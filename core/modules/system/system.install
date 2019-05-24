@@ -762,7 +762,7 @@ function system_requirements($phase) {
     if ($change_list = \Drupal::entityDefinitionUpdateManager()->getChangeSummary()) {
       $build = [];
       foreach ($change_list as $entity_type_id => $changes) {
-        $entity_type = \Drupal::entityManager()->getDefinition($entity_type_id);
+        $entity_type = \Drupal::entityTypeManager()->getDefinition($entity_type_id);
         $build[] = [
           '#theme' => 'item_list',
           '#title' => $entity_type->getLabel(),
@@ -1330,7 +1330,7 @@ function system_update_8004() {
   // https://www.drupal.org/node/2542748. Regenerate the related schemas to
   // ensure they match the currently expected status.
   $manager = \Drupal::entityDefinitionUpdateManager();
-  foreach (array_keys(\Drupal::entityManager()
+  foreach (array_keys(\Drupal::entityTypeManager()
     ->getDefinitions()) as $entity_type_id) {
     // Only update the entity type if it already exists. This condition is
     // needed in case new entity types are introduced after this update.
@@ -1591,7 +1591,7 @@ function _system_update_create_block($name, $theme_name, array $values) {
 function system_update_8007() {
   $database = \Drupal::database();
   $database_schema = $database->schema();
-  $entity_types = \Drupal::entityManager()->getDefinitions();
+  $entity_types = \Drupal::entityTypeManager()->getDefinitions();
 
   $schema = \Drupal::keyValue('entity.storage_schema.sql')->getAll();
   $schema_copy = $schema;
@@ -1649,7 +1649,7 @@ function system_update_8007() {
  * Purge field schema data for uninstalled entity types.
  */
 function system_update_8008() {
-  $entity_types = \Drupal::entityManager()->getDefinitions();
+  $entity_types = \Drupal::entityTypeManager()->getDefinitions();
   /** @var \Drupal\Core\KeyValueStore\KeyValueStoreInterface $schema */
   $schema = \Drupal::keyValue('entity.storage_schema.sql');
   foreach ($schema->getAll() as $key => $item) {

@@ -102,13 +102,13 @@ function config_translation_entity_type_alter(array &$entity_types) {
  * Implements hook_config_translation_info().
  */
 function config_translation_config_translation_info(&$info) {
-  $entity_manager = \Drupal::entityManager();
+  $entity_type_manager = \Drupal::entityTypeManager();
 
   // If field UI is not enabled, the base routes of the type
   // "entity.field_config.{$entity_type}_field_edit_form" are not defined.
   if (\Drupal::moduleHandler()->moduleExists('field_ui')) {
     // Add fields entity mappers to all fieldable entity types defined.
-    foreach ($entity_manager->getDefinitions() as $entity_type_id => $entity_type) {
+    foreach ($entity_type_manager->getDefinitions() as $entity_type_id => $entity_type) {
       // Make sure entity type has field UI enabled and has a base route.
       if ($entity_type->get('field_ui_base_route')) {
         $info[$entity_type_id . '_fields'] = [
@@ -123,7 +123,7 @@ function config_translation_config_translation_info(&$info) {
   }
 
   // Discover configuration entities automatically.
-  foreach ($entity_manager->getDefinitions() as $entity_type_id => $entity_type) {
+  foreach ($entity_type_manager->getDefinitions() as $entity_type_id => $entity_type) {
     // Determine base path for entities automatically if provided via the
     // configuration entity.
     if (

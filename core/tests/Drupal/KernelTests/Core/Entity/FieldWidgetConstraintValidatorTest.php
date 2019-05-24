@@ -45,7 +45,7 @@ class FieldWidgetConstraintValidatorTest extends KernelTestBase {
     $display->buildForm($entity, $form, $form_state);
 
     // Pretend the form has been built.
-    $form_state->setFormObject(\Drupal::entityManager()->getFormObject($entity_type, 'default'));
+    $form_state->setFormObject(\Drupal::entityTypeManager()->getFormObject($entity_type, 'default'));
     \Drupal::formBuilder()->prepareForm('field_test_entity_form', $form, $form_state);
     \Drupal::formBuilder()->processForm('field_test_entity_form', $form, $form_state);
 
@@ -83,7 +83,7 @@ class FieldWidgetConstraintValidatorTest extends KernelTestBase {
     $form_state = new FormState();
     $display->buildForm($entity, $form, $form_state);
 
-    $form_state->setFormObject(\Drupal::entityManager()->getFormObject($entity_type_id, 'default'));
+    $form_state->setFormObject(\Drupal::entityTypeManager()->getFormObject($entity_type_id, 'default'));
     \Drupal::formBuilder()->prepareForm('field_test_entity_form', $form, $form_state);
     \Drupal::formBuilder()->processForm('field_test_entity_form', $form, $form_state);
 

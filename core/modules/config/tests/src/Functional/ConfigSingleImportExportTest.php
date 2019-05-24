@@ -36,7 +36,7 @@ class ConfigSingleImportExportTest extends BrowserTestBase {
    * Tests importing a single configuration file.
    */
   public function testImport() {
-    $storage = \Drupal::entityManager()->getStorage('config_test');
+    $storage = \Drupal::entityTypeManager()->getStorage('config_test');
     $uuid = \Drupal::service('uuid');
 
     $this->drupalLogin($this->drupalCreateUser(['import configuration']));
@@ -254,7 +254,7 @@ EOD;
     $this->drupalGet('admin/config/development/configuration/single/export/date_format/fallback');
     $this->assertFieldByXPath('//select[@name="config_name"]//option[@selected="selected"]', t('Fallback date format (fallback)'), 'The fallback date format config entity is selected when specified in the URL.');
 
-    $fallback_date = \Drupal::entityManager()->getStorage('date_format')->load('fallback');
+    $fallback_date = \Drupal::entityTypeManager()->getStorage('date_format')->load('fallback');
     $yaml_text = $this->xpath('//textarea[@name="export"]')[0]->getValue();
     $this->assertEqual(Yaml::decode($yaml_text), $fallback_date->toArray(), 'The fallback date format config entity export code is displayed.');
   }

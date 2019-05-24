@@ -124,7 +124,7 @@ function tracker_page($account = NULL) {
   }
 
   // Add the list cache tag for nodes.
-  $cache_tags = Cache::mergeTags($cache_tags, \Drupal::entityManager()->getDefinition('node')->getListCacheTags());
+  $cache_tags = Cache::mergeTags($cache_tags, \Drupal::entityTypeManager()->getDefinition('node')->getListCacheTags());
 
   $page['tracker'] = [
     '#rows' => $rows,

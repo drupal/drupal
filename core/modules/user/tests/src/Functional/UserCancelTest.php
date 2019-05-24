@@ -268,7 +268,7 @@ class UserCancelTest extends BrowserTestBase {
     $test_node = node_revision_load($node->getRevisionId());
     $this->assertFalse($test_node->isPublished(), 'Node revision of the user has been unpublished.');
 
-    $storage = \Drupal::entityManager()->getStorage('comment');
+    $storage = \Drupal::entityTypeManager()->getStorage('comment');
     $storage->resetCache([$comment->id()]);
     $comment = $storage->load($comment->id());
     $this->assertFalse($comment->isPublished(), 'Comment of the user has been unpublished.');
@@ -345,7 +345,7 @@ class UserCancelTest extends BrowserTestBase {
     $test_node = $node_storage->load($revision_node->id());
     $this->assertTrue(($test_node->getOwnerId() != 0 && $test_node->isPublished()), "Current revision of the user's node was not attributed to anonymous user.");
 
-    $storage = \Drupal::entityManager()->getStorage('comment');
+    $storage = \Drupal::entityTypeManager()->getStorage('comment');
     $storage->resetCache([$comment->id()]);
     $test_comment = $storage->load($comment->id());
     $this->assertTrue(($test_comment->getOwnerId() == 0 && $test_comment->isPublished()), 'Comment of the user has been attributed to anonymous user.');
@@ -467,7 +467,7 @@ class UserCancelTest extends BrowserTestBase {
     $this->assertFalse(node_revision_load($revision), 'Node revision of the user has been deleted.');
     $node_storage->resetCache([$revision_node->id()]);
     $this->assertTrue($node_storage->load($revision_node->id()), "Current revision of the user's node was not deleted.");
-    \Drupal::entityManager()->getStorage('comment')->resetCache([$comment->id()]);
+    \Drupal::entityTypeManager()->getStorage('comment')->resetCache([$comment->id()]);
     $this->assertFalse(Comment::load($comment->id()), 'Comment of the user has been deleted.');
 
     // Confirm that the confirmation message made it through to the end user.

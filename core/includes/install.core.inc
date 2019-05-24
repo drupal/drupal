@@ -1621,7 +1621,7 @@ function install_profile_modules(&$install_state) {
  */
 function install_core_entity_type_definitions() {
   $update_manager = \Drupal::entityDefinitionUpdateManager();
-  foreach (\Drupal::entityManager()->getDefinitions() as $entity_type) {
+  foreach (\Drupal::entityTypeManager()->getDefinitions() as $entity_type) {
     if ($entity_type->getProvider() == 'core') {
       $update_manager->installEntityType($entity_type);
     }

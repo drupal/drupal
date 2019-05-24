@@ -334,7 +334,7 @@ function content_translation_entity_operation(EntityInterface $entity) {
 function content_translation_views_data_alter(array &$data) {
   // Add the content translation entity link definition to Views data for entity
   // types having translation enabled.
-  $entity_types = \Drupal::entityManager()->getDefinitions();
+  $entity_types = \Drupal::entityTypeManager()->getDefinitions();
   /** @var \Drupal\content_translation\ContentTranslationManagerInterface $manager */
   $manager = \Drupal::service('content_translation.manager');
   foreach ($entity_types as $entity_type_id => $entity_type) {
@@ -393,7 +393,7 @@ function content_translation_form_alter(array &$form, FormStateInterface $form_s
   // be the 'add' or 'edit' form. It also tries a 'default' form in case neither
   // of the aforementioned forms are defined.
   if ($entity instanceof ContentEntityInterface && $entity->isTranslatable() && count($entity->getTranslationLanguages()) > 1 && in_array($op, ['edit', 'add', 'default'], TRUE)) {
-    $controller = \Drupal::entityManager()->getHandler($entity->getEntityTypeId(), 'translation');
+    $controller = \Drupal::entityTypeManager()->getHandler($entity->getEntityTypeId(), 'translation');
     $controller->entityFormAlter($form, $form_state, $entity);
 
     // @todo Move the following lines to the code generating the property form
@@ -454,7 +454,7 @@ function content_translation_language_fallback_candidates_entity_view_alter(&$ca
 function content_translation_entity_extra_field_info() {
   $extra = [];
   $bundle_info_service = \Drupal::service('entity_type.bundle.info');
-  foreach (\Drupal::entityManager()->getDefinitions() as $entity_type => $info) {
+  foreach (\Drupal::entityTypeManager()->getDefinitions() as $entity_type => $info) {
     foreach ($bundle_info_service->getBundleInfo($entity_type) as $bundle => $bundle_info) {
       if (\Drupal::service('content_translation.manager')->isEnabled($entity_type, $bundle)) {
         $extra[$entity_type][$bundle]['form']['translation'] = [

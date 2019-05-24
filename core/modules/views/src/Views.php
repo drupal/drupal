@@ -242,7 +242,7 @@ class Views {
    *   An array of loaded view entities.
    */
   public static function getAllViews() {
-    return \Drupal::entityManager()->getStorage('view')->loadMultiple();
+    return \Drupal::entityTypeManager()->getStorage('view')->loadMultiple();
   }
 
   /**
@@ -256,7 +256,7 @@ class Views {
       ->condition('status', TRUE)
       ->execute();
 
-    return \Drupal::entityManager()->getStorage('view')->loadMultiple($query);
+    return \Drupal::entityTypeManager()->getStorage('view')->loadMultiple($query);
   }
 
   /**
@@ -270,7 +270,7 @@ class Views {
       ->condition('status', FALSE)
       ->execute();
 
-    return \Drupal::entityManager()->getStorage('view')->loadMultiple($query);
+    return \Drupal::entityTypeManager()->getStorage('view')->loadMultiple($query);
   }
 
   /**

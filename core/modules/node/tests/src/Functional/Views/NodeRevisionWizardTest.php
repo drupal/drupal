@@ -19,7 +19,7 @@ class NodeRevisionWizardTest extends WizardTestBase {
   public function testViewAdd() {
     $this->drupalCreateContentType(['type' => 'article']);
     // Create two nodes with two revision.
-    $node_storage = \Drupal::entityManager()->getStorage('node');
+    $node_storage = \Drupal::entityTypeManager()->getStorage('node');
     /** @var \Drupal\node\NodeInterface $node */
     $node = $node_storage->create(['title' => $this->randomString(), 'type' => 'article', 'changed' => REQUEST_TIME + 40]);
     $node->save();

@@ -228,7 +228,7 @@ class SearchConfigSettingsFormTest extends BrowserTestBase {
    */
   public function testMultipleSearchPages() {
     $this->assertDefaultSearch('node_search', 'The default page is set to the installer default.');
-    $search_storage = \Drupal::entityManager()->getStorage('search_page');
+    $search_storage = \Drupal::entityTypeManager()->getStorage('search_page');
     $entities = $search_storage->loadMultiple();
     $search_storage->delete($entities);
     $this->assertDefaultSearch(FALSE);

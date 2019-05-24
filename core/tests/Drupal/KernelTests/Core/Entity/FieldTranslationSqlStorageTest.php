@@ -78,7 +78,7 @@ class FieldTranslationSqlStorageTest extends EntityLanguageTestBase {
     $langcode = $entity->getUntranslated()->language()->getId();
     $fields = [$this->fieldName, $this->untranslatableFieldName];
     /** @var \Drupal\Core\Entity\Sql\DefaultTableMapping $table_mapping */
-    $table_mapping = \Drupal::entityManager()->getStorage($entity_type)->getTableMapping();
+    $table_mapping = \Drupal::entityTypeManager()->getStorage($entity_type)->getTableMapping();
 
     foreach ($fields as $field_name) {
       $field_storage = FieldStorageConfig::loadByName($entity_type, $field_name);

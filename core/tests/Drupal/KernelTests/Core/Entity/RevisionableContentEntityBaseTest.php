@@ -42,7 +42,7 @@ class RevisionableContentEntityBaseTest extends EntityKernelTestBase {
    */
   public function testRevisionableContentEntity() {
     $entity_type = 'entity_test_mul_revlog';
-    $definition = \Drupal::entityManager()->getDefinition($entity_type);
+    $definition = \Drupal::entityTypeManager()->getDefinition($entity_type);
     $user = User::create(['name' => 'test name']);
     $user->save();
     /** @var \Drupal\entity_test_mul_revlog\Entity\EntityTestMulWithRevisionLog $entity */

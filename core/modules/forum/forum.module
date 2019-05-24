@@ -472,7 +472,7 @@ function template_preprocess_forums(&$variables) {
         $variables['topics'][$id]->new_url = '';
 
         if ($topic->new_replies) {
-          $page_number = \Drupal::entityManager()->getStorage('comment')
+          $page_number = \Drupal::entityTypeManager()->getStorage('comment')
             ->getNewCommentPageNumber($topic->comment_count, $topic->new_replies, $topic, 'comment_forum');
           $query = $page_number ? ['page' => $page_number] : NULL;
           $variables['topics'][$id]->new_text = \Drupal::translation()->formatPlural($topic->new_replies, '1 new post<span class="visually-hidden"> in topic %title</span>', '@count new posts<span class="visually-hidden"> in topic %title</span>', ['%title' => $variables['topics'][$id]->label()]);

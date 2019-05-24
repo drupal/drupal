@@ -326,7 +326,7 @@ class ImageWidget extends FileWidget {
     if ($style_id && $style = ImageStyle::load($style_id)) {
       if (!empty($dependencies[$style->getConfigDependencyKey()][$style->getConfigDependencyName()])) {
         /** @var \Drupal\image\ImageStyleStorageInterface $storage */
-        $storage = \Drupal::entityManager()->getStorage($style->getEntityTypeId());
+        $storage = \Drupal::entityTypeManager()->getStorage($style->getEntityTypeId());
         $replacement_id = $storage->getReplacementId($style_id);
         // If a valid replacement has been provided in the storage, replace the
         // preview image style with the replacement.

@@ -171,7 +171,7 @@ function field_cron() {
  * Implements hook_entity_field_storage_info().
  */
 function field_entity_field_storage_info(EntityTypeInterface $entity_type) {
-  if (\Drupal::entityManager()->getStorage($entity_type->id()) instanceof DynamicallyFieldableEntityStorageInterface) {
+  if (\Drupal::entityTypeManager()->getStorage($entity_type->id()) instanceof DynamicallyFieldableEntityStorageInterface) {
     // Query by filtering on the ID as this is more efficient than filtering
     // on the entity_type property directly.
     $ids = \Drupal::entityQuery('field_storage_config')
@@ -192,7 +192,7 @@ function field_entity_field_storage_info(EntityTypeInterface $entity_type) {
  * Implements hook_entity_bundle_field_info().
  */
 function field_entity_bundle_field_info(EntityTypeInterface $entity_type, $bundle, array $base_field_definitions) {
-  if (\Drupal::entityManager()->getStorage($entity_type->id()) instanceof DynamicallyFieldableEntityStorageInterface) {
+  if (\Drupal::entityTypeManager()->getStorage($entity_type->id()) instanceof DynamicallyFieldableEntityStorageInterface) {
     // Query by filtering on the ID as this is more efficient than filtering
     // on the entity_type property directly.
     $ids = \Drupal::entityQuery('field_config')
@@ -213,7 +213,7 @@ function field_entity_bundle_field_info(EntityTypeInterface $entity_type, $bundl
  * Implements hook_entity_bundle_delete().
  */
 function field_entity_bundle_delete($entity_type_id, $bundle) {
-  $storage = \Drupal::entityManager()->getStorage('field_config');
+  $storage = \Drupal::entityTypeManager()->getStorage('field_config');
   // Get the fields on the bundle.
   $fields = $storage->loadByProperties(['entity_type' => $entity_type_id, 'bundle' => $bundle]);
   // This deletes the data for the field as well as the field themselves. This
@@ -271,7 +271,7 @@ function field_entity_bundle_delete($entity_type_id, $bundle) {
  */
 function _field_create_entity_from_ids($ids) {
   $id_properties = [];
-  $entity_type = \Drupal::entityManager()->getDefinition($ids->entity_type);
+  $entity_type = \Drupal::entityTypeManager()->getDefinition($ids->entity_type);
   if ($id_key = $entity_type->getKey('id')) {
     $id_properties[$id_key] = $ids->entity_id;
   }

@@ -107,7 +107,7 @@ class UserPermissionsTest extends BrowserTestBase {
     $edit['user_admin_role'] = $this->rid;
     $this->drupalPostForm('admin/config/people/accounts', $edit, t('Save configuration'));
 
-    \Drupal::entityManager()->getStorage('user_role')->resetCache();
+    \Drupal::entityTypeManager()->getStorage('user_role')->resetCache();
     $this->assertTrue(Role::load($this->rid)->isAdmin());
 
     // Enable aggregator module and ensure the 'administer news feeds'
@@ -121,7 +121,7 @@ class UserPermissionsTest extends BrowserTestBase {
     $edit['user_admin_role'] = '';
     $this->drupalPostForm('admin/config/people/accounts', $edit, t('Save configuration'));
 
-    \Drupal::entityManager()->getStorage('user_role')->resetCache();
+    \Drupal::entityTypeManager()->getStorage('user_role')->resetCache();
     \Drupal::configFactory()->reset();
     $this->assertFalse(Role::load($this->rid)->isAdmin());
 

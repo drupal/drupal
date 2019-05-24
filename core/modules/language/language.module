@@ -330,7 +330,7 @@ function language_modules_installed($modules) {
     // this is not a hard dependency, and thus is not detected by the config
     // system, we have to clean up the related values manually.
     foreach (['entity_view_display', 'entity_form_display'] as $key) {
-      $displays = \Drupal::entityManager()->getStorage($key)->loadMultiple();
+      $displays = \Drupal::entityTypeManager()->getStorage($key)->loadMultiple();
       /** @var \Drupal\Core\Entity\Display\EntityDisplayInterface $display */
       foreach ($displays as $display) {
         $display->save();

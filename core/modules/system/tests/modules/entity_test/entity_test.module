@@ -221,7 +221,7 @@ function entity_test_delete_bundle($bundle, $entity_type = 'entity_test') {
  */
 function entity_test_entity_bundle_info() {
   $bundles = [];
-  $entity_types = \Drupal::entityManager()->getDefinitions();
+  $entity_types = \Drupal::entityTypeManager()->getDefinitions();
   foreach ($entity_types as $entity_type_id => $entity_type) {
     if ($entity_type->getProvider() == 'entity_test' && $entity_type_id != 'entity_test_with_bundle') {
       $bundles[$entity_type_id] = \Drupal::state()->get($entity_type_id . '.bundles') ?: [$entity_type_id => ['label' => 'Entity Test Bundle']];
@@ -254,7 +254,7 @@ function entity_test_entity_bundle_info_alter(&$bundles) {
  * Implements hook_entity_view_mode_info_alter().
  */
 function entity_test_entity_view_mode_info_alter(&$view_modes) {
-  $entity_info = \Drupal::entityManager()->getDefinitions();
+  $entity_info = \Drupal::entityTypeManager()->getDefinitions();
   foreach ($entity_info as $entity_type => $info) {
     if ($entity_info[$entity_type]->getProvider() == 'entity_test' && !isset($view_modes[$entity_type])) {
       $view_modes[$entity_type] = [
@@ -277,7 +277,7 @@ function entity_test_entity_view_mode_info_alter(&$view_modes) {
  * Implements hook_entity_form_mode_info_alter().
  */
 function entity_test_entity_form_mode_info_alter(&$form_modes) {
-  $entity_info = \Drupal::entityManager()->getDefinitions();
+  $entity_info = \Drupal::entityTypeManager()->getDefinitions();
   foreach ($entity_info as $entity_type => $info) {
     if ($entity_info[$entity_type]->getProvider() == 'entity_test') {
       $form_modes[$entity_type] = [

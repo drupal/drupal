@@ -32,7 +32,7 @@
  */
 function hook_shortcut_default_set($account) {
   // Use a special set of default shortcuts for administrators only.
-  $roles = \Drupal::entityManager()->getStorage('user_role')->loadByProperties(['is_admin' => TRUE]);
+  $roles = \Drupal::entityTypeManager()->getStorage('user_role')->loadByProperties(['is_admin' => TRUE]);
   $user_admin_roles = array_intersect(array_keys($roles), $account->getRoles());
   if ($user_admin_roles) {
     return 'admin-shortcuts';

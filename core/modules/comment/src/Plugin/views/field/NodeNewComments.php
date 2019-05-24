@@ -4,6 +4,8 @@ namespace Drupal\comment\Plugin\views\field;
 
 use Drupal\Core\Database\Connection;
 use Drupal\comment\CommentInterface;
+use Drupal\Core\Entity\EntityFieldManagerInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\node\Entity\Node;
 use Drupal\views\Plugin\views\field\NumericField;
@@ -36,6 +38,20 @@ class NodeNewComments extends NumericField {
   protected $database;
 
   /**
+   * The entity type manager.
+   *
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
+   */
+  protected $entityTypeManager;
+
+  /**
+   * The entity field manager.
+   *
+   * @var \Drupal\Core\Entity\EntityFieldManagerInterface
+   */
+  protected $entityFieldManager;
+
+  /**
    * Constructs a \Drupal\comment\Plugin\views\field\NodeNewComments object.
    *
    * @param array $configuration
@@ -46,18 +62,38 @@ class NodeNewComments extends NumericField {
    *   The plugin implementation definition.
    * @param \Drupal\Core\Database\Connection $database
    *   Database Service Object.
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   *   The entity type manager service.
+   * @param \Drupal\Core\Entity\EntityFieldManagerInterface $entity_field_manager
+   *   The entity field manager service.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, Connection $database) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, Connection $database, EntityTypeManagerInterface $entity_type_manager = NULL, EntityFieldManagerInterface $entity_field_manager = NULL) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
-
     $this->database = $database;
+    if (!$entity_type_manager) {
+      @trigger_error("Not passing the entity type manager to the NodeNewComments constructor is deprecated in drupal:8.8.0 and will be required in drupal 9.0.0. @see https://www.drupal.org/node/3047897");
+      $entity_type_manager = \Drupal::entityTypeManager();
+    }
+    if (!$entity_field_manager) {
+      @trigger_error("Not passing the entity type manager to the NodeNewComments constructor is deprecated in drupal:8.8.0 and will be required in drupal 9.0.0. @see https://www.drupal.org/node/3047897");
+      $entity_field_manager = \Drupal::service('entity_field.manager');
+    }
+    $this->entityTypeManager = $entity_type_manager;
+    $this->entityFieldManager = $entity_field_manager;
   }
 
   /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
-    return new static($configuration, $plugin_id, $plugin_definition, $container->get('database'));
+    return new static(
+      $configuration,
+      $plugin_id,
+      $plugin_definition,
+      $container->get('database'),
+      $container->get('entity_type.manager'),
+      $container->get('entity_field.manager')
+    );
   }
 
   /**
@@ -166,8 +202,7 @@ class NodeNewComments extends NumericField {
       // reference, we arbitrarily use the first such field name we find.
       // @todo Provide a means for selecting the comment field.
       //   https://www.drupal.org/node/2594201
-      $entity_type_manager = \Drupal::entityTypeManager();
-      $field_map = \Drupal::service('entity_field.manager')->getFieldMapByFieldType('comment');
+      $field_map = $this->entityFieldManager->getFieldMapByFieldType('comment');
       $comment_field_name = 'comment';
       foreach ($field_map['node'] as $field_name => $field_data) {
         foreach ($field_data['bundles'] as $bundle_name) {
@@ -177,7 +212,7 @@ class NodeNewComments extends NumericField {
           }
         }
       }
-      $page_number = $entity_type_manager->getStorage('comment')
+      $page_number = $this->entityTypeManager->getStorage('comment')
         ->getNewCommentPageNumber($this->getValue($values, 'comment_count'), $this->getValue($values), $node, $comment_field_name);
       $this->options['alter']['make_link'] = TRUE;
       $this->options['alter']['url'] = $node->toUrl();

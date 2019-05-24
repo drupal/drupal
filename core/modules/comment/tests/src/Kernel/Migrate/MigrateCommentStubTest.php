@@ -31,7 +31,7 @@ class MigrateCommentStubTest extends MigrateDrupalTestBase {
     $this->installSchema('system', ['sequences']);
 
     // Make sure uid 0 is created (default uid for comments is 0).
-    $storage = \Drupal::entityManager()->getStorage('user');
+    $storage = \Drupal::entityTypeManager()->getStorage('user');
     // Insert a row for the anonymous user.
     $storage
       ->create([

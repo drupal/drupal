@@ -139,7 +139,7 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
     $this->bundleInfoService = $bundle_info_service;
     $this->base_table = $this->definition['base_table'];
 
-    $entity_types = \Drupal::entityManager()->getDefinitions();
+    $entity_types = \Drupal::entityTypeManager()->getDefinitions();
     foreach ($entity_types as $entity_type_id => $entity_type) {
       if (in_array($this->base_table, [$entity_type->getBaseTable(), $entity_type->getDataTable(), $entity_type->getRevisionTable(), $entity_type->getRevisionDataTable()], TRUE)) {
         $this->entityType = $entity_type;

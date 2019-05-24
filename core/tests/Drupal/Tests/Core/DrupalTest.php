@@ -79,6 +79,8 @@ class DrupalTest extends UnitTestCase {
    * Tests the entityManager() method.
    *
    * @covers ::entityManager
+   * @group legacy
+   * @expectedDeprecation \Drupal::entityManager() is deprecated in Drupal 8.0.0 and will be removed before Drupal 9.0.0. Use \Drupal::entityTypeManager() instead in most cases. If the needed method is not on \Drupal\Core\Entity\EntityTypeManagerInterface, see the deprecated \Drupal\Core\Entity\EntityManager to find the correct interface or service. See https://www.drupal.org/node/2549139
    */
   public function testEntityManager() {
     $this->setMockContainerService('entity.manager');

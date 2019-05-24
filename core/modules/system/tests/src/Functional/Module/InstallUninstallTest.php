@@ -352,7 +352,7 @@ class InstallUninstallTest extends ModuleTestBase {
     $query = \Drupal::entityQuery('taxonomy_term');
     $query->condition('vid', 'forums');
     $ids = $query->execute();
-    $storage = \Drupal::entityManager()->getStorage('taxonomy_term');
+    $storage = \Drupal::entityTypeManager()->getStorage('taxonomy_term');
     $terms = $storage->loadMultiple($ids);
     $storage->delete($terms);
   }

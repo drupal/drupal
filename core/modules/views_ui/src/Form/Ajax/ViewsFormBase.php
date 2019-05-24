@@ -165,7 +165,7 @@ abstract class ViewsFormBase extends FormBase implements ViewsFormInterface {
     // If this form was for view-wide changes, there's no need to regenerate
     // the display section of the form.
     if ($display_id !== '') {
-      \Drupal::entityManager()->getFormObject('view', 'edit')->rebuildCurrentTab($view, $response, $display_id);
+      \Drupal::entityTypeManager()->getFormObject('view', 'edit')->rebuildCurrentTab($view, $response, $display_id);
     }
 
     return $response;

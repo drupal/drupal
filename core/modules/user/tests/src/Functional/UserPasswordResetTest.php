@@ -307,7 +307,7 @@ class UserPasswordResetTest extends PageCacheTagsTestBase {
       ->fields(['pass' => NULL])
       ->condition('uid', [$user1->id(), $user2->id()], 'IN')
       ->execute();
-    \Drupal::entityManager()->getStorage('user')->resetCache();
+    \Drupal::entityTypeManager()->getStorage('user')->resetCache();
     $user1 = User::load($user1->id());
     $user2 = User::load($user2->id());
 

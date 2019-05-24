@@ -73,7 +73,7 @@ class NodeAccessLanguageTest extends NodeAccessTestBase {
     $this->assertNodeAccess($expected_node_access, $node_public_no_language, $web_user);
 
     // Reset the node access cache and turn on our test node access code.
-    \Drupal::entityManager()->getAccessControlHandler('node')->resetCache();
+    \Drupal::entityTypeManager()->getAccessControlHandler('node')->resetCache();
     \Drupal::state()->set('node_access_test_secret_catalan', 1);
     $node_public_ca = $this->drupalCreateNode(['body' => [[]], 'langcode' => 'ca', 'private' => FALSE]);
     $this->assertTrue($node_public_ca->language()->getId() == 'ca', 'Node created as Catalan.');
@@ -97,7 +97,7 @@ class NodeAccessLanguageTest extends NodeAccessTestBase {
     $this->assertNodeAccess($expected_node_access_no_access, $node_public_ca, $web_user);
     $this->assertNodeAccess($expected_node_access_no_access, $node_public_ca->getTranslation('ca'), $web_user);
 
-    \Drupal::entityManager()->getAccessControlHandler('node')->resetCache();
+    \Drupal::entityTypeManager()->getAccessControlHandler('node')->resetCache();
 
     // Tests that access is granted if requested with no language.
     $this->assertNodeAccess($expected_node_access, $node_public_no_language, $web_user);
@@ -142,7 +142,7 @@ class NodeAccessLanguageTest extends NodeAccessTestBase {
     $this->assertNodeAccess($expected_node_access_no_access, $node_private_no_language, $web_user);
 
     // Reset the node access cache and turn on our test node access code.
-    \Drupal::entityManager()->getAccessControlHandler('node')->resetCache();
+    \Drupal::entityTypeManager()->getAccessControlHandler('node')->resetCache();
     \Drupal::state()->set('node_access_test_secret_catalan', 1);
 
     // Tests that access is not granted if requested with no language.
@@ -160,7 +160,7 @@ class NodeAccessLanguageTest extends NodeAccessTestBase {
     $this->assertNodeAccess($expected_node_access_no_access, $node_private_ca, $private_ca_user);
     $this->assertNodeAccess($expected_node_access_no_access, $node_private_ca->getTranslation('ca'), $private_ca_user);
 
-    \Drupal::entityManager()->getAccessControlHandler('node')->resetCache();
+    \Drupal::entityTypeManager()->getAccessControlHandler('node')->resetCache();
     \Drupal::state()->set('node_access_test_secret_catalan', 0);
 
     // Tests that Catalan is still not accessible for a user with no access to

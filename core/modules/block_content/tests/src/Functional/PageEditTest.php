@@ -57,7 +57,7 @@ class PageEditTest extends BlockContentTestBase {
     $this->drupalPostForm(NULL, $edit, t('Save'));
 
     // Ensure that the block revision has been created.
-    \Drupal::entityManager()->getStorage('block_content')->resetCache([$block->id()]);
+    \Drupal::entityTypeManager()->getStorage('block_content')->resetCache([$block->id()]);
     $revised_block = BlockContent::load($block->id());
     $this->assertNotIdentical($block->getRevisionId(), $revised_block->getRevisionId(), 'A new revision has been created.');
 

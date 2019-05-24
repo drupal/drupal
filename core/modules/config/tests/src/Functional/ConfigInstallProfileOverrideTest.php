@@ -94,7 +94,7 @@ class ConfigInstallProfileOverrideTest extends BrowserTestBase {
     // configuration in a modules config/install directory.
     $this->container->get('module_installer')->install(['config_test']);
     $this->rebuildContainer();
-    $config_test_storage = \Drupal::entityManager()->getStorage('config_test');
+    $config_test_storage = \Drupal::entityTypeManager()->getStorage('config_test');
     $this->assertEqual($config_test_storage->load('dotted.default')->label(), 'Default install profile override', 'The config_test entity is overridden by the profile optional configuration.');
     // Test that override of optional configuration does work.
     $this->assertEqual($config_test_storage->load('override')->label(), 'Override', 'The optional config_test entity is overridden by the profile optional configuration.');
@@ -115,7 +115,7 @@ class ConfigInstallProfileOverrideTest extends BrowserTestBase {
     // that deleted profile configuration is not re-created.
     $this->container->get('module_installer')->install(['config_other_module_config_test']);
     $this->rebuildContainer();
-    $config_test_storage = \Drupal::entityManager()->getStorage('config_test');
+    $config_test_storage = \Drupal::entityTypeManager()->getStorage('config_test');
     $this->assertNull($config_test_storage->load('completely_new'));
   }
 

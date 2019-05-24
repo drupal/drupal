@@ -19,7 +19,7 @@ function node_requirements($phase) {
     // Only show rebuild button if there are either 0, or 2 or more, rows
     // in the {node_access} table, or if there are modules that
     // implement hook_node_grants().
-    $grant_count = \Drupal::entityManager()->getAccessControlHandler('node')->countGrants();
+    $grant_count = \Drupal::entityTypeManager()->getAccessControlHandler('node')->countGrants();
     if ($grant_count != 1 || count(\Drupal::moduleHandler()->getImplementations('node_grants')) > 0) {
       $value = \Drupal::translation()->formatPlural($grant_count, 'One permission in use', '@count permissions in use', ['@count' => $grant_count]);
     }

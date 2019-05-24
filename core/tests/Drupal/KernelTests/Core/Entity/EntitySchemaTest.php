@@ -323,7 +323,7 @@ class EntitySchemaTest extends EntityKernelTestBase {
     // Find all the entity types provided by the entity_test module and install
     // the schema for them.
     $entity_type_ids = [];
-    $entities = \Drupal::entityManager()->getDefinitions();
+    $entities = \Drupal::entityTypeManager()->getDefinitions();
     foreach ($entities as $entity_type_id => $definition) {
       if ($definition->getProvider() == 'entity_test') {
         $this->installEntitySchema($entity_type_id);

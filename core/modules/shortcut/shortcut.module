@@ -123,10 +123,10 @@ function shortcut_set_switch_access($account = NULL) {
  *   A user account that will be assigned to use the set.
  *
  * @deprecated in Drupal 8.x, will be removed before Drupal 9.0.
- *   Use \Drupal::entityManager()->getStorage('shortcut_set')->assignUser().
+ *   Use \Drupal::entityTypeManager()->getStorage('shortcut_set')->assignUser().
  */
 function shortcut_set_assign_user($shortcut_set, $account) {
-  \Drupal::entityManager()
+  \Drupal::entityTypeManager()
     ->getStorage('shortcut_set')
     ->assignUser($shortcut_set, $account);
 }
@@ -145,10 +145,10 @@ function shortcut_set_assign_user($shortcut_set, $account) {
  *   to any set.
  *
  * @deprecated in Drupal 8.x, will be removed before Drupal 9.0.
- *   Use \Drupal::entityManager()->getStorage('shortcut_set')->unassignUser().
+ *   Use \Drupal::entityTypeManager()->getStorage('shortcut_set')->unassignUser().
  */
 function shortcut_set_unassign_user($account) {
-  return (bool) \Drupal::entityManager()
+  return (bool) \Drupal::entityTypeManager()
     ->getStorage('shortcut_set')
     ->unassignUser($account);
 }
@@ -177,7 +177,7 @@ function shortcut_current_displayed_set($account = NULL) {
   }
   // If none was found, try to find a shortcut set that is explicitly assigned
   // to this user.
-  $shortcut_set_name = \Drupal::entityManager()
+  $shortcut_set_name = \Drupal::entityTypeManager()
     ->getStorage('shortcut_set')
     ->getAssignedToUser($account);
   if ($shortcut_set_name) {
@@ -325,7 +325,7 @@ function shortcut_preprocess_page_title(&$variables) {
     $shortcut_set = shortcut_current_displayed_set();
 
     // Check if $link is already a shortcut and set $link_mode accordingly.
-    $shortcuts = \Drupal::entityManager()->getStorage('shortcut')->loadByProperties(['shortcut_set' => $shortcut_set->id()]);
+    $shortcuts = \Drupal::entityTypeManager()->getStorage('shortcut')->loadByProperties(['shortcut_set' => $shortcut_set->id()]);
     /** @var \Drupal\shortcut\ShortcutInterface $shortcut */
     foreach ($shortcuts as $shortcut) {
       if (($shortcut_url = $shortcut->getUrl()) && $shortcut_url->isRouted() && $shortcut_url->getRouteName() == $route_match->getRouteName() && $shortcut_url->getRouteParameters() == $route_match->getRawParameters()->all()) {

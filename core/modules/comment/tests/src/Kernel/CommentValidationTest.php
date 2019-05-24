@@ -138,7 +138,7 @@ class CommentValidationTest extends EntityKernelTestBase {
     $field->setSetting('anonymous', CommentInterface::ANONYMOUS_MUST_CONTACT);
     $field->save();
     // Reset the node entity.
-    \Drupal::entityManager()->getStorage('node')->resetCache([$node->id()]);
+    \Drupal::entityTypeManager()->getStorage('node')->resetCache([$node->id()]);
     $node = Node::load($node->id());
     // Create a new comment with the new field.
     $comment = $this->entityTypeManager->getStorage('comment')->create([

@@ -177,7 +177,7 @@ function comment_field_config_update(FieldConfigInterface $field) {
   if ($field->getType() == 'comment') {
     // Comment field settings also affects the rendering of *comment* entities,
     // not only the *commented* entities.
-    \Drupal::entityManager()->getViewBuilder('comment')->resetCache();
+    \Drupal::entityTypeManager()->getViewBuilder('comment')->resetCache();
   }
 }
 
@@ -357,7 +357,7 @@ function comment_form_field_ui_display_overview_form_alter(&$form, FormStateInte
  */
 function comment_entity_storage_load($entities, $entity_type) {
   // Comments can only be attached to content entities, so skip others.
-  if (!\Drupal::entityManager()->getDefinition($entity_type)->entityClassImplements(FieldableEntityInterface::class)) {
+  if (!\Drupal::entityTypeManager()->getDefinition($entity_type)->entityClassImplements(FieldableEntityInterface::class)) {
     return;
   }
   if (!\Drupal::service('comment.manager')->getFields($entity_type)) {
@@ -426,7 +426,7 @@ function comment_entity_predelete(EntityInterface $entity) {
  *   FALSE otherwise.
  */
 function _comment_entity_uses_integer_id($entity_type_id) {
-  $entity_type = \Drupal::entityManager()->getDefinition($entity_type_id);
+  $entity_type = \Drupal::entityTypeManager()->getDefinition($entity_type_id);
   $entity_type_id_key = $entity_type->getKey('id');
   if ($entity_type_id_key === FALSE) {
     return FALSE;
@@ -453,7 +453,7 @@ function comment_node_update_index(EntityInterface $node) {
     // edit could change the security situation so it is not safe to index the
     // comments.
     $index_comments = TRUE;
-    $roles = \Drupal::entityManager()->getStorage('user_role')->loadMultiple();
+    $roles = \Drupal::entityTypeManager()->getStorage('user_role')->loadMultiple();
     $authenticated_can_access = $roles[RoleInterface::AUTHENTICATED_ID]->hasPermission('access comments');
     foreach ($roles as $rid => $role) {
       if ($role->hasPermission('search content') && !$role->hasPermission('access comments')) {
@@ -477,10 +477,10 @@ function comment_node_update_index(EntityInterface $node) {
       $mode = $field_definition->getSetting('default_mode');
       $comments_per_page = $field_definition->getSetting('per_page');
       if ($node->get($field_name)->status) {
-        $comments = \Drupal::entityManager()->getStorage('comment')
+        $comments = \Drupal::entityTypeManager()->getStorage('comment')
           ->loadThread($node, $field_name, $mode, $comments_per_page);
         if ($comments) {
-          $build[] = \Drupal::entityManager()->getViewBuilder('comment')->viewMultiple($comments);
+          $build[] = \Drupal::entityTypeManager()->getViewBuilder('comment')->viewMultiple($comments);
         }
       }
     }

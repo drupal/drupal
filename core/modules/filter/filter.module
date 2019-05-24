@@ -103,9 +103,9 @@ function filter_formats(AccountInterface $account = NULL) {
       $formats['all'] = $cache->data;
     }
     else {
-      $formats['all'] = \Drupal::entityManager()->getStorage('filter_format')->loadByProperties(['status' => TRUE]);
+      $formats['all'] = \Drupal::entityTypeManager()->getStorage('filter_format')->loadByProperties(['status' => TRUE]);
       uasort($formats['all'], 'Drupal\Core\Config\Entity\ConfigEntityBase::sort');
-      \Drupal::cache()->set("filter_formats:{$language_interface->getId()}", $formats['all'], Cache::PERMANENT, \Drupal::entityManager()->getDefinition('filter_format')->getListCacheTags());
+      \Drupal::cache()->set("filter_formats:{$language_interface->getId()}", $formats['all'], Cache::PERMANENT, \Drupal::entityTypeManager()->getDefinition('filter_format')->getListCacheTags());
     }
   }
 

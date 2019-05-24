@@ -142,7 +142,7 @@ class FileManagedFileElementTest extends FileFieldTestBase {
     $this->drupalPostForm(NULL, $edit, t('Upload'));
 
     $fid = $this->getLastFileId();
-    $file = \Drupal::entityManager()->getStorage('file')->load($fid);
+    $file = \Drupal::entityTypeManager()->getStorage('file')->load($fid);
     $file->delete();
 
     $this->drupalPostForm(NULL, $edit, t('Upload'));

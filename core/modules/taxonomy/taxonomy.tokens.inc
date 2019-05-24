@@ -95,7 +95,7 @@ function taxonomy_tokens($type, $tokens, array $data, array $options, Bubbleable
   $token_service = \Drupal::token();
 
   $replacements = [];
-  $taxonomy_storage = \Drupal::entityManager()->getStorage('taxonomy_term');
+  $taxonomy_storage = \Drupal::entityTypeManager()->getStorage('taxonomy_term');
   if ($type == 'term' && !empty($data['term'])) {
     $term = $data['term'];
 

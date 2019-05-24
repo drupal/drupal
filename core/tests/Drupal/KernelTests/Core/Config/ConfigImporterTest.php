@@ -244,7 +244,7 @@ class ConfigImporterTest extends KernelTestBase {
     // Import.
     $this->configImporter->reset()->import();
 
-    $entity_storage = \Drupal::entityManager()->getStorage('config_test');
+    $entity_storage = \Drupal::entityTypeManager()->getStorage('config_test');
     $primary = $entity_storage->load('primary');
     $this->assertEqual($primary->id(), 'primary');
     $this->assertEqual($primary->uuid(), $values_primary['uuid']);
@@ -290,7 +290,7 @@ class ConfigImporterTest extends KernelTestBase {
     // Import.
     $this->configImporter->reset()->import();
 
-    $entity_storage = \Drupal::entityManager()->getStorage('config_test');
+    $entity_storage = \Drupal::entityTypeManager()->getStorage('config_test');
     $primary = $entity_storage->load('primary');
     $this->assertEqual($primary->id(), 'primary');
     $this->assertEqual($primary->uuid(), $values_primary['uuid']);
@@ -367,7 +367,7 @@ class ConfigImporterTest extends KernelTestBase {
     // Import.
     $this->configImporter->import();
 
-    $entity_storage = \Drupal::entityManager()->getStorage('config_test');
+    $entity_storage = \Drupal::entityTypeManager()->getStorage('config_test');
     $deleter = $entity_storage->load('deleter');
     $this->assertEqual($deleter->id(), 'deleter');
     $this->assertEqual($deleter->uuid(), $values_deleter['uuid']);
@@ -427,7 +427,7 @@ class ConfigImporterTest extends KernelTestBase {
     // Import.
     $this->configImporter->reset()->import();
 
-    $entity_storage = \Drupal::entityManager()->getStorage('config_test');
+    $entity_storage = \Drupal::entityTypeManager()->getStorage('config_test');
     // Both entities are deleted. ConfigTest::postSave() causes updates of the
     // deleter entity to delete the deletee entity. Since the deleter depends on
     // the deletee, removing the deletee causes the deleter to be removed.
@@ -469,7 +469,7 @@ class ConfigImporterTest extends KernelTestBase {
     // Import.
     $this->configImporter->reset()->import();
 
-    $entity_storage = \Drupal::entityManager()->getStorage('config_test');
+    $entity_storage = \Drupal::entityTypeManager()->getStorage('config_test');
     $this->assertFalse($entity_storage->load('deleter'));
     $this->assertFalse($entity_storage->load('deletee'));
     // The deletee entity does not exist as the delete worked and although the

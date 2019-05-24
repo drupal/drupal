@@ -131,7 +131,7 @@ class MigrateNodeTest extends MigrateDrupal7TestBase {
    *   The revision's time stamp.
    */
   protected function assertRevision($id, $title, $uid, $log, $timestamp) {
-    $revision = \Drupal::entityManager()->getStorage('node')->loadRevision($id);
+    $revision = \Drupal::entityTypeManager()->getStorage('node')->loadRevision($id);
     $this->assertInstanceOf(NodeInterface::class, $revision);
     $this->assertEquals($title, $revision->getTitle());
     $this->assertEquals($uid, $revision->getRevisionUser()->id());

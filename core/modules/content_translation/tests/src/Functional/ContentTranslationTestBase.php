@@ -121,7 +121,7 @@ abstract class ContentTranslationTestBase extends BrowserTestBase {
    * Returns the translate permissions for the current entity and bundle.
    */
   protected function getTranslatePermission() {
-    $entity_type = \Drupal::entityManager()->getDefinition($this->entityTypeId);
+    $entity_type = \Drupal::entityTypeManager()->getDefinition($this->entityTypeId);
     if ($permission_granularity = $entity_type->getPermissionGranularity()) {
       return $permission_granularity == 'bundle' ? "translate {$this->bundle} {$this->entityTypeId}" : "translate {$this->entityTypeId}";
     }
@@ -218,7 +218,7 @@ abstract class ContentTranslationTestBase extends BrowserTestBase {
   protected function createEntity($values, $langcode, $bundle_name = NULL) {
     $entity_values = $values;
     $entity_values['langcode'] = $langcode;
-    $entity_type = \Drupal::entityManager()->getDefinition($this->entityTypeId);
+    $entity_type = \Drupal::entityTypeManager()->getDefinition($this->entityTypeId);
     if ($bundle_key = $entity_type->getKey('bundle')) {
       $entity_values[$bundle_key] = $bundle_name ?: $this->bundle;
     }

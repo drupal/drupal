@@ -198,7 +198,7 @@ trait BookTestTrait {
       $edit['book[pid]'] = $parent;
       $this->drupalPostForm(NULL, $edit, t('Save'));
       // Make sure the parent was flagged as having children.
-      $parent_node = \Drupal::entityManager()->getStorage('node')->loadUnchanged($parent);
+      $parent_node = \Drupal::entityTypeManager()->getStorage('node')->loadUnchanged($parent);
       $this->assertFalse(empty($parent_node->book['has_children']), 'Parent node is marked as having children');
     }
     else {

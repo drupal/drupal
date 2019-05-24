@@ -39,7 +39,7 @@ class SiteBrandingConvertedIntoBlockUpdateTest extends UpdatePathTestBase {
     $this->runUpdates();
 
     /** @var \Drupal\block\BlockInterface $block_storage */
-    $block_storage = \Drupal::entityManager()->getStorage('block');
+    $block_storage = \Drupal::entityTypeManager()->getStorage('block');
 
     $this->assertRaw('Because your site has custom theme(s) installed, we had to set the branding block into the content region. Please manually review the block configuration and remove the site name, slogan, and logo variables from your templates.');
 

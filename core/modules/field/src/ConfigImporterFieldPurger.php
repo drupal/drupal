@@ -71,7 +71,7 @@ class ConfigImporterFieldPurger {
     $context['sandbox']['field']['steps_to_delete'] = 0;
     $fields = static::getFieldStoragesToPurge($context['sandbox']['field']['extensions'], $config_importer->getUnprocessedConfiguration('delete'));
     foreach ($fields as $field) {
-      $row_count = \Drupal::entityManager()->getStorage($field->getTargetEntityTypeId())
+      $row_count = \Drupal::entityTypeManager()->getStorage($field->getTargetEntityTypeId())
         ->countFieldData($field);
       if ($row_count > 0) {
         // The number of steps to delete each field is determined by the
@@ -117,7 +117,7 @@ class ConfigImporterFieldPurger {
     // where the module that provides the field type is also being uninstalled.
     $field_storage_ids = [];
     foreach ($deletes as $config_name) {
-      $field_storage_config_prefix = \Drupal::entityManager()->getDefinition('field_storage_config')->getConfigPrefix();
+      $field_storage_config_prefix = \Drupal::entityTypeManager()->getDefinition('field_storage_config')->getConfigPrefix();
       if (strpos($config_name, $field_storage_config_prefix . '.') === 0) {
         $field_storage_ids[] = ConfigEntityStorage::getIDFromConfigName($config_name, $field_storage_config_prefix);
       }

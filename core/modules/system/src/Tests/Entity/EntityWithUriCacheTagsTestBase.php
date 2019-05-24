@@ -38,7 +38,7 @@ abstract class EntityWithUriCacheTagsTestBase extends EntityCacheTagsTestBase {
 
     // Generate the standardized entity cache tags.
     $cache_tag = $this->entity->getCacheTags();
-    $view_cache_tag = \Drupal::entityManager()->getViewBuilder($entity_type)->getCacheTags();
+    $view_cache_tag = \Drupal::entityTypeManager()->getViewBuilder($entity_type)->getCacheTags();
     $render_cache_tag = 'rendered';
 
     $this->pass("Test entity.", 'Debug');
@@ -49,7 +49,7 @@ abstract class EntityWithUriCacheTagsTestBase extends EntityCacheTagsTestBase {
 
     // Also verify the existence of an entity render cache entry, if this entity
     // type supports render caching.
-    if (\Drupal::entityManager()->getDefinition($entity_type)->isRenderCacheable()) {
+    if (\Drupal::entityTypeManager()->getDefinition($entity_type)->isRenderCacheable()) {
       $cache_keys = ['entity_view', $entity_type, $this->entity->id(), $view_mode];
       $cid = $this->createCacheId($cache_keys, $entity_cache_contexts);
       $redirected_cid = NULL;

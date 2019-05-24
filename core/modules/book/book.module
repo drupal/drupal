@@ -96,7 +96,7 @@ function book_node_links_alter(array &$links, NodeInterface $node, array &$conte
     if (isset($node->book['depth'])) {
       if ($context['view_mode'] == 'full' && node_is_page($node)) {
         $child_type = \Drupal::config('book.settings')->get('child_type');
-        $access_control_handler = \Drupal::entityManager()->getAccessControlHandler('node');
+        $access_control_handler = \Drupal::entityTypeManager()->getAccessControlHandler('node');
         if (($account->hasPermission('add content to books') || $account->hasPermission('administer book outlines')) && $access_control_handler->createAccess($child_type) && $node->isPublished() && $node->book['depth'] < BookManager::BOOK_MAX_DEPTH) {
           $book_links['book_add_child'] = [
             'title' => t('Add child page'),

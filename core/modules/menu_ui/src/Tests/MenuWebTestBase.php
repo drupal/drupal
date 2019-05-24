@@ -37,7 +37,7 @@ abstract class MenuWebTestBase extends WebTestBase {
     $menu_link_manager = \Drupal::service('plugin.manager.menu.link');
     $menu_link_manager->resetDefinitions();
     // Reset the static load cache.
-    \Drupal::entityManager()->getStorage('menu_link_content')->resetCache();
+    \Drupal::entityTypeManager()->getStorage('menu_link_content')->resetCache();
     $definition = $menu_link_manager->getDefinition($menu_plugin_id);
 
     $entity = NULL;
@@ -46,7 +46,7 @@ abstract class MenuWebTestBase extends WebTestBase {
     if (strpos($menu_plugin_id, 'menu_link_content') === 0) {
       list(, $uuid) = explode(':', $menu_plugin_id, 2);
       /** @var \Drupal\menu_link_content\Entity\MenuLinkContent $entity */
-      $entity = \Drupal::entityManager()->loadEntityByUuid('menu_link_content', $uuid);
+      $entity = \Drupal::service('entity.repository')->loadEntityByUuid('menu_link_content', $uuid);
     }
 
     if (isset($expected_item['children'])) {

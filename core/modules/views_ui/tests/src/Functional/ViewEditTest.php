@@ -58,7 +58,7 @@ class ViewEditTest extends UITestBase {
 
     // Save the view, and test the new ID has been saved.
     $this->drupalPostForm(NULL, [], 'Save');
-    $view = \Drupal::entityManager()->getStorage('view')->load('test_view');
+    $view = \Drupal::entityTypeManager()->getStorage('view')->load('test_view');
     $displays = $view->get('display');
     $this->assertTrue(!empty($displays['test_1']), 'Display data found for new display ID key.');
     $this->assertIdentical($displays['test_1']['id'], 'test_1', 'New display ID matches the display ID key.');

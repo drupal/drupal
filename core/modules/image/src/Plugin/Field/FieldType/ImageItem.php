@@ -481,7 +481,7 @@ class ImageItem extends FileItem {
     if (isset($element['fids']['#value'][0])) {
       $value = $element['fids']['#value'][0];
       // Convert the file ID to a uuid.
-      if ($file = \Drupal::entityManager()->getStorage('file')->load($value)) {
+      if ($file = \Drupal::entityTypeManager()->getStorage('file')->load($value)) {
         $value = $file->uuid();
       }
     }

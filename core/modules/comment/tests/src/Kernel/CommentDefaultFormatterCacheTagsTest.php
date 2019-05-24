@@ -74,7 +74,7 @@ class CommentDefaultFormatterCacheTagsTest extends EntityKernelTestBase {
     $commented_entity->save();
 
     // Verify cache tags on the rendered entity before it has comments.
-    $build = \Drupal::entityManager()
+    $build = \Drupal::entityTypeManager()
       ->getViewBuilder('entity_test')
       ->view($commented_entity);
     $renderer->renderRoot($build);
@@ -117,7 +117,7 @@ class CommentDefaultFormatterCacheTagsTest extends EntityKernelTestBase {
     $commented_entity = $storage->load($commented_entity->id());
 
     // Verify cache tags on the rendered entity when it has comments.
-    $build = \Drupal::entityManager()
+    $build = \Drupal::entityTypeManager()
       ->getViewBuilder('entity_test')
       ->view($commented_entity);
     $renderer->renderRoot($build);
@@ -142,7 +142,7 @@ class CommentDefaultFormatterCacheTagsTest extends EntityKernelTestBase {
     // builder elements bubble up outside of the entity and we can check that
     // it got the correct cache max age.
     $build = ['#type' => 'container'];
-    $build['entity'] = \Drupal::entityManager()
+    $build['entity'] = \Drupal::entityTypeManager()
       ->getViewBuilder('entity_test')
       ->view($commented_entity);
     $renderer->renderRoot($build);

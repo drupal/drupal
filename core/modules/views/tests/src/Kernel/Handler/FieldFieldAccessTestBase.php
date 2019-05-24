@@ -83,7 +83,7 @@ abstract class FieldFieldAccessTestBase extends ViewsKernelTestBase {
   protected function assertFieldAccess($entity_type_id, $field_name, $field_content) {
     \Drupal::state()->set('views_field_access_test-field', $field_name);
 
-    $entity_type = \Drupal::entityManager()->getDefinition($entity_type_id);
+    $entity_type = \Drupal::entityTypeManager()->getDefinition($entity_type_id);
     $view_id = $this->randomMachineName();
     $data_table = $entity_type->getDataTable();
     // Use the data table as long as the field is not 'uuid'. This is the only

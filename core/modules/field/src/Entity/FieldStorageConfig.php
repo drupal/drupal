@@ -351,7 +351,7 @@ class FieldStorageConfig extends ConfigEntityBase implements FieldStorageConfigI
     $this->addDependencies($definition['class']::calculateStorageDependencies($this));
 
     // Ensure the field is dependent on the provider of the entity type.
-    $entity_type = \Drupal::entityManager()->getDefinition($this->entity_type);
+    $entity_type = \Drupal::entityTypeManager()->getDefinition($this->entity_type);
     $this->addDependency('module', $entity_type->getProvider());
     return $this;
   }
@@ -389,10 +389,10 @@ class FieldStorageConfig extends ConfigEntityBase implements FieldStorageConfigI
   public function postSave(EntityStorageInterface $storage, $update = TRUE) {
     if ($update) {
       // Invalidate the render cache for all affected entities.
-      $entity_manager = \Drupal::entityManager();
+      $entity_type_manager = \Drupal::entityTypeManager();
       $entity_type = $this->getTargetEntityTypeId();
-      if ($entity_manager->hasHandler($entity_type, 'view_builder')) {
-        $entity_manager->getViewBuilder($entity_type)->resetCache();
+      if ($entity_type_manager->hasHandler($entity_type, 'view_builder')) {
+        $entity_type_manager->getViewBuilder($entity_type)->resetCache();
       }
     }
   }
@@ -707,7 +707,7 @@ class FieldStorageConfig extends ConfigEntityBase implements FieldStorageConfigI
    *   TRUE if the field has data for any entity; FALSE otherwise.
    */
   public function hasData() {
-    return \Drupal::entityManager()->getStorage($this->entity_type)->countFieldData($this, TRUE);
+    return \Drupal::entityTypeManager()->getStorage($this->entity_type)->countFieldData($this, TRUE);
   }
 
   /**
@@ -806,7 +806,7 @@ class FieldStorageConfig extends ConfigEntityBase implements FieldStorageConfigI
    *   otherwise NULL.
    */
   public static function loadByName($entity_type_id, $field_name) {
-    return \Drupal::entityManager()->getStorage('field_storage_config')->load($entity_type_id . '.' . $field_name);
+    return \Drupal::entityTypeManager()->getStorage('field_storage_config')->load($entity_type_id . '.' . $field_name);
   }
 
   /**

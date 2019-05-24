@@ -107,7 +107,7 @@ class ConfigTranslationOverviewTest extends BrowserTestBase {
         $this->assertIdentical('Translate', $dropbutton->getText());
       }
 
-      $entity_type = \Drupal::entityManager()->getDefinition($test_entity->getEntityTypeId());
+      $entity_type = \Drupal::entityTypeManager()->getDefinition($test_entity->getEntityTypeId());
       $this->drupalGet($base_url . '/translate');
 
       $title = $test_entity->label() . ' ' . $entity_type->getLowercaseLabel();

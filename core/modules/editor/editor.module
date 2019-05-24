@@ -624,7 +624,7 @@ function editor_filter_format_presave(FilterFormatInterface $format) {
   }
 
   /** @var \Drupal\filter\FilterFormatInterface $original */
-  $original = \Drupal::entityManager()
+  $original = \Drupal::entityTypeManager()
     ->getStorage('filter_format')
     ->loadUnchanged($format->getOriginalId());
 

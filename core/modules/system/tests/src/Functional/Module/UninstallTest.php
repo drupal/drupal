@@ -104,7 +104,7 @@ class UninstallTest extends BrowserTestBase {
     }
     $entity_types = array_unique($entity_types);
     foreach ($entity_types as $entity_type_id) {
-      $entity_type = \Drupal::entityManager()->getDefinition($entity_type_id);
+      $entity_type = \Drupal::entityTypeManager()->getDefinition($entity_type_id);
       // Add h3's since the entity type label is often repeated in the entity
       // labels.
       $this->assertRaw('<h3>' . $entity_type->getLabel() . '</h3>');

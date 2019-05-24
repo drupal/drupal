@@ -143,7 +143,7 @@ function aggregator_entity_extra_field_info() {
 function aggregator_cron() {
   $queue = \Drupal::queue('aggregator_feeds');
 
-  $ids = \Drupal::entityManager()->getStorage('aggregator_feed')->getFeedIdsToRefresh();
+  $ids = \Drupal::entityTypeManager()->getStorage('aggregator_feed')->getFeedIdsToRefresh();
   foreach (Feed::loadMultiple($ids) as $feed) {
     if ($queue->createItem($feed)) {
       // Add timestamp to avoid queueing item more than once.

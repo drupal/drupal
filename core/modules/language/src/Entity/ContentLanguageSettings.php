@@ -190,7 +190,7 @@ class ContentLanguageSettings extends ConfigEntityBase implements ContentLanguag
     if ($entity_type_id == NULL || $bundle == NULL) {
       return NULL;
     }
-    $config = \Drupal::entityManager()->getStorage('language_content_settings')->load($entity_type_id . '.' . $bundle);
+    $config = \Drupal::entityTypeManager()->getStorage('language_content_settings')->load($entity_type_id . '.' . $bundle);
     if ($config == NULL) {
       $config = ContentLanguageSettings::create(['target_entity_type_id' => $entity_type_id, 'target_bundle' => $bundle]);
     }
@@ -204,7 +204,7 @@ class ContentLanguageSettings extends ConfigEntityBase implements ContentLanguag
     parent::calculateDependencies();
 
     // Create dependency on the bundle.
-    $entity_type = \Drupal::entityManager()->getDefinition($this->target_entity_type_id);
+    $entity_type = \Drupal::entityTypeManager()->getDefinition($this->target_entity_type_id);
     $bundle_config_dependency = $entity_type->getBundleConfigDependency($this->target_bundle);
     $this->addDependency($bundle_config_dependency['type'], $bundle_config_dependency['name']);
 

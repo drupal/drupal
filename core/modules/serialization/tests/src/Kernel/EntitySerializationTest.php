@@ -88,7 +88,7 @@ class EntitySerializationTest extends NormalizerTestBase {
     ])->save();
 
     // Create a test user to use as the entity owner.
-    $this->user = \Drupal::entityManager()->getStorage('user')->create([
+    $this->user = \Drupal::entityTypeManager()->getStorage('user')->create([
       'name' => 'serialization_test_user',
       'mail' => 'foo@example.com',
       'pass' => '123456',

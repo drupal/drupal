@@ -39,11 +39,11 @@ function image_field_views_data(FieldStorageConfigInterface $field_storage) {
 function image_field_views_data_views_data_alter(array &$data, FieldStorageConfigInterface $field_storage) {
   $entity_type_id = $field_storage->getTargetEntityTypeId();
   $field_name = $field_storage->getName();
-  $entity_manager = \Drupal::entityManager();
-  $entity_type = $entity_manager->getDefinition($entity_type_id);
+  $entity_type_manager = \Drupal::entityTypeManager();
+  $entity_type = $entity_type_manager->getDefinition($entity_type_id);
   $pseudo_field_name = 'reverse_' . $field_name . '_' . $entity_type_id;
   /** @var \Drupal\Core\Entity\Sql\DefaultTableMapping $table_mapping */
-  $table_mapping = $entity_manager->getStorage($entity_type_id)->getTableMapping();
+  $table_mapping = $entity_type_manager->getStorage($entity_type_id)->getTableMapping();
 
   list($label) = views_entity_field_label($entity_type_id, $field_name);
 

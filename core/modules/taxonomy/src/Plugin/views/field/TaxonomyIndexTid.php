@@ -139,7 +139,7 @@ class TaxonomyIndexTid extends PrerenderList {
       if (empty($this->options['limit'])) {
         $vocabs = [];
       }
-      $result = \Drupal::entityManager()->getStorage('taxonomy_term')->getNodeTerms($nids, $vocabs);
+      $result = \Drupal::entityTypeManager()->getStorage('taxonomy_term')->getNodeTerms($nids, $vocabs);
 
       foreach ($result as $node_nid => $data) {
         foreach ($data as $tid => $term) {

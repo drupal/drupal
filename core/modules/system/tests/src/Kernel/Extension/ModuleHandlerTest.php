@@ -269,7 +269,7 @@ class ModuleHandlerTest extends KernelTestBase {
     $this->assertTrue($this->moduleHandler()->moduleExists('module_test'), 'Test module is enabled.');
 
     $this->installSchema('user', 'users_data');
-    $entity_types = \Drupal::entityManager()->getDefinitions();
+    $entity_types = \Drupal::entityTypeManager()->getDefinitions();
     foreach ($entity_types as $entity_type) {
       if ('entity_test' == $entity_type->getProvider()) {
         $this->installEntitySchema($entity_type->id());

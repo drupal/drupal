@@ -729,7 +729,7 @@ function hook_post_update_NAME(&$sandbox) {
   $block_update_8001 = \Drupal::keyValue('update_backup')->get('block_update_8001', []);
 
   $block_ids = array_keys($block_update_8001);
-  $block_storage = \Drupal::entityManager()->getStorage('block');
+  $block_storage = \Drupal::entityTypeManager()->getStorage('block');
   $blocks = $block_storage->loadMultiple($block_ids);
   /** @var $blocks \Drupal\block\BlockInterface[] */
   foreach ($blocks as $block) {

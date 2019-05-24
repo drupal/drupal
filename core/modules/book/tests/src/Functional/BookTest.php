@@ -405,7 +405,7 @@ class BookTest extends BrowserTestBase {
     $edit = [];
     $edit['book[bid]'] = '1';
     $this->drupalPostForm('node/' . $empty_book->id() . '/outline', $edit, t('Add to book outline'));
-    $node = \Drupal::entityManager()->getStorage('node')->load($empty_book->id());
+    $node = \Drupal::entityTypeManager()->getStorage('node')->load($empty_book->id());
     // Test the book array.
     $this->assertEqual($node->book['nid'], $empty_book->id());
     $this->assertEqual($node->book['bid'], $empty_book->id());
@@ -428,7 +428,7 @@ class BookTest extends BrowserTestBase {
     $edit = [];
     $edit['book[bid]'] = $node->id();
     $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, t('Save'));
-    $node = \Drupal::entityManager()->getStorage('node')->load($node->id());
+    $node = \Drupal::entityTypeManager()->getStorage('node')->load($node->id());
 
     // Test the book array.
     $this->assertEqual($node->book['nid'], $node->id());
@@ -519,7 +519,7 @@ class BookTest extends BrowserTestBase {
     $this->drupalLogin($this->bookAuthor);
     $this->book = $this->createBookNode('new');
     // Reset any internal static caching.
-    $node_storage = \Drupal::entityManager()->getStorage('node');
+    $node_storage = \Drupal::entityTypeManager()->getStorage('node');
     $node_storage->resetCache();
 
     // Log in as user without access to the book node, so no 'node test view'

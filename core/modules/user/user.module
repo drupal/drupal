@@ -208,7 +208,7 @@ function user_entity_extra_field_info() {
 function user_load_multiple(array $uids = NULL, $reset = FALSE) {
   @trigger_error('user_load_multiple() is deprecated in Drupal 8.0.0 and will be removed before Drupal 9.0.0. Use \Drupal\user\Entity\User::loadMultiple(). See https://www.drupal.org/node/2266845', E_USER_DEPRECATED);
   if ($reset) {
-    \Drupal::entityManager()->getStorage('user')->resetCache($uids);
+    \Drupal::entityTypeManager()->getStorage('user')->resetCache($uids);
   }
   return User::loadMultiple($uids);
 }
@@ -234,7 +234,7 @@ function user_load_multiple(array $uids = NULL, $reset = FALSE) {
 function user_load($uid, $reset = FALSE) {
   @trigger_error('user_load() is deprecated in Drupal 8.0.0 and will be removed before Drupal 9.0.0. Use \Drupal\user\Entity\User::load(). See https://www.drupal.org/node/2266845', E_USER_DEPRECATED);
   if ($reset) {
-    \Drupal::entityManager()->getStorage('user')->resetCache([$uid]);
+    \Drupal::entityTypeManager()->getStorage('user')->resetCache([$uid]);
   }
   return User::load($uid);
 }
@@ -557,7 +557,7 @@ function user_login_finalize(UserInterface $account) {
   // Update the user table timestamp noting user has logged in.
   // This is also used to invalidate one-time login links.
   $account->setLastLoginTime(REQUEST_TIME);
-  \Drupal::entityManager()
+  \Drupal::entityTypeManager()
     ->getStorage('user')
     ->updateLastLoginTimestamp($account);
 
@@ -1075,7 +1075,7 @@ function user_user_role_insert(RoleInterface $role) {
  */
 function user_user_role_delete(RoleInterface $role) {
   // Delete role references for all users.
-  $user_storage = \Drupal::entityManager()->getStorage('user');
+  $user_storage = \Drupal::entityTypeManager()->getStorage('user');
   $user_storage->deleteRoleReferences([$role->id()]);
 
   // Ignore the authenticated and anonymous roles or the role is being synced.

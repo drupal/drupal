@@ -38,7 +38,7 @@ function file_field_views_data(FieldStorageConfigInterface $field_storage) {
  */
 function file_field_views_data_views_data_alter(array &$data, FieldStorageConfigInterface $field_storage) {
   $entity_type_id = $field_storage->getTargetEntityTypeId();
-  $entity_manager = \Drupal::entityManager();
+  $entity_manager = \Drupal::entityTypeManager();
   $entity_type = $entity_manager->getDefinition($entity_type_id);
   $field_name = $field_storage->getName();
   $pseudo_field_name = 'reverse_' . $field_name . '_' . $entity_type_id;

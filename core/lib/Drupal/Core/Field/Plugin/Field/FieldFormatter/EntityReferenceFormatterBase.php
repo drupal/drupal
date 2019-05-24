@@ -136,7 +136,7 @@ abstract class EntityReferenceFormatterBase extends FormatterBase {
     }
     if ($ids) {
       $target_type = $this->getFieldSetting('target_type');
-      $target_entities = \Drupal::entityManager()->getStorage($target_type)->loadMultiple($ids);
+      $target_entities = \Drupal::entityTypeManager()->getStorage($target_type)->loadMultiple($ids);
     }
 
     // For each item, pre-populate the loaded entity in $item->entity, and set

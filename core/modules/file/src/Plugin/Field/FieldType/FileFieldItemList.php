@@ -60,7 +60,7 @@ class FileFieldItemList extends EntityReferenceFieldItemList {
 
       // Decrement file usage by 1 for files that were removed from the field.
       $removed_ids = array_filter(array_diff($original_ids, $ids));
-      $removed_files = \Drupal::entityManager()->getStorage('file')->loadMultiple($removed_ids);
+      $removed_files = \Drupal::entityTypeManager()->getStorage('file')->loadMultiple($removed_ids);
       foreach ($removed_files as $file) {
         \Drupal::service('file.usage')->delete($file, 'file', $entity->getEntityTypeId(), $entity->id());
       }

@@ -25,7 +25,7 @@ class NodeWizardTest extends WizardTestBase {
     $view['page[style][row_plugin]'] = 'titles';
     $this->drupalPostForm('admin/structure/views/add', $view, t('Save and edit'));
 
-    $view_storage_controller = \Drupal::entityManager()->getStorage('view');
+    $view_storage_controller = \Drupal::entityTypeManager()->getStorage('view');
     /** @var \Drupal\views\Entity\View $view */
     $view = $view_storage_controller->load($view['id']);
 

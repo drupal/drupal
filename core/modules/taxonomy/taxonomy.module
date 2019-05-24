@@ -289,7 +289,7 @@ function taxonomy_term_is_page(Term $term) {
  * Clear all static cache variables for terms.
  */
 function taxonomy_terms_static_reset() {
-  \Drupal::entityManager()->getStorage('taxonomy_term')->resetCache();
+  \Drupal::entityTypeManager()->getStorage('taxonomy_term')->resetCache();
 }
 
 /**
@@ -299,7 +299,7 @@ function taxonomy_terms_static_reset() {
  *   An array of ids to reset in the entity cache.
  */
 function taxonomy_vocabulary_static_reset(array $ids = NULL) {
-  \Drupal::entityManager()->getStorage('taxonomy_vocabulary')->resetCache($ids);
+  \Drupal::entityTypeManager()->getStorage('taxonomy_vocabulary')->resetCache($ids);
 }
 
 /**
@@ -513,7 +513,7 @@ function taxonomy_node_insert(EntityInterface $node) {
 function taxonomy_build_node_index($node) {
   // We maintain a denormalized table of term/node relationships, containing
   // only data for current, published nodes.
-  if (!\Drupal::config('taxonomy.settings')->get('maintain_index_table') || !(\Drupal::entityManager()->getStorage('node') instanceof SqlContentEntityStorage)) {
+  if (!\Drupal::config('taxonomy.settings')->get('maintain_index_table') || !(\Drupal::entityTypeManager()->getStorage('node') instanceof SqlContentEntityStorage)) {
     return;
   }
 

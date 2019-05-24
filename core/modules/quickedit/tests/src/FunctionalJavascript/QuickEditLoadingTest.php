@@ -138,7 +138,7 @@ class QuickEditLoadingTest extends WebDriverTestBase {
     $nid = $this->testNode->id();
     // There should be only one revision so far.
     $node = Node::load($nid);
-    $vids = \Drupal::entityManager()->getStorage('node')->revisionIds($node);
+    $vids = \Drupal::entityTypeManager()->getStorage('node')->revisionIds($node);
     $this->assertCount(1, $vids, 'The node has only one revision.');
     $original_log = $node->revision_log->value;
 
@@ -164,7 +164,7 @@ class QuickEditLoadingTest extends WebDriverTestBase {
     $assert->assertWaitOnAjaxRequest();
 
     $node = Node::load($nid);
-    $vids = \Drupal::entityManager()->getStorage('node')->revisionIds($node);
+    $vids = \Drupal::entityTypeManager()->getStorage('node')->revisionIds($node);
     $this->assertCount(1, $vids, 'The node has only one revision.');
     $this->assertSame($original_log, $node->revision_log->value, 'The revision log message is unchanged.');
 

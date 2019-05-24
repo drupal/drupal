@@ -41,7 +41,7 @@ class SevenSecondaryLocalTasksConvertedIntoBlockUpdateTest extends UpdatePathTes
     $this->runUpdates();
 
     /** @var \Drupal\block\BlockInterface $block_storage */
-    $block_storage = \Drupal::entityManager()->getStorage('block');
+    $block_storage = \Drupal::entityTypeManager()->getStorage('block');
 
     // Disable maintenance mode.
     // @todo Can be removed once maintenance mode is automatically turned off

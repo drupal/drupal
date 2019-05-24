@@ -125,7 +125,7 @@ class Feed extends ContentEntityBase implements FeedInterface {
         ->condition('settings.feed', array_keys($entities))
         ->execute();
       if ($ids) {
-        $block_storage = \Drupal::entityManager()->getStorage('block');
+        $block_storage = \Drupal::entityTypeManager()->getStorage('block');
         $block_storage->delete($block_storage->loadMultiple($ids));
       }
     }

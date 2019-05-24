@@ -487,7 +487,7 @@ class FilterAPITest extends EntityKernelTestBase {
     $this->assertTrue(isset($filters['filter_test_restrict_tags_and_attributes']), 'The filter plugin filter_test_restrict_tags_and_attributes is configured by the filtered_html filter format.');
 
     drupal_static_reset('filter_formats');
-    \Drupal::entityManager()->getStorage('filter_format')->resetCache();
+    \Drupal::entityTypeManager()->getStorage('filter_format')->resetCache();
     $module_data = \Drupal::service('extension.list.module')->reset()->getList();
     $this->assertFalse(isset($module_data['filter_test']->info['required']), 'The filter_test module is required.');
 
@@ -500,7 +500,7 @@ class FilterAPITest extends EntityKernelTestBase {
 
     // Verify the filter format still exists but the dependency and filter is
     // gone.
-    \Drupal::entityManager()->getStorage('filter_format')->resetCache();
+    \Drupal::entityTypeManager()->getStorage('filter_format')->resetCache();
     $filter_format = FilterFormat::load('filtered_html');
     $this->assertEqual([], $filter_format->getDependencies());
     // Use the get method since the FilterFormat::filters() method only returns

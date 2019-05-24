@@ -108,7 +108,7 @@ class EditorImageDialogTest extends EntityKernelTestBase {
       ->addBuildInfo('args', [$this->editor]);
 
     $form_builder = $this->container->get('form_builder');
-    $form_object = new EditorImageDialog(\Drupal::entityManager()->getStorage('file'));
+    $form_object = new EditorImageDialog(\Drupal::entityTypeManager()->getStorage('file'));
     $form_id = $form_builder->getFormId($form_object, $form_state);
     $form = $form_builder->retrieveForm($form_id, $form_state);
     $form_builder->prepareForm($form_id, $form, $form_state);

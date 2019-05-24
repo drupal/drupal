@@ -270,6 +270,7 @@ class Drupal {
    *   correct interface or service.
    */
   public static function entityManager() {
+    @trigger_error("\Drupal::entityManager() is deprecated in Drupal 8.0.0 and will be removed before Drupal 9.0.0. Use \Drupal::entityTypeManager() instead in most cases. If the needed method is not on \Drupal\Core\Entity\EntityTypeManagerInterface, see the deprecated \Drupal\Core\Entity\EntityManager to find the correct interface or service. See https://www.drupal.org/node/2549139", E_USER_DEPRECATED);
     return static::getContainer()->get('entity.manager');
   }
 

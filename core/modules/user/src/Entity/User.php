@@ -420,8 +420,8 @@ class User extends ContentEntityBase implements UserInterface {
 
       // @todo Use the entity factory once available, see
       //   https://www.drupal.org/node/1867228.
-      $entity_manager = \Drupal::entityManager();
-      $entity_type = $entity_manager->getDefinition('user');
+      $entity_type_manager = \Drupal::entityTypeManager();
+      $entity_type = $entity_type_manager->getDefinition('user');
       $class = $entity_type->getClass();
 
       static::$anonymousUser = new $class([
@@ -557,7 +557,7 @@ class User extends ContentEntityBase implements UserInterface {
    *   The role storage object.
    */
   protected function getRoleStorage() {
-    return \Drupal::entityManager()->getStorage('user_role');
+    return \Drupal::entityTypeManager()->getStorage('user_role');
   }
 
   /**

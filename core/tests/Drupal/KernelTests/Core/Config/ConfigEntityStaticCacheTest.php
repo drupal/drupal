@@ -86,7 +86,7 @@ class ConfigEntityStaticCacheTest extends KernelTestBase {
    */
   public function testConfigOverride() {
     /** @var \Drupal\Core\Config\Entity\ConfigEntityStorage $storage */
-    $storage = \Drupal::entityManager()->getStorage($this->entityTypeId);
+    $storage = \Drupal::entityTypeManager()->getStorage($this->entityTypeId);
     // Prime the cache prior to adding a config override.
     $storage->load($this->entityId);
 

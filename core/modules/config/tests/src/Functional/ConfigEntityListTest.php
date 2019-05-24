@@ -30,7 +30,7 @@ class ConfigEntityListTest extends BrowserTestBase {
     parent::setUp();
     // Delete the override config_test entity since it is not required by this
     // test.
-    \Drupal::entityManager()->getStorage('config_test')->load('override')->delete();
+    \Drupal::entityTypeManager()->getStorage('config_test')->load('override')->delete();
     $this->drupalPlaceBlock('local_actions_block');
   }
 
@@ -38,7 +38,7 @@ class ConfigEntityListTest extends BrowserTestBase {
    * Tests entity list builder methods.
    */
   public function testList() {
-    $controller = \Drupal::entityManager()->getListBuilder('config_test');
+    $controller = \Drupal::entityTypeManager()->getListBuilder('config_test');
 
     // Test getStorage() method.
     $this->assertTrue($controller->getStorage() instanceof EntityStorageInterface, 'EntityStorage instance in storage.');
@@ -252,7 +252,7 @@ class ConfigEntityListTest extends BrowserTestBase {
   public function testPager() {
     $this->drupalLogin($this->drupalCreateUser(['administer site configuration']));
 
-    $storage = \Drupal::entityManager()->getListBuilder('config_test')->getStorage();
+    $storage = \Drupal::service('entity_type.manager')->getListBuilder('config_test')->getStorage();
 
     // Create 51 test entities.
     for ($i = 1; $i < 52; $i++) {

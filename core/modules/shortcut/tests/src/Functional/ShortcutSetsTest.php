@@ -91,7 +91,7 @@ class ShortcutSetsTest extends ShortcutTestBase {
     $this->drupalPostForm(NULL, $edit, t('Save'));
     $this->assertRaw(t('The shortcut set has been updated.'));
 
-    \Drupal::entityManager()->getStorage('shortcut')->resetCache();
+    \Drupal::entityTypeManager()->getStorage('shortcut')->resetCache();
     // Check to ensure that the shortcut weights have changed and that
     // ShortcutSet::.getShortcuts() returns shortcuts in the new order.
     $this->assertIdentical(array_reverse(array_keys($shortcuts)), array_keys($set->getShortcuts()));
@@ -117,7 +117,7 @@ class ShortcutSetsTest extends ShortcutTestBase {
   public function testShortcutSetAssign() {
     $new_set = $this->generateShortcutSet($this->randomMachineName());
 
-    \Drupal::entityManager()->getStorage('shortcut_set')->assignUser($new_set, $this->shortcutUser);
+    \Drupal::entityTypeManager()->getStorage('shortcut_set')->assignUser($new_set, $this->shortcutUser);
     $current_set = shortcut_current_displayed_set($this->shortcutUser);
     $this->assertTrue($new_set->id() == $current_set->id(), "Successfully switched another user's shortcut set.");
   }
@@ -169,7 +169,7 @@ class ShortcutSetsTest extends ShortcutTestBase {
   public function testShortcutSetUnassign() {
     $new_set = $this->generateShortcutSet($this->randomMachineName());
 
-    $shortcut_set_storage = \Drupal::entityManager()->getStorage('shortcut_set');
+    $shortcut_set_storage = \Drupal::entityTypeManager()->getStorage('shortcut_set');
     $shortcut_set_storage->assignUser($new_set, $this->shortcutUser);
     $shortcut_set_storage->unassignUser($this->shortcutUser);
     $current_set = shortcut_current_displayed_set($this->shortcutUser);

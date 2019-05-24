@@ -557,9 +557,9 @@ function hook_field_views_data(\Drupal\field\FieldStorageConfigInterface $field_
 function hook_field_views_data_alter(array &$data, \Drupal\field\FieldStorageConfigInterface $field_storage) {
   $entity_type_id = $field_storage->getTargetEntityTypeId();
   $field_name = $field_storage->getName();
-  $entity_type = \Drupal::entityManager()->getDefinition($entity_type_id);
+  $entity_type = \Drupal::entityTypeManager()->getDefinition($entity_type_id);
   $pseudo_field_name = 'reverse_' . $field_name . '_' . $entity_type_id;
-  $table_mapping = \Drupal::entityManager()->getStorage($entity_type_id)->getTableMapping();
+  $table_mapping = \Drupal::entityTypeManager()->getStorage($entity_type_id)->getTableMapping();
 
   list($label) = views_entity_field_label($entity_type_id, $field_name);
 
@@ -614,10 +614,10 @@ function hook_field_views_data_views_data_alter(array &$data, \Drupal\field\Fiel
   $field_name = $field->getName();
   $data_key = 'field_data_' . $field_name;
   $entity_type_id = $field->entity_type;
-  $entity_type = \Drupal::entityManager()->getDefinition($entity_type_id);
+  $entity_type = \Drupal::entityTypeManager()->getDefinition($entity_type_id);
   $pseudo_field_name = 'reverse_' . $field_name . '_' . $entity_type_id;
   list($label) = views_entity_field_label($entity_type_id, $field_name);
-  $table_mapping = \Drupal::entityManager()->getStorage($entity_type_id)->getTableMapping();
+  $table_mapping = \Drupal::entityTypeManager()->getStorage($entity_type_id)->getTableMapping();
 
   // Views data for this field is in $data[$data_key].
   $data[$data_key][$pseudo_field_name]['relationship'] = [

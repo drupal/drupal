@@ -43,7 +43,7 @@ class EntityReferenceFieldItemList extends FieldItemList implements EntityRefere
     // Load and add the existing entities.
     if ($ids) {
       $target_type = $this->getFieldDefinition()->getSetting('target_type');
-      $entities = \Drupal::entityManager()->getStorage($target_type)->loadMultiple($ids);
+      $entities = \Drupal::entityTypeManager()->getStorage($target_type)->loadMultiple($ids);
       foreach ($ids as $delta => $target_id) {
         if (isset($entities[$target_id])) {
           $target_entities[$delta] = $entities[$target_id];
@@ -75,7 +75,7 @@ class EntityReferenceFieldItemList extends FieldItemList implements EntityRefere
         $entity_ids = \Drupal::entityQuery($target_type)
           ->condition('uuid', $uuids, 'IN')
           ->execute();
-        $entities = \Drupal::entityManager()
+        $entities = \Drupal::entityTypeManager()
           ->getStorage($target_type)
           ->loadMultiple($entity_ids);
 
@@ -117,7 +117,7 @@ class EntityReferenceFieldItemList extends FieldItemList implements EntityRefere
       }
       $ids[] = $default_value[$delta]['target_id'];
     }
-    $entities = \Drupal::entityManager()
+    $entities = \Drupal::entityTypeManager()
       ->getStorage($this->getSetting('target_type'))
       ->loadMultiple($ids);
 

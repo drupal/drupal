@@ -44,7 +44,7 @@ class NodeSaveTest extends NodeTestBase {
    */
   public function testImport() {
     // Node ID must be a number that is not in the database.
-    $nids = \Drupal::entityManager()->getStorage('node')->getQuery()
+    $nids = \Drupal::entityTypeManager()->getStorage('node')->getQuery()
       ->sort('nid', 'DESC')
       ->range(0, 1)
       ->execute();

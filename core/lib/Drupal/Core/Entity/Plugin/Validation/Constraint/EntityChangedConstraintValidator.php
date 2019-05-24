@@ -17,7 +17,7 @@ class EntityChangedConstraintValidator extends ConstraintValidator {
     if (isset($entity)) {
       /** @var \Drupal\Core\Entity\EntityInterface $entity */
       if (!$entity->isNew()) {
-        $saved_entity = \Drupal::entityManager()->getStorage($entity->getEntityTypeId())->loadUnchanged($entity->id());
+        $saved_entity = \Drupal::entityTypeManager()->getStorage($entity->getEntityTypeId())->loadUnchanged($entity->id());
         // Ensure that all the entity translations are the same as or newer
         // than their current version in the storage in order to avoid
         // reverting other changes. In fact the entity object that is being

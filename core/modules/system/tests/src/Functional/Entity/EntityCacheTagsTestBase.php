@@ -203,7 +203,7 @@ abstract class EntityCacheTagsTestBase extends PageCacheTagsTestBase {
    * chooses 'default'.
    */
   protected function selectViewMode($entity_type) {
-    $view_modes = \Drupal::entityManager()
+    $view_modes = \Drupal::entityTypeManager()
       ->getStorage('entity_view_mode')
       ->loadByProperties(['targetEntityType' => $entity_type]);
 
@@ -287,7 +287,7 @@ abstract class EntityCacheTagsTestBase extends PageCacheTagsTestBase {
     }
 
     // Create an entity that does reference the entity being tested.
-    $label_key = \Drupal::entityManager()->getDefinition($entity_type)->getKey('label');
+    $label_key = \Drupal::entityTypeManager()->getDefinition($entity_type)->getKey('label');
     $referencing_entity = $this->container->get('entity_type.manager')
       ->getStorage($entity_type)
       ->create([
@@ -354,7 +354,7 @@ abstract class EntityCacheTagsTestBase extends PageCacheTagsTestBase {
 
     $view_cache_tag = [];
     if ($this->entity->getEntityType()->hasHandlerClass('view_builder')) {
-      $view_cache_tag = \Drupal::entityManager()->getViewBuilder($entity_type)
+      $view_cache_tag = \Drupal::entityTypeManager()->getViewBuilder($entity_type)
         ->getCacheTags();
     }
 
@@ -362,7 +362,7 @@ abstract class EntityCacheTagsTestBase extends PageCacheTagsTestBase {
     $cache_context_tags = $context_metadata->getCacheTags();
 
     // Generate the cache tags for the (non) referencing entities.
-    $referencing_entity_cache_tags = Cache::mergeTags($this->referencingEntity->getCacheTags(), \Drupal::entityManager()->getViewBuilder('entity_test')->getCacheTags());
+    $referencing_entity_cache_tags = Cache::mergeTags($this->referencingEntity->getCacheTags(), \Drupal::entityTypeManager()->getViewBuilder('entity_test')->getCacheTags());
     // Includes the main entity's cache tags, since this entity references it.
     $referencing_entity_cache_tags = Cache::mergeTags($referencing_entity_cache_tags, $this->entity->getCacheTags());
     $referencing_entity_cache_tags = Cache::mergeTags($referencing_entity_cache_tags, $this->getAdditionalCacheTagsForEntity($this->entity));
@@ -370,7 +370,7 @@ abstract class EntityCacheTagsTestBase extends PageCacheTagsTestBase {
     $referencing_entity_cache_tags = Cache::mergeTags($referencing_entity_cache_tags, $cache_context_tags);
     $referencing_entity_cache_tags = Cache::mergeTags($referencing_entity_cache_tags, ['rendered']);
 
-    $non_referencing_entity_cache_tags = Cache::mergeTags($this->nonReferencingEntity->getCacheTags(), \Drupal::entityManager()->getViewBuilder('entity_test')->getCacheTags());
+    $non_referencing_entity_cache_tags = Cache::mergeTags($this->nonReferencingEntity->getCacheTags(), \Drupal::entityTypeManager()->getViewBuilder('entity_test')->getCacheTags());
     $non_referencing_entity_cache_tags = Cache::mergeTags($non_referencing_entity_cache_tags, ['rendered']);
 
     // Generate the cache tags for all two possible entity listing paths.
@@ -633,7 +633,7 @@ abstract class EntityCacheTagsTestBase extends PageCacheTagsTestBase {
     $this->verifyPageCache($non_referencing_entity_url, 'HIT');
 
     // Verify cache hits.
-    $referencing_entity_cache_tags = Cache::mergeTags($this->referencingEntity->getCacheTags(), \Drupal::entityManager()->getViewBuilder('entity_test')->getCacheTags());
+    $referencing_entity_cache_tags = Cache::mergeTags($this->referencingEntity->getCacheTags(), \Drupal::entityTypeManager()->getViewBuilder('entity_test')->getCacheTags());
     $referencing_entity_cache_tags = Cache::mergeTags($referencing_entity_cache_tags, ['http_response', 'rendered']);
 
     $nonempty_entity_listing_cache_tags = Cache::mergeTags($this->entity->getEntityType()->getListCacheTags(), $this->getAdditionalCacheTagsForEntityListing());

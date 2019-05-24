@@ -144,7 +144,7 @@ class Node extends EditorialContentEntityBase implements NodeInterface {
     // is new.
     if ($this->isDefaultRevision()) {
       /** @var \Drupal\node\NodeAccessControlHandlerInterface $access_control_handler */
-      $access_control_handler = \Drupal::entityManager()->getAccessControlHandler('node');
+      $access_control_handler = \Drupal::entityTypeManager()->getAccessControlHandler('node');
       $grants = $access_control_handler->acquireGrants($this);
       \Drupal::service('node.grant_storage')->write($this, $grants, NULL, $update);
     }

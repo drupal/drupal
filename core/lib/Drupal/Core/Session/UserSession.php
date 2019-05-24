@@ -203,7 +203,7 @@ class UserSession implements AccountInterface {
    *   The role storage object.
    */
   protected function getRoleStorage() {
-    return \Drupal::entityManager()->getStorage('user_role');
+    return \Drupal::entityTypeManager()->getStorage('user_role');
   }
 
 }

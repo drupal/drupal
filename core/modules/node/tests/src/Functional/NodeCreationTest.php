@@ -34,7 +34,7 @@ class NodeCreationTest extends NodeTestBase {
    * Creates a "Basic page" node and verifies its consistency in the database.
    */
   public function testNodeCreation() {
-    $node_type_storage = \Drupal::entityManager()->getStorage('node_type');
+    $node_type_storage = \Drupal::entityTypeManager()->getStorage('node_type');
 
     // Test /node/add page with only one content type.
     $node_type_storage->load('article')->delete();
@@ -248,7 +248,7 @@ class NodeCreationTest extends NodeTestBase {
     $this->assertNoLinkByHref('/admin/structure/types/add');
 
     // Test /node/add page without content types.
-    foreach (\Drupal::entityManager()->getStorage('node_type')->loadMultiple() as $entity) {
+    foreach (\Drupal::entityTypeManager()->getStorage('node_type')->loadMultiple() as $entity) {
       $entity->delete();
     }
 

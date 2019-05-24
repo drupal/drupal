@@ -31,7 +31,7 @@ class ViewTestData {
       $class = get_parent_class($class);
     }
     if (!empty($views)) {
-      $storage = \Drupal::entityManager()->getStorage('view');
+      $storage = \Drupal::entityTypeManager()->getStorage('view');
       $module_handler = \Drupal::moduleHandler();
       foreach ($modules as $module) {
         $config_dir = drupal_get_path('module', $module) . '/test_views';

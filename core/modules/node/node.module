@@ -431,7 +431,7 @@ function node_entity_extra_field_info() {
  *   The number of nodes whose node type field was modified.
  */
 function node_type_update_nodes($old_id, $new_id) {
-  return \Drupal::entityManager()->getStorage('node')->updateType($old_id, $new_id);
+  return \Drupal::entityTypeManager()->getStorage('node')->updateType($old_id, $new_id);
 }
 
 /**
@@ -458,7 +458,7 @@ function node_type_update_nodes($old_id, $new_id) {
 function node_load_multiple(array $nids = NULL, $reset = FALSE) {
   @trigger_error('node_load_multiple() is deprecated in Drupal 8.0.0 and will be removed before Drupal 9.0.0. Use \Drupal\node\Entity\Node::loadMultiple(). See https://www.drupal.org/node/2266845', E_USER_DEPRECATED);
   if ($reset) {
-    \Drupal::entityManager()->getStorage('node')->resetCache($nids);
+    \Drupal::entityTypeManager()->getStorage('node')->resetCache($nids);
   }
   return Node::loadMultiple($nids);
 }
@@ -483,7 +483,7 @@ function node_load_multiple(array $nids = NULL, $reset = FALSE) {
 function node_load($nid = NULL, $reset = FALSE) {
   @trigger_error('node_load() is deprecated in Drupal 8.0.0 and will be removed before Drupal 9.0.0. Use \Drupal\node\Entity\Node::load(). See https://www.drupal.org/node/2266845', E_USER_DEPRECATED);
   if ($reset) {
-    \Drupal::entityManager()->getStorage('node')->resetCache([$nid]);
+    \Drupal::entityTypeManager()->getStorage('node')->resetCache([$nid]);
   }
   return Node::load($nid);
 }
@@ -772,7 +772,7 @@ function node_user_cancel($edit, UserInterface $account, $method) {
     case 'user_cancel_reassign':
       // Anonymize all of the nodes for this old account.
       module_load_include('inc', 'node', 'node.admin');
-      $vids = \Drupal::entityManager()->getStorage('node')->userRevisionIds($account);
+      $vids = \Drupal::entityTypeManager()->getStorage('node')->userRevisionIds($account);
       node_mass_update($vids, [
         'uid' => 0,
         'revision_uid' => 0,
@@ -792,7 +792,7 @@ function node_user_predelete($account) {
     ->accessCheck(FALSE)
     ->execute();
   // Delete old revisions.
-  $storage_controller = \Drupal::entityManager()->getStorage('node');
+  $storage_controller = \Drupal::entityTypeManager()->getStorage('node');
   $nodes = $storage_controller->loadMultiple($nids);
   $storage_controller->delete($nodes);
   $revisions = $storage_controller->userRevisionIds($account);
@@ -1091,7 +1091,7 @@ function node_access_view_all_nodes($account = NULL) {
     $access[$account->id()] = TRUE;
   }
   else {
-    $access[$account->id()] = \Drupal::entityManager()->getAccessControlHandler('node')->checkAllGrants($account);
+    $access[$account->id()] = \Drupal::entityTypeManager()->getAccessControlHandler('node')->checkAllGrants($account);
   }
 
   return $access[$account->id()];
@@ -1235,9 +1235,9 @@ function node_access_needs_rebuild($rebuild = NULL) {
  * @see node_access_needs_rebuild()
  */
 function node_access_rebuild($batch_mode = FALSE) {
-  $node_storage = \Drupal::entityManager()->getStorage('node');
+  $node_storage = \Drupal::entityTypeManager()->getStorage('node');
   /** @var \Drupal\node\NodeAccessControlHandlerInterface $access_control_handler */
-  $access_control_handler = \Drupal::entityManager()->getAccessControlHandler('node');
+  $access_control_handler = \Drupal::entityTypeManager()->getAccessControlHandler('node');
   $access_control_handler->deleteGrants();
   // Only recalculate if the site is using a node_access module.
   if (count(\Drupal::moduleHandler()->getImplementations('node_grants'))) {
@@ -1301,7 +1301,7 @@ function node_access_rebuild($batch_mode = FALSE) {
  *   An array of contextual key/value information for rebuild batch process.
  */
 function _node_access_rebuild_batch_operation(&$context) {
-  $node_storage = \Drupal::entityManager()->getStorage('node');
+  $node_storage = \Drupal::entityTypeManager()->getStorage('node');
   if (empty($context['sandbox'])) {
     // Initiate multistep processing.
     $context['sandbox']['progress'] = 0;
@@ -1328,7 +1328,7 @@ function _node_access_rebuild_batch_operation(&$context) {
     // loads successfully.
     if (!empty($node)) {
       /** @var \Drupal\node\NodeAccessControlHandlerInterface $access_control_handler */
-      $access_control_handler = \Drupal::entityManager()->getAccessControlHandler('node');
+      $access_control_handler = \Drupal::entityTypeManager()->getAccessControlHandler('node');
       $grants = $access_control_handler->acquireGrants($node);
       \Drupal::service('node.grant_storage')->write($node, $grants);
     }
@@ -1408,7 +1408,7 @@ function node_modules_uninstalled($modules) {
  */
 function node_configurable_language_delete(ConfigurableLanguageInterface $language) {
   // On nodes with this language, unset the language.
-  \Drupal::entityManager()->getStorage('node')->clearRevisionsLanguage($language);
+  \Drupal::entityTypeManager()->getStorage('node')->clearRevisionsLanguage($language);
 }
 
 /**

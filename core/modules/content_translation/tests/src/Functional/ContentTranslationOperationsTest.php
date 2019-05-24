@@ -126,7 +126,7 @@ class ContentTranslationOperationsTest extends NodeTestBase {
    * @see content_translation_translate_access()
    */
   public function testContentTranslationOverviewAccess() {
-    $access_control_handler = \Drupal::entityManager()->getAccessControlHandler('node');
+    $access_control_handler = \Drupal::entityTypeManager()->getAccessControlHandler('node');
     $user = $this->createUser(['create content translations', 'access content']);
     $this->drupalLogin($user);
 

@@ -39,9 +39,9 @@ class FieldDataCountTest extends FieldKernelTestBase {
   protected function setUp() {
     parent::setUp();
     $this->installEntitySchema('entity_test_rev');
-    $this->storage = \Drupal::entityManager()->getStorage('entity_test');
-    $this->storageRev = \Drupal::entityManager()->getStorage('entity_test_rev');
-    $this->storageUser = \Drupal::entityManager()->getStorage('user');
+    $this->storage = \Drupal::entityTypeManager()->getStorage('entity_test');
+    $this->storageRev = \Drupal::entityTypeManager()->getStorage('entity_test_rev');
+    $this->storageUser = \Drupal::entityTypeManager()->getStorage('user');
   }
 
   /**
@@ -83,7 +83,7 @@ class FieldDataCountTest extends FieldKernelTestBase {
       $entity->save();
     }
 
-    $storage = \Drupal::entityManager()->getStorage('entity_test');
+    $storage = \Drupal::entityTypeManager()->getStorage('entity_test');
     if ($storage instanceof SqlContentEntityStorage) {
       // Count the actual number of rows in the field table.
       $table_mapping = $storage->getTableMapping();

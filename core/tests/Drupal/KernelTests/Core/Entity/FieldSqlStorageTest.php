@@ -93,7 +93,7 @@ class FieldSqlStorageTest extends EntityKernelTestBase {
     $this->field->save();
 
     /** @var \Drupal\Core\Entity\Sql\DefaultTableMapping $table_mapping */
-    $table_mapping = \Drupal::entityManager()->getStorage($entity_type)->getTableMapping();
+    $table_mapping = \Drupal::entityTypeManager()->getStorage($entity_type)->getTableMapping();
     $this->tableMapping = $table_mapping;
     $this->table = $table_mapping->getDedicatedDataTableName($this->fieldStorage);
     $this->revisionTable = $table_mapping->getDedicatedRevisionTableName($this->fieldStorage);

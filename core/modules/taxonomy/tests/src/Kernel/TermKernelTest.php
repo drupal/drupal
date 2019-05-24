@@ -127,7 +127,7 @@ class TermKernelTest extends KernelTestBase {
     $this->assertEqual(1, $depth_count[3], 'One element in taxonomy tree depth 3.');
 
     /** @var \Drupal\taxonomy\TermStorageInterface $storage */
-    $storage = \Drupal::entityManager()->getStorage('taxonomy_term');
+    $storage = \Drupal::entityTypeManager()->getStorage('taxonomy_term');
     // Count parents of $term[2].
     $parents = $storage->loadParents($term[2]->id());
     $this->assertEqual(2, count($parents), 'The term has two parents.');

@@ -171,7 +171,7 @@ abstract class CommentTestBase extends BrowserTestBase {
     }
 
     if (isset($match[1])) {
-      \Drupal::entityManager()->getStorage('comment')->resetCache([$match[1]]);
+      \Drupal::entityTypeManager()->getStorage('comment')->resetCache([$match[1]]);
       return Comment::load($match[1]);
     }
   }

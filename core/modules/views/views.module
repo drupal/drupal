@@ -399,7 +399,7 @@ function views_add_contextual_links(&$render_element, $location, $display_id, ar
         $args = [];
         $valid = TRUE;
         if (!empty($link['route_parameters_names'])) {
-          $view_storage = \Drupal::entityManager()
+          $view_storage = \Drupal::entityTypeManager()
             ->getStorage('view')
             ->load($view_id);
           foreach ($link['route_parameters_names'] as $parameter_name => $property) {

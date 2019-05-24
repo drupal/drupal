@@ -77,7 +77,7 @@ function field_purge_batch($batch_size, $field_storage_unique_id = NULL) {
 
   $fields = $deleted_fields_repository->getFieldDefinitions($field_storage_unique_id);
 
-  $info = \Drupal::entityManager()->getDefinitions();
+  $info = \Drupal::entityTypeManager()->getDefinitions();
   foreach ($fields as $field) {
     $entity_type = $field->getTargetEntityTypeId();
 
@@ -89,7 +89,7 @@ function field_purge_batch($batch_size, $field_storage_unique_id = NULL) {
       continue;
     }
 
-    $count_purged = \Drupal::entityManager()->getStorage($entity_type)->purgeFieldData($field, $batch_size);
+    $count_purged = \Drupal::entityTypeManager()->getStorage($entity_type)->purgeFieldData($field, $batch_size);
     if ($count_purged < $batch_size || $count_purged == 0) {
       // No field data remains for the field, so we can remove it.
       field_purge_field($field);
@@ -163,7 +163,7 @@ function field_purge_field_storage(FieldStorageDefinitionInterface $field_storag
   $deleted_fields_repository->removeFieldStorageDefinition($field_storage);
 
   // Notify the storage layer.
-  \Drupal::entityManager()->getStorage($field_storage->getTargetEntityTypeId())->finalizePurge($field_storage);
+  \Drupal::entityTypeManager()->getStorage($field_storage->getTargetEntityTypeId())->finalizePurge($field_storage);
 
   // Invoke external hooks after the cache is cleared for API consistency.
   \Drupal::moduleHandler()->invokeAll('field_purge_field_storage', [$field_storage]);

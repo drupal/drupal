@@ -94,7 +94,7 @@ class RowEntityRenderersTest extends ViewsKernelTestBase {
 
     $this->values = [];
     $this->ids = [];
-    $controller = \Drupal::entityManager()->getStorage('node');
+    $controller = \Drupal::entityTypeManager()->getStorage('node');
     $langcode_index = 0;
 
     for ($i = 0; $i < count($this->langcodes); $i++) {

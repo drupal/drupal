@@ -193,7 +193,7 @@ class CommentViewsData extends EntityViewsData {
     unset($data['comment_field_data']['thread']['filter']);
     unset($data['comment_field_data']['thread']['argument']);
 
-    $entities_types = \Drupal::entityManager()->getDefinitions();
+    $entities_types = \Drupal::entityTypeManager()->getDefinitions();
 
     // Provide a relationship for each entity type except comment.
     foreach ($entities_types as $type => $entity_type) {

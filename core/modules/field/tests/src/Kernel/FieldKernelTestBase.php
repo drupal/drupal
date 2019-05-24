@@ -52,7 +52,7 @@ abstract class FieldKernelTestBase extends KernelTestBase {
     $this->installConfig(['field', 'system']);
 
     // Create user 1.
-    $storage = \Drupal::entityManager()->getStorage('user');
+    $storage = \Drupal::entityTypeManager()->getStorage('user');
     $storage
       ->create([
         'uid' => 1,

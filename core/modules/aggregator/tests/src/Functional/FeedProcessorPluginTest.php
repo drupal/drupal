@@ -57,7 +57,7 @@ class FeedProcessorPluginTest extends AggregatorTestBase {
     $this->updateFeedItems($feed);
     $feed_id = $feed->id();
     // Reset entity cache manually.
-    \Drupal::entityManager()->getStorage('aggregator_feed')->resetCache([$feed_id]);
+    \Drupal::entityTypeManager()->getStorage('aggregator_feed')->resetCache([$feed_id]);
     // Reload the feed to get new values.
     $feed = Feed::load($feed_id);
     // Make sure its refresh rate doubled.

@@ -132,7 +132,7 @@ class BlockContentTranslationUITest extends ContentTranslationUITestBase {
     // as in the original language.
     $default_langcode = $this->langcodes[0];
     $values = $this->getNewEntityValues($default_langcode);
-    $storage = \Drupal::entityManager()->getStorage($this->entityTypeId);
+    $storage = \Drupal::entityTypeManager()->getStorage($this->entityTypeId);
     /** @var \Drupal\Core\Entity\ContentEntityInterface $entity */
     $entity = $storage->create(['type' => 'basic'] + $values);
     $entity->save();

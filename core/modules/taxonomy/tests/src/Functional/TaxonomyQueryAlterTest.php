@@ -37,7 +37,7 @@ class TaxonomyQueryAlterTest extends BrowserTestBase {
     $terms[2]->parent = $terms[1]->id();
     $terms[2]->save();
 
-    $term_storage = \Drupal::entityManager()->getStorage('taxonomy_term');
+    $term_storage = \Drupal::entityTypeManager()->getStorage('taxonomy_term');
 
     $this->setupQueryTagTestHooks();
     $loaded_term = $term_storage->load($terms[0]->id());

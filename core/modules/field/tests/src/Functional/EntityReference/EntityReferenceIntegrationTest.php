@@ -163,7 +163,7 @@ class EntityReferenceIntegrationTest extends BrowserTestBase {
       // default value deleted.
       $referenced_entities[0]->delete();
       // Reload the field since deleting the default value can change the field.
-      \Drupal::entityManager()->getStorage($field->getEntityTypeId())->resetCache([$field->id()]);
+      \Drupal::entityTypeManager()->getStorage($field->getEntityTypeId())->resetCache([$field->id()]);
       $field = FieldConfig::loadByName($this->entityType, $this->bundle, $this->fieldName);
       $this->assertConfigEntityImport($field);
 

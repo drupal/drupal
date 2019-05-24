@@ -44,7 +44,7 @@ function menu_link_content_entity_type_alter(array &$entity_types) {
  * Implements hook_menu_delete().
  */
 function menu_link_content_menu_delete(MenuInterface $menu) {
-  $storage = \Drupal::entityManager()->getStorage('menu_link_content');
+  $storage = \Drupal::entityTypeManager()->getStorage('menu_link_content');
   $menu_links = $storage->loadByProperties(['menu_name' => $menu->id()]);
   $storage->delete($menu_links);
 }
@@ -66,7 +66,7 @@ function _menu_link_content_update_path_alias($path) {
   /** @var \Drupal\Core\Menu\MenuLinkManagerInterface $menu_link_manager */
   $menu_link_manager = \Drupal::service('plugin.manager.menu.link');
   /** @var \Drupal\menu_link_content\MenuLinkContentInterface[] $entities */
-  $entities = \Drupal::entityManager()
+  $entities = \Drupal::entityTypeManager()
     ->getStorage('menu_link_content')
     ->loadByProperties(['link.uri' => 'internal:' . $path]);
   foreach ($entities as $menu_link) {

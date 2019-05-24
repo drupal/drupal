@@ -87,7 +87,7 @@ function file_field_widget_info_alter(array &$info) {
 function file_load_multiple(array $fids = NULL, $reset = FALSE) {
   @trigger_error('file_load_multiple() is deprecated in Drupal 8.0.0 and will be removed before Drupal 9.0.0. Use \Drupal\file\Entity\File::loadMultiple(). See https://www.drupal.org/node/2266845', E_USER_DEPRECATED);
   if ($reset) {
-    \Drupal::entityManager()->getStorage('file')->resetCache($fids);
+    \Drupal::entityTypeManager()->getStorage('file')->resetCache($fids);
   }
   return File::loadMultiple($fids);
 }
@@ -112,7 +112,7 @@ function file_load_multiple(array $fids = NULL, $reset = FALSE) {
 function file_load($fid, $reset = FALSE) {
   @trigger_error('file_load() is deprecated in Drupal 8.0.0 and will be removed before Drupal 9.0.0. Use \Drupal\file\Entity\File::load(). See https://www.drupal.org/node/2266845', E_USER_DEPRECATED);
   if ($reset) {
-    \Drupal::entityManager()->getStorage('file')->resetCache([$fid]);
+    \Drupal::entityTypeManager()->getStorage('file')->resetCache([$fid]);
   }
   return File::load($fid);
 }
@@ -396,7 +396,7 @@ function file_validate_size(FileInterface $file, $file_limit = 0, $user_limit = 
   }
 
   // Save a query by only calling spaceUsed() when a limit is provided.
-  if ($user_limit && (\Drupal::entityManager()->getStorage('file')->spaceUsed($user->id()) + $file->getSize()) > $user_limit) {
+  if ($user_limit && (\Drupal::entityTypeManager()->getStorage('file')->spaceUsed($user->id()) + $file->getSize()) > $user_limit) {
     $errors[] = t('The file is %filesize which would exceed your disk quota of %quota.', ['%filesize' => format_size($file->getSize()), '%quota' => format_size($user_limit)]);
   }
 
@@ -714,7 +714,7 @@ function file_file_download($uri) {
  */
 function file_cron() {
   $age = \Drupal::config('system.file')->get('temporary_maximum_age');
-  $file_storage = \Drupal::entityManager()->getStorage('file');
+  $file_storage = \Drupal::entityTypeManager()->getStorage('file');
 
   // Only delete temporary files if older than $age. Note that automatic cleanup
   // is disabled if $age set to 0.

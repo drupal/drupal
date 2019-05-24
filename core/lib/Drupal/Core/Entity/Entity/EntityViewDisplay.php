@@ -112,7 +112,7 @@ class EntityViewDisplay extends EntityDisplayBase implements EntityViewDisplayIn
     }
 
     // Load the selected displays.
-    $storage = \Drupal::entityManager()->getStorage('entity_view_display');
+    $storage = \Drupal::entityTypeManager()->getStorage('entity_view_display');
     $displays = $storage->loadMultiple($load_ids);
 
     $displays_by_bundle = [];
@@ -182,8 +182,8 @@ class EntityViewDisplay extends EntityDisplayBase implements EntityViewDisplayIn
   public function postSave(EntityStorageInterface $storage, $update = TRUE) {
     // Reset the render cache for the target entity type.
     parent::postSave($storage, $update);
-    if (\Drupal::entityManager()->hasHandler($this->targetEntityType, 'view_builder')) {
-      \Drupal::entityManager()->getViewBuilder($this->targetEntityType)->resetCache();
+    if (\Drupal::entityTypeManager()->hasHandler($this->targetEntityType, 'view_builder')) {
+      \Drupal::entityTypeManager()->getViewBuilder($this->targetEntityType)->resetCache();
     }
   }
 

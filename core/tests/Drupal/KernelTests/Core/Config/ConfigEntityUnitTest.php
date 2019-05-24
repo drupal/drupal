@@ -46,7 +46,7 @@ class ConfigEntityUnitTest extends KernelTestBase {
    * Tests storage methods.
    */
   public function testStorageMethods() {
-    $entity_type = \Drupal::entityManager()->getDefinition('config_test');
+    $entity_type = \Drupal::entityTypeManager()->getDefinition('config_test');
 
     // Test the static extractID() method.
     $expected_id = 'test_id';

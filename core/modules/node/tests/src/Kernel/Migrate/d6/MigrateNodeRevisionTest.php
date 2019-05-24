@@ -26,7 +26,7 @@ class MigrateNodeRevisionTest extends MigrateNodeTestBase {
    * Test node revisions migration from Drupal 6 to 8.
    */
   public function testNodeRevision() {
-    $node = \Drupal::entityManager()->getStorage('node')->loadRevision(2001);
+    $node = \Drupal::entityTypeManager()->getStorage('node')->loadRevision(2001);
     /** @var \Drupal\node\NodeInterface $node */
     $this->assertIdentical('1', $node->id());
     $this->assertIdentical('2001', $node->getRevisionId());
@@ -38,7 +38,7 @@ class MigrateNodeRevisionTest extends MigrateNodeTestBase {
     $this->assertIdentical('modified rev 2', $node->revision_log->value);
     $this->assertIdentical('1390095702', $node->getRevisionCreationTime());
 
-    $node = \Drupal::entityManager()->getStorage('node')->loadRevision(5);
+    $node = \Drupal::entityTypeManager()->getStorage('node')->loadRevision(5);
     $this->assertIdentical('1', $node->id());
     $this->assertIdentical('body test rev 3', $node->body->value);
     $this->assertIdentical('1', $node->getRevisionUser()->id());

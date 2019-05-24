@@ -203,15 +203,15 @@ class LanguageConfigurationElementTest extends BrowserTestBase {
     $this->drupalPostForm('admin/structure/types/manage/article', $edit, t('Save content type'));
 
     // Check the language default configuration for articles is present.
-    $configuration = \Drupal::entityManager()->getStorage('language_content_settings')->load('node.article');
+    $configuration = \Drupal::entityTypeManager()->getStorage('language_content_settings')->load('node.article');
     $this->assertTrue($configuration, 'The language configuration is present.');
 
     // Delete 'article' bundle.
     $this->drupalPostForm('admin/structure/types/manage/article/delete', [], t('Delete'));
 
     // Check that the language configuration has been deleted.
-    \Drupal::entityManager()->getStorage('language_content_settings')->resetCache();
-    $configuration = \Drupal::entityManager()->getStorage('language_content_settings')->load('node.article');
+    \Drupal::entityTypeManager()->getStorage('language_content_settings')->resetCache();
+    $configuration = \Drupal::entityTypeManager()->getStorage('language_content_settings')->load('node.article');
     $this->assertFalse($configuration, 'The language configuration was deleted after bundle was deleted.');
   }
 

@@ -147,7 +147,6 @@ class FieldConfig extends FieldConfigBase implements FieldConfigInterface {
    *   In case of failures at the configuration storage level.
    */
   public function preSave(EntityStorageInterface $storage) {
-    $entity_manager = \Drupal::entityManager();
     $field_type_manager = \Drupal::service('plugin.manager.field.field_type');
 
     $storage_definition = $this->getFieldStorageDefinition();
@@ -248,7 +247,7 @@ class FieldConfig extends FieldConfigBase implements FieldConfigInterface {
       }
     }
     if ($storages_to_delete) {
-      \Drupal::entityManager()->getStorage('field_storage_config')->delete($storages_to_delete);
+      \Drupal::entityTypeManager()->getStorage('field_storage_config')->delete($storages_to_delete);
     }
   }
 
@@ -274,7 +273,7 @@ class FieldConfig extends FieldConfigBase implements FieldConfigInterface {
    */
   protected function urlRouteParameters($rel) {
     $parameters = parent::urlRouteParameters($rel);
-    $entity_type = \Drupal::entityManager()->getDefinition($this->entity_type);
+    $entity_type = \Drupal::entityTypeManager()->getDefinition($this->entity_type);
     $bundle_parameter_key = $entity_type->getBundleEntityType() ?: 'bundle';
     $parameters[$bundle_parameter_key] = $this->bundle;
     return $parameters;
@@ -372,7 +371,7 @@ class FieldConfig extends FieldConfigBase implements FieldConfigInterface {
    *   name, otherwise NULL.
    */
   public static function loadByName($entity_type_id, $bundle, $field_name) {
-    return \Drupal::entityManager()->getStorage('field_config')->load($entity_type_id . '.' . $bundle . '.' . $field_name);
+    return \Drupal::entityTypeManager()->getStorage('field_config')->load($entity_type_id . '.' . $bundle . '.' . $field_name);
   }
 
 }

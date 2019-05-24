@@ -910,7 +910,7 @@ class EntityType extends PluginDefinition implements EntityTypeInterface {
     // If this entity type uses entities to manage its bundles then depend on
     // the bundle entity.
     if ($bundle_entity_type_id = $this->getBundleEntityType()) {
-      if (!$bundle_entity = \Drupal::entityManager()->getStorage($bundle_entity_type_id)->load($bundle)) {
+      if (!$bundle_entity = \Drupal::entityTypeManager()->getStorage($bundle_entity_type_id)->load($bundle)) {
         throw new \LogicException(sprintf('Missing bundle entity, entity type %s, entity id %s.', $bundle_entity_type_id, $bundle));
       }
       $config_dependency = [

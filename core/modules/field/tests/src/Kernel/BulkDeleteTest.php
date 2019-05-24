@@ -278,7 +278,7 @@ class BulkDeleteTest extends FieldKernelTestBase {
     }
 
     // Check that the two field storages have different tables.
-    $storage = \Drupal::entityManager()->getStorage($this->entityTypeId);
+    $storage = \Drupal::entityTypeManager()->getStorage($this->entityTypeId);
     /** @var \Drupal\Core\Entity\Sql\DefaultTableMapping $table_mapping */
     $table_mapping = $storage->getTableMapping();
     $deleted_table_name = $table_mapping->getDedicatedDataTableName($deleted_field_storage, TRUE);

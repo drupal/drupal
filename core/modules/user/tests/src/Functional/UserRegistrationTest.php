@@ -208,7 +208,7 @@ class UserRegistrationTest extends BrowserTestBase {
     $this->drupalPostForm('user/register', $edit, t('Create new account'));
     $this->assertResponse(200);
 
-    $user_storage = \Drupal::entityManager()->getStorage('user');
+    $user_storage = \Drupal::entityTypeManager()->getStorage('user');
 
     $this->assertTrue($user_storage->loadByProperties(['name' => $edit['name']]));
     $this->drupalLogout();

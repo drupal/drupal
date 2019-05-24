@@ -86,7 +86,7 @@ abstract class EntityDisplayModeBase extends ConfigEntityBase implements EntityD
    */
   public function calculateDependencies() {
     parent::calculateDependencies();
-    $target_entity_type = \Drupal::entityManager()->getDefinition($this->targetEntityType);
+    $target_entity_type = \Drupal::entityTypeManager()->getDefinition($this->targetEntityType);
     $this->addDependency('module', $target_entity_type->getProvider());
     return $this;
   }

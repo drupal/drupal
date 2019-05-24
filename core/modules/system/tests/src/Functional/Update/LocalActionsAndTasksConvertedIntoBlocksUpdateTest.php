@@ -42,7 +42,7 @@ class LocalActionsAndTasksConvertedIntoBlocksUpdateTest extends UpdatePathTestBa
     $this->runUpdates();
 
     /** @var \Drupal\block\BlockInterface $block_storage */
-    $block_storage = \Drupal::entityManager()->getStorage('block');
+    $block_storage = \Drupal::entityTypeManager()->getStorage('block');
     /* @var \Drupal\block\BlockInterface[] $help_blocks */
     $help_blocks = $block_storage->loadByProperties(['theme' => 'bartik', 'region' => 'help']);
 

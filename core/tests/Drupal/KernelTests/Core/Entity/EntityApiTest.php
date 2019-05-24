@@ -93,7 +93,7 @@ class EntityApiTest extends EntityKernelTestBase {
     $this->assertTrue(empty($all), format_string('%entity_type: Deleted all entities.', ['%entity_type' => $entity_type]));
 
     // Verify that all data got deleted.
-    $definition = \Drupal::entityManager()->getDefinition($entity_type);
+    $definition = \Drupal::entityTypeManager()->getDefinition($entity_type);
     $this->assertEqual(0, db_query('SELECT COUNT(*) FROM {' . $definition->getBaseTable() . '}')->fetchField(), 'Base table was emptied');
     if ($data_table = $definition->getDataTable()) {
       $this->assertEqual(0, db_query('SELECT COUNT(*) FROM {' . $data_table . '}')->fetchField(), 'Data table was emptied');
@@ -113,7 +113,7 @@ class EntityApiTest extends EntityKernelTestBase {
     $entity = $storage->create(['name' => 'test2', 'user_id' => $user1->id()]);
     $entity->save();
     $entities['test2'] = $entity;
-    $controller = \Drupal::entityManager()->getStorage($entity_type);
+    $controller = \Drupal::entityTypeManager()->getStorage($entity_type);
     $controller->delete($entities);
 
     // Verify that entities got deleted.
@@ -121,7 +121,7 @@ class EntityApiTest extends EntityKernelTestBase {
     $this->assertTrue(empty($all), format_string('%entity_type: Deleted all entities.', ['%entity_type' => $entity_type]));
 
     // Verify that all data got deleted from the tables.
-    $definition = \Drupal::entityManager()->getDefinition($entity_type);
+    $definition = \Drupal::entityTypeManager()->getDefinition($entity_type);
     $this->assertEqual(0, db_query('SELECT COUNT(*) FROM {' . $definition->getBaseTable() . '}')->fetchField(), 'Base table was emptied');
     if ($data_table = $definition->getDataTable()) {
       $this->assertEqual(0, db_query('SELECT COUNT(*) FROM {' . $data_table . '}')->fetchField(), 'Data table was emptied');

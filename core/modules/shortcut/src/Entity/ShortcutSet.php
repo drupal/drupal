@@ -100,7 +100,7 @@ class ShortcutSet extends ConfigEntityBundleBase implements ShortcutSetInterface
         ->condition('shortcut_set', $entity->id(), '=')
         ->execute();
 
-      $controller = \Drupal::entityManager()->getStorage('shortcut');
+      $controller = \Drupal::entityTypeManager()->getStorage('shortcut');
       $entities = $controller->loadMultiple($shortcut_ids);
       $controller->delete($entities);
     }
@@ -123,7 +123,7 @@ class ShortcutSet extends ConfigEntityBundleBase implements ShortcutSetInterface
    * {@inheritdoc}
    */
   public function getShortcuts() {
-    $shortcuts = \Drupal::entityManager()->getStorage('shortcut')->loadByProperties(['shortcut_set' => $this->id()]);
+    $shortcuts = \Drupal::entityTypeManager()->getStorage('shortcut')->loadByProperties(['shortcut_set' => $this->id()]);
     uasort($shortcuts, ['\Drupal\shortcut\Entity\Shortcut', 'sort']);
     return $shortcuts;
   }

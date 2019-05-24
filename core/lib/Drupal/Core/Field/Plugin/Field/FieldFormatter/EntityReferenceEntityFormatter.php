@@ -213,7 +213,7 @@ class EntityReferenceEntityFormatter extends EntityReferenceFormatterBase implem
     // This formatter is only available for entity types that have a view
     // builder.
     $target_type = $field_definition->getFieldStorageDefinition()->getSetting('target_type');
-    return \Drupal::entityManager()->getDefinition($target_type)->hasViewBuilderClass();
+    return \Drupal::entityTypeManager()->getDefinition($target_type)->hasViewBuilderClass();
   }
 
 }

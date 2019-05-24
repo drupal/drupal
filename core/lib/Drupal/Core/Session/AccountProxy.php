@@ -195,7 +195,7 @@ class AccountProxy implements AccountProxyInterface {
    *   An account or NULL if none is found.
    */
   protected function loadUserEntity($account_id) {
-    return \Drupal::entityManager()->getStorage('user')->load($account_id);
+    return \Drupal::entityTypeManager()->getStorage('user')->load($account_id);
   }
 
 }

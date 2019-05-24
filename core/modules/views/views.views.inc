@@ -138,7 +138,7 @@ function views_views_data() {
   ];
 
   // Registers an entity area handler per entity type.
-  foreach (\Drupal::entityManager()->getDefinitions() as $entity_type_id => $entity_type) {
+  foreach (\Drupal::entityTypeManager()->getDefinitions() as $entity_type_id => $entity_type) {
     // Excludes entity types, which cannot be rendered.
     if ($entity_type->hasViewBuilderClass()) {
       $label = $entity_type->getLabel();
@@ -154,8 +154,8 @@ function views_views_data() {
   }
 
   // Registers an action bulk form per entity.
-  foreach (\Drupal::entityManager()->getDefinitions() as $entity_type => $entity_info) {
-    $actions = array_filter(\Drupal::entityManager()->getStorage('action')->loadMultiple(), function (ActionConfigEntityInterface $action) use ($entity_type) {
+  foreach (\Drupal::entityTypeManager()->getDefinitions() as $entity_type => $entity_info) {
+    $actions = array_filter(\Drupal::entityTypeManager()->getStorage('action')->loadMultiple(), function (ActionConfigEntityInterface $action) use ($entity_type) {
       return $action->getType() == $entity_type;
     });
     if (empty($actions)) {
@@ -171,10 +171,10 @@ function views_views_data() {
   }
 
   // Registers views data for the entity itself.
-  foreach (\Drupal::entityManager()->getDefinitions() as $entity_type_id => $entity_type) {
+  foreach (\Drupal::entityTypeManager()->getDefinitions() as $entity_type_id => $entity_type) {
     if ($entity_type->hasHandlerClass('views_data')) {
       /** @var \Drupal\views\EntityViewsDataInterface $views_data */
-      $views_data = \Drupal::entityManager()->getHandler($entity_type_id, 'views_data');
+      $views_data = \Drupal::entityTypeManager()->getHandler($entity_type_id, 'views_data');
       $data = NestedArray::mergeDeep($data, $views_data->getViewsData());
     }
   }
@@ -183,10 +183,10 @@ function views_views_data() {
   // behavior for adding fields.
   $module_handler = \Drupal::moduleHandler();
 
-  $entity_manager = \Drupal::entityManager();
-  if ($entity_manager->hasDefinition('field_storage_config')) {
+  $entity_type_manager = \Drupal::entityTypeManager();
+  if ($entity_type_manager->hasDefinition('field_storage_config')) {
     /** @var \Drupal\field\FieldStorageConfigInterface $field_storage */
-    foreach ($entity_manager->getStorage('field_storage_config')->loadMultiple() as $field_storage) {
+    foreach ($entity_type_manager->getStorage('field_storage_config')->loadMultiple() as $field_storage) {
       if (_views_field_get_entity_type_storage($field_storage)) {
         $result = (array) $module_handler->invoke($field_storage->getTypeProvider(), 'field_views_data', [$field_storage]);
         if (empty($result)) {
@@ -213,7 +213,7 @@ function views_views_data() {
  * in views_views_data().
  */
 function views_views_data_alter(&$data) {
-  $entity_manager = \Drupal::entityManager();
+  $entity_manager = \Drupal::entityTypeManager();
   if (!$entity_manager->hasDefinition('field_storage_config')) {
     return;
   }
@@ -239,7 +239,7 @@ function views_views_data_alter(&$data) {
  */
 function _views_field_get_entity_type_storage(FieldStorageConfigInterface $field_storage) {
   $result = FALSE;
-  $entity_manager = \Drupal::entityManager();
+  $entity_manager = \Drupal::entityTypeManager();
   if ($entity_manager->hasDefinition($field_storage->getTargetEntityTypeId())) {
     $storage = $entity_manager->getStorage($field_storage->getTargetEntityTypeId());
     $result = $storage instanceof SqlContentEntityStorage ? $storage : FALSE;
@@ -321,9 +321,9 @@ function views_field_default_views_data(FieldStorageConfigInterface $field_stora
 
   // Grab information about the entity type tables.
   // We need to join to both the base table and the data table, if available.
-  $entity_manager = \Drupal::entityManager();
+  $entity_type_manager = \Drupal::entityTypeManager();
   $entity_type_id = $field_storage->getTargetEntityTypeId();
-  $entity_type = $entity_manager->getDefinition($entity_type_id);
+  $entity_type = $entity_type_manager->getDefinition($entity_type_id);
   if (!$base_table = $entity_type->getBaseTable()) {
     // We cannot do anything if for some reason there is no base table.
     return $data;
@@ -776,17 +776,17 @@ function core_field_views_data(FieldStorageConfigInterface $field_storage) {
     return $data;
   }
 
-  $entity_manager = \Drupal::entityManager();
+  $entity_type_manager = \Drupal::entityTypeManager();
   $entity_type_id = $field_storage->getTargetEntityTypeId();
   /** @var \Drupal\Core\Entity\Sql\DefaultTableMapping $table_mapping */
-  $table_mapping = $entity_manager->getStorage($entity_type_id)->getTableMapping();
+  $table_mapping = $entity_type_manager->getStorage($entity_type_id)->getTableMapping();
 
   foreach ($data as $table_name => $table_data) {
     // Add a relationship to the target entity type.
     $target_entity_type_id = $field_storage->getSetting('target_type');
-    $target_entity_type = $entity_manager->getDefinition($target_entity_type_id);
+    $target_entity_type = $entity_type_manager->getDefinition($target_entity_type_id);
     $entity_type_id = $field_storage->getTargetEntityTypeId();
-    $entity_type = $entity_manager->getDefinition($entity_type_id);
+    $entity_type = $entity_type_manager->getDefinition($entity_type_id);
     $target_base_table = $target_entity_type->getDataTable() ?: $target_entity_type->getBaseTable();
     $field_name = $field_storage->getName();
 

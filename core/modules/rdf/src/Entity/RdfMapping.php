@@ -145,7 +145,7 @@ class RdfMapping extends ConfigEntityBase implements RdfMappingInterface {
     parent::calculateDependencies();
 
     // Create dependency on the bundle.
-    $entity_type = \Drupal::entityManager()->getDefinition($this->targetEntityType);
+    $entity_type = \Drupal::entityTypeManager()->getDefinition($this->targetEntityType);
     $this->addDependency('module', $entity_type->getProvider());
     $bundle_config_dependency = $entity_type->getBundleConfigDependency($this->bundle);
     $this->addDependency($bundle_config_dependency['type'], $bundle_config_dependency['name']);
@@ -159,8 +159,8 @@ class RdfMapping extends ConfigEntityBase implements RdfMappingInterface {
   public function postSave(EntityStorageInterface $storage, $update = TRUE) {
     parent::postSave($storage, $update);
 
-    if (\Drupal::entityManager()->hasHandler($this->targetEntityType, 'view_builder')) {
-      \Drupal::entityManager()->getViewBuilder($this->targetEntityType)->resetCache();
+    if (\Drupal::entityTypeManager()->hasHandler($this->targetEntityType, 'view_builder')) {
+      \Drupal::entityTypeManager()->getViewBuilder($this->targetEntityType)->resetCache();
     }
   }
 

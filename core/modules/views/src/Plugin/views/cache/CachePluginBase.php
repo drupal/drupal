@@ -241,7 +241,7 @@ abstract class CachePluginBase extends PluginBase {
     if (!empty($entity_information)) {
       // Add the list cache tags for each entity type used by this view.
       foreach ($entity_information as $table => $metadata) {
-        $tags = Cache::mergeTags($tags, \Drupal::entityManager()->getDefinition($metadata['entity_type'])->getListCacheTags());
+        $tags = Cache::mergeTags($tags, \Drupal::entityTypeManager()->getDefinition($metadata['entity_type'])->getListCacheTags());
       }
     }
 
