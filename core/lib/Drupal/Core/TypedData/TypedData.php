@@ -3,6 +3,7 @@
 namespace Drupal\Core\TypedData;
 
 use Drupal\Component\Plugin\PluginInspectionInterface;
+use Drupal\Core\DependencyInjection\DependencySerializationTrait;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 
 /**
@@ -14,7 +15,7 @@ use Drupal\Core\StringTranslation\StringTranslationTrait;
  * @ingroup typed_data
  */
 abstract class TypedData implements TypedDataInterface, PluginInspectionInterface {
-
+  use DependencySerializationTrait;
   use StringTranslationTrait;
   use TypedDataTrait;
 
@@ -189,24 +190,6 @@ abstract class TypedData implements TypedDataInterface, PluginInspectionInterfac
    */
   public function getParent() {
     return $this->parent;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function __sleep() {
-    $vars = get_object_vars($this);
-    // Prevent services from being serialized. static::getStringTranslation()
-    // and static::getTypedDataManager() lazy-load them after $this has been
-    // unserialized.
-    // @todo Replace this with
-    //   \Drupal\Core\DependencyInjection\DependencySerializationTrait before
-    //   Drupal 9.0.0. We cannot use that now, because child classes already use
-    //   it and PHP 5 would consider that conflicts.
-    unset($vars['stringTranslation']);
-    unset($vars['typedDataManager']);
-
-    return array_keys($vars);
   }
 
 }

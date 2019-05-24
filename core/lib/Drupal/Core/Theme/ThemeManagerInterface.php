@@ -87,9 +87,9 @@ interface ThemeManagerInterface {
    *   $this->alter('mymodule_data', $alterable1, $alterable2, $context);
    * @endcode
    *
-   * Note that objects are always passed by reference in PHP5. If it is
-   * absolutely required that no implementation alters a passed object in
-   * $context, then an object needs to be cloned:
+   * Note that objects are always passed by reference. If it is absolutely
+   * required that no implementation alters a passed object in $context, then an
+   * object needs to be cloned:
    * @code
    *   $context = array(
    *     'unalterable_object' => clone $object,

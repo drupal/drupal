@@ -32,7 +32,7 @@ use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
  * @todo Move this to an appropriate autoloadable class. See
  *   https://www.drupal.org/project/drupal/issues/2908079
  */
-const DRUPAL_MINIMUM_PHP = '5.5.9';
+const DRUPAL_MINIMUM_PHP = '7.0.8';
 
 /**
  * Minimum supported version of PHP.
@@ -604,14 +604,9 @@ function _drupal_exception_handler($exception) {
     // Log the message to the watchdog and return an error page to the user.
     _drupal_log_error(Error::decodeException($exception), TRUE);
   }
-  // PHP 7 introduces Throwable, which covers both Error and
-  // Exception throwables.
+  // Catch \Throwable, which covers both Error and Exception throwables.
   catch (\Throwable $error) {
     _drupal_exception_handler_additional($exception, $error);
-  }
-  // In order to be compatible with PHP 5 we also catch regular Exceptions.
-  catch (\Exception $exception2) {
-    _drupal_exception_handler_additional($exception, $exception2);
   }
 }
 
@@ -1057,14 +1052,9 @@ function _drupal_shutdown_function() {
       next($callbacks);
     }
   }
-  // PHP 7 introduces Throwable, which covers both Error and
-  // Exception throwables.
+  // Catch \Throwable, which covers both Error and Exception throwables.
   catch (\Throwable $error) {
     _drupal_shutdown_function_handle_exception($error);
-  }
-  // In order to be compatible with PHP 5 we also catch regular Exceptions.
-  catch (\Exception $exception) {
-    _drupal_shutdown_function_handle_exception($exception);
   }
 }
 

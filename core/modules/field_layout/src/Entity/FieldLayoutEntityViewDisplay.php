@@ -18,6 +18,7 @@ class FieldLayoutEntityViewDisplay extends EntityViewDisplay implements EntityDi
   public function getDefaultRegion() {
     // This cannot be provided by the trait due to
     // https://bugs.php.net/bug.php?id=71414 which is fixed in PHP 7.0.6.
+    // @todo Move to trait. https://www.drupal.org/node/3054317
     return $this->getLayoutDefinition($this->getLayoutId())->getDefaultRegion();
   }
 

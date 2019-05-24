@@ -323,12 +323,7 @@ class CommentTest extends ResourceTestBase {
       $this->assertResourceErrorResponse(422, 'entity_id: This value should not be null.', NULL, $response, '/data/attributes/entity_id');
     }
     catch (\Exception $e) {
-      if (version_compare(phpversion(), '7.0') >= 0) {
-        $this->assertSame("Error: Call to a member function get() on null\nDrupal\\comment\\Plugin\\Validation\\Constraint\\CommentNameConstraintValidator->getAnonymousContactDetailsSetting()() (Line: 96)\n", $e->getMessage());
-      }
-      else {
-        $this->assertSame(500, $response->getStatusCode());
-      }
+      $this->assertSame("Error: Call to a member function get() on null\nDrupal\\comment\\Plugin\\Validation\\Constraint\\CommentNameConstraintValidator->getAnonymousContactDetailsSetting()() (Line: 96)\n", $e->getMessage());
     }
 
     // DX: 422 when missing 'field_name' field.

@@ -2,11 +2,8 @@
 SQLITE REQUIREMENTS
 -------------------
 
-To use SQLite with your Drupal installation, the following requirements must be
-met: Server has PHP 5.3.10 or later with PDO, and the PDO SQLite driver must be
-enabled.
-
-If you have not pdo_sqlite available depending on your system there are different ways to install it.
+PHP's PDO SQLite driver must be enabled. If you do not have pdo_sqlite
+available, depending on your system there are different ways to install it.
 
 Windows
 -------

@@ -182,7 +182,6 @@ class PhpassHashedPassword implements PasswordInterface {
     // Convert the base 2 logarithm into an integer.
     $count = 1 << $count_log2;
 
-    // We rely on the hash() function being available in PHP 5.2+.
     $hash = hash($algo, $salt . $password, TRUE);
     do {
       $hash = hash($algo, $hash . $password, TRUE);

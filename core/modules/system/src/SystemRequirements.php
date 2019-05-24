@@ -4,6 +4,8 @@ namespace Drupal\system;
 
 /**
  * Class for helper methods used for the system requirements.
+ *
+ * @todo Deprecate this class. https://www.drupal.org/node/3054060
  */
 class SystemRequirements {
 

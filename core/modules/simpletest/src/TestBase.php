@@ -923,8 +923,7 @@ abstract class TestBase {
       $this->httpAuthCredentials = $username . ':' . $password;
     }
 
-    // Force assertion failures to be thrown as AssertionError for PHP 5 & 7
-    // compatibility.
+    // Force assertion failures to be thrown as exceptions.
     Handle::register();
 
     set_error_handler([$this, 'errorHandler']);

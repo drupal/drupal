@@ -5,7 +5,7 @@
   "homepage": "https://www.drupal.org/project/drupal",
   "license": "GPL-2.0-or-later",
   "require": {
-    "php": ">=5.5.9",
+    "php": ">=7.0.8",
     "doctrine/common": "^2.5",
     "doctrine/annotations": "1.2.*",
     "drupal/core-file-cache": "^8.2",

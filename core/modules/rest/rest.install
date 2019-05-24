@@ -9,23 +9,6 @@ use Drupal\Core\Config\Entity\ConfigEntityType;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 
 /**
- * Implements hook_requirements().
- */
-function rest_requirements($phase) {
-  $requirements = [];
-
-  if ($phase == 'runtime' && PHP_SAPI !== 'cli' && version_compare(PHP_VERSION, '5.6.0', '>=') && version_compare(PHP_VERSION, '7', '<') && ini_get('always_populate_raw_post_data') != -1) {
-    $requirements['always_populate_raw_post_data'] = [
-      'title' => t('always_populate_raw_post_data PHP setting'),
-      'value' => t('Not set to -1.'),
-      'severity' => REQUIREMENT_ERROR,
-      'description' => t('The always_populate_raw_post_data PHP setting should be set to -1 in PHP version 5.6. Please check the <a href="https://php.net/manual/en/ini.core.php#ini.always-populate-raw-post-data">PHP manual</a> for information on how to correct this.'),
-    ];
-  }
-  return $requirements;
-}
-
-/**
  * Install the REST config entity type and fix old settings-based config.
  *
  * @see rest_post_update_create_rest_resource_config_entities()

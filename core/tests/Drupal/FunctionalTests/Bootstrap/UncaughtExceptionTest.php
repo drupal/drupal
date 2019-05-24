@@ -105,16 +105,10 @@ class UncaughtExceptionTest extends BrowserTestBase {
    */
   public function testUncaughtFatalError() {
     $fatal_error = [
-      '%type' => 'Recoverable fatal error',
-      '@message' => 'Argument 1 passed to Drupal\error_test\Controller\ErrorTestController::Drupal\error_test\Controller\{closure}() must be of the type array, string given, called in ' . \Drupal::root() . '/core/modules/system/tests/modules/error_test/src/Controller/ErrorTestController.php on line 62 and defined',
+      '%type' => 'TypeError',
+      '@message' => 'Argument 1 passed to Drupal\error_test\Controller\ErrorTestController::Drupal\error_test\Controller\{closure}() must be of the type array, string given, called in ' . \Drupal::root() . '/core/modules/system/tests/modules/error_test/src/Controller/ErrorTestController.php on line 62',
       '%function' => 'Drupal\error_test\Controller\ErrorTestController->Drupal\error_test\Controller\{closure}()',
     ];
-    if (version_compare(PHP_VERSION, '7.0.0-dev') >= 0) {
-      // In PHP 7, instead of a recoverable fatal error we get a TypeError.
-      $fatal_error['%type'] = 'TypeError';
-      // The error message also changes in PHP 7.
-      $fatal_error['@message'] = 'Argument 1 passed to Drupal\error_test\Controller\ErrorTestController::Drupal\error_test\Controller\{closure}() must be of the type array, string given, called in ' . \Drupal::root() . '/core/modules/system/tests/modules/error_test/src/Controller/ErrorTestController.php on line 62';
-    }
     $this->drupalGet('error-test/generate-fatals');
     $this->assertResponse(500, 'Received expected HTTP status code.');
     $message = new FormattableMarkup('%type: @message in %function (line ', $fatal_error);

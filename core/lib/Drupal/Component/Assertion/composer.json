@@ -1,11 +1,11 @@
 {
   "name": "drupal/core-assertion",
-  "description": "Provides runtime assertions similar to those in PHP 7, under PHP 5.",
+  "description": "Provides helper functionality for runtime assertions.",
   "keywords": ["drupal"],
   "homepage": "https://www.drupal.org/project/drupal",
   "license": "GPL-2.0-or-later",
   "require": {
-    "php": ">=5.5.9"
+    "php": ">=7.0.8"
   },
   "autoload": {
     "psr-4": {

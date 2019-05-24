@@ -380,15 +380,6 @@ abstract class BrowserTestBase extends TestCase {
    * {@inheritdoc}
    */
   protected function setUp() {
-    // Installing Drupal creates 1000s of objects. Garbage collection of these
-    // objects is expensive. This appears to be causing random segmentation
-    // faults in PHP 5.x due to https://bugs.php.net/bug.php?id=72286. Once
-    // Drupal is installed is rebuilt, garbage collection is re-enabled.
-    $disable_gc = version_compare(PHP_VERSION, '7', '<') && gc_enabled();
-    if ($disable_gc) {
-      gc_collect_cycles();
-      gc_disable();
-    }
     parent::setUp();
 
     $this->setupBaseUrl();
@@ -402,11 +393,6 @@ abstract class BrowserTestBase extends TestCase {
 
     // Set up the browser test output file.
     $this->initBrowserOutputFile();
-    // If garbage collection was disabled prior to rebuilding container,
-    // re-enable it.
-    if ($disable_gc) {
-      gc_enable();
-    }
 
     // Ensure that the test is not marked as risky because of no assertions. In
     // PHPUnit 6 tests that only make assertions using $this->assertSession()

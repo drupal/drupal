@@ -190,12 +190,7 @@ class LinkItem extends FieldItemBase implements LinkItemInterface {
     // this, options must not be passed as a string anymore.
     if (is_string($values['options'])) {
       @trigger_error('Support for passing options as a serialized string is deprecated in 8.7.0 and will be removed before Drupal 9.0.0. Pass them as an array instead. See https://www.drupal.org/node/2961643.', E_USER_DEPRECATED);
-      if (version_compare(PHP_VERSION, '7.0.0', '>=')) {
-        $values['options'] = unserialize($values['options'], ['allowed_classes' => FALSE]);
-      }
-      else {
-        $values['options'] = unserialize($values['options']);
-      }
+      $values['options'] = unserialize($values['options'], ['allowed_classes' => FALSE]);
     }
     parent::setValue($values, $notify);
   }

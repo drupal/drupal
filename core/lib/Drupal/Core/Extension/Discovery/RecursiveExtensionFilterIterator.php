@@ -27,6 +27,7 @@ namespace Drupal\Core\Extension\Discovery;
  *
  * @todo Use RecursiveCallbackFilterIterator instead of the $acceptTests
  *   parameter forwarding once PHP 5.4 is available.
+ *   https://www.drupal.org/node/2532228
  */
 class RecursiveExtensionFilterIterator extends \RecursiveFilterIterator {
 

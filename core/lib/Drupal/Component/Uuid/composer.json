@@ -9,7 +9,7 @@
     "source": "https://www.drupal.org/project/drupal/git-instructions"
   },
   "require": {
-    "php": ">=5.5.9",
+    "php": ">=7.0.8",
     "drupal/core-utility": "^8.2"
   },
   "autoload": {

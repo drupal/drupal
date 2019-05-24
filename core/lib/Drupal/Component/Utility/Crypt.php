@@ -27,45 +27,12 @@ class Crypt {
    *
    * @return string
    *   A randomly generated string.
+   *
+   * @todo Deprecate in favor of random_bytes().
+   *   https://www.drupal.org/node/3054311
    */
   public static function randomBytes($count) {
-    try {
-      return random_bytes($count);
-    }
-    catch (\Exception $e) {
-      // $random_state does not use drupal_static as it stores random bytes.
-      static $random_state, $bytes;
-      // If the compatibility library fails, this simple hash-based PRNG will
-      // generate a good set of pseudo-random bytes on any system.
-      // Note that it may be important that our $random_state is passed
-      // through hash() prior to being rolled into $output, that the two hash()
-      // invocations are different, and that the extra input into the first one
-      // - the microtime() - is prepended rather than appended. This is to avoid
-      // directly leaking $random_state via the $output stream, which could
-      // allow for trivial prediction of further "random" numbers.
-      if (strlen($bytes) < $count) {
-        // Initialize on the first call. The $_SERVER variable includes user and
-        // system-specific information that varies a little with each page.
-        if (!isset($random_state)) {
-          $random_state = print_r($_SERVER, TRUE);
-          if (function_exists('getmypid')) {
-            // Further initialize with the somewhat random PHP process ID.
-            $random_state .= getmypid();
-          }
-          $bytes = '';
-          // Ensure mt_rand() is reseeded before calling it the first time.
-          mt_srand();
-        }
-
-        do {
-          $random_state = hash('sha256', microtime() . mt_rand() . $random_state);
-          $bytes .= hash('sha256', mt_rand() . $random_state, TRUE);
-        } while (strlen($bytes) < $count);
-      }
-      $output = substr($bytes, 0, $count);
-      $bytes = substr($bytes, $count);
-      return $output;
-    }
+    return random_bytes($count);
   }
 
   /**
@@ -120,37 +87,12 @@ class Crypt {
    *
    * @return bool
    *   Returns TRUE when the two strings are equal, FALSE otherwise.
+   *
+   * @todo Deprecate in favor of hash_equals().
+   *   https://www.drupal.org/node/3053956
    */
   public static function hashEquals($known_string, $user_string) {
-    if (function_exists('hash_equals')) {
-      return hash_equals($known_string, $user_string);
-    }
-    else {
-      // Backport of hash_equals() function from PHP 5.6
-      // @see https://github.com/php/php-src/blob/PHP-5.6/ext/hash/hash.c#L739
-      if (!is_string($known_string)) {
-        trigger_error(sprintf("Expected known_string to be a string, %s given", gettype($known_string)), E_USER_WARNING);
-        return FALSE;
-      }
-
-      if (!is_string($user_string)) {
-        trigger_error(sprintf("Expected user_string to be a string, %s given", gettype($user_string)), E_USER_WARNING);
-        return FALSE;
-      }
-
-      $known_len = strlen($known_string);
-      if ($known_len !== strlen($user_string)) {
-        return FALSE;
-      }
-
-      // This is security sensitive code. Do not optimize this for speed.
-      $result = 0;
-      for ($i = 0; $i < $known_len; $i++) {
-        $result |= (ord($known_string[$i]) ^ ord($user_string[$i]));
-      }
-
-      return $result === 0;
-    }
+    return hash_equals($known_string, $user_string);
   }
 
   /**

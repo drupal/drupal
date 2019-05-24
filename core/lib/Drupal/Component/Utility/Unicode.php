@@ -162,16 +162,6 @@ EOD;
     if (ini_get('mbstring.encoding_translation') != 0) {
       return 'mbstring.encoding_translation';
     }
-    // mbstring.http_input and mbstring.http_output are deprecated and empty by
-    // default in PHP 5.6.
-    if (version_compare(PHP_VERSION, '5.6.0') == -1) {
-      if (ini_get('mbstring.http_input') != 'pass') {
-        return 'mbstring.http_input';
-      }
-      if (ini_get('mbstring.http_output') != 'pass') {
-        return 'mbstring.http_output';
-      }
-    }
 
     return '';
   }

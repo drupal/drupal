@@ -15,7 +15,7 @@ QUICKSTART
 ----------------------
 
 Prerequisites:
-- PHP 5.5.9 (or greater) (https://php.net).
+- PHP 7.0.8 (or greater) (https://php.net).
 
 In the instructions below, replace the version x.y.z with the specific version
 you wish to download. Example: 8.6.0.zip. You can find the latest stable version
@@ -48,8 +48,8 @@ Drupal requires:
 - A web server with PHP support, for example:
   - Apache 2.0 (or greater) (http://httpd.apache.org/).
   - Nginx 1.1 (or greater) (http://nginx.com/).
-- PHP 5.5.9 (or greater) (http://php.net/). For better security support it is
-  recommended to update to at least 5.5.21 or 5.6.5.
+- PHP 7.0.8 (or greater) (http://php.net/). For better security support it is
+  recommended to update to at least 7.2.17.
 - One of the following databases:
   - MySQL 5.5.3 (or greater) (http://www.mysql.com/).
   - MariaDB 5.5.20 (or greater) (https://mariadb.org/). MariaDB is a fully
@@ -92,10 +92,6 @@ OPTIONAL SERVER REQUIREMENTS
   functionality, you need to verify that your hosting provider or server
   configuration allows the web server to initiate outbound connections. Most web
   hosting setups allow this.
-
-- PHP 5.5.21 provides features for improved security when used with MySQL. While
-  this is not required, it is highly encouraged to use PHP 5.5.21 or 5.6.5 and
-  above.
 
 INSTALLATION
 ------------

@@ -12,7 +12,7 @@ use Symfony\Component\HttpKernel\Controller\ArgumentResolverInterface;
 /**
  * Common base class for form interstitial controllers.
  *
- * @todo Make this a trait in PHP 5.4.
+ * @todo Make this a trait in PHP 5.4. https://www.drupal.org/node/3054053
  */
 abstract class FormController {
   use DependencySerializationTrait;

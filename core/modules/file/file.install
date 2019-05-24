@@ -102,10 +102,6 @@ function file_requirements($phase) {
       $value = t('Not enabled');
       $description = t('Your server is capable of displaying file upload progress, but does not have the required libraries. It is recommended to install the <a href="http://pecl.php.net/package/uploadprogress">PECL uploadprogress library</a>.');
     }
-    elseif ($implementation == 'apc') {
-      $value = t('Enabled (<a href="http://php.net/manual/apcu.configuration.php#ini.apcu.rfc1867">APC RFC1867</a>)');
-      $description = t('Your server is capable of displaying file upload progress using APC RFC1867. Note that only one upload at a time is supported. It is recommended to use the <a href="http://pecl.php.net/package/uploadprogress">PECL uploadprogress library</a> if possible.');
-    }
     elseif ($implementation == 'uploadprogress') {
       $value = t('Enabled (<a href="http://pecl.php.net/package/uploadprogress">PECL uploadprogress</a>)');
     }

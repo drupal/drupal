@@ -11,7 +11,7 @@
     "source": "https://www.drupal.org/project/drupal/git-instructions"
   },
   "require": {
-    "php": ">=5.5.9",
+    "php": ">=7.0.8",
     "symfony/dependency-injection": ">=2.8 <4.0.0"
   },
   "suggest": {
