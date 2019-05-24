@@ -474,23 +474,6 @@ function simpletest_script_init() {
     exit(SIMPLETEST_SCRIPT_EXIT_FAILURE);
   }
 
-  // Detect if we're in the top-level process using the private 'execute-test'
-  // argument. Determine if being run on drupal.org's testing infrastructure
-  // using the presence of 'drupaltestbot' in the database url.
-  // @todo https://www.drupal.org/project/drupalci_testbot/issues/2860941 Use
-  //   better environment variable to detect DrupalCI.
-  // @todo https://www.drupal.org/project/drupal/issues/2942473 Remove when
-  //   dropping PHPUnit 4 and PHP 5 support.
-  if (!$args['execute-test'] && preg_match('/drupalci/', $args['sqlite'])) {
-    // Update PHPUnit if needed and possible. There is a later check once the
-    // autoloader is in place to ensure we're on the correct version. We need to
-    // do this before the autoloader is in place to ensure that it is correct.
-    $composer = ($composer = rtrim('\\' === DIRECTORY_SEPARATOR ? preg_replace('/[\r\n].*/', '', `where.exe composer.phar`) : `which composer.phar`))
-      ? $php . ' ' . escapeshellarg($composer)
-      : 'composer';
-    passthru("$composer run-script drupal-phpunit-upgrade-check");
-  }
-
   $autoloader = require_once __DIR__ . '/../../autoload.php';
 
   // Get URL from arguments.

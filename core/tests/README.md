@@ -74,8 +74,6 @@ chromedriver using port 4444, and keep it running:
 
 * Ensure your vendor directory is populated
   (e.g. by running `composer install`)
-* If you're running PHP 7.0 or greater you will need to upgrade PHPUnit with
-  `composer run-script drupal-phpunit-upgrade`
 * Install [Node.js](https://nodejs.org/en/download/) and
   [yarn](https://yarnpkg.com/en/docs/install). The versions required are
   specificed inside core/package.json in the `engines` field
