@@ -15,6 +15,7 @@ use Drupal\Core\Session\AnonymousUserSession;
 use Drupal\Core\Test\AssertMailTrait;
 use Drupal\Core\Test\FunctionalTestSetupTrait;
 use Drupal\Core\Url;
+use Drupal\KernelTests\AssertContentTrait as CoreAssertContentTrait;
 use Drupal\system\Tests\Cache\AssertPageCacheContextsAndTagsTrait;
 use Drupal\Tests\EntityViewTrait;
 use Drupal\Tests\block\Traits\BlockCreationTrait as BaseBlockCreationTrait;
@@ -31,11 +32,14 @@ use Zend\Diactoros\Uri;
  * Test case for typical Drupal tests.
  *
  * @ingroup testing
+ *
+ * @deprecated in Drupal 8.8.0 and will be removed before Drupal 9.0.0. Instead,
+ *   use \Drupal\Tests\BrowserTestBase. See https://www.drupal.org/node/3030340.
  */
 abstract class WebTestBase extends TestBase {
 
   use FunctionalTestSetupTrait;
-  use AssertContentTrait;
+  use CoreAssertContentTrait;
   use TestFileCreationTrait {
     getTestFiles as drupalGetTestFiles;
     compareFiles as drupalCompareFiles;

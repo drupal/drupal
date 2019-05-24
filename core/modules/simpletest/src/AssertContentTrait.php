@@ -4,6 +4,8 @@ namespace Drupal\simpletest;
 
 use Drupal\KernelTests\AssertContentTrait as CoreAssertContentTrait;
 
+@trigger_error('\Drupal\simpletest\AssertContentTrait is deprecated in Drupal 8.6.0 and will be removed before Drupal 9.0.0. Instead, use \Drupal\KernelTests\AssertContentTrait.', E_USER_DEPRECATED);
+
 /**
  * Provides test methods to assert content.
  *
