@@ -254,23 +254,10 @@ class LayoutBuilderUiTest extends WebDriverTestBase {
    * Waits for the dialog to close and confirms no highlights are present.
    */
   private function assertHighlightNotExists() {
-    $this->waitForNoElement('#drupal-off-canvas');
-    $this->waitForNoElement('.is-layout-builder-highlighted');
-  }
+    $assert_session = $this->assertSession();
 
-  /**
-   * Waits for an element to be removed from the page.
-   *
-   * @param string $selector
-   *   CSS selector.
-   * @param int $timeout
-   *   (optional) Timeout in milliseconds, defaults to 10000.
-   *
-   * @todo Remove in https://www.drupal.org/node/2892440.
-   */
-  protected function waitForNoElement($selector, $timeout = 10000) {
-    $condition = "(typeof jQuery !== 'undefined' && jQuery('$selector').length === 0)";
-    $this->assertJsCondition($condition, $timeout);
+    $assert_session->assertNoElementAfterWait('css', '#drupal-off-canvas');
+    $assert_session->assertNoElementAfterWait('css', '.is-layout-builder-highlighted');
   }
 
 }

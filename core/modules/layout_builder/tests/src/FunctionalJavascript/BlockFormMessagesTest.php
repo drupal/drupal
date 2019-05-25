@@ -71,7 +71,7 @@ class BlockFormMessagesTest extends WebDriverTestBase {
     $block_css_locator = '#layout-builder .block-system-powered-by-block';
     $this->assertNotEmpty($assert_session->waitForElementVisible('css', $block_css_locator));
 
-    $this->waitForNoElement('#drupal-off-canvas');
+    $assert_session->assertNoElementAfterWait('css', '#drupal-off-canvas');
     $assert_session->assertWaitOnAjaxRequest();
     $this->drupalGet($this->getUrl());
     $this->clickElementWhenClickable($page->findButton('Save layout'));
@@ -85,21 +85,6 @@ class BlockFormMessagesTest extends WebDriverTestBase {
     $page->findField('Title')->setValue('');
     $this->clickElementWhenClickable($page->findButton('Update'));
     $this->assertMessagesDisplayed();
-  }
-
-  /**
-   * Waits for an element to be removed from the page.
-   *
-   * @param string $selector
-   *   CSS selector.
-   * @param int $timeout
-   *   (optional) Timeout in milliseconds, defaults to 10000.
-   *
-   * @todo Remove in https://www.drupal.org/node/2892440.
-   */
-  protected function waitForNoElement($selector, $timeout = 10000) {
-    $condition = "(typeof jQuery !== 'undefined' && jQuery('$selector').length === 0)";
-    $this->assertJsCondition($condition, $timeout);
   }
 
   /**

@@ -12,3 +12,11 @@ wait_for_element:
   dependencies:
     - core/jquery
     - core/drupal
+
+no_element_after_wait:
+  version: VERSION
+  js:
+    js/js_webassert_test.no_element_after_wait.js: {}
+  dependencies:
+    - core/jquery
+    - core/drupal

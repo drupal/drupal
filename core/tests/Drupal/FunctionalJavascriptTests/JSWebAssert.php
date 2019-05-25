@@ -387,4 +387,35 @@ JS;
     return $this->session->evaluateScript($full_javascript_visibility_test);
   }
 
+  /**
+   * Asserts that no matching element exists on the page after a wait.
+   *
+   * @param string $selector_type
+   *   The element selector type (css, xpath).
+   * @param string|array $selector
+   *   The element selector.
+   * @param int $timeout
+   *   (optional) Timeout in milliseconds, defaults to 10000.
+   * @param string $message
+   *   (optional) The exception message.
+   *
+   * @throws \Behat\Mink\Exception\ElementHtmlException
+   *   When an element still exists on the page.
+   */
+  public function assertNoElementAfterWait($selector_type, $selector, $timeout = 10000, $message = 'Element exists on the page.') {
+    $start = microtime(TRUE);
+    $end = $start + ($timeout / 1000);
+    $page = $this->session->getPage();
+
+    do {
+      $node = $page->find($selector_type, $selector);
+      if (empty($node)) {
+        return;
+      }
+      usleep(100000);
+    } while (microtime(TRUE) < $end);
+
+    throw new ElementHtmlException($message, $this->session->getDriver(), $node);
+  }
+
 }

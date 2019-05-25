@@ -125,7 +125,7 @@ class LayoutBuilderTest extends WebDriverTestBase {
     // Save the new block, and ensure it is displayed on the page.
     $page->pressButton('Add block');
     $assert_session->assertWaitOnAjaxRequest();
-    $this->assertNoElementAfterWait('#drupal-off-canvas');
+    $assert_session->assertNoElementAfterWait('css', '#drupal-off-canvas');
     $assert_session->addressEquals($layout_url);
     $assert_session->pageTextContains('Powered by Drupal');
     $assert_session->pageTextContains('This is the label');
@@ -158,7 +158,7 @@ class LayoutBuilderTest extends WebDriverTestBase {
     $page->pressButton('Add section');
     $assert_session->assertWaitOnAjaxRequest();
 
-    $this->assertNoElementAfterWait('.layout__region--second .block-system-powered-by-block');
+    $assert_session->assertNoElementAfterWait('css', '.layout__region--second .block-system-powered-by-block');
     $assert_session->elementTextNotContains('css', '.layout__region--second', 'Powered by Drupal');
 
     // Drag the block to a region in different section.
@@ -190,7 +190,7 @@ class LayoutBuilderTest extends WebDriverTestBase {
     $page->fillField('settings[label]', 'This is the new label');
     $page->pressButton('Update');
     $assert_session->assertWaitOnAjaxRequest();
-    $this->assertNoElementAfterWait('#drupal-off-canvas');
+    $assert_session->assertNoElementAfterWait('css', '#drupal-off-canvas');
 
     $assert_session->addressEquals($layout_url);
     $assert_session->pageTextContains('Powered by Drupal');
@@ -204,7 +204,7 @@ class LayoutBuilderTest extends WebDriverTestBase {
     $assert_session->pageTextContains('This action cannot be undone.');
     $page->pressButton('Remove');
     $assert_session->assertWaitOnAjaxRequest();
-    $this->assertNoElementAfterWait('#drupal-off-canvas');
+    $assert_session->assertNoElementAfterWait('css', '#drupal-off-canvas');
 
     $assert_session->pageTextNotContains('Powered by Drupal');
     $assert_session->linkExists('Add block');
@@ -296,7 +296,7 @@ class LayoutBuilderTest extends WebDriverTestBase {
     $page->pressButton('Add section');
     $assert_session->assertWaitOnAjaxRequest();
 
-    $this->assertNoElementAfterWait('#drupal-off-canvas');
+    $assert_session->assertNoElementAfterWait('css', '#drupal-off-canvas');
     $assert_session->pageTextContains('Default');
     $assert_session->linkExists('Add block');
 
@@ -307,7 +307,7 @@ class LayoutBuilderTest extends WebDriverTestBase {
     $page->fillField('layout_settings[setting_1]', 'Test setting value');
     $page->pressButton('Update');
     $assert_session->assertWaitOnAjaxRequest();
-    $this->assertNoElementAfterWait('#drupal-off-canvas');
+    $assert_session->assertNoElementAfterWait('css', '#drupal-off-canvas');
     $assert_session->pageTextContains('Test setting value');
     $this->assertPageNotReloaded();
   }
@@ -350,7 +350,7 @@ class LayoutBuilderTest extends WebDriverTestBase {
       'region' => 'content',
       'plugin_id' => 'system_powered_by_block',
     ]));
-    $this->assertNoElementAfterWait('#drupal-off-canvas');
+    $assert_session->assertNoElementAfterWait('css', '#drupal-off-canvas');
     $page->fillField('settings[label]', 'The block label');
     $page->fillField('settings[label_display]', TRUE);
     $page->pressButton('Add block');
@@ -370,28 +370,6 @@ class LayoutBuilderTest extends WebDriverTestBase {
     $assert_session->pageTextNotContains('Powered by Drupal');
     $assert_session->pageTextNotContains('The block label');
     $assert_session->linkNotExists('Add block');
-  }
-
-  /**
-   * Waits for an element to be removed from the page.
-   *
-   * @param string $selector
-   *   CSS selector.
-   * @param int $timeout
-   *   (optional) Timeout in milliseconds, defaults to 10000.
-   * @param string $message
-   *   (optional) Custom message to display with the assertion.
-   *
-   * @todo: Remove after https://www.drupal.org/project/drupal/issues/2892440
-   */
-  public function assertNoElementAfterWait($selector, $timeout = 10000, $message = '') {
-    $page = $this->getSession()->getPage();
-    if ($message === '') {
-      $message = "Element '$selector' was not on the page after wait.";
-    }
-    $this->assertTrue($page->waitFor($timeout / 1000, function () use ($page, $selector) {
-      return empty($page->find('css', $selector));
-    }), $message);
   }
 
   /**

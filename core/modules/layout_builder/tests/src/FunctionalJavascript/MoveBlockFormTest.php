@@ -83,10 +83,10 @@ class MoveBlockFormTest extends WebDriverTestBase {
     $this->assertNotEmpty($assert_session->waitForElementVisible('css', 'input[value="Add block"]'));
     $assert_session->assertWaitOnAjaxRequest();
     $page->pressButton('Add block');
+    $assert_session->assertNoElementAfterWait('css', '#drupal-off-canvas');
     $this->assertNotEmpty($assert_session->waitForElementVisible('css', $first_region_block_locator));
 
     // Ensure the request has completed before the test starts.
-    $this->waitForNoElement('#drupal-off-canvas');
     $assert_session->assertWaitOnAjaxRequest();
   }
 
@@ -153,21 +153,6 @@ class MoveBlockFormTest extends WebDriverTestBase {
   }
 
   /**
-   * Waits for an element to be removed from the page.
-   *
-   * @param string $selector
-   *   CSS selector.
-   * @param int $timeout
-   *   (optional) Timeout in milliseconds, defaults to 10000.
-   *
-   * @todo Remove in https://www.drupal.org/node/2892440.
-   */
-  protected function waitForNoElement($selector, $timeout = 10000) {
-    $condition = "(typeof jQuery !== 'undefined' && jQuery('$selector').length === 0)";
-    $this->assertJsCondition($condition, $timeout);
-  }
-
-  /**
    * Moves a block in the draggable table.
    *
    * @param string $direction
@@ -221,7 +206,7 @@ class MoveBlockFormTest extends WebDriverTestBase {
     $assert_session = $this->assertSession();
 
     $assert_session->assertWaitOnAjaxRequest();
-    $this->waitForNoElement('#drupal-off-canvas');
+    $assert_session->assertNoElementAfterWait('css', '#drupal-off-canvas');
 
     $region_selector = "[data-layout-delta=\"$section_delta\"] [data-region=\"$region\"]";
 

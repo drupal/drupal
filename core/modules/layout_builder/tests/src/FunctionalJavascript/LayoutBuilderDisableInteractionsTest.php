@@ -3,7 +3,6 @@
 namespace Drupal\Tests\layout_builder\FunctionalJavascript;
 
 use Behat\Mink\Element\NodeElement;
-use Behat\Mink\Exception\ElementHtmlException;
 use Drupal\block_content\Entity\BlockContent;
 use Drupal\block_content\Entity\BlockContentType;
 use Drupal\Component\Render\FormattableMarkup;
@@ -206,7 +205,7 @@ class LayoutBuilderDisableInteractionsTest extends WebDriverTestBase {
     $this->clickContextualLink('.block-field-blocknodebundle-with-section-fieldbody [data-contextual-id^="layout_builder_block"]', 'Configure');
     $this->assertNotEmpty($assert_session->waitForElementVisible('css', '.ui-dialog-titlebar [title="Close"]'));
     $page->pressButton('Close');
-    $this->assertNoElementAfterWait('css', '#drupal-off-canvas');
+    $assert_session->assertNoElementAfterWait('css', '#drupal-off-canvas');
 
     // Run the steps a second time after closing dialog, which reverses the
     // order that behaviors.layoutBuilderDisableInteractiveElements and
@@ -214,7 +213,7 @@ class LayoutBuilderDisableInteractionsTest extends WebDriverTestBase {
     $this->clickContextualLink('.block-field-blocknodebundle-with-section-fieldbody [data-contextual-id^="layout_builder_block"]', 'Configure');
     $this->assertNotEmpty($assert_session->waitForElementVisible('css', '#drupal-off-canvas'));
     $page->pressButton('Close');
-    $this->assertNoElementAfterWait('css', '#drupal-off-canvas');
+    $assert_session->assertNoElementAfterWait('css', '#drupal-off-canvas');
     $this->assertContextualLinkRetainsMouseup();
   }
 
@@ -301,36 +300,6 @@ class LayoutBuilderDisableInteractionsTest extends WebDriverTestBase {
     $driver_session = $this->getSession()->getDriver()->getWebDriverSession();
     $element = $driver_session->element('css selector', $selector);
     $driver_session->moveto(['element' => $element->getID()]);
-  }
-
-  /**
-   * Asserts that no matching element exists on the page after a wait.
-   *
-   * @param string $selector_type
-   *   The element selector type (CSS, XPath).
-   * @param string|array $selector
-   *   The element selector.
-   * @param int $timeout
-   *   (optional) Timeout in milliseconds, defaults to 10000.
-   * @param string $message
-   *   (optional) The exception message.
-   *
-   * @throws \Behat\Mink\Exception\ElementHtmlException
-   *   When an element still exists on the page.
-   */
-  public function assertNoElementAfterWait($selector_type, $selector, $timeout = 10000, $message = 'Element exists on the page.') {
-    $start = microtime(TRUE);
-    $end = $start + ($timeout / 1000);
-    $page = $this->getSession()->getPage();
-    do {
-      $node = $page->find($selector_type, $selector);
-      if (empty($node)) {
-        return;
-      }
-      usleep(100000);
-    } while (microtime(TRUE) < $end);
-
-    throw new ElementHtmlException($message, $this->session->getDriver(), $node);
   }
 
 }

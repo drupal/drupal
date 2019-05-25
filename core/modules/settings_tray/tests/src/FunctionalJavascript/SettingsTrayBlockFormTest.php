@@ -79,14 +79,14 @@ class SettingsTrayBlockFormTest extends SettingsTrayTestBase {
       if ($element = $page->find('css', "#toolbar-administration a.is-active")) {
         // If a tray was open from page load close it.
         $element->click();
-        $this->waitForNoElement("#toolbar-administration a.is-active");
+        $web_assert->assertNoElementAfterWait('css', "#toolbar-administration a.is-active");
       }
       $page->find('css', $toolbar_item)->click();
       $this->assertElementVisibleAfterWait('css', "{$toolbar_item}.is-active");
     }
     $this->enableEditMode();
     if (isset($toolbar_item)) {
-      $this->waitForNoElement("{$toolbar_item}.is-active");
+      $web_assert->assertNoElementAfterWait('css', "{$toolbar_item}.is-active");
     }
     $this->openBlockForm($block_selector);
     switch ($block_plugin) {
@@ -144,7 +144,7 @@ class SettingsTrayBlockFormTest extends SettingsTrayTestBase {
     $this->getSession()->getPage()->find('css', static::TOOLBAR_EDIT_LINK_SELECTOR)->mouseOver();
     $this->assertEditModeDisabled();
     $this->assertNotEmpty($web_assert->waitForElement('css', '#drupal-live-announce:contains(Exited edit mode)'));
-    $this->waitForNoElement('.contextual-toolbar-tab button:contains(Editing)');
+    $web_assert->assertNoElementAfterWait('css', '.contextual-toolbar-tab button:contains(Editing)');
     $web_assert->elementAttributeNotContains('css', '.dialog-off-canvas-main-canvas', 'class', 'js-settings-tray-edit-mode');
 
     // Clean up test data so each test does not impact the next.
