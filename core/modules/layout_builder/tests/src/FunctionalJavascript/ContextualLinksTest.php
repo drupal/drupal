@@ -111,7 +111,7 @@ class ContextualLinksTest extends WebDriverTestBase {
     $page->clickLink($block_name);
     $this->assertNotEmpty($assert_session->waitForElementVisible('css', '[data-drupal-selector=\'edit-actions-submit\']'));
 
-    $page->pressButton('Add block');
+    $page->pressButton('Add Block');
     $assert_session->assertNoElementAfterWait('css', '#drupal-off-canvas');
     $assert_session->assertWaitOnAjaxRequest();
   }

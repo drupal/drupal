@@ -82,7 +82,7 @@ class MoveBlockFormTest extends WebDriverTestBase {
     $page->clickLink('Powered by Drupal');
     $this->assertNotEmpty($assert_session->waitForElementVisible('css', 'input[value="Add Block"]'));
     $assert_session->assertWaitOnAjaxRequest();
-    $page->pressButton('Add block');
+    $page->pressButton('Add Block');
     $assert_session->assertNoElementAfterWait('css', '#drupal-off-canvas');
     $this->assertNotEmpty($assert_session->waitForElementVisible('css', $first_region_block_locator));
 
