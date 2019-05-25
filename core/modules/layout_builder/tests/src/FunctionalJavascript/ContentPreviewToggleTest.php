@@ -78,8 +78,7 @@ class ContentPreviewToggleTest extends WebDriverTestBase {
     $page->uncheckField('layout-builder-content-preview');
     $this->assertNotEmpty($assert_session->waitForElementVisible('css', '.layout-builder-block__content-preview-placeholder-label'));
 
-    // Wait for preview content hide() to complete.
-    $this->waitForNoElement('[data-layout-content-preview-placeholder-label] .field--name-body:visible');
+    // Confirm that block content is not on page.
     $assert_session->pageTextNotContains($content_preview_body_text);
     $this->assertContextualLinks();
 
@@ -124,7 +123,7 @@ class ContentPreviewToggleTest extends WebDriverTestBase {
     $this->assertSession()->assertWaitOnAjaxRequest();
     $this->assertNotEmpty($this->assertSession()->waitForButton('Close'));
     $page->pressButton('Close');
-    $this->waitForNoElement('#drupal-off-canvas');
+    $assert_session->assertNoElementAfterWait('css', '#drupal-off-canvas');
   }
 
   /**
@@ -145,21 +144,6 @@ class ContentPreviewToggleTest extends WebDriverTestBase {
     }, ArrayUtils::ARRAY_FILTER_USE_BOTH);
 
     $this->assertCount(count($items), $blocks_with_expected_text);
-  }
-
-  /**
-   * Waits for an element to be removed from the page.
-   *
-   * @param string $selector
-   *   CSS selector.
-   * @param int $timeout
-   *   (optional) Timeout in milliseconds, defaults to 10000.
-   *
-   * @todo Remove in https://www.drupal.org/node/2892440.
-   */
-  protected function waitForNoElement($selector, $timeout = 10000) {
-    $condition = "(typeof jQuery !== 'undefined' && jQuery('$selector').length === 0)";
-    $this->assertJsCondition($condition, $timeout);
   }
 
 }

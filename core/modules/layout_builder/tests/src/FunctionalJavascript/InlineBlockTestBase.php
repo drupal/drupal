@@ -116,8 +116,8 @@ abstract class InlineBlockTestBase extends WebDriverTestBase {
     $assert_session->waitForElement('css', "#drupal-off-canvas input[value='Remove']");
     $assert_session->assertWaitOnAjaxRequest();
     $page->find('css', '#drupal-off-canvas')->pressButton('Remove');
-    $this->waitForNoElement('#drupal-off-canvas');
-    $this->waitForNoElement(static::INLINE_BLOCK_LOCATOR);
+    $assert_session->assertNoElementAfterWait('css', '#drupal-off-canvas');
+    $assert_session->assertNoElementAfterWait('css', static::INLINE_BLOCK_LOCATOR);
     $assert_session->assertWaitOnAjaxRequest();
     $assert_session->pageTextNotContains($block_text);
   }
@@ -167,7 +167,7 @@ abstract class InlineBlockTestBase extends WebDriverTestBase {
     $this->assertSame($old_body, $textarea->getValue());
     $textarea->setValue($new_body);
     $page->pressButton('Update');
-    $this->waitForNoElement('#drupal-off-canvas');
+    $assert_session->assertNoElementAfterWait('css', '#drupal-off-canvas');
     $assert_session->assertWaitOnAjaxRequest();
     $this->assertDialogClosedAndTextVisible($new_body);
   }
@@ -180,9 +180,11 @@ abstract class InlineBlockTestBase extends WebDriverTestBase {
    * @param int $timeout
    *   (optional) Timeout in milliseconds, defaults to 10000.
    *
-   * @todo Remove in https://www.drupal.org/node/2892440.
+   * @deprecated in Drupal 8.8.x, will be removed before Drupal 9.0.0. Use
+   *   Drupal\FunctionalJavascriptTests\JSWebAssert::assertNoElementAfterWait()
    */
   protected function waitForNoElement($selector, $timeout = 10000) {
+    @trigger_error('::waitForNoElement is deprecated in Drupal 8.8.0 and will be removed before Drupal 9.0.0. Use \Drupal\FunctionalJavascriptTests\JSWebAssert::assertNoElementAfterWait() instead.', E_USER_DEPRECATED);
     $condition = "(typeof jQuery !== 'undefined' && jQuery('$selector').length === 0)";
     $this->assertJsCondition($condition, $timeout);
   }
@@ -197,7 +199,7 @@ abstract class InlineBlockTestBase extends WebDriverTestBase {
    */
   protected function assertDialogClosedAndTextVisible($text, $css_locator = NULL) {
     $assert_session = $this->assertSession();
-    $this->waitForNoElement('#drupal-off-canvas');
+    $assert_session->assertNoElementAfterWait('css', '#drupal-off-canvas');
     $assert_session->assertWaitOnAjaxRequest();
     $assert_session->elementNotExists('css', '#drupal-off-canvas');
     if ($css_locator) {
