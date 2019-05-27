@@ -242,7 +242,7 @@ function rdf_comment_storage_load($comments) {
     // bubbleable metadata, because it can be outside of a render context.
     $comment->rdf_data['entity_uri'] = $entity->toUrl()->toString(TRUE)->getGeneratedUrl();
     if ($comment->hasParentComment()) {
-      $comment->rdf_data['pid_uri'] = $comment->getParentComment()->toUrl()->toString();
+      $comment->rdf_data['pid_uri'] = $comment->getParentComment()->toUrl()->toString(TRUE)->getGeneratedUrl();
     }
   }
 }
