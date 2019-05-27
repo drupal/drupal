@@ -7,6 +7,7 @@ use Drupal\Core\Cache\MemoryCache\MemoryCacheInterface;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Config\Entity\ConfigEntityStorage;
 use Drupal\Core\Database\Connection;
+use Drupal\Core\Database\Database;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
@@ -118,7 +119,7 @@ class ShortcutSetStorage extends ConfigEntityStorage implements ShortcutSetStora
    * {@inheritdoc}
    */
   public function countAssignedUsers(ShortcutSetInterface $shortcut_set) {
-    return db_query('SELECT COUNT(*) FROM {shortcut_set_users} WHERE set_name = :name', [':name' => $shortcut_set->id()])->fetchField();
+    return Database::getConnection()->query('SELECT COUNT(*) FROM {shortcut_set_users} WHERE set_name = :name', [':name' => $shortcut_set->id()])->fetchField();
   }
 
   /**

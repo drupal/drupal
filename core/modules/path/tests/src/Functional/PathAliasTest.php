@@ -368,7 +368,7 @@ class PathAliasTest extends PathTestBase {
    *   Integer representing the path ID.
    */
   public function getPID($alias) {
-    return db_query("SELECT pid FROM {url_alias} WHERE alias = :alias", [':alias' => $alias])->fetchField();
+    return Database::getConnection()->query("SELECT pid FROM {url_alias} WHERE alias = :alias", [':alias' => $alias])->fetchField();
   }
 
   /**

@@ -221,7 +221,7 @@ class BlockContentCreationTest extends BlockContentTestBase {
       $this->assertTrue($id, 'Transactions not supported, and block found in database.');
 
       // Check that the failed rollback was logged.
-      $records = db_query("SELECT wid FROM {watchdog} WHERE message LIKE 'Explicit rollback failed%'")->fetchAll();
+      $records = $connection->query("SELECT wid FROM {watchdog} WHERE message LIKE 'Explicit rollback failed%'")->fetchAll();
       $this->assertTrue(count($records) > 0, 'Transactions not supported, and rollback error logged to watchdog.');
     }
   }

@@ -8,6 +8,7 @@ use Drupal\big_pipe\Render\BigPipe;
 use Drupal\big_pipe_test\BigPipePlaceholderTestCases;
 use Drupal\Component\Serialization\Json;
 use Drupal\Component\Utility\Html;
+use Drupal\Core\Database\Database;
 use Drupal\Core\Logger\RfcLogLevel;
 use Drupal\Core\Url;
 use Drupal\Tests\BrowserTestBase;
@@ -146,7 +147,8 @@ class BigPipeTest extends BrowserTestBase {
     $this->assertSessionCookieExists(TRUE);
     $this->assertBigPipeNoJsCookieExists(FALSE);
 
-    $log_count = db_query('SELECT COUNT(*) FROM {watchdog}')->fetchField();
+    $connection = Database::getConnection();
+    $log_count = $connection->query('SELECT COUNT(*) FROM {watchdog}')->fetchField();
 
     // By not calling performMetaRefresh() here, we simulate JavaScript being
     // enabled, because as far as the BigPipe module is concerned, JavaScript is
@@ -184,8 +186,8 @@ class BigPipeTest extends BrowserTestBase {
     $this->assertTrue(in_array('big_pipe/big_pipe', explode(',', $this->getDrupalSettings()['ajaxPageState']['libraries'])), 'BigPipe asset library is present.');
 
     // Verify that the two expected exceptions are logged as errors.
-    $this->assertEqual($log_count + 2, db_query('SELECT COUNT(*) FROM {watchdog}')->fetchField(), 'Two new watchdog entries.');
-    $records = db_query('SELECT * FROM {watchdog} ORDER BY wid DESC LIMIT 2')->fetchAll();
+    $this->assertEqual($log_count + 2, $connection->query('SELECT COUNT(*) FROM {watchdog}')->fetchField(), 'Two new watchdog entries.');
+    $records = $connection->query('SELECT * FROM {watchdog} ORDER BY wid DESC LIMIT 2')->fetchAll();
     $this->assertEqual(RfcLogLevel::ERROR, $records[0]->severity);
     $this->assertTrue(FALSE !== strpos((string) unserialize($records[0]->variables)['@message'], 'Oh noes!'));
     $this->assertEqual(RfcLogLevel::ERROR, $records[1]->severity);

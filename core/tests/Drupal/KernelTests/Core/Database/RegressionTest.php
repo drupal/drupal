@@ -30,7 +30,7 @@ class RegressionTest extends DatabaseTestBase {
         'job' => $job,
       ])->execute();
 
-    $from_database = db_query('SELECT job FROM {test} WHERE job = :job', [':job' => $job])->fetchField();
+    $from_database = $this->connection->query('SELECT job FROM {test} WHERE job = :job', [':job' => $job])->fetchField();
     $this->assertSame($job, $from_database, 'The database handles UTF-8 characters cleanly.');
   }
 

@@ -13,10 +13,10 @@ class QueryTest extends DatabaseTestBase {
    * Tests that we can pass an array of values directly in the query.
    */
   public function testArraySubstitution() {
-    $names = db_query('SELECT name FROM {test} WHERE age IN ( :ages[] ) ORDER BY age', [':ages[]' => [25, 26, 27]])->fetchAll();
+    $names = $this->connection->query('SELECT name FROM {test} WHERE age IN ( :ages[] ) ORDER BY age', [':ages[]' => [25, 26, 27]])->fetchAll();
     $this->assertEqual(count($names), 3, 'Correct number of names returned');
 
-    $names = db_query('SELECT name FROM {test} WHERE age IN ( :ages[] ) ORDER BY age', [':ages[]' => [25]])->fetchAll();
+    $names = $this->connection->query('SELECT name FROM {test} WHERE age IN ( :ages[] ) ORDER BY age', [':ages[]' => [25]])->fetchAll();
     $this->assertEqual(count($names), 1, 'Correct number of names returned');
   }
 
@@ -25,7 +25,7 @@ class QueryTest extends DatabaseTestBase {
    */
   public function testScalarSubstitution() {
     try {
-      $names = db_query('SELECT name FROM {test} WHERE age IN ( :ages[] ) ORDER BY age', [':ages[]' => 25])->fetchAll();
+      $names = $this->connection->query('SELECT name FROM {test} WHERE age IN ( :ages[] ) ORDER BY age', [':ages[]' => 25])->fetchAll();
       $this->fail('Array placeholder with scalar argument should result in an exception.');
     }
     catch (\InvalidArgumentException $e) {
@@ -44,7 +44,7 @@ class QueryTest extends DatabaseTestBase {
       '1' => '',
     ];
     try {
-      db_query("SELECT * FROM {test} WHERE name = :name", [':name' => $condition])->fetchObject();
+      $this->connection->query("SELECT * FROM {test} WHERE name = :name", [':name' => $condition])->fetchObject();
       $this->fail('SQL injection attempt via array arguments should result in a database exception.');
     }
     catch (\InvalidArgumentException $e) {
@@ -142,10 +142,10 @@ class QueryTest extends DatabaseTestBase {
    * @see http://bugs.php.net/bug.php?id=45259
    */
   public function testNumericExpressionSubstitution() {
-    $count = db_query('SELECT COUNT(*) >= 3 FROM {test}')->fetchField();
+    $count = $this->connection->query('SELECT COUNT(*) >= 3 FROM {test}')->fetchField();
     $this->assertEqual((bool) $count, TRUE);
 
-    $count = db_query('SELECT COUNT(*) >= :count FROM {test}', [
+    $count = $this->connection->query('SELECT COUNT(*) >= :count FROM {test}', [
       ':count' => 3,
     ])->fetchField();
     $this->assertEqual((bool) $count, TRUE);

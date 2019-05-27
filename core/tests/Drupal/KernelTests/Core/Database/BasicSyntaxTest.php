@@ -17,7 +17,7 @@ class BasicSyntaxTest extends DatabaseTestBase {
    * Tests string concatenation.
    */
   public function testConcatLiterals() {
-    $result = db_query('SELECT CONCAT(:a1, CONCAT(:a2, CONCAT(:a3, CONCAT(:a4, :a5))))', [
+    $result = $this->connection->query('SELECT CONCAT(:a1, CONCAT(:a2, CONCAT(:a3, CONCAT(:a4, :a5))))', [
       ':a1' => 'This',
       ':a2' => ' ',
       ':a3' => 'is',
@@ -51,7 +51,7 @@ class BasicSyntaxTest extends DatabaseTestBase {
    * Tests string concatenation with separator.
    */
   public function testConcatWsLiterals() {
-    $result = db_query("SELECT CONCAT_WS(', ', :a1, NULL, :a2, :a3, :a4)", [
+    $result = $this->connection->query("SELECT CONCAT_WS(', ', :a1, NULL, :a2, :a3, :a4)", [
       ':a1' => 'Hello',
       ':a2' => NULL,
       ':a3' => '',
@@ -64,7 +64,7 @@ class BasicSyntaxTest extends DatabaseTestBase {
    * Tests string concatenation with separator, with field values.
    */
   public function testConcatWsFields() {
-    $result = db_query("SELECT CONCAT_WS('-', :a1, name, :a2, age) FROM {test} WHERE age = :age", [
+    $result = $this->connection->query("SELECT CONCAT_WS('-', :a1, name, :a2, age) FROM {test} WHERE age = :age", [
       ':a1' => 'name',
       ':a2' => 'age',
       ':age' => 25,

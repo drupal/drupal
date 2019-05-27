@@ -20,7 +20,7 @@ class InsertDefaultsTest extends DatabaseTestBase {
 
     $schema = drupal_get_module_schema('database_test', 'test');
 
-    $job = db_query('SELECT job FROM {test} WHERE id = :id', [':id' => $id])->fetchField();
+    $job = $this->connection->query('SELECT job FROM {test} WHERE id = :id', [':id' => $id])->fetchField();
     $this->assertEqual($job, $schema['fields']['job']['default'], 'Default field value is set.');
   }
 
@@ -28,7 +28,7 @@ class InsertDefaultsTest extends DatabaseTestBase {
    * Tests that no action will be preformed if no fields are specified.
    */
   public function testDefaultEmptyInsert() {
-    $num_records_before = (int) db_query('SELECT COUNT(*) FROM {test}')->fetchField();
+    $num_records_before = (int) $this->connection->query('SELECT COUNT(*) FROM {test}')->fetchField();
 
     try {
       $this->connection->insert('test')->execute();
@@ -39,7 +39,7 @@ class InsertDefaultsTest extends DatabaseTestBase {
       $this->pass('Expected exception NoFieldsException has been thrown.');
     }
 
-    $num_records_after = (int) db_query('SELECT COUNT(*) FROM {test}')->fetchField();
+    $num_records_after = (int) $this->connection->query('SELECT COUNT(*) FROM {test}')->fetchField();
     $this->assertSame($num_records_before, $num_records_after, 'Do nothing as no fields are specified.');
   }
 
@@ -54,7 +54,7 @@ class InsertDefaultsTest extends DatabaseTestBase {
 
     $schema = drupal_get_module_schema('database_test', 'test');
 
-    $job = db_query('SELECT job FROM {test} WHERE id = :id', [':id' => $id])->fetchField();
+    $job = $this->connection->query('SELECT job FROM {test} WHERE id = :id', [':id' => $id])->fetchField();
     $this->assertEqual($job, $schema['fields']['job']['default'], 'Default field value is set.');
   }
 

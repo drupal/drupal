@@ -24,7 +24,7 @@ class SelectPagerDefaultTest extends DatabaseTestBase {
     // information forward to the actual query on the other side of the
     // HTTP request.
     $limit = 2;
-    $count = db_query('SELECT COUNT(*) FROM {test}')->fetchField();
+    $count = Database::getConnection()->query('SELECT COUNT(*) FROM {test}')->fetchField();
 
     $correct_number = $limit;
     $num_pages = floor($count / $limit);
@@ -58,7 +58,7 @@ class SelectPagerDefaultTest extends DatabaseTestBase {
     // information forward to the actual query on the other side of the
     // HTTP request.
     $limit = 2;
-    $count = db_query('SELECT COUNT(*) FROM {test_task}')->fetchField();
+    $count = Database::getConnection()->query('SELECT COUNT(*) FROM {test_task}')->fetchField();
 
     $correct_number = $limit;
     $num_pages = floor($count / $limit);

@@ -343,9 +343,9 @@ interface SelectInterface extends ConditionInterface, AlterableInterface, Extend
    *
    * @deprecated as of Drupal 8.1.x, will be removed in Drupal 9.0.0. Instead,
    *   change the query to use leftJoin(). For instance:
-   *   db_query('A')->rightJoin('B') is identical to
-   *   db_query('B')->leftJoin('A'). This functionality has been deprecated
-   *   because SQLite does not support it.
+   *   $injected_connection->query('A')->rightJoin('B') is identical to
+   *   $injected_connection->query('B')->leftJoin('A'). This functionality has
+   *   been deprecated because SQLite does not support it.
    *
    * @see https://www.drupal.org/node/2765249
    */

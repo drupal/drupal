@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\locale\Functional;
 
+use Drupal\Core\Database\Database;
 use Drupal\Core\Language\LanguageInterface;
 
 /**
@@ -346,14 +347,15 @@ class LocaleUpdateTest extends LocaleUpdateBase {
     $this->assertTranslation('Extraday', 'extra dag', 'nl');
 
     // Check if the language data is added to the database.
-    $result = db_query("SELECT project FROM {locale_file} WHERE langcode='nl'")->fetchField();
+    $connection = Database::getConnection();
+    $result = $connection->query("SELECT project FROM {locale_file} WHERE langcode='nl'")->fetchField();
     $this->assertTrue($result, 'Files added to file history');
 
     // Remove a language.
     $this->drupalPostForm('admin/config/regional/language/delete/nl', [], t('Delete'));
 
     // Check if the language data is removed from the database.
-    $result = db_query("SELECT project FROM {locale_file} WHERE langcode='nl'")->fetchField();
+    $result = $connection->query("SELECT project FROM {locale_file} WHERE langcode='nl'")->fetchField();
     $this->assertFalse($result, 'Files removed from file history');
 
     // Check that the Dutch translation is gone.

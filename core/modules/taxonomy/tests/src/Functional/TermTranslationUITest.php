@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\taxonomy\Functional;
 
+use Drupal\Core\Database\Database;
 use Drupal\Tests\content_translation\Functional\ContentTranslationUITestBase;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\taxonomy\Entity\Vocabulary;
@@ -91,7 +92,7 @@ class TermTranslationUITest extends ContentTranslationUITestBase {
 
     // Make sure that no row was inserted for taxonomy vocabularies which do
     // not have translations enabled.
-    $rows = db_query('SELECT tid, count(tid) AS count FROM {taxonomy_term_field_data} WHERE vid <> :vid GROUP BY tid', [':vid' => $this->bundle])->fetchAll();
+    $rows = Database::getConnection()->query('SELECT tid, count(tid) AS count FROM {taxonomy_term_field_data} WHERE vid <> :vid GROUP BY tid', [':vid' => $this->bundle])->fetchAll();
     foreach ($rows as $row) {
       $this->assertTrue($row->count < 2, 'Term does not have translations.');
     }

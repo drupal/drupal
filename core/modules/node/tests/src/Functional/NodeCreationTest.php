@@ -274,7 +274,7 @@ class NodeCreationTest extends NodeTestBase {
     // PostgreSQL doesn't support bytea LIKE queries, so we need to unserialize
     // first to check for the rollback exception message.
     $matches = [];
-    $query = db_query("SELECT wid, variables FROM {watchdog}");
+    $query = Database::getConnection()->query("SELECT wid, variables FROM {watchdog}");
     foreach ($query as $row) {
       $variables = (array) unserialize($row->variables);
       if (isset($variables['@message']) && $variables['@message'] === 'Test exception for rollback.') {
@@ -292,7 +292,7 @@ class NodeCreationTest extends NodeTestBase {
    *   records with the explicit rollback failed exception message.
    */
   protected static function getWatchdogIdsForFailedExplicitRollback() {
-    return db_query("SELECT wid FROM {watchdog} WHERE message LIKE 'Explicit rollback failed%'")->fetchAll();
+    return Database::getConnection()->query("SELECT wid FROM {watchdog} WHERE message LIKE 'Explicit rollback failed%'")->fetchAll();
   }
 
 }

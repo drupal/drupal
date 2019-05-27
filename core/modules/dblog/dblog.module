@@ -91,7 +91,7 @@ function dblog_cron() {
  *   List of uniquely defined database log message types.
  */
 function _dblog_get_message_types() {
-  return db_query('SELECT DISTINCT(type) FROM {watchdog} ORDER BY type')
+  return \Drupal::database()->query('SELECT DISTINCT(type) FROM {watchdog} ORDER BY type')
     ->fetchAllKeyed(0, 0);
 }
 

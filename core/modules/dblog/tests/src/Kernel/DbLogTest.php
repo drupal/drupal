@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\dblog\Kernel;
 
+use Drupal\Core\Database\Database;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\Tests\dblog\Functional\FakeLogEntries;
 
@@ -38,7 +39,7 @@ class DbLogTest extends KernelTestBase {
     // Generate additional log entries.
     $this->generateLogEntries($row_limit + 10);
     // Verify that the database log row count exceeds the row limit.
-    $count = db_query('SELECT COUNT(wid) FROM {watchdog}')->fetchField();
+    $count = Database::getConnection()->query('SELECT COUNT(wid) FROM {watchdog}')->fetchField();
     $this->assertGreaterThan($row_limit, $count, format_string('Dblog row count of @count exceeds row limit of @limit', ['@count' => $count, '@limit' => $row_limit]));
 
     // Get the number of enabled modules. Cron adds a log entry for each module.
@@ -60,16 +61,17 @@ class DbLogTest extends KernelTestBase {
    *   Number of new watchdog entries.
    */
   private function runCron() {
+    $connection = Database::getConnection();
     // Get last ID to compare against; log entries get deleted, so we can't
     // reliably add the number of newly created log entries to the current count
     // to measure number of log entries created by cron.
-    $last_id = db_query('SELECT MAX(wid) FROM {watchdog}')->fetchField();
+    $last_id = $connection->query('SELECT MAX(wid) FROM {watchdog}')->fetchField();
 
     // Run a cron job.
     $this->container->get('cron')->run();
 
     // Get last ID after cron was run.
-    $current_id = db_query('SELECT MAX(wid) FROM {watchdog}')->fetchField();
+    $current_id = $connection->query('SELECT MAX(wid) FROM {watchdog}')->fetchField();
 
     return $current_id - $last_id;
   }

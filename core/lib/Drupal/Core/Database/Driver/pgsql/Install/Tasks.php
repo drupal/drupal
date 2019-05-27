@@ -112,7 +112,7 @@ class Tasks extends InstallTasks {
    */
   protected function checkEncoding() {
     try {
-      if (db_query('SHOW server_encoding')->fetchField() == 'UTF8') {
+      if (Database::getConnection()->query('SHOW server_encoding')->fetchField() == 'UTF8') {
         $this->pass(t('Database is encoded in UTF-8'));
       }
       else {
@@ -147,7 +147,7 @@ class Tasks extends InstallTasks {
         // value.
         $query = "ALTER DATABASE \"" . $connection_options['database'] . "\" SET bytea_output = 'escape';";
         try {
-          db_query($query);
+          $database_connection->query($query);
         }
         catch (\Exception $e) {
           // Ignore possible errors when the user doesn't have the necessary
@@ -177,7 +177,7 @@ class Tasks extends InstallTasks {
    * Verify that a binary data roundtrip returns the original string.
    */
   protected function checkBinaryOutputSuccess() {
-    $bytea_output = db_query("SHOW bytea_output")->fetchField();
+    $bytea_output = Database::getConnection()->query("SHOW bytea_output")->fetchField();
     return ($bytea_output == 'escape');
   }
 

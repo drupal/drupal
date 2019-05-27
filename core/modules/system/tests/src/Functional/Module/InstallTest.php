@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\system\Functional\Module;
 
+use Drupal\Core\Database\Database;
 use Drupal\Core\Extension\ExtensionNameLengthException;
 use Drupal\Tests\BrowserTestBase;
 
@@ -24,7 +25,7 @@ class InstallTest extends BrowserTestBase {
    */
   public function testGetSchemaAtInstallTime() {
     // @see module_test_install()
-    $value = db_query("SELECT data FROM {module_test}")->fetchField();
+    $value = Database::getConnection()->query("SELECT data FROM {module_test}")->fetchField();
     $this->assertIdentical($value, 'varchar');
   }
 

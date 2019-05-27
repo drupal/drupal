@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\views\Kernel\Plugin;
 
+use Drupal\Core\Database\Database;
 use Drupal\Tests\user\Traits\UserCreationTrait;
 use Drupal\views\Views;
 
@@ -38,15 +39,16 @@ class RelationshipJoinInTest extends RelationshipJoinTestBase {
   public function testRelationshipInQuery() {
     // Update the first two Beatles to be authored by Kristiaan.
     $account_k = $this->createUser([], 'Kristiaan');
-    db_query("UPDATE {views_test_data} SET uid = :uid WHERE id IN (1,2)", [':uid' => $account_k->id()]);
+    $connection = Database::getConnection();
+    $connection->query("UPDATE {views_test_data} SET uid = :uid WHERE id IN (1,2)", [':uid' => $account_k->id()]);
 
     // Update the other two Beatles to be authored by Django.
     $account_d = $this->createUser([], 'Django');
-    db_query("UPDATE {views_test_data} SET uid = :uid WHERE id IN (3,4)", [':uid' => $account_d->id()]);
+    $connection->query("UPDATE {views_test_data} SET uid = :uid WHERE id IN (3,4)", [':uid' => $account_d->id()]);
 
     // Update Meredith to be authored by Silvie.
     $account_s = $this->createUser([], 'Silvie');
-    db_query("UPDATE {views_test_data} SET uid = :uid WHERE id = 5", [':uid' => $account_s->id()]);
+    $connection->query("UPDATE {views_test_data} SET uid = :uid WHERE id = 5", [':uid' => $account_s->id()]);
 
     $view = Views::getView('test_view');
     $view->setDisplay();

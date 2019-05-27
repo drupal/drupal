@@ -179,7 +179,7 @@ class NodeRevisionsAllTest extends NodeTestBase {
       ]),
       'Revision deleted.');
     $connection = Database::getConnection();
-    $this->assertTrue(db_query('SELECT COUNT(vid) FROM {node_revision} WHERE nid = :nid and vid = :vid',
+    $this->assertTrue($connection->query('SELECT COUNT(vid) FROM {node_revision} WHERE nid = :nid and vid = :vid',
       [':nid' => $node->id(), ':vid' => $nodes[1]->getRevisionId()])->fetchField() == 0,
       'Revision not found.');
 

@@ -1028,7 +1028,7 @@ abstract class Connection {
    * For example, the following does a case-insensitive query for all rows whose
    * name starts with $prefix:
    * @code
-   * $result = db_query(
+   * $result = $injected_connection->query(
    *   'SELECT * FROM person WHERE name LIKE :pattern',
    *   array(':pattern' => $injected_connection->escapeLike($prefix) . '%')
    * );

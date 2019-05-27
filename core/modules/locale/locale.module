@@ -820,7 +820,7 @@ function locale_translation_get_file_history() {
 
   if (empty($history)) {
     // Get file history from the database.
-    $result = db_query('SELECT project, langcode, filename, version, uri, timestamp, last_checked FROM {locale_file}');
+    $result = \Drupal::database()->query('SELECT project, langcode, filename, version, uri, timestamp, last_checked FROM {locale_file}');
     foreach ($result as $file) {
       $file->type = $file->timestamp ? LOCALE_TRANSLATION_CURRENT : '';
       $history[$file->project][$file->langcode] = $file;

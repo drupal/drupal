@@ -214,10 +214,11 @@ function search_cron() {
  */
 function search_update_totals() {
   $connection = \Drupal::database();
+  $replica = \Drupal::service('database.replica');
   // Update word IDF (Inverse Document Frequency) counts for new/changed words.
   foreach (search_dirty() as $word => $dummy) {
     // Get total count
-    $total = db_query("SELECT SUM(score) FROM {search_index} WHERE word = :word", [':word' => $word], ['target' => 'replica'])->fetchField();
+    $total = $replica->query("SELECT SUM(score) FROM {search_index} WHERE word = :word", [':word' => $word])->fetchField();
     // Apply Zipf's law to equalize the probability distribution.
     $total = log10(1 + 1 / (max(1, $total)));
     $connection->merge('search_total')
@@ -228,7 +229,7 @@ function search_update_totals() {
   // Find words that were deleted from search_index, but are still in
   // search_total. We use a LEFT JOIN between the two tables and keep only the
   // rows which fail to join.
-  $result = db_query("SELECT t.word AS realword, i.word FROM {search_total} t LEFT JOIN {search_index} i ON t.word = i.word WHERE i.word IS NULL", [], ['target' => 'replica']);
+  $result = $replica->query("SELECT t.word AS realword, i.word FROM {search_total} t LEFT JOIN {search_index} i ON t.word = i.word WHERE i.word IS NULL");
   $or = new Condition('OR');
   foreach ($result as $word) {
     $or->condition('word', $word->realword);

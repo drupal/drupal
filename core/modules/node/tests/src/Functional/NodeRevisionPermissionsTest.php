@@ -102,9 +102,10 @@ class NodeRevisionPermissionsTest extends NodeTestBase {
     $permutations = $this->generatePermutations($parameters);
 
     $node_revision_access = \Drupal::service('access_check.node.revision');
+    $connection = \Drupal::database();
     foreach ($permutations as $case) {
       // Skip this test if there are no revisions for the node.
-      if (!($revision->isDefaultRevision() && (db_query('SELECT COUNT(vid) FROM {node_field_revision} WHERE nid = :nid', [':nid' => $revision->id()])->fetchField() == 1 || $case['op'] == 'update' || $case['op'] == 'delete'))) {
+      if (!($revision->isDefaultRevision() && ($connection->query('SELECT COUNT(vid) FROM {node_field_revision} WHERE nid = :nid', [':nid' => $revision->id()])->fetchField() == 1 || $case['op'] == 'update' || $case['op'] == 'delete'))) {
         if (!empty($case['account']->is_admin) || $case['account']->hasPermission($this->map[$case['op']])) {
           $this->assertTrue($node_revision_access->checkAccess($revision, $case['account'], $case['op']), "{$this->map[$case['op']]} granted.");
         }
@@ -150,9 +151,10 @@ class NodeRevisionPermissionsTest extends NodeTestBase {
 
     $permutations = $this->generatePermutations($parameters);
     $node_revision_access = \Drupal::service('access_check.node.revision');
+    $connection = \Drupal::database();
     foreach ($permutations as $case) {
       // Skip this test if there are no revisions for the node.
-      if (!($revision->isDefaultRevision() && (db_query('SELECT COUNT(vid) FROM {node_field_revision} WHERE nid = :nid', [':nid' => $revision->id()])->fetchField() == 1 || $case['op'] == 'update' || $case['op'] == 'delete'))) {
+      if (!($revision->isDefaultRevision() && ($connection->query('SELECT COUNT(vid) FROM {node_field_revision} WHERE nid = :nid', [':nid' => $revision->id()])->fetchField() == 1 || $case['op'] == 'update' || $case['op'] == 'delete'))) {
         if (!empty($case['account']->is_admin) || $case['account']->hasPermission($this->typeMap[$case['op']])) {
           $this->assertTrue($node_revision_access->checkAccess($revision, $case['account'], $case['op']), "{$this->typeMap[$case['op']]} granted.");
         }

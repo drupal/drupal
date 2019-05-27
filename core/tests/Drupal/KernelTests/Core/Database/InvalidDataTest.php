@@ -40,7 +40,7 @@ class InvalidDataTest extends DatabaseTestBase {
     }
     catch (IntegrityConstraintViolationException $e) {
       // Check if the first record was inserted.
-      $name = db_query('SELECT name FROM {test} WHERE age = :age', [':age' => 63])->fetchField();
+      $name = $this->connection->query('SELECT name FROM {test} WHERE age = :age', [':age' => 63])->fetchField();
 
       if ($name == 'Elvis') {
         if (!Database::getConnection()->supportsTransactions()) {
@@ -117,7 +117,7 @@ class InvalidDataTest extends DatabaseTestBase {
     }
     catch (IntegrityConstraintViolationException $e) {
       // Check if the second record was inserted.
-      $name = db_query('SELECT name FROM {test} WHERE age = :age', [':age' => 75])->fetchField();
+      $name = $this->connection->query('SELECT name FROM {test} WHERE age = :age', [':age' => 75])->fetchField();
 
       if ($name == 'Frank') {
         if (!Database::getConnection()->supportsTransactions()) {

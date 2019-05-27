@@ -44,15 +44,17 @@ use Drupal\Core\Database\Query\Condition;
  * @return \Drupal\Core\Database\StatementInterface
  *   A prepared statement object, already executed.
  *
- * @deprecated as of Drupal 8.0.x, will be removed in Drupal 9.0.0. Instead, get
- *   a database connection injected into your service from the container and
- *   call query() on it. For example,
+ * @deprecated in drupal:8.0.0 and will be removed from drupal:9.0.0. Instead,
+ *   get a database connection injected into your service from the container
+ *   and call query() on it. For example,
  *   $injected_database->query($query, $args, $options);
  *
+ * @see https://www.drupal.org/node/2993033
  * @see \Drupal\Core\Database\Connection::query()
  * @see \Drupal\Core\Database\Connection::defaultOptions()
  */
 function db_query($query, array $args = [], array $options = []) {
+  @trigger_error('db_query() is deprecated in drupal:8.0.0. It will be removed before drupal:9.0.0. Instead, get a database connection injected into your service from the container and call query() on it. For example, $injected_database->query($query, $args, $options). See https://www.drupal.org/node/2993033', E_USER_DEPRECATED);
   return Database::getConnection(_db_get_target($options))->query($query, $args, $options);
 }
 

@@ -9,6 +9,7 @@ use Drupal\Core\Database\Query\Merge;
 use Drupal\Core\Database\Query\Select;
 use Drupal\Core\Database\Query\Truncate;
 use Drupal\Core\Database\Query\Update;
+use Drupal\Core\Database\StatementInterface;
 use Drupal\Core\Database\Transaction;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Database\DatabaseException;
@@ -408,6 +409,15 @@ class DatabaseLegacyTest extends DatabaseTestBase {
    */
   public function testDbUpdate() {
     $this->assertInstanceOf(Update::class, db_update('test'));
+  }
+
+  /**
+   * Tests the db_query() function.
+   *
+   * @expectedDeprecation db_query() is deprecated in drupal:8.0.0. It will be removed before drupal:9.0.0. Instead, get a database connection injected into your service from the container and call query() on it. For example, $injected_database->query($query, $args, $options). See https://www.drupal.org/node/2993033
+   */
+  public function testDbQuery() {
+    $this->assertInstanceOf(StatementInterface::class, db_query('SELECT name FROM {test} WHERE name = :name', [':name' => "John"]));
   }
 
   /**

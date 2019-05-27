@@ -3,6 +3,7 @@
 namespace Drupal\Tests\locale\Functional;
 
 use Drupal\Core\Url;
+use Drupal\Core\Database\Database;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Core\Language\LanguageInterface;
 
@@ -185,7 +186,7 @@ class LocaleImportFunctionalTest extends BrowserTestBase {
 
     // The database should now contain 6 customized strings (two imported
     // strings are not translated).
-    $count = db_query('SELECT COUNT(*) FROM {locales_target} WHERE customized = :custom', [':custom' => 1])->fetchField();
+    $count = Database::getConnection()->query('SELECT COUNT(*) FROM {locales_target} WHERE customized = :custom', [':custom' => 1])->fetchField();
     $this->assertEqual($count, 6, 'Customized translations successfully imported.');
 
     // Try importing a .po file with overriding strings, and ensure existing

@@ -3,6 +3,7 @@
 namespace Drupal\Tests\block_content\Functional;
 
 use Drupal\block_content\Entity\BlockContent;
+use Drupal\Core\Database\Database;
 
 /**
  * Tests $block_content->save() for saving content.
@@ -32,7 +33,7 @@ class BlockContentSaveTest extends BlockContentTestBase {
    */
   public function testImport() {
     // Custom block ID must be a number that is not in the database.
-    $max_id = db_query('SELECT MAX(id) FROM {block_content}')->fetchField();
+    $max_id = Database::getConnection()->query('SELECT MAX(id) FROM {block_content}')->fetchField();
     $test_id = $max_id + mt_rand(1000, 1000000);
     $info = $this->randomMachineName(8);
     $block_array = [

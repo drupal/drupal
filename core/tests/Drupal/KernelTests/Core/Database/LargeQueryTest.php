@@ -25,11 +25,11 @@ class LargeQueryTest extends DatabaseTestBase {
       // Retrieve the max_allowed_packet value from the current instance and
       // check if PHP is configured with sufficient allowed memory to be able
       // to generate a query larger than max_allowed_packet.
-      $max_allowed_packet = db_query('SELECT @@global.max_allowed_packet')->fetchField();
+      $max_allowed_packet = $this->connection->query('SELECT @@global.max_allowed_packet')->fetchField();
       if (Environment::checkMemoryLimit($max_allowed_packet + (16 * 1024 * 1024))) {
         $long_name = str_repeat('a', $max_allowed_packet + 1);
         try {
-          db_query('SELECT name FROM {test} WHERE name = :name', [':name' => $long_name]);
+          $this->connection->query('SELECT name FROM {test} WHERE name = :name', [':name' => $long_name]);
           $this->fail("An exception should be thrown for queries larger than 'max_allowed_packet'");
         }
         catch (DatabaseException $e) {
