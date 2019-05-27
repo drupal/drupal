@@ -169,4 +169,11 @@ class FileSystemDeprecationTest extends KernelTestBase {
     $this->assertNotNull(file_default_scheme());
   }
 
+  /**
+   * @expectedDeprecation file_directory_os_temp() is deprecated in drupal:8.3.0 and is removed from drupal:9.0.0. Use \Drupal\Component\FileSystem\FileSystem::getOsTemporaryDirectory() instead. See https://www.drupal.org/node/2418133
+   */
+  public function testDeprecatedDirectoryOsTemp() {
+    $this->assertNotNull(file_directory_os_temp());
+  }
+
 }
