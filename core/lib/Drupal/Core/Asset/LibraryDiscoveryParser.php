@@ -226,8 +226,8 @@ class LibraryDiscoveryParser {
    * This method sets the parsed information onto the library property.
    *
    * Library information is parsed from *.libraries.yml files; see
-   * editor.library.yml for an example. Every library must have at least one js
-   * or css entry. Each entry starts with a machine name and defines the
+   * editor.libraries.yml for an example. Every library must have at least one
+   * js or css entry. Each entry starts with a machine name and defines the
    * following elements:
    * - js: A list of JavaScript files to include. Each file is keyed by the file
    *   path. An item can have several attributes (like HTML
