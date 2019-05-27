@@ -429,6 +429,24 @@ class DatabaseLegacyTest extends DatabaseTestBase {
   }
 
   /**
+   * Tests deprecation of the $options 'target' key in Connection::query.
+   *
+   * @expectedDeprecation Passing a 'target' key to \Drupal\Core\Database\Connection::query $options argument is deprecated in Drupal 8.0.x and will be removed before Drupal 9.0.0. Instead, use \Drupal\Core\Database\Database::getConnection($target)->query(). See https://www.drupal.org/node/2993033.
+   */
+  public function testDbOptionsTarget() {
+    $this->assertNotNull($this->connection->query('SELECT * FROM {test}', [], ['target' => 'bar']));
+  }
+
+  /**
+   * Tests deprecation of the $options 'target' key in Select.
+   *
+   * @expectedDeprecation Passing a 'target' key to \Drupal\Core\Database\Connection::query $options argument is deprecated in Drupal 8.0.x and will be removed before Drupal 9.0.0. Instead, use \Drupal\Core\Database\Database::getConnection($target)->query(). See https://www.drupal.org/node/2993033.
+   */
+  public function testDbOptionsTargetInSelect() {
+    $this->assertNotNull($this->connection->select('test', 't', ['target' => 'bar'])->fields('t')->execute());
+  }
+
+  /**
    * Tests deprecation of the db_query_temporary() function.
    *
    * @expectedDeprecation db_query_temporary() is deprecated in Drupal 8.0.x and will be removed before Drupal 9.0.0. Instead, get a database connection injected into your service from the container and call queryTemporary() on it. For example, $injected_database->queryTemporary($query, $args, $options). See https://www.drupal.org/node/2993033

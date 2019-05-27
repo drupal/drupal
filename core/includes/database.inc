@@ -53,11 +53,7 @@ use Drupal\Core\Database\Query\Condition;
  * @see \Drupal\Core\Database\Connection::defaultOptions()
  */
 function db_query($query, array $args = [], array $options = []) {
-  if (empty($options['target'])) {
-    $options['target'] = 'default';
-  }
-
-  return Database::getConnection($options['target'])->query($query, $args, $options);
+  return Database::getConnection(_db_get_target($options))->query($query, $args, $options);
 }
 
 /**
@@ -92,11 +88,7 @@ function db_query($query, array $args = [], array $options = []) {
  */
 function db_query_range($query, $from, $count, array $args = [], array $options = []) {
   @trigger_error('db_query_range() is deprecated in Drupal 8.0.x and will be removed before Drupal 9.0.0. Instead, get a database connection injected into your service from the container and call queryRange() on it. For example, $injected_database->queryRange($query, $from, $count, $args, $options). See https://www.drupal.org/node/2993033', E_USER_DEPRECATED);
-  if (empty($options['target'])) {
-    $options['target'] = 'default';
-  }
-
-  return Database::getConnection($options['target'])->queryRange($query, $from, $count, $args, $options);
+  return Database::getConnection(_db_get_target($options))->queryRange($query, $from, $count, $args, $options);
 }
 
 /**
@@ -129,11 +121,7 @@ function db_query_range($query, $from, $count, array $args = [], array $options 
  */
 function db_query_temporary($query, array $args = [], array $options = []) {
   @trigger_error('db_query_temporary() is deprecated in Drupal 8.0.x and will be removed before Drupal 9.0.0. Instead, get a database connection injected into your service from the container and call queryTemporary() on it. For example, $injected_database->queryTemporary($query, $args, $options). See https://www.drupal.org/node/2993033', E_USER_DEPRECATED);
-  if (empty($options['target'])) {
-    $options['target'] = 'default';
-  }
-
-  return Database::getConnection($options['target'])->queryTemporary($query, $args, $options);
+  return Database::getConnection(_db_get_target($options))->queryTemporary($query, $args, $options);
 }
 
 /**
@@ -157,10 +145,7 @@ function db_query_temporary($query, array $args = [], array $options = []) {
  */
 function db_insert($table, array $options = []) {
   @trigger_error('db_insert() is deprecated in Drupal 8.0.x and will be removed before Drupal 9.0.0. Instead, get a database connection injected into your service from the container and call insert() on it. For example, $injected_database->insert($table, $options); See https://www.drupal.org/node/2993033', E_USER_DEPRECATED);
-  if (empty($options['target']) || $options['target'] == 'replica') {
-    $options['target'] = 'default';
-  }
-  return Database::getConnection($options['target'])->insert($table, $options);
+  return Database::getConnection(_db_get_target($options, FALSE))->insert($table, $options);
 }
 
 /**
@@ -184,12 +169,7 @@ function db_insert($table, array $options = []) {
  */
 function db_merge($table, array $options = []) {
   @trigger_error('db_merge() is deprecated in Drupal 8.0.x and will be removed before Drupal 9.0.0. Instead, get a database connection injected into your service from the container and call merge() on it. For example, $injected_database->merge($table, $options). See https://www.drupal.org/node/2993033', E_USER_DEPRECATED);
-  // @todo Move away from here setting default target connection,
-  // https://www.drupal.org/node/2947775
-  if (empty($options['target']) || $options['target'] == 'replica') {
-    $options['target'] = 'default';
-  }
-  return Database::getConnection($options['target'])->merge($table, $options);
+  return Database::getConnection(_db_get_target($options, FALSE))->merge($table, $options);
 }
 
 /**
@@ -213,10 +193,7 @@ function db_merge($table, array $options = []) {
  */
 function db_update($table, array $options = []) {
   @trigger_error('db_update() is deprecated in Drupal 8.0.x and will be removed before Drupal 9.0.0. Instead, get a database connection injected into your service from the container and call call update() on it. For example, $injected_database->update($table, $options); See https://www.drupal.org/node/2993033', E_USER_DEPRECATED);
-  if (empty($options['target']) || $options['target'] == 'replica') {
-    $options['target'] = 'default';
-  }
-  return Database::getConnection($options['target'])->update($table, $options);
+  return Database::getConnection(_db_get_target($options, FALSE))->update($table, $options);
 }
 
 /**
@@ -240,12 +217,7 @@ function db_update($table, array $options = []) {
  */
 function db_delete($table, array $options = []) {
   @trigger_error('db_delete is deprecated in Drupal 8.0.x and will be removed before Drupal 9.0.0. Instead, get a database connection injected into your service from the container and call delete() on it. For example, $injected_database->delete($table, $options). See https://www.drupal.org/node/2993033', E_USER_DEPRECATED);
-  // @todo Move away from here setting default target connection,
-  // https://www.drupal.org/node/2947775
-  if (empty($options['target']) || $options['target'] == 'replica') {
-    $options['target'] = 'default';
-  }
-  return Database::getConnection($options['target'])->delete($table, $options);
+  return Database::getConnection(_db_get_target($options, FALSE))->delete($table, $options);
 }
 
 /**
@@ -269,10 +241,7 @@ function db_delete($table, array $options = []) {
  */
 function db_truncate($table, array $options = []) {
   @trigger_error('db_truncate() is deprecated in Drupal 8.0.x and will be removed before Drupal 9.0.0. Instead, get a database connection injected into your service from the container and call truncate() on it. For example, $injected_database->truncate($table, $options). See https://www.drupal.org/node/2993033', E_USER_DEPRECATED);
-  if (empty($options['target']) || $options['target'] == 'replica') {
-    $options['target'] = 'default';
-  }
-  return Database::getConnection($options['target'])->truncate($table, $options);
+  return Database::getConnection(_db_get_target($options, FALSE))->truncate($table, $options);
 }
 
 /**
@@ -300,10 +269,7 @@ function db_truncate($table, array $options = []) {
  */
 function db_select($table, $alias = NULL, array $options = []) {
   @trigger_error('db_select() is deprecated in Drupal 8.0.x and will be removed before Drupal 9.0.0. Instead, get a database connection injected into your service from the container and call call select() on it. For example, $injected_database->db_select($table, $alias, $options); See https://www.drupal.org/node/2993033', E_USER_DEPRECATED);
-  if (empty($options['target'])) {
-    $options['target'] = 'default';
-  }
-  return Database::getConnection($options['target'])->select($table, $alias, $options);
+  return Database::getConnection(_db_get_target($options))->select($table, $alias, $options);
 }
 
 /**
@@ -328,12 +294,7 @@ function db_select($table, $alias = NULL, array $options = []) {
  */
 function db_transaction($name = NULL, array $options = []) {
   @trigger_error('db_transaction is deprecated in Drupal 8.0.x and will be removed before Drupal 9.0.0. Instead, get a database connection injected into your service from the container and call startTransaction() on it. For example, $injected_database->startTransaction($name). See https://www.drupal.org/node/2993033', E_USER_DEPRECATED);
-  // @todo Move away from here setting default target connection,
-  // https://www.drupal.org/node/2947775
-  if (empty($options['target'])) {
-    $options['target'] = 'default';
-  }
-  return Database::getConnection($options['target'])->startTransaction($name);
+  return Database::getConnection(_db_get_target($options))->startTransaction($name);
 }
 
 /**
@@ -472,10 +433,41 @@ function db_driver() {
  */
 function db_close(array $options = []) {
   @trigger_error('db_close() is deprecated in Drupal 8.0.x and will be removed before Drupal 9.0.0. Use \Drupal\Core\Database\Database::closeConnection() instead. See https://www.drupal.org/node/2993033.', E_USER_DEPRECATED);
-  if (empty($options['target'])) {
-    $options['target'] = NULL;
+  Database::closeConnection(_db_get_target($options));
+}
+
+/**
+ * Get target helper.
+ *
+ * Helps get "target" database from the query options.
+ *
+ * @param array $options
+ *   An array of options to control how the query operates. The array is passed
+ *   by reference, and its 'target' key is removed from it during the process,
+ *   so that it will not leak in calls to methods in the Database class.
+ * @param bool $allow_replica
+ *   (Optional) When false, 'replica' connection will be redirected to the
+ *   'default' one. Defaults to TRUE.
+ *
+ * @return string
+ *   The target database key for the database connection.
+ *
+ * @internal
+ *
+ * @deprecated in drupal:8.8.0 and will be removed from drupal:9.0.0. There is
+ *   no replacement, this function should not be used. It was introduced in
+ *   Drupal 8.8.0 only as a byproduct of the deprecation of the db_* procedural
+ *   functions.
+ *
+ * @see https://www.drupal.org/node/2993033
+ */
+function _db_get_target(array &$options, $allow_replica = TRUE) {
+  if (empty($options['target']) || ($options['target'] === 'replica' && !$allow_replica)) {
+    $options['target'] = 'default';
   }
-  Database::closeConnection($options['target']);
+  $target = $options['target'];
+  unset($options['target']);
+  return $target;
 }
 
 /**

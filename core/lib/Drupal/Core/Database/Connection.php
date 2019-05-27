@@ -212,12 +212,6 @@ abstract class Connection {
    *
    * A given query can be customized with a number of option flags in an
    * associative array:
-   * - target: The database "target" against which to execute a query. Valid
-   *   values are "default" or "replica". The system will first try to open a
-   *   connection to a database specified with the user-supplied key. If one
-   *   is not available, it will silently fall back to the "default" target.
-   *   If multiple databases connections are specified with the same target,
-   *   one will be selected at random for the duration of the request.
    * - fetch: This element controls how rows from a result set will be
    *   returned. Legal values include PDO::FETCH_ASSOC, PDO::FETCH_BOTH,
    *   PDO::FETCH_OBJ, PDO::FETCH_NUM, or a string representing the name of a
@@ -260,7 +254,6 @@ abstract class Connection {
    */
   protected function defaultOptions() {
     return [
-      'target' => 'default',
       'fetch' => \PDO::FETCH_OBJ,
       'return' => Database::RETURN_STATEMENT,
       'throw_exception' => TRUE,
@@ -606,6 +599,9 @@ abstract class Connection {
   public function query($query, array $args = [], $options = []) {
     // Use default values if not already set.
     $options += $this->defaultOptions();
+    if (isset($options['target'])) {
+      @trigger_error('Passing a \'target\' key to \\Drupal\\Core\\Database\\Connection::query $options argument is deprecated in Drupal 8.0.x and will be removed before Drupal 9.0.0. Instead, use \\Drupal\\Core\\Database\\Database::getConnection($target)->query(). See https://www.drupal.org/node/2993033.', E_USER_DEPRECATED);
+    }
 
     try {
       // We allow either a pre-bound statement object or a literal string.
