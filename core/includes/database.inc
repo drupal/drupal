@@ -464,6 +464,7 @@ function db_close(array $options = []) {
  * @see https://www.drupal.org/node/2993033
  */
 function _db_get_target(array &$options, $allow_replica = TRUE) {
+  @trigger_error('_db_get_target() is deprecated in drupal:8.8.0. Will be removed before drupal:9.0.0. See https://www.drupal.org/node/2993033', E_USER_DEPRECATED);
   if (empty($options['target']) || ($options['target'] === 'replica' && !$allow_replica)) {
     $options['target'] = 'default';
   }

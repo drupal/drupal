@@ -530,4 +530,17 @@ class DatabaseLegacyTest extends DatabaseTestBase {
     $this->assertTrue($session->has('ignore_replica_server'));
   }
 
+  /**
+   * Tests the _db_get_target() function.
+   *
+   * @expectedDeprecation _db_get_target() is deprecated in drupal:8.8.0. Will be removed before drupal:9.0.0. See https://www.drupal.org/node/2993033
+   */
+  public function testDbGetTarget() {
+    $op1 = $op2 = ['target' => 'replica'];
+    $this->assertEquals('replica', _db_get_target($op1));
+    $this->assertEquals('default', _db_get_target($op2, FALSE));
+    $this->assertEmpty($op1);
+    $this->assertEmpty($op2);
+  }
+
 }
