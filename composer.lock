@@ -2060,7 +2060,7 @@
                 },
                 {
                     "name": "Gert de Pagter",
-                    "email": "BackEndTea@gmail.com"
+                    "email": "backendtea@gmail.com"
                 }
             ],
             "description": "Symfony polyfill for ctype functions",
@@ -5357,7 +5357,7 @@
         "ext-spl": "*",
         "ext-tokenizer": "*",
         "ext-xml": "*",
-        "php": "^5.5.9|>=7.0.8"
+        "php": ">=7.0.8"
     },
     "platform-dev": []
 }
