@@ -237,7 +237,7 @@ class PhpBackend implements CacheBackendInterface {
    *
    * @param string $cidhash
    *   The hashed version of the original cache ID after being normalized.
-   * @param \stdClass $item
+   * @param object $item
    *   The cache item to store.
    */
   protected function writeItem($cidhash, \stdClass $item) {

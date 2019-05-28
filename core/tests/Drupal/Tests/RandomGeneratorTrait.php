@@ -100,7 +100,7 @@ trait RandomGeneratorTrait {
    * @param int $size
    *   The number of random keys to add to the object.
    *
-   * @return \stdClass
+   * @return object
    *   The generated object, with the specified number of random keys. Each key
    *   has a random string value.
    *

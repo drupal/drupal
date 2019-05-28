@@ -13,7 +13,6 @@ use Drupal\Component\Utility\Crypt;
 use Drupal\Component\Utility\OpCodeCache;
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Extension\ExtensionDiscovery;
-use Drupal\Core\Extension\ModuleHandler;
 use Drupal\Core\Site\Settings;
 
 /**

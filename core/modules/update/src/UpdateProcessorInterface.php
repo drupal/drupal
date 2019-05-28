@@ -10,7 +10,7 @@ interface UpdateProcessorInterface {
   /**
    * Claims an item in the update fetch queue for processing.
    *
-   * @return bool|\stdClass
+   * @return bool|object
    *   On success we return an item object. If the queue is unable to claim an
    *   item it returns false.
    *
@@ -71,7 +71,7 @@ interface UpdateProcessorInterface {
   /**
    * Deletes a finished item from the update fetch queue.
    *
-   * @param \stdClass $item
+   * @param object $item
    *   The item returned by \Drupal\Core\Queue\QueueInterface::claimItem().
    *
    * @see \Drupal\Core\Queue\QueueInterface::deleteItem()

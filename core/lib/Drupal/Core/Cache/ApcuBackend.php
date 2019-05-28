@@ -128,7 +128,7 @@ class ApcuBackend implements CacheBackendInterface {
    *
    * Checks that the item is either permanent or did not expire.
    *
-   * @param \stdClass $cache
+   * @param object $cache
    *   An item loaded from self::get() or self::getMultiple().
    * @param bool $allow_invalid
    *   If TRUE, a cache item may be returned even if it is expired or has been

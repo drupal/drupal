@@ -1060,7 +1060,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
    * @param string $table_name
    *   (optional) The table name to map records to. Defaults to the base table.
    *
-   * @return \stdClass
+   * @return object
    *   The record to store.
    */
   protected function mapToStorageRecord(ContentEntityInterface $entity, $table_name = NULL) {
@@ -1145,7 +1145,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
    * @param string $table_name
    *   (optional) The table name to map records to. Defaults to the data table.
    *
-   * @return \stdClass
+   * @return object
    *   The record to store.
    */
   protected function mapToDataStorageRecord(EntityInterface $entity, $table_name = NULL) {

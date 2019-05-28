@@ -167,9 +167,9 @@ class UrlGenerator implements UrlGeneratorInterface {
    *   The url path, without any base path, without the query string, not URL
    *   encoded.
    *
-   * @throws MissingMandatoryParametersException
+   * @throws \Symfony\Component\Routing\Exception\MissingMandatoryParametersException
    *   When some parameters are missing that are mandatory for the route.
-   * @throws InvalidParameterException
+   * @throws \Symfony\Component\Routing\Exception\InvalidParameterException
    *   When a parameter value for a placeholder is not correct because it does
    *   not match the requirement.
    */

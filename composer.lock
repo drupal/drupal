@@ -3382,11 +3382,11 @@
         },
         {
             "name": "drupal/coder",
-            "version": "8.3.2",
+            "version": "8.3.4",
             "source": {
                 "type": "git",
                 "url": "https://git.drupal.org/project/coder.git",
-                "reference": "44c80c21074df43572652f35bec4f184f9eae5e7"
+                "reference": "0a274321f4930f186d9f246783f0b4d743501cf8"
             },
             "require": {
                 "ext-mbstring": "*",
@@ -3415,7 +3415,7 @@
                 "phpcs",
                 "standards"
             ],
-            "time": "2019-04-14T17:56:07+00:00"
+            "time": "2019-05-24T11:44:05+00:00"
         },
         {
             "name": "fabpot/goutte",

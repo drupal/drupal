@@ -242,7 +242,7 @@ class ConfigEntityStorage extends EntityStorageBase implements ConfigEntityStora
   /**
    * Implements Drupal\Core\Entity\EntityStorageInterface::save().
    *
-   * @throws EntityMalformedException
+   * @throws \Drupal\Core\Entity\EntityMalformedException
    *   When attempting to save a configuration entity that has no ID.
    */
   public function save(EntityInterface $entity) {

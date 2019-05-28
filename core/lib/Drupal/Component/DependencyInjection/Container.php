@@ -416,7 +416,7 @@ class Container implements ContainerInterface {
   /**
    * Resolves arguments that represent services or variables to the real values.
    *
-   * @param array|\stdClass $arguments
+   * @param array|object $arguments
    *   The arguments to resolve.
    *
    * @return array

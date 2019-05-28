@@ -347,7 +347,7 @@ class ForumManager implements ForumManagerInterface {
    * @param int $tid
    *   The forum tid.
    *
-   * @return \stdClass
+   * @return object
    *   The last post for the given forum.
    */
   protected function getLastPost($tid) {
@@ -388,7 +388,7 @@ class ForumManager implements ForumManagerInterface {
    * @param int $tid
    *   The forum tid.
    *
-   * @return \stdClass|null
+   * @return object|null
    *   Statistics for the given forum if statistics exist, else NULL.
    */
   protected function getForumStatistics($tid) {

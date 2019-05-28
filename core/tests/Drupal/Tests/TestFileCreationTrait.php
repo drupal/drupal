@@ -101,9 +101,9 @@ trait TestFileCreationTrait {
    *
    * Callback for uasort() within \TestFileCreationTrait::getTestFiles().
    *
-   * @param \stdClass $file1
+   * @param object $file1
    *   The first file.
-   * @param \stdClass $file2
+   * @param object $file2
    *   The second class.
    *
    * @return int

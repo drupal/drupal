@@ -423,7 +423,7 @@ class WebAssert extends MinkWebAssert {
    * @param string|object $text
    *   Text value. Any non-string value will be cast to string.
    *
-   * @throws ExpectationException
+   * @throws \Behat\Mink\Exception\ExpectationException
    */
   public function responseContains($text) {
     parent::responseContains((string) $text);
@@ -435,7 +435,7 @@ class WebAssert extends MinkWebAssert {
    * @param string|object $text
    *   Text value. Any non-string value will be cast to string.
    *
-   * @throws ExpectationException
+   * @throws \Behat\Mink\Exception\ExpectationException
    */
   public function responseNotContains($text) {
     parent::responseNotContains((string) $text);

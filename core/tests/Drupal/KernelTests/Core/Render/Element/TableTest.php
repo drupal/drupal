@@ -231,13 +231,13 @@ class TableTest extends KernelTestBase {
    */
   public function testThemeTableHeaderRenderArray() {
     $header = [
-       [
+      [
         'data' => [
           '#markup' => 'one',
         ],
       ],
       'two',
-       [
+      [
         'data' => [
           '#type' => 'html_tag',
           '#tag' => 'b',
@@ -271,13 +271,13 @@ class TableTest extends KernelTestBase {
         '1-three',
       ],
       [
-         [
+        [
           'data' => [
             '#markup' => '2-one',
           ],
         ],
         '2-two',
-         [
+        [
           'data' => [
             '#type' => 'html_tag',
             '#tag' => 'b',

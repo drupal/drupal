@@ -292,7 +292,7 @@ class OptimizedPhpArrayDumper extends Dumper {
    *   collection needed to be resolved or not. This is used for optimizing
    *   deep arrays that don't need to be traversed.
    *
-   * @return \stdClass|array
+   * @return object|array
    *   The collection in a suitable format.
    */
   protected function dumpCollection($collection, &$resolve = FALSE) {
@@ -355,7 +355,7 @@ class OptimizedPhpArrayDumper extends Dumper {
    *   (optional) Whether the service will be shared with others.
    *   By default this parameter is FALSE.
    *
-   * @return \stdClass
+   * @return object
    *   A very lightweight private service value object.
    */
   protected function getPrivateServiceCall($id, Definition $definition, $shared = FALSE) {
@@ -381,7 +381,7 @@ class OptimizedPhpArrayDumper extends Dumper {
    * @return mixed
    *   The dumped value in a suitable format.
    *
-   * @throws RuntimeException
+   * @throws \Symfony\Component\DependencyInjection\Exception\RuntimeException
    *   When trying to dump object or resource.
    */
   protected function dumpValue($value) {
@@ -435,7 +435,7 @@ class OptimizedPhpArrayDumper extends Dumper {
    *   (optional) The reference object to process; needed to get the invalid
    *   behavior value.
    *
-   * @return string|\stdClass
+   * @return string|object
    *   A suitable representation of the service reference.
    */
   protected function getReferenceCall($id, Reference $reference = NULL) {
@@ -468,7 +468,7 @@ class OptimizedPhpArrayDumper extends Dumper {
    * @param int $invalid_behavior
    *   (optional) The invalid behavior of the service.
    *
-   * @return string|\stdClass
+   * @return string|object
    *   A suitable representation of the service reference.
    */
   protected function getServiceCall($id, $invalid_behavior = ContainerInterface::EXCEPTION_ON_INVALID_REFERENCE) {
@@ -485,7 +485,7 @@ class OptimizedPhpArrayDumper extends Dumper {
    * @param string $name
    *   The name of the parameter to get a reference for.
    *
-   * @return string|\stdClass
+   * @return string|object
    *   A suitable representation of the parameter reference.
    */
   protected function getParameterCall($name) {
