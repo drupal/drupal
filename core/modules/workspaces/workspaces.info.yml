@@ -6,4 +6,4 @@ core: 8.x
 package: Core (Experimental)
 configure: entity.workspace.collection
 dependencies:
- - user
+ - drupal:user
