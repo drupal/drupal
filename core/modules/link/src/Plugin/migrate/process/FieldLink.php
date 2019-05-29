@@ -119,7 +119,9 @@ class FieldLink extends ProcessPluginBase {
       $attributes = unserialize($attributes);
     }
 
-    if (!$attributes) {
+    // In rare cases Drupal 6/7 link attributes are triple serialized. To avoid
+    // further problems with them we set them to an empty array in this case.
+    if (!is_array($attributes)) {
       $attributes = [];
     }
 
