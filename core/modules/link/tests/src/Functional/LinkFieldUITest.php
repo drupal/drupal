@@ -197,7 +197,7 @@ class LinkFieldUITest extends BrowserTestBase {
 
     $expected_help_texts = [
       LinkItemInterface::LINK_EXTERNAL => 'This must be an external URL such as <em class="placeholder">http://example.com</em>.',
-      LinkItemInterface::LINK_GENERIC => 'You can also enter an internal path such as <em class="placeholder">/node/add</em> or an external URL such as <em class="placeholder">http://example.com</em>. Enter <em class="placeholder">&lt;front&gt;</em> to link to the front page.',
+      LinkItemInterface::LINK_GENERIC => 'You can also enter an internal path such as <em class="placeholder">/node/add</em> or an external URL such as <em class="placeholder">http://example.com</em>. Enter <em class="placeholder">&lt;front&gt;</em> to link to the front page. Enter <em class="placeholder">&lt;nolink&gt;</em> to display link text only',
       LinkItemInterface::LINK_INTERNAL => rtrim(Url::fromRoute('<front>', [], ['absolute' => TRUE])->toString(), '/'),
     ];
 
