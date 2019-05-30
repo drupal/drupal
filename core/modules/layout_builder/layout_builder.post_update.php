@@ -201,7 +201,12 @@ function layout_builder_post_update_make_layout_untranslatable() {
     if (isset($field_infos[OverridesSectionStorage::FIELD_NAME]['bundles'])) {
       $non_translatable_bundle_count = 0;
       foreach ($field_infos[OverridesSectionStorage::FIELD_NAME]['bundles'] as $bundle) {
-        $field_config = FieldConfig::loadByName($entity_type_id, $bundle, OverridesSectionStorage::FIELD_NAME);
+        // The field map can contain stale information. If the field does not
+        // exist, ignore it. The field map will be rebuilt when the cache is
+        // cleared at the end of the update process.
+        if (!$field_config = FieldConfig::loadByName($entity_type_id, $bundle, OverridesSectionStorage::FIELD_NAME)) {
+          continue;
+        }
         if (!$field_config->isTranslatable()) {
           $non_translatable_bundle_count++;
           // The layout field is already configured to be non-translatable so it
