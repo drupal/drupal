@@ -11,7 +11,7 @@ use Drupal\Core\Url;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Provides a form for reverting a node revision.
+ * Provides a form for deleting a node revision.
  *
  * @internal
  */
