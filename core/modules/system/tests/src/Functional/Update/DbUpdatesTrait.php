@@ -42,18 +42,4 @@ trait DbUpdatesTrait {
     $this->checkForMetaRefresh();
   }
 
-  /**
-   * Conditionally load Update API functions for the specified group.
-   *
-   * @param string $module
-   *   The name of the module defining the update functions.
-   * @param string $group
-   *   A name identifying the group of update functions to enable.
-   */
-  public static function includeUpdates($module, $group) {
-    if ($index = \Drupal::state()->get($module . '.db_updates.' . $group)) {
-      module_load_include('inc', $module, 'update/' . $group . '_' . $index);
-    }
-  }
-
 }

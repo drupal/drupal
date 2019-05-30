@@ -7,3 +7,4 @@ core: 8.x
 dependencies:
   - drupal:field
   - drupal:text
+  - drupal:system

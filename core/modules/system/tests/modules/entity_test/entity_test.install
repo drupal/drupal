@@ -5,7 +5,6 @@
  * Install, update and uninstall functions for the entity_test module.
  */
 
-use Drupal\system\Tests\Update\DbUpdatesTrait;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\field\Entity\FieldConfig;
 
@@ -55,5 +54,7 @@ function entity_test_schema() {
   return $schema;
 }
 
-DbUpdatesTrait::includeUpdates('entity_test', 'entity_definition_updates');
-DbUpdatesTrait::includeUpdates('entity_test', 'status_report');
+$index = \Drupal::state()->get('entity_test.db_updates.entity_definition_updates');
+module_load_include('inc', 'entity_test', 'update/entity_definition_updates_' . $index);
+$index = \Drupal::state()->get('entity_test.db_updates.status_report');
+module_load_include('inc', 'entity_test', 'update/status_report_' . $index);
