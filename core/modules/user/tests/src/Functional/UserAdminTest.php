@@ -41,7 +41,7 @@ class UserAdminTest extends BrowserTestBase {
     $user_c->name = 'User C';
     $user_c->save();
 
-    $user_storage = $this->container->get('entity.manager')->getStorage('user');
+    $user_storage = $this->container->get('entity_type.manager')->getStorage('user');
 
     // Create admin user to delete registered user.
     $admin_user = $this->drupalCreateUser(['administer users']);

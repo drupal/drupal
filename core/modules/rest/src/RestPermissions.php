@@ -22,7 +22,7 @@ class RestPermissions implements ContainerInjectionInterface {
   /**
    * The REST resource config storage.
    *
-   * @var \Drupal\Core\Entity\EntityManagerInterface
+   * @var \Drupal\Core\Entity\EntityStorageInterface
    */
   protected $resourceConfigStorage;
 

@@ -36,7 +36,7 @@ class DateFormatterTest extends KernelTestBase {
       'Long month name' => ['March' => 'marzo'],
     ]);
 
-    $formats = $this->container->get('entity.manager')
+    $formats = $this->container->get('entity_type.manager')
       ->getStorage('date_format')
       ->loadMultiple(['long', 'medium', 'short']);
     $formats['long']->setPattern('l, j. F Y - G:i')->save();

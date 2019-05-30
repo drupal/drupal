@@ -41,7 +41,7 @@ abstract class ChangeUserRoleBase extends ConfigurableActionBase implements Cont
       $configuration,
       $plugin_id,
       $plugin_definition,
-      $container->get('entity.manager')->getDefinition('user_role')
+      $container->get('entity_type.manager')->getDefinition('user_role')
     );
   }
 

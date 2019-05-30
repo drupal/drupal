@@ -54,7 +54,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
   public function _testImageFieldFormatters($scheme) {
     /** @var \Drupal\Core\Render\RendererInterface $renderer */
     $renderer = $this->container->get('renderer');
-    $node_storage = $this->container->get('entity.manager')->getStorage('node');
+    $node_storage = $this->container->get('entity_type.manager')->getStorage('node');
     $field_name = strtolower($this->randomMachineName());
     $field_settings = ['alt_field_required' => 0];
     $instance = $this->createImageField($field_name, 'article', ['uri_scheme' => $scheme], $field_settings);
@@ -230,7 +230,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
   public function testImageFieldSettings() {
     /** @var \Drupal\Core\Render\RendererInterface $renderer */
     $renderer = $this->container->get('renderer');
-    $node_storage = $this->container->get('entity.manager')->getStorage('node');
+    $node_storage = $this->container->get('entity_type.manager')->getStorage('node');
     $test_image = current($this->drupalGetTestFiles('image'));
     list(, $test_image_extension) = explode('.', $test_image->filename);
     $field_name = strtolower($this->randomMachineName());
@@ -349,7 +349,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     /** @var \Drupal\Core\Render\RendererInterface $renderer */
     $renderer = $this->container->get('renderer');
 
-    $node_storage = $this->container->get('entity.manager')->getStorage('node');
+    $node_storage = $this->container->get('entity_type.manager')->getStorage('node');
     // Create a new image field.
     $field_name = strtolower($this->randomMachineName());
     $this->createImageField($field_name, 'article');

@@ -174,7 +174,7 @@ class EntityAccessControlHandlerTest extends EntityLanguageTestBase {
 
     // Check that the default access control handler is used for entities that don't
     // have a specific access control handler defined.
-    $handler = $this->container->get('entity.manager')->getAccessControlHandler('entity_test_default_access');
+    $handler = $this->container->get('entity_type.manager')->getAccessControlHandler('entity_test_default_access');
     $this->assertTrue($handler instanceof EntityAccessControlHandler, 'The default entity handler is used for the entity_test_default_access entity type.');
 
     $entity = EntityTestDefaultAccess::create();

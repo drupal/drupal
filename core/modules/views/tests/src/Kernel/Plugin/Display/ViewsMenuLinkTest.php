@@ -26,13 +26,6 @@ class ViewsMenuLinkTest extends ViewsKernelTestBase {
   public static $testViews = ['test_page_display_menu'];
 
   /**
-   * The entity manager.
-   *
-   * @var \Drupal\Core\Entity\EntityManagerInterface
-   */
-  protected $entityManager;
-
-  /**
    * The menu link manager.
    *
    * @var \Drupal\Core\Menu\MenuLinkManagerInterface
@@ -52,7 +45,6 @@ class ViewsMenuLinkTest extends ViewsKernelTestBase {
   protected function setUp($import_test_views = TRUE) {
     parent::setUp($import_test_views);
 
-    $this->entityManager = $this->container->get('entity.manager');
     $this->menuLinkManager = $this->container->get('plugin.manager.menu.link');
     $this->menuLinkOverrides = $this->container->get('menu_link.static.overrides');
   }

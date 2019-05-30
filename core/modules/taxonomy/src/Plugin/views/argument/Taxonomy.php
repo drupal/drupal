@@ -38,7 +38,7 @@ class Taxonomy extends NumericArgument implements ContainerFactoryPluginInterfac
       $configuration,
       $plugin_id,
       $plugin_definition,
-      $container->get('entity.manager')->getStorage('taxonomy_term')
+      $container->get('entity_type.manager')->getStorage('taxonomy_term')
     );
   }
 

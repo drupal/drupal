@@ -131,7 +131,7 @@ class TermTest extends TaxonomyTestBase {
     $term1 = $this->createTerm($this->vocabulary);
     $terms_array = [];
 
-    $taxonomy_storage = $this->container->get('entity.manager')->getStorage('taxonomy_term');
+    $taxonomy_storage = $this->container->get('entity_type.manager')->getStorage('taxonomy_term');
 
     // Create 40 terms. Terms 1-12 get parent of $term1. All others are
     // individual terms.
@@ -257,7 +257,7 @@ class TermTest extends TaxonomyTestBase {
     foreach ($terms as $term) {
       $this->assertText($term, 'The term appears on the node preview.');
     }
-    $tree = $this->container->get('entity.manager')->getStorage('taxonomy_term')->loadTree($this->vocabulary->id());
+    $tree = $this->container->get('entity_type.manager')->getStorage('taxonomy_term')->loadTree($this->vocabulary->id());
     $this->assertTrue(empty($tree), 'The terms are not created on preview.');
 
     // taxonomy.module does not maintain its static caches.
@@ -396,7 +396,7 @@ class TermTest extends TaxonomyTestBase {
     $this->createTerm($this->vocabulary);
     $this->createTerm($this->vocabulary);
 
-    $taxonomy_storage = $this->container->get('entity.manager')->getStorage('taxonomy_term');
+    $taxonomy_storage = $this->container->get('entity_type.manager')->getStorage('taxonomy_term');
 
     // Fetch the created terms in the default alphabetical order, i.e. term1
     // precedes term2 alphabetically, and term2 precedes term3.
@@ -478,7 +478,7 @@ class TermTest extends TaxonomyTestBase {
     $this->assertEqual($edit['description[0][value]'], $term->getDescription(), 'Term description was successfully saved.');
     // Check that the parent tid is still there. The other parent (<root>) is
     // not added by \Drupal\taxonomy\TermStorageInterface::loadParents().
-    $parents = $this->container->get('entity.manager')->getStorage('taxonomy_term')->loadParents($term->id());
+    $parents = $this->container->get('entity_type.manager')->getStorage('taxonomy_term')->loadParents($term->id());
     $parent = reset($parents);
     $this->assertEqual($edit['parent[]'][1], $parent->id(), 'Term parents were successfully saved.');
   }

@@ -96,7 +96,7 @@ class ContentTranslationConfigImportTest extends KernelTestBase {
     $this->assertIdentical($config->get('id'), $config_id);
 
     // Verify that updates were performed.
-    $entity_type = $this->container->get('entity.manager')->getDefinition($entity_type_id);
+    $entity_type = $this->container->get('entity_type.manager')->getDefinition($entity_type_id);
     $table = $entity_type->getDataTable();
     $db_schema = $this->container->get('database')->schema();
     $result = $db_schema->fieldExists($table, 'content_translation_source') && $db_schema->fieldExists($table, 'content_translation_outdated');

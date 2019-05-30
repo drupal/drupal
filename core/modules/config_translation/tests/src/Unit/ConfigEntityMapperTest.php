@@ -22,11 +22,11 @@ class ConfigEntityMapperTest extends UnitTestCase {
   protected $configEntityMapper;
 
   /**
-   * The entity manager used for testing.
+   * The entity type manager used for testing.
    *
-   * @var \Drupal\Core\Entity\EntityManagerInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface|\PHPUnit_Framework_MockObject_MockObject
    */
-  protected $entityManager;
+  protected $entityTypeManager;
 
   /**
    * The entity instance used for testing.
@@ -57,7 +57,7 @@ class ConfigEntityMapperTest extends UnitTestCase {
   protected $eventDispatcher;
 
   protected function setUp() {
-    $this->entityManager = $this->getMock('Drupal\Core\Entity\EntityManagerInterface');
+    $this->entityTypeManager = $this->getMock('Drupal\Core\Entity\EntityTypeManagerInterface');
 
     $this->entity = $this->getMock('Drupal\Core\Config\Entity\ConfigEntityInterface');
 
@@ -97,7 +97,7 @@ class ConfigEntityMapperTest extends UnitTestCase {
       $this->getMock('Drupal\config_translation\ConfigMapperManagerInterface'),
       $this->routeProvider,
       $this->getStringTranslationStub(),
-      $this->entityManager,
+      $this->entityTypeManager,
       $this->languageManager,
       $this->eventDispatcher
     );
@@ -118,7 +118,7 @@ class ConfigEntityMapperTest extends UnitTestCase {
       ->expects($this->any())
       ->method('getConfigPrefix')
       ->will($this->returnValue('config_prefix'));
-    $this->entityManager
+    $this->entityTypeManager
       ->expects($this->once())
       ->method('getDefinition')
       ->with('configurable_language')
@@ -147,7 +147,7 @@ class ConfigEntityMapperTest extends UnitTestCase {
    */
   public function testGetOverviewRouteParameters() {
     $entity_type = $this->getMock('Drupal\Core\Config\Entity\ConfigEntityTypeInterface');
-    $this->entityManager
+    $this->entityTypeManager
       ->expects($this->once())
       ->method('getDefinition')
       ->with('configurable_language')
@@ -181,7 +181,7 @@ class ConfigEntityMapperTest extends UnitTestCase {
     $entity_type->expects($this->once())
       ->method('getLabel')
       ->will($this->returnValue('test'));
-    $this->entityManager
+    $this->entityTypeManager
       ->expects($this->once())
       ->method('getDefinition')
       ->with('configurable_language')
@@ -199,7 +199,7 @@ class ConfigEntityMapperTest extends UnitTestCase {
     $entity_type->expects($this->once())
       ->method('getLabel')
       ->will($this->returnValue('test'));
-    $this->entityManager
+    $this->entityTypeManager
       ->expects($this->once())
       ->method('getDefinition')
       ->with('configurable_language')

@@ -53,7 +53,7 @@ class AccountSettingsForm extends ConfigFormBase {
     return new static(
       $container->get('config.factory'),
       $container->get('module_handler'),
-      $container->get('entity.manager')->getStorage('user_role')
+      $container->get('entity_type.manager')->getStorage('user_role')
     );
   }
 

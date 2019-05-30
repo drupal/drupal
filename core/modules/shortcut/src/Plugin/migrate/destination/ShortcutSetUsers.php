@@ -52,7 +52,7 @@ class ShortcutSetUsers extends DestinationBase implements ContainerFactoryPlugin
       $plugin_id,
       $plugin_definition,
       $migration,
-      $container->get('entity.manager')->getStorage('shortcut_set')
+      $container->get('entity_type.manager')->getStorage('shortcut_set')
     );
   }
 

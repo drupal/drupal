@@ -60,7 +60,7 @@ class ViewStorageTest extends ViewsKernelTestBase {
   public function testConfigurationEntityCRUD() {
     // Get the configuration entity type and controller.
     $this->entityType = \Drupal::entityTypeManager()->getDefinition('view');
-    $this->controller = $this->container->get('entity.manager')->getStorage('view');
+    $this->controller = $this->container->get('entity_type.manager')->getStorage('view');
 
     // Confirm that an info array has been returned.
     $this->assertTrue($this->entityType instanceof EntityTypeInterface, 'The View info array is loaded.');

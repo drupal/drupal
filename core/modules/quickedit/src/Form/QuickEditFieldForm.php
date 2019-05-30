@@ -64,7 +64,7 @@ class QuickEditFieldForm extends FormBase {
     return new static(
       $container->get('tempstore.private'),
       $container->get('module_handler'),
-      $container->get('entity.manager')->getStorage('node_type')
+      $container->get('entity_type.manager')->getStorage('node_type')
     );
   }
 

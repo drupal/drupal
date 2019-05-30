@@ -65,7 +65,7 @@ class UnpublishByKeywordComment extends ConfigurableActionBase implements Contai
       $configuration,
       $plugin_id,
       $plugin_definition,
-      $container->get('entity.manager')->getViewBuilder('comment'),
+      $container->get('entity_type.manager')->getViewBuilder('comment'),
       $container->get('renderer')
     );
   }

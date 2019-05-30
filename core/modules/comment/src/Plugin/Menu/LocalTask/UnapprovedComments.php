@@ -47,7 +47,7 @@ class UnapprovedComments extends LocalTaskDefault implements ContainerFactoryPlu
       $configuration,
       $plugin_id,
       $plugin_definition,
-      $container->get('entity.manager')->getStorage('comment')
+      $container->get('entity_type.manager')->getStorage('comment')
     );
   }
 

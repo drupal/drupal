@@ -41,7 +41,7 @@ class ViewsBlock implements ContainerDeriverInterface {
   public static function create(ContainerInterface $container, $base_plugin_id) {
     return new static(
       $base_plugin_id,
-      $container->get('entity.manager')->getStorage('view')
+      $container->get('entity_type.manager')->getStorage('view')
     );
   }
 

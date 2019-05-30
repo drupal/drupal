@@ -29,11 +29,6 @@ class ManageDisplayTest extends WebDriverTestBase {
   protected $type;
 
   /**
-   * @var \Drupal\Core\Entity\EntityManagerInterface
-   */
-  protected $entity_manager;
-
-  /**
    * @var \Drupal\Core\Entity\EntityTypeManagerInterface
    */
   protected $entity_type_manager;
@@ -60,7 +55,6 @@ class ManageDisplayTest extends WebDriverTestBase {
     $this->type = $type->id();
 
     $this->entity_type_manager = $this->container->get('entity_type.manager');
-    $this->entity_manager = $this->container->get('entity.manager');
   }
 
   /**

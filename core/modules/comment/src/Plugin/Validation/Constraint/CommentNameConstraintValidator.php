@@ -42,7 +42,7 @@ class CommentNameConstraintValidator extends ConstraintValidator implements Cont
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container) {
-    return new static($container->get('entity.manager')->getStorage('user'));
+    return new static($container->get('entity_type.manager')->getStorage('user'));
   }
 
   /**

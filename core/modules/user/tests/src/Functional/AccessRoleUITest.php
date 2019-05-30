@@ -40,14 +40,14 @@ class AccessRoleUITest extends UITestBase {
    * Tests the role access plugin UI.
    */
   public function testAccessRoleUI() {
-    $entity_manager = $this->container->get('entity.manager');
-    $entity_manager->getStorage('user_role')->create(['id' => 'custom_role', 'label' => 'Custom role'])->save();
+    $entity_type_manager = $this->container->get('entity_type.manager');
+    $entity_type_manager->getStorage('user_role')->create(['id' => 'custom_role', 'label' => 'Custom role'])->save();
     $access_url = "admin/structure/views/nojs/display/test_access_role/default/access_options";
     $this->drupalPostForm($access_url, ['access_options[role][custom_role]' => 1], t('Apply'));
     $this->assertResponse(200);
 
     $this->drupalPostForm(NULL, [], t('Save'));
-    $view = $entity_manager->getStorage('view')->load('test_access_role');
+    $view = $entity_type_manager->getStorage('view')->load('test_access_role');
 
     $display = $view->getDisplay('default');
     $this->assertEqual($display['display_options']['access']['options']['role'], ['custom_role' => 'custom_role']);
@@ -56,7 +56,7 @@ class AccessRoleUITest extends UITestBase {
     $this->drupalPostForm('admin/structure/views/nojs/display/test_access_role/default/access', ['access[type]' => 'none'], t('Apply'));
     $this->drupalPostForm(NULL, [], t('Save'));
     // Verify that role option is not set.
-    $view = $entity_manager->getStorage('view')->load('test_access_role');
+    $view = $entity_type_manager->getStorage('view')->load('test_access_role');
     $display = $view->getDisplay('default');
     $this->assertFalse(isset($display['display_options']['access']['options']['role']));
   }

@@ -43,8 +43,12 @@ class Uid extends NumericArgument {
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
-    return new static($configuration, $plugin_id, $plugin_definition,
-      $container->get('entity.manager')->getStorage('user'));
+    return new static(
+      $configuration,
+      $plugin_id,
+      $plugin_definition,
+      $container->get('entity_type.manager')->getStorage('user')
+    );
   }
 
   /**

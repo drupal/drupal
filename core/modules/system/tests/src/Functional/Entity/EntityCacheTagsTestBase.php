@@ -84,7 +84,7 @@ abstract class EntityCacheTagsTestBase extends PageCacheTagsTestBase {
 
       // Reload the entity now that a new field has been added to it.
       $storage = $this->container
-        ->get('entity.manager')
+        ->get('entity_type.manager')
         ->getStorage($this->entity->getEntityTypeId());
       $storage->resetCache();
       $this->entity = $storage->load($this->entity->id());

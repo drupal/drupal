@@ -98,8 +98,8 @@ class BlockPageVariant extends VariantBase implements PageVariantInterface, Cont
       $plugin_id,
       $plugin_definition,
       $container->get('block.repository'),
-      $container->get('entity.manager')->getViewBuilder('block'),
-      $container->get('entity.manager')->getDefinition('block')->getListCacheTags()
+      $container->get('entity_type.manager')->getViewBuilder('block'),
+      $container->get('entity_type.manager')->getDefinition('block')->getListCacheTags()
     );
   }
 

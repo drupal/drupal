@@ -88,7 +88,7 @@ class ImageStyleIntegrationTest extends KernelTestBase {
     // of selecting a replacement style by setting the replacement image style
     // ID in the image style storage.
     /** @var \Drupal\image\ImageStyleStorageInterface $storage */
-    $storage = $this->container->get('entity.manager')->getStorage($style->getEntityTypeId());
+    $storage = $this->container->get('entity_type.manager')->getStorage($style->getEntityTypeId());
     $storage->setReplacementId('main_style', 'replacement_style');
     $style->delete();
 

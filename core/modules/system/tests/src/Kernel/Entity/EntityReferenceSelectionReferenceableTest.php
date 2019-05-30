@@ -53,7 +53,7 @@ class EntityReferenceSelectionReferenceableTest extends KernelTestBase {
     $this->installEntitySchema('node');
 
     /** @var \Drupal\Core\Entity\EntityStorageInterface $storage */
-    $storage = $this->container->get('entity.manager')
+    $storage = $this->container->get('entity_type.manager')
       ->getStorage('entity_test_no_label');
 
     // Create a new node-type.

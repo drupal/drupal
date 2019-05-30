@@ -80,7 +80,7 @@ class UserRolesAssignmentTest extends BrowserTestBase {
    *   Defaults to TRUE.
    */
   private function userLoadAndCheckRoleAssigned($account, $rid, $is_assigned = TRUE) {
-    $user_storage = $this->container->get('entity.manager')->getStorage('user');
+    $user_storage = $this->container->get('entity_type.manager')->getStorage('user');
     $user_storage->resetCache([$account->id()]);
     $account = $user_storage->load($account->id());
     if ($is_assigned) {

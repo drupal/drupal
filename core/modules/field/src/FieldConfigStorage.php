@@ -83,7 +83,7 @@ class FieldConfigStorage extends FieldConfigStorageBase {
       $container->get('config.factory'),
       $container->get('uuid'),
       $container->get('language_manager'),
-      $container->get('entity.manager'),
+      $container->get('entity_type.manager'),
       $container->get('plugin.manager.field.field_type'),
       $container->get('entity_field.deleted_fields_repository'),
       $container->get('entity.memory_cache')

@@ -51,9 +51,9 @@ class BookAdminEditForm extends FormBase {
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container) {
-    $entity_manager = $container->get('entity.manager');
+    $entity_type_manager = $container->get('entity_type.manager');
     return new static(
-      $entity_manager->getStorage('node'),
+      $entity_type_manager->getStorage('node'),
       $container->get('book.manager')
     );
   }

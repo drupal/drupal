@@ -75,10 +75,10 @@ class NodeRevisionDeleteForm extends ConfirmFormBase {
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container) {
-    $entity_manager = $container->get('entity.manager');
+    $entity_type_manager = $container->get('entity_type.manager');
     return new static(
-      $entity_manager->getStorage('node'),
-      $entity_manager->getStorage('node_type'),
+      $entity_type_manager->getStorage('node'),
+      $entity_type_manager->getStorage('node_type'),
       $container->get('database'),
       $container->get('date.formatter')
     );

@@ -37,7 +37,7 @@ class FilePrivateTest extends FileFieldTestBase {
    * Tests file access for file uploaded to a private node.
    */
   public function testPrivateFile() {
-    $node_storage = $this->container->get('entity.manager')->getStorage('node');
+    $node_storage = $this->container->get('entity_type.manager')->getStorage('node');
     /** @var \Drupal\Core\File\FileSystemInterface $file_system */
     $file_system = \Drupal::service('file_system');
     $type_name = 'article';
@@ -139,7 +139,7 @@ class FilePrivateTest extends FileFieldTestBase {
     $edit = ['files[' . $field_name . '_0]' => $file_system->realpath($test_file->getFileUri())];
     $this->drupalPostForm(NULL, $edit, t('Upload'));
     /** @var \Drupal\file\FileStorageInterface $file_storage */
-    $file_storage = $this->container->get('entity.manager')->getStorage('file');
+    $file_storage = $this->container->get('entity_type.manager')->getStorage('file');
     $files = $file_storage->loadByProperties(['uid' => 0]);
     $this->assertEqual(1, count($files), 'Loaded one anonymous file.');
     $file = end($files);

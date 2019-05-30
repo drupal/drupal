@@ -228,7 +228,7 @@ abstract class ContentTranslationTestBase extends WebTestBase {
     if ($bundle_key = $entity_type->getKey('bundle')) {
       $entity_values[$bundle_key] = $bundle_name ?: $this->bundle;
     }
-    $controller = $this->container->get('entity.manager')->getStorage($this->entityTypeId);
+    $controller = $this->container->get('entity_type.manager')->getStorage($this->entityTypeId);
     if (!($controller instanceof SqlContentEntityStorage)) {
       foreach ($values as $property => $value) {
         if (is_array($value)) {

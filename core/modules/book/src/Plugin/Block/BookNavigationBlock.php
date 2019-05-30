@@ -78,7 +78,7 @@ class BookNavigationBlock extends BlockBase implements ContainerFactoryPluginInt
       $plugin_definition,
       $container->get('request_stack'),
       $container->get('book.manager'),
-      $container->get('entity.manager')->getStorage('node')
+      $container->get('entity_type.manager')->getStorage('node')
     );
   }
 

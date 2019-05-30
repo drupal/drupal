@@ -58,7 +58,7 @@ class Vid extends NumericArgument {
       $plugin_id,
       $plugin_definition,
       $container->get('database'),
-      $container->get('entity.manager')->getStorage('node')
+      $container->get('entity_type.manager')->getStorage('node')
     );
   }
 

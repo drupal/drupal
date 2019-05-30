@@ -222,8 +222,8 @@ abstract class ContentTranslationTestBase extends BrowserTestBase {
     if ($bundle_key = $entity_type->getKey('bundle')) {
       $entity_values[$bundle_key] = $bundle_name ?: $this->bundle;
     }
-    $controller = $this->container->get('entity.manager')->getStorage($this->entityTypeId);
-    if (!($controller instanceof SqlContentEntityStorage)) {
+    $storage = $this->container->get('entity_type.manager')->getStorage($this->entityTypeId);
+    if (!($storage instanceof SqlContentEntityStorage)) {
       foreach ($values as $property => $value) {
         if (is_array($value)) {
           $entity_values[$property] = [$langcode => $value];

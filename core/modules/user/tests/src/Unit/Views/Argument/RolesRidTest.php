@@ -3,7 +3,6 @@
 namespace Drupal\Tests\user\Unit\Views\Argument;
 
 use Drupal\Core\DependencyInjection\ContainerBuilder;
-use Drupal\Core\Entity\EntityManager;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Tests\UnitTestCase;
 use Drupal\user\Entity\Role;
@@ -53,7 +52,6 @@ class RolesRidTest extends UnitTestCase {
       ->with('label')
       ->will($this->returnValue('label'));
 
-    $entity_manager = new EntityManager();
     $entity_type_manager = $this->getMock(EntityTypeManagerInterface::class);
     $entity_type_manager->expects($this->any())
       ->method('getDefinition')
@@ -69,14 +67,10 @@ class RolesRidTest extends UnitTestCase {
     // Set up a minimal container to satisfy Drupal\Core\Entity\EntityBase's
     // dependency on it.
     $container = new ContainerBuilder();
-    $container->set('entity.manager', $entity_manager);
     $container->set('entity_type.manager', $entity_type_manager);
-    // Inject the container into entity.manager so it can defer to
-    // entity_type.manager.
-    $entity_manager->setContainer($container);
     \Drupal::setContainer($container);
 
-    $roles_rid_argument = new RolesRid([], 'user__roles_rid', [], $entity_manager);
+    $roles_rid_argument = new RolesRid([], 'user__roles_rid', [], $entity_type_manager);
 
     $roles_rid_argument->value = [];
     $titles = $roles_rid_argument->titleQuery();

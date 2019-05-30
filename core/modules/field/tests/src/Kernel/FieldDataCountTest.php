@@ -136,7 +136,7 @@ class FieldDataCountTest extends FieldKernelTestBase {
 
     $this->assertIdentical($this->fieldTestData->field_storage_2->hasData(), TRUE, 'There are entities with field data.');
 
-    $storage = $this->container->get('entity.manager')->getStorage($entity_type);
+    $storage = $this->container->get('entity_type.manager')->getStorage($entity_type);
     $entity = $storage->loadRevision($first_revision);
     $this->assertEqual(count($entity->{$this->fieldTestData->field_name_2}), $cardinality, format_string('Revision %revision_id: expected number of values.', ['%revision_id' => $first_revision]));
   }

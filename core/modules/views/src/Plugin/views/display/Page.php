@@ -80,7 +80,7 @@ class Page extends PathPluginBase {
       $plugin_definition,
       $container->get('router.route_provider'),
       $container->get('state'),
-      $container->get('entity.manager')->getStorage('menu')
+      $container->get('entity_type.manager')->getStorage('menu')
     );
   }
 

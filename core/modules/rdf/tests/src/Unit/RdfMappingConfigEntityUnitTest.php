@@ -3,7 +3,6 @@
 namespace Drupal\Tests\rdf\Unit;
 
 use Drupal\Core\DependencyInjection\ContainerBuilder;
-use Drupal\Core\Entity\EntityManager;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Tests\UnitTestCase;
 use Drupal\rdf\Entity\RdfMapping;
@@ -20,13 +19,6 @@ class RdfMappingConfigEntityUnitTest extends UnitTestCase {
    * @var \Drupal\Core\Entity\EntityTypeInterface|\PHPUnit_Framework_MockObject_MockObject
    */
   protected $entityType;
-
-  /**
-   * The entity manager used for testing.
-   *
-   * @var \Drupal\Core\Entity\EntityManagerInterface|\PHPUnit_Framework_MockObject_MockObject
-   */
-  protected $entityManager;
 
   /**
    * The entity type manager used for testing.
@@ -60,16 +52,13 @@ class RdfMappingConfigEntityUnitTest extends UnitTestCase {
       ->method('getProvider')
       ->will($this->returnValue('entity'));
 
-    $this->entityManager = new EntityManager();
     $this->entityTypeManager = $this->getMock(EntityTypeManagerInterface::class);
 
     $this->uuid = $this->getMock('\Drupal\Component\Uuid\UuidInterface');
 
     $container = new ContainerBuilder();
-    $container->set('entity.manager', $this->entityManager);
     $container->set('entity_type.manager', $this->entityTypeManager);
     $container->set('uuid', $this->uuid);
-    $this->entityManager->setContainer($container);
     \Drupal::setContainer($container);
 
   }

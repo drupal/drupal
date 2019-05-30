@@ -48,9 +48,9 @@ abstract class CommentViewsKernelTestBase extends ViewsKernelTestBase {
     $this->installEntitySchema('comment');
     $this->installConfig(['user']);
 
-    $entity_manager = $this->container->get('entity.manager');
-    $this->commentStorage = $entity_manager->getStorage('comment');
-    $this->userStorage = $entity_manager->getStorage('user');
+    $entity_type_manager = $this->container->get('entity_type.manager');
+    $this->commentStorage = $entity_type_manager->getStorage('comment');
+    $this->userStorage = $entity_type_manager->getStorage('user');
 
     // Insert a row for the anonymous user.
     $this->userStorage

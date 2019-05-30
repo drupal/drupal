@@ -71,7 +71,7 @@ class BlockContentCacheTagsTest extends EntityCacheTagsTestBase {
    */
   public function testBlock() {
     $block = $this->drupalPlaceBlock('block_content:' . $this->entity->uuid());
-    $build = $this->container->get('entity.manager')->getViewBuilder('block')->view($block, 'block');
+    $build = $this->container->get('entity_type.manager')->getViewBuilder('block')->view($block, 'block');
 
     // Render the block.
     // @todo The request stack manipulation won't be necessary once

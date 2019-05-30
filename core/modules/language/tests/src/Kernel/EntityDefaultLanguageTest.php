@@ -29,7 +29,7 @@ class EntityDefaultLanguageTest extends KernelTestBase {
     $this->installEntitySchema('user');
 
     // Activate Spanish language, so there are two languages activated.
-    $language = $this->container->get('entity.manager')->getStorage('configurable_language')->create([
+    $language = $this->container->get('entity_type.manager')->getStorage('configurable_language')->create([
       'id' => 'es',
     ]);
     $language->save();
@@ -101,7 +101,7 @@ class EntityDefaultLanguageTest extends KernelTestBase {
    *   Default language code of the nodes of this type.
    */
   protected function createContentType($name, $langcode) {
-    $content_type = $this->container->get('entity.manager')->getStorage('node_type')->create([
+    $content_type = $this->container->get('entity_type.manager')->getStorage('node_type')->create([
       'name' => 'Test ' . $name,
       'title_label' => 'Title',
       'type' => $name,
@@ -134,7 +134,7 @@ class EntityDefaultLanguageTest extends KernelTestBase {
     if (!empty($langcode)) {
       $values['langcode'] = $langcode;
     }
-    $node = $this->container->get('entity.manager')->getStorage('node')->create($values);
+    $node = $this->container->get('entity_type.manager')->getStorage('node')->create($values);
     return $node;
   }
 

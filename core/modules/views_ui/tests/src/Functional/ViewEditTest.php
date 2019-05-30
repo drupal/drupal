@@ -26,7 +26,7 @@ class ViewEditTest extends UITestBase {
     $this->drupalGet('admin/structure/views/view/test_view');
     $this->assertLink(t('Delete view'), 0, 'Ensure that the view delete link appears');
 
-    $view = $this->container->get('entity.manager')->getStorage('view')->load('test_view');
+    $view = $this->container->get('entity_type.manager')->getStorage('view')->load('test_view');
     $this->assertTrue($view instanceof View);
     $this->clickLink(t('Delete view'));
     $this->assertUrl('admin/structure/views/view/test_view/delete');
@@ -34,7 +34,7 @@ class ViewEditTest extends UITestBase {
     $this->assertRaw(t('The view %name has been deleted.', ['%name' => $view->label()]));
 
     $this->assertUrl('admin/structure/views');
-    $view = $this->container->get('entity.manager')->getStorage('view')->load('test_view');
+    $view = $this->container->get('entity_type.manager')->getStorage('view')->load('test_view');
     $this->assertFalse($view instanceof View);
   }
 

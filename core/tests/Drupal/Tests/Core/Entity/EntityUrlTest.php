@@ -576,12 +576,12 @@ class EntityUrlTest extends UnitTestCase {
    *   An array of entity values to construct the mock entity with.
    * @param array $methods
    *   (optional) An array of additional methods to mock on the entity object.
-   *   The getEntityType() and entityManager() methods are always mocked.
+   *   The getEntityType() and entityTypeBundleInfo() methods are always mocked.
    *
    * @return \Drupal\Core\Entity\Entity|\PHPUnit_Framework_MockObject_MockObject
    */
   protected function getEntity($class, array $values, array $methods = []) {
-    $methods = array_merge($methods, ['getEntityType', 'entityManager', 'entityTypeBundleInfo']);
+    $methods = array_merge($methods, ['getEntityType', 'entityTypeBundleInfo']);
 
     // Prophecy does not allow prophesizing abstract classes while actually
     // calling their code. We use Prophecy below because that allows us to

@@ -59,7 +59,7 @@ class MenuLinkParent extends ProcessPluginBase implements ContainerFactoryPlugin
       $plugin_definition,
       $container->get('plugin.manager.migrate.process')->createInstance('migration', $migration_configuration, $migration),
       $container->get('plugin.manager.menu.link'),
-      $container->get('entity.manager')->getStorage('menu_link_content')
+      $container->get('entity_type.manager')->getStorage('menu_link_content')
     );
   }
 

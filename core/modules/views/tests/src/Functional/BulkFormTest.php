@@ -24,7 +24,7 @@ class BulkFormTest extends BrowserTestBase {
    * Tests the bulk form.
    */
   public function testBulkForm() {
-    $node_storage = $this->container->get('entity.manager')->getStorage('node');
+    $node_storage = $this->container->get('entity_type.manager')->getStorage('node');
 
     // First, test an empty bulk form with the default style plugin to make sure
     // the empty region is rendered correctly.

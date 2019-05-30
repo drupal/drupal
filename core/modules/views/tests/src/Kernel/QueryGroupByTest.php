@@ -46,7 +46,7 @@ class QueryGroupByTest extends ViewsKernelTestBase {
     $this->installEntitySchema('entity_test');
     $this->installEntitySchema('entity_test_mul');
 
-    $this->storage = $this->container->get('entity.manager')->getStorage('entity_test');
+    $this->storage = $this->container->get('entity_type.manager')->getStorage('entity_test');
 
     ConfigurableLanguage::createFromLangcode('it')->save();
   }

@@ -43,7 +43,7 @@ class ConfigDependencyTest extends EntityKernelTestBase {
   public function testDependencyManagement() {
     /** @var \Drupal\Core\Config\ConfigManagerInterface $config_manager */
     $config_manager = \Drupal::service('config.manager');
-    $storage = $this->container->get('entity.manager')->getStorage('config_test');
+    $storage = $this->container->get('entity_type.manager')->getStorage('config_test');
     // Test dependencies between modules.
     $entity1 = $storage->create(
       [
@@ -126,7 +126,7 @@ class ConfigDependencyTest extends EntityKernelTestBase {
 
     // Create a configuration entity of a different type with the same ID as one
     // of the entities already created.
-    $alt_storage = $this->container->get('entity.manager')->getStorage('config_query_test');
+    $alt_storage = $this->container->get('entity_type.manager')->getStorage('config_query_test');
     $alt_storage->create(['id' => 'entity1', 'dependencies' => ['enforced' => ['config' => [$entity1->getConfigDependencyName()]]]])->save();
     $alt_storage->create(['id' => 'entity2', 'dependencies' => ['enforced' => ['module' => ['views']]]])->save();
 
@@ -192,7 +192,7 @@ class ConfigDependencyTest extends EntityKernelTestBase {
     /** @var \Drupal\Core\Config\ConfigManagerInterface $config_manager */
     $config_manager = \Drupal::service('config.manager');
     /** @var \Drupal\Core\Config\Entity\ConfigEntityStorage $storage */
-    $storage = $this->container->get('entity.manager')
+    $storage = $this->container->get('entity_type.manager')
       ->getStorage('config_test');
     // Test dependencies between modules.
     $entity1 = $storage->create(
@@ -256,7 +256,7 @@ class ConfigDependencyTest extends EntityKernelTestBase {
     /** @var \Drupal\Core\Config\ConfigManagerInterface $config_manager */
     $config_manager = \Drupal::service('config.manager');
     /** @var \Drupal\Core\Config\Entity\ConfigEntityStorage $storage */
-    $storage = $this->container->get('entity.manager')
+    $storage = $this->container->get('entity_type.manager')
       ->getStorage('config_test');
     // Entity 1 will be deleted because it depends on node.
     $entity_1 = $storage->create(
@@ -504,7 +504,7 @@ class ConfigDependencyTest extends EntityKernelTestBase {
     /** @var \Drupal\Core\Config\ConfigManagerInterface $config_manager */
     $config_manager = \Drupal::service('config.manager');
     /** @var \Drupal\Core\Config\Entity\ConfigEntityStorage $storage */
-    $storage = $this->container->get('entity.manager')->getStorage('config_test');
+    $storage = $this->container->get('entity_type.manager')->getStorage('config_test');
     // Test dependencies between configuration entities.
     $entity1 = $storage->create(
       [
@@ -615,7 +615,7 @@ class ConfigDependencyTest extends EntityKernelTestBase {
     $content_entity = EntityTest::create();
     $content_entity->save();
     /** @var \Drupal\Core\Config\Entity\ConfigEntityStorage $storage */
-    $storage = $this->container->get('entity.manager')->getStorage('config_test');
+    $storage = $this->container->get('entity_type.manager')->getStorage('config_test');
     $entity1 = $storage->create(
       [
         'id' => 'entity1',

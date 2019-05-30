@@ -150,7 +150,7 @@ class FormTest extends FieldTestBase {
     ];
     $this->drupalPostForm(NULL, $edit, t('Save'));
     $this->assertText(t('entity_test @id has been updated.', ['@id' => $id]), 'Entity was updated');
-    $this->container->get('entity.manager')->getStorage('entity_test')->resetCache([$id]);
+    $this->container->get('entity_type.manager')->getStorage('entity_test')->resetCache([$id]);
     $entity = EntityTest::load($id);
     $this->assertEqual($entity->{$field_name}->value, $value, 'Field value was updated');
 
@@ -161,7 +161,7 @@ class FormTest extends FieldTestBase {
     ];
     $this->drupalPostForm('entity_test/manage/' . $id . '/edit', $edit, t('Save'));
     $this->assertText(t('entity_test @id has been updated.', ['@id' => $id]), 'Entity was updated');
-    $this->container->get('entity.manager')->getStorage('entity_test')->resetCache([$id]);
+    $this->container->get('entity_type.manager')->getStorage('entity_test')->resetCache([$id]);
     $entity = EntityTest::load($id);
     $this->assertTrue($entity->{$field_name}->isEmpty(), 'Field was emptied');
   }

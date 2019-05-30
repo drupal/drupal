@@ -38,7 +38,7 @@ class VocabularyForm extends BundleEntityFormBase {
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('entity.manager')->getStorage('taxonomy_vocabulary')
+      $container->get('entity_type.manager')->getStorage('taxonomy_vocabulary')
     );
   }
 

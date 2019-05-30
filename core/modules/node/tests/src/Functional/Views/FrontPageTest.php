@@ -45,7 +45,7 @@ class FrontPageTest extends ViewTestBase {
   protected function setUp($import_test_views = TRUE) {
     parent::setUp($import_test_views);
 
-    $this->nodeStorage = $this->container->get('entity.manager')
+    $this->nodeStorage = $this->container->get('entity_type.manager')
       ->getStorage('node');
   }
 

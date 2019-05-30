@@ -124,7 +124,7 @@ class VocabularyCrudTest extends TaxonomyTestBase {
     $this->assertIdentical($loaded_order, $expected_order);
 
     // Test loading vocabularies by their properties.
-    $controller = $this->container->get('entity.manager')->getStorage('taxonomy_vocabulary');
+    $controller = $this->container->get('entity_type.manager')->getStorage('taxonomy_vocabulary');
     // Fetch vocabulary 1 by name.
     $vocabulary = current($controller->loadByProperties(['name' => $vocabulary1->label()]));
     $this->assertEqual($vocabulary->id(), $vocabulary1->id(), 'Vocabulary loaded successfully by name.');

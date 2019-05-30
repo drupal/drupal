@@ -7,7 +7,6 @@ use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\Entity\ContentEntityBase;
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
-use Drupal\Core\Entity\EntityManager;
 use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
@@ -51,13 +50,6 @@ class ContentEntityBaseUnitTest extends UnitTestCase {
    * @var \Drupal\Core\Entity\EntityTypeInterface|\PHPUnit_Framework_MockObject_MockObject
    */
   protected $entityType;
-
-  /**
-   * The entity manager used for testing.
-   *
-   * @var \Drupal\Core\Entity\EntityManagerInterface|\PHPUnit_Framework_MockObject_MockObject
-   */
-  protected $entityManager;
 
   /**
    * The entity field manager used for testing.
@@ -150,8 +142,6 @@ class ContentEntityBaseUnitTest extends UnitTestCase {
         'uuid' => 'uuid',
     ]));
 
-    $this->entityManager = new EntityManager();
-
     $this->entityTypeManager = $this->getMock(EntityTypeManagerInterface::class);
     $this->entityTypeManager->expects($this->any())
       ->method('getDefinition')
@@ -199,7 +189,6 @@ class ContentEntityBaseUnitTest extends UnitTestCase {
       ->will($this->returnValue($this->getMock('Drupal\Core\Field\FieldItemListInterface')));
 
     $container = new ContainerBuilder();
-    $container->set('entity.manager', $this->entityManager);
     $container->set('entity_field.manager', $this->entityFieldManager);
     $container->set('entity_type.bundle.info', $this->entityTypeBundleInfo);
     $container->set('entity_type.manager', $this->entityTypeManager);
@@ -207,9 +196,6 @@ class ContentEntityBaseUnitTest extends UnitTestCase {
     $container->set('typed_data_manager', $this->typedDataManager);
     $container->set('language_manager', $this->languageManager);
     $container->set('plugin.manager.field.field_type', $this->fieldTypePluginManager);
-    // Inject the container into entity.manager so it can defer to
-    // entity_type.manager and other services.
-    $this->entityManager->setContainer($container);
     \Drupal::setContainer($container);
 
     $this->fieldDefinitions = [

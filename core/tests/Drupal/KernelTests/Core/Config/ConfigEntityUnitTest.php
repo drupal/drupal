@@ -39,7 +39,7 @@ class ConfigEntityUnitTest extends KernelTestBase {
    */
   protected function setUp() {
     parent::setUp();
-    $this->storage = $this->container->get('entity.manager')->getStorage('config_test');
+    $this->storage = $this->container->get('entity_type.manager')->getStorage('config_test');
   }
 
   /**

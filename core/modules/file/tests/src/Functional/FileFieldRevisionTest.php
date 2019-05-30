@@ -29,7 +29,7 @@ class FileFieldRevisionTest extends FileFieldTestBase {
     $this->config('file.settings')
       ->set('make_unused_managed_files_temporary', TRUE)
       ->save();
-    $node_storage = $this->container->get('entity.manager')->getStorage('node');
+    $node_storage = $this->container->get('entity_type.manager')->getStorage('node');
     $type_name = 'article';
     $field_name = strtolower($this->randomMachineName());
     $this->createFileField($field_name, 'node', $type_name);

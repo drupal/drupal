@@ -64,7 +64,7 @@ class DisplayFeedTest extends ViewTestBase {
     // Verify HTML is properly escaped in the description field.
     $this->assertRaw('&lt;p&gt;A paragraph&lt;/p&gt;');
 
-    $view = $this->container->get('entity.manager')->getStorage('view')->load('test_display_feed');
+    $view = $this->container->get('entity_type.manager')->getStorage('view')->load('test_display_feed');
     $display = &$view->getDisplay('feed_1');
     $display['display_options']['sitename_title'] = 0;
     $view->save();

@@ -337,7 +337,7 @@ class FieldCrudTest extends FieldKernelTestBase {
     $field->save();
     $field_2 = FieldConfig::create($field_definition_2);
     $field_2->save();
-    $this->container->get('entity.manager')->getStorage('field_config')->delete([$field, $field_2]);
+    $this->container->get('entity_type.manager')->getStorage('field_config')->delete([$field, $field_2]);
     $this->assertFalse(FieldStorageConfig::loadByName('entity_test', $field_storage->getName()));
   }
 

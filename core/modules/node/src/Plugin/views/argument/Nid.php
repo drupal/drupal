@@ -44,7 +44,7 @@ class Nid extends NumericArgument {
       $configuration,
       $plugin_id,
       $plugin_definition,
-      $container->get('entity.manager')->getStorage('node')
+      $container->get('entity_type.manager')->getStorage('node')
     );
   }
 

@@ -56,7 +56,7 @@ class View extends AreaPluginBase {
       $configuration,
       $plugin_id,
       $plugin_definition,
-      $container->get('entity.manager')->getStorage('view')
+      $container->get('entity_type.manager')->getStorage('view')
     );
   }
 

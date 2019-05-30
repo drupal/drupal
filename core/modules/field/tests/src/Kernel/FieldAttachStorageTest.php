@@ -46,7 +46,7 @@ class FieldAttachStorageTest extends FieldKernelTestBase {
       $values[$current_revision] = $current_values;
     }
 
-    $storage = $this->container->get('entity.manager')->getStorage($entity_type);
+    $storage = $this->container->get('entity_type.manager')->getStorage($entity_type);
     $storage->resetCache();
     $entity = $storage->load($entity_id);
     // Confirm current revision loads the correct data.
@@ -249,7 +249,7 @@ class FieldAttachStorageTest extends FieldKernelTestBase {
     $entity->setNewRevision();
     $entity->save();
     $vids[] = $entity->getRevisionId();
-    $controller = $this->container->get('entity.manager')->getStorage($entity->getEntityTypeId());
+    $controller = $this->container->get('entity_type.manager')->getStorage($entity->getEntityTypeId());
     $controller->resetCache();
 
     // Confirm each revision loads
@@ -361,7 +361,7 @@ class FieldAttachStorageTest extends FieldKernelTestBase {
     entity_test_delete_bundle($this->fieldTestData->field->getTargetBundle(), $entity_type);
 
     // Verify no data gets loaded
-    $controller = $this->container->get('entity.manager')->getStorage($entity->getEntityTypeId());
+    $controller = $this->container->get('entity_type.manager')->getStorage($entity->getEntityTypeId());
     $controller->resetCache();
     $entity = $controller->load($entity->id());
 

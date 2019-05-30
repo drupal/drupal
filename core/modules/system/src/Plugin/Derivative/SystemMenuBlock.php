@@ -36,7 +36,7 @@ class SystemMenuBlock extends DeriverBase implements ContainerDeriverInterface {
    */
   public static function create(ContainerInterface $container, $base_plugin_id) {
     return new static(
-      $container->get('entity.manager')->getStorage('menu')
+      $container->get('entity_type.manager')->getStorage('menu')
     );
   }
 

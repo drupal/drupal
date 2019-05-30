@@ -34,9 +34,9 @@ class EntityRevisionTest extends UnitTestCase {
   protected $storage;
 
   /**
-   * @var \Drupal\Core\Entity\EntityManagerInterface
+   * @var \Drupal\Core\Entity\EntityFieldManagerInterface
    */
-  protected $entityManager;
+  protected $entityFieldManager;
 
   /**
    * @var \Drupal\Core\Field\FieldTypePluginManagerInterface
@@ -55,7 +55,7 @@ class EntityRevisionTest extends UnitTestCase {
     $entity_type->getPluralLabel()->willReturn('craziness');
     $this->storage->getEntityType()->willReturn($entity_type->reveal());
 
-    $this->entityManager = $this->prophesize('\Drupal\Core\Entity\EntityManagerInterface');
+    $this->entityFieldManager = $this->prophesize('\Drupal\Core\Entity\EntityFieldManagerInterface');
     $this->fieldTypeManager = $this->prophesize('\Drupal\Core\Field\FieldTypePluginManagerInterface');
   }
 
@@ -193,7 +193,7 @@ class EntityRevisionTest extends UnitTestCase {
       $this->migration->reveal(),
       $this->storage->reveal(),
       [],
-      $this->entityManager->reveal(),
+      $this->entityFieldManager->reveal(),
       $this->fieldTypeManager->reveal()
     );
   }

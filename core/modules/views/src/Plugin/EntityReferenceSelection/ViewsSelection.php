@@ -41,7 +41,7 @@ class ViewsSelection extends SelectionPluginBase implements ContainerFactoryPlug
   /**
    * The entity type manager service.
    *
-   * @var \Drupal\Core\Entity\EntityManagerInterface
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
    */
   protected $entityTypeManager;
 

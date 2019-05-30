@@ -44,11 +44,11 @@ class BlockFormTest extends UnitTestCase {
   protected $themeHandler;
 
   /**
-   * The entity manager.
+   * The entity type manager.
    *
-   * @var \Drupal\Core\Entity\EntityManagerInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface|\PHPUnit_Framework_MockObject_MockObject
    */
-  protected $entityManager;
+  protected $entityTypeManager;
 
   /**
    * The mocked context repository.
@@ -74,10 +74,10 @@ class BlockFormTest extends UnitTestCase {
     $this->language = $this->getMock('Drupal\Core\Language\LanguageManagerInterface');
     $this->contextRepository = $this->getMock('Drupal\Core\Plugin\Context\ContextRepositoryInterface');
 
-    $this->entityManager = $this->getMock('Drupal\Core\Entity\EntityManagerInterface');
+    $this->entityTypeManager = $this->getMock('Drupal\Core\Entity\EntityTypeManagerInterface');
     $this->storage = $this->getMock('Drupal\Core\Config\Entity\ConfigEntityStorageInterface');
     $this->themeHandler = $this->getMock('Drupal\Core\Extension\ThemeHandlerInterface');
-    $this->entityManager->expects($this->any())
+    $this->entityTypeManager->expects($this->any())
       ->method('getStorage')
       ->will($this->returnValue($this->storage));
 
@@ -136,7 +136,7 @@ class BlockFormTest extends UnitTestCase {
       ->method('getQuery')
       ->will($this->returnValue($query));
 
-    $block_form_controller = new BlockForm($this->entityManager, $this->conditionManager, $this->contextRepository, $this->language, $this->themeHandler, $this->pluginFormFactory->reveal());
+    $block_form_controller = new BlockForm($this->entityTypeManager, $this->conditionManager, $this->contextRepository, $this->language, $this->themeHandler, $this->pluginFormFactory->reveal());
 
     // Ensure that the block with just one other instance gets the next available
     // name suggestion.

@@ -101,7 +101,7 @@ abstract class DrupalSqlBase extends SqlBase implements ContainerFactoryPluginIn
       $plugin_definition,
       $migration,
       $container->get('state'),
-      $container->get('entity.manager')
+      $container->get('entity_type.manager')
     );
   }
 

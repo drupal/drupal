@@ -126,7 +126,7 @@ abstract class FileFieldTestBase extends BrowserTestBase {
       'revision' => (string) (int) $new_revision,
     ];
 
-    $node_storage = $this->container->get('entity.manager')->getStorage('node');
+    $node_storage = $this->container->get('entity_type.manager')->getStorage('node');
     if (is_numeric($nid_or_type)) {
       $nid = $nid_or_type;
       $node_storage->resetCache([$nid]);
@@ -220,7 +220,7 @@ abstract class FileFieldTestBase extends BrowserTestBase {
    * Asserts that a file exists in the database.
    */
   public function assertFileEntryExists($file, $message = NULL) {
-    $this->container->get('entity.manager')->getStorage('file')->resetCache();
+    $this->container->get('entity_type.manager')->getStorage('file')->resetCache();
     $db_file = File::load($file->id());
     $message = isset($message) ? $message : format_string('File %file exists in database at the correct path.', ['%file' => $file->getFileUri()]);
     $this->assertEqual($db_file->getFileUri(), $file->getFileUri(), $message);
@@ -247,7 +247,7 @@ abstract class FileFieldTestBase extends BrowserTestBase {
    * Asserts that a file does not exist in the database.
    */
   public function assertFileEntryNotExists($file, $message) {
-    $this->container->get('entity.manager')->getStorage('file')->resetCache();
+    $this->container->get('entity_type.manager')->getStorage('file')->resetCache();
     $message = isset($message) ? $message : format_string('File %file exists in database at the correct path.', ['%file' => $file->getFileUri()]);
     $this->assertFalse(File::load($file->id()), $message);
   }

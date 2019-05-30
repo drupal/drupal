@@ -45,7 +45,7 @@ class SwitchShortcutSet extends FormBase {
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('entity.manager')->getStorage('shortcut_set')
+      $container->get('entity_type.manager')->getStorage('shortcut_set')
     );
   }
 

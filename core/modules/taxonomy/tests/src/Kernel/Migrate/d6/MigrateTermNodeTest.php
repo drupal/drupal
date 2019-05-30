@@ -34,7 +34,7 @@ class MigrateTermNodeTest extends MigrateDrupal6TestBase {
     // This is a base plugin id and we want to run all derivatives.
     $this->executeMigrations(['d6_term_node']);
 
-    $this->container->get('entity.manager')
+    $this->container->get('entity_type.manager')
       ->getStorage('node')
       ->resetCache([1, 2]);
 

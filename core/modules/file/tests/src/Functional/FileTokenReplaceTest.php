@@ -18,7 +18,7 @@ class FileTokenReplaceTest extends FileFieldTestBase {
    * Creates a file, then tests the tokens generated from it.
    */
   public function testFileTokenReplacement() {
-    $node_storage = $this->container->get('entity.manager')->getStorage('node');
+    $node_storage = $this->container->get('entity_type.manager')->getStorage('node');
     $token_service = \Drupal::token();
     $language_interface = \Drupal::languageManager()->getCurrentLanguage();
     /** @var \Drupal\Core\Datetime\DateFormatterInterface $date_formatter */

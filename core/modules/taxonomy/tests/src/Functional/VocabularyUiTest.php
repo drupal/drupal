@@ -99,7 +99,7 @@ class VocabularyUiTest extends TaxonomyTestBase {
     $this->drupalPostForm('admin/structure/taxonomy', $edit, t('Save'));
 
     // Load the vocabularies from the database.
-    $this->container->get('entity.manager')->getStorage('taxonomy_vocabulary')->resetCache();
+    $this->container->get('entity_type.manager')->getStorage('taxonomy_vocabulary')->resetCache();
     $new_vocabularies = Vocabulary::loadMultiple();
 
     // Check that the weights are saved in the database correctly.
@@ -138,7 +138,7 @@ class VocabularyUiTest extends TaxonomyTestBase {
     $this->assertText(t('Created new vocabulary'), 'New vocabulary was created.');
 
     // Check the created vocabulary.
-    $this->container->get('entity.manager')->getStorage('taxonomy_vocabulary')->resetCache();
+    $this->container->get('entity_type.manager')->getStorage('taxonomy_vocabulary')->resetCache();
     $vocabulary = Vocabulary::load($vid);
     $this->assertTrue($vocabulary, 'Vocabulary found.');
 
@@ -151,7 +151,7 @@ class VocabularyUiTest extends TaxonomyTestBase {
     // Confirm deletion.
     $this->drupalPostForm(NULL, NULL, t('Delete'));
     $this->assertRaw(t('Deleted vocabulary %name.', ['%name' => $vocabulary->label()]), 'Vocabulary deleted.');
-    $this->container->get('entity.manager')->getStorage('taxonomy_vocabulary')->resetCache();
+    $this->container->get('entity_type.manager')->getStorage('taxonomy_vocabulary')->resetCache();
     $this->assertFalse(Vocabulary::load($vid), 'Vocabulary not found.');
   }
 

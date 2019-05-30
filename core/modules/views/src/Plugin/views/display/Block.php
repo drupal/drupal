@@ -88,7 +88,7 @@ class Block extends DisplayPluginBase {
       $configuration,
       $plugin_id,
       $plugin_definition,
-      $container->get('entity.manager'),
+      $container->get('entity_type.manager'),
       $container->get('plugin.manager.block')
     );
   }

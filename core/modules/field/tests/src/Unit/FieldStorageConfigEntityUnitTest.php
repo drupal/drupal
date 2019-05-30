@@ -8,7 +8,6 @@
 namespace Drupal\Tests\field\Unit;
 
 use Drupal\Core\DependencyInjection\ContainerBuilder;
-use Drupal\Core\Entity\EntityManager;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Field\FieldException;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
@@ -55,19 +54,14 @@ class FieldStorageConfigEntityUnitTest extends UnitTestCase {
    * {@inheritdoc}
    */
   protected function setUp() {
-    $entity_manager = new EntityManager();
     $this->entityTypeManager = $this->getMock(EntityTypeManagerInterface::class);
     $this->uuid = $this->getMock('\Drupal\Component\Uuid\UuidInterface');
     $this->fieldTypeManager = $this->getMock(FieldTypePluginManagerInterface::class);
 
     $container = new ContainerBuilder();
-    $container->set('entity.manager', $entity_manager);
     $container->set('entity_type.manager', $this->entityTypeManager);
     $container->set('uuid', $this->uuid);
     $container->set('plugin.manager.field.field_type', $this->fieldTypeManager);
-    // Inject the container into entity.manager so it can defer to
-    // entity_type.manager.
-    $entity_manager->setContainer($container);
     \Drupal::setContainer($container);
   }
 

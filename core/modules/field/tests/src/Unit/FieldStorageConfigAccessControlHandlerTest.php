@@ -6,7 +6,6 @@ use Drupal\Component\Uuid\UuidInterface;
 use Drupal\Core\Cache\Context\CacheContextsManager;
 use Drupal\Core\Config\Entity\ConfigEntityTypeInterface;
 use Drupal\Core\DependencyInjection\Container;
-use Drupal\Core\Entity\EntityManager;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
@@ -141,16 +140,10 @@ class FieldStorageConfigAccessControlHandlerTest extends UnitTestCase {
         ['field_storage_config', $storage_access_control_handler],
       ]);
 
-    $entity_manager = new EntityManager();
-
     $container = new Container();
-    $container->set('entity.manager', $entity_manager);
     $container->set('entity_type.manager', $entity_type_manager);
     $container->set('uuid', $this->getMock(UuidInterface::class));
     $container->set('cache_contexts_manager', $this->prophesize(CacheContextsManager::class));
-    // Inject the container into entity.manager so it can defer to
-    // entity_type.manager.
-    $entity_manager->setContainer($container);
     \Drupal::setContainer($container);
 
     $this->entity = new FieldStorageConfig([

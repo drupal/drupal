@@ -668,7 +668,7 @@ class LinkFieldTest extends BrowserTestBase {
       ],
     ])->save();
 
-    $this->container->get('entity.manager')
+    $this->container->get('entity_type.manager')
       ->getStorage('entity_form_display')
       ->load('entity_test.entity_test.default')
       ->setComponent($field_name, [
@@ -823,7 +823,7 @@ class LinkFieldTest extends BrowserTestBase {
    */
   protected function renderTestEntity($id, $view_mode = 'full', $reset = TRUE) {
     if ($reset) {
-      $this->container->get('entity.manager')->getStorage('entity_test')->resetCache([$id]);
+      $this->container->get('entity_type.manager')->getStorage('entity_test')->resetCache([$id]);
     }
     $entity = EntityTest::load($id);
     $display = \Drupal::service('entity_display.repository')

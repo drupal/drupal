@@ -34,7 +34,7 @@ class BulkFormTest extends UserTestBase {
   public function testBulkForm() {
     // Log in as a user without 'administer users'.
     $this->drupalLogin($this->drupalCreateUser(['administer permissions']));
-    $user_storage = $this->container->get('entity.manager')->getStorage('user');
+    $user_storage = $this->container->get('entity_type.manager')->getStorage('user');
 
     // Create an user which actually can change users.
     $this->drupalLogin($this->drupalCreateUser(['administer users']));

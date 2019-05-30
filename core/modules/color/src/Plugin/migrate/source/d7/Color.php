@@ -52,7 +52,7 @@ class Color extends VariableMultiRow {
       $plugin_definition,
       $migration,
       $container->get('state'),
-      $container->get('entity.manager'),
+      $container->get('entity_type.manager'),
       $container->get('theme_handler')
     );
   }

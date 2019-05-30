@@ -47,7 +47,7 @@ class NodeEditFormTest extends NodeTestBase {
     $this->adminUser = $this->drupalCreateUser(['bypass node access', 'administer nodes']);
     $this->drupalPlaceBlock('local_tasks_block');
 
-    $this->nodeStorage = $this->container->get('entity.manager')->getStorage('node');
+    $this->nodeStorage = $this->container->get('entity_type.manager')->getStorage('node');
   }
 
   /**

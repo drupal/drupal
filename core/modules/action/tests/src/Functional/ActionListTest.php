@@ -27,7 +27,7 @@ class ActionListTest extends BrowserTestBase {
 
     // Ensure the empty text appears on the action list page.
     /** @var $storage \Drupal\Core\Entity\EntityStorageInterface */
-    $storage = $this->container->get('entity.manager')->getStorage('action');
+    $storage = $this->container->get('entity_type.manager')->getStorage('action');
     $actions = $storage->loadMultiple();
     $storage->delete($actions);
     $this->drupalGet('/admin/config/system/actions');

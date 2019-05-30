@@ -11,7 +11,6 @@ use Drupal\Core\Entity\EntityType;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
-use Drupal\Core\Entity\EntityManager;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\Tests\UnitTestCase;
@@ -31,13 +30,6 @@ class FieldConfigEntityUnitTest extends UnitTestCase {
 
   /**
    * The entity manager used for testing.
-   *
-   * @var \Drupal\Core\Entity\EntityManagerInterface|\PHPUnit_Framework_MockObject_MockObject
-   */
-  protected $entityManager;
-
-  /**
-   * The entity type manager used for testing.
    *
    * @var \Drupal\Core\Entity\EntityTypeManagerInterface|\PHPUnit_Framework_MockObject_MockObject
    */
@@ -85,7 +77,6 @@ class FieldConfigEntityUnitTest extends UnitTestCase {
     $this->entityTypeId = $this->randomMachineName();
     $this->entityType = $this->getMock('\Drupal\Core\Config\Entity\ConfigEntityTypeInterface');
 
-    $this->entityManager = new EntityManager();
     $this->entityTypeManager = $this->getMock(EntityTypeManagerInterface::class);
     $this->entityFieldManager = $this->getMock(EntityFieldManagerInterface::class);
 
@@ -94,14 +85,10 @@ class FieldConfigEntityUnitTest extends UnitTestCase {
     $this->fieldTypePluginManager = $this->getMock('Drupal\Core\Field\FieldTypePluginManagerInterface');
 
     $container = new ContainerBuilder();
-    $container->set('entity.manager', $this->entityManager);
     $container->set('entity_field.manager', $this->entityFieldManager);
     $container->set('entity_type.manager', $this->entityTypeManager);
     $container->set('uuid', $this->uuid);
     $container->set('plugin.manager.field.field_type', $this->fieldTypePluginManager);
-    // Inject the container into entity.manager so it can defer to
-    // entity_type.manager, etc.
-    $this->entityManager->setContainer($container);
     \Drupal::setContainer($container);
 
     // Create a mock FieldStorageConfig object.

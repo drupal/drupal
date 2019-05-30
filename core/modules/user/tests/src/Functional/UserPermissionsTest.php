@@ -45,7 +45,7 @@ class UserPermissionsTest extends BrowserTestBase {
   public function testUserPermissionChanges() {
     $permissions_hash_generator = $this->container->get('user_permissions_hash_generator');
 
-    $storage = $this->container->get('entity.manager')->getStorage('user_role');
+    $storage = $this->container->get('entity_type.manager')->getStorage('user_role');
 
     // Create an additional role and mark it as admin role.
     Role::create(['is_admin' => TRUE, 'id' => 'administrator', 'label' => 'Administrator'])->save();

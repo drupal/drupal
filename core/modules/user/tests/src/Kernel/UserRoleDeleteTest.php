@@ -31,7 +31,7 @@ class UserRoleDeleteTest extends KernelTestBase {
    */
   public function testRoleDeleteUserRoleReferenceDelete() {
     // Create two test roles.
-    $role_storage = $this->container->get('entity.manager')->getStorage('user_role');
+    $role_storage = $this->container->get('entity_type.manager')->getStorage('user_role');
     $role_storage->create(['id' => 'test_role_one'])->save();
     $role_storage->create(['id' => 'test_role_two'])->save();
 

@@ -20,11 +20,11 @@ class ImageStyleTest extends UnitTestCase {
   protected $entityType;
 
   /**
-   * The entity manager used for testing.
+   * The entity type manager used for testing.
    *
-   * @var \Drupal\Core\Entity\EntityManagerInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface|\PHPUnit_Framework_MockObject_MockObject
    */
-  protected $entityManager;
+  protected $entityTypeManager;
 
   /**
    * The ID of the type of the entity under test.
@@ -92,8 +92,8 @@ class ImageStyleTest extends UnitTestCase {
     $this->entityType->expects($this->any())
       ->method('getProvider')
       ->will($this->returnValue($this->provider));
-    $this->entityManager = $this->getMock('\Drupal\Core\Entity\EntityManagerInterface');
-    $this->entityManager->expects($this->any())
+    $this->entityTypeManager = $this->getMock('\Drupal\Core\Entity\EntityTypeManagerInterface');
+    $this->entityTypeManager->expects($this->any())
       ->method('getDefinition')
       ->with($this->entityTypeId)
       ->will($this->returnValue($this->entityType));

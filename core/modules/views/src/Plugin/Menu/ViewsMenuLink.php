@@ -85,7 +85,7 @@ class ViewsMenuLink extends MenuLinkBase implements ContainerFactoryPluginInterf
       $configuration,
       $plugin_id,
       $plugin_definition,
-      $container->get('entity.manager'),
+      $container->get('entity_type.manager'),
       $container->get('views.executable')
     );
   }

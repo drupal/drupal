@@ -69,7 +69,7 @@ class AggregatorAdminTest extends AggregatorTestBase {
     // Check if the fields in the table match with what's expected.
     $link = $this->xpath('//table/tbody/tr//td[1]/a');
     $this->assertEquals($feed->label(), $link[0]->getText());
-    $count = $this->container->get('entity.manager')->getStorage('aggregator_item')->getItemCount($feed);
+    $count = $this->container->get('entity_type.manager')->getStorage('aggregator_item')->getItemCount($feed);
     $td = $this->xpath('//table/tbody/tr//td[2]');
     $this->assertEquals(\Drupal::translation()->formatPlural($count, '1 item', '@count items'), $td[0]->getText());
 
@@ -80,7 +80,7 @@ class AggregatorAdminTest extends AggregatorTestBase {
     // Check if the fields in the table match with what's expected.
     $link = $this->xpath('//table/tbody/tr//td[1]/a');
     $this->assertEquals($feed->label(), $link[0]->getText());
-    $count = $this->container->get('entity.manager')->getStorage('aggregator_item')->getItemCount($feed);
+    $count = $this->container->get('entity_type.manager')->getStorage('aggregator_item')->getItemCount($feed);
     $td = $this->xpath('//table/tbody/tr//td[2]');
     $this->assertEquals(\Drupal::translation()->formatPlural($count, '1 item', '@count items'), $td[0]->getText());
   }

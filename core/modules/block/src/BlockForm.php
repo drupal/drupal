@@ -110,7 +110,7 @@ class BlockForm extends EntityForm {
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('entity.manager'),
+      $container->get('entity_type.manager'),
       $container->get('plugin.manager.condition'),
       $container->get('context.repository'),
       $container->get('language_manager'),

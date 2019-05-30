@@ -77,9 +77,9 @@ class CacheTagTest extends ViewTestBase {
     $this->drupalCreateContentType(['type' => 'page', 'name' => 'Basic page']);
     $this->drupalCreateContentType(['type' => 'article', 'name' => 'Article']);
 
-    $this->nodeStorage = $this->container->get('entity.manager')->getStorage('node');
-    $this->nodeViewBuilder = $this->container->get('entity.manager')->getViewBuilder('node');
-    $this->userViewBuilder = $this->container->get('entity.manager')->getViewBuilder('user');
+    $this->nodeStorage = $this->container->get('entity_type.manager')->getStorage('node');
+    $this->nodeViewBuilder = $this->container->get('entity_type.manager')->getViewBuilder('node');
+    $this->userViewBuilder = $this->container->get('entity_type.manager')->getViewBuilder('user');
 
     for ($i = 1; $i <= 5; $i++) {
       $this->pages[] = $this->drupalCreateNode(['title' => "Test $i", 'type' => 'page']);

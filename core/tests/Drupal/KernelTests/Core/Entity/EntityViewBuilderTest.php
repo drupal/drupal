@@ -49,12 +49,12 @@ class EntityViewBuilderTest extends EntityKernelTestBase {
 
     // Test that new entities (before they are saved for the first time) do not
     // generate a cache entry.
-    $build = $this->container->get('entity.manager')->getViewBuilder('entity_test')->view($entity_test, 'full');
+    $build = $this->container->get('entity_type.manager')->getViewBuilder('entity_test')->view($entity_test, 'full');
     $this->assertTrue(isset($build['#cache']) && array_keys($build['#cache']) == ['tags', 'contexts', 'max-age'], 'The render array element of new (unsaved) entities is not cached, but does have cache tags set.');
 
     // Get a fully built entity view render array.
     $entity_test->save();
-    $build = $this->container->get('entity.manager')->getViewBuilder('entity_test')->view($entity_test, 'full');
+    $build = $this->container->get('entity_type.manager')->getViewBuilder('entity_test')->view($entity_test, 'full');
     $cid_parts = array_merge($build['#cache']['keys'], $cache_contexts_manager->convertTokensToKeys(['languages:' . LanguageInterface::TYPE_INTERFACE, 'theme', 'user.permissions'])->getKeys());
     $cid = implode(':', $cid_parts);
     $bin = $build['#cache']['bin'];
@@ -110,7 +110,7 @@ class EntityViewBuilderTest extends EntityKernelTestBase {
     $entity_test_reference->save();
 
     // Get a fully built entity view render array for the referenced entity.
-    $build = $this->container->get('entity.manager')->getViewBuilder('entity_test')->view($entity_test_reference, 'full');
+    $build = $this->container->get('entity_type.manager')->getViewBuilder('entity_test')->view($entity_test_reference, 'full');
     $cid_parts = array_merge($build['#cache']['keys'], $cache_contexts_manager->convertTokensToKeys(['languages:' . LanguageInterface::TYPE_INTERFACE, 'theme', 'user.permissions'])->getKeys());
     $cid_reference = implode(':', $cid_parts);
     $bin_reference = $build['#cache']['bin'];
@@ -129,7 +129,7 @@ class EntityViewBuilderTest extends EntityKernelTestBase {
     $entity_test->save();
 
     // Get a fully built entity view render array.
-    $build = $this->container->get('entity.manager')->getViewBuilder('entity_test')->view($entity_test, 'full');
+    $build = $this->container->get('entity_type.manager')->getViewBuilder('entity_test')->view($entity_test, 'full');
     $cid_parts = array_merge($build['#cache']['keys'], $cache_contexts_manager->convertTokensToKeys(['languages:' . LanguageInterface::TYPE_INTERFACE, 'theme', 'user.permissions'])->getKeys());
     $cid = implode(':', $cid_parts);
     $bin = $build['#cache']['bin'];
@@ -160,18 +160,18 @@ class EntityViewBuilderTest extends EntityKernelTestBase {
 
     // Test a view mode in default conditions: render caching is enabled for
     // the entity type and the view mode.
-    $build = $this->container->get('entity.manager')->getViewBuilder('entity_test')->view($entity_test, 'full');
+    $build = $this->container->get('entity_type.manager')->getViewBuilder('entity_test')->view($entity_test, 'full');
     $this->assertTrue(isset($build['#cache']) && array_keys($build['#cache']) == ['tags', 'contexts', 'max-age', 'keys', 'bin'], 'A view mode with render cache enabled has the correct output (cache tags, keys, contexts, max-age and bin).');
 
     // Test that a view mode can opt out of render caching.
-    $build = $this->container->get('entity.manager')->getViewBuilder('entity_test')->view($entity_test, 'test');
+    $build = $this->container->get('entity_type.manager')->getViewBuilder('entity_test')->view($entity_test, 'test');
     $this->assertTrue(isset($build['#cache']) && array_keys($build['#cache']) == ['tags', 'contexts', 'max-age'], 'A view mode with render cache disabled has the correct output (only cache tags, contexts and max-age).');
 
     // Test that an entity type can opt out of render caching completely.
     $this->installEntitySchema('entity_test_label');
     $entity_test_no_cache = $this->createTestEntity('entity_test_label');
     $entity_test_no_cache->save();
-    $build = $this->container->get('entity.manager')->getViewBuilder('entity_test_label')->view($entity_test_no_cache, 'full');
+    $build = $this->container->get('entity_type.manager')->getViewBuilder('entity_test_label')->view($entity_test_no_cache, 'full');
     $this->assertTrue(isset($build['#cache']) && array_keys($build['#cache']) == ['tags', 'contexts', 'max-age'], 'An entity type can opt out of render caching regardless of view mode configuration, but always has cache tags, contexts and max-age set.');
   }
 
@@ -190,7 +190,7 @@ class EntityViewBuilderTest extends EntityKernelTestBase {
 
     // Create and build a test entity.
     $entity_test = $this->createTestEntity('entity_test');
-    $view = $this->container->get('entity.manager')->getViewBuilder('entity_test')->view($entity_test, 'full');
+    $view = $this->container->get('entity_type.manager')->getViewBuilder('entity_test')->view($entity_test, 'full');
     $renderer->renderRoot($view);
 
     // Check that the weight is respected.
@@ -211,7 +211,7 @@ class EntityViewBuilderTest extends EntityKernelTestBase {
       'bundle' => $entity_type,
       'name' => $this->randomMachineName(),
     ];
-    return $this->container->get('entity.manager')->getStorage($entity_type)->create($data);
+    return $this->container->get('entity_type.manager')->getStorage($entity_type)->create($data);
   }
 
   /**

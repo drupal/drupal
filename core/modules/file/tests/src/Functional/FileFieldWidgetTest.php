@@ -113,7 +113,7 @@ class FileFieldWidgetTest extends FileFieldTestBase {
    * Tests upload and remove buttons for multiple multi-valued File fields.
    */
   public function testMultiValuedWidget() {
-    $node_storage = $this->container->get('entity.manager')->getStorage('node');
+    $node_storage = $this->container->get('entity_type.manager')->getStorage('node');
     $type_name = 'article';
     // Use explicit names instead of random names for those fields, because of a
     // bug in drupalPostForm() with multiple file uploads in one form, where the
@@ -239,7 +239,7 @@ class FileFieldWidgetTest extends FileFieldTestBase {
    * Tests a file field with a "Private files" upload destination setting.
    */
   public function testPrivateFileSetting() {
-    $node_storage = $this->container->get('entity.manager')->getStorage('node');
+    $node_storage = $this->container->get('entity_type.manager')->getStorage('node');
     // Grant the admin user required permissions.
     user_role_grant_permissions($this->adminUser->roles[0]->target_id, ['administer node fields']);
 

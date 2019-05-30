@@ -93,8 +93,8 @@ class NegotiationConfigureForm extends ConfigFormBase {
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container) {
-    $entity_manager = $container->get('entity.manager');
-    $block_storage = $entity_manager->hasHandler('block', 'storage') ? $entity_manager->getStorage('block') : NULL;
+    $entity_type_manager = $container->get('entity_type.manager');
+    $block_storage = $entity_type_manager->hasHandler('block', 'storage') ? $entity_type_manager->getStorage('block') : NULL;
     return new static(
       $container->get('config.factory'),
       $container->get('language_manager'),

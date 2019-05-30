@@ -48,7 +48,7 @@ class MigrateExternalTranslatedTest extends MigrateTestBase {
    */
   public function testMigrations() {
     /** @var \Drupal\Core\Entity\ContentEntityStorageInterface $storage */
-    $storage = $this->container->get('entity.manager')->getStorage('node');
+    $storage = $this->container->get('entity_type.manager')->getStorage('node');
     $this->assertEquals(0, count($storage->loadMultiple()));
 
     // Run the migrations.

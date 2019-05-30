@@ -29,11 +29,11 @@ class ConfigFieldMapperTest extends UnitTestCase {
   protected $entity;
 
   /**
-   * The entity manager used for testing.
+   * The entity type manager used for testing.
    *
-   * @var \Drupal\Core\Entity\EntityManagerInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface|\PHPUnit_Framework_MockObject_MockObject
    */
-  protected $entityManager;
+  protected $entityTypeManager;
 
   /**
    * The mocked event dispatcher.
@@ -46,7 +46,7 @@ class ConfigFieldMapperTest extends UnitTestCase {
    * {@inheritdoc}
    */
   protected function setUp() {
-    $this->entityManager = $this->getMock('Drupal\Core\Entity\EntityManagerInterface');
+    $this->entityTypeManager = $this->getMock('Drupal\Core\Entity\EntityTypeManagerInterface');
     $this->entity = $this->getMock('Drupal\field\FieldConfigInterface');
 
     $definition = [
@@ -72,7 +72,7 @@ class ConfigFieldMapperTest extends UnitTestCase {
       $this->getMock('Drupal\config_translation\ConfigMapperManagerInterface'),
       $this->getMock('Drupal\Core\Routing\RouteProviderInterface'),
       $this->getStringTranslationStub(),
-      $this->entityManager,
+      $this->entityTypeManager,
       $this->getMock('Drupal\Core\Language\LanguageManagerInterface'),
       $this->eventDispatcher
     );
@@ -90,7 +90,7 @@ class ConfigFieldMapperTest extends UnitTestCase {
       ->method('getConfigPrefix')
       ->will($this->returnValue('config_prefix'));
 
-    $this->entityManager
+    $this->entityTypeManager
       ->expects($this->any())
       ->method('getDefinition')
       ->will($this->returnValue($entity_type));

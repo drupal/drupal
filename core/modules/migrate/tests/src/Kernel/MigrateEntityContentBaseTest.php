@@ -55,7 +55,7 @@ class MigrateEntityContentBaseTest extends KernelTestBase {
     ConfigurableLanguage::createFromLangcode('en')->save();
     ConfigurableLanguage::createFromLangcode('fr')->save();
 
-    $this->storage = $this->container->get('entity.manager')->getStorage('entity_test_mul');
+    $this->storage = $this->container->get('entity_type.manager')->getStorage('entity_test_mul');
   }
 
   /**

@@ -134,7 +134,7 @@ class NodeRevisionsTest extends NodeTestBase {
    * Checks node revision related operations.
    */
   public function testRevisions() {
-    $node_storage = $this->container->get('entity.manager')->getStorage('node');
+    $node_storage = $this->container->get('entity_type.manager')->getStorage('node');
     $nodes = $this->nodes;
     $logs = $this->revisionLogs;
 
@@ -305,7 +305,7 @@ class NodeRevisionsTest extends NodeTestBase {
    * Checks that revisions are correctly saved without log messages.
    */
   public function testNodeRevisionWithoutLogMessage() {
-    $node_storage = $this->container->get('entity.manager')->getStorage('node');
+    $node_storage = $this->container->get('entity_type.manager')->getStorage('node');
     // Create a node with an initial log message.
     $revision_log = $this->randomMachineName(10);
     $node = $this->drupalCreateNode(['revision_log' => $revision_log]);
@@ -406,7 +406,7 @@ class NodeRevisionsTest extends NodeTestBase {
     ]);
     $this->drupalPostForm($revert_translation_url, [], t('Revert'));
     /** @var \Drupal\node\NodeStorage $node_storage */
-    $node_storage = $this->container->get('entity.manager')->getStorage('node');
+    $node_storage = $this->container->get('entity_type.manager')->getStorage('node');
     $node_storage->resetCache();
     /** @var \Drupal\node\NodeInterface $node */
     $node = $node_storage->load($node->id());

@@ -108,7 +108,7 @@ class EmailAction extends ConfigurableActionBase implements ContainerFactoryPlug
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
     return new static($configuration, $plugin_id, $plugin_definition,
       $container->get('token'),
-      $container->get('entity.manager'),
+      $container->get('entity_type.manager'),
       $container->get('logger.factory')->get('action'),
       $container->get('plugin.manager.mail'),
       $container->get('language_manager'),

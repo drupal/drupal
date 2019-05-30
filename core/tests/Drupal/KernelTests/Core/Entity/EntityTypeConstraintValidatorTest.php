@@ -38,7 +38,7 @@ class EntityTypeConstraintValidatorTest extends EntityKernelTestBase {
     );
 
     // Test the validation.
-    $node = $this->container->get('entity.manager')->getStorage('node')->create(['type' => 'page']);
+    $node = $this->container->get('entity_type.manager')->getStorage('node')->create(['type' => 'page']);
     $typed_data = $this->typedData->create($definition, $node);
     $violations = $typed_data->validate();
     $this->assertEqual($violations->count(), 0, 'Validation passed for correct value.');

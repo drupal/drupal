@@ -48,7 +48,7 @@ class Roles extends ManyToOne {
       $configuration,
       $plugin_id,
       $plugin_definition,
-      $container->get('entity.manager')->getStorage('user_role')
+      $container->get('entity_type.manager')->getStorage('user_role')
     );
   }
 

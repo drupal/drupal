@@ -25,7 +25,7 @@ class EntityTest extends UnitTestCase {
   /**
    * The mocked entity type manager.
    *
-   * @var \Drupal\Core\Entity\EntityManagerInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface|\PHPUnit_Framework_MockObject_MockObject
    */
   protected $entityTypeManager;
 
@@ -125,7 +125,7 @@ class EntityTest extends UnitTestCase {
   /**
    * Ensures that the entity manager returns an entity storage.
    */
-  protected function setupEntityManager() {
+  protected function setupEntityTypeManager() {
     $this->entityTypeManager->expects($this->any())
       ->method('getStorage')
       ->with('entity_test')
@@ -156,7 +156,7 @@ class EntityTest extends UnitTestCase {
    * @covers ::init
    */
   public function testRenderWithId() {
-    $this->setupEntityManager();
+    $this->setupEntityTypeManager();
     $options = [
       'target' => 1,
       'tokenize' => FALSE,
@@ -192,7 +192,7 @@ class EntityTest extends UnitTestCase {
    * @dataProvider providerTestTokens
    */
   public function testRenderWithIdAndToken($token, $id) {
-    $this->setupEntityManager();
+    $this->setupEntityTypeManager();
     $options = [
       'target' => $token,
       'tokenize' => TRUE,
@@ -231,7 +231,7 @@ class EntityTest extends UnitTestCase {
    * @covers ::init
    */
   public function testRenderWithUuid() {
-    $this->setupEntityManager();
+    $this->setupEntityTypeManager();
     $uuid = '1d52762e-b9d8-4177-908f-572d1a5845a4';
     $options = [
       'target' => $uuid,
@@ -264,7 +264,7 @@ class EntityTest extends UnitTestCase {
    * @dataProvider providerTestTokens
    */
   public function testCalculateDependenciesWithPlaceholder($token, $id) {
-    $this->setupEntityManager();
+    $this->setupEntityTypeManager();
 
     $options = [
       'target' => $token,
@@ -278,7 +278,7 @@ class EntityTest extends UnitTestCase {
    * @covers ::calculateDependencies
    */
   public function testCalculateDependenciesWithUuid() {
-    $this->setupEntityManager();
+    $this->setupEntityTypeManager();
 
     $uuid = '1d52762e-b9d8-4177-908f-572d1a5845a4';
     $entity = $this->getMock('Drupal\Core\Entity\EntityInterface');
@@ -310,7 +310,7 @@ class EntityTest extends UnitTestCase {
    * @covers ::calculateDependencies
    */
   public function testCalculateDependenciesWithEntityId() {
-    $this->setupEntityManager();
+    $this->setupEntityTypeManager();
 
     $entity = $this->getMock('Drupal\Core\Entity\EntityInterface');
     $entity_type = $this->getMock('Drupal\Core\Entity\EntityTypeInterface');

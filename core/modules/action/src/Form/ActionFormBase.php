@@ -42,7 +42,7 @@ abstract class ActionFormBase extends EntityForm {
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('entity.manager')->getStorage('action')
+      $container->get('entity_type.manager')->getStorage('action')
     );
   }
 

@@ -3,7 +3,6 @@
 namespace Drupal\Tests\Core\Config\Entity;
 
 use Drupal\Core\DependencyInjection\ContainerBuilder;
-use Drupal\Core\Entity\EntityManager;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Tests\UnitTestCase;
 
@@ -26,13 +25,6 @@ class EntityDisplayModeBaseUnitTest extends UnitTestCase {
    * @var \Drupal\Core\Entity\EntityTypeInterface|\PHPUnit_Framework_MockObject_MockObject
    */
   protected $entityInfo;
-
-  /**
-   * The entity manager used for testing.
-   *
-   * @var \Drupal\Core\Entity\EntityManagerInterface|\PHPUnit_Framework_MockObject_MockObject
-   */
-  protected $entityManager;
 
   /**
    * The entity type manager used for testing.
@@ -68,18 +60,11 @@ class EntityDisplayModeBaseUnitTest extends UnitTestCase {
 
     $this->entityTypeManager = $this->getMock(EntityTypeManagerInterface::class);
 
-    $this->entityManager = new EntityManager();
-
     $this->uuid = $this->getMock('\Drupal\Component\Uuid\UuidInterface');
 
     $container = new ContainerBuilder();
-    $container->set('entity.manager', $this->entityManager);
     $container->set('entity_type.manager', $this->entityTypeManager);
     $container->set('uuid', $this->uuid);
-
-    // Inject the container into entity.manager so it can defer to
-    // entity_type.manager.
-    $this->entityManager->setContainer($container);
 
     \Drupal::setContainer($container);
   }

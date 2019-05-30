@@ -50,7 +50,7 @@ abstract class DateFormatFormBase extends EntityForm {
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('date.formatter'),
-      $container->get('entity.manager')->getStorage('date_format')
+      $container->get('entity_type.manager')->getStorage('date_format')
     );
   }
 

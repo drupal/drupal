@@ -3,7 +3,6 @@
 namespace Drupal\Tests\editor\Unit;
 
 use Drupal\Core\DependencyInjection\ContainerBuilder;
-use Drupal\Core\Entity\EntityManager;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\editor\Entity\Editor;
 use Drupal\Tests\UnitTestCase;
@@ -80,16 +79,10 @@ class EditorConfigEntityUnitTest extends UnitTestCase {
       ->disableOriginalConstructor()
       ->getMock();
 
-    $entity_manager = new EntityManager();
-
     $container = new ContainerBuilder();
-    $container->set('entity.manager', $entity_manager);
     $container->set('entity_type.manager', $this->entityTypeManager);
     $container->set('uuid', $this->uuid);
     $container->set('plugin.manager.editor', $this->editorPluginManager);
-    // Inject the container into entity.manager so it can defer to
-    // entity_type.manager.
-    $entity_manager->setContainer($container);
     \Drupal::setContainer($container);
   }
 

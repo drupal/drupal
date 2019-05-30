@@ -43,7 +43,7 @@ class ShortcutSetDeleteForm extends EntityDeleteForm {
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('database'),
-      $container->get('entity.manager')->getStorage('shortcut_set')
+      $container->get('entity_type.manager')->getStorage('shortcut_set')
     );
   }
 

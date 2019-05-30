@@ -104,7 +104,7 @@ class FieldSqlStorageTest extends EntityKernelTestBase {
    */
   public function testFieldLoad() {
     $entity_type = $bundle = 'entity_test_rev';
-    $storage = $this->container->get('entity.manager')->getStorage($entity_type);
+    $storage = $this->container->get('entity_type.manager')->getStorage($entity_type);
 
     $columns = ['bundle', 'deleted', 'entity_id', 'revision_id', 'delta', 'langcode', $this->tableMapping->getFieldColumnName($this->fieldStorage, 'value')];
 
@@ -276,7 +276,7 @@ class FieldSqlStorageTest extends EntityKernelTestBase {
     // Use one of the longest entity_type names in core.
     $entity_type = $bundle = 'entity_test_label_callback';
     $this->installEntitySchema('entity_test_label_callback');
-    $storage = $this->container->get('entity.manager')->getStorage($entity_type);
+    $storage = $this->container->get('entity_type.manager')->getStorage($entity_type);
 
     // Create two fields and generate random values.
     $name_base = mb_strtolower($this->randomMachineName(FieldStorageConfig::NAME_MAX_LENGTH - 1));
@@ -440,7 +440,7 @@ class FieldSqlStorageTest extends EntityKernelTestBase {
     }
 
     // Verify that the tables were not dropped in the process.
-    $entity = $this->container->get('entity.manager')->getStorage($entity_type)->load(1);
+    $entity = $this->container->get('entity_type.manager')->getStorage($entity_type)->load(1);
     $this->assertEqual($entity->$field_name->value, 'field data', t("Index changes performed without dropping the tables"));
   }
 

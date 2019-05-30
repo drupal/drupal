@@ -16,7 +16,7 @@ class FileFieldPathTest extends FileFieldTestBase {
    */
   public function testUploadPath() {
     /** @var \Drupal\node\NodeStorageInterface $node_storage */
-    $node_storage = $this->container->get('entity.manager')->getStorage('node');
+    $node_storage = $this->container->get('entity_type.manager')->getStorage('node');
     $field_name = strtolower($this->randomMachineName());
     $type_name = 'article';
     $this->createFileField($field_name, 'node', $type_name);

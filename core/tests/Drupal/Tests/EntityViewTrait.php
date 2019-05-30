@@ -58,7 +58,7 @@ trait EntityViewTrait {
       }
     };
 
-    $render_controller = $this->container->get('entity.manager')->getViewBuilder($entity->getEntityTypeId());
+    $render_controller = $this->container->get('entity_type.manager')->getViewBuilder($entity->getEntityTypeId());
     if ($reset) {
       $render_controller->resetCache([$entity->id()]);
     }

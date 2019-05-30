@@ -144,7 +144,7 @@ class EntityViewControllerTest extends BrowserTestBase {
       'bundle' => $entity_type,
       'name' => $this->randomMachineName(),
     ];
-    return $this->container->get('entity.manager')->getStorage($entity_type)->create($data);
+    return $this->container->get('entity_type.manager')->getStorage($entity_type)->create($data);
   }
 
 }

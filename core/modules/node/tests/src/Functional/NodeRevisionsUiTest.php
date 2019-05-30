@@ -38,7 +38,7 @@ class NodeRevisionsUiTest extends NodeTestBase {
    */
   public function testNodeFormSaveWithoutRevision() {
     $this->drupalLogin($this->editor);
-    $node_storage = $this->container->get('entity.manager')->getStorage('node');
+    $node_storage = $this->container->get('entity_type.manager')->getStorage('node');
 
     // Set page revision setting 'create new revision'. This will mean new
     // revisions are created by default when the node is edited.

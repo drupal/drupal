@@ -187,7 +187,7 @@ class BlockContentTypeTest extends BlockContentTestBase {
 
     // Get the custom block storage.
     $storage = $this->container
-      ->get('entity.manager')
+      ->get('entity_type.manager')
       ->getStorage('block_content');
 
     // Install all themes.

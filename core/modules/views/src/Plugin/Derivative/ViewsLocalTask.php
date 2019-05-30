@@ -59,7 +59,7 @@ class ViewsLocalTask extends DeriverBase implements ContainerDeriverInterface {
     return new static(
       $container->get('router.route_provider'),
       $container->get('state'),
-      $container->get('entity.manager')->getStorage('view')
+      $container->get('entity_type.manager')->getStorage('view')
     );
   }
 

@@ -59,7 +59,7 @@ class UserPermissionsForm extends FormBase {
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('user.permissions'),
-      $container->get('entity.manager')->getStorage('user_role'),
+      $container->get('entity_type.manager')->getStorage('user_role'),
       $container->get('module_handler')
     );
   }

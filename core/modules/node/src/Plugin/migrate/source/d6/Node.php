@@ -66,7 +66,7 @@ class Node extends DrupalSqlBase {
       $plugin_definition,
       $migration,
       $container->get('state'),
-      $container->get('entity.manager'),
+      $container->get('entity_type.manager'),
       $container->get('module_handler')
     );
   }

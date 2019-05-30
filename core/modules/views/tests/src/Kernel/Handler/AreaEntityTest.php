@@ -62,7 +62,7 @@ class AreaEntityTest extends ViewsKernelTestBase {
    */
   public function testEntityAreaData() {
     $data = $this->container->get('views.views_data')->get('views');
-    $entity_types = $this->container->get('entity.manager')->getDefinitions();
+    $entity_types = $this->container->get('entity_type.manager')->getDefinitions();
 
     $expected_entities = array_filter($entity_types, function (EntityTypeInterface $entity_type) {
       return $entity_type->hasViewBuilderClass();
@@ -94,7 +94,7 @@ class AreaEntityTest extends ViewsKernelTestBase {
     for ($i = 0; $i < 3; $i++) {
       $random_label = $this->randomMachineName();
       $data = ['bundle' => 'entity_test', 'name' => $random_label];
-      $entity_test = $this->container->get('entity.manager')
+      $entity_test = $this->container->get('entity_type.manager')
         ->getStorage('entity_test')
         ->create($data);
 

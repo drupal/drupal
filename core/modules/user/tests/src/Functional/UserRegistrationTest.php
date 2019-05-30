@@ -57,7 +57,7 @@ class UserRegistrationTest extends BrowserTestBase {
     $edit['name'] = $name = $this->randomMachineName();
     $edit['mail'] = $mail = $edit['name'] . '@example.com';
     $this->drupalPostForm('user/register', $edit, t('Create new account'));
-    $this->container->get('entity.manager')->getStorage('user')->resetCache();
+    $this->container->get('entity_type.manager')->getStorage('user')->resetCache();
     $accounts = $storage->loadByProperties(['name' => $name, 'mail' => $mail]);
     $new_user = reset($accounts);
     $this->assertFalse($new_user->isActive(), 'New account is blocked until approved by an administrator.');
@@ -86,7 +86,7 @@ class UserRegistrationTest extends BrowserTestBase {
     $edit['pass[pass1]'] = $new_pass = $this->randomMachineName();
     $edit['pass[pass2]'] = $new_pass;
     $this->drupalPostForm('user/register', $edit, t('Create new account'));
-    $this->container->get('entity.manager')->getStorage('user')->resetCache();
+    $this->container->get('entity_type.manager')->getStorage('user')->resetCache();
     $accounts = $this->container->get('entity_type.manager')->getStorage('user')
       ->loadByProperties(['name' => $name, 'mail' => $mail]);
     $new_user = reset($accounts);

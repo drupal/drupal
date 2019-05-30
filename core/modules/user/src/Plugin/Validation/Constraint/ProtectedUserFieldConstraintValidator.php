@@ -46,7 +46,7 @@ class ProtectedUserFieldConstraintValidator extends ConstraintValidator implemen
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('entity.manager')->getStorage('user'),
+      $container->get('entity_type.manager')->getStorage('user'),
       $container->get('current_user')
     );
   }

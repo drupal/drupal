@@ -285,14 +285,4 @@ class ContentTranslationSettingsTest extends BrowserTestBase {
     $this->assertNoField('settings[entity_test][entity_test][translatable]');
   }
 
-  /**
-   * Returns the entity manager.
-   *
-   * @return \Drupal\Core\Entity\EntityManagerInterface
-   *   The entity manager;
-   */
-  protected function entityManager() {
-    return $this->container->get('entity.manager');
-  }
-
 }

@@ -5,16 +5,23 @@ namespace Drupal\Tests\Core\Entity;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\Entity\Display\EntityFormDisplayInterface;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
+use Drupal\Core\Entity\EntityAccessControlHandlerInterface;
 use Drupal\Core\Entity\EntityDisplayRepositoryInterface;
 use Drupal\Core\Entity\EntityFieldManager;
+use Drupal\Core\Entity\EntityFormInterface;
+use Drupal\Core\Entity\EntityHandlerInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityLastInstalledSchemaRepositoryInterface;
+use Drupal\Core\Entity\EntityListBuilderInterface;
 use Drupal\Core\Entity\EntityManager;
 use Drupal\Core\Entity\EntityRepositoryInterface;
+use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityType;
 use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
+use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\EntityTypeManager;
 use Drupal\Core\Entity\EntityTypeRepositoryInterface;
+use Drupal\Core\Entity\EntityViewBuilderInterface;
 use Drupal\Tests\UnitTestCase;
 
 /**
@@ -588,6 +595,135 @@ class EntityManagerTest extends UnitTestCase {
     $form_display = $this->prophesize(EntityFormDisplayInterface::class)->reveal();
     $this->entityDisplayRepository->getFormDisplay('entity_test', 'bundle', 'default')->shouldBeCalled()->willReturn($form_display);
     $this->assertInstanceOf(EntityFormDisplayInterface::class, $this->entityManager->getFormDisplay('entity_test', 'bundle', 'default'));
+  }
+
+  /**
+   * @covers ::getDefinition
+   *
+   * @expectedDeprecation EntityManagerInterface::getDefinition() is deprecated in drupal:8.0.0 and is removed from drupal:9.0.0. Use \Drupal\Core\Entity\EntityTypeManager::getDefinition() instead. See https://www.drupal.org/node/2549139
+   */
+  public function testGetDefinition() {
+    $entity_type = $this->prophesize(EntityTypeInterface::class)->reveal();
+    $this->entityTypeManager->getDefinition('entity_test', TRUE)->shouldBeCalled()->willReturn($entity_type);
+    $this->assertInstanceOf(EntityTypeInterface::class, $this->entityManager->getDefinition('entity_test'));
+  }
+
+  /**
+   * @covers ::getDefinitions
+   *
+   * @expectedDeprecation EntityManagerInterface::getDefinitions() is deprecated in drupal:8.0.0 and is removed from drupal:9.0.0. Use \Drupal\Core\Entity\EntityTypeManager::getDefinitions() instead. See https://www.drupal.org/node/2549139
+   */
+  public function testGetDefinitions() {
+    $this->entityTypeManager->getDefinitions()->shouldBeCalled()->willReturn([]);
+    $this->assertEquals([], $this->entityManager->getDefinitions());
+  }
+
+  /**
+   * @covers ::hasDefinition
+   *
+   * @expectedDeprecation EntityManagerInterface::hasDefinition() is deprecated in drupal:8.0.0 and is removed from drupal:9.0.0. Use \Drupal\Core\Entity\EntityTypeManager::hasDefinition() instead. See https://www.drupal.org/node/2549139
+   */
+  public function testHasDefinition() {
+    $this->entityTypeManager->hasDefinition('entity_test')->shouldBeCalled()->willReturn(TRUE);
+    $this->assertTrue($this->entityManager->hasDefinition('entity_test'));
+  }
+
+  /**
+   * @covers ::getDefinitions
+   *
+   * @expectedDeprecation EntityManagerInterface::getRouteProviders() is deprecated in drupal:8.0.0 and is removed from drupal:9.0.0. Use \Drupal\Core\Entity\EntityTypeManager::getRouteProviders() instead. See https://www.drupal.org/node/2549139
+   */
+  public function testGetRouteProviders() {
+    $this->entityTypeManager->getRouteProviders('entity_test')->shouldBeCalled()->willReturn([]);
+    $this->assertEquals([], $this->entityManager->getRouteProviders('entity_test'));
+  }
+
+  /**
+   * @covers ::hasHandler
+   *
+   * @expectedDeprecation EntityManagerInterface::hasHandler() is deprecated in drupal:8.0.0 and is removed from drupal:9.0.0. Use \Drupal\Core\Entity\EntityTypeManager::hasHandler() instead. See https://www.drupal.org/node/2549139
+   */
+  public function testHasHandler() {
+    $this->entityTypeManager->hasHandler('entity_test', 'storage')->shouldBeCalled()->willReturn(TRUE);
+    $this->assertTrue($this->entityManager->hasHandler('entity_test', 'storage'));
+  }
+
+  /**
+   * @covers ::getStorage
+   *
+   * @expectedDeprecation EntityManagerInterface::getStorage() is deprecated in drupal:8.0.0 and is removed from drupal:9.0.0. Use \Drupal\Core\Entity\EntityTypeManager::getStorage() instead. See https://www.drupal.org/node/2549139
+   */
+  public function testGetStorage() {
+    $storage = $this->prophesize(EntityStorageInterface::class)->reveal();
+    $this->entityTypeManager->getStorage('entity_test')->shouldBeCalled()->willReturn($storage);
+    $this->assertInstanceOf(EntityStorageInterface::class, $this->entityManager->getStorage('entity_test'));
+  }
+
+  /**
+   * @covers ::getFormObject
+   *
+   * @expectedDeprecation EntityManagerInterface::getFormObject() is deprecated in drupal:8.0.0 and is removed from drupal:9.0.0. Use \Drupal\Core\Entity\EntityTypeManager::getFormObject() instead. See https://www.drupal.org/node/2549139
+   */
+  public function testGetFormObject() {
+    $form_object = $this->prophesize(EntityFormInterface::class)->reveal();
+    $this->entityTypeManager->getFormObject('entity_test', 'edit')->shouldBeCalled()->willReturn($form_object);
+    $this->assertInstanceOf(EntityFormInterface::class, $this->entityManager->getFormObject('entity_test', 'edit'));
+  }
+
+  /**
+   * @covers ::getListBuilder
+   *
+   * @expectedDeprecation EntityManagerInterface::getListBuilder() is deprecated in drupal:8.0.0 and is removed from drupal:9.0.0. Use \Drupal\Core\Entity\EntityTypeManager::getListBuilder() instead. See https://www.drupal.org/node/2549139
+   */
+  public function testGetListBuilder() {
+    $list_builder = $this->prophesize(EntityListBuilderInterface::class)->reveal();
+    $this->entityTypeManager->getListBuilder('entity_test')->shouldBeCalled()->willReturn($list_builder);
+    $this->assertInstanceOf(EntityListBuilderInterface::class, $this->entityManager->getListBuilder('entity_test'));
+  }
+
+  /**
+   * @covers ::getViewBuilder
+   *
+   * @expectedDeprecation EntityManagerInterface::getViewBuilder() is deprecated in drupal:8.0.0 and is removed from drupal:9.0.0. Use \Drupal\Core\Entity\EntityTypeManager::getViewBuilder() instead. See https://www.drupal.org/node/2549139
+   */
+  public function testGetViewBuilder() {
+    $view_builder = $this->prophesize(EntityViewBuilderInterface::class)->reveal();
+    $this->entityTypeManager->getViewBuilder('entity_test')->shouldBeCalled()->willReturn($view_builder);
+    $this->assertInstanceOf(EntityViewBuilderInterface::class, $this->entityManager->getViewBuilder('entity_test'));
+  }
+
+  /**
+   * @covers ::getAccessControlHandler
+   *
+   * @expectedDeprecation EntityManagerInterface::getAccessControlHandler() is deprecated in drupal:8.0.0 and is removed from drupal:9.0.0. Use \Drupal\Core\Entity\EntityTypeManager::getAccessControlHandler() instead. See https://www.drupal.org/node/2549139
+   */
+  public function testGetAccessControlHandler() {
+    $access_control_handler = $this->prophesize(EntityAccessControlHandlerInterface::class)->reveal();
+    $this->entityTypeManager->getAccessControlHandler('entity_test')->shouldBeCalled()->willReturn($access_control_handler);
+    $this->assertInstanceOf(EntityAccessControlHandlerInterface::class, $this->entityManager->getAccessControlHandler('entity_test'));
+  }
+
+  /**
+   * @covers ::getHandler
+   *
+   * @expectedDeprecation EntityManagerInterface::getHandler() is deprecated in drupal:8.0.0 and is removed from drupal:9.0.0. Use \Drupal\Core\Entity\EntityTypeManager::getHandler() instead. See https://www.drupal.org/node/2549139
+   */
+  public function testGetHandler() {
+    $handler = $this->prophesize(EntityHandlerInterface::class)->reveal();
+    $this->entityTypeManager->getHandler('entity_test', 'storage')->shouldBeCalled()->willReturn($handler);
+    $this->assertInstanceOf(EntityHandlerInterface::class, $this->entityManager->getHandler('entity_test', 'storage'));
+  }
+
+  /**
+   * @covers ::createHandlerInstance
+   *
+   * @expectedDeprecation EntityManagerInterface::createHandlerInstance() is deprecated in drupal:8.0.0 and is removed from drupal:9.0.0. Use \Drupal\Core\Entity\EntityTypeManager::createHandlerInstance() instead. See https://www.drupal.org/node/2549139
+   */
+  public function testCreateHandlerInstance() {
+    $handler = $this->prophesize(EntityHandlerInterface::class)->reveal();
+    $entity_type = $this->prophesize(EntityTypeInterface::class)->reveal();
+    $this->entityTypeManager->createHandlerInstance(EntityHandlerInterface::class, $entity_type)->shouldBeCalled()->willReturn($handler);
+    $this->assertInstanceOf(EntityHandlerInterface::class, $this->entityManager->createHandlerInstance(EntityHandlerInterface::class, $entity_type));
   }
 
 }

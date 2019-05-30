@@ -93,7 +93,7 @@ class SiteConfigureForm extends ConfigFormBase {
     return new static(
       $container->get('app.root'),
       $container->get('site.path'),
-      $container->get('entity.manager')->getStorage('user'),
+      $container->get('entity_type.manager')->getStorage('user'),
       $container->get('state'),
       $container->get('module_installer'),
       $container->get('country_manager')

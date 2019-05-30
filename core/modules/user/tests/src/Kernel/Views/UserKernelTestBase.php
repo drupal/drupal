@@ -45,9 +45,9 @@ abstract class UserKernelTestBase extends ViewsKernelTestBase {
 
     $this->installEntitySchema('user');
 
-    $entity_manager = $this->container->get('entity.manager');
-    $this->roleStorage = $entity_manager->getStorage('user_role');
-    $this->userStorage = $entity_manager->getStorage('user');
+    $entity_type_manager = $this->container->get('entity_type.manager');
+    $this->roleStorage = $entity_type_manager->getStorage('user_role');
+    $this->userStorage = $entity_type_manager->getStorage('user');
   }
 
   /**

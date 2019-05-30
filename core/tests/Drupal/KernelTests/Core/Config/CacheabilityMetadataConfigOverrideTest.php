@@ -63,9 +63,9 @@ class CacheabilityMetadataConfigOverrideTest extends KernelTestBase {
     // Load the User login block and check that its cacheability metadata is
     // overridden correctly. This verifies that the metadata is correctly
     // applied to config entities.
-    /** @var \Drupal\Core\Entity\EntityManagerInterface $entity_manager */
-    $entity_manager = $this->container->get('entity.manager');
-    $block = $entity_manager->getStorage('block')->load('call_to_action');
+    /** @var \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager */
+    $entity_type_manager = $this->container->get('entity_type.manager');
+    $block = $entity_type_manager->getStorage('block')->load('call_to_action');
 
     // Check that our call to action message is appealing to filibusters.
     $this->assertEqual($block->label(), 'Draw yer cutlasses!');

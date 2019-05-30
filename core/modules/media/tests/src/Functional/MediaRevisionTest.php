@@ -22,7 +22,7 @@ class MediaRevisionTest extends MediaFunctionalTestBase {
     $assert = $this->assertSession();
 
     /** @var \Drupal\Core\Entity\Sql\SqlContentEntityStorage $media_storage */
-    $media_storage = $this->container->get('entity.manager')->getStorage('media');
+    $media_storage = $this->container->get('entity_type.manager')->getStorage('media');
 
     // Create a media type and media item.
     $media_type = $this->createMediaType('test');

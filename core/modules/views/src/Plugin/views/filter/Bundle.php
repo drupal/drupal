@@ -81,7 +81,7 @@ class Bundle extends InOperator {
       $configuration,
       $plugin_id,
       $plugin_definition,
-      $container->get('entity.manager'),
+      $container->get('entity_type.manager'),
       $container->get('entity_type.bundle.info')
     );
   }

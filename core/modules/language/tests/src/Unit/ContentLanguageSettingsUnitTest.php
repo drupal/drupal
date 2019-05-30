@@ -4,7 +4,6 @@ namespace Drupal\Tests\language\Unit;
 
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
-use Drupal\Core\Entity\EntityManager;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Entity\EntityTypeRepositoryInterface;
 use Drupal\language\Entity\ContentLanguageSettings;
@@ -22,13 +21,6 @@ class ContentLanguageSettingsUnitTest extends UnitTestCase {
    * @var \Drupal\Core\Entity\EntityTypeInterface|\PHPUnit_Framework_MockObject_MockObject
    */
   protected $entityType;
-
-  /**
-   * The entity manager used for testing.
-   *
-   * @var \Drupal\Core\Entity\EntityManagerInterface|\PHPUnit_Framework_MockObject_MockObject
-   */
-  protected $entityManager;
 
   /**
    * The entity type manager used for testing.
@@ -72,7 +64,6 @@ class ContentLanguageSettingsUnitTest extends UnitTestCase {
     $this->entityTypeId = $this->randomMachineName();
     $this->entityType = $this->getMock('\Drupal\Core\Entity\EntityTypeInterface');
 
-    $this->entityManager = new EntityManager();
     $this->entityTypeManager = $this->getMock(EntityTypeManagerInterface::class);
 
     $this->uuid = $this->getMock('\Drupal\Component\Uuid\UuidInterface');
@@ -82,14 +73,10 @@ class ContentLanguageSettingsUnitTest extends UnitTestCase {
     $this->configEntityStorageInterface = $this->getMock('Drupal\Core\Entity\EntityStorageInterface');
 
     $container = new ContainerBuilder();
-    $container->set('entity.manager', $this->entityManager);
     $container->set('entity_type.manager', $this->entityTypeManager);
     $container->set('uuid', $this->uuid);
     $container->set('config.typed', $this->typedConfigManager);
     $container->set('config.storage', $this->configEntityStorageInterface);
-    // Inject the container into entity.manager so it can defer to other entity
-    // services.
-    $this->entityManager->setContainer($container);
     \Drupal::setContainer($container);
   }
 

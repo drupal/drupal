@@ -141,7 +141,7 @@ class ModuleTest extends ViewsKernelTestBase {
     $this->enableModules(['text', 'node']);
     $this->installEntitySchema('node');
     $this->installConfig(['node']);
-    $storage = $this->container->get('entity.manager')->getStorage('view');
+    $storage = $this->container->get('entity_type.manager')->getStorage('view');
 
     // Test views_view_is_enabled/disabled.
     $archive = $storage->load('archive');

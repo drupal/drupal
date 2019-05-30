@@ -26,7 +26,7 @@ class ConfigEntityFormOverrideTest extends BrowserTestBase {
     $overridden_label = 'Overridden label';
     $edited_label = 'Edited label';
 
-    $config_test_storage = $this->container->get('entity.manager')->getStorage('config_test');
+    $config_test_storage = $this->container->get('entity_type.manager')->getStorage('config_test');
 
     // Set up an override.
     $settings['config']['config_test.dynamic.dotted.default']['label'] = (object) [

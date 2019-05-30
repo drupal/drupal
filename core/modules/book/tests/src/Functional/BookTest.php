@@ -340,7 +340,7 @@ class BookTest extends BrowserTestBase {
    * Tests the access for deleting top-level book nodes.
    */
   public function testBookDelete() {
-    $node_storage = $this->container->get('entity.manager')->getStorage('node');
+    $node_storage = $this->container->get('entity_type.manager')->getStorage('node');
     $nodes = $this->createBook();
     $this->drupalLogin($this->adminUser);
     $edit = [];

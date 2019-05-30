@@ -10,7 +10,6 @@ use Drupal\Core\DependencyInjection\Container;
 use Drupal\Core\Entity\Entity\Access\EntityFormDisplayAccessControlHandler;
 use Drupal\Core\Entity\Entity\EntityFormDisplay;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
-use Drupal\Core\Entity\EntityManager;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
@@ -173,9 +172,7 @@ class EntityFormDisplayAccessControlHandlerTest extends UnitTestCase {
       ->method('getFieldDefinitions')
       ->will($this->returnValue([]));
 
-    $entity_manager = new EntityManager();
     $container = new Container();
-    $container->set('entity.manager', $entity_manager);
     $container->set('entity_type.manager', $entity_type_manager);
     $container->set('entity_field.manager', $entity_field_manager);
     $container->set('language_manager', $this->getMock(LanguageManagerInterface::class));
@@ -185,9 +182,6 @@ class EntityFormDisplayAccessControlHandlerTest extends UnitTestCase {
     $container->set('uuid', $this->getMock(UuidInterface::class));
     $container->set('renderer', $this->getMock(RendererInterface::class));
     $container->set('cache_contexts_manager', $this->prophesize(CacheContextsManager::class));
-    // Inject the container into entity.manager so it can defer to
-    // entity_type.manager.
-    $entity_manager->setContainer($container);
     \Drupal::setContainer($container);
 
     $this->entity = new EntityFormDisplay([

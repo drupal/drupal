@@ -139,7 +139,7 @@ class EntityFormTest extends BrowserTestBase {
   protected function loadEntityByName($entity_type, $name) {
     // Always load the entity from the database to ensure that changes are
     // correctly picked up.
-    $entity_storage = $this->container->get('entity.manager')->getStorage($entity_type);
+    $entity_storage = $this->container->get('entity_type.manager')->getStorage($entity_type);
     $entity_storage->resetCache();
     $entities = $entity_storage->loadByProperties(['name' => $name]);
     return $entities ? current($entities) : NULL;

@@ -49,7 +49,7 @@ interface FieldableEntityInterface extends EntityInterface {
    *   An array of base field definitions for the entity type, keyed by field
    *   name.
    *
-   * @see \Drupal\Core\Entity\EntityManagerInterface::getFieldDefinitions()
+   * @see \Drupal\Core\Entity\EntityFieldManagerInterface::getFieldDefinitions()
    * @see \Drupal\Core\Entity\FieldableEntityInterface::bundleFieldDefinitions()
    */
   public static function baseFieldDefinitions(EntityTypeInterface $entity_type);
@@ -85,7 +85,7 @@ interface FieldableEntityInterface extends EntityInterface {
    * @return \Drupal\Core\Field\FieldDefinitionInterface[]
    *   An array of bundle field definitions, keyed by field name.
    *
-   * @see \Drupal\Core\Entity\EntityManagerInterface::getFieldDefinitions()
+   * @see \Drupal\Core\Entity\EntityFieldManagerInterface::getFieldDefinitions()
    * @see \Drupal\Core\Entity\FieldableEntityInterface::baseFieldDefinitions()
    *
    * @todo WARNING: This method will be changed in
@@ -121,7 +121,7 @@ interface FieldableEntityInterface extends EntityInterface {
    * @return \Drupal\Core\Field\FieldDefinitionInterface[]
    *   An array of field definitions, keyed by field name.
    *
-   * @see \Drupal\Core\Entity\EntityManagerInterface::getFieldDefinitions()
+   * @see \Drupal\Core\Entity\EntityFieldManagerInterface::getFieldDefinitions()
    */
   public function getFieldDefinitions();
 

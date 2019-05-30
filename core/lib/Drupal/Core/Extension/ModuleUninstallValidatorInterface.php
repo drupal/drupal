@@ -17,10 +17,10 @@ interface ModuleUninstallValidatorInterface {
    * Example implementation:
    * @code
    * public function validate($module) {
-   *   $entity_types = $this->entityManager->getDefinitions();
+   *   $entity_types = $this->entityTypeManager->getDefinitions();
    *   $reasons = array();
    *   foreach ($entity_types as $entity_type) {
-   *     if ($module == $entity_type->getProvider() && $entity_type instanceof ContentEntityTypeInterface && $this->entityManager->getStorage($entity_type->id())->hasData()) {
+   *     if ($module == $entity_type->getProvider() && $entity_type instanceof ContentEntityTypeInterface && $this->entityTypeManager->getStorage($entity_type->id())->hasData()) {
    *       $reasons[] = $this->t('There is content for the entity type: @entity_type', array('@entity_type' => $entity_type->getLabel()));
    *     }
    *   }

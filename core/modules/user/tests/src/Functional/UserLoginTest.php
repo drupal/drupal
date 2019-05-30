@@ -122,7 +122,7 @@ class UserLoginTest extends BrowserTestBase {
     $this->drupalLogin($account);
     $this->drupalLogout();
     // Load the stored user. The password hash should reflect $default_count_log2.
-    $user_storage = $this->container->get('entity.manager')->getStorage('user');
+    $user_storage = $this->container->get('entity_type.manager')->getStorage('user');
     $account = User::load($account->id());
     $this->assertIdentical($password_hasher->getCountLog2($account->getPassword()), $default_count_log2);
 

@@ -119,7 +119,7 @@ class Views {
    *   A view executable instance, from the loaded entity.
    */
   public static function getView($id) {
-    $view = \Drupal::service('entity.manager')->getStorage('view')->load($id);
+    $view = \Drupal::entityTypeManager()->getStorage('view')->load($id);
     if ($view) {
       return static::executableFactory()->get($view);
     }

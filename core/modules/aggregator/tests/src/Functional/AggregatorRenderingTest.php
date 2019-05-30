@@ -55,7 +55,7 @@ class AggregatorRenderingTest extends AggregatorTestBase {
     $this->assertText($block->label(), 'Feed block is displayed on the page.');
 
     // Confirm items appear as links.
-    $items = $this->container->get('entity.manager')->getStorage('aggregator_item')->loadByFeed($feed->id(), 1);
+    $items = $this->container->get('entity_type.manager')->getStorage('aggregator_item')->loadByFeed($feed->id(), 1);
     $links = $this->xpath('//a[@href = :href]', [':href' => reset($items)->getLink()]);
     $this->assert(isset($links[0]), 'Item link found.');
 

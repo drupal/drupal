@@ -53,7 +53,7 @@ class NodeRevisionRevertTranslationForm extends NodeRevisionRevertForm {
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('entity.manager')->getStorage('node'),
+      $container->get('entity_type.manager')->getStorage('node'),
       $container->get('date.formatter'),
       $container->get('language_manager'),
       $container->get('datetime.time')

@@ -40,7 +40,7 @@ class TaxonomyTermIndentationTest extends TaxonomyTestBase {
     $term3 = $this->createTerm($this->vocabulary);
 
     // Get the taxonomy storage.
-    $taxonomy_storage = $this->container->get('entity.manager')->getStorage('taxonomy_term');
+    $taxonomy_storage = $this->container->get('entity_type.manager')->getStorage('taxonomy_term');
 
     // Indent the second term under the first one.
     $this->drupalGet('admin/structure/taxonomy/manage/' . $this->vocabulary->get('vid') . '/overview');
