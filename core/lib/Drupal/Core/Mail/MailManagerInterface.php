@@ -102,7 +102,9 @@ interface MailManagerInterface extends PluginManagerInterface {
    * @param string $langcode
    *   Language code to use to compose the email.
    * @param array $params
-   *   (optional) Parameters to build the email.
+   *   (optional) Parameters to build the email. Use the key '_error_message'
+   *   to provide translatable markup to display as a message if an error
+   *   occurs, or set this to false to disable error display.
    * @param string|null $reply
    *   Optional email address to be used to answer.
    * @param bool $send

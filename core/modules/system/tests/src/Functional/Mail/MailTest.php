@@ -6,6 +6,7 @@ use Drupal\Component\Utility\Random;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Mail\MailFormatHelper;
 use Drupal\Core\Mail\Plugin\Mail\TestMailCollector;
+use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\Core\Render\Markup;
 use Drupal\Core\Url;
 use Drupal\file\Entity\File;
@@ -49,6 +50,24 @@ class MailTest extends BrowserTestBase {
     // Assert whether the added mail backend is an instance of the expected
     // class.
     $this->assertTrue($mail_backend instanceof TestMailCollector, 'Additional mail interfaces can be added.');
+  }
+
+  /**
+   * Assert that the pluggable mail system is functional.
+   */
+  public function testErrorMessageDisplay() {
+    // Switch mail backends.
+    $this->config('system.mail')->set('interface.default', 'test_php_mail_failure')->save();
+
+    // Test with errors displayed to users.
+    \Drupal::service('plugin.manager.mail')->mail('default', 'default', 'test@example.com', 'en');
+    $messages = \Drupal::messenger()->messagesByType(MessengerInterface::TYPE_ERROR);
+    $this->assertEquals('Unable to send email. Contact the site administrator if the problem persists.', $messages[0]);
+    \Drupal::messenger()->deleteAll();
+
+    // Test without errors displayed to users.
+    \Drupal::service('plugin.manager.mail')->mail('default', 'default', 'test@example.com', 'en', ['_error_message' => '']);
+    $this->assertEmpty(\Drupal::messenger()->messagesByType(MessengerInterface::TYPE_ERROR));
   }
 
   /**
