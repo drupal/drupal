@@ -72,10 +72,9 @@ class LayoutBuilderEntityViewDisplay extends BaseEntityViewDisplay implements La
    * {@inheritdoc}
    */
   public function isLayoutBuilderEnabled() {
-    // To prevent infinite recursion, Layout Builder must not be enabled for the
-    // '_custom' view mode that is used for on-the-fly rendering of fields in
-    // isolation from the entity.
-    if ($this->getOriginalMode() === static::CUSTOM_MODE) {
+    // Layout Builder must not be enabled for the '_custom' view mode that is
+    // used for on-the-fly rendering of fields in isolation from the entity.
+    if ($this->isCustomMode()) {
       return FALSE;
     }
     return (bool) $this->getThirdPartySetting('layout_builder', 'enabled');
@@ -252,10 +251,26 @@ class LayoutBuilderEntityViewDisplay extends BaseEntityViewDisplay implements La
   }
 
   /**
+   * Indicates if this display is using the '_custom' view mode.
+   *
+   * @return bool
+   *   TRUE if this display is using the '_custom' view mode, FALSE otherwise.
+   */
+  protected function isCustomMode() {
+    return $this->getOriginalMode() === static::CUSTOM_MODE;
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function buildMultiple(array $entities) {
     $build_list = parent::buildMultiple($entities);
+
+    // Layout Builder can not be enabled for the '_custom' view mode that is
+    // used for on-the-fly rendering of fields in isolation from the entity.
+    if ($this->isCustomMode()) {
+      return $build_list;
+    }
 
     foreach ($entities as $id => $entity) {
       $build_list[$id]['_layout_builder'] = $this->buildSections($entity);
