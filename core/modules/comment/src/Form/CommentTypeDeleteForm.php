@@ -4,7 +4,6 @@ namespace Drupal\comment\Form;
 
 use Drupal\comment\CommentManagerInterface;
 use Drupal\Core\Entity\EntityDeleteForm;
-use Drupal\Core\Entity\EntityManager;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\field\Entity\FieldStorageConfig;
 use Psr\Log\LoggerInterface;
@@ -25,13 +24,6 @@ class CommentTypeDeleteForm extends EntityDeleteForm {
   protected $commentManager;
 
   /**
-   * The entity manager service.
-   *
-   * @var \Drupal\Core\Entity\EntityManager
-   */
-  protected $entityManager;
-
-  /**
    * A logger instance.
    *
    * @var \Psr\Log\LoggerInterface
@@ -50,14 +42,11 @@ class CommentTypeDeleteForm extends EntityDeleteForm {
    *
    * @param \Drupal\comment\CommentManagerInterface $comment_manager
    *   The comment manager service.
-   * @param \Drupal\Core\Entity\EntityManager $entity_manager
-   *   The entity manager service.
    * @param \Psr\Log\LoggerInterface $logger
    *   A logger instance.
    */
-  public function __construct(CommentManagerInterface $comment_manager, EntityManager $entity_manager, LoggerInterface $logger) {
+  public function __construct(CommentManagerInterface $comment_manager, LoggerInterface $logger) {
     $this->commentManager = $comment_manager;
-    $this->entityManager = $entity_manager;
     $this->logger = $logger;
   }
 
@@ -67,7 +56,6 @@ class CommentTypeDeleteForm extends EntityDeleteForm {
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('comment.manager'),
-      $container->get('entity.manager'),
       $container->get('logger.factory')->get('comment')
     );
   }
