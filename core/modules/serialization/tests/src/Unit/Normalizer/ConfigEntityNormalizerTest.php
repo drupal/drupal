@@ -39,7 +39,7 @@ class ConfigEntityNormalizerTest extends UnitTestCase {
       $entity_field_manager
     );
 
-    $config_entity = $this->getMock('Drupal\Core\Config\Entity\ConfigEntityInterface');
+    $config_entity = $this->createMock('Drupal\Core\Config\Entity\ConfigEntityInterface');
     $config_entity->expects($this->once())
       ->method('toArray')
       ->will($this->returnValue($test_export_properties));

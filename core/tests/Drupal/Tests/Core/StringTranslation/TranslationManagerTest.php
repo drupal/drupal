@@ -52,7 +52,7 @@ class TranslationManagerTest extends UnitTestCase {
    */
   public function testFormatPlural($count, $singular, $plural, array $args, array $options, $expected) {
     $langcode = empty($options['langcode']) ? 'fr' : $options['langcode'];
-    $translator = $this->getMock('\Drupal\Core\StringTranslation\Translator\TranslatorInterface');
+    $translator = $this->createMock('\Drupal\Core\StringTranslation\Translator\TranslatorInterface');
     $translator->expects($this->once())
       ->method('getStringTranslation')
       ->with($langcode, $this->anything(), $this->anything())

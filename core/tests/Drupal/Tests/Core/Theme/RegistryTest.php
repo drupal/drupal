@@ -79,12 +79,12 @@ class RegistryTest extends UnitTestCase {
   protected function setUp() {
     parent::setUp();
 
-    $this->cache = $this->getMock('Drupal\Core\Cache\CacheBackendInterface');
-    $this->lock = $this->getMock('Drupal\Core\Lock\LockBackendInterface');
-    $this->moduleHandler = $this->getMock('Drupal\Core\Extension\ModuleHandlerInterface');
-    $this->themeHandler = $this->getMock('Drupal\Core\Extension\ThemeHandlerInterface');
-    $this->themeInitialization = $this->getMock('Drupal\Core\Theme\ThemeInitializationInterface');
-    $this->themeManager = $this->getMock('Drupal\Core\Theme\ThemeManagerInterface');
+    $this->cache = $this->createMock('Drupal\Core\Cache\CacheBackendInterface');
+    $this->lock = $this->createMock('Drupal\Core\Lock\LockBackendInterface');
+    $this->moduleHandler = $this->createMock('Drupal\Core\Extension\ModuleHandlerInterface');
+    $this->themeHandler = $this->createMock('Drupal\Core\Extension\ThemeHandlerInterface');
+    $this->themeInitialization = $this->createMock('Drupal\Core\Theme\ThemeInitializationInterface');
+    $this->themeManager = $this->createMock('Drupal\Core\Theme\ThemeManagerInterface');
 
     $this->setupTheme();
   }

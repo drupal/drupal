@@ -66,7 +66,7 @@ class UserAccessControlHandlerTest extends UnitTestCase {
     $container->set('cache_contexts_manager', $cache_contexts_manager);
     \Drupal::setContainer($container);
 
-    $this->viewer = $this->getMock('\Drupal\Core\Session\AccountInterface');
+    $this->viewer = $this->createMock('\Drupal\Core\Session\AccountInterface');
     $this->viewer
       ->expects($this->any())
       ->method('hasPermission')
@@ -76,7 +76,7 @@ class UserAccessControlHandlerTest extends UnitTestCase {
       ->method('id')
       ->will($this->returnValue(1));
 
-    $this->owner = $this->getMock('\Drupal\Core\Session\AccountInterface');
+    $this->owner = $this->createMock('\Drupal\Core\Session\AccountInterface');
     $this->owner
       ->expects($this->any())
       ->method('hasPermission')
@@ -90,16 +90,16 @@ class UserAccessControlHandlerTest extends UnitTestCase {
       ->method('id')
       ->will($this->returnValue(2));
 
-    $this->admin = $this->getMock('\Drupal\Core\Session\AccountInterface');
+    $this->admin = $this->createMock('\Drupal\Core\Session\AccountInterface');
     $this->admin
       ->expects($this->any())
       ->method('hasPermission')
       ->will($this->returnValue(TRUE));
 
-    $entity_type = $this->getMock('Drupal\Core\Entity\EntityTypeInterface');
+    $entity_type = $this->createMock('Drupal\Core\Entity\EntityTypeInterface');
 
     $this->accessControlHandler = new UserAccessControlHandler($entity_type);
-    $module_handler = $this->getMock('Drupal\Core\Extension\ModuleHandlerInterface');
+    $module_handler = $this->createMock('Drupal\Core\Extension\ModuleHandlerInterface');
     $module_handler->expects($this->any())
       ->method('getImplementations')
       ->will($this->returnValue([]));
@@ -118,7 +118,7 @@ class UserAccessControlHandlerTest extends UnitTestCase {
    * Asserts correct field access grants for a field.
    */
   public function assertFieldAccess($field, $viewer, $target, $view, $edit) {
-    $field_definition = $this->getMock('Drupal\Core\Field\FieldDefinitionInterface');
+    $field_definition = $this->createMock('Drupal\Core\Field\FieldDefinitionInterface');
     $field_definition->expects($this->any())
       ->method('getName')
       ->will($this->returnValue($field));

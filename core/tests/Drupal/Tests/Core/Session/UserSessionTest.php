@@ -110,7 +110,7 @@ class UserSessionTest extends UnitTestCase {
         [['anonymous', 'role_one', 'role_two'], [$roles['role_one'], $roles['role_two']]],
       ]));
 
-    $entity_type_manager = $this->getMock('Drupal\Core\Entity\EntityTypeManagerInterface');
+    $entity_type_manager = $this->createMock('Drupal\Core\Entity\EntityTypeManagerInterface');
     $entity_type_manager->expects($this->any())
       ->method('getStorage')
       ->with($this->equalTo('user_role'))

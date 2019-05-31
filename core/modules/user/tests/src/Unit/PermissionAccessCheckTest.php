@@ -73,7 +73,7 @@ class PermissionAccessCheckTest extends UnitTestCase {
     if (!empty($message)) {
       $access_result->setReason($message);
     }
-    $user = $this->getMock('Drupal\Core\Session\AccountInterface');
+    $user = $this->createMock('Drupal\Core\Session\AccountInterface');
     $user->expects($this->any())
       ->method('hasPermission')
       ->will($this->returnValueMap([

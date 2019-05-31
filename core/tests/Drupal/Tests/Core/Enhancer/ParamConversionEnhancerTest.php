@@ -31,7 +31,7 @@ class ParamConversionEnhancerTest extends UnitTestCase {
   protected function setUp() {
     parent::setUp();
 
-    $this->paramConverterManager = $this->getMock('Drupal\Core\ParamConverter\ParamConverterManagerInterface');
+    $this->paramConverterManager = $this->createMock('Drupal\Core\ParamConverter\ParamConverterManagerInterface');
     $this->paramConversionEnhancer = new ParamConversionEnhancer($this->paramConverterManager);
   }
 

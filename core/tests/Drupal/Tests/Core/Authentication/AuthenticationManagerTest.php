@@ -29,7 +29,7 @@ class AuthenticationManagerTest extends UnitTestCase {
    * @dataProvider providerTestDefaultFilter
    */
   public function testDefaultFilter($applies, $has_route, $auth_option, $provider_id, $global) {
-    $auth_provider = $this->getMock('Drupal\Core\Authentication\AuthenticationProviderInterface');
+    $auth_provider = $this->createMock('Drupal\Core\Authentication\AuthenticationProviderInterface');
     $auth_collector = new AuthenticationCollector();
     $auth_collector->addProvider($auth_provider, $provider_id, 0, $global);
     $authentication_manager = new AuthenticationManager($auth_collector);
@@ -50,7 +50,7 @@ class AuthenticationManagerTest extends UnitTestCase {
    * @covers ::applyFilter
    */
   public function testApplyFilterWithFilterprovider() {
-    $auth_provider = $this->getMock('Drupal\Tests\Core\Authentication\TestAuthenticationProviderInterface');
+    $auth_provider = $this->createMock('Drupal\Tests\Core\Authentication\TestAuthenticationProviderInterface');
     $auth_provider->expects($this->once())
       ->method('appliesToRoutedRequest')
       ->willReturn(TRUE);

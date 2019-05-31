@@ -96,18 +96,18 @@ class UrlTest extends UnitTestCase {
       $generate_from_route_map[] = $values;
       $generate_from_route_map[] = [$values[0], $values[1], $values[2], TRUE, (new GeneratedUrl())->setGeneratedUrl($values[4])];
     }
-    $this->urlGenerator = $this->getMock('Drupal\Core\Routing\UrlGeneratorInterface');
+    $this->urlGenerator = $this->createMock('Drupal\Core\Routing\UrlGeneratorInterface');
     $this->urlGenerator->expects($this->any())
       ->method('generateFromRoute')
       ->will($this->returnValueMap($generate_from_route_map));
 
-    $this->pathAliasManager = $this->getMock('Drupal\Core\Path\AliasManagerInterface');
+    $this->pathAliasManager = $this->createMock('Drupal\Core\Path\AliasManagerInterface');
     $this->pathAliasManager->expects($this->any())
       ->method('getPathByAlias')
       ->will($this->returnValueMap($alias_map));
 
-    $this->router = $this->getMock('Drupal\Tests\Core\Routing\TestRouterInterface');
-    $this->pathValidator = $this->getMock('Drupal\Core\Path\PathValidatorInterface');
+    $this->router = $this->createMock('Drupal\Tests\Core\Routing\TestRouterInterface');
+    $this->pathValidator = $this->createMock('Drupal\Core\Path\PathValidatorInterface');
 
     $this->container = new ContainerBuilder();
     $this->container->set('router.no_access_checks', $this->router);
@@ -365,7 +365,7 @@ class UrlTest extends UnitTestCase {
       // Clone the url so that there is no leak of internal state into the
       // other ones.
       $url = clone $url;
-      $url_generator = $this->getMock('Drupal\Core\Routing\UrlGeneratorInterface');
+      $url_generator = $this->createMock('Drupal\Core\Routing\UrlGeneratorInterface');
       $url_generator->expects($this->once())
         ->method('getPathFromRoute')
         ->will($this->returnValueMap($map, $index));
@@ -501,7 +501,7 @@ class UrlTest extends UnitTestCase {
    * @dataProvider accessProvider
    */
   public function testAccessRouted($access) {
-    $account = $this->getMock('Drupal\Core\Session\AccountInterface');
+    $account = $this->createMock('Drupal\Core\Session\AccountInterface');
     $url = new TestUrl('entity.node.canonical', ['node' => 3]);
     $url->setAccessManager($this->getMockAccessManager($access, $account));
     $this->assertEquals($access, $url->access($account));
@@ -513,9 +513,9 @@ class UrlTest extends UnitTestCase {
    * @covers ::access
    */
   public function testAccessUnrouted() {
-    $account = $this->getMock('Drupal\Core\Session\AccountInterface');
+    $account = $this->createMock('Drupal\Core\Session\AccountInterface');
     $url = TestUrl::fromUri('base:kittens');
-    $access_manager = $this->getMock('Drupal\Core\Access\AccessManagerInterface');
+    $access_manager = $this->createMock('Drupal\Core\Access\AccessManagerInterface');
     $access_manager->expects($this->never())
       ->method('checkNamedRoute');
     $url->setAccessManager($access_manager);
@@ -534,7 +534,7 @@ class UrlTest extends UnitTestCase {
     $element = [
       '#url' => Url::fromRoute('entity.node.canonical', ['node' => 3]),
     ];
-    $this->container->set('current_user', $this->getMock('Drupal\Core\Session\AccountInterface'));
+    $this->container->set('current_user', $this->createMock('Drupal\Core\Session\AccountInterface'));
     $this->container->set('access_manager', $this->getMockAccessManager($access));
     $this->assertEquals($access, TestUrl::renderAccess($element));
   }
@@ -840,7 +840,7 @@ class UrlTest extends UnitTestCase {
    * @return \Drupal\Core\Access\AccessManagerInterface|\PHPUnit_Framework_MockObject_MockObject
    */
   protected function getMockAccessManager($access, $account = NULL) {
-    $access_manager = $this->getMock('Drupal\Core\Access\AccessManagerInterface');
+    $access_manager = $this->createMock('Drupal\Core\Access\AccessManagerInterface');
     $access_manager->expects($this->once())
       ->method('checkNamedRoute')
       ->with('entity.node.canonical', ['node' => 3], $account)

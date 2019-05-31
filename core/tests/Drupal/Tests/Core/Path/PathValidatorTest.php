@@ -57,10 +57,10 @@ class PathValidatorTest extends UnitTestCase {
   protected function setUp() {
     parent::setUp();
 
-    $this->accessAwareRouter = $this->getMock('Drupal\Core\Routing\AccessAwareRouterInterface');
-    $this->accessUnawareRouter = $this->getMock('Symfony\Component\Routing\Matcher\UrlMatcherInterface');
-    $this->account = $this->getMock('Drupal\Core\Session\AccountInterface');
-    $this->pathProcessor = $this->getMock('Drupal\Core\PathProcessor\InboundPathProcessorInterface');
+    $this->accessAwareRouter = $this->createMock('Drupal\Core\Routing\AccessAwareRouterInterface');
+    $this->accessUnawareRouter = $this->createMock('Symfony\Component\Routing\Matcher\UrlMatcherInterface');
+    $this->account = $this->createMock('Drupal\Core\Session\AccountInterface');
+    $this->pathProcessor = $this->createMock('Drupal\Core\PathProcessor\InboundPathProcessorInterface');
     $this->pathValidator = new PathValidator($this->accessAwareRouter, $this->accessUnawareRouter, $this->account, $this->pathProcessor);
   }
 

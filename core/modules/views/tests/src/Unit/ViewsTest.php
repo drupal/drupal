@@ -31,13 +31,13 @@ class ViewsTest extends UnitTestCase {
     parent::setUp();
 
     $this->container = new ContainerBuilder();
-    $user = $this->getMock('Drupal\Core\Session\AccountInterface');
+    $user = $this->createMock('Drupal\Core\Session\AccountInterface');
     $request_stack = new RequestStack();
     $request_stack->push(new Request());
     $views_data = $this->getMockBuilder('Drupal\views\ViewsData')
       ->disableOriginalConstructor()
       ->getMock();
-    $route_provider = $this->getMock('Drupal\Core\Routing\RouteProviderInterface');
+    $route_provider = $this->createMock('Drupal\Core\Routing\RouteProviderInterface');
     $this->container->set('views.executable', new ViewExecutableFactory($user, $request_stack, $views_data, $route_provider));
 
     \Drupal::setContainer($this->container);
@@ -134,7 +134,7 @@ class ViewsTest extends UnitTestCase {
       ],
     ], 'view');
 
-    $query = $this->getMock('Drupal\Core\Entity\Query\QueryInterface');
+    $query = $this->createMock('Drupal\Core\Entity\Query\QueryInterface');
     $query->expects($this->exactly(2))
       ->method('condition')
       ->willReturnSelf();
@@ -154,7 +154,7 @@ class ViewsTest extends UnitTestCase {
       ->with(['test_view_1', 'test_view_2', 'test_view_3'])
       ->will($this->returnValue(['test_view_1' => $view_1, 'test_view_2' => $view_2, 'test_view_3' => $view_3]));
 
-    $entity_type_manager = $this->getMock(EntityTypeManagerInterface::class);
+    $entity_type_manager = $this->createMock(EntityTypeManagerInterface::class);
     $entity_type_manager->expects($this->exactly(2))
       ->method('getStorage')
       ->with('view')
@@ -172,7 +172,7 @@ class ViewsTest extends UnitTestCase {
       ],
     ];
 
-    $display_manager = $this->getMock('Drupal\Component\Plugin\PluginManagerInterface');
+    $display_manager = $this->createMock('Drupal\Component\Plugin\PluginManagerInterface');
     $display_manager->expects($this->once())
       ->method('getDefinitions')
       ->willReturn($definitions);

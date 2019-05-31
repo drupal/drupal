@@ -29,7 +29,7 @@ class PathProcessorAliasTest extends UnitTestCase {
   protected $pathProcessor;
 
   protected function setUp() {
-    $this->aliasManager = $this->getMock('Drupal\Core\Path\AliasManagerInterface');
+    $this->aliasManager = $this->createMock('Drupal\Core\Path\AliasManagerInterface');
     $this->pathProcessor = new PathProcessorAlias($this->aliasManager);
   }
 

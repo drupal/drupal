@@ -94,7 +94,7 @@ class FieldTest extends UnitTestCase {
       ->disableOriginalConstructor()
       ->getMock();
 
-    $this->fieldTypePluginManager = $this->getMock('Drupal\Core\Field\FieldTypePluginManagerInterface');
+    $this->fieldTypePluginManager = $this->createMock('Drupal\Core\Field\FieldTypePluginManagerInterface');
     $this->fieldTypePluginManager->expects($this->any())
       ->method('getDefaultStorageSettings')
       ->willReturn([]);
@@ -102,8 +102,8 @@ class FieldTest extends UnitTestCase {
       ->method('getDefaultFieldSettings')
       ->willReturn([]);
 
-    $this->languageManager = $this->getMock('Drupal\Core\Language\LanguageManagerInterface');
-    $this->renderer = $this->getMock('Drupal\Core\Render\RendererInterface');
+    $this->languageManager = $this->createMock('Drupal\Core\Language\LanguageManagerInterface');
+    $this->renderer = $this->createMock('Drupal\Core\Render\RendererInterface');
 
     $this->setupExecutableAndView();
     $this->setupViewsData();
@@ -285,7 +285,7 @@ class FieldTest extends UnitTestCase {
         'table' => ['entity type' => 'test_entity'],
       ]);
 
-    $access_control_handler = $this->getMock('Drupal\Core\Entity\EntityAccessControlHandlerInterface');
+    $access_control_handler = $this->createMock('Drupal\Core\Entity\EntityAccessControlHandlerInterface');
     $this->entityTypeManager->expects($this->atLeastOnce())
       ->method('getAccessControlHandler')
       ->with('test_entity')
@@ -299,7 +299,7 @@ class FieldTest extends UnitTestCase {
         'title' => $title_storage,
       ]);
 
-    $account = $this->getMock('Drupal\Core\Session\AccountInterface');
+    $account = $this->createMock('Drupal\Core\Session\AccountInterface');
 
     $access_control_handler->expects($this->atLeastOnce())
       ->method('fieldAccess')
@@ -353,13 +353,13 @@ class FieldTest extends UnitTestCase {
         'title' => $field_storage,
       ]);
 
-    $table_mapping = $this->getMock('Drupal\Core\Entity\Sql\TableMappingInterface');
+    $table_mapping = $this->createMock('Drupal\Core\Entity\Sql\TableMappingInterface');
     $table_mapping
       ->expects($this->atLeastOnce())
       ->method('getFieldColumnName')
       ->with($field_storage, 'value')
       ->willReturn('title');
-    $entity_storage = $this->getMock('Drupal\Core\Entity\Sql\SqlEntityStorageInterface');
+    $entity_storage = $this->createMock('Drupal\Core\Entity\Sql\SqlEntityStorageInterface');
     $entity_storage->expects($this->atLeastOnce())
       ->method('getTableMapping')
       ->willReturn($table_mapping);
@@ -413,13 +413,13 @@ class FieldTest extends UnitTestCase {
         'body' => $field_storage,
       ]);
 
-    $table_mapping = $this->getMock('Drupal\Core\Entity\Sql\TableMappingInterface');
+    $table_mapping = $this->createMock('Drupal\Core\Entity\Sql\TableMappingInterface');
     $table_mapping
       ->expects($this->atLeastOnce())
       ->method('getFieldColumnName')
       ->with($field_storage, 'value')
       ->willReturn('body_value');
-    $entity_storage = $this->getMock('Drupal\Core\Entity\Sql\SqlEntityStorageInterface');
+    $entity_storage = $this->createMock('Drupal\Core\Entity\Sql\SqlEntityStorageInterface');
     $entity_storage->expects($this->atLeastOnce())
       ->method('getTableMapping')
       ->willReturn($table_mapping);
@@ -471,13 +471,13 @@ class FieldTest extends UnitTestCase {
         'title' => $field_storage,
       ]);
 
-    $table_mapping = $this->getMock('Drupal\Core\Entity\Sql\TableMappingInterface');
+    $table_mapping = $this->createMock('Drupal\Core\Entity\Sql\TableMappingInterface');
     $table_mapping
       ->expects($this->any())
       ->method('getFieldColumnName')
       ->with($field_storage, 'value')
       ->willReturn('title');
-    $entity_storage = $this->getMock('Drupal\Core\Entity\Sql\SqlEntityStorageInterface');
+    $entity_storage = $this->createMock('Drupal\Core\Entity\Sql\SqlEntityStorageInterface');
     $entity_storage->expects($this->any())
       ->method('getTableMapping')
       ->willReturn($table_mapping);
@@ -533,13 +533,13 @@ class FieldTest extends UnitTestCase {
         'body' => $field_storage,
       ]);
 
-    $table_mapping = $this->getMock('Drupal\Core\Entity\Sql\TableMappingInterface');
+    $table_mapping = $this->createMock('Drupal\Core\Entity\Sql\TableMappingInterface');
     $table_mapping
       ->expects($this->any())
       ->method('getFieldColumnName')
       ->with($field_storage, 'value')
       ->willReturn('body_value');
-    $entity_storage = $this->getMock('Drupal\Core\Entity\Sql\SqlEntityStorageInterface');
+    $entity_storage = $this->createMock('Drupal\Core\Entity\Sql\SqlEntityStorageInterface');
     $entity_storage->expects($this->any())
       ->method('getTableMapping')
       ->willReturn($table_mapping);
@@ -601,13 +601,13 @@ class FieldTest extends UnitTestCase {
         'integer' => $field_storage,
       ]);
 
-    $table_mapping = $this->getMock('Drupal\Core\Entity\Sql\TableMappingInterface');
+    $table_mapping = $this->createMock('Drupal\Core\Entity\Sql\TableMappingInterface');
     $table_mapping
       ->expects($this->any())
       ->method('getFieldColumnName')
       ->with($field_storage, 'value')
       ->willReturn('integer_value');
-    $entity_storage = $this->getMock('Drupal\Core\Entity\Sql\SqlEntityStorageInterface');
+    $entity_storage = $this->createMock('Drupal\Core\Entity\Sql\SqlEntityStorageInterface');
     $entity_storage->expects($this->any())
       ->method('getTableMapping')
       ->willReturn($table_mapping);
@@ -658,7 +658,7 @@ class FieldTest extends UnitTestCase {
    * @return \Drupal\Core\Field\FieldStorageDefinitionInterface|\PHPUnit_Framework_MockObject_MockObject
    */
   protected function getBaseFieldStorage() {
-    $title_storage = $this->getMock('Drupal\Core\Field\FieldStorageDefinitionInterface');
+    $title_storage = $this->createMock('Drupal\Core\Field\FieldStorageDefinitionInterface');
     $title_storage->expects($this->any())
       ->method('getColumns')
       ->willReturn(['value' => ['type' => 'varchar']]);
@@ -677,7 +677,7 @@ class FieldTest extends UnitTestCase {
    * @return \Drupal\field\FieldStorageConfigInterface|\PHPUnit_Framework_MockObject_MockObject
    */
   protected function getConfigFieldStorage() {
-    $title_storage = $this->getMock('Drupal\field\FieldStorageConfigInterface');
+    $title_storage = $this->createMock('Drupal\field\FieldStorageConfigInterface');
     $title_storage->expects($this->any())
       ->method('getColumns')
       ->willReturn(['value' => ['type' => 'varchar']]);
@@ -731,7 +731,7 @@ class FieldTest extends UnitTestCase {
       ->willReturn($data);
     $this->container->set('views.views_data', $views_data);
 
-    $entity_type = $this->getMock('\Drupal\Core\Entity\EntityTypeInterface');
+    $entity_type = $this->createMock('\Drupal\Core\Entity\EntityTypeInterface');
     $entity_type->expects($this->any())
       ->method('id')
       ->willReturn($definition['entity_type']);

@@ -47,7 +47,7 @@ class TwigSandboxTest extends UnitTestCase {
    * @dataProvider getTwigEntityDangerousMethods
    */
   public function testEntityDangerousMethods($template) {
-    $entity = $this->getMock('Drupal\Core\Entity\EntityInterface');
+    $entity = $this->createMock('Drupal\Core\Entity\EntityInterface');
     $this->setExpectedException(\Twig_Sandbox_SecurityError::class);
     $this->twig->render($template, ['entity' => $entity]);
   }
@@ -78,7 +78,7 @@ class TwigSandboxTest extends UnitTestCase {
    * Currently "get", "has", and "is" are the only allowed prefixes.
    */
   public function testEntitySafePrefixes() {
-    $entity = $this->getMock('Drupal\Core\Entity\EntityInterface');
+    $entity = $this->createMock('Drupal\Core\Entity\EntityInterface');
     $entity->expects($this->atLeastOnce())
       ->method('hasLinkTemplate')
       ->with('test')
@@ -86,14 +86,14 @@ class TwigSandboxTest extends UnitTestCase {
     $result = $this->twig->render('{{ entity.hasLinkTemplate("test") }}', ['entity' => $entity]);
     $this->assertTrue((bool) $result, 'Sandbox policy allows has* functions to be called.');
 
-    $entity = $this->getMock('Drupal\Core\Entity\EntityInterface');
+    $entity = $this->createMock('Drupal\Core\Entity\EntityInterface');
     $entity->expects($this->atLeastOnce())
       ->method('isNew')
       ->willReturn(TRUE);
     $result = $this->twig->render('{{ entity.isNew }}', ['entity' => $entity]);
     $this->assertTrue((bool) $result, 'Sandbox policy allows is* functions to be called.');
 
-    $entity = $this->getMock('Drupal\Core\Entity\EntityInterface');
+    $entity = $this->createMock('Drupal\Core\Entity\EntityInterface');
     $entity->expects($this->atLeastOnce())
       ->method('getEntityType')
       ->willReturn('test');
@@ -118,21 +118,21 @@ class TwigSandboxTest extends UnitTestCase {
     $result = $this->twig->render('{{ entity.get("title") }}', ['entity' => $entity]);
     $this->assertEquals($result, 'test', 'Sandbox policy allows get() to be called.');
 
-    $entity = $this->getMock('Drupal\Core\Entity\EntityInterface');
+    $entity = $this->createMock('Drupal\Core\Entity\EntityInterface');
     $entity->expects($this->atLeastOnce())
       ->method('id')
       ->willReturn('1234');
     $result = $this->twig->render('{{ entity.id }}', ['entity' => $entity]);
     $this->assertEquals($result, '1234', 'Sandbox policy allows get() to be called.');
 
-    $entity = $this->getMock('Drupal\Core\Entity\EntityInterface');
+    $entity = $this->createMock('Drupal\Core\Entity\EntityInterface');
     $entity->expects($this->atLeastOnce())
       ->method('label')
       ->willReturn('testing');
     $result = $this->twig->render('{{ entity.label }}', ['entity' => $entity]);
     $this->assertEquals($result, 'testing', 'Sandbox policy allows get() to be called.');
 
-    $entity = $this->getMock('Drupal\Core\Entity\EntityInterface');
+    $entity = $this->createMock('Drupal\Core\Entity\EntityInterface');
     $entity->expects($this->atLeastOnce())
       ->method('bundle')
       ->willReturn('testing');

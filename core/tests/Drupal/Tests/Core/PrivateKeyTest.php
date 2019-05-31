@@ -41,7 +41,7 @@ class PrivateKeyTest extends UnitTestCase {
     parent::setUp();
     $this->key = Crypt::randomBytesBase64(55);
 
-    $this->state = $this->getMock('Drupal\Core\State\StateInterface');
+    $this->state = $this->createMock('Drupal\Core\State\StateInterface');
 
     $this->privateKey = new PrivateKey($this->state);
   }

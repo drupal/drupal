@@ -70,7 +70,7 @@ class QuickEditEntityFieldAccessCheckTest extends UnitTestCase {
       ->method('access')
       ->willReturn(AccessResult::allowedIf($entity_is_editable)->cachePerPermissions());
 
-    $field_storage = $this->getMock('Drupal\field\FieldStorageConfigInterface');
+    $field_storage = $this->createMock('Drupal\field\FieldStorageConfigInterface');
     $field_storage->expects($this->any())
       ->method('access')
       ->willReturn(AccessResult::allowedIf($field_storage_is_accessible));
@@ -88,7 +88,7 @@ class QuickEditEntityFieldAccessCheckTest extends UnitTestCase {
       ->with(LanguageInterface::LANGCODE_NOT_SPECIFIED)
       ->will($this->returnValue(TRUE));
 
-    $account = $this->getMock('Drupal\Core\Session\AccountInterface');
+    $account = $this->createMock('Drupal\Core\Session\AccountInterface');
     $access = $this->editAccessCheck->access($entity_with_field, $field_name, LanguageInterface::LANGCODE_NOT_SPECIFIED, $account);
     $this->assertEquals($expected_result, $access);
   }
@@ -99,7 +99,7 @@ class QuickEditEntityFieldAccessCheckTest extends UnitTestCase {
    * @dataProvider providerTestAccessForbidden
    */
   public function testAccessForbidden($field_name, $langcode) {
-    $account = $this->getMock('Drupal\Core\Session\AccountInterface');
+    $account = $this->createMock('Drupal\Core\Session\AccountInterface');
     $entity = $this->createMockEntity();
     $this->assertEquals(AccessResult::forbidden(), $this->editAccessCheck->access($entity, $field_name, $langcode, $account));
   }

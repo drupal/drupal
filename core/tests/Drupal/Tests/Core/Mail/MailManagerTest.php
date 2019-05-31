@@ -84,12 +84,12 @@ class MailManagerTest extends UnitTestCase {
   protected function setUp() {
     parent::setUp();
     // Prepare the default constructor arguments required by MailManager.
-    $this->cache = $this->getMock('Drupal\Core\Cache\CacheBackendInterface');
+    $this->cache = $this->createMock('Drupal\Core\Cache\CacheBackendInterface');
 
-    $this->moduleHandler = $this->getMock('Drupal\Core\Extension\ModuleHandlerInterface');
+    $this->moduleHandler = $this->createMock('Drupal\Core\Extension\ModuleHandlerInterface');
 
     // Mock a Discovery object to replace AnnotationClassDiscovery.
-    $this->discovery = $this->getMock('Drupal\Component\Plugin\Discovery\DiscoveryInterface');
+    $this->discovery = $this->createMock('Drupal\Component\Plugin\Discovery\DiscoveryInterface');
     $this->discovery->expects($this->any())
       ->method('getDefinitions')
       ->will($this->returnValue($this->definitions));
@@ -108,9 +108,9 @@ class MailManagerTest extends UnitTestCase {
         'mail' => 'test@example.com',
       ],
     ]);
-    $logger_factory = $this->getMock('\Drupal\Core\Logger\LoggerChannelFactoryInterface');
+    $logger_factory = $this->createMock('\Drupal\Core\Logger\LoggerChannelFactoryInterface');
     $string_translation = $this->getStringTranslationStub();
-    $this->renderer = $this->getMock(RendererInterface::class);
+    $this->renderer = $this->createMock(RendererInterface::class);
     // Construct the manager object and override its discovery.
     $this->mailManager = new TestMailManager(new \ArrayObject(), $this->cache, $this->moduleHandler, $this->configFactory, $logger_factory, $string_translation, $this->renderer);
     $this->mailManager->setDiscovery($this->discovery);

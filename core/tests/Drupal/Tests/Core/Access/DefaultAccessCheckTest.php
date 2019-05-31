@@ -34,7 +34,7 @@ class DefaultAccessCheckTest extends UnitTestCase {
   protected function setUp() {
     parent::setUp();
 
-    $this->account = $this->getMock('Drupal\Core\Session\AccountInterface');
+    $this->account = $this->createMock('Drupal\Core\Session\AccountInterface');
     $this->accessChecker = new DefaultAccessCheck();
   }
 

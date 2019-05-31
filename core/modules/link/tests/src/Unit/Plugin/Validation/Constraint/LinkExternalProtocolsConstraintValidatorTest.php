@@ -20,7 +20,7 @@ class LinkExternalProtocolsConstraintValidatorTest extends UnitTestCase {
    * @dataProvider providerValidate
    */
   public function testValidate($value, $valid) {
-    $context = $this->getMock(ExecutionContextInterface::class);
+    $context = $this->createMock(ExecutionContextInterface::class);
 
     if ($valid) {
       $context->expects($this->never())
@@ -57,7 +57,7 @@ class LinkExternalProtocolsConstraintValidatorTest extends UnitTestCase {
 
     foreach ($data as &$single_data) {
       $url = Url::fromUri($single_data[0]);
-      $link = $this->getMock('Drupal\link\LinkItemInterface');
+      $link = $this->createMock('Drupal\link\LinkItemInterface');
       $link->expects($this->any())
         ->method('getUrl')
         ->willReturn($url);
@@ -73,12 +73,12 @@ class LinkExternalProtocolsConstraintValidatorTest extends UnitTestCase {
    * @see \Drupal\Core\Url::fromUri
    */
   public function testValidateWithMalformedUri() {
-    $link = $this->getMock('Drupal\link\LinkItemInterface');
+    $link = $this->createMock('Drupal\link\LinkItemInterface');
     $link->expects($this->any())
       ->method('getUrl')
       ->willThrowException(new \InvalidArgumentException());
 
-    $context = $this->getMock(ExecutionContextInterface::class);
+    $context = $this->createMock(ExecutionContextInterface::class);
     $context->expects($this->never())
       ->method('addViolation');
 
@@ -93,12 +93,12 @@ class LinkExternalProtocolsConstraintValidatorTest extends UnitTestCase {
    * @covers ::validate
    */
   public function testValidateIgnoresInternalUrls() {
-    $link = $this->getMock('Drupal\link\LinkItemInterface');
+    $link = $this->createMock('Drupal\link\LinkItemInterface');
     $link->expects($this->any())
       ->method('getUrl')
       ->willReturn(Url::fromRoute('example.test'));
 
-    $context = $this->getMock(ExecutionContextInterface::class);
+    $context = $this->createMock(ExecutionContextInterface::class);
     $context->expects($this->never())
       ->method('addViolation');
 

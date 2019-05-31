@@ -32,7 +32,7 @@ class PathRootsSubscriberTest extends UnitTestCase {
    * {@inheritdoc}
    */
   protected function setUp() {
-    $this->state = $this->getMock('Drupal\Core\State\StateInterface');
+    $this->state = $this->createMock('Drupal\Core\State\StateInterface');
     $this->pathRootsSubscriber = new PathRootsSubscriber($this->state);
   }
 

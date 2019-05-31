@@ -80,7 +80,7 @@ class ImageTest extends UnitTestCase {
    */
   protected function getToolkitOperationMock($class_name, ImageToolkitInterface $toolkit) {
     $mock_builder = $this->getMockBuilder('Drupal\system\Plugin\ImageToolkit\Operation\gd\\' . $class_name);
-    $logger = $this->getMock('Psr\Log\LoggerInterface');
+    $logger = $this->createMock('Psr\Log\LoggerInterface');
     return $mock_builder
       ->setMethods(['execute'])
       ->setConstructorArgs([[], '', [], $toolkit, $logger])
@@ -210,7 +210,10 @@ class ImageTest extends UnitTestCase {
       ->method('save')
       ->will($this->returnValue(TRUE));
 
-    $image = $this->getMock('Drupal\Core\Image\Image', ['chmod'], [$toolkit, $this->image->getSource()]);
+    $image = $this->getMockBuilder('Drupal\Core\Image\Image')
+      ->setMethods(['chmod'])
+      ->setConstructorArgs([$toolkit, $this->image->getSource()])
+      ->getMock();
 
     $file_system = $this->prophesize(FileSystemInterface::class);
     $file_system->chmod($this->image->getSource())
@@ -252,7 +255,10 @@ class ImageTest extends UnitTestCase {
       ->method('save')
       ->will($this->returnValue(TRUE));
 
-    $image = $this->getMock('Drupal\Core\Image\Image', ['chmod'], [$toolkit, $this->image->getSource()]);
+    $image = $this->getMockBuilder('Drupal\Core\Image\Image')
+      ->setMethods(['chmod'])
+      ->setConstructorArgs([$toolkit, $this->image->getSource()])
+      ->getMock();
 
     $file_system = $this->prophesize(FileSystemInterface::class);
     $file_system->chmod($this->image->getSource())

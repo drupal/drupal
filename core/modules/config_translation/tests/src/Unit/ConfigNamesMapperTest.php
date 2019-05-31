@@ -96,7 +96,7 @@ class ConfigNamesMapperTest extends UnitTestCase {
   protected $eventDispatcher;
 
   protected function setUp() {
-    $this->routeProvider = $this->getMock('Drupal\Core\Routing\RouteProviderInterface');
+    $this->routeProvider = $this->createMock('Drupal\Core\Routing\RouteProviderInterface');
 
     $this->pluginDefinition = [
       'class' => '\Drupal\config_translation\ConfigNamesMapper',
@@ -106,15 +106,15 @@ class ConfigNamesMapperTest extends UnitTestCase {
       'weight' => 42,
     ];
 
-    $this->typedConfigManager = $this->getMock('Drupal\Core\Config\TypedConfigManagerInterface');
+    $this->typedConfigManager = $this->createMock('Drupal\Core\Config\TypedConfigManagerInterface');
 
     $this->localeConfigManager = $this->getMockBuilder('Drupal\locale\LocaleConfigManager')
       ->disableOriginalConstructor()
       ->getMock();
 
-    $this->configMapperManager = $this->getMock('Drupal\config_translation\ConfigMapperManagerInterface');
+    $this->configMapperManager = $this->createMock('Drupal\config_translation\ConfigMapperManagerInterface');
 
-    $this->urlGenerator = $this->getMock('Drupal\Core\Routing\UrlGeneratorInterface');
+    $this->urlGenerator = $this->createMock('Drupal\Core\Routing\UrlGeneratorInterface');
     $container = new ContainerBuilder();
     $container->set('url_generator', $this->urlGenerator);
     \Drupal::setContainer($container);
@@ -127,9 +127,9 @@ class ConfigNamesMapperTest extends UnitTestCase {
       ->with('system.site_information_settings')
       ->will($this->returnValue($this->baseRoute));
 
-    $this->languageManager = $this->getMock('Drupal\Core\Language\LanguageManagerInterface');
+    $this->languageManager = $this->createMock('Drupal\Core\Language\LanguageManagerInterface');
 
-    $this->eventDispatcher = $this->getMock('Symfony\Component\EventDispatcher\EventDispatcherInterface');
+    $this->eventDispatcher = $this->createMock('Symfony\Component\EventDispatcher\EventDispatcherInterface');
 
     $this->configNamesMapper = new TestConfigNamesMapper(
       'system.site_information_settings',

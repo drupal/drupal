@@ -21,7 +21,7 @@ class ConfirmFormHelperTest extends UnitTestCase {
    */
   public function testCancelLinkTitle() {
     $cancel_text = 'Cancel text';
-    $form = $this->getMock('Drupal\Core\Form\ConfirmFormInterface');
+    $form = $this->createMock('Drupal\Core\Form\ConfirmFormInterface');
     $form->expects($this->any())
       ->method('getCancelText')
       ->will($this->returnValue($cancel_text));
@@ -39,7 +39,7 @@ class ConfirmFormHelperTest extends UnitTestCase {
   public function testCancelLinkRoute() {
     $route_name = 'foo_bar';
     $cancel_route = new Url($route_name);
-    $form = $this->getMock('Drupal\Core\Form\ConfirmFormInterface');
+    $form = $this->createMock('Drupal\Core\Form\ConfirmFormInterface');
     $form->expects($this->any())
       ->method('getCancelUrl')
       ->will($this->returnValue($cancel_route));
@@ -55,7 +55,7 @@ class ConfirmFormHelperTest extends UnitTestCase {
    */
   public function testCancelLinkRouteWithParams() {
     $expected = Url::fromRoute('foo_bar.baz', ['baz' => 'banana'], ['absolute' => TRUE]);
-    $form = $this->getMock('Drupal\Core\Form\ConfirmFormInterface');
+    $form = $this->createMock('Drupal\Core\Form\ConfirmFormInterface');
     $form->expects($this->any())
       ->method('getCancelUrl')
       ->will($this->returnValue($expected));
@@ -78,7 +78,7 @@ class ConfirmFormHelperTest extends UnitTestCase {
         'absolute' => TRUE,
       ]
     );
-    $form = $this->getMock('Drupal\Core\Form\ConfirmFormInterface');
+    $form = $this->createMock('Drupal\Core\Form\ConfirmFormInterface');
     $form->expects($this->any())
       ->method('getCancelUrl')
       ->will($this->returnValue($cancel_route));
@@ -96,9 +96,9 @@ class ConfirmFormHelperTest extends UnitTestCase {
    */
   public function testCancelLinkDestination($destination) {
     $query = ['destination' => $destination];
-    $form = $this->getMock('Drupal\Core\Form\ConfirmFormInterface');
+    $form = $this->createMock('Drupal\Core\Form\ConfirmFormInterface');
 
-    $path_validator = $this->getMock('Drupal\Core\Path\PathValidatorInterface');
+    $path_validator = $this->createMock('Drupal\Core\Path\PathValidatorInterface');
     $container_builder = new ContainerBuilder();
     $container_builder->set('path.validator', $path_validator);
     \Drupal::setContainer($container_builder);

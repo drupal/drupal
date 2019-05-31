@@ -50,9 +50,9 @@ class CacheCollectorTest extends UnitTestCase {
    * {@inheritdoc}
    */
   protected function setUp() {
-    $this->cacheBackend = $this->getMock('Drupal\Core\Cache\CacheBackendInterface');
-    $this->cacheTagsInvalidator = $this->getMock('Drupal\Core\Cache\CacheTagsInvalidatorInterface');
-    $this->lock = $this->getMock('Drupal\Core\Lock\LockBackendInterface');
+    $this->cacheBackend = $this->createMock('Drupal\Core\Cache\CacheBackendInterface');
+    $this->cacheTagsInvalidator = $this->createMock('Drupal\Core\Cache\CacheTagsInvalidatorInterface');
+    $this->lock = $this->createMock('Drupal\Core\Lock\LockBackendInterface');
     $this->cid = $this->randomMachineName();
     $this->collector = new CacheCollectorHelper($this->cid, $this->cacheBackend, $this->lock);
 

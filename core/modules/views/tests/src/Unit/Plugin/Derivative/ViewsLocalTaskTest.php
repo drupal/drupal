@@ -50,9 +50,9 @@ class ViewsLocalTaskTest extends UnitTestCase {
   protected $localTaskDerivative;
 
   protected function setUp() {
-    $this->routeProvider = $this->getMock('Drupal\Core\Routing\RouteProviderInterface');
-    $this->state = $this->getMock('Drupal\Core\State\StateInterface');
-    $this->viewStorage = $this->getMock('Drupal\Core\Entity\EntityStorageInterface');
+    $this->routeProvider = $this->createMock('Drupal\Core\Routing\RouteProviderInterface');
+    $this->state = $this->createMock('Drupal\Core\State\StateInterface');
+    $this->viewStorage = $this->createMock('Drupal\Core\Entity\EntityStorageInterface');
 
     $this->localTaskDerivative = new TestViewsLocalTask($this->routeProvider, $this->state, $this->viewStorage);
   }

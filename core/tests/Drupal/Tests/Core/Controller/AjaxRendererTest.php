@@ -36,7 +36,7 @@ class AjaxRendererTest extends UnitTestCase {
    * {@inheritdoc}
    */
   protected function setUp() {
-    $element_info_manager = $this->getMock('Drupal\Core\Render\ElementInfoManagerInterface');
+    $element_info_manager = $this->createMock('Drupal\Core\Render\ElementInfoManagerInterface');
     $element_info_manager->expects($this->any())
       ->method('getInfo')
       ->with('ajax')
@@ -64,7 +64,7 @@ class AjaxRendererTest extends UnitTestCase {
   public function testRenderWithFragmentObject() {
     $main_content = ['#markup' => 'example content'];
     $request = new Request();
-    $route_match = $this->getMock('Drupal\Core\Routing\RouteMatchInterface');
+    $route_match = $this->createMock('Drupal\Core\Routing\RouteMatchInterface');
     /** @var \Drupal\Core\Ajax\AjaxResponse $result */
     $result = $this->ajaxRenderer->renderResponse($main_content, $request, $route_match);
 

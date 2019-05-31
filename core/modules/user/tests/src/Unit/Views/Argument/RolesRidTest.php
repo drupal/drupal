@@ -46,13 +46,13 @@ class RolesRidTest extends UnitTestCase {
         [['test_rid_1', 'test_rid_2'], ['test_rid_1' => $role1, 'test_rid_2' => $role2]],
       ]));
 
-    $entity_type = $this->getMock('Drupal\Core\Entity\EntityTypeInterface');
+    $entity_type = $this->createMock('Drupal\Core\Entity\EntityTypeInterface');
     $entity_type->expects($this->any())
       ->method('getKey')
       ->with('label')
       ->will($this->returnValue('label'));
 
-    $entity_type_manager = $this->getMock(EntityTypeManagerInterface::class);
+    $entity_type_manager = $this->createMock(EntityTypeManagerInterface::class);
     $entity_type_manager->expects($this->any())
       ->method('getDefinition')
       ->with($this->equalTo('user_role'))

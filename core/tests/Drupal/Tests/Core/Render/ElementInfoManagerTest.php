@@ -60,10 +60,10 @@ class ElementInfoManagerTest extends UnitTestCase {
   protected function setUp() {
     parent::setUp();
 
-    $this->cache = $this->getMock('Drupal\Core\Cache\CacheBackendInterface');
-    $this->cacheTagsInvalidator = $this->getMock('Drupal\Core\Cache\CacheTagsInvalidatorInterface');
-    $this->moduleHandler = $this->getMock('Drupal\Core\Extension\ModuleHandlerInterface');
-    $this->themeManager = $this->getMock('Drupal\Core\Theme\ThemeManagerInterface');
+    $this->cache = $this->createMock('Drupal\Core\Cache\CacheBackendInterface');
+    $this->cacheTagsInvalidator = $this->createMock('Drupal\Core\Cache\CacheTagsInvalidatorInterface');
+    $this->moduleHandler = $this->createMock('Drupal\Core\Extension\ModuleHandlerInterface');
+    $this->themeManager = $this->createMock('Drupal\Core\Theme\ThemeManagerInterface');
 
     $this->elementInfo = new ElementInfoManager(new \ArrayObject(), $this->cache, $this->cacheTagsInvalidator, $this->moduleHandler, $this->themeManager);
   }
@@ -82,7 +82,7 @@ class ElementInfoManagerTest extends UnitTestCase {
       ->with('element_info', $this->anything())
       ->will($this->returnArgument(0));
 
-    $plugin = $this->getMock($plugin_class);
+    $plugin = $this->createMock($plugin_class);
     $plugin->expects($this->once())
       ->method('getInfo')
       ->willReturn([

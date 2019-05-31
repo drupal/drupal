@@ -37,7 +37,7 @@ class EntityCreateAccessCheckTest extends UnitTestCase {
     $container->set('cache_contexts_manager', $cache_contexts_manager);
     \Drupal::setContainer($container);
 
-    $this->entityTypeManager = $this->getMock('Drupal\Core\Entity\EntityTypeManagerInterface');
+    $this->entityTypeManager = $this->createMock('Drupal\Core\Entity\EntityTypeManagerInterface');
   }
 
   /**
@@ -83,7 +83,7 @@ class EntityCreateAccessCheckTest extends UnitTestCase {
     // Don't expect a call to the access control handler when we have a bundle
     // argument requirement but no bundle is provided.
     if ($entity_bundle || strpos($requirement, '{') === FALSE) {
-      $access_control_handler = $this->getMock('Drupal\Core\Entity\EntityAccessControlHandlerInterface');
+      $access_control_handler = $this->createMock('Drupal\Core\Entity\EntityAccessControlHandlerInterface');
       $access_control_handler->expects($this->once())
         ->method('createAccess')
         ->with($entity_bundle)
@@ -109,12 +109,12 @@ class EntityCreateAccessCheckTest extends UnitTestCase {
       $raw_variables->set('bundle_argument', $entity_bundle);
     }
 
-    $route_match = $this->getMock('Drupal\Core\Routing\RouteMatchInterface');
+    $route_match = $this->createMock('Drupal\Core\Routing\RouteMatchInterface');
     $route_match->expects($this->any())
       ->method('getRawParameters')
       ->will($this->returnValue($raw_variables));
 
-    $account = $this->getMock('Drupal\Core\Session\AccountInterface');
+    $account = $this->createMock('Drupal\Core\Session\AccountInterface');
     $this->assertEquals($expected_access_result, $applies_check->access($route, $route_match, $account));
   }
 

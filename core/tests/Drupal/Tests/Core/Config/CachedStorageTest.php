@@ -23,7 +23,7 @@ class CachedStorageTest extends UnitTestCase {
    */
   public function testListAllStaticCache() {
     $prefix = __FUNCTION__;
-    $storage = $this->getMock('Drupal\Core\Config\StorageInterface');
+    $storage = $this->createMock('Drupal\Core\Config\StorageInterface');
 
     $response = ["$prefix." . $this->randomMachineName(), "$prefix." . $this->randomMachineName()];
     $storage->expects($this->once())

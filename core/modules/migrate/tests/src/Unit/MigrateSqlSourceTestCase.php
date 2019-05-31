@@ -80,17 +80,17 @@ abstract class MigrateSqlSourceTestCase extends MigrateTestCase {
    * {@inheritdoc}
    */
   protected function setUp() {
-    $module_handler = $this->getMock('Drupal\Core\Extension\ModuleHandlerInterface');
-    $state = $this->getMock('Drupal\Core\State\StateInterface');
-    $entity_manager = $this->getMock('Drupal\Core\Entity\EntityManagerInterface');
+    $module_handler = $this->createMock('Drupal\Core\Extension\ModuleHandlerInterface');
+    $state = $this->createMock('Drupal\Core\State\StateInterface');
+    $entity_manager = $this->createMock('Drupal\Core\Entity\EntityManagerInterface');
 
     // Mock a key-value store to return high-water values.
-    $key_value = $this->getMock(KeyValueStoreInterface::class);
+    $key_value = $this->createMock(KeyValueStoreInterface::class);
 
     // SourcePluginBase does not yet support full dependency injection so we
     // need to make sure that \Drupal::keyValue() works as expected by mocking
     // the keyvalue service.
-    $key_value_factory = $this->getMock(KeyValueFactoryInterface::class);
+    $key_value_factory = $this->createMock(KeyValueFactoryInterface::class);
     $key_value_factory
       ->method('get')
       ->with('migrate:high_water')

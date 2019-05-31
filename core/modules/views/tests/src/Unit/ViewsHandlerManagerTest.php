@@ -46,8 +46,8 @@ class ViewsHandlerManagerTest extends UnitTestCase {
     $this->viewsData = $this->getMockBuilder('Drupal\views\ViewsData')
       ->disableOriginalConstructor()
       ->getMock();
-    $cache_backend = $this->getMock('Drupal\Core\Cache\CacheBackendInterface');
-    $this->moduleHandler = $this->getMock('Drupal\Core\Extension\ModuleHandlerInterface');
+    $cache_backend = $this->createMock('Drupal\Core\Cache\CacheBackendInterface');
+    $this->moduleHandler = $this->createMock('Drupal\Core\Extension\ModuleHandlerInterface');
     $this->handlerManager = new ViewsHandlerManager('test', new \ArrayObject([]), $this->viewsData, $cache_backend, $this->moduleHandler);
   }
 
@@ -55,7 +55,7 @@ class ViewsHandlerManagerTest extends UnitTestCase {
    * Setups of the plugin factory.
    */
   protected function setupMockedFactory() {
-    $this->factory = $this->getMock('Drupal\Component\Plugin\Factory\FactoryInterface');
+    $this->factory = $this->createMock('Drupal\Component\Plugin\Factory\FactoryInterface');
 
     $reflection = new \ReflectionClass($this->handlerManager);
     $property = $reflection->getProperty('factory');
@@ -110,7 +110,7 @@ class ViewsHandlerManagerTest extends UnitTestCase {
       'real table' => 'test real table',
       'entity field' => 'test entity field',
     ];
-    $plugin = $this->getMock('Drupal\views\Plugin\views\ViewsHandlerInterface');
+    $plugin = $this->createMock('Drupal\views\Plugin\views\ViewsHandlerInterface');
     $this->factory->expects($this->once())
       ->method('createInstance')
       ->with('test_id', $expected_definition)
@@ -138,7 +138,7 @@ class ViewsHandlerManagerTest extends UnitTestCase {
       ->with('test_table')
       ->willReturn($views_data);
 
-    $plugin = $this->getMock('Drupal\views\Plugin\views\ViewsHandlerInterface');
+    $plugin = $this->createMock('Drupal\views\Plugin\views\ViewsHandlerInterface');
     $this->factory->expects($this->once())
       ->method('createInstance')
       ->with('test_override')
@@ -166,7 +166,7 @@ class ViewsHandlerManagerTest extends UnitTestCase {
       ->with('test_table')
       ->willReturn($views_data);
 
-    $plugin = $this->getMock('Drupal\views\Plugin\views\ViewsHandlerInterface');
+    $plugin = $this->createMock('Drupal\views\Plugin\views\ViewsHandlerInterface');
     $this->factory->expects($this->once())
       ->method('createInstance')
       ->with('test_id')

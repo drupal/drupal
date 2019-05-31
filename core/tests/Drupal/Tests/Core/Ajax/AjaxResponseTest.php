@@ -33,15 +33,15 @@ class AjaxResponseTest extends UnitTestCase {
    * @see \Drupal\Core\Ajax\AjaxResponse::getCommands()
    */
   public function testCommands() {
-    $command_one = $this->getMock('Drupal\Core\Ajax\CommandInterface');
+    $command_one = $this->createMock('Drupal\Core\Ajax\CommandInterface');
     $command_one->expects($this->once())
       ->method('render')
       ->will($this->returnValue(['command' => 'one']));
-    $command_two = $this->getMock('Drupal\Core\Ajax\CommandInterface');
+    $command_two = $this->createMock('Drupal\Core\Ajax\CommandInterface');
     $command_two->expects($this->once())
       ->method('render')
       ->will($this->returnValue(['command' => 'two']));
-    $command_three = $this->getMock('Drupal\Core\Ajax\CommandInterface');
+    $command_three = $this->createMock('Drupal\Core\Ajax\CommandInterface');
     $command_three->expects($this->once())
       ->method('render')
       ->will($this->returnValue(['command' => 'three']));
@@ -78,10 +78,10 @@ class AjaxResponseTest extends UnitTestCase {
     $response = new AjaxResponse([]);
     $response->headers->set('Content-Type', 'application/json; charset=utf-8');
 
-    $ajax_response_attachments_processor = $this->getMock('\Drupal\Core\Render\AttachmentsResponseProcessorInterface');
+    $ajax_response_attachments_processor = $this->createMock('\Drupal\Core\Render\AttachmentsResponseProcessorInterface');
     $subscriber = new AjaxResponseSubscriber($ajax_response_attachments_processor);
     $event = new FilterResponseEvent(
-      $this->getMock('\Symfony\Component\HttpKernel\HttpKernelInterface'),
+      $this->createMock('\Symfony\Component\HttpKernel\HttpKernelInterface'),
       $request,
       HttpKernelInterface::MASTER_REQUEST,
       $response

@@ -77,12 +77,12 @@ class AssetResolverTest extends UnitTestCase {
     $this->libraryDiscovery = $this->getMockBuilder('Drupal\Core\Asset\LibraryDiscovery')
       ->disableOriginalConstructor()
       ->getMock();
-    $this->libraryDependencyResolver = $this->getMock('\Drupal\Core\Asset\LibraryDependencyResolverInterface');
+    $this->libraryDependencyResolver = $this->createMock('\Drupal\Core\Asset\LibraryDependencyResolverInterface');
     $this->libraryDependencyResolver->expects($this->any())
       ->method('getLibrariesWithDependencies')
       ->willReturnArgument(0);
-    $this->moduleHandler = $this->getMock('\Drupal\Core\Extension\ModuleHandlerInterface');
-    $this->themeManager = $this->getMock('\Drupal\Core\Theme\ThemeManagerInterface');
+    $this->moduleHandler = $this->createMock('\Drupal\Core\Extension\ModuleHandlerInterface');
+    $this->themeManager = $this->createMock('\Drupal\Core\Theme\ThemeManagerInterface');
     $active_theme = $this->getMockBuilder('\Drupal\Core\Theme\ActiveTheme')
       ->disableOriginalConstructor()
       ->getMock();
@@ -93,16 +93,16 @@ class AssetResolverTest extends UnitTestCase {
       ->method('getActiveTheme')
       ->willReturn($active_theme);
 
-    $this->languageManager = $this->getMock('\Drupal\Core\Language\LanguageManagerInterface');
-    $english = $this->getMock('\Drupal\Core\Language\LanguageInterface');
+    $this->languageManager = $this->createMock('\Drupal\Core\Language\LanguageManagerInterface');
+    $english = $this->createMock('\Drupal\Core\Language\LanguageInterface');
     $english->expects($this->any())
       ->method('getId')
       ->willReturn('en');
-    $japanese = $this->getMock('\Drupal\Core\Language\LanguageInterface');
+    $japanese = $this->createMock('\Drupal\Core\Language\LanguageInterface');
     $japanese->expects($this->any())
       ->method('getId')
       ->willReturn('jp');
-    $this->languageManager = $this->getMock('\Drupal\Core\Language\LanguageManagerInterface');
+    $this->languageManager = $this->createMock('\Drupal\Core\Language\LanguageManagerInterface');
     $this->languageManager->expects($this->any())
       ->method('getCurrentLanguage')
       ->will($this->onConsecutiveCalls($english, $english, $japanese, $japanese));

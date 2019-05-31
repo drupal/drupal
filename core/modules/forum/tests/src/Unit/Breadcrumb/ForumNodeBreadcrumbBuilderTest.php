@@ -4,6 +4,7 @@ namespace Drupal\Tests\forum\Unit\Breadcrumb;
 
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Link;
+use Drupal\forum\Breadcrumb\ForumNodeBreadcrumbBuilder;
 use Drupal\taxonomy\TermStorageInterface;
 use Drupal\Tests\UnitTestCase;
 use Symfony\Component\DependencyInjection\Container;
@@ -44,15 +45,15 @@ class ForumNodeBreadcrumbBuilderTest extends UnitTestCase {
    */
   public function testApplies($expected, $route_name = NULL, $parameter_map = []) {
     // Make some test doubles.
-    $entity_manager = $this->getMock('Drupal\Core\Entity\EntityManagerInterface');
+    $entity_manager = $this->createMock('Drupal\Core\Entity\EntityManagerInterface');
     $config_factory = $this->getConfigFactoryStub([]);
 
-    $forum_manager = $this->getMock('Drupal\forum\ForumManagerInterface');
+    $forum_manager = $this->createMock('Drupal\forum\ForumManagerInterface');
     $forum_manager->expects($this->any())
       ->method('checkNodeType')
       ->will($this->returnValue(TRUE));
 
-    $translation_manager = $this->getMock('Drupal\Core\StringTranslation\TranslationInterface');
+    $translation_manager = $this->createMock('Drupal\Core\StringTranslation\TranslationInterface');
 
     // Make an object to test.
     $builder = $this->getMockBuilder('Drupal\forum\Breadcrumb\ForumNodeBreadcrumbBuilder')
@@ -67,7 +68,7 @@ class ForumNodeBreadcrumbBuilderTest extends UnitTestCase {
       ->setMethods(NULL)
       ->getMock();
 
-    $route_match = $this->getMock('Drupal\Core\Routing\RouteMatchInterface');
+    $route_match = $this->createMock('Drupal\Core\Routing\RouteMatchInterface');
     $route_match->expects($this->once())
       ->method('getRouteName')
       ->will($this->returnValue($route_name));
@@ -164,7 +165,7 @@ class ForumNodeBreadcrumbBuilderTest extends UnitTestCase {
     $prophecy->getCacheTags()->willReturn(['taxonomy_vocabulary:5']);
     $prophecy->getCacheContexts()->willReturn([]);
     $prophecy->getCacheMaxAge()->willReturn(Cache::PERMANENT);
-    $vocab_storage = $this->getMock('Drupal\Core\Entity\EntityStorageInterface');
+    $vocab_storage = $this->createMock('Drupal\Core\Entity\EntityStorageInterface');
     $vocab_storage->expects($this->any())
       ->method('load')
       ->will($this->returnValueMap([
@@ -190,20 +191,14 @@ class ForumNodeBreadcrumbBuilderTest extends UnitTestCase {
     );
 
     // Build a breadcrumb builder to test.
-    $breadcrumb_builder = $this->getMock(
-      'Drupal\forum\Breadcrumb\ForumNodeBreadcrumbBuilder', NULL, [
-        $entity_manager,
-        $config_factory,
-        $forum_manager,
-        $translation_manager,
-      ]
-    );
+    $breadcrumb_builder = new ForumNodeBreadcrumbBuilder($entity_manager,
+      $config_factory,
+      $forum_manager,
+      $translation_manager);
 
     // Add a translation manager for t().
     $translation_manager = $this->getStringTranslationStub();
-    $property = new \ReflectionProperty('Drupal\forum\Breadcrumb\ForumNodeBreadcrumbBuilder', 'stringTranslation');
-    $property->setAccessible(TRUE);
-    $property->setValue($breadcrumb_builder, $translation_manager);
+    $breadcrumb_builder->setStringTranslation($translation_manager);
 
     // The forum node we need a breadcrumb back from.
     $forum_node = $this->getMockBuilder('Drupal\node\Entity\Node')
@@ -211,7 +206,7 @@ class ForumNodeBreadcrumbBuilderTest extends UnitTestCase {
       ->getMock();
 
     // Our data set.
-    $route_match = $this->getMock('Drupal\Core\Routing\RouteMatchInterface');
+    $route_match = $this->createMock('Drupal\Core\Routing\RouteMatchInterface');
     $route_match->expects($this->exactly(2))
       ->method('getParameter')
       ->with('node')

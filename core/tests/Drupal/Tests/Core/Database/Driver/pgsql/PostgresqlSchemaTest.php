@@ -46,7 +46,7 @@ class PostgresqlSchemaTest extends UnitTestCase {
     $max_identifier_length = 63;
     $schema = new Schema($this->connection);
 
-    $statement = $this->getMock('\Drupal\Core\Database\StatementInterface');
+    $statement = $this->createMock('\Drupal\Core\Database\StatementInterface');
     $statement->expects($this->any())
       ->method('fetchField')
       ->willReturn($max_identifier_length);
@@ -58,7 +58,7 @@ class PostgresqlSchemaTest extends UnitTestCase {
     $this->connection->expects($this->at(2))
       ->method('query')
       ->with("SELECT 1 FROM pg_constraint WHERE conname = '$expected'")
-      ->willReturn($this->getMock('\Drupal\Core\Database\StatementInterface'));
+      ->willReturn($this->createMock('\Drupal\Core\Database\StatementInterface'));
 
     $schema->constraintExists($table_name, $name);
   }

@@ -35,7 +35,7 @@ class ControllerBaseTest extends UnitTestCase {
       ],
     ]);
 
-    $container = $this->getMock('Symfony\Component\DependencyInjection\ContainerInterface');
+    $container = $this->createMock('Symfony\Component\DependencyInjection\ContainerInterface');
     $container->expects($this->once())
       ->method('get')
       ->with('config.factory')

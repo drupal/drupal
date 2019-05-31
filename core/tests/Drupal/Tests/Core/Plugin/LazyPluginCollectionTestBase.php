@@ -43,7 +43,7 @@ abstract class LazyPluginCollectionTestBase extends UnitTestCase {
   ];
 
   protected function setUp() {
-    $this->pluginManager = $this->getMock('Drupal\Component\Plugin\PluginManagerInterface');
+    $this->pluginManager = $this->createMock('Drupal\Component\Plugin\PluginManagerInterface');
     $this->pluginManager->expects($this->any())
       ->method('getDefinitions')
       ->will($this->returnValue($this->getPluginDefinitions()));
@@ -102,7 +102,7 @@ abstract class LazyPluginCollectionTestBase extends UnitTestCase {
    */
   protected function getPluginMock($plugin_id, array $definition) {
     // Create a mock plugin instance.
-    $mock = $this->getMock('Drupal\Component\Plugin\PluginInspectionInterface');
+    $mock = $this->createMock('Drupal\Component\Plugin\PluginInspectionInterface');
     $mock->expects($this->any())
       ->method('getPluginId')
       ->will($this->returnValue($plugin_id));

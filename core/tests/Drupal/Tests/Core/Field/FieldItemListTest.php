@@ -25,30 +25,30 @@ class FieldItemListTest extends UnitTestCase {
   public function testEquals($expected, FieldItemInterface $first_field_item = NULL, FieldItemInterface $second_field_item = NULL) {
 
     // Mock the field type manager and place it in the container.
-    $field_type_manager = $this->getMock('Drupal\Core\Field\FieldTypePluginManagerInterface');
+    $field_type_manager = $this->createMock('Drupal\Core\Field\FieldTypePluginManagerInterface');
     $container = new ContainerBuilder();
     $container->set('plugin.manager.field.field_type', $field_type_manager);
     \Drupal::setContainer($container);
 
     // Set up three properties, one of them being computed.
-    $property_definitions['0'] = $this->getMock('Drupal\Core\TypedData\DataDefinitionInterface');
+    $property_definitions['0'] = $this->createMock('Drupal\Core\TypedData\DataDefinitionInterface');
     $property_definitions['0']->expects($this->any())
       ->method('isComputed')
       ->willReturn(FALSE);
-    $property_definitions['1'] = $this->getMock('Drupal\Core\TypedData\DataDefinitionInterface');
+    $property_definitions['1'] = $this->createMock('Drupal\Core\TypedData\DataDefinitionInterface');
     $property_definitions['1']->expects($this->any())
       ->method('isComputed')
       ->willReturn(FALSE);
-    $property_definitions['2'] = $this->getMock('Drupal\Core\TypedData\DataDefinitionInterface');
+    $property_definitions['2'] = $this->createMock('Drupal\Core\TypedData\DataDefinitionInterface');
     $property_definitions['2']->expects($this->any())
       ->method('isComputed')
       ->willReturn(TRUE);
 
-    $field_storage_definition = $this->getMock('Drupal\Core\Field\FieldStorageDefinitionInterface');
+    $field_storage_definition = $this->createMock('Drupal\Core\Field\FieldStorageDefinitionInterface');
     $field_storage_definition->expects($this->any())
       ->method('getPropertyDefinitions')
       ->will($this->returnValue($property_definitions));
-    $field_definition = $this->getMock('Drupal\Core\Field\FieldDefinitionInterface');
+    $field_definition = $this->createMock('Drupal\Core\Field\FieldDefinitionInterface');
     $field_definition->expects($this->any())
       ->method('getFieldStorageDefinition')
       ->willReturn($field_storage_definition);
@@ -158,20 +158,20 @@ class FieldItemListTest extends UnitTestCase {
       ->willReturn([0 => '0', 1 => '1']);
 
     // Set up three properties, one of them being computed.
-    $property_definitions['0'] = $this->getMock('Drupal\Core\TypedData\DataDefinitionInterface');
+    $property_definitions['0'] = $this->createMock('Drupal\Core\TypedData\DataDefinitionInterface');
     $property_definitions['0']->expects($this->any())
       ->method('isComputed')
       ->willReturn(FALSE);
-    $property_definitions['1'] = $this->getMock('Drupal\Core\TypedData\DataDefinitionInterface');
+    $property_definitions['1'] = $this->createMock('Drupal\Core\TypedData\DataDefinitionInterface');
     $property_definitions['1']->expects($this->any())
       ->method('isComputed')
       ->willReturn(FALSE);
-    $property_definitions['2'] = $this->getMock('Drupal\Core\TypedData\DataDefinitionInterface');
+    $property_definitions['2'] = $this->createMock('Drupal\Core\TypedData\DataDefinitionInterface');
     $property_definitions['2']->expects($this->any())
       ->method('isComputed')
       ->willReturn(TRUE);
 
-    $field_storage_definition = $this->getMock('Drupal\Core\Field\FieldStorageDefinitionInterface');
+    $field_storage_definition = $this->createMock('Drupal\Core\Field\FieldStorageDefinitionInterface');
     $field_storage_definition->expects($this->any())
       ->method('getPropertyDefinitions')
       ->will($this->returnValue($property_definitions));
@@ -214,26 +214,26 @@ class FieldItemListTest extends UnitTestCase {
     $second_field_item->setValue(['1' => 2, '0' => 1]);
     $empty_field_item = $this->getMockForAbstractClass('Drupal\Core\Field\FieldItemBase', [], '', FALSE);
     // Mock the field type manager and place it in the container.
-    $field_type_manager = $this->getMock('Drupal\Core\Field\FieldTypePluginManagerInterface');
+    $field_type_manager = $this->createMock('Drupal\Core\Field\FieldTypePluginManagerInterface');
     $container = new ContainerBuilder();
     $container->set('plugin.manager.field.field_type', $field_type_manager);
     \Drupal::setContainer($container);
 
     // Set up the properties of the field item.
-    $property_definitions['0'] = $this->getMock('Drupal\Core\TypedData\DataDefinitionInterface');
+    $property_definitions['0'] = $this->createMock('Drupal\Core\TypedData\DataDefinitionInterface');
     $property_definitions['0']->expects($this->any())
       ->method('isComputed')
       ->willReturn(FALSE);
-    $property_definitions['1'] = $this->getMock('Drupal\Core\TypedData\DataDefinitionInterface');
+    $property_definitions['1'] = $this->createMock('Drupal\Core\TypedData\DataDefinitionInterface');
     $property_definitions['1']->expects($this->any())
       ->method('isComputed')
       ->willReturn(FALSE);
 
-    $field_storage_definition = $this->getMock('Drupal\Core\Field\FieldStorageDefinitionInterface');
+    $field_storage_definition = $this->createMock('Drupal\Core\Field\FieldStorageDefinitionInterface');
     $field_storage_definition->expects($this->any())
       ->method('getPropertyDefinitions')
       ->will($this->returnValue($property_definitions));
-    $field_definition = $this->getMock('Drupal\Core\Field\FieldDefinitionInterface');
+    $field_definition = $this->createMock('Drupal\Core\Field\FieldDefinitionInterface');
     $field_definition->expects($this->any())
       ->method('getFieldStorageDefinition')
       ->willReturn($field_storage_definition);
@@ -271,12 +271,15 @@ class FieldItemListTest extends UnitTestCase {
    * @covers ::defaultValuesForm
    */
   public function testDefaultValuesForm() {
-    $field_definition = $this->getMock(FieldDefinitionInterface::class);
+    $field_definition = $this->createMock(FieldDefinitionInterface::class);
     $field_definition->expects($this->any())
       ->method('getType')
       ->willReturn('field_type');
     /** @var \Drupal\Core\Field\FieldItemList|\PHPUnit_Framework_MockObject_MockObject $field_list */
-    $field_list = $this->getMock(FieldItemList::class, ['defaultValueWidget'], [$field_definition]);
+    $field_list = $this->getMockBuilder(FieldItemList::class)
+      ->setMethods(['defaultValueWidget'])
+      ->setConstructorArgs([$field_definition])
+      ->getMock();
     $field_list->expects($this->any())
       ->method('defaultValueWidget')
       ->willReturn(NULL);
@@ -292,9 +295,12 @@ class FieldItemListTest extends UnitTestCase {
    * @covers ::defaultValuesFormValidate
    */
   public function testDefaultValuesFormValidate() {
-    $field_definition = $this->getMock(FieldDefinitionInterface::class);
+    $field_definition = $this->createMock(FieldDefinitionInterface::class);
     /** @var \Drupal\Core\Field\FieldItemList|\PHPUnit_Framework_MockObject_MockObject $field_list */
-    $field_list = $this->getMock(FieldItemList::class, ['defaultValueWidget', 'validate'], [$field_definition]);
+    $field_list = $this->getMockBuilder(FieldItemList::class)
+      ->setMethods(['defaultValueWidget', 'validate'])
+      ->setConstructorArgs([$field_definition])
+      ->getMock();
     $field_list->expects($this->any())
       ->method('defaultValueWidget')
       ->willReturn(NULL);
@@ -310,9 +316,12 @@ class FieldItemListTest extends UnitTestCase {
    * @covers ::defaultValuesFormSubmit
    */
   public function testDefaultValuesFormSubmit() {
-    $field_definition = $this->getMock(FieldDefinitionInterface::class);
+    $field_definition = $this->createMock(FieldDefinitionInterface::class);
     /** @var \Drupal\Core\Field\FieldItemList|\PHPUnit_Framework_MockObject_MockObject $field_list */
-    $field_list = $this->getMock(FieldItemList::class, ['defaultValueWidget', 'getValue'], [$field_definition]);
+    $field_list = $this->getMockBuilder(FieldItemList::class)
+      ->setMethods(['defaultValueWidget', 'getValue'])
+      ->setConstructorArgs([$field_definition])
+      ->getMock();
     $field_list->expects($this->any())
       ->method('defaultValueWidget')
       ->willReturn(NULL);

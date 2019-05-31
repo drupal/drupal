@@ -57,8 +57,8 @@ class FormAjaxSubscriberTest extends UnitTestCase {
   protected function setUp() {
     parent::setUp();
 
-    $this->httpKernel = $this->getMock('Symfony\Component\HttpKernel\HttpKernelInterface');
-    $this->formAjaxResponseBuilder = $this->getMock('Drupal\Core\Form\FormAjaxResponseBuilderInterface');
+    $this->httpKernel = $this->createMock('Symfony\Component\HttpKernel\HttpKernelInterface');
+    $this->formAjaxResponseBuilder = $this->createMock('Drupal\Core\Form\FormAjaxResponseBuilderInterface');
     $this->stringTranslation = $this->getStringTranslationStub();
     $this->messenger = $this->createMock(MessengerInterface::class);
     $this->subscriber = new FormAjaxSubscriber($this->formAjaxResponseBuilder, $this->stringTranslation, $this->messenger);
@@ -176,7 +176,7 @@ class FormAjaxSubscriberTest extends UnitTestCase {
     $rendered_output = 'the rendered output';
     // CommandWithAttachedAssetsTrait::getRenderedContent() will call the
     // renderer service via the container.
-    $renderer = $this->getMock('Drupal\Core\Render\RendererInterface');
+    $renderer = $this->createMock('Drupal\Core\Render\RendererInterface');
     $renderer->expects($this->once())
       ->method('renderRoot')
       ->with()

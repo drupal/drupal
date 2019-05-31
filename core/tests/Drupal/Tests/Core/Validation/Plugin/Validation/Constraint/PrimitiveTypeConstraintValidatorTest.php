@@ -27,7 +27,7 @@ class PrimitiveTypeConstraintValidatorTest extends UnitTestCase {
    * @dataProvider provideTestValidate
    */
   public function testValidate(PrimitiveInterface $typed_data, $value, $valid) {
-    $context = $this->getMock(ExecutionContextInterface::class);
+    $context = $this->createMock(ExecutionContextInterface::class);
     $context->expects($this->any())
       ->method('getObject')
       ->willReturn($typed_data);
@@ -62,7 +62,7 @@ class PrimitiveTypeConstraintValidatorTest extends UnitTestCase {
     $data[] = [new StringData(DataDefinition::create('string')), 'test', TRUE];
     $data[] = [new StringData(DataDefinition::create('string')), new TranslatableMarkup('test'), TRUE];
     // It is odd that 1 is a valid string.
-    // $data[] = [$this->getMock('Drupal\Core\TypedData\Type\StringInterface'), 1, FALSE];
+    // $data[] = [$this->createMock('Drupal\Core\TypedData\Type\StringInterface'), 1, FALSE];
     $data[] = [new StringData(DataDefinition::create('string')), [], FALSE];
     $data[] = [new Uri(DataDefinition::create('uri')), 'http://www.drupal.org', TRUE];
     $data[] = [new Uri(DataDefinition::create('uri')), 'https://www.drupal.org', TRUE];

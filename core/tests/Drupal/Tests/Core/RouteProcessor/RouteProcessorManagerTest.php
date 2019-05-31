@@ -63,7 +63,7 @@ class RouteProcessorManagerTest extends UnitTestCase {
    * @return \Drupal\Core\RouteProcessor\OutboundRouteProcessorInterface|\PHPUnit_Framework_MockObject_MockObject
    */
   protected function getMockProcessor($route_name, $route, $parameters) {
-    $processor = $this->getMock('Drupal\Core\RouteProcessor\OutboundRouteProcessorInterface');
+    $processor = $this->createMock('Drupal\Core\RouteProcessor\OutboundRouteProcessorInterface');
     $processor->expects($this->once())
       ->method('processOutbound')
       ->with($route_name, $route, $parameters);

@@ -100,14 +100,14 @@ class DownloadTest extends FileTestBase {
    */
   protected function doTransform($destination_uri, $configuration = []) {
     // Prepare a mock HTTP client.
-    $this->container->set('http_client', $this->getMock(Client::class));
+    $this->container->set('http_client', $this->createMock(Client::class));
 
     // Instantiate the plugin statically so it can pull dependencies out of
     // the container.
     $plugin = Download::create($this->container, $configuration, 'download', []);
 
     // Execute the transformation.
-    $executable = $this->getMock(MigrateExecutableInterface::class);
+    $executable = $this->createMock(MigrateExecutableInterface::class);
     $row = new Row([], []);
 
     // Return the downloaded file's local URI.

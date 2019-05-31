@@ -1152,21 +1152,21 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
   }
 
   public function providerTestRequiresEntityDataMigration() {
-    $updated_entity_type_definition = $this->getMock('\Drupal\Core\Entity\EntityTypeInterface');
+    $updated_entity_type_definition = $this->createMock('\Drupal\Core\Entity\EntityTypeInterface');
     $updated_entity_type_definition->expects($this->any())
       ->method('getStorageClass')
       // A class that exists, *any* class.
       ->willReturn('\Drupal\Core\Entity\Sql\SqlContentEntityStorageSchema');
-    $original_entity_type_definition = $this->getMock('\Drupal\Core\Entity\EntityTypeInterface');
+    $original_entity_type_definition = $this->createMock('\Drupal\Core\Entity\EntityTypeInterface');
     $original_entity_type_definition->expects($this->any())
       ->method('getStorageClass')
       // A class that exists, *any* class.
       ->willReturn('\Drupal\Core\Entity\Sql\SqlContentEntityStorageSchema');
-    $original_entity_type_definition_other_nonexisting = $this->getMock('\Drupal\Core\Entity\EntityTypeInterface');
+    $original_entity_type_definition_other_nonexisting = $this->createMock('\Drupal\Core\Entity\EntityTypeInterface');
     $original_entity_type_definition_other_nonexisting->expects($this->any())
       ->method('getStorageClass')
       ->willReturn('bar');
-    $original_entity_type_definition_other_existing = $this->getMock('\Drupal\Core\Entity\EntityTypeInterface');
+    $original_entity_type_definition_other_existing = $this->createMock('\Drupal\Core\Entity\EntityTypeInterface');
     $original_entity_type_definition_other_existing->expects($this->any())
       ->method('getStorageClass')
       // A class that exists, *any* class.
@@ -1241,8 +1241,8 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
 
     $cases = [];
 
-    $updated_entity_type_definition = $this->getMock('\Drupal\Core\Entity\ContentEntityTypeInterface');
-    $original_entity_type_definition = $this->getMock('\Drupal\Core\Entity\ContentEntityTypeInterface');
+    $updated_entity_type_definition = $this->createMock('\Drupal\Core\Entity\ContentEntityTypeInterface');
+    $original_entity_type_definition = $this->createMock('\Drupal\Core\Entity\ContentEntityTypeInterface');
 
     $updated_entity_type_definition->expects($this->any())
       ->method('id')
@@ -1407,7 +1407,7 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
       ->method('schema')
       ->will($this->returnValue($this->dbSchemaHandler));
 
-    $key_value = $this->getMock('Drupal\Core\KeyValueStore\KeyValueStoreInterface');
+    $key_value = $this->createMock('Drupal\Core\KeyValueStore\KeyValueStoreInterface');
 
     $this->entityLastInstalledSchemaRepository
       ->expects($this->any())
@@ -1442,7 +1442,7 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
    *   FieldStorageDefinitionInterface::getSchema().
    */
   public function setUpStorageDefinition($field_name, array $schema) {
-    $this->storageDefinitions[$field_name] = $this->getMock('Drupal\Tests\Core\Field\TestBaseFieldDefinitionInterface');
+    $this->storageDefinitions[$field_name] = $this->createMock('Drupal\Tests\Core\Field\TestBaseFieldDefinitionInterface');
     $this->storageDefinitions[$field_name]->expects($this->any())
       ->method('isBaseField')
       ->will($this->returnValue(TRUE));
@@ -1461,7 +1461,7 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
     if (!empty($schema['columns'])) {
       $property_definitions = [];
       foreach ($schema['columns'] as $column => $info) {
-        $property_definitions[$column] = $this->getMock('Drupal\Core\TypedData\DataDefinitionInterface');
+        $property_definitions[$column] = $this->createMock('Drupal\Core\TypedData\DataDefinitionInterface');
         $property_definitions[$column]->expects($this->any())
           ->method('isRequired')
           ->will($this->returnValue(!empty($info['not null'])));

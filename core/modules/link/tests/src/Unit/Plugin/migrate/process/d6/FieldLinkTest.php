@@ -17,12 +17,12 @@ class FieldLinkTest extends UnitTestCase {
    * @dataProvider canonicalizeUriDataProvider
    */
   public function testCanonicalizeUri($url, $expected) {
-    $link_plugin = new FieldLink([], '', [], $this->getMock('\Drupal\migrate\Plugin\MigrationInterface'));
+    $link_plugin = new FieldLink([], '', [], $this->createMock('\Drupal\migrate\Plugin\MigrationInterface'));
     $transformed = $link_plugin->transform([
       'url' => $url,
       'title' => '',
       'attributes' => serialize([]),
-    ], $this->getMock('\Drupal\migrate\MigrateExecutableInterface'), $this->getMockBuilder('\Drupal\migrate\Row')->disableOriginalConstructor()->getMock(), NULL);
+    ], $this->createMock('\Drupal\migrate\MigrateExecutableInterface'), $this->getMockBuilder('\Drupal\migrate\Row')->disableOriginalConstructor()->getMock(), NULL);
     $this->assertEquals($expected, $transformed['uri']);
   }
 

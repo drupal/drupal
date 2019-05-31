@@ -28,7 +28,7 @@ class MetadataBubblingUrlGeneratorTest extends UrlGeneratorTest {
   protected function setUp() {
     parent::setUp();
 
-    $this->renderer = $this->getMock('\Drupal\Core\Render\RendererInterface');
+    $this->renderer = $this->createMock('\Drupal\Core\Render\RendererInterface');
     $this->renderer->expects($this->any())
       ->method('hasRenderContext')
       ->willReturn(TRUE);

@@ -42,8 +42,8 @@ class ForumBreadcrumbBuilderBaseTest extends UnitTestCase {
         'forum.settings' => ['IAmATestKey' => 'IAmATestValue'],
       ]
     );
-    $forum_manager = $this->getMock('Drupal\forum\ForumManagerInterface');
-    $translation_manager = $this->getMock('Drupal\Core\StringTranslation\TranslationInterface');
+    $forum_manager = $this->createMock('Drupal\forum\ForumManagerInterface');
+    $translation_manager = $this->createMock('Drupal\Core\StringTranslation\TranslationInterface');
 
     // Make an object to test.
     $builder = $this->getMockForAbstractClass(
@@ -101,7 +101,7 @@ class ForumBreadcrumbBuilderBaseTest extends UnitTestCase {
     $prophecy->getCacheContexts()->willReturn([]);
     $prophecy->getCacheMaxAge()->willReturn(Cache::PERMANENT);
 
-    $vocab_storage = $this->getMock('Drupal\Core\Entity\EntityStorageInterface');
+    $vocab_storage = $this->createMock('Drupal\Core\Entity\EntityStorageInterface');
     $vocab_storage->expects($this->any())
       ->method('load')
       ->will($this->returnValueMap([
@@ -140,7 +140,7 @@ class ForumBreadcrumbBuilderBaseTest extends UnitTestCase {
     $breadcrumb_builder->setStringTranslation($translation_manager);
 
     // Our empty data set.
-    $route_match = $this->getMock('Drupal\Core\Routing\RouteMatchInterface');
+    $route_match = $this->createMock('Drupal\Core\Routing\RouteMatchInterface');
 
     // Expected result set.
     $expected = [

@@ -117,7 +117,7 @@ class FilterUninstallValidatorTest extends UnitTestCase {
         ['test_filter_plugin4', $filter_plugin_enabled],
       ]);
 
-    $filter_format1 = $this->getMock('Drupal\filter\FilterFormatInterface');
+    $filter_format1 = $this->createMock('Drupal\filter\FilterFormatInterface');
     $filter_format1->expects($this->once())
       ->method('filters')
       ->willReturn($filter_plugin_collection1);
@@ -142,7 +142,7 @@ class FilterUninstallValidatorTest extends UnitTestCase {
       ->with('test_filter_plugin4')
       ->willReturn($filter_plugin_enabled);
 
-    $filter_format2 = $this->getMock('Drupal\filter\FilterFormatInterface');
+    $filter_format2 = $this->createMock('Drupal\filter\FilterFormatInterface');
     $filter_format2->expects($this->once())
       ->method('filters')
       ->willReturn($filter_plugin_collection2);

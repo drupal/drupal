@@ -36,7 +36,7 @@ class BaseFieldDefinitionTest extends UnitTestCase {
    */
   protected function setUp() {
     // Mock the field type manager and place it in the container.
-    $field_type_manager = $this->getMock('Drupal\Core\Field\FieldTypePluginManagerInterface');
+    $field_type_manager = $this->createMock('Drupal\Core\Field\FieldTypePluginManagerInterface');
 
     $this->fieldType = $this->randomMachineName();
     $this->fieldTypeDefinition = [

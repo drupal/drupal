@@ -57,8 +57,8 @@ class BlockPageVariantTest extends UnitTestCase {
       ->willReturn(TRUE);
     \Drupal::setContainer($container);
 
-    $this->blockRepository = $this->getMock('Drupal\block\BlockRepositoryInterface');
-    $this->blockViewBuilder = $this->getMock('Drupal\Core\Entity\EntityViewBuilderInterface');
+    $this->blockRepository = $this->createMock('Drupal\block\BlockRepositoryInterface');
+    $this->blockViewBuilder = $this->createMock('Drupal\Core\Entity\EntityViewBuilderInterface');
 
     return $this->getMockBuilder('Drupal\block\Plugin\DisplayVariant\BlockPageVariant')
       ->setConstructorArgs([$configuration, 'test', $definition, $this->blockRepository, $this->blockViewBuilder, ['config:block_list']])
@@ -206,12 +206,12 @@ class BlockPageVariantTest extends UnitTestCase {
     $display_variant->setMainContent(['#markup' => 'Hello kittens!']);
 
     $blocks = ['top' => [], 'center' => [], 'bottom' => []];
-    $block_plugin = $this->getMock('Drupal\Core\Block\BlockPluginInterface');
-    $main_content_block_plugin = $this->getMock('Drupal\Core\Block\MainContentBlockPluginInterface');
-    $messages_block_plugin = $this->getMock('Drupal\Core\Block\MessagesBlockPluginInterface');
-    $title_block_plugin = $this->getMock('Drupal\Core\Block\TitleBlockPluginInterface');
+    $block_plugin = $this->createMock('Drupal\Core\Block\BlockPluginInterface');
+    $main_content_block_plugin = $this->createMock('Drupal\Core\Block\MainContentBlockPluginInterface');
+    $messages_block_plugin = $this->createMock('Drupal\Core\Block\MessagesBlockPluginInterface');
+    $title_block_plugin = $this->createMock('Drupal\Core\Block\TitleBlockPluginInterface');
     foreach ($blocks_config as $block_id => $block_config) {
-      $block = $this->getMock('Drupal\block\BlockInterface');
+      $block = $this->createMock('Drupal\block\BlockInterface');
       $block->expects($this->atLeastOnce())
         ->method('getPlugin')
         ->willReturn($block_config[1] ? $main_content_block_plugin : ($block_config[2] ? $messages_block_plugin : ($block_config[3] ? $title_block_plugin : $block_plugin)));

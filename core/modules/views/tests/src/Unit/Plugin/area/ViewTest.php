@@ -30,7 +30,7 @@ class ViewTest extends UnitTestCase {
    */
   protected function setUp() {
     parent::setUp();
-    $this->entityStorage = $this->getMock('Drupal\Core\Entity\EntityStorageInterface');
+    $this->entityStorage = $this->createMock('Drupal\Core\Entity\EntityStorageInterface');
     $this->viewHandler = new ViewAreaPlugin([], 'view', [], $this->entityStorage);
     $this->viewHandler->view = $this->getMockBuilder('Drupal\views\ViewExecutable')
       ->disableOriginalConstructor()
@@ -43,11 +43,11 @@ class ViewTest extends UnitTestCase {
   public function testCalculateDependencies() {
     /* @var $view_this \Drupal\views\Entity\View */
     /* @var $view_other \Drupal\views\Entity\View */
-    $view_this = $this->getMock('Drupal\views\ViewEntityInterface');
+    $view_this = $this->createMock('Drupal\views\ViewEntityInterface');
     $view_this->expects($this->any())->method('getConfigDependencyKey')->willReturn('config');
     $view_this->expects($this->any())->method('getConfigDependencyName')->willReturn('view.this');
     $view_this->expects($this->any())->method('id')->willReturn('this');
-    $view_other = $this->getMock('Drupal\views\ViewEntityInterface');
+    $view_other = $this->createMock('Drupal\views\ViewEntityInterface');
     $view_other->expects($this->any())->method('getConfigDependencyKey')->willReturn('config');
     $view_other->expects($this->any())->method('getConfigDependencyName')->willReturn('view.other');
     $this->entityStorage->expects($this->any())

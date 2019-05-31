@@ -20,10 +20,10 @@ class FieldSettingsTest extends UnitTestCase {
    * @dataProvider getSettingsProvider
    */
   public function testGetSettings($field_type, $field_settings, $allowed_values) {
-    $migration = $this->getMock(MigrationInterface::class);
+    $migration = $this->createMock(MigrationInterface::class);
     $plugin = new FieldSettings([], 'd6_field_settings', [], $migration);
 
-    $executable = $this->getMock(MigrateExecutableInterface::class);
+    $executable = $this->createMock(MigrateExecutableInterface::class);
     $row = $this->getMockBuilder(Row::class)
       ->disableOriginalConstructor()
       ->getMock();

@@ -40,7 +40,7 @@ class LoggerChannelTest extends UnitTestCase {
   public function testLog(callable $expected, Request $request = NULL, AccountInterface $current_user = NULL) {
     $channel = new LoggerChannel('test');
     $message = $this->randomMachineName();
-    $logger = $this->getMock('Psr\Log\LoggerInterface');
+    $logger = $this->createMock('Psr\Log\LoggerInterface');
     $logger->expects($this->once())
       ->method('log')
       ->with($this->anything(), $message, $this->callback($expected));
@@ -63,7 +63,7 @@ class LoggerChannelTest extends UnitTestCase {
    */
   public function testLogRecursionProtection() {
     $channel = new LoggerChannel('test');
-    $logger = $this->getMock('Psr\Log\LoggerInterface');
+    $logger = $this->createMock('Psr\Log\LoggerInterface');
     $logger->expects($this->exactly(LoggerChannel::MAX_CALL_DEPTH))
       ->method('log');
     $channel->addLogger($logger);
@@ -81,7 +81,7 @@ class LoggerChannelTest extends UnitTestCase {
     $channel = new LoggerChannel($this->randomMachineName());
     $index_order = '';
     for ($i = 0; $i < 4; $i++) {
-      $logger = $this->getMock('Psr\Log\LoggerInterface');
+      $logger = $this->createMock('Psr\Log\LoggerInterface');
       $logger->expects($this->once())
         ->method('log')
         ->will($this->returnCallback(function () use ($i, &$index_order) {
@@ -101,16 +101,18 @@ class LoggerChannelTest extends UnitTestCase {
    * Data provider for self::testLog().
    */
   public function providerTestLog() {
-    $account_mock = $this->getMock('Drupal\Core\Session\AccountInterface');
+    $account_mock = $this->createMock('Drupal\Core\Session\AccountInterface');
     $account_mock->expects($this->any())
       ->method('id')
       ->will($this->returnValue(1));
 
-    $request_mock = $this->getMock('Symfony\Component\HttpFoundation\Request', ['getClientIp']);
+    $request_mock = $this->getMockBuilder('Symfony\Component\HttpFoundation\Request')
+      ->setMethods(['getClientIp'])
+      ->getMock();
     $request_mock->expects($this->any())
       ->method('getClientIp')
       ->will($this->returnValue('127.0.0.1'));
-    $request_mock->headers = $this->getMock('Symfony\Component\HttpFoundation\ParameterBag');
+    $request_mock->headers = $this->createMock('Symfony\Component\HttpFoundation\ParameterBag');
 
     // No request or account.
     $cases[] = [

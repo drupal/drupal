@@ -70,13 +70,13 @@ class BlockFormTest extends UnitTestCase {
   protected function setUp() {
     parent::setUp();
 
-    $this->conditionManager = $this->getMock('Drupal\Core\Executable\ExecutableManagerInterface');
-    $this->language = $this->getMock('Drupal\Core\Language\LanguageManagerInterface');
-    $this->contextRepository = $this->getMock('Drupal\Core\Plugin\Context\ContextRepositoryInterface');
+    $this->conditionManager = $this->createMock('Drupal\Core\Executable\ExecutableManagerInterface');
+    $this->language = $this->createMock('Drupal\Core\Language\LanguageManagerInterface');
+    $this->contextRepository = $this->createMock('Drupal\Core\Plugin\Context\ContextRepositoryInterface');
 
-    $this->entityTypeManager = $this->getMock('Drupal\Core\Entity\EntityTypeManagerInterface');
-    $this->storage = $this->getMock('Drupal\Core\Config\Entity\ConfigEntityStorageInterface');
-    $this->themeHandler = $this->getMock('Drupal\Core\Extension\ThemeHandlerInterface');
+    $this->entityTypeManager = $this->createMock('Drupal\Core\Entity\EntityTypeManagerInterface');
+    $this->storage = $this->createMock('Drupal\Core\Config\Entity\ConfigEntityStorageInterface');
+    $this->themeHandler = $this->createMock('Drupal\Core\Extension\ThemeHandlerInterface');
     $this->entityTypeManager->expects($this->any())
       ->method('getStorage')
       ->will($this->returnValue($this->storage));
@@ -123,7 +123,7 @@ class BlockFormTest extends UnitTestCase {
     $blocks['other_test_1'] = $this->getBlockMockWithMachineName('other_test');
     $blocks['other_test_2'] = $this->getBlockMockWithMachineName('other_test');
 
-    $query = $this->getMock('Drupal\Core\Entity\Query\QueryInterface');
+    $query = $this->createMock('Drupal\Core\Entity\Query\QueryInterface');
     $query->expects($this->exactly(5))
       ->method('condition')
       ->will($this->returnValue($query));

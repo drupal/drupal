@@ -36,7 +36,7 @@ class CssCollectionRendererUnitTest extends UnitTestCase {
   protected function setUp() {
     parent::setUp();
 
-    $this->state = $this->getMock('Drupal\Core\State\StateInterface');
+    $this->state = $this->createMock('Drupal\Core\State\StateInterface');
 
     $this->renderer = new CssCollectionRenderer($this->state);
     $this->fileCssGroup = [

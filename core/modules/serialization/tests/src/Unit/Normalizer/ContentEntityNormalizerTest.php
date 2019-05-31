@@ -52,8 +52,8 @@ class ContentEntityNormalizerTest extends UnitTestCase {
    * @covers ::supportsNormalization
    */
   public function testSupportsNormalization() {
-    $content_mock = $this->getMock('Drupal\Core\Entity\ContentEntityInterface');
-    $config_mock = $this->getMock('Drupal\Core\Entity\ConfigEntityInterface');
+    $content_mock = $this->createMock('Drupal\Core\Entity\ContentEntityInterface');
+    $config_mock = $this->createMock('Drupal\Core\Config\Entity\ConfigEntityInterface');
     $this->assertTrue($this->contentEntityNormalizer->supportsNormalization($content_mock));
     $this->assertFalse($this->contentEntityNormalizer->supportsNormalization($config_mock));
   }
@@ -92,7 +92,7 @@ class ContentEntityNormalizerTest extends UnitTestCase {
    * @covers ::normalize
    */
   public function testNormalizeWithAccountContext() {
-    $mock_account = $this->getMock('Drupal\Core\Session\AccountInterface');
+    $mock_account = $this->createMock('Drupal\Core\Session\AccountInterface');
 
     $context = [
       'account' => $mock_account,
@@ -152,7 +152,7 @@ class ContentEntityNormalizerTest extends UnitTestCase {
    */
   protected function createMockFieldListItem($access, $internal, AccountInterface $user_context = NULL) {
     $data_definition = $this->prophesize(DataDefinitionInterface::class);
-    $mock = $this->getMock('Drupal\Core\Field\FieldItemListInterface');
+    $mock = $this->createMock('Drupal\Core\Field\FieldItemListInterface');
     $mock->expects($this->once())
       ->method('getDataDefinition')
       ->will($this->returnValue($data_definition->reveal()));

@@ -83,11 +83,10 @@ class AggregatorPluginSettingsBaseTest extends UnitTestCase {
       'aggregator_allowed_html_tags' => '',
     ]);
 
-    $test_processor = $this->getMock(
-      'Drupal\aggregator_test\Plugin\aggregator\processor\TestProcessor',
-      ['buildConfigurationForm', 'validateConfigurationForm', 'submitConfigurationForm'],
-      [[], 'aggregator_test', ['description' => ''], $this->configFactory]
-    );
+    $test_processor = $this->getMockBuilder('Drupal\aggregator_test\Plugin\aggregator\processor\TestProcessor')
+      ->setMethods(['buildConfigurationForm', 'validateConfigurationForm', 'submitConfigurationForm'])
+      ->setConstructorArgs([[], 'aggregator_test', ['description' => ''], $this->configFactory])
+      ->getMock();
     $test_processor->expects($this->at(0))
       ->method('buildConfigurationForm')
       ->with($this->anything(), $form_state)

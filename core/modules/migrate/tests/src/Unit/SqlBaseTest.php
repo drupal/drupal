@@ -62,7 +62,7 @@ class SqlBaseTest extends UnitTestCase {
       ->willReturn($idmap_connection);
 
     // Setup a migration entity.
-    $migration = $this->getMock(MigrationInterface::class);
+    $migration = $this->createMock(MigrationInterface::class);
     $migration->expects($with_id_map ? $this->once() : $this->never())
       ->method('getIdMap')
       ->willReturn($id_map_is_sql ? $sql : NULL);

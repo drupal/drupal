@@ -59,8 +59,8 @@ class IteratorTest extends MigrateTestCase {
     $migration->expects($this->at(2))
       ->method('getProcessPlugins')
       ->will($this->returnValue($key_plugin));
-    $event_dispatcher = $this->getMock('Symfony\Component\EventDispatcher\EventDispatcherInterface');
-    $migrate_executable = new MigrateExecutable($migration, $this->getMock('Drupal\migrate\MigrateMessageInterface'), $event_dispatcher);
+    $event_dispatcher = $this->createMock('Symfony\Component\EventDispatcher\EventDispatcherInterface');
+    $migrate_executable = new MigrateExecutable($migration, $this->createMock('Drupal\migrate\MigrateMessageInterface'), $event_dispatcher);
 
     // The current value of the pipeline.
     $current_value = [

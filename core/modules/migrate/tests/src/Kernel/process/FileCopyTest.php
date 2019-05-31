@@ -211,7 +211,7 @@ class FileCopyTest extends FileTestBase {
    * Tests that remote URIs are delegated to the download plugin.
    */
   public function testDownloadRemoteUri() {
-    $download_plugin = $this->getMock(MigrateProcessInterface::class);
+    $download_plugin = $this->createMock(MigrateProcessInterface::class);
     $download_plugin->expects($this->once())->method('transform');
 
     $plugin = new FileCopy(
@@ -225,7 +225,7 @@ class FileCopyTest extends FileTestBase {
 
     $plugin->transform(
       ['http://drupal.org/favicon.ico', '/destination/path'],
-      $this->getMock(MigrateExecutableInterface::class),
+      $this->createMock(MigrateExecutableInterface::class),
       new Row([], []),
       $this->randomMachineName()
     );

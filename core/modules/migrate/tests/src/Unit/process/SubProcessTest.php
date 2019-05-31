@@ -53,8 +53,8 @@ class SubProcessTest extends MigrateTestCase {
     $migration->expects($this->at(2))
       ->method('getProcessPlugins')
       ->will($this->returnValue($key_plugin));
-    $event_dispatcher = $this->getMock(EventDispatcherInterface::class);
-    $migrate_executable = new MigrateExecutable($migration, $this->getMock(MigrateMessageInterface::class), $event_dispatcher);
+    $event_dispatcher = $this->createMock(EventDispatcherInterface::class);
+    $migrate_executable = new MigrateExecutable($migration, $this->createMock(MigrateMessageInterface::class), $event_dispatcher);
 
     // The current value of the pipeline.
     $current_value = [

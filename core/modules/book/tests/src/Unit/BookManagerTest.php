@@ -61,8 +61,8 @@ class BookManagerTest extends UnitTestCase {
     $this->entityTypeManager = $this->createMock(EntityTypeManagerInterface::class);
     $this->translation = $this->getStringTranslationStub();
     $this->configFactory = $this->getConfigFactoryStub([]);
-    $this->bookOutlineStorage = $this->getMock('Drupal\book\BookOutlineStorageInterface');
-    $this->renderer = $this->getMock('\Drupal\Core\Render\RendererInterface');
+    $this->bookOutlineStorage = $this->createMock('Drupal\book\BookOutlineStorageInterface');
+    $this->renderer = $this->createMock('\Drupal\Core\Render\RendererInterface');
     $this->bookManager = new BookManager($this->entityTypeManager, $this->translation, $this->configFactory, $this->bookOutlineStorage, $this->renderer);
   }
 

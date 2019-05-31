@@ -62,7 +62,7 @@ class ContextDefinitionTest extends UnitTestCase {
     if ($is_multiple) {
       $create_definition_method = 'createListDataDefinition';
     }
-    $mock_data_manager = $this->getMock(TypedDataManagerInterface::class);
+    $mock_data_manager = $this->createMock(TypedDataManagerInterface::class);
     // Our mocked data manager will return our mocked data definition for a
     // valid data type.
     $mock_data_manager->expects($this->once())
@@ -123,7 +123,7 @@ class ContextDefinitionTest extends UnitTestCase {
     if ($is_multiple) {
       $create_definition_method = 'createListDataDefinition';
     }
-    $mock_data_manager = $this->getMock(TypedDataManagerInterface::class);
+    $mock_data_manager = $this->createMock(TypedDataManagerInterface::class);
     // Our mocked data manager will return NULL for a non-valid data type. This
     // will eventually cause getDataDefinition() to throw an exception.
     $mock_data_manager->expects($this->once())

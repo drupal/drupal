@@ -31,11 +31,11 @@ class MigrationTest extends UnitTestCase {
   public function testRequirementsForSourcePlugin() {
     $migration = new TestMigration();
 
-    $source_plugin = $this->getMock('Drupal\Tests\migrate\Unit\RequirementsAwareSourceInterface');
+    $source_plugin = $this->createMock('Drupal\Tests\migrate\Unit\RequirementsAwareSourceInterface');
     $source_plugin->expects($this->once())
       ->method('checkRequirements')
       ->willThrowException(new RequirementsException('Missing source requirement', ['key' => 'value']));
-    $destination_plugin = $this->getMock('Drupal\Tests\migrate\Unit\RequirementsAwareDestinationInterface');
+    $destination_plugin = $this->createMock('Drupal\Tests\migrate\Unit\RequirementsAwareDestinationInterface');
 
     $migration->setSourcePlugin($source_plugin);
     $migration->setDestinationPlugin($destination_plugin);
@@ -52,8 +52,8 @@ class MigrationTest extends UnitTestCase {
   public function testRequirementsForDestinationPlugin() {
     $migration = new TestMigration();
 
-    $source_plugin = $this->getMock('Drupal\migrate\Plugin\MigrateSourceInterface');
-    $destination_plugin = $this->getMock('Drupal\Tests\migrate\Unit\RequirementsAwareDestinationInterface');
+    $source_plugin = $this->createMock('Drupal\migrate\Plugin\MigrateSourceInterface');
+    $destination_plugin = $this->createMock('Drupal\Tests\migrate\Unit\RequirementsAwareDestinationInterface');
     $destination_plugin->expects($this->once())
       ->method('checkRequirements')
       ->willThrowException(new RequirementsException('Missing destination requirement', ['key' => 'value']));
@@ -74,21 +74,21 @@ class MigrationTest extends UnitTestCase {
     $migration = new TestMigration();
 
     // Setup source and destination plugins without any requirements.
-    $source_plugin = $this->getMock('Drupal\migrate\Plugin\MigrateSourceInterface');
-    $destination_plugin = $this->getMock('Drupal\migrate\Plugin\MigrateDestinationInterface');
+    $source_plugin = $this->createMock('Drupal\migrate\Plugin\MigrateSourceInterface');
+    $destination_plugin = $this->createMock('Drupal\migrate\Plugin\MigrateDestinationInterface');
     $migration->setSourcePlugin($source_plugin);
     $migration->setDestinationPlugin($destination_plugin);
 
-    $plugin_manager = $this->getMock('Drupal\migrate\Plugin\MigrationPluginManagerInterface');
+    $plugin_manager = $this->createMock('Drupal\migrate\Plugin\MigrationPluginManagerInterface');
     $migration->setMigrationPluginManager($plugin_manager);
 
     // We setup the requirements that test_a doesn't exist and test_c is not
     // completed yet.
     $migration->setRequirements(['test_a', 'test_b', 'test_c', 'test_d']);
 
-    $migration_b = $this->getMock(MigrationInterface::class);
-    $migration_c = $this->getMock(MigrationInterface::class);
-    $migration_d = $this->getMock(MigrationInterface::class);
+    $migration_b = $this->createMock(MigrationInterface::class);
+    $migration_c = $this->createMock(MigrationInterface::class);
+    $migration_d = $this->createMock(MigrationInterface::class);
 
     $migration_b->expects($this->once())
       ->method('allRowsProcessed')

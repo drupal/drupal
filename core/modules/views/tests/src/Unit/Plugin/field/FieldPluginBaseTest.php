@@ -140,22 +140,22 @@ class FieldPluginBaseTest extends UnitTestCase {
       ->disableOriginalConstructor()
       ->getMock();
 
-    $route_provider = $this->getMock('Drupal\Core\Routing\RouteProviderInterface');
+    $route_provider = $this->createMock('Drupal\Core\Routing\RouteProviderInterface');
     $route_provider->expects($this->any())
       ->method('getRouteByName')
       ->with('test_route')
       ->willReturn(new Route('/test-path'));
 
-    $this->urlGenerator = $this->getMock('Drupal\Core\Routing\UrlGeneratorInterface');
-    $this->pathValidator = $this->getMock('Drupal\Core\Path\PathValidatorInterface');
+    $this->urlGenerator = $this->createMock('Drupal\Core\Routing\UrlGeneratorInterface');
+    $this->pathValidator = $this->createMock('Drupal\Core\Path\PathValidatorInterface');
 
     $this->requestStack = new RequestStack();
     $this->requestStack->push(new Request());
 
-    $this->unroutedUrlAssembler = $this->getMock('Drupal\Core\Utility\UnroutedUrlAssemblerInterface');
-    $this->linkGenerator = $this->getMock('Drupal\Core\Utility\LinkGeneratorInterface');
+    $this->unroutedUrlAssembler = $this->createMock('Drupal\Core\Utility\UnroutedUrlAssemblerInterface');
+    $this->linkGenerator = $this->createMock('Drupal\Core\Utility\LinkGeneratorInterface');
 
-    $this->renderer = $this->getMock('Drupal\Core\Render\RendererInterface');
+    $this->renderer = $this->createMock('Drupal\Core\Render\RendererInterface');
 
     $container_builder = new ContainerBuilder();
     $container_builder->set('url_generator', $this->urlGenerator);
@@ -170,12 +170,12 @@ class FieldPluginBaseTest extends UnitTestCase {
    * Sets up the unrouted url assembler and the link generator.
    */
   protected function setUpUrlIntegrationServices() {
-    $this->pathProcessor = $this->getMock('Drupal\Core\PathProcessor\OutboundPathProcessorInterface');
+    $this->pathProcessor = $this->createMock('Drupal\Core\PathProcessor\OutboundPathProcessorInterface');
     $this->unroutedUrlAssembler = new UnroutedUrlAssembler($this->requestStack, $this->pathProcessor);
 
     \Drupal::getContainer()->set('unrouted_url_assembler', $this->unroutedUrlAssembler);
 
-    $this->linkGenerator = new LinkGenerator($this->urlGenerator, $this->getMock('Drupal\Core\Extension\ModuleHandlerInterface'), $this->renderer);
+    $this->linkGenerator = new LinkGenerator($this->urlGenerator, $this->createMock('Drupal\Core\Extension\ModuleHandlerInterface'), $this->renderer);
     $this->renderer
       ->method('render')
       ->willReturnCallback(
@@ -365,7 +365,7 @@ class FieldPluginBaseTest extends UnitTestCase {
     // executed for paths which aren't routed.
 
     // Entity flag.
-    $entity = $this->getMock('Drupal\Core\Entity\EntityInterface');
+    $entity = $this->createMock('Drupal\Core\Entity\EntityInterface');
     $data[] = ['test-path', ['entity' => $entity], '<a href="/test-path">value</a>'];
     // entity_type flag.
     $entity_type_id = 'node';
@@ -499,7 +499,7 @@ class FieldPluginBaseTest extends UnitTestCase {
     $data[] = [$url, ['language' => $language], $url_with_language, '/fr/test-path', clone $url_with_language, '<a href="/fr/test-path" hreflang="fr">value</a>'];
 
     // Entity flag.
-    $entity = $this->getMock('Drupal\Core\Entity\EntityInterface');
+    $entity = $this->createMock('Drupal\Core\Entity\EntityInterface');
     $url = Url::fromRoute('test_route');
     $url_with_entity = Url::fromRoute('test_route');
     $options = ['entity' => $entity] + $this->defaultUrlOptions;
@@ -649,7 +649,10 @@ class FieldPluginBaseTest extends UnitTestCase {
    */
   protected function setupTestField(array $options = []) {
     /** @var \Drupal\Tests\views\Unit\Plugin\field\FieldPluginBaseTestField $field */
-    $field = $this->getMock('Drupal\Tests\views\Unit\Plugin\field\FieldPluginBaseTestField', ['l'], [$this->configuration, $this->pluginId, $this->pluginDefinition]);
+    $field = $this->getMockBuilder('Drupal\Tests\views\Unit\Plugin\field\FieldPluginBaseTestField')
+      ->setMethods(['l'])
+      ->setConstructorArgs([$this->configuration, $this->pluginId, $this->pluginDefinition])
+      ->getMock();
     $field->init($this->executable, $this->display, $options);
     $field->setLinkGenerator($this->linkGenerator);
 

@@ -72,9 +72,9 @@ class PrivateTempStoreTest extends UnitTestCase {
   protected function setUp() {
     parent::setUp();
 
-    $this->keyValue = $this->getMock('Drupal\Core\KeyValueStore\KeyValueStoreExpirableInterface');
-    $this->lock = $this->getMock('Drupal\Core\Lock\LockBackendInterface');
-    $this->currentUser = $this->getMock('Drupal\Core\Session\AccountProxyInterface');
+    $this->keyValue = $this->createMock('Drupal\Core\KeyValueStore\KeyValueStoreExpirableInterface');
+    $this->lock = $this->createMock('Drupal\Core\Lock\LockBackendInterface');
+    $this->currentUser = $this->createMock('Drupal\Core\Session\AccountProxyInterface');
     $this->currentUser->expects($this->any())
       ->method('id')
       ->willReturn(1);

@@ -32,11 +32,11 @@ class MenuLinkTreeTest extends UnitTestCase {
     parent::setUp();
 
     $this->menuLinkTree = new MenuLinkTree(
-      $this->getMock('\Drupal\Core\Menu\MenuTreeStorageInterface'),
-      $this->getMock('\Drupal\Core\Menu\MenuLinkManagerInterface'),
-      $this->getMock('\Drupal\Core\Routing\RouteProviderInterface'),
-      $this->getMock('\Drupal\Core\Menu\MenuActiveTrailInterface'),
-      $this->getMock('\Drupal\Core\Controller\ControllerResolverInterface')
+      $this->createMock('\Drupal\Core\Menu\MenuTreeStorageInterface'),
+      $this->createMock('\Drupal\Core\Menu\MenuLinkManagerInterface'),
+      $this->createMock('\Drupal\Core\Routing\RouteProviderInterface'),
+      $this->createMock('\Drupal\Core\Menu\MenuActiveTrailInterface'),
+      $this->createMock('\Drupal\Core\Controller\ControllerResolverInterface')
     );
 
     $cache_contexts_manager = $this->getMockBuilder('Drupal\Core\Cache\Context\CacheContextsManager')

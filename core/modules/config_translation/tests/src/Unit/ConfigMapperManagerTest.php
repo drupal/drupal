@@ -32,7 +32,7 @@ class ConfigMapperManagerTest extends UnitTestCase {
 
   protected function setUp() {
     $language = new Language(['id' => 'en']);
-    $language_manager = $this->getMock('Drupal\Core\Language\LanguageManagerInterface');
+    $language_manager = $this->createMock('Drupal\Core\Language\LanguageManagerInterface');
     $language_manager->expects($this->once())
       ->method('getCurrentLanguage')
       ->with(LanguageInterface::TYPE_INTERFACE)
@@ -41,11 +41,11 @@ class ConfigMapperManagerTest extends UnitTestCase {
     $this->typedConfigManager = $this->getMockBuilder('Drupal\Core\Config\TypedConfigManagerInterface')
       ->getMock();
 
-    $module_handler = $this->getMock('Drupal\Core\Extension\ModuleHandlerInterface');
-    $theme_handler = $this->getMock('Drupal\Core\Extension\ThemeHandlerInterface');
+    $module_handler = $this->createMock('Drupal\Core\Extension\ModuleHandlerInterface');
+    $theme_handler = $this->createMock('Drupal\Core\Extension\ThemeHandlerInterface');
 
     $this->configMapperManager = new ConfigMapperManager(
-      $this->getMock('Drupal\Core\Cache\CacheBackendInterface'),
+      $this->createMock('Drupal\Core\Cache\CacheBackendInterface'),
       $language_manager,
       $module_handler,
       $this->typedConfigManager,
@@ -148,7 +148,7 @@ class ConfigMapperManagerTest extends UnitTestCase {
    */
   protected function getElement(array $definition) {
     $data_definition = new DataDefinition($definition);
-    $element = $this->getMock('Drupal\Core\TypedData\TypedDataInterface');
+    $element = $this->createMock('Drupal\Core\TypedData\TypedDataInterface');
     $element->expects($this->any())
       ->method('getDataDefinition')
       ->will($this->returnValue($data_definition));

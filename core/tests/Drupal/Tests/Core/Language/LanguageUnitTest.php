@@ -59,7 +59,7 @@ class LanguageUnitTest extends UnitTestCase {
    */
   public function testIsDefault() {
     $language_default = $this->getMockBuilder('Drupal\Core\Language\LanguageDefault')->disableOriginalConstructor()->getMock();
-    $container = $this->getMock('Symfony\Component\DependencyInjection\ContainerInterface');
+    $container = $this->createMock('Symfony\Component\DependencyInjection\ContainerInterface');
     $container->expects($this->any())
       ->method('get')
       ->with('language.default')

@@ -18,7 +18,7 @@ class LoggerChannelFactoryTest extends UnitTestCase {
    */
   public function testGet() {
     $factory = new LoggerChannelFactory();
-    $factory->setContainer($this->getMock('Symfony\Component\DependencyInjection\ContainerInterface'));
+    $factory->setContainer($this->createMock('Symfony\Component\DependencyInjection\ContainerInterface'));
 
     // Ensure that when called with the same argument, always the same instance
     // will be returned.

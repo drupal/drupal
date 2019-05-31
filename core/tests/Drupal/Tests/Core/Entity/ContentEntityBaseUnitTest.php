@@ -134,7 +134,7 @@ class ContentEntityBaseUnitTest extends UnitTestCase {
     $this->entityTypeId = $this->randomMachineName();
     $this->bundle = $this->randomMachineName();
 
-    $this->entityType = $this->getMock('\Drupal\Core\Entity\EntityTypeInterface');
+    $this->entityType = $this->createMock('\Drupal\Core\Entity\EntityTypeInterface');
     $this->entityType->expects($this->any())
       ->method('getKeys')
       ->will($this->returnValue([
@@ -142,19 +142,19 @@ class ContentEntityBaseUnitTest extends UnitTestCase {
         'uuid' => 'uuid',
     ]));
 
-    $this->entityTypeManager = $this->getMock(EntityTypeManagerInterface::class);
+    $this->entityTypeManager = $this->createMock(EntityTypeManagerInterface::class);
     $this->entityTypeManager->expects($this->any())
       ->method('getDefinition')
       ->with($this->entityTypeId)
       ->will($this->returnValue($this->entityType));
 
-    $this->entityFieldManager = $this->getMock(EntityFieldManagerInterface::class);
+    $this->entityFieldManager = $this->createMock(EntityFieldManagerInterface::class);
 
-    $this->entityTypeBundleInfo = $this->getMock(EntityTypeBundleInfoInterface::class);
+    $this->entityTypeBundleInfo = $this->createMock(EntityTypeBundleInfoInterface::class);
 
-    $this->uuid = $this->getMock('\Drupal\Component\Uuid\UuidInterface');
+    $this->uuid = $this->createMock('\Drupal\Component\Uuid\UuidInterface');
 
-    $this->typedDataManager = $this->getMock(TypedDataManagerInterface::class);
+    $this->typedDataManager = $this->createMock(TypedDataManagerInterface::class);
     $this->typedDataManager->expects($this->any())
       ->method('getDefinition')
       ->with('entity')
@@ -162,7 +162,7 @@ class ContentEntityBaseUnitTest extends UnitTestCase {
 
     $english = new Language(['id' => 'en']);
     $not_specified = new Language(['id' => LanguageInterface::LANGCODE_NOT_SPECIFIED, 'locked' => TRUE]);
-    $this->languageManager = $this->getMock('\Drupal\Core\Language\LanguageManagerInterface');
+    $this->languageManager = $this->createMock('\Drupal\Core\Language\LanguageManagerInterface');
     $this->languageManager->expects($this->any())
       ->method('getLanguages')
       ->will($this->returnValue(['en' => $english, LanguageInterface::LANGCODE_NOT_SPECIFIED => $not_specified]));
@@ -186,7 +186,7 @@ class ContentEntityBaseUnitTest extends UnitTestCase {
       ->will($this->returnValue([]));
     $this->fieldTypePluginManager->expects($this->any())
       ->method('createFieldItemList')
-      ->will($this->returnValue($this->getMock('Drupal\Core\Field\FieldItemListInterface')));
+      ->will($this->returnValue($this->createMock('Drupal\Core\Field\FieldItemListInterface')));
 
     $container = new ContainerBuilder();
     $container->set('entity_field.manager', $this->entityFieldManager);
@@ -342,7 +342,7 @@ class ContentEntityBaseUnitTest extends UnitTestCase {
    */
   public function testPreSaveRevision() {
     // This method is internal, so check for errors on calling it only.
-    $storage = $this->getMock('\Drupal\Core\Entity\EntityStorageInterface');
+    $storage = $this->createMock('\Drupal\Core\Entity\EntityStorageInterface');
     $record = new \stdClass();
     // Our mocked entity->preSaveRevision() returns NULL, so assert that.
     $this->assertNull($this->entity->preSaveRevision($storage, $record));
@@ -352,13 +352,13 @@ class ContentEntityBaseUnitTest extends UnitTestCase {
    * @covers ::validate
    */
   public function testValidate() {
-    $validator = $this->getMock(ValidatorInterface::class);
+    $validator = $this->createMock(ValidatorInterface::class);
     /** @var \Symfony\Component\Validator\ConstraintViolationList|\PHPUnit_Framework_MockObject_MockObject $empty_violation_list */
     $empty_violation_list = $this->getMockBuilder('\Symfony\Component\Validator\ConstraintViolationList')
       ->setMethods(NULL)
       ->getMock();
     $non_empty_violation_list = clone $empty_violation_list;
-    $violation = $this->getMock('\Symfony\Component\Validator\ConstraintViolationInterface');
+    $violation = $this->createMock('\Symfony\Component\Validator\ConstraintViolationInterface');
     $non_empty_violation_list->add($violation);
     $validator->expects($this->at(0))
       ->method('validate')
@@ -385,7 +385,7 @@ class ContentEntityBaseUnitTest extends UnitTestCase {
    * @covers ::preSave
    */
   public function testRequiredValidation() {
-    $validator = $this->getMock(ValidatorInterface::class);
+    $validator = $this->createMock(ValidatorInterface::class);
     /** @var \Symfony\Component\Validator\ConstraintViolationList|\PHPUnit_Framework_MockObject_MockObject $empty_violation_list */
     $empty_violation_list = $this->getMockBuilder('\Symfony\Component\Validator\ConstraintViolationList')
       ->setMethods(NULL)
@@ -399,7 +399,7 @@ class ContentEntityBaseUnitTest extends UnitTestCase {
       ->will($this->returnValue($validator));
 
     /** @var \Drupal\Core\Entity\EntityStorageInterface|\PHPUnit_Framework_MockObject_MockObject $storage */
-    $storage = $this->getMock('\Drupal\Core\Entity\EntityStorageInterface');
+    $storage = $this->createMock('\Drupal\Core\Entity\EntityStorageInterface');
     $storage->expects($this->any())
       ->method('save')
       ->willReturnCallback(function (ContentEntityInterface $entity) use ($storage) {
@@ -442,7 +442,7 @@ class ContentEntityBaseUnitTest extends UnitTestCase {
    * @covers ::access
    */
   public function testAccess() {
-    $access = $this->getMock('\Drupal\Core\Entity\EntityAccessControlHandlerInterface');
+    $access = $this->createMock('\Drupal\Core\Entity\EntityAccessControlHandlerInterface');
     $operation = $this->randomMachineName();
     $access->expects($this->at(0))
       ->method('access')
@@ -477,7 +477,7 @@ class ContentEntityBaseUnitTest extends UnitTestCase {
     // We check that it is called, and that the entity's label is the callback's
     // return value.
     $callback_label = $this->randomMachineName();
-    $callback_container = $this->getMock(get_class());
+    $callback_container = $this->createMock(get_class());
     $callback_container->expects($this->once())
       ->method(__FUNCTION__)
       ->will($this->returnValue($callback_label));

@@ -33,7 +33,7 @@ class FilterIdTest extends KernelTestBase {
    */
   protected function setUp() {
     parent::setUp();
-    $this->executable = $this->getMock(MigrateExecutableInterface::class);
+    $this->executable = $this->createMock(MigrateExecutableInterface::class);
   }
 
   /**

@@ -33,7 +33,7 @@ class RawTest extends UnitTestCase {
     $view->expects($this->any())
       ->method('getRequest')
       ->will($this->returnValue($request));
-    $alias_manager = $this->getMock('Drupal\Core\Path\AliasManagerInterface');
+    $alias_manager = $this->createMock('Drupal\Core\Path\AliasManagerInterface');
     $alias_manager->expects($this->never())
       ->method('getAliasByPath');
 
@@ -71,7 +71,7 @@ class RawTest extends UnitTestCase {
     $this->assertEquals(NULL, $raw->getArgument());
 
     // Setup an alias manager with a path alias.
-    $alias_manager = $this->getMock('Drupal\Core\Path\AliasManagerInterface');
+    $alias_manager = $this->createMock('Drupal\Core\Path\AliasManagerInterface');
     $alias_manager->expects($this->any())
       ->method('getAliasByPath')
       ->with($this->equalTo('/test/example'))

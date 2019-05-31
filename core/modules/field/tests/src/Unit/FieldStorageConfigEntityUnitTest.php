@@ -54,9 +54,9 @@ class FieldStorageConfigEntityUnitTest extends UnitTestCase {
    * {@inheritdoc}
    */
   protected function setUp() {
-    $this->entityTypeManager = $this->getMock(EntityTypeManagerInterface::class);
-    $this->uuid = $this->getMock('\Drupal\Component\Uuid\UuidInterface');
-    $this->fieldTypeManager = $this->getMock(FieldTypePluginManagerInterface::class);
+    $this->entityTypeManager = $this->createMock(EntityTypeManagerInterface::class);
+    $this->uuid = $this->createMock('\Drupal\Component\Uuid\UuidInterface');
+    $this->fieldTypeManager = $this->createMock(FieldTypePluginManagerInterface::class);
 
     $container = new ContainerBuilder();
     $container->set('entity_type.manager', $this->entityTypeManager);
@@ -70,14 +70,14 @@ class FieldStorageConfigEntityUnitTest extends UnitTestCase {
    */
   public function testCalculateDependencies() {
     // Create a mock entity type for FieldStorageConfig.
-    $fieldStorageConfigentityType = $this->getMock('\Drupal\Core\Config\Entity\ConfigEntityTypeInterface');
+    $fieldStorageConfigentityType = $this->createMock('\Drupal\Core\Config\Entity\ConfigEntityTypeInterface');
     $fieldStorageConfigentityType->expects($this->any())
       ->method('getProvider')
       ->will($this->returnValue('field'));
 
     // Create a mock entity type to attach the field to.
     $attached_entity_type_id = $this->randomMachineName();
-    $attached_entity_type = $this->getMock('\Drupal\Core\Entity\EntityTypeInterface');
+    $attached_entity_type = $this->createMock('\Drupal\Core\Entity\EntityTypeInterface');
     $attached_entity_type->expects($this->any())
       ->method('getProvider')
       ->will($this->returnValue('entity_provider_module'));

@@ -36,7 +36,7 @@ class ConfigTest extends UnitTestCase {
     $config->expects($this->once())
       ->method('getName')
       ->willReturn('d8_config');
-    $config_factory = $this->getMock('Drupal\Core\Config\ConfigFactoryInterface');
+    $config_factory = $this->createMock('Drupal\Core\Config\ConfigFactoryInterface');
     $config_factory->expects($this->once())
       ->method('getEditable')
       ->with('d8_config')
@@ -83,7 +83,7 @@ class ConfigTest extends UnitTestCase {
     $config->expects($this->any())
       ->method('getName')
       ->willReturn('d8_config');
-    $config_factory = $this->getMock('Drupal\Core\Config\ConfigFactoryInterface');
+    $config_factory = $this->createMock('Drupal\Core\Config\ConfigFactoryInterface');
     $config_factory->expects($this->once())
       ->method('getEditable')
       ->with('d8_config')

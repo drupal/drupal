@@ -44,7 +44,10 @@ class ViewUIObjectTest extends UnitTestCase {
       }
     }
 
-    $storage = $this->getMock('Drupal\views\Entity\View', $interface_methods, [[], 'view']);
+    $storage = $this->getMockBuilder('Drupal\views\Entity\View')
+      ->setMethods($interface_methods)
+      ->setConstructorArgs([[], 'view'])
+      ->getMock();
     $executable = $this->getMockBuilder('Drupal\views\ViewExecutable')
       ->disableOriginalConstructor()
       ->setConstructorArgs([$storage])
@@ -71,13 +74,15 @@ class ViewUIObjectTest extends UnitTestCase {
    * Tests the isLocked method.
    */
   public function testIsLocked() {
-    $storage = $this->getMock('Drupal\views\Entity\View', [], [[], 'view']);
+    $storage = $this->getMockBuilder('Drupal\views\Entity\View')
+      ->setConstructorArgs([[], 'view'])
+      ->getMock();
     $executable = $this->getMockBuilder('Drupal\views\ViewExecutable')
       ->disableOriginalConstructor()
       ->setConstructorArgs([$storage])
       ->getMock();
     $storage->set('executable', $executable);
-    $account = $this->getMock('Drupal\Core\Session\AccountInterface');
+    $account = $this->createMock('Drupal\Core\Session\AccountInterface');
     $account->expects($this->exactly(2))
       ->method('id')
       ->will($this->returnValue(1));
@@ -112,13 +117,15 @@ class ViewUIObjectTest extends UnitTestCase {
    * @group legacy
    */
   public function testIsLockedLegacy() {
-    $storage = $this->getMock('Drupal\views\Entity\View', [], [[], 'view']);
+    $storage = $this->getMockBuilder('Drupal\views\Entity\View')
+      ->setConstructorArgs([[], 'view'])
+      ->getMock();
     $executable = $this->getMockBuilder('Drupal\views\ViewExecutable')
       ->disableOriginalConstructor()
       ->setConstructorArgs([$storage])
       ->getMock();
     $storage->set('executable', $executable);
-    $account = $this->getMock('Drupal\Core\Session\AccountInterface');
+    $account = $this->createMock('Drupal\Core\Session\AccountInterface');
     $account->expects($this->exactly(2))
       ->method('id')
       ->will($this->returnValue(1));

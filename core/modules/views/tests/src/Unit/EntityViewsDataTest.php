@@ -97,10 +97,10 @@ class EntityViewsDataTest extends UnitTestCase {
     $this->entityTypeManager = $this->createMock(EntityTypeManagerInterface::class);
     $this->entityFieldManager = $this->createMock(EntityFieldManagerInterface::class);
 
-    $typed_data_manager = $this->getMock(TypedDataManagerInterface::class);
+    $typed_data_manager = $this->createMock(TypedDataManagerInterface::class);
     $typed_data_manager->expects($this->any())
       ->method('createDataDefinition')
-      ->willReturn($this->getMock('Drupal\Core\TypedData\DataDefinitionInterface'));
+      ->willReturn($this->createMock('Drupal\Core\TypedData\DataDefinitionInterface'));
 
     $typed_data_manager->expects($this->any())
       ->method('getDefinition')
@@ -126,7 +126,7 @@ class EntityViewsDataTest extends UnitTestCase {
 
     $this->translationManager = $this->getStringTranslationStub();
     $this->baseEntityType->setStringTranslation($this->translationManager);
-    $this->moduleHandler = $this->getMock('Drupal\Core\Extension\ModuleHandlerInterface');
+    $this->moduleHandler = $this->createMock('Drupal\Core\Extension\ModuleHandlerInterface');
 
     $this->viewsData = new TestEntityViewsData($this->baseEntityType, $this->entityStorage, $this->entityTypeManager, $this->moduleHandler, $this->translationManager, $this->entityFieldManager);
 
@@ -386,35 +386,35 @@ class EntityViewsDataTest extends UnitTestCase {
    * Helper method to mock all store definitions.
    */
   protected function setupFieldStorageDefinition() {
-    $id_field_storage_definition = $this->getMock('Drupal\Core\Field\FieldStorageDefinitionInterface');
+    $id_field_storage_definition = $this->createMock('Drupal\Core\Field\FieldStorageDefinitionInterface');
     $id_field_storage_definition->expects($this->any())
       ->method('getSchema')
       ->willReturn(IntegerItem::schema($id_field_storage_definition));
-    $uuid_field_storage_definition = $this->getMock('Drupal\Core\Field\FieldStorageDefinitionInterface');
+    $uuid_field_storage_definition = $this->createMock('Drupal\Core\Field\FieldStorageDefinitionInterface');
     $uuid_field_storage_definition->expects($this->any())
       ->method('getSchema')
       ->willReturn(UuidItem::schema($uuid_field_storage_definition));
-    $type_field_storage_definition = $this->getMock('Drupal\Core\Field\FieldStorageDefinitionInterface');
+    $type_field_storage_definition = $this->createMock('Drupal\Core\Field\FieldStorageDefinitionInterface');
     $type_field_storage_definition->expects($this->any())
       ->method('getSchema')
       ->willReturn(StringItem::schema($type_field_storage_definition));
-    $langcode_field_storage_definition = $this->getMock('Drupal\Core\Field\FieldStorageDefinitionInterface');
+    $langcode_field_storage_definition = $this->createMock('Drupal\Core\Field\FieldStorageDefinitionInterface');
     $langcode_field_storage_definition->expects($this->any())
       ->method('getSchema')
       ->willReturn(LanguageItem::schema($langcode_field_storage_definition));
-    $name_field_storage_definition = $this->getMock('Drupal\Core\Field\FieldStorageDefinitionInterface');
+    $name_field_storage_definition = $this->createMock('Drupal\Core\Field\FieldStorageDefinitionInterface');
     $name_field_storage_definition->expects($this->any())
       ->method('getSchema')
       ->willReturn(StringItem::schema($name_field_storage_definition));
-    $description_field_storage_definition = $this->getMock('Drupal\Core\Field\FieldStorageDefinitionInterface');
+    $description_field_storage_definition = $this->createMock('Drupal\Core\Field\FieldStorageDefinitionInterface');
     $description_field_storage_definition->expects($this->any())
       ->method('getSchema')
       ->willReturn(TextLongItem::schema($description_field_storage_definition));
-    $homepage_field_storage_definition = $this->getMock('Drupal\Core\Field\FieldStorageDefinitionInterface');
+    $homepage_field_storage_definition = $this->createMock('Drupal\Core\Field\FieldStorageDefinitionInterface');
     $homepage_field_storage_definition->expects($this->any())
       ->method('getSchema')
       ->willReturn(UriItem::schema($homepage_field_storage_definition));
-    $string_field_storage_definition = $this->getMock('Drupal\Core\Field\FieldStorageDefinitionInterface');
+    $string_field_storage_definition = $this->createMock('Drupal\Core\Field\FieldStorageDefinitionInterface');
     $string_field_storage_definition->expects($this->any())
       ->method('getSchema')
       ->willReturn(StringItem::schema($string_field_storage_definition));
@@ -432,7 +432,7 @@ class EntityViewsDataTest extends UnitTestCase {
           ['user', TRUE, static::userEntityInfo()],
         ]
       );
-    $user_id_field_storage_definition = $this->getMock('Drupal\Core\Field\FieldStorageDefinitionInterface');
+    $user_id_field_storage_definition = $this->createMock('Drupal\Core\Field\FieldStorageDefinitionInterface');
     $user_id_field_storage_definition->expects($this->any())
       ->method('getSetting')
       ->with('target_type')
@@ -444,7 +444,7 @@ class EntityViewsDataTest extends UnitTestCase {
       ->method('getSchema')
       ->willReturn(EntityReferenceItem::schema($user_id_field_storage_definition));
 
-    $revision_id_field_storage_definition = $this->getMock('Drupal\Core\Field\FieldStorageDefinitionInterface');
+    $revision_id_field_storage_definition = $this->createMock('Drupal\Core\Field\FieldStorageDefinitionInterface');
     $revision_id_field_storage_definition->expects($this->any())
       ->method('getSchema')
       ->willReturn(IntegerItem::schema($revision_id_field_storage_definition));

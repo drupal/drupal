@@ -25,11 +25,11 @@ class LanguageNegotiationUrlTest extends UnitTestCase {
   protected function setUp() {
 
     // Set up some languages to be used by the language-based path processor.
-    $language_de = $this->getMock('\Drupal\Core\Language\LanguageInterface');
+    $language_de = $this->createMock('\Drupal\Core\Language\LanguageInterface');
     $language_de->expects($this->any())
       ->method('getId')
       ->will($this->returnValue('de'));
-    $language_en = $this->getMock('\Drupal\Core\Language\LanguageInterface');
+    $language_en = $this->createMock('\Drupal\Core\Language\LanguageInterface');
     $language_en->expects($this->any())
       ->method('getId')
       ->will($this->returnValue('en'));

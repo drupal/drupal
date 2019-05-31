@@ -15,6 +15,8 @@ class PhpunitCompatibilityTraitTest extends UnitTestCase {
    *
    * @covers ::getMock
    * @dataProvider providerMockVersions
+   * @group legacy
+   * @expectedDeprecation \Drupal\Tests\PhpunitCompatibilityTrait::getMock() is deprecated in drupal:8.5.0 and is removed from drupal:9.0.0. Use \Drupal\Tests\PhpunitCompatibilityTrait::createMock() instead. See https://www.drupal.org/node/2907725
    */
   public function testGetMock($className, $expected) {
     $class = new $className();
@@ -33,16 +35,38 @@ class PhpunitCompatibilityTraitTest extends UnitTestCase {
   }
 
   /**
+   * Tests that createMock is available and calls the correct parent method.
+   *
+   * @covers ::createMock
+   * @dataProvider providerMockLegacyVersions
+   * @group legacy
+   * @expectedDeprecation \Drupal\Tests\PhpunitCompatibilityTrait::getMock() is deprecated in drupal:8.5.0 and is removed from drupal:9.0.0. Use \Drupal\Tests\PhpunitCompatibilityTrait::createMock() instead. See https://www.drupal.org/node/2907725
+   */
+  public function testLegacyCreateMock($className, $expected) {
+    $this->testCreateMock($className, $expected);
+  }
+
+  /**
    * Returns the class names and the string they return.
    *
    * @return array
    */
   public function providerMockVersions() {
     return [
-      [UnitTestCasePhpunit4TestClass::class, 'PHPUnit 4'],
-      [UnitTestCasePhpunit4TestClassExtends::class, 'PHPUnit 4'],
       [UnitTestCasePhpunit6TestClass::class, 'PHPUnit 6'],
       [UnitTestCasePhpunit6TestClassExtends::class, 'PHPUnit 6'],
+    ];
+  }
+
+  /**
+   * Returns the class names and the string they return.
+   *
+   * @return array
+   */
+  public function providerMockLegacyVersions() {
+    return [
+      [UnitTestCasePhpunit4TestClass::class, 'PHPUnit 4'],
+      [UnitTestCasePhpunit4TestClassExtends::class, 'PHPUnit 4'],
     ];
   }
 

@@ -52,8 +52,8 @@ class PathPluginBaseTest extends UnitTestCase {
   protected function setUp() {
     parent::setUp();
 
-    $this->routeProvider = $this->getMock('Drupal\Core\Routing\RouteProviderInterface');
-    $this->state = $this->getMock('\Drupal\Core\State\StateInterface');
+    $this->routeProvider = $this->createMock('Drupal\Core\Routing\RouteProviderInterface');
+    $this->state = $this->createMock('\Drupal\Core\State\StateInterface');
     $this->pathPlugin = $this->getMockBuilder('Drupal\views\Plugin\views\display\PathPluginBase')
       ->setConstructorArgs([[], 'path_base', [], $this->routeProvider, $this->state])
       ->setMethods(NULL)

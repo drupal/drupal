@@ -40,7 +40,7 @@ class CsrfAccessCheckTest extends UnitTestCase {
       ->disableOriginalConstructor()
       ->getMock();
 
-    $this->routeMatch = $this->getMock('Drupal\Core\Routing\RouteMatchInterface');
+    $this->routeMatch = $this->createMock('Drupal\Core\Routing\RouteMatchInterface');
 
     $this->accessCheck = new CsrfAccessCheck($this->csrfToken);
   }

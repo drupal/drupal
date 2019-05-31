@@ -57,7 +57,7 @@ class RouteSubscriberTest extends UnitTestCase {
       ->method('getStorage')
       ->with('view')
       ->will($this->returnValue($this->viewStorage));
-    $this->state = $this->getMock('\Drupal\Core\State\StateInterface');
+    $this->state = $this->createMock('\Drupal\Core\State\StateInterface');
     $this->routeSubscriber = new TestRouteSubscriber($this->entityTypeManager, $this->state);
   }
 
@@ -171,8 +171,8 @@ class RouteSubscriberTest extends UnitTestCase {
       ]));
 
     // Ensure that only the first two displays are actually called.
-    $display_1 = $this->getMock('Drupal\views\Plugin\views\display\DisplayRouterInterface');
-    $display_2 = $this->getMock('Drupal\views\Plugin\views\display\DisplayRouterInterface');
+    $display_1 = $this->createMock('Drupal\views\Plugin\views\display\DisplayRouterInterface');
+    $display_2 = $this->createMock('Drupal\views\Plugin\views\display\DisplayRouterInterface');
 
     $display_collection = $this->getMockBuilder('Drupal\views\DisplayPluginCollection')
       ->disableOriginalConstructor()

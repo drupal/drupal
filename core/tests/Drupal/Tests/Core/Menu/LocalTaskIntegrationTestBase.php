@@ -61,7 +61,7 @@ abstract class LocalTaskIntegrationTestBase extends UnitTestCase {
       ->setMethods(NULL)
       ->getMock();
 
-    $argumentResolver = $this->getMock('Symfony\Component\HttpKernel\Controller\ArgumentResolverInterface');
+    $argumentResolver = $this->createMock('Symfony\Component\HttpKernel\Controller\ArgumentResolverInterface');
     $property = new \ReflectionProperty('Drupal\Core\Menu\LocalTaskManager', 'argumentResolver');
     $property->setAccessible(TRUE);
     $property->setValue($manager, $argumentResolver);
@@ -72,12 +72,12 @@ abstract class LocalTaskIntegrationTestBase extends UnitTestCase {
     $property->setAccessible(TRUE);
     $property->setValue($manager, $request_stack);
 
-    $accessManager = $this->getMock('Drupal\Core\Access\AccessManagerInterface');
+    $accessManager = $this->createMock('Drupal\Core\Access\AccessManagerInterface');
     $property = new \ReflectionProperty('Drupal\Core\Menu\LocalTaskManager', 'accessManager');
     $property->setAccessible(TRUE);
     $property->setValue($manager, $accessManager);
 
-    $route_provider = $this->getMock('Drupal\Core\Routing\RouteProviderInterface');
+    $route_provider = $this->createMock('Drupal\Core\Routing\RouteProviderInterface');
     $property = new \ReflectionProperty('Drupal\Core\Menu\LocalTaskManager', 'routeProvider');
     $property->setAccessible(TRUE);
     $property->setValue($manager, $route_provider);
@@ -105,8 +105,8 @@ abstract class LocalTaskIntegrationTestBase extends UnitTestCase {
     $method->setAccessible(TRUE);
     $method->invoke($manager, 'local_tasks');
 
-    $plugin_stub = $this->getMock('Drupal\Core\Menu\LocalTaskInterface');
-    $factory = $this->getMock('Drupal\Component\Plugin\Factory\FactoryInterface');
+    $plugin_stub = $this->createMock('Drupal\Core\Menu\LocalTaskInterface');
+    $factory = $this->createMock('Drupal\Component\Plugin\Factory\FactoryInterface');
     $factory->expects($this->any())
       ->method('createInstance')
       ->will($this->returnValue($plugin_stub));
@@ -114,7 +114,7 @@ abstract class LocalTaskIntegrationTestBase extends UnitTestCase {
     $property->setAccessible(TRUE);
     $property->setValue($manager, $factory);
 
-    $cache_backend = $this->getMock('Drupal\Core\Cache\CacheBackendInterface');
+    $cache_backend = $this->createMock('Drupal\Core\Cache\CacheBackendInterface');
     $manager->setCacheBackend($cache_backend, 'local_task.en', ['local_task']);
 
     return $manager;

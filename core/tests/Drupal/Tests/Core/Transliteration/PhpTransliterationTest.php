@@ -37,7 +37,7 @@ class PhpTransliterationTest extends UnitTestCase {
 
     // Test each case both with a new instance of the transliteration class,
     // and with one that builds as it goes.
-    $module_handler = $this->getMock('Drupal\Core\Extension\ModuleHandlerInterface');
+    $module_handler = $this->createMock('Drupal\Core\Extension\ModuleHandlerInterface');
     $module_handler->expects($this->any())
       ->method('alter')
       ->will($this->returnCallback(function ($hook, &$overrides, $langcode) {

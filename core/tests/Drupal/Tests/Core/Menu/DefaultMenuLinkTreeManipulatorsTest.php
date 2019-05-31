@@ -69,11 +69,11 @@ class DefaultMenuLinkTreeManipulatorsTest extends UnitTestCase {
   protected function setUp() {
     parent::setUp();
 
-    $this->accessManager = $this->getMock('\Drupal\Core\Access\AccessManagerInterface');
-    $this->currentUser = $this->getMock('Drupal\Core\Session\AccountInterface');
+    $this->accessManager = $this->createMock('\Drupal\Core\Access\AccessManagerInterface');
+    $this->currentUser = $this->createMock('Drupal\Core\Session\AccountInterface');
     $this->currentUser->method('isAuthenticated')
       ->willReturn(TRUE);
-    $this->entityTypeManager = $this->getMock(EntityTypeManagerInterface::class);
+    $this->entityTypeManager = $this->createMock(EntityTypeManagerInterface::class);
 
     $this->defaultMenuTreeManipulators = new DefaultMenuLinkTreeManipulators($this->accessManager, $this->currentUser, $this->entityTypeManager);
 
@@ -290,7 +290,7 @@ class DefaultMenuLinkTreeManipulatorsTest extends UnitTestCase {
       6 => new MenuLinkTreeElement($links[6], FALSE, 2, FALSE, []),
     ]);
 
-    $query = $this->getMock('Drupal\Core\Entity\Query\QueryInterface');
+    $query = $this->createMock('Drupal\Core\Entity\Query\QueryInterface');
     $query->expects($this->at(0))
       ->method('condition')
       ->with('nid', [1, 2, 3, 4]);
@@ -300,7 +300,7 @@ class DefaultMenuLinkTreeManipulatorsTest extends UnitTestCase {
     $query->expects($this->once())
       ->method('execute')
       ->willReturn([1, 2, 4]);
-    $storage = $this->getMock(EntityStorageInterface::class);
+    $storage = $this->createMock(EntityStorageInterface::class);
     $storage->expects($this->once())
       ->method('getQuery')
       ->willReturn($query);

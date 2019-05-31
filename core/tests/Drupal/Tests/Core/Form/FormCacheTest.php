@@ -98,11 +98,11 @@ class FormCacheTest extends UnitTestCase {
   protected function setUp() {
     parent::setUp();
 
-    $this->moduleHandler = $this->getMock('Drupal\Core\Extension\ModuleHandlerInterface');
+    $this->moduleHandler = $this->createMock('Drupal\Core\Extension\ModuleHandlerInterface');
 
-    $this->formCacheStore = $this->getMock('Drupal\Core\KeyValueStore\KeyValueStoreExpirableInterface');
-    $this->formStateCacheStore = $this->getMock('Drupal\Core\KeyValueStore\KeyValueStoreExpirableInterface');
-    $this->keyValueExpirableFactory = $this->getMock('Drupal\Core\KeyValueStore\KeyValueExpirableFactoryInterface');
+    $this->formCacheStore = $this->createMock('Drupal\Core\KeyValueStore\KeyValueStoreExpirableInterface');
+    $this->formStateCacheStore = $this->createMock('Drupal\Core\KeyValueStore\KeyValueStoreExpirableInterface');
+    $this->keyValueExpirableFactory = $this->createMock('Drupal\Core\KeyValueStore\KeyValueExpirableFactoryInterface');
     $this->keyValueExpirableFactory->expects($this->any())
       ->method('get')
       ->will($this->returnValueMap([
@@ -113,11 +113,11 @@ class FormCacheTest extends UnitTestCase {
     $this->csrfToken = $this->getMockBuilder('Drupal\Core\Access\CsrfTokenGenerator')
       ->disableOriginalConstructor()
       ->getMock();
-    $this->account = $this->getMock('Drupal\Core\Session\AccountInterface');
+    $this->account = $this->createMock('Drupal\Core\Session\AccountInterface');
 
-    $this->logger = $this->getMock('Psr\Log\LoggerInterface');
-    $this->requestStack = $this->getMock('\Symfony\Component\HttpFoundation\RequestStack');
-    $this->requestPolicy = $this->getMock('\Drupal\Core\PageCache\RequestPolicyInterface');
+    $this->logger = $this->createMock('Psr\Log\LoggerInterface');
+    $this->requestStack = $this->createMock('\Symfony\Component\HttpFoundation\RequestStack');
+    $this->requestPolicy = $this->createMock('\Drupal\Core\PageCache\RequestPolicyInterface');
 
     $this->formCache = new FormCache($this->root, $this->keyValueExpirableFactory, $this->moduleHandler, $this->account, $this->csrfToken, $this->logger, $this->requestStack, $this->requestPolicy);
   }

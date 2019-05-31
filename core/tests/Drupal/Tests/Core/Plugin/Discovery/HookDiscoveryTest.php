@@ -30,7 +30,7 @@ class HookDiscoveryTest extends UnitTestCase {
    * {@inheritdoc}
    */
   protected function setUp() {
-    $this->moduleHandler = $this->getMock('Drupal\Core\Extension\ModuleHandlerInterface');
+    $this->moduleHandler = $this->createMock('Drupal\Core\Extension\ModuleHandlerInterface');
     $this->hookDiscovery = new HookDiscovery($this->moduleHandler, 'test_plugin');
   }
 

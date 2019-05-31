@@ -78,13 +78,13 @@ class ContextualLinkManagerTest extends UnitTestCase {
       ->setMethods(NULL)
       ->getMock();
 
-    $this->controllerResolver = $this->getMock('Symfony\Component\HttpKernel\Controller\ControllerResolverInterface');
-    $this->pluginDiscovery = $this->getMock('Drupal\Component\Plugin\Discovery\DiscoveryInterface');
-    $this->factory = $this->getMock('Drupal\Component\Plugin\Factory\FactoryInterface');
-    $this->cacheBackend = $this->getMock('Drupal\Core\Cache\CacheBackendInterface');
-    $this->moduleHandler = $this->getMock('\Drupal\Core\Extension\ModuleHandlerInterface');
-    $this->accessManager = $this->getMock('Drupal\Core\Access\AccessManagerInterface');
-    $this->account = $this->getMock('Drupal\Core\Session\AccountInterface');
+    $this->controllerResolver = $this->createMock('Symfony\Component\HttpKernel\Controller\ControllerResolverInterface');
+    $this->pluginDiscovery = $this->createMock('Drupal\Component\Plugin\Discovery\DiscoveryInterface');
+    $this->factory = $this->createMock('Drupal\Component\Plugin\Factory\FactoryInterface');
+    $this->cacheBackend = $this->createMock('Drupal\Core\Cache\CacheBackendInterface');
+    $this->moduleHandler = $this->createMock('\Drupal\Core\Extension\ModuleHandlerInterface');
+    $this->accessManager = $this->createMock('Drupal\Core\Access\AccessManagerInterface');
+    $this->account = $this->createMock('Drupal\Core\Session\AccountInterface');
 
     $property = new \ReflectionProperty('Drupal\Core\Menu\ContextualLinkManager', 'controllerResolver');
     $property->setAccessible(TRUE);
@@ -110,7 +110,7 @@ class ContextualLinkManagerTest extends UnitTestCase {
     $property->setAccessible(TRUE);
     $property->setValue($this->contextualLinkManager, $this->moduleHandler);
 
-    $language_manager = $this->getMock('Drupal\Core\Language\LanguageManagerInterface');
+    $language_manager = $this->createMock('Drupal\Core\Language\LanguageManagerInterface');
     $language_manager->expects($this->any())
       ->method('getCurrentLanguage')
       ->will($this->returnValue(new Language(['id' => 'en'])));
@@ -340,7 +340,7 @@ class ContextualLinkManagerTest extends UnitTestCase {
     // Set up mocking of the plugin factory.
     $map = [];
     foreach ($definitions as $plugin_id => $definition) {
-      $plugin = $this->getMock('Drupal\Core\Menu\ContextualLinkInterface');
+      $plugin = $this->createMock('Drupal\Core\Menu\ContextualLinkInterface');
       $plugin->expects($this->any())
         ->method('getRouteName')
         ->will($this->returnValue($definition['route_name']));

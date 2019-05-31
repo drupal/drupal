@@ -23,7 +23,7 @@ class PostgresqlConnectionTest extends UnitTestCase {
    */
   protected function setUp() {
     parent::setUp();
-    $this->mockPdo = $this->getMock('Drupal\Tests\Core\Database\Stub\StubPDO');
+    $this->mockPdo = $this->createMock('Drupal\Tests\Core\Database\Stub\StubPDO');
   }
 
   /**

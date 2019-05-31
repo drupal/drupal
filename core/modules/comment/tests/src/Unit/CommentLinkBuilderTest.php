@@ -69,11 +69,11 @@ class CommentLinkBuilderTest extends UnitTestCase {
    * Prepares mocks for the test.
    */
   protected function setUp() {
-    $this->commentManager = $this->getMock('\Drupal\comment\CommentManagerInterface');
+    $this->commentManager = $this->createMock('\Drupal\comment\CommentManagerInterface');
     $this->stringTranslation = $this->getStringTranslationStub();
     $this->entityTypeManager = $this->createMock(EntityTypeManagerInterface::class);
-    $this->moduleHandler = $this->getMock('\Drupal\Core\Extension\ModuleHandlerInterface');
-    $this->currentUser = $this->getMock('\Drupal\Core\Session\AccountProxyInterface');
+    $this->moduleHandler = $this->createMock('\Drupal\Core\Extension\ModuleHandlerInterface');
+    $this->currentUser = $this->createMock('\Drupal\Core\Session\AccountProxyInterface');
     $this->commentLinkBuilder = new CommentLinkBuilder($this->currentUser, $this->commentManager, $this->moduleHandler, $this->stringTranslation, $this->entityTypeManager);
     $this->commentManager->expects($this->any())
       ->method('getFields')
@@ -269,7 +269,7 @@ class CommentLinkBuilderTest extends UnitTestCase {
    *   Mock node for testing.
    */
   protected function getMockNode($has_field, $comment_status, $form_location, $comment_count) {
-    $node = $this->getMock('\Drupal\node\NodeInterface');
+    $node = $this->createMock('\Drupal\node\NodeInterface');
     $node->expects($this->any())
       ->method('hasField')
       ->willReturn($has_field);
@@ -287,7 +287,7 @@ class CommentLinkBuilderTest extends UnitTestCase {
       ->with('comment')
       ->willReturn($field_item);
 
-    $field_definition = $this->getMock('\Drupal\Core\Field\FieldDefinitionInterface');
+    $field_definition = $this->createMock('\Drupal\Core\Field\FieldDefinitionInterface');
     $field_definition->expects($this->any())
       ->method('getSetting')
       ->with('form_location')

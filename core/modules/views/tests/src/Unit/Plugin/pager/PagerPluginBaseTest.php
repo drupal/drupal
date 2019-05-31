@@ -206,7 +206,7 @@ class PagerPluginBaseTest extends UnitTestCase {
    * @see \Drupal\views\Plugin\views\pager\PagerPluginBase::executeCountQuery()
    */
   public function testExecuteCountQueryWithoutOffset() {
-    $statement = $this->getMock('\Drupal\Tests\views\Unit\Plugin\pager\TestStatementInterface');
+    $statement = $this->createMock('\Drupal\Tests\views\Unit\Plugin\pager\TestStatementInterface');
 
     $statement->expects($this->once())
       ->method('fetchField')
@@ -230,7 +230,7 @@ class PagerPluginBaseTest extends UnitTestCase {
    * @see \Drupal\views\Plugin\views\pager\PagerPluginBase::executeCountQuery()
    */
   public function testExecuteCountQueryWithOffset() {
-    $statement = $this->getMock('\Drupal\Tests\views\Unit\Plugin\pager\TestStatementInterface');
+    $statement = $this->createMock('\Drupal\Tests\views\Unit\Plugin\pager\TestStatementInterface');
 
     $statement->expects($this->once())
       ->method('fetchField')
@@ -254,7 +254,7 @@ class PagerPluginBaseTest extends UnitTestCase {
    * @see \Drupal\views\Plugin\views\pager\PagerPluginBase::executeCountQuery()
    */
   public function testExecuteCountQueryWithOffsetLargerThanResult() {
-    $statement = $this->getMock(TestStatementInterface::class);
+    $statement = $this->createMock(TestStatementInterface::class);
 
     $statement->expects($this->once())
       ->method('fetchField')

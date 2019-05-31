@@ -509,7 +509,7 @@ class UrlGeneratorTest extends UnitTestCase {
    * \Drupal\Tests\Core\Render\MetadataBubblingUrlGeneratorTest work.
    */
   public function testGenerateWithPathProcessorChangingQueryParameter() {
-    $path_processor = $this->getMock(OutboundPathProcessorInterface::CLASS);
+    $path_processor = $this->createMock(OutboundPathProcessorInterface::CLASS);
     $path_processor->expects($this->atLeastOnce())
       ->method('processOutbound')
       ->willReturnCallback(function ($path, &$options = [], Request $request = NULL, BubbleableMetadata $bubbleable_metadata = NULL) {

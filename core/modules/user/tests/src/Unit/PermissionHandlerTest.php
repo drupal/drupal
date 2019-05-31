@@ -61,7 +61,7 @@ class PermissionHandlerTest extends UnitTestCase {
     parent::setUp();
 
     $this->stringTranslation = new TestTranslationManager();
-    $this->controllerResolver = $this->getMock('Drupal\Core\Controller\ControllerResolverInterface');
+    $this->controllerResolver = $this->createMock('Drupal\Core\Controller\ControllerResolverInterface');
   }
 
   /**
@@ -94,7 +94,7 @@ class PermissionHandlerTest extends UnitTestCase {
     $root = new vfsStreamDirectory('modules');
     vfsStreamWrapper::setRoot($root);
 
-    $this->moduleHandler = $this->getMock('Drupal\Core\Extension\ModuleHandlerInterface');
+    $this->moduleHandler = $this->createMock('Drupal\Core\Extension\ModuleHandlerInterface');
     $this->moduleHandler->expects($this->once())
       ->method('getModuleDirectories')
       ->willReturn([
@@ -169,7 +169,7 @@ EOF
     $root = new vfsStreamDirectory('modules');
     vfsStreamWrapper::setRoot($root);
 
-    $this->moduleHandler = $this->getMock('Drupal\Core\Extension\ModuleHandlerInterface');
+    $this->moduleHandler = $this->createMock('Drupal\Core\Extension\ModuleHandlerInterface');
     $this->moduleHandler->expects($this->once())
       ->method('getModuleDirectories')
       ->willReturn([
@@ -224,7 +224,7 @@ EOF
     $root = new vfsStreamDirectory('modules');
     vfsStreamWrapper::setRoot($root);
 
-    $this->moduleHandler = $this->getMock('Drupal\Core\Extension\ModuleHandlerInterface');
+    $this->moduleHandler = $this->createMock('Drupal\Core\Extension\ModuleHandlerInterface');
     $this->moduleHandler->expects($this->once())
       ->method('getModuleDirectories')
       ->willReturn([
@@ -304,7 +304,7 @@ EOF
     $root = new vfsStreamDirectory('modules');
     vfsStreamWrapper::setRoot($root);
 
-    $this->moduleHandler = $this->getMock('Drupal\Core\Extension\ModuleHandlerInterface');
+    $this->moduleHandler = $this->createMock('Drupal\Core\Extension\ModuleHandlerInterface');
     $this->moduleHandler->expects($this->once())
       ->method('getModuleDirectories')
       ->willReturn([

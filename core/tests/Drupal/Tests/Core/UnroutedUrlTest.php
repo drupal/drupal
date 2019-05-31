@@ -48,12 +48,12 @@ class UnroutedUrlTest extends UnitTestCase {
   protected function setUp() {
     parent::setUp();
 
-    $this->urlAssembler = $this->getMock('Drupal\Core\Utility\UnroutedUrlAssemblerInterface');
+    $this->urlAssembler = $this->createMock('Drupal\Core\Utility\UnroutedUrlAssemblerInterface');
     $this->urlAssembler->expects($this->any())
       ->method('assemble')
       ->will($this->returnArgument(0));
 
-    $this->router = $this->getMock('Drupal\Tests\Core\Routing\TestRouterInterface');
+    $this->router = $this->createMock('Drupal\Tests\Core\Routing\TestRouterInterface');
     $container = new ContainerBuilder();
     $container->set('router.no_access_checks', $this->router);
     $container->set('unrouted_url_assembler', $this->urlAssembler);

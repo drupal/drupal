@@ -45,9 +45,9 @@ class DrupalSqlBaseTest extends MigrateTestCase {
     $plugin_definition['requirements_met'] = TRUE;
     $plugin_definition['source_module'] = 'module1';
     /** @var \Drupal\Core\State\StateInterface $state */
-    $state = $this->getMock('Drupal\Core\State\StateInterface');
+    $state = $this->createMock('Drupal\Core\State\StateInterface');
     /** @var \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager */
-    $entity_type_manager = $this->getMock('Drupal\Core\Entity\EntityTypeManagerInterface');
+    $entity_type_manager = $this->createMock('Drupal\Core\Entity\EntityTypeManagerInterface');
     $plugin = new TestDrupalSqlBase([], 'placeholder_id', $plugin_definition, $this->getMigration(), $state, $entity_type_manager);
     $plugin->setDatabase($this->getDatabase($this->databaseContents));
     $system_data = $plugin->getSystemData();
@@ -70,9 +70,9 @@ class DrupalSqlBaseTest extends MigrateTestCase {
     $plugin_definition['requirements_met'] = TRUE;
     $plugin_definition['source_module'] = 'module1';
     /** @var \Drupal\Core\State\StateInterface $state */
-    $state = $this->getMock('Drupal\Core\State\StateInterface');
+    $state = $this->createMock('Drupal\Core\State\StateInterface');
     /** @var \Drupal\Core\Entity\EntityTypeManagerInterface $entity_manager */
-    $entity_manager = $this->getMock('Drupal\Core\Entity\EntityTypeManagerInterface');
+    $entity_manager = $this->createMock('Drupal\Core\Entity\EntityTypeManagerInterface');
     $plugin = new TestDrupalSqlBase([], 'test', $plugin_definition, $this->getMigration(), $state, $entity_manager);
     $system_data = $plugin->getSystemData();
     $this->setExpectedException(RequirementsException::class, 'No database connection configured for source plugin test');

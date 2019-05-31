@@ -26,7 +26,7 @@ class DefaultTableMappingTest extends UnitTestCase {
   protected function setUp() {
     parent::setUp();
 
-    $this->entityType = $this->getMock('\Drupal\Core\Entity\ContentEntityTypeInterface');
+    $this->entityType = $this->createMock('\Drupal\Core\Entity\ContentEntityTypeInterface');
     $this->entityType
       ->expects($this->any())
       ->method('id')
@@ -592,7 +592,7 @@ class DefaultTableMappingTest extends UnitTestCase {
    * @return \Drupal\Core\Field\FieldStorageDefinitionInterface|\PHPUnit_Framework_MockObject_MockObject
    */
   protected function setUpDefinition($name, array $column_names, $base_field = TRUE) {
-    $definition = $this->getMock('Drupal\Tests\Core\Field\TestBaseFieldDefinitionInterface');
+    $definition = $this->createMock('Drupal\Tests\Core\Field\TestBaseFieldDefinitionInterface');
     $definition->expects($this->any())
       ->method('isBaseField')
       ->willReturn($base_field);

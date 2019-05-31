@@ -59,7 +59,7 @@ class ThemeNegotiatorTest extends UnitTestCase {
    * @see \Drupal\Core\Theme\ThemeNegotiator::determineActiveTheme()
    */
   public function testDetermineActiveTheme() {
-    $negotiator = $this->getMock('Drupal\Core\Theme\ThemeNegotiatorInterface');
+    $negotiator = $this->createMock('Drupal\Core\Theme\ThemeNegotiatorInterface');
     $negotiator->expects($this->once())
       ->method('determineActiveTheme')
       ->will($this->returnValue('example_test'));
@@ -89,7 +89,7 @@ class ThemeNegotiatorTest extends UnitTestCase {
   public function testDetermineActiveThemeWithPriority() {
     $negotiators = [];
 
-    $negotiator = $this->getMock('Drupal\Core\Theme\ThemeNegotiatorInterface');
+    $negotiator = $this->createMock('Drupal\Core\Theme\ThemeNegotiatorInterface');
     $negotiator->expects($this->once())
       ->method('determineActiveTheme')
       ->will($this->returnValue('example_test'));
@@ -99,7 +99,7 @@ class ThemeNegotiatorTest extends UnitTestCase {
 
     $negotiators['test_negotiator_1'] = $negotiator;
 
-    $negotiator = $this->getMock('Drupal\Core\Theme\ThemeNegotiatorInterface');
+    $negotiator = $this->createMock('Drupal\Core\Theme\ThemeNegotiatorInterface');
     $negotiator->expects($this->never())
       ->method('determineActiveTheme');
     $negotiator->expects($this->never())
@@ -129,7 +129,7 @@ class ThemeNegotiatorTest extends UnitTestCase {
   public function testDetermineActiveThemeWithAccessCheck() {
     $negotiators = [];
 
-    $negotiator = $this->getMock('Drupal\Core\Theme\ThemeNegotiatorInterface');
+    $negotiator = $this->createMock('Drupal\Core\Theme\ThemeNegotiatorInterface');
     $negotiator->expects($this->once())
       ->method('determineActiveTheme')
       ->will($this->returnValue('example_test'));
@@ -139,7 +139,7 @@ class ThemeNegotiatorTest extends UnitTestCase {
 
     $negotiators['test_negotiator_1'] = $negotiator;
 
-    $negotiator = $this->getMock('Drupal\Core\Theme\ThemeNegotiatorInterface');
+    $negotiator = $this->createMock('Drupal\Core\Theme\ThemeNegotiatorInterface');
     $negotiator->expects($this->once())
       ->method('determineActiveTheme')
       ->will($this->returnValue('example_test2'));
@@ -177,7 +177,7 @@ class ThemeNegotiatorTest extends UnitTestCase {
   public function testDetermineActiveThemeWithNotApplyingNegotiator() {
     $negotiators = [];
 
-    $negotiator = $this->getMock('Drupal\Core\Theme\ThemeNegotiatorInterface');
+    $negotiator = $this->createMock('Drupal\Core\Theme\ThemeNegotiatorInterface');
     $negotiator->expects($this->never())
       ->method('determineActiveTheme');
     $negotiator->expects($this->once())
@@ -186,7 +186,7 @@ class ThemeNegotiatorTest extends UnitTestCase {
 
     $negotiators['test_negotiator_1'] = $negotiator;
 
-    $negotiator = $this->getMock('Drupal\Core\Theme\ThemeNegotiatorInterface');
+    $negotiator = $this->createMock('Drupal\Core\Theme\ThemeNegotiatorInterface');
     $negotiator->expects($this->once())
       ->method('determineActiveTheme')
       ->will($this->returnValue('example_test2'));

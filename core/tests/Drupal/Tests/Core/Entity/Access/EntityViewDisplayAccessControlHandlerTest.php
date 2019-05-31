@@ -18,7 +18,7 @@ class EntityViewDisplayAccessControlHandlerTest extends EntityFormDisplayAccessC
   protected function setUp() {
     parent::setUp();
 
-    $this->member = $this->getMock(AccountInterface::class);
+    $this->member = $this->createMock(AccountInterface::class);
     $this->member
       ->expects($this->any())
       ->method('hasPermission')

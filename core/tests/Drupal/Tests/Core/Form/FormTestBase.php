@@ -150,11 +150,11 @@ abstract class FormTestBase extends UnitTestCase {
     // Add functions to the global namespace for testing.
     require_once __DIR__ . '/fixtures/form_base_test.inc';
 
-    $this->moduleHandler = $this->getMock('Drupal\Core\Extension\ModuleHandlerInterface');
+    $this->moduleHandler = $this->createMock('Drupal\Core\Extension\ModuleHandlerInterface');
 
-    $this->formCache = $this->getMock('Drupal\Core\Form\FormCacheInterface');
-    $this->cache = $this->getMock('Drupal\Core\Cache\CacheBackendInterface');
-    $this->urlGenerator = $this->getMock('Drupal\Core\Routing\UrlGeneratorInterface');
+    $this->formCache = $this->createMock('Drupal\Core\Form\FormCacheInterface');
+    $this->cache = $this->createMock('Drupal\Core\Cache\CacheBackendInterface');
+    $this->urlGenerator = $this->createMock('Drupal\Core\Routing\UrlGeneratorInterface');
 
     $this->classResolver = $this->getClassResolverStub();
 
@@ -171,14 +171,14 @@ abstract class FormTestBase extends UnitTestCase {
     $this->kernel = $this->getMockBuilder('\Drupal\Core\DrupalKernel')
       ->disableOriginalConstructor()
       ->getMock();
-    $this->account = $this->getMock('Drupal\Core\Session\AccountInterface');
-    $this->themeManager = $this->getMock('Drupal\Core\Theme\ThemeManagerInterface');
+    $this->account = $this->createMock('Drupal\Core\Session\AccountInterface');
+    $this->themeManager = $this->createMock('Drupal\Core\Theme\ThemeManagerInterface');
     $this->request = new Request();
-    $this->eventDispatcher = $this->getMock('Symfony\Component\EventDispatcher\EventDispatcherInterface');
+    $this->eventDispatcher = $this->createMock('Symfony\Component\EventDispatcher\EventDispatcherInterface');
     $this->requestStack = new RequestStack();
     $this->requestStack->push($this->request);
-    $this->logger = $this->getMock('Drupal\Core\Logger\LoggerChannelInterface');
-    $form_error_handler = $this->getMock('Drupal\Core\Form\FormErrorHandlerInterface');
+    $this->logger = $this->createMock('Drupal\Core\Logger\LoggerChannelInterface');
+    $form_error_handler = $this->createMock('Drupal\Core\Form\FormErrorHandlerInterface');
     $this->formValidator = $this->getMockBuilder('Drupal\Core\Form\FormValidator')
       ->setConstructorArgs([$this->requestStack, $this->getStringTranslationStub(), $this->csrfToken, $this->logger, $form_error_handler])
       ->setMethods(NULL)
@@ -216,7 +216,7 @@ abstract class FormTestBase extends UnitTestCase {
    *   The mocked form object.
    */
   protected function getMockForm($form_id, $expected_form = NULL, $count = 1) {
-    $form = $this->getMock('Drupal\Core\Form\FormInterface');
+    $form = $this->createMock('Drupal\Core\Form\FormInterface');
     $form->expects($this->once())
       ->method('getFormId')
       ->will($this->returnValue($form_id));

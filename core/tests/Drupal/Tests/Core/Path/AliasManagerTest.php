@@ -68,10 +68,10 @@ class AliasManagerTest extends UnitTestCase {
   protected function setUp() {
     parent::setUp();
 
-    $this->aliasStorage = $this->getMock('Drupal\Core\Path\AliasStorageInterface');
-    $this->aliasWhitelist = $this->getMock('Drupal\Core\Path\AliasWhitelistInterface');
-    $this->languageManager = $this->getMock('Drupal\Core\Language\LanguageManagerInterface');
-    $this->cache = $this->getMock('Drupal\Core\Cache\CacheBackendInterface');
+    $this->aliasStorage = $this->createMock('Drupal\Core\Path\AliasStorageInterface');
+    $this->aliasWhitelist = $this->createMock('Drupal\Core\Path\AliasWhitelistInterface');
+    $this->languageManager = $this->createMock('Drupal\Core\Language\LanguageManagerInterface');
+    $this->cache = $this->createMock('Drupal\Core\Cache\CacheBackendInterface');
 
     $this->aliasManager = new AliasManager($this->aliasStorage, $this->aliasWhitelist, $this->languageManager, $this->cache);
 

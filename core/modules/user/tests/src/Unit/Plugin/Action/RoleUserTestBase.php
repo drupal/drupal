@@ -33,7 +33,7 @@ abstract class RoleUserTestBase extends UnitTestCase {
       ->getMockBuilder('Drupal\user\Entity\User')
       ->disableOriginalConstructor()
       ->getMock();
-    $this->userRoleEntityType = $this->getMock('Drupal\Core\Entity\EntityTypeInterface');
+    $this->userRoleEntityType = $this->createMock('Drupal\Core\Entity\EntityTypeInterface');
   }
 
 }

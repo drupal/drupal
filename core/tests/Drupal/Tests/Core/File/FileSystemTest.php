@@ -34,8 +34,8 @@ class FileSystemTest extends UnitTestCase {
     parent::setUp();
 
     $settings = new Settings([]);
-    $stream_wrapper_manager = $this->getMock('Drupal\Core\StreamWrapper\StreamWrapperManagerInterface');
-    $this->logger = $this->getMock('Psr\Log\LoggerInterface');
+    $stream_wrapper_manager = $this->createMock('Drupal\Core\StreamWrapper\StreamWrapperManagerInterface');
+    $this->logger = $this->createMock('Psr\Log\LoggerInterface');
     $this->fileSystem = new FileSystem($stream_wrapper_manager, $settings, $this->logger);
   }
 

@@ -110,11 +110,11 @@ class LocalActionManagerTest extends UnitTestCase {
    * {@inheritdoc}
    */
   protected function setUp() {
-    $this->argumentResolver = $this->getMock('\Symfony\Component\HttpKernel\Controller\ArgumentResolverInterface');
-    $this->request = $this->getMock('Symfony\Component\HttpFoundation\Request');
-    $this->routeProvider = $this->getMock('Drupal\Core\Routing\RouteProviderInterface');
-    $this->moduleHandler = $this->getMock('Drupal\Core\Extension\ModuleHandlerInterface');
-    $this->cacheBackend = $this->getMock('Drupal\Core\Cache\CacheBackendInterface');
+    $this->argumentResolver = $this->createMock('\Symfony\Component\HttpKernel\Controller\ArgumentResolverInterface');
+    $this->request = $this->createMock('Symfony\Component\HttpFoundation\Request');
+    $this->routeProvider = $this->createMock('Drupal\Core\Routing\RouteProviderInterface');
+    $this->moduleHandler = $this->createMock('Drupal\Core\Extension\ModuleHandlerInterface');
+    $this->cacheBackend = $this->createMock('Drupal\Core\Cache\CacheBackendInterface');
 
     $cache_contexts_manager = $this->prophesize(CacheContextsManager::class);
     $cache_contexts_manager->assertValidTokens(Argument::any())
@@ -125,14 +125,14 @@ class LocalActionManagerTest extends UnitTestCase {
     \Drupal::setContainer($container);
 
     $access_result = (new AccessResultForbidden())->cachePerPermissions();
-    $this->accessManager = $this->getMock('Drupal\Core\Access\AccessManagerInterface');
+    $this->accessManager = $this->createMock('Drupal\Core\Access\AccessManagerInterface');
     $this->accessManager->expects($this->any())
       ->method('checkNamedRoute')
       ->willReturn($access_result);
-    $this->account = $this->getMock('Drupal\Core\Session\AccountInterface');
-    $this->discovery = $this->getMock('Drupal\Component\Plugin\Discovery\DiscoveryInterface');
-    $this->factory = $this->getMock('Drupal\Component\Plugin\Factory\FactoryInterface');
-    $route_match = $this->getMock('Drupal\Core\Routing\RouteMatchInterface');
+    $this->account = $this->createMock('Drupal\Core\Session\AccountInterface');
+    $this->discovery = $this->createMock('Drupal\Component\Plugin\Discovery\DiscoveryInterface');
+    $this->factory = $this->createMock('Drupal\Component\Plugin\Factory\FactoryInterface');
+    $route_match = $this->createMock('Drupal\Core\Routing\RouteMatchInterface');
 
     $this->localActionManager = new TestLocalActionManager($this->argumentResolver, $this->request, $route_match, $this->routeProvider, $this->moduleHandler, $this->cacheBackend, $this->accessManager, $this->account, $this->discovery, $this->factory);
   }
@@ -141,7 +141,7 @@ class LocalActionManagerTest extends UnitTestCase {
    * @covers ::getTitle
    */
   public function testGetTitle() {
-    $local_action = $this->getMock('Drupal\Core\Menu\LocalActionInterface');
+    $local_action = $this->createMock('Drupal\Core\Menu\LocalActionInterface');
     $local_action->expects($this->once())
       ->method('getTitle')
       ->with('test');
@@ -165,7 +165,7 @@ class LocalActionManagerTest extends UnitTestCase {
       ->will($this->returnValue($plugin_definitions));
     $map = [];
     foreach ($plugin_definitions as $plugin_id => $plugin_definition) {
-      $plugin = $this->getMock('Drupal\Core\Menu\LocalActionInterface');
+      $plugin = $this->createMock('Drupal\Core\Menu\LocalActionInterface');
       $plugin->expects($this->any())
         ->method('getRouteName')
         ->will($this->returnValue($plugin_definition['route_name']));
@@ -391,14 +391,14 @@ class LocalActionManagerTest extends UnitTestCase {
     }
 
     $controller_resolver = $this->getMockBuilder(ControllerResolver::class)->disableOriginalConstructor()->getMock();
-    $route_match = $this->getMock('Drupal\Core\Routing\RouteMatchInterface');
+    $route_match = $this->createMock('Drupal\Core\Routing\RouteMatchInterface');
     $request_stack = new RequestStack();
     $request_stack->push($this->request);
-    $module_handler = $this->getMock('Drupal\Core\Extension\ModuleHandlerInterface');
+    $module_handler = $this->createMock('Drupal\Core\Extension\ModuleHandlerInterface');
     $module_handler->expects($this->any())
       ->method('getModuleDirectories')
       ->willReturn([]);
-    $language_manager = $this->getMock('Drupal\Core\Language\LanguageManagerInterface');
+    $language_manager = $this->createMock('Drupal\Core\Language\LanguageManagerInterface');
     $language_manager->expects($this->any())
       ->method('getCurrentLanguage')
       ->will($this->returnValue(new Language(['id' => 'en'])));

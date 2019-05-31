@@ -19,10 +19,10 @@ class QueryFactoryTest extends UnitTestCase {
    * @dataProvider providerTestGetKeys
    */
   public function testGetKeys(array $expected, $key, Config $config) {
-    $config_factory = $this->getMock('Drupal\Core\Config\ConfigFactoryInterface');
-    $key_value_factory = $this->getMock('Drupal\Core\KeyValueStore\KeyValueFactoryInterface');
-    $config_manager = $this->getMock('Drupal\Core\Config\ConfigManagerInterface');
-    $config_entity_type = $this->getMock('Drupal\Core\Config\Entity\ConfigEntityTypeInterface');
+    $config_factory = $this->createMock('Drupal\Core\Config\ConfigFactoryInterface');
+    $key_value_factory = $this->createMock('Drupal\Core\KeyValueStore\KeyValueFactoryInterface');
+    $config_manager = $this->createMock('Drupal\Core\Config\ConfigManagerInterface');
+    $config_entity_type = $this->createMock('Drupal\Core\Config\Entity\ConfigEntityTypeInterface');
     $query_factory = new QueryFactory($config_factory, $key_value_factory, $config_manager);
     $method = new \ReflectionMethod($query_factory, 'getKeys');
     $method->setAccessible(TRUE);
@@ -100,10 +100,10 @@ class QueryFactoryTest extends UnitTestCase {
    * @covers ::getValues
    */
   public function testGetKeysWildCardEnd() {
-    $config_factory = $this->getMock('Drupal\Core\Config\ConfigFactoryInterface');
-    $key_value_factory = $this->getMock('Drupal\Core\KeyValueStore\KeyValueFactoryInterface');
-    $config_manager = $this->getMock('Drupal\Core\Config\ConfigManagerInterface');
-    $config_entity_type = $this->getMock('Drupal\Core\Config\Entity\ConfigEntityTypeInterface');
+    $config_factory = $this->createMock('Drupal\Core\Config\ConfigFactoryInterface');
+    $key_value_factory = $this->createMock('Drupal\Core\KeyValueStore\KeyValueFactoryInterface');
+    $config_manager = $this->createMock('Drupal\Core\Config\ConfigManagerInterface');
+    $config_entity_type = $this->createMock('Drupal\Core\Config\Entity\ConfigEntityTypeInterface');
     $config_entity_type->expects($this->atLeastOnce())
       ->method('id')
       ->willReturn('test_config_entity_type');

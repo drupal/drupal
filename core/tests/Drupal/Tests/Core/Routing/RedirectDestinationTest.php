@@ -42,7 +42,7 @@ class RedirectDestinationTest extends UnitTestCase {
     parent::setUp();
 
     $this->requestStack = new RequestStack();
-    $this->urlGenerator = $this->getMock('Drupal\Core\Routing\UrlGeneratorInterface');
+    $this->urlGenerator = $this->createMock('Drupal\Core\Routing\UrlGeneratorInterface');
     $this->redirectDestination = new RedirectDestination($this->requestStack, $this->urlGenerator);
   }
 

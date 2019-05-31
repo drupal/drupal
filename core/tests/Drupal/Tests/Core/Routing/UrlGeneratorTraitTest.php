@@ -15,7 +15,7 @@ class UrlGeneratorTraitTest extends UnitTestCase {
    * @covers ::getUrlGenerator
    */
   public function testGetUrlGenerator() {
-    $url_generator = $this->getMock('Drupal\Core\Routing\UrlGeneratorInterface');
+    $url_generator = $this->createMock('Drupal\Core\Routing\UrlGeneratorInterface');
 
     $url_generator_trait_object = $this->getMockForTrait('Drupal\Core\Routing\UrlGeneratorTrait');
     $url_generator_trait_object->setUrlGenerator($url_generator);
@@ -33,7 +33,7 @@ class UrlGeneratorTraitTest extends UnitTestCase {
     $route_name = 'some_route_name';
     $generated_url = 'some/generated/url';
 
-    $url_generator = $this->getMock('Drupal\Core\Routing\UrlGeneratorInterface');
+    $url_generator = $this->createMock('Drupal\Core\Routing\UrlGeneratorInterface');
     $url_generator->expects($this->once())
       ->method('generateFromRoute')
       ->with($route_name, [], ['absolute' => TRUE])

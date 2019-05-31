@@ -34,7 +34,7 @@ class XmlEncoderTest extends UnitTestCase {
   protected $testArray = ['test' => 'test'];
 
   protected function setUp() {
-    $this->baseEncoder = $this->getMock(BaseXmlEncoder::class);
+    $this->baseEncoder = $this->createMock(BaseXmlEncoder::class);
     $this->encoder = new XmlEncoder();
     $this->encoder->setBaseEncoder($this->baseEncoder);
   }

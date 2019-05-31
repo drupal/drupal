@@ -61,10 +61,10 @@ class TwigExtensionTest extends UnitTestCase {
   public function setUp() {
     parent::setUp();
 
-    $this->renderer = $this->getMock('\Drupal\Core\Render\RendererInterface');
-    $this->urlGenerator = $this->getMock('\Drupal\Core\Routing\UrlGeneratorInterface');
-    $this->themeManager = $this->getMock('\Drupal\Core\Theme\ThemeManagerInterface');
-    $this->dateFormatter = $this->getMock('\Drupal\Core\Datetime\DateFormatterInterface');
+    $this->renderer = $this->createMock('\Drupal\Core\Render\RendererInterface');
+    $this->urlGenerator = $this->createMock('\Drupal\Core\Routing\UrlGeneratorInterface');
+    $this->themeManager = $this->createMock('\Drupal\Core\Theme\ThemeManagerInterface');
+    $this->dateFormatter = $this->createMock('\Drupal\Core\Datetime\DateFormatterInterface');
 
     $this->systemUnderTest = new TwigExtension($this->renderer, $this->urlGenerator, $this->themeManager, $this->dateFormatter);
   }
@@ -200,7 +200,7 @@ class TwigExtensionTest extends UnitTestCase {
 
     // By default, TwigExtension will attempt to cast objects to strings.
     // Ensure objects that implement MarkupInterface are unchanged.
-    $safe_string = $this->getMock('\Drupal\Component\Render\MarkupInterface');
+    $safe_string = $this->createMock('\Drupal\Component\Render\MarkupInterface');
     $this->assertSame($safe_string, $this->systemUnderTest->escapeFilter($twig, $safe_string, 'html', 'UTF-8', TRUE));
 
     // Ensure objects that do not implement MarkupInterface are escaped.

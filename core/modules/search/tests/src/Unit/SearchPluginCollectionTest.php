@@ -36,7 +36,7 @@ class SearchPluginCollectionTest extends UnitTestCase {
    * {@inheritdoc}
    */
   protected function setUp() {
-    $this->pluginManager = $this->getMock('Drupal\Component\Plugin\PluginManagerInterface');
+    $this->pluginManager = $this->createMock('Drupal\Component\Plugin\PluginManagerInterface');
     $this->searchPluginCollection = new SearchPluginCollection($this->pluginManager, 'banana', ['id' => 'banana', 'color' => 'yellow'], 'fruit_stand');
   }
 
@@ -44,7 +44,7 @@ class SearchPluginCollectionTest extends UnitTestCase {
    * Tests the get() method.
    */
   public function testGet() {
-    $plugin = $this->getMock('Drupal\search\Plugin\SearchInterface');
+    $plugin = $this->createMock('Drupal\search\Plugin\SearchInterface');
     $this->pluginManager->expects($this->once())
       ->method('createInstance')
       ->will($this->returnValue($plugin));
@@ -55,7 +55,7 @@ class SearchPluginCollectionTest extends UnitTestCase {
    * Tests the get() method with a configurable plugin.
    */
   public function testGetWithConfigurablePlugin() {
-    $plugin = $this->getMock('Drupal\search\Plugin\ConfigurableSearchPluginInterface');
+    $plugin = $this->createMock('Drupal\search\Plugin\ConfigurableSearchPluginInterface');
     $plugin->expects($this->once())
       ->method('setSearchPageId')
       ->with('fruit_stand')

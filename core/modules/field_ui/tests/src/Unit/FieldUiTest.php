@@ -26,7 +26,7 @@ class FieldUiTest extends UnitTestCase {
   protected function setUp() {
     parent::setUp();
 
-    $this->pathValidator = $this->getMock('Drupal\Core\Path\PathValidatorInterface');
+    $this->pathValidator = $this->createMock('Drupal\Core\Path\PathValidatorInterface');
     $container = new ContainerBuilder();
     $container->set('path.validator', $this->pathValidator);
     \Drupal::setContainer($container);

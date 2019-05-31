@@ -36,7 +36,7 @@ class ChainEntityResolverTest extends UnitTestCase {
    * {@inheritdoc}
    */
   protected function setUp() {
-    $this->testNormalizer = $this->getMock('Symfony\Component\Serializer\Normalizer\NormalizerInterface');
+    $this->testNormalizer = $this->createMock('Symfony\Component\Serializer\Normalizer\NormalizerInterface');
     $this->testData = new \stdClass();
   }
 
@@ -134,7 +134,7 @@ class ChainEntityResolverTest extends UnitTestCase {
    *   The mocked entity resolver.
    */
   protected function createEntityResolverMock($return = NULL, $called = TRUE) {
-    $mock = $this->getMock('Drupal\serialization\EntityResolver\EntityResolverInterface');
+    $mock = $this->createMock('Drupal\serialization\EntityResolver\EntityResolverInterface');
 
     if ($called) {
       $mock->expects($this->once())

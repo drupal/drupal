@@ -107,15 +107,15 @@ class ViewExecutableTest extends UnitTestCase {
   protected function setUp() {
     parent::setUp();
 
-    $this->view = $this->getMock('Drupal\views\ViewEntityInterface');
-    $this->user = $this->getMock('Drupal\Core\Session\AccountInterface');
+    $this->view = $this->createMock('Drupal\views\ViewEntityInterface');
+    $this->user = $this->createMock('Drupal\Core\Session\AccountInterface');
     $this->viewsData = $this->getMockBuilder('Drupal\views\ViewsData')
       ->disableOriginalConstructor()
       ->getMock();
     $this->displayHandler = $this->getMockBuilder('Drupal\views\Plugin\views\display\DisplayRouterInterface')
       ->disableOriginalConstructor()
       ->getMock();
-    $this->routeProvider = $this->getMock('Drupal\Core\Routing\RouteProviderInterface');
+    $this->routeProvider = $this->createMock('Drupal\Core\Routing\RouteProviderInterface');
     $this->displayHandlers = $this->getMockBuilder('Drupal\views\DisplayPluginCollection')
       ->disableOriginalConstructor()
       ->getMock();
@@ -185,7 +185,7 @@ class ViewExecutableTest extends UnitTestCase {
    * @covers ::getUrl
    */
   public function testGetUrlWithoutRouterDisplay() {
-    $this->displayHandler = $this->getMock('Drupal\views\Plugin\views\display\DisplayPluginInterface');
+    $this->displayHandler = $this->createMock('Drupal\views\Plugin\views\display\DisplayPluginInterface');
     $this->displayHandlers->expects($this->any())
       ->method('get')
       ->willReturn($this->displayHandler);

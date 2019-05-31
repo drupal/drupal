@@ -23,10 +23,10 @@ class FilterSettingsTest extends MigrateTestCase {
    * @covers ::transform
    */
   public function testTransform($value, $destination_id, $expected_value) {
-    $migration = $this->getMock(MigrationInterface::class);
+    $migration = $this->createMock(MigrationInterface::class);
     $plugin = new FilterSettings([], 'filter_settings', [], $migration);
 
-    $executable = $this->getMock(MigrateExecutableInterface::class);
+    $executable = $this->createMock(MigrateExecutableInterface::class);
     $row = $this->getMockBuilder(Row::class)
       ->disableOriginalConstructor()
       ->getMock();

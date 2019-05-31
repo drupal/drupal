@@ -83,13 +83,13 @@ class EntityListBuilderTest extends UnitTestCase {
   protected function setUp() {
     parent::setUp();
 
-    $this->role = $this->getMock('Drupal\user\RoleInterface');
-    $this->roleStorage = $this->getMock('\Drupal\user\RoleStorageInterface');
-    $this->moduleHandler = $this->getMock('\Drupal\Core\Extension\ModuleHandlerInterface');
-    $this->entityType = $this->getMock('\Drupal\Core\Entity\EntityTypeInterface');
-    $this->translationManager = $this->getMock('\Drupal\Core\StringTranslation\TranslationInterface');
+    $this->role = $this->createMock('Drupal\user\RoleInterface');
+    $this->roleStorage = $this->createMock('\Drupal\user\RoleStorageInterface');
+    $this->moduleHandler = $this->createMock('\Drupal\Core\Extension\ModuleHandlerInterface');
+    $this->entityType = $this->createMock('\Drupal\Core\Entity\EntityTypeInterface');
+    $this->translationManager = $this->createMock('\Drupal\Core\StringTranslation\TranslationInterface');
     $this->entityListBuilder = new TestEntityListBuilder($this->entityType, $this->roleStorage);
-    $this->redirectDestination = $this->getMock(RedirectDestinationInterface::class);
+    $this->redirectDestination = $this->createMock(RedirectDestinationInterface::class);
     $this->container = new ContainerBuilder();
     \Drupal::setContainer($this->container);
   }

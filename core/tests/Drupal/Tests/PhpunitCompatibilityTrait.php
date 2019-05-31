@@ -43,12 +43,13 @@ trait PhpunitCompatibilityTrait {
    *
    * @return \PHPUnit_Framework_MockObject_MockObject
    *
-   * @deprecated in Drupal 8.5.0 and will be removed before Drupal 9.0.0.
+   * @deprecated in drupal:8.5.0 and is removed from drupal:9.0.0.
    *   Use \Drupal\Tests\PhpunitCompatibilityTrait::createMock() instead.
    *
    * @see https://www.drupal.org/node/2907725
    */
   public function getMock($originalClassName, $methods = [], array $arguments = [], $mockClassName = '', $callOriginalConstructor = TRUE, $callOriginalClone = TRUE, $callAutoload = TRUE, $cloneArguments = FALSE, $callOriginalMethods = FALSE, $proxyTarget = NULL) {
+    @trigger_error('\Drupal\Tests\PhpunitCompatibilityTrait::getMock() is deprecated in drupal:8.5.0 and is removed from drupal:9.0.0. Use \Drupal\Tests\PhpunitCompatibilityTrait::createMock() instead. See https://www.drupal.org/node/2907725', E_USER_DEPRECATED);
     if (!$this->supports('getMock')) {
       $mock = $this->getMockBuilder($originalClassName)
         ->setMethods($methods)

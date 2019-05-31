@@ -95,7 +95,7 @@ class MigrateSqlIdMapTest extends MigrateTestCase {
   protected function getIdMap() {
     $migration = $this->getMigration();
 
-    $plugin = $this->getMock('Drupal\migrate\Plugin\MigrateSourceInterface');
+    $plugin = $this->createMock('Drupal\migrate\Plugin\MigrateSourceInterface');
     $plugin
       ->method('getIds')
       ->willReturn($this->sourceIds);
@@ -103,14 +103,14 @@ class MigrateSqlIdMapTest extends MigrateTestCase {
       ->method('getSourcePlugin')
       ->willReturn($plugin);
 
-    $plugin = $this->getMock('Drupal\migrate\Plugin\MigrateDestinationInterface');
+    $plugin = $this->createMock('Drupal\migrate\Plugin\MigrateDestinationInterface');
     $plugin
       ->method('getIds')
       ->willReturn($this->destinationIds);
     $migration
       ->method('getDestinationPlugin')
       ->willReturn($plugin);
-    $event_dispatcher = $this->getMock('Symfony\Component\EventDispatcher\EventDispatcherInterface');
+    $event_dispatcher = $this->createMock('Symfony\Component\EventDispatcher\EventDispatcherInterface');
 
     $id_map = new TestSqlIdMap($this->database, [], 'sql', [], $migration, $event_dispatcher);
     $migration
@@ -191,7 +191,7 @@ class MigrateSqlIdMapTest extends MigrateTestCase {
    * Tests the SQL ID map set message method.
    */
   public function testSetMessage() {
-    $message = $this->getMock('Drupal\migrate\MigrateMessageInterface');
+    $message = $this->createMock('Drupal\migrate\MigrateMessageInterface');
     $id_map = $this->getIdMap();
     $id_map->setMessage($message);
     $this->assertAttributeEquals($message, 'message', $id_map);

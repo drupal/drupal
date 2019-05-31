@@ -80,7 +80,7 @@ class RecursiveContextualValidatorTest extends UnitTestCase {
     $container->set('typed_data_manager', $this->typedDataManager);
     \Drupal::setContainer($container);
 
-    $translator = $this->getMock('Drupal\Core\Validation\TranslatorInterface');
+    $translator = $this->createMock('Drupal\Core\Validation\TranslatorInterface');
     $translator->expects($this->any())
       ->method('trans')
       ->willReturnCallback(function ($id) {
@@ -258,7 +258,7 @@ class RecursiveContextualValidatorTest extends UnitTestCase {
     $data[] = [new \stdClass()];
     $data[] = [new TestClass()];
 
-    $data[] = [$this->getMock('Drupal\Core\TypedData\TypedDataInterface')];
+    $data[] = [$this->createMock('Drupal\Core\TypedData\TypedDataInterface')];
 
     return $data;
   }

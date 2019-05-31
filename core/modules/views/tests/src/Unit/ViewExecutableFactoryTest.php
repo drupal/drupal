@@ -61,13 +61,13 @@ class ViewExecutableFactoryTest extends UnitTestCase {
   protected function setUp() {
     parent::setUp();
 
-    $this->user = $this->getMock('Drupal\Core\Session\AccountInterface');
+    $this->user = $this->createMock('Drupal\Core\Session\AccountInterface');
     $this->requestStack = new RequestStack();
-    $this->view = $this->getMock('Drupal\views\ViewEntityInterface');
+    $this->view = $this->createMock('Drupal\views\ViewEntityInterface');
     $this->viewsData = $this->getMockBuilder('Drupal\views\ViewsData')
       ->disableOriginalConstructor()
       ->getMock();
-    $this->routeProvider = $this->getMock('Drupal\Core\Routing\RouteProviderInterface');
+    $this->routeProvider = $this->createMock('Drupal\Core\Routing\RouteProviderInterface');
     $this->viewExecutableFactory = new ViewExecutableFactory($this->user, $this->requestStack, $this->viewsData, $this->routeProvider);
   }
 

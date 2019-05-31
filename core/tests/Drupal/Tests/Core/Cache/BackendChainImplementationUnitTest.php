@@ -290,7 +290,7 @@ class BackendChainImplementationUnitTest extends UnitTestCase {
   public function testRemoveBin() {
     $chain = new BackendChain('foo');
     for ($i = 0; $i < 3; $i++) {
-      $backend = $this->getMock('Drupal\Core\Cache\CacheBackendInterface');
+      $backend = $this->createMock('Drupal\Core\Cache\CacheBackendInterface');
       $backend->expects($this->once())->method('removeBin');
       $chain->appendBackend($backend);
     }

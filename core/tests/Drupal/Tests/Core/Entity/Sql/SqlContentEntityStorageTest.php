@@ -115,7 +115,7 @@ class SqlContentEntityStorageTest extends UnitTestCase {
    * {@inheritdoc}
    */
   protected function setUp() {
-    $this->entityType = $this->getMock('Drupal\Core\Entity\ContentEntityTypeInterface');
+    $this->entityType = $this->createMock('Drupal\Core\Entity\ContentEntityTypeInterface');
     $this->entityType->expects($this->any())
       ->method('id')
       ->will($this->returnValue($this->entityTypeId));
@@ -126,9 +126,9 @@ class SqlContentEntityStorageTest extends UnitTestCase {
     $this->entityTypeManager = $this->createMock(EntityTypeManager::class);
     $this->entityTypeBundleInfo = $this->createMock(EntityTypeBundleInfoInterface::class);
     $this->entityFieldManager = $this->createMock(EntityFieldManager::class);
-    $this->moduleHandler = $this->getMock('Drupal\Core\Extension\ModuleHandlerInterface');
-    $this->cache = $this->getMock('Drupal\Core\Cache\CacheBackendInterface');
-    $this->languageManager = $this->getMock('Drupal\Core\Language\LanguageManagerInterface');
+    $this->moduleHandler = $this->createMock('Drupal\Core\Extension\ModuleHandlerInterface');
+    $this->cache = $this->createMock('Drupal\Core\Cache\CacheBackendInterface');
+    $this->languageManager = $this->createMock('Drupal\Core\Language\LanguageManagerInterface');
     $this->languageManager->expects($this->any())
       ->method('getDefaultLanguage')
       ->will($this->returnValue(new Language(['langcode' => 'en'])));
@@ -433,7 +433,7 @@ class SqlContentEntityStorageTest extends UnitTestCase {
       ->setMethods(['getStorageSchema'])
       ->getMock();
 
-    $key_value = $this->getMock('Drupal\Core\KeyValueStore\KeyValueStoreInterface');
+    $key_value = $this->createMock('Drupal\Core\KeyValueStore\KeyValueStoreInterface');
     $schema_handler = $this->getMockBuilder('Drupal\Core\Entity\Sql\SqlContentEntityStorageSchema')
       ->setConstructorArgs([$this->entityTypeManager, $this->entityType, $storage, $this->connection, $this->entityFieldManager])
       ->setMethods(['installedStorageSchema', 'createSharedTableSchema'])
@@ -1066,7 +1066,7 @@ class SqlContentEntityStorageTest extends UnitTestCase {
    * @covers ::create
    */
   public function testCreate() {
-    $language_manager = $this->getMock('Drupal\Core\Language\LanguageManagerInterface');
+    $language_manager = $this->createMock('Drupal\Core\Language\LanguageManagerInterface');
 
     $language = new Language(['id' => 'en']);
     $language_manager->expects($this->any())
@@ -1128,7 +1128,7 @@ class SqlContentEntityStorageTest extends UnitTestCase {
    */
   protected function mockFieldDefinitions(array $field_names, $methods = []) {
     $field_definitions = [];
-    $definition = $this->getMock('Drupal\Tests\Core\Field\TestBaseFieldDefinitionInterface');
+    $definition = $this->createMock('Drupal\Tests\Core\Field\TestBaseFieldDefinitionInterface');
 
     // Assign common method return values.
     $methods += [
@@ -1335,7 +1335,7 @@ class SqlContentEntityStorageTest extends UnitTestCase {
    * @covers ::hasData
    */
   public function testHasData() {
-    $query = $this->getMock('Drupal\Core\Entity\Query\QueryInterface');
+    $query = $this->createMock('Drupal\Core\Entity\Query\QueryInterface');
     $query->expects(($this->once()))
       ->method('accessCheck')
       ->with(FALSE)
@@ -1348,7 +1348,7 @@ class SqlContentEntityStorageTest extends UnitTestCase {
       ->method('execute')
       ->willReturn([5]);
 
-    $factory = $this->getMock(QueryFactoryInterface::class);
+    $factory = $this->createMock(QueryFactoryInterface::class);
     $factory->expects($this->once())
       ->method('get')
       ->with($this->entityType, 'AND')

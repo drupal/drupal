@@ -68,20 +68,20 @@ class LocaleLookupTest extends UnitTestCase {
    * {@inheritdoc}
    */
   protected function setUp() {
-    $this->storage = $this->getMock('Drupal\locale\StringStorageInterface');
-    $this->cache = $this->getMock('Drupal\Core\Cache\CacheBackendInterface');
-    $this->lock = $this->getMock('Drupal\Core\Lock\LockBackendInterface');
+    $this->storage = $this->createMock('Drupal\locale\StringStorageInterface');
+    $this->cache = $this->createMock('Drupal\Core\Cache\CacheBackendInterface');
+    $this->lock = $this->createMock('Drupal\Core\Lock\LockBackendInterface');
     $this->lock->expects($this->never())
       ->method($this->anything());
 
-    $this->user = $this->getMock('Drupal\Core\Session\AccountInterface');
+    $this->user = $this->createMock('Drupal\Core\Session\AccountInterface');
     $this->user->expects($this->any())
       ->method('getRoles')
       ->will($this->returnValue(['anonymous']));
 
     $this->configFactory = $this->getConfigFactoryStub(['locale.settings' => ['cache_strings' => FALSE]]);
 
-    $this->languageManager = $this->getMock('Drupal\Core\Language\LanguageManagerInterface');
+    $this->languageManager = $this->createMock('Drupal\Core\Language\LanguageManagerInterface');
     $this->requestStack = new RequestStack();
 
     $container = new ContainerBuilder();
@@ -243,7 +243,7 @@ class LocaleLookupTest extends UnitTestCase {
    * @covers ::resolveCacheMiss
    */
   public function testResolveCacheMissNoTranslation() {
-    $string = $this->getMock('Drupal\locale\StringInterface');
+    $string = $this->createMock('Drupal\locale\StringInterface');
     $string->expects($this->once())
       ->method('addLocation')
       ->will($this->returnSelf());
