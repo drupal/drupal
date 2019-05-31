@@ -93,7 +93,7 @@ class MediaLibraryState extends ParameterBag {
     // all validation runs.
     $state = static::create(
       $query->get('media_library_opener_id'),
-      $query->get('media_library_allowed_types'),
+      $query->get('media_library_allowed_types', []),
       $query->get('media_library_selected_type'),
       $query->get('media_library_remaining')
     );
