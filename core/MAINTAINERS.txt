@@ -27,9 +27,9 @@ Framework managers
   Backend
   - Alex Bronstein 'effulgentsia' https://www.drupal.org/u/effulgentsia
   - Nathaniel Catchpole 'catch' https://www.drupal.org/u/catch
+  - Francesco Placella 'plach' https://www.drupal.org/u/plach
   - Alex Pott 'alexpott' https://www.drupal.org/u/alexpott
   - Lee Rowlands 'larowlan' https://www.drupal.org/u/larowlan
-  - (provisional) Francesco Placella 'plach' https://www.drupal.org/u/plach
 
   Frontend
   - Lauri Eskola 'lauriii' https://www.drupal.org/u/lauriii
