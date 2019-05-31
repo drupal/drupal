@@ -282,6 +282,15 @@ class MediaLibraryStateTest extends KernelTestBase {
   }
 
   /**
+   * @covers ::fromRequest
+   */
+  public function testFromRequestQueryLess() {
+    $this->setExpectedException(\InvalidArgumentException::class, 'The opener ID parameter is required and must be a string.');
+    $state = MediaLibraryState::fromRequest(new Request());
+    $this->assertInstanceOf(MediaLibraryState::class, $state);
+  }
+
+  /**
    * Data provider for testFromRequest().
    *
    * @return array
