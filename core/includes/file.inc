@@ -158,7 +158,7 @@ function file_uri_target($uri) {
  * @see https://www.drupal.org/node/3049030
  */
 function file_default_scheme() {
-  @trigger_error('file_default_scheme() is deprecated in drupal:8.8.0. It will be removed from drupal:9.0.0. Use \Drupal::config(\'system.file\')->get(\'default_scheme\') instead. See https://www.drupal.org/project/paragraphs/issues/3049030', E_USER_DEPRECATED);
+  @trigger_error('file_default_scheme() is deprecated in drupal:8.8.0. It will be removed from drupal:9.0.0. Use \Drupal::config(\'system.file\')->get(\'default_scheme\') instead. See https://www.drupal.org/node/3049030', E_USER_DEPRECATED);
   return \Drupal::config('system.file')->get('default_scheme');
 }
 
