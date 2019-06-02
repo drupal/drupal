@@ -5,6 +5,8 @@
  * Hooks related to the File management system.
  */
 
+use Drupal\Core\StreamWrapper\StreamWrapperManager;
+
 /**
  * @addtogroup hooks
  * @{
@@ -30,8 +32,8 @@
  */
 function hook_file_download($uri) {
   // Check to see if this is a config download.
-  $scheme = file_uri_scheme($uri);
-  $target = file_uri_target($uri);
+  $scheme = StreamWrapperManager::getScheme($uri);
+  $target = StreamWrapperManager::getTarget($uri);
   if ($scheme == 'temporary' && $target == 'config.tar.gz') {
     return [
       'Content-disposition' => 'attachment; filename="config.tar.gz"',
@@ -70,7 +72,10 @@ function hook_file_url_alter(&$uri) {
   // so don't support this in the common case.
   $schemes = ['public'];
 
-  $scheme = file_uri_scheme($uri);
+  /** @var \Drupal\Core\StreamWrapper\StreamWrapperManagerInterface $stream_wrapper_manager */
+  $stream_wrapper_manager = \Drupal::service('stream_wrapper_manager');
+
+  $scheme = $stream_wrapper_manager::getScheme($uri);
 
   // Only serve shipped files and public created files from the CDN.
   if (!$scheme || in_array($scheme, $schemes)) {
@@ -80,8 +85,8 @@ function hook_file_url_alter(&$uri) {
     }
     // Public created files.
     else {
-      $wrapper = \Drupal::service('stream_wrapper_manager')->getViaScheme($scheme);
-      $path = $wrapper->getDirectoryPath() . '/' . file_uri_target($uri);
+      $wrapper = $stream_wrapper_manager->getViaScheme($scheme);
+      $path = $wrapper->getDirectoryPath() . '/' . $stream_wrapper_manager::getTarget($uri);
     }
 
     // Clean up Windows paths.

@@ -342,7 +342,11 @@ class OEmbed extends MediaSourceBase implements OEmbedInterface {
    */
   public function validateConfigurationForm(array &$form, FormStateInterface $form_state) {
     $thumbnails_directory = $form_state->getValue('thumbnails_directory');
-    if (!file_valid_uri($thumbnails_directory)) {
+
+    /** @var \Drupal\Core\StreamWrapper\StreamWrapperManagerInterface $stream_wrapper_manager */
+    $stream_wrapper_manager = \Drupal::service('stream_wrapper_manager');
+
+    if (!$stream_wrapper_manager->isValidUri($thumbnails_directory)) {
       $form_state->setErrorByName('thumbnails_directory', $this->t('@path is not a valid path.', [
         '@path' => $thumbnails_directory,
       ]));

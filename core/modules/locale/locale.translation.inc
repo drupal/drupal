@@ -5,6 +5,8 @@
  * Common API for interface translation.
  */
 
+use Drupal\Core\StreamWrapper\StreamWrapperManager;
+
 /**
  * Comparison result of source files timestamps.
  *
@@ -376,7 +378,7 @@ function locale_cron_fill_queue() {
  *   TRUE if the $uri is a remote file.
  */
 function _locale_translation_file_is_remote($uri) {
-  $scheme = file_uri_scheme($uri);
+  $scheme = StreamWrapperManager::getScheme($uri);
   if ($scheme) {
     return !\Drupal::service('file_system')->realpath($scheme . '://');
   }

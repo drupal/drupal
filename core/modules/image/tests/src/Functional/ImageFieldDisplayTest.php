@@ -2,13 +2,14 @@
 
 namespace Drupal\Tests\image\Functional;
 
-use Drupal\Core\Url;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
+use Drupal\Core\StreamWrapper\StreamWrapperManager;
+use Drupal\Core\Url;
 use Drupal\field\Entity\FieldStorageConfig;
-use Drupal\Tests\TestFileCreationTrait;
-use Drupal\Tests\system\Functional\Cache\AssertPageCacheContextsAndTagsTrait;
-use Drupal\user\RoleInterface;
 use Drupal\image\Entity\ImageStyle;
+use Drupal\Tests\system\Functional\Cache\AssertPageCacheContextsAndTagsTrait;
+use Drupal\Tests\TestFileCreationTrait;
+use Drupal\user\RoleInterface;
 
 /**
  * Tests the display of image fields.
@@ -451,7 +452,8 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     $private_field_storage = FieldStorageConfig::loadByName('node', $private_field_name);
     $default_image = $private_field_storage->getSetting('default_image');
     $file = \Drupal::service('entity.repository')->loadEntityByUuid('file', $default_image['uuid']);
-    $this->assertEqual('private', file_uri_scheme($file->getFileUri()), 'Default image uses private:// scheme.');
+
+    $this->assertEqual('private', StreamWrapperManager::getScheme($file->getFileUri()), 'Default image uses private:// scheme.');
     $this->assertTrue($file->isPermanent(), 'The default image status is permanent.');
     // Create a new node with no image attached and ensure that default private
     // image is displayed.

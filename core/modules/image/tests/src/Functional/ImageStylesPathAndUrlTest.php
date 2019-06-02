@@ -3,6 +3,7 @@
 namespace Drupal\Tests\image\Functional;
 
 use Drupal\Core\File\FileSystemInterface;
+use Drupal\Core\StreamWrapper\StreamWrapperManager;
 use Drupal\image\Entity\ImageStyle;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\Tests\BrowserTestBase;
@@ -189,7 +190,7 @@ class ImageStylesPathAndUrlTest extends BrowserTestBase {
     // match the desired scheme before testing this, then switch it back to the
     // "temporary" scheme used throughout this test afterwards.
     $this->config('system.file')->set('default_scheme', $scheme)->save();
-    $relative_path = file_uri_target($original_uri);
+    $relative_path = StreamWrapperManager::getTarget($original_uri);
     $generate_url_from_relative_path = $this->style->buildUrl($relative_path, $clean_url);
     $this->assertEqual($generate_url, $generate_url_from_relative_path);
     $this->config('system.file')->set('default_scheme', 'temporary')->save();

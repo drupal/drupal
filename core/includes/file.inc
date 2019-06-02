@@ -16,6 +16,7 @@ use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Site\Settings;
 use Drupal\Core\StreamWrapper\PrivateStream;
 use Drupal\Core\StreamWrapper\PublicStream;
+use Drupal\Core\StreamWrapper\StreamWrapperManager;
 
 /**
  * Default mode for new directories.
@@ -98,25 +99,29 @@ const FILE_STATUS_PERMANENT = 1;
 /**
  * Returns the scheme of a URI (e.g. a stream).
  *
- * @deprecated in Drupal 8.0.x-dev, will be removed before Drupal 9.0.0.
- *   Use \Drupal\Core\File\FileSystem::uriScheme().
+ * @deprecated in drupal:8.8.0 and will be removed from drupal:9.0.0. Use
+ *   Drupal\Core\StreamWrapper\StreamWrapperManagerInterface::getScheme()
+ *   instead.
  *
- * @see https://www.drupal.org/node/2418133
+ * @see https://www.drupal.org/node/3035273
  */
 function file_uri_scheme($uri) {
-  return \Drupal::service('file_system')->uriScheme($uri);
+  @trigger_error('file_uri_scheme() is deprecated in drupal:8.0.0 and will be removed before drupal:9.0.0. Use \Drupal\Core\StreamWrapper\StreamWrapperManagerInterface::getScheme() instead. See https://www.drupal.org/node/3035273', E_USER_DEPRECATED);
+  return StreamWrapperManager::getScheme($uri);
 }
 
 /**
  * Checks that the scheme of a stream URI is valid.
  *
- * @deprecated in Drupal 8.0.x-dev, will be removed before Drupal 9.0.0.
- *   Use \Drupal\Core\File\FileSystem::validScheme().
+ * @deprecated in drupal:8.8.0 and will be removed from Drupal 9.0.0. Use
+ *   Drupal\Core\StreamWrapper\StreamWrapperManagerInterface::isValidScheme()
+ *   instead.
  *
- * @see https://www.drupal.org/node/2418133
+ * @see https://www.drupal.org/node/3035273
  */
 function file_stream_wrapper_valid_scheme($scheme) {
-  return \Drupal::service('file_system')->validScheme($scheme);
+  @trigger_error('file_stream_wrapper_valid_scheme() is deprecated in drupal:8.0.0 and will be removed before drupal:9.0.0. Use \Drupal\Core\StreamWrapper\StreamWrapperManagerInterface::isValidScheme() instead. See https://www.drupal.org/node/3035273', E_USER_DEPRECATED);
+  return \Drupal::service('stream_wrapper_manager')->isValidScheme($scheme);
 }
 
 /**
@@ -130,15 +135,15 @@ function file_stream_wrapper_valid_scheme($scheme) {
  *   For example, the URI "public://sample/test.txt" would return
  *   "sample/test.txt".
  *
- * @see file_uri_scheme()
+ * @deprecated in drupal:8.8.0 and will be removed from drupal:9.0.0. Use
+ *   \Drupal\Core\StreamWrapper\StreamWrapperManagerInterface::getTarget()
+ *   instead.
+ *
+ * @see https://www.drupal.org/node/3035273
  */
 function file_uri_target($uri) {
-  // Remove the scheme from the URI and remove erroneous leading or trailing,
-  // forward-slashes and backslashes.
-  $target = trim(preg_replace('/^[\w\-]+:\/\/|^data:/', '', $uri), '\/');
-
-  // If nothing was replaced, the URI doesn't have a valid scheme.
-  return $target !== $uri ? $target : FALSE;
+  @trigger_error('file_uri_target() is deprecated in drupal:8.8.0 and will be removed before drupal:9.0.0. Use \Drupal\Core\StreamWrapper\StreamWrapperManagerInterface::getTarget() instead. See https://www.drupal.org/node/3035273', E_USER_DEPRECATED);
+  return StreamWrapperManager::getTarget($uri);
 }
 
 /**
@@ -171,19 +176,16 @@ function file_default_scheme() {
  *
  * @return string
  *   The normalized URI.
+ *
+ * @deprecated in drupal:8.8.0 and will be removed from drupal:9.0.0. Use
+ *   \Drupal\Core\StreamWrapper\StreamWrapperManagerInterface::normalizeUri()
+ *   instead.
+ *
+ * @see https://www.drupal.org/node/3035273
  */
 function file_stream_wrapper_uri_normalize($uri) {
-  $scheme = \Drupal::service('file_system')->uriScheme($uri);
-
-  if (file_stream_wrapper_valid_scheme($scheme)) {
-    $target = file_uri_target($uri);
-
-    if ($target !== FALSE) {
-      $uri = $scheme . '://' . $target;
-    }
-  }
-
-  return $uri;
+  @trigger_error('file_stream_wrapper_uri_normalize() is deprecated in drupal:8.8.0 and will be removed before drupal:9.0.0. Use \Drupal\Core\StreamWrapper\StreamWrapperManagerInterface::normalizeUri() instead. See https://www.drupal.org/node/3035273', E_USER_DEPRECATED);
+  return \Drupal::service('stream_wrapper_manager')->normalizeUri($uri);
 }
 
 /**
@@ -216,7 +218,7 @@ function file_create_url($uri) {
   // file server.
   \Drupal::moduleHandler()->alter('file_url', $uri);
 
-  $scheme = \Drupal::service('file_system')->uriScheme($uri);
+  $scheme = StreamWrapperManager::getScheme($uri);
 
   if (!$scheme) {
     // Allow for:
@@ -364,8 +366,12 @@ function file_ensure_htaccess() {
  *   if one is already present. Defaults to FALSE.
  */
 function file_save_htaccess($directory, $private = TRUE, $force_overwrite = FALSE) {
-  if (\Drupal::service('file_system')->uriScheme($directory)) {
-    $htaccess_path = file_stream_wrapper_uri_normalize($directory . '/.htaccess');
+
+  /** @var \Drupal\Core\StreamWrapper\StreamWrapperManagerInterface $stream_wrapper_manager */
+  $stream_wrapper_manager = \Drupal::service('stream_wrapper_manager');
+
+  if ($stream_wrapper_manager::getScheme($directory)) {
+    $htaccess_path = $stream_wrapper_manager->normalizeUri($directory . '/.htaccess');
   }
   else {
     $directory = rtrim($directory, '/\\');
@@ -421,14 +427,16 @@ function file_htaccess_lines($private = TRUE) {
  *
  * @return
  *   TRUE if the URI is allowed.
+ *
+ * @deprecated in drupal:8.8.0 and will be removed before drupal:9.0.0. Use
+ *   \Drupal\Core\StreamWrapper\StreamWrapperManagerInterface::isValidUri()
+ *   instead.
+ *
+ * @see https://www.drupal.org/node/3035273
  */
 function file_valid_uri($uri) {
-  // Assert that the URI has an allowed scheme. Bare paths are not allowed.
-  $uri_scheme = \Drupal::service('file_system')->uriScheme($uri);
-  if (!file_stream_wrapper_valid_scheme($uri_scheme)) {
-    return FALSE;
-  }
-  return TRUE;
+  @trigger_error('file_valid_uri() is deprecated in drupal:8.8.0 and will be removed before drupal:9.0.0. Use \Drupal\Core\StreamWrapper\StreamWrapperManagerInterface::isValidUri() instead. See https://www.drupal.org/node/3035273', E_USER_DEPRECATED);
+  return \Drupal::service('stream_wrapper_manager')->isValidUri($uri);
 }
 
 /**
@@ -586,7 +594,9 @@ function file_unmanaged_prepare($source, &$destination = NULL, $replace = FILE_E
  */
 function file_build_uri($path) {
   $uri = \Drupal::config('system.file')->get('default_scheme') . '://' . $path;
-  return file_stream_wrapper_uri_normalize($uri);
+  /** @var \Drupal\Core\StreamWrapper\StreamWrapperManagerInterface $stream_wrapper_manager */
+  $stream_wrapper_manager = \Drupal::service('stream_wrapper_manager');
+  return $stream_wrapper_manager->normalizeUri($uri);
 }
 
 /**
@@ -1001,7 +1011,9 @@ function file_scan_directory($dir, $mask, $options = [], $depth = 0) {
   ];
   // Normalize $dir only once.
   if ($depth == 0) {
-    $dir = file_stream_wrapper_uri_normalize($dir);
+    /** @var \Drupal\Core\StreamWrapper\StreamWrapperManagerInterface $stream_wrapper_manager */
+    $stream_wrapper_manager = \Drupal::service('stream_wrapper_manager');
+    $dir = $stream_wrapper_manager->normalizeUri($dir);
     $dir_has_slash = (substr($dir, -1) === '/');
   }
 

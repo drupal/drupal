@@ -3,15 +3,47 @@
 namespace Drupal\system;
 
 use Drupal\Core\Controller\ControllerBase;
+use Drupal\Core\StreamWrapper\StreamWrapperManagerInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 /**
  * System file controller.
  */
 class FileDownloadController extends ControllerBase {
+
+  /**
+   * The stream wrapper manager.
+   *
+   * @var \Drupal\Core\StreamWrapper\StreamWrapperManagerInterface
+   */
+  protected $streamWrapperManager;
+
+  /**
+   * FileDownloadController constructor.
+   *
+   * @param \Drupal\Core\StreamWrapper\StreamWrapperManagerInterface $streamWrapperManager
+   *   The stream wrapper manager.
+   */
+  public function __construct(StreamWrapperManagerInterface $streamWrapperManager = NULL) {
+    if (!$streamWrapperManager) {
+      @trigger_error('Calling FileDownloadController::__construct() without the $streamWrapperManager argument is deprecated in drupal:8.8.0. The $streamWrapperManager argument will be required in drupal:9.0.0. See https://www.drupal.org/node/3035273', E_USER_DEPRECATED);
+      $streamWrapperManager = \Drupal::service('stream_wrapper_manager');
+    }
+    $this->streamWrapperManager = $streamWrapperManager;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container) {
+    return new static(
+      $container->get('stream_wrapper_manager')
+    );
+  }
 
   /**
    * Handles private file transfers.
@@ -43,7 +75,7 @@ class FileDownloadController extends ControllerBase {
     // Merge remaining path arguments into relative file path.
     $uri = $scheme . '://' . $target;
 
-    if (file_stream_wrapper_valid_scheme($scheme) && file_exists($uri)) {
+    if ($this->streamWrapperManager->isValidScheme($scheme) && file_exists($uri)) {
       // Let other modules provide headers and controls access to the file.
       $headers = $this->moduleHandler()->invokeAll('file_download', [$uri]);
 

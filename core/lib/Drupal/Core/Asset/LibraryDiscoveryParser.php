@@ -8,6 +8,7 @@ use Drupal\Core\Asset\Exception\InvalidLibraryFileException;
 use Drupal\Core\Asset\Exception\LibraryDefinitionMissingLicenseException;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Serialization\Yaml;
+use Drupal\Core\StreamWrapper\StreamWrapperManagerInterface;
 use Drupal\Core\Theme\ThemeManagerInterface;
 use Drupal\Component\Serialization\Exception\InvalidDataTypeException;
 use Drupal\Component\Utility\NestedArray;
@@ -39,6 +40,13 @@ class LibraryDiscoveryParser {
   protected $root;
 
   /**
+   * The stream wrapper manager.
+   *
+   * @var \Drupal\Core\StreamWrapper\StreamWrapperManagerInterface
+   */
+  protected $streamWrapperManager;
+
+  /**
    * Constructs a new LibraryDiscoveryParser instance.
    *
    * @param string $root
@@ -47,11 +55,18 @@ class LibraryDiscoveryParser {
    *   The module handler.
    * @param \Drupal\Core\Theme\ThemeManagerInterface $theme_manager
    *   The theme manager.
+   * @param \Drupal\Core\StreamWrapper\StreamWrapperManagerInterface $stream_wrapper_manager
+   *   The stream wrapper manager.
    */
-  public function __construct($root, ModuleHandlerInterface $module_handler, ThemeManagerInterface $theme_manager) {
+  public function __construct($root, ModuleHandlerInterface $module_handler, ThemeManagerInterface $theme_manager, StreamWrapperManagerInterface $stream_wrapper_manager = NULL) {
     $this->root = $root;
     $this->moduleHandler = $module_handler;
     $this->themeManager = $theme_manager;
+    if (!$stream_wrapper_manager) {
+      @trigger_error('Calling LibraryDiscoveryParser::__construct() without the $stream_wrapper_manager argument is deprecated in drupal:8.8.0. The $stream_wrapper_manager argument will be required in drupal:9.0.0. See https://www.drupal.org/node/3035273', E_USER_DEPRECATED);
+      $stream_wrapper_manager = \Drupal::service('stream_wrapper_manager');
+    }
+    $this->streamWrapperManager = $stream_wrapper_manager;
   }
 
   /**
@@ -183,7 +198,7 @@ class LibraryDiscoveryParser {
               }
             }
             // A stream wrapper URI (e.g., public://generated_js/example.js).
-            elseif ($this->fileValidUri($source)) {
+            elseif ($this->streamWrapperManager->isValidUri($source)) {
               $options['data'] = $source;
             }
             // A regular URI (e.g., http://example.com/example.js) without
@@ -393,10 +408,15 @@ class LibraryDiscoveryParser {
   }
 
   /**
-   * Wraps file_valid_uri().
+   * Wraps \Drupal\Core\StreamWrapper\StreamWrapperManagerInterface::isValidUri().
+   *
+   * @deprecated in drupal:8.8.0 and will be removed before drupal:9.0.0. Use
+   *   \Drupal\Core\StreamWrapper\StreamWrapperManagerInterface::isValidUri()
+   *   instead.
    */
   protected function fileValidUri($source) {
-    return file_valid_uri($source);
+    @trigger_error('fileValidUri() is deprecated in Drupal 8.8.0 and will be removed before Drupal 9.0.0. Use \Drupal\Core\StreamWrapper\StreamWrapperManagerInterface::isValidUri() instead. See https://www.drupal.org/node/3035273', E_USER_DEPRECATED);
+    return $this->streamWrapperManager->isValidUri($source);
   }
 
   /**

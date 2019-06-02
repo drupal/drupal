@@ -11,6 +11,7 @@ use Drupal\Core\File\Exception\FileException;
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Routing\RequestHelper;
 use Drupal\Core\Site\Settings;
+use Drupal\Core\StreamWrapper\StreamWrapperManager;
 use Drupal\Core\Url;
 use Drupal\image\ImageEffectPluginCollection;
 use Drupal\image\ImageEffectInterface;
@@ -173,11 +174,11 @@ class ImageStyle extends ConfigEntityBase implements ImageStyleInterface, Entity
    * {@inheritdoc}
    */
   public function buildUri($uri) {
-    $source_scheme = $scheme = $this->fileUriScheme($uri);
+    $source_scheme = $scheme = StreamWrapperManager::getScheme($uri);
     $default_scheme = $this->fileDefaultScheme();
 
     if ($source_scheme) {
-      $path = $this->fileUriTarget($uri);
+      $path = StreamWrapperManager::getTarget($uri);
       // The scheme of derivative image files only needs to be computed for
       // source files not stored in the default scheme.
       if ($source_scheme != $default_scheme) {
@@ -202,6 +203,10 @@ class ImageStyle extends ConfigEntityBase implements ImageStyleInterface, Entity
    */
   public function buildUrl($path, $clean_urls = NULL) {
     $uri = $this->buildUri($path);
+
+    /** @var \Drupal\Core\StreamWrapper\StreamWrapperManagerInterface $stream_wrapper_manager */
+    $stream_wrapper_manager = \Drupal::service('stream_wrapper_manager');
+
     // The token query is added even if the
     // 'image.settings:allow_insecure_derivatives' configuration is TRUE, so
     // that the emitted links remain valid if it is changed back to the default
@@ -214,7 +219,7 @@ class ImageStyle extends ConfigEntityBase implements ImageStyleInterface, Entity
     $token_query = [];
     if (!\Drupal::config('image.settings')->get('suppress_itok_output')) {
       // The passed $path variable can be either a relative path or a full URI.
-      $original_uri = file_uri_scheme($path) ? file_stream_wrapper_uri_normalize($path) : file_build_uri($path);
+      $original_uri = $stream_wrapper_manager::getScheme($path) ? $stream_wrapper_manager->normalizeUri($path) : file_build_uri($path);
       $token_query = [IMAGE_DERIVATIVE_TOKEN => $this->getPathToken($original_uri)];
     }
 
@@ -234,9 +239,9 @@ class ImageStyle extends ConfigEntityBase implements ImageStyleInterface, Entity
     // ensure that it is included. Once the file exists it's fine to fall back
     // to the actual file path, this avoids bootstrapping PHP once the files are
     // built.
-    if ($clean_urls === FALSE && file_uri_scheme($uri) == 'public' && !file_exists($uri)) {
-      $directory_path = $this->getStreamWrapperManager()->getViaUri($uri)->getDirectoryPath();
-      return Url::fromUri('base:' . $directory_path . '/' . file_uri_target($uri), ['absolute' => TRUE, 'query' => $token_query])->toString();
+    if ($clean_urls === FALSE && $stream_wrapper_manager::getScheme($uri) == 'public' && !file_exists($uri)) {
+      $directory_path = $stream_wrapper_manager->getViaUri($uri)->getDirectoryPath();
+      return Url::fromUri('base:' . $directory_path . '/' . $stream_wrapper_manager::getTarget($uri), ['absolute' => TRUE, 'query' => $token_query])->toString();
     }
 
     $file_url = file_create_url($uri);
@@ -505,16 +510,18 @@ class ImageStyle extends ConfigEntityBase implements ImageStyleInterface, Entity
    * @param string $uri
    *   A stream, referenced as "scheme://target"  or "data:target".
    *
-   * @see file_uri_target()
-   *
-   * @todo: Remove when https://www.drupal.org/node/2050759 is in.
-   *
    * @return string
    *   A string containing the name of the scheme, or FALSE if none. For
    *   example, the URI "public://example.txt" would return "public".
+   *
+   * @deprecated in drupal:8.8.0 and will be removed from drupal:9.0.0. Use
+   *   \Drupal\Core\StreamWrapper\StreamWrapperManager::getTarget() instead.
+   *
+   * @see https://www.drupal.org/node/3035273
    */
   protected function fileUriScheme($uri) {
-    return file_uri_scheme($uri);
+    @trigger_error('fileUriTarget() is deprecated in drupal:8.8.0. It will be removed from drupal:9.0.0. See https://www.drupal.org/node/3035273', E_USER_DEPRECATED);
+    return StreamWrapperManager::getScheme($uri);
   }
 
   /**
@@ -525,17 +532,19 @@ class ImageStyle extends ConfigEntityBase implements ImageStyleInterface, Entity
    * @param string $uri
    *   A stream, referenced as "scheme://target" or "data:target".
    *
-   * @see file_uri_scheme()
-   *
-   * @todo: Convert file_uri_target() into a proper injectable service.
-   *
    * @return string|bool
    *   A string containing the target (path), or FALSE if none.
    *   For example, the URI "public://sample/test.txt" would return
    *   "sample/test.txt".
+   *
+   * @deprecated in drupal:8.8.0 and will be removed from drupal:9.0.0. Use
+   *   \Drupal\Core\StreamWrapper\StreamWrapperManager::getUriTarget() instead.
+   *
+   * @see https://www.drupal.org/node/3035273
    */
   protected function fileUriTarget($uri) {
-    return file_uri_target($uri);
+    @trigger_error('fileUriTarget() is deprecated in drupal:8.8.0. It will be removed from drupal:9.0.0. See https://www.drupal.org/node/3035273', E_USER_DEPRECATED);
+    return StreamWrapperManager::getTarget($uri);
   }
 
   /**

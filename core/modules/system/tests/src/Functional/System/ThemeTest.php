@@ -3,6 +3,7 @@
 namespace Drupal\Tests\system\Functional\System;
 
 use Drupal\Core\StreamWrapper\PublicStream;
+use Drupal\Core\StreamWrapper\StreamWrapperManager;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\TestFileCreationTrait;
 
@@ -64,12 +65,12 @@ class ThemeTest extends BrowserTestBase {
     $supported_paths = [
       // Raw stream wrapper URI.
       $file->uri => [
-        'form' => file_uri_target($file->uri),
+        'form' => StreamWrapperManager::getTarget($file->uri),
         'src' => file_url_transform_relative(file_create_url($file->uri)),
       ],
       // Relative path within the public filesystem.
-      file_uri_target($file->uri) => [
-        'form' => file_uri_target($file->uri),
+      StreamWrapperManager::getTarget($file->uri) => [
+        'form' => StreamWrapperManager::getTarget($file->uri),
         'src' => file_url_transform_relative(file_create_url($file->uri)),
       ],
       // Relative path to a public file.
@@ -107,17 +108,17 @@ class ThemeTest extends BrowserTestBase {
       $explicit_file = 'public://logo.svg';
       $local_file = $default_theme_path . '/logo.svg';
       // Adjust for fully qualified stream wrapper URI in public filesystem.
-      if (file_uri_scheme($input) == 'public') {
-        $implicit_public_file = file_uri_target($input);
+      if (StreamWrapperManager::getScheme($input) == 'public') {
+        $implicit_public_file = StreamWrapperManager::getTarget($input);
         $explicit_file = $input;
         $local_file = strtr($input, ['public:/' => PublicStream::basePath()]);
       }
       // Adjust for fully qualified stream wrapper URI elsewhere.
-      elseif (file_uri_scheme($input) !== FALSE) {
+      elseif (StreamWrapperManager::getScheme($input) !== FALSE) {
         $explicit_file = $input;
       }
       // Adjust for relative path within public filesystem.
-      elseif ($input == file_uri_target($file->uri)) {
+      elseif ($input == StreamWrapperManager::getTarget($file->uri)) {
         $implicit_public_file = $input;
         $explicit_file = 'public://' . $input;
         $local_file = PublicStream::basePath() . '/' . $input;

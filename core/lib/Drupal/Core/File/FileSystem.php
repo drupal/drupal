@@ -10,6 +10,7 @@ use Drupal\Core\File\Exception\FileNotExistsException;
 use Drupal\Core\File\Exception\FileWriteException;
 use Drupal\Core\File\Exception\NotRegularFileException;
 use Drupal\Core\Site\Settings;
+use Drupal\Core\StreamWrapper\StreamWrapperManager;
 use Drupal\Core\StreamWrapper\StreamWrapperManagerInterface;
 use Psr\Log\LoggerInterface;
 
@@ -110,8 +111,7 @@ class FileSystem implements FileSystemInterface {
    * {@inheritdoc}
    */
   public function unlink($uri, $context = NULL) {
-    $scheme = $this->uriScheme($uri);
-    if (!$this->validScheme($scheme) && (substr(PHP_OS, 0, 3) == 'WIN')) {
+    if (!$this->streamWrapperManager->isValidUri($uri) && (substr(PHP_OS, 0, 3) == 'WIN')) {
       chmod($uri, 0600);
     }
     if ($context) {
@@ -140,9 +140,9 @@ class FileSystem implements FileSystemInterface {
    * {@inheritdoc}
    */
   public function dirname($uri) {
-    $scheme = $this->uriScheme($uri);
+    $scheme = StreamWrapperManager::getScheme($uri);
 
-    if ($this->validScheme($scheme)) {
+    if ($this->streamWrapperManager->isValidScheme($scheme)) {
       return $this->streamWrapperManager->getViaScheme($scheme)->dirname($uri);
     }
     else {
@@ -181,7 +181,7 @@ class FileSystem implements FileSystemInterface {
 
     // If the URI has a scheme, don't override the umask - schemes can handle
     // this issue in their own implementation.
-    if ($this->uriScheme($uri)) {
+    if (StreamWrapperManager::getScheme($uri)) {
       return $this->mkdirCall($uri, $mode, $recursive, $context);
     }
 
@@ -252,8 +252,7 @@ class FileSystem implements FileSystemInterface {
    * {@inheritdoc}
    */
   public function rmdir($uri, $context = NULL) {
-    $scheme = $this->uriScheme($uri);
-    if (!$this->validScheme($scheme) && (substr(PHP_OS, 0, 3) == 'WIN')) {
+    if (!$this->streamWrapperManager->isValidUri($uri) && (substr(PHP_OS, 0, 3) == 'WIN')) {
       chmod($uri, 0700);
     }
     if ($context) {
@@ -268,9 +267,9 @@ class FileSystem implements FileSystemInterface {
    * {@inheritdoc}
    */
   public function tempnam($directory, $prefix) {
-    $scheme = $this->uriScheme($directory);
+    $scheme = StreamWrapperManager::getScheme($directory);
 
-    if ($this->validScheme($scheme)) {
+    if ($this->streamWrapperManager->isValidScheme($scheme)) {
       $wrapper = $this->streamWrapperManager->getViaScheme($scheme);
 
       if ($filename = tempnam($wrapper->getDirectoryPath(), $prefix)) {
@@ -290,22 +289,16 @@ class FileSystem implements FileSystemInterface {
    * {@inheritdoc}
    */
   public function uriScheme($uri) {
-    if (preg_match('/^([\w\-]+):\/\/|^(data):/', $uri, $matches)) {
-      // The scheme will always be the last element in the matches array.
-      return array_pop($matches);
-    }
-
-    return FALSE;
+    @trigger_error('FileSystem::uriScheme() is deprecated in drupal:8.8.0. It will be removed from drupal:9.0.0. Use \Drupal\Core\StreamWrapper\StreamWrapperManagerInterface::getScheme() instead. See https://www.drupal.org/node/3035273', E_USER_DEPRECATED);
+    return StreamWrapperManager::getScheme($uri);
   }
 
   /**
    * {@inheritdoc}
    */
   public function validScheme($scheme) {
-    if (!$scheme) {
-      return FALSE;
-    }
-    return class_exists($this->streamWrapperManager->getClass($scheme));
+    @trigger_error('FileSystem::validScheme() is deprecated in drupal:8.8.0 and will be removed before drupal:9.0.0. Use \Drupal\Core\StreamWrapper\StreamWrapperManagerInterface::isValidScheme() instead. See https://www.drupal.org/node/3035273', E_USER_DEPRECATED);
+    return $this->streamWrapperManager->isValidScheme($scheme);
   }
 
   /**
@@ -397,8 +390,7 @@ class FileSystem implements FileSystemInterface {
 
     // Ensure compatibility with Windows.
     // @see \Drupal\Core\File\FileSystemInterface::unlink().
-    $scheme = $this->uriScheme($source);
-    if (!$this->validScheme($scheme) && (substr(PHP_OS, 0, 3) == 'WIN')) {
+    if (!$this->streamWrapperManager->isValidUri($source) && (substr(PHP_OS, 0, 3) == 'WIN')) {
       chmod($source, 0600);
     }
     // Attempt to resolve the URIs. This is necessary in certain
@@ -481,7 +473,7 @@ class FileSystem implements FileSystemInterface {
     // Prepare the destination directory.
     if ($this->prepareDirectory($destination)) {
       // The destination is already a directory, so append the source basename.
-      $destination = file_stream_wrapper_uri_normalize($destination . '/' . $this->basename($source));
+      $destination = $this->streamWrapperManager->normalizeUri($destination . '/' . $this->basename($source));
     }
     else {
       // Perhaps $destination is a dir/file?
@@ -537,7 +529,7 @@ class FileSystem implements FileSystemInterface {
    * {@inheritdoc}
    */
   public function prepareDirectory(&$directory, $options = self::MODIFY_PERMISSIONS) {
-    if (!$this->validScheme($this->uriScheme($directory))) {
+    if (!$this->streamWrapperManager->isValidUri($directory)) {
       // Only trim if we're not dealing with a stream.
       $directory = rtrim($directory, '/\\');
     }

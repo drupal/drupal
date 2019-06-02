@@ -124,7 +124,11 @@ class FileItemTest extends FieldKernelTestBase {
     $this->entityValidateAndSave($entity);
     // Verify that the sample file was stored in the correct directory.
     $uri = $entity->file_test->entity->getFileUri();
-    $this->assertEqual($this->directory, dirname(file_uri_target($uri)));
+
+    /** @var \Drupal\Core\StreamWrapper\StreamWrapperManagerInterface $stream_wrapper_manager */
+    $stream_wrapper_manager = \Drupal::service('stream_wrapper_manager');
+
+    $this->assertEqual($this->directory, dirname($stream_wrapper_manager::getTarget($uri)));
 
     // Make sure the computed files reflects updates to the file.
     file_put_contents('public://example-3.txt', $this->randomMachineName());

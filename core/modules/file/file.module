@@ -157,7 +157,10 @@ function file_load($fid, $reset = FALSE) {
 function file_copy(FileInterface $source, $destination = NULL, $replace = FILE_EXISTS_RENAME) {
   /** @var \Drupal\Core\File\FileSystemInterface $file_system */
   $file_system = \Drupal::service('file_system');
-  if (!file_valid_uri($destination)) {
+  /** @var \Drupal\Core\StreamWrapper\StreamWrapperManagerInterface $stream_wrapper_manager */
+  $stream_wrapper_manager = \Drupal::service('stream_wrapper_manager');
+
+  if (!$stream_wrapper_manager->isValidUri($destination)) {
     if (($realpath = $file_system->realpath($source->getFileUri())) !== FALSE) {
       \Drupal::logger('file')->notice('File %file (%realpath) could not be copied because the destination %destination is invalid. This is often caused by improper use of file_copy() or a missing stream wrapper.', ['%file' => $source->getFileUri(), '%realpath' => $realpath, '%destination' => $destination]);
     }
@@ -237,7 +240,10 @@ function file_copy(FileInterface $source, $destination = NULL, $replace = FILE_E
 function file_move(FileInterface $source, $destination = NULL, $replace = FILE_EXISTS_RENAME) {
   /** @var \Drupal\Core\File\FileSystemInterface $file_system */
   $file_system = \Drupal::service('file_system');
-  if (!file_valid_uri($destination)) {
+  /** @var \Drupal\Core\StreamWrapper\StreamWrapperManagerInterface $stream_wrapper_manager */
+  $stream_wrapper_manager = \Drupal::service('stream_wrapper_manager');
+
+  if (!$stream_wrapper_manager->isValidUri($destination)) {
     if (($realpath = $file_system->realpath($source->getFileUri())) !== FALSE) {
       \Drupal::logger('file')->notice('File %file (%realpath) could not be moved because the destination %destination is invalid. This may be caused by improper use of file_move() or a missing stream wrapper.', ['%file' => $source->getFileUri(), '%realpath' => $realpath, '%destination' => $destination]);
     }
@@ -561,7 +567,10 @@ function file_save_data($data, $destination = NULL, $replace = FILE_EXISTS_RENAM
   if (empty($destination)) {
     $destination = \Drupal::config('system.file')->get('default_scheme') . '://';
   }
-  if (!file_valid_uri($destination)) {
+
+  /** @var \Drupal\Core\StreamWrapper\StreamWrapperManagerInterface $stream_wrapper_manager */
+  $stream_wrapper_manager = \Drupal::service('stream_wrapper_manager');
+  if (!$stream_wrapper_manager->isValidUri($destination)) {
     \Drupal::logger('file')->notice('The data could not be saved because the destination %destination is invalid. This may be caused by improper use of file_save_data() or a missing stream wrapper.', ['%destination' => $destination]);
     \Drupal::messenger()->addError(t('The data could not be saved because the destination is invalid. More information is available in the system log.'));
     return FALSE;
@@ -716,6 +725,9 @@ function file_cron() {
   $age = \Drupal::config('system.file')->get('temporary_maximum_age');
   $file_storage = \Drupal::entityTypeManager()->getStorage('file');
 
+  /** @var \Drupal\Core\StreamWrapper\StreamWrapperManagerInterface $stream_wrapper_manager */
+  $stream_wrapper_manager = \Drupal::service('stream_wrapper_manager');
+
   // Only delete temporary files if older than $age. Note that automatic cleanup
   // is disabled if $age set to 0.
   if ($age) {
@@ -729,7 +741,7 @@ function file_cron() {
       $references = \Drupal::service('file.usage')->listUsage($file);
       if (empty($references)) {
         if (!file_exists($file->getFileUri())) {
-          if (!file_valid_uri($file->getFileUri())) {
+          if (!$stream_wrapper_manager->isValidUri($file->getFileUri())) {
             \Drupal::logger('file system')->warning('Temporary file "%path" that was deleted during garbage collection did not exist on the filesystem. This could be caused by a missing stream wrapper.', ['%path' => $file->getFileUri()]);
           }
           else {
@@ -1029,9 +1041,12 @@ function _file_save_upload_single(\SplFileInfo $file_info, $form_field_name, $va
     $destination = 'temporary://';
   }
 
+  /** @var \Drupal\Core\StreamWrapper\StreamWrapperManagerInterface $stream_wrapper_manager */
+  $stream_wrapper_manager = \Drupal::service('stream_wrapper_manager');
+
   // Assert that the destination contains a valid stream.
-  $destination_scheme = file_uri_scheme($destination);
-  if (!file_stream_wrapper_valid_scheme($destination_scheme)) {
+  $destination_scheme = $stream_wrapper_manager::getScheme($destination);
+  if (!$stream_wrapper_manager->isValidScheme($destination_scheme)) {
     \Drupal::messenger()->addError(t('The file could not be uploaded because the destination %destination is invalid.', ['%destination' => $destination]));
     return FALSE;
   }

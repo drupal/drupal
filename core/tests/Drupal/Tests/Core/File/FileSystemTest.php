@@ -5,6 +5,7 @@ namespace Drupal\Tests\Core\File;
 use Drupal\Core\File\Exception\FileException;
 use Drupal\Core\File\FileSystem;
 use Drupal\Core\Site\Settings;
+use Drupal\Core\StreamWrapper\StreamWrapperManagerInterface;
 use Drupal\Tests\UnitTestCase;
 use org\bovigo\vfs\vfsStream;
 
@@ -28,15 +29,22 @@ class FileSystemTest extends UnitTestCase {
   protected $logger;
 
   /**
+   * The stream wrapper manager.
+   *
+   * @var \Drupal\Core\StreamWrapper\StreamWrapperInterface|\PHPUnit_Framework_MockObject_MockObject
+   */
+  protected $streamWrapperManager;
+
+  /**
    * {@inheritdoc}
    */
   protected function setUp() {
     parent::setUp();
 
     $settings = new Settings([]);
-    $stream_wrapper_manager = $this->createMock('Drupal\Core\StreamWrapper\StreamWrapperManagerInterface');
+    $this->streamWrapperManager = $this->createMock(StreamWrapperManagerInterface::class);
     $this->logger = $this->createMock('Psr\Log\LoggerInterface');
-    $this->fileSystem = new FileSystem($stream_wrapper_manager, $settings, $this->logger);
+    $this->fileSystem = new FileSystem($this->streamWrapperManager, $settings, $this->logger);
   }
 
   /**
@@ -85,12 +93,8 @@ class FileSystemTest extends UnitTestCase {
     vfsStream::create(['test.txt' => 'asdf']);
     $uri = 'vfs://dir/test.txt';
 
-    $this->fileSystem = $this->getMockBuilder('Drupal\Core\File\FileSystem')
-      ->disableOriginalConstructor()
-      ->setMethods(['validScheme'])
-      ->getMock();
-    $this->fileSystem->expects($this->once())
-      ->method('validScheme')
+    $this->streamWrapperManager->expects($this->once())
+      ->method('isValidUri')
       ->willReturn(TRUE);
 
     $this->assertFileExists($uri);
@@ -121,32 +125,6 @@ class FileSystemTest extends UnitTestCase {
       'public://dir/test.txt',
       'test',
       '.txt',
-    ];
-    return $data;
-  }
-
-  /**
-   * @covers ::uriScheme
-   *
-   * @dataProvider providerTestUriScheme
-   */
-  public function testUriScheme($uri, $expected) {
-    $this->assertSame($expected, $this->fileSystem->uriScheme($uri));
-  }
-
-  public function providerTestUriScheme() {
-    $data = [];
-    $data[] = [
-      'public://filename',
-      'public',
-    ];
-    $data[] = [
-      'public://extra://',
-      'public',
-    ];
-    $data[] = [
-      'invalid',
-      FALSE,
     ];
     return $data;
   }

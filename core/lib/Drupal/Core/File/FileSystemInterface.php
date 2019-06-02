@@ -242,7 +242,11 @@ interface FileSystemInterface {
    *   A string containing the name of the scheme, or FALSE if none. For
    *   example, the URI "public://example.txt" would return "public".
    *
-   * @see file_uri_target()
+   * @deprecated in drupal:8.8.0 and will be removed from drupal:9.0.0. Use
+   *   Drupal\Core\StreamWrapper\StreamWrapperManagerInterface::getScheme()
+   *   instead.
+   *
+   * @see https://www.drupal.org/node/3035273
    */
   public function uriScheme($uri);
 
@@ -259,6 +263,12 @@ interface FileSystemInterface {
    * @return bool
    *   Returns TRUE if the string is the name of a validated stream, or FALSE if
    *   the scheme does not have a registered handler.
+   *
+   * @deprecated in drupal:8.0.0 and will be removed before Drupal 9.0.0. Use
+   *   Drupal\Core\StreamWrapper\StreamWrapperManagerInterface::isValidScheme()
+   *   instead.
+   *
+   * @see https://www.drupal.org/node/3035273
    */
   public function validScheme($scheme);
 

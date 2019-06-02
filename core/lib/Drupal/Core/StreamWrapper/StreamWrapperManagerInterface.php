@@ -169,4 +169,81 @@ interface StreamWrapperManagerInterface {
    */
   public function registerWrapper($scheme, $class, $type);
 
+  /**
+   * Returns the part of a URI after the schema.
+   *
+   * @param string $uri
+   *   A stream, referenced as "scheme://target" or "data:target".
+   *
+   * @return string|bool
+   *   A string containing the target (path), or FALSE if none.
+   *   For example, the URI "public://sample/test.txt" would return
+   *   "sample/test.txt".
+   *
+   * @see \Drupal\Core\StreamWrapper\StreamWrapperManagerInterface::getScheme()
+   */
+  public static function getTarget($uri);
+
+  /**
+   * Normalizes a URI by making it syntactically correct.
+   *
+   * A stream is referenced as "scheme://target".
+   *
+   * The following actions are taken:
+   * - Remove trailing slashes from target
+   * - Trim erroneous leading slashes from target. e.g. ":///" becomes "://".
+   *
+   * @param string $uri
+   *   String reference containing the URI to normalize.
+   *
+   * @return string
+   *   The normalized URI.
+   */
+  public function normalizeUri($uri);
+
+  /**
+   * Returns the scheme of a URI (e.g. a stream).
+   *
+   * @param string $uri
+   *   A stream, referenced as "scheme://target" or "data:target".
+   *
+   * @return string|bool
+   *   A string containing the name of the scheme, or FALSE if none. For
+   *   example, the URI "public://example.txt" would return "public".
+   *
+   * @see \Drupal\Core\StreamWrapper\StreamWrapperManagerInterface::getTarget()
+   */
+  public static function getScheme($uri);
+
+  /**
+   * Checks that the scheme of a stream URI is valid.
+   *
+   * Confirms that there is a registered stream handler for the provided scheme
+   * and that it is callable. This is useful if you want to confirm a valid
+   * scheme without creating a new instance of the registered handler.
+   *
+   * @param string $scheme
+   *   A URI scheme, a stream is referenced as "scheme://target".
+   *
+   * @return bool
+   *   Returns TRUE if the string is the name of a validated stream, or FALSE if
+   *   the scheme does not have a registered handler.
+   */
+  public function isValidScheme($scheme);
+
+  /**
+   * Determines whether the URI has a valid scheme for file API operations.
+   *
+   * There must be a scheme and it must be a Drupal-provided scheme like
+   * 'public', 'private', 'temporary', or an extension provided with
+   * hook_stream_wrappers().
+   *
+   * @param string $uri
+   *   The URI to be tested.
+   *
+   * @return bool
+   *   TRUE if the URI is valid.
+   */
+  public function isValidUri($uri);
+
 }

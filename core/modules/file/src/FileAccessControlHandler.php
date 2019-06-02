@@ -21,7 +21,7 @@ class FileAccessControlHandler extends EntityAccessControlHandler {
   protected function checkAccess(EntityInterface $entity, $operation, AccountInterface $account) {
     /** @var \Drupal\file\FileInterface $entity */
     if ($operation == 'download' || $operation == 'view') {
-      if (\Drupal::service('file_system')->uriScheme($entity->getFileUri()) === 'public') {
+      if (\Drupal::service('stream_wrapper_manager')->getScheme($entity->getFileUri()) === 'public') {
         if ($operation === 'download') {
           return AccessResult::allowed();
         }

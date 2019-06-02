@@ -3,9 +3,10 @@
 namespace Drupal\Tests\user\Functional;
 
 use Drupal\Core\Database\Database;
+use Drupal\Core\StreamWrapper\StreamWrapperManager;
+use Drupal\file\Entity\File;
 use Drupal\image\Entity\ImageStyle;
 use Drupal\Tests\BrowserTestBase;
-use Drupal\file\Entity\File;
 use Drupal\Tests\TestFileCreationTrait;
 
 /**
@@ -65,7 +66,7 @@ class UserPictureTest extends BrowserTestBase {
 
     // Verify that the image is displayed on the user account page.
     $this->drupalGet('user');
-    $this->assertRaw(file_uri_target($file->getFileUri()), 'User picture found on user account page.');
+    $this->assertRaw(StreamWrapperManager::getTarget($file->getFileUri()), 'User picture found on user account page.');
 
     // Delete the picture.
     $edit = [];
@@ -136,7 +137,7 @@ class UserPictureTest extends BrowserTestBase {
       ->save();
 
     $this->drupalGet('node/' . $node->id());
-    $this->assertNoRaw(file_uri_target($file->getFileUri()), 'User picture not found on node and comment.');
+    $this->assertNoRaw(StreamWrapperManager::getTarget($file->getFileUri()), 'User picture not found on node and comment.');
   }
 
   /**

@@ -5,13 +5,14 @@
  * Exposes global functionality for creating image styles.
  */
 
-use Drupal\Core\Url;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
-use Drupal\file\FileInterface;
-use Drupal\field\FieldStorageConfigInterface;
+use Drupal\Core\StreamWrapper\StreamWrapperManager;
+use Drupal\Core\Url;
 use Drupal\field\FieldConfigInterface;
+use Drupal\field\FieldStorageConfigInterface;
+use Drupal\file\FileInterface;
 use Drupal\image\Entity\ImageStyle;
 
 /**
@@ -179,7 +180,8 @@ function image_theme() {
  * Control the access to files underneath the styles directory.
  */
 function image_file_download($uri) {
-  $path = file_uri_target($uri);
+
+  $path = StreamWrapperManager::getTarget($uri);
 
   // Private file access for image style derivatives.
   if (strpos($path, 'styles/') === 0) {
@@ -189,7 +191,7 @@ function image_file_download($uri) {
     $args = array_slice($args, 3);
 
     // Then the remaining parts are the path to the image.
-    $original_uri = file_uri_scheme($uri) . '://' . implode('/', $args);
+    $original_uri = StreamWrapperManager::getScheme($uri) . '://' . implode('/', $args);
 
     // Check that the file exists and is an image.
     $image = \Drupal::service('image.factory')->get($uri);
@@ -434,7 +436,7 @@ function image_field_storage_config_update(FieldStorageConfigInterface $field_st
   }
 
   // If the upload destination changed, then move the file.
-  if ($file_new && (file_uri_scheme($file_new->getFileUri()) != $field_storage->getSetting('uri_scheme'))) {
+  if ($file_new && (StreamWrapperManager::getScheme($file_new->getFileUri()) != $field_storage->getSetting('uri_scheme'))) {
     $directory = $field_storage->getSetting('uri_scheme') . '://default_images/';
     \Drupal::service('file_system')->prepareDirectory($directory, FileSystemInterface::CREATE_DIRECTORY);
     file_move($file_new, $directory . $file_new->getFilename());
@@ -472,7 +474,7 @@ function image_field_config_update(FieldConfigInterface $field) {
   }
 
   // If the upload destination changed, then move the file.
-  if ($file_new && (file_uri_scheme($file_new->getFileUri()) != $field_storage->getSetting('uri_scheme'))) {
+  if ($file_new && (StreamWrapperManager::getScheme($file_new->getFileUri()) != $field_storage->getSetting('uri_scheme'))) {
     $directory = $field_storage->getSetting('uri_scheme') . '://default_images/';
     \Drupal::service('file_system')->prepareDirectory($directory, FileSystemInterface::CREATE_DIRECTORY);
     file_move($file_new, $directory . $file_new->getFilename());

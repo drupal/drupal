@@ -21,6 +21,21 @@ class FileSystemDeprecationTest extends KernelTestBase {
   public static $modules = ['system'];
 
   /**
+   * The file system service.
+   *
+   * @var \Drupal\Core\File\FileSystemInterface
+   */
+  protected $fileSystem;
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function setUp() {
+    parent::setUp();
+    $this->fileSystem = $fileSystem = $this->container->get('file_system');
+  }
+
+  /**
    * @expectedDeprecation drupal_move_uploaded_file() is deprecated in Drupal 8.0.x-dev and will be removed before Drupal 9.0.0. Use \Drupal\Core\File\FileSystemInterface::moveUploadedFile(). See https://www.drupal.org/node/2418133.
    */
   public function testDeprecatedFileMoveUploadedFile() {
@@ -174,6 +189,67 @@ class FileSystemDeprecationTest extends KernelTestBase {
    */
   public function testDeprecatedDirectoryOsTemp() {
     $this->assertNotNull(file_directory_os_temp());
+  }
+
+  /**
+   * @expectedDeprecation file_uri_scheme() is deprecated in drupal:8.0.0 and will be removed before drupal:9.0.0. Use \Drupal\Core\StreamWrapper\StreamWrapperManagerInterface::getScheme() instead. See https://www.drupal.org/node/3035273
+   */
+  public function testDeprecatedFileUriScheme() {
+    $this->assertEquals('public', file_uri_scheme('public://filename'));
+  }
+
+  /**
+   * @expectedDeprecation file_stream_wrapper_valid_scheme() is deprecated in drupal:8.0.0 and will be removed before drupal:9.0.0. Use \Drupal\Core\StreamWrapper\StreamWrapperManagerInterface::isValidScheme() instead. See https://www.drupal.org/node/3035273
+   */
+  public function testDeprecatedValidScheme() {
+    $this->assertTrue(file_stream_wrapper_valid_scheme('public'));
+  }
+
+  /**
+   * @expectedDeprecation file_uri_target() is deprecated in drupal:8.8.0 and will be removed before drupal:9.0.0. Use \Drupal\Core\StreamWrapper\StreamWrapperManagerInterface::getTarget() instead. See https://www.drupal.org/node/3035273
+   */
+  public function testDeprecatedFileUriTarget() {
+    $this->assertEquals('sample/test.txt', file_uri_target('public://sample/test.txt'));
+  }
+
+  /**
+   * @expectedDeprecation file_stream_wrapper_uri_normalize() is deprecated in drupal:8.8.0 and will be removed before drupal:9.0.0. Use \Drupal\Core\StreamWrapper\StreamWrapperManagerInterface::normalizeUri() instead. See https://www.drupal.org/node/3035273
+   */
+  public function testDeprecatedFileStreamWrapperUriNormalize() {
+    $this->assertEquals('public://sample/test.txt', file_stream_wrapper_uri_normalize('public:///sample/test.txt'));
+  }
+
+  /**
+   * @expectedDeprecation file_valid_uri() is deprecated in drupal:8.8.0 and will be removed before drupal:9.0.0. Use \Drupal\Core\StreamWrapper\StreamWrapperManagerInterface::isValidUri() instead. See https://www.drupal.org/node/3035273
+   */
+  public function testDeprecatedValidUri() {
+    $this->assertTrue(file_valid_uri('public://sample/test.txt'));
+  }
+
+  /**
+   * @expectedDeprecation FileSystem::uriScheme() is deprecated in drupal:8.8.0. It will be removed from drupal:9.0.0. Use \Drupal\Core\StreamWrapper\StreamWrapperManagerInterface::getScheme() instead. See https://www.drupal.org/node/3035273
+   *
+   * @dataProvider providerTestUriScheme
+   */
+  public function testUriScheme($uri, $expected) {
+    $this->assertSame($expected, $this->fileSystem->uriScheme($uri));
+  }
+
+  public function providerTestUriScheme() {
+    $data = [];
+    $data[] = [
+      'public://filename',
+      'public',
+    ];
+    $data[] = [
+      'public://extra://',
+      'public',
+    ];
+    $data[] = [
+      'invalid',
+      FALSE,
+    ];
+    return $data;
   }
 
 }

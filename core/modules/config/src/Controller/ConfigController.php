@@ -77,7 +77,7 @@ class ConfigController implements ContainerInjectionInterface {
       $container->get('config.storage'),
       $container->get('config.storage.sync'),
       $container->get('config.manager'),
-      new FileDownloadController(),
+      FileDownloadController::create($container),
       $container->get('diff.formatter'),
       $container->get('file_system'),
       $container->get('config.storage.export')

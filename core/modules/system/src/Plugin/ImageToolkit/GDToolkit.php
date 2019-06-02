@@ -10,6 +10,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\ImageToolkit\ImageToolkitBase;
 use Drupal\Core\ImageToolkit\ImageToolkitOperationManagerInterface;
 use Drupal\Core\StreamWrapper\StreamWrapperInterface;
+use Drupal\Core\StreamWrapper\StreamWrapperManager;
 use Drupal\Core\StreamWrapper\StreamWrapperManagerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -230,9 +231,9 @@ class GDToolkit extends ImageToolkitBase {
    * {@inheritdoc}
    */
   public function save($destination) {
-    $scheme = file_uri_scheme($destination);
+    $scheme = StreamWrapperManager::getScheme($destination);
     // Work around lack of stream wrapper support in imagejpeg() and imagepng().
-    if ($scheme && file_stream_wrapper_valid_scheme($scheme)) {
+    if ($scheme && $this->streamWrapperManager->isValidScheme($scheme)) {
       // If destination is not local, save image to temporary local file.
       $local_wrappers = $this->streamWrapperManager->getWrappers(StreamWrapperInterface::LOCAL);
       if (!isset($local_wrappers[$scheme])) {

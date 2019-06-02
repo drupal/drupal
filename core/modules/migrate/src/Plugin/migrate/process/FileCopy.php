@@ -6,6 +6,7 @@ use Drupal\Core\File\Exception\FileException;
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\StreamWrapper\LocalStream;
+use Drupal\Core\StreamWrapper\StreamWrapperManager;
 use Drupal\Core\StreamWrapper\StreamWrapperManagerInterface;
 use Drupal\migrate\MigrateException;
 use Drupal\migrate\MigrateExecutableInterface;
@@ -243,7 +244,7 @@ class FileCopy extends FileProcessBase implements ContainerFactoryPluginInterfac
    * @return bool
    */
   protected function isLocalUri($uri) {
-    $scheme = $this->fileSystem->uriScheme($uri);
+    $scheme = StreamWrapperManager::getScheme($uri);
 
     // The vfs scheme is vfsStream, which is used in testing. vfsStream is a
     // simulated file system that exists only in memory, but should be treated

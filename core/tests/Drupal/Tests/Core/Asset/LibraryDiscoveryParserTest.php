@@ -11,6 +11,7 @@ use Drupal\Core\Asset\Exception\IncompleteLibraryDefinitionException;
 use Drupal\Core\Asset\Exception\InvalidLibraryFileException;
 use Drupal\Core\Asset\Exception\LibraryDefinitionMissingLicenseException;
 use Drupal\Core\Asset\LibraryDiscoveryParser;
+use Drupal\Core\StreamWrapper\StreamWrapperManagerInterface;
 use Drupal\Tests\UnitTestCase;
 
 /**
@@ -55,6 +56,13 @@ class LibraryDiscoveryParserTest extends UnitTestCase {
   protected $lock;
 
   /**
+   * The mocked stream wrapper manager.
+   *
+   * @var \Drupal\Core\StreamWrapper\StreamWrapperManagerInterface||\PHPUnit_Framework_MockObject_MockObject
+   */
+  protected $streamWrapperManager;
+
+  /**
    * {@inheritdoc}
    */
   protected function setUp() {
@@ -71,7 +79,8 @@ class LibraryDiscoveryParserTest extends UnitTestCase {
     $this->themeManager->expects($this->any())
       ->method('getActiveTheme')
       ->willReturn($mock_active_theme);
-    $this->libraryDiscoveryParser = new TestLibraryDiscoveryParser($this->root, $this->moduleHandler, $this->themeManager);
+    $this->streamWrapperManager = $this->createMock(StreamWrapperManagerInterface::class);
+    $this->libraryDiscoveryParser = new TestLibraryDiscoveryParser($this->root, $this->moduleHandler, $this->themeManager, $this->streamWrapperManager);
   }
 
   /**
@@ -353,6 +362,9 @@ class LibraryDiscoveryParserTest extends UnitTestCase {
     $this->moduleHandler->expects($this->atLeastOnce())
       ->method('moduleExists')
       ->with('data_types')
+      ->will($this->returnValue(TRUE));
+    $this->streamWrapperManager->expects($this->atLeastOnce())
+      ->method('isValidUri')
       ->will($this->returnValue(TRUE));
 
     $path = __DIR__ . '/library_test_files';
