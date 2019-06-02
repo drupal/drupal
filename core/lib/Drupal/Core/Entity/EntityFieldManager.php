@@ -325,10 +325,11 @@ class EntityFieldManager implements EntityFieldManagerInterface {
    * {@inheritdoc}
    */
   public function getFieldDefinitions($entity_type_id, $bundle) {
-    if (!isset($this->fieldDefinitions[$entity_type_id][$bundle])) {
+    $langcode = $this->languageManager->getCurrentLanguage()->getId();
+    if (!isset($this->fieldDefinitions[$entity_type_id][$bundle][$langcode])) {
       $base_field_definitions = $this->getBaseFieldDefinitions($entity_type_id);
       // Not prepared, try to load from cache.
-      $cid = 'entity_bundle_field_definitions:' . $entity_type_id . ':' . $bundle . ':' . $this->languageManager->getCurrentLanguage()->getId();
+      $cid = 'entity_bundle_field_definitions:' . $entity_type_id . ':' . $bundle . ':' . $langcode;
       if ($cache = $this->cacheGet($cid)) {
         $bundle_field_definitions = $cache->data;
       }
@@ -341,9 +342,9 @@ class EntityFieldManager implements EntityFieldManagerInterface {
       // base fields, merge them together. Use array_replace() to replace base
       // fields with by bundle overrides and keep them in order, append
       // additional by bundle fields.
-      $this->fieldDefinitions[$entity_type_id][$bundle] = array_replace($base_field_definitions, $bundle_field_definitions);
+      $this->fieldDefinitions[$entity_type_id][$bundle][$langcode] = array_replace($base_field_definitions, $bundle_field_definitions);
     }
-    return $this->fieldDefinitions[$entity_type_id][$bundle];
+    return $this->fieldDefinitions[$entity_type_id][$bundle][$langcode];
   }
 
   /**
