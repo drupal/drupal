@@ -1133,7 +1133,7 @@ function drupal_flush_all_caches() {
   \Drupal::service('twig')->invalidate();
 
   // Rebuild module and theme data.
-  $module_data = system_rebuild_module_data();
+  $module_data = \Drupal::service('extension.list.module')->reset()->getList();
   /** @var \Drupal\Core\Extension\ThemeHandlerInterface $theme_handler */
   $theme_handler = \Drupal::service('theme_handler');
   $theme_handler->refreshInfo();

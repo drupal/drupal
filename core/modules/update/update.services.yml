@@ -6,7 +6,7 @@ services:
       - { name: access_check, applies_to: _access_update_manager }
   update.manager:
     class: Drupal\update\UpdateManager
-    arguments: ['@config.factory', '@module_handler', '@update.processor', '@string_translation', '@keyvalue.expirable', '@theme_handler']
+    arguments: ['@config.factory', '@module_handler', '@update.processor', '@string_translation', '@keyvalue.expirable', '@theme_handler', '@extension.list.module']
   update.processor:
     class: Drupal\update\UpdateProcessor
     arguments: ['@config.factory', '@queue', '@update.fetcher', '@state', '@private_key', '@keyvalue', '@keyvalue.expirable']

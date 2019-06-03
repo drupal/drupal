@@ -6,6 +6,7 @@ use Drupal\Core\Config\ConfigImporterException;
 use Drupal\Core\Config\ConfigImporter;
 use Drupal\Core\Config\Importer\ConfigImporterBatch;
 use Drupal\Core\Config\TypedConfigManagerInterface;
+use Drupal\Core\Extension\ModuleExtensionList;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Extension\ModuleInstallerInterface;
 use Drupal\Core\Extension\ThemeHandlerInterface;
@@ -105,6 +106,13 @@ class ConfigSync extends FormBase {
   protected $renderer;
 
   /**
+   * The module extension list.
+   *
+   * @var \Drupal\Core\Extension\ModuleExtensionList
+   */
+  protected $moduleExtensionList;
+
+  /**
    * Constructs the object.
    *
    * @param \Drupal\Core\Config\StorageInterface $sync_storage
@@ -129,8 +137,10 @@ class ConfigSync extends FormBase {
    *   The theme handler.
    * @param \Drupal\Core\Render\RendererInterface $renderer
    *   The renderer.
+   * @param \Drupal\Core\Extension\ModuleExtensionList $extension_list_module
+   *   The module extension list
    */
-  public function __construct(StorageInterface $sync_storage, StorageInterface $active_storage, StorageInterface $snapshot_storage, LockBackendInterface $lock, EventDispatcherInterface $event_dispatcher, ConfigManagerInterface $config_manager, TypedConfigManagerInterface $typed_config, ModuleHandlerInterface $module_handler, ModuleInstallerInterface $module_installer, ThemeHandlerInterface $theme_handler, RendererInterface $renderer) {
+  public function __construct(StorageInterface $sync_storage, StorageInterface $active_storage, StorageInterface $snapshot_storage, LockBackendInterface $lock, EventDispatcherInterface $event_dispatcher, ConfigManagerInterface $config_manager, TypedConfigManagerInterface $typed_config, ModuleHandlerInterface $module_handler, ModuleInstallerInterface $module_installer, ThemeHandlerInterface $theme_handler, RendererInterface $renderer, ModuleExtensionList $extension_list_module) {
     $this->syncStorage = $sync_storage;
     $this->activeStorage = $active_storage;
     $this->snapshotStorage = $snapshot_storage;
@@ -142,6 +152,7 @@ class ConfigSync extends FormBase {
     $this->moduleInstaller = $module_installer;
     $this->themeHandler = $theme_handler;
     $this->renderer = $renderer;
+    $this->moduleExtensionList = $extension_list_module;
   }
 
   /**
@@ -159,7 +170,8 @@ class ConfigSync extends FormBase {
       $container->get('module_handler'),
       $container->get('module_installer'),
       $container->get('theme_handler'),
-      $container->get('renderer')
+      $container->get('renderer'),
+      $container->get('extension.list.module')
     );
   }
 
@@ -328,7 +340,8 @@ class ConfigSync extends FormBase {
       $this->moduleHandler,
       $this->moduleInstaller,
       $this->themeHandler,
-      $this->getStringTranslation()
+      $this->getStringTranslation(),
+      $this->moduleExtensionList
     );
     if ($config_importer->alreadyImporting()) {
       $this->messenger()->addStatus($this->t('Another request may be synchronizing configuration already.'));

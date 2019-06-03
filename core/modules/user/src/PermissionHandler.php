@@ -229,13 +229,4 @@ class PermissionHandler implements PermissionHandlerInterface {
     return $modules;
   }
 
-  /**
-   * Wraps system_rebuild_module_data()
-   *
-   * @return \Drupal\Core\Extension\Extension[]
-   */
-  protected function systemRebuildModuleData() {
-    return system_rebuild_module_data();
-  }
-
 }

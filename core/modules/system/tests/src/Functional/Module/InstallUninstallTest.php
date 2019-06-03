@@ -36,7 +36,7 @@ class InstallUninstallTest extends ModuleTestBase {
     $this->assertEqual($this->container->get('state')->get('system_test_preuninstall_module'), 'module_test');
     $this->resetAll();
 
-    $all_modules = system_rebuild_module_data();
+    $all_modules = $this->container->get('extension.list.module')->getList();
 
     // Test help on required modules, but do not test uninstalling.
     $required_modules = array_filter($all_modules, function ($module) {

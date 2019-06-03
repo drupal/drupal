@@ -965,7 +965,7 @@ function system_check_directory($form_element, FormStateInterface $form_state) {
  *   information for $name, if given. If no records are available, an empty
  *   array is returned.
  *
- * @see system_rebuild_module_data()
+ * @see \Drupal\Core\Extension\ModuleExtensionList::getList()
  * @see \Drupal\Core\Extension\ThemeExtensionList
  */
 function system_get_info($type, $name = NULL) {
@@ -1032,8 +1032,15 @@ function _system_rebuild_module_data() {
  *
  * @return \Drupal\Core\Extension\Extension[]
  *   Array of all available modules and their data.
+ *
+ * @deprecated in Drupal 8.8.0 and will be removed before Drupal 9.0.0.
+ *   Use \Drupal::service('extension.list.module')->getList() instead.
+ *   Note: use reset() only when you really need to rescan and rebuild the list.
+ *
+ * @see https://www.drupal.org/node/2709919
  */
 function system_rebuild_module_data() {
+  @trigger_error('system_rebuild_module_data() is deprecated in Drupal 8.8.0 and will be removed before Drupal 9.0.0. Instead, you should use \Drupal::service("extension.list.module")->getList(). See https://www.drupal.org/node/2709919', E_USER_DEPRECATED);
   return \Drupal::service('extension.list.module')->reset()->getList();
 }
 

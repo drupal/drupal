@@ -1578,7 +1578,7 @@ function install_profile_modules(&$install_state) {
   install_core_entity_type_definitions();
 
   $modules = \Drupal::state()->get('install_profile_modules') ?: [];
-  $files = system_rebuild_module_data();
+  $files = \Drupal::service('extension.list.module')->getList();
   \Drupal::state()->delete('install_profile_modules');
 
   // Always install required modules first. Respect the dependencies between
@@ -2350,7 +2350,8 @@ function install_config_import_batch() {
     \Drupal::service('module_handler'),
     \Drupal::service('module_installer'),
     \Drupal::service('theme_handler'),
-    \Drupal::service('string_translation')
+    \Drupal::service('string_translation'),
+    \Drupal::service('extension.list.module')
   );
 
   try {
@@ -2421,7 +2422,8 @@ function install_config_revert_install_changes() {
       \Drupal::service('module_handler'),
       \Drupal::service('module_installer'),
       \Drupal::service('theme_handler'),
-      \Drupal::service('string_translation')
+      \Drupal::service('string_translation'),
+      \Drupal::service('extension.list.module')
     );
     try {
       $config_importer->import();

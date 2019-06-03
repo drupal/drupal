@@ -38,7 +38,7 @@ class ModuleConfigureRouteTest extends KernelTestBase {
   protected function setUp() {
     parent::setUp();
     $this->routeProvider = \Drupal::service('router.route_provider');
-    $this->moduleInfo = system_rebuild_module_data();
+    $this->moduleInfo = \Drupal::service('extension.list.module')->getList();
   }
 
   /**

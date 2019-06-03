@@ -60,7 +60,7 @@ class StableLibraryOverrideTest extends KernelTestBase {
     $this->container->get('theme_installer')->install(['stable']);
 
     // Enable all core modules.
-    $all_modules = system_rebuild_module_data();
+    $all_modules = $this->container->get('extension.list.module')->getList();
     $all_modules = array_filter($all_modules, function ($module) {
       // Filter contrib, hidden, experimental, already enabled modules, and
       // modules in the Testing package.

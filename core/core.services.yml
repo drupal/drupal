@@ -536,7 +536,7 @@ services:
     class: Drupal\Core\Extension\RequiredModuleUninstallValidator
     tags:
       - { name: module_install.uninstall_validator }
-    arguments: ['@string_translation']
+    arguments: ['@string_translation', '@extension.list.module']
     lazy: true
   theme_handler:
     class: Drupal\Core\Extension\ThemeHandler
@@ -1265,7 +1265,7 @@ services:
     class: Drupal\Core\EventSubscriber\ConfigImportSubscriber
     tags:
       - { name: event_subscriber }
-    arguments: ['@theme_handler']
+    arguments: ['@theme_handler', '@extension.list.module']
   config_snapshot_subscriber:
     class: Drupal\Core\EventSubscriber\ConfigSnapshotSubscriber
     tags:

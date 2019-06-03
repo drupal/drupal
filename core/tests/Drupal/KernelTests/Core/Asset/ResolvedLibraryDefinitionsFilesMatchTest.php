@@ -99,7 +99,7 @@ class ResolvedLibraryDefinitionsFilesMatchTest extends KernelTestBase {
     $this->container->get('theme_installer')->install($this->allThemes);
 
     // Enable all core modules.
-    $all_modules = system_rebuild_module_data();
+    $all_modules = $this->container->get('extension.list.module')->getList();
     $all_modules = array_filter($all_modules, function ($module) {
       // Filter contrib, hidden, already enabled modules and modules in the
       // Testing package.

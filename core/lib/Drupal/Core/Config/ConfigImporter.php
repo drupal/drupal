@@ -3,6 +3,7 @@
 namespace Drupal\Core\Config;
 
 use Drupal\Core\Config\Importer\MissingContentEvent;
+use Drupal\Core\Extension\ModuleExtensionList;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Extension\ModuleInstallerInterface;
 use Drupal\Core\Extension\ThemeHandlerInterface;
@@ -159,6 +160,13 @@ class ConfigImporter {
   protected $moduleInstaller;
 
   /**
+   * The module extension list.
+   *
+   * @var \Drupal\Core\Extension\ModuleExtensionList
+   */
+  protected $moduleExtensionList;
+
+  /**
    * Constructs a configuration import object.
    *
    * @param \Drupal\Core\Config\StorageComparerInterface $storage_comparer
@@ -180,8 +188,18 @@ class ConfigImporter {
    *   The theme handler
    * @param \Drupal\Core\StringTranslation\TranslationInterface $string_translation
    *   The string translation service.
+   * @param \Drupal\Core\Extension\ModuleExtensionList|null $extension_list_module
+   *   The module extension list. This is left optional for BC reasons, but the
+   *   optional usage is deprecated and will become required in Drupal 9.0.0.
+   *
+   * @todo Remove null default value https://www.drupal.org/node/2947083
    */
-  public function __construct(StorageComparerInterface $storage_comparer, EventDispatcherInterface $event_dispatcher, ConfigManagerInterface $config_manager, LockBackendInterface $lock, TypedConfigManagerInterface $typed_config, ModuleHandlerInterface $module_handler, ModuleInstallerInterface $module_installer, ThemeHandlerInterface $theme_handler, TranslationInterface $string_translation) {
+  public function __construct(StorageComparerInterface $storage_comparer, EventDispatcherInterface $event_dispatcher, ConfigManagerInterface $config_manager, LockBackendInterface $lock, TypedConfigManagerInterface $typed_config, ModuleHandlerInterface $module_handler, ModuleInstallerInterface $module_installer, ThemeHandlerInterface $theme_handler, TranslationInterface $string_translation, ModuleExtensionList $extension_list_module = NULL) {
+    if ($extension_list_module === NULL) {
+      @trigger_error('Invoking the ConfigImporter constructor without the module extension list parameter is deprecated in Drupal 8.8.0 and will no longer be supported in Drupal 9.0.0. The extension list parameter is now required in the ConfigImporter constructor. See https://www.drupal.org/node/2943918', E_USER_DEPRECATED);
+      $extension_list_module = \Drupal::service('extension.list.module');
+    }
+    $this->moduleExtensionList = $extension_list_module;
     $this->storageComparer = $storage_comparer;
     $this->eventDispatcher = $event_dispatcher;
     $this->configManager = $config_manager;
@@ -369,7 +387,7 @@ class ConfigImporter {
     }
 
     // Get a list of modules with dependency weights as values.
-    $module_data = system_rebuild_module_data();
+    $module_data = $this->moduleExtensionList->getList();
     // Set the actual module weights.
     $module_list = array_combine(array_keys($module_data), array_keys($module_data));
     $module_list = array_map(function ($module) use ($module_data) {

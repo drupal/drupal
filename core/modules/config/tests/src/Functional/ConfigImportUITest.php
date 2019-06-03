@@ -498,7 +498,7 @@ class ConfigImportUITest extends BrowserTestBase {
     $core = $sync->read('core.extension');
     // Node depends on text.
     unset($core['module']['text']);
-    $module_data = system_rebuild_module_data();
+    $module_data = $this->container->get('extension.list.module')->getList();
     $this->assertTrue(isset($module_data['node']->requires['text']), 'The Node module depends on the Text module.');
     // Bartik depends on classy.
     unset($core['theme']['classy']);

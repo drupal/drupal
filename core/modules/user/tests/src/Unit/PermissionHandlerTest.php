@@ -29,7 +29,7 @@ class PermissionHandlerTest extends UnitTestCase {
   /**
    * The tested permission handler.
    *
-   * @var \Drupal\Tests\user\Unit\TestPermissionHandler|\Drupal\user\PermissionHandler
+   * @var \Drupal\user\PermissionHandler
    */
   protected $permissionHandler;
 
@@ -142,10 +142,7 @@ EOF
     $this->controllerResolver->expects($this->never())
       ->method('getControllerFromDefinition');
 
-    $this->permissionHandler = new TestPermissionHandler($this->moduleHandler, $this->stringTranslation, $this->controllerResolver);
-
-    // Setup system_rebuild_module_data().
-    $this->permissionHandler->setSystemRebuildModuleData($extensions);
+    $this->permissionHandler = new PermissionHandler($this->moduleHandler, $this->stringTranslation, $this->controllerResolver);
 
     $actual_permissions = $this->permissionHandler->getPermissions();
     $this->assertPermissions($actual_permissions);
@@ -206,7 +203,7 @@ EOF
       ->method('getModuleList')
       ->willReturn(array_flip($modules));
 
-    $permissionHandler = new TestPermissionHandler($this->moduleHandler, $this->stringTranslation, $this->controllerResolver);
+    $permissionHandler = new PermissionHandler($this->moduleHandler, $this->stringTranslation, $this->controllerResolver);
     $actual_permissions = $permissionHandler->getPermissions();
     $this->assertEquals(['access_module_a4', 'access_module_a1', 'access_module_a2', 'access_module_a3'],
       array_keys($actual_permissions));
@@ -287,10 +284,7 @@ EOF
       ->with('Drupal\\user\\Tests\\TestPermissionCallbacks::titleDescriptionRestrictAccess')
       ->willReturn([new TestPermissionCallbacks(), 'titleDescriptionRestrictAccess']);
 
-    $this->permissionHandler = new TestPermissionHandler($this->moduleHandler, $this->stringTranslation, $this->controllerResolver);
-
-    // Setup system_rebuild_module_data().
-    $this->permissionHandler->setSystemRebuildModuleData($extensions);
+    $this->permissionHandler = new PermissionHandler($this->moduleHandler, $this->stringTranslation, $this->controllerResolver);
 
     $actual_permissions = $this->permissionHandler->getPermissions();
     $this->assertPermissions($actual_permissions);
@@ -341,10 +335,7 @@ EOF
       ->with('Drupal\\user\\Tests\\TestPermissionCallbacks::titleDescription')
       ->willReturn([new TestPermissionCallbacks(), 'titleDescription']);
 
-    $this->permissionHandler = new TestPermissionHandler($this->moduleHandler, $this->stringTranslation, $this->controllerResolver);
-
-    // Setup system_rebuild_module_data().
-    $this->permissionHandler->setSystemRebuildModuleData($extensions);
+    $this->permissionHandler = new PermissionHandler($this->moduleHandler, $this->stringTranslation, $this->controllerResolver);
 
     $actual_permissions = $this->permissionHandler->getPermissions();
 
@@ -373,25 +364,6 @@ EOF
     $this->assertEquals($actual_permissions['access_module_c']['provider'], 'module_c');
     $this->assertEquals($actual_permissions['access_module_c']['restrict access'], TRUE);
     $this->assertEquals($actual_permissions['access module a via module b']['provider'], 'module_a');
-  }
-
-}
-
-class TestPermissionHandler extends PermissionHandler {
-
-  /**
-   * Test module data.
-   *
-   * @var array
-   */
-  protected $systemModuleData;
-
-  protected function systemRebuildModuleData() {
-    return $this->systemModuleData;
-  }
-
-  public function setSystemRebuildModuleData(array $extensions) {
-    $this->systemModuleData = $extensions;
   }
 
 }

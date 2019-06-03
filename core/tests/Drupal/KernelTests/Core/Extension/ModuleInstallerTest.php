@@ -16,15 +16,6 @@ use Symfony\Component\Routing\Exception\RouteNotFoundException;
 class ModuleInstallerTest extends KernelTestBase {
 
   /**
-   * Modules to install.
-   *
-   * The System module is required because system_rebuild_module_data() is used.
-   *
-   * @var array
-   */
-  public static $modules = ['system'];
-
-  /**
    * Tests that routes are rebuilt during install and uninstall of modules.
    *
    * @covers ::install

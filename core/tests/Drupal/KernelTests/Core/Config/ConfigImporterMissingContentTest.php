@@ -55,7 +55,8 @@ class ConfigImporterMissingContentTest extends KernelTestBase {
       $this->container->get('module_handler'),
       $this->container->get('module_installer'),
       $this->container->get('theme_handler'),
-      $this->container->get('string_translation')
+      $this->container->get('string_translation'),
+      $this->container->get('extension.list.module')
     );
   }
 

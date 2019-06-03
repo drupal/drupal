@@ -217,10 +217,6 @@ class ConfigDependencyTest extends EntityKernelTestBase {
       ]
     );
     $entity2->save();
-    // Perform a module rebuild so we can know where the node module is located
-    // and uninstall it.
-    // @todo Remove as part of https://www.drupal.org/node/2186491
-    system_rebuild_module_data();
     // Test that doing a config uninstall of the node module deletes entity2
     // since it is dependent on entity1 which is dependent on the node module.
     $config_manager->uninstall('module', 'node');
@@ -359,10 +355,6 @@ class ConfigDependencyTest extends EntityKernelTestBase {
     $this->assertEqual($entity_4->uuid(), $config_entities['delete'][0]->uuid(), 'Entity 4 will be deleted.');
     $this->assertEqual($entity_5->uuid(), $config_entities['update'][1]->uuid(), 'Entity 5 is updated.');
 
-    // Perform a module rebuild so we can know where the node module is located
-    // and uninstall it.
-    // @todo Remove as part of https://www.drupal.org/node/2186491
-    system_rebuild_module_data();
     // Perform the uninstall.
     $config_manager->uninstall('module', 'node');
 
@@ -476,10 +468,6 @@ class ConfigDependencyTest extends EntityKernelTestBase {
     $this->assertSame(['config' => [], 'content' => [], 'module' => ['node'], 'theme' => []], $called[$entity_2->id()]);
     $this->assertSame(['config' => [], 'content' => [], 'module' => ['node'], 'theme' => []], $called[$entity_4->id()]);
 
-    // Perform a module rebuild so we can know where the node module is located
-    // and uninstall it.
-    // @todo Remove as part of https://www.drupal.org/node/2186491
-    system_rebuild_module_data();
     // Perform the uninstall.
     $config_manager->uninstall('module', 'node');
 

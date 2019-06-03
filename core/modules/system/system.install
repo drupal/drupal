@@ -797,7 +797,7 @@ function system_requirements($phase) {
   // Display an error if a newly introduced dependency in a module is not resolved.
   if ($phase == 'update') {
     $profile = drupal_get_profile();
-    $files = system_rebuild_module_data();
+    $files = \Drupal::service('extension.list.module')->getList();
     foreach ($files as $module => $file) {
       // Ignore disabled modules and installation profiles.
       if (!$file->status || $module == $profile) {

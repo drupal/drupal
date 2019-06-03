@@ -83,7 +83,9 @@ class ModuleInstaller implements ModuleInstallerInterface {
     $extension_config = \Drupal::configFactory()->getEditable('core.extension');
     if ($enable_dependencies) {
       // Get all module data so we can find dependencies and sort.
-      $module_data = system_rebuild_module_data();
+      // The module list needs to be reset so that it can re-scan and include
+      // any new modules that may have been added directly into the filesystem.
+      $module_data = \Drupal::service('extension.list.module')->reset()->getList();
       $module_list = $module_list ? array_combine($module_list, $module_list) : [];
       if ($missing_modules = array_diff_key($module_list, $module_data)) {
         // One or more of the given modules doesn't exist.
@@ -335,7 +337,7 @@ class ModuleInstaller implements ModuleInstallerInterface {
    */
   public function uninstall(array $module_list, $uninstall_dependents = TRUE) {
     // Get all module data so we can find dependencies and sort.
-    $module_data = system_rebuild_module_data();
+    $module_data = \Drupal::service('extension.list.module')->getList();
     $module_list = $module_list ? array_combine($module_list, $module_list) : [];
     if (array_diff_key($module_list, $module_data)) {
       // One or more of the given modules doesn't exist.

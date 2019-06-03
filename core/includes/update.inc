@@ -48,7 +48,7 @@ function update_check_incompatibility($name, $type = 'module') {
     // code changes that were made in the filesystem before the update script
     // was initiated.
     $themes = \Drupal::service('theme_handler')->rebuildThemeData();
-    $modules = system_rebuild_module_data();
+    $modules = \Drupal::service('extension.list.module')->reset()->getList();
   }
 
   if ($type == 'module' && isset($modules[$name])) {

@@ -56,11 +56,8 @@ class StableTemplateOverrideTest extends KernelTestBase {
    * Installs all core modules.
    */
   protected function installAllModules() {
-    // Needed for system_rebuild_module_data().
-    include_once $this->root . '/core/modules/system/system.module';
-
     // Enable all core modules.
-    $all_modules = system_rebuild_module_data();
+    $all_modules = $this->container->get('extension.list.module')->getList();
     $all_modules = array_filter($all_modules, function ($module) {
       // Filter contrib, hidden, experimental, already enabled modules, and
       // modules in the Testing package.

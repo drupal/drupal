@@ -30,8 +30,6 @@ class GetFilenameTest extends KernelTestBase {
    * Tests that drupal_get_filename() works when the file is not in database.
    */
   public function testDrupalGetFilename() {
-    system_rebuild_module_data();
-
     // Retrieving the location of a module.
     $this->assertIdentical(drupal_get_filename('module', 'system'), 'core/modules/system/system.info.yml');
 

@@ -120,7 +120,7 @@ class UpdateContribTest extends UpdateTestBase {
    * project. We need to make sure that we see the "BBB" project before the
    * "CCC" project, even though "CCC" includes a module that's processed first
    * if you sort alphabetically by module name (which is the order we see things
-   * inside system_rebuild_module_data() for example).
+   * inside \Drupal\Core\Extension\ExtensionList::getList() for example).
    */
   public function testUpdateContribOrder() {
     // We want core to be version 8.0.0.

@@ -89,7 +89,6 @@ class ModuleHandlerTest extends KernelTestBase {
     // Color will depend on Config, which depends on a non-existing module Foo.
     // Nothing should be installed.
     \Drupal::state()->set('module_test.dependency', 'missing dependency');
-    \Drupal::service('extension.list.module')->reset();
 
     try {
       $result = $this->moduleInstaller()->install(['color']);
@@ -104,7 +103,6 @@ class ModuleHandlerTest extends KernelTestBase {
     // Fix the missing dependency.
     // Color module depends on Config. Config depends on Help module.
     \Drupal::state()->set('module_test.dependency', 'dependency');
-    \Drupal::service('extension.list.module')->reset();
 
     $result = $this->moduleInstaller()->install(['color']);
     $this->assertTrue($result, 'ModuleInstaller::install() returns the correct value.');
@@ -136,7 +134,6 @@ class ModuleHandlerTest extends KernelTestBase {
     // dependency on a specific version of Help module in its info file. Make
     // sure that Drupal\Core\Extension\ModuleInstaller::install() still works.
     \Drupal::state()->set('module_test.dependency', 'version dependency');
-    \Drupal::service('extension.list.module')->reset();
 
     $result = $this->moduleInstaller()->install(['color']);
     $this->assertTrue($result, 'ModuleInstaller::install() returns the correct value.');
@@ -171,7 +168,7 @@ class ModuleHandlerTest extends KernelTestBase {
     drupal_get_filename('profile', $profile, 'core/profiles/' . $profile . '/' . $profile . '.info.yml');
     $this->enableModules(['module_test', $profile]);
 
-    $data = \Drupal::service('extension.list.module')->reset()->getList();
+    $data = \Drupal::service('extension.list.module')->getList();
     $this->assertFalse(isset($data[$profile]->requires[$dependency]));
     $this->assertContains($dependency, $data[$profile]->info['install']);
 
@@ -280,7 +277,6 @@ class ModuleHandlerTest extends KernelTestBase {
     // entity_test will depend on help. This way help can not be uninstalled
     // when there is test content preventing entity_test from being uninstalled.
     \Drupal::state()->set('module_test.dependency', 'dependency');
-    \Drupal::service('extension.list.module')->reset();
 
     // Create an entity so that the modules can not be disabled.
     $entity = EntityTest::create(['name' => $this->randomString()]);
@@ -319,7 +315,7 @@ class ModuleHandlerTest extends KernelTestBase {
    */
   public function testModuleMetaData() {
     // Generate the list of available modules.
-    $modules = system_rebuild_module_data();
+    $modules = $this->container->get('extension.list.module')->getList();
     // Check that the mtime field exists for the system module.
     $this->assertTrue(!empty($modules['system']->info['mtime']), 'The system.info.yml file modification time field is present.');
     // Use 0 if mtime isn't present, to avoid an array index notice.

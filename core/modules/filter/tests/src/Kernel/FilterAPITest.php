@@ -488,7 +488,7 @@ class FilterAPITest extends EntityKernelTestBase {
 
     drupal_static_reset('filter_formats');
     \Drupal::entityTypeManager()->getStorage('filter_format')->resetCache();
-    $module_data = \Drupal::service('extension.list.module')->reset()->getList();
+    $module_data = \Drupal::service('extension.list.module')->getList();
     $this->assertFalse(isset($module_data['filter_test']->info['required']), 'The filter_test module is required.');
 
     // Verify that a dependency exists on the module that provides the filter

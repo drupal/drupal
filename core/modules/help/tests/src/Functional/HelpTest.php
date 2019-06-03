@@ -152,7 +152,7 @@ class HelpTest extends BrowserTestBase {
    */
   protected function getModuleList() {
     $modules = [];
-    $module_data = system_rebuild_module_data();
+    $module_data = $this->container->get('extension.list.module')->getList();
     foreach (\Drupal::moduleHandler()->getImplementations('help') as $module) {
       $modules[$module] = $module_data[$module]->info['name'];
     }

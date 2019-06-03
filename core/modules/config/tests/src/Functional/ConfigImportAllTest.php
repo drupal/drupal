@@ -45,7 +45,7 @@ class ConfigImportAllTest extends ModuleTestBase {
   public function testInstallUninstall() {
 
     // Get a list of modules to enable.
-    $all_modules = system_rebuild_module_data();
+    $all_modules = $this->container->get('extension.list.module')->getList();
     $all_modules = array_filter($all_modules, function ($module) {
       // Filter contrib, hidden, already enabled modules and modules in the
       // Testing package.
@@ -86,7 +86,7 @@ class ConfigImportAllTest extends ModuleTestBase {
     // Purge the field data.
     field_purge_batch(1000);
 
-    $all_modules = system_rebuild_module_data();
+    $all_modules = \Drupal::service('extension.list.module')->getList();
 
     // Ensure that only core required modules and the install profile can not be uninstalled.
     $validation_reasons = \Drupal::service('module_installer')->validateUninstall(array_keys($all_modules));
