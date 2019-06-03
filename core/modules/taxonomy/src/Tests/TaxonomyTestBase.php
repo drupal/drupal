@@ -6,7 +6,7 @@ namespace Drupal\taxonomy\Tests;
 
 use Drupal\simpletest\WebTestBase;
 use Drupal\Tests\field\Traits\EntityReferenceTestTrait;
-use Drupal\Tests\taxonomy\Functional\TaxonomyTestTrait;
+use Drupal\Tests\taxonomy\Traits\TaxonomyTestTrait;
 
 /**
  * Provides common helper methods for Taxonomy module tests.
