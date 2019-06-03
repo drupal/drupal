@@ -1,0 +1,8 @@
+test: English test
+test_multiple:
+  string: 'A string'
+  another_string: 'Another string'
+  test_after_multiple: false
+test_after_multiple:
+  string: 'After a string'
+  another_string: 'After another string'
