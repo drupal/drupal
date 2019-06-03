@@ -59,8 +59,7 @@ class Composer {
     'symfony/debug' => ['Tests'],
     'symfony/dependency-injection' => ['Tests'],
     'symfony/dom-crawler' => ['Tests'],
-    // @see \Drupal\Tests\Component\EventDispatcher\ContainerAwareEventDispatcherTest
-    // 'symfony/event-dispatcher' => ['Tests'],
+    'symfony/event-dispatcher' => ['Tests'],
     'symfony/http-foundation' => ['Tests'],
     'symfony/http-kernel' => ['Tests'],
     'symfony/process' => ['Tests'],
