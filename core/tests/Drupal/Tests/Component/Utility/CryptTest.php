@@ -18,17 +18,11 @@ class CryptTest extends TestCase {
    * Tests random byte generation.
    *
    * @covers ::randomBytes
-   *
-   * @see \Drupal\Tests\Component\Utility\CryptRandomFallbackTest::testRandomBytesFallback
+   * @expectedDeprecation Drupal\Component\Utility\Crypt::randomBytes() is deprecated in Drupal 8.8.0 and will be removed before Drupal 9.0.0. Use PHP's built-in random_bytes() function instead. See https://www.drupal.org/node/3054488
+   * @group legacy
    */
   public function testRandomBytes() {
-    for ($i = 1; $i < 10; $i++) {
-      $count = rand(10, 10000);
-      // Check that different values are being generated.
-      $this->assertNotEquals(Crypt::randomBytes($count), Crypt::randomBytes($count));
-      // Check the length.
-      $this->assertEquals(strlen(Crypt::randomBytes($count)), $count);
-    }
+    $this->assertSame(16, strlen(Crypt::randomBytes(16)));
   }
 
   /**

@@ -2,8 +2,6 @@
 
 namespace Drupal\Component\Uuid;
 
-use Drupal\Component\Utility\Crypt;
-
 /**
  * Generates a UUID v4 (RFC 4122 section 4.4) using PHP code.
  *
@@ -17,7 +15,7 @@ class Php implements UuidInterface {
    */
   public function generate() {
     // Obtain a random string of 32 hex characters.
-    $hex = bin2hex(Crypt::randomBytes(16));
+    $hex = bin2hex(random_bytes(16));
 
     // The variable names $time_low, $time_mid, $time_hi_and_version,
     // $clock_seq_hi_and_reserved, $clock_seq_low, and $node correlate to

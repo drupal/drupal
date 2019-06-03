@@ -314,7 +314,7 @@ function user_password($length = 10) {
   for ($i = 0; $i < $length; $i++) {
     do {
       // Find a secure random number within the range needed.
-      $index = ord(Crypt::randomBytes(1));
+      $index = ord(random_bytes(1));
     } while ($index > $len);
 
     // Each iteration, pick a random character from the

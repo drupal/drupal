@@ -28,10 +28,13 @@ class Crypt {
    * @return string
    *   A randomly generated string.
    *
-   * @todo Deprecate in favor of random_bytes().
-   *   https://www.drupal.org/node/3054311
+   * @deprecated in Drupal 8.8.0 and will be removed before Drupal 9.0.0.
+   *   Use PHP's built-in random_bytes() function instead.
+   *
+   * @see https://www.drupal.org/node/3054488
    */
   public static function randomBytes($count) {
+    @trigger_error(__CLASS__ . '::randomBytes() is deprecated in Drupal 8.8.0 and will be removed before Drupal 9.0.0. Use PHP\'s built-in random_bytes() function instead. See https://www.drupal.org/node/3054488', E_USER_DEPRECATED);
     return random_bytes($count);
   }
 
@@ -107,7 +110,7 @@ class Crypt {
    * @see \Drupal\Component\Utility\Crypt::randomBytes()
    */
   public static function randomBytesBase64($count = 32) {
-    return str_replace(['+', '/', '='], ['-', '_', ''], base64_encode(static::randomBytes($count)));
+    return str_replace(['+', '/', '='], ['-', '_', ''], base64_encode(random_bytes($count)));
   }
 
 }

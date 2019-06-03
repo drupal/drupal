@@ -108,7 +108,7 @@ class PhpassHashedPassword implements PasswordInterface {
     // We encode the final log2 iteration count in base 64.
     $output .= static::$ITOA64[$this->countLog2];
     // 6 bytes is the standard salt for a portable phpass hash.
-    $output .= $this->base64Encode(Crypt::randomBytes(6), 6);
+    $output .= $this->base64Encode(random_bytes(6), 6);
     return $output;
   }
 
