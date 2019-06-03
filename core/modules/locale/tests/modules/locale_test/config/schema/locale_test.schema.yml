@@ -19,3 +19,40 @@ locale_test.translation:
       label: 'Test'
       # See \Drupal\Tests\locale\Kernel\LocaleConfigSubscriberTest
       translatable: true
+
+locale_test.translation_multiple:
+  type: config_object
+  label: 'translation settings'
+  mapping:
+    test:
+      type: string
+      label: 'Test'
+      # See \Drupal\Tests\locale\Kernel\LocaleConfigSubscriberTest
+      translatable: true
+    test_multiple:
+      type: mapping
+      label: 'Multiple settings'
+      mapping:
+        string:
+          type: string
+          label: 'A string'
+          translatable: true
+        another_string:
+          type: string
+          label: 'Another string'
+          translatable: true
+        test_after_multiple:
+          type: boolean
+          label: 'Test after multiple'
+    test_after_multiple:
+      type: mapping
+      label: 'Test after multiple settings'
+      mapping:
+        string:
+          type: string
+          label: 'A string'
+          translatable: true
+        another_string:
+          type: string
+          label: 'Another string'
+          translatable: true
