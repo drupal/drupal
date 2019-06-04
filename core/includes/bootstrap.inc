@@ -684,7 +684,7 @@ function drupal_valid_test_ua($new_prefix = NULL) {
     $test_hmac = Crypt::hmacBase64($check_string, $key);
     // Since we are making a local request a 600 second time window is allowed,
     // and the HMAC must match.
-    if ($time_diff >= 0 && $time_diff <= 600 && $hmac === $test_hmac) {
+    if ($time_diff >= 0 && $time_diff <= 600 && Crypt::hashEquals($test_hmac, $hmac)) {
       $test_prefix = $prefix;
     }
     else {

@@ -104,7 +104,7 @@ class ImageStyleDownloadController extends FileDownloadController {
     // starts with styles/.
     $valid = !empty($image_style) && file_stream_wrapper_valid_scheme($scheme);
     if (!$this->config('image.settings')->get('allow_insecure_derivatives') || strpos(ltrim($target, '\/'), 'styles/') === 0) {
-      $valid &= $request->query->get(IMAGE_DERIVATIVE_TOKEN) === $image_style->getPathToken($image_uri);
+      $valid &= Crypt::hashEquals($image_style->getPathToken($image_uri), $request->query->get(IMAGE_DERIVATIVE_TOKEN, ''));
     }
     if (!$valid) {
       // Return a 404 (Page Not Found) rather than a 403 (Access Denied) as the
