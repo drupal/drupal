@@ -2,9 +2,9 @@
 
 namespace Drupal\Core\TypedData\Validation;
 
+use Drupal\Core\Validation\ConstraintViolation;
 use Drupal\Core\Validation\TranslatorInterface;
 use Symfony\Component\Validator\Constraint;
-use Symfony\Component\Validator\ConstraintViolation;
 use Symfony\Component\Validator\ConstraintViolationList;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
 use Symfony\Component\Validator\Mapping\MetadataInterface;

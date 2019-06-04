@@ -6,8 +6,8 @@ use Drupal\Core\Entity\EntityConstraintViolationList;
 use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\entity_test\Plugin\Validation\Constraint\EntityTestCompositeConstraint;
+use Drupal\Core\Validation\ConstraintViolation;
 use Drupal\Tests\UnitTestCase;
-use Symfony\Component\Validator\ConstraintViolation;
 
 /**
  * @coversDefaultClass \Drupal\Core\Entity\EntityConstraintViolationList
