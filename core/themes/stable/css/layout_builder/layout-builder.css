@@ -14,14 +14,14 @@
 }
 
 .layout-builder__link--add {
-  padding-left: 24px; /* LTR */
+  padding-left: 1.3em; /* LTR */
   color: #686868;
   border-bottom: none;
-  background: url(../../../../misc/icons/787878/plus.svg) transparent top left / 16px 16px no-repeat; /* LTR */
+  background: url(../../../../misc/icons/787878/plus.svg) transparent center left / 1em no-repeat; /* LTR */
 }
 
 [dir="rtl"] .layout-builder__link--add {
-  padding-right: 24px;
+  padding-right: 1.3em;
   padding-left: 0;
   background-position-x: right;
 }
