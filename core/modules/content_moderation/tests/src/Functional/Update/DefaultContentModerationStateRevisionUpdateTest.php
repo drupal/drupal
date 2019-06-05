@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\Tests\content_moderation\Functional;
+namespace Drupal\Tests\content_moderation\Functional\Update;
 
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\FunctionalTests\Update\UpdatePathTestBase;
@@ -19,8 +19,8 @@ class DefaultContentModerationStateRevisionUpdateTest extends UpdatePathTestBase
    */
   protected function setDatabaseDumpFiles() {
     $this->databaseDumpFiles = [
-      __DIR__ . '/../../../../system/tests/fixtures/update/drupal-8.4.0.bare.standard.php.gz',
-      __DIR__ . '/../../fixtures/update/drupal-8.4.0-content_moderation_installed.php',
+      __DIR__ . '/../../../../../system/tests/fixtures/update/drupal-8.4.0.bare.standard.php.gz',
+      __DIR__ . '/../../../fixtures/update/drupal-8.4.0-content_moderation_installed.php',
     ];
   }
 
@@ -31,7 +31,7 @@ class DefaultContentModerationStateRevisionUpdateTest extends UpdatePathTestBase
     // Include the database fixture required to test updating the default
     // revision. This is excluded from  ::setDatabaseDumpFiles so that we can
     // test the same post_update hook with no test content enabled.
-    require __DIR__ . '/../../fixtures/update/drupal-8.default-cms-entity-id-2941736.php';
+    require __DIR__ . '/../../../fixtures/update/drupal-8.default-cms-entity-id-2941736.php';
 
     $this->runUpdates();
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\Tests\content_moderation\Functional;
+namespace Drupal\Tests\content_moderation\Functional\Update;
 
 use Drupal\FunctionalTests\Update\UpdatePathTestBase;
 use Drupal\workflows\Entity\Workflow;
@@ -20,8 +20,8 @@ class DefaultModerationStateUpdateTest extends UpdatePathTestBase {
    */
   protected function setDatabaseDumpFiles() {
     $this->databaseDumpFiles = [
-      __DIR__ . '/../../../../system/tests/fixtures/update/drupal-8.4.0.bare.standard.php.gz',
-      __DIR__ . '/../../fixtures/update/drupal-8.4.0-content_moderation_installed.php',
+      __DIR__ . '/../../../../../system/tests/fixtures/update/drupal-8.4.0.bare.standard.php.gz',
+      __DIR__ . '/../../../fixtures/update/drupal-8.4.0-content_moderation_installed.php',
     ];
   }
 

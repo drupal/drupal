@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\Tests\content_moderation\Functional;
+namespace Drupal\Tests\content_moderation\Functional\Update;
 
 use Drupal\Core\Entity\Entity\EntityFormDisplay;
 use Drupal\FunctionalTests\Update\UpdatePathTestBase;
@@ -20,9 +20,9 @@ class EntityFormDisplayDependenciesUpdateTest extends UpdatePathTestBase {
    */
   protected function setDatabaseDumpFiles() {
     $this->databaseDumpFiles = [
-      __DIR__ . '/../../../../system/tests/fixtures/update/drupal-8.4.0.bare.standard.php.gz',
-      __DIR__ . '/../../fixtures/update/drupal-8.4.0-content_moderation_installed.php',
-      __DIR__ . '/../../fixtures/update/drupal-8.entity-form-display-dependencies-2915383.php',
+      __DIR__ . '/../../../../../system/tests/fixtures/update/drupal-8.4.0.bare.standard.php.gz',
+      __DIR__ . '/../../../fixtures/update/drupal-8.4.0-content_moderation_installed.php',
+      __DIR__ . '/../../../fixtures/update/drupal-8.entity-form-display-dependencies-2915383.php',
     ];
   }
 
