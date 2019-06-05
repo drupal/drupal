@@ -283,12 +283,11 @@ class EntityReferenceItem extends FieldItemBase implements OptionsProviderInterf
     $options = [
       'target_type' => $field_definition->getFieldStorageDefinition()->getSetting('target_type'),
       'handler' => $field_definition->getSetting('handler'),
-      'handler_settings' => $field_definition->getSetting('handler_settings') ?: [],
       'entity' => NULL,
-    ];
+    ] + $field_definition->getSetting('handler_settings') ?: [];
 
     $entity_type = \Drupal::entityTypeManager()->getDefinition($options['target_type']);
-    $options['handler_settings']['sort'] = [
+    $options['sort'] = [
       'field' => $entity_type->getKey('id'),
       'direction' => 'DESC',
     ];
@@ -305,7 +304,7 @@ class EntityReferenceItem extends FieldItemBase implements OptionsProviderInterf
     // Attempt to create a sample entity, avoiding recursion.
     $entity_storage = \Drupal::entityTypeManager()->getStorage($options['target_type']);
     if ($entity_storage instanceof ContentEntityStorageInterface) {
-      $bundle = static::getRandomBundle($entity_type, $options['handler_settings']);
+      $bundle = static::getRandomBundle($entity_type, $options);
 
       // Track the generated entity by reference type, target type, and bundle.
       $key = $field_definition->getTargetEntityTypeId() . ':' . $options['target_type'] . ':' . $bundle;
