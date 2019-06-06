@@ -80,6 +80,7 @@ class DefaultsEntityForm extends EntityForm {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state, SectionStorageInterface $section_storage = NULL) {
+    $form['#attributes']['class'][] = 'layout-builder-form';
     $form['layout_builder'] = [
       '#type' => 'layout_builder',
       '#section_storage' => $section_storage,

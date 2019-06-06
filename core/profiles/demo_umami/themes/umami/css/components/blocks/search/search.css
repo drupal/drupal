@@ -69,7 +69,7 @@
 .search-block-form .form-search {
   width: auto;
   height: auto;
-  margin: 0 80px 0 0; /* LTR */
+  margin: 0;
   padding: 7px 8px 7px 32px;
   color: #464646;
   border: 2px solid #fff;
@@ -77,13 +77,10 @@
   font-size: 0.875rem;
   line-height: normal;
 }
-[dir=rtl] .form-search {
-  margin: 0 0 0 80px;
-}
 
 @media screen and (min-width: 48em) {
   .search-block-form .form-search {
-    width: 18em;
+    width: 20rem;
   }
 }
 
@@ -109,8 +106,8 @@
 /* Search submit */
 .search-block-form .form-actions {
   position: relative;
-  margin-top: 0;
-  margin-bottom: 0;
+  margin: 0;
+  padding: 0;
   border-top: 1px solid #dbdbdb;
   border-right: 1px solid #dbdbdb; /* LTR */
   border-bottom: 1px solid #dbdbdb;
@@ -124,6 +121,9 @@
   border-top-right-radius: 0;
   border-bottom-right-radius: 0;
   border-bottom-left-radius: 3px;
+}
+.search-block-form .form-actions .button {
+  margin: 0;
 }
 .search-block-form .form-submit {
   margin: 0;
