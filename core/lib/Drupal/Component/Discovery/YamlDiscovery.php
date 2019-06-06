@@ -2,8 +2,9 @@
 
 namespace Drupal\Component\Discovery;
 
-use Drupal\Component\Serialization\Yaml;
 use Drupal\Component\FileCache\FileCacheFactory;
+use Drupal\Component\Serialization\Exception\InvalidDataTypeException;
+use Drupal\Component\Serialization\Yaml;
 
 /**
  * Provides discovery for YAML files within a given set of directories.
@@ -74,10 +75,16 @@ class YamlDiscovery implements DiscoverableInterface {
    *
    * @param string $file
    *   Yaml file path.
+   *
    * @return array
    */
   protected function decode($file) {
-    return Yaml::decode(file_get_contents($file)) ?: [];
+    try {
+      return Yaml::decode(file_get_contents($file)) ?: [];
+    }
+    catch (InvalidDataTypeException $e) {
+      throw new InvalidDataTypeException($file . ': ' . $e->getMessage(), $e->getCode(), $e);
+    }
   }
 
   /**

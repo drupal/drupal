@@ -4,9 +4,10 @@ namespace Drupal\Tests\Component\Discovery;
 
 use Drupal\Component\Discovery\YamlDiscovery;
 use Drupal\Component\FileCache\FileCacheFactory;
+use Drupal\Component\Serialization\Exception\InvalidDataTypeException;
 use org\bovigo\vfs\vfsStream;
-use org\bovigo\vfs\vfsStreamWrapper;
 use org\bovigo\vfs\vfsStreamDirectory;
+use org\bovigo\vfs\vfsStreamWrapper;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -65,6 +66,26 @@ class YamlDiscoveryTest extends TestCase {
     }
 
     $this->assertSame([], $data['test_4']);
+  }
+
+  /**
+   * Tests if filename is output for a broken YAML file.
+   */
+  public function testForBrokenYml() {
+    vfsStreamWrapper::register();
+    $root = new vfsStreamDirectory('modules');
+    vfsStreamWrapper::setRoot($root);
+    $url = vfsStream::url('modules');
+
+    mkdir($url . '/test_broken');
+    file_put_contents($url . '/test_broken/test_broken.test.yml', "broken:\n:");
+
+    $this->expectException(InvalidDataTypeException::class);
+    $this->expectExceptionMessage('vfs://modules/test_broken/test_broken.test.yml');
+
+    $directories = ['test_broken' => $url . '/test_broken'];
+    $discovery = new YamlDiscovery('test', $directories);
+    $discovery->findAll();
   }
 
 }
