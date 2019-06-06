@@ -13,5 +13,13 @@
 
 .block-page-title-block {
   margin: 1rem 0 3rem;
+  padding: 0 1rem;
   text-align: center;
+}
+
+/* Large */
+@media screen and (min-width: 77rem) { /* 1200px + 2rem */
+  .block-page-title-block {
+    padding: 0;
+  }
 }

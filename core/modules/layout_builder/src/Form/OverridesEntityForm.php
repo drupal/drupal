@@ -97,6 +97,7 @@ class OverridesEntityForm extends ContentEntityForm {
   public function buildForm(array $form, FormStateInterface $form_state, SectionStorageInterface $section_storage = NULL) {
     $this->sectionStorage = $section_storage;
     $form = parent::buildForm($form, $form_state);
+    $form['#attributes']['class'][] = 'layout-builder-form';
 
     // @todo \Drupal\layout_builder\Field\LayoutSectionItemList::defaultAccess()
     //   restricts all access to the field, explicitly allow access here until
