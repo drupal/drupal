@@ -293,9 +293,10 @@ class TransactionTest extends DatabaseTestBase {
       try {
         $transaction->rollBack();
         unset($transaction);
-        // @TODO: an exception should be triggered here, but is not, because
+        // @todo An exception should be triggered here, but is not because
         // "ROLLBACK" fails silently in MySQL if there is no transaction active.
-        // $this->fail(t('Rolling back a transaction containing DDL should fail.'));
+        // @see https://www.drupal.org/project/drupal/issues/2736777
+        // $this->fail('Rolling back a transaction containing DDL should fail.');
       }
       catch (TransactionNoActiveException $e) {
         $this->pass('Rolling back a transaction containing DDL should fail.');

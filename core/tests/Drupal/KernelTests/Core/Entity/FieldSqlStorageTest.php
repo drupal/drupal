@@ -341,10 +341,10 @@ class FieldSqlStorageTest extends EntityKernelTestBase {
     $field_storage->setSetting('scale', 3);
     try {
       $field_storage->save();
-      $this->fail(t('Cannot update field schema with data.'));
+      $this->fail('Cannot update field schema with data.');
     }
     catch (FieldStorageDefinitionUpdateForbiddenException $e) {
-      $this->pass(t('Cannot update field schema with data.'));
+      $this->pass('Cannot update field schema with data.');
     }
   }
 
@@ -370,10 +370,10 @@ class FieldSqlStorageTest extends EntityKernelTestBase {
     $field_storage->setSetting('max_length', '-1)');
     try {
       $field_storage->save();
-      $this->fail(t('Update succeeded.'));
+      $this->fail('Update succeeded.');
     }
     catch (\Exception $e) {
-      $this->pass(t('Update properly failed.'));
+      $this->pass('Update properly failed.');
     }
 
     // Ensure that the field tables are still there.

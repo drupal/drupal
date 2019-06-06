@@ -65,7 +65,7 @@ class NodeQueryAlterTest extends NodeTestBase {
       $this->assertEqual(count($result), 4, 'User with access can see correct nodes');
     }
     catch (\Exception $e) {
-      $this->fail(t('Altered query is malformed'));
+      $this->fail('Altered query is malformed');
     }
   }
 
@@ -106,7 +106,7 @@ class NodeQueryAlterTest extends NodeTestBase {
       $this->assertEqual(count($result), 0, 'User with no access cannot see nodes');
     }
     catch (\Exception $e) {
-      $this->fail(t('Altered query is malformed'));
+      $this->fail('Altered query is malformed');
     }
   }
 
@@ -131,7 +131,7 @@ class NodeQueryAlterTest extends NodeTestBase {
     catch (\Exception $e) {
       $this->fail($e->getMessage());
       $this->fail((string) $query);
-      $this->fail(t('Altered query is malformed'));
+      $this->fail('Altered query is malformed');
     }
   }
 
@@ -170,7 +170,7 @@ class NodeQueryAlterTest extends NodeTestBase {
       $this->assertEqual(count($result), 0, 'User view privileges are not overridden');
     }
     catch (\Exception $e) {
-      $this->fail(t('Altered query is malformed'));
+      $this->fail('Altered query is malformed');
     }
 
     // Have node_test_node_grants return a node_access_all privilege,
@@ -192,7 +192,7 @@ class NodeQueryAlterTest extends NodeTestBase {
       $this->assertEqual(count($result), 4, 'User view privileges are overridden');
     }
     catch (\Exception $e) {
-      $this->fail(t('Altered query is malformed'));
+      $this->fail('Altered query is malformed');
     }
     \Drupal::state()->delete('node_access_test.no_access_uid');
   }

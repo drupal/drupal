@@ -92,10 +92,10 @@ class ModuleHandlerTest extends KernelTestBase {
 
     try {
       $result = $this->moduleInstaller()->install(['color']);
-      $this->fail(t('ModuleInstaller::install() throws an exception if dependencies are missing.'));
+      $this->fail('ModuleInstaller::install() throws an exception if dependencies are missing.');
     }
     catch (MissingDependencyException $e) {
-      $this->pass(t('ModuleInstaller::install() throws an exception if dependencies are missing.'));
+      $this->pass('ModuleInstaller::install() throws an exception if dependencies are missing.');
     }
 
     $this->assertFalse($this->moduleHandler()->moduleExists('color'), 'ModuleInstaller::install() aborts if dependencies are missing.');

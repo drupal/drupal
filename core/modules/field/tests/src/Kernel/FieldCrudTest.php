@@ -100,20 +100,20 @@ class FieldCrudTest extends FieldKernelTestBase {
     // Guarantee that the field/bundle combination is unique.
     try {
       FieldConfig::create($this->fieldDefinition)->save();
-      $this->fail(t('Cannot create two fields with the same field / bundle combination.'));
+      $this->fail('Cannot create two fields with the same field / bundle combination.');
     }
     catch (EntityStorageException $e) {
-      $this->pass(t('Cannot create two fields with the same field / bundle combination.'));
+      $this->pass('Cannot create two fields with the same field / bundle combination.');
     }
 
     // Check that the specified field exists.
     try {
       $this->fieldDefinition['field_name'] = $this->randomMachineName();
       FieldConfig::create($this->fieldDefinition)->save();
-      $this->fail(t('Cannot create a field with a non-existing storage.'));
+      $this->fail('Cannot create a field with a non-existing storage.');
     }
     catch (FieldException $e) {
-      $this->pass(t('Cannot create a field with a non-existing storage.'));
+      $this->pass('Cannot create a field with a non-existing storage.');
     }
 
     // TODO: test other failures.

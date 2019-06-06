@@ -205,7 +205,7 @@ EOD;
 
     // This causes the eleventh of the sixteen passes asserted in
     // confirmStubResults().
-    $this->pass(t('Test ID is @id.', ['@id' => $this->testId]));
+    $this->pass('Test ID is ' . $this->testId . '.');
 
     // These cause the twelfth to fifteenth of the sixteen passes asserted in
     // confirmStubResults().
@@ -234,7 +234,7 @@ EOD;
    * Assert nothing.
    */
   public function assertNothing() {
-    $this->pass("This is nothing.");
+    $this->pass('This is nothing.');
   }
 
   /**

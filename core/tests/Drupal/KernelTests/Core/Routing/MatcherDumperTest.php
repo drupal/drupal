@@ -99,7 +99,7 @@ class MatcherDumperTest extends KernelTestBase {
     foreach ($collection_routes as $name => $route) {
       if (empty($dumper_routes[$name])) {
         $success = FALSE;
-        $this->fail(t('Not all routes found in the dumper.'));
+        $this->fail('Not all routes found in the dumper.');
       }
     }
 
