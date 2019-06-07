@@ -203,7 +203,6 @@ class NodeTypeForm extends BundleEntityFormBase {
   protected function actions(array $form, FormStateInterface $form_state) {
     $actions = parent::actions($form, $form_state);
     $actions['submit']['#value'] = t('Save content type');
-    $actions['delete']['#value'] = t('Delete content type');
     return $actions;
   }
 
