@@ -268,7 +268,7 @@ abstract class EntityBase implements EntityInterface {
    * {@inheritdoc}
    */
   public function link($text = NULL, $rel = 'canonical', array $options = []) {
-    @trigger_error("EntityInterface::link() is deprecated in Drupal 8.0.0 and will be removed in Drupal 9.0.0. EntityInterface::toLink() instead. Note, the default relationship for configuration entities changes from 'edit-form' to 'canonical'. See https://www.drupal.org/node/2614344", E_USER_DEPRECATED);
+    @trigger_error("EntityInterface::link() is deprecated in Drupal 8.0.0 and will be removed in Drupal 9.0.0. Use EntityInterface::toLink()->toString() instead. Note, the default relationship for configuration entities changes from 'edit-form' to 'canonical'. See https://www.drupal.org/node/2614344", E_USER_DEPRECATED);
     return $this->toLink($text, $rel, $options)->toString();
   }
 
