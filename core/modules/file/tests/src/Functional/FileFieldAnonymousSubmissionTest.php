@@ -88,7 +88,7 @@ class FileFieldAnonymousSubmissionTest extends FileFieldTestBase {
       $this->assertNotEqual($nid, 0, 'The node ID was extracted from the URL.');
       $node = Node::load($nid);
       $this->assertNotEqual($node, NULL, 'The node was loaded successfully.');
-      $this->assertFileExists(File::load($node->field_image->target_id), 'The image was uploaded successfully.');
+      $this->assertFileExists(File::load($node->field_image->target_id)->getFileUri(), 'The image was uploaded successfully.');
     }
   }
 
@@ -162,7 +162,7 @@ class FileFieldAnonymousSubmissionTest extends FileFieldTestBase {
       $this->assertNotEqual($nid, 0, 'The node ID was extracted from the URL.');
       $node = Node::load($nid);
       $this->assertNotEqual($node, NULL, 'The node was loaded successfully.');
-      $this->assertFileExists(File::load($node->field_image->target_id), 'The image was uploaded successfully.');
+      $this->assertFileExists(File::load($node->field_image->target_id)->getFileUri(), 'The image was uploaded successfully.');
     }
   }
 
