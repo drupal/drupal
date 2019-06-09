@@ -2,6 +2,7 @@
 
 namespace Drupal\migrate\Plugin\migrate\process;
 
+use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Menu\MenuLinkManagerInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
@@ -85,16 +86,24 @@ class MenuLinkParent extends ProcessPluginBase implements ContainerFactoryPlugin
     catch (MigrateSkipRowException $e) {
 
     }
+
     if (isset($value[1])) {
       list($menu_name, $parent_link_path) = $value;
-      $url = Url::fromUserInput("/$parent_link_path");
-      if ($url->isRouted()) {
-        $links = $this->menuLinkManager->loadLinksByRoute($url->getRouteName(), $url->getRouteParameters(), $menu_name);
-        if (count($links) == 1) {
-          /** @var \Drupal\Core\Menu\MenuLinkInterface $link */
-          $link = reset($links);
-          return $link->getPluginId();
+
+      $links = [];
+      if (UrlHelper::isExternal($parent_link_path)) {
+        $links = $this->menuLinkStorage->loadByProperties(['link__uri' => $parent_link_path]);
+      }
+      else {
+        $url = Url::fromUserInput("/$parent_link_path");
+        if ($url->isRouted()) {
+          $links = $this->menuLinkManager->loadLinksByRoute($url->getRouteName(), $url->getRouteParameters(), $menu_name);
         }
+      }
+      if (count($links) == 1) {
+        /** @var \Drupal\Core\Menu\MenuLinkInterface $link */
+        $link = reset($links);
+        return $link->getPluginId();
       }
     }
     throw new MigrateSkipRowException(sprintf("No parent link found for plid '%d' in menu '%s'.", $parent_id, $value[0]));
