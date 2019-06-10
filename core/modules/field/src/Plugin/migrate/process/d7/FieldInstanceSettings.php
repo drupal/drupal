@@ -23,6 +23,19 @@ class FieldInstanceSettings extends ProcessPluginBase {
     $field_data = unserialize($field_definition['data']);
     $field_settings = $field_data['settings'];
 
+    // Get taxonomy term reference handler settings from allowed values.
+    if ($row->getSourceProperty('type') == 'taxonomy_term_reference') {
+      $instance_settings['handler_settings']['sort'] = [
+        'field' => '_none',
+      ];
+      $allowed_values = $row->get('@allowed_values');
+      foreach ($allowed_values as $allowed_value) {
+        foreach ($allowed_value as $vocabulary) {
+          $instance_settings['handler_settings']['target_bundles'][$vocabulary] = $vocabulary;
+        }
+      }
+    }
+
     // Get entityreference handler settings from source field configuration.
     if ($row->getSourceProperty('type') == "entityreference") {
       $instance_settings['handler'] = 'default:' . $field_settings['target_type'];
