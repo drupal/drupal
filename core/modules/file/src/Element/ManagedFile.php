@@ -111,7 +111,7 @@ class ManagedFile extends FormElement {
                 elseif (\Drupal::currentUser()->isAnonymous()) {
                   $token = NestedArray::getValue($form_state->getUserInput(), array_merge($element['#parents'], ['file_' . $file->id(), 'fid_token']));
                   $file_hmac = Crypt::hmacBase64('file-' . $file->id(), \Drupal::service('private_key')->get() . Settings::getHashSalt());
-                  if ($token === NULL || !Crypt::hashEquals($file_hmac, $token)) {
+                  if ($token === NULL || !hash_equals($file_hmac, $token)) {
                     $force_default = TRUE;
                     break;
                   }

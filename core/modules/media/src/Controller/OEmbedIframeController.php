@@ -125,7 +125,7 @@ class OEmbedIframeController implements ContainerInjectionInterface {
     // Hash the URL and max dimensions, and ensure it is equal to the hash
     // parameter passed in the query string.
     $hash = $this->iFrameUrlHelper->getHash($url, $max_width, $max_height);
-    if (!Crypt::hashEquals($hash, $request->query->get('hash', ''))) {
+    if (!hash_equals($hash, $request->query->get('hash', ''))) {
       throw new AccessDeniedHttpException('This resource is not available');
     }
 

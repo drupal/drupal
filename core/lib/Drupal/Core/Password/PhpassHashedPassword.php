@@ -2,8 +2,6 @@
 
 namespace Drupal\Core\Password;
 
-use Drupal\Component\Utility\Crypt;
-
 /**
  * Secure password hashing functions based on the Portable PHP password
  * hashing framework.
@@ -248,8 +246,8 @@ class PhpassHashedPassword implements PasswordInterface {
         return FALSE;
     }
 
-    // Compare using hashEquals() instead of === to mitigate timing attacks.
-    return $computed_hash && Crypt::hashEquals($stored_hash, $computed_hash);
+    // Compare using hash_equals() instead of === to mitigate timing attacks.
+    return $computed_hash && hash_equals($stored_hash, $computed_hash);
   }
 
   /**

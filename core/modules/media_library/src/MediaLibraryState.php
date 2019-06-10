@@ -187,7 +187,7 @@ class MediaLibraryState extends ParameterBag {
    *   The hashed parameters.
    */
   public function isValidHash($hash) {
-    return Crypt::hashEquals($this->getHash(), $hash);
+    return hash_equals($this->getHash(), $hash);
   }
 
   /**

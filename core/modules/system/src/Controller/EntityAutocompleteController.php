@@ -87,7 +87,7 @@ class EntityAutocompleteController extends ControllerBase {
       $selection_settings = $this->keyValue->get($selection_settings_key, FALSE);
       if ($selection_settings !== FALSE) {
         $selection_settings_hash = Crypt::hmacBase64(serialize($selection_settings) . $target_type . $selection_handler, Settings::getHashSalt());
-        if (!Crypt::hashEquals($selection_settings_hash, $selection_settings_key)) {
+        if (!hash_equals($selection_settings_hash, $selection_settings_key)) {
           // Disallow access when the selection settings hash does not match the
           // passed-in key.
           throw new AccessDeniedHttpException('Invalid selection settings key.');

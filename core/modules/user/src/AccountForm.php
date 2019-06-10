@@ -3,7 +3,6 @@
 namespace Drupal\user;
 
 use Drupal\Component\Datetime\TimeInterface;
-use Drupal\Component\Utility\Crypt;
 use Drupal\Core\Entity\ContentEntityForm;
 use Drupal\Core\Entity\EntityConstraintViolationListInterface;
 use Drupal\Core\Entity\EntityRepositoryInterface;
@@ -131,7 +130,7 @@ abstract class AccountForm extends ContentEntityForm {
       // so it persists even on subsequent Ajax requests.
       if (!$form_state->get('user_pass_reset') && ($token = $this->getRequest()->get('pass-reset-token'))) {
         $session_key = 'pass_reset_' . $account->id();
-        $user_pass_reset = isset($_SESSION[$session_key]) && Crypt::hashEquals($_SESSION[$session_key], $token);
+        $user_pass_reset = isset($_SESSION[$session_key]) && hash_equals($_SESSION[$session_key], $token);
         $form_state->set('user_pass_reset', $user_pass_reset);
       }
 

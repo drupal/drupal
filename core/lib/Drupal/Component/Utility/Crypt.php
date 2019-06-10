@@ -91,10 +91,13 @@ class Crypt {
    * @return bool
    *   Returns TRUE when the two strings are equal, FALSE otherwise.
    *
-   * @todo Deprecate in favor of hash_equals().
-   *   https://www.drupal.org/node/3053956
+   * @deprecated in drupal:8.8.0 and is removed from drupal:9.0.0.
+   *   Use PHP's built-in hash_equals() function instead.
+   *
+   * @see https://www.drupal.org/node/3054488
    */
   public static function hashEquals($known_string, $user_string) {
+    @trigger_error(__CLASS__ . '::hashEquals() is deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. Use PHP\'s built-in hash_equals() function instead. See https://www.drupal.org/node/3054488', E_USER_DEPRECATED);
     return hash_equals($known_string, $user_string);
   }
 

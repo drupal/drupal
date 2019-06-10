@@ -148,4 +148,17 @@ class CryptTest extends TestCase {
     ];
   }
 
+  /**
+   * Legacy test of Drupal\Component\Utility\Crypt::hashEquals() method.
+   *
+   * @expectedDeprecation Drupal\Component\Utility\Crypt::hashEquals() is deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. Use PHP's built-in hash_equals() function instead. See https://www.drupal.org/node/3054488
+   * @group legacy
+   */
+  public function testHashEquals() {
+    $a_hash = Crypt::hashBase64('a');
+    $b_hash = Crypt::hashBase64('b');
+    $this->assertTrue(Crypt::hashEquals($a_hash, $a_hash));
+    $this->assertFalse(Crypt::hashEquals($a_hash, $b_hash));
+  }
+
 }
