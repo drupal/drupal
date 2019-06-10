@@ -4,7 +4,6 @@ namespace Drupal\Tests\system\Functional\System;
 
 use Drupal\Core\Url;
 use Drupal\Tests\BrowserTestBase;
-use Drupal\system\SystemRequirements;
 use Symfony\Component\CssSelector\CssSelectorConverter;
 
 /**
@@ -51,15 +50,6 @@ class StatusTest extends BrowserTestBase {
 
     $phpversion = phpversion();
     $this->assertText($phpversion, 'Php version is shown on the page.');
-
-    // Checks if the suggestion to update to php 5.5.21 or 5.6.5 for disabling
-    // multiple statements is present when necessary.
-    if (\Drupal::database()->driver() === 'mysql' && !SystemRequirements::phpVersionWithPdoDisallowMultipleStatements($phpversion)) {
-      $this->assertText(t('PHP (multiple statement disabling)'));
-    }
-    else {
-      $this->assertNoText(t('PHP (multiple statement disabling)'));
-    }
 
     if (function_exists('phpinfo')) {
       $this->assertLinkByHref(Url::fromRoute('system.php')->toString());

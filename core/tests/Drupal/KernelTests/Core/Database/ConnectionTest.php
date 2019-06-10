@@ -117,12 +117,12 @@ class ConnectionTest extends DatabaseTestBase {
   }
 
   /**
-   * Ensure that you cannot execute multiple statements on phpversion() > 5.5.21 or > 5.6.5.
+   * Ensure that you cannot execute multiple statements on MySQL.
    */
   public function testMultipleStatementsForNewPhp() {
     // This just tests mysql, as other PDO integrations don't allow disabling
     // multiple statements.
-    if (Database::getConnection()->databaseType() !== 'mysql' || !defined('\PDO::MYSQL_ATTR_MULTI_STATEMENTS')) {
+    if (Database::getConnection()->databaseType() !== 'mysql') {
       return;
     }
 
