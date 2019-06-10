@@ -12,7 +12,7 @@ use Drupal\Tests\media\Traits\MediaTypeCreationTrait;
 use Drupal\media\Entity\MediaType;
 
 /**
- * Tests that the Media library automatically configures form/view modes.
+ * Tests that the Media Library automatically configures form/view modes.
  *
  * @group media_library
  */
@@ -46,7 +46,7 @@ class MediaLibraryDisplayModeTest extends BrowserTestBase {
   }
 
   /**
-   * Tests that the Media library can automatically configure display modes.
+   * Tests that the Media Library can automatically configure display modes.
    */
   public function testDisplayModes() {
     $this->createMediaType('file', [

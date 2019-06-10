@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Post update functions for Media library.
+ * Post update functions for Media Library.
  */
 
 use Drupal\Core\Entity\Entity\EntityFormMode;
@@ -63,7 +63,7 @@ function media_library_post_update_table_display() {
   $view = Views::getView('media_library');
 
   if (!$view) {
-    return t('The media_library view could not be updated because it has been deleted. The Media library module needs this view in order to work properly. Uninstall and reinstall the module so the view will be re-created.');
+    return t('The media_library view could not be updated because it has been deleted. The Media Library module needs this view in order to work properly. Uninstall and reinstall the module so the view will be re-created.');
   }
 
   // Override CSS classes to allow targeting grid displays.
