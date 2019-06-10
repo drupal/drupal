@@ -7,7 +7,6 @@
 
 namespace Drupal\KernelTests\Core\Routing;
 
-use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Cache\MemoryBackend;
 use Drupal\Core\Database\Database;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
@@ -221,12 +220,6 @@ class RouteProviderTest extends KernelTestBase {
    * @dataProvider providerMixedCaseRoutePaths
    */
   public function testMixedCasePaths($path, $expected_route_name, $method = 'GET') {
-    // The case-insensitive behavior for higher UTF-8 characters depends on
-    // mb_strtolower() using mb_strtolower()
-    // but kernel tests do not currently run the check that enables it.
-    // @todo remove this when https://www.drupal.org/node/2849669 is fixed.
-    Unicode::check();
-
     $connection = Database::getConnection();
     $provider = new RouteProvider($connection, $this->state, $this->currentPath, $this->cache, $this->pathProcessor, $this->cacheTagsInvalidator, 'test_routes');
 
@@ -271,13 +264,6 @@ class RouteProviderTest extends KernelTestBase {
    * @dataProvider providerDuplicateRoutePaths
    */
   public function testDuplicateRoutePaths($path, $number, $expected_route_name = NULL) {
-
-    // The case-insensitive behavior for higher UTF-8 characters depends on
-    // mb_strtolower() using mb_strtolower()
-    // but kernel tests do not currently run the check that enables it.
-    // @todo remove this when https://www.drupal.org/node/2849669 is fixed.
-    Unicode::check();
-
     $connection = Database::getConnection();
     $provider = new RouteProvider($connection, $this->state, $this->currentPath, $this->cache, $this->pathProcessor, $this->cacheTagsInvalidator, 'test_routes');
 
