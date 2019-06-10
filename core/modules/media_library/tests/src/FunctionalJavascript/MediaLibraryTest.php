@@ -14,7 +14,7 @@ use Drupal\user\Entity\Role;
 use Drupal\user\RoleInterface;
 
 /**
- * Contains Media library integration tests.
+ * Contains Media Library integration tests.
  *
  * @group media_library
  */
@@ -80,7 +80,7 @@ class MediaLibraryTest extends WebDriverTestBase {
   }
 
   /**
-   * Tests that the Media library's administration page works as expected.
+   * Tests that the Media Library's administration page works as expected.
    */
   public function testAdministrationPage() {
     $session = $this->getSession();

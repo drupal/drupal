@@ -1,6 +1,6 @@
-name: 'Media library test'
+name: 'Media Library test'
 type: module
-description: 'Test module for Media library.'
+description: 'Test module for Media Library.'
 package: Testing
 core: 8.x
 dependencies:

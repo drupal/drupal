@@ -36,7 +36,7 @@ function media_library_help($route_name, RouteMatchInterface $route_match) {
   switch ($route_name) {
     case 'help.page.media_library':
       $output = '<h3>' . t('About') . '</h3>';
-      $output .= '<p>' . t('The Media library module overrides the /admin/content/media view to provide a rich visual interface for performing administrative operations on media. For more information, see the <a href=":media">online documentation for the Media library module</a>.', [':media' => 'https://www.drupal.org/docs/8/core/modules/media']) . '</p>';
+      $output .= '<p>' . t('The Media Library module overrides the /admin/content/media view to provide a rich visual interface for performing administrative operations on media. For more information, see the <a href=":media">online documentation for the Media Library module</a>.', [':media' => 'https://www.drupal.org/docs/8/core/modules/media']) . '</p>';
       return $output;
   }
 }
