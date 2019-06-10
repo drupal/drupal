@@ -21,11 +21,6 @@ function template_preprocess_image_widget(&$variables) {
 
   $variables['attributes'] = ['class' => ['image-widget', 'js-form-managed-file', 'form-managed-file', 'clearfix']];
 
-  if (!empty($element['fids']['#value'])) {
-    $file = reset($element['#files']);
-    $element['file_' . $file->id()]['filename']['#suffix'] = ' <span class="file-size">(' . format_size($file->getSize()) . ')</span> ';
-  }
-
   $variables['data'] = [];
   foreach (Element::children($element) as $child) {
     $variables['data'][$child] = $element[$child];

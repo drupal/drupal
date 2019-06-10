@@ -6,6 +6,7 @@
  * Available variables:
  * - attributes: The HTML attributes for the containing element.
  * - link: A link to the file.
+ * - file_size: The size of the file.
  *
  * @see template_preprocess_file_link()
  *
@@ -13,3 +14,7 @@
  */
 #}
 <span{{ attributes }}>{{ link }}</span>
+{% if file_size %}
+  {# @todo remove class before Drupal 9.0.0 #}
+  <span class="file-size">({{ file_size }})</span>
+{% endif %}

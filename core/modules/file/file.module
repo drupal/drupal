@@ -1502,6 +1502,7 @@ function template_preprocess_file_link(&$variables) {
   // Set file classes to the options array.
   $variables['attributes'] = new Attribute($variables['attributes']);
   $variables['attributes']->addClass($classes);
+  $variables['file_size'] = format_size($file->getSize());
 
   $variables['link'] = \Drupal::l($link_text, Url::fromUri($url, $options));
 }

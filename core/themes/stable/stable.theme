@@ -23,3 +23,13 @@ function stable_preprocess_links(&$variables) {
     }
   }
 }
+
+/**
+ * Implements hook_preprocess_image_widget().
+ */
+function stable_preprocess_image_widget(&$variables) {
+  if (!empty($variables['element']['fids']['#value'])) {
+    $file = reset($variables['element']['#files']);
+    $variables['data']['file_' . $file->id()]['filename']['#suffix'] = ' <span class="file-size">(' . format_size($file->getSize()) . ')</span> ';
+  }
+}
