@@ -292,6 +292,8 @@ class MediaLibraryTest extends WebDriverTestBase {
     // Verify that unprivileged users can't access the widget view.
     $this->drupalGet('admin/content/media-widget', $url_options);
     $assert_session->responseContains('Access denied');
+    $this->drupalGet('admin/content/media-widget-table', $url_options);
+    $assert_session->responseContains('Access denied');
     $this->drupalGet('media-library', $url_options);
     $assert_session->responseContains('Access denied');
 
@@ -302,11 +304,22 @@ class MediaLibraryTest extends WebDriverTestBase {
     ]);
     $this->drupalGet('admin/content/media-widget', $url_options);
     $assert_session->elementExists('css', '.view-media-library');
+    $this->drupalGet('admin/content/media-widget-table', $url_options);
+    $assert_session->elementExists('css', '.view-media-library');
     $this->drupalGet('media-library', $url_options);
     $assert_session->elementExists('css', '.view-media-library');
     // Assert the user does not have access to the media add form if the user
     // does not have the 'create media' permission.
     $assert_session->fieldNotExists('files[upload][]');
+
+    // Assert users can not access the widget displays of the media library view
+    // without a valid media library state.
+    $this->drupalGet('admin/content/media-widget');
+    $assert_session->responseContains('Access denied');
+    $this->drupalGet('admin/content/media-widget-table');
+    $assert_session->responseContains('Access denied');
+    $this->drupalGet('media-library');
+    $assert_session->responseContains('Access denied');
 
     // Assert users with the 'create media' permission can access the media add
     // form.

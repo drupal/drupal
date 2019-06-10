@@ -2,3 +2,7 @@ services:
   media_library.ui_builder:
     class: Drupal\media_library\MediaLibraryUiBuilder
     arguments: ['@entity_type.manager', '@request_stack', '@views.executable', '@form_builder']
+  media_library.route_subscriber:
+    class: Drupal\media_library\Routing\RouteSubscriber
+    tags:
+      - { name: event_subscriber }
