@@ -3,7 +3,7 @@
 namespace Drupal\FunctionalJavascriptTests\Core;
 
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
-use Drupal\system\Tests\JsMessageTestCases;
+use Drupal\js_message_test\Controller\JSMessageTestController;
 
 /**
  * Tests core/drupal.messages library.
@@ -38,9 +38,9 @@ class JsMessageTest extends WebDriverTestBase {
     $this->drupalGet('js_message_test_link');
 
     $current_messages = [];
-    foreach (JsMessageTestCases::getMessagesSelectors() as $messagesSelector) {
+    foreach (JSMessageTestController::getMessagesSelectors() as $messagesSelector) {
       $web_assert->elementExists('css', $messagesSelector);
-      foreach (JsMessageTestCases::getTypes() as $type) {
+      foreach (JSMessageTestController::getTypes() as $type) {
         $this->click('[id="add-' . $messagesSelector . '-' . $type . '"]');
         $selector = "$messagesSelector .messages.messages--$type";
         $msg_element = $web_assert->waitForElementVisible('css', $selector);
@@ -50,7 +50,7 @@ class JsMessageTest extends WebDriverTestBase {
         $this->assertCurrentMessages($current_messages, $messagesSelector);
       }
       // Remove messages 1 by 1 and confirm the messages are expected.
-      foreach (JsMessageTestCases::getTypes() as $type) {
+      foreach (JSMessageTestController::getTypes() as $type) {
         $this->click('[id="remove-' . $messagesSelector . '-' . $type . '"]');
         $selector = "$messagesSelector .messages.messages--$type";
         // The message for this selector should not be on the page.
@@ -59,9 +59,9 @@ class JsMessageTest extends WebDriverTestBase {
       }
     }
 
-    $messagesSelector = JsMessageTestCases::getMessagesSelectors()[0];
+    $messagesSelector = JSMessageTestController::getMessagesSelectors()[0];
     $current_messages = [];
-    $types = JsMessageTestCases::getTypes();
+    $types = JSMessageTestController::getTypes();
     $nb_messages = count($types) * 2;
     for ($i = 0; $i < $nb_messages; $i++) {
       $current_messages[] = "This is message number $i of the type, {$types[$i % count($types)]}. You be the the judge of its importance.";

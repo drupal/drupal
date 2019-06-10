@@ -2,12 +2,32 @@
 
 namespace Drupal\js_message_test\Controller;
 
-use Drupal\system\Tests\JsMessageTestCases;
-
 /**
  * Test Controller to show message links.
  */
 class JSMessageTestController {
+
+  /**
+   * Gets the test types.
+   *
+   * @return string[]
+   *   The test types.
+   */
+  public static function getTypes() {
+    return ['status', 'error', 'warning'];
+  }
+
+  /**
+   * Gets the test messages selectors.
+   *
+   * @return string[]
+   *   The test test messages selectors.
+   *
+   * @see core/modules/system/tests/themes/test_messages/templates/status-messages.html.twig
+   */
+  public static function getMessagesSelectors() {
+    return ['', '[data-drupal-messages-other]'];
+  }
 
   /**
    * Displays links to show messages via Javascript.
@@ -17,7 +37,7 @@ class JSMessageTestController {
    */
   public function messageLinks() {
     $buttons = [];
-    foreach (JsMessageTestCases::getMessagesSelectors() as $messagesSelector) {
+    foreach (static::getMessagesSelectors() as $messagesSelector) {
       $buttons[$messagesSelector] = [
         '#type' => 'details',
         '#open' => TRUE,
@@ -26,7 +46,7 @@ class JSMessageTestController {
           'data-drupal-messages-area' => $messagesSelector,
         ],
       ];
-      foreach (JsMessageTestCases::getTypes() as $type) {
+      foreach (static::getTypes() as $type) {
         $buttons[$messagesSelector]["add-$type"] = [
           '#type' => 'html_tag',
           '#tag' => 'button',
@@ -52,7 +72,7 @@ class JSMessageTestController {
       }
     }
     // Add alternative message area.
-    $buttons[JsMessageTestCases::getMessagesSelectors()[1]]['messages-other-area'] = [
+    $buttons[static::getMessagesSelectors()[1]]['messages-other-area'] = [
       '#type' => 'html_tag',
       '#tag' => 'div',
       '#attributes' => [
@@ -128,8 +148,8 @@ class JSMessageTestController {
         ],
         'drupalSettings' => [
           'testMessages' => [
-            'selectors' => JsMessageTestCases::getMessagesSelectors(),
-            'types' => JsMessageTestCases::getTypes(),
+            'selectors' => static::getMessagesSelectors(),
+            'types' => static::getTypes(),
           ],
         ],
       ],
