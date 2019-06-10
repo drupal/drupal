@@ -29,6 +29,15 @@ process:
   description: description
   required: required
   status: 'constants/status'
+  allowed_values:
+    -
+      plugin: sub_process
+      source: allowed_vid
+      process:
+        -
+          plugin: migration_lookup
+          migration: d7_taxonomy_vocabulary
+          source: vid
   settings:
     plugin: d7_field_instance_settings
     source:
