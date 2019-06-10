@@ -85,6 +85,16 @@ abstract class WebDriverTestBase extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
+  protected function initFrontPage() {
+    parent::initFrontPage();
+    // Set a standard window size so that all javascript tests start with the
+    // same viewport.
+    $this->getSession()->resizeWindow(1024, 768);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   protected function tearDown() {
     if ($this->mink) {
       // Wait for all requests to finish. It is possible that an AJAX request is

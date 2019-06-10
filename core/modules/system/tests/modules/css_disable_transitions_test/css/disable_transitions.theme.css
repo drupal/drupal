@@ -29,6 +29,9 @@
 
 /**
  * Prevent youtube and third party content in iFrames from affecting tests.
+ *
+ * @todo Remove once bug in Chromedriver is fixed.
+     https://bugs.chromium.org/p/chromedriver/issues/detail?id=2758
  */
 iframe.media-oembed-content {
   width: 0 !important;
