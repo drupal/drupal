@@ -747,7 +747,7 @@ function simpletest_script_execute_batch($test_classes) {
           // @see https://www.drupal.org/node/2780087
           $total_status = max(SIMPLETEST_SCRIPT_EXIT_FAILURE, $total_status);
           // Insert a fail for xml results.
-          TestBase::insertAssert($child['test_id'], $child['class'], FALSE, $message, 'run-tests.sh check');
+          simpletest_insert_assert($child['test_id'], $child['class'], FALSE, $message, 'run-tests.sh check');
           // Ensure that an error line is displayed for the class.
           simpletest_script_reporter_display_summary(
             $child['class'],
@@ -950,7 +950,7 @@ function simpletest_script_cleanup($test_id, $test_class, $exitcode) {
     // would also delete file directories of other tests that are potentially
     // running concurrently.
     try {
-      \Drupal::service('file_system')->deleteRecursive($test_directory, ['Drupal\simpletest\TestBase', 'filePreDeleteCallback']);
+      \Drupal::service('file_system')->deleteRecursive($test_directory, ['\Drupal\Tests\BrowserTestBase', 'filePreDeleteCallback']);
       $messages[] = "- Removed test site directory.";
     }
     catch (FileException $e) {

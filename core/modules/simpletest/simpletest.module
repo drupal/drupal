@@ -11,7 +11,6 @@ use Drupal\Core\Database\Database;
 use Drupal\Core\File\Exception\FileException;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Routing\RouteMatchInterface;
-use Drupal\simpletest\TestBase;
 use Drupal\Core\Test\TestDatabase;
 use Drupal\simpletest\TestDiscovery;
 use Drupal\Tests\Listeners\SimpletestUiPrinter;
@@ -552,16 +551,72 @@ function simpletest_log_read($test_id, $database_prefix, $test_class) {
           'line' => $match[4],
           'file' => $match[3],
         ];
-        TestBase::insertAssert($test_id, $test_class, FALSE, $match[2], $match[1], $caller);
+        simpletest_insert_assert($test_id, $test_class, FALSE, $match[2], $match[1], $caller);
       }
       else {
         // Unknown format, place the entire message in the log.
-        TestBase::insertAssert($test_id, $test_class, FALSE, $line, 'Fatal error');
+        simpletest_insert_assert($test_id, $test_class, FALSE, $line, 'Fatal error');
       }
       $found = TRUE;
     }
   }
   return $found;
+}
+
+/**
+ * Store an assertion from outside the testing context.
+ *
+ * This is useful for inserting assertions that can only be recorded after
+ * the test case has been destroyed, such as PHP fatal errors. The caller
+ * information is not automatically gathered since the caller is most likely
+ * inserting the assertion on behalf of other code. In all other respects
+ * the method behaves just like \Drupal\simpletest\TestBase::assert() in terms
+ * of storing the assertion.
+ *
+ * @param string $test_id
+ *   The test ID to which the assertion relates.
+ * @param string $test_class
+ *   The test class to store an assertion for.
+ * @param bool|string $status
+ *   A boolean or a string of 'pass' or 'fail'. TRUE means 'pass'.
+ * @param string $message
+ *   The assertion message.
+ * @param string $group
+ *   The assertion message group.
+ * @param array $caller
+ *   The an array containing the keys 'file' and 'line' that represent the file
+ *   and line number of that file that is responsible for the assertion.
+ *
+ * @return
+ *   Message ID of the stored assertion.
+ */
+function simpletest_insert_assert($test_id, $test_class, $status, $message = '', $group = 'Other', array $caller = []) {
+  // Convert boolean status to string status.
+  if (is_bool($status)) {
+    $status = $status ? 'pass' : 'fail';
+  }
+
+  $caller += [
+    'function' => 'Unknown',
+    'line' => 0,
+    'file' => 'Unknown',
+  ];
+
+  $assertion = [
+    'test_id' => $test_id,
+    'test_class' => $test_class,
+    'status' => $status,
+    'message' => $message,
+    'message_group' => $group,
+    'function' => $caller['function'],
+    'line' => $caller['line'],
+    'file' => $caller['file'],
+  ];
+
+  return TestDatabase::getConnection()
+    ->insert('simpletest')
+    ->fields($assertion)
+    ->execute();
 }
 
 /**
