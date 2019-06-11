@@ -4889,7 +4889,7 @@ $connection->insert('field_config_instance')
   'field_name' => 'field_reference_2',
   'entity_type' => 'node',
   'bundle' => 'article',
-  'data' => 'a:6:{s:5:"label";s:11:"Reference 2";s:6:"widget";a:4:{s:4:"type";s:14:"options_select";s:6:"weight";s:2:"21";s:8:"settings";a:0:{}s:6:"module";s:7:"options";}s:8:"settings";a:2:{s:18:"user_register_form";b:0;s:23:"entity_translation_sync";b:0;}s:7:"display";a:1:{s:7:"default";a:5:{s:5:"label";s:5:"above";s:4:"type";s:21:"entityreference_label";s:8:"settings";a:2:{s:4:"link";b:0;s:13:"bypass_access";b:0;}s:6:"module";s:15:"entityreference";s:6:"weight";i:21;}}s:8:"required";b:0;s:11:"description";s:0:"";}',
+  'data' => 'a:6:{s:5:"label";s:11:"Reference 2";s:6:"widget";a:4:{s:4:"type";s:33:"entityreference_autocomplete_tags";s:6:"weight";s:2:"21";s:8:"settings";a:3:{s:14:"match_operator";s:8:"CONTAINS";s:4:"size";i:60;s:4:"path";s:0:"";}s:6:"module";s:15:"entityreference";}s:8:"settings";a:2:{s:18:"user_register_form";b:0;s:23:"entity_translation_sync";b:0;}s:7:"display";a:1:{s:7:"default";a:5:{s:5:"label";s:5:"above";s:4:"type";s:27:"entityreference_entity_view";s:6:"weight";s:2:"21";s:8:"settings";a:3:{s:9:"view_mode";s:7:"default";s:5:"links";b:1;s:20:"use_content_language";b:1;}s:6:"module";s:15:"entityreference";}}s:8:"required";b:0;s:11:"description";s:0:"";}',
   'deleted' => '0',
 ))
 ->values(array(

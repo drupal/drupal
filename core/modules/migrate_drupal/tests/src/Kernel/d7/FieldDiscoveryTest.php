@@ -196,6 +196,7 @@ class FieldDiscoveryTest extends MigrateDrupal7TestBase {
                 'taxonomy_term_reference' => [
                   'taxonomy_term_reference_link' => 'entity_reference_label',
                   'i18n_taxonomy_term_reference_link' => 'entity_reference_label',
+                  'entityreference_entity_view' => 'entity_reference_entity_view',
                 ],
                 'link_field' => [
                   'link_default' => 'link',
