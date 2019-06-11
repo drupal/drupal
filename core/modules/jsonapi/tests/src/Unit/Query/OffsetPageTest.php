@@ -12,7 +12,6 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 /**
  * @coversDefaultClass \Drupal\jsonapi\Query\OffsetPage
  * @group jsonapi
- * @group legacy
  *
  * @internal
  */

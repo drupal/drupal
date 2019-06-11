@@ -26,7 +26,6 @@ use GuzzleHttp\RequestOptions;
  * JSON:API regression tests.
  *
  * @group jsonapi
- * @group legacy
  *
  * @internal
  */
@@ -70,7 +69,7 @@ class JsonApiRegressionTest extends JsonApiFunctionalTestBase {
     ]);
     $response = $this->request('GET', Url::fromUri('internal:/jsonapi/comment/tcomment?include=entity_id&filter[entity_id.name]=foobar'), [
       RequestOptions::AUTH => [
-        $user->getUsername(),
+        $user->getAccountName(),
         $user->pass_raw,
       ],
     ]);
@@ -134,7 +133,7 @@ class JsonApiRegressionTest extends JsonApiFunctionalTestBase {
     ]);
     $response = $this->request('GET', Url::fromUri('internal:/jsonapi/node/page?include=field_comment,field_comment.entity_id,field_comment.entity_id.uid'), [
       RequestOptions::AUTH => [
-        $user->getUsername(),
+        $user->getAccountName(),
         $user->pass_raw,
       ],
     ]);
@@ -181,7 +180,7 @@ class JsonApiRegressionTest extends JsonApiFunctionalTestBase {
         'Content-Type' => 'application/vnd.api+json',
         'Accept' => 'application/vnd.api+json',
       ],
-      RequestOptions::AUTH => [$user->getUsername(), $user->pass_raw],
+      RequestOptions::AUTH => [$user->getAccountName(), $user->pass_raw],
       RequestOptions::JSON => [
         'data' => [
           ['type' => 'user--user', 'id' => $target->uuid()],
@@ -221,7 +220,7 @@ class JsonApiRegressionTest extends JsonApiFunctionalTestBase {
     ]);
     $response = $this->request('GET', Url::fromUri('internal:/jsonapi/taxonomy_term/one'), [
       RequestOptions::AUTH => [
-        $user->getUsername(),
+        $user->getAccountName(),
         $user->pass_raw,
       ],
     ]);
@@ -283,7 +282,7 @@ class JsonApiRegressionTest extends JsonApiFunctionalTestBase {
         'Content-Type' => 'application/vnd.api+json',
         'Accept' => 'application/vnd.api+json',
       ],
-      RequestOptions::AUTH => [$user->getUsername(), $user->pass_raw],
+      RequestOptions::AUTH => [$user->getAccountName(), $user->pass_raw],
       RequestOptions::JSON => [
         'data' => [
           'type' => 'node--journal_article',
@@ -322,7 +321,7 @@ class JsonApiRegressionTest extends JsonApiFunctionalTestBase {
     ]);
     $response = $this->request('GET', Url::fromUri('internal:/jsonapi/node/article'), [
       RequestOptions::AUTH => [
-        $user->getUsername(),
+        $user->getAccountName(),
         $user->pass_raw,
       ],
     ]);
@@ -408,7 +407,7 @@ class JsonApiRegressionTest extends JsonApiFunctionalTestBase {
         'Content-Type' => 'application/vnd.api+json',
         'Accept' => 'application/vnd.api+json',
       ],
-      RequestOptions::AUTH => [$user->getUsername(), $user->pass_raw],
+      RequestOptions::AUTH => [$user->getAccountName(), $user->pass_raw],
     ];
     $issue_node->delete();
     $response = $this->request('GET', $url, $request_options);
@@ -469,7 +468,7 @@ class JsonApiRegressionTest extends JsonApiFunctionalTestBase {
     $user = $this->drupalCreateUser(['access content']);
     $request_options = [
       RequestOptions::AUTH => [
-        $user->getUsername(),
+        $user->getAccountName(),
         $user->pass_raw,
       ],
     ];
@@ -563,7 +562,7 @@ class JsonApiRegressionTest extends JsonApiFunctionalTestBase {
     // Test.
     $response = $this->request('PATCH', Url::fromUri(sprintf('internal:/jsonapi/taxonomy_term/tags/%s/relationships/%s', Term::load(1)->uuid(), $public_relationship_field_name)), [
       RequestOptions::AUTH => [
-        $user->getUsername(),
+        $user->getAccountName(),
         $user->pass_raw,
       ],
       RequestOptions::HEADERS => [
@@ -637,7 +636,7 @@ class JsonApiRegressionTest extends JsonApiFunctionalTestBase {
     ]);
     $response = $this->request('GET', Url::fromUri('internal:/jsonapi/shortcut/default?filter[drupal_internal__id]=' . $shortcut->id()), [
       RequestOptions::AUTH => [
-        $user->getUsername(),
+        $user->getAccountName(),
         $user->pass_raw,
       ],
     ]);
@@ -689,7 +688,7 @@ class JsonApiRegressionTest extends JsonApiFunctionalTestBase {
     ]);
     $response = $this->request('GET', Url::fromUri('internal:/jsonapi/node/page/' . $page->uuid()), [
       RequestOptions::AUTH => [
-        $user->getUsername(),
+        $user->getAccountName(),
         $user->pass_raw,
       ],
     ]);
@@ -757,7 +756,7 @@ class JsonApiRegressionTest extends JsonApiFunctionalTestBase {
     ]);
     $request_options = [
       RequestOptions::AUTH => [
-        $user->getUsername(),
+        $user->getAccountName(),
         $user->pass_raw,
       ],
       RequestOptions::HEADERS => [
@@ -801,7 +800,7 @@ class JsonApiRegressionTest extends JsonApiFunctionalTestBase {
         'Content-Type' => 'application/vnd.api+json',
         'Accept' => 'application/vnd.api+json',
       ],
-      RequestOptions::AUTH => [$user->getUsername(), $user->pass_raw],
+      RequestOptions::AUTH => [$user->getAccountName(), $user->pass_raw],
       RequestOptions::JSON => [
         'data' => [
           'type' => 'node--page',
@@ -846,7 +845,7 @@ class JsonApiRegressionTest extends JsonApiFunctionalTestBase {
         'Content-Type' => 'application/vnd.api+json',
         'Accept' => 'application/vnd.api+json',
       ],
-      RequestOptions::AUTH => [$user->getUsername(), $user->pass_raw],
+      RequestOptions::AUTH => [$user->getAccountName(), $user->pass_raw],
       RequestOptions::JSON => [
         'data' => [
           'type' => 'node--page',
@@ -887,7 +886,7 @@ class JsonApiRegressionTest extends JsonApiFunctionalTestBase {
     // Test.
     $url = Url::fromUri(sprintf('internal:/jsonapi/entity_test_map_field/entity_test_map_field', $entity->uuid()));
     $request_options = [
-      RequestOptions::AUTH => [$user->getUsername(), $user->pass_raw],
+      RequestOptions::AUTH => [$user->getAccountName(), $user->pass_raw],
     ];
     $response = $this->request('GET', $url, $request_options);
     $this->assertSame(200, $response->getStatusCode());
@@ -931,7 +930,7 @@ class JsonApiRegressionTest extends JsonApiFunctionalTestBase {
     $admin = $this->drupalCreateUser([], 'Gandalf', TRUE);
 
     // Make request as regular user.
-    $request_options[RequestOptions::AUTH] = [$user->getUsername(), $user->pass_raw];
+    $request_options[RequestOptions::AUTH] = [$user->getAccountName(), $user->pass_raw];
     $this->request('POST', $url, $request_options);
     $response = $this->request('POST', $url, $request_options);
 
@@ -942,7 +941,7 @@ class JsonApiRegressionTest extends JsonApiFunctionalTestBase {
     $this->assertSame(sprintf('title: This value should not be null.'), $data['errors'][0]['detail']);
 
     // Make request as regular user.
-    $request_options[RequestOptions::AUTH] = [$admin->getUsername(), $admin->pass_raw];
+    $request_options[RequestOptions::AUTH] = [$admin->getAccountName(), $admin->pass_raw];
     $this->request('POST', $url, $request_options);
     $response = $this->request('POST', $url, $request_options);
 
@@ -981,7 +980,7 @@ class JsonApiRegressionTest extends JsonApiFunctionalTestBase {
     $user = $this->drupalCreateUser(['access comments']);
     $request_options = [
       RequestOptions::AUTH => [
-        $user->getUsername(),
+        $user->getAccountName(),
         $user->pass_raw,
       ],
     ];

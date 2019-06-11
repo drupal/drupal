@@ -12,7 +12,6 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 /**
  * @coversDefaultClass \Drupal\jsonapi\Query\Sort
  * @group jsonapi
- * @group legacy
  *
  * @internal
  */

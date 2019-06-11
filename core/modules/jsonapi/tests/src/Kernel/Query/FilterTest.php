@@ -17,7 +17,6 @@ use Prophecy\Argument;
  * @coversDefaultClass \Drupal\jsonapi\Query\Filter
  * @group jsonapi
  * @group jsonapi_query
- * @group legacy
  *
  * @internal
  */

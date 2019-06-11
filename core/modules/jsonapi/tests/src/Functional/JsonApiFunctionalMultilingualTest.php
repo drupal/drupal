@@ -15,7 +15,6 @@ use GuzzleHttp\RequestOptions;
  * Tests JSON:API multilingual support.
  *
  * @group jsonapi
- * @group legacy
  *
  * @internal
  */

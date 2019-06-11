@@ -8,7 +8,6 @@ use Drupal\Tests\UnitTestCase;
 /**
  * @coversDefaultClass \Drupal\jsonapi\Query\EntityConditionGroup
  * @group jsonapi
- * @group legacy
  *
  * @internal
  */

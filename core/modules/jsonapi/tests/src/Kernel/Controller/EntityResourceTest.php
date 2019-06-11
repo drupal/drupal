@@ -10,7 +10,6 @@ use Drupal\jsonapi\Exception\EntityAccessDeniedHttpException;
 use Drupal\jsonapi\JsonApiResource\ResourceIdentifier;
 use Drupal\jsonapi\JsonApiResource\ResourceObject;
 use Drupal\jsonapi\ResourceType\ResourceType;
-use Drupal\jsonapi\Controller\EntityResource;
 use Drupal\jsonapi\JsonApiResource\Data;
 use Drupal\jsonapi\JsonApiResource\JsonApiDocumentTopLevel;
 use Drupal\node\Entity\Node;
@@ -27,7 +26,6 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 /**
  * @coversDefaultClass \Drupal\jsonapi\Controller\EntityResource
  * @group jsonapi
- * @group legacy
  *
  * @internal
  */
@@ -187,19 +185,7 @@ class EntityResourceTest extends JsonapiKernelTestBase {
    *   An EntityResource instance.
    */
   protected function createEntityResource() {
-    return new EntityResource(
-      $this->container->get('entity_type.manager'),
-      $this->container->get('entity_field.manager'),
-      $this->container->get('jsonapi.resource_type.repository'),
-      $this->container->get('renderer'),
-      $this->container->get('entity.repository'),
-      $this->container->get('jsonapi.include_resolver'),
-      $this->container->get('jsonapi.entity_access_checker'),
-      $this->container->get('jsonapi.field_resolver'),
-      $this->container->get('jsonapi.serializer'),
-      $this->container->get('datetime.time'),
-      $this->container->get('current_user')
-    );
+    return $this->container->get('jsonapi.entity_resource');
   }
 
   /**
@@ -422,7 +408,8 @@ class EntityResourceTest extends JsonapiKernelTestBase {
     $response = $this->entityResource->createIndividual($resource_type, $request);
     // As a side effect, the node will also be saved.
     $this->assertInstanceOf(JsonApiDocumentTopLevel::class, $response->getResponseData());
-    $this->assertTrue(entity_load_multiple_by_properties('node', ['uuid' => $response->getResponseData()->getData()->getIterator()->offsetGet(0)->getId()]));
+    $entity_type_manager = $this->container->get('entity_type.manager');
+    $this->assertTrue($entity_type_manager->getStorage('node')->loadByProperties(['uuid' => $response->getResponseData()->getData()->getIterator()->offsetGet(0)->getId()]));
     $this->assertEquals(201, $response->getStatusCode());
   }
 
