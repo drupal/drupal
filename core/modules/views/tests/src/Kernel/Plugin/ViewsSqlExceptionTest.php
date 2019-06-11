@@ -1,8 +1,8 @@
 <?php
 
-namespace Drupal\Tests\views\Functional\Plugin;
+namespace Drupal\Tests\views\Kernel\Plugin;
 
-use Drupal\Tests\views\Functional\ViewTestBase;
+use Drupal\Tests\views\Kernel\ViewsKernelTestBase;
 use Drupal\views\Views;
 use Drupal\Core\Database\DatabaseExceptionWrapper;
 
@@ -11,23 +11,12 @@ use Drupal\Core\Database\DatabaseExceptionWrapper;
  *
  * @group views
  */
-class ViewsSqlExceptionTest extends ViewTestBase {
-
-  /**
-   * Views used by this test.
-   *
-   * @var array
-   */
-  public static $testViews = ['test_filter'];
+class ViewsSqlExceptionTest extends ViewsKernelTestBase {
 
   /**
    * {@inheritdoc}
    */
-  protected function setUp($import_test_views = TRUE) {
-    parent::setUp($import_test_views);
-
-    $this->enableViewsTestModule();
-  }
+  public static $testViews = ['test_filter'];
 
   /**
    * {@inheritdoc}
@@ -35,12 +24,11 @@ class ViewsSqlExceptionTest extends ViewTestBase {
   protected function viewsData() {
     $data = parent::viewsData();
     $data['views_test_data']['name']['filter']['id'] = 'test_exception_filter';
-
     return $data;
   }
 
   /**
-   * Test for the SQL exception.
+   * Tests for the SQL exception.
    */
   public function testSqlException() {
     $view = Views::getView('test_filter');
@@ -58,14 +46,10 @@ class ViewsSqlExceptionTest extends ViewTestBase {
       ],
     ]);
 
-    try {
-      $this->executeView($view);
-      $this->fail('Expected exception not thrown.');
-    }
-    catch (DatabaseExceptionWrapper $e) {
-      $exception_assert_message = "Exception in {$view->storage->label()}[{$view->storage->id()}]";
-      $this->assertEqual(strstr($e->getMessage(), ':', TRUE), $exception_assert_message);
-    }
+    $this->expectException(DatabaseExceptionWrapper::class);
+    $this->expectExceptionMessageRegExp('/^Exception in Test filters\[test_filter\]:/');
+
+    $this->executeView($view);
   }
 
 }
