@@ -86,11 +86,10 @@ class MediaLibrarySelectForm extends FieldPluginBase {
     // Currently the default URL for all AJAX form elements is the current URL,
     // not the form action. This causes bugs when this form is rendered from an
     // AJAX path like /views/ajax, which cannot process AJAX form submits.
-    $url = parse_url($form['#action'], PHP_URL_PATH);
     $query = $this->view->getRequest()->query->all();
     $query[FormBuilderInterface::AJAX_FORM_REQUEST] = TRUE;
     $form['actions']['submit']['#ajax'] = [
-      'url' => Url::fromUserInput($url),
+      'url' => Url::fromRoute('media_library.ui'),
       'options' => [
         'query' => $query,
       ],
