@@ -32,6 +32,9 @@ class Term extends FieldableEntity {
       $query->condition('tv.machine_name', (array) $this->configuration['bundle'], 'IN');
     }
 
+    if ($this->getDatabase()->schema()->fieldExists('taxonomy_vocabulary', 'i18n_mode')) {
+      $query->addField('tv', 'i18n_mode');
+    }
     return $query;
   }
 
@@ -68,6 +71,12 @@ class Term extends FieldableEntity {
     $entity_translatable = $this->isEntityTranslatable('taxonomy_term') && in_array($vocabulary, $translatable_vocabularies, TRUE);
     $source_language = $this->getEntityTranslationSourceLanguage('taxonomy_term', $tid);
     $language = $entity_translatable && $source_language ? $source_language : $default_language['language'];
+
+    // If this is an i18n translation.
+    $i18n_mode = $row->get('i18n_mode');
+    if ($i18n_mode) {
+      $language = $row->get('language');
+    }
     $row->setSourceProperty('language', $language);
 
     // Get Field API field values.
