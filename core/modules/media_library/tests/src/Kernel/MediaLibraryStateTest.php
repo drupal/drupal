@@ -99,7 +99,8 @@ class MediaLibraryStateTest extends KernelTestBase {
    */
   public function testCreate($opener_id, array $allowed_media_type_ids, $selected_type_id, $remaining_slots, $exception_message = '') {
     if ($exception_message) {
-      $this->setExpectedException(\InvalidArgumentException::class, $exception_message);
+      $this->expectException(\InvalidArgumentException::class);
+      $this->expectExceptionMessage($exception_message);
     }
     $state = MediaLibraryState::create($opener_id, $allowed_media_type_ids, $selected_type_id, $remaining_slots);
     $this->assertInstanceOf(MediaLibraryState::class, $state);
@@ -275,7 +276,8 @@ class MediaLibraryStateTest extends KernelTestBase {
     $query = MediaLibraryState::create('test', ['file', 'image'], 'image', 2)->all();
     $query = array_merge($query, $query_overrides);
     if ($exception_expected) {
-      $this->setExpectedException(BadRequestHttpException::class, "Invalid media library parameters specified.");
+      $this->expectException(BadRequestHttpException::class);
+      $this->expectExceptionMessage("Invalid media library parameters specified.");
     }
     $state = MediaLibraryState::fromRequest(new Request($query));
     $this->assertInstanceOf(MediaLibraryState::class, $state);
@@ -285,7 +287,8 @@ class MediaLibraryStateTest extends KernelTestBase {
    * @covers ::fromRequest
    */
   public function testFromRequestQueryLess() {
-    $this->setExpectedException(\InvalidArgumentException::class, 'The opener ID parameter is required and must be a string.');
+    $this->expectException(\InvalidArgumentException::class);
+    $this->expectExceptionMessage('The opener ID parameter is required and must be a string.');
     $state = MediaLibraryState::fromRequest(new Request());
     $this->assertInstanceOf(MediaLibraryState::class, $state);
   }

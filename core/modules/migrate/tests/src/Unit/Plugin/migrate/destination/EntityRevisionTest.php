@@ -55,7 +55,8 @@ class EntityRevisionTest extends EntityTestBase {
       $this->entityFieldManager->reveal(),
       $this->prophesize(FieldTypePluginManagerInterface::class)->reveal()
     );
-    $this->setExpectedException(MigrateException::class, 'The "foo" entity type does not support revisions.');
+    $this->expectException(MigrateException::class);
+    $this->expectExceptionMessage('The "foo" entity type does not support revisions.');
     $destination->getIds();
   }
 
@@ -82,7 +83,8 @@ class EntityRevisionTest extends EntityTestBase {
       $this->entityFieldManager->reveal(),
       $this->prophesize(FieldTypePluginManagerInterface::class)->reveal()
     );
-    $this->setExpectedException(MigrateException::class, 'The "foo" entity type does not support translations.');
+    $this->expectException(MigrateException::class);
+    $this->expectExceptionMessage('The "foo" entity type does not support translations.');
     $destination->getIds();
   }
 

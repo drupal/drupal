@@ -73,7 +73,7 @@ class DiscoveryTraitTest extends TestCase {
       $this->expectException(PluginNotFoundException::class);
     }
     else {
-      $this->setExpectedException(PluginNotFoundException::class);
+      $this->expectException(PluginNotFoundException::class);
     }
     $method_ref->invoke($trait, $definitions, $plugin_id, TRUE);
   }
@@ -115,7 +115,7 @@ class DiscoveryTraitTest extends TestCase {
       $this->expectException(PluginNotFoundException::class);
     }
     else {
-      $this->setExpectedException(PluginNotFoundException::class);
+      $this->expectException(PluginNotFoundException::class);
     }
     $trait->getDefinition($plugin_id, TRUE);
   }

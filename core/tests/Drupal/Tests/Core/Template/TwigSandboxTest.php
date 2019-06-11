@@ -48,7 +48,7 @@ class TwigSandboxTest extends UnitTestCase {
    */
   public function testEntityDangerousMethods($template) {
     $entity = $this->createMock('Drupal\Core\Entity\EntityInterface');
-    $this->setExpectedException(\Twig_Sandbox_SecurityError::class);
+    $this->expectException(\Twig_Sandbox_SecurityError::class);
     $this->twig->render($template, ['entity' => $entity]);
   }
 

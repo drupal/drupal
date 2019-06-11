@@ -33,7 +33,7 @@ class BigPipeResponseAttachmentsProcessorTest extends UnitTestCase {
     $big_pipe_response_attachments_processor = $this->createBigPipeResponseAttachmentsProcessor($this->prophesize(AttachmentsResponseProcessorInterface::class));
 
     $non_html_response = new $response_class();
-    $this->setExpectedException(\AssertionError::class);
+    $this->expectException(\AssertionError::class);
     $big_pipe_response_attachments_processor->processAttachments($non_html_response);
   }
 

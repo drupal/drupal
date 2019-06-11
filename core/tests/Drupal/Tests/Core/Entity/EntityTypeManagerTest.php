@@ -268,7 +268,7 @@ class EntityTypeManagerTest extends UnitTestCase {
     $entity->getFormClass('edit')->willReturn('');
     $this->setUpEntityTypeDefinitions(['test_entity_type' => $entity]);
 
-    $this->setExpectedException(InvalidPluginDefinitionException::class);
+    $this->expectException(InvalidPluginDefinitionException::class);
     $this->entityTypeManager->getFormObject('test_entity_type', 'edit');
   }
 
@@ -301,7 +301,7 @@ class EntityTypeManagerTest extends UnitTestCase {
     $entity = $this->prophesize(EntityTypeInterface::class);
     $entity->getHandlerClass('storage')->willReturn('');
     $this->setUpEntityTypeDefinitions(['test_entity_type' => $entity]);
-    $this->setExpectedException(InvalidPluginDefinitionException::class);
+    $this->expectException(InvalidPluginDefinitionException::class);
     $this->entityTypeManager->getHandler('test_entity_type', 'storage');
   }
 
@@ -334,7 +334,8 @@ class EntityTypeManagerTest extends UnitTestCase {
     $apple->getLinkTemplates()->willReturn(['canonical' => 'path/to/apple']);
 
     $definition = $apple->reveal();
-    $this->setExpectedException(InvalidLinkTemplateException::class, "Link template 'canonical' for entity type 'apple' must start with a leading slash, the current link template is 'path/to/apple'");
+    $this->expectException(InvalidLinkTemplateException::class);
+    $this->expectExceptionMessage("Link template 'canonical' for entity type 'apple' must start with a leading slash, the current link template is 'path/to/apple'");
     $this->entityTypeManager->processDefinition($definition, 'apple');
   }
 
@@ -384,7 +385,8 @@ class EntityTypeManagerTest extends UnitTestCase {
   public function testGetDefinitionInvalidException() {
     $this->setUpEntityTypeDefinitions();
 
-    $this->setExpectedException(PluginNotFoundException::class, 'The "pear" entity type does not exist.');
+    $this->expectException(PluginNotFoundException::class);
+    $this->expectExceptionMessage('The "pear" entity type does not exist.');
     $this->entityTypeManager->getDefinition('pear', TRUE);
   }
 

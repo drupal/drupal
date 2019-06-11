@@ -66,7 +66,7 @@ class RandomTest extends TestCase {
       $this->expectException(\RuntimeException::class);
     }
     else {
-      $this->setExpectedException(\RuntimeException::class);
+      $this->expectException(\RuntimeException::class);
     }
     for ($i = 0; $i <= 100; $i++) {
       $str = $random->name(1, TRUE);
@@ -87,7 +87,7 @@ class RandomTest extends TestCase {
       $this->expectException(\RuntimeException::class);
     }
     else {
-      $this->setExpectedException(\RuntimeException::class);
+      $this->expectException(\RuntimeException::class);
     }
     for ($i = 0; $i <= 100; $i++) {
       $str = $random->string(1, TRUE);

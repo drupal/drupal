@@ -161,7 +161,7 @@ class ConditionTest extends UnitTestCase {
 
     $condition = new Condition('AND');
     $condition->condition('name', 'value', $operator);
-    $this->setExpectedException(\PHPUnit_Framework_Error::class);
+    $this->expectException(\PHPUnit_Framework_Error::class);
     $condition->compile($connection, $query_placeholder);
   }
 

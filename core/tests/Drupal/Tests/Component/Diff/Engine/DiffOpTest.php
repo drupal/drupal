@@ -29,7 +29,7 @@ class DiffOpTest extends TestCase {
       $this->expectException(Error::class);
     }
     else {
-      $this->setExpectedException(\PHPUnit_Framework_Error::class);
+      $this->expectException(\PHPUnit_Framework_Error::class);
     }
     $op = new DiffOp();
     $result = $op->reverse();

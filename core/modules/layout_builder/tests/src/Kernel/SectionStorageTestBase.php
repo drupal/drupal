@@ -83,7 +83,8 @@ abstract class SectionStorageTestBase extends EntityKernelTestBase {
    * @covers ::getSection
    */
   public function testGetSectionInvalidDelta() {
-    $this->setExpectedException(\OutOfBoundsException::class, 'Invalid delta "2"');
+    $this->expectException(\OutOfBoundsException::class);
+    $this->expectExceptionMessage('Invalid delta "2"');
     $this->sectionStorage->getSection(2);
   }
 

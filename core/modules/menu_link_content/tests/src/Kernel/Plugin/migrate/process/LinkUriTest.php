@@ -99,7 +99,8 @@ class LinkUriTest extends KernelTestBase {
    * @dataProvider providerTestNotRouted
    */
   public function testNotRouted($value, $exception_message) {
-    $this->setExpectedException(MigrateException::class, $exception_message);
+    $this->expectException(MigrateException::class);
+    $this->expectExceptionMessage($exception_message);
     $this->doTransform($value);
   }
 

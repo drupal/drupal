@@ -347,7 +347,7 @@ class HtmlTest extends TestCase {
       $this->expectException(\AssertionError::class);
     }
     else {
-      $this->setExpectedException(\AssertionError::class);
+      $this->expectException(\AssertionError::class);
     }
     Html::transformRootRelativeUrlsToAbsolute('', $scheme_and_host);
   }

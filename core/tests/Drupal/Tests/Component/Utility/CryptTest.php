@@ -75,7 +75,7 @@ class CryptTest extends TestCase {
       $this->expectException('InvalidArgumentException');
     }
     else {
-      $this->setExpectedException('InvalidArgumentException');
+      $this->expectException('InvalidArgumentException');
     }
     Crypt::hmacBase64($data, $key);
   }

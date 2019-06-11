@@ -126,7 +126,8 @@ class WorkflowStateTransitionOperationsAccessCheckTest extends UnitTestCase {
    * @dataProvider invalidOperationNameTestCases
    */
   public function testInvalidOperationName($operation_name) {
-    $this->setExpectedException(\Exception::class, "Invalid _workflow_access operation '$operation_name' specified for route 'Foo Route'.");
+    $this->expectException(\Exception::class);
+    $this->expectExceptionMessage("Invalid _workflow_access operation '$operation_name' specified for route 'Foo Route'.");
     $route = new Route('', [], [
       '_workflow_access' => $operation_name,
     ]);

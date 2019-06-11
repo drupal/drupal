@@ -147,7 +147,8 @@ class EntityTypeRepositoryTest extends UnitTestCase {
     $apple->getOriginalClass()->willReturn('\Drupal\apple\Entity\Apple');
     $banana->getOriginalClass()->willReturn('\Drupal\banana\Entity\Banana');
 
-    $this->setExpectedException(NoCorrespondingEntityClassException::class, 'The \Drupal\pear\Entity\Pear class does not correspond to an entity type.');
+    $this->expectException(NoCorrespondingEntityClassException::class);
+    $this->expectExceptionMessage('The \Drupal\pear\Entity\Pear class does not correspond to an entity type.');
     $this->entityTypeRepository->getEntityTypeFromClass('\Drupal\pear\Entity\Pear');
   }
 
@@ -168,7 +169,8 @@ class EntityTypeRepositoryTest extends UnitTestCase {
       'gala' => $gala,
     ]);
 
-    $this->setExpectedException(AmbiguousEntityClassException::class, 'Multiple entity types found for \Drupal\apple\Entity\Apple.');
+    $this->expectException(AmbiguousEntityClassException::class);
+    $this->expectExceptionMessage('Multiple entity types found for \Drupal\apple\Entity\Apple.');
     $this->entityTypeRepository->getEntityTypeFromClass('\Drupal\apple\Entity\Apple');
   }
 

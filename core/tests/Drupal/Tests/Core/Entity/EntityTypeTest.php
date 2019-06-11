@@ -272,7 +272,8 @@ class EntityTypeTest extends UnitTestCase {
   public function testIdExceedsMaxLength() {
     $id = $this->randomMachineName(33);
     $message = 'Attempt to create an entity type with an ID longer than 32 characters: ' . $id;
-    $this->setExpectedException('Drupal\Core\Entity\Exception\EntityTypeIdLengthException', $message);
+    $this->expectException('Drupal\Core\Entity\Exception\EntityTypeIdLengthException');
+    $this->expectExceptionMessage($message);
     $this->setUpEntityType(['id' => $id]);
   }
 
@@ -442,7 +443,7 @@ class EntityTypeTest extends UnitTestCase {
    */
   public function testSetLinkTemplateWithInvalidPath() {
     $entity_type = $this->setUpEntityType(['id' => $this->randomMachineName()]);
-    $this->setExpectedException(\InvalidArgumentException::class);
+    $this->expectException(\InvalidArgumentException::class);
     $entity_type->setLinkTemplate('test', 'invalid-path');
   }
 

@@ -111,7 +111,7 @@ class EntityNormalizerTest extends UnitTestCase {
    * @covers ::denormalize
    */
   public function testDenormalizeWithNoEntityType() {
-    $this->setExpectedException(UnexpectedValueException::class);
+    $this->expectException(UnexpectedValueException::class);
     $this->entityNormalizer->denormalize([], 'Drupal\Core\Entity\ContentEntityBase');
   }
 
@@ -310,7 +310,7 @@ class EntityNormalizerTest extends UnitTestCase {
       ->with('test_bundle')
       ->will($this->returnValue($entity_type_storage));
 
-    $this->setExpectedException(UnexpectedValueException::class);
+    $this->expectException(UnexpectedValueException::class);
     $this->entityNormalizer->denormalize($test_data, 'Drupal\Core\Entity\ContentEntityBase', NULL, ['entity_type' => 'test']);
   }
 

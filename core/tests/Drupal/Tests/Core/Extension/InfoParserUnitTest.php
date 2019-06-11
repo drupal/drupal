@@ -71,7 +71,8 @@ BROKEN_INFO;
       ],
     ]);
     $filename = vfsStream::url('modules/fixtures/broken.info.txt');
-    $this->setExpectedException('\Drupal\Core\Extension\InfoParserException', 'broken.info.txt');
+    $this->expectException('\Drupal\Core\Extension\InfoParserException');
+    $this->expectExceptionMessage('broken.info.txt');
     $this->infoParser->parse($filename);
   }
 
@@ -96,7 +97,8 @@ MISSINGKEYS;
       ],
     ]);
     $filename = vfsStream::url('modules/fixtures/missing_keys.info.txt');
-    $this->setExpectedException('\Drupal\Core\Extension\InfoParserException', 'Missing required keys (type, core, name) in vfs://modules/fixtures/missing_keys.info.txt');
+    $this->expectException('\Drupal\Core\Extension\InfoParserException');
+    $this->expectExceptionMessage('Missing required keys (type, core, name) in vfs://modules/fixtures/missing_keys.info.txt');
     $this->infoParser->parse($filename);
   }
 
@@ -124,7 +126,8 @@ MISSINGKEY;
       ],
     ]);
     $filename = vfsStream::url('modules/fixtures/missing_key.info.txt');
-    $this->setExpectedException('\Drupal\Core\Extension\InfoParserException', 'Missing required keys (type) in vfs://modules/fixtures/missing_key.info.txt');
+    $this->expectException('\Drupal\Core\Extension\InfoParserException');
+    $this->expectExceptionMessage('Missing required keys (type) in vfs://modules/fixtures/missing_key.info.txt');
     $this->infoParser->parse($filename);
   }
 

@@ -257,7 +257,7 @@ class ConfigTest extends UnitTestCase {
    * @covers ::set
    */
   public function testSetValidation() {
-    $this->setExpectedException(ConfigValueException::class);
+    $this->expectException(ConfigValueException::class);
     $this->config->set('testData', ['dot.key' => 1]);
   }
 
@@ -269,7 +269,7 @@ class ConfigTest extends UnitTestCase {
     $this->config->set('testData', 1);
 
     // Attempt to treat the single value as a nested item.
-    $this->setExpectedException(\PHPUnit_Framework_Error_Warning::class);
+    $this->expectException(\PHPUnit_Framework_Error_Warning::class);
     $this->config->set('testData.illegalOffset', 1);
   }
 
@@ -411,7 +411,8 @@ class ConfigTest extends UnitTestCase {
    * @dataProvider validateNameProvider
    */
   public function testValidateNameException($name, $exception_message) {
-    $this->setExpectedException('\Drupal\Core\Config\ConfigNameException', $exception_message);
+    $this->expectException('\Drupal\Core\Config\ConfigNameException');
+    $this->expectExceptionMessage($exception_message);
     $this->config->validateName($name);
   }
 

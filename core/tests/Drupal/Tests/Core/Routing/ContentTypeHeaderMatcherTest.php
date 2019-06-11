@@ -112,7 +112,8 @@ class ContentTypeHeaderMatcherTest extends UnitTestCase {
     $routes = $this->fixtures->contentRouteCollection();
     $request = Request::create('path/two', 'POST');
     $request->headers->set('Content-type', 'application/hal+json');
-    $this->setExpectedException(UnsupportedMediaTypeHttpException::class, 'No route found that matches "Content-Type: application/hal+json"');
+    $this->expectException(UnsupportedMediaTypeHttpException::class);
+    $this->expectExceptionMessage('No route found that matches "Content-Type: application/hal+json"');
     $matcher->filter($routes, $request);
   }
 
@@ -128,7 +129,8 @@ class ContentTypeHeaderMatcherTest extends UnitTestCase {
     $request = Request::create('path/two', 'POST');
     // Delete all request headers that Request::create() sets by default.
     $request->headers = new ParameterBag();
-    $this->setExpectedException(UnsupportedMediaTypeHttpException::class, 'No "Content-Type" request header specified');
+    $this->expectException(UnsupportedMediaTypeHttpException::class);
+    $this->expectExceptionMessage('No "Content-Type" request header specified');
     $matcher->filter($routes, $request);
   }
 

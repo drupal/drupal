@@ -120,7 +120,8 @@ class MailHandlerTest extends UnitTestCase {
     $sender->expects($this->once())
       ->method('isAnonymous')
       ->willReturn(FALSE);
-    $this->setExpectedException(MailHandlerException::class, 'Unable to determine message recipient');
+    $this->expectException(MailHandlerException::class);
+    $this->expectExceptionMessage('Unable to determine message recipient');
     $this->contactMailHandler->sendMailMessages($message, $sender);
   }
 

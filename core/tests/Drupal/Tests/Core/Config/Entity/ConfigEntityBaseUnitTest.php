@@ -635,7 +635,8 @@ class ConfigEntityBaseUnitTest extends UnitTestCase {
     $this->entityType->expects($this->any())
       ->method('getPropertiesToExport')
       ->willReturn(NULL);
-    $this->setExpectedException(SchemaIncompleteException::class, 'Incomplete or missing schema for test_provider.');
+    $this->expectException(SchemaIncompleteException::class);
+    $this->expectExceptionMessage('Incomplete or missing schema for test_provider.');
     $this->entity->toArray();
   }
 

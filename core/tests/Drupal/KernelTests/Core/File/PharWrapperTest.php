@@ -26,7 +26,7 @@ class PharWrapperTest extends KernelTestBase {
 
     // Ensure that file operations via the phar:// stream wrapper throw an
     // exception for files without the .phar extension.
-    $this->setExpectedException('TYPO3\PharStreamWrapper\Exception');
+    $this->expectException('TYPO3\PharStreamWrapper\Exception');
     file_exists("phar://$base/image-2.jpg/index.php");
   }
 

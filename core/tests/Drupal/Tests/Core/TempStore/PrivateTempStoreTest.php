@@ -139,7 +139,7 @@ class PrivateTempStoreTest extends UnitTestCase {
     $this->keyValue->expects($this->once())
       ->method('getCollectionName');
 
-    $this->setExpectedException(TempStoreException::class);
+    $this->expectException(TempStoreException::class);
     $this->tempStore->set('test', 'value');
   }
 
@@ -274,7 +274,7 @@ class PrivateTempStoreTest extends UnitTestCase {
     $this->keyValue->expects($this->once())
       ->method('getCollectionName');
 
-    $this->setExpectedException(TempStoreException::class);
+    $this->expectException(TempStoreException::class);
     $this->tempStore->delete('test');
   }
 

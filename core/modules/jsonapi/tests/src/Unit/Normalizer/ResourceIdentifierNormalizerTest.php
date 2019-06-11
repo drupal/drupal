@@ -149,7 +149,7 @@ class ResourceIdentifierNormalizerTest extends UnitTestCase {
       'related' => $field_name,
       'target_entity' => $this->prophesize(FieldableEntityInterface::class)->reveal(),
     ];
-    $this->setExpectedException(BadRequestHttpException::class);
+    $this->expectException(BadRequestHttpException::class);
     $this->normalizer->denormalize($data, NULL, 'api_json', $context);
   }
 

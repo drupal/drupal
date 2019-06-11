@@ -228,7 +228,7 @@ class FieldDiscoveryTest extends UnitTestCase {
     $migration->getMigrationTags()->willReturn($tags);
     $field_discovery = new FieldDiscoveryTestClass($this->fieldPluginManager->reveal(), $this->migrationPluginManager->reveal(), $this->logger->reveal());
     if (!$expected_result) {
-      $this->setExpectedException(\InvalidArgumentException::class);
+      $this->expectException(\InvalidArgumentException::class);
     }
     $actual_result = $field_discovery->getCoreVersion($migration->reveal());
     $this->assertEquals($expected_result, $actual_result);
@@ -316,7 +316,8 @@ class FieldDiscoveryTest extends UnitTestCase {
   public function testGetFieldInstanceStubMigrationDefinition($core, $expected_definition) {
     $field_discovery = new FieldDiscoveryTestClass($this->fieldPluginManager->reveal(), $this->migrationPluginManager->reveal(), $this->logger->reveal());
     if (!$expected_definition) {
-      $this->setExpectedException(\InvalidArgumentException::class, sprintf("Drupal version %s is not supported. Valid values for Drupal core version are '6' and '7'.", $core));
+      $this->expectException(\InvalidArgumentException::class);
+      $this->expectExceptionMessage(sprintf("Drupal version %s is not supported. Valid values for Drupal core version are '6' and '7'.", $core));
     }
     $actual_definition = $field_discovery->getFieldInstanceStubMigrationDefinition($core);
     $this->assertSame($expected_definition, $actual_definition);

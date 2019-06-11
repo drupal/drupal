@@ -92,7 +92,8 @@ class DateTimePlusTest extends TestCase {
       $this->expectExceptionMessage('Method Drupal\Component\Datetime\DateTimePlus::diff expects parameter 1 to be a \DateTime or \Drupal\Component\Datetime\DateTimePlus object');
     }
     else {
-      $this->setExpectedException(\BadMethodCallException::class, 'Method Drupal\Component\Datetime\DateTimePlus::diff expects parameter 1 to be a \DateTime or \Drupal\Component\Datetime\DateTimePlus object');
+      $this->expectException(\BadMethodCallException::class);
+      $this->expectExceptionMessage('Method Drupal\Component\Datetime\DateTimePlus::diff expects parameter 1 to be a \DateTime or \Drupal\Component\Datetime\DateTimePlus object');
     }
     $interval = $input1->diff($input2, $absolute);
   }
@@ -114,7 +115,7 @@ class DateTimePlusTest extends TestCase {
       $this->expectException($class);
     }
     else {
-      $this->setExpectedException($class);
+      $this->expectException($class);
     }
     $this->assertInstanceOf(
       '\Drupal\Component\DateTimePlus',
@@ -257,7 +258,7 @@ class DateTimePlusTest extends TestCase {
       $this->expectException($class);
     }
     else {
-      $this->setExpectedException($class);
+      $this->expectException($class);
     }
     DateTimePlus::createFromFormat($format, $input, $timezone);
   }
@@ -820,7 +821,7 @@ class DateTimePlusTest extends TestCase {
       $this->expectException(\UnexpectedValueException::class);
     }
     else {
-      $this->setExpectedException(\UnexpectedValueException::class);
+      $this->expectException(\UnexpectedValueException::class);
     }
     $date = DateTimePlus::createFromFormat('Y-m-d H:i:s', '11-03-31 17:44:00', 'UTC', ['validate_format' => TRUE]);
   }
@@ -885,7 +886,8 @@ class DateTimePlusTest extends TestCase {
       $this->expectExceptionMessage('Call to undefined method Drupal\Component\Datetime\DateTimePlus::nonexistent()');
     }
     else {
-      $this->setExpectedException(\BadMethodCallException::class, 'Call to undefined method Drupal\Component\Datetime\DateTimePlus::nonexistent()');
+      $this->expectException(\BadMethodCallException::class);
+      $this->expectExceptionMessage('Call to undefined method Drupal\Component\Datetime\DateTimePlus::nonexistent()');
     }
     $date = new DateTimePlus('now', 'Australia/Sydney');
     $date->setTimezone(new \DateTimeZone('America/New_York'))->nonexistent();

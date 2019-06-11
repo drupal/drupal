@@ -121,7 +121,7 @@ class ViewAjaxControllerTest extends UnitTestCase {
    */
   public function testMissingViewName() {
     $request = new Request();
-    $this->setExpectedException(NotFoundHttpException::class);
+    $this->expectException(NotFoundHttpException::class);
     $this->viewAjaxController->ajaxView($request);
   }
 
@@ -138,7 +138,7 @@ class ViewAjaxControllerTest extends UnitTestCase {
       ->with('test_view')
       ->will($this->returnValue(FALSE));
 
-    $this->setExpectedException(NotFoundHttpException::class);
+    $this->expectException(NotFoundHttpException::class);
     $this->viewAjaxController->ajaxView($request);
   }
 
@@ -171,7 +171,7 @@ class ViewAjaxControllerTest extends UnitTestCase {
       ->with($view)
       ->will($this->returnValue($executable));
 
-    $this->setExpectedException(AccessDeniedHttpException::class);
+    $this->expectException(AccessDeniedHttpException::class);
     $this->viewAjaxController->ajaxView($request);
   }
 
@@ -215,7 +215,7 @@ class ViewAjaxControllerTest extends UnitTestCase {
 
     $this->setupValidMocks(static::USE_NO_AJAX);
 
-    $this->setExpectedException(AccessDeniedHttpException::class);
+    $this->expectException(AccessDeniedHttpException::class);
     $this->viewAjaxController->ajaxView($request);
   }
 

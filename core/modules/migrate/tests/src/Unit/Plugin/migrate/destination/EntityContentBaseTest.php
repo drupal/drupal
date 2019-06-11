@@ -63,7 +63,8 @@ class EntityContentBaseTest extends EntityTestBase {
       $this->entityFieldManager->reveal(),
       $this->prophesize(FieldTypePluginManagerInterface::class)->reveal());
     $destination->setEntity(FALSE);
-    $this->setExpectedException(MigrateException::class, 'Unable to get entity');
+    $this->expectException(MigrateException::class);
+    $this->expectExceptionMessage('Unable to get entity');
     $destination->import(new Row());
   }
 
@@ -87,7 +88,8 @@ class EntityContentBaseTest extends EntityTestBase {
       $this->entityFieldManager->reveal(),
       $this->prophesize(FieldTypePluginManagerInterface::class)->reveal()
     );
-    $this->setExpectedException(MigrateException::class, 'The "foo" entity type does not support translations.');
+    $this->expectException(MigrateException::class);
+    $this->expectExceptionMessage('The "foo" entity type does not support translations.');
     $destination->getIds();
   }
 

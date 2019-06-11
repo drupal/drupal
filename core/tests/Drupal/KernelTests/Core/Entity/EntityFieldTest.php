@@ -944,7 +944,7 @@ class EntityFieldTest extends EntityKernelTestBase {
     $this->assertTrue($entity);
 
     // Check that an ID cannot be explicitly assigned on update.
-    $this->setExpectedException(EntityStorageException::class);
+    $this->expectException(EntityStorageException::class);
     $entity->set('id', $entity_id + 1);
     $storage->save($entity);
   }

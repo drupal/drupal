@@ -176,7 +176,8 @@ class BatchBuilderTest extends UnitTestCase {
    */
   public function testQueueExists() {
     $batch_builder = (new BatchBuilder());
-    $this->setExpectedException(\InvalidArgumentException::class, 'Class \ThisIsNotAClass does not exist.');
+    $this->expectException(\InvalidArgumentException::class);
+    $this->expectExceptionMessage('Class \ThisIsNotAClass does not exist.');
     $batch_builder->setQueue('BatchName', '\ThisIsNotAClass');
   }
 
@@ -187,7 +188,8 @@ class BatchBuilderTest extends UnitTestCase {
    */
   public function testQueueImplements() {
     $batch_builder = (new BatchBuilder());
-    $this->setExpectedException(\InvalidArgumentException::class, 'Class Exception does not implement \Drupal\Core\Queue\QueueInterface.');
+    $this->expectException(\InvalidArgumentException::class);
+    $this->expectExceptionMessage('Class Exception does not implement \Drupal\Core\Queue\QueueInterface.');
     $batch_builder->setQueue('BatchName', \Exception::class);
   }
 

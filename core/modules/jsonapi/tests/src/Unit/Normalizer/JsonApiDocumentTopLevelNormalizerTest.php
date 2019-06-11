@@ -216,10 +216,8 @@ class JsonApiDocumentTopLevelNormalizerTest extends UnitTestCase {
       ['type' => 'node--article'];
 
     if ($expect_exception) {
-      $this->setExpectedException(
-        UnprocessableEntityHttpException::class,
-        'IDs should be properly generated and formatted UUIDs as described in RFC 4122.'
-      );
+      $this->expectException(UnprocessableEntityHttpException::class);
+      $this->expectExceptionMessage('IDs should be properly generated and formatted UUIDs as described in RFC 4122.');
     }
 
     $denormalized = $this->normalizer->denormalize($data, NULL, 'api_json', [

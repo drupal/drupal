@@ -127,7 +127,7 @@ class ReflectionFactoryTest extends TestCase {
         $this->expectException('\ReflectionException');
       }
       else {
-        $this->setExpectedException('\ReflectionException');
+        $this->expectException('\ReflectionException');
       }
     }
 

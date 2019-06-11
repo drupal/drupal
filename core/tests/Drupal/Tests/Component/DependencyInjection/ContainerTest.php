@@ -74,7 +74,7 @@ class ContainerTest extends TestCase {
       $this->expectException(InvalidArgumentException::class);
     }
     else {
-      $this->setExpectedException(InvalidArgumentException::class);
+      $this->expectException(InvalidArgumentException::class);
     }
     $container = new $this->containerClass($container_definition);
   }
@@ -102,7 +102,7 @@ class ContainerTest extends TestCase {
       $this->expectException(ParameterNotFoundException::class);
     }
     else {
-      $this->setExpectedException(ParameterNotFoundException::class);
+      $this->expectException(ParameterNotFoundException::class);
     }
     $this->container->getParameter('parameter_that_does_not_exist');
   }
@@ -117,7 +117,7 @@ class ContainerTest extends TestCase {
       $this->expectException(ParameterNotFoundException::class);
     }
     else {
-      $this->setExpectedException(ParameterNotFoundException::class);
+      $this->expectException(ParameterNotFoundException::class);
     }
     $this->container->getParameter(NULL);
   }
@@ -156,7 +156,7 @@ class ContainerTest extends TestCase {
       $this->expectException(LogicException::class);
     }
     else {
-      $this->setExpectedException(LogicException::class);
+      $this->expectException(LogicException::class);
     }
     $this->container->setParameter('some_config', 'new_value');
   }
@@ -266,7 +266,7 @@ class ContainerTest extends TestCase {
       $this->expectException(ServiceCircularReferenceException::class);
     }
     else {
-      $this->setExpectedException(ServiceCircularReferenceException::class);
+      $this->expectException(ServiceCircularReferenceException::class);
     }
     $this->container->get('circular_dependency');
   }
@@ -284,7 +284,7 @@ class ContainerTest extends TestCase {
       $this->expectException(ServiceNotFoundException::class);
     }
     else {
-      $this->setExpectedException(ServiceNotFoundException::class);
+      $this->expectException(ServiceNotFoundException::class);
     }
     $this->container->get('service_not_exists');
   }
@@ -338,7 +338,7 @@ class ContainerTest extends TestCase {
       $this->expectException(InvalidArgumentException::class);
     }
     else {
-      $this->setExpectedException(InvalidArgumentException::class);
+      $this->expectException(InvalidArgumentException::class);
     }
     $this->container->get('service_parameter_not_exists');
   }
@@ -355,7 +355,7 @@ class ContainerTest extends TestCase {
       $this->expectException(InvalidArgumentException::class);
     }
     else {
-      $this->setExpectedException(InvalidArgumentException::class);
+      $this->expectException(InvalidArgumentException::class);
     }
     $this->container->get('service_parameter_not_exists');
   }
@@ -385,7 +385,7 @@ class ContainerTest extends TestCase {
       $this->expectException(ServiceNotFoundException::class);
     }
     else {
-      $this->setExpectedException(ServiceNotFoundException::class);
+      $this->expectException(ServiceNotFoundException::class);
     }
     $this->container->get('service_dependency_not_exists');
   }
@@ -410,7 +410,7 @@ class ContainerTest extends TestCase {
       $this->expectException(ServiceNotFoundException::class);
     }
     else {
-      $this->setExpectedException(ServiceNotFoundException::class);
+      $this->expectException(ServiceNotFoundException::class);
     }
     $this->container->get(NULL);
   }
@@ -441,7 +441,7 @@ class ContainerTest extends TestCase {
       $this->expectException(ServiceNotFoundException::class);
     }
     else {
-      $this->setExpectedException(ServiceNotFoundException::class);
+      $this->expectException(ServiceNotFoundException::class);
     }
     $this->container->get('service_not_exists');
   }
@@ -482,7 +482,7 @@ class ContainerTest extends TestCase {
       $this->expectException(RuntimeException::class);
     }
     else {
-      $this->setExpectedException(RuntimeException::class);
+      $this->expectException(RuntimeException::class);
     }
     $this->container->get('synthetic');
   }
@@ -526,7 +526,7 @@ class ContainerTest extends TestCase {
       $this->expectException(RuntimeException::class);
     }
     else {
-      $this->setExpectedException(RuntimeException::class);
+      $this->expectException(RuntimeException::class);
     }
     $this->container->get('wrong_factory');
   }
@@ -569,7 +569,7 @@ class ContainerTest extends TestCase {
       $this->expectException(InvalidArgumentException::class);
     }
     else {
-      $this->setExpectedException(InvalidArgumentException::class);
+      $this->expectException(InvalidArgumentException::class);
     }
     $this->container->get('configurable_service_exception');
   }
@@ -672,7 +672,7 @@ class ContainerTest extends TestCase {
       $this->expectException(InvalidArgumentException::class);
     }
     else {
-      $this->setExpectedException(InvalidArgumentException::class);
+      $this->expectException(InvalidArgumentException::class);
     }
     $this->container->get('invalid_argument_service');
   }
@@ -691,7 +691,7 @@ class ContainerTest extends TestCase {
       $this->expectException(InvalidArgumentException::class);
     }
     else {
-      $this->setExpectedException(InvalidArgumentException::class);
+      $this->expectException(InvalidArgumentException::class);
     }
     if (!$this->machineFormat) {
       throw new InvalidArgumentException('Simulating the test failure.');

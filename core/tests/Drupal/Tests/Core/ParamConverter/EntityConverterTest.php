@@ -333,7 +333,7 @@ class EntityConverterTest extends UnitTestCase {
       ->with($plugin_id, 'id', $contexts)
       ->willThrowException(new PluginNotFoundException($plugin_id));
 
-    $this->setExpectedException(PluginNotFoundException::class);
+    $this->expectException(PluginNotFoundException::class);
 
     $this->entityConverter->convert('id', ['type' => 'entity:' . $plugin_id], 'foo', ['foo' => 'id']);
   }
@@ -342,7 +342,8 @@ class EntityConverterTest extends UnitTestCase {
    * Tests the convert() method with an invalid dynamic entity type.
    */
   public function testConvertWithInvalidDynamicEntityType() {
-    $this->setExpectedException(ParamNotConvertedException::class, 'The "foo" parameter was not converted because the "invalid_id" parameter is missing.');
+    $this->expectException(ParamNotConvertedException::class);
+    $this->expectExceptionMessage('The "foo" parameter was not converted because the "invalid_id" parameter is missing.');
     $this->entityConverter->convert('id', ['type' => 'entity:{invalid_id}'], 'foo', ['foo' => 'id']);
   }
 

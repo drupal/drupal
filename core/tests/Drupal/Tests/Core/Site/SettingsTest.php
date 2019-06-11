@@ -84,7 +84,7 @@ class SettingsTest extends UnitTestCase {
   public function testGetHashSaltEmpty(array $config) {
     // Re-create settings with no 'hash_salt' key.
     $settings = new Settings($config);
-    $this->setExpectedException(\RuntimeException::class);
+    $this->expectException(\RuntimeException::class);
     $settings->getHashSalt();
   }
 
@@ -107,7 +107,7 @@ class SettingsTest extends UnitTestCase {
    * @covers ::__sleep
    */
   public function testSerialize() {
-    $this->setExpectedException(\LogicException::class);
+    $this->expectException(\LogicException::class);
     serialize(new Settings([]));
   }
 
@@ -137,7 +137,7 @@ class SettingsTest extends UnitTestCase {
     $instace_property->setAccessible(TRUE);
     $instace_property->setValue(NULL);
 
-    $this->setExpectedException(\BadMethodCallException::class);
+    $this->expectException(\BadMethodCallException::class);
     $settings->getInstance();
   }
 

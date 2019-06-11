@@ -25,7 +25,8 @@ class WorkspaceInternalResourceTest extends KernelTestBase {
    * @see \Drupal\workspaces\Entity\WorkspaceAssociation
    */
   public function testCreateWorkspaceAssociationResource() {
-    $this->setExpectedException(PluginNotFoundException::class, 'The "entity:workspace_association" plugin does not exist.');
+    $this->expectException(PluginNotFoundException::class);
+    $this->expectExceptionMessage('The "entity:workspace_association" plugin does not exist.');
     RestResourceConfig::create([
       'id' => 'entity.workspace_association',
       'granularity' => RestResourceConfigInterface::RESOURCE_GRANULARITY,

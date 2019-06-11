@@ -28,7 +28,8 @@ class CheckRequirementsTest extends UnitTestCase {
       $this->prophesize(ConfigFactoryInterface::class)->reveal(),
       $this->prophesize(LanguageManagerInterface::class)->reveal()
     );
-    $this->setExpectedException(RequirementsException::class, "Destination plugin 'test' did not meet the requirements");
+    $this->expectException(RequirementsException::class);
+    $this->expectExceptionMessage("Destination plugin 'test' did not meet the requirements");
     $destination->checkRequirements();
   }
 

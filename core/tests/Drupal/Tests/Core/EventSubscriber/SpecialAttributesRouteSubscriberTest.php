@@ -98,7 +98,8 @@ class SpecialAttributesRouteSubscriberTest extends UnitTestCase {
 
     $event = new RouteBuildEvent($route_collection, 'test');
     $subscriber = new SpecialAttributesRouteSubscriber();
-    $this->setExpectedException(\PHPUnit_Framework_Error_Warning::class, 'uses reserved variable names');
+    $this->expectException(\PHPUnit_Framework_Error_Warning::class);
+    $this->expectExceptionMessage('uses reserved variable names');
     $subscriber->onAlterRoutes($event);
   }
 

@@ -23,7 +23,8 @@ class SectionListTraitTest extends SectionStorageTestBase {
    * @covers ::addBlankSection
    */
   public function testAddBlankSection() {
-    $this->setExpectedException(\Exception::class, 'A blank section must only be added to an empty list');
+    $this->expectException(\Exception::class);
+    $this->expectExceptionMessage('A blank section must only be added to an empty list');
     $this->sectionStorage->addBlankSection();
   }
 

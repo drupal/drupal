@@ -147,7 +147,7 @@ class ContentModerationStateTest extends KernelTestBase {
     }
 
     // Set an invalid moderation state.
-    $this->setExpectedException(EntityStorageException::class);
+    $this->expectException(EntityStorageException::class);
     $entity->moderation_state->value = 'foobar';
     $entity->save();
   }

@@ -549,7 +549,7 @@ namespace Drupal\Tests\Component\DependencyInjection\Dumper {
         $this->expectException(InvalidArgumentException::class);
       }
       else {
-        $this->setExpectedException(InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
       }
       $this->dumper->getArray();
     }
@@ -571,7 +571,7 @@ namespace Drupal\Tests\Component\DependencyInjection\Dumper {
         $this->expectException(RuntimeException::class);
       }
       else {
-        $this->setExpectedException(RuntimeException::class);
+        $this->expectException(RuntimeException::class);
       }
       $this->dumper->getArray();
     }
@@ -593,7 +593,7 @@ namespace Drupal\Tests\Component\DependencyInjection\Dumper {
         $this->expectException(RuntimeException::class);
       }
       else {
-        $this->setExpectedException(RuntimeException::class);
+        $this->expectException(RuntimeException::class);
       }
       $this->dumper->getArray();
     }
@@ -615,7 +615,7 @@ namespace Drupal\Tests\Component\DependencyInjection\Dumper {
         $this->expectException(RuntimeException::class);
       }
       else {
-        $this->setExpectedException(RuntimeException::class);
+        $this->expectException(RuntimeException::class);
       }
       $this->dumper->getArray();
     }

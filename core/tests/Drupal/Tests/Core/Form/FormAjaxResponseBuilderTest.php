@@ -55,7 +55,7 @@ class FormAjaxResponseBuilderTest extends UnitTestCase {
     $commands = [];
 
     $expected = [];
-    $this->setExpectedException(HttpException::class);
+    $this->expectException(HttpException::class);
     $this->formAjaxResponseBuilder->buildResponse($request, $form, $form_state, $commands);
   }
 
@@ -74,7 +74,7 @@ class FormAjaxResponseBuilderTest extends UnitTestCase {
     $commands = [];
 
     $expected = [];
-    $this->setExpectedException(HttpException::class);
+    $this->expectException(HttpException::class);
     $this->formAjaxResponseBuilder->buildResponse($request, $form, $form_state, $commands);
   }
 

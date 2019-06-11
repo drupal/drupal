@@ -476,18 +476,21 @@ class WorkspaceIntegrationTest extends KernelTestBase {
     // Check updating an existing entity.
     $entity_test->name->value = 'stage entity_test_mulrev';
     $entity_test->setNewRevision(TRUE);
-    $this->setExpectedException(EntityStorageException::class, 'This entity can only be saved in the default workspace.');
+    $this->expectException(EntityStorageException::class);
+    $this->expectExceptionMessage('This entity can only be saved in the default workspace.');
     $entity_test->save();
 
     // Check saving a new entity.
     $new_entity_test = EntityTestMulRev::create([
       'name' => 'stage entity_test_mulrev',
     ]);
-    $this->setExpectedException(EntityStorageException::class, 'This entity can only be saved in the default workspace.');
+    $this->expectException(EntityStorageException::class);
+    $this->expectExceptionMessage('This entity can only be saved in the default workspace.');
     $new_entity_test->save();
 
     // Check deleting an existing entity.
-    $this->setExpectedException(EntityStorageException::class, 'This entity can only be deleted in the default workspace.');
+    $this->expectException(EntityStorageException::class);
+    $this->expectExceptionMessage('This entity can only be deleted in the default workspace.');
     $entity_test->delete();
   }
 

@@ -43,7 +43,7 @@ class StaticMapTest extends MigrateProcessTestCase {
    * Tests when the source is empty.
    */
   public function testMapwithEmptySource() {
-    $this->setExpectedException(MigrateException::class);
+    $this->expectException(MigrateException::class);
     $this->plugin->transform([], $this->migrateExecutable, $this->row, 'destinationproperty');
   }
 
@@ -51,7 +51,8 @@ class StaticMapTest extends MigrateProcessTestCase {
    * Tests when the source is invalid.
    */
   public function testMapwithInvalidSource() {
-    $this->setExpectedException(MigrateSkipRowException::class, sprintf("No static mapping found for '%s' and no default value provided for destination '%s'.", Variable::export(['bar']), 'destinationproperty'));
+    $this->expectException(MigrateSkipRowException::class);
+    $this->expectExceptionMessage(sprintf("No static mapping found for '%s' and no default value provided for destination '%s'.", Variable::export(['bar']), 'destinationproperty'));
     $this->plugin->transform(['bar'], $this->migrateExecutable, $this->row, 'destinationproperty');
   }
 
@@ -85,7 +86,8 @@ class StaticMapTest extends MigrateProcessTestCase {
     $configuration['default_value'] = 'test';
     $configuration['bypass'] = TRUE;
     $this->plugin = new StaticMap($configuration, 'map', []);
-    $this->setExpectedException(MigrateException::class, 'Setting both default_value and bypass is invalid.');
+    $this->expectException(MigrateException::class);
+    $this->expectExceptionMessage('Setting both default_value and bypass is invalid.');
     $this->plugin->transform(['bar'], $this->migrateExecutable, $this->row, 'destinationproperty');
   }
 

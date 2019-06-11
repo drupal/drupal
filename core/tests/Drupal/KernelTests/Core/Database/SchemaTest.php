@@ -917,7 +917,8 @@ class SchemaTest extends KernelTestBase {
       ],
       'primary key' => ['test_field'],
     ];
-    $this->setExpectedException(SchemaException::class, "The 'test_field' field specification does not define 'not null' as TRUE.");
+    $this->expectException(SchemaException::class);
+    $this->expectExceptionMessage("The 'test_field' field specification does not define 'not null' as TRUE.");
     $this->schema->createTable($table_name, $table_spec);
   }
 
@@ -935,7 +936,8 @@ class SchemaTest extends KernelTestBase {
     ];
     $this->schema->createTable($table_name, $table_spec);
 
-    $this->setExpectedException(SchemaException::class, "The 'new_test_field' field specification does not define 'not null' as TRUE.");
+    $this->expectException(SchemaException::class);
+    $this->expectExceptionMessage("The 'new_test_field' field specification does not define 'not null' as TRUE.");
     $this->schema->addField($table_name, 'new_test_field', ['type' => 'int'], ['primary key' => ['test_field', 'new_test_field']]);
   }
 
@@ -953,7 +955,8 @@ class SchemaTest extends KernelTestBase {
     ];
     $this->schema->createTable($table_name, $table_spec);
 
-    $this->setExpectedException(SchemaException::class, "The 'changed_test_field' field specification does not define 'not null' as TRUE.");
+    $this->expectException(SchemaException::class);
+    $this->expectExceptionMessage("The 'changed_test_field' field specification does not define 'not null' as TRUE.");
     $this->schema->dropPrimaryKey($table_name);
     $this->schema->changeField($table_name, 'test_field', 'changed_test_field', ['type' => 'int'], ['primary key' => ['changed_test_field']]);
   }

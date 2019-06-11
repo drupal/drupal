@@ -167,7 +167,7 @@ class LibraryDiscoveryParserTest extends UnitTestCase {
     $path = substr($path, strlen($this->root) + 1);
     $this->libraryDiscoveryParser->setPaths('module', 'invalid_file', $path);
 
-    $this->setExpectedException(InvalidLibraryFileException::class);
+    $this->expectException(InvalidLibraryFileException::class);
     $this->libraryDiscoveryParser->buildByExtension('invalid_file');
   }
 
@@ -186,7 +186,8 @@ class LibraryDiscoveryParserTest extends UnitTestCase {
     $path = substr($path, strlen($this->root) + 1);
     $this->libraryDiscoveryParser->setPaths('module', 'example_module_missing_information', $path);
 
-    $this->setExpectedException(IncompleteLibraryDefinitionException::class, "Incomplete library definition for definition 'example' in extension 'example_module_missing_information'");
+    $this->expectException(IncompleteLibraryDefinitionException::class);
+    $this->expectExceptionMessage("Incomplete library definition for definition 'example' in extension 'example_module_missing_information'");
     $this->libraryDiscoveryParser->buildByExtension('example_module_missing_information');
   }
 
@@ -296,7 +297,7 @@ class LibraryDiscoveryParserTest extends UnitTestCase {
     $path = substr($path, strlen($this->root) + 1);
     $this->libraryDiscoveryParser->setPaths('module', 'js_positive_weight', $path);
 
-    $this->setExpectedException(\UnexpectedValueException::class);
+    $this->expectException(\UnexpectedValueException::class);
     $this->libraryDiscoveryParser->buildByExtension('js_positive_weight');
   }
 
@@ -426,7 +427,8 @@ class LibraryDiscoveryParserTest extends UnitTestCase {
     $path = substr($path, strlen($this->root) + 1);
     $this->libraryDiscoveryParser->setPaths('module', 'licenses_missing_information', $path);
 
-    $this->setExpectedException(LibraryDefinitionMissingLicenseException::class, "Missing license information in library definition for definition 'no-license-info-but-remote' extension 'licenses_missing_information': it has a remote, but no license.");
+    $this->expectException(LibraryDefinitionMissingLicenseException::class);
+    $this->expectExceptionMessage("Missing license information in library definition for definition 'no-license-info-but-remote' extension 'licenses_missing_information': it has a remote, but no license.");
     $this->libraryDiscoveryParser->buildByExtension('licenses_missing_information');
   }
 
@@ -540,7 +542,8 @@ class LibraryDiscoveryParserTest extends UnitTestCase {
     $path = substr($path, strlen($this->root) + 1);
     $this->libraryDiscoveryParser->setPaths('module', $extension, $path);
 
-    $this->setExpectedException(\AssertionError::class, $exception_message);
+    $this->expectException(\AssertionError::class);
+    $this->expectExceptionMessage($exception_message);
     $this->libraryDiscoveryParser->buildByExtension($extension);
   }
 

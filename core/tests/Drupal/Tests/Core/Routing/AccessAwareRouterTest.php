@@ -96,7 +96,7 @@ class AccessAwareRouterTest extends UnitTestCase {
       ->method('checkRequest')
       ->with($request)
       ->willReturn($access_result);
-    $this->setExpectedException(AccessDeniedHttpException::class);
+    $this->expectException(AccessDeniedHttpException::class);
     $this->router->matchRequest($request);
   }
 
@@ -112,7 +112,8 @@ class AccessAwareRouterTest extends UnitTestCase {
       ->method('checkRequest')
       ->with($request)
       ->willReturn($access_result);
-    $this->setExpectedException(AccessDeniedHttpException::class, $reason);
+    $this->expectException(AccessDeniedHttpException::class);
+    $this->expectExceptionMessage($reason);
     $this->router->matchRequest($request);
   }
 

@@ -35,7 +35,8 @@ class MigrateFieldPluginManagerTest extends UnitTestCase {
     $discovery->getDefinitions()->willReturn($this->pluginFixtureData());
     $manager = new MigrateFieldPluginManagerTestClass('field', new \ArrayObject(), $cache, $module_handler, MigrateField::class, $discovery->reveal());
     if (!$expected_plugin_id) {
-      $this->setExpectedException(PluginNotFoundException::class, sprintf("Plugin ID '%s' was not found.", $field_type));
+      $this->expectException(PluginNotFoundException::class);
+      $this->expectExceptionMessage(sprintf("Plugin ID '%s' was not found.", $field_type));
     }
     $actual_plugin_id = $manager->getPluginIdFromFieldType($field_type, ['core' => $core]);
     $this->assertSame($expected_plugin_id, $actual_plugin_id);

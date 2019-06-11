@@ -48,7 +48,8 @@ class ConfigFormBaseTraitTest extends UnitTestCase {
     $config_method->setAccessible(TRUE);
 
     // There is no config factory available this should result in an exception.
-    $this->setExpectedException(\LogicException::class, 'No config factory available for ConfigFormBaseTrait');
+    $this->expectException(\LogicException::class);
+    $this->expectExceptionMessage('No config factory available for ConfigFormBaseTrait');
     $config_method->invoke($trait, 'editable.config');
   }
 
@@ -62,7 +63,8 @@ class ConfigFormBaseTraitTest extends UnitTestCase {
     $config_method->setAccessible(TRUE);
 
     // There is no config factory available this should result in an exception.
-    $this->setExpectedException(\LogicException::class, 'No config factory available for ConfigFormBaseTrait');
+    $this->expectException(\LogicException::class);
+    $this->expectExceptionMessage('No config factory available for ConfigFormBaseTrait');
     $config_method->invoke($trait, 'editable.config');
   }
 

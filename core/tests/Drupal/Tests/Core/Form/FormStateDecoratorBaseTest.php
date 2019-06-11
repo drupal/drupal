@@ -162,7 +162,7 @@ class FormStateDecoratorBaseTest extends UnitTestCase {
   public function testSetCachedWithLogicException($cache) {
     $this->decoratedFormState->setCached($cache)
       ->willThrow(\LogicException::class);
-    $this->setExpectedException(\LogicException::class);
+    $this->expectException(\LogicException::class);
     $this->formStateDecoratorBase->setCached($cache);
   }
 

@@ -118,7 +118,8 @@ class ConfigEntityUpdaterTest extends KernelTestBase {
    */
   public function testUpdateException() {
     $this->enableModules(['entity_test']);
-    $this->setExpectedException(\InvalidArgumentException::class, 'The provided entity type ID \'entity_test_mul_changed\' is not a configuration entity type');
+    $this->expectException(\InvalidArgumentException::class);
+    $this->expectExceptionMessage('The provided entity type ID \'entity_test_mul_changed\' is not a configuration entity type');
     $updater = $this->container->get('class_resolver')->getInstanceFromDefinition(ConfigEntityUpdater::class);
     $sandbox = [];
     $updater->update($sandbox, 'entity_test_mul_changed');

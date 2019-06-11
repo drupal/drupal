@@ -104,7 +104,7 @@ class StaticDiscoveryDecoratorTest extends TestCase {
         $this->expectException('Drupal\Component\Plugin\Exception\PluginNotFoundException');
       }
       else {
-        $this->setExpectedException('Drupal\Component\Plugin\Exception\PluginNotFoundException');
+        $this->expectException('Drupal\Component\Plugin\Exception\PluginNotFoundException');
       }
     }
 

@@ -222,7 +222,8 @@ class ModuleHandlerTest extends KernelTestBase {
     $this->assertNotContains($profile, $uninstalled_modules, 'The installation profile is not in the list of uninstalled modules.');
 
     // Try uninstalling the required module.
-    $this->setExpectedException(ModuleUninstallValidatorException::class, 'The following reasons prevent the modules from being uninstalled: The Testing install profile dependencies module is required');
+    $this->expectException(ModuleUninstallValidatorException::class);
+    $this->expectExceptionMessage('The following reasons prevent the modules from being uninstalled: The Testing install profile dependencies module is required');
     $this->moduleInstaller()->uninstall([$dependency]);
   }
 
@@ -253,7 +254,8 @@ class ModuleHandlerTest extends KernelTestBase {
     }
 
     // Try uninstalling the dependencies.
-    $this->setExpectedException(ModuleUninstallValidatorException::class, 'The following reasons prevent the modules from being uninstalled: The Testing install profile all dependencies module is required');
+    $this->expectException(ModuleUninstallValidatorException::class);
+    $this->expectExceptionMessage('The following reasons prevent the modules from being uninstalled: The Testing install profile all dependencies module is required');
     $this->moduleInstaller()->uninstall($dependencies);
   }
 

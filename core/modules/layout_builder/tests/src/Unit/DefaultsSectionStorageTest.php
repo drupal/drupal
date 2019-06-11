@@ -164,7 +164,7 @@ class DefaultsSectionStorageTest extends UnitTestCase {
     }
 
     if (!$success) {
-      $this->setExpectedException(\InvalidArgumentException::class);
+      $this->expectException(\InvalidArgumentException::class);
     }
 
     $result = $this->plugin->getSectionListFromId($value);

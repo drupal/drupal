@@ -49,7 +49,8 @@ class PoStreamWriterTest extends TestCase {
       $this->expectException(\Exception::class, 'No URI set.');
     }
     else {
-      $this->setExpectedException(\Exception::class, 'No URI set.');
+      $this->expectException(\Exception::class);
+      $this->expectExceptionMessage('No URI set.');
     }
 
     $this->poWriter->getURI();
@@ -65,7 +66,8 @@ class PoStreamWriterTest extends TestCase {
         $this->expectException(\Exception::class, 'Unable to write data:');
       }
       else {
-        $this->setExpectedException(\Exception::class, 'Unable to write data:');
+        $this->expectException(\Exception::class);
+        $this->expectExceptionMessage('Unable to write data:');
       }
     }
 
@@ -109,7 +111,8 @@ class PoStreamWriterTest extends TestCase {
       $this->expectException(\Exception::class, 'Cannot close stream that is not open.');
     }
     else {
-      $this->setExpectedException(\Exception::class, 'Cannot close stream that is not open.');
+      $this->expectException(\Exception::class);
+      $this->expectExceptionMessage('Cannot close stream that is not open.');
     }
 
     $this->poWriter->close();

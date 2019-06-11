@@ -91,7 +91,7 @@ foo:
       $this->expectException(InvalidDataTypeException::class);
     }
     else {
-      $this->setExpectedException(InvalidDataTypeException::class);
+      $this->expectException(InvalidDataTypeException::class);
     }
     YamlPecl::decode('foo: [ads');
   }

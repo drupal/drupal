@@ -296,7 +296,7 @@ class EntityAdapterUnitTest extends UnitTestCase {
    * @covers ::get
    */
   public function testGetInvalidField() {
-    $this->setExpectedException(\InvalidArgumentException::class);
+    $this->expectException(\InvalidArgumentException::class);
     $this->entityAdapter->get('invalid');
   }
 
@@ -305,7 +305,7 @@ class EntityAdapterUnitTest extends UnitTestCase {
    */
   public function testGetWithoutData() {
     $this->entityAdapter->setValue(NULL);
-    $this->setExpectedException(MissingDataException::class);
+    $this->expectException(MissingDataException::class);
     $this->entityAdapter->get('id');
   }
 
@@ -328,7 +328,7 @@ class EntityAdapterUnitTest extends UnitTestCase {
   public function testSetWithoutData() {
     $this->entityAdapter->setValue(NULL);
     $id_items = [['value' => $this->id + 1]];
-    $this->setExpectedException(MissingDataException::class);
+    $this->expectException(MissingDataException::class);
     $this->entityAdapter->set('id', $id_items);
   }
 
@@ -357,7 +357,7 @@ class EntityAdapterUnitTest extends UnitTestCase {
    */
   public function testToArrayWithoutData() {
     $this->entityAdapter->setValue(NULL);
-    $this->setExpectedException(MissingDataException::class);
+    $this->expectException(MissingDataException::class);
     $this->entityAdapter->toArray();
   }
 

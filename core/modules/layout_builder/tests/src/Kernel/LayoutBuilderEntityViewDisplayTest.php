@@ -37,7 +37,7 @@ class LayoutBuilderEntityViewDisplayTest extends SectionStorageTestBase {
    * Tests that configuration schema enforces valid values.
    */
   public function testInvalidConfiguration() {
-    $this->setExpectedException(SchemaIncompleteException::class);
+    $this->expectException(SchemaIncompleteException::class);
     $this->sectionStorage->getSection(0)->getComponent('first-uuid')->setConfiguration(['id' => 'foo', 'bar' => 'baz']);
     $this->sectionStorage->save();
   }

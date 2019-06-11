@@ -162,7 +162,8 @@ class FileSystemTest extends UnitTestCase {
   public function testInvalidUTF8() {
     vfsStream::setup('dir');
     $filename = "a\xFFsdf\x80€" . '.txt';
-    $this->setExpectedException(FileException::class, "Invalid filename '$filename'");
+    $this->expectException(FileException::class);
+    $this->expectExceptionMessage("Invalid filename '$filename'");
     $this->fileSystem->createFilename($filename, 'vfs://dir');
   }
 

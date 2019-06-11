@@ -63,7 +63,7 @@ class YamlSymfonyTest extends YamlTestBase {
       $this->expectException(InvalidDataTypeException::class);
     }
     else {
-      $this->setExpectedException(InvalidDataTypeException::class);
+      $this->expectException(InvalidDataTypeException::class);
     }
     YamlSymfony::decode('foo: [ads');
   }
@@ -79,7 +79,8 @@ class YamlSymfonyTest extends YamlTestBase {
       $this->expectExceptionMessage('Object support when dumping a YAML file has been disabled.');
     }
     else {
-      $this->setExpectedException(InvalidDataTypeException::class, 'Object support when dumping a YAML file has been disabled.');
+      $this->expectException(InvalidDataTypeException::class);
+      $this->expectExceptionMessage('Object support when dumping a YAML file has been disabled.');
     }
     $object = new \stdClass();
     $object->foo = 'bar';

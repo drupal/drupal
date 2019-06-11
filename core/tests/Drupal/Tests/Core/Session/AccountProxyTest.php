@@ -35,7 +35,7 @@ class AccountProxyTest extends UnitTestCase {
    * @covers ::setInitialAccountId
    */
   public function testSetInitialAccountIdException() {
-    $this->setExpectedException(\LogicException::class);
+    $this->expectException(\LogicException::class);
     $account_proxy = new AccountProxy();
     $current_user = $this->prophesize(AccountInterface::class);
     $account_proxy->setAccount($current_user->reveal());

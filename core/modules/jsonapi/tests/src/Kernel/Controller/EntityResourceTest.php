@@ -205,7 +205,7 @@ class EntityResourceTest extends JsonapiKernelTestBase {
     $role = Role::load(RoleInterface::ANONYMOUS_ID);
     $role->revokePermission('access content');
     $role->save();
-    $this->setExpectedException(EntityAccessDeniedHttpException::class);
+    $this->expectException(EntityAccessDeniedHttpException::class);
     $this->entityResource->getIndividual($this->node, Request::create('/jsonapi/node/article'));
   }
 
@@ -420,7 +420,8 @@ class EntityResourceTest extends JsonapiKernelTestBase {
     Role::load(Role::ANONYMOUS_ID)
       ->grantPermission('create article content')
       ->save();
-    $this->setExpectedException(HttpException::class, 'Unprocessable Entity: validation failed.');
+    $this->expectException(HttpException::class);
+    $this->expectExceptionMessage('Unprocessable Entity: validation failed.');
     $resource_type = new ResourceType('node', 'article', Node::class);
     $payload = Json::encode([
       'data' => [
@@ -455,7 +456,8 @@ class EntityResourceTest extends JsonapiKernelTestBase {
       ],
     ]);
 
-    $this->setExpectedException(ConflictHttpException::class, 'Conflict: Entity already exists.');
+    $this->expectException(ConflictHttpException::class);
+    $this->expectExceptionMessage('Conflict: Entity already exists.');
     $resource_type = new ResourceType('node', 'article', Node::class);
     $resource_type->setRelatableResourceTypes([
       'field_relationships' => [new ResourceType('node', 'article', NULL)],

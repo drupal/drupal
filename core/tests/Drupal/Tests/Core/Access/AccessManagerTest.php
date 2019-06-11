@@ -514,7 +514,7 @@ class AccessManagerTest extends UnitTestCase {
     $this->checkProvider->setContainer($container);
     $this->checkProvider->addCheckService('test_incorrect_value', 'access');
 
-    $this->setExpectedException(AccessException::class);
+    $this->expectException(AccessException::class);
     $access_manager->checkNamedRoute('test_incorrect_value', [], $this->account);
   }
 

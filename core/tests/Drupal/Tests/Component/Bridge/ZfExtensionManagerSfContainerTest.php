@@ -63,7 +63,8 @@ class ZfExtensionManagerSfContainerTest extends TestCase {
       $this->expectExceptionMessage('Drupal\Tests\Component\Bridge\ZfExtensionManagerSfContainerTest must implement Zend\Feed\Reader\ExtensionManagerInterface or Zend\Feed\Writer\ExtensionManagerInterface');
     }
     else {
-      $this->setExpectedException(\RuntimeException::class, 'Drupal\Tests\Component\Bridge\ZfExtensionManagerSfContainerTest must implement Zend\Feed\Reader\ExtensionManagerInterface or Zend\Feed\Writer\ExtensionManagerInterface');
+      $this->expectException(\RuntimeException::class);
+      $this->expectExceptionMessage('Drupal\Tests\Component\Bridge\ZfExtensionManagerSfContainerTest must implement Zend\Feed\Reader\ExtensionManagerInterface or Zend\Feed\Writer\ExtensionManagerInterface');
     }
     $bridge = new ZfExtensionManagerSfContainer();
     $bridge->setStandalone(static::class);
@@ -78,7 +79,8 @@ class ZfExtensionManagerSfContainerTest extends TestCase {
       $this->expectExceptionMessage('You have requested a non-existent service "test.foo".');
     }
     else {
-      $this->setExpectedException(ServiceNotFoundException::class, 'You have requested a non-existent service "test.foo".');
+      $this->expectException(ServiceNotFoundException::class);
+      $this->expectExceptionMessage('You have requested a non-existent service "test.foo".');
     }
     $container = new ContainerBuilder();
     $bridge = new ZfExtensionManagerSfContainer('test.');

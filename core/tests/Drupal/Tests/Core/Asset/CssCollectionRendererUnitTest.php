@@ -279,7 +279,8 @@ class CssCollectionRendererUnitTest extends UnitTestCase {
       ->method('get')
       ->with('system.css_js_query_string')
       ->will($this->returnValue(NULL));
-    $this->setExpectedException('Exception', 'Invalid CSS asset type.');
+    $this->expectException('Exception');
+    $this->expectExceptionMessage('Invalid CSS asset type.');
 
     $css_group = [
       'group' => 0,

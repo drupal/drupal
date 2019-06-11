@@ -32,7 +32,7 @@ class ExtensionListTest extends UnitTestCase {
     $extension_discovery->scan('test_extension')->willReturn([]);
     $test_extension_list->setExtensionDiscovery($extension_discovery->reveal());
 
-    $this->setExpectedException(UnknownExtensionException::class);
+    $this->expectException(UnknownExtensionException::class);
     $test_extension_list->getName('test_name');
   }
 
@@ -56,7 +56,7 @@ class ExtensionListTest extends UnitTestCase {
     $extension_discovery->scan('test_extension')->willReturn([]);
     $test_extension_list->setExtensionDiscovery($extension_discovery->reveal());
 
-    $this->setExpectedException(UnknownExtensionException::class);
+    $this->expectException(UnknownExtensionException::class);
     $test_extension_list->get('test_name');
   }
 

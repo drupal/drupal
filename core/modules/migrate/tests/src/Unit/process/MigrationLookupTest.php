@@ -105,7 +105,7 @@ class MigrationLookupTest extends MigrateProcessTestCase {
     $migration_plugin_manager->createInstances(['foobaz'])
       ->willReturn(['foobaz' => $migration_plugin->reveal()]);
     $migration = new MigrationLookup($configuration, 'migration_lookup', [], $migration_plugin->reveal(), $migration_plugin_manager->reveal());
-    $this->setExpectedException(MigrateSkipProcessException::class);
+    $this->expectException(MigrateSkipProcessException::class);
     $migration->transform($value, $this->migrateExecutable, $this->row, 'foo');
   }
 

@@ -95,7 +95,8 @@ class BlockVisibilityTest extends MigrateProcessTestCase {
       ->method('getSourceProperty')
       ->willReturnMap([['bid', 99], ['module', 'foobar']]);
     $this->plugin = new BlockVisibility(['skip_php' => TRUE], 'block_visibility_pages', [], $this->moduleHandler->reveal(), $migration_plugin->reveal());
-    $this->setExpectedException(MigrateSkipRowException::class, "The block with bid '99' from module 'foobar' will have no PHP or request_path visibility configuration.");
+    $this->expectException(MigrateSkipRowException::class);
+    $this->expectExceptionMessage("The block with bid '99' from module 'foobar' will have no PHP or request_path visibility configuration.");
     $this->plugin->transform([2, '<?php', []], $this->migrateExecutable, $this->row, 'destinationproperty');
   }
 

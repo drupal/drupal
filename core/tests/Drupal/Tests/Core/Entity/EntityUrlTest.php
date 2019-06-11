@@ -103,7 +103,8 @@ class EntityUrlTest extends UnitTestCase {
   public function testToUrlNoId() {
     $entity = $this->getEntity(EntityBase::class, []);
 
-    $this->setExpectedException(EntityMalformedException::class, 'The "' . $this->entityTypeId . '" entity cannot have a URI as it does not have an ID');
+    $this->expectException(EntityMalformedException::class);
+    $this->expectExceptionMessage('The "' . $this->entityTypeId . '" entity cannot have a URI as it does not have an ID');
     $entity->toUrl();
   }
 
@@ -314,7 +315,8 @@ class EntityUrlTest extends UnitTestCase {
     $this->entityType->getUriCallback()->willReturn($uri_callback);
 
     $link_template = 'canonical';
-    $this->setExpectedException(UndefinedLinkTemplateException::class, "No link template '$link_template' found for the '$this->entityTypeId' entity type");
+    $this->expectException(UndefinedLinkTemplateException::class);
+    $this->expectExceptionMessage("No link template '$link_template' found for the '$this->entityTypeId' entity type");
     $entity->toUrl($link_template);
   }
 

@@ -300,7 +300,7 @@ class FieldBlockTest extends EntityKernelTestBase {
     $entity->get('the_field_name')->willReturn($field->reveal());
 
     $block = $this->getTestBlock($entity);
-    $this->setExpectedException(EnforcedResponseException::class);
+    $this->expectException(EnforcedResponseException::class);
     $block->build();
   }
 

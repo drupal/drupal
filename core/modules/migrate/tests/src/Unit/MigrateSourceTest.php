@@ -156,7 +156,7 @@ class MigrateSourceTest extends MigrateTestCase {
    */
   public function testHighwaterTrackChangesIncompatible() {
     $source_config = ['track_changes' => TRUE, 'high_water_property' => ['name' => 'something']];
-    $this->setExpectedException(MigrateException::class);
+    $this->expectException(MigrateException::class);
     $this->getSource($source_config);
   }
 

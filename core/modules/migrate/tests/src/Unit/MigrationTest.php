@@ -40,7 +40,8 @@ class MigrationTest extends UnitTestCase {
     $migration->setSourcePlugin($source_plugin);
     $migration->setDestinationPlugin($destination_plugin);
 
-    $this->setExpectedException(RequirementsException::class, 'Missing source requirement');
+    $this->expectException(RequirementsException::class);
+    $this->expectExceptionMessage('Missing source requirement');
     $migration->checkRequirements();
   }
 
@@ -61,7 +62,8 @@ class MigrationTest extends UnitTestCase {
     $migration->setSourcePlugin($source_plugin);
     $migration->setDestinationPlugin($destination_plugin);
 
-    $this->setExpectedException(RequirementsException::class, 'Missing destination requirement');
+    $this->expectException(RequirementsException::class);
+    $this->expectExceptionMessage('Missing destination requirement');
     $migration->checkRequirements();
   }
 
@@ -105,7 +107,8 @@ class MigrationTest extends UnitTestCase {
       ->with(['test_a', 'test_b', 'test_c', 'test_d'])
       ->willReturn(['test_b' => $migration_b, 'test_c' => $migration_c, 'test_d' => $migration_d]);
 
-    $this->setExpectedException(RequirementsException::class, 'Missing migrations test_a, test_c');
+    $this->expectException(RequirementsException::class);
+    $this->expectExceptionMessage('Missing migrations test_a, test_c');
     $migration->checkRequirements();
   }
 

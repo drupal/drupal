@@ -23,7 +23,7 @@ class FieldItemNormalizerDenormalizeExceptionsUnitTest extends NormalizerDenorma
     $field_item_normalizer = new FieldItemNormalizer();
     $data = [];
     $class = [];
-    $this->setExpectedException(InvalidArgumentException::class);
+    $this->expectException(InvalidArgumentException::class);
     $field_item_normalizer->denormalize($data, $class, NULL, $context);
   }
 

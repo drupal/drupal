@@ -39,7 +39,7 @@ class RendererRecursionTest extends RendererTestBase {
 
     $complex_child = $complex_child_template;
     $callable = function () use ($renderer, $complex_child) {
-      $this->setExpectedException(\LogicException::class);
+      $this->expectException(\LogicException::class);
       $renderer->renderRoot($complex_child);
     };
 

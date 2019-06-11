@@ -410,7 +410,8 @@ class ConfigEntityStorageTest extends UnitTestCase {
       ->shouldNotBeCalled();
 
     $entity = $this->getMockEntity();
-    $this->setExpectedException(EntityMalformedException::class, 'The entity does not have an ID.');
+    $this->expectException(EntityMalformedException::class);
+    $this->expectExceptionMessage('The entity does not have an ID.');
     $this->entityStorage->save($entity);
   }
 
@@ -431,7 +432,7 @@ class ConfigEntityStorageTest extends UnitTestCase {
     $entity = $this->getMockEntity(['id' => 'foo']);
     $entity->enforceIsNew();
 
-    $this->setExpectedException(EntityStorageException::class);
+    $this->expectException(EntityStorageException::class);
     $this->entityStorage->save($entity);
   }
 
@@ -453,7 +454,8 @@ class ConfigEntityStorageTest extends UnitTestCase {
     $this->entityQuery->execute()->willReturn(['baz']);
 
     $entity = $this->getMockEntity(['id' => 'foo']);
-    $this->setExpectedException(ConfigDuplicateUUIDException::class, 'when this UUID is already used for');
+    $this->expectException(ConfigDuplicateUUIDException::class);
+    $this->expectExceptionMessage('when this UUID is already used for');
     $this->entityStorage->save($entity);
   }
 
@@ -531,7 +533,8 @@ class ConfigEntityStorageTest extends UnitTestCase {
     $entity = $this->getMockEntity(['id' => 'foo']);
 
     $entity->set('uuid', 'baz');
-    $this->setExpectedException(ConfigDuplicateUUIDException::class, 'when this entity already exists with UUID');
+    $this->expectException(ConfigDuplicateUUIDException::class);
+    $this->expectExceptionMessage('when this entity already exists with UUID');
     $this->entityStorage->save($entity);
   }
 
@@ -560,7 +563,8 @@ class ConfigEntityStorageTest extends UnitTestCase {
     $this->assertInstanceOf(EntityInterface::class, $entity);
     $this->assertSame('foo', $entity->id());
 
-    $this->setExpectedException(\AssertionError::class, 'Cannot load a NULL ID.');
+    $this->expectException(\AssertionError::class);
+    $this->expectExceptionMessage('Cannot load a NULL ID.');
     $this->entityStorage->load(NULL);
   }
 

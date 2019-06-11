@@ -296,7 +296,8 @@ class SectionRenderTest extends UnitTestCase {
    * @covers ::toRenderArray
    */
   public function testToRenderArrayMissingPluginId() {
-    $this->setExpectedException(PluginException::class, 'No plugin ID specified for component with "some_uuid" UUID');
+    $this->expectException(PluginException::class);
+    $this->expectExceptionMessage('No plugin ID specified for component with "some_uuid" UUID');
     (new Section('layout_onecol', [], [new SectionComponent('some_uuid', 'content')]))->toRenderArray();
   }
 

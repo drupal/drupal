@@ -108,7 +108,8 @@ class AllowedValuesConstraintValidatorTest extends KernelTestBase {
       ->addConstraint('AllowedValues', ['choices' => [1, 2, 3], 'callback' => [static::class, 'doesNotExist']]);
     $typed_data = $this->typedData->create($definition, 1);
 
-    $this->setExpectedException(ConstraintDefinitionException::class, 'The AllowedValuesConstraint constraint expects a valid callback');
+    $this->expectException(ConstraintDefinitionException::class);
+    $this->expectExceptionMessage('The AllowedValuesConstraint constraint expects a valid callback');
     $typed_data->validate();
   }
 

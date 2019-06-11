@@ -22,7 +22,8 @@ class EntityReferenceSelectionUnitTest extends UnitTestCase {
    * @covers ::resolveBackwardCompatibilityConfiguration
    */
   public function testInvalidDefaultConfiguration() {
-    $this->setExpectedException(\InvalidArgumentException::class, "TestSelectionWithInvalidDefaultConfiguration::defaultConfiguration() should not contain a 'handler_settings' key. All settings should be placed in the root level.");
+    $this->expectException(\InvalidArgumentException::class);
+    $this->expectExceptionMessage("TestSelectionWithInvalidDefaultConfiguration::defaultConfiguration() should not contain a 'handler_settings' key. All settings should be placed in the root level.");
     new TestSelectionWithInvalidDefaultConfiguration(
       [],
       'test_selector',
@@ -37,7 +38,8 @@ class EntityReferenceSelectionUnitTest extends UnitTestCase {
    * @covers ::resolveBackwardCompatibilityConfiguration
    */
   public function testMalformedHandlerSettingsValue() {
-    $this->setExpectedException(\InvalidArgumentException::class, "The setting 'handler_settings' is reserved and cannot be used.");
+    $this->expectException(\InvalidArgumentException::class);
+    $this->expectExceptionMessage("The setting 'handler_settings' is reserved and cannot be used.");
     new TestSelection(
       // The deprecated 'handler_setting' should be an array.
       ['handler_settings' => FALSE],

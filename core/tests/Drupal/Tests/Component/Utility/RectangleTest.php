@@ -21,7 +21,7 @@ class RectangleTest extends TestCase {
       $this->expectException(\InvalidArgumentException::class);
     }
     else {
-      $this->setExpectedException(\InvalidArgumentException::class);
+      $this->expectException(\InvalidArgumentException::class);
     }
     $rect = new Rectangle(-40, 20);
   }
@@ -36,7 +36,7 @@ class RectangleTest extends TestCase {
       $this->expectException(\InvalidArgumentException::class);
     }
     else {
-      $this->setExpectedException(\InvalidArgumentException::class);
+      $this->expectException(\InvalidArgumentException::class);
     }
     $rect = new Rectangle(40, 0);
   }

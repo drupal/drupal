@@ -72,7 +72,8 @@ class MigrateFieldPluginManagerTest extends MigrateDrupalTestBase {
    * @dataProvider nonExistentPluginExceptionsData
    */
   public function testNonExistentPluginExceptions($core, $field_type) {
-    $this->setExpectedException(PluginNotFoundException::class, sprintf("Plugin ID '%s' was not found.", $field_type));
+    $this->expectException(PluginNotFoundException::class);
+    $this->expectExceptionMessage(sprintf("Plugin ID '%s' was not found.", $field_type));
     $this->pluginManager->getPluginIdFromFieldType($field_type, ['core' => $core]);
   }
 

@@ -58,7 +58,7 @@ class OffsetPageTest extends UnitTestCase {
    * @covers ::createFromQueryParameter
    */
   public function testCreateFromQueryParameterFail() {
-    $this->setExpectedException(BadRequestHttpException::class);
+    $this->expectException(BadRequestHttpException::class);
     OffsetPage::createFromQueryParameter('lorem');
   }
 

@@ -194,7 +194,7 @@ class BreadcrumbManagerTest extends UnitTestCase {
       ->will($this->returnValue('invalid_result'));
 
     $this->breadcrumbManager->addBuilder($builder, 0);
-    $this->setExpectedException(\UnexpectedValueException::class);
+    $this->expectException(\UnexpectedValueException::class);
     $this->breadcrumbManager->build($this->createMock('Drupal\Core\Routing\RouteMatchInterface'));
   }
 

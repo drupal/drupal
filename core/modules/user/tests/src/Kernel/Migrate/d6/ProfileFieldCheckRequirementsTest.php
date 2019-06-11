@@ -24,7 +24,8 @@ class ProfileFieldCheckRequirementsTest extends MigrateDrupal6TestBase {
    * Tests exception in thrown when profile_fields tables does not exist.
    */
   public function testCheckRequirements() {
-    $this->setExpectedException(RequirementsException::class, 'Profile module not enabled on source site');
+    $this->expectException(RequirementsException::class);
+    $this->expectExceptionMessage('Profile module not enabled on source site');
     $this->getMigration('user_profile_field')
       ->getSourcePlugin()
       ->checkRequirements();

@@ -253,7 +253,8 @@ class EntityApiTest extends EntityKernelTestBase {
     $entity = $storage->create(['name' => 'revision_test']);
     $entity->save();
 
-    $this->setExpectedException(EntityStorageException::class, "Update existing 'entity_test_mulrev' entity revision while changing the revision ID is not supported.");
+    $this->expectException(EntityStorageException::class);
+    $this->expectExceptionMessage("Update existing 'entity_test_mulrev' entity revision while changing the revision ID is not supported.");
 
     $entity->revision_id = 60;
     $entity->save();
@@ -270,7 +271,8 @@ class EntityApiTest extends EntityKernelTestBase {
     $entity = $storage->create(['name' => 'revision_test']);
     $entity->save();
 
-    $this->setExpectedException(EntityStorageException::class, "Update existing 'entity_test_mulrev' entity while changing the ID is not supported.");
+    $this->expectException(EntityStorageException::class);
+    $this->expectExceptionMessage("Update existing 'entity_test_mulrev' entity while changing the ID is not supported.");
 
     $entity->id = 60;
     $entity->save();

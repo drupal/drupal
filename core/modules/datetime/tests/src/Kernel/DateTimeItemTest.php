@@ -255,7 +255,7 @@ class DateTimeItemTest extends FieldKernelTestBase {
    * @dataProvider datetimeValidationProvider
    */
   public function testDatetimeValidation($value) {
-    $this->setExpectedException(\PHPUnit_Framework_AssertionFailedError::class);
+    $this->expectException(\PHPUnit_Framework_AssertionFailedError::class);
 
     $this->fieldStorage->setSetting('datetime_type', DateTimeItem::DATETIME_TYPE_DATETIME);
     $this->fieldStorage->save();
@@ -315,7 +315,7 @@ class DateTimeItemTest extends FieldKernelTestBase {
    * @dataProvider dateonlyValidationProvider
    */
   public function testDateonlyValidation($value) {
-    $this->setExpectedException(\PHPUnit_Framework_AssertionFailedError::class);
+    $this->expectException(\PHPUnit_Framework_AssertionFailedError::class);
 
     $this->fieldStorage->setSetting('datetime_type', DateTimeItem::DATETIME_TYPE_DATE);
     $this->fieldStorage->save();

@@ -51,7 +51,7 @@ class PluralTranslationTest extends UnitTestCase {
    * @dataProvider providerTestMissingData
    */
   public function testMissingData($data) {
-    $this->setExpectedException(\InvalidArgumentException::class);
+    $this->expectException(\InvalidArgumentException::class);
     new PluralTranslation($data);
   }
 

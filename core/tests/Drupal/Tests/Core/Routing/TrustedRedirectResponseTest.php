@@ -39,7 +39,7 @@ class TrustedRedirectResponseTest extends UnitTestCase {
 
     $redirect_response = new TrustedRedirectResponse('/example');
 
-    $this->setExpectedException(\InvalidArgumentException::class);
+    $this->expectException(\InvalidArgumentException::class);
     $redirect_response->setTargetUrl('http://evil-url.com/example');
   }
 

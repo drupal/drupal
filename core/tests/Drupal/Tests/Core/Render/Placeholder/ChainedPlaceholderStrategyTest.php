@@ -128,7 +128,8 @@ class ChainedPlaceholderStrategyTest extends UnitTestCase {
     ];
 
     $chained_placeholder_strategy = new ChainedPlaceholderStrategy();
-    $this->setExpectedException(\AssertionError::class, 'At least one placeholder strategy must be present; by default the fallback strategy \Drupal\Core\Render\Placeholder\SingleFlushStrategy is always present.');
+    $this->expectException(\AssertionError::class);
+    $this->expectExceptionMessage('At least one placeholder strategy must be present; by default the fallback strategy \Drupal\Core\Render\Placeholder\SingleFlushStrategy is always present.');
     $chained_placeholder_strategy->processPlaceholders($placeholders);
   }
 
@@ -152,7 +153,8 @@ class ChainedPlaceholderStrategyTest extends UnitTestCase {
 
     $chained_placeholder_strategy = new ChainedPlaceholderStrategy();
     $chained_placeholder_strategy->addPlaceholderStrategy($rogue_strategy);
-    $this->setExpectedException(\AssertionError::class, 'Processed placeholders must be a subset of all placeholders.');
+    $this->expectException(\AssertionError::class);
+    $this->expectExceptionMessage('Processed placeholders must be a subset of all placeholders.');
     $chained_placeholder_strategy->processPlaceholders($placeholders);
   }
 

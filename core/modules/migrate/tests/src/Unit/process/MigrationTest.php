@@ -127,7 +127,7 @@ class MigrationTest extends MigrateProcessTestCase {
     $this->migration_plugin_manager->createInstances(['foobaz'])
       ->willReturn(['foobaz' => $this->migration_plugin->reveal()]);
     $migration = new Migration($configuration, 'migration', [], $this->migration_plugin->reveal(), $this->migration_plugin_manager->reveal(), $this->process_plugin_manager->reveal());
-    $this->setExpectedException(MigrateSkipProcessException::class);
+    $this->expectException(MigrateSkipProcessException::class);
     $migration->transform(FALSE, $this->migrateExecutable, $this->row, 'foo');
   }
 

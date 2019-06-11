@@ -54,7 +54,7 @@ class ParamConverterManagerTest extends UnitTestCase {
    * @covers ::getConverter
    */
   public function testGetConverterException() {
-    $this->setExpectedException(\InvalidArgumentException::class);
+    $this->expectException(\InvalidArgumentException::class);
     $this->manager->getConverter('undefined.converter');
   }
 
@@ -243,7 +243,8 @@ class ParamConverterManagerTest extends UnitTestCase {
       ->will($this->returnValue(NULL));
     $this->manager->addConverter($converter, 'test_convert');
 
-    $this->setExpectedException(ParamNotConvertedException::class, 'The "id" parameter was not converted for the path "/test/{id}" (route name: "test_route")');
+    $this->expectException(ParamNotConvertedException::class);
+    $this->expectExceptionMessage('The "id" parameter was not converted for the path "/test/{id}" (route name: "test_route")');
     $this->manager->convert($defaults);
   }
 

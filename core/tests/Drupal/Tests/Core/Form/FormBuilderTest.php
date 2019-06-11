@@ -57,7 +57,8 @@ class FormBuilderTest extends FormTestBase {
   public function testGetFormIdWithString() {
     $form_arg = 'foo';
     $form_state = new FormState();
-    $this->setExpectedException(\InvalidArgumentException::class, 'The form argument foo is not a valid form.');
+    $this->expectException(\InvalidArgumentException::class);
+    $this->expectExceptionMessage('The form argument foo is not a valid form.');
     $this->formBuilder->getFormId($form_arg, $form_state);
   }
 
@@ -215,7 +216,8 @@ class FormBuilderTest extends FormTestBase {
    */
   public function testGetFormWithString() {
     $form_id = 'test_form_id';
-    $this->setExpectedException(\InvalidArgumentException::class, 'The form argument test_form_id is not a valid form.');
+    $this->expectException(\InvalidArgumentException::class);
+    $this->expectExceptionMessage('The form argument test_form_id is not a valid form.');
     $this->formBuilder->getForm($form_id);
   }
 
@@ -253,7 +255,8 @@ class FormBuilderTest extends FormTestBase {
    */
   public function testBuildFormWithString() {
     $form_id = 'test_form_id';
-    $this->setExpectedException(\InvalidArgumentException::class, 'The form argument test_form_id is not a valid form.');
+    $this->expectException(\InvalidArgumentException::class);
+    $this->expectExceptionMessage('The form argument test_form_id is not a valid form.');
     $this->formBuilder->getForm($form_id);
   }
 
@@ -545,7 +548,7 @@ class FormBuilderTest extends FormTestBase {
     $form_arg = $this->getMockForm('test_form_id');
     $form_state = new FormState();
 
-    $this->setExpectedException(BrokenPostRequestException::class);
+    $this->expectException(BrokenPostRequestException::class);
     $this->formBuilder->buildForm($form_arg, $form_state);
   }
 

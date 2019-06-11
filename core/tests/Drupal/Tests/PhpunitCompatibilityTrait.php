@@ -97,8 +97,14 @@ trait PhpunitCompatibilityTrait {
    *   The expected exception message.
    * @param int $exception_code
    *   The expected exception code.
+   *
+   * @deprecated in drupal:8.8.0 and is removed from drupal:9.0.0.
+   *   Backward compatibility for PHPUnit 4 will no longer be supported.
+   *
+   * @see https://www.drupal.org/node/3056869
    */
   public function setExpectedException($class, $message = '', $exception_code = NULL) {
+    @trigger_error('\Drupal\Tests\PhpunitCompatibilityTrait:setExpectedException() is deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. Backward compatibility for PHPUnit 4 will no longer be supported. See https://www.drupal.org/node/3056869', E_USER_DEPRECATED);
     $this->expectException($class);
     if (!empty($message)) {
       $this->expectExceptionMessage($message);

@@ -97,7 +97,8 @@ class LinkItemSerializationTest extends FieldKernelTestBase {
     $json = json_decode($this->serializer->serialize($entity, 'json'), TRUE);
     $json['field_test'][0]['options'] = 'string data';
     $serialized = json_encode($json, TRUE);
-    $this->setExpectedException(\LogicException::class, 'The generic FieldItemNormalizer cannot denormalize string values for "options" properties of the "field_test" field (field item class: Drupal\link\Plugin\Field\FieldType\LinkItem).');
+    $this->expectException(\LogicException::class);
+    $this->expectExceptionMessage('The generic FieldItemNormalizer cannot denormalize string values for "options" properties of the "field_test" field (field item class: Drupal\link\Plugin\Field\FieldType\LinkItem).');
     $this->serializer->deserialize($serialized, EntityTest::class, 'json');
   }
 

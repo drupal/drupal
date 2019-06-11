@@ -30,7 +30,7 @@ class ColorTest extends TestCase {
         $this->expectException('InvalidArgumentException');
       }
       else {
-        $this->setExpectedException('InvalidArgumentException');
+        $this->expectException('InvalidArgumentException');
       }
     }
     $this->assertSame($expected, Color::hexToRgb($value));

@@ -141,7 +141,8 @@ class FieldableEntityDefinitionUpdateTest extends EntityKernelTestBase {
     $updated_field_storage_definitions = $this->getUpdatedFieldStorageDefinitions($new_rev, $new_mul);
 
     if (!$data_migration_supported) {
-      $this->setExpectedException(EntityStorageException::class, 'Converting an entity type from revisionable to non-revisionable or from translatable to non-translatable is not supported.');
+      $this->expectException(EntityStorageException::class);
+      $this->expectExceptionMessage('Converting an entity type from revisionable to non-revisionable or from translatable to non-translatable is not supported.');
     }
 
     // Check that existing data can be retrieved from the storage before the
@@ -620,7 +621,8 @@ class FieldableEntityDefinitionUpdateTest extends EntityKernelTestBase {
 
     // Make the update throw an exception during the entity save process.
     \Drupal::state()->set('entity_test_update.throw_exception', TRUE);
-    $this->setExpectedException(EntityStorageException::class, 'The entity update process failed while processing the entity type entity_test_update, ID: 1.');
+    $this->expectException(EntityStorageException::class);
+    $this->expectExceptionMessage('The entity update process failed while processing the entity type entity_test_update, ID: 1.');
 
     try {
       $updated_entity_type = $this->getUpdatedEntityTypeDefinition(TRUE, TRUE);

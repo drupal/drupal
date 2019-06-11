@@ -165,7 +165,8 @@ class FileCopyTest extends FileTestBase {
    */
   public function testNonExistentSourceFile() {
     $source = '/non/existent/file';
-    $this->setExpectedException(MigrateException::class, "File '/non/existent/file' does not exist");
+    $this->expectException(MigrateException::class);
+    $this->expectExceptionMessage("File '/non/existent/file' does not exist");
     $this->doTransform($source, 'public://wontmatter.jpg');
   }
 
@@ -191,7 +192,8 @@ class FileCopyTest extends FileTestBase {
     $this->fileSystem->chmod('public://dir', 0);
 
     // Check that the proper exception is raised.
-    $this->setExpectedException(MigrateException::class, "Could not create or write to directory 'public://dir/subdir2'");
+    $this->expectException(MigrateException::class);
+    $this->expectExceptionMessage("Could not create or write to directory 'public://dir/subdir2'");
     $this->doTransform($source, 'public://dir/subdir2/file.txt');
   }
 

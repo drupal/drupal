@@ -66,7 +66,7 @@ class AssertLegacyTraitTest extends UnitTestCase {
    */
   public function testAssertUniqueTextFail() {
     $this->page->getText()->willReturn('foo bar bar');
-    $this->setExpectedException(PHPUnit_Framework_ExpectationFailedException::class);
+    $this->expectException(PHPUnit_Framework_ExpectationFailedException::class);
     $this->assertUniqueText('bar');
   }
 
@@ -75,7 +75,7 @@ class AssertLegacyTraitTest extends UnitTestCase {
    */
   public function testAssertUniqueTextUnknown() {
     $this->page->getText()->willReturn('foo bar bar');
-    $this->setExpectedException(PHPUnit_Framework_ExpectationFailedException::class);
+    $this->expectException(PHPUnit_Framework_ExpectationFailedException::class);
     $this->assertUniqueText('alice');
   }
 
@@ -102,7 +102,7 @@ class AssertLegacyTraitTest extends UnitTestCase {
    */
   public function testAssertNoUniqueTextFail() {
     $this->page->getText()->willReturn('foo bar bar');
-    $this->setExpectedException(PHPUnit_Framework_ExpectationFailedException::class);
+    $this->expectException(PHPUnit_Framework_ExpectationFailedException::class);
     $this->assertNoUniqueText('foo');
   }
 
@@ -111,7 +111,7 @@ class AssertLegacyTraitTest extends UnitTestCase {
    */
   public function testAssertNoUniqueTextUnknown() {
     $this->page->getText()->willReturn('foo bar bar');
-    $this->setExpectedException(PHPUnit_Framework_ExpectationFailedException::class);
+    $this->expectException(PHPUnit_Framework_ExpectationFailedException::class);
     $this->assertNoUniqueText('alice');
   }
 
@@ -150,7 +150,7 @@ class AssertLegacyTraitTest extends UnitTestCase {
       ->optionExists('myselect', 'two')
       ->willReturn($option_field->reveal());
 
-    $this->setExpectedException(PHPUnit_Framework_ExpectationFailedException::class);
+    $this->expectException(PHPUnit_Framework_ExpectationFailedException::class);
     $this->assertOptionSelected('myselect', 'two');
   }
 

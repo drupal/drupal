@@ -47,7 +47,7 @@ JS;
 
     // We expected the following assertion to fail because the window has been
     // re-sized to have a width of 500 not 400.
-    $this->setExpectedException(\PHPUnit_Framework_AssertionFailedError::class);
+    $this->expectException(\PHPUnit_Framework_AssertionFailedError::class);
     $this->assertJsCondition($javascript, 100);
   }
 

@@ -192,7 +192,8 @@ class FieldStorageConfigEntityUnitTest extends UnitTestCase {
       'module' => 'test_module',
     ]);
 
-    $this->setExpectedException(FieldException::class, "Invalid enforced cardinality '$enforced_cardinality'. Allowed values: a positive integer or -1.");
+    $this->expectException(FieldException::class);
+    $this->expectExceptionMessage("Invalid enforced cardinality '$enforced_cardinality'. Allowed values: a positive integer or -1.");
     $field_storage->getCardinality();
   }
 

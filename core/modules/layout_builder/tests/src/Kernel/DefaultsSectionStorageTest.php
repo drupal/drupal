@@ -179,7 +179,8 @@ class DefaultsSectionStorageTest extends KernelTestBase {
    */
   public function testSetSectionList() {
     $section_list = $this->prophesize(SectionListInterface::class);
-    $this->setExpectedException(\Exception::class, '\Drupal\layout_builder\SectionStorageInterface::setSectionList() must no longer be called. The section list should be derived from context. See https://www.drupal.org/node/3016262.');
+    $this->expectException(\Exception::class);
+    $this->expectExceptionMessage('\Drupal\layout_builder\SectionStorageInterface::setSectionList() must no longer be called. The section list should be derived from context. See https://www.drupal.org/node/3016262.');
     $this->plugin->setSectionList($section_list->reveal());
   }
 

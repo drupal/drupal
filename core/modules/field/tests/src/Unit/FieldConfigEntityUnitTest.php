@@ -207,7 +207,8 @@ class FieldConfigEntityUnitTest extends UnitTestCase {
       'bundle' => 'test_bundle_not_exists',
       'field_type' => 'test_field',
     ], $this->entityTypeId);
-    $this->setExpectedException(\LogicException::class, 'Missing bundle entity, entity type bundle_entity_type, entity id test_bundle_not_exists.');
+    $this->expectException(\LogicException::class);
+    $this->expectExceptionMessage('Missing bundle entity, entity type bundle_entity_type, entity id test_bundle_not_exists.');
     $field->calculateDependencies();
   }
 

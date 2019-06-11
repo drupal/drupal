@@ -32,7 +32,7 @@ class EntityConditionGroupTest extends UnitTestCase {
    * @covers ::__construct
    */
   public function testConstructException() {
-    $this->setExpectedException(\InvalidArgumentException::class);
+    $this->expectException(\InvalidArgumentException::class);
     new EntityConditionGroup('NOT_ALLOWED', []);
   }
 

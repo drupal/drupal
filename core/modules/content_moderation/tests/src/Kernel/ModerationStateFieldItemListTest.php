@@ -101,7 +101,7 @@ class ModerationStateFieldItemListTest extends KernelTestBase {
    */
   public function testGet() {
     $this->assertEquals('draft', $this->testNode->moderation_state->get(0)->value);
-    $this->setExpectedException(\InvalidArgumentException::class);
+    $this->expectException(\InvalidArgumentException::class);
     $this->testNode->moderation_state->get(2);
   }
 

@@ -227,7 +227,8 @@ class CssOptimizerUnitTest extends UnitTestCase {
    * Tests a file CSS asset with preprocessing disabled.
    */
   public function testTypeFilePreprocessingDisabled() {
-    $this->setExpectedException('Exception', 'Only file CSS assets with preprocessing enabled can be optimized.');
+    $this->expectException('Exception');
+    $this->expectExceptionMessage('Only file CSS assets with preprocessing enabled can be optimized.');
 
     $css_asset = [
       'group' => -100,
@@ -247,7 +248,8 @@ class CssOptimizerUnitTest extends UnitTestCase {
    * Tests a CSS asset with 'type' => 'external'.
    */
   public function testTypeExternal() {
-    $this->setExpectedException('Exception', 'Only file CSS assets can be optimized.');
+    $this->expectException('Exception');
+    $this->expectExceptionMessage('Only file CSS assets can be optimized.');
 
     $css_asset = [
       'group' => -100,

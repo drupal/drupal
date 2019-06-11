@@ -279,7 +279,8 @@ class TestDiscoveryTest extends UnitTestCase {
  * Bulk delete storages and fields, and clean up afterwards.
  */
 EOT;
-    $this->setExpectedException(MissingGroupException::class, 'Missing @group annotation in Drupal\KernelTests\field\BulkDeleteTest');
+    $this->expectException(MissingGroupException::class);
+    $this->expectExceptionMessage('Missing @group annotation in Drupal\KernelTests\field\BulkDeleteTest');
     TestDiscovery::getTestInfo($classname, $doc_comment);
   }
 
@@ -530,7 +531,7 @@ EOF;
     // We want to make sure it didn't do that, because we already did some
     // analysis and already have an empty docblock. getTestInfo() will throw
     // MissingGroupException because the annotation is empty.
-    $this->setExpectedException(MissingGroupException::class);
+    $this->expectException(MissingGroupException::class);
     TestDiscovery::getTestInfo('Drupal\Tests\simpletest\ThisTestDoesNotExistTest', '');
   }
 

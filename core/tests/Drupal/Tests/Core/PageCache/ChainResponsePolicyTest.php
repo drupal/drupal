@@ -84,7 +84,7 @@ class ChainResponsePolicyTest extends UnitTestCase {
 
     $this->policy->addPolicy($rule);
 
-    $this->setExpectedException(\UnexpectedValueException::class);
+    $this->expectException(\UnexpectedValueException::class);
     $this->policy->check($this->response, $this->request);
   }
 

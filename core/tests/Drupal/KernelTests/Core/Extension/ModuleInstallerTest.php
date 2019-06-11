@@ -31,7 +31,7 @@ class ModuleInstallerTest extends KernelTestBase {
     $this->assertEquals('/router_test/test1', $route->getPath());
 
     $this->container->get('module_installer')->uninstall(['router_test']);
-    $this->setExpectedException(RouteNotFoundException::class);
+    $this->expectException(RouteNotFoundException::class);
     $this->container->get('router.route_provider')->getRouteByName('router_test.1');
   }
 

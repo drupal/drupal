@@ -101,7 +101,7 @@ class SubformStateTest extends UnitTestCase {
    * @param string $expected
    */
   public function testGetValuesBroken(array $parents, $expected) {
-    $this->setExpectedException(\UnexpectedValueException::class);
+    $this->expectException(\UnexpectedValueException::class);
     $this->testGetValues($parents, $expected);
   }
 
@@ -162,7 +162,7 @@ class SubformStateTest extends UnitTestCase {
    * @dataProvider providerTestGetValueBroken
    */
   public function testGetValueBroken(array $parents, $key, $expected, $default = NULL) {
-    $this->setExpectedException(\UnexpectedValueException::class);
+    $this->expectException(\UnexpectedValueException::class);
     $this->testGetValue($parents, $key, $expected, $default);
   }
 
@@ -217,7 +217,7 @@ class SubformStateTest extends UnitTestCase {
    * @dataProvider providerTestSetValuesBroken
    */
   public function testSetValuesBroken($parents, $new_values, $expected) {
-    $this->setExpectedException(\UnexpectedValueException::class);
+    $this->expectException(\UnexpectedValueException::class);
     $this->testSetValues($parents, $new_values, $expected);
   }
 

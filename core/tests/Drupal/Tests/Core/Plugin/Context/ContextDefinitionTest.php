@@ -153,7 +153,7 @@ class ContextDefinitionTest extends UnitTestCase {
       ->method('getDataType')
       ->willReturn($data_type);
 
-    $this->setExpectedException(\Exception::class);
+    $this->expectException(\Exception::class);
     $mock_context_definition->getDataDefinition();
   }
 

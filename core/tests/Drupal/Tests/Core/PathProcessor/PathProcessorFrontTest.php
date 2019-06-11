@@ -64,7 +64,7 @@ class PathProcessorFrontTest extends UnitTestCase {
     $config->get('page.front')
       ->willReturn('');
     $processor = new PathProcessorFront($config_factory->reveal());
-    $this->setExpectedException(NotFoundHttpException::class);
+    $this->expectException(NotFoundHttpException::class);
     $processor->processInbound('/', new Request());
   }
 

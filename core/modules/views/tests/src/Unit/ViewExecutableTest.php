@@ -191,7 +191,7 @@ class ViewExecutableTest extends UnitTestCase {
       ->willReturn($this->displayHandler);
     $this->executable->display_handler = $this->displayHandler;
 
-    $this->setExpectedException(\InvalidArgumentException::class);
+    $this->expectException(\InvalidArgumentException::class);
     $this->executable->getUrl();
   }
 

@@ -285,7 +285,7 @@ class FieldDefinitionTest extends UnitTestCase {
   public function testInvalidDefaultValueCallback($factory_name) {
     $definition = $this->initializeFieldUsingFactory($factory_name);
     // setDefaultValueCallback returns $this.
-    $this->setExpectedException(\InvalidArgumentException::class);
+    $this->expectException(\InvalidArgumentException::class);
     $definition->setDefaultValueCallback([get_class($this), 'mockDefaultValueCallback']);
   }
 

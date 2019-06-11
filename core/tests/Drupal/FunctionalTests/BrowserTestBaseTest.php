@@ -168,7 +168,8 @@ class BrowserTestBaseTest extends BrowserTestBase {
   }
 
   public function testError() {
-    $this->setExpectedException('\Exception', 'User notice: foo');
+    $this->expectException('\Exception');
+    $this->expectExceptionMessage('User notice: foo');
     $this->drupalGet('test-error');
   }
 
@@ -199,7 +200,8 @@ class BrowserTestBaseTest extends BrowserTestBase {
    */
   public function testInvalidLinkExistsExact() {
     $this->drupalGet('test-pipe-char');
-    $this->setExpectedException(ExpectationException::class, 'Link with label foo|bar found');
+    $this->expectException(ExpectationException::class);
+    $this->expectExceptionMessage('Link with label foo|bar found');
     $this->assertSession()->linkExistsExact('foo|bar');
   }
 
@@ -220,7 +222,8 @@ class BrowserTestBaseTest extends BrowserTestBase {
    */
   public function testInvalidLinkNotExistsExact() {
     $this->drupalGet('test-pipe-char');
-    $this->setExpectedException(ExpectationException::class, 'Link with label foo|bar|baz not found');
+    $this->expectException(ExpectationException::class);
+    $this->expectExceptionMessage('Link with label foo|bar|baz not found');
     $this->assertSession()->linkNotExistsExact('foo|bar|baz');
   }
 
@@ -685,7 +688,8 @@ class BrowserTestBaseTest extends BrowserTestBase {
    * Ensures we can't access modules we shouldn't be able to after install.
    */
   public function testProfileModules() {
-    $this->setExpectedException(\InvalidArgumentException::class, 'The module demo_umami_content does not exist.');
+    $this->expectException(\InvalidArgumentException::class);
+    $this->expectExceptionMessage('The module demo_umami_content does not exist.');
     $this->assertFileExists('core/profiles/demo_umami/modules/demo_umami_content/demo_umami_content.info.yml');
     \Drupal::service('extension.list.module')->getPathname('demo_umami_content');
   }

@@ -125,7 +125,7 @@ class HookDiscoveryTest extends UnitTestCase {
       ->method('getImplementations')
       ->will($this->returnValue([]));
 
-    $this->setExpectedException(PluginNotFoundException::class);
+    $this->expectException(PluginNotFoundException::class);
     $this->hookDiscovery->getDefinition('test_non_existant', TRUE);
   }
 

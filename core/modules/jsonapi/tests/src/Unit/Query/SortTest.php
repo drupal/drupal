@@ -84,7 +84,7 @@ class SortTest extends UnitTestCase {
    * @dataProvider badParameterProvider
    */
   public function testCreateFromQueryParameterFail($input) {
-    $this->setExpectedException(BadRequestHttpException::class);
+    $this->expectException(BadRequestHttpException::class);
     Sort::createFromQueryParameter($input);
   }
 

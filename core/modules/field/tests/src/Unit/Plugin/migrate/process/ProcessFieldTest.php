@@ -63,7 +63,8 @@ class ProcessFieldTest extends MigrateTestCase {
     $this->plugin = new ProcessField(['method' => $method], $value, [], $this->cckFieldManager->reveal(), $this->fieldManager->reveal(), $this->migration->reveal());
 
     if ($migrate_exception) {
-      $this->setExpectedException(MigrateException::class, $migrate_exception);
+      $this->expectException(MigrateException::class);
+      $this->expectExceptionMessage($migrate_exception);
     }
 
     if ($plugin_not_found) {
