@@ -524,6 +524,7 @@ class MediaLibraryTest extends WebDriverTestBase {
     $assert_session->linkExists('Table');
     // Select the item.
     $assert_session->elementExists('css', '.ui-dialog-buttonpane')->pressButton('Insert selected');
+    $this->assertNotEmpty($assert_session->waitForText('Added one media item.'));
     $assert_session->assertWaitOnAjaxRequest();
     // Ensure that the selection completed successfully.
     $assert_session->pageTextNotContains('Add or select media');
@@ -533,6 +534,7 @@ class MediaLibraryTest extends WebDriverTestBase {
     // Clear the selection.
     $assert_session->elementAttributeContains('css', '.media-library-item__remove', 'aria-label', 'Remove Dog');
     $assert_session->elementExists('css', '.media-library-item__remove')->click();
+    $this->assertNotEmpty($assert_session->waitForText('Removed Dog.'));
     $assert_session->assertWaitOnAjaxRequest();
 
     // Assert adding a single media item and removing it.
@@ -542,14 +544,40 @@ class MediaLibraryTest extends WebDriverTestBase {
     $this->assertGreaterThanOrEqual(1, count($checkboxes));
     $checkboxes[0]->click();
     $assert_session->elementExists('css', '.ui-dialog-buttonpane')->pressButton('Insert selected');
+    $this->assertNotEmpty($assert_session->waitForText('Added one media item.'));
     $assert_session->assertWaitOnAjaxRequest();
     // Assert the focus is set back on the open button of the media field.
     $this->assertJsCondition('jQuery("#field_twin_media-media-library-wrapper .js-media-library-open-button").is(":focus")');
     $assert_session->elementAttributeContains('css', '.media-library-item__remove', 'aria-label', 'Remove Dog');
     $assert_session->elementExists('css', '.media-library-item__remove')->click();
+    $this->assertNotEmpty($assert_session->waitForText('Removed Dog.'));
     $assert_session->assertWaitOnAjaxRequest();
     // Assert the focus is set back on the open button of the media field.
     $this->assertJsCondition('jQuery("#field_twin_media-media-library-wrapper .js-media-library-open-button").is(":focus")');
+
+    // Assert we can select the same media item twice.
+    $assert_session->elementExists('css', '.media-library-open-button[name^="field_twin_media"]')->click();
+    $assert_session->assertWaitOnAjaxRequest();
+    $page->checkField('Select Dog');
+    $assert_session->elementExists('css', '.ui-dialog-buttonpane')->pressButton('Insert selected');
+    $this->assertNotEmpty($assert_session->waitForText('Added one media item.'));
+    $assert_session->assertWaitOnAjaxRequest();
+    $assert_session->elementExists('css', '.media-library-open-button[name^="field_twin_media"]')->click();
+    $assert_session->assertWaitOnAjaxRequest();
+    $page->checkField('Select Dog');
+    $assert_session->elementExists('css', '.ui-dialog-buttonpane')->pressButton('Insert selected');
+    $this->assertNotEmpty($assert_session->waitForText('Added one media item.'));
+    $assert_session->assertWaitOnAjaxRequest();
+    // Assert the same has been added twice and remove the items again.
+    $this->assertCount(2, $page->findAll('css', '.field--name-field-twin-media .media-library-item'));
+    $assert_session->hiddenFieldValueEquals('field_twin_media[selection][0][target_id]', 4);
+    $assert_session->hiddenFieldValueEquals('field_twin_media[selection][1][target_id]', 4);
+    $assert_session->elementExists('css', '.media-library-item__remove')->click();
+    $this->assertNotEmpty($assert_session->waitForText('Removed Dog.'));
+    $assert_session->assertWaitOnAjaxRequest();
+    $assert_session->elementExists('css', '.media-library-item__remove')->click();
+    $this->assertNotEmpty($assert_session->waitForText('Removed Dog.'));
+    $assert_session->assertWaitOnAjaxRequest();
 
     // Assert the selection is persistent in the media library modal, and
     // the number of selected items is displayed correctly.
@@ -624,6 +652,7 @@ class MediaLibraryTest extends WebDriverTestBase {
     $this->assertTrue($checkboxes[3]->hasAttribute('disabled'));
     // Select the items.
     $assert_session->elementExists('css', '.ui-dialog-buttonpane')->pressButton('Insert selected');
+    $this->assertNotEmpty($assert_session->waitForText('Added 2 media items.'));
     $assert_session->assertWaitOnAjaxRequest();
     // Assert the open button is disabled.
     $open_button = $assert_session->elementExists('css', '.media-library-open-button[name^="field_twin_media"]');
@@ -633,19 +662,20 @@ class MediaLibraryTest extends WebDriverTestBase {
 
     // Ensure that the selection completed successfully.
     $assert_session->pageTextNotContains('Add or select media');
-    $assert_session->pageTextNotContains('Dog');
-    $assert_session->pageTextContains('Cat');
-    $assert_session->pageTextContains('Turtle');
-    $assert_session->pageTextNotContains('Snake');
+    $assert_session->elementTextNotContains('css', '#field_twin_media-media-library-wrapper', 'Dog');
+    $assert_session->elementTextContains('css', '#field_twin_media-media-library-wrapper', 'Cat');
+    $assert_session->elementTextContains('css', '#field_twin_media-media-library-wrapper', 'Turtle');
+    $assert_session->elementTextNotContains('css', '#field_twin_media-media-library-wrapper', 'Snake');
 
     // Remove "Cat" (happens to be the first remove button on the page).
     $assert_session->elementAttributeContains('css', '.media-library-item__remove', 'aria-label', 'Remove Cat');
     $assert_session->elementExists('css', '.media-library-item__remove')->click();
+    $this->assertNotEmpty($assert_session->waitForText('Removed Cat.'));
     $assert_session->assertWaitOnAjaxRequest();
-    // Assert the focus is set to the remove button of the other selected item.
-    $this->assertJsCondition('jQuery("#field_twin_media-media-library-wrapper .media-library-item__remove").is(":focus")');
-    $assert_session->pageTextNotContains('Cat');
-    $assert_session->pageTextContains('Turtle');
+    // Assert the focus is set to the wrapper of the other selected item.
+    $this->assertJsCondition('jQuery("#field_twin_media-media-library-wrapper .media-library-item").is(":focus")');
+    $assert_session->elementTextNotContains('css', '#field_twin_media-media-library-wrapper', 'Cat');
+    $assert_session->elementTextContains('css', '#field_twin_media-media-library-wrapper', 'Turtle');
     // Assert the open button is no longer disabled.
     $open_button = $assert_session->elementExists('css', '.media-library-open-button[name^="field_twin_media"]');
     $this->assertFalse($open_button->hasAttribute('data-disabled-focus'));
@@ -659,11 +689,12 @@ class MediaLibraryTest extends WebDriverTestBase {
     $this->assertGreaterThanOrEqual(1, count($checkboxes));
     $checkboxes[0]->click();
     $assert_session->elementExists('css', '.ui-dialog-buttonpane')->pressButton('Insert selected');
+    $this->assertNotEmpty($assert_session->waitForText('Added one media item.'));
     $assert_session->assertWaitOnAjaxRequest();
-    $assert_session->pageTextContains('Dog');
-    $assert_session->pageTextNotContains('Cat');
-    $assert_session->pageTextContains('Turtle');
-    $assert_session->pageTextNotContains('Snake');
+    $assert_session->elementTextContains('css', '#field_twin_media-media-library-wrapper', 'Dog');
+    $assert_session->elementTextNotContains('css', '#field_twin_media-media-library-wrapper', 'Cat');
+    $assert_session->elementTextContains('css', '#field_twin_media-media-library-wrapper', 'Turtle');
+    $assert_session->elementTextNotContains('css', '#field_twin_media-media-library-wrapper', 'Snake');
     // Assert the open button is disabled.
     $this->assertTrue($assert_session->elementExists('css', '.media-library-open-button[name^="field_twin_media"]')->hasAttribute('data-disabled-focus'));
     $this->assertTrue($assert_session->elementExists('css', '.media-library-open-button[name^="field_twin_media"]')->hasAttribute('disabled'));
@@ -694,6 +725,7 @@ class MediaLibraryTest extends WebDriverTestBase {
     $assert_session->elementExists('css', '.media-library-open-button[name^="field_unlimited_media"]')->click();
     $assert_session->assertWaitOnAjaxRequest();
     $checkboxes = $page->findAll('css', '.media-library-view .js-click-to-select-checkbox input');
+    $this->assertGreaterThanOrEqual(4, count($checkboxes));
     $this->assertFalse($checkboxes[0]->isChecked());
     $this->assertFalse($checkboxes[1]->isChecked());
     $this->assertFalse($checkboxes[2]->isChecked());
@@ -704,14 +736,14 @@ class MediaLibraryTest extends WebDriverTestBase {
     $assert_session->elementExists('css', '.js-media-library-widget-toggle-weight')->click();
     $this->submitForm([
       'title[0][value]' => 'My page',
-      'field_twin_media[selection][0][weight]' => '2',
+      'field_twin_media[selection][0][weight]' => '3',
     ], 'Save');
     $assert_session->pageTextContains('Basic Page My page has been created');
     // We removed this item earlier.
     $assert_session->pageTextNotContains('Cat');
     // This item was never selected.
     $assert_session->pageTextNotContains('Snake');
-    // "Dog" should come after "Turtle", since we changed the weight.
+    // "Turtle" should come after "Dog", since we changed the weight.
     $assert_session->elementExists('css', '.field--name-field-twin-media > .field__items > .field__item:last-child:contains("Turtle")');
     // Make sure everything that was selected shows up.
     $assert_session->pageTextContains('Dog');
@@ -737,6 +769,7 @@ class MediaLibraryTest extends WebDriverTestBase {
     $checkboxes[2]->click();
     $checkboxes[3]->click();
     $assert_session->elementExists('css', '.ui-dialog-buttonpane')->pressButton('Insert selected');
+    $this->assertNotEmpty($assert_session->waitForText('Added 4 media items.'));
     $assert_session->assertWaitOnAjaxRequest();
     $assert_session->pageTextContains('Dog');
     $assert_session->pageTextContains('Cat');
@@ -780,6 +813,7 @@ class MediaLibraryTest extends WebDriverTestBase {
     // Select the first media item (should be Dog).
     $page->find('css', '.media-library-view .js-click-to-select-checkbox input')->click();
     $assert_session->elementExists('css', '.ui-dialog-buttonpane')->pressButton('Insert selected');
+    $this->assertNotEmpty($assert_session->waitForText('Added one media item.'));
     $assert_session->assertWaitOnAjaxRequest();
 
     // Ensure that the selection completed successfully.
@@ -924,6 +958,7 @@ class MediaLibraryTest extends WebDriverTestBase {
     $assert_session->hiddenFieldValueEquals('current_selection', $added_media->id());
     // Ensure the created item is added in the widget.
     $assert_session->elementExists('css', '.ui-dialog-buttonpane')->pressButton('Insert selected');
+    $this->assertNotEmpty($assert_session->waitForText('Added one media item.'));
     $assert_session->assertWaitOnAjaxRequest();
     $assert_session->pageTextNotContains('Add or select media');
     $assert_session->pageTextContains($png_image->filename);
@@ -944,6 +979,7 @@ class MediaLibraryTest extends WebDriverTestBase {
     $assert_session->assertWaitOnAjaxRequest();
     $page->fillField('Alternative text', $this->randomString());
     $assert_session->elementExists('css', '.ui-dialog-buttonpane')->pressButton('Save and insert');
+    $this->assertNotEmpty($assert_session->waitForText('Added one media item.'));
     $assert_session->assertWaitOnAjaxRequest();
     $assert_session->pageTextNotContains('Add or select media');
     $assert_session->pageTextContains($file_system->basename($png_uri_2));
@@ -998,6 +1034,7 @@ class MediaLibraryTest extends WebDriverTestBase {
     $this->assertCount(2, $selected_checkboxes);
     // Ensure the created item is added in the widget.
     $assert_session->elementExists('css', '.ui-dialog-buttonpane')->pressButton('Insert selected');
+    $this->assertNotEmpty($assert_session->waitForText('Added one media item.'));
     $assert_session->assertWaitOnAjaxRequest();
     $assert_session->pageTextNotContains('Add or select media');
     $assert_session->pageTextContains('Unlimited Cardinality Image');
@@ -1039,6 +1076,7 @@ class MediaLibraryTest extends WebDriverTestBase {
     $assert_session->pageTextContains($file_system->basename($jpg_uri_2));
     // Ensure the created item is added in the widget.
     $assert_session->elementExists('css', '.ui-dialog-buttonpane')->pressButton('Insert selected');
+    $this->assertNotEmpty($assert_session->waitForText('Added one media item.'));
     $assert_session->assertWaitOnAjaxRequest();
     $assert_session->pageTextNotContains('Add or select media');
     $assert_session->pageTextContains($file_system->basename($jpg_uri_2));
@@ -1079,6 +1117,7 @@ class MediaLibraryTest extends WebDriverTestBase {
     $assert_session->checkboxNotChecked("Select $existing_media_name");
     $assert_session->hiddenFieldValueEquals('current_selection', $added_media->id());
     $assert_session->elementExists('css', '.ui-dialog-buttonpane')->pressButton('Insert selected');
+    $this->assertNotEmpty($assert_session->waitForText('Added one media item.'));
     $assert_session->assertWaitOnAjaxRequest();
     $assert_session->pageTextNotContains('Add or select media');
     $assert_session->pageTextContains($file_system->basename($png_uri_5));
@@ -1232,6 +1271,7 @@ class MediaLibraryTest extends WebDriverTestBase {
 
     // Assert the created oEmbed video is correctly added to the widget.
     $assert_session->elementExists('css', '.ui-dialog-buttonpane')->pressButton('Insert selected');
+    $this->assertNotEmpty($assert_session->waitForText('Added one media item.'));
     $assert_session->assertWaitOnAjaxRequest();
     $assert_session->pageTextNotContains('Add or select media');
     $assert_session->pageTextContains($youtube_title);
@@ -1304,6 +1344,7 @@ class MediaLibraryTest extends WebDriverTestBase {
     $this->assertCount(2, $selected_checkboxes);
     // Ensure the created item is added in the widget.
     $assert_session->elementExists('css', '.ui-dialog-buttonpane')->pressButton('Insert selected');
+    $this->assertNotEmpty($assert_session->waitForText('Added 2 media items.'));
     $assert_session->assertWaitOnAjaxRequest();
     $assert_session->pageTextNotContains('Add or select media');
     $assert_session->pageTextContains('Custom video title');
@@ -1318,6 +1359,7 @@ class MediaLibraryTest extends WebDriverTestBase {
     $page->pressButton('Add');
     $assert_session->assertWaitOnAjaxRequest();
     $assert_session->elementExists('css', '.ui-dialog-buttonpane')->pressButton('Save and insert');
+    $this->assertNotEmpty($assert_session->waitForText('Added one media item.'));
     $assert_session->assertWaitOnAjaxRequest();
     $assert_session->pageTextNotContains('Add or select media');
     $assert_session->pageTextContains($vimeo_title);
@@ -1355,6 +1397,7 @@ class MediaLibraryTest extends WebDriverTestBase {
     $assert_session->checkboxNotChecked("Select $vimeo_title");
     $assert_session->hiddenFieldValueEquals('current_selection', $added_media->id());
     $assert_session->elementExists('css', '.ui-dialog-buttonpane')->pressButton('Insert selected');
+    $this->assertNotEmpty($assert_session->waitForText('Added one media item.'));
     $assert_session->assertWaitOnAjaxRequest();
     $assert_session->pageTextNotContains('Add or select media');
     $assert_session->pageTextContains('Another video');

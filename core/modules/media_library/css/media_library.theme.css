@@ -293,12 +293,20 @@
   margin: 0 8px;
 }
 
+/**
+ * Style the media library grid items.
+ *
+ * The media library item container receives screen reader focus when items are
+ * removed. Since it is not an interactive element, it does not need an
+ * outline.
+ */
 .media-library-item--grid {
   justify-content: center;
   box-sizing: border-box;
   width: 50%;
   padding: 8px;
   vertical-align: top;
+  outline: none;
   background: #fff;
 }
 
