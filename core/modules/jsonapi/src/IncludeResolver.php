@@ -176,11 +176,17 @@ class IncludeResolver {
     $exploded_paths = array_map(function ($include_path) {
       return array_map('trim', explode('.', $include_path));
     }, $include_paths);
-    $resolved_paths = [];
+    $resolved_paths_per_resource_type = [];
     /* @var \Drupal\jsonapi\JsonApiResource\ResourceIdentifierInterface $resource_object */
     foreach ($data as $resource_object) {
-      $resolved_paths = array_merge($resolved_paths, static::resolveInternalIncludePaths($resource_object->getResourceType(), $exploded_paths));
+      $resource_type = $resource_object->getResourceType();
+      $resource_type_name = $resource_type->getTypeName();
+      if (isset($resolved_paths_per_resource_type[$resource_type_name])) {
+        continue;
+      }
+      $resolved_paths_per_resource_type[$resource_type_name] = static::resolveInternalIncludePaths($resource_type, $exploded_paths);
     }
+    $resolved_paths = array_reduce($resolved_paths_per_resource_type, 'array_merge', []);
     return static::buildTree($resolved_paths);
   }
 
