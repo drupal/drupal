@@ -55,10 +55,10 @@ class WorkspaceBypassTest extends BrowserTestBase {
     $this->drupalLogin($lombardi);
     $this->switchToWorkspace($bears);
 
-    // Because editor 2 has the bypass permission, he should be able to create
-    // and edit any node.
+    // Editor 2 should be able to create and edit any node because of the
+    // assigned bypass permission.
     $this->drupalGet('/node/' . $ditka_bears_node_id . '/edit');
-    $this->assertSession()->statusCodeEquals(403);
+    $this->assertSession()->statusCodeEquals(200);
   }
 
 }
