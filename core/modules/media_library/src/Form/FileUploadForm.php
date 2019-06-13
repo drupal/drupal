@@ -19,6 +19,7 @@ use Drupal\file\Plugin\Field\FieldType\FileItem;
 use Drupal\media\MediaInterface;
 use Drupal\media\MediaTypeInterface;
 use Drupal\media_library\MediaLibraryUiBuilder;
+use Drupal\media_library\OpenerResolverInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -65,9 +66,11 @@ class FileUploadForm extends AddFormBase {
    *   The renderer service.
    * @param \Drupal\Core\File\FileSystemInterface $file_system
    *   The file system service.
+   * @param \Drupal\media_library\OpenerResolverInterface $opener_resolver
+   *   The opener resolver.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, MediaLibraryUiBuilder $library_ui_builder, ElementInfoManagerInterface $element_info, RendererInterface $renderer, FileSystemInterface $file_system) {
-    parent::__construct($entity_type_manager, $library_ui_builder);
+  public function __construct(EntityTypeManagerInterface $entity_type_manager, MediaLibraryUiBuilder $library_ui_builder, ElementInfoManagerInterface $element_info, RendererInterface $renderer, FileSystemInterface $file_system, OpenerResolverInterface $opener_resolver = NULL) {
+    parent::__construct($entity_type_manager, $library_ui_builder, $opener_resolver);
     $this->elementInfo = $element_info;
     $this->renderer = $renderer;
     $this->fileSystem = $file_system;
@@ -82,7 +85,8 @@ class FileUploadForm extends AddFormBase {
       $container->get('media_library.ui_builder'),
       $container->get('element_info'),
       $container->get('renderer'),
-      $container->get('file_system')
+      $container->get('file_system'),
+      $container->get('media_library.opener_resolver')
     );
   }
 

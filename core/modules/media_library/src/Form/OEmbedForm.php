@@ -11,6 +11,7 @@ use Drupal\media\OEmbed\ResourceFetcherInterface;
 use Drupal\media\OEmbed\UrlResolverInterface;
 use Drupal\media\Plugin\media\Source\OEmbedInterface;
 use Drupal\media_library\MediaLibraryUiBuilder;
+use Drupal\media_library\OpenerResolverInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -48,9 +49,11 @@ class OEmbedForm extends AddFormBase {
    *   The oEmbed URL resolver service.
    * @param \Drupal\media\OEmbed\ResourceFetcherInterface $resource_fetcher
    *   The oEmbed resource fetcher service.
+   * @param \Drupal\media_library\OpenerResolverInterface $opener_resolver
+   *   The opener resolver.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, MediaLibraryUiBuilder $library_ui_builder, UrlResolverInterface $url_resolver, ResourceFetcherInterface $resource_fetcher) {
-    parent::__construct($entity_type_manager, $library_ui_builder);
+  public function __construct(EntityTypeManagerInterface $entity_type_manager, MediaLibraryUiBuilder $library_ui_builder, UrlResolverInterface $url_resolver, ResourceFetcherInterface $resource_fetcher, OpenerResolverInterface $opener_resolver = NULL) {
+    parent::__construct($entity_type_manager, $library_ui_builder, $opener_resolver);
     $this->urlResolver = $url_resolver;
     $this->resourceFetcher = $resource_fetcher;
   }
@@ -63,7 +66,8 @@ class OEmbedForm extends AddFormBase {
       $container->get('entity_type.manager'),
       $container->get('media_library.ui_builder'),
       $container->get('media.oembed.url_resolver'),
-      $container->get('media.oembed.resource_fetcher')
+      $container->get('media.oembed.resource_fetcher'),
+      $container->get('media_library.opener_resolver')
     );
   }
 
