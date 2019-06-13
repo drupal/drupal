@@ -162,4 +162,39 @@ class TermTranslationUITest extends ContentTranslationUITestBase {
     }
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  protected function doTestPublishedStatus() {
+    $storage = $this->container->get('entity_type.manager')
+      ->getStorage($this->entityTypeId);
+    $storage->resetCache([$this->entityId]);
+    $entity = $storage->load($this->entityId);
+    $languages = $this->container->get('language_manager')->getLanguages();
+
+    $statuses = [
+      TRUE,
+      FALSE,
+    ];
+
+    foreach ($statuses as $index => $value) {
+      // (Un)publish the term translations and check that the translation
+      // statuses are (un)published accordingly.
+      foreach ($this->langcodes as $langcode) {
+        $options = ['language' => $languages[$langcode]];
+        $url = $entity->toUrl('edit-form', $options);
+        $this->drupalPostForm($url, ['status[value]' => $value], t('Save'), $options);
+      }
+      $storage->resetCache([$this->entityId]);
+      $entity = $storage->load($this->entityId);
+      foreach ($this->langcodes as $langcode) {
+        // The term is created as unpublished thus we switch to the published
+        // status first.
+        $status = !$index;
+        $translation = $entity->getTranslation($langcode);
+        $this->assertEquals($status, $this->manager->getTranslationMetadata($translation)->isPublished(), 'The translation has been correctly unpublished.');
+      }
+    }
+  }
+
 }

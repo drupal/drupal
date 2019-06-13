@@ -135,6 +135,16 @@ class Term extends EditorialContentEntityBase implements TermInterface {
 
     $fields['uuid']->setDescription(t('The term UUID.'));
 
+    $fields['status']
+      ->setDisplayOptions('form', [
+        'type' => 'boolean_checkbox',
+        'settings' => [
+          'display_label' => TRUE,
+        ],
+        'weight' => 100,
+      ])
+      ->setDisplayConfigurable('form', TRUE);
+
     $fields['vid']->setLabel(t('Vocabulary'))
       ->setDescription(t('The vocabulary to which the term is assigned.'));
 

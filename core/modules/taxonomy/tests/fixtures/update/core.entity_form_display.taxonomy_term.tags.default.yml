@@ -2,20 +2,22 @@ langcode: en
 status: true
 dependencies:
   config:
-    - field.field.taxonomy_term.forums.forum_container
-    - taxonomy.vocabulary.forums
+    - taxonomy.vocabulary.tags
   module:
+    - path
     - text
-id: taxonomy_term.forums.default
+id: taxonomy_term.tags.default
 targetEntityType: taxonomy_term
-bundle: forums
+bundle: tags
 mode: default
 content:
   description:
-    type: text_textfield
+    type: text_textarea
     weight: 0
     region: content
-    settings: {  }
+    settings:
+      placeholder: ''
+      rows: 5
     third_party_settings: {  }
   name:
     type: string_textfield
@@ -25,12 +27,17 @@ content:
       size: 60
       placeholder: ''
     third_party_settings: {  }
+  path:
+    type: path
+    weight: 30
+    region: content
+    settings: {  }
+    third_party_settings: {  }
   status:
     type: boolean_checkbox
     settings:
-      display_label: true
+      display_label: false
     weight: 100
     region: content
     third_party_settings: {  }
-hidden:
-  forum_container: true
+hidden: {  }

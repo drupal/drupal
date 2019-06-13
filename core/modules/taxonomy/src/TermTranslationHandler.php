@@ -16,6 +16,9 @@ class TermTranslationHandler extends ContentTranslationHandler {
    */
   public function entityFormAlter(array &$form, FormStateInterface $form_state, EntityInterface $entity) {
     parent::entityFormAlter($form, $form_state, $entity);
+
+    $form['content_translation']['status']['#access'] = !isset($form['content_translation']);
+
     $form['actions']['submit']['#submit'][] = [$this, 'entityFormSave'];
   }
 
@@ -34,6 +37,17 @@ class TermTranslationHandler extends ContentTranslationHandler {
       // translation for a language that already has a translation.
       $form_state->setRedirectUrl($entity->toUrl('edit-form'));
     }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function entityFormEntityBuild($entity_type, EntityInterface $entity, array $form, FormStateInterface $form_state) {
+    if ($form_state->hasValue('content_translation')) {
+      $translation = &$form_state->getValue('content_translation');
+      $translation['status'] = $entity->isPublished();
+    }
+    parent::entityFormEntityBuild($entity_type, $entity, $form, $form_state);
   }
 
 }

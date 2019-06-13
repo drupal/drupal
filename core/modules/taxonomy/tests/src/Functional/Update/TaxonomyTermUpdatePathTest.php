@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\taxonomy\Functional\Update;
 
+use Drupal\Core\Entity\Entity\EntityFormDisplay;
 use Drupal\FunctionalTests\Update\UpdatePathTestBase;
 use Drupal\user\Entity\User;
 use Drupal\views\Entity\View;
@@ -22,6 +23,7 @@ class TaxonomyTermUpdatePathTest extends UpdatePathTestBase {
     $this->databaseDumpFiles = [
       __DIR__ . '/../../../../../system/tests/fixtures/update/drupal-8.filled.standard.php.gz',
       __DIR__ . '/../../../fixtures/update/drupal-8.views-taxonomy-term-publishing-status-2981887.php',
+      __DIR__ . '/../../../fixtures/update/drupal-8.taxonomy-term-publishing-status-ui-2899923.php',
     ];
   }
 
@@ -195,6 +197,52 @@ class TaxonomyTermUpdatePathTest extends UpdatePathTestBase {
    */
   protected function replaceUser1() {
     // Do not replace the user from our dump.
+  }
+
+  /**
+   * Tests that the taxonomy_term entity form has the status checkbox.
+   *
+   * @see taxonomy_post_update_configure_status_field_widget()
+   */
+  public function testStatusCheckbox() {
+    $ids = \Drupal::entityQuery('entity_form_display')
+      ->condition('targetEntityType', 'taxonomy_term')
+      ->execute();
+
+    // Make sure we have the expected values before the update.
+    $config_keys = [];
+    foreach ($ids as $id) {
+      $config_keys[] = 'core.entity_form_display.' . $id;
+    }
+    /* @var \Drupal\Core\Config\ImmutableConfig[] $form_display_configs */
+    $form_display_configs = $this->container->get('config.factory')->loadMultiple($config_keys);
+    foreach ($form_display_configs as $config) {
+      $status_config = $config->get('content.status');
+      if ($config->getName() == 'core.entity_form_display.taxonomy_term.tags.default') {
+        $this->assertNotNull($status_config);
+        $this->assertEquals(['display_label' => FALSE], $status_config['settings']);
+      }
+      else {
+        $this->assertNull($status_config);
+      }
+    }
+
+    // Run updates.
+    $this->runUpdates();
+
+    /* @var \Drupal\Core\Entity\Display\EntityDisplayInterface[] $form_displays */
+    $form_displays = EntityFormDisplay::loadMultiple($ids);
+    foreach ($form_displays as $form_display) {
+      $component = $form_display->getComponent('status');
+      if ($form_display->id() == 'taxonomy_term.tags.default') {
+        // Display label should not have been set to TRUE by the upgrade path.
+        $this->assertEquals(['display_label' => FALSE], $component['settings']);
+      }
+      else {
+        $this->assertEquals('boolean_checkbox', $component['type']);
+        $this->assertEquals(['display_label' => TRUE], $component['settings']);
+      }
+    }
   }
 
 }
