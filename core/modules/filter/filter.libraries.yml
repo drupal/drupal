@@ -2,9 +2,6 @@ drupal.filter.admin:
   version: VERSION
   js:
     filter.admin.js: {}
-  css:
-    theme:
-      css/filter.admin.css: {}
   dependencies:
     - core/jquery
     - core/drupal
@@ -24,10 +21,6 @@ drupal.filter:
   version: VERSION
   js:
     filter.js: {}
-  css:
-    theme:
-      # @todo Misnomer: Does not contain administrative styles.
-      css/filter.admin.css: {}
   dependencies:
     - core/jquery
     - core/drupal

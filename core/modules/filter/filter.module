@@ -377,6 +377,9 @@ function template_preprocess_filter_guidelines(&$variables) {
     '#theme' => 'filter_tips',
     '#tips' => _filter_tips($format->id(), FALSE),
   ];
+
+  // Add format id for filter.es6.js.
+  $variables['attributes']['data-drupal-format-id'] = $format->id();
 }
 
 /**

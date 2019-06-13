@@ -124,7 +124,7 @@ class TextFormat extends RenderElement {
     // Setup child container for the text format widget.
     $element['format'] = [
       '#type' => 'container',
-      '#attributes' => ['class' => ['filter-wrapper']],
+      '#attributes' => ['class' => ['js-filter-wrapper']],
     ];
 
     // Get a list of formats that the current user has access to.
@@ -148,7 +148,8 @@ class TextFormat extends RenderElement {
     // If #allowed_formats is set, the list of formats must not be modified in
     // any way. Otherwise, however, if all of the following conditions are true,
     // remove the fallback format from the list of formats:
-    // 1. The 'always_show_fallback_choice' filter setting has not been activated.
+    // 1. The 'always_show_fallback_choice' filter setting has not been
+    //    activated.
     // 2. Multiple text formats are available.
     // 3. The fallback format is not the default format.
     // The 'always_show_fallback_choice' filter setting is a hidden setting that
@@ -164,7 +165,7 @@ class TextFormat extends RenderElement {
     // Prepare text format guidelines.
     $element['format']['guidelines'] = [
       '#type' => 'container',
-      '#attributes' => ['class' => ['filter-guidelines']],
+      '#attributes' => ['class' => ['js-filter-guidelines']],
       '#weight' => 20,
     ];
     $options = [];
@@ -183,7 +184,7 @@ class TextFormat extends RenderElement {
       '#default_value' => $element['#format'],
       '#access' => count($formats) > 1,
       '#weight' => 10,
-      '#attributes' => ['class' => ['filter-list']],
+      '#attributes' => ['class' => ['js-filter-list']],
       '#parents' => array_merge($element['#parents'], ['format']),
     ];
 
@@ -195,7 +196,6 @@ class TextFormat extends RenderElement {
         '#url' => new Url('filter.tips_all'),
         '#attributes' => ['target' => '_blank'],
       ],
-      '#attributes' => ['class' => ['filter-help']],
       '#weight' => 0,
     ];
 

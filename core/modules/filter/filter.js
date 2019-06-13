@@ -11,10 +11,10 @@
       function updateFilterGuidelines(event) {
         var $this = $(event.target);
         var value = $this.val();
-        $this.closest('.filter-wrapper').find('.filter-guidelines-item').hide().filter('.filter-guidelines-' + value).show();
+        $this.closest('.js-filter-wrapper').find('[data-drupal-format-id]').hide().filter('[data-drupal-format-id="' + value + '"]').show();
       }
 
-      $(context).find('.filter-guidelines').once('filter-guidelines').find(':header').hide().closest('.filter-wrapper').find('select.filter-list').on('change.filterGuidelines', updateFilterGuidelines).trigger('change.filterGuidelines');
+      $(context).find('.js-filter-guidelines').once('filter-guidelines').find(':header').hide().closest('.js-filter-wrapper').find('select.js-filter-list').on('change.filterGuidelines', updateFilterGuidelines).trigger('change.filterGuidelines');
     }
   };
 })(jQuery, Drupal);
