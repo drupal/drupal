@@ -2,18 +2,18 @@ langcode: en
 status: true
 dependencies:
   config:
-    - field.storage.media.field_media_file
-    - media.type.file
+    - field.storage.media.field_media_document
+    - media.type.document
   enforced:
     module:
       - media
   module:
     - file
-id: media.file.field_media_file
-field_name: field_media_file
+id: media.document.field_media_document
+field_name: field_media_document
 entity_type: media
-bundle: file
-label: File
+bundle: document
+label: Document
 description: ''
 required: true
 translatable: true

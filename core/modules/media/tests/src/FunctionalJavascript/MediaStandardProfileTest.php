@@ -56,11 +56,11 @@ class MediaStandardProfileTest extends MediaJavascriptTestBase {
       'settings' => [
         'handler_settings' => [
           'target_bundles' => [
-            'image' => 'image',
-            'video' => 'video',
-            'remote_video' => 'remote_video',
             'audio' => 'audio',
-            'file' => 'file',
+            'document' => 'document',
+            'image' => 'image',
+            'remote_video' => 'remote_video',
+            'video' => 'video',
           ],
         ],
       ],
@@ -75,7 +75,7 @@ class MediaStandardProfileTest extends MediaJavascriptTestBase {
     ])->save();
 
     $this->audioTest();
-    $this->fileTest();
+    $this->documentTest();
     $this->imageTest();
     $this->remoteVideoTest();
     $this->videoTest();
@@ -260,12 +260,12 @@ class MediaStandardProfileTest extends MediaJavascriptTestBase {
   }
 
   /**
-   * Test the standard profile configuration for media type 'file'.
+   * Test the standard profile configuration for media type 'document'.
    */
-  protected function fileTest() {
+  protected function documentTest() {
     $assert_session = $this->assertSession();
     $page = $this->getSession()->getPage();
-    $source_field_id = 'field_media_file';
+    $source_field_id = 'field_media_document';
 
     // Create 2 test files.
     $test_filename = $this->randomMachineName() . '.txt';
@@ -276,7 +276,7 @@ class MediaStandardProfileTest extends MediaJavascriptTestBase {
     file_put_contents($test_filepath_updated, $this->randomMachineName());
 
     // Check if the name field is properly hidden on the media form.
-    $this->drupalGet('media/add/file');
+    $this->drupalGet('media/add/document');
     $assert_session->fieldNotExists('name');
 
     // Check if the source field is available.
@@ -314,11 +314,11 @@ class MediaStandardProfileTest extends MediaJavascriptTestBase {
 
     // Here we expect to see only the linked filename. Assert only one element
     // in the content region.
-    $assert_session->elementsCount('css', 'article.media--type-file > *', 1);
+    $assert_session->elementsCount('css', 'article.media--type-document > *', 1);
 
     // Assert the file link is present in the media element and its text matches
     // the filename.
-    $link_element = $assert_session->elementExists('css', 'article.media--type-file .field--name-field-media-file a');
+    $link_element = $assert_session->elementExists('css', 'article.media--type-document .field--name-field-media-document a');
     $this->assertSame($test_filename, $link_element->getText());
 
     // Assert the media name is updated through the field mapping when changing
@@ -340,11 +340,11 @@ class MediaStandardProfileTest extends MediaJavascriptTestBase {
 
     // Again we expect to see only the linked filename. Assert only one element
     // in the content region.
-    $assert_session->elementsCount('css', 'article.media--type-file > *', 1);
+    $assert_session->elementsCount('css', 'article.media--type-document > *', 1);
 
     // Assert the file link is present in the media element and its text matches
     // the updated filename.
-    $link_element = $assert_session->elementExists('css', 'article.media--type-file .field--name-field-media-file a');
+    $link_element = $assert_session->elementExists('css', 'article.media--type-document .field--name-field-media-document a');
     $this->assertSame($test_filename_updated, $link_element->getText());
   }
 

@@ -2,16 +2,16 @@ langcode: en
 status: true
 dependencies:
   config:
-    - field.field.media.file.field_media_file
-    - media.type.file
+    - field.field.media.document.field_media_document
+    - media.type.document
   module:
     - file
-id: media.file.default
+id: media.document.default
 targetEntityType: media
-bundle: file
+bundle: document
 mode: default
 content:
-  field_media_file:
+  field_media_document:
     label: visually_hidden
     settings: {  }
     third_party_settings: {  }
@@ -20,7 +20,6 @@ content:
     region: content
 hidden:
   created: true
-  langcode: true
-  name: true
   thumbnail: true
   uid: true
+  name: true

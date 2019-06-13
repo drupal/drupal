@@ -109,8 +109,8 @@ class MediaDisplayTest extends MediaJavascriptTestBase {
     $test_filename = $this->randomMachineName() . '.txt';
     $test_filepath = 'public://' . $test_filename;
     file_put_contents($test_filepath, $this->randomMachineName());
-    $this->drupalGet("media/add/file");
-    $page->attachFileToField("files[field_media_file_0]", \Drupal::service('file_system')->realpath($test_filepath));
+    $this->drupalGet("media/add/document");
+    $page->attachFileToField("files[field_media_document_0]", \Drupal::service('file_system')->realpath($test_filepath));
     $result = $assert_session->waitForButton('Remove');
     $this->assertNotEmpty($result);
     $page->pressButton('Save');
@@ -122,10 +122,10 @@ class MediaDisplayTest extends MediaJavascriptTestBase {
     $assert_session->elementTextContains('css', 'h1', $test_filename);
     // Here we expect to see only the linked filename.
     // Assert only one element in the content region.
-    $this->assertSame(1, count($page->findAll('css', 'article.media--type-file > div')));
+    $this->assertSame(1, count($page->findAll('css', 'article.media--type-document > div')));
     // Assert the file link is present, and its text matches the filename.
-    $assert_session->elementExists('css', 'article.media--type-file .field--name-field-media-file a');
-    $link = $page->find('css', 'article.media--type-file .field--name-field-media-file a');
+    $assert_session->elementExists('css', 'article.media--type-document .field--name-field-media-document a');
+    $link = $page->find('css', 'article.media--type-document .field--name-field-media-document a');
     $this->assertSame($test_filename, $link->getText());
 
     // Create a node type "page" to use as host entity.
