@@ -4,7 +4,6 @@ namespace Drupal\Tests\workspaces\Kernel;
 
 use Drupal\Core\Entity\EntityStorageException;
 use Drupal\Core\Form\FormState;
-use Drupal\entity_test\Entity\EntityTestMulRev;
 use Drupal\entity_test\Entity\EntityTestMulRevPub;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\system\Form\SiteInformationForm;
@@ -75,6 +74,7 @@ class WorkspaceIntegrationTest extends KernelTestBase {
 
     $this->installEntitySchema('entity_test_mulrev');
     $this->installEntitySchema('entity_test_mulrevpub');
+    $this->installEntitySchema('entity_test_no_label');
     $this->installEntitySchema('node');
     $this->installEntitySchema('user');
 
@@ -457,38 +457,106 @@ class WorkspaceIntegrationTest extends KernelTestBase {
   }
 
   /**
-   * Tests CRUD operations for unsupported entity types.
+   * Tests CREATE operations for unsupported entity types.
+   *
+   * @dataProvider providerTestAllowedEntityCrudInNonDefaultWorkspace
    */
-  public function testDisallowedEntityCRUDInNonDefaultWorkspace() {
+  public function testDisallowedEntityCreateInNonDefaultWorkspace($entity_type_id, $allowed) {
     $this->initializeWorkspacesModule();
+    /** @var \Drupal\Core\Entity\ContentEntityStorageInterface $storage */
+    $storage = $this->entityTypeManager->getStorage($entity_type_id);
 
-    // Create an unsupported entity type in the default workspace.
-    $this->switchToWorkspace('live');
-    $entity_test = EntityTestMulRev::create([
-      'name' => 'live entity_test_mulrev',
-    ]);
-    $entity_test->save();
-
-    // Switch to a non-default workspace and check that any entity type CRUD are
-    // not allowed.
+    // Switch to a non-default workspace and check whether creating a new entity
+    // is allowed.
     $this->switchToWorkspace('stage');
 
-    // Check updating an existing entity.
-    $entity_test->name->value = 'stage entity_test_mulrev';
-    $entity_test->setNewRevision(TRUE);
-    $this->setExpectedException(EntityStorageException::class, 'This entity can only be saved in the default workspace.');
-    $entity_test->save();
+    $entity = $storage->createWithSampleValues($entity_type_id);
+    if ($entity_type_id === 'workspace') {
+      $entity->id = 'test';
+    }
 
-    // Check saving a new entity.
-    $new_entity_test = EntityTestMulRev::create([
-      'name' => 'stage entity_test_mulrev',
-    ]);
-    $this->setExpectedException(EntityStorageException::class, 'This entity can only be saved in the default workspace.');
-    $new_entity_test->save();
+    if (!$allowed) {
+      $this->setExpectedException(EntityStorageException::class, 'This entity can only be saved in the default workspace.');
+    }
+    $entity->save();
+  }
 
-    // Check deleting an existing entity.
-    $this->setExpectedException(EntityStorageException::class, 'This entity can only be deleted in the default workspace.');
-    $entity_test->delete();
+  /**
+   * Tests UPDATE operations for unsupported entity types.
+   *
+   * @dataProvider providerTestAllowedEntityCrudInNonDefaultWorkspace
+   */
+  public function testDisallowedEntityUpdateInNonDefaultWorkspace($entity_type_id, $allowed) {
+    $this->initializeWorkspacesModule();
+    /** @var \Drupal\Core\Entity\ContentEntityStorageInterface $storage */
+    $storage = $this->entityTypeManager->getStorage($entity_type_id);
+
+    // Create the entity in the default workspace.
+    $this->switchToWorkspace('live');
+    $entity = $storage->createWithSampleValues($entity_type_id);
+    if ($entity_type_id === 'workspace') {
+      $entity->id = 'test';
+    }
+    $entity->save();
+
+    // Switch to a non-default workspace and check whether updating the entity
+    // is allowed.
+    $this->switchToWorkspace('stage');
+
+    $entity->created->value = 1;
+
+    if (!$allowed) {
+      $this->setExpectedException(EntityStorageException::class, 'This entity can only be saved in the default workspace.');
+    }
+    $entity->save();
+  }
+
+  /**
+   * Tests DELETE operations for unsupported entity types.
+   *
+   * @dataProvider providerTestAllowedEntityCrudInNonDefaultWorkspace
+   */
+  public function testDisallowedEntityDeleteInNonDefaultWorkspace($entity_type_id, $allowed) {
+    $this->initializeWorkspacesModule();
+    /** @var \Drupal\Core\Entity\ContentEntityStorageInterface $storage */
+    $storage = $this->entityTypeManager->getStorage($entity_type_id);
+
+    // Create the entity in the default workspace.
+    $this->switchToWorkspace('live');
+    $entity = $storage->createWithSampleValues($entity_type_id);
+    if ($entity_type_id === 'workspace') {
+      $entity->id = 'test';
+    }
+    $entity->save();
+
+    // Switch to a non-default workspace and check whether deleting the entity
+    // is allowed.
+    $this->switchToWorkspace('stage');
+
+    if (!$allowed) {
+      $this->setExpectedException(EntityStorageException::class, 'This entity can only be deleted in the default workspace.');
+    }
+    $entity->delete();
+  }
+
+  /**
+   * Data provider for allowed entity CRUD operations.
+   */
+  public function providerTestAllowedEntityCrudInNonDefaultWorkspace() {
+    return [
+      'workspace-provided non-internal entity type' => [
+        'entity_type_id' => 'workspace',
+        'allowed' => TRUE,
+      ],
+      'internal entity type' => [
+        'entity_type_id' => 'entity_test_no_label',
+        'allowed' => TRUE,
+      ],
+      'non-internal entity type' => [
+        'entity_type_id' => 'entity_test_mulrev',
+        'allowed' => FALSE,
+      ],
+    ];
   }
 
   /**

@@ -4,6 +4,7 @@ namespace Drupal\workspaces;
 
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Entity\RevisionableInterface;
 use Drupal\Core\Form\FormStateInterface;
@@ -116,9 +117,10 @@ class EntityOperations implements ContainerInjectionInterface {
   public function entityPresave(EntityInterface $entity) {
     $entity_type = $entity->getEntityType();
 
-    // Only run if this is not an entity type provided by the Workspaces module
-    // and we are in a non-default workspace
-    if ($entity_type->getProvider() === 'workspaces' || $this->workspaceManager->getActiveWorkspace()->isDefaultWorkspace()) {
+    // Only run if we are not dealing with an entity type provided by the
+    // Workspaces module, an internal entity type or if we are in a non-default
+    // workspace.
+    if ($this->shouldSkipPreOperations($entity_type)) {
       return;
     }
 
@@ -224,9 +226,10 @@ class EntityOperations implements ContainerInjectionInterface {
   public function entityPredelete(EntityInterface $entity) {
     $entity_type = $entity->getEntityType();
 
-    // Only run if this is not an entity type provided by the Workspaces module
-    // and we are in a non-default workspace
-    if ($entity_type->getProvider() === 'workspaces' || $this->workspaceManager->getActiveWorkspace()->isDefaultWorkspace()) {
+    // Only run if we are not dealing with an entity type provided by the
+    // Workspaces module, an internal entity type or if we are in a non-default
+    // workspace.
+    if ($this->shouldSkipPreOperations($entity_type)) {
       return;
     }
 
@@ -338,6 +341,26 @@ class EntityOperations implements ContainerInjectionInterface {
     // Set the non-default revision flag so that validation constraints are also
     // aware that a pending revision is about to be created.
     $entity->isDefaultRevision(FALSE);
+  }
+
+  /**
+   * Determines whether we need to react on pre-save or pre-delete operations.
+   *
+   * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
+   *   The entity type to check.
+   *
+   * @return bool
+   *   Returns TRUE if the pre-save or pre-delete entity operations should not
+   *   be altered in the current request, FALSE otherwise.
+   */
+  protected function shouldSkipPreOperations(EntityTypeInterface $entity_type) {
+    // We should not react on pre-save and pre-delete entity operations if one
+    // of the following conditions are met:
+    // - the entity type is provided by the Workspaces module;
+    // - the entity type is internal, which means that it should not affect
+    //   anything in the default (Live) workspace;
+    // - we are in the default workspace.
+    return $entity_type->getProvider() === 'workspaces' || $entity_type->isInternal() || $this->workspaceManager->getActiveWorkspace()->isDefaultWorkspace();
   }
 
 }
