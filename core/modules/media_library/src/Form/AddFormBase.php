@@ -16,7 +16,7 @@ use Drupal\media\MediaInterface;
 use Drupal\media\MediaTypeInterface;
 use Drupal\media_library\Ajax\UpdateSelectionCommand;
 use Drupal\media_library\MediaLibraryUiBuilder;
-use Drupal\media_library\Plugin\Field\FieldWidget\MediaLibraryWidget;
+use Drupal\media_library\OpenerResolverInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -58,17 +58,31 @@ abstract class AddFormBase extends FormBase {
   protected $viewBuilder;
 
   /**
+   * The opener resolver.
+   *
+   * @var \Drupal\media_library\OpenerResolverInterface
+   */
+  protected $openerResolver;
+
+  /**
    * Constructs a AddFormBase object.
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   The entity type manager.
    * @param \Drupal\media_library\MediaLibraryUiBuilder $library_ui_builder
    *   The media library UI builder.
+   * @param \Drupal\media_library\OpenerResolverInterface $opener_resolver
+   *   The opener resolver.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, MediaLibraryUiBuilder $library_ui_builder) {
+  public function __construct(EntityTypeManagerInterface $entity_type_manager, MediaLibraryUiBuilder $library_ui_builder, OpenerResolverInterface $opener_resolver = NULL) {
     $this->entityTypeManager = $entity_type_manager;
     $this->libraryUiBuilder = $library_ui_builder;
     $this->viewBuilder = $this->entityTypeManager->getViewBuilder('media');
+    if (!$opener_resolver) {
+      @trigger_error('The media_library.opener_resolver service must be passed to AddFormBase::__construct(), it is required before Drupal 9.0.0.', E_USER_DEPRECATED);
+      $opener_resolver = \Drupal::service('media_library.opener_resolver');
+    }
+    $this->openerResolver = $opener_resolver;
   }
 
   /**
@@ -77,7 +91,8 @@ abstract class AddFormBase extends FormBase {
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('entity_type.manager'),
-      $container->get('media_library.ui_builder')
+      $container->get('media_library.ui_builder'),
+      $container->get('media_library.opener_resolver')
     );
   }
 
@@ -247,7 +262,7 @@ abstract class AddFormBase extends FormBase {
     // triggering element is not set correctly and the wrong media item is
     // removed.
     // @see ::removeButtonSubmit()
-    $parents = $form['#parents'];
+    $parents = isset($form['#parents']) ? $form['#parents'] : [];
     $id_suffix = $parents ? '-' . implode('-', $parents) : '';
 
     $element = [
@@ -724,20 +739,18 @@ abstract class AddFormBase extends FormBase {
       return $form;
     }
 
-    // Pass the selection to the field widget based on the current widget ID.
-    $opener_id = $this->getMediaLibraryState($form_state)->getOpenerId();
-    if ($field_id = MediaLibraryWidget::getOpenerFieldId($opener_id)) {
-      // The added media items get an ID  when they are saved in ::submitForm().
-      // For that reason the added media items are keyed by delta in the form
-      // state and we have to do an array map to get each media ID.
-      $current_media_ids = array_map(function (MediaInterface $media) {
-        return $media->id();
-      }, $this->getCurrentMediaItems($form_state));
-      return (new AjaxResponse())
-        ->addCommand(new InvokeCommand("[data-media-library-widget-value=\"$field_id\"]", 'val', [implode(',', $current_media_ids)]))
-        ->addCommand(new InvokeCommand("[data-media-library-widget-update=\"$field_id\"]", 'trigger', ['mousedown']))
-        ->addCommand(new CloseDialogCommand());
-    }
+    // The added media items get an ID when they are saved in ::submitForm().
+    // For that reason the added media items are keyed by delta in the form
+    // state and we have to do an array map to get each media ID.
+    $current_media_ids = array_map(function (MediaInterface $media) {
+      return $media->id();
+    }, $this->getCurrentMediaItems($form_state));
+
+    // Allow the opener service to respond to the selection.
+    $state = $this->getMediaLibraryState($form_state);
+    return $this->openerResolver->get($state)
+      ->getSelectionResponse($state, $current_media_ids)
+      ->addCommand(new CloseDialogCommand());
   }
 
   /**

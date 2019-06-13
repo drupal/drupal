@@ -224,7 +224,7 @@ class MediaLibraryUiBuilder {
 
     $selected_type_id = $state->getSelectedTypeId();
     foreach ($allowed_types as $allowed_type_id => $allowed_type) {
-      $link_state = MediaLibraryState::create($state->getOpenerId(), $state->getAllowedTypeIds(), $allowed_type_id, $state->getAvailableSlots());
+      $link_state = MediaLibraryState::create($state->getOpenerId(), $state->getAllowedTypeIds(), $allowed_type_id, $state->getAvailableSlots(), $state->getOpenerParameters());
       // Add the 'media_library_content' parameter so the response will contain
       // only the updated content for the tab.
       // @see self::buildUi()

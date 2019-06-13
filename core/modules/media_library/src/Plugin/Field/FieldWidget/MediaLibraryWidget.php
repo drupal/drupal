@@ -68,13 +68,6 @@ class MediaLibraryWidget extends WidgetBase implements ContainerFactoryPluginInt
   protected $moduleHandler;
 
   /**
-   * The prefix to use with a field ID for media library opener IDs.
-   *
-   * @var string
-   */
-  protected static $openerIdPrefix = 'field:';
-
-  /**
    * Constructs a MediaLibraryWidget widget.
    *
    * @param string $plugin_id
@@ -90,9 +83,9 @@ class MediaLibraryWidget extends WidgetBase implements ContainerFactoryPluginInt
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   Entity type manager service.
    * @param \Drupal\Core\Session\AccountInterface $current_user
-   *   (optional) The current active user.
+   *   The current active user.
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
-   *   (optional) The module handler.
+   *   The module handler.
    */
   public function __construct($plugin_id, $plugin_definition, FieldDefinitionInterface $field_definition, array $settings, array $third_party_settings, EntityTypeManagerInterface $entity_type_manager, AccountInterface $current_user = NULL, ModuleHandlerInterface $module_handler = NULL) {
     parent::__construct($plugin_id, $plugin_definition, $field_definition, $settings, $third_party_settings);
@@ -142,7 +135,7 @@ class MediaLibraryWidget extends WidgetBase implements ContainerFactoryPluginInt
   }
 
   /**
-   * Get the enabled media type IDs sorted by weight.
+   * Gets the enabled media type IDs sorted by weight.
    *
    * @return string[]
    *   The media type IDs sorted by weight.
@@ -309,7 +302,9 @@ class MediaLibraryWidget extends WidgetBase implements ContainerFactoryPluginInt
     $view_builder = $this->entityTypeManager->getViewBuilder('media');
     $field_name = $this->fieldDefinition->getName();
     $parents = $form['#parents'];
+    // Create an ID suffix from the parents to make sure each widget is unique.
     $id_suffix = $parents ? '-' . implode('-', $parents) : '';
+    $field_widget_id = implode(':', array_filter([$field_name, $id_suffix]));
     $wrapper_id = $field_name . '-media-library-wrapper' . $id_suffix;
     $limit_validation_errors = [array_merge($parents, [$field_name])];
 
@@ -463,11 +458,13 @@ class MediaLibraryWidget extends WidgetBase implements ContainerFactoryPluginInt
     // Create a new media library URL with the correct state parameters.
     $selected_type_id = reset($allowed_media_type_ids);
     $remaining = $cardinality_unlimited ? FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED : $remaining;
-    // The opener ID is used by the select form and the upload form to add the
-    // selected/uploaded media items to the widget.
-    $opener_id = static::$openerIdPrefix . $field_name . $id_suffix;
-
-    $state = MediaLibraryState::create($opener_id, $allowed_media_type_ids, $selected_type_id, $remaining);
+    // This particular media library opener needs some extra metadata for its
+    // \Drupal\media_library\MediaLibraryOpenerInterface::getSelectionResponse()
+    // to be able to target the element whose 'data-media-library-widget-value'
+    // attribute is the same as $field_widget_id.
+    $state = MediaLibraryState::create('media_library.opener.field_widget', $allowed_media_type_ids, $selected_type_id, $remaining, [
+      'field_widget_id' => $field_widget_id,
+    ]);
 
     // Add a button that will load the Media library in a modal using AJAX.
     $element['media_library_open_button'] = [
@@ -512,7 +509,7 @@ class MediaLibraryWidget extends WidgetBase implements ContainerFactoryPluginInt
       '#type' => 'hidden',
       '#attributes' => [
         // This is used to pass the selection from the modal to the widget.
-        'data-media-library-widget-value' => $field_name . $id_suffix,
+        'data-media-library-widget-value' => $field_widget_id,
       ],
     ];
 
@@ -531,7 +528,7 @@ class MediaLibraryWidget extends WidgetBase implements ContainerFactoryPluginInt
         ],
       ],
       '#attributes' => [
-        'data-media-library-widget-update' => $field_name . $id_suffix,
+        'data-media-library-widget-update' => $field_widget_id,
         'class' => ['js-hide'],
       ],
       '#validate' => [[static::class, 'validateItems']],
@@ -884,25 +881,6 @@ class MediaLibraryWidget extends WidgetBase implements ContainerFactoryPluginInt
    */
   protected static function setFieldState(array $element, FormStateInterface $form_state, array $field_state) {
     static::setWidgetState($element['#field_parents'], $element['#field_name'], $form_state, $field_state);
-  }
-
-  /**
-   * Get the field ID of the widget from an opener ID.
-   *
-   * @param string $opener_id
-   *   The opener ID of the media library.
-   *
-   * @return string|null
-   *   The field ID or NULL if the opener ID is not valid for the widget.
-   *
-   * @see \Drupal\media_library\MediaLibraryState
-   */
-  public static function getOpenerFieldId($opener_id) {
-    // Media library widget opener IDs are always prefixed with 'field:' in .
-    if (preg_match('/^' . static::$openerIdPrefix . '([a-z0-9_-]+)$/', $opener_id, $matches)) {
-      return $matches[1];
-    }
-    return NULL;
   }
 
 }

@@ -351,4 +351,14 @@ class MediaLibraryStateTest extends KernelTestBase {
     return $test_data;
   }
 
+  /**
+   * @covers ::getOpenerParameters
+   */
+  public function testOpenerParameters() {
+    $state = MediaLibraryState::create('test', ['file'], 'file', -1, [
+      'foo' => 'baz',
+    ]);
+    $this->assertSame(['foo' => 'baz'], $state->getOpenerParameters());
+  }
+
 }
