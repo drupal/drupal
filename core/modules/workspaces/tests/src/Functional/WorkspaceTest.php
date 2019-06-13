@@ -16,7 +16,7 @@ class WorkspaceTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['workspaces', 'toolbar'];
+  public static $modules = ['workspaces', 'toolbar', 'field_ui'];
 
   /**
    * A test user.
@@ -139,6 +139,45 @@ class WorkspaceTest extends BrowserTestBase {
     $this->drupalPostForm($live_workspace->toUrl('edit-form')->toString(), [], 'Save');
     $live_workspace = $storage->loadUnchanged('live');
     $this->assertEquals('3', $live_workspace->getRevisionId());
+  }
+
+  /**
+   * Tests adding new fields to workspace entities.
+   */
+  public function testWorkspaceFieldUi() {
+    $user = $this->drupalCreateUser([
+      'administer workspaces',
+      'access administration pages',
+      'administer site configuration',
+      'administer workspace fields',
+      'administer workspace display',
+      'administer workspace form display',
+    ]);
+    $this->drupalLogin($user);
+
+    $this->drupalGet('admin/config/workflow/workspaces/fields');
+    $this->assertSession()->statusCodeEquals(200);
+
+    // Create a new filed.
+    $field_name = mb_strtolower($this->randomMachineName());
+    $field_label = $this->randomMachineName();
+    $edit = [
+      'new_storage_type' => 'string',
+      'label' => $field_label,
+      'field_name' => $field_name,
+    ];
+    $this->drupalPostForm("admin/config/workflow/workspaces/fields/add-field", $edit, 'Save and continue');
+    $page = $this->getSession()->getPage();
+    $page->pressButton('Save field settings');
+    $page->pressButton('Save settings');
+
+    // Check that the field is displayed on the manage form display page.
+    $this->drupalGet('admin/config/workflow/workspaces/form-display');
+    $this->assertText($field_label);
+
+    // Check that the field is displayed on the manage display page.
+    $this->drupalGet('admin/config/workflow/workspaces/display');
+    $this->assertText($field_label);
   }
 
 }
