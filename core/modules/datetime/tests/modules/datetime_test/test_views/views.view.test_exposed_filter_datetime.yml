@@ -1,10 +1,11 @@
-langcode: en
+langcode: und
 status: true
 dependencies:
   module:
+    - datetime
     - node
-id: test_filter_in_operator_ui
-label: ''
+id: test_exposed_filter_datetime
+label: test_exposed_filter_datetime
 module: views
 description: ''
 tag: ''
@@ -17,60 +18,20 @@ display:
       access:
         type: none
       cache:
-        type: tag
+        type: none
       exposed_form:
         type: basic
       fields:
         nid:
+          field: nid
           id: nid
           table: node_field_data
-          field: nid
-          relationship: none
-          group_type: group
-          admin_label: ''
-          label: ''
-          exclude: false
-          empty: ''
-          hide_empty: false
-          empty_zero: false
-          hide_alter_empty: true
-          click_sort_column: value
-          type: number_integer
-          settings:
-            thousand_separator: ''
-            prefix_suffix: true
-          group_column: value
-          group_columns: {  }
-          group_rows: true
-          delta_limit: 0
-          delta_offset: 0
-          delta_reversed: false
-          delta_first_last: false
-          multi_type: separator
-          separator: ', '
-          field_api_classes: false
-          entity_type: node
-          entity_field: nid
-          plugin_id: field
+          plugin_id: node
       filters:
-        type:
-          expose:
-            identifier: type
-            label: 'Content: Type'
-            operator_id: type_op
-            reduce: false
-            use_operator: false
-          exposed: true
-          field: type
-          id: type
-          table: node_field_data
-          plugin_id: in_operator
-          entity_type: node
-          entity_field: type
-        nid:
-          id: nid
-          table: node_field_data
-          field: nid
+        field_date_value:
+          id: field_date_value
+          table: node__field_date
+          field: field_date_value
           relationship: none
           group_type: group
           admin_label: ''
@@ -79,20 +40,20 @@ display:
             min: ''
             max: ''
             value: ''
+            type: date
           group: 1
           exposed: true
           expose:
-            operator_id: nid_op
-            label: ID
+            operator_id: field_date_value_op
+            label: 'field_date (field_date)'
             description: ''
             use_operator: true
-            operator: nid_op
+            operator: field_date_value_op
             operator_limit_selection: true
             operator_list:
-              '<': '<'
-              '<=': '<='
               '=': '='
-            identifier: nid
+              '!=': '!='
+            identifier: field_date_value
             required: false
             remember: false
             multiple: false
@@ -100,6 +61,9 @@ display:
               authenticated: authenticated
               anonymous: '0'
               administrator: '0'
+            placeholder: ''
+            min_placeholder: ''
+            max_placeholder: ''
           is_grouped: false
           group_info:
             label: ''
@@ -112,17 +76,26 @@ display:
             default_group: All
             default_group_multiple: {  }
             group_items: {  }
-          entity_type: node
-          entity_field: nid
+          plugin_id: datetime
+      sorts:
+        id:
+          field: nid
+          id: nid
+          order: ASC
+          relationship: none
+          table: node_field_data
           plugin_id: numeric
       pager:
         type: full
+      query:
+        options:
+          query_comment: ''
+        type: views_query
       style:
         type: default
       row:
         type: fields
       display_extenders: {  }
-
     display_plugin: default
     display_title: Master
     id: default
@@ -137,13 +110,13 @@ display:
         - 'user.node_grants:view'
       tags: {  }
   page_1:
-    display_options:
-      path: test_filter_in_operator_ui
-      display_extenders: {  }
     display_plugin: page
-    display_title: Page
     id: page_1
-    position: 0
+    display_title: Page
+    position: 1
+    display_options:
+      display_extenders: {  }
+      path: test_exposed_filter_datetime
     cache_metadata:
       max-age: -1
       contexts:

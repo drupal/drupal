@@ -128,6 +128,8 @@ abstract class FilterPluginBase extends HandlerBase implements CacheableDependen
         'description' => ['default' => ''],
         'use_operator' => ['default' => FALSE],
         'operator' => ['default' => ''],
+        'operator_limit_selection' => ['default' => FALSE],
+        'operator_list' => ['default' => []],
         'identifier' => ['default' => ''],
         'required' => ['default' => FALSE],
         'remember' => ['default' => FALSE],
@@ -559,6 +561,36 @@ abstract class FilterPluginBase extends HandlerBase implements CacheableDependen
         '#description' => $this->t('Allow the user to choose the operator.'),
         '#default_value' => !empty($this->options['expose']['use_operator']),
       ];
+
+      $operators = $this->operatorOptions();
+      if (!empty($operators) && count($operators) > 1) {
+        $form['expose']['operator_limit_selection'] = [
+          '#type' => 'checkbox',
+          '#title' => $this->t('Limit the available operators'),
+          '#description' => $this->t('Limit the available operators to be shown on the exposed filter.'),
+          '#default_value' => !empty($this->options['expose']['operator_limit_selection']),
+          '#states' => [
+            'visible' => [
+              ':input[name="options[expose][use_operator]"]' => ['checked' => TRUE],
+            ],
+          ],
+        ];
+        $form['expose']['operator_list'] = [
+          '#type' => 'select',
+          '#title' => $this->t('Restrict operators to'),
+          '#default_value' => $this->options['expose']['operator_list'],
+          '#options' => $operators,
+          '#multiple' => TRUE,
+          '#description' => $this->t('Selecting none will make all of them available.'),
+          '#states' => [
+            'visible' => [
+              ':input[name="options[expose][operator_limit_selection]"]' => ['checked' => TRUE],
+              ':input[name="options[expose][use_operator]"]' => ['checked' => TRUE],
+            ],
+          ],
+        ];
+      }
+
       $form['expose']['operator_id'] = [
         '#type' => 'textfield',
         '#default_value' => $this->options['expose']['operator_id'],
@@ -623,6 +655,15 @@ abstract class FilterPluginBase extends HandlerBase implements CacheableDependen
   public function validateExposeForm($form, FormStateInterface $form_state) {
     $identifier = $form_state->getValue(['options', 'expose', 'identifier']);
     $this->validateIdentifier($identifier, $form_state, $form['expose']['identifier']);
+
+    $limit_operators = $form_state->getValue(['options', 'expose', 'operator_limit_selection']);
+    $operators_selected = $form_state->getValue(['options', 'expose', 'operator_list']);
+    $selected_operator = $form_state->getValue(['options', 'operator']);
+    if ($limit_operators && !in_array($selected_operator, $operators_selected, TRUE)) {
+      $form_state->setError(
+        $form['expose']['operator_list'],
+        $this->t('You selected the "@operator" operator as the default value but is not included in the list of limited operators.', ['@operator' => $this->operatorOptions()[$selected_operator]]));
+    }
   }
 
   /**
@@ -763,6 +804,8 @@ abstract class FilterPluginBase extends HandlerBase implements CacheableDependen
     $this->options['expose'] = [
       'use_operator' => FALSE,
       'operator' => $this->options['id'] . '_op',
+      'operator_limit_selection' => FALSE,
+      'operator_list' => [],
       'identifier' => $this->options['id'],
       'label' => $this->definition['title'],
       'description' => NULL,
@@ -848,6 +891,15 @@ abstract class FilterPluginBase extends HandlerBase implements CacheableDependen
     if (!empty($this->options['expose']['use_operator']) && !empty($this->options['expose']['operator_id'])) {
       $operator = $this->options['expose']['operator_id'];
       $this->operatorForm($form, $form_state);
+
+      // Limit the exposed operators if needed.
+      if (!empty($this->options['expose']['operator_limit_selection']) &&
+          !empty($this->options['expose']['operator_list'])) {
+
+        $options = $this->operatorOptions();
+        $operator_list = $this->options['expose']['operator_list'];
+        $form['operator']['#options'] = array_intersect_key($options, $operator_list);
+      }
       $form[$operator] = $form['operator'];
 
       $this->exposedTranslate($form[$operator], 'operator');

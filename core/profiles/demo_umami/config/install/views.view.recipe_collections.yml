@@ -123,6 +123,9 @@ display:
           entity_type: taxonomy_term
           entity_field: vid
           plugin_id: bundle
+          expose:
+            operator_limit_selection: false
+            operator_list: {  }
         langcode:
           id: langcode
           table: taxonomy_term_field_data
@@ -148,6 +151,8 @@ display:
             remember_roles:
               authenticated: authenticated
             reduce: false
+            operator_limit_selection: false
+            operator_list: {  }
           is_grouped: false
           group_info:
             label: ''

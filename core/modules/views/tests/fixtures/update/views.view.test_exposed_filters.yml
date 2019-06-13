@@ -1,17 +1,13 @@
 langcode: en
 status: true
 dependencies:
-  config:
-    - core.entity_view_mode.node.card
-    - node.type.recipe
-    - system.menu.main
   module:
     - node
     - user
-id: recipes
-label: Recipes
+id: test_exposed_filters
+label: 'Test Exposed filters'
 module: views
-description: 'Recipes listing'
+description: ''
 tag: ''
 base_table: node_field_data
 base_field: nid
@@ -51,13 +47,10 @@ display:
       pager:
         type: mini
         options:
-          items_per_page: 12
+          items_per_page: 10
           offset: 0
           id: 0
           total_pages: null
-          tags:
-            previous: ‹‹
-            next: ››
           expose:
             items_per_page: false
             items_per_page_label: 'Items per page'
@@ -66,13 +59,18 @@ display:
             items_per_page_options_all_label: '- All -'
             offset: false
             offset_label: Offset
+          tags:
+            previous: ‹‹
+            next: ››
       style:
         type: default
       row:
-        type: 'entity:node'
+        type: fields
         options:
-          relationship: none
-          view_mode: card
+          default_field_elements: true
+          inline: {  }
+          separator: ''
+          hide_empty: false
       fields:
         title:
           id: title
@@ -132,48 +130,33 @@ display:
           id: status
           expose:
             operator: ''
-            operator_limit_selection: false
-            operator_list: {  }
           group: 1
-        type:
-          id: type
+        title:
+          id: title
           table: node_field_data
-          field: type
-          value:
-            recipe: recipe
-          entity_type: node
-          entity_field: type
-          plugin_id: bundle
-          expose:
-            operator_limit_selection: false
-            operator_list: {  }
-        langcode:
-          id: langcode
-          table: node_field_data
-          field: langcode
+          field: title
           relationship: none
           group_type: group
           admin_label: ''
-          operator: in
-          value:
-            '***LANGUAGE_language_content***': '***LANGUAGE_language_content***'
+          operator: '='
+          value: ''
           group: 1
-          exposed: false
+          exposed: true
           expose:
-            operator_id: ''
-            label: ''
+            operator_id: title_op
+            label: Title
             description: ''
-            use_operator: false
-            operator: ''
-            identifier: ''
+            use_operator: true
+            operator: title_op
+            identifier: title
             required: false
             remember: false
             multiple: false
             remember_roles:
               authenticated: authenticated
-            reduce: false
-            operator_limit_selection: false
-            operator_list: {  }
+              anonymous: '0'
+              administrator: '0'
+            placeholder: ''
           is_grouped: false
           group_info:
             label: ''
@@ -187,8 +170,55 @@ display:
             default_group_multiple: {  }
             group_items: {  }
           entity_type: node
-          entity_field: langcode
-          plugin_id: language
+          entity_field: title
+          plugin_id: string
+        created:
+          id: created
+          table: node_field_data
+          field: created
+          relationship: none
+          group_type: group
+          admin_label: ''
+          operator: '='
+          value:
+            min: ''
+            max: ''
+            value: ''
+            type: date
+          group: 1
+          exposed: true
+          expose:
+            operator_id: created_op
+            label: 'Authored on'
+            description: ''
+            use_operator: true
+            operator: created_op
+            identifier: created
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+              anonymous: '0'
+              administrator: '0'
+            placeholder: ''
+            min_placeholder: ''
+            max_placeholder: ''
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+          entity_type: node
+          entity_field: created
+          plugin_id: date
       sorts:
         created:
           id: created
@@ -205,33 +235,19 @@ display:
           expose:
             label: ''
           granularity: second
-        nid:
-          id: nid
-          table: node_field_data
-          field: nid
-          relationship: none
-          group_type: group
-          admin_label: ''
-          order: ASC
-          exposed: false
-          expose:
-            label: ''
-          entity_type: node
-          entity_field: nid
-          plugin_id: standard
-      title: Recipes
+      title: 'Test Exposed filters'
       header: {  }
       footer: {  }
       empty: {  }
       relationships: {  }
       arguments: {  }
       display_extenders: {  }
-      css_class: grid--4
     cache_metadata:
       max-age: -1
       contexts:
         - 'languages:language_content'
         - 'languages:language_interface'
+        - url
         - url.query_args
         - 'user.node_grants:view'
         - user.permissions
@@ -243,21 +259,13 @@ display:
     position: 1
     display_options:
       display_extenders: {  }
-      path: recipes
-      menu:
-        type: normal
-        title: Recipes
-        description: ''
-        expanded: false
-        parent: ''
-        weight: 30
-        context: '0'
-        menu_name: main
+      path: test-exposed-filters
     cache_metadata:
       max-age: -1
       contexts:
         - 'languages:language_content'
         - 'languages:language_interface'
+        - url
         - url.query_args
         - 'user.node_grants:view'
         - user.permissions

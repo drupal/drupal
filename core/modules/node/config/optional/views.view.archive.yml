@@ -110,6 +110,8 @@ display:
           group: 0
           expose:
             operator: '0'
+            operator_limit_selection: false
+            operator_list: {  }
           plugin_id: boolean
           entity_type: node
           entity_field: status
@@ -138,6 +140,8 @@ display:
             remember_roles:
               authenticated: authenticated
             reduce: false
+            operator_limit_selection: false
+            operator_list: {  }
           is_grouped: false
           group_info:
             label: ''
