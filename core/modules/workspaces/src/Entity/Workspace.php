@@ -44,6 +44,7 @@ use Drupal\workspaces\WorkspaceInterface;
  *   revision_table = "workspace_revision",
  *   data_table = "workspace_field_data",
  *   revision_data_table = "workspace_field_revision",
+ *   field_ui_base_route = "entity.workspace.collection",
  *   entity_keys = {
  *     "id" = "id",
  *     "revision" = "revision_id",
