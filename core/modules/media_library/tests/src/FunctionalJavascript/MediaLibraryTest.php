@@ -26,7 +26,13 @@ class MediaLibraryTest extends WebDriverTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['block', 'media_library_test', 'field_ui'];
+  protected static $modules = [
+    'block',
+    'media_library_test',
+    'field_ui',
+    'views',
+    'views_ui',
+  ];
 
   /**
    * {@inheritdoc}
@@ -73,6 +79,7 @@ class MediaLibraryTest extends WebDriverTestBase {
       'delete any media',
       'view media',
       'administer node form display',
+      'administer views',
     ]);
     $this->drupalLogin($user);
     $this->drupalPlaceBlock('local_tasks_block');
@@ -270,6 +277,43 @@ class MediaLibraryTest extends WebDriverTestBase {
     // entity reference field is null.
     $assert_session->elementContains('css', '.field--name-field-null-types-media', $field_ui_uninstalled_message);
     $assert_session->elementNotExists('css', '.media-library-open-button[name^="field_null_types_media"]');
+  }
+
+  /**
+   * Tests that the integration with Views works correctly.
+   */
+  public function testViewsAdmin() {
+    $assert_session = $this->assertSession();
+    $page = $this->getSession()->getPage();
+
+    // Assert that the widget can be seen and that there are 8 items.
+    $this->drupalGet('/admin/structure/views/view/media_library/edit/widget');
+    $assert_session->assertWaitOnAjaxRequest();
+    $assert_session->elementsCount('css', '.media-library-item', 8);
+
+    // Assert that filtering works in live preview.
+    $page->find('css', '.media-library-view .view-filters')->fillField('name', 'snake');
+    $page->find('css', '.media-library-view .view-filters')->pressButton('Apply filters');
+    $assert_session->assertWaitOnAjaxRequest();
+    $assert_session->elementsCount('css', '.media-library-item', 1);
+
+    // Test the same routine but in the view for the table wiget.
+    $this->drupalGet('/admin/structure/views/view/media_library/edit/widget_table');
+    $assert_session->assertWaitOnAjaxRequest();
+    $assert_session->elementsCount('css', '.media-library-item', 8);
+
+    // Assert that filtering works in live preview.
+    $page->find('css', '.media-library-view .view-filters')->fillField('name', 'snake');
+    $page->find('css', '.media-library-view .view-filters')->pressButton('Apply filters');
+    $assert_session->assertWaitOnAjaxRequest();
+    $assert_session->elementsCount('css', '.media-library-item', 1);
+
+    // We cannot test clicking the 'Insert selected' button in either view
+    // because we expect an AJAX error, which would always throw an exception
+    // on ::tearDown even if we try to catch it here. If there is an API for
+    // marking certain elements 'unsuitable for previewing', we could test that
+    // here.
+    // @see https://www.drupal.org/project/drupal/issues/3060852
   }
 
   /**
