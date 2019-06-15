@@ -14,7 +14,7 @@ class CacheFactory implements CacheFactoryInterface, ContainerAwareInterface {
   use ContainerAwareTrait;
 
   /**
-   * The settings array.
+   * The site settings.
    *
    * @var \Drupal\Core\Site\Settings
    */
@@ -37,7 +37,7 @@ class CacheFactory implements CacheFactoryInterface, ContainerAwareInterface {
    * Constructs CacheFactory object.
    *
    * @param \Drupal\Core\Site\Settings $settings
-   *   The settings array.
+   *   The site settings.
    * @param array $default_bin_backends
    *   (optional) A mapping of bin to backend service name. Mappings in
    *   $settings take precedence over this.
