@@ -367,9 +367,17 @@ abstract class UpdatePathTestBase extends BrowserTestBase {
       // executed. But once the update has been completed, it needs to be valid
       // again. Assert the schema of all configuration objects now.
       $names = $this->container->get('config.storage')->listAll();
+
+      // Allow tests to opt out of checking specific configuration.
+      $exclude = $this->getConfigSchemaExclusions();
       /** @var \Drupal\Core\Config\TypedConfigManagerInterface $typed_config */
       $typed_config = $this->container->get('config.typed');
       foreach ($names as $name) {
+        if (in_array($name, $exclude, TRUE)) {
+          // Skip checking schema if the config is listed in the
+          // $configSchemaCheckerExclusions property.
+          continue;
+        }
         $config = $this->config($name);
         $this->assertConfigSchema($typed_config, $name, $config->get());
       }
