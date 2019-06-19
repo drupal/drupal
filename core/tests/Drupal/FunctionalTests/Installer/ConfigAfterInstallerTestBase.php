@@ -34,6 +34,7 @@ abstract class ConfigAfterInstallerTestBase extends InstallerTestBase {
       $result = $config_manager->diff($profile_config_storage, $active_config_storage, $config_name);
       try {
         $this->assertConfigDiff($result, $config_name, $skipped_config);
+        $this->pass("$config_name has no differences");
       }
       catch (\Exception $e) {
         $this->fail($e->getMessage());

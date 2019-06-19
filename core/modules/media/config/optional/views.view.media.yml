@@ -1,6 +1,8 @@
 langcode: en
 status: true
 dependencies:
+  config:
+    - image.style.thumbnail
   module:
     - image
     - media

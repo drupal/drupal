@@ -1,6 +1,8 @@
 langcode: en
 status: true
-dependencies: {  }
+dependencies:
+  module:
+    - language
 id: language-add
 label: 'Adding languages'
 module: language
