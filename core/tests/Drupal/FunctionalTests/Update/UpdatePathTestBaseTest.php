@@ -182,4 +182,18 @@ class UpdatePathTestBaseTest extends UpdatePathTestBase {
     $this->assertFalse(\Drupal::service('cache.default')->get(__CLASS__));
   }
 
+  /**
+   * Tests that schema can be excluded from testing.
+   *
+   * @see \Drupal\FunctionalTests\Update\UpdatePathTestBase::runUpdates()
+   * @see \Drupal\Core\Test\TestSetupTrait::$configSchemaCheckerExclusions
+   */
+  public function testSchemaChecking() {
+    // Create some configuration that should be skipped.
+    $this->config('config_schema_test.noschema')->set('foo', 'bar')->save();
+    $this->runUpdates();
+    $this->assertSame('bar', $this->config('config_schema_test.noschema')->get('foo'));
+
+  }
+
 }
