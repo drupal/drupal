@@ -307,8 +307,10 @@ class View extends ConfigEntityBase implements ViewEntityInterface {
     ksort($displays);
     $this->set('display', ['default' => $displays['default']] + $displays);
 
-    // @todo Check whether isSyncing is needed.
-    if (!$this->isSyncing()) {
+    // Calculating the cacheability metadata is only needed when the view is
+    // saved through the UI or API. It should not be done when we are syncing
+    // configuration or installing modules.
+    if (!$this->isSyncing() && !$this->hasTrustedData()) {
       $this->addCacheMetadata();
     }
   }
