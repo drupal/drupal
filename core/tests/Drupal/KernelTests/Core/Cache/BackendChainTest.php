@@ -13,7 +13,7 @@ use Drupal\Core\Cache\MemoryBackend;
 class BackendChainTest extends GenericCacheBackendUnitTestBase {
 
   protected function createCacheBackend($bin) {
-    $chain = new BackendChain($bin);
+    $chain = new BackendChain();
 
     // We need to create some various backends in the chain.
     $chain

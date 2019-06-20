@@ -11,6 +11,7 @@ use Drupal\Tests\UnitTestCase;
  * Unit test of backend chain implementation specifics.
  *
  * @group Cache
+ * @coversDefaultClass \Drupal\Core\Cache\BackendChain
  */
 class BackendChainImplementationUnitTest extends UnitTestCase {
 
@@ -72,7 +73,7 @@ class BackendChainImplementationUnitTest extends UnitTestCase {
     $this->thirdBackend->set('t3', 33);
 
     // Create the chain.
-    $this->chain = new BackendChain('foobarbaz');
+    $this->chain = new BackendChain();
     $this->chain
       ->appendBackend($this->firstBackend)
       ->appendBackend($this->secondBackend)
@@ -288,7 +289,7 @@ class BackendChainImplementationUnitTest extends UnitTestCase {
    * Test that removing bin propagates to all backends.
    */
   public function testRemoveBin() {
-    $chain = new BackendChain('foo');
+    $chain = new BackendChain();
     for ($i = 0; $i < 3; $i++) {
       $backend = $this->createMock('Drupal\Core\Cache\CacheBackendInterface');
       $backend->expects($this->once())->method('removeBin');
@@ -296,6 +297,17 @@ class BackendChainImplementationUnitTest extends UnitTestCase {
     }
 
     $chain->removeBin();
+  }
+
+  /**
+   * Tests deprecation of the constructor parameter.
+   *
+   * @group legacy
+   * @covers ::__construct
+   * @expectedDeprecation The $bin parameter is deprecated in drupal:8.0.0 and is removed from drupal:9.0.0. Omit the first parameter. See https://www.drupal.org/node/3061125
+   */
+  public function testConstructorParameterDeprecation() {
+    new BackendChain('arbitrary');
   }
 
 }
