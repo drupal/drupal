@@ -45,6 +45,13 @@ display:
           plugin_id: node
           entity_type: node
           entity_field: nid
+        title:
+          field: title
+          id: title
+          table: node_field_data
+          plugin_id: field
+          entity_type: node
+          entity_field: title
       pager:
         type: full
       query:
