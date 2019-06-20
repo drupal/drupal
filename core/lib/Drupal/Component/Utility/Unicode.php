@@ -556,8 +556,14 @@ EOD;
    *
    * @return string
    *   The flipped text.
+   *
+   * @deprecated in Drupal 8.8.0, will be removed before Drupal 9.0.0. There is
+   *   no direct replacement.
+   *
+   * @see https://www.drupal.org/node/3057322
    */
   public static function caseFlip($matches) {
+    @trigger_error('\Drupal\Component\Utility\Unicode::caseFlip() is deprecated in Drupal 8.8.0 and will be removed before Drupal 9.0.0. There is no direct replacement. See https://www.drupal.org/node/3057322', E_USER_DEPRECATED);
     return $matches[0][0] . chr(ord($matches[0][1]) ^ 32);
   }
 

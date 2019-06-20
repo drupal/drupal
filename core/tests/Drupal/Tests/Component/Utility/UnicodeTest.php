@@ -55,7 +55,6 @@ class UnicodeTest extends TestCase {
    *
    * @dataProvider providerStrtolower
    * @covers ::strtolower
-   * @covers ::caseFlip
    * @group legacy
    * @expectedDeprecation \Drupal\Component\Utility\Unicode::strtolower() is deprecated in Drupal 8.6.0 and will be removed before Drupal 9.0.0. Use mb_strtolower() instead. See https://www.drupal.org/node/2850048.
    */
@@ -84,7 +83,6 @@ class UnicodeTest extends TestCase {
    *
    * @dataProvider providerStrtoupper
    * @covers ::strtoupper
-   * @covers ::caseFlip
    * @group legacy
    * @expectedDeprecation \Drupal\Component\Utility\Unicode::strtoupper() is deprecated in Drupal 8.6.0 and will be removed before Drupal 9.0.0. Use mb_strtoupper() instead. See https://www.drupal.org/node/2850048.
    */
