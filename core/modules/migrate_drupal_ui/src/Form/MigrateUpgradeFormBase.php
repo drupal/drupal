@@ -57,52 +57,13 @@ abstract class MigrateUpgradeFormBase extends FormBase {
   }
 
   /**
-   * Gets and stores information for this migration in temporary store.
-   *
-   * Gets all the migrations, converts each to an array and stores it in the
-   * form state. The source base path for public and private files is also
-   * put into form state.
-   *
-   * @param array $database
-   *   Database array representing the source Drupal database.
-   * @param \Drupal\Core\Form\FormStateInterface $form_state
-   *   The current state of the form.
-   */
-  protected function setupMigrations(array $database, FormStateInterface $form_state) {
-    $connection = $this->getConnection($database);
-    $version = $this->getLegacyDrupalVersion($connection);
-    $this->createDatabaseStateSettings($database, $version);
-    $migrations = $this->getMigrations('migrate_drupal_' . $version, $version);
-
-    // Get the system data from source database.
-    $system_data = $this->getSystemData($connection);
-
-    // Convert the migration object into array
-    // so that it can be stored in form storage.
-    $migration_array = [];
-    foreach ($migrations as $migration) {
-      $migration_array[$migration->id()] = $migration->label();
-    }
-
-    // Store information in the private store.
-    $this->store->set('version', $version);
-    $this->store->set('migrations', $migration_array);
-    if ($version == 6) {
-      $this->store->set('source_base_path', $form_state->getValue('d6_source_base_path'));
-    }
-    else {
-      $this->store->set('source_base_path', $form_state->getValue('source_base_path'));
-    }
-    $this->store->set('source_private_file_path', $form_state->getValue('source_private_file_path'));
-    // Store the retrieved system data in the private store.
-    $this->store->set('system_data', $system_data);
-  }
-
-  /**
    * Helper to redirect to the Overview form.
    *
    * @return \Symfony\Component\HttpFoundation\RedirectResponse
    *   A redirect response object that may be returned by the controller.
+   *
+   * @throws \Drupal\Core\TempStore\TempStoreException
+   *   Thrown when a lock for the backend storage could not be acquired.
    */
   protected function restartUpgradeForm() {
     $this->store->set('step', 'overview');

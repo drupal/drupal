@@ -3,6 +3,7 @@
 namespace Drupal\migrate_drupal_ui\Form;
 
 use Drupal\Component\Utility\UrlHelper;
+use Drupal\Core\Database\Connection;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\TempStore\PrivateTempStoreFactory;
 use Drupal\migrate\Exception\RequirementsException;
@@ -217,25 +218,11 @@ class CredentialForm extends MigrateUpgradeFormBase {
         $this->errors[$name] = $message;
       }
     }
-    else {
-      $error_key = $database['driver'] . '[database';
+
+    // Get the Drupal version of the source database so it can be validated.
+    if (!$this->errors) {
       try {
         $connection = $this->getConnection($database);
-        $version = (string) $this->getLegacyDrupalVersion($connection);
-        if (!$version) {
-          $this->errors[$error_key] = $this->t('Source database does not contain a recognizable Drupal version.');
-        }
-        elseif ($version !== (string) $form_state->getValue('version')) {
-          $this->errors['version'] = $this->t('Source database is Drupal version @version but version @selected was selected.',
-            [
-              '@version' => $version,
-              '@selected' => $form_state->getValue('version'),
-            ]);
-        }
-        else {
-          // Setup migrations and save form data to private store.
-          $this->setupMigrations($database, $form_state);
-        }
       }
       catch (\Exception $e) {
         $msg = $this->t('Failed to connect to your database server. The server reports the following message: %error.<ul><li>Is the database server running?</li><li>Does the database exist, and have you entered the correct database name?</li><li>Have you entered the correct username and password?</li><li>Have you entered the correct database hostname?</li></ul>', ['%error' => $e->getMessage()]);
@@ -261,7 +248,7 @@ class CredentialForm extends MigrateUpgradeFormBase {
     // Setup migrations and save form data to private store.
     if (!$this->errors) {
       try {
-        $this->setupMigrations($database, $form_state);
+        $this->setupMigrations($connection, $version, $database, $form_state);
       }
       catch (BadPluginDefinitionException $e) {
         // BadPluginDefinitionException occurs if the source_module is not
@@ -330,6 +317,53 @@ class CredentialForm extends MigrateUpgradeFormBase {
     // Make sure the install API is available.
     include_once DRUPAL_ROOT . '/core/includes/install.inc';
     return drupal_get_database_types();
+  }
+
+  /**
+   * Gets and stores information for this migration in temporary store.
+   *
+   * Gets all the migrations, converts each to an array and stores it in the
+   * form state. The source base path for public and private files is also
+   * put into form state.
+   *
+   * @param \Drupal\Core\Database\Connection $connection
+   *   The database connection used.
+   * @param string $version
+   *   The Drupal version.
+   * @param array $database
+   *   Database array representing the source Drupal database.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The current state of the form.
+   *
+   * @throws \Drupal\Core\TempStore\TempStoreException
+   *   Thrown when a lock for the backend storage could not be acquired.
+   */
+  protected function setupMigrations(Connection $connection, $version, array $database, FormStateInterface $form_state) {
+    $this->createDatabaseStateSettings($database, $version);
+    $migrations = $this->getMigrations('migrate_drupal_' . $version, $version);
+
+    // Get the system data from source database.
+    $system_data = $this->getSystemData($connection);
+
+    // Convert the migration object into array
+    // so that it can be stored in form storage.
+    $migration_array = [];
+    foreach ($migrations as $migration) {
+      $migration_array[$migration->id()] = $migration->label();
+    }
+
+    // Store information in the private store.
+    $this->store->set('version', $version);
+    $this->store->set('migrations', $migration_array);
+    if ($version == 6) {
+      $this->store->set('source_base_path', $form_state->getValue('d6_source_base_path'));
+    }
+    else {
+      $this->store->set('source_base_path', $form_state->getValue('source_base_path'));
+    }
+    $this->store->set('source_private_file_path', $form_state->getValue('source_private_file_path'));
+    // Store the retrieved system data in the private store.
+    $this->store->set('system_data', $system_data);
   }
 
 }
