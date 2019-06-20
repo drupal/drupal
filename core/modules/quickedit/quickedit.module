@@ -12,9 +12,9 @@
  */
 
 use Drupal\Core\Url;
-use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
+use Drupal\Core\Entity\RevisionableInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 
 /**
@@ -134,7 +134,7 @@ function quickedit_preprocess_field(&$variables) {
   /** @var \Drupal\Core\Entity\ContentEntityInterface $entity */
   $entity = $element['#object'];
 
-  if (!\Drupal::currentUser()->hasPermission('access in-place editing') || !$entity->isLatestRevision()) {
+  if (!\Drupal::currentUser()->hasPermission('access in-place editing') || ($entity instanceof RevisionableInterface && !$entity->isLatestRevision())) {
     return;
   }
 
@@ -158,9 +158,8 @@ function quickedit_preprocess_field(&$variables) {
  * Implements hook_entity_view_alter().
  */
 function quickedit_entity_view_alter(&$build, EntityInterface $entity, EntityViewDisplayInterface $display) {
-  /** @var \Drupal\Core\Entity\ContentEntityInterface $entity */
   $build['#cache']['contexts'][] = 'user.permissions';
-  if (!\Drupal::currentUser()->hasPermission('access in-place editing') || !$entity->isLatestRevision()) {
+  if (!\Drupal::currentUser()->hasPermission('access in-place editing') || ($entity instanceof RevisionableInterface && !$entity->isLatestRevision())) {
     return;
   }
 
@@ -170,7 +169,7 @@ function quickedit_entity_view_alter(&$build, EntityInterface $entity, EntityVie
 /**
  * Check if a loaded entity is the latest revision.
  *
- * @param \Drupal\Core\Entity\ContentEntityInterface $entity
+ * @param \Drupal\Core\Entity\RevisionableInterface $entity
  *   The entity to check.
  *
  * @return bool
@@ -183,7 +182,7 @@ function quickedit_entity_view_alter(&$build, EntityInterface $entity, EntityVie
  *
  * @internal
  */
-function _quickedit_entity_is_latest_revision(ContentEntityInterface $entity) {
+function _quickedit_entity_is_latest_revision(RevisionableInterface $entity) {
   @trigger_error('_quickedit_entity_is_latest_revision() is deprecated in Drupal 8.5.0 and will be removed before Drupal 9.0.0. Use \Drupal\Core\Entity\RevisionableInterface::isLatestRevision() instead. As internal API, _quickedit_entity_is_latest_revision() may also be removed in a minor release.', E_USER_DEPRECATED);
   return $entity->isLatestRevision();
 }
