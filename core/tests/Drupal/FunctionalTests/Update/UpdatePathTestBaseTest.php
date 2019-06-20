@@ -183,9 +183,10 @@ class UpdatePathTestBaseTest extends UpdatePathTestBase {
   }
 
   /**
-   * Tests that test running environment is updated when module list changes.
+   * Tests that schema can be excluded from testing.
    *
-   * @see update_test_schema_update_8003()
+   * @see \Drupal\FunctionalTests\Update\UpdatePathTestBase::runUpdates()
+   * @see \Drupal\Core\Test\TestSetupTrait::$configSchemaCheckerExclusions
    */
   public function testSchemaChecking() {
     // Create some configuration that should be skipped.
