@@ -1,6 +1,6 @@
 name: 'Workflows'
 type: module
-description: 'Provides UI and API for managing workflows. This module can be used with the Content moderation module to add highly customizable workflows to content.'
+description: 'Provides an interface to create workflows with transitions between different states (for example publication or user status) provided by other modules.'
 version: VERSION
 core: 8.x
 package: Core
