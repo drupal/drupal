@@ -30,7 +30,7 @@ class TextField extends FieldPluginBase {
 
     switch ($field_type) {
       case 'string':
-        $formatter_type = str_replace('text_default', 'string', $formatter_type);
+        $formatter_type = str_replace(['text_default', 'text_plain'], 'string', $formatter_type);
         break;
       case 'string_long':
         $formatter_type = str_replace('text_default', 'basic_string', $formatter_type);
