@@ -1,8 +1,0 @@
-name: 'Umami demo: Tour'
-type: module
-description: 'A guide to the Umami food magazine Drupal demo.'
-version: VERSION
-core: 8.x
-dependencies:
-  - node
-  - tour

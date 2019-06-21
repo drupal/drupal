@@ -2,10 +2,10 @@ langcode: en
 status: true
 dependencies:
   module:
-    - node
+    - demo_umami
 id: umami-front
 label: 'Front page'
-module: demo_umami_tour
+module: demo_umami
 routes:
   - route_name: view.frontpage.page_1
 tips:
