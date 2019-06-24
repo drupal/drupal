@@ -630,35 +630,59 @@ function system_requirements($phase) {
   // Check the config directory if it is defined in settings.php. If it isn't
   // defined, the installer will create a valid config directory later, but
   // during runtime we must always display an error.
-  if (!empty($GLOBALS['config_directories'])) {
-    foreach (array_keys(array_filter($GLOBALS['config_directories'])) as $type) {
-      $directory = config_get_config_directory($type);
-      // If we're installing Drupal try and create the config sync directory.
-      if (!is_dir($directory) && $phase == 'install') {
-        \Drupal::service('file_system')->prepareDirectory($directory, FileSystemInterface::CREATE_DIRECTORY | FileSystemInterface::MODIFY_PERMISSIONS);
+  $config_sync_directory = Settings::get('config_sync_directory');
+  if (!empty($config_sync_directory)) {
+    // If we're installing Drupal try and create the config sync directory.
+    if (!is_dir($config_sync_directory) && $phase == 'install') {
+      \Drupal::service('file_system')->prepareDirectory($config_sync_directory, FileSystemInterface::CREATE_DIRECTORY | FileSystemInterface::MODIFY_PERMISSIONS);
+    }
+    if (!is_dir($config_sync_directory)) {
+      if ($phase == 'install') {
+        $description = t('An automated attempt to create the directory %directory failed, possibly due to a permissions problem. To proceed with the installation, either create the directory and modify its permissions manually or ensure that the installer has the permissions to create it automatically. For more information, see INSTALL.txt or the <a href=":handbook_url">online handbook</a>.', ['%directory' => $config_sync_directory, ':handbook_url' => 'https://www.drupal.org/server-permissions']);
       }
-      if (!is_dir($directory)) {
-        if ($phase == 'install') {
-          $description = t('An automated attempt to create the directory %directory failed, possibly due to a permissions problem. To proceed with the installation, either create the directory and modify its permissions manually or ensure that the installer has the permissions to create it automatically. For more information, see INSTALL.txt or the <a href=":handbook_url">online handbook</a>.', ['%directory' => $directory, ':handbook_url' => 'https://www.drupal.org/server-permissions']);
-        }
-        else {
-          $description = t('The directory %directory does not exist.', ['%directory' => $directory]);
-        }
-        $requirements['config directory ' . $type] = [
-          'title' => t('Configuration directory: %type', ['%type' => $type]),
-          'description' => $description,
-          'severity' => REQUIREMENT_ERROR,
-        ];
+      else {
+        $description = t('The directory %directory does not exist.', ['%directory' => $config_sync_directory]);
       }
+      $requirements['config sync directory'] = [
+        'title' => t('Configuration sync directory'),
+        'description' => $description,
+        'severity' => REQUIREMENT_ERROR,
+      ];
     }
   }
-  if ($phase != 'install' && (empty($GLOBALS['config_directories']) || empty($GLOBALS['config_directories'][CONFIG_SYNC_DIRECTORY]))) {
-    $requirements['config directories'] = [
-      'title' => t('Configuration directories'),
+  if ($phase != 'install' && empty($config_sync_directory)) {
+    $requirements['config sync directory'] = [
+      'title' => t('Configuration sync directory'),
       'value' => t('Not present'),
-      'description' => t('Your %file file must define the $config_directories variable as an array containing the names of directories in which configuration files can be found. It must contain a %sync_key key.', ['%file' => $site_path . '/settings.php', '%sync_key' => CONFIG_SYNC_DIRECTORY]),
+      'description' => t("Your %file file must define the %setting setting as a string containing the directory in which configuration files can be found.", ['%file' => $site_path . '/settings.php', '%setting' => "\$settings['config_sync_directory']"]),
       'severity' => REQUIREMENT_ERROR,
     ];
+  }
+
+  // Handle other configuration directories. This will be removed in Drupal 9.
+  // See https://www.drupal.org/node/3018145.
+  $bc_config_directories = isset($GLOBALS['config_directories']) ? $GLOBALS['config_directories'] : [];
+  unset($bc_config_directories['sync']);
+  foreach (array_keys(array_filter($bc_config_directories)) as $type) {
+    @trigger_error("Automatic creation of '$type' configuration directory will be removed from drupal:9.0.0. See https://www.drupal.org/node/3018145.", E_USER_DEPRECATED);
+    $directory = config_get_config_directory($type);
+    // If we're installing Drupal try and create the config sync directory.
+    if (!is_dir($directory) && $phase == 'install') {
+      \Drupal::service('file_system')->prepareDirectory($directory, FileSystemInterface::CREATE_DIRECTORY | FileSystemInterface::MODIFY_PERMISSIONS);
+    }
+    if (!is_dir($directory)) {
+      if ($phase == 'install') {
+        $description = t('An automated attempt to create the directory %directory failed, possibly due to a permissions problem. To proceed with the installation, either create the directory and modify its permissions manually or ensure that the installer has the permissions to create it automatically. For more information, see INSTALL.txt or the <a href=":handbook_url">online handbook</a>.', ['%directory' => $directory, ':handbook_url' => 'https://www.drupal.org/server-permissions']);
+      }
+      else {
+        $description = t('The directory %directory does not exist.', ['%directory' => $directory]);
+      }
+      $requirements['config directory ' . $type] = [
+        'title' => t('Configuration directory: %type', ['%type' => $type]),
+        'description' => $description,
+        'severity' => REQUIREMENT_ERROR,
+      ];
+    }
   }
 
   $requirements['file system'] = [

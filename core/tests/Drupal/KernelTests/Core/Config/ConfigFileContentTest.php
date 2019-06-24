@@ -3,6 +3,7 @@
 namespace Drupal\KernelTests\Core\Config;
 
 use Drupal\Core\Config\FileStorage;
+use Drupal\Core\Site\Settings;
 use Drupal\KernelTests\KernelTestBase;
 
 /**
@@ -205,7 +206,7 @@ class ConfigFileContentTest extends KernelTestBase {
     ];
 
     // Encode and write, and reload and decode the configuration data.
-    $filestorage = new FileStorage(config_get_config_directory(CONFIG_SYNC_DIRECTORY));
+    $filestorage = new FileStorage(Settings::get('config_sync_directory'));
     $filestorage->write($name, $config_data);
     $config_parsed = $filestorage->read($name);
 

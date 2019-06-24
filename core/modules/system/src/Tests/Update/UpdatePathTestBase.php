@@ -187,9 +187,6 @@ abstract class UpdatePathTestBase extends WebTestBase {
     $container = $this->initKernel($request);
     $this->initConfig($container);
 
-    // Add the config directories to settings.php.
-    drupal_install_config_directories();
-
     // Restore the original Simpletest batch.
     $this->restoreBatch();
 

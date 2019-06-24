@@ -4,9 +4,11 @@ namespace Drupal\Core\Installer\Form;
 
 use Drupal\Component\Utility\Crypt;
 use Drupal\Core\Database\Database;
+use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\RendererInterface;
+use Drupal\Core\Site\Settings;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -225,11 +227,25 @@ class SiteSettingsForm extends FormBase {
       'value'    => Crypt::randomBytesBase64(55),
       'required' => TRUE,
     ];
+    // If settings.php does not contain a config sync directory name we need to
+    // configure one.
+    if (empty(Settings::get('config_sync_directory'))) {
+      if (empty($install_state['config_install_path'])) {
+        // Add a randomized config directory name to settings.php
+        $config_sync_directory = $this->createRandomConfigDirectory();
+      }
+      else {
+        // Install profiles can contain a config sync directory. If they do,
+        // 'config_install_path' is a path to the directory.
+        $config_sync_directory = $install_state['config_install_path'];
+      }
+      $settings['settings']['config_sync_directory'] = (object) [
+        'value' => $config_sync_directory,
+        'required' => TRUE,
+      ];
+    }
 
     drupal_rewrite_settings($settings);
-
-    // Add the config directories to settings.php.
-    drupal_install_config_directories();
 
     // Indicate that the settings file has been verified, and check the database
     // for the last completed task, now that we have a valid connection. This
@@ -239,6 +255,28 @@ class SiteSettingsForm extends FormBase {
     $install_state['config_verified'] = TRUE;
     $install_state['database_verified'] = TRUE;
     $install_state['completed_task'] = install_verify_completed_task();
+  }
+
+  /**
+   * Create a random config sync directory.
+   *
+   * @return string
+   *   The path to the generated config sync directory.
+   */
+  protected function createRandomConfigDirectory() {
+    $config_sync_directory = \Drupal::service('site.path') . '/files/config_' . Crypt::randomBytesBase64(55) . '/sync';
+    // This should never fail, it is created here inside the public files
+    // directory, which has already been verified to be writable itself.
+    if (\Drupal::service('file_system')->prepareDirectory($config_sync_directory, FileSystemInterface::CREATE_DIRECTORY | FileSystemInterface::MODIFY_PERMISSIONS)) {
+      // Put a README.txt into the sync config directory. This is required so
+      // that they can later be added to git. Since this directory is
+      // auto-created, we have to write out the README rather than just adding
+      // it to the drupal core repo.
+      $text = 'This directory contains configuration to be imported into your Drupal site. To make this configuration active, visit admin/config/development/configuration/sync.' . ' For information about deploying configuration between servers, see https://www.drupal.org/documentation/administer/config';
+      file_put_contents($config_sync_directory . '/README.txt', $text);
+    }
+
+    return $config_sync_directory;
   }
 
 }

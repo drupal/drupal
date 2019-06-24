@@ -292,15 +292,12 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
     $this->siteDirectory = vfsStream::url('root/' . $test_site_path);
 
     mkdir($this->siteDirectory . '/files', 0775);
-    mkdir($this->siteDirectory . '/files/config/' . CONFIG_SYNC_DIRECTORY, 0775, TRUE);
+    mkdir($this->siteDirectory . '/files/config/sync', 0775, TRUE);
 
     $settings = Settings::getInstance() ? Settings::getAll() : [];
     $settings['file_public_path'] = $this->siteDirectory . '/files';
+    $settings['config_sync_directory'] = $this->siteDirectory . '/files/config/sync';
     new Settings($settings);
-
-    $GLOBALS['config_directories'] = [
-      CONFIG_SYNC_DIRECTORY => $this->siteDirectory . '/files/config/sync',
-    ];
   }
 
   /**
@@ -1051,9 +1048,9 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
     }
 
     if ($name === 'configDirectories') {
-      trigger_error(sprintf("KernelTestBase::\$%s no longer exists. Use config_get_config_directory() directly instead.", $name), E_USER_DEPRECATED);
+      trigger_error(sprintf("KernelTestBase::\$%s no longer exists. Use Settings::get('config_sync_directory') directly instead.", $name), E_USER_DEPRECATED);
       return [
-        CONFIG_SYNC_DIRECTORY => config_get_config_directory(CONFIG_SYNC_DIRECTORY),
+        CONFIG_SYNC_DIRECTORY => Settings::get('config_sync_directory'),
       ];
     }
 

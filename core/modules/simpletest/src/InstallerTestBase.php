@@ -148,9 +148,7 @@ abstract class InstallerTestBase extends WebTestBase {
       $request = Request::createFromGlobals();
       $class_loader = require $this->container->get('app.root') . '/autoload.php';
       Settings::initialize($this->container->get('app.root'), DrupalKernel::findSitePath($request), $class_loader);
-      foreach ($GLOBALS['config_directories'] as $type => $path) {
-        $this->configDirectories[$type] = $path;
-      }
+      $this->configDirectories['sync'] = Settings::get('config_sync_directory');
 
       // After writing settings.php, the installer removes write permissions
       // from the site directory. To allow drupal_generate_test_ua() to write

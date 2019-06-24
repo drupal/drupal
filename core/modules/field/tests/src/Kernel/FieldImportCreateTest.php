@@ -2,8 +2,8 @@
 
 namespace Drupal\Tests\field\Kernel;
 
+use Drupal\Core\Site\Settings;
 use Drupal\field\Entity\FieldConfig;
-
 use Drupal\field\Entity\FieldStorageConfig;
 
 /**
@@ -93,7 +93,7 @@ class FieldImportCreateTest extends FieldKernelTestBase {
 
     // Add the new files to the sync directory.
     $src_dir = __DIR__ . '/../../modules/field_test_config/sync';
-    $target_dir = config_get_config_directory(CONFIG_SYNC_DIRECTORY);
+    $target_dir = Settings::get('config_sync_directory');
     /** @var \Drupal\Core\File\FileSystemInterface $file_system */
     $file_system = \Drupal::service('file_system');
     $this->assertTrue($file_system->copy("$src_dir/$field_storage_config_name.yml", "$target_dir/$field_storage_config_name.yml"));

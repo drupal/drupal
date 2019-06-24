@@ -7,6 +7,7 @@ use Drupal\Core\Config\StorageInterface;
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Site\Settings;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -31,20 +32,34 @@ class ConfigImportForm extends FormBase {
   protected $fileSystem;
 
   /**
+   * The settings object.
+   *
+   * @var \Drupal\Core\Site\Settings
+   */
+  protected $settings;
+
+  /**
    * Constructs a new ConfigImportForm.
    *
    * @param \Drupal\Core\Config\StorageInterface $config_storage
    *   The configuration storage.
    * @param \Drupal\Core\File\FileSystemInterface $file_system
    *   The file system service.
+   * @param \Drupal\Core\Site\Settings $settings
+   *   The settings object.
    */
-  public function __construct(StorageInterface $config_storage, FileSystemInterface $file_system = NULL) {
+  public function __construct(StorageInterface $config_storage, FileSystemInterface $file_system = NULL, Settings $settings = NULL) {
     $this->configStorage = $config_storage;
     if (!isset($file_system)) {
       @trigger_error('The $file_system parameter was added in Drupal 8.8.0 and will be required in 9.0.0. See https://www.drupal.org/node/3021434.', E_USER_DEPRECATED);
       $file_system = \Drupal::service('file_system');
     }
     $this->fileSystem = $file_system;
+    if (!isset($settings)) {
+      @trigger_error('The $settings parameter was added in Drupal 8.8.0 and will be required in 9.0.0. See https://www.drupal.org/node/2980712.', E_USER_DEPRECATED);
+      $settings = \Drupal::service('settings');
+    }
+    $this->settings = $settings;
   }
 
   /**
@@ -53,7 +68,8 @@ class ConfigImportForm extends FormBase {
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('config.storage.sync'),
-      $container->get('file_system')
+      $container->get('file_system'),
+      $container->get('settings')
     );
   }
 
@@ -68,7 +84,7 @@ class ConfigImportForm extends FormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
-    $directory = config_get_config_directory(CONFIG_SYNC_DIRECTORY);
+    $directory = $this->settings->get('config_sync_directory');
     $directory_is_writable = is_writable($directory);
     if (!$directory_is_writable) {
       $this->messenger()->addError($this->t('The directory %directory is not writable.', ['%directory' => $directory]));
@@ -115,7 +131,7 @@ class ConfigImportForm extends FormBase {
         foreach ($archiver->listContent() as $file) {
           $files[] = $file['filename'];
         }
-        $archiver->extractList($files, config_get_config_directory(CONFIG_SYNC_DIRECTORY));
+        $archiver->extractList($files, $this->settings->get('config_sync_directory'));
         $this->messenger()->addStatus($this->t('Your configuration files were successfully uploaded and are ready for import.'));
         $form_state->setRedirect('config.sync');
       }

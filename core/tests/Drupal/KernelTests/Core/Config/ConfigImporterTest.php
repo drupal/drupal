@@ -749,15 +749,18 @@ class ConfigImporterTest extends KernelTestBase {
 
   /**
    * Tests config_get_config_directory().
+   *
+   * @group legacy
+   * @expectedDeprecation config_get_config_directory() is deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. Use \Drupal\Core\Site\Settings::get('config_sync_directory') instead. See https://www.drupal.org/node/3018145
    */
   public function testConfigGetConfigDirectory() {
     global $config_directories;
-    $directory = config_get_config_directory(CONFIG_SYNC_DIRECTORY);
-    $this->assertEqual($config_directories[CONFIG_SYNC_DIRECTORY], $directory);
+    // Ensure the global and the setting matches.
+    $this->assertSame(config_get_config_directory(CONFIG_SYNC_DIRECTORY), $config_directories[CONFIG_SYNC_DIRECTORY]);
 
-    $message = 'Calling config_get_config_directory() with CONFIG_ACTIVE_DIRECTORY results in an exception.';
+    $message = 'Calling config_get_config_directory() with an invalid key results in an exception.';
     try {
-      config_get_config_directory(CONFIG_ACTIVE_DIRECTORY);
+      config_get_config_directory('does_not_exist');
       $this->fail($message);
     }
     catch (\Exception $e) {

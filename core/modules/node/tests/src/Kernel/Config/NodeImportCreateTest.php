@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\node\Kernel\Config;
 
+use Drupal\Core\Site\Settings;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\node\Entity\NodeType;
 use Drupal\KernelTests\KernelTestBase;
@@ -60,7 +61,7 @@ class NodeImportCreateTest extends KernelTestBase {
     $this->copyConfig($active, $sync);
     // Manually add new node type.
     $src_dir = __DIR__ . '/../../../modules/node_test_config/sync';
-    $target_dir = config_get_config_directory(CONFIG_SYNC_DIRECTORY);
+    $target_dir = Settings::get('config_sync_directory');
     $this->assertTrue(\Drupal::service('file_system')->copy("$src_dir/$node_type_config_name.yml", "$target_dir/$node_type_config_name.yml"));
 
     // Import the content of the sync directory.

@@ -380,7 +380,7 @@ function install_begin_request($class_loader, &$install_state) {
 
   // Determine whether base system services are ready to operate.
   try {
-    $sync_directory = config_get_config_directory(CONFIG_SYNC_DIRECTORY);
+    $sync_directory = Settings::get('config_sync_directory', FALSE);
     $install_state['config_verified'] = file_exists($sync_directory);
   }
   catch (Exception $e) {
@@ -1532,13 +1532,13 @@ function _install_get_version_info($version) {
  *   profile information will be added here.
  */
 function install_load_profile(&$install_state) {
-  global $config_directories;
   $profile = $install_state['parameters']['profile'];
   $install_state['profiles'][$profile]->load();
   $install_state['profile_info'] = install_profile_info($profile, isset($install_state['parameters']['langcode']) ? $install_state['parameters']['langcode'] : 'en');
 
-  if (!empty($install_state['parameters']['existing_config']) && !empty($config_directories[CONFIG_SYNC_DIRECTORY])) {
-    $install_state['config_install_path'] = $config_directories[CONFIG_SYNC_DIRECTORY];
+  $sync_directory = Settings::get('config_sync_directory');
+  if (!empty($install_state['parameters']['existing_config']) && !empty($sync_directory)) {
+    $install_state['config_install_path'] = $sync_directory;
   }
   // If the profile has a config/sync directory copy the information to the
   // install_state global.

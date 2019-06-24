@@ -13,6 +13,7 @@ use Drupal\Core\Config\BootstrapConfigStorageFactory;
 use Drupal\Core\Logger\RfcLogLevel;
 use Drupal\Core\Test\TestDatabase;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\Site\Settings;
 use Drupal\Core\Utility\Error;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
@@ -158,7 +159,10 @@ const CONFIG_ACTIVE_DIRECTORY = 'active';
 /**
  * $config_directories key for sync directory.
  *
- * @see config_get_config_directory()
+ * @deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. Use
+ *   \Drupal\Core\Site\Settings::get('config_sync_directory') instead.
+ *
+ * @see https://www.drupal.org/node/3018145
  */
 const CONFIG_SYNC_DIRECTORY = 'sync';
 
@@ -196,10 +200,19 @@ define('DRUPAL_ROOT', dirname(dirname(__DIR__)));
  *   The configuration directory path.
  *
  * @throws \Exception
+ *
+ * @deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. Use
+ *   \Drupal\Core\Site\Settings::get('config_sync_directory') instead.
+ *
+ * @see https://www.drupal.org/node/3018145
  */
 function config_get_config_directory($type) {
   global $config_directories;
-
+  @trigger_error('config_get_config_directory() is deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. Use \Drupal\Core\Site\Settings::get(\'config_sync_directory\') instead. See https://www.drupal.org/node/3018145', E_USER_DEPRECATED);
+  $config_sync_directory = Settings::get('config_sync_directory', FALSE);
+  if ($config_sync_directory) {
+    $config_directories[CONFIG_SYNC_DIRECTORY] = $config_sync_directory;
+  }
   // @todo Remove fallback in Drupal 9. https://www.drupal.org/node/2574943
   if ($type == CONFIG_SYNC_DIRECTORY && !isset($config_directories[CONFIG_SYNC_DIRECTORY]) && isset($config_directories[CONFIG_STAGING_DIRECTORY])) {
     $type = CONFIG_STAGING_DIRECTORY;

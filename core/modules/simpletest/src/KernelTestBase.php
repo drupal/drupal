@@ -138,23 +138,26 @@ abstract class KernelTestBase extends TestBase {
   /**
    * Create and set new configuration directories.
    *
-   * @see config_get_config_directory()
+   * @see \Drupal\Core\Site\Settings::getConfigDirectory()
    *
    * @throws \RuntimeException
-   *   Thrown when CONFIG_SYNC_DIRECTORY cannot be created or made writable.
+   *   Thrown when the configuration sync directory cannot be created or made
+   *   writable.
+   *
+   * @return string
+   *   The config sync directory path.
    */
   protected function prepareConfigDirectories() {
     $this->configDirectories = [];
-    include_once DRUPAL_ROOT . '/core/includes/install.inc';
     // Assign the relative path to the global variable.
     $path = $this->siteDirectory . '/config_' . CONFIG_SYNC_DIRECTORY;
-    $GLOBALS['config_directories'][CONFIG_SYNC_DIRECTORY] = $path;
     // Ensure the directory can be created and is writeable.
     if (!\Drupal::service('file_system')->prepareDirectory($path, FileSystemInterface::CREATE_DIRECTORY | FileSystemInterface::MODIFY_PERMISSIONS)) {
       throw new \RuntimeException("Failed to create '" . CONFIG_SYNC_DIRECTORY . "' config directory $path");
     }
     // Provide the already resolved path for tests.
     $this->configDirectories[CONFIG_SYNC_DIRECTORY] = $path;
+    return $path;
   }
 
   /**
@@ -236,13 +239,13 @@ EOD;
     // @see \Drupal\Core\Extension\ExtensionDiscovery::scan()
     $settings['test_parent_site'] = $this->originalSite;
 
+    // Create and set new configuration directories.
+    $settings['config_sync_directory'] = $this->prepareConfigDirectories();
+
     // Restore and merge settings.
     // DrupalKernel::boot() initializes new Settings, and the containerBuild()
     // method sets additional settings.
     new Settings($settings + Settings::getAll());
-
-    // Create and set new configuration directories.
-    $this->prepareConfigDirectories();
 
     // Set the request scope.
     $this->container = $this->kernel->getContainer();

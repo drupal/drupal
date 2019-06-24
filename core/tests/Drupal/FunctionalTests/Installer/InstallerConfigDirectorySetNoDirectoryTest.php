@@ -5,7 +5,7 @@ namespace Drupal\FunctionalTests\Installer;
 use Drupal\Component\Utility\Crypt;
 
 /**
- * Tests the installer when a config_directory set up but does not exist.
+ * Tests the installer when a custom config directory set up but does not exist.
  *
  * @group Installer
  */
@@ -24,13 +24,8 @@ class InstallerConfigDirectorySetNoDirectoryTest extends InstallerTestBase {
   protected function prepareEnvironment() {
     parent::prepareEnvironment();
     $this->syncDirectory = $this->publicFilesDirectory . '/config_' . Crypt::randomBytesBase64() . '/sync';
-    $this->settings['config_directories'][CONFIG_SYNC_DIRECTORY] = (object) [
+    $this->settings['settings']['config_sync_directory'] = (object) [
       'value' => $this->syncDirectory,
-      'required' => TRUE,
-    ];
-    // Other directories will be created too.
-    $this->settings['config_directories']['custom'] = (object) [
-      'value' => $this->publicFilesDirectory . '/config_custom',
       'required' => TRUE,
     ];
   }
@@ -42,7 +37,6 @@ class InstallerConfigDirectorySetNoDirectoryTest extends InstallerTestBase {
     $this->assertUrl('user/1');
     $this->assertResponse(200);
     $this->assertTrue(file_exists($this->syncDirectory) && is_dir($this->syncDirectory), "The directory {$this->syncDirectory} exists.");
-    $this->assertTrue(file_exists($this->publicFilesDirectory . '/config_custom') && is_dir($this->publicFilesDirectory . '/config_custom'), "The directory {$this->publicFilesDirectory}/custom_config exists.");
   }
 
 }

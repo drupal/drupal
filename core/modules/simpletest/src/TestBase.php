@@ -1103,7 +1103,6 @@ abstract class TestBase {
     // Backup statics and globals.
     $this->originalContainer = \Drupal::getContainer();
     $this->originalLanguage = $language_interface;
-    $this->originalConfigDirectories = $GLOBALS['config_directories'];
 
     // Save further contextual information.
     // Use the original files directory to avoid nesting it within an existing
@@ -1274,9 +1273,6 @@ abstract class TestBase {
     $GLOBALS['config'] = $this->originalConfig;
     $GLOBALS['conf'] = $this->originalConf;
     new Settings($this->originalSettings);
-
-    // Restore original statics and globals.
-    $GLOBALS['config_directories'] = $this->originalConfigDirectories;
 
     // Re-initialize original stream wrappers of the parent site.
     // This must happen after static variables have been reset and the original

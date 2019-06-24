@@ -204,16 +204,14 @@ function drupal_get_database_types() {
  *   are dumped up to a stdClass object. The object can have value, required
  *   and comment properties.
  *   @code
- *   $settings['config_directories'] = array(
- *     CONFIG_SYNC_DIRECTORY => (object) array(
- *       'value' => 'config_hash/sync',
- *       'required' => TRUE,
- *     ),
+ *   $settings['settings']['config_sync_directory'] = (object) array(
+ *     'value' => 'config_hash/sync',
+ *     'required' => TRUE,
  *   );
  *   @endcode
  *   gets dumped as:
  *   @code
- *   $config_directories['sync'] = 'config_hash/sync'
+ *   $settings['config_sync_directory'] = 'config_hash/sync'
  *   @endcode
  */
 function drupal_rewrite_settings($settings = [], $settings_file = NULL) {
@@ -479,10 +477,13 @@ function _drupal_rewrite_settings_dump_one(\stdClass $variable, $prefix = '', $s
 /**
  * Creates the config directory and ensures it is operational.
  *
- * @see install_settings_form_submit()
- * @see update_prepare_d8_bootstrap()
+ * @deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. There is no
+ *   replacement.
+ *
+ * @see https://www.drupal.org/node/3018145
  */
 function drupal_install_config_directories() {
+  @trigger_error('drupal_install_config_directories() is deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. There is no replacement. See https://www.drupal.org/node/3018145.', E_USER_DEPRECATED);
   global $config_directories, $install_state;
 
   // If settings.php does not contain a config sync directory name we need to

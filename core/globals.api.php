@@ -62,7 +62,10 @@ global $config;
 /**
  * The location of file system directories used for site configuration data.
  *
- * @see drupal_install_config_directories()
+ * @deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. Use
+ *   \Drupal\Core\Site\Settings::get('config_sync_directory') instead.
+ *
+ * @see https://www.drupal.org/node/3018145
  */
 global $config_directories;
 

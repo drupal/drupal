@@ -49,13 +49,11 @@ class InstallerExistingSettingsReadOnlyMismatchProfileTest extends InstallerTest
 
     // Pre-configure config directories.
     $site_path = DrupalKernel::findSitePath(Request::createFromGlobals());
-    $this->settings['config_directories'] = [
-      CONFIG_SYNC_DIRECTORY => (object) [
-        'value' => $site_path . '/files/config_staging',
-        'required' => TRUE,
-      ],
+    $this->settings['settings']['config_sync_directory'] = (object) [
+      'value' => $site_path . '/files/config_staging',
+      'required' => TRUE,
     ];
-    mkdir($this->settings['config_directories'][CONFIG_SYNC_DIRECTORY]->value, 0777, TRUE);
+    mkdir($this->settings['settings']['config_sync_directory']->value, 0777, TRUE);
   }
 
   /**

@@ -43,6 +43,11 @@ trait FunctionalTestSetupTrait {
 
   /**
    * The config directories used in this test.
+   *
+   * @deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. Use
+   *   \Drupal\Core\Site\Settings::get('config_sync_directory') instead.
+   *
+   * @see https://www.drupal.org/node/3018145
    */
   protected $configDirectories = [];
 
@@ -293,9 +298,7 @@ trait FunctionalTestSetupTrait {
    */
   protected function initSettings() {
     Settings::initialize(DRUPAL_ROOT, $this->siteDirectory, $this->classLoader);
-    foreach ($GLOBALS['config_directories'] as $type => $path) {
-      $this->configDirectories[$type] = $path;
-    }
+    $this->configDirectories['sync'] = Settings::get('config_sync_directory');
 
     // After writing settings.php, the installer removes write permissions
     // from the site directory. To allow drupal_generate_test_ua() to write

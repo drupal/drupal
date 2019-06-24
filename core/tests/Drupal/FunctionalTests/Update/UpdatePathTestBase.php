@@ -3,11 +3,13 @@
 namespace Drupal\FunctionalTests\Update;
 
 use Drupal\Component\Utility\Crypt;
+use Drupal\Core\Site\Settings;
 use Drupal\Core\Test\TestRunnerKernel;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\SchemaCheckTestTrait;
 use Drupal\Core\Database\Database;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
+use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Url;
 use Drupal\Tests\RequirementsPageTrait;
@@ -185,7 +187,8 @@ abstract class UpdatePathTestBase extends BrowserTestBase {
     $this->installDrupal();
 
     // Add the config directories to settings.php.
-    drupal_install_config_directories();
+    $sync_directory = Settings::get('config_sync_directory');
+    \Drupal::service('file_system')->prepareDirectory($sync_directory, FileSystemInterface::CREATE_DIRECTORY | FileSystemInterface::MODIFY_PERMISSIONS);
 
     // Set the container. parent::rebuildAll() would normally do this, but this
     // not safe to do here, because the database has not been updated yet.
@@ -271,6 +274,12 @@ abstract class UpdatePathTestBase extends BrowserTestBase {
     // Force every update hook to only run one entity per batch.
     $settings['entity_update_batch_size'] = (object) [
       'value' => 1,
+      'required' => TRUE,
+    ];
+
+    // Set up sync directory.
+    $settings['settings']['config_sync_directory'] = (object) [
+      'value' => $this->publicFilesDirectory . '/config_sync',
       'required' => TRUE,
     ];
 
