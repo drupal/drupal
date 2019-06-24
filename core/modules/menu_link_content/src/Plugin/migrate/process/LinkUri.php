@@ -12,9 +12,32 @@ use Drupal\migrate\Row;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Processes a link path into an 'internal:' or 'entity:' URI.
+ * Generates an internal URI from the source value.
  *
- * @todo: Add documentation in https://www.drupal.org/node/2954908
+ * Converts the source path value to an 'entity:', 'internal:' or 'base:' URI.
+ *
+ * Available configuration keys:
+ * - source: A source path to be converted into an URI.
+ * - validate_route: (optional) Whether the plugin should validate that the URI
+ *   derived from the source link path has a valid Drupal route.
+ *   - TRUE: Throw a MigrateException if the resulting URI is not routed. This
+ *     value is the default.
+ *   - FALSE: Return the URI for the unrouted path.
+ *
+ * Examples:
+ *
+ * @code
+ * process:
+ *   link/uri:
+ *     plugin: link_uri
+ *     validate_route: false
+ *     source: link_path
+ * @endcode
+ *
+ * This will set the uri property of link to the internal notation of link_path
+ * without validating if the resulting URI is valid. For example, if the
+ * 'link_path' property is 'node/12', the uri property value of link will be
+ * 'entity:node/12'.
  *
  * @MigrateProcessPlugin(
  *   id = "link_uri"
