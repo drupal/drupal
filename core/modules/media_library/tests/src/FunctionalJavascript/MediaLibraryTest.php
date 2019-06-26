@@ -26,12 +26,14 @@ class MediaLibraryTest extends WebDriverTestBase {
   /**
    * {@inheritdoc}
    */
+
   protected static $modules = [
     'block',
     'media_library_test',
     'field_ui',
     'views',
     'views_ui',
+    'media_test_oembed',
   ];
 
   /**
@@ -1264,6 +1266,7 @@ class MediaLibraryTest extends WebDriverTestBase {
    * Tests that oEmbed media can be added in the Media library's widget.
    */
   public function testWidgetOEmbed() {
+    $this->hijackProviderEndpoints();
     $assert_session = $this->assertSession();
     $page = $this->getSession()->getPage();
 
@@ -1272,6 +1275,8 @@ class MediaLibraryTest extends WebDriverTestBase {
     $vimeo_title = "Drupal Rap Video - Schipulcon09";
     $vimeo_url = 'https://vimeo.com/7073899';
     ResourceController::setResourceUrl($youtube_url, $this->getFixturesDirectory() . '/video_youtube.json');
+    ResourceController::setResourceUrl($vimeo_url, $this->getFixturesDirectory() . '/video_vimeo.json');
+    ResourceController::setResource404('https://www.youtube.com/watch?v=PWjcqE3QKBg1');
 
     // Visit a node create page.
     $this->drupalGet('node/add/basic_page');
