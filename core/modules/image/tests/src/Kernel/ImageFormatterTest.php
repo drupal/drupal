@@ -3,6 +3,7 @@
 namespace Drupal\Tests\image\Kernel;
 
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
+use Drupal\Core\Url;
 use Drupal\entity_test\Entity\EntityTest;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
@@ -171,6 +172,31 @@ class ImageFormatterTest extends FieldKernelTestBase {
     // HTML attributes will not be present.
     $this->assertFalse(strpos($build[$this->fieldName][1]['#markup'], 'width'));
     $this->assertFalse(strpos($build[$this->fieldName][1]['#markup'], 'height'));
+  }
+
+  /**
+   * Tests Image Formatter URL options handling.
+   */
+  public function testImageFormatterUrlOptions() {
+    $this->display->setComponent($this->fieldName, ['settings' => ['image_link' => 'content']]);
+
+    // Create a test entity with the image field set.
+    $entity = EntityTest::create([
+      'name' => $this->randomMachineName(),
+    ]);
+    $entity->{$this->fieldName}->generateSampleItems(2);
+    $entity->save();
+
+    // Generate the render array to verify URL options are as expected.
+    $build = $this->display->build($entity);
+    $this->assertInstanceOf(Url::class, $build[$this->fieldName][0]['#url']);
+    $build[$this->fieldName][0]['#url']->setOption('attributes', ['data-attributes-test' => 'test123']);
+
+    /** @var \Drupal\Core\Render\RendererInterface $renderer */
+    $renderer = $this->container->get('renderer');
+
+    $output = $renderer->renderRoot($build[$this->fieldName][0]);
+    $this->assertContains('<a href="' . $entity->toUrl()->toString() . '" data-attributes-test="test123"', (string) $output);
   }
 
   /**
