@@ -2,6 +2,7 @@
 
 namespace Drupal\layout_builder\Plugin\SectionStorage;
 
+use Drupal\Component\Plugin\Context\ContextInterface as ComponentContextInterface;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Cache\RefinableCacheableDependencyInterface;
@@ -33,6 +34,7 @@ use Symfony\Component\Routing\RouteCollection;
  *   weight = 20,
  *   context_definitions = {
  *     "display" = @ContextDefinition("entity:entity_view_display"),
+ *     "view_mode" = @ContextDefinition("string", default_value = "default"),
  *   },
  * )
  *
@@ -430,6 +432,17 @@ class DefaultsSectionStorage extends SectionStorageBase implements ContainerFact
   public function isApplicable(RefinableCacheableDependencyInterface $cacheability) {
     $cacheability->addCacheableDependency($this);
     return $this->isLayoutBuilderEnabled();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setContext($name, ComponentContextInterface $context) {
+    // Set the view mode context based on the display context.
+    if ($name === 'display') {
+      $this->setContextValue('view_mode', $context->getContextValue()->getMode());
+    }
+    parent::setContext($name, $context);
   }
 
 }

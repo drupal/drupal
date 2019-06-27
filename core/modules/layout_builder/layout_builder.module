@@ -405,3 +405,15 @@ function layout_builder_preprocess_language_content_settings_table(&$variables) 
     }
   }
 }
+
+/**
+ * Implements hook_theme_suggestions_HOOK_alter().
+ */
+function layout_builder_theme_suggestions_field_alter(&$suggestions, array $variables) {
+  $element = $variables['element'];
+  if (isset($element['#third_party_settings']['layout_builder']['view_mode'])) {
+    // See system_theme_suggestions_field().
+    $suggestions[] = 'field__' . $element['#entity_type'] . '__' . $element['#field_name'] . '__' . $element['#bundle'] . '__' . $element['#third_party_settings']['layout_builder']['view_mode'];
+  }
+  return $suggestions;
+}

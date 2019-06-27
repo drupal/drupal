@@ -39,7 +39,7 @@ use Symfony\Component\Routing\RouteCollection;
  *     "entity" = @ContextDefinition("entity", constraints = {
  *       "EntityHasField" = \Drupal\layout_builder\Plugin\SectionStorage\OverridesSectionStorage::FIELD_NAME,
  *     }),
- *     "view_mode" = @ContextDefinition("string"),
+ *     "view_mode" = @ContextDefinition("string", default_value = "default"),
  *   }
  * )
  *

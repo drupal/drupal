@@ -109,6 +109,7 @@ trait LayoutEntityHelperTrait {
     $view_mode = 'full';
     if ($entity instanceof LayoutEntityDisplayInterface) {
       $contexts['display'] = EntityContext::fromEntity($entity);
+      $contexts['view_mode'] = new Context(new ContextDefinition('string'), $entity->getMode());
     }
     else {
       $contexts['entity'] = EntityContext::fromEntity($entity);

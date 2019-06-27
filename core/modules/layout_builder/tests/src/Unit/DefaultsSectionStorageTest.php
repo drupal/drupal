@@ -2,13 +2,17 @@
 
 namespace Drupal\Tests\layout_builder\Unit;
 
+use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityType;
 use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Entity\FieldableEntityInterface;
+use Drupal\Core\Plugin\Context\ContextDefinition;
 use Drupal\Core\Plugin\Context\ContextInterface;
+use Drupal\Core\Plugin\Context\EntityContextDefinition;
+use Drupal\Core\TypedData\TypedDataManagerInterface;
 use Drupal\layout_builder\Entity\LayoutEntityDisplayInterface;
 use Drupal\layout_builder\Entity\SampleEntityGeneratorInterface;
 use Drupal\layout_builder\Plugin\SectionStorage\DefaultsSectionStorage;
@@ -67,6 +71,17 @@ class DefaultsSectionStorageTest extends UnitTestCase {
    * @covers ::setThirdPartySetting
    */
   public function testThirdPartySettings() {
+    $this->entityTypeManager->getDefinition('entity_view_display')->willReturn(new EntityType(['id' => 'entity_view_display']));
+
+    $container = new ContainerBuilder();
+    $container->set('typed_data_manager', $this->prophesize(TypedDataManagerInterface::class)->reveal());
+    $container->set('entity_type.manager', $this->entityTypeManager->reveal());
+    \Drupal::setContainer($container);
+
+    $this->plugin->getPluginDefinition()
+      ->addContextDefinition('display', EntityContextDefinition::fromEntityTypeId('entity_view_display'))
+      ->addContextDefinition('view_mode', new ContextDefinition('string'));
+
     // Set an initial value on the section list.
     $section_list = $this->prophesize(LayoutEntityDisplayInterface::class);
 
