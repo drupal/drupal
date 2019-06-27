@@ -60,10 +60,15 @@
   width: 100%;
   padding: 10px 25px 10px 25px;
   vertical-align: top;
-  word-break: break-all;
+  word-break: break-word;
+  hyphens: auto;
   border: 1px solid #d3d7d9;
   font-size: 0.929em;
   line-height: 1.6;
+}
+
+.comment__content a {
+  hyphens: none;
 }
 
 .comment__content:before {
