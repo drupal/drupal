@@ -621,6 +621,47 @@ namespace Drupal\Tests\Component\DependencyInjection\Dumper {
     }
 
     /**
+     * Tests that service arguments with escaped percents are correctly dumped.
+     *
+     * @dataProvider percentsEscapeProvider
+     */
+    public function testPercentsEscape($expected, $argument) {
+      $this->containerBuilder->getDefinitions()->willReturn([
+        'test' => new Definition('\stdClass', [$argument]),
+      ]);
+
+      $dump = $this->dumper->getArray();
+
+      $this->assertEquals($this->serializeDefinition([
+        'class' => '\stdClass',
+        'arguments' => $this->getCollection([
+          $this->getRaw($expected),
+        ]),
+        'arguments_count' => 1,
+      ]), $dump['services']['test']);
+    }
+
+    /**
+     * Data provider for testPercentsEscape().
+     *
+     * @return array[]
+     *   Returns data-set elements with:
+     *     - expected final value.
+     *     - escaped value in service definition.
+     */
+    public function percentsEscapeProvider() {
+      return [
+        ['%foo%', '%%foo%%'],
+        ['foo%bar%', 'foo%%bar%%'],
+        ['%foo%bar', '%%foo%%bar'],
+        ['%', '%'],
+        ['%', '%%'],
+        ['%%', '%%%'],
+        ['%%', '%%%%'],
+      ];
+    }
+
+    /**
      * Helper function to return a private service definition.
      */
     protected function getPrivateServiceCall($id, $service_definition, $shared = FALSE) {
@@ -654,6 +695,16 @@ namespace Drupal\Tests\Component\DependencyInjection\Dumper {
       return (object) [
         'type' => 'parameter',
         'name' => $name,
+      ];
+    }
+
+    /**
+     * Helper function to return a raw value definition.
+     */
+    protected function getRaw($value) {
+      return (object) [
+        'type' => 'raw',
+        'value' => $value,
       ];
     }
 

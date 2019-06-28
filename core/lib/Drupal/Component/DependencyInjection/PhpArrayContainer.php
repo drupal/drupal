@@ -218,6 +218,11 @@ class PhpArrayContainer extends Container {
 
           continue;
         }
+        elseif ($type == 'raw') {
+          $arguments[$key] = $argument->value;
+
+          continue;
+        }
 
         if ($type !== NULL) {
           throw new InvalidArgumentException("Undefined type '$type' while resolving parameters and services.");

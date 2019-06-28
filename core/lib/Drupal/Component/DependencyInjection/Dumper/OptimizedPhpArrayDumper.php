@@ -402,8 +402,22 @@ class OptimizedPhpArrayDumper extends Dumper {
     elseif ($value instanceof Parameter) {
       return $this->getParameterCall((string) $value);
     }
-    elseif (is_string($value) && preg_match('/^\%(.*)\%$/', $value, $matches)) {
-      return $this->getParameterCall($matches[1]);
+    elseif (is_string($value) && FALSE !== strpos($value, '%')) {
+      if (preg_match('/^%([^%]+)%$/', $value, $matches)) {
+        return $this->getParameterCall($matches[1]);
+      }
+      else {
+        $replaceParameters = function ($matches) {
+          return $this->getParameterCall($matches[2]);
+        };
+
+        // We cannot directly return the string value because it would
+        // potentially not always be resolved in the dumpCollection() method.
+        return (object) [
+          'type' => 'raw',
+          'value' => str_replace('%%', '%', preg_replace_callback('/(?<!%)(%)([^%]+)\1/', $replaceParameters, $value)),
+        ];
+      }
     }
     elseif ($value instanceof Expression) {
       throw new RuntimeException('Unable to use expressions as the Symfony ExpressionLanguage component is not installed.');

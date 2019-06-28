@@ -520,6 +520,11 @@ class Container implements ContainerInterface {
 
           continue;
         }
+        elseif ($type == 'raw') {
+          $arguments[$key] = $argument->value;
+
+          continue;
+        }
 
         if ($type !== NULL) {
           throw new InvalidArgumentException(sprintf('Undefined type "%s" while resolving parameters and services.', $type));

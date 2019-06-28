@@ -752,6 +752,17 @@ class ContainerTest extends TestCase {
   }
 
   /**
+   * Tests that raw type services arguments are resolved correctly.
+   *
+   * @covers ::get
+   * @covers ::createService
+   * @covers ::resolveServicesAndParameters
+   */
+  public function testResolveServicesAndParametersForRawArgument() {
+    $this->assertEquals(['ccc'], $this->container->get('service_with_raw_argument')->getArguments());
+  }
+
+  /**
    * Gets a mock container definition.
    *
    * @return array
@@ -1002,6 +1013,12 @@ class ContainerTest extends TestCase {
       'configurator' => 'configurator_service_test_does_not_exist',
     ];
 
+    // Raw argument
+    $services['service_with_raw_argument'] = [
+      'class' => '\Drupal\Tests\Component\DependencyInjection\MockInstantiationService',
+      'arguments' => $this->getCollection([$this->getRaw('ccc')]),
+    ];
+
     $aliases = [];
     $aliases['service.provider_alias'] = 'service.provider';
     $aliases['late.service_alias'] = 'late.service';
@@ -1027,7 +1044,7 @@ class ContainerTest extends TestCase {
   }
 
   /**
-   * Helper function to return a service definition.
+   * Helper function to return a parameter definition.
    */
   protected function getParameterCall($name) {
     return (object) [
@@ -1060,6 +1077,16 @@ class ContainerTest extends TestCase {
       'type' => 'collection',
       'value' => $collection,
       'resolve' => $resolve,
+    ];
+  }
+
+  /**
+   * Helper function to return a raw value definition.
+   */
+  protected function getRaw($value) {
+    return (object) [
+      'type' => 'raw',
+      'value' => $value,
     ];
   }
 
