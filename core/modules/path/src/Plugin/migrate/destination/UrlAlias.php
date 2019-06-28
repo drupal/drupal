@@ -2,7 +2,7 @@
 
 namespace Drupal\path\Plugin\migrate\destination;
 
-use Drupal\Core\Path\AliasStorage;
+use Drupal\Core\Path\AliasStorageInterface;
 use Drupal\migrate\Plugin\MigrationInterface;
 use Drupal\migrate\Row;
 use Drupal\migrate\Plugin\migrate\destination\DestinationBase;
@@ -19,7 +19,7 @@ class UrlAlias extends DestinationBase implements ContainerFactoryPluginInterfac
   /**
    * The alias storage service.
    *
-   * @var \Drupal\Core\Path\AliasStorage
+   * @var \Drupal\Core\Path\AliasStorageInterface
    */
   protected $aliasStorage;
 
@@ -34,10 +34,10 @@ class UrlAlias extends DestinationBase implements ContainerFactoryPluginInterfac
    *   The plugin implementation definition.
    * @param \Drupal\migrate\Plugin\MigrationInterface $migration
    *   The migration.
-   * @param \Drupal\Core\Path\AliasStorage $alias_storage
+   * @param \Drupal\Core\Path\AliasStorageInterface $alias_storage
    *   The alias storage service.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, MigrationInterface $migration, AliasStorage $alias_storage) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, MigrationInterface $migration, AliasStorageInterface $alias_storage) {
     parent::__construct($configuration, $plugin_id, $plugin_definition, $migration);
     $this->aliasStorage = $alias_storage;
   }
