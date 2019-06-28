@@ -198,4 +198,26 @@ interface ModerationInformationInterface {
    */
   public function getUnsupportedFeatures(EntityTypeInterface $entity_type);
 
+  /**
+   * Gets the original or initial state of the given entity.
+   *
+   * When a state is being validated, the original state is used to validate
+   * that a valid transition exists for target state and the user has access
+   * to the transition between those two states. If the entity has been
+   * moderated before, we can load the original unmodified revision and
+   * translation for this state.
+   *
+   * If the entity is new we need to load the initial state from the workflow.
+   * Even if a value was assigned to the moderation_state field, the initial
+   * state is used to compute an appropriate transition for the purposes of
+   * validation.
+   *
+   * @param \Drupal\Core\Entity\ContentEntityInterface $entity
+   *   The content entity to get the workflow for.
+   *
+   * @return \Drupal\content_moderation\ContentModerationState
+   *   The original or default moderation state.
+   */
+  public function getOriginalState(ContentEntityInterface $entity);
+
 }

@@ -4,8 +4,6 @@ namespace Drupal\content_moderation\Plugin\Validation\Constraint;
 
 use Drupal\content_moderation\StateTransitionValidationInterface;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
-use Drupal\Core\Entity\ContentEntityInterface;
-use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\content_moderation\ModerationInformationInterface;
 use Drupal\Core\Session\AccountInterface;
@@ -110,7 +108,7 @@ class ModerationStateConstraintValidator extends ConstraintValidator implements 
     }
 
     $new_state = $workflow->getTypePlugin()->getState($entity->moderation_state->value);
-    $original_state = $this->getOriginalOrInitialState($entity);
+    $original_state = $this->moderationInformation->getOriginalState($entity);
 
     // If a new state is being set and there is an existing state, validate
     // there is a valid transition between them.
@@ -130,60 +128,6 @@ class ModerationStateConstraintValidator extends ConstraintValidator implements 
         ]);
       }
     }
-  }
-
-  /**
-   * Gets the original or initial state of the given entity.
-   *
-   * When a state is being validated, the original state is used to validate
-   * that a valid transition exists for target state and the user has access
-   * to the transition between those two states. If the entity has been
-   * moderated before, we can load the original unmodified revision and
-   * translation for this state.
-   *
-   * If the entity is new we need to load the initial state from the workflow.
-   * Even if a value was assigned to the moderation_state field, the initial
-   * state is used to compute an appropriate transition for the purposes of
-   * validation.
-   *
-   * @return \Drupal\workflows\StateInterface
-   *   The original or default moderation state.
-   */
-  protected function getOriginalOrInitialState(ContentEntityInterface $entity) {
-    $state = NULL;
-    $workflow_type = $this->moderationInformation->getWorkflowForEntity($entity)->getTypePlugin();
-    if (!$entity->isNew() && !$this->isFirstTimeModeration($entity)) {
-      $original_entity = $this->entityTypeManager->getStorage($entity->getEntityTypeId())->loadRevision($entity->getLoadedRevisionId());
-      if (!$entity->isDefaultTranslation() && $original_entity->hasTranslation($entity->language()->getId())) {
-        $original_entity = $original_entity->getTranslation($entity->language()->getId());
-      }
-      if ($workflow_type->hasState($original_entity->moderation_state->value)) {
-        $state = $workflow_type->getState($original_entity->moderation_state->value);
-      }
-    }
-    return $state ?: $workflow_type->getInitialState($entity);
-  }
-
-  /**
-   * Determines if this entity is being moderated for the first time.
-   *
-   * If the previous version of the entity has no moderation state, we assume
-   * that means it predates the presence of moderation states.
-   *
-   * @param \Drupal\Core\Entity\EntityInterface $entity
-   *   The entity being moderated.
-   *
-   * @return bool
-   *   TRUE if this is the entity's first time being moderated, FALSE otherwise.
-   */
-  protected function isFirstTimeModeration(EntityInterface $entity) {
-    $original_entity = $this->moderationInformation->getLatestRevision($entity->getEntityTypeId(), $entity->id());
-
-    if ($original_entity) {
-      $original_id = $original_entity->moderation_state;
-    }
-
-    return !($entity->moderation_state && $original_entity && $original_id);
   }
 
 }

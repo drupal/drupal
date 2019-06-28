@@ -110,6 +110,15 @@ class ModerationFormTest extends ModerationStateTestBase {
     $this->drupalGet($edit_path);
     $this->assertFieldByName('moderation_state[0][state]', 'published', 'The moderation default value is set correctly.');
 
+    // Preview the content while selecting the "draft" state and when the user
+    // returns to the edit form, ensure all of the available transitions are
+    // still those available from the "published" source state.
+    $this->submitForm(['moderation_state[0][state]' => 'draft'], 'Preview');
+    $this->clickLink('Back to content editing');
+    $this->assertSession()->optionExists('moderation_state[0][state]', 'draft');
+    $this->assertSession()->optionExists('moderation_state[0][state]', 'published');
+    $this->assertSession()->optionExists('moderation_state[0][state]', 'archived');
+
     // The published view should not have a moderation form, because it is the
     // live revision.
     $this->drupalGet($canonical_path);
@@ -306,6 +315,16 @@ class ModerationFormTest extends ModerationStateTestBase {
     $this->assertSession()->optionExists('moderation_state[0][state]', 'draft');
     $this->assertSession()->optionExists('moderation_state[0][state]', 'published');
     $this->assertSession()->optionExists('moderation_state[0][state]', 'archived');
+
+    // Preview the content while selecting the "draft" state and when the user
+    // returns to the edit form, ensure all of the available transitions are
+    // still those available from the "published" source state.
+    $this->submitForm(['moderation_state[0][state]' => 'draft'], 'Preview');
+    $this->clickLink('Back to content editing');
+    $this->assertSession()->optionExists('moderation_state[0][state]', 'draft');
+    $this->assertSession()->optionExists('moderation_state[0][state]', 'published');
+    $this->assertSession()->optionExists('moderation_state[0][state]', 'archived');
+
     $this->drupalPostForm(NULL, [
       'body[0][value]' => 'Third version of the content.',
       'moderation_state[0][state]' => 'draft',

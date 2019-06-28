@@ -185,4 +185,33 @@ class ModerationInformationTest extends KernelTestBase {
     $this->assertTrue($this->moderationInformation->hasPendingRevision($translated));
   }
 
+  /**
+   * @covers ::getOriginalState
+   */
+  public function testGetOriginalState() {
+    $entity = EntityTestMulRevPub::create([
+      'moderation_state' => 'published',
+    ]);
+    $entity->save();
+    $entity->moderation_state = 'foo';
+    $this->assertEquals('published', $this->moderationInformation->getOriginalState($entity)->id());
+  }
+
+  /**
+   * @covers ::getOriginalState
+   */
+  public function testGetOriginalStateMultilingual() {
+    $entity = EntityTestMulRevPub::create([
+      'moderation_state' => 'draft',
+    ]);
+    $entity->save();
+
+    $translated = $entity->addTranslation('de', $entity->toArray());
+    $translated->moderation_state = 'published';
+    $translated->save();
+
+    $translated->moderation_state = 'foo';
+    $this->assertEquals('published', $this->moderationInformation->getOriginalState($translated)->id());
+  }
+
 }

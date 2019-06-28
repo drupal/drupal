@@ -240,4 +240,45 @@ class ModerationInformation implements ModerationInformationInterface {
     return $features;
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function getOriginalState(ContentEntityInterface $entity) {
+    $state = NULL;
+    $workflow_type = $this->getWorkflowForEntity($entity)->getTypePlugin();
+    if (!$entity->isNew() && !$this->isFirstTimeModeration($entity)) {
+      /** @var \Drupal\Core\Entity\ContentEntityInterface $original_entity */
+      $original_entity = $this->entityTypeManager->getStorage($entity->getEntityTypeId())->loadRevision($entity->getLoadedRevisionId());
+      if (!$entity->isDefaultTranslation() && $original_entity->hasTranslation($entity->language()->getId())) {
+        $original_entity = $original_entity->getTranslation($entity->language()->getId());
+      }
+      if ($workflow_type->hasState($original_entity->moderation_state->value)) {
+        $state = $workflow_type->getState($original_entity->moderation_state->value);
+      }
+    }
+    return $state ?: $workflow_type->getInitialState($entity);
+  }
+
+  /**
+   * Determines if this entity is being moderated for the first time.
+   *
+   * If the previous version of the entity has no moderation state, we assume
+   * that means it predates the presence of moderation states.
+   *
+   * @param \Drupal\Core\Entity\ContentEntityInterface $entity
+   *   The entity being moderated.
+   *
+   * @return bool
+   *   TRUE if this is the entity's first time being moderated, FALSE otherwise.
+   */
+  protected function isFirstTimeModeration(ContentEntityInterface $entity) {
+    $original_entity = $this->getLatestRevision($entity->getEntityTypeId(), $entity->id());
+
+    if ($original_entity) {
+      $original_id = $original_entity->moderation_state;
+    }
+
+    return !($entity->moderation_state && $original_entity && $original_id);
+  }
+
 }
