@@ -51,16 +51,16 @@ use Drupal\Core\Form\FormStateInterface;
  * Filters are discovered through annotations, which may contain the following
  * definition properties:
  * - title: (required) An administrative summary of what the filter does.
- *   - type: (required) A classification of the filter's purpose. This is one
- *     of the following:
- *     - FilterInterface::TYPE_HTML_RESTRICTOR: HTML tag and attribute
- *       restricting filters.
- *     - FilterInterface::TYPE_MARKUP_LANGUAGE: Non-HTML markup language filters
- *       that generate HTML.
- *     - FilterInterface::TYPE_TRANSFORM_IRREVERSIBLE: Irreversible
- *       transformation filters.
- *     - FilterInterface::TYPE_TRANSFORM_REVERSIBLE: Reversible transformation
- *       filters.
+ * - type: (required) A classification of the filter's purpose. This is one of
+ *   the following:
+ *   - FilterInterface::TYPE_HTML_RESTRICTOR: HTML tag and attribute restricting
+ *     filters.
+ *   - FilterInterface::TYPE_MARKUP_LANGUAGE: Non-HTML markup language filters
+ *     that generate HTML.
+ *   - FilterInterface::TYPE_TRANSFORM_IRREVERSIBLE: Irreversible transformation
+ *     filters.
+ *   - FilterInterface::TYPE_TRANSFORM_REVERSIBLE: Reversible transformation
+ *     filters.
  * - description: Additional administrative information about the filter's
  *   behavior, if needed for clarification.
  * - status: The default status for new instances of the filter. Defaults to
