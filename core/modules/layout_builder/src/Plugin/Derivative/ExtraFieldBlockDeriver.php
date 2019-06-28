@@ -12,6 +12,7 @@ use Drupal\Core\Plugin\Context\EntityContextDefinition;
 use Drupal\Core\Plugin\Discovery\ContainerDeriverInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Drupal\Core\Entity\EntityTypeRepositoryInterface;
 
 /**
  * Provides entity field block definitions for every field.
@@ -45,6 +46,13 @@ class ExtraFieldBlockDeriver extends DeriverBase implements ContainerDeriverInte
   protected $entityTypeBundleInfo;
 
   /**
+   * The entity type repository.
+   *
+   * @var \Drupal\Core\Entity\EntityTypeRepositoryInterface
+   */
+  protected $entityTypeRepository;
+
+  /**
    * Constructs new FieldBlockDeriver.
    *
    * @param \Drupal\Core\Entity\EntityFieldManagerInterface $entity_field_manager
@@ -53,11 +61,14 @@ class ExtraFieldBlockDeriver extends DeriverBase implements ContainerDeriverInte
    *   The entity type manager.
    * @param \Drupal\Core\Entity\EntityTypeBundleInfoInterface $entity_type_bundle_info
    *   The entity type bundle info.
+   * @param \Drupal\Core\Entity\EntityTypeRepositoryInterface $entity_type_repository
+   *   The entity type repository.
    */
-  public function __construct(EntityFieldManagerInterface $entity_field_manager, EntityTypeManagerInterface $entity_type_manager, EntityTypeBundleInfoInterface $entity_type_bundle_info) {
+  public function __construct(EntityFieldManagerInterface $entity_field_manager, EntityTypeManagerInterface $entity_type_manager, EntityTypeBundleInfoInterface $entity_type_bundle_info, EntityTypeRepositoryInterface $entity_type_repository) {
     $this->entityFieldManager = $entity_field_manager;
     $this->entityTypeManager = $entity_type_manager;
     $this->entityTypeBundleInfo = $entity_type_bundle_info;
+    $this->entityTypeRepository = $entity_type_repository;
   }
 
   /**
@@ -67,7 +78,8 @@ class ExtraFieldBlockDeriver extends DeriverBase implements ContainerDeriverInte
     return new static(
       $container->get('entity_field.manager'),
       $container->get('entity_type.manager'),
-      $container->get('entity_type.bundle.info')
+      $container->get('entity_type.bundle.info'),
+      $container->get('entity_type.repository')
     );
   }
 
@@ -75,6 +87,7 @@ class ExtraFieldBlockDeriver extends DeriverBase implements ContainerDeriverInte
    * {@inheritdoc}
    */
   public function getDerivativeDefinitions($base_plugin_definition) {
+    $entity_type_labels = $this->entityTypeRepository->getEntityTypeLabels();
     foreach ($this->entityTypeManager->getDefinitions() as $entity_type_id => $entity_type) {
       // Only process fieldable entity types.
       if (!$entity_type->entityClassImplements(FieldableEntityInterface::class)) {
@@ -92,7 +105,7 @@ class ExtraFieldBlockDeriver extends DeriverBase implements ContainerDeriverInte
         foreach ($extra_fields['display'] as $extra_field_id => $extra_field) {
           $derivative = $base_plugin_definition;
 
-          $derivative['category'] = $entity_type->getLabel();
+          $derivative['category'] = $this->t('@entity fields', ['@entity' => $entity_type_labels[$entity_type_id]]);
 
           $derivative['admin_label'] = $extra_field['label'];
 

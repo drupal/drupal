@@ -821,12 +821,23 @@ class LayoutBuilderTest extends BrowserTestBase {
   public function testExtraFields() {
     $assert_session = $this->assertSession();
 
-    $this->drupalLogin($this->drupalCreateUser(['administer node display']));
+    $this->drupalLogin($this->drupalCreateUser([
+      'configure any layout',
+      'administer node display',
+    ]));
 
     $this->drupalGet('node');
     $assert_session->linkExists('Read more');
 
     $this->drupalPostForm('admin/structure/types/manage/bundle_with_section_field/display/default', ['layout[enabled]' => TRUE], 'Save');
+
+    // Extra fields display under "Content fields".
+    $this->drupalGet("admin/structure/types/manage/bundle_with_section_field/display/default/layout");
+    $this->clickLink('Add block');
+    $page = $this->getSession()->getPage();
+    $content_fields_category = $page->find('xpath', '//details/summary[contains(text(),"Content fields")]/parent::details');
+    $extra_field = strpos($content_fields_category->getText(), 'Extra label');
+    $this->assertTrue($extra_field !== FALSE);
 
     $this->drupalGet('node');
     $assert_session->linkExists('Read more');
