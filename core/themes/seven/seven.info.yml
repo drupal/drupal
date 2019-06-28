@@ -31,7 +31,7 @@ libraries-override:
   core/drupal.vertical-tabs:
     css:
       component:
-        misc/vertical-tabs.css: false
+        /core/themes/stable/css/core/vertical-tabs.css: false
   core/jquery.ui:
     css:
       theme:
