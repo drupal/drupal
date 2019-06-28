@@ -1,0 +1,12 @@
+services:
+  new_dependency_test.dependent:
+    class: Drupal\new_dependency_test\DependentService
+    arguments: ['@new_dependency_test_with_service.service']
+  new_dependency_test.decorated:
+    class: Drupal\new_dependency_test\DecoratedDependentService
+    arguments: ['@new_dependency_test.dependent']
+  new_dependency_test.decorated_optional:
+    class: Drupal\new_dependency_test\DecoratedDependentService
+    arguments: ['@?new_dependency_test.dependent']
+  new_dependency_test.alias:
+    alias: new_dependency_test.dependent

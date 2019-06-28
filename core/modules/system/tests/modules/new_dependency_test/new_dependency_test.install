@@ -1,0 +1,15 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for the new_dependency_test module.
+ */
+
+/**
+ * Enable the new_dependency_test_with_service module.
+ */
+function new_dependency_test_update_8001() {
+  // During the update hooks the container is cleaned up to contain only
+  // services that have their dependencies met. Core services are available.
+  \Drupal::getContainer()->get('module_installer')->install(['new_dependency_test_with_service']);
+}
