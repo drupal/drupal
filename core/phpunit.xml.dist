@@ -54,11 +54,20 @@
     <whitelist>
       <directory>./includes</directory>
       <directory>./lib</directory>
+      <!-- Extensions can have their own test directories, so exclude those. -->
       <directory>./modules</directory>
+      <exclude>
+        <directory>./modules/*/src/Tests</directory>
+        <directory>./modules/*/tests</directory>
+      </exclude>
       <directory>../modules</directory>
+      <exclude>
+        <directory>../modules/*/src/Tests</directory>
+        <directory>../modules/*/tests</directory>
+        <directory>../modules/*/*/src/Tests</directory>
+        <directory>../modules/*/*/tests</directory>
+      </exclude>
       <directory>../sites</directory>
-      <!-- Exclude all test modules, tests etc -->
-      <exclude-pattern>*/tests/*</exclude-pattern>
      </whitelist>
   </filter>
 </phpunit>
