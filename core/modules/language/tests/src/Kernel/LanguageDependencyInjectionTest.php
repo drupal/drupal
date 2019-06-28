@@ -21,9 +21,7 @@ class LanguageDependencyInjectionTest extends LanguageTestBase {
   public function testDependencyInjectedNewLanguage() {
     $expected = $this->languageManager->getDefaultLanguage();
     $result = $this->languageManager->getCurrentLanguage();
-    foreach ($expected as $property => $value) {
-      $this->assertEqual($expected->$property, $result->$property, format_string('The dependency injected language object %prop property equals the new Language object %prop property.', ['%prop' => $property]));
-    }
+    $this->assertSame($expected, $result);
   }
 
   /**

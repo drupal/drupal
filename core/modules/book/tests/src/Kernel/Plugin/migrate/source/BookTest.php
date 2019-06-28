@@ -85,6 +85,7 @@ class BookTest extends MigrateSqlSourceTestBase {
 
   /**
    * @expectedDeprecation Book is deprecated in Drupal 8.6.x and will be removed before Drupal 9.0.x. Use \Drupal\book\Plugin\migrate\source\Book instead. See https://www.drupal.org/node/2947487 for more information.
+   * @doesNotPerformAssertions
    */
   public function testDeprecatedPlugin() {
     new D6Book(

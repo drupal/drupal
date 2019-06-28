@@ -123,7 +123,7 @@ class ConnectionTest extends DatabaseTestBase {
     // This just tests mysql, as other PDO integrations don't allow disabling
     // multiple statements.
     if (Database::getConnection()->databaseType() !== 'mysql') {
-      return;
+      $this->markTestSkipped("This test only runs for MySQL");
     }
 
     $db = Database::getConnection('default', 'default');
@@ -160,7 +160,7 @@ class ConnectionTest extends DatabaseTestBase {
    */
   public function testPostgresqlReservedWords() {
     if (Database::getConnection()->databaseType() !== 'pgsql') {
-      return;
+      $this->markTestSkipped("This test only runs for PostgreSQL");
     }
 
     $db = Database::getConnection('default', 'default');

@@ -588,9 +588,6 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
       $this->container->get('kernel')->shutdown();
     }
 
-    // Fail in case any (new) shutdown functions exist.
-    $this->assertCount(0, drupal_register_shutdown_function(), 'Unexpected Drupal shutdown callbacks exist after running shutdown functions.');
-
     parent::assertPostConditions();
   }
 

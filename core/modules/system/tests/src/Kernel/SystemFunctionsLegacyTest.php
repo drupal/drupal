@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\system\Kernel;
 
+use Drupal\Core\Extension\Extension;
 use Drupal\KernelTests\KernelTestBase;
 
 /**
@@ -22,7 +23,8 @@ class SystemFunctionsLegacyTest extends KernelTestBase {
    * @see system_rebuild_module_data()
    */
   public function testSystemRebuildModuleDataDeprecation() {
-    system_rebuild_module_data();
+    $list = system_rebuild_module_data();
+    $this->assertInstanceOf(Extension::class, $list['system']);
   }
 
 }

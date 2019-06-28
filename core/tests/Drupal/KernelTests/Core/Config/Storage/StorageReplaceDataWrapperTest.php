@@ -55,7 +55,7 @@ class StorageReplaceDataWrapperTest extends ConfigStorageTestBase {
    * {@inheritdoc}
    */
   public function testInvalidStorage() {
-    // No-op as this test does not make sense.
+    $this->markTestSkipped('No-op as this test does not make sense');
   }
 
   /**

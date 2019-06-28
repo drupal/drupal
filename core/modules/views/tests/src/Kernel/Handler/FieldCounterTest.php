@@ -9,6 +9,9 @@ use Drupal\views\Views;
  * Tests the Drupal\views\Plugin\views\field\Counter handler.
  *
  * @group views
+ *
+ * @todo Write tests for pager in
+ *   https://www.drupal.org/project/drupal/issues/3063179
  */
 class FieldCounterTest extends ViewsKernelTestBase {
 
@@ -82,12 +85,6 @@ class FieldCounterTest extends ViewsKernelTestBase {
     $counter = $view->style_plugin->getField(2, 'counter');
     $expected_number = 2 + $rand_start;
     $this->assertEqual($counter, (string) $expected_number, format_string('Make sure the expected number (@expected) patches with the rendered number (@counter)', ['@expected' => $expected_number, '@counter' => $counter]));
-  }
-
-  /**
-   * @todo: Write tests for pager.
-   */
-  public function testPager() {
   }
 
 }

@@ -3,7 +3,6 @@
 namespace Drupal\Tests\field\Kernel;
 
 use Drupal\Component\Plugin\Discovery\DiscoveryInterface;
-use Drupal\Component\Plugin\Exception\PluginNotFoundException;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Entity\ContentEntityTypeInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
@@ -166,18 +165,13 @@ class FieldDefinitionIntegrityTest extends KernelTestBase {
   protected function checkDisplayOption($entity_type_id, $field_id, BaseFieldDefinition $field_definition, DiscoveryInterface $plugin_manager, $display_context) {
     $display_options = $field_definition->getDisplayOptions($display_context);
     if (!empty($display_options['type'])) {
-      try {
-        $plugin_manager->getDefinition($display_options['type']);
-      }
-      catch (PluginNotFoundException $e) {
-        $this->fail(sprintf(
-          'PluginNotFoundException here for "%s" field %s display options of "%s" entity type. Original message: %s',
-          $field_id,
-          $display_context,
-          $entity_type_id,
-          $e->getMessage()
-        ));
-      }
+      $plugin = $plugin_manager->getDefinition($display_options['type'], FALSE);
+      $this->assertNotNull($plugin, sprintf(
+        'Plugin found for "%s" field %s display options of "%s" entity type.',
+        $field_id,
+        $display_context,
+        $entity_type_id)
+      );
     }
   }
 
