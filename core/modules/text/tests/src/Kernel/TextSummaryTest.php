@@ -2,8 +2,13 @@
 
 namespace Drupal\Tests\text\Kernel;
 
+use Drupal\Core\Entity\Entity\EntityFormDisplay;
+use Drupal\entity_test\Entity\EntityTest;
+use Drupal\field\Entity\FieldConfig;
+use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\filter\Entity\FilterFormat;
+use Drupal\Tests\user\Traits\UserCreationTrait;
 
 /**
  * Tests text_summary() with different strings and lengths.
@@ -12,7 +17,16 @@ use Drupal\filter\Entity\FilterFormat;
  */
 class TextSummaryTest extends KernelTestBase {
 
-  public static $modules = ['system', 'user', 'filter', 'text'];
+  use UserCreationTrait;
+
+  public static $modules = [
+    'system',
+    'user',
+    'filter',
+    'text',
+    'field',
+    'entity_test',
+  ];
 
   protected function setUp() {
     parent::setUp();
@@ -225,6 +239,68 @@ class TextSummaryTest extends KernelTestBase {
       '@actual' => $summary,
       '@expected' => $expected,
     ]));
+  }
+
+  /**
+   * Test required summary.
+   */
+  public function testRequiredSummary() {
+    $this->installEntitySchema('entity_test');
+    $this->setUpCurrentUser();
+    $field_definition = FieldStorageConfig::create([
+      'field_name' => 'test_textwithsummary',
+      'type' => 'text_with_summary',
+      'entity_type' => 'entity_test',
+      'cardinality' => 1,
+      'settings' => [
+        'max_length' => 200,
+      ],
+    ]);
+    $field_definition->save();
+
+    $instance = FieldConfig::create([
+      'field_name' => 'test_textwithsummary',
+      'label' => 'A text field',
+      'entity_type' => 'entity_test',
+      'bundle' => 'entity_test',
+      'settings' => [
+        'text_processing' => TRUE,
+        'display_summary' => TRUE,
+        'required_summary' => TRUE,
+      ],
+    ]);
+    $instance->save();
+
+    EntityFormDisplay::create([
+      'targetEntityType' => 'entity_test',
+      'bundle' => 'entity_test',
+      'mode' => 'default',
+      'status' => TRUE,
+    ])->setComponent('test_textwithsummary', [
+      'type' => 'text_textarea_with_summary',
+      'settings' => [
+        'summary_rows' => 2,
+        'show_summary' => TRUE,
+      ],
+    ])
+      ->save();
+
+    // Check the required summary.
+    $entity = EntityTest::create([
+      'name' => $this->randomMachineName(),
+      'type' => 'entity_test',
+      'test_textwithsummary' => ['value' => $this->randomMachineName()],
+    ]);
+    $form = \Drupal::service('entity.form_builder')->getForm($entity);
+    $this->assertTrue(!empty($form['test_textwithsummary']['widget'][0]['summary']), 'Summary field is shown');
+    $this->assertTrue(!empty($form['test_textwithsummary']['widget'][0]['summary']['#required']), 'Summary field is required');
+
+    // Test validation.
+    /** @var \Symfony\Component\Validator\ConstraintViolation[] $violations */
+    $violations = $entity->validate();
+    $this->assertCount(1, $violations);
+    $this->assertEquals('test_textwithsummary.0.summary', $violations[0]->getPropertyPath());
+    $this->assertEquals('The summary field is required for A text field', $violations[0]->getMessage());
   }
 
 }

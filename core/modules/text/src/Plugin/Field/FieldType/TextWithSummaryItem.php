@@ -26,6 +26,7 @@ class TextWithSummaryItem extends TextItemBase {
   public static function defaultFieldSettings() {
     return [
       'display_summary' => 0,
+      'required_summary' => FALSE,
     ] + parent::defaultFieldSettings();
   }
 
@@ -95,7 +96,32 @@ class TextWithSummaryItem extends TextItemBase {
       '#description' => t('This allows authors to input an explicit summary, to be displayed instead of the automatically trimmed text when using the "Summary or trimmed" display type.'),
     ];
 
+    $element['required_summary'] = [
+      '#type' => 'checkbox',
+      '#title' => t('Require summary'),
+      '#description' => t('The summary will also be visible when marked as required.'),
+      '#default_value' => $settings['required_summary'],
+    ];
+
     return $element;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getConstraints() {
+    $constraints = parent::getConstraints();
+    if ($this->getSetting('required_summary')) {
+      $manager = $this->getTypedDataManager()->getValidationConstraintManager();
+      $constraints[] = $manager->create('ComplexData', [
+        'summary' => [
+          'NotNull' => [
+            'message' => $this->t('The summary field is required for @name', ['@name' => $this->getFieldDefinition()->getLabel()]),
+          ],
+        ],
+      ]);
+    }
+    return $constraints;
   }
 
 }
