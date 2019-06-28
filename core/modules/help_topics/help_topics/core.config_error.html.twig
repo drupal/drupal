@@ -1,0 +1,10 @@
+<meta name="help_topic:label" content="Configuring error responses, including 403/404 pages"/>
+<meta name="help_topic:related" content="core.config_basic,core.maintenance"/>
+{% set log_settings_url = render_var(url('system.logging_settings')) %}
+{% set site_settings_url = render_var(url('system.site_information_settings')) %}
+<h2>{% trans %}Configuring 403/404 pages{% endtrans %}</h2>
+<p>{% trans %}The core software provides default responses for 403 response (Not Authorized: when someone tries to visit a page they do not have permission to see) and 404 response (Not Found: when someone tries to visit a page that does not exist). You can change what page is displayed for these responses on the <a href="{{ site_settings_url }}"><em>Basic site settings</em></a> page, which you can reach in the main <em>Manage</em> administrative menu, by navigating to <em>Configuration</em> &gt; <em>System</em> &gt; <em>Basic site settings</em>. Note that the pages you want to use must already exist as either system-provided pages or content that you have created.{% endtrans %}</p>
+<h2>{% trans %}Responding to software errors{% endtrans %}</h2>
+<p>{% trans %}Software errors on your site are logged, if you have a logging module installed (such as the core Database Logging module or the core Syslog module). You can configure whether or not error messages are also shown (to both administrators and other site visitors) on the <a href="{{ log_settings_url }}"><em>Logging and errors</em></a> configuration page, which you can reach in the main <em>Manage</em> administrative menu, by navigating to <em>Configuration</em> &gt; <em>Development</em> &gt; <em>Logging and errors</em>.{% endtrans %}</p>
+<h2>{% trans %}Viewing the site log{% endtrans %}</h2>
+<p>{% trans %}If you have the core Database Logging module installed, you can view recent error and informational messages by navigating in the main <em>Manage</em> administrative menu to <em>Reports</em> &gt; <em>Recent log messages</em>. If you are using the core Syslog module for logging, error messages will be logged in your web server''s log files.{% endtrans %}</p>

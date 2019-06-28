@@ -1,0 +1,15 @@
+<meta name="help_topic:label" content="Changing basic site settings"/>
+<meta name="help_topic:top_level"/>
+<meta name="help_topic:related" content="user.security_account_settings"/>
+{% set regional_url = render_var(url('system.regional_settings')) %}
+{% set information_url = render_var(url('system.site_information_settings')) %}
+{% set datetime_url = render_var(url('entity.date_format.collection')) %}
+<p>{% trans %}The settings for your site are configured on various administrative pages, as follows:{% endtrans %}</p>
+<dl>
+  <dt>{% trans %}Site name, slogan, and email address{% endtrans %}</dt>
+  <dd>{% trans %}On the <a href="{{ information_url }}"><em>Basic site settings</em></a> page, which you can reach in the main <em>Manage</em> administrative menu, by navigating to <em>Configuration</em> &gt; <em>System</em> &gt; <em>Basic site settings</em>.{% endtrans %}</dd>
+  <dt>{% trans %}Time zone and country{% endtrans %}</dt>
+  <dd>{% trans %}On the <a href="{{ regional_url }}"><em>Regional settings</em></a> page, which you can reach in the main <em>Manage</em> administrative menu, by navigating to <em>Configuration</em> &gt; <em>Regional and language</em> &gt; <em>Regional settings</em>.{% endtrans %}</dd>
+  <dt>{% trans %}Date and time formats{% endtrans %}</dt>
+  <dd>{% trans %}On the <a href="{{ datetime_url }}"><em>Date and time formats</em></a> page, which you can reach in the main <em>Manage</em> administrative menu, by navigating to <em>Configuration</em> &gt; <em>Regional and language</em> &gt; <em>Date and time formats</em>.{% endtrans %}</dd>
+</dl>

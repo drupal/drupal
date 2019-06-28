@@ -1,0 +1,10 @@
+<meta name="help_topic:label" content="Defining how user accounts are created"/>
+<meta name="help_topic:related" content="core.security"/>
+{% set account_settings_url = render_var(url('entity.user.admin_form')) %}
+<p>{% trans %}On the <a href="{{ account_settings_url }}"><em>Account settings</em></a> page, which you can reach from the <em>Manage</em> administrative menu, by navigating to <em>Configuration</em> &gt; <em>People</em> &gt; <em>Account settings</em> (requires the <em>Administer account settings</em> permission), you can configure several settings related to how user accounts are created:{% endtrans %}</p>
+<ul>
+  <li>{% trans %}You can make it possible for new users to register themselves, with or without administrator approval. Or, you can make it so only administrators with <em>Administer users</em> permission can register new users.{% endtrans %}</li>
+  <li>{% trans %}You can require email verification of new user accounts.{% endtrans %}</li>
+  <li>{% trans %}You can enable or disable a password strength indicator, which is shown whenever passwords are being set up or changed.{% endtrans %}</li>
+  <li>{% trans %}You can edit the email messages that are sent to users in conjunction with the user registration process.{% endtrans %}</li>
+</ul>

@@ -231,6 +231,10 @@ Hypertext Application Language (HAL)
 Help
 - ?
 
+Help Topics
+- Amber Matz 'Amber Himes Matz' https://www.drupal.org/u/amber-himes-matz
+- Andrey Postnikov 'andypost' https://www.drupal.org/u/andypost
+
 Image
 - Claudiu Cristea 'claudiu.cristea' https://www.drupal.org/u/claudiu.cristea
 

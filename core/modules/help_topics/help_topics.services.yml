@@ -1,0 +1,17 @@
+services:
+  help_topics.breadcrumb:
+    class: Drupal\help_topics\HelpBreadcrumbBuilder
+    arguments: ['@string_translation']
+    tags:
+      - { name: breadcrumb_builder, priority: 900 }
+    public: false
+  plugin.manager.help_topic:
+    class: Drupal\help_topics\HelpTopicPluginManager
+    arguments: ['@module_handler', '@theme_handler', '@cache.discovery']
+  help_topics.twig.loader:
+    class: Drupal\help_topics\HelpTopicTwigLoader
+    arguments: ['@app.root', '@module_handler', '@theme_handler']
+    # Lowest core priority because loading help topics is not the usual case.
+    tags:
+    - { name: twig.loader, priority: -200 }
+    public: false

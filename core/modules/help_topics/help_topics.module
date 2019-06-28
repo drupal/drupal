@@ -1,0 +1,53 @@
+<?php
+
+/**
+ * @file
+ * Displays help topics provided by modules and themes.
+ */
+
+use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\Url;
+
+/**
+ * Implements hook_help().
+ */
+function help_topics_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    case 'help.page.help_topics':
+      $help_home = Url::fromRoute('help.main')->toString();
+      $locale_help = (\Drupal::moduleHandler()->moduleExists('locale')) ? Url::fromRoute('help.page', ['name' => 'locale'])->toString() : '#';
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('The Help Topics module adds module- and theme-provided help topics to the module overviews from the core Help module. For more information, see the <a href=":online">online documentation for the Help Topics module</a>.', [':online' => 'https://www.drupal.org/modules/help_topics']) . '</p>';
+      $output .= '<h3>' . t('Uses') . '</h3>';
+      $output .= '<dl>';
+      $output .= '<dt>' . t('Viewing help topics') . '</dt>';
+      $output .= '<dd>' . t('The top-level help topics are listed on the main <a href=":help_page">Help page</a>. Links to other topics, including non-top-level help topics, can be found under the "Related" heading when viewing a topic page.', [':help_page' => $help_home]) . '</dd>';
+      $output .= '<dt>' . t('Providing help topics') . '</dt>';
+      $output .= '<dd>' . t("Modules and themes can provide help topics as Twig-file-based plugins in a project sub-directory called <em>help_topics</em>; plugin meta-data is provided in meta tags within each Twig file. Plugin-based help topics provided by modules and themes will automatically be updated when a module or theme is updated. Use the plugins in <em>core/modules/help_topics/help_topics</em> as a guide when writing and formatting a help topic plugin for your theme or module.") . '</dd>';
+      $output .= '<dt>' . t('Translating help topics') . '</dt>';
+      $output .= '<dd>' . t('The title and body text of help topics provided by contributed modules and themes are translatable using the <a href=":locale_help">Interface Translation module</a>. Topics provided by custom modules and themes are also translatable if they have been viewed at least once in a non-English language, which triggers putting their translatable text into the translation database.', [':locale_help' => $locale_help]) . '</dd>';
+      $output .= '</dl>';
+      return ['#markup' => $output];
+
+    case 'help_topics.help_topic':
+      $help_home = Url::fromRoute('help.main')->toString();
+      return '<p>' . t('See the <a href=":help_page">Help page</a> for more topics.', [
+        ':help_page' => $help_home,
+      ]) . '</p>';
+  }
+}
+
+/**
+ * Implements hook_theme().
+ */
+function help_topics_theme() {
+  return [
+    'help_topic' => [
+      'variables' => [
+        'body' => [],
+        'related' => [],
+      ],
+    ],
+  ];
+}
