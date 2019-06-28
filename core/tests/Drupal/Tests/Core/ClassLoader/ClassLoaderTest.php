@@ -9,6 +9,7 @@ use Drupal\Tests\UnitTestCase;
 /**
  * @group ClassLoader
  * @group legacy
+ * @runTestsInSeparateProcesses
  */
 class ClassLoaderTest extends UnitTestCase {
 
