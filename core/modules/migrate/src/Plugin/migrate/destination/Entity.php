@@ -13,11 +13,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 /**
  * Provides a generic destination to import entities.
  *
- * Available configuration keys:
- * - translations: (optional) Boolean, if TRUE, the destination will be
- *   associated with the langcode provided by the source plugin. Defaults to
- *   FALSE.
- *
  * Examples:
  *
  * @code
@@ -48,11 +43,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *   revision_timestamp: timestamp
  * destination:
  *   plugin: entity:node
- *   translations: true
  * @endcode
- *
- * This will save the processed, migrated row as a node with the relevant
- * langcode because the translations configuration is set to "true".
  *
  * @MigrateDestination(
  *   id = "entity",
