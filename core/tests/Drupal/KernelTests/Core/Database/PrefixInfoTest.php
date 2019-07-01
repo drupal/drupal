@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\KernelTests\Core\Database\Driver\mysql;
+namespace Drupal\KernelTests\Core\Database;
 
 use Drupal\Core\Database\Database;
 
@@ -9,7 +9,7 @@ use Drupal\Core\Database\Database;
  *
  * @group Database
  */
-class PrefixInfoTest extends MySqlDriverTestBase {
+class PrefixInfoTest extends DatabaseTestBase {
 
   /**
    * Tests that DatabaseSchema::getPrefixInfo() returns the right database.
@@ -21,6 +21,11 @@ class PrefixInfoTest extends MySqlDriverTestBase {
    * set in the return array.
    */
   public function testGetPrefixInfo() {
+    // Only run this test for the 'mysql' driver.
+    $driver = $this->connection->driver();
+    if ($driver !== 'mysql') {
+      $this->markTestSkipped("MySql tests can not run for driver '$driver'.");
+    }
     $connection_info = Database::getConnectionInfo('default');
 
     // Copy the default connection info to the 'extra' key.
