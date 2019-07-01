@@ -39,7 +39,7 @@ class TextFieldTest extends UnitTestCase {
    * @covers ::getFieldType
    * @dataProvider getFieldFormatterTypeProvider
    */
-  public function testGetFieldType(string $type, string $formatter_type, string $expected) {
+  public function testGetFieldType($type, $formatter_type, $expected) {
     $row = new Row();
     $row->setSourceProperty('type', $type);
     $row->setSourceProperty('formatter/type', $formatter_type);
