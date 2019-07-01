@@ -31,7 +31,13 @@
   Drupal.behaviors.MediaLibraryTabs = {
     attach: function attach(context) {
       var $menu = $('.js-media-library-menu');
-      $menu.find('a', context).once('media-library-menu-item').on('click', function (e) {
+      $menu.find('a', context).once('media-library-menu-item').on('keypress', function (e) {
+        if (e.which === 32) {
+          e.preventDefault();
+          e.stopPropagation();
+          $(e.currentTarget).trigger('click');
+        }
+      }).on('click', function (e) {
         e.preventDefault();
         e.stopPropagation();
 
@@ -70,7 +76,11 @@
 
         $menu.find('.active-tab').remove();
         $menu.find('a').removeClass('active');
-        $(e.currentTarget).addClass('active').html(Drupal.t('@title<span class="active-tab visually-hidden"> (active tab)</span>', { '@title': $(e.currentTarget).html() }));
+        $(e.currentTarget).addClass('active').html(Drupal.t('<span class="visually-hidden">Show </span>@title<span class="visually-hidden"> media</span><span class="active-tab visually-hidden"> (selected)</span>', { '@title': $(e.currentTarget).data('title') }));
+
+        Drupal.announce(Drupal.t('Showing @title media.', {
+          '@title': $(e.currentTarget).data('title')
+        }));
       });
     }
   };
