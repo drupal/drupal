@@ -82,6 +82,15 @@
       $menu
         .find('a', context)
         .once('media-library-menu-item')
+        .on('keypress', e => {
+          // The AJAX link has the button role, so we need to make sure the link
+          // is also triggered when pressing the spacebar.
+          if (e.which === 32) {
+            e.preventDefault();
+            e.stopPropagation();
+            $(e.currentTarget).trigger('click');
+          }
+        })
         .on('click', e => {
           e.preventDefault();
           e.stopPropagation();
@@ -125,17 +134,24 @@
           };
           ajaxObject.execute();
 
-          // Set the active tab.
+          // Set the selected tab.
           $menu.find('.active-tab').remove();
           $menu.find('a').removeClass('active');
           $(e.currentTarget)
             .addClass('active')
             .html(
               Drupal.t(
-                '@title<span class="active-tab visually-hidden"> (active tab)</span>',
-                { '@title': $(e.currentTarget).html() },
+                '<span class="visually-hidden">Show </span>@title<span class="visually-hidden"> media</span><span class="active-tab visually-hidden"> (selected)</span>',
+                { '@title': $(e.currentTarget).data('title') },
               ),
             );
+
+          // Announce the updated content.
+          Drupal.announce(
+            Drupal.t('Showing @title media.', {
+              '@title': $(e.currentTarget).data('title'),
+            }),
+          );
         });
     },
   };

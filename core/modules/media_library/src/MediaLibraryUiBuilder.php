@@ -231,19 +231,24 @@ class MediaLibraryUiBuilder {
       $link_state->set('media_library_content', 1);
 
       $title = $allowed_type->label();
+      $display_title = [
+        '#markup' => $this->t('<span class="visually-hidden">Show </span>@title<span class="visually-hidden"> media</span>', ['@title' => $title]),
+      ];
       if ($allowed_type_id === $selected_type_id) {
-        $title = [
-          '#markup' => $this->t('@title<span class="active-tab visually-hidden"> (active tab)</span>', ['@title' => $title]),
+        $display_title = [
+          '#markup' => $this->t('<span class="visually-hidden">Show </span>@title<span class="visually-hidden"> media</span><span class="active-tab visually-hidden"> (selected)</span>', ['@title' => $title]),
         ];
       }
 
       $menu['#links']['media-library-menu-' . $allowed_type_id] = [
-        'title' => $title,
+        'title' => $display_title,
         'url' => Url::fromRoute('media_library.ui', [], [
           'query' => $link_state->all(),
         ]),
         'attributes' => [
           'class' => ['media-library-menu__link'],
+          'role' => 'button',
+          'data-title' => $title,
         ],
       ];
     }

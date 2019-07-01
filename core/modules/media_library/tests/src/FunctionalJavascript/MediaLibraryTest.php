@@ -471,7 +471,7 @@ class MediaLibraryTest extends WebDriverTestBase {
     foreach ($links as $link) {
       $link_titles[] = $link->getText();
     }
-    $expected_link_titles = ['Type Three (active tab)', 'Type One', 'Type Two', 'Type Four'];
+    $expected_link_titles = ['Show Type Three media (selected)', 'Show Type One media', 'Show Type Two media', 'Show Type Four media'];
     $this->assertSame($link_titles, $expected_link_titles);
     $this->drupalGet('admin/structure/types/manage/basic_page/form-display');
     $assert_session->buttonExists('field_twin_media_settings_edit')->press();
@@ -490,7 +490,22 @@ class MediaLibraryTest extends WebDriverTestBase {
     $link_titles = array_map(function ($link) {
       return $link->getText();
     }, $page->findAll('css', '.media-library-menu a'));
-    $this->assertSame($link_titles, ['Type One (active tab)', 'Type Three', 'Type Four', 'Type Two']);
+    $this->assertSame($link_titles, ['Show Type One media (selected)', 'Show Type Three media', 'Show Type Four media', 'Show Type Two media']);
+    $page->find('css', '.ui-dialog-titlebar-close')->click();
+
+    // Assert the announcements for media type navigation in the media library.
+    $assert_session->elementExists('css', '.media-library-open-button[name^="field_unlimited_media"]')->click();
+    $assert_session->assertWaitOnAjaxRequest();
+    $page->clickLink('Type Three');
+    $assert_session->assertWaitOnAjaxRequest();
+    $this->assertNotEmpty($assert_session->waitForText('Showing Type Three media.'));
+    $page->clickLink('Type One');
+    $assert_session->assertWaitOnAjaxRequest();
+    $this->assertNotEmpty($assert_session->waitForText('Showing Type One media.'));
+    // Assert the links can be triggered by via the spacebar.
+    $assert_session->elementExists('named', ['link', 'Type Three'])->keyPress(32);
+    $assert_session->assertWaitOnAjaxRequest();
+    $this->assertNotEmpty($assert_session->waitForText('Showing Type Three media.'));
     $page->find('css', '.ui-dialog-titlebar-close')->click();
 
     // Assert media is only visible on the tab for the related media type.
@@ -501,7 +516,8 @@ class MediaLibraryTest extends WebDriverTestBase {
     $assert_session->pageTextNotContains('Turtle');
     $page->clickLink('Type Three');
     $assert_session->assertWaitOnAjaxRequest();
-    $assert_session->elementExists('named', ['link', 'Type Three (active tab)']);
+    $this->assertNotEmpty($assert_session->waitForText('Showing Type Three media.'));
+    $assert_session->elementExists('named', ['link', 'Show Type Three media (selected)']);
     $assert_session->pageTextNotContains('Dog');
     $assert_session->pageTextNotContains('Bear');
     $assert_session->pageTextNotContains('Turtle');
@@ -1080,7 +1096,7 @@ class MediaLibraryTest extends WebDriverTestBase {
     $this->assertCount(2, $selected_checkboxes);
     // Ensure the created item is added in the widget.
     $assert_session->elementExists('css', '.ui-dialog-buttonpane')->pressButton('Insert selected');
-    $this->assertNotEmpty($assert_session->waitForText('Added one media item.'));
+    $this->assertNotEmpty($assert_session->waitForText('Added 2 media items.'));
     $assert_session->assertWaitOnAjaxRequest();
     $assert_session->pageTextNotContains('Add or select media');
     $assert_session->pageTextContains('Unlimited Cardinality Image');
