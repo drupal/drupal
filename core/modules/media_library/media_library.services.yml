@@ -1,7 +1,7 @@
 services:
   media_library.ui_builder:
     class: Drupal\media_library\MediaLibraryUiBuilder
-    arguments: ['@entity_type.manager', '@request_stack', '@views.executable', '@form_builder']
+    arguments: ['@entity_type.manager', '@request_stack', '@views.executable', '@form_builder', '@media_library.opener_resolver']
   media_library.route_subscriber:
     class: Drupal\media_library\Routing\RouteSubscriber
     tags:
@@ -12,3 +12,4 @@ services:
       - [setContainer, ['@service_container']]
   media_library.opener.field_widget:
     class: Drupal\media_library\MediaLibraryFieldWidgetOpener
+    arguments: ['@entity_type.manager']
