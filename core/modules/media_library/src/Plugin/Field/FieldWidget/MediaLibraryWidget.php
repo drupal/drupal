@@ -461,9 +461,17 @@ class MediaLibraryWidget extends WidgetBase implements ContainerFactoryPluginInt
     // This particular media library opener needs some extra metadata for its
     // \Drupal\media_library\MediaLibraryOpenerInterface::getSelectionResponse()
     // to be able to target the element whose 'data-media-library-widget-value'
-    // attribute is the same as $field_widget_id.
+    // attribute is the same as $field_widget_id. The entity ID, entity type ID,
+    // bundle, field name are used for access checking.
+    $entity = $items->getEntity();
     $state = MediaLibraryState::create('media_library.opener.field_widget', $allowed_media_type_ids, $selected_type_id, $remaining, [
       'field_widget_id' => $field_widget_id,
+      'entity_type_id' => $entity->getEntityTypeId(),
+      'bundle' => $entity->bundle(),
+      'field_name' => $field_name,
+      // The entity ID needs to be a string to ensure that the media library
+      // state generates its tamper-proof hash in a consistent way.
+      'entity_id' => (string) $entity->id(),
     ]);
 
     // Add a button that will load the Media library in a modal using AJAX.

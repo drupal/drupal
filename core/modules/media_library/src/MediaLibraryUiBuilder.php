@@ -54,6 +54,13 @@ class MediaLibraryUiBuilder {
   protected $viewsExecutableFactory;
 
   /**
+   * The media library opener resolver.
+   *
+   * @var \Drupal\media_library\OpenerResolverInterface
+   */
+  protected $openerResolver;
+
+  /**
    * Constructs a MediaLibraryUiBuilder instance.
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
@@ -64,12 +71,19 @@ class MediaLibraryUiBuilder {
    *   The views executable factory.
    * @param \Drupal\Core\Form\FormBuilderInterface $form_builder
    *   The currently active request object.
+   * @param \Drupal\media_library\OpenerResolverInterface $opener_resolver
+   *   The opener resolver.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, RequestStack $request_stack, ViewExecutableFactory $views_executable_factory, FormBuilderInterface $form_builder) {
+  public function __construct(EntityTypeManagerInterface $entity_type_manager, RequestStack $request_stack, ViewExecutableFactory $views_executable_factory, FormBuilderInterface $form_builder, OpenerResolverInterface $opener_resolver = NULL) {
     $this->entityTypeManager = $entity_type_manager;
     $this->request = $request_stack->getCurrentRequest();
     $this->viewsExecutableFactory = $views_executable_factory;
     $this->formBuilder = $form_builder;
+    if (!$opener_resolver) {
+      @trigger_error('The media_library.opener_resolver service must be passed to ' . __METHOD__ . ' and will be required before Drupal 9.0.0.', E_USER_DEPRECATED);
+      $opener_resolver = \Drupal::service('media_library.opener_resolver');
+    }
+    $this->openerResolver = $opener_resolver;
   }
 
   /**
@@ -159,7 +173,7 @@ class MediaLibraryUiBuilder {
    * Check access to the media library.
    *
    * @param \Drupal\Core\Session\AccountInterface $account
-   *   (optional) Run access checks for this account.
+   *   Run access checks for this account.
    * @param \Drupal\media_library\MediaLibraryState $state
    *   (optional) The current state of the media library, derived from the
    *   current request.
@@ -167,10 +181,10 @@ class MediaLibraryUiBuilder {
    * @return \Drupal\Core\Access\AccessResult
    *   The access result.
    */
-  public function checkAccess(AccountInterface $account = NULL, MediaLibraryState $state = NULL) {
+  public function checkAccess(AccountInterface $account, MediaLibraryState $state = NULL) {
     if (!$state) {
       try {
-        MediaLibraryState::fromRequest($this->request);
+        $state = MediaLibraryState::fromRequest($this->request);
       }
       catch (BadRequestHttpException $e) {
         return AccessResult::forbidden($e->getMessage());
@@ -189,8 +203,16 @@ class MediaLibraryUiBuilder {
       return AccessResult::forbidden('The media library widget display does not exist.')
         ->addCacheableDependency($view);
     }
-    return AccessResult::allowedIfHasPermission($account, 'view media')
+
+    // The user must at least be able to view media in order to access the media
+    // library.
+    $can_view_media = AccessResult::allowedIfHasPermission($account, 'view media')
       ->addCacheableDependency($view);
+
+    // Delegate any further access checking to the opener service nominated by
+    // the media library state.
+    return $this->openerResolver->get($state)->checkAccess($state, $account)
+      ->andIf($can_view_media);
   }
 
   /**

@@ -332,7 +332,13 @@ class MediaLibraryTest extends WebDriverTestBase {
 
     // Create a working state.
     $allowed_types = ['type_one', 'type_two', 'type_three', 'type_four'];
-    $state = MediaLibraryState::create('test', $allowed_types, 'type_three', 2);
+    // The opener parameters are not relevant to the test, but the opener
+    // expects them to be there or it will deny access.
+    $state = MediaLibraryState::create('media_library.opener.field_widget', $allowed_types, 'type_three', 2, [
+      'entity_type_id' => 'node',
+      'bundle' => 'basic_page',
+      'field_name' => 'field_unlimited_media',
+    ]);
     $url_options = ['query' => $state->all()];
 
     // Verify that unprivileged users can't access the widget view.
@@ -344,8 +350,10 @@ class MediaLibraryTest extends WebDriverTestBase {
     $assert_session->responseContains('Access denied');
 
     // Allow users with 'view media' permission to access the media library view
-    // and controller.
+    // and controller. Since we are using the node entity type in the state
+    // object, ensure the user also has permission to work with those.
     $this->grantPermissions($role, [
+      'create basic_page content',
       'view media',
     ]);
     $this->drupalGet('admin/content/media-widget', $url_options);
