@@ -78,6 +78,7 @@ class MediaLibraryTest extends WebDriverTestBase {
       'edit own basic_page content',
       'create basic_page content',
       'create media',
+      'update any media',
       'delete any media',
       'view media',
       'administer node form display',
@@ -105,6 +106,12 @@ class MediaLibraryTest extends WebDriverTestBase {
     // Verify that media from two separate types is present.
     $assert_session->pageTextContains('Dog');
     $assert_session->pageTextContains('Turtle');
+
+    // Verify that the media name does not contain a link.
+    $assert_session->elementNotExists('css', '.media-library-item__name a');
+    // Verify that there are links to edit and delete media items.
+    $assert_session->elementExists('css', '.media-library-item .media-library-item__edit');
+    $assert_session->elementExists('css', '.media-library-item .media-library-item__remove');
 
     // Test that users can filter by type.
     $page->selectFieldOption('Media type', 'Type One');
@@ -429,7 +436,7 @@ class MediaLibraryTest extends WebDriverTestBase {
     $assert_session->assertWaitOnAjaxRequest();
     $assert_session->pageTextContains('Add or select media');
     $this->assertFalse($assert_session->elementExists('css', '.media-library-select-all')->isVisible());
-    $page->find('css', '.ui-dialog-titlebar-close')->click();
+    $assert_session->elementExists('css', '.ui-dialog-titlebar-close')->click();
 
     // Assert that the media type menu is available when more than 1 type is
     // configured for the field.
@@ -440,7 +447,16 @@ class MediaLibraryTest extends WebDriverTestBase {
     $this->assertFalse($menu->hasLink('Type Two'));
     $this->assertTrue($menu->hasLink('Type Three'));
     $this->assertFalse($menu->hasLink('Type Four'));
-    $page->find('css', '.ui-dialog-titlebar-close')->click();
+    $assert_session->elementExists('css', '.ui-dialog-titlebar-close')->click();
+    $assert_session->assertWaitOnAjaxRequest();
+
+    // Assert that there are no links in the media library view.
+    $assert_session->elementExists('css', '.media-library-open-button[name^="field_unlimited_media"]')->click();
+    $assert_session->assertWaitOnAjaxRequest();
+    $assert_session->elementNotExists('css', '.media-library-item__name a');
+    $assert_session->elementNotExists('css', '.media-library-view .media-library-item__edit');
+    $assert_session->elementNotExists('css', '.media-library-view .media-library-item__remove');
+    $assert_session->elementExists('css', '.ui-dialog-titlebar-close')->click();
     $assert_session->assertWaitOnAjaxRequest();
 
     // Assert that the media type menu is available when the target_bundles
@@ -454,7 +470,7 @@ class MediaLibraryTest extends WebDriverTestBase {
     $this->assertTrue($menu->hasLink('Type Three'));
     $this->assertTrue($menu->hasLink('Type Four'));
     $this->assertTrue($menu->hasLink('Type Five'));
-    $page->find('css', '.ui-dialog-titlebar-close')->click();
+    $assert_session->elementExists('css', '.ui-dialog-titlebar-close')->click();
 
     // Assert that the media type menu is not available when only 1 type is
     // configured for the field.
@@ -469,7 +485,7 @@ class MediaLibraryTest extends WebDriverTestBase {
     $assert_session->hiddenFieldValueEquals('media-library-modal-selection', '4');
     $assert_session->elementTextContains('css', '.media-library-selected-count', '1 of 1 item selected');
     $assert_session->elementNotExists('css', '.media-library-menu');
-    $page->find('css', '.ui-dialog-titlebar-close')->click();
+    $assert_session->elementExists('css', '.ui-dialog-titlebar-close')->click();
 
     // Assert the menu links can be sorted through the widget configuration.
     $assert_session->elementExists('css', '.media-library-open-button[name^="field_twin_media"]')->click();
@@ -499,7 +515,7 @@ class MediaLibraryTest extends WebDriverTestBase {
       return $link->getText();
     }, $page->findAll('css', '.media-library-menu a'));
     $this->assertSame($link_titles, ['Show Type One media (selected)', 'Show Type Three media', 'Show Type Four media', 'Show Type Two media']);
-    $page->find('css', '.ui-dialog-titlebar-close')->click();
+    $assert_session->elementExists('css', '.ui-dialog-titlebar-close')->click();
 
     // Assert the announcements for media type navigation in the media library.
     $assert_session->elementExists('css', '.media-library-open-button[name^="field_unlimited_media"]')->click();
@@ -514,7 +530,7 @@ class MediaLibraryTest extends WebDriverTestBase {
     $assert_session->elementExists('named', ['link', 'Type Three'])->keyPress(32);
     $assert_session->assertWaitOnAjaxRequest();
     $this->assertNotEmpty($assert_session->waitForText('Showing Type Three media.'));
-    $page->find('css', '.ui-dialog-titlebar-close')->click();
+    $assert_session->elementExists('css', '.ui-dialog-titlebar-close')->click();
 
     // Assert media is only visible on the tab for the related media type.
     $assert_session->elementExists('css', '.media-library-open-button[name^="field_unlimited_media"]')->click();
@@ -529,7 +545,7 @@ class MediaLibraryTest extends WebDriverTestBase {
     $assert_session->pageTextNotContains('Dog');
     $assert_session->pageTextNotContains('Bear');
     $assert_session->pageTextNotContains('Turtle');
-    $page->find('css', '.ui-dialog-titlebar-close')->click();
+    $assert_session->elementExists('css', '.ui-dialog-titlebar-close')->click();
 
     // Assert the exposed name filter of the view.
     $assert_session->elementExists('css', '.media-library-open-button[name^="field_unlimited_media"]')->click();
@@ -545,7 +561,7 @@ class MediaLibraryTest extends WebDriverTestBase {
     $assert_session->assertWaitOnAjaxRequest();
     $assert_session->pageTextContains('Dog');
     $assert_session->pageTextContains('Bear');
-    $page->find('css', '.ui-dialog-titlebar-close')->click();
+    $assert_session->elementExists('css', '.ui-dialog-titlebar-close')->click();
 
     // Assert the media library contains header links to switch between the grid
     // and table display.
@@ -618,6 +634,11 @@ class MediaLibraryTest extends WebDriverTestBase {
     $assert_session->assertWaitOnAjaxRequest();
     // Assert the focus is set back on the open button of the media field.
     $this->assertJsCondition('jQuery("#field_twin_media-media-library-wrapper .js-media-library-open-button").is(":focus")');
+    // Assert the weight field can be focused via a mouse click.
+    $assert_session->elementExists('named', ['button', 'Show media item weights'])->click();
+    $assert_session->elementExists('css', '#field_twin_media-media-library-wrapper .media-library-item__weight')->click();
+    $assert_session->elementExists('css', '#field_twin_media-media-library-wrapper .js-media-library-widget-toggle-weight')->click();
+    // Remove the selected item.
     $assert_session->elementAttributeContains('css', '.media-library-item__remove', 'aria-label', 'Remove Dog');
     $assert_session->elementExists('css', '.media-library-item__remove')->click();
     $this->assertNotEmpty($assert_session->waitForText('Removed Dog.'));
@@ -791,7 +812,7 @@ class MediaLibraryTest extends WebDriverTestBase {
     $this->assertFalse($checkboxes[2]->isChecked());
     $this->assertFalse($checkboxes[3]->isChecked());
     // Close the dialog, reopen it and assert not is selected again.
-    $page->find('css', '.ui-dialog-titlebar-close')->click();
+    $assert_session->elementExists('css', '.ui-dialog-titlebar-close')->click();
     $assert_session->elementExists('css', '.media-library-open-button[name^="field_unlimited_media"]')->click();
     $assert_session->assertWaitOnAjaxRequest();
     $checkboxes = $page->findAll('css', '.media-library-view .js-click-to-select-checkbox input');
@@ -800,7 +821,7 @@ class MediaLibraryTest extends WebDriverTestBase {
     $this->assertFalse($checkboxes[1]->isChecked());
     $this->assertFalse($checkboxes[2]->isChecked());
     $this->assertFalse($checkboxes[3]->isChecked());
-    $page->find('css', '.ui-dialog-titlebar-close')->click();
+    $assert_session->elementExists('css', '.ui-dialog-titlebar-close')->click();
 
     // Finally, save the form.
     $assert_session->elementExists('css', '.js-media-library-widget-toggle-weight')->click();
@@ -1217,7 +1238,7 @@ class MediaLibraryTest extends WebDriverTestBase {
     $this->assertJsCondition('jQuery("#media-library-add-form-wrapper :tabbable").is(":focus")');
     $assert_session->elementNotExists('css', '.media-library-add-form__fields');
     $assert_session->elementExists('css', '.media-library-menu');
-    $page->find('css', '.ui-dialog-titlebar-close')->click();
+    $assert_session->elementExists('css', '.ui-dialog-titlebar-close')->click();
 
     // Assert uploading multiple files.
     $assert_session->elementExists('css', '.media-library-open-button[name^="field_unlimited_media"]')->click();

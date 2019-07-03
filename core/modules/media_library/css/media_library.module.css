@@ -51,21 +51,24 @@
 .media-library-item .js-click-to-select-checkbox {
   position: absolute;
   z-index: 1;
-  top: 5px;
-  right: 5px; /* LTR */
+  top: 16px;
+  left: 16px; /* LTR */
   display: block;
 }
-
 [dir="rtl"] .media-library-item .js-click-to-select-checkbox {
-  right: 0;
-  left: 5px;
+  right: 16px;
+  left: auto;
 }
 
 .media-library-item__status {
   position: absolute;
-  top: 10px;
-  left: 2px;
+  top: 40px;
+  left: 5px; /* LTR */
   pointer-events: none;
+}
+[dir="rtl"] .media-library-item__status {
+  right: 5px;
+  left: auto;
 }
 
 .media-library-select-all {
@@ -85,13 +88,6 @@
   cursor: move;
 }
 
-/* @todo Remove or re-work in https://www.drupal.org/node/2985168 */
-.media-library-widget .media-library-item__name a,
-.media-library-view--widget .media-library-item__name a,
-.media-library-add-form__selected-media .media-library-item__name a {
-  pointer-events: none;
-}
-
 .media-library-widget-modal .ui-dialog-buttonpane {
   display: flex;
   align-items: center;
@@ -105,4 +101,9 @@
   .media-library-view .form-actions {
     flex-basis: 100%;
   }
+}
+
+/* @todo Remove in https://www.drupal.org/project/drupal/issues/3064914 */
+.views-live-preview .media-library-view div.views-row + div.views-row {
+  margin-top: 0;
 }

@@ -218,3 +218,218 @@ function media_library_update_8702() {
     $view->save(TRUE);
   }
 }
+
+/**
+ * Add edit and delete button to media library view page display.
+ */
+function media_library_update_8703() {
+  $view = \Drupal::configFactory()->getEditable('views.view.media_library');
+  if (!$view->isNew() && $view->get('display.page')) {
+    // Fetch the fields from the page display, if the fields are not yet
+    // overridden, get the fields from the default display.
+    $fields = $view->get('display.page.display_options.fields');
+    if (!$fields) {
+      $fields = $view->get('display.default.display_options.fields');
+      // Override the fields for the page display.
+      $view->set('display.page.display_options.defaults.fields', FALSE);
+    }
+
+    // Check if the name field already exists and add if it doesn't.
+    if (!isset($fields['name'])) {
+      $fields['name'] = [
+        'id' => 'name',
+        'table' => 'media_field_data',
+        'field' => 'name',
+        'relationship' => 'none',
+        'group_type' => 'group',
+        'admin_label' => '',
+        'label' => '',
+        'exclude' => TRUE,
+        'alter' => [
+          'alter_text' => FALSE,
+          'text' => '',
+          'make_link' => FALSE,
+          'path' => '',
+          'absolute' => FALSE,
+          'external' => FALSE,
+          'replace_spaces' => FALSE,
+          'path_case' => 'none',
+          'trim_whitespace' => FALSE,
+          'alt' => '',
+          'rel' => '',
+          'link_class' => '',
+          'prefix' => '',
+          'suffix' => '',
+          'target' => '',
+          'nl2br' => FALSE,
+          'max_length' => 0,
+          'word_boundary' => TRUE,
+          'ellipsis' => TRUE,
+          'more_link' => FALSE,
+          'more_link_text' => '',
+          'more_link_path' => '',
+          'strip_tags' => FALSE,
+          'trim' => FALSE,
+          'preserve_tags' => '',
+          'html' => FALSE,
+        ],
+        'element_type' => '',
+        'element_class' => '',
+        'element_label_type' => '',
+        'element_label_class' => '',
+        'element_label_colon' => FALSE,
+        'element_wrapper_type' => '',
+        'element_wrapper_class' => '',
+        'element_default_classes' => TRUE,
+        'empty' => '',
+        'hide_empty' => FALSE,
+        'empty_zero' => FALSE,
+        'hide_alter_empty' => TRUE,
+        'click_sort_column' => 'value',
+        'type' => 'string',
+        'settings' => [
+          'link_to_entity' => FALSE,
+        ],
+        'group_column' => 'value',
+        'group_columns' => [],
+        'group_rows' => TRUE,
+        'delta_limit' => 0,
+        'delta_offset' => 0,
+        'delta_reversed' => FALSE,
+        'delta_first_last' => FALSE,
+        'multi_type' => 'separator',
+        'separator' => ', ',
+        'field_api_classes' => FALSE,
+        'entity_type' => 'media',
+        'entity_field' => 'name',
+        'plugin_id' => 'field',
+      ];
+    }
+
+    // Check if the edit link field already exists and add if it doesn't.
+    if (!isset($fields['edit_media'])) {
+      $fields['edit_media'] = [
+        'id' => 'edit_media',
+        'table' => 'media',
+        'field' => 'edit_media',
+        'relationship' => 'none',
+        'group_type' => 'group',
+        'admin_label' => '',
+        'label' => '',
+        'exclude' => FALSE,
+        'alter' => [
+          'alter_text' => TRUE,
+          'text' => 'Edit {{ name }}',
+          'make_link' => TRUE,
+          'path' => '',
+          'absolute' => FALSE,
+          'external' => FALSE,
+          'replace_spaces' => FALSE,
+          'path_case' => 'none',
+          'trim_whitespace' => FALSE,
+          'alt' => 'Edit {{ name }}',
+          'rel' => '',
+          'link_class' => 'media-library-item__edit',
+          'prefix' => '',
+          'suffix' => '',
+          'target' => '',
+          'nl2br' => FALSE,
+          'max_length' => 0,
+          'word_boundary' => TRUE,
+          'ellipsis' => TRUE,
+          'more_link' => FALSE,
+          'more_link_text' => '',
+          'more_link_path' => '',
+          'strip_tags' => FALSE,
+          'trim' => FALSE,
+          'preserve_tags' => '',
+          'html' => FALSE,
+        ],
+        'element_type' => '',
+        'element_class' => '',
+        'element_label_type' => '',
+        'element_label_class' => '',
+        'element_label_colon' => FALSE,
+        'element_wrapper_type' => '0',
+        'element_wrapper_class' => '',
+        'element_default_classes' => FALSE,
+        'empty' => '',
+        'hide_empty' => FALSE,
+        'empty_zero' => FALSE,
+        'hide_alter_empty' => TRUE,
+        'text' => 'Edit',
+        'output_url_as_text' => FALSE,
+        'absolute' => FALSE,
+        'entity_type' => 'media',
+        'plugin_id' => 'entity_link_edit',
+      ];
+    }
+
+    // Check if the delete link field already exists and add if it doesn't.
+    if (!isset($fields['delete_media'])) {
+      $fields['delete_media'] = [
+        'id' => 'delete_media',
+        'table' => 'media',
+        'field' => 'delete_media',
+        'relationship' => 'none',
+        'group_type' => 'group',
+        'admin_label' => '',
+        'label' => '',
+        'exclude' => FALSE,
+        'alter' => [
+          'alter_text' => TRUE,
+          'text' => 'Delete {{ name }}',
+          'make_link' => TRUE,
+          'path' => '',
+          'absolute' => FALSE,
+          'external' => FALSE,
+          'replace_spaces' => FALSE,
+          'path_case' => 'none',
+          'trim_whitespace' => FALSE,
+          'alt' => 'Delete {{ name }}',
+          'rel' => '',
+          'link_class' => 'media-library-item__remove',
+          'prefix' => '',
+          'suffix' => '',
+          'target' => '',
+          'nl2br' => FALSE,
+          'max_length' => 0,
+          'word_boundary' => TRUE,
+          'ellipsis' => TRUE,
+          'more_link' => FALSE,
+          'more_link_text' => '',
+          'more_link_path' => '',
+          'strip_tags' => FALSE,
+          'trim' => FALSE,
+          'preserve_tags' => '',
+          'html' => FALSE,
+        ],
+        'element_type' => '',
+        'element_class' => '',
+        'element_label_type' => '',
+        'element_label_class' => '',
+        'element_label_colon' => FALSE,
+        'element_wrapper_type' => '0',
+        'element_wrapper_class' => '',
+        'element_default_classes' => FALSE,
+        'empty' => '',
+        'hide_empty' => FALSE,
+        'empty_zero' => FALSE,
+        'hide_alter_empty' => TRUE,
+        'text' => 'Delete',
+        'output_url_as_text' => FALSE,
+        'absolute' => FALSE,
+        'entity_type' => 'media',
+        'plugin_id' => 'entity_link_delete',
+      ];
+    }
+
+    // Move the rendered entity field to the last position for accessibility.
+    $rendered_entity = $fields['rendered_entity'];
+    unset($fields['rendered_entity']);
+    $fields['rendered_entity'] = $rendered_entity;
+
+    $view->set('display.page.display_options.fields', $fields)
+      ->save(TRUE);
+  }
+}
