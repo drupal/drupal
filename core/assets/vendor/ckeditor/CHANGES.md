@@ -1,6 +1,34 @@
 CKEditor 4 Changelog
 ====================
 
+## CKEditor 4.11.4
+
+Fixed Issues:
+
+* [#589](https://github.com/ckeditor/ckeditor-dev/issues/589): Fixed: The editor causes memory leaks in create and destroy cycles.
+* [#1397](https://github.com/ckeditor/ckeditor-dev/issues/1397): Fixed: Using the dialog to remove headers from a [table](https://ckeditor.com/cke4/addon/table) with one header row only throws an error.
+* [#1479](https://github.com/ckeditor/ckeditor-dev/issues/1479): Fixed: [Justification](https://ckeditor.com/cke4/addon/justify) for styled content in BR mode is disabled.
+* [#2816](https://github.com/ckeditor/ckeditor-dev/issues/2816): Fixed: [Enhanced Image](https://ckeditor.com/cke4/addon/image2) resize handler is visible in [read-only mode](https://ckeditor.com/docs/ckeditor4/latest/guide/dev_readonly.html).
+* [#2874](https://github.com/ckeditor/ckeditor-dev/issues/2874): Fixed: [Enhanced Image](https://ckeditor.com/cke4/addon/image2) resize handler is not created when the editor is initialized in [read-only mode](https://ckeditor.com/docs/ckeditor4/latest/guide/dev_readonly.html).
+* [#2775](https://github.com/ckeditor/ckeditor-dev/issues/2775): Fixed: [Clipboard](https://ckeditor.com/cke4/addon/clipboard) paste buttons have wrong state when [read-only](https://ckeditor.com/docs/ckeditor4/latest/guide/dev_readonly.html) mode is set by the mouse event listener with the [Div Editing Area](https://ckeditor.com/cke4/addon/divarea) plugin.
+* [#1901](https://github.com/ckeditor/ckeditor-dev/issues/1901): Fixed: Cannot open the context menu over a [Widget](https://ckeditor.com/cke4/addon/widget) with the <kbd>Shift</kbd>+<kbd>F10</kbd> keyboard shortcut.
+
+Other Changes:
+
+* Updated [WebSpellChecker](https://ckeditor.com/cke4/addon/wsc) (WSC) and [SpellCheckAsYouType](https://ckeditor.com/cke4/addon/scayt) (SCAYT) plugins:
+	* Language dictionary update: German language was extended with over 600k new words.
+	* Language dictionary update: Swedish language was extended with over 300k new words.
+	* Grammar support added for Australian and New Zealand English, Polish, Slovak, Slovenian and Austrian languages.
+	* Changed wavy red and green lines that underline spelling and grammar errors to straight ones.
+	* [#55](https://github.com/WebSpellChecker/ckeditor-plugin-wsc/issues/55): Fixed: WSC does not use [`CKEDITOR.getUrl()`](https://ckeditor.com/docs/ckeditor4/latest/api/CKEDITOR.html#method-getUrl) when referencing style sheets.
+	* [#166](https://github.com/WebSpellChecker/ckeditor-plugin-scayt/issues/166): Fixed: SCAYT does not use [`CKEDITOR.getUrl()`](https://ckeditor.com/docs/ckeditor4/latest/api/CKEDITOR.html#method-getUrl) when referencing style sheets.
+	* [#56](https://github.com/WebSpellChecker/ckeditor-plugin-wsc/issues/56): [Chrome] Fixed: SCAYT/WSC throws errors when running inside a  Chrome extension.
+	* Fixed: After removing a dictionary, the words are not underlined and considered as incorrect.
+	* Fixed: The Slovenian (`sl_SL`) language does not work.
+	* Fixed: Quotes with code `U+2019` (Right single quotation mark) are considered separators.
+	* Fixed: Wrong error message formatting when the service ID is invalid.
+	* Fixed: Absent languages in the Languages tab when using SCAYT with the [Shared Spaces](https://ckeditor.com/cke4/addon/sharedspace) plugin.
+
 ## CKEditor 4.11.3
 
 Fixed Issues:
@@ -36,7 +64,7 @@ Fixed Issues:
 Other Changes:
 
 * Updated the [WebSpellChecker](https://ckeditor.com/cke4/addon/wsc) (WSC) plugin:
-  * [#52](https://github.com/WebSpellChecker/ckeditor-plugin-wsc/issues/52) Fixed: Clicking "Finish Checking" without a prior action would hang the Spell Checking dialog.
+	* [#52](https://github.com/WebSpellChecker/ckeditor-plugin-wsc/issues/52) Fixed: Clicking "Finish Checking" without a prior action would hang the Spell Checking dialog.
 * [#2603](https://github.com/ckeditor/ckeditor-dev/issues/2603): Corrected the GPL license entry in the `package.json` file.
 
 ## CKEditor 4.11.1
@@ -51,7 +79,7 @@ Fixed Issues:
 
 * Fixed XSS vulnerability in the HTML parser reported by [maxarr](https://hackerone.com/maxarr).
 
-  Issue summary: It was possible to execute XSS inside CKEditor after persuading the victim to: (i) switch CKEditor to source mode, then (ii) paste a specially crafted HTML code, prepared by the attacker, into the opened CKEditor source area, and (iii) switch back to WYSIWYG mode.
+	Issue summary: It was possible to execute XSS inside CKEditor after persuading the victim to: (i) switch CKEditor to source mode, then (ii) paste a specially crafted HTML code, prepared by the attacker, into the opened CKEditor source area, and (iii) switch back to WYSIWYG mode.
 
 **An upgrade is highly recommended!**
 
@@ -98,8 +126,8 @@ API Changes:
 * [#2224](https://github.com/ckeditor/ckeditor-dev/issues/2224):  The [`CKEDITOR.tools.convertToPx`](https://ckeditor.com/docs/ckeditor4/latest/api/CKEDITOR_tools.html#method-convertToPx) function now converts negative values.
 * [#2253](https://github.com/ckeditor/ckeditor-dev/issues/2253): The widget definition [`insert`](https://ckeditor.com/docs/ckeditor4/latest/api/CKEDITOR_plugins_widget_definition.html#property-insert) method now passes `editor` and `commandData`. Thanks to [marcparmet](https://github.com/marcparmet)!
 * [#2045](https://github.com/ckeditor/ckeditor-dev/issues/2045): Extracted [`tools.eventsBuffer`](https://ckeditor.com/docs/ckeditor4/latest/api/CKEDITOR_tools.html#method-eventsBuffer) and [`tools.throttle`](https://ckeditor.com/docs/ckeditor4/latest/api/CKEDITOR_tools.html#method-throttle) functions logic into a separate namespace.
-  * [`tools.eventsBuffer`](https://ckeditor.com/docs/ckeditor4/latest/api/CKEDITOR_tools.html#method-eventsBuffer) was extracted into [`tools.buffers.event`](https://ckeditor.com/docs/ckeditor4/latest/api/CKEDITOR_tools_buffers_event.html),
-  * [`tools.throttle`](https://ckeditor.com/docs/ckeditor4/latest/api/CKEDITOR_tools.html#method-throttle) was extracted into [`tools.buffers.throttle`](https://ckeditor.com/docs/ckeditor4/latest/api/CKEDITOR_tools_buffers_throttle.html).
+	* [`tools.eventsBuffer`](https://ckeditor.com/docs/ckeditor4/latest/api/CKEDITOR_tools.html#method-eventsBuffer) was extracted into [`tools.buffers.event`](https://ckeditor.com/docs/ckeditor4/latest/api/CKEDITOR_tools_buffers_event.html),
+	* [`tools.throttle`](https://ckeditor.com/docs/ckeditor4/latest/api/CKEDITOR_tools.html#method-throttle) was extracted into [`tools.buffers.throttle`](https://ckeditor.com/docs/ckeditor4/latest/api/CKEDITOR_tools_buffers_throttle.html).
 * [#2466](https://github.com/ckeditor/ckeditor-dev/issues/2466):  The [`CKEDITOR.filter`](https://ckeditor.com/docs/ckeditor4/latest/api/CKEDITOR_tools.html#method-constructor) constructor accepts an additional `rules` parameter allowing to bind the editor and filter together.
 * [#2493](https://github.com/ckeditor/ckeditor-dev/issues/2493):  The [`editor.getCommandKeystroke`](https://ckeditor.com/docs/ckeditor4/latest/api/CKEDITOR_editor.html#method-getCommandKeystroke) method accepts an additional `all` parameter allowing to retrieve an array of all command keystrokes.
 * [#2483](https://github.com/ckeditor/ckeditor-dev/issues/2483): Button's DOM element created with the [`hasArrow`](https://ckeditor.com/docs/ckeditor4/latest/api/CKEDITOR_ui.html#method-addButton) definition option can by identified by the `.cke_button_expandable` CSS class.
@@ -652,7 +680,7 @@ Other Changes:
 	- New features:
 		- CKEditor [Language](https://ckeditor.com/cke4/addon/language) plugin support.
 		- CKEditor [Placeholder](https://ckeditor.com/cke4/addon/placeholder) plugin support.
-    - [Drag&Drop](https://ckeditor.com/docs/ckeditor4/latest/examples/fileupload.html) support.
+		- [Drag&Drop](https://ckeditor.com/docs/ckeditor4/latest/examples/fileupload.html) support.
 		- **Experimental** [GRAYT](https://ckeditor.com/docs/ckeditor4/latest/api/CKEDITOR_config.html#cfg-grayt_autoStartup) (Grammar As You Type) functionality.
 	- Fixed issues:
 		* [#98](https://github.com/WebSpellChecker/ckeditor-plugin-scayt/issues/98): SCAYT affects dialog double-click. Fixed in SCAYT core.
