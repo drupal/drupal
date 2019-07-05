@@ -5,7 +5,6 @@
  * Primarily Drupal hooks and global API functions to manipulate views.
  */
 
-use Drupal\Component\Render\MarkupInterface;
 use Drupal\Component\Utility\Html;
 use Drupal\Core\Database\Query\AlterableInterface;
 use Drupal\Core\Entity\EntityInterface;
@@ -16,7 +15,7 @@ use Drupal\views\Plugin\Derivative\ViewsLocalTask;
 use Drupal\views\ViewEntityInterface;
 use Drupal\views\ViewExecutable;
 use Drupal\views\Entity\View;
-use Drupal\views\Render\ViewsRenderPipelineMarkup;
+use Drupal\views\Form\ViewsFormMainForm;
 use Drupal\views\Views;
 
 /**
@@ -627,36 +626,15 @@ function views_disable_view(View $view) {
  * @return array
  *   The $element with prepared variables ready for #theme 'form'
  *   in views_form_views_form.
+ *
+ * @deprecated in Drupal 8.8.0 and will be removed before Drupal 9.0.0. Use
+ *   \Drupal\views\Form\ViewsFormMainForm::preRenderViewsForm() instead.
+ *
+ * @see https://www.drupal.org/node/2966725
  */
 function views_pre_render_views_form_views_form($element) {
-  // Placeholders and their substitutions (usually rendered form elements).
-  $search = [];
-  $replace = [];
-
-  // Add in substitutions provided by the form.
-  foreach ($element['#substitutions']['#value'] as $substitution) {
-    $field_name = $substitution['field_name'];
-    $row_id = $substitution['row_id'];
-
-    $search[] = $substitution['placeholder'];
-    $replace[] = isset($element[$field_name][$row_id]) ? \Drupal::service('renderer')->render($element[$field_name][$row_id]) : '';
-  }
-  // Add in substitutions from hook_views_form_substitutions().
-  $substitutions = \Drupal::moduleHandler()->invokeAll('views_form_substitutions');
-  foreach ($substitutions as $placeholder => $substitution) {
-    $search[] = Html::escape($placeholder);
-    // Ensure that any replacements made are safe to make.
-    if (!($substitution instanceof MarkupInterface)) {
-      $substitution = Html::escape($substitution);
-    }
-    $replace[] = $substitution;
-  }
-
-  // Apply substitutions to the rendered output.
-  $output = str_replace($search, $replace, \Drupal::service('renderer')->render($element['output']));
-  $element['output'] = ['#markup' => ViewsRenderPipelineMarkup::create($output)];
-
-  return $element;
+  @trigger_error('views_pre_render_views_form_views_form() is deprecated in Drupal 8.8.0 and will be removed before Drupal 9.0.0. Use \Drupal\views\Form\ViewsFormMainForm::preRenderViewsForm() instead. See https://www.drupal.org/node/2966725', E_USER_DEPRECATED);
+  return ViewsFormMainForm::preRenderViewsForm($element);
 }
 
 /**

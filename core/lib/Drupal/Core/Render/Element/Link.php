@@ -5,6 +5,7 @@ namespace Drupal\Core\Render\Element;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Component\Utility\Html as HtmlUtility;
 use Drupal\Core\Render\BubbleableMetadata;
+use Drupal\Core\Render\Element;
 use Drupal\Core\Url as CoreUrl;
 
 /**
@@ -95,6 +96,107 @@ class Link extends RenderElement {
       $element['#markup'] = $generated_link;
       $generated_link->merge(BubbleableMetadata::createFromRenderArray($element))
         ->applyTo($element);
+    }
+    return $element;
+  }
+
+  /**
+   * Pre-render callback: Collects child links into a single array.
+   *
+   * This method can be added as a pre_render callback for a renderable array,
+   * usually one which will be themed by links.html.twig. It iterates through
+   * all unrendered children of the element, collects any #links properties it
+   * finds, merges them into the parent element's #links array, and prevents
+   * those children from being rendered separately.
+   *
+   * The purpose of this is to allow links to be logically grouped into related
+   * categories, so that each child group can be rendered as its own list of
+   * links if drupal_render() is called on it, but calling drupal_render() on
+   * the parent element will still produce a single list containing all the
+   * remaining links, regardless of what group they were in.
+   *
+   * A typical example comes from node links, which are stored in a renderable
+   * array similar to this:
+   * @code
+   * $build['links'] = array(
+   *   '#theme' => 'links__node',
+   *   '#pre_render' => array(Link::class, 'preRenderLinks'),
+   *   'comment' => array(
+   *     '#theme' => 'links__node__comment',
+   *     '#links' => array(
+   *       // An array of links associated with node comments, suitable for
+   *       // passing in to links.html.twig.
+   *     ),
+   *   ),
+   *   'statistics' => array(
+   *     '#theme' => 'links__node__statistics',
+   *     '#links' => array(
+   *       // An array of links associated with node statistics, suitable for
+   *       // passing in to links.html.twig.
+   *     ),
+   *   ),
+   *   'translation' => array(
+   *     '#theme' => 'links__node__translation',
+   *     '#links' => array(
+   *       // An array of links associated with node translation, suitable for
+   *       // passing in to links.html.twig.
+   *     ),
+   *   ),
+   * );
+   * @endcode
+   *
+   * In this example, the links are grouped by functionality, which can be
+   * helpful to themers who want to display certain kinds of links
+   * independently. For example, adding this code to node.html.twig will result
+   * in the comment links being rendered as a single list:
+   * @code
+   * {{ content.links.comment }}
+   * @endcode
+   *
+   * (where a node's content has been transformed into $content before handing
+   * control to the node.html.twig template).
+   *
+   * The preRenderLinks method defined here allows the above flexibility, but
+   * also allows the following code to be used to render all remaining links
+   * into a single list, regardless of their group:
+   * @code
+   * {{ content.links }}
+   * @endcode
+   *
+   * In the above example, this will result in the statistics and translation
+   * links being rendered together in a single list (but not the comment links,
+   * which were rendered previously on their own).
+   *
+   * Because of the way this method works, the individual properties of each
+   * group (for example, a group-specific #theme property such as
+   * 'links__node__comment' in the example above, or any other property such as
+   * #attributes or #pre_render that is attached to it) are only used when that
+   * group is rendered on its own. When the group is rendered together with
+   * other children, these child-specific properties are ignored, and only the
+   * overall properties of the parent are used.
+   *
+   * @param array $element
+   *   Render array containing child links to group.
+   *
+   * @return array
+   *   Render array containing child links grouped into a single array.
+   */
+  public static function preRenderLinks($element) {
+    $element += ['#links' => [], '#attached' => []];
+    foreach (Element::children($element) as $key) {
+      $child = &$element[$key];
+      // If the child has links which have not been printed yet and the user has
+      // access to it, merge its links in to the parent.
+      if (isset($child['#links']) && empty($child['#printed']) && Element::isVisibleElement($child)) {
+        $element['#links'] += $child['#links'];
+        // Mark the child as having been printed already (so that its links
+        // cannot be mistakenly rendered twice).
+        $child['#printed'] = TRUE;
+      }
+      // Merge attachments.
+      if (isset($child['#attached'])) {
+        $element['#attached'] = BubbleableMetadata::mergeAttachments($element['#attached'], $child['#attached']);
+      }
     }
     return $element;
   }

@@ -169,7 +169,7 @@ class CommentViewBuilder extends EntityViewBuilder {
 
         // Embed the metadata for the comment "new" indicators on this node.
         $build[$id]['history'] = [
-          '#lazy_builder' => ['history_attach_timestamp', [$commented_entity->id()]],
+          '#lazy_builder' => ['\Drupal\history\HistoryRenderCallback::lazyBuilder', [$commented_entity->id()]],
           '#create_placeholder' => TRUE,
         ];
       }

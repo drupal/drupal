@@ -237,7 +237,7 @@ class FieldKernelTest extends ViewsKernelTestBase {
     $renderer = \Drupal::service('renderer');
 
     $view = Views::getView('test_field_argument_tokens');
-    $this->executeView($view, ['{{ { "#pre_render": ["views_test_data_test_pre_render_function"]} }}']);
+    $this->executeView($view, ['{{ { "#pre_render": ["\Drupal\views_test_data\Controller\ViewsTestDataController::preRender"]} }}']);
 
     $name_field_0 = $view->field['name'];
 
@@ -250,7 +250,7 @@ class FieldKernelTest extends ViewsKernelTestBase {
       return $name_field_0->advancedRender($row);
     });
 
-    $this->assertFalse(strpos((string) $output, 'views_test_data_test_pre_render_function executed') !== FALSE, 'Ensure that the pre_render function was not executed');
+    $this->assertFalse(strpos((string) $output, '\Drupal\views_test_data\Controller\ViewsTestDataController::preRender executed') !== FALSE, 'Ensure that the pre_render function was not executed');
     $this->assertEqual('%1 !1', (string) $output, "Ensure that old style placeholders aren't replaced");
 
     // This time use new style tokens but ensure that we still don't allow
@@ -263,8 +263,8 @@ class FieldKernelTest extends ViewsKernelTestBase {
       return $name_field_0->advancedRender($row);
     });
 
-    $this->assertFalse(strpos((string) $output, 'views_test_data_test_pre_render_function executed') !== FALSE, 'Ensure that the pre_render function was not executed');
-    $this->assertEqual('{{ { &quot;#pre_render&quot;: [&quot;views_test_data_test_pre_render_function&quot;]} }} {{ { &quot;#pre_render&quot;: [&quot;views_test_data_test_pre_render_function&quot;]} }}', (string) $output, 'Ensure that new style placeholders are replaced');
+    $this->assertFalse(strpos((string) $output, '\Drupal\views_test_data\Controller\ViewsTestDataController::preRender executed') !== FALSE, 'Ensure that the pre_render function was not executed');
+    $this->assertEqual('{{ { &quot;#pre_render&quot;: [&quot;\Drupal\views_test_data\Controller\ViewsTestDataController::preRender&quot;]} }} {{ { &quot;#pre_render&quot;: [&quot;\Drupal\views_test_data\Controller\ViewsTestDataController::preRender&quot;]} }}', (string) $output, 'Ensure that new style placeholders are replaced');
   }
 
   /**

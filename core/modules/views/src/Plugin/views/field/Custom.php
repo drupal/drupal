@@ -58,6 +58,15 @@ class Custom extends FieldPluginBase {
   /**
    * {@inheritdoc}
    */
+  public static function trustedCallbacks() {
+    $callbacks = parent::trustedCallbacks();
+    $callbacks[] = 'preRenderCustomForm';
+    return $callbacks;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function render(ResultRow $values) {
     // Return the text, so the code never thinks the value is empty.
     return ViewsRenderPipelineMarkup::create(Xss::filterAdmin($this->options['alter']['text']));

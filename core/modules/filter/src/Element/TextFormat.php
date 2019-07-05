@@ -226,7 +226,7 @@ class TextFormat extends RenderElement {
       // Prepend #pre_render callback to replace field value with user notice
       // prior to rendering.
       $element['value'] += ['#pre_render' => []];
-      array_unshift($element['value']['#pre_render'], 'filter_form_access_denied');
+      array_unshift($element['value']['#pre_render'], [static::class, 'accessDeniedCallback']);
 
       // Cosmetic adjustments.
       if (isset($element['value']['#rows'])) {
@@ -244,6 +244,26 @@ class TextFormat extends RenderElement {
       }
     }
 
+    return $element;
+  }
+
+  /**
+   * Render API callback: Hides the field value of 'text_format' elements.
+   *
+   * To not break form processing and previews if a user does not have access to
+   * a stored text format, the expanded form elements in filter_process_format()
+   * are forced to take over the stored #default_values for 'value' and
+   * 'format'. However, to prevent the unfiltered, original #value from being
+   * displayed to the user, we replace it with a friendly notice here.
+   *
+   * @param array $element
+   *   The render array to add the access denied message to.
+   *
+   * @return array
+   *   The updated render array.
+   */
+  public static function accessDeniedCallback(array $element) {
+    $element['#value'] = t('This field has been disabled because you do not have sufficient permissions to edit it.');
     return $element;
   }
 

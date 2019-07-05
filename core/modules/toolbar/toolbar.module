@@ -6,12 +6,12 @@
  */
 
 use Drupal\Core\Cache\CacheableMetadata;
-use Drupal\Core\Menu\MenuTreeParameters;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Template\Attribute;
 use Drupal\Component\Utility\Crypt;
 use Drupal\Core\Url;
+use Drupal\toolbar\Controller\ToolbarController;
 
 /**
  * Implements hook_help().
@@ -192,9 +192,7 @@ function toolbar_toolbar() {
       '#heading' => t('Administration menu'),
       '#attached' => $subtrees_attached,
       'toolbar_administration' => [
-        '#pre_render' => [
-          'toolbar_prerender_toolbar_administration_tray',
-        ],
+        '#pre_render' => [[ToolbarController::class, 'preRenderAdministrationTray']],
         '#type' => 'container',
         '#attributes' => [
           'class' => ['toolbar-menu-administration'],
@@ -217,25 +215,16 @@ function toolbar_toolbar() {
  * @return array
  *   The updated renderable array.
  *
+ * @deprecated in Drupal 8.8.0 and will be removed before Drupal 9.0.0. Use
+ *   \Drupal\toolbar\Controller\ToolbarController::preRenderAdministrationTray()
+ *   instead.
+ *
+ * @see https://www.drupal.org/node/2966725
  * @see \Drupal\Core\Render\RendererInterface::render()
  */
 function toolbar_prerender_toolbar_administration_tray(array $element) {
-  $menu_tree = \Drupal::service('toolbar.menu_tree');
-  // Load the administrative menu. The first level is the "Administration" link.
-  // In order to load the children of that link, start and end on the second
-  // level.
-  $parameters = new MenuTreeParameters();
-  $parameters->setMinDepth(2)->setMaxDepth(2)->onlyEnabledLinks();
-  // @todo Make the menu configurable in https://www.drupal.org/node/1869638.
-  $tree = $menu_tree->load('admin', $parameters);
-  $manipulators = [
-    ['callable' => 'menu.default_tree_manipulators:checkAccess'],
-    ['callable' => 'menu.default_tree_manipulators:generateIndexAndSort'],
-    ['callable' => 'toolbar_menu_navigation_links'],
-  ];
-  $tree = $menu_tree->transform($tree, $manipulators);
-  $element['administration_menu'] = $menu_tree->build($tree);
-  return $element;
+  @trigger_error('toolbar_prerender_toolbar_administration_tray() is deprecated in Drupal 8.8.0 and will be removed before Drupal 9.0.0. Use \Drupal\toolbar\Controller\ToolbarController::preRenderAdministrationTray() instead. See https://www.drupal.org/node/2966725', E_USER_DEPRECATED);
+  return ToolbarController::preRenderAdministrationTray($element);
 }
 
 /**
@@ -299,7 +288,7 @@ function toolbar_preprocess_html(&$variables) {
  */
 function toolbar_get_rendered_subtrees() {
   $data = [
-    '#pre_render' => ['_toolbar_do_get_rendered_subtrees'],
+    '#pre_render' => [[ToolbarController::class, 'preRenderGetRenderedSubtrees']],
     '#cache' => [
       'keys' => [
         'toolbar_rendered_subtrees',
@@ -313,49 +302,16 @@ function toolbar_get_rendered_subtrees() {
 
 /**
  * #pre_render callback for toolbar_get_rendered_subtrees().
+ *
+ * @deprecated in Drupal 8.8.0 and will be removed before Drupal 9.0.0. Use
+ *   \Drupal\toolbar\Controller\ToolbarController::preRenderGetRenderedSubtrees()
+ *   instead.
+ *
+ * @see https://www.drupal.org/node/2966725
  */
 function _toolbar_do_get_rendered_subtrees(array $data) {
-  $menu_tree = \Drupal::service('toolbar.menu_tree');
-  // Load the administration menu. The first level is the "Administration" link.
-  // In order to load the children of that link and the subsequent two levels,
-  // start at the second level and end at the fourth.
-  $parameters = new MenuTreeParameters();
-  $parameters->setMinDepth(2)->setMaxDepth(4)->onlyEnabledLinks();
-  // @todo Make the menu configurable in https://www.drupal.org/node/1869638.
-  $tree = $menu_tree->load('admin', $parameters);
-  $manipulators = [
-    ['callable' => 'menu.default_tree_manipulators:checkAccess'],
-    ['callable' => 'menu.default_tree_manipulators:generateIndexAndSort'],
-    ['callable' => 'toolbar_menu_navigation_links'],
-  ];
-  $tree = $menu_tree->transform($tree, $manipulators);
-  $subtrees = [];
-  // Calculated the combined cacheability of all subtrees.
-  $cacheability = new CacheableMetadata();
-  foreach ($tree as $element) {
-    /** @var \Drupal\Core\Menu\MenuLinkInterface $link */
-    $link = $element->link;
-    if ($element->subtree) {
-      $subtree = $menu_tree->build($element->subtree);
-      $output = \Drupal::service('renderer')->renderPlain($subtree);
-      $cacheability = $cacheability->merge(CacheableMetadata::createFromRenderArray($subtree));
-    }
-    else {
-      $output = '';
-    }
-    // Many routes have dots as route name, while some special ones like <front>
-    // have <> characters in them.
-    $url = $link->getUrlObject();
-    $id = str_replace(['.', '<', '>'], ['-', '', ''], $url->isRouted() ? $url->getRouteName() : $url->getUri());
-
-    $subtrees[$id] = $output;
-  }
-
-  // Store the subtrees, along with the cacheability metadata.
-  $cacheability->applyTo($data);
-  $data['#subtrees'] = $subtrees;
-
-  return $data;
+  @trigger_error('_toolbar_do_get_rendered_subtrees() is deprecated in Drupal 8.8.0 and will be removed before Drupal 9.0.0. Use Drupal\toolbar\Controller\ToolbarController::preRenderGetRenderedSubtrees() instead. See https://www.drupal.org/node/2966725', E_USER_DEPRECATED);
+  return ToolbarController::preRenderGetRenderedSubtrees($data);
 }
 
 /**

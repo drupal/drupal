@@ -7,13 +7,14 @@ use Drupal\Core\DependencyInjection\DeprecatedServicePropertyTrait;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Entity\FieldableEntityInterface;
+use Drupal\Core\Security\TrustedCallbackInterface;
 use Drupal\Core\Render\RendererInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Defines a generic controller to render a single entity.
  */
-class EntityViewController implements ContainerInjectionInterface {
+class EntityViewController implements ContainerInjectionInterface, TrustedCallbackInterface {
   use DeprecatedServicePropertyTrait;
 
   /**
@@ -108,6 +109,13 @@ class EntityViewController implements ContainerInjectionInterface {
     $page['#' . $page['#entity_type']] = $_entity;
 
     return $page;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function trustedCallbacks() {
+    return ['buildTitle'];
   }
 
   /**

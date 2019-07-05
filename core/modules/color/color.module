@@ -11,13 +11,13 @@ use Drupal\Component\Utility\Color;
 use Drupal\Component\Utility\Environment;
 use Drupal\Core\Asset\CssOptimizer;
 use Drupal\Core\Block\BlockPluginInterface;
-use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\File\Exception\FileException;
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Render\Element\Textfield;
 use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\color\ColorSystemBrandingBlockAlter;
 
 /**
  * Implements hook_help().
@@ -116,26 +116,20 @@ function color_library_info_alter(&$libraries, $extension) {
  * Implements hook_block_view_BASE_BLOCK_ID_alter().
  */
 function color_block_view_system_branding_block_alter(array &$build, BlockPluginInterface $block) {
-  $build['#pre_render'][] = 'color_block_view_pre_render';
+  $build['#pre_render'][] = [ColorSystemBrandingBlockAlter::class, 'preRender'];
 }
 
 /**
  * #pre_render callback: Sets color preset logo.
+ *
+ * @deprecated in Drupal 8.8.0 and will be removed before Drupal 9.0.0. Use
+ *   \Drupal\color\ColorSystemBrandingBlockAlter::preRender() instead.
+ *
+ * @see https://www.drupal.org/node/2966725
  */
 function color_block_view_pre_render(array $build) {
-  $theme_key = \Drupal::theme()->getActiveTheme()->getName();
-  $config = \Drupal::config('color.theme.' . $theme_key);
-  CacheableMetadata::createFromRenderArray($build)
-    ->addCacheableDependency($config)
-    ->applyTo($build);
-
-  // Override logo.
-  $logo = $config->get('logo');
-  if ($logo && $build['content']['site_logo'] && preg_match('!' . $theme_key . '/logo.svg$!', $build['content']['site_logo']['#uri'])) {
-    $build['content']['site_logo']['#uri'] = file_url_transform_relative(file_create_url($logo));
-  }
-
-  return $build;
+  @trigger_error('color_block_view_pre_render() is deprecated in Drupal 8.8.0 and will be removed before Drupal 9.0.0. Use \Drupal\color\ColorSystemBrandingBlockAlter::preRender() instead. See https://www.drupal.org/node/2966725', E_USER_DEPRECATED);
+  return ColorSystemBrandingBlockAlter::preRender($build);
 }
 
 /**

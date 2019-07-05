@@ -650,6 +650,15 @@ abstract class FilterPluginBase extends HandlerBase implements CacheableDependen
   }
 
   /**
+   * {@inheritdoc}
+   */
+  public static function trustedCallbacks() {
+    $callbacks = parent::trustedCallbacks();
+    $callbacks[] = 'preRenderFlattenData';
+    return $callbacks;
+  }
+
+  /**
    * Validate the options form.
    */
   public function validateExposeForm($form, FormStateInterface $form_state) {

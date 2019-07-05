@@ -12,6 +12,7 @@ use Drupal\Core\Cache\Cache;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Template\Attribute;
+use Drupal\filter\Element\TextFormat;
 use Drupal\filter\FilterFormatInterface;
 
 /**
@@ -306,17 +307,14 @@ function check_markup($text, $format_id = NULL, $langcode = '', $filter_types_to
 /**
  * Render API callback: Hides the field value of 'text_format' elements.
  *
- * To not break form processing and previews if a user does not have access to
- * a stored text format, the expanded form elements in filter_process_format()
- * are forced to take over the stored #default_values for 'value' and 'format'.
- * However, to prevent the unfiltered, original #value from being displayed to
- * the user, we replace it with a friendly notice here.
+ * @deprecated in Drupal 8.8.0 and will be removed before Drupal 9.0.0. Use
+ *   \Drupal\filter\Element\TextFormat::accessDeniedCallback() instead.
  *
- * @see filter_process_format()
+ * @see https://www.drupal.org/node/2966725
  */
 function filter_form_access_denied($element) {
-  $element['#value'] = t('This field has been disabled because you do not have sufficient permissions to edit it.');
-  return $element;
+  @trigger_error('filter_form_access_denied() is deprecated in Drupal 8.8.0 and will be removed before Drupal 9.0.0. Use \Drupal\filter\Element\TextFormat::accessDeniedCallback() instead. See https://www.drupal.org/node/2966725', E_USER_DEPRECATED);
+  return TextFormat::accessDeniedCallback($element);
 }
 
 /**

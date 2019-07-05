@@ -15,6 +15,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\Messenger\MessengerInterface;
+use Drupal\Core\Security\TrustedCallbackInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Access\AccessibleInterface;
 use Drupal\Core\Database\Query\Condition;
@@ -33,7 +34,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *   title = @Translation("Content")
  * )
  */
-class NodeSearch extends ConfigurableSearchPluginBase implements AccessibleInterface, SearchIndexingInterface {
+class NodeSearch extends ConfigurableSearchPluginBase implements AccessibleInterface, SearchIndexingInterface, TrustedCallbackInterface {
   use DeprecatedServicePropertyTrait;
 
   /**
@@ -848,6 +849,13 @@ class NodeSearch extends ConfigurableSearchPluginBase implements AccessibleInter
         unset($this->configuration['rankings'][$var]);
       }
     }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function trustedCallbacks() {
+    return ['removeSubmittedInfo'];
   }
 
 }

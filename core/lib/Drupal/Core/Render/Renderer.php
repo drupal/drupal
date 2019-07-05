@@ -9,6 +9,9 @@ use Drupal\Core\Access\AccessResultInterface;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Controller\ControllerResolverInterface;
+use Drupal\Core\Render\Element\RenderCallbackInterface;
+use Drupal\Core\Security\TrustedCallbackInterface;
+use Drupal\Core\Security\DoTrustedCallbackTrait;
 use Drupal\Core\Theme\ThemeManagerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 
@@ -16,6 +19,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
  * Turns a render array into a HTML string.
  */
 class Renderer implements RendererInterface {
+  use DoTrustedCallbackTrait;
 
   /**
    * The theme manager.
@@ -210,10 +214,7 @@ class Renderer implements RendererInterface {
     }
 
     if (!isset($elements['#access']) && isset($elements['#access_callback'])) {
-      if (is_string($elements['#access_callback']) && strpos($elements['#access_callback'], '::') === FALSE) {
-        $elements['#access_callback'] = $this->controllerResolver->getControllerFromDefinition($elements['#access_callback']);
-      }
-      $elements['#access'] = call_user_func($elements['#access_callback'], $elements);
+      $elements['#access'] = $this->doCallback('#access_callback', $elements['#access_callback'], [$elements]);
     }
 
     // Early-return nothing if user does not have access.
@@ -350,12 +351,7 @@ class Renderer implements RendererInterface {
     }
     // Build the element if it is still empty.
     if (isset($elements['#lazy_builder'])) {
-      $callable = $elements['#lazy_builder'][0];
-      $args = $elements['#lazy_builder'][1];
-      if (is_string($callable) && strpos($callable, '::') === FALSE) {
-        $callable = $this->controllerResolver->getControllerFromDefinition($callable);
-      }
-      $new_elements = call_user_func_array($callable, $args);
+      $new_elements = $this->doCallback('#lazy_builder', $elements['#lazy_builder'][0], $elements['#lazy_builder'][1]);
       // Retain the original cacheability metadata, plus cache keys.
       CacheableMetadata::createFromRenderArray($elements)
         ->merge(CacheableMetadata::createFromRenderArray($new_elements))
@@ -372,10 +368,7 @@ class Renderer implements RendererInterface {
     // element is rendered into the final text.
     if (isset($elements['#pre_render'])) {
       foreach ($elements['#pre_render'] as $callable) {
-        if (is_string($callable) && strpos($callable, '::') === FALSE) {
-          $callable = $this->controllerResolver->getControllerFromDefinition($callable);
-        }
-        $elements = call_user_func($callable, $elements);
+        $elements = $this->doCallback('#pre_render', $callable, [$elements]);
       }
     }
 
@@ -499,10 +492,7 @@ class Renderer implements RendererInterface {
     // outputted text to be filtered.
     if (isset($elements['#post_render'])) {
       foreach ($elements['#post_render'] as $callable) {
-        if (is_string($callable) && strpos($callable, '::') === FALSE) {
-          $callable = $this->controllerResolver->getControllerFromDefinition($callable);
-        }
-        $elements['#children'] = call_user_func($callable, $elements['#children'], $elements);
+        $elements['#children'] = $this->doCallback('#post_render', $callable, [$elements['#children'], $elements]);
       }
     }
 
@@ -754,6 +744,40 @@ class Renderer implements RendererInterface {
     }
 
     return $elements;
+  }
+
+  /**
+   * Performs a callback.
+   *
+   * @param string $callback_type
+   *   The type of the callback. For example, '#post_render'.
+   * @param string|callable $callback
+   *   The callback to perform.
+   * @param array $args
+   *   The arguments to pass to the callback.
+   *
+   * @return mixed
+   *   The callback's return value.
+   *
+   * @see \Drupal\Core\Security\TrustedCallbackInterface
+   */
+  protected function doCallback($callback_type, $callback, array $args) {
+    if (is_string($callback)) {
+      $double_colon = strpos($callback, '::');
+      if ($double_colon === FALSE) {
+        $callback = $this->controllerResolver->getControllerFromDefinition($callback);
+      }
+      elseif ($double_colon > 0) {
+        $callback = explode('::', $callback, 2);
+      }
+    }
+    $message = sprintf('Render %s callbacks must be methods of a class that implements \Drupal\Core\Security\TrustedCallbackInterface or be an anonymous function. The callback was %s. Support for this callback implementation is deprecated in 8.8.0 and will be removed in Drupal 9.0.0. See https://www.drupal.org/node/2966725', $callback_type, '%s');
+    // Add \Drupal\Core\Render\Element\RenderCallbackInterface as an extra
+    // trusted interface so that:
+    // - All public methods on Render elements are considered trusted.
+    // - Helper classes that contain only callback methods can implement this
+    //   instead of TrustedCallbackInterface.
+    return $this->doTrustedCallback($callback, $args, $message, TrustedCallbackInterface::TRIGGER_SILENCED_DEPRECATION, RenderCallbackInterface::class);
   }
 
 }

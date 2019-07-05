@@ -11,6 +11,7 @@ use Drupal\Component\Utility\Crypt;
 use Drupal\Component\Utility\Html;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Render\Markup;
+use Drupal\Core\Security\TrustedCallbackInterface;
 use Drupal\Core\Render\RenderContext;
 
 /**
@@ -1142,7 +1143,7 @@ EOS;
 /**
  * @see \Drupal\Tests\Core\Render\RendererPlaceholdersTest::testRecursivePlaceholder()
  */
-class RecursivePlaceholdersTest {
+class RecursivePlaceholdersTest implements TrustedCallbackInterface {
 
   /**
    * #lazy_builder callback; bubbles another placeholder.
@@ -1160,6 +1161,13 @@ class RecursivePlaceholdersTest {
         '#lazy_builder' => ['Drupal\Tests\Core\Render\PlaceholdersTest::callback', [$animal]],
       ],
     ];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function trustedCallbacks() {
+    return ['callback'];
   }
 
 }

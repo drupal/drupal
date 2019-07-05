@@ -9,6 +9,7 @@ namespace Drupal\Tests\Core\Render;
 
 use Drupal\Core\Cache\MemoryBackend;
 use Drupal\Core\KeyValueStore\KeyValueMemoryFactory;
+use Drupal\Core\Security\TrustedCallbackInterface;
 use Drupal\Core\State\State;
 use Drupal\Core\Cache\Cache;
 
@@ -632,7 +633,7 @@ class RendererBubblingTest extends RendererTestBase {
 }
 
 
-class BubblingTest {
+class BubblingTest implements TrustedCallbackInterface {
 
   /**
    * #pre_render callback for testBubblingWithPrerender().
@@ -709,6 +710,13 @@ class BubblingTest {
     ];
     $elements['#markup'] = 'Setting cache keys just now!';
     return $elements;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function trustedCallbacks() {
+    return ['bubblingPreRender', 'bubblingNestedPreRenderUncached', 'bubblingNestedPreRenderCached', 'bubblingPlaceholder', 'bubblingCacheOverwritePrerender'];
   }
 
 }

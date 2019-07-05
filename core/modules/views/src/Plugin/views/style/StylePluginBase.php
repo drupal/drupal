@@ -745,6 +745,15 @@ abstract class StylePluginBase extends PluginBase {
   }
 
   /**
+   * {@inheritdoc}
+   */
+  public static function trustedCallbacks() {
+    $callbacks = parent::trustedCallbacks();
+    $callbacks[] = 'elementPreRenderRow';
+    return $callbacks;
+  }
+
+  /**
    * #pre_render callback for view row field rendering.
    *
    * @see self::render()

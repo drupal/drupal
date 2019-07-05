@@ -3,6 +3,7 @@
 namespace Drupal\Tests\views\Kernel;
 
 use Drupal\Core\Render\RenderContext;
+use Drupal\views\Form\ViewsFormMainForm;
 use Drupal\views\Views;
 
 /**
@@ -97,7 +98,29 @@ class ViewsHooksTest extends ViewsKernelTestBase {
    * Tests how hook_views_form_substitutions() makes substitutions.
    *
    * @see views_test_data_views_form_substitutions()
-   * @see views_pre_render_views_form_views_form()
+   * @see \Drupal\views\Form\ViewsFormMainForm::preRenderViewsForm()
+   */
+  public function testViewsFormMainFormPreRender() {
+    $element = [
+      'output' => [
+        '#plain_text' => '<!--will-be-escaped--><!--will-be-not-escaped-->',
+      ],
+      '#substitutions' => ['#value' => []],
+    ];
+    $element = \Drupal::service('renderer')->executeInRenderContext(new RenderContext(), function () use ($element) {
+      return ViewsFormMainForm::preRenderViewsForm($element);
+    });
+    $this->setRawContent((string) $element['output']['#markup']);
+    $this->assertEscaped('<em>escaped</em>');
+    $this->assertRaw('<em>unescaped</em>');
+  }
+
+  /**
+   * Tests views_pre_render_views_form_views_form() deprecation.
+   *
+   * @group legacy
+   *
+   * @expectedDeprecation views_pre_render_views_form_views_form() is deprecated in Drupal 8.8.0 and will be removed before Drupal 9.0.0. Use \Drupal\views\Form\ViewsFormMainForm::preRenderViewsForm() instead. See https://www.drupal.org/node/2966725
    */
   public function testViewsPreRenderViewsFormViewsForm() {
     $element = [

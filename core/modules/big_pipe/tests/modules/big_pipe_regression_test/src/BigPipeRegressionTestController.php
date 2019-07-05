@@ -3,8 +3,9 @@
 namespace Drupal\big_pipe_regression_test;
 
 use Drupal\big_pipe\Render\BigPipeMarkup;
+use Drupal\Core\Security\TrustedCallbackInterface;
 
-class BigPipeRegressionTestController {
+class BigPipeRegressionTestController implements TrustedCallbackInterface {
 
   const MARKER_2678662 = '<script>var hitsTheFloor = "</body>";</script>';
 
@@ -41,6 +42,13 @@ class BigPipeRegressionTestController {
       '#markup' => '<time datetime="' . date('Y-m-d', time()) . '"></time>',
       '#cache' => ['max-age' => 0],
     ];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function trustedCallbacks() {
+    return ['currentTime'];
   }
 
 }

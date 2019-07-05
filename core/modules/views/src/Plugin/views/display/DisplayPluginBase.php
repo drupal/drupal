@@ -2127,6 +2127,15 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
   }
 
   /**
+   * {@inheritdoc}
+   */
+  public static function trustedCallbacks() {
+    $callbacks = parent::trustedCallbacks();
+    $callbacks[] = 'elementPreRender';
+    return $callbacks;
+  }
+
+  /**
    * Applies the cacheability of the current display to the given render array.
    *
    * @param array $element

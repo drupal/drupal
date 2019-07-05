@@ -5,6 +5,7 @@ namespace Drupal\Tests\system\Kernel\Theme;
 use Drupal\Component\Serialization\Json;
 use Drupal\Component\Utility\Html;
 use Drupal\Component\Render\FormattableMarkup;
+use Drupal\Core\Render\Element\Link;
 use Drupal\Core\Session\UserSession;
 use Drupal\Core\Url;
 use Drupal\KernelTests\KernelTestBase;
@@ -417,9 +418,114 @@ class FunctionsTest extends KernelTestBase {
   }
 
   /**
-   * Test the use of drupal_pre_render_links() on a nested array of links.
+   * Test the use of Link::preRenderLinks() on a nested array of links.
+   *
+   * @see \Drupal\Core\Render\Element\Link::preRenderLinks()
    */
   public function testDrupalPreRenderLinks() {
+    // Define the base array to be rendered, containing a variety of different
+    // kinds of links.
+    $base_array = [
+      '#theme' => 'links',
+      '#pre_render' => [[Link::class, 'preRenderLinks']],
+      '#links' => [
+        'parent_link' => [
+          'title' => 'Parent link original',
+          'url' => Url::fromRoute('router_test.1'),
+        ],
+      ],
+      'first_child' => [
+        '#theme' => 'links',
+        '#links' => [
+          // This should be rendered if 'first_child' is rendered separately,
+          // but ignored if the parent is being rendered (since it duplicates
+          // one of the parent's links).
+          'parent_link' => [
+            'title' => 'Parent link copy',
+            'url' => Url::fromRoute('router_test.6'),
+          ],
+          // This should always be rendered.
+          'first_child_link' => [
+            'title' => 'First child link',
+            'url' => Url::fromRoute('router_test.7'),
+          ],
+        ],
+      ],
+      // This should always be rendered as part of the parent.
+      'second_child' => [
+        '#theme' => 'links',
+        '#links' => [
+          'second_child_link' => [
+            'title' => 'Second child link',
+            'url' => Url::fromRoute('router_test.8'),
+          ],
+        ],
+      ],
+      // This should never be rendered, since the user does not have access to
+      // it.
+      'third_child' => [
+        '#theme' => 'links',
+        '#links' => [
+          'third_child_link' => [
+            'title' => 'Third child link',
+            'url' => Url::fromRoute('router_test.9'),
+          ],
+        ],
+        '#access' => FALSE,
+      ],
+    ];
+
+    // Start with a fresh copy of the base array, and try rendering the entire
+    // thing. We expect a single <ul> with appropriate links contained within
+    // it.
+    $render_array = $base_array;
+    $html = \Drupal::service('renderer')->renderRoot($render_array);
+    $dom = new \DOMDocument();
+    $dom->loadHTML($html);
+    $this->assertEqual($dom->getElementsByTagName('ul')->length, 1, 'One "ul" tag found in the rendered HTML.');
+    $list_elements = $dom->getElementsByTagName('li');
+    $this->assertEqual($list_elements->length, 3, 'Three "li" tags found in the rendered HTML.');
+    $this->assertEqual($list_elements->item(0)->nodeValue, 'Parent link original', 'First expected link found.');
+    $this->assertEqual($list_elements->item(1)->nodeValue, 'First child link', 'Second expected link found.');
+    $this->assertEqual($list_elements->item(2)->nodeValue, 'Second child link', 'Third expected link found.');
+    $this->assertIdentical(strpos($html, 'Parent link copy'), FALSE, '"Parent link copy" link not found.');
+    $this->assertIdentical(strpos($html, 'Third child link'), FALSE, '"Third child link" link not found.');
+
+    // Now render 'first_child', followed by the rest of the links, and make
+    // sure we get two separate <ul>'s with the appropriate links contained
+    // within each.
+    $render_array = $base_array;
+    $child_html = \Drupal::service('renderer')->renderRoot($render_array['first_child']);
+    $parent_html = \Drupal::service('renderer')->renderRoot($render_array);
+    // First check the child HTML.
+    $dom = new \DOMDocument();
+    $dom->loadHTML($child_html);
+    $this->assertEqual($dom->getElementsByTagName('ul')->length, 1, 'One "ul" tag found in the rendered child HTML.');
+    $list_elements = $dom->getElementsByTagName('li');
+    $this->assertEqual($list_elements->length, 2, 'Two "li" tags found in the rendered child HTML.');
+    $this->assertEqual($list_elements->item(0)->nodeValue, 'Parent link copy', 'First expected link found.');
+    $this->assertEqual($list_elements->item(1)->nodeValue, 'First child link', 'Second expected link found.');
+    // Then check the parent HTML.
+    $dom = new \DOMDocument();
+    $dom->loadHTML($parent_html);
+    $this->assertEqual($dom->getElementsByTagName('ul')->length, 1, 'One "ul" tag found in the rendered parent HTML.');
+    $list_elements = $dom->getElementsByTagName('li');
+    $this->assertEqual($list_elements->length, 2, 'Two "li" tags found in the rendered parent HTML.');
+    $this->assertEqual($list_elements->item(0)->nodeValue, 'Parent link original', 'First expected link found.');
+    $this->assertEqual($list_elements->item(1)->nodeValue, 'Second child link', 'Second expected link found.');
+    $this->assertIdentical(strpos($parent_html, 'First child link'), FALSE, '"First child link" link not found.');
+    $this->assertIdentical(strpos($parent_html, 'Third child link'), FALSE, '"Third child link" link not found.');
+  }
+
+  /**
+   * Test the use of drupal_pre_render_links() on a nested array of links.
+   *
+   * @group legacy
+   *
+   * @expectedDeprecation Render #pre_render callbacks must be methods of a class that implements \Drupal\Core\Security\TrustedCallbackInterface or be an anonymous function. The callback was drupal_pre_render_links. Support for this callback implementation is deprecated in 8.8.0 and will be removed in Drupal 9.0.0. See https://www.drupal.org/node/2966725
+   * @expectedDeprecation drupal_pre_render_links() is deprecated in Drupal 8.8.0 and will be removed before Drupal 9.0.0. Use \Drupal\Core\Render\Element\Link::preRenderLinks() instead. See https://www.drupal.org/node/2966725
+   */
+  public function testDrupalPreRenderLinksLegacy() {
     // Define the base array to be rendered, containing a variety of different
     // kinds of links.
     $base_array = [

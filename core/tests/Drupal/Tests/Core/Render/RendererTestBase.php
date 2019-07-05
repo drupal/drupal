@@ -11,6 +11,7 @@ use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Cache\Context\ContextCacheKeys;
 use Drupal\Core\Cache\MemoryBackend;
+use Drupal\Core\Security\TrustedCallbackInterface;
 use Drupal\Core\Render\PlaceholderGenerator;
 use Drupal\Core\Render\PlaceholderingRenderCache;
 use Drupal\Core\Render\Renderer;
@@ -252,7 +253,7 @@ abstract class RendererTestBase extends UnitTestCase {
 }
 
 
-class PlaceholdersTest {
+class PlaceholdersTest implements TrustedCallbackInterface {
 
   /**
    * #lazy_builder callback; attaches setting, generates markup.
@@ -306,6 +307,13 @@ class PlaceholdersTest {
     $build = static::callback($animal);
     $build['#cache']['tags'][] = 'current-temperature';
     return $build;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function trustedCallbacks() {
+    return ['callbackTagCurrentTemperature', 'callbackPerUser', 'callback'];
   }
 
 }

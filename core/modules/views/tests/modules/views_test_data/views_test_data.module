@@ -113,20 +113,6 @@ function template_preprocess_views_view_mapping_test(&$variables) {
 }
 
 /**
- * Test pre_render function.
- *
- * @param array $element
- *   A render array
- *
- * @return array
- *   The changed render array.
- */
-function views_test_data_test_pre_render_function($element) {
-  $element['#markup'] = 'views_test_data_test_pre_render_function executed';
-  return $element;
-}
-
-/**
  * Implements hook_form_BASE_FORM_ID_alter().
  */
 function views_test_data_form_views_form_test_form_multiple_default_alter(&$form, FormStateInterface $form_state, $form_id) {

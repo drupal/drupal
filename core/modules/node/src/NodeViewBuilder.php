@@ -4,11 +4,13 @@ namespace Drupal\node;
 
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityViewBuilder;
+use Drupal\Core\Render\Element\Link;
+use Drupal\Core\Security\TrustedCallbackInterface;
 
 /**
  * View builder handler for nodes.
  */
-class NodeViewBuilder extends EntityViewBuilder {
+class NodeViewBuilder extends EntityViewBuilder implements TrustedCallbackInterface {
 
   /**
    * {@inheritdoc}
@@ -87,7 +89,7 @@ class NodeViewBuilder extends EntityViewBuilder {
   public static function renderLinks($node_entity_id, $view_mode, $langcode, $is_in_preview, $revision_id = NULL) {
     $links = [
       '#theme' => 'links__node',
-      '#pre_render' => ['drupal_pre_render_links'],
+      '#pre_render' => [[Link::class, 'preRenderLinks']],
       '#attributes' => ['class' => ['links', 'inline']],
     ];
 
@@ -144,6 +146,15 @@ class NodeViewBuilder extends EntityViewBuilder {
       '#links' => $links,
       '#attributes' => ['class' => ['links', 'inline']],
     ];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function trustedCallbacks() {
+    $callbacks = parent::trustedCallbacks();
+    $callbacks[] = 'renderLinks';
+    return $callbacks;
   }
 
 }

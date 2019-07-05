@@ -10,6 +10,7 @@ use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
+use Drupal\Core\Security\TrustedCallbackInterface;
 use Drupal\language\ConfigurableLanguageManagerInterface;
 use Drupal\user\Plugin\LanguageNegotiation\LanguageNegotiationUser;
 use Drupal\user\Plugin\LanguageNegotiation\LanguageNegotiationUserAdmin;
@@ -18,7 +19,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 /**
  * Form controller for the user account forms.
  */
-abstract class AccountForm extends ContentEntityForm {
+abstract class AccountForm extends ContentEntityForm implements TrustedCallbackInterface {
 
   /**
    * The language manager.
@@ -274,6 +275,13 @@ abstract class AccountForm extends ContentEntityForm {
     $form['#entity_builders']['sync_user_langcode'] = '::syncUserLangcode';
 
     return parent::form($form, $form_state, $account);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function trustedCallbacks() {
+    return ['alterPreferredLangcodeDescription'];
   }
 
   /**

@@ -12,11 +12,12 @@ use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Plugin\ContextAwarePluginInterface;
 use Drupal\Core\Render\Element;
 use Drupal\block\Entity\Block;
+use Drupal\Core\Security\TrustedCallbackInterface;
 
 /**
  * Provides a Block view builder.
  */
-class BlockViewBuilder extends EntityViewBuilder {
+class BlockViewBuilder extends EntityViewBuilder implements TrustedCallbackInterface {
 
   /**
    * {@inheritdoc}
@@ -133,6 +134,13 @@ class BlockViewBuilder extends EntityViewBuilder {
     $module_handler->alter(['block_view', "block_view_$base_id"], $build, $plugin);
 
     return $build;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function trustedCallbacks() {
+    return ['preRender', 'lazyBuilder'];
   }
 
   /**

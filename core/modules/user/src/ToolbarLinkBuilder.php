@@ -2,6 +2,7 @@
 
 namespace Drupal\user;
 
+use Drupal\Core\Security\TrustedCallbackInterface;
 use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Url;
@@ -9,7 +10,7 @@ use Drupal\Core\Url;
 /**
  * ToolbarLinkBuilder fills out the placeholders generated in user_toolbar().
  */
-class ToolbarLinkBuilder {
+class ToolbarLinkBuilder implements TrustedCallbackInterface {
 
   use StringTranslationTrait;
 
@@ -81,6 +82,13 @@ class ToolbarLinkBuilder {
     return [
       '#markup' => $this->account->getDisplayName(),
     ];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function trustedCallbacks() {
+    return ['renderToolbarLinks', 'renderDisplayName'];
   }
 
 }

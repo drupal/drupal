@@ -25,7 +25,7 @@ function block_test_block_view_test_cache_alter(array &$build, BlockPluginInterf
     $build['#attributes']['foo'] = 'bar';
   }
   if (\Drupal::state()->get('block_test_view_alter_append_pre_render_prefix') !== NULL) {
-    $build['#pre_render'][] = 'block_test_pre_render_alter_content';
+    $build['#pre_render'][] = '\Drupal\block_test\BlockRenderAlterContent::preRender';
   }
 }
 
@@ -51,12 +51,4 @@ function block_test_block_build_test_cache_alter(array &$build, BlockPluginInter
   if (\Drupal::state()->get('block_test_block_alter_create_placeholder') !== NULL) {
     $build['#create_placeholder'] = \Drupal::state()->get('block_test_block_alter_create_placeholder');
   }
-}
-
-/**
- * #pre_render callback for a block to alter its content.
- */
-function block_test_pre_render_alter_content($build) {
-  $build['#prefix'] = 'Hiya!<br>';
-  return $build;
 }

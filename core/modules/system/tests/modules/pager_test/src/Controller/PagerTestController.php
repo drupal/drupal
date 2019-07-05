@@ -5,11 +5,12 @@ namespace Drupal\pager_test\Controller;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Database\Query\PagerSelectExtender;
+use Drupal\Core\Security\TrustedCallbackInterface;
 
 /**
  * Controller routine for testing the pager.
  */
-class PagerTestController extends ControllerBase {
+class PagerTestController extends ControllerBase implements TrustedCallbackInterface {
 
   /**
    * Builds a render array for a pageable test table.
@@ -122,6 +123,13 @@ class PagerTestController extends ControllerBase {
   public static function showPagerCacheContext(array $pager) {
     \Drupal::messenger()->addStatus(\Drupal::service('cache_contexts_manager')->convertTokensToKeys(['url.query_args.pagers:' . $pager['#element']])->getKeys()[0]);
     return $pager;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function trustedCallbacks() {
+    return ['showPagerCacheContext'];
   }
 
 }
