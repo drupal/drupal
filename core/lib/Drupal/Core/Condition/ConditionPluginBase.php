@@ -24,7 +24,7 @@ abstract class ConditionPluginBase extends ExecutablePluginBase implements Condi
   /**
    * The condition manager to proxy execute calls through.
    *
-   * @var \Drupal\Core\Executable\ExecutableInterface
+   * @var \Drupal\Core\Executable\ExecutableManagerInterface
    */
   protected $executableManager;
 
