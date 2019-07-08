@@ -39,4 +39,12 @@ class ModerationStateViewsFieldUpdateTest extends UpdatePathTestBase {
     $this->assertEquals('moderation_state_field', $views_display['display_options']['fields']['moderation_state']['plugin_id']);
   }
 
+  /**
+   * Tests that the update succeeds even if Views is not installed.
+   */
+  public function testViewsFieldIdUpdateWithoutViews() {
+    $this->container->get('module_installer')->uninstall(['views']);
+    $this->runUpdates();
+  }
+
 }

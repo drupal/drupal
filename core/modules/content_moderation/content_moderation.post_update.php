@@ -175,6 +175,11 @@ function content_moderation_post_update_entity_display_dependencies(&$sandbox) {
  * Update the moderation state views field plugin ID.
  */
 function content_moderation_post_update_views_field_plugin_id(&$sandbox) {
+  // If Views is not installed, there is nothing to do.
+  if (!\Drupal::moduleHandler()->moduleExists('views')) {
+    return;
+  }
+
   \Drupal::classResolver(ConfigEntityUpdater::class)->update($sandbox, 'view', function ($view) {
     /** @var \Drupal\views\ViewEntityInterface $view */
     $updated = FALSE;
