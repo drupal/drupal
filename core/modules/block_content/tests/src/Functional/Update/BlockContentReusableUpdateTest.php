@@ -150,4 +150,12 @@ class BlockContentReusableUpdateTest extends UpdatePathTestBase {
     $assert_session->statusCodeEquals('403');
   }
 
+  /**
+   * Tests that the update succeeds even if Views is not installed.
+   */
+  public function testReusableFieldAdditionWithoutViews() {
+    $this->container->get('module_installer')->uninstall(['views']);
+    $this->runUpdates();
+  }
+
 }

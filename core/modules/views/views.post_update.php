@@ -371,6 +371,11 @@ function views_post_update_table_display_cache_max_age(&$sandbox = NULL) {
  * Update exposed filter blocks label display to be disabled.
  */
 function views_post_update_exposed_filter_blocks_label_display(&$sandbox = NULL) {
+  // If Block is not installed, there's nothing to do.
+  if (!\Drupal::moduleHandler()->moduleExists('block')) {
+    return;
+  }
+
   \Drupal::classResolver(ConfigEntityUpdater::class)->update($sandbox, 'block', function ($block) {
     /** @var \Drupal\block\BlockInterface $block */
     if (strpos($block->getPluginId(), 'views_exposed_filter_block:') === 0) {

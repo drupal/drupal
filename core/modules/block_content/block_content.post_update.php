@@ -12,6 +12,11 @@ use Drupal\Core\Entity\Sql\SqlContentEntityStorage;
  * Adds a 'reusable' filter to all Custom Block views.
  */
 function block_content_post_update_add_views_reusable_filter(&$sandbox = NULL) {
+  // If Views is not installed, there is nothing to do.
+  if (!\Drupal::moduleHandler()->moduleExists('views')) {
+    return;
+  }
+
   $entity_type = \Drupal::entityTypeManager()->getDefinition('block_content');
   $storage = \Drupal::entityTypeManager()->getStorage('block_content');
 
