@@ -5,11 +5,12 @@ namespace Drupal\Core\Update;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\DependencyInjection\ServiceModifierInterface;
 use Drupal\Core\DependencyInjection\ServiceProviderInterface;
+use Symfony\Component\DependencyInjection\Compiler\PassConfig;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Reference;
 
 /**
- * Ensures for some services that they don't cache.
+ * Customises the container for running updates.
  */
 class UpdateServiceProvider implements ServiceProviderInterface, ServiceModifierInterface {
 
@@ -19,12 +20,15 @@ class UpdateServiceProvider implements ServiceProviderInterface, ServiceModifier
   public function register(ContainerBuilder $container) {
     $definition = new Definition('Drupal\Core\Cache\NullBackend', ['null']);
     $container->setDefinition('cache.null', $definition);
+
+    $container->addCompilerPass(new UpdateCompilerPass(), PassConfig::TYPE_REMOVE, 128);
   }
 
   /**
    * {@inheritdoc}
    */
   public function alter(ContainerBuilder $container) {
+    // Ensures for some services that they don't cache.
     $null_cache_service = new Reference('cache.null');
 
     $definition = $container->getDefinition('asset.resolver');

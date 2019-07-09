@@ -1,0 +1,8 @@
+name: 'New Dependency test'
+type: module
+description: 'Support module for update testing.'
+package: Testing
+version: VERSION
+core: 8.x
+dependencies:
+  - new_dependency_test_with_service
