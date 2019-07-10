@@ -142,7 +142,7 @@ class ExternalNormalizersTest extends BrowserTestBase {
     // Asserts the expected JSON:API normalization.
     // @todo Remove line below in favor of commented line in https://www.drupal.org/project/jsonapi/issues/2878463.
     $url = Url::fromRoute('jsonapi.entity_test--entity_test.individual', ['entity' => $this->entity->uuid()]);
-    /* $url = $this->entity->toUrl('jsonapi'); */
+    // $url = $this->entity->toUrl('jsonapi');
     $client = $this->getSession()->getDriver()->getClient()->getClient();
     $response = $client->request('GET', $url->setAbsolute(TRUE)->toString());
     $document = Json::decode((string) $response->getBody());

@@ -377,6 +377,9 @@ abstract class ResourceTestBase extends BrowserTestBase {
    *   The JSON:API normalization for the given entity.
    */
   protected function normalize(EntityInterface $entity, Url $url) {
+    // Don't use cached normalizations in tests.
+    $this->container->get('cache.jsonapi_normalizations')->deleteAll();
+
     $self_link = new Link(new CacheableMetadata(), $url, ['self']);
     $resource_type = $this->container->get('jsonapi.resource_type.repository')->getByTypeName(static::$resourceTypeName);
     $doc = new JsonApiDocumentTopLevel(new ResourceObjectData([ResourceObject::createFromEntity($resource_type, $entity)], 1), new NullIncludedData(), new LinkCollection(['self' => $self_link]));
@@ -908,7 +911,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
     // - to eventually result in a well-formed request that succeeds.
     // @todo Remove line below in favor of commented line in https://www.drupal.org/project/jsonapi/issues/2878463.
     $url = Url::fromRoute(sprintf('jsonapi.%s.individual', static::$resourceTypeName), ['entity' => $this->entity->uuid()]);
-    /* $url = $this->entity->toUrl('jsonapi'); */
+    // $url = $this->entity->toUrl('jsonapi');
     $request_options = [];
     $request_options[RequestOptions::HEADERS]['Accept'] = 'application/vnd.api+json';
     $request_options = NestedArray::mergeDeep($request_options, $this->getAuthenticationRequestOptions());
@@ -2110,7 +2113,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
     // - to eventually result in a well-formed request that succeeds.
     // @todo Remove line below in favor of commented line in https://www.drupal.org/project/jsonapi/issues/2878463.
     $url = Url::fromRoute(sprintf('jsonapi.%s.individual', static::$resourceTypeName), ['entity' => $this->entity->uuid()]);
-    /* $url = $this->entity->toUrl('jsonapi'); */
+    // $url = $this->entity->toUrl('jsonapi');
     $request_options = [];
     $request_options[RequestOptions::HEADERS]['Accept'] = 'application/vnd.api+json';
     $request_options = NestedArray::mergeDeep($request_options, $this->getAuthenticationRequestOptions());
@@ -2403,7 +2406,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
     // - to eventually result in a well-formed request that succeeds.
     // @todo Remove line below in favor of commented line in https://www.drupal.org/project/jsonapi/issues/2878463.
     $url = Url::fromRoute(sprintf('jsonapi.%s.individual', static::$resourceTypeName), ['entity' => $this->entity->uuid()]);
-    /* $url = $this->entity->toUrl('jsonapi'); */
+    // $url = $this->entity->toUrl('jsonapi');
     $request_options = [];
     $request_options[RequestOptions::HEADERS]['Accept'] = 'application/vnd.api+json';
     $request_options = NestedArray::mergeDeep($request_options, $this->getAuthenticationRequestOptions());
@@ -2723,7 +2726,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
 
     // @todo Remove line below in favor of commented line in https://www.drupal.org/project/jsonapi/issues/2878463.
     $url = Url::fromRoute(sprintf('jsonapi.%s.individual', static::$resourceTypeName), ['entity' => $this->entity->uuid()])->setAbsolute();
-    /* $url = $this->entity->toUrl('jsonapi'); */
+    // $url = $this->entity->toUrl('jsonapi');
     $collection_url = Url::fromRoute(sprintf('jsonapi.%s.collection', static::$resourceTypeName))->setAbsolute();
     $relationship_url = Url::fromRoute(sprintf('jsonapi.%s.%s.relationship.get', static::$resourceTypeName, 'field_jsonapi_test_entity_ref'), ['entity' => $this->entity->uuid()])->setAbsolute();
     $related_url = Url::fromRoute(sprintf('jsonapi.%s.%s.related', static::$resourceTypeName, 'field_jsonapi_test_entity_ref'), ['entity' => $this->entity->uuid()])->setAbsolute();

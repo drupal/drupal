@@ -7,6 +7,7 @@ use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Url;
 use Drupal\jsonapi\Normalizer\HttpExceptionNormalizer;
+use Drupal\jsonapi\Normalizer\Value\CacheableNormalization;
 use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
 use Drupal\Tests\jsonapi\Traits\CommonCollectionFilterAccessTestPatternsTrait;
@@ -267,7 +268,7 @@ class NodeTest extends ResourceTestBase {
 
     // @todo Remove line below in favor of commented line in https://www.drupal.org/project/jsonapi/issues/2878463.
     $url = Url::fromRoute(sprintf('jsonapi.%s.individual', static::$resourceTypeName), ['entity' => $this->entity->uuid()]);
-    /* $url = $this->entity->toUrl('jsonapi'); */
+    // $url = $this->entity->toUrl('jsonapi');
 
     // GET node's current normalization.
     $response = $this->request('GET', $url, $this->getAuthenticationRequestOptions());
@@ -301,12 +302,13 @@ class NodeTest extends ResourceTestBase {
   public function testGetIndividual() {
     parent::testGetIndividual();
 
+    $this->assertCacheableNormalizations();
     // Unpublish node.
     $this->entity->setUnpublished()->save();
 
     // @todo Remove line below in favor of commented line in https://www.drupal.org/project/jsonapi/issues/2878463.
     $url = Url::fromRoute(sprintf('jsonapi.%s.individual', static::$resourceTypeName), ['entity' => $this->entity->uuid()]);
-    /* $url = $this->entity->toUrl('jsonapi'); */
+    // $url = $this->entity->toUrl('jsonapi');
     $request_options = $this->getAuthenticationRequestOptions();
 
     // 403 when accessing own unpublished node.
@@ -348,6 +350,65 @@ class NodeTest extends ResourceTestBase {
     $expected_cache_contexts = Cache::mergeContexts($this->getExpectedCacheContexts(), ['user']);
     $expected_cache_contexts = array_diff($expected_cache_contexts, ['user.permissions']);
     $this->assertResourceResponse(200, FALSE, $response, $this->getExpectedCacheTags(), $expected_cache_contexts, FALSE, 'UNCACHEABLE');
+  }
+
+  /**
+   * Asserts that normalizations are cached in an incremental way.
+   *
+   * @throws \Drupal\Core\Entity\EntityStorageException
+   */
+  protected function assertCacheableNormalizations() {
+    // Save the entity to invalidate caches.
+    $this->entity->save();
+    $uuid = $this->entity->uuid();
+    $cache = \Drupal::service('render_cache')->get([
+      '#cache' => [
+        'keys' => ['node--camelids', $uuid],
+        'bin' => 'jsonapi_normalizations',
+      ],
+    ]);
+    // After saving the entity the normalization should not be cached.
+    $this->assertFalse($cache);
+    // @todo Remove line below in favor of commented line in https://www.drupal.org/project/jsonapi/issues/2878463.
+    $url = Url::fromRoute(sprintf('jsonapi.%s.individual', static::$resourceTypeName), ['entity' => $uuid]);
+    // $url = $this->entity->toUrl('jsonapi');
+    $request_options = $this->getAuthenticationRequestOptions();
+    $request_options[RequestOptions::QUERY] = ['fields' => ['node--camelids' => 'title']];
+    $this->request('GET', $url, $request_options);
+    // Ensure the normalization cache is being incrementally built. After
+    // requesting the title, only the title is in the cache.
+    $this->assertNormalizedFieldsAreCached(['title']);
+    $request_options[RequestOptions::QUERY] = ['fields' => ['node--camelids' => 'field_rest_test']];
+    $this->request('GET', $url, $request_options);
+    // After requesting an additional field, then that field is in the cache and
+    // the old one is still there.
+    $this->assertNormalizedFieldsAreCached(['title', 'field_rest_test']);
+  }
+
+  /**
+   * Checks that the provided field names are the only fields in the cache.
+   *
+   * The normalization cache should only have these fields, which build up
+   * across responses.
+   *
+   * @param string[] $field_names
+   *   The field names.
+   */
+  protected function assertNormalizedFieldsAreCached($field_names) {
+    $cache = \Drupal::service('render_cache')->get([
+      '#cache' => [
+        'keys' => ['node--camelids', $this->entity->uuid()],
+        'bin' => 'jsonapi_normalizations',
+      ],
+    ]);
+    $cached_fields = $cache['#data']['fields'];
+    $this->assertCount(count($field_names), $cached_fields);
+    array_walk($field_names, function ($field_name) use ($cached_fields) {
+      $this->assertInstanceOf(
+        CacheableNormalization::class,
+        $cached_fields[$field_name]
+      );
+    });
   }
 
   /**

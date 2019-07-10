@@ -44,8 +44,15 @@ services:
       - { name: jsonapi_normalizer }
   serializer.normalizer.resource_object.jsonapi:
     class: Drupal\jsonapi\Normalizer\ResourceObjectNormalizer
+    arguments: ['@jsonapi.normalization_cacher']
     tags:
       - { name: jsonapi_normalizer }
+  jsonapi.normalization_cacher:
+    class: Drupal\jsonapi\EventSubscriber\ResourceObjectNormalizationCacher
+    calls:
+      - ['setRenderCache', ['@render_cache']]
+    tags:
+      - { name: event_subscriber }
   serializer.normalizer.content_entity.jsonapi:
     class: Drupal\jsonapi\Normalizer\ContentEntityDenormalizer
     arguments: ['@entity_type.manager', '@entity_field.manager', '@plugin.manager.field.field_type']
@@ -118,6 +125,12 @@ services:
     # We need this to add this to the Drupal's cache_tags.invalidator service.
     # This way it can invalidate the data in here based on tags.
     tags: [{ name: cache.bin }]
+  cache.jsonapi_normalizations:
+    class: Drupal\Core\Cache\CacheBackendInterface
+    tags:
+      - { name: cache.bin }
+    factory: cache_factory:get
+    arguments: [jsonapi_normalizations]
 
   # Route filter.
   jsonapi.route_filter.format_setter:

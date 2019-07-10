@@ -4,6 +4,7 @@ namespace Drupal\jsonapi\Normalizer;
 
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Field\FieldItemListInterface;
+use Drupal\jsonapi\EventSubscriber\ResourceObjectNormalizationCacher;
 use Drupal\jsonapi\JsonApiResource\ResourceObject;
 use Drupal\jsonapi\Normalizer\Value\CacheableNormalization;
 use Drupal\jsonapi\Normalizer\Value\CacheableOmission;
@@ -23,6 +24,23 @@ class ResourceObjectNormalizer extends NormalizerBase {
    * {@inheritdoc}
    */
   protected $supportedInterfaceOrClass = ResourceObject::class;
+
+  /**
+   * The entity normalization cacher.
+   *
+   * @var \Drupal\jsonapi\EventSubscriber\ResourceObjectNormalizationCacher
+   */
+  protected $cacher;
+
+  /**
+   * Constructs a ResourceObjectNormalizer object.
+   *
+   * @param \Drupal\jsonapi\EventSubscriber\ResourceObjectNormalizationCacher $cacher
+   *   The entity normalization cacher.
+   */
+  public function __construct(ResourceObjectNormalizationCacher $cacher) {
+    $this->cacher = $cacher;
+  }
 
   /**
    * {@inheritdoc}
@@ -49,23 +67,91 @@ class ResourceObjectNormalizer extends NormalizerBase {
     else {
       $field_names = array_keys($fields);
     }
-    $normalizer_values = [];
-    foreach ($fields as $field_name => $field) {
-      $in_sparse_fieldset = in_array($field_name, $field_names);
-      // Omit fields not listed in sparse fieldsets.
-      if (!$in_sparse_fieldset) {
-        continue;
-      }
-      $normalizer_values[$field_name] = $this->serializeField($field, $context, $format);
-    }
+
+    $normalization_parts = $this->getNormalization($field_names, $object, $format, $context);
+
+    // Keep only the requested fields (the cached normalization gradually grows
+    // to the complete set of fields).
+    $fields = $normalization_parts[ResourceObjectNormalizationCacher::RESOURCE_CACHE_SUBSET_FIELDS];
+    $field_normalizations = array_intersect_key($fields, array_flip($field_names));
+
     $relationship_field_names = array_keys($resource_type->getRelatableResourceTypes());
-    return CacheableNormalization::aggregate([
-      'type' => CacheableNormalization::permanent($resource_type->getTypeName()),
-      'id' => CacheableNormalization::permanent($object->getId()),
-      'attributes' => CacheableNormalization::aggregate(array_diff_key($normalizer_values, array_flip($relationship_field_names)))->omitIfEmpty(),
-      'relationships' => CacheableNormalization::aggregate(array_intersect_key($normalizer_values, array_flip($relationship_field_names)))->omitIfEmpty(),
-      'links' => $this->serializer->normalize($object->getLinks(), $format, $context)->omitIfEmpty(),
-    ])->withCacheableDependency($object);
+    $attributes = array_diff_key($field_normalizations, array_flip($relationship_field_names));
+    $relationships = array_intersect_key($field_normalizations, array_flip($relationship_field_names));
+    $entity_normalization = array_filter(
+      $normalization_parts[ResourceObjectNormalizationCacher::RESOURCE_CACHE_SUBSET_BASE] + [
+        'attributes' => CacheableNormalization::aggregate($attributes)->omitIfEmpty(),
+        'relationships' => CacheableNormalization::aggregate($relationships)->omitIfEmpty(),
+      ]
+    );
+    return CacheableNormalization::aggregate($entity_normalization)->withCacheableDependency($object);
+  }
+
+  /**
+   * Normalizes an entity using the given fieldset.
+   *
+   * @param string[] $field_names
+   *   The field names to normalize (the sparse fieldset, if any).
+   * @param \Drupal\jsonapi\JsonApiResource\ResourceObject $object
+   *   The resource object to partially normalize.
+   * @param string $format
+   *   The format in which the normalization will be encoded.
+   * @param array $context
+   *   Context options for the normalizer.
+   *
+   * @return array
+   *   An array with two key-value pairs:
+   *   - 'base': array, the base normalization of the entity, that does not
+   *             depend on which sparse fieldset was requested.
+   *   - 'fields': CacheableNormalization for all requested fields.
+   *
+   * @see ::normalize()
+   */
+  protected function getNormalization(array $field_names, ResourceObject $object, $format = NULL, array $context = []) {
+    $cached_normalization_parts = $this->cacher->get($object);
+    $normalizer_values = $cached_normalization_parts !== FALSE
+      ? $cached_normalization_parts
+      : static::buildEmptyNormalization($object);
+    $fields = &$normalizer_values[ResourceObjectNormalizationCacher::RESOURCE_CACHE_SUBSET_FIELDS];
+    $non_cached_fields = array_diff_key($object->getFields(), $fields);
+    $non_cached_requested_fields = array_intersect_key($non_cached_fields, array_flip($field_names));
+    foreach ($non_cached_requested_fields as $field_name => $field) {
+      $fields[$field_name] = $this->serializeField($field, $context, $format);
+    }
+    // Add links if missing.
+    $base = &$normalizer_values[ResourceObjectNormalizationCacher::RESOURCE_CACHE_SUBSET_BASE];
+    $base['links'] = isset($base['links'])
+      ? $base['links']
+      : $this->serializer
+        ->normalize($object->getLinks(), $format, $context)
+        ->omitIfEmpty();
+
+    if (!empty($non_cached_requested_fields)) {
+      $this->cacher->saveOnTerminate($object, $normalizer_values);
+    }
+
+    return $normalizer_values;
+  }
+
+  /**
+   * Builds the empty normalization structure for cache misses.
+   *
+   * @param \Drupal\jsonapi\JsonApiResource\ResourceObject $object
+   *   The resource object being normalized.
+   *
+   * @return array
+   *   The normalization structure as defined in ::getNormalization().
+   *
+   * @see ::getNormalization()
+   */
+  protected static function buildEmptyNormalization(ResourceObject $object) {
+    return [
+      ResourceObjectNormalizationCacher::RESOURCE_CACHE_SUBSET_BASE => [
+        'type' => CacheableNormalization::permanent($object->getResourceType()->getTypeName()),
+        'id' => CacheableNormalization::permanent($object->getId()),
+      ],
+      ResourceObjectNormalizationCacher::RESOURCE_CACHE_SUBSET_FIELDS => [],
+    ];
   }
 
   /**
