@@ -12,6 +12,8 @@ use Drupal\Tests\migrate_drupal_ui\Functional\NoMultilingualReviewPageTestBase;
  *
  * @group migrate_drupal_6
  * @group migrate_drupal_ui
+ *
+ * @group legacy
  */
 class NoMultilingualReviewPageTest extends NoMultilingualReviewPageTestBase {
 
@@ -28,6 +30,11 @@ class NoMultilingualReviewPageTest extends NoMultilingualReviewPageTestBase {
     'syslog',
     'tracker',
     'update',
+    // Test migrations states.
+    'migrate_state_finished_test',
+    'migrate_state_not_finished_test',
+    // Test missing migrate_drupal.yml.
+    'migrate_state_no_file_test',
   ];
 
   /**
@@ -51,47 +58,18 @@ class NoMultilingualReviewPageTest extends NoMultilingualReviewPageTestBase {
   protected function getAvailablePaths() {
     return [
       'aggregator',
-      'block',
+      'blog',
+      'blogapi',
       'book',
+      'calendarsignup',
+      'color',
       'comment',
       'contact',
       'content',
-      'date',
-      'dblog',
-      'email',
-      'filefield',
-      'filter',
-      'forum',
-      'imagecache',
-      'imagefield',
-      'language',
-      'link',
-      'locale',
-      'menu',
-      'node',
-      'nodereference',
-      'optionwidgets',
-      'path',
-      'profile',
-      'search',
-      'statistics',
-      'syslog',
-      'system',
-      'taxonomy',
-      'text',
-      'update',
-      'upload',
-      'user',
-      'userreference',
-      // Include modules that do not have an upgrade path, defined in the
-      // $noUpgradePath property in MigrateUpgradeForm.
-      'blog',
-      'blogapi',
-      'calendarsignup',
-      'color',
       'content_copy',
       'content_multigroup',
       'content_permissions',
+      'date',
       'date_api',
       'date_locale',
       'date_php4',
@@ -100,28 +78,52 @@ class NoMultilingualReviewPageTest extends NoMultilingualReviewPageTestBase {
       'date_timezone',
       'date_tools',
       'datepicker',
+      'dblog',
       'ddblock',
+      'email',
       'event',
       'fieldgroup',
+      'filefield',
       'filefield_meta',
+      'filter',
+      'forum',
       'help',
-      'i18nstrings',
-      'i18nsync',
       'imageapi',
       'imageapi_gd',
       'imageapi_imagemagick',
+      'imagecache',
       'imagecache_ui',
+      'imagefield',
       'jquery_ui',
+      'link',
+      'locale',
+      'menu',
+      'node',
       'nodeaccess',
+      'nodereference',
       'number',
       'openid',
+      'optionwidgets',
+      'path',
+      'phone',
       'php',
       'ping',
       'poll',
+      'profile',
+      'search',
+      'statistics',
+      'syslog',
+      'system',
+      'taxonomy',
+      'text',
       'throttle',
       'tracker',
       'translation',
       'trigger',
+      'update',
+      'upload',
+      'user',
+      'userreference',
       'variable',
       'variable_admin',
       'views_export',
@@ -132,8 +134,17 @@ class NoMultilingualReviewPageTest extends NoMultilingualReviewPageTestBase {
   /**
    * {@inheritdoc}
    */
+  protected function getIncompletePaths() {
+    return [];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   protected function getMissingPaths() {
     return [
+      // Block is set not_finished in migrate_state_not_finished_test.
+      'block',
       'devel',
       'devel_generate',
       'devel_node_access',
@@ -144,9 +155,11 @@ class NoMultilingualReviewPageTest extends NoMultilingualReviewPageTestBase {
       'i18nmenu',
       'i18npoll',
       'i18nprofile',
+      'i18nstrings',
+      'i18nsync',
       'i18ntaxonomy',
       'i18nviews',
-      'phone',
+      'migrate_status_active_test',
       'views',
     ];
   }

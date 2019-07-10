@@ -1,0 +1,28 @@
+finished:
+  6:
+    i18nprofile: config_translation
+  7:
+    i18n_variable: config_translation
+not_finished:
+  6:
+    # language content comment settings.
+    locale: language
+    # @TODO: Move to finished when remaining Drupal 6 i18n issues are resolved.
+    # See https://www.drupal.org/project/drupal/issues/2208401
+    i18n: config_translation
+    # field labels and descriptions, synchronized fields.
+    i18ncck: config_translation
+    # Block, menu, taxonomy, User profiles.
+    i18nstrings: config_translation
+    i18ntaxonomy: config_translation
+  7:
+    # language content comment settings.
+    locale: language
+    # @TODO: Move to finished when remaining Drupal 7 i18n issues are resolved.
+    # See https://www.drupal.org/project/drupal/issues/2208401
+    i18n: config_translation
+    # field labels and descriptions, field options.
+    i18n_field: config_translation
+    i18n_string: config_translation
+      # localized. vocabulary language settings, taxonomy term language.
+    i18n_taxonomy: config_tanslation

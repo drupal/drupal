@@ -7,7 +7,7 @@ source:
   plugin: variable
   variables:
     - language_negotiation
-  source_module: language
+  source_module: locale
 process:
   session/parameter:
     plugin: default_value

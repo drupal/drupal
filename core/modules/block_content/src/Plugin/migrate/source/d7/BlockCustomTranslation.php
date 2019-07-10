@@ -11,7 +11,7 @@ use Drupal\content_translation\Plugin\migrate\source\I18nQueryTrait;
  *
  * @MigrateSource(
  *   id = "d7_block_custom_translation",
- *   source_module = "block"
+ *   source_module = "i18n_block"
  * )
  */
 class BlockCustomTranslation extends DrupalSqlBase {

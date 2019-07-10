@@ -12,6 +12,8 @@ use Drupal\user\Entity\User;
  * The test method is provided by the MigrateUpgradeTestBase class.
  *
  * @group migrate_drupal_ui
+ *
+ * @group legacy
  */
 class Upgrade6Test extends MigrateUpgradeExecuteTestBase {
 
@@ -130,40 +132,33 @@ class Upgrade6Test extends MigrateUpgradeExecuteTestBase {
       'contact',
       'content',
       'date',
-      'dblog',
       'email',
       'filefield',
       'filter',
       'forum',
-      'i18n',
       'i18nblocks',
-      'i18ncck',
+      'i18ncontent',
       'i18nmenu',
       'i18nprofile',
-      'i18nstrings',
-      'i18ntaxonomy',
+      'i18nsync',
       'imagecache',
       'imagefield',
-      'language',
-      'link',
-      'locale',
       'menu',
       'node',
       'nodereference',
       'optionwidgets',
       'path',
-      'profile',
       'search',
       'statistics',
       'system',
       'taxonomy',
       'text',
+      'translation',
       'upload',
       'user',
       'userreference',
       // Include modules that do not have an upgrade path and are enabled in the
-      // source database, defined in the $noUpgradePath property
-      // in MigrateUpgradeForm.
+      // source database'.
       'date_api',
       'date_timezone',
       'event',
@@ -180,7 +175,11 @@ class Upgrade6Test extends MigrateUpgradeExecuteTestBase {
    */
   protected function getMissingPaths() {
     return [
-      'i18ncontent',
+      'i18n',
+      'i18ncck',
+      'i18nstrings',
+      'i18ntaxonomy',
+      'locale',
     ];
   }
 

@@ -117,7 +117,7 @@ abstract class MigrateUpgradeExecuteTestBase extends MigrateUpgradeTestBase {
     // Ensure there are no errors about any other missing migration providers.
     $session->pageTextNotContains(t('module not found'));
 
-    // Test the upgrade paths.
+    // Test the review page.
     $available_paths = $this->getAvailablePaths();
     $missing_paths = $this->getMissingPaths();
     $this->assertReviewPage($session, $available_paths, $missing_paths);
@@ -146,12 +146,7 @@ abstract class MigrateUpgradeExecuteTestBase extends MigrateUpgradeTestBase {
     $this->drupalPostForm(NULL, [], t('I acknowledge I may lose data. Continue anyway.'));
     $session->statusCodeEquals(200);
 
-    // Need to update available and missing path lists.
-    $all_available = $this->getAvailablePaths();
-    $all_available[] = 'aggregator';
-    $all_missing = $this->getMissingPaths();
-    $all_missing = array_diff($all_missing, ['aggregator']);
-    $this->assertReviewPage($session, $all_available, $all_missing);
+    // Run the incremental migration and check the results.
     $this->drupalPostForm(NULL, [], t('Perform upgrade'));
     $session->pageTextContains(t('Congratulations, you upgraded Drupal!'));
     $this->assertMigrationResults($this->getEntityCountsIncremental(), $version);

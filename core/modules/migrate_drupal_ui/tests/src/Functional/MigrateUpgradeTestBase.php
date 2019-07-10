@@ -169,13 +169,13 @@ abstract class MigrateUpgradeTestBase extends BrowserTestBase {
    * Helper method to assert the text on the 'Upgrade analysis report' page.
    *
    * @param \Drupal\Tests\WebAssert $session
-   *   The current session.
-   * @param array $all_available
-   *   Array of modules that will be upgraded.
-   * @param array $all_missing
-   *   Array of modules that will not be upgraded.
+   *   The web-assert session.
+   * @param array $available_paths
+   *   An array of modules that will be upgraded.
+   * @param array $missing_paths
+   *   An array of modules that will not be upgraded.
    */
-  protected function assertReviewPage(WebAssert $session, array $all_available, array $all_missing) {
+  protected function assertReviewPage(WebAssert $session, array $available_paths, array $missing_paths) {
     $this->assertText('What will be upgraded?');
 
     // Ensure there are no errors about the missing modules from the test module.
@@ -185,17 +185,7 @@ abstract class MigrateUpgradeTestBase extends BrowserTestBase {
     // Ensure there are no errors about any other missing migration providers.
     $session->pageTextNotContains(t('module not found'));
 
-    // Test the available migration paths.
-    foreach ($all_available as $available) {
-      $session->elementExists('xpath', "//span[contains(@class, 'checked') and text() = '$available']");
-      $session->elementNotExists('xpath', "//span[contains(@class, 'error') and text() = '$available']");
-    }
-
-    // Test the missing migration paths.
-    foreach ($all_missing as $missing) {
-      $session->elementExists('xpath', "//span[contains(@class, 'error') and text() = '$missing']");
-      $session->elementNotExists('xpath', "//span[contains(@class, 'checked') and text() = '$missing']");
-    }
+    $this->assertUpgradePaths($session, $available_paths, $missing_paths);
   }
 
   /**

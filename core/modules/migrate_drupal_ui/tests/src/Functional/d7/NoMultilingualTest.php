@@ -148,8 +148,7 @@ class NoMultilingualTest extends MigrateUpgradeExecuteTestBase {
       'text',
       'user',
       // Include modules that do not have an upgrade path and are enabled in the
-      // source database, defined in the $noUpgradePath property
-      // in MigrateUpgradeForm.
+      // source database.
       'blog',
       'contextual',
       'date_api',
@@ -162,6 +161,13 @@ class NoMultilingualTest extends MigrateUpgradeExecuteTestBase {
       'translation',
       'trigger',
     ];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function getIncompletePaths() {
+    return [];
   }
 
   /**

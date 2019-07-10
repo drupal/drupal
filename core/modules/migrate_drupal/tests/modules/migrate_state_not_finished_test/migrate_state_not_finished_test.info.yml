@@ -1,0 +1,6 @@
+name: Migrate state incomplete test
+type: module
+description: Tests the 'incomplete' migrate state
+package: Testing
+version: VERSION
+core: 8.x

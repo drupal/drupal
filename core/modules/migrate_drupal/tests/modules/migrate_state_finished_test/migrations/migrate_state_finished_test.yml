@@ -1,0 +1,19 @@
+id: migrate_state_finished_test
+label: Block content body field configuration
+migration_tags:
+  - Drupal 6
+  - Drupal 7
+  - Configuration
+source:
+  plugin: embedded_data
+  data_rows:
+    -
+      id: 1
+  ids:
+    id:
+      type: string
+  source_module: action
+process: []
+destination:
+  plugin: entity:field_config
+  destination_module: migrate_state_finished_test

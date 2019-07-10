@@ -5,18 +5,26 @@ namespace Drupal\migrate_drupal_ui\Form;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\State\StateInterface;
 use Drupal\Core\TempStore\PrivateTempStoreFactory;
-use Drupal\migrate_drupal\Plugin\MigrateFieldPluginManagerInterface;
 use Drupal\migrate\Plugin\MigrationPluginManagerInterface;
+use Drupal\migrate_drupal\MigrationState;
+use Drupal\migrate_drupal\Plugin\MigrateFieldPluginManagerInterface;
 use Drupal\migrate_drupal_ui\Batch\MigrateUpgradeImportBatch;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Migrate Upgrade review form.
  *
- * This confirmation form uses the source_module and destination_module
- * properties on the source, destination and field plugins as well as the
- * system data from the source to determine if there is a migration path for
- * each module in the source.
+ * This confirmation form provides the user with a summary of all the modules
+ * enabled on the source site and whether they will be upgraded or not. Data
+ * from a module's .migrate_drupal.yml file and all the migration plugins
+ * (source, destination and field) for each enabled Drupal 8 module are used to
+ * decide the migration status for each enabled module on the source site.
+ *
+ * The migration status displayed on the Review page is a list of all the
+ * enabled modules on the source site divided into two categories, those that
+ * will not be upgraded and those that will be upgraded. The intention is to
+ * provide the admin with enough information to decide if it is OK to proceed
+ * with the upgrade.
  *
  * @internal
  */
@@ -51,101 +59,11 @@ class ReviewForm extends MigrateUpgradeFormBase {
   protected $migrations;
 
   /**
-   * List of extensions that do not need an upgrade path.
+   * Migration state service.
    *
-   * This property is an array where the keys are the major Drupal core version
-   * from which we are upgrading, and the values are arrays of extension names
-   * that do not need an upgrade path.
-   *
-   * @var array[]
+   * @var \Drupal\migrate_drupal\MigrationState
    */
-  protected $noUpgradePaths = [
-    '6' => [
-      'blog',
-      'blogapi',
-      'calendarsignup',
-      'color',
-      'content_copy',
-      'content_multigroup',
-      'content_permissions',
-      'date_api',
-      'date_locale',
-      'date_php4',
-      'date_popup',
-      'date_repeat',
-      'date_timezone',
-      'date_tools',
-      'datepicker',
-      'ddblock',
-      'event',
-      'fieldgroup',
-      'filefield_meta',
-      'help',
-      'i18nstrings',
-      'i18nsync',
-      'imageapi',
-      'imageapi_gd',
-      'imageapi_imagemagick',
-      'imagecache_ui',
-      'jquery_ui',
-      'nodeaccess',
-      'number',
-      'openid',
-      'php',
-      'ping',
-      'poll',
-      'throttle',
-      'tracker',
-      'translation',
-      'trigger',
-      'variable',
-      'variable_admin',
-      'views_export',
-      'views_ui',
-    ],
-    '7' => [
-      'blog',
-      'bulk_export',
-      'contextual',
-      'ctools',
-      'ctools_access_ruleset',
-      'ctools_ajax_sample',
-      'ctools_custom_content',
-      'dashboard',
-      'date_all_day',
-      'date_api',
-      'date_context',
-      'date_migrate',
-      'date_popup',
-      'date_repeat',
-      'date_repeat_field',
-      'date_tools',
-      'date_views',
-      'entity',
-      'entity_feature',
-      'entity_token',
-      'entityreference',
-      'field_ui',
-      'help',
-      'openid',
-      'overlay',
-      'page_manager',
-      'php',
-      'poll',
-      'search_embedded_form',
-      'search_extra_type',
-      'search_node_tags',
-      'simpletest',
-      'stylizer',
-      'term_depth',
-      'title',
-      'toolbar',
-      'translation',
-      'trigger',
-      'views_content',
-      'views_ui',
-    ],
-  ];
+  protected $migrationState;
 
   /**
    * ReviewForm constructor.
@@ -158,12 +76,15 @@ class ReviewForm extends MigrateUpgradeFormBase {
    *   The field plugin manager service.
    * @param \Drupal\Core\TempStore\PrivateTempStoreFactory $tempstore_private
    *   The private tempstore factory.
+   * @param \Drupal\migrate_drupal\MigrationState $migrationState
+   *   Migration state service.
    */
-  public function __construct(StateInterface $state, MigrationPluginManagerInterface $migration_plugin_manager, MigrateFieldPluginManagerInterface $field_plugin_manager, PrivateTempStoreFactory $tempstore_private) {
+  public function __construct(StateInterface $state, MigrationPluginManagerInterface $migration_plugin_manager, MigrateFieldPluginManagerInterface $field_plugin_manager, PrivateTempStoreFactory $tempstore_private, MigrationState $migrationState) {
     parent::__construct($tempstore_private);
     $this->state = $state;
     $this->pluginManager = $migration_plugin_manager;
     $this->fieldPluginManager = $field_plugin_manager;
+    $this->migrationState = $migrationState;
   }
 
   /**
@@ -174,7 +95,8 @@ class ReviewForm extends MigrateUpgradeFormBase {
       $container->get('state'),
       $container->get('plugin.manager.migration'),
       $container->get('plugin.manager.migrate.field'),
-      $container->get('tempstore.private')
+      $container->get('tempstore.private'),
+      $container->get('migrate_drupal.migration_state')
     );
   }
 
@@ -192,7 +114,7 @@ class ReviewForm extends MigrateUpgradeFormBase {
     // Get all the data needed for this form.
     $version = $this->store->get('version');
     $this->migrations = $this->store->get('migrations');
-    // Fetch the system data at the first opportunity.
+    // Fetch the source system data at the first opportunity.
     $system_data = $this->store->get('system_data');
 
     // If data is missing or this is the wrong step, start over.
@@ -204,58 +126,10 @@ class ReviewForm extends MigrateUpgradeFormBase {
     $form = parent::buildForm($form, $form_state);
     $form['#title'] = $this->t('What will be upgraded?');
 
-    // Get the source_module and destination_module for each migration.
     $migrations = $this->pluginManager->createInstances(array_keys($this->store->get('migrations')));
-    $table_data = [];
-    foreach ($migrations as $migration) {
-      $migration_id = $migration->getPluginId();
-      $source_module = $migration->getSourcePlugin()->getSourceModule();
-      if (!$source_module) {
-        $this->messenger()->addError($this->t('Source module not found for @migration_id.', ['@migration_id' => $migration_id]));
-      }
-      $destination_module = $migration->getDestinationPlugin()->getDestinationModule();
-      if (!$destination_module) {
-        $this->messenger()->addError($this->t('Destination module not found for @migration_id.', ['@migration_id' => $migration_id]));
-      }
 
-      if ($source_module && $destination_module) {
-        $table_data[$source_module][$destination_module][$migration_id] = $migration->label();
-      }
-    }
-
-    // Get the source_module and destination_module from the field plugins.
-    $definitions = $this->fieldPluginManager->getDefinitions();
-    foreach ($definitions as $definition) {
-      // This is not strict so that we find field plugins with an annotation
-      // where the Drupal core version is an integer and when it is a string.
-      if (in_array($version, $definition['core'])) {
-        $source_module = $definition['source_module'];
-        $destination_module = $definition['destination_module'];
-        $table_data[$source_module][$destination_module][$definition['id']] = $definition['id'];
-      }
-    }
-
-    // Add source_module and destination_module for modules that do not need an
-    // upgrade path and are enabled on the source site.
-    foreach ($this->noUpgradePaths[$version] as $extension) {
-      if (isset($system_data['module'][$extension]) && $system_data['module'][$extension]['status']) {
-        $table_data[$extension]['core'][$extension] = $extension;
-      }
-    }
-
-    // Sort the table by source module names and within that destination
-    // module names.
-    ksort($table_data);
-    foreach ($table_data as $source_module => $destination_module_info) {
-      ksort($table_data[$source_module]);
-    }
-
-    // Remove core profiles from the system data.
-    foreach (['standard', 'minimal'] as $profile) {
-      unset($system_data['module'][$profile]);
-    }
-
-    $unmigrated_source_modules = array_diff_key($system_data['module'], $table_data);
+    // Get the upgrade states for the source modules.
+    $display = $this->migrationState->getUpgradeStates($version, $system_data, $migrations);
 
     // Missing migrations.
     $missing_module_list = [
@@ -263,7 +137,7 @@ class ReviewForm extends MigrateUpgradeFormBase {
       '#open' => TRUE,
       '#title' => $this->t('Modules that will not be upgraded'),
       '#summary_attributes' => ['id' => ['error']],
-      '#description' => $this->t('There are no modules installed on your new site to replace these modules. If you proceed with the upgrade now, configuration and/or content needed by these modules will not be available on your new site. For more information, see <a href=":review">Review the pre-upgrade analysis</a> in the <a href=":migrate">Upgrading to Drupal 8</a> handbook.', [':review' => 'https://www.drupal.org/docs/8/upgrade/upgrade-using-web-browser#pre-upgrade-analysis', ':migrate' => 'https://www.drupal.org/docs/8/upgrade']),
+      '#description' => $this->t("The new site is missing modules corresponding to the old site's modules. Unless they are installed prior to the upgrade, configuration and/or content needed by them will not be available on your new site. <a href=':review'>Read the checklist</a> to help decide what to do.", [':review' => 'https://www.drupal.org/docs/8/upgrade/upgrade-using-web-browser#pre-upgrade-analysis']),
       '#weight' => 2,
     ];
     $missing_module_list['module_list'] = [
@@ -273,12 +147,14 @@ class ReviewForm extends MigrateUpgradeFormBase {
         $this->t('Drupal 8'),
       ],
     ];
+
     $missing_count = 0;
-    ksort($unmigrated_source_modules);
-    foreach ($unmigrated_source_modules as $source_module => $module_data) {
-      if ($module_data['status']) {
+    if (isset($display[MigrationState::NOT_FINISHED])) {
+      foreach ($display[MigrationState::NOT_FINISHED] as $source_module => $destination_modules) {
         $missing_count++;
-        $missing_module_list['module_list'][$source_module] = [
+        // Get the migration status for this $source_module, if a module of the
+        // same name exists on the destination site.
+        $missing_module_list['module_list'][] = [
           'source_module' => [
             '#type' => 'html_tag',
             '#tag' => 'span',
@@ -290,7 +166,9 @@ class ReviewForm extends MigrateUpgradeFormBase {
               ],
             ],
           ],
-          'destination_module' => ['#plain_text' => 'Not upgraded'],
+          'destination_module' => [
+            '#plain_text' => $destination_modules,
+          ],
         ];
       }
     }
@@ -300,7 +178,7 @@ class ReviewForm extends MigrateUpgradeFormBase {
       '#type' => 'details',
       '#title' => $this->t('Modules that will be upgraded'),
       '#summary_attributes' => ['id' => ['checked']],
-      '#weight' => 3,
+      '#weight' => 4,
     ];
 
     $available_module_list['module_list'] = [
@@ -312,29 +190,26 @@ class ReviewForm extends MigrateUpgradeFormBase {
     ];
 
     $available_count = 0;
-    foreach ($table_data as $source_module => $destination_module_info) {
-      $available_count++;
-      $destination_details = [];
-      foreach ($destination_module_info as $destination_module => $migration_ids) {
-        $destination_details[$destination_module] = [
-          '#type' => 'item',
-          '#plain_text' => $destination_module,
-        ];
-      }
-      $available_module_list['module_list'][$source_module] = [
-        'source_module' => [
-          '#type' => 'html_tag',
-          '#tag' => 'span',
-          '#value' => $source_module,
-          '#attributes' => [
-            'class' => [
-              'upgrade-analysis-report__status-icon',
-              'upgrade-analysis-report__status-icon--checked',
+    if (isset($display[MigrationState::FINISHED])) {
+      foreach ($display[MigrationState::FINISHED] as $source_module => $destination_modules) {
+        $available_count++;
+        $available_module_list['module_list'][] = [
+          'source_module' => [
+            '#type' => 'html_tag',
+            '#tag' => 'span',
+            '#value' => $source_module,
+            '#attributes' => [
+              'class' => [
+                'upgrade-analysis-report__status-icon',
+                'upgrade-analysis-report__status-icon--checked',
+              ],
             ],
           ],
-        ],
-        'destination_module' => $destination_details,
-      ];
+          'destination_module' => [
+            '#plain_text' => $destination_modules,
+          ],
+        ];
+      }
     }
 
     $counters = [];

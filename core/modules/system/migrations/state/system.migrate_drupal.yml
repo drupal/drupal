@@ -1,0 +1,15 @@
+finished:
+  6:
+    menu:
+      - system
+      - menu_link_content
+      - menu_ui
+    system: system
+# An upgrade path is not needed for jquery_ui.
+    jquery_ui: core
+  7:
+    menu:
+      - system
+      - menu_link_content
+      - menu_ui
+    system: system

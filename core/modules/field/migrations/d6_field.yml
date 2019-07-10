@@ -10,6 +10,8 @@ source:
   constants:
     entity_type: node
     langcode: en
+  # Phone is here since it does not use a migrate field plugin.
+  source_module: phone
 process:
   entity_type: 'constants/entity_type'
   status: active

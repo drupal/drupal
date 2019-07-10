@@ -1,0 +1,6 @@
+name: Migrate state no migration and no migrate_drupal.yml file test
+type: module
+description: Does not have a migration or migrate_drupal.yml file.
+package: Testing
+version: VERSION
+core: 8.x

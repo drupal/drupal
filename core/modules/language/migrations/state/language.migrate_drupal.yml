@@ -1,0 +1,11 @@
+finished:
+  6:
+    locale:
+      - language
+      - system
+    system: language
+    taxonomy: language
+  7:
+    locale:
+      - language
+      - system

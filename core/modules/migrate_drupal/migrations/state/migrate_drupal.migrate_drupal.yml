@@ -1,0 +1,95 @@
+# The modules listed here do not have an migration. A status of finished is
+# assigned so that they appear in the will not be upgraded list on the Review
+# form.
+finished:
+  6:
+    nodereference: core
+    userreference: core
+    # Blog requires node.
+    blog: node
+    # The following do not have an upgrade path.
+    blogapi: core
+    calendarsignup: core
+    color: core
+    content_copy: core
+    content_multigroup: core
+    content_permissions: core
+    date_api: core
+    date_locale: core
+    date_php4: core
+    date_popup: core
+    date_repeat: core
+    date_timezone: core
+    date_tools: core
+    datepicker: core
+    ddblock: core
+    event: core
+    fieldgroup: core
+    filefield_meta: core
+    help: core
+    # i18n modules require content_translation.
+    i18ncontent: content_translation
+    i18npoll: content_translation
+    i18nstrings: content_translation
+    i18nsync: content_translation
+    imageapi: core
+    imageapi_gd: core
+    imageapi_imagemagick: core
+    imagecache_ui: core
+    nodeaccess: core
+    number: core
+    openid: core
+    php: core
+    ping: core
+    poll: core
+    throttle: core
+    tracker: core
+    translation: core
+    trigger: core
+    variable: core
+    variable_admin: core
+    views_export: core
+    views_ui: core
+  7:
+    # Blog requires node.
+    blog: node
+    # The following do not need have an upgrade path.
+    bulk_export: core
+    contextual: core
+    ctools: core
+    ctools_access_ruleset: core
+    ctools_ajax_sample: core
+    ctools_custom_content: core
+    dashboard: core
+    date_all_day: core
+    date_api: core
+    date_context: core
+    date_migrate: core
+    date_popup: core
+    date_repeat: core
+    date_repeat_field: core
+    date_tools: core
+    date_views: core
+    entity: core
+    entity_feature: core
+    entity_token: core
+    entityreference: core
+    field_ui: core
+    help: core
+    openid: core
+    overlay: core
+    page_manager: core
+    php: core
+    poll: core
+    search_embedded_form: core
+    search_extra_type: core
+    search_node_tags: core
+    simpletest: core
+    stylizer: core
+    term_depth: core
+    title: core
+    toolbar: core
+    translation: core
+    trigger: core
+    views_content: core
+    views_ui: core

@@ -1,0 +1,9 @@
+not_finished:
+  6:
+    block: migrate_state_not_finished_test
+  7:
+    # Override any finished declarations for this field plugin.
+    aggregator: field_left
+    # Override any finished declarations for this migration.
+    action: migrate_state_not_finished_test
+    block: migrate_state_not_finished_test

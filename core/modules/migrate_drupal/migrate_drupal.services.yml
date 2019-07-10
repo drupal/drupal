@@ -25,3 +25,6 @@ services:
       - '@plugin.manager.migrate.field'
       - '@plugin.manager.migration'
       - '@logger.channel.migrate_drupal'
+  migrate_drupal.migration_state:
+    class: Drupal\migrate_drupal\MigrationState
+    arguments: ['@plugin.manager.migrate.field', '@module_handler', '@messenger', '@string_translation']

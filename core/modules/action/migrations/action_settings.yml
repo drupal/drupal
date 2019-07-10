@@ -8,7 +8,7 @@ source:
   plugin: variable
   variables:
     - actions_max_stack
-  source_module: action
+  source_module: system
 process:
   recursion_limit: actions_max_stack
 destination:
