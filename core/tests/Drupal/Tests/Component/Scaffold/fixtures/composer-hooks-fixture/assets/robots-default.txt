@@ -1,0 +1,1 @@
+# robots.txt fixture scaffolded from "file-mappings" in composer-hooks-fixture composer.json fixture.

@@ -1,0 +1,14 @@
+{
+    "packages": {
+        "fixtures/drupal-drupal": {
+            "dev-master": {
+                "name": "fixtures/drupal-drupal",
+                "version": "1.0.0",
+                "dist": {
+                    "url": "./drupal-drupal",
+                    "type": "path"
+                }
+            }
+        }
+    }
+}

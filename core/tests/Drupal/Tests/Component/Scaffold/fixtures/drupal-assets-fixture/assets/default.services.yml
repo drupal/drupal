@@ -1,0 +1,4 @@
+# Test version of default.services.yml from drupal/core.
+# Add a dummy key until YamlPecl can validate an empty YAML file:
+# https://www.drupal.org/project/drupal/issues/3003300
+foo: bar

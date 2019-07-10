@@ -1,0 +1,13 @@
+{
+  "name": "fixtures/drupal-core-fixture",
+  "require": {
+    "fixtures/drupal-assets-fixture": "*"
+  },
+  "extra": {
+    "composer-scaffold": {
+      "allowed-packages": [
+        "fixtures/drupal-assets-fixture"
+      ]
+    }
+  }
+}

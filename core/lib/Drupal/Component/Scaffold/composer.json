@@ -1,0 +1,29 @@
+{
+  "name": "drupal/core-composer-scaffold",
+  "description": "A flexible Composer project scaffold builder.",
+  "type": "composer-plugin",
+  "keywords": ["drupal"],
+  "homepage": "https://www.drupal.org/project/drupal",
+  "license": "GPL-2.0-or-later",
+  "require": {
+    "composer-plugin-api": "^1.0.0",
+    "php": ">=7.0.8"
+  },
+  "autoload": {
+    "psr-4": {
+      "Drupal\\Component\\Scaffold\\": ""
+    }
+  },
+  "extra": {
+    "class": "Drupal\\Component\\Scaffold\\Plugin",
+    "branch-alias": {
+      "dev-master": "1.0.x-dev"
+    }
+  },
+  "config": {
+    "sort-packages": true
+  },
+  "require-dev": {
+    "composer/composer": "^1.8@stable"
+  }
+}

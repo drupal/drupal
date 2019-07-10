@@ -1,0 +1,4 @@
+# default.services.yml fixture scaffolded from "file-mappings" in drupal-project composer.json fixture.
+# Add a dummy key until YamlPecl can validate an empty YAML file:
+# https://www.drupal.org/project/drupal/issues/3003300
+foo: bar
