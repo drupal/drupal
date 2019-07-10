@@ -50,6 +50,13 @@ class LibraryDiscoveryTest extends UnitTestCase {
       ],
       'css' => [],
     ],
+    'test_3' => [
+      'js' => [
+        'baz.js' => [],
+      ],
+      'css' => [],
+      'deprecated' => 'The "%library_id%" asset library is deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. Use the test_2 library instead. See https://www.example.com',
+    ],
   ];
 
   /**
@@ -63,17 +70,16 @@ class LibraryDiscoveryTest extends UnitTestCase {
       ->disableOriginalConstructor()
       ->getMock();
     $this->libraryDiscovery = new LibraryDiscovery($this->libraryDiscoveryCollector, $this->cacheTagsInvalidator);
+    $this->libraryDiscoveryCollector->expects($this->once())
+      ->method('get')
+      ->with('test')
+      ->willReturn($this->libraryData);
   }
 
   /**
    * @covers ::getLibrariesByExtension
    */
   public function testGetLibrariesByExtension() {
-    $this->libraryDiscoveryCollector->expects($this->once())
-      ->method('get')
-      ->with('test')
-      ->willReturn($this->libraryData);
-
     $this->libraryDiscovery->getLibrariesbyExtension('test');
     // Verify that subsequent calls don't trigger hook_library_info_alter()
     // and hook_js_settings_alter() invocations, nor do they talk to the
@@ -82,6 +88,40 @@ class LibraryDiscoveryTest extends UnitTestCase {
     // are statically cached, as desired.
     $this->libraryDiscovery->getLibraryByName('test', 'test_1');
     $this->libraryDiscovery->getLibrariesbyExtension('test');
+  }
+
+  /**
+   * Tests getting a library by name.
+   *
+   * @covers ::getLibraryByName
+   */
+  public function testGetLibraryByName() {
+    $this->assertSame($this->libraryData['test_1'], $this->libraryDiscovery->getLibraryByName('test', 'test_1'));
+  }
+
+  /**
+   * Tests getting a deprecated library.
+   */
+  public function testAssetLibraryDeprecation() {
+    $previous_error_handler = set_error_handler(function ($severity, $message, $file, $line, $context) use (&$previous_error_handler) {
+      // Convert deprecation error into a catchable exception.
+      if ($severity === E_USER_DEPRECATED) {
+        throw new \ErrorException($message, 0, $severity, $file, $line);
+      }
+      if ($previous_error_handler) {
+        return $previous_error_handler($severity, $message, $file, $line, $context);
+      }
+    });
+
+    try {
+      $this->libraryDiscovery->getLibraryByName('test', 'test_3');
+      $this->fail('No deprecation error triggered.');
+    }
+    catch (\ErrorException $e) {
+      $this->assertSame('The "test/test_3" asset library is deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. Use the test_2 library instead. See https://www.example.com', $e->getMessage());
+    }
+
+    restore_error_handler();
   }
 
 }
