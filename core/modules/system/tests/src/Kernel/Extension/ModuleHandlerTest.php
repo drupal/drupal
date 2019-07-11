@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\system\Kernel\Extension;
 
+use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Extension\MissingDependencyException;
 use Drupal\Core\Extension\ModuleUninstallValidatorException;
 use Drupal\entity_test\Entity\EntityTest;
@@ -61,7 +62,7 @@ class ModuleHandlerTest extends KernelTestBase {
   protected function assertModuleList(array $expected_values, $condition) {
     $expected_values = array_values(array_unique($expected_values));
     $enabled_modules = array_keys($this->container->get('module_handler')->getModuleList());
-    $this->assertEqual($expected_values, $enabled_modules, format_string('@condition: extension handler returns correct results', ['@condition' => $condition]));
+    $this->assertEqual($expected_values, $enabled_modules, new FormattableMarkup('@condition: extension handler returns correct results', ['@condition' => $condition]));
   }
 
   /**

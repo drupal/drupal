@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\node\Functional;
 
+use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Tests\content_translation\Functional\ContentTranslationUITestBase;
@@ -372,7 +373,7 @@ class NodeTranslationUITest extends ContentTranslationUITestBase {
     $languages = $this->container->get('language_manager')->getLanguages();
     foreach ($this->langcodes as $langcode) {
       $this->drupalGet($path, ['language' => $languages[$langcode]]);
-      $this->assertText($values[$langcode]['title'][0]['value'], format_string('The %langcode node translation is correctly displayed.', ['%langcode' => $langcode]));
+      $this->assertText($values[$langcode]['title'][0]['value'], new FormattableMarkup('The %langcode node translation is correctly displayed.', ['%langcode' => $langcode]));
     }
   }
 
@@ -396,7 +397,7 @@ class NodeTranslationUITest extends ContentTranslationUITestBase {
         // Retrieve desired link elements from the HTML head.
         $links = $this->xpath('head/link[@rel = "alternate" and @href = :href and @hreflang = :hreflang]',
           [':href' => $language_url->toString(), ':hreflang' => $alternate_langcode]);
-        $this->assert(isset($links[0]), format_string('The %langcode node translation has the correct alternate hreflang link for %alternate_langcode: %link.', ['%langcode' => $langcode, '%alternate_langcode' => $alternate_langcode, '%link' => $url->toString()]));
+        $this->assert(isset($links[0]), new FormattableMarkup('The %langcode node translation has the correct alternate hreflang link for %alternate_langcode: %link.', ['%langcode' => $langcode, '%alternate_langcode' => $alternate_langcode, '%link' => $url->toString()]));
       }
     }
   }

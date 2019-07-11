@@ -2,6 +2,7 @@
 
 namespace Drupal\filter_test\Plugin\Filter;
 
+use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Security\TrustedCallbackInterface;
 use Drupal\filter\FilterProcessResult;
 use Drupal\filter\Plugin\FilterBase;
@@ -39,7 +40,7 @@ class FilterTestPlaceholders extends FilterBase implements TrustedCallbackInterf
    */
   public static function renderDynamicThing($thing) {
     return [
-      '#markup' => format_string('This is a dynamic @thing.', ['@thing' => $thing]),
+      '#markup' => new FormattableMarkup('This is a dynamic @thing.', ['@thing' => $thing]),
     ];
   }
 

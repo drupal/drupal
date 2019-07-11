@@ -191,7 +191,7 @@ class FormTest extends BrowserTestBase {
       $expected_key = array_search($error->getText(), $expected);
       // If the error message is not one of the expected messages, fail.
       if ($expected_key === FALSE) {
-        $this->fail(format_string("Unexpected error message: @error", ['@error' => $error[0]]));
+        $this->fail(new FormattableMarkup("Unexpected error message: @error", ['@error' => $error[0]]));
       }
       // Remove the expected message from the list once it is found.
       else {
@@ -201,7 +201,7 @@ class FormTest extends BrowserTestBase {
 
     // Fail if any expected messages were not found.
     foreach ($expected as $not_found) {
-      $this->fail(format_string("Found error message: @error", ['@error' => $not_found]));
+      $this->fail(new FormattableMarkup("Found error message: @error", ['@error' => $not_found]));
     }
 
     // Verify that input elements are still empty.
@@ -369,7 +369,7 @@ class FormTest extends BrowserTestBase {
       'zero_checkbox_off' => 0,
     ];
     foreach ($expected_values as $widget => $expected_value) {
-      $this->assertSame($values[$widget], $expected_value, format_string('Checkbox %widget returns expected value (expected: %expected, got: %value)', [
+      $this->assertSame($values[$widget], $expected_value, new FormattableMarkup('Checkbox %widget returns expected value (expected: %expected, got: %value)', [
         '%widget' => var_export($widget, TRUE),
         '%expected' => var_export($expected_value, TRUE),
         '%value' => var_export($values[$widget], TRUE),
@@ -446,7 +446,7 @@ class FormTest extends BrowserTestBase {
       'multiple_no_default_required' => ['three' => 'three'],
     ];
     foreach ($expected as $key => $value) {
-      $this->assertIdentical($values[$key], $value, format_string('@name: @actual is equal to @expected.', [
+      $this->assertIdentical($values[$key], $value, new FormattableMarkup('@name: @actual is equal to @expected.', [
         '@name' => $key,
         '@actual' => var_export($values[$key], TRUE),
         '@expected' => var_export($value, TRUE),
@@ -517,10 +517,10 @@ class FormTest extends BrowserTestBase {
           // Check if the error exists on the page, if the current message ID is
           // expected. Otherwise ensure that the error message is not present.
           if ($id === $error) {
-            $this->assertRaw(format_string($message, $placeholders));
+            $this->assertRaw(new FormattableMarkup($message, $placeholders));
           }
           else {
-            $this->assertNoRaw(format_string($message, $placeholders));
+            $this->assertNoRaw(new FormattableMarkup($message, $placeholders));
           }
         }
       }
@@ -660,7 +660,7 @@ class FormTest extends BrowserTestBase {
           // Checkboxes values are not filtered out.
           $values[$key] = array_filter($values[$key]);
         }
-        $this->assertIdentical($expected_value, $values[$key], format_string('Default value for %type: expected %expected, returned %returned.', ['%type' => $key, '%expected' => var_export($expected_value, TRUE), '%returned' => var_export($values[$key], TRUE)]));
+        $this->assertIdentical($expected_value, $values[$key], new FormattableMarkup('Default value for %type: expected %expected, returned %returned.', ['%type' => $key, '%expected' => var_export($expected_value, TRUE), '%returned' => var_export($values[$key], TRUE)]));
       }
 
       // Recurse children.
@@ -717,7 +717,7 @@ class FormTest extends BrowserTestBase {
         ':div-class' => $class,
         ':value' => isset($item['#value']) ? $item['#value'] : '',
       ]);
-      $this->assertTrue(isset($element[0]), format_string('Disabled form element class found for #type %type.', ['%type' => $item['#type']]));
+      $this->assertTrue(isset($element[0]), new FormattableMarkup('Disabled form element class found for #type %type.', ['%type' => $item['#type']]));
     }
 
     // Verify special element #type text-format.
@@ -725,12 +725,12 @@ class FormTest extends BrowserTestBase {
       ':name' => 'text_format[value]',
       ':div-class' => 'form-disabled',
     ]);
-    $this->assertTrue(isset($element[0]), format_string('Disabled form element class found for #type %type.', ['%type' => 'text_format[value]']));
+    $this->assertTrue(isset($element[0]), new FormattableMarkup('Disabled form element class found for #type %type.', ['%type' => 'text_format[value]']));
     $element = $this->xpath('//div[contains(@class, :div-class)]/descendant::select[@name=:name]', [
       ':name' => 'text_format[format]',
       ':div-class' => 'form-disabled',
     ]);
-    $this->assertTrue(isset($element[0]), format_string('Disabled form element class found for #type %type.', ['%type' => 'text_format[format]']));
+    $this->assertTrue(isset($element[0]), new FormattableMarkup('Disabled form element class found for #type %type.', ['%type' => 'text_format[format]']));
   }
 
   /**
@@ -759,7 +759,7 @@ class FormTest extends BrowserTestBase {
         ':id' => 'edit-' . $type,
         ':expected' => $expected,
       ]);
-      $this->assertTrue(!empty($element), format_string('The @type has the proper required attribute.', ['@type' => $type]));
+      $this->assertTrue(!empty($element), new FormattableMarkup('The @type has the proper required attribute.', ['@type' => $type]));
     }
 
     // Test to make sure textarea has the proper required attribute.

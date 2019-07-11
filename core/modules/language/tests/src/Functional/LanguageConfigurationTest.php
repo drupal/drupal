@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\language\Functional;
 
+use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Url;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\language\Entity\ConfigurableLanguage;
@@ -189,7 +190,7 @@ class LanguageConfigurationTest extends BrowserTestBase {
     $replacements = ['@event' => $state];
     foreach (\Drupal::languageManager()->getLanguages(LanguageInterface::STATE_LOCKED) as $locked_language) {
       $replacements['%language'] = $locked_language->getName();
-      $this->assertTrue($locked_language->getWeight() > $max_configurable_language_weight, format_string('System language %language has higher weight than configurable languages @event', $replacements));
+      $this->assertTrue($locked_language->getWeight() > $max_configurable_language_weight, new FormattableMarkup('System language %language has higher weight than configurable languages @event', $replacements));
     }
   }
 

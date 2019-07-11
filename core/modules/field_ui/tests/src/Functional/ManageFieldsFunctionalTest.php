@@ -142,7 +142,7 @@ class ManageFieldsFunctionalTest extends BrowserTestBase {
     ];
     foreach ($table_headers as $table_header) {
       // We check that the label appear in the table headings.
-      $this->assertRaw($table_header . '</th>', format_string('%table_header table header was found.', ['%table_header' => $table_header]));
+      $this->assertRaw($table_header . '</th>', new FormattableMarkup('%table_header table header was found.', ['%table_header' => $table_header]));
     }
 
     // Test the "Add field" action link.
@@ -399,7 +399,7 @@ class ManageFieldsFunctionalTest extends BrowserTestBase {
     // Create a valid field.
     $this->fieldUIAddNewField('admin/structure/types/manage/' . $this->contentType, $this->fieldNameInput, $this->fieldLabel);
     $this->drupalGet('admin/structure/types/manage/' . $this->contentType . '/fields/node.' . $this->contentType . '.' . $field_prefix . $this->fieldNameInput);
-    $this->assertText(format_string('@label settings for @type', ['@label' => $this->fieldLabel, '@type' => $this->contentType]));
+    $this->assertText(new FormattableMarkup('@label settings for @type', ['@label' => $this->fieldLabel, '@type' => $this->contentType]));
   }
 
   /**
@@ -603,7 +603,7 @@ class ManageFieldsFunctionalTest extends BrowserTestBase {
       ->getFormDisplay('node', $this->contentType)
       ->setComponent($field_name)
       ->save();
-    $this->assertTrue(FieldConfig::load('node.' . $this->contentType . '.' . $field_name), format_string('A field of the field storage %field was created programmatically.', ['%field' => $field_name]));
+    $this->assertTrue(FieldConfig::load('node.' . $this->contentType . '.' . $field_name), new FormattableMarkup('A field of the field storage %field was created programmatically.', ['%field' => $field_name]));
 
     // Check that the newly added field appears on the 'Manage Fields'
     // screen.

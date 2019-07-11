@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\system\Functional\Form;
 
+use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Tests\BrowserTestBase;
 
 /**
@@ -48,7 +49,7 @@ class CheckboxTest extends BrowserTestBase {
           $checked = ($default_value === '1foobar');
         }
         $checked_in_html = strpos($form, 'checked') !== FALSE;
-        $message = format_string('#default_value is %default_value #return_value is %return_value.', ['%default_value' => var_export($default_value, TRUE), '%return_value' => var_export($return_value, TRUE)]);
+        $message = new FormattableMarkup('#default_value is %default_value #return_value is %return_value.', ['%default_value' => var_export($default_value, TRUE), '%return_value' => var_export($return_value, TRUE)]);
         $this->assertIdentical($checked, $checked_in_html, $message);
       }
     }
@@ -78,7 +79,7 @@ class CheckboxTest extends BrowserTestBase {
     foreach ($checkboxes as $checkbox) {
       $checked = $checkbox->isChecked();
       $name = $checkbox->getAttribute('name');
-      $this->assertIdentical($checked, $name == 'checkbox_zero_default[0]' || $name == 'checkbox_string_zero_default[0]', format_string('Checkbox %name correctly checked', ['%name' => $name]));
+      $this->assertIdentical($checked, $name == 'checkbox_zero_default[0]' || $name == 'checkbox_string_zero_default[0]', new FormattableMarkup('Checkbox %name correctly checked', ['%name' => $name]));
     }
     // Due to Mink driver differences, we cannot submit an empty checkbox value
     // to drupalPostForm(), even if that empty value is the 'true' value for
@@ -92,7 +93,7 @@ class CheckboxTest extends BrowserTestBase {
     foreach ($checkboxes as $checkbox) {
       $checked = $checkbox->isChecked();
       $name = (string) $checkbox->getAttribute('name');
-      $this->assertIdentical($checked, $name == 'checkbox_off[0]' || $name == 'checkbox_zero_default[0]' || $name == 'checkbox_string_zero_default[0]', format_string('Checkbox %name correctly checked', ['%name' => $name]));
+      $this->assertIdentical($checked, $name == 'checkbox_off[0]' || $name == 'checkbox_zero_default[0]' || $name == 'checkbox_string_zero_default[0]', new FormattableMarkup('Checkbox %name correctly checked', ['%name' => $name]));
     }
   }
 

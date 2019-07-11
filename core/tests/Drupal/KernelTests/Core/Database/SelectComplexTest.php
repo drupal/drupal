@@ -2,6 +2,7 @@
 
 namespace Drupal\KernelTests\Core\Database;
 
+use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Database\Query\Condition;
 use Drupal\Core\Database\RowCountException;
@@ -100,7 +101,7 @@ class SelectComplexTest extends DatabaseTestBase {
     ];
 
     foreach ($correct_results as $task => $count) {
-      $this->assertEqual($records[$task], $count, format_string("Correct number of '@task' records found.", ['@task' => $task]));
+      $this->assertEqual($records[$task], $count, new FormattableMarkup("Correct number of '@task' records found.", ['@task' => $task]));
     }
 
     $this->assertEqual($num_records, 6, 'Returned the correct number of total rows.');
@@ -134,7 +135,7 @@ class SelectComplexTest extends DatabaseTestBase {
     ];
 
     foreach ($correct_results as $task => $count) {
-      $this->assertEqual($records[$task], $count, format_string("Correct number of '@task' records found.", ['@task' => $task]));
+      $this->assertEqual($records[$task], $count, new FormattableMarkup("Correct number of '@task' records found.", ['@task' => $task]));
     }
 
     $this->assertEqual($num_records, 1, 'Returned the correct number of total rows.');

@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\search\Functional;
 
+use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Url;
 use Drupal\search\Entity\SearchPage;
 use Drupal\Tests\BrowserTestBase;
@@ -207,7 +208,7 @@ class SearchConfigSettingsFormTest extends BrowserTestBase {
       $this->drupalGet($item['path'], $item['options']);
       foreach ($plugins as $entity_id) {
         $label = $entities[$entity_id]->label();
-        $this->assertText($label, format_string('%label search tab is shown', ['%label' => $label]));
+        $this->assertText($label, new FormattableMarkup('%label search tab is shown', ['%label' => $label]));
       }
     }
   }

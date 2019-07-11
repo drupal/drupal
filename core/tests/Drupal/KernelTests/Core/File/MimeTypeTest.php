@@ -2,6 +2,8 @@
 
 namespace Drupal\KernelTests\Core\File;
 
+use Drupal\Component\Render\FormattableMarkup;
+
 /**
  * Tests filename mimetype detection.
  *
@@ -45,12 +47,12 @@ class MimeTypeTest extends FileTestBase {
       // Test stream [URI].
       foreach ($prefixes as $prefix) {
         $output = $guesser->guess($prefix . $input);
-        $this->assertIdentical($output, $expected, format_string('Mimetype for %input is %output (expected: %expected).', ['%input' => $prefix . $input, '%output' => $output, '%expected' => $expected]));
+        $this->assertIdentical($output, $expected, new FormattableMarkup('Mimetype for %input is %output (expected: %expected).', ['%input' => $prefix . $input, '%output' => $output, '%expected' => $expected]));
       }
 
       // Test normal path equivalent
       $output = $guesser->guess($input);
-      $this->assertIdentical($output, $expected, format_string('Mimetype (using default mappings) for %input is %output (expected: %expected).', ['%input' => $input, '%output' => $output, '%expected' => $expected]));
+      $this->assertIdentical($output, $expected, new FormattableMarkup('Mimetype (using default mappings) for %input is %output (expected: %expected).', ['%input' => $input, '%output' => $output, '%expected' => $expected]));
     }
 
     // Now test the extension guesser by passing in a custom mapping.
@@ -85,7 +87,7 @@ class MimeTypeTest extends FileTestBase {
 
     foreach ($test_case as $input => $expected) {
       $output = $extension_guesser->guess($input);
-      $this->assertIdentical($output, $expected, format_string('Mimetype (using passed-in mappings) for %input is %output (expected: %expected).', ['%input' => $input, '%output' => $output, '%expected' => $expected]));
+      $this->assertIdentical($output, $expected, new FormattableMarkup('Mimetype (using passed-in mappings) for %input is %output (expected: %expected).', ['%input' => $input, '%output' => $output, '%expected' => $expected]));
     }
   }
 

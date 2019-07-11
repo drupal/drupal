@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\views\Functional\Plugin;
 
+use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Tests\views\Functional\ViewTestBase;
 use Drupal\views\Views;
 use Drupal\views_test_data\Plugin\views\filter\FilterTest as FilterPlugin;
@@ -91,7 +92,7 @@ class FilterTest extends ViewTestBase {
 
     // Check that we have a single element, as a result of applying the '= John'
     // filter.
-    $this->assertEqual(count($view->result), 1, format_string('Results were returned. @count results.', ['@count' => count($view->result)]));
+    $this->assertEqual(count($view->result), 1, new FormattableMarkup('Results were returned. @count results.', ['@count' => count($view->result)]));
 
     $view->destroy();
 
@@ -117,7 +118,7 @@ class FilterTest extends ViewTestBase {
 
     // Check if we have the other elements in the dataset, as a result of
     // applying the '<> John' filter.
-    $this->assertEqual(count($view->result), 4, format_string('Results were returned. @count results.', ['@count' => count($view->result)]));
+    $this->assertEqual(count($view->result), 4, new FormattableMarkup('Results were returned. @count results.', ['@count' => count($view->result)]));
 
     $view->destroy();
     $view->initDisplay();
@@ -141,7 +142,7 @@ class FilterTest extends ViewTestBase {
     $this->executeView($view);
 
     // Check if we have all 5 results.
-    $this->assertEqual(count($view->result), 5, format_string('All @count results returned', ['@count' => count($view->displayHandlers)]));
+    $this->assertEqual(count($view->result), 5, new FormattableMarkup('All @count results returned', ['@count' => count($view->displayHandlers)]));
   }
 
   /**

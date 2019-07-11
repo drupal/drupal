@@ -225,7 +225,7 @@ class ConfigCRUDTest extends KernelTestBase {
         unset($test_characters[$i]);
       }
     }
-    $this->assertTrue(empty($test_characters), format_string('Expected ConfigNameException was thrown for all invalid name characters: @characters', [
+    $this->assertTrue(empty($test_characters), new FormattableMarkup('Expected ConfigNameException was thrown for all invalid name characters: @characters', [
       '@characters' => implode(' ', $characters),
     ]));
 

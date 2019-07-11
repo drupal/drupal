@@ -2,6 +2,7 @@
 
 namespace Drupal\KernelTests\Core\Database;
 
+use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Database\DatabaseExceptionWrapper;
 
@@ -168,9 +169,9 @@ class ConnectionTest extends DatabaseTestBase {
     $stmt->execute();
     foreach ($stmt->fetchAllAssoc('word') as $word => $row) {
       $expected = '"' . $word . '"';
-      $this->assertIdentical($db->escapeTable($word), $expected, format_string('The reserved word %word was correctly escaped when used as a table name.', ['%word' => $word]));
-      $this->assertIdentical($db->escapeField($word), $expected, format_string('The reserved word %word was correctly escaped when used as a column name.', ['%word' => $word]));
-      $this->assertIdentical($db->escapeAlias($word), $expected, format_string('The reserved word %word was correctly escaped when used as an alias.', ['%word' => $word]));
+      $this->assertIdentical($db->escapeTable($word), $expected, new FormattableMarkup('The reserved word %word was correctly escaped when used as a table name.', ['%word' => $word]));
+      $this->assertIdentical($db->escapeField($word), $expected, new FormattableMarkup('The reserved word %word was correctly escaped when used as a column name.', ['%word' => $word]));
+      $this->assertIdentical($db->escapeAlias($word), $expected, new FormattableMarkup('The reserved word %word was correctly escaped when used as an alias.', ['%word' => $word]));
     }
   }
 

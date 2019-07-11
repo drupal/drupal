@@ -4,6 +4,7 @@ namespace Drupal\field\Tests;
 
 @trigger_error(__NAMESPACE__ . '\FieldTestBase is deprecated for removal before Drupal 9.0.0. Use Drupal\Tests\field\Functional\FieldTestBase instead. See https://www.drupal.org/node/2999939', E_USER_DEPRECATED);
 
+use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\simpletest\WebTestBase;
@@ -65,7 +66,7 @@ abstract class FieldTestBase extends WebTestBase {
     $values = $field->getValue();
     $this->assertEqual(count($values), count($expected_values), 'Expected number of values were saved.');
     foreach ($expected_values as $key => $value) {
-      $this->assertEqual($values[$key][$column], $value, format_string('Value @value was saved correctly.', ['@value' => $value]));
+      $this->assertEqual($values[$key][$column], $value, new FormattableMarkup('Value @value was saved correctly.', ['@value' => $value]));
     }
   }
 

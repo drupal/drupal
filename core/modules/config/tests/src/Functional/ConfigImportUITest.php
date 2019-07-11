@@ -292,7 +292,7 @@ class ConfigImportUITest extends BrowserTestBase {
     // Load the diff UI and verify that the diff reflects the change.
     $this->drupalGet('admin/config/development/configuration/sync/diff/' . $config_name);
     $this->assertNoRaw('&amp;nbsp;');
-    $this->assertTitle(format_string('View changes of @config_name | Drupal', ['@config_name' => $config_name]));
+    $this->assertTitle(new FormattableMarkup('View changes of @config_name | Drupal', ['@config_name' => $config_name]));
 
     // The following assertions do not use $this::assertEscaped() because
     // \Drupal\Component\Diff\DiffFormatter adds markup that signifies what has
@@ -453,11 +453,11 @@ class ConfigImportUITest extends BrowserTestBase {
     $this->drupalGet('admin/config/development/configuration');
     // The node type, body field and entity displays will be scheduled for
     // removal.
-    $this->assertText(format_string('node.type.@type', ['@type' => $node_type->id()]));
-    $this->assertText(format_string('field.field.node.@type.body', ['@type' => $node_type->id()]));
-    $this->assertText(format_string('core.entity_view_display.node.@type.teaser', ['@type' => $node_type->id()]));
-    $this->assertText(format_string('core.entity_view_display.node.@type.default', ['@type' => $node_type->id()]));
-    $this->assertText(format_string('core.entity_form_display.node.@type.default', ['@type' => $node_type->id()]));
+    $this->assertText(new FormattableMarkup('node.type.@type', ['@type' => $node_type->id()]));
+    $this->assertText(new FormattableMarkup('field.field.node.@type.body', ['@type' => $node_type->id()]));
+    $this->assertText(new FormattableMarkup('core.entity_view_display.node.@type.teaser', ['@type' => $node_type->id()]));
+    $this->assertText(new FormattableMarkup('core.entity_view_display.node.@type.default', ['@type' => $node_type->id()]));
+    $this->assertText(new FormattableMarkup('core.entity_form_display.node.@type.default', ['@type' => $node_type->id()]));
 
     // Attempt to import configuration and verify that an error message appears
     // and the node type, body field and entity displays are still scheduled for
@@ -465,22 +465,22 @@ class ConfigImportUITest extends BrowserTestBase {
     $this->drupalPostForm(NULL, [], t('Import all'));
     $validation_message = t('Entities exist of type %entity_type and %bundle_label %bundle. These entities need to be deleted before importing.', ['%entity_type' => $node->getEntityType()->getLabel(), '%bundle_label' => $node->getEntityType()->getBundleLabel(), '%bundle' => $node_type->label()]);
     $this->assertRaw($validation_message);
-    $this->assertText(format_string('node.type.@type', ['@type' => $node_type->id()]));
-    $this->assertText(format_string('field.field.node.@type.body', ['@type' => $node_type->id()]));
-    $this->assertText(format_string('core.entity_view_display.node.@type.teaser', ['@type' => $node_type->id()]));
-    $this->assertText(format_string('core.entity_view_display.node.@type.default', ['@type' => $node_type->id()]));
-    $this->assertText(format_string('core.entity_form_display.node.@type.default', ['@type' => $node_type->id()]));
+    $this->assertText(new FormattableMarkup('node.type.@type', ['@type' => $node_type->id()]));
+    $this->assertText(new FormattableMarkup('field.field.node.@type.body', ['@type' => $node_type->id()]));
+    $this->assertText(new FormattableMarkup('core.entity_view_display.node.@type.teaser', ['@type' => $node_type->id()]));
+    $this->assertText(new FormattableMarkup('core.entity_view_display.node.@type.default', ['@type' => $node_type->id()]));
+    $this->assertText(new FormattableMarkup('core.entity_form_display.node.@type.default', ['@type' => $node_type->id()]));
 
     // Delete the node and try to import again.
     $node->delete();
     $this->drupalPostForm(NULL, [], t('Import all'));
     $this->assertNoRaw($validation_message);
     $this->assertText(t('There are no configuration changes to import.'));
-    $this->assertNoText(format_string('node.type.@type', ['@type' => $node_type->id()]));
-    $this->assertNoText(format_string('field.field.node.@type.body', ['@type' => $node_type->id()]));
-    $this->assertNoText(format_string('core.entity_view_display.node.@type.teaser', ['@type' => $node_type->id()]));
-    $this->assertNoText(format_string('core.entity_view_display.node.@type.default', ['@type' => $node_type->id()]));
-    $this->assertNoText(format_string('core.entity_form_display.node.@type.default', ['@type' => $node_type->id()]));
+    $this->assertNoText(new FormattableMarkup('node.type.@type', ['@type' => $node_type->id()]));
+    $this->assertNoText(new FormattableMarkup('field.field.node.@type.body', ['@type' => $node_type->id()]));
+    $this->assertNoText(new FormattableMarkup('core.entity_view_display.node.@type.teaser', ['@type' => $node_type->id()]));
+    $this->assertNoText(new FormattableMarkup('core.entity_view_display.node.@type.default', ['@type' => $node_type->id()]));
+    $this->assertNoText(new FormattableMarkup('core.entity_form_display.node.@type.default', ['@type' => $node_type->id()]));
   }
 
   /**

@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\views\Kernel;
 
+use Drupal\Component\Render\FormattableMarkup;
 use Drupal\entity_test\Entity\EntityTestMul;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
@@ -104,8 +105,8 @@ class QueryGroupByTest extends ViewsKernelTestBase {
     foreach ($view->result as $item) {
       $results[$item->entity_test_name] = $item->id;
     }
-    $this->assertEqual($results['name1'], $values[0], format_string('Aggregation with @aggregation_function and groupby name: name1 returned the expected amount of results', ['@aggregation_function' => $aggregation_function]));
-    $this->assertEqual($results['name2'], $values[1], format_string('Aggregation with @aggregation_function and groupby name: name2 returned the expected amount of results', ['@aggregation_function' => $aggregation_function]));
+    $this->assertEqual($results['name1'], $values[0], new FormattableMarkup('Aggregation with @aggregation_function and groupby name: name1 returned the expected amount of results', ['@aggregation_function' => $aggregation_function]));
+    $this->assertEqual($results['name2'], $values[1], new FormattableMarkup('Aggregation with @aggregation_function and groupby name: name2 returned the expected amount of results', ['@aggregation_function' => $aggregation_function]));
   }
 
   /**

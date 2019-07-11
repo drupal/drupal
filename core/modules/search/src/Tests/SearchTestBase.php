@@ -91,8 +91,8 @@ abstract class SearchTestBase extends WebTestBase {
       foreach ($edit as $name => $value) {
         $this->fail(new FormattableMarkup('Failed to set field @name to @value', ['@name' => $name, '@value' => $value]));
       }
-      $this->assertTrue($submit_matches, format_string('Found the @submit button', ['@submit' => $submit]));
-      $this->fail(format_string('Found the requested form fields at @path', ['@path' => $path]));
+      $this->assertTrue($submit_matches, new FormattableMarkup('Found the @submit button', ['@submit' => $submit]));
+      $this->fail(new FormattableMarkup('Found the requested form fields at @path', ['@path' => $path]));
     }
   }
 

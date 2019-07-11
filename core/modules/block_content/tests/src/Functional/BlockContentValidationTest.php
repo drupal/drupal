@@ -2,6 +2,8 @@
 
 namespace Drupal\Tests\block_content\Functional;
 
+use Drupal\Component\Render\FormattableMarkup;
+
 /**
  * Tests block content validation constraints.
  *
@@ -32,7 +34,7 @@ class BlockContentValidationTest extends BlockContentTestBase {
     // Make sure the violation is on the info property
     $this->assertEqual($violations[0]->getPropertyPath(), 'info');
     // Make sure the message is correct.
-    $this->assertEqual($violations[0]->getMessage(), format_string('A custom block with block description %value already exists.', [
+    $this->assertEqual($violations[0]->getMessage(), new FormattableMarkup('A custom block with block description %value already exists.', [
       '%value' => $block->label(),
     ]));
   }

@@ -7,6 +7,7 @@ namespace Drupal\Tests\system\Functional\Cache;
  *
  * @group Cache
  */
+use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Cache\Cache;
 
 class ClearTest extends CacheTestBase {
@@ -35,7 +36,7 @@ class ClearTest extends CacheTestBase {
 
     foreach ($bins as $bin => $cache_backend) {
       $cid = 'test_cid_clear' . $bin;
-      $this->assertFalse($this->checkCacheExists($cid, $this->defaultValue, $bin), format_string('All cache entries removed from @bin.', ['@bin' => $bin]));
+      $this->assertFalse($this->checkCacheExists($cid, $this->defaultValue, $bin), new FormattableMarkup('All cache entries removed from @bin.', ['@bin' => $bin]));
     }
   }
 

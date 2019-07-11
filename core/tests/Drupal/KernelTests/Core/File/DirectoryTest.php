@@ -2,6 +2,7 @@
 
 namespace Drupal\KernelTests\Core\File;
 
+use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Component\PhpStorage\FileStorage;
 use Drupal\Core\File\Exception\FileException;
 use Drupal\Core\File\FileSystemInterface;
@@ -115,14 +116,14 @@ class DirectoryTest extends FileTestBase {
     /** @var \Drupal\Core\File\FileSystemInterface $file_system */
     $file_system = \Drupal::service('file_system');
     $path = $file_system->createFilename($basename, $directory);
-    $this->assertEqual($path, $original, format_string('New filepath %new equals %original.', ['%new' => $path, '%original' => $original]), 'File');
+    $this->assertEqual($path, $original, new FormattableMarkup('New filepath %new equals %original.', ['%new' => $path, '%original' => $original]), 'File');
 
     // Then we test against a file that already exists within that directory.
     $basename = 'druplicon.png';
     $original = $directory . '/' . $basename;
     $expected = $directory . '/druplicon_0.png';
     $path = $file_system->createFilename($basename, $directory);
-    $this->assertEqual($path, $expected, format_string('Creating a new filepath from %original equals %new (expected %expected).', ['%new' => $path, '%original' => $original, '%expected' => $expected]), 'File');
+    $this->assertEqual($path, $expected, new FormattableMarkup('Creating a new filepath from %original equals %new (expected %expected).', ['%new' => $path, '%original' => $original, '%expected' => $expected]), 'File');
 
     // @TODO: Finally we copy a file into a directory several times, to ensure a properly iterating filename suffix.
   }

@@ -303,7 +303,7 @@ EOF;
   protected function assertTranslation($source, $translation, $langcode, $message = '') {
     $db_translation = Database::getConnection()->query('SELECT translation FROM {locales_target} lt INNER JOIN {locales_source} ls ON ls.lid = lt.lid WHERE ls.source = :source AND lt.language = :langcode', [':source' => $source, ':langcode' => $langcode])->fetchField();
     $db_translation = $db_translation == FALSE ? '' : $db_translation;
-    $this->assertEqual($translation, $db_translation, $message ? $message : format_string('Correct translation of %source (%language)', ['%source' => $source, '%language' => $langcode]));
+    $this->assertEqual($translation, $db_translation, $message ? $message : new FormattableMarkup('Correct translation of %source (%language)', ['%source' => $source, '%language' => $langcode]));
   }
 
 }

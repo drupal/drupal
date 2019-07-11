@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\system\Functional\Menu;
 
+use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Url;
 
 /**
@@ -56,7 +57,7 @@ trait AssertMenuActiveTrailTrait {
       ':title' => $active_link_title,
     ];
     $elements = $this->xpath($xpath, $args);
-    $this->assertTrue(!empty($elements), format_string('Active link %title was found in menu tree, including active trail links %tree.', [
+    $this->assertTrue(!empty($elements), new FormattableMarkup('Active link %title was found in menu tree, including active trail links %tree.', [
       '%title' => $active_link_title,
       '%tree' => implode(' » ', $tree),
     ]));

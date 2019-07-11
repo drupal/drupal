@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\comment\Functional;
 
+use Drupal\Component\Render\FormattableMarkup;
 use Drupal\comment\CommentInterface;
 use Drupal\comment\Entity\Comment;
 use Drupal\comment\Entity\CommentType;
@@ -226,10 +227,10 @@ class CommentNonNodeTest extends BrowserTestBase {
 
     if ($operation == 'delete') {
       $this->drupalPostForm(NULL, [], t('Delete'));
-      $this->assertRaw(\Drupal::translation()->formatPlural(1, 'Deleted 1 comment.', 'Deleted @count comments.'), format_string('Operation "@operation" was performed on comment.', ['@operation' => $operation]));
+      $this->assertRaw(\Drupal::translation()->formatPlural(1, 'Deleted 1 comment.', 'Deleted @count comments.'), new FormattableMarkup('Operation "@operation" was performed on comment.', ['@operation' => $operation]));
     }
     else {
-      $this->assertText(t('The update has been performed.'), format_string('Operation "@operation" was performed on comment.', ['@operation' => $operation]));
+      $this->assertText(t('The update has been performed.'), new FormattableMarkup('Operation "@operation" was performed on comment.', ['@operation' => $operation]));
     }
   }
 

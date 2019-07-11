@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\content_translation\Functional;
 
+use Drupal\Component\Render\FormattableMarkup;
 use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
 use Drupal\comment\Tests\CommentTestTrait;
 use Drupal\Core\Field\Entity\BaseFieldOverride;
@@ -238,7 +239,7 @@ class ContentTranslationSettingsTest extends BrowserTestBase {
   protected function assertSettings($entity_type, $bundle, $enabled, $edit) {
     $this->drupalPostForm('admin/config/regional/content-language', $edit, t('Save configuration'));
     $args = ['@entity_type' => $entity_type, '@bundle' => $bundle, '@enabled' => $enabled ? 'enabled' : 'disabled'];
-    $message = format_string('Translation for entity @entity_type (@bundle) is @enabled.', $args);
+    $message = new FormattableMarkup('Translation for entity @entity_type (@bundle) is @enabled.', $args);
     return $this->assertEqual(\Drupal::service('content_translation.manager')->isEnabled($entity_type, $bundle), $enabled, $message);
   }
 

@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\taxonomy\Kernel;
 
+use Drupal\Component\Render\FormattableMarkup;
 use Drupal\KernelTests\Core\Entity\EntityKernelTestBase;
 
 /**
@@ -58,7 +59,7 @@ class TermValidationTest extends EntityKernelTestBase {
     $term->set('parent', 9999);
     $violations = $term->validate();
     $this->assertEqual(count($violations), 1, 'Violation found when term parent is invalid.');
-    $this->assertEqual($violations[0]->getMessage(), format_string('The referenced entity (%type: %id) does not exist.', ['%type' => 'taxonomy_term', '%id' => 9999]));
+    $this->assertEqual($violations[0]->getMessage(), new FormattableMarkup('The referenced entity (%type: %id) does not exist.', ['%type' => 'taxonomy_term', '%id' => 9999]));
 
     $term->set('parent', 0);
     $violations = $term->validate();

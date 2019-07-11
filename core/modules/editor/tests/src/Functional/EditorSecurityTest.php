@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\editor\Functional;
 
+use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Component\Serialization\Json;
 use Drupal\editor\Entity\Editor;
 use Drupal\filter\Entity\FilterFormat;
@@ -276,7 +277,7 @@ class EditorSecurityTest extends BrowserTestBase {
     // Log in as each user that may edit the content, and assert the value.
     foreach ($expected as $case) {
       foreach ($case['users'] as $account) {
-        $this->pass(format_string('Scenario: sample %sample_id, %format.', [
+        $this->pass(new FormattableMarkup('Scenario: sample %sample_id, %format.', [
           '%sample_id' => $case['node_id'],
           '%format' => $case['format'],
         ]));
@@ -401,7 +402,7 @@ class EditorSecurityTest extends BrowserTestBase {
 
       // Switch to every other text format/editor and verify the results.
       foreach ($case['switch_to'] as $format => $expected_filtered_value) {
-        $this->pass(format_string('Scenario: sample %sample_id, switch from %original_format to %format.', [
+        $this->pass(new FormattableMarkup('Scenario: sample %sample_id, switch from %original_format to %format.', [
           '%sample_id' => $case['node_id'],
           '%original_format' => $case['format'],
           '%format' => $format,

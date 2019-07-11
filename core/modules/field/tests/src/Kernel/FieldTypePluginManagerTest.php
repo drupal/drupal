@@ -21,8 +21,8 @@ class FieldTypePluginManagerTest extends FieldKernelTestBase {
     $field_type_manager = \Drupal::service('plugin.manager.field.field_type');
     foreach (['test_field', 'shape', 'hidden_test_field'] as $type) {
       $definition = $field_type_manager->getDefinition($type);
-      $this->assertIdentical($field_type_manager->getDefaultStorageSettings($type), $definition['class']::defaultStorageSettings(), format_string("%type storage settings were returned", ['%type' => $type]));
-      $this->assertIdentical($field_type_manager->getDefaultFieldSettings($type), $definition['class']::defaultFieldSettings(), format_string(" %type field settings were returned", ['%type' => $type]));
+      $this->assertIdentical($field_type_manager->getDefaultStorageSettings($type), $definition['class']::defaultStorageSettings(), new FormattableMarkup("%type storage settings were returned", ['%type' => $type]));
+      $this->assertIdentical($field_type_manager->getDefaultFieldSettings($type), $definition['class']::defaultFieldSettings(), new FormattableMarkup(" %type field settings were returned", ['%type' => $type]));
     }
   }
 

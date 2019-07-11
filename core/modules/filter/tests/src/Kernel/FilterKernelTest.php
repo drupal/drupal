@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\filter\Kernel;
 
+use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Component\Utility\Html;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Render\RenderContext;
@@ -876,14 +877,14 @@ www.example.com with a newline in comments -->
       foreach ($tasks as $value => $is_expected) {
         // Not using assertIdentical, since combination with strpos() is hard to grok.
         if ($is_expected) {
-          $success = $this->assertTrue(strpos($result, $value) !== FALSE, format_string('@source: @value found. Filtered result: @result.', [
+          $success = $this->assertTrue(strpos($result, $value) !== FALSE, new FormattableMarkup('@source: @value found. Filtered result: @result.', [
             '@source' => var_export($source, TRUE),
             '@value' => var_export($value, TRUE),
             '@result' => var_export($result, TRUE),
           ]));
         }
         else {
-          $success = $this->assertTrue(strpos($result, $value) === FALSE, format_string('@source: @value not found. Filtered result: @result.', [
+          $success = $this->assertTrue(strpos($result, $value) === FALSE, new FormattableMarkup('@source: @value not found. Filtered result: @result.', [
             '@source' => var_export($source, TRUE),
             '@value' => var_export($value, TRUE),
             '@result' => var_export($result, TRUE),
@@ -1066,7 +1067,7 @@ body {color:red}
 
 /*--><!]]>*/
 </style></p>',
-      format_string('HTML corrector -- Existing cdata section @pattern_name properly escaped', ['@pattern_name' => '/*<![CDATA[*/'])
+      new FormattableMarkup('HTML corrector -- Existing cdata section @pattern_name properly escaped', ['@pattern_name' => '/*<![CDATA[*/'])
     );
 
     $filtered_data = Html::normalize('<p><style>
@@ -1085,7 +1086,7 @@ body {color:red}
 
 /*--><!]]>*/
 </style></p>',
-      format_string('HTML corrector -- Existing cdata section @pattern_name properly escaped', ['@pattern_name' => '<!--/*--><![CDATA[/* ><!--*/'])
+      new FormattableMarkup('HTML corrector -- Existing cdata section @pattern_name properly escaped', ['@pattern_name' => '<!--/*--><![CDATA[/* ><!--*/'])
     );
 
     $filtered_data = Html::normalize('<p><script>
@@ -1102,7 +1103,7 @@ body {color:red}
 
 //--><!]]>
 </script></p>',
-      format_string('HTML corrector -- Existing cdata section @pattern_name properly escaped', ['@pattern_name' => '<!--//--><![CDATA[// ><!--'])
+      new FormattableMarkup('HTML corrector -- Existing cdata section @pattern_name properly escaped', ['@pattern_name' => '<!--//--><![CDATA[// ><!--'])
     );
 
     $filtered_data = Html::normalize('<p><script>
@@ -1119,7 +1120,7 @@ body {color:red}
 
 //--><!]]>
 </script></p>',
-      format_string('HTML corrector -- Existing cdata section @pattern_name properly escaped', ['@pattern_name' => '// <![CDATA['])
+      new FormattableMarkup('HTML corrector -- Existing cdata section @pattern_name properly escaped', ['@pattern_name' => '// <![CDATA['])
     );
 
   }

@@ -411,7 +411,7 @@ class ShortcutLinksTest extends ShortcutTestBase {
 
     foreach ($edit_paths as $path) {
       $this->drupalGet($path);
-      $message = format_string('Access is denied on %s', ['%s' => $path]);
+      $message = new FormattableMarkup('Access is denied on %s', ['%s' => $path]);
       $this->assertResponse(403, $message);
     }
   }
@@ -450,7 +450,7 @@ class ShortcutLinksTest extends ShortcutTestBase {
    *   Link position counting from zero.
    * @param string $message
    *   (optional) A message to display with the assertion. Do not translate
-   *   messages: use format_string() to embed variables in the message text, not
+   *   messages: use new FormattableMarkup() to embed variables in the message text, not
    *   t(). If left blank, a default message will be displayed.
    * @param string $group
    *   (optional) The group this message is in, which is displayed in a column

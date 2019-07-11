@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\system\Functional\Common;
 
+use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Language\Language;
@@ -32,11 +33,11 @@ class UrlTest extends BrowserTestBase {
     $encoded_path = "3CSCRIPT%3Ealert%28%27XSS%27%29%3C/SCRIPT%3E";
 
     $link = \Drupal::l($text, Url::fromUserInput('/' . $path));
-    $this->assertTrue(strpos($link, $encoded_path) !== FALSE && strpos($link, $path) === FALSE, format_string('XSS attack @path was filtered by \Drupal\Core\Utility\LinkGeneratorInterface::generate().', ['@path' => $path]));
+    $this->assertTrue(strpos($link, $encoded_path) !== FALSE && strpos($link, $path) === FALSE, new FormattableMarkup('XSS attack @path was filtered by \Drupal\Core\Utility\LinkGeneratorInterface::generate().', ['@path' => $path]));
 
     // Test \Drupal\Core\Url.
     $link = Url::fromUri('base:' . $path)->toString();
-    $this->assertTrue(strpos($link, $encoded_path) !== FALSE && strpos($link, $path) === FALSE, format_string('XSS attack @path was filtered by #theme', ['@path' => $path]));
+    $this->assertTrue(strpos($link, $encoded_path) !== FALSE && strpos($link, $path) === FALSE, new FormattableMarkup('XSS attack @path was filtered by #theme', ['@path' => $path]));
   }
 
   /**
@@ -93,10 +94,10 @@ class UrlTest extends BrowserTestBase {
     $hreflang_override_link['#options']['attributes']['hreflang'] = 'foo';
 
     $rendered = $renderer->renderRoot($hreflang_link);
-    $this->assertTrue($this->hasAttribute('hreflang', $rendered, $langcode), format_string('hreflang attribute with value @langcode is present on a rendered link when langcode is provided in the render array.', ['@langcode' => $langcode]));
+    $this->assertTrue($this->hasAttribute('hreflang', $rendered, $langcode), new FormattableMarkup('hreflang attribute with value @langcode is present on a rendered link when langcode is provided in the render array.', ['@langcode' => $langcode]));
 
     $rendered = $renderer->renderRoot($hreflang_override_link);
-    $this->assertTrue($this->hasAttribute('hreflang', $rendered, 'foo'), format_string('hreflang attribute with value @hreflang is present on a rendered link when @hreflang is provided in the render array.', ['@hreflang' => 'foo']));
+    $this->assertTrue($this->hasAttribute('hreflang', $rendered, 'foo'), new FormattableMarkup('hreflang attribute with value @hreflang is present on a rendered link when @hreflang is provided in the render array.', ['@hreflang' => 'foo']));
 
     // Test the active class in links produced by
     // \Drupal\Core\Utility\LinkGeneratorInterface::generate() and #type 'link'.
@@ -139,7 +140,7 @@ class UrlTest extends BrowserTestBase {
     // Test the link generator.
     $class_l = $this->randomMachineName();
     $link_l = \Drupal::l($this->randomMachineName(), new Url('<current>', [], ['attributes' => ['class' => [$class_l]]]));
-    $this->assertTrue($this->hasAttribute('class', $link_l, $class_l), format_string('Custom class @class is present on link when requested by l()', ['@class' => $class_l]));
+    $this->assertTrue($this->hasAttribute('class', $link_l, $class_l), new FormattableMarkup('Custom class @class is present on link when requested by l()', ['@class' => $class_l]));
 
     // Test #type.
     $class_theme = $this->randomMachineName();
@@ -154,7 +155,7 @@ class UrlTest extends BrowserTestBase {
       ],
     ];
     $link_theme = $renderer->renderRoot($type_link);
-    $this->assertTrue($this->hasAttribute('class', $link_theme, $class_theme), format_string('Custom class @class is present on link when requested by #type', ['@class' => $class_theme]));
+    $this->assertTrue($this->hasAttribute('class', $link_theme, $class_theme), new FormattableMarkup('Custom class @class is present on link when requested by #type', ['@class' => $class_theme]));
   }
 
   /**

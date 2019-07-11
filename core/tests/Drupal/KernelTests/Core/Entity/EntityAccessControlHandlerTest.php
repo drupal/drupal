@@ -2,6 +2,7 @@
 
 namespace Drupal\KernelTests\Core\Entity;
 
+use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Access\AccessibleInterface;
@@ -40,7 +41,7 @@ class EntityAccessControlHandlerTest extends EntityLanguageTestBase {
    */
   public function assertEntityAccess($ops, AccessibleInterface $object, AccountInterface $account = NULL) {
     foreach ($ops as $op => $result) {
-      $message = format_string("Entity access returns @result with operation '@op'.", [
+      $message = new FormattableMarkup("Entity access returns @result with operation '@op'.", [
         '@result' => !isset($result) ? 'null' : ($result ? 'true' : 'false'),
         '@op' => $op,
       ]);

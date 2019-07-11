@@ -5,6 +5,7 @@
  * Test module for the entity API providing several entity types for testing.
  */
 
+use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Database\Query\AlterableInterface;
 use Drupal\Core\Entity\ContentEntityInterface;
@@ -574,7 +575,7 @@ function entity_test_entity_operation_alter(array &$operations, EntityInterface 
   if (in_array($entity->getEntityTypeId(), $valid_entity_type_ids)) {
     if (\Drupal::service('router.route_provider')->getRouteByName("entity.{$entity->getEntityTypeId()}.test_operation")) {
       $operations['test_operation'] = [
-        'title' => format_string('Test Operation: @label', ['@label' => $entity->label()]),
+        'title' => new FormattableMarkup('Test Operation: @label', ['@label' => $entity->label()]),
         'url' => Url::fromRoute("entity.{$entity->getEntityTypeId()}.test_operation", [$entity->getEntityTypeId() => $entity->id()]),
         'weight' => 50,
       ];

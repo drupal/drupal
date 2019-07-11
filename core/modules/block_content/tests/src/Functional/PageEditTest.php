@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\block_content\Functional;
 
+use Drupal\Component\Render\FormattableMarkup;
 use Drupal\block_content\Entity\BlockContent;
 
 /**
@@ -64,7 +65,7 @@ class PageEditTest extends BlockContentTestBase {
     // Test deleting the block.
     $this->drupalGet("block/" . $revised_block->id());
     $this->clickLink(t('Delete'));
-    $this->assertText(format_string('Are you sure you want to delete the custom block @label?', ['@label' => $revised_block->label()]));
+    $this->assertText(new FormattableMarkup('Are you sure you want to delete the custom block @label?', ['@label' => $revised_block->label()]));
   }
 
 }

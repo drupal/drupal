@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\file\Kernel;
 
+use Drupal\Component\Render\FormattableMarkup;
 use Drupal\file\Entity\File;
 
 /**
@@ -32,7 +33,7 @@ class MoveTest extends FileManagedUnitTestBase {
     $this->assertFileHooksCalled(['move', 'load', 'update']);
 
     // Make sure we got the same file back.
-    $this->assertEqual($source->id(), $result->id(), format_string("Source file id's' %fid is unchanged after move.", ['%fid' => $source->id()]));
+    $this->assertEqual($source->id(), $result->id(), new FormattableMarkup("Source file id's' %fid is unchanged after move.", ['%fid' => $source->id()]));
 
     // Reload the file from the database and check that the changes were
     // actually saved.

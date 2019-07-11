@@ -121,10 +121,10 @@ class ErrorHandlerTest extends BrowserTestBase {
     $this->assertSession()->statusCodeEquals(500);
     // We cannot use assertErrorMessage() since the exact error reported
     // varies from database to database. Check that the SQL string is displayed.
-    $this->assertText($error_pdo_exception['%type'], format_string('Found %type in error page.', $error_pdo_exception));
-    $this->assertText($error_pdo_exception['@message'], format_string('Found @message in error page.', $error_pdo_exception));
-    $error_details = format_string('in %function (line ', $error_pdo_exception);
-    $this->assertRaw($error_details, format_string("Found '@message' in error page.", ['@message' => $error_details]));
+    $this->assertText($error_pdo_exception['%type'], new FormattableMarkup('Found %type in error page.', $error_pdo_exception));
+    $this->assertText($error_pdo_exception['@message'], new FormattableMarkup('Found @message in error page.', $error_pdo_exception));
+    $error_details = new FormattableMarkup('in %function (line ', $error_pdo_exception);
+    $this->assertRaw($error_details, new FormattableMarkup("Found '@message' in error page.", ['@message' => $error_details]));
 
     $this->drupalGet('error-test/trigger-renderer-exception');
     $this->assertSession()->statusCodeEquals(500);
@@ -147,7 +147,7 @@ class ErrorHandlerTest extends BrowserTestBase {
    */
   public function assertErrorMessage(array $error) {
     $message = new FormattableMarkup('%type: @message in %function (line ', $error);
-    $this->assertRaw($message, format_string('Found error message: @message.', ['@message' => $message]));
+    $this->assertRaw($message, new FormattableMarkup('Found error message: @message.', ['@message' => $message]));
   }
 
   /**
@@ -155,7 +155,7 @@ class ErrorHandlerTest extends BrowserTestBase {
    */
   public function assertNoErrorMessage(array $error) {
     $message = new FormattableMarkup('%type: @message in %function (line ', $error);
-    $this->assertNoRaw($message, format_string('Did not find error message: @message.', ['@message' => $message]));
+    $this->assertNoRaw($message, new FormattableMarkup('Did not find error message: @message.', ['@message' => $message]));
   }
 
   /**

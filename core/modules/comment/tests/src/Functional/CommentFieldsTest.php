@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\comment\Functional;
 
+use Drupal\Component\Render\FormattableMarkup;
 use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\field\Entity\FieldConfig;
@@ -51,7 +52,7 @@ class CommentFieldsTest extends CommentTestBase {
     $field_storage = FieldStorageConfig::loadByName('comment', 'comment_body');
     $this->assertTrue($field_storage, 'The comment_body field exists');
     $field = FieldConfig::loadByName('comment', 'comment', 'comment_body');
-    $this->assertTrue(isset($field), format_string('The comment_body field is present for comments on type @type', ['@type' => $type_name]));
+    $this->assertTrue(isset($field), new FormattableMarkup('The comment_body field is present for comments on type @type', ['@type' => $type_name]));
 
     // Test adding a field that defaults to CommentItemInterface::CLOSED.
     $this->addDefaultCommentField('node', 'test_node_type', 'who_likes_ponies', CommentItemInterface::CLOSED, 'who_likes_ponies');

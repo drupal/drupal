@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\taxonomy\Functional;
 
+use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Component\Utility\Tags;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\field\Entity\FieldConfig;
@@ -304,10 +305,10 @@ class TermTest extends TaxonomyTestBase {
     $this->drupalGet('node/' . $node->id());
 
     foreach ($term_names as $term_name) {
-      $this->assertText($term_name, format_string('The term %name appears on the node page after two terms, %deleted1 and %deleted2, were deleted.', ['%name' => $term_name, '%deleted1' => $term_objects['term1']->getName(), '%deleted2' => $term_objects['term2']->getName()]));
+      $this->assertText($term_name, new FormattableMarkup('The term %name appears on the node page after two terms, %deleted1 and %deleted2, were deleted.', ['%name' => $term_name, '%deleted1' => $term_objects['term1']->getName(), '%deleted2' => $term_objects['term2']->getName()]));
     }
-    $this->assertNoText($term_objects['term1']->getName(), format_string('The deleted term %name does not appear on the node page.', ['%name' => $term_objects['term1']->getName()]));
-    $this->assertNoText($term_objects['term2']->getName(), format_string('The deleted term %name does not appear on the node page.', ['%name' => $term_objects['term2']->getName()]));
+    $this->assertNoText($term_objects['term1']->getName(), new FormattableMarkup('The deleted term %name does not appear on the node page.', ['%name' => $term_objects['term1']->getName()]));
+    $this->assertNoText($term_objects['term2']->getName(), new FormattableMarkup('The deleted term %name does not appear on the node page.', ['%name' => $term_objects['term2']->getName()]));
   }
 
   /**

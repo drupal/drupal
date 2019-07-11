@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\filter\Kernel;
 
+use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Session\AnonymousUserSession;
 use Drupal\Core\TypedData\OptionsProviderInterface;
@@ -455,7 +456,7 @@ class FilterAPITest extends EntityKernelTestBase {
         break;
       }
     }
-    $this->assertTrue($filter_format_violation_found, format_string('Validation violation for invalid value "%invalid_value" found', ['%invalid_value' => $invalid_value]));
+    $this->assertTrue($filter_format_violation_found, new FormattableMarkup('Validation violation for invalid value "%invalid_value" found', ['%invalid_value' => $invalid_value]));
   }
 
   /**

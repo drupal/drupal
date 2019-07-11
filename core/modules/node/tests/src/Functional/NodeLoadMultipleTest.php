@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\node\Functional;
 
+use Drupal\Component\Render\FormattableMarkup;
 use Drupal\node\Entity\Node;
 
 /**
@@ -45,12 +46,12 @@ class NodeLoadMultipleTest extends NodeTestBase {
     $this->assertEqual($node3->label(), $nodes[$node3->id()]->label(), 'Node was loaded.');
     $this->assertEqual($node4->label(), $nodes[$node4->id()]->label(), 'Node was loaded.');
     $count = count($nodes);
-    $this->assertTrue($count == 2, format_string('@count nodes loaded.', ['@count' => $count]));
+    $this->assertTrue($count == 2, new FormattableMarkup('@count nodes loaded.', ['@count' => $count]));
 
     // Load nodes by nid. Nodes 1, 2 and 4 will be loaded.
     $nodes = Node::loadMultiple([1, 2, 4]);
     $count = count($nodes);
-    $this->assertTrue(count($nodes) == 3, format_string('@count nodes loaded', ['@count' => $count]));
+    $this->assertTrue(count($nodes) == 3, new FormattableMarkup('@count nodes loaded', ['@count' => $count]));
     $this->assertTrue(isset($nodes[$node1->id()]), 'Node is correctly keyed in the array');
     $this->assertTrue(isset($nodes[$node2->id()]), 'Node is correctly keyed in the array');
     $this->assertTrue(isset($nodes[$node4->id()]), 'Node is correctly keyed in the array');

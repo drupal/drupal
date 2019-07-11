@@ -4,6 +4,7 @@ namespace Drupal\aggregator\Tests;
 
 @trigger_error(__NAMESPACE__ . '\AggregatorTestBase is deprecated for removal before Drupal 9.0.0. Use \Drupal\Tests\aggregator\Functional\AggregatorTestBase instead. See https://www.drupal.org/node/2999939', E_USER_DEPRECATED);
 
+use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Url;
 use Drupal\aggregator\Entity\Feed;
 use Drupal\Component\Utility\Html;
@@ -70,7 +71,7 @@ abstract class AggregatorTestBase extends WebTestBase {
   public function createFeed($feed_url = NULL, array $edit = []) {
     $edit = $this->getFeedEditArray($feed_url, $edit);
     $this->drupalPostForm('aggregator/sources/add', $edit, t('Save'));
-    $this->assertText(t('The feed @name has been added.', ['@name' => $edit['title[0][value]']]), format_string('The feed @name has been added.', ['@name' => $edit['title[0][value]']]));
+    $this->assertText(t('The feed @name has been added.', ['@name' => $edit['title[0][value]']]), new FormattableMarkup('The feed @name has been added.', ['@name' => $edit['title[0][value]']]));
 
     // Verify that the creation message contains a link to a feed.
     $view_link = $this->xpath('//div[@class="messages"]//a[contains(@href, :href)]', [':href' => 'aggregator/sources/']);
@@ -181,7 +182,7 @@ abstract class AggregatorTestBase extends WebTestBase {
   public function updateFeedItems(FeedInterface $feed, $expected_count = NULL) {
     // First, let's ensure we can get to the rss xml.
     $this->drupalGet($feed->getUrl());
-    $this->assertResponse(200, format_string(':url is reachable.', [':url' => $feed->getUrl()]));
+    $this->assertResponse(200, new FormattableMarkup(':url is reachable.', [':url' => $feed->getUrl()]));
 
     // Attempt to access the update link directly without an access token.
     $this->drupalGet('admin/config/services/aggregator/update/' . $feed->id());
@@ -200,7 +201,7 @@ abstract class AggregatorTestBase extends WebTestBase {
 
     if ($expected_count !== NULL) {
       $feed->item_count = count($feed->items);
-      $this->assertEqual($expected_count, $feed->item_count, format_string('Total items in feed equal to the total items in database (@val1 != @val2)', ['@val1' => $expected_count, '@val2' => $feed->item_count]));
+      $this->assertEqual($expected_count, $feed->item_count, new FormattableMarkup('Total items in feed equal to the total items in database (@val1 != @val2)', ['@val1' => $expected_count, '@val2' => $feed->item_count]));
     }
   }
 

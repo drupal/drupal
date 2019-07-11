@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\contact\Functional;
 
+use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Url;
 use Drupal\contact\Entity\ContactForm;
 use Drupal\Core\Mail\MailFormatHelper;
@@ -103,7 +104,7 @@ class ContactSitewideTest extends BrowserTestBase {
     $edit_link = $this->xpath('//a[@href=:href]', [
       ':href' => Url::fromRoute('entity.contact_form.edit_form', ['contact_form' => 'personal'])->toString(),
     ]);
-    $this->assertTrue(empty($edit_link), format_string('No link containing href %href found.',
+    $this->assertTrue(empty($edit_link), new FormattableMarkup('No link containing href %href found.',
       ['%href' => 'admin/structure/contact/manage/personal']
     ));
     $this->assertNoLinkByHref('admin/structure/contact/manage/personal/delete');
@@ -150,7 +151,7 @@ class ContactSitewideTest extends BrowserTestBase {
     $max_length = EntityTypeInterface::BUNDLE_MAX_LENGTH;
     $max_length_exceeded = $max_length + 1;
     $this->addContactForm($id = mb_strtolower($this->randomMachineName($max_length_exceeded)), $label = $this->randomMachineName($max_length_exceeded), implode(',', [$recipients[0]]), '', TRUE);
-    $this->assertText(format_string('Machine-readable name cannot be longer than @max characters but is currently @exceeded characters long.', ['@max' => $max_length, '@exceeded' => $max_length_exceeded]));
+    $this->assertText(new FormattableMarkup('Machine-readable name cannot be longer than @max characters but is currently @exceeded characters long.', ['@max' => $max_length, '@exceeded' => $max_length_exceeded]));
     $this->addContactForm($id = mb_strtolower($this->randomMachineName($max_length)), $label = $this->randomMachineName($max_length), implode(',', [$recipients[0]]), '', TRUE);
     $this->assertText(t('Contact form @label has been added.', ['@label' => $label]));
 
@@ -567,7 +568,7 @@ class ContactSitewideTest extends BrowserTestBase {
       else {
         $this->drupalPostForm("admin/structure/contact/manage/$id/delete", [], t('Delete'));
         $this->assertRaw(t('The contact form %label has been deleted.', ['%label' => $contact_form->label()]));
-        $this->assertFalse(ContactForm::load($id), format_string('Form %contact_form not found', ['%contact_form' => $contact_form->label()]));
+        $this->assertFalse(ContactForm::load($id), new FormattableMarkup('Form %contact_form not found', ['%contact_form' => $contact_form->label()]));
       }
     }
   }

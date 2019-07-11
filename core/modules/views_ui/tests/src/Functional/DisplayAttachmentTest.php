@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\views_ui\Functional;
 
+use Drupal\Component\Render\FormattableMarkup;
 use Drupal\views\Views;
 
 /**
@@ -33,7 +34,7 @@ class DisplayAttachmentTest extends UITestBase {
     $this->assertEscaped('<em>Page</em>');
 
     foreach (['default', 'page-1'] as $display_id) {
-      $this->assertNoFieldChecked("edit-displays-$display_id", format_string('Make sure the @display_id can be marked as attached', ['@display_id' => $display_id]));
+      $this->assertNoFieldChecked("edit-displays-$display_id", new FormattableMarkup('Make sure the @display_id can be marked as attached', ['@display_id' => $display_id]));
     }
 
     // Save the attachments and test the value on the view.

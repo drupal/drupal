@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\field\Kernel;
 
+use Drupal\Component\Render\FormattableMarkup;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\field\Entity\FieldStorageConfig;
@@ -136,7 +137,7 @@ class TranslationTest extends FieldKernelTestBase {
       foreach ($items as $delta => $item) {
         $result = $result && $item['value'] == $entity->getTranslation($langcode)->{$this->fieldName}[$delta]->value;
       }
-      $this->assertTrue($result, format_string('%language translation correctly handled.', ['%language' => $langcode]));
+      $this->assertTrue($result, new FormattableMarkup('%language translation correctly handled.', ['%language' => $langcode]));
     }
 
     // Test default values.
@@ -173,7 +174,7 @@ class TranslationTest extends FieldKernelTestBase {
     // @todo Test every translation once the Entity Translation API allows for
     //   multilingual defaults.
     $langcode = $entity->language()->getId();
-    $this->assertEqual($entity->getTranslation($langcode)->{$field_name_default}->getValue(), $field->getDefaultValueLiteral(), format_string('Default value correctly populated for language %language.', ['%language' => $langcode]));
+    $this->assertEqual($entity->getTranslation($langcode)->{$field_name_default}->getValue(), $field->getDefaultValueLiteral(), new FormattableMarkup('Default value correctly populated for language %language.', ['%language' => $langcode]));
 
     $storage = \Drupal::entityTypeManager()->getStorage($entity_type_id);
     // Check that explicit empty values are not overridden with default values.
@@ -189,7 +190,7 @@ class TranslationTest extends FieldKernelTestBase {
       }
 
       foreach ($entity->getTranslationLanguages() as $langcode => $language) {
-        $this->assertEquals([], $entity->getTranslation($langcode)->{$field_name_default}->getValue(), format_string('Empty value correctly populated for language %language.', ['%language' => $langcode]));
+        $this->assertEquals([], $entity->getTranslation($langcode)->{$field_name_default}->getValue(), new FormattableMarkup('Empty value correctly populated for language %language.', ['%language' => $langcode]));
       }
     }
   }

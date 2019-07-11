@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\system\Functional\Menu;
 
+use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Component\Utility\Html;
 use Drupal\Core\Url;
 use Drupal\Tests\BrowserTestBase;
@@ -56,7 +57,7 @@ class LocalTasksTest extends BrowserTestBase {
       list($route_name, $route_parameters) = $route_info;
       $expected = Url::fromRoute($route_name, $route_parameters)->toString();
       $method = ($elements[$index]->getAttribute('href') == $expected ? 'pass' : 'fail');
-      $this->{$method}(format_string('Task @number href @value equals @expected.', [
+      $this->{$method}(new FormattableMarkup('Task @number href @value equals @expected.', [
         '@number' => $index + 1,
         '@value' => $elements[$index]->getAttribute('href'),
         '@expected' => $expected,

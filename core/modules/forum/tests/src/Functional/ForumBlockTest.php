@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\forum\Functional;
 
+use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\comment\Entity\Comment;
 use Drupal\Tests\BrowserTestBase;
@@ -57,7 +58,7 @@ class ForumBlockTest extends BrowserTestBase {
 
     // We expect all 5 forum topics to appear in the "New forum topics" block.
     foreach ($topics as $topic) {
-      $this->assertLink($topic, 0, format_string('Forum topic @topic found in the "New forum topics" block.', ['@topic' => $topic]));
+      $this->assertLink($topic, 0, new FormattableMarkup('Forum topic @topic found in the "New forum topics" block.', ['@topic' => $topic]));
     }
 
     // Configure the new forum topics block to only show 2 topics.
@@ -69,10 +70,10 @@ class ForumBlockTest extends BrowserTestBase {
     // topics" block.
     for ($index = 0; $index < 5; $index++) {
       if (in_array($index, [3, 4])) {
-        $this->assertLink($topics[$index], 0, format_string('Forum topic @topic found in the "New forum topics" block.', ['@topic' => $topics[$index]]));
+        $this->assertLink($topics[$index], 0, new FormattableMarkup('Forum topic @topic found in the "New forum topics" block.', ['@topic' => $topics[$index]]));
       }
       else {
-        $this->assertNoText($topics[$index], format_string('Forum topic @topic not found in the "New forum topics" block.', ['@topic' => $topics[$index]]));
+        $this->assertNoText($topics[$index], new FormattableMarkup('Forum topic @topic not found in the "New forum topics" block.', ['@topic' => $topics[$index]]));
       }
     }
   }
@@ -115,10 +116,10 @@ class ForumBlockTest extends BrowserTestBase {
     $this->drupalGet('<front>');
     for ($index = 0; $index < 10; $index++) {
       if ($index < 5) {
-        $this->assertLink($topics[$index], 0, format_string('Forum topic @topic found in the "Active forum topics" block.', ['@topic' => $topics[$index]]));
+        $this->assertLink($topics[$index], 0, new FormattableMarkup('Forum topic @topic found in the "Active forum topics" block.', ['@topic' => $topics[$index]]));
       }
       else {
-        $this->assertNoText($topics[$index], format_string('Forum topic @topic not found in the "Active forum topics" block.', ['@topic' => $topics[$index]]));
+        $this->assertNoText($topics[$index], new FormattableMarkup('Forum topic @topic not found in the "Active forum topics" block.', ['@topic' => $topics[$index]]));
       }
     }
 

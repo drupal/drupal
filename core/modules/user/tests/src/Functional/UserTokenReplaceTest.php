@@ -126,7 +126,7 @@ class UserTokenReplaceTest extends BrowserTestBase {
     foreach ($tests as $input => $expected) {
       $bubbleable_metadata = new BubbleableMetadata();
       $output = $token_service->replace($input, ['user' => $anonymous_user], ['langcode' => $language_interface->getId()], $bubbleable_metadata);
-      $this->assertEqual($output, $expected, format_string('Sanitized user token %token replaced.', ['%token' => $input]));
+      $this->assertEqual($output, $expected, new FormattableMarkup('Sanitized user token %token replaced.', ['%token' => $input]));
       $this->assertEqual($bubbleable_metadata, $metadata_tests[$input]);
     }
 

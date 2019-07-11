@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\system\Kernel\Form;
 
+use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Form\FormState;
 use Drupal\KernelTests\KernelTestBase;
 
@@ -77,14 +78,14 @@ class ProgrammaticTest extends KernelTestBase {
       '%values' => print_r($values, TRUE),
       '%errors' => $valid_form ? t('None') : implode(' ', $errors),
     ];
-    $this->assertTrue($valid_input == $valid_form, format_string('Input values: %values<br />Validation handler errors: %errors', $args));
+    $this->assertTrue($valid_input == $valid_form, new FormattableMarkup('Input values: %values<br />Validation handler errors: %errors', $args));
 
     // We check submitted values only if we have a valid input.
     if ($valid_input) {
       // Fetching the values that were set in the submission handler.
       $stored_values = $form_state->get('programmatic_form_submit');
       foreach ($values as $key => $value) {
-        $this->assertEqual($stored_values[$key], $value, format_string('Submission handler correctly executed: %stored_key is %stored_value', ['%stored_key' => $key, '%stored_value' => print_r($value, TRUE)]));
+        $this->assertEqual($stored_values[$key], $value, new FormattableMarkup('Submission handler correctly executed: %stored_key is %stored_value', ['%stored_key' => $key, '%stored_value' => print_r($value, TRUE)]));
       }
     }
   }

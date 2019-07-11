@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\block\Functional;
 
+use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Component\Utility\Html;
 use Drupal\block\Entity\Block;
 use Drupal\Core\Url;
@@ -336,7 +337,7 @@ class BlockTest extends BlockTestBase {
     $this->drupalPostForm('admin/structure/block', $edit, t('Save blocks'));
 
     // Confirm that the block was moved to the proper region.
-    $this->assertText(t('The block settings have been updated.'), format_string('Block successfully moved to %region_name region.', ['%region_name' => $region]));
+    $this->assertText(t('The block settings have been updated.'), new FormattableMarkup('Block successfully moved to %region_name region.', ['%region_name' => $region]));
 
     // Confirm that the block is being displayed.
     $this->drupalGet('');

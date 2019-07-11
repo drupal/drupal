@@ -1084,12 +1084,12 @@ class ConfigTranslationUiTest extends BrowserTestBase {
    */
   protected function getTranslation($config_name, $key, $langcode) {
     $settings_locations = $this->localeStorage->getLocations(['type' => 'configuration', 'name' => $config_name]);
-    $this->assertTrue(!empty($settings_locations), format_string('Configuration locations found for %config_name.', ['%config_name' => $config_name]));
+    $this->assertTrue(!empty($settings_locations), new FormattableMarkup('Configuration locations found for %config_name.', ['%config_name' => $config_name]));
 
     if (!empty($settings_locations)) {
       $source = $this->container->get('config.factory')->get($config_name)->get($key);
       $source_string = $this->localeStorage->findString(['source' => $source, 'type' => 'configuration']);
-      $this->assertTrue(!empty($source_string), format_string('Found string for %config_name.%key.', ['%config_name' => $config_name, '%key' => $key]));
+      $this->assertTrue(!empty($source_string), new FormattableMarkup('Found string for %config_name.%key.', ['%config_name' => $config_name, '%key' => $key]));
 
       if (!empty($source_string)) {
         $conditions = [

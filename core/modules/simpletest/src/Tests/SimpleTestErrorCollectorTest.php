@@ -2,6 +2,7 @@
 
 namespace Drupal\simpletest\Tests;
 
+use Drupal\Component\Render\FormattableMarkup;
 use Drupal\simpletest\WebTestBase;
 
 /**
@@ -83,11 +84,11 @@ class SimpleTestErrorCollectorTest extends WebTestBase {
    * Asserts that a collected error matches what we are expecting.
    */
   public function assertError($error, $group, $function, $file, $message = NULL) {
-    $this->assertEqual($error['group'], $group, format_string("Group was %group", ['%group' => $group]));
-    $this->assertEqual($error['caller']['function'], $function, format_string("Function was %function", ['%function' => $function]));
-    $this->assertEqual(\Drupal::service('file_system')->basename($error['caller']['file']), $file, format_string("File was %file", ['%file' => $file]));
+    $this->assertEqual($error['group'], $group, new FormattableMarkup("Group was %group", ['%group' => $group]));
+    $this->assertEqual($error['caller']['function'], $function, new FormattableMarkup("Function was %function", ['%function' => $function]));
+    $this->assertEqual(\Drupal::service('file_system')->basename($error['caller']['file']), $file, new FormattableMarkup("File was %file", ['%file' => $file]));
     if (isset($message)) {
-      $this->assertEqual($error['message'], $message, format_string("Message was %message", ['%message' => $message]));
+      $this->assertEqual($error['message'], $message, new FormattableMarkup("Message was %message", ['%message' => $message]));
     }
   }
 

@@ -2,6 +2,7 @@
 
 namespace Drupal\KernelTests\Core\Entity;
 
+use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityStorageException;
 use Drupal\Core\Entity\RevisionLogInterface;
@@ -115,66 +116,66 @@ class EntityFieldTest extends EntityKernelTestBase {
     $langcode = 'en';
 
     // Access the name field.
-    $this->assertTrue($entity->name instanceof FieldItemListInterface, format_string('%entity_type: Field implements interface', ['%entity_type' => $entity_type]));
-    $this->assertTrue($entity->name[0] instanceof FieldItemInterface, format_string('%entity_type: Field item implements interface', ['%entity_type' => $entity_type]));
+    $this->assertTrue($entity->name instanceof FieldItemListInterface, new FormattableMarkup('%entity_type: Field implements interface', ['%entity_type' => $entity_type]));
+    $this->assertTrue($entity->name[0] instanceof FieldItemInterface, new FormattableMarkup('%entity_type: Field item implements interface', ['%entity_type' => $entity_type]));
 
-    $this->assertEqual($this->entityName, $entity->name->value, format_string('%entity_type: Name value can be read.', ['%entity_type' => $entity_type]));
-    $this->assertEqual($this->entityName, $entity->name[0]->value, format_string('%entity_type: Name value can be read through list access.', ['%entity_type' => $entity_type]));
-    $this->assertEqual($entity->name->getValue(), [0 => ['value' => $this->entityName]], format_string('%entity_type: Plain field value returned.', ['%entity_type' => $entity_type]));
+    $this->assertEqual($this->entityName, $entity->name->value, new FormattableMarkup('%entity_type: Name value can be read.', ['%entity_type' => $entity_type]));
+    $this->assertEqual($this->entityName, $entity->name[0]->value, new FormattableMarkup('%entity_type: Name value can be read through list access.', ['%entity_type' => $entity_type]));
+    $this->assertEqual($entity->name->getValue(), [0 => ['value' => $this->entityName]], new FormattableMarkup('%entity_type: Plain field value returned.', ['%entity_type' => $entity_type]));
 
     // Change the name.
     $new_name = $this->randomMachineName();
     $entity->name->value = $new_name;
-    $this->assertEqual($new_name, $entity->name->value, format_string('%entity_type: Name can be updated and read.', ['%entity_type' => $entity_type]));
-    $this->assertEqual($entity->name->getValue(), [0 => ['value' => $new_name]], format_string('%entity_type: Plain field value reflects the update.', ['%entity_type' => $entity_type]));
+    $this->assertEqual($new_name, $entity->name->value, new FormattableMarkup('%entity_type: Name can be updated and read.', ['%entity_type' => $entity_type]));
+    $this->assertEqual($entity->name->getValue(), [0 => ['value' => $new_name]], new FormattableMarkup('%entity_type: Plain field value reflects the update.', ['%entity_type' => $entity_type]));
 
     $new_name = $this->randomMachineName();
     $entity->name[0]->value = $new_name;
-    $this->assertEqual($new_name, $entity->name->value, format_string('%entity_type: Name can be updated and read through list access.', ['%entity_type' => $entity_type]));
+    $this->assertEqual($new_name, $entity->name->value, new FormattableMarkup('%entity_type: Name can be updated and read through list access.', ['%entity_type' => $entity_type]));
 
     // Access the user field.
-    $this->assertTrue($entity->user_id instanceof FieldItemListInterface, format_string('%entity_type: Field implements interface', ['%entity_type' => $entity_type]));
-    $this->assertTrue($entity->user_id[0] instanceof FieldItemInterface, format_string('%entity_type: Field item implements interface', ['%entity_type' => $entity_type]));
+    $this->assertTrue($entity->user_id instanceof FieldItemListInterface, new FormattableMarkup('%entity_type: Field implements interface', ['%entity_type' => $entity_type]));
+    $this->assertTrue($entity->user_id[0] instanceof FieldItemInterface, new FormattableMarkup('%entity_type: Field item implements interface', ['%entity_type' => $entity_type]));
 
-    $this->assertEqual($this->entityUser->id(), $entity->user_id->target_id, format_string('%entity_type: User id can be read.', ['%entity_type' => $entity_type]));
-    $this->assertEqual($this->entityUser->getAccountName(), $entity->user_id->entity->name->value, format_string('%entity_type: User name can be read.', ['%entity_type' => $entity_type]));
+    $this->assertEqual($this->entityUser->id(), $entity->user_id->target_id, new FormattableMarkup('%entity_type: User id can be read.', ['%entity_type' => $entity_type]));
+    $this->assertEqual($this->entityUser->getAccountName(), $entity->user_id->entity->name->value, new FormattableMarkup('%entity_type: User name can be read.', ['%entity_type' => $entity_type]));
 
     // Change the assigned user by entity.
     $new_user1 = $this->createUser();
     $entity->user_id->entity = $new_user1;
-    $this->assertEqual($new_user1->id(), $entity->user_id->target_id, format_string('%entity_type: Updated user id can be read.', ['%entity_type' => $entity_type]));
-    $this->assertEqual($new_user1->getAccountName(), $entity->user_id->entity->name->value, format_string('%entity_type: Updated username value can be read.', ['%entity_type' => $entity_type]));
+    $this->assertEqual($new_user1->id(), $entity->user_id->target_id, new FormattableMarkup('%entity_type: Updated user id can be read.', ['%entity_type' => $entity_type]));
+    $this->assertEqual($new_user1->getAccountName(), $entity->user_id->entity->name->value, new FormattableMarkup('%entity_type: Updated username value can be read.', ['%entity_type' => $entity_type]));
 
     // Change the assigned user by id.
     $new_user2 = $this->createUser();
     $entity->user_id->target_id = $new_user2->id();
-    $this->assertEqual($new_user2->id(), $entity->user_id->target_id, format_string('%entity_type: Updated user id can be read.', ['%entity_type' => $entity_type]));
-    $this->assertEqual($new_user2->getAccountName(), $entity->user_id->entity->name->value, format_string('%entity_type: Updated username value can be read.', ['%entity_type' => $entity_type]));
+    $this->assertEqual($new_user2->id(), $entity->user_id->target_id, new FormattableMarkup('%entity_type: Updated user id can be read.', ['%entity_type' => $entity_type]));
+    $this->assertEqual($new_user2->getAccountName(), $entity->user_id->entity->name->value, new FormattableMarkup('%entity_type: Updated username value can be read.', ['%entity_type' => $entity_type]));
 
     // Try unsetting a field property.
     $entity->name->value = NULL;
     $entity->user_id->target_id = NULL;
-    $this->assertNull($entity->name->value, format_string('%entity_type: Name field is not set.', ['%entity_type' => $entity_type]));
-    $this->assertNull($entity->user_id->target_id, format_string('%entity_type: User ID field is not set.', ['%entity_type' => $entity_type]));
-    $this->assertNull($entity->user_id->entity, format_string('%entity_type: User entity field is not set.', ['%entity_type' => $entity_type]));
+    $this->assertNull($entity->name->value, new FormattableMarkup('%entity_type: Name field is not set.', ['%entity_type' => $entity_type]));
+    $this->assertNull($entity->user_id->target_id, new FormattableMarkup('%entity_type: User ID field is not set.', ['%entity_type' => $entity_type]));
+    $this->assertNull($entity->user_id->entity, new FormattableMarkup('%entity_type: User entity field is not set.', ['%entity_type' => $entity_type]));
 
     // Test setting the values via the typed data API works as well.
     // Change the assigned user by entity.
     $entity->user_id->first()->get('entity')->setValue($new_user2);
-    $this->assertEqual($new_user2->id(), $entity->user_id->target_id, format_string('%entity_type: Updated user id can be read.', ['%entity_type' => $entity_type]));
-    $this->assertEqual($new_user2->getAccountName(), $entity->user_id->entity->name->value, format_string('%entity_type: Updated user name value can be read.', ['%entity_type' => $entity_type]));
+    $this->assertEqual($new_user2->id(), $entity->user_id->target_id, new FormattableMarkup('%entity_type: Updated user id can be read.', ['%entity_type' => $entity_type]));
+    $this->assertEqual($new_user2->getAccountName(), $entity->user_id->entity->name->value, new FormattableMarkup('%entity_type: Updated user name value can be read.', ['%entity_type' => $entity_type]));
 
     // Change the assigned user by id.
     $entity->user_id->first()->get('target_id')->setValue($new_user2->id());
-    $this->assertEqual($new_user2->id(), $entity->user_id->target_id, format_string('%entity_type: Updated user id can be read.', ['%entity_type' => $entity_type]));
-    $this->assertEqual($new_user2->getAccountName(), $entity->user_id->entity->name->value, format_string('%entity_type: Updated user name value can be read.', ['%entity_type' => $entity_type]));
+    $this->assertEqual($new_user2->id(), $entity->user_id->target_id, new FormattableMarkup('%entity_type: Updated user id can be read.', ['%entity_type' => $entity_type]));
+    $this->assertEqual($new_user2->getAccountName(), $entity->user_id->entity->name->value, new FormattableMarkup('%entity_type: Updated user name value can be read.', ['%entity_type' => $entity_type]));
 
     // Try unsetting a field.
     $entity->name->first()->get('value')->setValue(NULL);
     $entity->user_id->first()->get('target_id')->setValue(NULL);
-    $this->assertNull($entity->name->value, format_string('%entity_type: Name field is not set.', ['%entity_type' => $entity_type]));
-    $this->assertNull($entity->user_id->target_id, format_string('%entity_type: User ID field is not set.', ['%entity_type' => $entity_type]));
-    $this->assertNull($entity->user_id->entity, format_string('%entity_type: User entity field is not set.', ['%entity_type' => $entity_type]));
+    $this->assertNull($entity->name->value, new FormattableMarkup('%entity_type: Name field is not set.', ['%entity_type' => $entity_type]));
+    $this->assertNull($entity->user_id->target_id, new FormattableMarkup('%entity_type: User ID field is not set.', ['%entity_type' => $entity_type]));
+    $this->assertNull($entity->user_id->entity, new FormattableMarkup('%entity_type: User entity field is not set.', ['%entity_type' => $entity_type]));
 
     // Create a fresh entity so target_id does not get its property object
     // instantiated, then verify setting a new value via typed data API works.
@@ -185,38 +186,38 @@ class EntityFieldTest extends EntityKernelTestBase {
       ]);
     // Access the property object, and set a value.
     $entity2->user_id->first()->get('target_id')->setValue($new_user2->id());
-    $this->assertEqual($new_user2->id(), $entity2->user_id->target_id, format_string('%entity_type: Updated user id can be read.', ['%entity_type' => $entity_type]));
-    $this->assertEqual($new_user2->name->value, $entity2->user_id->entity->name->value, format_string('%entity_type: Updated user name value can be read.', ['%entity_type' => $entity_type]));
+    $this->assertEqual($new_user2->id(), $entity2->user_id->target_id, new FormattableMarkup('%entity_type: Updated user id can be read.', ['%entity_type' => $entity_type]));
+    $this->assertEqual($new_user2->name->value, $entity2->user_id->entity->name->value, new FormattableMarkup('%entity_type: Updated user name value can be read.', ['%entity_type' => $entity_type]));
 
     // Test using isset(), empty() and unset().
     $entity->name->value = 'test unset';
     unset($entity->name->value);
-    $this->assertFalse(isset($entity->name->value), format_string('%entity_type: Name is not set.', ['%entity_type' => $entity_type]));
-    $this->assertFalse(isset($entity->name[0]->value), format_string('%entity_type: Name is not set.', ['%entity_type' => $entity_type]));
-    $this->assertTrue(empty($entity->name->value), format_string('%entity_type: Name is empty.', ['%entity_type' => $entity_type]));
-    $this->assertTrue(empty($entity->name[0]->value), format_string('%entity_type: Name is empty.', ['%entity_type' => $entity_type]));
+    $this->assertFalse(isset($entity->name->value), new FormattableMarkup('%entity_type: Name is not set.', ['%entity_type' => $entity_type]));
+    $this->assertFalse(isset($entity->name[0]->value), new FormattableMarkup('%entity_type: Name is not set.', ['%entity_type' => $entity_type]));
+    $this->assertTrue(empty($entity->name->value), new FormattableMarkup('%entity_type: Name is empty.', ['%entity_type' => $entity_type]));
+    $this->assertTrue(empty($entity->name[0]->value), new FormattableMarkup('%entity_type: Name is empty.', ['%entity_type' => $entity_type]));
 
     $entity->name->value = 'a value';
-    $this->assertTrue(isset($entity->name->value), format_string('%entity_type: Name is set.', ['%entity_type' => $entity_type]));
-    $this->assertTrue(isset($entity->name[0]->value), format_string('%entity_type: Name is set.', ['%entity_type' => $entity_type]));
-    $this->assertFalse(empty($entity->name->value), format_string('%entity_type: Name is not empty.', ['%entity_type' => $entity_type]));
-    $this->assertFalse(empty($entity->name[0]->value), format_string('%entity_type: Name is not empty.', ['%entity_type' => $entity_type]));
-    $this->assertTrue(isset($entity->name[0]), format_string('%entity_type: Name string item is set.', ['%entity_type' => $entity_type]));
-    $this->assertFalse(isset($entity->name[1]), format_string('%entity_type: Second name string item is not set as it does not exist', ['%entity_type' => $entity_type]));
-    $this->assertTrue(isset($entity->name), format_string('%entity_type: Name field is set.', ['%entity_type' => $entity_type]));
-    $this->assertFalse(isset($entity->nameInvalid), format_string('%entity_type: Not existing field is not set.', ['%entity_type' => $entity_type]));
+    $this->assertTrue(isset($entity->name->value), new FormattableMarkup('%entity_type: Name is set.', ['%entity_type' => $entity_type]));
+    $this->assertTrue(isset($entity->name[0]->value), new FormattableMarkup('%entity_type: Name is set.', ['%entity_type' => $entity_type]));
+    $this->assertFalse(empty($entity->name->value), new FormattableMarkup('%entity_type: Name is not empty.', ['%entity_type' => $entity_type]));
+    $this->assertFalse(empty($entity->name[0]->value), new FormattableMarkup('%entity_type: Name is not empty.', ['%entity_type' => $entity_type]));
+    $this->assertTrue(isset($entity->name[0]), new FormattableMarkup('%entity_type: Name string item is set.', ['%entity_type' => $entity_type]));
+    $this->assertFalse(isset($entity->name[1]), new FormattableMarkup('%entity_type: Second name string item is not set as it does not exist', ['%entity_type' => $entity_type]));
+    $this->assertTrue(isset($entity->name), new FormattableMarkup('%entity_type: Name field is set.', ['%entity_type' => $entity_type]));
+    $this->assertFalse(isset($entity->nameInvalid), new FormattableMarkup('%entity_type: Not existing field is not set.', ['%entity_type' => $entity_type]));
 
     unset($entity->name[0]);
-    $this->assertFalse(isset($entity->name[0]), format_string('%entity_type: Name field item is not set.', ['%entity_type' => $entity_type]));
-    $this->assertFalse(isset($entity->name[0]->value), format_string('%entity_type: Name is not set.', ['%entity_type' => $entity_type]));
-    $this->assertFalse(isset($entity->name->value), format_string('%entity_type: Name is not set.', ['%entity_type' => $entity_type]));
+    $this->assertFalse(isset($entity->name[0]), new FormattableMarkup('%entity_type: Name field item is not set.', ['%entity_type' => $entity_type]));
+    $this->assertFalse(isset($entity->name[0]->value), new FormattableMarkup('%entity_type: Name is not set.', ['%entity_type' => $entity_type]));
+    $this->assertFalse(isset($entity->name->value), new FormattableMarkup('%entity_type: Name is not set.', ['%entity_type' => $entity_type]));
 
     // Test emptying a field by assigning an empty value. NULL and array()
     // behave the same.
     foreach ([NULL, [], 'unset'] as $empty) {
       // Make sure a value is present
       $entity->name->value = 'a value';
-      $this->assertTrue(isset($entity->name->value), format_string('%entity_type: Name is set.', ['%entity_type' => $entity_type]));
+      $this->assertTrue(isset($entity->name->value), new FormattableMarkup('%entity_type: Name is set.', ['%entity_type' => $entity_type]));
       // Now, empty the field.
       if ($empty === 'unset') {
         unset($entity->name);
@@ -224,36 +225,36 @@ class EntityFieldTest extends EntityKernelTestBase {
       else {
         $entity->name = $empty;
       }
-      $this->assertTrue(isset($entity->name), format_string('%entity_type: Name field is set.', ['%entity_type' => $entity_type]));
-      $this->assertTrue($entity->name->isEmpty(), format_string('%entity_type: Name field is set.', ['%entity_type' => $entity_type]));
-      $this->assertIdentical(count($entity->name), 0, format_string('%entity_type: Name field contains no items.', ['%entity_type' => $entity_type]));
-      $this->assertIdentical($entity->name->getValue(), [], format_string('%entity_type: Name field value is an empty array.', ['%entity_type' => $entity_type]));
-      $this->assertFalse(isset($entity->name[0]), format_string('%entity_type: Name field item is not set.', ['%entity_type' => $entity_type]));
-      $this->assertFalse(isset($entity->name[0]->value), format_string('%entity_type: First name item value is not set.', ['%entity_type' => $entity_type]));
-      $this->assertFalse(isset($entity->name->value), format_string('%entity_type: Name value is not set.', ['%entity_type' => $entity_type]));
+      $this->assertTrue(isset($entity->name), new FormattableMarkup('%entity_type: Name field is set.', ['%entity_type' => $entity_type]));
+      $this->assertTrue($entity->name->isEmpty(), new FormattableMarkup('%entity_type: Name field is set.', ['%entity_type' => $entity_type]));
+      $this->assertIdentical(count($entity->name), 0, new FormattableMarkup('%entity_type: Name field contains no items.', ['%entity_type' => $entity_type]));
+      $this->assertIdentical($entity->name->getValue(), [], new FormattableMarkup('%entity_type: Name field value is an empty array.', ['%entity_type' => $entity_type]));
+      $this->assertFalse(isset($entity->name[0]), new FormattableMarkup('%entity_type: Name field item is not set.', ['%entity_type' => $entity_type]));
+      $this->assertFalse(isset($entity->name[0]->value), new FormattableMarkup('%entity_type: First name item value is not set.', ['%entity_type' => $entity_type]));
+      $this->assertFalse(isset($entity->name->value), new FormattableMarkup('%entity_type: Name value is not set.', ['%entity_type' => $entity_type]));
     }
 
     // Access the language field.
     $langcode_key = $this->entityTypeManager->getDefinition($entity_type)->getKey('langcode');
-    $this->assertEqual($langcode, $entity->{$langcode_key}->value, format_string('%entity_type: Language code can be read.', ['%entity_type' => $entity_type]));
-    $this->assertEqual(\Drupal::languageManager()->getLanguage($langcode), $entity->{$langcode_key}->language, format_string('%entity_type: Language object can be read.', ['%entity_type' => $entity_type]));
+    $this->assertEqual($langcode, $entity->{$langcode_key}->value, new FormattableMarkup('%entity_type: Language code can be read.', ['%entity_type' => $entity_type]));
+    $this->assertEqual(\Drupal::languageManager()->getLanguage($langcode), $entity->{$langcode_key}->language, new FormattableMarkup('%entity_type: Language object can be read.', ['%entity_type' => $entity_type]));
 
     // Change the language by code.
     $entity->{$langcode_key}->value = \Drupal::languageManager()->getDefaultLanguage()->getId();
-    $this->assertEqual(\Drupal::languageManager()->getDefaultLanguage()->getId(), $entity->{$langcode_key}->value, format_string('%entity_type: Language code can be read.', ['%entity_type' => $entity_type]));
-    $this->assertEqual(\Drupal::languageManager()->getDefaultLanguage(), $entity->{$langcode_key}->language, format_string('%entity_type: Language object can be read.', ['%entity_type' => $entity_type]));
+    $this->assertEqual(\Drupal::languageManager()->getDefaultLanguage()->getId(), $entity->{$langcode_key}->value, new FormattableMarkup('%entity_type: Language code can be read.', ['%entity_type' => $entity_type]));
+    $this->assertEqual(\Drupal::languageManager()->getDefaultLanguage(), $entity->{$langcode_key}->language, new FormattableMarkup('%entity_type: Language object can be read.', ['%entity_type' => $entity_type]));
 
     // Revert language by code then try setting it by language object.
     $entity->{$langcode_key}->value = $langcode;
     $entity->{$langcode_key}->language = \Drupal::languageManager()->getDefaultLanguage();
-    $this->assertEqual(\Drupal::languageManager()->getDefaultLanguage()->getId(), $entity->{$langcode_key}->value, format_string('%entity_type: Language code can be read.', ['%entity_type' => $entity_type]));
-    $this->assertEqual(\Drupal::languageManager()->getDefaultLanguage(), $entity->{$langcode_key}->language, format_string('%entity_type: Language object can be read.', ['%entity_type' => $entity_type]));
+    $this->assertEqual(\Drupal::languageManager()->getDefaultLanguage()->getId(), $entity->{$langcode_key}->value, new FormattableMarkup('%entity_type: Language code can be read.', ['%entity_type' => $entity_type]));
+    $this->assertEqual(\Drupal::languageManager()->getDefaultLanguage(), $entity->{$langcode_key}->language, new FormattableMarkup('%entity_type: Language object can be read.', ['%entity_type' => $entity_type]));
 
     // Access the text field and test updating.
-    $this->assertEqual($entity->field_test_text->value, $this->entityFieldText, format_string('%entity_type: Text field can be read.', ['%entity_type' => $entity_type]));
+    $this->assertEqual($entity->field_test_text->value, $this->entityFieldText, new FormattableMarkup('%entity_type: Text field can be read.', ['%entity_type' => $entity_type]));
     $new_text = $this->randomMachineName();
     $entity->field_test_text->value = $new_text;
-    $this->assertEqual($entity->field_test_text->value, $new_text, format_string('%entity_type: Updated text field can be read.', ['%entity_type' => $entity_type]));
+    $this->assertEqual($entity->field_test_text->value, $new_text, new FormattableMarkup('%entity_type: Updated text field can be read.', ['%entity_type' => $entity_type]));
 
     // Test creating the entity by passing in plain values.
     $this->entityName = $this->randomMachineName();
@@ -270,70 +271,70 @@ class EntityFieldTest extends EntityKernelTestBase {
         'user_id' => $user_item,
         'field_test_text' => $text_item,
       ]);
-    $this->assertEqual($this->entityName, $entity->name->value, format_string('%entity_type: Name value can be read.', ['%entity_type' => $entity_type]));
-    $this->assertEqual($this->entityUser->id(), $entity->user_id->target_id, format_string('%entity_type: User id can be read.', ['%entity_type' => $entity_type]));
-    $this->assertEqual($this->entityUser->getAccountName(), $entity->user_id->entity->name->value, format_string('%entity_type: User name can be read.', ['%entity_type' => $entity_type]));
-    $this->assertEqual($this->entityFieldText, $entity->field_test_text->value, format_string('%entity_type: Text field can be read.', ['%entity_type' => $entity_type]));
+    $this->assertEqual($this->entityName, $entity->name->value, new FormattableMarkup('%entity_type: Name value can be read.', ['%entity_type' => $entity_type]));
+    $this->assertEqual($this->entityUser->id(), $entity->user_id->target_id, new FormattableMarkup('%entity_type: User id can be read.', ['%entity_type' => $entity_type]));
+    $this->assertEqual($this->entityUser->getAccountName(), $entity->user_id->entity->name->value, new FormattableMarkup('%entity_type: User name can be read.', ['%entity_type' => $entity_type]));
+    $this->assertEqual($this->entityFieldText, $entity->field_test_text->value, new FormattableMarkup('%entity_type: Text field can be read.', ['%entity_type' => $entity_type]));
 
     // Tests copying field values by assigning the TypedData objects.
     $entity2 = $this->createTestEntity($entity_type);
     $entity2->name = $entity->name;
     $entity2->user_id = $entity->user_id;
     $entity2->field_test_text = $entity->field_test_text;
-    $this->assertFalse($entity->name === $entity2->name, format_string('%entity_type: Copying properties results in a different field object.', ['%entity_type' => $entity_type]));
-    $this->assertEqual($entity->name->value, $entity2->name->value, format_string('%entity_type: Name field copied.', ['%entity_type' => $entity_type]));
-    $this->assertEqual($entity->user_id->target_id, $entity2->user_id->target_id, format_string('%entity_type: User id field copied.', ['%entity_type' => $entity_type]));
-    $this->assertEqual($entity->field_test_text->value, $entity2->field_test_text->value, format_string('%entity_type: Text field copied.', ['%entity_type' => $entity_type]));
+    $this->assertFalse($entity->name === $entity2->name, new FormattableMarkup('%entity_type: Copying properties results in a different field object.', ['%entity_type' => $entity_type]));
+    $this->assertEqual($entity->name->value, $entity2->name->value, new FormattableMarkup('%entity_type: Name field copied.', ['%entity_type' => $entity_type]));
+    $this->assertEqual($entity->user_id->target_id, $entity2->user_id->target_id, new FormattableMarkup('%entity_type: User id field copied.', ['%entity_type' => $entity_type]));
+    $this->assertEqual($entity->field_test_text->value, $entity2->field_test_text->value, new FormattableMarkup('%entity_type: Text field copied.', ['%entity_type' => $entity_type]));
 
     // Tests that assigning TypedData objects to non-field properties keeps the
     // assigned value as is.
     $entity2 = $this->createTestEntity($entity_type);
     $entity2->_not_a_field = $entity->name;
-    $this->assertTrue($entity2->_not_a_field === $entity->name, format_string('%entity_type: Typed data objects can be copied to non-field properties as is.', ['%entity_type' => $entity_type]));
+    $this->assertTrue($entity2->_not_a_field === $entity->name, new FormattableMarkup('%entity_type: Typed data objects can be copied to non-field properties as is.', ['%entity_type' => $entity_type]));
 
     // Tests adding a value to a field item list.
     $entity->name[] = 'Another name';
-    $this->assertEqual($entity->name[1]->value, 'Another name', format_string('%entity_type: List item added via [] and the first property.', ['%entity_type' => $entity_type]));
+    $this->assertEqual($entity->name[1]->value, 'Another name', new FormattableMarkup('%entity_type: List item added via [] and the first property.', ['%entity_type' => $entity_type]));
     $entity->name[] = ['value' => 'Third name'];
-    $this->assertEqual($entity->name[2]->value, 'Third name', format_string('%entity_type: List item added via [] and an array of properties.', ['%entity_type' => $entity_type]));
+    $this->assertEqual($entity->name[2]->value, 'Third name', new FormattableMarkup('%entity_type: List item added via [] and an array of properties.', ['%entity_type' => $entity_type]));
     $entity->name[3] = ['value' => 'Fourth name'];
-    $this->assertEqual($entity->name[3]->value, 'Fourth name', format_string('%entity_type: List item added via offset and an array of properties.', ['%entity_type' => $entity_type]));
+    $this->assertEqual($entity->name[3]->value, 'Fourth name', new FormattableMarkup('%entity_type: List item added via offset and an array of properties.', ['%entity_type' => $entity_type]));
     unset($entity->name[3]);
 
     // Test removing and empty-ing list items.
-    $this->assertEqual(count($entity->name), 3, format_string('%entity_type: List has 3 items.', ['%entity_type' => $entity_type]));
+    $this->assertEqual(count($entity->name), 3, new FormattableMarkup('%entity_type: List has 3 items.', ['%entity_type' => $entity_type]));
     unset($entity->name[1]);
-    $this->assertEqual(count($entity->name), 2, format_string('%entity_type: Second list item has been removed.', ['%entity_type' => $entity_type]));
-    $this->assertEqual($entity->name[1]->value, 'Third name', format_string('%entity_type: The subsequent items have been shifted up.', ['%entity_type' => $entity_type]));
-    $this->assertEqual($entity->name[1]->getName(), 1, format_string('%entity_type: The items names have been updated to their new delta.', ['%entity_type' => $entity_type]));
+    $this->assertEqual(count($entity->name), 2, new FormattableMarkup('%entity_type: Second list item has been removed.', ['%entity_type' => $entity_type]));
+    $this->assertEqual($entity->name[1]->value, 'Third name', new FormattableMarkup('%entity_type: The subsequent items have been shifted up.', ['%entity_type' => $entity_type]));
+    $this->assertEqual($entity->name[1]->getName(), 1, new FormattableMarkup('%entity_type: The items names have been updated to their new delta.', ['%entity_type' => $entity_type]));
     $entity->name[1] = NULL;
-    $this->assertEqual(count($entity->name), 2, format_string('%entity_type: Assigning NULL does not reduce array count.', ['%entity_type' => $entity_type]));
-    $this->assertTrue($entity->name[1]->isEmpty(), format_string('%entity_type: Assigning NULL empties the item.', ['%entity_type' => $entity_type]));
+    $this->assertEqual(count($entity->name), 2, new FormattableMarkup('%entity_type: Assigning NULL does not reduce array count.', ['%entity_type' => $entity_type]));
+    $this->assertTrue($entity->name[1]->isEmpty(), new FormattableMarkup('%entity_type: Assigning NULL empties the item.', ['%entity_type' => $entity_type]));
 
     // Test using isEmpty().
     unset($entity->name[1]);
-    $this->assertFalse($entity->name[0]->isEmpty(), format_string('%entity_type: Name item is not empty.', ['%entity_type' => $entity_type]));
+    $this->assertFalse($entity->name[0]->isEmpty(), new FormattableMarkup('%entity_type: Name item is not empty.', ['%entity_type' => $entity_type]));
     $entity->name->value = NULL;
-    $this->assertTrue($entity->name[0]->isEmpty(), format_string('%entity_type: Name item is empty.', ['%entity_type' => $entity_type]));
-    $this->assertTrue($entity->name->isEmpty(), format_string('%entity_type: Name field is empty.', ['%entity_type' => $entity_type]));
-    $this->assertEqual(count($entity->name), 1, format_string('%entity_type: Empty item is considered when counting.', ['%entity_type' => $entity_type]));
-    $this->assertEqual(count(iterator_to_array($entity->name->getIterator())), count($entity->name), format_string('%entity_type: Count matches iterator count.', ['%entity_type' => $entity_type]));
-    $this->assertTrue($entity->name->getValue() === [0 => ['value' => NULL]], format_string('%entity_type: Name field value contains a NULL value.', ['%entity_type' => $entity_type]));
+    $this->assertTrue($entity->name[0]->isEmpty(), new FormattableMarkup('%entity_type: Name item is empty.', ['%entity_type' => $entity_type]));
+    $this->assertTrue($entity->name->isEmpty(), new FormattableMarkup('%entity_type: Name field is empty.', ['%entity_type' => $entity_type]));
+    $this->assertEqual(count($entity->name), 1, new FormattableMarkup('%entity_type: Empty item is considered when counting.', ['%entity_type' => $entity_type]));
+    $this->assertEqual(count(iterator_to_array($entity->name->getIterator())), count($entity->name), new FormattableMarkup('%entity_type: Count matches iterator count.', ['%entity_type' => $entity_type]));
+    $this->assertTrue($entity->name->getValue() === [0 => ['value' => NULL]], new FormattableMarkup('%entity_type: Name field value contains a NULL value.', ['%entity_type' => $entity_type]));
 
     // Test using filterEmptyItems().
     $entity->name = [NULL, 'foo'];
-    $this->assertEqual(count($entity->name), 2, format_string('%entity_type: List has 2 items.', ['%entity_type' => $entity_type]));
+    $this->assertEqual(count($entity->name), 2, new FormattableMarkup('%entity_type: List has 2 items.', ['%entity_type' => $entity_type]));
     $entity->name->filterEmptyItems();
-    $this->assertEqual(count($entity->name), 1, format_string('%entity_type: The empty item was removed.', ['%entity_type' => $entity_type]));
-    $this->assertEqual($entity->name[0]->value, 'foo', format_string('%entity_type: The items were renumbered.', ['%entity_type' => $entity_type]));
-    $this->assertEqual($entity->name[0]->getName(), 0, format_string('%entity_type: The deltas were updated in the items.', ['%entity_type' => $entity_type]));
+    $this->assertEqual(count($entity->name), 1, new FormattableMarkup('%entity_type: The empty item was removed.', ['%entity_type' => $entity_type]));
+    $this->assertEqual($entity->name[0]->value, 'foo', new FormattableMarkup('%entity_type: The items were renumbered.', ['%entity_type' => $entity_type]));
+    $this->assertEqual($entity->name[0]->getName(), 0, new FormattableMarkup('%entity_type: The deltas were updated in the items.', ['%entity_type' => $entity_type]));
 
     // Test get and set field values.
     $entity->name = 'foo';
-    $this->assertEqual($entity->name[0]->toArray(), ['value' => 'foo'], format_string('%entity_type: Field value has been retrieved via toArray()', ['%entity_type' => $entity_type]));
+    $this->assertEqual($entity->name[0]->toArray(), ['value' => 'foo'], new FormattableMarkup('%entity_type: Field value has been retrieved via toArray()', ['%entity_type' => $entity_type]));
 
     $values = $entity->toArray();
-    $this->assertEqual($values['name'], [0 => ['value' => 'foo']], format_string('%entity_type: Field value has been retrieved via toArray() from an entity.', ['%entity_type' => $entity_type]));
+    $this->assertEqual($values['name'], [0 => ['value' => 'foo']], new FormattableMarkup('%entity_type: Field value has been retrieved via toArray() from an entity.', ['%entity_type' => $entity_type]));
 
     // Make sure the user id can be set to zero.
     $user_item[0]['target_id'] = 0;
@@ -344,8 +345,8 @@ class EntityFieldTest extends EntityKernelTestBase {
         'user_id' => $user_item,
         'field_test_text' => $text_item,
       ]);
-    $this->assertNotNull($entity->user_id->target_id, format_string('%entity_type: User id is not NULL', ['%entity_type' => $entity_type]));
-    $this->assertIdentical($entity->user_id->target_id, 0, format_string('%entity_type: User id has been set to 0', ['%entity_type' => $entity_type]));
+    $this->assertNotNull($entity->user_id->target_id, new FormattableMarkup('%entity_type: User id is not NULL', ['%entity_type' => $entity_type]));
+    $this->assertIdentical($entity->user_id->target_id, 0, new FormattableMarkup('%entity_type: User id has been set to 0', ['%entity_type' => $entity_type]));
 
     // Test setting the ID with the value only.
     $entity = $this->container->get('entity_type.manager')
@@ -355,8 +356,8 @@ class EntityFieldTest extends EntityKernelTestBase {
         'user_id' => 0,
         'field_test_text' => $text_item,
       ]);
-    $this->assertNotNull($entity->user_id->target_id, format_string('%entity_type: User id is not NULL', ['%entity_type' => $entity_type]));
-    $this->assertIdentical($entity->user_id->target_id, 0, format_string('%entity_type: User id has been set to 0', ['%entity_type' => $entity_type]));
+    $this->assertNotNull($entity->user_id->target_id, new FormattableMarkup('%entity_type: User id is not NULL', ['%entity_type' => $entity_type]));
+    $this->assertIdentical($entity->user_id->target_id, 0, new FormattableMarkup('%entity_type: User id has been set to 0', ['%entity_type' => $entity_type]));
   }
 
   /**
@@ -379,21 +380,21 @@ class EntityFieldTest extends EntityKernelTestBase {
     $langcode_key = $this->entityTypeManager->getDefinition($entity_type)->getKey('langcode');
     $entity = $this->createTestEntity($entity_type);
     $entity->save();
-    $this->assertTrue((bool) $entity->id(), format_string('%entity_type: Entity has received an id.', ['%entity_type' => $entity_type]));
+    $this->assertTrue((bool) $entity->id(), new FormattableMarkup('%entity_type: Entity has received an id.', ['%entity_type' => $entity_type]));
 
     $entity = $this->container->get('entity_type.manager')
       ->getStorage($entity_type)
       ->load($entity->id());
-    $this->assertTrue((bool) $entity->id(), format_string('%entity_type: Entity loaded.', ['%entity_type' => $entity_type]));
+    $this->assertTrue((bool) $entity->id(), new FormattableMarkup('%entity_type: Entity loaded.', ['%entity_type' => $entity_type]));
 
     // Access the name field.
-    $this->assertEqual(1, $entity->id->value, format_string('%entity_type: ID value can be read.', ['%entity_type' => $entity_type]));
-    $this->assertTrue(is_string($entity->uuid->value), format_string('%entity_type: UUID value can be read.', ['%entity_type' => $entity_type]));
-    $this->assertEqual('en', $entity->{$langcode_key}->value, format_string('%entity_type: Language code can be read.', ['%entity_type' => $entity_type]));
-    $this->assertEqual(\Drupal::languageManager()->getLanguage('en'), $entity->{$langcode_key}->language, format_string('%entity_type: Language object can be read.', ['%entity_type' => $entity_type]));
-    $this->assertEqual($this->entityUser->id(), $entity->user_id->target_id, format_string('%entity_type: User id can be read.', ['%entity_type' => $entity_type]));
-    $this->assertEqual($this->entityUser->getAccountName(), $entity->user_id->entity->name->value, format_string('%entity_type: User name can be read.', ['%entity_type' => $entity_type]));
-    $this->assertEqual($this->entityFieldText, $entity->field_test_text->value, format_string('%entity_type: Text field can be read.', ['%entity_type' => $entity_type]));
+    $this->assertEqual(1, $entity->id->value, new FormattableMarkup('%entity_type: ID value can be read.', ['%entity_type' => $entity_type]));
+    $this->assertTrue(is_string($entity->uuid->value), new FormattableMarkup('%entity_type: UUID value can be read.', ['%entity_type' => $entity_type]));
+    $this->assertEqual('en', $entity->{$langcode_key}->value, new FormattableMarkup('%entity_type: Language code can be read.', ['%entity_type' => $entity_type]));
+    $this->assertEqual(\Drupal::languageManager()->getLanguage('en'), $entity->{$langcode_key}->language, new FormattableMarkup('%entity_type: Language object can be read.', ['%entity_type' => $entity_type]));
+    $this->assertEqual($this->entityUser->id(), $entity->user_id->target_id, new FormattableMarkup('%entity_type: User id can be read.', ['%entity_type' => $entity_type]));
+    $this->assertEqual($this->entityUser->getAccountName(), $entity->user_id->entity->name->value, new FormattableMarkup('%entity_type: User name can be read.', ['%entity_type' => $entity_type]));
+    $this->assertEqual($this->entityFieldText, $entity->field_test_text->value, new FormattableMarkup('%entity_type: Text field can be read.', ['%entity_type' => $entity_type]));
   }
 
   /**
@@ -535,8 +536,8 @@ class EntityFieldTest extends EntityKernelTestBase {
     }
 
     $fields = $entity->getFields();
-    $this->assertEqual(array_keys($fields), array_keys($entity->getTypedData()->getDataDefinition()->getPropertyDefinitions()), format_string('%entity_type: All fields returned.', ['%entity_type' => $entity_type]));
-    $this->assertEqual($fields, iterator_to_array($entity->getIterator()), format_string('%entity_type: Entity iterator iterates over all fields.', ['%entity_type' => $entity_type]));
+    $this->assertEqual(array_keys($fields), array_keys($entity->getTypedData()->getDataDefinition()->getPropertyDefinitions()), new FormattableMarkup('%entity_type: All fields returned.', ['%entity_type' => $entity_type]));
+    $this->assertEqual($fields, iterator_to_array($entity->getIterator()), new FormattableMarkup('%entity_type: Entity iterator iterates over all fields.', ['%entity_type' => $entity_type]));
   }
 
   /**
@@ -584,7 +585,7 @@ class EntityFieldTest extends EntityKernelTestBase {
 
     asort($strings);
     asort($target_strings);
-    $this->assertEqual(array_values($strings), array_values($target_strings), format_string('%entity_type: All contained strings found.', ['%entity_type' => $entity_type]));
+    $this->assertEqual(array_values($strings), array_values($target_strings), new FormattableMarkup('%entity_type: All contained strings found.', ['%entity_type' => $entity_type]));
   }
 
   /**
@@ -910,14 +911,14 @@ class EntityFieldTest extends EntityKernelTestBase {
     $entity->field_test_text->format = filter_default_format();
 
     $target = "<p>The &lt;strong&gt;text&lt;/strong&gt; text to filter.</p>\n";
-    $this->assertEqual($entity->field_test_text->processed, $target, format_string('%entity_type: Text is processed with the default filter.', ['%entity_type' => $entity_type]));
+    $this->assertEqual($entity->field_test_text->processed, $target, new FormattableMarkup('%entity_type: Text is processed with the default filter.', ['%entity_type' => $entity_type]));
 
     // Save and load entity and make sure it still works.
     $entity->save();
     $entity = $this->container->get('entity_type.manager')
       ->getStorage($entity_type)
       ->load($entity->id());
-    $this->assertEqual($entity->field_test_text->processed, $target, format_string('%entity_type: Text is processed with the default filter.', ['%entity_type' => $entity_type]));
+    $this->assertEqual($entity->field_test_text->processed, $target, new FormattableMarkup('%entity_type: Text is processed with the default filter.', ['%entity_type' => $entity_type]));
   }
 
   /**

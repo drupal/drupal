@@ -133,10 +133,10 @@ class ContentTranslationWorkflowsTest extends ContentTranslationTestBase {
 
       foreach ($ops as $op => $label) {
         if ($op != $current_op) {
-          $this->assertNoLink($label, format_string('No %op link found.', ['%op' => $label]));
+          $this->assertNoLink($label, new FormattableMarkup('No %op link found.', ['%op' => $label]));
         }
         else {
-          $this->assertLink($label, 0, format_string('%op link found.', ['%op' => $label]));
+          $this->assertLink($label, 0, new FormattableMarkup('%op link found.', ['%op' => $label]));
         }
       }
     }

@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\aggregator\Functional;
 
+use Drupal\Component\Render\FormattableMarkup;
 use Drupal\aggregator\FeedStorageInterface;
 use Drupal\Core\Url;
 use Drupal\aggregator\Entity\Feed;
@@ -32,7 +33,7 @@ class FeedParserTest extends AggregatorTestBase {
     $feed = $this->createFeed($this->getRSS091Sample());
     $feed->refreshItems();
     $this->drupalGet('aggregator/sources/' . $feed->id());
-    $this->assertResponse(200, format_string('Feed %name exists.', ['%name' => $feed->label()]));
+    $this->assertResponse(200, new FormattableMarkup('Feed %name exists.', ['%name' => $feed->label()]));
     $this->assertText('First example feed item title');
     $this->assertLinkByHref('http://example.com/example-turns-one');
     $this->assertText('First example feed item description.');
@@ -55,7 +56,7 @@ class FeedParserTest extends AggregatorTestBase {
     $feed = $this->createFeed($this->getAtomSample());
     $feed->refreshItems();
     $this->drupalGet('aggregator/sources/' . $feed->id());
-    $this->assertResponse(200, format_string('Feed %name exists.', ['%name' => $feed->label()]));
+    $this->assertResponse(200, new FormattableMarkup('Feed %name exists.', ['%name' => $feed->label()]));
     $this->assertText('Atom-Powered Robots Run Amok');
     $this->assertLinkByHref('http://example.org/2003/12/13/atom03');
     $this->assertText('Some text.');
@@ -79,7 +80,7 @@ class FeedParserTest extends AggregatorTestBase {
     $feed = $this->createFeed($this->getHtmlEntitiesSample());
     $feed->refreshItems();
     $this->drupalGet('aggregator/sources/' . $feed->id());
-    $this->assertResponse(200, format_string('Feed %name exists.', ['%name' => $feed->label()]));
+    $this->assertResponse(200, new FormattableMarkup('Feed %name exists.', ['%name' => $feed->label()]));
     $this->assertRaw("Quote&quot; Amp&amp;");
   }
 

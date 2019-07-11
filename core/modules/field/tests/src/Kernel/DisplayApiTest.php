@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\field\Kernel;
 
+use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Entity\Entity\EntityViewMode;
 use Drupal\entity_test\Entity\EntityTest;
 use Drupal\field\Entity\FieldConfig;
@@ -135,7 +136,7 @@ class DisplayApiTest extends FieldKernelTestBase {
     $setting = $settings['test_formatter_setting'];
     $this->assertText($this->label, 'Label was displayed.');
     foreach ($this->values as $delta => $value) {
-      $this->assertText($setting . '|' . $value['value'], format_string('Value @delta was displayed with expected setting.', ['@delta' => $delta]));
+      $this->assertText($setting . '|' . $value['value'], new FormattableMarkup('Value @delta was displayed with expected setting.', ['@delta' => $delta]));
     }
 
     // Display settings: Check hidden field.
@@ -194,7 +195,7 @@ class DisplayApiTest extends FieldKernelTestBase {
     $this->assertNoText($this->label, 'Label was not displayed.');
     $this->assertNoText('field_test_entity_display_build_alter', 'Alter not fired.');
     foreach ($this->values as $delta => $value) {
-      $this->assertText($setting . '|' . $value['value'] . '|' . ($value['value'] + 1), format_string('Value @delta was displayed with expected setting.', ['@delta' => $delta]));
+      $this->assertText($setting . '|' . $value['value'] . '|' . ($value['value'] + 1), new FormattableMarkup('Value @delta was displayed with expected setting.', ['@delta' => $delta]));
     }
 
     // View mode: check that display settings specified in the display object
@@ -204,7 +205,7 @@ class DisplayApiTest extends FieldKernelTestBase {
     $setting = $this->displayOptions['teaser']['settings']['test_formatter_setting'];
     $this->assertText($this->label, 'Label was displayed.');
     foreach ($this->values as $delta => $value) {
-      $this->assertText($setting . '|' . $value['value'], format_string('Value @delta was displayed with expected setting.', ['@delta' => $delta]));
+      $this->assertText($setting . '|' . $value['value'], new FormattableMarkup('Value @delta was displayed with expected setting.', ['@delta' => $delta]));
     }
 
     // Unknown view mode: check that display settings for 'default' view mode
@@ -214,7 +215,7 @@ class DisplayApiTest extends FieldKernelTestBase {
     $setting = $this->displayOptions['default']['settings']['test_formatter_setting'];
     $this->assertText($this->label, 'Label was displayed.');
     foreach ($this->values as $delta => $value) {
-      $this->assertText($setting . '|' . $value['value'], format_string('Value @delta was displayed with expected setting.', ['@delta' => $delta]));
+      $this->assertText($setting . '|' . $value['value'], new FormattableMarkup('Value @delta was displayed with expected setting.', ['@delta' => $delta]));
     }
   }
 
@@ -229,7 +230,7 @@ class DisplayApiTest extends FieldKernelTestBase {
       $item = $this->entity->{$this->fieldName}[$delta];
       $build = $item->view();
       $this->render($build);
-      $this->assertText($setting . '|' . $value['value'], format_string('Value @delta was displayed with expected setting.', ['@delta' => $delta]));
+      $this->assertText($setting . '|' . $value['value'], new FormattableMarkup('Value @delta was displayed with expected setting.', ['@delta' => $delta]));
     }
 
     // Check that explicit display settings are used.
@@ -244,7 +245,7 @@ class DisplayApiTest extends FieldKernelTestBase {
       $item = $this->entity->{$this->fieldName}[$delta];
       $build = $item->view($display);
       $this->render($build);
-      $this->assertText($setting . '|0:' . $value['value'], format_string('Value @delta was displayed with expected setting.', ['@delta' => $delta]));
+      $this->assertText($setting . '|0:' . $value['value'], new FormattableMarkup('Value @delta was displayed with expected setting.', ['@delta' => $delta]));
     }
 
     // Check that prepare_view steps are invoked.
@@ -259,7 +260,7 @@ class DisplayApiTest extends FieldKernelTestBase {
       $item = $this->entity->{$this->fieldName}[$delta];
       $build = $item->view($display);
       $this->render($build);
-      $this->assertText($setting . '|' . $value['value'] . '|' . ($value['value'] + 1), format_string('Value @delta was displayed with expected setting.', ['@delta' => $delta]));
+      $this->assertText($setting . '|' . $value['value'] . '|' . ($value['value'] + 1), new FormattableMarkup('Value @delta was displayed with expected setting.', ['@delta' => $delta]));
     }
 
     // View mode: check that display settings specified in the field are used.
@@ -268,7 +269,7 @@ class DisplayApiTest extends FieldKernelTestBase {
       $item = $this->entity->{$this->fieldName}[$delta];
       $build = $item->view('teaser');
       $this->render($build);
-      $this->assertText($setting . '|' . $value['value'], format_string('Value @delta was displayed with expected setting.', ['@delta' => $delta]));
+      $this->assertText($setting . '|' . $value['value'], new FormattableMarkup('Value @delta was displayed with expected setting.', ['@delta' => $delta]));
     }
 
     // Unknown view mode: check that display settings for 'default' view mode
@@ -278,7 +279,7 @@ class DisplayApiTest extends FieldKernelTestBase {
       $item = $this->entity->{$this->fieldName}[$delta];
       $build = $item->view('unknown_view_mode');
       $this->render($build);
-      $this->assertText($setting . '|' . $value['value'], format_string('Value @delta was displayed with expected setting.', ['@delta' => $delta]));
+      $this->assertText($setting . '|' . $value['value'], new FormattableMarkup('Value @delta was displayed with expected setting.', ['@delta' => $delta]));
     }
   }
 

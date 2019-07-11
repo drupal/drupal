@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\views_ui\Functional;
 
+use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Url;
 use Drupal\user\Entity\Role;
 use Drupal\user\RoleInterface;
@@ -235,7 +236,7 @@ class DefaultViewsTest extends UITestBase {
         break;
       }
     }
-    $this->assertTrue(isset($index), format_string('Link to "@label" containing @part found.', ['@label' => $label, '@part' => $unique_href_part]));
+    $this->assertTrue(isset($index), new FormattableMarkup('Link to "@label" containing @part found.', ['@label' => $label, '@part' => $unique_href_part]));
     if (isset($index)) {
       return $this->clickLink((string) $label, $index);
     }

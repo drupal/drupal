@@ -434,7 +434,7 @@ EOD;
       }
       \Drupal::service('config.installer')->installDefaultConfig('module', $module);
     }
-    $this->pass(format_string('Installed default config: %modules.', [
+    $this->pass(new FormattableMarkup('Installed default config: %modules.', [
       '%modules' => implode(', ', $modules),
     ]));
   }
@@ -476,7 +476,7 @@ EOD;
       }
       $this->container->get('database')->schema()->createTable($table, $schema);
     }
-    $this->pass(format_string('Installed %module tables: %tables.', [
+    $this->pass(new FormattableMarkup('Installed %module tables: %tables.', [
       '%tables' => '{' . implode('}, {', $tables) . '}',
       '%module' => $module,
     ]));
@@ -566,7 +566,7 @@ EOD;
     // Note that the kernel has rebuilt the container; this $module_handler is
     // no longer the $module_handler instance from above.
     $this->container->get('module_handler')->reload();
-    $this->pass(format_string('Enabled modules: %modules.', [
+    $this->pass(new FormattableMarkup('Enabled modules: %modules.', [
       '%modules' => implode(', ', $modules),
     ]));
   }
@@ -601,7 +601,7 @@ EOD;
     // no longer the $module_handler instance from above.
     $module_handler = $this->container->get('module_handler');
     $module_handler->reload();
-    $this->pass(format_string('Disabled modules: %modules.', [
+    $this->pass(new FormattableMarkup('Disabled modules: %modules.', [
       '%modules' => implode(', ', $modules),
     ]));
   }

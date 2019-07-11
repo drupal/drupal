@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\block\Functional\Views;
 
+use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Component\Serialization\Json;
 use Drupal\Component\Utility\Crypt;
 use Drupal\Core\Site\Settings;
@@ -366,8 +367,8 @@ class DisplayBlockTest extends ViewTestBase {
     $cached_id = 'block:block=' . $cached_block->id() . ':langcode=en|entity.view.edit_form:view=test_view_block:location=block&name=test_view_block&display_id=block_1&langcode=en';
     $cached_id_token = Crypt::hmacBase64($cached_id, Settings::getHashSalt() . $this->container->get('private_key')->get());
     // @see \Drupal\contextual\Tests\ContextualDynamicContextTest:assertContextualLinkPlaceHolder()
-    $this->assertRaw('<div' . new Attribute(['data-contextual-id' => $id, 'data-contextual-token' => $id_token]) . '></div>', format_string('Contextual link placeholder with id @id exists.', ['@id' => $id]));
-    $this->assertRaw('<div' . new Attribute(['data-contextual-id' => $cached_id, 'data-contextual-token' => $cached_id_token]) . '></div>', format_string('Contextual link placeholder with id @id exists.', ['@id' => $cached_id]));
+    $this->assertRaw('<div' . new Attribute(['data-contextual-id' => $id, 'data-contextual-token' => $id_token]) . '></div>', new FormattableMarkup('Contextual link placeholder with id @id exists.', ['@id' => $id]));
+    $this->assertRaw('<div' . new Attribute(['data-contextual-id' => $cached_id, 'data-contextual-token' => $cached_id_token]) . '></div>', new FormattableMarkup('Contextual link placeholder with id @id exists.', ['@id' => $cached_id]));
 
     // Get server-rendered contextual links.
     // @see \Drupal\contextual\Tests\ContextualDynamicContextTest:renderContextualLinks()

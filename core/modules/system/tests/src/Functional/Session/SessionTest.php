@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\system\Functional\Session;
 
+use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Database\Database;
 use Drupal\Tests\BrowserTestBase;
 
@@ -65,7 +66,7 @@ class SessionTest extends BrowserTestBase {
     ];
     $this->drupalPostForm('user/login', $edit, t('Log in'));
     $this->drupalGet('user');
-    $pass = $this->assertText($user->getAccountName(), format_string('Found name: %name', ['%name' => $user->getAccountName()]), 'User login');
+    $pass = $this->assertText($user->getAccountName(), new FormattableMarkup('Found name: %name', ['%name' => $user->getAccountName()]), 'User login');
     $this->_logged_in = $pass;
 
     $this->drupalGet('session-test/id');

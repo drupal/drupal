@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\file\Functional;
 
+use Drupal\Component\Render\FormattableMarkup;
 use Drupal\comment\Entity\Comment;
 use Drupal\comment\Tests\CommentTestTrait;
 use Drupal\Component\Serialization\Json;
@@ -160,7 +161,7 @@ class FileFieldWidgetTest extends FileFieldTestBase {
         // Ensure we have the expected number of Remove buttons, and that they
         // are numbered sequentially.
         $buttons = $this->xpath('//input[@type="submit" and @value="Remove"]');
-        $this->assertTrue(is_array($buttons) && count($buttons) === $num_expected_remove_buttons, format_string('There are %n "Remove" buttons displayed.', ['%n' => $num_expected_remove_buttons]));
+        $this->assertTrue(is_array($buttons) && count($buttons) === $num_expected_remove_buttons, new FormattableMarkup('There are %n "Remove" buttons displayed.', ['%n' => $num_expected_remove_buttons]));
         foreach ($buttons as $i => $button) {
           $key = $i >= $remaining ? $i - $remaining : $i;
           $check_field_name = $field_name2;

@@ -48,7 +48,7 @@ class TokenReplaceKernelTest extends TokenReplaceKernelTestBase {
       $input = $test['prefix'] . '[site:name]' . $test['suffix'];
       $expected = $test['prefix'] . 'Drupal' . $test['suffix'];
       $output = $this->tokenService->replace($input, [], ['langcode' => $this->interfaceLanguage->getId()]);
-      $this->assertTrue($output == $expected, format_string('Token recognized in string %string', ['%string' => $input]));
+      $this->assertTrue($output == $expected, new FormattableMarkup('Token recognized in string %string', ['%string' => $input]));
     }
 
     // Test token replacement when the string contains no tokens.
@@ -150,7 +150,7 @@ class TokenReplaceKernelTest extends TokenReplaceKernelTestBase {
 
     foreach ($tests as $input => $expected) {
       $output = $this->tokenService->replace($input, ['date' => $date], ['langcode' => $this->interfaceLanguage->getId()]);
-      $this->assertEqual($output, $expected, format_string('Date token %token replaced.', ['%token' => $input]));
+      $this->assertEqual($output, $expected, new FormattableMarkup('Date token %token replaced.', ['%token' => $input]));
     }
   }
 

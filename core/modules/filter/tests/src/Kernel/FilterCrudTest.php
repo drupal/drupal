@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\filter\Kernel;
 
+use Drupal\Component\Render\FormattableMarkup;
 use Drupal\filter\Entity\FilterFormat;
 use Drupal\KernelTests\KernelTestBase;
 
@@ -94,11 +95,11 @@ class FilterCrudTest extends KernelTestBase {
 
     // Verify the loaded filter has all properties.
     $filter_format = FilterFormat::load($format->id());
-    $this->assertEqual($filter_format->id(), $format->id(), format_string('filter_format_load: Proper format id for text format %format.', $t_args));
-    $this->assertEqual($filter_format->label(), $format->label(), format_string('filter_format_load: Proper title for text format %format.', $t_args));
-    $this->assertEqual($filter_format->get('weight'), $format->get('weight'), format_string('filter_format_load: Proper weight for text format %format.', $t_args));
+    $this->assertEqual($filter_format->id(), $format->id(), new FormattableMarkup('filter_format_load: Proper format id for text format %format.', $t_args));
+    $this->assertEqual($filter_format->label(), $format->label(), new FormattableMarkup('filter_format_load: Proper title for text format %format.', $t_args));
+    $this->assertEqual($filter_format->get('weight'), $format->get('weight'), new FormattableMarkup('filter_format_load: Proper weight for text format %format.', $t_args));
     // Check that the filter was created in site default language.
-    $this->assertEqual($format->language()->getId(), $default_langcode, format_string('filter_format_load: Proper language code for text format %format.', $t_args));
+    $this->assertEqual($format->language()->getId(), $default_langcode, new FormattableMarkup('filter_format_load: Proper language code for text format %format.', $t_args));
   }
 
 }

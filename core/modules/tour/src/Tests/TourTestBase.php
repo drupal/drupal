@@ -2,6 +2,7 @@
 
 namespace Drupal\tour\Tests;
 
+use Drupal\Component\Render\FormattableMarkup;
 use Drupal\simpletest\WebTestBase;
 
 @trigger_error('\Drupal\tour\Tests\TourTestBase is deprecated in 8.4.0 and will be removed before Drupal 9.0.0. Instead, use \Drupal\Tests\tour\Functional\TourTestBase.', E_USER_DEPRECATED);
@@ -56,11 +57,11 @@ abstract class TourTestBase extends WebTestBase {
       foreach ($tips as $tip) {
         if (!empty($tip['data-id'])) {
           $elements = $this->xpath('//*[@id="' . $tip['data-id'] . '"]');
-          $this->assertTrue(!empty($elements) && count($elements) === 1, format_string('Found corresponding page element for tour tip with id #%data-id', ['%data-id' => $tip['data-id']]));
+          $this->assertTrue(!empty($elements) && count($elements) === 1, new FormattableMarkup('Found corresponding page element for tour tip with id #%data-id', ['%data-id' => $tip['data-id']]));
         }
         elseif (!empty($tip['data-class'])) {
           $elements = $this->xpath('//*[contain(@class, "' . $tip['data-id'] . '")]');
-          $this->assertFalse(empty($elements), format_string('Found corresponding page element for tour tip with class .%data-class', ['%data-class' => $tip['data-class']]));
+          $this->assertFalse(empty($elements), new FormattableMarkup('Found corresponding page element for tour tip with class .%data-class', ['%data-class' => $tip['data-class']]));
         }
         else {
           // It's a modal.
@@ -68,7 +69,7 @@ abstract class TourTestBase extends WebTestBase {
         }
         $total++;
       }
-      $this->pass(format_string('Total %total Tips tested of which %modals modal(s).', ['%total' => $total, '%modals' => $modals]));
+      $this->pass(new FormattableMarkup('Total %total Tips tested of which %modals modal(s).', ['%total' => $total, '%modals' => $modals]));
     }
   }
 

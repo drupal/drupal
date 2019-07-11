@@ -2,6 +2,8 @@
 
 namespace Drupal\Core\Test;
 
+use Drupal\Component\Render\FormattableMarkup;
+
 /**
  * Provides methods for testing emails sent during test runs.
  */
@@ -103,7 +105,7 @@ trait AssertMailTrait {
       }
     }
     if (!$message) {
-      $message = format_string('Expected text found in @field of email message: "@expected".', ['@field' => $field_name, '@expected' => $string]);
+      $message = new FormattableMarkup('Expected text found in @field of email message: "@expected".', ['@field' => $field_name, '@expected' => $string]);
     }
     return $this->assertTrue($string_found, $message, $group);
   }
@@ -134,7 +136,7 @@ trait AssertMailTrait {
     $mail = end($mails);
     $regex_found = preg_match("/$regex/", $mail[$field_name]);
     if (!$message) {
-      $message = format_string('Expected text found in @field of email message: "@expected".', ['@field' => $field_name, '@expected' => $regex]);
+      $message = new FormattableMarkup('Expected text found in @field of email message: "@expected".', ['@field' => $field_name, '@expected' => $regex]);
     }
     return $this->assertTrue($regex_found, $message, $group);
   }

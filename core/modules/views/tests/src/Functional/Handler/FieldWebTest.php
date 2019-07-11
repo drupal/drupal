@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\views\Functional\Handler;
 
+use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Render\RenderContext;
@@ -560,14 +561,14 @@ class FieldWebTest extends ViewTestBase {
     $output = $renderer->executeInRenderContext(new RenderContext(), function () use ($name_field, $row) {
       return $name_field->advancedRender($row);
     });
-    $this->assertSubString($output, $trimmed_name, format_string('Make sure the trimmed output (@trimmed) appears in the rendered output (@output).', ['@trimmed' => $trimmed_name, '@output' => $output]));
-    $this->assertNotSubString($output, $row->views_test_data_name, format_string("Make sure the untrimmed value (@untrimmed) shouldn't appear in the rendered output (@output).", ['@untrimmed' => $row->views_test_data_name, '@output' => $output]));
+    $this->assertSubString($output, $trimmed_name, new FormattableMarkup('Make sure the trimmed output (@trimmed) appears in the rendered output (@output).', ['@trimmed' => $trimmed_name, '@output' => $output]));
+    $this->assertNotSubString($output, $row->views_test_data_name, new FormattableMarkup("Make sure the untrimmed value (@untrimmed) shouldn't appear in the rendered output (@output).", ['@untrimmed' => $row->views_test_data_name, '@output' => $output]));
 
     $name_field->options['alter']['max_length'] = 9;
     $output = $renderer->executeInRenderContext(new RenderContext(), function () use ($name_field, $row) {
       return $name_field->advancedRender($row);
     });
-    $this->assertSubString($output, $trimmed_name, format_string('Make sure the untrimmed (@untrimmed) output appears in the rendered output  (@output).', ['@trimmed' => $trimmed_name, '@output' => $output]));
+    $this->assertSubString($output, $trimmed_name, new FormattableMarkup('Make sure the untrimmed (@untrimmed) output appears in the rendered output  (@output).', ['@trimmed' => $trimmed_name, '@output' => $output]));
 
     // Take word_boundary into account for the tests.
     $name_field->options['alter']['max_length'] = 5;
@@ -611,10 +612,10 @@ class FieldWebTest extends ViewTestBase {
       });
 
       if ($tuple['trimmed']) {
-        $this->assertNotSubString($output, $tuple['value'], format_string('The untrimmed value (@untrimmed) should not appear in the trimmed output (@output).', ['@untrimmed' => $tuple['value'], '@output' => $output]));
+        $this->assertNotSubString($output, $tuple['value'], new FormattableMarkup('The untrimmed value (@untrimmed) should not appear in the trimmed output (@output).', ['@untrimmed' => $tuple['value'], '@output' => $output]));
       }
       if (!empty($tuple['trimmed_value'])) {
-        $this->assertSubString($output, $tuple['trimmed_value'], format_string('The trimmed value (@trimmed) should appear in the trimmed output (@output).', ['@trimmed' => $tuple['trimmed_value'], '@output' => $output]));
+        $this->assertSubString($output, $tuple['trimmed_value'], new FormattableMarkup('The trimmed value (@trimmed) should appear in the trimmed output (@output).', ['@trimmed' => $tuple['trimmed_value'], '@output' => $output]));
       }
     }
 

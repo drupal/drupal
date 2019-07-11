@@ -4,6 +4,7 @@ namespace Drupal\system\Tests\Menu;
 
 @trigger_error(__NAMESPACE__ . '\AssertMenuActiveTrailTrait is deprecated in Drupal 8.4.0 and will be removed before Drupal 9.0.0. Instead, use \Drupal\Tests\system\Functional\Menu\AssertMenuActiveTrailTrait', E_USER_DEPRECATED);
 
+use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Url;
 
 /**
@@ -61,7 +62,7 @@ trait AssertMenuActiveTrailTrait {
       ':title' => $active_link_title,
     ];
     $elements = $this->xpath($xpath, $args);
-    $this->assertTrue(!empty($elements), format_string('Active link %title was found in menu tree, including active trail links %tree.', [
+    $this->assertTrue(!empty($elements), new FormattableMarkup('Active link %title was found in menu tree, including active trail links %tree.', [
       '%title' => $active_link_title,
       '%tree' => implode(' » ', $tree),
     ]));

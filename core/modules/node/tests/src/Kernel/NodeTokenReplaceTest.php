@@ -104,7 +104,7 @@ class NodeTokenReplaceTest extends TokenReplaceKernelTestBase {
     foreach ($tests as $input => $expected) {
       $bubbleable_metadata = new BubbleableMetadata();
       $output = $this->tokenService->replace($input, ['node' => $node], ['langcode' => $this->interfaceLanguage->getId()], $bubbleable_metadata);
-      $this->assertEqual($output, $expected, format_string('Node token %token replaced.', ['%token' => $input]));
+      $this->assertEqual($output, $expected, new FormattableMarkup('Node token %token replaced.', ['%token' => $input]));
       $this->assertEqual($bubbleable_metadata, $metadata_tests[$input]);
     }
 

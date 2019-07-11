@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\taxonomy\Functional;
 
+use Drupal\Component\Render\FormattableMarkup;
 use Drupal\taxonomy\Entity\Term;
 
 /**
@@ -34,7 +35,7 @@ class LoadMultipleTest extends TaxonomyTestBase {
     $term_storage = \Drupal::entityTypeManager()->getStorage('taxonomy_term');
     $terms = $term_storage->loadByProperties(['vid' => $vocabulary->id()]);
     $count = count($terms);
-    $this->assertEqual($count, 5, format_string('Correct number of terms were loaded. @count terms.', ['@count' => $count]));
+    $this->assertEqual($count, 5, new FormattableMarkup('Correct number of terms were loaded. @count terms.', ['@count' => $count]));
 
     // Load the same terms again by tid.
     $terms2 = Term::loadMultiple(array_keys($terms));

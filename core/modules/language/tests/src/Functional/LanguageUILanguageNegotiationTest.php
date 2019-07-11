@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\language\Functional;
 
+use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Url;
 use Drupal\file\Entity\File;
@@ -513,19 +514,19 @@ class LanguageUILanguageNegotiationTest extends BrowserTestBase {
     $italian_url = Url::fromRoute('system.admin', [], ['language' => $languages['it']])->toString();
     $url_scheme = \Drupal::request()->isSecure() ? 'https://' : 'http://';
     $correct_link = $url_scheme . $link;
-    $this->assertEqual($italian_url, $correct_link, format_string('The right URL (@url) in accordance with the chosen language', ['@url' => $italian_url]));
+    $this->assertEqual($italian_url, $correct_link, new FormattableMarkup('The right URL (@url) in accordance with the chosen language', ['@url' => $italian_url]));
 
     // Test HTTPS via options.
     $italian_url = Url::fromRoute('system.admin', [], ['https' => TRUE, 'language' => $languages['it']])->toString();
     $correct_link = 'https://' . $link;
-    $this->assertTrue($italian_url == $correct_link, format_string('The right HTTPS URL (via options) (@url) in accordance with the chosen language', ['@url' => $italian_url]));
+    $this->assertTrue($italian_url == $correct_link, new FormattableMarkup('The right HTTPS URL (via options) (@url) in accordance with the chosen language', ['@url' => $italian_url]));
 
     // Test HTTPS via current URL scheme.
     $request = Request::create('', 'GET', [], [], [], ['HTTPS' => 'on']);
     $this->container->get('request_stack')->push($request);
     $italian_url = Url::fromRoute('system.admin', [], ['language' => $languages['it']])->toString();
     $correct_link = 'https://' . $link;
-    $this->assertTrue($italian_url == $correct_link, format_string('The right URL (via current URL scheme) (@url) in accordance with the chosen language', ['@url' => $italian_url]));
+    $this->assertTrue($italian_url == $correct_link, new FormattableMarkup('The right URL (via current URL scheme) (@url) in accordance with the chosen language', ['@url' => $italian_url]));
   }
 
   /**

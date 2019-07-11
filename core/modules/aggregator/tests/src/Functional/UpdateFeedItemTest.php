@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\aggregator\Functional;
 
+use Drupal\Component\Render\FormattableMarkup;
 use Drupal\aggregator\Entity\Feed;
 use Drupal\aggregator\Entity\Item;
 
@@ -38,7 +39,7 @@ class UpdateFeedItemTest extends AggregatorTestBase {
     $this->assertResponse(200);
 
     $this->drupalPostForm('aggregator/sources/add', $edit, t('Save'));
-    $this->assertText(t('The feed @name has been added.', ['@name' => $edit['title[0][value]']]), format_string('The feed @name has been added.', ['@name' => $edit['title[0][value]']]));
+    $this->assertText(t('The feed @name has been added.', ['@name' => $edit['title[0][value]']]), new FormattableMarkup('The feed @name has been added.', ['@name' => $edit['title[0][value]']]));
 
     // Verify that the creation message contains a link to a feed.
     $view_link = $this->xpath('//div[@class="messages"]//a[contains(@href, :href)]', [':href' => 'aggregator/sources/']);
@@ -62,7 +63,7 @@ class UpdateFeedItemTest extends AggregatorTestBase {
     $feed->refreshItems();
 
     $after = Item::load(array_values($iids)[0])->getPostedTime();
-    $this->assertTrue($before === $after, format_string('Publish timestamp of feed item was not updated (@before === @after)', ['@before' => $before, '@after' => $after]));
+    $this->assertTrue($before === $after, new FormattableMarkup('Publish timestamp of feed item was not updated (@before === @after)', ['@before' => $before, '@after' => $after]));
 
     // Make sure updating items works even after uninstalling a module
     // that provides the selected plugins.

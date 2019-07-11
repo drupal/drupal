@@ -62,7 +62,7 @@ class AggregatorRenderingTest extends AggregatorTestBase {
     // Find the expected read_more link.
     $href = $feed->toUrl()->toString();
     $links = $this->xpath('//a[@href = :href]', [':href' => $href]);
-    $this->assert(isset($links[0]), format_string('Link to href %href found.', ['%href' => $href]));
+    $this->assert(isset($links[0]), new FormattableMarkup('Link to href %href found.', ['%href' => $href]));
     $cache_tags_header = $this->drupalGetHeader('X-Drupal-Cache-Tags');
     $cache_tags = explode(' ', $cache_tags_header);
     $this->assertTrue(in_array('aggregator_feed:' . $feed->id(), $cache_tags));

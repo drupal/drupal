@@ -2,6 +2,8 @@
 
 namespace Drupal\KernelTests\Core\Database;
 
+use Drupal\Component\Render\FormattableMarkup;
+
 /**
  * Tests the Update query builder with LOB fields.
  *
@@ -26,7 +28,7 @@ class UpdateLobTest extends DatabaseTestBase {
       ->execute();
 
     $r = $this->connection->query('SELECT * FROM {test_one_blob} WHERE id = :id', [':id' => $id])->fetchAssoc();
-    $this->assertTrue($r['blob1'] === $data, format_string('Can update a blob: id @id, @data.', ['@id' => $id, '@data' => serialize($r)]));
+    $this->assertTrue($r['blob1'] === $data, new FormattableMarkup('Can update a blob: id @id, @data.', ['@id' => $id, '@data' => serialize($r)]));
   }
 
   /**

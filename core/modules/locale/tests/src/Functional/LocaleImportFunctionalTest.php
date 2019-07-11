@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\locale\Functional;
 
+use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Url;
 use Drupal\Core\Database\Database;
 use Drupal\Tests\BrowserTestBase;
@@ -326,7 +327,7 @@ class LocaleImportFunctionalTest extends BrowserTestBase {
         'translation' => 'all',
       ];
       $this->drupalPostForm('admin/config/regional/translate', $search, t('Filter'));
-      $this->assertText($config_string[1], format_string('Translation of @string found.', ['@string' => $config_string[0]]));
+      $this->assertText($config_string[1], new FormattableMarkup('Translation of @string found.', ['@string' => $config_string[0]]));
     }
 
     // Test that translations got recorded in the config system.

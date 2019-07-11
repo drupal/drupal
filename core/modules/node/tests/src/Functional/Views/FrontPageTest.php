@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\node\Functional\Views;
 
+use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Url;
@@ -77,7 +78,7 @@ class FrontPageTest extends ViewTestBase {
     $this->executeView($view);
     $view->preview();
 
-    $this->assertEqual($view->getTitle(), format_string('Welcome to @site_name', ['@site_name' => $site_name]), 'The welcome title is used for the empty view.');
+    $this->assertEqual($view->getTitle(), new FormattableMarkup('Welcome to @site_name', ['@site_name' => $site_name]), 'The welcome title is used for the empty view.');
     $view->destroy();
 
     // Create some nodes on the frontpage view. Add more than 10 nodes in order

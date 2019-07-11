@@ -229,7 +229,7 @@ abstract class WebTestBase extends TestBase {
    */
   protected function assertBlockAppears(Block $block) {
     $result = $this->findBlockInstance($block);
-    $this->assertTrue(!empty($result), format_string('Ensure the block @id appears on the page', ['@id' => $block->id()]));
+    $this->assertTrue(!empty($result), new FormattableMarkup('Ensure the block @id appears on the page', ['@id' => $block->id()]));
   }
 
   /**
@@ -240,7 +240,7 @@ abstract class WebTestBase extends TestBase {
    */
   protected function assertNoBlockAppears(Block $block) {
     $result = $this->findBlockInstance($block);
-    $this->assertFalse(!empty($result), format_string('Ensure the block @id does not appear on the page', ['@id' => $block->id()]));
+    $this->assertFalse(!empty($result), new FormattableMarkup('Ensure the block @id does not appear on the page', ['@id' => $block->id()]));
   }
 
   /**
@@ -298,7 +298,7 @@ abstract class WebTestBase extends TestBase {
     if (isset($this->sessionId)) {
       $account->session_id = $this->sessionId;
     }
-    $pass = $this->assert($this->drupalUserIsLoggedIn($account), format_string('User %name successfully logged in.', ['%name' => $account->getAccountName()]), 'User login');
+    $pass = $this->assert($this->drupalUserIsLoggedIn($account), new FormattableMarkup('User %name successfully logged in.', ['%name' => $account->getAccountName()]), 'User login');
     if ($pass) {
       $this->loggedInUser = $account;
       $this->container->get('current_user')->setAccount($account);
@@ -1061,9 +1061,9 @@ abstract class WebTestBase extends TestBase {
         $this->fail(new FormattableMarkup('Failed to set field @name to @value', ['@name' => $name, '@value' => $value]));
       }
       if (!$ajax && isset($submit)) {
-        $this->assertTrue($submit_matches, format_string('Found the @submit button', ['@submit' => $submit]));
+        $this->assertTrue($submit_matches, new FormattableMarkup('Found the @submit button', ['@submit' => $submit]));
       }
-      $this->fail(format_string('Found the requested form fields at @path', ['@path' => ($path instanceof Url) ? $path->toString() : $path]));
+      $this->fail(new FormattableMarkup('Found the requested form fields at @path', ['@path' => ($path instanceof Url) ? $path->toString() : $path]));
     }
   }
 

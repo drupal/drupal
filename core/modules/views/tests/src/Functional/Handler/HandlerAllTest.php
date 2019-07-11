@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\views\Functional\Handler;
 
+use Drupal\Component\Render\FormattableMarkup;
 use Drupal\comment\Tests\CommentTestTrait;
 use Drupal\Tests\views\Functional\ViewTestBase;
 use Drupal\views\ViewExecutable;
@@ -101,7 +102,7 @@ class HandlerAllTest extends ViewTestBase {
       foreach ($object_types as $type) {
         if (isset($view->{$type})) {
           foreach ($view->{$type} as $handler) {
-            $this->assertTrue($handler instanceof HandlerBase, format_string(
+            $this->assertTrue($handler instanceof HandlerBase, new FormattableMarkup(
               '@type handler of class %class is an instance of HandlerBase',
               [
                 '@type' => $type,

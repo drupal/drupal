@@ -2,6 +2,8 @@
 
 namespace Drupal\Tests\aggregator\Functional;
 
+use Drupal\Component\Render\FormattableMarkup;
+
 /**
  * Update feed test.
  *
@@ -25,7 +27,7 @@ class UpdateFeedTest extends AggregatorTestBase {
         $edit[$same_field] = $feed->{$same_field}->value;
       }
       $this->drupalPostForm('aggregator/sources/' . $feed->id() . '/configure', $edit, t('Save'));
-      $this->assertText(t('The feed @name has been updated.', ['@name' => $edit['title[0][value]']]), format_string('The feed %name has been updated.', ['%name' => $edit['title[0][value]']]));
+      $this->assertText(t('The feed @name has been updated.', ['@name' => $edit['title[0][value]']]), new FormattableMarkup('The feed %name has been updated.', ['%name' => $edit['title[0][value]']]));
 
       // Verify that the creation message contains a link to a feed.
       $view_link = $this->xpath('//div[@class="messages"]//a[contains(@href, :href)]', [':href' => 'aggregator/sources/']);

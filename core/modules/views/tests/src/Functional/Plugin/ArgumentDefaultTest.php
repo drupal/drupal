@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\views\Functional\Plugin;
 
+use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Url;
 use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
@@ -102,7 +103,7 @@ class ArgumentDefaultTest extends ViewTestBase {
       '%function' => 'views_handler_argument->validateOptionsForm()',
     ];
     $message = t('%type: @message in %function', $error);
-    $this->assertNoRaw($message, format_string('Did not find error message: @message.', ['@message' => $message]));
+    $this->assertNoRaw($message, new FormattableMarkup('Did not find error message: @message.', ['@message' => $message]));
   }
 
   /**

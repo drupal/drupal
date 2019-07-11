@@ -2,6 +2,8 @@
 
 namespace Drupal\Tests\aggregator\Functional;
 
+use Drupal\Component\Render\FormattableMarkup;
+
 /**
  * Tests aggregator admin pages.
  *
@@ -35,7 +37,7 @@ class AggregatorAdminTest extends AggregatorTestBase {
     $this->assertText(t('The configuration options have been saved.'));
 
     foreach ($edit as $name => $value) {
-      $this->assertFieldByName($name, $value, format_string('"@name" has correct default value.', ['@name' => $name]));
+      $this->assertFieldByName($name, $value, new FormattableMarkup('"@name" has correct default value.', ['@name' => $name]));
     }
 
     // Check for our test processor settings form.

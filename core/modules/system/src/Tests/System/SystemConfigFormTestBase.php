@@ -4,6 +4,7 @@ namespace Drupal\system\Tests\System;
 
 @trigger_error('\Drupal\system\Tests\System\SystemConfigFormTestBase is deprecated in Drupal 8.6.0 and will be removed before Drupal 9.0.0. Use \Drupal\KernelTests\ConfigFormTestBase instead.', E_USER_DEPRECATED);
 
+use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Form\FormState;
 use Drupal\simpletest\WebTestBase;
 
@@ -64,7 +65,7 @@ abstract class SystemConfigFormTestBase extends WebTestBase {
       '%values' => print_r($values, TRUE),
       '%errors' => $valid_form ? t('None') : implode(' ', $errors),
     ];
-    $this->assertTrue($valid_form, format_string('Input values: %values<br/>Validation handler errors: %errors', $args));
+    $this->assertTrue($valid_form, new FormattableMarkup('Input values: %values<br/>Validation handler errors: %errors', $args));
 
     foreach ($this->values as $data) {
       $this->assertEqual($data['#value'], $this->config($data['#config_name'])->get($data['#config_key']));

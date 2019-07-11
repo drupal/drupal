@@ -2,6 +2,7 @@
 
 namespace Drupal\KernelTests\Core\Path;
 
+use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Cache\MemoryCounterBackend;
 use Drupal\Core\Path\AliasStorage;
 use Drupal\Core\Database\Database;
@@ -32,7 +33,7 @@ class AliasTest extends PathUnitTestBase {
       $result = $connection->query('SELECT * FROM {url_alias} WHERE source = :source AND alias= :alias AND langcode = :langcode', [':source' => $alias['source'], ':alias' => $alias['alias'], ':langcode' => $alias['langcode']]);
       $rows = $result->fetchAll();
 
-      $this->assertEqual(count($rows), 1, format_string('Created an entry for %alias.', ['%alias' => $alias['alias']]));
+      $this->assertEqual(count($rows), 1, new FormattableMarkup('Created an entry for %alias.', ['%alias' => $alias['alias']]));
 
       // Cache the pid for further tests.
       $aliases[$idx]['pid'] = $rows[0]->pid;
@@ -42,7 +43,7 @@ class AliasTest extends PathUnitTestBase {
     foreach ($aliases as $alias) {
       $pid = $alias['pid'];
       $loadedAlias = $aliasStorage->load(['pid' => $pid]);
-      $this->assertEqual($loadedAlias, $alias, format_string('Loaded the expected path with pid %pid.', ['%pid' => $pid]));
+      $this->assertEqual($loadedAlias, $alias, new FormattableMarkup('Loaded the expected path with pid %pid.', ['%pid' => $pid]));
     }
 
     // Load alias by source path.
@@ -58,7 +59,7 @@ class AliasTest extends PathUnitTestBase {
       $result = $connection->query('SELECT pid FROM {url_alias} WHERE source = :source AND alias= :alias AND langcode = :langcode', [':source' => $alias['source'], ':alias' => $alias['alias'] . '_updated', ':langcode' => $alias['langcode']]);
       $pid = $result->fetchField();
 
-      $this->assertEqual($pid, $alias['pid'], format_string('Updated entry for pid %pid.', ['%pid' => $pid]));
+      $this->assertEqual($pid, $alias['pid'], new FormattableMarkup('Updated entry for pid %pid.', ['%pid' => $pid]));
     }
 
     // Delete a few aliases
@@ -69,7 +70,7 @@ class AliasTest extends PathUnitTestBase {
       $result = $connection->query('SELECT * FROM {url_alias} WHERE pid = :pid', [':pid' => $pid]);
       $rows = $result->fetchAll();
 
-      $this->assertEqual(count($rows), 0, format_string('Deleted entry with pid %pid.', ['%pid' => $pid]));
+      $this->assertEqual(count($rows), 0, new FormattableMarkup('Deleted entry with pid %pid.', ['%pid' => $pid]));
     }
   }
 

@@ -143,7 +143,7 @@ class CommentTokenReplaceTest extends CommentTestBase {
     $comment->setOwnerId(0)->setAuthorName($author_name);
     $input = '[comment:author]';
     $output = $token_service->replace($input, ['comment' => $comment], ['langcode' => $language_interface->getId()]);
-    $this->assertEqual($output, Html::escape($author_name), format_string('Comment author token %token replaced.', ['%token' => $input]));
+    $this->assertEqual($output, Html::escape($author_name), new FormattableMarkup('Comment author token %token replaced.', ['%token' => $input]));
     // Add comment field to user and term entities.
     $this->addDefaultCommentField('user', 'user', 'comment', CommentItemInterface::OPEN, 'comment_user');
     $this->addDefaultCommentField('taxonomy_term', 'tags', 'comment', CommentItemInterface::OPEN, 'comment_term');
@@ -181,7 +181,7 @@ class CommentTokenReplaceTest extends CommentTestBase {
 
     foreach ($tests as $input => $expected) {
       $output = $token_service->replace($input, ['entity' => $node, 'node' => $node, 'user' => $user, 'term' => $term], ['langcode' => $language_interface->getId()]);
-      $this->assertEqual($output, $expected, format_string('Comment token %token replaced.', ['%token' => $input]));
+      $this->assertEqual($output, $expected, new FormattableMarkup('Comment token %token replaced.', ['%token' => $input]));
     }
   }
 

@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\field\Kernel;
 
+use Drupal\Component\Render\FormattableMarkup;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 
@@ -54,17 +55,17 @@ class FieldAttachStorageTest extends FieldKernelTestBase {
     $this->assertEqual(count($entity->{$this->fieldTestData->field_name}), $cardinality, 'Current revision: expected number of values');
     for ($delta = 0; $delta < $cardinality; $delta++) {
       // The field value loaded matches the one inserted or updated.
-      $this->assertEqual($entity->{$this->fieldTestData->field_name}[$delta]->value, $values[$current_revision][$delta]['value'], format_string('Current revision: expected value %delta was found.', ['%delta' => $delta]));
+      $this->assertEqual($entity->{$this->fieldTestData->field_name}[$delta]->value, $values[$current_revision][$delta]['value'], new FormattableMarkup('Current revision: expected value %delta was found.', ['%delta' => $delta]));
     }
 
     // Confirm each revision loads the correct data.
     foreach (array_keys($values) as $revision_id) {
       $entity = $storage->loadRevision($revision_id);
       // Number of values per field loaded equals the field cardinality.
-      $this->assertEqual(count($entity->{$this->fieldTestData->field_name}), $cardinality, format_string('Revision %revision_id: expected number of values.', ['%revision_id' => $revision_id]));
+      $this->assertEqual(count($entity->{$this->fieldTestData->field_name}), $cardinality, new FormattableMarkup('Revision %revision_id: expected number of values.', ['%revision_id' => $revision_id]));
       for ($delta = 0; $delta < $cardinality; $delta++) {
         // The field value loaded matches the one inserted or updated.
-        $this->assertEqual($entity->{$this->fieldTestData->field_name}[$delta]->value, $values[$revision_id][$delta]['value'], format_string('Revision %revision_id: expected value %delta was found.', ['%revision_id' => $revision_id, '%delta' => $delta]));
+        $this->assertEqual($entity->{$this->fieldTestData->field_name}[$delta]->value, $values[$revision_id][$delta]['value'], new FormattableMarkup('Revision %revision_id: expected value %delta was found.', ['%revision_id' => $revision_id, '%delta' => $delta]));
       }
     }
   }
@@ -136,7 +137,7 @@ class FieldAttachStorageTest extends FieldKernelTestBase {
           continue;
         }
         // The field value loaded matches the one inserted.
-        $this->assertEqual($entity->{$field_name}->value, $values[$index][$field_name], format_string('Entity %index: expected value was found.', ['%index' => $index]));
+        $this->assertEqual($entity->{$field_name}->value, $values[$index][$field_name], new FormattableMarkup('Entity %index: expected value was found.', ['%index' => $index]));
       }
     }
   }

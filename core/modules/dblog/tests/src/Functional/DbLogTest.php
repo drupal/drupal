@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\dblog\Functional;
 
+use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Database\Database;
@@ -180,7 +181,7 @@ class DbLogTest extends BrowserTestBase {
 
     // Check row limit variable.
     $current_limit = $this->config('dblog.settings')->get('row_limit');
-    $this->assertTrue($current_limit == $row_limit, format_string('[Cache] Row limit variable of @count equals row limit of @limit', ['@count' => $current_limit, '@limit' => $row_limit]));
+    $this->assertTrue($current_limit == $row_limit, new FormattableMarkup('[Cache] Row limit variable of @count equals row limit of @limit', ['@count' => $current_limit, '@limit' => $row_limit]));
   }
 
   /**
@@ -339,7 +340,7 @@ class DbLogTest extends BrowserTestBase {
     $this->assertResponse(200);
     // Retrieve the user object.
     $user = user_load_by_name($name);
-    $this->assertTrue($user != NULL, format_string('User @name was loaded', ['@name' => $name]));
+    $this->assertTrue($user != NULL, new FormattableMarkup('User @name was loaded', ['@name' => $name]));
     // pass_raw property is needed by drupalLogin.
     $user->passRaw = $pass;
     // Log in user.
@@ -352,7 +353,7 @@ class DbLogTest extends BrowserTestBase {
       $ids[] = $row->wid;
     }
     $count_before = (isset($ids)) ? count($ids) : 0;
-    $this->assertTrue($count_before > 0, format_string('DBLog contains @count records for @name', ['@count' => $count_before, '@name' => $user->getAccountName()]));
+    $this->assertTrue($count_before > 0, new FormattableMarkup('DBLog contains @count records for @name', ['@count' => $count_before, '@name' => $user->getAccountName()]));
 
     // Log in the admin user.
     $this->drupalLogin($this->adminUser);
@@ -422,7 +423,7 @@ class DbLogTest extends BrowserTestBase {
     $this->assertResponse(200);
     // Retrieve the node object.
     $node = $this->drupalGetNodeByTitle($title);
-    $this->assertTrue($node != NULL, format_string('Node @title was loaded', ['@title' => $title]));
+    $this->assertTrue($node != NULL, new FormattableMarkup('Node @title was loaded', ['@title' => $title]));
     // Edit the node.
     $edit = $this->getContentUpdate($type);
     $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, t('Save'));
@@ -535,7 +536,7 @@ class DbLogTest extends BrowserTestBase {
     // Add a watchdog entry.
     $this->container->get('logger.dblog')->log($log['severity'], $log['message'], $log);
     // Make sure the table count has actually been incremented.
-    $this->assertEqual($count + 1, $connection->query('SELECT COUNT(*) FROM {watchdog}')->fetchField(), format_string('\Drupal\dblog\Logger\DbLog->log() added an entry to the dblog :count', [':count' => $count]));
+    $this->assertEqual($count + 1, $connection->query('SELECT COUNT(*) FROM {watchdog}')->fetchField(), new FormattableMarkup('\Drupal\dblog\Logger\DbLog->log() added an entry to the dblog :count', [':count' => $count]));
     // Log in the admin user.
     $this->drupalLogin($this->adminUser);
     // Post in order to clear the database table.
@@ -544,7 +545,7 @@ class DbLogTest extends BrowserTestBase {
     $this->drupalPostForm(NULL, [], 'Confirm');
     // Count the rows in watchdog that previously related to the deleted user.
     $count = $connection->query('SELECT COUNT(*) FROM {watchdog}')->fetchField();
-    $this->assertEqual($count, 0, format_string('DBLog contains :count records after a clear.', [':count' => $count]));
+    $this->assertEqual($count, 0, new FormattableMarkup('DBLog contains :count records after a clear.', [':count' => $count]));
   }
 
   /**

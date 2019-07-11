@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\system\Kernel\Common;
 
+use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Extension\ExtensionDiscovery;
 use Drupal\KernelTests\KernelTestBase;
 
@@ -33,7 +34,7 @@ class SystemListingTest extends KernelTestBase {
     foreach ($expected_directories as $module => $directories) {
       foreach ($directories as $directory) {
         $filename = "$directory/$module/$module.info.yml";
-        $this->assertTrue(file_exists($this->root . '/' . $filename), format_string('@filename exists.', ['@filename' => $filename]));
+        $this->assertTrue(file_exists($this->root . '/' . $filename), new FormattableMarkup('@filename exists.', ['@filename' => $filename]));
       }
     }
 
@@ -45,7 +46,7 @@ class SystemListingTest extends KernelTestBase {
     foreach ($expected_directories as $module => $directories) {
       $expected_directory = array_shift($directories);
       $expected_uri = "$expected_directory/$module/$module.info.yml";
-      $this->assertEqual($files[$module]->getPathname(), $expected_uri, format_string('Module @actual was found at @expected.', [
+      $this->assertEqual($files[$module]->getPathname(), $expected_uri, new FormattableMarkup('Module @actual was found at @expected.', [
         '@actual' => $files[$module]->getPathname(),
         '@expected' => $expected_uri,
       ]));

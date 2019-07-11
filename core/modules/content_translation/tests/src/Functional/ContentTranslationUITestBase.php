@@ -96,7 +96,7 @@ abstract class ContentTranslationUITestBase extends ContentTranslationTestBase {
     foreach ($values[$default_langcode] as $property => $value) {
       $stored_value = $this->getValue($translation, $property, $default_langcode);
       $value = is_array($value) ? $value[0]['value'] : $value;
-      $message = format_string('@property correctly stored in the default language.', ['@property' => $property]);
+      $message = new FormattableMarkup('@property correctly stored in the default language.', ['@property' => $property]);
       $this->assertEqual($stored_value, $value, $message);
     }
 
@@ -201,7 +201,7 @@ abstract class ContentTranslationUITestBase extends ContentTranslationTestBase {
       foreach ($property_values as $property => $value) {
         $stored_value = $this->getValue($translation, $property, $langcode);
         $value = is_array($value) ? $value[0]['value'] : $value;
-        $message = format_string('%property correctly stored with language %language.', ['%property' => $property, '%language' => $langcode]);
+        $message = new FormattableMarkup('%property correctly stored with language %language.', ['%property' => $property, '%language' => $langcode]);
         $this->assertEqual($stored_value, $value, $message);
       }
     }
@@ -562,7 +562,7 @@ abstract class ContentTranslationUITestBase extends ContentTranslationTestBase {
         $entity = $storage->load($this->entityId);
         $this->assertEqual(
           $entity->getChangedTimeAcrossTranslations(), $entity->getTranslation($langcode)->getChangedTime(),
-          format_string('Changed time for language %language is the latest change over all languages.', ['%language' => $language->getName()])
+          new FormattableMarkup('Changed time for language %language is the latest change over all languages.', ['%language' => $language->getName()])
         );
       }
 

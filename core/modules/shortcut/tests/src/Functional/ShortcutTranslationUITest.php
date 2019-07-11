@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\shortcut\Functional;
 
+use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Tests\content_translation\Functional\ContentTranslationUITestBase;
 use Drupal\Core\Entity\EntityChangedInterface;
 use Drupal\Core\Language\Language;
@@ -78,7 +79,7 @@ class ShortcutTranslationUITest extends ContentTranslationUITestBase {
         $expected_path = \Drupal::urlGenerator()->generateFromRoute('user.page', [], ['language' => $language]);
         $label = $entity->getTranslation($langcode)->label();
         $elements = $this->xpath('//nav[contains(@class, "toolbar-lining")]/ul[@class="toolbar-menu"]/li/a[contains(@href, :href) and normalize-space(text())=:label]', [':href' => $expected_path, ':label' => $label]);
-        $this->assertTrue(!empty($elements), format_string('Translated @language shortcut link @label found.', ['@label' => $label, '@language' => $language->getName()]));
+        $this->assertTrue(!empty($elements), new FormattableMarkup('Translated @language shortcut link @label found.', ['@label' => $label, '@language' => $language->getName()]));
       }
     }
   }
@@ -120,7 +121,7 @@ class ShortcutTranslationUITest extends ContentTranslationUITestBase {
 
     $this->assertFalse(
       $entity instanceof EntityChangedInterface,
-      format_string('%entity is not implementing EntityChangedInterface.', ['%entity' => $this->entityTypeId])
+      new FormattableMarkup('%entity is not implementing EntityChangedInterface.', ['%entity' => $this->entityTypeId])
     );
   }
 

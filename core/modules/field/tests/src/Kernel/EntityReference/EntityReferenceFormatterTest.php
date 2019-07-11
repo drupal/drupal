@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\field\Kernel\EntityReference;
 
+use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
@@ -163,7 +164,7 @@ class EntityReferenceFormatterTest extends EntityKernelTestBase {
         ->view($referencing_entity, 'default');
 
       // Verify the un-accessible item still exists.
-      $this->assertEqual($referencing_entity->{$field_name}->target_id, $this->referencedEntity->id(), format_string('The un-accessible item still exists after @name formatter was executed.', ['@name' => $name]));
+      $this->assertEqual($referencing_entity->{$field_name}->target_id, $this->referencedEntity->id(), new FormattableMarkup('The un-accessible item still exists after @name formatter was executed.', ['@name' => $name]));
     }
   }
 
@@ -215,7 +216,7 @@ class EntityReferenceFormatterTest extends EntityKernelTestBase {
     $this->assertEqual($build[0]['#markup'], 'default | ' . $this->referencedEntity->label() . $expected_rendered_name_field_1 . $expected_rendered_body_field_1, sprintf('The markup returned by the %s formatter is correct for an item with a saved entity.', $formatter));
     $expected_cache_tags = Cache::mergeTags(\Drupal::entityTypeManager()->getViewBuilder($this->entityType)->getCacheTags(), $this->referencedEntity->getCacheTags());
     $expected_cache_tags = Cache::mergeTags($expected_cache_tags, FilterFormat::load('full_html')->getCacheTags());
-    $this->assertEqual($build[0]['#cache']['tags'], $expected_cache_tags, format_string('The @formatter formatter has the expected cache tags.', ['@formatter' => $formatter]));
+    $this->assertEqual($build[0]['#cache']['tags'], $expected_cache_tags, new FormattableMarkup('The @formatter formatter has the expected cache tags.', ['@formatter' => $formatter]));
 
     // Test the second field item.
     $expected_rendered_name_field_2 = '

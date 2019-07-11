@@ -354,17 +354,17 @@ function t($string, array $args = [], array $options = []) {
 /**
  * Formats a string for HTML display by replacing variable placeholders.
  *
+ * @deprecated in drupal:8.0.0 and is removed from drupal:9.0.0.
+ *   Use \Drupal\Component\Render\FormattableMarkup instead.
+ *
+ * @see https://www.drupal.org/node/2302363
  * @see \Drupal\Component\Render\FormattableMarkup::placeholderFormat()
  * @see \Drupal\Component\Render\FormattableMarkup
  * @see t()
  * @ingroup sanitization
- *
- * @deprecated in Drupal 8.0.0, will be removed before Drupal 9.0.0.
- *   Use \Drupal\Component\Render\FormattableMarkup.
- *
- * @see https://www.drupal.org/node/2302363
  */
 function format_string($string, array $args) {
+  @trigger_error("format_string() is deprecated in drupal:8.0.0 and is removed from drupal:9.0.0. Use \Drupal\Component\Render\FormattableMarkup instead. See https://www.drupal.org/node/2302363", E_USER_DEPRECATED);
   return new FormattableMarkup($string, $args);
 }
 

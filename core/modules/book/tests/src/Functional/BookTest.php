@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\book\Functional;
 
+use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Cache\Cache;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\user\RoleInterface;
@@ -247,7 +248,7 @@ class BookTest extends BrowserTestBase {
     $nodes = $this->createBook();
     $this->drupalGet('<front>');
     $this->assertText($block->label(), 'Book navigation block is displayed.');
-    $this->assertText($this->book->label(), format_string('Link to book root (@title) is displayed.', ['@title' => $nodes[0]->label()]));
+    $this->assertText($this->book->label(), new FormattableMarkup('Link to book root (@title) is displayed.', ['@title' => $nodes[0]->label()]));
     $this->assertNoText($nodes[0]->label(), 'No links to individual book pages are displayed.');
   }
 

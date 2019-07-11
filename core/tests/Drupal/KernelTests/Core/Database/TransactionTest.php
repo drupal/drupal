@@ -2,6 +2,7 @@
 
 namespace Drupal\KernelTests\Core\Database;
 
+use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Database\TransactionOutOfOrderException;
 use Drupal\Core\Database\TransactionNoActiveException;
 
@@ -352,7 +353,7 @@ class TransactionTest extends DatabaseTestBase {
    */
   public function assertRowPresent($name, $message = NULL) {
     if (!isset($message)) {
-      $message = format_string('Row %name is present.', ['%name' => $name]);
+      $message = new FormattableMarkup('Row %name is present.', ['%name' => $name]);
     }
     $present = (boolean) $this->connection->query('SELECT 1 FROM {test} WHERE name = :name', [':name' => $name])->fetchField();
     return $this->assertTrue($present, $message);
@@ -368,7 +369,7 @@ class TransactionTest extends DatabaseTestBase {
    */
   public function assertRowAbsent($name, $message = NULL) {
     if (!isset($message)) {
-      $message = format_string('Row %name is absent.', ['%name' => $name]);
+      $message = new FormattableMarkup('Row %name is absent.', ['%name' => $name]);
     }
     $present = (boolean) $this->connection->query('SELECT 1 FROM {test} WHERE name = :name', [':name' => $name])->fetchField();
     return $this->assertFalse($present, $message);

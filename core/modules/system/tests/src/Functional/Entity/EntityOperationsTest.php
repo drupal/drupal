@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\system\Functional\Entity;
 
+use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Tests\BrowserTestBase;
 
 /**
@@ -36,7 +37,7 @@ class EntityOperationsTest extends BrowserTestBase {
     $roles = user_roles();
     foreach ($roles as $role) {
       $this->assertLinkByHref($role->toUrl()->toString() . '/test_operation');
-      $this->assertLink(format_string('Test Operation: @label', ['@label' => $role->label()]));
+      $this->assertLink(new FormattableMarkup('Test Operation: @label', ['@label' => $role->label()]));
     }
   }
 

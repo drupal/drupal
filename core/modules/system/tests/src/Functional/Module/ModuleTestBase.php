@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\system\Functional\Module;
 
+use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Config\InstallStorage;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Config\FileStorage;
@@ -43,9 +44,9 @@ abstract class ModuleTestBase extends BrowserTestBase {
     $tables = $connection->schema()->findTables($connection->prefixTables('{' . $base_table . '}') . '%');
 
     if ($count) {
-      return $this->assertTrue($tables, format_string('Tables matching "@base_table" found.', ['@base_table' => $base_table]));
+      return $this->assertTrue($tables, new FormattableMarkup('Tables matching "@base_table" found.', ['@base_table' => $base_table]));
     }
-    return $this->assertFalse($tables, format_string('Tables matching "@base_table" not found.', ['@base_table' => $base_table]));
+    return $this->assertFalse($tables, new FormattableMarkup('Tables matching "@base_table" not found.', ['@base_table' => $base_table]));
   }
 
   /**
@@ -63,7 +64,7 @@ abstract class ModuleTestBase extends BrowserTestBase {
         $tables_exist = FALSE;
       }
     }
-    return $this->assertTrue($tables_exist, format_string('All database tables defined by the @module module exist.', ['@module' => $module]));
+    return $this->assertTrue($tables_exist, new FormattableMarkup('All database tables defined by the @module module exist.', ['@module' => $module]));
   }
 
   /**
@@ -81,7 +82,7 @@ abstract class ModuleTestBase extends BrowserTestBase {
         $tables_exist = TRUE;
       }
     }
-    return $this->assertFalse($tables_exist, format_string('None of the database tables defined by the @module module exist.', ['@module' => $module]));
+    return $this->assertFalse($tables_exist, new FormattableMarkup('None of the database tables defined by the @module module exist.', ['@module' => $module]));
   }
 
   /**
@@ -127,7 +128,7 @@ abstract class ModuleTestBase extends BrowserTestBase {
     }
     // Verify that all configuration has been installed (which means that $names
     // is empty).
-    return $this->assertFalse($names, format_string('All default configuration of @module module found.', ['@module' => $module]));
+    return $this->assertFalse($names, new FormattableMarkup('All default configuration of @module module found.', ['@module' => $module]));
   }
 
   /**
@@ -141,7 +142,7 @@ abstract class ModuleTestBase extends BrowserTestBase {
    */
   public function assertNoModuleConfig($module) {
     $names = \Drupal::configFactory()->listAll($module . '.');
-    return $this->assertFalse($names, format_string('No configuration found for @module module.', ['@module' => $module]));
+    return $this->assertFalse($names, new FormattableMarkup('No configuration found for @module module.', ['@module' => $module]));
   }
 
   /**
@@ -161,7 +162,7 @@ abstract class ModuleTestBase extends BrowserTestBase {
       else {
         $message = 'Module "@module" is not enabled.';
       }
-      $this->assertEqual($this->container->get('module_handler')->moduleExists($module), $enabled, format_string($message, ['@module' => $module]));
+      $this->assertEqual($this->container->get('module_handler')->moduleExists($module), $enabled, new FormattableMarkup($message, ['@module' => $module]));
     }
   }
 
@@ -195,7 +196,7 @@ abstract class ModuleTestBase extends BrowserTestBase {
       ->countQuery()
       ->execute()
       ->fetchField();
-    $this->assertTrue($count > 0, format_string('watchdog table contains @count rows for @message', ['@count' => $count, '@message' => format_string($message, $variables)]));
+    $this->assertTrue($count > 0, new FormattableMarkup('watchdog table contains @count rows for @message', ['@count' => $count, '@message' => new FormattableMarkup($message, $variables)]));
   }
 
 }

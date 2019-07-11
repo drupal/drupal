@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\system\Functional\Form;
 
+use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Tests\BrowserTestBase;
 
 /**
@@ -30,7 +31,7 @@ class ElementTest extends BrowserTestBase {
         ':id' => 'edit-' . $type,
         ':expected' => $expected,
       ]);
-      $this->assertTrue(!empty($element), format_string('Placeholder text placed in @type.', ['@type' => $type]));
+      $this->assertTrue(!empty($element), new FormattableMarkup('Placeholder text placed in @type.', ['@type' => $type]));
     }
 
     // Test to make sure textarea has the proper placeholder text.
@@ -82,7 +83,7 @@ class ElementTest extends BrowserTestBase {
         ':id' => 'edit-' . $type . '-foo',
         ':class' => 'description',
       ]);
-      $this->assertTrue(count($elements), format_string('Custom %type option description found.', [
+      $this->assertTrue(count($elements), new FormattableMarkup('Custom %type option description found.', [
         '%type' => $type,
       ]));
     }
@@ -138,8 +139,8 @@ class ElementTest extends BrowserTestBase {
     foreach (['checkboxes', 'radios'] as $type) {
       $element_ids = $this->xpath('//div[@id=:id]', [':id' => 'edit-' . $type]);
       $wrapper_ids = $this->xpath('//fieldset[@id=:id]', [':id' => 'edit-' . $type . '--wrapper']);
-      $this->assertTrue(count($element_ids) == 1, format_string('A single element id found for type %type', ['%type' => $type]));
-      $this->assertTrue(count($wrapper_ids) == 1, format_string('A single wrapper id found for type %type', ['%type' => $type]));
+      $this->assertTrue(count($element_ids) == 1, new FormattableMarkup('A single element id found for type %type', ['%type' => $type]));
+      $this->assertTrue(count($wrapper_ids) == 1, new FormattableMarkup('A single wrapper id found for type %type', ['%type' => $type]));
     }
   }
 

@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\file\Functional;
 
+use Drupal\Component\Render\FormattableMarkup;
 use Drupal\file\Entity\File;
 use Drupal\file\FileInterface;
 use Drupal\Tests\BrowserTestBase;
@@ -42,16 +43,16 @@ abstract class FileManagedTestBase extends BrowserTestBase {
     // Determine if there were any expected that were not called.
     $uncalled = array_diff($expected, $actual);
     if (count($uncalled)) {
-      $this->assertTrue(FALSE, format_string('Expected hooks %expected to be called but %uncalled was not called.', ['%expected' => implode(', ', $expected), '%uncalled' => implode(', ', $uncalled)]));
+      $this->assertTrue(FALSE, new FormattableMarkup('Expected hooks %expected to be called but %uncalled was not called.', ['%expected' => implode(', ', $expected), '%uncalled' => implode(', ', $uncalled)]));
     }
     else {
-      $this->assertTrue(TRUE, format_string('All the expected hooks were called: %expected', ['%expected' => empty($expected) ? '(none)' : implode(', ', $expected)]));
+      $this->assertTrue(TRUE, new FormattableMarkup('All the expected hooks were called: %expected', ['%expected' => empty($expected) ? '(none)' : implode(', ', $expected)]));
     }
 
     // Determine if there were any unexpected calls.
     $unexpected = array_diff($actual, $expected);
     if (count($unexpected)) {
-      $this->assertTrue(FALSE, format_string('Unexpected hooks were called: %unexpected.', ['%unexpected' => empty($unexpected) ? '(none)' : implode(', ', $unexpected)]));
+      $this->assertTrue(FALSE, new FormattableMarkup('Unexpected hooks were called: %unexpected.', ['%unexpected' => empty($unexpected) ? '(none)' : implode(', ', $unexpected)]));
     }
     else {
       $this->assertTrue(TRUE, 'No unexpected hooks were called.');
@@ -73,13 +74,13 @@ abstract class FileManagedTestBase extends BrowserTestBase {
 
     if (!isset($message)) {
       if ($actual_count == $expected_count) {
-        $message = format_string('hook_file_@name was called correctly.', ['@name' => $hook]);
+        $message = new FormattableMarkup('hook_file_@name was called correctly.', ['@name' => $hook]);
       }
       elseif ($expected_count == 0) {
         $message = \Drupal::translation()->formatPlural($actual_count, 'hook_file_@name was not expected to be called but was actually called once.', 'hook_file_@name was not expected to be called but was actually called @count times.', ['@name' => $hook, '@count' => $actual_count]);
       }
       else {
-        $message = format_string('hook_file_@name was expected to be called %expected times but was called %actual times.', ['@name' => $hook, '%expected' => $expected_count, '%actual' => $actual_count]);
+        $message = new FormattableMarkup('hook_file_@name was expected to be called %expected times but was called %actual times.', ['@name' => $hook, '%expected' => $expected_count, '%actual' => $actual_count]);
       }
     }
     $this->assertEqual($actual_count, $expected_count, $message);

@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\image\Functional;
 
+use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\StreamWrapper\StreamWrapperManager;
 use Drupal\Core\Url;
@@ -331,7 +332,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, t('Save'));
     // Add the required alt text.
     $this->drupalPostForm(NULL, [$field_name . '[1][alt]' => $alt], t('Save'));
-    $this->assertText(format_string('Article @title has been updated.', ['@title' => $node->getTitle()]));
+    $this->assertText(new FormattableMarkup('Article @title has been updated.', ['@title' => $node->getTitle()]));
 
     // Assert ImageWidget::process() calls FieldWidget::process().
     $this->drupalGet('node/' . $node->id() . '/edit');
