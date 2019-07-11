@@ -183,7 +183,7 @@ function layout_builder_entity_build_defaults_alter(array &$build, EntityInterfa
 }
 
 /**
- * Implements hook_builder_module_implements_alter().
+ * Implements hook_module_implements_alter().
  */
 function layout_builder_module_implements_alter(&$implementations, $hook) {
   if ($hook === 'entity_view_alter') {
