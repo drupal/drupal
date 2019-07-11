@@ -31,7 +31,10 @@ interface FieldItemListInterface extends ListInterface, AccessibleInterface {
    * Gets the entity that field belongs to.
    *
    * @return \Drupal\Core\Entity\FieldableEntityInterface
-   *   The entity object.
+   *   The entity object. If the entity is translatable and a specific
+   *   translation is required, always request it by calling ::getTranslation()
+   *   or ::getUntranslated() as the language of the returned object is not
+   *   defined.
    */
   public function getEntity();
 
