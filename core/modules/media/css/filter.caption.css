@@ -1,0 +1,10 @@
+/**
+ * @file
+ * Caption filter: default styling for displaying Media Embed captions.
+ */
+
+.caption .media .field,
+.caption .media .field * {
+  float: none;
+  margin: unset;
+}

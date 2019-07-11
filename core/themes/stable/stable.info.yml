@@ -144,6 +144,11 @@ libraries-override:
       component:
         css/locale.admin.css: css/locale/locale.admin.css
 
+  media/filter.caption:
+    css:
+      component:
+        css/filter.caption.css: css/media/filter.caption.css
+
   media/oembed.formatter:
     css:
       component:

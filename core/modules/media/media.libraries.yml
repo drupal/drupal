@@ -23,3 +23,11 @@ oembed.frame:
   css:
     component:
       css/oembed.frame.css: {}
+
+filter.caption:
+  version: VERSION
+  css:
+    component:
+      css/filter.caption.css: {}
+  dependencies:
+    - filter/caption

@@ -1,0 +1,8 @@
+name: Media Filter test
+description: 'Provides functionality to test the Media Embed filter.'
+type: module
+package: Testing
+version: VERSION
+core: 8.x
+dependencies:
+  - drupal:media

@@ -1,0 +1,25 @@
+<?php
+
+/**
+ * @file
+ * Helper module for the Media Embed filter tests.
+ */
+
+use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Session\AccountInterface;
+
+/**
+ * Implements hook_entity_access().
+ */
+function media_test_filter_entity_access(EntityInterface $entity, $operation, AccountInterface $account) {
+  return AccessResult::neutral()->addCacheTags(['_media_test_filter_access:' . $entity->getEntityTypeId() . ':' . $entity->id()]);
+}
+
+/**
+ * Implements hook_entity_view_alter().
+ */
+function media_test_filter_entity_view_alter(&$build, EntityInterface $entity, EntityViewDisplayInterface $display) {
+  $build['#attributes']['data-media-embed-test-view-mode'] = $display->getMode();
+}
