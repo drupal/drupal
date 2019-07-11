@@ -1,0 +1,13 @@
+services:
+  # @todo: Move this back to core services in #2991683
+  config.import_transformer:
+    class: Drupal\config_environment\Core\Config\ImportStorageTransformer
+    arguments: ['@event_dispatcher', '@database']
+  config.storage.export:
+    class: Drupal\config_environment\Core\Config\ManagedStorage
+    arguments: ['@config.storage.export.manager']
+  config.storage.export.manager:
+    class: Drupal\config_environment\Core\Config\ExportStorageManager
+    arguments: ['@config.storage', '@state', '@database', '@event_dispatcher']
+    tags:
+      - { name: event_subscriber }

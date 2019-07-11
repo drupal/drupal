@@ -1,0 +1,6 @@
+services:
+  config_transformer_test.event_subscriber:
+    class: Drupal\config_transformer_test\EventSubscriber
+    arguments: ['@config.storage', '@config.storage.sync']
+    tags:
+      - { name: event_subscriber }

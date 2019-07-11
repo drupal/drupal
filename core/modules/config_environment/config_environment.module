@@ -5,6 +5,15 @@
  * Allows site administrators to modify environment configuration.
  */
 
+// Set class aliases for the classes that will go into core when we are in beta.
+// See the experimental modules policy https://www.drupal.org/core/experimental
+// @todo: remove class aliases in #2991683
+@class_alias('Drupal\config_environment\Core\Config\StorageTransformEvent', 'Drupal\Core\Config\StorageTransformEvent');
+@class_alias('Drupal\config_environment\Core\Config\ManagedStorage', 'Drupal\Core\Config\ManagedStorage');
+@class_alias('Drupal\config_environment\Core\Config\StorageManagerInterface', 'Drupal\Core\Config\StorageManagerInterface');
+@class_alias('Drupal\config_environment\Core\Config\ExportStorageManager', 'Drupal\Core\Config\ExportStorageManager');
+@class_alias('Drupal\config_environment\Core\Config\ImportStorageTransformer', 'Drupal\Core\Config\ImportStorageTransformer');
+
 use Drupal\Core\Routing\RouteMatchInterface;
 
 /**
