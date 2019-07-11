@@ -19,7 +19,9 @@ class ViewPageController {
    *   The ID of the display.
    * @param \Drupal\Core\Routing\RouteMatchInterface $route_match
    *   The route match.
-   * @return null|void
+   *
+   * @return array|\Symfony\Component\HttpFoundation\Response
+   *   A render array or a Response object.
    */
   public function handle($view_id, $display_id, RouteMatchInterface $route_match) {
     $args = [];
