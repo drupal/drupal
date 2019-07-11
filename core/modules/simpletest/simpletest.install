@@ -22,7 +22,6 @@ function simpletest_requirements($phase) {
 
   $has_phpunit = class_exists(TestCase::class);
   $has_curl = function_exists('curl_init');
-  $open_basedir = ini_get('open_basedir');
 
   $requirements['phpunit'] = [
     'title' => t('PHPUnit dependency'),
@@ -40,18 +39,6 @@ function simpletest_requirements($phase) {
   if (!$has_curl) {
     $requirements['curl']['severity'] = REQUIREMENT_ERROR;
     $requirements['curl']['description'] = t('The testing framework requires the <a href="https://secure.php.net/manual/en/curl.setup.php">PHP cURL library</a>. For more information, see the <a href="https://www.drupal.org/requirements/php/curl">online information on installing the PHP cURL extension</a>.');
-  }
-
-  // SimpleTest currently needs 2 cURL options which are incompatible with
-  // having PHP's open_basedir restriction set.
-  // See https://www.drupal.org/node/674304.
-  $requirements['php_open_basedir'] = [
-    'title' => t('PHP open_basedir restriction'),
-    'value' => $open_basedir ? t('Enabled') : t('Disabled'),
-  ];
-  if ($open_basedir) {
-    $requirements['php_open_basedir']['severity'] = REQUIREMENT_ERROR;
-    $requirements['php_open_basedir']['description'] = t('The testing framework requires the PHP <a href="http://php.net/manual/ini.core.php#ini.open-basedir">open_basedir</a> restriction to be disabled. Check your webserver configuration or contact your web host.');
   }
 
   // Check the current memory limit. If it is set too low, SimpleTest will fail
