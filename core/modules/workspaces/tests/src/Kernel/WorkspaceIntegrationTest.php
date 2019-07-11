@@ -6,6 +6,7 @@ use Drupal\Core\Entity\EntityStorageException;
 use Drupal\Core\Form\FormState;
 use Drupal\entity_test\Entity\EntityTestMulRevPub;
 use Drupal\KernelTests\KernelTestBase;
+use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\system\Form\SiteInformationForm;
 use Drupal\Tests\field\Traits\EntityReferenceTestTrait;
 use Drupal\Tests\node\Traits\ContentTypeCreationTrait;
@@ -62,6 +63,8 @@ class WorkspaceIntegrationTest extends KernelTestBase {
     'user',
     'system',
     'views',
+    'language',
+    'content_translation',
   ];
 
   /**
@@ -78,20 +81,29 @@ class WorkspaceIntegrationTest extends KernelTestBase {
     $this->installEntitySchema('node');
     $this->installEntitySchema('user');
 
-    $this->installConfig(['filter', 'node', 'system']);
+    $this->installConfig(['filter', 'node', 'system', 'language', 'content_translation']);
 
     $this->installSchema('system', ['key_value_expire', 'sequences']);
     $this->installSchema('node', ['node_access']);
 
+    $language = ConfigurableLanguage::createFromLangcode('de');
+    $language->save();
+
     $this->createContentType(['type' => 'page']);
 
     $this->setCurrentUser($this->createUser(['administer nodes']));
+
+    $this->container->get('content_translation.manager')->setEnabled('node', 'page', TRUE);
 
     // Create two nodes, a published and an unpublished one, so we can test the
     // behavior of the module with default/existing content.
     $this->createdTimestamp = \Drupal::time()->getRequestTime();
     $this->nodes[] = $this->createNode(['title' => 'live - 1 - r1 - published', 'created' => $this->createdTimestamp++, 'status' => TRUE]);
     $this->nodes[] = $this->createNode(['title' => 'live - 2 - r2 - unpublished', 'created' => $this->createdTimestamp++, 'status' => FALSE]);
+
+    $translation = $this->nodes[0]->addTranslation('de');
+    $translation->setTitle('live - 1 - r1 - published - de');
+    $translation->save();
   }
 
   /**
