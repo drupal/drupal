@@ -30,6 +30,9 @@ trait CommandWithAttachedAssetsTrait {
   protected function getRenderedContent() {
     $this->attachedAssets = new AttachedAssets();
     if (is_array($this->content)) {
+      if (!$this->content) {
+        return '';
+      }
       $html = \Drupal::service('renderer')->renderRoot($this->content);
       $this->attachedAssets = AttachedAssets::createFromRenderArray($this->content);
       return $html;
