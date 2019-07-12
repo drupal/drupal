@@ -41,7 +41,7 @@ class ColorSafePreviewTest extends BrowserTestBase {
    */
   public function testColorPreview() {
     // Install the color test theme.
-    \Drupal::service('theme_handler')->install(['color_test_theme']);
+    \Drupal::service('theme_installer')->install(['color_test_theme']);
     $this->drupalLogin($this->bigUser);
 
     // Markup is being printed from a HTML file located in:

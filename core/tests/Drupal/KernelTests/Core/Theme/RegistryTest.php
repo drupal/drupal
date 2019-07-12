@@ -67,7 +67,7 @@ class RegistryTest extends KernelTestBase {
    */
   public function testMultipleSubThemes() {
     $theme_handler = \Drupal::service('theme_handler');
-    $theme_handler->install(['test_basetheme', 'test_subtheme', 'test_subsubtheme']);
+    \Drupal::service('theme_installer')->install(['test_basetheme', 'test_subtheme', 'test_subsubtheme']);
 
     $registry_subsub_theme = new Registry($this->root, \Drupal::cache(), \Drupal::lock(), \Drupal::moduleHandler(), $theme_handler, \Drupal::service('theme.initialization'), 'test_subsubtheme');
     $registry_subsub_theme->setThemeManager(\Drupal::theme());
@@ -109,7 +109,7 @@ class RegistryTest extends KernelTestBase {
    */
   public function testSuggestionPreprocessFunctions() {
     $theme_handler = \Drupal::service('theme_handler');
-    $theme_handler->install(['test_theme']);
+    \Drupal::service('theme_installer')->install(['test_theme']);
 
     $registry_theme = new Registry($this->root, \Drupal::cache(), \Drupal::lock(), \Drupal::moduleHandler(), $theme_handler, \Drupal::service('theme.initialization'), 'test_theme');
     $registry_theme->setThemeManager(\Drupal::theme());
@@ -151,7 +151,7 @@ class RegistryTest extends KernelTestBase {
 
     /** @var \Drupal\Core\Extension\ThemeHandlerInterface $theme_handler */
     $theme_handler = \Drupal::service('theme_handler');
-    $theme_handler->install(['test_theme']);
+    \Drupal::service('theme_installer')->install(['test_theme']);
     $this->config('system.theme')->set('default', 'test_theme')->save();
 
     $registry = new Registry($this->root, \Drupal::cache(), \Drupal::lock(), \Drupal::moduleHandler(), $theme_handler, \Drupal::service('theme.initialization'), 'test_theme');
@@ -197,7 +197,7 @@ class RegistryTest extends KernelTestBase {
    */
   public function testThemeTemplatesRegisteredByModules() {
     $theme_handler = \Drupal::service('theme_handler');
-    $theme_handler->install(['test_theme']);
+    \Drupal::service('theme_installer')->install(['test_theme']);
 
     $registry_theme = new Registry($this->root, \Drupal::cache(), \Drupal::lock(), \Drupal::moduleHandler(), $theme_handler, \Drupal::service('theme.initialization'), 'test_theme');
     $registry_theme->setThemeManager(\Drupal::theme());

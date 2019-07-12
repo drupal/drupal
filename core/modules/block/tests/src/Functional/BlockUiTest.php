@@ -84,11 +84,11 @@ class BlockUiTest extends BrowserTestBase {
     $elements = $this->xpath('//div[contains(@class, "region-highlighted")]/div[contains(@class, "block-region") and contains(text(), :title)]', [':title' => 'Highlighted']);
     $this->assertTrue(!empty($elements), 'Block demo regions are shown.');
 
-    \Drupal::service('theme_handler')->install(['test_theme']);
+    \Drupal::service('theme_installer')->install(['test_theme']);
     $this->drupalGet('admin/structure/block/demo/test_theme');
     $this->assertEscaped('<strong>Test theme</strong>');
 
-    \Drupal::service('theme_handler')->install(['stable']);
+    \Drupal::service('theme_installer')->install(['stable']);
     $this->drupalGet('admin/structure/block/demo/stable');
     $this->assertResponse(404, 'Hidden themes that are not the default theme are not supported by the block demo screen');
   }

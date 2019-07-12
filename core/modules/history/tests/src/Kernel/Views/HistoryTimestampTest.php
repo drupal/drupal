@@ -42,7 +42,7 @@ class HistoryTimestampTest extends ViewsKernelTestBase {
     $this->installSchema('history', ['history']);
     // Use classy theme because its marker is wrapped in a span so it can be
     // easily targeted with xpath.
-    \Drupal::service('theme_handler')->install(['classy']);
+    \Drupal::service('theme_installer')->install(['classy']);
     \Drupal::theme()->setActiveTheme(\Drupal::service('theme.initialization')->initTheme('classy'));
   }
 

@@ -35,7 +35,7 @@ class ViewsPreprocessTest extends ViewsKernelTestBase {
    * Tests css classes on displays are cleaned correctly.
    */
   public function testCssClassCleaning() {
-    \Drupal::service('theme_handler')->install(['test_theme']);
+    \Drupal::service('theme_installer')->install(['test_theme']);
     $this->config('system.theme')->set('default', 'test_theme')->save();
 
     $entity = EntityTest::create();

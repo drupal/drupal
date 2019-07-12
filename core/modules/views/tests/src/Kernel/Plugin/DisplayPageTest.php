@@ -239,7 +239,7 @@ class DisplayPageTest extends ViewsKernelTestBase {
     $themes = ['bartik', 'classy', 'seven', 'stable', 'stark'];
 
     foreach ($themes as $theme) {
-      \Drupal::service('theme_handler')->install([$theme]);
+      \Drupal::service('theme_installer')->install([$theme]);
       \Drupal::theme()->setActiveTheme(\Drupal::service('theme.initialization')->initTheme($theme));
       foreach ($styles as $type => $xpath) {
         $view = Views::getView('test_page_display');

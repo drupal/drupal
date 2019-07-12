@@ -136,7 +136,7 @@ class SiteMaintenanceTest extends BrowserTestBase {
     $this->assertText($user_message);
 
     // Regression test to check if title displays in Bartik on maintenance page.
-    \Drupal::service('theme_handler')->install(['bartik']);
+    \Drupal::service('theme_installer')->install(['bartik']);
     $this->config('system.theme')->set('default', 'bartik')->save();
 
     // Logout and verify that offline message is displayed in Bartik.

@@ -244,7 +244,7 @@ class BlockTest extends BlockTestBase {
    */
   public function testBlockThemeSelector() {
     // Install all themes.
-    \Drupal::service('theme_handler')->install(['bartik', 'seven', 'stark']);
+    \Drupal::service('theme_installer')->install(['bartik', 'seven', 'stark']);
     $theme_settings = $this->config('system.theme');
     foreach (['bartik', 'seven', 'stark'] as $theme) {
       $this->drupalGet('admin/structure/block/list/' . $theme);
@@ -275,7 +275,7 @@ class BlockTest extends BlockTestBase {
     $this->drupalPlaceBlock('local_tasks_block');
     // Explicitly set the default and admin themes.
     $theme = 'block_test_specialchars_theme';
-    \Drupal::service('theme_handler')->install([$theme]);
+    \Drupal::service('theme_installer')->install([$theme]);
     \Drupal::service('router.builder')->rebuild();
     $this->drupalGet('admin/structure/block');
     $this->assertEscaped('<"Cat" & \'Mouse\'>');
@@ -484,17 +484,17 @@ class BlockTest extends BlockTestBase {
    * Tests that uninstalling a theme removes its block configuration.
    */
   public function testUninstallTheme() {
-    /** @var \Drupal\Core\Extension\ThemeHandlerInterface $theme_handler */
-    $theme_handler = \Drupal::service('theme_handler');
+    /** @var \Drupal\Core\Extension\ThemeInstallerInterface $theme_installer */
+    $theme_installer = \Drupal::service('theme_installer');
 
-    $theme_handler->install(['seven']);
+    $theme_installer->install(['seven']);
     $this->config('system.theme')->set('default', 'seven')->save();
     $block = $this->drupalPlaceBlock('system_powered_by_block', ['theme' => 'seven', 'region' => 'help']);
     $this->drupalGet('<front>');
     $this->assertText('Powered by Drupal');
 
     $this->config('system.theme')->set('default', 'classy')->save();
-    $theme_handler->uninstall(['seven']);
+    $theme_installer->uninstall(['seven']);
 
     // Ensure that the block configuration does not exist anymore.
     $this->assertIdentical(NULL, Block::load($block->id()));

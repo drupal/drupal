@@ -1854,12 +1854,13 @@ function system_update_8014() {
     return;
   }
   $theme_handler->refreshInfo();
+  $theme_installer = \Drupal::service('theme_installer');
   foreach ($theme_handler->listInfo() as $theme) {
     // We first check that a base theme is set because if it's set to false then
     // it's unset in
     // \Drupal\Core\Extension\ThemeExtensionList::createExtensionInfo().
     if (isset($theme->info['base theme']) && $theme->info['base theme'] == 'stable') {
-      $theme_handler->install(['stable']);
+      $theme_installer->install(['stable']);
       return;
     }
   }

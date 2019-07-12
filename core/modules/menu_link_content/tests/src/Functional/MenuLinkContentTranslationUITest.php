@@ -88,7 +88,7 @@ class MenuLinkContentTranslationUITest extends ContentTranslationUITestBase {
     $entityId = $this->createEntity([], 'en');
 
     // Set up Seven as the admin theme to test.
-    $this->container->get('theme_handler')->install(['seven']);
+    $this->container->get('theme_installer')->install(['seven']);
     $edit = [];
     $edit['admin_theme'] = 'seven';
     $this->drupalPostForm('admin/appearance', $edit, t('Save configuration'));

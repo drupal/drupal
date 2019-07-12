@@ -188,7 +188,7 @@ class UpdateContribTest extends UpdateTestBase {
     // @todo https://www.drupal.org/node/2338175 base themes have to be
     //  installed.
     // Only install the subtheme, not the base theme.
-    \Drupal::service('theme_handler')->install(['update_test_subtheme']);
+    \Drupal::service('theme_installer')->install(['update_test_subtheme']);
 
     // Define the initial state for core and the subtheme.
     $system_info = [
@@ -295,7 +295,7 @@ class UpdateContribTest extends UpdateTestBase {
     module_load_include('compare.inc', 'update');
 
     // Install the subtheme.
-    \Drupal::service('theme_handler')->install(['update_test_subtheme']);
+    \Drupal::service('theme_installer')->install(['update_test_subtheme']);
 
     // Add a project and initial state for base theme and subtheme.
     $system_info = [

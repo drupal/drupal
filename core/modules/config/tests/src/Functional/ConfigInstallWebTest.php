@@ -164,7 +164,7 @@ class ConfigInstallWebTest extends BrowserTestBase {
 
     // Test installing a theme through the API that has existing configuration.
     try {
-      \Drupal::service('theme_handler')->install(['config_clash_test_theme']);
+      \Drupal::service('theme_installer')->install(['config_clash_test_theme']);
       $this->fail('Expected PreExistingConfigException not thrown.');
     }
     catch (PreExistingConfigException $e) {

@@ -34,7 +34,7 @@ class NonDefaultBlockAdminTest extends BrowserTestBase {
     $admin_user = $this->drupalCreateUser(['administer blocks', 'administer themes']);
     $this->drupalLogin($admin_user);
     $new_theme = 'bartik';
-    \Drupal::service('theme_handler')->install([$new_theme]);
+    \Drupal::service('theme_installer')->install([$new_theme]);
     $this->drupalGet('admin/structure/block/list/' . $new_theme);
     $this->assertText('Bartik(' . t('active tab') . ')', 'Tab for non-default theme found.');
   }

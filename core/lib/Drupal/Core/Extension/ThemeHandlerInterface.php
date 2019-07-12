@@ -23,10 +23,11 @@ interface ThemeHandlerInterface {
    * @throws \Drupal\Core\Extension\ExtensionNameLengthException
    *   Thrown when the theme name is to long.
    *
-   * @deprecated in Drupal 8.0.x-dev and will be removed before Drupal 9.0.0.
+   * @deprecated in drupal:8.0.0 and is removed from drupal:9.0.0.
    *   Use the theme_installer service instead.
    *
-   * @see \Drupal\Core\Extension\ThemeInstallerInterface::install
+   * @see https://www.drupal.org/node/3017233
+   * @see \Drupal\Core\Extension\ThemeInstallerInterface::install()
    */
   public function install(array $theme_list, $install_dependencies = TRUE);
 
@@ -42,12 +43,12 @@ interface ThemeHandlerInterface {
    * @throws \Drupal\Core\Extension\Exception\UninstalledExtensionException
    *   Thrown when you try to uninstall a theme that wasn't installed.
    *
-   * @see hook_themes_uninstalled()
-   *
-   * @deprecated in Drupal 8.0.x-dev and will be removed before Drupal 9.0.0.
+   * @deprecated in drupal:8.0.0 and is removed from drupal:9.0.0.
    *   Use the theme_installer service instead.
    *
-   * @see \Drupal\Core\Extension\ThemeInstallerInterface::uninstall
+   * @see https://www.drupal.org/node/3017233
+   * @see hook_themes_uninstalled()
+   * @see \Drupal\Core\Extension\ThemeInstallerInterface::uninstall()
    */
   public function uninstall(array $theme_list);
 

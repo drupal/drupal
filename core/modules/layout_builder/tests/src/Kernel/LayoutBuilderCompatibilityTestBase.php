@@ -47,7 +47,7 @@ abstract class LayoutBuilderCompatibilityTestBase extends EntityKernelTestBase {
     // Set up a non-admin user that is allowed to view test entities.
     \Drupal::currentUser()->setAccount($this->createUser(['uid' => 2], ['view test entity']));
 
-    \Drupal::service('theme_handler')->install(['classy']);
+    \Drupal::service('theme_installer')->install(['classy']);
     $this->config('system.theme')->set('default', 'classy')->save();
 
     $field_storage = FieldStorageConfig::create([

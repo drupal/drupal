@@ -490,7 +490,7 @@ class ConfigImportUITest extends BrowserTestBase {
    */
   public function testExtensionValidation() {
     \Drupal::service('module_installer')->install(['node']);
-    \Drupal::service('theme_handler')->install(['bartik']);
+    \Drupal::service('theme_installer')->install(['bartik']);
     $this->rebuildContainer();
 
     $sync = $this->container->get('config.storage.sync');

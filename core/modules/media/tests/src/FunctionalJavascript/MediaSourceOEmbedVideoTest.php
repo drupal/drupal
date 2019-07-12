@@ -174,7 +174,7 @@ class MediaSourceOEmbedVideoTest extends MediaSourceTestBase {
     $this->assertNoRaw('core/modules/media/templates/media-oembed-iframe.html.twig');
 
     // Test themes not inheriting from stable.
-    \Drupal::service('theme_handler')->install(['stark']);
+    \Drupal::service('theme_installer')->install(['stark']);
     $this->config('system.theme')->set('default', 'stark')->save();
     $this->drupalGet('media/oembed', ['query' => $query]);
     $assert_session->pageTextContains('By the power of Greyskull, Vimeo works!');

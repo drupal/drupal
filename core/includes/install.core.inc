@@ -1641,7 +1641,7 @@ function install_core_entity_type_definitions() {
 function install_profile_themes(&$install_state) {
   // Install the themes specified by the installation profile.
   $themes = $install_state['profile_info']['themes'];
-  \Drupal::service('theme_handler')->install($themes);
+  \Drupal::service('theme_installer')->install($themes);
 
   // Ensure that the install profile's theme is used.
   // @see _drupal_maintenance_theme()

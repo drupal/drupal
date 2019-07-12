@@ -26,7 +26,8 @@ class NewDefaultThemeBlocksTest extends KernelTestBase {
    * Check the enabled Bartik blocks are correctly copied over.
    */
   public function testNewDefaultThemeBlocks() {
-    $theme_handler = $this->container->get('theme_handler');
+    /** @var \Drupal\Core\Extension\ThemeInstallerInterface $theme_installer */
+    $theme_installer = $this->container->get('theme_installer');
     $default_theme = $this->config('system.theme')->get('default');
 
     // Add two instances of the user login block.
@@ -47,7 +48,7 @@ class NewDefaultThemeBlocksTest extends KernelTestBase {
     // The new theme is different from the previous default theme.
     $this->assertNotEquals($new_theme, $default_theme);
 
-    $theme_handler->install([$new_theme]);
+    $theme_installer->install([$new_theme]);
     $this->config('system.theme')
       ->set('default', $new_theme)
       ->save();
@@ -74,7 +75,7 @@ class NewDefaultThemeBlocksTest extends KernelTestBase {
 
     // Install a hidden base theme and ensure blocks are not copied.
     $base_theme = 'test_basetheme';
-    $theme_handler->install([$base_theme]);
+    $theme_installer->install([$base_theme]);
     $new_blocks = $block_storage->getQuery()
       ->condition('theme', $base_theme)
       ->execute();

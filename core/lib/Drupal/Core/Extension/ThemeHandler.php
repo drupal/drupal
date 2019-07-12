@@ -82,6 +82,7 @@ class ThemeHandler implements ThemeHandlerInterface {
   public function install(array $theme_list, $install_dependencies = TRUE) {
     // We keep the old install() method as BC layer but redirect directly to the
     // theme installer.
+    @trigger_error('\Drupal\Core\Extension\ThemeHandlerInterface::install() is deprecated in drupal:8.0.0 and is removed from drupal:9.0.0. Use \Drupal\Core\Extension\ThemeInstallerInterface::install() instead. See https://www.drupal.org/node/3017233', E_USER_DEPRECATED);
     return \Drupal::service('theme_installer')->install($theme_list, $install_dependencies);
   }
 
@@ -91,6 +92,7 @@ class ThemeHandler implements ThemeHandlerInterface {
   public function uninstall(array $theme_list) {
     // We keep the old uninstall() method as BC layer but redirect directly to
     // the theme installer.
+    @trigger_error('\Drupal\Core\Extension\ThemeHandlerInterface::uninstall() is deprecated in drupal:8.0.0 and is removed from drupal:9.0.0. Use \Drupal\Core\Extension\ThemeInstallerInterface::uninstall() instead. See https://www.drupal.org/node/3017233', E_USER_DEPRECATED);
     \Drupal::service('theme_installer')->uninstall($theme_list);
   }
 

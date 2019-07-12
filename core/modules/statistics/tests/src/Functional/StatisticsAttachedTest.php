@@ -29,7 +29,7 @@ class StatisticsAttachedTest extends BrowserTestBase {
 
     // Install "statistics_test_attached" and set it as the default theme.
     $theme = 'statistics_test_attached';
-    \Drupal::service('theme_handler')->install([$theme]);
+    \Drupal::service('theme_installer')->install([$theme]);
     $this->config('system.theme')
       ->set('default', $theme)
       ->save();

@@ -43,7 +43,7 @@ class CommentLinksTest extends CommentTestBase {
    */
   public function testCommentLinks() {
     // Bartik theme alters comment links, so use a different theme.
-    \Drupal::service('theme_handler')->install(['stark']);
+    \Drupal::service('theme_installer')->install(['stark']);
     $this->config('system.theme')
       ->set('default', 'stark')
       ->save();

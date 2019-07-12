@@ -82,7 +82,7 @@ class TableTest extends KernelTestBase {
     ];
 
     // Enable the Classy theme.
-    \Drupal::service('theme_handler')->install(['classy']);
+    \Drupal::service('theme_installer')->install(['classy']);
     $this->config('system.theme')->set('default', 'classy')->save();
 
     $this->render($table);

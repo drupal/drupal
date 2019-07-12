@@ -32,7 +32,7 @@ class BlockAdminThemeTest extends BrowserTestBase {
     $this->assertResponse(403);
 
     // Install admin theme and confirm that tab is accessible.
-    \Drupal::service('theme_handler')->install(['bartik']);
+    \Drupal::service('theme_installer')->install(['bartik']);
     $edit['admin_theme'] = 'bartik';
     $this->drupalPostForm('admin/appearance', $edit, t('Save configuration'));
     $this->drupalGet('admin/structure/block/list/bartik');
@@ -53,7 +53,7 @@ class BlockAdminThemeTest extends BrowserTestBase {
     $this->drupalLogin($admin_user);
 
     // Install admin theme and confirm that tab is accessible.
-    \Drupal::service('theme_handler')->install(['seven']);
+    \Drupal::service('theme_installer')->install(['seven']);
     $edit['admin_theme'] = 'seven';
     $this->drupalPostForm('admin/appearance', $edit, t('Save configuration'));
 

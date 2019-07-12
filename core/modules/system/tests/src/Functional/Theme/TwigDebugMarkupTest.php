@@ -26,7 +26,7 @@ class TwigDebugMarkupTest extends BrowserTestBase {
     /** @var \Drupal\Core\Render\RendererInterface $renderer */
     $renderer = $this->container->get('renderer');
     $extension = twig_extension();
-    \Drupal::service('theme_handler')->install(['test_theme']);
+    \Drupal::service('theme_installer')->install(['test_theme']);
     $this->config('system.theme')->set('default', 'test_theme')->save();
     $this->drupalCreateContentType(['type' => 'page']);
     // Enable debug, rebuild the service container, and clear all caches.

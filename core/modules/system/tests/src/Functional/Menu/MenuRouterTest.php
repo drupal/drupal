@@ -247,8 +247,9 @@ class MenuRouterTest extends BrowserTestBase {
     $this->defaultTheme = 'bartik';
     $this->adminTheme = 'seven';
 
-    $theme_handler = $this->container->get('theme_handler');
-    $theme_handler->install([$this->defaultTheme, $this->adminTheme]);
+    /** @var \Drupal\Core\Extension\ThemeInstallerInterface $theme_installer */
+    $theme_installer = $this->container->get('theme_installer');
+    $theme_installer->install([$this->defaultTheme, $this->adminTheme]);
     $this->config('system.theme')
       ->set('default', $this->defaultTheme)
       ->set('admin', $this->adminTheme)
@@ -305,14 +306,15 @@ class MenuRouterTest extends BrowserTestBase {
     $this->assertRaw('bartik/css/base/elements.css', "The default theme's CSS appears on the page.");
 
     // Now install the theme and request it again.
-    $theme_handler = $this->container->get('theme_handler');
-    $theme_handler->install(['test_theme']);
+    /** @var \Drupal\Core\Extension\ThemeInstallerInterface $theme_installer */
+    $theme_installer = $this->container->get('theme_installer');
+    $theme_installer->install(['test_theme']);
 
     $this->drupalGet('menu-test/theme-callback/use-test-theme');
     $this->assertText('Active theme: test_theme. Actual theme: test_theme.', 'The theme negotiation system uses an optional theme once it has been installed.');
     $this->assertRaw('test_theme/kitten.css', "The optional theme's CSS appears on the page.");
 
-    $theme_handler->uninstall(['test_theme']);
+    $theme_installer->uninstall(['test_theme']);
   }
 
   /**

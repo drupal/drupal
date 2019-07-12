@@ -65,7 +65,7 @@ class EntityReferenceFormatterTest extends EntityKernelTestBase {
     parent::setUp();
 
     // Use Classy theme for testing markup output.
-    \Drupal::service('theme_handler')->install(['classy']);
+    \Drupal::service('theme_installer')->install(['classy']);
     $this->config('system.theme')->set('default', 'classy')->save();
     $this->installEntitySchema('entity_test');
     // Grant the 'view test entity' permission.

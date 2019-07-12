@@ -829,7 +829,7 @@ class ConfigImporter {
         $this->configManager->getConfigFactory()->reset('system.theme');
         $this->processedSystemTheme = TRUE;
       }
-      $this->themeHandler->$op([$name]);
+      \Drupal::service('theme_installer')->$op([$name]);
     }
 
     $this->setProcessedExtension($type, $op, $name);

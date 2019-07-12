@@ -53,7 +53,7 @@ class BlockHiddenRegionTest extends BrowserTestBase {
     $theme = 'block_test_theme';
     // We need to install a non-hidden theme so that there is more than one
     // local task.
-    \Drupal::service('theme_handler')->install([$theme, 'stark']);
+    \Drupal::service('theme_installer')->install([$theme, 'stark']);
     $this->config('system.theme')
       ->set('default', $theme)
       ->save();

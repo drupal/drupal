@@ -98,7 +98,7 @@ class FrameworkTest extends WebDriverTestBase {
   public function testLazyLoadOverriddenCSS() {
     // The test theme overrides js.module.css without an implementation,
     // thereby removing it.
-    \Drupal::service('theme_handler')->install(['test_theme']);
+    \Drupal::service('theme_installer')->install(['test_theme']);
     $this->config('system.theme')
       ->set('default', 'test_theme')
       ->save();

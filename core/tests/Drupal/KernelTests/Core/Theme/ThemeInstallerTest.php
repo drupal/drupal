@@ -109,7 +109,7 @@ class ThemeInstallerTest extends KernelTestBase {
     $this->assertFalse(array_keys($themes));
 
     try {
-      $message = 'ThemeHandler::install() throws UnknownExtensionException upon installing a non-existing theme.';
+      $message = 'ThemeInstaller::install() throws UnknownExtensionException upon installing a non-existing theme.';
       $this->themeInstaller()->install([$name]);
       $this->fail($message);
     }
@@ -128,7 +128,7 @@ class ThemeInstallerTest extends KernelTestBase {
     $name = 'test_theme_having_veery_long_name_which_is_too_long';
 
     try {
-      $message = 'ThemeHandler::install() throws ExtensionNameLengthException upon installing a theme with a too long name.';
+      $message = 'ThemeInstaller::install() throws ExtensionNameLengthException upon installing a theme with a too long name.';
       $this->themeInstaller()->install([$name]);
       $this->fail($message);
     }
@@ -151,8 +151,8 @@ class ThemeInstallerTest extends KernelTestBase {
     $this->assertTrue(isset($themes[$other_name]));
 
     try {
-      $message = 'ThemeHandler::uninstall() throws InvalidArgumentException upon disabling default theme.';
-      $this->themeHandler()->uninstall([$name]);
+      $message = 'ThemeInstaller::uninstall() throws InvalidArgumentException upon disabling default theme.';
+      $this->themeInstaller()->uninstall([$name]);
       $this->fail($message);
     }
     catch (\InvalidArgumentException $e) {
@@ -178,8 +178,8 @@ class ThemeInstallerTest extends KernelTestBase {
     $this->assertTrue(isset($themes[$other_name]));
 
     try {
-      $message = 'ThemeHandler::uninstall() throws InvalidArgumentException upon disabling admin theme.';
-      $this->themeHandler()->uninstall([$name]);
+      $message = 'ThemeInstaller::uninstall() throws InvalidArgumentException upon disabling admin theme.';
+      $this->themeInstaller()->uninstall([$name]);
       $this->fail($message);
     }
     catch (\InvalidArgumentException $e) {
@@ -216,7 +216,7 @@ class ThemeInstallerTest extends KernelTestBase {
     $this->themeInstaller()->install([$sub_name]);
 
     try {
-      $message = 'ThemeHandler::install() throws InvalidArgumentException upon uninstalling base theme before sub theme.';
+      $message = 'ThemeInstaller::install() throws InvalidArgumentException upon uninstalling base theme before sub theme.';
       $this->themeInstaller()->uninstall([$name]);
       $this->fail($message);
     }
@@ -246,7 +246,7 @@ class ThemeInstallerTest extends KernelTestBase {
     $this->assertFalse(array_keys($themes));
 
     try {
-      $message = 'ThemeHandler::uninstall() throws UnknownExtensionException upon uninstalling a non-existing theme.';
+      $message = 'ThemeInstaller::uninstall() throws UnknownExtensionException upon uninstalling a non-existing theme.';
       $this->themeInstaller()->uninstall([$name]);
       $this->fail($message);
     }
@@ -288,7 +288,7 @@ class ThemeInstallerTest extends KernelTestBase {
     $name = 'test_basetheme';
 
     try {
-      $message = 'ThemeHandler::uninstall() throws UnknownExtensionException upon uninstalling a theme that is not installed.';
+      $message = 'ThemeInstaller::uninstall() throws UnknownExtensionException upon uninstalling a theme that is not installed.';
       $this->themeInstaller()->uninstall([$name]);
       $this->fail($message);
     }

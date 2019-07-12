@@ -48,7 +48,7 @@ class TwigTransTest extends BrowserTestBase {
     parent::setUp();
 
     // Setup test_theme.
-    \Drupal::service('theme_handler')->install(['test_theme']);
+    \Drupal::service('theme_installer')->install(['test_theme']);
     $this->config('system.theme')->set('default', 'test_theme')->save();
 
     // Create and log in as admin.

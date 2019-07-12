@@ -30,7 +30,7 @@ class HelpTopicTranslationTest extends BrowserTestBase {
     parent::setUp();
 
     // These tests rely on some markup from the 'Seven' theme.
-    \Drupal::service('theme_handler')->install(['seven']);
+    \Drupal::service('theme_installer')->install(['seven']);
     \Drupal::service('config.factory')->getEditable('system.theme')->set('admin', 'seven')->save();
 
     // Place various blocks.

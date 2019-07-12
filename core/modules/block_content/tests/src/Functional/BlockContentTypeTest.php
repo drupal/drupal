@@ -192,7 +192,7 @@ class BlockContentTypeTest extends BlockContentTestBase {
       ->getStorage('block_content');
 
     // Install all themes.
-    \Drupal::service('theme_handler')->install(['bartik', 'seven', 'stark']);
+    \Drupal::service('theme_installer')->install(['bartik', 'seven', 'stark']);
     $theme_settings = $this->config('system.theme');
     foreach (['bartik', 'seven', 'stark'] as $default_theme) {
       // Change the default theme.

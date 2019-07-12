@@ -725,7 +725,7 @@ function hook_theme_suggestions_HOOK_alter(array &$suggestions, array $variables
  * @param array $theme_list
  *   Array containing the names of the themes being installed.
  *
- * @see \Drupal\Core\Extension\ThemeHandler::install()
+ * @see \Drupal\Core\Extension\ThemeInstallerInterface::install()
  */
 function hook_themes_installed($theme_list) {
   foreach ($theme_list as $theme) {
@@ -739,7 +739,7 @@ function hook_themes_installed($theme_list) {
  * @param array $themes
  *   Array containing the names of the themes being uninstalled.
  *
- * @see \Drupal\Core\Extension\ThemeHandler::uninstall()
+ * @see \Drupal\Core\Extension\ThemeInstallerInterface::uninstall()
  */
 function hook_themes_uninstalled(array $themes) {
   // Remove some state entries depending on the theme.

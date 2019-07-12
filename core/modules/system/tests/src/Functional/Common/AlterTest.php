@@ -24,7 +24,7 @@ class AlterTest extends BrowserTestBase {
   public function testDrupalAlter() {
     // This test depends on Bartik, so make sure that it is always the current
     // active theme.
-    \Drupal::service('theme_handler')->install(['bartik']);
+    \Drupal::service('theme_installer')->install(['bartik']);
     \Drupal::theme()->setActiveTheme(\Drupal::service('theme.initialization')->initTheme('bartik'));
 
     $array = ['foo' => 'bar'];

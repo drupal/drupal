@@ -47,7 +47,7 @@ class HelpTopicTest extends BrowserTestBase {
 
     // These tests rely on some markup from the 'Seven' theme and we test theme
     // provided help topics.
-    \Drupal::service('theme_handler')->install(['seven', 'help_topics_test_theme']);
+    \Drupal::service('theme_installer')->install(['seven', 'help_topics_test_theme']);
     \Drupal::service('config.factory')->getEditable('system.theme')->set('admin', 'seven')->save();
 
     // Place various blocks.

@@ -107,7 +107,7 @@ class CustomBooleanTest extends UITestBase {
    */
   public function testCustomOptionTemplate() {
     // Install theme to test with template system.
-    \Drupal::service('theme_handler')->install(['views_test_theme']);
+    \Drupal::service('theme_installer')->install(['views_test_theme']);
 
     // Set the default theme for Views preview.
     $this->config('system.theme')

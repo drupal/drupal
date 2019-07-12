@@ -7,6 +7,7 @@ use Drupal\Core\Config\PreExistingConfigException;
 use Drupal\Core\Config\UnmetDependenciesException;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Extension\ThemeHandlerInterface;
+use Drupal\Core\Extension\ThemeInstallerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
@@ -24,16 +25,26 @@ class ThemeController extends ControllerBase {
   protected $themeHandler;
 
   /**
+   * The theme installer service.
+   *
+   * @var \Drupal\Core\Extension\ThemeInstallerInterface
+   */
+  protected $themeInstaller;
+
+  /**
    * Constructs a new ThemeController.
    *
    * @param \Drupal\Core\Extension\ThemeHandlerInterface $theme_handler
    *   The theme handler.
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The config factory.
+   * @param \Drupal\Core\Extension\ThemeInstallerInterface $theme_installer
+   *   The theme installer.
    */
-  public function __construct(ThemeHandlerInterface $theme_handler, ConfigFactoryInterface $config_factory) {
+  public function __construct(ThemeHandlerInterface $theme_handler, ConfigFactoryInterface $config_factory, ThemeInstallerInterface $theme_installer) {
     $this->themeHandler = $theme_handler;
     $this->configFactory = $config_factory;
+    $this->themeInstaller = $theme_installer;
   }
 
   /**
@@ -42,7 +53,8 @@ class ThemeController extends ControllerBase {
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('theme_handler'),
-      $container->get('config.factory')
+      $container->get('config.factory'),
+      $container->get('theme_installer')
     );
   }
 
@@ -74,7 +86,7 @@ class ThemeController extends ControllerBase {
           $this->messenger()->addError($this->t('%theme is the default theme and cannot be uninstalled.', ['%theme' => $themes[$theme]->info['name']]));
         }
         else {
-          $this->themeHandler->uninstall([$theme]);
+          $this->themeInstaller->uninstall([$theme]);
           $this->messenger()->addStatus($this->t('The %theme theme has been uninstalled.', ['%theme' => $themes[$theme]->info['name']]));
         }
       }
@@ -106,7 +118,7 @@ class ThemeController extends ControllerBase {
 
     if (isset($theme)) {
       try {
-        if ($this->themeHandler->install([$theme])) {
+        if ($this->themeInstaller->install([$theme])) {
           $themes = $this->themeHandler->listInfo();
           $this->messenger()->addStatus($this->t('The %theme theme has been installed.', ['%theme' => $themes[$theme]->info['name']]));
         }
@@ -159,7 +171,7 @@ class ThemeController extends ControllerBase {
 
       // Check if the specified theme is one recognized by the system.
       // Or try to install the theme.
-      if (isset($themes[$theme]) || $this->themeHandler->install([$theme])) {
+      if (isset($themes[$theme]) || $this->themeInstaller->install([$theme])) {
         $themes = $this->themeHandler->listInfo();
 
         // Set the default theme.

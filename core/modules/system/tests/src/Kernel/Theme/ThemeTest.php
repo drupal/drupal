@@ -23,7 +23,7 @@ class ThemeTest extends KernelTestBase {
    */
   protected function setUp() {
     parent::setUp();
-    \Drupal::service('theme_handler')->install(['test_theme']);
+    \Drupal::service('theme_installer')->install(['test_theme']);
   }
 
   /**
@@ -104,8 +104,8 @@ class ThemeTest extends KernelTestBase {
    * Test the listInfo() function.
    */
   public function testListThemes() {
+    $this->container->get('theme_installer')->install(['test_subtheme']);
     $theme_handler = $this->container->get('theme_handler');
-    $theme_handler->install(['test_subtheme']);
     $themes = $theme_handler->listInfo();
 
     // Check if ThemeHandlerInterface::listInfo() retrieves enabled themes.

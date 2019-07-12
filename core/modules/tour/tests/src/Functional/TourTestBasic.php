@@ -44,7 +44,7 @@ abstract class TourTestBasic extends TourTestBase {
 
     // Make sure we are using distinct default and administrative themes for
     // the duration of these tests.
-    $this->container->get('theme_handler')->install(['bartik', 'seven']);
+    $this->container->get('theme_installer')->install(['bartik', 'seven']);
     $this->config('system.theme')
       ->set('default', 'bartik')
       ->set('admin', 'seven')
