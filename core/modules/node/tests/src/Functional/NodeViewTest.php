@@ -79,7 +79,7 @@ class NodeViewTest extends NodeTestBase {
 
     $this->drupalGet($node->toUrl());
 
-    $links = $this->drupalGetHeaders()['Link'];
+    $links = $this->getSession()->getResponseHeaders()['Link'];
     $this->assertEqual($links, $expected);
   }
 

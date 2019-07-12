@@ -637,10 +637,13 @@ abstract class BrowserTestBase extends TestCase {
    * @return array
    *   The HTTP headers values.
    *
-   * @deprecated Scheduled for removal in Drupal 9.0.0.
+   * @deprecated in drupal:8.8.0 and is removed from drupal:9.0.0.
    *   Use $this->getSession()->getResponseHeaders() instead.
+   *
+   * @see https://www.drupal.org/node/3067207
    */
   protected function drupalGetHeaders() {
+    @trigger_error('Drupal\Tests\BrowserTestBase::drupalGetHeaders() is deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. Use $this->getSession()->getResponseHeaders() instead. See https://www.drupal.org/node/3067207', E_USER_DEPRECATED);
     return $this->getSession()->getResponseHeaders();
   }
 

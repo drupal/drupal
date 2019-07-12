@@ -113,7 +113,7 @@ class StyleSerializerTest extends ViewTestBase {
     // propagation of cache max-age.
 
     // Test the http Content-type.
-    $headers = $this->drupalGetHeaders();
+    $headers = $this->getSession()->getResponseHeaders();
     $this->assertSame(['application/json'], $headers['Content-Type']);
 
     $expected = [];

@@ -33,8 +33,9 @@ class RouterTest extends BrowserTestBase {
     // Confirm that the router can get to a controller.
     $this->drupalGet('router_test/test1');
     $this->assertRaw('test1', 'The correct string was returned because the route was successful.');
+    $session = $this->getSession();
     // Check expected headers from FinishResponseSubscriber.
-    $headers = $this->getSession()->getResponseHeaders();
+    $headers = $session->getResponseHeaders();
 
     $this->assertEquals($headers['X-UA-Compatible'], ['IE=edge']);
     $this->assertEquals($headers['Content-language'], ['en']);
@@ -44,7 +45,7 @@ class RouterTest extends BrowserTestBase {
     $this->drupalGet('router_test/test2');
     $this->assertRaw('test2', 'The correct string was returned because the route was successful.');
     // Check expected headers from FinishResponseSubscriber.
-    $headers = $this->drupalGetHeaders();
+    $headers = $session->getResponseHeaders();
     $this->assertEqual($headers['X-Drupal-Cache-Contexts'], [implode(' ', $expected_cache_contexts)]);
     $this->assertEqual($headers['X-Drupal-Cache-Tags'], ['config:user.role.anonymous http_response rendered']);
     // Confirm that the page wrapping is being added, so we're not getting a
@@ -58,46 +59,46 @@ class RouterTest extends BrowserTestBase {
     // X-Drupal-Cache-Contexts and X-Drupal-Cache-Tags headers.
     // 1. controller result: render array, globally cacheable route access.
     $this->drupalGet('router_test/test18');
-    $headers = $this->drupalGetHeaders();
+    $headers = $session->getResponseHeaders();
     $this->assertEqual($headers['X-Drupal-Cache-Contexts'], [implode(' ', Cache::mergeContexts($renderer_required_cache_contexts, ['url']))]);
     $this->assertEqual($headers['X-Drupal-Cache-Tags'], ['config:user.role.anonymous foo http_response rendered']);
     // 2. controller result: render array, per-role cacheable route access.
     $this->drupalGet('router_test/test19');
-    $headers = $this->drupalGetHeaders();
+    $headers = $session->getResponseHeaders();
     $this->assertEqual($headers['X-Drupal-Cache-Contexts'], [implode(' ', Cache::mergeContexts($renderer_required_cache_contexts, ['url', 'user.roles']))]);
     $this->assertEqual($headers['X-Drupal-Cache-Tags'], ['config:user.role.anonymous foo http_response rendered']);
     // 3. controller result: Response object, globally cacheable route access.
     $this->drupalGet('router_test/test1');
-    $headers = $this->drupalGetHeaders();
+    $headers = $session->getResponseHeaders();
     $this->assertFalse(isset($headers['X-Drupal-Cache-Contexts']));
     $this->assertFalse(isset($headers['X-Drupal-Cache-Tags']));
     // 4. controller result: Response object, per-role cacheable route access.
     $this->drupalGet('router_test/test20');
-    $headers = $this->drupalGetHeaders();
+    $headers = $session->getResponseHeaders();
     $this->assertFalse(isset($headers['X-Drupal-Cache-Contexts']));
     $this->assertFalse(isset($headers['X-Drupal-Cache-Tags']));
     // 5. controller result: CacheableResponse object, globally cacheable route access.
     $this->drupalGet('router_test/test21');
-    $headers = $this->drupalGetHeaders();
+    $headers = $session->getResponseHeaders();
     $this->assertEqual($headers['X-Drupal-Cache-Contexts'], ['']);
     $this->assertEqual($headers['X-Drupal-Cache-Tags'], ['http_response']);
     // 6. controller result: CacheableResponse object, per-role cacheable route access.
     $this->drupalGet('router_test/test22');
-    $headers = $this->drupalGetHeaders();
+    $headers = $session->getResponseHeaders();
     $this->assertEqual($headers['X-Drupal-Cache-Contexts'], ['user.roles']);
     $this->assertEqual($headers['X-Drupal-Cache-Tags'], ['http_response']);
 
     // Finally, verify that the X-Drupal-Cache-Contexts and X-Drupal-Cache-Tags
     // headers are not sent when their container parameter is set to FALSE.
     $this->drupalGet('router_test/test18');
-    $headers = $this->drupalGetHeaders();
+    $headers = $session->getResponseHeaders();
     $this->assertTrue(isset($headers['X-Drupal-Cache-Contexts']));
     $this->assertTrue(isset($headers['X-Drupal-Cache-Tags']));
     $this->setContainerParameter('http.response.debug_cacheability_headers', FALSE);
     $this->rebuildContainer();
     $this->resetAll();
     $this->drupalGet('router_test/test18');
-    $headers = $this->drupalGetHeaders();
+    $headers = $session->getResponseHeaders();
     $this->assertFalse(isset($headers['X-Drupal-Cache-Contexts']));
     $this->assertFalse(isset($headers['X-Drupal-Cache-Tags']));
   }
