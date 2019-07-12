@@ -41,7 +41,7 @@ class DefaultTableMappingTest extends UnitTestCase {
   public function testGetTableNames() {
     // The storage definitions are only used in getColumnNames() so we do not
     // need to provide any here.
-    $table_mapping = new DefaultTableMapping($this->entityType, []);
+    $table_mapping = new TestDefaultTableMapping($this->entityType, []);
     $this->assertSame([], $table_mapping->getTableNames());
 
     $table_mapping->setFieldNames('foo', []);
@@ -80,7 +80,7 @@ class DefaultTableMappingTest extends UnitTestCase {
       'target_revision_id',
     ]);
 
-    $table_mapping = new DefaultTableMapping($this->entityType, $definitions);
+    $table_mapping = new TestDefaultTableMapping($this->entityType, $definitions);
     $expected = [];
     $this->assertSame($expected, $table_mapping->getAllColumns('test'));
 
@@ -178,7 +178,7 @@ class DefaultTableMappingTest extends UnitTestCase {
   public function testGetFieldNames() {
     // The storage definitions are only used in getColumnNames() so we do not
     // need to provide any here.
-    $table_mapping = new DefaultTableMapping($this->entityType, []);
+    $table_mapping = new TestDefaultTableMapping($this->entityType, []);
 
     // Test that requesting the list of field names for a table for which no
     // fields have been added does not fail.
@@ -207,17 +207,17 @@ class DefaultTableMappingTest extends UnitTestCase {
    */
   public function testGetColumnNames() {
     $definitions['test'] = $this->setUpDefinition('test', []);
-    $table_mapping = new DefaultTableMapping($this->entityType, $definitions);
+    $table_mapping = new TestDefaultTableMapping($this->entityType, $definitions);
     $expected = [];
     $this->assertSame($expected, $table_mapping->getColumnNames('test'));
 
     $definitions['test'] = $this->setUpDefinition('test', ['value']);
-    $table_mapping = new DefaultTableMapping($this->entityType, $definitions);
+    $table_mapping = new TestDefaultTableMapping($this->entityType, $definitions);
     $expected = ['value' => 'test'];
     $this->assertSame($expected, $table_mapping->getColumnNames('test'));
 
     $definitions['test'] = $this->setUpDefinition('test', ['value', 'format']);
-    $table_mapping = new DefaultTableMapping($this->entityType, $definitions);
+    $table_mapping = new TestDefaultTableMapping($this->entityType, $definitions);
     $expected = ['value' => 'test__value', 'format' => 'test__format'];
     $this->assertSame($expected, $table_mapping->getColumnNames('test'));
 
@@ -226,7 +226,7 @@ class DefaultTableMappingTest extends UnitTestCase {
     $definitions['test']->expects($this->any())
       ->method('hasCustomStorage')
       ->wilLReturn(TRUE);
-    $table_mapping = new DefaultTableMapping($this->entityType, $definitions);
+    $table_mapping = new TestDefaultTableMapping($this->entityType, $definitions);
     // Should return empty for column names.
     $this->assertSame([], $table_mapping->getColumnNames('test'));
   }
@@ -240,7 +240,7 @@ class DefaultTableMappingTest extends UnitTestCase {
   public function testGetExtraColumns() {
     // The storage definitions are only used in getColumnNames() so we do not
     // need to provide any here.
-    $table_mapping = new DefaultTableMapping($this->entityType, []);
+    $table_mapping = new TestDefaultTableMapping($this->entityType, []);
 
     // Test that requesting the list of field names for a table for which no
     // fields have been added does not fail.
@@ -280,7 +280,7 @@ class DefaultTableMappingTest extends UnitTestCase {
    */
   public function testGetFieldColumnName($base_field, $columns, $column, $expected) {
     $definitions['test'] = $this->setUpDefinition('test', $columns, $base_field);
-    $table_mapping = new DefaultTableMapping($this->entityType, $definitions);
+    $table_mapping = new TestDefaultTableMapping($this->entityType, $definitions);
     $result = $table_mapping->getFieldColumnName($definitions['test'], $column);
     $this->assertEquals($expected, $result);
   }
@@ -308,7 +308,7 @@ class DefaultTableMappingTest extends UnitTestCase {
       ->method('hasCustomStorage')
       ->willReturn(TRUE);
 
-    $table_mapping = new DefaultTableMapping($this->entityType, $definitions);
+    $table_mapping = new TestDefaultTableMapping($this->entityType, $definitions);
     $this->expectException(SqlContentEntityStorageException::class);
     $this->expectExceptionMessage("Column information not available for the 'test' field.");
     $table_mapping->getFieldColumnName($definitions['test'], $column);
@@ -394,7 +394,7 @@ class DefaultTableMappingTest extends UnitTestCase {
       ->method('getRevisionMetadataKeys')
       ->willReturn([]);
 
-    $table_mapping = new DefaultTableMapping($this->entityType, [$field_name => $definition]);
+    $table_mapping = new TestDefaultTableMapping($this->entityType, [$field_name => $definition]);
 
     // Add the field to all the defined tables to ensure the correct one is
     // picked.
@@ -441,7 +441,7 @@ class DefaultTableMappingTest extends UnitTestCase {
    * @covers ::getFieldTableName
    */
   public function testGetFieldTableNameInvalid() {
-    $table_mapping = new DefaultTableMapping($this->entityType, []);
+    $table_mapping = new TestDefaultTableMapping($this->entityType, []);
     $this->expectException(SqlContentEntityStorageException::class);
     $this->expectExceptionMessage("Table information not available for the 'invalid_field_name' field.");
     $table_mapping->getFieldTableName('invalid_field_name');
@@ -478,7 +478,7 @@ class DefaultTableMappingTest extends UnitTestCase {
       ->method('isRevisionable')
       ->willReturn(FALSE);
 
-    $table_mapping = new DefaultTableMapping($this->entityType, [], $info['prefix']);
+    $table_mapping = new TestDefaultTableMapping($this->entityType, [], $info['prefix']);
 
     $this->assertSame($expected_data_table, $table_mapping->getDedicatedDataTableName($definition));
     $this->assertSame($expected_revision_table, $table_mapping->getDedicatedRevisionTableName($definition));
@@ -605,6 +605,27 @@ class DefaultTableMappingTest extends UnitTestCase {
       ->method('getColumns')
       ->will($this->returnValue(array_fill_keys($column_names, [])));
     return $definition;
+  }
+
+}
+
+/**
+ * Extends DefaultTableMapping to allow calling its protected methods.
+ */
+class TestDefaultTableMapping extends DefaultTableMapping {
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setFieldNames($table_name, array $field_names) {
+    return parent::setFieldNames($table_name, $field_names);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setExtraColumns($table_name, array $column_names) {
+    return parent::setExtraColumns($table_name, $column_names);
   }
 
 }
