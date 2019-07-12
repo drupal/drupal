@@ -3,7 +3,7 @@
 namespace Drupal\Core;
 
 use Drupal\Core\Render\RenderableInterface;
-use Drupal\Core\Routing\LinkGeneratorTrait;
+use Drupal\Core\Utility\LinkGeneratorInterface;
 
 /**
  * Defines an object that holds information about a link.
@@ -11,9 +11,11 @@ use Drupal\Core\Routing\LinkGeneratorTrait;
 class Link implements RenderableInterface {
 
   /**
-   * @deprecated in Drupal 8.0.x-dev, will be removed before Drupal 9.0.0.
+   * The link generator.
+   *
+   * @var \Drupal\Core\Utility\LinkGeneratorInterface
    */
-  use LinkGeneratorTrait;
+  protected $linkGenerator;
 
   /**
    * The text of the link.
@@ -145,6 +147,33 @@ class Link implements RenderableInterface {
       '#url' => $this->url,
       '#title' => $this->text,
     ];
+  }
+
+  /**
+   * Returns the link generator.
+   *
+   * @return \Drupal\Core\Utility\LinkGeneratorInterface
+   *   The link generator
+   */
+  protected function getLinkGenerator() {
+    if (!isset($this->linkGenerator)) {
+      $this->linkGenerator = \Drupal::service('link_generator');
+    }
+    return $this->linkGenerator;
+  }
+
+  /**
+   * Sets the link generator service.
+   *
+   * @param \Drupal\Core\Utility\LinkGeneratorInterface $generator
+   *   The link generator service.
+   *
+   * @return $this
+   */
+  public function setLinkGenerator(LinkGeneratorInterface $generator) {
+    $this->linkGenerator = $generator;
+
+    return $this;
   }
 
 }

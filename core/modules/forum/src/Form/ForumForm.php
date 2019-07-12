@@ -3,6 +3,7 @@
 namespace Drupal\forum\Form;
 
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Link;
 use Drupal\Core\Url;
 use Drupal\taxonomy\TermForm;
 
@@ -78,7 +79,7 @@ class ForumForm extends TermForm {
 
     $route_name = $this->urlStub == 'container' ? 'entity.taxonomy_term.forum_edit_container_form' : 'entity.taxonomy_term.forum_edit_form';
     $route_parameters = ['taxonomy_term' => $term->id()];
-    $link = $this->l($this->t('Edit'), new Url($route_name, $route_parameters));
+    $link = Link::fromTextAndUrl($this->t('Edit'), new Url($route_name, $route_parameters))->toString();
     $view_link = $term->toLink($term->getName())->toString();
     switch ($status) {
       case SAVED_NEW:

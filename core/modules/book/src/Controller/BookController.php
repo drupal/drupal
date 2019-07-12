@@ -5,6 +5,7 @@ namespace Drupal\book\Controller;
 use Drupal\book\BookExport;
 use Drupal\book\BookManagerInterface;
 use Drupal\Core\Controller\ControllerBase;
+use Drupal\Core\Link;
 use Drupal\Core\Render\RendererInterface;
 use Drupal\Core\Url;
 use Drupal\node\NodeInterface;
@@ -84,7 +85,7 @@ class BookController extends ControllerBase {
         $url->setOptions($book['options']);
       }
       $row = [
-        $this->l($book['title'], $url),
+        Link::fromTextAndUrl($book['title'], $url),
       ];
       $links = [];
       $links['edit'] = [
@@ -116,7 +117,7 @@ class BookController extends ControllerBase {
   public function bookRender() {
     $book_list = [];
     foreach ($this->bookManager->getAllBooks() as $book) {
-      $book_list[] = $this->l($book['title'], $book['url']);
+      $book_list[] = Link::fromTextAndUrl($book['title'], $book['url']);
     }
     return [
       '#theme' => 'item_list',

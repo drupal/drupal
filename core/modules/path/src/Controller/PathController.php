@@ -4,6 +4,7 @@ namespace Drupal\path\Controller;
 
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Controller\ControllerBase;
+use Drupal\Core\Link;
 use Drupal\Core\Path\AliasStorageInterface;
 use Drupal\Core\Path\AliasManagerInterface;
 use Drupal\Core\Url;
@@ -84,13 +85,13 @@ class PathController extends ControllerBase {
       $row = [];
       // @todo Should Path module store leading slashes? See
       //   https://www.drupal.org/node/2430593.
-      $row['data']['alias'] = $this->l(Unicode::truncate($data->alias, 50, FALSE, TRUE), Url::fromUserInput($data->source, [
+      $row['data']['alias'] = Link::fromTextAndUrl(Unicode::truncate($data->alias, 50, FALSE, TRUE), Url::fromUserInput($data->source, [
         'attributes' => ['title' => $data->alias],
-      ]));
-      $row['data']['source'] = $this->l(Unicode::truncate($data->source, 50, FALSE, TRUE), Url::fromUserInput($data->source, [
+      ]))->toString();
+      $row['data']['source'] = Link::fromTextAndUrl(Unicode::truncate($data->source, 50, FALSE, TRUE), Url::fromUserInput($data->source, [
         'alias' => TRUE,
         'attributes' => ['title' => $data->source],
-      ]));
+      ]))->toString();
       if ($multilanguage) {
         $row['data']['language_name'] = $this->languageManager()->getLanguageName($data->langcode);
       }

@@ -29,7 +29,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
  * @see \Psr\Log\LoggerInterface
  * @see \Drupal\Core\Logger\\LoggerChannelFactoryInterface
  * @see \Drupal\Core\Utility\LinkGeneratorInterface
- * @see \Drupal\Core\Routing\LinkGeneratorTrait::l()
+ * @see \Drupal\Core\Link::fromTextAndUrl()
  * @see \Drupal\Core\Entity\EntityInterface::link()
  */
 interface LoggerChannelInterface extends LoggerInterface {

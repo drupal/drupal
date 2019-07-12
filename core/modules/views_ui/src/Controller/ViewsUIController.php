@@ -3,6 +3,7 @@
 namespace Drupal\views_ui\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
+use Drupal\Core\Link;
 use Drupal\Core\Url;
 use Drupal\views\ViewExecutable;
 use Drupal\views\ViewEntityInterface;
@@ -86,7 +87,7 @@ class ViewsUIController extends ControllerBase {
     foreach ($fields as $field_name => $views) {
       $rows[$field_name]['data'][0]['data']['#plain_text'] = $field_name;
       foreach ($views as $view) {
-        $rows[$field_name]['data'][1][] = $this->l($view, new Url('entity.view.edit_form', ['view' => $view]));
+        $rows[$field_name]['data'][1][] = Link::fromTextAndUrl($view, new Url('entity.view.edit_form', ['view' => $view]))->toString();
       }
       $item_list = [
         '#theme' => 'item_list',
@@ -120,7 +121,7 @@ class ViewsUIController extends ControllerBase {
       $views = [];
       // Link each view name to the view itself.
       foreach ($row['views'] as $row_name => $view) {
-        $views[] = $this->l($view, new Url('entity.view.edit_form', ['view' => $view]));
+        $views[] = Link::fromTextAndUrl($view, new Url('entity.view.edit_form', ['view' => $view]))->toString();
       }
       unset($row['views']);
       $row['views']['data'] = [
