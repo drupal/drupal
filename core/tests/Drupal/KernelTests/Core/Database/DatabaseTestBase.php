@@ -27,6 +27,7 @@ abstract class DatabaseTestBase extends KernelTestBase {
     $this->connection = Database::getConnection();
     $this->installSchema('database_test', [
       'test',
+      'test_classtype',
       'test_people',
       'test_people_copy',
       'test_one_blob',
@@ -97,6 +98,15 @@ abstract class DatabaseTestBase extends KernelTestBase {
         'name' => 'Paul',
         'age' => 26,
         'job' => 'Songwriter',
+      ])
+      ->execute();
+
+    $connection->insert('test_classtype')
+      ->fields([
+        'classname' => 'Drupal\Tests\system\Functional\Database\FakeRecord',
+        'name' => 'Kay',
+        'age' => 26,
+        'job' => 'Web Developer',
       ])
       ->execute();
 
