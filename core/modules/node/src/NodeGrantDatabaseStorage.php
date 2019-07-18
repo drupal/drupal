@@ -156,6 +156,12 @@ class NodeGrantDatabaseStorage implements NodeGrantDatabaseStorageInterface {
     // more than once in the query, and could be aliased. Join each one to
     // the node_access table.
     $grants = node_access_grants($op, $account);
+    // If any grant exists for the specified user, then user has access to the
+    // node for the specified operation.
+    $grant_conditions = static::buildGrantsQueryCondition($grants);
+    $grants_exist = count($grant_conditions->conditions()) > 0;
+
+    $is_multilingual = \Drupal::languageManager()->isMultilingual();
     foreach ($tables as $nalias => $tableinfo) {
       $table = $tableinfo['table'];
       if (!($table instanceof SelectInterface) && $table == $base_table) {
@@ -163,18 +169,14 @@ class NodeGrantDatabaseStorage implements NodeGrantDatabaseStorageInterface {
         $subquery = $this->database->select('node_access', 'na')
           ->fields('na', ['nid']);
 
-        // If any grant exists for the specified user, then user has access to the
-        // node for the specified operation.
-        $grant_conditions = static::buildGrantsQueryCondition($grants);
-
-        // Attach conditions to the subquery for nodes.
-        if (count($grant_conditions->conditions())) {
+        // Attach conditions to the sub-query for nodes.
+        if ($grants_exist) {
           $subquery->condition($grant_conditions);
         }
         $subquery->condition('na.grant_' . $op, 1, '>=');
 
         // Add langcode-based filtering if this is a multilingual site.
-        if (\Drupal::languageManager()->isMultilingual()) {
+        if ($is_multilingual) {
           // If no specific langcode to check for is given, use the grant entry
           // which is set as a fallback.
           // If a specific langcode is given, use the grant entry for it.
