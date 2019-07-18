@@ -29,7 +29,9 @@ class ExtensionInstallStorage extends InstallStorage {
   /**
    * The name of the currently active installation profile.
    *
-   * @var string
+   * In the early installer this value can be NULL.
+   *
+   * @var string|NULL
    */
   protected $installProfile;
 
@@ -41,26 +43,27 @@ class ExtensionInstallStorage extends InstallStorage {
    *   themes is stored.
    * @param string $directory
    *   The directory to scan in each extension to scan for files. Defaults to
-   *   'config/install'.
+   *   'config/install'. This parameter will be mandatory in Drupal 9.0.0.
    * @param string $collection
    *   (optional) The collection to store configuration in. Defaults to the
-   *   default collection.
+   *   default collection. This parameter will be mandatory in Drupal 9.0.0.
    * @param bool $include_profile
    *   (optional) Whether to include the install profile in extensions to
-   *   search and to get overrides from.
-   * @param string $profile
+   *   search and to get overrides from. This parameter will be mandatory in
+   *   Drupal 9.0.0.
+   * @param string|null $profile
    *   (optional) The current installation profile. This parameter will be
-   *   mandatory in Drupal 9.0.0. In Drupal 8.3.0 not providing this parameter
-   *   will trigger a silenced deprecation warning.
+   *   mandatory in Drupal 9.0.0.
    */
   public function __construct(StorageInterface $config_storage, $directory = self::CONFIG_INSTALL_DIRECTORY, $collection = StorageInterface::DEFAULT_COLLECTION, $include_profile = TRUE, $profile = NULL) {
     parent::__construct($directory, $collection);
     $this->configStorage = $config_storage;
     $this->includeProfile = $include_profile;
-    if (is_null($profile)) {
-      @trigger_error('Install profile will be a mandatory parameter in Drupal 9.0.', E_USER_DEPRECATED);
+    if (!isset($profile) && count(func_get_args()) < 5) {
+      $profile = \Drupal::installProfile();
+      @trigger_error('All \Drupal\Core\Config\ExtensionInstallStorage::__construct() arguments will be required in drupal:9.0.0. See https://www.drupal.org/node/2538996', E_USER_DEPRECATED);
     }
-    $this->installProfile = $profile ?: \Drupal::installProfile();
+    $this->installProfile = $profile;
   }
 
   /**
