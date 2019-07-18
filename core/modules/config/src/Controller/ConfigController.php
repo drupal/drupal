@@ -156,7 +156,7 @@ class ConfigController implements ContainerInjectionInterface {
    *   (optional) The configuration collection name. Defaults to the default
    *   collection.
    *
-   * @return string
+   * @return array
    *   Table showing a two-way diff between the active and staged configuration.
    */
   public function diff($source_name, $target_name = NULL, $collection = NULL) {
