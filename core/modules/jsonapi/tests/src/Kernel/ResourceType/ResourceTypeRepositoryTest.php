@@ -3,8 +3,8 @@
 namespace Drupal\Tests\jsonapi\Kernel\ResourceType;
 
 use Drupal\jsonapi\ResourceType\ResourceType;
-use Drupal\KernelTests\KernelTestBase;
 use Drupal\node\Entity\NodeType;
+use Drupal\Tests\jsonapi\Kernel\JsonapiKernelTestBase;
 
 /**
  * @coversDefaultClass \Drupal\jsonapi\ResourceType\ResourceTypeRepository
@@ -12,14 +12,14 @@ use Drupal\node\Entity\NodeType;
  *
  * @internal
  */
-class ResourceTypeRepositoryTest extends KernelTestBase {
+class ResourceTypeRepositoryTest extends JsonapiKernelTestBase {
 
   /**
    * {@inheritdoc}
    */
   public static $modules = [
+    'field',
     'node',
-    'jsonapi',
     'serialization',
     'system',
     'user',
@@ -94,6 +94,17 @@ class ResourceTypeRepositoryTest extends KernelTestBase {
       ['node_type', 'node_type', 'Drupal\node\Entity\NodeType'],
       ['menu', 'menu', 'Drupal\system\Entity\Menu'],
     ];
+  }
+
+  /**
+   * Ensures that the ResourceTypeRepository's cache does not become stale.
+   */
+  public function testCaching() {
+    $this->assertEmpty($this->resourceTypeRepository->get('node', 'article')->getRelatableResourceTypesByField('field_relationship'));
+    $this->createEntityReferenceField('node', 'article', 'field_relationship', 'Related entity', 'node');
+    $this->assertCount(2, $this->resourceTypeRepository->get('node', 'article')->getRelatableResourceTypesByField('field_relationship'));
+    NodeType::create(['type' => 'camelids'])->save();
+    $this->assertCount(3, $this->resourceTypeRepository->get('node', 'article')->getRelatableResourceTypesByField('field_relationship'));
   }
 
 }
