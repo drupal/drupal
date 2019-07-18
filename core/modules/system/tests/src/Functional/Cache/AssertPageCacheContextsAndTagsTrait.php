@@ -94,22 +94,6 @@ trait AssertPageCacheContextsAndTagsTrait {
     $cache_entry = \Drupal::cache('page')->get($cid);
     sort($cache_entry->tags);
     $this->assertEqual($cache_entry->tags, $expected_tags);
-    $this->debugCacheTags($cache_entry->tags, $expected_tags);
-  }
-
-  /**
-   * Provides debug information for cache tags.
-   *
-   * @param string[] $actual_tags
-   *   The actual cache tags.
-   * @param string[] $expected_tags
-   *   The expected cache tags.
-   */
-  protected function debugCacheTags(array $actual_tags, array $expected_tags) {
-    if ($actual_tags !== $expected_tags) {
-      debug('Unwanted cache tags in response: ' . implode(',', array_diff($actual_tags, $expected_tags)));
-      debug('Missing cache tags in response: ' . implode(',', array_diff($expected_tags, $actual_tags)));
-    }
   }
 
   /**
@@ -133,7 +117,6 @@ trait AssertPageCacheContextsAndTagsTrait {
     sort($expected_tags);
     sort($actual_tags);
     $this->assertIdentical($actual_tags, $expected_tags);
-    $this->debugCacheTags($actual_tags, $expected_tags);
   }
 
   /**
@@ -163,17 +146,8 @@ trait AssertPageCacheContextsAndTagsTrait {
     $actual_contexts = $this->getCacheHeaderValues('X-Drupal-Cache-Contexts');
     sort($expected_contexts);
     sort($actual_contexts);
-    $match = $actual_contexts === $expected_contexts;
-    if (!$match) {
-      debug('Unwanted cache contexts in response: ' . implode(',', array_diff($actual_contexts, $expected_contexts)));
-      debug('Missing cache contexts in response: ' . implode(',', array_diff($expected_contexts, $actual_contexts)));
-    }
-
     $this->assertIdentical($actual_contexts, $expected_contexts, $message);
-
-    // For compatibility with both BrowserTestBase and WebTestBase always return
-    // a boolean.
-    return $match;
+    return $actual_contexts === $expected_contexts;
   }
 
   /**
@@ -183,10 +157,7 @@ trait AssertPageCacheContextsAndTagsTrait {
    */
   protected function assertCacheMaxAge($max_age) {
     $cache_control_header = $this->drupalGetHeader('Cache-Control');
-    if (strpos($cache_control_header, 'max-age:' . $max_age) === FALSE) {
-      debug('Expected max-age:' . $max_age . '; Response max-age:' . $cache_control_header);
-    }
-    $this->assertTrue(strpos($cache_control_header, 'max-age:' . $max_age));
+    $this->assertContains('max-age:' . $max_age, $cache_control_header);
   }
 
 }
