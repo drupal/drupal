@@ -270,12 +270,13 @@ function language_get_default_langcode($entity_type, $bundle) {
 /**
  * Reads language prefixes and uses the langcode if no prefix is set.
  *
- * @deprecated in Drupal 8.0.x-dev, will be removed before Drupal 9.0.0.
- *   Use \Drupal::config('language.negotiation')->get('url.prefixes') instead.
+ * @deprecated in drupal:8.0.0 and is removed from drupal:9.0.0. Use
+ *   \Drupal::config('language.negotiation')->get('url.prefixes') instead.
  *
  * @see https://www.drupal.org/node/2912748
  */
 function language_negotiation_url_prefixes() {
+  @trigger_error("language_negotiation_url_prefixes() is deprecated in drupal:8.0.0 and is removed from drupal:9.0.0. Use \Drupal::config('language.negotiation')->get('url.prefixes') instead. See https://www.drupal.org/node/2912748", E_USER_DEPRECATED);
   return \Drupal::config('language.negotiation')->get('url.prefixes');
 }
 
@@ -301,12 +302,13 @@ function language_negotiation_url_prefixes_update() {
 /**
  * Reads language domains.
  *
- * @deprecated in Drupal 8.0.x-dev, will be removed before Drupal 9.0.0.
- *   Use \Drupal::config('language.negotiation')->get('url.domains') instead.
+ * @deprecated in drupal:8.0.0 and is removed from drupal:9.0.0. Use
+ *   \Drupal::config('language.negotiation')->get('url.domains') instead.
  *
  * @see https://www.drupal.org/node/2912748
  */
 function language_negotiation_url_domains() {
+  @trigger_error("language_negotiation_url_domains() is deprecated in drupal:8.0.0 and is removed from drupal:9.0.0. Use \Drupal::config('language.negotiation')->get('url.domains') instead. See https://www.drupal.org/node/2912748", E_USER_DEPRECATED);
   return \Drupal::config('language.negotiation')->get('url.domains');
 }
 

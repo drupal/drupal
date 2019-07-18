@@ -98,7 +98,7 @@ class CommentLanguageTest extends BrowserTestBase {
       $this->drupalPostForm("node/add/article", $edit, t('Save'));
       $node = $this->drupalGetNodeByTitle($title);
 
-      $prefixes = language_negotiation_url_prefixes();
+      $prefixes = $this->config('language.negotiation')->get('url.prefixes');
       foreach ($this->container->get('language_manager')->getLanguages() as $langcode => $language) {
         // Post a comment with content language $langcode.
         $prefix = empty($prefixes[$langcode]) ? '' : $prefixes[$langcode] . '/';
