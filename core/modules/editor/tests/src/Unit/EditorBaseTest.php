@@ -22,8 +22,8 @@ class EditorBaseTest extends UnitTestCase {
    * @covers ::submitConfigurationForm
    *
    * @expectedDeprecation Drupal\Tests\editor\Unit\BcEditor::settingsForm is deprecated since version 8.3.x. Rename the implementation 'buildConfigurationForm'. See https://www.drupal.org/node/2819753
-   *  @expectedDeprecation Drupal\Tests\editor\Unit\BcEditor::settingsFormValidate is deprecated since version 8.3.x. Rename the implementation 'validateConfigurationForm'. See https://www.drupal.org/node/2819753
-   *  @expectedDeprecation Drupal\Tests\editor\Unit\BcEditor::settingsFormSubmit is deprecated since version 8.3.x. Rename the implementation 'submitConfigurationForm'. See https://www.drupal.org/node/2819753
+   * @expectedDeprecation Drupal\Tests\editor\Unit\BcEditor::settingsFormValidate is deprecated since version 8.3.x. Rename the implementation 'validateConfigurationForm'. See https://www.drupal.org/node/2819753
+   * @expectedDeprecation Drupal\Tests\editor\Unit\BcEditor::settingsFormSubmit is deprecated since version 8.3.x. Rename the implementation 'submitConfigurationForm'. See https://www.drupal.org/node/2819753
    */
   public function testBc() {
     $form_state = new FormState();
