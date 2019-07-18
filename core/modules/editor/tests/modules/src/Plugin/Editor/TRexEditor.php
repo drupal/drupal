@@ -32,7 +32,7 @@ class TRexEditor extends EditorBase {
   /**
    * {@inheritdoc}
    */
-  public function settingsForm(array $form, FormStateInterface $form_state, Editor $editor) {
+  public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
     $form['stumpy_arms'] = [
       '#title' => t('Stumpy arms'),
       '#type' => 'checkbox',

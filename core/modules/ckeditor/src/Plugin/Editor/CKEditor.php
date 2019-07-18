@@ -137,7 +137,8 @@ class CKEditor extends EditorBase implements ContainerFactoryPluginInterface {
   /**
    * {@inheritdoc}
    */
-  public function settingsForm(array $form, FormStateInterface $form_state, Editor $editor) {
+  public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
+    $editor = $form_state->get('editor');
     $settings = $editor->getSettings();
 
     $ckeditor_settings_toolbar = [
@@ -234,7 +235,13 @@ class CKEditor extends EditorBase implements ContainerFactoryPluginInterface {
   /**
    * {@inheritdoc}
    */
-  public function settingsFormSubmit(array $form, FormStateInterface $form_state) {
+  public function validateConfigurationForm(array &$form, FormStateInterface $form_state) {
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function submitConfigurationForm(array &$form, FormStateInterface $form_state) {
     // Modify the toolbar settings by reference. The values in
     // $form_state->getValue(array('editor', 'settings')) will be saved directly
     // by editor_form_filter_admin_format_submit().

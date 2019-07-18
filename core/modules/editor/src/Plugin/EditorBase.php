@@ -4,7 +4,6 @@ namespace Drupal\editor\Plugin;
 
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\PluginBase;
-use Drupal\editor\Entity\Editor;
 
 /**
  * Defines a base class from which other modules providing editors may extend.
@@ -31,51 +30,33 @@ abstract class EditorBase extends PluginBase implements EditorPluginInterface {
 
   /**
    * {@inheritdoc}
-   *
-   * @todo Remove in Drupal 9.0.0.
-   */
-  public function settingsForm(array $form, FormStateInterface $form_state, Editor $editor) {
-    @trigger_error('The ' . __METHOD__ . ' method is deprecated since version 8.3.x and will be removed in 9.0.0.', E_USER_DEPRECATED);
-    return $form;
-  }
-
-  /**
-   * {@inheritdoc}
-   *
-   * @todo Remove in Drupal 9.0.0.
-   */
-  public function settingsFormValidate(array $form, FormStateInterface $form_state) {
-    @trigger_error('The ' . __METHOD__ . ' method is deprecated since version 8.3.x and will be removed in 9.0.0.', E_USER_DEPRECATED);
-  }
-
-  /**
-   * {@inheritdoc}
-   *
-   * @todo Remove in Drupal 9.0.0.
-   */
-  public function settingsFormSubmit(array $form, FormStateInterface $form_state) {
-    @trigger_error('The ' . __METHOD__ . ' method is deprecated since version 8.3.x and will be removed in 9.0.0.', E_USER_DEPRECATED);
-  }
-
-  /**
-   * {@inheritdoc}
    */
   public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
-    return $this->settingsForm($form, $form_state, $form_state->get('editor'));
+    if (method_exists($this, 'settingsForm')) {
+      @trigger_error(get_called_class() . "::settingsForm is deprecated since version 8.3.x. Rename the implementation 'buildConfigurationForm'. See https://www.drupal.org/node/2819753", E_USER_DEPRECATED);
+      return $this->settingsForm($form, $form_state, $form_state->get('editor'));
+    }
+    return $form;
   }
 
   /**
    * {@inheritdoc}
    */
   public function validateConfigurationForm(array &$form, FormStateInterface $form_state) {
-    return $this->settingsFormValidate($form, $form_state);
+    if (method_exists($this, 'settingsFormValidate')) {
+      @trigger_error(get_called_class() . "::settingsFormValidate is deprecated since version 8.3.x. Rename the implementation 'validateConfigurationForm'. See https://www.drupal.org/node/2819753", E_USER_DEPRECATED);
+      $this->settingsFormValidate($form, $form_state);
+    }
   }
 
   /**
    * {@inheritdoc}
    */
   public function submitConfigurationForm(array &$form, FormStateInterface $form_state) {
-    return $this->settingsFormSubmit($form, $form_state);
+    if (method_exists($this, 'settingsFormSubmit')) {
+      @trigger_error(get_called_class() . "::settingsFormSubmit is deprecated since version 8.3.x. Rename the implementation 'submitConfigurationForm'. See https://www.drupal.org/node/2819753", E_USER_DEPRECATED);
+      $this->settingsFormSubmit($form, $form_state);
+    }
   }
 
 }
