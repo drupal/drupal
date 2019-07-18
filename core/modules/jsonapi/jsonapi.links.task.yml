@@ -1,0 +1,4 @@
+jsonapi.settings:
+  route_name: jsonapi.settings
+  base_route: jsonapi.settings
+  title: 'Settings'
