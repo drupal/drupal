@@ -56,6 +56,7 @@ class NullIdMap extends PluginBase implements MigrateIdMapInterface {
    * {@inheritdoc}
    */
   public function lookupDestinationId(array $source_id_values) {
+    @trigger_error(__NAMESPACE__ . '\NullIdMap::lookupDestinationId() is deprecated in drupal:8.1.0 and is removed from drupal:9.0.0. Use Sql::lookupDestinationIds() instead. See https://www.drupal.org/node/2725809', E_USER_DEPRECATED);
     return [];
   }
 

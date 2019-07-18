@@ -182,7 +182,9 @@ class MigrationLookup extends ProcessPluginBase implements ContainerFactoryPlugi
       $this->skipInvalid($value);
       $source_id_values[$lookup_migration_id] = $value;
       // Break out of the loop as soon as a destination ID is found.
-      if ($destination_ids = $lookup_migration->getIdMap()->lookupDestinationId($source_id_values[$lookup_migration_id])) {
+      $lookup = $lookup_migration->getIdMap()->lookupDestinationIds($source_id_values[$lookup_migration_id]);
+      if (!empty($lookup)) {
+        $destination_ids = $lookup[0];
         break;
       }
     }

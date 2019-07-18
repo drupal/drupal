@@ -29,7 +29,7 @@ class MigrationLookupTest extends MigrateProcessTestCase {
     $destination_id_map = $this->prophesize(MigrateIdMapInterface::class);
     $destination_migration = $this->prophesize(MigrationInterface::class);
     $destination_migration->getIdMap()->willReturn($destination_id_map->reveal());
-    $destination_id_map->lookupDestinationId([1])->willReturn(NULL);
+    $destination_id_map->lookupDestinationIds([1])->willReturn(NULL);
 
     // Ensure the migration plugin manager returns our migration.
     $migration_plugin_manager->createInstances(Argument::exact(['destination_migration']))
@@ -60,7 +60,7 @@ class MigrationLookupTest extends MigrateProcessTestCase {
     $destination_migration->getIdMap()->willReturn($destination_id_map->reveal());
     $migration_plugin_manager->createInstances(['destination_migration'])
       ->willReturn(['destination_migration' => $destination_migration->reveal()]);
-    $destination_id_map->lookupDestinationId([1])->willReturn(NULL);
+    $destination_id_map->lookupDestinationIds([1])->willReturn(NULL);
     $destination_id_map->saveIdMapping(Argument::any(), Argument::any(), MigrateIdMapInterface::STATUS_NEEDS_UPDATE)->willReturn(NULL);
 
     $configuration = [
@@ -137,7 +137,7 @@ class MigrationLookupTest extends MigrateProcessTestCase {
     $migration_plugin_manager = $this->prophesize(MigrationPluginManagerInterface::class);
     $process_plugin_manager = $this->prophesize(MigratePluginManager::class);
     $id_map = $this->prophesize(MigrateIdMapInterface::class);
-    $id_map->lookupDestinationId([$value])->willReturn([]);
+    $id_map->lookupDestinationIds([$value])->willReturn([]);
     $migration_plugin->getIdMap()->willReturn($id_map->reveal());
 
     $configuration = [
@@ -192,7 +192,7 @@ class MigrationLookupTest extends MigrateProcessTestCase {
     $migration_plugin->id()->willReturn(uniqid());
 
     $id_map = $this->prophesize(MigrateIdMapInterface::class);
-    $id_map->lookupDestinationId($source_id_values)->willReturn($destination_id_values);
+    $id_map->lookupDestinationIds($source_id_values)->willReturn([$destination_id_values]);
     $migration_plugin->getIdMap()->willReturn($id_map->reveal());
 
     $migration_plugin_manager->createInstances(['foobaz'])
@@ -284,7 +284,7 @@ class MigrationLookupTest extends MigrateProcessTestCase {
     $destination_migration->getIdMap()->willReturn($destination_id_map->reveal());
     $migration_plugin_manager->createInstances(['destination_migration'])
       ->willReturn(['destination_migration' => $destination_migration->reveal()]);
-    $destination_id_map->lookupDestinationId([1])->willReturn(NULL);
+    $destination_id_map->lookupDestinationIds([1])->willReturn(NULL);
     $destination_id_map->saveMessage(Argument::any(), Argument::any())->willReturn(NULL);
     $destination_id_map->saveIdMapping(Argument::any(), Argument::any(), Argument::any())->shouldNotBeCalled();
 

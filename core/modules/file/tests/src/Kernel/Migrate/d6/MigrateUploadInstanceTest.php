@@ -43,7 +43,7 @@ class MigrateUploadInstanceTest extends MigrateDrupal6TestBase {
     $field = FieldConfig::load('node.article.upload');
     $this->assertTrue(is_null($field));
 
-    $this->assertIdentical(['node', 'page', 'upload'], $this->getMigration('d6_upload_field_instance')->getIdMap()->lookupDestinationId(['page']));
+    $this->assertIdentical([['node', 'page', 'upload']], $this->getMigration('d6_upload_field_instance')->getIdMap()->lookupDestinationIds(['page']));
   }
 
 }

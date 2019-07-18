@@ -61,7 +61,7 @@ class MigrateTermNodeTest extends MigrateDrupal6TestBase {
     // according to the map table, it failed.
     $migration = $this->getMigration('d6_term_node:2');
     $this->executeMigration($migration);
-    $this->assertNull($migration->getIdMap()->lookupDestinationId(['vid' => 3])[0]);
+    $this->assertNull($migration->getIdMap()->lookupDestinationIds(['vid' => 3])[0][0]);
   }
 
 }

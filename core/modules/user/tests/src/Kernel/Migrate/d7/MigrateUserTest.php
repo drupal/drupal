@@ -157,7 +157,7 @@ class MigrateUserTest extends MigrateDrupal7TestBase {
       $roles = [RoleInterface::AUTHENTICATED_ID];
       $id_map = $this->getMigration('d7_user_role')->getIdMap();
       foreach ($rids as $rid) {
-        $role = $id_map->lookupDestinationId([$rid]);
+        $role = $id_map->lookupDestinationIds([$rid])[0];
         $roles[] = reset($role);
       }
 
