@@ -129,15 +129,18 @@ class QuickEditIntegration implements ContainerInjectionInterface {
     $plugin_ids_to_update = [];
     foreach (Element::children($build['_layout_builder']) as $delta) {
       $section = $build['_layout_builder'][$delta];
-      /** @var \Drupal\Core\Layout\LayoutDefinition $layout */
-      $layout = $section['#layout'];
-      $regions = $layout->getRegionNames();
 
-      foreach ($regions as $region) {
-        if (isset($section[$region])) {
-          foreach ($section[$region] as $uuid => $component) {
-            if (isset($component['#plugin_id']) && $this->supportQuickEditOnComponent($component, $entity)) {
-              $plugin_ids_to_update[$component['#plugin_id']][$delta][$region][$uuid] = $uuid;
+      if (!Element::isEmpty($section)) {
+        /** @var \Drupal\Core\Layout\LayoutDefinition $layout */
+        $layout = $section['#layout'];
+        $regions = $layout->getRegionNames();
+
+        foreach ($regions as $region) {
+          if (isset($section[$region])) {
+            foreach ($section[$region] as $uuid => $component) {
+              if (isset($component['#plugin_id']) && $this->supportQuickEditOnComponent($component, $entity)) {
+                $plugin_ids_to_update[$component['#plugin_id']][$delta][$region][$uuid] = $uuid;
+              }
             }
           }
         }
