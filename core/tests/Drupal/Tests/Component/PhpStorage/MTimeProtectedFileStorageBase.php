@@ -14,6 +14,8 @@ abstract class MTimeProtectedFileStorageBase extends PhpStorageTestBase {
    * The PHP storage class to test.
    *
    * This should be overridden by extending classes.
+   *
+   * @var string
    */
   protected $storageClass;
 

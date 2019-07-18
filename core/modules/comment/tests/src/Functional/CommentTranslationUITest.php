@@ -18,6 +18,8 @@ class CommentTranslationUITest extends ContentTranslationUITestBase {
 
   /**
    * The subject of the test comment.
+   *
+   * @var string
    */
   protected $subject;
 

@@ -66,6 +66,8 @@ class Merge extends Query implements ConditionInterface {
 
   /**
    * The table or subquery to be used for the condition.
+   *
+   * @var string
    */
   protected $conditionTable;
 

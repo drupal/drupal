@@ -64,6 +64,8 @@ class View extends ConfigEntityBase implements ViewEntityInterface {
 
   /**
    * The label of the view.
+   *
+   * @var string
    */
   protected $label;
 

@@ -42,6 +42,8 @@ class Transaction {
    *
    * This is used to label the transaction savepoint. It will be overridden to
    * 'drupal_transaction' if there is no transaction depth.
+   *
+   * @var string
    */
   protected $name;
 

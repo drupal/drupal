@@ -180,6 +180,8 @@ abstract class WebTestBase extends TestBase {
 
   /**
    * The number of redirects followed during the handling of a request.
+   *
+   * @var int
    */
   protected $redirectCount;
 

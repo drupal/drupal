@@ -34,6 +34,8 @@ class FilterDateTest extends DateTimeHandlerTestBase {
 
   /**
    * For offset tests, set to the current time.
+   *
+   * @var int
    */
   protected static $date;
 

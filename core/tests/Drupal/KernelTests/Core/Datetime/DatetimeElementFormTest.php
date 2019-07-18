@@ -16,6 +16,8 @@ class DatetimeElementFormTest extends KernelTestBase implements FormInterface {
 
   /**
    * The variable under test.
+   *
+   * @var string
    */
   protected $flag;
 

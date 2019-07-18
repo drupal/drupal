@@ -39,6 +39,8 @@ abstract class Schema implements PlaceholderInterface {
 
   /**
    * A unique identifier for this query object.
+   *
+   * @var string
    */
   protected $uniqueIdentifier;
 

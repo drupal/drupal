@@ -24,6 +24,8 @@ class ThemeRegistry extends CacheCollector implements DestructableInterface {
    * This is only allowed if all modules and the request method is GET. _theme()
    * should be very rarely called on POST requests and this avoids polluting
    * the runtime cache.
+   *
+   * @var bool
    */
   protected $persistable;
 

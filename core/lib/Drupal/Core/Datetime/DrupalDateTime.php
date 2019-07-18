@@ -24,6 +24,8 @@ class DrupalDateTime extends DateTimePlus {
 
   /**
    * Format string translation cache.
+   *
+   * @var string
    */
   protected $formatTranslationCache;
 

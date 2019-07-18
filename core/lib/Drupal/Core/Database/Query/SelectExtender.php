@@ -25,6 +25,8 @@ class SelectExtender implements SelectInterface {
 
   /**
    * A unique identifier for this query object.
+   *
+   * @var string
    */
   protected $uniqueIdentifier;
 

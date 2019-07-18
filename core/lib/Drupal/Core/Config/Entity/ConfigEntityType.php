@@ -14,6 +14,8 @@ class ConfigEntityType extends EntityType implements ConfigEntityTypeInterface {
   /**
    * The config prefix set in the configuration entity type annotation.
    *
+   * @var string
+   *
    * @see \Drupal\Core\Config\Entity\ConfigEntityTypeInterface::getConfigPrefix()
    */
   protected $config_prefix;

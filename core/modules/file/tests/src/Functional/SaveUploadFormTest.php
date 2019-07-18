@@ -35,11 +35,15 @@ class SaveUploadFormTest extends FileManagedTestBase {
 
   /**
    * A PHP file path for upload security testing.
+   *
+   * @var string
    */
   protected $phpfile;
 
   /**
    * The largest file id when the test starts.
+   *
+   * @var int
    */
   protected $maxFidBefore;
 
