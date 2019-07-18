@@ -133,9 +133,10 @@ function search_preprocess_block(&$variables) {
  *   (optional) The plugin ID or other machine-readable type for the items to
  *   remove from the search index. If omitted, $sid and $langcode are ignored
  *   and the entire search index is cleared.
- * @param string|null $sid
- *   (optional) The ID of the items to remove from the search index. If
- *   omitted, all items matching $type are cleared, and $langcode is ignored.
+ * @param int|array|null $sid
+ *   (optional) The ID or array of IDs of the items to remove from the search
+ *   index. If omitted, all items matching $type are cleared, and $langcode
+ *   is ignored.
  * @param string|null $langcode
  *   (optional) Language code of the item to remove from the search index. If
  *   omitted, all items matching $sid and $type are cleared.
