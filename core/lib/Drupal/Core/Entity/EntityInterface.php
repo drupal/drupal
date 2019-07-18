@@ -241,7 +241,7 @@ interface EntityInterface extends AccessibleInterface, CacheableDependencyInterf
    * @param mixed $id
    *   The id of the entity to load.
    *
-   * @return static
+   * @return static|null
    *   The entity object or NULL if there is no entity with the given ID.
    */
   public static function load($id);
