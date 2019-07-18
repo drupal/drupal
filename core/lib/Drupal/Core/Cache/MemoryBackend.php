@@ -64,26 +64,21 @@ class MemoryBackend implements CacheBackendInterface, CacheTagsInvalidatorInterf
    * Checks that items are either permanent or did not expire, and returns data
    * as appropriate.
    *
-   * @param object $cache
+   * @param array $cache
    *   An item loaded from self::get() or self::getMultiple().
    * @param bool $allow_invalid
    *   (optional) If TRUE, cache items may be returned even if they have expired
    *   or been invalidated.
    *
-   * @return mixed
+   * @return object|false
    *   The item with data as appropriate or FALSE if there is no
    *   valid item to load.
    */
-  protected function prepareItem($cache, $allow_invalid) {
-    if (!isset($cache->data)) {
+  protected function prepareItem(array $cache, $allow_invalid) {
+    if (!isset($cache['data'])) {
       return FALSE;
     }
-    // The object passed into this function is the one stored in $this->cache.
-    // We must clone it as part of the preparation step so that the actual
-    // cache object is not affected by the unserialize() call or other
-    // manipulations of the returned object.
-
-    $prepared = clone $cache;
+    $prepared = (object) $cache;
     $prepared->data = unserialize($prepared->data);
 
     // Check expire time.
@@ -104,7 +99,10 @@ class MemoryBackend implements CacheBackendInterface, CacheTagsInvalidatorInterf
     $tags = array_unique($tags);
     // Sort the cache tags so that they are stored consistently in the database.
     sort($tags);
-    $this->cache[$cid] = (object) [
+
+    // Do not create an object at this point to minimize the number of objects
+    // garbage collection has to keep a track off.
+    $this->cache[$cid] = [
       'cid' => $cid,
       'data' => serialize($data),
       'created' => $this->getRequestTime(),
@@ -148,7 +146,7 @@ class MemoryBackend implements CacheBackendInterface, CacheTagsInvalidatorInterf
    */
   public function invalidate($cid) {
     if (isset($this->cache[$cid])) {
-      $this->cache[$cid]->expire = $this->getRequestTime() - 1;
+      $this->cache[$cid]['expire'] = $this->getRequestTime() - 1;
     }
   }
 
@@ -158,7 +156,7 @@ class MemoryBackend implements CacheBackendInterface, CacheTagsInvalidatorInterf
   public function invalidateMultiple(array $cids) {
     $items = array_intersect_key($this->cache, array_flip($cids));
     foreach ($items as $cid => $item) {
-      $this->cache[$cid]->expire = $this->getRequestTime() - 1;
+      $this->cache[$cid]['expire'] = $this->getRequestTime() - 1;
     }
   }
 
@@ -167,8 +165,8 @@ class MemoryBackend implements CacheBackendInterface, CacheTagsInvalidatorInterf
    */
   public function invalidateTags(array $tags) {
     foreach ($this->cache as $cid => $item) {
-      if (array_intersect($tags, $item->tags)) {
-        $this->cache[$cid]->expire = $this->getRequestTime() - 1;
+      if (array_intersect($tags, $item['tags'])) {
+        $this->cache[$cid]['expire'] = $this->getRequestTime() - 1;
       }
     }
   }
@@ -178,7 +176,7 @@ class MemoryBackend implements CacheBackendInterface, CacheTagsInvalidatorInterf
    */
   public function invalidateAll() {
     foreach ($this->cache as $cid => $item) {
-      $this->cache[$cid]->expire = $this->getRequestTime() - 1;
+      $this->cache[$cid]['expire'] = $this->getRequestTime() - 1;
     }
   }
 

@@ -8,40 +8,29 @@ use Drupal\Core\Cache\MemoryBackend;
 /**
  * Defines a memory cache implementation.
  *
- * Stores cache items in memory using a PHP array.
+ * Stores cache items in memory using a PHP array. Cache data is not serialized
+ * thereby returning the same object as was cached.
  *
  * @ingroup cache
  */
 class MemoryCache extends MemoryBackend implements MemoryCacheInterface {
 
   /**
-   * Prepares a cached item.
-   *
-   * Checks that items are either permanent or did not expire, and returns data
-   * as appropriate.
-   *
-   * @param object $cache
-   *   An item loaded from self::get() or self::getMultiple().
-   * @param bool $allow_invalid
-   *   (optional) If TRUE, cache items may be returned even if they have expired
-   *   or been invalidated. Defaults to FALSE.
-   *
-   * @return mixed
-   *   The item with data as appropriate or FALSE if there is no
-   *   valid item to load.
+   * {@inheritdoc}
    */
-  protected function prepareItem($cache, $allow_invalid = FALSE) {
-    if (!isset($cache->data)) {
+  protected function prepareItem(array $cache, $allow_invalid = FALSE) {
+    if (!isset($cache['data'])) {
       return FALSE;
     }
+    $prepared = (object) $cache;
     // Check expire time.
-    $cache->valid = $cache->expire == static::CACHE_PERMANENT || $cache->expire >= $this->getRequestTime();
+    $prepared->valid = $prepared->expire == static::CACHE_PERMANENT || $prepared->expire >= $this->getRequestTime();
 
-    if (!$allow_invalid && !$cache->valid) {
+    if (!$allow_invalid && !$prepared->valid) {
       return FALSE;
     }
 
-    return $cache;
+    return $prepared;
   }
 
   /**
@@ -51,8 +40,11 @@ class MemoryCache extends MemoryBackend implements MemoryCacheInterface {
     assert(Inspector::assertAllStrings($tags), 'Cache tags must be strings.');
     $tags = array_unique($tags);
 
-    $this->cache[$cid] = (object) [
+    // Do not create an object at this point to minimize the number of objects
+    // garbage collection has to keep a track off.
+    $this->cache[$cid] = [
       'cid' => $cid,
+      // Note that $data is not serialized.
       'data' => $data,
       'created' => $this->getRequestTime(),
       'expire' => $expire,
