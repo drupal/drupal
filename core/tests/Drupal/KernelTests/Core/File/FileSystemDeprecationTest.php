@@ -252,4 +252,11 @@ class FileSystemDeprecationTest extends KernelTestBase {
     return $data;
   }
 
+  /**
+   * @expectedDeprecation drupal_realpath() is deprecated in drupal:8.0.0 and will be removed in drupal:9.0.0. Use \Drupal\Core\File\FileSystemInterface::realpath(). See https://www.drupal.org/node/2418133.
+   */
+  public function testRealpath() {
+    $this->assertNotEmpty(drupal_realpath('public://'));
+  }
+
 }
