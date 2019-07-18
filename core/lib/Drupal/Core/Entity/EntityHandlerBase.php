@@ -9,11 +9,6 @@ use Drupal\Core\StringTranslation\StringTranslationTrait;
 /**
  * Provides a base class for entity handlers.
  *
- * @deprecated in Drupal 8.0.x, will be removed before Drupal 9.0.0.
- *   Implement the container injection pattern of
- *   \Drupal\Core\Entity\EntityHandlerInterface::createInstance() to obtain the
- *   module handler service for your class.
- *
  * @ingroup entity_api
  */
 abstract class EntityHandlerBase {
