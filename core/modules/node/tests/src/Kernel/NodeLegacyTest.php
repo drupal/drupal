@@ -77,4 +77,14 @@ class NodeLegacyTest extends EntityKernelTestBase {
     $this->assertEquals(4, count(node_view_multiple($entities)));
   }
 
+  /**
+   * Tests that NodeType::isNewRevision() triggers a deprecation error.
+   *
+   * @expectedDeprecation NodeType::isNewRevision is deprecated in drupal:8.3.0 and is removed from drupal:9.0.0. Use Drupal\Core\Entity\RevisionableEntityBundleInterface::shouldCreateNewRevision() instead. See https://www.drupal.org/node/3067365
+   */
+  public function testNodeTypeIsNewRevision() {
+    $type = NodeType::load('page');
+    $this->assertSame($type->shouldCreateNewRevision(), $type->isNewRevision());
+  }
+
 }

@@ -122,7 +122,7 @@ class QuickEditFieldForm extends FormBase {
     //   once https://www.drupal.org/node/1863258 lands.
     if ($entity->getEntityTypeId() == 'node') {
       $node_type = $this->nodeTypeStorage->load($entity->bundle());
-      $entity->setNewRevision($node_type->isNewRevision());
+      $entity->setNewRevision($node_type->shouldCreateNewRevision());
       $entity->revision_log = NULL;
     }
 

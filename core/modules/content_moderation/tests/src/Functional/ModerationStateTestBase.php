@@ -123,7 +123,7 @@ abstract class ModerationStateTestBase extends BrowserTestBase {
     $this->drupalPostForm(NULL, $edit, t('Save content type'));
 
     // Check the content type has been set to create new revisions.
-    $this->assertTrue(NodeType::load($content_type_id)->isNewRevision());
+    $this->assertTrue(NodeType::load($content_type_id)->shouldCreateNewRevision());
 
     if ($moderated) {
       $this->enableModerationThroughUi($content_type_id, $workflow_id);

@@ -36,7 +36,7 @@ class MigrateNodeTypeTest extends MigrateDrupal6TestBase {
     $node_type_page = NodeType::load('test_page');
     $this->assertIdentical('test_page', $node_type_page->id(), 'Node type test_page loaded');
     $this->assertIdentical(TRUE, $node_type_page->displaySubmitted());
-    $this->assertIdentical(FALSE, $node_type_page->isNewRevision());
+    $this->assertIdentical(FALSE, $node_type_page->shouldCreateNewRevision());
     $this->assertIdentical(DRUPAL_OPTIONAL, $node_type_page->getPreviewMode());
     $this->assertIdentical($id_map->lookupDestinationIds(['test_page']), [['test_page']]);
 
@@ -55,7 +55,7 @@ class MigrateNodeTypeTest extends MigrateDrupal6TestBase {
     $this->assertIdentical('test_story', $node_type_story->id(), 'Node type test_story loaded');
 
     $this->assertIdentical(TRUE, $node_type_story->displaySubmitted());
-    $this->assertIdentical(FALSE, $node_type_story->isNewRevision());
+    $this->assertIdentical(FALSE, $node_type_story->shouldCreateNewRevision());
     $this->assertIdentical(DRUPAL_OPTIONAL, $node_type_story->getPreviewMode());
     $this->assertIdentical($id_map->lookupDestinationIds(['test_story']), [['test_story']]);
 
@@ -74,7 +74,7 @@ class MigrateNodeTypeTest extends MigrateDrupal6TestBase {
     $this->assertIdentical('test_event', $node_type_event->id(), 'Node type test_event loaded');
 
     $this->assertIdentical(TRUE, $node_type_event->displaySubmitted());
-    $this->assertIdentical(TRUE, $node_type_event->isNewRevision());
+    $this->assertIdentical(TRUE, $node_type_event->shouldCreateNewRevision());
     $this->assertIdentical(DRUPAL_OPTIONAL, $node_type_event->getPreviewMode());
     $this->assertIdentical($id_map->lookupDestinationIds(['test_event']), [['test_event']]);
 
