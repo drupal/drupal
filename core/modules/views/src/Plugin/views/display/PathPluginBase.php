@@ -442,7 +442,7 @@ abstract class PathPluginBase extends DisplayPluginBase implements DisplayRouter
           '#title' => $this->t('Path'),
           '#description' => $this->t('This view will be displayed by visiting this path on your site. You may use "%" in your URL to represent values that will be used for contextual filters: For example, "node/%/feed". If needed you can even specify named route parameters like taxonomy/term/%taxonomy_term'),
           '#default_value' => $this->getOption('path'),
-          '#field_prefix' => '<span dir="ltr">' . $this->url('<none>', [], ['absolute' => TRUE]),
+          '#field_prefix' => '<span dir="ltr">' . Url::fromRoute('<none>', [], ['absolute' => TRUE])->toString(),
           '#field_suffix' => '</span>&lrm;',
           '#attributes' => ['dir' => LanguageInterface::DIRECTION_LTR],
           // Account for the leading backslash.

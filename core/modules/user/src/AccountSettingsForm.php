@@ -7,6 +7,7 @@ use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
+use Drupal\Core\Url;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -171,7 +172,7 @@ class AccountSettingsForm extends ConfigFormBase {
       '#type' => 'radios',
       '#title' => $this->t('When cancelling a user account'),
       '#default_value' => $config->get('cancel_method'),
-      '#description' => $this->t('Users with the %select-cancel-method or %administer-users <a href=":permissions-url">permissions</a> can override this default method.', ['%select-cancel-method' => $this->t('Select method for cancelling account'), '%administer-users' => $this->t('Administer users'), ':permissions-url' => $this->url('user.admin_permissions')]),
+      '#description' => $this->t('Users with the %select-cancel-method or %administer-users <a href=":permissions-url">permissions</a> can override this default method.', ['%select-cancel-method' => $this->t('Select method for cancelling account'), '%administer-users' => $this->t('Administer users'), ':permissions-url' => Url::fromRoute('user.admin_permissions')->toString()]),
     ];
     $form['registration_cancellation']['user_cancel_method'] += user_cancel_methods();
     foreach (Element::children($form['registration_cancellation']['user_cancel_method']) as $key) {

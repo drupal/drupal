@@ -9,7 +9,6 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
 use Drupal\simpletest\TestDiscovery;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
  * Test results form for $test_id.
@@ -113,7 +112,7 @@ class SimpletestResultsForm extends FormBase {
     $results = [];
     if (is_numeric($test_id) && !$results = $this->getResults($test_id)) {
       $this->messenger()->addError($this->t('No test results to display.'));
-      return new RedirectResponse($this->url('simpletest.test_form', [], ['absolute' => TRUE]));
+      return $this->redirect('simpletest.test_form');
     }
 
     // Load all classes and include CSS.
@@ -122,7 +121,7 @@ class SimpletestResultsForm extends FormBase {
     $filter = static::addResultForm($form, $results, $this->getStringTranslation());
 
     // Actions.
-    $form['#action'] = $this->url('simpletest.result_form', ['test_id' => 're-run']);
+    $form['#action'] = Url::fromRoute('simpletest.result_form', ['test_id' => 're-run'])->toString();
     $form['action'] = [
       '#type' => 'fieldset',
       '#title' => $this->t('Actions'),

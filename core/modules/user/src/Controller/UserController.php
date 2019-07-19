@@ -6,6 +6,7 @@ use Drupal\Component\Utility\Crypt;
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Datetime\DateFormatterInterface;
+use Drupal\Core\Url;
 use Drupal\user\Form\UserPasswordResetForm;
 use Drupal\user\UserDataInterface;
 use Drupal\user\UserInterface;
@@ -125,7 +126,7 @@ class UserController extends ControllerBase {
               [
                 '%other_user' => $account->getAccountName(),
                 '%resetting_user' => $reset_link_user->getAccountName(),
-                ':logout' => $this->url('user.logout'),
+                ':logout' => Url::fromRoute('user.logout')->toString(),
               ]));
         }
         else {

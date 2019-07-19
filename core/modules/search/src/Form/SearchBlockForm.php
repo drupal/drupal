@@ -6,6 +6,7 @@ use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\RendererInterface;
+use Drupal\Core\Url;
 use Drupal\search\SearchPageRepositoryInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -93,7 +94,7 @@ class SearchBlockForm extends FormBase {
     }
 
     $route = 'search.view_' . $entity_id;
-    $form['#action'] = $this->url($route);
+    $form['#action'] = Url::fromRoute($route)->toString();
     $form['#method'] = 'get';
 
     $form['keys'] = [

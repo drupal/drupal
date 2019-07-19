@@ -5,6 +5,7 @@ namespace Drupal\shortcut\Form;
 use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
+use Drupal\Core\Url;
 
 /**
  * Builds the shortcut set customize form.
@@ -33,7 +34,7 @@ class SetCustomize extends EntityForm {
     $form['shortcuts']['links'] = [
       '#type' => 'table',
       '#header' => [t('Name'), t('Weight'), t('Operations')],
-      '#empty' => $this->t('No shortcuts available. <a href=":link">Add a shortcut</a>', [':link' => $this->url('shortcut.link_add', ['shortcut_set' => $this->entity->id()])]),
+      '#empty' => $this->t('No shortcuts available. <a href=":link">Add a shortcut</a>', [':link' => Url::fromRoute('shortcut.link_add', ['shortcut_set' => $this->entity->id()])->toString()]),
       '#attributes' => ['id' => 'shortcuts'],
       '#tabledrag' => [
         [

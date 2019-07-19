@@ -160,7 +160,7 @@ class AggregatorController extends ControllerBase {
       '#type' => 'table',
       '#header' => $header,
       '#rows' => $rows,
-      '#empty' => $this->t('No feeds available. <a href=":link">Add feed</a>.', [':link' => $this->url('aggregator.feed_add')]),
+      '#empty' => $this->t('No feeds available. <a href=":link">Add feed</a>.', [':link' => Url::fromRoute('aggregator.feed_add')->toString()]),
     ];
 
     return $build;

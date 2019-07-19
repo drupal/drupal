@@ -5,6 +5,7 @@ namespace Drupal\contact\Controller;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\contact\ContactFormInterface;
 use Drupal\Core\Render\RendererInterface;
+use Drupal\Core\Url;
 use Drupal\user\UserInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -66,7 +67,7 @@ class ContactController extends ControllerBase {
       if (empty($contact_form)) {
         if ($this->currentUser()->hasPermission('administer contact forms')) {
           $this->messenger()->addError($this->t('The contact form has not been configured. <a href=":add">Add one or more forms</a> .', [
-            ':add' => $this->url('contact.form_add'),
+            ':add' => Url::fromRoute('contact.form_add')->toString(),
           ]));
           return [];
         }

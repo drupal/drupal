@@ -11,6 +11,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\Security\TrustedCallbackInterface;
+use Drupal\Core\Url;
 use Drupal\language\ConfigurableLanguageManagerInterface;
 use Drupal\user\Plugin\LanguageNegotiation\LanguageNegotiationUser;
 use Drupal\user\Plugin\LanguageNegotiation\LanguageNegotiationUserAdmin;
@@ -156,7 +157,7 @@ abstract class AccountForm extends ContentEntityForm implements TrustedCallbackI
           $form['account']['current_pass']['#description'] = $this->t('Required if you want to change the %mail or %pass below. <a href=":request_new_url" title="Send password reset instructions via email.">Reset your password</a>.', [
             '%mail' => $form['account']['mail']['#title'],
             '%pass' => $this->t('Password'),
-            ':request_new_url' => $this->url('user.pass'),
+            ':request_new_url' => Url::fromRoute('user.pass')->toString(),
           ]);
         }
       }

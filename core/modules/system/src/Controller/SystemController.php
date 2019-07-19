@@ -100,7 +100,7 @@ class SystemController extends ControllerBase {
   public function overview($link_id) {
     // Check for status report errors.
     if ($this->systemManager->checkRequirements() && $this->currentUser()->hasPermission('administer site configuration')) {
-      $this->messenger()->addError($this->t('One or more problems were detected with your Drupal installation. Check the <a href=":status">status report</a> for more information.', [':status' => $this->url('system.status')]));
+      $this->messenger()->addError($this->t('One or more problems were detected with your Drupal installation. Check the <a href=":status">status report</a> for more information.', [':status' => Url::fromRoute('system.status')->toString()]));
     }
     // Load all menu links below it.
     $parameters = new MenuTreeParameters();

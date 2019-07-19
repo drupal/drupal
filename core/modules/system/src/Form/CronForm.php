@@ -9,6 +9,7 @@ use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\State\StateInterface;
+use Drupal\Core\Url;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Core\Form\ConfigFormBaseTrait;
 
@@ -114,7 +115,7 @@ class CronForm extends FormBase {
       '#markup' => $status,
     ];
 
-    $cron_url = $this->url('system.cron', ['key' => $this->state->get('system.cron_key')], ['absolute' => TRUE]);
+    $cron_url = Url::fromRoute('system.cron', ['key' => $this->state->get('system.cron_key')], ['absolute' => TRUE])->toString();
     $form['cron_url'] = [
       '#markup' => '<p>' . t('To run cron from outside the site, go to <a href=":cron" class="system-cron-settings__link">@cron</a>', [':cron' => $cron_url, '@cron' => $cron_url]) . '</p>',
     ];

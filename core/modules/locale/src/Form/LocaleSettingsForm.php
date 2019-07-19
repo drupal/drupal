@@ -4,6 +4,7 @@ namespace Drupal\locale\Form;
 
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Url;
 
 /**
  * Configure locale settings for this site.
@@ -41,14 +42,14 @@ class LocaleSettingsForm extends ConfigFormBase {
         '7' => $this->t('Weekly'),
         '30' => $this->t('Monthly'),
       ],
-      '#description' => $this->t('Select how frequently you want to check for new interface translations for your currently installed modules and themes. <a href=":url">Check updates now</a>.', [':url' => $this->url('locale.check_translation')]),
+      '#description' => $this->t('Select how frequently you want to check for new interface translations for your currently installed modules and themes. <a href=":url">Check updates now</a>.', [':url' => Url::fromRoute('locale.check_translation')->toString()]),
     ];
 
     if ($directory = $config->get('translation.path')) {
-      $description = $this->t('Translation files are stored locally in the  %path directory. You can change this directory on the <a href=":url">File system</a> configuration page.', ['%path' => $directory, ':url' => $this->url('system.file_system_settings')]);
+      $description = $this->t('Translation files are stored locally in the  %path directory. You can change this directory on the <a href=":url">File system</a> configuration page.', ['%path' => $directory, ':url' => Url::fromRoute('system.file_system_settings')->toString()]);
     }
     else {
-      $description = $this->t('Translation files will not be stored locally. Change the Interface translation directory on the <a href=":url">File system configuration</a> page.', [':url' => $this->url('system.file_system_settings')]);
+      $description = $this->t('Translation files will not be stored locally. Change the Interface translation directory on the <a href=":url">File system configuration</a> page.', [':url' => Url::fromRoute('system.file_system_settings')->toString()]);
     }
     $form['#translation_directory'] = $directory;
     $form['use_source'] = [
@@ -93,7 +94,7 @@ class LocaleSettingsForm extends ConfigFormBase {
     parent::validateForm($form, $form_state);
 
     if (empty($form['#translation_directory']) && $form_state->getValue('use_source') == LOCALE_TRANSLATION_USE_SOURCE_LOCAL) {
-      $form_state->setErrorByName('use_source', $this->t('You have selected local translation source, but no <a href=":url">Interface translation directory</a> was configured.', [':url' => $this->url('system.file_system_settings')]));
+      $form_state->setErrorByName('use_source', $this->t('You have selected local translation source, but no <a href=":url">Interface translation directory</a> was configured.', [':url' => Url::fromRoute('system.file_system_settings')->toString()]));
     }
   }
 

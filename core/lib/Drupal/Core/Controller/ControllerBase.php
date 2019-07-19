@@ -8,8 +8,10 @@ use Drupal\Core\Routing\LinkGeneratorTrait;
 use Drupal\Core\Routing\RedirectDestinationTrait;
 use Drupal\Core\Routing\UrlGeneratorTrait;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\Core\Url;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Core\Messenger\MessengerTrait;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
  * Utility base class for thin controllers.
@@ -280,6 +282,27 @@ abstract class ControllerBase implements ContainerInjectionInterface {
       $this->languageManager = $this->container()->get('language_manager');
     }
     return $this->languageManager;
+  }
+
+  /**
+   * Returns a redirect response object for the specified route.
+   *
+   * @param string $route_name
+   *   The name of the route to which to redirect.
+   * @param array $route_parameters
+   *   (optional) Parameters for the route.
+   * @param array $options
+   *   (optional) An associative array of additional options.
+   * @param int $status
+   *   (optional) The HTTP redirect status code for the redirect. The default is
+   *   302 Found.
+   *
+   * @return \Symfony\Component\HttpFoundation\RedirectResponse
+   *   A redirect response object that may be returned by the controller.
+   */
+  protected function redirect($route_name, array $route_parameters = [], array $options = [], $status = 302) {
+    $options['absolute'] = TRUE;
+    return new RedirectResponse(Url::fromRoute($route_name, $route_parameters, $options)->toString(), $status);
   }
 
   /**

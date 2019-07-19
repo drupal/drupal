@@ -4,6 +4,7 @@ namespace Drupal\shortcut\Form;
 
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Url;
 use Drupal\shortcut\Entity\ShortcutSet;
 use Drupal\shortcut\ShortcutSetStorageInterface;
 use Drupal\user\UserInterface;
@@ -183,7 +184,7 @@ class SwitchShortcutSet extends FormBase {
       $replacements = [
         '%user' => $this->user->label(),
         '%set_name' => $set->label(),
-        ':switch-url' => $this->url('<current>'),
+        ':switch-url' => Url::fromRoute('<current>')->toString(),
       ];
       if ($account_is_user) {
         // Only administrators can create new shortcut sets, so we know they have

@@ -37,11 +37,11 @@ class ReorderDisplays extends ViewsFormBase {
 
     $form['#title'] = $this->t('Reorder displays');
     $form['#section'] = 'reorder';
-    $form['#action'] = $this->url('views_ui.form_reorder_displays', [
+    $form['#action'] = Url::fromRoute('views_ui.form_reorder_displays', [
       'js' => 'nojs',
       'view' => $view->id(),
       'display_id' => $display_id,
-    ]);
+    ])->toString();
     $form['view'] = [
       '#type' => 'value',
       '#value' => $view,

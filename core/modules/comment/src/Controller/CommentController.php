@@ -12,6 +12,7 @@ use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityRepositoryInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Url;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -361,7 +362,7 @@ class CommentController extends ControllerBase {
       $query = $page_number ? ['page' => $page_number] : NULL;
       $links[$nid] = [
         'new_comment_count' => (int) $new,
-        'first_new_comment_link' => $this->getUrlGenerator()->generateFromRoute('entity.node.canonical', ['node' => $node->id()], ['query' => $query, 'fragment' => 'new']),
+        'first_new_comment_link' => Url::fromRoute('entity.node.canonical', ['node' => $node->id()], ['query' => $query, 'fragment' => 'new'])->toString(),
       ];
     }
 
