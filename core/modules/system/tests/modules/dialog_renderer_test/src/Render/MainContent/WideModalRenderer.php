@@ -6,6 +6,7 @@ use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\OpenModalDialogCommand;
 use Drupal\Core\Controller\TitleResolverInterface;
 use Drupal\Core\Render\MainContent\ModalRenderer;
+use Drupal\Core\Render\RendererInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -30,11 +31,13 @@ class WideModalRenderer extends ModalRenderer {
    *
    * @param \Drupal\Core\Controller\TitleResolverInterface $title_resolver
    *   The title resolver.
+   * @param \Drupal\Core\Render\RendererInterface $renderer
+   *   The renderer.
    * @param string $mode
    *   The mode, either 'wide' or 'extra_wide'.
    */
-  public function __construct(TitleResolverInterface $title_resolver, $mode = 'wide') {
-    parent::__construct($title_resolver);
+  public function __construct(TitleResolverInterface $title_resolver, RendererInterface $renderer, $mode = 'wide') {
+    parent::__construct($title_resolver, $renderer);
     $this->mode = $mode;
   }
 
@@ -45,7 +48,7 @@ class WideModalRenderer extends ModalRenderer {
     $response = new AjaxResponse();
 
     // First render the main content, because it might provide a title.
-    $content = drupal_render_root($main_content);
+    $content = $this->renderer->renderRoot($main_content);
 
     // Attach the library necessary for using the OpenModalDialogCommand and set
     // the attachments for this Ajax response.

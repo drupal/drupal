@@ -1093,13 +1093,13 @@ services:
       - { name: render.main_content_renderer, format: html }
   main_content_renderer.ajax:
     class: Drupal\Core\Render\MainContent\AjaxRenderer
-    arguments: ['@element_info']
+    arguments: ['@element_info', '@renderer']
     tags:
       - { name: render.main_content_renderer, format: drupal_ajax }
       - { name: render.main_content_renderer, format: iframeupload }
   main_content_renderer.dialog:
     class: Drupal\Core\Render\MainContent\DialogRenderer
-    arguments: ['@title_resolver']
+    arguments: ['@title_resolver', '@renderer']
     tags:
       - { name: render.main_content_renderer, format: drupal_dialog }
   main_content_renderer.off_canvas:
@@ -1114,7 +1114,7 @@ services:
       - { name: render.main_content_renderer, format: drupal_dialog.off_canvas_top }
   main_content_renderer.modal:
     class: Drupal\Core\Render\MainContent\ModalRenderer
-    arguments: ['@title_resolver']
+    arguments: ['@title_resolver', '@renderer']
     tags:
       - { name: render.main_content_renderer, format: drupal_modal }
   controller.form:

@@ -1,16 +1,13 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\Core\Controller\AjaxRendererTest.
- */
-
 namespace Drupal\Tests\Core\Controller;
 
+use Drupal\Core\Render\ElementInfoManagerInterface;
 use Drupal\Core\Render\MainContent\AjaxRenderer;
+use Drupal\Core\Render\RendererInterface;
 use Drupal\Tests\UnitTestCase;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /**
  * @coversDefaultClass \Drupal\Core\Render\MainContent\AjaxRenderer
@@ -45,15 +42,23 @@ class AjaxRendererTest extends UnitTestCase {
         '#commands' => [],
         '#error' => NULL,
       ]);
-    $this->ajaxRenderer = new TestAjaxRenderer($element_info_manager);
+    $renderer = $this->createMock(RendererInterface::class);
+    $renderer->expects($this->any())
+      ->method('renderRoot')
+      ->willReturnCallback(function (&$elements, $is_root_call = FALSE) {
+        $elements += ['#attached' => []];
+        if (isset($elements['#markup'])) {
+          return $elements['#markup'];
+        }
+        elseif (isset($elements['#type'])) {
+          return $elements['#type'];
+        }
+        else {
+          return 'Markup';
+        }
+      });
 
-    $this->renderer = $this->getMockBuilder('Drupal\Core\Render\Renderer')
-      ->disableOriginalConstructor()
-      ->setMethods(NULL)
-      ->getMock();
-    $container = new ContainerBuilder();
-    $container->set('renderer', $this->renderer);
-    \Drupal::setContainer($container);
+    $this->ajaxRenderer = new AjaxRenderer($element_info_manager, $renderer);
   }
 
   /**
@@ -78,24 +83,19 @@ class AjaxRendererTest extends UnitTestCase {
     $this->assertEquals('status_messages', $commands[1]['data']);
   }
 
-}
-
-class TestAjaxRenderer extends AjaxRenderer {
-
   /**
-   * {@inheritdoc}
+   * @group legacy
+   * @expectedDeprecation The renderer service must be passed to Drupal\Core\Render\MainContent\AjaxRenderer::__construct and will be required before Drupal 9.0.0. See https://www.drupal.org/node/3009400
    */
-  protected function drupalRenderRoot(&$elements, $is_root_call = FALSE) {
-    $elements += ['#attached' => []];
-    if (isset($elements['#markup'])) {
-      return $elements['#markup'];
-    }
-    elseif (isset($elements['#type'])) {
-      return $elements['#type'];
-    }
-    else {
-      return 'Markup';
-    }
+  public function testConstructorRendererArgument() {
+    $element_info_manager = $this->createMock(ElementInfoManagerInterface::class);
+    $container = $this->createMock(ContainerInterface::class);
+    $container->expects($this->once())
+      ->method('get')
+      ->with('renderer')
+      ->willReturn(NULL);
+    \Drupal::setContainer($container);
+    new AjaxRenderer($element_info_manager);
   }
 
 }

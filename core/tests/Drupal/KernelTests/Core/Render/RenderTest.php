@@ -77,4 +77,30 @@ class RenderTest extends KernelTestBase {
     }
   }
 
+  /**
+   * Tests the drupal_render_root() deprecation.
+   *
+   * @group legacy
+   * @expectedDeprecation drupal_render_root() is deprecated in drupal:8.0.0 and is removed from drupal:9.0.0. Use \Drupal\Core\Render\RendererInterface::renderRoot() instead. See https://www.drupal.org/node/2912696
+   */
+  public function testRenderRootDeprecation() {
+    \Drupal::state()->set('theme_preprocess_attached_test', TRUE);
+
+    $test_element = [
+      '#theme' => 'common_test_render_element',
+      'foo' => [
+        '#markup' => 'Kittens!',
+      ],
+    ];
+    drupal_render_root($test_element);
+
+    $expected_attached = [
+      'library' => [
+        'test/generic_preprocess',
+        'test/specific_preprocess',
+      ],
+    ];
+    $this->assertEqual($expected_attached, $test_element['#attached'], 'All expected assets from theme preprocess hooks attached.');
+  }
+
 }

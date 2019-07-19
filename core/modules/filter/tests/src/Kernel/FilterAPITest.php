@@ -292,7 +292,7 @@ class FilterAPITest extends EntityKernelTestBase {
       '#text' => '<p>Hello, world!</p>',
       '#format' => 'element_test',
     ];
-    drupal_render_root($build);
+    \Drupal::service('renderer')->renderRoot($build);
 
     // Verify the attachments and cacheability metadata.
     $expected_attachments = [

@@ -776,7 +776,7 @@ function drupal_pre_render_link($element) {
 /**
  * Pre-render callback: Collects child links into a single array.
  *
- * @deprecated in Drupal 8.8.0 and will be removed before Drupal 9.0.0. Use
+ * @deprecated in drupal:8.0.0 and will be removed before drupal:9.0.0. Use
  *   \Drupal\Core\Render\Element\Link::preRenderLinks() instead.
  *
  * @see https://www.drupal.org/node/2966725
@@ -789,13 +789,14 @@ function drupal_pre_render_links($element) {
 /**
  * Renders final HTML given a structured array tree.
  *
- * @deprecated as of Drupal 8.0.x, will be removed before Drupal 9.0.0. Use the
- *   'renderer' service instead.
+ * @deprecated as of drupal:8.0.0 and is removed from drupal:9.0.0. Use
+ *   \Drupal\Core\Render\RendererInterface::renderRoot() instead.
  *
  * @see \Drupal\Core\Render\RendererInterface::renderRoot()
  * @see https://www.drupal.org/node/2912696
  */
 function drupal_render_root(&$elements) {
+  @trigger_error('drupal_render_root() is deprecated in drupal:8.0.0 and is removed from drupal:9.0.0. Use \Drupal\Core\Render\RendererInterface::renderRoot() instead. See https://www.drupal.org/node/2912696', E_USER_DEPRECATED);
   return \Drupal::service('renderer')->renderRoot($elements);
 }
 

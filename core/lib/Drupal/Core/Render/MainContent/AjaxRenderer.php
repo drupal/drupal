@@ -7,6 +7,7 @@ use Drupal\Core\Ajax\AlertCommand;
 use Drupal\Core\Ajax\InsertCommand;
 use Drupal\Core\Ajax\PrependCommand;
 use Drupal\Core\Render\ElementInfoManagerInterface;
+use Drupal\Core\Render\RendererInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -23,13 +24,27 @@ class AjaxRenderer implements MainContentRendererInterface {
   protected $elementInfoManager;
 
   /**
+   * The renderer.
+   *
+   * @var \Drupal\Core\Render\RendererInterface
+   */
+  protected $renderer;
+
+  /**
    * Constructs a new AjaxRenderer instance.
    *
    * @param \Drupal\Core\Render\ElementInfoManagerInterface $element_info_manager
    *   The element info manager.
+   * @param \Drupal\Core\Render\RendererInterface $renderer
+   *   The renderer.
    */
-  public function __construct(ElementInfoManagerInterface $element_info_manager) {
+  public function __construct(ElementInfoManagerInterface $element_info_manager, RendererInterface $renderer = NULL) {
     $this->elementInfoManager = $element_info_manager;
+    if ($renderer === NULL) {
+      @trigger_error('The renderer service must be passed to ' . __METHOD__ . ' and will be required before Drupal 9.0.0. See https://www.drupal.org/node/3009400', E_USER_DEPRECATED);
+      $renderer = \Drupal::service('renderer');
+    }
+    $this->renderer = $renderer;
   }
 
   /**
@@ -52,7 +67,7 @@ class AjaxRenderer implements MainContentRendererInterface {
       }
     }
 
-    $html = $this->drupalRenderRoot($main_content);
+    $html = $this->renderer->renderRoot($main_content);
     $response->setAttachments($main_content['#attached']);
 
     // The selector for the insert command is NULL as the new content will
@@ -60,7 +75,7 @@ class AjaxRenderer implements MainContentRendererInterface {
     // behavior can be changed with #ajax['method'].
     $response->addCommand(new InsertCommand(NULL, $html));
     $status_messages = ['#type' => 'status_messages'];
-    $output = $this->drupalRenderRoot($status_messages);
+    $output = $this->renderer->renderRoot($status_messages);
     if (!empty($output)) {
       $response->addCommand(new PrependCommand(NULL, $output));
     }
@@ -68,12 +83,16 @@ class AjaxRenderer implements MainContentRendererInterface {
   }
 
   /**
-   * Wraps drupal_render_root().
+   * Wraps \Drupal\Core\Render\RendererInterface::renderRoot().
    *
-   * @todo Remove as part of https://www.drupal.org/node/2182149.
+   * @deprecated in Drupal 8.7.x and will be removed before Drupal 9.0.0. Use
+   *   $this->renderer->renderRoot() instead.
+   *
+   * @see https://www.drupal.org/node/2912696
    */
   protected function drupalRenderRoot(&$elements) {
-    return drupal_render_root($elements);
+    @trigger_error('\Drupal\Core\Render\MainContent\AjaxRenderer::drupalRenderRoot() is deprecated in Drupal 8.7.x and will be removed before Drupal 9.0.0. Use $this->renderer->renderRoot() instead. See https://www.drupal.org/node/2912696', E_USER_DEPRECATED);
+    return $this->renderer->renderRoot($elements);
   }
 
 }
