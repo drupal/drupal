@@ -102,6 +102,7 @@ class EntityTypeRepository implements EntityTypeRepositoryInterface {
    * {@inheritdoc}
    */
   public function clearCachedDefinitions() {
+    @trigger_error(__METHOD__ . ' is deprecated in drupal:8.0.0 and is removed in drupal:9.0.0', E_USER_DEPRECATED);
     $this->classNameEntityTypeMap = [];
   }
 

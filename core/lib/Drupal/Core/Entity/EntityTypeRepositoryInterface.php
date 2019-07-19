@@ -45,9 +45,7 @@ interface EntityTypeRepositoryInterface {
   /**
    * Clear the static cache.
    *
-   * @deprecated in Drupal 8.0.0, will be removed before Drupal 9.0.0.
-   *
-   * @todo Remove in https://www.drupal.org/node/2549143.
+   * @deprecated in drupal:8.0.0 and is removed in drupal:9.0.0.
    */
   public function clearCachedDefinitions();
 
