@@ -19,15 +19,7 @@ class UpdateServiceProvider implements ServiceProviderInterface, ServiceModifier
    */
   public function register(ContainerBuilder $container) {
     $definition = new Definition('Drupal\Core\Cache\NullBackend', ['null']);
-    $definition->setDeprecated(TRUE, 'The "%service_id%\" service is deprecated. While updating Drupal all caches use \Drupal\Core\Update\UpdateBackend. See https://www.drupal.org/node/3066407');
     $container->setDefinition('cache.null', $definition);
-
-    // Decorate the cache factory in order to use
-    // \Drupal\Core\Update\UpdateBackend while running updates.
-    $container
-      ->register('update.cache_factory', UpdateCacheBackendFactory::class)
-      ->setDecoratedService('cache_factory')
-      ->addArgument(new Reference('update.cache_factory.inner'));
 
     $container->addCompilerPass(new UpdateCompilerPass(), PassConfig::TYPE_REMOVE, 128);
   }
@@ -36,6 +28,25 @@ class UpdateServiceProvider implements ServiceProviderInterface, ServiceModifier
    * {@inheritdoc}
    */
   public function alter(ContainerBuilder $container) {
+    // Ensures for some services that they don't cache.
+    $null_cache_service = new Reference('cache.null');
+
+    $definition = $container->getDefinition('asset.resolver');
+    $definition->replaceArgument(5, $null_cache_service);
+
+    $definition = $container->getDefinition('library.discovery.collector');
+    $definition->replaceArgument(0, $null_cache_service);
+
+    $definition = $container->getDefinition('theme.registry');
+    $definition->replaceArgument(1, $null_cache_service);
+    $definition->replaceArgument(7, $null_cache_service);
+
+    $definition = $container->getDefinition('theme.initialization');
+    $definition->replaceArgument(2, $null_cache_service);
+
+    $definition = $container->getDefinition('plugin.manager.element_info');
+    $definition->replaceArgument(1, $null_cache_service);
+
     // Prevent the alias-based path processor, which requires a path_alias db
     // table, from being registered to the path processor manager. We do this by
     // removing the tags that the compiler pass looks for. This means the url
