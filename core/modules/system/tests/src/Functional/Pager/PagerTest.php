@@ -250,7 +250,6 @@ class PagerTest extends BrowserTestBase {
         $this->assertClass($element, 'pager__item', "Element for page $page has .pager__item class.");
         $link = $element->find('css', 'a');
         $this->assertTrue($link, "Link to page $page found.");
-        $this->assertEqual($link->getAttribute('pager-test'), 'yes', "Pager link for page $page has an attribute set in pager_test_preprocess_pager()");
         $destination = $link->getAttribute('href');
         $this->assertEqual($destination, '?page=' . ($page - 1));
       }
@@ -265,7 +264,6 @@ class PagerTest extends BrowserTestBase {
       $link = $first->find('css', 'a');
       $this->assertTrue($link, 'Link to first page found.');
       $this->assertNoClass($link, 'is-active', 'Link to first page is not active.');
-      $this->assertEqual($link->getAttribute('pager-test'), 'first', 'Pager link for first page has an attribute set in pager_test_preprocess_pager()');
       $destination = $link->getAttribute('href');
       $this->assertEqual($destination, '?page=0');
     }
@@ -274,7 +272,6 @@ class PagerTest extends BrowserTestBase {
       $link = $previous->find('css', 'a');
       $this->assertTrue($link, 'Link to previous page found.');
       $this->assertNoClass($link, 'is-active', 'Link to previous page is not active.');
-      $this->assertEqual($link->getAttribute('pager-test'), 'previous', 'Pager link for previous page has an attribute set in pager_test_preprocess_pager()');
       $destination = $link->getAttribute('href');
       // URL query string param is 0-indexed, $current_page is 1-indexed.
       $this->assertEqual($destination, '?page=' . ($current_page - 2));
@@ -284,7 +281,6 @@ class PagerTest extends BrowserTestBase {
       $link = $next->find('css', 'a');
       $this->assertTrue($link, 'Link to next page found.');
       $this->assertNoClass($link, 'is-active', 'Link to next page is not active.');
-      $this->assertEqual($link->getAttribute('pager-test'), 'next', 'Pager link for next page has an attribute set in pager_test_preprocess_pager()');
       $destination = $link->getAttribute('href');
       // URL query string param is 0-indexed, $current_page is 1-indexed.
       $this->assertEqual($destination, '?page=' . $current_page);
@@ -294,7 +290,6 @@ class PagerTest extends BrowserTestBase {
       $this->assertClass($last, 'pager__item--last', 'Element for last page has .pager__item--last class.');
       $this->assertTrue($link, 'Link to last page found.');
       $this->assertNoClass($link, 'is-active', 'Link to last page is not active.');
-      $this->assertEqual($link->getAttribute('pager-test'), 'last', 'Pager link for last page has an attribute set in pager_test_preprocess_pager()');
       $destination = $link->getAttribute('href');
       // URL query string param is 0-indexed.
       $this->assertEqual($destination, '?page=' . ($total_pages - 1));
