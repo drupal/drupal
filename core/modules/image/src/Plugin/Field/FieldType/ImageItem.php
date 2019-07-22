@@ -503,8 +503,17 @@ class ImageItem extends FileItem {
    * Gets the entity manager.
    *
    * @return \Drupal\Core\Entity\EntityManagerInterface
+   *
+   * @deprecated in drupal:8.8.0 and is removed in drupal:9.0.0. Use
+   *   \Drupal::entityTypeManager() instead in most cases. If the needed method
+   *   is not on \Drupal\Core\Entity\EntityTypeManagerInterface, see the
+   *   deprecated \Drupal\Core\Entity\EntityManager to find the correct
+   *   interface or service.
+   *
+   * @see https://www.drupal.org/node/2549139
    */
   protected function getEntityManager() {
+    @trigger_error(__METHOD__ . ' is deprecated in drupal:8.8.0 and is removed in drupal:9.0.0. Use \Drupal::entityTypeManager() instead in most cases. If the needed method is not on \Drupal\Core\Entity\EntityTypeManagerInterface, see the deprecated \Drupal\Core\Entity\EntityManager to find the correct interface or service. See https://www.drupal.org/node/2549139', E_USER_DEPRECATED);
     if (!isset($this->entityManager)) {
       $this->entityManager = \Drupal::entityManager();
     }
