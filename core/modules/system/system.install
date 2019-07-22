@@ -44,7 +44,7 @@ function system_requirements($phase) {
 
     // Display the currently active installation profile, if the site
     // is not running the default installation profile.
-    $profile = drupal_get_profile();
+    $profile = \Drupal::installProfile();
     if ($profile != 'standard') {
       $info = system_get_info('module', $profile);
       $requirements['install_profile'] = [
@@ -820,7 +820,7 @@ function system_requirements($phase) {
 
   // Display an error if a newly introduced dependency in a module is not resolved.
   if ($phase == 'update') {
-    $profile = drupal_get_profile();
+    $profile = \Drupal::installProfile();
     $files = \Drupal::service('extension.list.module')->getList();
     foreach ($files as $module => $file) {
       // Ignore disabled modules and installation profiles.

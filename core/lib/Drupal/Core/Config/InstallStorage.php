@@ -155,7 +155,7 @@ class InstallStorage extends FileStorage {
       // yet because the system module may not yet be enabled during install.
       // @todo Remove as part of https://www.drupal.org/node/2186491
       $listing = new ExtensionDiscovery(\Drupal::root());
-      if ($profile = drupal_get_profile()) {
+      if ($profile = \Drupal::installProfile()) {
         $profile_list = $listing->scan('profile');
         if (isset($profile_list[$profile])) {
           // Prime the drupal_get_filename() static cache with the profile info

@@ -242,7 +242,8 @@ abstract class Tasks {
       '#weight' => 10,
     ];
 
-    $profile = drupal_get_profile();
+    global $install_state;
+    $profile = $install_state['parameters']['profile'];
     $db_prefix = ($profile == 'standard') ? 'drupal_' : $profile . '_';
     $form['advanced_options']['prefix'] = [
       '#type' => 'textfield',

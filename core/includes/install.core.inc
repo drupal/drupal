@@ -1655,7 +1655,7 @@ function install_profile_themes(&$install_state) {
  *   An array of information about the current installation state.
  */
 function install_install_profile(&$install_state) {
-  \Drupal::service('module_installer')->install([drupal_get_profile()], FALSE);
+  \Drupal::service('module_installer')->install([$install_state['parameters']['profile']], FALSE);
   // Install all available optional config. During installation the module order
   // is determined by dependencies. If there are no dependencies between modules
   // then the order in which they are installed is dependent on random factors
@@ -1853,7 +1853,7 @@ function install_finish_translations(&$install_state) {
  *   A message informing the user that the installation is complete.
  */
 function install_finished(&$install_state) {
-  $profile = drupal_get_profile();
+  $profile = $install_state['parameters']['profile'];
 
   // Installation profiles are always loaded last.
   module_set_weight($profile, 1000);

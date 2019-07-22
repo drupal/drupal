@@ -778,7 +778,7 @@ function drupal_installation_attempted() {
  *   currently active. This is the case for example during the first steps of
  *   the installer or during unit tests.
  *
- * @deprecated in Drupal 8.3.0, will be removed before Drupal 9.0.0.
+ * @deprecated in drupal:8.3.0 and is removed from drupal:9.0.0.
  *   Use the install_profile container parameter or \Drupal::installProfile()
  *   instead. If you are accessing the value before it is written to
  *   configuration during the installer use the $install_state global. If you
@@ -790,6 +790,8 @@ function drupal_installation_attempted() {
  */
 function drupal_get_profile() {
   global $install_state;
+
+  @trigger_error('drupal_get_profile() is deprecated in drupal:8.3.0 and is removed from drupal:9.0.0. Use the install_profile container parameter or \Drupal::installProfile() instead. If you are accessing the value before it is written to configuration during the installer use the $install_state global. If you need to access the value before container is available you can use BootstrapConfigStorageFactory to load the value directly from configuration. See https://www.drupal.org/node/2538996', E_USER_DEPRECATED);
 
   if (drupal_installation_attempted()) {
     // If the profile has been selected return it.

@@ -1108,7 +1108,7 @@ abstract class TestBase {
     // Use the original files directory to avoid nesting it within an existing
     // simpletest directory if a test is executed within a test.
     $this->originalFileDirectory = Settings::get('file_public_path', $site_path . '/files');
-    $this->originalProfile = drupal_get_profile();
+    $this->originalProfile = $this->originalContainer->getParameter('install_profile');
     $this->originalUser = isset($user) ? clone $user : NULL;
 
     // Prevent that session data is leaked into the UI test runner by closing

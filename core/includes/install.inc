@@ -107,7 +107,7 @@ function drupal_install_profile_distribution_name() {
   }
   // At all other times, we load the profile via standard methods.
   else {
-    $profile = drupal_get_profile();
+    $profile = \Drupal::installProfile();
     $info = system_get_info('module', $profile);
   }
   return isset($info['distribution']['name']) ? $info['distribution']['name'] : 'Drupal';
@@ -132,7 +132,7 @@ function drupal_install_profile_distribution_version() {
   }
   // At all other times, we load the profile via standard methods.
   else {
-    $profile = drupal_get_profile();
+    $profile = \Drupal::installProfile();
     $info = system_get_info('module', $profile);
     return $info['version'];
   }

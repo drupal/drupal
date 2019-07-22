@@ -155,9 +155,8 @@ function drupal_required_modules() {
   $required = [];
 
   // Unless called by the installer, an installation profile is required and
-  // must always be loaded. drupal_get_profile() also returns the installation
-  // profile in the installer, but only after it has been selected.
-  if ($profile = drupal_get_profile()) {
+  // must always be loaded.
+  if ($profile = \Drupal::installProfile()) {
     $required[] = $profile;
   }
 
