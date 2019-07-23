@@ -1,0 +1,30 @@
+<?php
+
+/**
+ * @file
+ * Hook implementations for this module.
+ */
+
+/**
+ * Implements hook_preprocess_HOOK().
+ */
+function pager_test_preprocess_pager(&$variables) {
+  global $pager_total;
+
+  // Nothing to do if there is only one page.
+  $element = $variables['pager']['#element'];
+  if ($pager_total[$element] <= 1) {
+    return;
+  }
+
+  foreach ($variables['items']['pages'] as $index => &$pager_item) {
+    $pager_item['attributes']['pager-test'] = 'yes';
+  }
+  unset($pager_item);
+
+  foreach (['first', 'previous', 'next', 'last'] as $special_pager_item) {
+    if (isset($variables['items'][$special_pager_item])) {
+      $variables['items'][$special_pager_item]['attributes']['pager-test'] = $special_pager_item;
+    }
+  }
+}

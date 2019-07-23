@@ -20,7 +20,7 @@ class PagerTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = ['dblog', 'pager_test'];
+  public static $modules = ['dblog', 'image', 'pager_test'];
 
   /**
    * A user with permission to access site reports.
@@ -42,6 +42,7 @@ class PagerTest extends BrowserTestBase {
 
     $this->adminUser = $this->drupalCreateUser([
       'access site reports',
+      'administer image styles',
     ]);
     $this->drupalLogin($this->adminUser);
   }
@@ -66,6 +67,10 @@ class PagerTest extends BrowserTestBase {
     $current_page = (int) $matches[1];
     $this->drupalGet($GLOBALS['base_root'] . parse_url($this->getUrl())['path'] . $elements[0]->getAttribute('href'), ['external' => TRUE]);
     $this->assertPagerItems($current_page);
+
+    // Verify the pager does not render on a list without pagination.
+    $this->drupalGet('admin/config/media/image-styles');
+    $this->assertElementNotPresent('.pager');
   }
 
   /**
@@ -250,6 +255,8 @@ class PagerTest extends BrowserTestBase {
         $this->assertClass($element, 'pager__item', "Element for page $page has .pager__item class.");
         $link = $element->find('css', 'a');
         $this->assertTrue($link, "Link to page $page found.");
+        // Pager link has an attribute set in pager_test_preprocess_pager().
+        $this->assertEquals('yes', $link->getAttribute('pager-test'));
         $destination = $link->getAttribute('href');
         $this->assertEqual($destination, '?page=' . ($page - 1));
       }
@@ -264,6 +271,7 @@ class PagerTest extends BrowserTestBase {
       $link = $first->find('css', 'a');
       $this->assertTrue($link, 'Link to first page found.');
       $this->assertNoClass($link, 'is-active', 'Link to first page is not active.');
+      $this->assertEquals('first', $link->getAttribute('pager-test'));
       $destination = $link->getAttribute('href');
       $this->assertEqual($destination, '?page=0');
     }
@@ -272,6 +280,7 @@ class PagerTest extends BrowserTestBase {
       $link = $previous->find('css', 'a');
       $this->assertTrue($link, 'Link to previous page found.');
       $this->assertNoClass($link, 'is-active', 'Link to previous page is not active.');
+      $this->assertEquals('previous', $link->getAttribute('pager-test'));
       $destination = $link->getAttribute('href');
       // URL query string param is 0-indexed, $current_page is 1-indexed.
       $this->assertEqual($destination, '?page=' . ($current_page - 2));
@@ -281,6 +290,7 @@ class PagerTest extends BrowserTestBase {
       $link = $next->find('css', 'a');
       $this->assertTrue($link, 'Link to next page found.');
       $this->assertNoClass($link, 'is-active', 'Link to next page is not active.');
+      $this->assertEquals('next', $link->getAttribute('pager-test'));
       $destination = $link->getAttribute('href');
       // URL query string param is 0-indexed, $current_page is 1-indexed.
       $this->assertEqual($destination, '?page=' . $current_page);
@@ -290,6 +300,7 @@ class PagerTest extends BrowserTestBase {
       $this->assertClass($last, 'pager__item--last', 'Element for last page has .pager__item--last class.');
       $this->assertTrue($link, 'Link to last page found.');
       $this->assertNoClass($link, 'is-active', 'Link to last page is not active.');
+      $this->assertEquals('last', $link->getAttribute('pager-test'));
       $destination = $link->getAttribute('href');
       // URL query string param is 0-indexed.
       $this->assertEqual($destination, '?page=' . ($total_pages - 1));
