@@ -87,4 +87,32 @@ class NodeLegacyTest extends EntityKernelTestBase {
     $this->assertSame($type->shouldCreateNewRevision(), $type->isNewRevision());
   }
 
+  /**
+   * Tests that Node::setRevisionAuthorId() triggers a deprecation error.
+   *
+   * @expectedDeprecation Drupal\node\Entity\Node::setRevisionAuthorId is deprecated in drupal:8.2.0 and is removed from drupal:9.0.0. Use \Drupal\Core\Entity\RevisionLogInterface::setRevisionUserId() instead. See https://www.drupal.org/node/3069750
+   */
+  public function testNodeSetRevisionAuthorId() {
+    $user = $this->createUser(['uid' => 2, 'name' => 'Test']);
+    $entity = Node::create([
+      'type' => 'page',
+    ]);
+    $entity->setRevisionAuthorId($user->id());
+    $this->assertSame($user->id(), $entity->getRevisionUser()->id());
+  }
+
+  /**
+   * Tests that Node::getRevisionAuthor() triggers a deprecation error.
+   *
+   * @expectedDeprecation Drupal\node\Entity\Node::getRevisionAuthor is deprecated in drupal:8.2.0 and is removed from drupal:9.0.0. Use \Drupal\Core\Entity\RevisionLogInterface::getRevisionUser() instead. See https://www.drupal.org/node/3069750
+   */
+  public function testNodeGetRevisionAuthor() {
+    $user = $this->createUser(['uid' => 2, 'name' => 'Test']);
+    $entity = Node::create([
+      'type' => 'page',
+    ]);
+    $entity->setRevisionUser($user);
+    $this->assertSame($user->id(), $entity->getRevisionAuthor()->id());
+  }
+
 }

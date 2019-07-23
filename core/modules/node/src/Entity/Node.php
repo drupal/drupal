@@ -257,6 +257,7 @@ class Node extends EditorialContentEntityBase implements NodeInterface {
    * {@inheritdoc}
    */
   public function getRevisionAuthor() {
+    @trigger_error(__NAMESPACE__ . '\Node::getRevisionAuthor is deprecated in drupal:8.2.0 and is removed from drupal:9.0.0. Use \Drupal\Core\Entity\RevisionLogInterface::getRevisionUser() instead. See https://www.drupal.org/node/3069750', E_USER_DEPRECATED);
     return $this->getRevisionUser();
   }
 
@@ -264,8 +265,8 @@ class Node extends EditorialContentEntityBase implements NodeInterface {
    * {@inheritdoc}
    */
   public function setRevisionAuthorId($uid) {
-    $this->setRevisionUserId($uid);
-    return $this;
+    @trigger_error(__NAMESPACE__ . '\Node::setRevisionAuthorId is deprecated in drupal:8.2.0 and is removed from drupal:9.0.0. Use \Drupal\Core\Entity\RevisionLogInterface::setRevisionUserId() instead. See https://www.drupal.org/node/3069750', E_USER_DEPRECATED);
+    return $this->setRevisionUserId($uid);
   }
 
   /**
