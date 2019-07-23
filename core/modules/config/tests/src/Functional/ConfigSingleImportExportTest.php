@@ -256,7 +256,7 @@ EOD;
 
     $fallback_date = \Drupal::entityTypeManager()->getStorage('date_format')->load('fallback');
     $yaml_text = $this->xpath('//textarea[@name="export"]')[0]->getValue();
-    $this->assertEqual(Yaml::decode($yaml_text), $fallback_date->toArray(), 'The fallback date format config entity export code is displayed.');
+    $this->assertEquals(Yaml::decode($yaml_text), $fallback_date->toArray(), 'The fallback date format config entity export code is displayed.');
   }
 
 }

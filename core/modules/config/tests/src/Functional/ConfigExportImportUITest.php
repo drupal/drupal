@@ -95,7 +95,7 @@ class ConfigExportImportUITest extends BrowserTestBase {
     $this->config('system.site')
       ->set('slogan', $this->newSlogan)
       ->save();
-    $this->assertEqual($this->config('system.site')->get('slogan'), $this->newSlogan);
+    $this->assertEquals($this->newSlogan, $this->config('system.site')->get('slogan'));
 
     // Create a content type.
     $this->contentType = $this->drupalCreateContentType();
@@ -140,7 +140,7 @@ class ConfigExportImportUITest extends BrowserTestBase {
     $this->config('system.site')
       ->set('slogan', $this->originalSlogan)
       ->save();
-    $this->assertEqual($this->config('system.site')->get('slogan'), $this->originalSlogan);
+    $this->assertEquals($this->originalSlogan, $this->config('system.site')->get('slogan'));
 
     // Delete the custom field.
     $fields = FieldConfig::loadMultiple();
@@ -172,7 +172,7 @@ class ConfigExportImportUITest extends BrowserTestBase {
     $this->assertNoText(t('Warning message'));
     $this->assertText(t('There are no configuration changes to import.'));
 
-    $this->assertEqual($this->config('system.site')->get('slogan'), $this->newSlogan);
+    $this->assertEquals($this->newSlogan, $this->config('system.site')->get('slogan'));
 
     $this->drupalGet('node/add');
     $this->assertFieldByName("{$this->fieldName}[0][value]", '', 'Widget is displayed');
@@ -244,15 +244,15 @@ class ConfigExportImportUITest extends BrowserTestBase {
     // Ensure that the snapshot has the expected collection data before import.
     $test1_snapshot = $snapshot_storage->createCollection('collection.test1');
     $data = $test1_snapshot->read('config_test.delete');
-    $this->assertEqual($data, ['foo' => 'bar'], 'The config_test.delete in collection.test1 exists in the snapshot storage.');
+    $this->assertEquals(['foo' => 'bar'], $data, 'The config_test.delete in collection.test1 exists in the snapshot storage.');
     $data = $test1_snapshot->read('config_test.update');
-    $this->assertEqual($data, ['foo' => 'baz'], 'The config_test.update in collection.test1 exists in the snapshot storage.');
+    $this->assertEquals(['foo' => 'baz'], $data, 'The config_test.update in collection.test1 exists in the snapshot storage.');
     $this->assertFalse($test1_snapshot->read('config_test.create'), 'The config_test.create in collection.test1 does not exist in the snapshot storage.');
     $test2_snapshot = $snapshot_storage->createCollection('collection.test2');
     $data = $test2_snapshot->read('config_test.another_delete');
-    $this->assertEqual($data, ['foo' => 'bar'], 'The config_test.another_delete in collection.test2 exists in the snapshot storage.');
+    $this->assertEquals(['foo' => 'bar'], $data, 'The config_test.another_delete in collection.test2 exists in the snapshot storage.');
     $data = $test2_snapshot->read('config_test.another_update');
-    $this->assertEqual($data, ['foo' => 'baz'], 'The config_test.another_update in collection.test2 exists in the snapshot storage.');
+    $this->assertEquals(['foo' => 'baz'], $data, 'The config_test.another_update in collection.test2 exists in the snapshot storage.');
     $this->assertFalse($test2_snapshot->read('config_test.another_create'), 'The config_test.another_create in collection.test2 does not exist in the snapshot storage.');
 
     // Create the tar that contains the expected content for the collections.
@@ -294,30 +294,30 @@ class ConfigExportImportUITest extends BrowserTestBase {
 
     // Test data in collections.
     $data = $test1_storage->read('config_test.create');
-    $this->assertEqual($data, ['foo' => 'bar'], 'The config_test.create in collection.test1 has been created.');
+    $this->assertEquals(['foo' => 'bar'], $data, 'The config_test.create in collection.test1 has been created.');
     $data = $test1_storage->read('config_test.update');
-    $this->assertEqual($data, ['foo' => 'bar'], 'The config_test.update in collection.test1 has been updated.');
+    $this->assertEquals(['foo' => 'bar'], $data, 'The config_test.update in collection.test1 has been updated.');
     $this->assertFalse($test1_storage->read('config_test.delete'), 'The config_test.delete in collection.test1 has been deleted.');
 
     $data = $test2_storage->read('config_test.another_create');
-    $this->assertEqual($data, ['foo' => 'bar'], 'The config_test.another_create in collection.test2 has been created.');
+    $this->assertEquals(['foo' => 'bar'], $data, 'The config_test.another_create in collection.test2 has been created.');
     $data = $test2_storage->read('config_test.another_update');
-    $this->assertEqual($data, ['foo' => 'bar'], 'The config_test.another_update in collection.test2 has been updated.');
+    $this->assertEquals(['foo' => 'bar'], $data, 'The config_test.another_update in collection.test2 has been updated.');
     $this->assertFalse($test2_storage->read('config_test.another_delete'), 'The config_test.another_delete in collection.test2 has been deleted.');
 
     // Ensure that the snapshot has been updated with the collection data.
     $snapshot_storage = \Drupal::service('config.storage.snapshot');
     $test1_snapshot = $snapshot_storage->createCollection('collection.test1');
     $data = $test1_snapshot->read('config_test.create');
-    $this->assertEqual($data, ['foo' => 'bar'], 'The config_test.create in collection.test1 has been created in the snapshot storage.');
+    $this->assertEquals(['foo' => 'bar'], $data, 'The config_test.create in collection.test1 has been created in the snapshot storage.');
     $data = $test1_snapshot->read('config_test.update');
-    $this->assertEqual($data, ['foo' => 'bar'], 'The config_test.update in collection.test1 has been updated in the snapshot storage.');
+    $this->assertEquals(['foo' => 'bar'], $data, 'The config_test.update in collection.test1 has been updated in the snapshot storage.');
     $this->assertFalse($test1_snapshot->read('config_test.delete'), 'The config_test.delete in collection.test1 does not exist in the snapshot storage.');
     $test2_snapshot = $snapshot_storage->createCollection('collection.test2');
     $data = $test2_snapshot->read('config_test.another_create');
-    $this->assertEqual($data, ['foo' => 'bar'], 'The config_test.another_create in collection.test2 has been created in the snapshot storage.');
+    $this->assertEquals(['foo' => 'bar'], $data, 'The config_test.another_create in collection.test2 has been created in the snapshot storage.');
     $data = $test2_snapshot->read('config_test.another_update');
-    $this->assertEqual($data, ['foo' => 'bar'], 'The config_test.another_update in collection.test2 has been updated in the snapshot storage.');
+    $this->assertEquals(['foo' => 'bar'], $data, 'The config_test.another_update in collection.test2 has been updated in the snapshot storage.');
     $this->assertFalse($test2_snapshot->read('config_test.another_delete'), 'The config_test.another_delete in collection.test2 does not exist in the snapshot storage.');
   }
 

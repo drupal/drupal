@@ -93,9 +93,9 @@ class ConfigInstallWebTest extends BrowserTestBase {
       $this->fail('Expected PreExistingConfigException not thrown.');
     }
     catch (PreExistingConfigException $e) {
-      $this->assertEqual($e->getExtension(), 'config_integration_test');
-      $this->assertEqual($e->getConfigObjects(), [StorageInterface::DEFAULT_COLLECTION => ['config_test.dynamic.config_integration_test']]);
-      $this->assertEqual($e->getMessage(), 'Configuration objects (config_test.dynamic.config_integration_test) provided by config_integration_test already exist in active configuration');
+      $this->assertEquals('config_integration_test', $e->getExtension());
+      $this->assertEquals([StorageInterface::DEFAULT_COLLECTION => ['config_test.dynamic.config_integration_test']], $e->getConfigObjects());
+      $this->assertEquals('Configuration objects (config_test.dynamic.config_integration_test) provided by config_integration_test already exist in active configuration', $e->getMessage());
     }
 
     // Delete the configuration entity so that the install will work.
@@ -168,9 +168,9 @@ class ConfigInstallWebTest extends BrowserTestBase {
       $this->fail('Expected PreExistingConfigException not thrown.');
     }
     catch (PreExistingConfigException $e) {
-      $this->assertEqual($e->getExtension(), 'config_clash_test_theme');
-      $this->assertEqual($e->getConfigObjects(), [StorageInterface::DEFAULT_COLLECTION => ['config_test.dynamic.dotted.default'], 'language.fr' => ['config_test.dynamic.dotted.default']]);
-      $this->assertEqual($e->getMessage(), 'Configuration objects (config_test.dynamic.dotted.default, language/fr/config_test.dynamic.dotted.default) provided by config_clash_test_theme already exist in active configuration');
+      $this->assertEquals('config_clash_test_theme', $e->getExtension());
+      $this->assertEquals([StorageInterface::DEFAULT_COLLECTION => ['config_test.dynamic.dotted.default'], 'language.fr' => ['config_test.dynamic.dotted.default']], $e->getConfigObjects());
+      $this->assertEquals('Configuration objects (config_test.dynamic.dotted.default, language/fr/config_test.dynamic.dotted.default) provided by config_clash_test_theme already exist in active configuration', $e->getMessage());
     }
   }
 

@@ -36,7 +36,7 @@ class ConfigEntityFormOverrideTest extends BrowserTestBase {
     $this->writeSettings($settings);
 
     // Test that the overridden label is loaded with the entity.
-    $this->assertEqual($config_test_storage->load('dotted.default')->label(), $overridden_label);
+    $this->assertEquals($overridden_label, $config_test_storage->load('dotted.default')->label());
 
     // Test that the original label on the listing page is intact.
     $this->drupalGet('admin/structure/config_test');
@@ -64,7 +64,7 @@ class ConfigEntityFormOverrideTest extends BrowserTestBase {
     $this->assertIdentical($elements[0]->getValue(), $edited_label);
 
     // Test that the overridden label is still loaded with the entity.
-    $this->assertEqual($config_test_storage->load('dotted.default')->label(), $overridden_label);
+    $this->assertEquals($overridden_label, $config_test_storage->load('dotted.default')->label());
   }
 
 }

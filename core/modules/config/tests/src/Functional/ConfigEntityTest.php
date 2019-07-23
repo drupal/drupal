@@ -225,7 +225,7 @@ class ConfigEntityTest extends BrowserTestBase {
     // Test config entity prepopulation.
     \Drupal::state()->set('config_test.prepopulate', TRUE);
     $config_test = $storage->create(['foo' => 'bar']);
-    $this->assertEqual($config_test->get('foo'), 'baz', 'Initial value correctly populated');
+    $this->assertEquals('baz', $config_test->get('foo'), 'Initial value correctly populated');
   }
 
   /**
@@ -345,8 +345,8 @@ class ConfigEntityTest extends BrowserTestBase {
     $this->drupalPostForm(NULL, $edit, 'Save');
 
     $entity = $storage->load($id);
-    $this->assertEqual($entity->get('size'), 'custom');
-    $this->assertEqual($entity->get('size_value'), 'medium');
+    $this->assertEquals('custom', $entity->get('size'));
+    $this->assertEquals('medium', $entity->get('size_value'));
   }
 
 }
