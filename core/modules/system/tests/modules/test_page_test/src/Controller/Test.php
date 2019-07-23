@@ -2,6 +2,7 @@
 
 namespace Drupal\test_page_test\Controller;
 
+use Drupal\Core\Render\Markup;
 use Drupal\Core\Url;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpKernel\Exception\HttpException;
@@ -114,6 +115,32 @@ class Test {
    */
   public function renderPipeInLink() {
     return ['#markup' => '<a href="http://example.com">foo|bar|baz</a>'];
+  }
+
+  public function escapedCharacters() {
+    return [
+      '#prefix' => '<div class="escaped">',
+      '#plain_text' => 'Escaped: <"\'&>',
+      '#suffix' => '</div>',
+    ];
+  }
+
+  public function escapedScript() {
+    return [
+      '#prefix' => '<div class="escaped">',
+      // We use #plain_text because #markup would be filtered and that is not
+      // being tested here.
+      '#plain_text' => "<script>alert('XSS');alert(\"XSS\");</script>",
+      '#suffix' => '</div>',
+    ];
+  }
+
+  public function unEscapedScript() {
+    return [
+      '#prefix' => '<div class="unescaped">',
+      '#markup' => Markup::create("<script>alert('Marked safe');alert(\"Marked safe\");</script>"),
+      '#suffix' => '</div>',
+    ];
   }
 
   /**

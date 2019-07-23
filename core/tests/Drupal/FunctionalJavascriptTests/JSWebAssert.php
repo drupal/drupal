@@ -388,6 +388,51 @@ JS;
   }
 
   /**
+   * Passes if the raw text IS NOT found escaped on the loaded page.
+   *
+   * Raw text refers to the raw HTML that the page generated.
+   *
+   * @param string $raw
+   *   Raw (HTML) string to look for.
+   */
+  public function assertNoEscaped($raw) {
+    $this->responseNotContains($this->escapeHtml($raw));
+  }
+
+  /**
+   * Passes if the raw text IS found escaped on the loaded page.
+   *
+   * Raw text refers to the raw HTML that the page generated.
+   *
+   * @param string $raw
+   *   Raw (HTML) string to look for.
+   */
+  public function assertEscaped($raw) {
+    $this->responseContains($this->escapeHtml($raw));
+  }
+
+  /**
+   * Escapes HTML for testing.
+   *
+   * Drupal's Html::escape() uses the ENT_QUOTES flag with htmlspecialchars() to
+   * escape both single and double quotes. With JavascriptTestBase testing the
+   * browser is automatically converting &quot; and &#039; to double and single
+   * quotes respectively therefore we can not escape them when testing for
+   * escaped HTML.
+   *
+   * @param $raw
+   *   The raw string to escape.
+   *
+   * @return string
+   *   The string with escaped HTML.
+   *
+   * @see Drupal\Component\Utility\Html::escape()
+   */
+  protected function escapeHtml($raw) {
+    return htmlspecialchars($raw, ENT_NOQUOTES | ENT_SUBSTITUTE, 'UTF-8');
+  }
+
+  /**
    * Asserts that no matching element exists on the page after a wait.
    *
    * @param string $selector_type
