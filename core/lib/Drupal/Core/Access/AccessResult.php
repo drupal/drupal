@@ -32,7 +32,7 @@ abstract class AccessResult implements AccessResultInterface, RefinableCacheable
    * Creates an AccessResultInterface object with isNeutral() === TRUE.
    *
    * @param string|null $reason
-   *   (optional) The reason why access is forbidden. Intended for developers,
+   *   (optional) The reason why access is neutral. Intended for developers,
    *   hence not translatable.
    *
    * @return \Drupal\Core\Access\AccessResultNeutral
