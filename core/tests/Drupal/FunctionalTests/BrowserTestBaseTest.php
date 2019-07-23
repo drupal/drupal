@@ -707,4 +707,30 @@ class BrowserTestBaseTest extends BrowserTestBase {
     $this->assertSession()->statusCodeEquals(403);
   }
 
+  /**
+   * Tests assertEscaped() and assertUnescaped().
+   *
+   * @see \Drupal\Tests\WebAssert::assertNoEscaped()
+   * @see \Drupal\Tests\WebAssert::assertEscaped()
+   */
+  public function testEscapingAssertions() {
+    $assert = $this->assertSession();
+
+    $this->drupalGet('test-escaped-characters');
+    $assert->assertNoEscaped('<div class="escaped">');
+    $assert->responseContains('<div class="escaped">');
+    $assert->assertEscaped('Escaped: <"\'&>');
+
+    $this->drupalGet('test-escaped-script');
+    $assert->assertNoEscaped('<div class="escaped">');
+    $assert->responseContains('<div class="escaped">');
+    $assert->assertEscaped("<script>alert('XSS');alert(\"XSS\");</script>");
+
+    $this->drupalGet('test-unescaped-script');
+    $assert->assertNoEscaped('<div class="unescaped">');
+    $assert->responseContains('<div class="unescaped">');
+    $assert->responseContains("<script>alert('Marked safe');alert(\"Marked safe\");</script>");
+    $assert->assertNoEscaped("<script>alert('Marked safe');alert(\"Marked safe\");</script>");
+  }
+
 }
