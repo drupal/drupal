@@ -21,6 +21,7 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
  *   label = @Translation("Test entity update"),
  *   handlers = {
  *     "storage_schema" = "Drupal\entity_test_update\EntityTestUpdateStorageSchema",
+ *     "storage" = "Drupal\entity_test_update\EntityTestUpdateStorage",
  *   },
  *   base_table = "entity_test_update",
  *   persistent_cache = FALSE,
@@ -44,17 +45,6 @@ class EntityTestUpdate extends ContentEntityBase {
     if (empty($values['type'])) {
       $values['type'] = $storage->getEntityTypeId();
     }
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function preSave(EntityStorageInterface $storage) {
-    // Simulate an error during the 'restore' process of a test entity.
-    if (\Drupal::state()->get('entity_test_update.throw_exception', FALSE)) {
-      throw new \Exception('Peekaboo!');
-    }
-    parent::preSave($storage);
   }
 
   /**

@@ -854,13 +854,9 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
   public function restore(EntityInterface $entity) {
     $transaction = $this->database->startTransaction();
     try {
-      /** @var \Drupal\Core\Entity\ContentEntityInterface $entity */
-      // Allow code to run before saving.
-      $entity->preSave($this);
-      $this->invokeFieldMethod('preSave', $entity);
-
       // Insert the entity data in the base and data tables only for default
       // revisions.
+      /** @var \Drupal\Core\Entity\ContentEntityInterface $entity */
       if ($entity->isDefaultRevision()) {
         $record = $this->mapToStorageRecord($entity->getUntranslated(), $this->baseTable);
         $this->database
