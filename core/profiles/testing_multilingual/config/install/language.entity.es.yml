@@ -1,7 +1,8 @@
+langcode: en
+status: true
+dependencies: {  }
 id: es
 label: Spanish
 direction: 'ltr'
 weight: 0
 locked: false
-status: true
-langcode: en
