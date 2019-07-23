@@ -78,26 +78,20 @@ class IntegrationTest extends ViewTestBase {
     $client->post($stats_path, ['form_params' => ['nid' => $this->node->id()]]);
     $this->drupalGet('test_statistics_integration');
 
-    $expected = statistics_get($this->node->id());
-    // Convert the timestamp to year, to match the expected output of the date
-    // handler.
-    $expected['timestamp'] = date('Y', $expected['timestamp']);
-
-    foreach ($expected as $field => $value) {
-      $xpath = "//div[contains(@class, views-field-$field)]/span[@class = 'field-content']";
-      $this->assertFieldByXpath($xpath, $value, "The $field output matches the expected.");
-    }
+    /** @var \Drupal\statistics\StatisticsViewsResult $statistics */
+    $statistics = \Drupal::service('statistics.storage.node')->fetchView($this->node->id());
+    $this->assertSession()->pageTextContains('Total views: 1');
+    $this->assertSession()->pageTextContains('Views today: 1');
+    $this->assertSession()->pageTextContains('Most recent view: ' . date('Y', $statistics->getTimestamp()));
 
     $this->drupalLogout();
     $this->drupalLogin($this->deniedUser);
     $this->drupalGet('test_statistics_integration');
     $this->assertResponse(200);
 
-    foreach ($expected as $field => $value) {
-      $xpath = "//div[contains(@class, views-field-$field)]/span[@class = 'field-content']";
-      $this->assertNoFieldByXpath($xpath, $value, "The $field output is not displayed.");
-    }
-
+    $this->assertSession()->pageTextNotContains('Total views:');
+    $this->assertSession()->pageTextNotContains('Views today:');
+    $this->assertSession()->pageTextNotContains('Most recent view:');
   }
 
 }

@@ -33,7 +33,8 @@ class StatisticsTokenReplaceTest extends StatisticsTestBase {
     $stats_path = $base_url . '/' . drupal_get_path('module', 'statistics') . '/statistics.php';
     $client = \Drupal::httpClient();
     $client->post($stats_path, ['headers' => $headers, 'body' => $post]);
-    $statistics = statistics_get($node->id());
+    /** @var \Drupal\statistics\StatisticsViewsResult $statistics */
+    $statistics = \Drupal::service('statistics.storage.node')->fetchView($node->id());
 
     // Generate and test tokens.
     $tests = [];
@@ -41,8 +42,8 @@ class StatisticsTokenReplaceTest extends StatisticsTestBase {
     $tests['[node:day-count]'] = 1;
     /** @var \Drupal\Core\Datetime\DateFormatterInterface $date_formatter */
     $date_formatter = $this->container->get('date.formatter');
-    $tests['[node:last-view]'] = $date_formatter->format($statistics['timestamp']);
-    $tests['[node:last-view:short]'] = $date_formatter->format($statistics['timestamp'], 'short');
+    $tests['[node:last-view]'] = $date_formatter->format($statistics->getTimestamp());
+    $tests['[node:last-view:short]'] = $date_formatter->format($statistics->getTimestamp(), 'short');
 
     // Test to make sure that we generated something for each token.
     $this->assertFalse(in_array(0, array_map('strlen', $tests)), 'No empty tokens generated.');

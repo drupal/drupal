@@ -123,10 +123,13 @@ function statistics_title_list($dbfield, $dbrows) {
 /**
  * Retrieves a node's "view statistics".
  *
- * @deprecated in Drupal 8.2.x, will be removed before Drupal 9.0.0.
- *   Use \Drupal::service('statistics.storage.node')->fetchView($id).
+ * @deprecated in drupal:8.2.0 and is removed from drupal:9.0.0. Use
+ *   \Drupal::service('statistics.storage.node')->fetchView($id) instead.
+ *
+ * @see https://www.drupal.org/node/2778245
  */
 function statistics_get($id) {
+  @trigger_error("statistics_get() is deprecated in drupal:8.2.0 and is removed from drupal:9.0.0. Use Drupal::service('statistics.storage.node')->fetchView() instead. See https://www.drupal.org/node/2778245", E_USER_DEPRECATED);
   if ($id > 0) {
     /** @var \Drupal\statistics\StatisticsViewsResult $statistics */
     $statistics = \Drupal::service('statistics.storage.node')->fetchView($id);
