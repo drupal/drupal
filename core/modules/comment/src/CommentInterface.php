@@ -211,11 +211,14 @@ interface CommentInterface extends ContentEntityInterface, EntityChangedInterfac
   /**
    * Returns the comment's status.
    *
-   * @return int
-   *   One of CommentInterface::PUBLISHED or CommentInterface::NOT_PUBLISHED
+   * @return int|string|bool
+   *   Either TRUE, '1', or CommentInterface::PUBLISHED(1) if the comment is
+   *   published, or FALSE, '0', or CommentInterface::NOT_PUBLISHED(0) if the
+   *   comment is not published.
    *
-   * @deprecated in Drupal 8.3.0, will be removed before Drupal 9.0.0. Use
+   * @deprecated in drupal:8.3.0 and is removed from drupal:9.0.0. Use
    *   \Drupal\Core\Entity\EntityPublishedInterface::isPublished() instead.
+   * @see https://www.drupal.org/node/2830201
    */
   public function getStatus();
 

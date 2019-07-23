@@ -141,7 +141,7 @@ class CommentForm extends ContentEntityForm {
       if (!$comment->getOwnerId()) {
         $author = $comment->getAuthorName();
       }
-      $status = $comment->getStatus();
+      $status = $comment->isPublished() ? CommentInterface::PUBLISHED : CommentInterface::NOT_PUBLISHED;
       if (empty($comment_preview)) {
         $form['#title'] = $this->t('Edit comment %title', [
           '%title' => $comment->getSubject(),

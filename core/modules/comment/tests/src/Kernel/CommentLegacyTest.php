@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\comment\Kernel;
 
+use Drupal\comment\CommentInterface;
 use Drupal\comment\Entity\Comment;
 use Drupal\comment\Entity\CommentType;
 use Drupal\entity_test\Entity\EntityTest;
@@ -88,6 +89,19 @@ class CommentLegacyTest extends EntityKernelTestBase {
       $this->createComment(),
     ];
     $this->assertEquals(4, count(comment_view_multiple($entities)));
+  }
+
+  /**
+   * Tests the getStatus() method.
+   *
+   * @expectedDeprecation Drupal\comment\Entity\Comment::getStatus() is deprecated in drupal:8.3.0 and is removed from drupal:9.0.0. Use \Drupal\Core\Entity\EntityPublishedInterface::isPublished() instead. See https://www.drupal.org/node/2830201
+   */
+  public function testGetStatus() {
+    $entity = $this->createComment();
+    $entity->setPublished();
+    $this->assertEquals(CommentInterface::PUBLISHED, $entity->getStatus());
+    $entity->setUnPublished();
+    $this->assertEquals(CommentInterface::NOT_PUBLISHED, $entity->getStatus());
   }
 
 }

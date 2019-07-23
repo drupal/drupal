@@ -347,7 +347,7 @@ abstract class CommentResourceTestBase extends EntityResourceTestBase {
     $response = $this->request('POST', $url, $request_options);
     $unserialized = $this->serializer->deserialize((string) $response->getBody(), get_class($this->entity), static::$format);
     $this->assertResourceResponse(201, FALSE, $response);
-    $this->assertFalse($unserialized->getStatus());
+    $this->assertFalse($unserialized->isPublished());
 
     // Grant anonymous permission to skip comment approval.
     $this->grantPermissionsToTestedRole(['skip comment approval']);
@@ -356,7 +356,7 @@ abstract class CommentResourceTestBase extends EntityResourceTestBase {
     $response = $this->request('POST', $url, $request_options);
     $unserialized = $this->serializer->deserialize((string) $response->getBody(), get_class($this->entity), static::$format);
     $this->assertResourceResponse(201, FALSE, $response);
-    $this->assertTrue($unserialized->getStatus());
+    $this->assertTrue($unserialized->isPublished());
   }
 
   /**
