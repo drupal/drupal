@@ -29,7 +29,7 @@
     {% for row in rows %}
       <tr{{ row.attributes }}>
         <td class="views-ui-view-name">
-          <h3 data-drupal-selector="views-table-filter-text-source">{{ row.data.view_name.data }}</h3>
+          <strong data-drupal-selector="views-table-filter-text-source">{{ row.data.view_name.data }}</strong>
         </td>
         <td class="views-ui-view-machine-name" data-drupal-selector="views-table-filter-text-source">
           {{ row.data.machine_name.data }}
