@@ -3,6 +3,7 @@
 namespace Drupal\Tests\update\Functional;
 
 use Drupal\Core\DrupalKernel;
+use Drupal\Core\Link;
 use Drupal\Core\Url;
 use Drupal\Tests\BrowserTestBase;
 
@@ -92,7 +93,7 @@ abstract class UpdateTestBase extends BrowserTestBase {
    */
   protected function standardTests() {
     $this->assertRaw('<h3>' . t('Drupal core') . '</h3>');
-    $this->assertRaw(\Drupal::l(t('Drupal'), Url::fromUri('http://example.com/project/drupal')), 'Link to the Drupal project appears.');
+    $this->assertRaw(Link::fromTextAndUrl(t('Drupal'), Url::fromUri('http://example.com/project/drupal'))->toString(), 'Link to the Drupal project appears.');
     $this->assertNoText(t('No available releases found'));
   }
 

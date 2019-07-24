@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\update\Functional;
 
+use Drupal\Core\Link;
 use Drupal\Core\Url;
 use Drupal\Tests\Traits\Core\CronRunTrait;
 
@@ -81,9 +82,9 @@ class UpdateCoreTest extends UpdateTestBase {
         $this->clickLink(t('Check manually'));
         $this->checkForMetaRefresh();
         $this->assertNoText(t('Security update required!'));
-        $this->assertRaw(\Drupal::l("8.$minor_version.1" . $extra_version, Url::fromUri("http://example.com/drupal-8-$minor_version-1$extra_version-release")), 'Link to release appears.');
-        $this->assertRaw(\Drupal::l(t('Download'), Url::fromUri("http://example.com/drupal-8-$minor_version-1$extra_version.tar.gz")), 'Link to download appears.');
-        $this->assertRaw(\Drupal::l(t('Release notes'), Url::fromUri("http://example.com/drupal-8-$minor_version-1$extra_version-release")), 'Link to release notes appears.');
+        $this->assertRaw(Link::fromTextAndUrl("8.$minor_version.1" . $extra_version, Url::fromUri("http://example.com/drupal-8-$minor_version-1$extra_version-release"))->toString(), 'Link to release appears.');
+        $this->assertRaw(Link::fromTextAndUrl(t('Download'), Url::fromUri("http://example.com/drupal-8-$minor_version-1$extra_version.tar.gz"))->toString(), 'Link to download appears.');
+        $this->assertRaw(Link::fromTextAndUrl(t('Release notes'), Url::fromUri("http://example.com/drupal-8-$minor_version-1$extra_version-release"))->toString(), 'Link to release notes appears.');
 
         switch ($minor_version) {
           case 0:
@@ -145,9 +146,9 @@ class UpdateCoreTest extends UpdateTestBase {
           $this->clickLink(t('Check manually'));
           $this->checkForMetaRefresh();
           $this->assertNoText(t('Security update required!'));
-          $this->assertRaw(\Drupal::l('9.0.0', Url::fromUri("http://example.com/drupal-9-0-0-release")), 'Link to release appears.');
-          $this->assertRaw(\Drupal::l(t('Download'), Url::fromUri("http://example.com/drupal-9-0-0.tar.gz")), 'Link to download appears.');
-          $this->assertRaw(\Drupal::l(t('Release notes'), Url::fromUri("http://example.com/drupal-9-0-0-release")), 'Link to release notes appears.');
+          $this->assertRaw(Link::fromTextAndUrl('9.0.0', Url::fromUri("http://example.com/drupal-9-0-0-release"))->toString(), 'Link to release appears.');
+          $this->assertRaw(Link::fromTextAndUrl(t('Download'), Url::fromUri("http://example.com/drupal-9-0-0.tar.gz"))->toString(), 'Link to download appears.');
+          $this->assertRaw(Link::fromTextAndUrl(t('Release notes'), Url::fromUri("http://example.com/drupal-9-0-0-release"))->toString(), 'Link to release notes appears.');
           $this->assertNoText(t('Up to date'));
           $this->assertText(t('Not supported!'));
           $this->assertText(t('Recommended version:'));

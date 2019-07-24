@@ -5,6 +5,7 @@ namespace Drupal\Tests\link\Functional;
 use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Entity\Entity\EntityViewDisplay;
+use Drupal\Core\Link;
 use Drupal\Core\Url;
 use Drupal\entity_test\Entity\EntityTest;
 use Drupal\field\Entity\FieldConfig;
@@ -342,7 +343,7 @@ class LinkFieldTest extends BrowserTestBase {
     $this->assertText(t('entity_test @id has been created.', ['@id' => $id]));
 
     $output = $this->renderTestEntity($id);
-    $expected_link = (string) \Drupal::l($value, Url::fromUri($value));
+    $expected_link = (string) Link::fromTextAndUrl($value, Url::fromUri($value))->toString();
     $this->assertContains($expected_link, $output);
 
     // Verify that a link with text is rendered using the link text.
@@ -354,7 +355,7 @@ class LinkFieldTest extends BrowserTestBase {
     $this->assertText(t('entity_test @id has been updated.', ['@id' => $id]));
 
     $output = $this->renderTestEntity($id);
-    $expected_link = (string) \Drupal::l($title, Url::fromUri($value));
+    $expected_link = (string) Link::fromTextAndUrl($title, Url::fromUri($value))->toString();
     $this->assertContains($expected_link, $output);
   }
 

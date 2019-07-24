@@ -6,6 +6,7 @@
  */
 
 use Drupal\Component\Utility\Html;
+use Drupal\Core\Link;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Template\Attribute;
 
@@ -25,7 +26,7 @@ function template_preprocess_admin_block_content(&$variables) {
   if (!empty($variables['content'])) {
     $variables['compact'] = system_admin_compact_mode();
     foreach ($variables['content'] as $key => $item) {
-      $variables['content'][$key]['link'] = \Drupal::l($item['title'], $item['url']);
+      $variables['content'][$key]['link'] = Link::fromTextAndUrl($item['title'], $item['url'])->toString();
       if (!$variables['compact'] && isset($item['description'])) {
         $variables['content'][$key]['description'] = ['#markup' => $item['description']];
       }

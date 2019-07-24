@@ -12,6 +12,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Plugin\PluginDependencyTrait;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\Link;
 use Drupal\Core\Url;
 use Drupal\views\Form\ViewsForm;
 use Drupal\views\Plugin\views\area\AreaPluginBase;
@@ -1028,7 +1029,7 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
       $title = $text;
     }
 
-    return \Drupal::l($text, new Url('views_ui.form_display', [
+    return Link::fromTextAndUrl($text, Url::fromRoute('views_ui.form_display', [
         'js' => 'nojs',
         'view' => $this->view->storage->id(),
         'display_id' => $this->display['id'],
@@ -1039,7 +1040,7 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
           'title' => $title,
           'id' => Html::getUniqueId('views-' . $this->display['id'] . '-' . $section),
         ],
-    ]));
+    ]))->toString();
   }
 
   /**

@@ -5,6 +5,7 @@
  * Provides page callbacks for custom blocks.
  */
 
+use Drupal\Core\Link;
 use Drupal\Core\Url;
 
 /**
@@ -23,7 +24,7 @@ function template_preprocess_block_content_add_list(&$variables) {
   $query = \Drupal::request()->query->all();
   foreach ($variables['content'] as $type) {
     $variables['types'][$type->id()] = [
-      'link' => \Drupal::l($type->label(), new Url('block_content.add_form', ['block_content_type' => $type->id()], ['query' => $query])),
+      'link' => Link::fromTextAndUrl($type->label(), Url::fromRoute('block_content.add_form', ['block_content_type' => $type->id()], ['query' => $query]))->toString(),
       'description' => [
         '#markup' => $type->getDescription(),
       ],

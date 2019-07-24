@@ -7,6 +7,7 @@
 
 use Drupal\Component\Utility\Html;
 use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\Link;
 use Drupal\Core\Url;
 use Drupal\language\ConfigurableLanguageInterface;
 use Drupal\system\Entity\Menu;
@@ -43,7 +44,7 @@ function block_help($route_name, RouteMatchInterface $route_match) {
     $demo_theme = $route_match->getParameter('theme') ?: \Drupal::config('system.theme')->get('default');
     $themes = \Drupal::service('theme_handler')->listInfo();
     $output = '<p>' . t('Block placement is specific to each theme on your site. Changes will not be saved until you click <em>Save blocks</em> at the bottom of the page.') . '</p>';
-    $output .= '<p>' . \Drupal::l(t('Demonstrate block regions (@theme)', ['@theme' => $themes[$demo_theme]->info['name']]), new Url('block.admin_demo', ['theme' => $demo_theme])) . '</p>';
+    $output .= '<p>' . Link::fromTextAndUrl(t('Demonstrate block regions (@theme)', ['@theme' => $themes[$demo_theme]->info['name']]), Url::fromRoute('block.admin_demo', ['theme' => $demo_theme]))->toString() . '</p>';
     return $output;
   }
 }

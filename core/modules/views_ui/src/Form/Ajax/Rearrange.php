@@ -4,6 +4,7 @@ namespace Drupal\views_ui\Form\Ajax;
 
 use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Link;
 use Drupal\Core\Url;
 use Drupal\views\ViewEntityInterface;
 use Drupal\views\ViewExecutable;
@@ -126,7 +127,7 @@ class Rearrange extends ViewsFormBase {
         '#id' => 'views-removed-' . $id,
         '#attributes' => ['class' => ['views-remove-checkbox']],
         '#default_value' => 0,
-        '#suffix' => \Drupal::l(new FormattableMarkup('<span>@text</span>', ['@text' => $this->t('Remove')]),
+        '#suffix' => Link::fromTextAndUrl(new FormattableMarkup('<span>@text</span>', ['@text' => $this->t('Remove')]),
           Url::fromRoute('<none>', [], [
             'attributes' => [
               'id' => 'views-remove-link-' . $id,
@@ -135,7 +136,7 @@ class Rearrange extends ViewsFormBase {
               'title' => $this->t('Remove this item'),
             ],
           ])
-        ),
+        )->toString(),
       ];
     }
 

@@ -5,6 +5,7 @@
  * Content administration and module settings user interface.
  */
 
+use Drupal\Core\Link;
 use Drupal\node\NodeInterface;
 
 /**
@@ -134,7 +135,7 @@ function _node_mass_update_batch_process(array $nodes, array $updates, $langcode
     $node = _node_mass_update_helper($node, $updates, $langcode);
 
     // Store result for post-processing in the finished callback.
-    $context['results'][] = \Drupal::l($node->label(), $node->toUrl());
+    $context['results'][] = Link::fromTextAndUrl($node->label(), $node->toUrl())->toString();
 
     // Update our progress information.
     $context['sandbox']['progress']++;

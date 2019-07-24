@@ -6,6 +6,7 @@ use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Language\Language;
+use Drupal\Core\Link;
 use Drupal\Core\Render\RenderContext;
 use Drupal\Core\Url;
 use Drupal\Tests\BrowserTestBase;
@@ -27,12 +28,12 @@ class UrlTest extends BrowserTestBase {
    * Confirms that invalid URLs are filtered in link generating functions.
    */
   public function testLinkXSS() {
-    // Test \Drupal::l().
+    // Test link generator.
     $text = $this->randomMachineName();
     $path = "<SCRIPT>alert('XSS')</SCRIPT>";
     $encoded_path = "3CSCRIPT%3Ealert%28%27XSS%27%29%3C/SCRIPT%3E";
 
-    $link = \Drupal::l($text, Url::fromUserInput('/' . $path));
+    $link = Link::fromTextAndUrl($text, Url::fromUserInput('/' . $path))->toString();
     $this->assertTrue(strpos($link, $encoded_path) !== FALSE && strpos($link, $path) === FALSE, new FormattableMarkup('XSS attack @path was filtered by \Drupal\Core\Utility\LinkGeneratorInterface::generate().', ['@path' => $path]));
 
     // Test \Drupal\Core\Url.
@@ -139,8 +140,8 @@ class UrlTest extends BrowserTestBase {
     // \Drupal\Core\Utility\LinkGeneratorInterface::generate() and #type 'link'.
     // Test the link generator.
     $class_l = $this->randomMachineName();
-    $link_l = \Drupal::l($this->randomMachineName(), new Url('<current>', [], ['attributes' => ['class' => [$class_l]]]));
-    $this->assertTrue($this->hasAttribute('class', $link_l, $class_l), new FormattableMarkup('Custom class @class is present on link when requested by l()', ['@class' => $class_l]));
+    $link_l = Link::fromTextAndUrl($this->randomMachineName(), Url::fromRoute('<current>', [], ['attributes' => ['class' => [$class_l]]]))->toString();
+    $this->assertTrue($this->hasAttribute('class', $link_l, $class_l), new FormattableMarkup('Custom class @class is present on link when requested by Link::toString()', ['@class' => $class_l]));
 
     // Test #type.
     $class_theme = $this->randomMachineName();
@@ -166,12 +167,12 @@ class UrlTest extends BrowserTestBase {
     $renderer = $this->container->get('renderer');
 
     // Build a link with the link generator for reference.
-    $l = \Drupal::l('foo', Url::fromUri('https://www.drupal.org'));
+    $l = Link::fromTextAndUrl('foo', Url::fromUri('https://www.drupal.org'))->toString();
 
     // Test a renderable array passed to the link generator.
     $renderer->executeInRenderContext(new RenderContext(), function () use ($renderer, $l) {
       $renderable_text = ['#markup' => 'foo'];
-      $l_renderable_text = \Drupal::l($renderable_text, Url::fromUri('https://www.drupal.org'));
+      $l_renderable_text = \Drupal::service('link_generator')->generate($renderable_text, Url::fromUri('https://www.drupal.org'));
       $this->assertEqual($l_renderable_text, $l);
     });
 

@@ -6,6 +6,7 @@ use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\Timer;
 use Drupal\Core\EventSubscriber\AjaxResponseSubscriber;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Link;
 use Drupal\Core\TempStore\Lock;
 use Drupal\views\Views;
 use Drupal\Core\Entity\EntityStorageInterface;
@@ -699,7 +700,7 @@ class ViewUI implements ViewEntityInterface {
             if (isset($path)) {
               // @todo Views should expect and store a leading /. See:
               //   https://www.drupal.org/node/2423913
-              $path = \Drupal::l($path->toString(), $path);
+              $path = Link::fromTextAndUrl($path->toString(), $path)->toString();
             }
             else {
               $path = t('This display has no path.');

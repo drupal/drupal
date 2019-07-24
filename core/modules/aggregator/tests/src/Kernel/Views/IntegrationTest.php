@@ -4,6 +4,7 @@ namespace Drupal\Tests\aggregator\Kernel\Views;
 
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Render\RenderContext;
+use Drupal\Core\Link;
 use Drupal\Core\Url;
 use Drupal\Tests\views\Kernel\ViewsKernelTestBase;
 use Drupal\views\Views;
@@ -111,7 +112,7 @@ class IntegrationTest extends ViewsKernelTestBase {
     // Ensure that the rendering of the linked title works as expected.
     foreach ($view->result as $row) {
       $iid = $view->field['iid']->getValue($row);
-      $expected_link = \Drupal::l($items[$iid]->getTitle(), Url::fromUri($items[$iid]->getLink(), ['absolute' => TRUE]));
+      $expected_link = Link::fromTextAndUrl($items[$iid]->getTitle(), Url::fromUri($items[$iid]->getLink(), ['absolute' => TRUE]))->toString();
       $output = $renderer->executeInRenderContext(new RenderContext(), function () use ($view, $row) {
         return $view->field['title']->advancedRender($row);
       });

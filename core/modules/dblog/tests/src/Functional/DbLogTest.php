@@ -7,6 +7,7 @@ use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Logger\RfcLogLevel;
+use Drupal\Core\Link;
 use Drupal\Core\Url;
 use Drupal\dblog\Controller\DbLogController;
 use Drupal\Tests\BrowserTestBase;
@@ -307,7 +308,7 @@ class DbLogTest extends BrowserTestBase {
    * page.
    */
   private function verifyLinkEscaping() {
-    $link = \Drupal::l('View', Url::fromRoute('entity.node.canonical', ['node' => 1]));
+    $link = Link::fromTextAndUrl('View', Url::fromRoute('entity.node.canonical', ['node' => 1]))->toString();
     $message = 'Log entry added to do the verifyLinkEscaping test.';
     $this->generateLogEntries(1, [
       'message' => $message,

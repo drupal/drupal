@@ -5,6 +5,7 @@
  * A dummy module to test API interaction with the Toolbar module.
  */
 
+use Drupal\Core\Link;
 use Drupal\Core\Url;
 
 /**
@@ -33,9 +34,9 @@ function toolbar_test_toolbar() {
       'content' => [
         '#theme' => 'item_list',
         '#items' => [
-          \Drupal::l(t('link 1'), new Url('<front>', [], ['attributes' => ['title' => 'Test link 1 title']])),
-          \Drupal::l(t('link 2'), new Url('<front>', [], ['attributes' => ['title' => 'Test link 2 title']])),
-          \Drupal::l(t('link 3'), new Url('<front>', [], ['attributes' => ['title' => 'Test link 3 title']])),
+          Link::fromTextAndUrl(t('link 1'), Url::fromRoute('<front>', [], ['attributes' => ['title' => 'Test link 1 title']]))->toRenderable(),
+          Link::fromTextAndUrl(t('link 2'), Url::fromRoute('<front>', [], ['attributes' => ['title' => 'Test link 2 title']]))->toRenderable(),
+          Link::fromTextAndUrl(t('link 3'), Url::fromRoute('<front>', [], ['attributes' => ['title' => 'Test link 3 title']]))->toRenderable(),
         ],
         '#attributes' => [
           'class' => ['toolbar-menu'],

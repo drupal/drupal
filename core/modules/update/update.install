@@ -5,6 +5,7 @@
  * Install, update, and uninstall functions for the Update Manager module.
  */
 
+use Drupal\Core\Link;
 use Drupal\Core\Url;
 
 /**
@@ -148,7 +149,7 @@ function _update_requirement_check($project, $type) {
   if ($status != UPDATE_CURRENT && $type == 'core' && isset($project['recommended'])) {
     $requirement_label .= ' ' . t('(version @version available)', ['@version' => $project['recommended']]);
   }
-  $requirement['value'] = \Drupal::l($requirement_label, new Url(_update_manager_access() ? 'update.report_update' : 'update.status'));
+  $requirement['value'] = Link::fromTextAndUrl($requirement_label, Url::fromRoute(_update_manager_access() ? 'update.report_update' : 'update.status'))->toString();
   return $requirement;
 }
 

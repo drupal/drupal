@@ -14,6 +14,7 @@ use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\Core\Render\BubbleableMetadata;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\Link;
 use Drupal\Core\Url;
 use Drupal\file\Entity\File;
 use Drupal\file\FileInterface;
@@ -1504,7 +1505,7 @@ function template_preprocess_file_link(&$variables) {
   $variables['attributes']->addClass($classes);
   $variables['file_size'] = format_size($file->getSize());
 
-  $variables['link'] = \Drupal::l($link_text, Url::fromUri($url, $options));
+  $variables['link'] = Link::fromTextAndUrl($link_text, Url::fromUri($url, $options))->toString();
 }
 
 /**

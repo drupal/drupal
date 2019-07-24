@@ -12,6 +12,7 @@
  */
 
 use Drupal\Core\File\Exception\FileException;
+use Drupal\Core\Link;
 use Drupal\Core\Url;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
@@ -652,7 +653,7 @@ function _update_project_status_sort($a, $b) {
  */
 function template_preprocess_update_last_check(&$variables) {
   $variables['time'] = \Drupal::service('date.formatter')->formatTimeDiffSince($variables['last']);
-  $variables['link'] = \Drupal::l(t('Check manually'), new Url('update.manual_status', [], ['query' => \Drupal::destination()->getAsArray()]));
+  $variables['link'] = Link::fromTextAndUrl(t('Check manually'), Url::fromRoute('update.manual_status', [], ['query' => \Drupal::destination()->getAsArray()]))->toString();
 }
 
 /**

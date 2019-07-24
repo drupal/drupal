@@ -7,6 +7,7 @@ use Drupal\comment\CommentInterface;
 use Drupal\comment\Tests\CommentTestTrait;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Language\LanguageInterface;
+use Drupal\Core\Link;
 use Drupal\Core\Url;
 use Drupal\views\Views;
 use Drupal\comment\Entity\Comment;
@@ -88,7 +89,7 @@ class DefaultViewsTest extends ViewTestBase {
       if ($i % 2) {
         $values['promote'] = TRUE;
       }
-      $values['body'][]['value'] = \Drupal::l('Node ' . 1, new Url('entity.node.canonical', ['node' => 1]));
+      $values['body'][]['value'] = Link::fromTextAndUrl('Node ' . 1, Url::fromRoute('entity.node.canonical', ['node' => 1]))->toString();
 
       $node = $this->drupalCreateNode($values);
 

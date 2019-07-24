@@ -9,6 +9,7 @@ use Drupal\comment\CommentInterface;
 use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\Core\Link;
 use Drupal\Core\Url;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
@@ -446,11 +447,11 @@ function template_preprocess_forums(&$variables) {
         if ($variables['tid'] != $topic->forum_tid) {
           $variables['topics'][$id]->moved = TRUE;
           $variables['topics'][$id]->title = $topic->getTitle();
-          $variables['topics'][$id]->message = \Drupal::l(t('This topic has been moved'), new Url('forum.page', ['taxonomy_term' => $topic->forum_tid]));
+          $variables['topics'][$id]->message = Link::fromTextAndUrl(t('This topic has been moved'), Url::fromRoute('forum.page', ['taxonomy_term' => $topic->forum_tid]))->toString();
         }
         else {
           $variables['topics'][$id]->moved = FALSE;
-          $variables['topics'][$id]->title_link = \Drupal::l($topic->getTitle(), $topic->toUrl());
+          $variables['topics'][$id]->title_link = Link::fromTextAndUrl($topic->getTitle(), $topic->toUrl())->toString();
           $variables['topics'][$id]->message = '';
         }
         $forum_submitted = [

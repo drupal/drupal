@@ -17,6 +17,7 @@ use Drupal\Component\Utility\UrlHelper;
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\File\Exception\FileException;
 use Drupal\Core\File\FileSystemInterface;
+use Drupal\Core\Link;
 use Drupal\Core\Url;
 use Drupal\Core\Asset\AttachedAssetsInterface;
 use Drupal\Core\Form\FormStateInterface;
@@ -647,16 +648,14 @@ function locale_form_language_admin_overview_form_alter(&$form, FormStateInterfa
       'ratio' => 0,
     ];
     if (!$language->isLocked() && locale_is_translatable($langcode)) {
-      $form['languages'][$langcode]['locale_statistics'] = [
-        '#markup' => \Drupal::l(
-          t('@translated/@total (@ratio%)', [
-            '@translated' => $stats[$langcode]['translated'],
-            '@total' => $total_strings,
-            '@ratio' => $stats[$langcode]['ratio'],
-          ]),
-          new Url('locale.translate_page', [], ['query' => ['langcode' => $langcode]])
-        ),
-      ];
+      $form['languages'][$langcode]['locale_statistics'] = Link::fromTextAndUrl(
+        t('@translated/@total (@ratio%)', [
+          '@translated' => $stats[$langcode]['translated'],
+          '@total' => $total_strings,
+          '@ratio' => $stats[$langcode]['ratio'],
+        ]),
+        Url::fromRoute('locale.translate_page', [], ['query' => ['langcode' => $langcode]])
+      )->toRenderable();
     }
     else {
       $form['languages'][$langcode]['locale_statistics'] = [

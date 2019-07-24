@@ -17,6 +17,7 @@ use Drupal\Core\Database\Query\SelectInterface;
 use Drupal\Core\Database\StatementInterface;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Link;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Session\AccountInterface;
@@ -226,7 +227,7 @@ function node_title_list(StatementInterface $result, $title = NULL) {
     // database rows, not actual nodes.
     $nids[] = $row->nid;
     $options = !empty($row->comment_count) ? ['attributes' => ['title' => \Drupal::translation()->formatPlural($row->comment_count, '1 comment', '@count comments')]] : [];
-    $items[] = \Drupal::l($row->title, new Url('entity.node.canonical', ['node' => $row->nid], $options));
+    $items[] = Link::fromTextAndUrl($row->title, Url::fromRoute('entity.node.canonical', ['node' => $row->nid], $options))->toString();
     $num_rows = TRUE;
   }
 
@@ -545,7 +546,7 @@ function template_preprocess_node_add_list(&$variables) {
     foreach ($variables['content'] as $type) {
       $variables['types'][$type->id()] = [
         'type' => $type->id(),
-        'add_link' => \Drupal::l($type->label(), new Url('node.add', ['node_type' => $type->id()])),
+        'add_link' => Link::fromTextAndUrl($type->label(), Url::fromRoute('node.add', ['node_type' => $type->id()]))->toString(),
         'description' => [
           '#markup' => $type->getDescription(),
         ],

@@ -5,6 +5,7 @@ namespace Drupal\Tests\dblog\Kernel\Views;
 use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Logger\RfcLogLevel;
+use Drupal\Core\Link;
 use Drupal\Core\Url;
 use Drupal\Tests\views\Kernel\ViewsKernelTestBase;
 use Drupal\views\Views;
@@ -177,12 +178,15 @@ class ViewsIntegrationTest extends ViewsKernelTestBase {
     // Setup a watchdog entry without tokens.
     $entries[] = [
       'message' => $this->randomMachineName(),
-      'variables' => ['link' => \Drupal::l('Link', new Url('<front>'))],
+      'variables' => ['link' => Link::fromTextAndUrl('Link', Url::fromRoute('<front>'))->toString()],
     ];
     // Setup a watchdog entry with one token.
     $entries[] = [
       'message' => '@token1',
-      'variables' => ['@token1' => $this->randomMachineName(), 'link' => \Drupal::l('Link', new Url('<front>'))],
+      'variables' => [
+        '@token1' => $this->randomMachineName(),
+        'link' => Link::fromTextAndUrl('Link', Url::fromRoute('<front>'))->toString(),
+      ],
     ];
     // Setup a watchdog entry with two tokens.
     $entries[] = [

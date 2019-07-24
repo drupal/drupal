@@ -5,6 +5,7 @@
  * Redirects logging messages to syslog.
  */
 
+use Drupal\Core\Link;
 use Drupal\Core\Url;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
@@ -34,7 +35,7 @@ function syslog_help($route_name, RouteMatchInterface $route_match) {
  */
 function syslog_form_system_logging_settings_alter(&$form, FormStateInterface $form_state) {
   $config = \Drupal::configFactory()->getEditable('syslog.settings');
-  $help = \Drupal::moduleHandler()->moduleExists('help') ? ' ' . \Drupal::l(t('More information'), new Url('help.page', ['name' => 'syslog'])) . '.' : NULL;
+  $help = \Drupal::moduleHandler()->moduleExists('help') ? ' ' . Link::fromTextAndUrl(t('More information'), Url::fromRoute('help.page', ['name' => 'syslog']))->toString() . '.' : NULL;
   $form['syslog_identity'] = [
     '#type'          => 'textfield',
     '#title'         => t('Syslog identity'),

@@ -392,6 +392,11 @@ class DrupalTest extends UnitTestCase {
    * Tests the l() method.
    *
    * @covers ::l
+   *
+   * @group legacy
+   *
+   * @expectedDeprecation \Drupal::l() is deprecated in drupal:8.0.0 and is removed from drupal:9.0.0. Use \Drupal\Core\Link::fromTextAndUrl() instead. See https://www.drupal.org/node/2614344
+   *
    * @see \Drupal\Core\Utility\LinkGeneratorInterface::generate()
    */
   public function testL() {

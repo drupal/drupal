@@ -20,6 +20,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Render\Element;
+use Drupal\Core\Link;
 use Drupal\Core\Url;
 use Drupal\field\FieldConfigInterface;
 use Drupal\field\FieldStorageConfigInterface;
@@ -678,17 +679,17 @@ function template_preprocess_comment(&$variables) {
   }
 
   if (isset($comment->in_preview)) {
-    $variables['title'] = \Drupal::l($comment->getSubject(), new Url('<front>'));
-    $variables['permalink'] = \Drupal::l(t('Permalink'), new Url('<front>'));
+    $variables['title'] = Link::fromTextAndUrl($comment->getSubject(), Url::fromRoute('<front>'))->toString();
+    $variables['permalink'] = Link::fromTextAndUrl(t('Permalink'), Url::fromRoute('<front>'))->toString();
   }
   else {
     $uri = $comment->permalink();
     $attributes = $uri->getOption('attributes') ?: [];
     $attributes += ['class' => ['permalink'], 'rel' => 'bookmark'];
     $uri->setOption('attributes', $attributes);
-    $variables['title'] = \Drupal::l($comment->getSubject(), $uri);
+    $variables['title'] = Link::fromTextAndUrl($comment->getSubject(), $uri)->toString();
 
-    $variables['permalink'] = \Drupal::l(t('Permalink'), $comment->permalink());
+    $variables['permalink'] = Link::fromTextAndUrl(t('Permalink'), $comment->permalink())->toString();
   }
 
   $variables['submitted'] = t('Submitted by @username on @datetime', ['@username' => $variables['author'], '@datetime' => $variables['created']]);
@@ -715,8 +716,8 @@ function template_preprocess_comment(&$variables) {
     $attributes = $permalink_uri_parent->getOption('attributes') ?: [];
     $attributes += ['class' => ['permalink'], 'rel' => 'bookmark'];
     $permalink_uri_parent->setOption('attributes', $attributes);
-    $variables['parent_title'] = \Drupal::l($comment_parent->getSubject(), $permalink_uri_parent);
-    $variables['parent_permalink'] = \Drupal::l(t('Parent permalink'), $permalink_uri_parent);
+    $variables['parent_title'] = Link::fromTextAndUrl($comment_parent->getSubject(), $permalink_uri_parent)->toString();
+    $variables['parent_permalink'] = Link::fromTextAndUrl(t('Parent permalink'), $permalink_uri_parent)->toString();
     $variables['parent'] = t('In reply to @parent_title by @parent_username',
         ['@parent_username' => $variables['parent_author'], '@parent_title' => $variables['parent_title']]);
   }
