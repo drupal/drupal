@@ -213,7 +213,7 @@ function taxonomy_update_8702(&$sandbox) {
   //   and this used to fix the parent field langcode data.
   // - Terms are using a SQL-based storage class.
   if (!$field_storage_definition->isTranslatable() &&
-      !$entity_type->isRevisionable()  &&
+      !$entity_type->isRevisionable() &&
       is_subclass_of($entity_type->getStorageClass(), SqlEntityStorageInterface::class)
   ) {
     // taxonomy_update_8502() populated the langcode field of
@@ -227,7 +227,8 @@ function taxonomy_update_8702(&$sandbox) {
       ->condition('tdf.default_langcode', 1);
 
     if (!isset($sandbox['max'])) {
-      $sandbox['max'] = (clone $select)->countQuery()->execute()->fetchField();
+      $count_query = clone $select;
+      $sandbox['max'] = $count_query->countQuery()->execute()->fetchField();
       $sandbox['current'] = 0;
     }
 
