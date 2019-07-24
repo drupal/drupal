@@ -444,7 +444,9 @@ function install_begin_request($class_loader, &$install_state) {
   else {
     $directory = $site_path . '/files/translations';
   }
-  $container->set('string_translator.file_translation', new FileTranslation($directory));
+  /** @var \Drupal\Core\File\FileSystemInterface $file_system */
+  $file_system = $container->get('file_system');
+  $container->set('string_translator.file_translation', new FileTranslation($directory, $file_system));
   $container->get('string_translation')
     ->addTranslator($container->get('string_translator.file_translation'));
 
@@ -1324,9 +1326,9 @@ function _install_select_profile(&$install_state) {
  *
  * @return
  *   An associative array of file URIs keyed by language code. URIs as
- *   returned by file_scan_directory().
+ *   returned by FileSystemInterface::scanDirectory().
  *
- * @see file_scan_directory()
+ * @see \Drupal\Core\File\FileSystemInterface::scanDirectory()
  */
 function install_find_translations() {
   $translations = [];

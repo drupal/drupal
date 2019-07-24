@@ -52,6 +52,8 @@ trait TestFileCreationTrait {
    *   List of files in public:// that match the filter(s).
    */
   protected function getTestFiles($type, $size = NULL) {
+    /** @var \Drupal\Core\File\FileSystemInterface $file_system */
+    $file_system = \Drupal::service('file_system');
     if (empty($this->generatedTestFiles)) {
       // Generate binary test files.
       $lines = [64, 1024];
@@ -69,9 +71,9 @@ trait TestFileCreationTrait {
 
       // Copy other test files from simpletest.
       $original = drupal_get_path('module', 'simpletest') . '/files';
-      $files = file_scan_directory($original, '/(html|image|javascript|php|sql)-.*/');
+      $files = $file_system->scanDirectory($original, '/(html|image|javascript|php|sql)-.*/');
       foreach ($files as $file) {
-        \Drupal::service('file_system')->copy($file->uri, PublicStream::basePath());
+        $file_system->copy($file->uri, PublicStream::basePath());
       }
 
       $this->generatedTestFiles = TRUE;
@@ -80,7 +82,7 @@ trait TestFileCreationTrait {
     $files = [];
     // Make sure type is valid.
     if (in_array($type, ['binary', 'html', 'image', 'javascript', 'php', 'sql', 'text'])) {
-      $files = file_scan_directory('public://', '/' . $type . '\-.*/');
+      $files = $file_system->scanDirectory('public://', '/' . $type . '\-.*/');
 
       // If size is set then remove any files that are not of that size.
       if ($size !== NULL) {

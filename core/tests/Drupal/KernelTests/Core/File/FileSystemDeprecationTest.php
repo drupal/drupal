@@ -259,4 +259,11 @@ class FileSystemDeprecationTest extends KernelTestBase {
     $this->assertNotEmpty(drupal_realpath('public://'));
   }
 
+  /**
+   * @expectedDeprecation file_scan_directory() is deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. Use \Drupal\Core\File\FileSystemInterface::scanDirectory() instead. See https://www.drupal.org/node/3038437
+   */
+  public function testDeprecatedScanDirectory() {
+    $this->assertNotNull(file_scan_directory('temporary://', '/^NONEXISTINGFILENAME/'));
+  }
+
 }

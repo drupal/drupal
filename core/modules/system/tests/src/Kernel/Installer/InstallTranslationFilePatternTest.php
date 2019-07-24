@@ -1,16 +1,21 @@
 <?php
 
-namespace Drupal\Tests\system\Unit\Installer;
+namespace Drupal\Tests\system\Kernel\Installer;
 
 use Drupal\Core\StringTranslation\Translator\FileTranslation;
-use Drupal\Tests\UnitTestCase;
+use Drupal\KernelTests\KernelTestBase;
 
 /**
  * Tests for installer language support.
  *
  * @group Installer
  */
-class InstallTranslationFilePatternTest extends UnitTestCase {
+class InstallTranslationFilePatternTest extends KernelTestBase {
+
+  /**
+   * {@inheritdoc}
+   */
+  protected static $modules = ['system'];
 
   /**
    * @var \Drupal\Core\StringTranslation\Translator\FileTranslation
@@ -27,7 +32,7 @@ class InstallTranslationFilePatternTest extends UnitTestCase {
    */
   protected function setup() {
     parent::setUp();
-    $this->fileTranslation = new FileTranslation('filename');
+    $this->fileTranslation = new FileTranslation('filename', $this->container->get('file_system'));
     $method = new \ReflectionMethod('\Drupal\Core\StringTranslation\Translator\FileTranslation', 'getTranslationFilesPattern');
     $method->setAccessible(TRUE);
     $this->filePatternMethod = $method;

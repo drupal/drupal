@@ -97,7 +97,10 @@ function locale_translate_get_interface_translation_files(array $projects = [], 
   // {project}-{version}.{langcode}.po.
   // Only files of known projects and languages will be returned.
   $directory = \Drupal::config('locale.settings')->get('translation.path');
-  $result = file_scan_directory($directory, '![a-z_]+(\-[0-9a-z\.\-\+]+|)\.[^\./]+\.po$!', ['recurse' => FALSE]);
+  $result = [];
+  if (is_dir($directory)) {
+    $result = \Drupal::service('file_system')->scanDirectory($directory, '![a-z_]+(\-[0-9a-z\.\-\+]+|)\.[^\./]+\.po$!', ['recurse' => FALSE]);
+  }
 
   foreach ($result as $file) {
     // Update the file object with project name and version from the file name.

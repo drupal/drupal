@@ -24,7 +24,7 @@ function media_install() {
   $file_system = \Drupal::service('file_system');
   $file_system->prepareDirectory($destination, FileSystemInterface::CREATE_DIRECTORY | FileSystemInterface::MODIFY_PERMISSIONS);
 
-  $files = file_scan_directory($source, '/.*\.(svg|png|jpg|jpeg|gif)$/');
+  $files = $file_system->scanDirectory($source, '/.*\.(svg|png|jpg|jpeg|gif)$/');
   foreach ($files as $file) {
     // When reinstalling the media module we don't want to copy the icons when
     // they already exist. The icons could be replaced (by a contrib module or

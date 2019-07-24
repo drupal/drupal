@@ -690,7 +690,9 @@ function update_verify_update_archive($project, $archive_file, $directory) {
   // functionality).
   $compatible_project = FALSE;
   $incompatible = [];
-  $files = file_scan_directory("$directory/$project", '/^' . DRUPAL_PHP_FUNCTION_PATTERN . '\.info.yml$/', ['key' => 'name', 'min_depth' => 0]);
+  /** @var \Drupal\Core\File\FileSystemInterface $file_system */
+  $file_system = \Drupal::service('file_system');
+  $files = $file_system->scanDirectory("$directory/$project", '/^' . DRUPAL_PHP_FUNCTION_PATTERN . '\.info.yml$/', ['key' => 'name', 'min_depth' => 0]);
   foreach ($files as $file) {
     // Get the .info.yml file for the module or theme this file belongs to.
     $info = \Drupal::service('info_parser')->parse($file->uri);
@@ -705,8 +707,6 @@ function update_verify_update_archive($project, $archive_file, $directory) {
     }
   }
 
-  /** @var \Drupal\Core\File\FileSystemInterface $file_system */
-  $file_system = \Drupal::service('file_system');
   if (empty($files)) {
     $errors[] = t('%archive_file does not contain any .info.yml files.', ['%archive_file' => $file_system->basename($archive_file)]);
   }
@@ -805,7 +805,7 @@ function update_clear_update_disk_cache() {
 
   // Search for files and directories in base folder only without recursion.
   foreach ($directories as $directory) {
-    file_scan_directory($directory, '/.*/', ['callback' => 'update_delete_file_if_stale', 'recurse' => FALSE]);
+    \Drupal::service('file_system')->scanDirectory($directory, '/.*/', ['callback' => 'update_delete_file_if_stale', 'recurse' => FALSE]);
   }
 }
 

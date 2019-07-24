@@ -3,8 +3,9 @@
 namespace Drupal\KernelTests\Core\File;
 
 /**
- * Tests the file_scan_directory() function.
+ * Tests \Drupal\Core\File\FileSystemInterface::scanDirectory().
  *
+ * @coversDefaultClass \Drupal\Core\File\FileSystem
  * @group File
  */
 class RemoteFileScanDirectoryTest extends ScanDirectoryTest {

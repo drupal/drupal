@@ -32,10 +32,12 @@ function locale_uninstall() {
 
   if (is_dir($locale_js_directory)) {
     $locale_javascripts = \Drupal::state()->get('locale.translation.javascript') ?: [];
+    /** @var \Drupal\Core\File\FileSystemInterface $file_system */
+    $file_system = \Drupal::service('file_system');
     foreach ($locale_javascripts as $langcode => $file_suffix) {
       if (!empty($file_suffix)) {
         try {
-          \Drupal::service('file_system')->delete($locale_js_directory . '/' . $langcode . '_' . $file_suffix . '.js');
+          $file_system->delete($locale_js_directory . '/' . $langcode . '_' . $file_suffix . '.js');
         }
         catch (FileException $e) {
           // Ignore and continue.
@@ -43,8 +45,10 @@ function locale_uninstall() {
       }
     }
     // Delete the JavaScript translations directory if empty.
-    if (!file_scan_directory($locale_js_directory, '/.*/')) {
-      \Drupal::service('file_system')->rmdir($locale_js_directory);
+    if (is_dir($locale_js_directory)) {
+      if (!$file_system->scanDirectory($locale_js_directory, '/.*/')) {
+        $file_system->rmdir($locale_js_directory);
+      }
     }
   }
 

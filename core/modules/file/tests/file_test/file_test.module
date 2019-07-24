@@ -314,7 +314,7 @@ function file_test_validator(File $file, $errors) {
 }
 
 /**
- * Helper function for testing file_scan_directory().
+ * Helper function for testing FileSystemInterface::scanDirectory().
  *
  * Each time the function is called the file is stored in a static variable.
  * When the function is called with no $filepath parameter, the results are

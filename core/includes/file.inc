@@ -992,81 +992,23 @@ function file_unmanaged_save_data($data, $destination = NULL, $replace = FILE_EX
  * @return
  *   An associative array (keyed on the chosen key) of objects with 'uri',
  *   'filename', and 'name' properties corresponding to the matched files.
+ *
+ * @deprecated in drupal:8.8.0 and is removed from drupal:9.0.0.
+ *   Use \Drupal\Core\File\FileSystemInterface::scanDirectory() instead.
+ *
+ * @see https://www.drupal.org/node/3038437
  */
 function file_scan_directory($dir, $mask, $options = [], $depth = 0) {
-  // Merge in defaults.
-  $options += [
-    'callback' => 0,
-    'recurse' => TRUE,
-    'key' => 'uri',
-    'min_depth' => 0,
-  ];
-  // Normalize $dir only once.
-  if ($depth == 0) {
-    /** @var \Drupal\Core\StreamWrapper\StreamWrapperManagerInterface $stream_wrapper_manager */
-    $stream_wrapper_manager = \Drupal::service('stream_wrapper_manager');
-    $dir = $stream_wrapper_manager->normalizeUri($dir);
-    $dir_has_slash = (substr($dir, -1) === '/');
-  }
-
-  // Allow directories specified in settings.php to be ignored. You can use this
-  // to not check for files in common special-purpose directories. For example,
-  // node_modules and bower_components. Ignoring irrelevant directories is a
-  // performance boost.
-  if (!isset($options['nomask'])) {
-    $ignore_directories = Settings::get('file_scan_ignore_directories', []);
-    array_walk($ignore_directories, function (&$value) {
-      $value = preg_quote($value, '/');
-    });
-    $default_nomask = '/^' . implode('|', $ignore_directories) . '$/';
-  }
-
-  $options['key'] = in_array($options['key'], ['uri', 'filename', 'name']) ? $options['key'] : 'uri';
+  @trigger_error('file_scan_directory() is deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. Use \Drupal\Core\File\FileSystemInterface::scanDirectory() instead. See https://www.drupal.org/node/3038437', E_USER_DEPRECATED);
   $files = [];
-  // Avoid warnings when opendir does not have the permissions to open a
-  // directory.
-  if (is_dir($dir)) {
-    if ($handle = @opendir($dir)) {
-      while (FALSE !== ($filename = readdir($handle))) {
-        // Skip this file if it matches the nomask or starts with a dot.
-        if ($filename[0] != '.'
-          && !(isset($options['nomask']) && preg_match($options['nomask'], $filename))
-          && !(!empty($default_nomask) && preg_match($default_nomask, $filename))
-          ) {
-          if ($depth == 0 && $dir_has_slash) {
-            $uri = "$dir$filename";
-          }
-          else {
-            $uri = "$dir/$filename";
-          }
-          if ($options['recurse'] && is_dir($uri)) {
-            // Give priority to files in this folder by merging them in after
-            // any subdirectory files.
-            $files = array_merge(file_scan_directory($uri, $mask, $options, $depth + 1), $files);
-          }
-          elseif ($depth >= $options['min_depth'] && preg_match($mask, $filename)) {
-            // Always use this match over anything already set in $files with
-            // the same $options['key'].
-            $file = new stdClass();
-            $file->uri = $uri;
-            $file->filename = $filename;
-            $file->name = pathinfo($filename, PATHINFO_FILENAME);
-            $key = $options['key'];
-            $files[$file->$key] = $file;
-            if ($options['callback']) {
-              $options['callback']($uri);
-            }
-          }
-        }
-      }
-
-      closedir($handle);
-    }
-    else {
-      \Drupal::logger('file')->error('@dir can not be opened', ['@dir' => $dir]);
+  try {
+    if (is_dir($dir)) {
+      $files = \Drupal::service('file_system')->scanDirectory($dir, $mask, $options);
     }
   }
-
+  catch (FileException $e) {
+    // Ignore and return empty array for BC.
+  }
   return $files;
 }
 

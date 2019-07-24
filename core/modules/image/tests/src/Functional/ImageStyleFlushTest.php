@@ -42,7 +42,11 @@ class ImageStyleFlushTest extends ImageFieldTestBase {
    * Count the number of images currently created for a style in a wrapper.
    */
   public function getImageCount($style, $wrapper) {
-    return count(file_scan_directory($wrapper . '://styles/' . $style->id(), '/.*/'));
+    $count = 0;
+    if (is_dir($wrapper . '://styles/' . $style->id())) {
+      $count = count(\Drupal::service('file_system')->scanDirectory($wrapper . '://styles/' . $style->id(), '/.*/'));
+    }
+    return $count;
   }
 
   /**
