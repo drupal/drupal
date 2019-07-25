@@ -301,10 +301,11 @@ abstract class AccessResult implements AccessResultInterface, RefinableCacheable
    *
    * @return $this
    *
-   * @deprecated in Drupal 8.0.x-dev, will be removed before Drupal 9.0.0. Use
-   *   ::addCacheableDependency() instead.
+   * @deprecated in drupal:8.0.0 and is removed in drupal:9.0.0. Use
+   *   \Drupal\Core\Access\AccessResult::addCacheableDependency() instead.
    */
   public function cacheUntilConfigurationChanges(ConfigBase $configuration) {
+    @trigger_error(__METHOD__ . ' is deprecated in drupal:8.0.0 and is removed in drupal:9.0.0. Use \Drupal\Core\Access\AccessResult::addCacheableDependency() instead.', E_USER_DEPRECATED);
     return $this->addCacheableDependency($configuration);
   }
 
