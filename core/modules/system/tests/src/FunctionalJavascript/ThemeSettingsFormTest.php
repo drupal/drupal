@@ -11,7 +11,7 @@ use Drupal\Tests\TestFileCreationTrait;
  *
  * @group system
  */
-class ThemeFormSettingsTest extends WebDriverTestBase {
+class ThemeSettingsFormTest extends WebDriverTestBase {
 
   use TestFileCreationTrait;
 
