@@ -15,8 +15,15 @@ class BlockBaseTest extends UnitTestCase {
    * Tests the machine name suggestion.
    *
    * @see \Drupal\Core\Block\BlockBase::getMachineNameSuggestion()
+   *
+   * @param string $label
+   *   The block label.
+   * @param string $expected
+   *   The expected machine name.
+   *
+   * @dataProvider providerTestGetMachineNameSuggestion()
    */
-  public function testGetMachineNameSuggestion() {
+  public function testGetMachineNameSuggestion($label, $expected) {
     $module_handler = $this->createMock('Drupal\Core\Extension\ModuleHandlerInterface');
     $transliteration = $this->getMockBuilder('Drupal\Core\Transliteration\PhpTransliteration')
       ->setConstructorArgs([NULL, $module_handler])
@@ -25,21 +32,22 @@ class BlockBaseTest extends UnitTestCase {
 
     $config = [];
     $definition = [
-      'admin_label' => 'Admin label',
+      'admin_label' => $label,
       'provider' => 'block_test',
     ];
     $block_base = new TestBlockInstantiation($config, 'test_block_instantiation', $definition);
     $block_base->setTransliteration($transliteration);
-    $this->assertEquals('adminlabel', $block_base->getMachineNameSuggestion());
+    $this->assertEquals($expected, $block_base->getMachineNameSuggestion());
+  }
 
-    // Test with more unicodes.
-    $definition = [
-      'admin_label' => 'über åwesome',
-      'provider' => 'block_test',
+  /**
+   * Provides data for testGetMachineNameSuggestion().
+   */
+  public function providerTestGetMachineNameSuggestion() {
+    return [
+      ['Admin label', 'adminlabel'],
+      ['über åwesome', 'uberawesome'],
     ];
-    $block_base = new TestBlockInstantiation($config, 'test_block_instantiation', $definition);
-    $block_base->setTransliteration($transliteration);
-    $this->assertEquals('uberawesome', $block_base->getMachineNameSuggestion());
   }
 
 }
