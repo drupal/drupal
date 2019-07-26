@@ -14,7 +14,7 @@ class TestLoader implements \Twig_LoaderInterface, \Twig_ExistsLoaderInterface, 
    */
   public function getSourceContext($name) {
     $name = (string) $name;
-    $value = $this->getSource($name);
+    $value = $name === 'kittens' ? 'kittens' : 'cats';
     return new Source($value, $name);
   }
 
@@ -22,12 +22,7 @@ class TestLoader implements \Twig_LoaderInterface, \Twig_ExistsLoaderInterface, 
    * {@inheritdoc}
    */
   public function getSource($name) {
-    if ($name == 'kittens') {
-      return $name;
-    }
-    else {
-      return 'cats';
-    }
+    return $this->getSourceContext($name)->getCode();
   }
 
   /**
