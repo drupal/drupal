@@ -37,7 +37,7 @@ class TemporaryStream extends LocalStream {
    * {@inheritdoc}
    */
   public function getDirectoryPath() {
-    return file_directory_temp();
+    return \Drupal::service('file_system')->getTempDirectory();
   }
 
   /**

@@ -4,6 +4,7 @@ namespace Drupal\system\Form;
 
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Datetime\DateFormatterInterface;
+use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\StreamWrapper\PrivateStream;
 use Drupal\Core\StreamWrapper\PublicStream;
@@ -34,6 +35,13 @@ class FileSystemForm extends ConfigFormBase {
   protected $streamWrapperManager;
 
   /**
+   * The file system.
+   *
+   * @var \Drupal\Core\File\FileSystemInterface
+   */
+  protected $fileSystem;
+
+  /**
    * Constructs a FileSystemForm object.
    *
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
@@ -42,11 +50,18 @@ class FileSystemForm extends ConfigFormBase {
    *   The date formatter service.
    * @param \Drupal\Core\StreamWrapper\StreamWrapperManagerInterface $stream_wrapper_manager
    *   The stream wrapper manager.
+   * @param \Drupal\Core\File\FileSystemInterface $file_system
+   *   The file system.
    */
-  public function __construct(ConfigFactoryInterface $config_factory, DateFormatterInterface $date_formatter, StreamWrapperManagerInterface $stream_wrapper_manager) {
+  public function __construct(ConfigFactoryInterface $config_factory, DateFormatterInterface $date_formatter, StreamWrapperManagerInterface $stream_wrapper_manager, FileSystemInterface $file_system = NULL) {
     parent::__construct($config_factory);
     $this->dateFormatter = $date_formatter;
     $this->streamWrapperManager = $stream_wrapper_manager;
+    if (!$file_system) {
+      @trigger_error('Calling FileSystemForm::__construct() without the $file_system argument is deprecated in drupal:8.8.0. The $file_system argument will be required in drupal:9.0.0. See https://www.drupal.org/node/3039255', E_USER_DEPRECATED);
+      $file_system = \Drupal::service('file_system');
+    }
+    $this->fileSystem = $file_system;
   }
 
   /**
@@ -56,7 +71,8 @@ class FileSystemForm extends ConfigFormBase {
     return new static(
       $container->get('config.factory'),
       $container->get('date.formatter'),
-      $container->get('stream_wrapper_manager')
+      $container->get('stream_wrapper_manager'),
+      $container->get('file_system')
     );
   }
 
@@ -101,12 +117,10 @@ class FileSystemForm extends ConfigFormBase {
     ];
 
     $form['file_temporary_path'] = [
-      '#type' => 'textfield',
+      '#type' => 'item',
       '#title' => t('Temporary directory'),
-      '#default_value' => $config->get('path.temporary'),
-      '#maxlength' => 255,
-      '#description' => t('A local file system path where temporary files will be stored. This directory should not be accessible over the web.'),
-      '#after_build' => ['system_check_directory'],
+      '#markup' => $this->fileSystem->getTempDirectory(),
+      '#description' => t('A local file system path where temporary files will be stored. This directory should not be accessible over the web. This must be changed in settings.php.'),
     ];
     // Any visible, writeable wrapper can potentially be used for the files
     // directory, including a remote file system that integrates with a CDN.
@@ -141,7 +155,6 @@ class FileSystemForm extends ConfigFormBase {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $config = $this->config('system.file')
-      ->set('path.temporary', $form_state->getValue('file_temporary_path'))
       ->set('temporary_maximum_age', $form_state->getValue('temporary_maximum_age'));
 
     if ($form_state->hasValue('file_default_scheme')) {

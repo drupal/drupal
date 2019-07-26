@@ -2,6 +2,7 @@
 
 namespace Drupal\Core\File;
 
+use Drupal\Component\FileSystem\FileSystem as FileSystemComponent;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\File\Exception\DirectoryNotReadyException;
 use Drupal\Core\File\Exception\FileException;
@@ -11,6 +12,7 @@ use Drupal\Core\File\Exception\FileWriteException;
 use Drupal\Core\File\Exception\NotRegularDirectoryException;
 use Drupal\Core\File\Exception\NotRegularFileException;
 use Drupal\Core\Site\Settings;
+use Drupal\Core\StreamWrapper\PublicStream;
 use Drupal\Core\StreamWrapper\StreamWrapperManager;
 use Drupal\Core\StreamWrapper\StreamWrapperManagerInterface;
 use Psr\Log\LoggerInterface;
@@ -624,6 +626,44 @@ class FileSystem implements FileSystemInterface {
     }
 
     return $destination;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getTempDirectory() {
+    // Use settings.
+    $temporary_directory = $this->settings->get('file_temp_path');
+    if (!empty($temporary_directory)) {
+      return $temporary_directory;
+    }
+
+    // Fallback to config for Backwards compatibility.
+    // This service is lazy-loaded and not injected, as the file_system service
+    // is used in the install phase before config_factory service exists. It
+    // will be removed before Drupal 9.0.0.
+    if (\Drupal::hasContainer()) {
+      $temporary_directory = \Drupal::config('system.file')->get('path.temporary');
+      if (!empty($temporary_directory)) {
+        @trigger_error("The 'system.file' config 'path.temporary' is deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. Set 'file_temp_path' in settings.php instead. See https://www.drupal.org/node/3039255", E_USER_DEPRECATED);
+        return $temporary_directory;
+      }
+    }
+
+    // Fallback to OS default.
+    $temporary_directory = FileSystemComponent::getOsTemporaryDirectory();
+
+    if (empty($temporary_directory)) {
+      // If no directory has been found default to 'files/tmp'.
+      $temporary_directory = PublicStream::basePath() . '/tmp';
+
+      // Windows accepts paths with either slash (/) or backslash (\), but
+      // will not accept a path which contains both a slash and a backslash.
+      // Since the 'file_public_path' variable may have either format, we
+      // sanitize everything to use slash which is supported on all platforms.
+      $temporary_directory = str_replace('\\', '/', $temporary_directory);
+    }
+    return $temporary_directory;
   }
 
   /**

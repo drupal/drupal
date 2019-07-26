@@ -6,11 +6,9 @@ migration_tags:
 source:
   plugin: variable
   variables:
-    - file_directory_temp
     - allow_insecure_uploads
   source_module: system
 process:
-  'path/temporary': file_directory_temp
   allow_insecure_uploads:
     plugin: static_map
     source: allow_insecure_uploads

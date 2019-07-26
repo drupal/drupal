@@ -121,13 +121,13 @@ class ConfigController implements ContainerInjectionInterface {
    */
   public function downloadExport() {
     try {
-      $this->fileSystem->delete(file_directory_temp() . '/config.tar.gz');
+      $this->fileSystem->delete($this->fileSystem->getTempDirectory() . '/config.tar.gz');
     }
     catch (FileException $e) {
       // Ignore failed deletes.
     }
 
-    $archiver = new ArchiveTar(file_directory_temp() . '/config.tar.gz', 'gz');
+    $archiver = new ArchiveTar($this->fileSystem->getTempDirectory() . '/config.tar.gz', 'gz');
     // Add all contents of the export storage to the archive.
     foreach ($this->exportStorage->listAll() as $name) {
       $archiver->addString("$name.yml", Yaml::encode($this->exportStorage->read($name)));

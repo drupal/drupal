@@ -2,6 +2,7 @@
 
 namespace Drupal\KernelTests\Core\File;
 
+use Drupal\Component\FileSystem\FileSystem;
 use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Component\PhpStorage\FileStorage;
 use Drupal\Core\File\Exception\FileException;
@@ -167,15 +168,12 @@ class DirectoryTest extends FileTestBase {
   }
 
   /**
-   * Ensure that the file_directory_temp() function always returns a value.
+   * Ensure that the getTempDirectory() method always returns a value.
    */
   public function testFileDirectoryTemp() {
-    // Start with an empty variable to ensure we have a clean slate.
-    $config = $this->config('system.file');
-    $config->set('path.temporary', '')->save();
-    $tmp_directory = file_directory_temp();
-    $this->assertEqual(empty($tmp_directory), FALSE, 'file_directory_temp() returned a non-empty value.');
-    $this->assertEqual($config->get('path.temporary'), $tmp_directory);
+    $tmp_directory = \Drupal::service('file_system')->getTempDirectory();
+    $this->assertNotEmpty($tmp_directory);
+    $this->assertEquals($tmp_directory, FileSystem::getOsTemporaryDirectory());
   }
 
   /**

@@ -529,6 +529,38 @@ function system_requirements($phase) {
     }
   }
 
+  // Test that path.temporary config is not set.
+  if ($phase == 'runtime') {
+    if (!Settings::get('file_temp_path')) {
+      $filesystem_config = \Drupal::config('system.file');
+      if ($temp_path = $filesystem_config->get('path.temporary')) {
+        $requirements['temp_directory'] = [
+          'title' => t('Temporary Directory'),
+          'severity' => REQUIREMENT_WARNING,
+          'value' => 'Deprecated configuration',
+          'description' => [
+            [
+              '#markup' => t('You are using deprecated configuration for the temporary files path.'),
+              '#suffix' => ' ',
+            ],
+          ],
+        ];
+        if ($temp_path === FileSystem::getOsTemporaryDirectory()) {
+          $requirements['temp_directory']['description'][] = [
+            '#markup' => t('Your temporary directory configuration matches the OS default and can be safely removed.'),
+            '#suffix' => ' ',
+          ];
+        }
+        else {
+          $requirements['temp_directory']['description'][] = [
+            '#markup' => t('Remove the configuration and add the following to <code>settings.php</code>. <code>$settings["file_temp_path"] = "%temp_path"', ['%temp_path' => $temp_path]),
+            '#suffix' => ' ',
+          ];
+        }
+      }
+    }
+  }
+
   // Report cron status.
   if ($phase == 'runtime') {
     $cron_config = \Drupal::config('system.cron');
@@ -596,7 +628,7 @@ function system_requirements($phase) {
       // By default no private files directory is configured. For private files
       // to be secure the admin needs to provide a path outside the webroot.
       PrivateStream::basePath(),
-      file_directory_temp(),
+      \Drupal::service('file_system')->getTempDirectory(),
     ];
   }
 
@@ -617,8 +649,8 @@ function system_requirements($phase) {
     if ($file_private_path = Settings::get('file_private_path')) {
       $directories[] = $file_private_path;
     }
-    if (!empty($GLOBALS['config']['system.file']['path']['temporary'])) {
-      $directories[] = $GLOBALS['config']['system.file']['path']['temporary'];
+    if (Settings::get('file_temp_path')) {
+      $directories[] = Settings::get('file_temp_path');
     }
     else {
       // If the temporary directory is not overridden use an appropriate
@@ -2311,4 +2343,17 @@ function system_update_8702() {
     }
   }
   \Drupal::entityTypeManager()->useCaches(TRUE);
+}
+
+/**
+ * Remove 'path.temporary' config if redundant.
+ */
+function system_update_8801() {
+  // If settings is already being used, or the config is set to the OS default,
+  // clear the config value.
+  $config = Drupal::configFactory()->getEditable('system.file');
+  if (Settings::get('file_temp_path') || $config->get('path.temporary') === FileSystem::getOsTemporaryDirectory()) {
+    $config->clear('path.temporary')
+      ->save(TRUE);
+  }
 }

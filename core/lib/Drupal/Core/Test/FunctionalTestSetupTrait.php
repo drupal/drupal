@@ -91,6 +91,10 @@ trait FunctionalTestSetupTrait {
       'value' => $this->privateFilesDirectory,
       'required' => TRUE,
     ];
+    $settings['settings']['file_temp_path'] = (object) [
+      'value' => $this->tempFilesDirectory,
+      'required' => TRUE,
+    ];
     // Save the original site directory path, so that extensions in the
     // site-specific directory can still be discovered in the test site
     // environment.

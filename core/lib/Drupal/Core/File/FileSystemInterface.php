@@ -473,6 +473,18 @@ interface FileSystemInterface {
   public function getDestinationFilename($destination, $replace);
 
   /**
+   * Gets the path of the configured temporary directory.
+   *
+   * If the path is not set, it will fall back to the OS-specific default if
+   * set, otherwise a directory under the public files directory. It will then
+   * set this as the configured directory.
+   *
+   * @return string
+   *   A string containing the path to the temporary directory.
+   */
+  public function getTempDirectory();
+
+  /**
    * Finds all files that match a given mask in a given directory.
    *
    * Directories and files beginning with a dot are excluded; this prevents

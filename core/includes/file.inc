@@ -15,7 +15,6 @@ use Drupal\Core\File\FileSystem;
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Site\Settings;
 use Drupal\Core\StreamWrapper\PrivateStream;
-use Drupal\Core\StreamWrapper\PublicStream;
 use Drupal\Core\StreamWrapper\StreamWrapperManager;
 
 /**
@@ -1138,30 +1137,16 @@ function drupal_tempnam($directory, $prefix) {
  *
  * @return mixed|null
  *   A string containing the path to the temporary directory.
+ *
+ * @deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. Use
+ *   \Drupal\Core\File\FileSystemInterface::getTempDirectory() instead.
+ *
+ * @see \Drupal\Core\File\FileSystemInterface::getTempDirectory()
+ * @see https://www.drupal.org/node/3039255
  */
 function file_directory_temp() {
-  $temporary_directory = \Drupal::config('system.file')->get('path.temporary');
-  if (empty($temporary_directory)) {
-    // Needs set up.
-    $config = \Drupal::configFactory()->getEditable('system.file');
-    $temporary_directory = ComponentFileSystem::getOsTemporaryDirectory();
-
-    if (empty($temporary_directory)) {
-      // If no directory has been found default to 'files/tmp'.
-      $temporary_directory = PublicStream::basePath() . '/tmp';
-
-      // Windows accepts paths with either slash (/) or backslash (\), but will
-      // not accept a path which contains both a slash and a backslash. Since
-      // the 'file_public_path' variable may have either format, we sanitize
-      // everything to use slash which is supported on all platforms.
-      $temporary_directory = str_replace('\\', '/', $temporary_directory);
-    }
-    // Save the path of the discovered directory. Do not check config schema on
-    // save.
-    $config->set('path.temporary', (string) $temporary_directory)->save(TRUE);
-  }
-
-  return $temporary_directory;
+  @trigger_error('file_directory_temp() is deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. Use \Drupal\Core\File\FileSystemInterface::getTempDirectory() instead. See https://www.drupal.org/node/3039255', E_USER_DEPRECATED);
+  return \Drupal::service('file_system')->getTempDirectory();
 }
 
 /**

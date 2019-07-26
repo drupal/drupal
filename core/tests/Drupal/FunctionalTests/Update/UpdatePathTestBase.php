@@ -190,6 +190,10 @@ abstract class UpdatePathTestBase extends BrowserTestBase {
     $sync_directory = Settings::get('config_sync_directory');
     \Drupal::service('file_system')->prepareDirectory($sync_directory, FileSystemInterface::CREATE_DIRECTORY | FileSystemInterface::MODIFY_PERMISSIONS);
 
+    // Ensure the default temp directory exist and is writable. The configured
+    // temp directory may be removed during update.
+    \Drupal::service('file_system')->prepareDirectory($this->tempFilesDirectory, FileSystemInterface::CREATE_DIRECTORY | FileSystemInterface::MODIFY_PERMISSIONS);
+
     // Set the container. parent::rebuildAll() would normally do this, but this
     // not safe to do here, because the database has not been updated yet.
     $this->container = \Drupal::getContainer();

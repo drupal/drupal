@@ -3,6 +3,7 @@
 namespace Drupal\KernelTests\Core\File;
 
 use Drupal\Core\DrupalKernel;
+use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Site\Settings;
 use Drupal\Core\StreamWrapper\PublicStream;
 use Symfony\Component\HttpFoundation\Request;
@@ -91,7 +92,9 @@ class StreamWrapperTest extends FileTestBase {
     // Drupal\Core\StreamWrapper\LocalStream::getDirectoryPath().
     $this->assertEqual(file_build_uri('foo/bar.txt'), 'public://foo/bar.txt', 'Expected scheme was added.');
     $this->assertEqual($stream_wrapper_manager->getViaScheme('public')->getDirectoryPath(), PublicStream::basePath(), 'Expected default directory path was returned.');
-    $this->assertEqual($stream_wrapper_manager->getViaScheme('temporary')->getDirectoryPath(), $config->get('path.temporary'), 'Expected temporary directory path was returned.');
+    $file_system = \Drupal::service('file_system');
+    assert($file_system instanceof FileSystemInterface);
+    $this->assertEqual($stream_wrapper_manager->getViaScheme('temporary')->getDirectoryPath(), $file_system->getTempDirectory(), 'Expected temporary directory path was returned.');
     $config->set('default_scheme', 'private')->save();
     $this->assertEqual(file_build_uri('foo/bar.txt'), 'private://foo/bar.txt', 'Got a valid URI from foo/bar.txt.');
 

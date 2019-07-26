@@ -1037,7 +1037,7 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
           return Settings::get('file_private_path');
 
         case 'temp_files_directory':
-          return file_directory_temp();
+          return \Drupal::service('file_system')->getTempDirectory();
 
         case 'translation_files_directory':
           return Settings::get('file_public_path', \Drupal::service('site.path') . '/translations');

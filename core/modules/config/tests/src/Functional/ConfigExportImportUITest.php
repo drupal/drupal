@@ -226,7 +226,7 @@ class ConfigExportImportUITest extends BrowserTestBase {
     // Export the configuration.
     $this->drupalPostForm('admin/config/development/configuration/full/export', [], 'Export');
     $this->tarball = $this->getSession()->getPage()->getContent();
-    $filename = file_directory_temp() . '/' . $this->randomMachineName();
+    $filename = \Drupal::service('file_system')->getTempDirectory() . '/' . $this->randomMachineName();
     file_put_contents($filename, $this->tarball);
 
     // Set up the active storage collections to test import.

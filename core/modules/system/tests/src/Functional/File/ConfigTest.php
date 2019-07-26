@@ -27,7 +27,6 @@ class ConfigTest extends BrowserTestBase {
     // upon form submission.
     $file_path = $this->publicFilesDirectory;
     $fields = [
-      'file_temporary_path' => $file_path . '/file_config_page_test/temporary',
       'file_default_scheme' => 'private',
     ];
 
