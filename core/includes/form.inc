@@ -630,7 +630,7 @@ function template_preprocess_form_element_label(&$variables) {
  *       ->fetchField();
  *   }
  *   $limit = 5;
- *   $result = db_select('example')
+ *   $result = \Drupal::database()->select('example')
  *     ->fields('example', array('id'))
  *     ->condition('id', $context['sandbox']['current_id'], '>')
  *     ->orderBy('id')

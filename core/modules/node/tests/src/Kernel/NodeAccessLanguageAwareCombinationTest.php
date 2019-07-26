@@ -262,7 +262,7 @@ class NodeAccessLanguageAwareCombinationTest extends NodeAccessTestBase {
 
     // Four nodes should be returned with public Hungarian translations or the
     // no language public node.
-    $this->assertEqual(count($nids), 4, 'db_select() returns 4 nodes when no langcode is specified.');
+    $this->assertEqual(count($nids), 4, 'Query returns 4 nodes when no langcode is specified.');
     $this->assertTrue(array_key_exists($this->nodes['public_both_public']->id(), $nids), 'Returned node ID is full public node.');
     $this->assertTrue(array_key_exists($this->nodes['public_ca_private']->id(), $nids), 'Returned node ID is Hungarian public only node.');
     $this->assertTrue(array_key_exists($this->nodes['private_both_public']->id(), $nids), 'Returned node ID is both public non-language-aware private only node.');
@@ -277,7 +277,7 @@ class NodeAccessLanguageAwareCombinationTest extends NodeAccessTestBase {
     $nids = $select->execute()->fetchAllAssoc('nid');
 
     // Three nodes should be returned (with public Hungarian translations).
-    $this->assertEqual(count($nids), 3, 'db_select() returns 3 nodes.');
+    $this->assertEqual(count($nids), 3, 'Query returns 3 nodes.');
     $this->assertTrue(array_key_exists($this->nodes['public_both_public']->id(), $nids), 'Returned node ID is both public node.');
     $this->assertTrue(array_key_exists($this->nodes['public_ca_private']->id(), $nids), 'Returned node ID is Hungarian public only node.');
     $this->assertTrue(array_key_exists($this->nodes['private_both_public']->id(), $nids), 'Returned node ID is both public non-language-aware private only node.');
@@ -291,7 +291,7 @@ class NodeAccessLanguageAwareCombinationTest extends NodeAccessTestBase {
     $nids = $select->execute()->fetchAllAssoc('nid');
 
     // Three nodes should be returned (with public Catalan translations).
-    $this->assertEqual(count($nids), 3, 'db_select() returns 3 nodes.');
+    $this->assertEqual(count($nids), 3, 'Query returns 3 nodes.');
     $this->assertTrue(array_key_exists($this->nodes['public_both_public']->id(), $nids), 'Returned node ID is both public node.');
     $this->assertTrue(array_key_exists($this->nodes['public_hu_private']->id(), $nids), 'Returned node ID is Catalan public only node.');
     $this->assertTrue(array_key_exists($this->nodes['private_both_public']->id(), $nids), 'Returned node ID is both public non-language-aware private only node.');
@@ -305,7 +305,7 @@ class NodeAccessLanguageAwareCombinationTest extends NodeAccessTestBase {
     $nids = $select->execute()->fetchAllAssoc('nid');
 
     // There are no nodes with German translations, so no results are returned.
-    $this->assertTrue(empty($nids), 'db_select() returns an empty result.');
+    $this->assertTrue(empty($nids), 'Query returns an empty result.');
 
     // Query the nodes table as admin user (full access) with the node access
     // tag and no specific langcode.
@@ -316,7 +316,7 @@ class NodeAccessLanguageAwareCombinationTest extends NodeAccessTestBase {
     $nids = $select->execute()->fetchAllAssoc('nid');
 
     // All nodes are returned.
-    $this->assertEqual(count($nids), 10, 'db_select() returns all nodes.');
+    $this->assertEqual(count($nids), 10, 'Query returns all nodes.');
 
     // Query the nodes table as admin user (full access) with the node access
     // tag and langcode de.
@@ -329,7 +329,7 @@ class NodeAccessLanguageAwareCombinationTest extends NodeAccessTestBase {
 
     // Even though there is no German translation, all nodes are returned
     // because node access filtering does not occur when the user is user 1.
-    $this->assertEqual(count($nids), 10, 'db_select() returns all nodes.');
+    $this->assertEqual(count($nids), 10, 'Query returns all nodes.');
   }
 
 }

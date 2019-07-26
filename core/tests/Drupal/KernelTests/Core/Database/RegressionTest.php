@@ -35,7 +35,7 @@ class RegressionTest extends DatabaseTestBase {
   }
 
   /**
-   * Tests the db_table_exists() function.
+   * Tests the Schema::tableExists() method.
    */
   public function testDBTableExists() {
     $this->assertSame(TRUE, $this->connection->schema()->tableExists('test'), 'Returns true for existent table.');

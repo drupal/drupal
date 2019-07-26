@@ -10,7 +10,7 @@ use Drupal\user\Entity\User;
 use Drupal\field\Entity\FieldStorageConfig;
 
 /**
- * Tests node_access and db_select() with node_access tag functionality with
+ * Tests node_access and select queries with node_access tag functionality with
  * multiple languages with node_access_test_language which is language-aware.
  *
  * @group node
@@ -220,7 +220,7 @@ class NodeAccessLanguageAwareTest extends NodeAccessTestBase {
 
     // Two nodes should be returned: the node with both translations public, and
     // the node with only the Catalan translation marked as private.
-    $this->assertEqual(count($nids), 2, 'db_select() returns 2 nodes when the hu langcode is specified.');
+    $this->assertEqual(count($nids), 2, 'Query returns 2 nodes when the hu langcode is specified.');
     $this->assertTrue(array_key_exists($this->nodes['both_public']->id(), $nids), 'The node with both translations public is returned.');
     $this->assertTrue(array_key_exists($this->nodes['ca_private']->id(), $nids), 'The node with only the Catalan translation private is returned.');
 
@@ -234,7 +234,7 @@ class NodeAccessLanguageAwareTest extends NodeAccessTestBase {
 
     // Two nodes should be returned: the node with both translations public, and
     // the node with only the Hungarian translation marked as private.
-    $this->assertEqual(count($nids), 2, 'db_select() returns 2 nodes when the hu langcode is specified.');
+    $this->assertEqual(count($nids), 2, 'Query returns 2 nodes when the hu langcode is specified.');
     $this->assertTrue(array_key_exists($this->nodes['both_public']->id(), $nids), 'The node with both translations public is returned.');
     $this->assertTrue(array_key_exists($this->nodes['hu_private']->id(), $nids), 'The node with only the Hungarian translation private is returned.');
 
@@ -247,7 +247,7 @@ class NodeAccessLanguageAwareTest extends NodeAccessTestBase {
     $nids = $select->execute()->fetchAllAssoc('nid');
 
     // There are no nodes with German translations, so no results are returned.
-    $this->assertTrue(empty($nids), 'db_select() returns an empty result when the de langcode is specified.');
+    $this->assertTrue(empty($nids), 'Query returns an empty result when the de langcode is specified.');
 
     // Query the nodes table as admin user (full access) with the node access
     // tag and no specific langcode.
@@ -258,7 +258,7 @@ class NodeAccessLanguageAwareTest extends NodeAccessTestBase {
     $nids = $select->execute()->fetchAllAssoc('nid');
 
     // All nodes are returned.
-    $this->assertEqual(count($nids), 6, 'db_select() returns all nodes.');
+    $this->assertEqual(count($nids), 6, 'Query returns all nodes.');
 
     // Query the nodes table as admin user (full access) with the node access
     // tag and langcode de.
@@ -271,7 +271,7 @@ class NodeAccessLanguageAwareTest extends NodeAccessTestBase {
 
     // Even though there is no German translation, all nodes are returned
     // because node access filtering does not occur when the user is user 1.
-    $this->assertEqual(count($nids), 6, 'db_select() returns all nodes.');
+    $this->assertEqual(count($nids), 6, 'Query returns all nodes.');
   }
 
 }

@@ -51,7 +51,7 @@ class DefaultDisplay extends DisplayPluginBase {
    *
    * If short circuited at any point, look in $view->build_info for
    * information about the query. After execute, look in $view->result
-   * for the array of objects returned from db_query.
+   * for the array of objects returned from \Drupal::database()->query().
    *
    * You can also do:
    * @code

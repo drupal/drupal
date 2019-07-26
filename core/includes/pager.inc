@@ -50,7 +50,7 @@ function pager_find_page($element = 0) {
  * can simply extend the query object with the 'PagerSelectExtender' extender
  * before executing it. For example:
  * @code
- *   $query = db_select('some_table')
+ *   $query = \Drupal::database()->select('some_table')
  *     ->extend('Drupal\Core\Database\Query\PagerSelectExtender');
  * @endcode
  *

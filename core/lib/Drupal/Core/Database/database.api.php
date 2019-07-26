@@ -93,6 +93,11 @@ use Drupal\Core\Database\Query\Condition;
  * fields (see the @link entity_api Entity API topic @endlink for more on
  * entity queries).
  *
+ * Note: \Drupal::database() is used here as a shorthand way to get a reference
+ * to the database connection object. In most classes, you should use dependency
+ * injection and inject the 'database' service to perform queries. See
+ * @ref sec_connection below for details.
+ *
  * The dynamic query API lets you build up a query dynamically using method
  * calls. As an illustration, the query example from @ref sec_simple above
  * would be:

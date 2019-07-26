@@ -21,11 +21,12 @@ use Drupal\Core\Database\Query\Condition;
  * Executes an arbitrary query string against the active database.
  *
  * Use this function for SELECT queries if it is just a simple query string.
- * If the caller or other modules need to change the query, use db_select()
- * instead.
+ * If the caller or other modules need to change the query, use
+ * \Drupal::database()->select() instead.
  *
  * Do not use this function for INSERT, UPDATE, or DELETE queries. Those should
- * be handled via db_insert(), db_update() and db_delete() respectively.
+ * be handled via \Drupal::database()->insert(), \Drupal::database()->update(),
+ * \Drupal::database()->merge()and \Drupal::database()->delete().
  *
  * @param string|\Drupal\Core\Database\StatementInterface $query
  *   The prepared statement query to run. Although it will accept both named and
@@ -382,14 +383,15 @@ function db_escape_field($field) {
  * a backslash. Use this to do a search for a verbatim string without any
  * wildcard behavior.
  *
- * You must use a query builder like db_select() in order to use db_like() on
- * all supported database systems. Using db_like() with db_query() or
- * db_query_range() is not supported.
+ * You must use a query builder like \Drupal::database()->select() in order to
+ * use \Drupal::database()->escapeLike() on all supported database systems. Using
+ * \Drupal::database()->escapeLike() with \Drupal::database()->query() or
+ * \Drupal::database()->queryRange() is not supported.
  *
  * For example, the following does a case-insensitive query for all rows whose
  * name starts with $prefix:
  * @code
- * $result = db_select('person', 'p')
+ * $result = \Drupal::database()->select('person', 'p')
  *   ->fields('p')
  *   ->condition('name', db_like($prefix) . '%', 'LIKE')
  *   ->execute()
@@ -1050,8 +1052,8 @@ function db_drop_index($table, $name) {
  * recreate all indices and primary keys that are using the changed field.
  *
  * That means that you have to drop all affected keys and indexes with
- * db_drop_{primary_key,unique_key,index}() before calling
- * \Drupal\Core\Database\Schema::changeField().
+ * \Drupal::database()->schema()->drop{PrimaryKey,UniqueKey,Index}() before
+ * calling \Drupal\Core\Database\Schema::changeField().
  * To recreate the keys and indices, pass the key definitions as the optional
  * $keys_new argument directly to \Drupal\Core\Database\Schema::changeField().
  *
@@ -1082,14 +1084,15 @@ function db_drop_index($table, $name) {
  *
  * On MySQL, all type 'serial' fields must be part of at least one key or index
  * as soon as they are created. You cannot use
- * db_add_{primary_key,unique_key,index}() for this purpose because the ALTER
- * TABLE command will fail to add the column without a key or index
- * specification. The solution is to use the optional $keys_new argument to
- * create the key or index at the same time as field.
+ * \Drupal::database()->schema()->add{PrimaryKey,UniqueKey,Index}() for this
+ * purpose because the ALTER TABLE command will fail to add the column without
+ * a key or index specification. The solution is to use the optional $keys_new
+ * argument to create the key or index at the same time as field.
  *
- * You could use db_add_{primary_key,unique_key,index}() in all cases unless you
- * are converting a field to be type serial. You can use the $keys_new argument
- * in all cases.
+ * You could use
+ * \Drupal::database()->schema()->add{PrimaryKey,UniqueKey,Index}() in all
+ * cases unless you are converting a field to be type serial. You can use the
+ * $keys_new argument in all cases.
  *
  * @param $table
  *   Name of the table.

@@ -30,7 +30,7 @@ interface ConditionInterface {
    * Drupal considers LIKE case insensitive and the following is often used
    * to tell the database that case insensitive equivalence is desired:
    * @code
-   * db_select('users')
+   * \Drupal::database()->select('users')
    *  ->condition('name', $injected_connection->escapeLike($name), 'LIKE')
    * @endcode
    * Use 'LIKE BINARY' instead of 'LIKE' for case sensitive queries.

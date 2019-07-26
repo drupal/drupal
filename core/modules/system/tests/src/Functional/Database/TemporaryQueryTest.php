@@ -38,7 +38,7 @@ class TemporaryQueryTest extends DatabaseTestBase {
       $this->fail('The creation of the temporary table failed.');
     }
 
-    // Now try to run two db_query_temporary() in the same request.
+    // Now try to run two temporary queries in the same request.
     $table_name_test = $connection->queryTemporary('SELECT name FROM {test}', []);
     $table_name_task = $connection->queryTemporary('SELECT pid FROM {test_task}', []);
 
