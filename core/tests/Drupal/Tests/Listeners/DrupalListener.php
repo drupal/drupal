@@ -2,8 +2,9 @@
 
 namespace Drupal\Tests\Listeners;
 
-use PHPUnit\Framework\BaseTestListener;
 use PHPUnit\Framework\Test;
+use PHPUnit\Framework\TestListener;
+use PHPUnit\Framework\TestListenerDefaultImplementation;
 
 if (class_exists('PHPUnit_Runner_Version') && version_compare(\PHPUnit_Runner_Version::id(), '6.0.0', '<')) {
   class_alias('Drupal\Tests\Listeners\Legacy\DrupalListener', 'Drupal\Tests\Listeners\DrupalListener');
@@ -18,7 +19,8 @@ else {
    *
    * @internal
    */
-  class DrupalListener extends BaseTestListener {
+  class DrupalListener implements TestListener {
+    use TestListenerDefaultImplementation;
     use DeprecationListenerTrait;
     use DrupalComponentTestListenerTrait;
     use DrupalStandardsListenerTrait;
