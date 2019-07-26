@@ -110,7 +110,6 @@ class ViewEditForm extends ViewFormBase {
 
     $form['#tree'] = TRUE;
 
-    $form['#attached']['library'][] = 'core/jquery.ui.tabs';
     $form['#attached']['library'][] = 'core/jquery.ui.dialog';
     $form['#attached']['library'][] = 'core/drupal.states';
     $form['#attached']['library'][] = 'core/drupal.tabledrag';
