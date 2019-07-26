@@ -169,6 +169,7 @@ EOT;
     $this->assertFileNotExists($sut . '/docroot/sites/.gitignore');
     // Confirm that 'git' is available (n.b. if it were not, createSutWithGit()
     // would fail).
+    $output = [];
     exec('git --help', $output, $status);
     $this->assertEquals(0, $status);
     // Modify our $PATH so that it begins with a path that contains an
@@ -177,12 +178,44 @@ EOT;
     // not need to restore the PATH when we are done.
     $unavailableGitPath = $this->fixtures->binFixtureDir('disable-git-bin');
     chmod($unavailableGitPath . '/git', 0755);
+    $oldPath = getenv('PATH');
     putenv('PATH=' . $unavailableGitPath . ':' . getenv('PATH'));
     // Confirm that 'git' is no longer available.
+    $output = [];
     exec('git --help', $output, $status);
     $this->assertEquals(127, $status);
     // Run the scaffold command.
+    $output = [];
     exec('composer composer:scaffold', $output, $status);
+
+    putenv('PATH=' . $oldPath . ':' . getenv('PATH'));
+
+    $expected = <<<EOT
+0
+
+Scaffolding files for fixtures/drupal-assets-fixture:
+  - Copy [web-root]/.csslintrc from assets/.csslintrc
+  - Copy [web-root]/.editorconfig from assets/.editorconfig
+  - Copy [web-root]/.eslintignore from assets/.eslintignore
+  - Copy [web-root]/.eslintrc.json from assets/.eslintrc.json
+  - Copy [web-root]/.gitattributes from assets/.gitattributes
+  - Copy [web-root]/.ht.router.php from assets/.ht.router.php
+  - Skip [web-root]/.htaccess: overridden in fixtures/drupal-composer-drupal-project
+  - Copy [web-root]/sites/default/default.services.yml from assets/default.services.yml
+  - Skip [web-root]/sites/default/default.settings.php: overridden in fixtures/scaffold-override-fixture
+  - Copy [web-root]/sites/example.settings.local.php from assets/example.settings.local.php
+  - Copy [web-root]/sites/example.sites.php from assets/example.sites.php
+  - Copy [web-root]/index.php from assets/index.php
+  - Skip [web-root]/robots.txt: overridden in fixtures/drupal-composer-drupal-project
+  - Copy [web-root]/update.php from assets/update.php
+  - Copy [web-root]/web.config from assets/web.config
+Scaffolding files for fixtures/scaffold-override-fixture:
+  - Copy [web-root]/sites/default/default.settings.php from assets/override-settings.php
+Scaffolding files for fixtures/drupal-composer-drupal-project:
+  - Skip [web-root]/.htaccess: disabled
+  - Copy [web-root]/robots.txt from assets/robots-default.txt
+EOT;
+    $this->assertEquals($expected, $status . "\n\n" . implode("\n", $output));
     $this->assertFileExists($sut . '/docroot/index.php');
     $this->assertFileNotExists($sut . '/docroot/sites/default/.gitignore');
   }

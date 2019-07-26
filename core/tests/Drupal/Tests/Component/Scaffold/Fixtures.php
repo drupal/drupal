@@ -20,6 +20,13 @@ use Symfony\Component\Console\Output\BufferedOutput;
 class Fixtures {
 
   /**
+   * Keep a persistent prefix to help group our tmp directories together.
+   *
+   * @var string
+   */
+  protected static $randomPrefix = '';
+
+  /**
    * Directories to delete when we are done.
    *
    * @var string[]
@@ -167,7 +174,7 @@ class Fixtures {
    * @see \Drupal\Component\Scaffold\ManageOptions::getLocationReplacements()
    */
   public function getLocationReplacements() {
-    $destinationTmpDir = $this->mkTmpDir();
+    $destinationTmpDir = $this->mkTmpDir('location-replacements');
     $interpolator = new Interpolator();
     $interpolator->setData(['web-root' => $destinationTmpDir, 'package-name' => 'fixtures/tmp-destination']);
     return $interpolator;
@@ -237,29 +244,47 @@ class Fixtures {
   /**
    * Generates a path to a temporary location, but do not create the directory.
    *
-   * @param string $extraSalt
-   *   Extra characters to throw into the md5 to add to name.
+   * @param string $prefix
+   *   A prefix for the temporary directory name.
    *
    * @return string
    *   Path to temporary directory
    */
-  public function tmpDir($extraSalt = '') {
-    $tmpDir = sys_get_temp_dir() . '/composer-scaffold-test-' . md5($extraSalt . microtime());
+  public function tmpDir($prefix) {
+    $prefix .= static::persistentPrefix();
+    $tmpDir = sys_get_temp_dir() . '/scaffold-' . $prefix . uniqid(md5($prefix . microtime()), TRUE);
     $this->tmpDirs[] = $tmpDir;
     return $tmpDir;
   }
 
   /**
+   * Generates a persistent prefix to use with all of our temporary directories.
+   *
+   * The presumption is that this should reduce collisions in highly-parallel
+   * tests. We prepend the process id to play nicely with phpunit process
+   * isolation.
+   *
+   * @return string
+   *   A random string that will remain the same for the entire process run.
+   */
+  protected static function persistentPrefix() {
+    if (empty(static::$randomPrefix)) {
+      static::$randomPrefix = getmypid() . md5(microtime());
+    }
+    return static::$randomPrefix;
+  }
+
+  /**
    * Creates a temporary directory.
    *
-   * @param string $extraSalt
-   *   Extra characters to throw into the md5 to add to name.
+   * @param string $prefix
+   *   A prefix for the temporary directory name.
    *
    * @return string
    *   Path to temporary directory
    */
-  public function mkTmpDir($extraSalt = '') {
-    $tmpDir = $this->tmpDir($extraSalt);
+  public function mkTmpDir($prefix) {
+    $tmpDir = $this->tmpDir($prefix);
     $filesystem = new Filesystem();
     $filesystem->ensureDirectoryExists($tmpDir);
     return $tmpDir;
@@ -342,28 +367,21 @@ class Fixtures {
    *   The Composer command to execute (escaped as required)
    * @param string $cwd
    *   The current working directory to run the command from.
-   * @param int $expectedExitCode
-   *   The expected exit code; will throw if a different exit code is returned.
    *
    * @return string
    *   Standard output and standard error from the command.
    */
-  public function runComposer($cmd, $cwd, $expectedExitCode = 0) {
+  public function runComposer($cmd, $cwd) {
     chdir($cwd);
     $input = new StringInput($cmd);
     $output = new BufferedOutput();
     $application = new Application();
     $application->setAutoExit(FALSE);
-    try {
-      $exitCode = $application->run($input, $output);
-      if ($exitCode != $expectedExitCode) {
-        print "Command '{$cmd}' - Expected exit code: {$expectedExitCode}, actual exit code: {$exitCode}\n";
-      }
-    }
-    catch (\Exception $e) {
-      print "Exception: " . $e->getMessage() . "\n";
-    }
+    $exitCode = $application->run($input, $output);
     $output = $output->fetch();
+    if ($exitCode != 0) {
+      throw new \Exception("Fixtures::runComposer failed to set up fixtures.\n\nCommand: '{$cmd}'\nExit code: {$exitCode}\nOutput: \n\n$output");
+    }
     return $output;
   }
 
