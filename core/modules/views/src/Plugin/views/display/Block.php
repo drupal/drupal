@@ -2,6 +2,7 @@
 
 namespace Drupal\views\Plugin\views\display;
 
+use Drupal\Core\Url;
 use Drupal\Component\Plugin\Discovery\CachedDiscoveryInterface;
 use Drupal\Core\Block\BlockManagerInterface;
 use Drupal\Core\Entity\EntityManagerInterface;
@@ -204,7 +205,7 @@ class Block extends DisplayPluginBase {
         $form['block_category'] = [
           '#type' => 'textfield',
           '#autocomplete_route_name' => 'block.category_autocomplete',
-          '#description' => $this->t('The category this block will appear under on the <a href=":href">blocks placement page</a>.', [':href' => \Drupal::url('block.admin_display')]),
+          '#description' => $this->t('The category this block will appear under on the <a href=":href">blocks placement page</a>.', [':href' => Url::fromRoute('block.admin_display')->toString()]),
           '#default_value' => $this->getOption('block_category'),
         ];
         break;

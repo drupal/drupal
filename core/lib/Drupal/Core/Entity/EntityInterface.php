@@ -189,10 +189,10 @@ interface EntityInterface extends AccessibleInterface, CacheableDependencyInterf
    *   An HTML string containing a link to the entity.
    *
    * @deprecated in Drupal 8.0.0, intended to be removed in Drupal 9.0.0
-   *   Please use toLink() instead.
+   *   Use \Drupal\Core\EntityInterface::toLink()->toString() instead.
    *
    * @see https://www.drupal.org/node/2614344
-   * @see \Drupal\Core\Entity\EntityInterface::toLink
+   * @see \Drupal\Core\Entity\EntityInterface::toLink()
    */
   public function link($text = NULL, $rel = 'canonical', array $options = []);
 

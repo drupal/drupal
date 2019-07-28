@@ -2,7 +2,6 @@
 
 namespace Drupal\Tests\layout_builder\Functional;
 
-use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\layout_builder\Entity\LayoutBuilderEntityViewDisplay;
 use Drupal\layout_builder\Plugin\SectionStorage\OverridesSectionStorage;
 use Drupal\layout_builder\Section;
@@ -197,50 +196,6 @@ class LayoutSectionTest extends BrowserTestBase {
     $this->container->get('state')->set('test_block_access', TRUE);
     $this->drupalGet($node->toUrl('canonical'));
     $this->assertLayoutSection('.layout--onecol', 'Hello test world', '', '', 'UNCACHEABLE');
-  }
-
-  /**
-   * Tests the multilingual support of the section formatter.
-   */
-  public function testMultilingualLayoutSectionFormatter() {
-    $this->container->get('module_installer')->install(['content_translation']);
-    $this->rebuildContainer();
-
-    ConfigurableLanguage::createFromLangcode('es')->save();
-    $this->container->get('content_translation.manager')->setEnabled('node', 'bundle_with_section_field', TRUE);
-
-    $entity = $this->createSectionNode([
-      [
-        'section' => new Section('layout_onecol', [], [
-          'baz' => new SectionComponent('baz', 'content', [
-            'id' => 'system_powered_by_block',
-          ]),
-        ]),
-      ],
-    ]);
-    $entity->addTranslation('es', [
-      'title' => 'Translated node title',
-      OverridesSectionStorage::FIELD_NAME => [
-        [
-          'section' => new Section('layout_twocol', [], [
-            'foo' => new SectionComponent('foo', 'first', [
-              'id' => 'test_block_instantiation',
-              'display_message' => 'foo text',
-            ]),
-            'bar' => new SectionComponent('bar', 'second', [
-              'id' => 'test_block_instantiation',
-              'display_message' => 'bar text',
-            ]),
-          ]),
-        ],
-      ],
-    ]);
-    $entity->save();
-
-    $this->drupalGet($entity->toUrl('canonical'));
-    $this->assertLayoutSection('.layout--onecol', 'Powered by');
-    $this->drupalGet($entity->toUrl('canonical')->setOption('prefix', 'es/'));
-    $this->assertLayoutSection('.layout--twocol', ['foo text', 'bar text']);
   }
 
   /**

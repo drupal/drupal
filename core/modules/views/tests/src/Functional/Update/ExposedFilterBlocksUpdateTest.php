@@ -36,4 +36,18 @@ class ExposedFilterBlocksUpdateTest extends UpdatePathTestBase {
     $this->assertEquals('0', $config['label_display']);
   }
 
+  /**
+   * Tests that the update succeeds even if Block is not installed.
+   */
+  public function testViewsPostUpdateExposedFilterBlocksWithoutBlock() {
+    // This block is created during the update process, but since we are
+    // uninstalling the Block module for this test, it will fail config schema
+    // validation. Since that's okay for the purposes of this test, just make
+    // the config schema checker ignore the block.
+    static::$configSchemaCheckerExclusions[] = 'block.block.seven_secondary_local_tasks';
+
+    $this->container->get('module_installer')->uninstall(['block']);
+    $this->runUpdates();
+  }
+
 }

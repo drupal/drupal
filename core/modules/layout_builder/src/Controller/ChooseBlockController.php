@@ -6,9 +6,11 @@ use Drupal\Core\Ajax\AjaxHelperTrait;
 use Drupal\Core\Block\BlockManagerInterface;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Url;
 use Drupal\layout_builder\Context\LayoutBuilderContextTrait;
+use Drupal\layout_builder\LayoutBuilderHighlightTrait;
 use Drupal\layout_builder\SectionStorageInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -16,11 +18,13 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * Defines a controller to choose a new block.
  *
  * @internal
+ *   Controller classes are internal.
  */
 class ChooseBlockController implements ContainerInjectionInterface {
 
   use AjaxHelperTrait;
   use LayoutBuilderContextTrait;
+  use LayoutBuilderHighlightTrait;
   use StringTranslationTrait;
 
   /**
@@ -38,16 +42,30 @@ class ChooseBlockController implements ContainerInjectionInterface {
   protected $entityTypeManager;
 
   /**
+   * The current user.
+   *
+   * @var \Drupal\Core\Session\AccountInterface
+   */
+  protected $currentUser;
+
+  /**
    * ChooseBlockController constructor.
    *
    * @param \Drupal\Core\Block\BlockManagerInterface $block_manager
    *   The block manager.
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   The entity type manager.
+   * @param \Drupal\Core\Session\AccountInterface $current_user
+   *   The current user.
    */
-  public function __construct(BlockManagerInterface $block_manager, EntityTypeManagerInterface $entity_type_manager) {
+  public function __construct(BlockManagerInterface $block_manager, EntityTypeManagerInterface $entity_type_manager, AccountInterface $current_user = NULL) {
     $this->blockManager = $block_manager;
     $this->entityTypeManager = $entity_type_manager;
+    if (!$current_user) {
+      @trigger_error('The current_user service must be passed to ChooseBlockController::__construct(), it is required before Drupal 9.0.0.', E_USER_DEPRECATED);
+      $current_user = \Drupal::currentUser();
+    }
+    $this->currentUser = $current_user;
   }
 
   /**
@@ -56,7 +74,8 @@ class ChooseBlockController implements ContainerInjectionInterface {
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('plugin.manager.block'),
-      $container->get('entity_type.manager')
+      $container->get('entity_type.manager'),
+      $container->get('current_user')
     );
   }
 
@@ -104,6 +123,7 @@ class ChooseBlockController implements ContainerInjectionInterface {
             '@entity_type' => $this->entityTypeManager->getDefinition('block_content')->getSingularLabel(),
           ]),
           '#attributes' => $this->getAjaxAttributes(),
+          '#access' => $this->currentUser->hasPermission('create and edit custom blocks'),
         ];
         $build['add_block']['#attributes']['class'][] = 'inline-block-create-button';
       }
@@ -124,6 +144,7 @@ class ChooseBlockController implements ContainerInjectionInterface {
     $block_categories['#type'] = 'container';
     $block_categories['#attributes']['class'][] = 'block-categories';
     $block_categories['#attributes']['class'][] = 'js-layout-builder-categories';
+    $block_categories['#attributes']['data-layout-builder-target-highlight-id'] = $this->blockAddHighlightId($delta, $region);
 
     // @todo Explicitly cast delta to an integer, remove this in
     //   https://www.drupal.org/project/drupal/issues/2984509.
@@ -188,6 +209,7 @@ class ChooseBlockController implements ContainerInjectionInterface {
         '#attributes' => $this->getAjaxAttributes(),
       ];
     }
+    $build['links']['#attributes']['data-layout-builder-target-highlight-id'] = $this->blockAddHighlightId($delta, $region);
     return $build;
   }
 

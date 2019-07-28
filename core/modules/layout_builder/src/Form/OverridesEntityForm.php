@@ -5,10 +5,12 @@ namespace Drupal\layout_builder\Form;
 use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Core\Entity\ContentEntityForm;
 use Drupal\Core\Entity\Entity\EntityFormDisplay;
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityRepositoryInterface;
 use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\layout_builder\LayoutTempstoreRepositoryInterface;
+use Drupal\layout_builder\OverridesSectionStorageInterface;
 use Drupal\layout_builder\Plugin\SectionStorage\OverridesSectionStorage;
 use Drupal\layout_builder\SectionStorageInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -17,8 +19,11 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * Provides a form containing the Layout Builder UI for overrides.
  *
  * @internal
+ *   Form classes are internal.
  */
 class OverridesEntityForm extends ContentEntityForm {
+
+  use PreviewToggleTrait;
 
   /**
    * Layout tempstore repository.
@@ -76,24 +81,14 @@ class OverridesEntityForm extends ContentEntityForm {
   protected function init(FormStateInterface $form_state) {
     parent::init($form_state);
 
-    // Create a transient display that is not persisted, but used only for
-    // building the components required for the layout form.
-    $display = EntityFormDisplay::create([
-      'targetEntityType' => $this->getEntity()->getEntityTypeId(),
-      'bundle' => $this->getEntity()->bundle(),
-    ]);
-
-    // Allow modules to choose if they are relevant to the layout form.
-    $this->moduleHandler->alter('layout_builder_overrides_entity_form_display', $display);
-
-    // Add the widget for Layout Builder after the alter.
-    $display->setComponent(OverridesSectionStorage::FIELD_NAME, [
+    $form_display = EntityFormDisplay::collectRenderDisplay($this->entity, $this->getOperation(), FALSE);
+    $form_display->setComponent(OverridesSectionStorage::FIELD_NAME, [
       'type' => 'layout_builder_widget',
       'weight' => -10,
       'settings' => [],
     ]);
 
-    $this->setFormDisplay($display, $form_state);
+    $this->setFormDisplay($form_display, $form_state);
   }
 
   /**
@@ -102,12 +97,77 @@ class OverridesEntityForm extends ContentEntityForm {
   public function buildForm(array $form, FormStateInterface $form_state, SectionStorageInterface $section_storage = NULL) {
     $this->sectionStorage = $section_storage;
     $form = parent::buildForm($form, $form_state);
+    $form['#attributes']['class'][] = 'layout-builder-form';
 
     // @todo \Drupal\layout_builder\Field\LayoutSectionItemList::defaultAccess()
     //   restricts all access to the field, explicitly allow access here until
     //   https://www.drupal.org/node/2942975 is resolved.
     $form[OverridesSectionStorage::FIELD_NAME]['#access'] = TRUE;
+
+    $form['layout_builder_message'] = $this->buildMessage($section_storage->getContextValue('entity'), $section_storage);
     return $form;
+  }
+
+  /**
+   * Renders a message to display at the top of the layout builder.
+   *
+   * @param \Drupal\Core\Entity\EntityInterface $entity
+   *   The entity whose layout is being edited.
+   * @param \Drupal\layout_builder\OverridesSectionStorageInterface $section_storage
+   *   The current section storage.
+   *
+   * @return array
+   *   A renderable array containing the message.
+   */
+  protected function buildMessage(EntityInterface $entity, OverridesSectionStorageInterface $section_storage) {
+    $entity_type = $entity->getEntityType();
+    $bundle_info = $this->entityTypeBundleInfo->getBundleInfo($entity->getEntityTypeId());
+
+    $variables = [
+      '@bundle' => $bundle_info[$entity->bundle()]['label'],
+      '@singular_label' => $entity_type->getSingularLabel(),
+      '@plural_label' => $entity_type->getPluralLabel(),
+    ];
+
+    $defaults_link = $section_storage
+      ->getDefaultSectionStorage()
+      ->getLayoutBuilderUrl();
+
+    if ($defaults_link->access($this->currentUser())) {
+      $variables[':link'] = $defaults_link->toString();
+      if ($entity_type->hasKey('bundle')) {
+        $message = $this->t('You are editing the layout for this @bundle @singular_label. <a href=":link">Edit the template for all @bundle @plural_label instead.</a>', $variables);
+      }
+      else {
+        $message = $this->t('You are editing the layout for this @singular_label. <a href=":link">Edit the template for all @plural_label instead.</a>', $variables);
+      }
+    }
+    else {
+      if ($entity_type->hasKey('bundle')) {
+        $message = $this->t('You are editing the layout for this @bundle @singular_label.', $variables);
+      }
+      else {
+        $message = $this->t('You are editing the layout for this @singular_label.', $variables);
+      }
+    }
+
+    return [
+      '#type' => 'container',
+      '#attributes' => [
+        'class' => [
+          'layout-builder__message',
+          'layout-builder__message--overrides',
+        ],
+      ],
+      'message' => [
+        '#theme' => 'status_messages',
+        '#message_list' => ['status' => [$message]],
+        '#status_headings' => [
+          'status' => $this->t('Status message'),
+        ],
+      ],
+      '#weight' => -900,
+    ];
   }
 
   /**
@@ -127,6 +187,8 @@ class OverridesEntityForm extends ContentEntityForm {
    */
   protected function actions(array $form, FormStateInterface $form_state) {
     $actions = parent::actions($form, $form_state);
+    $actions['#attributes']['role'] = 'region';
+    $actions['#attributes']['aria-label'] = $this->t('Layout Builder tools');
     $actions['submit']['#value'] = $this->t('Save layout');
     $actions['delete']['#access'] = FALSE;
     $actions['#weight'] = -1000;
@@ -145,6 +207,7 @@ class OverridesEntityForm extends ContentEntityForm {
       '#submit' => ['::redirectOnSubmit'],
       '#redirect' => 'revert',
     ];
+    $actions['preview_toggle'] = $this->buildContentPreviewToggle();
     return $actions;
   }
 

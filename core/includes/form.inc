@@ -837,7 +837,7 @@ function batch_process($redirect = NULL, Url $url = NULL, $redirect_callback = N
 
     // Assign an arbitrary id: don't rely on a serial column in the 'batch'
     // table, since non-progressive batches skip database storage completely.
-    $batch['id'] = \Drupal::database()->nextId();;
+    $batch['id'] = \Drupal::database()->nextId();
 
     // Move operations to a job queue. Non-progressive batches will use a
     // memory-based queue.

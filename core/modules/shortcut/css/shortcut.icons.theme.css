@@ -18,11 +18,11 @@
  * Add/remove links.
  */
 .shortcut-action__icon {
-  background: transparent url(../images/favstar.svg) no-repeat left top;
+  display: inline-block;
   width: 20px;
   height: 20px;
-  display: inline-block;
   vertical-align: -2px;
+  background: transparent url(../images/favstar.svg) no-repeat left top;
 }
 [dir="rtl"] .shortcut-action__icon {
   background-image: url(../images/favstar-rtl.svg);

@@ -27,9 +27,9 @@ Framework managers
   Backend
   - Alex Bronstein 'effulgentsia' https://www.drupal.org/u/effulgentsia
   - Nathaniel Catchpole 'catch' https://www.drupal.org/u/catch
+  - Francesco Placella 'plach' https://www.drupal.org/u/plach
   - Alex Pott 'alexpott' https://www.drupal.org/u/alexpott
   - Lee Rowlands 'larowlan' https://www.drupal.org/u/larowlan
-  - (provisional) Francesco Placella 'plach' https://www.drupal.org/u/plach
 
   Frontend
   - Lauri Eskola 'lauriii' https://www.drupal.org/u/lauriii
@@ -248,9 +248,19 @@ JavaScript
 - Matthew Grill 'alwaysworking' https://www.drupal.org/u/alwaysworking
 - Sally Young 'justafish' https://www.drupal.org/u/justafish
 
+JSON:API
+- Gabe Sullice 'gabesullice' https://www.drupal.org/u/gabesullice
+- Mateu Aguiló Bosch 'e0ipso' https://www.drupal.org/u/e0ipso
+- Wim Leers 'Wim Leers' https://www.drupal.org/u/wim-leers
+
 Language
 - Francesco Placella 'plach' https://www.drupal.org/u/plach
 - Daniel F. Kudwien 'sun' https://www.drupal.org/u/sun
+
+Layout Builder
+- Ted Bowman 'tedbow' https://www.drupal.org/u/tedbow
+- Emilie Nouveau 'DyanneNova' https://www.drupal.org/u/dyannenova
+- Tim Plunkett 'tim.plunkett' https://www.drupal.org/u/tim.plunkett
 
 Link Field
 - Weber Macedo 'Mac_Weber' https://www.drupal.org/u/mac_weber
@@ -412,6 +422,7 @@ Umami demo
 - Mark Conroy 'markconroy' https://www.drupal.org/u/markconroy
 - Gareth Goodwin 'smaz' https://www.drupal.org/u/smaz
 - Keith Jay 'kjay' https://www.drupal.org/u/kjay
+- Ofer Shaal 'shaal' https://www.drupal.org/u/shaal
 
 Update UI
 - ?
@@ -447,6 +458,7 @@ Testing
 - ?
 
 Usability
+- Cristina Chumillas 'ckrina' https://www.drupal.org/u/ckrina
 - Roy Scholten 'yoroy' https://www.drupal.org/u/yoroy
 - Bojhan Somers 'Bojhan' https://www.drupal.org/u/bojhan
 

@@ -147,9 +147,9 @@ class Datelist extends DateElementBase {
    *   - #date_increment: The increment to use for minutes and seconds, i.e.
    *     '15' would show only :00, :15, :30 and :45. Defaults to 1 to show every
    *     minute.
-   *   - #date_timezone: The local timezone to use when displaying or
-   *     interpreting dates. Defaults to the value returned by
-   *     drupal_get_user_timezone().
+   *   - #date_timezone: The Time Zone Identifier (TZID) to use when displaying
+   *     or interpreting dates, i.e: 'Asia/Kolkata'. Defaults to the value
+   *     returned by drupal_get_user_timezone().
    *
    * Example usage:
    * @code
@@ -160,6 +160,7 @@ class Datelist extends DateElementBase {
    *     '#date_text_parts' => array('year'),
    *     '#date_year_range' => '2010:2020',
    *     '#date_increment' => 15,
+   *     '#date_timezone' => 'Asia/Kolkata'
    *   );
    * @endcode
    *

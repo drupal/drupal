@@ -50,6 +50,10 @@ class LanguageContentSettings extends DrupalSqlBase {
     else {
       $row->setSourceProperty('i18n_lock_node', 0);
     }
+
+    // Get the entity translation entity settings.
+    $entity_translation_entity_types = $this->variableGet('entity_translation_entity_types', NULL);
+    $row->setSourceProperty('entity_translation_entity_types', $entity_translation_entity_types);
     return parent::prepareRow($row);
   }
 

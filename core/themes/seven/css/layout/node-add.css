@@ -1,7 +1,7 @@
 .layout-region-node-footer__content {
-  border-top: 1px solid #bebfb9;
-  padding-top: 0.5em;
   margin-top: 1.5em;
+  padding-top: 0.5em;
+  border-top: 1px solid #bebfb9;
 }
 
 /**

@@ -13,6 +13,60 @@ use PHPUnit\Framework\TestCase;
 class ColorTest extends TestCase {
 
   /**
+   * @covers \Drupal\Component\Utility\Color::validateHex
+   *
+   * @param bool $expected
+   *   The expected result of validation.
+   * @param string $value
+   *   The hex color value.
+   *
+   * @dataProvider providerTestValidateHex()
+   */
+  public function testValidateHex($expected, $value) {
+    $this->assertSame($expected, Color::validateHex($value));
+  }
+
+  /**
+   * Provides data for testValidateHex().
+   */
+  public function providerTestValidateHex() {
+    return [
+      // Tests length.
+      [FALSE, ''],
+      [FALSE, '#'],
+      [FALSE, '1'],
+      [FALSE, '#1'],
+      [FALSE, '12'],
+      [FALSE, '#12'],
+      [TRUE, '123'],
+      [TRUE, '#123'],
+      [FALSE, '1234'],
+      [FALSE, '#1234'],
+      [FALSE, '12345'],
+      [FALSE, '#12345'],
+      [TRUE, '123456'],
+      [TRUE, '#123456'],
+      [FALSE, '1234567'],
+      [FALSE, '#1234567'],
+      // Tests valid hex value.
+      [TRUE, 'abcdef'],
+      [TRUE, 'ABCDEF'],
+      [TRUE, 'A0F1B1'],
+      [FALSE, 'WWW'],
+      [FALSE, '#123##'],
+      [FALSE, '@a0055'],
+      // Tests the data type.
+      [FALSE, 123456],
+      // Tests multiple hash prefix.
+      [FALSE, '###F00'],
+      // Tests spaces.
+      [FALSE, ' #123456'],
+      [FALSE, '123456 '],
+      [FALSE, '#12 3456'],
+    ];
+  }
+
+  /**
    * Tests Color::hexToRgb().
    *
    * @param string $value

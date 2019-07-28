@@ -31,7 +31,13 @@
   Drupal.behaviors.MediaLibraryTabs = {
     attach: function attach(context) {
       var $menu = $('.js-media-library-menu');
-      $menu.find('a', context).once('media-library-menu-item').on('click', function (e) {
+      $menu.find('a', context).once('media-library-menu-item').on('keypress', function (e) {
+        if (e.which === 32) {
+          e.preventDefault();
+          e.stopPropagation();
+          $(e.currentTarget).trigger('click');
+        }
+      }).on('click', function (e) {
         e.preventDefault();
         e.stopPropagation();
 
@@ -70,7 +76,11 @@
 
         $menu.find('.active-tab').remove();
         $menu.find('a').removeClass('active');
-        $(e.currentTarget).addClass('active').html(Drupal.t('@title<span class="active-tab visually-hidden"> (active tab)</span>', { '@title': $(e.currentTarget).html() }));
+        $(e.currentTarget).addClass('active').html(Drupal.t('<span class="visually-hidden">Show </span>@title<span class="visually-hidden"> media</span><span class="active-tab visually-hidden"> (selected)</span>', { '@title': $(e.currentTarget).data('title') }));
+
+        Drupal.announce(Drupal.t('Showing @title media.', {
+          '@title': $(e.currentTarget).data('title')
+        }));
       });
     }
   };
@@ -153,19 +163,12 @@
         $items.prop('disabled', false).closest('.js-media-library-item').removeClass('media-library-item--disabled');
       }
 
-      function updateSelectionInfo(remaining) {
-        var $buttonPane = $('.media-library-widget-modal .ui-dialog-buttonpane');
-        if (!$buttonPane.length) {
-          return;
-        }
+      function updateSelectionCount(remaining) {
+        var selectItemsText = remaining < 0 ? Drupal.formatPlural(currentSelection.length, '1 item selected', '@count items selected') : Drupal.formatPlural(remaining, '@selected of @count item selected', '@selected of @count items selected', {
+          '@selected': currentSelection.length
+        });
 
-        var latestCount = Drupal.theme('mediaLibrarySelectionCount', Drupal.MediaLibrary.currentSelection, remaining);
-        var $existingCount = $buttonPane.find('.media-library-selected-count');
-        if ($existingCount.length) {
-          $existingCount.replaceWith(latestCount);
-        } else {
-          $buttonPane.append(latestCount);
-        }
+        $('.js-media-library-selected-count').html(selectItemsText);
       }
 
       $mediaItems.once('media-item-change').on('change', function (e) {
@@ -183,8 +186,10 @@
         $form.find('#media-library-modal-selection').val(currentSelection.join()).trigger('change');
 
         $('.js-media-library-add-form-current-selection').val(currentSelection.join());
+      });
 
-        updateSelectionInfo(settings.media_library.selection_remaining);
+      $('#media-library-modal-selection', $form).once('media-library-selection-change').on('change', function (e) {
+        updateSelectionCount(settings.media_library.selection_remaining);
 
         if (currentSelection.length === settings.media_library.selection_remaining) {
           disableItems($mediaItems.not(':checked'));
@@ -198,8 +203,13 @@
         $form.find('input[type="checkbox"][value="' + value + '"]').prop('checked', true).trigger('change');
       });
 
-      $(window).once('media-library-toggle-buttons').on('dialog:aftercreate', function () {
-        updateSelectionInfo(settings.media_library.selection_remaining);
+      $(window).once('media-library-selection-info').on('dialog:aftercreate', function () {
+        var $buttonPane = $('.media-library-widget-modal .ui-dialog-buttonpane');
+        if (!$buttonPane.length) {
+          return;
+        }
+        $buttonPane.append(Drupal.theme('mediaLibrarySelectionCount'));
+        updateSelectionCount(settings.media_library.selection_remaining);
       });
     }
   };
@@ -212,13 +222,7 @@
     }
   };
 
-  Drupal.theme.mediaLibrarySelectionCount = function (selection, remaining) {
-    var selectItemsText = Drupal.formatPlural(remaining, '@selected of @count item selected', '@selected of @count items selected', {
-      '@selected': selection.length
-    });
-    if (remaining === -1) {
-      selectItemsText = Drupal.formatPlural(selection.length, '1 item selected', '@count items selected');
-    }
-    return '<div class="media-library-selected-count" aria-live="polite">' + selectItemsText + '</div>';
+  Drupal.theme.mediaLibrarySelectionCount = function () {
+    return '<div class="media-library-selected-count js-media-library-selected-count" role="status" aria-live="polite" aria-atomic="true"></div>';
   };
 })(jQuery, Drupal, window);

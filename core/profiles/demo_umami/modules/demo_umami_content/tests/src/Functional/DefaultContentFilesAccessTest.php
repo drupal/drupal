@@ -23,7 +23,7 @@ class DefaultContentFilesAccessTest extends BrowserTestBase {
       'images/heritage-carrots.jpg',
       'languages/en/recipe_instructions/mediterranean-quiche-umami.html',
       'languages/en/article_body/lets-hear-it-for-carrots.html',
-      'languages/en/articles.csv',
+      'languages/en/node/article.csv',
     ];
     foreach ($files_to_test as $file) {
       // Hard code the path since the demo_umami profile is not installed.

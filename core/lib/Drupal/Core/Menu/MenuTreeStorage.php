@@ -9,8 +9,8 @@ use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Cache\CacheTagsInvalidatorInterface;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Database\Database;
+use Drupal\Core\Database\DatabaseException;
 use Drupal\Core\Database\Query\SelectInterface;
-use Drupal\Core\Database\SchemaObjectExistsException;
 
 /**
  * Provides a menu tree storage using the database.
@@ -845,10 +845,6 @@ class MenuTreeStorage implements MenuTreeStorageInterface {
    * {@inheritdoc}
    */
   public function loadTreeData($menu_name, MenuTreeParameters $parameters) {
-    // Build the cache ID; sort 'expanded' and 'conditions' to prevent duplicate
-    // cache items.
-    sort($parameters->expandedParents);
-    asort($parameters->conditions);
     $tree_cid = "tree-data:$menu_name:" . serialize($parameters);
     $cache = $this->menuCacheBackend->get($tree_cid);
     if ($cache && isset($cache->data)) {
@@ -1172,7 +1168,7 @@ class MenuTreeStorage implements MenuTreeStorageInterface {
         return TRUE;
       }
     }
-    catch (SchemaObjectExistsException $e) {
+    catch (DatabaseException $e) {
       // If another process has already created the config table, attempting to
       // recreate it will throw an exception. In this case just catch the
       // exception and do nothing.

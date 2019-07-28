@@ -10,8 +10,8 @@
   padding: 0;
 }
 .views-admin pre {
-  margin-bottom: 0;
   margin-top: 0;
+  margin-bottom: 0;
   white-space: pre-wrap;
 }
 .views-left-25 {
@@ -71,8 +71,8 @@
   float: left;
 }
 .views-group-box .form-item {
-  margin-left: 3px;
   margin-right: 3px;
+  margin-left: 3px;
 }
 
 /*
@@ -85,20 +85,20 @@
 
 /* The tabs that switch between sections */
 .views-displays .tabs {
-  border-bottom: 0 none;
-  margin: 0;
   overflow: visible;
+  margin: 0;
   padding: 0;
+  border-bottom: 0 none;
 }
 .views-displays .tabs > li {
-  border-right: 0 none; /* LTR */
   float: left; /* LTR */
   padding: 0;
+  border-right: 0 none; /* LTR */
 }
 [dir="rtl"] .views-displays .tabs > li {
   float: right;
-  border-left: 0 none;
   border-right: 1px solid #bfbfbf;
+  border-left: 0 none;
 }
 .views-displays .tabs .open > a {
   position: relative;
@@ -124,15 +124,15 @@
   position: relative;
 }
 .views-displays .tabs .action-list {
+  position: absolute;
+  z-index: 50;
+  top: 23px;
   left: 0; /* LTR */
   margin: 0;
-  position: absolute;
-  top: 23px;
-  z-index: 50;
 }
 [dir="rtl"] .views-displays .tabs .action-list {
-  left: auto;
   right: 0;
+  left: auto;
 }
 .views-displays .tabs .action-list li {
   display: block;
@@ -150,14 +150,14 @@
 @media screen and (min-width: 45em) { /* 720px */
   .views-display-columns > * {
     float: left; /* LTR */
-    margin-left: 2%; /* LTR */
-    margin-bottom: 0;
     width: 32%;
+    margin-bottom: 0;
+    margin-left: 2%; /* LTR */
   }
   [dir="rtl"] .views-display-columns > * {
     float: right;
-    margin-left: 0;
     margin-right: 2%;
+    margin-left: 0;
   }
   .views-display-columns > *:first-child {
     margin-left: 0; /* LTR */
@@ -180,8 +180,8 @@
 
 /* Don't let the messages overwhelm the modal */
 .views-ui-dialog .views-messages {
-  max-height: 200px;
   overflow: auto;
+  max-height: 200px;
 }
 .views-display-setting .label,
 .views-display-setting .views-ajax-link {

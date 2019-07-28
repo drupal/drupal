@@ -61,4 +61,53 @@ class LayoutBuilderEntityViewDisplayTest extends SectionStorageTestBase {
     $this->assertEquals($this->sectionStorage->getSections(), $result);
   }
 
+  /**
+   * @dataProvider providerTestIsLayoutBuilderEnabled
+   */
+  public function testIsLayoutBuilderEnabled($expected, $view_mode, $enabled) {
+    $display = LayoutBuilderEntityViewDisplay::create([
+      'targetEntityType' => 'entity_test',
+      'bundle' => 'entity_test',
+      'mode' => $view_mode,
+      'status' => TRUE,
+      'third_party_settings' => [
+        'layout_builder' => [
+          'enabled' => $enabled,
+        ],
+      ],
+    ]);
+    $result = $display->isLayoutBuilderEnabled();
+    $this->assertSame($expected, $result);
+  }
+
+  /**
+   * Provides test data for ::testIsLayoutBuilderEnabled().
+   */
+  public function providerTestIsLayoutBuilderEnabled() {
+    $data = [];
+    $data['default enabled'] = [TRUE, 'default', TRUE];
+    $data['default disabled'] = [FALSE, 'default', FALSE];
+    $data['full enabled'] = [TRUE, 'full', TRUE];
+    $data['full disabled'] = [FALSE, 'full', FALSE];
+    $data['_custom enabled'] = [FALSE, '_custom', TRUE];
+    $data['_custom disabled'] = [FALSE, '_custom', FALSE];
+    return $data;
+  }
+
+  /**
+   * Tests that setting overridable enables Layout Builder only when set to TRUE.
+   */
+  public function testSetOverridable() {
+    // Disable Layout Builder.
+    $this->sectionStorage->disableLayoutBuilder();
+
+    // Set Overridable to TRUE and ensure Layout Builder is enabled.
+    $this->sectionStorage->setOverridable();
+    $this->assertEquals($this->sectionStorage->isLayoutBuilderEnabled(), TRUE);
+
+    // Ensure Layout Builder is still enabled after setting Overridable to FALSE.
+    $this->sectionStorage->setOverridable(FALSE);
+    $this->assertEquals($this->sectionStorage->isLayoutBuilderEnabled(), TRUE);
+  }
+
 }

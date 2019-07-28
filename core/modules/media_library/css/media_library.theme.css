@@ -208,9 +208,9 @@
  *   template in https://www.drupal.org/project/drupal/issues/3035994
  */
 .media-library-wrapper .view-header {
-  order: 2;
   align-self: flex-end;
-  margin: 8px 0;
+  order: 2;
+  margin: 1em 0;
   text-align: right; /* LTR */
 }
 [dir="rtl"] .media-library-wrapper .view-header {
@@ -246,11 +246,16 @@
   margin: 0;
   padding-left: 22px; /* LTR */
   color: #333;
+  font-size: 15px;
   line-height: 16px;
 }
 [dir="rtl"] .media-library-wrapper .views-display-link {
   padding-right: 22px;
   padding-left: 0;
+}
+
+.media-library-wrapper .views-display-link.is-active {
+  font-weight: bold;
 }
 
 .media-library-wrapper .views-display-link-widget {
@@ -288,12 +293,20 @@
   margin: 0 8px;
 }
 
+/**
+ * Style the media library grid items.
+ *
+ * The media library item container receives screen reader focus when items are
+ * removed. Since it is not an interactive element, it does not need an
+ * outline.
+ */
 .media-library-item--grid {
   justify-content: center;
   box-sizing: border-box;
   width: 50%;
   padding: 8px;
   vertical-align: top;
+  outline: none;
   background: #fff;
 }
 
@@ -579,8 +592,8 @@
 
 .media-library-add-form__preview {
   display: flex;
-  justify-content: center;
   align-items: center;
+  justify-content: center;
   width: 220px;
   margin-right: 20px; /* LTR */
   background: #ebebeb;

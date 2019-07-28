@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\locale\Functional;
 
+use Drupal\Core\Url;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Core\Language\LanguageInterface;
 
@@ -78,7 +79,7 @@ class LocaleImportFunctionalTest extends BrowserTestBase {
     $this->assertEqual(2, $locale_plurals, 'Plural number initialized.');
 
     // Ensure we were redirected correctly.
-    $this->assertUrl(\Drupal::url('locale.translate_page', [], ['absolute' => TRUE]), [], 'Correct page redirection.');
+    $this->assertUrl(Url::fromRoute('locale.translate_page', [], ['absolute' => TRUE])->toString(), [], 'Correct page redirection.');
 
     // Try importing a .po file with invalid tags.
     $this->importPoFile($this->getBadPoFile(), [
@@ -88,7 +89,7 @@ class LocaleImportFunctionalTest extends BrowserTestBase {
     // The import should have created 1 string and rejected 2.
     $this->assertRaw(t('One translation file imported. %number translations were added, %update translations were updated and %delete translations were removed.', ['%number' => 1, '%update' => 0, '%delete' => 0]), 'The translation file was successfully imported.');
 
-    $skip_message = \Drupal::translation()->formatPlural(2, 'One translation string was skipped because of disallowed or malformed HTML. <a href=":url">See the log</a> for details.', '@count translation strings were skipped because of disallowed or malformed HTML. See the log for details.', [':url' => \Drupal::url('dblog.overview')]);
+    $skip_message = \Drupal::translation()->formatPlural(2, 'One translation string was skipped because of disallowed or malformed HTML. <a href=":url">See the log</a> for details.', '@count translation strings were skipped because of disallowed or malformed HTML. See the log for details.', [':url' => Url::fromRoute('dblog.overview')->toString()]);
     $this->assertRaw($skip_message, 'Unsafe strings were skipped.');
 
     // Repeat the process with a user that can access site reports, and this
@@ -100,7 +101,7 @@ class LocaleImportFunctionalTest extends BrowserTestBase {
       'langcode' => 'fr',
     ]);
 
-    $skip_message = \Drupal::translation()->formatPlural(2, 'One translation string was skipped because of disallowed or malformed HTML. <a href=":url">See the log</a> for details.', '@count translation strings were skipped because of disallowed or malformed HTML. <a href=":url">See the log</a> for details.', [':url' => \Drupal::url('dblog.overview')]);
+    $skip_message = \Drupal::translation()->formatPlural(2, 'One translation string was skipped because of disallowed or malformed HTML. <a href=":url">See the log</a> for details.', '@count translation strings were skipped because of disallowed or malformed HTML. <a href=":url">See the log</a> for details.', [':url' => Url::fromRoute('dblog.overview')->toString()]);
     $this->assertRaw($skip_message, 'Unsafe strings were skipped.');
 
     // Check empty files import with a user that cannot access site reports..
@@ -120,7 +121,7 @@ class LocaleImportFunctionalTest extends BrowserTestBase {
       'langcode' => 'fr',
     ]);
     // The import should have created 0 string and rejected 0.
-    $this->assertRaw(t('One translation file could not be imported. <a href=":url">See the log</a> for details.', [':url' => \Drupal::url('dblog.overview')]), 'The empty translation file import reported no translations imported.');
+    $this->assertRaw(t('One translation file could not be imported. <a href=":url">See the log</a> for details.', [':url' => Url::fromRoute('dblog.overview')->toString()]), 'The empty translation file import reported no translations imported.');
 
     // Try importing a .po file which doesn't exist.
     $name = $this->randomMachineName(16);
@@ -128,7 +129,7 @@ class LocaleImportFunctionalTest extends BrowserTestBase {
       'langcode' => 'fr',
       'files[file]' => $name,
     ], t('Import'));
-    $this->assertUrl(\Drupal::url('locale.translate_import', [], ['absolute' => TRUE]), [], 'Correct page redirection.');
+    $this->assertUrl(Url::fromRoute('locale.translate_import', [], ['absolute' => TRUE])->toString(), [], 'Correct page redirection.');
     $this->assertText(t('File to import not found.'), 'File to import not found message.');
 
     // Try importing a .po file with overriding strings, and ensure existing

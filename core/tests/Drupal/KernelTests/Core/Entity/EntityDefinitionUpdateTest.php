@@ -139,6 +139,65 @@ class EntityDefinitionUpdateTest extends EntityKernelTestBase {
   }
 
   /**
+   * Tests updating an entity type that doesn't exist in code anymore.
+   *
+   * @covers ::updateEntityType
+   */
+  public function testUpdateEntityTypeWithoutInCodeDefinition() {
+    $entity_type = clone $this->entityManager->getDefinition('entity_test_update');
+
+    // Remove the entity type definition. This is the same thing as removing the
+    // code that defines it.
+    $this->deleteEntityType();
+
+    // Add an entity index, update the entity type and check that the index has
+    // been created.
+    $this->addEntityIndex();
+    $this->entityDefinitionUpdateManager->updateEntityType($entity_type);
+
+    $this->assertTrue($this->database->schema()->indexExists('entity_test_update', 'entity_test_update__new_index'), 'Index created.');
+  }
+
+  /**
+   * Tests updating a fieldable entity type that doesn't exist in code anymore.
+   *
+   * @covers ::updateFieldableEntityType
+   */
+  public function testUpdateFieldableEntityTypeWithoutInCodeDefinition() {
+    $entity_type = clone $this->entityManager->getDefinition('entity_test_update');
+    $field_storage_definitions = \Drupal::service('entity_field.manager')->getFieldStorageDefinitions('entity_test_update');
+
+    // Remove the entity type definition. This is the same thing as removing the
+    // code that defines it.
+    $this->deleteEntityType();
+
+    // Rename the base table, update the fieldable entity type and check that
+    // the table has been renamed.
+    $entity_type->set('base_table', 'entity_test_update_new');
+    $this->entityDefinitionUpdateManager->updateFieldableEntityType($entity_type, $field_storage_definitions);
+
+    $this->assertTrue($this->database->schema()->tableExists('entity_test_update_new'), 'The base table has been renamed.');
+    $this->assertFalse($this->database->schema()->tableExists('entity_test_update'), 'The old base table does not exist anymore.');
+  }
+
+  /**
+   * Tests uninstalling an entity type that doesn't exist in code anymore.
+   *
+   * @covers ::uninstallEntityType
+   */
+  public function testUninstallEntityTypeWithoutInCodeDefinition() {
+    $entity_type = clone $this->entityManager->getDefinition('entity_test_update');
+
+    // Remove the entity type definition. This is the same thing as removing the
+    // code that defines it.
+    $this->deleteEntityType();
+
+    // Now uninstall it and check that the tables have been removed.
+    $this->entityDefinitionUpdateManager->uninstallEntityType($entity_type);
+    $this->assertFalse($this->database->schema()->tableExists('entity_test_update'), 'Base table for entity_test_update does not exist anymore.');
+  }
+
+  /**
    * Tests creating, updating, and deleting a base field if no entities exist.
    */
   public function testBaseFieldCreateUpdateDeleteWithoutData() {

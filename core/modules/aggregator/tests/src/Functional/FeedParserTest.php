@@ -93,7 +93,7 @@ class FeedParserTest extends AggregatorTestBase {
     $feed->refreshItems();
 
     // Make sure that the feed URL was updated correctly.
-    $this->assertEqual($feed->getUrl(), \Drupal::url('aggregator_test.feed', [], ['absolute' => TRUE]));
+    $this->assertEqual($feed->getUrl(), Url::fromRoute('aggregator_test.feed', [], ['absolute' => TRUE])->toString());
   }
 
   /**

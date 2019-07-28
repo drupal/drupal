@@ -261,11 +261,11 @@ function template_preprocess_views_view_summary(&$variables) {
 
   $active_urls = [
     // Force system path.
-    \Drupal::url('<current>', [], ['alias' => TRUE]),
+    Url::fromRoute('<current>', [], ['alias' => TRUE])->toString(),
     // Force system path.
     Url::fromRouteMatch(\Drupal::routeMatch())->setOption('alias', TRUE)->toString(),
     // Could be an alias.
-    \Drupal::url('<current>'),
+    Url::fromRoute('<current>')->toString(),
     // Could be an alias.
     Url::fromRouteMatch(\Drupal::routeMatch())->toString(),
   ];
@@ -350,9 +350,9 @@ function template_preprocess_views_view_summary_unformatted(&$variables) {
   $count = 0;
   $active_urls = [
     // Force system path.
-    \Drupal::url('<current>', [], ['alias' => TRUE]),
+    Url::fromRoute('<current>', [], ['alias' => TRUE])->toString(),
     // Could be an alias.
-    \Drupal::url('<current>'),
+    Url::fromRoute('<current>')->toString(),
   ];
   $active_urls = array_combine($active_urls, $active_urls);
 
@@ -1038,7 +1038,7 @@ function template_preprocess_views_mini_pager(&$variables) {
     $options = [
       'query' => pager_query_add_page($parameters, $element, $pager_page_array[$element] - 1),
     ];
-    $variables['items']['previous']['href'] = \Drupal::url('<current>', [], $options);
+    $variables['items']['previous']['href'] = Url::fromRoute('<current>', [], $options)->toString();
     if (isset($tags[1])) {
       $variables['items']['previous']['text'] = $tags[1];
     }
@@ -1049,7 +1049,7 @@ function template_preprocess_views_mini_pager(&$variables) {
     $options = [
       'query' => pager_query_add_page($parameters, $element, $pager_page_array[$element] + 1),
     ];
-    $variables['items']['next']['href'] = \Drupal::url('<current>', [], $options);
+    $variables['items']['next']['href'] = Url::fromRoute('<current>', [], $options)->toString();
     if (isset($tags[3])) {
       $variables['items']['next']['text'] = $tags[3];
     }

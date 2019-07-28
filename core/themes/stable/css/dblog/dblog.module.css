@@ -5,8 +5,8 @@
 .dblog-filter-form .form-item-type,
 .dblog-filter-form .form-item-severity {
   display: inline-block;
-  margin: 0.1em 0.9em 0.1em 0.1em; /* LTR */
   max-width: 30%;
+  margin: 0.1em 0.9em 0.1em 0.1em; /* LTR */
 }
 [dir="rtl"] .dblog-filter-form .form-item-type,
 [dir="rtl"] .dblog-filter-form .form-item-severity {
@@ -23,8 +23,8 @@
 .admin-dblog .dblog-critical .icon,
 .admin-dblog .dblog-alert .icon,
 .admin-dblog .dblog-emergency .icon {
-  background: no-repeat center;
   width: 16px;
+  background: no-repeat center;
 }
 .admin-dblog .dblog-warning .icon {
   background-image: url(../../images/core/icons/e29700/warning.svg);

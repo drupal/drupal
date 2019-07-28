@@ -11,6 +11,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * Provides inline block plugin definitions for all custom block types.
  *
  * @internal
+ *   Plugin derivers are internal.
  */
 class InlineBlockDeriver extends DeriverBase implements ContainerDeriverInterface {
 

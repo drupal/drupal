@@ -6,21 +6,21 @@
 /* Set some global attributes. */
 #drupal-off-canvas *,
 #drupal-off-canvas *:not(div) {
+  color: #ddd;
   background: #444;
   font-family: "Lucida Grande", "Lucida Sans Unicode", "liberation sans", sans-serif;
-  color: #ddd;
 }
 
 /* Generic elements. */
 #drupal-off-canvas a,
 #drupal-off-canvas .link {
+  transition: color 0.5s ease;
+  text-decoration: none;
+  color: #85bef4;
   border-bottom: none;
   font-family: "Lucida Grande", "Lucida Sans Unicode", "liberation sans", sans-serif;
   font-size: inherit;
   font-weight: normal;
-  color: #85bef4;
-  text-decoration: none;
-  transition: color 0.5s ease;
 }
 
 #drupal-off-canvas a:focus,
@@ -40,44 +40,44 @@
 #drupal-off-canvas h1,
 #drupal-off-canvas .heading-a {
   display: block;
-  font-weight: bold;
   font-size: 1.625em;
+  font-weight: bold;
   line-height: 1.875em;
 }
 #drupal-off-canvas h2,
 #drupal-off-canvas .heading-b {
   display: block;
-  font-weight: bold;
   margin: 10px 0;
   font-size: 1.385em;
+  font-weight: bold;
 }
 #drupal-off-canvas h3,
 #drupal-off-canvas .heading-c {
   display: block;
-  font-weight: bold;
   margin: 10px 0;
   font-size: 1.231em;
+  font-weight: bold;
 }
 #drupal-off-canvas h4,
 #drupal-off-canvas .heading-d {
   display: block;
-  font-weight: bold;
   margin: 10px 0;
   font-size: 1.154em;
+  font-weight: bold;
 }
 #drupal-off-canvas h5,
 #drupal-off-canvas .heading-e {
   display: block;
-  font-weight: bold;
   margin: 10px 0;
   font-size: 1.077em;
+  font-weight: bold;
 }
 #drupal-off-canvas h6,
 #drupal-off-canvas .heading-f {
   display: block;
-  font-weight: bold;
   margin: 10px 0;
   font-size: 1.077em;
+  font-weight: bold;
 }
 #drupal-off-canvas p {
   margin: 1em 0;
@@ -87,8 +87,8 @@
 }
 #drupal-off-canvas dl dd,
 #drupal-off-canvas dl dl {
-  margin-left: 20px; /* LTR */
   margin-bottom: 10px;
+  margin-left: 20px; /* LTR */
 }
 [dir="rtl"] #drupal-off-canvas dl dd,
 [dir="rtl"] #drupal-off-canvas dl dl {
@@ -160,19 +160,19 @@
 }
 #drupal-off-canvas .visually-hidden {
   position: absolute !important;
-  clip: rect(1px, 1px, 1px, 1px);
   overflow: hidden;
-  height: 1px;
+  clip: rect(1px, 1px, 1px, 1px);
   width: 1px;
+  height: 1px;
   word-wrap: normal;
 }
 #drupal-off-canvas .visually-hidden.focusable:active,
 #drupal-off-canvas .visually-hidden.focusable:focus {
   position: static !important;
-  clip: auto;
   overflow: visible;
-  height: auto;
+  clip: auto;
   width: auto;
+  height: auto;
 }
 #drupal-off-canvas .invisible {
   visibility: hidden;
@@ -212,23 +212,23 @@
   color: #444;
 }
 #drupal-off-canvas .messages--status {
+  color: #325e1c;
   background-color: #f3faef;
   background-image: url(../../../images/core/icons/73b355/check.svg);
-  color: #325e1c;
 }
 #drupal-off-canvas .messages--warning {
+  color: #734c00;
   background-color: #fdf8ed;
   background-image: url(../../../images/core/icons/e29700/warning.svg);
-  color: #734c00;
 }
 
 #drupal-off-canvas .messages--error {
+  color: #a51b00;
   background-color: #fcf4f2;
   background-image: url(../../../images/core/icons/e32700/error.svg);
-  color: #a51b00;
 }
 
 #drupal-off-canvas .messages--error div[role="alert"] {
-  background: transparent;
   color: inherit;
+  background: transparent;
 }

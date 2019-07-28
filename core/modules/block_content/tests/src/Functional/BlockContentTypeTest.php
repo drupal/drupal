@@ -129,7 +129,7 @@ class BlockContentTypeTest extends BlockContentTestBase {
     $this->drupalGet('block/add');
     $this->assertRaw('Bar', 'New name was displayed.');
     $this->clickLink('Bar');
-    $this->assertUrl(\Drupal::url('block_content.add_form', ['block_content_type' => 'basic'], ['absolute' => TRUE]), [], 'Original machine name was used in URL.');
+    $this->assertUrl(Url::fromRoute('block_content.add_form', ['block_content_type' => 'basic'], ['absolute' => TRUE])->toString(), [], 'Original machine name was used in URL.');
 
     // Remove the body field.
     $this->drupalPostForm('admin/structure/block/block-content/manage/basic/fields/block_content.basic.body/delete', [], t('Delete'));
@@ -209,7 +209,7 @@ class BlockContentTypeTest extends BlockContentTestBase {
         // The seven theme has markup inside the link, we cannot use clickLink().
         if ($default_theme == 'seven') {
           $options = $theme != $default_theme ? ['query' => ['theme' => $theme]] : [];
-          $this->assertLinkByHref(\Drupal::url('block_content.add_form', ['block_content_type' => 'foo'], $options));
+          $this->assertLinkByHref(Url::fromRoute('block_content.add_form', ['block_content_type' => 'foo'], $options)->toString());
           $this->drupalGet('block/add/foo', $options);
         }
         else {
@@ -221,9 +221,9 @@ class BlockContentTypeTest extends BlockContentTestBase {
         $blocks = $storage->loadByProperties(['info' => $edit['info[0][value]']]);
         if (!empty($blocks)) {
           $block = reset($blocks);
-          $this->assertUrl(\Drupal::url('block.admin_add', ['plugin_id' => 'block_content:' . $block->uuid(), 'theme' => $theme], ['absolute' => TRUE]));
+          $this->assertUrl(Url::fromRoute('block.admin_add', ['plugin_id' => 'block_content:' . $block->uuid(), 'theme' => $theme], ['absolute' => TRUE])->toString());
           $this->drupalPostForm(NULL, ['region' => 'content'], t('Save block'));
-          $this->assertUrl(\Drupal::url('block.admin_display_theme', ['theme' => $theme], ['absolute' => TRUE, 'query' => ['block-placement' => Html::getClass($edit['info[0][value]'])]]));
+          $this->assertUrl(Url::fromRoute('block.admin_display_theme', ['theme' => $theme], ['absolute' => TRUE, 'query' => ['block-placement' => Html::getClass($edit['info[0][value]'])]])->toString());
         }
         else {
           $this->fail('Could not load created block.');
@@ -240,7 +240,7 @@ class BlockContentTypeTest extends BlockContentTestBase {
     $this->drupalPostForm(NULL, $edit, t('Save'));
     $blocks = $storage->loadByProperties(['info' => $edit['info[0][value]']]);
     if (!empty($blocks)) {
-      $this->assertUrl(\Drupal::url('entity.block_content.collection', [], ['absolute' => TRUE]));
+      $this->assertUrl(Url::fromRoute('entity.block_content.collection', [], ['absolute' => TRUE])->toString());
     }
     else {
       $this->fail('Could not load created block.');

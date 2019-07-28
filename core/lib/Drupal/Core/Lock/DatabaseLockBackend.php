@@ -4,8 +4,8 @@ namespace Drupal\Core\Lock;
 
 use Drupal\Component\Utility\Crypt;
 use Drupal\Core\Database\Connection;
+use Drupal\Core\Database\DatabaseException;
 use Drupal\Core\Database\IntegrityConstraintViolationException;
-use Drupal\Core\Database\SchemaObjectExistsException;
 
 /**
  * Defines the database lock backend. This is the default backend in Drupal.
@@ -186,7 +186,7 @@ class DatabaseLockBackend extends LockBackendAbstract {
     // If another process has already created the semaphore table, attempting to
     // recreate it will throw an exception. In this case just catch the
     // exception and do nothing.
-    catch (SchemaObjectExistsException $e) {
+    catch (DatabaseException $e) {
       return TRUE;
     }
     return FALSE;

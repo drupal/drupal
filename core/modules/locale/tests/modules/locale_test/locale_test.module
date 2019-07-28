@@ -5,6 +5,7 @@
  * Simulate a custom module with a local po file.
  */
 
+use Drupal\Core\Url;
 use Drupal\Core\Extension\Extension;
 use Drupal\Core\StreamWrapper\PublicStream;
 
@@ -53,7 +54,7 @@ function locale_test_locale_translation_projects_alter(&$projects) {
 
     // Instead of the default ftp.drupal.org we use the file system of the test
     // instance to simulate a remote file location.
-    $url = \Drupal::url('<front>', [], ['absolute' => TRUE]);
+    $url = Url::fromRoute('<front>', [], ['absolute' => TRUE])->toString();
     $remote_url = $url . PublicStream::basePath() . '/remote/';
 
     // Completely replace the project data with a set of test projects.

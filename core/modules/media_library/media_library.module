@@ -36,7 +36,7 @@ function media_library_help($route_name, RouteMatchInterface $route_match) {
   switch ($route_name) {
     case 'help.page.media_library':
       $output = '<h3>' . t('About') . '</h3>';
-      $output .= '<p>' . t('The Media library module overrides the /admin/content/media view to provide a rich visual interface for performing administrative operations on media. For more information, see the <a href=":media">online documentation for the Media library module</a>.', [':media' => 'https://www.drupal.org/docs/8/core/modules/media']) . '</p>';
+      $output .= '<p>' . t('The Media Library module overrides the /admin/content/media view to provide a rich visual interface for performing administrative operations on media. For more information, see the <a href=":media">online documentation for the Media Library module</a>.', [':media' => 'https://www.drupal.org/docs/8/core/modules/media']) . '</p>';
       return $output;
   }
 }
@@ -70,7 +70,21 @@ function media_library_views_post_render(ViewExecutable $view, &$output, CachePl
   if ($view->id() === 'media_library') {
     $output['#attached']['library'][] = 'media_library/view';
     if (strpos($view->current_display, 'widget') === 0) {
-      $query = MediaLibraryState::fromRequest($view->getRequest())->all();
+      try {
+        $query = MediaLibraryState::fromRequest($view->getRequest())->all();
+      }
+      catch (InvalidArgumentException $e) {
+        // MediaLibraryState::fromRequest() will throw an exception if the view
+        // is being previewed, since not all required query parameters will be
+        // present. In a preview, however, this can be omitted since we're
+        // merely previewing.
+        // @todo Use the views API for checking for the preview mode when it
+        //   lands. https://www.drupal.org/project/drupal/issues/3060855
+        if (empty($view->preview) && empty($view->live_preview)) {
+          throw $e;
+        }
+      }
+
       // If the current query contains any parameters we use to contextually
       // filter the view, ensure they persist across AJAX rebuilds.
       // The ajax_path is shared for all AJAX views on the page, but our query

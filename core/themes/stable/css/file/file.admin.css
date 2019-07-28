@@ -9,9 +9,9 @@
 }
 .form-managed-file div.ajax-progress-bar {
   display: none;
+  width: 28em;
   margin-top: 4px;
   padding: 0;
-  width: 28em;
 }
 .form-managed-file .ajax-progress-bar .bar {
   margin: 0;

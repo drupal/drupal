@@ -4,8 +4,8 @@ namespace Drupal\media\Controller;
 
 use Drupal\Component\Utility\Crypt;
 use Drupal\Core\Cache\CacheableMetadata;
-use Drupal\Core\Cache\CacheableResponse;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
+use Drupal\Core\Render\HtmlResponse;
 use Drupal\Core\Render\RenderContext;
 use Drupal\Core\Render\RendererInterface;
 use Drupal\Core\Url;
@@ -132,12 +132,14 @@ class OEmbedIframeController implements ContainerInjectionInterface {
     // Return a response instead of a render array so that the frame content
     // will not have all the blocks and page elements normally rendered by
     // Drupal.
-    $response = new CacheableResponse();
+    $response = new HtmlResponse();
     $response->addCacheableDependency(Url::createFromRequest($request));
 
     try {
       $resource_url = $this->urlResolver->getResourceUrl($url, $max_width, $max_height);
       $resource = $this->resourceFetcher->fetchResource($resource_url);
+
+      $placeholder_token = Crypt::randomBytesBase64(55);
 
       // Render the content in a new render context so that the cacheability
       // metadata of the rendered HTML will be captured correctly.
@@ -153,12 +155,22 @@ class OEmbedIframeController implements ContainerInjectionInterface {
           // \Drupal\Core\Render\MainContent\HtmlRenderer::renderResponse().
           'tags' => ['rendered'],
         ],
+        '#attached' => [
+          'html_response_attachment_placeholders' => [
+            'styles' => '<css-placeholder token="' . $placeholder_token . '">',
+          ],
+          'library' => [
+            'media/oembed.frame',
+          ],
+        ],
+        '#placeholder_token' => $placeholder_token,
       ];
       $content = $this->renderer->executeInRenderContext(new RenderContext(), function () use ($resource, $element) {
         return $this->renderer->render($element);
       });
       $response
         ->setContent($content)
+        ->setAttachments($element['#attached'])
         ->addCacheableDependency($resource)
         ->addCacheableDependency(CacheableMetadata::createFromRenderArray($element));
     }

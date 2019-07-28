@@ -12,6 +12,11 @@ use Drupal\layout_builder\SectionStorageInterface;
  * Provides an access check for the Layout Builder UI.
  *
  * @internal
+ *   Tagged services are internal.
+ *
+ * @todo Deprecated in Drupal 8.7.0 and will be removed before Drupal 9.0.0. Use
+ *   \Drupal\layout_builder\Access\LayoutBuilderAccessCheck instead. See
+ *   https://www.drupal.org/node/3039551.
  */
 class LayoutSectionAccessCheck implements AccessInterface {
 
@@ -27,6 +32,7 @@ class LayoutSectionAccessCheck implements AccessInterface {
    *   The access result.
    */
   public function access(RouteMatchInterface $route_match, AccountInterface $account) {
+    @trigger_error(__NAMESPACE__ . '\LayoutSectionAccessCheck is deprecated in Drupal 8.7.0 and will be removed before Drupal 9.0.0. Use \Drupal\layout_builder\Access\LayoutBuilderAccessCheck instead. See https://www.drupal.org/node/3039551.', E_USER_DEPRECATED);
     $section_storage = $route_match->getParameter('section_storage');
 
     if (empty($section_storage)) {

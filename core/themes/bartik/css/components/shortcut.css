@@ -14,13 +14,13 @@
   float: right;
 }
 .shortcut-action {
-  border-bottom: none;
   margin-left: 0.5em; /* LTR */
   padding-top: 0.35em;
+  border-bottom: none;
 }
 [dir="rtl"] .shortcut-action {
-  margin-left: 0;
   margin-right: 0.5em;
+  margin-left: 0;
 }
 .shortcut-action:hover,
 .shortcut-action:active,

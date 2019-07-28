@@ -30,7 +30,10 @@ class FileSystemDeprecationTest extends KernelTestBase {
    * @expectedDeprecation file_unmanaged_copy() is deprecated in Drupal 8.7.0 and will be removed before Drupal 9.0.0. Use \Drupal\Core\File\FileSystemInterface::copy(). See https://www.drupal.org/node/3006851.
    */
   public function testDeprecatedUnmanagedFileCopy() {
-    $this->assertNotNull(file_unmanaged_copy(NULL));
+    $source = file_directory_temp() . '/example.txt';
+    file_put_contents($source, 'example');
+    $filename = file_unmanaged_copy($source);
+    $this->assertEquals('public://example.txt', $filename);
   }
 
   /**
@@ -51,7 +54,10 @@ class FileSystemDeprecationTest extends KernelTestBase {
    * @expectedDeprecation file_unmanaged_move() is deprecated in Drupal 8.7.0 and will be removed before Drupal 9.0.0. Use \Drupal\Core\File\FileSystemInterface::move(). See https://www.drupal.org/node/3006851.
    */
   public function testDeprecatedUnmanagedFileMove() {
-    $this->assertNotNull(file_unmanaged_move(NULL));
+    $source = file_directory_temp() . '/example.txt';
+    file_put_contents($source, 'example');
+    $filename = file_unmanaged_move($source);
+    $this->assertEquals('public://example.txt', $filename);
   }
 
   /**
@@ -65,7 +71,8 @@ class FileSystemDeprecationTest extends KernelTestBase {
    * @expectedDeprecation file_unmanaged_save_data() is deprecated in Drupal 8.7.0 and will be removed before Drupal 9.0.0. Use \Drupal\Core\File\FileSystemInterface::saveData(). See https://www.drupal.org/node/3006851.
    */
   public function testDeprecatedUnmanagedSaveData() {
-    $this->assertNotNull(file_unmanaged_save_data(NULL));
+    $filename = file_unmanaged_save_data('example');
+    $this->assertStringMatchesFormat('public://file%s', $filename);
   }
 
   /**

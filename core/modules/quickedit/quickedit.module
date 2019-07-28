@@ -11,9 +11,10 @@
  * entities, enabling them for in-place editing.
  */
 
-use Drupal\Core\Entity\ContentEntityInterface;
+use Drupal\Core\Url;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
+use Drupal\Core\Entity\RevisionableInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 
 /**
@@ -23,12 +24,12 @@ function quickedit_help($route_name, RouteMatchInterface $route_match) {
   switch ($route_name) {
     case 'help.page.quickedit':
       $output = '<h3>' . t('About') . '</h3>';
-      $output .= '<p>' . t('The Quick Edit module allows users with the <a href=":quickedit_permission">Access in-place editing</a> and <a href=":contextual_permission">Use contextual links</a> permissions to edit field content without visiting a separate page. For more information, see the <a href=":handbook_url">online documentation for the Quick Edit module</a>.', [':handbook_url' => 'https://www.drupal.org/documentation/modules/edit', ':quickedit_permission' => \Drupal::url('user.admin_permissions', [], ['fragment' => 'module-quickedit']), ':contextual_permission' => \Drupal::url('user.admin_permissions', [], ['fragment' => 'module-contextual'])]) . '</p>';
+      $output .= '<p>' . t('The Quick Edit module allows users with the <a href=":quickedit_permission">Access in-place editing</a> and <a href=":contextual_permission">Use contextual links</a> permissions to edit field content without visiting a separate page. For more information, see the <a href=":handbook_url">online documentation for the Quick Edit module</a>.', [':handbook_url' => 'https://www.drupal.org/documentation/modules/edit', ':quickedit_permission' => Url::fromRoute('user.admin_permissions', [], ['fragment' => 'module-quickedit'])->toString(), ':contextual_permission' => Url::fromRoute('user.admin_permissions', [], ['fragment' => 'module-contextual'])->toString()]) . '</p>';
       $output .= '<h3>' . t('Uses') . '</h3>';
       $output .= '<dl>';
       $output .= '<dt>' . t('Editing content in-place') . '</dt>';
       $output .= '<dd>';
-      $output .= '<p>' . t('To edit content in place, you need to activate quick edit mode for a content item. Activate quick edit mode by choosing Quick edit from the contextual links for an area displaying the content (see the <a href=":contextual">Contextual Links module help</a> for more information about how to use contextual links).', [':contextual' => \Drupal::url('help.page', ['name' => 'contextual'])]) . '</p>';
+      $output .= '<p>' . t('To edit content in place, you need to activate quick edit mode for a content item. Activate quick edit mode by choosing Quick edit from the contextual links for an area displaying the content (see the <a href=":contextual">Contextual Links module help</a> for more information about how to use contextual links).', [':contextual' => Url::fromRoute('help.page', ['name' => 'contextual'])->toString()]) . '</p>';
       $output .= '<p>' . t('Once quick edit mode is activated, you will be able to edit the individual fields of your content. In the default theme, with a JavaScript-enabled browser and a mouse, the output of different fields in your content is outlined in blue, a pop-up gives the field name as you hover over the field output, and clicking on a field activates the editor. Closing the pop-up window ends quick edit mode.') . '</p>';
       $output .= '</dd>';
       $output .= '</dl>';
@@ -133,7 +134,7 @@ function quickedit_preprocess_field(&$variables) {
   /** @var \Drupal\Core\Entity\ContentEntityInterface $entity */
   $entity = $element['#object'];
 
-  if (!\Drupal::currentUser()->hasPermission('access in-place editing') || !$entity->isLatestRevision()) {
+  if (!\Drupal::currentUser()->hasPermission('access in-place editing') || ($entity instanceof RevisionableInterface && !$entity->isLatestRevision())) {
     return;
   }
 
@@ -157,9 +158,8 @@ function quickedit_preprocess_field(&$variables) {
  * Implements hook_entity_view_alter().
  */
 function quickedit_entity_view_alter(&$build, EntityInterface $entity, EntityViewDisplayInterface $display) {
-  /** @var \Drupal\Core\Entity\ContentEntityInterface $entity */
   $build['#cache']['contexts'][] = 'user.permissions';
-  if (!\Drupal::currentUser()->hasPermission('access in-place editing') || !$entity->isLatestRevision()) {
+  if (!\Drupal::currentUser()->hasPermission('access in-place editing') || ($entity instanceof RevisionableInterface && !$entity->isLatestRevision())) {
     return;
   }
 
@@ -169,7 +169,7 @@ function quickedit_entity_view_alter(&$build, EntityInterface $entity, EntityVie
 /**
  * Check if a loaded entity is the latest revision.
  *
- * @param \Drupal\Core\Entity\ContentEntityInterface $entity
+ * @param \Drupal\Core\Entity\RevisionableInterface $entity
  *   The entity to check.
  *
  * @return bool
@@ -182,7 +182,7 @@ function quickedit_entity_view_alter(&$build, EntityInterface $entity, EntityVie
  *
  * @internal
  */
-function _quickedit_entity_is_latest_revision(ContentEntityInterface $entity) {
+function _quickedit_entity_is_latest_revision(RevisionableInterface $entity) {
   @trigger_error('_quickedit_entity_is_latest_revision() is deprecated in Drupal 8.5.0 and will be removed before Drupal 9.0.0. Use \Drupal\Core\Entity\RevisionableInterface::isLatestRevision() instead. As internal API, _quickedit_entity_is_latest_revision() may also be removed in a minor release.', E_USER_DEPRECATED);
   return $entity->isLatestRevision();
 }

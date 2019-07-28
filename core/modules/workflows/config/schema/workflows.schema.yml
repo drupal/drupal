@@ -20,6 +20,7 @@ workflows.state:
     label:
       type: label
       label: 'Label'
+      translation context: 'Workflow state label'
     weight:
       type: integer
       label: 'Weight'
@@ -30,6 +31,7 @@ workflows.transition:
     label:
       type: label
       label: 'Transition label'
+      translation context: 'Workflow transition label'
     from:
       type: sequence
       label: 'From state IDs'

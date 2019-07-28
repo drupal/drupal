@@ -138,6 +138,13 @@ class ViewsEntitySchemaSubscriberIntegrationTest extends ViewsKernelTestBase {
     $display = $view->getDisplay('default');
     $this->assertEqual('entity_test_update_new', $display['display_options']['fields']['id']['table']);
     $this->assertEqual('entity_test_update_new', $display['display_options']['fields']['name']['table']);
+
+    // Check that only the impacted views have been updated.
+    $this->assertUpdatedViews([
+      'test_view_entity_test',
+      'test_view_entity_test_data',
+      'test_view_entity_test_additional_base_field',
+    ]);
   }
 
   /**
@@ -166,6 +173,12 @@ class ViewsEntitySchemaSubscriberIntegrationTest extends ViewsKernelTestBase {
     $display = $view->getDisplay('default');
     $this->assertEqual('entity_test_update', $display['display_options']['fields']['id']['table']);
     $this->assertEqual('entity_test_update_data_new', $display['display_options']['fields']['name']['table']);
+
+    // Check that only the impacted views have been updated.
+    $this->assertUpdatedViews([
+      'test_view_entity_test',
+      'test_view_entity_test_data',
+    ]);
   }
 
   /**
@@ -194,6 +207,11 @@ class ViewsEntitySchemaSubscriberIntegrationTest extends ViewsKernelTestBase {
     $display = $view->getDisplay('default');
     $this->assertEqual('entity_test_update_revision_new', $display['display_options']['fields']['id']['table']);
     $this->assertEqual('entity_test_update_revision_new', $display['display_options']['fields']['name']['table']);
+
+    // Check that only the impacted views have been updated.
+    $this->assertUpdatedViews([
+      'test_view_entity_test_revision',
+    ]);
   }
 
   /**
@@ -222,6 +240,12 @@ class ViewsEntitySchemaSubscriberIntegrationTest extends ViewsKernelTestBase {
     $display = $view->getDisplay('default');
     $this->assertEqual('entity_test_update_revision', $display['display_options']['fields']['id']['table']);
     $this->assertEqual('entity_test_update_revision_data_new', $display['display_options']['fields']['name']['table']);
+
+    // Check that only the impacted views have been updated.
+    $this->assertUpdatedViews([
+      'test_view_entity_test',
+      'test_view_entity_test_revision',
+    ]);
   }
 
   /**
@@ -239,6 +263,11 @@ class ViewsEntitySchemaSubscriberIntegrationTest extends ViewsKernelTestBase {
     $display = $view->getDisplay('default');
     $this->assertEqual('entity_test_update', $display['display_options']['fields']['id']['table']);
     $this->assertEqual('entity_test_update_data', $display['display_options']['fields']['name']['table']);
+
+    // Check that only the impacted views have been updated.
+    $this->assertUpdatedViews([
+      'test_view_entity_test',
+    ]);
   }
 
   /**
@@ -256,6 +285,9 @@ class ViewsEntitySchemaSubscriberIntegrationTest extends ViewsKernelTestBase {
     $display = $view->getDisplay('default');
     $this->assertEqual('entity_test_update', $display['display_options']['fields']['id']['table']);
     $this->assertEqual('entity_test_update', $display['display_options']['fields']['name']['table']);
+
+    // Check that only the impacted views have been updated.
+    $this->assertUpdatedViews([]);
   }
 
   /**
@@ -270,6 +302,11 @@ class ViewsEntitySchemaSubscriberIntegrationTest extends ViewsKernelTestBase {
     $view = $entity_storage->load('test_view_entity_test_revision');
 
     $this->assertFalse($view->status());
+
+    // Check that only the impacted views have been updated.
+    $this->assertUpdatedViews([
+      'test_view_entity_test_revision',
+    ]);
   }
 
   /**
@@ -381,6 +418,13 @@ class ViewsEntitySchemaSubscriberIntegrationTest extends ViewsKernelTestBase {
     $this->assertEqual('entity_test_update', $view->get('base_table'));
     $this->assertEqual('entity_test_update', $display['display_options']['fields']['id']['table']);
     $this->assertEqual('entity_test_update', $display['display_options']['fields']['name']['table']);
+
+    // Check that only the impacted views have been updated.
+    $this->assertUpdatedViews([
+      'test_view_entity_test',
+      'test_view_entity_test_data',
+      'test_view_entity_test_revision',
+    ]);
   }
 
   /**
@@ -409,6 +453,52 @@ class ViewsEntitySchemaSubscriberIntegrationTest extends ViewsKernelTestBase {
     $this->assertEqual('entity_test_update_revision', $view->get('base_table'));
     $this->assertEqual('entity_test_update_revision', $display['display_options']['fields']['id']['table']);
     $this->assertEqual('entity_test_update_revision', $display['display_options']['fields']['name']['table']);
+
+    // Check that only the impacted views have been updated.
+    $this->assertUpdatedViews([
+      'test_view_entity_test',
+      'test_view_entity_test_data',
+      'test_view_entity_test_revision',
+    ]);
+  }
+
+  /**
+   * Tests the case when a view could not be updated automatically.
+   */
+  public function testViewSaveException() {
+    $this->renameBaseTable();
+    \Drupal::state()->set('entity_test_update.throw_view_exception', 'test_view_entity_test');
+    $this->applyEntityUpdates('entity_test_update');
+
+    /** @var \Drupal\views\Entity\View $view */
+    $entity_storage = $this->entityTypeManager->getStorage('view');
+    $view = $entity_storage->load('test_view_entity_test');
+
+    // Check that the table names were not updated automatically for the
+    // 'test_view_entity_test' view.
+    $this->assertEquals('entity_test_update', $view->get('base_table'));
+    $display = $view->getDisplay('default');
+    $this->assertEquals('entity_test_update', $display['display_options']['fields']['id']['table']);
+    $this->assertEquals('entity_test_update', $display['display_options']['fields']['name']['table']);
+
+    // Check that the other two views impacted by the entity update were updated
+    // automatically.
+    $view = $entity_storage->load('test_view_entity_test_data');
+    $this->assertEquals('entity_test_update_new', $view->get('base_table'));
+    $display = $view->getDisplay('default');
+    $this->assertEquals('entity_test_update_new', $display['display_options']['fields']['id']['table']);
+    $this->assertEquals('entity_test_update_data', $display['display_options']['fields']['name']['table']);
+
+    $view = $entity_storage->load('test_view_entity_test_additional_base_field');
+    $this->assertEquals('entity_test_update_new', $view->get('base_table'));
+    $display = $view->getDisplay('default');
+    $this->assertEquals('entity_test_update_new', $display['display_options']['fields']['id']['table']);
+    $this->assertEquals('entity_test_update_new', $display['display_options']['fields']['new_base_field']['table']);
+
+    $this->assertUpdatedViews([
+      'test_view_entity_test_data',
+      'test_view_entity_test_additional_base_field',
+    ]);
   }
 
   /**
@@ -427,6 +517,30 @@ class ViewsEntitySchemaSubscriberIntegrationTest extends ViewsKernelTestBase {
     $display = $view->getDisplay('default');
 
     return [$view, $display];
+  }
+
+  /**
+   * Checks that the passed-in view IDs were the only ones updated.
+   *
+   * @param string[] $updated_view_ids
+   *   An array of view IDs.
+   */
+  protected function assertUpdatedViews($updated_view_ids) {
+    $all_view_ids = array_keys($this->entityTypeManager->getStorage('view')->loadMultiple());
+
+    $view_save_count = \Drupal::state()->get('views_test_data.view_save_count', []);
+    foreach ($all_view_ids as $view_id) {
+      if (in_array($view_id, $updated_view_ids, TRUE)) {
+        $this->assertTrue(isset($view_save_count[$view_id]), "The $view_id view has been updated.");
+      }
+      else {
+        $this->assertFalse(isset($view_save_count[$view_id]), "The $view_id view has not been updated.");
+      }
+    }
+
+    // Check that all test cases are updating only a subset of all the available
+    // views.
+    $this->assertGreaterThan(count($updated_view_ids), count($all_view_ids));
   }
 
 }

@@ -1,0 +1,36 @@
+services:
+  new_dependency_test.alias2:
+    alias: new_dependency_test.alias_dependency
+  new_dependency_test.alias_dependency2:
+    class: Drupal\new_dependency_test\ServiceWithDependency
+    arguments: ['@new_dependency_test.alias2']
+  new_dependency_test.alias_dependency:
+    class: Drupal\new_dependency_test\ServiceWithDependency
+    arguments: ['@new_dependency_test.alias']
+  new_dependency_test.recursion:
+    class: Drupal\new_dependency_test\ServiceWithDependency
+    arguments: ['@new_dependency_test.hard_dependency']
+  new_dependency_test.alias:
+    alias: new_dependency_test.dependent
+  new_dependency_test.dependent:
+    class: Drupal\new_dependency_test\InjectedService
+    arguments: ['@new_dependency_test_with_service.service']
+  new_dependency_test.hard_dependency:
+    class: Drupal\new_dependency_test\ServiceWithDependency
+    arguments: ['@new_dependency_test.dependent']
+  new_dependency_test.optional_dependency:
+    class: Drupal\new_dependency_test\ServiceWithDependency
+    arguments: ['@?new_dependency_test.dependent']
+  new_dependency_test.another_service:
+    class: Drupal\new_dependency_test\Service
+  new_dependency_test.another_service.decorated:
+    class: Drupal\new_dependency_test\Service
+    decorates: new_dependency_test.another_service
+    arguments: ['@new_dependency_test.another_service.decorated.inner']
+  new_dependency_test.another_service_two:
+    class: Drupal\new_dependency_test\Service
+  new_dependency_test.another_service_two.decorated:
+    class: Drupal\new_dependency_test\Service
+    decorates: new_dependency_test.another_service_two
+    decoration_inner_name: new_dependency_test.foo
+    arguments: ['@new_dependency_test.foo']

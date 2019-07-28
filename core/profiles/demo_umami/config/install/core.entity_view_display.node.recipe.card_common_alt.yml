@@ -13,6 +13,7 @@ dependencies:
     - field.field.node.recipe.field_recipe_instruction
     - field.field.node.recipe.field_summary
     - field.field.node.recipe.field_tags
+    - field.field.node.recipe.layout_builder__layout
     - node.type.recipe
     - responsive_image.styles.square
   module:
@@ -44,4 +45,5 @@ hidden:
   field_summary: true
   field_tags: true
   langcode: true
+  layout_builder__layout: true
   links: true

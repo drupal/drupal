@@ -14,8 +14,8 @@ body {
   background-color: #fff;
 }
 .tabs ul.primary li.is-active a {
-  background-color: #fff;
   border-bottom-color: #fff;
+  background-color: #fff;
 }
 #header {
   background-color: #1d84c3;
@@ -37,8 +37,8 @@ a:active,
   color: #23aeff;
 }
 .sidebar .block {
-  background-color: #f6f6f2;
   border-color: #f9f9f9;
+  background-color: #f6f6f2;
 }
 .site-footer {
   background: #292929;
@@ -58,8 +58,8 @@ a:active,
 /* ---------- Color Form ----------- */
 
 [dir="rtl"] .color-form .color-palette {
-  margin-left: 0;
   margin-right: 20px;
+  margin-left: 0;
 }
 [dir="rtl"] .color-form .form-item label {
   float: right;

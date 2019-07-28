@@ -1,0 +1,5 @@
+jsonapi.settings:
+  title: 'JSON:API'
+  parent: system.admin_config_services
+  description: "Configure whether to allow only read operations or all operations."
+  route_name: jsonapi.settings

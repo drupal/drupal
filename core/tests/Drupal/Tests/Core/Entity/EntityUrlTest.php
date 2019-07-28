@@ -406,7 +406,7 @@ class EntityUrlTest extends UnitTestCase {
    * @covers ::urlInfo
    *
    * @group legacy
-   * @expectedDeprecation EntityInterface::link() is deprecated in Drupal 8.0.0 and will be removed in Drupal 9.0.0. EntityInterface::toLink() instead. Note, the default relationship for configuration entities changes from 'edit-form' to 'canonical'. See https://www.drupal.org/node/2614344
+   * @expectedDeprecation EntityInterface::link() is deprecated in Drupal 8.0.0 and will be removed in Drupal 9.0.0. Use EntityInterface::toLink()->toString() instead. Note, the default relationship for configuration entities changes from 'edit-form' to 'canonical'. See https://www.drupal.org/node/2614344
    */
   public function testLink() {
 

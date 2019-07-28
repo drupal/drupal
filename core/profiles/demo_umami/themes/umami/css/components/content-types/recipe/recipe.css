@@ -45,9 +45,9 @@
 [dir=rtl] .node--type-recipe.node--view-mode-full .field--name-field-cooking-time,
 [dir=rtl] .node--type-recipe.node--view-mode-full .field--name-field-number-of-servings,
 [dir=rtl] .node--type-recipe.node--view-mode-full .field--name-field-difficulty {
-  background-position: right center;
-  padding-left: 0;
   padding-right: 48px;
+  padding-left: 0;
+  background-position: right center;
 }
 .node--type-recipe.node--view-mode-full .field--name-field-preparation-time {
   background-image: url(../../../../images/svg/knife.svg);

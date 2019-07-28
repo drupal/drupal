@@ -141,6 +141,13 @@ class BlockTranslationTest extends MigrateSqlSourceTestBase {
       ],
     ];
 
+    // Change the name of the locale_target i18n status field.
+    $tests[1] = $tests[0];
+    foreach ($tests[1]['source_data']['locales_target'] as &$lt) {
+      $lt['status'] = $lt['i18n_status'];
+      unset($lt['i18n_status']);
+    }
+
     return $tests;
   }
 

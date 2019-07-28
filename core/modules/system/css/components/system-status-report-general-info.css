@@ -4,9 +4,9 @@
  */
 
 .system-status-general-info__item {
-  border: 1px solid #ccc;
   margin-top: 1em;
   padding: 0 1em 1em;
+  border: 1px solid #ccc;
 }
 
 .system-status-general-info__item-title {

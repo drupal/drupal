@@ -10,6 +10,7 @@ use Drupal\Core\Session\AccountInterface;
  * Accessible class to allow access for inline blocks in the Layout Builder.
  *
  * @internal
+ *   Tagged services are internal.
  */
 class LayoutPreviewAccessAllowed implements AccessibleInterface {
 

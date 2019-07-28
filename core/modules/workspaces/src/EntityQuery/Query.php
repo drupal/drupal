@@ -14,17 +14,6 @@ class Query extends BaseQuery {
   }
 
   /**
-   * Stores the SQL expressions used to build the SQL query.
-   *
-   * The array is keyed by the expression alias and the values are the actual
-   * expressions.
-   *
-   * @var array
-   *   An array of expressions.
-   */
-  protected $sqlExpressions = [];
-
-  /**
    * {@inheritdoc}
    */
   public function prepare() {
@@ -42,21 +31,15 @@ class Query extends BaseQuery {
       // relationship, and, as a consequence, the revision ID field is no longer
       // a simple SQL field but an expression.
       $this->sqlFields = [];
-      $this->sqlExpressions[$revision_field] = "COALESCE(workspace_association.target_entity_revision_id, base_table.$revision_field)";
-      $this->sqlExpressions[$id_field] = "base_table.$id_field";
+      $this->sqlQuery->addExpression("COALESCE(workspace_association.target_entity_revision_id, base_table.$revision_field)", $revision_field);
+      $this->sqlQuery->addExpression("base_table.$id_field", $id_field);
+
+      $this->sqlGroupBy['workspace_association.target_entity_revision_id'] = 'workspace_association.target_entity_revision_id';
+      $this->sqlGroupBy["base_table.$id_field"] = "base_table.$id_field";
+      $this->sqlGroupBy["base_table.$revision_field"] = "base_table.$revision_field";
     }
 
     return $this;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function finish() {
-    foreach ($this->sqlExpressions as $alias => $expression) {
-      $this->sqlQuery->addExpression($expression, $alias);
-    }
-    return parent::finish();
   }
 
 }

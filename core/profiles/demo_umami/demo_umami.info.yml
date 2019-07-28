@@ -14,6 +14,8 @@ install:
   - config
   - contextual
   - contact
+  - layout_builder
+  - layout_discovery
   - menu_link_content
   - datetime
   - block_content

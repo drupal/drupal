@@ -49,7 +49,7 @@ class SiteMaintenanceTest extends BrowserTestBase {
     $permission_handler = $this->container->get('user.permissions');
     $permissions = $permission_handler->getPermissions();
     $permission_label = $permissions['access site in maintenance mode']['title'];
-    $permission_message = t('Visitors will only see the maintenance mode message. Only users with the "@permission-label" <a href=":permissions-url">permission</a> will be able to access the site. Authorized users can log in directly via the <a href=":user-login">user login</a> page.', ['@permission-label' => $permission_label, ':permissions-url' => \Drupal::url('user.admin_permissions'), ':user-login' => \Drupal::url('user.login')]);
+    $permission_message = t('Visitors will only see the maintenance mode message. Only users with the "@permission-label" <a href=":permissions-url">permission</a> will be able to access the site. Authorized users can log in directly via the <a href=":user-login">user login</a> page.', ['@permission-label' => $permission_label, ':permissions-url' => Url::fromRoute('user.admin_permissions')->toString(), ':user-login' => Url::fromRoute('user.login')->toString()]);
     $this->drupalGet(Url::fromRoute('system.site_maintenance_mode'));
     $this->assertRaw($permission_message, 'Found the permission message.');
 
@@ -63,7 +63,7 @@ class SiteMaintenanceTest extends BrowserTestBase {
     ];
     $this->drupalPostForm('admin/config/development/maintenance', $edit, t('Save configuration'));
 
-    $admin_message = t('Operating in maintenance mode. <a href=":url">Go online.</a>', [':url' => \Drupal::url('system.site_maintenance_mode')]);
+    $admin_message = t('Operating in maintenance mode. <a href=":url">Go online.</a>', [':url' => Url::fromRoute('system.site_maintenance_mode')->toString()]);
     $user_message = t('Operating in maintenance mode.');
     $offline_message = t('@site is currently under maintenance. We should be back shortly. Thank you for your patience.', ['@site' => $this->config('system.site')->get('name')]);
 

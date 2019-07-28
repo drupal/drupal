@@ -24,7 +24,7 @@ class ExposedFormTest extends ViewTestBase {
    *
    * @var array
    */
-  public static $testViews = ['test_exposed_form_buttons', 'test_exposed_block', 'test_exposed_form_sort_items_per_page'];
+  public static $testViews = ['test_exposed_form_buttons', 'test_exposed_block', 'test_exposed_form_sort_items_per_page', 'test_exposed_form_pager'];
 
   /**
    * Modules to enable.
@@ -379,6 +379,34 @@ class ExposedFormTest extends ViewTestBase {
     $this->assertTrue($form, 'The exposed form element was found.');
     $this->assertRaw(t('Apply'), 'Ensure the exposed form is rendered after submitting the normal form.');
     $this->assertRaw('<div class="views-row">', 'Views result shown.');
+  }
+
+  /**
+   * Tests the exposed form with a pager.
+   */
+  public function testExposedFilterPagination() {
+    $this->drupalCreateContentType(['type' => 'post']);
+    // Create some random nodes.
+    for ($i = 0; $i < 5; $i++) {
+      $this->drupalCreateNode(['type' => 'post']);
+    }
+
+    $this->drupalGet('test_exposed_form_pager');
+    $this->getSession()->getPage()->fillField('type[]', 'post');
+    $this->getSession()->getPage()->fillField('created[min]', '-1 month');
+    $this->getSession()->getPage()->fillField('created[max]', '+1 month');
+
+    // Ensure the filters can be applied.
+    $this->getSession()->getPage()->pressButton('Apply');
+    $this->assertFieldByName('type[]', 'post');
+    $this->assertFieldByName('created[min]', '-1 month');
+    $this->assertFieldByName('created[max]', '+1 month');
+
+    // Ensure the filters are still applied after pressing next.
+    $this->clickLink('Next ›');
+    $this->assertFieldByName('type[]', 'post');
+    $this->assertFieldByName('created[min]', '-1 month');
+    $this->assertFieldByName('created[max]', '+1 month');
   }
 
 }

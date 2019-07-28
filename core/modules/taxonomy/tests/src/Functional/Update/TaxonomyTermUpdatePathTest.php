@@ -90,6 +90,22 @@ class TaxonomyTermUpdatePathTest extends UpdatePathTestBase {
   }
 
   /**
+   * Tests taxonomy term views updates succeed even if Views is not installed.
+   */
+  public function testPublishingStatusUpdateForTaxonomyTermViewsWithoutViews() {
+    // Uninstalling Views will trigger some activity in the menu tree storage
+    // system, which will cause errors until system_update_8001() is run. This
+    // is because, in the drupal-8.filled.standard database fixture used for
+    // this update test, the menu link titles are not serialized (this is what
+    // gets done by system_update_8001()). Since this method is not testing
+    // anything relating to menu links, it's OK to just truncate the menu_tree
+    // table before uninstalling Views.
+    $this->container->get('database')->truncate('menu_tree')->execute();
+    $this->container->get('module_installer')->uninstall(['views']);
+    $this->runUpdates();
+  }
+
+  /**
    * Tests handling of the publishing status in taxonomy term views updates.
    *
    * @see taxonomy_post_update_handle_publishing_status_addition_in_views()

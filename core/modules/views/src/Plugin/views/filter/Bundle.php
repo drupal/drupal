@@ -103,7 +103,7 @@ class Bundle extends InOperator {
         $options[$type] = $info['label'];
       }
 
-      asort($options);
+      array_multisort($options, SORT_ASC, SORT_REGULAR, array_keys($options));
       $this->valueOptions = $options;
     }
 

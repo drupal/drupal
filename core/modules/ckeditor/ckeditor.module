@@ -5,6 +5,7 @@
  * Provides integration with the CKEditor WYSIWYG editor.
  */
 
+use Drupal\Core\Url;
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\editor\Entity\Editor;
@@ -17,15 +18,15 @@ function ckeditor_help($route_name, RouteMatchInterface $route_match) {
     case 'help.page.ckeditor':
       $output = '';
       $output .= '<h3>' . t('About') . '</h3>';
-      $output .= '<p>' . t('The CKEditor module provides a highly-accessible, highly-usable visual text editor and adds a toolbar to text fields. Users can use buttons to format content and to create semantically correct and valid HTML. The CKEditor module uses the framework provided by the <a href=":text_editor">Text Editor module</a>. It requires JavaScript to be enabled in the browser. For more information, see the <a href=":doc_url">online documentation for the CKEditor module</a> and the <a href=":cke_url">CKEditor website</a>.', [':doc_url' => 'https://www.drupal.org/documentation/modules/ckeditor', ':cke_url' => 'http://ckeditor.com', ':text_editor' => \Drupal::url('help.page', ['name' => 'editor'])]) . '</p>';
+      $output .= '<p>' . t('The CKEditor module provides a highly-accessible, highly-usable visual text editor and adds a toolbar to text fields. Users can use buttons to format content and to create semantically correct and valid HTML. The CKEditor module uses the framework provided by the <a href=":text_editor">Text Editor module</a>. It requires JavaScript to be enabled in the browser. For more information, see the <a href=":doc_url">online documentation for the CKEditor module</a> and the <a href=":cke_url">CKEditor website</a>.', [':doc_url' => 'https://www.drupal.org/documentation/modules/ckeditor', ':cke_url' => 'http://ckeditor.com', ':text_editor' => Url::fromRoute('help.page', ['name' => 'editor'])->toString()]) . '</p>';
       $output .= '<h3>' . t('Uses') . '</h3>';
       $output .= '<dl>';
       $output .= '<dt>' . t('Enabling CKEditor for individual text formats') . '</dt>';
-      $output .= '<dd>' . t('CKEditor has to be enabled and configured separately for individual text formats from the <a href=":formats">Text formats and editors page</a> because the filter settings for each text format can be different. For more information, see the <a href=":text_editor">Text Editor help page</a> and <a href=":filter">Filter help page</a>.', [':formats' => \Drupal::url('filter.admin_overview'), ':text_editor' => \Drupal::url('help.page', ['name' => 'editor']), ':filter' => \Drupal::url('help.page', ['name' => 'filter'])]) . '</dd>';
+      $output .= '<dd>' . t('CKEditor has to be enabled and configured separately for individual text formats from the <a href=":formats">Text formats and editors page</a> because the filter settings for each text format can be different. For more information, see the <a href=":text_editor">Text Editor help page</a> and <a href=":filter">Filter help page</a>.', [':formats' => Url::fromRoute('filter.admin_overview')->toString(), ':text_editor' => Url::fromRoute('help.page', ['name' => 'editor'])->toString(), ':filter' => Url::fromRoute('help.page', ['name' => 'filter'])->toString()]) . '</dd>';
       $output .= '<dt>' . t('Configuring the toolbar') . '</dt>';
       $output .= '<dd>' . t('When CKEditor is chosen from the <em>Text editor</em> drop-down menu, its toolbar configuration is displayed. You can add and remove buttons from the <em>Active toolbar</em> by dragging and dropping them, and additional rows can be added to organize the buttons.') . '</dd>';
       $output .= '<dt>' . t('Formatting content') . '</dt>';
-      $output .= '<dd>' . t('CKEditor only allow users to format content in accordance with the filter configuration of the specific text format. If a text format excludes certain HTML tags, the corresponding toolbar buttons are not displayed to users when they edit a text field in this format. For more information see the <a href=":filter">Filter help page</a>.', [':filter' => \Drupal::url('help.page', ['name' => 'filter'])]) . '</dd>';
+      $output .= '<dd>' . t('CKEditor only allow users to format content in accordance with the filter configuration of the specific text format. If a text format excludes certain HTML tags, the corresponding toolbar buttons are not displayed to users when they edit a text field in this format. For more information see the <a href=":filter">Filter help page</a>.', [':filter' => Url::fromRoute('help.page', ['name' => 'filter'])->toString()]) . '</dd>';
       $output .= '<dt>' . t('Toggling between formatted text and HTML source') . '</dt>';
       $output .= '<dd>' . t('If the <em>Source</em> button is available in the toolbar, users can click this button to disable the visual editor and edit the HTML source directly. After toggling back, the visual editor uses the allowed HTML tags to format the text — independent of whether buttons for these tags are available in the toolbar. If the text format is set to <em>limit the use of HTML tags</em>, then all excluded tags will be stripped out of the HTML source when the user toggles back to the text editor.') . '</dd>';
       $output .= '<dt>' . t('Check my spelling as I type') . '</dt>';

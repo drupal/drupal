@@ -1,4 +1,4 @@
-name: 'Media library'
+name: 'Media Library'
 type: module
 description: 'Enhances the media list with additional features to more easily find and use existing media items.'
 package: Core (Experimental)

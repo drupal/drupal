@@ -10,11 +10,11 @@
   box-sizing: border-box;
 }
 #toolbar-administration {
-  font-size: small;
-  line-height: 1;
   margin: 0;
   padding: 0;
   vertical-align: baseline;
+  font-size: small;
+  line-height: 1;
 }
 
 @media print {
@@ -61,31 +61,31 @@
 }
 .toolbar-horizontal .toolbar-tray {
   position: fixed;
-  width: 100%;
   left: 0;
+  width: 100%;
 }
 /* Position the admin toolbar absolutely when the configured standard breakpoint
  * is active. The toolbar container, that contains the bar and the trays, is
  * position absolutely so that it scrolls with the page. Otherwise, on smaller
  * screens, the components of the admin toolbar are positioned statically. */
 .toolbar-oriented .toolbar-bar {
-  left: 0;
   position: absolute;
-  right: 0;
   top: 0;
+  right: 0;
+  left: 0;
 }
 .toolbar-oriented .toolbar-tray {
-  left: 0;
   position: absolute;
   right: 0;
+  left: 0;
 }
 /* .toolbar-loading is required by Toolbar JavaScript to pre-render markup
  * style to avoid extra reflow & flicker. */
 @media (min-width: 61em) {
   .toolbar-loading.toolbar-horizontal .toolbar .toolbar-bar .toolbar-tab:last-child .toolbar-tray {
     position: relative;
-    display: block;
     z-index: -999;
+    display: block;
     visibility: hidden;
     width: 1px;
   }
@@ -168,18 +168,18 @@ body.toolbar-tray-open.toolbar-fixed.toolbar-vertical .toolbar-oriented {
  * Toolbar tray.
  */
 .toolbar .toolbar-tray {
-  display: none;
   z-index: 501;
+  display: none;
 }
 .toolbar-oriented .toolbar-tray-vertical {
-  left: -100%; /* LTR */
   position: absolute;
+  left: -100%; /* LTR */
   width: 240px;
   width: 15rem;
 }
 [dir="rtl"] .toolbar-oriented .toolbar-tray-vertical {
-  left: auto;
   right: -100%;
+  left: auto;
 }
 .toolbar .toolbar-tray-vertical > .toolbar-lining {
   min-height: 100%;
@@ -188,19 +188,19 @@ body.toolbar-tray-open.toolbar-fixed.toolbar-vertical .toolbar-oriented {
   width: 100%;
 }
 .toolbar-oriented .toolbar-tray-vertical > .toolbar-lining:before {
-  bottom: 0;
-  content: "";
-  display: block;
-  left: 0; /* LTR */
   position: fixed;
+  z-index: -1;
   top: 0;
+  bottom: 0;
+  left: 0; /* LTR */
+  display: block;
   width: 240px;
   width: 14rem;
-  z-index: -1;
+  content: "";
 }
 [dir="rtl"] .toolbar .toolbar-tray-vertical > .toolbar-lining:before {
-  left: auto;
   right: 0;
+  left: auto;
 }
 /* Layer the links just above the toolbar-tray. */
 .toolbar .toolbar-bar .toolbar-tab > .toolbar-icon {
@@ -217,10 +217,10 @@ body.toolbar-tray-open.toolbar-fixed.toolbar-vertical .toolbar-oriented {
  */
 .toolbar .toolbar-tray-vertical.is-active,
 body.toolbar-fixed .toolbar .toolbar-tray-vertical {
-  height: 100%;
+  position: fixed;
   overflow-x: hidden;
   overflow-y: auto;
-  position: fixed;
+  height: 100%;
 }
 .toolbar .toolbar-tray.is-active {
   display: block;
@@ -230,8 +230,8 @@ body.toolbar-fixed .toolbar .toolbar-tray-vertical {
   left: 0; /* LTR */
 }
 [dir="rtl"] .toolbar-oriented .toolbar-tray-vertical.is-active {
-  left: auto;
   right: 0;
+  left: auto;
 }
 /* When the configured standard breakpoint is active, the tray appears to push
  * the page content away from the edge of the viewport. */
@@ -246,9 +246,9 @@ body.toolbar-tray-open.toolbar-vertical.toolbar-fixed {
   }
 }
 [dir="rtl"] body.toolbar-tray-open.toolbar-vertical.toolbar-fixed {
-  margin-left: auto;
   margin-right: 240px;
   margin-right: 15rem;
+  margin-left: auto;
 }
 
 @media print {
@@ -270,14 +270,14 @@ body.toolbar-tray-open.toolbar-vertical.toolbar-fixed {
   display: block;
 }
 .toolbar-oriented .toolbar-tray-horizontal .toolbar-toggle-orientation {
-  bottom: 0;
   position: absolute;
-  right: 0; /* LTR */
   top: auto;
+  right: 0; /* LTR */
+  bottom: 0;
 }
 [dir="rtl"] .toolbar-oriented .toolbar-tray-horizontal .toolbar-toggle-orientation {
-  left: 0;
   right: auto;
+  left: 0;
 }
 .toolbar-oriented .toolbar-tray-vertical .toolbar-toggle-orientation {
   float: right; /* LTR */

@@ -30,10 +30,6 @@ class TestMultiWidthLayoutsTest extends WebDriverTestBase {
   protected function setUp() {
     parent::setUp();
 
-    // @todo The Layout Builder UI relies on local tasks; fix in
-    //   https://www.drupal.org/project/drupal/issues/2917777.
-    $this->drupalPlaceBlock('local_tasks_block');
-
     $this->createContentType(['type' => 'bundle_with_section_field']);
 
     $this->drupalLogin($this->drupalCreateUser([
@@ -105,23 +101,8 @@ class TestMultiWidthLayoutsTest extends WebDriverTestBase {
       $this->clickLink('Remove section');
       $this->assertNotEmpty($assert_session->waitForElementVisible('css', '#drupal-off-canvas input[type="submit"][value="Remove"]'));
       $page->pressButton('Remove');
-      $this->waitForNoElement(".$width_class");
+      $assert_session->assertNoElementAfterWait('css', ".$width_class");
     }
-  }
-
-  /**
-   * Waits for an element to be removed from the page.
-   *
-   * @param string $selector
-   *   CSS selector.
-   * @param int $timeout
-   *   (optional) Timeout in milliseconds, defaults to 10000.
-   *
-   * @todo Remove in https://www.drupal.org/node/2892440.
-   */
-  protected function waitForNoElement($selector, $timeout = 10000) {
-    $condition = "(typeof jQuery !== 'undefined' && jQuery('$selector').length === 0)";
-    $this->assertJsCondition($condition, $timeout);
   }
 
   /**

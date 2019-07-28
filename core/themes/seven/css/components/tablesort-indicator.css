@@ -5,9 +5,9 @@
 
 .tablesort {
   float: right; /* LTR */
-  margin-top: 5px;
   width: 10px;
   height: 10px;
+  margin-top: 5px;
 }
 [dir="rtl"] .tablesort {
   float: left;

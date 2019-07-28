@@ -12,11 +12,11 @@
 }
 
 .filter-wrapper {
-  border: 1px solid #ccc;
-  border-top: 0;
+  overflow: hidden;
   margin: 0;
   padding: 0.5em 0.666em;
-  overflow: hidden;
+  border: 1px solid #ccc;
+  border-top: 0;
 }
 .filter-wrapper .form-item {
   margin: 0;
@@ -48,10 +48,10 @@
   position: absolute;
   top: 0;
   right: -20px; /* LTR */
-  content: "";
   display: block;
   width: 16px;
   height: 16px;
+  content: "";
   background: transparent url(../../images/core/help.png);
 }
 [dir="rtl"] .filter-help a:after {
@@ -63,11 +63,11 @@
   margin-top: 0.5em;
 }
 .tips {
-  font-size: 0.9em;
-  margin-bottom: 0;
   margin-top: 0;
-  padding-bottom: 0;
+  margin-bottom: 0;
   padding-top: 0;
+  padding-bottom: 0;
+  font-size: 0.9em;
 }
 
 /**

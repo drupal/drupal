@@ -6,12 +6,12 @@ form {
   padding: 0;
 }
 fieldset:not(.fieldgroup) {
-  background-color: #fcfcfa;
-  border-radius: 2px;
+  position: relative;
+  min-width: 0;
   margin: 1em 0;
   padding: 30px 18px 18px;
-  min-width: 0;
-  position: relative;
+  border-radius: 2px;
+  background-color: #fcfcfa;
 }
 /**
  * We've temporarily added this Firefox specific rule here to fix fieldset
@@ -25,12 +25,12 @@ fieldset:not(.fieldgroup) {
   }
 }
 fieldset:not(.fieldgroup) > legend {
+  position: absolute;
+  top: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
   font-size: 1em;
   font-weight: bold;
-  letter-spacing: 0.08em;
-  position: absolute;
-  text-transform: uppercase;
-  top: 10px;
 }
 .fieldgroup {
   min-width: 0;
@@ -87,8 +87,10 @@ label[for] {
 .form-disabled label {
   color: #686868;
 }
+.form-disabled input.form-date,
 .form-disabled input.form-text,
 .form-disabled input.form-tel,
+.form-disabled input.form-time,
 .form-disabled input.form-email,
 .form-disabled input.form-url,
 .form-disabled input.form-search,
@@ -104,11 +106,11 @@ label[for] {
 .form-item input.error,
 .form-item textarea.error,
 .form-item select.error {
+  color: #a51b00;
   border-width: 1px;
   border-color: #e62600;
   background-color: hsla(15, 75%, 97%, 1);
   box-shadow: inset 0 5px 5px -5px #b8b8b8;
-  color: #a51b00;
 }
 .form-item textarea.error + .cke {
   border-width: 1px;
@@ -119,13 +121,13 @@ label[for] {
 .form-item select.error:focus {
   border-color: #e62600;
   outline: 0;
-  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05), 0 0 8px 1px #e62600;
   background-color: #fcf4f2;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05), 0 0 8px 1px #e62600;
 }
 .form-required:after {
-  background-size: 7px 7px;
   width: 7px;
   height: 7px;
+  background-size: 7px 7px;
 }
 .form-item--error-message {
   margin-top: 0.15em;
@@ -135,10 +137,10 @@ label[for] {
   margin-top: 0;
 }
 .text-format-wrapper .form-item--error-message {
-  border: solid #ccc;
-  border-width: 0 1px;
   margin: 0;
   padding: 0.25em 0.666em 0;
+  border: solid #ccc;
+  border-width: 0 1px;
 }
 
 /* Filter */
@@ -166,8 +168,8 @@ ul.tips li {
 }
 [dir="rtl"] .form-type-radio .description,
 [dir="rtl"] .form-type-checkbox .description {
-  margin-left: 0;
   margin-right: 1.5em;
+  margin-left: 0;
 }
 .form-text,
 .form-textarea {
@@ -189,17 +191,17 @@ input.form-date,
 input.form-time,
 textarea.form-textarea {
   box-sizing: border-box;
-  padding: 0.3em 0.4em 0.3em 0.5em; /* LTR */
   max-width: 100%;
+  padding: 0.3em 0.4em 0.3em 0.5em; /* LTR */
+  -webkit-transition: border linear 0.2s, box-shadow linear 0.2s;
+  transition: border linear 0.2s, box-shadow linear 0.2s;
+  color: #595959;
   border: 1px solid #b8b8b8;
   border-top-color: #999;
   border-radius: 2px;
   background: #fcfcfa;
   box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.125);
   font-size: 1em;
-  color: #595959;
-  -webkit-transition: border linear 0.2s, box-shadow linear 0.2s;
-  transition: border linear 0.2s, box-shadow linear 0.2s;
 }
 [dir="rtl"] textarea.form-textarea {
   padding: 0.3em 0.5em 0.3em 0.4em;
@@ -217,8 +219,8 @@ textarea.form-textarea {
 .form-time:focus {
   border-color: #40b6ff;
   outline: 0;
-  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05), 0 0 8px #40b6ff;
   background-color: #fff;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05), 0 0 8px #40b6ff;
 }
 
 .confirm-parent,
@@ -245,9 +247,10 @@ select {
  */
 @media screen and (-webkit-min-device-pixel-ratio: 0) {
   select {
-    cursor: pointer;
-    -webkit-appearance: none;
     padding: 1px 1.571em 1px 0.5em; /* LTR */
+    cursor: pointer;
+    -webkit-transition: all 0.1s;
+    transition: all 0.1s;
     border: 1px solid #a6a6a6;
     border-radius: 0.143em;
     background:
@@ -256,8 +259,7 @@ select {
 
     text-shadow: 0 1px hsla(0, 0%, 100%, 0.6);
     font-size: 0.875rem;
-    -webkit-transition: all 0.1s;
-    transition: all 0.1s;
+    -webkit-appearance: none;
     -webkit-font-smoothing: antialiased;
   }
   [dir="rtl"] select {
@@ -266,10 +268,10 @@ select {
   }
   select:focus,
   select:hover {
+    color: #1a1a1a;
     background-image:
       url(../../../../misc/icons/333333/caret-down.svg),
       -webkit-linear-gradient(top, #fcfcfa, #e9e9dd);
-    color: #1a1a1a;
   }
   select:hover {
     box-shadow: 0 1px 2px hsla(0, 0%, 0%, 0.125);
@@ -283,8 +285,8 @@ select {
   margin-left: 10px; /* LTR */
 }
 [dir="rtl"] #edit-cancel {
-  margin-left: 0;
   margin-right: 10px;
+  margin-left: 0;
 }
 
 /**
@@ -311,11 +313,11 @@ select {
   .form-actions input,
   .form-wrapper input[type="submit"] {
     float: none;
-    margin-left: 0;
-    margin-right: 0;
-    margin-top: 10px;
-    padding-bottom: 6px;
     width: 100%;
+    margin-top: 10px;
+    margin-right: 0;
+    margin-left: 0;
+    padding-bottom: 6px;
   }
   .form-actions input:first-child,
   .form-wrapper input[type="submit"]:first-child {
@@ -323,9 +325,9 @@ select {
   }
   details summary {
     overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
     box-sizing: border-box;
+    white-space: nowrap;
+    text-overflow: ellipsis;
   }
   .password-strength {
     width: 100%;

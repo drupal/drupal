@@ -4,14 +4,15 @@
  */
 
 .messages {
+  margin-bottom: 1em;
   padding: 20px;
-  color: inherit;
   word-wrap: break-word;
+  color: inherit;
   overflow-wrap: break-word;
 }
 [dir="rtl"] .messages {
-  background-position: right 10px top 17px;
   text-align: right;
+  background-position: right 10px top 17px;
 }
 .messages + .messages {
   margin-top: 1.538em;
@@ -26,18 +27,21 @@
   background-position: right;
 }
 .messages--status {
+  border: 1px solid #cbdebc;
   background-color: #e6eee0;
 }
 .messages--status .messages__content {
   background-image: url(/core/misc/icons/73b355/check.svg);
 }
 .messages--warning {
+  border: 1px solid #fae2a4;
   background-color: #fcf1d4;
 }
 .messages--warning .messages__content {
   background-image: url(/core/misc/icons/e29700/warning.svg);
 }
 .messages--error {
+  border: 1px solid #f8c8d5;
   background-color: #f9e6eb;
 }
 .messages--error .messages__content {
@@ -50,9 +54,9 @@
   color: #cc2a00;
 }
 .messages__list {
-  list-style: none;
-  padding: 0;
   margin: 0;
+  padding: 0;
+  list-style: none;
 }
 .messages__item + .messages__item {
   margin-top: 0.769em;

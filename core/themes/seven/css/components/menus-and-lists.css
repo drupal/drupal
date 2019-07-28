@@ -2,9 +2,9 @@
  * Menus and lists.
  */
 .item-list ul {
+  margin: 0.25em 0 0.25em 1.5em; /* LTR */
   list-style-type: disc;
   list-style-image: none;
-  margin: 0.25em 0 0.25em 1.5em; /* LTR */
 }
 [dir="rtl"] .item-list ul {
   margin: 0.25em 1.5em 0.25em 0;
@@ -19,13 +19,13 @@
 }
 .item-list ul li.collapsed,
 .menu-item--collapsed {
-  list-style-image: url(../../../../misc/menu-collapsed.png);
   list-style-type: disc;
+  list-style-image: url(../../../../misc/menu-collapsed.png);
 }
 .item-list ul li.expanded,
 .menu-item--expanded {
-  list-style-image: url(../../../../misc/menu-expanded.png);
   list-style-type: circle;
+  list-style-image: url(../../../../misc/menu-expanded.png);
 }
 ul.links li,
 ul.inline li {
@@ -33,8 +33,8 @@ ul.inline li {
 }
 [dir="rtl"] ul.links li,
 [dir="rtl"] ul.inline li {
-  padding-left: 1em;
   padding-right: 0;
+  padding-left: 1em;
 }
 ul.inline li {
   display: inline;

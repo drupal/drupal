@@ -1,0 +1,3 @@
+services:
+  new_dependency_test_with_service.service:
+    class: Drupal\new_dependency_test_with_service\NewService

@@ -125,7 +125,7 @@ class MigrateTaxonomyTermTest extends MigrateDrupal7TestBase {
 
     // Reset the forums tree data so this new term is included in the tree.
     unset($this->treeData['forums']);
-    $this->assertEntity(19, 'Forum Container', 'forums', '', NULL, 0, [], NULL, NULL, 1);
+    $this->assertEntity(25, 'Forum Container', 'forums', '', NULL, 0, [], NULL, NULL, 1);
   }
 
   /**

@@ -2,6 +2,7 @@
 
 namespace Drupal\views\Plugin\Block;
 
+use Drupal\Core\Url;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Form\FormStateInterface;
@@ -109,7 +110,7 @@ abstract class ViewsBlockBase extends BlockBase implements ContainerFactoryPlugi
    * {@inheritdoc}
    */
   public function getPreviewFallbackString() {
-    return $this->t('Placeholder for the "@view" views block', ['@view' => $this->view->storage->label()]);
+    return $this->t('"@view" views block', ['@view' => $this->view->storage->label()]);
   }
 
   /**
@@ -161,7 +162,7 @@ abstract class ViewsBlockBase extends BlockBase implements ContainerFactoryPlugi
     ];
 
     if ($this->view->storage->access('edit') && \Drupal::moduleHandler()->moduleExists('views_ui')) {
-      $form['views_label']['#description'] = $this->t('Changing the title here means it cannot be dynamically altered anymore. (Try changing it directly in <a href=":url">@name</a>.)', [':url' => \Drupal::url('entity.view.edit_display_form', ['view' => $this->view->storage->id(), 'display_id' => $this->displayID]), '@name' => $this->view->storage->label()]);
+      $form['views_label']['#description'] = $this->t('Changing the title here means it cannot be dynamically altered anymore. (Try changing it directly in <a href=":url">@name</a>.)', [':url' => Url::fromRoute('entity.view.edit_display_form', ['view' => $this->view->storage->id(), 'display_id' => $this->displayID])->toString(), '@name' => $this->view->storage->label()]);
     }
     else {
       $form['views_label']['#description'] = $this->t('Changing the title here means it cannot be dynamically altered anymore.');
@@ -211,6 +212,20 @@ abstract class ViewsBlockBase extends BlockBase implements ContainerFactoryPlugi
       $output['#view_display_plugin_id'] = $this->view->display_handler->getPluginId();
       views_add_contextual_links($output, $block_type, $this->displayID);
     }
+  }
+
+  /**
+   * Gets the view executable.
+   *
+   * @return \Drupal\views\ViewExecutable
+   *   The view executable.
+   *
+   * @todo revisit after https://www.drupal.org/node/3027653. This method was
+   *   added in https://www.drupal.org/node/3002608, but should not be
+   *   necessary once block plugins can determine if they are being previewed.
+   */
+  public function getViewExecutable() {
+    return $this->view;
   }
 
 }

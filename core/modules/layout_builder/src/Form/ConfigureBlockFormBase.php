@@ -27,6 +27,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * Provides a base form for configuring a block.
  *
  * @internal
+ *   Form classes are internal.
  */
 abstract class ConfigureBlockFormBase extends FormBase implements BaseFormIdInterface {
 
@@ -191,6 +192,8 @@ abstract class ConfigureBlockFormBase extends FormBase implements BaseFormIdInte
       $form['#id'] = Html::getId($form_state->getBuildInfo()['form_id']);
     }
 
+    // Mark this as an administrative page for JavaScript ("Back to site" link).
+    $form['#attached']['drupalSettings']['path']['currentPathIsAdmin'] = TRUE;
     return $form;
   }
 

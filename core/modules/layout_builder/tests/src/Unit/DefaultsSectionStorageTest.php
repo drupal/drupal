@@ -9,8 +9,8 @@ use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Plugin\Context\ContextInterface;
-use Drupal\layout_builder\Entity\LayoutBuilderSampleEntityGenerator;
 use Drupal\layout_builder\Entity\LayoutEntityDisplayInterface;
+use Drupal\layout_builder\Entity\SampleEntityGeneratorInterface;
 use Drupal\layout_builder\Plugin\SectionStorage\DefaultsSectionStorage;
 use Drupal\layout_builder\SectionStorage\SectionStorageDefinition;
 use Drupal\Tests\UnitTestCase;
@@ -41,7 +41,7 @@ class DefaultsSectionStorageTest extends UnitTestCase {
   /**
    * The sample entity generator.
    *
-   * @var \Drupal\layout_builder\Entity\LayoutBuilderSampleEntityGenerator
+   * @var \Drupal\layout_builder\Entity\SampleEntityGeneratorInterface
    */
   protected $sampleEntityGenerator;
 
@@ -53,7 +53,7 @@ class DefaultsSectionStorageTest extends UnitTestCase {
 
     $this->entityTypeManager = $this->prophesize(EntityTypeManagerInterface::class);
     $entity_type_bundle_info = $this->prophesize(EntityTypeBundleInfoInterface::class);
-    $this->sampleEntityGenerator = $this->prophesize(LayoutBuilderSampleEntityGenerator::class);
+    $this->sampleEntityGenerator = $this->prophesize(SampleEntityGeneratorInterface::class);
 
     $definition = new SectionStorageDefinition([
       'id' => 'defaults',
@@ -397,7 +397,6 @@ class DefaultsSectionStorageTest extends UnitTestCase {
         ],
         [
           '_field_ui_view_mode_access' => 'administer with_bundle_key display',
-          '_has_layout_section' => 'true',
           '_layout_builder_access' => 'view',
         ],
         [
@@ -420,7 +419,6 @@ class DefaultsSectionStorageTest extends UnitTestCase {
         ],
         [
           '_field_ui_view_mode_access' => 'administer with_bundle_key display',
-          '_has_layout_section' => 'true',
           '_layout_builder_access' => 'view',
         ],
         [
@@ -442,7 +440,6 @@ class DefaultsSectionStorageTest extends UnitTestCase {
         ],
         [
           '_field_ui_view_mode_access' => 'administer with_bundle_key display',
-          '_has_layout_section' => 'true',
           '_layout_builder_access' => 'view',
         ],
         [
@@ -462,7 +459,6 @@ class DefaultsSectionStorageTest extends UnitTestCase {
         ],
         [
           '_field_ui_view_mode_access' => 'administer with_bundle_parameter display',
-          '_has_layout_section' => 'true',
           '_layout_builder_access' => 'view',
         ],
         [
@@ -483,7 +479,6 @@ class DefaultsSectionStorageTest extends UnitTestCase {
         ],
         [
           '_field_ui_view_mode_access' => 'administer with_bundle_parameter display',
-          '_has_layout_section' => 'true',
           '_layout_builder_access' => 'view',
         ],
         [
@@ -504,7 +499,6 @@ class DefaultsSectionStorageTest extends UnitTestCase {
         ],
         [
           '_field_ui_view_mode_access' => 'administer with_bundle_parameter display',
-          '_has_layout_section' => 'true',
           '_layout_builder_access' => 'view',
         ],
         [

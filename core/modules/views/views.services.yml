@@ -77,7 +77,7 @@ services:
     class: Drupal\views\ExposedFormCache
   views.entity_schema_subscriber:
     class: Drupal\views\EventSubscriber\ViewsEntitySchemaSubscriber
-    arguments: ['@entity_type.manager']
+    arguments: ['@entity_type.manager', '@logger.channel.default']
     tags:
       - { name: 'event_subscriber' }
   views.date_sql:

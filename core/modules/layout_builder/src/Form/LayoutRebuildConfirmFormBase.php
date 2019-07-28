@@ -6,6 +6,7 @@ use Drupal\Core\Ajax\AjaxFormHelperTrait;
 use Drupal\Core\Form\ConfirmFormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\layout_builder\Controller\LayoutRebuildTrait;
+use Drupal\layout_builder\LayoutBuilderHighlightTrait;
 use Drupal\layout_builder\LayoutTempstoreRepositoryInterface;
 use Drupal\layout_builder\SectionStorageInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -14,10 +15,12 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * Provides a base class for confirmation forms that rebuild the Layout Builder.
  *
  * @internal
+ *   Form classes are internal.
  */
 abstract class LayoutRebuildConfirmFormBase extends ConfirmFormBase {
 
   use AjaxFormHelperTrait;
+  use LayoutBuilderHighlightTrait;
   use LayoutRebuildTrait;
 
   /**
@@ -79,8 +82,12 @@ abstract class LayoutRebuildConfirmFormBase extends ConfirmFormBase {
     if ($this->isAjax()) {
       $form['actions']['submit']['#ajax']['callback'] = '::ajaxSubmit';
       $form['actions']['cancel']['#attributes']['class'][] = 'dialog-cancel';
+      $target_highlight_id = !empty($this->uuid) ? $this->blockUpdateHighlightId($this->uuid) : $this->sectionUpdateHighlightId($delta);
+      $form['#attributes']['data-layout-builder-target-highlight-id'] = $target_highlight_id;
     }
 
+    // Mark this as an administrative page for JavaScript ("Back to site" link).
+    $form['#attached']['drupalSettings']['path']['currentPathIsAdmin'] = TRUE;
     return $form;
   }
 

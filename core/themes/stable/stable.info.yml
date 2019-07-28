@@ -134,10 +134,24 @@ libraries-override:
       theme:
         css/language.admin.css: css/language/language.admin.css
 
+  layout_builder/drupal.layout_builder:
+    css:
+      theme:
+        css/layout-builder.css: css/layout_builder/layout-builder.css
+
   locale/drupal.locale.admin:
     css:
       component:
         css/locale.admin.css: css/locale/locale.admin.css
+
+  media/oembed.formatter:
+    css:
+      component:
+        css/oembed.formatter.css: css/media/oembed.formatter.css
+  media/oembed.frame:
+    css:
+      component:
+        css/oembed.frame.css: css/media/oembed.frame.css
 
   menu_ui/drupal.menu_ui.adminforms:
     css:

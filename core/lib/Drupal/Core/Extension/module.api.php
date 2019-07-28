@@ -637,7 +637,7 @@ function hook_update_N(&$sandbox) {
     // This must be the first run. Initialize the sandbox.
     $sandbox['progress'] = 0;
     $sandbox['current_pk'] = 0;
-    $sandbox['max'] = Database::getConnection()->query('SELECT COUNT(myprimarykey) FROM {mytable1}')->fetchField() - 1;
+    $sandbox['max'] = Database::getConnection()->query('SELECT COUNT(myprimarykey) FROM {mytable1}')->fetchField();
   }
 
   // Update in chunks of 20.
@@ -974,7 +974,7 @@ function hook_requirements($phase) {
       ];
     }
 
-    $requirements['cron']['description'] .= ' ' . t('You can <a href=":cron">run cron manually</a>.', [':cron' => \Drupal::url('system.run_cron')]);
+    $requirements['cron']['description'] .= ' ' . t('You can <a href=":cron">run cron manually</a>.', [':cron' => Url::fromRoute('system.run_cron')->toString()]);
 
     $requirements['cron']['title'] = t('Cron maintenance tasks');
   }

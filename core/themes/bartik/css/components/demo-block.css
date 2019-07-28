@@ -4,14 +4,14 @@
  */
 
 .demo-block {
-  background: #ff6;
-  border: 1px dotted #9f9e00;
-  color: #000;
-  font: 90% "Lucida Grande", "Lucida Sans Unicode", sans-serif;
   margin: 5px;
   padding: 5px;
   text-align: center;
+  color: #000;
+  border: 1px dotted #9f9e00;
+  background: #ff6;
   text-shadow: none;
+  font: 90% "Lucida Grande", "Lucida Sans Unicode", sans-serif;
 }
 .featured-top .demo-block {
   font-size: 0.55em;

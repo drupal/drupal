@@ -3,8 +3,10 @@
 namespace Drupal\layout_builder\Form;
 
 use Drupal\Core\Entity\EntityForm;
+use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\layout_builder\Entity\LayoutEntityDisplayInterface;
 use Drupal\layout_builder\LayoutTempstoreRepositoryInterface;
 use Drupal\layout_builder\SectionStorageInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -13,8 +15,11 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * Provides a form containing the Layout Builder UI for defaults.
  *
  * @internal
+ *   Form classes are internal.
  */
 class DefaultsEntityForm extends EntityForm {
+
+  use PreviewToggleTrait;
 
   /**
    * Layout tempstore repository.
@@ -22,6 +27,13 @@ class DefaultsEntityForm extends EntityForm {
    * @var \Drupal\layout_builder\LayoutTempstoreRepositoryInterface
    */
   protected $layoutTempstoreRepository;
+
+  /**
+   * The entity type bundle info service.
+   *
+   * @var \Drupal\Core\Entity\EntityTypeBundleInfoInterface
+   */
+  protected $entityTypeBundleInfo;
 
   /**
    * The section storage.
@@ -35,9 +47,16 @@ class DefaultsEntityForm extends EntityForm {
    *
    * @param \Drupal\layout_builder\LayoutTempstoreRepositoryInterface $layout_tempstore_repository
    *   The layout tempstore repository.
+   * @param \Drupal\Core\Entity\EntityTypeBundleInfoInterface $entity_type_bundle_info
+   *   The entity type bundle info service.
    */
-  public function __construct(LayoutTempstoreRepositoryInterface $layout_tempstore_repository) {
+  public function __construct(LayoutTempstoreRepositoryInterface $layout_tempstore_repository, EntityTypeBundleInfoInterface $entity_type_bundle_info = NULL) {
     $this->layoutTempstoreRepository = $layout_tempstore_repository;
+    if (!$entity_type_bundle_info) {
+      @trigger_error('The entity_type.bundle.info service must be passed to DefaultsEntityForm::__construct(), it is required before Drupal 9.0.0.', E_USER_DEPRECATED);
+      $entity_type_bundle_info = \Drupal::service('entity_type.bundle.info');
+    }
+    $this->entityTypeBundleInfo = $entity_type_bundle_info;
   }
 
   /**
@@ -45,7 +64,8 @@ class DefaultsEntityForm extends EntityForm {
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('layout_builder.tempstore_repository')
+      $container->get('layout_builder.tempstore_repository'),
+      $container->get('entity_type.bundle.info')
     );
   }
 
@@ -60,12 +80,58 @@ class DefaultsEntityForm extends EntityForm {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state, SectionStorageInterface $section_storage = NULL) {
+    $form['#attributes']['class'][] = 'layout-builder-form';
     $form['layout_builder'] = [
       '#type' => 'layout_builder',
       '#section_storage' => $section_storage,
     ];
+    $form['layout_builder_message'] = $this->buildMessage($section_storage->getContextValue('display'));
+
     $this->sectionStorage = $section_storage;
     return parent::buildForm($form, $form_state);
+  }
+
+  /**
+   * Renders a message to display at the top of the layout builder.
+   *
+   * @param \Drupal\layout_builder\Entity\LayoutEntityDisplayInterface $entity
+   *   The entity view display being edited.
+   *
+   * @return array
+   *   A renderable array containing the message.
+   */
+  protected function buildMessage(LayoutEntityDisplayInterface $entity) {
+    $entity_type_id = $entity->getTargetEntityTypeId();
+    $entity_type = $this->entityTypeManager->getDefinition($entity_type_id);
+    $bundle_info = $this->entityTypeBundleInfo->getBundleInfo($entity_type_id);
+
+    $args = [
+      '@bundle' => $bundle_info[$entity->getTargetBundle()]['label'],
+      '@plural_label' => $entity_type->getPluralLabel(),
+    ];
+    if ($entity_type->hasKey('bundle')) {
+      $message = $this->t('You are editing the layout template for all @bundle @plural_label.', $args);
+    }
+    else {
+      $message = $this->t('You are editing the layout template for all @plural_label.', $args);
+    }
+    return [
+      '#type' => 'container',
+      '#attributes' => [
+        'class' => [
+          'layout-builder__message',
+          'layout-builder__message--defaults',
+        ],
+      ],
+      'message' => [
+        '#theme' => 'status_messages',
+        '#message_list' => ['status' => [$message]],
+        '#status_headings' => [
+          'status' => $this->t('Status message'),
+        ],
+      ],
+      '#weight' => -900,
+    ];
   }
 
   /**
@@ -94,6 +160,8 @@ class DefaultsEntityForm extends EntityForm {
    */
   protected function actions(array $form, FormStateInterface $form_state) {
     $actions = parent::actions($form, $form_state);
+    $actions['#attributes']['role'] = 'region';
+    $actions['#attributes']['aria-label'] = $this->t('Layout Builder tools');
     $actions['submit']['#value'] = $this->t('Save layout');
     $actions['#weight'] = -1000;
 
@@ -103,6 +171,7 @@ class DefaultsEntityForm extends EntityForm {
       '#submit' => ['::redirectOnSubmit'],
       '#redirect' => 'discard_changes',
     ];
+    $actions['preview_toggle'] = $this->buildContentPreviewToggle();
     return $actions;
   }
 

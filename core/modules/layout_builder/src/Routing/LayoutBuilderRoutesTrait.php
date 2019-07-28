@@ -11,11 +11,6 @@ use Symfony\Component\Routing\RouteCollection;
 
 /**
  * Provides a trait for building routes for a Layout Builder UI.
- *
- * @internal
- *   Layout Builder is currently experimental and should only be leveraged by
- *   experimental modules and development releases of contributed modules.
- *   See https://www.drupal.org/core/experimental for more information.
  */
 trait LayoutBuilderRoutesTrait {
 
@@ -45,7 +40,6 @@ trait LayoutBuilderRoutesTrait {
     // Provide an empty value to allow the section storage to be upcast.
     $defaults['section_storage'] = '';
     // Trigger the layout builder access check.
-    $requirements['_has_layout_section'] = 'true';
     $requirements['_layout_builder_access'] = 'view';
     // Trigger the layout builder RouteEnhancer.
     $options['_layout_builder'] = TRUE;

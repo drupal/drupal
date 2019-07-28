@@ -8,8 +8,8 @@
   outline: medium none;
 }
 .views-live-preview .contextual {
-  right: auto; /* LTR */
   top: auto;
+  right: auto; /* LTR */
 }
 [dir="rtl"] .views-live-preview .contextual {
   left: auto;
@@ -21,25 +21,25 @@
   display: block;
 }
 .contextual .contextual-links {
-  border-radius: 0 4px 4px 4px; /* LTR */
+  right: auto; /* LTR */
   min-width: 10em;
   padding: 6px 6px 9px 6px;
-  right: auto; /* LTR */
+  border-radius: 0 4px 4px 4px; /* LTR */
 }
 [dir="rtl"] .contextual .contextual-links {
-  border-radius: 4px 0 4px 4px;
   left: auto;
+  border-radius: 4px 0 4px 4px;
 }
 .contextual-links li a,
 .contextual-links li span {
-  padding-bottom: 0.25em;
-  padding-right: 0.1667em; /* LTR */
   padding-top: 0.25em;
+  padding-right: 0.1667em; /* LTR */
+  padding-bottom: 0.25em;
 }
 [dir="rtl"] .contextual-links li a,
 [dir="rtl"] .contextual-links li span {
-  padding-left: 0.1667em;
   padding-right: 0;
+  padding-left: 0.1667em;
 }
 .contextual-links li span {
   font-weight: bold;
@@ -49,8 +49,8 @@
   padding-left: 1em; /* LTR */
 }
 [dir="rtl"] .contextual-links li a {
-  padding-left: 0.1667em;
   padding-right: 1em;
+  padding-left: 0.1667em;
 }
 .contextual-links li a:hover {
   background-color: #badbec;

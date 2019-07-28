@@ -9,7 +9,7 @@ namespace Drupal\Component\Utility;
  */
 class Timer {
 
-  static protected $timers = [];
+  protected static $timers = [];
 
   /**
    * Starts the timer with the specified name.

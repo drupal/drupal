@@ -76,7 +76,7 @@ abstract class DestinationBase extends PluginBase implements MigrateDestinationI
    */
   public function checkRequirements() {
     if (empty($this->pluginDefinition['requirements_met'])) {
-      throw new RequirementsException();
+      throw new RequirementsException(sprintf("Destination plugin '%s' did not meet the requirements", $this->pluginId));
     }
   }
 

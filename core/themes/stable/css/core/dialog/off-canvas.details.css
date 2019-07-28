@@ -13,13 +13,13 @@
 #drupal-off-canvas details,
 #drupal-off-canvas summary,
 #drupal-off-canvas .ui-dialog-content {
-  background: #474747;
   color: #ddd;
+  background: #474747;
 }
 #drupal-off-canvas summary a {
-  color: #ddd;
   padding-top: 0;
   padding-bottom: 0;
+  color: #ddd;
 }
 #drupal-off-canvas summary a:hover,
 #drupal-off-canvas summary a:focus {
@@ -28,16 +28,16 @@
 #drupal-off-canvas details,
 #drupal-off-canvas summary,
 #drupal-off-canvas .details-wrapper {
-  border-width: 0;
   /* Cancel out the padding of the parent. */
   margin: 0 -20px;
   padding: 0 20px;
+  border-width: 0;
 }
 #drupal-off-canvas summary {
-  text-shadow: none;
   padding: 10px 20px;
-  font-size: 14px;
   transition: all 0.5s ease;
+  text-shadow: none;
+  font-size: 14px;
 }
 #drupal-off-canvas summary:hover,
 #drupal-off-canvas summary:focus {
@@ -47,16 +47,16 @@
   padding-bottom: 10px;
 }
 #drupal-off-canvas details[open] > summary {
-  background-color: #333;
   color: #eee;
+  background-color: #333;
 }
 #drupal-off-canvas details[open] > summary:hover {
-  background-color: #222;
   color: #fff;
+  background-color: #222;
 }
 #drupal-off-canvas details .placeholder {
-  font: inherit;
   color: inherit;
-  font-style: italic;
   background: transparent;
+  font: inherit;
+  font-style: italic;
 }

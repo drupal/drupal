@@ -14,8 +14,8 @@
 /* @todo Use a class instead of the li element.
      https://www.drupal.org/project/drupal/issues/3029227 */
 .media-library-menu li {
-  list-style: none;
   padding: 0;
+  list-style: none;
 }
 
 .media-library-views-form > .form-actions {
@@ -52,8 +52,13 @@
   position: absolute;
   z-index: 1;
   top: 5px;
-  right: 0;
+  right: 5px; /* LTR */
   display: block;
+}
+
+[dir="rtl"] .media-library-item .js-click-to-select-checkbox {
+  right: 0;
+  left: 5px;
 }
 
 .media-library-item__status {

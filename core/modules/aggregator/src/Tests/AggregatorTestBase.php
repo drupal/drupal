@@ -4,6 +4,7 @@ namespace Drupal\aggregator\Tests;
 
 @trigger_error(__NAMESPACE__ . '\AggregatorTestBase is deprecated for removal before Drupal 9.0.0. Use \Drupal\Tests\aggregator\Functional\AggregatorTestBase instead. See https://www.drupal.org/node/2999939', E_USER_DEPRECATED);
 
+use Drupal\Core\Url;
 use Drupal\aggregator\Entity\Feed;
 use Drupal\Component\Utility\Html;
 use Drupal\node\NodeInterface;
@@ -106,10 +107,10 @@ abstract class AggregatorTestBase extends WebTestBase {
   public function getFeedEditArray($feed_url = NULL, array $edit = []) {
     $feed_name = $this->randomMachineName(10);
     if (!$feed_url) {
-      $feed_url = \Drupal::url('view.frontpage.feed_1', [], [
+      $feed_url = Url::fromRoute('view.frontpage.feed_1', [], [
         'query' => ['feed' => $feed_name],
         'absolute' => TRUE,
-      ]);
+      ])->toString();
     }
     $edit += [
       'title[0][value]' => $feed_name,
@@ -134,10 +135,10 @@ abstract class AggregatorTestBase extends WebTestBase {
   public function getFeedEditObject($feed_url = NULL, array $values = []) {
     $feed_name = $this->randomMachineName(10);
     if (!$feed_url) {
-      $feed_url = \Drupal::url('view.frontpage.feed_1', [
+      $feed_url = Url::fromRoute('view.frontpage.feed_1', [
         'query' => ['feed' => $feed_name],
         'absolute' => TRUE,
-      ]);
+      ])->toString();
     }
     $values += [
       'title' => $feed_name,

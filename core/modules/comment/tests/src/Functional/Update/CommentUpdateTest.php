@@ -118,4 +118,25 @@ class CommentUpdateTest extends UpdatePathTestBase {
     }
   }
 
+  /**
+   * Test the update hook requirements check for 8701.
+   *
+   * @see comment_update_8701()
+   * @see comment_requirements()
+   */
+  public function testCommentEntityTypeAndFieldUpdateRequirementsCheck() {
+    require_once __DIR__ . '/../../../fixtures/update/drupal-8.empty-comment-fields.3052147.php';
+    $this->writeSettings([
+      'settings' => [
+        'update_free_access' => (object) [
+          'value' => TRUE,
+          'required' => TRUE,
+        ],
+      ],
+    ]);
+    $this->drupalGet($this->updateUrl);
+    $this->assertSession()->pageTextContains('Errors found');
+    $this->assertSession()->elementContains('css', '.system-status-report__entry--error', 'The comment_update_8701() function requires that the <em class="placeholder">entity_type</em> and <em class="placeholder">field_name</em> fields have values for all comment entities.');
+  }
+
 }

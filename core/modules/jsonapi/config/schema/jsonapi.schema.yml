@@ -1,0 +1,7 @@
+jsonapi.settings:
+  type: config_object
+  label: 'JSON:API settings'
+  mapping:
+    read_only:
+      type: boolean
+      label: 'Restrict JSON:API to only read operations'

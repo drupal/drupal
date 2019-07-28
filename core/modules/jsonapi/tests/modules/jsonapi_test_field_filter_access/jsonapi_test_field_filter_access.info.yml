@@ -1,0 +1,5 @@
+name: 'JSON:API filter access'
+type: module
+description: 'Provides custom access related code to test JSON:API filter security.'
+package: Testing
+core: 8.x

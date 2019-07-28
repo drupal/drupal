@@ -3,13 +3,13 @@
  * Styles for the upgrade analysis report tables.
  */
 .upgrade-analysis-report__status-icon:before {
-  content: "";
-  background-size: 16px;
-  background-position: left center;
-  background-repeat: no-repeat;
+  display: inline-block;
   width: 32px;
   height: 14px;
-  display: inline-block;
+  content: "";
+  background-repeat: no-repeat;
+  background-position: left center;
+  background-size: 16px;
 }
 
 .upgrade-analysis-report__status-icon--warning:before {

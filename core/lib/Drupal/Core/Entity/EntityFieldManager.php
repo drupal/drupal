@@ -56,6 +56,13 @@ class EntityFieldManager implements EntityFieldManagerInterface {
   protected $fieldStorageDefinitions;
 
   /**
+   * Static cache of active field storage definitions per entity type.
+   *
+   * @var array
+   */
+  protected $activeFieldStorageDefinitions;
+
+  /**
    * An array keyed by entity type. Each value is an array whose keys are
    * field names and whose value is an array with two entries:
    *   - type: The field type.
@@ -318,10 +325,11 @@ class EntityFieldManager implements EntityFieldManagerInterface {
    * {@inheritdoc}
    */
   public function getFieldDefinitions($entity_type_id, $bundle) {
-    if (!isset($this->fieldDefinitions[$entity_type_id][$bundle])) {
+    $langcode = $this->languageManager->getCurrentLanguage()->getId();
+    if (!isset($this->fieldDefinitions[$entity_type_id][$bundle][$langcode])) {
       $base_field_definitions = $this->getBaseFieldDefinitions($entity_type_id);
       // Not prepared, try to load from cache.
-      $cid = 'entity_bundle_field_definitions:' . $entity_type_id . ':' . $bundle . ':' . $this->languageManager->getCurrentLanguage()->getId();
+      $cid = 'entity_bundle_field_definitions:' . $entity_type_id . ':' . $bundle . ':' . $langcode;
       if ($cache = $this->cacheGet($cid)) {
         $bundle_field_definitions = $cache->data;
       }
@@ -334,9 +342,9 @@ class EntityFieldManager implements EntityFieldManagerInterface {
       // base fields, merge them together. Use array_replace() to replace base
       // fields with by bundle overrides and keep them in order, append
       // additional by bundle fields.
-      $this->fieldDefinitions[$entity_type_id][$bundle] = array_replace($base_field_definitions, $bundle_field_definitions);
+      $this->fieldDefinitions[$entity_type_id][$bundle][$langcode] = array_replace($base_field_definitions, $bundle_field_definitions);
     }
-    return $this->fieldDefinitions[$entity_type_id][$bundle];
+    return $this->fieldDefinitions[$entity_type_id][$bundle][$langcode];
   }
 
   /**
@@ -443,6 +451,25 @@ class EntityFieldManager implements EntityFieldManagerInterface {
       $this->fieldStorageDefinitions[$entity_type_id] += $field_storage_definitions;
     }
     return $this->fieldStorageDefinitions[$entity_type_id];
+  }
+
+  /**
+   * Gets the active field storage definitions for a content entity type.
+   *
+   * @param string $entity_type_id
+   *   The entity type ID. Only content entities are supported.
+   *
+   * @return \Drupal\Core\Field\FieldStorageDefinitionInterface[]
+   *   An array of field storage definitions that are active in the current
+   *   request, keyed by field name.
+   *
+   * @internal
+   */
+  public function getActiveFieldStorageDefinitions($entity_type_id) {
+    if (!isset($this->activeFieldStorageDefinitions[$entity_type_id])) {
+      $this->activeFieldStorageDefinitions[$entity_type_id] = $this->keyValueFactory->get('entity.definitions.installed')->get($entity_type_id . '.field_storage_definitions', []);
+    }
+    return $this->activeFieldStorageDefinitions[$entity_type_id] ?: $this->getFieldStorageDefinitions($entity_type_id);
   }
 
   /**
@@ -569,6 +596,7 @@ class EntityFieldManager implements EntityFieldManagerInterface {
     $this->baseFieldDefinitions = [];
     $this->fieldDefinitions = [];
     $this->fieldStorageDefinitions = [];
+    $this->activeFieldStorageDefinitions = [];
     $this->fieldMap = [];
     $this->fieldMapByFieldType = [];
     $this->entityDisplayRepository->clearDisplayModeInfo();
@@ -588,6 +616,7 @@ class EntityFieldManager implements EntityFieldManagerInterface {
       $this->fieldDefinitions = [];
       $this->baseFieldDefinitions = [];
       $this->fieldStorageDefinitions = [];
+      $this->activeFieldStorageDefinitions = [];
     }
   }
 

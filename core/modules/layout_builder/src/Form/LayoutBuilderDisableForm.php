@@ -12,6 +12,9 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Disables Layout Builder for a given default.
+ *
+ * @internal
+ *   Form classes are internal.
  */
 class LayoutBuilderDisableForm extends ConfirmFormBase {
 
@@ -89,6 +92,8 @@ class LayoutBuilderDisableForm extends ConfirmFormBase {
     }
 
     $this->sectionStorage = $section_storage;
+    // Mark this as an administrative page for JavaScript ("Back to site" link).
+    $form['#attached']['drupalSettings']['path']['currentPathIsAdmin'] = TRUE;
     return parent::buildForm($form, $form_state);
   }
 

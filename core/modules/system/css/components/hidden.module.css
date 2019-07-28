@@ -25,10 +25,10 @@
  */
 .visually-hidden {
   position: absolute !important;
-  clip: rect(1px, 1px, 1px, 1px);
   overflow: hidden;
-  height: 1px;
+  clip: rect(1px, 1px, 1px, 1px);
   width: 1px;
+  height: 1px;
   word-wrap: normal;
 }
 
@@ -39,10 +39,10 @@
 .visually-hidden.focusable:active,
 .visually-hidden.focusable:focus {
   position: static !important;
-  clip: auto;
   overflow: visible;
-  height: auto;
+  clip: auto;
   width: auto;
+  height: auto;
 }
 
 /**

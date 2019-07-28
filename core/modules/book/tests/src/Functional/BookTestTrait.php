@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\book\Functional;
 
+use Drupal\Core\Url;
 use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Entity\EntityInterface;
 
@@ -125,7 +126,7 @@ trait BookTestTrait {
 
     // Compute the expected breadcrumb.
     $expected_breadcrumb = [];
-    $expected_breadcrumb[] = \Drupal::url('<front>');
+    $expected_breadcrumb[] = Url::fromRoute('<front>')->toString();
     foreach ($breadcrumb as $a_node) {
       $expected_breadcrumb[] = $a_node->toUrl()->toString();
     }

@@ -30,8 +30,8 @@
   }
 }
 .site-branding__name {
-  font-size: 1.6em;
   color: #686868;
+  font-size: 1.6em;
   line-height: 1;
 }
 
@@ -41,9 +41,9 @@
   }
 }
 .site-branding__slogan {
-  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-  font-size: 0.929em;
   margin-top: 7px;
   word-spacing: 0.1em;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 0.929em;
   font-style: italic;
 }

@@ -59,6 +59,20 @@ class EntityTypeManager extends DefaultPluginManager implements EntityTypeManage
   protected $classResolver;
 
   /**
+   * The entity last installed schema repository.
+   *
+   * @var \Drupal\Core\Entity\EntityLastInstalledSchemaRepositoryInterface
+   */
+  protected $entityLastInstalledSchemaRepository;
+
+  /**
+   * A list of entity type definitions that are active for the current request.
+   *
+   * @var \Drupal\Core\Entity\EntityTypeInterface[]
+   */
+  protected $activeDefinitions;
+
+  /**
    * Constructs a new Entity plugin manager.
    *
    * @param \Traversable $namespaces
@@ -72,8 +86,10 @@ class EntityTypeManager extends DefaultPluginManager implements EntityTypeManage
    *   The string translation.
    * @param \Drupal\Core\DependencyInjection\ClassResolverInterface $class_resolver
    *   The class resolver.
+   * @param \Drupal\Core\Entity\EntityLastInstalledSchemaRepositoryInterface $entity_last_installed_schema_repository
+   *   The entity last installed schema repository.
    */
-  public function __construct(\Traversable $namespaces, ModuleHandlerInterface $module_handler, CacheBackendInterface $cache, TranslationInterface $string_translation, ClassResolverInterface $class_resolver) {
+  public function __construct(\Traversable $namespaces, ModuleHandlerInterface $module_handler, CacheBackendInterface $cache, TranslationInterface $string_translation, ClassResolverInterface $class_resolver, EntityLastInstalledSchemaRepositoryInterface $entity_last_installed_schema_repository) {
     parent::__construct('Entity', $namespaces, $module_handler, 'Drupal\Core\Entity\EntityInterface');
 
     $this->setCacheBackend($cache, 'entity_type', ['entity_types']);
@@ -82,6 +98,7 @@ class EntityTypeManager extends DefaultPluginManager implements EntityTypeManage
     $this->discovery = new AnnotatedClassDiscovery('Entity', $namespaces, 'Drupal\Core\Entity\Annotation\EntityType');
     $this->stringTranslation = $string_translation;
     $this->classResolver = $class_resolver;
+    $this->entityLastInstalledSchemaRepository = $entity_last_installed_schema_repository;
   }
 
   /**
@@ -134,10 +151,30 @@ class EntityTypeManager extends DefaultPluginManager implements EntityTypeManage
   }
 
   /**
+   * Gets the active definition for a content entity type.
+   *
+   * @param string $entity_type_id
+   *   The entity type ID.
+   *
+   * @return \Drupal\Core\Entity\EntityTypeInterface
+   *   The active entity type definition.
+   *
+   * @internal
+   */
+  public function getActiveDefinition($entity_type_id) {
+    if (!isset($this->activeDefinitions[$entity_type_id])) {
+      $this->activeDefinitions[$entity_type_id] = $this->entityLastInstalledSchemaRepository->getLastInstalledDefinition($entity_type_id);
+    }
+
+    return $this->activeDefinitions[$entity_type_id] ?: $this->getDefinition($entity_type_id);
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function clearCachedDefinitions() {
     parent::clearCachedDefinitions();
+    $this->activeDefinitions = [];
     $this->handlers = [];
   }
 
@@ -147,6 +184,7 @@ class EntityTypeManager extends DefaultPluginManager implements EntityTypeManage
   public function useCaches($use_caches = FALSE) {
     parent::useCaches($use_caches);
     if (!$use_caches) {
+      $this->activeDefinitions = [];
       $this->handlers = [];
       $this->container->get('entity.memory_cache')->reset();
     }

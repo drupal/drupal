@@ -15,10 +15,10 @@
   touch-callout: none;
 }
 .toolbar .toolbar-item {
-  cursor: pointer;
   padding: 1em 1.3333em;
-  line-height: 1em;
+  cursor: pointer;
   text-decoration: none;
+  line-height: 1em;
 }
 .toolbar .toolbar-item:hover,
 .toolbar .toolbar-item:focus {
@@ -29,9 +29,9 @@
  * Toolbar bar.
  */
 .toolbar .toolbar-bar {
+  color: #ddd;
   background-color: #0f0f0f;
   box-shadow: -1px 0 3px 1px rgba(0, 0, 0, 0.3333); /* LTR */
-  color: #ddd;
 }
 [dir="rtl"] .toolbar .toolbar-bar {
   box-shadow: 1px 0 3px 1px rgba(0, 0, 0, 0.3333);
@@ -66,13 +66,13 @@
   padding-left: 5em;
 }
 .toolbar .toolbar-tray-vertical {
-  background-color: #f5f5f5;
   border-right: 1px solid #aaa; /* LTR */
+  background-color: #f5f5f5;
   box-shadow: -1px 0 5px 2px rgba(0, 0, 0, 0.3333); /* LTR */
 }
 [dir="rtl"] .toolbar .toolbar-tray-vertical {
-  border-left: 1px solid #aaa;
   border-right: 0 none;
+  border-left: 1px solid #aaa;
   box-shadow: 1px 0 5px 2px rgba(0, 0, 0, 0.3333);
 }
 .toolbar-horizontal .toolbar-tray {
@@ -86,17 +86,17 @@
   background-color: #f5f5f5;
 }
 .toolbar-tray a {
-  color: #565656;
-  cursor: pointer;
   padding: 1em 1.3333em;
+  cursor: pointer;
   text-decoration: none;
+  color: #565656;
 }
 .toolbar-tray a:hover,
 .toolbar-tray a:active,
 .toolbar-tray a:focus,
 .toolbar-tray a.is-active {
-  color: #000;
   text-decoration: underline;
+  color: #000;
 }
 .toolbar .toolbar-menu {
   background-color: #fff;
@@ -105,8 +105,8 @@
   border-left: 1px solid #ddd; /* LTR */
 }
 [dir="rtl"] .toolbar-horizontal .toolbar-tray .menu-item + .menu-item {
-  border-left: 0 none;
   border-right: 1px solid #ddd;
+  border-left: 0 none;
 }
 .toolbar-horizontal .toolbar-tray .menu-item:last-child {
   border-right: 1px solid #ddd; /* LTR */
@@ -124,8 +124,8 @@
   border: 0 none;
 }
 .toolbar .toolbar-tray-vertical .toolbar-menu ul ul {
-  border-bottom: 1px solid #ddd;
   border-top: 1px solid #ddd;
+  border-bottom: 1px solid #ddd;
 }
 .toolbar .toolbar-tray-vertical .menu-item:last-child > ul {
   border-bottom: 0;
@@ -134,8 +134,8 @@
   margin-left: 0.25em; /* LTR */
 }
 [dir="rtl"] .toolbar .toolbar-tray-vertical .toolbar-menu .toolbar-menu .toolbar-menu .toolbar-menu {
-  margin-left: 0;
   margin-right: 0.25em;
+  margin-left: 0;
 }
 .toolbar .toolbar-menu .toolbar-menu a {
   color: #434343;
@@ -145,16 +145,16 @@
  * Orientation toggle.
  */
 .toolbar .toolbar-toggle-orientation {
-  background-color: #f5f5f5;
-  padding: 0;
   height: 100%;
+  padding: 0;
+  background-color: #f5f5f5;
 }
 .toolbar-horizontal .toolbar-tray .toolbar-toggle-orientation {
   border-left: 1px solid #c9c9c9; /* LTR */
 }
 [dir="rtl"] .toolbar-horizontal .toolbar-tray .toolbar-toggle-orientation {
-  border-left: 0 none;
   border-right: 1px solid #c9c9c9;
+  border-left: 0 none;
 }
 .toolbar .toolbar-toggle-orientation > .toolbar-lining {
   float: right; /* LTR */
@@ -163,6 +163,6 @@
   float: left;
 }
 .toolbar .toolbar-toggle-orientation button {
-  cursor: pointer;
   display: inline-block;
+  cursor: pointer;
 }

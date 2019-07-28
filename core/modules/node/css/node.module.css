@@ -20,16 +20,16 @@
   .layout-region-node-main,
   .layout-region-node-footer {
     float: left; /* LTR */
+    box-sizing: border-box;
     width: 65%;
     padding-right: 2em; /* LTR */
-    box-sizing: border-box;
   }
 
   [dir="rtl"] .layout-region-node-main,
   [dir="rtl"] .layout-region-node-footer {
     float: right;
-    padding-left: 2em;
     padding-right: 0;
+    padding-left: 2em;
   }
 
   .layout-region-node-secondary {

@@ -16,6 +16,6 @@ p[data-widget="image"].align-center {
  * the alignment of internals must be set separately.
  */
 div[data-cke-widget-wrapper].align-center > figure[data-widget="image"] {
-  margin-left: auto;
   margin-right: auto;
+  margin-left: auto;
 }

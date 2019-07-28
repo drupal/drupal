@@ -2,6 +2,7 @@
 
 namespace Drupal\responsive_image;
 
+use Drupal\Core\Url;
 use Drupal\breakpoint\BreakpointManagerInterface;
 use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Form\FormStateInterface;
@@ -127,7 +128,7 @@ class ResponsiveImageStyleForm extends EntityForm {
         ];
         $image_style_mapping = $responsive_image_style->getImageStyleMapping($breakpoint_id, $multiplier);
         if (\Drupal::moduleHandler()->moduleExists('help')) {
-          $description = $this->t('See the <a href=":responsive_image_help">Responsive Image help page</a> for information on the sizes attribute.', [':responsive_image_help' => \Drupal::url('help.page', ['name' => 'responsive_image'])]);
+          $description = $this->t('See the <a href=":responsive_image_help">Responsive Image help page</a> for information on the sizes attribute.', [':responsive_image_help' => Url::fromRoute('help.page', ['name' => 'responsive_image'])->toString()]);
         }
         else {
           $description = $this->t('Enable the Help module for more information on the sizes attribute.');

@@ -4,30 +4,30 @@
   margin-left: 1em; /* LTR */
 }
 [dir="rtl"] .region-title__action {
-  margin-left: 0;
   margin-right: 1em;
+  margin-left: 0;
 }
 
 /* Block demo mode */
 .block-region {
-  background-color: #ff6;
   margin-top: 4px;
   margin-bottom: 4px;
   padding: 3px;
+  background-color: #ff6;
 }
 a.block-demo-backlink,
 a.block-demo-backlink:link,
 a.block-demo-backlink:visited {
-  background-color: #b4d7f0;
-  border-radius: 0 0 10px 10px;
+  position: fixed;
+  z-index: 499;
+  left: 20px; /* LTR */
+  padding: 5px 10px;
   color: #000;
+  border-radius: 0 0 10px 10px;
+  background-color: #b4d7f0;
   font-family: "Lucida Grande", Verdana, sans-serif;
   font-size: small;
   line-height: 20px;
-  left: 20px; /* LTR */
-  padding: 5px 10px;
-  position: fixed;
-  z-index: 499;
 }
 a.block-demo-backlink:hover {
   text-decoration: underline;

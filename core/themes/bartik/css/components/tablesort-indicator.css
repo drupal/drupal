@@ -6,8 +6,8 @@
 .tablesort {
   width: 14px;
   height: 14px;
-  vertical-align: top;
   margin: 1px 0 0 5px;
+  vertical-align: top;
 }
 .tablesort--asc {
   background-image: url(../../../../misc/icons/ffffff/twistie-down.svg);

@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\rdf\Functional;
 
+use Drupal\Core\Url;
 use Drupal\Tests\file\Functional\FileFieldTestBase;
 use Drupal\file\Entity\File;
 
@@ -81,7 +82,7 @@ class FileFieldAttributesTest extends FileFieldTestBase {
     // Parses front page where the node is displayed in its teaser form.
     $parser = new \EasyRdf_Parser_Rdfa();
     $graph = new \EasyRdf_Graph();
-    $base_uri = \Drupal::url('<front>', [], ['absolute' => TRUE]);
+    $base_uri = Url::fromRoute('<front>', [], ['absolute' => TRUE])->toString();
     $parser->parse($graph, $html, 'rdfa', $base_uri);
 
     $node_uri = $this->node->toUrl('canonical', ['absolute' => TRUE])->toString();

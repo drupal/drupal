@@ -131,3 +131,9 @@ media-form:
       css/components/media.css: {}
   dependencies:
     - media/form
+
+layout_builder_content_translation_admin:
+  version: VERSION
+  css:
+    component:
+      css/components/layout-builder-content-translation.css: {}

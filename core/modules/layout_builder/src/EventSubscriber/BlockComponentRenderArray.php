@@ -8,20 +8,22 @@ use Drupal\Core\Block\BlockPluginInterface;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Render\PreviewFallbackInterface;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\layout_builder\Access\LayoutPreviewAccessAllowed;
 use Drupal\layout_builder\Event\SectionComponentBuildRenderArrayEvent;
 use Drupal\layout_builder\LayoutBuilderEvents;
+use Drupal\views\Plugin\Block\ViewsBlock;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
  * Builds render arrays and handles access for all block components.
  *
  * @internal
- *   Layout Builder is currently experimental and should only be leveraged by
- *   experimental modules and development releases of contributed modules.
- *   See https://www.drupal.org/core/experimental for more information.
+ *   Tagged services are internal.
  */
 class BlockComponentRenderArray implements EventSubscriberInterface {
+
+  use StringTranslationTrait;
 
   /**
    * The current user.
@@ -90,6 +92,15 @@ class BlockComponentRenderArray implements EventSubscriberInterface {
     if ($access->isAllowed()) {
       $event->addCacheableDependency($block);
 
+      // @todo Revisit after https://www.drupal.org/node/3027653, as this will
+      //   provide a better way to remove contextual links from Views blocks.
+      //   Currently, doing this requires setting
+      //   \Drupal\views\ViewExecutable::$showAdminLinks() to false before the
+      //   Views block is built.
+      if ($block instanceof ViewsBlock && $event->inPreview()) {
+        $block->getViewExecutable()->setShowAdminLinks(FALSE);
+      }
+
       $content = $block->build();
       $is_content_empty = Element::isEmpty($content);
       $is_placeholder_ready = $event->inPreview() && $block instanceof PreviewFallbackInterface;
@@ -106,11 +117,22 @@ class BlockComponentRenderArray implements EventSubscriberInterface {
         '#base_plugin_id' => $block->getBaseId(),
         '#derivative_plugin_id' => $block->getDerivativeId(),
         '#weight' => $event->getComponent()->getWeight(),
-        '#attributes' => ['class' => ['layout-builder-block']],
         'content' => $content,
       ];
+
+      if ($block instanceof PreviewFallbackInterface) {
+        $preview_fallback_string = $block->getPreviewFallbackString();
+      }
+      else {
+        $preview_fallback_string = $this->t('"@block" block', ['@block' => $block->label()]);
+      }
+      // @todo Use new label methods so
+      //   data-layout-content-preview-placeholder-label doesn't have to use
+      //   preview fallback in https://www.drupal.org/node/2025649.
+      $build['#attributes']['data-layout-content-preview-placeholder-label'] = $preview_fallback_string;
+
       if ($is_content_empty && $is_placeholder_ready) {
-        $build['content']['#markup'] = $block->getPreviewFallbackString();
+        $build['content']['#markup'] = $this->t('Placeholder for the @preview_fallback', ['@preview_fallback' => $block->getPreviewFallbackString()]);
       }
       $event->setBuild($build);
     }

@@ -37,7 +37,7 @@ class FilterHtmlTest extends UnitTestCase {
    *
    * @param string $html
    *   Input HTML.
-   * @param array $expected
+   * @param string $expected
    *   The expected output string.
    */
   public function testfilterAttributes($html, $expected) {

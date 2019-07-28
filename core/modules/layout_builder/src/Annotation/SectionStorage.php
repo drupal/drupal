@@ -47,6 +47,20 @@ class SectionStorage extends Plugin {
   public $context_definitions = [];
 
   /**
+   * Indicates that this section storage handles its own permission checking.
+   *
+   * If FALSE, the 'configure any layout' permission will be required during
+   * routing access. If TRUE, Layout Builder will not enforce any access
+   * restrictions for the storage, so the section storage's implementation of
+   * access() must perform the access checking itself. Defaults to FALSE.
+   *
+   * @var bool
+   *
+   * @see \Drupal\layout_builder\Access\LayoutBuilderAccessCheck
+   */
+  public $handles_permission_check = FALSE;
+
+  /**
    * {@inheritdoc}
    */
   public function get() {

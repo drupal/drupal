@@ -11,3 +11,15 @@ type_form:
     js/type_form.js: {}
   dependencies:
     - core/drupal.form
+
+oembed.formatter:
+  version: VERSION
+  css:
+    component:
+      css/oembed.formatter.css: {}
+
+oembed.frame:
+  version: VERSION
+  css:
+    component:
+      css/oembed.frame.css: {}

@@ -1,0 +1,19 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - language
+  theme:
+    - umami
+id: languageswitcher
+theme: umami
+region: pre_header
+weight: 0
+provider: null
+plugin: 'language_block:language_interface'
+settings:
+  id: 'language_block:language_interface'
+  label: 'Language switcher'
+  provider: language
+  label_display: '0'
+visibility: {  }

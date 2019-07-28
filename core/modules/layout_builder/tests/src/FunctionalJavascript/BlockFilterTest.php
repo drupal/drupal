@@ -117,7 +117,7 @@ class BlockFilterTest extends WebDriverTestBase {
     });
 
     // Test Drupal.announce() message when all blocks are listed.
-    $filter->setValue('');;
+    $filter->setValue('');
     $this->assertAnnounceContains('All available blocks are listed.');
     // Confirm the Content Fields category remains collapsed after filtering.
     $this->assertFalse($promoteToFrontPageLink->isVisible());

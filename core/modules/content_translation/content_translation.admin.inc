@@ -182,8 +182,7 @@ function _content_translation_is_field_translatability_configurable(EntityTypeIn
   // Allow to configure only fields supporting multilingual storage. We skip our
   // own fields as they are always translatable. Additionally we skip a set of
   // well-known fields implementing entity system business logic.
-  return
-    $definition->isTranslatable() &&
+  return $definition->isTranslatable() &&
     $definition->getProvider() != 'content_translation' &&
     !in_array($definition->getName(), [$entity_type->getKey('langcode'), $entity_type->getKey('default_langcode'), 'revision_translation_affected']);
 }
@@ -256,6 +255,7 @@ function _content_translation_preprocess_language_content_settings_table(&$varia
             'class' => ['operations'],
           ],
         ],
+        '#field_name' => $field_name,
         'class' => ['field-settings'],
       ];
 

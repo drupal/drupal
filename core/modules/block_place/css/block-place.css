@@ -4,24 +4,24 @@
  */
 
 .block-place-region {
-  outline: 1px dashed rgba(0, 0, 0, 0.5);
-  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.7);
   margin: 1em 0;
   padding: 5px;
   text-align: center;
+  outline: 1px dashed rgba(0, 0, 0, 0.5);
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.7);
   text-shadow: none;
 }
 
 .block-place-region a.button {
   position: relative;
-  background: url(../../../misc/icons/bebebe/plus.svg) #fff center center / 16px 16px no-repeat;
-  border: 1px solid #ccc;
   box-sizing: border-box;
-  font-size: 1rem;
-  padding: 0;
-  height: 26px;
   width: 26px;
+  height: 26px;
+  padding: 0;
   white-space: nowrap;
+  border: 1px solid #ccc;
+  background: url(../../../misc/icons/bebebe/plus.svg) #fff center center / 16px 16px no-repeat;
+  font-size: 1rem;
 }
 
 .block-place-region:hover a.button,
@@ -33,26 +33,26 @@
   position: relative;
   top: -10px;
   right: 26px; /* LTR */
-  height: 0;
-  width: 0;
   overflow: visible;
+  width: 0;
+  height: 0;
   padding: 0;
 }
 
 [dir="rtl"] .block-place-region .ajax-progress {
-  float: inherit;
-  left: 26px;
   right: inherit;
+  left: 26px;
+  float: inherit;
 }
 
 .block-place-region .ajax-progress-throbber .throbber {
   display: block;
-  padding: 0;
-  height: 26px;
+  box-sizing: border-box;
   width: 26px;
-  background-position: center 6px;
-  background-color: #fff;
+  height: 26px;
+  padding: 0;
   border: 1px solid #ddd;
   border-radius: 100px;
-  box-sizing: border-box;
+  background-color: #fff;
+  background-position: center 6px;
 }

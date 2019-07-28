@@ -4,16 +4,16 @@
  */
 
 .forum__description {
-  font-size: 0.9em;
   margin: 0.5em;
+  font-size: 0.9em;
 }
 .forum__icon {
-  background-image: url(../../images/icons/forum-icons.png);
-  background-repeat: no-repeat;
   float: left; /* LTR */
+  width: 24px;
   height: 24px;
   margin: 0 9px 0 0; /* LTR */
-  width: 24px;
+  background-image: url(../../images/icons/forum-icons.png);
+  background-repeat: no-repeat;
 }
 [dir="rtl"] .forum__icon {
   float: right;
@@ -26,8 +26,8 @@
   margin-left: 20px; /* LTR */
 }
 [dir="rtl"] .forum .indented {
-  margin-left: 0;
   margin-right: 20px;
+  margin-left: 0;
 }
 .forum__topic-status--new {
   background-position: -24px 0;

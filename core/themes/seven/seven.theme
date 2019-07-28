@@ -5,6 +5,7 @@
  * Functions to support theming in the Seven theme.
  */
 
+use Drupal\Core\Url;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\media\MediaForm;
 
@@ -62,7 +63,7 @@ function seven_preprocess_node_add_list(&$variables) {
     /** @var \Drupal\node\NodeTypeInterface $type */
     foreach ($variables['content'] as $type) {
       $variables['types'][$type->id()]['label'] = $type->label();
-      $variables['types'][$type->id()]['url'] = \Drupal::url('node.add', ['node_type' => $type->id()]);
+      $variables['types'][$type->id()]['url'] = Url::fromRoute('node.add', ['node_type' => $type->id()])->toString();
     }
   }
 }
@@ -78,7 +79,7 @@ function seven_preprocess_block_content_add_list(&$variables) {
     foreach ($variables['content'] as $type) {
       $variables['types'][$type->id()]['label'] = $type->label();
       $options = ['query' => \Drupal::request()->query->all()];
-      $variables['types'][$type->id()]['url'] = \Drupal::url('block_content.add_form', ['block_content_type' => $type->id()], $options);
+      $variables['types'][$type->id()]['url'] = Url::fromRoute('block_content.add_form', ['block_content_type' => $type->id()], $options)->toString();
     }
   }
 }
@@ -177,4 +178,11 @@ function seven_form_media_form_alter(&$form, FormStateInterface $form_state) {
     // media-edit-form.html.twig template the same way node does.
     $form['#attached']['library'][] = 'seven/media-form';
   }
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter() for language_content_settings_form().
+ */
+function seven_form_language_content_settings_form_alter(array &$form, FormStateInterface $form_state) {
+  $form['#attached']['library'][] = 'seven/layout_builder_content_translation_admin';
 }

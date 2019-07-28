@@ -29,6 +29,11 @@ function taxonomy_post_update_clear_entity_bundle_field_definitions_cache() {
  * existing ones that were using the 'content_translation_status' field.
  */
 function taxonomy_post_update_handle_publishing_status_addition_in_views(&$sandbox = NULL) {
+  // If Views is not installed, there is nothing to do.
+  if (!\Drupal::moduleHandler()->moduleExists('views')) {
+    return;
+  }
+
   $definition_update_manager = \Drupal::entityDefinitionUpdateManager();
   $entity_type = $definition_update_manager->getEntityType('taxonomy_term');
   $published_key = $entity_type->getKey('published');

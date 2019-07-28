@@ -100,7 +100,7 @@ class ConfigEntityMapper extends ConfigNamesMapper {
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
     // Note that we ignore the plugin $configuration because mappers have
     // nothing to configure in themselves.
-    return new static (
+    return new static(
       $plugin_id,
       $plugin_definition,
       $container->get('config.factory'),

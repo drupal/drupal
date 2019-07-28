@@ -24,4 +24,5 @@ settings:
       field: name
       direction: asc
     auto_create: true
+    auto_create_bundle: ''
 field_type: entity_reference

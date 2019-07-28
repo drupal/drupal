@@ -16,19 +16,40 @@
 
 /* Tab appearance. */
 .toolbar .toolbar-bar .workspaces-toolbar-tab {
-  float: right; /* LTR */
+  color: #000;
   background-color: #e09600;
-}
-[dir="rtl"] .toolbar .toolbar-bar .workspaces-toolbar-tab {
-  float: left;
 }
 .toolbar .toolbar-bar .workspaces-toolbar-tab--is-default {
   background-color: #81c071;
 }
+.toolbar-oriented .toolbar-bar .workspaces-toolbar-tab {
+  float: right; /* LTR */
+}
+[dir="rtl"] .toolbar-oriented .toolbar-bar .workspaces-toolbar-tab {
+  float: left;
+}
+
+@media (min-width: 16.5em) {
+  .toolbar:not(.toolbar-oriented) .toolbar-bar .workspaces-toolbar-tab {
+    float: right;
+  }
+  [dir="rtl"] .toolbar:not(.toolbar-oriented) .toolbar-bar .workspaces-toolbar-tab {
+    float: left;
+  }
+}
 
 .toolbar .toolbar-bar .workspaces-toolbar-tab .toolbar-item {
-  color: #000;
+  width: 100%;
   margin: 0;
+  text-align: left;
+  color: inherit;
+}
+[dir="rtl"] .toolbar .toolbar-bar .workspaces-toolbar-tab .toolbar-item {
+  text-align: right;
+}
+.toolbar-oriented .toolbar-bar .workspaces-toolbar-tab .toolbar-item {
+  width: auto;
+  text-align: initial;
 }
 
 .toolbar .toolbar-icon-workspace:before {
@@ -42,8 +63,8 @@
 
 .workspaces-dialog.ui-dialog-off-canvas #drupal-off-canvas,
 .workspaces-dialog.ui-dialog-off-canvas {
-  background: #333;
   padding: 0;
+  background: #333;
 }
 
 .workspaces-dialog.ui-widget.ui-widget-content {
@@ -51,22 +72,22 @@
 }
 
 .workspaces-dialog.ui-dialog-off-canvas .ui-dialog-titlebar {
-  visibility: hidden;
   position: relative;
+  visibility: hidden;
 }
 
 .workspaces-dialog.ui-dialog-off-canvas .ui-dialog-titlebar .ui-button {
-  visibility: visible;
   z-index: 101;
+  visibility: visible;
 }
 
 #drupal-off-canvas .active-workspace {
-  background-color: #444;
-  width: 100%;
-  padding: 20px 40px 0 20px;
-  height: 140px;
   position: relative;
   top: 16px;
+  width: 100%;
+  height: 140px;
+  padding: 20px 40px 0 20px;
+  background-color: #444;
 }
 
 @media all and (min-width: 767px) {
@@ -81,17 +102,17 @@
 }
 
 #drupal-off-canvas .active-workspace__label {
-  color: #fff;
-  font-size: 1.285em;
   margin-top: 0.5em;
   margin-left: 3.2rem;
+  color: #fff;
+  font-size: 1.285em;
 }
 
 #drupal-off-canvas .active-workspace__manage {
-  font-size: 0.9286em;
   margin-left: 3.2rem;
   white-space: nowrap;
   outline-color: currentColor;
+  font-size: 0.9286em;
 }
 
 #drupal-off-canvas .active-workspace__actions {
@@ -100,11 +121,11 @@
 }
 
 #drupal-off-canvas .active-workspace__button {
-  border-radius: 20px;
-  background-image: linear-gradient(to bottom, #007bc6, #0071b8);
-  border: solid 1px #1e5c90;
   padding: 5px 22px;
   color: #fff;
+  border: solid 1px #1e5c90;
+  border-radius: 20px;
+  background-image: linear-gradient(to bottom, #007bc6, #0071b8);
   text-shadow: 0 1px 0 rgba(0, 0, 0, 0.5);
   font-weight: bold;
 }
@@ -131,29 +152,29 @@
 }
 
 #drupal-off-canvas .workspaces a {
-  background-color: #555;
-  box-sizing: border-box;
-  padding: 20px 0 0 50px;
-  margin-right: 1px;
-  color: #fff;
-  font-size: 0.929em;
-  font-weight: bold;
-  text-decoration: none;
   position: relative;
   display: block;
+  box-sizing: border-box;
   height: 73px;
+  margin-right: 1px;
+  padding: 20px 0 0 50px;
+  text-decoration: none;
+  color: #fff;
+  background-color: #555;
+  font-size: 0.929em;
+  font-weight: bold;
 }
 
 #drupal-off-canvas .active-workspace__label:before,
 #drupal-off-canvas .workspaces__item:before {
+  position: absolute;
+  left: 20px;
+  display: block;
+  width: 20px;
+  height: 20px;
+  content: "";
   background: url("../icons/f0a100/ws_icon.svg") center center no-repeat;
   background-size: 100% auto;
-  content: "";
-  display: block;
-  height: 20px;
-  width: 20px;
-  left: 20px;
-  position: absolute;
 }
 
 #drupal-off-canvas .active-workspace--default .active-workspace__label:before,
@@ -162,9 +183,9 @@
 }
 
 #drupal-off-canvas .active-workspace__label:before {
-  height: 40px;
-  width: 40px;
   left: 20px;
+  width: 40px;
+  height: 40px;
 }
 
 @media all and (min-width: 767px) {
@@ -174,50 +195,61 @@
 }
 
 .workspaces-dialog.ui-dialog-off-canvas .ui-dialog-titlebar {
-  padding: 0;
   top: 39px;
+  padding: 0;
 }
 
 .workspaces-dialog.ui-dialog-off-canvas .ui-dialog-titlebar-close {
-  right: 0.5em;
   top: 1em;
+  right: 0.5em;
 }
 
 @media all and (max-width: 766px) {
-  .toolbar .toolbar-bar .workspaces-toolbar-tab .toolbar-icon-workspace {
-    padding-left: 2.75em;
-    padding-right: 1.3333em;
-    text-indent: 0;
+  .toolbar-oriented .toolbar-bar .workspaces-toolbar-tab .toolbar-icon-workspace {
     width: auto;
     max-width: 8em;
-    white-space: nowrap;
+  }
+
+  .toolbar .toolbar-bar .workspaces-toolbar-tab .toolbar-icon-workspace {
     overflow: hidden;
+    padding-right: 1.3333em;
+    padding-left: 2.75em; /* LTR */
+    white-space: nowrap;
+    text-indent: 0;
     text-overflow: ellipsis;
+  }
+  [dir=rtl] .toolbar .toolbar-bar .workspaces-toolbar-tab .toolbar-icon-workspace {
+    padding-right: 2.75em;
+    padding-left: 1.3333em;
   }
 
   .toolbar .toolbar-bar .workspaces-toolbar-tab .toolbar-icon-workspace:before {
-    background-size: 100% auto;
-    left: 0.6667em;
+    left: 0.6667em; /* LTR */
     width: 20px;
+    background-size: 100% auto;
+  }
+  [dir=rtl] .toolbar .toolbar-bar .workspaces-toolbar-tab .toolbar-icon-workspace:before {
+    right: 0.6667em;
+    left: auto;
   }
 }
 
 @media all and (min-width: 767px) {
   #drupal-off-canvas .active-workspace {
-    right: 0;
-    top: 0;
     position: fixed;
+    top: 0;
+    right: 0;
     width: calc(30% - 80px);
-    padding: 20px 40px 0;
     height: 140px;
+    padding: 20px 40px 0;
   }
 
   #drupal-off-canvas .all-workspaces {
-    padding-left: 20px;
     position: relative;
-    margin-top: 31px;
-    left: 0;
     top: 27px;
+    left: 0;
+    margin-top: 31px;
+    padding-left: 20px;
   }
 
   .workspaces-dialog.ui-widget.ui-widget-content {
@@ -225,9 +257,9 @@
   }
 
   #drupal-off-canvas .workspaces {
-    width: 70%;
-    bottom: 0;
     position: absolute;
+    bottom: 0;
+    width: 70%;
   }
 
   #drupal-off-canvas .workspaces ul {
@@ -241,8 +273,8 @@
 
   #drupal-off-canvas .active-workspace__actions {
     position: absolute;
-    bottom: 1em;
     top: unset;
+    bottom: 1em;
   }
 
   .workspaces-dialog.ui-dialog-off-canvas .ui-dialog-titlebar {

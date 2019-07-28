@@ -5,6 +5,7 @@
  * Allows to ban individual IP addresses.
  */
 
+use Drupal\Core\Url;
 use Drupal\Core\Routing\RouteMatchInterface;
 
 /**
@@ -19,7 +20,7 @@ function ban_help($route_name, RouteMatchInterface $route_match) {
       $output .= '<h3>' . t('Uses') . '</h3>';
       $output .= '<dl>';
       $output .= '<dt>' . t('Banning IP addresses') . '</dt>';
-      $output .= '<dd>' . t('Administrators can enter IP addresses to ban on the <a href=":bans">IP address bans</a> page.', [':bans' => \Drupal::url('ban.admin_page')]) . '</dd>';
+      $output .= '<dd>' . t('Administrators can enter IP addresses to ban on the <a href=":bans">IP address bans</a> page.', [':bans' => Url::fromRoute('ban.admin_page')->toString()]) . '</dd>';
       $output .= '</dl>';
       return $output;
 

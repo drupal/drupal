@@ -195,7 +195,7 @@ class SearchPageListBuilder extends DraggableListBuilder implements FormInterfac
       '#type' => 'details',
       '#title' => $this->t('Indexing progress'),
       '#open' => TRUE,
-      '#description' => $this->t('Only items in the index will appear in search results. To build and maintain the index, a correctly configured <a href=":cron">cron maintenance task</a> is required.', [':cron' => \Drupal::url('system.cron_settings')]),
+      '#description' => $this->t('Only items in the index will appear in search results. To build and maintain the index, a correctly configured <a href=":cron">cron maintenance task</a> is required.', [':cron' => Url::fromRoute('system.cron_settings')->toString()]),
     ];
     $form['status']['status'] = ['#markup' => $status];
     $form['status']['wipe'] = [
@@ -218,7 +218,7 @@ class SearchPageListBuilder extends DraggableListBuilder implements FormInterfac
       '#title' => $this->t('Number of items to index per cron run'),
       '#default_value' => $search_settings->get('index.cron_limit'),
       '#options' => $items,
-      '#description' => $this->t('The maximum number of items indexed in each run of the <a href=":cron">cron maintenance task</a>. If necessary, reduce the number of items to prevent timeouts and memory errors while indexing. Some search page types may have their own setting for this.', [':cron' => \Drupal::url('system.cron_settings')]),
+      '#description' => $this->t('The maximum number of items indexed in each run of the <a href=":cron">cron maintenance task</a>. If necessary, reduce the number of items to prevent timeouts and memory errors while indexing. Some search page types may have their own setting for this.', [':cron' => Url::fromRoute('system.cron_settings')->toString()]),
     ];
     // Indexing settings:
     $form['indexing_settings'] = [

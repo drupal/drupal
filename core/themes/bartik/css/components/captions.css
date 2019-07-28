@@ -3,16 +3,16 @@
   margin-bottom: 1.2em;
 }
 .caption > * {
-  background: #f3f3f3;
   padding: 0.5ex;
   border: 1px solid #ccc;
+  background: #f3f3f3;
 }
 .caption > figcaption {
+  padding-top: 0.5ex;
+  text-align: center;
   border: 1px solid #ccc;
   border-top: none;
-  padding-top: 0.5ex;
   font-size: small;
-  text-align: center;
 }
 
 /* Override Bartik's default blockquote and pre styles when captioned. */

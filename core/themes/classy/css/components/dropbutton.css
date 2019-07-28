@@ -4,8 +4,8 @@
  */
 
 .js .dropbutton-widget {
-  background-color: white;
   border: 1px solid #ccc;
+  background-color: white;
 }
 .js .dropbutton-widget:hover {
   border-color: #b8b8b8;
@@ -21,13 +21,13 @@
   border-right: 1px solid #e8e8e8; /* LTR */
 }
 [dir="rtl"] .dropbutton-multiple .dropbutton {
-  border-left: 1px solid #e8e8e8;
   border-right: 0 none;
+  border-left: 1px solid #e8e8e8;
 }
 .dropbutton-multiple .dropbutton .dropbutton-action > * {
   margin-right: 0.25em; /* LTR */
 }
 [dir="rtl"] .dropbutton-multiple .dropbutton .dropbutton-action > * {
-  margin-left: 0.25em;
   margin-right: 0;
+  margin-left: 0.25em;
 }

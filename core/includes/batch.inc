@@ -43,7 +43,7 @@ function _batch_page(Request $request) {
     $batch = \Drupal::service('batch.storage')->load($request_id);
     if (!$batch) {
       \Drupal::messenger()->addError(t('No active batch.'));
-      return new RedirectResponse(\Drupal::url('<front>', [], ['absolute' => TRUE]));
+      return new RedirectResponse(Url::fromRoute('<front>', [], ['absolute' => TRUE])->toString());
     }
   }
 

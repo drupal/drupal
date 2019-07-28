@@ -7,11 +7,6 @@ use Drupal\Core\Cache\RefinableCacheableDependencyInterface;
 
 /**
  * Provides the interface for a plugin manager of section storage types.
- *
- * @internal
- *   Layout Builder is currently experimental and should only be leveraged by
- *   experimental modules and development releases of contributed modules.
- *   See https://www.drupal.org/core/experimental for more information.
  */
 interface SectionStorageManagerInterface extends DiscoveryInterface {
 
@@ -50,8 +45,8 @@ interface SectionStorageManagerInterface extends DiscoveryInterface {
   /**
    * Loads a section storage with no associated section list.
    *
-   * @param string $id
-   *   The ID of the section storage being instantiated.
+   * @param string $type
+   *   The type of the section storage being instantiated.
    *
    * @return \Drupal\layout_builder\SectionStorageInterface
    *   The section storage.
@@ -62,7 +57,7 @@ interface SectionStorageManagerInterface extends DiscoveryInterface {
    *   collaborators of the plugins in build-time situations when section
    *   storage type must be consulted.
    */
-  public function loadEmpty($id);
+  public function loadEmpty($type);
 
   /**
    * Loads a section storage populated with an existing section list.

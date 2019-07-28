@@ -141,7 +141,7 @@ views_block:
   mapping:
     views_label:
       type: label
-      lable: 'Title'
+      label: 'Title'
     items_per_page:
       type: string
       label: 'Items per block'

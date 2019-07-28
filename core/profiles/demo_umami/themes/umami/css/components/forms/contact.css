@@ -4,8 +4,9 @@
  */
 
 .contact-form {
-  margin: auto auto 1rem;
   max-width: 600px;
+  margin: auto auto 1rem;
+  padding: 0 1rem;
 }
 
 @media screen and (min-width: 30rem) { /* 480px */
@@ -23,28 +24,6 @@
   margin-bottom: 0;
 }
 .contact-form .form-item-copy .form-checkbox {
-  margin: 0 5px 0 0;
   min-width: auto;
-}
-.contact-form .form-actions {
-  display: block;
-}
-
-@media screen and (min-width: 30rem) { /* 480px */
-  .contact-form .form-actions {
-    display: inline-flex;
-  }
-}
-.contact-form .form-actions .button {
-  margin-left: 0;
-}
-
-@media screen and (min-width: 30rem) { /* 480px */
-  .contact-form .form-actions .button {
-    margin-left: 1em; /* LTR */
-  }
-  [dir=rtl] .contact-form .form-actions .button + .button {
-    margin-right: 1em;
-    margin-left: 0;
-  }
+  margin: 0 5px 0 0;
 }

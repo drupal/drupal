@@ -36,7 +36,7 @@ class FileTransferAuthorizeForm extends FormBase {
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container) {
-    return new static ($container->get('app.root'));
+    return new static($container->get('app.root'));
   }
 
   /**

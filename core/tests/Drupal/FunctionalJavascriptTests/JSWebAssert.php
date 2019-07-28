@@ -387,4 +387,80 @@ JS;
     return $this->session->evaluateScript($full_javascript_visibility_test);
   }
 
+  /**
+   * Passes if the raw text IS NOT found escaped on the loaded page.
+   *
+   * Raw text refers to the raw HTML that the page generated.
+   *
+   * @param string $raw
+   *   Raw (HTML) string to look for.
+   */
+  public function assertNoEscaped($raw) {
+    $this->responseNotContains($this->escapeHtml($raw));
+  }
+
+  /**
+   * Passes if the raw text IS found escaped on the loaded page.
+   *
+   * Raw text refers to the raw HTML that the page generated.
+   *
+   * @param string $raw
+   *   Raw (HTML) string to look for.
+   */
+  public function assertEscaped($raw) {
+    $this->responseContains($this->escapeHtml($raw));
+  }
+
+  /**
+   * Escapes HTML for testing.
+   *
+   * Drupal's Html::escape() uses the ENT_QUOTES flag with htmlspecialchars() to
+   * escape both single and double quotes. With JavascriptTestBase testing the
+   * browser is automatically converting &quot; and &#039; to double and single
+   * quotes respectively therefore we can not escape them when testing for
+   * escaped HTML.
+   *
+   * @param $raw
+   *   The raw string to escape.
+   *
+   * @return string
+   *   The string with escaped HTML.
+   *
+   * @see Drupal\Component\Utility\Html::escape()
+   */
+  protected function escapeHtml($raw) {
+    return htmlspecialchars($raw, ENT_NOQUOTES | ENT_SUBSTITUTE, 'UTF-8');
+  }
+
+  /**
+   * Asserts that no matching element exists on the page after a wait.
+   *
+   * @param string $selector_type
+   *   The element selector type (css, xpath).
+   * @param string|array $selector
+   *   The element selector.
+   * @param int $timeout
+   *   (optional) Timeout in milliseconds, defaults to 10000.
+   * @param string $message
+   *   (optional) The exception message.
+   *
+   * @throws \Behat\Mink\Exception\ElementHtmlException
+   *   When an element still exists on the page.
+   */
+  public function assertNoElementAfterWait($selector_type, $selector, $timeout = 10000, $message = 'Element exists on the page.') {
+    $start = microtime(TRUE);
+    $end = $start + ($timeout / 1000);
+    $page = $this->session->getPage();
+
+    do {
+      $node = $page->find($selector_type, $selector);
+      if (empty($node)) {
+        return;
+      }
+      usleep(100000);
+    } while (microtime(TRUE) < $end);
+
+    throw new ElementHtmlException($message, $this->session->getDriver(), $node);
+  }
+
 }

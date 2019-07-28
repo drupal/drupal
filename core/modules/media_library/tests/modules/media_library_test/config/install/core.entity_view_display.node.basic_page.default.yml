@@ -51,7 +51,16 @@ content:
     region: content
   field_empty_types_media:
     type: entity_reference_entity_view
-    weight: 103
+    weight: 104
+    label: above
+    settings:
+      view_mode: default
+      link: false
+    third_party_settings: {  }
+    region: content
+  field_null_types_media:
+    type: entity_reference_entity_view
+    weight: 105
     label: above
     settings:
       view_mode: default

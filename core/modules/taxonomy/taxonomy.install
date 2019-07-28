@@ -5,6 +5,7 @@
  * Install, update and uninstall functions for the taxonomy module.
  */
 
+use Drupal\Core\Entity\Sql\SqlEntityStorageInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Site\Settings;
 
@@ -194,4 +195,56 @@ function taxonomy_update_8701() {
   $entity_definition_update_manager = \Drupal::entityDefinitionUpdateManager();
   $storage_definition = $entity_definition_update_manager->getFieldStorageDefinition('parent', 'taxonomy_term');
   $entity_definition_update_manager->updateFieldStorageDefinition($storage_definition);
+}
+
+/**
+ * Fix the parent field langcode data.
+ */
+function taxonomy_update_8702(&$sandbox) {
+  $definition_update_manager = \Drupal::entityDefinitionUpdateManager();
+  $field_storage_definition = $definition_update_manager->getFieldStorageDefinition('parent', 'taxonomy_term');
+  $entity_type = $definition_update_manager->getEntityType('taxonomy_term');
+
+  // Only perform the update if:
+  // - The field is not translatable. It's possible that custom or contrib code
+  //   has overridden this.
+  // - The field is not revisionable. If it is then
+  //   taxonomy_post_update_make_taxonomy_term_revisionable() has already run
+  //   and this used to fix the parent field langcode data.
+  // - Terms are using a SQL-based storage class.
+  if (!$field_storage_definition->isTranslatable() &&
+      !$entity_type->isRevisionable() &&
+      is_subclass_of($entity_type->getStorageClass(), SqlEntityStorageInterface::class)
+  ) {
+    // taxonomy_update_8502() populated the langcode field of
+    // 'taxonomy_term__parent' using the term's langcode. However, the field is
+    // not translatable and, therefore, should use the term's default language.
+    $database = \Drupal::database();
+    $select = $database->select('taxonomy_term__parent', 'tp');
+    $select->join('taxonomy_term_field_data', 'tdf', 'tp.entity_id = tdf.tid AND tdf.langcode <> tp.langcode');
+    $select->fields('tp', ['entity_id'])
+      ->fields('tdf', ['tid', 'langcode'])
+      ->condition('tdf.default_langcode', 1);
+
+    if (!isset($sandbox['max'])) {
+      $count_query = clone $select;
+      $sandbox['max'] = $count_query->countQuery()->execute()->fetchField();
+      $sandbox['current'] = 0;
+    }
+
+    $result = $select->execute();
+    $processed = 0;
+    while ($row = $result->fetchAssoc()) {
+      $database->update('taxonomy_term__parent')
+        ->condition('entity_id', $row['tid'])
+        ->fields(['langcode' => $row['langcode']])
+        ->execute();
+      $sandbox['current']++;
+      $processed++;
+      if ($processed >= Settings::get('entity_update_batch_size', 50)) {
+        break;
+      }
+    }
+  }
+  $sandbox['#finished'] = empty($sandbox['max']) ? 1 : ($sandbox['current'] / $sandbox['max']);
 }

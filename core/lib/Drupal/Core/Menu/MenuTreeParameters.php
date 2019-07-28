@@ -12,7 +12,7 @@ namespace Drupal\Core\Menu;
  *   a parent in the list will be included.
  * - Which menu links are omitted, depending on the minimum and maximum depth.
  */
-class MenuTreeParameters {
+class MenuTreeParameters implements \Serializable {
 
   /**
    * A menu link plugin ID that should be used as the root.
@@ -27,9 +27,6 @@ class MenuTreeParameters {
 
   /**
    * The minimum depth of menu links in the resulting tree relative to the root.
-   *
-   * Defaults to 1, which is the default to build a whole tree for a menu
-   * (excluding the root).
    *
    * @var int|null
    */
@@ -208,6 +205,41 @@ class MenuTreeParameters {
    */
   public function excludeRoot() {
     $this->setMinDepth(1);
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function serialize() {
+    // Enforce type consistency for all the internal properties of this object.
+    $this->root = (string) $this->root;
+    $this->minDepth = $this->minDepth !== NULL ? (int) $this->minDepth : NULL;
+    $this->maxDepth = $this->maxDepth !== NULL ? (int) $this->maxDepth : NULL;
+    $this->activeTrail = array_values(array_filter($this->activeTrail));
+
+    // Sort 'expanded' and 'conditions' to prevent duplicate cache items.
+    sort($this->expandedParents);
+    asort($this->conditions);
+
+    return serialize([
+      'root' => $this->root,
+      'minDepth' => $this->minDepth,
+      'maxDepth' => $this->maxDepth,
+      'expandedParents' => $this->expandedParents,
+      'activeTrail' => $this->activeTrail,
+      'conditions' => $this->conditions,
+    ]);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function unserialize($serialized) {
+    foreach (unserialize($serialized) as $key => $value) {
+      $this->{$key} = $value;
+    }
+
     return $this;
   }
 

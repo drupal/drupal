@@ -157,7 +157,7 @@ class ModerationInformation implements ModerationInformationInterface {
       $latest_revision_id = $storage->getLatestTranslationAffectedRevisionId($entity->id(), $entity->language()->getId());
       $default_revision_id = $entity->isDefaultRevision() && !$entity->isNewRevision() && ($revision_id = $entity->getRevisionId()) ?
         $revision_id : $this->getDefaultRevisionId($entity->getEntityTypeId(), $entity->id());
-      if ($latest_revision_id != $default_revision_id) {
+      if ($latest_revision_id !== NULL && $latest_revision_id != $default_revision_id) {
         /** @var \Drupal\Core\Entity\ContentEntityInterface $latest_revision */
         $latest_revision = $storage->loadRevision($latest_revision_id);
         $result = !$latest_revision->wasDefaultRevision();

@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\aggregator\Functional;
 
+use Drupal\Core\Url;
 use Drupal\aggregator\Entity\Feed;
 use Drupal\Component\Utility\Html;
 use Drupal\node\NodeInterface;
@@ -99,10 +100,10 @@ abstract class AggregatorTestBase extends BrowserTestBase {
   public function getFeedEditArray($feed_url = NULL, array $edit = []) {
     $feed_name = $this->randomMachineName(10);
     if (!$feed_url) {
-      $feed_url = \Drupal::url('view.frontpage.feed_1', [], [
+      $feed_url = Url::fromRoute('view.frontpage.feed_1', [], [
         'query' => ['feed' => $feed_name],
         'absolute' => TRUE,
-      ]);
+      ])->toString();
     }
     $edit += [
       'title[0][value]' => $feed_name,
@@ -127,10 +128,10 @@ abstract class AggregatorTestBase extends BrowserTestBase {
   public function getFeedEditObject($feed_url = NULL, array $values = []) {
     $feed_name = $this->randomMachineName(10);
     if (!$feed_url) {
-      $feed_url = \Drupal::url('view.frontpage.feed_1', [
+      $feed_url = Url::fromRoute('view.frontpage.feed_1', [
         'query' => ['feed' => $feed_name],
         'absolute' => TRUE,
-      ]);
+      ])->toString();
     }
     $values += [
       'title' => $feed_name,

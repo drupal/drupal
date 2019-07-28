@@ -30,12 +30,12 @@ function book_help($route_name, RouteMatchInterface $route_match) {
       $output .= '<dl>';
       $output .= '<dt>' . t('Adding and managing book content') . '</dt>';
       $output .= '<dd>' . t('Books have a hierarchical structure, called a <em>book outline</em>. Each book outline can have nested pages up to nine levels deep. Multiple content types can be configured to behave as a book outline. From the content edit form, it is possible to add a page to a book outline or create a new book.') . '</dd>';
-      $output .= '<dd>' . t('You can assign separate permissions for <em>creating new books</em> as well as <em>creating</em>, <em>editing</em> and <em>deleting</em> book content. Users with the <em>Administer book outlines</em> permission can add <em>any</em> type of content to a book by selecting the appropriate book outline while editing the content. They can also view a list of all books, and edit and rearrange section titles on the <a href=":admin-book">Book list page</a>.', [':admin-book' => \Drupal::url('book.admin')]) . '</dd>';
+      $output .= '<dd>' . t('You can assign separate permissions for <em>creating new books</em> as well as <em>creating</em>, <em>editing</em> and <em>deleting</em> book content. Users with the <em>Administer book outlines</em> permission can add <em>any</em> type of content to a book by selecting the appropriate book outline while editing the content. They can also view a list of all books, and edit and rearrange section titles on the <a href=":admin-book">Book list page</a>.', [':admin-book' => Url::fromRoute('book.admin')->toString()]) . '</dd>';
       $output .= '<dt>' . t('Configuring content types for books') . '</dt>';
-      $output .= '<dd>' . t('The <em>Book page</em> content type is the initial content type enabled for book outlines. On the <a href=":admin-settings">Book settings page</a> you can configure content types that can used in book outlines.', [':admin-settings' => \Drupal::url('book.settings')]) . '</dd>';
-      $output .= '<dd>' . t('Users with the <em>Add content and child pages to books</em> permission will see a link to <em>Add child page</em> when viewing a content item that is part of a book outline. This link will allow users to create a new content item of the content type you select on the <a href=":admin-settings">Book settings page</a>. By default this is the <em>Book page</em> content type.', [':admin-settings' => \Drupal::url('book.settings')]) . '</dd>';
+      $output .= '<dd>' . t('The <em>Book page</em> content type is the initial content type enabled for book outlines. On the <a href=":admin-settings">Book settings page</a> you can configure content types that can used in book outlines.', [':admin-settings' => Url::fromRoute('book.settings')->toString()]) . '</dd>';
+      $output .= '<dd>' . t('Users with the <em>Add content and child pages to books</em> permission will see a link to <em>Add child page</em> when viewing a content item that is part of a book outline. This link will allow users to create a new content item of the content type you select on the <a href=":admin-settings">Book settings page</a>. By default this is the <em>Book page</em> content type.', [':admin-settings' => Url::fromRoute('book.settings')->toString()]) . '</dd>';
       $output .= '<dt>' . t('Book navigation') . '</dt>';
-      $output .= '<dd>' . t("Book pages have a default book-specific navigation block. This navigation block contains links that lead to the previous and next pages in the book, and to the level above the current page in the book's structure. This block can be enabled on the <a href=':admin-block'>Blocks layout page</a>. For book pages to show up in the book navigation, they must be added to a book outline.", [':admin-block' => (\Drupal::moduleHandler()->moduleExists('block')) ? \Drupal::url('block.admin_display') : '#']) . '</dd>';
+      $output .= '<dd>' . t("Book pages have a default book-specific navigation block. This navigation block contains links that lead to the previous and next pages in the book, and to the level above the current page in the book's structure. This block can be enabled on the <a href=':admin-block'>Blocks layout page</a>. For book pages to show up in the book navigation, they must be added to a book outline.", [':admin-block' => (\Drupal::moduleHandler()->moduleExists('block')) ? Url::fromRoute('block.admin_display')->toString() : '#']) . '</dd>';
       $output .= '<dt>' . t('Collaboration') . '</dt>';
       $output .= '<dd>' . t('Books can be created collaboratively, as they allow users with appropriate permissions to add pages into existing books, and add those pages to a custom table of contents.') . '</dd>';
       $output .= '<dt>' . t('Printing books') . '</dt>';
@@ -47,7 +47,7 @@ function book_help($route_name, RouteMatchInterface $route_match) {
       return '<p>' . t('The book module offers a means to organize a collection of related content pages, collectively known as a book. When viewed, this content automatically displays links to adjacent book pages, providing a simple navigation system for creating and reviewing structured content.') . '</p>';
 
     case 'entity.node.book_outline_form':
-      return '<p>' . t('The outline feature allows you to include pages in the <a href=":book">Book hierarchy</a>, as well as move them within the hierarchy or to <a href=":book-admin">reorder an entire book</a>.', [':book' => \Drupal::url('book.render'), ':book-admin' => \Drupal::url('book.admin')]) . '</p>';
+      return '<p>' . t('The outline feature allows you to include pages in the <a href=":book">Book hierarchy</a>, as well as move them within the hierarchy or to <a href=":book-admin">reorder an entire book</a>.', [':book' => Url::fromRoute('book.render')->toString(), ':book-admin' => Url::fromRoute('book.admin')->toString()]) . '</p>';
   }
 }
 
@@ -392,7 +392,7 @@ function template_preprocess_book_navigation(&$variables) {
   // Provide extra variables for themers. Not needed by default.
   $variables['book_id'] = $book_link['bid'];
   $variables['book_title'] = $book_link['link_title'];
-  $variables['book_url'] = \Drupal::url('entity.node.canonical', ['node' => $book_link['bid']]);
+  $variables['book_url'] = Url::fromRoute('entity.node.canonical', ['node' => $book_link['bid']])->toString();
   $variables['current_depth'] = $book_link['depth'];
   $variables['tree'] = '';
 
@@ -405,7 +405,7 @@ function template_preprocess_book_navigation(&$variables) {
     $build = [];
 
     if ($prev = $book_outline->prevLink($book_link)) {
-      $prev_href = \Drupal::url('entity.node.canonical', ['node' => $prev['nid']]);
+      $prev_href = Url::fromRoute('entity.node.canonical', ['node' => $prev['nid']])->toString();
       $build['#attached']['html_head_link'][][] = [
         'rel' => 'prev',
         'href' => $prev_href,
@@ -417,7 +417,7 @@ function template_preprocess_book_navigation(&$variables) {
     /** @var \Drupal\book\BookManagerInterface $book_manager */
     $book_manager = \Drupal::service('book.manager');
     if ($book_link['pid'] && $parent = $book_manager->loadBookLink($book_link['pid'])) {
-      $parent_href = \Drupal::url('entity.node.canonical', ['node' => $book_link['pid']]);
+      $parent_href = Url::fromRoute('entity.node.canonical', ['node' => $book_link['pid']])->toString();
       $build['#attached']['html_head_link'][][] = [
         'rel' => 'up',
         'href' => $parent_href,
@@ -427,7 +427,7 @@ function template_preprocess_book_navigation(&$variables) {
     }
 
     if ($next = $book_outline->nextLink($book_link)) {
-      $next_href = \Drupal::url('entity.node.canonical', ['node' => $next['nid']]);
+      $next_href = Url::fromRoute('entity.node.canonical', ['node' => $next['nid']])->toString();
       $build['#attached']['html_head_link'][][] = [
         'rel' => 'next',
         'href' => $next_href,

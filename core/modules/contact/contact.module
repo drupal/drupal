@@ -5,6 +5,7 @@
  * Enables the use of personal and site-wide contact forms.
  */
 
+use Drupal\Core\Url;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\contact\Plugin\rest\resource\ContactMessageResource;
@@ -17,9 +18,9 @@ function contact_help($route_name, RouteMatchInterface $route_match) {
 
   switch ($route_name) {
     case 'help.page.contact':
-      $menu_page = \Drupal::moduleHandler()->moduleExists('menu_ui') ? \Drupal::url('entity.menu.collection') : '#';
-      $block_page = \Drupal::moduleHandler()->moduleExists('block') ? \Drupal::url('block.admin_display') : '#';
-      $contact_page = \Drupal::url('entity.contact_form.collection');
+      $menu_page = \Drupal::moduleHandler()->moduleExists('menu_ui') ? Url::fromRoute('entity.menu.collection')->toString() : '#';
+      $block_page = \Drupal::moduleHandler()->moduleExists('block') ? Url::fromRoute('block.admin_display')->toString() : '#';
+      $contact_page = Url::fromRoute('entity.contact_form.collection')->toString();
       $output = '';
       $output .= '<h3>' . t('About') . '</h3>';
       $output .= '<p>' . t('The Contact module allows visitors to contact registered users on your site, using the personal contact form, and also allows you to set up site-wide contact forms. For more information, see the <a href=":contact">online documentation for the Contact module</a>.', [':contact' => 'https://www.drupal.org/documentation/modules/contact']) . '</p>';
@@ -123,7 +124,7 @@ function contact_mail($key, &$message, $params) {
     '@site-name' => \Drupal::config('system.site')->get('name'),
     '@subject' => $contact_message->getSubject(),
     '@form' => !empty($params['contact_form']) ? $params['contact_form']->label() : NULL,
-    '@form-url' => \Drupal::url('<current>', [], ['absolute' => TRUE, 'language' => $language]),
+    '@form-url' => Url::fromRoute('<current>', [], ['absolute' => TRUE, 'language' => $language])->toString(),
     '@sender-name' => $sender->getDisplayName(),
   ];
   if ($sender->isAuthenticated()) {

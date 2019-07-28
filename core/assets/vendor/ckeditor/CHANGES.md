@@ -1,6 +1,141 @@
 CKEditor 4 Changelog
 ====================
 
+## CKEditor 4.11.4
+
+Fixed Issues:
+
+* [#589](https://github.com/ckeditor/ckeditor-dev/issues/589): Fixed: The editor causes memory leaks in create and destroy cycles.
+* [#1397](https://github.com/ckeditor/ckeditor-dev/issues/1397): Fixed: Using the dialog to remove headers from a [table](https://ckeditor.com/cke4/addon/table) with one header row only throws an error.
+* [#1479](https://github.com/ckeditor/ckeditor-dev/issues/1479): Fixed: [Justification](https://ckeditor.com/cke4/addon/justify) for styled content in BR mode is disabled.
+* [#2816](https://github.com/ckeditor/ckeditor-dev/issues/2816): Fixed: [Enhanced Image](https://ckeditor.com/cke4/addon/image2) resize handler is visible in [read-only mode](https://ckeditor.com/docs/ckeditor4/latest/guide/dev_readonly.html).
+* [#2874](https://github.com/ckeditor/ckeditor-dev/issues/2874): Fixed: [Enhanced Image](https://ckeditor.com/cke4/addon/image2) resize handler is not created when the editor is initialized in [read-only mode](https://ckeditor.com/docs/ckeditor4/latest/guide/dev_readonly.html).
+* [#2775](https://github.com/ckeditor/ckeditor-dev/issues/2775): Fixed: [Clipboard](https://ckeditor.com/cke4/addon/clipboard) paste buttons have wrong state when [read-only](https://ckeditor.com/docs/ckeditor4/latest/guide/dev_readonly.html) mode is set by the mouse event listener with the [Div Editing Area](https://ckeditor.com/cke4/addon/divarea) plugin.
+* [#1901](https://github.com/ckeditor/ckeditor-dev/issues/1901): Fixed: Cannot open the context menu over a [Widget](https://ckeditor.com/cke4/addon/widget) with the <kbd>Shift</kbd>+<kbd>F10</kbd> keyboard shortcut.
+
+Other Changes:
+
+* Updated [WebSpellChecker](https://ckeditor.com/cke4/addon/wsc) (WSC) and [SpellCheckAsYouType](https://ckeditor.com/cke4/addon/scayt) (SCAYT) plugins:
+	* Language dictionary update: German language was extended with over 600k new words.
+	* Language dictionary update: Swedish language was extended with over 300k new words.
+	* Grammar support added for Australian and New Zealand English, Polish, Slovak, Slovenian and Austrian languages.
+	* Changed wavy red and green lines that underline spelling and grammar errors to straight ones.
+	* [#55](https://github.com/WebSpellChecker/ckeditor-plugin-wsc/issues/55): Fixed: WSC does not use [`CKEDITOR.getUrl()`](https://ckeditor.com/docs/ckeditor4/latest/api/CKEDITOR.html#method-getUrl) when referencing style sheets.
+	* [#166](https://github.com/WebSpellChecker/ckeditor-plugin-scayt/issues/166): Fixed: SCAYT does not use [`CKEDITOR.getUrl()`](https://ckeditor.com/docs/ckeditor4/latest/api/CKEDITOR.html#method-getUrl) when referencing style sheets.
+	* [#56](https://github.com/WebSpellChecker/ckeditor-plugin-wsc/issues/56): [Chrome] Fixed: SCAYT/WSC throws errors when running inside a  Chrome extension.
+	* Fixed: After removing a dictionary, the words are not underlined and considered as incorrect.
+	* Fixed: The Slovenian (`sl_SL`) language does not work.
+	* Fixed: Quotes with code `U+2019` (Right single quotation mark) are considered separators.
+	* Fixed: Wrong error message formatting when the service ID is invalid.
+	* Fixed: Absent languages in the Languages tab when using SCAYT with the [Shared Spaces](https://ckeditor.com/cke4/addon/sharedspace) plugin.
+
+## CKEditor 4.11.3
+
+Fixed Issues:
+
+* [#2721](https://github.com/ckeditor/ckeditor-dev/issues/2721), [#487](https://github.com/ckeditor/ckeditor-dev/issues/487): Fixed: The order of sublist items is reversed when a higher level list item is removed.
+* [#2527](https://github.com/ckeditor/ckeditor-dev/issues/2527): Fixed: [Emoji](https://ckeditor.com/cke4/addon/emoji) autocomplete order does not prioritize emojis with the name starting from the used string.
+* [#2572](https://github.com/ckeditor/ckeditor-dev/issues/2572): Fixed: Icons in the [Emoji](https://ckeditor.com/cke4/addon/emoji) dropdown navigation groups are not centered.
+* [#1191](https://github.com/ckeditor/ckeditor-dev/issues/1191): Fixed: Items in the [elements path](https://ckeditor.com/cke4/addon/elementspath) are draggable.
+* [#2292](https://github.com/ckeditor/ckeditor-dev/issues/2292): Fixed: Dropping a list with a link on the editor's margin causes a console error and removes the dragged text from editor.
+* [#2756](https://github.com/ckeditor/ckeditor-dev/issues/2756): Fixed: The [Auto Link](https://ckeditor.com/cke4/addon/autolink) plugin causes an error when typing in the [source editing mode](https://ckeditor.com/docs/ckeditor4/latest/guide/dev_sourcearea.html).
+* [#1986](https://github.com/ckeditor/ckeditor-dev/issues/1986): Fixed: The Cell Properties dialog from the [Table Tools](https://ckeditor.com/cke4/addon/tabletools) plugin shows styles that are not allowed through [`config.allowedContent`](https://ckeditor.com/docs/ckeditor4/latest/api/CKEDITOR_config.html#cfg-allowedContent).
+* [#2565](https://github.com/ckeditor/ckeditor-dev/issues/2565): [IE, Edge] Fixed: Buttons in the [editor toolbar](https://ckeditor.com/cke4/addon/toolbar) are activated by clicking them with the right mouse button.
+* [#2792](https://github.com/ckeditor/ckeditor-dev/pull/2792): Fixed: A bug in the [Copy Formatting](https://ckeditor.com/cke4/addon/copyformatting) plugin that caused the following issues:
+    * [#2780](https://github.com/ckeditor/ckeditor-dev/issues/2780): Fixed: Undo steps disappear after multiple changes of selection.
+    * [#2470](https://github.com/ckeditor/ckeditor-dev/issues/2470): [Firefox] Fixed: Widget's nested editable gets blurred upon focus.
+    * [#2655](https://github.com/ckeditor/ckeditor-dev/issues/2655): [Chrome, Safari] Fixed: Widget's nested editable cannot be focused under certain circumstances.
+
+## CKEditor 4.11.2
+
+Fixed Issues:
+
+* [#2403](https://github.com/ckeditor/ckeditor-dev/issues/2403): Fixed: Styling inline editor initialized inside a table with the [Table Selection](https://ckeditor.com/cke4/addon/tableselection) plugin is causing style leaks.
+* [#2514](https://github.com/ckeditor/ckeditor-dev/issues/2403): Fixed: Pasting table data into inline editor initialized inside a table with the [Table Selection](https://ckeditor.com/cke4/addon/tableselection) plugin inserts pasted content into the wrapping table.
+* [#2451](https://github.com/ckeditor/ckeditor-dev/issues/2451): Fixed: The [Remove Format](https://ckeditor.com/cke4/addon/removeformat) plugin changes selection.
+* [#2546](https://github.com/ckeditor/ckeditor-dev/issues/2546): Fixed: The separator in the toolbar moves when buttons are focused.
+* [#2506](https://github.com/ckeditor/ckeditor-dev/issues/2506): Fixed: [Enhanced Image](https://ckeditor.com/cke4/addon/image2) throws a type error when an empty `<figure>` tag with an `image` class is upcasted.
+* [#2650](https://github.com/ckeditor/ckeditor-dev/issues/2650): Fixed: [Table](https://ckeditor.com/cke4/addon/table) dialog validator fails when the `getValue()` function is defined in the global scope.
+* [#2690](https://github.com/ckeditor/ckeditor-dev/issues/2690): Fixed: Decimal characters are removed from the inside of numbered lists when pasting content using the [Paste from Word](https://ckeditor.com/cke4/addon/pastefromword) plugin.
+* [#2205](https://github.com/ckeditor/ckeditor-dev/issues/2205): Fixed: It is not possible to add new list items under an item containing a block element.
+* [#2411](https://github.com/ckeditor/ckeditor-dev/issues/2411), [#2438](https://github.com/ckeditor/ckeditor-dev/issues/2438) Fixed: Apply numbered list option throws a console error for a specific markup.
+* [#2430](https://github.com/ckeditor/ckeditor-dev/issues/2430) Fixed: [Color Button](https://ckeditor.com/cke4/addon/colorbutton) and [List Block](https://ckeditor.com/cke4/addon/listblock) items are draggable.
+
+Other Changes:
+
+* Updated the [WebSpellChecker](https://ckeditor.com/cke4/addon/wsc) (WSC) plugin:
+	* [#52](https://github.com/WebSpellChecker/ckeditor-plugin-wsc/issues/52) Fixed: Clicking "Finish Checking" without a prior action would hang the Spell Checking dialog.
+* [#2603](https://github.com/ckeditor/ckeditor-dev/issues/2603): Corrected the GPL license entry in the `package.json` file.
+
+## CKEditor 4.11.1
+
+Fixed Issues:
+
+* [#2571](https://github.com/ckeditor/ckeditor-dev/issues/2571): Fixed: Clicking the categories in the [Emoji](https://ckeditor.com/cke4/addon/emoji) dropdown panel scrolls the entire page.
+
+## CKEditor 4.11
+
+**Security Updates:**
+
+* Fixed XSS vulnerability in the HTML parser reported by [maxarr](https://hackerone.com/maxarr).
+
+	Issue summary: It was possible to execute XSS inside CKEditor after persuading the victim to: (i) switch CKEditor to source mode, then (ii) paste a specially crafted HTML code, prepared by the attacker, into the opened CKEditor source area, and (iii) switch back to WYSIWYG mode.
+
+**An upgrade is highly recommended!**
+
+New Features:
+
+* [#2062](https://github.com/ckeditor/ckeditor-dev/pull/2062): Added the emoji dropdown that allows the user to choose the emoji from the toolbar and search for them using keywords.
+* [#2154](https://github.com/ckeditor/ckeditor-dev/issues/2154): The [Link](https://ckeditor.com/cke4/addon/link) plugin now supports phone number links.
+* [#1815](https://github.com/ckeditor/ckeditor-dev/issues/1815): The [Auto Link](https://ckeditor.com/cke4/addon/autolink) plugin supports typing link completion.
+* [#2478](https://github.com/ckeditor/ckeditor-dev/issues/2478): [Link](https://ckeditor.com/cke4/addon/link) can be inserted using the <kbd>Ctrl</kbd>/<kbd>Cmd</kbd> + <kbd>K</kbd> keystroke.
+* [#651](https://github.com/ckeditor/ckeditor-dev/issues/651): Text pasted using the [Paste from Word](https://ckeditor.com/cke4/addon/pastefromword) plugin preserves indentation in paragraphs.
+* [#2248](https://github.com/ckeditor/ckeditor-dev/issues/2248): Added support for justification in the [BBCode](https://ckeditor.com/cke4/addon/bbcode) plugin. Thanks to [Matěj Kmínek](https://github.com/KminekMatej)!
+* [#706](https://github.com/ckeditor/ckeditor-dev/issues/706): Added a different cursor style when selecting cells for the [Table Selection](https://ckeditor.com/cke4/addon/tableselection) plugin.
+* [#2072](https://github.com/ckeditor/ckeditor-dev/issues/2072): The [UI Button](https://ckeditor.com/cke4/addon/button) plugin supports custom `aria-haspopup` property values. The [Menu Button](https://ckeditor.com/cke4/addon/menubutton) `aria-haspopup` value is now `menu`, the [Panel Button](https://ckeditor.com/cke4/addon/panelbutton) and [Rich Combo](https://ckeditor.com/cke4/addon/richcombo) `aria-haspopup` value is now `listbox`.
+* [#1176](https://github.com/ckeditor/ckeditor-dev/pull/1176): The [Balloon Panel](https://ckeditor.com/cke4/addon/balloonpanel) can now be attached to a selection instead of an element.
+* [#2202](https://github.com/ckeditor/ckeditor-dev/issues/2202): Added the `contextmenu_contentsCss` configuration option to allow adding custom CSS to the [Context Menu](https://ckeditor.com/cke4/addon/contextmenu).
+
+Fixed Issues:
+
+* [#1477](https://github.com/ckeditor/ckeditor-dev/issues/1477): Fixed: On destroy, [Balloon Toolbar](https://ckeditor.com/cke4/addon/balloontoolbar) does not destroy its content.
+* [#2394](https://github.com/ckeditor/ckeditor-dev/issues/2394): Fixed: [Emoji](https://ckeditor.com/cke4/addon/emoji) dropdown does not show up with repeated symbols in a single line.
+* [#1181](https://github.com/ckeditor/ckeditor-dev/issues/1181): [Chrome] Fixed: Opening the context menu in a read-only editor results in an error.
+* [#2276](https://github.com/ckeditor/ckeditor-dev/issues/2276): [iOS] Fixed: [Button](https://ckeditor.com/cke4/addon/button) state does not refresh properly.
+* [#1489](https://github.com/ckeditor/ckeditor-dev/issues/1489): Fixed: Table contents can be removed in read-only mode when the [Table Selection](https://ckeditor.com/cke4/addon/tableselection) plugin is used.
+* [#1264](https://github.com/ckeditor/ckeditor-dev/issues/1264) Fixed: Right-click does not clear the selection created with the [Table Selection](https://ckeditor.com/cke4/addon/tableselection) plugin.
+* [#586](https://github.com/ckeditor/ckeditor-dev/issues/586) Fixed: The `required` attribute is not correctly recognized by the [Form Elements](https://ckeditor.com/cke4/addon/forms) plugin dialog. Thanks to [Roli Züger](https://github.com/rzueger)!
+* [#2380](https://github.com/ckeditor/ckeditor-dev/issues/2380) Fixed: Styling HTML comments in a top-level element results in extra paragraphs.
+* [#2294](https://github.com/ckeditor/ckeditor-dev/issues/2294) Fixed: Pasting content from Microsoft Outlook and then bolding it results in an error.
+* [#2035](https://github.com/ckeditor/ckeditor-dev/issues/2035) [Edge] Fixed: `Permission denied` is thrown when opening a [Panel](https://ckeditor.com/cke4/addon/panel) instance.
+* [#965](https://github.com/ckeditor/ckeditor-dev/issues/965) Fixed: The [`config.forceSimpleAmpersand`](https://ckeditor.com/docs/ckeditor4/latest/api/CKEDITOR_config.html#cfg-forceSimpleAmpersand) option does not work. Thanks to [Alex Maris](https://github.com/alexmaris)!
+* [#2448](https://github.com/ckeditor/ckeditor-dev/issues/2448): Fixed: The [`Escape HTML Entities`] plugin with custom [additional entities](https://ckeditor.com/docs/ckeditor4/latest/api/CKEDITOR_config.html#cfg-entities_additional) configuration breaks HTML escaping.
+* [#898](https://github.com/ckeditor/ckeditor-dev/issues/898): Fixed: [Enhanced Image](https://ckeditor.com/cke4/addon/image2) long alternative text protrudes into the editor when the image is selected.
+* [#1113](https://github.com/ckeditor/ckeditor-dev/issues/1113): [Firefox] Fixed: Nested contenteditable elements path is not updated on focus with the [Div Editing Area](https://ckeditor.com/cke4/addon/divarea) plugin.
+* [#1682](https://github.com/ckeditor/ckeditor-dev/issues/1682) Fixed: Hovering the [Balloon Toolbar](https://ckeditor.com/cke4/addon/balloontoolbar) panel changes its size, causing flickering.
+* [#421](https://github.com/ckeditor/ckeditor-dev/issues/421) Fixed: Expandable [Button](https://ckeditor.com/cke4/addon/button) puts the `(Selected)` text at the end of the label when clicked.
+* [#1454](https://github.com/ckeditor/ckeditor-dev/issues/1454): Fixed: The [`onAbort`](https://ckeditor.com/docs/ckeditor4/latest/api/CKEDITOR_fileTools_uploadWidgetDefinition.html#property-onAbort) method of the [Upload Widget](https://ckeditor.com/cke4/addon/uploadwidget) is not called when the loader is aborted.
+* [#1451](https://github.com/ckeditor/ckeditor-dev/issues/1451): Fixed: The context menu is incorrectly positioned when opened with <kbd>Shift</kbd>+<kbd>F10</kbd>.
+* [#1722](https://github.com/ckeditor/ckeditor-dev/issues/1722): [`CKEDITOR.filter.instances`](https://ckeditor.com/docs/ckeditor4/latest/api/CKEDITOR_filter.html#static-property-instances) is causing memory leaks.
+* [#2491](https://github.com/ckeditor/ckeditor-dev/issues/2491): Fixed: The [Mentions](https://ckeditor.com/cke4/addon/mentions) plugin is not matching diacritic characters.
+* [#2519](https://github.com/ckeditor/ckeditor-dev/issues/2519): Fixed: The [Accessibility Help](https://ckeditor.com/cke4/addon/a11yhelp) dialog should display all available keystrokes for a single command.
+
+API Changes:
+
+* [#2453](https://github.com/ckeditor/ckeditor-dev/issues/2453): The [`CKEDITOR.ui.panel.block.getItems`](https://ckeditor.com/docs/ckeditor4/latest/api/CKEDITOR_ui_panel_block.html#method-getItems) method now also returns `input` elements in addition to links.
+* [#2224](https://github.com/ckeditor/ckeditor-dev/issues/2224):  The [`CKEDITOR.tools.convertToPx`](https://ckeditor.com/docs/ckeditor4/latest/api/CKEDITOR_tools.html#method-convertToPx) function now converts negative values.
+* [#2253](https://github.com/ckeditor/ckeditor-dev/issues/2253): The widget definition [`insert`](https://ckeditor.com/docs/ckeditor4/latest/api/CKEDITOR_plugins_widget_definition.html#property-insert) method now passes `editor` and `commandData`. Thanks to [marcparmet](https://github.com/marcparmet)!
+* [#2045](https://github.com/ckeditor/ckeditor-dev/issues/2045): Extracted [`tools.eventsBuffer`](https://ckeditor.com/docs/ckeditor4/latest/api/CKEDITOR_tools.html#method-eventsBuffer) and [`tools.throttle`](https://ckeditor.com/docs/ckeditor4/latest/api/CKEDITOR_tools.html#method-throttle) functions logic into a separate namespace.
+	* [`tools.eventsBuffer`](https://ckeditor.com/docs/ckeditor4/latest/api/CKEDITOR_tools.html#method-eventsBuffer) was extracted into [`tools.buffers.event`](https://ckeditor.com/docs/ckeditor4/latest/api/CKEDITOR_tools_buffers_event.html),
+	* [`tools.throttle`](https://ckeditor.com/docs/ckeditor4/latest/api/CKEDITOR_tools.html#method-throttle) was extracted into [`tools.buffers.throttle`](https://ckeditor.com/docs/ckeditor4/latest/api/CKEDITOR_tools_buffers_throttle.html).
+* [#2466](https://github.com/ckeditor/ckeditor-dev/issues/2466):  The [`CKEDITOR.filter`](https://ckeditor.com/docs/ckeditor4/latest/api/CKEDITOR_tools.html#method-constructor) constructor accepts an additional `rules` parameter allowing to bind the editor and filter together.
+* [#2493](https://github.com/ckeditor/ckeditor-dev/issues/2493):  The [`editor.getCommandKeystroke`](https://ckeditor.com/docs/ckeditor4/latest/api/CKEDITOR_editor.html#method-getCommandKeystroke) method accepts an additional `all` parameter allowing to retrieve an array of all command keystrokes.
+* [#2483](https://github.com/ckeditor/ckeditor-dev/issues/2483): Button's DOM element created with the [`hasArrow`](https://ckeditor.com/docs/ckeditor4/latest/api/CKEDITOR_ui.html#method-addButton) definition option can by identified by the `.cke_button_expandable` CSS class.
+
+Other Changes:
+
+* [#1713](https://github.com/ckeditor/ckeditor-dev/issues/1713): Removed the redundant `lang.title` entry from the [Clipboard](https://ckeditor.com/cke4/addon/clipboard) plugin.
+
 ## CKEditor 4.10.1
 
 Fixed Issues:
@@ -12,7 +147,7 @@ Fixed Issues:
 * [#2169](https://github.com/ckeditor/ckeditor-dev/issues/2169): [Edge] Fixed: Error thrown when pasting into the editor.
 * [#1084](https://github.com/ckeditor/ckeditor-dev/issues/1084) Fixed: Using the "Automatic" option with [Color Button](https://ckeditor.com/cke4/addon/colorbutton) on a text with the color already defined sets an invalid color value.
 * [#2271](https://github.com/ckeditor/ckeditor-dev/issues/2271): Fixed: Custom color name not used as a label in the [Color Button](https://ckeditor.com/cke4/addon/image2) plugin. Thanks to [Eric Geloen](https://github.com/egeloen)!
-* [#2296](https://github.com/ckeditor/ckeditor-dev/issues/2296): Fixed: [Color Button](https://ckeditor.com/cke4/addon/colorbutton) throws an error when activated on a content containing HTML comments.
+* [#2296](https://github.com/ckeditor/ckeditor-dev/issues/2296): Fixed: The [Color Button](https://ckeditor.com/cke4/addon/colorbutton) plugin throws an error when activated on content containing HTML comments.
 * [#966](https://github.com/ckeditor/ckeditor-dev/issues/966): Fixed: Executing [`editor.destroy()`](https://ckeditor.com/docs/ckeditor4/latest/api/CKEDITOR_editor.html#method-destroy) during the [file upload](https://ckeditor.com/docs/ckeditor4/latest/api/CKEDITOR_fileTools_uploadWidgetDefinition.html#property-onUploading) throws an error. Thanks to [Maksim Makarevich](https://github.com/MaksimMakarevich)!
 * [#1719](https://github.com/ckeditor/ckeditor-dev/issues/1719): Fixed: <kbd>Ctrl</kbd>/<kbd>Cmd</kbd> + <kbd>A</kbd> inadvertently focuses inline editor if it is starting and ending with a list. Thanks to [theNailz](https://github.com/theNailz)!
 * [#1046](https://github.com/ckeditor/ckeditor-dev/issues/1046): Fixed: Subsequent new links do not include the `id` attribute. Thanks to [Nathan Samson](https://github.com/nathansamson)!
@@ -545,7 +680,7 @@ Other Changes:
 	- New features:
 		- CKEditor [Language](https://ckeditor.com/cke4/addon/language) plugin support.
 		- CKEditor [Placeholder](https://ckeditor.com/cke4/addon/placeholder) plugin support.
-		- [Drag&Drop](https://sdk.ckeditor.com/samples/fileupload.html) support.
+		- [Drag&Drop](https://ckeditor.com/docs/ckeditor4/latest/examples/fileupload.html) support.
 		- **Experimental** [GRAYT](https://ckeditor.com/docs/ckeditor4/latest/api/CKEDITOR_config.html#cfg-grayt_autoStartup) (Grammar As You Type) functionality.
 	- Fixed issues:
 		* [#98](https://github.com/WebSpellChecker/ckeditor-plugin-scayt/issues/98): SCAYT affects dialog double-click. Fixed in SCAYT core.
@@ -764,7 +899,7 @@ New Features:
     * Direct access to clipboard could only be implemented in Chrome, Safari on Mac OS, Opera and Firefox. In other browsers the pastebin must still be used.
 
 * [#12875](https://dev.ckeditor.com/ticket/12875): Samples and toolbar configuration tools.
-  * The old set of samples shipped with every CKEditor package was replaced with a shiny new single-page sample. This change concluded a long term plan which started from introducing the [CKEditor SDK](https://sdk.ckeditor.com/) and [CKEditor Functionality Overview](https://ckeditor.com/docs/ckeditor4/latest/guide/dev_features.html) section in the documentation which essentially redefined the old samples.
+  * The old set of samples shipped with every CKEditor package was replaced with a shiny new single-page sample. This change concluded a long term plan which started from introducing the [CKEditor SDK](https://ckeditor.com/docs/ckeditor4/latest/examples/index.html) and [CKEditor Functionality Overview](https://ckeditor.com/docs/ckeditor4/latest/guide/dev_features.html) section in the documentation which essentially redefined the old samples.
   * Toolbar configurators with live previews were introduced. They will be shipped with every CKEditor package and are meant to help in configuring toolbar layouts.
 
 * [#10925](https://dev.ckeditor.com/ticket/10925): The [Media Embed](https://ckeditor.com/cke4/addon/embed) and [Semantic Media Embed](https://ckeditor.com/cke4/addon/embedsemantic) plugins were introduced. Read more about the new features in the [Embedding Content](https://ckeditor.com/docs/ckeditor4/latest/guide/dev_media_embed.html) article.
@@ -915,7 +1050,7 @@ Fixed Issues:
 * [#12315](https://dev.ckeditor.com/ticket/12315): Fixed: Marked [`config.autoParagraph`](https://ckeditor.com/docs/ckeditor4/latest/api/CKEDITOR_config.html#cfg-autoParagraph) as deprecated.
 * [#12113](https://dev.ckeditor.com/ticket/12113): Fixed: A [code snippet](https://ckeditor.com/cke4/addon/codesnippet) should be presented in the [elements path](https://ckeditor.com/cke4/addon/elementspath) as "code snippet" (translatable).
 * [#12311](https://dev.ckeditor.com/ticket/12311): Fixed: [Remove Format](https://ckeditor.com/cke4/addon/removeformat) should also remove `<cite>` elements.
-* [#12261](https://dev.ckeditor.com/ticket/12261): Fixed: Filter has to be destroyed and removed from [`CKEDITOR.filter.instances`](https://ckeditor.com/docs/ckeditor4/latest/api/CKEDITOR_filter.html#static-property-instances) on editor destroy.
+* [#12261](https://dev.ckeditor.com/ticket/12261): Fixed: The filter is not destroyed and removed from [`CKEDITOR.filter.instances`](https://ckeditor.com/docs/ckeditor4/latest/api/CKEDITOR_filter.html#static-property-instances) on editor destroy.
 * [#12398](https://dev.ckeditor.com/ticket/12398): Fixed: [Maximize](https://ckeditor.com/cke4/addon/maximize) does not work on an instance without a [title](https://ckeditor.com/docs/ckeditor4/latest/api/CKEDITOR_config.html#cfg-title).
 * [#12097](https://dev.ckeditor.com/ticket/12097): Fixed: JAWS not reading the number of options correctly in the [Text Color and Background Color](https://ckeditor.com/cke4/addon/colorbutton) button menu.
 * [#12411](https://dev.ckeditor.com/ticket/12411): Fixed: [Page Break](https://ckeditor.com/cke4/addon/pagebreak) used directly in the editable breaks the editor.

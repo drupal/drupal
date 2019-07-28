@@ -170,7 +170,7 @@ class FieldDefinitionTest extends UnitTestCase {
    */
   public function testDefaultFieldSettings($factory_name) {
     $definition = $this->initializeFieldUsingFactory($factory_name);
-    $expected_settings = $this->fieldTypeDefinition['field_settings'] + $this->fieldTypeDefinition['storage_settings'];;
+    $expected_settings = $this->fieldTypeDefinition['field_settings'] + $this->fieldTypeDefinition['storage_settings'];
     $this->assertEquals($expected_settings, $definition->getSettings());
     foreach ($expected_settings as $setting => $value) {
       $this->assertEquals($value, $definition->getSetting($setting));

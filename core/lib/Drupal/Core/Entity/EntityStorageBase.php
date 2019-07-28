@@ -246,6 +246,7 @@ abstract class EntityStorageBase extends EntityHandlerBase implements EntityStor
    * {@inheritdoc}
    */
   public function load($id) {
+    assert(!is_null($id), 'Cannot load a NULL ID.');
     $entities = $this->loadMultiple([$id]);
     return isset($entities[$id]) ? $entities[$id] : NULL;
   }
@@ -537,10 +538,7 @@ abstract class EntityStorageBase extends EntityHandlerBase implements EntityStor
    * {@inheritdoc}
    */
   public function restore(EntityInterface $entity) {
-    // Allow code to run before saving.
-    $entity->preSave($this);
-
-    // The restore process does not invoke any post-save operations.
+    // The restore process does not invoke any pre or post-save operations.
     $this->doSave($entity->id(), $entity);
   }
 

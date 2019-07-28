@@ -105,9 +105,9 @@
 #drupal-off-canvas var,
 #drupal-off-canvas video,
 #drupal-off-canvas xmp {
-  border: 0;
   margin: 0;
   padding: 0;
+  border: 0;
   font-size: 100%;
 }
 
@@ -127,8 +127,8 @@
 #drupal-off-canvas nav,
 #drupal-off-canvas section {
   display: block;
-  line-height: normal;
   border-radius: 0;
+  line-height: normal;
 }
 
 /*
@@ -147,9 +147,9 @@
 }
 
 #drupal-off-canvas img {
+  vertical-align: middle;
   color: transparent;
   font-size: 0;
-  vertical-align: middle;
 }
 
 #drupal-off-canvas ul,
@@ -159,8 +159,8 @@
 
 /* reset table styling. */
 #drupal-off-canvas table {
-  border-collapse: collapse;
   border-spacing: 0;
+  border-collapse: collapse;
 }
 #drupal-off-canvas table thead,
 #drupal-off-canvas table tbody,
@@ -189,9 +189,9 @@
 }
 #drupal-off-canvas sub,
 #drupal-off-canvas sup {
-  line-height: 0;
   position: relative;
   vertical-align: baseline;
+  line-height: 0;
 }
 #drupal-off-canvas sub {
   bottom: -0.25em;
@@ -235,8 +235,8 @@
 #drupal-off-canvas input[type="radio"]:active,
 #drupal-off-canvas input[type="checkbox"]:focus,
 #drupal-off-canvas input[type="checkbox"]:active {
-  box-shadow: none;
   z-index: 1;
+  box-shadow: none;
 }
 #drupal-off-canvas input[role="button"] {
   cursor: pointer;
@@ -245,39 +245,39 @@
 #drupal-off-canvas input[type="reset"],
 #drupal-off-canvas input[type="submit"],
 #drupal-off-canvas input[type="button"] {
-  -webkit-appearance: none;
-  -moz-appearance: none;
   display: inline-block;
-  background-image: none;
+  overflow: visible;
+  cursor: pointer;
+  vertical-align: middle;
+  text-decoration: none;
   border: 0;
   outline: 0;
-  overflow: visible;
+  background-image: none;
   text-shadow: none;
-  text-decoration: none;
-  vertical-align: middle;
-  cursor: pointer;
+  -webkit-appearance: none;
+  -moz-appearance: none;
 }
 #drupal-off-canvas button:hover,
 #drupal-off-canvas input[type="reset"]:hover,
 #drupal-off-canvas input[type="submit"]:hover,
 #drupal-off-canvas input[type="button"]:hover {
-  background-image: none;
   text-decoration: none;
+  background-image: none;
 }
 #drupal-off-canvas button:active,
 #drupal-off-canvas input[type="reset"]:active,
 #drupal-off-canvas input[type="submit"]:active,
 #drupal-off-canvas input[type="button"]:active {
+  border-color: grey;
   background-image: none;
   box-shadow: none;
-  border-color: grey;
 }
 #drupal-off-canvas button::-moz-focus-inner,
 #drupal-off-canvas input[type="reset"]::-moz-focus-inner,
 #drupal-off-canvas input[type="submit"]::-moz-focus-inner,
 #drupal-off-canvas input[type="button"]::-moz-focus-inner {
-  border: 0;
   padding: 0;
+  border: 0;
 }
 #drupal-off-canvas textarea,
 #drupal-off-canvas select,
@@ -324,12 +324,12 @@
 #drupal-off-canvas select[disabled] option,
 #drupal-off-canvas select[disabled] optgroup,
 #drupal-off-canvas textarea[disabled] {
-  box-shadow: none;
+  cursor: default;
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
-  cursor: default;
+  box-shadow: none;
 }
 #drupal-off-canvas input:placeholder,
 #drupal-off-canvas textarea:placeholder {
@@ -345,44 +345,44 @@
   height: auto;
 }
 #drupal-off-canvas textarea {
-  min-height: 40px;
   overflow: auto;
-  resize: vertical;
   width: 100%;
+  min-height: 40px;
+  resize: vertical;
 }
 #drupal-off-canvas optgroup {
   color: black;
-  font-style: normal;
   font-weight: normal;
+  font-style: normal;
 }
 #drupal-off-canvas optgroup::-moz-focus-inner {
-  border: 0;
   padding: 0;
+  border: 0;
 }
 #drupal-off-canvas * button {
-  background: none;
-  border: 1px solid grey;
-  color: black;
-  padding: 0;
-  text-decoration: none;
   overflow: visible;
-  vertical-align: middle;
   width: auto;
+  padding: 0;
+  vertical-align: middle;
+  text-decoration: none;
+  color: black;
+  border: 1px solid grey;
+  background: none;
 }
 #drupal-off-canvas * textarea,
 #drupal-off-canvas * select,
 #drupal-off-canvas *:not(div) textarea,
 #drupal-off-canvas *:not(div) select {
-  background: white;
-  border: 1px solid grey;
-  color: black;
   padding: 0;
   vertical-align: top;
+  color: black;
+  border: 1px solid grey;
+  background: white;
 }
 
 /* To standardize off-canvas selection color. */
 #drupal-off-canvas ::-moz-selection,
 #drupal-off-canvas ::selection {
-  background-color: rgba(175, 175, 175, 0.5);
   color: inherit;
+  background-color: rgba(175, 175, 175, 0.5);
 }

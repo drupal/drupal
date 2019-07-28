@@ -1,7 +1,7 @@
 @media print {
   * {
-    background-color: transparent !important;
     color: #000 !important; /* Black prints faster: h5bp.com/s */
+    background-color: transparent !important;
     box-shadow: none !important;
     text-shadow: none !important;
   }
@@ -39,8 +39,8 @@
   }
   a,
   .link {
-    color: #000;
     text-decoration: underline;
+    color: #000;
   }
   .button,
   .button--primary {
@@ -68,8 +68,8 @@
     display: none;
   }
   .js .dropbutton-multiple .dropbutton-widget {
-    background: none;
     border-radius: 4px;
+    background: none;
   }
   input.form-autocomplete,
   input.form-text,

@@ -26,6 +26,7 @@ use Drupal\layout_builder\InlineBlockEntityOperations;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Access\AccessResult;
 use Drupal\layout_builder\Plugin\SectionStorage\OverridesSectionStorage;
+use Drupal\layout_builder\QuickEditIntegration;
 
 /**
  * Implements hook_help().
@@ -55,6 +56,11 @@ function layout_builder_help($route_name, RouteMatchInterface $route_match) {
       $output .= '<dd>' . t('Layout Builder can be selectively enabled on the "Manage Display" page in the <a href=":field_ui">Field UI</a>. This allows you to control the output of each type of display individually. For example, a "Basic page" might have view modes such as Full and Teaser, with each view mode having different layouts selected.', [':field_ui' => Url::fromRoute('help.page', ['name' => 'field_ui'])->toString()]) . '</dd>';
       $output .= '<dt>' . t('Overridden layouts') . '</dt>';
       $output .= '<dd>' . t('If enabled, each individual content item can have a custom layout. Once the layout for an individual content item is overridden, changes to the Default layout will no longer affect it. Overridden layouts may be reverted to return to matching and being synchronized to their Default layout.') . '</dd>';
+      $output .= '<dt>' . t('User permissions') . '</dt>';
+      $output .= '<dd>' . t('The Layout Builder module makes a number of permissions available, which can be set by role on the <a href=":permissions">permissions page</a>. For more information, see the <a href=":layout-builder-permissions">Configuring Layout Builder permissions</a> online documentation.', [
+        ':permissions' => Url::fromRoute('user.admin_permissions', [], ['fragment' => 'module-layout_builder'])->toString(),
+        ':layout-builder-permissions' => 'https://www.drupal.org/docs/8/core/modules/layout-builder/configuring-layout-builder-permissions',
+      ]) . '</dd>';
       $output .= '</dl>';
       return $output;
   }
@@ -147,6 +153,33 @@ function layout_builder_entity_view_alter(array &$build, EntityInterface $entity
       }
     }
   }
+
+  $route_name = \Drupal::routeMatch()->getRouteName();
+
+  // If the entity is displayed within a Layout Builder block and the current
+  // route is in the Layout Builder UI, then remove all contextual link
+  // placeholders.
+  if ($display instanceof LayoutBuilderEntityViewDisplay && strpos($route_name, 'layout_builder.') === 0) {
+    unset($build['#contextual_links']);
+  }
+
+  if (\Drupal::moduleHandler()->moduleExists('quickedit')) {
+    /** @var \Drupal\layout_builder\QuickEditIntegration $quick_edit_integration */
+    $quick_edit_integration = \Drupal::classResolver(QuickEditIntegration::class);
+    $quick_edit_integration->entityViewAlter($build, $entity, $display);
+  }
+}
+
+/**
+ * Implements hook_entity_build_defaults_alter().
+ */
+function layout_builder_entity_build_defaults_alter(array &$build, EntityInterface $entity, $view_mode) {
+  // Contextual links are removed for entities viewed in Layout Builder's UI.
+  // The route.name.is_layout_builder_ui cache context accounts for this
+  // difference.
+  // @see layout_builder_entity_view_alter()
+  // @see \Drupal\layout_builder\Cache\LayoutBuilderUiCacheContext
+  $build['#cache']['contexts'][] = 'route.name.is_layout_builder_ui';
 }
 
 /**
@@ -230,7 +263,7 @@ function layout_builder_block_content_access(EntityInterface $entity, $operation
     return AccessResult::neutral();
   }
 
-  if ($account->hasPermission('configure any layout')) {
+  if ($account->hasPermission('create and edit custom blocks')) {
     return AccessResult::allowed();
   }
   return AccessResult::forbidden();
@@ -311,5 +344,64 @@ function layout_builder_system_breadcrumb_alter(Breadcrumb &$breadcrumb, RouteMa
     $breadcrumb = new Breadcrumb();
     $breadcrumb->setLinks($links);
     $breadcrumb->addCacheableDependency($cacheability);
+  }
+}
+
+/**
+ * Implements hook_quickedit_render_field().
+ */
+function layout_builder_quickedit_render_field(EntityInterface $entity, $field_name, $view_mode_id, $langcode) {
+  /** @var \Drupal\layout_builder\QuickEditIntegration $quick_edit_integration */
+  $quick_edit_integration = \Drupal::classResolver(QuickEditIntegration::class);
+  return $quick_edit_integration->quickEditRenderField($entity, $field_name, $view_mode_id, $langcode);
+}
+
+/**
+ * Implements hook_entity_translation_create().
+ */
+function layout_builder_entity_translation_create(EntityInterface $translation) {
+  /** @var \Drupal\Core\Entity\FieldableEntityInterface $translation */
+  if ($translation->hasField(OverridesSectionStorage::FIELD_NAME) && $translation->getFieldDefinition(OverridesSectionStorage::FIELD_NAME)->isTranslatable()) {
+    // When creating a new translation do not copy untranslated sections because
+    // per-language layouts are not supported.
+    $translation->set(OverridesSectionStorage::FIELD_NAME, []);
+  }
+}
+
+/**
+ * Implements hook_theme_registry_alter().
+ */
+function layout_builder_theme_registry_alter(&$theme_registry) {
+  // Move our preprocess to run after
+  // content_translation_preprocess_language_content_settings_table().
+  if (!empty($theme_registry['language_content_settings_table']['preprocess functions'])) {
+    $preprocess_functions = &$theme_registry['language_content_settings_table']['preprocess functions'];
+    $index = array_search('layout_builder_preprocess_language_content_settings_table', $preprocess_functions);
+    if ($index !== FALSE) {
+      unset($preprocess_functions[$index]);
+      $preprocess_functions[] = 'layout_builder_preprocess_language_content_settings_table';
+    }
+  }
+}
+
+/**
+ * Implements hook_preprocess_HOOK() for language-content-settings-table.html.twig.
+ */
+function layout_builder_preprocess_language_content_settings_table(&$variables) {
+  foreach ($variables['build']['#rows'] as &$row) {
+    if (isset($row['#field_name']) && $row['#field_name'] === OverridesSectionStorage::FIELD_NAME) {
+      // Rebuild the label to include a warning about using translations with
+      // layouts.
+      $row['data'][1]['data']['field'] = [
+        'label' => $row['data'][1]['data']['field'],
+        'description' => [
+          '#type' => 'container',
+          '#markup' => t('<strong>Warning</strong>: Layout Builder does not support translating layouts. (<a href="https://www.drupal.org/docs/8/core/modules/layout-builder/layout-builder-and-content-translation">online documentation</a>)'),
+          '#attributes' => [
+            'class' => ['layout-builder-translation-warning'],
+          ],
+        ],
+      ];
+    }
   }
 }

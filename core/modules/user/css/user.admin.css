@@ -11,12 +11,12 @@
   padding-left: 1.5em; /* LTR */
 }
 [dir="rtl"] .permissions .permission {
-  padding-left: 0;
   padding-right: 1.5em;
+  padding-left: 0;
 }
 
 /* Account settings */
 .user-admin-settings .details-description {
-  font-size: 0.85em;
   padding-bottom: 0.5em;
+  font-size: 0.85em;
 }

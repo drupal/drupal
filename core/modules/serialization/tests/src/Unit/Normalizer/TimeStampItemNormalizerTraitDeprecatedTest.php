@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\serialization\Unit\Normalizer;
 
+use Drupal\serialization_test\TimeStampItemNormalizerTraitDeprecatedTestClass;
 use Drupal\Tests\UnitTestCase;
 
 /**

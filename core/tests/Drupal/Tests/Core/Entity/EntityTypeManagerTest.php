@@ -14,6 +14,7 @@ use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Entity\EntityHandlerBase;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\EntityLastInstalledSchemaRepositoryInterface;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\EntityTypeManager;
@@ -67,6 +68,13 @@ class EntityTypeManagerTest extends UnitTestCase {
   protected $cacheBackend;
 
   /**
+   * The entity last installed schema repository.
+   *
+   * @var \Drupal\Core\Entity\EntityLastInstalledSchemaRepositoryInterface|\Prophecy\Prophecy\ProphecyInterface
+   */
+  protected $entityLastInstalledSchemaRepository;
+
+  /**
    * {@inheritdoc}
    */
   protected function setUp() {
@@ -78,8 +86,9 @@ class EntityTypeManagerTest extends UnitTestCase {
 
     $this->cacheBackend = $this->prophesize(CacheBackendInterface::class);
     $this->translationManager = $this->prophesize(TranslationInterface::class);
+    $this->entityLastInstalledSchemaRepository = $this->prophesize(EntityLastInstalledSchemaRepositoryInterface::class);
 
-    $this->entityTypeManager = new TestEntityTypeManager(new \ArrayObject(), $this->moduleHandler->reveal(), $this->cacheBackend->reveal(), $this->translationManager->reveal(), $this->getClassResolverStub());
+    $this->entityTypeManager = new TestEntityTypeManager(new \ArrayObject(), $this->moduleHandler->reveal(), $this->cacheBackend->reveal(), $this->translationManager->reveal(), $this->getClassResolverStub(), $this->entityLastInstalledSchemaRepository->reveal());
     $this->discovery = $this->prophesize(DiscoveryInterface::class);
     $this->entityTypeManager->setDiscovery($this->discovery->reveal());
   }

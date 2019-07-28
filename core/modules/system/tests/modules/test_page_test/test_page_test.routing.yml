@@ -83,6 +83,30 @@ test_page_test.field_xpath:
   requirements:
     _access: 'TRUE'
 
+test_page_test.escaped_characters:
+  path: '/test-escaped-characters'
+  defaults:
+    _controller: '\Drupal\test_page_test\Controller\Test::escapedCharacters'
+    code: 200
+  requirements:
+    _access: 'TRUE'
+
+test_page_test.escaped_script:
+  path: '/test-escaped-script'
+  defaults:
+    _controller: '\Drupal\test_page_test\Controller\Test::escapedScript'
+    code: 200
+  requirements:
+    _access: 'TRUE'
+
+test_page_test.unescaped_script:
+  path: '/test-unescaped-script'
+  defaults:
+    _controller: '\Drupal\test_page_test\Controller\Test::unescapedScript'
+    code: 200
+  requirements:
+    _access: 'TRUE'
+
 test_page_test.meta_refresh:
   path: '/test-meta-refresh'
   defaults:

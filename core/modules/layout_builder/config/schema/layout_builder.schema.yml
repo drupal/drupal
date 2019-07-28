@@ -59,7 +59,7 @@ inline_block:
   mapping:
     view_mode:
       type: string
-      lable: 'View mode'
+      label: 'View mode'
     block_revision_id:
       type: integer
       label: 'Block revision ID'

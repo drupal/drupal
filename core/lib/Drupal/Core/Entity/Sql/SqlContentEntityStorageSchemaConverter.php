@@ -96,7 +96,7 @@ class SqlContentEntityStorageSchemaConverter {
 
     /** @var \Drupal\Core\Entity\EntityLastInstalledSchemaRepositoryInterface $last_installed_schema_repository */
     $last_installed_schema_repository = \Drupal::service('entity.last_installed_schema.repository');
-    $field_storage_definitions = $last_installed_schema_repository->getLastInstalledFieldStorageDefinitions('entity_test_update');
+    $field_storage_definitions = $last_installed_schema_repository->getLastInstalledFieldStorageDefinitions($this->entityTypeId);
 
     // Add the revision ID field.
     $field_name = $entity_type->getKey('revision');

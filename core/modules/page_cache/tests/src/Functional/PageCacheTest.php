@@ -60,7 +60,7 @@ class PageCacheTest extends BrowserTestBase {
     // Verify a cache hit, but also the presence of the correct cache tags.
     $this->drupalGet($path);
     $this->assertEqual($this->drupalGetHeader('X-Drupal-Cache'), 'HIT');
-    $cid_parts = [\Drupal::url('system_test.cache_tags_page', [], ['absolute' => TRUE]), ''];
+    $cid_parts = [Url::fromRoute('system_test.cache_tags_page', [], ['absolute' => TRUE])->toString(), ''];
     $cid = implode(':', $cid_parts);
     $cache_entry = \Drupal::cache('page')->get($cid);
     sort($cache_entry->tags);
@@ -95,7 +95,7 @@ class PageCacheTest extends BrowserTestBase {
     // Verify a cache hit, but also the presence of the correct cache tags.
     $this->drupalGet($path);
     $this->assertEqual($this->drupalGetHeader('X-Drupal-Cache'), 'HIT');
-    $cid_parts = [\Drupal::url('system_test.cache_tags_page', [], ['absolute' => TRUE]), ''];
+    $cid_parts = [Url::fromRoute('system_test.cache_tags_page', [], ['absolute' => TRUE])->toString(), ''];
     $cid = implode(':', $cid_parts);
     $cache_entry = \Drupal::cache('page')->get($cid);
     sort($cache_entry->tags);

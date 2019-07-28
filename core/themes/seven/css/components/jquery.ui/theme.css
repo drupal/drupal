@@ -37,8 +37,8 @@
 .ui-state-error,
 .ui-widget-content .ui-state-error {
   color: #fff;
-  background: #e63;
   border-color: #d52;
+  background: #e63;
 }
 .ui-state-disabled,
 .ui-widget-content .ui-state-disabled {
@@ -57,12 +57,12 @@
 /* states and images */
 .ui-icon {
   display: block;
-  text-indent: -99999px;
+  overflow: hidden;
   width: 16px;
   height: 16px;
-  overflow: hidden;
-  background-repeat: no-repeat;
+  text-indent: -99999px;
   background-image: url(../../../images/ui-icons-222222-256x240.png);
+  background-repeat: no-repeat;
 }
 .ui-widget-content .ui-icon,
 .ui-widget-header .ui-icon {
@@ -272,13 +272,13 @@
   border: none;
 }
 .ui-accordion .ui-accordion-header {
-  border: solid 1px #ccc;
   text-transform: uppercase;
+  border: solid 1px #ccc;
 }
 .ui-accordion h3.ui-accordion-header,
 #block-system-main h3.ui-accordion-header {
-  font-size: 1.1em;
   margin: 10px 0;
+  font-size: 1.1em;
 }
 #block-system-main .ui-accordion h3.ui-state-active,
 .ui-accordion h3.ui-state-active {
@@ -300,16 +300,16 @@
   padding: 0;
 }
 .ui-tabs .ui-tabs-nav {
-  padding: 5px 10px 4px;
   margin: 0;
-  line-height: 20px;
+  padding: 5px 10px 4px;
   border-bottom: solid 1px #ccc;
-  border-bottom-left-radius: 0;
   border-bottom-right-radius: 0;
+  border-bottom-left-radius: 0;
+  line-height: 20px;
 }
 .ui-tabs .ui-tabs-nav li {
-  padding: 0 1em 0 10px; /* LTR */
   margin: 0;
+  padding: 0 1em 0 10px; /* LTR */
   list-style: none;
 }
 [dir="rtl"] .ui-tabs .ui-tabs-nav li {
@@ -330,9 +330,9 @@
  * Overlays
  */
 .ui-widget-overlay {
-  background: #000;
   opacity: 0.7;
   filter: alpha(Opacity=70);
+  background: #000;
 }
 
 /**
@@ -346,45 +346,45 @@
 }
 .ui-slider .ui-slider-handle {
   border: 1px solid #e4e4e4;
+  border-right-color: #d2d2d2;
   border-bottom: 1px solid #b4b4b4;
   border-left-color: #d2d2d2;
-  border-right-color: #d2d2d2;
-  background-color: #e4e4e4;
   border-radius: 4px;
+  background-color: #e4e4e4;
 }
 .ui-slider a.ui-state-active,
 .ui-slider .ui-slider-handle:active {
-  background: #666;
   color: #fff;
   border: solid 1px #555;
+  background: #666;
 }
 
 /**
  * Progress Bar
  */
 .ui-progressbar {
-  background: #e4e4e4;
   height: 1.4em;
+  background: #e4e4e4;
 }
 .ui-progressbar .ui-progressbar-value {
-  background: #0072b9 url(../../../../../misc/progress.gif);
   height: 1.5em;
+  background: #0072b9 url(../../../../../misc/progress.gif);
 }
 
 /**
  * Date Picker
  */
 .ui-datepicker {
-  border: 1px solid #a6a6a6;
-  background: #fff;
   /* Override datepicker.css */
   padding: 0;
+  border: 1px solid #a6a6a6;
+  background: #fff;
 }
 
 /* Override tables.css */
 .ui-datepicker-calendar thead tr {
-  border-bottom: 1px solid #a6a6a6;
   border-top: 1px solid #a6a6a6;
+  border-bottom: 1px solid #a6a6a6;
 }
 .ui-datepicker-calendar tr:hover {
   background: transparent;
@@ -396,48 +396,48 @@
 }
 .ui-datepicker td span,
 .ui-datepicker td a {
-  color: inherit;
   /* Override datepicker.css */
   text-align: center;
+  color: inherit;
 }
 .ui-datepicker .ui-datepicker-header .ui-datepicker-next-hover {
-  cursor: pointer;
+  top: 2px;
   /* Override datepicker.css - keep icons still on hover */
   right: 2px;
-  top: 2px;
+  cursor: pointer;
 }
 .ui-datepicker .ui-datepicker-header .ui-datepicker-prev-hover {
-  cursor: pointer;
+  top: 2px;
   /* Override datepicker.css - keep icons still on hover */
   left: 2px;
-  top: 2px;
+  cursor: pointer;
 }
 .ui-datepicker td a.ui-state-hover {
   background-color: #f7fcff;
 }
 .ui-datepicker .ui-state-active {
-  background: #ebeae4;
   border: none;
+  background: #ebeae4;
 }
 .ui-datepicker .ui-state-highlight {
-  font-weight: bold;
   /* Override datepicker.css */
   color: inherit;
+  font-weight: bold;
 }
 
 /**
  * Autocomplete
  */
 .ui-autocomplete {
-  background: #fff;
   border: 1px solid #ccc;
+  background: #fff;
 }
 
 /* Suggestion list */
 .ui-autocomplete .ui-menu-item.ui-state-focus,
 .autocomplete .ui-menu-item.ui-state-hover {
-  background: #0072b9;
   margin: 0;
+  background: #0072b9;
 }
 .ui-autocomplete .ui-state-focus a,
 .autocomplete .ui-state-hover a {

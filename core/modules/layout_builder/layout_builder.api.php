@@ -6,27 +6,26 @@
  */
 
 /**
- * @addtogroup hooks
+ * @defgroup layout_builder_access Layout Builder access
  * @{
+ * In determining access rights for the Layout Builder UI,
+ * \Drupal\layout_builder\Access\LayoutBuilderAccessCheck checks if the
+ * specified section storage plugin (an implementation of
+ * \Drupal\layout_builder\SectionStorageInterface) grants access.
+ *
+ * By default, the Layout Builder access check requires the 'configure any
+ * layout' permission. Individual section storage plugins may override this by
+ * setting the 'handles_permission_check' annotation key to TRUE. Any section
+ * storage plugin that uses 'handles_permission_check' must provide its own
+ * complete routing access checking to avoid any access bypasses.
+ *
+ * This access checking is only enforced on the routing level (not on the entity
+ * or field level) with additional form access restrictions. All HTTP API access
+ * to Layout Builder data is currently forbidden.
+ *
+ * @see https://www.drupal.org/project/drupal/issues/2942975
  */
 
 /**
- * Allows customization of the Layout Builder UI for per-entity overrides.
- *
- * The Layout Builder widget will be added with a weight of -10 after this hook
- * is invoked.
- *
- * @see hook_entity_form_display_alter()
- * @see \Drupal\layout_builder\Form\OverridesEntityForm::init()
- */
-function hook_layout_builder_overrides_entity_form_display_alter(\Drupal\Core\Entity\Display\EntityFormDisplayInterface $display) {
-  $display->setComponent('moderation_state', [
-    'type' => 'moderation_state_default',
-    'weight' => 2,
-    'settings' => [],
-  ]);
-}
-
-/**
- * @} End of "addtogroup hooks".
+ * @} End of "defgroup layout_builder_access".
  */

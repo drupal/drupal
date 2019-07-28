@@ -86,16 +86,13 @@ class UrlResolver implements UrlResolverInterface {
    *
    * @return string|bool
    *   URL of the oEmbed endpoint, or FALSE if the discovery was unsuccessful.
-   *
-   * @throws \Drupal\media\OEmbed\ResourceException
-   *   If the resource cannot be retrieved.
    */
   protected function discoverResourceUrl($url) {
     try {
       $response = $this->httpClient->get($url);
     }
     catch (RequestException $e) {
-      throw new ResourceException('Could not fetch oEmbed resource.', $url, [], $e);
+      return FALSE;
     }
 
     $document = Html::load((string) $response->getBody());
@@ -176,7 +173,7 @@ class UrlResolver implements UrlResolverInterface {
     // provide extra parameters in the query string. For example, Instagram also
     // supports the 'omitscript' parameter.
     $this->moduleHandler->alter('oembed_resource_url', $parsed_url, $provider);
-    $resource_url = $parsed_url['path'] . '?' . UrlHelper::buildQuery($parsed_url['query']);
+    $resource_url = $parsed_url['path'] . '?' . rawurldecode(UrlHelper::buildQuery($parsed_url['query']));
 
     $this->urlCache[$url] = $resource_url;
     $this->cacheSet($cache_id, $resource_url);

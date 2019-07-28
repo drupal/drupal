@@ -5,38 +5,38 @@
  */
 
 .views-admin .links {
-  list-style: none outside none;
   margin: 0;
+  list-style: none outside none;
 }
 .views-admin a:hover {
   text-decoration: none;
 }
 .box-padding {
-  padding-left: 12px;
   padding-right: 12px;
+  padding-left: 12px;
 }
 .box-margin {
   margin: 12px 12px 0 12px;
 }
 .views-admin .icon {
-  height: 16px;
   width: 16px;
+  height: 16px;
 }
 .views-admin .icon,
 .views-admin .icon-text {
-  background-attachment: scroll;
   background-image: url(../images/sprites.png);
-  background-position: left top; /* LTR */
   background-repeat: no-repeat;
+  background-attachment: scroll;
+  background-position: left top; /* LTR */
 }
 [dir="rtl"] .views-admin .icon,
 [dir="rtl"] .views-admin .icon-text {
   background-position: right top;
 }
 .views-admin a.icon {
-  background: linear-gradient(-90deg, #fff 0, #e8e8e8 100%) no-repeat, repeat-y;
   border: 1px solid #ddd;
   border-radius: 4px;
+  background: linear-gradient(-90deg, #fff 0, #e8e8e8 100%) no-repeat, repeat-y;
   box-shadow: 0 0 0 rgba(0, 0, 0, 0.3333) inset;
 }
 .views-admin a.icon:hover {
@@ -47,8 +47,8 @@
   border-color: #c0c0c0;
 }
 .views-admin span.icon {
-  float: left; /* LTR */
   position: relative;
+  float: left; /* LTR */
 }
 [dir="rtl"] .views-admin span.icon {
   float: right;
@@ -56,8 +56,8 @@
 .views-admin .icon.compact {
   display: block;
   overflow: hidden;
-  direction: ltr;
   text-indent: -9999px;
+  direction: ltr;
 }
 
 /* Targets any element with an icon -> text combo */
@@ -65,8 +65,8 @@
   padding-left: 19px; /* LTR */
 }
 [dir="rtl"] .views-admin .icon-text {
-  padding-left: 0;
   padding-right: 19px;
+  padding-left: 0;
 }
 .views-admin .icon.linked {
   background-position: center -153px;
@@ -115,8 +115,8 @@ details.box-padding {
 }
 .form-item {
   margin-top: 9px;
-  padding-bottom: 0;
   padding-top: 0;
+  padding-bottom: 0;
 }
 .form-type-checkbox {
   margin-top: 6px;
@@ -136,12 +136,12 @@ details.box-padding {
 }
 [dir="rtl"] .container-inline > * + *,
 [dir="rtl"] .container-inline .details-wrapper > * + * {
-  padding-left: 0;
   padding-right: 4px;
+  padding-left: 0;
 }
 .views-admin details details.container-inline {
-  margin-bottom: 1em;
   margin-top: 1em;
+  margin-bottom: 1em;
   padding-top: 0;
 }
 .views-admin details details.container-inline > .details-wrapper {
@@ -152,8 +152,8 @@ details.box-padding {
   margin-left: 16px; /* LTR */
 }
 [dir="rtl"] .views-admin .form-type-checkbox + .form-wrapper {
-  margin-left: 0;
   margin-right: 16px;
+  margin-left: 0;
 }
 
 /* Hide 'remove' checkboxes. */
@@ -167,21 +167,21 @@ details.box-padding {
   line-height: 2;
 }
 .views-admin-dependent .form-item {
-  margin-bottom: 6px;
   margin-top: 6px;
+  margin-bottom: 6px;
 }
 .views-ui-view-name h3 {
-  font-weight: bold;
   margin: 0.25em 0;
+  font-weight: bold;
 }
 .view-changed {
   margin-bottom: 21px;
 }
 .views-admin .unit-title {
+  margin-top: 18px;
+  margin-bottom: 0;
   font-size: 15px;
   line-height: 1.6154;
-  margin-bottom: 0;
-  margin-top: 18px;
 }
 .views-ui-view-displays ul {
   margin-left: 0; /* LTR */
@@ -190,8 +190,8 @@ details.box-padding {
 }
 [dir="rtl"] .views-ui-view-displays ul {
   margin-right: 0;
-  padding-right: 0;
   margin-left: inherit;
+  padding-right: 0;
   padding-left: inherit;
 }
 
@@ -253,8 +253,8 @@ td.group-title {
 }
 .views-ui-dialog td.group-title span {
   display: block;
-  height: 1px;
   overflow: hidden;
+  height: 1px;
 }
 .group-message .form-submit,
 .views-remove-group-link,
@@ -268,14 +268,14 @@ td.group-title {
   float: left;
 }
 .views-operator-label {
-  font-style: italic;
-  font-weight: bold;
   padding-left: 0.5em; /* LTR */
   text-transform: uppercase;
+  font-weight: bold;
+  font-style: italic;
 }
 [dir="rtl"] .views-operator-label {
-  padding-left: 0;
   padding-right: 0.5em;
+  padding-left: 0;
 }
 .grouped-description,
 .exposed-description {
@@ -286,64 +286,64 @@ td.group-title {
 [dir="rtl"] .grouped-description,
 [dir="rtl"] .exposed-description {
   float: right;
-  padding-left: 10px;
   padding-right: 0;
+  padding-left: 10px;
 }
 .views-displays {
-  border: 1px solid #ccc;
   padding-bottom: 36px;
+  border: 1px solid #ccc;
 }
 .views-display-top {
-  background-color: #e1e2dc;
-  border-bottom: 1px solid #ccc;
-  padding: 8px 8px 3px;
   position: relative;
+  padding: 8px 8px 3px;
+  border-bottom: 1px solid #ccc;
+  background-color: #e1e2dc;
 }
 .views-display-top .tabs {
   margin-right: 18em; /* LTR */
 }
 [dir="rtl"] .views-display-top .tabs {
-  margin-left: 18em;
   margin-right: 0;
+  margin-left: 18em;
 }
 .views-display-top .tabs > li {
   margin-right: 6px; /* LTR */
   padding-left: 0; /* LTR */
 }
 [dir="rtl"] .views-display-top .tabs > li {
-  margin-left: 6px;
   margin-right: 0.3em;
+  margin-left: 6px;
   padding-right: 0;
 }
 .views-display-top .tabs > li:last-child {
   margin-right: 0; /* LTR */
 }
 [dir="rtl"] .views-display-top .tabs > li:last-child {
-  margin-left: 0;
   margin-right: 0.3em;
+  margin-left: 0;
 }
 .form-edit .form-actions {
-  background-color: #e1e2dc;
+  margin-top: 0;
+  padding: 8px 12px;
   border-right: 1px solid #ccc;
   border-bottom: 1px solid #ccc;
   border-left: 1px solid #ccc;
-  margin-top: 0;
-  padding: 8px 12px;
+  background-color: #e1e2dc;
 }
 .views-displays .tabs.secondary {
   margin-right: 200px; /* LTR */
   border: 0;
 }
 [dir="rtl"] .views-displays .tabs.secondary {
-  margin-left: 200px;
   margin-right: 0;
+  margin-left: 200px;
 }
 .views-displays .tabs.secondary li,
 .views-displays .tabs.secondary li.is-active {
-  background: transparent;
-  border: 0;
-  padding: 0;
   width: auto;
+  padding: 0;
+  border: 0;
+  background: transparent;
 }
 .views-displays .tabs li.add ul.action-list li {
   margin: 0;
@@ -352,37 +352,37 @@ td.group-title {
   margin: 0 5px 5px 6px; /* LTR */
 }
 [dir="rtl"] .views-displays .tabs.secondary li {
-  margin-left: 5px;
   margin-right: 6px;
+  margin-left: 5px;
 }
 .views-displays .tabs.secondary .tabs__tab + .tabs__tab {
   border-top: 0;
 }
 .views-displays .tabs li.tabs__tab:hover {
-  border: 0;
   padding-left: 0; /* LTR */
+  border: 0;
 }
 [dir="rtl"] .views-displays .tabs li.tabs__tab:hover {
   padding-right: 0;
 }
 .views-displays .tabs.secondary a {
+  display: inline-block;
+  padding: 3px 7px;
   border: 1px solid #cbcbcb;
   border-radius: 7px;
-  display: inline-block;
   font-size: small;
   line-height: 1.3333;
-  padding: 3px 7px;
 }
 
 /* Display a red border if the display doesn't validate. */
 .views-displays .tabs li.is-active a.is-active.error,
 .views-displays .tabs .error {
-  border: 2px solid #ed541d;
   padding: 1px 6px;
+  border: 2px solid #ed541d;
 }
 .views-displays .tabs a:focus {
-  outline: none;
   text-decoration: underline;
+  outline: none;
 }
 .views-displays .tabs.secondary li a {
   background-color: #fff;
@@ -390,24 +390,24 @@ td.group-title {
 .views-displays .tabs li a:hover,
 .views-displays .tabs li.is-active a,
 .views-displays .tabs li.is-active a.is-active {
-  background-color: #555;
   color: #fff;
+  background-color: #555;
 }
 .views-displays .tabs .open > a {
-  background-color: #f1f1f1;
-  border-bottom: 1px solid transparent;
   position: relative;
+  border-bottom: 1px solid transparent;
+  background-color: #f1f1f1;
 }
 .views-displays .tabs .open > a:hover {
   color: #0074bd;
   background-color: #f1f1f1;
 }
 .views-displays .tabs .action-list li {
-  background-color: #f1f1f1;
-  border-color: #cbcbcb;
-  border-style: solid;
-  border-width: 0 1px;
   padding: 2px 9px;
+  border-width: 0 1px;
+  border-style: solid;
+  border-color: #cbcbcb;
+  background-color: #f1f1f1;
 }
 .views-displays .tabs .action-list li:first-child {
   border-width: 1px 1px 0;
@@ -419,10 +419,10 @@ td.group-title {
   border-width: 0 1px 1px;
 }
 .views-displays .tabs .action-list input.form-submit {
-  background: none repeat scroll 0 0 transparent;
-  border: medium none;
   margin: 0;
   padding: 0;
+  border: medium none;
+  background: none repeat scroll 0 0 transparent;
 }
 .views-displays .tabs .action-list input.form-submit:hover {
   box-shadow: none;
@@ -434,12 +434,12 @@ td.group-title {
   margin: 12px 12px 0 12px;
 }
 .edit-display-settings-top.views-ui-display-tab-bucket {
-  border: 1px solid #f3f3f3;
-  line-height: 20px;
+  position: relative;
   margin: 0 0 15px 0;
   padding-top: 4px;
   padding-bottom: 4px;
-  position: relative;
+  border: 1px solid #f3f3f3;
+  line-height: 20px;
 }
 .views-display-column {
   border: 1px solid #f3f3f3;
@@ -460,19 +460,19 @@ td.group-title {
 }
 [dir="rtl"] .view-preview-form .arguments-preview,
 [dir="rtl"] .view-preview-form .form-item-view-args {
-  margin-left: 0;
   margin-right: 10px;
+  margin-left: 0;
 }
 .view-preview-form .form-item-view-args label {
   float: left; /* LTR */
-  font-weight: normal;
   height: 6ex;
   margin-right: 0.75em; /* LTR */
+  font-weight: normal;
 }
 [dir="rtl"] .view-preview-form .form-item-view-args label {
   float: right;
-  margin-left: 0.75em;
   margin-right: 0.2em;
+  margin-left: 0.75em;
 }
 .form-item-live-preview,
 .form-item-view-args,
@@ -492,11 +492,11 @@ td.group-title {
 
 /* These are the individual "buckets," or boxes, inside the display settings area */
 .views-ui-display-tab-bucket {
-  border-bottom: 1px solid #f3f3f3;
-  line-height: 20px;
+  position: relative;
   margin: 0;
   padding-top: 4px;
-  position: relative;
+  border-bottom: 1px solid #f3f3f3;
+  line-height: 20px;
 }
 .views-ui-display-tab-bucket:last-of-type {
   border-bottom: none;
@@ -509,8 +509,8 @@ td.group-title {
   padding: 2px 6px 4px;
 }
 .views-ui-display-tab-bucket__title {
-  font-size: small;
   margin: 0;
+  font-size: small;
 }
 .views-ui-display-tab-bucket.access {
   padding-top: 0;
@@ -519,16 +519,16 @@ td.group-title {
   border-bottom: medium none;
 }
 .views-display-setting .views-ajax-link {
-  margin-left: 0.2083em;
   margin-right: 0.2083em;
+  margin-left: 0.2083em;
 }
 
 .views-ui-display-tab-setting > span {
   margin-left: 0.5em; /* LTR */
 }
 [dir="rtl"] .views-ui-display-tab-setting > span {
-  margin-left: 0;
   margin-right: 0.5em;
+  margin-left: 0;
 }
 
 /** Applies an overridden(italics) font style to overridden buckets.
@@ -544,9 +544,9 @@ td.group-title {
 
 /* This is each row within one of the "boxes." */
 .views-ui-display-tab-bucket .views-display-setting {
+  padding-bottom: 2px;
   color: #666;
   font-size: 12px;
-  padding-bottom: 2px;
 }
 .views-ui-display-tab-bucket .views-display-setting:nth-of-type(even) {
   background-color: #f3f5ee;
@@ -562,8 +562,8 @@ td.group-title {
   margin-right: 3px; /* LTR */
 }
 [dir="rtl"] .views-display-setting .label {
-  margin-left: 3px;
   margin-right: 0;
+  margin-left: 3px;
 }
 .views-edit-view {
   margin-bottom: 15px;
@@ -578,12 +578,12 @@ td.group-title {
   border-top: 1px solid #ccc;
 }
 .filterable-option .form-item {
-  margin-bottom: 0;
   margin-top: 0;
+  margin-bottom: 0;
 }
 .views-filterable-options .filterable-option .title {
-  font-weight: bold;
   cursor: pointer;
+  font-weight: bold;
 }
 .views-filterable-options .form-type-checkbox .description {
   margin-top: 0;
@@ -617,8 +617,8 @@ td.group-title {
   padding: 6px 16px;
 }
 .views-ui-dialog .views-override {
-  background-color: #f3f4ee;
   padding: 8px 13px;
+  background-color: #f3f4ee;
 }
 .views-ui-dialog.views-ui-dialog-scroll .ui-dialog-titlebar {
   border: none;
@@ -633,15 +633,15 @@ td.group-title {
   margin: 0;
 }
 .views-ui-dialog .views-progress-indicator {
+  position: absolute;
+  top: 32px;
+  right: 10px; /* LTR */
   color: #fff;
   font-size: 11px;
-  position: absolute;
-  right: 10px; /* LTR */
-  top: 32px;
 }
 [dir="rtl"] .views-ui-dialog .views-progress-indicator {
-  left: 10px;
   right: auto;
+  left: 10px;
 }
 .views-ui-dialog .views-progress-indicator:before {
   content: "\003C\00A0";
@@ -653,23 +653,23 @@ td.group-title {
   padding-left: 2em; /* LTR */
 }
 [dir="rtl"] .views-ui-dialog details .item-list {
-  padding-left: 0;
   padding-right: 2em;
+  padding-left: 0;
 }
 .views-ui-rearrange-filter-form table {
   border-collapse: collapse;
 }
 .views-ui-rearrange-filter-form tr td[rowspan] {
-  border-color: #cdcdcd;
-  border-style: solid;
   border-width: 0 1px 1px 1px;
+  border-style: solid;
+  border-color: #cdcdcd;
 }
 .views-ui-rearrange-filter-form tr[id^="views-row"] {
   border-right: 1px solid #cdcdcd; /* LTR */
 }
 [dir="rtl"] .views-ui-rearrange-filter-form tr[id^="views-row"] {
-  border-left: 1px solid #cdcdcd;
   border-right: 0;
+  border-left: 1px solid #cdcdcd;
 }
 .views-ui-rearrange-filter-form .even td {
   background-color: #f3f4ed;
@@ -683,15 +683,15 @@ td.group-title {
 .form-item-options-expose-required,
 .form-item-options-expose-label,
 .form-item-options-expose-description {
+  margin-top: 6px;
   margin-bottom: 6px;
   margin-left: 18px; /* LTR */
-  margin-top: 6px;
 }
 [dir="rtl"] .form-item-options-expose-required,
 [dir="rtl"] .form-item-options-expose-label,
 [dir="rtl"] .form-item-options-expose-description {
-  margin-left: 0;
   margin-right: 18px;
+  margin-left: 0;
 }
 .views-preview-wrapper {
   border: 1px solid #ccc;
@@ -700,23 +700,23 @@ td.group-title {
   position: relative;
 }
 .view-preview-form__title {
-  background-color: #e1e2dc;
-  border-bottom: 1px solid #ccc;
   margin-top: 0;
   padding: 8px 12px;
+  border-bottom: 1px solid #ccc;
+  background-color: #e1e2dc;
 }
 .view-preview-form .form-item-live-preview {
   position: absolute;
-  right: 12px;
   top: 3px;
+  right: 12px;
   margin-top: 2px;
   margin-left: 2px; /* LTR */
 }
 [dir="rtl"] .view-preview-form .form-item-live-preview {
   right: auto;
   left: 12px;
-  margin-left: 0;
   margin-right: 2px;
+  margin-left: 0;
 }
 .views-live-preview {
   padding: 12px;
@@ -725,21 +725,21 @@ td.group-title {
   overflow: auto;
 }
 .views-live-preview .section-title {
-  color: #818181;
   display: inline-block;
+  margin-top: 0;
+  margin-bottom: 0;
+  color: #818181;
   font-size: 13px;
   font-weight: normal;
   line-height: 1.6154;
-  margin-bottom: 0;
-  margin-top: 0;
 }
 .views-live-preview .view > * {
   margin-top: 18px;
 }
 .views-live-preview .preview-section {
-  border: 1px dashed #dedede;
   margin: 0 -5px;
   padding: 3px 5px;
+  border: 1px dashed #dedede;
 }
 .views-live-preview li.views-row + li.views-row {
   margin-top: 18px;
@@ -750,18 +750,18 @@ td.group-title {
   margin-top: 36px;
 }
 .views-query-info table {
+  margin: 10px 0;
+  border-spacing: 0;
   border-collapse: separate;
   border-color: #ddd;
-  border-spacing: 0;
-  margin: 10px 0;
 }
 .views-query-info table tr {
   background-color: #f9f9f9;
 }
 .views-query-info table th,
 .views-query-info table td {
-  color: #666;
   padding: 4px 10px;
+  color: #666;
 }
 .messages {
   margin-bottom: 18px;
@@ -778,13 +778,13 @@ td.group-title {
 }
 .js .dropbutton-wrapper .dropbutton .dropbutton-action > .ajax-progress-throbber {
   position: absolute;
-  right: -5px; /* LTR */
-  top: -1px;
   z-index: 2;
+  top: -1px;
+  right: -5px; /* LTR */
 }
 [dir="rtl"].js .dropbutton-wrapper .dropbutton .dropbutton-action > .ajax-progress-throbber {
-  left: -5px;
   right: auto;
+  left: -5px;
 }
 .js .dropbutton-wrapper.dropbutton-multiple.open .dropbutton-action:first-child a {
   border-radius: 1.1em 0 0 0; /* LTR */
@@ -800,12 +800,12 @@ td.group-title {
 }
 .views-display-top .dropbutton-wrapper {
   position: absolute;
-  right: 12px; /* LTR */
   top: 7px;
+  right: 12px; /* LTR */
 }
 [dir="rtl"] .views-display-top .dropbutton-wrapper {
-  left: 12px;
   right: auto;
+  left: 12px;
 }
 .views-display-top .dropbutton-wrapper .dropbutton-widget .dropbutton-action a {
   width: auto;
@@ -813,33 +813,33 @@ td.group-title {
 
 .views-ui-display-tab-bucket .dropbutton-wrapper {
   position: absolute;
-  right: 5px; /* LTR */
   top: 4px;
+  right: 5px; /* LTR */
 }
 [dir="rtl"] .views-ui-display-tab-bucket .dropbutton-wrapper {
-  left: 5px;
   right: auto;
+  left: 5px;
 }
 .views-ui-display-tab-bucket .dropbutton-wrapper .dropbutton-widget .dropbutton-action a {
   width: auto;
 }
 .views-ui-display-tab-actions .dropbutton-wrapper li a,
 .views-ui-display-tab-actions .dropbutton-wrapper input {
-  background: none;
+  margin-bottom: 0;
+  padding-left: 12px; /* LTR */
   border: medium;
+  background: none;
   font-family: inherit;
   font-size: 12px;
-  padding-left: 12px; /* LTR */
-  margin-bottom: 0;
 }
 [dir="rtl"] .views-ui-display-tab-actions .dropbutton-wrapper li a,
 [dir="rtl"] .views-ui-display-tab-actions .dropbutton-wrapper input {
-  padding-left: 0.5em;
   padding-right: 12px;
+  padding-left: 0.5em;
 }
 .views-ui-display-tab-actions .dropbutton-wrapper input:hover {
-  background: none;
   border: none;
+  background: none;
 }
 .views-list-section {
   margin-bottom: 2em;

@@ -89,4 +89,27 @@ class FieldLinkTest extends UnitTestCase {
     ];
   }
 
+  /**
+   * Test the attributes that are deeply serialized are discarded.
+   */
+  public function testCanonicalizeUriSerialized() {
+    $link_plugin = new FieldLink([], '', [], $this->getMock(MigrationInterface::class));
+    $migrate_executable = $this->getMock(MigrateExecutableInterface::class);
+    $row = new Row();
+
+    $transformed = $link_plugin->transform([
+      'url' => '',
+      'title' => '',
+      'attributes' => serialize(serialize(['not too deep'])),
+    ], $migrate_executable, $row, NULL);
+    $this->assertEquals(['not too deep'], $transformed['options']['attributes']);
+
+    $transformed = $link_plugin->transform([
+      'url' => '',
+      'title' => '',
+      'attributes' => serialize(serialize(serialize(['too deep']))),
+    ], $migrate_executable, $row, NULL);
+    $this->assertEmpty($transformed['options']['attributes']);
+  }
+
 }

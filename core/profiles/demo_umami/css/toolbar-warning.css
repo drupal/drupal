@@ -4,12 +4,12 @@
  */
 
 .toolbar-warning {
+  overflow: hidden;
   margin: 0.5em 0;
   padding: 0.5em 2em 0.5em 2.3333em;
+  text-indent: -1000px;
   background: url(../../../../core/misc/icons/e29700/warning.svg) no-repeat center center transparent;
   background-size: auto 20px;
-  text-indent: -1000px;
-  overflow: hidden;
 }
 
 .toolbar-warning:hover {
@@ -19,19 +19,19 @@
 @media only screen and (min-width: 40em) {
   .toolbar-warning {
     padding-right: 1em; /* LTR */
-    border-radius: 4px;
+    text-decoration: none;
+    text-indent: 0;
+    color: #000;
     border-color: #f4daa6;
+    border-radius: 4px;
     background-color: #fdf8ed;
     background-position: 0.5em center; /* LTR */
     background-size: auto 18px;
-    text-indent: 0;
-    text-decoration: none;
     font-weight: bold;
-    color: #000;
   }
   [dir="rtl"] .toolbar-warning {
-    background-position: right 0.5em center;
-    padding-left: 1em;
     padding-right: 2em;
+    padding-left: 1em;
+    background-position: right 0.5em center;
   }
 }

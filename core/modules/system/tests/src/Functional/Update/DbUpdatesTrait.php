@@ -4,6 +4,7 @@ namespace Drupal\Tests\system\Functional\Update;
 
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Url;
+use Drupal\Tests\RequirementsPageTrait;
 
 /**
  * Provides methods to conditionally enable db update functions and apply
@@ -14,6 +15,7 @@ use Drupal\Core\Url;
 trait DbUpdatesTrait {
 
   use StringTranslationTrait;
+  use RequirementsPageTrait;
 
   /**
    * Enables db updates until the specified index.
@@ -34,6 +36,7 @@ trait DbUpdatesTrait {
    */
   protected function applyUpdates() {
     $this->drupalGet(Url::fromRoute('system.db_update'));
+    $this->updateRequirementsProblem();
     $this->clickLink($this->t('Continue'));
     $this->clickLink($this->t('Apply pending updates'));
     $this->checkForMetaRefresh();

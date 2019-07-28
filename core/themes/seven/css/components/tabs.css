@@ -7,22 +7,22 @@
 }
 .is-collapse-enabled .tabs:before,
 .is-horizontal .tabs:before {
-  content: "";
-  display: block;
-  background-color: #a6a6a6;
-  height: 1px;
   position: absolute;
-  bottom: 0;
-  left: 0;
   z-index: 10;
   right: 0;
+  bottom: 0;
+  left: 0;
+  display: block;
+  height: 1px;
+  content: "";
+  background-color: #a6a6a6;
 }
 
 /* Span the full width of the viewport */
 .content-header .is-horizontal .tabs:before,
 .content-header .is-collapse-enabled .tabs:before {
-  left: -2.5em;
   right: -2.5em;
+  left: -2.5em;
 }
 
 /**
@@ -37,18 +37,18 @@
   display: block;
   overflow: hidden;
   box-sizing: border-box;
+  width: 100%;  /* 1 */
   margin: -1px 0 0;
   padding: 9px 2em 7px 1em; /* LTR */
-  width: 100%;  /* 1 */
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  color: #0074bd;
   border: 1px solid #bfbfbf;
   background-color: rgba(242, 242, 240, 0.7);
-  color: #0074bd;
-  text-overflow: ellipsis;
-  white-space: nowrap;
 }
 [dir="rtl"] .tabs__tab {
-  padding-left: 2em;
   padding-right: 1em;
+  padding-left: 2em;
 }
 .tabs__tab:hover,
 .tabs__tab:focus {
@@ -61,15 +61,15 @@ li.tabs__tab {
 }
 /* This is required to win over specificity of [dir="rtl"] .tabs__tab */
 [dir="rtl"] li.tabs__tab {
-  padding-left: 0;
   padding-right: 0;
+  padding-left: 0;
 }
 li.tabs__tab a {
   padding: 9px 2em 7px 1em; /* LTR */
 }
 [dir="rtl"] li.tabs__tab a {
-  padding-left: 2em;
   padding-right: 1em;
+  padding-left: 2em;
 }
 .tabs a:hover,
 .tabs a:focus {
@@ -84,10 +84,10 @@ li.tabs__tab a {
 }
 .tabs.primary .tabs__tab.is-active {
   z-index: 15;
+  color: #004f80;
   border-color: #a6a6a6;
   border-radius: 4px 0 0 0; /* LTR */
   background-color: #fff;
-  color: #004f80;
 }
 [dir="rtl"] .tabs.primary .tabs__tab.is-active {
   border-top-left-radius: 0;
@@ -97,13 +97,13 @@ li.tabs__tab a {
   background: none;
 }
 .tabs.primary a:focus {
+  text-decoration: underline;
   color: #008ee6;
   background-color: #fafaf7;
-  text-decoration: underline;
 }
 .tabs.primary .is-active a:focus {
-  background: none;
   text-decoration: underline;
+  background: none;
 }
 
 /* Only add the arrow if there's space */
@@ -124,34 +124,34 @@ li.tabs__tab a {
 
 /* JS dependent styling */
 .is-collapse-enabled .tabs__trigger {
-  box-sizing: content-box;
-  display: block;
   position: absolute;
   z-index: 10;
-  right: 0; /* LTR */
   top: 2px;
+  right: 0; /* LTR */
   left: auto; /* LTR */
+  display: block;
+  box-sizing: content-box;
   width: 25%;
   padding-right: 4px;
   padding-left: 4px;
+  text-align: center;
+  letter-spacing: 0.1em;
   border-left: 0; /* LTR */
   border-radius: 0 4px 0 0; /* LTR */
+  outline: 0;
   font-family: Arial, sans-serif;
   font-size: 1.25em;
-  letter-spacing: 0.1em;
-  text-align: center;
-  outline: 0;
 }
 [dir="rtl"] .is-collapse-enabled .tabs__trigger {
+  right: auto;
+  left: 0;
   border-right: 0;
   border-left: 1px solid #bfbfbf;
   border-radius: 4px 0 0 0;
-  right: auto;
-  left: 0;
 }
 .is-collapse-enabled .tabs {
-  padding-top: 38px;
   max-height: 0;
+  padding-top: 38px;
 }
 .tabs.is-open {
   max-height: 999em;
@@ -166,29 +166,29 @@ li.tabs__tab a {
   border-bottom: 0;
 }
 [dir="rtl"] .is-collapse-enabled .tabs__tab.is-active {
-  left: auto;
   right: 0;
+  left: auto;
 }
 .is-collapse-enabled .tabs.primary a.is-active:before {
   content: none;
 }
 .is-open .tabs__tab.is-active {
-  border-color: #a6a6a6;
-  background-color: #fff;
   color: #004f80;
+  border-color: #a6a6a6;
   border-bottom: 1px solid #a6a6a6;
+  background-color: #fff;
 }
 
 /* Styles for the horizontal state always take priority */
 .is-horizontal .tabs {
+  overflow: visible;
   max-height: none !important;
   padding-top: 0 !important;
-  overflow: visible;
 }
 .is-horizontal .tabs__tab {
   float: left; /* LTR */
-  height: auto;
   width: auto;
+  height: auto;
   margin: 0 0 -1px;
   text-align: center;
   border-bottom-color: #a6a6a6;
@@ -202,8 +202,8 @@ li.tabs__tab a {
   margin-left: -1px; /* LTR */
 }
 [dir="rtl"] .is-horizontal .tabs__tab + .tabs__tab {
-  margin-left: 0;
   margin-right: -1px;
+  margin-left: 0;
 }
 .is-horizontal .tabs.primary .tabs__tab:first-child {
   border-radius: 4px 0 0 0; /* LTR */
@@ -222,16 +222,16 @@ li.tabs__tab a {
 .is-horizontal .tabs__tab.is-active,
 .is-horizontal .tabs.primary .tabs__tab.is-active,
 [dir="rtl"] .is-horizontal .tabs.primary .tabs__tab.is-active {
-  border-radius: 4px 4px 0 0;
   position: relative;
-  width: auto;
   top: 0;
-  border-bottom: 0;
+  width: auto;
   margin: 0 -4px;
+  border-bottom: 0;
+  border-radius: 4px 4px 0 0;
 }
 .is-horizontal .tabs.primary a {
-  background-image: none;
   padding: 7px 2em 7px 2em;
+  background-image: none;
 }
 .is-horizontal .tabs__trigger {
   display: none;
@@ -245,73 +245,73 @@ li.tabs__tab a {
 }
 .tabs.secondary .tabs__tab {
   display: block;
-  padding: 5px 15px 5px 16px; /* LTR */
   margin-left: -1px; /* LTR */
-  color: #0074bd;
+  padding: 5px 15px 5px 16px; /* LTR */
   -webkit-transition: border-color 0.2s, background-color 0.2s;
   transition: border-color 0.2s, background-color 0.2s;
+  color: #0074bd;
 }
 [dir="rtl"] .tabs.secondary .tabs__tab {
-  padding-left: 15px;
-  padding-right: 16px;
-  margin-left: 0;
   margin-right: -1px;
+  margin-left: 0;
+  padding-right: 16px;
+  padding-left: 15px;
 }
 /* This is required to win over specificity of [dir="rtl"] .tabs.secondary .tabs__tab */
 [dir="rtl"] .views-displays .tabs.secondary li,
 [dir="rtl"] .views-displays .tabs.secondary li.is-active {
-  padding-left: 0;
   padding-right: 0;
+  padding-left: 0;
 }
 .tabs.secondary .tabs__tab + .tabs__tab {
   border-top: 1px solid #d9d8d4;
 }
 .tabs.secondary .tabs__tab.is-active {
+  padding-left: 15px; /* LTR */
   color: #004f80;
   border-left: 2px solid #004f80; /* LTR */
-  padding-left: 15px; /* LTR */
 }
 [dir="rtl"] .tabs.secondary .tabs__tab.is-active {
-  border-left: 1px solid #bfbfbf;
-  border-right: 2px solid #004f80;
   padding-right: 15px;
+  border-right: 2px solid #004f80;
+  border-left: 1px solid #bfbfbf;
 }
 /* This is required to win over specificity of [dir="rtl"] .tabs.secondary .tabs__tab.is-active */
 [dir="rtl"] .views-displays .tabs.secondary li.is-active {
-  border: 0 none;
   padding-right: 0;
+  border: 0 none;
 }
 .tabs.secondary .tabs__tab:hover,
 .tabs.secondary .tabs__tab:focus {
+  padding-left: 15px; /* LTR */
   color: #008ee6;
   border-left: 2px solid #008ee6; /* LTR */
-  padding-left: 15px; /* LTR */
 }
 [dir="rtl"] .tabs.secondary .tabs__tab:hover,
 [dir="rtl"] .tabs.secondary .tabs__tab:focus {
-  border-left: 1px solid #bfbfbf;
-  border-right: 2px solid #008ee6;
   padding-right: 15px;
+  border-right: 2px solid #008ee6;
+  border-left: 1px solid #bfbfbf;
 }
 /* This is required to win over specificity of [dir="rtl"] .tabs.secondary .tabs__tab:hover */
 [dir="rtl"] .views-displays .tabs li.tabs__tab:hover {
-  border: 0 none;
   padding-right: 0;
+  border: 0 none;
 }
 .tabs.secondary a {
-  background-color: transparent;
   padding: 7px 13px 5px;
   text-decoration: none;
+  background-color: transparent;
 }
 /* This is required to win over specificity of [dir="rtl"] li.tabs__tab a */
 [dir="rtl"] .tabs.secondary a {
-  padding-left: 13px;
   padding-right: 13px;
+  padding-left: 13px;
 }
 /* This is required to win over specificity of [dir="rtl"] .tabs.secondary a */
 [dir="rtl"] .views-displays .tabs.secondary a {
-  padding-left: 7px;
   padding-right: 7px;
+  padding-left: 7px;
 }
 .tabs.secondary .is-active a {
   color: #004f80;
@@ -322,18 +322,18 @@ li.tabs__tab a {
 
 /* Styles for the horizontal state */
 .is-horizontal .tabs.secondary .tabs__tab {
-  background: none;
-  float: left; /* LTR */
   position: relative;
-  top: 0;
   z-index: 15;
-  margin-left: 1em;
+  top: 0;
+  float: left; /* LTR */
   margin-right: 1em;
+  margin-left: 1em;
+  padding: 0;
+  border-top: 0;
+  border-right-color: transparent; /* LTR */
   border-bottom: 2px solid transparent;
   border-left: 1px solid transparent; /* LTR */
-  border-right-color: transparent; /* LTR */
-  border-top: 0;
-  padding: 0;
+  background: none;
 }
 /**
  * 1. This is required to win over specificity of
@@ -342,9 +342,9 @@ li.tabs__tab a {
  */
 [dir="rtl"] .is-horizontal .tabs.secondary .tabs__tab {
   float: right;
+  padding-right: 0; /* 1 */
   border-right: 1px solid transparent;
   border-left-color: transparent;
-  padding-right: 0; /* 1 */
 }
 .is-horizontal .tabs.secondary .tabs__tab.is-active {
   border-bottom-color: #004f80;

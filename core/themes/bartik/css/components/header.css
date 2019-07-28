@@ -36,9 +36,9 @@
 }
 /* Region header blocks. */
 .region-header .block:not(.site-branding) {
-  font-size: 0.857em;
-  margin: 0 0 1em;
   clear: right;
+  margin: 0 0 1em;
+  font-size: 0.857em;
 }
 
 @media all and (min-width: 901px) {
@@ -49,8 +49,8 @@
 .region-header .block > h2 {
   /* @extend .visually-hidden */
   position: absolute !important;
-  clip: rect(1px, 1px, 1px, 1px);
   overflow: hidden;
+  clip: rect(1px, 1px, 1px, 1px);
   height: 1px;
 }
 .header .block .content {
@@ -61,24 +61,24 @@
   padding: 0;
 }
 .region-header .block li {
+  padding: 0;
   list-style: none;
   list-style-image: none;
-  padding: 0;
 }
 .region-header .branding {
   font-size: 1em;
 }
 .region-header .form-text {
-  background: #fefefe;
-  background: rgba(255, 255, 255, 0.7);
+  width: 120px;
+  margin-right: 2px; /* LTR */
   border-color: #ccc;
   border-color: rgba(255, 255, 255, 0.3);
-  margin-right: 2px; /* LTR */
-  width: 120px;
+  background: #fefefe;
+  background: rgba(255, 255, 255, 0.7);
 }
 [dir="rtl"] .region-header .form-text {
-  margin-left: 2px;
   margin-right: 0;
+  margin-left: 2px;
 }
 .region-header .form-text:hover,
 .region-header .form-text:focus,
@@ -91,18 +91,18 @@
 }
 /* Region header block menus. */
 .region-header .block-menu {
+  width: 208px;
+  padding: 0;
   border: 1px solid;
   border-color: #eee;
   border-color: rgba(255, 255, 255, 0.2);
-  padding: 0;
-  width: 208px;
 }
 .region-header .block-menu li a {
   display: block;
+  padding: 3px 7px;
   border-bottom: 1px solid;
   border-bottom-color: #eee;
   border-bottom-color: rgba(255, 255, 255, 0.2);
-  padding: 3px 7px;
 }
 .region-header .block-menu li a:hover,
 .region-header .block-menu li a:focus,
@@ -127,8 +127,8 @@
 }
 .region-header #block-user-login div.item-list,
 .region-header #block-user-login div.description {
-  font-size: 0.916em;
   margin: 0;
+  font-size: 0.916em;
 }
 .region-header #block-user-login div.item-list {
   clear: both;
@@ -141,30 +141,30 @@
   line-height: 1;
 }
 .region-header #block-user-login .item-list li {
-  list-style: none;
   float: left; /* LTR */
   padding: 3px 0 1px;
+  list-style: none;
 }
 .region-header #block-user-login .item-list li:last-child {
   padding-left: 0.5em; /* LTR */
 }
 [dir="rtl"] .region-header #block-user-login .item-list li:last-child {
-  padding-left: 0;
   padding-right: 0.5em;
+  padding-left: 0;
 }
 .region-header #block-user-login .form-actions {
+  clear: both;
   margin: 4px 0 0;
   padding: 0;
-  clear: both;
 }
 .region-header #block-user-login input.form-submit {
+  margin: 4px 0;
+  padding: 3px 8px;
   border: 1px solid;
   border-color: #ccc;
   border-color: rgba(255, 255, 255, 0.5);
   background: #eee;
   background: rgba(255, 255, 255, 0.7);
-  margin: 4px 0;
-  padding: 3px 8px;
 }
 .region-header #block-user-login input.form-submit:hover,
 .region-header #block-user-login input.form-submit:focus {

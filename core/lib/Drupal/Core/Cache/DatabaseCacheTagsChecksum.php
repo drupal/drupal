@@ -3,7 +3,7 @@
 namespace Drupal\Core\Cache;
 
 use Drupal\Core\Database\Connection;
-use Drupal\Core\Database\SchemaObjectExistsException;
+use Drupal\Core\Database\DatabaseException;
 
 /**
  * Cache tags invalidations checksum implementation that uses the database.
@@ -155,7 +155,7 @@ class DatabaseCacheTagsChecksum implements CacheTagsChecksumInterface, CacheTags
     // If another process has already created the cachetags table, attempting to
     // recreate it will throw an exception. In this case just catch the
     // exception and do nothing.
-    catch (SchemaObjectExistsException $e) {
+    catch (DatabaseException $e) {
       return TRUE;
     }
     return FALSE;

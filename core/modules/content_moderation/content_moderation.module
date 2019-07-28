@@ -193,14 +193,16 @@ function content_moderation_entity_view(array &$build, EntityInterface $entity, 
 }
 
 /**
- * Implements hook_layout_builder_overrides_entity_form_display_alter().
+ * Implements hook_entity_form_display_alter().
  */
-function content_moderation_layout_builder_overrides_entity_form_display_alter(EntityFormDisplayInterface $display) {
-  $display->setComponent('moderation_state', [
-    'type' => 'moderation_state_default',
-    'weight' => -900,
-    'settings' => [],
-  ]);
+function content_moderation_entity_form_display_alter(EntityFormDisplayInterface $form_display, array $context) {
+  if ($context['form_mode'] === 'layout_builder') {
+    $form_display->setComponent('moderation_state', [
+      'type' => 'moderation_state_default',
+      'weight' => -900,
+      'settings' => [],
+    ]);
+  }
 }
 
 /**

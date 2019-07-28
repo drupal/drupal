@@ -14,16 +14,16 @@
 
 @media all and (min-width: 851px) {
   .main-content {
-    float: left; /* LTR */
     position: relative;
+    float: left; /* LTR */
   }
   [dir="rtl"] .main-content {
     float: right;
   }
   .layout-two-sidebars .main-content {
-    margin-left: 25%;
-    margin-right: 25%;
     width: 50%;
+    margin-right: 25%;
+    margin-left: 25%;
   }
   .layout-one-sidebar .main-content {
     width: 75%;
@@ -32,12 +32,12 @@
     width: 100%;
   }
   .layout-sidebar-first .main-content {
-    margin-left: 25%; /* LTR */
     margin-right: 0; /* LTR */
+    margin-left: 25%; /* LTR */
   }
   [dir="rtl"] .layout-sidebar-first .main-content {
-    margin-left: 0;
     margin-right: 25%;
+    margin-left: 0;
   }
   .layout-sidebar-second .main-content {
     margin-right: 25%; /* LTR */

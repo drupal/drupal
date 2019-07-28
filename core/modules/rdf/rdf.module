@@ -5,6 +5,7 @@
  * Enables semantically enriched output for Drupal sites in the form of RDFa.
  */
 
+use Drupal\Core\Url;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Template\Attribute;
 use Drupal\rdf\Entity\RdfMapping;
@@ -241,7 +242,7 @@ function rdf_comment_storage_load($comments) {
     // bubbleable metadata, because it can be outside of a render context.
     $comment->rdf_data['entity_uri'] = $entity->toUrl()->toString(TRUE)->getGeneratedUrl();
     if ($comment->hasParentComment()) {
-      $comment->rdf_data['pid_uri'] = $comment->getParentComment()->toUrl()->toString();
+      $comment->rdf_data['pid_uri'] = $comment->getParentComment()->toUrl()->toString(TRUE)->getGeneratedUrl();
     }
   }
 }
@@ -429,7 +430,7 @@ function rdf_preprocess_username(&$variables) {
   // a user profile URI for it (only a homepage which cannot be used as user
   // profile in RDF.)
   if ($variables['uid'] > 0) {
-    $variables['attributes']['about'] = \Drupal::url('entity.user.canonical', ['user' => $variables['uid']]);
+    $variables['attributes']['about'] = Url::fromRoute('entity.user.canonical', ['user' => $variables['uid']])->toString();
   }
 
   // Add RDF type of user.

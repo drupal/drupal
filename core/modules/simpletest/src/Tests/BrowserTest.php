@@ -2,6 +2,7 @@
 
 namespace Drupal\simpletest\Tests;
 
+use Drupal\Core\Url;
 use Drupal\simpletest\WebTestBase;
 
 /**
@@ -42,7 +43,7 @@ class BrowserTest extends WebTestBase {
     $url = 'user/login';
 
     $this->drupalGet($url);
-    $absolute = \Drupal::url('user.login', [], ['absolute' => TRUE]);
+    $absolute = Url::fromRoute('user.login', [], ['absolute' => TRUE])->toString();
     $this->assertEqual($absolute, $this->url, 'Passed and requested URL are equal.');
     $this->assertEqual($this->url, $this->getAbsoluteUrl($this->url), 'Requested and returned absolute URL are equal.');
 
@@ -51,7 +52,7 @@ class BrowserTest extends WebTestBase {
     $this->assertEqual($this->url, $this->getAbsoluteUrl($this->url), 'Requested and returned absolute URL are equal.');
 
     $this->clickLink('Create new account');
-    $absolute = \Drupal::url('user.register', [], ['absolute' => TRUE]);
+    $absolute = Url::fromRoute('user.register', [], ['absolute' => TRUE])->toString();
     $this->assertEqual($absolute, $this->url, 'Passed and requested URL are equal.');
     $this->assertEqual($this->url, $this->getAbsoluteUrl($this->url), 'Requested and returned absolute URL are equal.');
   }

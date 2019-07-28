@@ -58,11 +58,13 @@
     </header>
   {% endif %}
 
-
-  <div class="layout-highlighted">
-    {{ page.highlighted }}
-  </div>
-
+  {% if page.highlighted %}
+    <div class="layout-highlighted">
+      <div class="container">
+        {{ page.highlighted }}
+      </div>
+    </div>
+  {% endif %}
 
   {% if page.tabs %}
   <div class="layout-tabs">

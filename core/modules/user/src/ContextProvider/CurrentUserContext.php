@@ -53,9 +53,14 @@ class CurrentUserContext implements ContextProviderInterface {
       // @todo Do not validate protected fields to avoid bug in TypedData,
       //   remove this in https://www.drupal.org/project/drupal/issues/2934192.
       $current_user->_skipProtectedUserFieldConstraint = TRUE;
+
+      $context = EntityContext::fromEntity($current_user, $this->t('Current user'));
+    }
+    else {
+      // If not user is available, provide an empty context object.
+      $context = EntityContext::fromEntityTypeId('user', $this->t('Current user'));
     }
 
-    $context = EntityContext::fromEntity($current_user, $this->t('Current user'));
     $cacheability = new CacheableMetadata();
     $cacheability->setCacheContexts(['user']);
     $context->addCacheableDependency($cacheability);

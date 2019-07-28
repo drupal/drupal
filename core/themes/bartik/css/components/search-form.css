@@ -13,21 +13,21 @@
 }
 [dir="rtl"] .search-form .form-search {
   float: right;
-  margin-left: 5px;
   margin-right: 0;
+  margin-left: 5px;
 }
 .button.search-form__submit,
 .search-form__submit {
-  background: #f0f0f0 url(../../../../misc/icons/505050/loupe.svg) no-repeat center;
-  cursor: pointer;
-  height: 26px;
-  margin-left: 0;
-  margin-right: 0;
   overflow: hidden;
+  width: 34px;
+  height: 26px;
+  margin-right: 0;
+  margin-left: 0;
   padding: 0;
+  cursor: pointer;
   text-indent: -9999px;
   direction: ltr;
-  width: 34px;
+  background: #f0f0f0 url(../../../../misc/icons/505050/loupe.svg) no-repeat center;
 }
 .button.search-form__submit:hover,
 .search-form__submit:hover,

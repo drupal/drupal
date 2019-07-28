@@ -14,22 +14,22 @@ caption {
   text-align: right;
 }
 th {
-  text-align: left; /* LTR */
   padding: 10px 12px;
+  text-align: left; /* LTR */
 }
 [dir="rtl"] th {
   text-align: right;
 }
 thead th {
-  background: #f5f5f2;
+  text-transform: uppercase;
+  color: #333;
   border: solid #bfbfba;
   border-width: 1px 0;
-  color: #333;
-  text-transform: uppercase;
+  background: #f5f5f2;
 }
 tr {
-  border-bottom: 1px solid #e6e4df;
   padding: 0.1em 0.6em;
+  border-bottom: 1px solid #e6e4df;
 }
 thead > tr {
   border-bottom: 1px solid #000;
@@ -70,24 +70,24 @@ th > a {
 
 /* 1. Must match negative bottom padding of the parent <th> */
 th > a:after {
-  content: "";
-  display: block;
   position: absolute;
   top: 0;
+  right: 0;
   bottom: -10px; /* 1. */
   left: 0;
-  right: 0;
-  border-bottom: 2px solid transparent;
+  display: block;
+  content: "";
   -webkit-transition: all 0.1s;
   transition: all 0.1s;
+  border-bottom: 2px solid transparent;
 }
 th.is-active > a {
   color: #004875;
 }
 th.is-active img {
   position: absolute;
-  right: 0; /* LTR */
   top: 50%;
+  right: 0; /* LTR */
 }
 [dir="rtl"] th.is-active img {
   right: auto;
@@ -100,8 +100,8 @@ th > a:hover,
 th > a:focus,
 th.is-active > a:hover,
 th.is-active > a:focus {
-  color: #008ee6;
   text-decoration: none;
+  color: #008ee6;
 }
 th > a:hover:after,
 th > a:focus:after,

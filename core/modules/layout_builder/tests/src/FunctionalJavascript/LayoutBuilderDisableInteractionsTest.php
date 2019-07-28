@@ -8,7 +8,6 @@ use Drupal\block_content\Entity\BlockContentType;
 use Drupal\Component\Render\FormattableMarkup;
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 use Drupal\Tests\contextual\FunctionalJavascript\ContextualLinkClickTrait;
-use WebDriver\Exception\UnknownError;
 
 /**
  * Tests the Layout Builder disables interactions of rendered blocks.
@@ -31,7 +30,6 @@ class LayoutBuilderDisableInteractionsTest extends WebDriverTestBase {
     'node',
     'search',
     'contextual',
-    'layout_builder_test_css_transitions',
   ];
 
   /**
@@ -39,10 +37,6 @@ class LayoutBuilderDisableInteractionsTest extends WebDriverTestBase {
    */
   protected function setUp() {
     parent::setUp();
-
-    // @todo The Layout Builder UI relies on local tasks; fix in
-    //   https://www.drupal.org/project/drupal/issues/2917777.
-    $this->drupalPlaceBlock('local_tasks_block');
 
     $this->createContentType(['type' => 'bundle_with_section_field']);
     $this->createNode([
@@ -78,7 +72,7 @@ class LayoutBuilderDisableInteractionsTest extends WebDriverTestBase {
       'info' => 'Block with iframe',
       'body' => [
         // Add iframe that should be non-interactive in Layout Builder preview.
-        'value' => '<iframe id="iframe-that-should-be-disabled" width="560" height="315" src="https://www.youtube.com/embed/gODZzSOelss" frameborder="0"></iframe>',
+        'value' => '<iframe id="iframe-that-should-be-disabled" width="1" height="1" src="https://www.youtube.com/embed/gODZzSOelss" frameborder="0"></iframe>',
         'format' => 'full_html',
       ],
     ])->save();
@@ -88,6 +82,10 @@ class LayoutBuilderDisableInteractionsTest extends WebDriverTestBase {
    * Tests that forms and links are disabled in the Layout Builder preview.
    */
   public function testFormsLinksDisabled() {
+    // Resize window due to bug in Chromedriver when clicking on overlays over
+    // iFrames.
+    // @see https://bugs.chromium.org/p/chromedriver/issues/detail?id=2758
+    $this->getSession()->resizeWindow(1200, 1200);
     $assert_session = $this->assertSession();
     $page = $this->getSession()->getPage();
 
@@ -175,7 +173,7 @@ class LayoutBuilderDisableInteractionsTest extends WebDriverTestBase {
       $tag_name = $element->getTagName();
       $this->fail(new FormattableMarkup("@tag_name was clickable when it shouldn't have been", ['@tag_name' => $tag_name]));
     }
-    catch (UnknownError $e) {
+    catch (\Exception $e) {
       $this->assertContains('is not clickable at point', $e->getMessage());
     }
   }
@@ -207,7 +205,7 @@ class LayoutBuilderDisableInteractionsTest extends WebDriverTestBase {
     $this->clickContextualLink('.block-field-blocknodebundle-with-section-fieldbody [data-contextual-id^="layout_builder_block"]', 'Configure');
     $this->assertNotEmpty($assert_session->waitForElementVisible('css', '.ui-dialog-titlebar [title="Close"]'));
     $page->pressButton('Close');
-    $this->assertNoElementAfterWait('#drupal-off-canvas');
+    $assert_session->assertNoElementAfterWait('css', '#drupal-off-canvas');
 
     // Run the steps a second time after closing dialog, which reverses the
     // order that behaviors.layoutBuilderDisableInteractiveElements and
@@ -215,7 +213,7 @@ class LayoutBuilderDisableInteractionsTest extends WebDriverTestBase {
     $this->clickContextualLink('.block-field-blocknodebundle-with-section-fieldbody [data-contextual-id^="layout_builder_block"]', 'Configure');
     $this->assertNotEmpty($assert_session->waitForElementVisible('css', '#drupal-off-canvas'));
     $page->pressButton('Close');
-    $this->assertNoElementAfterWait('#drupal-off-canvas');
+    $assert_session->assertNoElementAfterWait('css', '#drupal-off-canvas');
     $this->assertContextualLinkRetainsMouseup();
   }
 
@@ -231,19 +229,20 @@ class LayoutBuilderDisableInteractionsTest extends WebDriverTestBase {
   protected function assertContextualLinkRetainsMouseup() {
     $assert_session = $this->assertSession();
     $page = $this->getSession()->getPage();
+    $body_field_selector = '.block-field-blocknodebundle-with-section-fieldbody';
 
-    $body_block = $page->find('css', '.block-field-blocknodebundle-with-section-fieldbody');
+    $body_block = $page->find('css', $body_field_selector);
     $this->assertNotEmpty($body_block);
 
     // Get the current Y position of the body block.
-    $body_block_y_position = $this->getSession()->evaluateScript("document.getElementsByClassName('block-field-blocknodebundle-with-section-fieldbody')[0].getBoundingClientRect().top + window.pageYOffset");
+    $body_block_top_position = $this->getElementVerticalPosition($body_field_selector, 'top');
 
     $body_block_contextual_link_button = $body_block->find('css', '.trigger');
     $this->assertNotEmpty($body_block_contextual_link_button);
 
     // If the body block contextual link is hidden, make it visible.
     if ($body_block_contextual_link_button->hasClass('visually-hidden')) {
-      $this->toggleContextualTriggerVisibility('.block-field-blocknodebundle-with-section-fieldbody');
+      $this->toggleContextualTriggerVisibility($body_field_selector);
     }
 
     // For the purposes of this test, the contextual link must be accessed with
@@ -254,13 +253,41 @@ class LayoutBuilderDisableInteractionsTest extends WebDriverTestBase {
     $assert_session->assertWaitOnAjaxRequest();
 
     // After the contextual link opens the dialog, move the mouse pointer
-    // elsewhere on the page.
+    // elsewhere on the page. If mouse up were not working correctly this would
+    // actually drag the body field too.
     $this->movePointerTo('#iframe-that-should-be-disabled');
 
-    // If mouseup is working properly, the body block should be in the same
-    // position it was when $body_block_y_position was declared.
-    $new_body_block_y_position = $this->getSession()->evaluateScript("document.getElementsByClassName('block-field-blocknodebundle-with-section-fieldbody')[0].getBoundingClientRect().top + window.pageYOffset");
-    $this->assertEquals($body_block_y_position, $new_body_block_y_position);
+    $new_body_block_bottom_position = $this->getElementVerticalPosition($body_field_selector, 'bottom');
+    $iframe_top_position = $this->getElementVerticalPosition('#iframe-that-should-be-disabled', 'top');
+
+    $minimum_distance_mouse_moved = $iframe_top_position - $new_body_block_bottom_position;
+    $this->assertGreaterThan(200, $minimum_distance_mouse_moved, 'The mouse moved at least 200 pixels');
+
+    // If mouseup is working properly, the body block should be nearly in same
+    // position as it was when $body_block_y_position was declared. It will have
+    // moved slightly because the current block being configured will have a
+    // border that was not present when the dialog was not open.
+    $new_body_block_top_position = $this->getElementVerticalPosition($body_field_selector, 'top');
+    $distance_body_block_moved = abs($body_block_top_position - $new_body_block_top_position);
+    // Confirm that body moved only slightly compared to the distance the mouse
+    // moved and therefore was not dragged when the mouse moved.
+    $this->assertGreaterThan($distance_body_block_moved * 20, $minimum_distance_mouse_moved);
+  }
+
+  /**
+   * Gets the element position.
+   *
+   * @param string $css_selector
+   *   The CSS selector of the element.
+   * @param string $position_type
+   *   The position type to get, either 'top' or 'bottom'.
+   *
+   * @return int
+   *   The element position.
+   */
+  protected function getElementVerticalPosition($css_selector, $position_type) {
+    $this->assertTrue(in_array($position_type, ['top', 'bottom']), 'Expected position type.');
+    return (int) $this->getSession()->evaluateScript("document.querySelector('$css_selector').getBoundingClientRect().$position_type + window.pageYOffset");
   }
 
   /**
@@ -273,28 +300,6 @@ class LayoutBuilderDisableInteractionsTest extends WebDriverTestBase {
     $driver_session = $this->getSession()->getDriver()->getWebDriverSession();
     $element = $driver_session->element('css selector', $selector);
     $driver_session->moveto(['element' => $element->getID()]);
-  }
-
-  /**
-   * Waits for an element to be removed from the page.
-   *
-   * @param string $selector
-   *   CSS selector.
-   * @param int $timeout
-   *   (optional) Timeout in milliseconds, defaults to 10000.
-   * @param string $message
-   *   (optional) Custom message to display with the assertion.
-   *
-   * @todo: Remove after https://www.drupal.org/project/drupal/issues/2892440
-   */
-  public function assertNoElementAfterWait($selector, $timeout = 10000, $message = '') {
-    $page = $this->getSession()->getPage();
-    if ($message === '') {
-      $message = "Element '$selector' was not on the page after wait.";
-    }
-    $this->assertTrue($page->waitFor($timeout / 1000, function () use ($page, $selector) {
-      return empty($page->find('css', $selector));
-    }), $message);
   }
 
 }

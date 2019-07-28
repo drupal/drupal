@@ -7,6 +7,9 @@ services:
     tags:
       - { name: access_check, applies_to: _layout_builder_access }
   access_check.entity.layout:
+    # Deprecated in Drupal 8.7.0 and will be removed before Drupal 9.0.0. Use
+    # access_check.entity.layout_builder_access instead. See
+    # https://www.drupal.org/node/3039551.
     class: Drupal\layout_builder\Access\LayoutSectionAccessCheck
     tags:
       - { name: access_check, applies_to: _has_layout_section }
@@ -29,6 +32,11 @@ services:
     arguments: ['@current_route_match']
     tags:
       - { name: cache.context}
+  cache_context.route.name.is_layout_builder_ui:
+    class: Drupal\layout_builder\Cache\LayoutBuilderUiCacheContext
+    arguments: ['@current_route_match']
+    tags:
+      - { name: cache.context }
   layout_builder.sample_entity_generator:
     class: Drupal\layout_builder\Entity\LayoutBuilderSampleEntityGenerator
     arguments: ['@tempstore.shared', '@entity_type.manager']

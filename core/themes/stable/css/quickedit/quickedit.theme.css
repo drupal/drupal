@@ -83,80 +83,80 @@
  * In-place editors that don't use a popup.
  */
 .quickedit-validation-errors .messages.error {
-  box-shadow: 0 0 1px 1px red, 0 0 3px 3px rgba(153, 153, 153, 0.5);
   background-color: white;
+  box-shadow: 0 0 1px 1px red, 0 0 3px 3px rgba(153, 153, 153, 0.5);
 }
 
 /**
  * Styling specific to the 'form' in-place editor.
  */
 .quickedit-form {
-  box-shadow: 0 0 30px 4px #4f4f4f;
   background-color: white;
+  box-shadow: 0 0 30px 4px #4f4f4f;
 }
 
 /**
  * Toolbars.
  */
 .quickedit-toolbar-container {
-  font-family: "Source Sans Pro", "Lucida Grande", sans-serif;
-  padding-bottom: 7px;
   padding-top: 7px;
+  padding-bottom: 7px;
   -webkit-transition: all 1s;
   transition: all 1s;
+  font-family: "Source Sans Pro", "Lucida Grande", sans-serif;
 }
 .quickedit-toolbar-container > .quickedit-toolbar-content {
-  background-image: -webkit-linear-gradient(top, #fff, #e4e4e4);
-  background-image: linear-gradient(to bottom, #fff, #e4e4e4);
-  box-sizing: border-box;
-  color: black;
-  padding: 0.1667em;
   position: relative;
+  z-index: 2;
+  box-sizing: border-box;
+  padding: 0.1667em;
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
-  z-index: 2;
+  color: black;
+  background-image: -webkit-linear-gradient(top, #fff, #e4e4e4);
+  background-image: linear-gradient(to bottom, #fff, #e4e4e4);
 }
 .quickedit-toolbar-container > .quickedit-toolbar-pointer {
-  background-color: #e4e4e4;
-  bottom: 2px;
-  box-shadow: 0 0 0 1px #818181, 0 0 0 4px rgba(150, 150, 150, 0.5);
-  display: block;
-  height: 16px;
-  left: 18px; /* LTR */
   position: absolute;
+  z-index: 1;
+  bottom: 2px;
+  left: 18px; /* LTR */
+  display: block;
+  width: 16px;
+  height: 16px;
   -webkit-transform: rotate(45deg);
   -ms-transform: rotate(45deg);
   transform: rotate(45deg);
-  width: 16px;
-  z-index: 1;
+  background-color: #e4e4e4;
+  box-shadow: 0 0 0 1px #818181, 0 0 0 4px rgba(150, 150, 150, 0.5);
 }
 [dir="rtl"] .quickedit-toolbar-container > .quickedit-toolbar-pointer {
-  left: auto;
   right: 18px;
+  left: auto;
 }
 .quickedit-toolbar-container.quickedit-toolbar-pointer-top > .quickedit-toolbar-pointer {
-  bottom: auto;
   top: 2px;
+  bottom: auto;
 }
 .quickedit-toolbar-container > .quickedit-toolbar-lining {
-  bottom: 7px;
-  box-shadow: 0 0 0 1px #818181, 0 3px 0 1px rgba(150, 150, 150, 0.5);
-  display: block;
-  left: 0;
   position: absolute;
-  right: 0;
-  top: 7px;
   z-index: 0;
+  top: 7px;
+  right: 0;
+  bottom: 7px;
+  left: 0;
+  display: block;
+  box-shadow: 0 0 0 1px #818181, 0 3px 0 1px rgba(150, 150, 150, 0.5);
 }
 
 .quickedit-toolbar-label {
-  font-style: italic;
   overflow: hidden;
   padding: 0.333em 0.4em;
-  text-overflow: ellipsis;
   white-space: nowrap;
+  text-overflow: ellipsis;
+  font-style: italic;
 }
 .quickedit-toolbar-label .field:after {
   content: " → "; /* LTR */
@@ -192,24 +192,24 @@
   padding-left: 0; /* LTR */
 }
 [dir="rtl"] .quickedit-toolgroup.wysiwyg-main {
-  padding-left: 0;
   padding-right: 0;
+  padding-left: 0;
 }
 
 /**
  * Buttons.
  */
 .quickedit-button {
-  background-color: #e4e4e4;
-  border: 1px solid #d2d2d2;
-  color: #5a5a5a;
-  cursor: pointer;
   display: inline-block;
   margin: 0;
-  opacity: 1;
   padding: 0.345em;
+  cursor: pointer;
   -webkit-transition: opacity 0.1s ease;
   transition: opacity 0.1s ease;
+  opacity: 1;
+  color: #5a5a5a;
+  border: 1px solid #d2d2d2;
+  background-color: #e4e4e4;
 }
 .quickedit-button[aria-hidden="true"] {
   visibility: hidden;
@@ -219,26 +219,26 @@
   margin-left: 0.2em; /* LTR */
 }
 [dir="rtl"] .quickedit-button + .quickedit-button {
-  margin-left: auto;
   margin-right: 0.25em;
+  margin-left: auto;
 }
 /* Button with icons. */
 .quickedit-button:hover,
 .quickedit-button:active {
-  background-color: #c8c8c8;
-  border: 1px solid #a0a0a0;
   color: #2e2e2e;
+  border: 1px solid #a0a0a0;
+  background-color: #c8c8c8;
 }
 .quickedit-toolbar-container .quickedit-button.action-cancel {
-  background-color: transparent;
   border: 1px solid transparent;
+  background-color: transparent;
 }
 .quickedit-button.action-save {
   color: white;
+  border: 1px solid transparent;
   background-color: #50a0e9;
   background-image: -webkit-linear-gradient(top, #50a0e9, #4481dc);
   background-image: linear-gradient(to bottom, #50a0e9, #4481dc);
-  border: 1px solid transparent;
 }
 .quickedit-button.action-save:hover,
 .quickedit-button.action-save:active {
@@ -247,8 +247,8 @@
 .quickedit-button.action-saving,
 .quickedit-button.action-saving:hover,
 .quickedit-button.action-saving:active {
+  color: #5a5a5a;
+  border-color: #d2d2d2;
   background-color: #e4e4e4;
   background-image: none;
-  border-color: #d2d2d2;
-  color: #5a5a5a;
 }

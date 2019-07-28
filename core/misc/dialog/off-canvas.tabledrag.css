@@ -21,15 +21,15 @@
   display: none;
 }
 #drupal-off-canvas .draggable a.tabledrag-handle {
-  background-image: none;
-  margin: 0 5px 0 0;
-  height: auto;
-  min-width: 20px;
-  padding: 0;
-  overflow: hidden;
   float: left; /* LTR */
-  text-decoration: none;
+  overflow: hidden;
+  min-width: 20px;
+  height: auto;
+  margin: 0 5px 0 0;
+  padding: 0;
   cursor: move;
+  text-decoration: none;
+  background-image: none;
 }
 [dir="rtl"] #drupal-off-canvas .draggable a.tabledrag-handle {
   float: right;
@@ -37,20 +37,20 @@
   margin-left: 5px;
 }
 #drupal-off-canvas a.tabledrag-handle .handle {
+  width: auto;
+  height: auto;
+  margin: 0;
+  padding: 0;
   /* Use lighter drag icon against dark background. */
   background-color: transparent;
   background-image: url(../icons/bebebe/move.svg);
   background-repeat: no-repeat;
   background-position: center;
-  height: auto;
-  margin: 0;
-  padding: 0;
-  width: auto;
 }
 #drupal-off-canvas .draggable a.tabledrag-handle:hover .handle,
 #drupal-off-canvas .draggable a.tabledrag-handle:focus .handle {
-  background-image: url(../icons/787878/move.svg);
   text-decoration: none;
+  background-image: url(../icons/787878/move.svg);
 }
 #drupal-off-canvas tr td {
   transition: background 0.3s ease;
@@ -61,8 +61,8 @@
 }
 
 [dir="rtl"] #drupal-off-canvas tr td abbr {
-  margin-left: 0;
   margin-right: 5px;
+  margin-left: 0;
 }
 #drupal-off-canvas tr:hover td {
   background: #222;
@@ -88,12 +88,12 @@ body div.tabledrag-changed-warning {
   padding: 10px 0;
 }
 #drupal-off-canvas .touchevents a.tabledrag-handle {
-  height: 44px;
   width: 40px;
+  height: 44px;
 }
 #drupal-off-canvas .touchevents a.tabledrag-handle .handle {
-  background-position: 40% 19px; /* LTR */
   height: 21px;
+  background-position: 40% 19px; /* LTR */
 }
 [dir="rtl"] #drupal-off-canvas .touch a.tabledrag-handle .handle {
   background-position: right 40% top 19px;
@@ -110,10 +110,10 @@ body div.tabledrag-changed-warning {
 }
 #drupal-off-canvas .indentation {
   float: left; /* LTR */
+  width: auto;
   height: auto;
   margin: 0 3px 0 -10px; /* LTR */
   padding: 0 0 0 10px; /* LTR */
-  width: auto;
 }
 [dir="rtl"] #drupal-off-canvas .indentation {
   float: right;

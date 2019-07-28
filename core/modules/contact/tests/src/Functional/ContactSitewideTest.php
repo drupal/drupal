@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\contact\Functional;
 
+use Drupal\Core\Url;
 use Drupal\contact\Entity\ContactForm;
 use Drupal\Core\Mail\MailFormatHelper;
 use Drupal\Core\Test\AssertMailTrait;
@@ -100,7 +101,7 @@ class ContactSitewideTest extends BrowserTestBase {
     // field_ui enabled admin/structure/contact/manage/personal/fields exists.
     // @todo: See https://www.drupal.org/node/2031223 for the above.
     $edit_link = $this->xpath('//a[@href=:href]', [
-      ':href' => \Drupal::url('entity.contact_form.edit_form', ['contact_form' => 'personal']),
+      ':href' => Url::fromRoute('entity.contact_form.edit_form', ['contact_form' => 'personal'])->toString(),
     ]);
     $this->assertTrue(empty($edit_link), format_string('No link containing href %href found.',
       ['%href' => 'admin/structure/contact/manage/personal']
@@ -280,7 +281,7 @@ class ContactSitewideTest extends BrowserTestBase {
     $this->drupalGet('admin/structure/contact');
 
     $view_link = $this->xpath('//table/tbody/tr/td/a[contains(@href, :href) and text()=:text]', [
-      ':href' => \Drupal::url('entity.contact_form.canonical', ['contact_form' => $contact_form]),
+      ':href' => Url::fromRoute('entity.contact_form.canonical', ['contact_form' => $contact_form])->toString(),
       ':text' => $label,
       ]
     );
@@ -555,7 +556,7 @@ class ContactSitewideTest extends BrowserTestBase {
    * Deletes all forms.
    */
   public function deleteContactForms() {
-    $contact_forms = ContactForm::loadMultiple();;
+    $contact_forms = ContactForm::loadMultiple();
     foreach ($contact_forms as $id => $contact_form) {
       if ($id == 'personal') {
         // Personal form could not be deleted.

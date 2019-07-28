@@ -4,8 +4,8 @@
  */
 
 .view-frontpage .view-header {
-  padding: 0 1.266rem;
   margin-bottom: 2rem;
+  padding: 0 1.266rem;
 }
 
 @media screen and (min-width: 30em) {
@@ -17,7 +17,7 @@
 @media screen and (min-width: 60em) {
   .view-frontpage .view-header {
     margin-bottom: 4rem;
-    padding-left: 2.37rem;
     padding-right: 2.37rem;
+    padding-left: 2.37rem;
   }
 }

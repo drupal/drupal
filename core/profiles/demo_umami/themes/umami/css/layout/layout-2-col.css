@@ -18,7 +18,7 @@
 
   .layout-sidebar {
     flex: 0 0 25%;
-    min-width: 300px;
     width: 25%;
+    min-width: 300px;
   }
 }

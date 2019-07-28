@@ -13,8 +13,8 @@
 }
 .js .dropbutton-wrapper,
 .js .dropbutton-widget {
-  display: block;
   position: relative;
+  display: block;
 }
 
 @media screen and (max-width: 600px) {
@@ -42,15 +42,15 @@
   min-height: 2em;
 }
 .js td .dropbutton-multiple {
-  padding-right: 10em; /* LTR */
-  margin-right: 2em; /* LTR */
   max-width: 100%;
+  margin-right: 2em; /* LTR */
+  padding-right: 10em; /* LTR */
 }
 [dir="rtl"].js td .dropbutton-multiple {
-  padding-right: 0;
   margin-right: 0;
-  padding-left: 10em;
   margin-left: 2em;
+  padding-right: 0;
+  padding-left: 10em;
 }
 .js td .dropbutton-multiple .dropbutton-action a,
 .js td .dropbutton-multiple .dropbutton-action input,
@@ -60,11 +60,11 @@
 
 /* UL styles are over-scoped in core, so this selector needs weight parity. */
 .js .dropbutton-widget .dropbutton {
-  list-style-image: none;
-  list-style-type: none;
-  margin: 0;
   overflow: hidden;
+  margin: 0;
   padding: 0;
+  list-style-type: none;
+  list-style-image: none;
 }
 .js .dropbutton li,
 .js .dropbutton a {
@@ -93,8 +93,8 @@
   padding-right: 2em; /* LTR */
 }
 .js[dir="rtl"] .dropbutton-multiple .dropbutton-widget {
-  padding-left: 2em;
   padding-right: 0;
+  padding-left: 2em;
 }
 .dropbutton-multiple.open,
 .dropbutton-multiple.open .dropbutton-widget {
@@ -110,55 +110,55 @@
   display: block;
 }
 .dropbutton-toggle {
+  position: absolute;
+  top: 0;
+  right: 0; /* LTR */
   bottom: 0;
   display: block;
-  position: absolute;
-  right: 0; /* LTR */
-  text-indent: 110%;
-  top: 0;
-  white-space: nowrap;
   width: 2em;
+  white-space: nowrap;
+  text-indent: 110%;
 }
 [dir="rtl"] .dropbutton-toggle {
-  left: 0;
   right: auto;
+  left: 0;
 }
 .dropbutton-toggle button {
-  background: none;
-  border: 0;
-  cursor: pointer;
   display: block;
+  width: 100%;
   height: 100%;
   margin: 0;
   padding: 0;
-  width: 100%;
+  cursor: pointer;
+  border: 0;
+  background: none;
 }
 .dropbutton-toggle button:hover,
 .dropbutton-toggle button:focus {
   outline: initial;
 }
 .dropbutton-arrow {
+  position: absolute;
+  top: 50%;
+  right: 40%; /* 0.6667em; */ /* LTR */
+  display: block;
+  overflow: hidden;
+  width: 0;
+  height: 0;
+  margin-top: -0.1666em;
+  border-width: 0.3333em 0.3333em 0;
+  border-style: solid;
+  border-right-color: transparent;
   border-bottom-color: transparent;
   border-left-color: transparent;
-  border-right-color: transparent;
-  border-style: solid;
-  border-width: 0.3333em 0.3333em 0;
-  display: block;
-  height: 0;
   line-height: 0;
-  position: absolute;
-  right: 40%; /* 0.6667em; */ /* LTR */
-  top: 50%;
-  margin-top: -0.1666em;
-  width: 0;
-  overflow: hidden;
 }
 [dir="rtl"] .dropbutton-arrow {
-  left: 0.6667em;
   right: auto;
+  left: 0.6667em;
 }
 .dropbutton-multiple.open .dropbutton-arrow {
-  border-bottom: 0.3333em solid;
-  border-top-color: transparent;
   top: 0.6667em;
+  border-top-color: transparent;
+  border-bottom: 0.3333em solid;
 }

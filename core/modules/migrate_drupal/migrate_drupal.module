@@ -5,6 +5,7 @@
  * Provides migration from other Drupal sites.
  */
 
+use Drupal\Core\Url;
 use Drupal\Core\Database\DatabaseExceptionWrapper;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\migrate\Exception\RequirementsException;
@@ -19,7 +20,7 @@ function migrate_drupal_help($route_name, RouteMatchInterface $route_match) {
     case 'help.page.migrate_drupal':
       $output = '';
       $output .= '<h3>' . t('About') . '</h3>';
-      $output .= '<p>' . t('The Migrate Drupal module provides a framework based on the <a href=":migrate">Migrate module</a> to facilitate migration from a Drupal (6, 7, or 8) site to your website. It does not provide a user interface. For more information, see the <a href=":migrate_drupal">online documentation for the Migrate Drupal module</a>.', [':migrate' => \Drupal::url('help.page', ['name' => 'migrate']), ':migrate_drupal' => 'https://www.drupal.org/documentation/modules/migrate_drupal']) . '</p>';
+      $output .= '<p>' . t('The Migrate Drupal module provides a framework based on the <a href=":migrate">Migrate module</a> to facilitate migration from a Drupal (6, 7, or 8) site to your website. It does not provide a user interface. For more information, see the <a href=":migrate_drupal">online documentation for the Migrate Drupal module</a>.', [':migrate' => Url::fromRoute('help.page', ['name' => 'migrate'])->toString(), ':migrate_drupal' => 'https://www.drupal.org/documentation/modules/migrate_drupal']) . '</p>';
       return $output;
   }
 }
@@ -45,6 +46,7 @@ function migrate_drupal_migration_plugins_alter(&$definitions) {
       ],
     ];
     $vocabulary_migration = \Drupal::service('plugin.manager.migration')->createStubMigration($vocabulary_migration_definition);
+    $translation_active = \Drupal::service('module_handler')->moduleExists('config_translation');
 
     try {
       $source_plugin = $vocabulary_migration->getSourcePlugin();
@@ -56,7 +58,13 @@ function migrate_drupal_migration_plugins_alter(&$definitions) {
       foreach ($source_plugin as $row) {
         $executable->processRow($row, $process);
         $source_vid = $row->getSourceProperty('vid');
-        $plugin_ids = ['d6_term_node:' . $source_vid, 'd6_term_node_revision:' . $source_vid];
+        $plugin_ids = [
+          'd6_term_node:' . $source_vid,
+          'd6_term_node_revision:' . $source_vid,
+        ];
+        if ($translation_active) {
+          $plugin_ids[] = 'd6_term_node_translation:' . $source_vid;
+        }
         foreach ($plugin_ids as $plugin_id) {
           // Match the field name derivation in d6_vocabulary_field.yml.
           $field_name = substr('field_' . $row->getDestinationProperty('vid'), 0, 32);

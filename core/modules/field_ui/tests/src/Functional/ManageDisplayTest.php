@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\field_ui\Functional;
 
+use Drupal\Core\Url;
 use Behat\Mink\Element\NodeElement;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Language\LanguageInterface;
@@ -178,7 +179,7 @@ class ManageDisplayTest extends BrowserTestBase {
     ])->save();
 
     $this->drupalGet('admin/structure/types/manage/no_fields/display');
-    $this->assertRaw(t('There are no fields yet added. You can add new fields on the <a href=":link">Manage fields</a> page.', [':link' => \Drupal::url('entity.node.field_ui_fields', ['node_type' => 'no_fields'])]));
+    $this->assertRaw(t('There are no fields yet added. You can add new fields on the <a href=":link">Manage fields</a> page.', [':link' => Url::fromRoute('entity.node.field_ui_fields', ['node_type' => 'no_fields'])->toString()]));
   }
 
   /**

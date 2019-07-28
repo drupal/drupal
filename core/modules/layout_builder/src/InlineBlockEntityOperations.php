@@ -15,6 +15,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * Defines a class for reacting to entity events related to Inline Blocks.
  *
  * @internal
+ *   This is an internal utility class wrapping hook implementations.
  */
 class InlineBlockEntityOperations implements ContainerInjectionInterface {
 
@@ -23,7 +24,7 @@ class InlineBlockEntityOperations implements ContainerInjectionInterface {
   /**
    * Inline block usage tracking service.
    *
-   * @var \Drupal\layout_builder\InlineBlockUsage
+   * @var \Drupal\layout_builder\InlineBlockUsageInterface
    */
   protected $usage;
 
@@ -52,7 +53,7 @@ class InlineBlockEntityOperations implements ContainerInjectionInterface {
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
    *   The entity type manager service.
-   * @param \Drupal\layout_builder\InlineBlockUsage $usage
+   * @param \Drupal\layout_builder\InlineBlockUsageInterface $usage
    *   Inline block usage tracking service.
    * @param \Drupal\Core\Database\Connection $database
    *   The database connection.
@@ -65,7 +66,7 @@ class InlineBlockEntityOperations implements ContainerInjectionInterface {
    *   - The $database parameter is unused and should be removed.
    *   Deprecate in https://www.drupal.org/node/3031492.
    */
-  public function __construct(EntityTypeManagerInterface $entityTypeManager, InlineBlockUsage $usage, Connection $database, SectionStorageManagerInterface $section_storage_manager = NULL) {
+  public function __construct(EntityTypeManagerInterface $entityTypeManager, InlineBlockUsageInterface $usage, Connection $database, SectionStorageManagerInterface $section_storage_manager = NULL) {
     $this->entityTypeManager = $entityTypeManager;
     $this->blockContentStorage = $entityTypeManager->getStorage('block_content');
     $this->usage = $usage;

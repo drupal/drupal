@@ -35,15 +35,15 @@ class UrlResolverTest extends MediaFunctionalTestBase {
     return [
       'match by endpoint: Twitter' => [
         'https://twitter.com/Dries/status/999985431595880448',
-        'https://publish.twitter.com/oembed?url=https%3A//twitter.com/Dries/status/999985431595880448',
+        'https://publish.twitter.com/oembed?url=https://twitter.com/Dries/status/999985431595880448',
       ],
       'match by endpoint: Vimeo' => [
         'https://vimeo.com/14782834',
-        'https://vimeo.com/api/oembed.json?url=https%3A//vimeo.com/14782834',
+        'https://vimeo.com/api/oembed.json?url=https://vimeo.com/14782834',
       ],
       'match by endpoint: CollegeHumor' => [
         'http://www.collegehumor.com/video/40002870/lets-not-get-a-drink-sometime',
-        'http://www.collegehumor.com/oembed.json?url=http%3A//www.collegehumor.com/video/40002870/lets-not-get-a-drink-sometime',
+        'http://www.collegehumor.com/oembed.json?url=http://www.collegehumor.com/video/40002870/lets-not-get-a-drink-sometime',
       ],
     ];
   }

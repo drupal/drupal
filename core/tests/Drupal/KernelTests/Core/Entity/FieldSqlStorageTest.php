@@ -557,6 +557,20 @@ class FieldSqlStorageTest extends EntityKernelTestBase {
     $this->assertEqual($this->tableMapping->getDedicatedDataTableName($field_storage, TRUE), $expected);
     $expected = 'field_deleted_revision_' . substr(hash('sha256', $field_storage->uuid()), 0, 10);
     $this->assertEqual($this->tableMapping->getDedicatedRevisionTableName($field_storage, TRUE), $expected);
+
+    // Check that the table mapping is kept up-to-date in a request where a new
+    // field storage definition is added. Since the cardinality of the field is
+    // greater than 1, the table name retrieved from getFieldTableName() should
+    // be the dedicated table.
+    $field_storage = FieldStorageConfig::create([
+      'entity_type' => 'entity_test_rev',
+      'field_name' => 'some_field_name',
+      'type' => 'test_field',
+      'cardinality' => 2,
+    ]);
+    $field_storage->save();
+    $table_mapping = \Drupal::entityTypeManager()->getStorage('entity_test_rev')->getTableMapping();
+    $this->assertEquals($table_mapping->getDedicatedDataTableName($field_storage), $table_mapping->getFieldTableName('some_field_name'));
   }
 
 }

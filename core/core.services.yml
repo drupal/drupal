@@ -552,7 +552,7 @@ services:
     class: Drupal\Core\Cache\MemoryCache\MemoryCache
   entity_type.manager:
     class: Drupal\Core\Entity\EntityTypeManager
-    arguments: ['@container.namespaces', '@module_handler', '@cache.discovery', '@string_translation', '@class_resolver']
+    arguments: ['@container.namespaces', '@module_handler', '@cache.discovery', '@string_translation', '@class_resolver', '@entity.last_installed_schema.repository']
     parent: container.trait
     tags:
       - { name: plugin_manager_cache_clear }

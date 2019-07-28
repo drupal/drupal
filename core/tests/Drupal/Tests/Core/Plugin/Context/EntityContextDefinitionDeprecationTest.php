@@ -79,7 +79,9 @@ class EntityContextDefinitionDeprecationTest extends UnitTestCase {
    * @expectedDeprecation Constructing a ContextDefinition object for an entity type is deprecated in Drupal 8.6.0. Use Drupal\Core\Plugin\Context\EntityContextDefinition instead. See https://www.drupal.org/node/2976400 for more information.
    */
   public function testSerialization() {
+    $this->definition->addConstraint('foo');
     $definition = unserialize(serialize($this->definition));
+    $this->assertEquals(['foo' => NULL], $definition->getConstraints());
     $bc_layer = $this->compatibilityLayer->getValue($definition);
     $this->assertInstanceOf(EntityContextDefinition::class, $bc_layer);
   }

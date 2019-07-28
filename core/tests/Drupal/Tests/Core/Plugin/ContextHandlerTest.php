@@ -378,8 +378,9 @@ class ContextHandlerTest extends UnitTestCase {
       ->method('setContext');
 
     // No context, so no cacheability metadata can be passed along.
-    $plugin->expects($this->never())
-      ->method('getContext');
+    $plugin->expects($this->any())
+      ->method('getContext')
+      ->willThrowException(new ContextException());
 
     $this->setExpectedException(MissingValueContextException::class, 'Required contexts without a value: hit');
     $this->contextHandler->applyContextMapping($plugin, $contexts);
@@ -413,8 +414,9 @@ class ContextHandlerTest extends UnitTestCase {
       ->method('setContext');
 
     // No context, so no cacheability metadata can be passed along.
-    $plugin->expects($this->never())
-      ->method('getContext');
+    $plugin->expects($this->any())
+      ->method('getContext')
+      ->willThrowException(new ContextException());
 
     $this->contextHandler->applyContextMapping($plugin, $contexts);
   }

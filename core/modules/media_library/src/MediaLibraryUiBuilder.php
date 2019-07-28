@@ -6,12 +6,12 @@ use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Form\FormBuilderInterface;
 use Drupal\Core\Form\FormState;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
-use Drupal\Core\EventSubscriber\MainContentViewSubscriber;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Url;
 use Drupal\views\ViewExecutableFactory;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 /**
  * Service which builds the media library.
@@ -54,6 +54,13 @@ class MediaLibraryUiBuilder {
   protected $viewsExecutableFactory;
 
   /**
+   * The media library opener resolver.
+   *
+   * @var \Drupal\media_library\OpenerResolverInterface
+   */
+  protected $openerResolver;
+
+  /**
    * Constructs a MediaLibraryUiBuilder instance.
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
@@ -64,12 +71,19 @@ class MediaLibraryUiBuilder {
    *   The views executable factory.
    * @param \Drupal\Core\Form\FormBuilderInterface $form_builder
    *   The currently active request object.
+   * @param \Drupal\media_library\OpenerResolverInterface $opener_resolver
+   *   The opener resolver.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, RequestStack $request_stack, ViewExecutableFactory $views_executable_factory, FormBuilderInterface $form_builder) {
+  public function __construct(EntityTypeManagerInterface $entity_type_manager, RequestStack $request_stack, ViewExecutableFactory $views_executable_factory, FormBuilderInterface $form_builder, OpenerResolverInterface $opener_resolver = NULL) {
     $this->entityTypeManager = $entity_type_manager;
     $this->request = $request_stack->getCurrentRequest();
     $this->viewsExecutableFactory = $views_executable_factory;
     $this->formBuilder = $form_builder;
+    if (!$opener_resolver) {
+      @trigger_error('The media_library.opener_resolver service must be passed to ' . __METHOD__ . ' and will be required before Drupal 9.0.0.', E_USER_DEPRECATED);
+      $opener_resolver = \Drupal::service('media_library.opener_resolver');
+    }
+    $this->openerResolver = $opener_resolver;
   }
 
   /**
@@ -160,11 +174,25 @@ class MediaLibraryUiBuilder {
    *
    * @param \Drupal\Core\Session\AccountInterface $account
    *   Run access checks for this account.
+   * @param \Drupal\media_library\MediaLibraryState $state
+   *   (optional) The current state of the media library, derived from the
+   *   current request.
    *
    * @return \Drupal\Core\Access\AccessResult
    *   The access result.
    */
-  public function checkAccess(AccountInterface $account = NULL) {
+  public function checkAccess(AccountInterface $account, MediaLibraryState $state = NULL) {
+    if (!$state) {
+      try {
+        $state = MediaLibraryState::fromRequest($this->request);
+      }
+      catch (BadRequestHttpException $e) {
+        return AccessResult::forbidden($e->getMessage());
+      }
+      catch (\InvalidArgumentException $e) {
+        return AccessResult::forbidden($e->getMessage());
+      }
+    }
     // Deny access if the view or display are removed.
     $view = $this->entityTypeManager->getStorage('view')->load('media_library');
     if (!$view) {
@@ -175,8 +203,16 @@ class MediaLibraryUiBuilder {
       return AccessResult::forbidden('The media library widget display does not exist.')
         ->addCacheableDependency($view);
     }
-    return AccessResult::allowedIfHasPermission($account, 'view media')
+
+    // The user must at least be able to view media in order to access the media
+    // library.
+    $can_view_media = AccessResult::allowedIfHasPermission($account, 'view media')
       ->addCacheableDependency($view);
+
+    // Delegate any further access checking to the opener service nominated by
+    // the media library state.
+    return $this->openerResolver->get($state)->checkAccess($state, $account)
+      ->andIf($can_view_media);
   }
 
   /**
@@ -192,7 +228,7 @@ class MediaLibraryUiBuilder {
     // Add the menu for each type if we have more than 1 media type enabled for
     // the field.
     $allowed_type_ids = $state->getAllowedTypeIds();
-    if (count($allowed_type_ids) === 1) {
+    if (count($allowed_type_ids) <= 1) {
       return [];
     }
 
@@ -206,36 +242,35 @@ class MediaLibraryUiBuilder {
       ],
     ];
 
-    // Get the state parameters but remove the wrapper format, AJAX form and
-    // form rebuild parameters. These are internal parameters that should never
-    // be part of the vertical tab links.
-    $query = $state->all();
-    unset($query[MainContentViewSubscriber::WRAPPER_FORMAT], $query[FormBuilderInterface::AJAX_FORM_REQUEST], $query['_media_library_form_rebuild']);
-    // Add the 'media_library_content' parameter so the response will contain
-    // only the updated content for the tab.
-    // @see self::buildUi()
-    $query['media_library_content'] = 1;
-
     $allowed_types = $this->entityTypeManager->getStorage('media_type')->loadMultiple($allowed_type_ids);
 
     $selected_type_id = $state->getSelectedTypeId();
     foreach ($allowed_types as $allowed_type_id => $allowed_type) {
-      $query['media_library_selected_type'] = $allowed_type_id;
+      $link_state = MediaLibraryState::create($state->getOpenerId(), $state->getAllowedTypeIds(), $allowed_type_id, $state->getAvailableSlots(), $state->getOpenerParameters());
+      // Add the 'media_library_content' parameter so the response will contain
+      // only the updated content for the tab.
+      // @see self::buildUi()
+      $link_state->set('media_library_content', 1);
 
       $title = $allowed_type->label();
+      $display_title = [
+        '#markup' => $this->t('<span class="visually-hidden">Show </span>@title<span class="visually-hidden"> media</span>', ['@title' => $title]),
+      ];
       if ($allowed_type_id === $selected_type_id) {
-        $title = [
-          '#markup' => $this->t('@title<span class="active-tab visually-hidden"> (active tab)</span>', ['@title' => $title]),
+        $display_title = [
+          '#markup' => $this->t('<span class="visually-hidden">Show </span>@title<span class="visually-hidden"> media</span><span class="active-tab visually-hidden"> (selected)</span>', ['@title' => $title]),
         ];
       }
 
       $menu['#links']['media-library-menu-' . $allowed_type_id] = [
-        'title' => $title,
+        'title' => $display_title,
         'url' => Url::fromRoute('media_library.ui', [], [
-          'query' => $query,
+          'query' => $link_state->all(),
         ]),
         'attributes' => [
           'class' => ['media-library-menu__link'],
+          'role' => 'button',
+          'data-title' => $title,
         ],
       ];
     }

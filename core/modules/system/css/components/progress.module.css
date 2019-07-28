@@ -9,26 +9,26 @@
   position: relative;
 }
 .progress__track {
-  background-color: #fff;
-  border: 1px solid;
-  margin-top: 5px;
-  max-width: 100%;
   min-width: 100px;
+  max-width: 100%;
   height: 16px;
+  margin-top: 5px;
+  border: 1px solid;
+  background-color: #fff;
 }
 .progress__bar {
-  background-color: #000;
-  height: 16px;
   width: 3%;
   min-width: 3%;
   max-width: 100%;
+  height: 16px;
+  background-color: #000;
 }
 .progress__description,
 .progress__percentage {
-  color: #555;
   overflow: hidden;
-  font-size: 0.875em;
   margin-top: 0.2em;
+  color: #555;
+  font-size: 0.875em;
 }
 .progress__description {
   float: left; /* LTR */

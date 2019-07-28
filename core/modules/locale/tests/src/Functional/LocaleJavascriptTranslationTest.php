@@ -86,6 +86,8 @@ class LocaleJavascriptTranslationTest extends BrowserTestBase {
         "Context Unquoted plural{$etx}Context Unquoted @count plural" => 'Context string unquoted',
         "Context Single Quoted plural{$etx}Context Single Quoted @count plural" => 'Context string single quoted',
         "Context Double Quoted plural{$etx}Context Double Quoted @count plural" => 'Context string double quoted',
+
+        "No count argument plural - singular{$etx}No count argument plural - plural" => '',
       ];
 
       // Assert that all strings were found properly.

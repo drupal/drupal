@@ -91,6 +91,13 @@ function system_post_update_field_formatter_entity_schema() {
 }
 
 /**
+ * Clear the library cache and ensure aggregate files are regenerated.
+ */
+function system_post_update_fix_jquery_extend() {
+  // Empty post-update hook.
+}
+
+/**
  * Change plugin IDs of actions.
  */
 function system_post_update_change_action_plugins() {
@@ -189,4 +196,13 @@ function system_post_update_add_expand_all_items_key_in_system_menu_block(&$sand
   \Drupal::classResolver(ConfigEntityUpdater::class)->update($sandbox, 'block', function ($block) {
     return strpos($block->getPluginId(), 'system_menu_block:') === 0;
   });
+}
+
+/**
+ * Clear the menu cache.
+ *
+ * @see https://www.drupal.org/project/drupal/issues/3044364
+ */
+function system_post_update_clear_menu_cache() {
+  // Empty post-update hook.
 }

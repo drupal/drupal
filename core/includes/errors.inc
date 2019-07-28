@@ -180,7 +180,7 @@ function _drupal_log_error($error, $fatal = FALSE) {
       // Should not translate the string to avoid errors producing more errors.
       $response->setContent(html_entity_decode(strip_tags(new FormattableMarkup('%type: @message in %function (line %line of %file).', $error))) . "\n");
       $response->send();
-      exit;
+      exit(1);
     }
   }
 

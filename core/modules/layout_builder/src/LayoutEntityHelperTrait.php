@@ -15,8 +15,6 @@ use Drupal\layout_builder\Plugin\SectionStorage\OverridesSectionStorage;
 
 /**
  * Methods to help with entities using the layout builder.
- *
- * @internal
  */
 trait LayoutEntityHelperTrait {
 

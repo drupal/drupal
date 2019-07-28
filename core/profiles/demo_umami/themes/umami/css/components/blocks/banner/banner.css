@@ -12,11 +12,11 @@
 }
 
 .block-type-banner-block .field--name-field-title {
+  margin: 0 0 0.5em 0;
   font-family: "Scope One", Georgia, serif;
   font-size: 1.777em;
-  line-height: 1.2em;
   font-weight: 400;
-  margin: 0 0 0.5em 0;
+  line-height: 1.2em;
 }
 
 .block-type-banner-block .field--name-field-summary {
@@ -27,54 +27,54 @@
 .block-type-banner-block .field--name-field-content-link a {
   display: inline-block;
   padding: 0.7em 1.3em;
+  cursor: pointer;
+  transition: background-color 0.5s ease;
+  text-align: center;
+  text-decoration: none;
+  color: #fff;
   border: 2px solid #d93760;
   border-radius: 3px;
   background-color: #d93760;
-  color: #fff;
-  cursor: pointer;
-  text-align: center;
-  text-decoration: none;
   font-family: "Scope One", Georgia, serif;
   font-size: 1.2rem;
   font-weight: 400;
-  transition: background-color 0.5s ease;
 }
 
 .block-type-banner-block .field--name-field-content-link a:focus,
 .block-type-banner-block .field--name-field-content-link a:hover {
-  background-color: #fcece7;
   color: #000;
   border-color: #d93760;
-  outline-offset: 2px;
   outline-color: #fff;
+  outline-offset: 2px;
+  background-color: #fcece7;
 }
 
 @media screen and (min-width: 48rem) { /* 768px */
   .block-type-banner-block {
     background-color: #464646;
-    background-size: cover;
-    background-position: left center;
     background-repeat: no-repeat;
+    background-position: left center;
+    background-size: cover;
     /* Image ratio 7:3 */
   }
 
   .block-type-banner-block .block-inner {
-    max-width: 1200px;
-    margin: 0 auto;
     display: flex;
-    padding: 0 1em;
+    align-items: center;
+    max-width: 1200px;
     height: 0; /* Required for flexbox vertical centering in IE11. Min-height will take precedence. */
     min-height: 54vw;
-    align-items: center;
+    margin: 0 auto;
+    padding: 0 1em;
   }
 
   .block-type-banner-block .summary {
-    background: rgba(0, 0, 0, 0.42);
-    border: 1px solid #464646;
-    padding: 1.777em;
-    margin: 0;
     flex: 0 0 50%;
+    margin: 0;
+    padding: 1.777em;
     color: #fff;
+    border: 1px solid #464646;
+    background: rgba(0, 0, 0, 0.42);
   }
 
   .block-type-banner-block .field--name-field-banner-image {
@@ -84,10 +84,10 @@
      * as the .visually-hidden class has.
      */
     position: absolute !important;
-    clip: rect(1px, 1px, 1px, 1px);
     overflow: hidden;
-    height: 1px;
+    clip: rect(1px, 1px, 1px, 1px);
     width: 1px;
+    height: 1px;
     word-wrap: normal;
   }
 }

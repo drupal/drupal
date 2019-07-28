@@ -148,8 +148,8 @@ class LocaleConfigSubscriber implements EventSubscriberInterface {
         continue;
       }
       if (is_array($item)) {
-        $reference_config = isset($reference_config[$key]) ? $reference_config[$key] : [];
-        $this->processTranslatableData($name, $config[$key], $item, $langcode, $reference_config);
+        $reference_config_item = isset($reference_config[$key]) ? $reference_config[$key] : [];
+        $this->processTranslatableData($name, $config[$key], $item, $langcode, $reference_config_item);
       }
       else {
         $this->saveCustomizedTranslation($name, $item->getUntranslatedString(), $item->getOption('context'), $config[$key], $langcode);
