@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\views\Functional\Plugin;
 
+use Drupal\Core\Url;
 use Drupal\Tests\views\Functional\ViewTestBase;
 use Drupal\views\Views;
 
@@ -56,10 +57,12 @@ class DisplayFeedTest extends ViewTestBase {
 
     // Test the site name setting.
     $site_name = $this->randomMachineName();
+    $frontpage_url = Url::fromRoute('<front>')->setAbsolute()->toString();
     $this->config('system.site')->set('name', $site_name)->save();
 
     $this->drupalGet('test-feed-display.xml');
     $this->assertEquals($site_name, $this->getSession()->getDriver()->getText('//title'));
+    $this->assertEquals($frontpage_url, $this->getSession()->getDriver()->getText('//link'));
     $this->assertEquals($node_title, $this->getSession()->getDriver()->getText('//item/title'));
     // Verify HTML is properly escaped in the description field.
     $this->assertRaw('&lt;p&gt;A paragraph&lt;/p&gt;');
@@ -90,8 +93,8 @@ class DisplayFeedTest extends ViewTestBase {
     $this->assertEqual($icon_href, $page_url . '/feed', 'The feed icon was found.');
     $link_href = $this->cssSelect('link[type = "application/rss+xml"][href *= "test-feed-icon"]')[0]->getAttribute('href');
     $this->assertEqual($link_href, $page_url . '/feed', 'The RSS link was found.');
-    $feed_link = simplexml_load_string($this->drupalGet($icon_href))->channel->link;
-    $this->assertEqual($feed_link, $page_url, 'The channel link was found.');
+    $this->drupalGet($icon_href);
+    $this->assertEquals($frontpage_url, $this->getSession()->getDriver()->getText('//channel/link'));
   }
 
   /**

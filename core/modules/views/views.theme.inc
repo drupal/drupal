@@ -866,32 +866,7 @@ function template_preprocess_views_view_rss(&$variables) {
     $title = $view->getTitle();
   }
   $variables['title'] = $title;
-
-  // Figure out which display which has a path we're using for this feed. If
-  // there isn't one, use the global $base_url
-  $link_display_id = $view->display_handler->getLinkDisplay();
-  /** @var \Drupal\views\Plugin\views\display\DisplayPluginBase $display */
-  if ($link_display_id && ($display = $view->displayHandlers->get($link_display_id)) && $display->isEnabled()) {
-    $url = $view->getUrl(NULL, $link_display_id);
-  }
-
-  /** @var \Drupal\Core\Url $url */
-  if (!empty($url)) {
-    $url_options = ['absolute' => TRUE];
-    if (!empty($view->exposed_raw_input)) {
-      $url_options['query'] = $view->exposed_raw_input;
-    }
-
-    // Compare the link to the default home page; if it's the default home page,
-    // just use $base_url.
-    $url_string = $url->setOptions($url_options)->toString();
-    if ($url_string === Url::fromUserInput($config->get('page.front'))->toString()) {
-      $url_string = Url::fromRoute('<front>')->setAbsolute()->toString();
-    }
-
-    $variables['link'] = $url_string;
-  }
-
+  $variables['link'] = Url::fromRoute('<front>')->setAbsolute()->toString();
   $variables['langcode'] = \Drupal::languageManager()->getCurrentLanguage()->getId();
   $variables['namespaces'] = new Attribute($style->namespaces);
   $variables['items'] = $items;
