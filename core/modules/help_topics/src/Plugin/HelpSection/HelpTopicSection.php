@@ -15,6 +15,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * @HelpSection(
  *   id = "help_topics",
  *   title = @Translation("Topics"),
+ *   weight = -10,
  *   description = @Translation("Topics can be provided by modules or themes. Top-level help topics on your site:"),
  *   permission = "access administration pages"
  * )

@@ -18,3 +18,10 @@ function more_help_page_test_help($route_name, RouteMatchInterface $route_match)
       return ['#markup' => 'Help text from more_help_page_test_help module.'];
   }
 }
+
+/**
+ * Implements hook_help_section_info_alter().
+ */
+function more_help_page_test_help_section_info_alter(array &$info) {
+  $info['hook_help']['weight'] = 500;
+}

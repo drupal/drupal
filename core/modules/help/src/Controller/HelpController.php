@@ -85,6 +85,7 @@ class HelpController extends ControllerBase {
         '#description' => $plugin->getDescription(),
         '#empty' => $this->t('There is currently nothing in this section.'),
         '#links' => [],
+        '#weight' => $plugin_definition['weight'],
       ];
 
       $links = $plugin->listTopics();

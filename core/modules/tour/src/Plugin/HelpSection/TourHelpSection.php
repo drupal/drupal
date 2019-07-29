@@ -15,6 +15,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * @HelpSection(
  *   id = "tour",
  *   title = @Translation("Tours"),
+ *   weight = 10,
  *   description = @Translation("Tours guide you through workflows or explain concepts on various user interface pages. The tours with links in this list are on user interface landing pages; the tours without links will show on individual pages (such as when editing a View using the Views UI module). Available tours:"),
  *   permission = "access tour"
  * )
