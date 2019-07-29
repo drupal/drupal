@@ -154,7 +154,7 @@ class ForumController extends ControllerBase {
   public function forumPage(TermInterface $taxonomy_term) {
     // Get forum details.
     $taxonomy_term->forums = $this->forumManager->getChildren($this->config('forum.settings')->get('vocabulary'), $taxonomy_term->id());
-    $taxonomy_term->parents = $this->forumManager->getParents($taxonomy_term->id());
+    $taxonomy_term->parents = $this->termStorage->loadAllParents($taxonomy_term->id());
 
     if (empty($taxonomy_term->forum_container->value)) {
       $build = $this->forumManager->getTopics($taxonomy_term->id(), $this->currentUser());

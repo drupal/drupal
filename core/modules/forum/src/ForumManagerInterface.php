@@ -60,8 +60,10 @@ interface ForumManagerInterface {
    * @return array
    *   Array of parent terms.
    *
-   * @deprecated Scheduled to be removed in 9.0.x, see
-   *   https://www.drupal.org/node/2371593.
+   * @deprecated in drupal:8.1.0 and is removed from drupal:9.0.0. Call
+   * loadAllParents() on taxonomy term storage directly.
+   *
+   * @see https://www.drupal.org/node/3069599
    */
   public function getParents($tid);
 
