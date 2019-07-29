@@ -38,7 +38,7 @@ interface ConditionInterface {
   /**
    * Queries for the existence of a field.
    *
-   * @param $field
+   * @param string $field
    * @param string $langcode
    * @return ConditionInterface
    * @see \Drupal\Core\Entity\Query\QueryInterface::exists()
@@ -46,9 +46,10 @@ interface ConditionInterface {
   public function exists($field, $langcode = NULL);
 
   /**
-   * Queries for the existence of a field.
+   * Queries for the nonexistence of a field.
    *
    * @param string $field
+   * @param string $langcode
    * @return ConditionInterface
    * @see \Drupal\Core\Entity\Query\QueryInterface::notExists()
    */
