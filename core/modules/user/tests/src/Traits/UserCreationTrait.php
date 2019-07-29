@@ -322,7 +322,7 @@ trait UserCreationTrait {
    * Grant permissions to a user role.
    *
    * @param \Drupal\user\RoleInterface $role
-   *   The ID of a user role to alter.
+   *   The user role entity to alter.
    * @param array $permissions
    *   (optional) A list of permission names to grant.
    */
