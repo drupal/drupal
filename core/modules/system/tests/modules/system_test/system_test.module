@@ -75,7 +75,7 @@ function system_test_system_info_alter(&$info, Extension $file, $type) {
     'system_incompatible_core_version_dependencies_test',
     'system_incompatible_module_version_test',
     'system_incompatible_core_version_test',
-    'system_incompatible_core_version_test_9x',
+    'system_incompatible_core_version_test_99x',
   ])) {
     $info['hidden'] = FALSE;
   }

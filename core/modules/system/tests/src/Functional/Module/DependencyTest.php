@@ -115,7 +115,7 @@ class DependencyTest extends ModuleTestBase {
     // Test the next minor release.
     \Drupal::state()->set('dependency_test.core_version_requirement', "~$major.$next_minor");
     $this->drupalGet('admin/modules');
-    $assert_session->fieldDisabled('modules[system_incompatible_core_version_test_9x][enable]');
+    $assert_session->fieldDisabled('modules[system_incompatible_core_version_test_99x][enable]');
     $assert_session->fieldDisabled('modules[common_test][enable]');
 
     // Test either current major or the next one.
@@ -137,11 +137,13 @@ class DependencyTest extends ModuleTestBase {
     \Drupal::state()->set('dependency_test.core_version_requirement', "~$major.$minor");
     $this->drupalGet('admin/modules');
     $this->assertFalse($assert_session->elementExists('css', '[name="modules[common_test][enable]"]')->hasAttribute('disabled'));
+    $this->assertFalse($assert_session->elementExists('css', '[name="modules[system_core_semver_test][enable]"]')->hasAttribute('disabled'));
 
-    // Ensure the module can actually be installed.
+    // Ensure the modules can actually be installed.
     $edit['modules[common_test][enable]'] = 'common_test';
+    $edit['modules[system_core_semver_test][enable]'] = 'system_core_semver_test';
     $this->drupalPostForm('admin/modules', $edit, t('Install'));
-    $this->assertModules(['common_test'], TRUE);
+    $this->assertModules(['common_test', 'system_core_semver_test'], TRUE);
   }
 
   /**

@@ -1,0 +1,5 @@
+name: 'Theme test with semver core version'
+type: theme
+description: 'Test theme which has semver core version.'
+version: VERSION
+core: ^8 || ^9
