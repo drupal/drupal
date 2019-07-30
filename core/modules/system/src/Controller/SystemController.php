@@ -12,6 +12,7 @@ use Drupal\Core\Theme\ThemeAccessCheck;
 use Drupal\Core\Url;
 use Drupal\system\SystemManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Drupal\Component\Version\DrupalSemver;
 
 /**
  * Returns responses for System routes.
@@ -223,7 +224,7 @@ class SystemController extends ControllerBase {
 
       if (empty($theme->status)) {
         // Ensure this theme is compatible with this version of core.
-        $theme->incompatible_core = !isset($theme->info['core']) || ($theme->info['core'] != \DRUPAL::CORE_COMPATIBILITY);
+        $theme->incompatible_core = !isset($theme->info['core']) || !DrupalSemver::satisfies(\Drupal::VERSION, $theme->info['core']);
         // Require the 'content' region to make sure the main page
         // content has a common place in all themes.
         $theme->incompatible_region = !isset($theme->info['regions']['content']);

@@ -103,6 +103,48 @@ class DependencyTest extends ModuleTestBase {
   }
 
   /**
+   * Tests enabling modules with different core version specifications.
+   */
+  public function testCoreVersionDependency() {
+    $assert_session = $this->assertSession();
+    list($major, $minor) = explode('.', \Drupal::VERSION);
+
+    $next_minor = $minor + 1;
+    $next_major = $major + 1;
+
+    // Test the next minor release.
+    \Drupal::state()->set('dependency_test.core_version_requirement', "~$major.$next_minor");
+    $this->drupalGet('admin/modules');
+    $assert_session->fieldDisabled('modules[system_incompatible_core_version_test_9x][enable]');
+    $assert_session->fieldDisabled('modules[common_test][enable]');
+
+    // Test either current major or the next one.
+    \Drupal::state()->set('dependency_test.core_version_requirement', "^$major || ^$next_major");
+    $this->drupalGet('admin/modules');
+    $this->assertFalse($assert_session->elementExists('css', '[name="modules[common_test][enable]"]')->hasAttribute('disabled'));
+
+    // Test either a previous major or the next one.
+    \Drupal::state()->set('dependency_test.core_version_requirement', "^1 || ^$next_major");
+    $this->drupalGet('admin/modules');
+    $assert_session->fieldDisabled('modules[common_test][enable]');
+
+    // Test an invalid major.
+    \Drupal::state()->set('dependency_test.core_version_requirement', 'this-string-is-invalid');
+    $this->drupalGet('admin/modules');
+    $assert_session->fieldDisabled('modules[common_test][enable]');
+
+    // Test the current minor.
+    \Drupal::state()->set('dependency_test.core_version_requirement', "~$major.$minor");
+    $this->drupalGet('admin/modules');
+    $this->assertFalse($assert_session->elementExists('css', '[name="modules[common_test][enable]"]')->hasAttribute('disabled'));
+
+    // Ensure the module can actually be installed.
+    $edit['modules[common_test][enable]'] = 'common_test';
+    $this->drupalPostForm('admin/modules', $edit, t('Install'));
+    $this->assertModules(['common_test'], TRUE);
+  }
+
+  /**
    * Tests enabling a module that depends on a module which fails hook_requirements().
    */
   public function testEnableRequirementsFailureDependency() {

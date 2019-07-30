@@ -3,6 +3,7 @@
 namespace Drupal\system\Form;
 
 use Drupal\Component\Utility\Unicode;
+use Drupal\Component\Version\DrupalSemver;
 use Drupal\Core\Config\PreExistingConfigException;
 use Drupal\Core\Config\UnmetDependenciesException;
 use Drupal\Core\Access\AccessManagerInterface;
@@ -295,10 +296,15 @@ class ModulesListForm extends FormBase {
     $reasons = [];
 
     // Check the core compatibility.
-    if ($module->info['core'] != \Drupal::CORE_COMPATIBILITY) {
+    if (!DrupalSemver::satisfies(\Drupal::VERSION, $module->info['core'])) {
       $compatible = FALSE;
       $reasons[] = $this->t('This version is not compatible with Drupal @core_version and should be replaced.', [
-        '@core_version' => \Drupal::CORE_COMPATIBILITY,
+        '@core_version' => \Drupal::VERSION,
+      ]);
+      $row['#requires']['core'] = $this->t('Drupal Core (@core_requirement) (<span class="admin-missing">incompatible with</span> version @core_version)', [
+        '@module' => $module->getName(),
+        '@core_requirement' => $module->info['core'],
+        '@core_version' => \Drupal::VERSION,
       ]);
     }
 
@@ -342,7 +348,7 @@ class ModulesListForm extends FormBase {
         }
         // Disable the checkbox if the dependency is incompatible with this
         // version of Drupal core.
-        elseif ($modules[$dependency]->info['core'] != \Drupal::CORE_COMPATIBILITY) {
+        elseif (!DrupalSemver::satisfies(\Drupal::VERSION, $modules[$dependency]->info['core'])) {
           $row['#requires'][$dependency] = $this->t('@module (<span class="admin-missing">incompatible with</span> this version of Drupal core)', [
             '@module' => $name,
           ]);
