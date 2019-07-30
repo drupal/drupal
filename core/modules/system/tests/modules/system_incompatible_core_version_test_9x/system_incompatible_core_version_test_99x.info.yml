@@ -1,4 +1,4 @@
-name: 'System incompatible core 9.x version test'
+name: 'System incompatible core 99.x version test'
 type: module
 description: 'Support module for testing system core incompatibility.'
 package: Testing
