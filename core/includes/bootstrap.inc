@@ -717,7 +717,7 @@ function drupal_generate_test_ua($prefix) {
     // request, then the outbound request has to use the same User-Agent header
     // as the inbound request. A newly generated private key for the same test
     // prefix would invalidate all subsequent inbound requests.
-    // @see \Drupal\Core\Http\Plugin\SimpletestHttpRequestSubscriber
+    // @see \Drupal\Core\Test\HttpClientMiddleware\TestHttpClientMiddleware
     if (DRUPAL_TEST_IN_CHILD_SITE && $parent_prefix = drupal_valid_test_ua()) {
       if ($parent_prefix != $prefix) {
         throw new \RuntimeException("Malformed User-Agent: Expected '$parent_prefix' but got '$prefix'.");
