@@ -811,6 +811,24 @@ function hook_element_info_alter(array &$info) {
 }
 
 /**
+ * Alter Element plugin definitions.
+ *
+ * Whenever possible, hook_element_info_alter() should be used to alter the
+ * default properties of an element type. Use this hook only when the plugin
+ * definition itself needs to be altered.
+ *
+ * @param array $definitions
+ *   An array of Element plugin definitions.
+ *
+ * @see \Drupal\Core\Render\ElementInfoManager
+ * @see \Drupal\Core\Render\Element\ElementInterface
+ */
+function hook_element_plugin_alter(array &$definitions) {
+  // Use a custom class for the LayoutBuilder element.
+  $definitions['layout_builder']['class'] = '\Drupal\mymodule\Element\MyLayoutBuilderElement';
+}
+
+/**
  * Perform necessary alterations to the JavaScript before it is presented on
  * the page.
  *

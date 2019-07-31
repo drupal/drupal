@@ -15,6 +15,15 @@ function element_info_test_element_info_alter(array &$info) {
 }
 
 /**
+ * Implements hook_element_plugin_alter().
+ */
+function element_info_test_element_plugin_alter(array &$definitions) {
+  if (\Drupal::state()->get('hook_element_plugin_alter:remove_weight', FALSE)) {
+    unset($definitions['weight']);
+  }
+}
+
+/**
  * {@inheritdoc}
  *
  * @see \Drupal\KernelTests\Core\Render\Element\WeightTest::testProcessWeightSelectMax()
