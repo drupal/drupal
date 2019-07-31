@@ -281,10 +281,10 @@ class ResourceObject implements CacheableDependencyInterface, ResourceIdentifier
       [$resource_type, 'isFieldEnabled']
     );
 
-    // The "label" field needs special treatment: some entity types have a label
-    // field that is actually backed by a label callback.
+    // Special handling for user entities.
+    // @todo Improve in https://www.drupal.org/project/drupal/issues/3057175.
     $entity_type = $entity->getEntityType();
-    if ($entity_type->hasLabelCallback()) {
+    if ($entity_type->id() == 'user') {
       $fields[static::getLabelFieldName($entity)]->value = $entity->label();
     }
 

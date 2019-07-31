@@ -96,13 +96,10 @@ class EntityType extends PluginDefinition implements EntityTypeInterface {
    *
    * @var callable|null
    *
-   * @deprecated in Drupal 8.0.x-dev and will be removed before Drupal 9.0.0.
-   *   Use Drupal\Core\Entity\EntityInterface::label() for complex label
-   *   generation as needed.
+   * @deprecated in drupal:8.0.0 and is removed from drupal:9.0.0. Override the
+   *   EntityInterface::label() method instead for dynamic labels.
    *
    * @see \Drupal\Core\Entity\EntityInterface::label()
-   *
-   * @todo Remove usages of label_callback https://www.drupal.org/node/2450793.
    */
   protected $label_callback = NULL;
 
@@ -667,6 +664,7 @@ class EntityType extends PluginDefinition implements EntityTypeInterface {
    * {@inheritdoc}
    */
   public function getLabelCallback() {
+    @trigger_error('EntityType::getLabelCallback() is deprecated in drupal:8.0.0 and is removed from drupal:9.0.0. Override the EntityInterface::label() method instead for dynamic labels. See https://www.drupal.org/node/3050794', E_USER_DEPRECATED);
     return $this->label_callback;
   }
 
@@ -674,6 +672,7 @@ class EntityType extends PluginDefinition implements EntityTypeInterface {
    * {@inheritdoc}
    */
   public function setLabelCallback($callback) {
+    @trigger_error('EntityType::setLabelCallback() is deprecated in drupal:8.0.0 and is removed from drupal:9.0.0. Override the EntityInterface::label() method instead for dynamic labels. See https://www.drupal.org/node/3050794', E_USER_DEPRECATED);
     $this->label_callback = $callback;
     return $this;
   }
@@ -682,6 +681,7 @@ class EntityType extends PluginDefinition implements EntityTypeInterface {
    * {@inheritdoc}
    */
   public function hasLabelCallback() {
+    @trigger_error('EntityType::hasabelCallback() is deprecated in drupal:8.0.0 and is removed from drupal:9.0.0. Override the EntityInterface::label() method instead for dynamic labels. See https://www.drupal.org/node/3050794', E_USER_DEPRECATED);
     return isset($this->label_callback);
   }
 

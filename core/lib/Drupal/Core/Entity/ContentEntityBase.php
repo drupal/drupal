@@ -1246,7 +1246,8 @@ abstract class ContentEntityBase extends EntityBase implements \IteratorAggregat
   public function label() {
     $label = NULL;
     $entity_type = $this->getEntityType();
-    if (($label_callback = $entity_type->getLabelCallback()) && is_callable($label_callback)) {
+    if (($label_callback = $entity_type->get('label_callback')) && is_callable($label_callback)) {
+      @trigger_error('Entity type ' . $this->getEntityTypeId() . ' defines a label callback. Support for that is deprecated in drupal:8.0.0 and will be removed in drupal:9.0.0. Override the EntityInterface::label() method instead. See https://www.drupal.org/node/3050794', E_USER_DEPRECATED);
       $label = call_user_func($label_callback, $this);
     }
     elseif (($label_key = $entity_type->getKey('label'))) {

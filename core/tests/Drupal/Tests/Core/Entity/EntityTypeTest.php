@@ -496,4 +496,47 @@ class EntityTypeTest extends UnitTestCase {
     $this->assertEquals('example_entity_type', $entity_type->id());
   }
 
+  /**
+   * @covers ::getLabelCallback
+   *
+   * @group legacy
+   *
+   * @deprecatedMessage EntityType::getLabelCallback() is deprecated in drupal:8.0.0 and is removed from drupal:9.0.0. Override the EntityInterface::label() method instead for dynamic labels. See https://www.drupal.org/node/3050794
+   */
+  public function testGetLabelCallack() {
+    $entity_type = $this->setUpEntityType(['label_callback' => 'label_function']);
+    $this->assertSame('label_function', $entity_type->getLabelCallback());
+
+    $entity_type = $this->setUpEntityType([]);
+    $this->assertNull($entity_type->getLabelCallback());
+  }
+
+  /**
+   * @covers ::setLabelCallback
+   *
+   * @group legacy
+   *
+   * @deprecatedMessage EntityType::setLabelCallback() is deprecated in drupal:8.0.0 and is removed from drupal:9.0.0. Override the EntityInterface::label() method instead for dynamic labels. See https://www.drupal.org/node/3050794
+   */
+  public function testSetLabelCallack() {
+    $entity_type = $this->setUpEntityType([]);
+    $entity_type->setLabelCallback('label_function');
+    $this->assertSame('label_function', $entity_type->get('label_callback'));
+  }
+
+  /**
+   * @covers ::hasLabelCallback
+   *
+   * @group legacy
+   *
+   * @deprecatedMessage EntityType::hasLabelCallback() is deprecated in drupal:8.0.0 and is removed from drupal:9.0.0. Override the EntityInterface::label() method instead for dynamic labels. See https://www.drupal.org/node/3050794
+   */
+  public function testHasLabelCallack() {
+    $entity_type = $this->setUpEntityType(['label_callback' => 'label_function']);
+    $this->assertTrue($entity_type->hasLabelCallback());
+
+    $entity_type = $this->setUpEntityType([]);
+    $this->assertFalse($entity_type->hasLabelCallback());
+  }
+
 }

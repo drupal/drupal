@@ -10,6 +10,7 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Entity\EntityTypeRepositoryInterface;
 use Drupal\Core\Language\Language;
 use Drupal\entity_test\Entity\EntityTestMul;
+use Drupal\Tests\Traits\ExpectDeprecationTrait;
 use Drupal\Tests\UnitTestCase;
 
 /**
@@ -18,6 +19,8 @@ use Drupal\Tests\UnitTestCase;
  * @group Access
  */
 class EntityUnitTest extends UnitTestCase {
+
+  use ExpectDeprecationTrait;
 
   /**
    * The entity under test.
@@ -171,6 +174,9 @@ class EntityUnitTest extends UnitTestCase {
    * @group legacy
    */
   public function testLabel() {
+
+    $this->expectDeprecation('Entity type ' . $this->entityTypeId . ' defines a label callback. Support for that is deprecated in drupal:8.0.0 and will be removed in drupal:9.0.0. Override the EntityInterface::label() method instead. See https://www.drupal.org/node/3050794');
+
     // Make a mock with one method that we use as the entity's uri_callback. We
     // check that it is called, and that the entity's label is the callback's
     // return value.
@@ -181,11 +187,9 @@ class EntityUnitTest extends UnitTestCase {
       ->method(__FUNCTION__)
       ->will($this->returnValue($callback_label));
     $this->entityType->expects($this->at(0))
-      ->method('getLabelCallback')
+      ->method('get')
+      ->with('label_callback')
       ->will($this->returnValue([$callback_container, __FUNCTION__]));
-    $this->entityType->expects($this->at(1))
-      ->method('getLabelCallback')
-      ->will($this->returnValue(NULL));
     $this->entityType->expects($this->at(2))
       ->method('getKey')
       ->with('label')

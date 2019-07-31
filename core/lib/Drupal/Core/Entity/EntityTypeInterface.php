@@ -488,15 +488,12 @@ interface EntityTypeInterface extends PluginDefinitionInterface {
    * @return callable|null
    *   The callback, or NULL if none exists.
    *
-   * @deprecated in Drupal 8.0.x-dev and will be removed before Drupal 9.0.0.
-   *   Use Drupal\Core\Entity\EntityInterface::label() for complex label
-   *   generation as needed.
+   * @deprecated in drupal:8.0.0 and is removed from drupal:9.0.0. Override the
+   *   EntityInterface::label() method instead for dynamic labels.
    *
    * @see \Drupal\Core\Entity\EntityInterface::label()
    * @see \Drupal\Core\Entity\EntityTypeInterface::setLabelCallback()
    * @see \Drupal\Core\Entity\EntityTypeInterface::hasLabelCallback()
-   *
-   * @todo Remove usages of label_callback https://www.drupal.org/node/2450793.
    */
   public function getLabelCallback();
 
@@ -508,8 +505,8 @@ interface EntityTypeInterface extends PluginDefinitionInterface {
    *
    * @return $this
    *
-   * @deprecated in Drupal 8.0.x-dev and will be removed before Drupal 9.0.0.
-   *   Use EntityInterface::label() for complex label generation as needed.
+   * @deprecated in drupal:8.0.0 and is removed from drupal:9.0.0. Override the
+   *   EntityInterface::label() method instead for dynamic labels.
    *
    * @see \Drupal\Core\Entity\EntityInterface::label()
    * @see \Drupal\Core\Entity\EntityTypeInterface::getLabelCallback()
@@ -522,8 +519,8 @@ interface EntityTypeInterface extends PluginDefinitionInterface {
    *
    * @return bool
    *
-   * @deprecated in Drupal 8.0.x-dev and will be removed before Drupal 9.0.0.
-   *   Use EntityInterface::label() for complex label generation as needed.
+   * @deprecated in drupal:8.0.0 and is removed from drupal:9.0.0. Override the
+   *   EntityInterface::label() method instead for dynamic labels.
    *
    * @see \Drupal\Core\Entity\EntityInterface::label()
    * @see \Drupal\Core\Entity\EntityTypeInterface::getLabelCallback()

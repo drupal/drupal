@@ -48,7 +48,6 @@ use Drupal\user\UserInterface;
  *   admin_permission = "administer users",
  *   base_table = "users",
  *   data_table = "users_field_data",
- *   label_callback = "user_format_name",
  *   translatable = TRUE,
  *   entity_keys = {
  *     "id" = "uid",
@@ -81,6 +80,13 @@ class User extends ContentEntityBase implements UserInterface {
    */
   public function isNew() {
     return !empty($this->enforceIsNew) || $this->id() === NULL;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function label() {
+    return $this->getDisplayName();
   }
 
   /**

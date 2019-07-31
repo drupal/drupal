@@ -436,12 +436,13 @@ function user_preprocess_block(&$variables) {
  * @return string
  *   An unsanitized string with the username to display.
  *
- * @deprecated in Drupal 8.0.x-dev, will be removed before Drupal 9.0.0.
- *   Use \Drupal\Core\Session\AccountInterface::getDisplayName().
+ * @deprecated in drupal:8.0.0 and is removed from drupal:9.0.0.
+ *   Use $account->label() or $account->getDisplayName() instead
  *
- * @todo Remove usage in https://www.drupal.org/node/2311219.
+ * @see https://www.drupal.org/node/3050794
  */
 function user_format_name(AccountInterface $account) {
+  @trigger_error('user_format_name() is deprecated in drupal:8.0.0 and is removed from drupal:9.0.0. Use $account->label() or $account->getDisplayName() instead. See https://www.drupal.org/node/3050794', E_USER_DEPRECATED);
   return $account->getDisplayName();
 }
 

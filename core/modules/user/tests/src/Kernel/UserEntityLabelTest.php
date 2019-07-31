@@ -11,7 +11,7 @@ use Drupal\user\Entity\User;
  *
  * @group user
  */
-class UserEntityLabelCallbackTest extends KernelTestBase {
+class UserEntityLabelTest extends KernelTestBase {
 
   use UserCreationTrait;
 

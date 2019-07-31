@@ -84,4 +84,14 @@ class UserLegacyTest extends KernelTestBase {
     $this->assert(NULL === User::load(11), "User 11 has been deleted");
   }
 
+  /**
+   * Tests user_format_name().
+   *
+   * @expectedDeprecation user_format_name() is deprecated in drupal:8.0.0 and is removed from drupal:9.0.0. Use $account->label() or $account->getDisplayName() instead. See https://www.drupal.org/node/3050794
+   */
+  public function testUserFormatName() {
+    $user = User::create(['name' => 'foo', 'uid' => 10]);
+    $this->assertSame('foo', user_format_name($user));
+  }
+
 }
