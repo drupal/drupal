@@ -75,16 +75,17 @@ class SearchBlockForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, FormStateInterface $form_state) {
+  public function buildForm(array $form, FormStateInterface $form_state, $entity_id = NULL) {
     // Set up the form to submit using GET to the correct search page.
-    $entity_id = $this->searchPageRepository->getDefaultSearchPage();
-
-    // SearchPageRepository::getDefaultSearchPage() depends on search.settings.
-    // The dependency needs to be added before the conditional return, otherwise
-    // the block would get cached without the necessary cacheablity metadata in
-    // case there is no default search page and would not be invalidated if that
-    // changes.
-    $this->renderer->addCacheableDependency($form, $this->configFactory->get('search.settings'));
+    if (!$entity_id) {
+      $entity_id = $this->searchPageRepository->getDefaultSearchPage();
+      // SearchPageRepository::getDefaultSearchPage() depends on
+      // search.settings.  The dependency needs to be added before the
+      // conditional return, otherwise the block would get cached without the
+      // necessary cacheability metadata in case there is no default search page
+      // and would not be invalidated if that changes.
+      $this->renderer->addCacheableDependency($form, $this->configFactory->get('search.settings'));
+    }
 
     if (!$entity_id) {
       $form['message'] = [

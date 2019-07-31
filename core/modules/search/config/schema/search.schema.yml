@@ -88,3 +88,11 @@ search.page.*:
       label: 'Plugin'
     configuration:
       type: search.plugin.[%parent.plugin]
+
+block.settings.search_form_block:
+  type: block_settings
+  label: 'Search block'
+  mapping:
+    page_id:
+      type: string
+      label: 'Search page'

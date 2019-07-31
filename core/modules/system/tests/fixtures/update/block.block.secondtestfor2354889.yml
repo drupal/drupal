@@ -17,6 +17,7 @@ settings:
   label: Search
   provider: search
   label_display: visible
+  page_id: node_search
   cache:
     max_age: -1
   status: true

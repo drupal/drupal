@@ -15,14 +15,29 @@ class SearchBlockTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['block', 'node', 'search', 'dblog'];
+  protected static $modules = ['block', 'node', 'search', 'dblog', 'user'];
 
+  /**
+   * The administrative user.
+   *
+   * @var \Drupal\Core\Session\AccountInterface
+   */
+  protected $adminUser;
+
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp() {
     parent::setUp();
 
     // Create and log in user.
-    $admin_user = $this->drupalCreateUser(['administer blocks', 'search content']);
-    $this->drupalLogin($admin_user);
+    $this->adminUser = $this->drupalCreateUser([
+      'administer blocks',
+      'search content',
+      'access user profiles',
+      'access content',
+    ]);
+    $this->drupalLogin($this->adminUser);
   }
 
   /**
@@ -105,6 +120,16 @@ class SearchBlockTest extends BrowserTestBase {
     $this->drupalPostForm(NULL, ['keys' => $this->randomMachineName()], t('Search'), [], 'search-form');
     $this->assertNoText('You must include at least one keyword to match in the content', 'Keyword message is not displayed when searching for long word after short word search');
 
+    // Edit the block configuration so that it searches users instead of nodes,
+    // and test.
+    $this->drupalPostForm('admin/structure/block/manage/' . $block->id(),
+      [
+        'settings[page_id]' => 'user_search',
+      ], 'Save block');
+    $name = $this->adminUser->getAccountName();
+    $email = $this->adminUser->getEmail();
+    $this->drupalPostForm('node', ['keys' => $name], t('Search'));
+    $this->assertLink($name);
   }
 
 }
