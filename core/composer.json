@@ -18,6 +18,7 @@
         "ext-tokenizer": "*",
         "ext-xml": "*",
         "php": ">=7.0.8",
+        "drupal/core-composer-scaffold": "self.version",
         "symfony/class-loader": "~3.4.0",
         "symfony/console": "~3.4.0",
         "symfony/dependency-injection": "~3.4.26",
@@ -50,22 +51,6 @@
     },
     "conflict": {
         "drush/drush": "<8.1.10"
-    },
-    "require-dev": {
-        "behat/mink": "1.7.x-dev",
-        "behat/mink-goutte-driver": "^1.2",
-        "behat/mink-selenium2-driver": "1.3.x-dev",
-        "composer/composer": "^1.8",
-        "drupal/coder": "^8.3.2",
-        "jcalderonzumba/gastonjs": "^1.0.2",
-        "jcalderonzumba/mink-phantomjs-driver": "^0.3.1",
-        "mikey179/vfsstream": "^1.2",
-        "phpunit/phpunit": "^6.5",
-        "phpspec/prophecy": "^1.7",
-        "symfony/css-selector": "^3.4.0",
-        "symfony/phpunit-bridge": "^3.4.3",
-        "symfony/debug": "^3.4.0",
-        "justinrainbow/json-schema": "^5.2"
     },
     "replace": {
         "drupal/action": "self.version",
@@ -110,7 +95,6 @@
         "drupal/core-proxy-builder": "self.version",
         "drupal/core-render": "self.version",
         "drupal/core-serialization": "self.version",
-        "drupal/core-composer-scaffold": "self.version",
         "drupal/core-transliteration": "self.version",
         "drupal/core-utility": "self.version",
         "drupal/core-uuid": "self.version",
@@ -179,39 +163,6 @@
         "drupal/views_ui": "self.version",
         "drupal/workflows": "self.version",
         "drupal/workspaces": "self.version"
-    },
-    "extra": {
-        "merge-plugin": {
-            "require": [
-                "core/lib/Drupal/Component/Annotation/composer.json",
-                "core/lib/Drupal/Component/Assertion/composer.json",
-                "core/lib/Drupal/Component/Bridge/composer.json",
-                "core/lib/Drupal/Component/ClassFinder/composer.json",
-                "core/lib/Drupal/Component/Datetime/composer.json",
-                "core/lib/Drupal/Component/DependencyInjection/composer.json",
-                "core/lib/Drupal/Component/Diff/composer.json",
-                "core/lib/Drupal/Component/Discovery/composer.json",
-                "core/lib/Drupal/Component/EventDispatcher/composer.json",
-                "core/lib/Drupal/Component/FileCache/composer.json",
-                "core/lib/Drupal/Component/FileSystem/composer.json",
-                "core/lib/Drupal/Component/Gettext/composer.json",
-                "core/lib/Drupal/Component/Graph/composer.json",
-                "core/lib/Drupal/Component/HttpFoundation/composer.json",
-                "core/lib/Drupal/Component/PhpStorage/composer.json",
-                "core/lib/Drupal/Component/Plugin/composer.json",
-                "core/lib/Drupal/Component/ProxyBuilder/composer.json",
-                "core/lib/Drupal/Component/Render/composer.json",
-                "core/lib/Drupal/Component/Serialization/composer.json",
-                "core/lib/Drupal/Component/Scaffold/composer.json",
-                "core/lib/Drupal/Component/Transliteration/composer.json",
-                "core/lib/Drupal/Component/Utility/composer.json",
-                "core/lib/Drupal/Component/Uuid/composer.json",
-                "core/lib/Drupal/Component/Version/composer.json"
-            ],
-            "recurse": false,
-            "replace": false,
-            "merge-extra": false
-        }
     },
     "minimum-stability": "dev",
     "prefer-stable": true,
