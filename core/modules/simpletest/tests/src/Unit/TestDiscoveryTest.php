@@ -513,6 +513,7 @@ EOF;
     $data['module-functionaljavascripttest'] = ['\Drupal\Tests\toolbar\FunctionalJavascript\ToolbarIntegrationTest', 'FunctionalJavascript'];
     $data['core-unittest'] = ['\Drupal\Tests\ComposerIntegrationTest', 'Unit'];
     $data['core-unittest2'] = ['Drupal\Tests\Core\DrupalTest', 'Unit'];
+    $data['core-unittest3'] = ['Drupal\Tests\Scripts\TestSiteApplicationTest', 'Unit'];
     $data['core-kerneltest'] = ['\Drupal\KernelTests\KernelTestBaseTest', 'Kernel'];
     $data['core-functionaltest'] = ['\Drupal\FunctionalTests\ExampleTest', 'Functional'];
     $data['core-functionaljavascripttest'] = ['\Drupal\FunctionalJavascriptTests\ExampleTest', 'FunctionalJavascript'];

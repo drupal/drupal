@@ -85,6 +85,7 @@ class TestSiteApplicationTest extends UnitTestCase {
    * @coversNothing
    */
   public function testInstallWithNonSetupClass() {
+    $this->markTestIncomplete('Fix this test in https://www.drupal.org/project/drupal/issues/2962157.');
 
     // Create a connection to the DB configured in SIMPLETEST_DB.
     $connection = Database::getConnection('default', $this->addTestDatabase(''));
@@ -254,6 +255,7 @@ class TestSiteApplicationTest extends UnitTestCase {
    * @coversNothing
    */
   public function testUserLogin() {
+    $this->markTestIncomplete('Fix this test in https://www.drupal.org/project/drupal/issues/2962157.');
     $simpletest_path = $this->root . DIRECTORY_SEPARATOR . 'sites' . DIRECTORY_SEPARATOR . 'simpletest';
     if (!is_writable($simpletest_path)) {
       $this->markTestSkipped("Requires the directory $simpletest_path to exist and be writable");

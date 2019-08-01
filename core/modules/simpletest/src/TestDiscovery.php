@@ -455,7 +455,7 @@ class TestDiscovery {
   }
 
   /**
-   * Determines the phpunit testsuite for a given classname.
+   * Determines the phpunit testsuite for a given classname, based on namespace.
    *
    * @param string $classname
    *   The test classname.
@@ -464,15 +464,13 @@ class TestDiscovery {
    *   The testsuite name or FALSE if its not a phpunit test.
    */
   public static function getPhpunitTestSuite($classname) {
-    if (preg_match('/Drupal\\\\Tests\\\\Core\\\\(\w+)/', $classname, $matches)) {
-      return 'Unit';
-    }
-    if (preg_match('/Drupal\\\\Tests\\\\Component\\\\(\w+)/', $classname, $matches)) {
-      return 'Unit';
-    }
-    // Module tests.
     if (preg_match('/Drupal\\\\Tests\\\\(\w+)\\\\(\w+)/', $classname, $matches)) {
-      return $matches[2];
+      // This could be an extension test, in which case the first match will be
+      // the extension name. We assume that lower-case strings are module names.
+      if (strtolower($matches[1]) == $matches[1]) {
+        return $matches[2];
+      }
+      return 'Unit';
     }
     // Core tests.
     elseif (preg_match('/Drupal\\\\(\w*)Tests\\\\/', $classname, $matches)) {
