@@ -5,23 +5,10 @@
     "license": "GPL-2.0-or-later",
     "require": {
         "composer/installers": "^1.0.24",
-        "drupal/core": "self.version"
+        "wikimedia/composer-merge-plugin": "^1.4"
     },
-    "require-dev": {
-        "behat/mink": "1.7.x-dev",
-        "behat/mink-goutte-driver": "^1.2",
-        "behat/mink-selenium2-driver": "1.3.x-dev",
-        "composer/composer": "^1.8",
-        "drupal/coder": "^8.3.2",
-        "jcalderonzumba/gastonjs": "^1.0.2",
-        "jcalderonzumba/mink-phantomjs-driver": "^0.3.1",
-        "mikey179/vfsstream": "^1.2",
-        "phpunit/phpunit": "^6.5",
-        "phpspec/prophecy": "^1.7",
-        "symfony/css-selector": "^3.4.0",
-        "symfony/phpunit-bridge": "^3.4.3",
-        "symfony/debug": "^3.4.0",
-        "justinrainbow/json-schema": "^5.2"
+    "replace": {
+        "drupal/core": "^8.8"
     },
     "minimum-stability": "dev",
     "prefer-stable": true,
@@ -37,8 +24,16 @@
             "You can read more about this composer repository at:",
             "https://www.drupal.org/node/2718229"
         ],
+        "merge-plugin": {
+            "include": [
+                "core/composer.json"
+            ],
+            "recurse": true,
+            "replace": false,
+            "merge-extra": false
+        },
         "installer-paths": {
-            "vendor/drupal/core": ["type:drupal-core"],
+            "core": ["type:drupal-core"],
             "modules/contrib/{$name}": ["type:drupal-module"],
             "profiles/contrib/{$name}": ["type:drupal-profile"],
             "themes/contrib/{$name}": ["type:drupal-theme"],
@@ -64,14 +59,6 @@
         {
             "type": "composer",
             "url": "https://packages.drupal.org/8"
-        },
-        {
-            "type": "path",
-            "url": "core"
-        },
-        {
-            "type": "path",
-            "url": "core/lib/Drupal/Component/Scaffold"
         }
     ]
 }
