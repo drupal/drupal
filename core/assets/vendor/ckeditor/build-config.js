@@ -1,18 +1,16 @@
 /**
  * This is a Drupal-optimized build of CKEditor.
  *
- * You may re-use it at any time at http://ckeditor.com/builder to build
- * CKEditor again. Alternatively, use the "build.sh" script to build it locally.
- * If you do so, be sure to pass it the "-s" flag. So: "sh build.sh -s".
+ * To re-create this build:
+ * 1. Clone the development repo of CKEditor to your machine
+ * 2. Check out the version you'd like to build
+ * 3. Run ./dev/builder/build.sh -s /path/to/build-config.js
+ *
+ * Then, replace this directory (core/assets/vendor/ckeditor) with your build.
  *
  * If you are developing or debugging CKEditor plugins, you may want to work
- * against an unoptimized (unminified) CKEditor build. To do so, you have two
- * options:
- * 1. Upload build-config.js to http://ckeditor.com/builder and choose the
- *    "Source (Big N'Slow)" option when downloading.
- * 2. Use the "build.sh" script to build it locally, with one additional flag:
- *    "sh build.sh -s --leave-js-unminified".
- * Then, replace this directory (core/assets/vendor/ckeditor) with your build.
+ * against an unoptimized (unminified) CKEditor build. To do so,
+ * run the build command with the --leave-js-unminified flag.
  *
  * NOTE:
  *    This file is not used by CKEditor, you may remove it.
