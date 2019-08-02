@@ -447,6 +447,7 @@ jquery.ui:
     assets/vendor/jquery.ui/ui/tabbable-min.js: { weight: -11, minified: true }
     assets/vendor/jquery.ui/ui/unique-id-min.js: { weight: -11, minified: true }
     assets/vendor/jquery.ui/ui/version-min.js: { weight: -11, minified: true }
+    assets/vendor/jquery.ui/ui/escape-selector-min.js: { weight: -11, minified: true }
     assets/vendor/jquery.ui/ui/focusable-min.js: { weight: -11, minified: true }
     assets/vendor/jquery.ui/ui/ie-min.js: { weight: -11, minified: true }
     assets/vendor/jquery.ui/ui/keycode-min.js: { weight: -11, minified: true }
@@ -498,11 +499,14 @@ jquery.ui.button:
   dependencies:
     - core/jquery.ui
     - core/jquery.ui.widget
+    - core/jquery.ui.checkboxradio
+    - core/jquery.ui.controlgroup
 
 jquery.ui.checkboxradio:
   version: *jquery_ui_version
   license: *jquery_ui_license
   js:
+    assets/vendor/jquery.ui/ui/form-reset-mixin-min.js: { minified: true }
     assets/vendor/jquery.ui/ui/widgets/checkboxradio-min.js: { minified: true }
   css:
     component:
@@ -650,6 +654,7 @@ jquery.ui.effects.puff:
     assets/vendor/jquery.ui/ui/effects/effect-puff-min.js: { minified: true }
   dependencies:
     - core/jquery.ui.effects.core
+    - core/jquery.ui.effects.scale
 
 jquery.ui.effects.pulsate:
   version: *jquery_ui_version
@@ -666,6 +671,7 @@ jquery.ui.effects.scale:
     assets/vendor/jquery.ui/ui/effects/effect-scale-min.js: { minified: true }
   dependencies:
     - core/jquery.ui.effects.core
+    - core/jquery.ui.effects.size
 
 jquery.ui.effects.shake:
   version: *jquery_ui_version
@@ -709,12 +715,14 @@ jquery.ui.menu:
       assets/vendor/jquery.ui/themes/base/menu.css: {}
   dependencies:
     - core/jquery.ui
+    - core/jquery.ui.position
     - core/jquery.ui.widget
 
 jquery.ui.mouse:
   version: *jquery_ui_version
   license: *jquery_ui_license
   js:
+    assets/vendor/jquery.ui/ui/ie-min.js: { minified: true }
     assets/vendor/jquery.ui/ui/widgets/mouse-min.js: { minified: true }
   dependencies:
     - core/jquery.ui.widget
@@ -769,6 +777,7 @@ jquery.ui.selectmenu:
   version: *jquery_ui_version
   license: *jquery_ui_license
   js:
+    assets/vendor/jquery.ui/ui/form-reset-mixin-min.js: { minified: true }
     assets/vendor/jquery.ui/ui/widgets/selectmenu-min.js: { minified: true }
   css:
     component:
@@ -852,6 +861,8 @@ jquery.ui.touch-punch:
     assets/vendor/jquery-ui-touch-punch/jquery.ui.touch-punch.js: {}
   dependencies:
     - core/jquery.ui
+    - core/jquery.ui.mouse
+    - core/jquery.ui.widget
 
 jquery.ui.widget:
   version: *jquery_ui_version
