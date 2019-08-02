@@ -547,66 +547,6 @@ class MediaLibraryTest extends WebDriverTestBase {
     $assert_session->pageTextContains('Bear');
     $page->find('css', '.ui-dialog-titlebar-close')->click();
 
-    // Assert the media library contains header links to switch between the grid
-    // and table display.
-    $assert_session->elementExists('css', '.media-library-open-button[name^="field_unlimited_media"]')->click();
-    $assert_session->assertWaitOnAjaxRequest();
-    $assert_session->elementExists('css', '.media-library-view .media-library-item--grid');
-    $assert_session->elementNotExists('css', '.media-library-view .media-library-item--table');
-    // Assert the 'Apply filter' button is not moved to the button pane.
-    $button_pane = $assert_session->elementExists('css', '.ui-dialog-buttonpane');
-    $assert_session->buttonExists('Insert selected', $button_pane);
-    $assert_session->buttonNotExists('Apply filters', $button_pane);
-    $assert_session->linkExists('Grid');
-    $page->clickLink('Table');
-    // Assert the display change is correctly announced for screen readers.
-    $this->assertNotEmpty($assert_session->waitForText('Loading table view.'));
-    $this->assertNotEmpty($assert_session->waitForText('Changed to table view.'));
-    $this->assertNotEmpty($assert_session->waitForElementVisible('css', '.media-library-view .media-library-item--table'));
-    $assert_session->elementNotExists('css', '.media-library-view .media-library-item--grid');
-    // Assert the 'Apply filter' button is not moved to the button pane.
-    $assert_session->buttonExists('Insert selected', $button_pane);
-    $assert_session->buttonNotExists('Apply filters', $button_pane);
-    $assert_session->pageTextContains('Dog');
-    $assert_session->pageTextContains('Bear');
-    $assert_session->pageTextNotContains('Turtle');
-    // Assert the exposed filters can be applied.
-    $page->fillField('Name', 'Dog');
-    $page->pressButton('Apply filters');
-    $assert_session->assertWaitOnAjaxRequest();
-    $assert_session->pageTextContains('Dog');
-    $assert_session->pageTextNotContains('Bear');
-    $assert_session->pageTextNotContains('Turtle');
-    $page->checkField('Select Dog');
-    $assert_session->linkExists('Table');
-    $page->clickLink('Grid');
-    // Assert the display change is correctly announced for screen readers.
-    $this->assertNotEmpty($assert_session->waitForText('Loading grid view.'));
-    $this->assertNotEmpty($assert_session->waitForText('Changed to grid view.'));
-    $this->assertNotEmpty($assert_session->waitForElementVisible('css', '.media-library-view .media-library-item--grid'));
-    $assert_session->elementNotExists('css', '.media-library-view .media-library-item--table');
-    // Assert the exposed filters are persisted when changing display.
-    $this->assertSame('Dog', $page->findField('Name')->getValue());
-    $assert_session->pageTextContains('Dog');
-    $assert_session->pageTextNotContains('Bear');
-    $assert_session->pageTextNotContains('Turtle');
-    $assert_session->linkExists('Grid');
-    $assert_session->linkExists('Table');
-    // Select the item.
-    $assert_session->elementExists('css', '.ui-dialog-buttonpane')->pressButton('Insert selected');
-    $this->assertNotEmpty($assert_session->waitForText('Added one media item.'));
-    $assert_session->assertWaitOnAjaxRequest();
-    // Ensure that the selection completed successfully.
-    $assert_session->pageTextNotContains('Add or select media');
-    $assert_session->pageTextContains('Dog');
-    $assert_session->pageTextNotContains('Bear');
-    $assert_session->pageTextNotContains('Turtle');
-    // Clear the selection.
-    $assert_session->elementAttributeContains('css', '.media-library-item__remove', 'aria-label', 'Remove Dog');
-    $assert_session->elementExists('css', '.media-library-item__remove')->click();
-    $this->assertNotEmpty($assert_session->waitForText('Removed Dog.'));
-    $assert_session->assertWaitOnAjaxRequest();
-
     // Assert adding a single media item and removing it.
     $assert_session->elementExists('css', '.media-library-open-button[name^="field_twin_media"]')->click();
     $assert_session->assertWaitOnAjaxRequest();
@@ -854,6 +794,124 @@ class MediaLibraryTest extends WebDriverTestBase {
     $assert_session->pageTextContains('Horse');
     $assert_session->pageTextContains('Turtle');
     $assert_session->pageTextNotContains('Snake');
+  }
+
+  /**
+   * Tests that the views in the Media library's widget work as expected.
+   */
+  public function testWidgetViews() {
+    $assert_session = $this->assertSession();
+    $page = $this->getSession()->getPage();
+
+    // Create more media items for use in selection. We want to have more than
+    // 24 items to trigger a pager in the widget view.
+    $media_names = [
+      'Goat',
+      'Sheep',
+      'Pig',
+      'Cow',
+      'Chicken',
+      'Duck',
+      'Donkey',
+      'Llama',
+      'Mouse',
+      'Goldfish',
+      'Rabbit',
+      'Turkey',
+      'Dove',
+      'Giraffe',
+      'Tiger',
+      'Hamster',
+      'Parrot',
+      'Monkey',
+      'Koala',
+      'Panda',
+      'Kangaroo',
+    ];
+
+    $time = time();
+    foreach ($media_names as $name) {
+      $entity = Media::create(['name' => $name, 'bundle' => 'type_one']);
+      $entity->setCreatedTime(++$time);
+      $entity->set('field_media_test', $name);
+      $entity->save();
+    }
+
+    $this->drupalGet('node/add/basic_page');
+
+    // Assert the media library contains header links to switch between the grid
+    // and table display.
+    $assert_session->elementExists('css', '.media-library-open-button[name^="field_unlimited_media"]')->click();
+    $assert_session->assertWaitOnAjaxRequest();
+    $assert_session->elementExists('css', '.media-library-view .media-library-item--grid');
+    $assert_session->elementNotExists('css', '.media-library-view .media-library-item--table');
+    $assert_session->linkExists('Grid');
+    $assert_session->linkExists('Table');
+
+    // Assert the 'Apply filter' button is not moved to the button pane.
+    $button_pane = $assert_session->elementExists('css', '.ui-dialog-buttonpane');
+    $assert_session->buttonExists('Insert selected', $button_pane);
+    $assert_session->buttonNotExists('Apply filters', $button_pane);
+
+    // Assert the pager works as expected.
+    $assert_session->elementTextContains('css', '.media-library-view .pager__item.is-active', 'Page 1');
+    $assert_session->elementsCount('css', '.media-library-view .js-click-to-select-checkbox input', 24);
+    $page->clickLink('Next page');
+    $assert_session->assertWaitOnAjaxRequest();
+    $assert_session->elementTextContains('css', '.media-library-view .pager__item.is-active', 'Page 2');
+    $assert_session->elementsCount('css', '.media-library-view .js-click-to-select-checkbox input', 1);
+    $page->clickLink('Previous page');
+    $assert_session->assertWaitOnAjaxRequest();
+    $assert_session->elementTextContains('css', '.media-library-view .pager__item.is-active', 'Page 1');
+    $assert_session->elementsCount('css', '.media-library-view .js-click-to-select-checkbox input', 24);
+
+    // Assert the display change is correctly announced for screen readers.
+    $page->clickLink('Table');
+    $this->assertNotEmpty($assert_session->waitForText('Loading table view.'));
+    $this->assertNotEmpty($assert_session->waitForText('Changed to table view.'));
+    $this->assertNotEmpty($assert_session->waitForElementVisible('css', '.media-library-view .media-library-item--table'));
+    $assert_session->elementNotExists('css', '.media-library-view .media-library-item--grid');
+
+    // Assert the 'Apply filter' button is not moved to the button pane.
+    $assert_session->buttonExists('Insert selected', $button_pane);
+    $assert_session->buttonNotExists('Apply filters', $button_pane);
+    $assert_session->pageTextContains('Dog');
+    $assert_session->pageTextContains('Bear');
+    $assert_session->pageTextNotContains('Turtle');
+
+    // Assert the exposed filters can be applied.
+    $page->fillField('Name', 'Dog');
+    $page->pressButton('Apply filters');
+    $assert_session->assertWaitOnAjaxRequest();
+    $assert_session->pageTextContains('Dog');
+    $assert_session->pageTextNotContains('Bear');
+    $assert_session->pageTextNotContains('Turtle');
+    $page->checkField('Select Dog');
+    $assert_session->linkExists('Table');
+    $page->clickLink('Grid');
+    // Assert the display change is correctly announced for screen readers.
+    $this->assertNotEmpty($assert_session->waitForText('Loading grid view.'));
+    $this->assertNotEmpty($assert_session->waitForText('Changed to grid view.'));
+    $this->assertNotEmpty($assert_session->waitForElementVisible('css', '.media-library-view .media-library-item--grid'));
+    $assert_session->elementNotExists('css', '.media-library-view .media-library-item--table');
+
+    // Assert the exposed filters are persisted when changing display.
+    $this->assertSame('Dog', $page->findField('Name')->getValue());
+    $assert_session->pageTextContains('Dog');
+    $assert_session->pageTextNotContains('Bear');
+    $assert_session->pageTextNotContains('Turtle');
+    $assert_session->linkExists('Grid');
+    $assert_session->linkExists('Table');
+
+    // Select the item.
+    $assert_session->elementExists('css', '.ui-dialog-buttonpane')->pressButton('Insert selected');
+    $this->assertNotEmpty($assert_session->waitForText('Added one media item.'));
+    $assert_session->assertWaitOnAjaxRequest();
+    // Ensure that the selection completed successfully.
+    $assert_session->pageTextNotContains('Add or select media');
+    $assert_session->pageTextContains('Dog');
+    $assert_session->pageTextNotContains('Bear');
+    $assert_session->pageTextNotContains('Turtle');
   }
 
   /**
