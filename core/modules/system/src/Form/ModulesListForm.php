@@ -324,7 +324,7 @@ class ModulesListForm extends FormBase {
     /** @var \Drupal\Core\Extension\Dependency $dependency_object */
     foreach ($module->requires as $dependency => $dependency_object) {
       if (!isset($modules[$dependency])) {
-        $row['#requires'][$dependency] = $this->t('@module (<span class="admin-missing">missing</span>)', ['@module' => Unicode::ucfirst($dependency)]);
+        $row['#requires'][$dependency] = $this->t('@module (<span class="admin-missing">missing</span>)', ['@module' => $dependency]);
         $row['enable']['#disabled'] = TRUE;
       }
       // Only display visible modules.
