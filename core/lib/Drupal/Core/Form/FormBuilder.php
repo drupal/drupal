@@ -220,9 +220,9 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
   /**
    * {@inheritdoc}
    */
-  public function buildForm($form_id, FormStateInterface &$form_state) {
+  public function buildForm($form_arg, FormStateInterface &$form_state) {
     // Ensure the form ID is prepared.
-    $form_id = $this->getFormId($form_id, $form_state);
+    $form_id = $this->getFormId($form_arg, $form_state);
 
     $request = $this->requestStack->getCurrentRequest();
 

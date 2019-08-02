@@ -68,7 +68,7 @@ interface FormBuilderInterface {
    * previous page load. The form is then passed on for processing, validation,
    * and submission if there is proper input.
    *
-   * @param \Drupal\Core\Form\FormInterface|string $form_id
+   * @param \Drupal\Core\Form\FormInterface|string $form_arg
    *   The value must be one of the following:
    *   - The name of a class that implements \Drupal\Core\Form\FormInterface.
    *   - An instance of a class that implements \Drupal\Core\Form\FormInterface.
@@ -89,7 +89,7 @@ interface FormBuilderInterface {
    *
    * @see self::redirectForm()
    */
-  public function buildForm($form_id, FormStateInterface &$form_state);
+  public function buildForm($form_arg, FormStateInterface &$form_state);
 
   /**
    * Constructs a new $form from the information in $form_state.
