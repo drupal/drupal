@@ -464,15 +464,19 @@ class MediaLibraryWidget extends WidgetBase implements ContainerFactoryPluginInt
     // attribute is the same as $field_widget_id. The entity ID, entity type ID,
     // bundle, field name are used for access checking.
     $entity = $items->getEntity();
-    $state = MediaLibraryState::create('media_library.opener.field_widget', $allowed_media_type_ids, $selected_type_id, $remaining, [
+    $opener_parameters = [
       'field_widget_id' => $field_widget_id,
       'entity_type_id' => $entity->getEntityTypeId(),
       'bundle' => $entity->bundle(),
       'field_name' => $field_name,
-      // The entity ID needs to be a string to ensure that the media library
-      // state generates its tamper-proof hash in a consistent way.
-      'entity_id' => (string) $entity->id(),
-    ]);
+    ];
+    // Only add the entity ID when we actually have one. The entity ID needs to
+    // be a string to ensure that the media library state generates its
+    // tamper-proof hash in a consistent way.
+    if (!$entity->isNew()) {
+      $opener_parameters['entity_id'] = (string) $entity->id();
+    }
+    $state = MediaLibraryState::create('media_library.opener.field_widget', $allowed_media_type_ids, $selected_type_id, $remaining, $opener_parameters);
 
     // Add a button that will load the Media library in a modal using AJAX.
     $element['media_library_open_button'] = [
