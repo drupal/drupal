@@ -194,6 +194,7 @@ class EntityDefinitionUpdateManager implements EntityDefinitionUpdateManagerInte
    * {@inheritdoc}
    */
   public function installEntityType(EntityTypeInterface $entity_type) {
+    $this->clearCachedDefinitions();
     $this->entityTypeListener->onEntityTypeCreate($entity_type);
   }
 
@@ -202,6 +203,7 @@ class EntityDefinitionUpdateManager implements EntityDefinitionUpdateManagerInte
    */
   public function updateEntityType(EntityTypeInterface $entity_type) {
     $original = $this->getEntityType($entity_type->id());
+    $this->clearCachedDefinitions();
     $this->entityTypeListener->onEntityTypeUpdate($entity_type, $original);
   }
 
@@ -209,6 +211,7 @@ class EntityDefinitionUpdateManager implements EntityDefinitionUpdateManagerInte
    * {@inheritdoc}
    */
   public function uninstallEntityType(EntityTypeInterface $entity_type) {
+    $this->clearCachedDefinitions();
     $this->entityTypeListener->onEntityTypeDelete($entity_type);
   }
 
@@ -224,6 +227,7 @@ class EntityDefinitionUpdateManager implements EntityDefinitionUpdateManagerInte
 
     $original_field_storage_definitions = $this->entityLastInstalledSchemaRepository->getLastInstalledFieldStorageDefinitions($entity_type->id());
     $this->entityTypeListener->onFieldableEntityTypeUpdate($entity_type, $original, $field_storage_definitions, $original_field_storage_definitions, $sandbox);
+    $this->clearCachedDefinitions();
   }
 
   /**
@@ -239,6 +243,7 @@ class EntityDefinitionUpdateManager implements EntityDefinitionUpdateManagerInte
         ->setProvider($provider)
         ->setTargetBundle(NULL);
     }
+    $this->clearCachedDefinitions();
     $this->fieldStorageDefinitionListener->onFieldStorageDefinitionCreate($storage_definition);
   }
 
@@ -255,6 +260,7 @@ class EntityDefinitionUpdateManager implements EntityDefinitionUpdateManagerInte
    */
   public function updateFieldStorageDefinition(FieldStorageDefinitionInterface $storage_definition) {
     $original = $this->getFieldStorageDefinition($storage_definition->getName(), $storage_definition->getTargetEntityTypeId());
+    $this->clearCachedDefinitions();
     $this->fieldStorageDefinitionListener->onFieldStorageDefinitionUpdate($storage_definition, $original);
   }
 
@@ -262,6 +268,7 @@ class EntityDefinitionUpdateManager implements EntityDefinitionUpdateManagerInte
    * {@inheritdoc}
    */
   public function uninstallFieldStorageDefinition(FieldStorageDefinitionInterface $storage_definition) {
+    $this->clearCachedDefinitions();
     $this->fieldStorageDefinitionListener->onFieldStorageDefinitionDelete($storage_definition);
   }
 
@@ -378,6 +385,14 @@ class EntityDefinitionUpdateManager implements EntityDefinitionUpdateManagerInte
   protected function requiresEntityDataMigration(EntityTypeInterface $entity_type, EntityTypeInterface $original) {
     $storage = $this->entityTypeManager->getStorage($entity_type->id());
     return ($storage instanceof EntityStorageSchemaInterface) && $storage->requiresEntityDataMigration($entity_type, $original);
+  }
+
+  /**
+   * Clears necessary caches to apply entity/field definition updates.
+   */
+  protected function clearCachedDefinitions() {
+    $this->entityTypeManager->clearCachedDefinitions();
+    $this->entityFieldManager->clearCachedFieldDefinitions();
   }
 
 }
