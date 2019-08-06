@@ -251,8 +251,9 @@ class NodeForm extends ContentEntityForm {
       '#submit' => ['::submitForm', '::preview'],
     ];
 
-    $element['delete']['#access'] = $node->access('delete');
-    $element['delete']['#weight'] = 100;
+    if (array_key_exists('delete', $element)) {
+      $element['delete']['#weight'] = 100;
+    }
 
     return $element;
   }
