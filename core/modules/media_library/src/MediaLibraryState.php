@@ -71,7 +71,7 @@ class MediaLibraryState extends ParameterBag {
    * @param array $opener_parameters
    *   (optional) Any additional opener-specific parameter values.
    *
-   * @return \Drupal\media_library\MediaLibraryState
+   * @return static
    *   A state object.
    */
   public static function create($opener_id, array $allowed_media_type_ids, $selected_type_id, $remaining_slots, array $opener_parameters = []) {
@@ -91,7 +91,7 @@ class MediaLibraryState extends ParameterBag {
    * @param \Symfony\Component\HttpFoundation\Request $request
    *   The request.
    *
-   * @return \Drupal\media_library\MediaLibraryState
+   * @return static
    *   A state object.
    *
    * @throws \Symfony\Component\HttpKernel\Exception\BadRequestHttpException

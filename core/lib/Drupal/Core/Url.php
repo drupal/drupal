@@ -133,7 +133,7 @@ class Url implements TrustedCallbackInterface {
    * @param array $options
    *   See \Drupal\Core\Url::fromUri() for details.
    *
-   * @return \Drupal\Core\Url
+   * @return static
    *   A new Url object for a routed (internal to Drupal) URL.
    *
    * @see \Drupal\Core\Url::fromUserInput()
@@ -149,7 +149,7 @@ class Url implements TrustedCallbackInterface {
    * @param \Drupal\Core\Routing\RouteMatchInterface $route_match
    *   The route match.
    *
-   * @return $this
+   * @return static
    */
   public static function fromRouteMatch(RouteMatchInterface $route_match) {
     if ($route_match->getRouteObject()) {
@@ -254,7 +254,7 @@ class Url implements TrustedCallbackInterface {
    *     defined, the current scheme is used, so the user stays on HTTP or HTTPS
    *     respectively. TRUE enforces HTTPS and FALSE enforces HTTP.
    *
-   * @return \Drupal\Core\Url
+   * @return static
    *   A new Url object with properties depending on the URI scheme. Call the
    *   access() method on this to do access checking.
    *
@@ -333,7 +333,7 @@ class Url implements TrustedCallbackInterface {
    * @param string $uri
    *   The original entered URI.
    *
-   * @return \Drupal\Core\Url
+   * @return static
    *   A new Url object for an entity's canonical route.
    *
    * @throws \InvalidArgumentException
@@ -383,7 +383,7 @@ class Url implements TrustedCallbackInterface {
    * @param array $options
    *   An array of options, see \Drupal\Core\Url::fromUri() for details.
    *
-   * @return \Drupal\Core\Url
+   * @return static
    *   A new Url object for a 'internal:' URI.
    *
    * @throws \InvalidArgumentException
@@ -432,7 +432,7 @@ class Url implements TrustedCallbackInterface {
    * @param string $uri
    *   The original passed in URI.
    *
-   * @return \Drupal\Core\Url
+   * @return static
    *   A new Url object for a 'route:' URI.
    *
    * @throws \InvalidArgumentException

@@ -19,7 +19,7 @@ interface AlterableInterface {
    * @param $tag
    *   The tag to add.
    *
-   * @return \Drupal\Core\Database\Query\AlterableInterface
+   * @return $this
    *   The called object.
    */
   public function addTag($tag);
@@ -76,7 +76,7 @@ interface AlterableInterface {
    * @param $object
    *   The additional data to add to the query. May be any valid PHP variable.
    *
-   * @return \Drupal\Core\Database\Query\AlterableInterface
+   * @return $this
    *   The called object.
    */
   public function addMetaData($key, $object);

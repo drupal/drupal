@@ -30,7 +30,9 @@ interface ConditionInterface {
    * @param mixed $value
    * @param string $operator
    * @param string $langcode
-   * @return ConditionInterface
+   *
+   * @return $this
+   *
    * @see \Drupal\Core\Entity\Query\QueryInterface::condition()
    */
   public function condition($field, $value = NULL, $operator = NULL, $langcode = NULL);
@@ -40,7 +42,9 @@ interface ConditionInterface {
    *
    * @param string $field
    * @param string $langcode
-   * @return ConditionInterface
+   *
+   * @return $this
+   *
    * @see \Drupal\Core\Entity\Query\QueryInterface::exists()
    */
   public function exists($field, $langcode = NULL);
@@ -50,7 +54,9 @@ interface ConditionInterface {
    *
    * @param string $field
    * @param string $langcode
-   * @return ConditionInterface
+   *
+   * @return $this
+   *
    * @see \Drupal\Core\Entity\Query\QueryInterface::notExists()
    */
   public function notExists($field, $langcode = NULL);

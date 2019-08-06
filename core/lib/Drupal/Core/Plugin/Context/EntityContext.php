@@ -51,7 +51,7 @@ class EntityContext extends Context {
    * @param string $label
    *   (optional) The label of the context.
    *
-   * @return \Drupal\Core\Plugin\Context\EntityContext
+   * @return static
    */
   public static function fromEntity(EntityInterface $entity, $label = NULL) {
     $context = static::fromEntityType($entity->getEntityType(), $label);

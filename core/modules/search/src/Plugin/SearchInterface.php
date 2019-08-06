@@ -21,7 +21,7 @@ interface SearchInterface extends PluginInspectionInterface {
    * @param array $attributes
    *   Array of attributes, usually from the current request object.
    *
-   * @return \Drupal\search\Plugin\SearchInterface
+   * @return $this
    *   A search plugin object for chaining.
    */
   public function setSearch($keywords, array $parameters, array $attributes);

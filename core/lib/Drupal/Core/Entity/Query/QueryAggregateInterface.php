@@ -23,7 +23,7 @@ interface QueryAggregateInterface extends QueryInterface {
    * @param string $alias
    *   (optional) The key that will be used on the resultset.
    *
-   * @return \Drupal\Core\Entity\Query\QueryAggregateInterface
+   * @return $this
    *   The called object.
    */
   public function aggregate($field, $function, $langcode = NULL, &$alias = NULL);
@@ -34,7 +34,7 @@ interface QueryAggregateInterface extends QueryInterface {
    * @param string $field
    *   The name of the field to group by.
    *
-   * @return \Drupal\Core\Entity\Query\QueryAggregateInterface
+   * @return $this
    *   The called object.
    */
   public function groupBy($field);
@@ -60,7 +60,7 @@ interface QueryAggregateInterface extends QueryInterface {
    * @param string $langcode
    *   (optional) The language code.
    *
-   * @return \Drupal\Core\Entity\Query\QueryAggregateInterface
+   * @return $this
    *   The called object.
    *
    * @see \Drupal\Core\Entity\Query\QueryInterface::condition()
@@ -77,7 +77,7 @@ interface QueryAggregateInterface extends QueryInterface {
    * @param $langcode
    *   (optional) The language code.
    *
-   * @return \Drupal\Core\Entity\Query\QueryAggregateInterface
+   * @return $this
    *   The called object.
    */
   public function existsAggregate($field, $function, $langcode = NULL);
@@ -92,7 +92,7 @@ interface QueryAggregateInterface extends QueryInterface {
    * @param string $langcode
    *   (optional) The language code.
    *
-   * @return \Drupal\Core\Entity\Query\QueryAggregateInterface
+   * @return $this
    *   The called object.
    */
   public function notExistsAggregate($field, $function, $langcode = NULL);
@@ -124,7 +124,7 @@ interface QueryAggregateInterface extends QueryInterface {
    * @param string $langcode
    *   (optional) The language code.
    *
-   * @return \Drupal\Core\Entity\Query\QueryAggregateInterface
+   * @return $this
    *   The called object.
    */
   public function sortAggregate($field, $function, $direction = 'ASC', $langcode = NULL);

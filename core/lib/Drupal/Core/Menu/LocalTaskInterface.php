@@ -70,7 +70,7 @@ interface LocalTaskInterface {
    * @param bool $active
    *   Sets whether this tab is active (e.g. a parent of the current tab).
    *
-   * @return \Drupal\Core\Menu\LocalTaskInterface
+   * @return $this
    *   The called object for chaining.
    */
   public function setActive($active = TRUE);

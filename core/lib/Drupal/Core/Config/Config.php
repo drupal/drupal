@@ -117,7 +117,7 @@ class Config extends StorableConfigBase {
    * @param array $data
    *   The overridden values of the configuration data.
    *
-   * @return \Drupal\Core\Config\Config
+   * @return $this
    *   The configuration object.
    */
   public function setSettingsOverride(array $data) {
@@ -132,7 +132,7 @@ class Config extends StorableConfigBase {
    * @param array $data
    *   The overridden values of the configuration data.
    *
-   * @return \Drupal\Core\Config\Config
+   * @return $this
    *   The configuration object.
    */
   public function setModuleOverride(array $data) {
@@ -149,7 +149,7 @@ class Config extends StorableConfigBase {
    * provided by modules. Precedence or different module overrides is
    * determined by the priority of the config.factory.override tagged services.
    *
-   * @return \Drupal\Core\Config\Config
+   * @return $this
    *   The configuration object.
    */
   protected function setOverriddenData() {
@@ -169,7 +169,7 @@ class Config extends StorableConfigBase {
    * This method should be called after the original data or the overridden data
    * has been changed.
    *
-   * @return \Drupal\Core\Config\Config
+   * @return $this
    *   The configuration object.
    */
   protected function resetOverriddenData() {
@@ -236,7 +236,7 @@ class Config extends StorableConfigBase {
   /**
    * Deletes the configuration object.
    *
-   * @return \Drupal\Core\Config\Config
+   * @return $this
    *   The configuration object.
    */
   public function delete() {

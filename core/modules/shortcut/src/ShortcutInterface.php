@@ -23,7 +23,7 @@ interface ShortcutInterface extends ContentEntityInterface {
    * @param string $title
    *   The title of this shortcut.
    *
-   * @return \Drupal\shortcut\ShortcutInterface
+   * @return $this
    *   The called shortcut entity.
    */
   public function setTitle($title);
@@ -42,7 +42,7 @@ interface ShortcutInterface extends ContentEntityInterface {
    * @param int $weight
    *   The shortcut weight.
    *
-   * @return \Drupal\shortcut\ShortcutInterface
+   * @return $this
    *   The called shortcut entity.
    */
   public function setWeight($weight);

@@ -16,7 +16,7 @@ interface ShortcutSetInterface extends ConfigEntityInterface {
    * to the set. If the link is added to the end of the array and this function
    * is called, it will force that link to display at the end of the list.
    *
-   * @return \Drupal\shortcut\ShortcutSetInterface
+   * @return $this
    *   The shortcut set.
    */
   public function resetLinkWeights();

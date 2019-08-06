@@ -72,7 +72,7 @@ abstract class ExecutablePluginBase extends ContextAwarePluginBase implements Ex
    *   https://www.drupal.org/node/1764380.
    * @todo This does not set a value in \Drupal::config(), so the name is confusing.
    *
-   * @return \Drupal\Core\Executable\ExecutablePluginBase
+   * @return $this
    *   The executable object for chaining.
    *
    * @throws \Drupal\Component\Plugin\Exception\PluginException

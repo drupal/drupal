@@ -131,7 +131,7 @@ class GDToolkit extends ImageToolkitBase {
    * @param resource $resource
    *   The GD image resource.
    *
-   * @return \Drupal\system\Plugin\ImageToolkit\GDToolkit
+   * @return $this
    *   An instance of the current toolkit object.
    */
   public function setResource($resource) {

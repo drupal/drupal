@@ -23,7 +23,7 @@ interface ItemInterface extends ContentEntityInterface {
    * @param int $fid
    *   The feed id.
    *
-   * @return \Drupal\aggregator\ItemInterface
+   * @return $this
    *   The called feed item entity.
    */
   public function setFeedId($fid);
@@ -42,7 +42,7 @@ interface ItemInterface extends ContentEntityInterface {
    * @param string $title
    *   The title of the feed item.
    *
-   * @return \Drupal\aggregator\ItemInterface
+   * @return $this
    *   The called feed item entity.
    */
   public function setTitle($title);
@@ -61,7 +61,7 @@ interface ItemInterface extends ContentEntityInterface {
    * @param string $link
    *   The link to the feed item.
    *
-   * @return \Drupal\aggregator\ItemInterface
+   * @return $this
    *   The called feed item entity.
    */
   public function setLink($link);
@@ -80,7 +80,7 @@ interface ItemInterface extends ContentEntityInterface {
    * @param string $author
    *   The author name of the feed item.
    *
-   * @return \Drupal\aggregator\ItemInterface
+   * @return $this
    *   The called feed item entity.
    */
   public function setAuthor($author);
@@ -99,7 +99,7 @@ interface ItemInterface extends ContentEntityInterface {
    * @param string $description
    *   The body of the feed item.
    *
-   * @return \Drupal\aggregator\ItemInterface
+   * @return $this
    *   The called feed item entity.
    */
   public function setDescription($description);
@@ -118,7 +118,7 @@ interface ItemInterface extends ContentEntityInterface {
    * @param int $timestamp
    *   The posted date of the feed item, as a Unix timestamp.
    *
-   * @return \Drupal\aggregator\ItemInterface
+   * @return $this
    *   The called feed item entity.
    */
   public function setPostedTime($timestamp);
@@ -137,7 +137,7 @@ interface ItemInterface extends ContentEntityInterface {
    * @param string $guid
    *   The unique identifier for the feed item.
    *
-   * @return \Drupal\aggregator\ItemInterface
+   * @return $this
    *   The called feed item entity.
    */
   public function setGuid($guid);

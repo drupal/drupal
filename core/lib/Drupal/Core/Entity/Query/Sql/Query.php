@@ -86,7 +86,7 @@ class Query extends QueryBase implements QueryInterface {
   /**
    * Prepares the basic query with proper metadata/tags and base fields.
    *
-   * @return \Drupal\Core\Entity\Query\Sql\Query
+   * @return $this
    *   Returns the called object.
    *
    * @throws \Drupal\Core\Entity\Query\QueryException
@@ -165,7 +165,7 @@ class Query extends QueryBase implements QueryInterface {
   /**
    * Compiles the conditions.
    *
-   * @return \Drupal\Core\Entity\Query\Sql\Query
+   * @return $this
    *   Returns the called object.
    */
   protected function compile() {
@@ -176,7 +176,7 @@ class Query extends QueryBase implements QueryInterface {
   /**
    * Adds the sort to the build query.
    *
-   * @return \Drupal\Core\Entity\Query\Sql\Query
+   * @return $this
    *   Returns the called object.
    */
   protected function addSort() {
@@ -234,7 +234,7 @@ class Query extends QueryBase implements QueryInterface {
   /**
    * Finish the query by adding fields, GROUP BY and range.
    *
-   * @return \Drupal\Core\Entity\Query\Sql\Query
+   * @return $this
    *   Returns the called object.
    */
   protected function finish() {

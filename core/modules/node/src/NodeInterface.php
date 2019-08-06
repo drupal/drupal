@@ -65,7 +65,7 @@ interface NodeInterface extends ContentEntityInterface, EntityChangedInterface, 
    * @param string $title
    *   The node title.
    *
-   * @return \Drupal\node\NodeInterface
+   * @return $this
    *   The called node entity.
    */
   public function setTitle($title);
@@ -84,7 +84,7 @@ interface NodeInterface extends ContentEntityInterface, EntityChangedInterface, 
    * @param int $timestamp
    *   The node creation timestamp.
    *
-   * @return \Drupal\node\NodeInterface
+   * @return $this
    *   The called node entity.
    */
   public function setCreatedTime($timestamp);
@@ -103,7 +103,7 @@ interface NodeInterface extends ContentEntityInterface, EntityChangedInterface, 
    * @param bool $promoted
    *   TRUE to set this node to promoted, FALSE to set it to not promoted.
    *
-   * @return \Drupal\node\NodeInterface
+   * @return $this
    *   The called node entity.
    */
   public function setPromoted($promoted);
@@ -122,7 +122,7 @@ interface NodeInterface extends ContentEntityInterface, EntityChangedInterface, 
    * @param bool $sticky
    *   TRUE to set this node to sticky, FALSE to set it to not sticky.
    *
-   * @return \Drupal\node\NodeInterface
+   * @return $this
    *   The called node entity.
    */
   public function setSticky($sticky);
@@ -141,7 +141,7 @@ interface NodeInterface extends ContentEntityInterface, EntityChangedInterface, 
    * @param int $timestamp
    *   The UNIX timestamp of when this revision was created.
    *
-   * @return \Drupal\node\NodeInterface
+   * @return $this
    *   The called node entity.
    */
   public function setRevisionCreationTime($timestamp);
@@ -165,7 +165,7 @@ interface NodeInterface extends ContentEntityInterface, EntityChangedInterface, 
    * @param int $uid
    *   The user ID of the revision author.
    *
-   * @return \Drupal\node\NodeInterface
+   * @return $this
    *   The called node entity.
    *
    * @deprecated in drupal:8.2.0 and is removed from drupal:9.0.0. Use

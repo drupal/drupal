@@ -75,7 +75,7 @@ class Update extends Query implements ConditionInterface {
    *   An associative array of fields to write into the database. The array keys
    *   are the field names and the values are the values to which to set them.
    *
-   * @return \Drupal\Core\Database\Query\Update
+   * @return $this
    *   The called object.
    */
   public function fields(array $fields) {
@@ -98,7 +98,7 @@ class Update extends Query implements ConditionInterface {
    *   If specified, this is an array of key/value pairs for named placeholders
    *   corresponding to the expression.
    *
-   * @return \Drupal\Core\Database\Query\Update
+   * @return $this
    *   The called object.
    */
   public function expression($field, $expression, array $arguments = NULL) {

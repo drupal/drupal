@@ -177,7 +177,7 @@ interface WorkflowTypeInterface extends PluginWithFormsInterface, DerivativeInsp
    * @param string $state_id
    *   The state ID to delete.
    *
-   * @return \Drupal\workflows\WorkflowTypeInterface
+   * @return $this
    *   The workflow type plugin.
    *
    * @throws \InvalidArgumentException

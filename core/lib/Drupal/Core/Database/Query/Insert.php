@@ -44,7 +44,7 @@ class Insert extends Query implements \Countable {
    * @param \Drupal\Core\Database\Query\SelectInterface $query
    *   The query to fetch the rows that should be inserted.
    *
-   * @return \Drupal\Core\Database\Query\Insert
+   * @return $this
    *   The called object.
    */
   public function from(SelectInterface $query) {

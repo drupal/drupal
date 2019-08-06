@@ -58,7 +58,7 @@ interface LanguageManagerInterface {
    *   LanguageInterface::TYPE_INTERFACE, or NULL to reset all language types.
    *   Defaults to NULL.
    *
-   * @return \Drupal\Core\Language\LanguageManagerInterface
+   * @return $this
    *   The language manager that has been reset.
    */
   public function reset($type = NULL);

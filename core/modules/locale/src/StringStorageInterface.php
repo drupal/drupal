@@ -101,7 +101,7 @@ interface StringStorageInterface {
    * @param \Drupal\locale\StringInterface $string
    *   The string object.
    *
-   * @return \Drupal\locale\StringStorageInterface
+   * @return $this
    *   The called object.
    *
    * @throws \Drupal\locale\StringStorageException
@@ -115,7 +115,7 @@ interface StringStorageInterface {
    * @param \Drupal\locale\StringInterface $string
    *   The string object.
    *
-   * @return \Drupal\locale\StringStorageInterface
+   * @return $this
    *   The called object.
    *
    * @throws \Drupal\locale\StringStorageException
