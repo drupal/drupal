@@ -3,6 +3,8 @@
 namespace Drupal\Core\Composer;
 
 use Drupal\Component\PhpStorage\FileStorage;
+use Composer\Semver\Comparator;
+use Composer\Composer as ComposerApp;
 use Composer\Script\Event;
 use Composer\Installer\PackageEvent;
 use Composer\Semver\Constraint\Constraint;
@@ -93,6 +95,17 @@ class Composer {
     'zendframework/zend-feed' => ['doc'],
     'zendframework/zend-stdlib' => ['doc'],
   ];
+
+  /**
+   * Ensure that the minimum required version of Composer is running.
+   * Throw an exception if Composer is too old.
+   */
+  public static function ensureComposerVersion() {
+    $composerVersion = ComposerApp::getVersion();
+    if (Comparator::lessThan($composerVersion, '1.9.0')) {
+      throw new \RuntimeException("Drupal core development requires Composer 1.9.0, but Composer $composerVersion is installed. Please run 'composer self-update'.");
+    }
+  }
 
   /**
    * Add vendor classes to Composer's static classmap.

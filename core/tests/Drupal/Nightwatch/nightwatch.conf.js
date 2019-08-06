@@ -10,13 +10,16 @@ const collectedFolders = {
   Pages: [],
 };
 const searchDirectory = process.env.DRUPAL_NIGHTWATCH_SEARCH_DIRECTORY || '';
+const defaultIgnore = ['vendor/**'];
 
 glob
   .sync('**/tests/**/Nightwatch/**/*.js', {
     cwd: path.resolve(process.cwd(), `../${searchDirectory}`),
     ignore: process.env.DRUPAL_NIGHTWATCH_IGNORE_DIRECTORIES
-      ? process.env.DRUPAL_NIGHTWATCH_IGNORE_DIRECTORIES.split(',')
-      : [],
+      ? process.env.DRUPAL_NIGHTWATCH_IGNORE_DIRECTORIES.split(',').concat(
+          defaultIgnore,
+        )
+      : defaultIgnore,
   })
   .forEach(file => {
     let m = regex.exec(file);
