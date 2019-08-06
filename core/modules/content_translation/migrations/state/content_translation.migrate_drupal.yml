@@ -35,5 +35,6 @@ not_finished:
     i18n: content_translation
     # menu links.
     i18n_menu: content_translation
-    # localized.
+    # Migrate taxonomy term references
+    # https://www.drupal.org/project/drupal/issues/3035392
     i18n_taxonomy: content_translation

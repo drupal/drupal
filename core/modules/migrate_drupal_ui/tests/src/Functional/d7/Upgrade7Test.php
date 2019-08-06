@@ -185,6 +185,8 @@ class Upgrade7Test extends MigrateUpgradeExecuteTestBase {
       'i18n',
       'i18n_field',
       'i18n_string',
+      'i18n_taxonomy',
+      'i18n_translation',
       'locale',
       'variable',
       'variable_realm',
