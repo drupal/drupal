@@ -152,7 +152,6 @@ function workspaces_cron() {
  * Implements hook_toolbar().
  */
 function workspaces_toolbar() {
-  $items = [];
   $items['workspace'] = [
     '#cache' => [
       'contexts' => [
@@ -160,7 +159,6 @@ function workspaces_toolbar() {
       ],
     ],
   ];
-
   $current_user = \Drupal::currentUser();
   if (!$current_user->hasPermission('administer workspaces')
     && !$current_user->hasPermission('view own workspace')
@@ -176,7 +174,7 @@ function workspaces_toolbar() {
     'tab' => [
       '#type' => 'link',
       '#title' => $active_workspace->label(),
-      '#url' => $active_workspace->toUrl('collection'),
+      '#url' => $active_workspace->toUrl('collection', ['query' => \Drupal::destination()->getAsArray()]),
       '#attributes' => [
         'title' => t('Switch workspace'),
         'class' => ['use-ajax', 'toolbar-icon', 'toolbar-icon-workspace'],
