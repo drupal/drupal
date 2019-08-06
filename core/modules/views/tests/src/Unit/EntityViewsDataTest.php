@@ -973,7 +973,36 @@ class EntityViewsDataTest extends UnitTestCase {
   public function testGetViewsDataWithEntityOperations() {
     $this->baseEntityType->setListBuilderClass('\Drupal\Core\Entity\EntityListBuilder');
     $data = $this->viewsData->getViewsData();
-    $this->assertSame('entity_operations', $data[$this->baseEntityType->getBaseTable()]['operations']['field']['id']);
+
+    $tables = ['entity_test', 'entity_test_revision'];
+    $this->assertSame($tables, array_keys($data));
+    foreach ($tables as $table_name) {
+      $this->assertSame('entity_operations', $data[$table_name]['operations']['field']['id']);
+    }
+  }
+
+  /**
+   * @covers ::getViewsData
+   */
+  public function testGetViewsDataWithNonRevisionableEntityOperations() {
+    $this->baseEntityType->setListBuilderClass('\Drupal\Core\Entity\EntityListBuilder');
+
+    $entity_type_without_revisions = $this->baseEntityType;
+    $views_data = $this->viewsData;
+
+    $entity_type_keys = $entity_type_without_revisions->getKeys();
+    unset($entity_type_keys['revision']);
+
+    $entity_type_without_revisions->set('entity_keys', $entity_type_keys);
+    $views_data->setEntityType($entity_type_without_revisions);
+
+    $data = $views_data->getViewsData();
+
+    $tables = ['entity_test'];
+    $this->assertSame($tables, array_keys($data));
+    foreach ($tables as $table_name) {
+      $this->assertSame('entity_operations', $data[$table_name]['operations']['field']['id']);
+    }
   }
 
   /**
