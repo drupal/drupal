@@ -21,14 +21,22 @@ abstract class FileUsageBase implements FileUsageInterface {
    * Creates a FileUsageBase object.
    *
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
-   *   (optional) The config factory. Defaults to NULL and will use
-   *   \Drupal::configFactory() instead.
+   *   The config factory. This parameter is required as of drupal:8.4.0 and
+   *   trigger a fatal error if not passed in drupal:9.0.0.
    *
-   * @deprecated The $config_factory parameter will become required in Drupal
-   *   9.0.0.
+   * @todo Update the docblock and make $config_factory required in
+   *   https://www.drupal.org/project/drupal/issues/3070114 when the
+   *   drupal:9.0.x branch is opened.
    */
   public function __construct(ConfigFactoryInterface $config_factory = NULL) {
-    $this->configFactory = $config_factory ?: \Drupal::configFactory();
+    // @todo Remove below conditional when the drupal:9.0.x branch is opened.
+    // @see https://www.drupal.org/project/drupal/issues/3070114
+    if (empty($config_factory)) {
+      @trigger_error('Not passing the $config_factory parameter to ' . __METHOD__ . ' is deprecated in drupal:8.4.0 and will trigger a fatal error in drupal:9.0.0. See https://www.drupal.org/project/drupal/issues/2801777', E_USER_DEPRECATED);
+      $config_factory = \Drupal::configFactory();
+    }
+
+    $this->configFactory = $config_factory;
   }
 
   /**
