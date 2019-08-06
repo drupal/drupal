@@ -201,13 +201,15 @@ class EntityViewsData implements EntityHandlerInterface, EntityViewsDataInterfac
           'id' => 'entity_operations',
         ],
       ];
-      $data[$revision_table]['operations'] = [
-        'field' => [
-          'title' => $this->t('Operations links'),
-          'help' => $this->t('Provides links to perform entity operations.'),
-          'id' => 'entity_operations',
-        ],
-      ];
+      if ($revision_table) {
+        $data[$revision_table]['operations'] = [
+          'field' => [
+            'title' => $this->t('Operations links'),
+            'help' => $this->t('Provides links to perform entity operations.'),
+            'id' => 'entity_operations',
+          ],
+        ];
+      }
     }
 
     if ($this->entityType->hasViewBuilderClass()) {
