@@ -322,6 +322,7 @@ class FieldItemList extends ItemList implements FieldItemListInterface {
       $widget->extractFormValues($this, $element, $form_state);
       return $this->getValue();
     }
+    return [];
   }
 
   /**
