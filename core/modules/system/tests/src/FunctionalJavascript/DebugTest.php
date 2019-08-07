@@ -44,11 +44,28 @@ class DebugTest extends WebDriverTestBase {
 
   public function testDirectXPath() {
     //$this->drupalGet('validxml.xml');
+//    $this->getSession()->visit(' http://d8/validxml.xml');
+//    $driver = $this->getSession()->getDriver();
+//    $this->assertEquals('Drupal\FunctionalJavascriptTests\DrupalSelenium2Driver', get_class($driver));
+//    $this->assertNotEmpty($driver->getContent());
+    $doc = new \DOMDocument();
+    $file = '/Users/ted.bowman/Sites/www/d8/validxml.xml';
+    $doc->load($file);
+
+    $xpath = new \DOMXPath($doc);
+
+    // example 1: for everything with an id
+    $elements = $xpath->query("//book");
+    $this->assertNotEmpty($elements);
+  }
+
+
+  public function testVisitXPath() {
+    //$this->drupalGet('validxml.xml');
     $this->getSession()->visit(' http://d8/validxml.xml');
     $driver = $this->getSession()->getDriver();
-    $this->assertEquals('Drupal\FunctionalJavascriptTests\DrupalSelenium2Driver', get_class($driver));
-    $this->assertNotEmpty($driver->getContent());
-    $file = "/Users/ted.bowman/Sites/www/d8/ted.html";
+    //    $this->assertEquals('Drupal\FunctionalJavascriptTests\DrupalSelenium2Driver', get_class($driver));
+    //    $this->assertNotEmpty($driver->getContent());
     $doc = new \DOMDocument();
     $doc->loadXML($driver->getContent());
 
@@ -58,6 +75,5 @@ class DebugTest extends WebDriverTestBase {
     $elements = $xpath->query("//book");
     $this->assertNotEmpty($elements);
   }
-
 
 }
