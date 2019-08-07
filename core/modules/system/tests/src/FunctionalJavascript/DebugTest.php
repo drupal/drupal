@@ -2,6 +2,8 @@
 
 namespace Drupal\Tests\system\FunctionalJavascript;
 
+use Behat\Mink\Driver\Selenium2Driver;
+use Drupal\FunctionalJavascriptTests\DrupalSelenium2Driver;
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 
 /**
@@ -10,6 +12,13 @@ use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
  * @group debug
  */
 class DebugTest extends WebDriverTestBase {
+
+  /**
+   * {@inheritdoc}
+   *
+   * To use a legacy phantomjs based approach, please use PhantomJSDriver::class.
+   */
+  //protected $minkDefaultDriverClass = Selenium2Driver::class;
 
   public function testXPath() {
     $driver = $this->getSession()->getDriver();
@@ -29,5 +38,20 @@ class DebugTest extends WebDriverTestBase {
     $assert_session->elementExists('css', 'body');
   }
 
+  public function testDirectXPath() {
+    $this->drupalGet('ted.html');
+    $driver = $this->getSession()->getDriver();
+    $this->assertEquals('Drupal\FunctionalJavascriptTests\DrupalSelenium2Driver', get_class($driver));
+    $this->assertNotEmpty($driver->getContent());
+    $file = "/Users/ted.bowman/Sites/www/d8/ted.html";
+    $doc = new \DOMDocument();
+    $doc->loadXML($driver->getContent());
+
+    $xpath = new \DOMXPath($doc);
+
+    // example 1: for everything with an id
+    $elements = $xpath->query("//html/body");
+    $this->assertNotEmpty($elements);
+  }
 
 }
