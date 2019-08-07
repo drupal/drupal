@@ -67,7 +67,9 @@ class DebugTest extends WebDriverTestBase {
     //    $this->assertEquals('Drupal\FunctionalJavascriptTests\DrupalSelenium2Driver', get_class($driver));
     //    $this->assertNotEmpty($driver->getContent());
     $doc = new \DOMDocument();
-    $doc->loadXML($driver->getContent());
+    $content = $driver->getContent();
+    $this->assertSame(file_get_contents('/Users/ted.bowman/Sites/www/d8/validxml-from-visit.xml'), $content);
+    $doc->loadXML($content);
 
     $xpath = new \DOMXPath($doc);
 
