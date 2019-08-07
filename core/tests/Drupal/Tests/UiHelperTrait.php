@@ -322,7 +322,7 @@ trait UiHelperTrait {
     foreach ($headers as $header_name => $header_value) {
       $session->setRequestHeader($header_name, $header_value);
     }
-
+   print "visiting $url";
     $session->visit($url);
     $out = $session->getPage()->getContent();
 
