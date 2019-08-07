@@ -61,14 +61,13 @@ class DebugTest extends WebDriverTestBase {
 
 
   public function testVisitXPath() {
-    //$this->drupalGet('validxml.xml');
-    $this->getSession()->visit(' http://d8/validxml.xml');
+    $this->drupalGet('validxml.xml');
+    //$this->getSession()->visit(' http://d8/validxml.xml');
     $driver = $this->getSession()->getDriver();
     //    $this->assertEquals('Drupal\FunctionalJavascriptTests\DrupalSelenium2Driver', get_class($driver));
     //    $this->assertNotEmpty($driver->getContent());
     $doc = new \DOMDocument();
     $content = $driver->getContent();
-    $this->assertSame(file_get_contents('/Users/ted.bowman/Sites/www/d8/validxml-from-visit.xml'), $content);
     $doc->loadXML($content);
 
     $xpath = new \DOMXPath($doc);
