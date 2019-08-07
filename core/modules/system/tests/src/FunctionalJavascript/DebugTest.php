@@ -42,8 +42,11 @@ class DebugTest extends WebDriverTestBase {
 
     $doc = new \DOMDocument();
     $content = $driver->getContent();
+    // We got the actual page from Drupal.
+    $this->assertTrue(strstr($content, 'Username') !== FALSE);
     $doc->loadXML($content);
 
+    // This doesn't work for Peter?
     $xpath = new \DOMXPath($doc);
     /** @var \DOMNodeList $elements */
     $elements = $xpath->query("//html/body");
