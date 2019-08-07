@@ -31,3 +31,9 @@ filter.caption:
       css/filter.caption.css: {}
   dependencies:
     - filter/caption
+
+media_embed:
+  version: VERSION
+  css:
+    component:
+      css/filter.media_embed.css: {}

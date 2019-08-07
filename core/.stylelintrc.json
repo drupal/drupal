@@ -440,6 +440,7 @@
   },
   "ignoreFiles": [
     "assets/vendor/**/*.css",
-    "tests/Drupal/Tests/Core/Asset/css_test_files/**/*.css"
+    "tests/Drupal/Tests/Core/Asset/css_test_files/**/*.css",
+    "modules/media/css/plugins/drupalmedia/ckeditor.drupalmedia.css"
   ]
 }

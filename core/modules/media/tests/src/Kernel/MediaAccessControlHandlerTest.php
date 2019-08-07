@@ -87,7 +87,7 @@ class MediaAccessControlHandlerTest extends MediaKernelTestBase {
    * @param string[] $expected_cache_contexts
    *   Expected contexts.
    * @param string[] $expected_cache_tags
-   *   Expected cache tags
+   *   Expected cache tags.
    * @param \Drupal\Core\Access\AccessResultInterface $actual
    *   The actual access result.
    */

@@ -258,30 +258,32 @@ class MediaEmbedFilterTest extends MediaEmbedFilterTestBase {
    *
    * @dataProvider providerMissingEntityIndicator
    */
-  public function testMissingEntityIndicator($uuid) {
+  public function testMissingEntityIndicator($uuid, array $filter_ids, array $additional_attributes) {
     $content = $this->createEmbedCode([
       'data-entity-type' => 'media',
       'data-entity-uuid' => $uuid,
       'data-view-mode' => 'foobar',
-    ]);
+    ] + $additional_attributes);
 
     // If the UUID being used in the embed is that of the sample entity, first
     // assert that it currently results in a functional embed, then delete it.
     if ($uuid === static::EMBEDDED_ENTITY_UUID) {
-      $this->applyFilter($content);
+      $result = $this->processText($content, 'en', $filter_ids);
+      $this->setRawContent($result->getProcessedText());
       $this->assertCount(1, $this->cssSelect('div[data-media-embed-test-view-mode="foobar"]'));
       $this->embeddedEntity->delete();
     }
 
-    $this->applyFilter($content);
+    $result = $this->processText($content, 'en', $filter_ids);
+    $this->setRawContent($result->getProcessedText());
     $this->assertCount(0, $this->cssSelect('div[data-media-embed-test-view-mode="foobar"]'));
-    $deleted_embed_warning = $this->cssSelect('img')[0];
-    $this->assertNotEmpty($deleted_embed_warning);
-    $this->assertHasAttributes($deleted_embed_warning, [
-      'alt' => 'Missing media.',
-      'src' => file_url_transform_relative(file_create_url('core/modules/media/images/icons/no-thumbnail.png')),
-      'title' => 'Missing media.',
-    ]);
+    $this->assertCount(1, $this->cssSelect('div.media-embed-error'));
+    $error_element = $this->cssSelect('div.media-embed-error')[0];
+    $expected_class = 'media-embed-error media-embed-error--missing-source';
+    if (in_array('filter_align', $filter_ids, TRUE) && !empty($additional_attributes['data-align'])) {
+      $expected_class .= ' align-' . $additional_attributes['data-align'];
+    }
+    $this->assertSame($expected_class, (string) $error_element['class']);
   }
 
   /**
@@ -289,17 +291,57 @@ class MediaEmbedFilterTest extends MediaEmbedFilterTestBase {
    */
   public function providerMissingEntityIndicator() {
     return [
-      'valid UUID but for a deleted entity' => [
-        static::EMBEDDED_ENTITY_UUID,
+      'invalid UUID' => [
+        'uuid' => 'invalidUUID',
+        'filter_ids' => [
+          'filter_align',
+          'filter_caption',
+          'media_embed',
+        ],
+        'additional_attributes' => [],
       ],
-      'node; invalid UUID' => [
-        'invalidUUID',
+      'valid UUID but for a deleted entity' => [
+        'uuid' => static::EMBEDDED_ENTITY_UUID,
+        'filter_ids' => [
+          'filter_align',
+          'filter_caption',
+          'media_embed',
+        ],
+        'additional_attributes' => [],
+      ],
+      'invalid UUID; data-align attribute without filter_align enabled' => [
+        'uuid' => 'invalidUUID',
+        'filter_ids' => [
+          'filter_caption',
+          'media_embed',
+        ],
+        'additional_attributes' => ['data-align' => 'right'],
+      ],
+      'invalid UUID; data-align attribute with filter_align enabled' => [
+        'uuid' => 'invalidUUID',
+        'filter_ids' => [
+          'filter_align',
+          'filter_caption',
+          'media_embed',
+        ],
+        'additional_attributes' => ['data-align' => 'left'],
+      ],
+      'valid UUID but for a deleted entity; data-align attribute with filter_align enabled' => [
+        'uuid' => static::EMBEDDED_ENTITY_UUID,
+        'filter_ids' => [
+          'filter_align',
+          'filter_caption',
+          'media_embed',
+        ],
+        'additional_attributes' => ['data-align' => 'center'],
       ],
     ];
   }
 
   /**
    * Tests that only <drupal-media> tags are processed.
+   *
+   * @see \Drupal\Tests\media\FunctionalJavascript\CKEditorIntegrationTest::testOnlyDrupalMediaTagProcessed()
    */
   public function testOnlyDrupalMediaTagProcessed() {
     $content = $this->createEmbedCode([
@@ -339,7 +381,7 @@ class MediaEmbedFilterTest extends MediaEmbedFilterTestBase {
    * @covers \Drupal\filter\Plugin\Filter\FilterCaption
    * @dataProvider providerFilterIntegration
    */
-  public function testFilterIntegration(array $filter_ids, array $additional_attributes, $verification_selector, $expected_verification_success, array $expected_asset_libraries, $prefix = '', $suffix = '') {
+  public function testFilterIntegration(array $filter_ids, array $additional_attributes, $verification_selector, $expected_verification_success, array $expected_asset_libraries = [], $prefix = '', $suffix = '') {
     $content = $this->createEmbedCode([
       'data-entity-type' => 'media',
       'data-entity-uuid' => static::EMBEDDED_ENTITY_UUID,

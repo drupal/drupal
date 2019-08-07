@@ -187,13 +187,13 @@ class MediaEmbed extends FilterBase implements ContainerFactoryPluginInterface, 
 
     // There are a few concerns when rendering an embedded media entity:
     // - entity access checking happens not during rendering but during routing,
-    //   and therefore we have to do it explicitly here for the embedded entity;
+    //   and therefore we have to do it explicitly here for the embedded entity.
     $build['#access'] = $media->access('view', NULL, TRUE);
     // - caching an embedded media entity separately is unnecessary; the host
-    //   entity is already render cached;
+    //   entity is already render cached.
     unset($build['#cache']['keys']);
     // - Contextual Links do not make sense for embedded entities; we only allow
-    //   the host entity to be contextually managed;
+    //   the host entity to be contextually managed.
     $build['#pre_render'][] = static::class . '::disableContextualLinks';
     // - default styling may break captioned media embeds; attach asset library
     //   to ensure captions behave as intended. Do not set this at the root
@@ -206,19 +206,29 @@ class MediaEmbed extends FilterBase implements ContainerFactoryPluginInterface, 
   }
 
   /**
-   * Builds the render array for a missing media entity.
+   * Builds the render array for the indicator when media cannot be loaded.
    *
    * @return array
    *   A render array.
+   *
+   * @todo Make this themeable in https://www.drupal.org/project/drupal/issues/3071713
    */
-  protected function renderMissingMedia() {
+  protected function renderMissingMediaIndicator() {
     return [
-      '#theme' => 'image',
-      '#uri' => file_url_transform_relative(file_create_url('core/modules/media/images/icons/no-thumbnail.png')),
-      '#width' => 180,
-      '#height' => 180,
-      '#alt' => $this->t('Missing media.'),
-      '#title' => $this->t('Missing media.'),
+      '#type' => 'html_tag',
+      '#tag' => 'div',
+      '#value' => $this->t('The referenced media source is missing and needs to be re-embedded.'),
+      '#attached' => [
+        'library' => [
+          'media/media_embed',
+        ],
+      ],
+      '#attributes' => [
+        'class' => [
+          'media-embed-error',
+          'media-embed-error--missing-source',
+        ],
+      ],
     ];
   }
 
@@ -263,14 +273,27 @@ class MediaEmbed extends FilterBase implements ContainerFactoryPluginInterface, 
 
       $build = $media && $view_mode
         ? $this->renderMedia($media, $view_mode_id, $langcode)
-        : $this->renderMissingMedia();
+        : $this->renderMissingMediaIndicator();
 
+      if (empty($build['#attributes']['class'])) {
+        $build['#attributes']['class'] = [];
+      }
       // Any attributes not consumed by the filter should be carried over to the
       // rendered embedded entity. For example, `data-align` and `data-caption`
       // should be carried over, so that even when embedded media goes missing,
       // at least the caption and visual structure won't get lost.
       foreach ($node->attributes as $attribute) {
-        $build['#attributes'][$attribute->nodeName] = $attribute->nodeValue;
+        if ($attribute->nodeName == 'class') {
+          // We don't want to overwrite the existing CSS class of the embedded
+          // media (or if the media entity can't be loaded, the missing media
+          // indicator). But, we need to merge in CSS classes added by other
+          // filters, such as filter_align, in order for those filters to work
+          // properly.
+          $build['#attributes']['class'] = array_unique(array_merge($build['#attributes']['class'], explode(' ', $attribute->nodeValue)));
+        }
+        else {
+          $build['#attributes'][$attribute->nodeName] = $attribute->nodeValue;
+        }
       }
 
       $this->renderIntoDomNode($build, $node, $result);
@@ -303,7 +326,7 @@ class MediaEmbed extends FilterBase implements ContainerFactoryPluginInterface, 
    * Renders the given render array into the given DOM node.
    *
    * @param array $build
-   *   The render array to render in isolation
+   *   The render array to render in isolation.
    * @param \DOMNode $node
    *   The DOM node to render into.
    * @param \Drupal\filter\FilterProcessResult $result

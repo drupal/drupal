@@ -21,6 +21,8 @@
       return;
     }
 
+    CKEDITOR.plugins.drupallink.registerLinkableWidget('image');
+
     editor.getCommand('drupalunlink').on('exec', function (evt) {
       var widget = getFocusedWidget(editor);
 

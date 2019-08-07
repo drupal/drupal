@@ -47,6 +47,8 @@
       return;
     }
 
+    CKEDITOR.plugins.drupallink.registerLinkableWidget('image');
+
     // Override default behaviour of 'drupalunlink' command.
     editor.getCommand('drupalunlink').on('exec', function(evt) {
       const widget = getFocusedWidget(editor);

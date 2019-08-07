@@ -29,8 +29,9 @@ use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
  * of an iframe.
  *
  * @internal
- *   This is an internal part of the oEmbed system and should only be used by
- *   oEmbed-related code in Drupal core.
+ *   This is an internal part of the media system in Drupal core and may be
+ *   subject to change in minor releases. This class should not be
+ *   instantiated or extended by external code.
  */
 class OEmbedIframeController implements ContainerInjectionInterface {
 

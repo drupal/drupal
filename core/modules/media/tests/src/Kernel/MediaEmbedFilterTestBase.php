@@ -174,7 +174,7 @@ abstract class MediaEmbedFilterTestBase extends KernelTestBase {
    *   The filtered text, wrapped in a FilterProcessResult object, and possibly
    *   with associated assets, cacheability metadata and placeholders.
    *
-   * @see \Drupal\Tests\entity_embed\Kernel\EntityEmbedFilterTestBase::createEmbedCode()
+   * @see \Drupal\Tests\media\Kernel\MediaEmbedFilterTestBase::createEmbedCode()
    * @see \Drupal\KernelTests\AssertContentTrait::setRawContent()
    */
   protected function applyFilter($text, $langcode = 'en') {
