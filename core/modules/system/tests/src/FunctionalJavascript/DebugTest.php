@@ -60,8 +60,8 @@ class DebugTest extends WebDriverTestBase {
   }
 
 
-  public function testVisitXPath() {
-    $this->drupalGet('validxml.xml');
+  public function testDrupalGetBody() {
+    $this->drupalGet('user');
     //$this->getSession()->visit(' http://d8/validxml.xml');
     $driver = $this->getSession()->getDriver();
     //    $this->assertEquals('Drupal\FunctionalJavascriptTests\DrupalSelenium2Driver', get_class($driver));
@@ -73,8 +73,13 @@ class DebugTest extends WebDriverTestBase {
     $xpath = new \DOMXPath($doc);
 
     // example 1: for everything with an id
-    $elements = $xpath->query("//book");
+    /** @var \DOMNodeList $elements */
+    $elements = $xpath->query("//html/body");
     $this->assertNotEmpty($elements);
+    foreach ($elements as $element) {
+      $this->assertEquals('body', $element->nodeName);
+    }
+
   }
 
 }
