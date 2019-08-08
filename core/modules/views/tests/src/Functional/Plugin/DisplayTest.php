@@ -19,7 +19,7 @@ class DisplayTest extends ViewTestBase {
    *
    * @var array
    */
-  public static $testViews = ['test_filter_groups', 'test_get_attach_displays', 'test_view', 'test_display_more', 'test_display_invalid', 'test_display_empty', 'test_exposed_relationship_admin_ui'];
+  public static $testViews = ['test_filter_groups', 'test_get_attach_displays', 'test_view', 'test_display_more', 'test_display_invalid', 'test_display_empty', 'test_exposed_relationship_admin_ui', 'test_simple_argument'];
 
   /**
    * Modules to enable.
@@ -191,6 +191,101 @@ class DisplayTest extends ViewTestBase {
     $errors = $view->validate();
     $this->assertTrue(!empty($errors), 'More link validation has some errors.');
     $this->assertEqual($errors['default'][0], 'Display "Master" uses a "more" link but there are no displays it can link to. You need to specify a custom URL.', 'More link validation has the right error.');
+  }
+
+  /**
+   * Tests the readmore with custom URL.
+   */
+  public function testReadMoreCustomURL() {
+    /** @var \Drupal\Core\Render\RendererInterface $renderer */
+    $renderer = $this->container->get('renderer');
+
+    $view = Views::getView('test_display_more');
+    $view->setDisplay('default');
+    $view->display_handler->setOption('use_more', 1);
+    $view->display_handler->setOption('use_more_always', 1);
+    $view->display_handler->setOption('link_display', 'custom_url');
+
+    // Test more link without leading slash.
+    $view->display_handler->setOption('link_url', 'node');
+    $this->executeView($view);
+    $output = $view->preview();
+    $output = $renderer->renderRoot($output);
+    $this->assertTrue(strpos($output, '/node') !== FALSE, 'The read more link with href "/node" was found.');
+
+    // Test more link with leading slash.
+    $view->display_handler->setOption('link_display', 'custom_url');
+    $view->display_handler->setOption('link_url', '/node');
+    $this->executeView($view);
+    $output = $view->preview();
+    $output = $renderer->renderRoot($output);
+    $this->assertTrue(strpos($output, '/node') !== FALSE, 'The read more link with href "/node" was found.');
+
+    // Test more link with absolute url.
+    $view->display_handler->setOption('link_display', 'custom_url');
+    $view->display_handler->setOption('link_url', 'http://drupal.org');
+    $this->executeView($view);
+    $output = $view->preview();
+    $output = $renderer->renderRoot($output);
+    $this->assertTrue(strpos($output, 'http://drupal.org') !== FALSE, 'The read more link with href "http://drupal.org" was found.');
+
+    // Test more link with query parameters in the url.
+    $view->display_handler->setOption('link_display', 'custom_url');
+    $view->display_handler->setOption('link_url', 'node?page=1&foo=bar');
+    $this->executeView($view);
+    $output = $view->preview();
+    $output = $renderer->renderRoot($output);
+    $this->assertTrue(strpos($output, '/node?page=1&amp;foo=bar') !== FALSE, 'The read more link with href "/node?page=1&foo=bar" was found.');
+
+    // Test more link with fragment in the url.
+    $view->display_handler->setOption('link_display', 'custom_url');
+    $view->display_handler->setOption('link_url', 'node#target');
+    $this->executeView($view);
+    $output = $view->preview();
+    $output = $renderer->renderRoot($output);
+    $this->assertTrue(strpos($output, '/node#target') !== FALSE, 'The read more link with href "/node#target" was found.');
+
+    // Test more link with arguments.
+    $view = Views::getView('test_simple_argument');
+    $view->setDisplay('default');
+    $view->display_handler->setOption('use_more', 1);
+    $view->display_handler->setOption('use_more_always', 1);
+    $view->display_handler->setOption('link_display', 'custom_url');
+    $view->display_handler->setOption('link_url', 'node?date={{ raw_arguments.age }}&foo=bar');
+    $view->setArguments([22]);
+    $this->executeView($view);
+    $output = $view->preview();
+    $output = $renderer->renderRoot($output);
+    $this->assertTrue(strpos($output, '/node?date=22&amp;foo=bar') !== FALSE, 'The read more link with href "/node?date=22&foo=bar" was found.');
+
+    // Test more link with 1 dimension array query parameters with arguments.
+    $view = Views::getView('test_simple_argument');
+    $view->setDisplay('default');
+    $view->display_handler->setOption('use_more', 1);
+    $view->display_handler->setOption('use_more_always', 1);
+    $view->display_handler->setOption('link_display', 'custom_url');
+    $view->display_handler->setOption('link_url', '/node?f[0]=foo:bar&f[1]=foo:{{ raw_arguments.age }}');
+    $view->setArguments([22]);
+    $this->executeView($view);
+    $output = $view->preview();
+    $output = $renderer->renderRoot($output);
+    $this->assertTrue(strpos($output, '/node?f%5B0%5D=foo%3Abar&amp;f%5B1%5D=foo%3A22') !== FALSE, 'The read more link with href "/node?f[0]=foo:bar&f[1]=foo:22" was found.');
+
+    // Test more link with arguments in path.
+    $view->display_handler->setOption('link_url', 'node/{{ raw_arguments.age }}?date={{ raw_arguments.age }}&foo=bar');
+    $view->setArguments([22]);
+    $this->executeView($view);
+    $output = $view->preview();
+    $output = $renderer->renderRoot($output);
+    $this->assertTrue(strpos($output, '/node/22?date=22&amp;foo=bar') !== FALSE, 'The read more link with href "/node/22?date=22&foo=bar" was found.');
+
+    // Test more link with arguments in fragment.
+    $view->display_handler->setOption('link_url', 'node?date={{ raw_arguments.age }}&foo=bar#{{ raw_arguments.age }}');
+    $view->setArguments([22]);
+    $this->executeView($view);
+    $output = $view->preview();
+    $output = $renderer->renderRoot($output);
+    $this->assertTrue(strpos($output, '/node?date=22&amp;foo=bar#22') !== FALSE, 'The read more link with href "/node?date=22&foo=bar#22" was found.');
   }
 
   /**
