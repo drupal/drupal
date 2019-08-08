@@ -25,7 +25,7 @@
           return dateFormats[key] ? dateFormats[key] : value;
         });
 
-        $preview.html(dateString);
+        $preview.text(dateString);
         $target.toggleClass('js-hide', !dateString.length);
       }
 
