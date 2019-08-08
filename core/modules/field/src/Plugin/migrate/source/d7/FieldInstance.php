@@ -141,6 +141,34 @@ class FieldInstance extends DrupalSqlBase {
         ->condition('machine_name', $vocabulary, 'IN');
       $allowed_vid = $query->execute()->fetchAllAssoc('vid');
       $row->setSourceProperty('allowed_vid', $allowed_vid);
+
+      // If there is an i18n_mode use it to determine if this field is
+      // translatable. It is TRUE only for i18n_mode 'Translate', all others are
+      // FALSE. When there is a term reference field with two vocabularies where
+      // one vocabulary is translatable and other is not the field itself is set
+      // to not translatable. Note mode '5' is not used for taxonomy but is
+      // listed here for completeness.
+      // - 0: No multilingual options.
+      // - 1: Localize. Localizable object.
+      // - 2: Fixed Language.
+      // - 4: Translate. Multilingual objects.
+      // - 5: Objects are translatable, if they have language or localizable
+      // if not)
+      if ($this->getDatabase()
+        ->schema()
+        ->fieldExists('taxonomy_vocabulary', 'i18n_mode')) {
+        $query = $this->select('taxonomy_vocabulary', 'v')
+          ->fields('v', ['i18n_mode'])
+          ->condition('machine_name', $vocabulary, 'IN');
+        $results = $query->execute()->fetchAllAssoc('i18n_mode');
+        $translatable = TRUE;
+        foreach ($results as $result) {
+          if ($result['i18n_mode'] != '4') {
+            $translatable = FALSE;
+          }
+        }
+        $row->setSourceProperty('translatable', $translatable);
+      }
     }
 
     $field_data = unserialize($row->getSourceProperty('field_data'));

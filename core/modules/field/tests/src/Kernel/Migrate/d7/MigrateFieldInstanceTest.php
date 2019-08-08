@@ -104,7 +104,7 @@ class MigrateFieldInstanceTest extends MigrateDrupal7TestBase {
     $this->assertEntity('node.page.body', 'Body', 'text_with_summary', FALSE, FALSE);
     $this->assertEntity('comment.comment_node_article.comment_body', 'Comment', 'text_long', TRUE, FALSE);
     $this->assertEntity('node.article.body', 'Body', 'text_with_summary', FALSE, TRUE);
-    $this->assertEntity('node.article.field_tags', 'Tags', 'entity_reference', FALSE, TRUE);
+    $this->assertEntity('node.article.field_tags', 'Tags', 'entity_reference', FALSE, FALSE);
     $this->assertEntity('node.article.field_image', 'Image', 'image', FALSE, TRUE);
     $this->assertEntity('comment.comment_node_blog.comment_body', 'Comment', 'text_long', TRUE, FALSE);
     $this->assertEntity('node.blog.body', 'Body', 'text_with_summary', FALSE, TRUE);
@@ -150,6 +150,11 @@ class MigrateFieldInstanceTest extends MigrateDrupal7TestBase {
     $this->assertNull($name_field);
     $description_field = FieldConfig::load('taxonomy_term.test_vocabulary.description_field');
     $this->assertNull($description_field);
+
+    // Test the translation settings for taxonomy fields.
+    $this->assertEntity('node.article.field_vocab_fixed', 'vocab_fixed', 'entity_reference', FALSE, FALSE);
+    $this->assertEntity('node.article.field_vocab_localize', 'vocab_localize', 'entity_reference', FALSE, FALSE);
+    $this->assertEntity('node.article.field_vocab_translate', 'vocab_translate', 'entity_reference', FALSE, TRUE);
   }
 
   /**
