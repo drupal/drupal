@@ -249,8 +249,8 @@ class TwigExtension extends \Twig_Extension {
    *   (optional) An associative array of additional options. The 'absolute'
    *   option is forced to be TRUE.
    *
-   * @return string
-   *   The generated absolute URL for the given route.
+   * @return array
+   *   A render array with generated absolute URL for the given route.
    *
    * @todo Add an option for scheme-relative URLs.
    */
