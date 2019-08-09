@@ -149,27 +149,6 @@ class ShortcutTest extends ResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  public function testPostIndividual() {
-    $this->markTestSkipped('Disabled until https://www.drupal.org/project/drupal/issues/2982060 is fixed.');
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function testRelationships() {
-    $this->markTestSkipped('Disabled until https://www.drupal.org/project/drupal/issues/2982060 is fixed.');
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function testPatchIndividual() {
-    $this->markTestSkipped('Disabled until https://www.drupal.org/project/drupal/issues/2982060 is fixed.');
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function testCollectionFilterAccess() {
     $label_field_name = 'title';
     // Verify the expected behavior in the common case: default shortcut set.
