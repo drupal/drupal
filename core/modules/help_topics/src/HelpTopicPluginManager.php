@@ -6,6 +6,8 @@ use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Extension\ThemeHandlerInterface;
 use Drupal\Core\Plugin\DefaultPluginManager;
+use Drupal\Core\Plugin\Discovery\YamlDiscoveryDecorator;
+use Drupal\Core\Plugin\Discovery\ContainerDerivativeDiscoveryDecorator;
 
 /**
  * Provides the default help_topic manager.
@@ -29,12 +31,33 @@ use Drupal\Core\Plugin\DefaultPluginManager;
  * <meta name="help_topic:top_level"/>
  * @endcode
  *
+ * In addition, modules wishing to add plugins can define them in a
+ * module_name.help_topics.yml file, with the plugin ID as the heading for
+ * each entry, and these properties:
+ * - id: The plugin ID.
+ * - class: The name of your plugin class, implementing
+ *   \Drupal\help_topics\HelpTopicPluginInterface.
+ * - top_level: TRUE if the topic is top-level.
+ * - related: Array of IDs of topics this one is related to.
+ * - Additional properties that your plugin class needs, such as 'label'.
+ *
+ * You can also provide an entry that designates a plugin deriver class in your
+ * help_topics.yml file, with a heading giving a prefix ID for your group of
+ * derived plugins, and a 'deriver' property giving the name of a class
+ * implementing \Drupal\Component\Plugin\Derivative\DeriverInterface. Example:
+ * @code
+ * mymodule_prefix:
+ *   deriver: 'Drupal\mymodule\Plugin\Deriver\HelpTopicDeriver'
+ * @endcode
+ *
  * @see \Drupal\help_topics\HelpTopicDiscovery
  * @see \Drupal\help_topics\HelpTopicTwig
  * @see \Drupal\help_topics\HelpTopicTwigLoader
  * @see \Drupal\help_topics\HelpTopicPluginInterface
  * @see \Drupal\help_topics\HelpTopicPluginBase
  * @see hook_help_topics_info_alter()
+ * @see plugin_api
+ * @see \Drupal\Component\Plugin\Derivative\DeriverInterface
  *
  * @internal
  *   Help Topic is currently experimental and should only be leveraged by
@@ -94,19 +117,25 @@ class HelpTopicPluginManager extends DefaultPluginManager implements HelpTopicPl
    */
   protected function getDiscovery() {
     if (!isset($this->discovery)) {
-      // We want to find help topic plugins in core, modules and themes in
-      // a sub-directory called help_topics.
-      $directories = array_merge(
+      $module_directories = $this->moduleHandler->getModuleDirectories();
+      $all_directories = array_merge(
         ['core'],
-        $this->moduleHandler->getModuleDirectories(),
+        $module_directories,
         $this->themeHandler->getThemeDirectories()
       );
 
-      $directories = array_map(function ($dir) {
+      // Search for Twig help topics in subdirectory help_topics, under
+      // modules/profiles, themes, and the core directory.
+      $all_directories = array_map(function ($dir) {
         return [$dir . '/help_topics'];
-      }, $directories);
+      }, $all_directories);
+      $discovery = new HelpTopicDiscovery($all_directories);
 
-      $this->discovery = new HelpTopicDiscovery($directories);
+      // Also allow modules/profiles to extend help topic discovery to their
+      // own plugins and derivers, in mymodule.help_topics.yml files.
+      $discovery = new YamlDiscoveryDecorator($discovery, 'help_topics', $module_directories);
+      $discovery = new ContainerDerivativeDiscoveryDecorator($discovery);
+      $this->discovery = $discovery;
     }
     return $this->discovery;
   }

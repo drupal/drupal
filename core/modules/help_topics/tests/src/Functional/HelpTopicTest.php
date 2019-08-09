@@ -219,6 +219,12 @@ class HelpTopicTest extends BrowserTestBase {
       'help_topics_test.test' => [
         'name' => 'ABC Help Test module',
       ],
+      'help_topics_derivatives:test_derived_topic' => [
+        'name' => 'Label for test_derived_topic',
+      ],
+      'help_topics_test_direct_yml' => [
+        'name' => 'Test direct yaml topic label',
+      ],
       'help_topics.help_topic_writing' => [
         'name' => 'Writing good help',
       ],
