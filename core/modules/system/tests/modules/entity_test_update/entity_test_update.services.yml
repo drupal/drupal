@@ -1,6 +1,0 @@
-services:
-  entity_test_update.entity_schema_listener:
-    class: Drupal\entity_test_update\EventSubscriber\EntitySchemaSubscriber
-    arguments: ['@entity.definition_update_manager', '@state']
-    tags:
-      - { name: 'event_subscriber' }

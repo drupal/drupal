@@ -71,12 +71,12 @@ class EntityTypeListener implements EntityTypeListenerInterface {
       $storage->onEntityTypeCreate($entity_type);
     }
 
+    $this->eventDispatcher->dispatch(EntityTypeEvents::CREATE, new EntityTypeEvent($entity_type));
+
     $this->entityLastInstalledSchemaRepository->setLastInstalledDefinition($entity_type);
     if ($entity_type->entityClassImplements(FieldableEntityInterface::class)) {
       $this->entityLastInstalledSchemaRepository->setLastInstalledFieldStorageDefinitions($entity_type_id, $this->entityFieldManager->getFieldStorageDefinitions($entity_type_id));
     }
-
-    $this->eventDispatcher->dispatch(EntityTypeEvents::CREATE, new EntityTypeEvent($entity_type));
   }
 
   /**
@@ -94,9 +94,9 @@ class EntityTypeListener implements EntityTypeListenerInterface {
       $storage->onEntityTypeUpdate($entity_type, $original);
     }
 
-    $this->entityLastInstalledSchemaRepository->setLastInstalledDefinition($entity_type);
-
     $this->eventDispatcher->dispatch(EntityTypeEvents::UPDATE, new EntityTypeEvent($entity_type, $original));
+
+    $this->entityLastInstalledSchemaRepository->setLastInstalledDefinition($entity_type);
   }
 
   /**
@@ -116,9 +116,9 @@ class EntityTypeListener implements EntityTypeListenerInterface {
       $storage->onEntityTypeDelete($entity_type);
     }
 
-    $this->entityLastInstalledSchemaRepository->deleteLastInstalledDefinition($entity_type_id);
-
     $this->eventDispatcher->dispatch(EntityTypeEvents::DELETE, new EntityTypeEvent($entity_type));
+
+    $this->entityLastInstalledSchemaRepository->deleteLastInstalledDefinition($entity_type_id);
   }
 
   /**
@@ -135,12 +135,12 @@ class EntityTypeListener implements EntityTypeListenerInterface {
     }
 
     if ($sandbox === NULL || (isset($sandbox['#finished']) && $sandbox['#finished'] == 1)) {
+      $this->eventDispatcher->dispatch(EntityTypeEvents::UPDATE, new EntityTypeEvent($entity_type, $original));
+
       $this->entityLastInstalledSchemaRepository->setLastInstalledDefinition($entity_type);
       if ($entity_type->entityClassImplements(FieldableEntityInterface::class)) {
         $this->entityLastInstalledSchemaRepository->setLastInstalledFieldStorageDefinitions($entity_type_id, $field_storage_definitions);
       }
-
-      $this->eventDispatcher->dispatch(EntityTypeEvents::UPDATE, new EntityTypeEvent($entity_type, $original));
     }
   }
 
