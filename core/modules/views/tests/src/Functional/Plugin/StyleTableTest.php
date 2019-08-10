@@ -44,7 +44,7 @@ class StyleTableTest extends ViewTestBase {
     $this->assertTrue(count($result), 'The summary appears on the table.');
     $this->assertEqual(trim($result[0]->getText()), 'summary-text');
 
-    $result = $this->xpath('//caption/details/child::text()');
+    $result = $this->xpath('//caption/details/child::text()[normalize-space()]');
     $this->assertTrue(count($result), 'The table description appears on the table.');
     $this->assertEqual(trim($result[0]->getText()), 'description-text');
 
@@ -73,7 +73,7 @@ class StyleTableTest extends ViewTestBase {
     $view->save();
 
     $this->drupalGet('test-table');
-    $result = $this->xpath('//caption/details/child::text()');
+    $result = $this->xpath('//caption/details/child::text()[normalize-space()]');
     $this->assertFalse(count($result), 'Ensure that the description disappears.');
   }
 

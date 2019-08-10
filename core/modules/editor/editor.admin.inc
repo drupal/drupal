@@ -93,8 +93,6 @@ function editor_image_upload_settings_form(Editor $editor) {
   $form['max_dimensions'] = [
     '#type' => 'item',
     '#title' => t('Maximum dimensions'),
-    '#field_prefix' => '<div class="container-inline clearfix">',
-    '#field_suffix' => '</div>',
     '#description' => t('Images larger than these dimensions will be scaled down.'),
     '#states' => $show_if_image_uploads_enabled,
   ];
@@ -110,6 +108,7 @@ function editor_image_upload_settings_form(Editor $editor) {
     '#placeholder' => t('width'),
     '#field_suffix' => ' x ',
     '#states' => $show_if_image_uploads_enabled,
+    '#prefix' => '<div class="form--inline clearfix">',
   ];
   $form['max_dimensions']['height'] = [
     '#title' => t('Height'),
@@ -123,6 +122,7 @@ function editor_image_upload_settings_form(Editor $editor) {
     '#placeholder' => t('height'),
     '#field_suffix' => t('pixels'),
     '#states' => $show_if_image_uploads_enabled,
+    '#suffix' => '</div>',
   ];
 
   return $form;
