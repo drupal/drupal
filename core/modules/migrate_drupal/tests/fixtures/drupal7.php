@@ -4991,15 +4991,6 @@ $connection->insert('field_config_instance')
   'data' => 'a:7:{s:5:"label";s:6:"Rating";s:6:"widget";a:5:{s:6:"weight";s:2:"12";s:4:"type";s:15:"options_buttons";s:6:"module";s:7:"options";s:6:"active";i:1;s:8:"settings";a:0:{}}s:8:"settings";a:2:{s:18:"user_register_form";b:0;s:23:"entity_translation_sync";b:0;}s:7:"display";a:1:{s:7:"default";a:5:{s:5:"label";s:5:"above";s:4:"type";s:12:"list_default";s:8:"settings";a:0:{}s:6:"module";s:4:"list";s:6:"weight";i:11;}}s:8:"required";i:0;s:11:"description";s:0:"";s:13:"default_value";N;}',
   'deleted' => '0',
 ))
-->values(array(
-  'id' => '78',
-  'field_id' => '6',
-  'field_name' => 'field_boolean',
-  'entity_type' => 'node',
-  'bundle' => 'blog',
-  'data' => 'a:6:{s:5:"label";s:7:"Boolean";s:6:"widget";a:4:{s:4:"type";s:13:"options_onoff";s:6:"weight";s:2:"14";s:8:"settings";a:1:{s:13:"display_label";i:0;}s:6:"module";s:7:"options";}s:8:"settings";a:2:{s:18:"user_register_form";b:0;s:23:"entity_translation_sync";b:0;}s:7:"display";a:1:{s:7:"default";a:5:{s:5:"label";s:5:"above";s:4:"type";s:12:"list_default";s:8:"settings";a:0:{}s:6:"module";s:4:"list";s:6:"weight";i:12;}}s:8:"required";b:0;s:11:"description";s:0:"";}',
-  'deleted' => '0',
-))
 ->execute();
 $connection->schema()->createTable('field_data_body', array(
   'fields' => array(
@@ -5503,17 +5494,7 @@ $connection->insert('field_data_field_boolean')
   'deleted' => '0',
   'entity_id' => '1',
   'revision_id' => '1',
-  'language' => 'fr',
-  'delta' => '0',
-  'field_boolean_value' => '1',
-))
-->values(array(
-  'entity_type' => 'node',
-  'bundle' => 'test_content_type',
-  'deleted' => '0',
-  'entity_id' => '1',
-  'revision_id' => '1',
-  'language' => 'is',
+  'language' => 'und',
   'delta' => '0',
   'field_boolean_value' => '1',
 ))
@@ -10614,27 +10595,7 @@ $connection->insert('field_revision_field_boolean')
   'deleted' => '0',
   'entity_id' => '1',
   'revision_id' => '1',
-  'language' => 'en',
-  'delta' => '0',
-  'field_boolean_value' => '1',
-))
-->values(array(
-  'entity_type' => 'node',
-  'bundle' => 'test_content_type',
-  'deleted' => '0',
-  'entity_id' => '1',
-  'revision_id' => '1',
-  'language' => 'fr',
-  'delta' => '0',
-  'field_boolean_value' => '1',
-))
-->values(array(
-  'entity_type' => 'node',
-  'bundle' => 'test_content_type',
-  'deleted' => '0',
-  'entity_id' => '1',
-  'revision_id' => '1',
-  'language' => 'is',
+  'language' => 'und',
   'delta' => '0',
   'field_boolean_value' => '1',
 ))
@@ -18907,22 +18868,6 @@ $connection->insert('locales_target')
 ->values(array(
   'lid' => '80',
   'translation' => 'is - Holographic research. (localized)',
-  'language' => 'is',
-  'plid' => '0',
-  'plural' => '0',
-  'i18n_status' => '0',
-))
-->values(array(
-  'lid' => '687',
-  'translation' => 'is - Off',
-  'language' => 'is',
-  'plid' => '0',
-  'plural' => '0',
-  'i18n_status' => '0',
-))
-->values(array(
-  'lid' => '688',
-  'translation' => 'is - 1',
   'language' => 'is',
   'plid' => '0',
   'plural' => '0',
