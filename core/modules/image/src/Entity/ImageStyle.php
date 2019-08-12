@@ -182,7 +182,10 @@ class ImageStyle extends ConfigEntityBase implements ImageStyleInterface, Entity
       // source files not stored in the default scheme.
       if ($source_scheme != $default_scheme) {
         $class = $this->getStreamWrapperManager()->getClass($source_scheme);
-        $is_writable = $class::getType() & StreamWrapperInterface::WRITE;
+        $is_writable = NULL;
+        if ($class) {
+          $is_writable = $class::getType() & StreamWrapperInterface::WRITE;
+        }
 
         // Compute the derivative URI scheme. Derivatives created from writable
         // source stream wrappers will inherit the scheme. Derivatives created
