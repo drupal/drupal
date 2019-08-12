@@ -1,0 +1,17 @@
+<?php
+
+/**
+ * @file
+ * Hook implementations for this module.
+ */
+
+/**
+ * Implements hook_preprocess_HOOK().
+ */
+function views_test_rss_preprocess_views_view_rss(&$variables) {
+  $variables['channel_elements'][] = [
+    '#type' => 'html_tag',
+    '#tag' => 'copyright',
+    '#value' => t('Copyright 2019 Dries Buytaert'),
+  ];
+}

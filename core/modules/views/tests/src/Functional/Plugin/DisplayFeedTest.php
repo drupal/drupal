@@ -26,7 +26,7 @@ class DisplayFeedTest extends ViewTestBase {
    *
    * @var array
    */
-  public static $modules = ['block', 'node', 'views'];
+  public static $modules = ['block', 'node', 'views', 'views_test_rss'];
 
   protected function setUp($import_test_views = TRUE) {
     parent::setUp($import_test_views);
@@ -63,6 +63,7 @@ class DisplayFeedTest extends ViewTestBase {
     $this->drupalGet('test-feed-display.xml');
     $this->assertEquals($site_name, $this->getSession()->getDriver()->getText('//title'));
     $this->assertEquals($frontpage_url, $this->getSession()->getDriver()->getText('//link'));
+    $this->assertEquals('Copyright 2019 Dries Buytaert', $this->getSession()->getDriver()->getText('//channel/copyright'));
     $this->assertEquals($node_title, $this->getSession()->getDriver()->getText('//item/title'));
     // Verify HTML is properly escaped in the description field.
     $this->assertRaw('&lt;p&gt;A paragraph&lt;/p&gt;');

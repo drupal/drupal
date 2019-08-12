@@ -870,7 +870,7 @@ function template_preprocess_views_view_rss(&$variables) {
   $variables['langcode'] = \Drupal::languageManager()->getCurrentLanguage()->getId();
   $variables['namespaces'] = new Attribute($style->namespaces);
   $variables['items'] = $items;
-  $variables['channel_elements'] = \Drupal::service('renderer')->render($style->channel_elements);
+  $variables['channel_elements'] = $style->channel_elements;
 
   // During live preview we don't want to output the header since the contents
   // of the feed are being displayed inside a normal HTML page.
