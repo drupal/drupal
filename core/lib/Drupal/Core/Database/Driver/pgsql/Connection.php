@@ -65,9 +65,9 @@ class Connection extends DatabaseConnection {
     'localtime', 'localtimestamp', 'natural', 'not', 'notnull', 'null', 'offset',
     'on', 'only', 'or', 'order', 'outer', 'over', 'overlaps', 'placing',
     'primary', 'references', 'returning', 'right', 'select', 'session_user',
-    'similar', 'some', 'symmetric', 'table', 'then', 'to', 'trailing', 'true',
-    'union', 'unique', 'user', 'using', 'variadic', 'verbose', 'when', 'where',
-    'window', 'with',
+    'similar', 'some', 'symmetric', 'table', 'tablesample', 'then', 'to',
+    'trailing', 'true', 'union', 'unique', 'user', 'using', 'variadic', 'verbose',
+    'when', 'where', 'window', 'with',
   ];
 
   /**
