@@ -189,7 +189,7 @@ class EntityReferenceSelectionUnitTest extends UnitTestCase {
    *
    * @covers ::setConfiguration
    * @covers ::resolveBackwardCompatibilityConfiguration
-   * @expectedDeprecation Providing settings under 'handler_settings' is deprecated and will be removed before 9.0.0. Move the settings in the root of the configuration array. See https://www.drupal.org/node/2870971.
+   * @expectedDeprecation Providing settings under 'handler_settings' is deprecated in drupal:8.4.0 support for 'handler_settings' is removed from drupal:9.0.0. Move the settings in the root of the configuration array. See https://www.drupal.org/node/2870971
    */
   public function testDeprecationErrorTriggering() {
     // Configuration with BC level.
