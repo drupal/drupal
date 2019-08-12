@@ -539,7 +539,8 @@ function simpletest_script_init() {
   try {
     $request = Request::createFromGlobals();
     $kernel = TestRunnerKernel::createFromRequest($request, $autoloader);
-    $kernel->prepareLegacyRequest($request);
+    $kernel->boot();
+    $kernel->preHandle($request);
   }
   catch (Exception $e) {
     echo (string) $e;

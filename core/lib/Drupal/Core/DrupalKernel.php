@@ -753,6 +753,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
     $request->attributes->set(RouteObjectInterface::ROUTE_NAME, '<none>');
     $this->container->get('request_stack')->push($request);
     $this->container->get('router.request_context')->fromRequest($request);
+    @trigger_error(__NAMESPACE__ . '\DrupalKernel::prepareLegacyRequest is deprecated drupal:8.0.0 and is removed from drupal:9.0.0. Use DrupalKernel::boot() and DrupalKernel::preHandle() instead. See https://www.drupal.org/node/3070678', E_USER_DEPRECATED);
     return $this;
   }
 

@@ -27,6 +27,8 @@ use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpFoundation\Request;
 use org\bovigo\vfs\vfsStream;
 use org\bovigo\vfs\visitor\vfsStreamPrintVisitor;
+use Symfony\Cmf\Component\Routing\RouteObjectInterface;
+use Symfony\Component\Routing\Route;
 
 /**
  * Base class for functional integration tests.
@@ -341,9 +343,11 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
     // DrupalKernel::boot() is not sufficient as it does not invoke preHandle(),
     // which is required to initialize legacy global variables.
     $request = Request::create('/');
-    $kernel->prepareLegacyRequest($request);
+    $kernel->boot();
+    $request->attributes->set(RouteObjectInterface::ROUTE_OBJECT, new Route('<none>'));
+    $request->attributes->set(RouteObjectInterface::ROUTE_NAME, '<none>');
+    $kernel->preHandle($request);
 
-    // register() is only called if a new container was built/compiled.
     $this->container = $kernel->getContainer();
 
     // Ensure database tasks have been run.
@@ -357,8 +361,6 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
     if ($modules) {
       $this->container->get('module_handler')->loadAll();
     }
-
-    $this->container->get('request_stack')->push($request);
 
     // Setup the destion to the be frontpage by default.
     \Drupal::destination()->set('/');

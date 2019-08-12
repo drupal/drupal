@@ -158,8 +158,13 @@ abstract class InstallerTestBase extends WebTestBase {
       // Not using File API; a potential error must trigger a PHP warning.
       chmod($this->container->get('app.root') . '/' . $this->siteDirectory, 0777);
       $this->kernel = DrupalKernel::createFromRequest($request, $class_loader, 'prod', FALSE);
-      $this->kernel->prepareLegacyRequest($request);
+      $this->kernel->boot();
+      $this->kernel->preHandle($request);
       $this->container = $this->kernel->getContainer();
+      // Ensure our request includes the session if appropriate.
+      if (PHP_SAPI !== 'cli') {
+        $request->setSession($this->container->get('session'));
+      }
 
       // Manually configure the test mail collector implementation to prevent
       // tests from sending out emails and collect them in state instead.

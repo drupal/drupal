@@ -627,6 +627,7 @@ function drupal_install_system($install_state) {
   // Add the normal installer service provider.
   $GLOBALS['conf']['container_service_providers']['InstallerServiceProvider'] = 'Drupal\Core\Installer\NormalInstallerServiceProvider';
 
+  // Get the existing request.
   $request = \Drupal::request();
   // Reboot into a full production environment to continue the installation.
   /** @var \Drupal\Core\Installer\InstallerKernel $kernel */
@@ -634,7 +635,13 @@ function drupal_install_system($install_state) {
   $kernel->shutdown();
   // Have installer rebuild from the disk, rather then building from scratch.
   $kernel->rebuildContainer(FALSE);
-  $kernel->prepareLegacyRequest($request);
+  // Reboot the kernel with new container.
+  $kernel->boot();
+  $kernel->preHandle($request);
+  // Ensure our request includes the session if appropriate.
+  if (PHP_SAPI !== 'cli') {
+    $request->setSession($kernel->getContainer()->get('session'));
+  }
 
   // Before having installed the system module and being able to do a module
   // rebuild, prime the \Drupal\Core\Extension\ModuleExtensionList static cache

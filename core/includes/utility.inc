@@ -35,12 +35,15 @@ function drupal_rebuild($class_loader, Request $request) {
   // Bootstrap up to where caches exist and clear them.
   $kernel = new DrupalKernel('prod', $class_loader);
   $kernel->setSitePath(DrupalKernel::findSitePath($request));
+  $kernel->boot();
+  $kernel->preHandle($request);
+  // Ensure our request includes the session if appropriate.
+  if (PHP_SAPI !== 'cli') {
+    $request->setSession($kernel->getContainer()->get('session'));
+  }
 
   // Invalidate the container.
   $kernel->invalidateContainer();
-
-  // Prepare a NULL request.
-  $kernel->prepareLegacyRequest($request);
 
   foreach (Cache::getBins() as $bin) {
     $bin->deleteAll();

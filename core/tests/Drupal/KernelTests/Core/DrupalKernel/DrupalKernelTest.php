@@ -191,4 +191,24 @@ class DrupalKernelTest extends KernelTestBase {
     $kernel->setSitePath($path);
   }
 
+  /**
+   * @group legacy
+   * @expectedDeprecation Drupal\Core\DrupalKernel::prepareLegacyRequest is deprecated drupal:8.0.0 and is removed from drupal:9.0.0. Use DrupalKernel::boot() and DrupalKernel::preHandle() instead. See https://www.drupal.org/node/3070678
+   */
+  public function testPrepareLegacyRequest() {
+    $request = Request::createFromGlobals();
+    // Manually create kernel to avoid replacing settings.
+    $class_loader = require $this->root . '/autoload.php';
+    $kernel = DrupalKernel::createFromRequest($request, $class_loader, 'testing');
+    $this->setSetting('container_yamls', []);
+    $this->setSetting('hash_salt', $this->databasePrefix);
+
+    $this->assertNull($kernel->getContainer());
+    // Restore the usual PHPUnit error handler for deprecation testing.
+    restore_error_handler();
+    $kernel->prepareLegacyRequest($request);
+
+    $this->assertSame($request, $kernel->getContainer()->get('request_stack')->getMasterRequest());
+  }
+
 }

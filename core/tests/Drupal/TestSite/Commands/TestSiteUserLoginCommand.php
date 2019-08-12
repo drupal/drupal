@@ -52,9 +52,9 @@ class TestSiteUserLoginCommand extends Command {
     Settings::initialize($kernel->getAppRoot(), $kernel->getSitePath(), $this->classLoader);
 
     $request = Request::createFromGlobals();
-    $kernel->prepareLegacyRequest($request);
 
     $kernel->boot();
+    $kernel->preHandle($request);
 
     $container = $kernel->getContainer();
     $uid = $input->getArgument('uid');

@@ -181,7 +181,8 @@ abstract class InstallerTestBase extends BrowserTestBase {
       // Not using File API; a potential error must trigger a PHP warning.
       chmod($this->container->get('app.root') . '/' . $this->siteDirectory, 0777);
       $this->kernel = DrupalKernel::createFromRequest($request, $class_loader, 'prod', FALSE);
-      $this->kernel->prepareLegacyRequest($request);
+      $this->kernel->boot();
+      $this->kernel->preHandle($request);
       $this->container = $this->kernel->getContainer();
 
       // Manually configure the test mail collector implementation to prevent

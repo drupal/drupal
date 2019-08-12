@@ -214,7 +214,8 @@ class KernelTestBaseTest extends KernelTestBase {
   /**
    * @covers ::bootKernel
    */
-  public function testFileDefaultScheme() {
+  public function testBootKernel() {
+    $this->assertNull($this->container->get('request_stack')->getParentRequest(), 'There should only be one request on the stack');
     $this->assertEquals('public', \Drupal::config('system.file')->get('default_scheme'));
   }
 
