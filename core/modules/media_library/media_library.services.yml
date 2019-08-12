@@ -13,3 +13,6 @@ services:
   media_library.opener.field_widget:
     class: Drupal\media_library\MediaLibraryFieldWidgetOpener
     arguments: ['@entity_type.manager']
+  media_library.opener.editor:
+    class: Drupal\media_library\MediaLibraryEditorOpener
+    arguments: ['@entity_type.manager']

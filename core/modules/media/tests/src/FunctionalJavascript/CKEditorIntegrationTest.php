@@ -9,6 +9,7 @@ use Drupal\file\Entity\File;
 use Drupal\filter\Entity\FilterFormat;
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 use Drupal\media\Entity\Media;
+use Drupal\Tests\ckeditor\Traits\CKEditorTestTrait;
 use Drupal\Tests\media\Traits\MediaTypeCreationTrait;
 use Drupal\Tests\TestFileCreationTrait;
 
@@ -18,6 +19,7 @@ use Drupal\Tests\TestFileCreationTrait;
  */
 class CKEditorIntegrationTest extends WebDriverTestBase {
 
+  use CKEditorTestTrait;
   use MediaTypeCreationTrait;
   use TestFileCreationTrait;
 
@@ -669,20 +671,6 @@ JS;
   }
 
   /**
-   * Assigns a name to the CKEditor iframe.
-   *
-   * @see \Behat\Mink\Session::switchToIFrame()
-   */
-  protected function assignNameToCkeditorIframe() {
-    $javascript = <<<JS
-(function(){
-  document.getElementsByClassName('cke_wysiwyg_frame')[0].id = 'ckeditor';
-})()
-JS;
-    $this->getSession()->evaluateScript($javascript);
-  }
-
-  /**
    * Assigns a name to the CKEditor context menu iframe.
    *
    * Note that this iframe doesn't appear until context menu appears.
@@ -696,82 +684,6 @@ JS;
 })()
 JS;
     $this->getSession()->evaluateScript($javascript);
-  }
-
-  /**
-   * Clicks a CKEditor button.
-   *
-   * @param string $name
-   *   The name of the button, such as drupalink, source, etc.
-   */
-  protected function pressEditorButton($name) {
-    $this->getSession()->switchToIFrame();
-    $button = $this->assertSession()->waitForElementVisible('css', 'a.cke_button__' . $name);
-    $this->assertNotEmpty($button);
-    $button->click();
-  }
-
-  /**
-   * Waits for a CKEditor button and returns it when available and visible.
-   *
-   * @param string $name
-   *   The name of the button, such as drupalink, source, etc.
-   *
-   * @return \Behat\Mink\Element\NodeElement|null
-   *   The page element node if found, NULL if not.
-   */
-  protected function getEditorButton($name) {
-    $this->getSession()->switchToIFrame();
-    $button = $this->assertSession()->waitForElementVisible('css', 'a.cke_button__' . $name);
-    $this->assertNotEmpty($button);
-
-    return $button;
-  }
-
-  /**
-   * Asserts a CKEditor button is disabled.
-   *
-   * @param string $name
-   *   The name of the button, such as `drupallink`, `source`, etc.
-   */
-  protected function assertEditorButtonDisabled($name) {
-    $button = $this->getEditorButton($name);
-    $this->assertTrue($button->hasClass('cke_button_disabled'));
-    $this->assertSame('true', $button->getAttribute('aria-disabled'));
-  }
-
-  /**
-   * Asserts a CKEditor button is enabled.
-   *
-   * @param string $name
-   *   The name of the button, such as `drupallink`, `source`, etc.
-   */
-  protected function assertEditorButtonEnabled($name) {
-    $button = $this->getEditorButton($name);
-    $this->assertFalse($button->hasClass('cke_button_disabled'));
-    $this->assertSame('false', $button->getAttribute('aria-disabled'));
-  }
-
-  /**
-   * Waits for CKEditor to initialize.
-   *
-   * @param string $instance_id
-   *   The CKEditor instance ID.
-   * @param int $timeout
-   *   (optional) Timeout in milliseconds, defaults to 10000.
-   */
-  protected function waitForEditor($instance_id = 'edit-body-0-value', $timeout = 10000) {
-    $condition = <<<JS
-      (function() {
-        return (
-          typeof CKEDITOR !== 'undefined'
-          && typeof CKEDITOR.instances["$instance_id"] !== 'undefined'
-          && CKEDITOR.instances["$instance_id"].instanceReady
-        );
-      }());
-JS;
-
-    $this->getSession()->wait($timeout, $condition);
   }
 
   /**

@@ -31,6 +31,7 @@ class MediaLibraryAccessTest extends KernelTestBase {
     'media',
     'media_library',
     'media_library_test',
+    'filter',
     'file',
     'field',
     'image',
@@ -50,6 +51,7 @@ class MediaLibraryAccessTest extends KernelTestBase {
     $this->installSchema('file', 'file_usage');
     $this->installSchema('system', ['sequences', 'key_value_expire']);
     $this->installEntitySchema('entity_test');
+    $this->installEntitySchema('filter_format');
     $this->installEntitySchema('media');
     $this->installConfig([
       'field',
@@ -122,6 +124,76 @@ class MediaLibraryAccessTest extends KernelTestBase {
     ]);
     $access_result = $ui_builder->checkAccess($account, $state);
     $this->assertAccess($access_result, TRUE, NULL, Views::getView('media_library')->storage->getCacheTags(), ['url.query_args', 'user.permissions']);
+  }
+
+  /**
+   * @covers \Drupal\media_library\MediaLibraryEditorOpener::checkAccess
+   *
+   * @param bool $media_embed_enabled
+   *   Whether to test with media_embed filter enabled on the text format.
+   * @param bool $can_use_format
+   *   Whether the logged in user is allowed to use the text format.
+   *
+   * @dataProvider editorOpenerAccessProvider
+   */
+  public function testEditorOpenerAccess($media_embed_enabled, $can_use_format) {
+    $format = $this->container
+      ->get('entity_type.manager')
+      ->getStorage('filter_format')->create([
+        'format' => $this->randomMachineName(),
+        'name' => $this->randomString(),
+        'filters' => [
+          'media_embed' => ['status' => $media_embed_enabled],
+        ],
+      ]);
+    $format->save();
+
+    $permissions = [
+      'access media overview',
+      'view media',
+    ];
+    if ($can_use_format) {
+      $permissions[] = $format->getPermissionName();
+    }
+
+    $state = MediaLibraryState::create(
+      'media_library.opener.editor',
+      ['image'],
+      'image',
+      1,
+      ['filter_format_id' => $format->id()]
+    );
+
+    $access_result = $this->container
+      ->get('media_library.ui_builder')
+      ->checkAccess($this->createUser($permissions), $state);
+
+    if ($media_embed_enabled && $can_use_format) {
+      $this->assertAccess($access_result, TRUE, NULL, Views::getView('media_library')->storage->getCacheTags(), ['user.permissions']);
+    }
+    else {
+      $this->assertAccess($access_result, FALSE, NULL, [], ['user.permissions']);
+    }
+  }
+
+  /**
+   * Data provider for ::testEditorOpenerAccess.
+   */
+  public function editorOpenerAccessProvider() {
+    return [
+      'media_embed filter enabled' => [
+        TRUE,
+        TRUE,
+      ],
+      'media_embed filter disabled' => [
+        FALSE,
+        TRUE,
+      ],
+      'media_embed filter enabled, user not allowed to use text format' => [
+        TRUE,
+        FALSE,
+      ],
+    ];
   }
 
   /**

@@ -1,0 +1,51 @@
+/**
+ * @file
+ * Drupal Media Library plugin.
+ */
+
+(function(Drupal, CKEDITOR) {
+  CKEDITOR.plugins.add('drupalmedialibrary', {
+    requires: 'drupalmedia',
+    icons: 'drupalmedialibrary',
+    hidpi: true,
+    beforeInit(editor) {
+      editor.addCommand('drupalmedialibrary', {
+        allowedContent:
+          'drupal-media[!data-entity-type,!data-entity-uuid,data-align,data-caption,alt,title]',
+        requiredContent: 'drupal-media[data-entity-type,data-entity-uuid]',
+        modes: { wysiwyg: 1 },
+        // There is an edge case related to the undo functionality that will
+        // be resolved in https://www.drupal.org/project/drupal/issues/3073294.
+        canUndo: true,
+        exec(editor) {
+          const saveCallback = function(values) {
+            editor.fire('saveSnapshot');
+            const mediaElement = editor.document.createElement('drupal-media');
+            const attributes = values.attributes;
+            Object.keys(attributes).forEach(key => {
+              mediaElement.setAttribute(key, attributes[key]);
+            });
+            editor.insertHtml(mediaElement.getOuterHtml());
+            editor.fire('saveSnapshot');
+          };
+
+          // @see \Drupal\media_library\MediaLibraryUiBuilder::dialogOptions()
+          Drupal.ckeditor.openDialog(
+            editor,
+            editor.config.DrupalMediaLibrary_url,
+            {},
+            saveCallback,
+            editor.config.DrupalMediaLibrary_dialogOptions,
+          );
+        },
+      });
+
+      if (editor.ui.addButton) {
+        editor.ui.addButton('DrupalMediaLibrary', {
+          label: Drupal.t('Insert from Media Library'),
+          command: 'drupalmedialibrary',
+        });
+      }
+    },
+  });
+})(Drupal, CKEDITOR);

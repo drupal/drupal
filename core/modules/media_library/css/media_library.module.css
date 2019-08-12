@@ -2,6 +2,14 @@
 * @file media_library.module.css
 */
 
+/**
+ * By default, the dialog is too narrow to be usable.
+ * @see Drupal.ckeditor.openDialog()
+ */
+.ui-dialog--narrow.media-library-widget-modal {
+  max-width: 75%;
+}
+
 .media-library-wrapper {
   display: flex;
 }
