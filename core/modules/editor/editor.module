@@ -7,6 +7,7 @@
 
 use Drupal\Core\Url;
 use Drupal\Component\Utility\Html;
+use Drupal\Core\Form\SubformState;
 use Drupal\editor\Entity\Editor;
 use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
@@ -171,11 +172,11 @@ function editor_form_filter_format_form_alter(&$form, FormStateInterface $form_s
   if ($editor) {
     /** @var $plugin \Drupal\editor\Plugin\EditorPluginInterface */
     $plugin = $manager->createInstance($editor->getEditor());
-    $settings_form = [];
-    $settings_form['#element_validate'][] = [$plugin, 'validateConfigurationForm'];
-    $form['editor']['settings']['subform'] = $plugin->buildConfigurationForm($settings_form, $form_state);
+    $form_state->set('editor_plugin', $plugin);
+    $form['editor']['settings']['subform'] = [];
+    $subform_state = SubformState::createForSubform($form['editor']['settings']['subform'], $form, $form_state);
+    $form['editor']['settings']['subform'] = $plugin->buildConfigurationForm($form['editor']['settings']['subform'], $subform_state);
     $form['editor']['settings']['subform']['#parents'] = ['editor', 'settings'];
-    $form['actions']['submit']['#submit'][] = [$plugin, 'submitConfigurationForm'];
   }
 
   $form['#validate'][] = 'editor_form_filter_admin_format_validate';
@@ -215,6 +216,11 @@ function editor_form_filter_admin_form_ajax($form, FormStateInterface $form_stat
  * Additional validate handler for filter_format_form().
  */
 function editor_form_filter_admin_format_validate($form, FormStateInterface $form_state) {
+  if ($editor_plugin = $form_state->get('editor_plugin')) {
+    $subform_state = SubformState::createForSubform($form['editor']['settings']['subform'], $form, $form_state);
+    $editor_plugin->validateConfigurationForm($form['editor']['settings']['subform'], $subform_state);
+  }
+
   // This validate handler is not applicable when using the 'Configure' button.
   if ($form_state->getTriggeringElement()['#name'] === 'editor_configure') {
     return;
@@ -239,6 +245,11 @@ function editor_form_filter_admin_format_submit($form, FormStateInterface $form_
   $original_editor = editor_load($format_id);
   if ($original_editor && $original_editor->getEditor() != $form_state->getValue(['editor', 'editor'])) {
     $original_editor->delete();
+  }
+
+  if ($editor_plugin = $form_state->get('editor_plugin')) {
+    $subform_state = SubformState::createForSubform($form['editor']['settings']['subform'], $form, $form_state);
+    $editor_plugin->submitConfigurationForm($form['editor']['settings']['subform'], $subform_state);
   }
 
   // Create a new editor or update the existing editor.

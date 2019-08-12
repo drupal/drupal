@@ -242,19 +242,14 @@ class CKEditor extends EditorBase implements ContainerFactoryPluginInterface {
    * {@inheritdoc}
    */
   public function submitConfigurationForm(array &$form, FormStateInterface $form_state) {
-    // Modify the toolbar settings by reference. The values in
-    // $form_state->getValue(array('editor', 'settings')) will be saved directly
-    // by editor_form_filter_admin_format_submit().
-    $toolbar_settings = &$form_state->getValue(['editor', 'settings', 'toolbar']);
-
     // The rows key is not built into the form structure, so decode the button
     // groups data into this new key and remove the button_groups key.
-    $toolbar_settings['rows'] = json_decode($toolbar_settings['button_groups'], TRUE);
-    unset($toolbar_settings['button_groups']);
+    $form_state->setValue(['toolbar', 'rows'], json_decode($form_state->getValue(['toolbar', 'button_groups']), TRUE));
+    $form_state->unsetValue(['toolbar', 'button_groups']);
 
     // Remove the plugin settings' vertical tabs state; no need to save that.
-    if ($form_state->hasValue(['editor', 'settings', 'plugins'])) {
-      $form_state->unsetValue(['editor', 'settings', 'plugin_settings']);
+    if ($form_state->hasValue('plugins')) {
+      $form_state->unsetValue('plugin_settings');
     }
   }
 
