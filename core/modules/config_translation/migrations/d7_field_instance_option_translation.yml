@@ -1,0 +1,57 @@
+id: d7_field_instance_option_translation
+label: Field instance option configuration translation
+migration_tags:
+  - Drupal 7
+  - Configuration
+  - Multilingual
+source:
+  plugin: d7_field_option_translation
+  constants:
+    status: true
+process:
+  langcode:
+    plugin: skip_on_empty
+    source: language
+    method: row
+  type:
+    plugin: process_field
+    source: type
+    method: getFieldType
+  entity_type: entity_type
+  field_name: field_name
+#  # The bundle needs to be statically mapped in order to support comment types
+#  # that might already exist before this migration is run. See
+#  # d7_comment_type.yml for more information.
+  bundle:
+    plugin: static_map
+    source: bundle
+    bypass: true
+    map:
+      comment_node_forum: comment_forum
+  results:
+    plugin: d7_field_instance_option_translation
+    source:
+      - '@type'
+      - data
+  translation:
+    -
+      plugin: extract
+      source: '@results'
+      index: [1]
+    -
+      plugin: skip_on_empty
+      method: row
+  property:
+    -
+      plugin: extract
+      source: '@results'
+      index: [0]
+    -
+      plugin: skip_on_empty
+      method: row
+destination:
+  plugin: entity:field_config
+  translations: true
+migration_dependencies:
+  required:
+    - d7_field_instance
