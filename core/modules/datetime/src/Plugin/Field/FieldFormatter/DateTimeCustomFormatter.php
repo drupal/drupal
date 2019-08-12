@@ -55,7 +55,7 @@ class DateTimeCustomFormatter extends DateTimeFormatterBase {
    */
   protected function formatDate($date) {
     $format = $this->getSetting('date_format');
-    $timezone = $this->getSetting('timezone_override');
+    $timezone = $this->getSetting('timezone_override') ?: $date->getTimezone()->getName();
     return $this->dateFormatter->format($date->getTimestamp(), 'custom', $format, $timezone != '' ? $timezone : NULL);
   }
 

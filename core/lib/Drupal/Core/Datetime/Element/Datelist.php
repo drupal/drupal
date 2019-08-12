@@ -33,7 +33,7 @@ class Datelist extends DateElementBase {
       '#date_year_range' => '1900:2050',
       '#date_increment' => 1,
       '#date_date_callbacks' => [],
-      '#date_timezone' => drupal_get_user_timezone(),
+      '#date_timezone' => date_default_timezone_get(),
     ];
   }
 
@@ -149,7 +149,7 @@ class Datelist extends DateElementBase {
    *     minute.
    *   - #date_timezone: The Time Zone Identifier (TZID) to use when displaying
    *     or interpreting dates, i.e: 'Asia/Kolkata'. Defaults to the value
-   *     returned by drupal_get_user_timezone().
+   *     returned by date_default_timezone_get().
    *
    * Example usage:
    * @code

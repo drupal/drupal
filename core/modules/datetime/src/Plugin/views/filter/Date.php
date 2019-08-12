@@ -151,7 +151,7 @@ class Date extends NumericDate implements ContainerFactoryPluginInterface {
   protected function getTimezone() {
     return $this->dateFormat === DateTimeItemInterface::DATE_STORAGE_FORMAT
       ? DateTimeItemInterface::STORAGE_TIMEZONE
-      : drupal_get_user_timezone();
+      : date_default_timezone_get();
   }
 
   /**
@@ -173,7 +173,7 @@ class Date extends NumericDate implements ContainerFactoryPluginInterface {
     // the user's offset from UTC for use in the query.
     $origin_offset = 0;
     if ($this->dateFormat === DateTimeItemInterface::DATE_STORAGE_FORMAT && $this->value['type'] === 'offset') {
-      $origin_offset = $origin_offset + timezone_offset_get(new \DateTimeZone(drupal_get_user_timezone()), new \DateTime($time, new \DateTimeZone($timezone)));
+      $origin_offset = $origin_offset + timezone_offset_get(new \DateTimeZone(date_default_timezone_get()), new \DateTime($time, new \DateTimeZone($timezone)));
     }
 
     return $origin_offset;

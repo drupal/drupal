@@ -2,6 +2,9 @@
 
 namespace Drupal\Core\Session;
 
+use Drupal\Core\DependencyInjection\DependencySerializationTrait;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+
 /**
  * A proxied implementation of AccountInterface.
  *
@@ -14,6 +17,8 @@ namespace Drupal\Core\Session;
  * directly injected into dependent code.
  */
 class AccountProxy implements AccountProxyInterface {
+
+  use DependencySerializationTrait;
 
   /**
    * The instantiated account.
@@ -40,6 +45,27 @@ class AccountProxy implements AccountProxyInterface {
   protected $initialAccountId;
 
   /**
+   * Event dispatcher.
+   *
+   * @var \Symfony\Component\EventDispatcher\EventDispatcherInterface
+   */
+  protected $eventDispatcher;
+
+  /**
+   * AccountProxy constructor.
+   *
+   * @param \Symfony\Component\EventDispatcher\EventDispatcherInterface $eventDispatcher
+   *   Event dispatcher.
+   */
+  public function __construct(EventDispatcherInterface $eventDispatcher = NULL) {
+    if (!$eventDispatcher) {
+      @trigger_error('Calling AccountProxy::__construct() without the $eventDispatcher argument is deprecated in drupal:8.8.0. The $eventDispatcher argument will be required in drupal:9.0.0. See https://www.drupal.org/node/3009387', E_USER_DEPRECATED);
+      $eventDispatcher = \Drupal::service('event_dispatcher');
+    }
+    $this->eventDispatcher = $eventDispatcher;
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function setAccount(AccountInterface $account) {
@@ -50,7 +76,7 @@ class AccountProxy implements AccountProxyInterface {
     }
     $this->account = $account;
     $this->id = $account->id();
-    date_default_timezone_set(drupal_get_user_timezone());
+    $this->eventDispatcher->dispatch(AccountEvents::SET_USER, new AccountSetEvent($account));
   }
 
   /**

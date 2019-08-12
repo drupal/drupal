@@ -43,3 +43,8 @@ services:
     arguments: ['@theme_handler', '@cache_tags.invalidator']
     tags:
       - { name: event_subscriber }
+  system.timezone_resolver:
+    class: Drupal\system\TimeZoneResolver
+    arguments: ['@current_user', '@config.factory']
+    tags:
+      - { name: event_subscriber }

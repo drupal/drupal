@@ -564,20 +564,15 @@ function drupal_get_messages($type = NULL, $clear_queue = TRUE) {
  *
  * @return string
  *   The name of the current user's timezone or the name of the default timezone.
+ *
+ * @deprecated in drupal:8.8.0 and will be removed from drupal:9.0.0. Use
+ *   date_default_timezone_get() instead.
+ *
+ * @see https://www.drupal.org/node/3009387
  */
 function drupal_get_user_timezone() {
-  $user = \Drupal::currentUser();
-  $config = \Drupal::config('system.date');
-
-  if ($user && $config->get('timezone.user.configurable') && $user->isAuthenticated() && $user->getTimezone()) {
-    return $user->getTimezone();
-  }
-  else {
-    // Ignore PHP strict notice if time zone has not yet been set in the php.ini
-    // configuration.
-    $config_data_default_timezone = $config->get('timezone.default');
-    return !empty($config_data_default_timezone) ? $config_data_default_timezone : @date_default_timezone_get();
-  }
+  @trigger_error('drupal_get_user_timezone() is deprecated in drupal:8.8.0. It will be removed from drupal:9.0.0. Use date_default_timezone_get() instead. See https://www.drupal.org/node/3009387', E_USER_DEPRECATED);
+  return date_default_timezone_get();
 }
 
 /**

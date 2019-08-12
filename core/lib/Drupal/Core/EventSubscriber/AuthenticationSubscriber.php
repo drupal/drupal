@@ -2,8 +2,8 @@
 
 namespace Drupal\Core\EventSubscriber;
 
-use Drupal\Core\Authentication\AuthenticationProviderFilterInterface;
 use Drupal\Core\Authentication\AuthenticationProviderChallengeInterface;
+use Drupal\Core\Authentication\AuthenticationProviderFilterInterface;
 use Drupal\Core\Authentication\AuthenticationProviderInterface;
 use Drupal\Core\Session\AccountProxyInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -80,8 +80,6 @@ class AuthenticationSubscriber implements EventSubscriberInterface {
           return;
         }
       }
-      // No account has been set explicitly, initialize the timezone here.
-      date_default_timezone_set(drupal_get_user_timezone());
     }
   }
 

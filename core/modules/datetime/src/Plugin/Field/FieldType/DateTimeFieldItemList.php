@@ -95,7 +95,7 @@ class DateTimeFieldItemList extends FieldItemList {
       if ($definition->getSetting('datetime_type') === DateTimeItem::DATETIME_TYPE_DATE) {
         // A default date only value should be in the format used for date
         // storage but in the user's local timezone.
-        $date = new DrupalDateTime($default_value[0]['default_date'], drupal_get_user_timezone());
+        $date = new DrupalDateTime($default_value[0]['default_date'], date_default_timezone_get());
         $format = DateTimeItemInterface::DATE_STORAGE_FORMAT;
       }
       else {

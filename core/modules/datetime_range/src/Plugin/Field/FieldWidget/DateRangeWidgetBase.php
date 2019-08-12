@@ -62,7 +62,7 @@ class DateRangeWidgetBase extends DateTimeWidgetBase {
     }
 
     $storage_timezone = new \DateTimeZone(DateTimeItemInterface::STORAGE_TIMEZONE);
-    $user_timezone = new \DateTimeZone(drupal_get_user_timezone());
+    $user_timezone = new \DateTimeZone(date_default_timezone_get());
 
     foreach ($values as &$item) {
       if (!empty($item['value']) && $item['value'] instanceof DrupalDateTime) {

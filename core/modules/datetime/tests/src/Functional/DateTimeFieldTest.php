@@ -253,7 +253,7 @@ class DateTimeFieldTest extends DateTestBase {
     $date = new DrupalDateTime($value, 'UTC');
 
     // Update the timezone to the system default.
-    $date->setTimezone(timezone_open(drupal_get_user_timezone()));
+    $date->setTimezone(timezone_open(date_default_timezone_get()));
 
     // Submit a valid date and ensure it is accepted.
     $date_format = DateFormat::load('html_date')->getPattern();
@@ -708,7 +708,7 @@ class DateTimeFieldTest extends DateTestBase {
 
       // Create a new node to check that datetime field default value is today.
       $new_node = Node::create(['type' => 'date_content']);
-      $expected_date = new DrupalDateTime('now', drupal_get_user_timezone());
+      $expected_date = new DrupalDateTime('now', date_default_timezone_get());
       $this->assertEqual($new_node->get($field_name)
         ->offsetGet(0)->value, $expected_date->format(DateTimeItemInterface::DATE_STORAGE_FORMAT));
 
@@ -747,7 +747,7 @@ class DateTimeFieldTest extends DateTestBase {
       // Create a new node to check that datetime field default value is +90
       // days.
       $new_node = Node::create(['type' => 'date_content']);
-      $expected_date = new DrupalDateTime('+90 days', drupal_get_user_timezone());
+      $expected_date = new DrupalDateTime('+90 days', date_default_timezone_get());
       $this->assertEqual($new_node->get($field_name)
         ->offsetGet(0)->value, $expected_date->format(DateTimeItemInterface::DATE_STORAGE_FORMAT));
 

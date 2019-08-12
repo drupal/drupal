@@ -104,7 +104,7 @@ class TimestampTest extends BrowserTestBase {
     $date = new DrupalDateTime($value, 'UTC');
 
     // Update the timezone to the system default.
-    $date->setTimezone(timezone_open(drupal_get_user_timezone()));
+    $date->setTimezone(timezone_open(date_default_timezone_get()));
 
     // Display creation form.
     $this->drupalGet('entity_test/add');

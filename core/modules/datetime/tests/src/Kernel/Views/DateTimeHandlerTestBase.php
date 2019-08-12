@@ -111,7 +111,7 @@ abstract class DateTimeHandlerTestBase extends ViewsKernelTestBase {
    *   Unix timestamp.
    */
   protected function getUTCEquivalentOfUserNowAsTimestamp() {
-    $user_now = new DateTimePlus('now', new \DateTimeZone(drupal_get_user_timezone()));
+    $user_now = new DateTimePlus('now', new \DateTimeZone(date_default_timezone_get()));
     $utc_equivalent = new DateTimePlus($user_now->format('Y-m-d H:i:s'), new \DateTimeZone(DateTimeItemInterface::STORAGE_TIMEZONE));
 
     return $utc_equivalent->getTimestamp();

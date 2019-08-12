@@ -3,8 +3,9 @@
 namespace Drupal\Tests\Core\Session;
 
 use Drupal\Core\Session\AccountInterface;
-use Drupal\Tests\UnitTestCase;
 use Drupal\Core\Session\AccountProxy;
+use Drupal\Tests\UnitTestCase;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
  * @coversDefaultClass \Drupal\Core\Session\AccountProxy
@@ -17,7 +18,8 @@ class AccountProxyTest extends UnitTestCase {
    * @covers ::setInitialAccountId
    */
   public function testId() {
-    $account_proxy = new AccountProxy();
+    $dispatcher = $this->prophesize(EventDispatcherInterface::class);
+    $account_proxy = new AccountProxy($dispatcher->reveal());
     $this->assertSame(0, $account_proxy->id());
     $account_proxy->setInitialAccountId(1);
     $this->assertFalse(\Drupal::hasContainer());
@@ -36,20 +38,11 @@ class AccountProxyTest extends UnitTestCase {
    */
   public function testSetInitialAccountIdException() {
     $this->expectException(\LogicException::class);
-    $account_proxy = new AccountProxy();
+    $dispatcher = $this->prophesize(EventDispatcherInterface::class);
+    $account_proxy = new AccountProxy($dispatcher->reveal());
     $current_user = $this->prophesize(AccountInterface::class);
     $account_proxy->setAccount($current_user->reveal());
     $account_proxy->setInitialAccountId(1);
-  }
-
-}
-
-namespace Drupal\Core\Session;
-
-if (!function_exists('drupal_get_user_timezone')) {
-
-  function drupal_get_user_timezone() {
-    return date_default_timezone_get();
   }
 
 }

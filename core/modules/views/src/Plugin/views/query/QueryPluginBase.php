@@ -221,13 +221,13 @@ abstract class QueryPluginBase extends PluginBase implements CacheableDependency
   }
 
   /**
-   * Set the database to the current user timezone,
+   * Set the database to the current user timezone.
    *
    * @return string
-   *   The current timezone as returned by drupal_get_user_timezone().
+   *   The current timezone as returned by date_default_timezone_get().
    */
   public function setupTimezone() {
-    return drupal_get_user_timezone();
+    return date_default_timezone_get();
   }
 
   /**
