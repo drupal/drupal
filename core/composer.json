@@ -50,7 +50,8 @@
         "pear/archive_tar": "^1.4"
     },
     "conflict": {
-        "drush/drush": "<8.1.10"
+        "drush/drush": "<8.1.10",
+        "symfony/dom-crawler": ">=4"
     },
     "require-dev": {
         "behat/mink": "1.7.x-dev",
