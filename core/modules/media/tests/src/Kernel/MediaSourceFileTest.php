@@ -27,4 +27,21 @@ class MediaSourceFileTest extends MediaKernelTestBase {
     $this->assertCount(0, $result);
   }
 
+  /**
+   * Tests a media file can be deleted.
+   */
+  public function testFileDeletion() {
+    $mediaType = $this->createMediaType('file');
+    $media = $this->generateMedia('test.txt', $mediaType);
+    $media->save();
+
+    $source_field_name = $mediaType->getSource()
+      ->getSourceFieldDefinition($mediaType)
+      ->getName();
+    /** @var \Drupal\file\FileInterface $file */
+    $file = $media->get($source_field_name)->entity;
+    $file->delete();
+    $this->assertEmpty($this->container->get('entity_type.manager')->getStorage('file')->loadByProperties(['filename' => 'test.txt']));
+  }
+
 }
