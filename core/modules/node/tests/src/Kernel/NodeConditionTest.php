@@ -31,7 +31,7 @@ class NodeConditionTest extends EntityKernelTestBase {
    * Tests conditions.
    */
   public function testConditions() {
-    $manager = $this->container->get('plugin.manager.condition', $this->container->get('container.namespaces'));
+    $manager = $this->container->get('plugin.manager.condition');
     $this->createUser();
 
     // Get some nodes of various types to check against.
