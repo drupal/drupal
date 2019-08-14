@@ -350,8 +350,6 @@ class MediaTest extends ResourceTestBase {
 
   /**
    * {@inheritdoc}
-   *
-   * @todo Determine if this override should be removed in https://www.drupal.org/project/jsonapi/issues/2952522
    */
   protected function getExpectedGetRelationshipDocumentData($relationship_field_name, EntityInterface $entity = NULL) {
     $data = parent::getExpectedGetRelationshipDocumentData($relationship_field_name, $entity);
