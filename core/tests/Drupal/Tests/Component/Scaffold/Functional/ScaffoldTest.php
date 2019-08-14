@@ -56,6 +56,7 @@ class ScaffoldTest extends TestCase {
   protected function setUp() {
     $this->fileSystem = new Filesystem();
     $this->fixtures = new Fixtures();
+    $this->fixtures->createIsolatedComposerCacheDir();
     $this->projectRoot = $this->fixtures->projectRoot();
     // The directory used for creating composer projects to test can be
     // configured using the SCAFFOLD_FIXTURE_DIR environment variable. Otherwise

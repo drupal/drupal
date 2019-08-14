@@ -63,6 +63,7 @@ class ComposerHookTest extends TestCase {
   protected function setUp() {
     $this->fileSystem = new Filesystem();
     $this->fixtures = new Fixtures();
+    $this->fixtures->createIsolatedComposerCacheDir();
     $this->projectRoot = $this->fixtures->projectRoot();
   }
 

@@ -291,6 +291,14 @@ class Fixtures {
   }
 
   /**
+   * Create an isolated cache directory for Composer
+   */
+  public function createIsolatedComposerCacheDir() {
+    $cacheDir = $this->mkTmpDir('composer-cache');
+    putenv("COMPOSER_CACHE_DIR=$cacheDir");
+  }
+
+  /**
    * Calls 'tearDown' in any test that copies fixtures to transient locations.
    */
   public function tearDown() {
@@ -302,6 +310,8 @@ class Fixtures {
     // Clear out variables from the previous pass.
     $this->tmpDirs = [];
     $this->io = NULL;
+    // Clear the composer cache dir, if it was set
+    putenv('COMPOSER_CACHE_DIR=');
   }
 
   /**
