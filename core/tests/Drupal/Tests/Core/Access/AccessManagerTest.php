@@ -303,8 +303,7 @@ class AccessManagerTest extends UnitTestCase {
    */
   public function testCheckConjunctions($name, $condition_one, $condition_two, $expected_access) {
     $this->setupAccessChecker();
-    $access_check = new DefinedTestAccessCheck();
-    $this->container->register('test_access_defined', $access_check);
+    $this->container->register('test_access_defined', DefinedTestAccessCheck::class);
     $this->checkProvider->addCheckService('test_access_defined', 'access', ['_test_access']);
 
     $route_collection = new RouteCollection();
@@ -536,8 +535,7 @@ class AccessManagerTest extends UnitTestCase {
    * Adds a default access check service to the container and the access manager.
    */
   protected function setupAccessChecker() {
-    $access_check = new DefaultAccessCheck();
-    $this->container->register('test_access_default', $access_check);
+    $this->container->register('test_access_default', DefaultAccessCheck::class);
     $this->checkProvider->addCheckService('test_access_default', 'access', ['_access']);
   }
 
