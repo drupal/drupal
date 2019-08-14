@@ -25,7 +25,7 @@ use Symfony\Component\HttpFoundation\File\MimeType\MimeTypeGuesserInterface;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\HttpException;
-use Drupal\Core\Validation\ConstraintViolation;
+use Symfony\Component\Validator\ConstraintViolation;
 
 /**
  * Reads data from an upload stream and creates a corresponding file entity.
