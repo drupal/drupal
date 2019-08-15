@@ -85,9 +85,9 @@ class FieldStorageDefinitionListener implements FieldStorageDefinitionListenerIn
       $storage->onFieldStorageDefinitionCreate($storage_definition);
     }
 
-    $this->eventDispatcher->dispatch(FieldStorageDefinitionEvents::CREATE, new FieldStorageDefinitionEvent($storage_definition));
-
     $this->entityLastInstalledSchemaRepository->setLastInstalledFieldStorageDefinition($storage_definition);
+
+    $this->eventDispatcher->dispatch(FieldStorageDefinitionEvents::CREATE, new FieldStorageDefinitionEvent($storage_definition));
     $this->entityFieldManager->clearCachedFieldDefinitions();
   }
 
@@ -104,9 +104,9 @@ class FieldStorageDefinitionListener implements FieldStorageDefinitionListenerIn
       $storage->onFieldStorageDefinitionUpdate($storage_definition, $original);
     }
 
-    $this->eventDispatcher->dispatch(FieldStorageDefinitionEvents::UPDATE, new FieldStorageDefinitionEvent($storage_definition, $original));
-
     $this->entityLastInstalledSchemaRepository->setLastInstalledFieldStorageDefinition($storage_definition);
+
+    $this->eventDispatcher->dispatch(FieldStorageDefinitionEvents::UPDATE, new FieldStorageDefinitionEvent($storage_definition, $original));
     $this->entityFieldManager->clearCachedFieldDefinitions();
   }
 
@@ -133,9 +133,9 @@ class FieldStorageDefinitionListener implements FieldStorageDefinitionListenerIn
       $storage->onFieldStorageDefinitionDelete($storage_definition);
     }
 
-    $this->eventDispatcher->dispatch(FieldStorageDefinitionEvents::DELETE, new FieldStorageDefinitionEvent($storage_definition));
-
     $this->entityLastInstalledSchemaRepository->deleteLastInstalledFieldStorageDefinition($storage_definition);
+
+    $this->eventDispatcher->dispatch(FieldStorageDefinitionEvents::DELETE, new FieldStorageDefinitionEvent($storage_definition));
     $this->entityFieldManager->clearCachedFieldDefinitions();
   }
 
