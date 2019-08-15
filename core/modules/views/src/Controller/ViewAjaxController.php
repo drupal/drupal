@@ -160,7 +160,7 @@ class ViewAjaxController implements ContainerInjectionInterface {
         $response->setView($view);
         // Fix the current path for paging.
         if (!empty($path)) {
-          $this->currentPath->setPath('/' . $path, $request);
+          $this->currentPath->setPath('/' . ltrim($path, '/'), $request);
         }
 
         // Add all POST data, because AJAX is always a post and many things,

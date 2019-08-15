@@ -5,6 +5,7 @@ namespace Drupal\views\Form;
 use Drupal\Component\Utility\Html;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Path\CurrentPathStack;
 use Drupal\Core\Render\Element\Checkboxes;
 use Drupal\Core\Url;
 use Drupal\views\ExposedFormCache;
@@ -24,21 +25,39 @@ class ViewsExposedForm extends FormBase {
    */
   protected $exposedFormCache;
 
+
+  /**
+   * The current path stack.
+   *
+   * @var \Drupal\Core\Path\CurrentPathStack
+   */
+  protected $currentPathStack;
+
   /**
    * Constructs a new ViewsExposedForm
    *
    * @param \Drupal\views\ExposedFormCache $exposed_form_cache
    *   The exposed form cache.
+   * @param \Drupal\Core\Path\CurrentPathStack $current_path_stack
+   *   The current path stack.
    */
-  public function __construct(ExposedFormCache $exposed_form_cache) {
+  public function __construct(ExposedFormCache $exposed_form_cache, CurrentPathStack $current_path_stack = NULL) {
     $this->exposedFormCache = $exposed_form_cache;
+    if ($current_path_stack === NULL) {
+      @trigger_error('The path.current service must be passed to ViewsExposedForm::__construct(), it is required before Drupal 9.0.0. See https://www.drupal.org/node/3066604', E_USER_DEPRECATED);
+      $current_path_stack = \Drupal::service('path.current');
+    }
+    $this->currentPathStack = $current_path_stack;
   }
 
   /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container) {
-    return new static($container->get('views.exposed_form_cache'));
+    return new static(
+      $container->get('views.exposed_form_cache'),
+      $container->get('path.current')
+    );
   }
 
   /**
@@ -113,7 +132,21 @@ class ViewsExposedForm extends FormBase {
       '#id' => Html::getUniqueId('edit-submit-' . $view->storage->id()),
     ];
 
-    $form['#action'] = $view->hasUrl() ? $view->getUrl()->toString() : Url::fromRoute('<current>')->toString();
+    if (!$view->hasUrl()) {
+      // On any non views.ajax route, use the current route for the form action.
+      if ($this->getRouteMatch()->getRouteName() !== 'views.ajax') {
+        $form_action = Url::fromRoute('<current>')->toString();
+      }
+      else {
+        // On the views.ajax route, set the action to the page we were on.
+        $form_action = Url::fromUserInput($this->currentPathStack->getPath())->toString();
+      }
+    }
+    else {
+      $form_action = $view->getUrl()->toString();
+    }
+
+    $form['#action'] = $form_action;
     $form['#theme'] = $view->buildThemeFunctions('views_exposed_form');
     $form['#id'] = Html::cleanCssIdentifier('views_exposed_form-' . $view->storage->id() . '-' . $display['id']);
 

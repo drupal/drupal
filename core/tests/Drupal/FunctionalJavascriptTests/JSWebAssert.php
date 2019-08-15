@@ -72,6 +72,32 @@ JS;
   }
 
   /**
+   * Looks for the specified selector and returns TRUE when it is unavailable.
+   *
+   * @param string $selector
+   *   The selector engine name. See ElementInterface::findAll() for the
+   *   supported selectors.
+   * @param string|array $locator
+   *   The selector locator.
+   * @param int $timeout
+   *   (Optional) Timeout in milliseconds, defaults to 10000.
+   *
+   * @return bool
+   *   TRUE if not found, FALSE if found.
+   *
+   * @see \Behat\Mink\Element\ElementInterface::findAll()
+   */
+  public function waitForElementRemoved($selector, $locator, $timeout = 10000) {
+    $page = $this->session->getPage();
+
+    $result = $page->waitFor($timeout / 1000, function () use ($page, $selector, $locator) {
+      return !$page->find($selector, $locator);
+    });
+
+    return $result;
+  }
+
+  /**
    * Waits for the specified selector and returns it when available and visible.
    *
    * @param string $selector
