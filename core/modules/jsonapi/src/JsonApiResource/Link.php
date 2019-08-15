@@ -76,9 +76,7 @@ final class Link implements CacheableDependencyInterface {
     assert(/* !empty($link_relation_types) && */Inspector::assertAllStrings($link_relation_types));
     assert(Inspector::assertAllStrings(array_keys($target_attributes)));
     assert(Inspector::assertAll(function ($target_attribute_value) {
-      return is_string($target_attribute_value)
-        || is_array($target_attribute_value)
-        && Inspector::assertAllStrings($target_attribute_value);
+      return is_string($target_attribute_value) || is_array($target_attribute_value);
     }, array_values($target_attributes)));
     $generated_url = $url->setAbsolute()->toString(TRUE);
     $this->href = $generated_url->getGeneratedUrl();
@@ -160,17 +158,7 @@ final class Link implements CacheableDependencyInterface {
   public static function merge(Link $a, Link $b) {
     assert(static::compare($a, $b) === 0);
     $merged_rels = array_unique(array_merge($a->getLinkRelationTypes(), $b->getLinkRelationTypes()));
-    $merged_attributes = $a->getTargetAttributes();
-    foreach ($b->getTargetAttributes() as $key => $value) {
-      if (isset($merged_attributes[$key])) {
-        // The attribute values can be either a string or an array of strings.
-        $value = array_unique(array_merge(
-          is_string($merged_attributes[$key]) ? [$merged_attributes[$key]] : $merged_attributes[$key],
-          is_string($value) ? [$value] : $value
-        ));
-      }
-      $merged_attributes[$key] = count($value) === 1 ? reset($value) : $value;
-    }
+    $merged_attributes = array_merge_recursive($a->getTargetAttributes(), $b->getTargetAttributes());
     $merged_cacheability = (new CacheableMetadata())->addCacheableDependency($a)->addCacheableDependency($b);
     return new static($merged_cacheability, $a->getUri(), $merged_rels, $merged_attributes);
   }
