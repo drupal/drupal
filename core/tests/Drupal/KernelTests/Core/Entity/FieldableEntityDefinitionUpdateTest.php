@@ -150,13 +150,17 @@ class FieldableEntityDefinitionUpdateTest extends EntityKernelTestBase {
       $this->assertEntityData($initial_rev, $initial_mul);
     }
 
+    // Enable the creation of a new base field during a fieldable entity type
+    // update.
+    $this->state->set('entity_test_update.install_new_base_field_during_update', TRUE);
+
     // Simulate a batch run since we are converting the entities one by one.
     $sandbox = [];
     do {
       $this->entityDefinitionUpdateManager->updateFieldableEntityType($updated_entity_type, $updated_field_storage_definitions, $sandbox);
     } while ($sandbox['#finished'] != 1);
 
-    $this->assertEntityTypeSchema($new_rev, $new_mul);
+    $this->assertEntityTypeSchema($new_rev, $new_mul, TRUE);
     $this->assertEntityData($initial_rev, $initial_mul);
 
     $change_list = $this->entityDefinitionUpdateManager->getChangeList();
@@ -426,8 +430,20 @@ class FieldableEntityDefinitionUpdateTest extends EntityKernelTestBase {
    *   Whether the entity type is revisionable or not.
    * @param bool $translatable
    *   Whether the entity type is translatable or not.
+   * @param bool $new_base_field
+   *   (optional) Whether a new base field was added as part of the update.
+   *   Defaults to FALSE.
    */
-  protected function assertEntityTypeSchema($revisionable, $translatable) {
+  protected function assertEntityTypeSchema($revisionable, $translatable, $new_base_field = FALSE) {
+    // Check whether the 'new_base_field' field has been installed correctly.
+    $field_storage_definition = $this->entityDefinitionUpdateManager->getFieldStorageDefinition('new_base_field', $this->entityTypeId);
+    if ($new_base_field) {
+      $this->assertNotNull($field_storage_definition);
+    }
+    else {
+      $this->assertNull($field_storage_definition);
+    }
+
     if ($revisionable && $translatable) {
       $this->assertRevisionableAndTranslatable();
     }
