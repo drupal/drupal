@@ -173,10 +173,9 @@ class MigrateFieldTest extends MigrateDrupal7TestBase {
     // For each text field bases that were skipped, there should be a log
     // message with the required steps to fix this.
     $migration = $this->getMigration('d7_field');
-    $messages = $migration->getIdMap()->getMessageIterator()->fetchAll();
     $errors = array_map(function ($message) {
       return $message->message;
-    }, $messages);
+    }, iterator_to_array($migration->getIdMap()->getMessages()));
     sort($errors);
     $this->assertCount(4, $errors);
     $this->assertEquals($errors[0], 'Can\'t migrate source field field_text_long_plain_filtered configured with both plain text and filtered text processing. See https://www.drupal.org/docs/8/upgrade/known-issues-when-upgrading-from-drupal-6-or-7-to-drupal-8#plain-text');

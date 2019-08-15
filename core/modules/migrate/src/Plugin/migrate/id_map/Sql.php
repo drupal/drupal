@@ -676,7 +676,7 @@ class Sql extends PluginBase implements MigrateIdMapInterface, ContainerFactoryP
   /**
    * {@inheritdoc}
    */
-  public function getMessageIterator(array $source_id_values = [], $level = NULL) {
+  public function getMessages(array $source_id_values = [], $level = NULL) {
     $query = $this->getDatabase()->select($this->messageTableName(), 'msg');
     $condition = sprintf('msg.%s = map.%s', $this::SOURCE_IDS_HASH, $this::SOURCE_IDS_HASH);
     $query->addJoin('LEFT', $this->mapTableName(), 'map', $condition);
@@ -696,6 +696,14 @@ class Sql extends PluginBase implements MigrateIdMapInterface, ContainerFactoryP
       $query->condition('msg.level', $level);
     }
     return $query->execute();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getMessageIterator(array $source_id_values = [], $level = NULL) {
+    @trigger_error('getMessageIterator() is deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. Use getMessages() instead. See https://www.drupal.org/node/3060969', E_USER_DEPRECATED);
+    return $this->getMessages($source_id_values, $level);
   }
 
   /**

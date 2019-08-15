@@ -53,7 +53,7 @@ class MigrateLanguageContentSettingsTest extends MigrateDrupal7TestBase {
     $this->assertSame($config->getDefaultLangcode(), 'site_default');
 
     // Make sure there's no migration exceptions.
-    $messages = $this->migration->getIdMap()->getMessageIterator()->fetchAll();
+    $messages = $this->migration->getIdMap()->getMessages()->fetchAll();
     $this->assertEmpty($messages);
 
     // Assert that a content type translatable with entity_translation is still

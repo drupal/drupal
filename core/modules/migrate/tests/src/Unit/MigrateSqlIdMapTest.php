@@ -312,7 +312,7 @@ class MigrateSqlIdMapTest extends MigrateTestCase {
       $id_map->saveMessage(['source_id_property' => $key], $message, $original_value['level']);
     }
 
-    foreach ($id_map->getMessageIterator() as $message_row) {
+    foreach ($id_map->getMessages() as $message_row) {
       $key = $message_row->source_ids_hash;
       $this->assertEquals($expected_results[$key]['message'], $message_row->message);
       $this->assertEquals($expected_results[$key]['level'], $message_row->level);
@@ -321,7 +321,7 @@ class MigrateSqlIdMapTest extends MigrateTestCase {
     // Insert with default level.
     $message_default = 'Hello world default.';
     $id_map->saveMessage(['source_id_property' => 5], $message_default);
-    $messages = $id_map->getMessageIterator(['source_id_property' => 5]);
+    $messages = $id_map->getMessages(['source_id_property' => 5]);
     $count = 0;
     foreach ($messages as $key => $message_row) {
       $count = 1;
@@ -331,13 +331,24 @@ class MigrateSqlIdMapTest extends MigrateTestCase {
     $this->assertEquals($count, 1);
 
     // Retrieve messages with a specific level.
-    $messages = $id_map->getMessageIterator([], MigrationInterface::MESSAGE_WARNING);
+    $messages = $id_map->getMessages([], MigrationInterface::MESSAGE_WARNING);
     $count = 0;
     foreach ($messages as $key => $message_row) {
       $count = 1;
       $this->assertEquals(MigrationInterface::MESSAGE_WARNING, $message_row->level);
     }
     $this->assertEquals($count, 1);
+  }
+
+  /**
+   * Tests the SQL ID map get message iterator method.
+   *
+   * @group legacy
+   *
+   * @expectedDeprecation getMessageIterator() is deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. Use getMessages() instead. See https://www.drupal.org/node/3060969
+   */
+  public function testGetMessageIterator() {
+    $this->getIdMap()->getMessageIterator();
   }
 
   /**

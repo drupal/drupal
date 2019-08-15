@@ -120,12 +120,9 @@ class MigrateFieldTest extends MigrateDrupal6TestBase {
     $this->assertSame($migration->getSourcePlugin()->count(), $migration->getIdMap()->processedCount());
 
     // Check that we've reported on a conflict in widget_types.
-    $messages = [];
-    foreach ($migration->getIdMap()->getMessageIterator() as $message_row) {
-      $messages[] = $message_row->message;
-    }
+    $messages = iterator_to_array($migration->getIdMap()->getMessages());
     $this->assertCount(1, $messages);
-    $this->assertSame($messages[0], 'Widget types optionwidgets_onoff, text_textfield are used in Drupal 6 field instances: widget type optionwidgets_onoff applied to the Drupal 8 base field');
+    $this->assertSame($messages[0]->message, 'Widget types optionwidgets_onoff, text_textfield are used in Drupal 6 field instances: widget type optionwidgets_onoff applied to the Drupal 8 base field');
   }
 
 }

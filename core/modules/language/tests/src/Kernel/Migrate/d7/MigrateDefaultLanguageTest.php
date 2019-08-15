@@ -41,7 +41,7 @@ class MigrateDefaultLanguageTest extends MigrateDrupal7TestBase {
     $this->executeMigrations(['language', 'default_language']);
 
     // Tests the migration log contains an error message.
-    $messages = $this->migration->getIdMap()->getMessageIterator();
+    $messages = $this->migration->getIdMap()->getMessages();
     $count = 0;
     foreach ($messages as $message) {
       $count++;
@@ -62,7 +62,7 @@ class MigrateDefaultLanguageTest extends MigrateDrupal7TestBase {
     $this->startCollectingMessages();
     $this->executeMigrations(['language', 'default_language']);
 
-    $messages = $this->migration->getIdMap()->getMessageIterator()->fetchAll();
+    $messages = $this->migration->getIdMap()->getMessages()->fetchAll();
     // Make sure there's no migration exceptions.
     $this->assertEmpty($messages);
     // Make sure the default langcode is 'en', as it was the default on D6 & D7.

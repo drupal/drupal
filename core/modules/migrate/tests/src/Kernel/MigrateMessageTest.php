@@ -98,12 +98,12 @@ class MigrateMessageTest extends KernelTestBase implements MigrateMessageInterfa
   }
 
   /**
-   * Tests the return value of getMessageIterator().
+   * Tests the return value of getMessages().
    *
    * This method returns an iterator of StdClass objects. Check that these
    * objects have the expected keys.
    */
-  public function testGetMessageIterator() {
+  public function testGetMessages() {
     $expected_message = (object) [
       'src_name' => 'source_message',
       'dest_config_name' => NULL,
@@ -115,7 +115,7 @@ class MigrateMessageTest extends KernelTestBase implements MigrateMessageInterfa
     $executable = new MigrateExecutable($this->migration, $this);
     $executable->import();
     $count = 0;
-    foreach ($this->migration->getIdMap()->getMessageIterator() as $message) {
+    foreach ($this->migration->getIdMap()->getMessages() as $message) {
       ++$count;
       $this->assertEqual($message, $expected_message);
     }
