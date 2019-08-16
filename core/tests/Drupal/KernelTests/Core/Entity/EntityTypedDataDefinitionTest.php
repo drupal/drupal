@@ -151,6 +151,7 @@ class EntityTypedDataDefinitionTest extends KernelTestBase {
 
     $entity_type = $this->prophesize(EntityTypeInterface::class);
     $entity_type->entityClassImplements(ConfigEntityInterface::class)->willReturn(FALSE);
+    $entity_type->getKey('bundle')->willReturn(FALSE);
     $entity_type->getLabel()->willReturn($this->randomString());
     $entity_type->getConstraints()->willReturn([]);
     $entity_type->isInternal()->willReturn($internal);
