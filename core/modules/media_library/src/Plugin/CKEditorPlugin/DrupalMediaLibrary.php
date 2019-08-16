@@ -125,7 +125,7 @@ class DrupalMediaLibrary extends CKEditorPluginBase implements ContainerFactoryP
       'media_library.opener.editor',
       $media_type_ids,
       reset($media_type_ids),
-      -1,
+      1,
       ['filter_format_id' => $editor->getFilterFormat()->id()]
     );
 
