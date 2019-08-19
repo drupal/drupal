@@ -6,9 +6,12 @@ use Drupal\comment\Entity\Comment;
 use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
 use Drupal\comment\Tests\CommentTestTrait;
 use Drupal\Component\Serialization\Json;
+use Drupal\Core\Entity\TranslatableInterface;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
+use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Url;
 use Drupal\datetime\Plugin\Field\FieldType\DateTimeItem;
+use Drupal\entity_test\Entity\EntityTest;
 use Drupal\entity_test\Entity\EntityTestMapField;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
@@ -988,6 +991,67 @@ class JsonApiRegressionTest extends JsonApiFunctionalTestBase {
     // Requesting the comment collection should succeed.
     $response = $this->request('GET', Url::fromUri('internal:/jsonapi/comment/comment'), $request_options);
     $this->assertSame(200, $response->getStatusCode());
+  }
+
+  /**
+   * Ensure non-translatable entities can be PATCHed with an alternate language.
+   *
+   * @see https://www.drupal.org/project/drupal/issues/3043168
+   */
+  public function testNonTranslatableEntityUpdatesFromIssue3043168() {
+    // Enable write-mode.
+    $this->config('jsonapi.settings')->set('read_only', FALSE)->save(TRUE);
+    // Set the site language to Russian.
+    $this->config('system.site')->set('langcode', 'ru')->set('default_langcode', 'ru')->save(TRUE);
+    // Install a "custom" entity type that is not translatable.
+    $this->assertTrue($this->container->get('module_installer')->install(['entity_test'], TRUE), 'Installed modules.');
+    // Clear and rebuild caches and routes.
+    $this->rebuildAll();
+    // Create a test entity.
+    // @see \Drupal\language\DefaultLanguageItem
+    $entity = EntityTest::create([
+      'name' => 'Alexander',
+      'langcode' => LanguageInterface::LANGCODE_NOT_SPECIFIED,
+    ]);
+    $entity->save();
+    // Ensure it is an instance of TranslatableInterface and that it is *not*
+    // translatable.
+    $this->assertInstanceOf(TranslatableInterface::class, $entity);
+    $this->assertFalse($entity->isTranslatable());
+    // Set up a test user with permission to view and update the test entity.
+    $user = $this->drupalCreateUser(['view test entity', 'administer entity_test content']);
+    $request_options[RequestOptions::HEADERS]['Accept'] = 'application/vnd.api+json';
+    $request_options[RequestOptions::AUTH] = [
+      $user->getUsername(),
+      $user->pass_raw,
+    ];
+    // GET the test entity via JSON:API.
+    $entity_url = Url::fromUri('internal:/jsonapi/entity_test/entity_test/' . $entity->uuid());
+    $response = $this->request('GET', $entity_url, $request_options);
+    $this->assertSame(200, $response->getStatusCode());
+    $response_document = Json::decode($response->getBody());
+    // Ensure that the entity's langcode attribute is 'und'.
+    $this->assertSame(LanguageInterface::LANGCODE_NOT_SPECIFIED, $response_document['data']['attributes']['langcode']);
+    // Prepare to PATCH the entity via JSON:API.
+    $request_options[RequestOptions::HEADERS]['Content-Type'] = 'application/vnd.api+json';
+    $request_options[RequestOptions::JSON] = [
+      'data' => [
+        'type' => 'entity_test--entity_test',
+        'id' => $entity->uuid(),
+        'attributes' => [
+          'name' => 'Constantine',
+        ],
+      ],
+    ];
+    // Issue the PATCH request and verify that the test entity was successfully
+    // updated.
+    $response = $this->request('PATCH', $entity_url, $request_options);
+    $this->assertSame(200, $response->getStatusCode(), (string) $response->getBody());
+    $response_document = Json::decode($response->getBody());
+    // Ensure that the entity's langcode attribute is still 'und' and the name
+    // was successfully updated.
+    $this->assertSame(LanguageInterface::LANGCODE_NOT_SPECIFIED, $response_document['data']['attributes']['langcode']);
+    $this->assertSame('Constantine', $response_document['data']['attributes']['name']);
   }
 
 }
