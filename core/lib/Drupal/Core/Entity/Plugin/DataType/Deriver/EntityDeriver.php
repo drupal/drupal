@@ -98,12 +98,11 @@ class EntityDeriver implements ContainerDeriverInterface {
       ] + $base_plugin_definition;
 
       // Incorporate the bundles as entity:$entity_type:$bundle, if any.
-      $bundle_info = $this->bundleInfoService->getBundleInfo($entity_type_id);
-      if (count($bundle_info) > 1 || $entity_type->getKey('bundle')) {
-        foreach ($bundle_info as $bundle => $info) {
+      foreach ($this->bundleInfoService->getBundleInfo($entity_type_id) as $bundle => $bundle_info) {
+        if ($bundle !== $entity_type_id) {
           $this->derivatives[$entity_type_id . ':' . $bundle] = [
             'class' => $class,
-            'label' => $info['label'],
+            'label' => $bundle_info['label'],
             'constraints' => $this->derivatives[$entity_type_id]['constraints'],
           ] + $base_plugin_definition;
         }
