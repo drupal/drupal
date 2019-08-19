@@ -1,5 +1,7 @@
 services:
   test_discovery:
+    # @todo Change this service so that it uses \Drupal\Core\Test\TestDiscovery
+    # in https://www.drupal.org/node/1667822
     class: Drupal\simpletest\TestDiscovery
     arguments: ['@app.root', '@class_loader', '@module_handler']
   cache_context.test_discovery:

@@ -12,6 +12,7 @@ use Drupal\Tests\BrowserTestBase;
  *
  * @group #slow
  * @group simpletest
+ * @group legacy
  */
 class SimpletestUiTest extends BrowserTestBase {
 
@@ -30,6 +31,8 @@ class SimpletestUiTest extends BrowserTestBase {
 
   /**
    * Tests that unit, kernel, and functional tests work through the UI.
+   *
+   * @expectedDeprecation Drupal\simpletest\TestDiscovery is deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. Use \Drupal\Core\Test\TestDiscovery instead. See https://www.drupal.org/node/2949692
    */
   public function testTestingThroughUI() {
     $url = Url::fromRoute('simpletest.test_form');

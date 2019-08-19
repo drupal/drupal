@@ -12,6 +12,7 @@ use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Site\Settings;
 use Drupal\Core\StreamWrapper\PublicStream;
 use Drupal\Core\Test\TestDatabase;
+use Drupal\Core\Test\TestDiscovery;
 use Drupal\Core\Test\TestSetupTrait;
 use Drupal\Core\Utility\Error;
 use Drupal\Tests\AssertHelperTrait as BaseAssertHelperTrait;

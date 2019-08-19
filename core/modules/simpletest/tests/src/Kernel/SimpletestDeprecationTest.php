@@ -3,9 +3,10 @@
 namespace Drupal\Tests\simpletest\Kernel;
 
 use Drupal\KernelTests\KernelTestBase;
+use Drupal\simpletest\TestDiscovery;
 
 /**
- * Verify deprecation of simpletest.
+ * Verify deprecations within the simpletest module.
  *
  * @group simpletest
  * @group legacy
@@ -23,6 +24,14 @@ class SimpletestDeprecationTest extends KernelTestBase {
     $this->assertNotEmpty(simpletest_phpunit_configuration_filepath());
     $this->assertNotEmpty(simpletest_test_get_all());
     simpletest_classloader_register();
+  }
+
+  /**
+   * @expectedDeprecation Drupal\simpletest\TestDiscovery is deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. Use \Drupal\Core\Test\TestDiscovery instead. See https://www.drupal.org/node/2949692
+   * @expectedDeprecation The "test_discovery" service relies on the deprecated "Drupal\simpletest\TestDiscovery" class. It should either be deprecated or its implementation upgraded.
+   */
+  public function testDeprecatedServices() {
+    $this->assertInstanceOf(TestDiscovery::class, $this->container->get('test_discovery'));
   }
 
 }

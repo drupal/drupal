@@ -14,6 +14,7 @@ use Drupal\simpletest\WebTestBase;
  *
  * @group simpletest
  * @group WebTestBase
+ * @group legacy
  */
 class SimpleTestTest extends WebTestBase {
 

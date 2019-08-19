@@ -14,6 +14,7 @@ use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Session\AnonymousUserSession;
 use Drupal\Core\Test\AssertMailTrait;
 use Drupal\Core\Test\FunctionalTestSetupTrait;
+use Drupal\Core\Test\TestDiscovery;
 use Drupal\Core\Url;
 use Drupal\KernelTests\AssertContentTrait as CoreAssertContentTrait;
 use Drupal\system\Tests\Cache\AssertPageCacheContextsAndTagsTrait;
@@ -705,7 +706,7 @@ abstract class WebTestBase extends TestBase {
         if (getenv('SYMFONY_DEPRECATIONS_HELPER') !== 'disabled') {
           $message = (string) $parameters[0];
           $test_info = TestDiscovery::getTestInfo(get_called_class());
-          if ($test_info['group'] !== 'legacy' && !in_array($message, DeprecationListenerTrait::getSkippedDeprecations())) {
+          if (!in_array('legacy', $test_info['groups']) && !in_array($message, DeprecationListenerTrait::getSkippedDeprecations())) {
             call_user_func_array([&$this, 'error'], $parameters);
           }
         }

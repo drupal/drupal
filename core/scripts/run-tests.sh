@@ -18,7 +18,7 @@ use Drupal\Core\Test\TestDatabase;
 use Drupal\Core\Test\TestRunnerKernel;
 use Drupal\simpletest\Form\SimpletestResultsForm;
 use Drupal\simpletest\TestBase;
-use Drupal\simpletest\TestDiscovery;
+use Drupal\Core\Test\TestDiscovery;
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Runner\Version;
 use Symfony\Component\HttpFoundation\Request;
@@ -65,6 +65,8 @@ if ($args['list']) {
   echo "\nAvailable test groups & classes\n";
   echo "-------------------------------\n\n";
   try {
+    // @todo Use \Drupal\Core\Test\TestDiscovery when we no longer need BC for
+    //   hook_simpletest_alter().
     $groups = \Drupal::service('test_discovery')->getTestClasses($args['module']);
   }
   catch (Exception $e) {
@@ -95,6 +97,8 @@ if ($args['list-files'] || $args['list-files-json']) {
   // List all files which could be run as tests.
   $test_discovery = NULL;
   try {
+    // @todo Use \Drupal\Core\Test\TestDiscovery when we no longer need BC for
+    //   hook_simpletest_alter().
     $test_discovery = \Drupal::service('test_discovery');
   }
   catch (Exception $e) {
@@ -995,6 +999,8 @@ function simpletest_script_cleanup($test_id, $test_class, $exitcode) {
 function simpletest_script_get_test_list() {
   global $args;
 
+  // @todo Use \Drupal\Core\Test\TestDiscovery when we no longer need BC for
+  //   hook_simpletest_alter().
   /** $test_discovery \Drupal\simpletest\TestDiscovery */
   $test_discovery = \Drupal::service('test_discovery');
   $types_processed = empty($args['types']);

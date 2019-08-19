@@ -10,6 +10,7 @@ use Drupal\Tests\BrowserTestBase;
  * @see \Drupal\simpletest\Tests::testTestingThroughUI()
  *
  * @group simpletest
+ * @group legacy
  */
 class ThroughUITest extends BrowserTestBase {
 
