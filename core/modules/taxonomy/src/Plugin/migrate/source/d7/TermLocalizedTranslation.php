@@ -36,7 +36,6 @@ class TermLocalizedTranslation extends Term {
     // Cast td.tid as char for PostgreSQL compatibility.
     $query->leftJoin('i18n_string', 'i18n', 'CAST(td.tid AS CHAR(255)) = i18n.objectid');
     $query->condition('i18n.type', 'term');
-    $query->isNotNull('i18n.lid');
     $query->addField('i18n', 'lid');
     $query->addField('i18n', 'property');
 
