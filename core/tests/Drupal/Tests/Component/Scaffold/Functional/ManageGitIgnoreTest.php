@@ -104,10 +104,12 @@ class ManageGitIgnoreTest extends TestCase {
     // Note that the drupal-composer-drupal-project fixture does not
     // have any configuration settings related to .gitignore management.
     $sut = $this->createSutWithGit('drupal-composer-drupal-project');
+    $this->assertFileNotExists($sut . '/docroot/autoload.php');
     $this->assertFileNotExists($sut . '/docroot/index.php');
     $this->assertFileNotExists($sut . '/docroot/sites/.gitignore');
     // Run the scaffold command.
     $this->fixtures->runScaffold($sut);
+    $this->assertFileExists($sut . '/docroot/autoload.php');
     $this->assertFileExists($sut . '/docroot/index.php');
     $expected = <<<EOT
 build
@@ -147,9 +149,11 @@ EOT;
     // Note that the drupal-drupal fixture has a configuration setting
     // `"gitignore": false,` which disables .gitignore file handling.
     $sut = $this->createSutWithGit('drupal-drupal');
+    $this->assertFileNotExists($sut . '/docroot/autoload.php');
     $this->assertFileNotExists($sut . '/docroot/index.php');
     // Run the scaffold command.
     $this->fixtures->runScaffold($sut);
+    $this->assertFileExists($sut . '/autoload.php');
     $this->assertFileExists($sut . '/index.php');
     $this->assertFileNotExists($sut . '/.gitignore');
     $this->assertFileNotExists($sut . '/docroot/sites/default/.gitignore');

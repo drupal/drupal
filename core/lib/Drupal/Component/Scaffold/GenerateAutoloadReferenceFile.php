@@ -62,11 +62,12 @@ final class GenerateAutoloadReferenceFile {
    */
   public static function autoloadFileCommitted(IOInterface $io, $package_name, $web_root) {
     $autoload_path = static::autoloadPath($package_name, $web_root);
-    $location = dirname($autoload_path->fullPath());
-    if (!file_exists($location)) {
+    $autoload_file = $autoload_path->fullPath();
+    $location = dirname($autoload_file);
+    if (!file_exists($autoload_file)) {
       return FALSE;
     }
-    return Git::checkTracked($io, $location, $location);
+    return Git::checkTracked($io, $autoload_file, $location);
   }
 
   /**
