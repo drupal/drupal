@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\Tests\migrate_drupal\Kernel;
+namespace Drupal\Tests\migrate_drupal\Traits;
 
 use Drupal\Component\Discovery\YamlDiscovery;
 use Drupal\KernelTests\FileSystemModuleDiscoveryDataProviderTrait;
@@ -15,23 +15,9 @@ use Drupal\migrate_drupal\MigrationState;
  *
  * @group migrate_drupal
  */
-class ValidateMigrationStateTest extends MigrateDrupalTestBase {
+trait ValidateMigrationStateTestTrait {
 
   use FileSystemModuleDiscoveryDataProviderTrait;
-
-  /**
-   * {@inheritdoc}
-   */
-  public static $modules = [
-    // Test migrations states.
-    'migrate_state_finished_test',
-    'migrate_state_not_finished_test',
-  ];
-
-  /**
-   * Level separator of destination and source properties.
-   */
-  const SEPARATOR = ',';
 
   /**
    * Tests the migration information in .migrate_drupal.yml.
@@ -43,6 +29,10 @@ class ValidateMigrationStateTest extends MigrateDrupalTestBase {
    * migrations are not needed.
    */
   public function testMigrationState() {
+
+    // Level separator of destination and source properties.
+    $separator = ',';
+
     $this->enableAllModules();
 
     // Build an array for each migration keyed by provider. The value is a
@@ -68,7 +58,7 @@ class ValidateMigrationStateTest extends MigrateDrupalTestBase {
         $destination_module = $migration->getDestinationPlugin()
           ->getDestinationModule();
 
-        $discovered[$version][] = implode(static::SEPARATOR, [
+        $discovered[$version][] = implode($separator, [
           $version,
           $provider,
           $source_module,
@@ -83,7 +73,7 @@ class ValidateMigrationStateTest extends MigrateDrupalTestBase {
       ->getDefinitions();
     foreach ($definitions as $key => $definition) {
       foreach ($definition['core'] as $version) {
-        $discovered[$version][] = implode(static::SEPARATOR, [
+        $discovered[$version][] = implode($separator, [
           $version,
           $definition['provider'],
           $definition['source_module'],
@@ -114,7 +104,7 @@ class ValidateMigrationStateTest extends MigrateDrupalTestBase {
               if (($source !== 'i18nstrings') && ($source !== 'i18n_string')) {
                 foreach ((array) $destination as $dest) {
                   $key = [$info_version, $module, $source, trim($dest)];
-                  $declared[$info_version][$state][] = implode(static::SEPARATOR, $key);
+                  $declared[$info_version][$state][] = implode($separator, $key);
                 }
               }
             }

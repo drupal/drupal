@@ -144,7 +144,6 @@ class Upgrade6Test extends MigrateUpgradeExecuteTestBase {
       'imagecache',
       'imagefield',
       'menu',
-      'node',
       'nodereference',
       'optionwidgets',
       'path',
@@ -180,6 +179,7 @@ class Upgrade6Test extends MigrateUpgradeExecuteTestBase {
       'i18nstrings',
       'i18ntaxonomy',
       'locale',
+      'node',
     ];
   }
 

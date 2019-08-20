@@ -29,12 +29,19 @@ not_finished:
     i18n: content_translation
     # Taxonomy term references.
     i18ntaxonomy: content_translation
+    # Node revision translations.
+    # https://www.drupal.org/project/drupal/issues/2746541
+    node: content_translation
   7:
     # @TODO: Move to finished when remaining Drupal 7 i18n issues are resolved.
     # See https://www.drupal.org/project/drupal/issues/2208401
     i18n: content_translation
-    # menu links.
+    # Menu links.
+    # See https://www.drupal.org/project/drupal/issues/3008028
     i18n_menu: content_translation
     # Migrate taxonomy term references
     # https://www.drupal.org/project/drupal/issues/3035392
     i18n_taxonomy: content_translation
+    # Node revision translations.
+    # https://www.drupal.org/project/drupal/issues/2746541
+    node: content_translation
