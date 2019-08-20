@@ -397,7 +397,7 @@ class Datetime extends DateElementBase {
    * The format is important because these elements will not work with any other
    * format.
    *
-   * @param string $element
+   * @param array $element
    *   The $element to assess.
    *
    * @return string
@@ -424,7 +424,7 @@ class Datetime extends DateElementBase {
    * The format is important because these elements will not work with any other
    * format.
    *
-   * @param string $element
+   * @param array $element
    *   The $element to assess.
    *
    * @return string
