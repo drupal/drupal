@@ -22,11 +22,4 @@ class RangeConstraint extends Range {
   public $minMessage = 'This value should be %limit or more.';
   public $maxMessage = 'This value should be %limit or less.';
 
-  /**
-   * {@inheritdoc}
-   */
-  public function validatedBy() {
-    return '\Symfony\Component\Validator\Constraints\RangeValidator';
-  }
-
 }
