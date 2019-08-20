@@ -201,19 +201,15 @@ class UserTest extends ResourceTestBase {
     $url = Url::fromRoute(sprintf('jsonapi.user--user.individual'), ['entity' => $this->account->uuid()]);
     /* $url = $this->account->toUrl('jsonapi'); */
 
-    $original_normalization = $this->normalize($this->account, $url);
-    // @todo Remove the array_diff_key() call in https://www.drupal.org/node/2821077.
-    $original_normalization['data']['attributes'] = array_diff_key(
-      $original_normalization['data']['attributes'],
-      ['created' => TRUE, 'changed' => TRUE, 'name' => TRUE]
-    );
-
     // Since this test must be performed by the user that is being modified,
     // we must use $this->account, not $this->entity.
     $request_options = [];
     $request_options[RequestOptions::HEADERS]['Accept'] = 'application/vnd.api+json';
     $request_options[RequestOptions::HEADERS]['Content-Type'] = 'application/vnd.api+json';
     $request_options = NestedArray::mergeDeep($request_options, $this->getAuthenticationRequestOptions());
+
+    $response = $this->request('GET', $url, $request_options);
+    $original_normalization = Json::decode((string) $response->getBody());
 
     // Test case 1: changing email.
     $normalization = $original_normalization;
@@ -246,7 +242,7 @@ class UserTest extends ResourceTestBase {
     $this->assertResourceResponse(200, FALSE, $response);
 
     // Test case 2: changing password.
-    $normalization = $original_normalization;
+    $normalization = Json::decode((string) $response->getBody());
     $normalization['data']['attributes']['mail'] = 'new-email@example.com';
     $new_password = $this->randomString();
     $normalization['data']['attributes']['pass']['value'] = $new_password;
@@ -274,7 +270,7 @@ class UserTest extends ResourceTestBase {
     $request_options = NestedArray::mergeDeep($request_options, $this->getAuthenticationRequestOptions());
 
     // Test case 3: changing name.
-    $normalization = $original_normalization;
+    $normalization = Json::decode((string) $response->getBody());
     $normalization['data']['attributes']['mail'] = 'new-email@example.com';
     $normalization['data']['attributes']['pass']['existing'] = $new_password;
     $normalization['data']['attributes']['name'] = 'Cooler Llama';
