@@ -149,6 +149,9 @@ class MigrateNodeTest extends MigrateDrupal7TestBase {
     $node = Node::load(1);
     $this->assertTrue($node->field_boolean->value);
     $this->assertEquals('99-99-99-99', $node->field_phone->value);
+    $this->assertSame('2015-01-20T04:15:00', $node->field_date->value);
+    $this->assertSame('2015-01-20', $node->field_date_without_time->value);
+    $this->assertSame('2015-01-20', $node->field_datetime_without_time->value);
     $this->assertEquals('1', $node->field_float->value);
     $this->assertEquals('5', $node->field_integer->value);
     $this->assertEquals('Some more text', $node->field_text_list[0]->value);
