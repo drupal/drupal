@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\options\Plugin\migrate\field\d7;
+namespace Drupal\options\Plugin\migrate\field\d6;
 
 use Drupal\migrate_drupal\Plugin\migrate\field\FieldPluginBase;
 
