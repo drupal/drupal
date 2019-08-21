@@ -106,7 +106,16 @@ abstract class MigrateUpgradeExecuteTestBase extends MigrateUpgradeTestBase {
     $session->fieldExists('mysql[host]');
 
     $this->drupalPostForm(NULL, $edits, t('Review upgrade'));
-    $this->assertIdConflict($session);
+    $entity_types = [
+      'block_content',
+      'menu_link_content',
+      'file',
+      'taxonomy_term',
+      'user',
+      'comment',
+      'node',
+    ];
+    $this->assertIdConflict($session, $entity_types);
 
     $this->drupalPostForm(NULL, [], t('I acknowledge I may lose data. Continue anyway.'));
     $session->statusCodeEquals(200);

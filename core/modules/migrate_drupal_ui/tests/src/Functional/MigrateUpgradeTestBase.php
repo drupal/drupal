@@ -193,20 +193,20 @@ abstract class MigrateUpgradeTestBase extends BrowserTestBase {
    *
    * @param \Drupal\Tests\WebAssert $session
    *   The current session.
-   * @param $session
-   *   The current session.
+   * @param array $entity_types
+   *   An array of entity types
    */
-  protected function assertIdConflict(WebAssert $session) {
+  protected function assertIdConflict(WebAssert $session, $entity_types) {
+    /** @var \Drupal\ $entity_type_manager */
+    $entity_type_manager = \Drupal::service('entity_type.manager');
+
     $session->pageTextContains('WARNING: Content may be overwritten on your new site.');
     $session->pageTextContains('There is conflicting content of these types:');
-    $session->pageTextContains('custom blocks');
-    $session->pageTextContains('custom menu links');
-    $session->pageTextContains('files');
-    $session->pageTextContains('taxonomy terms');
-    $session->pageTextContains('users');
-    $session->pageTextContains('comments');
+    foreach ($entity_types as $entity_type) {
+      $label = $entity_type_manager->getDefinition($entity_type)->getPluralLabel();
+      $session->pageTextContains($label);
+    }
     $session->pageTextContains('content item revisions');
-    $session->pageTextContains('content items');
     $session->pageTextContains('There is translated content of these types:');
   }
 
