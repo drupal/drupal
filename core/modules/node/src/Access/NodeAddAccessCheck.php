@@ -48,8 +48,8 @@ class NodeAddAccessCheck implements AccessInterface {
    *   (optional) The node type. If not specified, access is allowed if there
    *   exists at least one node type for which the user may create a node.
    *
-   * @return string
-   *   A \Drupal\Core\Access\AccessInterface constant value.
+   * @return \Drupal\Core\Access\AccessResultInterface
+   *   The access result.
    */
   public function access(AccountInterface $account, NodeTypeInterface $node_type = NULL) {
     $access_control_handler = $this->entityTypeManager->getAccessControlHandler('node');

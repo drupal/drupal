@@ -13,8 +13,8 @@ class TestAccessCheck implements AccessInterface {
   /**
    * Checks access.
    *
-   * @return string
-   *   A \Drupal\Core\Access\AccessInterface constant value.
+   * @return \Drupal\Core\Access\AccessResultInterface
+   *   The access result.
    */
   public function access() {
     // No opinion, so other access checks should decide if access should be

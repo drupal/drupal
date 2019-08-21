@@ -46,8 +46,8 @@ class NodePreviewAccessCheck implements AccessInterface {
    * @param \Drupal\node\NodeInterface $node_preview
    *   The node that is being previewed.
    *
-   * @return string
-   *   A \Drupal\Core\Access\AccessInterface constant value.
+   * @return \Drupal\Core\Access\AccessResultInterface
+   *   The access result.
    */
   public function access(AccountInterface $account, NodeInterface $node_preview) {
     if ($node_preview->isNew()) {
