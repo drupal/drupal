@@ -19,10 +19,10 @@
 
         $passwordInputParent.addClass('password-parent');
 
-        $passwordInputParentWrapper.find('input.js-password-confirm').parent().append('<div aria-live="polite" aria-atomic="true" class="password-confirm js-password-confirm">' + translate.confirmTitle + ' <span></span></div>').addClass('confirm-parent');
+        $passwordInputParentWrapper.find('input.js-password-confirm').parent().append(Drupal.theme('passwordConfirmMessage', translate)).addClass('confirm-parent');
 
         var $confirmInput = $passwordInputParentWrapper.find('input.js-password-confirm');
-        var $confirmResult = $passwordInputParentWrapper.find('div.js-password-confirm');
+        var $confirmResult = $passwordInputParentWrapper.find('div.js-password-confirm-message');
         var $confirmChild = $confirmResult.find('span');
 
         if (settings.password.showStrengthIndicator) {

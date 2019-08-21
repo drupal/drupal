@@ -2,6 +2,7 @@ drupal.user:
   version: VERSION
   js:
     user.js: {}
+    user.theme.js: {}
   css:
     component:
       css/user.module.css: {}

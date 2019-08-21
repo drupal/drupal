@@ -308,3 +308,7 @@ libraries-override:
       theme:
         css/views_ui.admin.theme.css: css/views_ui/views_ui.admin.theme.css
         css/views_ui.contextual.css: css/views_ui/views_ui.contextual.css
+
+libraries-extend:
+  user/drupal.user:
+    - stable/drupal.user
