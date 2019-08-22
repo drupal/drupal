@@ -4,6 +4,7 @@ namespace Drupal\KernelTests\Core\Theme;
 
 use Drupal\Core\Path\CurrentPathStack;
 use Drupal\Core\Path\PathMatcherInterface;
+use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Theme\Registry;
 use Drupal\Core\Utility\ThemeRegistry;
 use Drupal\KernelTests\KernelTestBase;
@@ -190,6 +191,49 @@ class RegistryTest extends KernelTestBase {
       'page__node__1',
       'page__front',
     ], $suggestions, 'Found expected page node suggestions.');
+  }
+
+  /**
+   * Data provider for test40xThemeSuggestions().
+   *
+   * @return array
+   *   An associative array of 40x theme suggestions.
+   */
+  public function provider40xThemeSuggestions() {
+    return [
+      ['system.401', 'page__401'],
+      ['system.403', 'page__403'],
+      ['system.404', 'page__404'],
+    ];
+  }
+
+  /**
+   * Tests page theme suggestions for 40x responses.
+   *
+   * @dataProvider provider40xThemeSuggestions
+   */
+  public function test40xThemeSuggestions($route, $suggestion) {
+    /** @var \Drupal\Core\Path\PathMatcherInterface $path_matcher */
+    $path_matcher = $this->prophesize(PathMatcherInterface::class);
+    $path_matcher->isFrontPage()->willReturn(FALSE);
+    \Drupal::getContainer()->set('path.matcher', $path_matcher->reveal());
+    /** @var \Drupal\Core\Path\CurrentPathStack $path_current */
+    $path_current = $this->prophesize(CurrentPathStack::class);
+    $path_current->getPath()->willReturn('/node/123');
+    \Drupal::getContainer()->set('path.current', $path_current->reveal());
+    /** @var \Drupal\Core\Routing\RouteMatchInterface $route_matcher */
+    $route_matcher = $this->prophesize(RouteMatchInterface::class);
+    $route_matcher->getRouteName()->willReturn($route);
+    \Drupal::getContainer()->set('current_route_match', $route_matcher->reveal());
+
+    $suggestions = \Drupal::moduleHandler()->invokeAll('theme_suggestions_page', [[]]);
+    $this->assertSame([
+      'page__node',
+      'page__node__%',
+      'page__node__123',
+      'page__4xx',
+      $suggestion,
+    ], $suggestions);
   }
 
   /**
