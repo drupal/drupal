@@ -50,6 +50,9 @@ class ResourceTypeRepositoryTest extends JsonapiKernelTestBase {
     NodeType::create([
       'type' => 'page',
     ])->save();
+    NodeType::create([
+      'type' => '42',
+    ])->save();
 
     $this->resourceTypeRepository = $this->container->get('jsonapi.resource_type.repository');
   }
@@ -91,6 +94,7 @@ class ResourceTypeRepositoryTest extends JsonapiKernelTestBase {
   public function getProvider() {
     return [
       ['node', 'article', 'Drupal\node\Entity\Node'],
+      ['node', '42', 'Drupal\node\Entity\Node'],
       ['node_type', 'node_type', 'Drupal\node\Entity\NodeType'],
       ['menu', 'menu', 'Drupal\system\Entity\Menu'],
     ];
@@ -102,9 +106,9 @@ class ResourceTypeRepositoryTest extends JsonapiKernelTestBase {
   public function testCaching() {
     $this->assertEmpty($this->resourceTypeRepository->get('node', 'article')->getRelatableResourceTypesByField('field_relationship'));
     $this->createEntityReferenceField('node', 'article', 'field_relationship', 'Related entity', 'node');
-    $this->assertCount(2, $this->resourceTypeRepository->get('node', 'article')->getRelatableResourceTypesByField('field_relationship'));
-    NodeType::create(['type' => 'camelids'])->save();
     $this->assertCount(3, $this->resourceTypeRepository->get('node', 'article')->getRelatableResourceTypesByField('field_relationship'));
+    NodeType::create(['type' => 'camelids'])->save();
+    $this->assertCount(4, $this->resourceTypeRepository->get('node', 'article')->getRelatableResourceTypesByField('field_relationship'));
   }
 
 }
