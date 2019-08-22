@@ -2,6 +2,8 @@
 
 namespace Drupal\Component\PhpStorage;
 
+use Drupal\Component\FileSecurity\FileSecurity;
+
 /**
  * Stores the code as regular PHP files.
  */
@@ -64,46 +66,15 @@ class FileStorage implements PhpStorageInterface {
    * @return string
    *   The desired contents of the .htaccess file.
    *
-   * @see file_create_htaccess()
+   * @deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. Instead use
+   *   \Drupal\Component\FileSecurity\FileSecurity.
+   *
+   * @see https://www.drupal.org/node/3075098
+   * @see file_save_htaccess()
    */
   public static function htaccessLines($private = TRUE) {
-    $lines = <<<EOF
-# Turn off all options we don't need.
-Options -Indexes -ExecCGI -Includes -MultiViews
-
-# Set the catch-all handler to prevent scripts from being executed.
-SetHandler Drupal_Security_Do_Not_Remove_See_SA_2006_006
-<Files *>
-  # Override the handler again if we're run later in the evaluation list.
-  SetHandler Drupal_Security_Do_Not_Remove_See_SA_2013_003
-</Files>
-
-# If we know how to do it safely, disable the PHP engine entirely.
-<IfModule mod_php5.c>
-  php_flag engine off
-</IfModule>
-<IfModule mod_php7.c>
-  php_flag engine off
-</IfModule>
-EOF;
-
-    if ($private) {
-      $lines = <<<EOF
-# Deny all requests from Apache 2.4+.
-<IfModule mod_authz_core.c>
-  Require all denied
-</IfModule>
-
-# Deny all requests from Apache 2.0-2.2.
-<IfModule !mod_authz_core.c>
-  Deny from all
-</IfModule>
-
-$lines
-EOF;
-    }
-
-    return $lines;
+    @trigger_error("htaccessLines() is deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. Use \Drupal\Component\FileSecurity\FileSecurity::htaccessLines() instead. See https://www.drupal.org/node/3075098", E_USER_DEPRECATED);
+    return FileSecurity::htaccessLines($private);
   }
 
   /**
@@ -122,10 +93,7 @@ EOF;
    */
   protected function ensureDirectory($directory, $mode = 0777) {
     if ($this->createDirectory($directory, $mode)) {
-      $htaccess_path = $directory . '/.htaccess';
-      if (!file_exists($htaccess_path) && file_put_contents($htaccess_path, static::htaccessLines())) {
-        @chmod($htaccess_path, 0444);
-      }
+      FileSecurity::writeHtaccess($directory);
     }
   }
 

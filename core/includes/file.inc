@@ -5,8 +5,8 @@
  * API for handling file uploads and server file management.
  */
 
+use Drupal\Component\FileSecurity\FileSecurity;
 use Drupal\Component\FileSystem\FileSystem as ComponentFileSystem;
-use Drupal\Component\PhpStorage\FileStorage;
 use Drupal\Component\Utility\Environment;
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\File\Exception\FileException;
@@ -362,28 +362,18 @@ function file_save_htaccess($directory, $private = TRUE, $force_overwrite = FALS
   $stream_wrapper_manager = \Drupal::service('stream_wrapper_manager');
 
   if ($stream_wrapper_manager::getScheme($directory)) {
-    $htaccess_path = $stream_wrapper_manager->normalizeUri($directory . '/.htaccess');
+    $directory = $stream_wrapper_manager->normalizeUri($directory);
   }
   else {
     $directory = rtrim($directory, '/\\');
-    $htaccess_path = $directory . '/.htaccess';
   }
 
-  if (file_exists($htaccess_path) && !$force_overwrite) {
-    // Short circuit if the .htaccess file already exists.
+  if (FileSecurity::writeHtaccess($directory, $private, $force_overwrite)) {
     return TRUE;
   }
-  $htaccess_lines = FileStorage::htaccessLines($private);
 
-  // Write the .htaccess file.
-  if (file_exists($directory) && is_writable($directory) && file_put_contents($htaccess_path, $htaccess_lines)) {
-    return \Drupal::service('file_system')->chmod($htaccess_path, 0444);
-  }
-  else {
-    $variables = ['%directory' => $directory, '@htaccess' => $htaccess_lines];
-    \Drupal::logger('security')->error("Security warning: Couldn't write .htaccess file. Please create a .htaccess file in your %directory directory which contains the following lines: <pre><code>@htaccess</code></pre>", $variables);
-    return FALSE;
-  }
+  \Drupal::logger('security')->error("Security warning: Couldn't write .htaccess file. Please create a .htaccess file in your %directory directory which contains the following lines: <pre><code>@htaccess</code></pre>", ['%directory' => $directory, '@htaccess' => FileSecurity::htaccessLines($private)]);
+  return FALSE;
 }
 
 /**
@@ -398,12 +388,12 @@ function file_save_htaccess($directory, $private = TRUE, $force_overwrite = FALS
  *   The desired contents of the .htaccess file.
  *
  * @deprecated in Drupal 8.0.x-dev and will be removed before Drupal 9.0.0.
- *   Use \Drupal\Component\PhpStorage\FileStorage::htaccessLines().
+ *   Use \Drupal\Component\FileSecurity\FileSecurity::htaccessLines().
  *
  * @see https://www.drupal.org/node/2418133
  */
 function file_htaccess_lines($private = TRUE) {
-  return FileStorage::htaccessLines($private);
+  return FileSecurity::htaccessLines($private);
 }
 
 /**

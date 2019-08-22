@@ -2,9 +2,9 @@
 
 namespace Drupal\KernelTests\Core\File;
 
+use Drupal\Component\FileSecurity\FileSecurity;
 use Drupal\Component\FileSystem\FileSystem;
 use Drupal\Component\Render\FormattableMarkup;
-use Drupal\Component\PhpStorage\FileStorage;
 use Drupal\Core\File\Exception\FileException;
 use Drupal\Core\File\FileSystemInterface;
 
@@ -101,7 +101,7 @@ class DirectoryTest extends FileTestBase {
     $this->assertTrue(is_file($default_scheme . '://.htaccess'), 'Successfully re-created the .htaccess file in the files directory.', 'File');
     // Verify contents of .htaccess file.
     $file = file_get_contents($default_scheme . '://.htaccess');
-    $this->assertEqual($file, FileStorage::htaccessLines(FALSE), 'The .htaccess file contains the proper content.', 'File');
+    $this->assertEqual($file, FileSecurity::htaccessLines(FALSE), 'The .htaccess file contains the proper content.', 'File');
   }
 
   /**

@@ -2,13 +2,13 @@
 
 namespace Drupal\Core\Composer;
 
-use Drupal\Component\PhpStorage\FileStorage;
-use Composer\Semver\Comparator;
 use Composer\Composer as ComposerApp;
-use Composer\Script\Event;
 use Composer\Installer\PackageEvent;
+use Composer\Script\Event;
+use Composer\Semver\Comparator;
 use Composer\Semver\Constraint\Constraint;
 use Composer\Util\ProcessExecutor;
+use Drupal\Component\FileSecurity\FileSecurity;
 
 /**
  * Provides static functions for composer script events.
@@ -162,25 +162,10 @@ class Composer {
     $vendor_dir = $event->getComposer()->getConfig()->get('vendor-dir');
 
     // Prevent access to vendor directory on Apache servers.
-    $htaccess_file = $vendor_dir . '/.htaccess';
-    if (!file_exists($htaccess_file)) {
-      file_put_contents($htaccess_file, FileStorage::htaccessLines(TRUE) . "\n");
-    }
+    FileSecurity::writeHtaccess($vendor_dir);
 
     // Prevent access to vendor directory on IIS servers.
-    $webconfig_file = $vendor_dir . '/web.config';
-    if (!file_exists($webconfig_file)) {
-      $lines = <<<EOT
-<configuration>
-  <system.webServer>
-    <authorization>
-      <deny users="*">
-    </authorization>
-  </system.webServer>
-</configuration>
-EOT;
-      file_put_contents($webconfig_file, $lines . "\n");
-    }
+    FileSecurity::writeWebConfig($vendor_dir);
   }
 
   /**

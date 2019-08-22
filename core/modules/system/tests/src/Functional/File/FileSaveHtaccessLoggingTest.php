@@ -2,7 +2,7 @@
 
 namespace Drupal\Tests\system\Functional\File;
 
-use Drupal\Component\PhpStorage\FileStorage;
+use Drupal\Component\FileSecurity\FileSecurity;
 use Drupal\Tests\BrowserTestBase;
 
 /**
@@ -29,7 +29,7 @@ class FileSaveHtaccessLoggingTest extends BrowserTestBase {
     $this->drupalGet('admin/reports/dblog');
     $this->clickLink("Security warning: Couldn't write .htaccess file. Please…");
 
-    $lines = FileStorage::htaccessLines(TRUE);
+    $lines = FileSecurity::htaccessLines(TRUE);
     foreach (array_filter(explode("\n", $lines)) as $line) {
       $this->assertEscaped($line);
     }

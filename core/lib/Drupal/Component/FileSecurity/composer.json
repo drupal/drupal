@@ -1,16 +1,15 @@
 {
-  "name": "drupal/core-php-storage",
-  "description": "PhpStorage.",
+  "name": "drupal/core-file-security",
+  "description": "FileSecurity.",
   "keywords": ["drupal"],
   "homepage": "https://www.drupal.org/project/drupal",
   "license": "GPL-2.0-or-later",
   "require": {
-    "php": ">=7.0.8",
-    "drupal/core-file-security": "^8.8"
+    "php": ">=7.0.8"
   },
   "autoload": {
     "psr-4": {
-      "Drupal\\Component\\PhpStorage\\": ""
+      "Drupal\\Component\\FileSecurity\\": ""
     }
   }
 }
