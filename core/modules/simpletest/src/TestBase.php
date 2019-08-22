@@ -1252,7 +1252,7 @@ abstract class TestBase {
 
     // In case a fatal error occurred that was not in the test process read the
     // log to pick up any fatal errors.
-    simpletest_log_read($this->testId, $this->databasePrefix, get_class($this));
+    (new TestDatabase($this->databasePrefix))->logRead($this->testId, get_class($this));
 
     // Restore original dependency injection container.
     $this->container = $this->originalContainer;

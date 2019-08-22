@@ -179,4 +179,226 @@ class TestDatabase {
     return FileSystem::getOsTemporaryDirectory() . '/test_' . $lock_id;
   }
 
+  /**
+   * Store an assertion from outside the testing context.
+   *
+   * This is useful for inserting assertions that can only be recorded after
+   * the test case has been destroyed, such as PHP fatal errors. The caller
+   * information is not automatically gathered since the caller is most likely
+   * inserting the assertion on behalf of other code. In all other respects
+   * the method behaves just like \Drupal\simpletest\TestBase::assert() in terms
+   * of storing the assertion.
+   *
+   * @param string $test_id
+   *   The test ID to which the assertion relates.
+   * @param string $test_class
+   *   The test class to store an assertion for.
+   * @param bool|string $status
+   *   A boolean or a string of 'pass' or 'fail'. TRUE means 'pass'.
+   * @param string $message
+   *   The assertion message.
+   * @param string $group
+   *   The assertion message group.
+   * @param array $caller
+   *   The an array containing the keys 'file' and 'line' that represent the
+   *   file and line number of that file that is responsible for the assertion.
+   *
+   * @return int
+   *   Message ID of the stored assertion.
+   *
+   * @internal
+   */
+  public static function insertAssert($test_id, $test_class, $status, $message = '', $group = 'Other', array $caller = []) {
+    // Convert boolean status to string status.
+    if (is_bool($status)) {
+      $status = $status ? 'pass' : 'fail';
+    }
+
+    $caller += [
+      'function' => 'Unknown',
+      'line' => 0,
+      'file' => 'Unknown',
+    ];
+
+    $assertion = [
+      'test_id' => $test_id,
+      'test_class' => $test_class,
+      'status' => $status,
+      'message' => $message,
+      'message_group' => $group,
+      'function' => $caller['function'],
+      'line' => $caller['line'],
+      'file' => $caller['file'],
+    ];
+
+    return static::getConnection()
+      ->insert('simpletest')
+      ->fields($assertion)
+      ->execute();
+  }
+
+  /**
+   * Get information about the last test that ran given a test ID.
+   *
+   * @param int $test_id
+   *   The test ID to get the last test from.
+   *
+   * @return array
+   *   Array containing the last database prefix used and the last test class
+   *   that ran.
+   *
+   * @internal
+   */
+  public static function lastTestGet($test_id) {
+    $connection = static::getConnection();
+    $last_prefix = $connection
+      ->queryRange('SELECT last_prefix FROM {simpletest_test_id} WHERE test_id = :test_id', 0, 1, [
+        ':test_id' => $test_id,
+      ])
+      ->fetchField();
+    $last_test_class = $connection
+      ->queryRange('SELECT test_class FROM {simpletest} WHERE test_id = :test_id ORDER BY message_id DESC', 0, 1, [
+        ':test_id' => $test_id,
+      ])
+      ->fetchField();
+    return [$last_prefix, $last_test_class];
+  }
+
+  /**
+   * Reads the error log and reports any errors as assertion failures.
+   *
+   * The errors in the log should only be fatal errors since any other errors
+   * will have been recorded by the error handler.
+   *
+   * @param int $test_id
+   *   The test ID to which the log relates.
+   * @param string $test_class
+   *   The test class to which the log relates.
+   *
+   * @return bool
+   *   Whether any fatal errors were found.
+   *
+   * @internal
+   */
+  public function logRead($test_id, $test_class) {
+    $log = DRUPAL_ROOT . '/' . $this->getTestSitePath() . '/error.log';
+    $found = FALSE;
+    if (file_exists($log)) {
+      foreach (file($log) as $line) {
+        if (preg_match('/\[.*?\] (.*?): (.*?) in (.*) on line (\d+)/', $line, $match)) {
+          // Parse PHP fatal errors for example: PHP Fatal error: Call to
+          // undefined function break_me() in /path/to/file.php on line 17
+          $caller = [
+            'line' => $match[4],
+            'file' => $match[3],
+          ];
+          static::insertAssert($test_id, $test_class, FALSE, $match[2], $match[1], $caller);
+        }
+        else {
+          // Unknown format, place the entire message in the log.
+          static::insertAssert($test_id, $test_class, FALSE, $line, 'Fatal error');
+        }
+        $found = TRUE;
+      }
+    }
+    return $found;
+  }
+
+  /**
+   * Defines the database schema for run-tests.sh and simpletest module.
+   *
+   * @return array
+   *   Array suitable for use in a hook_schema() implementation.
+   *
+   * @internal
+   */
+  public static function testingSchema() {
+    $schema['simpletest'] = [
+      'description' => 'Stores simpletest messages',
+      'fields' => [
+        'message_id' => [
+          'type' => 'serial',
+          'not null' => TRUE,
+          'description' => 'Primary Key: Unique simpletest message ID.',
+        ],
+        'test_id' => [
+          'type' => 'int',
+          'not null' => TRUE,
+          'default' => 0,
+          'description' => 'Test ID, messages belonging to the same ID are reported together',
+        ],
+        'test_class' => [
+          'type' => 'varchar_ascii',
+          'length' => 255,
+          'not null' => TRUE,
+          'default' => '',
+          'description' => 'The name of the class that created this message.',
+        ],
+        'status' => [
+          'type' => 'varchar',
+          'length' => 9,
+          'not null' => TRUE,
+          'default' => '',
+          'description' => 'Message status. Core understands pass, fail, exception.',
+        ],
+        'message' => [
+          'type' => 'text',
+          'not null' => TRUE,
+          'description' => 'The message itself.',
+        ],
+        'message_group' => [
+          'type' => 'varchar_ascii',
+          'length' => 255,
+          'not null' => TRUE,
+          'default' => '',
+          'description' => 'The message group this message belongs to. For example: warning, browser, user.',
+        ],
+        'function' => [
+          'type' => 'varchar_ascii',
+          'length' => 255,
+          'not null' => TRUE,
+          'default' => '',
+          'description' => 'Name of the assertion function or method that created this message.',
+        ],
+        'line' => [
+          'type' => 'int',
+          'not null' => TRUE,
+          'default' => 0,
+          'description' => 'Line number on which the function is called.',
+        ],
+        'file' => [
+          'type' => 'varchar',
+          'length' => 255,
+          'not null' => TRUE,
+          'default' => '',
+          'description' => 'Name of the file where the function is called.',
+        ],
+      ],
+      'primary key' => ['message_id'],
+      'indexes' => [
+        'reporter' => ['test_class', 'message_id'],
+      ],
+    ];
+    $schema['simpletest_test_id'] = [
+      'description' => 'Stores simpletest test IDs, used to auto-increment the test ID so that a fresh test ID is used.',
+      'fields' => [
+        'test_id' => [
+          'type' => 'serial',
+          'not null' => TRUE,
+          'description' => 'Primary Key: Unique simpletest ID used to group test results together. Each time a set of tests
+                            are run a new test ID is used.',
+        ],
+        'last_prefix' => [
+          'type' => 'varchar',
+          'length' => 60,
+          'not null' => FALSE,
+          'default' => '',
+          'description' => 'The last database prefix used during testing.',
+        ],
+      ],
+      'primary key' => ['test_id'],
+    ];
+    return $schema;
+  }
+
 }

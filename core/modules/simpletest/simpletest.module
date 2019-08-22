@@ -490,8 +490,8 @@ function _simpletest_batch_finished($success, $results, $operations, $elapsed) {
     // Retrieve the last database prefix used for testing and the last test
     // class that was run from. Use the information to read the lgo file
     // in case any fatal errors caused the test to crash.
-    list($last_prefix, $last_test_class) = simpletest_last_test_get($test_id);
-    simpletest_log_read($test_id, $last_prefix, $last_test_class);
+    list($last_prefix, $last_test_class) = TestDatabase::lastTestGet($test_id);
+    (new TestDatabase($last_prefix))->logRead($test_id, $last_test_class);
 
     \Drupal::messenger()->addError(t('The test run did not successfully finish.'));
     \Drupal::messenger()->addWarning(t('Use the <em>Clean environment</em> button to clean-up temporary files and tables.'));
@@ -507,19 +507,15 @@ function _simpletest_batch_finished($success, $results, $operations, $elapsed) {
  * @return array
  *   Array containing the last database prefix used and the last test class
  *   that ran.
+ *
+ * @deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. Use
+ *   \Drupal\Core\Test\TestDatabase::lastTestGet() instead.
+ *
+ * @see https://www.drupal.org/node/3075252
  */
 function simpletest_last_test_get($test_id) {
-  $last_prefix = TestDatabase::getConnection()
-    ->queryRange('SELECT last_prefix FROM {simpletest_test_id} WHERE test_id = :test_id', 0, 1, [
-      ':test_id' => $test_id,
-    ])
-    ->fetchField();
-  $last_test_class = TestDatabase::getConnection()
-    ->queryRange('SELECT test_class FROM {simpletest} WHERE test_id = :test_id ORDER BY message_id DESC', 0, 1, [
-      ':test_id' => $test_id,
-    ])
-    ->fetchField();
-  return [$last_prefix, $last_test_class];
+  @trigger_error(__FUNCTION__ . ' is deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. Use \Drupal\Core\Test\TestDatabase::lastTestGet() instead. See https://www.drupal.org/node/3075252', E_USER_DEPRECATED);
+  return TestDatabase::lastTestGet($test_id);
 }
 
 /**
@@ -537,30 +533,16 @@ function simpletest_last_test_get($test_id) {
  *
  * @return bool
  *   Whether any fatal errors were found.
+ *
+ * @deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. Use
+ *   \Drupal\Core\Test\TestDatabase::logRead() instead.
+ *
+ * @see https://www.drupal.org/node/3075252
  */
 function simpletest_log_read($test_id, $database_prefix, $test_class) {
+  @trigger_error(__FUNCTION__ . ' is deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. Use \Drupal\Core\Test\TestDatabase::logRead() instead. See https://www.drupal.org/node/3075252', E_USER_DEPRECATED);
   $test_db = new TestDatabase($database_prefix);
-  $log = DRUPAL_ROOT . '/' . $test_db->getTestSitePath() . '/error.log';
-  $found = FALSE;
-  if (file_exists($log)) {
-    foreach (file($log) as $line) {
-      if (preg_match('/\[.*?\] (.*?): (.*?) in (.*) on line (\d+)/', $line, $match)) {
-        // Parse PHP fatal errors for example: PHP Fatal error: Call to
-        // undefined function break_me() in /path/to/file.php on line 17
-        $caller = [
-          'line' => $match[4],
-          'file' => $match[3],
-        ];
-        simpletest_insert_assert($test_id, $test_class, FALSE, $match[2], $match[1], $caller);
-      }
-      else {
-        // Unknown format, place the entire message in the log.
-        simpletest_insert_assert($test_id, $test_class, FALSE, $line, 'Fatal error');
-      }
-      $found = TRUE;
-    }
-  }
-  return $found;
+  return $test_db->logRead($test_id, $test_class);
 }
 
 /**
@@ -589,34 +571,15 @@ function simpletest_log_read($test_id, $database_prefix, $test_class) {
  *
  * @return
  *   Message ID of the stored assertion.
+ *
+ * @deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. Use
+ *   \Drupal\Core\Test\TestDatabase::insertAssert() instead.
+ *
+ * @see https://www.drupal.org/node/3075252
  */
 function simpletest_insert_assert($test_id, $test_class, $status, $message = '', $group = 'Other', array $caller = []) {
-  // Convert boolean status to string status.
-  if (is_bool($status)) {
-    $status = $status ? 'pass' : 'fail';
-  }
-
-  $caller += [
-    'function' => 'Unknown',
-    'line' => 0,
-    'file' => 'Unknown',
-  ];
-
-  $assertion = [
-    'test_id' => $test_id,
-    'test_class' => $test_class,
-    'status' => $status,
-    'message' => $message,
-    'message_group' => $group,
-    'function' => $caller['function'],
-    'line' => $caller['line'],
-    'file' => $caller['file'],
-  ];
-
-  return TestDatabase::getConnection()
-    ->insert('simpletest')
-    ->fields($assertion)
-    ->execute();
+  @trigger_error(__FUNCTION__ . ' is deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. Use \Drupal\Core\Test\TestDatabase::insertAssert() instead. See https://www.drupal.org/node/3075252', E_USER_DEPRECATED);
+  TestDatabase::insertAssert($test_id, $test_class, $status, $message, $group, $caller);
 }
 
 /**

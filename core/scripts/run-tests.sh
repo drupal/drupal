@@ -655,8 +655,7 @@ function simpletest_script_setup_database($new = FALSE) {
     exit(SIMPLETEST_SCRIPT_EXIT_FAILURE);
   }
   if ($new && $sqlite) {
-    require_once DRUPAL_ROOT . '/' . drupal_get_path('module', 'simpletest') . '/simpletest.install';
-    foreach (simpletest_schema() as $name => $table_spec) {
+    foreach (TestDatabase::testingSchema() as $name => $table_spec) {
       try {
         $table_exists = $schema->tableExists($name);
         if (empty($args['keep-results-table']) && $table_exists) {
@@ -752,14 +751,14 @@ function simpletest_script_execute_batch($test_classes) {
           // @see https://www.drupal.org/node/2780087
           $total_status = max(SIMPLETEST_SCRIPT_EXIT_FAILURE, $total_status);
           // Insert a fail for xml results.
-          simpletest_insert_assert($child['test_id'], $child['class'], FALSE, $message, 'run-tests.sh check');
+          TestDatabase::insertAssert($child['test_id'], $child['class'], FALSE, $message, 'run-tests.sh check');
           // Ensure that an error line is displayed for the class.
           simpletest_script_reporter_display_summary(
             $child['class'],
             ['#pass' => 0, '#fail' => 1, '#exception' => 0, '#debug' => 0]
           );
           if ($args['die-on-fail']) {
-            list($db_prefix) = simpletest_last_test_get($child['test_id']);
+            list($db_prefix) = TestDatabase::lastTestGet($child['test_id']);
             $test_db = new TestDatabase($db_prefix);
             $test_directory = $test_db->getTestSitePath();
             echo 'Simpletest database and files kept and test exited immediately on fail so should be reproducible if you change settings.php to use the database prefix ' . $db_prefix . ' and config directories in ' . $test_directory . "\n";
@@ -910,7 +909,7 @@ function simpletest_script_cleanup($test_id, $test_class, $exitcode) {
   }
   // Retrieve the last database prefix used for testing.
   try {
-    list($db_prefix) = simpletest_last_test_get($test_id);
+    list($db_prefix) = TestDatabase::lastTestGet($test_id);
   }
   catch (Exception $e) {
     echo (string) $e;
@@ -931,7 +930,7 @@ function simpletest_script_cleanup($test_id, $test_class, $exitcode) {
 
   // Read the log file in case any fatal errors caused the test to crash.
   try {
-    simpletest_log_read($test_id, $db_prefix, $test_class);
+    (new TestDatabase($db_prefix))->logRead($test_id, $last_test_class);
   }
   catch (Exception $e) {
     echo (string) $e;
