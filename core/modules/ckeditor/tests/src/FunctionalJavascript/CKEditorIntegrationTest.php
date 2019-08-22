@@ -9,6 +9,7 @@ use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\filter\Entity\FilterFormat;
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 use Drupal\node\Entity\NodeType;
+use Drupal\Tests\ckeditor\Traits\CKEditorTestTrait;
 
 /**
  * Tests the integration of CKEditor.
@@ -16,6 +17,8 @@ use Drupal\node\Entity\NodeType;
  * @group ckeditor
  */
 class CKEditorIntegrationTest extends WebDriverTestBase {
+
+  use CKEditorTestTrait;
 
   /**
    * The account.
@@ -160,7 +163,8 @@ class CKEditorIntegrationTest extends WebDriverTestBase {
 
     // If the caption filter is disabled, its checkbox should be absent.
     $this->drupalGet('node/add/page');
-    $this->click('.cke_button__drupalimage');
+    $this->waitForEditor();
+    $this->pressEditorButton('drupalimage');
     $this->assertNotEmpty($web_assert->waitForElement('css', '.ui-dialog'));
     $web_assert->elementNotExists('css', '.ui-dialog input[name="attributes[hasCaption]"]');
 
@@ -170,9 +174,10 @@ class CKEditorIntegrationTest extends WebDriverTestBase {
     ]);
     $this->filterFormat->save();
 
-    // If the caption filter is enabled,  its checkbox should be present.
+    // If the caption filter is enabled, its checkbox should be present.
     $this->drupalGet('node/add/page');
-    $this->click('.cke_button__drupalimage');
+    $this->waitForEditor();
+    $this->pressEditorButton('drupalimage');
     $this->assertNotEmpty($web_assert->waitForElement('css', '.ui-dialog'));
     $web_assert->elementExists('css', '.ui-dialog input[name="attributes[hasCaption]"]');
   }
