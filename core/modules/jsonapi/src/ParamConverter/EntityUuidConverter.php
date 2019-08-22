@@ -2,11 +2,10 @@
 
 namespace Drupal\jsonapi\ParamConverter;
 
-use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\TranslatableInterface;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\ParamConverter\EntityConverter;
-use Drupal\Core\TypedData\TranslatableInterface;
 use Drupal\jsonapi\Routing\Routes;
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
@@ -62,7 +61,7 @@ class EntityUuidConverter extends EntityConverter {
       $entity = reset($entities);
       // If the entity type is translatable, ensure we return the proper
       // translation object for the current context.
-      if ($entity instanceof EntityInterface && $entity instanceof TranslatableInterface) {
+      if ($entity instanceof TranslatableInterface && $entity->isTranslatable()) {
         // @see https://www.drupal.org/project/drupal/issues/2624770
         $entity_repository = isset($this->entityRepository) ? $this->entityRepository : $this->entityManager;
         $entity = $entity_repository->getTranslationFromContext($entity, NULL, ['operation' => 'entity_upcast']);
