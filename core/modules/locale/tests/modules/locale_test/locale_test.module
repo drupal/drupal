@@ -26,6 +26,15 @@ function locale_test_system_info_alter(&$info, Extension $file, $type) {
       $info['hidden'] = FALSE;
     }
   }
+
+  // Alter the name and the core version of the project. This should not affect
+  // the locale project information.
+  if (\Drupal::state()->get('locale.test_system_info_alter_name_core')) {
+    if ($file->getName() == 'locale_test') {
+      $info['core'] = '8.6.7';
+      $info['name'] = 'locale_test_alter';
+    }
+  }
 }
 
 /**
