@@ -30,7 +30,6 @@ use Drupal\jsonapi\Context\FieldResolver;
 use Drupal\jsonapi\Entity\EntityValidationTrait;
 use Drupal\jsonapi\Access\TemporaryQueryGuard;
 use Drupal\jsonapi\Exception\EntityAccessDeniedHttpException;
-use Drupal\jsonapi\Exception\UnprocessableHttpEntityException;
 use Drupal\jsonapi\IncludeResolver;
 use Drupal\jsonapi\JsonApiResource\IncludedData;
 use Drupal\jsonapi\JsonApiResource\LinkCollection;
@@ -53,6 +52,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Drupal\Core\Http\Exception\CacheableBadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\ConflictHttpException;
+use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 use Symfony\Component\Serializer\Exception\InvalidArgumentException;
 use Symfony\Component\Serializer\Exception\UnexpectedValueException;
 use Symfony\Component\Serializer\SerializerInterface;
@@ -822,10 +822,10 @@ class EntityResource {
     // These two serialization exception types mean there was a problem with
     // the structure of the decoded data and it's not valid.
     catch (UnexpectedValueException $e) {
-      throw new UnprocessableHttpEntityException($e->getMessage());
+      throw new UnprocessableEntityHttpException($e->getMessage());
     }
     catch (InvalidArgumentException $e) {
-      throw new UnprocessableHttpEntityException($e->getMessage());
+      throw new UnprocessableEntityHttpException($e->getMessage());
     }
   }
 

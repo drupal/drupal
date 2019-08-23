@@ -1053,4 +1053,36 @@ class JsonApiRegressionTest extends JsonApiFunctionalTestBase {
     $this->assertSame('Constantine', $response_document['data']['attributes']['name']);
   }
 
+  /**
+   * Ensure POSTing invalid data results in a 422 response, not a PHP error.
+   *
+   * @see https://www.drupal.org/project/drupal/issues/3052954
+   */
+  public function testInvalidDataTriggersUnprocessableEntityErrorFromIssue3052954() {
+    $this->config('jsonapi.settings')->set('read_only', FALSE)->save(TRUE);
+
+    // Set up data model.
+    $user = $this->drupalCreateUser(['bypass node access']);
+
+    // Test.
+    $request_options = [
+      RequestOptions::HEADERS => [
+        'Content-Type' => 'application/vnd.api+json',
+        'Accept' => 'application/vnd.api+json',
+      ],
+      RequestOptions::JSON => [
+        'data' => [
+          'type' => 'article',
+          'attributes' => [
+            'title' => 'foobar',
+            'created' => 'not_a_date',
+          ],
+        ],
+      ],
+      RequestOptions::AUTH => [$user->getAccountName(), $user->pass_raw],
+    ];
+    $response = $this->request('POST', Url::fromUri('internal:/jsonapi/node/article'), $request_options);
+    $this->assertSame(422, $response->getStatusCode());
+  }
+
 }
