@@ -102,7 +102,7 @@ class ResourceTypeRepository implements ResourceTypeRepositoryInterface {
       $resource_types = [];
       foreach ($this->entityTypeManager->getDefinitions() as $entity_type) {
         $resource_types = array_merge($resource_types, array_map(function ($bundle) use ($entity_type) {
-          return $this->createResourceType($entity_type, $bundle);
+          return $this->createResourceType($entity_type, (string) $bundle);
         }, array_keys($this->entityTypeBundleInfo->getBundleInfo($entity_type->id()))));
       }
       foreach ($resource_types as $resource_type) {

@@ -51,6 +51,9 @@ class ResourceTypeRepositoryTest extends KernelTestBase {
     NodeType::create([
       'type' => 'page',
     ])->save();
+    NodeType::create([
+      'type' => '42',
+    ])->save();
 
     $this->resourceTypeRepository = $this->container->get('jsonapi.resource_type.repository');
   }
@@ -92,6 +95,7 @@ class ResourceTypeRepositoryTest extends KernelTestBase {
   public function getProvider() {
     return [
       ['node', 'article', 'Drupal\node\Entity\Node'],
+      ['node', '42', 'Drupal\node\Entity\Node'],
       ['node_type', 'node_type', 'Drupal\node\Entity\NodeType'],
       ['menu', 'menu', 'Drupal\system\Entity\Menu'],
     ];
