@@ -14,10 +14,10 @@ use Drupal\Core\Database\Database;
 use Drupal\Core\File\Exception\FileException;
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\StreamWrapper\PublicStream;
+use Drupal\Core\Test\PhpUnitTestRunner;
 use Drupal\Core\Test\TestDatabase;
 use Drupal\Core\Test\TestRunnerKernel;
 use Drupal\simpletest\Form\SimpletestResultsForm;
-use Drupal\simpletest\TestBase;
 use Drupal\Core\Test\TestDiscovery;
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Runner\Version;
@@ -789,12 +789,11 @@ function simpletest_script_run_phpunit($test_id, $class) {
     set_time_limit($reflection->getStaticPropertyValue('runLimit'));
   }
 
-  $results = simpletest_run_phpunit_tests($test_id, [$class], $status);
+  $runner = PhpUnitTestRunner::create(\Drupal::getContainer());
+  $results = $runner->runTests($test_id, [$class], $status);
   simpletest_process_phpunit_results($results);
 
-  // Map phpunit results to a data structure we can pass to
-  // _simpletest_format_summary_line.
-  $summaries = simpletest_summarize_phpunit_result($results);
+  $summaries = $runner->summarizeResults($results);
   foreach ($summaries as $class => $summary) {
     simpletest_script_reporter_display_summary($class, $summary);
   }

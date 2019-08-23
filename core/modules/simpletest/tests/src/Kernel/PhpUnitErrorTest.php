@@ -1,24 +1,30 @@
 <?php
 
-namespace Drupal\Tests\simpletest\Unit;
+namespace Drupal\Tests\simpletest\Kernel;
 
-use Drupal\Tests\UnitTestCase;
+use Drupal\KernelTests\KernelTestBase;
 
 /**
  * Tests PHPUnit errors are getting converted to Simpletest errors.
  *
  * @group simpletest
+ * @group legacy
  */
-class PhpUnitErrorTest extends UnitTestCase {
+class PhpUnitErrorTest extends KernelTestBase {
+
+  /**
+   * Enable the simpletest module.
+   *
+   * @var string[]
+   */
+  protected static $modules = ['simpletest'];
 
   /**
    * Test errors reported.
    *
-   * @covers ::simpletest_phpunit_xml_to_rows
+   * @expectedDeprecation simpletest_phpunit_xml_to_rows is deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. Use \Drupal\Core\Test\JUnitConverter::xmlToRows() instead. See https://www.drupal.org/node/2948547
    */
   public function testPhpUnitXmlParsing() {
-    require_once __DIR__ . '/../../../simpletest.module';
-
     $phpunit_error_xml = __DIR__ . '/../../fixtures/phpunit_error.xml';
 
     $res = simpletest_phpunit_xml_to_rows(1, $phpunit_error_xml);
@@ -34,7 +40,7 @@ class PhpUnitErrorTest extends UnitTestCase {
 
     // Make sure simpletest_phpunit_xml_to_rows() does not balk if the test
     // didn't run.
-    simpletest_phpunit_xml_to_rows(1, 'foobar');
+    $this->assertNull(simpletest_phpunit_xml_to_rows(1, 'does_not_exist'));
   }
 
 }

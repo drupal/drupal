@@ -9,6 +9,7 @@ use Drupal\Tests\simpletest\Functional\SimpletestPhpunitBrowserTest;
  * Test PHPUnit output for the Simpletest UI.
  *
  * @group simpletest
+ * @group legacy
  *
  * @see \Drupal\Tests\Listeners\SimpletestUiPrinter
  */
