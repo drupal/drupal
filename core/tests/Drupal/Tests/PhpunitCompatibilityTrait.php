@@ -38,7 +38,6 @@ trait PhpunitCompatibilityTrait {
    * @param object $proxyTarget
    *   Sets the proxy target.
    *
-   * @see \PHPUnit_Framework_TestCase::getMock
    * @see https://github.com/sebastianbergmann/phpunit/wiki/Release-Announcement-for-PHPUnit-5.4.0
    *
    * @return \PHPUnit_Framework_MockObject_MockObject

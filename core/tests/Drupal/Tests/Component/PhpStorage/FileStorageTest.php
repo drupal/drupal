@@ -99,14 +99,8 @@ class FileStorageTest extends PhpStorageTestBase {
       'bin' => 'test',
     ]);
     $code = "<?php\n echo 'here';";
-    if (method_exists($this, 'expectException')) {
-      $this->expectException(Warning::class);
-      $this->expectExceptionMessage('mkdir(): Permission Denied');
-    }
-    else {
-      $this->expectException(\PHPUnit_Framework_Error_Warning::class);
-      $this->expectExceptionMessage('mkdir(): Permission Denied');
-    }
+    $this->expectException(Warning::class);
+    $this->expectExceptionMessage('mkdir(): Permission Denied');
     $storage->save('subdirectory/foo.php', $code);
   }
 

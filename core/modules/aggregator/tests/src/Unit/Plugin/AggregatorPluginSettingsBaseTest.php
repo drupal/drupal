@@ -24,7 +24,7 @@ class AggregatorPluginSettingsBaseTest extends UnitTestCase {
   /**
    * The stubbed config factory object.
    *
-   * @var \PHPUnit_Framework_MockObject_MockBuilder
+   * @var \PHPUnit\Framework\MockObject\MockBuilder
    */
   protected $configFactory;
 
@@ -56,7 +56,7 @@ class AggregatorPluginSettingsBaseTest extends UnitTestCase {
         ->will($this->returnValue(['aggregator_test' => ['title' => '', 'description' => '']]));
     }
 
-    /** @var \Drupal\Core\Messenger\MessengerInterface|\PHPUnit_Framework_MockObject_MockBuilder $messenger */
+    /** @var \Drupal\Core\Messenger\MessengerInterface|\PHPUnit\Framework\MockObject\MockBuilder $messenger */
     $messenger = $this->createMock(MessengerInterface::class);
     $messenger->expects($this->any())->method('addMessage');
 

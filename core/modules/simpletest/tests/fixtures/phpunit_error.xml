@@ -7,7 +7,7 @@
     <testsuite name="Drupal\Tests\Core\Cache\NullBackendTest" file="/home/chx/www/system/core/tests/Drupal/Tests/Core/Cache/NullBackendTest.php" namespace="Drupal\Tests\Core\Cache" fullPackage="Drupal.Tests.Core.Cache" tests="0" assertions="0" failures="0" errors="0" time="0.000000"/>
     <testsuite name="Drupal\Tests\Core\Extension\ModuleHandlerUnitTest" file="/home/chx/www/system/core/tests/Drupal/Tests/Core/Extension/ModuleHandlerUnitTest.php" namespace="Drupal\Tests\Core\Extension" fullPackage="Drupal.Tests.Core.Extension" tests="1" assertions="0" failures="0" errors="1" time="0.002680">
       <testcase name="testloadInclude" class="Drupal\Tests\Core\Extension\ModuleHandlerUnitTest" file="/home/chx/www/system/core/tests/Drupal/Tests/Core/Extension/ModuleHandlerUnitTest.php" line="37" assertions="0" time="0.002680">
-        <error type="PHPUnit_Framework_Error_Notice">Drupal\Tests\Core\Extension\ModuleHandlerUnitTest::testloadInclude
+        <error type="PHPUnit\Framework\Error\Notice">Drupal\Tests\Core\Extension\ModuleHandlerUnitTest::testloadInclude
 Undefined index: foo
 
 /home/chx/www/system/core/lib/Drupal/Core/Extension/ModuleHandler.php:219
@@ -20,19 +20,19 @@ Undefined index: foo
     <testsuite name="Drupal\Tests\Core\Route\RoleAccessCheckTest" file="/var/www/d8/core/tests/Drupal/Tests/Core/Route/RoleAccessCheckTestkTest.php" namespace="Drupal\Tests\Core\Route" fullPackage="Drupal.Tests.Core.Route" tests="3" assertions="3" failures="3" errors="0" time="0.009176">
       <testsuite name="Drupal\Tests\Core\Route\RoleAccessCheckTest::testRoleAccess" tests="3" assertions="3" failures="3" errors="0" time="0.009176">
         <testcase name="testRoleAccess with data set #0" assertions="1" time="0.004519">
-          <failure type="PHPUnit_Framework_ExpectationFailedException">Drupal\Tests\Core\Route\RoleAccessCheckTest::testRoleAccess with data set #0 ('role_test_1', array(Drupal\user\Entity\User, Drupal\user\Entity\User))
+          <failure type="PHPUnit\Framework\ExpectationFailedException">Drupal\Tests\Core\Route\RoleAccessCheckTest::testRoleAccess with data set #0 ('role_test_1', array(Drupal\user\Entity\User, Drupal\user\Entity\User))
             Access granted for user with the roles role_test_1 on path: role_test_1
             Failed asserting that false is true.
           </failure>
         </testcase>
         <testcase name="testRoleAccess with data set #1" assertions="1" time="0.002354">
-          <failure type="PHPUnit_Framework_ExpectationFailedException">Drupal\Tests\Core\Route\RoleAccessCheckTest::testRoleAccess with data set #1 ('role_test_2', array(Drupal\user\Entity\User, Drupal\user\Entity\User))
+          <failure type="PHPUnit\Framework\ExpectationFailedException">Drupal\Tests\Core\Route\RoleAccessCheckTest::testRoleAccess with data set #1 ('role_test_2', array(Drupal\user\Entity\User, Drupal\user\Entity\User))
             Access granted for user with the roles role_test_2 on path: role_test_2
             Failed asserting that false is true.
           </failure>
         </testcase>
         <testcase name="testRoleAccess with data set #2" assertions="1" time="0.002303">
-          <failure type="PHPUnit_Framework_ExpectationFailedException">Drupal\Tests\Core\Route\RoleAccessCheckTest::testRoleAccess with data set #2 ('role_test_3', array(Drupal\user\Entity\User))
+          <failure type="PHPUnit\Framework\ExpectationFailedException">Drupal\Tests\Core\Route\RoleAccessCheckTest::testRoleAccess with data set #2 ('role_test_3', array(Drupal\user\Entity\User))
             Access granted for user with the roles role_test_1, role_test_2 on path: role_test_3
             Failed asserting that false is true.
           </failure>

@@ -7,6 +7,7 @@ use Drupal\Core\Database\Query\Condition;
 use Drupal\Core\Database\Query\PlaceholderInterface;
 use Drupal\Tests\UnitTestCase;
 use Prophecy\Argument;
+use PHPUnit\Framework\Error\Error;
 
 /**
  * @coversDefaultClass \Drupal\Core\Database\Query\Condition
@@ -161,7 +162,7 @@ class ConditionTest extends UnitTestCase {
 
     $condition = new Condition('AND');
     $condition->condition('name', 'value', $operator);
-    $this->expectException(\PHPUnit_Framework_Error::class);
+    $this->expectException(Error::class);
     $condition->compile($connection, $query_placeholder);
   }
 

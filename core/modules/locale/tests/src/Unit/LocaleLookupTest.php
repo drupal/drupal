@@ -46,7 +46,7 @@ class LocaleLookupTest extends UnitTestCase {
   /**
    * A mocked config factory built with UnitTestCase::getConfigFactoryStub().
    *
-   * @var \Drupal\Core\Config\ConfigFactory|\PHPUnit_Framework_MockObject_MockBuilder
+   * @var \Drupal\Core\Config\ConfigFactory|\PHPUnit\Framework\MockObject\MockBuilder
    */
   protected $configFactory;
 

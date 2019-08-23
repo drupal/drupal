@@ -20,7 +20,6 @@ use Drupal\Core\Test\TestRunnerKernel;
 use Drupal\simpletest\Form\SimpletestResultsForm;
 use Drupal\Core\Test\TestDiscovery;
 use PHPUnit\Framework\TestCase;
-use PHPUnit\Runner\Version;
 use Symfony\Component\HttpFoundation\Request;
 
 // Define some colors for display.
@@ -142,14 +141,6 @@ if ($args['clean']) {
     echo " - " . $text . "\n";
   }
   exit(SIMPLETEST_SCRIPT_EXIT_SUCCESS);
-}
-
-// Ensure we have the correct PHPUnit version for the version of PHP.
-if (class_exists('\PHPUnit_Runner_Version')) {
-  $phpunit_version = \PHPUnit_Runner_Version::id();
-}
-else {
-  $phpunit_version = Version::id();
 }
 
 $test_list = simpletest_script_get_test_list();

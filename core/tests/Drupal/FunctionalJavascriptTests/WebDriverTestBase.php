@@ -168,7 +168,7 @@ abstract class WebDriverTestBase extends BrowserTestBase {
    *   (optional) A message to display with the assertion. If left blank, a
    *   default message will be displayed.
    *
-   * @throws \PHPUnit_Framework_AssertionFailedError
+   * @throws \PHPUnit\Framework\AssertionFailedError
    *
    * @see \Behat\Mink\Driver\DriverInterface::evaluateScript()
    */

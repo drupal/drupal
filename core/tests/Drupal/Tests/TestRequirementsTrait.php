@@ -3,12 +3,13 @@
 namespace Drupal\Tests;
 
 use Drupal\Core\Extension\ExtensionDiscovery;
+use PHPUnit\Framework\SkippedTestError;
 
 /**
  * Allows test classes to require Drupal modules as dependencies.
  *
- * This trait is assumed to be on a subclass of \PHPUnit_Framework_TestCase, and
- * overrides \PHPUnit_Framework_TestCase::checkRequirements(). This allows the
+ * This trait is assumed to be on a subclass of \PHPUnit\Framework\TestCase, and
+ * overrides \PHPUnit\Framework\TestCase::checkRequirements(). This allows the
  * test to be marked as skipped before any kernel boot processes have happened.
  */
 trait TestRequirementsTrait {
@@ -26,9 +27,9 @@ trait TestRequirementsTrait {
    * Check module requirements for the Drupal use case.
    *
    * This method is assumed to override
-   * \PHPUnit_Framework_TestCase::checkRequirements().
+   * \PHPUnit\Framework\TestCase::checkRequirements().
    *
-   * @throws \PHPUnit_Framework_SkippedTestError
+   * @throws \PHPUnit\Framework\SkippedTestError
    *   Thrown when the requirements are not met, and this test should be
    *   skipped. Callers should not catch this exception.
    */
@@ -59,7 +60,7 @@ trait TestRequirementsTrait {
    * @param string[] $annotations
    *   A list of requires annotations from either a method or class annotation.
    *
-   * @throws \PHPUnit_Framework_SkippedTestError
+   * @throws \PHPUnit\Framework\SkippedTestError
    *   Thrown when the requirements are not met, and this test should be
    *   skipped. Callers should not catch this exception.
    */
@@ -83,7 +84,7 @@ trait TestRequirementsTrait {
       $list = array_keys($discovery->scan('module'));
       $not_available = array_diff($required_modules, $list);
       if (!empty($not_available)) {
-        throw new \PHPUnit_Framework_SkippedTestError('Required modules: ' . implode(', ', $not_available));
+        throw new SkippedTestError('Required modules: ' . implode(', ', $not_available));
       }
     }
   }

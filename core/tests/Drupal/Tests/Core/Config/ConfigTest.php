@@ -7,6 +7,7 @@ use Drupal\Core\Render\Markup;
 use Drupal\Tests\UnitTestCase;
 use Drupal\Core\Config\Config;
 use Drupal\Core\Config\ConfigValueException;
+use PHPUnit\Framework\Error\Warning;
 
 /**
  * Tests the Config.
@@ -269,7 +270,7 @@ class ConfigTest extends UnitTestCase {
     $this->config->set('testData', 1);
 
     // Attempt to treat the single value as a nested item.
-    $this->expectException(\PHPUnit_Framework_Error_Warning::class);
+    $this->expectException(Warning::class);
     $this->config->set('testData.illegalOffset', 1);
   }
 

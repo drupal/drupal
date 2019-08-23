@@ -10,6 +10,7 @@ use Drupal\entity_test\Entity\EntityTest;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\Tests\field\Kernel\FieldKernelTestBase;
 use Drupal\field\Entity\FieldStorageConfig;
+use PHPUnit\Framework\AssertionFailedError;
 
 /**
  * Tests the new entity API for the date field type.
@@ -255,7 +256,7 @@ class DateTimeItemTest extends FieldKernelTestBase {
    * @dataProvider datetimeValidationProvider
    */
   public function testDatetimeValidation($value) {
-    $this->expectException(\PHPUnit_Framework_AssertionFailedError::class);
+    $this->expectException(AssertionFailedError::class);
 
     $this->fieldStorage->setSetting('datetime_type', DateTimeItem::DATETIME_TYPE_DATETIME);
     $this->fieldStorage->save();
@@ -315,7 +316,7 @@ class DateTimeItemTest extends FieldKernelTestBase {
    * @dataProvider dateonlyValidationProvider
    */
   public function testDateonlyValidation($value) {
-    $this->expectException(\PHPUnit_Framework_AssertionFailedError::class);
+    $this->expectException(AssertionFailedError::class);
 
     $this->fieldStorage->setSetting('datetime_type', DateTimeItem::DATETIME_TYPE_DATE);
     $this->fieldStorage->save();

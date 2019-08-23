@@ -1118,7 +1118,7 @@ HTML;
   }
 
   /**
-   * @return \Drupal\Core\Theme\ThemeManagerInterface|\PHPUnit_Framework_MockObject_Builder_InvocationMocker
+   * @return \Drupal\Core\Theme\ThemeManagerInterface|\PHPUnit\Framework\MockObject\Builder\InvocationMocker
    */
   protected function setupThemeManagerForDetails() {
     return $this->themeManager->expects($this->any())

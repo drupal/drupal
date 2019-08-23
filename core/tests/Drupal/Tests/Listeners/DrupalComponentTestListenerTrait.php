@@ -17,7 +17,7 @@ trait DrupalComponentTestListenerTrait {
   /**
    * Reacts to the end of a test.
    *
-   * @param \PHPUnit\Framework\Test|\PHPUnit_Framework_Test $test
+   * @param \PHPUnit\Framework\Test $test
    *   The test object that has ended its test run.
    * @param float $time
    *   The time the test took.

@@ -25,12 +25,7 @@ class DiffOpTest extends TestCase {
    * @covers ::reverse
    */
   public function testReverse() {
-    if (method_exists($this, 'expectException')) {
-      $this->expectException(Error::class);
-    }
-    else {
-      $this->expectException(\PHPUnit_Framework_Error::class);
-    }
+    $this->expectException(Error::class);
     $op = new DiffOp();
     $result = $op->reverse();
   }

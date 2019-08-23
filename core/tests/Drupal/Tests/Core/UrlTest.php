@@ -160,7 +160,7 @@ class UrlTest extends UnitTestCase {
    * @param string $path
    *   The path.
    *
-   * @return \PHPUnit_Framework_Constraint_Callback
+   * @return \PHPUnit\Framework\Constraint\Callback
    *   The constraint checks whether a Request object has the right path.
    */
   protected function getRequestConstraint($path) {

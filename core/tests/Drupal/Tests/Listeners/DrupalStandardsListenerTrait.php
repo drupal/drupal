@@ -5,6 +5,7 @@ namespace Drupal\Tests\Listeners;
 use PHPUnit\Framework\AssertionFailedError;
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\TestSuite;
+use PHPUnit\Util\ErrorHandler;
 
 /**
  * Listens for PHPUnit tests and fails those with invalid coverage annotations.
@@ -167,8 +168,7 @@ trait DrupalStandardsListenerTrait {
     if ($type === E_USER_DEPRECATED) {
       return;
     }
-    $error_handler = class_exists('PHPUnit_Util_ErrorHandler') ? 'PHPUnit_Util_ErrorHandler' : 'PHPUnit\Util\ErrorHandler';
-    return $error_handler::handleError($type, $msg, $file, $line, $context);
+    return ErrorHandler::handleError($type, $msg, $file, $line, $context);
   }
 
   /**
@@ -182,7 +182,7 @@ trait DrupalStandardsListenerTrait {
    *
    * @group legacy
    *
-   * @param \PHPUnit\Framework\Test|\PHPUnit_Framework_Test $test
+   * @param \PHPUnit\Framework\Test $test
    *   The test object that has ended its test run.
    * @param float $time
    *   The time the test took.
@@ -190,7 +190,7 @@ trait DrupalStandardsListenerTrait {
    * @see http://symfony.com/doc/current/components/phpunit_bridge.html#mark-tests-as-legacy
    */
   private function doEndTest($test, $time) {
-    // \PHPUnit_Framework_Test does not have any useful methods of its own for
+    // \PHPUnit\Framework\Test does not have any useful methods of its own for
     // our purpose, so we have to distinguish between the different known
     // subclasses.
     if ($test instanceof TestCase) {
@@ -212,16 +212,13 @@ trait DrupalStandardsListenerTrait {
   /**
    * Determine if a test object is a test suite regardless of PHPUnit version.
    *
-   * @param \PHPUnit\Framework\Test|\PHPUnit_Framework_Test $test
+   * @param \PHPUnit\Framework\Test $test
    *   The test object to test if it is a test suite.
    *
    * @return bool
    *   TRUE if it is a test suite, FALSE if not.
    */
   private function isTestSuite($test) {
-    if (class_exists('\PHPUnit_Framework_TestSuite') && $test instanceof \PHPUnit_Framework_TestSuite) {
-      return TRUE;
-    }
     if (class_exists('PHPUnit\Framework\TestSuite') && $test instanceof TestSuite) {
       return TRUE;
     }
@@ -231,7 +228,7 @@ trait DrupalStandardsListenerTrait {
   /**
    * Reacts to the end of a test.
    *
-   * @param \PHPUnit\Framework\Test|\PHPUnit_Framework_Test $test
+   * @param \PHPUnit\Framework\Test $test
    *   The test object that has ended its test run.
    * @param float $time
    *   The time the test took.

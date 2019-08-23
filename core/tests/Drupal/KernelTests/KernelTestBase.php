@@ -22,6 +22,7 @@ use Drupal\Tests\ConfigTestTrait;
 use Drupal\Tests\PhpunitCompatibilityTrait;
 use Drupal\Tests\RandomGeneratorTrait;
 use Drupal\Tests\TestRequirementsTrait;
+use PHPUnit\Framework\Exception;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpFoundation\Request;
@@ -477,7 +478,7 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
    * @return \Drupal\Core\Extension\Extension[]
    *   Extension objects for $modules, keyed by module name.
    *
-   * @throws \PHPUnit_Framework_Exception
+   * @throws \PHPUnit\Framework\Exception
    *   If a module is not available.
    *
    * @see \Drupal\Tests\KernelTestBase::enableModules()
@@ -490,7 +491,7 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
     $list = $discovery->scan('module');
     foreach ($modules as $name) {
       if (!isset($list[$name])) {
-        throw new \PHPUnit_Framework_Exception("Unavailable module: '$name'. If this module needs to be downloaded separately, annotate the test class with '@requires module $name'.");
+        throw new Exception("Unavailable module: '$name'. If this module needs to be downloaded separately, annotate the test class with '@requires module $name'.");
       }
       $extensions[$name] = $list[$name];
     }

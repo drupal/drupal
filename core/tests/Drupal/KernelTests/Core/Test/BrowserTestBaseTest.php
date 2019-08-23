@@ -5,6 +5,7 @@ namespace Drupal\KernelTests\Core\Test;
 use Drupal\FunctionalTests\BrowserMissingDependentModuleMethodTest;
 use Drupal\FunctionalTests\BrowserMissingDependentModuleTest;
 use Drupal\KernelTests\KernelTestBase;
+use PHPUnit\Framework\SkippedTestError;
 
 /**
  * @group Test
@@ -36,7 +37,7 @@ class BrowserTestBaseTest extends KernelTestBase {
       $stub_test->publicCheckRequirements();
       $this->fail('Missing required module throws skipped test exception.');
     }
-    catch (\PHPUnit_Framework_SkippedTestError $e) {
+    catch (SkippedTestError $e) {
       $this->assertEqual('Required modules: module_does_not_exist', $e->getMessage());
     }
   }
@@ -63,7 +64,7 @@ class BrowserTestBaseTest extends KernelTestBase {
       $stub_test->publicCheckRequirements();
       $this->fail('Missing required module throws skipped test exception.');
     }
-    catch (\PHPUnit_Framework_SkippedTestError $e) {
+    catch (SkippedTestError $e) {
       $this->assertEqual('Required modules: module_does_not_exist', $e->getMessage());
     }
   }

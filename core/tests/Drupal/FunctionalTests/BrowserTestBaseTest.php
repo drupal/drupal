@@ -8,6 +8,7 @@ use Drupal\Component\Utility\Html;
 use Drupal\Core\Url;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\Traits\Core\CronRunTrait;
+use PHPUnit\Framework\ExpectationFailedException;
 
 /**
  * Tests BrowserTestBase functionality.
@@ -263,7 +264,7 @@ class BrowserTestBaseTest extends BrowserTestBase {
       $this->assertFieldByXPath("//input[@id = 'notexisting']");
       $this->fail('The "notexisting" field was found.');
     }
-    catch (\PHPUnit_Framework_ExpectationFailedException $e) {
+    catch (ExpectationFailedException $e) {
       $this->pass('assertFieldByXPath correctly failed. The "notexisting" field was not found.');
     }
 
@@ -279,7 +280,7 @@ class BrowserTestBaseTest extends BrowserTestBase {
       $this->assertFieldsByValue($this->xpath("//input[@id = 'edit-name']"), 'not the value');
       $this->fail('The "edit-name" field is found with the value "not the value".');
     }
-    catch (\PHPUnit_Framework_ExpectationFailedException $e) {
+    catch (ExpectationFailedException $e) {
       $this->pass('The "edit-name" field is not found with the value "not the value".');
     }
   }
@@ -320,7 +321,7 @@ class BrowserTestBaseTest extends BrowserTestBase {
       $this->assertField('invalid_name_and_id');
       $this->fail('The "invalid_name_and_id" field was found.');
     }
-    catch (\PHPUnit_Framework_ExpectationFailedException $e) {
+    catch (ExpectationFailedException $e) {
       $this->pass('assertField correctly failed. The "invalid_name_and_id" field was not found.');
     }
 
@@ -359,7 +360,7 @@ class BrowserTestBaseTest extends BrowserTestBase {
       $this->assertFieldById('edit-name');
       $this->fail('The "edit-name" field with no value was found.');
     }
-    catch (\PHPUnit_Framework_ExpectationFailedException $e) {
+    catch (ExpectationFailedException $e) {
       $this->pass('The "edit-name" field with no value was not found.');
     }
 
@@ -368,7 +369,7 @@ class BrowserTestBaseTest extends BrowserTestBase {
       $this->assertFieldById('edit-name', 'not the value');
       $this->fail('The "name" field was found, using the wrong value.');
     }
-    catch (\PHPUnit_Framework_ExpectationFailedException $e) {
+    catch (ExpectationFailedException $e) {
       $this->pass('The "name" field was not found, using the wrong value.');
     }
 
@@ -409,7 +410,7 @@ class BrowserTestBaseTest extends BrowserTestBase {
       $this->assertFieldByName('non-existing-name');
       $this->fail('The "non-existing-name" field was found.');
     }
-    catch (\PHPUnit_Framework_ExpectationFailedException $e) {
+    catch (ExpectationFailedException $e) {
       $this->pass('The "non-existing-name" field was not found');
     }
 
@@ -418,7 +419,7 @@ class BrowserTestBaseTest extends BrowserTestBase {
       $this->assertFieldByName('name', 'not the value');
       $this->fail('The "name" field with incorrect value was found.');
     }
-    catch (\PHPUnit_Framework_ExpectationFailedException $e) {
+    catch (ExpectationFailedException $e) {
       $this->pass('assertFieldByName correctly failed. The "name" field with incorrect value was not found.');
     }
 
@@ -473,7 +474,7 @@ class BrowserTestBaseTest extends BrowserTestBase {
       $this->assertOptionSelected('options', 1);
       $this->fail('The select option "1" was selected.');
     }
-    catch (\PHPUnit_Framework_ExpectationFailedException $e) {
+    catch (ExpectationFailedException $e) {
       $this->pass($e->getMessage());
     }
 
@@ -492,7 +493,7 @@ class BrowserTestBaseTest extends BrowserTestBase {
       $this->assertFieldById('Save', NULL);
       $this->fail('The field with id of "Save" was found.');
     }
-    catch (\PHPUnit_Framework_ExpectationFailedException $e) {
+    catch (ExpectationFailedException $e) {
       $this->pass($e->getMessage());
     }
 

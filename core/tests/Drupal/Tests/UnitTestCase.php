@@ -104,7 +104,7 @@ abstract class UnitTestCase extends TestCase {
    *   configuration object names and whose values are key => value arrays for
    *   the configuration object in question. Defaults to an empty array.
    *
-   * @return \PHPUnit_Framework_MockObject_MockBuilder
+   * @return \PHPUnit\Framework\MockObject\MockBuilder
    *   A MockBuilder object for the ConfigFactory with the desired return
    *   values.
    */

@@ -7,6 +7,7 @@ use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Menu\ContextualLinkDefault;
 use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Constraint\Count;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
@@ -286,7 +287,7 @@ class ContextualLinkManagerTest extends UnitTestCase {
 
     $this->moduleHandler->expects($this->at(1))
       ->method('alter')
-      ->with($this->equalTo('contextual_links'), new \PHPUnit_Framework_Constraint_Count(2), $this->equalTo('group1'), $this->equalTo(['key' => 'value']));
+      ->with($this->equalTo('contextual_links'), new Count(2), $this->equalTo('group1'), $this->equalTo(['key' => 'value']));
 
     $result = $this->contextualLinkManager->getContextualLinksArrayByGroup('group1', ['key' => 'value']);
     $this->assertCount(2, $result);

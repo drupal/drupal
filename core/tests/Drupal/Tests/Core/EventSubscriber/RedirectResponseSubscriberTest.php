@@ -6,6 +6,7 @@ use Drupal\Core\EventSubscriber\RedirectResponseSubscriber;
 use Drupal\Core\Routing\TrustedRedirectResponse;
 use Drupal\Core\Utility\UnroutedUrlAssemblerInterface;
 use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Error\Error;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -123,7 +124,7 @@ class RedirectResponseSubscriberTest extends UnitTestCase {
     $listener = new RedirectResponseSubscriber($this->urlAssembler, $this->requestContext);
     $dispatcher->addListener(KernelEvents::RESPONSE, [$listener, 'checkRedirectUrl']);
     $event = new FilterResponseEvent($kernel, $request, HttpKernelInterface::SUB_REQUEST, $response);
-    $this->expectException(\PHPUnit_Framework_Error::class);
+    $this->expectException(Error::class);
     $dispatcher->dispatch(KernelEvents::RESPONSE, $event);
   }
 
@@ -171,7 +172,7 @@ class RedirectResponseSubscriberTest extends UnitTestCase {
     $listener = new RedirectResponseSubscriber($this->urlAssembler, $this->requestContext);
     $dispatcher->addListener(KernelEvents::RESPONSE, [$listener, 'checkRedirectUrl']);
     $event = new FilterResponseEvent($kernel, $request, HttpKernelInterface::SUB_REQUEST, $response);
-    $this->expectException(\PHPUnit_Framework_Error::class);
+    $this->expectException(Error::class);
     $dispatcher->dispatch(KernelEvents::RESPONSE, $event);
   }
 

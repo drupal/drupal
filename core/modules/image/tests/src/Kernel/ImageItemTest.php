@@ -12,6 +12,7 @@ use Drupal\Tests\field\Kernel\FieldKernelTestBase;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\file\Entity\File;
 use Drupal\user\Entity\Role;
+use PHPUnit\Framework\Error\Warning;
 
 /**
  * Tests using entity fields of the image field type.
@@ -153,7 +154,7 @@ class ImageItemTest extends FieldKernelTestBase {
       $this->fail('Exception did not fail');
     }
     catch (EntityStorageException $exception) {
-      $this->assertInstanceOf(\PHPUnit_Framework_Error_Warning::class, $exception->getPrevious());
+      $this->assertInstanceOf(Warning::class, $exception->getPrevious());
       $this->assertEquals($exception->getMessage(), 'Missing file with ID 9999.');
       $this->assertEmpty($entity->image_test->width);
       $this->assertEmpty($entity->image_test->height);

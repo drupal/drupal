@@ -7,7 +7,7 @@ use Drupal\Component\Annotation\Reflection\MockFileFinder;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Extension\ExtensionDiscovery;
 use Drupal\Core\Test\Exception\MissingGroupException;
-use PHPUnit_Util_Test;
+use PHPUnit\Util\Test;
 
 /**
  * Discovers available tests.
@@ -418,14 +418,14 @@ class TestDiscovery {
    *     - module: A list of Drupal module dependencies that are required to
    *       exist.
    *
-   * @see PHPUnit_Util_Test::parseTestMethodAnnotations()
+   * @see \PHPUnit\Util\Test::parseTestMethodAnnotations()
    * @see http://phpunit.de/manual/current/en/incomplete-and-skipped-tests.html#incomplete-and-skipped-tests.skipping-tests-using-requires
    */
   public static function parseTestClassAnnotations(\ReflectionClass $class) {
-    $annotations = PHPUnit_Util_Test::parseTestMethodAnnotations($class->getName())['class'];
+    $annotations = Test::parseTestMethodAnnotations($class->getName())['class'];
 
     // @todo Enhance PHPUnit upstream to allow for custom @requires identifiers.
-    // @see PHPUnit_Util_Test::getRequirements()
+    // @see \PHPUnit\Util\Test::getRequirements()
     // @todo Add support for 'PHP', 'OS', 'function', 'extension'.
     // @see https://www.drupal.org/node/1273478
     if (isset($annotations['requires'])) {

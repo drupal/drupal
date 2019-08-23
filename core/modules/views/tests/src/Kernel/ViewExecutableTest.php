@@ -20,6 +20,7 @@ use Drupal\views\Plugin\views\query\Sql;
 use Drupal\views\Plugin\views\pager\PagerPluginBase;
 use Drupal\views\Plugin\views\query\QueryPluginBase;
 use Drupal\views_test_data\Plugin\views\display\DisplayTest;
+use PHPUnit\Framework\Error\Warning;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -201,7 +202,7 @@ class ViewExecutableTest extends ViewsKernelTestBase {
       $view->setDisplay('invalid');
       $this->fail('Expected error, when setDisplay() called with invalid display ID');
     }
-    catch (\PHPUnit_Framework_Error_Warning $e) {
+    catch (Warning $e) {
       $this->assertEquals('setDisplay() called with invalid display ID "invalid".', $e->getMessage());
     }
 

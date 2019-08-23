@@ -4,6 +4,7 @@ namespace Drupal\Tests\Listeners;
 
 use Drupal\Tests\Traits\ExpectDeprecationTrait;
 use PHPUnit\Framework\TestCase;
+use PHPUnit\Util\Test;
 
 /**
  * Removes deprecations that we are yet to fix.
@@ -24,7 +25,7 @@ trait DeprecationListenerTrait {
   private $previousHandler;
 
   protected function deprecationStartTest($test) {
-    if ($test instanceof \PHPUnit_Framework_TestCase || $test instanceof TestCase) {
+    if ($test instanceof TestCase) {
       if ('disabled' !== getenv('SYMFONY_DEPRECATIONS_HELPER')) {
         $this->registerErrorHandler($test);
       }
@@ -37,7 +38,7 @@ trait DeprecationListenerTrait {
   /**
    * Reacts to the end of a test.
    *
-   * @param \PHPUnit\Framework\Test|\PHPUnit_Framework_Test $test
+   * @param \PHPUnit\Framework\Test $test
    *   The test object that has ended its test run.
    * @param float $time
    *   The time the test took.
@@ -52,13 +53,12 @@ trait DeprecationListenerTrait {
       }
     }
     if ($file = getenv('SYMFONY_DEPRECATIONS_SERIALIZE')) {
-      $util_test_class = class_exists('PHPUnit_Util_Test') ? 'PHPUnit_Util_Test' : 'PHPUnit\Util\Test';
       $method = $test->getName(FALSE);
       if (strpos($method, 'testLegacy') === 0
         || strpos($method, 'provideLegacy') === 0
         || strpos($method, 'getLegacy') === 0
         || strpos(get_class($test), '\Legacy')
-        || in_array('legacy', $util_test_class::getGroups(get_class($test), $method), TRUE)) {
+        || in_array('legacy', Test::getGroups(get_class($test), $method), TRUE)) {
         // This is a legacy test don't skip deprecations.
         return;
       }
@@ -83,7 +83,7 @@ trait DeprecationListenerTrait {
   /**
    * Determines if a test is isolated.
    *
-   * @param \PHPUnit_Framework_TestCase|\PHPUnit\Framework\TestCase $test
+   * @param \PHPUnit\Framework\TestCase $test
    *   The test to check.
    *
    * @return bool
