@@ -2,11 +2,14 @@
 
 namespace Drupal\datetime\Plugin\migrate\field;
 
+use Drupal\datetime\Plugin\Field\FieldType\DateTimeItemInterface;
 use Drupal\migrate\Plugin\MigrationInterface;
 use Drupal\migrate\MigrateException;
 use Drupal\migrate_drupal\Plugin\migrate\field\FieldPluginBase;
 
 /**
+ * Provides a field plugin for date and time fields.
+ *
  * @MigrateField(
  *   id = "datetime",
  *   type_map = {
@@ -45,19 +48,35 @@ class DateField extends FieldPluginBase {
    * {@inheritdoc}
    */
   public function defineValueProcessPipeline(MigrationInterface $migration, $field_name, $data) {
+    $to_format = DateTimeItemInterface::DATETIME_STORAGE_FORMAT;
+    if (isset($data['field_definition']['data'])) {
+      $field_data = unserialize($data['field_definition']['data']);
+      if (isset($field_data['settings']['granularity'])) {
+        $granularity = $field_data['settings']['granularity'];
+        if ($granularity = $field_data['settings']['granularity'] &&
+          $granularity['hour'] === 0 &&
+          $granularity['minute'] === 0 &&
+          $granularity['second'] === 0) {
+
+          $to_format = DateTimeItemInterface::DATE_STORAGE_FORMAT;
+        }
+      }
+    }
+
     switch ($data['type']) {
       case 'date':
         $from_format = 'Y-m-d\TH:i:s';
-        $to_format = 'Y-m-d\TH:i:s';
         break;
+
       case 'datestamp':
         $from_format = 'U';
         $to_format = 'U';
         break;
+
       case 'datetime':
         $from_format = 'Y-m-d H:i:s';
-        $to_format = 'Y-m-d\TH:i:s';
         break;
+
       default:
         throw new MigrateException(sprintf('Field %s of type %s is an unknown date field type.', $field_name, var_export($data['type'], TRUE)));
     }
