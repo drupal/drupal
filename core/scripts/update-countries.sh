@@ -69,6 +69,14 @@ foreach ($data->main->en->localeDisplayNames->territories as $code => $name) {
   $exclude_codes = [
     // The European Union is not a country.
     'EU',
+    // The Eurozone is not a country.
+    'EZ',
+    // The United Nations is not a country.
+    'UN',
+    // "Pseudo-Accents" is not a country.
+    'XA',
+    // "Pseudo-Bidi" is not a country.
+    'XB',
     // Don't allow "Unknown Region".
     'ZZ',
   ];
