@@ -90,15 +90,15 @@ class TestMultiWidthLayoutsTest extends WebDriverTestBase {
       $this->assertWidthClassApplied($width_option['class'] . $width);
       foreach ($width_option['widths'] as $width) {
         $width_class = $width_option['class'] . $width;
-        $assert_session->linkExists('Configure section 1');
-        $page->clickLink('Configure section 1');
+        $assert_session->linkExists('Configure Section 1');
+        $page->clickLink('Configure Section 1');
         $this->assertNotEmpty($assert_session->waitForElementVisible('css', '#drupal-off-canvas input[type="submit"][value="Update"]'));
         $page->findField('layout_settings[column_widths]')->setValue($width);
         $page->pressButton("Update");
         $this->assertWidthClassApplied($width_class);
       }
-      $assert_session->linkExists('Remove section');
-      $this->clickLink('Remove section');
+      $assert_session->linkExists('Remove Section 1');
+      $this->clickLink('Remove Section 1');
       $this->assertNotEmpty($assert_session->waitForElementVisible('css', '#drupal-off-canvas input[type="submit"][value="Remove"]'));
       $page->pressButton('Remove');
       $assert_session->assertNoElementAfterWait('css', ".$width_class");

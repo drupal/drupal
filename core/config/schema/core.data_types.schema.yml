@@ -358,6 +358,10 @@ display_variant.plugin:
 layout_plugin.settings:
   type: mapping
   label: 'Layout settings'
+  mapping:
+    label:
+      type: label
+      label: 'Label'
 
 layout_plugin.settings.*:
   type: layout_plugin.settings

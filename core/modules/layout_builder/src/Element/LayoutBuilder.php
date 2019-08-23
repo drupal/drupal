@@ -244,6 +244,9 @@ class LayoutBuilder extends RenderElement implements ContainerFactoryPluginInter
     $section = $section_storage->getSection($delta);
 
     $layout = $section->getLayout();
+    $layout_settings = $section->getLayoutSettings();
+    $section_label = !empty($layout_settings['label']) ? $layout_settings['label'] : $this->t('Section @section', ['@section' => $delta + 1]);
+
     $build = $section->toRenderArray($this->getAvailableContexts($section_storage), TRUE);
     $layout_definition = $layout->getPluginDefinition();
 
@@ -279,7 +282,7 @@ class LayoutBuilder extends RenderElement implements ContainerFactoryPluginInter
       $build[$region]['layout_builder_add_block']['link'] = [
         '#type' => 'link',
         // Add one to the current delta since it is zero-indexed.
-        '#title' => $this->t('Add block <span class="visually-hidden">in section @section, @region region</span>', ['@section' => $delta + 1, '@region' => $region_labels[$region]]),
+        '#title' => $this->t('Add block <span class="visually-hidden">in @section, @region region</span>', ['@section' => $section_label, '@region' => $region_labels[$region]]),
         '#url' => Url::fromRoute('layout_builder.choose_block',
           [
             'section_storage_type' => $storage_type,
@@ -310,9 +313,9 @@ class LayoutBuilder extends RenderElement implements ContainerFactoryPluginInter
       $build[$region]['#attributes']['class'][] = 'layout-builder__region';
       $build[$region]['#attributes']['class'][] = 'js-layout-builder-region';
       $build[$region]['#attributes']['role'] = 'group';
-      $build[$region]['#attributes']['aria-label'] = $this->t('@region region in section @section', [
+      $build[$region]['#attributes']['aria-label'] = $this->t('@region region in @section', [
         '@region' => $info['label'],
-        '@section' => $delta + 1,
+        '@section' => $section_label,
       ]);
 
       // Get weights of all children for use by the region label.
@@ -349,11 +352,11 @@ class LayoutBuilder extends RenderElement implements ContainerFactoryPluginInter
       '#attributes' => [
         'class' => ['layout-builder__section'],
         'role' => 'group',
-        'aria-label' => $this->t('Section @section', ['@section' => $delta + 1]),
+        'aria-label' => $section_label,
       ],
       'remove' => [
         '#type' => 'link',
-        '#title' => $this->t('Remove section <span class="visually-hidden">@section</span>', ['@section' => $delta + 1]),
+        '#title' => $this->t('Remove @section', ['@section' => $section_label]),
         '#url' => Url::fromRoute('layout_builder.remove_section', [
           'section_storage_type' => $storage_type,
           'section_storage' => $storage_id,
@@ -372,16 +375,12 @@ class LayoutBuilder extends RenderElement implements ContainerFactoryPluginInter
       // The section label is added to sections without a "Configure section"
       // link, and is only visible when the move block dialog is open.
       'section_label' => [
-        '#markup' => $this->t('<span class="layout-builder__section-label" aria-hidden="true">Section @section</span>', ['@section' => $delta + 1]),
+        '#markup' => $this->t('<span class="layout-builder__section-label" aria-hidden="true">@section</span>', ['@section' => $section_label]),
         '#access' => !$layout instanceof PluginFormInterface,
       ],
       'configure' => [
         '#type' => 'link',
-        // There are two instances of @section, the one wrapped in
-        // .visually-hidden is for screen readers. The one wrapped in
-        // .layout-builder__section-label is only visible when the
-        // move block dialog is open and it is not seen by screen readers.
-        '#title' => $this->t('Configure section <span class="visually-hidden">@section</span><span aria-hidden="true" class="layout-builder__section-label">@section</span>', ['@section' => $delta + 1]),
+        '#title' => $this->t('Configure @section', ['@section' => $section_label]),
         '#access' => $layout instanceof PluginFormInterface,
         '#url' => Url::fromRoute('layout_builder.configure_section', [
           'section_storage_type' => $storage_type,

@@ -123,12 +123,14 @@ class MoveBlockForm extends FormBase {
     foreach ($sections as $section_delta => $section) {
       $layout = $section->getLayout();
       $layout_definition = $layout->getPluginDefinition();
-      $section_label = $this->t('Section: @delta', ['@delta' => $section_delta + 1])->render();
+      if (!($section_label = $section->getLayoutSettings()['label'])) {
+        $section_label = $this->t('Section: @delta', ['@delta' => $section_delta + 1])->render();
+      }
       foreach ($layout_definition->getRegions() as $region_name => $region_info) {
         // Group regions by section.
         $region_options[$section_label]["$section_delta:$region_name"] = $this->t(
-          'Section: @delta, Region: @region',
-          ['@delta' => $section_delta + 1, '@region' => $region_info['label']]
+          '@section, Region: @region',
+          ['@section' => $section_label, '@region' => $region_info['label']]
         );
       }
     }

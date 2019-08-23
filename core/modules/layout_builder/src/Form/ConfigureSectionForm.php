@@ -111,6 +111,9 @@ class ConfigureSectionForm extends FormBase {
 
     if ($this->isUpdate) {
       $section = $this->sectionStorage->getSection($this->delta);
+      if ($label = $section->getLayoutSettings()['label']) {
+        $form['#title'] = $this->t('Configure @section', ['@section' => $label]);
+      }
     }
     else {
       $section = new Section($plugin_id);

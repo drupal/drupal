@@ -23,11 +23,17 @@ class LayoutSectionItemList extends FieldItemList implements SectionListInterfac
   use SectionStorageTrait;
 
   /**
+   * Numerically indexed array of field items.
+   *
+   * @var \Drupal\layout_builder\Plugin\Field\FieldType\LayoutSectionItem[]
+   */
+  protected $list = [];
+
+  /**
    * {@inheritdoc}
    */
   public function getSections() {
     $sections = [];
-    /** @var \Drupal\layout_builder\Plugin\Field\FieldType\LayoutSectionItem $item */
     foreach ($this->list as $delta => $item) {
       $sections[$delta] = $item->section;
     }
@@ -58,6 +64,18 @@ class LayoutSectionItemList extends FieldItemList implements SectionListInterfac
     // Ensure the entity is updated with the latest value.
     $entity->set($this->getName(), $this->getValue());
     return $entity;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function preSave() {
+    parent::preSave();
+    // Loop through each section and reconstruct it to ensure that all default
+    // values are present.
+    foreach ($this->list as $delta => $item) {
+      $item->section = Section::fromArray($item->section->toArray());
+    }
   }
 
   /**

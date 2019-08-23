@@ -67,7 +67,7 @@ class TranslatableFieldTest extends KernelTestBase {
    */
   public function testSectionsClearedOnCreateTranslation() {
     $section_data = [
-      new Section('layout_default', [], [
+      new Section('layout_onecol', [], [
         'first-uuid' => new SectionComponent('first-uuid', 'content', ['id' => 'foo']),
       ]),
     ];

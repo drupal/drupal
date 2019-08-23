@@ -296,8 +296,8 @@ class LayoutBuilderTest extends BrowserTestBase {
     $assert_session->linkExists('Layout');
     $this->clickLink('Layout');
     $assert_session->pageTextContains('Placeholder for the "Extra label" field');
-    $assert_session->linkExists('Remove section');
-    $this->clickLink('Remove section');
+    $assert_session->linkExists('Remove Section 1');
+    $this->clickLink('Remove Section 1');
     $page->pressButton('Remove');
 
     // Add a new section.
@@ -391,9 +391,16 @@ class LayoutBuilderTest extends BrowserTestBase {
     $assert_session->pageTextNotContains('My text field');
     $assert_session->elementNotExists('css', '.field--name-field-my-text');
 
+    $this->clickLink('Add section');
+    $this->clickLink('One column');
+    $page->fillField('layout_settings[label]', 'My Cool Section');
+    $page->pressButton('Add section');
+
     $expected_labels = [
-      'Section 1',
-      'Content region in section 1',
+      'My Cool Section',
+      'Content region in My Cool Section',
+      'Section 2',
+      'Content region in Section 2',
     ];
     $labels = [];
     foreach ($page->findAll('css', '[role="group"]') as $element) {
@@ -529,6 +536,7 @@ class LayoutBuilderTest extends BrowserTestBase {
     $this->clickLink('Add section');
     $assert_session->linkExists('Layout plugin (with dependencies)');
     $this->clickLink('Layout plugin (with dependencies)');
+    $page->pressButton('Add section');
     $assert_session->elementExists('css', '.layout--layout-test-dependencies-plugin');
     $assert_session->elementExists('css', '.field--name-body');
     $page->pressButton('Save layout');
@@ -940,6 +948,34 @@ class LayoutBuilderTest extends BrowserTestBase {
   }
 
   /**
+   * Tests the functionality of custom section labels.
+   */
+  public function testSectionLabels() {
+    $assert_session = $this->assertSession();
+    $page = $this->getSession()->getPage();
+
+    $this->drupalLogin($this->drupalCreateUser([
+      'configure any layout',
+      'administer node display',
+    ]));
+
+    $this->drupalGet('admin/structure/types/manage/bundle_with_section_field/display/default');
+    $page->checkField('layout[enabled]');
+    $page->pressButton('Save');
+    $page->checkField('layout[allow_custom]');
+    $page->pressButton('Save');
+
+    $this->drupalGet('node/1/layout');
+    $page->clickLink('Add section');
+    $page->clickLink('One column');
+    $page->fillField('layout_settings[label]', 'My Cool Section');
+    $page->pressButton('Add section');
+    $assert_session->pageTextContains('My Cool Section');
+    $page->pressButton('Save layout');
+    $assert_session->pageTextNotContains('My Cool Section');
+  }
+
+  /**
    * Tests that sections can provide custom attributes.
    */
   public function testCustomSectionAttributes() {
@@ -955,6 +991,7 @@ class LayoutBuilderTest extends BrowserTestBase {
     $page->clickLink('Manage layout');
     $page->clickLink('Add section');
     $page->clickLink('Layout Builder Test Plugin');
+    $page->pressButton('Add section');
     // See \Drupal\layout_builder_test\Plugin\Layout\LayoutBuilderTestPlugin::build().
     $assert_session->elementExists('css', '.go-birds');
   }
@@ -1150,7 +1187,7 @@ class LayoutBuilderTest extends BrowserTestBase {
     $assert_session->elementsCount('css', '.layout-builder__add-section', 2);
 
     // Remove the only section from the override.
-    $page->clickLink('Remove section');
+    $page->clickLink('Remove Section 1');
     $page->pressButton('Remove');
     $assert_session->elementsCount('css', '.layout', 0);
     $assert_session->elementsCount('css', '.layout-builder__add-block', 0);
@@ -1169,6 +1206,7 @@ class LayoutBuilderTest extends BrowserTestBase {
     // Add one section to the override.
     $page->clickLink('Add section');
     $page->clickLink('One column');
+    $page->pressButton('Add section');
     $assert_session->elementsCount('css', '.layout', 1);
     $assert_session->elementsCount('css', '.layout-builder__add-block', 1);
     $assert_session->elementsCount('css', '.layout-builder__add-section', 2);
@@ -1184,7 +1222,7 @@ class LayoutBuilderTest extends BrowserTestBase {
     $assert_session->elementsCount('css', '.layout-builder__add-section', 2);
 
     // Remove the only section from the default.
-    $page->clickLink('Remove section');
+    $page->clickLink('Remove Section 1');
     $page->pressButton('Remove');
     $assert_session->elementsCount('css', '.layout', 0);
     $assert_session->elementsCount('css', '.layout-builder__add-block', 0);
@@ -1219,10 +1257,10 @@ class LayoutBuilderTest extends BrowserTestBase {
     $assert_session = $this->assertSession();
     // Ensure the layouts provided by layout_builder are available.
     $expected_layouts_hrefs = [
-      'layout_builder/add/section/overrides/node.1/0/layout_onecol',
+      'layout_builder/configure/section/overrides/node.1/0/layout_onecol',
       'layout_builder/configure/section/overrides/node.1/0/layout_twocol_section',
       'layout_builder/configure/section/overrides/node.1/0/layout_threecol_section',
-      'layout_builder/add/section/overrides/node.1/0/layout_fourcol_section',
+      'layout_builder/configure/section/overrides/node.1/0/layout_fourcol_section',
     ];
     foreach ($expected_layouts_hrefs as $expected_layouts_href) {
       $assert_session->linkByHrefExists($expected_layouts_href);
@@ -1236,6 +1274,7 @@ class LayoutBuilderTest extends BrowserTestBase {
     ];
     foreach ($unexpected_layouts as $unexpected_layout) {
       $assert_session->linkByHrefNotExists("layout_builder/add/section/overrides/node.1/0/$unexpected_layout");
+      $assert_session->linkByHrefNotExists("layout_builder/configure/section/overrides/node.1/0/$unexpected_layout");
     }
   }
 

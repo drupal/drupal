@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\layout_builder\Kernel;
 
+use Drupal\layout_builder\Section;
 use Drupal\layout_builder\SectionListInterface;
 use Drupal\layout_builder\SectionStorage\SectionStorageTrait;
 
@@ -47,7 +48,11 @@ class TestSectionList implements SectionListInterface {
    * TestSectionList constructor.
    */
   public function __construct(array $sections) {
-    $this->setSections($sections);
+    // Loop through each section and reconstruct it to ensure that all default
+    // values are present.
+    foreach ($sections as $section) {
+      $this->sections[] = Section::fromArray($section->toArray());
+    }
   }
 
   /**

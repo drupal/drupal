@@ -28,7 +28,8 @@ third_party_settings:
     sections:
       -
         layout_id: layout_onecol
-        layout_settings: {  }
+        layout_settings:
+          label: ''
         components:
           44801518-fe93-421a-bdcb-550493c7925d:
             uuid: 44801518-fe93-421a-bdcb-550493c7925d

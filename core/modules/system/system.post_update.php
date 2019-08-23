@@ -206,3 +206,10 @@ function system_post_update_add_expand_all_items_key_in_system_menu_block(&$sand
 function system_post_update_clear_menu_cache() {
   // Empty post-update hook.
 }
+
+/**
+ * Clear the schema cache.
+ */
+function system_post_update_layout_plugin_schema_change() {
+  // Empty post-update hook.
+}

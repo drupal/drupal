@@ -69,7 +69,10 @@ class DefaultsSectionStorageTest extends KernelTestBase {
     $section = $display->getSection(0);
     $this->assertInstanceOf(Section::class, $section);
     $this->assertEquals('layout_twocol_section', $section->getLayoutId());
-    $this->assertEquals(['column_widths' => '50-50'], $section->getLayoutSettings());
+    $this->assertEquals([
+      'column_widths' => '50-50',
+      'label' => '',
+    ], $section->getLayoutSettings());
   }
 
   /**

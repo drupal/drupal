@@ -224,16 +224,16 @@ class LayoutBuilderTest extends WebDriverTestBase {
     $assert_session->pageTextContains('This is the block content');
 
     // Remove both sections.
-    $assert_session->linkExists('Remove section');
-    $this->clickLink('Remove section');
+    $assert_session->linkExists('Remove Section 1');
+    $this->clickLink('Remove Section 1');
     $this->assertOffCanvasFormAfterWait('layout_builder_remove_section');
     $assert_session->pageTextContains('Are you sure you want to remove section 1?');
     $assert_session->pageTextContains('This action cannot be undone.');
     $page->pressButton('Remove');
     $assert_session->assertWaitOnAjaxRequest();
 
-    $assert_session->linkExists('Remove section');
-    $this->clickLink('Remove section');
+    $assert_session->linkExists('Remove Section 1');
+    $this->clickLink('Remove Section 1');
     $this->assertOffCanvasFormAfterWait('layout_builder_remove_section');
     $page->pressButton('Remove');
     $assert_session->assertWaitOnAjaxRequest();
@@ -301,8 +301,8 @@ class LayoutBuilderTest extends WebDriverTestBase {
     $assert_session->linkExists('Add block');
 
     // Configure the existing section.
-    $assert_session->linkExists('Configure section 1');
-    $this->clickLink('Configure section 1');
+    $assert_session->linkExists('Configure Section 1');
+    $this->clickLink('Configure Section 1');
     $this->assertOffCanvasFormAfterWait('layout_builder_configure_section');
     $page->fillField('layout_settings[setting_1]', 'Test setting value');
     $page->pressButton('Update');
@@ -341,6 +341,7 @@ class LayoutBuilderTest extends WebDriverTestBase {
     ]));
     $assert_session->linkExists('One column');
     $this->clickLink('One column');
+    $page->pressButton('Add section');
 
     // Add a block.
     $this->drupalGet(Url::fromRoute('layout_builder.add_block', [
