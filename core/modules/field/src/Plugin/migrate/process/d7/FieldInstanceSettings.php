@@ -65,6 +65,16 @@ class FieldInstanceSettings extends ProcessPluginBase {
       $instance_settings['handler_settings'] = $field_settings['handler_settings'];
     }
 
+    // Get the labels for the list_boolean type.
+    if ($row->getSourceProperty('type') === 'list_boolean') {
+      if (isset($field_data['settings']['allowed_values'][1])) {
+        $instance_settings['on_label'] = $field_data['settings']['allowed_values'][1];
+      }
+      if (isset($field_data['settings']['allowed_values'][0])) {
+        $instance_settings['off_label'] = $field_data['settings']['allowed_values'][0];
+      }
+    }
+
     switch ($widget_type) {
       case 'image_image':
         $settings = $instance_settings;

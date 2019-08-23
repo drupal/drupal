@@ -150,6 +150,13 @@ class MigrateFieldInstanceTest extends MigrateDrupal7TestBase {
     $this->assertNull($name_field);
     $description_field = FieldConfig::load('taxonomy_term.test_vocabulary.description_field');
     $this->assertNull($description_field);
+
+    $boolean_field = FieldConfig::load('node.test_content_type.field_boolean');
+    $expected_settings = [
+      'on_label' => '1',
+      'off_label' => 'Off',
+    ];
+    $this->assertSame($expected_settings, $boolean_field->get('settings'));
   }
 
   /**
