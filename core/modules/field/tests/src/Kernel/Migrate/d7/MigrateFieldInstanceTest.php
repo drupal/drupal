@@ -151,6 +151,13 @@ class MigrateFieldInstanceTest extends MigrateDrupal7TestBase {
     $description_field = FieldConfig::load('taxonomy_term.test_vocabulary.description_field');
     $this->assertNull($description_field);
 
+    $boolean_field = FieldConfig::load('node.test_content_type.field_boolean');
+    $expected_settings = [
+      'on_label' => '1',
+      'off_label' => 'Off',
+    ];
+    $this->assertSame($expected_settings, $boolean_field->get('settings'));
+
     // Test the translation settings for taxonomy fields.
     $this->assertEntity('node.article.field_vocab_fixed', 'vocab_fixed', 'entity_reference', FALSE, FALSE);
     $this->assertEntity('node.article.field_vocab_localize', 'vocab_localize', 'entity_reference', FALSE, FALSE);
