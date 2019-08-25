@@ -170,6 +170,79 @@ class ComposerIntegrationTest extends UnitTestCase {
     }
   }
 
+  /**
+   * Data provider for the scaffold files test for Drupal core.
+   *
+   * @return array
+   */
+  public function providerTestExpectedScaffoldFiles() {
+    return [
+      ['.csslintrc', 'assets/scaffold/files/csslintrc'],
+      ['.editorconfig', 'assets/scaffold/files/editorconfig'],
+      ['.eslintignore', 'assets/scaffold/files/eslintignore'],
+      ['.eslintrc.json', 'assets/scaffold/files/eslintrc.json'],
+      ['.gitattributes', 'assets/scaffold/files/gitattributes'],
+      ['.ht.router.php', 'assets/scaffold/files/ht.router.php'],
+      ['.htaccess', 'assets/scaffold/files/htaccess'],
+      ['example.gitignore', 'assets/scaffold/files/example.gitignore'],
+      ['index.php', 'assets/scaffold/files/index.php'],
+      ['INSTALL.txt', 'assets/scaffold/files/drupal.INSTALL.txt'],
+      ['README.txt', 'assets/scaffold/files/drupal.README.txt'],
+      ['robots.txt', 'assets/scaffold/files/robots.txt'],
+      ['update.php', 'assets/scaffold/files/update.php'],
+      ['web.config', 'assets/scaffold/files/web.config'],
+      ['sites/README.txt', 'assets/scaffold/files/sites.README.txt'],
+      ['sites/development.services.yml', 'assets/scaffold/files/development.services.yml'],
+      ['sites/example.settings.local.php', 'assets/scaffold/files/example.settings.local.php'],
+      ['sites/example.sites.php', 'assets/scaffold/files/example.sites.php'],
+      ['sites/default/default.services.yml', 'assets/scaffold/files/default.services.yml'],
+      ['sites/default/default.settings.php', 'assets/scaffold/files/default.settings.php'],
+      ['modules/README.txt', 'assets/scaffold/files/modules.README.txt'],
+      ['profiles/README.txt', 'assets/scaffold/files/profiles.README.txt'],
+      ['themes/README.txt', 'assets/scaffold/files/themes.README.txt'],
+    ];
+  }
+
+  /**
+   * Tests core's composer.json extra composer-scaffold file-mappings section.
+   *
+   * Verify that every file listed in file-mappings exists in its destination
+   * path (mapping key) and also at its source path (mapping value), and that
+   * both of these files have exactly the same content.
+   *
+   * In Drupal 9, the files at the destination path will be removed. For the
+   * remainder of the Drupal 8 development cycle, these files will remain in
+   * order to maintain backwards compatibility with sites based on the template
+   * project drupal-composer/drupal-project.
+   *
+   * See https://www.drupal.org/project/drupal/issues/3075954
+   *
+   * @param string $destRelPath
+   *   Path to scaffold file destination location
+   * @param string $sourceRelPath
+   *   Path to scaffold file source location
+   *
+   * @dataProvider providerTestExpectedScaffoldFiles
+   */
+  public function testExpectedScaffoldFiles($destRelPath, $sourceRelPath) {
+    // Grab the 'file-mapping' section of the core composer.json file.
+    $json = json_decode(file_get_contents($this->root . '/core/composer.json'));
+    $scaffold_file_mapping = (array) $json->extra->{'composer-scaffold'}->{'file-mapping'};
+
+    // Assert that the 'file-mapping' section has the expected entry.
+    $this->assertArrayHasKey("[web-root]/$destRelPath", $scaffold_file_mapping);
+    $this->assertEquals($sourceRelPath, $scaffold_file_mapping["[web-root]/$destRelPath"]);
+
+    // Assert that the source file exists.
+    $this->assertFileExists($this->root . '/core/' . $sourceRelPath);
+
+    // Assert that the destination file exists and has the same contents as
+    // the source file. Note that in Drupal 9, the destination file will be
+    // removed.
+    $this->assertFileExists($this->root . '/' . $destRelPath);
+    $this->assertFileEquals($this->root . '/core/' . $sourceRelPath, $this->root . '/' . $destRelPath, 'Scaffold source and destination files must have the same contents.');
+  }
+
   // @codingStandardsIgnoreStart
   /**
    * The following method is copied from \Composer\Package\Locker.
