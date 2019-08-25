@@ -1,0 +1,21 @@
+{
+  "name": "drupal/core-vendor-hardening",
+  "description": "Hardens the vendor directory for when it's in the docroot.",
+  "keywords": ["drupal"],
+  "homepage": "https://www.drupal.org/project/drupal",
+  "license": "GPL-2.0-or-later",
+  "type": "composer-plugin",
+  "autoload": {
+    "psr-4": {
+      "Drupal\\Composer\\Plugin\\VendorHardening\\": "."
+    }
+  },
+  "extra": {
+    "class": "Drupal\\Composer\\Plugin\\VendorHardening\\VendorHardeningPlugin"
+  },
+  "require": {
+    "php": ">=7.0.8",
+    "composer-plugin-api": "^1.1",
+    "drupal/core-file-security": "^8.8"
+  }
+}
