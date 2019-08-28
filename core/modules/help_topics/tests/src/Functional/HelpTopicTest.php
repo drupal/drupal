@@ -177,7 +177,7 @@ class HelpTopicTest extends BrowserTestBase {
     // Verify links on the test top-level page.
     $page = 'admin/help/topic/help_topics_test.test';
     $links = [
-      'link to the writing good help topic' => 'Writing good help',
+      'link to the additional topic' => 'Additional topic',
       'Linked topic' => 'This topic is not supposed to be top-level',
       'Additional topic' => 'This topic should get listed automatically',
     ];
@@ -224,9 +224,6 @@ class HelpTopicTest extends BrowserTestBase {
       ],
       'help_topics_test_direct_yml' => [
         'name' => 'Test direct yaml topic label',
-      ],
-      'help_topics.help_topic_writing' => [
-        'name' => 'Writing good help',
       ],
     ];
   }
