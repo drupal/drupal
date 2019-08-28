@@ -1,16 +1,17 @@
 <?php
 
-namespace Drupal\Tests\system\Functional\Mail;
+namespace Drupal\Tests\system\Kernel\Mail;
 
 use Drupal\Component\Utility\Random;
 use Drupal\Component\Utility\Unicode;
+use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Mail\MailFormatHelper;
 use Drupal\Core\Mail\Plugin\Mail\TestMailCollector;
 use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\Core\Render\Markup;
 use Drupal\Core\Url;
 use Drupal\file\Entity\File;
-use Drupal\Tests\BrowserTestBase;
+use Drupal\KernelTests\KernelTestBase;
 use Drupal\system_mail_failure_test\Plugin\Mail\TestPhpMailFailure;
 
 /**
@@ -18,28 +19,44 @@ use Drupal\system_mail_failure_test\Plugin\Mail\TestPhpMailFailure;
  *
  * @group Mail
  */
-class MailTest extends BrowserTestBase {
+class MailTest extends KernelTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
-  public static $modules = ['simpletest', 'system_mail_failure_test', 'mail_html_test', 'file', 'image'];
+  protected static $modules = [
+    'file',
+    'image',
+    'mail_cancel_test',
+    'mail_html_test',
+    'system',
+    'system_mail_failure_test',
+    'user',
+  ];
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function setUp() {
+    parent::setUp();
+    $this->installEntitySchema('user');
+    $this->installEntitySchema('file');
+  }
 
   /**
    * Assert that the pluggable mail system is functional.
    */
   public function testPluggableFramework() {
     // Switch mail backends.
-    $this->config('system.mail')->set('interface.default', 'test_php_mail_failure')->save();
+    $this->configureDefaultMailInterface('test_php_mail_failure');
 
     // Get the default MailInterface class instance.
     $mail_backend = \Drupal::service('plugin.manager.mail')->getInstance(['module' => 'default', 'key' => 'default']);
 
     // Assert whether the default mail backend is an instance of the expected
     // class.
-    $this->assertTrue($mail_backend instanceof TestPhpMailFailure, 'Default mail interface can be swapped.');
+    // Default mail interface can be swapped.
+    $this->assertInstanceOf(TestPhpMailFailure::class, $mail_backend);
 
     // Add a module-specific mail backend.
     $this->config('system.mail')->set('interface.mymodule_testkey', 'test_mail_collector')->save();
@@ -49,7 +66,8 @@ class MailTest extends BrowserTestBase {
 
     // Assert whether the added mail backend is an instance of the expected
     // class.
-    $this->assertTrue($mail_backend instanceof TestMailCollector, 'Additional mail interfaces can be added.');
+    // Additional mail interfaces can be added.
+    $this->assertInstanceOf(TestMailCollector::class, $mail_backend);
   }
 
   /**
@@ -57,7 +75,7 @@ class MailTest extends BrowserTestBase {
    */
   public function testErrorMessageDisplay() {
     // Switch mail backends.
-    $this->config('system.mail')->set('interface.default', 'test_php_mail_failure')->save();
+    $this->configureDefaultMailInterface('test_php_mail_failure');
 
     // Test with errors displayed to users.
     \Drupal::service('plugin.manager.mail')->mail('default', 'default', 'test@example.com', 'en');
@@ -73,24 +91,23 @@ class MailTest extends BrowserTestBase {
   /**
    * Test that message sending may be canceled.
    *
-   * @see simpletest_mail_alter()
+   * @see mail_cancel_test_mail_alter()
    */
   public function testCancelMessage() {
     $language_interface = \Drupal::languageManager()->getCurrentLanguage();
 
-    // Use the state system collector mail backend.
-    $this->config('system.mail')->set('interface.default', 'test_mail_collector')->save();
     // Reset the state variable that holds sent messages.
     \Drupal::state()->set('system.test_mail_collector', []);
 
-    // Send a test message that simpletest_mail_alter should cancel.
-    \Drupal::service('plugin.manager.mail')->mail('simpletest', 'cancel_test', 'cancel@example.com', $language_interface->getId());
+    // Send a test message that mail_cancel_test_alter should cancel.
+    \Drupal::service('plugin.manager.mail')->mail('mail_cancel_test', 'cancel_test', 'cancel@example.com', $language_interface->getId());
     // Retrieve sent message.
     $captured_emails = \Drupal::state()->get('system.test_mail_collector');
     $sent_message = end($captured_emails);
 
     // Assert that the message was not actually sent.
-    $this->assertFalse($sent_message, 'Message was canceled.');
+    // Message was canceled.
+    $this->assertFalse($sent_message);
   }
 
   /**
@@ -99,33 +116,43 @@ class MailTest extends BrowserTestBase {
   public function testFromAndReplyToHeader() {
     $language = \Drupal::languageManager()->getCurrentLanguage();
 
-    // Use the state system collector mail backend.
-    $this->config('system.mail')->set('interface.default', 'test_mail_collector')->save();
+    // Set required site configuruation.
+    $this->config('system.site')
+      ->set('mail', 'mailtest@example.com')
+      ->set('name', 'Drupal')
+      ->save();
+
     // Reset the state variable that holds sent messages.
     \Drupal::state()->set('system.test_mail_collector', []);
     // Send an email with a reply-to address specified.
-    $from_email = 'Drupal <simpletest@example.com>';
+    $from_email = 'Drupal <mailtest@example.com>';
     $reply_email = 'someone_else@example.com';
-    \Drupal::service('plugin.manager.mail')->mail('simpletest', 'from_test', 'from_test@example.com', $language, [], $reply_email);
+    \Drupal::service('plugin.manager.mail')->mail('mail_cancel_test', 'from_test', 'from_test@example.com', $language, [], $reply_email);
     // Test that the reply-to email is just the email and not the site name
     // and default sender email.
     $captured_emails = \Drupal::state()->get('system.test_mail_collector');
     $sent_message = end($captured_emails);
-    $this->assertEqual($from_email, $sent_message['headers']['From'], 'Message is sent from the site email account.');
-    $this->assertEqual($reply_email, $sent_message['headers']['Reply-to'], 'Message reply-to headers are set.');
-    $this->assertFalse(isset($sent_message['headers']['Errors-To']), 'Errors-to header must not be set, it is deprecated.');
+    // Message is sent from the site email account.
+    $this->assertEquals($from_email, $sent_message['headers']['From']);
+    // Message reply-to headers are set.
+    $this->assertEquals($reply_email, $sent_message['headers']['Reply-to']);
+    // Errors-to header must not be set, it is deprecated.
+    $this->assertFalse(isset($sent_message['headers']['Errors-To']));
 
     // Test that long site names containing characters that need MIME encoding
     // works as expected.
     $this->config('system.site')->set('name', 'Drépal this is a very long test sentence to test what happens with very long site names')->save();
     // Send an email and check that the From-header contains the site name.
-    \Drupal::service('plugin.manager.mail')->mail('simpletest', 'from_test', 'from_test@example.com', $language);
+    \Drupal::service('plugin.manager.mail')->mail('mail_cancel_test', 'from_test', 'from_test@example.com', $language);
     $captured_emails = \Drupal::state()->get('system.test_mail_collector');
     $sent_message = end($captured_emails);
-    $this->assertEquals('=?UTF-8?B?RHLDqXBhbCB0aGlzIGlzIGEgdmVyeSBsb25nIHRlc3Qgc2VudGVuY2UgdG8gdGU=?= <simpletest@example.com>', $sent_message['headers']['From'], 'From header is correctly encoded.');
-    $this->assertEquals('Drépal this is a very long test sentence to te <simpletest@example.com>', Unicode::mimeHeaderDecode($sent_message['headers']['From']), 'From header is correctly encoded.');
+    // From header is correctly encoded.
+    $this->assertEquals('=?UTF-8?B?RHLDqXBhbCB0aGlzIGlzIGEgdmVyeSBsb25nIHRlc3Qgc2VudGVuY2UgdG8gdGU=?= <mailtest@example.com>', $sent_message['headers']['From']);
+    // From header is correctly encoded.
+    $this->assertEquals('Drépal this is a very long test sentence to te <mailtest@example.com>', Unicode::mimeHeaderDecode($sent_message['headers']['From']));
     $this->assertFalse(isset($sent_message['headers']['Reply-to']), 'Message reply-to is not set if not specified.');
-    $this->assertFalse(isset($sent_message['headers']['Errors-To']), 'Errors-to header must not be set, it is deprecated.');
+    // Errors-to header must not be set, it is deprecated.
+    $this->assertFalse(isset($sent_message['headers']['Errors-To']));
 
     // Test RFC-2822 rules are respected for 'display-name' component of
     // 'From:' header. Specials characters are not allowed, so randomly add one
@@ -137,21 +164,24 @@ class MailTest extends BrowserTestBase {
     $this->config('system.site')->set('name', $site_name)->save();
     // Send an email and check that the From-header contains the site name
     // within double-quotes. Also make sure double-quotes and "\" are escaped.
-    \Drupal::service('plugin.manager.mail')->mail('simpletest', 'from_test', 'from_test@example.com', $language);
+    \Drupal::service('plugin.manager.mail')->mail('mail_cancel_test', 'from_test', 'from_test@example.com', $language);
     $captured_emails = \Drupal::state()->get('system.test_mail_collector');
     $sent_message = end($captured_emails);
     $escaped_site_name = str_replace(['\\', '"'], ['\\\\', '\\"'], $site_name);
-    $this->assertEquals('"' . $escaped_site_name . '" <simpletest@example.com>', $sent_message['headers']['From'], 'From header is correctly quoted.');
+    // From header is correctly quoted.
+    $this->assertEquals('"' . $escaped_site_name . '" <mailtest@example.com>', $sent_message['headers']['From']);
 
     // Make sure display-name is not quoted nor escaped if part on an encoding.
     $site_name = 'Drépal, "si\te"';
     $this->config('system.site')->set('name', $site_name)->save();
     // Send an email and check that the From-header contains the site name.
-    \Drupal::service('plugin.manager.mail')->mail('simpletest', 'from_test', 'from_test@example.com', $language);
+    \Drupal::service('plugin.manager.mail')->mail('mail_cancel_test', 'from_test', 'from_test@example.com', $language);
     $captured_emails = \Drupal::state()->get('system.test_mail_collector');
     $sent_message = end($captured_emails);
-    $this->assertEquals('=?UTF-8?B?RHLDqXBhbCwgInNpXHRlIg==?= <simpletest@example.com>', $sent_message['headers']['From'], 'From header is correctly encoded.');
-    $this->assertEquals($site_name . ' <simpletest@example.com>', Unicode::mimeHeaderDecode($sent_message['headers']['From']), 'From header is correctly encoded.');
+    // From header is correctly encoded.
+    $this->assertEquals('=?UTF-8?B?RHLDqXBhbCwgInNpXHRlIg==?= <mailtest@example.com>', $sent_message['headers']['From']);
+    // From header is correctly encoded.
+    $this->assertEquals($site_name . ' <mailtest@example.com>', Unicode::mimeHeaderDecode($sent_message['headers']['From']));
   }
 
   /**
@@ -160,8 +190,7 @@ class MailTest extends BrowserTestBase {
   public function testConvertRelativeUrlsIntoAbsolute() {
     $language_interface = \Drupal::languageManager()->getCurrentLanguage();
 
-    // Use the HTML compatible state system collector mail backend.
-    $this->config('system.mail')->set('interface.default', 'test_html_mail_collector')->save();
+    $this->configureDefaultMailInterface('test_html_mail_collector');
 
     // Fetch the hostname and port for matching against.
     $http_host = \Drupal::request()->getSchemeAndHttpHost();
@@ -183,7 +212,7 @@ class MailTest extends BrowserTestBase {
       // Prepare render array.
       $render = ['#markup' => Markup::create($html)];
 
-      // Send a test message that simpletest_mail_alter should cancel.
+      // Send a test message that mail_cancel_test_mail_alter should cancel.
       \Drupal::service('plugin.manager.mail')->mail('mail_html_test', 'render_from_message_param', 'relative_url@example.com', $language_interface->getId(), ['message' => $render]);
       // Retrieve sent message.
       $captured_emails = \Drupal::state()->get('system.test_mail_collector');
@@ -205,7 +234,7 @@ class MailTest extends BrowserTestBase {
       // Prepare render array.
       $render = ['#markup' => Markup::create($html)];
 
-      // Send a test message that simpletest_mail_alter should cancel.
+      // Send a test message that mail_cancel_test_mail_alter should cancel.
       \Drupal::service('plugin.manager.mail')->mail('mail_html_test', 'render_from_message_param', 'relative_url@example.com', $language_interface->getId(), ['message' => $render]);
       // Retrieve sent message.
       $captured_emails = \Drupal::state()->get('system.test_mail_collector');
@@ -227,7 +256,7 @@ class MailTest extends BrowserTestBase {
       // Prepare render array.
       $render = ['#markup' => Markup::create($html)];
 
-      // Send a test message that simpletest_mail_alter should cancel.
+      // Send a test message that mail_cancel_test_mail_alter should cancel.
       \Drupal::service('plugin.manager.mail')->mail('mail_html_test', 'render_from_message_param', 'relative_url@example.com', $language_interface->getId(), ['message' => $render]);
       // Retrieve sent message.
       $captured_emails = \Drupal::state()->get('system.test_mail_collector');
@@ -248,8 +277,7 @@ class MailTest extends BrowserTestBase {
   public function testRenderedElementsUseAbsolutePaths() {
     $language_interface = \Drupal::languageManager()->getCurrentLanguage();
 
-    // Use the HTML compatible state system collector mail backend.
-    $this->config('system.mail')->set('interface.default', 'test_html_mail_collector')->save();
+    $this->configureDefaultMailInterface('test_html_mail_collector');
 
     // Fetch the hostname and port for matching against.
     $http_host = \Drupal::request()->getSchemeAndHttpHost();
@@ -258,6 +286,12 @@ class MailTest extends BrowserTestBase {
     $random = new Random();
     $image_name = $random->name();
 
+    $test_base_url = 'http://localhost';
+    $this->setSetting('file_public_base_url', $test_base_url);
+    $filepath = \Drupal::service('file_system')->createFilename("{$image_name}.png", '');
+    $directory_uri = 'public://' . dirname($filepath);
+    \Drupal::service('file_system')->prepareDirectory($directory_uri, FileSystemInterface::CREATE_DIRECTORY);
+
     // Create an image file.
     $file = File::create(['uri' => "public://{$image_name}.png", 'filename' => "{$image_name}.png"]);
     $file->save();
@@ -265,7 +299,7 @@ class MailTest extends BrowserTestBase {
     $base_path = base_path();
 
     $path_pairs = [
-      'root relative' => [$file->getFileUri(), "{$http_host}{$base_path}{$this->publicFilesDirectory}/{$image_name}.png"],
+      'root relative' => [$file->getFileUri(), "{$http_host}{$base_path}{$image_name}.png"],
       'protocol relative' => ['//example.com/image.png', '//example.com/image.png'],
       'absolute' => ['http://example.com/image.png', 'http://example.com/image.png'],
     ];
@@ -284,7 +318,7 @@ class MailTest extends BrowserTestBase {
       ];
       $expected_html = "<img src=\"$expected_path\" alt=\"\" />";
 
-      // Send a test message that simpletest_mail_alter should cancel.
+      // Send a test message that mail_cancel_test_mail_alter should cancel.
       \Drupal::service('plugin.manager.mail')->mail('mail_html_test', 'render_from_message_param', 'relative_url@example.com', $language_interface->getId(), ['message' => $render]);
       // Retrieve sent message.
       $captured_emails = \Drupal::state()->get('system.test_mail_collector');
@@ -316,7 +350,7 @@ class MailTest extends BrowserTestBase {
       ];
       $expected_html = "<a href=\"$expected_path\">Link</a>";
 
-      // Send a test message that simpletest_mail_alter should cancel.
+      // Send a test message that mail_cancel_test_mail_alter should cancel.
       \Drupal::service('plugin.manager.mail')->mail('mail_html_test', 'render_from_message_param', 'relative_url@example.com', $language_interface->getId(), ['message' => $render]);
       // Retrieve sent message.
       $captured_emails = \Drupal::state()->get('system.test_mail_collector');
@@ -326,6 +360,22 @@ class MailTest extends BrowserTestBase {
       $expected_html = MailFormatHelper::wrapMail($expected_html);
       $this->assertSame($expected_html, $sent_message['body']);
     }
+  }
+
+  /**
+   * Configures the default mail interface.
+   *
+   * KernelTestBase enforces the usage of 'test_mail_collector' plugin to
+   * collect mail. Since we need to test this functionality itself, we
+   * manually configure the default mail interface.
+   *
+   * @todo Refactor in https://www.drupal.org/project/drupal/issues/3076715
+   *
+   * @param string $mail_interface
+   *   The mail interface to configure.
+   */
+  protected function configureDefaultMailInterface($mail_interface) {
+    $GLOBALS['config']['system.mail']['interface']['default'] = $mail_interface;
   }
 
 }

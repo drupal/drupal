@@ -1,0 +1,6 @@
+name: 'Cancel mail test support'
+description: 'Test that the mail can be cancelled.'
+type: module
+package: Testing
+version: VERSION
+core: 8.x

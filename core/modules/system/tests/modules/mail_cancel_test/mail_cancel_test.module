@@ -1,0 +1,19 @@
+<?php
+
+/**
+ * @file
+ * Helper module for the catching mail that needs to be cancelled.
+ */
+
+/**
+ * Implements hook_mail_alter().
+ *
+ * Aborts sending of messages with ID 'mail_cancel_test_cancel_test'.
+ *
+ * @see MailTestCase::testCancelMessage()
+ */
+function mail_cancel_test_mail_alter(&$message) {
+  if ($message['id'] == 'mail_cancel_test_cancel_test') {
+    $message['send'] = FALSE;
+  }
+}
