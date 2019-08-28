@@ -222,8 +222,6 @@ class SystemController extends ControllerBase {
       }
 
       if (empty($theme->status)) {
-        // Ensure this theme is compatible with this version of core.
-        $theme->incompatible_core = !isset($theme->info['core']) || ($theme->info['core'] != \DRUPAL::CORE_COMPATIBILITY);
         // Require the 'content' region to make sure the main page
         // content has a common place in all themes.
         $theme->incompatible_region = !isset($theme->info['regions']['content']);
@@ -234,7 +232,7 @@ class SystemController extends ControllerBase {
         $theme->incompatible_engine = isset($theme->info['engine']) && !isset($theme->owner);
       }
       $theme->operations = [];
-      if (!empty($theme->status) || !$theme->incompatible_core && !$theme->incompatible_php && !$theme->incompatible_base && !$theme->incompatible_engine) {
+      if (!empty($theme->status) || !$theme->info['core_incompatible'] && !$theme->incompatible_php && !$theme->incompatible_base && !$theme->incompatible_engine) {
         // Create the operations links.
         $query['theme'] = $theme->getName();
         if ($this->themeAccess->checkAccess($theme->getName())) {

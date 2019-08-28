@@ -492,6 +492,35 @@ class WebAssert extends MinkWebAssert {
   }
 
   /**
+   * Checks that a given form field element is enabled.
+   *
+   * @param string $field
+   *   One of id|name|label|value for the field.
+   * @param \Behat\Mink\Element\TraversableElement $container
+   *   (optional) The document to check against. Defaults to the current page.
+   *
+   * @return \Behat\Mink\Element\NodeElement
+   *   The matching element.
+   *
+   * @throws \Behat\Mink\Exception\ElementNotFoundException
+   * @throws \Behat\Mink\Exception\ExpectationException
+   */
+  public function fieldEnabled($field, TraversableElement $container = NULL) {
+    $container = $container ?: $this->session->getPage();
+    $node = $container->findField($field);
+
+    if ($node === NULL) {
+      throw new ElementNotFoundException($this->session->getDriver(), 'field', 'id|name|label|value', $field);
+    }
+
+    if ($node->hasAttribute('disabled')) {
+      throw new ExpectationException("Field $field is not enabled", $this->session->getDriver());
+    }
+
+    return $node;
+  }
+
+  /**
    * Checks that specific hidden field exists.
    *
    * @param string $field
