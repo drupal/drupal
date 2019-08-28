@@ -70,7 +70,7 @@ BROKEN;
 
     // Confirm that the error message is shown.
     $this->assertSession()
-      ->pageTextContains('Modules could not be listed due to an error: Missing required keys (core) in ' . $path . '/broken.info.yml');
+      ->pageTextContains("The 'core' or the 'core_version_requirement' key must be present in " . $path . '/broken.info.yml');
 
     // Check that the module filter text box is available.
     $this->assertTrue($this->xpath('//input[@name="text"]'));

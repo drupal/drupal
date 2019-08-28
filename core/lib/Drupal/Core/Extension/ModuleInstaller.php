@@ -81,9 +81,14 @@ class ModuleInstaller implements ModuleInstallerInterface {
    */
   public function install(array $module_list, $enable_dependencies = TRUE) {
     $extension_config = \Drupal::configFactory()->getEditable('core.extension');
+    // Get all module data so we can find dependencies and sort.
+    $module_data = system_rebuild_module_data();
+    foreach ($module_list as $module) {
+      if (!empty($module_data[$module]->info['core_incompatible'])) {
+        throw new MissingDependencyException("Unable to install modules: module '$module' is incompatible with this version of Drupal core.");
+      }
+    }
     if ($enable_dependencies) {
-      // Get all module data so we can find dependencies and sort.
-      $module_data = system_rebuild_module_data();
       $module_list = $module_list ? array_combine($module_list, $module_list) : [];
       if ($missing_modules = array_diff_key($module_list, $module_data)) {
         // One or more of the given modules doesn't exist.
@@ -108,6 +113,9 @@ class ModuleInstaller implements ModuleInstallerInterface {
 
           // Skip already installed modules.
           if (!isset($module_list[$dependency]) && !isset($installed_modules[$dependency])) {
+            if ($module_data[$dependency]->info['core_incompatible']) {
+              throw new MissingDependencyException("Unable to install modules: module '$module'. Its dependency module '$dependency' is incompatible with this version of Drupal core.");
+            }
             $module_list[$dependency] = $dependency;
           }
         }

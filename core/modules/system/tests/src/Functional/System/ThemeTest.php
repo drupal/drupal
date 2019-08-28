@@ -366,8 +366,11 @@ class ThemeTest extends BrowserTestBase {
     $this->assertText(t('This theme requires the base theme @base_theme to operate correctly.', ['@base_theme' => 'not_real_test_basetheme']));
     $this->assertText(t('This theme requires the base theme @base_theme to operate correctly.', ['@base_theme' => 'test_invalid_basetheme']));
     $this->assertText(t('This theme requires the theme engine @theme_engine to operate correctly.', ['@theme_engine' => 'not_real_engine']));
-    // Check for the error text of a theme with the wrong core version.
-    $this->assertText("This theme is not compatible with Drupal 8.x. Check that the .info.yml file contains the correct 'core' value.");
+    // Check for the error text of a theme with the wrong core version
+    // using 7.x and ^7.
+    $incompatible_core_message = 'This theme is not compatible with Drupal ' . \Drupal::VERSION . ". Check that the .info.yml file contains a compatible 'core' or 'core_version_requirement' value.";
+    $this->assertThemeIncompatibleText('Theme test with invalid core version', $incompatible_core_message);
+    $this->assertThemeIncompatibleText('Theme test with invalid semver core version', $incompatible_core_message);
     // Check for the error text of a theme without a content region.
     $this->assertText("This theme is missing a 'content' region.");
   }
@@ -436,24 +439,28 @@ class ThemeTest extends BrowserTestBase {
    * Tests installing a theme and setting it as default.
    */
   public function testInstallAndSetAsDefault() {
-    $this->drupalGet('admin/appearance');
-    // Bartik is uninstalled in the test profile and has the third "Install and
-    // set as default" link.
-    $this->clickLink(t('Install and set as default'), 2);
-    // Test the confirmation message.
-    $this->assertText('Bartik is now the default theme.');
-    // Make sure Bartik is now set as the default theme in config.
-    $this->assertEqual($this->config('system.theme')->get('default'), 'bartik');
+    $themes = [
+      'bartik' => 'Bartik',
+      'test_core_semver' => 'Theme test with semver core version',
+    ];
+    foreach ($themes as $theme_machine_name => $theme_name) {
+      $this->drupalGet('admin/appearance');
+      $this->getSession()->getPage()->findLink("Install $theme_name as default theme")->click();
+      // Test the confirmation message.
+      $this->assertText("$theme_name is now the default theme.");
+      // Make sure the theme is now set as the default theme in config.
+      $this->assertEqual($this->config('system.theme')->get('default'), $theme_machine_name);
 
-    // This checks for a regression. See https://www.drupal.org/node/2498691.
-    $this->assertNoText('The bartik theme was not found.');
+      // This checks for a regression. See https://www.drupal.org/node/2498691.
+      $this->assertNoText("The $theme_machine_name theme was not found.");
 
-    $themes = \Drupal::service('theme_handler')->rebuildThemeData();
-    $version = $themes['bartik']->info['version'];
+      $themes = \Drupal::service('theme_handler')->rebuildThemeData();
+      $version = $themes[$theme_machine_name]->info['version'];
 
-    // Confirm Bartik is indicated as the default theme.
-    $out = $this->getSession()->getPage()->getContent();
-    $this->assertTrue((bool) preg_match('/Bartik ' . preg_quote($version) . '\s{2,}\(default theme\)/', $out));
+      // Confirm the theme is indicated as the default theme.
+      $out = $this->getSession()->getPage()->getContent();
+      $this->assertTrue((bool) preg_match("/$theme_name " . preg_quote($version) . '\s{2,}\(default theme\)/', $out));
+    }
   }
 
   /**
@@ -467,6 +474,18 @@ class ThemeTest extends BrowserTestBase {
     $edit = [];
     $this->drupalPostForm('admin/appearance/settings/test_theme_settings_features', $edit, t('Save configuration'));
     $this->assertText('The configuration options have been saved.');
+  }
+
+  /**
+   * Asserts that expected incompatibility text is displayed for a theme.
+   *
+   * @param string $theme_name
+   *   Theme name to select element on page. This can be a partial name.
+   * @param string $expected_text
+   *   The expected incompatibility text.
+   */
+  private function assertThemeIncompatibleText($theme_name, $expected_text) {
+    $this->assertSession()->elementExists('css', ".theme-info:contains(\"$theme_name\") .incompatible:contains(\"$expected_text\")");
   }
 
 }

@@ -696,7 +696,7 @@ function update_verify_update_archive($project, $archive_file, $directory) {
     $info = \Drupal::service('info_parser')->parse($file->uri);
 
     // If the module or theme is incompatible with Drupal core, set an error.
-    if (empty($info['core']) || $info['core'] != \Drupal::CORE_COMPATIBILITY) {
+    if ($info['core_incompatible']) {
       $incompatible[] = !empty($info['name']) ? $info['name'] : t('Unknown');
     }
     else {
@@ -716,7 +716,7 @@ function update_verify_update_archive($project, $archive_file, $directory) {
       '%archive_file contains a version of %names that is not compatible with Drupal @version.',
       '%archive_file contains versions of modules or themes that are not compatible with Drupal @version: %names',
       [
-        '@version' => \Drupal::CORE_COMPATIBILITY,
+        '@version' => \Drupal::VERSION,
         '%archive_file' => $file_system->basename($archive_file),
         '%names' => implode(', ', $incompatible),
       ]
