@@ -80,6 +80,7 @@
   <rule ref="Drupal.Commenting.VariableComment">
     <!-- Sniff for: DuplicateVar, EmptyVar, InlineVariableName -->
     <exclude name="Drupal.Commenting.VariableComment.IncorrectVarType"/>
+    <exclude name="Drupal.Commenting.VariableComment.Missing"/>
     <exclude name="Drupal.Commenting.VariableComment.MissingVar"/>
     <exclude name="Drupal.Commenting.VariableComment.VarOrder"/>
     <exclude name="Drupal.Commenting.VariableComment.WrongStyle"/>

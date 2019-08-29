@@ -136,6 +136,19 @@ interface FormBuilderInterface {
    * There is no return value, but you can check to see if there are errors
    * by calling $form_state->getErrors().
    *
+   * For example:
+   * @code
+   * // register a new user
+   * $form_state = new FormState();
+   * $values['name'] = 'robo-user';
+   * $values['mail'] = 'robouser@example.com';
+   * $values['pass']['pass1'] = 'password';
+   * $values['pass']['pass2'] = 'password';
+   * $values['op'] = t('Create new account');
+   * $form_state->setValues($values);
+   * \Drupal::formBuilder()->submitForm('user_register_form', $form_state);
+   * @endcode
+   *
    * @param \Drupal\Core\Form\FormInterface|string $form_arg
    *   The value must be one of the following:
    *   - The name of a class that implements \Drupal\Core\Form\FormInterface.
@@ -167,18 +180,6 @@ interface FormBuilderInterface {
    *   $form_state->addBuildInfo('args', [&$object]);
    *   \Drupal::formBuilder()->submitForm('mymodule_form', $form_state);
    *   @endcode
-   * For example:
-   * @code
-   * // register a new user
-   * $form_state = new FormState();
-   * $values['name'] = 'robo-user';
-   * $values['mail'] = 'robouser@example.com';
-   * $values['pass']['pass1'] = 'password';
-   * $values['pass']['pass2'] = 'password';
-   * $values['op'] = t('Create new account');
-   * $form_state->setValues($values);
-   * \Drupal::formBuilder()->submitForm('user_register_form', $form_state);
-   * @endcode
    */
   public function submitForm($form_arg, FormStateInterface &$form_state);
 

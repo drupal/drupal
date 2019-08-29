@@ -364,7 +364,7 @@ function _batch_process() {
       // If possible, estimate remaining processing time.
       '@estimate'   => ($current > 0) ? \Drupal::service('date.formatter')->formatInterval(($elapsed * ($total - $current) / $current) / 1000) : '-',
     ];
-    $message = strtr($progress_message, $values);
+    $message    = strtr($progress_message, $values);
 
     return [$percentage, $message, $task_message];
   }

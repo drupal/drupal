@@ -189,13 +189,13 @@ class ContentModerationSyncingTest extends KernelTestBase {
    */
   protected function getAllRevisionNames(EntityTestMulRevPub $entity) {
     $storage = $this->container->get('entity_type.manager')->getStorage('entity_test_mulrevpub');
-    return array_map(function($revision_id) use ($storage) {
+    return array_map(function ($revision_id) use ($storage) {
       return $storage->loadRevision($revision_id)->name->value;
     }, array_keys($storage->getQuery()
-        ->allRevisions()
-        ->condition('id', $entity->id())
-        ->sort('revision_id', 'ASC')
-        ->execute())
+      ->allRevisions()
+      ->condition('id', $entity->id())
+      ->sort('revision_id', 'ASC')
+      ->execute())
     );
   }
 

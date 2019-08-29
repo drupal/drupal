@@ -14,9 +14,6 @@ abstract class TourTestBase extends BrowserTestBase {
    * Assert function to determine if tips rendered to the page
    * have a corresponding page element.
    *
-   * @param array $tips
-   *   A list of tips which provide either a "data-id" or "data-class".
-   *
    * @code
    * // Basic example.
    * $this->assertTourTips();
@@ -29,6 +26,9 @@ abstract class TourTestBase extends BrowserTestBase {
    * $tips[] = array('data-class' => 'baz');
    * $this->assertTourTips($tips);
    * @endcode
+   *
+   * @param array $tips
+   *   A list of tips which provide either a "data-id" or "data-class".
    */
   public function assertTourTips($tips = []) {
     // Get the rendered tips and their data-id and data-class attributes.
