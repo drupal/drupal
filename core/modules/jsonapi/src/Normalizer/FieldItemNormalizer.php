@@ -112,6 +112,12 @@ class FieldItemNormalizer extends NormalizerBase implements DenormalizerInterfac
     // be expanded to an array of all properties, we special-case single-value
     // properties.
     if (!is_array($data)) {
+      // The NULL normalization means there is no value, hence we can return
+      // early. Note that this is not just an optimization but a necessity for
+      // field types without main properties (such as the "map" field type).
+      if ($data === NULL) {
+        return $data;
+      }
       $property_value = $data;
       $property_name = $item_definition->getMainPropertyName();
       $property_value_class = $property_definitions[$property_name]->getClass();
