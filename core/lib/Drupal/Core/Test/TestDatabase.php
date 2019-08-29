@@ -244,24 +244,29 @@ class TestDatabase {
    *   The test ID to get the last test from.
    *
    * @return array
-   *   Array containing the last database prefix used and the last test class
-   *   that ran.
+   *   Associative array containing the last database prefix used and the
+   *   last test class that ran.
    *
    * @internal
    */
   public static function lastTestGet($test_id) {
     $connection = static::getConnection();
-    $last_prefix = $connection
-      ->queryRange('SELECT last_prefix FROM {simpletest_test_id} WHERE test_id = :test_id', 0, 1, [
-        ':test_id' => $test_id,
-      ])
-      ->fetchField();
-    $last_test_class = $connection
-      ->queryRange('SELECT test_class FROM {simpletest} WHERE test_id = :test_id ORDER BY message_id DESC', 0, 1, [
-        ':test_id' => $test_id,
-      ])
-      ->fetchField();
-    return [$last_prefix, $last_test_class];
+
+    // Define a subquery to identify the latest 'message_id' given the
+    // $test_id.
+    $max_message_id_subquery = $connection
+      ->select('simpletest', 'sub')
+      ->condition('test_id', $test_id);
+    $max_message_id_subquery->addExpression('MAX(message_id)', 'max_message_id');
+
+    // Run a select query to return 'last_prefix' from {simpletest_test_id} and
+    // 'test_class' from {simpletest}.
+    $select = $connection->select($max_message_id_subquery, 'st_sub');
+    $select->join('simpletest', 'st', 'st.message_id = st_sub.max_message_id');
+    $select->join('simpletest_test_id', 'sttid', 'st.test_id = sttid.test_id');
+    $select->addField('sttid', 'last_prefix');
+    $select->addField('st', 'test_class');
+    return $select->execute()->fetchAssoc();
   }
 
   /**

@@ -749,7 +749,7 @@ function simpletest_script_execute_batch($test_classes) {
             ['#pass' => 0, '#fail' => 1, '#exception' => 0, '#debug' => 0]
           );
           if ($args['die-on-fail']) {
-            list($db_prefix) = TestDatabase::lastTestGet($child['test_id']);
+            $db_prefix = TestDatabase::lastTestGet($child['test_id'])['last_prefix'];
             $test_db = new TestDatabase($db_prefix);
             $test_directory = $test_db->getTestSitePath();
             echo 'Simpletest database and files kept and test exited immediately on fail so should be reproducible if you change settings.php to use the database prefix ' . $db_prefix . ' and config directories in ' . $test_directory . "\n";
@@ -899,7 +899,8 @@ function simpletest_script_cleanup($test_id, $test_class, $exitcode) {
   }
   // Retrieve the last database prefix used for testing.
   try {
-    list($db_prefix) = TestDatabase::lastTestGet($test_id);
+    $last_test = TestDatabase::lastTestGet($test_id);
+    $db_prefix = $last_test['last_prefix'];
   }
   catch (Exception $e) {
     echo (string) $e;
@@ -920,7 +921,7 @@ function simpletest_script_cleanup($test_id, $test_class, $exitcode) {
 
   // Read the log file in case any fatal errors caused the test to crash.
   try {
-    (new TestDatabase($db_prefix))->logRead($test_id, $last_test_class);
+    (new TestDatabase($db_prefix))->logRead($test_id, $last_test['test_class']);
   }
   catch (Exception $e) {
     echo (string) $e;

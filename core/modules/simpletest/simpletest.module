@@ -407,8 +407,8 @@ function _simpletest_batch_finished($success, $results, $operations, $elapsed) {
     // Retrieve the last database prefix used for testing and the last test
     // class that was run from. Use the information to read the lgo file
     // in case any fatal errors caused the test to crash.
-    list($last_prefix, $last_test_class) = TestDatabase::lastTestGet($test_id);
-    (new TestDatabase($last_prefix))->logRead($test_id, $last_test_class);
+    $last_test = TestDatabase::lastTestGet($test_id);
+    (new TestDatabase($last_test['last_prefix']))->logRead($test_id, $last_test['test_class']);
 
     \Drupal::messenger()->addError(t('The test run did not successfully finish.'));
     \Drupal::messenger()->addWarning(t('Use the <em>Clean environment</em> button to clean-up temporary files and tables.'));
@@ -432,7 +432,7 @@ function _simpletest_batch_finished($success, $results, $operations, $elapsed) {
  */
 function simpletest_last_test_get($test_id) {
   @trigger_error(__FUNCTION__ . ' is deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. Use \Drupal\Core\Test\TestDatabase::lastTestGet() instead. See https://www.drupal.org/node/3075252', E_USER_DEPRECATED);
-  return TestDatabase::lastTestGet($test_id);
+  return array_values(TestDatabase::lastTestGet($test_id));
 }
 
 /**
