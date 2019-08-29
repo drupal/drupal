@@ -76,14 +76,17 @@ chromedriver using port 4444, and keep it running:
   (e.g. by running `composer install`)
 * Install [Node.js](https://nodejs.org/en/download/) and
   [yarn](https://yarnpkg.com/en/docs/install). The versions required are
-  specificed inside core/package.json in the `engines` field
+  specified inside core/package.json in the `engines` field. You can use
+  [nvm](https://github.com/nvm-sh/nvm) and [yvm](https://github.com/tophat/yvm)
+  to manage your local versions of these.
 * Install
   [Google Chrome](https://www.google.com/chrome/browser/desktop/index.html)
 * Inside the `core` folder, run `yarn install`
 * Configure the nightwatch settings by copying `.env.example` to `.env` and
   editing as necessary.
 * Ensure you have a web server running (as instructed in `.env`)
-* Again inside the `core` folder, run `yarn test:nightwatch` to run the tests.
+* Again inside the `core` folder, run `yarn test:nightwatch --env local` to run
+  the tests.
   By default this will output reports to `core/reports`
 * Nightwatch will run tests for core, as well as contrib and custom modules and
   themes. It will search for tests located under folders with the pattern

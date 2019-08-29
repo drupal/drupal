@@ -25,14 +25,12 @@ exports.command = function drupalInstall({ setupFile = '' } = {}, callback) {
         : '';
     const install = execSync(
       commandAsWebserver(
-        `php ./scripts/test-site.php install ${setupFile} --base-url ${
-          process.env.DRUPAL_TEST_BASE_URL
-        } ${dbOption} --json`,
+        `php ./scripts/test-site.php install ${setupFile} --base-url ${process.env.DRUPAL_TEST_BASE_URL} ${dbOption} --json`,
       ),
     );
     const installData = JSON.parse(install.toString());
-    this.drupalDbPrefix = installData.db_prefix;
-    this.drupalSitePath = installData.site_path;
+    this.globals.drupalDbPrefix = installData.db_prefix;
+    this.globals.drupalSitePath = installData.site_path;
     const url = new URL(process.env.DRUPAL_TEST_BASE_URL);
     this.url(process.env.DRUPAL_TEST_BASE_URL).setCookie({
       name: 'SIMPLETEST_USER_AGENT',

@@ -11,7 +11,7 @@ import { commandAsWebserver } from '../globals';
  */
 exports.command = function drupalUninstal(callback) {
   const self = this;
-  const prefix = self.drupalDbPrefix;
+  const prefix = this.globals.drupalDbPrefix;
 
   // Check for any existing errors, because running this will cause Nightwatch to hang.
   if (!this.currentTest.results.errors && !this.currentTest.results.failed) {
