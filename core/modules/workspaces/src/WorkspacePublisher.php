@@ -4,6 +4,7 @@ namespace Drupal\workspaces;
 
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 
 /**
  * Default implementation of the workspace publisher.
@@ -12,19 +13,14 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
  */
 class WorkspacePublisher implements WorkspacePublisherInterface {
 
+  use StringTranslationTrait;
+
   /**
    * The source workspace entity.
    *
    * @var \Drupal\workspaces\WorkspaceInterface
    */
   protected $sourceWorkspace;
-
-  /**
-   * The target workspace entity.
-   *
-   * @var \Drupal\workspaces\WorkspaceInterface
-   */
-  protected $targetWorkspace;
 
   /**
    * The entity type manager.
@@ -70,7 +66,6 @@ class WorkspacePublisher implements WorkspacePublisherInterface {
     $this->workspaceAssociationStorage = $entity_type_manager->getStorage('workspace_association');
     $this->workspaceManager = $workspace_manager;
     $this->sourceWorkspace = $source;
-    $this->targetWorkspace = $this->entityTypeManager->getStorage('workspace')->load(WorkspaceInterface::DEFAULT_WORKSPACE);
   }
 
   /**
@@ -85,7 +80,7 @@ class WorkspacePublisher implements WorkspacePublisherInterface {
     try {
       // @todo Handle the publishing of a workspace with a batch operation in
       //   https://www.drupal.org/node/2958752.
-      $this->workspaceManager->executeInWorkspace($this->targetWorkspace->id(), function () {
+      $this->workspaceManager->executeOutsideWorkspace(function () {
         foreach ($this->getDifferringRevisionIdsOnSource() as $entity_type_id => $revision_difference) {
 
           $entity_revisions = $this->entityTypeManager->getStorage($entity_type_id)
@@ -128,7 +123,7 @@ class WorkspacePublisher implements WorkspacePublisherInterface {
    * {@inheritdoc}
    */
   public function getTargetLabel() {
-    return $this->targetWorkspace->label();
+    return $this->t('Live');
   }
 
   /**

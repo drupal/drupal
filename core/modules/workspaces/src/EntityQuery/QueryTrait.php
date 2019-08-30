@@ -54,8 +54,8 @@ trait QueryTrait {
 
     // Only alter the query if the active workspace is not the default one and
     // the entity type is supported.
-    $active_workspace = $this->workspaceManager->getActiveWorkspace();
-    if (!$active_workspace->isDefaultWorkspace() && $this->workspaceManager->isEntityTypeSupported($this->entityType)) {
+    if ($this->workspaceManager->hasActiveWorkspace() && $this->workspaceManager->isEntityTypeSupported($this->entityType)) {
+      $active_workspace = $this->workspaceManager->getActiveWorkspace();
       $this->sqlQuery->addMetaData('active_workspace_id', $active_workspace->id());
       $this->sqlQuery->addMetaData('simple_query', FALSE);
 

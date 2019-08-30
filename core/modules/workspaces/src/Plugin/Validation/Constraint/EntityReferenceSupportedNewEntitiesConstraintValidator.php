@@ -50,7 +50,8 @@ class EntityReferenceSupportedNewEntitiesConstraintValidator extends ConstraintV
    * {@inheritdoc}
    */
   public function validate($value, Constraint $constraint) {
-    if ($this->workspaceManager->getActiveWorkspace()->isDefaultWorkspace()) {
+    // The validator should run only if we are in a active workspace context.
+    if (!$this->workspaceManager->hasActiveWorkspace()) {
       return;
     }
 

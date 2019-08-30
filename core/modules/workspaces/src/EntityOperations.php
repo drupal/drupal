@@ -314,8 +314,7 @@ class EntityOperations implements ContainerInjectionInterface {
     // \Drupal\path\Plugin\Validation\Constraint\PathAliasConstraintValidator
     // know in advance (before hook_entity_presave()) that the new revision will
     // be a pending one.
-    $active_workspace = $this->workspaceManager->getActiveWorkspace();
-    if (!$active_workspace->isDefaultWorkspace()) {
+    if ($this->workspaceManager->hasActiveWorkspace()) {
       $form['#entity_builders'][] = [get_called_class(), 'entityFormEntityBuild'];
     }
 
@@ -325,7 +324,8 @@ class EntityOperations implements ContainerInjectionInterface {
       // An entity can only be edited in one workspace.
       $workspace_id = reset($workspace_ids);
 
-      if ($workspace_id !== $active_workspace->id()) {
+      $active_workspace = $this->workspaceManager->getActiveWorkspace();
+      if ($workspace_id && (!$active_workspace || $workspace_id !== $active_workspace->id())) {
         $workspace = $this->entityTypeManager->getStorage('workspace')->load($workspace_id);
 
         $form['#markup'] = $this->t('The content is being edited in the %label workspace.', ['%label' => $workspace->label()]);
@@ -360,7 +360,7 @@ class EntityOperations implements ContainerInjectionInterface {
     // - the entity type is internal, which means that it should not affect
     //   anything in the default (Live) workspace;
     // - we are in the default workspace.
-    return $entity_type->getProvider() === 'workspaces' || $entity_type->isInternal() || $this->workspaceManager->getActiveWorkspace()->isDefaultWorkspace();
+    return $entity_type->getProvider() === 'workspaces' || $entity_type->isInternal() || !$this->workspaceManager->hasActiveWorkspace();
   }
 
 }

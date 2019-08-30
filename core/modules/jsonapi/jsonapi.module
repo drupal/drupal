@@ -321,8 +321,6 @@ function jsonapi_jsonapi_user_filter_access(EntityTypeInterface $entity_type, Ac
  */
 function jsonapi_jsonapi_workspace_filter_access(EntityTypeInterface $entity_type, $published, $owner, AccountInterface $account) {
   // @see \Drupal\workspaces\WorkspaceAccessControlHandler::checkAccess()
-  // \Drupal\jsonapi\Access\TemporaryQueryGuard adds the condition for
-  // (isDefaultWorkspace()), so this does not have to.
   return ([
     JSONAPI_FILTER_AMONG_ALL => AccessResult::allowedIfHasPermission($account, 'view any workspace'),
     JSONAPI_FILTER_AMONG_OWN => AccessResult::allowedIfHasPermission($account, 'view own workspace'),

@@ -25,3 +25,12 @@ entity.workspace.deploy_form:
     _admin_route: TRUE
   requirements:
     _permission: 'administer workspaces'
+
+workspaces.switch_to_live:
+  path: '/admin/config/workflow/workspaces/switch-to-live'
+  defaults:
+    _form: '\Drupal\workspaces\Form\SwitchToLiveForm'
+    _title: 'Switch to Live'
+  requirements:
+    _user_is_logged_in: 'TRUE'
+    _has_active_workspace: 'TRUE'

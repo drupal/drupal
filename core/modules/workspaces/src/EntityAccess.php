@@ -75,7 +75,7 @@ class EntityAccess implements ContainerInjectionInterface {
     // Workspaces themselves are handled by their own access handler and we
     // should not try to do any access checks for entity types that can not
     // belong to a workspace.
-    if ($entity->getEntityTypeId() === 'workspace' || !$this->workspaceManager->isEntityTypeSupported($entity->getEntityType())) {
+    if ($entity->getEntityTypeId() === 'workspace' || !$this->workspaceManager->isEntityTypeSupported($entity->getEntityType()) || !$this->workspaceManager->hasActiveWorkspace()) {
       return AccessResult::neutral();
     }
 
@@ -102,7 +102,7 @@ class EntityAccess implements ContainerInjectionInterface {
     // should not try to do any access checks for entity types that can not
     // belong to a workspace.
     $entity_type = $this->entityTypeManager->getDefinition($context['entity_type_id']);
-    if ($entity_type->id() === 'workspace' || !$this->workspaceManager->isEntityTypeSupported($entity_type)) {
+    if ($entity_type->id() === 'workspace' || !$this->workspaceManager->isEntityTypeSupported($entity_type) || !$this->workspaceManager->hasActiveWorkspace()) {
       return AccessResult::neutral();
     }
 

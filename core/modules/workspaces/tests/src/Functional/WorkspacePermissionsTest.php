@@ -199,11 +199,6 @@ class WorkspacePermissionsTest extends BrowserTestBase {
 
     $this->drupalGet("/admin/config/workflow/workspaces/manage/{$bears->id()}/delete");
     $this->assertSession()->statusCodeEquals(200);
-
-    // Check that the default workspace can not be deleted, even by a user with
-    // the "delete any workspace" permission.
-    $this->drupalGet("/admin/config/workflow/workspaces/manage/live/delete");
-    $this->assertSession()->statusCodeEquals(403);
   }
 
 }

@@ -19,17 +19,8 @@ class WorkspaceAccessControlHandler extends EntityAccessControlHandler {
    */
   protected function checkAccess(EntityInterface $entity, $operation, AccountInterface $account) {
     /** @var \Drupal\workspaces\WorkspaceInterface $entity */
-    if ($operation === 'delete' && $entity->isDefaultWorkspace()) {
-      return AccessResult::forbidden()->addCacheableDependency($entity);
-    }
-
     if ($account->hasPermission('administer workspaces')) {
       return AccessResult::allowed()->cachePerPermissions();
-    }
-
-    // The default workspace is always viewable, no matter what.
-    if ($operation == 'view' && $entity->isDefaultWorkspace()) {
-      return AccessResult::allowed()->addCacheableDependency($entity);
     }
 
     $permission_operation = $operation === 'update' ? 'edit' : $operation;

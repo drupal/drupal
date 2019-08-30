@@ -108,7 +108,7 @@ abstract class WorkspaceResourceTestBase extends EntityResourceTestBase {
       ],
       'revision_id' => [
         [
-          'value' => 3,
+          'value' => 2,
         ],
       ],
       'uid' => [

@@ -102,6 +102,19 @@ trait WorkspaceTestUtilities {
   }
 
   /**
+   * Switches to the live version of the site for subsequent requests.
+   *
+   * This assumes that the switcher block has already been setup by calling
+   * setupWorkspaceSwitcherBlock().
+   */
+  protected function switchToLive() {
+    /** @var \Drupal\Tests\WebAssert $session */
+    $session = $this->assertSession();
+    $this->drupalPostForm(NULL, [], 'Switch to Live');
+    $session->pageTextContains('You are now viewing the live version of the site.');
+  }
+
+  /**
    * Creates a node by "clicking" buttons.
    *
    * @param string $label

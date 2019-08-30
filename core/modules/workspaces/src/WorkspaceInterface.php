@@ -13,6 +13,11 @@ interface WorkspaceInterface extends ContentEntityInterface, EntityChangedInterf
 
   /**
    * The ID of the default workspace.
+   *
+   * @deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. Use
+   *   \Drupal\workspaces\WorkspaceManager::hasActiveWorkspace() instead.
+   *
+   * @see https://www.drupal.org/node/3071527
    */
   const DEFAULT_WORKSPACE = 'live';
 
@@ -26,6 +31,11 @@ interface WorkspaceInterface extends ContentEntityInterface, EntityChangedInterf
    *
    * @return bool
    *   TRUE if this workspace is the default one (e.g 'Live'), FALSE otherwise.
+   *
+   * @deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. Use
+   *   \Drupal\workspaces\WorkspaceManager::hasActiveWorkspace() instead.
+   *
+   * @see https://www.drupal.org/node/3071527
    */
   public function isDefaultWorkspace();
 

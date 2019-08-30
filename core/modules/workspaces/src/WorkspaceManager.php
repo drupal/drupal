@@ -91,9 +91,9 @@ class WorkspaceManager implements WorkspaceManagerInterface {
   protected $negotiatorIds;
 
   /**
-   * The current active workspace.
+   * The current active workspace or FALSE if there is no active workspace.
    *
-   * @var \Drupal\workspaces\WorkspaceInterface
+   * @var \Drupal\workspaces\WorkspaceInterface|false
    */
   protected $activeWorkspace;
 
@@ -163,20 +163,30 @@ class WorkspaceManager implements WorkspaceManagerInterface {
   /**
    * {@inheritdoc}
    */
+  public function hasActiveWorkspace() {
+    return $this->getActiveWorkspace() !== FALSE;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function getActiveWorkspace() {
     if (!isset($this->activeWorkspace)) {
       $request = $this->requestStack->getCurrentRequest();
       foreach ($this->negotiatorIds as $negotiator_id) {
         $negotiator = $this->classResolver->getInstanceFromDefinition($negotiator_id);
         if ($negotiator->applies($request)) {
-          if ($this->activeWorkspace = $negotiator->getActiveWorkspace($request)) {
+          if ($active_workspace = $negotiator->getActiveWorkspace($request)) {
             break;
           }
         }
       }
+
+      // If no negotiator was able to determine the active workspace, default to
+      // the live version of the site.
+      $this->activeWorkspace = $active_workspace ?? FALSE;
     }
 
-    // The default workspace negotiator always returns a valid workspace.
     return $this->activeWorkspace;
   }
 
@@ -200,18 +210,34 @@ class WorkspaceManager implements WorkspaceManagerInterface {
   }
 
   /**
+   * {@inheritdoc}
+   */
+  public function switchToLive() {
+    $this->doSwitchWorkspace(NULL);
+
+    // Unset the active workspace on all negotiators.
+    foreach ($this->negotiatorIds as $negotiator_id) {
+      $negotiator = $this->classResolver->getInstanceFromDefinition($negotiator_id);
+      $negotiator->unsetActiveWorkspace();
+    }
+
+    return $this;
+  }
+
+  /**
    * Switches the current workspace.
    *
-   * @param \Drupal\workspaces\WorkspaceInterface $workspace
-   *   The workspace to set as active.
+   * @param \Drupal\workspaces\WorkspaceInterface|null $workspace
+   *   The workspace to set as active or NULL to switch out of the currently
+   *   active workspace.
    *
    * @throws \Drupal\workspaces\WorkspaceAccessException
    *   Thrown when the current user doesn't have access to view the workspace.
    */
-  protected function doSwitchWorkspace(WorkspaceInterface $workspace) {
+  protected function doSwitchWorkspace($workspace) {
     // If the current user doesn't have access to view the workspace, they
     // shouldn't be allowed to switch to it.
-    if (!$workspace->access('view') && !$workspace->isDefaultWorkspace()) {
+    if ($workspace && !$workspace->access('view')) {
       $this->logger->error('Denied access to view workspace %workspace_label for user %uid', [
         '%workspace_label' => $workspace->label(),
         '%uid' => $this->currentUser->id(),
@@ -219,7 +245,7 @@ class WorkspaceManager implements WorkspaceManagerInterface {
       throw new WorkspaceAccessException('The user does not have permission to view that workspace.');
     }
 
-    $this->activeWorkspace = $workspace;
+    $this->activeWorkspace = $workspace ?: FALSE;
 
     // Clear the static entity cache for the supported entity types.
     $cache_tags_to_invalidate = array_map(function ($entity_type_id) {
@@ -250,8 +276,20 @@ class WorkspaceManager implements WorkspaceManagerInterface {
   /**
    * {@inheritdoc}
    */
+  public function executeOutsideWorkspace(callable $function) {
+    $previous_active_workspace = $this->getActiveWorkspace();
+    $this->doSwitchWorkspace(NULL);
+    $result = $function();
+    $this->doSwitchWorkspace($previous_active_workspace);
+
+    return $result;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function shouldAlterOperations(EntityTypeInterface $entity_type) {
-    return $this->isEntityTypeSupported($entity_type) && !$this->getActiveWorkspace()->isDefaultWorkspace();
+    return $this->isEntityTypeSupported($entity_type) && $this->hasActiveWorkspace();
   }
 
   /**

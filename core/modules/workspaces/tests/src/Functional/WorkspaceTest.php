@@ -131,14 +131,14 @@ class WorkspaceTest extends BrowserTestBase {
     $this->drupalLogin($this->editor1);
     $storage = \Drupal::entityTypeManager()->getStorage('workspace');
 
-    // The current live workspace entity should be revision 1.
-    $live_workspace = $storage->load('live');
-    $this->assertEquals('1', $live_workspace->getRevisionId());
+    // The current 'stage' workspace entity should be revision 1.
+    $stage_workspace = $storage->load('stage');
+    $this->assertEquals('1', $stage_workspace->getRevisionId());
 
-    // Re-save the live workspace via the UI to create revision 3.
-    $this->drupalPostForm($live_workspace->toUrl('edit-form')->toString(), [], 'Save');
-    $live_workspace = $storage->loadUnchanged('live');
-    $this->assertEquals('3', $live_workspace->getRevisionId());
+    // Re-save the 'stage' workspace via the UI to create revision 2.
+    $this->drupalPostForm($stage_workspace->toUrl('edit-form')->toString(), [], 'Save');
+    $stage_workspace = $storage->loadUnchanged('stage');
+    $this->assertEquals('2', $stage_workspace->getRevisionId());
   }
 
   /**

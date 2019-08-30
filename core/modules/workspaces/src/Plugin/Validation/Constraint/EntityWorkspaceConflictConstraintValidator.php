@@ -62,7 +62,7 @@ class EntityWorkspaceConflictConstraintValidator extends ConstraintValidator imp
       $workspace_ids = $workspace_association_storage->getEntityTrackingWorkspaceIds($entity);
       $active_workspace = $this->workspaceManager->getActiveWorkspace();
 
-      if ($workspace_ids && !in_array($active_workspace->id(), $workspace_ids, TRUE)) {
+      if ($workspace_ids && (!$active_workspace || !in_array($active_workspace->id(), $workspace_ids, TRUE))) {
         // An entity can only be edited in one workspace.
         $workspace_id = reset($workspace_ids);
         $workspace = $this->entityTypeManager->getStorage('workspace')->load($workspace_id);

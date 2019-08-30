@@ -54,13 +54,7 @@ function workspaces_install() {
   // Default to user ID 1 if we could not find any other administrator users.
   $owner_id = !empty($result) ? reset($result) : 1;
 
-  // Create two workspaces by default, 'live' and 'stage'.
-  Workspace::create([
-    'id' => 'live',
-    'label' => 'Live',
-    'uid' => $owner_id,
-  ])->save();
-
+  // Create a 'stage' workspace by default.
   Workspace::create([
     'id' => 'stage',
     'label' => 'Stage',

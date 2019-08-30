@@ -79,6 +79,11 @@ class WorkspaceCacheContextTest extends BrowserTestBase {
 
     $cid_parts = array_merge($build['#cache']['keys'], $cache_contexts_manager->convertTokensToKeys($build['#cache']['contexts'])->getKeys());
     $this->assertTrue(in_array('[workspace]=stage', $cid_parts, TRUE));
+
+    // Test that a cache entry is created.
+    $cid = implode(':', $cid_parts);
+    $bin = $build['#cache']['bin'];
+    $this->assertTrue($this->container->get('cache.' . $bin)->get($cid), 'The entity render element has been cached.');
   }
 
 }

@@ -108,8 +108,8 @@ class ViewsQueryAlter implements ContainerInjectionInterface {
    * @see hook_views_query_alter()
    */
   public function alterQuery(ViewExecutable $view, QueryPluginBase $query) {
-    // Don't alter any views queries if we're in the default workspace.
-    if ($this->workspaceManager->getActiveWorkspace()->isDefaultWorkspace()) {
+    // Don't alter any views queries if we're not in a workspace context.
+    if (!$this->workspaceManager->hasActiveWorkspace()) {
       return;
     }
 

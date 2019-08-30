@@ -8,11 +8,6 @@ services:
     class: Drupal\workspaces\WorkspaceOperationFactory
     arguments: ['@entity_type.manager', '@database', '@workspaces.manager']
 
-  workspaces.negotiator.default:
-    class: Drupal\workspaces\Negotiator\DefaultWorkspaceNegotiator
-    arguments: ['@entity_type.manager']
-    tags:
-      - { name: workspace_negotiator, priority: 0 }
   workspaces.negotiator.session:
     class: Drupal\workspaces\Negotiator\SessionWorkspaceNegotiator
     arguments: ['@current_user', '@session', '@entity_type.manager']
@@ -23,6 +18,12 @@ services:
     parent: workspaces.negotiator.session
     tags:
       - { name: workspace_negotiator, priority: 100 }
+
+  access_check.workspaces.active_workspace:
+    class: Drupal\workspaces\Access\ActiveWorkspaceCheck
+    arguments: ['@workspaces.manager']
+    tags:
+      - { name: access_check, applies_to: _has_active_workspace }
 
   cache_context.workspace:
     class: Drupal\workspaces\WorkspaceCacheContext

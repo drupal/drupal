@@ -56,8 +56,8 @@ class FormOperations implements ContainerInjectionInterface {
    * @see hook_form_alter()
    */
   public function formAlter(array &$form, FormStateInterface $form_state, $form_id) {
-    // No alterations are needed in the default workspace.
-    if ($this->workspaceManager->getActiveWorkspace()->isDefaultWorkspace()) {
+    // No alterations are needed if we're not in a workspace context.
+    if (!$this->workspaceManager->hasActiveWorkspace()) {
       return;
     }
 

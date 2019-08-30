@@ -505,7 +505,7 @@ class WorkspaceIntegrationTest extends KernelTestBase {
     $storage = $this->entityTypeManager->getStorage($entity_type_id);
 
     // Create the entity in the default workspace.
-    $this->switchToWorkspace('live');
+    $this->workspaceManager->switchToLive();
     $entity = $storage->createWithSampleValues($entity_type_id);
     if ($entity_type_id === 'workspace') {
       $entity->id = 'test';
@@ -536,7 +536,7 @@ class WorkspaceIntegrationTest extends KernelTestBase {
     $storage = $this->entityTypeManager->getStorage($entity_type_id);
 
     // Create the entity in the default workspace.
-    $this->switchToWorkspace('live');
+    $this->workspaceManager->switchToLive();
     $entity = $storage->createWithSampleValues($entity_type_id);
     if ($entity_type_id === 'workspace') {
       $entity->id = 'test';
@@ -581,7 +581,7 @@ class WorkspaceIntegrationTest extends KernelTestBase {
     $this->initializeWorkspacesModule();
 
     // Create an entity in the default workspace.
-    $this->switchToWorkspace('live');
+    $this->workspaceManager->switchToLive();
     $node = $this->createNode([
       'title' => 'live node 1',
     ]);
@@ -594,12 +594,12 @@ class WorkspaceIntegrationTest extends KernelTestBase {
     $node->save();
 
     // Switch back to the default workspace and run the baseline assertions.
-    $this->switchToWorkspace('live');
+    $this->workspaceManager->switchToLive();
     $storage = $this->entityTypeManager->getStorage('node');
 
-    $this->assertEquals('live', $this->workspaceManager->getActiveWorkspace()->id());
+    $this->assertFalse($this->workspaceManager->hasActiveWorkspace());
 
-    $live_node = $storage->loadUnchanged($node->id());
+    $live_node = $storage->load($node->id());
     $this->assertEquals('live node 1', $live_node->title->value);
 
     $result = $storage->getQuery()
@@ -611,7 +611,7 @@ class WorkspaceIntegrationTest extends KernelTestBase {
     $this->workspaceManager->executeInWorkspace('stage', function () use ($node, $storage) {
       $this->assertEquals('stage', $this->workspaceManager->getActiveWorkspace()->id());
 
-      $stage_node = $storage->loadUnchanged($node->id());
+      $stage_node = $storage->load($node->id());
       $this->assertEquals('stage node 1', $stage_node->title->value);
 
       $result = $storage->getQuery()
@@ -622,7 +622,7 @@ class WorkspaceIntegrationTest extends KernelTestBase {
 
     // Check that the 'stage' workspace was not persisted by the workspace
     // manager.
-    $this->assertEquals('live', $this->workspaceManager->getActiveWorkspace()->id());
+    $this->assertFalse($this->workspaceManager->getActiveWorkspace());
   }
 
   /**
@@ -879,7 +879,7 @@ class WorkspaceIntegrationTest extends KernelTestBase {
     $this->initializeWorkspacesModule();
     $node_storage = $this->entityTypeManager->getStorage('node');
 
-    $this->switchToWorkspace('live');
+    $this->workspaceManager->switchToLive();
     $node = $node_storage->create([
       'title' => 'Foo title',
       // Use the body field on node as a test case because it requires dedicated
@@ -895,7 +895,7 @@ class WorkspaceIntegrationTest extends KernelTestBase {
     $node->save();
 
     $this->workspaces['stage']->publish();
-    $this->switchToWorkspace('live');
+    $this->workspaceManager->switchToLive();
 
     $reloaded = $node_storage->load($node->id());
     $this->assertEquals('Bar title', $reloaded->title->value);
