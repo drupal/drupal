@@ -47,6 +47,13 @@ class FieldInstanceLabelDescriptionTranslationTest extends MigrateSqlSourceTestB
           'type' => 'taxonomy_forums',
           'property' => 'label',
         ],
+        [
+          'lid' => 1,
+          'textgroup' => 'field',
+          'objectid' => 'story',
+          'type' => 'field_text',
+          'property' => 'label',
+        ],
       ],
       'locales_target' => [
         [

@@ -36,8 +36,7 @@ class BlockCustomTranslation extends DrupalSqlBase {
       ->fields('b', ['bid', 'format', 'body'])
       ->fields('i18n', ['property'])
       ->fields('lt', ['lid', 'translation', 'language'])
-      ->orderBy('b.bid')
-      ->isNotNull('lt.lid');
+      ->orderBy('b.bid');
 
     // Use 'title' for the info field to match the property name in
     // i18nStringTable.
@@ -49,7 +48,7 @@ class BlockCustomTranslation extends DrupalSqlBase {
     $query->condition('i18n.type', 'block');
 
     // Add in the translation for the property.
-    $query->leftJoin('locales_target', 'lt', 'lt.lid = i18n.lid');
+    $query->innerJoin('locales_target', 'lt', 'lt.lid = i18n.lid');
     return $query;
   }
 

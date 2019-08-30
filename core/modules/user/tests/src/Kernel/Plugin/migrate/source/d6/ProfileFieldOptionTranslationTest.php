@@ -31,6 +31,12 @@ class ProfileFieldOptionTranslationTest extends ProfileFieldTest {
         'type' => 'field',
         'property' => 'options',
       ],
+      [
+        'lid' => 1,
+        'objectid' => 'profile_last_name',
+        'type' => 'field',
+        'property' => 'options',
+      ],
     ];
     $test[0]['source_data']['locales_target'] = [
       [

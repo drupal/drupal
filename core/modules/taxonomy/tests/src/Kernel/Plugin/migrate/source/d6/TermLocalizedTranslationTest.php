@@ -101,6 +101,14 @@ class TermLocalizedTranslationTest extends MigrateSqlSourceTestBase {
         'objectindex' => '3',
         'format' => 0,
       ],
+      [
+        'lid' => 9,
+        'objectid' => 4,
+        'type' => 'term',
+        'property' => 'description',
+        'objectindex' => '4',
+        'format' => 0,
+      ],
     ];
     $tests[0]['source_data']['locales_target'] = [
       [

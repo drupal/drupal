@@ -38,14 +38,12 @@ class FieldLabelDescriptionTranslation extends DrupalSqlBase {
         'data',
         'deleted',
       ])
-      ->condition('i18n.textgroup', 'field')
-      ->isNotNull('language')
-      ->isNotNull('translation');
+      ->condition('i18n.textgroup', 'field');
     $condition = $query->orConditionGroup()
       ->condition('textgroup', 'field')
       ->condition('objectid', '#allowed_values', '!=');
     $query->condition($condition);
-    $query->leftJoin('locales_target', 'lt', 'lt.lid = i18n.lid');
+    $query->innerJoin('locales_target', 'lt', 'lt.lid = i18n.lid');
 
     $query->leftjoin('field_config_instance', 'fci', 'fci.bundle = i18n.objectid AND fci.field_name = i18n.type');
     return $query;

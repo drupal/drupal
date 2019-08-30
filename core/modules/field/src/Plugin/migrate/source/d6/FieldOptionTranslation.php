@@ -26,9 +26,8 @@ class FieldOptionTranslation extends Field {
         'plural',
       ])
       ->condition('i18n.type', 'field')
-      ->condition('property', 'option\_%', 'LIKE')
-      ->isNotNull('translation');
-    $query->leftJoin('locales_target', 'lt', 'lt.lid = i18n.lid');
+      ->condition('property', 'option\_%', 'LIKE');
+    $query->innerJoin('locales_target', 'lt', 'lt.lid = i18n.lid');
     $query->leftjoin('content_node_field', 'cnf', 'cnf.field_name = i18n.objectid');
     $query->addField('cnf', 'field_name');
     $query->addField('cnf', 'global_settings');

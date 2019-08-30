@@ -22,14 +22,12 @@ class FieldLabelDescriptionTranslation extends DrupalSqlBase {
     $query = $this->select('i18n_strings', 'i18n')
       ->fields('i18n', ['property', 'objectid', 'type'])
       ->fields('lt', ['lid', 'translation', 'language'])
-      ->condition('i18n.type', 'field')
-      ->isNotNull('language')
-      ->isNotNull('translation');
+      ->condition('i18n.type', 'field');
     $condition = $query->orConditionGroup()
       ->condition('property', 'widget_label')
       ->condition('property', 'widget_description');
     $query->condition($condition);
-    $query->leftJoin('locales_target', 'lt', 'lt.lid = i18n.lid');
+    $query->innerJoin('locales_target', 'lt', 'lt.lid = i18n.lid');
 
     return $query;
   }

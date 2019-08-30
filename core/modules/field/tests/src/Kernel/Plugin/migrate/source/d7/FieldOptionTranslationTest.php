@@ -118,6 +118,16 @@ class FieldOptionTranslationTest extends MigrateSqlSourceTestBase {
         'objectindex' => '0',
         'format' => '',
       ],
+      [
+        'lid' => '4',
+        'textgroup' => 'field',
+        'context' => 'field_rating:#allowed_values:4',
+        'objectid' => '#allowed_values',
+        'type' => 'field_rating',
+        'property' => '4',
+        'objectindex' => '0',
+        'format' => '',
+      ],
     ];
     $test[0]['source_data']['locales_target'] = [
       [
