@@ -82,4 +82,14 @@ class SimpletestDeprecationTest extends KernelTestBase {
     );
   }
 
+  /**
+   * @expectedDeprecation simpletest_generate_file() is deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. Use \Drupal\Tests\TestFileCreationTrait::generateFile() instead. See https://www.drupal.org/node/3077768
+   */
+  public function testDeprecatedSimpletestGenerateFile() {
+    $file = simpletest_generate_file('foo', 40, 10);
+    $public_file = 'public://' . $file . '.txt';
+    $this->assertFileExists($public_file);
+    $this->assertTrue(unlink($public_file));
+  }
+
 }
