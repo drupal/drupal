@@ -256,6 +256,7 @@ abstract class EntityStorageBase extends EntityHandlerBase implements EntityStor
    */
   public function loadMultiple(array $ids = NULL) {
     $entities = [];
+    $preloaded_entities = [];
 
     // Create a new variable which is either a prepared version of the $ids
     // array for later comparison with the entity cache, or FALSE if no $ids
@@ -271,15 +272,22 @@ abstract class EntityStorageBase extends EntityHandlerBase implements EntityStor
       $ids = array_keys(array_diff_key($flipped_ids, $entities));
     }
 
-    // Gather entities from a 'preload' method. This method can invoke a hook to
-    // be used by modules that need, for example, to swap the default revision
-    // of an entity with a different one. Even though the base entity storage
-    // class does not actually invoke any preload hooks, we need to call the
-    // method here so we can add the pre-loaded entity objects to the static
-    // cache below.
-    $preloaded_entities = $this->preLoad($ids);
+    // Try to gather any remaining entities from a 'preload' method. This method
+    // can invoke a hook to be used by modules that need, for example, to swap
+    // the default revision of an entity with a different one. Even though the
+    // base entity storage class does not actually invoke any preload hooks, we
+    // need to call the method here so we can add the pre-loaded entity objects
+    // to the static cache below. If all the entities were fetched from the
+    // static cache, skip this step.
+    if ($ids === NULL || $ids) {
+      $preloaded_entities = $this->preLoad($ids);
+    }
     if (!empty($preloaded_entities)) {
       $entities += $preloaded_entities;
+
+      // If any entities were pre-loaded, remove them from the IDs still to
+      // load.
+      $ids = array_keys(array_diff_key($flipped_ids, $entities));
 
       // Add pre-loaded entities to the cache.
       $this->setStaticCache($preloaded_entities);

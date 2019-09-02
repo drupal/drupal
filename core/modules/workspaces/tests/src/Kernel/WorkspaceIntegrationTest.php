@@ -705,6 +705,18 @@ class WorkspaceIntegrationTest extends KernelTestBase {
       $this->assertEquals($expected_default_revision[$published_key], $entities[$entity_id]->isPublished());
     }
 
+    // Check loading entities one by one. It is important to do these checks
+    // after the "multiple load" ones above so we can test with a fully warmed
+    // static cache.
+    foreach ($expected_default_revisions as $expected_default_revision) {
+      $entity_id = $expected_default_revision[$id_key];
+      $entities = $this->entityTypeManager->getStorage($entity_type_id)->loadMultiple([$entity_id]);
+      $this->assertCount(1, $entities);
+      $this->assertEquals($expected_default_revision[$revision_key], $entities[$entity_id]->getRevisionId());
+      $this->assertEquals($expected_default_revision[$label_key], $entities[$entity_id]->label());
+      $this->assertEquals($expected_default_revision[$published_key], $entities[$entity_id]->isPublished());
+    }
+
     // Check \Drupal\Core\Entity\EntityStorageInterface::loadUnchanged().
     foreach ($expected_default_revisions as $expected_default_revision) {
       /** @var \Drupal\Core\Entity\RevisionableInterface|\Drupal\Core\Entity\EntityPublishedInterface $entity */
