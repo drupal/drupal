@@ -24,21 +24,21 @@ class FormErrorHandlerTest extends UnitTestCase {
   /**
    * The messenger.
    *
-   * @var \Drupal\Core\Messenger\MessengerInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Messenger\MessengerInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $messenger;
 
   /**
    * The renderer.
    *
-   * @var \Drupal\Core\Render\RendererInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Render\RendererInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $renderer;
 
   /**
    * The link generator.
    *
-   * @var \Drupal\Core\Utility\LinkGeneratorInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Utility\LinkGeneratorInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $linkGenerator;
 

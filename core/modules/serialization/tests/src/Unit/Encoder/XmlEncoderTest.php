@@ -22,7 +22,7 @@ class XmlEncoderTest extends UnitTestCase {
   protected $encoder;
 
   /**
-   * @var \Symfony\Component\Serializer\Encoder\XmlEncoder|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Symfony\Component\Serializer\Encoder\XmlEncoder|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $baseEncoder;
 

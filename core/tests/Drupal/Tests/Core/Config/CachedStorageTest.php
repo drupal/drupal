@@ -14,7 +14,7 @@ use Drupal\Core\Cache\NullBackend;
 class CachedStorageTest extends UnitTestCase {
 
   /**
-   * @var \Drupal\Core\Cache\CacheFactoryInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Cache\CacheFactoryInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $cacheFactory;
 

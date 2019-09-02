@@ -40,7 +40,7 @@ trait PhpunitCompatibilityTrait {
    *
    * @see https://github.com/sebastianbergmann/phpunit/wiki/Release-Announcement-for-PHPUnit-5.4.0
    *
-   * @return \PHPUnit_Framework_MockObject_MockObject
+   * @return \PHPUnit\Framework\MockObject\MockObject
    *
    * @deprecated in drupal:8.5.0 and is removed from drupal:9.0.0.
    *   Use \Drupal\Tests\PhpunitCompatibilityTrait::createMock() instead.

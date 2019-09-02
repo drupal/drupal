@@ -21,7 +21,7 @@ class PsrResponseSubscriberTest extends UnitTestCase {
   /**
    * The tested path root subscriber.
    *
-   * @var \Symfony\Bridge\PsrHttpMessage\HttpFoundationFactoryInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Symfony\Bridge\PsrHttpMessage\HttpFoundationFactoryInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $httpFoundationFactoryMock;
 
@@ -80,7 +80,7 @@ class PsrResponseSubscriberTest extends UnitTestCase {
    * @param mixed $controller_result
    *   The return Object.
    *
-   * @return \Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent|\PHPUnit_Framework_MockObject_MockObject
+   * @return \Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent|\PHPUnit\Framework\MockObject\MockObject
    *   A mock object to test.
    */
   protected function createEventMock($controller_result) {

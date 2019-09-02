@@ -18,14 +18,14 @@ class SerializerTest extends UnitTestCase {
   /**
    * The View instance.
    *
-   * @var \Drupal\views\ViewExecutable|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\views\ViewExecutable|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $view;
 
   /**
    * The RestExport display handler.
    *
-   * @var \Drupal\rest\Plugin\views\display\RestExport|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\rest\Plugin\views\display\RestExport|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $displayHandler;
 

@@ -20,7 +20,7 @@ class ContentEntityNormalizerTest extends UnitTestCase {
   /**
    * The mock serializer.
    *
-   * @var \Symfony\Component\Serializer\SerializerInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Symfony\Component\Serializer\SerializerInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $serializer;
 
@@ -123,7 +123,7 @@ class ContentEntityNormalizerTest extends UnitTestCase {
    *
    * @param $definitions
    *
-   * @return \PHPUnit_Framework_MockObject_MockObject
+   * @return \PHPUnit\Framework\MockObject\MockObject
    */
   public function createMockForContentEntity($definitions) {
     $content_entity_mock = $this->getMockBuilder('Drupal\Core\Entity\ContentEntityBase')
@@ -148,7 +148,7 @@ class ContentEntityNormalizerTest extends UnitTestCase {
    * @param bool $internal
    * @param \Drupal\Core\Session\AccountInterface $user_context
    *
-   * @return \Drupal\Core\Field\FieldItemListInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @return \Drupal\Core\Field\FieldItemListInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected function createMockFieldListItem($access, $internal, AccountInterface $user_context = NULL) {
     $data_definition = $this->prophesize(DataDefinitionInterface::class);

@@ -22,7 +22,7 @@ class CategorizingPluginManagerTraitTest extends UnitTestCase {
   /**
    * The plugin manager to test.
    *
-   * @var \Drupal\Component\Plugin\CategorizingPluginManagerInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Component\Plugin\CategorizingPluginManagerInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $pluginManager;
 
@@ -113,7 +113,7 @@ class CategorizingPluginManager extends DefaultPluginManager implements Categori
   /**
    * Replace the constructor so we can instantiate a stub.
    *
-   * @param \Drupal\Core\Extension\ModuleHandlerInterface|\PHPUnit_Framework_MockObject_MockObject $module_handler
+   * @param \Drupal\Core\Extension\ModuleHandlerInterface|\PHPUnit\Framework\MockObject\MockObject $module_handler
    *   The module handler.
    */
   public function __construct(ModuleHandlerInterface $module_handler) {

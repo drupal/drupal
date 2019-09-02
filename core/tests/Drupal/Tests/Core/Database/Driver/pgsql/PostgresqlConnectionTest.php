@@ -14,7 +14,7 @@ class PostgresqlConnectionTest extends UnitTestCase {
   /**
    * Mock PDO object for use in tests.
    *
-   * @var \PHPUnit_Framework_MockObject_MockObject|\Drupal\Tests\Core\Database\Stub\StubPDO
+   * @var \PHPUnit\Framework\MockObject\MockObject|\Drupal\Tests\Core\Database\Stub\StubPDO
    */
   protected $mockPdo;
 

@@ -14,7 +14,7 @@ class ControllerBaseTest extends UnitTestCase {
   /**
    * The tested controller base class.
    *
-   * @var \Drupal\Core\Controller\ControllerBase|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Controller\ControllerBase|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $controllerBase;
 

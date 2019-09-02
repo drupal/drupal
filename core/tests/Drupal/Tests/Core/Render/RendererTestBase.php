@@ -52,33 +52,33 @@ abstract class RendererTestBase extends UnitTestCase {
   protected $requestStack;
 
   /**
-   * @var \Drupal\Core\Cache\CacheFactoryInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Cache\CacheFactoryInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $cacheFactory;
 
   /**
-   * @var \Drupal\Core\Cache\Context\CacheContextsManager|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Cache\Context\CacheContextsManager|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $cacheContexts;
 
   /**
    * The mocked controller resolver.
    *
-   * @var \Drupal\Core\Controller\ControllerResolverInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Controller\ControllerResolverInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $controllerResolver;
 
   /**
    * The mocked theme manager.
    *
-   * @var \Drupal\Core\Theme\ThemeManagerInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Theme\ThemeManagerInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $themeManager;
 
   /**
    * The mocked element info.
    *
-   * @var \Drupal\Core\Render\ElementInfoManagerInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Render\ElementInfoManagerInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $elementInfo;
 

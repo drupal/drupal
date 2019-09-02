@@ -15,7 +15,7 @@ class CommandLineOrUnsafeMethodTest extends UnitTestCase {
   /**
    * The request policy under test.
    *
-   * @var \Drupal\Core\PageCache\RequestPolicy\CommandLineOrUnsafeMethod|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\PageCache\RequestPolicy\CommandLineOrUnsafeMethod|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $policy;
 

@@ -23,28 +23,28 @@ class TwigExtensionTest extends UnitTestCase {
   /**
    * The renderer.
    *
-   * @var \Drupal\Core\Render\RendererInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Render\RendererInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $renderer;
 
   /**
    * The url generator.
    *
-   * @var \Drupal\Core\Routing\UrlGeneratorInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Routing\UrlGeneratorInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $urlGenerator;
 
   /**
    * The theme manager.
    *
-   * @var \Drupal\Core\Theme\ThemeManagerInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Theme\ThemeManagerInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $themeManager;
 
   /**
    * The date formatter.
    *
-   * @var \Drupal\Core\Datetime\DateFormatterInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Datetime\DateFormatterInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $dateFormatter;
 

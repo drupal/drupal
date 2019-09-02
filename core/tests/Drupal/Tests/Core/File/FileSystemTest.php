@@ -24,14 +24,14 @@ class FileSystemTest extends UnitTestCase {
   /**
    * The file logger channel.
    *
-   * @var \Psr\Log\LoggerInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Psr\Log\LoggerInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $logger;
 
   /**
    * The stream wrapper manager.
    *
-   * @var \Drupal\Core\StreamWrapper\StreamWrapperInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\StreamWrapper\StreamWrapperInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $streamWrapperManager;
 

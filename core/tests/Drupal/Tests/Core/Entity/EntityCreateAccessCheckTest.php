@@ -20,7 +20,7 @@ class EntityCreateAccessCheckTest extends UnitTestCase {
   /**
    * The mocked entity manager.
    *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   public $entityTypeManager;
 

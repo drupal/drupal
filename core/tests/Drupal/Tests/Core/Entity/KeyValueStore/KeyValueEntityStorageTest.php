@@ -23,35 +23,35 @@ class KeyValueEntityStorageTest extends UnitTestCase {
   /**
    * The entity type.
    *
-   * @var \Drupal\Core\Entity\EntityTypeInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Entity\EntityTypeInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $entityType;
 
   /**
    * The key value store.
    *
-   * @var \Drupal\Core\KeyValueStore\KeyValueStoreInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\KeyValueStore\KeyValueStoreInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $keyValueStore;
 
   /**
    * The module handler.
    *
-   * @var \Drupal\Core\Extension\ModuleHandlerInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Extension\ModuleHandlerInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $moduleHandler;
 
   /**
    * The UUID service.
    *
-   * @var \Drupal\Component\Uuid\UuidInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Component\Uuid\UuidInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $uuidService;
 
   /**
    * The language manager.
    *
-   * @var \Drupal\Core\Language\LanguageManagerInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Language\LanguageManagerInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $languageManager;
 
@@ -63,21 +63,21 @@ class KeyValueEntityStorageTest extends UnitTestCase {
   /**
    * The mocked entity type manager.
    *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $entityTypeManager;
 
   /**
    * The mocked entity field manager.
    *
-   * @var \Drupal\Core\Entity\EntityFieldManagerInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Entity\EntityFieldManagerInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $entityFieldManager;
 
   /**
    * The mocked cache tags invalidator.
    *
-   * @var \Drupal\Core\Cache\CacheTagsInvalidatorInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Cache\CacheTagsInvalidatorInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $cacheTagsInvalidator;
 
@@ -693,7 +693,7 @@ class KeyValueEntityStorageTest extends UnitTestCase {
    * @param array $methods
    *   (optional) The methods to mock.
    *
-   * @return \Drupal\Core\Entity\EntityInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @return \Drupal\Core\Entity\EntityInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   public function getMockEntity($class = 'Drupal\Core\Entity\EntityBase', array $arguments = [], $methods = []) {
     // Ensure the entity is passed at least an array of values and an entity

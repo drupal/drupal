@@ -29,42 +29,42 @@ class AssetResolverTest extends UnitTestCase {
   /**
    * The mocked library discovery service.
    *
-   * @var \Drupal\Core\Asset\LibraryDiscoveryInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Asset\LibraryDiscoveryInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $libraryDiscovery;
 
   /**
    * The mocked library dependency resolver.
    *
-   * @var \Drupal\Core\Asset\LibraryDependencyResolverInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Asset\LibraryDependencyResolverInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $libraryDependencyResolver;
 
   /**
    * The mocked module handler.
    *
-   * @var \Drupal\Core\Extension\ModuleHandlerInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Extension\ModuleHandlerInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $moduleHandler;
 
   /**
    * The mocked theme manager.
    *
-   * @var \Drupal\Core\Theme\ThemeManagerInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Theme\ThemeManagerInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $themeManager;
 
   /**
    * The mocked language manager.
    *
-   * @var \Drupal\Core\Language\LanguageManagerInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Language\LanguageManagerInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $languageManager;
 
   /**
    * The cache backend to use.
    *
-   * @var \Drupal\Core\Cache\CacheBackendInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Cache\CacheBackendInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $cache;
 

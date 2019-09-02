@@ -189,7 +189,7 @@ class RecursiveContextualValidatorTest extends UnitTestCase {
    * @param array $tree
    *   An array of value, constraints and properties.
    *
-   * @return \Drupal\Core\TypedData\TypedDataInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @return \Drupal\Core\TypedData\TypedDataInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected function setupTypedData(array $tree, $name = '') {
     $callback = function ($value, ExecutionContextInterface $context) {
@@ -312,7 +312,7 @@ class RecursiveContextualValidatorTest extends UnitTestCase {
   /**
    * Builds some example type data object.
    *
-   * @return \Drupal\Core\TypedData\TypedDataInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @return \Drupal\Core\TypedData\TypedDataInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected function buildExampleTypedDataWithProperties($subkey_value = NULL) {
     $subkey_value = $subkey_value ?: ['subkey1' => 'subvalue1', 'subkey2' => 'subvalue2'];

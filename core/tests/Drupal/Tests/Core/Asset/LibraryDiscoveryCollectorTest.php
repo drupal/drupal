@@ -15,21 +15,21 @@ class LibraryDiscoveryCollectorTest extends UnitTestCase {
   /**
    * The mock cache backend.
    *
-   * @var \Drupal\Core\Cache\CacheBackendInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Cache\CacheBackendInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $cache;
 
   /**
    * The mock lock backend.
    *
-   * @var \Drupal\Core\Lock\LockBackendInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Lock\LockBackendInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $lock;
 
   /**
    * The mock library discovery parser.
    *
-   * @var \Drupal\Core\Asset\LibraryDiscoveryParser|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Asset\LibraryDiscoveryParser|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $libraryDiscoveryParser;
 
@@ -43,7 +43,7 @@ class LibraryDiscoveryCollectorTest extends UnitTestCase {
   /**
    * The mocked theme manager.
    *
-   * @var \Drupal\Core\Theme\ThemeManagerInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Theme\ThemeManagerInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $themeManager;
 

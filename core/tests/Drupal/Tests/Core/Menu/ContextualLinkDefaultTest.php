@@ -46,7 +46,7 @@ class ContextualLinkDefaultTest extends UnitTestCase {
   /**
    * The mocked translator.
    *
-   * @var \Drupal\Core\StringTranslation\TranslationInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\StringTranslation\TranslationInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $stringTranslation;
 

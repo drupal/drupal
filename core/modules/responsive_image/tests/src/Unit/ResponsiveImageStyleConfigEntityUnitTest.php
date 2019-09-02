@@ -17,21 +17,21 @@ class ResponsiveImageStyleConfigEntityUnitTest extends UnitTestCase {
   /**
    * The entity type used for testing.
    *
-   * @var \Drupal\Core\Entity\EntityTypeInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Entity\EntityTypeInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $entityType;
 
   /**
    * The entity type manager used for testing.
    *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $entityTypeManager;
 
   /**
    * The breakpoint manager used for testing.
    *
-   * @var \Drupal\breakpoint\BreakpointManagerInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\breakpoint\BreakpointManagerInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $breakpointManager;
 

@@ -13,7 +13,7 @@ class LockBackendAbstractTest extends UnitTestCase {
   /**
    * The Mocked LockBackendAbstract object.
    *
-   * @var \Drupal\Core\Lock\LockBackendAbstract|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Lock\LockBackendAbstract|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $lock;
 

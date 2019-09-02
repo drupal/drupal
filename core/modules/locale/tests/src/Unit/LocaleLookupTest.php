@@ -18,28 +18,28 @@ class LocaleLookupTest extends UnitTestCase {
   /**
    * A mocked storage to use when instantiating LocaleTranslation objects.
    *
-   * @var \Drupal\locale\StringStorageInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\locale\StringStorageInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $storage;
 
   /**
    * A mocked cache object.
    *
-   * @var \Drupal\Core\Cache\CacheBackendInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Cache\CacheBackendInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $cache;
 
   /**
    * A mocked lock object.
    *
-   * @var \Drupal\Core\Lock\LockBackendInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Lock\LockBackendInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $lock;
 
   /**
    * A mocked user object built from AccountInterface.
    *
-   * @var \Drupal\Core\Session\AccountInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Session\AccountInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $user;
 
@@ -53,7 +53,7 @@ class LocaleLookupTest extends UnitTestCase {
   /**
    * A mocked language manager built from LanguageManagerInterface.
    *
-   * @var \Drupal\Core\Language\LanguageManagerInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Language\LanguageManagerInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $languageManager;
 

@@ -16,14 +16,14 @@ class EditorConfigEntityUnitTest extends UnitTestCase {
   /**
    * The entity type used for testing.
    *
-   * @var \Drupal\Core\Entity\EntityTypeInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Entity\EntityTypeInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $entityType;
 
   /**
    * The entity manager used for testing.
    *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $entityTypeManager;
 
@@ -37,14 +37,14 @@ class EditorConfigEntityUnitTest extends UnitTestCase {
   /**
    * The UUID generator used for testing.
    *
-   * @var \Drupal\Component\Uuid\UuidInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Component\Uuid\UuidInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $uuid;
 
   /**
    * The editor plugin manager used for testing.
    *
-   * @var \Drupal\editor\Plugin\EditorManager|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\editor\Plugin\EditorManager|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $editorPluginManager;
 

@@ -12,14 +12,14 @@ class MigrateExecutableMemoryExceededTest extends MigrateTestCase {
   /**
    * The mocked migration entity.
    *
-   * @var \Drupal\migrate\Plugin\MigrationInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\migrate\Plugin\MigrationInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $migration;
 
   /**
    * The mocked migrate message.
    *
-   * @var \Drupal\migrate\MigrateMessageInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\migrate\MigrateMessageInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $message;
 

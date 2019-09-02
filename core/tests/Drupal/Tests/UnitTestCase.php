@@ -191,7 +191,7 @@ abstract class UnitTestCase extends TestCase {
    * @param string $machine_name
    *   The machine name of the block plugin.
    *
-   * @return \Drupal\block\BlockInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @return \Drupal\block\BlockInterface|\PHPUnit\Framework\MockObject\MockObject
    *   The mocked block.
    *
    * @deprecated in Drupal 8.5.x, will be removed before Drupal 9.0.0. Unit test
@@ -221,7 +221,7 @@ abstract class UnitTestCase extends TestCase {
   /**
    * Returns a stub translation manager that just returns the passed string.
    *
-   * @return \PHPUnit_Framework_MockObject_MockObject|\Drupal\Core\StringTranslation\TranslationInterface
+   * @return \PHPUnit\Framework\MockObject\MockObject|\Drupal\Core\StringTranslation\TranslationInterface
    *   A mock translation object.
    */
   public function getStringTranslationStub() {
@@ -251,7 +251,7 @@ abstract class UnitTestCase extends TestCase {
    * @param \Drupal\Core\Cache\CacheTagsInvalidatorInterface $cache_tags_validator
    *   The cache tags invalidator.
    *
-   * @return \Symfony\Component\DependencyInjection\ContainerInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @return \Symfony\Component\DependencyInjection\ContainerInterface|\PHPUnit\Framework\MockObject\MockObject
    *   The container with the cache tags invalidator service.
    */
   protected function getContainerWithCacheTagsInvalidator(CacheTagsInvalidatorInterface $cache_tags_validator) {
@@ -268,7 +268,7 @@ abstract class UnitTestCase extends TestCase {
   /**
    * Returns a stub class resolver.
    *
-   * @return \Drupal\Core\DependencyInjection\ClassResolverInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @return \Drupal\Core\DependencyInjection\ClassResolverInterface|\PHPUnit\Framework\MockObject\MockObject
    *   The class resolver stub.
    */
   protected function getClassResolverStub() {

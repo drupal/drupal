@@ -26,7 +26,7 @@ abstract class LocalTaskIntegrationTestBase extends UnitTestCase {
   /**
    * The module handler.
    *
-   * @var \Drupal\Core\Extension\ModuleHandlerInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Extension\ModuleHandlerInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $moduleHandler;
 

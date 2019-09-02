@@ -21,35 +21,35 @@ class CommentLinkBuilderTest extends UnitTestCase {
   /**
    * Comment manager mock.
    *
-   * @var \Drupal\comment\CommentManagerInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\comment\CommentManagerInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $commentManager;
 
   /**
    * String translation mock.
    *
-   * @var \Drupal\Core\StringTranslation\TranslationInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\StringTranslation\TranslationInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $stringTranslation;
 
   /**
    * The entity type manager.
    *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $entityTypeManager;
 
   /**
    * Module handler mock.
    *
-   * @var \Drupal\Core\Extension\ModuleHandlerInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Extension\ModuleHandlerInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $moduleHandler;
 
   /**
    * Current user proxy mock.
    *
-   * @var \Drupal\Core\Session\AccountProxyInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Session\AccountProxyInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $currentUser;
 
@@ -92,7 +92,7 @@ class CommentLinkBuilderTest extends UnitTestCase {
   /**
    * Test the buildCommentedEntityLinks method.
    *
-   * @param \Drupal\node\NodeInterface|\PHPUnit_Framework_MockObject_MockObject $node
+   * @param \Drupal\node\NodeInterface|\PHPUnit\Framework\MockObject\MockObject $node
    *   Mock node.
    * @param array $context
    *   Context for the links.
@@ -265,7 +265,7 @@ class CommentLinkBuilderTest extends UnitTestCase {
    * @param int $comment_count
    *   Number of comments against the field.
    *
-   * @return \Drupal\node\NodeInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @return \Drupal\node\NodeInterface|\PHPUnit\Framework\MockObject\MockObject
    *   Mock node for testing.
    */
   protected function getMockNode($has_field, $comment_status, $form_location, $comment_count) {

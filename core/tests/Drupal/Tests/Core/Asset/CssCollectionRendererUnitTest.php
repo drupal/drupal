@@ -29,7 +29,7 @@ class CssCollectionRendererUnitTest extends UnitTestCase {
   /**
    * The state mock class.
    *
-   * @var \Drupal\Core\State\StateInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\State\StateInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $state;
 

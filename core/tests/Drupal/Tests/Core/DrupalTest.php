@@ -23,7 +23,7 @@ class DrupalTest extends UnitTestCase {
   /**
    * The mock container.
    *
-   * @var \Symfony\Component\DependencyInjection\ContainerBuilder|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Symfony\Component\DependencyInjection\ContainerBuilder|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $container;
 

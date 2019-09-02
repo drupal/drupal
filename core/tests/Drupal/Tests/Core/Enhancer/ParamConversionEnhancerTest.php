@@ -21,7 +21,7 @@ class ParamConversionEnhancerTest extends UnitTestCase {
   protected $paramConversionEnhancer;
 
   /**
-   * @var \Drupal\Core\ParamConverter\ParamConverterManagerInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\ParamConverter\ParamConverterManagerInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $paramConverterManager;
 

@@ -580,7 +580,7 @@ class EntityUrlTest extends UnitTestCase {
    *   (optional) An array of additional methods to mock on the entity object.
    *   The getEntityType() and entityTypeBundleInfo() methods are always mocked.
    *
-   * @return \Drupal\Core\Entity\Entity|\PHPUnit_Framework_MockObject_MockObject
+   * @return \Drupal\Core\Entity\Entity|\PHPUnit\Framework\MockObject\MockObject
    */
   protected function getEntity($class, array $values, array $methods = []) {
     $methods = array_merge($methods, ['getEntityType', 'entityTypeBundleInfo']);
@@ -611,7 +611,7 @@ class EntityUrlTest extends UnitTestCase {
    *   The expected route name of the generated URL.
    * @param array $expected_route_parameters
    *   The expected route parameters of the generated URL.
-   * @param \Drupal\Core\Entity\Entity|\PHPUnit_Framework_MockObject_MockObject $entity
+   * @param \Drupal\Core\Entity\Entity|\PHPUnit\Framework\MockObject\MockObject $entity
    *   The entity that is expected to be set as a URL option.
    * @param bool $has_language
    *   Whether or not the URL is expected to have a language option.

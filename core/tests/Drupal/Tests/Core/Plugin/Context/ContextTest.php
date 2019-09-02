@@ -23,21 +23,21 @@ class ContextTest extends UnitTestCase {
   /**
    * The mocked context definition object.
    *
-   * @var \Drupal\Core\Plugin\Context\ContextDefinitionInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Plugin\Context\ContextDefinitionInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $contextDefinition;
 
   /**
    * The mocked Typed Data manager.
    *
-   * @var \Drupal\Core\TypedData\TypedDataManager|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\TypedData\TypedDataManager|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $typedDataManager;
 
   /**
    * The mocked Typed Data object.
    *
-   * @var \Drupal\Core\TypedData\TypedDataInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\TypedData\TypedDataInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $typedData;
 

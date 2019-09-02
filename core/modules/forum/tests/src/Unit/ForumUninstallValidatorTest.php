@@ -15,7 +15,7 @@ class ForumUninstallValidatorTest extends UnitTestCase {
   use AssertHelperTrait;
 
   /**
-   * @var \Drupal\forum\ForumUninstallValidator|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\forum\ForumUninstallValidator|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $forumUninstallValidator;
 

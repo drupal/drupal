@@ -26,61 +26,61 @@ abstract class FormTestBase extends UnitTestCase {
   protected $formBuilder;
 
   /**
-   * @var \Drupal\Core\Form\FormValidatorInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Form\FormValidatorInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $formValidator;
 
   /**
-   * @var \Drupal\Core\Form\FormSubmitterInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Form\FormSubmitterInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $formSubmitter;
 
   /**
    * The mocked URL generator.
    *
-   * @var \Drupal\Core\Routing\UrlGeneratorInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Routing\UrlGeneratorInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $urlGenerator;
 
   /**
    * The mocked module handler.
    *
-   * @var \Drupal\Core\Extension\ModuleHandlerInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Extension\ModuleHandlerInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $moduleHandler;
 
   /**
    * The form cache.
    *
-   * @var \Drupal\Core\Form\FormCacheInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Form\FormCacheInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $formCache;
 
   /**
    * The cache backend to use.
    *
-   * @var \Drupal\Core\Cache\CacheBackendInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Cache\CacheBackendInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $cache;
 
   /**
    * The current user.
    *
-   * @var \Drupal\Core\Session\AccountInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Session\AccountInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $account;
 
   /**
    * The controller resolver.
    *
-   * @var \Drupal\Core\Controller\ControllerResolverInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Controller\ControllerResolverInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $controllerResolver;
 
   /**
    * The CSRF token generator.
    *
-   * @var \Drupal\Core\Access\CsrfTokenGenerator|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Access\CsrfTokenGenerator|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $csrfToken;
 
@@ -101,7 +101,7 @@ abstract class FormTestBase extends UnitTestCase {
   /**
    * The class results.
    *
-   * @var \Drupal\Core\DependencyInjection\ClassResolverInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\DependencyInjection\ClassResolverInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $classResolver;
 
@@ -115,29 +115,29 @@ abstract class FormTestBase extends UnitTestCase {
   /**
    * The event dispatcher.
    *
-   * @var \Symfony\Component\EventDispatcher\EventDispatcherInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Symfony\Component\EventDispatcher\EventDispatcherInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $eventDispatcher;
 
   /**
-   * @var \Drupal\Core\StringTranslation\TranslationInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\StringTranslation\TranslationInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $translationManager;
 
   /**
-   * @var \Drupal\Core\DrupalKernelInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\DrupalKernelInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $kernel;
 
   /**
-   * @var \PHPUnit_Framework_MockObject_MockObject|\Psr\Log\LoggerInterface
+   * @var \PHPUnit\Framework\MockObject\MockObject|\Psr\Log\LoggerInterface
    */
   protected $logger;
 
   /**
    * The mocked theme manager.
    *
-   * @var \Drupal\Core\Theme\ThemeManagerInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Theme\ThemeManagerInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $themeManager;
 
@@ -212,7 +212,7 @@ abstract class FormTestBase extends UnitTestCase {
    *   (optional) The number of times the form is expected to be built. Defaults
    *   to 1.
    *
-   * @return \PHPUnit_Framework_MockObject_MockObject|\Drupal\Core\Form\FormInterface
+   * @return \PHPUnit\Framework\MockObject\MockObject|\Drupal\Core\Form\FormInterface
    *   The mocked form object.
    */
   protected function getMockForm($form_id, $expected_form = NULL, $count = 1) {

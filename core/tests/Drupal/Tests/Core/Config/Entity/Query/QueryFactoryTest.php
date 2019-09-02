@@ -122,7 +122,7 @@ class QueryFactoryTest extends UnitTestCase {
    * @param string $name
    *   The config name.
    *
-   * @return \Drupal\Core\Config\Config|\PHPUnit_Framework_MockObject_MockObject
+   * @return \Drupal\Core\Config\Config|\PHPUnit\Framework\MockObject\MockObject
    *   The test configuration object.
    */
   protected function getConfigObject($name) {

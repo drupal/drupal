@@ -20,14 +20,14 @@ class SharedTempStoreTest extends UnitTestCase {
   /**
    * The mock key value expirable backend.
    *
-   * @var \Drupal\Core\KeyValueStore\KeyValueStoreExpirableInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\KeyValueStore\KeyValueStoreExpirableInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $keyValue;
 
   /**
    * The mock lock backend.
    *
-   * @var \Drupal\Core\Lock\LockBackendInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Lock\LockBackendInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $lock;
 

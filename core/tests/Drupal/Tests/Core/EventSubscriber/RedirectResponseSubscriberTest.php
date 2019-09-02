@@ -24,14 +24,14 @@ class RedirectResponseSubscriberTest extends UnitTestCase {
   /**
    * The mocked request context.
    *
-   * @var \Drupal\Core\Routing\RequestContext|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Routing\RequestContext|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $requestContext;
 
   /**
    * The mocked request context.
    *
-   * @var \Drupal\Core\Utility\UnroutedUrlAssemblerInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Utility\UnroutedUrlAssemblerInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $urlAssembler;
 

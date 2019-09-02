@@ -16,7 +16,7 @@ class DefaultTableMappingTest extends UnitTestCase {
   /**
    * The entity type definition.
    *
-   * @var \Drupal\Core\Entity\ContentEntityTypeInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Entity\ContentEntityTypeInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $entityType;
 
@@ -591,7 +591,7 @@ class DefaultTableMappingTest extends UnitTestCase {
    * @param array $column_names
    *   An array of column names for the storage definition.
    *
-   * @return \Drupal\Core\Field\FieldStorageDefinitionInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @return \Drupal\Core\Field\FieldStorageDefinitionInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected function setUpDefinition($name, array $column_names, $base_field = TRUE) {
     $definition = $this->createMock('Drupal\Tests\Core\Field\TestBaseFieldDefinitionInterface');

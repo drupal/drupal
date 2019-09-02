@@ -35,21 +35,21 @@ class UrlTest extends UnitTestCase {
   /**
    * The URL generator
    *
-   * @var \Drupal\Core\Routing\UrlGeneratorInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Routing\UrlGeneratorInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $urlGenerator;
 
   /**
    * The path alias manager.
    *
-   * @var \Drupal\Core\Path\AliasManagerInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Path\AliasManagerInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $pathAliasManager;
 
   /**
    * The router.
    *
-   * @var \Drupal\Tests\Core\Routing\TestRouterInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Tests\Core\Routing\TestRouterInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $router;
 
@@ -63,7 +63,7 @@ class UrlTest extends UnitTestCase {
   /**
    * The mocked path validator.
    *
-   * @var \Drupal\Core\Path\PathValidatorInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Path\PathValidatorInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $pathValidator;
 
@@ -838,7 +838,7 @@ class UrlTest extends UnitTestCase {
    * @param bool $access
    * @param \Drupal\Core\Session\AccountInterface|null $account
    *
-   * @return \Drupal\Core\Access\AccessManagerInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @return \Drupal\Core\Access\AccessManagerInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected function getMockAccessManager($access, $account = NULL) {
     $access_manager = $this->createMock('Drupal\Core\Access\AccessManagerInterface');

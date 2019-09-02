@@ -26,49 +26,49 @@ class ContextualLinkManagerTest extends UnitTestCase {
   /**
    * The mocked controller resolver.
    *
-   * @var \Symfony\Component\HttpKernel\Controller\ControllerResolverInterface|\Drupal\Core\\PHPUnit_Framework_MockObject_MockObject
+   * @var \Symfony\Component\HttpKernel\Controller\ControllerResolverInterface|\Drupal\Core\\PHPUnit\Framework\MockObject\MockObject
    */
   protected $controllerResolver;
 
   /**
    * The mocked plugin discovery.
    *
-   * @var \Drupal\Component\Plugin\Discovery\DiscoveryInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Component\Plugin\Discovery\DiscoveryInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $pluginDiscovery;
 
   /**
    * The plugin factory used in the test.
    *
-   * @var \Drupal\Component\Plugin\Factory\FactoryInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Component\Plugin\Factory\FactoryInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $factory;
 
   /**
    * The cache backend used in the test.
    *
-   * @var \Drupal\Core\Cache\CacheBackendInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Cache\CacheBackendInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $cacheBackend;
 
   /**
    * The mocked module handler.
    *
-   * @var \Drupal\Core\Extension\ModuleHandlerInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Extension\ModuleHandlerInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $moduleHandler;
 
   /**
    * The mocked access manager.
    *
-   * @var \Drupal\Core\Access\AccessManagerInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Access\AccessManagerInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $accessManager;
 
   /**
    * The mocked account.
    *
-   * @var \Drupal\Core\Session\AccountInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Session\AccountInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $account;
 

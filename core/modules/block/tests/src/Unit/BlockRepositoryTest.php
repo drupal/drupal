@@ -26,7 +26,7 @@ class BlockRepositoryTest extends UnitTestCase {
   protected $blockRepository;
 
   /**
-   * @var \Drupal\Core\Entity\EntityStorageInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Entity\EntityStorageInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $blockStorage;
 
@@ -36,7 +36,7 @@ class BlockRepositoryTest extends UnitTestCase {
   protected $theme;
 
   /**
-   * @var \Drupal\Core\Plugin\Context\ContextHandlerInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Plugin\Context\ContextHandlerInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $contextHandler;
 
@@ -67,7 +67,7 @@ class BlockRepositoryTest extends UnitTestCase {
 
     $this->contextHandler = $this->createMock('Drupal\Core\Plugin\Context\ContextHandlerInterface');
     $this->blockStorage = $this->createMock('Drupal\Core\Entity\EntityStorageInterface');
-    /** @var \Drupal\Core\Entity\EntityTypeManagerInterface|\PHPUnit_Framework_MockObject_MockObject $entity_type_manager */
+    /** @var \Drupal\Core\Entity\EntityTypeManagerInterface|\PHPUnit\Framework\MockObject\MockObject $entity_type_manager */
     $entity_type_manager = $this->createMock(EntityTypeManagerInterface::class);
     $entity_type_manager->expects($this->any())
       ->method('getStorage')

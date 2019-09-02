@@ -42,21 +42,21 @@ class ConfigNamesMapperTest extends UnitTestCase {
   /**
    * The locale configuration manager.
    *
-   * @var \Drupal\locale\LocaleConfigManager|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\locale\LocaleConfigManager|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $localeConfigManager;
 
   /**
    * The locale configuration manager.
    *
-   * @var \Drupal\locale\LocaleConfigManager|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\locale\LocaleConfigManager|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $typedConfigManager;
 
   /**
    * The configuration mapper manager.
    *
-   * @var \Drupal\config_translation\ConfigMapperManagerInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\config_translation\ConfigMapperManagerInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $configMapperManager;
 
@@ -70,28 +70,28 @@ class ConfigNamesMapperTest extends UnitTestCase {
   /**
    * The route provider used for testing.
    *
-   * @var \Drupal\Core\Routing\RouteProviderInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Routing\RouteProviderInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $routeProvider;
 
   /**
    * The mocked URL generator.
    *
-   * @var \Drupal\Core\Routing\UrlGeneratorInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Routing\UrlGeneratorInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $urlGenerator;
 
   /**
    * The mocked language manager.
    *
-   * @var \Drupal\Core\Language\LanguageManagerInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Language\LanguageManagerInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $languageManager;
 
   /**
    * The mocked event dispatcher.
    *
-   * @var \Symfony\Component\EventDispatcher\EventDispatcherInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Symfony\Component\EventDispatcher\EventDispatcherInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $eventDispatcher;
 

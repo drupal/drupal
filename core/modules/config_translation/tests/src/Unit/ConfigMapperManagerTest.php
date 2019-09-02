@@ -26,7 +26,7 @@ class ConfigMapperManagerTest extends UnitTestCase {
   /**
    * The typed configuration manager used for testing.
    *
-   * @var \Drupal\Core\Config\TypedConfigManagerInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Config\TypedConfigManagerInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $typedConfigManager;
 

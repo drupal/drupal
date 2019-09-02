@@ -17,7 +17,7 @@ class PathRootsSubscriberTest extends UnitTestCase {
   /**
    * The mocked state.
    *
-   * @var \Drupal\Core\State\StateInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\State\StateInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $state;
 

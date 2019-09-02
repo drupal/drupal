@@ -14,7 +14,7 @@ class SearchPluginCollectionTest extends UnitTestCase {
   /**
    * The mocked plugin manager.
    *
-   * @var \Drupal\Component\Plugin\PluginManagerInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Component\Plugin\PluginManagerInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $pluginManager;
 

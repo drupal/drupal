@@ -14,21 +14,21 @@ class CacheCollectorTest extends UnitTestCase {
   /**
    * The cache backend that should be used.
    *
-   * @var \Drupal\Core\Cache\CacheBackendInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Cache\CacheBackendInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $cacheBackend;
 
   /**
    * The cache tags invalidator.
    *
-   * @var \Drupal\Core\Cache\CacheTagsInvalidatorInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Cache\CacheTagsInvalidatorInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $cacheTagsInvalidator;
 
   /**
    * The lock backend that should be used.
    *
-   * @var \PHPUnit_Framework_MockObject_MockObject
+   * @var \PHPUnit\Framework\MockObject\MockObject
    */
   protected $lock;
 

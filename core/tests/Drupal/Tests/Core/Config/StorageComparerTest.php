@@ -13,12 +13,12 @@ use Drupal\Tests\UnitTestCase;
 class StorageComparerTest extends UnitTestCase {
 
   /**
-   * @var \Drupal\Core\Config\StorageInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Config\StorageInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $sourceStorage;
 
   /**
-   * @var \Drupal\Core\Config\StorageInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Config\StorageInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $targetStorage;
 

@@ -53,33 +53,33 @@ class AccessManagerTest extends UnitTestCase {
   /**
    * The route provider.
    *
-   * @var \PHPUnit_Framework_MockObject_MockObject
+   * @var \PHPUnit\Framework\MockObject\MockObject
    */
   protected $routeProvider;
 
   /**
    * The parameter converter.
    *
-   * @var \Drupal\Core\ParamConverter\ParamConverterManagerInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\ParamConverter\ParamConverterManagerInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $paramConverter;
 
   /**
    * The mocked account.
    *
-   * @var \Drupal\Core\Session\AccountInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Session\AccountInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $account;
 
   /**
    * The access arguments resolver.
    *
-   * @var \Drupal\Core\Access\AccessArgumentsResolverFactoryInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Access\AccessArgumentsResolverFactoryInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $argumentsResolverFactory;
 
   /**
-   * @var \Drupal\Core\Session\AccountInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Session\AccountInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $currentUser;
 

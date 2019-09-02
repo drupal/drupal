@@ -19,7 +19,7 @@ class ModuleHandlerTest extends UnitTestCase {
   /**
    * The mocked cache backend.
    *
-   * @var \Drupal\Core\Cache\CacheBackendInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Cache\CacheBackendInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $cacheBackend;
 

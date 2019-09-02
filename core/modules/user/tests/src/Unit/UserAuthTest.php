@@ -15,21 +15,21 @@ class UserAuthTest extends UnitTestCase {
   /**
    * The mock user storage.
    *
-   * @var \Drupal\Core\Entity\EntityStorageInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Entity\EntityStorageInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $userStorage;
 
   /**
    * The mocked password service.
    *
-   * @var \Drupal\Core\Password\PasswordInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Password\PasswordInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $passwordService;
 
   /**
    * The mock user.
    *
-   * @var \Drupal\user\Entity\User|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\user\Entity\User|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $testUser;
 
@@ -60,7 +60,7 @@ class UserAuthTest extends UnitTestCase {
   protected function setUp() {
     $this->userStorage = $this->createMock('Drupal\Core\Entity\EntityStorageInterface');
 
-    /** @var \Drupal\Core\Entity\EntityTypeManagerInterface|\PHPUnit_Framework_MockObject_MockObject $entity_type_manager */
+    /** @var \Drupal\Core\Entity\EntityTypeManagerInterface|\PHPUnit\Framework\MockObject\MockObject $entity_type_manager */
     $entity_type_manager = $this->createMock(EntityTypeManagerInterface::class);
     $entity_type_manager->expects($this->any())
       ->method('getStorage')

@@ -23,14 +23,14 @@ class RouteSubscriberTest extends UnitTestCase {
   /**
    * The mocked entity type manager.
    *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $entityTypeManager;
 
   /**
    * The mocked view storage.
    *
-   * @var \Drupal\views\ViewStorage|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\views\ViewStorage|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $viewStorage;
 
@@ -44,7 +44,7 @@ class RouteSubscriberTest extends UnitTestCase {
   /**
    * The mocked key value storage.
    *
-   * @var \Drupal\Core\State\StateInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\State\StateInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $state;
 
@@ -140,7 +140,7 @@ class RouteSubscriberTest extends UnitTestCase {
   /**
    * Sets up mocks of Views objects needed for testing.
    *
-   * @return \Drupal\views\Plugin\views\display\DisplayRouterInterface[]|\PHPUnit_Framework_MockObject_MockObject[]
+   * @return \Drupal\views\Plugin\views\display\DisplayRouterInterface[]|\PHPUnit\Framework\MockObject\MockObject[]
    *   An array of two mocked view displays.
    */
   protected function setupMocks() {

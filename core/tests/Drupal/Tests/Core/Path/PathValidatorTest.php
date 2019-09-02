@@ -20,27 +20,27 @@ class PathValidatorTest extends UnitTestCase {
   /**
    * The mocked access aware router.
    *
-   * @var \Drupal\Core\Routing\AccessAwareRouterInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Routing\AccessAwareRouterInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $accessAwareRouter;
 
   /**
    * The mocked access unaware router.
-   * @var \Symfony\Component\Routing\Matcher\UrlMatcherInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Symfony\Component\Routing\Matcher\UrlMatcherInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $accessUnawareRouter;
 
   /**
    * The mocked account.
    *
-   * @var \Drupal\Core\Session\AccountInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Session\AccountInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $account;
 
   /**
    * The path processor.
    *
-   * @var \Drupal\Core\PathProcessor\InboundPathProcessorInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\PathProcessor\InboundPathProcessorInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $pathProcessor;
 

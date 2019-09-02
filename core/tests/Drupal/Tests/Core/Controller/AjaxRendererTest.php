@@ -25,7 +25,7 @@ class AjaxRendererTest extends UnitTestCase {
   /**
    * The renderer.
    *
-   * @var \Drupal\Core\Render\RendererInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Render\RendererInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $renderer;
 

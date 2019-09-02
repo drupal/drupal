@@ -57,7 +57,7 @@ class ImageTest extends UnitTestCase {
    * @param array $stubs
    *   (optional) Array containing methods to be replaced with stubs.
    *
-   * @return \PHPUnit_Framework_MockObject_MockObject
+   * @return \PHPUnit\Framework\MockObject\MockObject
    */
   protected function getToolkitMock(array $stubs = []) {
     $mock_builder = $this->getMockBuilder('Drupal\system\Plugin\ImageToolkit\GDToolkit');
@@ -76,7 +76,7 @@ class ImageTest extends UnitTestCase {
    * @param \Drupal\Core\Image\ImageToolkitInterface $toolkit
    *   The image toolkit object.
    *
-   * @return \PHPUnit_Framework_MockObject_MockObject
+   * @return \PHPUnit\Framework\MockObject\MockObject
    */
   protected function getToolkitOperationMock($class_name, ImageToolkitInterface $toolkit) {
     $mock_builder = $this->getMockBuilder('Drupal\system\Plugin\ImageToolkit\Operation\gd\\' . $class_name);

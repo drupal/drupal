@@ -24,14 +24,14 @@ class ViewAjaxControllerTest extends UnitTestCase {
   /**
    * The mocked view entity storage.
    *
-   * @var \Drupal\Core\Entity\EntityStorageInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Entity\EntityStorageInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $viewStorage;
 
   /**
    * The mocked executable factory.
    *
-   * @var \Drupal\views\ViewExecutableFactory|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\views\ViewExecutableFactory|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $executableFactory;
 
@@ -45,21 +45,21 @@ class ViewAjaxControllerTest extends UnitTestCase {
   /**
    * The mocked current path.
    *
-   * @var \Drupal\Core\Path\CurrentPathStack|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Path\CurrentPathStack|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $currentPath;
 
   /**
    * The redirect destination.
    *
-   * @var \Drupal\Core\Routing\RedirectDestinationInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Routing\RedirectDestinationInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $redirectDestination;
 
   /**
    * The renderer.
    *
-   * @var \Drupal\Core\Render\RendererInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Render\RendererInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $renderer;
 

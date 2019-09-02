@@ -15,14 +15,14 @@ class LocaleTranslationTest extends UnitTestCase {
   /**
    * A mocked storage to use when instantiating LocaleTranslation objects.
    *
-   * @var \PHPUnit_Framework_MockObject_MockObject
+   * @var \PHPUnit\Framework\MockObject\MockObject
    */
   protected $storage;
 
   /**
    * A mocked language manager built from LanguageManagerInterface.
    *
-   * @var \Drupal\Core\Language\LanguageManagerInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Language\LanguageManagerInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $languageManager;
 

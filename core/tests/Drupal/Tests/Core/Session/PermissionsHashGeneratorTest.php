@@ -16,49 +16,49 @@ class PermissionsHashGeneratorTest extends UnitTestCase {
   /**
    * The mocked super user account.
    *
-   * @var \Drupal\user\UserInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\user\UserInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $account1;
 
   /**
    * A mocked account.
    *
-   * @var \Drupal\user\UserInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\user\UserInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $account2;
 
   /**
    * An "updated" mocked account.
    *
-   * @var \Drupal\user\UserInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\user\UserInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $account2Updated;
 
   /**
    * A different account.
    *
-   * @var \Drupal\user\UserInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\user\UserInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $account3;
 
   /**
    * The mocked private key service.
    *
-   * @var \Drupal\Core\PrivateKey|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\PrivateKey|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $privateKey;
 
   /**
    * The mocked cache backend.
    *
-   * @var \Drupal\Core\Cache\CacheBackendInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Cache\CacheBackendInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $cache;
 
   /**
    * The mocked cache backend.
    *
-   * @var \Drupal\Core\Cache\CacheBackendInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Cache\CacheBackendInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $staticCache;
 

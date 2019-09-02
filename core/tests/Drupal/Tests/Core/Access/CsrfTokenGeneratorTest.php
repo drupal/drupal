@@ -25,14 +25,14 @@ class CsrfTokenGeneratorTest extends UnitTestCase {
   /**
    * The mock private key instance.
    *
-   * @var \Drupal\Core\PrivateKey|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\PrivateKey|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $privateKey;
 
   /**
    * The mock session metadata bag.
    *
-   * @var \Drupal\Core\Session\MetadataBag|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Session\MetadataBag|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $sessionMetadata;
 

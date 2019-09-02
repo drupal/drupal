@@ -28,21 +28,21 @@ class ConfigEntityBaseUnitTest extends UnitTestCase {
   /**
    * The entity under test.
    *
-   * @var \Drupal\Core\Config\Entity\ConfigEntityBase|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Config\Entity\ConfigEntityBase|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $entity;
 
   /**
    * The entity type used for testing.
    *
-   * @var \Drupal\Core\Config\Entity\ConfigEntityTypeInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Config\Entity\ConfigEntityTypeInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $entityType;
 
   /**
    * The entity type manager used for testing.
    *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $entityTypeManager;
 
@@ -56,7 +56,7 @@ class ConfigEntityBaseUnitTest extends UnitTestCase {
   /**
    * The UUID generator used for testing.
    *
-   * @var \Drupal\Component\Uuid\UuidInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Component\Uuid\UuidInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $uuid;
 
@@ -70,7 +70,7 @@ class ConfigEntityBaseUnitTest extends UnitTestCase {
   /**
    * The language manager.
    *
-   * @var \Drupal\Core\Language\LanguageManagerInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Language\LanguageManagerInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $languageManager;
 
@@ -84,14 +84,14 @@ class ConfigEntityBaseUnitTest extends UnitTestCase {
   /**
    * The mocked cache backend.
    *
-   * @var \Drupal\Core\Cache\CacheTagsInvalidatorInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Cache\CacheTagsInvalidatorInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $cacheTagsInvalidator;
 
   /**
    * The mocked typed config manager.
    *
-   * @var \Drupal\Core\Config\TypedConfigManagerInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Config\TypedConfigManagerInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $typedConfigManager;
 

@@ -14,7 +14,7 @@ class PostgresqlSchemaTest extends UnitTestCase {
   /**
    * The PostgreSql DB connection.
    *
-   * @var \PHPUnit_Framework_MockObject_MockObject|\Drupal\Core\Database\Driver\pgsql\Connection
+   * @var \PHPUnit\Framework\MockObject\MockObject|\Drupal\Core\Database\Driver\pgsql\Connection
    */
   protected $connection;
 

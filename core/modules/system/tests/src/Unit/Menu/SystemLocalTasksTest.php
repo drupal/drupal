@@ -15,7 +15,7 @@ class SystemLocalTasksTest extends LocalTaskIntegrationTestBase {
   /**
    * The mocked theme handler.
    *
-   * @var \Drupal\Core\Extension\ThemeHandlerInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Extension\ThemeHandlerInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $themeHandler;
 

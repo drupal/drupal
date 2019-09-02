@@ -14,7 +14,7 @@ class ViewTest extends UnitTestCase {
   /**
    * The mocked entity storage.
    *
-   * @var \Drupal\Core\Entity\EntityStorageInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Entity\EntityStorageInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $entityStorage;
 

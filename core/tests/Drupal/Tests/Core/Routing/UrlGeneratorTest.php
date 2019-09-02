@@ -43,14 +43,14 @@ class UrlGeneratorTest extends UnitTestCase {
   /**
    * The alias manager.
    *
-   * @var \Drupal\Core\Path\AliasManager|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Path\AliasManager|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $aliasManager;
 
   /**
    * The mock route processor manager.
    *
-   * @var \Drupal\Core\RouteProcessor\RouteProcessorManager|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\RouteProcessor\RouteProcessorManager|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $routeProcessorManager;
 

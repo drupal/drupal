@@ -18,14 +18,14 @@ class RoutePreloaderTest extends UnitTestCase {
   /**
    * The mocked route provider.
    *
-   * @var \Drupal\Core\Routing\RouteProviderInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Routing\RouteProviderInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $routeProvider;
 
   /**
    * The mocked state.
    *
-   * @var \Drupal\Core\State\StateInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\State\StateInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $state;
 
@@ -39,7 +39,7 @@ class RoutePreloaderTest extends UnitTestCase {
   /**
    * The mocked cache.
    *
-   * @var \Drupal\Core\Cache\CacheBackendInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Cache\CacheBackendInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $cache;
 

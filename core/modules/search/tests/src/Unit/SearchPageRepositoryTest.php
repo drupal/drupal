@@ -28,21 +28,21 @@ class SearchPageRepositoryTest extends UnitTestCase {
   /**
    * The entity query object.
    *
-   * @var \Drupal\Core\Entity\Query\QueryInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Entity\Query\QueryInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $query;
 
   /**
    * The search page storage.
    *
-   * @var \Drupal\Core\Config\Entity\ConfigEntityStorageInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Config\Entity\ConfigEntityStorageInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $storage;
 
   /**
    * The config factory.
    *
-   * @var \Drupal\Core\Config\ConfigFactoryInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Config\ConfigFactoryInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $configFactory;
 
@@ -57,7 +57,7 @@ class SearchPageRepositoryTest extends UnitTestCase {
       ->method('getQuery')
       ->will($this->returnValue($this->query));
 
-    /** @var \Drupal\Core\Entity\EntityTypeManagerInterface|\PHPUnit_Framework_MockObject_MockObject $entity_type_manager */
+    /** @var \Drupal\Core\Entity\EntityTypeManagerInterface|\PHPUnit\Framework\MockObject\MockObject $entity_type_manager */
     $entity_type_manager = $this->createMock(EntityTypeManagerInterface::class);
     $entity_type_manager->expects($this->any())
       ->method('getStorage')

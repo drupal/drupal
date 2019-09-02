@@ -15,42 +15,42 @@ class ViewsBlockTest extends UnitTestCase {
   /**
    * The view executable.
    *
-   * @var \Drupal\views\ViewExecutable|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\views\ViewExecutable|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $executable;
 
   /**
    * The view executable factory.
    *
-   * @var \Drupal\views\ViewExecutableFactory|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\views\ViewExecutableFactory|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $executableFactory;
 
   /**
    * The view entity.
    *
-   * @var \Drupal\views\ViewEntityInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\views\ViewEntityInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $view;
 
   /**
    * The view storage.
    *
-   * @var \Drupal\Core\Entity\EntityStorageInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Entity\EntityStorageInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $storage;
 
   /**
    * The mocked user account.
    *
-   * @var \Drupal\Core\Session\AccountInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Session\AccountInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $account;
 
   /**
    * The mocked display handler.
    *
-   * @var \Drupal\views\Plugin\views\display\Block|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\views\Plugin\views\display\Block|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $displayHandler;
 

@@ -28,26 +28,26 @@ class FormAjaxSubscriberTest extends UnitTestCase {
   protected $subscriber;
 
   /**
-   * @var \Drupal\Core\Form\FormAjaxResponseBuilderInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Form\FormAjaxResponseBuilderInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $formAjaxResponseBuilder;
 
   /**
-   * @var \Symfony\Component\HttpKernel\HttpKernelInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Symfony\Component\HttpKernel\HttpKernelInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $httpKernel;
 
   /**
    * The mocked string translation.
    *
-   * @var \Drupal\Core\StringTranslation\TranslationInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\StringTranslation\TranslationInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $stringTranslation;
 
   /**
    * The mocked messenger.
    *
-   * @var \Drupal\Core\Messenger\MessengerInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Messenger\MessengerInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $messenger;
 

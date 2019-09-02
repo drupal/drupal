@@ -25,7 +25,7 @@ class UnroutedUrlAssemblerTest extends UnitTestCase {
   /**
    * The mocked config factory.
    *
-   * @var \Drupal\Core\Config\ConfigFactoryInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Config\ConfigFactoryInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $configFactory;
 
@@ -39,7 +39,7 @@ class UnroutedUrlAssemblerTest extends UnitTestCase {
   /**
    * The mocked outbound path processor.
    *
-   * @var \Drupal\Core\PathProcessor\OutboundPathProcessorInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\PathProcessor\OutboundPathProcessorInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $pathProcessor;
 

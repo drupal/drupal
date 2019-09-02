@@ -33,28 +33,28 @@ class RouteBuilderTest extends UnitTestCase {
   /**
    * The mocked matcher dumper.
    *
-   * @var \Drupal\Core\Routing\MatcherDumperInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Routing\MatcherDumperInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $dumper;
 
   /**
    * The mocked lock backend.
    *
-   * @var \Drupal\Core\Lock\LockBackendInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Lock\LockBackendInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $lock;
 
   /**
    * The mocked event dispatcher.
    *
-   * @var \Symfony\Component\EventDispatcher\EventDispatcherInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Symfony\Component\EventDispatcher\EventDispatcherInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $dispatcher;
 
   /**
    * The mocked YAML discovery.
    *
-   * @var \Drupal\Core\Discovery\YamlDiscovery|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Discovery\YamlDiscovery|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $yamlDiscovery;
 
@@ -68,12 +68,12 @@ class RouteBuilderTest extends UnitTestCase {
   /**
    * The controller resolver.
    *
-   * @var \Drupal\Core\Controller\ControllerResolverInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Controller\ControllerResolverInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $controllerResolver;
 
   /**
-   * @var \Drupal\Core\Access\CheckProviderInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Access\CheckProviderInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $checkProvider;
 
@@ -329,7 +329,7 @@ class TestRouteBuilder extends RouteBuilder {
   /**
    * The mocked YAML discovery.
    *
-   * @var \Drupal\Core\Discovery\YamlDiscovery|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Discovery\YamlDiscovery|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $yamlDiscovery;
 

@@ -22,7 +22,7 @@ class PasswordHashingTest extends UnitTestCase {
   /**
    * The user for testing.
    *
-   * @var \PHPUnit_Framework_MockObject_MockObject|\Drupal\user\UserInterface
+   * @var \PHPUnit\Framework\MockObject\MockObject|\Drupal\user\UserInterface
    */
   protected $user;
 

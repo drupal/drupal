@@ -39,63 +39,63 @@ class LocalActionManagerTest extends UnitTestCase {
   /**
    * The mocked argument resolver.
    *
-   * @var \Symfony\Component\HttpKernel\Controller\ArgumentResolverInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Symfony\Component\HttpKernel\Controller\ArgumentResolverInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $argumentResolver;
 
   /**
    * The mocked request.
    *
-   * @var \Symfony\Component\HttpFoundation\Request|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Symfony\Component\HttpFoundation\Request|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $request;
 
   /**
    * The mocked module handler.
    *
-   * @var \Drupal\Core\Extension\ModuleHandlerInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Extension\ModuleHandlerInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $moduleHandler;
 
   /**
    * The mocked router provider.
    *
-   * @var \Drupal\Core\Routing\RouteProviderInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Routing\RouteProviderInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $routeProvider;
 
   /**
    * The mocked cache backend.
    *
-   * @var \Drupal\Core\Cache\CacheBackendInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Cache\CacheBackendInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $cacheBackend;
 
   /**
    * The mocked access manager.
    *
-   * @var \Drupal\Core\Access\AccessManagerInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Access\AccessManagerInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $accessManager;
 
   /**
    * The mocked account.
    *
-   * @var \Drupal\Core\Session\AccountInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Session\AccountInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $account;
 
   /**
    * The mocked factory.
    *
-   * @var \Drupal\Component\Plugin\Factory\FactoryInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Component\Plugin\Factory\FactoryInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $factory;
 
   /**
    * The mocked plugin discovery.
    *
-   * @var \Drupal\Component\Plugin\Discovery\DiscoveryInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Component\Plugin\Discovery\DiscoveryInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $discovery;
 

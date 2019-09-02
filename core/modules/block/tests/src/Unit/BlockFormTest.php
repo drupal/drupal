@@ -17,21 +17,21 @@ class BlockFormTest extends UnitTestCase {
   /**
    * The condition plugin manager.
    *
-   * @var \Drupal\Core\Executable\ExecutableManagerInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Executable\ExecutableManagerInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $conditionManager;
 
   /**
    * The block storage.
    *
-   * @var \Drupal\Core\Entity\EntityStorageInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Entity\EntityStorageInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $storage;
 
   /**
    * The language manager service.
    *
-   * @var \Drupal\Core\Language\LanguageManagerInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Language\LanguageManagerInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $language;
 
@@ -39,21 +39,21 @@ class BlockFormTest extends UnitTestCase {
   /**
    * The theme handler.
    *
-   * @var \Drupal\Core\Extension\ThemeHandlerInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Extension\ThemeHandlerInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $themeHandler;
 
   /**
    * The entity type manager.
    *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $entityTypeManager;
 
   /**
    * The mocked context repository.
    *
-   * @var \Drupal\Core\Plugin\Context\ContextRepositoryInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Plugin\Context\ContextRepositoryInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $contextRepository;
 
@@ -90,7 +90,7 @@ class BlockFormTest extends UnitTestCase {
    * @param string $machine_name
    *   The machine name of the block plugin.
    *
-   * @return \Drupal\block\BlockInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @return \Drupal\block\BlockInterface|\PHPUnit\Framework\MockObject\MockObject
    *   The mocked block.
    */
   protected function getBlockMockWithMachineName($machine_name) {

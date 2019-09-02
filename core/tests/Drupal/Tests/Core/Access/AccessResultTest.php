@@ -26,7 +26,7 @@ class AccessResultTest extends UnitTestCase {
   /**
    * The cache contexts manager.
    *
-   * @var \Drupal\Core\Cache\Context\CacheContextsManager|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Cache\Context\CacheContextsManager|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $cacheContextsManager;
 

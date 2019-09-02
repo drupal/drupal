@@ -17,7 +17,7 @@ class RouteProcessorCsrfTest extends UnitTestCase {
   /**
    * The mock CSRF token generator.
    *
-   * @var \Drupal\Core\Access\CsrfTokenGenerator|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Access\CsrfTokenGenerator|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $csrfToken;
 

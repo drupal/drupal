@@ -20,7 +20,7 @@ class TimeTest extends TestCase {
   /**
    * The mocked request stack.
    *
-   * @var \Symfony\Component\HttpFoundation\RequestStack|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Symfony\Component\HttpFoundation\RequestStack|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $requestStack;
 

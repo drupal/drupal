@@ -21,28 +21,28 @@ class PathPluginBaseTest extends UnitTestCase {
   /**
    * The route provider that should be used.
    *
-   * @var \Drupal\Core\Routing\RouteProviderInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Routing\RouteProviderInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $routeProvider;
 
   /**
    * The tested path plugin base.
    *
-   * @var \Drupal\views\Plugin\views\display\PathPluginBase|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\views\Plugin\views\display\PathPluginBase|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $pathPlugin;
 
   /**
    * The mocked views access plugin manager.
    *
-   * @var \Drupal\views\Plugin\ViewsPluginManager|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\views\Plugin\ViewsPluginManager|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $accessPluginManager;
 
   /**
    * The mocked key value storage.
    *
-   * @var \Drupal\Core\State\StateInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\State\StateInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $state;
 
@@ -381,7 +381,7 @@ class PathPluginBaseTest extends UnitTestCase {
    * @see \Drupal\views\Plugin\views\display\PathPluginBase::collectRoutes()
    */
   public function testCollectRoutesWithNamedParameters() {
-    /** @var \Drupal\views\ViewExecutable|\PHPUnit_Framework_MockObject_MockObject $view */
+    /** @var \Drupal\views\ViewExecutable|\PHPUnit\Framework\MockObject\MockObject $view */
     list($view) = $this->setupViewExecutableAccessPlugin();
 
     $view->argument = [];

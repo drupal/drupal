@@ -23,28 +23,28 @@ class AliasManagerTest extends UnitTestCase {
   /**
    * Alias storage.
    *
-   * @var \Drupal\Core\Path\AliasStorageInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Path\AliasStorageInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $aliasStorage;
 
   /**
    * Alias whitelist.
    *
-   * @var \Drupal\Core\Path\AliasWhitelistInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Path\AliasWhitelistInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $aliasWhitelist;
 
   /**
    * Language manager.
    *
-   * @var \Drupal\Core\Language\LanguageManagerInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Language\LanguageManagerInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $languageManager;
 
   /**
    * Cache backend.
    *
-   * @var \Drupal\Core\Cache\CacheBackendInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Cache\CacheBackendInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $cache;
 

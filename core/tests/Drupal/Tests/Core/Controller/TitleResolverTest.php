@@ -23,21 +23,21 @@ class TitleResolverTest extends UnitTestCase {
   /**
    * The mocked controller resolver.
    *
-   * @var \Drupal\Core\Controller\ControllerResolverInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Controller\ControllerResolverInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $controllerResolver;
 
   /**
    * The mocked translation manager.
    *
-   * @var \Drupal\Core\StringTranslation\TranslationInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\StringTranslation\TranslationInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $translationManager;
 
   /**
    * The mocked argument resolver.
    *
-   * @var \Symfony\Component\HttpKernel\Controller\ArgumentResolverInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Symfony\Component\HttpKernel\Controller\ArgumentResolverInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $argumentResolver;
 

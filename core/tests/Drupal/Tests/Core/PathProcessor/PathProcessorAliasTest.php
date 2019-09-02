@@ -17,7 +17,7 @@ class PathProcessorAliasTest extends UnitTestCase {
   /**
    * The mocked alias manager.
    *
-   * @var \Drupal\Core\Path\AliasManagerInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Path\AliasManagerInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $aliasManager;
 

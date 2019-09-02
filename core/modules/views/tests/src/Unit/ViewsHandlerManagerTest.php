@@ -20,21 +20,21 @@ class ViewsHandlerManagerTest extends UnitTestCase {
   protected $handlerManager;
 
   /**
-   * @var \Drupal\Core\Extension\ModuleHandlerInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Extension\ModuleHandlerInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $moduleHandler;
 
   /**
    * The mocked views data.
    *
-   * @var \Drupal\views\ViewsData|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\views\ViewsData|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $viewsData;
 
   /**
    * The mocked factory.
    *
-   * @var \Drupal\Component\Plugin\Factory\FactoryInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Component\Plugin\Factory\FactoryInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $factory;
 

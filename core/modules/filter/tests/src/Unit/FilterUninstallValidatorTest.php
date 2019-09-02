@@ -14,7 +14,7 @@ class FilterUninstallValidatorTest extends UnitTestCase {
   use AssertHelperTrait;
 
   /**
-   * @var \Drupal\filter\FilterUninstallValidator|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\filter\FilterUninstallValidator|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $filterUninstallValidator;
 

@@ -30,14 +30,14 @@ class EntityTest extends UnitTestCase {
   /**
    * The entity manager.
    *
-   * @var \PHPUnit_Framework_MockObject_MockObject|\Drupal\Core\Entity\EntityTypeManagerInterface
+   * @var \PHPUnit\Framework\MockObject\MockObject|\Drupal\Core\Entity\EntityTypeManagerInterface
    */
   protected $entityTypeManager;
 
   /**
    * The mocked entity type bundle info used in this test.
    *
-   * @var \Drupal\Core\Entity\EntityTypeBundleInfoInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Entity\EntityTypeBundleInfoInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $entityTypeBundleInfo;
 

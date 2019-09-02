@@ -17,7 +17,7 @@ class ReverseProxyMiddlewareTest extends UnitTestCase {
   use ExpectDeprecationTrait;
 
   /**
-   * @var \Symfony\Component\HttpKernel\HttpKernelInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Symfony\Component\HttpKernel\HttpKernelInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $mockHttpKernel;
 

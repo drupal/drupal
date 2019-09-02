@@ -30,7 +30,7 @@ class SessionCacheContextTest extends UnitTestCase {
   /**
    * The session object.
    *
-   * @var \Symfony\Component\HttpFoundation\Session\SessionInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Symfony\Component\HttpFoundation\Session\SessionInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $session;
 

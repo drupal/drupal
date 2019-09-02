@@ -14,7 +14,7 @@ class BookUninstallValidatorTest extends UnitTestCase {
   use AssertHelperTrait;
 
   /**
-   * @var \Drupal\book\BookUninstallValidator|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\book\BookUninstallValidator|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $bookUninstallValidator;
 

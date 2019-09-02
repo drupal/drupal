@@ -23,17 +23,17 @@ class AccessAwareRouterTest extends UnitTestCase {
   protected $route;
 
   /**
-   * @var \Symfony\Cmf\Component\Routing\ChainRouter|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Symfony\Cmf\Component\Routing\ChainRouter|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $chainRouter;
 
   /**
-   * @var \Drupal\Core\Access\AccessManagerInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Access\AccessManagerInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $accessManager;
 
   /**
-   * @var \Drupal\Core\Session\AccountInterface||\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Session\AccountInterface||\PHPUnit\Framework\MockObject\MockObject
    */
   protected $currentUser;
 

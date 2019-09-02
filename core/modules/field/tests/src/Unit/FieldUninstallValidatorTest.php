@@ -14,14 +14,14 @@ class FieldUninstallValidatorTest extends UnitTestCase {
   use AssertHelperTrait;
 
   /**
-   * @var \Drupal\field\FieldUninstallValidator|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\field\FieldUninstallValidator|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $fieldUninstallValidator;
 
   /**
    * The mock field type plugin manager;
    *
-   * @var \Drupal\Core\Field\FieldTypePluginManagerInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Field\FieldTypePluginManagerInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $fieldTypePluginManager;
 

@@ -22,7 +22,7 @@ abstract class MigrateTestCase extends UnitTestCase {
   /**
    * The migration ID map.
    *
-   * @var \Drupal\migrate\Plugin\MigrateIdMapInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\migrate\Plugin\MigrateIdMapInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $idMap;
 
@@ -36,7 +36,7 @@ abstract class MigrateTestCase extends UnitTestCase {
   /**
    * Retrieves a mocked migration.
    *
-   * @return \Drupal\migrate\Plugin\MigrationInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @return \Drupal\migrate\Plugin\MigrationInterface|\PHPUnit\Framework\MockObject\MockObject
    *   The mocked migration.
    */
   protected function getMigration() {

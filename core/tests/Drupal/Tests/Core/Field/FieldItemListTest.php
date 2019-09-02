@@ -275,7 +275,7 @@ class FieldItemListTest extends UnitTestCase {
     $field_definition->expects($this->any())
       ->method('getType')
       ->willReturn('field_type');
-    /** @var \Drupal\Core\Field\FieldItemList|\PHPUnit_Framework_MockObject_MockObject $field_list */
+    /** @var \Drupal\Core\Field\FieldItemList|\PHPUnit\Framework\MockObject\MockObject $field_list */
     $field_list = $this->getMockBuilder(FieldItemList::class)
       ->setMethods(['defaultValueWidget'])
       ->setConstructorArgs([$field_definition])
@@ -296,7 +296,7 @@ class FieldItemListTest extends UnitTestCase {
    */
   public function testDefaultValuesFormValidate() {
     $field_definition = $this->createMock(FieldDefinitionInterface::class);
-    /** @var \Drupal\Core\Field\FieldItemList|\PHPUnit_Framework_MockObject_MockObject $field_list */
+    /** @var \Drupal\Core\Field\FieldItemList|\PHPUnit\Framework\MockObject\MockObject $field_list */
     $field_list = $this->getMockBuilder(FieldItemList::class)
       ->setMethods(['defaultValueWidget', 'validate'])
       ->setConstructorArgs([$field_definition])
@@ -317,7 +317,7 @@ class FieldItemListTest extends UnitTestCase {
    */
   public function testDefaultValuesFormSubmit() {
     $field_definition = $this->createMock(FieldDefinitionInterface::class);
-    /** @var \Drupal\Core\Field\FieldItemList|\PHPUnit_Framework_MockObject_MockObject $field_list */
+    /** @var \Drupal\Core\Field\FieldItemList|\PHPUnit\Framework\MockObject\MockObject $field_list */
     $field_list = $this->getMockBuilder(FieldItemList::class)
       ->setMethods(['defaultValueWidget', 'getValue'])
       ->setConstructorArgs([$field_definition])

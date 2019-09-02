@@ -18,14 +18,14 @@ class ContentLanguageSettingsUnitTest extends UnitTestCase {
   /**
    * The entity type used for testing.
    *
-   * @var \Drupal\Core\Entity\EntityTypeInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Entity\EntityTypeInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $entityType;
 
   /**
    * The entity type manager used for testing.
    *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $entityTypeManager;
 
@@ -39,21 +39,21 @@ class ContentLanguageSettingsUnitTest extends UnitTestCase {
   /**
    * The UUID generator used for testing.
    *
-   * @var \Drupal\Component\Uuid\UuidInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Component\Uuid\UuidInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $uuid;
 
   /**
    * The typed configuration manager used for testing.
    *
-   * @var \Drupal\Core\Config\TypedConfigManagerInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Config\TypedConfigManagerInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $typedConfigManager;
 
   /**
    * The typed configuration manager used for testing.
    *
-   * @var \Drupal\Core\Config\Entity\ConfigEntityStorage|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Config\Entity\ConfigEntityStorage|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $configEntityStorageInterface;
 

@@ -28,49 +28,49 @@ class FieldTest extends UnitTestCase {
   /**
    * The entity type manager.
    *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $entityTypeManager;
 
   /**
    * The entity field manager.
    *
-   * @var \Drupal\Core\Entity\EntityFieldManagerInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Entity\EntityFieldManagerInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $entityFieldManager;
 
   /**
    * The entity repository.
    *
-   * @var \Drupal\Core\Entity\EntityRepositoryInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Entity\EntityRepositoryInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $entityRepository;
 
   /**
    * The mocked formatter plugin manager.
    *
-   * @var \Drupal\Core\Field\FormatterPluginManager|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Field\FormatterPluginManager|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $formatterPluginManager;
 
   /**
    * The mocked language manager.
    *
-   * @var \Drupal\Core\Language\LanguageManagerInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Language\LanguageManagerInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $languageManager;
 
   /**
    * The mocked field type plugin manager.
    *
-   * @var \Drupal\Core\Field\FieldTypePluginManagerInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Field\FieldTypePluginManagerInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $fieldTypePluginManager;
 
   /**
    * The renderer.
    *
-   * @var \Drupal\Core\Render\RendererInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Render\RendererInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $renderer;
 
@@ -655,7 +655,7 @@ class FieldTest extends UnitTestCase {
   /**
    * Returns a mocked base field storage object.
    *
-   * @return \Drupal\Core\Field\FieldStorageDefinitionInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @return \Drupal\Core\Field\FieldStorageDefinitionInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected function getBaseFieldStorage() {
     $title_storage = $this->createMock('Drupal\Core\Field\FieldStorageDefinitionInterface');
@@ -674,7 +674,7 @@ class FieldTest extends UnitTestCase {
   /**
    * Returns a mocked configurable field storage object.
    *
-   * @return \Drupal\field\FieldStorageConfigInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @return \Drupal\field\FieldStorageConfigInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected function getConfigFieldStorage() {
     $title_storage = $this->createMock('Drupal\field\FieldStorageConfigInterface');

@@ -38,7 +38,7 @@ class DenyPrivateImageStyleDownloadTest extends UnitTestCase {
   /**
    * The current route match.
    *
-   * @var \Drupal\Core\Routing\RouteMatch|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Routing\RouteMatch|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $routeMatch;
 

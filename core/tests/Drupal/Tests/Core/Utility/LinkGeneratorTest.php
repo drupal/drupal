@@ -29,28 +29,28 @@ class LinkGeneratorTest extends UnitTestCase {
   /**
    * The mocked url generator.
    *
-   * @var \PHPUnit_Framework_MockObject_MockObject
+   * @var \PHPUnit\Framework\MockObject\MockObject
    */
   protected $urlGenerator;
 
   /**
    * The mocked module handler.
    *
-   * @var \PHPUnit_Framework_MockObject_MockObject
+   * @var \PHPUnit\Framework\MockObject\MockObject
    */
   protected $moduleHandler;
 
   /**
    * The mocked renderer service.
    *
-   * @var \PHPUnit_Framework_MockObject_MockObject|\Drupal\Core\Render\RendererInterface
+   * @var \PHPUnit\Framework\MockObject\MockObject|\Drupal\Core\Render\RendererInterface
    */
   protected $renderer;
 
   /**
    * The mocked URL Assembler service.
    *
-   * @var \PHPUnit_Framework_MockObject_MockObject|\Drupal\Core\Utility\UnroutedUrlAssemblerInterface
+   * @var \PHPUnit\Framework\MockObject\MockObject|\Drupal\Core\Utility\UnroutedUrlAssemblerInterface
    */
   protected $urlAssembler;
 

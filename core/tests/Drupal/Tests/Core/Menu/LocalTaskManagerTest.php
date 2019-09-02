@@ -34,7 +34,7 @@ class LocalTaskManagerTest extends UnitTestCase {
   /**
    * The mocked argument resolver.
    *
-   * @var \PHPUnit_Framework_MockObject_MockObject
+   * @var \PHPUnit\Framework\MockObject\MockObject
    */
   protected $argumentResolver;
 
@@ -48,49 +48,49 @@ class LocalTaskManagerTest extends UnitTestCase {
   /**
    * The mocked route provider.
    *
-   * @var \PHPUnit_Framework_MockObject_MockObject
+   * @var \PHPUnit\Framework\MockObject\MockObject
    */
   protected $routeProvider;
 
   /**
    * The mocked plugin discovery.
    *
-   * @var \PHPUnit_Framework_MockObject_MockObject
+   * @var \PHPUnit\Framework\MockObject\MockObject
    */
   protected $pluginDiscovery;
 
   /**
    * The plugin factory used in the test.
    *
-   * @var \PHPUnit_Framework_MockObject_MockObject
+   * @var \PHPUnit\Framework\MockObject\MockObject
    */
   protected $factory;
 
   /**
    * The cache backend used in the test.
    *
-   * @var \PHPUnit_Framework_MockObject_MockObject
+   * @var \PHPUnit\Framework\MockObject\MockObject
    */
   protected $cacheBackend;
 
   /**
    * The mocked access manager.
    *
-   * @var \Drupal\Core\Access\AccessManagerInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Access\AccessManagerInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $accessManager;
 
   /**
    * The route match.
    *
-   * @var \Drupal\Core\Routing\RouteMatchInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Routing\RouteMatchInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $routeMatch;
 
   /**
    * The mocked account.
    *
-   * @var \Drupal\Core\Session\AccountInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Session\AccountInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $account;
 
@@ -356,7 +356,7 @@ class LocalTaskManagerTest extends UnitTestCase {
   /**
    * Setups the plugin factory with some local task plugins.
    *
-   * @param \PHPUnit_Framework_MockObject_MockObject $mock_plugin
+   * @param \PHPUnit\Framework\MockObject\MockObject $mock_plugin
    *   The mock plugin.
    */
   protected function setupFactory($mock_plugin) {
@@ -372,7 +372,7 @@ class LocalTaskManagerTest extends UnitTestCase {
   /**
    * Returns an expected result for getLocalTasksForRoute.
    *
-   * @param \PHPUnit_Framework_MockObject_MockObject $mock_plugin
+   * @param \PHPUnit\Framework\MockObject\MockObject $mock_plugin
    *   The mock plugin.
    *
    * @return array

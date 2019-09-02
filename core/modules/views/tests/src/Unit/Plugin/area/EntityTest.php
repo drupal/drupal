@@ -25,56 +25,56 @@ class EntityTest extends UnitTestCase {
   /**
    * The mocked entity type manager.
    *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $entityTypeManager;
 
   /**
    * The entity repository.
    *
-   * @var \Drupal\Core\Entity\EntityRepositoryInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Entity\EntityRepositoryInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $entityRepository;
 
   /**
    * The entity display repository.
    *
-   * @var \Drupal\Core\Entity\EntityDisplayRepositoryInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Entity\EntityDisplayRepositoryInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $entityDisplayRepository;
 
   /**
    * The mocked entity storage.
    *
-   * @var \Drupal\Core\Entity\EntityStorageInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Entity\EntityStorageInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $entityStorage;
 
   /**
    * The mocked entity view builder.
    *
-   * @var \Drupal\Core\Entity\EntityViewBuilderInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Entity\EntityViewBuilderInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $entityViewBuilder;
 
   /**
    * The mocked view executable.
    *
-   * @var \Drupal\views\ViewExecutable|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\views\ViewExecutable|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $executable;
 
   /**
    * The mocked display.
    *
-   * @var \Drupal\views\Plugin\views\display\DisplayPluginBase|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\views\Plugin\views\display\DisplayPluginBase|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $display;
 
   /**
    * The mocked style plugin.
    *
-   * @var \Drupal\views\Plugin\views\style\StylePluginBase|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\views\Plugin\views\style\StylePluginBase|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $stylePlugin;
 

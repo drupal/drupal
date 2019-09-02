@@ -14,14 +14,14 @@ abstract class LazyPluginCollectionTestBase extends UnitTestCase {
   /**
    * The mocked plugin manager.
    *
-   * @var \Drupal\Component\Plugin\PluginManagerInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Component\Plugin\PluginManagerInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $pluginManager;
 
   /**
    * The tested plugin collection.
    *
-   * @var \Drupal\Core\Plugin\DefaultLazyPluginCollection|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Plugin\DefaultLazyPluginCollection|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $defaultPluginCollection;
 
@@ -82,7 +82,7 @@ abstract class LazyPluginCollectionTestBase extends UnitTestCase {
    * @param string $plugin_id
    *   The plugin ID to return the mock plugin for.
    *
-   * @return \Drupal\Component\Plugin\PluginInspectionInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @return \Drupal\Component\Plugin\PluginInspectionInterface|\PHPUnit\Framework\MockObject\MockObject
    *   The mock plugin object.
    */
   public function returnPluginMap($plugin_id) {
@@ -99,7 +99,7 @@ abstract class LazyPluginCollectionTestBase extends UnitTestCase {
    * @param array $definition
    *   The plugin definition.
    *
-   * @return \Drupal\Component\Plugin\PluginInspectionInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @return \Drupal\Component\Plugin\PluginInspectionInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected function getPluginMock($plugin_id, array $definition) {
     // Create a mock plugin instance.
