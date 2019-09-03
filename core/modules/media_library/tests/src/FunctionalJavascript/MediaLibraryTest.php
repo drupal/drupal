@@ -1561,4 +1561,36 @@ class MediaLibraryTest extends WebDriverTestBase {
     $assert_session->elementExists('css', '.media-library-menu');
   }
 
+  /**
+   * Tests field UI integration for media library widget.
+   */
+  public function testFieldUiIntegration() {
+    $page = $this->getSession()->getPage();
+    $assert_session = $this->assertSession();
+    $this->drupalCreateContentType(['type' => 'article']);
+    $user = $this->drupalCreateUser([
+      'access administration pages',
+      'administer node fields',
+      'administer node form display',
+    ]);
+    $this->drupalLogin($user);
+
+    $this->drupalGet('/admin/structure/types/manage/article/fields/add-field');
+    $page->selectFieldOption('new_storage_type', 'field_ui:entity_reference:media');
+    $this->assertTrue($assert_session->waitForField('label'));
+    $page->fillField('label', 'Shatner');
+    $this->assertTrue($assert_session->waitForText('field_shatner'));
+    $page->pressButton('Save and continue');
+    $page->pressButton('Save field settings');
+    $assert_session->pageTextNotContains('Undefined index: target_bundles');
+    $page->checkField('settings[handler_settings][target_bundles][type_one]');
+    $assert_session->assertWaitOnAjaxRequest();
+    $page->checkField('settings[handler_settings][target_bundles][type_two]');
+    $assert_session->assertWaitOnAjaxRequest();
+    $page->checkField('settings[handler_settings][target_bundles][type_three]');
+    $assert_session->assertWaitOnAjaxRequest();
+    $page->pressButton('Save settings');
+    $assert_session->pageTextContains('Saved Shatner configuration.');
+  }
+
 }
