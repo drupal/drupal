@@ -17,29 +17,6 @@ class InfoParserDynamic implements InfoParserInterface {
   const FIRST_CORE_VERSION_REQUIREMENT_SUPPORTED_VERSION = '8.7.7';
 
   /**
-   * Determines if a version satisfies the given constraints.
-   *
-   * This method uses \Composer\Semver\Semver::satisfies() but returns FALSE if
-   * the version or constraints are not valid instead of throwing an exception.
-   *
-   * @param string $version
-   *   The version.
-   * @param string $constraints
-   *   The constraints.
-   *
-   * @return bool
-   *   TRUE if the version satisfies the constraints, otherwise FALSE.
-   */
-  protected static function satisfies($version, $constraints) {
-    try {
-      return Semver::satisfies($version, $constraints);
-    }
-    catch (\UnexpectedValueException $exception) {
-      return FALSE;
-    }
-  }
-
-  /**
    * {@inheritdoc}
    */
   public function parse($filename) {
@@ -82,20 +59,15 @@ class InfoParserDynamic implements InfoParserInterface {
         // 'core_version_requirement' key. Do not throw the exception if the
         // constraint also is satisfied by 8.0.0-alpha1 to allow constraints
         // such as '^8' or '^8 || ^9'.
-        if ($supports_pre_core_version_requirement_version && !static::satisfies('8.0.0-alpha1', $parsed_info['core_version_requirement'])) {
+        if ($supports_pre_core_version_requirement_version && !Semver::satisfies('8.0.0-alpha1', $parsed_info['core_version_requirement'])) {
           throw new InfoParserException("The 'core_version_requirement' can not be used to specify compatibility for a specific version before " . static::FIRST_CORE_VERSION_REQUIREMENT_SUPPORTED_VERSION . " in $filename");
         }
       }
 
       // Determine if the extension is compatible with the current version of
       // Drupal core.
-      try {
-        $core_version_constraint = isset($parsed_info['core_version_requirement']) ? $parsed_info['core_version_requirement'] : $parsed_info['core'];
-        $parsed_info['core_incompatible'] = !static::satisfies(\Drupal::VERSION, $core_version_constraint);
-      }
-      catch (\UnexpectedValueException $exception) {
-        $parsed_info['core_incompatible'] = TRUE;
-      }
+      $core_version_constraint = isset($parsed_info['core_version_requirement']) ? $parsed_info['core_version_requirement'] : $parsed_info['core'];
+      $parsed_info['core_incompatible'] = !Semver::satisfies(\Drupal::VERSION, $core_version_constraint);
       if (isset($parsed_info['version']) && $parsed_info['version'] === 'VERSION') {
         $parsed_info['version'] = \Drupal::VERSION;
       }
@@ -150,7 +122,7 @@ class InfoParserDynamic implements InfoParserInterface {
     if (!isset($evaluated_constraints[$constraint][$version])) {
       $evaluated_constraints[$constraint][$version] = FALSE;
       foreach (static::getAllPreviousCoreVersions($version) as $previous_version) {
-        if (static::satisfies($previous_version, $constraint)) {
+        if (Semver::satisfies($previous_version, $constraint)) {
           $evaluated_constraints[$constraint][$version] = TRUE;
           // The constraint only has to satisfy one previous version so break
           // when the first one is found.

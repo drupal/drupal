@@ -428,11 +428,6 @@ CORE_INCOMPATIBILITY;
         "^1 || ^$next_major",
         TRUE,
       ],
-      'invalid' => [
-        'invalid',
-        'this-string-is-invalid',
-        TRUE,
-      ],
     ];
   }
 
@@ -457,6 +452,33 @@ PROFILE_TEST;
     $this->expectException('\Drupal\Core\Extension\InfoParserException');
     $this->expectExceptionMessage("The 'core_version_requirement' key is not supported in profiles in vfs://profiles/fixtures/invalid_profile.info.txt");
     $this->infoParser->parse(vfsStream::url('profiles/fixtures/invalid_profile.info.txt'));
+  }
+
+  /**
+   * Tests the exception for an unparsable 'core_version_requirement' value.
+   *
+   * @covers ::parse
+   */
+  public function testUnparsableCoreVersionRequirement() {
+    $unparsable_core_version_requirement = <<<UNPARSABLE_CORE_VERSION_REQUIREMENT
+# info.yml for testing missing type key.
+name: Not this module
+description: 'Not the module you are looking for.'
+package: Core
+type: module
+version: VERSION
+core_version_requirement: not-this-version
+UNPARSABLE_CORE_VERSION_REQUIREMENT;
+
+    vfsStream::setup('modules');
+    vfsStream::create([
+      'fixtures' => [
+        'unparsable_core_version_requirement.info.txt' => $unparsable_core_version_requirement,
+      ],
+    ]);
+    $this->expectException(\UnexpectedValueException::class);
+    $this->expectExceptionMessage('Could not parse version constraint not-this-version: Invalid version string "not-this-version"');
+    $this->infoParser->parse(vfsStream::url('modules/fixtures/unparsable_core_version_requirement.info.txt'));
   }
 
 }
