@@ -108,6 +108,14 @@ class DrupalMediaLibrary extends CKEditorPluginBase implements ContainerFactoryP
    * {@inheritdoc}
    */
   public function getConfig(Editor $editor) {
+    // If the editor has not been saved yet, we may not be able to create a
+    // coherent MediaLibraryState object, which is needed in order to generate
+    // the required configuration. But, if we're creating a new editor, we don't
+    // need to do that anyway, so just return an empty array.
+    if ($editor->isNew()) {
+      return [];
+    }
+
     $media_type_ids = $this->mediaTypeStorage->getQuery()->execute();
 
     if (in_array('image', $media_type_ids, TRUE)) {

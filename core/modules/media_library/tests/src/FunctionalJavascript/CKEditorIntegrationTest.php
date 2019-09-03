@@ -122,8 +122,7 @@ class CKEditorIntegrationTest extends WebDriverTestBase {
   }
 
   /**
-   * Tests that media_embed filter is required to enable the DrupalMediaLibrary
-   * button.
+   * Tests validation that DrupalMediaLibrary requires media_embed filter.
    */
   public function testConfigurationValidation() {
     $page = $this->getSession()->getPage();
@@ -141,6 +140,33 @@ class CKEditorIntegrationTest extends WebDriverTestBase {
     $page->checkField('filters[media_embed][status]');
     $page->pressButton('Save configuration');
     $assert_session->pageTextContains('The text format Test format has been updated.');
+
+    // Now test adding a new format.
+    $this->drupalGet('/admin/config/content/formats/add');
+    $page->fillField('name', 'Sulaco');
+    // Wait for machine name to be filled in.
+    $this->assertNotEmpty($assert_session->waitForText('sulaco'));
+    $page->checkField('roles[authenticated]');
+    $page->selectFieldOption('editor[editor]', 'ckeditor');
+    $this->assertNotEmpty($target = $assert_session->waitForElementVisible('css', 'ul.ckeditor-toolbar-group-buttons'));
+    $this->assertNotEmpty($button = $assert_session->elementExists('css', 'li[data-drupal-ckeditor-button-name="DrupalMediaLibrary"]'));
+    $button->dragTo($target);
+    $page->pressButton('Save configuration');
+    $assert_session->pageTextContains('The Embed media filter must be enabled to use the Insert from Media Library button.');
+    $page->checkField('filters[media_embed][status]');
+    $page->pressButton('Save configuration');
+    $assert_session->pageTextContains('Added text format Sulaco.');
+
+    // Test that when adding the DrupalMediaLibrary button to the editor the
+    // correct attributes are added to the <drupal-media> tag in the Allowed
+    // HTML tags.
+    $this->drupalGet('/admin/config/content/formats/manage/sulaco');
+    $page->checkField('filters[filter_html][status]');
+    $expected = 'drupal-media data-entity-type data-entity-uuid';
+    $allowed_html = $assert_session->fieldExists('filters[filter_html][settings][allowed_html]')->getValue();
+    $this->assertContains($expected, $allowed_html);
+    $page->pressButton('Save configuration');
+    $assert_session->pageTextContains('The text format Sulaco has been updated.');
   }
 
   /**
