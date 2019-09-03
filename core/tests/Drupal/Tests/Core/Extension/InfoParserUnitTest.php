@@ -461,7 +461,7 @@ PROFILE_TEST;
    */
   public function testUnparsableCoreVersionRequirement() {
     $unparsable_core_version_requirement = <<<UNPARSABLE_CORE_VERSION_REQUIREMENT
-# info.yml for testing missing type key.
+# info.yml for testing invalid core_version_requirement value.
 name: Not this module
 description: 'Not the module you are looking for.'
 package: Core
