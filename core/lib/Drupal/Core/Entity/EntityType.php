@@ -775,6 +775,7 @@ class EntityType extends PluginDefinition implements EntityTypeInterface {
    * {@inheritdoc}
    */
   public function getLowercaseLabel() {
+    @trigger_error('EntityType::getLowercaseLabel() is deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. Instead, you should call getSingularLabel(). See https://www.drupal.org/node/3075567', E_USER_DEPRECATED);
     return mb_strtolower($this->getLabel());
   }
 
@@ -794,7 +795,7 @@ class EntityType extends PluginDefinition implements EntityTypeInterface {
    */
   public function getSingularLabel() {
     if (empty($this->label_singular)) {
-      $lowercase_label = $this->getLowercaseLabel();
+      $lowercase_label = mb_strtolower($this->getLabel());
       $this->label_singular = $lowercase_label;
     }
     return $this->label_singular;
@@ -805,7 +806,7 @@ class EntityType extends PluginDefinition implements EntityTypeInterface {
    */
   public function getPluralLabel() {
     if (empty($this->label_plural)) {
-      $lowercase_label = $this->getLowercaseLabel();
+      $lowercase_label = $this->getSingularLabel();
       $this->label_plural = new TranslatableMarkup('@label entities', ['@label' => $lowercase_label], [], $this->getStringTranslation());
     }
     return $this->label_plural;
@@ -816,7 +817,7 @@ class EntityType extends PluginDefinition implements EntityTypeInterface {
    */
   public function getCountLabel($count) {
     if (empty($this->label_count)) {
-      return $this->formatPlural($count, '@count @label', '@count @label entities', ['@label' => $this->getLowercaseLabel()], ['context' => 'Entity type label']);
+      return $this->formatPlural($count, '@count @label', '@count @label entities', ['@label' => $this->getSingularLabel()], ['context' => 'Entity type label']);
     }
     $context = isset($this->label_count['context']) ? $this->label_count['context'] : 'Entity type label';
     return $this->formatPlural($count, $this->label_count['singular'], $this->label_count['plural'], ['context' => $context]);

@@ -85,7 +85,7 @@ class ContentTranslationPermissions implements ContainerInjectionInterface {
     // bundle.
     foreach ($this->entityTypeManager->getDefinitions() as $entity_type_id => $entity_type) {
       if ($permission_granularity = $entity_type->getPermissionGranularity()) {
-        $t_args = ['@entity_label' => $entity_type->getLowercaseLabel()];
+        $t_args = ['@entity_label' => $entity_type->getSingularLabel()];
 
         switch ($permission_granularity) {
           case 'bundle':

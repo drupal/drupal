@@ -45,7 +45,7 @@ trait EntityDeleteFormTrait {
    */
   public function getQuestion() {
     return $this->t('Are you sure you want to delete the @entity-type %label?', [
-      '@entity-type' => $this->getEntity()->getEntityType()->getLowercaseLabel(),
+      '@entity-type' => $this->getEntity()->getEntityType()->getSingularLabel(),
       '%label' => $this->getEntity()->label(),
     ]);
   }
@@ -66,7 +66,7 @@ trait EntityDeleteFormTrait {
   protected function getDeletionMessage() {
     $entity = $this->getEntity();
     return $this->t('The @entity-type %label has been deleted.', [
-      '@entity-type' => $entity->getEntityType()->getLowercaseLabel(),
+      '@entity-type' => $entity->getEntityType()->getSingularLabel(),
       '%label' => $entity->label(),
     ]);
   }
@@ -110,7 +110,7 @@ trait EntityDeleteFormTrait {
   protected function logDeletionMessage() {
     $entity = $this->getEntity();
     $this->logger($entity->getEntityType()->getProvider())->notice('The @entity-type %label has been deleted.', [
-      '@entity-type' => $entity->getEntityType()->getLowercaseLabel(),
+      '@entity-type' => $entity->getEntityType()->getSingularLabel(),
       '%label' => $entity->label(),
     ]);
   }

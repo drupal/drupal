@@ -142,7 +142,7 @@ function config_translation_config_translation_info(&$info) {
     $info[$entity_type_id] = [
       'class' => '\Drupal\config_translation\ConfigEntityMapper',
       'base_route_name' => $base_route_name,
-      'title' => $entity_type->getLowercaseLabel(),
+      'title' => $entity_type->getSingularLabel(),
       'names' => [],
       'entity_type' => $entity_type_id,
       'weight' => 10,

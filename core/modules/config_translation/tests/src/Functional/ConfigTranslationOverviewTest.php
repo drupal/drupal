@@ -110,13 +110,13 @@ class ConfigTranslationOverviewTest extends BrowserTestBase {
       $entity_type = \Drupal::entityTypeManager()->getDefinition($test_entity->getEntityTypeId());
       $this->drupalGet($base_url . '/translate');
 
-      $title = $test_entity->label() . ' ' . $entity_type->getLowercaseLabel();
+      $title = $test_entity->label() . ' ' . $entity_type->getSingularLabel();
       $title = 'Translations for <em class="placeholder">' . Html::escape($title) . '</em>';
       $this->assertRaw($title);
       $this->assertRaw('<th>' . t('Language') . '</th>');
 
       $this->drupalGet($base_url);
-      $this->assertLink(t('Translate @title', ['@title' => $entity_type->getLowercaseLabel()]));
+      $this->assertLink(t('Translate @title', ['@title' => $entity_type->getSingularLabel()]));
     }
   }
 

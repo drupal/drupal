@@ -148,7 +148,7 @@ class EntityController implements ContainerInjectionInterface {
     if ($bundle_entity_type_id) {
       $bundle_argument = $bundle_entity_type_id;
       $bundle_entity_type = $this->entityTypeManager->getDefinition($bundle_entity_type_id);
-      $bundle_entity_type_label = $bundle_entity_type->getLowercaseLabel();
+      $bundle_entity_type_label = $bundle_entity_type->getSingularLabel();
       $build['#cache']['tags'] = $bundle_entity_type->getListCacheTags();
 
       // Build the message shown when there are no bundles.
@@ -204,7 +204,7 @@ class EntityController implements ContainerInjectionInterface {
    */
   public function addTitle($entity_type_id) {
     $entity_type = $this->entityTypeManager->getDefinition($entity_type_id);
-    return $this->t('Add @entity-type', ['@entity-type' => $entity_type->getLowercaseLabel()]);
+    return $this->t('Add @entity-type', ['@entity-type' => $entity_type->getSingularLabel()]);
   }
 
   /**

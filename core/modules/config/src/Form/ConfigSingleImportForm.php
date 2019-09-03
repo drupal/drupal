@@ -219,7 +219,7 @@ class ConfigSingleImportForm extends ConfirmFormBase {
     else {
       $definition = $this->entityTypeManager->getDefinition($this->data['config_type']);
       $name = $this->data['import'][$definition->getKey('id')];
-      $type = $definition->getLowercaseLabel();
+      $type = $definition->getSingularLabel();
     }
 
     $args = [
