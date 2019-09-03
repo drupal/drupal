@@ -146,7 +146,9 @@ class MediaLibraryWidget extends WidgetBase implements ContainerFactoryPluginInt
 
     // Get the configured media types from the field storage.
     $handler_settings = $this->getFieldSetting('handler_settings');
-    $allowed_media_type_ids = $handler_settings['target_bundles'];
+    // The target bundles will be blank when saving field storage settings,
+    // when first adding a media reference field.
+    $allowed_media_type_ids = isset($handler_settings['target_bundles']) ? $handler_settings['target_bundles'] : NULL;
 
     // When there are no allowed media types, return the empty array.
     if ($allowed_media_type_ids === []) {
