@@ -502,6 +502,25 @@ class ViewsEntitySchemaSubscriberIntegrationTest extends ViewsKernelTestBase {
   }
 
   /**
+   * Tests that broken views are handled gracefully.
+   */
+  public function testBrokenView() {
+    $view_id = 'test_view_entity_test';
+    $this->state->set('views_test_config.broken_view', $view_id);
+    $this->updateEntityTypeToTranslatable(TRUE);
+
+    /** @var \Drupal\views\Entity\View $view */
+    $entity_storage = $this->entityTypeManager->getStorage('view');
+    $view = $entity_storage->load($view_id);
+
+    // The broken handler should have been removed.
+    $display = $view->getDisplay('default');
+    $this->assertFalse(isset($display['display_options']['fields']['id_broken']));
+
+    $this->assertUpdatedViews([$view_id]);
+  }
+
+  /**
    * Gets a view and its display.
    *
    * @param bool $revision
