@@ -26,7 +26,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * @Filter(
  *   id = "media_embed",
  *   title = @Translation("Embed media"),
- *   description = @Translation("Embeds media items using a custom HTML tag. If used in conjunction with the 'Align/Caption' filters, make sure this filter is configured to run after them."),
+ *   description = @Translation("Embeds media items using a custom tag, <code>&lt;drupal-media&gt;</code>. If used in conjunction with the 'Align/Caption' filters, make sure this filter is configured to run after them."),
  *   type = Drupal\filter\Plugin\FilterInterface::TYPE_TRANSFORM_REVERSIBLE,
  *   settings = {
  *     "default_view_mode" = "full",
@@ -414,6 +414,15 @@ class MediaEmbed extends FilterBase implements ContainerFactoryPluginInterface, 
       $settings = $media->{$image_field}->getItemDefinition()->getSettings();
 
       if (!empty($settings['alt_field']) && $node->hasAttribute('alt')) {
+        // Allow the display of the image without an alt tag in special cases.
+        // Since setting the value in the EditorMediaDialog to an empty string
+        // restores the default value, this allows special cases where the alt
+        // text should not be set to the default value, but should be
+        // explicitly empty instead so it can be ignored by assistive
+        // technologies, such as screen readers.
+        if ($node->getAttribute('alt') === '""') {
+          $node->setAttribute('alt', NULL);
+        }
         $media->{$image_field}->alt = $node->getAttribute('alt');
         // All media entities have a thumbnail. In the case of image media, it
         // is conceivable that a particular view mode chooses to display the

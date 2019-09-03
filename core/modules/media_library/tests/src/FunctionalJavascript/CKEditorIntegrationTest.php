@@ -162,9 +162,25 @@ class CKEditorIntegrationTest extends WebDriverTestBase {
     // HTML tags.
     $this->drupalGet('/admin/config/content/formats/manage/sulaco');
     $page->checkField('filters[filter_html][status]');
-    $expected = 'drupal-media data-entity-type data-entity-uuid';
+    $expected = 'drupal-media data-entity-type data-entity-uuid data-align data-caption alt title';
     $allowed_html = $assert_session->fieldExists('filters[filter_html][settings][allowed_html]')->getValue();
     $this->assertContains($expected, $allowed_html);
+    $page->pressButton('Save configuration');
+    $assert_session->pageTextContains('The text format Sulaco has been updated.');
+
+    // Test that the config form allows removing non-required attributes from
+    // the <drupal-media> tag.
+    $this->drupalGet('/admin/config/content/formats/manage/sulaco');
+    $allowed_html_field = $assert_session->fieldExists('filters[filter_html][settings][allowed_html]');
+    $allowed_html = $allowed_html_field->getValue();
+    $search = 'drupal-media data-entity-type data-entity-uuid data-align data-caption alt title';
+    $replace = 'drupal-media data-entity-type data-entity-uuid';
+    $allowed_html = str_replace($search, $replace, $allowed_html);
+    $page->clickLink('Limit allowed HTML tags and correct faulty HTML');
+    $this->assertTrue($allowed_html_field->waitFor(10, function ($allowed_html_field) {
+      return $allowed_html_field->isVisible();
+    }));
+    $allowed_html_field->setValue($allowed_html);
     $page->pressButton('Save configuration');
     $assert_session->pageTextContains('The text format Sulaco has been updated.');
   }

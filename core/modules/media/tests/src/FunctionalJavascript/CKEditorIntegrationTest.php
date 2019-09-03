@@ -5,13 +5,18 @@ namespace Drupal\Tests\media\FunctionalJavascript;
 use Drupal\Component\Utility\Html;
 use Drupal\Core\Url;
 use Drupal\editor\Entity\Editor;
+use Drupal\field\Entity\FieldConfig;
 use Drupal\file\Entity\File;
 use Drupal\filter\Entity\FilterFormat;
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
+use Drupal\language\Entity\ConfigurableLanguage;
+use Drupal\language\Entity\ContentLanguageSettings;
 use Drupal\media\Entity\Media;
 use Drupal\Tests\ckeditor\Traits\CKEditorTestTrait;
 use Drupal\Tests\media\Traits\MediaTypeCreationTrait;
 use Drupal\Tests\TestFileCreationTrait;
+use Drupal\user\Entity\Role;
+use Drupal\user\RoleInterface;
 
 /**
  * @coversDefaultClass \Drupal\media\Plugin\CKEditorPlugin\DrupalMedia
@@ -43,6 +48,20 @@ class CKEditorIntegrationTest extends WebDriverTestBase {
    * @var \Drupal\node\NodeInterface
    */
   protected $host;
+
+  /**
+   * The character code for the return key.
+   *
+   * @var int
+   */
+  const RETURN_KEY = 13;
+
+  /**
+   * The character code for the space bar.
+   *
+   * @var int
+   */
+  const SPACE_BAR = 32;
 
   /**
    * {@inheritdoc}
@@ -244,13 +263,58 @@ class CKEditorIntegrationTest extends WebDriverTestBase {
    * Tests caption editing in the CKEditor widget.
    */
   public function testEditableCaption() {
+    $page = $this->getSession()->getPage();
+    $assert_session = $this->assertSession();
+    // Test that setting caption to blank string doesn't break 'Edit media'
+    // button.
+    $original_value = $this->host->body->value;
+    $this->host->body->value = str_replace('data-caption="baz"', 'data-caption=""', $original_value);
+    $this->host->save();
     $this->drupalGet($this->host->toUrl('edit-form'));
     $this->waitForEditor();
     $this->assignNameToCkeditorIframe();
-
-    // Type in the widget's editable for the caption.
     $this->getSession()->switchToIFrame('ckeditor');
-    $assert_session = $this->assertSession();
+    $this->assertNotEmpty($assert_session->waitForButton('Edit media'));
+    $assert_session->elementContains('css', 'figcaption', '');
+    $assert_session->elementAttributeContains('css', 'figcaption', 'data-placeholder', 'Enter caption here');
+
+    // Restore caption in saved body value.
+    $original_value = $this->host->body->value;
+    $this->host->body->value = str_replace('data-caption=""', 'data-caption="baz"', $original_value);
+    $this->host->save();
+
+    $this->drupalGet($this->host->toUrl('edit-form'));
+    $this->waitForEditor();
+    $this->assignNameToCkeditorIframe();
+    $this->getSession()->switchToIFrame('ckeditor');
+    // Assert that figcaption element exists within the drupal-media element.
+    $this->assertNotEmpty($figcaption = $assert_session->waitForElement('css', 'drupal-media figcaption'));
+    $this->assertSame('baz', $figcaption->getHtml());
+
+    // Test that disabling the caption in the metadata dialog removes it
+    // from the drupal-media element.
+    $this->openMetadataDialogWithKeyPress(static::SPACE_BAR);
+    $page->uncheckField('hasCaption');
+    $this->submitDialog();
+    $this->getSession()->switchToIFrame('ckeditor');
+    $this->assertNotEmpty($drupal_media = $assert_session->waitForElementVisible('css', 'drupal-media'));
+
+    // Wait for element to update without figcaption.
+    $result = $page->waitFor(10, function () use ($drupal_media) {
+      return empty($drupal_media->find('css', 'figcaption'));
+    });
+    // Will be true if no figcaption exists within the drupal-media element.
+    $this->assertTrue($result);
+
+    // Test that enabling the caption in the metadata dialog adds an editable
+    // caption to the embedded media.
+    $this->openMetadataDialogWithKeyPress(static::SPACE_BAR);
+    $page->checkField('hasCaption');
+    $this->submitDialog();
+    $this->getSession()->switchToIFrame('ckeditor');
+    $this->assertNotEmpty($drupal_media = $assert_session->waitForElementVisible('css', 'drupal-media figcaption'));
+
+    // Type into the widget's caption element.
     $this->assertNotEmpty($assert_session->waitForElement('css', 'figcaption'));
     $this->setCaption('Caught in a <strong>landslide</strong>! No escape from <em>reality</em>!');
     $this->getSession()->switchToIFrame('ckeditor');
@@ -360,6 +424,350 @@ class CKEditorIntegrationTest extends WebDriverTestBase {
     $this->setCaption('Fin.');
     $this->getSession()->switchToIFrame('ckeditor');
     $assert_session->elementContains('css', 'figcaption', 'Fin.');
+  }
+
+  /**
+   * Test the EditorMediaDialog's form elements' #access logic.
+   */
+  public function testDialogAccess() {
+    $page = $this->getSession()->getPage();
+    $assert_session = $this->assertSession();
+    $this->drupalGet($this->host->toUrl('edit-form'));
+    $this->waitForEditor();
+    $this->assignNameToCkeditorIframe();
+    $this->getSession()->switchToIFrame('ckeditor');
+
+    // Enable `filter_html` without "alt", "data-align" or "data-caption"
+    // attributes added to the drupal-media tag.
+    $allowed_html = "<a href hreflang> <em> <strong> <cite> <blockquote cite> <code> <ul type> <ol start type='1 A I'> <li> <dl> <dt> <dd> <h2 id='jump-*'> <h3 id> <h4 id> <h5 id> <h6 id> <drupal-media data-entity-type data-entity-uuid data-view-mode>";
+    $filter_format = FilterFormat::load('test_format');
+    $filter_format->setFilterConfig('filter_html', [
+      'status' => TRUE,
+      'settings' => [
+        'allowed_html' => $allowed_html,
+      ],
+    ])->save();
+
+    // Test the validation of attributes in the dialog.  If the alt,
+    // data-caption, and data-align attributes are not set on the drupal-media
+    // tag, the respective fields shouldn't display in the dialog.
+    $this->drupalGet($this->host->toUrl('edit-form'));
+    $this->waitForEditor();
+    $this->assignNameToCkeditorIframe();
+    $this->getSession()->switchToIFrame('ckeditor');
+    $this->assertNotEmpty($assert_session->waitForElementVisible('css', 'drupal-media', 2000));
+    $page->pressButton('Edit media');
+    $this->waitForMetadataDialog();
+    $assert_session->fieldNotExists('attributes[alt]');
+    $assert_session->fieldNotExists('attributes[align]');
+    $assert_session->fieldNotExists('hasCaption');
+    $assert_session->pageTextContains('There is nothing to configure for this media.');
+    // The edit link for the format shouldn't appear unless the user has
+    // permission to edit the text format.
+    $assert_session->pageTextNotContains('Edit the text format Test format to modify the attributes that can be overridden.');
+    $page->pressButton('Close');
+    $this->getSession()->switchToIFrame('ckeditor');
+
+    // Now test the same thing with a user who has access to edit text formats.
+    // An extra message containing a link to edit the text format should
+    // appear.
+    Role::load(RoleInterface::AUTHENTICATED_ID)
+      ->grantPermission('administer filters')
+      ->save();
+    $this->drupalGet($this->host->toUrl('edit-form'));
+    $this->waitForEditor();
+    $this->assignNameToCkeditorIframe();
+    $this->getSession()->switchToIFrame('ckeditor');
+    $this->assertNotEmpty($assert_session->waitForElementVisible('css', 'drupal-media', 2000));
+    $page->pressButton('Edit media');
+    $this->waitForMetadataDialog();
+    $assert_session->fieldNotExists('attributes[alt]');
+    $assert_session->fieldNotExists('attributes[align]');
+    $assert_session->fieldNotExists('hasCaption');
+    $assert_session->pageTextContains('There is nothing to configure for this media. Edit the text format Test format to modify the attributes that can be overridden.');
+    $assert_session->linkExists('Edit the text format Test format');
+    $page->pressButton('Close');
+    $this->getSession()->switchToIFrame('ckeditor');
+
+    // Now test that adding the attributes to the allowed HTML will allow
+    // the fields to display in the dialog.
+    $allowed_html = str_replace('<drupal-media data-entity-type data-entity-uuid data-view-mode>', '<drupal-media alt data-align data-caption data-entity-type data-entity-uuid data-view-mode>', $allowed_html);
+    $filter_format->setFilterConfig('filter_html', [
+      'status' => TRUE,
+      'settings' => [
+        'allowed_html' => $allowed_html,
+      ],
+    ])->save();
+    $this->assertNotEmpty($assert_session->waitForElementVisible('css', 'drupal-media', 2000));
+    $page->pressButton('Edit media');
+    $this->waitForMetadataDialog();
+    $assert_session->fieldExists('attributes[alt]');
+    $assert_session->fieldExists('attributes[data-align]');
+    $assert_session->fieldExists('hasCaption');
+    $page->pressButton('Close');
+    $this->getSession()->switchToIFrame('ckeditor');
+
+    // Test that setting the media image field to not display alt field also
+    // disables it in the dialog.
+    FieldConfig::loadByName('media', 'image', 'field_media_image')
+      ->setSetting('alt_field', FALSE)
+      ->save();
+    // @todo This manual cache clearing should not be necessary, fix in
+    // https://www.drupal.org/project/drupal/issues/3076544
+    $this->container
+      ->get('cache.discovery')
+      ->delete('entity_bundle_field_definitions:media:image:en');
+    // Wait for preview.
+    $this->assertNotEmpty($assert_session->waitForElementVisible('css', 'drupal-media', 2000));
+    $page->pressButton('Edit media');
+    $this->waitForMetadataDialog();
+    $assert_session->fieldNotExists('attributes[alt]');
+    $assert_session->fieldExists('attributes[data-align]');
+    $assert_session->fieldExists('hasCaption');
+    $page->pressButton('Close');
+    $this->getSession()->switchToIFrame('ckeditor');
+
+    // Test that enabling the alt field on the media image field restores
+    // the field in the dialog.
+    FieldConfig::loadByName('media', 'image', 'field_media_image')
+      ->setSetting('alt_field', TRUE)
+      ->save();
+    // @todo This manual cache clearing should not be necessary, fix in
+    // https://www.drupal.org/project/drupal/issues/3076544
+    $this->container
+      ->get('cache.discovery')
+      ->delete('entity_bundle_field_definitions:media:image:en');
+    // Wait for preview.
+    $this->assertNotEmpty($assert_session->waitForElementVisible('css', 'drupal-media', 2000));
+    $page->pressButton('Edit media');
+    $this->waitForMetadataDialog();
+    $assert_session->fieldExists('attributes[alt]');
+    $assert_session->fieldExists('attributes[data-align]');
+    $assert_session->fieldExists('hasCaption');
+    $page->pressButton('Close');
+    $this->getSession()->switchToIFrame('ckeditor');
+
+    // Test that disabling `filter_caption` and `filter_align` disables the
+    // respective fields in the dialog.
+    $filter_format
+      ->setFilterConfig('filter_caption', [
+        'status' => FALSE,
+      ])->setFilterConfig('filter_align', [
+        'status' => FALSE,
+      ])->save();
+    // Wait for preview.
+    $this->assertNotEmpty($assert_session->waitForElementVisible('css', 'drupal-media', 2000));
+    $page->pressButton('Edit media');
+    $this->waitForMetadataDialog();
+    $assert_session->fieldNotExists('attributes[data-align]');
+    $assert_session->fieldNotExists('hasCaption');
+    // The alt field should be unaffected.
+    $assert_session->fieldExists('attributes[alt]');
+    $page->pressButton('Close');
+    $this->getSession()->switchToIFrame('ckeditor');
+
+    // Test that enabling the two filters restores the fields in the dialog.
+    $filter_format
+      ->setFilterConfig('filter_caption', [
+        'status' => TRUE,
+      ])->setFilterConfig('filter_align', [
+        'status' => TRUE,
+      ])->save();
+    // Wait for preview.
+    $this->assertNotEmpty($assert_session->waitForElementVisible('css', 'drupal-media', 2000));
+    $page->pressButton('Edit media');
+    $this->waitForMetadataDialog();
+    $assert_session->fieldExists('attributes[data-align]');
+    $assert_session->fieldExists('hasCaption');
+    $assert_session->pageTextNotContains('There is nothing to configure for this media. Edit the text format Test format to modify the attributes that can be overridden.');
+    // The alt field should be unaffected.
+    $assert_session->fieldExists('attributes[alt]');
+  }
+
+  /**
+   * Tests the EditorMediaDialog can set the alt attribute.
+   */
+  public function testAlt() {
+    $page = $this->getSession()->getPage();
+    $assert_session = $this->assertSession();
+    $this->drupalGet($this->host->toUrl('edit-form'));
+    $this->waitForEditor();
+    $this->assignNameToCkeditorIframe();
+    $this->getSession()->switchToIFrame('ckeditor');
+    // Test that by default no alt attribute is present on the drupal-media
+    // element.
+    $this->pressEditorButton('source');
+    $this->assertSourceAttributeSame('alt', NULL);
+    $this->leaveSourceMode();
+    // Test that the preview shows the alt value from the media field's
+    // alt text.
+    $this->assertNotEmpty($assert_session->waitForElementVisible('css', 'drupal-media img[alt*="default alt"]'));
+    $this->openMetadataDialogWithKeyPress(static::RETURN_KEY);
+    // Assert that the placeholder is set to the value of the media field's
+    // alt text.
+    $assert_session->elementAttributeContains('named', ['field', 'attributes[alt]'], 'placeholder', 'default alt');
+
+    // Fill in the alt field, submit and return to CKEditor.
+    $who_is_zartan = 'Zartan is the leader of the Dreadnoks.';
+    $page->fillField('attributes[alt]', $who_is_zartan);
+    $this->submitDialog();
+    $this->getSession()->switchToIFrame('ckeditor');
+
+    // Assert that the img within the media embed within the CKEditor contains
+    // the overridden alt text set in the dialog.
+    $this->assertNotEmpty($assert_session->waitForElementVisible('css', 'drupal-media img[alt*="' . $who_is_zartan . '"]'));
+
+    // Test that the downcast drupal-media element now has the alt attribute
+    // entered in the dialog.
+    $this->pressEditorButton('source');
+    $this->assertSourceAttributeSame('alt', $who_is_zartan);
+
+    // The alt field should now display the override instead of the default.
+    $this->leaveSourceMode();
+    $this->openMetadataDialog();
+    $assert_session->fieldValueEquals('attributes[alt]', $who_is_zartan);
+
+    // Test the process again with a different alt text to make sure it works
+    // the second time around.
+    $cobra_commander_bio = 'The supreme leader of the terrorist organization Cobra';
+    // Set the alt field to the new alt text.
+    $page->fillField('attributes[alt]', $cobra_commander_bio);
+    $this->submitDialog();
+    $this->getSession()->switchToIFrame('ckeditor');
+    // Assert that the img within the media embed preview
+    // within the CKEditor contains the overridden alt text set in the dialog.
+    $this->assertNotEmpty($assert_session->waitForElementVisible('css', 'drupal-media img[alt*="' . $cobra_commander_bio . '"]'));
+
+    // Test that the downcast drupal-media element now has the alt attribute
+    // entered in the dialog.
+    $this->pressEditorButton('source');
+    $this->assertSourceAttributeSame('alt', $cobra_commander_bio);
+
+    // The default value of the alt field should now display the override
+    // instead of the value on the media image field.
+    $this->leaveSourceMode();
+    $this->openMetadataDialogWithKeyPress(static::RETURN_KEY);
+    $assert_session->fieldValueEquals('attributes[alt]', $cobra_commander_bio);
+
+    // Test that setting alt value to two double quotes will signal to the
+    // MediaEmbed filter to unset the attribute on the media image field.
+    // We intentionally add a space space after the two double quotes to test
+    // the string is trimmed to two quotes.
+    $page->fillField('attributes[alt]', '"" ');
+    $this->submitDialog();
+    $this->getSession()->switchToIFrame('ckeditor');
+    // Verify that the two double quote empty alt indicator ('""') set in
+    // the dialog has successfully resulted in a media image field with the
+    // alt attribute present but without a value.
+    $this->assertNotEmpty($assert_session->waitForElementVisible('css', 'drupal-media img[alt=""]'));
+
+    // Test that the downcast drupal-media element's alt attribute now has the
+    // empty string indicator.
+    $this->pressEditorButton('source');
+    $this->assertSourceAttributeSame('alt', '""');
+
+    // Test that setting alt to back to an empty string within the dialog will
+    // restore the default alt value saved in to the media image field of the
+    // media item.
+    $this->leaveSourceMode();
+    $this->openMetadataDialog();
+    $page->fillField('attributes[alt]', '');
+    $this->submitDialog();
+    $this->getSession()->switchToIFrame('ckeditor');
+    $this->assertNotEmpty($assert_session->waitForElementVisible('css', 'drupal-media img[alt*="default alt"]'));
+
+    // Test that the downcast drupal-media element no longer has an alt
+    // attribute.
+    $this->pressEditorButton('source');
+    $this->assertSourceAttributeSame('alt', NULL);
+  }
+
+  /**
+   * Test that dialog loads appropriate translation's alt text.
+   */
+  public function testTranslationAlt() {
+    \Drupal::service('module_installer')->install(['language', 'content_translation']);
+    $this->resetAll();
+    ConfigurableLanguage::create(['id' => 'fr'])->save();
+    ContentLanguageSettings::loadByEntityTypeBundle('media', 'image')
+      ->setDefaultLangcode('en')
+      ->setLanguageAlterable(TRUE)
+      ->save();
+    $media = Media::create([
+      'bundle' => 'image',
+      'name' => 'Screaming hairy armadillo',
+      'field_media_image' => [
+        [
+          'target_id' => 1,
+          'alt' => 'default alt',
+          'title' => 'default title',
+        ],
+      ],
+    ]);
+    $media->save();
+    $media_fr = $media->addTranslation('fr');
+    $media_fr->name = "Tatou poilu hurlant";
+    $media_fr->field_media_image->setValue([
+      [
+        'target_id' => '1',
+        'alt' => "texte alternatif par défaut",
+        'title' => "titre alternatif par défaut",
+      ],
+    ]);
+    $media_fr->save();
+
+    ContentLanguageSettings::loadByEntityTypeBundle('node', 'blog')
+      ->setDefaultLangcode('en')
+      ->setLanguageAlterable(TRUE)
+      ->save();
+
+    $host = $this->createNode([
+      'type' => 'blog',
+      'title' => 'Animals with strange names',
+      'body' => [
+        'value' => '<drupal-media data-caption="baz" data-entity-type="media" data-entity-uuid="' . $media->uuid() . '"></drupal-media>',
+        'format' => 'test_format',
+      ],
+    ]);
+    $host->save();
+
+    $translation = $host->addTranslation('fr');
+    $translation->title = 'Animaux avec des noms étranges';
+    $translation->body->value = $host->body->value;
+    $translation->body->format = $host->body->format;
+    $translation->save();
+
+    Role::load(RoleInterface::AUTHENTICATED_ID)
+      ->grantPermission('translate any entity')
+      ->save();
+
+    $page = $this->getSession()->getPage();
+    $assert_session = $this->assertSession();
+    $this->drupalGet('/fr/node/' . $host->id() . '/edit');
+    $this->waitForEditor();
+    $this->assignNameToCkeditorIframe();
+    $this->getSession()->switchToIFrame('ckeditor');
+
+    // Test that the default alt attribute displays without an override.
+    $this->assertNotEmpty($assert_session->waitForElementVisible('xpath', '//img[contains(@alt, "texte alternatif par défaut")]'));
+    $page->pressButton('Edit media');
+    $this->waitForMetadataDialog();
+    // Assert that the placeholder is set to the value of the media field's
+    // alt text.
+    $assert_session->elementAttributeContains('named', ['field', 'attributes[alt]'], 'placeholder', 'texte alternatif par défaut');
+
+    // Fill in the alt field in the dialog.
+    $qui_est_zartan = 'Zartan est le chef des Dreadnoks.';
+    $page->fillField('attributes[alt]', $qui_est_zartan);
+    $this->submitDialog();
+    $this->getSession()->switchToIFrame('ckeditor');
+
+    // Assert that the img within the media embed within CKEditor contains
+    // the overridden alt text set in the dialog.
+    $this->assertNotEmpty($assert_session->waitForElementVisible('xpath', '//img[contains(@alt, "' . $qui_est_zartan . '")]'));
+    $this->getSession()->switchToIFrame();
+    $page->pressButton('Save');
+    $assert_session->elementExists('xpath', '//img[contains(@alt, "' . $qui_est_zartan . '")]');
   }
 
   /**
@@ -611,34 +1019,177 @@ class CKEditorIntegrationTest extends WebDriverTestBase {
   }
 
   /**
-   * Tests that alignment is reflected onto the CKEditor Widget wrapper.
+   * Tests alignment integration.
+   *
+   * Tests that alignment is reflected onto the CKEditor Widget wrapper, that
+   * the EditorMediaDialog allows altering the alignment and that the changes
+   * are reflected on the widget and downcast drupal-media tag.
    */
-  public function testAlignmentClasses() {
+  public function testAlignment() {
+    $assert_session = $this->assertSession();
+
+    $this->drupalGet($this->host->toUrl('edit-form'));
+    $this->waitForEditor();
+    $this->assignNameToCkeditorIframe();
+    $this->getSession()->switchToIFrame('ckeditor');
+    // Assert that setting the data-align property in the dialog adds the
+    // `align-right', `align-left` or `align-center' class on the widget,
+    // caption figure and drupal-media tag.
     $alignments = [
       'right',
       'left',
       'center',
     ];
-    $assert_session = $this->assertSession();
     foreach ($alignments as $alignment) {
-      $this->host->body->value = '<drupal-media data-align="' . $alignment . '" data-entity-type="media" data-entity-uuid="' . $this->media->uuid() . '"></drupal-media>';
-      $this->host->save();
-
-      // The upcasted CKEditor Widget's wrapper must get an `align-*` class.
-      $this->drupalGet($this->host->toUrl('edit-form'));
-      $this->waitForEditor();
-      $this->assignNameToCkeditorIframe();
-      $this->getSession()->switchToIFrame('ckeditor');
-      $wrapper = $assert_session->waitForElementVisible('css', '.cke_widget_drupalmedia', 2000);
-      $this->assertNotEmpty($wrapper);
-      $this->assertTrue($wrapper->hasClass('align-' . $alignment));
+      $this->fillFieldInMetadataDialogAndSubmit('attributes[data-align]', $alignment);
+      // Now verify the result.
+      $selector = sprintf('drupal-media[data-align="%s"] .caption-drupal-media.align-%s', $alignment, $alignment);
+      $this->assertNotEmpty($assert_session->waitForElementVisible('css', $selector, 2000));
+      // Assert that the resultant downcast drupal-media element has the proper
+      // `data-align` attribute.
+      $this->pressEditorButton('source');
+      $this->assertSourceAttributeSame('data-align', $alignment);
+      $this->leaveSourceMode();
     }
+    // Test that setting the "Align" field to "none" in the dialog will
+    // remove the attribute from the drupal-media element in the CKEditor.
+    $this->fillFieldInMetadataDialogAndSubmit('attributes[data-align]', 'none');
+
+    // Assert that neither the widget nor the caption figure have alignment
+    // classes.
+    $this->assertNotEmpty($assert_session->waitForElementVisible('css', '.caption-drupal-media:not([class*="align-"])', 2000));
+    $assert_session->elementExists('css', '.cke_widget_drupalmedia:not([class*="align-"])');
+    // Assert that the resultant downcast <drupal-media> tag has no data-align
+    // attribute.
+    $this->pressEditorButton('source');
+    $this->assertNotEmpty($drupal_media = $this->getDrupalMediaFromSource());
+    $this->assertFalse($drupal_media->hasAttribute('data-align'));
+  }
+
+  /**
+   * Waits for the form that allows editing metadata.
+   *
+   * @see \Drupal\media\Form\EditorMediaDialog
+   */
+  protected function waitForMetadataDialog() {
+    $page = $this->getSession()->getPage();
+    $this->getSession()->switchToIFrame();
+    // Wait for the dialog to open.
+    $result = $page->waitFor(10, function ($page) {
+      $metadata_editor = $page->find('css', 'form.editor-media-dialog');
+      return !empty($metadata_editor);
+    });
+    $this->assertTrue($result);
+  }
+
+  /**
+   * Fills in a field in the metadata dialog for an embedded media item.
+   *
+   * This method assumes that the calling code has already switched into the
+   * CKEditor iframe.
+   *
+   * @param string $locator
+   *   The field ID, name, or label.
+   * @param string $value
+   *   The value to set on the field.
+   */
+  protected function fillFieldInMetadataDialogAndSubmit($locator, $value) {
+    // Wait for the drupal-media which holds the "Edit media" button which
+    // opens the dialog.
+    $this->openMetadataDialog();
+    $this->getSession()->getPage()->fillField($locator, $value);
+    $this->submitDialog();
+    // Since ::waitforMetadataDialog() switches back to the main iframe, we'll
+    // need to switch back.
+    $this->getSession()->switchToIFrame('ckeditor');
+  }
+
+  /**
+   * Clicks the `Edit media` button and waits for the metadata dialog.
+   *
+   * This method assumes that the calling code has already switched into the
+   * CKEditor iframe.
+   */
+  protected function openMetadataDialog() {
+    $this->assertNotEmpty($embedded_media = $this->assertSession()->waitForElementVisible('css', 'drupal-media'));
+    $embedded_media->pressButton('Edit media');
+    $this->waitForMetadataDialog();
+  }
+
+  /**
+   * Focuses on `Edit media` button and presses the given key.
+   *
+   * @param int $char
+   *   The character code to press.
+   *
+   *   This method assumes that the calling code has already switched into the
+   *   CKEditor iframe.
+   */
+  protected function openMetadataDialogWithKeyPress($char) {
+    $this->assertNotEmpty($button = $this->assertSession()->waitForButton('Edit media'));
+    $button->keyDown($char);
+    $this->waitForMetadataDialog();
+  }
+
+  /**
+   * Leaves source mode and returns to the CKEditor iframe.
+   */
+  protected function leaveSourceMode() {
+    // Press the source button again to leave source mode.
+    $this->pressEditorButton('source');
+    // Having entered source mode means we need to reassign an id to the
+    // CKEditor iframe.
+    $this->assignNameToCkeditorIframe();
+    $this->getSession()->switchToIFrame('ckeditor');
+  }
+
+  /**
+   * Verifies value of an attribute on the downcast <drupal-media> element.
+   *
+   * Assumes CKEditor is in source mode.
+   *
+   * @param string $attribute
+   *   The attribute to check.
+   * @param mixed $value
+   *   Either a string value or if NULL, asserts that <drupal-media> element
+   *   doesn't have the attribute.
+   */
+  protected function assertSourceAttributeSame($attribute, $value) {
+    $this->assertNotEmpty($drupal_media = $this->getDrupalMediaFromSource());
+    if ($value === NULL) {
+      $this->assertFalse($drupal_media->hasAttribute($attribute));
+    }
+    else {
+      $this->assertSame($value, $drupal_media->getAttribute($attribute));
+    }
+  }
+
+  /**
+   * Closes and submits the metadata dialog.
+   */
+  protected function submitDialog() {
+    $this->assertNotEmpty($dialog_buttons = $this->assertSession()->elementExists('css', 'div.ui-dialog-buttonpane'));
+    $dialog_buttons->pressButton('Save');
+  }
+
+  /**
+   * Closes the metadata dialog.
+   */
+  protected function closeDialog() {
+    $page = $this->getSession()->getPage();
+    $page->pressButton('Close');
+    $result = $page->waitFor(10, function ($page) {
+      $metadata_editor = $page->find('css', 'form.editor-media-dialog');
+      return empty($metadata_editor);
+    });
+    $this->assertTrue($result);
   }
 
   /**
    * Gets the transfer size of the last preview request.
    *
    * @return int
+   *   The size of the bytes transferred.
    */
   protected function getLastPreviewRequestTransferSize() {
     $this->getSession()->switchToIFrame();
@@ -657,7 +1208,7 @@ JS;
   }
 
   /**
-   * Set the text of the editable caption to the given text.
+   * Sets the text of the editable caption to the given text.
    *
    * @param string $text
    *   The text to set in the caption.
@@ -745,13 +1296,29 @@ JS;
    *
    * @param string $text
    *   The title attribute of the link to click.
-   *
-   * @throws \Behat\Mink\Exception\ElementNotFoundException
    */
   protected function clickPathLinkByTitleAttribute($text) {
     $this->getSession()->switchToIFrame();
     $selector = '//span[@id="cke_1_path"]//a[@title="' . $text . '"]';
     $this->assertSession()->elementExists('xpath', $selector)->click();
+  }
+
+  /**
+   * Parses the <drupal-media> element from CKEditor's "source" view.
+   *
+   * Assumes CKEditor is in source mode.
+   *
+   * @return \DOMNode|null
+   *   The drupal-media element or NULL if it can't be found.
+   */
+  protected function getDrupalMediaFromSource() {
+    $value = $this->assertSession()
+      ->elementExists('css', 'textarea.cke_source')
+      ->getValue();
+    $dom = Html::load($value);
+    $xpath = new \DOMXPath($dom);
+    $list = $xpath->query('//drupal-media');
+    return count($list) > 0 ? $list[0] : NULL;
   }
 
 }

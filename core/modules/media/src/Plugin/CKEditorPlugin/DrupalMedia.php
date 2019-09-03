@@ -124,6 +124,8 @@ class DrupalMedia extends PluginBase implements ContainerFactoryPluginInterface,
       $this->moduleExtensionList->getPath('media') . '/css/filter.media_embed.css',
       $this->moduleExtensionList->getPath('media') . '/css/plugins/drupalmedia/ckeditor.drupalmedia.css',
       $this->moduleExtensionList->getPath('system') . '/css/components/hidden.module.css',
+      // Add media_library.theme.css for edit button styling.
+      $this->moduleExtensionList->getPath('media_library') . '/css/media_library.theme.css',
     ];
   }
 

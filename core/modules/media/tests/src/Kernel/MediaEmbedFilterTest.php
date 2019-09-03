@@ -214,11 +214,15 @@ class MediaEmbedFilterTest extends MediaEmbedFilterTestBase {
       'alt' => 'alt 3',
       'title' => 'title 3',
     ] + $base);
+    $input .= $this->createEmbedCode([
+      'alt' => '""',
+      'title' => 'title 4',
+    ] + $base);
 
     $this->applyFilter($input);
 
     $img_nodes = $this->cssSelect('img');
-    $this->assertCount(4, $img_nodes);
+    $this->assertCount(5, $img_nodes);
     $this->assertHasAttributes($img_nodes[0], [
       'alt' => 'default alt',
       'title' => $expected_title_attributes[0],
@@ -235,6 +239,10 @@ class MediaEmbedFilterTest extends MediaEmbedFilterTestBase {
       'alt' => 'alt 3',
       'title' => $expected_title_attributes[3],
     ]);
+    $this->assertHasAttributes($img_nodes[4], [
+      'alt' => '',
+      'title' => $expected_title_attributes[4],
+    ]);
   }
 
   /**
@@ -244,11 +252,11 @@ class MediaEmbedFilterTest extends MediaEmbedFilterTestBase {
     return [
       '`title` field property disabled ⇒ `title` is not overridable' => [
         FALSE,
-        [NULL, NULL, NULL, NULL],
+        [NULL, NULL, NULL, NULL, NULL],
       ],
-      '`title` field property enabled ⇒ `title` is not overridable' => [
+      '`title` field property enabled ⇒ `title` is overridable' => [
         TRUE,
-        [NULL, 'title 1', 'title 2', 'title 3'],
+        [NULL, 'title 1', 'title 2', 'title 3', 'title 4'],
       ],
     ];
   }

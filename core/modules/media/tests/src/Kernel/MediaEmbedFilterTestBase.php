@@ -148,7 +148,7 @@ abstract class MediaEmbedFilterTestBase extends KernelTestBase {
    *   The attributes to add.
    *
    * @return string
-   *   A string containing a drupal-entity dom element.
+   *   A string containing a drupal-media DOM element.
    *
    * @see assertEntityEmbedFilterHasRun()
    */

@@ -72,6 +72,10 @@
     return '<div class="media-embed-error media-embed-error--preview-error">' + error + '</div>';
   };
 
+  Drupal.theme.mediaEmbedEditButton = function () {
+    return '<button class="media-library-item__edit">' + Drupal.t('Edit media') + '</button>';
+  };
+
   CKEDITOR.plugins.add('drupalmedia', {
     requires: 'widget',
 
@@ -88,9 +92,27 @@
       dtd.a['drupal-media'] = 1;
 
       editor.widgets.add('drupalmedia', {
-        allowedContent: 'drupal-media[data-entity-type,data-entity-uuid,data-view-mode,data-align,data-caption,alt,title]',
+        allowedContent: {
+          'drupal-media': {
+            attributes: {
+              '!data-entity-type': true,
+              '!data-entity-uuid': true,
+              'data-align': true,
+              'data-caption': true,
+              alt: true,
+              title: true
+            },
+            classes: {}
+          }
+        },
 
-        requiredContent: 'drupal-media[data-entity-type,data-entity-uuid]',
+        requiredContent: new CKEDITOR.style({
+          element: 'drupal-media',
+          attributes: {
+            'data-entity-type': '',
+            'data-entity-uuid': ''
+          }
+        }),
 
         pathName: Drupal.t('Embedded media'),
 
@@ -110,6 +132,10 @@
           }
           data.attributes = CKEDITOR.tools.copy(attributes);
           data.hasCaption = data.attributes.hasOwnProperty('data-caption');
+
+          if (data.hasCaption && data.attributes['data-caption'] === '') {
+            data.attributes['data-caption'] = ' ';
+          }
           data.link = null;
           if (element.parent.name === 'a') {
             data.link = CKEDITOR.tools.copy(element.parent.attributes);
@@ -120,18 +146,32 @@
               }
             });
           }
+
+          var hostEntityLangcode = document.getElementById(editor.name).getAttribute('data-media-embed-host-entity-langcode');
+          if (hostEntityLangcode) {
+            data.hostEntityLangcode = hostEntityLangcode;
+          }
           return element;
         },
         destroy: function destroy() {
           this._tearDownDynamicEditables();
         },
         data: function data(event) {
+          if (this.oldData) {
+            if (!this.data.hasCaption && this.oldData.hasCaption) {
+              delete this.data.attributes['data-caption'];
+            } else if (this.data.hasCaption && !this.oldData.hasCaption) {
+              this.data.attributes['data-caption'] = ' ';
+            }
+          }
+
           if (this._previewNeedsServerSideUpdate()) {
             editor.fire('lockSnapshot');
             this._tearDownDynamicEditables();
 
             this._loadPreview(function (widget) {
               widget._setUpDynamicEditables();
+              widget._setUpEditButton();
               editor.fire('unlockSnapshot');
             });
           }
@@ -140,6 +180,13 @@
 
           if (this.data.attributes.hasOwnProperty('data-align')) {
             this.element.getParent().addClass('align-' + this.data.attributes['data-align']);
+          } else {
+            var classes = this.element.getParent().$.classList;
+            for (var i = 0; i < classes.length; i++) {
+              if (classes[i].indexOf('align-') === 0) {
+                this.element.getParent().removeClass(classes[i]);
+              }
+            }
           }
 
           this.oldData = CKEDITOR.tools.clone(this.data);
@@ -172,7 +219,71 @@
               childList: true,
               subtree: true
             });
+
+            if (captionEditable.$.childNodes.length === 1 && captionEditable.$.childNodes.item(0).nodeName === 'BR') {
+              captionEditable.$.removeChild(captionEditable.$.childNodes.item(0));
+            }
           }
+        },
+        _setUpEditButton: function _setUpEditButton() {
+          if (this.element.findOne('.media-embed-error')) {
+            return;
+          }
+
+          var isElementNode = function isElementNode(n) {
+            return n.type === CKEDITOR.NODE_ELEMENT;
+          };
+
+          var embeddedMediaContainer = this.data.hasCaption ? this.element.findOne('figure') : this.element;
+          var embeddedMedia = embeddedMediaContainer.getFirst(isElementNode);
+
+          if (this.data.link) {
+            embeddedMedia = embeddedMedia.getFirst(isElementNode);
+          }
+
+          embeddedMedia.setStyle('position', 'relative');
+
+          var editButton = CKEDITOR.dom.element.createFromHtml(Drupal.theme('mediaEmbedEditButton'));
+          embeddedMedia.getFirst().insertBeforeMe(editButton);
+
+          var widget = this;
+          this.element.findOne('.media-library-item__edit').on('click', function (event) {
+            var saveCallback = function saveCallback(values) {
+              event.cancel();
+              editor.fire('saveSnapshot');
+              if (values.hasOwnProperty('attributes')) {
+                CKEDITOR.tools.extend(values.attributes, widget.data.attributes);
+
+                Object.keys(values.attributes).forEach(function (prop) {
+                  if (values.attributes[prop] === false || prop === 'data-align' && values.attributes[prop] === 'none') {
+                    delete values.attributes[prop];
+                  }
+                });
+              }
+              widget.setData({
+                attributes: values.attributes,
+                hasCaption: !!values.hasCaption
+              });
+              editor.fire('saveSnapshot');
+            };
+
+            Drupal.ckeditor.openDialog(editor, Drupal.url('editor/dialog/media/' + editor.config.drupal.format), widget.data, saveCallback, {});
+          });
+
+          this.element.findOne('.media-library-item__edit').on('keydown', function (event) {
+            var returnKey = 13;
+
+            var spaceBar = 32;
+            if (typeof event.data !== 'undefined') {
+              var keypress = event.data.getKey();
+              if (keypress === returnKey || keypress === spaceBar) {
+                event.sender.$.click();
+              }
+
+              event.data.$.stopPropagation();
+              event.data.$.stopImmediatePropagation();
+            }
+          });
         },
         _tearDownDynamicEditables: function _tearDownDynamicEditables() {
           if (this.captionObserver) {

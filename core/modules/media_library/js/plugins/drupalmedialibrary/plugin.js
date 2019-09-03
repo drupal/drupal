@@ -12,8 +12,27 @@
     hidpi: true,
     beforeInit: function beforeInit(editor) {
       editor.addCommand('drupalmedialibrary', {
-        allowedContent: 'drupal-media[!data-entity-type,!data-entity-uuid,data-align,data-caption,alt,title]',
-        requiredContent: 'drupal-media[data-entity-type,data-entity-uuid]',
+        allowedContent: {
+          'drupal-media': {
+            attributes: {
+              '!data-entity-type': true,
+              '!data-entity-uuid': true,
+              '!data-align': true,
+              '!data-caption': true,
+              '!alt': true,
+              '!title': true
+            },
+            classes: {}
+          }
+        },
+
+        requiredContent: new CKEDITOR.style({
+          element: 'drupal-media',
+          attributes: {
+            'data-entity-type': '',
+            'data-entity-uuid': ''
+          }
+        }),
         modes: { wysiwyg: 1 },
 
         canUndo: true,

@@ -10,9 +10,30 @@
     hidpi: true,
     beforeInit(editor) {
       editor.addCommand('drupalmedialibrary', {
-        allowedContent:
-          'drupal-media[!data-entity-type,!data-entity-uuid,data-align,data-caption,alt,title]',
-        requiredContent: 'drupal-media[data-entity-type,data-entity-uuid]',
+        allowedContent: {
+          'drupal-media': {
+            attributes: {
+              '!data-entity-type': true,
+              '!data-entity-uuid': true,
+              '!data-align': true,
+              '!data-caption': true,
+              '!alt': true,
+              '!title': true,
+            },
+            classes: {},
+          },
+        },
+        // This does not use the object format used above, but a
+        // CKEDITOR.style instance, because requiredContent does not support
+        // the object format.
+        // @see https://ckeditor.com/docs/ckeditor4/latest/api/CKEDITOR_filter_contentRule.html
+        requiredContent: new CKEDITOR.style({
+          element: 'drupal-media',
+          attributes: {
+            'data-entity-type': '',
+            'data-entity-uuid': '',
+          },
+        }),
         modes: { wysiwyg: 1 },
         // There is an edge case related to the undo functionality that will
         // be resolved in https://www.drupal.org/project/drupal/issues/3073294.
