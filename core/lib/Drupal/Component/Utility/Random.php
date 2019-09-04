@@ -264,8 +264,10 @@ class Random {
    *
    * @param string $destination
    *   The absolute file path where the image should be stored.
-   * @param int $min_resolution
-   * @param int $max_resolution
+   * @param string $min_resolution
+   *   The minimum resolution for the image. For example, '400x300'.
+   * @param string $max_resolution
+   *   The maximum resolution for the image. For example, '800x600'.
    *
    * @return string
    *   Path to image file.
