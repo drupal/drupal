@@ -80,7 +80,7 @@ class ThemeHandlerTest extends UnitTestCase {
     $this->themeList->expects($this->at(1))
       ->method('getList')
       ->will($this->returnValue([
-        'seven' => new Extension($this->root, 'theme', $this->root . '/core/themes/seven/seven.info.yml', 'seven.theme'),
+        'seven' => new Extension($this->root, 'theme', 'core/themes/seven/seven.info.yml', 'seven.theme'),
       ]));
 
     $theme_data = $this->themeHandler->rebuildThemeData();
@@ -90,8 +90,8 @@ class ThemeHandlerTest extends UnitTestCase {
     // Ensure some basic properties.
     $this->assertInstanceOf('Drupal\Core\Extension\Extension', $info);
     $this->assertEquals('seven', $info->getName());
-    $this->assertEquals($this->root . '/core/themes/seven/seven.info.yml', $info->getPathname());
-    $this->assertEquals($this->root . '/core/themes/seven/seven.theme', $info->getExtensionPathname());
+    $this->assertEquals('core/themes/seven/seven.info.yml', $info->getPathname());
+    $this->assertEquals('core/themes/seven/seven.theme', $info->getExtensionPathname());
 
   }
 
@@ -99,7 +99,7 @@ class ThemeHandlerTest extends UnitTestCase {
    * Tests empty libraries in theme.info.yml file.
    */
   public function testThemeLibrariesEmpty() {
-    $theme = new Extension($this->root, 'theme', '/core/modules/system/tests/themes/test_theme_libraries_empty', 'test_theme_libraries_empty.info.yml');
+    $theme = new Extension($this->root, 'theme', 'core/modules/system/tests/themes/test_theme_libraries_empty', 'test_theme_libraries_empty.info.yml');
     try {
       $this->themeHandler->addTheme($theme);
       $this->assertTrue(TRUE, 'Empty libraries key in theme.info.yml does not cause PHP warning');

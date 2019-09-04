@@ -76,7 +76,7 @@ class PermissionHandlerTest extends UnitTestCase {
    *   The extension object.
    */
   protected function mockModuleExtension($module, $name) {
-    $extension = new Extension($this->root, $module, "modules/$module");
+    $extension = new Extension('vfs:/', $module, "modules/$module");
     $extension->info['name'] = $name;
     return $extension;
   }

@@ -318,7 +318,7 @@ class ModuleHandlerTest extends UnitTestCase {
     $module_handler->addModule('module_handler_test_added', 'core/tests/Drupal/Tests/Core/Extension/modules/module_handler_test_added');
     $this->assertTrue($module_handler->implementsHook('module_handler_test_added', 'hook'), 'Runtime added module with implementation in include found.');
 
-    $module_handler->addModule('module_handler_test_no_hook', 'core/tests/Drupal/Tests/Core/Extension/modules/module_handler_test_added');
+    $module_handler->addModule('module_handler_test_no_hook', 'core/tests/Drupal/Tests/Core/Extension/modules/module_handler_test_no_hook');
     $this->assertFalse($module_handler->implementsHook('module_handler_test_no_hook', 'hook', [TRUE]), 'Missing implementation not found.');
   }
 
@@ -502,8 +502,8 @@ class ModuleHandlerTest extends UnitTestCase {
   public function testGetModuleDirectories() {
     $module_handler = $this->getModuleHandler();
     $module_handler->setModuleList([]);
-    $module_handler->addModule('module', 'place');
-    $this->assertEquals(['module' => $this->root . '/place'], $module_handler->getModuleDirectories());
+    $module_handler->addModule('node', 'core/modules/node');
+    $this->assertEquals(['node' => $this->root . '/core/modules/node'], $module_handler->getModuleDirectories());
   }
 
 }

@@ -326,6 +326,7 @@ EOF;
     vfsStream::create([
       'modules' => [
         'test_module' => [
+          'test_module.info.yml' => $test_module_info,
           'tests' => [
             'src' => [
               'Functional' => [
@@ -491,7 +492,7 @@ EOF;
 
     $test_discovery = new TestDiscovery('vfs://drupal', $class_loader->reveal(), $module_handler->reveal());
 
-    $result = $test_discovery->getTestClasses(NULL, ['PHPUnit-Kernel']);
+    $result = $test_discovery->getTestClasses('test_profile_module', ['PHPUnit-Kernel']);
     $expected = [
       'example3' => [
         'Drupal\Tests\test_profile_module\Kernel\KernelExampleTest4' => [

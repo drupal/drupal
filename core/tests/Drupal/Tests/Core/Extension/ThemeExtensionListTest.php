@@ -31,29 +31,30 @@ class ThemeExtensionListTest extends UnitTestCase {
     $extension_discovery
       ->scan('theme')
       ->willReturn([
-        'test_subtheme'  => new Extension($this->root, 'theme', $this->root . '/core/modules/system/tests/themes/test_subtheme/test_subtheme.info.yml', 'test_subtheme.info.yml'),
-        'test_basetheme' => new Extension($this->root, 'theme', $this->root . '/core/modules/system/tests/themes/test_basetheme/test_basetheme.info.yml', 'test_basetheme.info.yml'),
+        'test_subtheme'  => new Extension($this->root, 'theme', 'core/modules/system/tests/themes/test_subtheme/test_subtheme.info.yml', 'test_subtheme.info.yml'),
+        'test_basetheme' => new Extension($this->root, 'theme', 'core/modules/system/tests/themes/test_basetheme/test_basetheme.info.yml', 'test_basetheme.info.yml'),
       ]);
     $extension_discovery
       ->scan('theme_engine')
       ->willReturn([
-        'twig' => new Extension($this->root, 'theme_engine', $this->root . '/core/themes/engines/twig/twig.info.yml', 'twig.engine'),
+        'twig' => new Extension($this->root, 'theme_engine', 'core/themes/engines/twig/twig.info.yml', 'twig.engine'),
       ]);
 
     // Verify that info parser is called with the specified paths.
     $argument_condition = function ($path) {
       return in_array($path, [
-        $this->root . '/core/modules/system/tests/themes/test_subtheme/test_subtheme.info.yml',
-        $this->root . '/core/modules/system/tests/themes/test_basetheme/test_basetheme.info.yml',
-        $this->root . '/core/themes/engines/twig/twig.info.yml',
+        'core/modules/system/tests/themes/test_subtheme/test_subtheme.info.yml',
+        'core/modules/system/tests/themes/test_basetheme/test_basetheme.info.yml',
+        'core/themes/engines/twig/twig.info.yml',
       ], TRUE);
     };
     $info_parser = $this->prophesize(InfoParserInterface::class);
+    $root = $this->root;
     $info_parser->parse(Argument::that($argument_condition))
       ->shouldBeCalled()
-      ->will(function ($file) {
+      ->will(function ($file) use ($root) {
         $info_parser = new InfoParser();
-        return $info_parser->parse($file[0]);
+        return $info_parser->parse($root . '/' . $file[0]);
       });
 
     $module_handler = $this->prophesize(ModuleHandlerInterface::class);
@@ -99,9 +100,9 @@ class ThemeExtensionListTest extends UnitTestCase {
     $info_subtheme->info['base theme'] = 'test_basetheme';
     $info_basetheme->sub_themes = ['test_subtheme'];
 
-    $this->assertEquals($this->root . '/core/themes/engines/twig/twig.engine', $info_basetheme->owner);
+    $this->assertEquals('core/themes/engines/twig/twig.engine', $info_basetheme->owner);
     $this->assertEquals('twig', $info_basetheme->prefix);
-    $this->assertEquals($this->root . '/core/themes/engines/twig/twig.engine', $info_subtheme->owner);
+    $this->assertEquals('core/themes/engines/twig/twig.engine', $info_subtheme->owner);
     $this->assertEquals('twig', $info_subtheme->prefix);
   }
 
