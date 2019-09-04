@@ -328,14 +328,15 @@ MISSINGKEY;
         'missing_key-duplicate.info.txt' => $missing_key,
       ],
     ]);
+    // Set the expected exception for the 2nd call to parse().
+    $this->expectException(InfoParserException::class);
+    $this->expectExceptionMessage('Missing required keys (type) in vfs://modules/fixtures/missing_key-duplicate.info.txt');
     try {
       $this->infoParser->parse(vfsStream::url('modules/fixtures/missing_key.info.txt'));
     }
     catch (InfoParserException $exception) {
       $this->assertSame('Missing required keys (type) in vfs://modules/fixtures/missing_key.info.txt', $exception->getMessage());
 
-      $this->expectException('\Drupal\Core\Extension\InfoParserException');
-      $this->expectExceptionMessage('Missing required keys (type) in vfs://modules/fixtures/missing_key-duplicate.info.txt');
       $this->infoParser->parse(vfsStream::url('modules/fixtures/missing_key-duplicate.info.txt'));
     }
 
