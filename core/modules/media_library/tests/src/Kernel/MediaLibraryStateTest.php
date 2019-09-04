@@ -361,4 +361,28 @@ class MediaLibraryStateTest extends KernelTestBase {
     $this->assertSame(['foo' => 'baz'], $state->getOpenerParameters());
   }
 
+  /**
+   * Test that hash is unaffected by allowed media type order.
+   */
+  public function testHashUnaffectedByMediaTypeOrder() {
+    $state1 = MediaLibraryState::create('test', ['file', 'image'], 'image', 2);
+    $state2 = MediaLibraryState::create('test', ['image', 'file'], 'image', 2);
+    $this->assertSame($state1->getHash(), $state2->getHash());
+  }
+
+  /**
+   * Test that hash is unaffected by opener parameter order.
+   */
+  public function testHashUnaffectedByOpenerParamOrder() {
+    $state1 = MediaLibraryState::create('test', ['file'], 'file', -1, [
+      'foo' => 'baz',
+      'baz' => 'foo',
+    ]);
+    $state2 = MediaLibraryState::create('test', ['file'], 'file', -1, [
+      'baz' => 'foo',
+      'foo' => 'baz',
+    ]);
+    $this->assertSame($state1->getHash(), $state2->getHash());
+  }
+
 }
