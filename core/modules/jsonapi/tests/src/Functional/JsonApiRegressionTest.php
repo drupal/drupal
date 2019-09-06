@@ -892,7 +892,7 @@ class JsonApiRegressionTest extends JsonApiFunctionalTestBase {
     ]);
 
     // Test.
-    $url = Url::fromUri('internal:/jsonapi/entity_test_map_field/entity_test_map_field');
+    $url = Url::fromUri('internal:/jsonapi/entity_test_map_field/entity_test_map_field?sort=drupal_internal__id');
     $request_options = [
       RequestOptions::AUTH => [$user->getAccountName(), $user->pass_raw],
     ];
