@@ -229,6 +229,13 @@ class OEmbedFormatter extends FormatterBase implements ContainerFactoryPluginInt
           ],
         ];
 
+        // An empty title attribute will disable title inheritance, so only
+        // add it if the resource has a title.
+        $title = $resource->getTitle();
+        if ($title) {
+          $element[$delta]['#attributes']['title'] = $title;
+        }
+
         CacheableMetadata::createFromObject($resource)
           ->addCacheTags($this->config->getCacheTags())
           ->applyTo($element[$delta]);
