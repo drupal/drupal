@@ -249,7 +249,6 @@ Interface Translation (locale)
 
 JavaScript
 - Théodore Biadala 'nod_' https://www.drupal.org/u/nod_
-- Matthew Grill 'alwaysworking' https://www.drupal.org/u/alwaysworking
 - Sally Young 'justafish' https://www.drupal.org/u/justafish
 
 JSON:API
@@ -500,7 +499,6 @@ API-first Initiative
 Admin UI & JavaScript Modernisation Initiative
 - Angela Byron 'webchick' https://www.drupal.org/u/webchick
 - Cristina Chumillas 'ckrina' https://www.drupal.org/u/ckrina
-- Matthew Grill 'alwaysworking' https://www.drupal.org/u/alwaysworking
 - Sally Young 'justafish' https://www.drupal.org/u/justafish
 
 Layout Initiative
