@@ -83,7 +83,12 @@ class ExportStorageManager implements StorageManagerInterface, EventSubscriberIn
    * {@inheritdoc}
    */
   public function getStorage() {
-    if ($this->state->get(self::NEEDS_REBUILD_KEY, TRUE)) {
+    $rebuild = $this->state->get(self::NEEDS_REBUILD_KEY, TRUE);
+    if (!$rebuild) {
+      // @todo: Use ConfigEvents::STORAGE_EXPORT_REBUILD in #2991683
+      $rebuild = $this->eventDispatcher->dispatch('config.export.rebuild', new StorageRebuildNeededEvent())->isRebuildNeeded();
+    }
+    if ($rebuild) {
       self::replaceStorageContents($this->active, $this->storage);
       // @todo: Use ConfigEvents::STORAGE_TRANSFORM_EXPORT in #2991683
       $this->eventDispatcher->dispatch('config.transform.export', new StorageTransformEvent($this->storage));

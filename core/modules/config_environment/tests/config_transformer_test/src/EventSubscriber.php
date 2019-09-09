@@ -3,7 +3,9 @@
 namespace Drupal\config_transformer_test;
 
 use Drupal\Core\Config\StorageInterface;
+use Drupal\Core\Config\StorageRebuildNeededEvent;
 use Drupal\Core\Config\StorageTransformEvent;
+use Drupal\Core\State\StateInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
@@ -29,16 +31,26 @@ class EventSubscriber implements EventSubscriberInterface {
   protected $sync;
 
   /**
+   * The Drupal state.
+   *
+   * @var \Drupal\Core\State\StateInterface
+   */
+  protected $state;
+
+  /**
    * EventSubscriber constructor.
    *
    * @param \Drupal\Core\Config\StorageInterface $active
    *   The active config storage.
    * @param \Drupal\Core\Config\StorageInterface $sync
    *   The sync config storage.
+   * @param \Drupal\Core\State\StateInterface $state
+   *   The Drupal state.
    */
-  public function __construct(StorageInterface $active, StorageInterface $sync) {
+  public function __construct(StorageInterface $active, StorageInterface $sync, StateInterface $state) {
     $this->active = $active;
     $this->sync = $sync;
+    $this->state = $state;
   }
 
   /**
@@ -85,7 +97,20 @@ class EventSubscriber implements EventSubscriberInterface {
       // Add "Arrr" to the site slogan. Because pirates!
       // The active slogan will be ignored.
       $site['slogan'] = $sync['slogan'] . ' Arrr';
+      $site['mail'] = $this->state->get('config_transform_test_mail', '');
       $storage->write('system.site', $site);
+    }
+  }
+
+  /**
+   * React to the rebuilding the config export storage.
+   *
+   * @param \Drupal\Core\Config\StorageRebuildNeededEvent $event
+   *   The event we may stop.
+   */
+  public function onExportRebuild(StorageRebuildNeededEvent $event) {
+    if ($this->state->get('config_transform_test_rebuild', FALSE)) {
+      $event->setRebuildNeeded();
     }
   }
 
@@ -96,6 +121,7 @@ class EventSubscriber implements EventSubscriberInterface {
     // @todo: use class constants when they get added in #2991683
     $events['config.transform.import'][] = ['onImportTransform'];
     $events['config.transform.export'][] = ['onExportTransform'];
+    $events['config.export.rebuild'][] = ['onExportRebuild'];
     return $events;
   }
 

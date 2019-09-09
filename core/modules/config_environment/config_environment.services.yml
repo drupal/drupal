@@ -11,3 +11,9 @@ services:
     arguments: ['@config.storage', '@state', '@database', '@event_dispatcher']
     tags:
       - { name: event_subscriber }
+  # config_environment services.
+  config_environment.excluded_modules.event_subscriber:
+    class: Drupal\config_environment\EventSubscriber\ExcludedModulesEventSubscriber
+    arguments: ['@config.storage', '@settings', '@config.manager', '@state']
+    tags:
+      - { name: event_subscriber }

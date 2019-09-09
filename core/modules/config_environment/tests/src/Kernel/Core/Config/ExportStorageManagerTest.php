@@ -57,6 +57,20 @@ class ExportStorageManagerTest extends KernelTestBase {
     // The test subscriber adds "Arrr" to the slogan of the sync config.
     $this->assertEquals('New name', $exported['name']);
     $this->assertEquals($rawConfig['slogan'] . ' Arrr', $exported['slogan']);
+
+    // Change the state which will not trigger a rebuild.
+    $this->container->get('state')->set('config_transform_test_mail', 'config@drupal.example');
+
+    $storage = $this->container->get('config.storage.export.manager')->getStorage();
+    $exported = $storage->read('system.site');
+    // The mail is still set to the empty value from last time.
+    $this->assertEquals('', $exported['mail']);
+
+    $this->container->get('state')->set('config_transform_test_rebuild', TRUE);
+    $storage = $this->container->get('config.storage.export.manager')->getStorage();
+    $exported = $storage->read('system.site');
+    // The mail is still set to the value from the beginning.
+    $this->assertEquals('config@drupal.example', $exported['mail']);
   }
 
 }

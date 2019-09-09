@@ -71,9 +71,38 @@ final class ConfigEvents {
    *
    * @see \Drupal\Core\Config\StorageTransformEvent
    * @see \Drupal\Core\Config\ConfigEvents::STORAGE_TRANSFORM_IMPORT
+   * @see \Drupal\Core\Config\ConfigEvents::STORAGE_EXPORT_REBUILD
+   * @see \Drupal\config_environment\Core\Config\ExportStorageManager::getStorage
    *
    * @var string
    */
   const STORAGE_TRANSFORM_EXPORT = 'config.transform.export';
+
+  /**
+   * Name of the event fired when the export storage may need to be rebuilt.
+   *
+   * This event allows subscribers to indicate that the export storage should be
+   * rebuilt. The event listener method receives a
+   * \Drupal\Core\Config\StorageRebuildNeededEvent instance.
+   * When this event is set to be needing a rebuild by a subscriber then the
+   * \Drupal\Core\Config\ConfigEvents::STORAGE_TRANSFORM_EXPORT event will be
+   * dispatched.
+   *
+   * @code
+   *   if ($exportStorageIsOutOfDateConditionIsMet) {
+   *     $event->setRebuildNeeded();
+   *   }
+   *   // else, do nothing.
+   * @endcode
+   *
+   * @Event
+   *
+   * @see \Drupal\Core\Config\StorageRebuildNeededEvent
+   * @see \Drupal\Core\Config\ConfigEvents::STORAGE_TRANSFORM_EXPORT
+   * @see \Drupal\config_environment\Core\Config\ExportStorageManager::getStorage
+   *
+   * @var string
+   */
+  const STORAGE_EXPORT_REBUILD = 'config.export.rebuild';
 
 }
