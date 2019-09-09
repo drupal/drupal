@@ -108,6 +108,7 @@ class FieldInstance extends DrupalSqlBase {
       ->fetch();
     $row->setSourceProperty('field_definition', $field_definition);
 
+    // Determine the translatable setting.
     $translatable = FALSE;
     if ($row->getSourceProperty('entity_type') == 'node') {
       $language_content_type_bundle = (int) $this->variableGet('language_content_type_' . $row->getSourceProperty('bundle'), 0);
@@ -125,6 +126,14 @@ class FieldInstance extends DrupalSqlBase {
       // field_config table.
       $field_data = unserialize($field_definition['data']);
       $translatable = $field_data['translatable'];
+    }
+
+    // Check if this is an i18n synchronized field.
+    $synchronized_fields = $this->variableGet('i18n_sync_node_type_' . $row->getSourceProperty('bundle'), NULL);
+    if ($synchronized_fields) {
+      if (in_array($row->getSourceProperty('field_name'), $synchronized_fields)) {
+        $translatable = FALSE;
+      }
     }
     $row->setSourceProperty('translatable', $translatable);
 

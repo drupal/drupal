@@ -210,6 +210,16 @@ class MigrateNodeTest extends MigrateDrupal7TestBase {
 
     $node = Node::load(7);
     $this->assertEquals(CommentItemInterface::OPEN, $node->comment_forum->status);
+
+    // Test synchronized field.
+    $value = 'Kai Opaka';
+    $node = Node::load(2);
+    $this->assertSame($value, $node->field_text_plain->value);
+    $this->assertArrayNotHasKey('field_text_plain', $node->getTranslatableFields());
+
+    $node = $node->getTranslation('is');
+    $this->assertSame($value, $node->field_text_plain->value);
+
   }
 
   /**

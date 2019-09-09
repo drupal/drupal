@@ -9,4 +9,5 @@ finished:
     entityreference: core
     field: field
     field_sql_storage: field
+    i18n_sync: field
     number: core

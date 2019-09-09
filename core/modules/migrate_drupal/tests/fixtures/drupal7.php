@@ -8713,6 +8713,41 @@ $connection->schema()->createTable('field_data_field_text_plain', array(
   'mysql_character_set' => 'utf8',
 ));
 
+$connection->insert('field_data_field_text_plain')
+  ->fields(array(
+    'entity_type',
+    'bundle',
+    'deleted',
+    'entity_id',
+    'revision_id',
+    'language',
+    'delta',
+    'field_text_plain_value',
+    'field_text_plain_format',
+  ))
+  ->values(array(
+    'entity_type' => 'node',
+    'bundle' => 'article',
+    'deleted' => '0',
+    'entity_id' => '2',
+    'revision_id' => '2',
+    'language' => 'und',
+    'delta' => '0',
+    'field_text_plain_value' => 'Kai Opaka',
+    'field_text_plain_format' => NULL,
+  ))
+  ->values(array(
+    'entity_type' => 'node',
+    'bundle' => 'article',
+    'deleted' => '0',
+    'entity_id' => '3',
+    'revision_id' => '3',
+    'language' => 'und',
+    'delta' => '0',
+    'field_text_plain_value' => 'Kai Opaka',
+    'field_text_plain_format' => NULL,
+  ))
+  ->execute();
 $connection->schema()->createTable('field_data_field_text_plain_filtered', array(
   'fields' => array(
     'entity_type' => array(
@@ -13854,7 +13889,41 @@ $connection->schema()->createTable('field_revision_field_text_plain', array(
   ),
   'mysql_character_set' => 'utf8',
 ));
-
+$connection->insert('field_revision_field_text_plain')
+  ->fields(array(
+    'entity_type',
+    'bundle',
+    'deleted',
+    'entity_id',
+    'revision_id',
+    'language',
+    'delta',
+    'field_text_plain_value',
+    'field_text_plain_format',
+  ))
+  ->values(array(
+    'entity_type' => 'node',
+    'bundle' => 'article',
+    'deleted' => '0',
+    'entity_id' => '2',
+    'revision_id' => '2',
+    'language' => 'und',
+    'delta' => '0',
+    'field_text_plain_value' => 'Kai Opaka',
+    'field_text_plain_format' => NULL,
+  ))
+  ->values(array(
+    'entity_type' => 'node',
+    'bundle' => 'article',
+    'deleted' => '0',
+    'entity_id' => '3',
+    'revision_id' => '3',
+    'language' => 'und',
+    'delta' => '0',
+    'field_text_plain_value' => 'Kai Opaka',
+    'field_text_plain_format' => NULL,
+  ))
+  ->execute();
 $connection->schema()->createTable('field_revision_field_text_plain_filtered', array(
   'fields' => array(
     'entity_type' => array(
@@ -52779,7 +52848,7 @@ $connection->insert('system')
   'name' => 'i18n_sync',
   'type' => 'module',
   'owner' => '',
-  'status' => '0',
+  'status' => '1',
   'bootstrap' => '0',
   'schema_version' => '-1',
   'weight' => '0',
@@ -54816,6 +54885,14 @@ $connection->insert('variable')
 ->values(array(
   'name' => 'i18n_string_textgroup_class_taxonomy',
   'value' => 's:29:"i18n_string_textgroup_default";',
+))
+->values(array(
+  'name' => 'i18n_sync_node_type_article',
+  'value' => 'a:1:{i:0;s:16:"field_text_plain";}',
+))
+->values(array(
+  'name' => 'i18n_sync_source_article',
+  'value' => 'i:0;',
 ))
 ->values(array(
   'name' => 'image_jpeg_quality',

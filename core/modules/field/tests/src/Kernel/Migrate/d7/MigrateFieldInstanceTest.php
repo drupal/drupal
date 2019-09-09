@@ -158,6 +158,11 @@ class MigrateFieldInstanceTest extends MigrateDrupal7TestBase {
     ];
     $this->assertSame($expected_settings, $boolean_field->get('settings'));
 
+    // Test a synchronized field is not translatable.
+    $field = FieldConfig::load('node.article.field_text_plain');
+    $this->assertInstanceOf(FieldConfig::class, $field);
+    $this->assertFalse($field->isTranslatable());
+
     // Test the translation settings for taxonomy fields.
     $this->assertEntity('node.article.field_vocab_fixed', 'vocab_fixed', 'entity_reference', FALSE, FALSE);
     $this->assertEntity('node.article.field_vocab_localize', 'vocab_localize', 'entity_reference', FALSE, FALSE);
@@ -174,7 +179,7 @@ class MigrateFieldInstanceTest extends MigrateDrupal7TestBase {
     // plain text instances should not have been migrated since there's no such
     // thing as a string_with_summary field.
     $this->assertEntity('node.page.field_text_plain', 'Text plain', 'string', FALSE, FALSE);
-    $this->assertEntity('node.article.field_text_plain', 'Text plain', 'string', FALSE, TRUE);
+    $this->assertEntity('node.article.field_text_plain', 'Text plain', 'string', FALSE, FALSE);
     $this->assertEntity('node.page.field_text_long_plain', 'Text long plain', 'string_long', FALSE, FALSE);
     $this->assertEntity('node.article.field_text_long_plain', 'Text long plain', 'string_long', FALSE, TRUE);
     $this->assertNull(FieldConfig::load('node.page.field_text_sum_plain'));

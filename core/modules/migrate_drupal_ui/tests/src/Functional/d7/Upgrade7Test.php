@@ -142,6 +142,7 @@ class Upgrade7Test extends MigrateUpgradeExecuteTestBase {
       'filter',
       'forum',
       'i18n_block',
+      'i18n_sync',
       'i18n_variable',
       'image',
       'link',
