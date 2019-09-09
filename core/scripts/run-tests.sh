@@ -782,7 +782,7 @@ function simpletest_script_run_phpunit($test_id, $class) {
 
   $runner = PhpUnitTestRunner::create(\Drupal::getContainer());
   $results = $runner->runTests($test_id, [$class], $status);
-  simpletest_process_phpunit_results($results);
+  TestDatabase::processPhpUnitResults($results);
 
   $summaries = $runner->summarizeResults($results);
   foreach ($summaries as $class => $summary) {

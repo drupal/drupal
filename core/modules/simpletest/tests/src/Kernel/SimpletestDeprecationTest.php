@@ -92,4 +92,13 @@ class SimpletestDeprecationTest extends KernelTestBase {
     $this->assertTrue(unlink($public_file));
   }
 
+  /**
+   * @expectedDeprecation simpletest_process_phpunit_results() is deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. Use \Drupal\Core\Test\TestDatabase::processPhpUnitResults() instead. See https://www.drupal.org/node/3075252
+   */
+  public function testProcessPhpUnitResults() {
+    // The only safe way to test this deprecation is to call it with an empty
+    // result set. This should not touch the results database.
+    $this->assertNull(simpletest_process_phpunit_results([]));
+  }
+
 }

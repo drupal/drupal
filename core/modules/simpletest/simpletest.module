@@ -204,19 +204,15 @@ function simpletest_run_phpunit_tests($test_id, array $unescaped_test_classnames
  *
  * @param array[] $phpunit_results
  *   An array of test results returned from simpletest_phpunit_xml_to_rows().
+ *
+ * @deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. Use
+ *   \Drupal\Core\Test\TestDatabase::processPhpUnitResults() instead.
+ *
+ * @see https://www.drupal.org/node/3075252
  */
 function simpletest_process_phpunit_results($phpunit_results) {
-  // Insert the results of the PHPUnit test run into the database so the results
-  // are displayed along with Simpletest's results.
-  if (!empty($phpunit_results)) {
-    $query = TestDatabase::getConnection()
-      ->insert('simpletest')
-      ->fields(array_keys($phpunit_results[0]));
-    foreach ($phpunit_results as $result) {
-      $query->values($result);
-    }
-    $query->execute();
-  }
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. Use \Drupal\Core\Test\TestDatabase::processPhpUnitResults() instead. See https://www.drupal.org/node/3075252', E_USER_DEPRECATED);
+  TestDatabase::processPhpUnitResults($phpunit_results);
 }
 
 /**
@@ -345,7 +341,7 @@ function _simpletest_batch_operation($test_list_init, $test_id, &$context) {
   if (is_subclass_of($test_class, TestCase::class)) {
     $runner = PhpUnitTestRunner::create(\Drupal::getContainer());
     $phpunit_results = $runner->runTests($test_id, [$test_class]);
-    simpletest_process_phpunit_results($phpunit_results);
+    TestDatabase::processPhpUnitResults($phpunit_results);
     $test_results[$test_class] = simpletest_summarize_phpunit_result($phpunit_results)[$test_class];
   }
   else {
