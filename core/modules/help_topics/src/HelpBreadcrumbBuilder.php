@@ -43,6 +43,7 @@ class HelpBreadcrumbBuilder implements BreadcrumbBuilderInterface {
    */
   public function build(RouteMatchInterface $route_match) {
     $breadcrumb = new Breadcrumb();
+    $breadcrumb->addCacheContexts(['url.path.parent']);
     $breadcrumb->addLink(Link::createFromRoute($this->t('Home'), '<front>'));
     $breadcrumb->addLink(Link::createFromRoute($this->t('Administration'), 'system.admin'));
     $breadcrumb->addLink(Link::createFromRoute($this->t('Help'), 'help.main'));
