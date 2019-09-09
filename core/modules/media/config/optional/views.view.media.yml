@@ -10,7 +10,7 @@ dependencies:
 id: media
 label: Media
 module: views
-description: ''
+description: 'Find and manage media.'
 tag: ''
 base_table: media_field_data
 base_field: mid
