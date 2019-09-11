@@ -15,19 +15,18 @@ use Drupal\Tests\UnitTestCase;
 class ContentEntityFormTest extends UnitTestCase {
 
   /**
+   * Tests the constructor bc layer for injecting the entity manager.
+   *
    * @group legacy
    * @expectedDeprecation Passing the entity.manager service to ContentEntityForm::__construct() is deprecated in Drupal 8.6.0 and will be removed before Drupal 9.0.0. Pass the entity.repository service instead. See https://www.drupal.org/node/2549139.
+   * @expectedDeprecation EntityForm::entityManager is deprecated in drupal:8.0.0 and is removed from drupal:9.0.0. Use EntityForm::entityTypeManager instead. See https://www.drupal.org/node/2549139
    */
   public function testEntityManagerDeprecation() {
     $entity_manager = $this->prophesize(EntityManagerInterface::class)->reveal();
     $entity_type_bundle_info = $this->prophesize(EntityTypeBundleInfoInterface::class)->reveal();
     $time = $this->prophesize(TimeInterface::class)->reveal();
     $form = new ContentEntityForm($entity_manager, $entity_type_bundle_info, $time);
-
-    $reflected_form = new \ReflectionClass($form);
-    $entity_manager_property = $reflected_form->getProperty('entityManager');
-    $entity_manager_property->setAccessible(TRUE);
-    $this->assertTrue($entity_manager_property->getValue($form) === $entity_manager);
+    $this->assertSame($form->entityManager, $entity_manager);
   }
 
 }
