@@ -18,9 +18,7 @@ exports.command = function drupalLoginAsAdmin(callback) {
     }
     const userLink = execSync(
       commandAsWebserver(
-        `php ./scripts/test-site.php user-login 1 --site-path ${
-          this.drupalSitePath
-        }`,
+        `php ./scripts/test-site.php user-login 1 --site-path ${this.globals.drupalSitePath}`,
       ),
     );
 

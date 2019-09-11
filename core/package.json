@@ -26,7 +26,7 @@
     "babel-preset-env": "^1.4.0",
     "chalk": "^2.3.0",
     "chokidar": "^2.0.0",
-    "chromedriver": "^2.35.0",
+    "chromedriver": "^75.1.0",
     "cross-env": "^5.1.3",
     "dotenv-safe": "^5.0.1",
     "eslint": "^4.19.1",
@@ -39,12 +39,12 @@
     "glob": "^7.1.2",
     "minimist": "^1.2.0",
     "mkdirp": "^0.5.1",
-    "nightwatch": "^0.9.20",
+    "nightwatch": "^1.2.1",
     "prettier": "^1.14.0",
     "stylelint": "^9.10.1",
     "stylelint-checkstyle-formatter": "^0.1.1",
     "stylelint-config-standard": "^18.2.0",
-    "stylelint-no-browser-hacks": "^1.1.0"
+    "stylelint-no-browser-hacks": "^1.2.1"
   },
   "//": "'development is the default environment, and legacy is for transpiling the old jQuery codebase",
   "babel": {
