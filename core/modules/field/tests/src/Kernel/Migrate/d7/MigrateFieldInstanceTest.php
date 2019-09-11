@@ -164,7 +164,7 @@ class MigrateFieldInstanceTest extends MigrateDrupal7TestBase {
     $this->assertFalse($field->isTranslatable());
 
     // Test the translation settings for taxonomy fields.
-    $this->assertEntity('node.article.field_vocab_fixed', 'vocab_fixed', 'entity_reference', FALSE, FALSE);
+    $this->assertEntity('node.article.field_vocab_fixed', 'vocab_fixed', 'entity_reference', FALSE, TRUE);
     $this->assertEntity('node.article.field_vocab_localize', 'vocab_localize', 'entity_reference', FALSE, FALSE);
     $this->assertEntity('node.article.field_vocab_translate', 'vocab_translate', 'entity_reference', FALSE, TRUE);
   }
