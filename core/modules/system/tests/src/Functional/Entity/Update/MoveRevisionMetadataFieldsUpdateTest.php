@@ -34,6 +34,7 @@ class MoveRevisionMetadataFieldsUpdateTest extends UpdatePathTestBase {
    * @expectedDeprecation The revision_user revision metadata key is not set for entity type: entity_test_mul_revlog See: https://www.drupal.org/node/2831499
    * @expectedDeprecation The revision_created revision metadata key is not set for entity type: entity_test_mul_revlog See: https://www.drupal.org/node/2831499
    * @expectedDeprecation The revision_log_message revision metadata key is not set for entity type: entity_test_mul_revlog See: https://www.drupal.org/node/2831499
+   * @expectedDeprecation Support for pre-8.3.0 revision table names in imported views is deprecated in drupal:8.3.0 and is removed from drupal:9.0.0. Imported views must reference the correct tables. See https://www.drupal.org/node/2831499
    */
   public function testSystemUpdate8400() {
     $this->runUpdates();

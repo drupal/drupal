@@ -303,6 +303,8 @@ class View extends ConfigEntityBase implements ViewEntityInterface {
 
     $displays = $this->get('display');
 
+    // @todo Remove this line and support for pre-8.3 table names in Drupal 9.
+    // @see https://www.drupal.org/project/drupal/issues/3069405 .
     $this->fixTableNames($displays);
 
     // Sort the displays.
@@ -328,8 +330,8 @@ class View extends ConfigEntityBase implements ViewEntityInterface {
    * @param array &$displays
    *   An array containing display handlers of a view.
    *
-   * @deprecated in Drupal 8.3.0, will be removed in Drupal 9.0.0.
-   *
+   * @todo Remove this method and its usage in Drupal 9. See
+   *   https://www.drupal.org/project/drupal/issues/3069405.
    * @see https://www.drupal.org/node/2831499
    */
   private function fixTableNames(array &$displays) {
@@ -349,6 +351,7 @@ class View extends ConfigEntityBase implements ViewEntityInterface {
               // Check if this is a revision metadata field and if it uses the
               // wrong table.
               if (in_array($property_data['field'], $revision_metadata_fields) && $property_data['table'] != $revision_table) {
+                @trigger_error('Support for pre-8.3.0 revision table names in imported views is deprecated in drupal:8.3.0 and is removed from drupal:9.0.0. Imported views must reference the correct tables. See https://www.drupal.org/node/2831499', E_USER_DEPRECATED);
                 $displays[$display]['display_options']['fields'][$property_name]['table'] = $revision_table;
               }
             }
