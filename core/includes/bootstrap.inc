@@ -942,7 +942,7 @@ function drupal_classloader_register($name, $path) {
  *   internally and should not be passed in; use drupal_static_reset() instead.
  *   (This function's return value should not be used when TRUE is passed in.)
  *
- * @return array
+ * @return mixed
  *   Returns a variable by reference.
  *
  * @see drupal_static_reset()
