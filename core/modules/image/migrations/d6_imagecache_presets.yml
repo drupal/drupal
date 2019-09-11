@@ -14,7 +14,7 @@ process:
       plugin: make_unique_entity_field
       entity_type: image_style
       field: name
-      length: 32
+      length: 30
   label: presetname
   effects:
     plugin: d6_imagecache_actions

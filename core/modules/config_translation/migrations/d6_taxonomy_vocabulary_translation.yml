@@ -13,7 +13,7 @@ process:
       source: name
     -
       plugin: substr
-      length: 32
+      length: 30
   langcode: language
   property:
     plugin: static_map

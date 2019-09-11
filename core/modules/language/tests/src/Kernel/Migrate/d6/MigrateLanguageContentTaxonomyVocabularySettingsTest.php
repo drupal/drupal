@@ -47,7 +47,7 @@ class MigrateLanguageContentTaxonomyVocabularySettingsTest extends MigrateDrupal
     // Localize terms.
     $this->assertLanguageContentSettings($target_entity, 'vocabulary_3_i_2_', LanguageInterface::LANGCODE_SITE_DEFAULT, TRUE, ['enabled' => FALSE]);
     // None translation enabled.
-    $this->assertLanguageContentSettings($target_entity, 'vocabulary_name_much_longer_than', LanguageInterface::LANGCODE_SITE_DEFAULT, TRUE, ['enabled' => TRUE]);
+    $this->assertLanguageContentSettings($target_entity, 'vocabulary_name_much_longer_th', LanguageInterface::LANGCODE_SITE_DEFAULT, TRUE, ['enabled' => TRUE]);
     $this->assertLanguageContentSettings($target_entity, 'tags', LanguageInterface::LANGCODE_SITE_DEFAULT, FALSE, ['enabled' => FALSE]);
     $this->assertLanguageContentSettings($target_entity, 'forums', LanguageInterface::LANGCODE_SITE_DEFAULT, FALSE, ['enabled' => FALSE]);
     $this->assertLanguageContentSettings($target_entity, 'type', LanguageInterface::LANGCODE_SITE_DEFAULT, FALSE, ['enabled' => FALSE]);

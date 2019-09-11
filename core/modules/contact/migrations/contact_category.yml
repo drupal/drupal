@@ -15,7 +15,7 @@ process:
       plugin: make_unique_entity_field
       entity_type: contact_form
       field: id
-      length: 32
+      length: 30
   label: category
   recipients: recipients
   reply: reply

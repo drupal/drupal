@@ -14,7 +14,7 @@ process:
       plugin: make_unique_entity_field
       entity_type: taxonomy_vocabulary
       field: vid
-      length: 32
+      length: 30
       migrated: true
     -
       # This plugin checks if the vocabulary being migrated is the one used by

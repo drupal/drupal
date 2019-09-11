@@ -19,7 +19,7 @@ process:
     entity_type: block
     field: id
     postfix: _
-    length: 32
+    length: 29
     source: module
   plugin:
     -
