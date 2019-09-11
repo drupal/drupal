@@ -157,6 +157,8 @@ abstract class ExtensionList {
    * We don't reset statically added filenames, as it is a static cache which
    * logically can't change. This is done for performance reasons of the
    * installer.
+   *
+   * @return $this
    */
   public function reset() {
     $this->extensions = NULL;
