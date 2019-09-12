@@ -28,7 +28,7 @@ class EntityReferenceAutocompleteWidget extends WidgetBase {
   public static function defaultSettings() {
     return [
       'match_operator' => 'CONTAINS',
-      'size' => '60',
+      'size' => 60,
       'placeholder' => '',
     ] + parent::defaultSettings();
   }
