@@ -49,14 +49,18 @@ class EntityReferenceAutocompleteWidgetTest extends WebDriverTestBase {
     // operator.
     $field_name = 'field_test';
     $this->createEntityReferenceField('node', 'page', $field_name, $field_name, 'node', 'default', ['target_bundles' => ['page']]);
-    entity_get_form_display('node', 'page', 'default')
-      ->setComponent($field_name, [
+    $form_display = entity_get_form_display('node', 'page', 'default');
+    $form_display->setComponent($field_name, [
         'type' => 'entity_reference_autocomplete',
         'settings' => [
           'match_operator' => 'CONTAINS',
         ],
-      ])
-      ->save();
+      ]);
+    // To satisfy config schema, the size setting must be an integer, not just
+    // a numeric value. See https://www.drupal.org/node/2885441.
+    $this->assertInternalType('integer', $form_display->getComponent($field_name)['settings']['size']);
+    $form_display->save();
+    $this->assertInternalType('integer', $form_display->getComponent($field_name)['settings']['size']);
 
     // Visit the node add page.
     $this->drupalGet('node/add/page');
