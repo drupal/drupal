@@ -90,7 +90,7 @@ function simpletest_uninstall() {
   // in a (recursive) test for itself, since simpletest_clean_environment()
   // would also delete the test site of the parent test process.
   if (!drupal_valid_test_ua()) {
-    simpletest_clean_environment();
+    \Drupal::service('environment_cleaner')->cleanEnvironment();
   }
   // Delete verbose test output and any other testing framework files.
   try {

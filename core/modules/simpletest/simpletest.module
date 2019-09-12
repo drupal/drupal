@@ -6,7 +6,6 @@
  */
 
 use Drupal\Core\Asset\AttachedAssetsInterface;
-use Drupal\Core\Database\Database;
 use Drupal\Core\File\Exception\FileException;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Routing\RouteMatchInterface;
@@ -596,72 +595,51 @@ function simpletest_generate_file($filename, $width, $lines, $type = 'binary-tex
 
 /**
  * Removes all temporary database tables and directories.
+ *
+ * @deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. Access the
+ *   environment_cleaner service and call its cleanEnvironment() method, or use
+ *   \Drupal\Core\Test\EnvironmentCleaner::cleanEnvironment() instead.
+ *
+ * @see https://www.drupal.org/node/3076634
  */
 function simpletest_clean_environment() {
-  simpletest_clean_database();
-  simpletest_clean_temporary_directories();
-  if (\Drupal::config('simpletest.settings')->get('clear_results')) {
-    $count = simpletest_clean_results_table();
-    \Drupal::messenger()->addStatus(\Drupal::translation()->formatPlural($count, 'Removed 1 test result.', 'Removed @count test results.'));
-  }
-  else {
-    \Drupal::messenger()->addWarning(t('Clear results is disabled and the test results table will not be cleared.'), 'warning');
-  }
+  @trigger_error(__FUNCTION__ . ' is deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. Access the environment_cleaner service and call its cleanEnvironment() method, or use \Drupal\Core\Test\EnvironmentCleaner::cleanEnvironment() instead.. See https://www.drupal.org/node/3076634', E_USER_DEPRECATED);
+  /* @var $cleaner \Drupal\simpletest\EnvironmentCleanerService */
+  $cleaner = \Drupal::service('environment_cleaner');
+  $cleaner->cleanEnvironment();
 }
 
 /**
  * Removes prefixed tables from the database from crashed tests.
+ *
+ * @deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. Access the
+ *   environment_cleaner service and call its cleanDatabase() method, or use
+ *   \Drupal\Core\Test\EnvironmentCleaner::cleanDatabase() instead.
+ *
+ * @see https://www.drupal.org/node/3076634
  */
 function simpletest_clean_database() {
-  $schema = Database::getConnection()->schema();
-  $tables = $schema->findTables('test%');
-  $count = 0;
-  foreach ($tables as $table) {
-    // Only drop tables which begin wih 'test' followed by digits, for example,
-    // {test12345678node__body}.
-    if (preg_match('/^test\d+.*/', $table, $matches)) {
-      $schema->dropTable($matches[0]);
-      $count++;
-    }
-  }
-
-  if ($count > 0) {
-    \Drupal::messenger()->addStatus(\Drupal::translation()->formatPlural($count, 'Removed 1 leftover table.', 'Removed @count leftover tables.'));
-  }
-  else {
-    \Drupal::messenger()->addStatus(t('No leftover tables to remove.'));
-  }
+  @trigger_error(__FUNCTION__ . ' is deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. Access the environment_cleaner service and call its cleanDatabase() method, or use \Drupal\Core\Test\EnvironmentCleaner::cleanDatabase() instead. See https://www.drupal.org/node/3076634', E_USER_DEPRECATED);
+  /* @var $cleaner \Drupal\simpletest\EnvironmentCleanerService */
+  $cleaner = \Drupal::service('environment_cleaner');
+  $cleaner->cleanDatabase();
 }
 
 /**
  * Finds all leftover temporary directories and removes them.
+ *
+ * @deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. Access the
+ *   environment_cleaner service and call its cleanTemporaryDirectories()
+ *   method, or use
+ *   \Drupal\Core\Test\EnvironmentCleaner::cleanTemporaryDirectories() instead.
+ *
+ * @see https://www.drupal.org/node/3076634
  */
 function simpletest_clean_temporary_directories() {
-  $count = 0;
-  if (is_dir(DRUPAL_ROOT . '/sites/simpletest')) {
-    $files = scandir(DRUPAL_ROOT . '/sites/simpletest');
-    foreach ($files as $file) {
-      if ($file[0] != '.') {
-        $path = DRUPAL_ROOT . '/sites/simpletest/' . $file;
-        try {
-          \Drupal::service('file_system')->deleteRecursive($path, function ($any_path) {
-            @chmod($any_path, 0700);
-          });
-        }
-        catch (FileException $e) {
-          // Ignore failed deletes.
-        }
-        $count++;
-      }
-    }
-  }
-
-  if ($count > 0) {
-    \Drupal::messenger()->addStatus(\Drupal::translation()->formatPlural($count, 'Removed 1 temporary directory.', 'Removed @count temporary directories.'));
-  }
-  else {
-    \Drupal::messenger()->addStatus(t('No temporary directories to remove.'));
-  }
+  @trigger_error(__FUNCTION__ . ' is deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. Access the environment_cleaner service and call its cleanTemporaryDirectories() method, or use \Drupal\Core\Test\EnvironmentCleaner::cleanTemporaryDirectories() instead. See https://www.drupal.org/node/3076634', E_USER_DEPRECATED);
+  /* @var $cleaner \Drupal\simpletest\EnvironmentCleanerService */
+  $cleaner = \Drupal::service('environment_cleaner');
+  $cleaner->cleanTemporaryDirectories();
 }
 
 /**
@@ -672,31 +650,22 @@ function simpletest_clean_temporary_directories() {
  *
  * @return int
  *   The number of results that were removed.
+ *
+ * @deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. Access the
+ *   environment_cleaner service and call its cleanResultsTable() method, or use
+ *   \Drupal\Core\Test\EnvironmentCleaner::cleanResultsTable() instead.
+ *
+ * @see https://www.drupal.org/node/3076634
  */
 function simpletest_clean_results_table($test_id = NULL) {
+  @trigger_error(__FUNCTION__ . ' is deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. Access the environment_cleaner service and call its cleanResultsTable() method, or use \Drupal\Core\Test\EnvironmentCleaner::cleanResultsTable() instead. See https://www.drupal.org/node/3076634', E_USER_DEPRECATED);
+  $count = 0;
   if (\Drupal::config('simpletest.settings')->get('clear_results')) {
-    $connection = TestDatabase::getConnection();
-    if ($test_id) {
-      $count = $connection->query('SELECT COUNT(test_id) FROM {simpletest_test_id} WHERE test_id = :test_id', [':test_id' => $test_id])->fetchField();
-
-      $connection->delete('simpletest')
-        ->condition('test_id', $test_id)
-        ->execute();
-      $connection->delete('simpletest_test_id')
-        ->condition('test_id', $test_id)
-        ->execute();
-    }
-    else {
-      $count = $connection->query('SELECT COUNT(test_id) FROM {simpletest_test_id}')->fetchField();
-
-      // Clear test results.
-      $connection->delete('simpletest')->execute();
-      $connection->delete('simpletest_test_id')->execute();
-    }
-
-    return $count;
+    /* @var $cleaner \Drupal\simpletest\EnvironmentCleanerService */
+    $cleaner = \Drupal::service('environment_cleaner');
+    $count = $cleaner->cleanResultsTable($test_id);
   }
-  return 0;
+  return $count;
 }
 
 /**

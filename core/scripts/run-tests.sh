@@ -14,12 +14,14 @@ use Drupal\Core\Database\Database;
 use Drupal\Core\File\Exception\FileException;
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\StreamWrapper\PublicStream;
+use Drupal\Core\Test\EnvironmentCleaner;
 use Drupal\Core\Test\PhpUnitTestRunner;
 use Drupal\Core\Test\TestDatabase;
 use Drupal\Core\Test\TestRunnerKernel;
 use Drupal\simpletest\Form\SimpletestResultsForm;
 use Drupal\Core\Test\TestDiscovery;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\HttpFoundation\Request;
 
 // Define some colors for display.
@@ -126,8 +128,15 @@ simpletest_script_setup_database(TRUE);
 
 if ($args['clean']) {
   // Clean up left-over tables and directories.
+  $cleaner = new EnvironmentCleaner(
+    DRUPAL_ROOT,
+    Database::getConnection(),
+    TestDatabase::getConnection(),
+    new ConsoleOutput(),
+    \Drupal::service('file_system')
+  );
   try {
-    simpletest_clean_environment();
+    $cleaner->cleanEnvironment();
   }
   catch (Exception $e) {
     echo (string) $e;
@@ -181,7 +190,14 @@ if ($args['xml']) {
 // Clean up all test results.
 if (!$args['keep-results']) {
   try {
-    simpletest_clean_results_table();
+    $cleaner = new EnvironmentCleaner(
+      DRUPAL_ROOT,
+      Database::getConnection(),
+      TestDatabase::getConnection(),
+      new ConsoleOutput(),
+      \Drupal::service('file_system')
+    );
+    $cleaner->cleanResultsTable();
   }
   catch (Exception $e) {
     echo (string) $e;

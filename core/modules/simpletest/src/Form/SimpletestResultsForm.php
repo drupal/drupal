@@ -6,6 +6,7 @@ use Drupal\Core\Database\Connection;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormState;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Test\EnvironmentCleanerInterface;
 use Drupal\Core\Url;
 use Drupal\simpletest\TestDiscovery;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -38,11 +39,19 @@ class SimpletestResultsForm extends FormBase {
   protected $database;
 
   /**
+   * The environment cleaner service.
+   *
+   * @var \Drupal\Core\Test\EnvironmentCleanerInterface
+   */
+  protected $cleaner;
+
+  /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('database')
+      $container->get('database'),
+      $container->get('environment_cleaner')
     );
   }
 
@@ -52,8 +61,9 @@ class SimpletestResultsForm extends FormBase {
    * @param \Drupal\Core\Database\Connection $database
    *   The database connection service.
    */
-  public function __construct(Connection $database) {
+  public function __construct(Connection $database, EnvironmentCleanerInterface $cleaner) {
     $this->database = $database;
+    $this->cleaner = $cleaner;
   }
 
   /**
@@ -162,7 +172,7 @@ class SimpletestResultsForm extends FormBase {
     ];
 
     if (is_numeric($test_id)) {
-      simpletest_clean_results_table($test_id);
+      $this->cleaner->cleanResultsTable($test_id);
     }
 
     return $form;

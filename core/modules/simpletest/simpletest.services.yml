@@ -1,9 +1,13 @@
 services:
   test_discovery:
-    # @todo Change this service so that it uses \Drupal\Core\Test\TestDiscovery
-    # in https://www.drupal.org/node/1667822
     class: Drupal\simpletest\TestDiscovery
     arguments: ['@app.root', '@class_loader', '@module_handler']
+  environment_cleaner_factory:
+    class: Drupal\simpletest\EnvironmentCleanerFactory
+    arguments: ['@service_container']
+  environment_cleaner:
+    class: Drupal\simpletest\EnvironmentCleanerService
+    factory: 'environment_cleaner_factory:createCleaner'
   cache_context.test_discovery:
     class: Drupal\simpletest\Cache\Context\TestDiscoveryCacheContext
     arguments: ['@test_discovery', '@private_key']

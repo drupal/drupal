@@ -7,7 +7,7 @@ use Drupal\Core\Database\ConnectionNotDefinedException;
 use Drupal\Core\Database\Database;
 
 /**
- * Provides helper methods for interacting with the Simpletest database.
+ * Provides helper methods for interacting with the fixture database.
  */
 class TestDatabase {
 
