@@ -224,6 +224,9 @@ trait SqlFieldableEntityTypeListenerTrait {
       $sandbox['current_id'] = $identifier;
     }
 
+    // Reset the cache in order to free memory as we progress.
+    \Drupal::service('entity.memory_cache')->deleteAll();
+
     // Get an updated count of entities that still need to migrated to the new
     // storage.
     $missing = $this->database->select($table_name, 't')
