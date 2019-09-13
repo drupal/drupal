@@ -40,7 +40,7 @@ class ImageFieldValidateTest extends ImageFieldTestBase {
     $this->drupalPostForm(NULL, [], t('Save'));
 
     // Get invalid image test files from simpletest.
-    $dir = drupal_get_path('module', 'simpletest') . '/files';
+    $dir = 'core/tests/fixtures/files';
     $files = [];
     if (is_dir($dir)) {
       $files = $file_system->scanDirectory($dir, '/invalid-img-.*/');

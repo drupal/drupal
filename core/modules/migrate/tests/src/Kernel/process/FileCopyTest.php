@@ -50,7 +50,7 @@ class FileCopyTest extends FileTestBase {
     $data_sets = [
       // Test a local to local copy.
       [
-        $this->root . '/core/modules/simpletest/files/image-test.jpg',
+        $this->root . '/core/tests/fixtures/files/image-test.jpg',
         'public://file1.jpg',
       ],
       // Test a temporary file using an absolute path.
@@ -61,7 +61,7 @@ class FileCopyTest extends FileTestBase {
       // Test a temporary file using a relative path.
       [
         $file_absolute,
-        'temporary://core/modules/simpletest/files/test.jpg',
+        'temporary://core/tests/fixtures/files/test.jpg',
       ],
     ];
     foreach ($data_sets as $data) {
@@ -113,7 +113,7 @@ class FileCopyTest extends FileTestBase {
   public function providerSuccessfulReuse() {
     return [
       [
-        'local_source_path' => static::getDrupalRoot() . '/core/modules/simpletest/files/image-test.jpg',
+        'local_source_path' => static::getDrupalRoot() . '/core/tests/fixtures/files/image-test.jpg',
         'local_destination_path' => 'public://file1.jpg',
       ],
       [
@@ -146,7 +146,7 @@ class FileCopyTest extends FileTestBase {
       // Test a temporary file using a relative path.
       [
         $file_2_absolute,
-        'temporary://core/modules/simpletest/files/test.jpg',
+        'temporary://core/tests/fixtures/files/test.jpg',
       ],
     ];
     foreach ($data_sets as $data) {

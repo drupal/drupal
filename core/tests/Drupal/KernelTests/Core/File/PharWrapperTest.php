@@ -15,7 +15,7 @@ class PharWrapperTest extends KernelTestBase {
    * Tests that only valid phar files can be used.
    */
   public function testPharFile() {
-    $base = $this->getDrupalRoot() . '/core/modules/simpletest/files';
+    $base = $this->getDrupalRoot() . '/core/tests/fixtures/files';
     // Ensure that file operations via the phar:// stream wrapper work for phar
     // files with the .phar extension.
     $this->assertFalse(file_exists("phar://$base/phar-1.phar/no-such-file.php"));

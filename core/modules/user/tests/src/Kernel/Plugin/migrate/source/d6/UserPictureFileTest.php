@@ -27,7 +27,7 @@ class UserPictureFileTest extends MigrateSqlSourceTestBase {
     $tests[0]['source_data']['users'] = [
       [
         'uid' => '2',
-        'picture' => 'core/modules/simpletest/files/image-test.jpg',
+        'picture' => 'core/tests/fixtures/files/image-test.jpg',
       ],
       [
         'uid' => '15',
@@ -39,7 +39,7 @@ class UserPictureFileTest extends MigrateSqlSourceTestBase {
     $tests[0]['expected_data'] = [
       [
         'uid' => '2',
-        'picture' => 'core/modules/simpletest/files/image-test.jpg',
+        'picture' => 'core/tests/fixtures/files/image-test.jpg',
       ],
     ];
 

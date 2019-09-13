@@ -24,7 +24,7 @@ trait TestFileCreationTrait {
    * The first time this method is called, it will call
    * $this->generateFile() to generate binary and ASCII text files in the
    * public:// directory. It will also copy all files in
-   * core/modules/simpletest/files to public://. These contain image, SQL, PHP,
+   * core/tests/fixtures/files to public://. These contain image, SQL, PHP,
    * JavaScript, and HTML files.
    *
    * All filenames are prefixed with their type and have appropriate extensions:
@@ -69,8 +69,8 @@ trait TestFileCreationTrait {
         $this->generateFile('text-' . $count++, 64, $line, 'text');
       }
 
-      // Copy other test files from simpletest.
-      $original = drupal_get_path('module', 'simpletest') . '/files';
+      // Copy other test files from fixtures.
+      $original = \Drupal::service('app.root') . '/core/tests/fixtures/files';
       $files = $file_system->scanDirectory($original, '/(html|image|javascript|php|sql)-.*/');
       foreach ($files as $file) {
         $file_system->copy($file->uri, PublicStream::basePath());
