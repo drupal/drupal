@@ -242,6 +242,13 @@ class EntityResource {
           }, array_keys($document['data'][$data_member_name])), function ($internal_field_name) use ($resource_type) {
             return $resource_type->hasField($internal_field_name);
           });
+          // User resource objects contain a read-only attribute that is not a
+          // real field on the user entity type.
+          // @see \Drupal\jsonapi\JsonApiResource\ResourceObject::extractContentEntityFields()
+          // @todo: eliminate this special casing in https://www.drupal.org/project/drupal/issues/3079254.
+          if ($resource_type->getEntityTypeId() === 'user') {
+            $valid_names = array_diff($valid_names, [$resource_type->getPublicName('display_name')]);
+          }
           foreach ($valid_names as $field_name) {
             $field_access = $parsed_entity->get($field_name)->access('edit', NULL, TRUE);
             if (!$field_access->isAllowed()) {
@@ -316,6 +323,14 @@ class EntityResource {
     }
     $data += ['attributes' => [], 'relationships' => []];
     $field_names = array_merge(array_keys($data['attributes']), array_keys($data['relationships']));
+
+    // User resource objects contain a read-only attribute that is not a real
+    // field on the user entity type.
+    // @see \Drupal\jsonapi\JsonApiResource\ResourceObject::extractContentEntityFields()
+    // @todo: eliminate this special casing in https://www.drupal.org/project/drupal/issues/3079254.
+    if ($entity->getEntityTypeId() === 'user') {
+      $field_names = array_diff($field_names, [$resource_type->getPublicName('display_name')]);
+    }
 
     array_reduce($field_names, function (EntityInterface $destination, $field_name) use ($resource_type, $parsed_entity) {
       $this->updateEntityField($resource_type, $parsed_entity, $destination, $field_name);

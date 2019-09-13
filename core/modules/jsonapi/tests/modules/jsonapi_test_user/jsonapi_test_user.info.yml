@@ -1,0 +1,4 @@
+name: 'JSON:API user tests'
+type: module
+package: Testing
+core: 8.x

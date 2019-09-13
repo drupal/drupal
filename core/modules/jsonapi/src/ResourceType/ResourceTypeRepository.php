@@ -244,6 +244,15 @@ class ResourceTypeRepository implements ResourceTypeRepositoryInterface {
       $mapping[$field_name] = TRUE;
     }
 
+    // Special handling for user entities that allows a JSON:API user agent to
+    // access the display name of a user. This is useful when displaying the
+    // name of a node's author.
+    // @see \Drupal\jsonapi\JsonApiResource\ResourceObject::extractContentEntityFields()
+    // @todo: eliminate this special casing in https://www.drupal.org/project/drupal/issues/3079254.
+    if ($entity_type->id() === 'user') {
+      $mapping['display_name'] = TRUE;
+    }
+
     return $mapping;
   }
 

@@ -230,7 +230,7 @@ class JsonApiDocumentTopLevelNormalizerTest extends JsonapiKernelTestBase {
               'field_image',
             ],
             'user--user' => [
-              'name',
+              'display_name',
             ],
           ],
           'include' => [
@@ -279,7 +279,7 @@ class JsonApiDocumentTopLevelNormalizerTest extends JsonapiKernelTestBase {
     $this->assertTrue(empty($normalized['meta']['omitted']));
     $this->assertSame($this->user->uuid(), $normalized['included'][0]['id']);
     $this->assertSame('user--user', $normalized['included'][0]['type']);
-    $this->assertSame('user1', $normalized['included'][0]['attributes']['name']);
+    $this->assertSame('user1', $normalized['included'][0]['attributes']['display_name']);
     $this->assertCount(1, $normalized['included'][0]['attributes']);
     $this->assertSame($this->term1->uuid(), $normalized['included'][1]['id']);
     $this->assertSame('taxonomy_term--tags', $normalized['included'][1]['type']);

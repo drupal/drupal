@@ -1,0 +1,17 @@
+<?php
+
+/**
+ * @file
+ * Support module for JSON:API user hooks testing.
+ */
+
+use Drupal\Core\Session\AccountInterface;
+
+/**
+ * Implements hook_user_format_name_alter().
+ */
+function jsonapi_test_user_user_format_name_alter(&$name, AccountInterface $account) {
+  if ($account->isAnonymous()) {
+    $name = 'User ' . $account->id();
+  }
+}

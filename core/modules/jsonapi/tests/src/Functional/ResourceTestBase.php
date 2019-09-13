@@ -136,14 +136,11 @@ abstract class ResourceTestBase extends BrowserTestBase {
   protected static $secondCreatedEntityId = 3;
 
   /**
-   * Optionally specify which field is the 'label' field.
-   *
-   * Some entities specify a 'label_callback', but not a 'label' entity key.
-   * For example: User.
+   * Specify which field is the 'label' field for testing a POST edge case.
    *
    * @var string|null
    *
-   * @see ::getInvalidNormalizedEntityToCreate()
+   * @see ::testPostIndividual()
    */
   protected static $labelFieldName = NULL;
 
@@ -1883,7 +1880,9 @@ abstract class ResourceTestBase extends BrowserTestBase {
     $parseable_valid_request_body = Json::encode($this->getPostDocument());
     /* $parseable_valid_request_body_2 = Json::encode($this->getNormalizedPostEntity()); */
     $parseable_invalid_request_body_missing_type = Json::encode($this->removeResourceTypeFromDocument($this->getPostDocument(), 'type'));
-    $parseable_invalid_request_body = Json::encode($this->makeNormalizationInvalid($this->getPostDocument(), 'label'));
+    if ($this->entity->getEntityType()->hasKey('label')) {
+      $parseable_invalid_request_body = Json::encode($this->makeNormalizationInvalid($this->getPostDocument(), 'label'));
+    }
     $parseable_invalid_request_body_2 = Json::encode(NestedArray::mergeDeep(['data' => ['id' => $this->randomMachineName(129)]], $this->getPostDocument()));
     $parseable_invalid_request_body_3 = Json::encode(NestedArray::mergeDeep(['data' => ['attributes' => ['field_rest_test' => $this->randomString()]]], $this->getPostDocument()));
     $parseable_invalid_request_body_4 = Json::encode(NestedArray::mergeDeep(['data' => ['attributes' => ['field_nonexistent' => $this->randomString()]]], $this->getPostDocument()));
@@ -1939,13 +1938,14 @@ abstract class ResourceTestBase extends BrowserTestBase {
     $response = $this->request('POST', $url, $request_options);
     $this->assertResourceErrorResponse(400, 'Resource object must include a "type".', $url, $response, FALSE);
 
-    $request_options[RequestOptions::BODY] = $parseable_invalid_request_body;
-
-    // DX: 422 when invalid entity: multiple values sent for single-value field.
-    $response = $this->request('POST', $url, $request_options);
-    $label_field = $this->entity->getEntityType()->hasKey('label') ? $this->entity->getEntityType()->getKey('label') : static::$labelFieldName;
-    $label_field_capitalized = $this->entity->getFieldDefinition($label_field)->getLabel();
-    $this->assertResourceErrorResponse(422, "$label_field: $label_field_capitalized: this field cannot hold more than 1 values.", NULL, $response, '/data/attributes/' . $label_field);
+    if ($this->entity->getEntityType()->hasKey('label')) {
+      $request_options[RequestOptions::BODY] = $parseable_invalid_request_body;
+      // DX: 422 when invalid entity: multiple values sent for single-value field.
+      $response = $this->request('POST', $url, $request_options);
+      $label_field = $this->entity->getEntityType()->getKey('label');
+      $label_field_capitalized = $this->entity->getFieldDefinition($label_field)->getLabel();
+      $this->assertResourceErrorResponse(422, "$label_field: $label_field_capitalized: this field cannot hold more than 1 values.", NULL, $response, '/data/attributes/' . $label_field);
+    }
 
     $request_options[RequestOptions::BODY] = $parseable_invalid_request_body_2;
 
@@ -2050,6 +2050,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
       // 500 when creating an entity with a duplicate UUID.
       $doc = $this->getModifiedEntityForPostTesting();
       $doc['data']['id'] = $uuid;
+      $label_field = $this->entity->getEntityType()->hasKey('label') ? $this->entity->getEntityType()->getKey('label') : static::$labelFieldName;
       $doc['data']['attributes'][$label_field] = [['value' => $this->randomMachineName()]];
       $request_options[RequestOptions::BODY] = Json::encode($doc);
 
@@ -2148,13 +2149,14 @@ abstract class ResourceTestBase extends BrowserTestBase {
     $response = $this->request('PATCH', $url, $request_options);
     $this->assertResourceErrorResponse(400, 'Syntax error', $url, $response, FALSE);
 
-    $request_options[RequestOptions::BODY] = $parseable_invalid_request_body;
-
     // DX: 422 when invalid entity: multiple values sent for single-value field.
-    $response = $this->request('PATCH', $url, $request_options);
-    $label_field = $this->entity->getEntityType()->hasKey('label') ? $this->entity->getEntityType()->getKey('label') : static::$labelFieldName;
-    $label_field_capitalized = $this->entity->getFieldDefinition($label_field)->getLabel();
-    $this->assertResourceErrorResponse(422, "$label_field: $label_field_capitalized: this field cannot hold more than 1 values.", NULL, $response, '/data/attributes/' . $label_field);
+    if ($this->entity->getEntityType()->hasKey('label')) {
+      $request_options[RequestOptions::BODY] = $parseable_invalid_request_body;
+      $response = $this->request('PATCH', $url, $request_options);
+      $label_field = $this->entity->getEntityType()->getKey('label');
+      $label_field_capitalized = $this->entity->getFieldDefinition($label_field)->getLabel();
+      $this->assertResourceErrorResponse(422, "$label_field: $label_field_capitalized: this field cannot hold more than 1 values.", NULL, $response, '/data/attributes/' . $label_field);
+    }
 
     $request_options[RequestOptions::BODY] = $parseable_invalid_request_body_2;
 
