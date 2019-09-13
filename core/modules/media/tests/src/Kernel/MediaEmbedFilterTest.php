@@ -4,6 +4,7 @@ namespace Drupal\Tests\media\Kernel;
 
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheableMetadata;
+use Drupal\Core\Entity\EntityDisplayRepositoryInterface;
 use Drupal\field\Entity\FieldConfig;
 
 /**
@@ -44,7 +45,7 @@ class MediaEmbedFilterTest extends MediaEmbedFilterTestBase {
    * Data provider for testBasics().
    */
   public function providerTestBasics() {
-    $expected_cacheability_full = (new CacheableMetadata())
+    $default_cacheability = (new CacheableMetadata())
       ->setCacheTags([
         '_media_test_filter_access:media:1',
         '_media_test_filter_access:user:2',
@@ -58,14 +59,14 @@ class MediaEmbedFilterTest extends MediaEmbedFilterTestBase {
       ->setCacheMaxAge(Cache::PERMANENT);
 
     return [
-      'data-entity-uuid only ⇒ default view mode "full" used' => [
+      'data-entity-uuid only ⇒ default view mode used' => [
         [
           'data-entity-type' => 'media',
           'data-entity-uuid' => static::EMBEDDED_ENTITY_UUID,
         ],
-        'full',
+        EntityDisplayRepositoryInterface::DEFAULT_DISPLAY_MODE,
         [],
-        $expected_cacheability_full,
+        $default_cacheability,
       ],
       'data-entity-uuid + data-view-mode=full ⇒ specified view mode used' => [
         [
@@ -75,7 +76,17 @@ class MediaEmbedFilterTest extends MediaEmbedFilterTestBase {
         ],
         'full',
         [],
-        $expected_cacheability_full,
+        $default_cacheability,
+      ],
+      'data-entity-uuid + data-view-mode=default ⇒ specified view mode used' => [
+        [
+          'data-entity-type' => 'media',
+          'data-entity-uuid' => static::EMBEDDED_ENTITY_UUID,
+          'data-view-mode' => EntityDisplayRepositoryInterface::DEFAULT_DISPLAY_MODE,
+        ],
+        EntityDisplayRepositoryInterface::DEFAULT_DISPLAY_MODE,
+        [],
+        $default_cacheability,
       ],
       'data-entity-uuid + data-view-mode=foobar ⇒ specified view mode used' => [
         [
@@ -103,12 +114,12 @@ class MediaEmbedFilterTest extends MediaEmbedFilterTestBase {
           'data-entity-type' => 'media',
           'data-entity-uuid' => static::EMBEDDED_ENTITY_UUID,
         ],
-        'full',
+        EntityDisplayRepositoryInterface::DEFAULT_DISPLAY_MODE,
         [
           'data-foo' => 'bar',
           'foo' => 'bar',
         ],
-        $expected_cacheability_full,
+        $default_cacheability,
       ],
     ];
   }
@@ -138,7 +149,7 @@ class MediaEmbedFilterTest extends MediaEmbedFilterTestBase {
       $this->assertEmpty($this->getRawContent());
     }
     else {
-      $this->assertCount(1, $this->cssSelect('div[data-media-embed-test-view-mode="full"]'));
+      $this->assertCount(1, $this->cssSelect('div[data-media-embed-test-view-mode="default"]'));
     }
 
     $this->assertSame($expected_cacheability->getCacheTags(), $result->getCacheTags());
@@ -375,7 +386,7 @@ class MediaEmbedFilterTest extends MediaEmbedFilterTestBase {
     // Render and verify the presence of the embedded entity 20 times.
     for ($i = 0; $i < 20; $i++) {
       $this->applyFilter($text);
-      $this->assertCount(1, $this->cssSelect('div[data-media-embed-test-view-mode="full"]'));
+      $this->assertCount(1, $this->cssSelect('div[data-media-embed-test-view-mode="default"]'));
     }
 
     // Render a 21st time, this is exceeding the recursion limit. The entity
@@ -399,7 +410,7 @@ class MediaEmbedFilterTest extends MediaEmbedFilterTestBase {
     $result = $this->processText($content, 'en', $filter_ids);
     $this->setRawContent($result->getProcessedText());
     $this->assertCount($expected_verification_success ? 1 : 0, $this->cssSelect($verification_selector));
-    $this->assertCount(1, $this->cssSelect('div[data-media-embed-test-view-mode="full"]'));
+    $this->assertCount(1, $this->cssSelect('div[data-media-embed-test-view-mode="default"]'));
     $this->assertSame([
       '_media_test_filter_access:media:1',
       '_media_test_filter_access:user:2',

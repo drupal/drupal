@@ -16,6 +16,7 @@ use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Template\Attribute;
 use Drupal\Core\Url;
 use Drupal\field\FieldConfigInterface;
+use Drupal\media\Plugin\media\Source\Image;
 use Drupal\media\Plugin\media\Source\OEmbedInterface;
 
 /**
@@ -507,4 +508,34 @@ function media_field_widget_form_alter(&$element, FormStateInterface $form_state
   if (!empty($element['#type']) && $element['#type'] == 'text_format') {
     $element['#attributes']['data-media-embed-host-entity-langcode'] = $context['items']->getLangcode();
   }
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function media_form_media_type_add_form_alter(array &$form, FormStateInterface $form_state, $form_id) {
+  $form['actions']['submit']['#submit'][] = '_media_type_add_form_submit';
+}
+
+/**
+ * Submit callback for media_type_add_form.
+ */
+function _media_type_add_form_submit(array &$form, FormStateInterface $form_state) {
+  $type = $form_state->getFormObject()->getEntity();
+
+  if (!is_a($type->getSource(), Image::class, TRUE)) {
+    return;
+  }
+
+  // Load the default entity view display.
+  $display = \Drupal::service('entity_display.repository')
+    ->getViewDisplay('media', $type->id());
+
+  // Remove all default components.
+  foreach (array_keys($display->getComponents()) as $name) {
+    $display->removeComponent($name);
+  }
+  $type->getSource()->prepareViewDisplay($type, $display);
+
+  $display->save();
 }

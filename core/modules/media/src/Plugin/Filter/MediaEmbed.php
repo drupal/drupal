@@ -29,7 +29,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *   description = @Translation("Embeds media items using a custom tag, <code>&lt;drupal-media&gt;</code>. If used in conjunction with the 'Align/Caption' filters, make sure this filter is configured to run after them."),
  *   type = Drupal\filter\Plugin\FilterInterface::TYPE_TRANSFORM_REVERSIBLE,
  *   settings = {
- *     "default_view_mode" = "full",
+ *     "default_view_mode" = "default",
  *   },
  *   weight = 100,
  * )
@@ -266,12 +266,15 @@ class MediaEmbed extends FilterBase implements ContainerFactoryPluginInterface, 
         $this->applyPerEmbedMediaOverrides($node, $media);
       }
 
-      $view_mode = $this->entityRepository->loadEntityByConfigTarget('entity_view_mode', "media.$view_mode_id");
-      if (!$view_mode) {
-        $this->loggerFactory->get('media')->error('During rendering of embedded media: the view mode "@view-mode-id" does not exist.', ['@view-mode-id' => $view_mode_id]);
+      $view_mode = NULL;
+      if ($view_mode_id !== EntityDisplayRepositoryInterface::DEFAULT_DISPLAY_MODE) {
+        $view_mode = $this->entityRepository->loadEntityByConfigTarget('entity_view_mode', "media.$view_mode_id");
+        if (!$view_mode) {
+          $this->loggerFactory->get('media')->error('During rendering of embedded media: the view mode "@view-mode-id" does not exist.', ['@view-mode-id' => $view_mode_id]);
+        }
       }
 
-      $build = $media && $view_mode
+      $build = $media && ($view_mode || $view_mode_id === EntityDisplayRepositoryInterface::DEFAULT_DISPLAY_MODE)
         ? $this->renderMedia($media, $view_mode_id, $langcode)
         : $this->renderMissingMediaIndicator();
 

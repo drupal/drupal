@@ -4,6 +4,7 @@ namespace Drupal\Tests\standard\Functional;
 
 use Drupal\Component\Utility\Html;
 use Drupal\media\Entity\MediaType;
+use Drupal\media\Plugin\media\Source\Image;
 use Drupal\Tests\SchemaCheckTestTrait;
 use Drupal\contact\Entity\ContactForm;
 use Drupal\Core\Url;
@@ -232,6 +233,7 @@ class StandardTest extends BrowserTestBase {
       'label' => 'Admin media',
     ]);
     $role->grantPermission('administer media');
+    $role->grantPermission('administer media display');
     $role->save();
     $this->adminUser->addRole($role->id());
     $this->adminUser->save();
@@ -256,6 +258,17 @@ class StandardTest extends BrowserTestBase {
       $date_field = $assert_session->fieldExists('Date', $form)->getOuterHtml();
       $published_checkbox = $assert_session->fieldExists('Published', $form)->getOuterHtml();
       $this->assertTrue(strpos($form_html, $published_checkbox) > strpos($form_html, $date_field));
+      if (is_a($media_type->getSource(), Image::class, TRUE)) {
+        // Assert the default entity view display is configured with an image
+        // style.
+        $this->drupalGet('/admin/structure/media/manage/' . $media_type->id() . '/display');
+        $assert_session->fieldValueEquals('fields[field_media_image][type]', 'image');
+        $assert_session->elementTextContains('css', 'tr[data-drupal-selector="edit-fields-field-media-image"]', 'Image style: Large (480×480)');
+        // By default for media types with an image source, only the image
+        // component should be enabled.
+        $assert_session->elementsCount('css', 'input[name$="_settings_edit"]', 1);
+      }
+
     }
   }
 

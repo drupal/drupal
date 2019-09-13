@@ -9,10 +9,13 @@ use Drupal\Core\Entity\Sql\SqlEntityStorageInterface;
 use Drupal\Core\File\Exception\FileException;
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Url;
+use Drupal\media\Entity\MediaType;
 use Drupal\media\MediaTypeInterface;
 use Drupal\media\Plugin\media\Source\OEmbedInterface;
 use Drupal\user\Entity\Role;
 use Drupal\user\RoleInterface;
+use Drupal\image\Plugin\Field\FieldType\ImageItem;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 
 /**
  * Implements hook_install().
@@ -118,6 +121,55 @@ function media_requirements($phase) {
         ];
       }
     }
+
+    // When a new media type with an image source is created we're configuring
+    // the default entity view display using the 'large' image style.
+    // Unfortunately, if a site builder has deleted the 'large' image style,
+    // we need some other image style to use, but at this point, we can't
+    // really know the site builder's intentions. So rather than do something
+    // surprising, we're leaving the embedded media without an image style and
+    // adding a warning that the site builder might want to add an image style.
+    // @see Drupal\media\Plugin\media\Source\Image::prepareViewDisplay
+    $module_handler = \Drupal::service('module_handler');
+    foreach (MediaType::loadMultiple() as $type) {
+      // Load the default display.
+      $display = \Drupal::service('entity_display.repository')
+        ->getViewDisplay('media', $type->id());
+
+      $source_field_definition = $type->getSource()->getSourceFieldDefinition($type);
+      if (!is_a($source_field_definition->getItemDefinition()->getClass(), ImageItem::class, TRUE)) {
+        continue;
+      }
+
+      $component = $display->getComponent($source_field_definition->getName());
+      if (empty($component) || $component['type'] !== 'image' || !empty($component['settings']['image_style'])) {
+        continue;
+      }
+
+      $action_item = '';
+      if ($module_handler->moduleExists('field_ui') && \Drupal::currentUser()->hasPermission('administer media display')) {
+        $url = Url::fromRoute('entity.entity_view_display.media.default', [
+          'media_type' => $type->id(),
+        ])->toString();
+        $action_item = new TranslatableMarkup('If you would like to change this, <a href=":display">add an image style to the %field_name field</a>.',
+          [
+            '%field_name' => $source_field_definition->label(),
+            ':display' => $url,
+          ]);
+      }
+      $requirements['media_default_image_style_' . $type->id()] = [
+        'title' => t('Media'),
+        'description' => new TranslatableMarkup('The default display for the %type media type is not currently using an image style on the %field_name field. Not using an image style can lead to much larger file downloads. @action_item',
+          [
+            '%field_name' => $source_field_definition->label(),
+            '@action_item' => $action_item,
+            '%type' => $type->label(),
+          ]
+        ),
+        'severity' => REQUIREMENT_WARNING,
+      ];
+    }
+
   }
 
   return $requirements;
