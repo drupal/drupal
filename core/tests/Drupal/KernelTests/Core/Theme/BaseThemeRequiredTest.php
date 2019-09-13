@@ -5,16 +5,14 @@ namespace Drupal\KernelTests\Core\Theme;
 use Drupal\KernelTests\KernelTestBase;
 
 /**
- * Tests the behavior of the Stable theme.
+ * Tests the behavior of the `base theme` key.
  *
  * @group Theme
  */
-class StableThemeTest extends KernelTestBase {
+class BaseThemeRequiredTest extends KernelTestBase {
 
   /**
-   * Modules to install.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   public static $modules = ['system'];
 
@@ -40,18 +38,6 @@ class StableThemeTest extends KernelTestBase {
 
     $this->themeInstaller = $this->container->get('theme_installer');
     $this->themeManager = $this->container->get('theme.manager');
-  }
-
-  /**
-   * Ensures Stable is used by default when no base theme has been defined.
-   */
-  public function testStableIsDefault() {
-    $this->themeInstaller->install(['test_stable']);
-    $this->config('system.theme')->set('default', 'test_stable')->save();
-    $theme = $this->themeManager->getActiveTheme();
-    $base_themes = $theme->getBaseThemeExtensions();
-    $base_theme = reset($base_themes);
-    $this->assertTrue($base_theme->getName() == 'stable', "Stable theme is the base theme if a theme hasn't decided to opt out.");
   }
 
   /**

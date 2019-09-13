@@ -1,5 +1,6 @@
 name: 'Theme test with semver core version'
 type: theme
+base theme: stable
 description: 'Test theme which has semver core version.'
 version: VERSION
 core_version_requirement: ^8 || ^9

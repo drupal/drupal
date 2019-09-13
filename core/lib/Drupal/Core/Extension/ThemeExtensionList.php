@@ -22,7 +22,6 @@ class ThemeExtensionList extends ExtensionList {
    */
   protected $defaults = [
     'engine' => 'twig',
-    'base theme' => 'stable',
     'regions' => [
       'sidebar_first' => 'Left sidebar',
       'sidebar_second' => 'Right sidebar',
@@ -247,6 +246,23 @@ class ThemeExtensionList extends ExtensionList {
    */
   protected function createExtensionInfo(Extension $extension) {
     $info = parent::createExtensionInfo($extension);
+
+    // In the past, Drupal used to default to the `stable` theme as the base
+    // theme. Explicitly opting out by specifying `base theme: false` was (and
+    // still is) possible. However, defaulting to `base theme: stable` prevents
+    // automatic updates to the next major version of Drupal, since each major
+    // version may have a different version of "the stable theme", for example:
+    // - for Drupal 8: `stable`
+    // - for Drupal 9: `stable9`
+    // - for Drupal 10: `stable10`
+    // - et cetera
+    // It is impossible to reliably determine which should be used by default,
+    // hence we now require the base theme to be explicitly specified.
+    if (!isset($info['base theme'])) {
+      @trigger_error(sprintf('There is no `base theme` property specified in the %s.info.yml file. The optionality of the `base theme` property is deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. All Drupal 8 themes must add `base theme: stable` to their *.info.yml file for them to continue to work as-is in future versions of Drupal. Drupal 9 requires the `base theme` property to be specified. See https://www.drupal.org/node/3066038', $extension->getName()), E_USER_DEPRECATED);
+      $info['base theme'] = 'stable';
+    }
+
     // Remove the default Stable base theme when 'base theme: false' is set in
     // a theme .info.yml file.
     if ($info['base theme'] === FALSE) {

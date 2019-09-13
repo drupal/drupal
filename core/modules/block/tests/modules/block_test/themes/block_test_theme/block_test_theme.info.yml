@@ -1,5 +1,6 @@
 name: 'Block test theme'
 type: theme
+base theme: stable
 description: 'Theme for testing the block system'
 version: VERSION
 core: 8.x

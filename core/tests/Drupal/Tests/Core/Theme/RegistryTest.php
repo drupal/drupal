@@ -116,7 +116,7 @@ class RegistryTest extends UnitTestCase {
 
     $test_stable = new ActiveTheme([
       'name' => 'test_stable',
-      'path' => 'core/modules/system/tests/themes/test_stable/test_stable.info.yml',
+      'path' => 'core/tests/fixtures/test_stable/test_stable.info.yml',
       'engine' => 'twig',
       'owner' => 'twig',
       'stylesheets_remove' => [],
@@ -133,7 +133,7 @@ class RegistryTest extends UnitTestCase {
 
     // Include the module and theme files so that hook_theme can be called.
     include_once $this->root . '/core/modules/system/tests/modules/theme_test/theme_test.module';
-    include_once $this->root . '/core/modules/system/tests/themes/test_stable/test_stable.theme';
+    include_once $this->root . '/core/tests/fixtures/test_stable/test_stable.theme';
     $this->moduleHandler->expects($this->exactly(2))
       ->method('getImplementations')
       ->with('theme')
