@@ -42,7 +42,7 @@
         "stack/builder": "^1.0",
         "egulias/email-validator": "^2.0",
         "masterminds/html5": "^2.1",
-        "symfony/psr-http-message-bridge": "^1.0",
+        "symfony/psr-http-message-bridge": "^1.1.2",
         "zendframework/zend-diactoros": "^1.1",
         "composer/semver": "^1.0",
         "paragonie/random_compat": "^1.0|^2.0|^9.99.99",
