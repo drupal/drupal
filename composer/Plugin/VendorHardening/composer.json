@@ -15,7 +15,6 @@
   },
   "require": {
     "php": ">=7.0.8",
-    "composer-plugin-api": "^1.1",
-    "drupal/core-file-security": "^8.8"
+    "composer-plugin-api": "^1.1"
   }
 }

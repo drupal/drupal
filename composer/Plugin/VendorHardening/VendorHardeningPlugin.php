@@ -11,7 +11,6 @@ use Composer\Script\ScriptEvents;
 use Composer\Util\Filesystem;
 use Composer\Script\Event;
 use Composer\Installer\PackageEvents;
-use Drupal\Component\FileSecurity\FileSecurity;
 
 /**
  * A Composer plugin to clean out your project's vendor directory.
