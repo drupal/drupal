@@ -7,6 +7,7 @@
 
 namespace Drupal\Tests\migrate\Unit;
 
+use Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException;
 use Drupal\migrate\Plugin\MigrationInterface;
 use Drupal\migrate\Plugin\Migration;
 use Drupal\migrate\Exception\RequirementsException;
@@ -112,6 +113,75 @@ class MigrationTest extends UnitTestCase {
     $migration->checkRequirements();
   }
 
+  /**
+   * Tests valid migration dependencies configuration returns expected values.
+   *
+   * @param array|null $source
+   *   The migration dependencies configuration being tested.
+   * @param array $expected_value
+   *   The migration dependencies configuration array expected.
+   *
+   * @covers ::getMigrationDependencies
+   * @dataProvider getValidMigrationDependenciesProvider
+   *
+   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+   */
+  public function testMigrationDependenciesWithValidConfig($source, array $expected_value) {
+    $migration = new TestMigration();
+    if (!is_null($source)) {
+      $migration->set('migration_dependencies', $source);
+    }
+    $this->assertSame($migration->getMigrationDependencies(), $expected_value);
+  }
+
+  /**
+   * Tests that getting migration dependencies fails with invalid configuration.
+   *
+   * @covers ::getMigrationDependencies
+   */
+  public function testMigrationDependenciesWithInvalidConfig() {
+    $migration = new TestMigration();
+
+    // Set the plugin ID to test the returned message.
+    $plugin_id = 'test_migration';
+    $migration->setPluginId($plugin_id);
+
+    // Migration dependencies expects ['optional' => []] or ['required' => []]].
+    $migration->set('migration_dependencies', ['test_migration_dependency']);
+
+    $this->expectException(InvalidPluginDefinitionException::class);
+    $this->expectExceptionMessage("Invalid migration dependencies configuration for migration {$plugin_id}");
+    $migration->getMigrationDependencies();
+  }
+
+  /**
+   * Provides data for valid migration configuration test.
+   */
+  public function getValidMigrationDependenciesProvider() {
+    return [
+      [
+        'source' => NULL,
+        'expected_value' => ['required' => [], 'optional' => []],
+      ],
+      [
+        'source' => [],
+        'expected_value' => ['required' => [], 'optional' => []],
+      ],
+      [
+        'source' => ['required' => ['test_migration']],
+        'expected_value' => ['required' => ['test_migration'], 'optional' => []],
+      ],
+      [
+        'source' => ['optional' => ['test_migration']],
+        'expected_value' => ['optional' => ['test_migration'], 'required' => []],
+      ],
+      [
+        'source' => ['required' => ['req_test_migration'], 'optional' => ['opt_test_migration']],
+        'expected_value' => ['required' => ['req_test_migration'], 'optional' => ['opt_test_migration']],
+      ],
+    ];
+  }
+
 }
 
 /**
@@ -123,6 +193,16 @@ class TestMigration extends Migration {
    * Constructs an instance of TestMigration object.
    */
   public function __construct() {
+  }
+
+  /**
+   * Sets the migration ID (machine name).
+   *
+   * @param string $plugin_id
+   *   The plugin_id of the plugin instance.
+   */
+  public function setPluginId($plugin_id) {
+    $this->pluginId = $plugin_id;
   }
 
   /**
