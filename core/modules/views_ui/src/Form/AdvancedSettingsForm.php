@@ -71,10 +71,10 @@ class AdvancedSettingsForm extends ConfigFormBase {
     if (!empty($options)) {
       $form['extenders'] = [
         '#type' => 'details',
+        '#title' => $this->t('Display extenders'),
         '#open' => TRUE,
       ];
       $form['extenders']['display_extenders'] = [
-        '#title' => $this->t('Display extenders'),
         '#default_value' => array_filter($config->get('display_extenders')),
         '#options' => $options,
         '#type' => 'checkboxes',
