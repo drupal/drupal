@@ -42,6 +42,24 @@ class MigrationTest extends KernelTestBase {
   }
 
   /**
+   * Tests Migration::getDestinationPlugin()
+   *
+   * @covers ::getDestinationPlugin
+   */
+  public function testGetProcessPluginsExceptionMessage() {
+    // Test with an invalid process pipeline.
+    $plugin_definition = [
+      'process' => [
+        'dest1' => 123,
+      ],
+    ];
+    $migration = \Drupal::service('plugin.manager.migration')->createStubMigration($plugin_definition);
+    $this->expectException(MigrateException::class);
+    $this->expectExceptionMessage("Process configuration for 'dest1' must be an array");
+    $migration->getProcessPlugins();
+  }
+
+  /**
    * Tests Migration::getMigrationDependencies()
    *
    * @covers ::getMigrationDependencies
