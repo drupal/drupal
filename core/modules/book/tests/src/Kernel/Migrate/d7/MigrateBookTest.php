@@ -59,6 +59,11 @@ class MigrateBookTest extends MigrateDrupal7TestBase {
     $this->assertSame('6', $tree['49990 is - The thing about Firefly 4']['below']['50000 Comments are closed :-( 6']['link']['nid']);
     $this->assertSame('2', $tree['49990 is - The thing about Firefly 4']['below']['50000 Comments are closed :-( 6']['below']['50000 The thing about Deep Space 9 2']['link']['nid']);
     $this->assertSame([], $tree['49990 is - The thing about Firefly 4']['below']['50000 Comments are closed :-( 6']['below']['50000 The thing about Deep Space 9 2']['below']);
+
+    // Set the d7_book migration to update and re run the migration.
+    $id_map = $this->migration->getIdMap();
+    $id_map->prepareUpdate();
+    $this->executeMigration('d7_book');
   }
 
 }

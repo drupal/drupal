@@ -25,7 +25,16 @@ class Book extends EntityContentBase {
    * {@inheritdoc}
    */
   protected function updateEntity(EntityInterface $entity, Row $row) {
-    $entity->book = $row->getDestinationProperty('book');
+    if ($entity->book) {
+      $book = $row->getDestinationProperty('book');
+      foreach ($book as $key => $value) {
+        $entity->book[$key] = $value;
+      }
+    }
+    else {
+      $entity->book = $row->getDestinationProperty('book');
+    }
+    return parent::updateEntity($entity, $row);
   }
 
 }
