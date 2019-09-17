@@ -33,7 +33,6 @@ class WorkspaceAccessTest extends KernelTestBase {
     $this->installSchema('system', ['sequences']);
 
     $this->installEntitySchema('workspace');
-    $this->installEntitySchema('workspace_association');
     $this->installEntitySchema('user');
 
     // User 1.

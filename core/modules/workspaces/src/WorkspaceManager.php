@@ -84,6 +84,13 @@ class WorkspaceManager implements WorkspaceManagerInterface {
   protected $classResolver;
 
   /**
+   * The workspace association service.
+   *
+   * @var \Drupal\workspaces\WorkspaceAssociationInterface
+   */
+  protected $workspaceAssociation;
+
+  /**
    * The workspace negotiator service IDs.
    *
    * @var array
@@ -114,10 +121,12 @@ class WorkspaceManager implements WorkspaceManagerInterface {
    *   A logger instance.
    * @param \Drupal\Core\DependencyInjection\ClassResolverInterface $class_resolver
    *   The class resolver.
+   * @param \Drupal\workspaces\WorkspaceAssociationInterface $workspace_association
+   *   The workspace association service.
    * @param array $negotiator_ids
    *   The workspace negotiator service IDs.
    */
-  public function __construct(RequestStack $request_stack, EntityTypeManagerInterface $entity_type_manager, MemoryCacheInterface $entity_memory_cache, AccountProxyInterface $current_user, StateInterface $state, LoggerInterface $logger, ClassResolverInterface $class_resolver, array $negotiator_ids) {
+  public function __construct(RequestStack $request_stack, EntityTypeManagerInterface $entity_type_manager, MemoryCacheInterface $entity_memory_cache, AccountProxyInterface $current_user, StateInterface $state, LoggerInterface $logger, ClassResolverInterface $class_resolver, WorkspaceAssociationInterface $workspace_association, array $negotiator_ids) {
     $this->requestStack = $request_stack;
     $this->entityTypeManager = $entity_type_manager;
     $this->entityMemoryCache = $entity_memory_cache;
@@ -125,6 +134,7 @@ class WorkspaceManager implements WorkspaceManagerInterface {
     $this->state = $state;
     $this->logger = $logger;
     $this->classResolver = $class_resolver;
+    $this->workspaceAssociation = $workspace_association;
     $this->negotiatorIds = $negotiator_ids;
   }
 
@@ -305,67 +315,35 @@ class WorkspaceManager implements WorkspaceManagerInterface {
 
     $batch_size = Settings::get('entity_update_batch_size', 50);
 
-    /** @var \Drupal\workspaces\WorkspaceAssociationStorageInterface $workspace_association_storage */
-    $workspace_association_storage = $this->entityTypeManager->getStorage('workspace_association');
-
     // Get the first deleted workspace from the list and delete the revisions
-    // associated with it, along with the workspace_association entries.
+    // associated with it, along with the workspace association records.
     $workspace_id = reset($deleted_workspace_ids);
-    $workspace_association_ids = $this->getWorkspaceAssociationRevisionsToPurge($workspace_id, $batch_size);
+    $tracked_entities = $this->workspaceAssociation->getTrackedEntities($workspace_id);
 
-    if ($workspace_association_ids) {
-      $workspace_associations = $workspace_association_storage->loadMultipleRevisions(array_keys($workspace_association_ids));
-      foreach ($workspace_associations as $workspace_association) {
-        $associated_entity_storage = $this->entityTypeManager->getStorage($workspace_association->target_entity_type_id->value);
+    $count = 1;
+    foreach ($tracked_entities as $entity_type_id => $entities) {
+      $associated_entity_storage = $this->entityTypeManager->getStorage($entity_type_id);
+      $associated_revisions = $this->workspaceAssociation->getAssociatedRevisions($workspace_id, $entity_type_id);
+      foreach (array_keys($associated_revisions) as $revision_id) {
+        if ($count > $batch_size) {
+          continue 2;
+        }
+
         // Delete the associated entity revision.
-        if ($entity = $associated_entity_storage->loadRevision($workspace_association->target_entity_revision_id->value)) {
-          if ($entity->isDefaultRevision()) {
-            $entity->delete();
-          }
-          else {
-            $associated_entity_storage->deleteRevision($workspace_association->target_entity_revision_id->value);
-          }
-        }
-
-        // Delete the workspace_association revision.
-        if ($workspace_association->isDefaultRevision()) {
-          $workspace_association->delete();
-        }
-        else {
-          $workspace_association_storage->deleteRevision($workspace_association->getRevisionId());
-        }
+        $associated_entity_storage->deleteRevision($revision_id);
+        $count++;
       }
+      // Delete the workspace association entries.
+      $this->workspaceAssociation->deleteAssociations($workspace_id, $entity_type_id, $entities);
     }
 
     // The purging operation above might have taken a long time, so we need to
-    // request a fresh list of workspace association IDs. If it is empty, we can
-    // go ahead and remove the deleted workspace ID entry from state.
-    if (!$this->getWorkspaceAssociationRevisionsToPurge($workspace_id, $batch_size)) {
+    // request a fresh list of tracked entities. If it is empty, we can go ahead
+    // and remove the deleted workspace ID entry from state.
+    if (!$this->workspaceAssociation->getTrackedEntities($workspace_id)) {
       unset($deleted_workspace_ids[$workspace_id]);
       $this->state->set('workspace.deleted', $deleted_workspace_ids);
     }
-  }
-
-  /**
-   * Gets a list of workspace association IDs to purge.
-   *
-   * @param string $workspace_id
-   *   The ID of the workspace.
-   * @param int $batch_size
-   *   The maximum number of records that will be purged.
-   *
-   * @return array
-   *   An array of workspace association IDs, keyed by their revision IDs.
-   */
-  protected function getWorkspaceAssociationRevisionsToPurge($workspace_id, $batch_size) {
-    return $this->entityTypeManager->getStorage('workspace_association')
-      ->getQuery()
-      ->allRevisions()
-      ->accessCheck(FALSE)
-      ->condition('workspace', $workspace_id)
-      ->sort('revision_id', 'ASC')
-      ->range(0, $batch_size)
-      ->execute();
   }
 
 }

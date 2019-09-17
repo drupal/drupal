@@ -35,7 +35,7 @@ trait WorkspaceTestTrait {
     $this->workspaceManager = \Drupal::service('workspaces.manager');
 
     $this->installEntitySchema('workspace');
-    $this->installEntitySchema('workspace_association');
+    $this->installSchema('workspaces', ['workspace_association']);
 
     // Create two workspaces by default, 'live' and 'stage'.
     $this->workspaces['live'] = Workspace::create(['id' => 'live']);
@@ -62,6 +62,35 @@ trait WorkspaceTestTrait {
     // Switch the test runner's context to the specified workspace.
     $workspace = $this->entityTypeManager->getStorage('workspace')->load($workspace_id);
     \Drupal::service('workspaces.manager')->setActiveWorkspace($workspace);
+  }
+
+  /**
+   * Returns all the revisions which are not associated with any workspace.
+   *
+   * @param string $entity_type_id
+   *   An entity type ID to find revisions for.
+   * @param int[]|string[]|null $entity_ids
+   *   (optional) An array of entity IDs to filter the results by. Defaults to
+   *   NULL.
+   *
+   * @return array
+   *   An array of entity IDs, keyed by revision IDs.
+   */
+  protected function getUnassociatedRevisions($entity_type_id, $entity_ids = NULL) {
+    $entity_type = \Drupal::entityTypeManager()->getDefinition($entity_type_id);
+
+    $query = \Drupal::entityTypeManager()
+      ->getStorage($entity_type_id)
+      ->getQuery()
+      ->allRevisions()
+      ->accessCheck(FALSE)
+      ->notExists($entity_type->get('revision_metadata_keys')['workspace']);
+
+    if ($entity_ids) {
+      $query->condition($entity_type->getKey('id'), $entity_ids, 'IN');
+    }
+
+    return $query->execute();
   }
 
 }
