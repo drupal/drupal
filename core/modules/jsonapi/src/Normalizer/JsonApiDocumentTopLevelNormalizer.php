@@ -309,7 +309,7 @@ class JsonApiDocumentTopLevelNormalizer extends NormalizerBase implements Denorm
         // random salt and the link href. This ensures that the key is non-
         // deterministic while letting use deduplicate the links by their
         // href. The salt is *not* used for any cryptographic reason.
-        $link_key = 'item:' . static::getLinkHash($link_hash_salt, $error['links']['via']['href']);
+        $link_key = 'item--' . static::getLinkHash($link_hash_salt, $error['links']['via']['href']);
         $omission_links['links'][$link_key] = [
           'href' => $error['links']['via']['href'],
           'meta' => [

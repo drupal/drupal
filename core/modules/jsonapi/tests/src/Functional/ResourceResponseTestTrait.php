@@ -594,7 +594,7 @@ trait ResourceResponseTestTrait {
       ],
     ];
     foreach ($errors as $error) {
-      $omitted['links']['item:' . substr(Crypt::hashBase64($error['links']['via']['href']), 0, 7)] = [
+      $omitted['links']['item--' . substr(Crypt::hashBase64($error['links']['via']['href']), 0, 7)] = [
         'href' => $error['links']['via']['href'],
         'meta' => [
           'detail' => $error['detail'],
@@ -658,7 +658,7 @@ trait ResourceResponseTestTrait {
     $reindexed = [];
     $links = array_diff_key($omitted['links'], array_flip(['help']));
     foreach (array_values($links) as $index => $link) {
-      $reindexed['item:' . $index] = $link;
+      $reindexed['item--' . $index] = $link;
     }
     $omitted['links'] = ['help' => $help] + $reindexed;
   }
