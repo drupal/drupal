@@ -11,7 +11,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
-use Symfony\Component\Serializer\SerializerInterface;
 
 /**
  * Response subscriber that validates a JSON:API response.
@@ -27,13 +26,6 @@ use Symfony\Component\Serializer\SerializerInterface;
  * @see \Drupal\rest\EventSubscriber\ResourceResponseSubscriber
  */
 class ResourceResponseValidator implements EventSubscriberInterface {
-
-  /**
-   * The serializer.
-   *
-   * @var \Symfony\Component\Serializer\SerializerInterface
-   */
-  protected $serializer;
 
   /**
    * The JSON:API logger channel.
@@ -68,8 +60,6 @@ class ResourceResponseValidator implements EventSubscriberInterface {
   /**
    * Constructs a ResourceResponseValidator object.
    *
-   * @param \Symfony\Component\Serializer\SerializerInterface $serializer
-   *   The serializer.
    * @param \Psr\Log\LoggerInterface $logger
    *   The JSON:API logger channel.
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
@@ -77,8 +67,7 @@ class ResourceResponseValidator implements EventSubscriberInterface {
    * @param string $app_root
    *   The application's root file path.
    */
-  public function __construct(SerializerInterface $serializer, LoggerInterface $logger, ModuleHandlerInterface $module_handler, $app_root) {
-    $this->serializer = $serializer;
+  public function __construct(LoggerInterface $logger, ModuleHandlerInterface $module_handler, $app_root) {
     $this->logger = $logger;
     $this->moduleHandler = $module_handler;
     $this->appRoot = $app_root;
