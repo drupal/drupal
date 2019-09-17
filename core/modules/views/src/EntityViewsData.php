@@ -101,6 +101,10 @@ class EntityViewsData implements EntityHandlerInterface, EntityViewsDataInterfac
     $this->storage = $storage_controller;
     $this->moduleHandler = $module_handler;
     $this->setStringTranslation($translation_manager);
+    if (!$entity_field_manager) {
+      @trigger_error('Calling EntityViewsData::__construct() with the $entity_field_manager argument is supported in drupal:8.8.0 and will be required before drupal:9.0.0. See https://www.drupal.org/node/2549139.', E_USER_DEPRECATED);
+      $entity_field_manager = \Drupal::service('entity_field.manager');
+    }
     $this->entityFieldManager = $entity_field_manager;
   }
 
