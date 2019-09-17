@@ -138,7 +138,7 @@ system.cron:
 system.admin_compact_page:
   path: '/admin/compact/{mode}'
   defaults:
-    _controller: 'Drupal\system\Controller\SystemController::compactPage'
+    _controller: '\Drupal\system\Controller\SystemController::compactPage'
     mode: 'off'
   requirements:
     _permission: 'access administration pages'
@@ -153,7 +153,7 @@ system.machine_name_transliterate:
 system.site_information_settings:
   path: '/admin/config/system/site-information'
   defaults:
-    _form: 'Drupal\system\Form\SiteInformationForm'
+    _form: '\Drupal\system\Form\SiteInformationForm'
     _title: 'Basic site settings'
   requirements:
     _permission: 'administer site configuration'
@@ -161,7 +161,7 @@ system.site_information_settings:
 system.cron_settings:
   path: '/admin/config/system/cron'
   defaults:
-    _form: 'Drupal\system\Form\CronForm'
+    _form: '\Drupal\system\Form\CronForm'
     _title: 'Cron'
   requirements:
     _permission: 'administer site configuration'
@@ -169,7 +169,7 @@ system.cron_settings:
 system.logging_settings:
   path: '/admin/config/development/logging'
   defaults:
-    _form: 'Drupal\system\Form\LoggingForm'
+    _form: '\Drupal\system\Form\LoggingForm'
     _title: 'Logging and errors'
   requirements:
     _permission: 'administer site configuration'
@@ -177,7 +177,7 @@ system.logging_settings:
 system.performance_settings:
   path: '/admin/config/development/performance'
   defaults:
-    _form: 'Drupal\system\Form\PerformanceForm'
+    _form: '\Drupal\system\Form\PerformanceForm'
     _title: 'Performance'
   requirements:
     _permission: 'administer site configuration'
@@ -185,7 +185,7 @@ system.performance_settings:
 system.file_system_settings:
   path: '/admin/config/media/file-system'
   defaults:
-    _form: 'Drupal\system\Form\FileSystemForm'
+    _form: '\Drupal\system\Form\FileSystemForm'
     _title: 'File system'
   requirements:
     _permission: 'administer site configuration'
@@ -193,7 +193,7 @@ system.file_system_settings:
 system.rss_feeds_settings:
   path: '/admin/config/services/rss-publishing'
   defaults:
-    _form: 'Drupal\system\Form\RssFeedsForm'
+    _form: '\Drupal\system\Form\RssFeedsForm'
     _title: 'RSS publishing'
   requirements:
     _permission: 'administer site configuration'
@@ -201,7 +201,7 @@ system.rss_feeds_settings:
 system.regional_settings:
   path: '/admin/config/regional/settings'
   defaults:
-    _form: 'Drupal\system\Form\RegionalForm'
+    _form: '\Drupal\system\Form\RegionalForm'
     _title: 'Regional settings'
   requirements:
     _permission: 'administer site configuration'
@@ -209,7 +209,7 @@ system.regional_settings:
 system.image_toolkit_settings:
   path: '/admin/config/media/image-toolkit'
   defaults:
-    _form: 'Drupal\system\Form\ImageToolkitForm'
+    _form: '\Drupal\system\Form\ImageToolkitForm'
     _title: 'Image toolkit'
   requirements:
     _permission: 'administer site configuration'
@@ -217,7 +217,7 @@ system.image_toolkit_settings:
 system.site_maintenance_mode:
   path: '/admin/config/development/maintenance'
   defaults:
-    _form: 'Drupal\system\Form\SiteMaintenanceModeForm'
+    _form: '\Drupal\system\Form\SiteMaintenanceModeForm'
     _title: 'Maintenance mode'
   requirements:
     _permission: 'administer site configuration'
@@ -269,14 +269,14 @@ system.modules_list:
   defaults:
     _title: 'Extend'
     _title_context: 'With components'
-    _form: 'Drupal\system\Form\ModulesListForm'
+    _form: '\Drupal\system\Form\ModulesListForm'
   requirements:
     _permission: 'administer modules'
 
 system.modules_list_confirm:
   path: '/admin/modules/list/confirm'
   defaults:
-    _form: 'Drupal\system\Form\ModulesListConfirmForm'
+    _form: '\Drupal\system\Form\ModulesListConfirmForm'
     _title: 'Some required modules must be enabled'
   requirements:
     _permission: 'administer modules'
@@ -284,7 +284,7 @@ system.modules_list_confirm:
 system.modules_list_experimental_confirm:
   path: '/admin/modules/list/confirm-experimental'
   defaults:
-    _form: 'Drupal\system\Form\ModulesListExperimentalConfirmForm'
+    _form: '\Drupal\system\Form\ModulesListExperimentalConfirmForm'
     _title: 'Experimental modules'
   requirements:
     _permission: 'administer modules'
@@ -292,7 +292,7 @@ system.modules_list_experimental_confirm:
 system.theme_uninstall:
   path: '/admin/appearance/uninstall'
   defaults:
-    _controller: 'Drupal\system\Controller\ThemeController::uninstall'
+    _controller: '\Drupal\system\Controller\ThemeController::uninstall'
   requirements:
     _permission: 'administer themes'
     _csrf_token: 'TRUE'
@@ -300,7 +300,7 @@ system.theme_uninstall:
 system.theme_install:
   path: '/admin/appearance/install'
   defaults:
-    _controller: 'Drupal\system\Controller\ThemeController::install'
+    _controller: '\Drupal\system\Controller\ThemeController::install'
   requirements:
     _permission: 'administer themes'
     _csrf_token: 'TRUE'
@@ -316,7 +316,7 @@ system.status:
 system.php:
   path: '/admin/reports/status/php'
   defaults:
-    _controller: 'Drupal\system\Controller\SystemInfoController::php'
+    _controller: '\Drupal\system\Controller\SystemInfoController::php'
   requirements:
     _permission: 'administer site configuration'
   # This page should not be treated as administrative since it outputs its own
@@ -335,7 +335,7 @@ system.admin_index:
 system.files:
   path: '/system/files/{scheme}'
   defaults:
-    _controller: 'Drupal\system\FileDownloadController::download'
+    _controller: '\Drupal\system\FileDownloadController::download'
     scheme: private
   requirements:
     _access: 'TRUE'
@@ -343,7 +343,7 @@ system.files:
 system.private_file_download:
   path: '/system/files/{filepath}'
   defaults:
-    _controller: 'Drupal\system\FileDownloadController::download'
+    _controller: '\Drupal\system\FileDownloadController::download'
   requirements:
     # Permissive regex to allow slashes in filepath see
     # http://symfony.com/doc/current/cookbook/routing/slash_in_parameter.html
@@ -418,7 +418,7 @@ system.theme_settings_theme:
 system.modules_uninstall:
   path: '/admin/modules/uninstall'
   defaults:
-    _form: 'Drupal\system\Form\ModulesUninstallForm'
+    _form: '\Drupal\system\Form\ModulesUninstallForm'
     _title: 'Uninstall'
   requirements:
     _permission: 'administer modules'
@@ -426,7 +426,7 @@ system.modules_uninstall:
 system.modules_uninstall_confirm:
   path: '/admin/modules/uninstall/confirm'
   defaults:
-    _form: 'Drupal\system\Form\ModulesUninstallConfirmForm'
+    _form: '\Drupal\system\Form\ModulesUninstallConfirmForm'
     _title: 'Confirm uninstall'
   requirements:
     _permission: 'administer modules'

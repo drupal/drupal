@@ -1,12 +1,12 @@
 file.test:
   path: '/file-test/upload'
   defaults:
-    _form: 'Drupal\file_test\Form\FileTestForm'
+    _form: '\Drupal\file_test\Form\FileTestForm'
   requirements:
     _access: 'TRUE'
 file.save_upload_from_form_test:
   path: '/file-test/save_upload_from_form_test'
   defaults:
-    _form: 'Drupal\file_test\Form\FileTestSaveUploadFromForm'
+    _form: '\Drupal\file_test\Form\FileTestSaveUploadFromForm'
   requirements:
     _access: 'TRUE'

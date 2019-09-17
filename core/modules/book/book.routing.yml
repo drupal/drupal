@@ -46,7 +46,7 @@ entity.node.book_outline_form:
 book.admin_edit:
   path: '/admin/structure/book/{node}'
   defaults:
-    _form: 'Drupal\book\Form\BookAdminEditForm'
+    _form: '\Drupal\book\Form\BookAdminEditForm'
     _title: 'Re-order book pages and change titles'
   requirements:
     _permission: 'administer book outlines'

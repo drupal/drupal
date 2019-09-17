@@ -1,7 +1,7 @@
 locale.settings:
   path: '/admin/config/regional/translate/settings'
   defaults:
-    _form: 'Drupal\locale\Form\LocaleSettingsForm'
+    _form: '\Drupal\locale\Form\LocaleSettingsForm'
     _title: 'Interface translation settings'
   requirements:
     _permission: 'translate interface'
@@ -9,7 +9,7 @@ locale.settings:
 locale.check_translation:
   path: '/admin/reports/translations/check'
   defaults:
-    _controller: 'Drupal\locale\Controller\LocaleController::checkTranslation'
+    _controller: '\Drupal\locale\Controller\LocaleController::checkTranslation'
   requirements:
     _permission: 'translate interface'
 

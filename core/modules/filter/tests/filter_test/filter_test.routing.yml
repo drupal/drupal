@@ -3,6 +3,6 @@ filter_text.text_format:
   path: '/filter-test/text-format'
   defaults:
     _title: 'Text format test forms'
-    _form: 'Drupal\filter_test\Form\FilterTestFormatForm'
+    _form: '\Drupal\filter_test\Form\FilterTestFormatForm'
   requirements:
     _access: 'TRUE'

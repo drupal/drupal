@@ -137,6 +137,6 @@ entity.node_type.delete_form:
 node.configure_rebuild_confirm:
   path: '/admin/reports/status/rebuild'
   defaults:
-    _form: 'Drupal\node\Form\RebuildPermissionsForm'
+    _form: '\Drupal\node\Form\RebuildPermissionsForm'
   requirements:
     _permission: 'access administration pages'

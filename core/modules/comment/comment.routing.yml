@@ -95,7 +95,7 @@ comment.new_comments_node_links:
 comment.node_redirect:
   path: '/comment/{node}/reply'
   defaults:
-    _controller: 'Drupal\comment\Controller\CommentController::redirectNode'
+    _controller: '\Drupal\comment\Controller\CommentController::redirectNode'
   requirements:
     _entity_access: 'node.view'
     _module_dependencies: 'node'

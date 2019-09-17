@@ -16,7 +16,7 @@ menu_ui.parent_options_js:
 menu_ui.link_edit:
   path: '/admin/structure/menu/link/{menu_link_plugin}/edit'
   defaults:
-    _form: 'Drupal\menu_ui\Form\MenuLinkEditForm'
+    _form: '\Drupal\menu_ui\Form\MenuLinkEditForm'
     _title: 'Edit menu link'
   options:
     parameters:
@@ -28,7 +28,7 @@ menu_ui.link_edit:
 menu_ui.link_reset:
   path: '/admin/structure/menu/link/{menu_link_plugin}/reset'
   defaults:
-    _form: 'Drupal\menu_ui\Form\MenuLinkResetForm'
+    _form: '\Drupal\menu_ui\Form\MenuLinkResetForm'
     _title: 'Reset menu link'
   options:
     parameters:

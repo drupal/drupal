@@ -1,6 +1,6 @@
 vocabulary_serialization_test:
   path: '/vocabulary_serialization_test/{taxonomy_vocabulary}'
   defaults:
-    _controller: 'Drupal\vocabulary_serialization_test\VocabularySerializationTestController::vocabularyResponse'
+    _controller: '\Drupal\vocabulary_serialization_test\VocabularySerializationTestController::vocabularyResponse'
   requirements:
     _access: 'TRUE'

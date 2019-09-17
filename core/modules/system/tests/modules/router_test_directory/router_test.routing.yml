@@ -165,7 +165,7 @@ router_test.25:
 router_test.26:
   path: '/router_test/test26'
   defaults:
-    _form: 'Drupal\system\Form\LoggingForm'
+    _form: '\Drupal\system\Form\LoggingForm'
     _title: 'Cron'
   requirements:
     _access: 'TRUE'

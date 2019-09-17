@@ -4,7 +4,7 @@ route_callbacks:
 jsonapi.settings:
   path: '/admin/config/services/jsonapi'
   defaults:
-    _form: 'Drupal\jsonapi\Form\JsonApiSettingsForm'
+    _form: '\Drupal\jsonapi\Form\JsonApiSettingsForm'
     _title: 'JSON:API'
   requirements:
     _permission: 'administer site configuration'
