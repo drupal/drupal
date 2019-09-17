@@ -233,8 +233,8 @@ class ResourceTypeRepository implements ResourceTypeRepositoryInterface {
     foreach (array_diff($field_names, array_keys($mapping)) as $field_name) {
       if ($field_name === 'id' || $field_name === 'type') {
         $alias = $entity_type->id() . '_' . $field_name;
-        if (isset($field_name[$alias])) {
-          throw new \LogicException('The generated alias conflicts with an existing field. Please report this in the JSON:API issue queue!');
+        if (in_array($alias, $field_names, TRUE)) {
+          throw new \LogicException("The generated alias '{$alias}' for field name '{$field_name}' conflicts with an existing field. Please report this in the JSON:API issue queue!");
         }
         $mapping[$field_name] = $alias;
         continue;

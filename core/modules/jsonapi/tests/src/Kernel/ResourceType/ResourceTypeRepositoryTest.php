@@ -111,4 +111,40 @@ class ResourceTypeRepositoryTest extends JsonapiKernelTestBase {
     $this->assertCount(4, $this->resourceTypeRepository->get('node', 'article')->getRelatableResourceTypesByField('field_relationship'));
   }
 
+  /**
+   * Ensures that a naming conflict in the mapping causes an exception to be
+   * thrown.
+   *
+   * @covers ::getFieldMapping
+   * @dataProvider getFieldMappingProvider
+   */
+  public function testMappingNameConflictCheck($field_name_list) {
+    $entity_type = \Drupal::entityTypeManager()->getDefinition('node');
+    $bundle = 'article';
+    $reflection_class = new \ReflectionClass($this->resourceTypeRepository);
+    $reflection_method = $reflection_class->getMethod('getFieldMapping');
+    $reflection_method->setAccessible(TRUE);
+
+    $this->expectException(\LogicException::class);
+    $this->expectExceptionMessage("The generated alias '{$field_name_list[1]}' for field name '{$field_name_list[0]}' conflicts with an existing field. Please report this in the JSON:API issue queue!");
+    $reflection_method->invokeArgs($this->resourceTypeRepository, [$field_name_list, $entity_type, $bundle]);
+  }
+
+  /**
+   * Data provider for testGetFieldMapping.
+   *
+   * These field name lists are designed to trigger a naming conflict in the
+   * mapping: the special-cased names "type" or "id", and the name
+   * "{$entity_type_id}_type" or "{$entity_type_id}_id", respectively.
+   *
+   * @returns array
+   *   The data for the test method.
+   */
+  public function getFieldMappingProvider() {
+    return [
+      [['type', 'node_type']],
+      [['id', 'node_id']],
+    ];
+  }
+
 }
