@@ -9,4 +9,4 @@ You can get the full Drupal repo here:
 https://www.drupal.org/project/drupal/git-instructions
 
 You can browse the full Drupal repo here:
-http://cgit.drupalcode.org/drupal
+https://git.drupalcode.org/project/drupal

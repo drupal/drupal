@@ -468,7 +468,7 @@ Patch a file after it's copied:
 Previous versions of drupal-scaffold (see community project,
 [drupal-composer/drupal-scaffold](https://github.com/drupal-composer/drupal-project))
 downloaded each scaffold file directly from its distribution server (e.g.
-`https://cgit.drupalcode.org`) to the desired destination directory. This was
+`https://git.drupalcode.org`) to the desired destination directory. This was
 necessary, because there was no subtree split of the scaffold files available.
 Copying the scaffold assets from projects already downloaded by Composer is more
 effective, as downloading and unpacking archive files is more efficient than
