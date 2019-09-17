@@ -4,14 +4,15 @@
  * Theme override for a views mini-pager.
  *
  * Available variables:
+ * - heading_id: Pagination heading ID.
  * - items: List of pager items.
  *
  * @see template_preprocess_views_mini_pager()
  */
 #}
 {% if items.previous or items.next %}
-  <nav role="navigation" aria-labelledby="pagination-heading">
-    <h4 class="visually-hidden">{{ 'Pagination'|t }}</h4>
+  <nav role="navigation" aria-labelledby="{{ heading_id }}">
+    <h4 id="{{ heading_id }}" class="visually-hidden">{{ 'Pagination'|t }}</h4>
     <ul class="js-pager__items">
       {% if items.previous %}
         <li>

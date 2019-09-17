@@ -1034,6 +1034,8 @@ function template_preprocess_views_mini_pager(&$variables) {
   // This is based on the entire current query string. We need to ensure
   // cacheability is affected accordingly.
   $variables['#cache']['contexts'][] = 'url.query_args';
+
+  $variables['heading_id'] = Html::getUniqueId('pagination-heading');
 }
 
 /**
