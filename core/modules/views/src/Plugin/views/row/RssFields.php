@@ -3,7 +3,6 @@
 namespace Drupal\views\Plugin\views\row;
 
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Url;
 
 /**
  * Renders an RSS item based on fields.
@@ -139,9 +138,7 @@ class RssFields extends RowPluginBase {
     // Create the RSS item object.
     $item = new \stdClass();
     $item->title = $this->getField($row_index, $this->options['title_field']);
-    // @todo Views should expect and store a leading /. See:
-    //   https://www.drupal.org/node/2423913
-    $item->link = Url::fromUserInput('/' . $this->getField($row_index, $this->options['link_field']))->setAbsolute()->toString();
+    $item->link = $this->getAbsoluteUrl($this->getField($row_index, $this->options['link_field']));
 
     $field = $this->getField($row_index, $this->options['description_field']);
     $item->description = is_array($field) ? $field : ['#markup' => $field];
@@ -158,9 +155,7 @@ class RssFields extends RowPluginBase {
     $item_guid = $this->getField($row_index, $this->options['guid_field_options']['guid_field']);
     if ($this->options['guid_field_options']['guid_field_is_permalink']) {
       $guid_is_permalink_string = 'true';
-      // @todo Enforce GUIDs as system-generated rather than user input? See
-      //   https://www.drupal.org/node/2430589.
-      $item_guid = Url::fromUserInput('/' . $item_guid)->setAbsolute()->toString();
+      $item_guid = $this->getAbsoluteUrl($item_guid);
     }
     $item->elements[] = [
       'key' => 'guid',
@@ -205,6 +200,23 @@ class RssFields extends RowPluginBase {
       return '';
     }
     return $this->view->style_plugin->getField($index, $field_id);
+  }
+
+  /**
+   * Convert a rendered URL string to an absolute URL.
+   *
+   * @param string $url_string
+   *   The rendered field value ready for display in a normal view.
+   *
+   * @return string
+   *   A string with an absolute URL.
+   */
+  protected function getAbsoluteUrl($url_string) {
+    $host = \Drupal::request()->getSchemeAndHttpHost();
+
+    // @todo Views should expect and store a leading /.
+    // @see https://www.drupal.org/node/2423913
+    return $host . '/' . ltrim($url_string, '/');
   }
 
 }

@@ -54,6 +54,7 @@ class DisplayFeedTest extends ViewTestBase {
         ],
       ],
     ]);
+    $node_link = $node->toUrl()->setAbsolute()->toString();
 
     // Test the site name setting.
     $site_name = $this->randomMachineName();
@@ -65,6 +66,7 @@ class DisplayFeedTest extends ViewTestBase {
     $this->assertEquals($frontpage_url, $this->getSession()->getDriver()->getText('//link'));
     $this->assertEquals('Copyright 2019 Dries Buytaert', $this->getSession()->getDriver()->getText('//channel/copyright'));
     $this->assertEquals($node_title, $this->getSession()->getDriver()->getText('//item/title'));
+    $this->assertEquals($node_link, $this->getSession()->getDriver()->getText('//item/link'));
     // Verify HTML is properly escaped in the description field.
     $this->assertRaw('&lt;p&gt;A paragraph&lt;/p&gt;');
 
@@ -106,7 +108,7 @@ class DisplayFeedTest extends ViewTestBase {
 
     // Verify a title with HTML entities is properly escaped.
     $node_title = 'This "cool" & "neat" article\'s title';
-    $this->drupalCreateNode([
+    $node = $this->drupalCreateNode([
       'title' => $node_title,
       'body' => [
         0 => [
@@ -115,9 +117,11 @@ class DisplayFeedTest extends ViewTestBase {
         ],
       ],
     ]);
+    $node_link = $node->toUrl()->setAbsolute()->toString();
 
     $this->drupalGet('test-feed-display-fields.xml');
     $this->assertEquals($node_title, $this->getSession()->getDriver()->getText('//title/a'));
+    $this->assertEquals($node_link, $this->getSession()->getDriver()->getText('//item/link'));
     // Verify HTML is properly escaped in the description field.
     $this->assertRaw('&lt;p&gt;A paragraph&lt;/p&gt;');
   }
