@@ -71,8 +71,9 @@ class ContentTranslationController extends ControllerBase {
    *   The language to be used as target.
    */
   public function prepareTranslation(ContentEntityInterface $entity, LanguageInterface $source, LanguageInterface $target) {
+    $source_langcode = $source->getId();
     /* @var \Drupal\Core\Entity\ContentEntityInterface $source_translation */
-    $source_translation = $entity->getTranslation($source->getId());
+    $source_translation = $entity->getTranslation($source_langcode);
     $target_translation = $entity->addTranslation($target->getId(), $source_translation->toArray());
 
     // Make sure we do not inherit the affected status from the source values.
@@ -88,6 +89,7 @@ class ContentTranslationController extends ControllerBase {
     // creation time.
     $metadata->setAuthor($user);
     $metadata->setCreatedTime(REQUEST_TIME);
+    $metadata->setSource($source_langcode);
   }
 
   /**

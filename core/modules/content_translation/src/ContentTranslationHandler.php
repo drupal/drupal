@@ -314,18 +314,18 @@ class ContentTranslationHandler implements ContentTranslationHandlerInterface, E
   public function entityFormAlter(array &$form, FormStateInterface $form_state, EntityInterface $entity) {
     /** @var \Drupal\Core\Entity\ContentEntityInterface $entity */
 
+    $metadata = $this->manager->getTranslationMetadata($entity);
     $form_object = $form_state->getFormObject();
     $form_langcode = $form_object->getFormLangcode($form_state);
     $entity_langcode = $entity->getUntranslated()->language()->getId();
-    $source_langcode = $this->getSourceLangcode($form_state);
 
-    $new_translation = !empty($source_langcode);
+    $new_translation = $entity->isNewTranslation();
     $translations = $entity->getTranslationLanguages();
     if ($new_translation) {
       // Make sure a new translation does not appear as existing yet.
       unset($translations[$form_langcode]);
     }
-    $is_translation = !$form_object->isDefaultFormLangcode($form_state);
+    $is_translation = $new_translation || ($entity->language()->getId() != $entity_langcode);
     $has_translations = count($translations) > 1;
 
     // Adjust page title to specify the current language being edited, if we
@@ -336,7 +336,7 @@ class ContentTranslationHandler implements ContentTranslationHandlerInterface, E
       // When editing the original values display just the entity label.
       if ($is_translation) {
         $t_args = ['%language' => $languages[$form_langcode]->getName(), '%title' => $entity->label(), '@title' => $title];
-        $title = empty($source_langcode) ? t('@title [%language translation]', $t_args) : t('Create %language translation of %title', $t_args);
+        $title = $new_translation ? t('Create %language translation of %title', $t_args) : t('@title [%language translation]', $t_args);
       }
       $form['#title'] = $title;
     }
@@ -344,6 +344,7 @@ class ContentTranslationHandler implements ContentTranslationHandlerInterface, E
     // Display source language selector only if we are creating a new
     // translation and there are at least two translations available.
     if ($has_translations && $new_translation) {
+      $source_langcode = $metadata->getSource();
       $form['source_langcode'] = [
         '#type' => 'details',
         '#title' => t('Source language: @language', ['@language' => $languages[$source_langcode]->getName()]),
@@ -435,7 +436,7 @@ class ContentTranslationHandler implements ContentTranslationHandlerInterface, E
         '#title' => t('Translation'),
         '#tree' => TRUE,
         '#weight' => 10,
-        '#access' => $this->getTranslationAccess($entity, $source_langcode ? 'create' : 'update')->isAllowed(),
+        '#access' => $this->getTranslationAccess($entity, $new_translation ? 'create' : 'update')->isAllowed(),
         '#multilingual' => TRUE,
       ];
 
@@ -450,7 +451,6 @@ class ContentTranslationHandler implements ContentTranslationHandlerInterface, E
       }
 
       // A new translation is enabled by default.
-      $metadata = $this->manager->getTranslationMetadata($entity);
       $status = $new_translation || $metadata->isPublished();
       // If there is only one published translation we cannot unpublish it,
       // since there would be nothing left to display.
@@ -679,11 +679,6 @@ class ContentTranslationHandler implements ContentTranslationHandlerInterface, E
     $metadata->setAuthor(!empty($values['uid']) ? User::load($values['uid']) : User::load(0));
     $metadata->setPublished(!empty($values['status']));
     $metadata->setCreatedTime(!empty($values['created']) ? strtotime($values['created']) : REQUEST_TIME);
-
-    $source_langcode = $this->getSourceLangcode($form_state);
-    if ($source_langcode) {
-      $metadata->setSource($source_langcode);
-    }
 
     $metadata->setOutdated(!empty($values['outdated']));
     if (!empty($values['retranslate'])) {
