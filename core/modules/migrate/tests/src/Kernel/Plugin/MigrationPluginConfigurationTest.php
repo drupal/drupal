@@ -20,6 +20,7 @@ class MigrationPluginConfigurationTest extends KernelTestBase {
     'migrate_drupal',
     // Test with a simple migration.
     'ban',
+    'locale',
   ];
 
   /**
@@ -27,9 +28,10 @@ class MigrationPluginConfigurationTest extends KernelTestBase {
    *
    * @dataProvider mergeProvider
    */
-  public function testConfigurationMerge($configuration, $expected) {
+  public function testConfigurationMerge($id, $configuration, $expected) {
     /** @var \Drupal\migrate\Plugin\MigrationInterface $migration */
-    $migration = $this->container->get('plugin.manager.migration')->createInstance('d7_blocked_ips', $configuration);
+    $migration = $this->container->get('plugin.manager.migration')
+      ->createInstance($id, $configuration);
     $source_configuration = $migration->getSourceConfiguration();
     $this->assertEquals($expected, $source_configuration);
   }
@@ -42,6 +44,7 @@ class MigrationPluginConfigurationTest extends KernelTestBase {
       // Tests adding new configuration to a migration.
       [
         // New configuration.
+        'd7_blocked_ips',
         [
           'source' => [
             'constants' => [
@@ -60,6 +63,7 @@ class MigrationPluginConfigurationTest extends KernelTestBase {
       // Tests overriding pre-existing configuration in a migration.
       [
         // New configuration.
+        'd7_blocked_ips',
         [
           'source' => [
             'plugin' => 'a_different_plugin',
@@ -68,6 +72,29 @@ class MigrationPluginConfigurationTest extends KernelTestBase {
         // Expected final source configuration.
         [
           'plugin' => 'a_different_plugin',
+        ],
+      ],
+      // New configuration.
+      [
+        'locale_settings',
+        [
+          'source' => [
+            'plugin' => 'variable',
+            'variables' => [
+              'locale_cache_strings',
+              'locale_js_directory',
+            ],
+            'source_module' => 'locale',
+          ],
+        ],
+        // Expected final source and process configuration.
+        [
+          'plugin' => 'variable',
+          'variables' => [
+            'locale_cache_strings',
+            'locale_js_directory',
+          ],
+          'source_module' => 'locale',
         ],
       ],
     ];
