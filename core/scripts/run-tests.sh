@@ -15,6 +15,7 @@ use Drupal\Core\Database\Database;
 use Drupal\Core\File\Exception\FileException;
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\StreamWrapper\PublicStream;
+use Drupal\Core\Test\RunTests\TestFileParser;
 use Drupal\Core\Test\TestDatabase;
 use Drupal\Core\Test\TestRunnerKernel;
 use Drupal\simpletest\Form\SimpletestResultsForm;
@@ -1063,31 +1064,13 @@ function simpletest_script_get_test_list() {
     }
     elseif ($args['file']) {
       // Extract test case class names from specified files.
+      $parser = new TestFileParser();
       foreach ($args['test_names'] as $file) {
         if (!file_exists($file)) {
           simpletest_script_print_error('File not found: ' . $file);
           exit(SIMPLETEST_SCRIPT_EXIT_FAILURE);
         }
-        $content = file_get_contents($file);
-        // Extract a potential namespace.
-        $namespace = FALSE;
-        if (preg_match('@^namespace ([^ ;]+)@m', $content, $matches)) {
-          $namespace = $matches[1];
-        }
-        // Extract all class names.
-        // Abstract classes are excluded on purpose.
-        preg_match_all('@^class ([^ ]+)@m', $content, $matches);
-        if (!$namespace) {
-          $test_list = array_merge($test_list, $matches[1]);
-        }
-        else {
-          foreach ($matches[1] as $class_name) {
-            $namespace_class = $namespace . '\\' . $class_name;
-            if (is_subclass_of($namespace_class, '\Drupal\simpletest\TestBase') || is_subclass_of($namespace_class, TestCase::class)) {
-              $test_list[] = $namespace_class;
-            }
-          }
-        }
+        $test_list = array_merge($test_list, $parser->getTestListFromFile($file));
       }
     }
     elseif ($args['directory']) {
@@ -1121,27 +1104,9 @@ function simpletest_script_get_test_list() {
           $files[$filename] = $filename;
         }
       }
+      $parser = new TestFileParser();
       foreach ($files as $file) {
-        $content = file_get_contents($file);
-        // Extract a potential namespace.
-        $namespace = FALSE;
-        if (preg_match('@^\s*namespace ([^ ;]+)@m', $content, $matches)) {
-          $namespace = $matches[1];
-        }
-        // Extract all class names.
-        // Abstract classes are excluded on purpose.
-        preg_match_all('@^\s*class ([^ ]+)@m', $content, $matches);
-        if (!$namespace) {
-          $test_list = array_merge($test_list, $matches[1]);
-        }
-        else {
-          foreach ($matches[1] as $class_name) {
-            $namespace_class = $namespace . '\\' . $class_name;
-            if (is_subclass_of($namespace_class, '\Drupal\simpletest\TestBase') || is_subclass_of($namespace_class, TestCase::class)) {
-              $test_list[] = $namespace_class;
-            }
-          }
-        }
+        $test_list = array_merge($test_list, $parser->getTestListFromFile($file));
       }
     }
     else {
