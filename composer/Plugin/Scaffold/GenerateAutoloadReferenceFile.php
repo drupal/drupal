@@ -38,12 +38,11 @@ final class GenerateAutoloadReferenceFile {
    */
   public static function generateAutoload(IOInterface $io, $package_name, $web_root, $vendor) {
     $autoload_path = static::autoloadPath($package_name, $web_root);
-    $location = dirname($autoload_path->fullPath());
     // Calculate the relative path from the webroot (location of the project
     // autoload.php) to the vendor directory.
     $fs = new Filesystem();
-    $relative_vendor_path = $fs->findShortestPath(realpath($location), $vendor);
-    file_put_contents($autoload_path->fullPath(), static::autoLoadContents($relative_vendor_path));
+    $relative_autoload_path = $fs->findShortestPath($autoload_path->fullPath(), "$vendor/autoload.php");
+    file_put_contents($autoload_path->fullPath(), static::autoLoadContents($relative_autoload_path));
     return new ScaffoldResult($autoload_path, TRUE);
   }
 
@@ -91,14 +90,14 @@ final class GenerateAutoloadReferenceFile {
   /**
    * Builds the contents of the autoload file.
    *
-   * @param string $vendor_path
-   *   The relative path to vendor.
+   * @param string $relative_autoload_path
+   *   The relative path to the autoloader in vendor.
    *
    * @return string
    *   Return the contents for the autoload.php.
    */
-  protected static function autoLoadContents($vendor_path) {
-    $vendor_path = rtrim($vendor_path, '/');
+  protected static function autoLoadContents($relative_autoload_path) {
+    $relative_autoload_path = preg_replace('#^\./#', '', $relative_autoload_path);
     return <<<EOF
 <?php
 
@@ -115,7 +114,7 @@ final class GenerateAutoloadReferenceFile {
  * @see core/modules/statistics/statistics.php
  */
 
-return require __DIR__ . '/{$vendor_path}/autoload.php';
+return require __DIR__ . '/{$relative_autoload_path}';
 
 EOF;
   }

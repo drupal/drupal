@@ -194,6 +194,7 @@ class ScaffoldTest extends TestCase {
     $result = $this->scaffoldSut($fixture_name, FALSE, FALSE);
     $this->assertContains('The allowed package fixtures/empty-fixture does not provide a file mapping for Composer Scaffold', $result->scaffoldOutput());
     $this->assertCommonDrupalAssetsWereScaffolded($result->docroot(), FALSE);
+    $this->assertAutoloadFileCorrect($result->docroot());
   }
 
   public function scaffoldOverridingSettingsExcludingHtaccessValues() {
@@ -229,6 +230,7 @@ class ScaffoldTest extends TestCase {
     $result = $this->scaffoldSut($fixture_name, $is_link, $relocated_docroot);
 
     $this->assertCommonDrupalAssetsWereScaffolded($result->docroot(), $is_link);
+    $this->assertAutoloadFileCorrect($result->docroot(), $relocated_docroot);
     $this->assertDefaultSettingsFromScaffoldOverride($result->docroot(), $is_link);
     $this->assertHtaccessExcluded($result->docroot());
   }
@@ -248,6 +250,7 @@ class ScaffoldTest extends TestCase {
     $this->assertScaffoldedFile($result->docroot() . '/keep-me.txt', FALSE, 'File in drupal-drupal-test-overwrite that is not replaced');
     $this->assertScaffoldedFile($result->docroot() . '/make-me.txt', FALSE, 'from assets that replaces file');
     $this->assertCommonDrupalAssetsWereScaffolded($result->docroot(), FALSE);
+    $this->assertAutoloadFileCorrect($result->docroot());
     $this->assertScaffoldedFile($result->docroot() . '/robots.txt', FALSE, $fixture_name);
   }
 
@@ -322,6 +325,7 @@ class ScaffoldTest extends TestCase {
 
     $this->assertScaffoldedFile($result->docroot() . '/robots.txt', FALSE, $robots_txt_contents);
     $this->assertCommonDrupalAssetsWereScaffolded($result->docroot(), $is_link);
+    $this->assertAutoloadFileCorrect($result->docroot());
   }
 
   /**
@@ -361,9 +365,7 @@ class ScaffoldTest extends TestCase {
    *   Whether or not symlinking is used.
    */
   protected function assertCommonDrupalAssetsWereScaffolded($docroot, $is_link) {
-    // Ensure that the autoload.php file was written.
-    $this->assertFileExists($docroot . '/autoload.php');
-    // Assert other scaffold files are written in the correct locations.
+    // Assert scaffold files are written in the correct locations.
     $this->assertScaffoldedFile($docroot . '/.csslintrc', $is_link, 'Test version of .csslintrc from drupal/core.');
     $this->assertScaffoldedFile($docroot . '/.editorconfig', $is_link, 'Test version of .editorconfig from drupal/core.');
     $this->assertScaffoldedFile($docroot . '/.eslintignore', $is_link, 'Test version of .eslintignore from drupal/core.');
@@ -376,6 +378,29 @@ class ScaffoldTest extends TestCase {
     $this->assertScaffoldedFile($docroot . '/index.php', $is_link, 'Test version of index.php from drupal/core.');
     $this->assertScaffoldedFile($docroot . '/update.php', $is_link, 'Test version of update.php from drupal/core.');
     $this->assertScaffoldedFile($docroot . '/web.config', $is_link, 'Test version of web.config from drupal/core.');
+  }
+
+  /**
+   * Assert that the autoload file was scaffolded and contains correct path.
+   *
+   * @param string $docroot
+   *   Location of the doc root, where autoload.php should be written.
+   * @param bool $relocated_docroot
+   *   Whether the document root is relocated or now.
+   */
+  protected function assertAutoloadFileCorrect($docroot, $relocated_docroot = FALSE) {
+    $autoload_path = $docroot . '/autoload.php';
+
+    // Ensure that the autoload.php file was written.
+    $this->assertFileExists($autoload_path);
+    $contents = file_get_contents($autoload_path);
+
+    $expected = "return require __DIR__ . '/vendor/autoload.php';";
+    if ($relocated_docroot) {
+      $expected = "return require __DIR__ . '/../vendor/autoload.php';";
+    }
+
+    $this->assertContains($expected, $contents);
   }
 
 }

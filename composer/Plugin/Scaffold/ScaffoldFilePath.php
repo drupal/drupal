@@ -2,6 +2,8 @@
 
 namespace Drupal\Composer\Plugin\Scaffold;
 
+use Composer\Util\Filesystem;
+
 /**
  * Manage the path to a file to scaffold.
  *
@@ -61,6 +63,14 @@ class ScaffoldFilePath {
     $this->packageName = $package_name;
     $this->relativePath = $rel_path;
     $this->fullPath = $full_path;
+
+    // Ensure that the full path really is a full path. We do not use
+    // 'realpath' here because the file specified by the full path might
+    // not exist yet.
+    $fs = new Filesystem();
+    if (!$fs->isAbsolutePath($this->fullPath)) {
+      $this->fullPath = getcwd() . '/' . $this->fullPath;
+    }
   }
 
   /**
