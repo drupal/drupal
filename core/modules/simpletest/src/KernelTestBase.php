@@ -351,7 +351,7 @@ EOD;
 
     if ($this->strictConfigSchema) {
       $container
-        ->register('simpletest.config_schema_checker', ConfigSchemaChecker::class)
+        ->register('testing.config_schema_checker', ConfigSchemaChecker::class)
         ->addArgument(new Reference('config.typed'))
         ->addArgument($this->getConfigSchemaExclusions())
         ->addTag('event_subscriber');

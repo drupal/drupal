@@ -107,7 +107,7 @@ trait FunctionalTestSetupTrait {
     ];
     // Add the parent profile's search path to the child site's search paths.
     // @see \Drupal\Core\Extension\ExtensionDiscovery::getProfileDirectories()
-    $settings['conf']['simpletest.settings']['parent_profile'] = (object) [
+    $settings['setting']['test_parent_profile'] = (object) [
       'value' => $this->originalProfile,
       'required' => TRUE,
     ];
@@ -137,7 +137,7 @@ trait FunctionalTestSetupTrait {
       $yaml = new SymfonyYaml();
       $content = file_get_contents($directory . '/services.yml');
       $services = $yaml->parse($content);
-      $services['services']['simpletest.config_schema_checker'] = [
+      $services['services']['testing.config_schema_checker'] = [
         'class' => ConfigSchemaChecker::class,
         'arguments' => ['@config.typed', $this->getConfigSchemaExclusions()],
         'tags' => [['name' => 'event_subscriber']],

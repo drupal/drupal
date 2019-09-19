@@ -776,8 +776,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
 
       // If a module is within a profile directory but specifies another
       // profile for testing, it needs to be found in the parent profile.
-      $settings = $this->getConfigStorage()->read('simpletest.settings');
-      $parent_profile = !empty($settings['parent_profile']) ? $settings['parent_profile'] : NULL;
+      $parent_profile = Settings::get('test_parent_profile');
       if ($parent_profile && !isset($profiles[$parent_profile])) {
         // In case both profile directories contain the same extension, the
         // actual profile always has precedence.
