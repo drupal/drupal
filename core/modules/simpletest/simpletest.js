@@ -27,7 +27,7 @@
       $(context).find('.simpletest-group').once('simpletest-group-select-all').each(function () {
         var $group = $(this);
         var $cell = $group.find('.simpletest-group-select-all');
-        var $groupCheckbox = $('<input type="checkbox" id="' + $cell.attr('id') + '-group-select-all" class="form-checkbox" />');
+        var $groupCheckbox = $(Drupal.theme('checkbox')).attr('id', $cell.attr('id') + '-group-select-all');
         var $testCheckboxes = $group.nextUntil('.simpletest-group').find('input[type=checkbox]');
         $cell.append($groupCheckbox);
 

@@ -127,6 +127,13 @@ drupal.batch:
     - core/drupal.progress
     - core/jquery.once
 
+drupal.checkbox:
+  version: VERSION
+  js:
+    misc/checkbox.js: {}
+  dependencies:
+    - core/drupal
+
 drupal.collapse:
   version: VERSION
   js:
@@ -307,6 +314,7 @@ drupal.tableselect:
     misc/tableselect.js: {}
   dependencies:
     - core/drupal
+    - core/drupal.checkbox
     - core/jquery
     - core/jquery.once
 

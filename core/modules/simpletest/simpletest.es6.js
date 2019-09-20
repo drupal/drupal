@@ -47,10 +47,9 @@
         .each(function() {
           const $group = $(this);
           const $cell = $group.find('.simpletest-group-select-all');
-          const $groupCheckbox = $(
-            `<input type="checkbox" id="${$cell.attr(
-              'id',
-            )}-group-select-all" class="form-checkbox" />`,
+          const $groupCheckbox = $(Drupal.theme('checkbox')).attr(
+            'id',
+            `${$cell.attr('id')}-group-select-all`,
           );
           const $testCheckboxes = $group
             .nextUntil('.simpletest-group')

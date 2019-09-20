@@ -22,7 +22,7 @@
         }
         $table.detach();
 
-        var $dummy = $('<input type="checkbox" class="dummy-checkbox js-dummy-checkbox" disabled="disabled" checked="checked" />').attr('title', Drupal.t('This permission is inherited from the authenticated user role.')).hide();
+        var $dummy = $(Drupal.theme('checkbox')).removeClass('form-checkbox').addClass('dummy-checkbox js-dummy-checkbox').attr('disabled', 'disabled').attr('checked', 'checked').attr('title', Drupal.t('This permission is inherited from the authenticated user role.')).hide();
 
         $table.find('input[type="checkbox"]').not('.js-rid-anonymous, .js-rid-authenticated').addClass('real-checkbox js-real-checkbox').after($dummy);
 

@@ -38,7 +38,7 @@
       });
     };
 
-    $table.find('th.select-all').prepend($('<input type="checkbox" class="form-checkbox" />').attr('title', strings.selectAll)).on('click', function (event) {
+    $table.find('th.select-all').prepend($(Drupal.theme('checkbox')).attr('title', strings.selectAll)).on('click', function (event) {
       if ($(event.target).is('input[type="checkbox"]')) {
         checkboxes.each(function () {
           var $checkbox = $(this);

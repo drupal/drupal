@@ -10,7 +10,7 @@
     attach: function attach(context) {
       var $view = $('.js-media-library-view', context).once('media-library-select-all');
       if ($view.length && $view.find('.js-media-library-item').length) {
-        var $checkbox = $('<input type="checkbox" class="form-checkbox" />').on('click', function (_ref) {
+        var $checkbox = $(Drupal.theme('checkbox')).on('click', function (_ref) {
           var currentTarget = _ref.currentTarget;
 
           var $checkboxes = $(currentTarget).closest('.media-library-view').find('.js-media-library-item input[type="checkbox"]');

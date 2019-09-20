@@ -40,9 +40,11 @@
           // submitted form. If we'd automatically check existing checkboxes, the
           // permission table would be polluted with redundant entries. This
           // is deliberate, but desirable when we automatically check them.
-          const $dummy = $(
-            '<input type="checkbox" class="dummy-checkbox js-dummy-checkbox" disabled="disabled" checked="checked" />',
-          )
+          const $dummy = $(Drupal.theme('checkbox'))
+            .removeClass('form-checkbox')
+            .addClass('dummy-checkbox js-dummy-checkbox')
+            .attr('disabled', 'disabled')
+            .attr('checked', 'checked')
             .attr(
               'title',
               Drupal.t(

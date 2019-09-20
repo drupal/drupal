@@ -70,12 +70,7 @@
     // Find all <th> with class select-all, and insert the check all checkbox.
     $table
       .find('th.select-all')
-      .prepend(
-        $('<input type="checkbox" class="form-checkbox" />').attr(
-          'title',
-          strings.selectAll,
-        ),
-      )
+      .prepend($(Drupal.theme('checkbox')).attr('title', strings.selectAll))
       .on('click', event => {
         if ($(event.target).is('input[type="checkbox"]')) {
           // Loop through all checkboxes and set their state to the select all
