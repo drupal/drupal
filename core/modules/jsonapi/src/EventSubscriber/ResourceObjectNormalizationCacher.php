@@ -143,6 +143,7 @@ class ResourceObjectNormalizationCacher implements EventSubscriberInterface {
     // Merge the entity's cacheability metadata with that of the normalization
     // parts, so that RenderCache can take care of cache redirects for us.
     CacheableMetadata::createFromObject($object)
+      ->merge(static::mergeCacheableDependencies($normalization_parts[static::RESOURCE_CACHE_SUBSET_BASE]))
       ->merge(static::mergeCacheableDependencies($normalization_parts[static::RESOURCE_CACHE_SUBSET_FIELDS]))
       ->applyTo($data_as_render_array);
 
