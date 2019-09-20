@@ -2,8 +2,13 @@
 
 namespace Drupal\workspaces\Form;
 
+use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Core\Entity\ContentEntityDeleteForm;
+use Drupal\Core\Entity\EntityRepositoryInterface;
+use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\workspaces\WorkspaceAssociationInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Provides a form for deleting a workspace.
@@ -20,13 +25,51 @@ class WorkspaceDeleteForm extends ContentEntityDeleteForm implements WorkspaceFo
   protected $entity;
 
   /**
+   * The workspace association service.
+   *
+   * @var \Drupal\workspaces\WorkspaceAssociationInterface
+   */
+  protected $workspaceAssociation;
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container) {
+    return new static(
+      $container->get('entity.repository'),
+      $container->get('workspaces.association'),
+      $container->get('entity_type.bundle.info'),
+      $container->get('datetime.time')
+    );
+  }
+
+  /**
+   * Constructs a WorkspaceDeleteForm object.
+   *
+   * @param \Drupal\Core\Entity\EntityRepositoryInterface $entity_repository
+   *   The entity repository service.
+   * @param \Drupal\workspaces\WorkspaceAssociationInterface $workspace_association
+   *   The workspace association service to check how many revisions will be
+   *   deleted.
+   * @param \Drupal\Core\Entity\EntityTypeBundleInfoInterface $entity_type_bundle_info
+   *   The entity type bundle service.
+   * @param \Drupal\Component\Datetime\TimeInterface $time
+   *   The time service.
+   */
+  public function __construct(EntityRepositoryInterface $entity_repository, WorkspaceAssociationInterface $workspace_association, EntityTypeBundleInfoInterface $entity_type_bundle_info = NULL, TimeInterface $time = NULL) {
+    parent::__construct($entity_repository, $entity_type_bundle_info, $time);
+    $this->workspaceAssociation = $workspace_association;
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
     $form = parent::buildForm($form, $form_state);
-    $source_rev_diff = $this->entityTypeManager->getStorage('workspace_association')->getTrackedEntities($this->entity->id());
+    $tracked_entities = $this->workspaceAssociation->getTrackedEntities($this->entity->id());
     $items = [];
-    foreach ($source_rev_diff as $entity_type_id => $revision_ids) {
+    foreach (array_keys($tracked_entities) as $entity_type_id => $entity_ids) {
+      $revision_ids = $this->workspaceAssociation->getAssociatedRevisions($this->entity->id(), $entity_type_id, $entity_ids);
       $label = $this->entityTypeManager->getDefinition($entity_type_id)->getLabel();
       $items[] = $this->formatPlural(count($revision_ids), '1 @label revision.', '@count @label revisions.', ['@label' => $label]);
     }

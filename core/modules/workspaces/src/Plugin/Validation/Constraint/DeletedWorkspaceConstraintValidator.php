@@ -3,7 +3,7 @@
 namespace Drupal\workspaces\Plugin\Validation\Constraint;
 
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
-use Drupal\workspaces\WorkspaceAssociationStorageInterface;
+use Drupal\workspaces\WorkspaceAssociationInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
@@ -14,20 +14,20 @@ use Symfony\Component\Validator\ConstraintValidator;
 class DeletedWorkspaceConstraintValidator extends ConstraintValidator implements ContainerInjectionInterface {
 
   /**
-   * The workspace association storage.
+   * The workspace association service.
    *
-   * @var \Drupal\workspaces\WorkspaceAssociationStorageInterface
+   * @var \Drupal\workspaces\WorkspaceAssociationInterface
    */
-  protected $workspaceAssociationStorage;
+  protected $workspaceAssociation;
 
   /**
    * Creates a new DeletedWorkspaceConstraintValidator instance.
    *
-   * @param \Drupal\workspaces\WorkspaceAssociationStorageInterface $workspace_association_storage
-   *   The workspace association storage.
+   * @param \Drupal\workspaces\WorkspaceAssociationInterface $workspace_association
+   *   The workspace association service.
    */
-  public function __construct(WorkspaceAssociationStorageInterface $workspace_association_storage) {
-    $this->workspaceAssociationStorage = $workspace_association_storage;
+  public function __construct(WorkspaceAssociationInterface $workspace_association) {
+    $this->workspaceAssociation = $workspace_association;
   }
 
   /**
@@ -35,7 +35,7 @@ class DeletedWorkspaceConstraintValidator extends ConstraintValidator implements
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('entity_type.manager')->getStorage('workspace_association')
+      $container->get('workspaces.association')
     );
   }
 
@@ -49,14 +49,7 @@ class DeletedWorkspaceConstraintValidator extends ConstraintValidator implements
       return;
     }
 
-    $count = $this->workspaceAssociationStorage
-      ->getQuery()
-      ->allRevisions()
-      ->accessCheck(FALSE)
-      ->condition('workspace', $value->getEntity()->id())
-      ->count()
-      ->execute();
-    if ($count) {
+    if ($this->workspaceAssociation->getTrackedEntities($value->getEntity()->id())) {
       $this->context->addViolation($constraint->message);
     }
   }

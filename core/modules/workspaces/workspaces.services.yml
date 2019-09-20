@@ -1,12 +1,17 @@
 services:
   workspaces.manager:
     class: Drupal\workspaces\WorkspaceManager
-    arguments: ['@request_stack', '@entity_type.manager', '@entity.memory_cache', '@current_user', '@state', '@logger.channel.workspaces', '@class_resolver']
+    arguments: ['@request_stack', '@entity_type.manager', '@entity.memory_cache', '@current_user', '@state', '@logger.channel.workspaces', '@class_resolver', '@workspaces.association']
     tags:
       - { name: service_id_collector, tag: workspace_negotiator }
   workspaces.operation_factory:
     class: Drupal\workspaces\WorkspaceOperationFactory
-    arguments: ['@entity_type.manager', '@database', '@workspaces.manager']
+    arguments: ['@entity_type.manager', '@database', '@workspaces.manager', '@workspaces.association']
+  workspaces.association:
+    class: Drupal\workspaces\WorkspaceAssociation
+    arguments: ['@database', '@entity_type.manager']
+    tags:
+      - { name: backend_overridable }
 
   workspaces.negotiator.session:
     class: Drupal\workspaces\Negotiator\SessionWorkspaceNegotiator
@@ -24,6 +29,12 @@ services:
     arguments: ['@workspaces.manager']
     tags:
       - { name: access_check, applies_to: _has_active_workspace }
+
+  workspaces.entity_schema_listener:
+    class: Drupal\workspaces\EventSubscriber\EntitySchemaSubscriber
+    arguments: ['@entity.definition_update_manager', '@entity.last_installed_schema.repository', '@workspaces.manager']
+    tags:
+      - { name: 'event_subscriber' }
 
   cache_context.workspace:
     class: Drupal\workspaces\WorkspaceCacheContext

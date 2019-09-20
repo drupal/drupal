@@ -275,7 +275,7 @@ class WorkspaceIntegrationTest extends KernelTestBase {
       ],
     ]);
     $test_scenarios['add_published_node_in_stage'] = $revision_state;
-    $expected_workspace_association['add_published_node_in_stage'] = ['stage' => [3, 4, 5, 6, 7]];
+    $expected_workspace_association['add_published_node_in_stage'] = ['stage' => [3, 4, 5, 7]];
 
     // Deploying 'stage' to 'live' should simply make the latest revisions in
     // 'stage' the default ones in 'live'.
@@ -365,8 +365,9 @@ class WorkspaceIntegrationTest extends KernelTestBase {
     $this->switchToWorkspace('stage');
 
     // Add a workspace-specific revision to a pre-existing node.
-    $this->nodes[1]->title->value = 'stage - 2 - r3 - published';
-    $this->nodes[1]->save();
+    $node = $this->entityTypeManager->getStorage('node')->load(2);
+    $node->title->value = 'stage - 2 - r3 - published';
+    $node->save();
 
     $query = $this->entityTypeManager->getStorage('node')->getQuery();
     $query->sort('nid');
@@ -809,7 +810,7 @@ class WorkspaceIntegrationTest extends KernelTestBase {
   }
 
   /**
-   * Checks the workspace_association entries for a test scenario.
+   * Checks the workspace_association records for a test scenario.
    *
    * @param array $expected
    *   An array of expected values, as defined in ::testWorkspaces().
@@ -817,10 +818,10 @@ class WorkspaceIntegrationTest extends KernelTestBase {
    *   The ID of the entity type that is being tested.
    */
   protected function assertWorkspaceAssociation(array $expected, $entity_type_id) {
-    /** @var \Drupal\workspaces\WorkspaceAssociationStorageInterface $workspace_association_storage */
-    $workspace_association_storage = $this->entityTypeManager->getStorage('workspace_association');
+    /** @var \Drupal\workspaces\WorkspaceAssociationInterface $workspace_association */
+    $workspace_association = \Drupal::service('workspaces.association');
     foreach ($expected as $workspace_id => $expected_tracked_revision_ids) {
-      $tracked_entities = $workspace_association_storage->getTrackedEntities($workspace_id, TRUE);
+      $tracked_entities = $workspace_association->getTrackedEntities($workspace_id, $entity_type_id);
       $tracked_revision_ids = isset($tracked_entities[$entity_type_id]) ? $tracked_entities[$entity_type_id] : [];
       $this->assertEquals($expected_tracked_revision_ids, array_keys($tracked_revision_ids));
     }

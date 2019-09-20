@@ -3,7 +3,10 @@
 namespace Drupal\workspaces;
 
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
+use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Field\BaseFieldDefinition;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -66,6 +69,10 @@ class EntityTypeInfo implements ContainerInjectionInterface {
     foreach ($entity_types as $entity_type) {
       if ($this->workspaceManager->isEntityTypeSupported($entity_type)) {
         $entity_type->addConstraint('EntityWorkspaceConflict');
+
+        $revision_metadata_keys = $entity_type->get('revision_metadata_keys');
+        $revision_metadata_keys['workspace'] = 'workspace';
+        $entity_type->set('revision_metadata_keys', $revision_metadata_keys);
       }
     }
   }
@@ -81,6 +88,32 @@ class EntityTypeInfo implements ContainerInjectionInterface {
   public function fieldInfoAlter(&$definitions) {
     if (isset($definitions['entity_reference'])) {
       $definitions['entity_reference']['constraints']['EntityReferenceSupportedNewEntities'] = [];
+    }
+  }
+
+  /**
+   * Provides custom base field definitions for a content entity type.
+   *
+   * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
+   *   The entity type definition.
+   *
+   * @return \Drupal\Core\Field\FieldDefinitionInterface[]
+   *   An array of field definitions, keyed by field name.
+   *
+   * @see hook_entity_base_field_info()
+   */
+  public function entityBaseFieldInfo(EntityTypeInterface $entity_type) {
+    if ($this->workspaceManager->isEntityTypeSupported($entity_type)) {
+      $field_name = $entity_type->getRevisionMetadataKey('workspace');
+      $fields[$field_name] = BaseFieldDefinition::create('entity_reference')
+        ->setLabel(new TranslatableMarkup('Workspace'))
+        ->setDescription(new TranslatableMarkup('Indicates the workspace that this revision belongs to.'))
+        ->setSetting('target_type', 'workspace')
+        ->setInternal(TRUE)
+        ->setTranslatable(FALSE)
+        ->setRevisionable(TRUE);
+
+      return $fields;
     }
   }
 
