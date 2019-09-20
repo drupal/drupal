@@ -251,10 +251,8 @@ class FieldResolver {
    *   'uid.field_first_name' -> 'uid.entity.field_first_name'.
    *   'author.firstName' -> 'field_author.entity.field_first_name'
    *
-   * @param string $entity_type_id
-   *   The type of the entity for which to resolve the field name.
-   * @param string $bundle
-   *   The bundle of the entity for which to resolve the field name.
+   * @param \Drupal\jsonapi\ResourceType\ResourceType $resource_type
+   *   The JSON:API resource type from which to resolve the field name.
    * @param string $external_field_name
    *   The public field name to map to a Drupal field name.
    *
@@ -263,9 +261,21 @@ class FieldResolver {
    *
    * @throws \Drupal\Core\Http\Exception\CacheableBadRequestHttpException
    */
-  public function resolveInternalEntityQueryPath($entity_type_id, $bundle, $external_field_name) {
+  public function resolveInternalEntityQueryPath($resource_type, $external_field_name) {
+    $function_args = func_get_args();
+    // @todo Remove this conditional block in drupal:9.0.0 and add a type hint
+    // to the first argument of this method.
+    // @see https://www.drupal.org/project/drupal/issues/3078045
+    if (count($function_args) === 3) {
+      @trigger_error('Passing the entity type ID and bundle to ' . __METHOD__ . ' is deprecated in drupal:8.8.0 and will throw a fatal error in drupal:9.0.0. Pass a JSON:API resource type instead. See https://www.drupal.org/node/3078036', E_USER_DEPRECATED);
+      list($entity_type_id, $bundle, $external_field_name) = $function_args;
+      $resource_type = $this->resourceTypeRepository->get($entity_type_id, $bundle);
+    }
+    elseif (!$resource_type instanceof ResourceType) {
+      throw new \InvalidArgumentException("The first argument to " . __METHOD__ . " should be an instance of \Drupal\jsonapi\ResourceType\ResourceType, " . gettype($resource_type) . " given.");
+    }
+
     $cacheability = (new CacheableMetadata())->addCacheContexts(['url.query_args:filter', 'url.query_args:sort']);
-    $resource_type = $this->resourceTypeRepository->get($entity_type_id, $bundle);
     if (empty($external_field_name)) {
       throw new CacheableBadRequestHttpException($cacheability, 'No field name was provided for the filter.');
     }

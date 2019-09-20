@@ -168,7 +168,8 @@ class FieldResolverTest extends JsonapiKernelTestBase {
    * @dataProvider resolveInternalEntityQueryPathProvider
    */
   public function testResolveInternalEntityQueryPath($expect, $external_path, $entity_type_id = 'entity_test_with_bundle', $bundle = 'bundle1') {
-    $this->assertEquals($expect, $this->sut->resolveInternalEntityQueryPath($entity_type_id, $bundle, $external_path));
+    $resource_type = $this->resourceTypeRepository->get($entity_type_id, $bundle);
+    $this->assertEquals($expect, $this->sut->resolveInternalEntityQueryPath($resource_type, $external_path));
   }
 
   /**
@@ -252,7 +253,8 @@ class FieldResolverTest extends JsonapiKernelTestBase {
     if (!empty($expected_message)) {
       $this->expectExceptionMessage($expected_message);
     }
-    $this->sut->resolveInternalEntityQueryPath($entity_type, $bundle, $external_path);
+    $resource_type = $this->resourceTypeRepository->get($entity_type, $bundle);
+    $this->sut->resolveInternalEntityQueryPath($resource_type, $external_path);
   }
 
   /**
