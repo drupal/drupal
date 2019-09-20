@@ -1454,25 +1454,3 @@ function system_element_info_alter(&$type) {
     $type['page']['#theme_wrappers']['off_canvas_page_wrapper'] = ['#weight' => -1000];
   }
 }
-
-/**
- * Implements hook_modules_uninstalled().
- */
-function system_modules_uninstalled($modules) {
-  // @todo Remove this when modules are able to maintain their revision metadata
-  //   keys.
-  //   @see https://www.drupal.org/project/drupal/issues/3074333
-  if (!in_array('workspaces', $modules, TRUE)) {
-    return;
-  }
-
-  $entity_definition_update_manager = \Drupal::entityDefinitionUpdateManager();
-  foreach ($entity_definition_update_manager->getEntityTypes() as $entity_type) {
-    $revision_metadata_keys = $entity_type->get('revision_metadata_keys');
-    if ($revision_metadata_keys && array_key_exists('workspace', $revision_metadata_keys)) {
-      unset($revision_metadata_keys['workspace']);
-      $entity_type->set('revision_metadata_keys', $revision_metadata_keys);
-      $entity_definition_update_manager->updateEntityType($entity_type);
-    }
-  }
-}

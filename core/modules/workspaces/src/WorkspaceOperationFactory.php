@@ -37,29 +37,17 @@ class WorkspaceOperationFactory {
   protected $workspaceManager;
 
   /**
-   * The workspace association service.
-   *
-   * @var \Drupal\workspaces\WorkspaceAssociationInterface
-   */
-  protected $workspaceAssociation;
-
-  /**
    * Constructs a new WorkspacePublisher.
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   The entity type manager.
    * @param \Drupal\Core\Database\Connection $database
    *   Database connection.
-   * @param \Drupal\workspaces\WorkspaceManagerInterface $workspace_manager
-   *   The workspace manager service.
-   * @param \Drupal\workspaces\WorkspaceAssociationInterface $workspace_association
-   *   The workspace association service.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, Connection $database, WorkspaceManagerInterface $workspace_manager, WorkspaceAssociationInterface $workspace_association) {
+  public function __construct(EntityTypeManagerInterface $entity_type_manager, Connection $database, WorkspaceManagerInterface $workspace_manager) {
     $this->entityTypeManager = $entity_type_manager;
     $this->database = $database;
     $this->workspaceManager = $workspace_manager;
-    $this->workspaceAssociation = $workspace_association;
   }
 
   /**
@@ -72,7 +60,7 @@ class WorkspaceOperationFactory {
    *   A workspace publisher object.
    */
   public function getPublisher(WorkspaceInterface $source) {
-    return new WorkspacePublisher($this->entityTypeManager, $this->database, $this->workspaceManager, $this->workspaceAssociation, $source);
+    return new WorkspacePublisher($this->entityTypeManager, $this->database, $this->workspaceManager, $source);
   }
 
 }
