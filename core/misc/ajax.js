@@ -393,6 +393,10 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
     return '<div class="message">' + message + '</div>';
   };
 
+  Drupal.theme.ajaxProgressBar = function ($element) {
+    return $('<div class="ajax-progress ajax-progress-bar"></div>').append($element);
+  };
+
   Drupal.Ajax.prototype.setProgressIndicatorBar = function () {
     var progressBar = new Drupal.ProgressBar('ajax-progress-' + this.element.id, $.noop, this.progress.method, $.noop);
     if (this.progress.message) {
@@ -401,7 +405,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
     if (this.progress.url) {
       progressBar.startMonitoring(this.progress.url, this.progress.interval || 1500);
     }
-    this.progress.element = $(progressBar.element).addClass('ajax-progress ajax-progress-bar');
+    this.progress.element = $(Drupal.theme('ajaxProgressBar', progressBar.element));
     this.progress.object = progressBar;
     $(this.element).after(this.progress.element);
   };

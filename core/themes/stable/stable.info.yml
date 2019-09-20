@@ -310,5 +310,7 @@ libraries-override:
         css/views_ui.contextual.css: css/views_ui/views_ui.contextual.css
 
 libraries-extend:
+  core/drupal.ajax:
+    - stable/drupal.ajax
   user/drupal.user:
     - stable/drupal.user

@@ -655,9 +655,7 @@
       // the complete response.
       this.ajaxing = false;
       window.alert(
-        `An error occurred while attempting to process ${this.options.url}: ${
-          e.message
-        }`,
+        `An error occurred while attempting to process ${this.options.url}: ${e.message}`,
       );
       // For consistency, return a rejected Deferred (i.e., jqXHR's superclass)
       // so that calling code can take appropriate action.
@@ -750,9 +748,7 @@
       // the complete response.
       ajax.ajaxing = false;
       window.alert(
-        `An error occurred while attempting to process ${ajax.options.url}: ${
-          e.message
-        }`,
+        `An error occurred while attempting to process ${ajax.options.url}: ${e.message}`,
       );
     }
   };
@@ -908,6 +904,17 @@
     `<div class="message">${message}</div>`;
 
   /**
+   * Provide a wrapper for the AJAX progress bar element.
+   *
+   * @param {jQuery} $element
+   *   Progress bar element.
+   * @return {string}
+   *   The HTML markup for the progress bar.
+   */
+  Drupal.theme.ajaxProgressBar = $element =>
+    $('<div class="ajax-progress ajax-progress-bar"></div>').append($element);
+
+  /**
    * Sets the progress bar progress indicator.
    */
   Drupal.Ajax.prototype.setProgressIndicatorBar = function() {
@@ -926,8 +933,8 @@
         this.progress.interval || 1500,
       );
     }
-    this.progress.element = $(progressBar.element).addClass(
-      'ajax-progress ajax-progress-bar',
+    this.progress.element = $(
+      Drupal.theme('ajaxProgressBar', progressBar.element),
     );
     this.progress.object = progressBar;
     $(this.element).after(this.progress.element);
