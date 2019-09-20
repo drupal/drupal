@@ -62,6 +62,10 @@ class AllowedPackages implements PostPackageEventListenerInterface {
   /**
    * Gets a list of all packages that are allowed to copy scaffold files.
    *
+   * We will implicitly allow the projects 'drupal/legacy-scaffold-assets'
+   * and 'drupal/core' to scaffold files, if they are present. Any other
+   * project must be explicitly whitelisted in the top-level composer.json
+   * file in order to be allowed to override scaffold files.
    * Configuration for packages specified later will override configuration
    * specified by packages listed earlier. In other words, the last listed
    * package has the highest priority. The root package will always be returned
@@ -71,12 +75,12 @@ class AllowedPackages implements PostPackageEventListenerInterface {
    *   An array of allowed Composer packages.
    */
   public function getAllowedPackages() {
-    $options = $this->manageOptions->getOptions();
-    $allowed_packages = $this->recursiveGetAllowedPackages($options->allowedPackages());
+    $top_level_packages = $this->getTopLevelAllowedPackages();
+    $allowed_packages = $this->recursiveGetAllowedPackages($top_level_packages);
     // If the root package defines any file mappings, then implicitly add it
     // to the list of allowed packages. Add it at the end so that it overrides
     // all the preceding packages.
-    if ($options->hasFileMapping()) {
+    if ($this->manageOptions->getOptions()->hasFileMapping()) {
       $root_package = $this->composer->getPackage();
       unset($allowed_packages[$root_package->getName()]);
       $allowed_packages[$root_package->getName()] = $root_package;
@@ -95,6 +99,26 @@ class AllowedPackages implements PostPackageEventListenerInterface {
     if (ScaffoldOptions::hasOptions($package->getExtra())) {
       $this->newPackages[$package->getName()] = $package;
     }
+  }
+
+  /**
+   * Gets all packages that are allowed in the top-level composer.json.
+   *
+   * We will implicitly allow the projects 'drupal/legacy-scaffold-assets'
+   * and 'drupal/core' to scaffold files, if they are present. Any other
+   * project must be explicitly whitelisted in the top-level composer.json
+   * file in order to be allowed to override scaffold files.
+   *
+   * @return array
+   *   An array of allowed Composer package names.
+   */
+  protected function getTopLevelAllowedPackages() {
+    $implicit_packages = [
+      'drupal/legacy-scaffold-assets',
+      'drupal/core',
+    ];
+    $top_level_packages = $this->manageOptions->getOptions()->allowedPackages();
+    return array_merge($implicit_packages, $top_level_packages);
   }
 
   /**

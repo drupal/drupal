@@ -224,7 +224,10 @@ class Handler {
     if ($options->hasFileMapping()) {
       return $this->createScaffoldOperations($package, $options->fileMapping());
     }
-    if (!$options->hasAllowedPackages()) {
+    // Warn the user if they allow a package that does not have any scaffold
+    // files. We will ignore drupal/core, though, as it is implicitly allowed,
+    // but might not have scaffold files (version 8.7.x and earlier).
+    if (!$options->hasAllowedPackages() && ($package->getName() != 'drupal/core')) {
       $this->io->writeError("The allowed package {$package->getName()} does not provide a file mapping for Composer Scaffold.");
     }
     return [];
