@@ -10645,6 +10645,14 @@ $connection->insert('imagecache_action')
   'action' => 'imagecache_rotate',
   'data' => 'a:3:{s:7:"degrees";s:2:"55";s:6:"random";i:0;s:7:"bgcolor";s:0:"";}',
 ))
+  ->values(array(
+  'actionid' => '7',
+  'presetid' => '2',
+  'weight' => '0',
+  'module' => 'imagecache',
+  'action' => '',
+  'data' => 'a:3:{s:7:"degrees";s:2:"55";s:6:"random";i:0;s:7:"bgcolor";s:0:"";}',
+  ))
 ->execute();
 $connection->schema()->createTable('imagecache_preset', array(
   'fields' => array(
