@@ -20,6 +20,9 @@ class ImageCacheActions extends ProcessPluginBase {
     $effects = [];
 
     foreach ($row->getSourceProperty('actions') as $action) {
+      if (empty($action['action'])) {
+        continue;
+      }
       $id = preg_replace('/^imagecache/', 'image', $action['action']);
 
       if ($id === 'image_crop') {
