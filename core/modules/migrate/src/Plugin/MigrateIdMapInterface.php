@@ -10,7 +10,9 @@ use Drupal\migrate\Row;
  * Defines an interface for migrate ID mappings.
  *
  * Migrate ID mappings maintain a relation between source ID and destination ID
- * for audit and rollback purposes.
+ * for audit and rollback purposes. The keys used in the migrate_map table are
+ * of the form sourceidN and destidN for the source and destination values
+ * respectively.
  */
 interface MigrateIdMapInterface extends \Iterator, PluginInspectionInterface {
 
