@@ -66,6 +66,7 @@ class ThemeHandler implements ThemeHandlerInterface {
    * {@inheritdoc}
    */
   public function setDefault($name) {
+    @trigger_error(__METHOD__ . ' is deprecated in drupal:8.2.0 and is removed from drupal:9.0.0. Use the configuration system to edit the system.theme config directly. See https://www.drupal.org/node/3082630', E_USER_DEPRECATED);
     $list = $this->listInfo();
     if (!isset($list[$name])) {
       throw new UninstalledExtensionException("$name theme is not installed.");

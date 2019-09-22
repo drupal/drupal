@@ -101,7 +101,10 @@ class ThemeSettingsTest extends KernelTestBase {
     $this->assertEquals($expected, theme_get_setting('logo.url', 'stark'));
 
     $theme_installer->install(['test_theme']);
-    $theme_handler->setDefault('test_theme');
+    \Drupal::configFactory()
+      ->getEditable('system.theme')
+      ->set('default', 'test_theme')
+      ->save();
     $theme = $theme_handler->getTheme('test_theme');
 
     drupal_static_reset('theme_get_setting');
