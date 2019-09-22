@@ -2,13 +2,13 @@
 
 namespace Drupal\migrate_drupal_ui\Form;
 
+use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\State\StateInterface;
 use Drupal\Core\TempStore\PrivateTempStoreFactory;
-use Drupal\migrate\Plugin\MigrationPluginManagerInterface;
-use Drupal\migrate_drupal\MigrationState;
-use Drupal\migrate_drupal\Plugin\MigrateFieldPluginManagerInterface;
 use Drupal\migrate_drupal_ui\Batch\MigrateUpgradeImportBatch;
+use Drupal\migrate_drupal\MigrationState;
+use Drupal\migrate\Plugin\MigrationPluginManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -31,27 +31,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class ReviewForm extends MigrateUpgradeFormBase {
 
   /**
-   * The state service.
-   *
-   * @var \Drupal\Core\State\StateInterface
-   */
-  protected $state;
-
-  /**
-   * The migration plugin manager service.
-   *
-   * @var \Drupal\migrate\Plugin\MigrationPluginManagerInterface
-   */
-  protected $pluginManager;
-
-  /**
-   * The field plugin manager service.
-   *
-   * @var \Drupal\migrate_drupal\Plugin\MigrateFieldPluginManagerInterface
-   */
-  protected $fieldPluginManager;
-
-  /**
    * The migrations.
    *
    * @var \Drupal\migrate\Plugin\MigrationInterface[]
@@ -72,18 +51,15 @@ class ReviewForm extends MigrateUpgradeFormBase {
    *   The state service.
    * @param \Drupal\migrate\Plugin\MigrationPluginManagerInterface $migration_plugin_manager
    *   The migration plugin manager service.
-   * @param \Drupal\migrate_drupal\Plugin\MigrateFieldPluginManagerInterface $field_plugin_manager
-   *   The field plugin manager service.
    * @param \Drupal\Core\TempStore\PrivateTempStoreFactory $tempstore_private
-   *   The private tempstore factory.
+   *   The private tempstore factory service.
    * @param \Drupal\migrate_drupal\MigrationState $migrationState
    *   Migration state service.
+   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
+   *   The config factory service.
    */
-  public function __construct(StateInterface $state, MigrationPluginManagerInterface $migration_plugin_manager, MigrateFieldPluginManagerInterface $field_plugin_manager, PrivateTempStoreFactory $tempstore_private, MigrationState $migrationState) {
-    parent::__construct($tempstore_private);
-    $this->state = $state;
-    $this->pluginManager = $migration_plugin_manager;
-    $this->fieldPluginManager = $field_plugin_manager;
+  public function __construct(StateInterface $state, MigrationPluginManagerInterface $migration_plugin_manager, PrivateTempStoreFactory $tempstore_private, MigrationState $migrationState, ConfigFactoryInterface $config_factory) {
+    parent::__construct($config_factory, $migration_plugin_manager, $state, $tempstore_private);
     $this->migrationState = $migrationState;
   }
 
@@ -94,9 +70,9 @@ class ReviewForm extends MigrateUpgradeFormBase {
     return new static(
       $container->get('state'),
       $container->get('plugin.manager.migration'),
-      $container->get('plugin.manager.migrate.field'),
       $container->get('tempstore.private'),
-      $container->get('migrate_drupal.migration_state')
+      $container->get('migrate_drupal.migration_state'),
+      $container->get('config.factory')
     );
   }
 
@@ -126,7 +102,7 @@ class ReviewForm extends MigrateUpgradeFormBase {
     $form = parent::buildForm($form, $form_state);
     $form['#title'] = $this->t('What will be upgraded?');
 
-    $migrations = $this->pluginManager->createInstances(array_keys($this->store->get('migrations')));
+    $migrations = $this->migrationPluginManager->createInstances(array_keys($this->store->get('migrations')));
 
     // Get the upgrade states for the source modules.
     $display = $this->migrationState->getUpgradeStates($version, $system_data, $migrations);

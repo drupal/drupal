@@ -3,10 +3,7 @@
 namespace Drupal\migrate_drupal_ui\Form;
 
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\State\StateInterface;
-use Drupal\Core\TempStore\PrivateTempStoreFactory;
 use Drupal\Core\Url;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Migrate Upgrade Overview form.
@@ -14,36 +11,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * @internal
  */
 class OverviewForm extends MigrateUpgradeFormBase {
-
-  /**
-   * The state service.
-   *
-   * @var \Drupal\Core\State\StateInterface
-   */
-  protected $state;
-
-  /**
-   * Overview form constructor.
-   *
-   * @param \Drupal\Core\State\StateInterface $state
-   *   The state service.
-   * @param \Drupal\Core\TempStore\PrivateTempStoreFactory $tempstore_private
-   *   The private tempstore factory.
-   */
-  public function __construct(StateInterface $state, PrivateTempStoreFactory $tempstore_private) {
-    parent::__construct($tempstore_private);
-    $this->state = $state;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container) {
-    return new static(
-      $container->get('state'),
-      $container->get('tempstore.private')
-    );
-  }
 
   /**
    * {@inheritdoc}

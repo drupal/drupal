@@ -2,10 +2,13 @@
 
 namespace Drupal\migrate_drupal_ui\Form;
 
+use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\migrate_drupal\MigrationConfigurationTrait;
+use Drupal\Core\State\StateInterface;
 use Drupal\Core\TempStore\PrivateTempStoreFactory;
+use Drupal\migrate\Plugin\MigrationPluginManagerInterface;
+use Drupal\migrate_drupal\MigrationConfigurationTrait;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -25,10 +28,19 @@ abstract class MigrateUpgradeFormBase extends FormBase {
   /**
    * Constructs the Migrate Upgrade Form Base.
    *
+   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
+   *   The config factory service.
+   * @param \Drupal\migrate\Plugin\MigrationPluginManagerInterface $migration_plugin_manager
+   *   The migration plugin manager service.
+   * @param \Drupal\Core\State\StateInterface $state
+   *   The state service.
    * @param \Drupal\Core\TempStore\PrivateTempStoreFactory $tempstore_private
-   *   Private store.
+   *   The private tempstore factory service.
    */
-  public function __construct(PrivateTempStoreFactory $tempstore_private) {
+  public function __construct(ConfigFactoryInterface $config_factory, MigrationPluginManagerInterface $migration_plugin_manager, StateInterface $state, PrivateTempStoreFactory $tempstore_private) {
+    $this->configFactory = $config_factory;
+    $this->migrationPluginManager = $migration_plugin_manager;
+    $this->state = $state;
     $this->store = $tempstore_private->get('migrate_drupal_ui');
   }
 
@@ -37,6 +49,9 @@ abstract class MigrateUpgradeFormBase extends FormBase {
    */
   public static function create(ContainerInterface $container) {
     return new static(
+      $container->get('config.factory'),
+      $container->get('plugin.manager.migration'),
+      $container->get('state'),
       $container->get('tempstore.private')
     );
   }

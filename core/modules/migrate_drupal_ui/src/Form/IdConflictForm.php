@@ -3,11 +3,8 @@
 namespace Drupal\migrate_drupal_ui\Form;
 
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\TempStore\PrivateTempStoreFactory;
 use Drupal\migrate\Audit\IdAuditor;
 use Drupal\migrate\Plugin\migrate\destination\EntityContentBase;
-use Drupal\migrate\Plugin\MigrationPluginManagerInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Migrate Upgrade Id Conflict form.
@@ -15,36 +12,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * @internal
  */
 class IdConflictForm extends MigrateUpgradeFormBase {
-
-  /**
-   * The migration plugin manager service.
-   *
-   * @var \Drupal\migrate\Plugin\MigrationPluginManagerInterface
-   */
-  protected $pluginManager;
-
-  /**
-   * IdConflictForm constructor.
-   *
-   * @param \Drupal\migrate\Plugin\MigrationPluginManagerInterface $migration_plugin_manager
-   *   The migration plugin manager service.
-   * @param \Drupal\Core\TempStore\PrivateTempStoreFactory $tempstore_private
-   *   The private tempstore factory.
-   */
-  public function __construct(MigrationPluginManagerInterface $migration_plugin_manager, PrivateTempStoreFactory $tempstore_private) {
-    parent::__construct($tempstore_private);
-    $this->pluginManager = $migration_plugin_manager;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container) {
-    return new static(
-      $container->get('plugin.manager.migration'),
-      $container->get('tempstore.private')
-    );
-  }
 
   /**
    * {@inheritdoc}
@@ -67,7 +34,7 @@ class IdConflictForm extends MigrateUpgradeFormBase {
 
     $migration_ids = array_keys($migrations);
     // Check if there are conflicts. If none, just skip this form!
-    $migrations = $this->pluginManager->createInstances($migration_ids);
+    $migrations = $this->migrationPluginManager->createInstances($migration_ids);
 
     $translated_content_conflicts = $content_conflicts = [];
 
