@@ -788,14 +788,14 @@ function file_cron() {
  *   array element contains the file entity if the upload succeeded or FALSE if
  *   there was an error. Function returns NULL if no file was uploaded.
  *
- * @deprecated in Drupal 8.4.x, will be removed before Drupal 9.0.0.
- *   For backwards compatibility use core file upload widgets in forms.
- *
  * @internal
- *   This function wraps file_save_upload() to allow correct error handling in
- *   forms.
+ *   This function is internal, and may be removed in a minor version release.
+ *   It wraps file_save_upload() to allow correct error handling in forms.
+ *   Contrib and custom code should not call this function, they should use the
+ *   managed file upload widgets in core.
  *
- * @todo Revisit after https://www.drupal.org/node/2244513.
+ * @see https://www.drupal.org/project/drupal/issues/3069020
+ * @see https://www.drupal.org/project/drupal/issues/2482783
  */
 function _file_save_upload_from_form(array $element, FormStateInterface $form_state, $delta = NULL, $replace = FILE_EXISTS_RENAME) {
   // Get all errors set before calling this method. This will also clear them
