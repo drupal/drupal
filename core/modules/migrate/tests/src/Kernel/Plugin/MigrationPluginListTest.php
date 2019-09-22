@@ -49,7 +49,6 @@ class MigrationPluginListTest extends KernelTestBase {
     'path',
     'search',
     'shortcut',
-    'simpletest',
     'statistics',
     'syslog',
     'system',
