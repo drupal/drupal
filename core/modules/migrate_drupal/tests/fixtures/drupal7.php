@@ -18790,23 +18790,7 @@ $connection->insert('locales_target')
   'i18n_status' => '0',
 ))
 ->values(array(
-  'lid' => '85',
-  'translation' => 'fr - VocabLocalized',
-  'language' => 'fr',
-  'plid' => '0',
-  'plural' => '0',
-  'i18n_status' => '0',
-))
-->values(array(
-  'lid' => '86',
-  'translation' => 'fr - Vocabulary localize option',
-  'language' => 'fr',
-  'plid' => '0',
-  'plural' => '0',
-  'i18n_status' => '0',
-))
-->values(array(
-  'lid' => '89',
+  'lid' => '87',
   'translation' => 'fr - VocabFixed',
   'language' => 'fr',
   'plid' => '0',
@@ -18814,40 +18798,16 @@ $connection->insert('locales_target')
   'i18n_status' => '0',
 ))
 ->values(array(
+  'lid' => '89',
+  'translation' => 'fr - VocabLocalized',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+  'i18n_status' => '0',
+))
+->values(array(
   'lid' => '90',
-  'translation' => 'fr - Vocabulary fixed option',
-  'language' => 'fr',
-  'plid' => '0',
-  'plural' => '0',
-  'i18n_status' => '0',
-))
-->values(array(
-  'lid' => '91',
-  'translation' => 'fr - Jupiter Station',
-  'language' => 'fr',
-  'plid' => '0',
-  'plural' => '0',
-  'i18n_status' => '0',
-))
-->values(array(
-  'lid' => '92',
-  'translation' => 'fr - Holographic research.',
-  'language' => 'fr',
-  'plid' => '0',
-  'plural' => '0',
-  'i18n_status' => '0',
-))
-->values(array(
-  'lid' => '93',
-  'translation' => 'fr - DS9',
-  'language' => 'fr',
-  'plid' => '0',
-  'plural' => '0',
-  'i18n_status' => '0',
-))
-->values(array(
-  'lid' => '94',
-  'translation' => 'Terok Nor',
+  'translation' => 'fr - Vocabulary localize option',
   'language' => 'fr',
   'plid' => '0',
   'plural' => '0',
@@ -18867,7 +18827,7 @@ $connection->insert('locales_target')
   'language' => 'fr',
   'plid' => '0',
   'plural' => '0',
-  'i18n_status' => '0',
+  'i18n_status' => '1',
 ))
 ->values(array(
   'lid' => '163',
@@ -18883,7 +18843,7 @@ $connection->insert('locales_target')
   'language' => 'fr',
   'plid' => '0',
   'plural' => '0',
-  'i18n_status' => '0',
+  'i18n_status' => '1',
 ))
 ->values(array(
   'lid' => '684',
@@ -18891,7 +18851,7 @@ $connection->insert('locales_target')
   'language' => 'fr',
   'plid' => '0',
   'plural' => '0',
-  'i18n_status' => '0',
+  'i18n_status' => '1',
 ))
 ->values(array(
   'lid' => '761',
@@ -18982,23 +18942,23 @@ $connection->insert('locales_target')
   'i18n_status' => '0',
 ))
 ->values(array(
-  'lid' => '687',
-  'translation' => 'is - Off',
+  'lid' => '89',
+  'translation' => 'is - VocabLocalized',
   'language' => 'is',
   'plid' => '0',
   'plural' => '0',
   'i18n_status' => '0',
 ))
 ->values(array(
-  'lid' => '688',
-  'translation' => 'is - 1',
+  'lid' => '90',
+  'translation' => 'is - Vocabulary localize option',
   'language' => 'is',
   'plid' => '0',
   'plural' => '0',
   'i18n_status' => '0',
 ))
 ->values(array(
-  'lid' => '87',
+  'lid' => '91',
   'translation' => 'is - VocabTranslate',
   'language' => 'is',
   'plid' => '0',
@@ -19006,24 +18966,8 @@ $connection->insert('locales_target')
   'i18n_status' => '0',
 ))
 ->values(array(
-  'lid' => '88',
+  'lid' => '92',
   'translation' => 'is - Vocabulary translate option',
-  'language' => 'is',
-  'plid' => '0',
-  'plural' => '0',
-  'i18n_status' => '0',
-))
-->values(array(
-  'lid' => '93',
-  'translation' => 'is - DS9',
-  'language' => 'is',
-  'plid' => '0',
-  'plural' => '0',
-  'i18n_status' => '0',
-))
-->values(array(
-  'lid' => '94',
-  'translation' => 'is - Terok Nor',
   'language' => 'is',
   'plid' => '0',
   'plural' => '0',
@@ -19056,6 +19000,30 @@ $connection->insert('locales_target')
 ->values(array(
   'lid' => '128',
   'translation' => 'is - Term Reference',
+  'language' => 'is',
+  'plid' => '0',
+  'plural' => '0',
+  'i18n_status' => '0',
+))
+->values(array(
+  'lid' => '687',
+  'translation' => 'is - Off',
+  'language' => 'is',
+  'plid' => '0',
+  'plural' => '0',
+  'i18n_status' => '0',
+))
+->values(array(
+  'lid' => '688',
+  'translation' => 'is - 1',
+  'language' => 'is',
+  'plid' => '0',
+  'plural' => '0',
+  'i18n_status' => '0',
+))
+->values(array(
+  'lid' => '758',
+  'translation' => 'is field - vocab_localize',
   'language' => 'is',
   'plid' => '0',
   'plural' => '0',

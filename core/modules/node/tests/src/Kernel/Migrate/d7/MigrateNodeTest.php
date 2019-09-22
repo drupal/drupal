@@ -3,6 +3,7 @@
 namespace Drupal\Tests\node\Kernel\Migrate\d7;
 
 use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
+use Drupal\taxonomy\Entity\Term;
 use Drupal\Tests\file\Kernel\Migrate\d7\FileMigrationSetupTrait;
 use Drupal\Tests\migrate_drupal\Kernel\d7\MigrateDrupal7TestBase;
 use Drupal\node\Entity\Node;
@@ -51,14 +52,19 @@ class MigrateNodeTest extends MigrateDrupal7TestBase {
 
     $this->migrateUsers();
     $this->migrateFields();
+    $this->migrateTaxonomyTerms();
     $this->executeMigrations([
       'language',
+      'd7_language_content_taxonomy_vocabulary_settings',
+      'd7_taxonomy_term_localized_translation',
+      'd7_taxonomy_term_translation',
       'd7_language_content_settings',
       'd7_comment_field',
       'd7_comment_field_instance',
       'd7_node',
       'd7_node_translation',
       'd7_entity_translation_settings',
+      'd7_taxonomy_term_entity_translation',
       'd7_node_entity_translation',
     ]);
   }
@@ -180,6 +186,16 @@ class MigrateNodeTest extends MigrateDrupal7TestBase {
     $this->assertEquals('internal:/', $node->field_link->uri);
     $this->assertEquals('Home', $node->field_link->title);
     $this->assertEquals(CommentItemInterface::OPEN, $node->comment_node_article->status);
+    $term_ref = $node->get('field_vocab_localize')->target_id;
+    $this->assertSame('20', $term_ref);
+    $this->assertSame('DS9', Term::load($term_ref)->getName());
+
+    $term_ref = $node->get('field_vocab_translate')->target_id;
+    $this->assertSame('21', $term_ref);
+    $this->assertSame('High council', Term::load($term_ref)->getName());
+
+    $term_ref = $node->get('field_vocab_fixed')->target_id;
+    $this->assertSame('24', $term_ref);
     $this->assertTrue($node->hasTranslation('is'), "Node 2 has an Icelandic translation");
 
     $translation = $node->getTranslation('is');
@@ -189,6 +205,16 @@ class MigrateNodeTest extends MigrateDrupal7TestBase {
     $this->assertEquals('internal:/', $translation->field_link->uri);
     $this->assertEquals(CommentItemInterface::OPEN, $translation->comment_node_article->status);
     $this->assertEquals('Home', $translation->field_link->title);
+    $term_ref = $translation->get('field_vocab_localize')->target_id;
+    $this->assertSame('20', $term_ref);
+    $this->assertSame('DS9', Term::load($term_ref)->getName());
+
+    $term_ref = $translation->get('field_vocab_translate')->target_id;
+    $this->assertSame('23', $term_ref);
+    $this->assertSame('is - High council', Term::load($term_ref)->getName());
+
+    $term_ref = $translation->get('field_vocab_fixed')->target_id;
+    $this->assertNulL($term_ref);
 
     // Test that content_translation_source is set.
     $manager = $this->container->get('content_translation.manager');

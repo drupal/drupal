@@ -3,6 +3,7 @@ finished:
     i18nprofile: config_translation
   7:
     i18n_variable: config_translation
+    i18n_taxonomy: config_translation
 not_finished:
   6:
     # language content comment settings.
@@ -24,5 +25,3 @@ not_finished:
     # field labels and descriptions, field options.
     i18n_field: config_translation
     i18n_string: config_translation
-      # localized. vocabulary language settings, taxonomy term language.
-    i18n_taxonomy: config_tanslation

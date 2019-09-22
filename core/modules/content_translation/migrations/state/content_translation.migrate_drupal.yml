@@ -39,8 +39,8 @@ not_finished:
     # Menu links.
     # See https://www.drupal.org/project/drupal/issues/3008028
     i18n_menu: content_translation
-    # Migrate taxonomy term references
-    # https://www.drupal.org/project/drupal/issues/3035392
+    # @TODO: Remove when taxonomy term field translations are migrated.
+    # See https://www.drupal.org/project/drupal/issues/3073050
     i18n_taxonomy: content_translation
     # Node revision translations.
     # https://www.drupal.org/project/drupal/issues/2746541
