@@ -58,8 +58,8 @@ class AjaxResponse extends JsonResponse implements AttachmentsInterface {
   /**
    * Gets all AJAX commands.
    *
-   * @return \Drupal\Core\Ajax\CommandInterface[]
-   *   Returns all previously added AJAX commands.
+   * @return array
+   *   Returns render arrays for all previously added commands.
    */
   public function &getCommands() {
     return $this->commands;
