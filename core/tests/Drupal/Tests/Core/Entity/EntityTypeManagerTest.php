@@ -231,11 +231,6 @@ class EntityTypeManagerTest extends UnitTestCase {
    * @covers ::getFormObject
    */
   public function testGetFormObject() {
-    $entity_manager = $this->prophesize(EntityManagerInterface::class);
-    $container = $this->prophesize(ContainerInterface::class);
-    $container->get('entity.manager')->willReturn($entity_manager->reveal());
-    \Drupal::setContainer($container->reveal());
-
     $apple = $this->prophesize(EntityTypeInterface::class);
     $apple->getFormClass('default')->willReturn(TestEntityForm::class);
 
