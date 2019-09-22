@@ -54,7 +54,7 @@ trait NodeCreationTrait {
    *   The following defaults are provided:
    *   - body: Random string using the default filter format:
    *     @code
-   *       $settings['body'][0] = array(
+   *       $values['body'][0] = array(
    *         'value' => $this->randomMachineName(32),
    *         'format' => filter_default_format(),
    *       );
