@@ -244,20 +244,19 @@
           // Convert data-align attribute to class so we're not applying styles
           // to data attributes.
           // @todo Consider removing this in https://www.drupal.org/project/drupal/issues/3072279
+          // Remove any align classes from from the widget wrapper. These
+          // classes are moved to the wrapper so that the alignment will still
+          // display within CKEditor.
+          const classes = this.element.getParent().$.classList;
+          for (let i = 0; i < classes.length; i++) {
+            if (classes[i].indexOf('align-') === 0) {
+              this.element.getParent().removeClass(classes[i]);
+            }
+          }
           if (this.data.attributes.hasOwnProperty('data-align')) {
             this.element
               .getParent()
               .addClass(`align-${this.data.attributes['data-align']}`);
-          } else {
-            // If data-align property is removed, remove any align classes from
-            // from the widget wrapper. These classes are moved to the wrapper
-            // so that the alignment will still display within CKEditor.
-            const classes = this.element.getParent().$.classList;
-            for (let i = 0; i < classes.length; i++) {
-              if (classes[i].indexOf('align-') === 0) {
-                this.element.getParent().removeClass(classes[i]);
-              }
-            }
           }
 
           // Track the previous state to allow checking if preview needs

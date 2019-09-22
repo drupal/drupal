@@ -178,15 +178,14 @@
 
           this.element.setAttributes(this.data.attributes);
 
+          var classes = this.element.getParent().$.classList;
+          for (var i = 0; i < classes.length; i++) {
+            if (classes[i].indexOf('align-') === 0) {
+              this.element.getParent().removeClass(classes[i]);
+            }
+          }
           if (this.data.attributes.hasOwnProperty('data-align')) {
             this.element.getParent().addClass('align-' + this.data.attributes['data-align']);
-          } else {
-            var classes = this.element.getParent().$.classList;
-            for (var i = 0; i < classes.length; i++) {
-              if (classes[i].indexOf('align-') === 0) {
-                this.element.getParent().removeClass(classes[i]);
-              }
-            }
           }
 
           this.oldData = CKEDITOR.tools.clone(this.data);

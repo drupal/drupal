@@ -1042,9 +1042,22 @@ class CKEditorIntegrationTest extends WebDriverTestBase {
     ];
     foreach ($alignments as $alignment) {
       $this->fillFieldInMetadataDialogAndSubmit('attributes[data-align]', $alignment);
-      // Now verify the result.
+      // Now verify the result. Assert the first element within the
+      // <drupal-media> element has the alignment class.
       $selector = sprintf('drupal-media[data-align="%s"] .caption-drupal-media.align-%s', $alignment, $alignment);
       $this->assertNotEmpty($assert_session->waitForElementVisible('css', $selector, 2000));
+      foreach ($alignments as $wrapper_alignment) {
+        $selector = sprintf('.cke_widget_drupalmedia.align-%s', $wrapper_alignment);
+        if ($wrapper_alignment === $alignment) {
+          // Assert that the alignment class exists on the wrapper.
+          $assert_session->elementExists('css', $selector);
+        }
+        else {
+          // Assert that the other alignment classes don't exist on the wrapper.
+          $assert_session->elementNotExists('css', $selector);
+        }
+      }
+
       // Assert that the resultant downcast drupal-media element has the proper
       // `data-align` attribute.
       $this->pressEditorButton('source');
