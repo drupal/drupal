@@ -53,7 +53,7 @@ function umami_preprocess_block(&$variables) {
 }
 
 /**
- * Implements hook_theme_suggestions_HOOK_alter() for form templates.
+ * Implements hook_theme_suggestions_HOOK_alter() for block templates.
  */
 function umami_theme_suggestions_block_alter(array &$suggestions, array $variables) {
   // Block suggestions for custom block bundles.
