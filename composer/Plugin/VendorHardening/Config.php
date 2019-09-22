@@ -93,7 +93,7 @@ class Config {
     'symfony/yaml' => ['Tests'],
     'symfony-cmf/routing' => ['Test', 'Tests'],
     'theseer/tokenizer' => ['tests'],
-    'twig/twig' => ['doc', 'ext', 'test'],
+    'twig/twig' => ['doc', 'ext', 'test', 'tests'],
     'zendframework/zend-escaper' => ['doc'],
     'zendframework/zend-feed' => ['doc'],
     'zendframework/zend-stdlib' => ['doc'],
