@@ -34,18 +34,31 @@ class Comment extends DrupalSqlBase {
    * {@inheritdoc}
    */
   public function prepareRow(Row $row) {
+    // @todo Remove the call to ->prepareComment() in
+    // https://www.drupal.org/project/drupal/issues/3069260 when the Drupal 9
+    // branch opens.
     return parent::prepareRow($this->prepareComment($row));
   }
 
   /**
+   * Provides a BC layer for deprecated sources.
+   *
    * This is a backward compatibility layer for the deprecated migrate source
    * plugins d6_comment_variable and d6_comment_variable_per_comment_type.
    *
    * @param \Drupal\migrate\Row $row
    *   The row from the source to process.
+   *
    * @return \Drupal\migrate\Row
    *   The row object.
-   * @deprecated in Drupal 8.4.x, to be removed before Drupal 9.0.x.
+   *
+   * @throws \Exception
+   *   Passing a Row with a frozen source to this method will trigger an
+   *   \Exception when attempting to set the source properties.
+   *
+   * @todo Remove usages of this method and deprecate for removal in
+   *   https://www.drupal.org/project/drupal/issues/3069260 when the Drupal 9
+   *   branch opens.
    */
   protected function prepareComment(Row $row) {
     if ($this->variableGet('comment_subject_field_' . $row->getSourceProperty('type'), 1)) {
