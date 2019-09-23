@@ -123,12 +123,7 @@ class ReflectionFactoryTest extends TestCase {
     // us to use one data set for this test method as well as
     // testCreateInstance().
     if ($plugin_id == 'arguments_no_constructor') {
-      if (method_exists($this, 'expectException')) {
-        $this->expectException('\ReflectionException');
-      }
-      else {
-        $this->expectException('\ReflectionException');
-      }
+      $this->expectException('\ReflectionException');
     }
 
     // Finally invoke getInstanceArguments() on our mocked factory.

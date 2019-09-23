@@ -545,12 +545,7 @@ namespace Drupal\Tests\Component\DependencyInjection\Dumper {
       $services['bar'] = $bar_definition;
 
       $this->containerBuilder->getDefinitions()->willReturn($services);
-      if (method_exists($this, 'expectException')) {
-        $this->expectException(InvalidArgumentException::class);
-      }
-      else {
-        $this->expectException(InvalidArgumentException::class);
-      }
+      $this->expectException(InvalidArgumentException::class);
       $this->dumper->getArray();
     }
 
@@ -567,12 +562,7 @@ namespace Drupal\Tests\Component\DependencyInjection\Dumper {
       $services['bar'] = $bar_definition;
 
       $this->containerBuilder->getDefinitions()->willReturn($services);
-      if (method_exists($this, 'expectException')) {
-        $this->expectException(RuntimeException::class);
-      }
-      else {
-        $this->expectException(RuntimeException::class);
-      }
+      $this->expectException(RuntimeException::class);
       $this->dumper->getArray();
     }
 
@@ -589,12 +579,7 @@ namespace Drupal\Tests\Component\DependencyInjection\Dumper {
       $services['bar'] = $bar_definition;
 
       $this->containerBuilder->getDefinitions()->willReturn($services);
-      if (method_exists($this, 'expectException')) {
-        $this->expectException(RuntimeException::class);
-      }
-      else {
-        $this->expectException(RuntimeException::class);
-      }
+      $this->expectException(RuntimeException::class);
       $this->dumper->getArray();
     }
 
@@ -611,12 +596,7 @@ namespace Drupal\Tests\Component\DependencyInjection\Dumper {
       $services['bar'] = $bar_definition;
 
       $this->containerBuilder->getDefinitions()->willReturn($services);
-      if (method_exists($this, 'expectException')) {
-        $this->expectException(RuntimeException::class);
-      }
-      else {
-        $this->expectException(RuntimeException::class);
-      }
+      $this->expectException(RuntimeException::class);
       $this->dumper->getArray();
     }
 

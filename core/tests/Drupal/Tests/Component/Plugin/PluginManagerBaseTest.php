@@ -121,14 +121,8 @@ class PluginManagerBaseTest extends TestCase {
     $manager = $this->getMockBuilder(PluginManagerBase::class)
       ->getMockForAbstractClass();
     // Set the expected exception thrown by ::getInstance.
-    if (method_exists($this, 'expectException')) {
-      $this->expectException(\BadMethodCallException::class);
-      $this->expectExceptionMessage(sprintf('%s does not support this method unless %s::$mapper is set.', get_class($manager), get_class($manager)));
-    }
-    else {
-      $this->expectException(\BadMethodCallException::class);
-      $this->expectExceptionMessage(sprintf('%s does not support this method unless %s::$mapper is set.', get_class($manager), get_class($manager)));
-    }
+    $this->expectException(\BadMethodCallException::class);
+    $this->expectExceptionMessage(sprintf('%s does not support this method unless %s::$mapper is set.', get_class($manager), get_class($manager)));
     $manager->getInstance($options);
   }
 
