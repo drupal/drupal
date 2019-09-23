@@ -335,7 +335,7 @@ class EntityReferenceAdminTest extends BrowserTestBase {
     // should be reset (no auto-creation).
     $vocabularies[1]->delete();
     $field_config = FieldConfig::load($field_id);
-    $this->assertFalse($field_config->getSetting('handler_settings')['auto_create']);
+    $this->assertSame(FALSE, $field_config->getSetting('handler_settings')['auto_create']);
     $this->assertFalse(isset($field_config->getSetting('handler_settings')['auto_create_bundle']));
   }
 
