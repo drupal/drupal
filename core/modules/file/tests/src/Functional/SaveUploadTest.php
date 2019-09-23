@@ -135,6 +135,35 @@ class SaveUploadTest extends FileManagedTestBase {
   }
 
   /**
+   * Test uploading a duplicate file.
+   */
+  public function testDuplicate() {
+    // It should not be possible to create two managed files with the same URI.
+    $image1 = current($this->drupalGetTestFiles('image'));
+    $edit = ['files[file_test_upload]' => \Drupal::service('file_system')->realpath($image1->uri)];
+    $this->drupalPostForm('file-test/upload', $edit, t('Submit'));
+    $max_fid_after = (int) \Drupal::entityQueryAggregate('file')->aggregate('fid', 'max')->execute()[0]['fid_max'];
+    $file1 = File::load($max_fid_after);
+
+    // Simulate a race condition where two files are uploaded at almost the same
+    // time, by removing the first uploaded file from disk (leaving the entry in
+    // the file_managed table) before trying to upload another file with the
+    // same name.
+    unlink(\Drupal::service('file_system')->realpath($file1->getFileUri()));
+
+    $image2 = $image1;
+    $edit = ['files[file_test_upload]' => \Drupal::service('file_system')->realpath($image2->uri)];
+    $this->drupalPostForm('file-test/upload', $edit, t('Submit'));
+    // Received a 200 response for posted test file.
+    $this->assertResponse(200);
+    $message = t('The file %file already exists. Enter a unique file URI.', ['%file' => $file1->getFileUri()]);
+    $this->assertRaw($message);
+    $max_fid_before_duplicate = $max_fid_after;
+    $max_fid_after = (int) \Drupal::entityQueryAggregate('file')->aggregate('fid', 'max')->execute()[0]['fid_max'];
+    $this->assertEqual($max_fid_before_duplicate, $max_fid_after, 'A new managed file was not created.');
+  }
+
+  /**
    * Test extension handling.
    */
   public function testHandleExtension() {

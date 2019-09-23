@@ -441,6 +441,34 @@ class FileUploadTest extends ResourceTestBase {
   }
 
   /**
+   * Tests using the file upload POST route twice, simulating a race condition.
+   *
+   * A validation error should occur when the filenames are not unique.
+   */
+  public function testPostFileUploadDuplicateFileRaceCondition() {
+    $this->setUpAuthorization('POST');
+    $this->config('jsonapi.settings')->set('read_only', FALSE)->save(TRUE);
+
+    $uri = Url::fromUri('base:' . static::$postUri);
+
+    // This request will have the default 'application/octet-stream' content
+    // type header.
+    $response = $this->fileRequest($uri, $this->testFileData);
+
+    $this->assertSame(201, $response->getStatusCode());
+
+    // Simulate a race condition where two files are uploaded at almost the same
+    // time, by removing the first uploaded file from disk (leaving the entry in
+    // the file_managed table) before trying to upload another file with the
+    // same name.
+    unlink(\Drupal::service('file_system')->realpath('public://foobar/example.txt'));
+
+    // Make the same request again. The upload should fail validation.
+    $response = $this->fileRequest($uri, $this->testFileData);
+    $this->assertResourceErrorResponse(422, PlainTextOutput::renderFromHtml("Unprocessable Entity: file validation failed.\nThe file public://foobar/example.txt already exists. Enter a unique file URI."), $uri, $response);
+  }
+
+  /**
    * Tests using the file upload route with any path prefixes being stripped.
    *
    * @see https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Disposition#Directives

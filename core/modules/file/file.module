@@ -995,6 +995,9 @@ function _file_save_upload_single(\SplFileInfo $file_info, $form_field_name, $va
   $values['filemime'] = \Drupal::service('file.mime_type.guesser')->guess($values['filename']);
   $file = File::create($values);
 
+  // Ensure that the file object is validated.
+  $file->setValidationRequired(TRUE);
+
   $extensions = '';
   if (isset($validators['file_validate_extensions'])) {
     if (isset($validators['file_validate_extensions'][0])) {
@@ -1123,6 +1126,28 @@ function _file_save_upload_single(\SplFileInfo $file_info, $form_field_name, $va
   // Update the filename with any changes as a result of security or renaming
   // due to an existing file.
   $file->setFilename(\Drupal::service('file_system')->basename($file->destination));
+
+  // We can now validate the file object itself before it's saved.
+  $violations = $file->validate();
+  foreach ($violations as $violation) {
+    $errors[] = $violation->getMessage();
+  }
+  if (!empty($errors)) {
+    $message = [
+      'error' => [
+        '#markup' => t('The specified file %name could not be uploaded.', ['%name' => $file->getFilename()]),
+      ],
+      'item_list' => [
+        '#theme' => 'item_list',
+        '#items' => $errors,
+      ],
+    ];
+    // @todo Add support for render arrays in
+    // \Drupal\Core\Messenger\MessengerInterface::addMessage()?
+    // @see https://www.drupal.org/node/2505497.
+    \Drupal::messenger()->addError(\Drupal::service('renderer')->renderPlain($message));
+    return FALSE;
+  }
 
   // If we made it this far it's safe to record this file in the database.
   $file->save();
