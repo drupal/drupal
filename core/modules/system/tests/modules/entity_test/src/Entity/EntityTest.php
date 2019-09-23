@@ -26,7 +26,6 @@ use Drupal\user\UserInterface;
  *     "route_provider" = {
  *       "html" = "Drupal\Core\Entity\Routing\DefaultHtmlRouteProvider",
  *     },
- *     "translation" = "Drupal\content_translation\ContentTranslationHandler",
  *     "views_data" = "Drupal\entity_test\EntityTestViewsData"
  *   },
  *   base_table = "entity_test",

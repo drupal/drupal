@@ -34,7 +34,6 @@ use Drupal\shortcut\ShortcutInterface;
  *       "edit" = "Drupal\shortcut\ShortcutForm",
  *       "delete" = "Drupal\shortcut\Form\ShortcutDeleteForm"
  *     },
- *     "translation" = "Drupal\content_translation\ContentTranslationHandler"
  *   },
  *   base_table = "shortcut",
  *   data_table = "shortcut_field_data",
