@@ -162,7 +162,6 @@ class MediaLibraryUiBuilder {
       '#attributes' => [
         'id' => 'media-library-content',
         'class' => ['media-library-content'],
-        'tabindex' => -1,
       ],
       'form' => $this->buildMediaTypeAddForm($state),
       'view' => $this->buildMediaLibraryView($state),

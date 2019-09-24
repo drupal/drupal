@@ -125,8 +125,9 @@
               }
             });
 
-            // Set focus to the media library content.
-            document.getElementById('media-library-content').focus();
+            // Set focus to the first tabbable element in the media library
+            // content.
+            $('#media-library-content :tabbable:first').focus();
 
             // Remove any response-specific settings so they don't get used on
             // the next call by mistake.

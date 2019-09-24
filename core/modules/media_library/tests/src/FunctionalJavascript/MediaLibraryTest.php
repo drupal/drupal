@@ -443,10 +443,18 @@ class MediaLibraryTest extends WebDriverTestBase {
     $assert_session->elementExists('css', '.media-library-open-button[name^="field_unlimited_media"]')->click();
     $assert_session->assertWaitOnAjaxRequest();
     $menu = $assert_session->elementExists('css', '.media-library-menu');
-    $this->assertTrue($menu->hasLink('Type One'));
+    $this->assertTrue($menu->hasLink('Show Type One media (selected)'));
     $this->assertFalse($menu->hasLink('Type Two'));
     $this->assertTrue($menu->hasLink('Type Three'));
     $this->assertFalse($menu->hasLink('Type Four'));
+    $page->clickLink('Type Three');
+    $assert_session->assertWaitOnAjaxRequest();
+    // Assert the active tab is set correctly.
+    $this->assertFalse($menu->hasLink('Show Type One media (selected)'));
+    $this->assertTrue($menu->hasLink('Show Type Three media (selected)'));
+    // Assert the focus is set to the first tabbable element when a vertical tab
+    // is clicked.
+    $this->assertJsCondition('jQuery("#media-library-content :tabbable:first").is(":focus")');
     $assert_session->elementExists('css', '.ui-dialog-titlebar-close')->click();
     $assert_session->assertWaitOnAjaxRequest();
 
