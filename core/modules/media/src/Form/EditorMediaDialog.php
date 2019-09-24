@@ -10,9 +10,11 @@ use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\HtmlCommand;
 use Drupal\editor\Ajax\EditorDialogSave;
 use Drupal\Core\Ajax\CloseModalDialogCommand;
+use Drupal\filter\Plugin\FilterInterface;
 use Drupal\image\Plugin\Field\FieldType\ImageItem;
 use Drupal\media\MediaInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Drupal\Core\Entity\EntityDisplayRepositoryInterface;
 
 /**
  * Provides a media embed dialog for text editors.
@@ -36,13 +38,23 @@ class EditorMediaDialog extends FormBase {
   protected $entityRepository;
 
   /**
+   * The entity display repository.
+   *
+   * @var \Drupal\Core\Entity\EntityDisplayRepositoryInterface
+   */
+  protected $entityDisplayRepository;
+
+  /**
    * Constructs a EditorMediaDialog object.
    *
    * @param \Drupal\Core\Entity\EntityRepositoryInterface $entity_repository
    *   The entity repository.
+   * @param \Drupal\Core\Entity\EntityDisplayRepositoryInterface $entity_display_repository
+   *   The entity display repository.
    */
-  public function __construct(EntityRepositoryInterface $entity_repository) {
+  public function __construct(EntityRepositoryInterface $entity_repository, EntityDisplayRepositoryInterface $entity_display_repository) {
     $this->entityRepository = $entity_repository;
+    $this->entityDisplayRepository = $entity_display_repository;
   }
 
   /**
@@ -50,7 +62,8 @@ class EditorMediaDialog extends FormBase {
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('entity.repository')
+      $container->get('entity.repository'),
+      $container->get('entity_display.repository')
     );
   }
 
@@ -102,6 +115,7 @@ class EditorMediaDialog extends FormBase {
     $filter_html = $filters->get('filter_html');
     $filter_align = $filters->get('filter_align');
     $filter_caption = $filters->get('filter_caption');
+    $media_embed_filter = $filters->get('media_embed');
 
     $allowed_attributes = [];
     if ($filter_html->status) {
@@ -158,7 +172,24 @@ class EditorMediaDialog extends FormBase {
       '#access' => $filter_caption->status && ($filter_html->status === FALSE || !empty($allowed_attributes['data-caption'])),
     ];
 
-    if ((empty($form['alt']) || $form['alt']['#access'] === FALSE) && $form['align']['#access'] === FALSE && $form['caption']['#access'] === FALSE) {
+    $view_mode_options = array_intersect_key($this->entityDisplayRepository->getViewModeOptions('media'), $media_embed_filter->settings['allowed_view_modes']);
+    $default_view_mode = static::getViewModeDefaultValue($view_mode_options, $media_embed_filter, $media_embed_element['data-view-mode']);
+
+    $form['view_mode'] = [
+      '#title' => $this->t("Display"),
+      '#type' => 'select',
+      '#options' => $view_mode_options,
+      '#default_value' => $default_view_mode,
+      '#parents' => ['attributes', 'data-view-mode'],
+      '#access' => count($view_mode_options) >= 2,
+    ];
+
+    // Store the default from the MediaEmbed filter, so that if the selected
+    // view mode matches the default, we can drop the 'data-view-mode'
+    // attribute.
+    $form_state->set('filter_default_view_mode', $media_embed_filter->settings['default_view_mode']);
+
+    if ((empty($form['alt']) || $form['alt']['#access'] === FALSE) && $form['align']['#access'] === FALSE && $form['caption']['#access'] === FALSE && $form['view_mode']['#access'] === FALSE) {
       $format = $editor->getFilterFormat();
       $warning = $this->t('There is nothing to configure for this media.');
       $form['no_access_notice'] = ['#markup' => $warning];
@@ -213,6 +244,12 @@ class EditorMediaDialog extends FormBase {
       $form_state->setValue(['attributes', 'alt'], FALSE);
     }
 
+    // If the selected view mode matches the default on the filter, remove the
+    // attribute.
+    if (!empty($form_state->get('filter_default_view_mode')) && $form_state->getValue(['attributes', 'data-view-mode']) === $form_state->get('filter_default_view_mode')) {
+      $form_state->setValue(['attributes', 'data-view-mode'], FALSE);
+    }
+
     if ($form_state->getErrors()) {
       unset($form['#prefix'], $form['#suffix']);
       $form['status_messages'] = [
@@ -232,6 +269,41 @@ class EditorMediaDialog extends FormBase {
     }
 
     return $response;
+  }
+
+  /**
+   * Gets the default value for the view mode form element.
+   *
+   * @param array $view_mode_options
+   *   The array of options for the view mode form element.
+   * @param \Drupal\filter\Plugin\FilterInterface $media_embed_filter
+   *   The media embed filter.
+   * @param string $media_element_view_mode_attribute
+   *   The data-view-mode attribute on the <drupal-media> element.
+   *
+   * @return string|null
+   *   The default value for the view mode form element.
+   */
+  public static function getViewModeDefaultValue(array $view_mode_options, FilterInterface $media_embed_filter, $media_element_view_mode_attribute) {
+    // The select element won't display without at least two options, so if
+    // that's the case, just return NULL.
+    if (count($view_mode_options) < 2) {
+      return NULL;
+    }
+
+    $filter_default_view_mode = $media_embed_filter->settings['default_view_mode'];
+
+    // If the current media embed ($media_embed_element) has a set view mode,
+    // we want to use that as the default in the select form element,
+    // otherwise we'll want to use the default for all embedded media.
+    if (!empty($media_element_view_mode_attribute) && array_key_exists($media_element_view_mode_attribute, $view_mode_options)) {
+      return $media_element_view_mode_attribute;
+    }
+    elseif (array_key_exists($filter_default_view_mode, $view_mode_options)) {
+      return $filter_default_view_mode;
+    }
+
+    return NULL;
   }
 
   /**

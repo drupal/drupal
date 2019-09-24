@@ -104,3 +104,17 @@ media.source.field_aware:
     source_field:
       type: string
       label: 'Source field'
+
+filter_settings.media_embed:
+  type: filter
+  label: 'Media Embed'
+  mapping:
+    default_view_mode:
+      type: string
+      label: 'The view mode that is used by default'
+    allowed_view_modes:
+      type: sequence
+      label: 'View modes selectable in the "Edit media" dialog'
+      sequence:
+        type: string
+        label: 'View mode'

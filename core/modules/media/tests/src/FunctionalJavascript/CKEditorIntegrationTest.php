@@ -17,6 +17,7 @@ use Drupal\Tests\media\Traits\MediaTypeCreationTrait;
 use Drupal\Tests\TestFileCreationTrait;
 use Drupal\user\Entity\Role;
 use Drupal\user\RoleInterface;
+use Drupal\Core\Entity\Entity\EntityViewMode;
 
 /**
  * @coversDefaultClass \Drupal\media\Plugin\CKEditorPlugin\DrupalMedia
@@ -1088,6 +1089,151 @@ class CKEditorIntegrationTest extends WebDriverTestBase {
   }
 
   /**
+   * Tests the EditorMediaDialog can set the data-view-mode attribute.
+   */
+  public function testViewMode() {
+    EntityViewMode::create([
+      'id' => 'media.view_mode_1',
+      'targetEntityType' => 'media',
+      'status' => TRUE,
+      'enabled' => TRUE,
+      'label' => 'View Mode 1',
+    ])->save();
+    EntityViewMode::create([
+      'id' => 'media.view_mode_2',
+      'targetEntityType' => 'media',
+      'status' => TRUE,
+      'enabled' => TRUE,
+      'label' => 'View Mode 2',
+    ])->save();
+
+    $filter_format = FilterFormat::load('test_format');
+    $filter_format->setFilterConfig('media_embed', [
+      'status' => TRUE,
+      'settings' => [
+        'default_view_mode' => 'view_mode_1',
+        'allowed_view_modes' => [
+          'view_mode_1' => 'view_mode_1',
+          'view_mode_2' => 'view_mode_2',
+        ],
+      ],
+    ])->save();
+
+    // Test that view mode dependencies are returned from the MediaEmbed
+    // filter's ::getDependencies() method.
+    $expected_config_dependencies = [
+      'core.entity_view_mode.media.view_mode_1',
+      'core.entity_view_mode.media.view_mode_2',
+    ];
+    $dependencies = $filter_format->getDependencies();
+    $this->assertArrayHasKey('config', $dependencies);
+    $this->assertSame($expected_config_dependencies, $dependencies['config']);
+
+    // Test MediaEmbed's allowed_view_modes option setting enables a view mode
+    // selection field.
+    $page = $this->getSession()->getPage();
+    $assert_session = $this->assertSession();
+    $this->drupalGet($this->host->toUrl('edit-form'));
+    $this->waitForEditor();
+    $this->assignNameToCkeditorIframe();
+    $this->getSession()->switchToIFrame('ckeditor');
+    $this->assertNotEmpty($assert_session->waitForElementVisible('css', 'drupal-media'));
+    $page->pressButton('Edit media');
+    $this->waitForMetadataDialog();
+    $assert_session->optionExists('attributes[data-view-mode]', 'view_mode_1');
+    $assert_session->optionExists('attributes[data-view-mode]', 'view_mode_2');
+    $assert_session->selectExists('attributes[data-view-mode]')->selectOption('view_mode_2');
+    $this->submitDialog();
+    $this->getSession()->switchToIFrame('ckeditor');
+    $this->assertNotEmpty($assert_session->waitForElementVisible('css', 'article.media--view-mode-view-mode-2'));
+    // Test that the downcast drupal-media element contains the
+    // `data-view-mode` attribute set in the dialog.
+    $this->pressEditorButton('source');
+    $this->assertNotEmpty($drupal_media = $this->getDrupalMediaFromSource());
+    $this->assertSame('view_mode_2', $drupal_media->getAttribute('data-view-mode'));
+
+    // Press the source button again to leave source mode.
+    $this->pressEditorButton('source');
+    // Having entered source mode means we need to reassign an ID to the
+    // CKEditor iframe.
+    $this->assignNameToCkeditorIframe();
+    $this->getSession()->switchToIFrame('ckeditor');
+
+    // Test that setting the allowed_view_modes option to only one option hides
+    // the field (it requires more than one option).
+    $filter_format->setFilterConfig('media_embed', [
+      'status' => TRUE,
+      'settings' => [
+        'default_view_mode' => 'view_mode_1',
+        'allowed_view_modes' => [
+          'view_mode_1' => 'view_mode_1',
+        ],
+      ],
+    ])->save();
+
+    // Test that the dependencies change when the allowed_view_modes change.
+    $dependencies = $filter_format->getDependencies();
+    $this->assertArrayHasKey('config', $dependencies);
+    $this->assertSame(['core.entity_view_mode.media.view_mode_1'], $dependencies['config']);
+
+    $this->assertNotEmpty($assert_session->waitForElementVisible('css', 'drupal-media'));
+    $page->pressButton('Edit media');
+    $this->waitForMetadataDialog();
+    $assert_session->fieldNotExists('attributes[data-view-mode]');
+    $page->pressButton('Close');
+    $this->getSession()->switchToIFrame('ckeditor');
+
+    // Test that setting allowed_view_modes back to two items restores the
+    // field.
+    $filter_format->setFilterConfig('media_embed', [
+      'status' => TRUE,
+      'settings' => [
+        'default_view_mode' => 'view_mode_1',
+        'allowed_view_modes' => [
+          'view_mode_1' => 'view_mode_1',
+          'view_mode_2' => 'view_mode_2',
+        ],
+      ],
+    ])->save();
+
+    // Test that the dependencies change when the allowed_view_modes change.
+    $expected_config_dependencies = [
+      'core.entity_view_mode.media.view_mode_1',
+      'core.entity_view_mode.media.view_mode_2',
+    ];
+    $dependencies = $filter_format->getDependencies();
+    $this->assertArrayHasKey('config', $dependencies);
+    $this->assertSame($expected_config_dependencies, $dependencies['config']);
+
+    // Test that setting the view mode back to the default removes the
+    // `data-view-mode` attribute.
+    $this->assertNotEmpty($assert_session->waitForElementVisible('css', 'drupal-media'));
+    $page->pressButton('Edit media');
+    $this->waitForMetadataDialog();
+    $assert_session->optionExists('attributes[data-view-mode]', 'view_mode_1');
+    $assert_session->optionExists('attributes[data-view-mode]', 'view_mode_2');
+    $assert_session->selectExists('attributes[data-view-mode]')->selectOption('view_mode_1');
+    $this->submitDialog();
+    $this->getSession()->switchToIFrame('ckeditor');
+    $this->assertNotEmpty($assert_session->waitForElementVisible('css', 'article.media--view-mode-view-mode-1'));
+    $this->pressEditorButton('source');
+    $this->assertNotEmpty($drupal_media = $this->getDrupalMediaFromSource());
+    $this->assertFalse($drupal_media->hasAttribute('data-view-mode'));
+
+    // Test that changing the view mode with an empty editable caption
+    // preserves the empty editable caption when the preview reloads.
+    $original_value = $this->host->body->value;
+    $this->host->body->value = str_replace('data-caption="baz"', '', $original_value);
+    $this->host->save();
+    $this->drupalGet($this->host->toUrl('edit-form'));
+    $this->waitForEditor();
+    $this->assignNameToCkeditorIframe();
+    $this->getSession()->switchToIFrame('ckeditor');
+    // Wait for preview to load with default view mode.
+    $this->assertNotEmpty($assert_session->waitForElementVisible('css', 'article.media--view-mode-view-mode-1'));
+  }
+
+  /**
    * Waits for the form that allows editing metadata.
    *
    * @see \Drupal\media\Form\EditorMediaDialog
@@ -1158,7 +1304,7 @@ class CKEditorIntegrationTest extends WebDriverTestBase {
   protected function leaveSourceMode() {
     // Press the source button again to leave source mode.
     $this->pressEditorButton('source');
-    // Having entered source mode means we need to reassign an id to the
+    // Having entered source mode means we need to reassign an ID to the
     // CKEditor iframe.
     $this->assignNameToCkeditorIframe();
     $this->getSession()->switchToIFrame('ckeditor');

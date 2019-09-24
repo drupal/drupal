@@ -30,6 +30,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *   type = Drupal\filter\Plugin\FilterInterface::TYPE_TRANSFORM_REVERSIBLE,
  *   settings = {
  *     "default_view_mode" = "default",
+ *     "allowed_view_modes" = {},
  *   },
  *   weight = 100,
  * )
@@ -134,14 +135,40 @@ class MediaEmbed extends FilterBase implements ContainerFactoryPluginInterface, 
    * {@inheritdoc}
    */
   public function settingsForm(array $form, FormStateInterface $form_state) {
+    $view_mode_options = $this->entityDisplayRepository->getViewModeOptions('media');
+
     $form['default_view_mode'] = [
       '#type' => 'select',
-      '#options' => $this->entityDisplayRepository->getViewModeOptions('media'),
+      '#options' => $view_mode_options,
       '#title' => $this->t('Default view mode'),
       '#default_value' => $this->settings['default_view_mode'],
-      '#description' => $this->t('The view mode that embedded media should be displayed in by default. This can be overridden by using the <code>data-view-mode</code> attribute.'),
+      '#description' => $this->t('The view mode that an embedded media item should be displayed in by default. This can be overridden using the <code>data-view-mode</code> attribute.'),
     ];
+
+    $form['allowed_view_modes'] = [
+      '#title' => $this->t("View modes selectable in the 'Edit media' dialog"),
+      '#type' => 'checkboxes',
+      '#options' => $view_mode_options,
+      '#default_value' => $this->settings['allowed_view_modes'],
+      '#description' => $this->t("If two or more view modes are selected, users will be able to update the view mode that an embedded media item should be displayed in after it has been embedded.  If less than two view modes are selected, media will be embedded using the default view mode and no view mode options will appear after a media item has been embedded."),
+      '#element_validate' => [[get_class($this), 'elementValidateAllowedViewModes']],
+    ];
+
     return $form;
+  }
+
+  /**
+   * Form element validation handler.
+   *
+   * @param array $element
+   *   The allowed_view_modes form element.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The form state.
+   */
+  public static function elementValidateAllowedViewModes(array &$element, FormStateInterface $form_state) {
+    // Filters the #value property so only selected values appear in the
+    // config.
+    $form_state->setValueForElement($element, array_filter($element['#value']));
   }
 
   /**
@@ -473,6 +500,24 @@ class MediaEmbed extends FilterBase implements ContainerFactoryPluginInterface, 
    */
   public static function trustedCallbacks() {
     return ['disableContextualLinks'];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function calculateDependencies() {
+    $dependencies = [];
+    // Combine the view modes from both config parameters.
+    $view_modes = $this->settings['allowed_view_modes'] + [$this->settings['default_view_mode']];
+    $view_modes = array_unique(array_values($view_modes));
+    $dependencies += ['config' => []];
+    $storage = $this->entityTypeManager->getStorage('entity_view_mode');
+    foreach ($view_modes as $view_mode) {
+      if ($entity_view_mode = $storage->load('media.' . $view_mode)) {
+        $dependencies[$entity_view_mode->getConfigDependencyKey()][] = $entity_view_mode->getConfigDependencyName();
+      }
+    }
+    return $dependencies;
   }
 
 }

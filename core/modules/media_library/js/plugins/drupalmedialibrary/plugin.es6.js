@@ -15,6 +15,7 @@
             attributes: {
               '!data-entity-type': true,
               '!data-entity-uuid': true,
+              '!data-view-mode': true,
               '!data-align': true,
               '!data-caption': true,
               '!alt': true,
@@ -27,6 +28,7 @@
         // CKEDITOR.style instance, because requiredContent does not support
         // the object format.
         // @see https://ckeditor.com/docs/ckeditor4/latest/api/CKEDITOR_filter_contentRule.html
+        // eslint-disable-next-line new-cap
         requiredContent: new CKEDITOR.style({
           element: 'drupal-media',
           attributes: {
@@ -38,10 +40,12 @@
         // There is an edge case related to the undo functionality that will
         // be resolved in https://www.drupal.org/project/drupal/issues/3073294.
         canUndo: true,
+        // eslint-disable-next-line no-shadow
         exec(editor) {
           const saveCallback = function(values) {
             editor.fire('saveSnapshot');
             const mediaElement = editor.document.createElement('drupal-media');
+            // eslint-disable-next-line prefer-destructuring
             const attributes = values.attributes;
             Object.keys(attributes).forEach(key => {
               mediaElement.setAttribute(key, attributes[key]);

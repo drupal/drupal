@@ -17,6 +17,7 @@
             attributes: {
               '!data-entity-type': true,
               '!data-entity-uuid': true,
+              '!data-view-mode': true,
               '!data-align': true,
               '!data-caption': true,
               '!alt': true,
@@ -40,6 +41,7 @@
           var saveCallback = function saveCallback(values) {
             editor.fire('saveSnapshot');
             var mediaElement = editor.document.createElement('drupal-media');
+
             var attributes = values.attributes;
             Object.keys(attributes).forEach(function (key) {
               mediaElement.setAttribute(key, attributes[key]);
