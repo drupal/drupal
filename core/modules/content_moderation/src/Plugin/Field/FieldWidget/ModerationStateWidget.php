@@ -122,16 +122,22 @@ class ModerationStateWidget extends OptionsSelectWidget implements ContainerFact
 
     $default = $this->moderationInformation->getOriginalState($entity);
 
-    // If the entity is not new, grab the most recent revision and
-    // load it. The moderation state of the saved revision will be used
-    // to display the current state as well determine the the appropriate
-    // transitions.
+    // If the entity already exists, grab the most recent revision and load it.
+    // The moderation state of the saved revision will be used to display the
+    // current state as well determine the the appropriate transitions.
     if (!$entity->isNew()) {
       /** @var \Drupal\Core\Entity\ContentEntityInterface $original_entity */
       $original_entity = $this->entityTypeManager->getStorage($entity->getEntityTypeId())->loadRevision($entity->getLoadedRevisionId());
       if (!$entity->isDefaultTranslation() && $original_entity->hasTranslation($entity->language()->getId())) {
         $original_entity = $original_entity->getTranslation($entity->language()->getId());
       }
+    }
+    // For a new entity, ensure the moderation state of the original entity is
+    // always the default state. Despite the entity being unsaved, it may have
+    // previously been set to a new target state, for example previewed entities
+    // are retrieved from temporary storage with field values set.
+    else {
+      $original_entity->set('moderation_state', $default->id());
     }
 
     /** @var \Drupal\workflows\Transition[] $transitions */
