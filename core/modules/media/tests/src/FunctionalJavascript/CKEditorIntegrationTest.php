@@ -277,6 +277,14 @@ class CKEditorIntegrationTest extends WebDriverTestBase {
     $this->assertNotEmpty($assert_session->waitForButton('Edit media'));
     $assert_session->elementContains('css', 'figcaption', '');
     $assert_session->elementAttributeContains('css', 'figcaption', 'data-placeholder', 'Enter caption here');
+    // Test if you leave the caption blank, but change another attribute,
+    // such as the alt text, the editable caption is still there and the edit
+    // button still exists.
+    $this->fillFieldInMetadataDialogAndSubmit('attributes[alt]', 'Mama, life had just begun');
+    $this->assertNotEmpty($assert_session->waitForElementVisible('css', 'drupal-media img[alt*="Mama, life had just begun"]'));
+    $assert_session->buttonExists('Edit media');
+    $assert_session->elementContains('css', 'figcaption', '');
+    $assert_session->elementAttributeContains('css', 'figcaption', 'data-placeholder', 'Enter caption here');
 
     // Restore caption in saved body value.
     $original_value = $this->host->body->value;

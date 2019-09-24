@@ -160,7 +160,7 @@
           if (this.oldData) {
             if (!this.data.hasCaption && this.oldData.hasCaption) {
               delete this.data.attributes['data-caption'];
-            } else if (this.data.hasCaption && !this.oldData.hasCaption) {
+            } else if (this.data.hasCaption && !this.data.attributes['data-caption']) {
               this.data.attributes['data-caption'] = ' ';
             }
           }
