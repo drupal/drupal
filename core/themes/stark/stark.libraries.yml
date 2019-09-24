@@ -3,3 +3,4 @@ global-styling:
   css:
     base:
       css/layout.css: {}
+  deprecated: The "%library_id%" asset library is deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. See https://www.drupal.org/project/drupal/issues/2349711
