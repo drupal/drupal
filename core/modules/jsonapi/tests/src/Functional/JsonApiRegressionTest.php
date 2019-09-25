@@ -876,19 +876,24 @@ class JsonApiRegressionTest extends JsonApiFunctionalTestBase {
     $this->assertTrue($this->container->get('module_installer')->install(['entity_test'], TRUE), 'Installed modules.');
 
     // Create data.
-    $entity = EntityTestMapField::create([
+    $entity_a = EntityTestMapField::create([
+      'name' => 'A',
       'data' => [
         'foo' => 'bar',
         'baz' => 'qux',
       ],
     ]);
-    $entity->save();
+    $entity_a->save();
+    $entity_b = EntityTestMapField::create([
+      'name' => 'B',
+    ]);
+    $entity_b->save();
     $user = $this->drupalCreateUser([
       'administer entity_test content',
     ]);
 
     // Test.
-    $url = Url::fromUri(sprintf('internal:/jsonapi/entity_test_map_field/entity_test_map_field', $entity->uuid()));
+    $url = Url::fromUri('internal:/jsonapi/entity_test_map_field/entity_test_map_field?sort=drupal_internal__id');
     $request_options = [
       RequestOptions::AUTH => [$user->getUsername(), $user->pass_raw],
     ];
@@ -899,7 +904,8 @@ class JsonApiRegressionTest extends JsonApiFunctionalTestBase {
       'foo' => 'bar',
       'baz' => 'qux',
     ], $data['data'][0]['attributes']['data']);
-    $entity->set('data', [
+    $this->assertNull($data['data'][1]['attributes']['data']);
+    $entity_a->set('data', [
       'foo' => 'bar',
     ])->save();
     $response = $this->request('GET', $url, $request_options);
@@ -1052,6 +1058,46 @@ class JsonApiRegressionTest extends JsonApiFunctionalTestBase {
     // was successfully updated.
     $this->assertSame(LanguageInterface::LANGCODE_NOT_SPECIFIED, $response_document['data']['attributes']['langcode']);
     $this->assertSame('Constantine', $response_document['data']['attributes']['name']);
+  }
+
+  /**
+   * Ensure optional `@FieldType=map` fields are denormalized correctly.
+   */
+  public function testEmptyMapFieldTypeDenormalization() {
+    $this->config('jsonapi.settings')->set('read_only', FALSE)->save(TRUE);
+
+    // Set up data model.
+    $this->assertTrue($this->container->get('module_installer')->install(['entity_test'], TRUE), 'Installed modules.');
+
+    // Create data.
+    $entity = EntityTestMapField::create([
+      'name' => 'foo',
+    ]);
+    $entity->save();
+    $user = $this->drupalCreateUser([
+      'administer entity_test content',
+    ]);
+
+    // Test.
+    $url = Url::fromUri(sprintf('internal:/jsonapi/entity_test_map_field/entity_test_map_field/%s', $entity->uuid()));
+    $request_options = [
+      RequestOptions::AUTH => [$user->getAccountName(), $user->pass_raw],
+    ];
+    // Retrieve the current representation of the entity.
+    $response = $this->request('GET', $url, $request_options);
+    $this->assertSame(200, $response->getStatusCode());
+    $doc = Json::decode((string) $response->getBody());
+    // Modify the title. The @FieldType=map normalization is not changed. (The
+    // name of this field is confusingly also 'data'.)
+    $doc['data']['attributes']['name'] = 'bar';
+    $request_options[RequestOptions::HEADERS] = [
+      'Content-Type' => 'application/vnd.api+json',
+      'Accept' => 'application/vnd.api+json',
+    ];
+    $request_options[RequestOptions::BODY] = Json::encode($doc);
+    $response = $this->request('PATCH', $url, $request_options);
+    $this->assertSame(200, $response->getStatusCode());
+    $this->assertSame($doc['data']['attributes']['data'], Json::decode((string) $response->getBody())['data']['attributes']['data']);
   }
 
 }
