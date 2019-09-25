@@ -45,7 +45,7 @@ class ExportStorageManagerTest extends KernelTestBase {
     $this->assertEquals($rawConfig['name'], $exported['name']);
     $this->assertEquals($rawConfig['slogan'] . ' Arrr', $exported['slogan']);
 
-    // Save the config to trigger the rebuild.
+    // Save the config to active storage so that the transformer can alter it.
     $this->config('system.site')
       ->set('name', 'New name')
       ->set('slogan', 'New slogan')
@@ -58,15 +58,9 @@ class ExportStorageManagerTest extends KernelTestBase {
     $this->assertEquals('New name', $exported['name']);
     $this->assertEquals($rawConfig['slogan'] . ' Arrr', $exported['slogan']);
 
-    // Change the state which will not trigger a rebuild.
+    // Change what the transformer does without changing anything else to assert
+    // that the event is dispatched every time the storage is needed.
     $this->container->get('state')->set('config_transform_test_mail', 'config@drupal.example');
-
-    $storage = $this->container->get('config.storage.export.manager')->getStorage();
-    $exported = $storage->read('system.site');
-    // The mail is still set to the empty value from last time.
-    $this->assertEquals('', $exported['mail']);
-
-    $this->container->get('state')->set('config_transform_test_rebuild', TRUE);
     $storage = $this->container->get('config.storage.export.manager')->getStorage();
     $exported = $storage->read('system.site');
     // The mail is still set to the value from the beginning.

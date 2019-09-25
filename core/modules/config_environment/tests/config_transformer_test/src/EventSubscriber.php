@@ -3,7 +3,6 @@
 namespace Drupal\config_transformer_test;
 
 use Drupal\Core\Config\StorageInterface;
-use Drupal\Core\Config\StorageRebuildNeededEvent;
 use Drupal\Core\Config\StorageTransformEvent;
 use Drupal\Core\State\StateInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -103,25 +102,12 @@ class EventSubscriber implements EventSubscriberInterface {
   }
 
   /**
-   * React to the rebuilding the config export storage.
-   *
-   * @param \Drupal\Core\Config\StorageRebuildNeededEvent $event
-   *   The event we may stop.
-   */
-  public function onExportRebuild(StorageRebuildNeededEvent $event) {
-    if ($this->state->get('config_transform_test_rebuild', FALSE)) {
-      $event->setRebuildNeeded();
-    }
-  }
-
-  /**
    * {@inheritdoc}
    */
   public static function getSubscribedEvents() {
     // @todo: use class constants when they get added in #2991683
     $events['config.transform.import'][] = ['onImportTransform'];
     $events['config.transform.export'][] = ['onExportTransform'];
-    $events['config.export.rebuild'][] = ['onExportRebuild'];
     return $events;
   }
 

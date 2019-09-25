@@ -4,10 +4,8 @@ namespace Drupal\config_environment\EventSubscriber;
 
 use Drupal\Core\Config\ConfigManagerInterface;
 use Drupal\Core\Config\StorageInterface;
-use Drupal\Core\Config\StorageRebuildNeededEvent;
 use Drupal\Core\Config\StorageTransformEvent;
 use Drupal\Core\Site\Settings;
-use Drupal\Core\State\StateInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
@@ -38,11 +36,6 @@ final class ExcludedModulesEventSubscriber implements EventSubscriberInterface {
   private $manager;
 
   /**
-   * @var \Drupal\Core\State\StateInterface
-   */
-  private $state;
-
-  /**
    * EnvironmentModulesEventSubscriber constructor.
    *
    * @param \Drupal\Core\Config\StorageInterface $active_storage
@@ -51,14 +44,11 @@ final class ExcludedModulesEventSubscriber implements EventSubscriberInterface {
    *   The Drupal settings.
    * @param \Drupal\Core\Config\ConfigManagerInterface $manager
    *   The config manager.
-   * @param \Drupal\Core\State\StateInterface $state
-   *   The Drupal state.
    */
-  public function __construct(StorageInterface $active_storage, Settings $settings, ConfigManagerInterface $manager, StateInterface $state) {
+  public function __construct(StorageInterface $active_storage, Settings $settings, ConfigManagerInterface $manager) {
     $this->activeStorage = $active_storage;
     $this->settings = $settings;
     $this->manager = $manager;
-    $this->state = $state;
   }
 
   /**
@@ -69,21 +59,7 @@ final class ExcludedModulesEventSubscriber implements EventSubscriberInterface {
     return [
       'config.transform.import' => ['onConfigTransformImport', -500],
       'config.transform.export' => ['onConfigTransformExport', 500],
-      'config.export.rebuild' => ['onExportStorageNeedsRebuild', 0],
     ];
-  }
-
-  /**
-   * Mark the export storage as out of date when the settings changed.
-   *
-   * @param \Drupal\Core\Config\StorageRebuildNeededEvent $event
-   *   The event to control the storage rebuild.
-   */
-  public function onExportStorageNeedsRebuild(StorageRebuildNeededEvent $event) {
-    // If the excluded modules are not the same as last time, re-transform.
-    if ($this->state->get(self::EXCLUDED_MODULES_KEY) != $this->getExcludedModules()) {
-      $event->setRebuildNeeded();
-    }
   }
 
   /**
@@ -141,9 +117,6 @@ final class ExcludedModulesEventSubscriber implements EventSubscriberInterface {
    *   The transformation event.
    */
   public function onConfigTransformExport(StorageTransformEvent $event) {
-    // Save which modules are excluded in state to know if it has changed.
-    $this->state->set(self::EXCLUDED_MODULES_KEY, $this->getExcludedModules());
-
     $storage = $event->getStorage();
     if (!$storage->exists('core.extension')) {
       // If the core.extension config is not present there is nothing to do.
