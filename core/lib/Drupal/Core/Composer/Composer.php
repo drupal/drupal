@@ -71,7 +71,7 @@ class Composer {
     'symfony/validator' => ['Tests', 'Resources'],
     'symfony/yaml' => ['Tests'],
     'symfony-cmf/routing' => ['Test', 'Tests'],
-    'twig/twig' => ['doc', 'ext', 'test'],
+    'twig/twig' => ['doc', 'ext', 'test', 'tests'],
   ];
 
   /**
