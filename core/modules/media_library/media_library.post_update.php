@@ -9,6 +9,7 @@ use Drupal\Core\Entity\Entity\EntityFormMode;
 use Drupal\Core\Entity\Entity\EntityViewMode;
 use Drupal\image\Entity\ImageStyle;
 use Drupal\media\Entity\MediaType;
+use Drupal\user\RoleInterface;
 use Drupal\views\Views;
 
 /**
@@ -239,4 +240,70 @@ function media_library_post_update_add_media_library_image_style() {
   $image_style->save();
 
   return t('The %label image style has been created successfully.', ['%label' => 'Media Library (220x220)']);
+}
+
+/**
+ * Add a status extra filter to the media library view default display.
+ */
+function media_library_post_update_add_status_extra_filter() {
+  $view = Views::getView('media_library');
+
+  if (!$view) {
+    return t('The media_library view could not be updated because it has been deleted. The Media Library module needs this view in order to work properly. Uninstall and reinstall the module so the view will be re-created.');
+  }
+
+  // Fetch the filters from the default display and add the new 'status_extra'
+  // filter if it does not yet exist.
+  $default_display = $view->getDisplay();
+  $filters = $default_display->getOption('filters');
+
+  if (!isset($filters['status_extra'])) {
+    $filters['status_extra'] = [
+      'group_info' => [
+        'widget' => 'select',
+        'group_items' => [],
+        'multiple' => FALSE,
+        'description' => '',
+        'default_group_multiple' => [],
+        'default_group' => 'All',
+        'label' => '',
+        'identifier' => '',
+        'optional' => TRUE,
+        'remember' => FALSE,
+      ],
+      'group' => 1,
+      'relationship' => 'none',
+      'exposed' => FALSE,
+      'expose' => [
+        'use_operator' => FALSE,
+        'remember' => FALSE,
+        'operator_id' => '',
+        'multiple' => FALSE,
+        'description' => '',
+        'required' => FALSE,
+        'label' => '',
+        'operator_limit_selection' => FALSE,
+        'operator' => '',
+        'identifier' => '',
+        'operator_list' => [],
+        'remember_roles' => [RoleInterface::AUTHENTICATED_ID => RoleInterface::AUTHENTICATED_ID],
+      ],
+      'entity_type' => 'media',
+      'value' => '',
+      'field' => 'status_extra',
+      'is_grouped' => FALSE,
+      'admin_label' => '',
+      'operator' => '=',
+      'table' => 'media_field_data',
+      'plugin_id' => 'media_status',
+      'id' => 'status_extra',
+      'group_type' => 'group',
+    ];
+    $default_display->setOption('filters', $filters);
+    $view->save();
+
+    return t("The 'Published status or admin user' filter was added to the %label view.", [
+      '%label' => $view->storage->label(),
+    ]);
+  }
 }

@@ -178,7 +178,7 @@ class MediaAccessTest extends MediaFunctionalTestBase {
     $this->drupalGet('admin/content');
     $assert_session->linkByHrefExists('/admin/content/media');
     $this->clickLink('Media');
-    $this->assertCacheContext('user.permissions');
+    $this->assertCacheContext('user');
     $assert_session->statusCodeEquals(200);
     $assert_session->elementExists('css', '.view-media');
     $assert_session->pageTextContains($this->loggedInUser->getDisplayName());

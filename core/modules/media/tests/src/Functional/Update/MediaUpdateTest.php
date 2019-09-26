@@ -114,4 +114,25 @@ class MediaUpdateTest extends UpdatePathTestBase {
     $this->assertSession()->statusCodeEquals(200);
   }
 
+  /**
+   * Tests that the status extra filter is added to the media view.
+   *
+   * @see media_post_update_add_status_extra_filter()
+   */
+  public function testMediaViewStatusExtraFilter() {
+    $config = $this->config('views.view.media');
+    $this->assertNull($config->get('display.default.display_options.filters.status_extra'));
+
+    $this->runUpdates();
+
+    $config = $this->config('views.view.media');
+    $filter = $config->get('display.default.display_options.filters.status_extra');
+    $this->assertInternalType('array', $filter);
+    $this->assertSame('status_extra', $filter['field']);
+    $this->assertSame('media', $filter['entity_type']);
+    $this->assertSame('media_status', $filter['plugin_id']);
+    $this->assertSame('status_extra', $filter['id']);
+    $this->assertFalse($filter['exposed']);
+  }
+
 }

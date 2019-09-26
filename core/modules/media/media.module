@@ -18,6 +18,7 @@ use Drupal\Core\Url;
 use Drupal\field\FieldConfigInterface;
 use Drupal\media\Plugin\media\Source\Image;
 use Drupal\media\Plugin\media\Source\OEmbedInterface;
+use Drupal\views\ViewExecutable;
 
 /**
  * Implements hook_help().
@@ -538,4 +539,15 @@ function _media_type_add_form_submit(array &$form, FormStateInterface $form_stat
   $type->getSource()->prepareViewDisplay($type, $display);
 
   $display->save();
+}
+
+/**
+ * Implements hook_views_query_substitutions().
+ */
+function media_views_query_substitutions(ViewExecutable $view) {
+  $account = \Drupal::currentUser();
+  return [
+    '***VIEW_OWN_UNPUBLISHED_MEDIA***' => (int) $account->hasPermission('view own unpublished media'),
+    '***ADMINISTER_MEDIA***' => (int) $account->hasPermission('administer media'),
+  ];
 }
