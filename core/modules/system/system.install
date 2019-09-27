@@ -2357,3 +2357,16 @@ function system_update_8801() {
       ->save(TRUE);
   }
 }
+
+/**
+ * Fix system.theme:admin when the default theme is used as the admin theme.
+ */
+function system_update_8802() {
+  $config = Drupal::configFactory()->getEditable('system.theme');
+  // Replace '0' with an empty string as '0' is not a valid value.
+  if ($config->get('admin') == '0') {
+    $config
+      ->set('admin', '')
+      ->save(TRUE);
+  }
+}

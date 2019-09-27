@@ -196,7 +196,7 @@ class SystemController extends ControllerBase {
         continue;
       }
       $theme->is_default = ($theme->getName() == $theme_default);
-      $theme->is_admin = ($theme->getName() == $admin_theme || ($theme->is_default && $admin_theme == '0'));
+      $theme->is_admin = ($theme->getName() == $admin_theme || ($theme->is_default && empty($admin_theme)));
 
       // Identify theme screenshot.
       $theme->screenshot = NULL;

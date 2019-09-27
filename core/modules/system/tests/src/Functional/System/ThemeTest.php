@@ -313,7 +313,7 @@ class ThemeTest extends BrowserTestBase {
 
     // Reset to the default theme settings.
     $edit = [
-      'admin_theme' => '0',
+      'admin_theme' => '',
       'use_admin_theme' => FALSE,
     ];
     $this->drupalPostForm('admin/appearance', $edit, t('Save configuration'));
@@ -458,9 +458,10 @@ class ThemeTest extends BrowserTestBase {
       $themes = \Drupal::service('theme_handler')->rebuildThemeData();
       $version = $themes[$theme_machine_name]->info['version'];
 
-      // Confirm the theme is indicated as the default theme.
+      // Confirm the theme is indicated as the default theme and administration
+      // theme because the admin theme is the default theme.
       $out = $this->getSession()->getPage()->getContent();
-      $this->assertTrue((bool) preg_match("/$theme_name " . preg_quote($version) . '\s{2,}\(default theme\)/', $out));
+      $this->assertTrue((bool) preg_match("/$theme_name " . preg_quote($version) . '\s{2,}\(default theme, administration theme\)/', $out));
     }
   }
 

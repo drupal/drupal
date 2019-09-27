@@ -38,7 +38,7 @@ class ThemeAdminForm extends ConfigFormBase {
     ];
     $form['admin_theme']['admin_theme'] = [
       '#type' => 'select',
-      '#options' => [0 => $this->t('Default theme')] + $theme_options,
+      '#options' => ['' => $this->t('Default theme')] + $theme_options,
       '#title' => $this->t('Administration theme'),
       '#description' => $this->t('Choose "Default theme" to always use the same theme as the rest of the site.'),
       '#default_value' => $this->config('system.theme')->get('admin'),
