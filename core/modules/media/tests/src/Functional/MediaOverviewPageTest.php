@@ -70,12 +70,14 @@ class MediaOverviewPageTest extends MediaFunctionalTestBase {
       'name' => 'Media 2',
       'uid' => $this->adminUser->id(),
       'status' => FALSE,
+      'changed' => time() - 50,
     ]);
     $media2->save();
     $media3 = Media::create([
       'bundle' => $media_type1->id(),
       'name' => 'Media 3',
       'uid' => $this->nonAdminUser->id(),
+      'changed' => time() - 100,
     ]);
     $media3->save();
 
