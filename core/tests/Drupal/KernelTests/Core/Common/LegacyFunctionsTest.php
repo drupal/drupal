@@ -24,7 +24,7 @@ class LegacyFunctionsTest extends KernelTestBase {
   }
 
   /**
-   * @expectedDeprecation drupal_set_time_limit() is deprecated in Drupal 8.7.0 and will be removed before Drupal 9.0.0. Use \Drupal\Core\Environment::setTimeLimit() instead. See https://www.drupal.org/node/3000058.
+   * @expectedDeprecation drupal_set_time_limit() is deprecated in Drupal 8.7.0 and will be removed before Drupal 9.0.0. Use \Drupal\Component\Utility\Environment::setTimeLimit() instead. See https://www.drupal.org/node/3000058.
    * @doesNotPerformAssertions
    */
   public function testDrupalSetTimeLimit() {

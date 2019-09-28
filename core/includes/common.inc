@@ -409,12 +409,12 @@ function drupal_http_header_attributes(array $attributes = []) {
  * @ingroup php_wrappers
  *
  * @deprecated in Drupal 8.7.0 and will be removed before Drupal 9.0.0. Use
- *   \Drupal\Core\Environment::setTimeLimit() instead.
+ *   \Drupal\Component\Utility\Environment::setTimeLimit() instead.
  *
  * @see https://www.drupal.org/node/3000058
  */
 function drupal_set_time_limit($time_limit) {
-  @trigger_error('drupal_set_time_limit() is deprecated in Drupal 8.7.0 and will be removed before Drupal 9.0.0. Use \Drupal\Core\Environment::setTimeLimit() instead. See https://www.drupal.org/node/3000058.', E_USER_DEPRECATED);
+  @trigger_error('drupal_set_time_limit() is deprecated in Drupal 8.7.0 and will be removed before Drupal 9.0.0. Use \Drupal\Component\Utility\Environment::setTimeLimit() instead. See https://www.drupal.org/node/3000058.', E_USER_DEPRECATED);
   Environment::setTimeLimit($time_limit);
 }
 
