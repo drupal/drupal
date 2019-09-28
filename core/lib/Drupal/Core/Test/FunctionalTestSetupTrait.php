@@ -6,6 +6,9 @@ use Drupal\Component\FileCache\FileCacheFactory;
 use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Component\Utility\Environment;
 use Drupal\Core\Config\Development\ConfigSchemaChecker;
+use Drupal\Core\Config\FileStorage;
+use Drupal\Core\Config\InstallStorage;
+use Drupal\Core\Config\StorageInterface;
 use Drupal\Core\Database\Database;
 use Drupal\Core\DrupalKernel;
 use Drupal\Core\Extension\MissingDependencyException;
@@ -401,6 +404,48 @@ trait FunctionalTestSetupTrait {
     $request->attributes->set(RouteObjectInterface::ROUTE_NAME, '<none>');
     $this->kernel->preHandle($request);
     return $this->kernel->getContainer();
+  }
+
+  /**
+   * Installs the default theme defined by `static::$defaultTheme` when needed.
+   *
+   * To install a test theme outside of the testing environment, add
+   * @code
+   * $settings['extension_discovery_scan_tests'] = TRUE;
+   * @endcode
+   * to your settings.php.
+   *
+   * @param \Symfony\Component\DependencyInjection\ContainerInterface $container
+   *   The container.
+   */
+  protected function installDefaultThemeFromClassProperty(ContainerInterface $container) {
+    // Use the install profile to determine the default theme if configured and
+    // not already specified.
+    $profile = $container->getParameter('install_profile');
+    $default_install_path = drupal_get_path('profile', $profile) . '/' . InstallStorage::CONFIG_INSTALL_DIRECTORY;
+    $profile_config_storage = new FileStorage($default_install_path, StorageInterface::DEFAULT_COLLECTION);
+    if (!isset($this->defaultTheme) && $profile_config_storage->exists('system.theme')) {
+      $this->defaultTheme = $profile_config_storage->read('system.theme')['default'];
+    }
+
+    // Require a default theme to be specified at this point.
+    if (!isset($this->defaultTheme)) {
+      // For backwards compatibility, tests using the 'testing' install profile
+      // on Drupal 8 automatically get 'classy' set, and other profiles use
+      // 'stark'.
+      @trigger_error('Drupal\Tests\BrowserTestBase::$defaultTheme is required in drupal:9.0.0 when using an install profile that does not set a default theme. See https://www.drupal.org/node/2352949, which includes recommendations on which theme to use.', E_USER_DEPRECATED);
+      $this->defaultTheme = $profile === 'testing' ? 'classy' : 'stark';
+    }
+
+    // Ensure the default theme is installed.
+    $container->get('theme_installer')->install([$this->defaultTheme], TRUE);
+
+    $system_theme_config = $container->get('config.factory')->getEditable('system.theme');
+    if ($system_theme_config->get('default') !== $this->defaultTheme) {
+      $system_theme_config
+        ->set('default', $this->defaultTheme)
+        ->save();
+    }
   }
 
   /**

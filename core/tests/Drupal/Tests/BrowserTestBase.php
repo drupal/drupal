@@ -115,6 +115,15 @@ abstract class BrowserTestBase extends TestCase {
   protected $profile = 'testing';
 
   /**
+   * The theme to install as the default for testing.
+   *
+   * Defaults to the install profile's default theme, if it specifies any.
+   *
+   * @var string
+   */
+  protected $defaultTheme;
+
+  /**
    * An array of custom translations suitable for drupal_rewrite_settings().
    *
    * @var array
@@ -557,6 +566,7 @@ abstract class BrowserTestBase extends TestCase {
     $this->initSettings();
     $container = $this->initKernel(\Drupal::request());
     $this->initConfig($container);
+    $this->installDefaultThemeFromClassProperty($container);
     $this->installModulesFromClassProperty($container);
     $this->rebuildAll();
   }

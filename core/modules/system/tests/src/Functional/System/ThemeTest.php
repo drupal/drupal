@@ -334,6 +334,7 @@ class ThemeTest extends BrowserTestBase {
     // First, install Stark and set it as the default theme programmatically.
     $theme_installer->install(['stark']);
     $this->config('system.theme')->set('default', 'stark')->save();
+    $this->drupalPlaceBlock('local_tasks_block');
 
     // Install Bartik and set it as the default theme.
     $theme_installer->install(['bartik']);

@@ -191,6 +191,8 @@ abstract class InstallerTestBase extends BrowserTestBase {
         ->getEditable('system.mail')
         ->set('interface.default', 'test_mail_collector')
         ->save();
+
+      $this->installDefaultThemeFromClassProperty($this->container);
     }
   }
 

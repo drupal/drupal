@@ -392,6 +392,8 @@ abstract class WebTestBase extends TestBase {
     // Initialize and override certain configurations.
     $this->initConfig($container);
 
+    $this->installDefaultThemeFromClassProperty($container);
+
     // Collect modules to install.
     $this->installModulesFromClassProperty($container);
 

@@ -9,6 +9,3 @@ install:
   # tests as possible run with them enabled.
   - drupal:page_cache
   - dynamic_page_cache
-# @todo: Remove this in https://www.drupal.org/node/2352949
-themes:
-  - classy
