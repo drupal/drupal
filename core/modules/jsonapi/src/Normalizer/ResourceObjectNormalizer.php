@@ -3,8 +3,10 @@
 namespace Drupal\jsonapi\Normalizer;
 
 use Drupal\Core\Cache\CacheableMetadata;
+use Drupal\Core\Field\EntityReferenceFieldItemListInterface;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\jsonapi\EventSubscriber\ResourceObjectNormalizationCacher;
+use Drupal\jsonapi\JsonApiResource\Relationship;
 use Drupal\jsonapi\JsonApiResource\ResourceObject;
 use Drupal\jsonapi\Normalizer\Value\CacheableNormalization;
 use Drupal\jsonapi\Normalizer\Value\CacheableOmission;
@@ -176,7 +178,17 @@ class ResourceObjectNormalizer extends NormalizerBase {
       if (!$field_access_result->isAllowed()) {
         return new CacheableOmission(CacheableMetadata::createFromObject($field_access_result));
       }
-      $normalized_field = $this->serializer->normalize($field, $format, $context);
+      if ($field instanceof EntityReferenceFieldItemListInterface) {
+        // Build the relationship object based on the entity reference and
+        // normalize that object instead.
+        assert(!empty($context['resource_object']) && $context['resource_object'] instanceof ResourceObject);
+        $resource_object = $context['resource_object'];
+        $relationship = Relationship::createFromEntityReferenceField($resource_object, $field);
+        $normalized_field = $this->serializer->normalize($relationship, $format, $context);
+      }
+      else {
+        $normalized_field = $this->serializer->normalize($field, $format, $context);
+      }
       assert($normalized_field instanceof CacheableNormalization);
       return $normalized_field->withCacheableDependency(CacheableMetadata::createFromObject($field_access_result));
     }

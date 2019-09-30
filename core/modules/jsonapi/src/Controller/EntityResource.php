@@ -34,11 +34,12 @@ use Drupal\jsonapi\IncludeResolver;
 use Drupal\jsonapi\JsonApiResource\IncludedData;
 use Drupal\jsonapi\JsonApiResource\LinkCollection;
 use Drupal\jsonapi\JsonApiResource\NullIncludedData;
+use Drupal\jsonapi\JsonApiResource\Relationship;
 use Drupal\jsonapi\JsonApiResource\ResourceIdentifier;
 use Drupal\jsonapi\JsonApiResource\Link;
 use Drupal\jsonapi\JsonApiResource\ResourceObject;
 use Drupal\jsonapi\JsonApiResource\ResourceObjectData;
-use Drupal\jsonapi\Normalizer\EntityReferenceFieldNormalizer;
+use Drupal\jsonapi\JsonApiResource\TopLevelDataInterface;
 use Drupal\jsonapi\Query\Filter;
 use Drupal\jsonapi\Query\Sort;
 use Drupal\jsonapi\Query\OffsetPage;
@@ -563,10 +564,8 @@ class EntityResource {
     // Access will have already been checked by the RelationshipFieldAccess
     // service, so we don't need to call ::getAccessCheckedResourceObject().
     $resource_object = ResourceObject::createFromEntity($resource_type, $entity);
-    $relationship_object_urls = EntityReferenceFieldNormalizer::getRelationshipLinks($resource_object, $related);
-    $response = $this->buildWrappedResponse($field_list, $request, $this->getIncludes($request, $resource_object), $response_code, [], array_reduce(array_keys($relationship_object_urls), function (LinkCollection $links, $key) use ($relationship_object_urls) {
-      return $links->withLink($key, new Link(new CacheableMetadata(), $relationship_object_urls[$key], [$key]));
-    }, new LinkCollection([])));
+    $relationship = Relationship::createFromEntityReferenceField($resource_object, $field_list);
+    $response = $this->buildWrappedResponse($relationship, $request, $this->getIncludes($request, $resource_object), $response_code);
     // Add the host entity as a cacheable dependency.
     $response->addCacheableDependency($entity);
     return $response;
@@ -969,7 +968,7 @@ class EntityResource {
   /**
    * Builds a response with the appropriate wrapped document.
    *
-   * @param mixed $data
+   * @param \Drupal\jsonapi\JsonApiResource\TopLevelDataInterface $data
    *   The data to wrap.
    * @param \Symfony\Component\HttpFoundation\Request $request
    *   The request object.
@@ -988,8 +987,7 @@ class EntityResource {
    * @return \Drupal\jsonapi\ResourceResponse
    *   The response.
    */
-  protected function buildWrappedResponse($data, Request $request, IncludedData $includes, $response_code = 200, array $headers = [], LinkCollection $links = NULL, array $meta = []) {
-    assert($data instanceof Data || $data instanceof FieldItemListInterface);
+  protected function buildWrappedResponse(TopLevelDataInterface $data, Request $request, IncludedData $includes, $response_code = 200, array $headers = [], LinkCollection $links = NULL, array $meta = []) {
     $links = ($links ?: new LinkCollection([]));
     if (!$links->hasLinkWithKey('self')) {
       $self_link = new Link(new CacheableMetadata(), self::getRequestLink($request), ['self']);

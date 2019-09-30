@@ -72,11 +72,10 @@ services:
     class: Drupal\jsonapi\Normalizer\LinkCollectionNormalizer
     tags:
       - { name: jsonapi_normalizer }
-  serializer.normalizer.entity_reference_field.jsonapi:
-    class: Drupal\jsonapi\Normalizer\EntityReferenceFieldNormalizer
+  serializer.normalizer.relationship.jsonapi:
+    class: Drupal\jsonapi\Normalizer\RelationshipNormalizer
     tags:
-      # This must have a higher priority than the 'serializer.normalizer.field.jsonapi' to take effect.
-      - { name: jsonapi_normalizer, priority: 1 }
+      - { name: jsonapi_normalizer }
   serializer.encoder.jsonapi:
     class: Drupal\jsonapi\Encoder\JsonEncoder
     tags:

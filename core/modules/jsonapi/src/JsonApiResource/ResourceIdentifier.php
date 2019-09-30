@@ -311,12 +311,15 @@ class ResourceIdentifier implements ResourceIdentifierInterface {
    */
   public static function toResourceIdentifiers(EntityReferenceFieldItemListInterface $items) {
     $relationships = [];
-    foreach ($items as $item) {
+    foreach ($items->filterEmptyItems() as $item) {
       // Create a ResourceIdentifier from the field item. This will make it
       // comparable with all previous field items. Here, it is assumed that the
       // resource identifier is unique so it has no arity. If a parallel
       // relationship is encountered, it will be assigned later.
       $relationship = static::toResourceIdentifier($item);
+      if ($relationship->getResourceType()->isInternal()) {
+        continue;
+      }
       // Now, iterate over the previously seen resource identifiers in reverse
       // order. Reverse order is important so that when a parallel relationship
       // is encountered, it will have the highest arity value so the current

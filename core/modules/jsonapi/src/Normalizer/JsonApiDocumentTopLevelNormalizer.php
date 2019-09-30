@@ -7,10 +7,8 @@ use Drupal\Component\Utility\Crypt;
 use Drupal\Component\Uuid\Uuid;
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
-use Drupal\Core\Field\EntityReferenceFieldItemListInterface;
 use Drupal\jsonapi\JsonApiResource\ErrorCollection;
 use Drupal\jsonapi\JsonApiResource\OmittedData;
-use Drupal\jsonapi\JsonApiResource\ResourceObject;
 use Drupal\jsonapi\JsonApiSpec;
 use Drupal\jsonapi\Normalizer\Value\CacheableOmission;
 use Drupal\jsonapi\JsonApiResource\JsonApiDocumentTopLevel;
@@ -190,13 +188,7 @@ class JsonApiDocumentTopLevelNormalizer extends NormalizerBase implements Denorm
     }
     else {
       // Add data.
-      // @todo: remove this if-else and just call $this->serializer->normalize($data...) in https://www.drupal.org/project/jsonapi/issues/3036285.
-      if ($data instanceof EntityReferenceFieldItemListInterface) {
-        $document['data'] = $this->normalizeEntityReferenceFieldItemList($object, $format, $context);
-      }
-      else {
-        $document['data'] = $this->serializer->normalize($data, $format, $context);
-      }
+      $document['data'] = $this->serializer->normalize($data, $format, $context);
       // Add includes.
       $document['included'] = $this->serializer->normalize($object->getIncludes(), $format, $context)->omitIfEmpty();
       // Add omissions and metadata.
@@ -238,32 +230,6 @@ class JsonApiDocumentTopLevelNormalizer extends NormalizerBase implements Denorm
       $errors = array_merge($errors, $normalized_error->getNormalization());
     }
     return new CacheableNormalization($cacheability, $errors);
-  }
-
-  /**
-   * Normalizes an entity reference field, i.e. a relationship document.
-   *
-   * @param \Drupal\jsonapi\JsonApiResource\JsonApiDocumentTopLevel $document
-   *   The document to normalize.
-   * @param string $format
-   *   The normalization format.
-   * @param array $context
-   *   The normalization context.
-   *
-   * @return \Drupal\jsonapi\Normalizer\Value\CacheableNormalization
-   *   The normalized document.
-   *
-   * @todo: remove this in https://www.drupal.org/project/jsonapi/issues/3036285.
-   */
-  protected function normalizeEntityReferenceFieldItemList(JsonApiDocumentTopLevel $document, $format, array $context = []) {
-    $data = $document->getData();
-    $parent_entity = $data->getEntity();
-    $resource_type = $this->resourceTypeRepository->get($parent_entity->getEntityTypeId(), $parent_entity->bundle());
-    $context['resource_object'] = ResourceObject::createFromEntity($resource_type, $parent_entity);
-    $normalized_relationship = $this->serializer->normalize($data, $format, $context);
-    assert($normalized_relationship instanceof CacheableNormalization);
-    unset($context['resource_object']);
-    return new CacheableNormalization($normalized_relationship, $normalized_relationship->getNormalization()['data']);
   }
 
   /**

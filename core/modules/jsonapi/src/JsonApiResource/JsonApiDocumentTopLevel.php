@@ -2,8 +2,6 @@
 
 namespace Drupal\jsonapi\JsonApiResource;
 
-use Drupal\Core\Field\EntityReferenceFieldItemListInterface;
-
 /**
  * Represents a JSON:API document's "top level".
  *
@@ -57,7 +55,7 @@ class JsonApiDocumentTopLevel {
   /**
    * Instantiates a JsonApiDocumentTopLevel object.
    *
-   * @param \Drupal\jsonapi\JsonApiResource\ResourceIdentifierInterface|\Drupal\jsonapi\JsonApiResource\Data|\Drupal\jsonapi\JsonApiResource\ErrorCollection|\Drupal\Core\Field\EntityReferenceFieldItemListInterface $data
+   * @param \Drupal\jsonapi\JsonApiResource\TopLevelDataInterface|\Drupal\jsonapi\JsonApiResource\ErrorCollection $data
    *   The data to normalize. It can be either a ResourceObject, or a stand-in
    *   for one, or a collection of the same.
    * @param \Drupal\jsonapi\JsonApiResource\IncludedData $includes
@@ -69,13 +67,13 @@ class JsonApiDocumentTopLevel {
    *   (optional) The metadata to normalize.
    */
   public function __construct($data, IncludedData $includes, LinkCollection $links, array $meta = []) {
-    assert($data instanceof ResourceIdentifierInterface || $data instanceof Data || $data instanceof ErrorCollection || $data instanceof EntityReferenceFieldItemListInterface);
+    assert($data instanceof TopLevelDataInterface || $data instanceof ErrorCollection);
     assert(!$data instanceof ErrorCollection || $includes instanceof NullIncludedData);
-    $this->data = $data instanceof ResourceObjectData ? $data->getAccessible() : $data;
-    $this->includes = $includes->getAccessible();
-    $this->links = $links->withContext($this);
-    $this->meta = $meta;
-    $this->omissions = $data instanceof ResourceObjectData
+    $this->data = $data instanceof TopLevelDataInterface ? $data->getData() : $data;
+    $this->includes = $includes->getData();
+    $this->links = $data instanceof TopLevelDataInterface ? $data->getMergedLinks($links->withContext($this)) : $links->withContext($this);
+    $this->meta = $data instanceof TopLevelDataInterface ? $data->getMergedMeta($meta) : $meta;
+    $this->omissions = $data instanceof TopLevelDataInterface
       ? OmittedData::merge($data->getOmissions(), $includes->getOmissions())
       : $includes->getOmissions();
   }
@@ -83,7 +81,7 @@ class JsonApiDocumentTopLevel {
   /**
    * Gets the data.
    *
-   * @return \Drupal\jsonapi\JsonApiResource\ResourceObject|\Drupal\jsonapi\JsonApiResource\Data|\Drupal\jsonapi\JsonApiResource\LabelOnlyResourceObject|\Drupal\jsonapi\JsonApiResource\ErrorCollection
+   * @return \Drupal\jsonapi\JsonApiResource\Data|\Drupal\jsonapi\JsonApiResource\ErrorCollection
    *   The data.
    */
   public function getData() {

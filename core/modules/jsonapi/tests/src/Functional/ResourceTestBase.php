@@ -1719,7 +1719,6 @@ abstract class ResourceTestBase extends BrowserTestBase {
     if (static::$resourceTypeIsVersionable) {
       assert($entity instanceof RevisionableInterface);
       $version_query = ['resourceVersion' => 'id:' . $entity->getRevisionId()];
-      $self_link->setOption('query', $version_query);
       $related_link->setOption('query', $version_query);
     }
     $data = $this->getExpectedGetRelationshipDocumentData($relationship_field_name, $entity);
@@ -3094,6 +3093,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
       $actual_response = $this->request('GET', $relationship_url, $request_options);
       $expected_response = $this->getExpectedGetRelationshipResponse('field_jsonapi_test_entity_ref', $revision);
       $expected_document = $expected_response->getResponseData();
+      $expected_document['links']['self']['href'] = $relationship_url->setAbsolute()->toString();
       $expected_cacheability = $expected_response->getCacheableMetadata();
       $this->assertResourceResponse(200, $expected_document, $actual_response, $expected_cacheability->getCacheTags(), $expected_cacheability->getCacheContexts(), FALSE, 'MISS');
       // Request the related route.

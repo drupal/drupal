@@ -8,8 +8,9 @@ use Drupal\Core\Url;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\file\Entity\File;
+use Drupal\jsonapi\JsonApiResource\Relationship;
 use Drupal\jsonapi\JsonApiResource\ResourceObject;
-use Drupal\jsonapi\Normalizer\EntityReferenceFieldNormalizer;
+use Drupal\jsonapi\Normalizer\RelationshipNormalizer;
 use Drupal\jsonapi\Normalizer\Value\CacheableNormalization;
 use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
@@ -17,12 +18,12 @@ use Drupal\Tests\jsonapi\Kernel\JsonapiKernelTestBase;
 use Drupal\user\Entity\User;
 
 /**
- * @coversDefaultClass \Drupal\jsonapi\Normalizer\EntityReferenceFieldNormalizer
+ * @coversDefaultClass \Drupal\jsonapi\Normalizer\RelationshipNormalizer
  * @group jsonapi
  *
  * @internal
  */
-class EntityReferenceFieldNormalizerTest extends JsonapiKernelTestBase {
+class RelationshipNormalizerTest extends JsonapiKernelTestBase {
 
   /**
    * {@inheritdoc}
@@ -137,7 +138,7 @@ class EntityReferenceFieldNormalizerTest extends JsonapiKernelTestBase {
 
     // Set up the test dependencies.
     $this->referencingResourceType = $this->container->get('jsonapi.resource_type.repository')->get('node', 'referencer');
-    $this->normalizer = new EntityReferenceFieldNormalizer();
+    $this->normalizer = new RelationshipNormalizer();
     $this->normalizer->setSerializer($this->container->get('jsonapi.serializer'));
   }
 
@@ -173,11 +174,10 @@ class EntityReferenceFieldNormalizerTest extends JsonapiKernelTestBase {
       }
       return $value;
     }, $entity_property_names);
+    $resource_object = ResourceObject::createFromEntity($this->referencingResourceType, $this->referencer);
+    $relationship = Relationship::createFromEntityReferenceField($resource_object, $resource_object->getField($field_name));
     // Normalize.
-    $actual = $this->normalizer->normalize($this->referencer->{$field_name}, 'api_json', [
-      'account' => $this->account,
-      'resource_object' => ResourceObject::createFromEntity($this->referencingResourceType, $this->referencer),
-    ]);
+    $actual = $this->normalizer->normalize($relationship, 'api_json');
     // Assert.
     assert($actual instanceof CacheableNormalization);
     $this->assertEquals($expected, $actual->getNormalization());
