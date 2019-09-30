@@ -16,6 +16,20 @@ use Drupal\Core\File\FileSystemInterface;
 class DirectoryTest extends FileTestBase {
 
   /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = ['system'];
+
+  protected function setUp() {
+    parent::setUp();
+
+    // These additional tables are necessary due to the call to system_cron().
+    $this->installSchema('system', ['key_value_expire']);
+  }
+
+  /**
    * Test local directory handling functions.
    */
   public function testFileCheckLocalDirectoryHandling() {
@@ -97,8 +111,15 @@ class DirectoryTest extends FileTestBase {
     // Remove .htaccess file to then test that it gets re-created.
     @$file_system->unlink($default_scheme . '://.htaccess');
     $this->assertFalse(is_file($default_scheme . '://.htaccess'), 'Successfully removed the .htaccess file in the files directory.', 'File');
-    file_ensure_htaccess();
+    $this->container->get('file.htaccess_writer')->ensure();
     $this->assertTrue(is_file($default_scheme . '://.htaccess'), 'Successfully re-created the .htaccess file in the files directory.', 'File');
+
+    // Remove .htaccess file again to test that it is re-created by a cron run.
+    @$file_system->unlink($default_scheme . '://.htaccess');
+    $this->assertFalse(is_file($default_scheme . '://.htaccess'), 'Successfully removed the .htaccess file in the files directory.', 'File');
+    system_cron();
+    $this->assertTrue(is_file($default_scheme . '://.htaccess'), 'Successfully re-created the .htaccess file in the files directory.', 'File');
+
     // Verify contents of .htaccess file.
     $file = file_get_contents($default_scheme . '://.htaccess');
     $this->assertEqual($file, FileSecurity::htaccessLines(FALSE), 'The .htaccess file contains the proper content.', 'File');

@@ -1100,14 +1100,14 @@ function install_base_system(&$install_state) {
   // Install system.module.
   drupal_install_system($install_state);
 
-  // Call file_ensure_htaccess() to ensure that all of Drupal's standard
+  // Call HtaccessWriter::ensure() to ensure that all of Drupal's standard
   // directories (e.g., the public files directory and config directory) have
   // appropriate .htaccess files. These directories will have already been
   // created by this point in the installer, since Drupal creates them during
   // the install_verify_requirements() task. Note that we cannot call
   // file_ensure_access() any earlier than this, since it relies on
   // system.module in order to work.
-  file_ensure_htaccess();
+  \Drupal::service('file.htaccess_writer')->ensure();
 
   // Prime the drupal_get_filename() static cache with the user module's
   // exact location.

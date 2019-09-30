@@ -5,25 +5,26 @@
  * Install, update and uninstall functions for the system module.
  */
 
+use Drupal\Component\FileSystem\FileSystem as FileSystemComponent;
 use Drupal\Component\Utility\Crypt;
 use Drupal\Component\Utility\Environment;
-use Drupal\Component\FileSystem\FileSystem;
 use Drupal\Component\Utility\OpCodeCache;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Cache\Cache;
-use Drupal\Core\File\FileSystemInterface;
-use Drupal\Core\Path\AliasStorage;
-use Drupal\Core\Url;
 use Drupal\Core\Database\Database;
+use Drupal\Core\DrupalKernel;
 use Drupal\Core\Entity\ContentEntityTypeInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\FieldableEntityInterface;
-use Drupal\Core\DrupalKernel;
 use Drupal\Core\Extension\Extension;
 use Drupal\Core\Field\BaseFieldDefinition;
+use Drupal\Core\File\FileSystemInterface;
+use Drupal\Core\Path\AliasStorage;
 use Drupal\Core\Site\Settings;
 use Drupal\Core\StreamWrapper\PrivateStream;
 use Drupal\Core\StreamWrapper\PublicStream;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\Core\Url;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -498,32 +499,20 @@ function system_requirements($phase) {
   if ($phase == 'runtime') {
     // Try to write the .htaccess files first, to prevent false alarms in case
     // (for example) the /tmp directory was wiped.
-    file_ensure_htaccess();
-    $file_system = \Drupal::service('file_system');
-    $htaccess_files['public://.htaccess'] = [
-      'title' => t('Public files directory'),
-      'directory' => $file_system->realpath('public://'),
-    ];
-    if (PrivateStream::basePath()) {
-      $htaccess_files['private://.htaccess'] = [
-        'title' => t('Private files directory'),
-        'directory' => $file_system->realpath('private://'),
-      ];
-    }
-    $htaccess_files['temporary://.htaccess'] = [
-      'title' => t('Temporary files directory'),
-      'directory' => $file_system->realpath('temporary://'),
-    ];
-    foreach ($htaccess_files as $htaccess_file => $info) {
+    /** @var \Drupal\Core\File\HtaccessWriterInterface $htaccessWriter */
+    $htaccessWriter = \Drupal::service("file.htaccess_writer");
+    $htaccessWriter->ensure();
+    foreach ($htaccessWriter->defaultProtectedDirs() as $protected_dir) {
+      $htaccess_file = $protected_dir->getPath() . '/.htaccess';
       // Check for the string which was added to the recommended .htaccess file
       // in the latest security update.
       if (!file_exists($htaccess_file) || !($contents = @file_get_contents($htaccess_file)) || strpos($contents, 'Drupal_Security_Do_Not_Remove_See_SA_2013_003') === FALSE) {
         $url = 'https://www.drupal.org/SA-CORE-2013-003';
         $requirements[$htaccess_file] = [
-          'title' => $info['title'],
+          'title' => new TranslatableMarkup($protected_dir->getTitle()),
           'value' => t('Not fully protected'),
           'severity' => REQUIREMENT_ERROR,
-          'description' => t('See <a href=":url">@url</a> for information about the recommended .htaccess file which should be added to the %directory directory to help protect against arbitrary code execution.', [':url' => $url, '@url' => $url, '%directory' => $info['directory']]),
+          'description' => t('See <a href=":url">@url</a> for information about the recommended .htaccess file which should be added to the %directory directory to help protect against arbitrary code execution.', [':url' => $url, '@url' => $url, '%directory' => $protected_dir->getPath()]),
         ];
       }
     }
@@ -545,7 +534,7 @@ function system_requirements($phase) {
             ],
           ],
         ];
-        if ($temp_path === FileSystem::getOsTemporaryDirectory()) {
+        if ($temp_path === FileSystemComponent::getOsTemporaryDirectory()) {
           $requirements['temp_directory']['description'][] = [
             '#markup' => t('Your temporary directory configuration matches the OS default and can be safely removed.'),
             '#suffix' => ' ',
@@ -655,7 +644,7 @@ function system_requirements($phase) {
     else {
       // If the temporary directory is not overridden use an appropriate
       // temporary path for the system.
-      $directories[] = FileSystem::getOsTemporaryDirectory();
+      $directories[] = FileSystemComponent::getOsTemporaryDirectory();
     }
   }
 
@@ -2352,7 +2341,7 @@ function system_update_8801() {
   // If settings is already being used, or the config is set to the OS default,
   // clear the config value.
   $config = Drupal::configFactory()->getEditable('system.file');
-  if (Settings::get('file_temp_path') || $config->get('path.temporary') === FileSystem::getOsTemporaryDirectory()) {
+  if (Settings::get('file_temp_path') || $config->get('path.temporary') === FileSystemComponent::getOsTemporaryDirectory()) {
     $config->clear('path.temporary')
       ->save(TRUE);
   }

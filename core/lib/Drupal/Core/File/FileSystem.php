@@ -508,9 +508,6 @@ class FileSystem implements FileSystemInterface {
       ]);
       throw new FileException("File '$source' could not be copied because it would overwrite itself.");
     }
-    // Make sure the .htaccess files are present.
-    // @todo Replace with a service in https://www.drupal.org/project/drupal/issues/2620304.
-    file_ensure_htaccess();
   }
 
   /**

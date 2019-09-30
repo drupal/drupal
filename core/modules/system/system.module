@@ -5,29 +5,30 @@
  * Configuration system that lets administrators modify the workings of the site.
  */
 
+use Drupal\Component\FileSecurity\FileSecurity;
 use Drupal\Component\Gettext\PoItem;
-use Drupal\Core\Extension\Dependency;
 use Drupal\Component\Render\PlainTextOutput;
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Asset\AttachedAssetsInterface;
+use Drupal\Core\Block\BlockPluginInterface;
 use Drupal\Core\Cache\Cache;
+use Drupal\Core\Database\Query\AlterableInterface;
+use Drupal\Core\Extension\Dependency;
+use Drupal\Core\Extension\Extension;
 use Drupal\Core\File\Exception\FileException;
 use Drupal\Core\File\FileSystemInterface;
-use Drupal\Core\Queue\QueueGarbageCollectionInterface;
-use Drupal\Core\Database\Query\AlterableInterface;
-use Drupal\Core\Extension\Extension;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\KeyValueStore\KeyValueDatabaseExpirableFactory;
-use Drupal\Core\PageCache\RequestPolicyInterface;
-use Drupal\Core\Routing\RouteMatchInterface;
-use Drupal\Core\Routing\StackedRouteMatchInterface;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Menu\MenuTreeParameters;
+use Drupal\Core\PageCache\RequestPolicyInterface;
+use Drupal\Core\Queue\QueueGarbageCollectionInterface;
+use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\Routing\StackedRouteMatchInterface;
 use Drupal\Core\Url;
-use Drupal\Core\Block\BlockPluginInterface;
 use Drupal\user\UserInterface;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use GuzzleHttp\Exception\RequestException;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
  * New users will be set to the default time zone at registration.
@@ -948,11 +949,11 @@ function system_check_directory($form_element, FormStateInterface $form_state) {
   elseif (is_dir($directory)) {
     if ($form_element['#name'] == 'file_public_path') {
       // Create public .htaccess file.
-      file_save_htaccess($directory, FALSE);
+      FileSecurity::writeHtaccess($directory, FALSE);
     }
     else {
       // Create private .htaccess file.
-      file_save_htaccess($directory);
+      FileSecurity::writeHtaccess($directory);
     }
   }
 
@@ -1233,7 +1234,8 @@ function system_get_module_admin_tasks($module, array $info) {
 /**
  * Implements hook_cron().
  *
- * Remove older rows from flood, batch cache and expirable keyvalue tables.
+ * Remove older rows from flood, batch cache and expirable keyvalue tables. Also
+ * ensure files directories have .htaccess files.
  */
 function system_cron() {
   // Clean up the flood.
@@ -1259,6 +1261,10 @@ function system_cron() {
       $queue->garbageCollection();
     }
   }
+
+  // Ensure that all of Drupal's standard directories (e.g., the public files
+  // directory and config directory) have appropriate .htaccess files.
+  \Drupal::service('file.htaccess_writer')->ensure();
 }
 
 /**

@@ -13,8 +13,6 @@ use Drupal\Core\File\Exception\FileException;
 use Drupal\Core\File\Exception\FileWriteException;
 use Drupal\Core\File\FileSystem;
 use Drupal\Core\File\FileSystemInterface;
-use Drupal\Core\Site\Settings;
-use Drupal\Core\StreamWrapper\PrivateStream;
 use Drupal\Core\StreamWrapper\StreamWrapperManager;
 
 /**
@@ -326,22 +324,15 @@ function file_prepare_directory(&$directory, $options = FileSystemInterface::MOD
 
 /**
  * Creates a .htaccess file in each Drupal files directory if it is missing.
+ *
+ * @deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. Use
+ * \Drupal\Core\File\HtaccessWriterInterface::ensure() instead.
+ *
+ * @see https://www.drupal.org/node/2940126
  */
 function file_ensure_htaccess() {
-  file_save_htaccess('public://', FALSE);
-  $private_path = PrivateStream::basePath();
-  if (!empty($private_path)) {
-    file_save_htaccess('private://', TRUE);
-  }
-  file_save_htaccess('temporary://', TRUE);
-
-  $staging = Settings::get('config_sync_directory', FALSE);
-  if ($staging) {
-    // Note that we log an error here if we can't write the .htaccess file. This
-    // can occur if the staging directory is read-only. If it is then it is the
-    // user's responsibility to create the .htaccess file.
-    file_save_htaccess($staging, TRUE);
-  }
+  @trigger_error("file_ensure_htaccess() is deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. Use \Drupal\Core\File\HtaccessWriter::ensure() instead. See https://www.drupal.org/node/2940126", E_USER_DEPRECATED);
+  \Drupal::service('file.htaccess_writer')->ensure();
 }
 
 /**
@@ -355,25 +346,18 @@ function file_ensure_htaccess() {
  * @param bool $force_overwrite
  *   (Optional) Set to TRUE to attempt to overwrite the existing .htaccess file
  *   if one is already present. Defaults to FALSE.
+ *
+ * @return bool
+ *   TRUE when file exists or created successfully, FALSE otherwise.
+ *
+ * @deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. Use
+ *   \Drupal\Component\FileSecurity\FileSecurity::writeHtaccess() instead.
+ *
+ * @see https://www.drupal.org/node/2940126
  */
 function file_save_htaccess($directory, $private = TRUE, $force_overwrite = FALSE) {
-
-  /** @var \Drupal\Core\StreamWrapper\StreamWrapperManagerInterface $stream_wrapper_manager */
-  $stream_wrapper_manager = \Drupal::service('stream_wrapper_manager');
-
-  if ($stream_wrapper_manager::getScheme($directory)) {
-    $directory = $stream_wrapper_manager->normalizeUri($directory);
-  }
-  else {
-    $directory = rtrim($directory, '/\\');
-  }
-
-  if (FileSecurity::writeHtaccess($directory, $private, $force_overwrite)) {
-    return TRUE;
-  }
-
-  \Drupal::logger('security')->error("Security warning: Couldn't write .htaccess file. Please create a .htaccess file in your %directory directory which contains the following lines: <pre><code>@htaccess</code></pre>", ['%directory' => $directory, '@htaccess' => FileSecurity::htaccessLines($private)]);
-  return FALSE;
+  @trigger_error('file_save_htaccess() is deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. Use \Drupal\Component\FileSecurity\FileSecurity::writeHtaccess() instead. See https://www.drupal.org/node/2940126', E_USER_DEPRECATED);
+  return \Drupal::service('file.htaccess_writer')->write($directory, $private, $force_overwrite);
 }
 
 /**
