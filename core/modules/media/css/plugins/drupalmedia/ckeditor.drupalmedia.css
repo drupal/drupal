@@ -30,3 +30,14 @@ drupal-media {
 drupal-media .media-library-item__edit {
   right: 10px;
 }
+
+/**
+ * Allow alignment to display in CKEditor.
+ */
+drupal-media[data-align=left],
+drupal-media[data-align=right] {
+  display: inline;
+}
+drupal-media[data-align=center] {
+  display: flex;
+}

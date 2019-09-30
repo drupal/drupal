@@ -1041,9 +1041,15 @@ class CKEditorIntegrationTest extends WebDriverTestBase {
     $this->waitForEditor();
     $this->assignNameToCkeditorIframe();
     $this->getSession()->switchToIFrame('ckeditor');
+    // Wait for preview to load.
+    $this->assertNotEmpty($img = $assert_session->waitForElement('css', 'drupal-media img'));
+    // Assert the drupal-media element starts without a data-align attribute.
+    $drupal_media = $assert_session->elementExists('css', 'drupal-media');
+    $this->assertFalse($drupal_media->hasAttribute('data-align'));
+
     // Assert that setting the data-align property in the dialog adds the
     // `align-right', `align-left` or `align-center' class on the widget,
-    // caption figure and drupal-media tag.
+    // caption figure and drupal-media element.
     $alignments = [
       'right',
       'left',
@@ -1051,21 +1057,12 @@ class CKEditorIntegrationTest extends WebDriverTestBase {
     ];
     foreach ($alignments as $alignment) {
       $this->fillFieldInMetadataDialogAndSubmit('attributes[data-align]', $alignment);
+      // Wait for preview to load.
+      $this->assertNotEmpty($img = $assert_session->waitForElement('css', 'drupal-media img'));
       // Now verify the result. Assert the first element within the
       // <drupal-media> element has the alignment class.
       $selector = sprintf('drupal-media[data-align="%s"] .caption-drupal-media.align-%s', $alignment, $alignment);
       $this->assertNotEmpty($assert_session->waitForElementVisible('css', $selector, 2000));
-      foreach ($alignments as $wrapper_alignment) {
-        $selector = sprintf('.cke_widget_drupalmedia.align-%s', $wrapper_alignment);
-        if ($wrapper_alignment === $alignment) {
-          // Assert that the alignment class exists on the wrapper.
-          $assert_session->elementExists('css', $selector);
-        }
-        else {
-          // Assert that the other alignment classes don't exist on the wrapper.
-          $assert_session->elementNotExists('css', $selector);
-        }
-      }
 
       // Assert that the resultant downcast drupal-media element has the proper
       // `data-align` attribute.
@@ -1077,10 +1074,7 @@ class CKEditorIntegrationTest extends WebDriverTestBase {
     // remove the attribute from the drupal-media element in the CKEditor.
     $this->fillFieldInMetadataDialogAndSubmit('attributes[data-align]', 'none');
 
-    // Assert that neither the widget nor the caption figure have alignment
-    // classes.
-    $this->assertNotEmpty($assert_session->waitForElementVisible('css', '.caption-drupal-media:not([class*="align-"])', 2000));
-    // Assert drupal-media element no longer has data-align attribute.
+    // Assert the drupal-media element no longer has data-align attribute.
     $this->assertNotEmpty($assert_session->waitForElementVisible('css', 'drupal-media .caption-drupal-media:not(.align-center)', 2000));
     $drupal_media = $assert_session->elementExists('css', 'drupal-media');
     $this->assertFalse($drupal_media->hasAttribute('data-align'));

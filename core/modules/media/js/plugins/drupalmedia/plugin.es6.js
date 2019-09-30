@@ -242,32 +242,13 @@
             });
           }
 
-          // Allow entity_embed.editor.css to respond to changes (for example in alignment).
-          this.element.setAttributes(this.data.attributes);
-          // Convert data-align attribute to class so we're not applying styles
-          // to data attributes.
-          // @todo Consider removing this in https://www.drupal.org/project/drupal/issues/3072279
-          // Remove any align classes from from the widget wrapper. These
-          // classes are moved to the wrapper so that the alignment will still
-          // display within CKEditor.
-          const classes = this.element.getParent().$.classList;
-          for (let i = 0; i < classes.length; i++) {
-            if (classes[i].indexOf('align-') === 0) {
-              this.element.getParent().removeClass(classes[i]);
-            }
-          }
-          if (this.data.attributes.hasOwnProperty('data-align')) {
-            this.element
-              .getParent()
-              .addClass(`align-${this.data.attributes['data-align']}`);
-          }
-          // Remove old attributes.
+          // Remove old attributes from drupal-media element within the widget.
           if (this.oldData) {
             Object.keys(this.oldData.attributes).forEach(attrName => {
               this.element.removeAttribute(attrName);
             });
           }
-
+          // Add attributes to drupal-media element within the widget.
           this.element.setAttributes(this.data.attributes);
 
           // Track the previous state to allow checking if preview needs
