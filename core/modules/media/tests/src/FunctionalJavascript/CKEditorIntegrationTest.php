@@ -1080,7 +1080,10 @@ class CKEditorIntegrationTest extends WebDriverTestBase {
     // Assert that neither the widget nor the caption figure have alignment
     // classes.
     $this->assertNotEmpty($assert_session->waitForElementVisible('css', '.caption-drupal-media:not([class*="align-"])', 2000));
-    $assert_session->elementExists('css', '.cke_widget_drupalmedia:not([class*="align-"])');
+    // Assert drupal-media element no longer has data-align attribute.
+    $this->assertNotEmpty($assert_session->waitForElementVisible('css', 'drupal-media .caption-drupal-media:not(.align-center)', 2000));
+    $drupal_media = $assert_session->elementExists('css', 'drupal-media');
+    $this->assertFalse($drupal_media->hasAttribute('data-align'));
     // Assert that the resultant downcast <drupal-media> tag has no data-align
     // attribute.
     $this->pressEditorButton('source');

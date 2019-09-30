@@ -261,6 +261,14 @@
               .getParent()
               .addClass(`align-${this.data.attributes['data-align']}`);
           }
+          // Remove old attributes.
+          if (this.oldData) {
+            Object.keys(this.oldData.attributes).forEach(attrName => {
+              this.element.removeAttribute(attrName);
+            });
+          }
+
+          this.element.setAttributes(this.data.attributes);
 
           // Track the previous state to allow checking if preview needs
           // server side update.

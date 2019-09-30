@@ -157,6 +157,8 @@
           this._tearDownDynamicEditables();
         },
         data: function data(event) {
+          var _this = this;
+
           if (this.oldData) {
             if (!this.data.hasCaption && this.oldData.hasCaption) {
               delete this.data.attributes['data-caption'];
@@ -188,6 +190,14 @@
             this.element.getParent().addClass('align-' + this.data.attributes['data-align']);
           }
 
+          if (this.oldData) {
+            Object.keys(this.oldData.attributes).forEach(function (attrName) {
+              _this.element.removeAttribute(attrName);
+            });
+          }
+
+          this.element.setAttributes(this.data.attributes);
+
           this.oldData = CKEDITOR.tools.clone(this.data);
         },
         downcast: function downcast() {
@@ -200,7 +210,7 @@
           return downcastElement;
         },
         _setUpDynamicEditables: function _setUpDynamicEditables() {
-          var _this = this;
+          var _this2 = this;
 
           if (this.initEditable('caption', this.definition.editables.caption)) {
             var captionEditable = this.editables.caption;
@@ -208,9 +218,9 @@
             captionEditable.setAttribute('data-placeholder', Drupal.t('Enter caption here'));
 
             this.captionObserver = new MutationObserver(function () {
-              var mediaAttributes = CKEDITOR.tools.clone(_this.data.attributes);
+              var mediaAttributes = CKEDITOR.tools.clone(_this2.data.attributes);
               mediaAttributes['data-caption'] = captionEditable.getData();
-              _this.setData('attributes', mediaAttributes);
+              _this2.setData('attributes', mediaAttributes);
             });
             this.captionObserver.observe(captionEditable.$, {
               characterData: true,
@@ -307,7 +317,7 @@
           return JSON.stringify(dataToHash);
         },
         _loadPreview: function _loadPreview(callback) {
-          var _this2 = this;
+          var _this3 = this;
 
           jQuery.get({
             url: Drupal.url('media/' + editor.config.drupal.format + '/preview'),
@@ -316,11 +326,11 @@
             },
             dataType: 'html',
             success: function success(previewHtml) {
-              _this2.element.setHtml(previewHtml);
-              callback(_this2);
+              _this3.element.setHtml(previewHtml);
+              callback(_this3);
             },
             error: function error() {
-              _this2.element.setHtml(Drupal.theme('mediaEmbedError'));
+              _this3.element.setHtml(Drupal.theme('mediaEmbedError'));
             }
           });
         }
