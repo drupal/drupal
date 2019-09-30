@@ -4,7 +4,6 @@ namespace Drupal\Core\Extension;
 
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Config\ConfigFactoryInterface;
-use Drupal\Core\Site\Settings;
 use Drupal\Core\State\StateInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 
@@ -109,16 +108,6 @@ class ModuleExtensionList extends ExtensionList {
     $all_profiles = $discovery->scan('profile');
     $active_profile = $all_profiles[$this->installProfile];
     $profiles = array_intersect_key($all_profiles, $this->configFactory->get('core.extension')->get('module') ?: [$active_profile->getName() => 0]);
-
-    // If a module is within a profile directory but specifies another
-    // profile for testing, it needs to be found in the parent profile.
-    $parent_profile = Settings::get('test_parent_profile');
-
-    if ($parent_profile && !isset($profiles[$parent_profile])) {
-      // In case both profile directories contain the same extension, the
-      // actual profile always has precedence.
-      $profiles = [$parent_profile => $all_profiles[$parent_profile]] + $profiles;
-    }
 
     $profile_directories = array_map(function (Extension $profile) {
       return $profile->getPath();

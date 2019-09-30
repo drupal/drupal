@@ -774,15 +774,6 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
       $all_profiles = $listing->scan('profile');
       $profiles = array_intersect_key($all_profiles, $this->moduleList);
 
-      // If a module is within a profile directory but specifies another
-      // profile for testing, it needs to be found in the parent profile.
-      $parent_profile = Settings::get('test_parent_profile');
-      if ($parent_profile && !isset($profiles[$parent_profile])) {
-        // In case both profile directories contain the same extension, the
-        // actual profile always has precedence.
-        $profiles = [$parent_profile => $all_profiles[$parent_profile]] + $profiles;
-      }
-
       $profile_directories = array_map(function ($profile) {
         return $profile->getPath();
       }, $profiles);

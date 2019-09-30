@@ -108,12 +108,6 @@ trait FunctionalTestSetupTrait {
       'value' => $this->originalSite,
       'required' => TRUE,
     ];
-    // Add the parent profile's search path to the child site's search paths.
-    // @see \Drupal\Core\Extension\ExtensionDiscovery::getProfileDirectories()
-    $settings['setting']['test_parent_profile'] = (object) [
-      'value' => $this->originalProfile,
-      'required' => TRUE,
-    ];
     $settings['settings']['apcu_ensure_unique_prefix'] = (object) [
       'value' => $this->apcuEnsureUniquePrefix,
       'required' => TRUE,
