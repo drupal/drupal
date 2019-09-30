@@ -189,11 +189,11 @@
     "extra": {
         "composer-scaffold": {
             "file-mapping": {
+                "[project-root]/.editorconfig": "assets/scaffold/files/editorconfig",
+                "[project-root]/.gitattributes": "assets/scaffold/files/gitattributes",
                 "[web-root]/.csslintrc": "assets/scaffold/files/csslintrc",
-                "[web-root]/.editorconfig": "assets/scaffold/files/editorconfig",
                 "[web-root]/.eslintignore": "assets/scaffold/files/eslintignore",
                 "[web-root]/.eslintrc.json": "assets/scaffold/files/eslintrc.json",
-                "[web-root]/.gitattributes": "assets/scaffold/files/gitattributes",
                 "[web-root]/.ht.router.php": "assets/scaffold/files/ht.router.php",
                 "[web-root]/.htaccess": "assets/scaffold/files/htaccess",
                 "[web-root]/example.gitignore": "assets/scaffold/files/example.gitignore",

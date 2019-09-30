@@ -34,6 +34,7 @@ class ScaffoldOptions {
 
     // Define any default locations.
     $this->options['locations'] += [
+      'project-root' => '.',
       'web-root' => '.',
     ];
   }

@@ -177,11 +177,11 @@ class ComposerIntegrationTest extends UnitTestCase {
    */
   public function providerTestExpectedScaffoldFiles() {
     return [
+      ['.editorconfig', 'assets/scaffold/files/editorconfig', '[project-root]'],
+      ['.gitattributes', 'assets/scaffold/files/gitattributes', '[project-root]'],
       ['.csslintrc', 'assets/scaffold/files/csslintrc'],
-      ['.editorconfig', 'assets/scaffold/files/editorconfig'],
       ['.eslintignore', 'assets/scaffold/files/eslintignore'],
       ['.eslintrc.json', 'assets/scaffold/files/eslintrc.json'],
-      ['.gitattributes', 'assets/scaffold/files/gitattributes'],
       ['.ht.router.php', 'assets/scaffold/files/ht.router.php'],
       ['.htaccess', 'assets/scaffold/files/htaccess'],
       ['example.gitignore', 'assets/scaffold/files/example.gitignore'],
@@ -221,17 +221,19 @@ class ComposerIntegrationTest extends UnitTestCase {
    *   Path to scaffold file destination location
    * @param string $sourceRelPath
    *   Path to scaffold file source location
+   * @param string $expectedDestination
+   *   Named location to the destination path of the scaffold file
    *
    * @dataProvider providerTestExpectedScaffoldFiles
    */
-  public function testExpectedScaffoldFiles($destRelPath, $sourceRelPath) {
+  public function testExpectedScaffoldFiles($destRelPath, $sourceRelPath, $expectedDestination = '[web-root]') {
     // Grab the 'file-mapping' section of the core composer.json file.
     $json = json_decode(file_get_contents($this->root . '/core/composer.json'));
     $scaffold_file_mapping = (array) $json->extra->{'composer-scaffold'}->{'file-mapping'};
 
     // Assert that the 'file-mapping' section has the expected entry.
-    $this->assertArrayHasKey("[web-root]/$destRelPath", $scaffold_file_mapping);
-    $this->assertEquals($sourceRelPath, $scaffold_file_mapping["[web-root]/$destRelPath"]);
+    $this->assertArrayHasKey("$expectedDestination/$destRelPath", $scaffold_file_mapping);
+    $this->assertEquals($sourceRelPath, $scaffold_file_mapping["$expectedDestination/$destRelPath"]);
 
     // Assert that the source file exists.
     $this->assertFileExists($this->root . '/core/' . $sourceRelPath);
