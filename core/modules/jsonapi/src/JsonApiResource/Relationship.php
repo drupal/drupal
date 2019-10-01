@@ -117,11 +117,10 @@ class Relationship implements TopLevelDataInterface {
    */
   public static function createFromEntityReferenceField(ResourceObject $context, EntityReferenceFieldItemListInterface $field, LinkCollection $links = NULL, array $meta = []) {
     $context_resource_type = $context->getResourceType();
-    $public_field_name = $context_resource_type->getPublicName($field->getName());
-    $field_cardinality = $field->getFieldDefinition()->getFieldStorageDefinition()->getCardinality();
+    $resource_field = $context_resource_type->getFieldByInternalName($field->getName());
     return new static(
-      $public_field_name,
-      new RelationshipData(ResourceIdentifier::toResourceIdentifiers($field), $field_cardinality),
+      $resource_field->getPublicName(),
+      new RelationshipData(ResourceIdentifier::toResourceIdentifiers($field), $resource_field->hasOne() ? 1 : -1),
       static::buildLinkCollectionFromEntityReferenceField($context, $field, $links ?: new LinkCollection([])),
       $meta,
       $context
@@ -228,7 +227,7 @@ class Relationship implements TopLevelDataInterface {
    */
   protected static function buildLinkCollectionFromEntityReferenceField(ResourceObject $context, EntityReferenceFieldItemListInterface $field, LinkCollection $links) {
     $context_resource_type = $context->getResourceType();
-    $public_field_name = $context_resource_type->getPublicName($context_resource_type->getPublicName($field->getName()));
+    $public_field_name = $context_resource_type->getPublicName($field->getName());
     if ($context_resource_type->isLocatable() && !$context_resource_type->isInternal()) {
       $context_is_versionable = $context_resource_type->isVersionable();
       if (!$links->hasLinkWithKey('self')) {

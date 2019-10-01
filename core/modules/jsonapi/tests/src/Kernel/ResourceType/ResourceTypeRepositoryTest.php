@@ -122,7 +122,7 @@ class ResourceTypeRepositoryTest extends JsonapiKernelTestBase {
     $entity_type = \Drupal::entityTypeManager()->getDefinition('node');
     $bundle = 'article';
     $reflection_class = new \ReflectionClass($this->resourceTypeRepository);
-    $reflection_method = $reflection_class->getMethod('getFieldMapping');
+    $reflection_method = $reflection_class->getMethod('getFields');
     $reflection_method->setAccessible(TRUE);
 
     $this->expectException(\LogicException::class);

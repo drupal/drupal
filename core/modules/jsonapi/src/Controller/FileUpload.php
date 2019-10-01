@@ -128,7 +128,7 @@ class FileUpload {
       throw new UnprocessableEntityHttpException($message);
     }
 
-    if ($field_definition->getFieldStorageDefinition()->getCardinality() === 1) {
+    if ($resource_type->getFieldByInternalName($file_field_name)->hasOne()) {
       $entity->{$file_field_name} = $file;
     }
     else {

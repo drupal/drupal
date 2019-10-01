@@ -3,6 +3,7 @@
 namespace Drupal\Tests\jsonapi\Kernel\Serializer;
 
 use Drupal\Core\Render\Markup;
+use Drupal\jsonapi\JsonApiResource\ResourceObject;
 use Drupal\jsonapi\Normalizer\Value\CacheableNormalization;
 use Drupal\jsonapi_test_data_type\TraversableObject;
 use Drupal\node\Entity\Node;
@@ -40,6 +41,13 @@ class SerializerTest extends JsonapiKernelTestBase {
    * @var \Drupal\Core\Entity\EntityInterface
    */
   protected $node;
+
+  /**
+   * A resource type for testing.
+   *
+   * @var \Drupal\jsonapi\ResourceType\ResourceType
+   */
+  protected $resourceType;
 
   /**
    * The subject under test.
@@ -80,6 +88,7 @@ class SerializerTest extends JsonapiKernelTestBase {
     ]);
     $this->node->save();
     $this->container->setAlias('sut', 'jsonapi.serializer');
+    $this->resourceType = $this->container->get('jsonapi.resource_type.repository')->get($this->node->getEntityTypeId(), $this->node->bundle());
     $this->sut = $this->container->get('sut');
   }
 
@@ -87,7 +96,10 @@ class SerializerTest extends JsonapiKernelTestBase {
    * @covers \Drupal\jsonapi\Serializer\Serializer::normalize
    */
   public function testFallbackNormalizer() {
-    $context = ['account' => $this->user];
+    $context = [
+      'account' => $this->user,
+      'resource_object' => ResourceObject::createFromEntity($this->resourceType, $this->node),
+    ];
 
     $value = $this->sut->normalize($this->node->field_text, 'api_json', $context);
     $this->assertTrue($value instanceof CacheableNormalization);

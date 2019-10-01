@@ -13,14 +13,14 @@ class AliasingResourceTypeRepository extends ResourceTypeRepository {
   /**
    * {@inheritdoc}
    */
-  protected static function getFieldMapping(array $field_names, EntityTypeInterface $entity_type, $bundle) {
-    $mapping = parent::getFieldMapping($field_names, $entity_type, $bundle);
-    foreach ($field_names as $field_name) {
+  protected function getFields(array $field_names, EntityTypeInterface $entity_type, $bundle) {
+    $fields = parent::getFields($field_names, $entity_type, $bundle);
+    foreach ($fields as $field_name => $field) {
       if (strpos($field_name, 'field_test_alias_') === 0) {
-        $mapping[$field_name] = 'field_test_alias';
+        $fields[$field_name] = $fields[$field_name]->withPublicName('field_test_alias');
       }
     }
-    return $mapping;
+    return $fields;
   }
 
 }

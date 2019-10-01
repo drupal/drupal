@@ -4,6 +4,7 @@ namespace Drupal\Tests\jsonapi\Unit\Routing;
 
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\jsonapi\ResourceType\ResourceType;
+use Drupal\jsonapi\ResourceType\ResourceTypeRelationship;
 use Drupal\jsonapi\ResourceType\ResourceTypeRepository;
 use Drupal\jsonapi\Routing\Routes;
 use Drupal\Tests\UnitTestCase;
@@ -30,8 +31,13 @@ class RoutesTest extends UnitTestCase {
    */
   protected function setUp() {
     parent::setUp();
-    $type_1 = new ResourceType('entity_type_1', 'bundle_1_1', EntityInterface::class);
-    $type_2 = new ResourceType('entity_type_2', 'bundle_2_1', EntityInterface::class, TRUE);
+    $relationship_fields = [
+      'external' => new ResourceTypeRelationship('external'),
+      'internal' => new ResourceTypeRelationship('internal'),
+      'both' => new ResourceTypeRelationship('both'),
+    ];
+    $type_1 = new ResourceType('entity_type_1', 'bundle_1_1', EntityInterface::class, FALSE, TRUE, TRUE, FALSE, $relationship_fields);
+    $type_2 = new ResourceType('entity_type_2', 'bundle_2_1', EntityInterface::class, TRUE, TRUE, TRUE, FALSE, $relationship_fields);
     $relatable_resource_types = [
       'external' => [$type_1],
       'internal' => [$type_2],
