@@ -696,7 +696,9 @@ abstract class AddFormBase extends FormBase {
 
     $response = new AjaxResponse();
     $response->addCommand(new UpdateSelectionCommand($media_ids));
+    $media_id_to_focus = array_pop($media_ids);
     $response->addCommand(new ReplaceCommand('#media-library-add-form-wrapper', $this->buildMediaLibraryUi($form_state)));
+    $response->addCommand(new InvokeCommand("#media-library-content [value=$media_id_to_focus]", 'focus'));
     return $response;
   }
 

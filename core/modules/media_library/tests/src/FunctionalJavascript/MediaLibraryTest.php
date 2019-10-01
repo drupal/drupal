@@ -1097,6 +1097,7 @@ class MediaLibraryTest extends WebDriverTestBase {
     $page->fillField('Alternative text', $this->randomString());
     $assert_session->elementExists('css', '.ui-dialog-buttonpane')->pressButton('Save and select');
     $assert_session->assertWaitOnAjaxRequest();
+    $this->assertJsCondition('jQuery("input[name=\'media_library_select_form[0]\']").is(":focus")');
     // The file should be permanent now.
     $files = $file_storage->loadMultiple();
     $file = array_pop($files);
