@@ -4,39 +4,51 @@ namespace Drupal\KernelTests\Core\Path;
 
 use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Cache\MemoryCounterBackend;
-use Drupal\Core\Path\AliasStorage;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Path\AliasManager;
 use Drupal\Core\Path\AliasWhitelist;
+use Drupal\KernelTests\KernelTestBase;
 
 /**
  * Tests path alias CRUD and lookup functionality.
  *
  * @group Path
  */
-class AliasTest extends PathUnitTestBase {
+class AliasTest extends KernelTestBase {
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function setUp() {
+    parent::setUp();
+
+    // The alias whitelist expects that the menu path roots are set by a
+    // menu router rebuild.
+    \Drupal::state()->set('router.path_roots', ['user', 'admin']);
+
+    $this->installEntitySchema('path_alias');
+  }
 
   public function testCRUD() {
     // Prepare database table.
     $connection = Database::getConnection();
-    $this->fixtures->createTables($connection);
 
     // Create Path object.
-    $aliasStorage = new AliasStorage($connection, $this->container->get('module_handler'));
+    $aliasStorage = $this->container->get('path.alias_storage');
 
-    $aliases = $this->fixtures->sampleUrlAliases();
+    $aliases = $this->sampleUrlAliases();
 
     // Create a few aliases
     foreach ($aliases as $idx => $alias) {
       $aliasStorage->save($alias['source'], $alias['alias'], $alias['langcode']);
 
-      $result = $connection->query('SELECT * FROM {url_alias} WHERE source = :source AND alias= :alias AND langcode = :langcode', [':source' => $alias['source'], ':alias' => $alias['alias'], ':langcode' => $alias['langcode']]);
+      $result = $connection->query('SELECT * FROM {path_alias} WHERE path = :path AND alias= :alias AND langcode = :langcode', [':path' => $alias['source'], ':alias' => $alias['alias'], ':langcode' => $alias['langcode']]);
       $rows = $result->fetchAll();
 
       $this->assertEqual(count($rows), 1, new FormattableMarkup('Created an entry for %alias.', ['%alias' => $alias['alias']]));
 
       // Cache the pid for further tests.
-      $aliases[$idx]['pid'] = $rows[0]->pid;
+      $aliases[$idx]['pid'] = $rows[0]->id;
     }
 
     // Load a few aliases
@@ -56,7 +68,7 @@ class AliasTest extends PathUnitTestBase {
 
       $this->assertEqual($alias['alias'], $fields['original']['alias']);
 
-      $result = $connection->query('SELECT pid FROM {url_alias} WHERE source = :source AND alias= :alias AND langcode = :langcode', [':source' => $alias['source'], ':alias' => $alias['alias'] . '_updated', ':langcode' => $alias['langcode']]);
+      $result = $connection->query('SELECT id FROM {path_alias} WHERE path = :path AND alias= :alias AND langcode = :langcode', [':path' => $alias['source'], ':alias' => $alias['alias'] . '_updated', ':langcode' => $alias['langcode']]);
       $pid = $result->fetchField();
 
       $this->assertEqual($pid, $alias['pid'], new FormattableMarkup('Updated entry for pid %pid.', ['%pid' => $pid]));
@@ -67,21 +79,47 @@ class AliasTest extends PathUnitTestBase {
       $pid = $alias['pid'];
       $aliasStorage->delete(['pid' => $pid]);
 
-      $result = $connection->query('SELECT * FROM {url_alias} WHERE pid = :pid', [':pid' => $pid]);
+      $result = $connection->query('SELECT * FROM {path_alias} WHERE id = :id', [':id' => $pid]);
       $rows = $result->fetchAll();
 
       $this->assertEqual(count($rows), 0, new FormattableMarkup('Deleted entry with pid %pid.', ['%pid' => $pid]));
     }
   }
 
-  public function testLookupPath() {
-    // Prepare database table.
-    $connection = Database::getConnection();
-    $this->fixtures->createTables($connection);
+  /**
+   * Returns an array of URL aliases for testing.
+   *
+   * @return array of URL alias definitions.
+   */
+  protected function sampleUrlAliases() {
+    return [
+      [
+        'source' => '/node/1',
+        'alias' => '/alias_for_node_1_en',
+        'langcode' => 'en',
+      ],
+      [
+        'source' => '/node/2',
+        'alias' => '/alias_for_node_2_en',
+        'langcode' => 'en',
+      ],
+      [
+        'source' => '/node/1',
+        'alias' => '/alias_for_node_1_fr',
+        'langcode' => 'fr',
+      ],
+      [
+        'source' => '/node/1',
+        'alias' => '/alias_for_node_1_und',
+        'langcode' => 'und',
+      ],
+    ];
+  }
 
+  public function testLookupPath() {
     // Create AliasManager and Path object.
     $aliasManager = $this->container->get('path.alias_manager');
-    $aliasStorage = new AliasStorage($connection, $this->container->get('module_handler'));
+    $aliasStorage = $this->container->get('path.alias_storage');
 
     // Test the situation where the source is the same for multiple aliases.
     // Start with a language-neutral alias, which we will override.
@@ -157,14 +195,10 @@ class AliasTest extends PathUnitTestBase {
    * Tests the alias whitelist.
    */
   public function testWhitelist() {
-    // Prepare database table.
-    $connection = Database::getConnection();
-    $this->fixtures->createTables($connection);
-
     $memoryCounterBackend = new MemoryCounterBackend();
 
     // Create AliasManager and Path object.
-    $aliasStorage = new AliasStorage($connection, $this->container->get('module_handler'));
+    $aliasStorage = $this->container->get('path.alias_storage');
     $whitelist = new AliasWhitelist('path_alias_whitelist', $memoryCounterBackend, $this->container->get('lock'), $this->container->get('state'), $aliasStorage);
     $aliasManager = new AliasManager($aliasStorage, $whitelist, $this->container->get('language_manager'), $memoryCounterBackend);
 
@@ -221,14 +255,10 @@ class AliasTest extends PathUnitTestBase {
    * Tests situation where the whitelist cache is deleted mid-request.
    */
   public function testWhitelistCacheDeletionMidRequest() {
-    // Prepare database table.
-    $connection = Database::getConnection();
-    $this->fixtures->createTables($connection);
-
     $memoryCounterBackend = new MemoryCounterBackend();
 
     // Create AliasManager and Path object.
-    $aliasStorage = new AliasStorage($connection, $this->container->get('module_handler'));
+    $aliasStorage = $this->container->get('path.alias_storage');
     $whitelist = new AliasWhitelist('path_alias_whitelist', $memoryCounterBackend, $this->container->get('lock'), $this->container->get('state'), $aliasStorage);
     $aliasManager = new AliasManager($aliasStorage, $whitelist, $this->container->get('language_manager'), $memoryCounterBackend);
 

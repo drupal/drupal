@@ -368,7 +368,11 @@ class PathAliasTest extends PathTestBase {
    *   Integer representing the path ID.
    */
   public function getPID($alias) {
-    return Database::getConnection()->query("SELECT pid FROM {url_alias} WHERE alias = :alias", [':alias' => $alias])->fetchField();
+    $result = \Drupal::entityTypeManager()->getStorage('path_alias')->getQuery()
+      ->condition('alias', $alias, '=')
+      ->accessCheck(FALSE)
+      ->execute();
+    return reset($result);
   }
 
   /**

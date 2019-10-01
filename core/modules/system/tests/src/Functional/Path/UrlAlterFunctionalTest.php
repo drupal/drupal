@@ -26,8 +26,8 @@ class UrlAlterFunctionalTest extends BrowserTestBase {
    * Test that URL altering works and that it occurs in the correct order.
    */
   public function testUrlAlter() {
-    // Ensure that the url_alias table exists after Drupal installation.
-    $this->assertTrue(Database::getConnection()->schema()->tableExists('url_alias'), 'The url_alias table exists after Drupal installation.');
+    // Ensure that the path_alias table exists after Drupal installation.
+    $this->assertTrue(Database::getConnection()->schema()->tableExists('path_alias'), 'The path_alias table exists after Drupal installation.');
 
     // User names can have quotes and plus signs so we should ensure that URL
     // altering works with this.

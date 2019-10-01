@@ -1,0 +1,148 @@
+<?php
+
+namespace Drupal\Core\Path\Entity;
+
+use Drupal\Core\Entity\ContentEntityBase;
+use Drupal\Core\Entity\EntityStorageInterface;
+use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\Core\Field\BaseFieldDefinition;
+use Drupal\Core\Language\LanguageInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\Core\Path\PathAliasInterface;
+
+/**
+ * Defines the path_alias entity class.
+ *
+ * @ContentEntityType(
+ *   id = "path_alias",
+ *   label = @Translation("Path alias"),
+ *   label_collection = @Translation("Path aliases"),
+ *   label_singular = @Translation("path alias"),
+ *   label_plural = @Translation("path aliases"),
+ *   label_count = @PluralTranslation(
+ *     singular = "@count path alias",
+ *     plural = "@count path aliases"
+ *   ),
+ *   handlers = {
+ *     "storage" = "Drupal\Core\Path\PathAliasStorage",
+ *     "storage_schema" = "Drupal\Core\Path\PathAliasStorageSchema",
+ *   },
+ *   base_table = "path_alias",
+ *   revision_table = "path_alias_revision",
+ *   entity_keys = {
+ *     "id" = "id",
+ *     "revision" = "revision_id",
+ *     "langcode" = "langcode",
+ *     "uuid" = "uuid",
+ *   },
+ *   admin_permission = "administer url aliases",
+ *   list_cache_tags = { "route_match" },
+ * )
+ */
+class PathAlias extends ContentEntityBase implements PathAliasInterface {
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function baseFieldDefinitions(EntityTypeInterface $entity_type) {
+    $fields = parent::baseFieldDefinitions($entity_type);
+
+    $fields['path'] = BaseFieldDefinition::create('string')
+      ->setLabel(new TranslatableMarkup('System path'))
+      ->setDescription(new TranslatableMarkup('The path that this alias belongs to.'))
+      ->setRequired(TRUE)
+      ->setRevisionable(TRUE);
+
+    $fields['alias'] = BaseFieldDefinition::create('string')
+      ->setLabel(new TranslatableMarkup('Path alias'))
+      ->setDescription(new TranslatableMarkup('An alias used with this path.'))
+      ->setRequired(TRUE)
+      ->setRevisionable(TRUE);
+
+    $fields['langcode']->setDefaultValue(LanguageInterface::LANGCODE_NOT_SPECIFIED);
+
+    return $fields;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function preSave(EntityStorageInterface $storage) {
+    parent::preSave($storage);
+
+    // Trim the alias value of whitespace and slashes. Ensure to not trim the
+    // slash on the left side.
+    $alias = rtrim(trim($this->getAlias()), "\\/");
+    $this->setAlias($alias);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function postSave(EntityStorageInterface $storage, $update = TRUE) {
+    parent::postSave($storage, $update);
+
+    $alias_manager = \Drupal::service('path.alias_manager');
+    $alias_manager->cacheClear($this->getPath());
+    if ($update) {
+      $alias_manager->cacheClear($this->original->getPath());
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function postDelete(EntityStorageInterface $storage, array $entities) {
+    parent::postDelete($storage, $entities);
+
+    $alias_manager = \Drupal::service('path.alias_manager');
+    foreach ($entities as $entity) {
+      $alias_manager->cacheClear($entity->getPath());
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getPath() {
+    return $this->get('path')->value;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setPath($path) {
+    $this->set('path', $path);
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getAlias() {
+    return $this->get('alias')->value;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setAlias($alias) {
+    $this->set('alias', $alias);
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function label() {
+    return $this->getAlias();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getCacheTagsToInvalidate() {
+    return ['route_match'];
+  }
+
+}

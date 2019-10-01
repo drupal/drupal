@@ -87,6 +87,7 @@ class RouteProviderTest extends KernelTestBase {
     $this->cache = new MemoryBackend();
     $this->pathProcessor = \Drupal::service('path_processor_manager');
     $this->cacheTagsInvalidator = \Drupal::service('cache_tags.invalidator');
+    $this->installEntitySchema('path_alias');
   }
 
   /**

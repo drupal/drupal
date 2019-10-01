@@ -28,6 +28,7 @@ class PathAliasMenuLinkContentTest extends KernelTestBase {
 
     $this->installEntitySchema('user');
     $this->installEntitySchema('menu_link_content');
+    $this->installEntitySchema('path_alias');
 
     // Ensure that the weight of module_link_content is higher than system.
     // @see menu_link_content_install()

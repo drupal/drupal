@@ -27,6 +27,7 @@ class AliasStorageTest extends KernelTestBase {
   protected function setUp() {
     parent::setUp();
 
+    $this->installEntitySchema('path_alias');
     $this->storage = $this->container->get('path.alias_storage');
   }
 

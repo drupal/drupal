@@ -18,13 +18,22 @@ class PathHooksTest extends KernelTestBase {
   public static $modules = ['system'];
 
   /**
-   * Test system_path_*() correctly clears caches.
+   * {@inheritdoc}
+   */
+  protected function setUp() {
+    parent::setUp();
+
+    $this->installEntitySchema('path_alias');
+  }
+
+  /**
+   * Test system_path_alias_*() correctly clears caches.
    */
   public function testPathHooks() {
     $source = '/' . $this->randomMachineName();
     $alias = '/' . $this->randomMachineName();
 
-    // Check system_path_insert();
+    // Check system_path_alias_insert();
     $alias_manager = $this->prophesize(AliasManagerInterface::class);
     $alias_manager->cacheClear(Argument::any())->shouldBeCalledTimes(1);
     $alias_manager->cacheClear($source)->shouldBeCalledTimes(1);
@@ -35,7 +44,7 @@ class PathHooksTest extends KernelTestBase {
     $new_source = '/' . $this->randomMachineName();
     $path = $alias_storage->load(['source' => $source]);
 
-    // Check system_path_update();
+    // Check system_path_alias_update();
     $alias_manager = $this->prophesize(AliasManagerInterface::class);
     $alias_manager->cacheClear(Argument::any())->shouldBeCalledTimes(2);
     $alias_manager->cacheClear($source)->shouldBeCalledTimes(1);
@@ -43,7 +52,7 @@ class PathHooksTest extends KernelTestBase {
     \Drupal::getContainer()->set('path.alias_manager', $alias_manager->reveal());
     $alias_storage->save($new_source, $alias, LanguageInterface::LANGCODE_NOT_SPECIFIED, $path['pid']);
 
-    // Check system_path_delete();
+    // Check system_path_alias_delete();
     $alias_manager = $this->prophesize(AliasManagerInterface::class);
     $alias_manager->cacheClear(Argument::any())->shouldBeCalledTimes(1);
     $alias_manager->cacheClear($new_source)->shouldBeCalledTimes(1);

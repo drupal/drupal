@@ -2050,7 +2050,9 @@ abstract class ResourceTestBase extends BrowserTestBase {
       $doc = $this->getModifiedEntityForPostTesting();
       $doc['data']['id'] = $uuid;
       $label_field = $this->entity->getEntityType()->hasKey('label') ? $this->entity->getEntityType()->getKey('label') : static::$labelFieldName;
-      $doc['data']['attributes'][$label_field] = [['value' => $this->randomMachineName()]];
+      if (isset($label_field)) {
+        $doc['data']['attributes'][$label_field] = [['value' => $this->randomMachineName()]];
+      }
       $request_options[RequestOptions::BODY] = Json::encode($doc);
 
       $response = $this->request('POST', $url, $request_options);
@@ -2060,7 +2062,9 @@ abstract class ResourceTestBase extends BrowserTestBase {
       $doc = $this->getModifiedEntityForPostTesting();
       $new_uuid = \Drupal::service('uuid')->generate();
       $doc['data']['id'] = $new_uuid;
-      $doc['data']['attributes'][$label_field] = [['value' => $this->randomMachineName()]];
+      if (isset($label_field)) {
+        $doc['data']['attributes'][$label_field] = [['value' => $this->randomMachineName()]];
+      }
       $request_options[RequestOptions::BODY] = Json::encode($doc);
 
       $response = $this->request('POST', $url, $request_options);
@@ -2094,7 +2098,9 @@ abstract class ResourceTestBase extends BrowserTestBase {
     $unparseable_request_body = '!{>}<';
     $parseable_valid_request_body = Json::encode($this->getPatchDocument());
     /* $parseable_valid_request_body_2 = Json::encode($this->getNormalizedPatchEntity()); */
-    $parseable_invalid_request_body = Json::encode($this->makeNormalizationInvalid($this->getPatchDocument(), 'label'));
+    if ($this->entity->getEntityType()->hasKey('label')) {
+      $parseable_invalid_request_body = Json::encode($this->makeNormalizationInvalid($this->getPatchDocument(), 'label'));
+    }
     $parseable_invalid_request_body_2 = Json::encode(NestedArray::mergeDeep(['data' => ['attributes' => ['field_rest_test' => $this->randomString()]]], $this->getPatchDocument()));
     // The 'field_rest_test' field does not allow 'view' access, so does not end
     // up in the JSON:API document. Even when we explicitly add it to the JSON
@@ -2340,7 +2346,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
 
     // Ensure that PATCHing an entity that is not the latest revision is
     // unsupported.
-    if (!$this->entity->getEntityType()->isRevisionable() || !$this->entity instanceof FieldableEntityInterface) {
+    if (!$this->entity->getEntityType()->isRevisionable() || !$this->entity->getEntityType()->hasHandlerClass('moderation') || !$this->entity instanceof FieldableEntityInterface) {
       return;
     }
     assert($this->entity instanceof RevisionableInterface);

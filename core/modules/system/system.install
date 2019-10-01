@@ -13,13 +13,16 @@ use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Database\Database;
 use Drupal\Core\DrupalKernel;
+use Drupal\Core\Entity\ContentEntityType;
 use Drupal\Core\Entity\ContentEntityTypeInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Extension\Extension;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\File\FileSystemInterface;
-use Drupal\Core\Path\AliasStorage;
+use Drupal\Core\Path\Entity\PathAlias;
+use Drupal\Core\Path\PathAliasStorage;
+use Drupal\Core\Path\PathAliasStorageSchema;
 use Drupal\Core\Site\Settings;
 use Drupal\Core\StreamWrapper\PrivateStream;
 use Drupal\Core\StreamWrapper\PublicStream;
@@ -1229,11 +1232,6 @@ function system_schema() {
     ],
   ];
 
-  // Create the url_alias table. The alias_storage service can auto-create its
-  // table, but this relies on exceptions being thrown. These exceptions will be
-  // thrown every request until an alias is created.
-  $schema['url_alias'] = AliasStorage::schemaDefinition();
-
   return $schema;
 }
 
@@ -2357,5 +2355,120 @@ function system_update_8802() {
     $config
       ->set('admin', '')
       ->save(TRUE);
+  }
+}
+
+/**
+ * Install the 'path_alias' entity type.
+ */
+function system_update_8803() {
+  $entity_definition_update_manager = \Drupal::entityDefinitionUpdateManager();
+  if (!$entity_definition_update_manager->getEntityType('path_alias')) {
+    $entity_type = new ContentEntityType([
+      'id' => 'path_alias',
+      'class' => PathAlias::class,
+      'label' => new TranslatableMarkup('Path alias'),
+      'handlers' => [
+        'storage' => PathAliasStorage::class,
+        'storage_schema' => PathAliasStorageSchema::class,
+      ],
+      'base_table' => 'path_alias',
+      'revision_table' => 'path_alias_revision',
+      'entity_keys' => [
+        'id' => 'id',
+        'revision' => 'revision_id',
+        'langcode' => 'langcode',
+        'uuid' => 'uuid',
+      ],
+    ]);
+    $entity_definition_update_manager->installEntityType($entity_type);
+
+    return t('The "path_alias" entity type has been installed.');
+  }
+}
+
+/**
+ * Convert path aliases to entities.
+ */
+function system_update_8804(&$sandbox = NULL) {
+  // Bail out early if the entity type is not using the default storage class.
+  $storage = \Drupal::entityTypeManager()->getStorage('path_alias');
+  if (!$storage instanceof PathAliasStorage) {
+    return;
+  }
+
+  if (!isset($sandbox['current_id'])) {
+    // This must be the first run. Initialize the sandbox.
+    $sandbox['progress'] = 0;
+    $sandbox['current_id'] = 0;
+  }
+
+  $database = \Drupal::database();
+  $step_size = 200;
+  $url_aliases = $database->select('url_alias', 't')
+    ->condition('t.pid', $sandbox['current_id'], '>')
+    ->fields('t')
+    ->orderBy('pid', 'ASC')
+    ->range(0, $step_size)
+    ->execute()
+    ->fetchAll();
+
+  if ($url_aliases) {
+    /** @var \Drupal\Component\Uuid\UuidInterface $uuid */
+    $uuid = \Drupal::service('uuid');
+
+    $base_table_insert = $database->insert('path_alias');
+    $base_table_insert->fields(['id', 'revision_id', 'uuid', 'path', 'alias', 'langcode']);
+    $revision_table_insert = $database->insert('path_alias_revision');
+    $revision_table_insert->fields(['id', 'revision_id', 'path', 'alias', 'langcode', 'revision_default']);
+    foreach ($url_aliases as $url_alias) {
+      $values = [
+        'id' => $url_alias->pid,
+        'revision_id' => $url_alias->pid,
+        'uuid' => $uuid->generate(),
+        'path' => $url_alias->source,
+        'alias' => $url_alias->alias,
+        'langcode' => $url_alias->langcode,
+      ];
+      $base_table_insert->values($values);
+
+      unset($values['uuid']);
+      $values['revision_default'] = 1;
+      $revision_table_insert->values($values);
+    }
+    $base_table_insert->execute();
+    $revision_table_insert->execute();
+
+    $sandbox['progress'] += count($url_aliases);
+    $last_url_alias = end($url_aliases);
+    $sandbox['current_id'] = $last_url_alias->pid;
+
+    // If we're not in maintenance mode, the number of path aliases could change
+    // at any time so make sure that we always use the latest record count.
+    $missing = $database->select('url_alias', 't')
+      ->condition('t.pid', $sandbox['current_id'], '>')
+      ->orderBy('pid', 'ASC')
+      ->countQuery()
+      ->execute()
+      ->fetchField();
+    $sandbox['#finished'] = $missing ? $sandbox['progress'] / ($sandbox['progress'] + (int) $missing) : 1;
+  }
+  else {
+    $sandbox['#finished'] = 1;
+  }
+
+  if ($sandbox['#finished'] >= 1) {
+    // Keep a backup of the old 'url_alias' table if requested.
+    if (Settings::get('entity_update_backup', TRUE)) {
+      $old_table_name = 'old_' . substr(uniqid(), 0, 6) . '_url_alias';
+      if (!$database->schema()->tableExists($old_table_name)) {
+        $database->schema()->renameTable('url_alias', $old_table_name);
+      }
+    }
+    else {
+      $database->schema()->dropTable('url_alias');
+    }
+
+    return t('Path aliases have been converted to entities.');
   }
 }

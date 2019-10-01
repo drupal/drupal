@@ -901,9 +901,10 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
 
     // DX: 422 when invalid entity: multiple values sent for single-value field.
     $response = $this->request('POST', $url, $request_options);
-    $label_field = $this->entity->getEntityType()->hasKey('label') ? $this->entity->getEntityType()->getKey('label') : static::$labelFieldName;
-    $label_field_capitalized = $this->entity->getFieldDefinition($label_field)->getLabel();
-    $this->assertResourceErrorResponse(422, "Unprocessable Entity: validation failed.\n$label_field: $label_field_capitalized: this field cannot hold more than 1 values.\n", $response);
+    if ($label_field = $this->entity->getEntityType()->hasKey('label') ? $this->entity->getEntityType()->getKey('label') : static::$labelFieldName) {
+      $label_field_capitalized = $this->entity->getFieldDefinition($label_field)->getLabel();
+      $this->assertResourceErrorResponse(422, "Unprocessable Entity: validation failed.\n$label_field: $label_field_capitalized: this field cannot hold more than 1 values.\n", $response);
+    }
 
     $request_options[RequestOptions::BODY] = $parseable_invalid_request_body_2;
 
@@ -988,7 +989,9 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
       // 500 when creating an entity with a duplicate UUID.
       $normalized_entity = $this->getModifiedEntityForPostTesting();
       $normalized_entity[$created_entity->getEntityType()->getKey('uuid')] = [['value' => $created_entity->uuid()]];
-      $normalized_entity[$label_field] = [['value' => $this->randomMachineName()]];
+      if ($label_field) {
+        $normalized_entity[$label_field] = [['value' => $this->randomMachineName()]];
+      }
       $request_options[RequestOptions::BODY] = $this->serializer->encode($normalized_entity, static::$format);
 
       $response = $this->request('POST', $url, $request_options);
@@ -999,7 +1002,9 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
       $normalized_entity = $this->getModifiedEntityForPostTesting();
       $new_uuid = \Drupal::service('uuid')->generate();
       $normalized_entity[$created_entity->getEntityType()->getKey('uuid')] = [['value' => $new_uuid]];
-      $normalized_entity[$label_field] = [['value' => $this->randomMachineName()]];
+      if ($label_field) {
+        $normalized_entity[$label_field] = [['value' => $this->randomMachineName()]];
+      }
       $request_options[RequestOptions::BODY] = $this->serializer->encode($normalized_entity, static::$format);
 
       $response = $this->request('POST', $url, $request_options);
@@ -1130,9 +1135,10 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
 
     // DX: 422 when invalid entity: multiple values sent for single-value field.
     $response = $this->request('PATCH', $url, $request_options);
-    $label_field = $this->entity->getEntityType()->hasKey('label') ? $this->entity->getEntityType()->getKey('label') : static::$labelFieldName;
-    $label_field_capitalized = $this->entity->getFieldDefinition($label_field)->getLabel();
-    $this->assertResourceErrorResponse(422, "Unprocessable Entity: validation failed.\n$label_field: $label_field_capitalized: this field cannot hold more than 1 values.\n", $response);
+    if ($label_field = $this->entity->getEntityType()->hasKey('label') ? $this->entity->getEntityType()->getKey('label') : static::$labelFieldName) {
+      $label_field_capitalized = $this->entity->getFieldDefinition($label_field)->getLabel();
+      $this->assertResourceErrorResponse(422, "Unprocessable Entity: validation failed.\n$label_field: $label_field_capitalized: this field cannot hold more than 1 values.\n", $response);
+    }
 
     $request_options[RequestOptions::BODY] = $parseable_invalid_request_body_2;
 
@@ -1499,8 +1505,9 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
     switch ($entity_key) {
       case 'label':
         // Add a second label to this entity to make it invalid.
-        $label_field = $entity_type->hasKey('label') ? $entity_type->getKey('label') : static::$labelFieldName;
-        $normalization[$label_field][1]['value'] = 'Second Title';
+        if ($label_field = $entity_type->hasKey('label') ? $entity_type->getKey('label') : static::$labelFieldName) {
+          $normalization[$label_field][1]['value'] = 'Second Title';
+        }
         break;
       case 'id':
         $normalization[$entity_type->getKey('id')][0]['value'] = $this->anotherEntity->id();

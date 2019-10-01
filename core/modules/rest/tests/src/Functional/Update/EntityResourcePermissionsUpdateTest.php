@@ -3,6 +3,7 @@
 namespace Drupal\Tests\rest\Functional\Update;
 
 use Drupal\FunctionalTests\Update\UpdatePathTestBase;
+use Drupal\rest\RestPermissions;
 
 /**
  * Tests that existing sites continue to use permissions for EntityResource.
@@ -33,16 +34,17 @@ class EntityResourcePermissionsUpdateTest extends UpdatePathTestBase {
    * Tests rest_update_8203().
    */
   public function testBcEntityResourcePermissionSettingAdded() {
-    $permission_handler = $this->container->get('user.permissions');
-
-    $is_rest_resource_permission = function ($permission) {
-      return $permission['provider'] === 'rest' && (string) $permission['title'] !== 'Administer REST resource configuration';
-    };
-
     // Make sure we have the expected values before the update.
     $rest_settings = $this->config('rest.settings');
     $this->assertFalse(array_key_exists('bc_entity_resource_permissions', $rest_settings->getRawData()));
-    $this->assertEqual([], array_filter($permission_handler->getPermissions(), $is_rest_resource_permission));
+
+    // We can not use the 'user.permissions' service here because some
+    // permissions include generated URLs inside their description, thus
+    // requiring the path alias system, which is not guaranteed to be working
+    // before running the database updates.
+    $rest_permissions_callback = \Drupal::service('controller_resolver')->getControllerFromDefinition(RestPermissions::class . '::permissions');
+    $rest_permissions = array_keys(call_user_func($rest_permissions_callback));
+    $this->assertEquals([], $rest_permissions);
 
     $this->runUpdates();
 
@@ -50,8 +52,10 @@ class EntityResourcePermissionsUpdateTest extends UpdatePathTestBase {
     $rest_settings = $this->config('rest.settings');
     $this->assertTrue(array_key_exists('bc_entity_resource_permissions', $rest_settings->getRawData()));
     $this->assertTrue($rest_settings->get('bc_entity_resource_permissions'));
-    $rest_permissions = array_keys(array_filter($permission_handler->getPermissions(), $is_rest_resource_permission));
-    $this->assertEqual(['restful delete entity:node', 'restful get entity:node', 'restful patch entity:node', 'restful post entity:node'], $rest_permissions);
+
+    $rest_permissions_callback = \Drupal::service('controller_resolver')->getControllerFromDefinition(RestPermissions::class . '::permissions');
+    $rest_permissions = array_keys(call_user_func($rest_permissions_callback));
+    $this->assertEquals(['restful get entity:node', 'restful post entity:node', 'restful delete entity:node', 'restful patch entity:node'], $rest_permissions);
   }
 
 }

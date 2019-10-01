@@ -7,6 +7,7 @@
 
 use Drupal\Core\Url;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Path\PathAliasInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\system\MenuInterface;
 
@@ -50,10 +51,10 @@ function menu_link_content_menu_delete(MenuInterface $menu) {
 }
 
 /**
- * Implements hook_path_insert().
+ * Implements hook_ENTITY_TYPE_insert() for 'path_alias'.
  */
-function menu_link_content_path_insert($path) {
-  _menu_link_content_update_path_alias($path['alias']);
+function menu_link_content_path_alias_insert(PathAliasInterface $path_alias) {
+  _menu_link_content_update_path_alias($path_alias->getAlias());
 }
 
 /**
@@ -75,23 +76,23 @@ function _menu_link_content_update_path_alias($path) {
 }
 
 /**
- * Implements hook_path_update().
+ * Implements hook_ENTITY_TYPE_update() for 'path_alias'.
  */
-function menu_link_content_path_update($path) {
-  if ($path['alias'] != $path['original']['alias']) {
-    _menu_link_content_update_path_alias($path['alias']);
-    _menu_link_content_update_path_alias($path['original']['alias']);
+function menu_link_content_path_alias_update(PathAliasInterface $path_alias) {
+  if ($path_alias->getAlias() != $path_alias->original->getAlias()) {
+    _menu_link_content_update_path_alias($path_alias->getAlias());
+    _menu_link_content_update_path_alias($path_alias->original->getAlias());
   }
-  elseif ($path['source'] != $path['original']['source']) {
-    _menu_link_content_update_path_alias($path['alias']);
+  elseif ($path_alias->getPath() != $path_alias->original->getPath()) {
+    _menu_link_content_update_path_alias($path_alias->getAlias());
   }
 }
 
 /**
- * Implements hook_path_delete().
+ * Implements hook_ENTITY_TYPE_delete() for 'path_alias'.
  */
-function menu_link_content_path_delete($path) {
-  _menu_link_content_update_path_alias($path['alias']);
+function menu_link_content_path_alias_delete(PathAliasInterface $path_alias) {
+  _menu_link_content_update_path_alias($path_alias->getAlias());
 }
 
 /**

@@ -31,6 +31,9 @@ class MigrateUrlAliasTest extends MigrateDrupal7TestBase {
   protected function setUp() {
     parent::setUp();
 
+    $this->installEntitySchema('node');
+    $this->installEntitySchema('path_alias');
+    $this->installConfig('node');
     $this->installSchema('node', ['node_access']);
 
     $this->migrateUsers(FALSE);

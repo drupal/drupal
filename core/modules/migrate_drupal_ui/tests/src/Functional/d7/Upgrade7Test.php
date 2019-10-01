@@ -90,6 +90,7 @@ class Upgrade7Test extends MigrateUpgradeExecuteTestBase {
       'menu' => 6,
       'taxonomy_term' => 24,
       'taxonomy_vocabulary' => 7,
+      'path_alias' => 8,
       'tour' => 5,
       'user' => 4,
       'user_role' => 3,

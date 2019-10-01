@@ -955,7 +955,7 @@ services:
       - { name: event_subscriber }
   path.alias_storage:
     class: Drupal\Core\Path\AliasStorage
-    arguments: ['@database', '@module_handler']
+    arguments: ['@database', '@module_handler', '@entity_type.manager']
     tags:
       - { name: backend_overridable }
   path.matcher:

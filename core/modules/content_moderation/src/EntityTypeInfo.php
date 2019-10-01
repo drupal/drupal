@@ -129,8 +129,11 @@ class EntityTypeInfo implements ContainerInjectionInterface {
    */
   public function entityTypeAlter(array &$entity_types) {
     foreach ($entity_types as $entity_type_id => $entity_type) {
-      // The ContentModerationState entity type should never be moderated.
-      if ($entity_type->isRevisionable() && !$entity_type->isInternal()) {
+      // Internal entity types should never be moderated, and the 'path_alias'
+      // entity type needs to be excluded for now.
+      // @todo Enable moderation for path aliases after they become publishable
+      //   in https://www.drupal.org/project/drupal/issues/3007669.
+      if ($entity_type->isRevisionable() && !$entity_type->isInternal() && $entity_type_id !== 'path_alias') {
         $entity_types[$entity_type_id] = $this->addModerationToEntityType($entity_type);
       }
     }

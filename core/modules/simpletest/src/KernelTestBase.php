@@ -386,10 +386,10 @@ EOD;
     }
 
     if ($container->hasDefinition('path_processor_alias')) {
-      // Prevent the alias-based path processor, which requires a url_alias db
-      // table, from being registered to the path processor manager. We do this
-      // by removing the tags that the compiler pass looks for. This means the
-      // url generator can safely be used within tests.
+      // The alias-based processor requires the path_alias entity schema to be
+      // installed, so we prevent it from being registered to the path processor
+      // manager. We do this by removing the tags that the compiler pass looks
+      // for. This means that the URL generator can safely be used within tests.
       $definition = $container->getDefinition('path_processor_alias');
       $definition->clearTag('path_processor_inbound')->clearTag('path_processor_outbound');
     }

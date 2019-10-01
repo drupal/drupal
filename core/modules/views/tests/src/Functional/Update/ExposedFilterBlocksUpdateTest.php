@@ -46,7 +46,14 @@ class ExposedFilterBlocksUpdateTest extends UpdatePathTestBase {
     // the config schema checker ignore the block.
     static::$configSchemaCheckerExclusions[] = 'block.block.seven_secondary_local_tasks';
 
-    $this->container->get('module_installer')->uninstall(['block']);
+    // We need to uninstall the menu_link_content module because
+    // menu_link_content_entity_predelete() invokes alias processing and we
+    // don't have a working path alias system until system_update_8803() runs.
+    // Note that path alias processing is disabled during the regular database
+    // update process, so this only happens because we uninstall the Block
+    // module before running the updates.
+    // @see \Drupal\Core\Update\UpdateServiceProvider::alter()
+    $this->container->get('module_installer')->uninstall(['menu_link_content', 'block']);
     $this->runUpdates();
   }
 

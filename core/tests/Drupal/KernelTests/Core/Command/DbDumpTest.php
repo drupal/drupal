@@ -93,6 +93,7 @@ class DbDumpTest extends KernelTestBase {
     $this->installEntitySchema('user');
     $this->installEntitySchema('file');
     $this->installEntitySchema('menu_link_content');
+    $this->installEntitySchema('path_alias');
     $this->installSchema('system', 'sequences');
 
     // Place some sample config to test for in the export.
@@ -107,7 +108,7 @@ class DbDumpTest extends KernelTestBase {
     $account = User::create(['mail' => 'q\'uote$dollar@example.com', 'name' => '$dollar']);
     $account->save();
 
-    // Create url_alias (this will create 'url_alias').
+    // Create a path alias.
     $this->container->get('path.alias_storage')->save('/user/' . $account->id(), '/user/example');
 
     // Create a cache table (this will create 'cache_discovery').
@@ -134,7 +135,8 @@ class DbDumpTest extends KernelTestBase {
       'menu_link_content_field_revision',
       'sequences',
       'sessions',
-      'url_alias',
+      'path_alias',
+      'path_alias_revision',
       'user__roles',
       'users',
       'users_field_data',

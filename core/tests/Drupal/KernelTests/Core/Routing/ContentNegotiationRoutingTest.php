@@ -22,6 +22,15 @@ class ContentNegotiationRoutingTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
+  protected function setUp() {
+    parent::setUp();
+
+    $this->installEntitySchema('path_alias');
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function register(ContainerBuilder $container) {
     parent::register($container);
 

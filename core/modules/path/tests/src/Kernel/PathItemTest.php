@@ -29,6 +29,7 @@ class PathItemTest extends KernelTestBase {
 
     $this->installEntitySchema('node');
     $this->installEntitySchema('user');
+    $this->installEntitySchema('path_alias');
 
     $this->installSchema('node', ['node_access']);
 
