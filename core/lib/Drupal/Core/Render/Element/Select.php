@@ -9,11 +9,32 @@ use Drupal\Core\Render\Element;
  * Provides a form element for a drop-down menu or scrolling selection box.
  *
  * Properties:
- * - #options: An associative array, where the keys are the values for each
- *   option, and the values are the option labels to be shown in the drop-down
- *   list. If a value is an array, it will be rendered similarly, but as an
- *   optgroup. The key of the sub-array will be used as the label for the
- *   optgroup. Nesting optgroups is not allowed.
+ * - #options: An associative array of options for the select. Do not use
+ *   placeholders that sanitize data in any labels, as doing so will lead to
+ *   double-escaping. Each array value can be:
+ *   - A single translated string representing an HTML option element, where
+ *     the outer array key is the option value and the translated string array
+ *     value is the option label. The option value will be visible in the HTML
+ *     and can be modified by malicious users, so it should not contain
+ *     sensitive information and should be treated as possibly malicious data in
+ *     processing.
+ *   - An array representing an HTML optgroup element. The outer array key
+ *     should be a translated string, and is used as the label for the group.
+ *     The inner array contains the options for the group (with the keys as
+ *     option values, and translated string values as option labels). Nesting
+ *     option groups is not supported.
+ *   - An object with an 'option' property. In this case, the outer array key
+ *     is ignored, and the contents of the 'option' property are interpreted as
+ *     an array of options to be merged with any other regular options and
+ *     option groups found in the outer array.
+ * - #sort_options: (optional) If set to TRUE (default is FALSE), sort the
+ *   options by their labels, after rendering and translation is complete.
+ *   Can be set within an option group to sort that group.
+ * - #sort_start: (optional) Option index to start sorting at, where 0 is the
+ *   first option. Can be used within an option group. If an empty option is
+ *   being added automatically (see #empty_option and #empty_value properties),
+ *   this defaults to 1 to keep the empty option at the top of the list.
+ *   Otherwise, it defaults to 0.
  * - #empty_option: (optional) The label to show for the first default option.
  *   By default, the label is automatically set to "- Select -" for a required
  *   field and "- None -" for an optional field.
@@ -68,6 +89,8 @@ class Select extends FormElement {
     return [
       '#input' => TRUE,
       '#multiple' => FALSE,
+      '#sort_options' => FALSE,
+      '#sort_start' => NULL,
       '#process' => [
         [$class, 'processSelect'],
         [$class, 'processAjaxForm'],
@@ -129,6 +152,9 @@ class Select extends FormElement {
         $element['#options'] = $empty_option + $element['#options'];
       }
     }
+    // Provide the correct default value for #sort_start.
+    $element['#sort_start'] = $element['#sort_start'] ??
+      (isset($element['#empty_value']) ? 1 : 0);
     return $element;
   }
 

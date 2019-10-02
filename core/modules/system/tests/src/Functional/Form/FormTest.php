@@ -12,6 +12,7 @@ use Drupal\form_test\Form\FormTestDisabledElementsForm;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\user\RoleInterface;
 use Drupal\filter\Entity\FilterFormat;
+use Behat\Mink\Element\NodeElement;
 
 /**
  * Tests various form element validation mechanisms.
@@ -461,6 +462,126 @@ class FormTest extends BrowserTestBase {
     $this->drupalGet('form-test/empty-select');
     $this->assertFieldByXPath("//select[1]", NULL, 'Select element found.');
     $this->assertNoFieldByXPath("//select[1]/option", NULL, 'No option element found.');
+  }
+
+  /**
+   * Tests sorting and not sorting of options in a select element.
+   */
+  public function testSelectSorting() {
+    $this->drupalGet('form-test/select');
+
+    // Verify the order of the select options.
+    $this->validateSelectSorting('unsorted', [
+      'uso_first_element',
+      'uso_second',
+      'uso_zzgroup',
+      'uso_gc',
+      'uso_ga',
+      'uso_gb',
+      'uso_yygroup',
+      'uso_ge',
+      'uso_gd',
+      'uso_gf',
+      'uso_xxgroup',
+      'uso_gz',
+      'uso_gi',
+      'uso_gh',
+      'uso_d',
+      'uso_c',
+      'uso_b',
+      'uso_a',
+    ]);
+
+    $this->validateSelectSorting('sorted', [
+      'sso_a',
+      'sso_d',
+      'sso_first_element',
+      'sso_b',
+      'sso_c',
+      'sso_second',
+      'sso_xxgroup',
+      'sso_gz',
+      'sso_gh',
+      'sso_gi',
+      'sso_yygroup',
+      'sso_ge',
+      'sso_gd',
+      'sso_gf',
+      'sso_zzgroup',
+      'sso_ga',
+      'sso_gb',
+      'sso_gc',
+    ]);
+
+    $this->validateSelectSorting('sorted_none', [
+      'sno_empty',
+      'sno_first_element',
+      'sno_second',
+      'sno_zzgroup',
+      'sno_ga',
+      'sno_gb',
+      'sno_gc',
+      'sno_a',
+      'sno_d',
+      'sno_b',
+      'sno_c',
+      'sno_xxgroup',
+      'sno_gz',
+      'sno_gi',
+      'sno_gh',
+      'sno_yygroup',
+      'sno_ge',
+      'sno_gd',
+      'sno_gf',
+    ]);
+
+    $this->validateSelectSorting('sorted_none_nostart', [
+      'snn_empty',
+      'snn_a',
+      'snn_d',
+      'snn_first_element',
+      'snn_b',
+      'snn_c',
+      'snn_second',
+      'snn_xxgroup',
+      'snn_gz',
+      'snn_gi',
+      'snn_gh',
+      'snn_yygroup',
+      'snn_ge',
+      'snn_gd',
+      'snn_gf',
+      'snn_zzgroup',
+      'snn_ga',
+      'snn_gb',
+      'snn_gc',
+    ]);
+
+    // Verify that #sort_order and #sort_start are not in the page.
+    $this->assertSession()->responseNotContains('#sort_order');
+    $this->assertSession()->responseNotContains('#sort_start');
+  }
+
+  /**
+   * Validates that the options are in the right order in a select.
+   *
+   * @param string $select
+   *   Name of the select to verify.
+   * @param string[] $order
+   *   Expected order of its options.
+   */
+  protected function validateSelectSorting($select, array $order) {
+    $option_map_function = function (NodeElement $node) {
+      return ($node->getTagName() === 'optgroup') ?
+        $node->getAttribute('label') : $node->getValue();
+    };
+    $option_nodes = $this->getSession()
+      ->getPage()
+      ->findField($select)
+      ->findAll('css', 'option, optgroup');
+
+    $options = array_map($option_map_function, $option_nodes);
+    $this->assertIdentical($order, $options);
   }
 
   /**

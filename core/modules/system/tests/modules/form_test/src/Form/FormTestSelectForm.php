@@ -4,6 +4,7 @@ namespace Drupal\form_test\Form;
 
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 /**
@@ -125,8 +126,89 @@ class FormTestSelectForm extends FormBase {
       ],
     ];
 
+    // Add a select that should have its options left alone.
+    $form['unsorted'] = [
+      '#type' => 'select',
+      '#options' => $this->makeSortableOptions('uso'),
+    ];
+
+    // Add a select to test sorting at the top level, and with some of the
+    // option groups sorted, some left alone, and at least one with #sort_start
+    // set to a non-default value.
+    $sortable_options = $this->makeSortableOptions('sso');
+    $sortable_options['sso_zzgroup']['#sort_options'] = TRUE;
+    $sortable_options['sso_xxgroup']['#sort_options'] = TRUE;
+    $sortable_options['sso_xxgroup']['#sort_start'] = 1;
+    // Do not use a sort start on this one.
+    $form['sorted'] = [
+      '#type' => 'select',
+      '#options' => $sortable_options,
+      '#sort_options' => TRUE,
+    ];
+
+    // Add a select to test sorting with a -NONE- option included,
+    // and #sort_start set.
+    $sortable_none_options = $this->makeSortableOptions('sno');
+    $sortable_none_options['sno_zzgroup']['#sort_options'] = TRUE;
+    $form['sorted_none'] = [
+      '#type' => 'select',
+      '#options' => $sortable_none_options,
+      '#sort_options' => TRUE,
+      '#sort_start' => 4,
+      '#empty_value' => 'sno_empty',
+    ];
+
+    // Add a select to test sorting with a -NONE- option included,
+    // and #sort_start not set.
+    $sortable_none_nostart_options = $this->makeSortableOptions('snn');
+    $sortable_none_nostart_options['snn_zzgroup']['#sort_options'] = TRUE;
+    $form['sorted_none_nostart'] = [
+      '#type' => 'select',
+      '#options' => $sortable_none_nostart_options,
+      '#sort_options' => TRUE,
+      '#empty_value' => 'snn_empty',
+    ];
+
     $form['submit'] = ['#type' => 'submit', '#value' => 'Submit'];
     return $form;
+  }
+
+  /**
+   * Makes and returns a set of options to test sorting on.
+   *
+   * @param string $prefix
+   *   Prefix for the keys of the options.
+   *
+   * @return array
+   *   Options array, including option groups, for testing.
+   */
+  protected function makeSortableOptions($prefix) {
+    return [
+      // Don't use $this->t() here, to avoid adding strings to
+      // localize.drupal.org. Do use TranslatableMarkup in places, to test
+      // that labels are cast to strings before sorting.
+      $prefix . '_first_element' => new TranslatableMarkup('first element'),
+      $prefix . '_second' => new TranslatableMarkup('second element'),
+      $prefix . '_zzgroup' => [
+        $prefix . '_gc' => new TranslatableMarkup('group c'),
+        $prefix . '_ga' => new TranslatableMarkup('group a'),
+        $prefix . '_gb' => 'group b',
+      ],
+      $prefix . '_yygroup' => [
+        $prefix . '_ge' => new TranslatableMarkup('group e'),
+        $prefix . '_gd' => new TranslatableMarkup('group d'),
+        $prefix . '_gf' => new TranslatableMarkup('group f'),
+      ],
+      $prefix . '_xxgroup' => [
+        $prefix . '_gz' => new TranslatableMarkup('group z'),
+        $prefix . '_gi' => new TranslatableMarkup('group i'),
+        $prefix . '_gh' => new TranslatableMarkup('group h'),
+      ],
+      $prefix . '_d' => 'd',
+      $prefix . '_c' => new TranslatableMarkup('main c'),
+      $prefix . '_b' => new TranslatableMarkup('main b'),
+      $prefix . '_a' => 'a',
+    ];
   }
 
   /**

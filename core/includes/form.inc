@@ -18,14 +18,15 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
  * Default template: select.html.twig.
  *
  * It is possible to group options together; to do this, change the format of
- * $options to an associative array in which the keys are group labels, and the
- * values are associative arrays in the normal $options format.
+ * the #options property to an associative array in which the keys are group
+ * labels, and the values are associative arrays in the normal #options format.
  *
  * @param $variables
  *   An associative array containing:
  *   - element: An associative array containing the properties of the element.
  *     Properties used: #title, #value, #options, #description, #extra,
- *     #multiple, #required, #name, #attributes, #size.
+ *     #multiple, #required, #name, #attributes, #size, #sort_options,
+ *     #sort_start.
  */
 function template_preprocess_select(&$variables) {
   $element = $variables['element'];
@@ -37,36 +38,17 @@ function template_preprocess_select(&$variables) {
 }
 
 /**
- * Converts an options form element into a structured array for output.
+ * Converts the options in a select element into a structured array for output.
  *
  * This function calls itself recursively to obtain the values for each optgroup
  * within the list of options and when the function encounters an object with
  * an 'options' property inside $element['#options'].
  *
  * @param array $element
- *   An associative array containing the following key-value pairs:
- *   - #multiple: Optional Boolean indicating if the user may select more than
- *     one item.
- *   - #options: An associative array of options to render as HTML. Each array
- *     value can be a string, an array, or an object with an 'option' property:
- *     - A string or integer key whose value is a translated string is
- *       interpreted as a single HTML option element. Do not use placeholders
- *       that sanitize data: doing so will lead to double-escaping. Note that
- *       the key will be visible in the HTML and could be modified by malicious
- *       users, so don't put sensitive information in it.
- *     - A translated string key whose value is an array indicates a group of
- *       options. The translated string is used as the label attribute for the
- *       optgroup. Do not use placeholders to sanitize data: doing so will lead
- *       to double-escaping. The array should contain the options you wish to
- *       group and should follow the syntax of $element['#options'].
- *     - If the function encounters a string or integer key whose value is an
- *       object with an 'option' property, the key is ignored, the contents of
- *       the option property are interpreted as $element['#options'], and the
- *       resulting HTML is added to the output.
- *   - #value: Optional integer, string, or array representing which option(s)
- *     to pre-select when the list is first displayed. The integer or string
- *     must match the key of an option in the '#options' list. If '#multiple' is
- *     TRUE, this can be an array of integers or strings.
+ *   An associative array containing properties of the select element. See
+ *   \Drupal\Core\Render\Element\Select for details, but note that the
+ *   #empty_option and #empty_value properties are processed, and the
+ *   #value property is set, before reaching this function.
  * @param array|null $choices
  *   (optional) Either an associative array of options in the same format as
  *   $element['#options'] above, or NULL. This parameter is only used internally
@@ -90,7 +72,17 @@ function form_select_options($element, $choices = NULL) {
       return [];
     }
     $choices = $element['#options'];
+    $sort_options = isset($element['#sort_options']) && $element['#sort_options'];
+    $sort_start = $element['#sort_start'] ?? 0;
   }
+  else {
+    // We are within an option group.
+    $sort_options = isset($choices['#sort_options']) && $choices['#sort_options'];
+    $sort_start = $choices['#sort_start'] ?? 0;
+    unset($choices['#sort_options']);
+    unset($choices['#sort_start']);
+  }
+
   // array_key_exists() accommodates the rare event where $element['#value'] is NULL.
   // isset() fails in this situation.
   $value_valid = isset($element['#value']) || array_key_exists('#value', $element);
@@ -124,6 +116,14 @@ function form_select_options($element, $choices = NULL) {
       $option['label'] = $choice;
       $options[] = $option;
     }
+  }
+  if ($sort_options) {
+    $unsorted = array_slice($options, 0, $sort_start);
+    $sorted = array_slice($options, $sort_start);
+    uasort($sorted, function ($a, $b) {
+      return strcmp((string) $a['label'], (string) $b['label']);
+    });
+    $options = array_merge($unsorted, $sorted);
   }
   return $options;
 }
