@@ -28,7 +28,7 @@ class TestHelpTopicPlugin extends HelpTopicPluginBase {
    * {@inheritdoc}
    */
   public function getCacheTags() {
-    return [];
+    return ['foobar'];
   }
 
   /**

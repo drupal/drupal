@@ -60,10 +60,14 @@ class HelpTopicTranslationTest extends BrowserTestBase {
     // Verify that help topic link is translated on admin/help.
     $this->drupalGet('admin/help');
     $session->linkExists('ABC-Hilfetestmodul');
+    // Verify that the language cache tag appears on admin/help.
+    $session->responseHeaderContains('X-Drupal-Cache-Contexts', 'languages:language_interface');
     // Verify that help topic is translated.
     $this->drupalGet('admin/help/topic/help_topics_test.test');
     $session->pageTextContains('ABC-Hilfetestmodul');
     $session->pageTextContains('Übersetzung testen.');
+    // Verify that the language cache tag appears on a topic page.
+    $session->responseHeaderContains('X-Drupal-Cache-Contexts', 'languages:language_interface');
   }
 
   /**

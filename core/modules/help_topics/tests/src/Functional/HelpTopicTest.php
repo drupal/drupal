@@ -87,10 +87,11 @@ class HelpTopicTest extends BrowserTestBase {
     $this->verifyHelpLinks();
     $this->verifyBreadCrumb();
 
-    // Verify that help topics text appears on admin/help.
+    // Verify that help topics text appears on admin/help, and cache tags.
     $this->drupalGet('admin/help');
     $session->responseContains('<h2>Topics</h2>');
     $session->pageTextContains('Topics can be provided by modules or themes');
+    $session->responseHeaderContains('X-Drupal-Cache-Tags', 'core.extension');
 
     // Verify links for for help topics and order.
     $page_text = $this->getTextContent();
@@ -161,9 +162,13 @@ class HelpTopicTest extends BrowserTestBase {
       $session = $this->assertSession();
       $session->statusCodeEquals($response);
       if ($response == 200) {
+        // Verify page information.
         $name = $info['name'];
         $session->titleEquals($name . ' | Drupal');
         $session->responseContains('<h1 class="page-title">' . $name . '</h1>');
+        foreach ($info['tags'] as $tag) {
+          $session->responseHeaderContains('X-Drupal-Cache-Tags', $tag);
+        }
       }
     }
   }
@@ -214,17 +219,21 @@ class HelpTopicTest extends BrowserTestBase {
    *   keys are the machine names of the topics. The values are arrays with the
    *   following elements:
    *   - name: Displayed name.
+   *   - tags: Cache tags to test for.
    */
   protected function getTopicList() {
     return [
       'help_topics_test.test' => [
         'name' => 'ABC Help Test module',
+        'tags' => ['core.extension'],
       ],
       'help_topics_derivatives:test_derived_topic' => [
         'name' => 'Label for test_derived_topic',
+        'tags' => ['foobar'],
       ],
       'help_topics_test_direct_yml' => [
         'name' => 'Test direct yaml topic label',
+        'tags' => ['foobar'],
       ],
     ];
   }
