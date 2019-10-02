@@ -186,7 +186,7 @@ abstract class EntityDisplayBase extends ConfigEntityBase implements EntityDispl
           // @todo Remove handling of 'type' in https://www.drupal.org/node/2799641.
           if (!isset($options['region']) && !empty($options['type']) && $options['type'] === 'hidden') {
             $options['region'] = 'hidden';
-            @trigger_error("Specifying 'type' => 'hidden' is deprecated, use 'region' => 'hidden' instead.", E_USER_DEPRECATED);
+            @trigger_error("Support for using 'type' => 'hidden' in a component is deprecated in drupal:8.3.0 and is removed from drupal:9.0.0. Use 'region' => 'hidden' instead. See https://www.drupal.org/node/2801513", E_USER_DEPRECATED);
           }
 
           if (!empty($options['region']) && $options['region'] === 'hidden') {
@@ -253,7 +253,13 @@ abstract class EntityDisplayBase extends ConfigEntityBase implements EntityDispl
   public function preSave(EntityStorageInterface $storage) {
     // Ensure that a region is set on each component.
     foreach ($this->getComponents() as $name => $component) {
-      $this->handleHiddenType($name, $component);
+      // @todo Remove this BC layer in Drupal 9.
+      // @see https://www.drupal.org/project/drupal/issues/2799641
+      if (!isset($component['region']) && isset($component['type']) && $component['type'] === 'hidden') {
+        @trigger_error("Support for using 'type' => 'hidden' in a component is deprecated in drupal:8.3.0 and is removed from drupal:9.0.0. Use 'region' => 'hidden' instead. See https://www.drupal.org/node/2801513", E_USER_DEPRECATED);
+        $this->removeComponent($name);
+      }
+
       // Ensure that a region is set.
       if (isset($this->content[$name]) && !isset($component['region'])) {
         // Directly set the component to bypass other changes in setComponent().
@@ -269,16 +275,21 @@ abstract class EntityDisplayBase extends ConfigEntityBase implements EntityDispl
   /**
    * Handles a component type of 'hidden'.
    *
-   * @deprecated This method exists only for backwards compatibility.
-   *
-   * @todo Remove this in https://www.drupal.org/node/2799641.
+   * The logic of this method has been duplicated inline in the preSave()
+   * method so that this method may remain deprecated and trigger an error.
    *
    * @param string $name
    *   The name of the component.
    * @param array $component
    *   The component array.
+   *
+   * @deprecated in drupal:8.3.0 and is removed from drupal:9.0.0. No
+   *   replacement is provided.
+   *
+   * @see https://www.drupal.org/node/2801513
    */
   protected function handleHiddenType($name, array $component) {
+    @trigger_error(__METHOD__ . ' is deprecated in drupal:8.3.0 and is removed from drupal:9.0.0. No replacement is provided. See https://www.drupal.org/node/2801513', E_USER_DEPRECATED);
     if (!isset($component['region']) && isset($component['type']) && $component['type'] === 'hidden') {
       $this->removeComponent($name);
     }
