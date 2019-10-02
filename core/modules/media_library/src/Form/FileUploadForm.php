@@ -14,6 +14,7 @@ use Drupal\Core\Render\ElementInfoManagerInterface;
 use Drupal\Core\Render\RendererInterface;
 use Drupal\Core\Url;
 use Drupal\file\FileInterface;
+use Drupal\file\FileUsage\FileUsageInterface;
 use Drupal\file\Plugin\Field\FieldType\FileFieldItemList;
 use Drupal\file\Plugin\Field\FieldType\FileItem;
 use Drupal\media\MediaInterface;
@@ -54,6 +55,13 @@ class FileUploadForm extends AddFormBase {
   protected $fileSystem;
 
   /**
+   * The file usage service.
+   *
+   * @var \Drupal\file\FileUsage\FileUsageInterface
+   */
+  protected $fileUsage;
+
+  /**
    * Constructs a new FileUploadForm.
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
@@ -68,12 +76,19 @@ class FileUploadForm extends AddFormBase {
    *   The file system service.
    * @param \Drupal\media_library\OpenerResolverInterface $opener_resolver
    *   The opener resolver.
+   * @param \Drupal\file\FileUsage\FileUsageInterface $file_usage
+   *   The file usage service.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, MediaLibraryUiBuilder $library_ui_builder, ElementInfoManagerInterface $element_info, RendererInterface $renderer, FileSystemInterface $file_system, OpenerResolverInterface $opener_resolver = NULL) {
+  public function __construct(EntityTypeManagerInterface $entity_type_manager, MediaLibraryUiBuilder $library_ui_builder, ElementInfoManagerInterface $element_info, RendererInterface $renderer, FileSystemInterface $file_system, OpenerResolverInterface $opener_resolver = NULL, FileUsageInterface $file_usage = NULL) {
     parent::__construct($entity_type_manager, $library_ui_builder, $opener_resolver);
     $this->elementInfo = $element_info;
     $this->renderer = $renderer;
     $this->fileSystem = $file_system;
+    if (!$file_usage) {
+      @trigger_error('Calling FileUploadForm::__construct() without the `file.usage` service is deprecated in drupal:8.8.0 and is removed in drupal:9.0.0. Pass the `file.usage` service to the constructor. See https://www.drupal.org/node/3075165', E_USER_DEPRECATED);
+      $file_usage = \Drupal::service('file.usage');
+    }
+    $this->fileUsage = $file_usage;
   }
 
   /**
@@ -86,7 +101,8 @@ class FileUploadForm extends AddFormBase {
       $container->get('element_info'),
       $container->get('renderer'),
       $container->get('file_system'),
-      $container->get('media_library.opener_resolver')
+      $container->get('media_library.opener_resolver'),
+      $container->get('file.usage')
     );
   }
 
@@ -288,6 +304,31 @@ class FileUploadForm extends AddFormBase {
     $file = $media->get($this->getSourceFieldName($media->bundle->entity))->entity;
     $file->setPermanent();
     $file->save();
+  }
+
+  /**
+   * Submit handler for the remove button.
+   *
+   * @param array $form
+   *   The form render array.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The form state.
+   */
+  public function removeButtonSubmit(array $form, FormStateInterface $form_state) {
+    // Retrieve the delta of the media item from the parents of the remove
+    // button.
+    $triggering_element = $form_state->getTriggeringElement();
+    $delta = array_slice($triggering_element['#array_parents'], -2, 1)[0];
+
+    /** @var \Drupal\media\MediaInterface $removed_media */
+    $removed_media = $form_state->get(['media', $delta]);
+
+    $file = $removed_media->get($this->getSourceFieldName($removed_media->bundle->entity))->entity;
+    if ($file instanceof FileInterface && empty($this->fileUsage->listUsage($file))) {
+      $file->delete();
+    }
+
+    parent::removeButtonSubmit($form, $form_state);
   }
 
 }

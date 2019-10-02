@@ -1321,7 +1321,7 @@ class MediaLibraryTest extends WebDriverTestBase {
     // Create a list of new files to upload.
     $filenames = [];
     $remote_paths = [];
-    foreach (range(1, 3) as $i) {
+    foreach (range(1, 4) as $i) {
       $path = $file_system->copy($png_image->uri, 'public://');
       $filenames[] = $file_system->basename($path);
       $remote_paths[] = $driver->uploadFileAndGetRemoteFilePath($file_system->realpath($path));
@@ -1336,19 +1336,50 @@ class MediaLibraryTest extends WebDriverTestBase {
     $assert_session->fieldValueEquals('media[0][fields][name][0][value]', $filenames[0]);
     $assert_session->fieldValueEquals('media[1][fields][name][0][value]', $filenames[1]);
     $assert_session->fieldValueEquals('media[2][fields][name][0][value]', $filenames[2]);
+    $assert_session->fieldValueEquals('media[3][fields][name][0][value]', $filenames[3]);
     // Assert the pre-selected items are shown.
-    $selection_area = $assert_session->elementExists('css', '.media-library-add-form__selected-media');
+    $this->assertNotEmpty($selection_area = $assert_session->waitForElement('css', '.media-library-add-form__selected-media'));
     $assert_session->elementExists('css', 'summary', $selection_area)->click();
     $assert_session->checkboxChecked("Select $existing_media_name", $selection_area);
-    // Set alt texts for items 1 and 2, leave the alt text empty for item 3 to
-    // assert the field validation does not stop users from removing items.
+    // Set alt texts for items 1 and 2, leave the alt text empty for items 3
+    // and 4 to assert the field validation does not stop users from removing
+    // items.
     $page->fillField('media[0][fields][field_media_test_image][0][alt]', $filenames[0]);
     $page->fillField('media[1][fields][field_media_test_image][0][alt]', $filenames[1]);
+    // Assert the file is available in the file storage.
+    $files = $file_storage->loadByProperties(['filename' => $filenames[1]]);
+    $this->assertCount(1, $files);
+    $file_1_uri = reset($files)->getFileUri();
     // Remove the second file and assert the focus is shifted to the container
     // of the next media item and field values are still correct.
     $page->pressButton('media-1-remove-button');
     $this->assertJsCondition('jQuery(".media-library-add-form__media[data-media-library-added-delta=2]").is(":focus")');
     $assert_session->pageTextContains('The media item ' . $filenames[1] . ' has been removed.');
+    // Assert the file was deleted.
+    $this->assertEmpty($file_storage->loadByProperties(['filename' => $filenames[1]]));
+    $this->assertFileNotExists($file_1_uri);
+
+    // When a file is already in usage, it should not be deleted. To test,
+    // let's add a usage for $filenames[3] (now in the third position).
+    $files = $file_storage->loadByProperties(['filename' => $filenames[3]]);
+    $this->assertCount(1, $files);
+    $target_file = reset($files);
+    Media::create([
+      'bundle' => 'type_three',
+      'name' => 'Disturbing',
+      'field_media_test_image' => [
+        ['target_id' => $target_file->id()],
+      ],
+    ])->save();
+    // Remove $filenames[3] (now in the third position) and assert the focus is
+    // shifted to the container of the previous media item and field values are
+    // still correct.
+    $page->pressButton('media-3-remove-button');
+    $this->assertTrue($assert_session->waitForText('The media item ' . $filenames[3] . ' has been removed.'));
+    // Assert the file was not deleted, due to being in use elsewhere.
+    $this->assertNotEmpty($file_storage->loadByProperties(['filename' => $filenames[3]]));
+    $this->assertFileExists($target_file->getFileUri());
+
     // The second media item should be removed (this has the delta 1 since we
     // start counting from 0).
     $assert_session->elementNotExists('css', '.media-library-add-form__media[data-media-library-added-delta=1]');
