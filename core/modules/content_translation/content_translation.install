@@ -6,6 +6,7 @@
  */
 
 use Drupal\Core\Entity\Sql\SqlEntityStorageInterface;
+use Drupal\Core\Installer\InstallerKernel;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Url;
 
@@ -19,7 +20,7 @@ function content_translation_install() {
 
   // Skip the guidance messages about enabling translation features if the
   // module was installed in the Drupal installation process.
-  if (drupal_installation_attempted()) {
+  if (InstallerKernel::installationAttempted()) {
     return;
   }
 

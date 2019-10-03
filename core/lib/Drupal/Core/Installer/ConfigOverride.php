@@ -28,7 +28,7 @@ class ConfigOverride implements ServiceProviderInterface, ConfigFactoryOverrideI
    */
   public function loadOverrides($names) {
     $overrides = [];
-    if (drupal_installation_attempted() && function_exists('drupal_install_profile_distribution_name')) {
+    if (InstallerKernel::installationAttempted() && function_exists('drupal_install_profile_distribution_name')) {
       // Early in the installer the site name is unknown. In this case we need
       // to fallback to the distribution's name.
       $overrides['system.site'] = [

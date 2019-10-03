@@ -9,6 +9,7 @@ use Drupal\Core\Config\ConfigImportValidateEventSubscriberBase;
 use Drupal\Core\Config\ConfigNameException;
 use Drupal\Core\Extension\ModuleExtensionList;
 use Drupal\Core\Extension\ThemeHandlerInterface;
+use Drupal\Core\Installer\InstallerKernel;
 
 /**
  * Config import subscriber for config import events.
@@ -95,7 +96,7 @@ class ConfigImportSubscriber extends ConfigImportValidateEventSubscriberBase {
 
     // Ensure the profile is not changing.
     if ($install_profile !== $core_extension['profile']) {
-      if (drupal_installation_attempted()) {
+      if (InstallerKernel::installationAttempted()) {
         $config_importer->logError($this->t('The selected installation profile %install_profile does not match the profile stored in configuration %config_profile.', [
           '%install_profile' => $install_profile,
           '%config_profile' => $core_extension['profile'],

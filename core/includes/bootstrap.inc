@@ -10,6 +10,7 @@ use Drupal\Component\Utility\Html;
 use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Config\BootstrapConfigStorageFactory;
+use Drupal\Core\Installer\InstallerKernel;
 use Drupal\Core\Logger\RfcLogLevel;
 use Drupal\Core\Test\TestDatabase;
 use Drupal\Core\Session\AccountInterface;
@@ -750,14 +751,16 @@ function drupal_maintenance_theme() {
 
 /**
  * Returns TRUE if a Drupal installation is currently being attempted.
+ *
+ * @deprecated in drupal:8.8.0 and is removed from drupal:9.0.0.
+ *   Use \Drupal\Core\Installer\InstallerKernel::installationAttempted()
+ *   instead.
+ *
+ * @see https://www.drupal.org/node/3035275
  */
 function drupal_installation_attempted() {
-  // This cannot rely on the MAINTENANCE_MODE constant, since that would prevent
-  // tests from using the non-interactive installer, in which case Drupal
-  // only happens to be installed within the same request, but subsequently
-  // executed code does not involve the installer at all.
-  // @see install_drupal()
-  return isset($GLOBALS['install_state']) && empty($GLOBALS['install_state']['installation_finished']);
+  @trigger_error('drupal_installation_attempted() is deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. Use \Drupal\Core\Installer\InstallerKernel::installationAttempted() instead. See https://www.drupal.org/node/3035275', E_USER_DEPRECATED);
+  return InstallerKernel::installationAttempted();
 }
 
 /**
@@ -788,7 +791,7 @@ function drupal_get_profile() {
 
   @trigger_error('drupal_get_profile() is deprecated in drupal:8.3.0 and is removed from drupal:9.0.0. Use the install_profile container parameter or \Drupal::installProfile() instead. If you are accessing the value before it is written to configuration during the installer use the $install_state global. If you need to access the value before container is available you can use BootstrapConfigStorageFactory to load the value directly from configuration. See https://www.drupal.org/node/2538996', E_USER_DEPRECATED);
 
-  if (drupal_installation_attempted()) {
+  if (InstallerKernel::installationAttempted()) {
     // If the profile has been selected return it.
     if (isset($install_state['parameters']['profile'])) {
       $profile = $install_state['parameters']['profile'];

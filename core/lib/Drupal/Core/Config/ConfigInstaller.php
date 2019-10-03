@@ -4,6 +4,7 @@ namespace Drupal\Core\Config;
 
 use Drupal\Component\Utility\Crypt;
 use Drupal\Core\Config\Entity\ConfigDependencyManager;
+use Drupal\Core\Installer\InstallerKernel;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 class ConfigInstaller implements ConfigInstallerInterface {
@@ -137,7 +138,7 @@ class ConfigInstaller implements ConfigInstallerInterface {
     // During a drupal installation optional configuration is installed at the
     // end of the installation process.
     // @see install_install_profile()
-    if (!$this->isSyncing() && !$this->drupalInstallationAttempted()) {
+    if (!$this->isSyncing() && !InstallerKernel::installationAttempted()) {
       $optional_install_path = $extension_path . '/' . InstallStorage::CONFIG_OPTIONAL_DIRECTORY;
       if (is_dir($optional_install_path)) {
         // Install any optional config the module provides.
@@ -356,7 +357,7 @@ class ConfigInstaller implements ConfigInstallerInterface {
    * {@inheritdoc}
    */
   public function installCollectionDefaultConfig($collection) {
-    $storage = new ExtensionInstallStorage($this->getActiveStorages(StorageInterface::DEFAULT_COLLECTION), InstallStorage::CONFIG_INSTALL_DIRECTORY, $collection, $this->drupalInstallationAttempted(), $this->installProfile);
+    $storage = new ExtensionInstallStorage($this->getActiveStorages(StorageInterface::DEFAULT_COLLECTION), InstallStorage::CONFIG_INSTALL_DIRECTORY, $collection, InstallerKernel::installationAttempted(), $this->installProfile);
     // Only install configuration for enabled extensions.
     $enabled_extensions = $this->getEnabledExtensions();
     $config_to_install = array_filter($storage->listAll(), function ($config_name) use ($enabled_extensions) {
@@ -701,9 +702,17 @@ class ConfigInstaller implements ConfigInstallerInterface {
    *
    * @return bool
    *   TRUE if a Drupal installation is currently being attempted.
+   *
+   * @deprecated in drupal:8.8.0 and is removed from drupal:9.0.0.
+   *   Use \Drupal\Core\Installer\InstallerKernel::installationAttempted()
+   *   instead.
+   *
+   * @see https://www.drupal.org/node/3035275
+   * @see \Drupal\Core\Installer\InstallerKernel::installationAttempted()
    */
   protected function drupalInstallationAttempted() {
-    return drupal_installation_attempted();
+    @trigger_error(__METHOD__ . '() is deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. Use \Drupal\Core\Installer\InstallerKernel::installationAttempted() instead. See https://www.drupal.org/node/3035275', E_USER_DEPRECATED);
+    return InstallerKernel::installationAttempted();
   }
 
 }

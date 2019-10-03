@@ -17,6 +17,7 @@ use Drupal\Component\Utility\UrlHelper;
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\File\Exception\FileException;
 use Drupal\Core\File\FileSystemInterface;
+use Drupal\Core\Installer\InstallerKernel;
 use Drupal\Core\Link;
 use Drupal\Core\Url;
 use Drupal\Core\Asset\AttachedAssetsInterface;
@@ -408,7 +409,7 @@ function locale_system_update(array $components) {
   // Skip running the translation imports if in the installer,
   // because it would break out of the installer flow. We have
   // built-in support for translation imports in the installer.
-  if (!drupal_installation_attempted() && locale_translatable_language_list()) {
+  if (!InstallerKernel::installationAttempted() && locale_translatable_language_list()) {
     if (\Drupal::config('locale.settings')->get('translation.import_enabled')) {
       module_load_include('compare.inc', 'locale');
 

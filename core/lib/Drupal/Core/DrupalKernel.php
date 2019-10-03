@@ -17,6 +17,7 @@ use Drupal\Core\DependencyInjection\YamlFileLoader;
 use Drupal\Core\Extension\ExtensionDiscovery;
 use Drupal\Core\File\MimeType\MimeTypeGuesser;
 use Drupal\Core\Http\TrustedHostsRequestFactory;
+use Drupal\Core\Installer\InstallerKernel;
 use Drupal\Core\Installer\InstallerRedirectTrait;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Security\PharExtensionInterceptor;
@@ -685,7 +686,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
       // Redirect the user to the installation script if Drupal has not been
       // installed yet (i.e., if no $databases array has been defined in the
       // settings.php file) and we are not already installing.
-      if (!Database::getConnectionInfo() && !drupal_installation_attempted() && PHP_SAPI !== 'cli') {
+      if (!Database::getConnectionInfo() && !InstallerKernel::installationAttempted() && PHP_SAPI !== 'cli') {
         $response = new RedirectResponse($request->getBasePath() . '/core/install.php', 302, ['Cache-Control' => 'no-cache']);
       }
       else {

@@ -7,6 +7,7 @@
 
 use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Component\Utility\Xss;
+use Drupal\Core\Installer\InstallerKernel;
 use Drupal\Core\Logger\RfcLogLevel;
 use Drupal\Core\Render\Markup;
 use Drupal\Core\Utility\Error;
@@ -140,7 +141,7 @@ function error_displayable($error = NULL) {
  *   Non-recoverable fatal errors cannot be logged by Drupal.
  */
 function _drupal_log_error($error, $fatal = FALSE) {
-  $is_installer = drupal_installation_attempted();
+  $is_installer = InstallerKernel::installationAttempted();
 
   // Backtrace array is not a valid replacement value for t().
   $backtrace = $error['backtrace'];
@@ -301,7 +302,7 @@ function _drupal_get_error_level() {
   // 'config.factory' service, which reads the default 'error_level' value from
   // System module's default configuration and the default value is not verbose.
   // @see error_displayable()
-  if (drupal_installation_attempted()) {
+  if (InstallerKernel::installationAttempted()) {
     return ERROR_REPORTING_DISPLAY_VERBOSE;
   }
   $error_level = NULL;
