@@ -4,6 +4,8 @@ namespace Drupal\media\Controller;
 
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
+use Drupal\Core\Entity\ContentEntityStorageInterface;
+use Drupal\Core\Entity\EntityRepositoryInterface;
 use Drupal\Core\Render\RendererInterface;
 use Drupal\filter\FilterFormatInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -29,13 +31,33 @@ class MediaFilterController implements ContainerInjectionInterface {
   protected $renderer;
 
   /**
+   * The media storage.
+   *
+   * @var \Drupal\Core\Entity\ContentEntityStorageInterface
+   */
+  protected $mediaStorage;
+
+  /**
+   * The entity repository.
+   *
+   * @var \Drupal\Core\Entity\EntityRepositoryInterface
+   */
+  protected $entityRepository;
+
+  /**
    * Constructs an MediaFilterController instance.
    *
    * @param \Drupal\Core\Render\RendererInterface $renderer
    *   The renderer service.
+   * @param \Drupal\Core\Entity\ContentEntityStorageInterface $media_storage
+   *   The media storage.
+   * @param \Drupal\Core\Entity\EntityRepositoryInterface $entity_repository
+   *   The entity repository.
    */
-  public function __construct(RendererInterface $renderer) {
+  public function __construct(RendererInterface $renderer, ContentEntityStorageInterface $media_storage, EntityRepositoryInterface $entity_repository) {
     $this->renderer = $renderer;
+    $this->mediaStorage = $media_storage;
+    $this->entityRepository = $entity_repository;
   }
 
   /**
@@ -43,7 +65,9 @@ class MediaFilterController implements ContainerInjectionInterface {
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('renderer')
+      $container->get('renderer'),
+      $container->get('entity_type.manager')->getStorage('media'),
+      $container->get('entity.repository')
     );
   }
 
@@ -70,7 +94,8 @@ class MediaFilterController implements ContainerInjectionInterface {
    */
   public function preview(Request $request, FilterFormatInterface $filter_format) {
     $text = $request->query->get('text');
-    if ($text == '') {
+    $uuid = $request->query->get('uuid');
+    if ($text == '' || $uuid == '') {
       throw new NotFoundHttpException();
     }
 
@@ -81,12 +106,19 @@ class MediaFilterController implements ContainerInjectionInterface {
     ];
     $html = $this->renderer->renderPlain($build);
 
+    // Load the media item so we can embed the label in the response, for use
+    // in an ARIA label.
+    $headers = [];
+    if ($media = $this->entityRepository->loadEntityByUuid('media', $uuid)) {
+      $headers['Drupal-Media-Label'] = $this->entityRepository->getTranslationFromContext($media)->label();
+    }
+
     // Note that we intentionally do not use:
     // - \Drupal\Core\Cache\CacheableResponse because caching it on the server
     //   side is wasteful, hence there is no need for cacheability metadata.
     // - \Drupal\Core\Render\HtmlResponse because there is no need for
     //   attachments nor cacheability metadata.
-    return (new Response($html))
+    return (new Response($html, 200, $headers))
       // Do not allow any intermediary to cache the response, only the end user.
       ->setPrivate()
       // Allow the end user to cache it for up to 5 minutes.

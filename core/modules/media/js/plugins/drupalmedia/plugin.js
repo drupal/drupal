@@ -124,6 +124,12 @@
           }
         },
 
+        getLabel: function getLabel() {
+          if (this.data.label) {
+            return this.data.label;
+          }
+          return Drupal.t('Embedded media');
+        },
         upcast: function upcast(element, data) {
           var attributes = element.attributes;
 
@@ -136,6 +142,7 @@
           if (data.hasCaption && data.attributes['data-caption'] === '') {
             data.attributes['data-caption'] = ' ';
           }
+          data.label = null;
           data.link = null;
           if (element.parent.name === 'a') {
             data.link = CKEDITOR.tools.copy(element.parent.attributes);
@@ -299,6 +306,8 @@
 
           delete dataToHash.attributes['data-caption'];
 
+          delete dataToHash.label;
+
           if (dataToHash.link) {
             delete dataToHash.link.href;
           }
@@ -310,11 +319,13 @@
           jQuery.get({
             url: Drupal.url('media/' + editor.config.drupal.format + '/preview'),
             data: {
-              text: this.downcast().getOuterHtml()
+              text: this.downcast().getOuterHtml(),
+              uuid: this.data.attributes['data-entity-uuid']
             },
             dataType: 'html',
-            success: function success(previewHtml) {
+            success: function success(previewHtml, textStatus, jqXhr) {
               _this3.element.setHtml(previewHtml);
+              _this3.setData('label', jqXhr.getResponseHeader('Drupal-Media-Label'));
               callback(_this3);
             },
             error: function error() {

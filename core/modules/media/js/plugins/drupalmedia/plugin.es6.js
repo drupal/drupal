@@ -163,6 +163,13 @@
           },
         },
 
+        getLabel() {
+          if (this.data.label) {
+            return this.data.label;
+          }
+          return Drupal.t('Embedded media');
+        },
+
         upcast(element, data) {
           const { attributes } = element;
           // This matches the behavior of the corresponding server-side text filter plugin.
@@ -181,6 +188,7 @@
           if (data.hasCaption && data.attributes['data-caption'] === '') {
             data.attributes['data-caption'] = ' ';
           }
+          data.label = null;
           data.link = null;
           if (element.parent.name === 'a') {
             data.link = CKEDITOR.tools.copy(element.parent.attributes);
@@ -459,6 +467,9 @@
           const dataToHash = CKEDITOR.tools.clone(data);
           // The caption does not need rendering.
           delete dataToHash.attributes['data-caption'];
+          // The media entity's label is server-side data and cannot be
+          // modified by the content author.
+          delete dataToHash.label;
           // Changed link destinations do not affect the visual preview.
           if (dataToHash.link) {
             delete dataToHash.link.href;
@@ -483,10 +494,15 @@
             url: Drupal.url(`media/${editor.config.drupal.format}/preview`),
             data: {
               text: this.downcast().getOuterHtml(),
+              uuid: this.data.attributes['data-entity-uuid'],
             },
             dataType: 'html',
-            success: previewHtml => {
+            success: (previewHtml, textStatus, jqXhr) => {
               this.element.setHtml(previewHtml);
+              this.setData(
+                'label',
+                jqXhr.getResponseHeader('Drupal-Media-Label'),
+              );
               callback(this);
             },
             error: () => {

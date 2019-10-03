@@ -243,7 +243,6 @@ class CKEditorIntegrationTest extends WebDriverTestBase {
     $this->assertNotEmpty($assert_session->waitForElementVisible('css', 'img[src*="image-test.png"]'));
     $element = $assert_session->elementExists('css', '[data-media-embed-test-active-theme]');
     $this->assertSame('stable', $element->getAttribute('data-media-embed-test-active-theme'));
-
     // Assert that the first preview request transferred >500 B over the wire.
     // Then toggle source mode on and off. This causes the CKEditor widget to be
     // destroyed and then reconstructed. Assert that during this reconstruction,
@@ -276,6 +275,8 @@ class CKEditorIntegrationTest extends WebDriverTestBase {
     $this->assignNameToCkeditorIframe();
     $this->getSession()->switchToIFrame('ckeditor');
     $this->assertNotEmpty($assert_session->waitForButton('Edit media'));
+    // Test `aria-label` attribute appears on the widget wrapper.
+    $assert_session->elementExists('css', '.cke_widget_drupalmedia[aria-label="Screaming hairy armadillo"]');
     $assert_session->elementContains('css', 'figcaption', '');
     $assert_session->elementAttributeContains('css', 'figcaption', 'data-placeholder', 'Enter caption here');
     // Test if you leave the caption blank, but change another attribute,
@@ -465,6 +466,8 @@ class CKEditorIntegrationTest extends WebDriverTestBase {
     $this->assignNameToCkeditorIframe();
     $this->getSession()->switchToIFrame('ckeditor');
     $this->assertNotEmpty($assert_session->waitForElementVisible('css', 'drupal-media', 2000));
+    // Test `aria-label` attribute appears on the widget wrapper.
+    $assert_session->elementExists('css', '.cke_widget_drupalmedia[aria-label="Screaming hairy armadillo"]');
     $page->pressButton('Edit media');
     $this->waitForMetadataDialog();
     $assert_session->fieldNotExists('attributes[alt]');
@@ -625,6 +628,8 @@ class CKEditorIntegrationTest extends WebDriverTestBase {
     // Assert that the img within the media embed within the CKEditor contains
     // the overridden alt text set in the dialog.
     $this->assertNotEmpty($assert_session->waitForElementVisible('css', 'drupal-media img[alt*="' . $who_is_zartan . '"]'));
+    // Test `aria-label` attribute appears on the widget wrapper.
+    $assert_session->elementExists('css', '.cke_widget_drupalmedia[aria-label="Screaming hairy armadillo"]');
 
     // Test that the downcast drupal-media element now has the alt attribute
     // entered in the dialog.
@@ -759,6 +764,8 @@ class CKEditorIntegrationTest extends WebDriverTestBase {
 
     // Test that the default alt attribute displays without an override.
     $this->assertNotEmpty($assert_session->waitForElementVisible('xpath', '//img[contains(@alt, "texte alternatif par défaut")]'));
+    // Test `aria-label` attribute appears on the widget wrapper.
+    $assert_session->elementExists('css', '.cke_widget_drupalmedia[aria-label="Tatou poilu hurlant"]');
     $page->pressButton('Edit media');
     $this->waitForMetadataDialog();
     // Assert that the placeholder is set to the value of the media field's
@@ -994,7 +1001,12 @@ class CKEditorIntegrationTest extends WebDriverTestBase {
 
     $text = '<drupal-media data-caption="baz" data-entity-type="media" data-entity-uuid="' . $this->media->uuid() . '"></drupal-media>';
     $route_parameters = ['filter_format' => $format->id()];
-    $options = ['query' => ['text' => $text]];
+    $options = [
+      'query' => [
+        'text' => $text,
+        'uuid' => $this->media->uuid(),
+      ],
+    ];
     $this->drupalGet(Url::fromRoute('media.filter.preview', $route_parameters, $options));
 
     $assert_session = $this->assertSession();
@@ -1135,6 +1147,7 @@ class CKEditorIntegrationTest extends WebDriverTestBase {
     $this->assignNameToCkeditorIframe();
     $this->getSession()->switchToIFrame('ckeditor');
     $this->assertNotEmpty($assert_session->waitForElementVisible('css', 'drupal-media'));
+    $assert_session->elementExists('css', '.cke_widget_drupalmedia[aria-label="Screaming hairy armadillo"]');
     $page->pressButton('Edit media');
     $this->waitForMetadataDialog();
     $assert_session->optionExists('attributes[data-view-mode]', 'view_mode_1');
