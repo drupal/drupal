@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\jsonapi\Kernel\ResourceType;
 
+use Drupal\Core\Cache\Cache;
 use Drupal\jsonapi\ResourceType\ResourceType;
 use Drupal\node\Entity\NodeType;
 use Drupal\Tests\jsonapi\Kernel\JsonapiKernelTestBase;
@@ -23,6 +24,7 @@ class ResourceTypeRepositoryTest extends JsonapiKernelTestBase {
     'serialization',
     'system',
     'user',
+    'jsonapi_test_resource_type_building',
   ];
 
   /**
@@ -145,6 +147,24 @@ class ResourceTypeRepositoryTest extends JsonapiKernelTestBase {
       [['type', 'node_type']],
       [['id', 'node_id']],
     ];
+  }
+
+  /**
+   * Tests that resource types can be disabled by a build subscriber.
+   */
+  public function testResourceTypeDisabling() {
+    $this->assertFalse($this->resourceTypeRepository->getByTypeName('node--article')->isInternal());
+    $this->assertFalse($this->resourceTypeRepository->getByTypeName('node--page')->isInternal());
+    $this->assertFalse($this->resourceTypeRepository->getByTypeName('user--user')->isInternal());
+    $disabled_resource_types = [
+      'node--page',
+      'user--user',
+    ];
+    \Drupal::state()->set('jsonapi_test_resource_type_builder.disabled_resource_types', $disabled_resource_types);
+    Cache::invalidateTags(['jsonapi_resource_types']);
+    $this->assertFalse($this->resourceTypeRepository->getByTypeName('node--article')->isInternal());
+    $this->assertTrue($this->resourceTypeRepository->getByTypeName('node--page')->isInternal());
+    $this->assertTrue($this->resourceTypeRepository->getByTypeName('user--user')->isInternal());
   }
 
 }

@@ -15,6 +15,7 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\TypedData\DataReferenceTargetDefinition;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpKernel\Exception\PreconditionFailedHttpException;
 
 /**
@@ -68,6 +69,13 @@ class ResourceTypeRepository implements ResourceTypeRepositoryInterface {
   protected $cache;
 
   /**
+   * The event dispatcher.
+   *
+   * @var \Symfony\Component\EventDispatcher\EventDispatcherInterface
+   */
+  protected $eventDispatcher;
+
+  /**
    * Cache tags used for caching the repository.
    *
    * @var string[]
@@ -93,12 +101,15 @@ class ResourceTypeRepository implements ResourceTypeRepositoryInterface {
    *   The entity field manager.
    * @param \Drupal\Core\Cache\CacheBackendInterface $cache
    *   The cache backend.
+   * @param \Symfony\Component\EventDispatcher\EventDispatcherInterface $dispatcher
+   *   The event dispatcher.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, EntityTypeBundleInfoInterface $entity_bundle_info, EntityFieldManagerInterface $entity_field_manager, CacheBackendInterface $cache) {
+  public function __construct(EntityTypeManagerInterface $entity_type_manager, EntityTypeBundleInfoInterface $entity_bundle_info, EntityFieldManagerInterface $entity_field_manager, CacheBackendInterface $cache, EventDispatcherInterface $dispatcher) {
     $this->entityTypeManager = $entity_type_manager;
     $this->entityTypeBundleInfo = $entity_bundle_info;
     $this->entityFieldManager = $entity_field_manager;
     $this->cache = $cache;
+    $this->eventDispatcher = $dispatcher;
   }
 
   /**
@@ -139,11 +150,17 @@ class ResourceTypeRepository implements ResourceTypeRepositoryInterface {
    */
   protected function createResourceType(EntityTypeInterface $entity_type, $bundle) {
     $raw_fields = $this->getAllFieldNames($entity_type, $bundle);
+    $internalize_resource_type = $entity_type->isInternal();
+    if (!$internalize_resource_type) {
+      $event = ResourceTypeBuildEvent::createFromEntityTypeAndBundle($entity_type, $bundle);
+      $this->eventDispatcher->dispatch(ResourceTypeBuildEvents::BUILD, $event);
+      $internalize_resource_type = $event->resourceTypeShouldBeDisabled();
+    }
     return new ResourceType(
       $entity_type->id(),
       $bundle,
       $entity_type->getClass(),
-      $entity_type->isInternal(),
+      $internalize_resource_type,
       static::isLocatableResourceType($entity_type, $bundle),
       static::isMutableResourceType($entity_type, $bundle),
       static::isVersionableResourceType($entity_type),

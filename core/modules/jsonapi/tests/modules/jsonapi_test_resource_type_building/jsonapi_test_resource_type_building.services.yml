@@ -1,0 +1,5 @@
+services:
+  jsonapi_test_resource_type_building.build_subscriber:
+    class: Drupal\jsonapi_test_resource_type_building\EventSubscriber\ResourceTypeBuildEventSubscriber
+    tags:
+      - { name: event_subscriber }
