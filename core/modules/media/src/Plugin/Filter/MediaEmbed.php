@@ -5,6 +5,7 @@ namespace Drupal\media\Plugin\Filter;
 use Drupal\Component\Utility\Html;
 use Drupal\Core\Entity\EntityDisplayRepositoryInterface;
 use Drupal\Core\Entity\EntityRepositoryInterface;
+use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Field\Plugin\Field\FieldFormatter\EntityReferenceEntityFormatter;
 use Drupal\Core\Form\FormStateInterface;
@@ -31,6 +32,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *   settings = {
  *     "default_view_mode" = "default",
  *     "allowed_view_modes" = {},
+ *     "allowed_media_types" = {},
  *   },
  *   weight = 100,
  * )
@@ -59,6 +61,13 @@ class MediaEmbed extends FilterBase implements ContainerFactoryPluginInterface, 
    * @var \Drupal\Core\Entity\EntityDisplayRepositoryInterface
    */
   protected $entityDisplayRepository;
+
+  /**
+   * The entity type bundle info service.
+   *
+   * @var \Drupal\Core\Entity\EntityTypeBundleInfoInterface
+   */
+  protected $entityTypeBundleInfo;
 
   /**
    * The renderer.
@@ -101,16 +110,19 @@ class MediaEmbed extends FilterBase implements ContainerFactoryPluginInterface, 
    *   The entity type manager.
    * @param \Drupal\Core\Entity\EntityDisplayRepositoryInterface $entity_display_repository
    *   The entity display repository.
+   * @param \Drupal\Core\Entity\EntityTypeBundleInfoInterface $bundle_info
+   *   The entity type bundle info service.
    * @param \Drupal\Core\Render\RendererInterface $renderer
    *   The renderer.
    * @param \Drupal\Core\Logger\LoggerChannelFactoryInterface $logger_factory
    *   The logger factory.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityRepositoryInterface $entity_repository, EntityTypeManagerInterface $entity_type_manager, EntityDisplayRepositoryInterface $entity_display_repository, RendererInterface $renderer, LoggerChannelFactoryInterface $logger_factory) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityRepositoryInterface $entity_repository, EntityTypeManagerInterface $entity_type_manager, EntityDisplayRepositoryInterface $entity_display_repository, EntityTypeBundleInfoInterface $bundle_info, RendererInterface $renderer, LoggerChannelFactoryInterface $logger_factory) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->entityRepository = $entity_repository;
     $this->entityTypeManager = $entity_type_manager;
     $this->entityDisplayRepository = $entity_display_repository;
+    $this->entityTypeBundleInfo = $bundle_info;
     $this->renderer = $renderer;
     $this->loggerFactory = $logger_factory;
   }
@@ -126,6 +138,7 @@ class MediaEmbed extends FilterBase implements ContainerFactoryPluginInterface, 
       $container->get('entity.repository'),
       $container->get('entity_type.manager'),
       $container->get('entity_display.repository'),
+      $container->get('entity_type.bundle.info'),
       $container->get('renderer'),
       $container->get('logger.factory')
     );
@@ -145,13 +158,26 @@ class MediaEmbed extends FilterBase implements ContainerFactoryPluginInterface, 
       '#description' => $this->t('The view mode that an embedded media item should be displayed in by default. This can be overridden using the <code>data-view-mode</code> attribute.'),
     ];
 
+    $bundles = $this->entityTypeBundleInfo->getBundleInfo('media');
+    $bundle_options = array_map(function ($item) {
+      return $item['label'];
+    }, $bundles);
+    $form['allowed_media_types'] = [
+      '#title' => $this->t('Media types selectable in the Media Library'),
+      '#type' => 'checkboxes',
+      '#options' => $bundle_options,
+      '#default_value' => $this->settings['allowed_media_types'],
+      '#description' => $this->t('If none are selected, all will be allowed.'),
+      '#element_validate' => [[static::class, 'validateOptions']],
+    ];
+
     $form['allowed_view_modes'] = [
       '#title' => $this->t("View modes selectable in the 'Edit media' dialog"),
       '#type' => 'checkboxes',
       '#options' => $view_mode_options,
       '#default_value' => $this->settings['allowed_view_modes'],
       '#description' => $this->t("If two or more view modes are selected, users will be able to update the view mode that an embedded media item should be displayed in after it has been embedded.  If less than two view modes are selected, media will be embedded using the default view mode and no view mode options will appear after a media item has been embedded."),
-      '#element_validate' => [[get_class($this), 'elementValidateAllowedViewModes']],
+      '#element_validate' => [[static::class, 'validateOptions']],
     ];
 
     return $form;
@@ -165,7 +191,7 @@ class MediaEmbed extends FilterBase implements ContainerFactoryPluginInterface, 
    * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   The form state.
    */
-  public static function elementValidateAllowedViewModes(array &$element, FormStateInterface $form_state) {
+  public static function validateOptions(array &$element, FormStateInterface $form_state) {
     // Filters the #value property so only selected values appear in the
     // config.
     $form_state->setValueForElement($element, array_filter($element['#value']));

@@ -117,6 +117,15 @@ class DrupalMediaLibrary extends CKEditorPluginBase implements ContainerFactoryP
     }
 
     $media_type_ids = $this->mediaTypeStorage->getQuery()->execute();
+    if ($editor->hasAssociatedFilterFormat()) {
+      if ($media_embed_filter = $editor->getFilterFormat()->filters()->get('media_embed')) {
+        // Optionally limit the allowed media types based on the MediaEmbed
+        // setting. If the setting is empty, do not limit the options.
+        if (!empty($media_embed_filter->settings['allowed_media_types'])) {
+          $media_type_ids = array_intersect_key($media_type_ids, $media_embed_filter->settings['allowed_media_types']);
+        }
+      }
+    }
 
     if (in_array('image', $media_type_ids, TRUE)) {
       // Due to a bug where the active item styling and the focus styling
