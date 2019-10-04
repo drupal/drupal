@@ -339,7 +339,9 @@ abstract class MediaSourceBase extends PluginBase implements MediaSourceInterfac
    * {@inheritdoc}
    */
   public function prepareViewDisplay(MediaTypeInterface $type, EntityViewDisplayInterface $display) {
-    $display->setComponent($this->getSourceFieldDefinition($type)->getName());
+    $display->setComponent($this->getSourceFieldDefinition($type)->getName(), [
+      'label' => 'visually_hidden',
+    ]);
   }
 
   /**

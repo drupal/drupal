@@ -363,6 +363,11 @@ class MediaTypeForm extends EntityForm {
       }
       if ($source_field->isDisplayConfigurable('view')) {
         $display = $this->entityDisplayRepository->getViewDisplay('media', $media_type->id());
+
+        // Remove all default components.
+        foreach (array_keys($display->getComponents()) as $name) {
+          $display->removeComponent($name);
+        }
         $source->prepareViewDisplay($media_type, $display);
         $display->save();
       }

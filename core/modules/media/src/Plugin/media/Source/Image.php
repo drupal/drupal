@@ -174,7 +174,6 @@ class Image extends File {
     // set an image style.
     $field_name = $this->getSourceFieldDefinition($type)->getName();
     $component = $display->getComponent($field_name);
-    $component['label'] = 'visually_hidden';
     $component['settings']['image_link'] = '';
     $component['settings']['image_style'] = '';
     if ($this->entityTypeManager->getStorage('image_style')->load('large')) {

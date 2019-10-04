@@ -141,8 +141,10 @@ class MediaSourceOEmbedVideoTest extends MediaSourceTestBase {
     $this->assertSame('480', $session->evaluateScript("$inner_frame.getAttribute('width')"));
     $this->assertLessThanOrEqual(240, $session->evaluateScript("$inner_frame.clientWidth"));
 
-    // Make sure the thumbnail is displayed from uploaded image.
-    $assert_session->elementAttributeContains('css', '.image-style-thumbnail', 'src', '/oembed_thumbnails/' . basename($thumbnail));
+    // The oEmbed content iFrame should be visible.
+    $assert_session->elementExists('css', 'iframe.media-oembed-content');
+    // The thumbnail should not be displayed.
+    $assert_session->elementNotExists('css', '.image-style-thumbnail');
 
     // Load the media and check that all fields are properly populated.
     $media = Media::load(1);

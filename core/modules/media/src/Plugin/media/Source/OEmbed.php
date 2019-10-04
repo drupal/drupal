@@ -442,6 +442,7 @@ class OEmbed extends MediaSourceBase implements OEmbedInterface {
   public function prepareViewDisplay(MediaTypeInterface $type, EntityViewDisplayInterface $display) {
     $display->setComponent($this->getSourceFieldDefinition($type)->getName(), [
       'type' => 'oembed',
+      'label' => 'visually_hidden',
     ]);
   }
 

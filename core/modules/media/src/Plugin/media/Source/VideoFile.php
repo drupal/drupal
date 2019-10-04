@@ -33,6 +33,7 @@ class VideoFile extends File {
   public function prepareViewDisplay(MediaTypeInterface $type, EntityViewDisplayInterface $display) {
     $display->setComponent($this->getSourceFieldDefinition($type)->getName(), [
       'type' => 'file_video',
+      'label' => 'visually_hidden',
     ]);
   }
 
