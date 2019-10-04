@@ -72,21 +72,15 @@ class UserPasswordResetTest extends PageCacheTagsTestBase {
 
     // Try to reset the password for an invalid account.
     $this->drupalGet('user/password');
-
-    $edit = ['name' => $this->randomMachineName(32)];
+    $edit = ['name' => $this->randomMachineName()];
     $this->drupalPostForm(NULL, $edit, t('Submit'));
-
-    $this->assertText(t('@name is not recognized as a username or an email address.', ['@name' => $edit['name']]), 'Validation error message shown when trying to request password for invalid account.');
-    $this->assertEqual(count($this->drupalGetMails(['id' => 'user_password_reset'])), 0, 'No email was sent when requesting a password for an invalid account.');
+    $this->assertNoValidPasswordReset($edit['name']);
 
     // Reset the password by username via the password reset page.
-    $edit['name'] = $this->account->getAccountName();
+    $this->drupalGet('user/password');
+    $edit = ['name' => $this->account->getAccountName()];
     $this->drupalPostForm(NULL, $edit, t('Submit'));
-
-    // Verify that the user was sent an email.
-    $this->assertMail('to', $this->account->getEmail(), 'Password email sent to user.');
-    $subject = t('Replacement login information for @username at @site', ['@username' => $this->account->getAccountName(), '@site' => $this->config('system.site')->get('name')]);
-    $this->assertMail('subject', $subject, 'Password reset email subject is correct.');
+    $this->assertValidPasswordReset($edit['name']);
 
     $resetURL = $this->getResetURL();
     $this->drupalGet($resetURL);
@@ -126,11 +120,12 @@ class UserPasswordResetTest extends PageCacheTagsTestBase {
     $this->assertText(t('You have tried to use a one-time login link that has either been used or is no longer valid. Please request a new one using the form below.'), 'One-time link is no longer valid.');
 
     // Request a new password again, this time using the email address.
-    $this->drupalGet('user/password');
     // Count email messages before to compare with after.
     $before = count($this->drupalGetMails(['id' => 'user_password_reset']));
+    $this->drupalGet('user/password');
     $edit = ['name' => $this->account->getEmail()];
     $this->drupalPostForm(NULL, $edit, t('Submit'));
+    $this->assertValidPasswordReset($edit['name']);
     $this->assertTrue(count($this->drupalGetMails(['id' => 'user_password_reset'])) === $before + 1, 'Email sent when requesting password reset using email address.');
 
     // Visit the user edit page without pass-reset-token and make sure it does
@@ -282,6 +277,136 @@ class UserPasswordResetTest extends PageCacheTagsTestBase {
     // Ensure the name field value is not cached.
     $this->drupalGet('user/password');
     $this->assertNoFieldByName('name', $edit['name'], 'User name not found.');
+  }
+
+  /**
+   * Tests password reset flood control for one user.
+   */
+  public function testUserResetPasswordUserFloodControl() {
+    \Drupal::configFactory()->getEditable('user.flood')
+      ->set('user_limit', 3)
+      ->save();
+
+    $edit = ['name' => $this->account->getAccountName()];
+
+    // Try 3 requests that should not trigger flood control.
+    for ($i = 0; $i < 3; $i++) {
+      $this->drupalGet('user/password');
+      $this->drupalPostForm(NULL, $edit, t('Submit'));
+      $this->assertValidPasswordReset($edit['name']);
+      $this->assertNoPasswordUserFlood();
+    }
+
+    // The next request should trigger flood control.
+    $this->drupalGet('user/password');
+    $this->drupalPostForm(NULL, $edit, t('Submit'));
+    $this->assertPasswordUserFlood();
+  }
+
+  /**
+   * Tests password reset flood control for one IP.
+   */
+  public function testUserResetPasswordIpFloodControl() {
+    \Drupal::configFactory()->getEditable('user.flood')
+      ->set('ip_limit', 3)
+      ->save();
+
+    // Try 3 requests that should not trigger flood control.
+    for ($i = 0; $i < 3; $i++) {
+      $this->drupalGet('user/password');
+      $edit = ['name' => $this->randomMachineName()];
+      $this->drupalPostForm(NULL, $edit, t('Submit'));
+      // Because we're testing with a random name, the password reset will not be valid.
+      $this->assertNoValidPasswordReset($edit['name']);
+      $this->assertNoPasswordIpFlood();
+    }
+
+    // The next request should trigger flood control.
+    $this->drupalGet('user/password');
+    $edit = ['name' => $this->randomMachineName()];
+    $this->drupalPostForm(NULL, $edit, t('Submit'));
+    $this->assertPasswordIpFlood();
+  }
+
+  /**
+   * Tests user password reset flood control is cleared on successful reset.
+   */
+  public function testUserResetPasswordUserFloodControlIsCleared() {
+    \Drupal::configFactory()->getEditable('user.flood')
+      ->set('user_limit', 3)
+      ->save();
+
+    $edit = ['name' => $this->account->getAccountName()];
+
+    // Try 3 requests that should not trigger flood control.
+    for ($i = 0; $i < 3; $i++) {
+      $this->drupalGet('user/password');
+      $this->drupalPostForm(NULL, $edit, t('Submit'));
+      $this->assertValidPasswordReset($edit['name']);
+      $this->assertNoPasswordUserFlood();
+    }
+
+    // Use the last password reset URL which was generated.
+    $reset_url = $this->getResetURL();
+    $this->drupalGet($reset_url . '/login');
+    $this->assertLink(t('Log out'));
+    $this->assertTitle(t('@name | @site', ['@name' => $this->account->getAccountName(), '@site' => $this->config('system.site')->get('name')]), 'Logged in using password reset link.');
+    $this->drupalLogout();
+
+    // The next request should *not* trigger flood control, since a successful
+    // password reset should have cleared flood events for this user.
+    $this->drupalGet('user/password');
+    $this->drupalPostForm(NULL, $edit, t('Submit'));
+    $this->assertValidPasswordReset($edit['name']);
+    $this->assertNoPasswordUserFlood();
+  }
+
+  /**
+   * Helper function to make assertions about a valid password reset.
+   */
+  public function assertValidPasswordReset($name) {
+    // Make sure the error text is not displayed and email sent.
+    $this->assertNoText(t('Sorry, @name is not recognized as a username or an e-mail address.', ['@name' => $name]), 'Validation error message shown when trying to request password for invalid account.');
+    $this->assertMail('to', $this->account->getEmail(), 'Password e-mail sent to user.');
+    $subject = t('Replacement login information for @username at @site', ['@username' => $this->account->getAccountName(), '@site' => \Drupal::config('system.site')->get('name')]);
+    $this->assertMail('subject', $subject, 'Password reset e-mail subject is correct.');
+  }
+
+  /**
+   * Helper function to make assertions about an invalid password reset.
+   */
+  public function assertNoValidPasswordReset($name) {
+    // Make sure the error text is displayed and no email sent.
+    $this->assertText(t('@name is not recognized as a username or an email address.', ['@name' => $name]), 'Validation error message shown when trying to request password for invalid account.');
+    $this->assertEqual(count($this->drupalGetMails(['id' => 'user_password_reset'])), 0, 'No e-mail was sent when requesting a password for an invalid account.');
+  }
+
+  /**
+   * Helper function to make assertions about a password reset triggering user flood cotrol.
+   */
+  public function assertPasswordUserFlood() {
+    $this->assertText(t('Too many password recovery requests for this account. It is temporarily blocked. Try again later or contact the site administrator.'), 'User password reset flood error message shown.');
+  }
+
+  /**
+   * Helper function to make assertions about a password reset not triggering user flood control.
+   */
+  public function assertNoPasswordUserFlood() {
+    $this->assertNoText(t('Too many password recovery requests for this account. It is temporarily blocked. Try again later or contact the site administrator.'), 'User password reset flood error message not shown.');
+  }
+
+  /**
+   * Helper function to make assertions about a password reset triggering IP flood cotrol.
+   */
+  public function assertPasswordIpFlood() {
+    $this->assertText(t('Too many password recovery requests from your IP address. It is temporarily blocked. Try again later or contact the site administrator.'), 'IP password reset flood error message shown.');
+  }
+
+  /**
+   * Helper function to make assertions about a password reset not triggering IP flood control.
+   */
+  public function assertNoPasswordIpFlood() {
+    $this->assertNoText(t('Too many password recovery requests from your IP address. It is temporarily blocked. Try again later or contact the site administrator.'), 'IP password reset flood error message not shown.');
   }
 
   /**
