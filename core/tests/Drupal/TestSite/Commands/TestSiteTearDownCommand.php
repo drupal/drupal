@@ -63,6 +63,8 @@ class TestSiteTearDownCommand extends Command {
     }
 
     $output->writeln("<info>Successfully uninstalled $db_prefix test site</info>");
+
+    return 0;
   }
 
   /**

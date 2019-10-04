@@ -42,6 +42,7 @@ class DbImportCommand extends DbCommandBase {
     $connection = $this->getDatabaseConnection($input);
     $this->runScript($connection, $script);
     $output->writeln('Import completed successfully.');
+    return 0;
   }
 
   /**

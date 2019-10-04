@@ -66,6 +66,8 @@ class TestSiteUserLoginCommand extends Command {
       ->load($uid);
     $url = user_pass_reset_url($userEntity) . '/login';
     $output->writeln($url);
+
+    return 0;
   }
 
 }

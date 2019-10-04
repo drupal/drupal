@@ -114,6 +114,8 @@ class TestSiteInstallCommand extends Command {
         ['Site path', $this->siteDirectory],
       ]);
     }
+
+    return 0;
   }
 
   /**

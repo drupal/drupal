@@ -129,6 +129,7 @@ class DbCommandBaseTester extends DbCommandBase {
    */
   protected function execute(InputInterface $input, OutputInterface $output) {
     // Empty implementation for testing.
+    return 0;
   }
 
 }

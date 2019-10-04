@@ -47,6 +47,7 @@ EOT
   protected function execute(InputInterface $input, OutputInterface $output) {
     $handler = new Handler($this->getComposer(), $this->getIO());
     $handler->scaffold();
+    return 0;
   }
 
 }

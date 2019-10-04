@@ -60,6 +60,7 @@ class DbDumpCommand extends DbCommandBase {
     $schema_tables = explode(',', $schema_tables);
 
     $output->writeln($this->generateScript($connection, $schema_tables), OutputInterface::OUTPUT_RAW);
+    return 0;
   }
 
   /**
