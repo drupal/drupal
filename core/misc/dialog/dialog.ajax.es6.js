@@ -65,19 +65,7 @@
         '.form-actions input[type=submit], .form-actions a.button',
       );
       $buttons.each(function() {
-        // Hidden form buttons need special attention. For browser consistency,
-        // the button needs to be "visible" in order to have the enter key fire
-        // the form submit event. So instead of a simple "hide" or
-        // "display: none", we set its dimensions to zero.
-        // See http://mattsnider.com/how-forms-submit-when-pressing-enter/
-        const $originalButton = $(this).css({
-          display: 'block',
-          width: 0,
-          height: 0,
-          padding: 0,
-          border: 0,
-          overflow: 'hidden',
-        });
+        const $originalButton = $(this).css({ display: 'none' });
         buttons.push({
           text: $originalButton.html() || $originalButton.attr('value'),
           class: $originalButton.attr('class'),
