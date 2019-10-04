@@ -4,6 +4,7 @@ namespace Drupal\Tests\rest\Unit;
 
 use Drupal\Core\Entity\EntityConstraintViolationList;
 use Drupal\node\Entity\Node;
+use Drupal\rest\Plugin\rest\resource\EntityResourceValidationTrait;
 use Drupal\Tests\UnitTestCase;
 use Drupal\user\Entity\User;
 use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
@@ -19,7 +20,7 @@ class EntityResourceValidationTraitTest extends UnitTestCase {
    * @covers ::validate
    */
   public function testValidate() {
-    $trait = $this->getMockForTrait('Drupal\rest\Plugin\rest\resource\EntityResourceValidationTrait');
+    $trait = new EntityResourceValidationTraitTestClass();
 
     $method = new \ReflectionMethod($trait, 'validate');
     $method->setAccessible(TRUE);
@@ -59,7 +60,7 @@ class EntityResourceValidationTraitTest extends UnitTestCase {
 
     $entity->validate()->willReturn($violations);
 
-    $trait = $this->getMockForTrait('Drupal\rest\Plugin\rest\resource\EntityResourceValidationTrait');
+    $trait = new EntityResourceValidationTraitTestClass();
 
     $method = new \ReflectionMethod($trait, 'validate');
     $method->setAccessible(TRUE);
@@ -68,5 +69,17 @@ class EntityResourceValidationTraitTest extends UnitTestCase {
 
     $method->invoke($trait, $entity->reveal());
   }
+
+}
+
+/**
+ * A test class to use to test EntityResourceValidationTrait.
+ *
+ * Using ->getMockForTrait is problematic, as this trait is marked internal.
+ * Because the mock doesn't use the \Drupal namespace, the Symfony 4+ class
+ * loader will throw a deprecation error.
+ */
+class EntityResourceValidationTraitTestClass {
+  use EntityResourceValidationTrait;
 
 }
