@@ -501,7 +501,7 @@ class ResourceType {
 
     /** @var \Drupal\Core\Entity\EntityFieldManagerInterface $entity_field_manager */
     $entity_type_manager = \Drupal::service('entity_type.manager');
-    $is_fieldable = $entity_type_manager->getDefinition($entity_type_manager)->entityClassImplements(FieldableEntityInterface::class);
+    $is_fieldable = $entity_type_manager->getDefinition($entity_type_id)->entityClassImplements(FieldableEntityInterface::class);
     $field_definitions = $is_fieldable
       ? \Drupal::service('entity_field.manager')->getFieldDefinitions($entity_type_id, $bundle)
       : [];
