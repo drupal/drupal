@@ -47,8 +47,9 @@
   position: relative;
 }
 
-.media-library-item .js-click-to-select-trigger {
+.media-library-item .click-to-select-trigger {
   overflow: hidden;
+  height: 100%;
   cursor: pointer;
 }
 

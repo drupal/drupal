@@ -115,10 +115,23 @@ function media_library_preprocess_media(&$variables) {
       'language' => $media->language(),
     ]);
     $variables['preview_attributes'] = new Attribute();
-    $variables['preview_attributes']->addClass('media-library-item__preview', 'js-media-library-item-preview', 'js-click-to-select-trigger');
+    $variables['preview_attributes']->addClass('media-library-item__preview', 'js-media-library-item-preview');
     $variables['metadata_attributes'] = new Attribute();
     $variables['metadata_attributes']->addClass('media-library-item__attributes');
     $variables['status'] = $media->isPublished();
+  }
+}
+
+/**
+ * Implements hook_preprocess_views_view_fields().
+ */
+function media_library_preprocess_views_view_fields(&$variables) {
+  // Add classes to media rendered entity field so it can be targeted for
+  // styling and JavaScript mouseover and click events.
+  if ($variables['view']->id() === 'media_library' && isset($variables['fields']['rendered_entity'])) {
+    if (isset($variables['fields']['rendered_entity']->wrapper_attributes)) {
+      $variables['fields']['rendered_entity']->wrapper_attributes->addClass('js-click-to-select-trigger click-to-select-trigger');
+    }
   }
 }
 
