@@ -30,7 +30,7 @@ class HelpTopicTwigTest extends UnitTestCase {
    *
    * @var array
    */
-  protected const PLUGIN_INFORMATION = [
+  const PLUGIN_INFORMATION = [
     'id' => 'test.topic',
     'provider' => 'test',
     'label' => 'This is the topic label',
