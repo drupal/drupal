@@ -67,15 +67,6 @@
     }
   }
 
-  Drupal.theme.mediaEmbedError = function () {
-    var error = Drupal.t('An error occurred while trying to preview the media. Please save your work and reload this page.');
-    return '<div class="media-embed-error media-embed-error--preview-error">' + error + '</div>';
-  };
-
-  Drupal.theme.mediaEmbedEditButton = function () {
-    return '<button class="media-library-item__edit">' + Drupal.t('Edit media') + '</button>';
-  };
-
   CKEDITOR.plugins.add('drupalmedia', {
     requires: 'widget',
 
@@ -329,7 +320,7 @@
               callback(_this3);
             },
             error: function error() {
-              _this3.element.setHtml(Drupal.theme('mediaEmbedError'));
+              _this3.element.setHtml(Drupal.theme('mediaEmbedPreviewError'));
             }
           });
         }

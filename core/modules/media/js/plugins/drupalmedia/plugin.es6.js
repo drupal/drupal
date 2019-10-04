@@ -83,31 +83,6 @@
     }
   }
 
-  /**
-   * Themes the error displayed when the media embed preview fails.
-   *
-   * @return {string}
-   *   An HTML string to insert in the CKEditor.
-   */
-  Drupal.theme.mediaEmbedError = function() {
-    const error = Drupal.t(
-      'An error occurred while trying to preview the media. Please save your work and reload this page.',
-    );
-    return `<div class="media-embed-error media-embed-error--preview-error">${error}</div>`;
-  };
-
-  /**
-   * Themes the edit button for a media embed.
-   *
-   * @return {string}
-   *   An HTML string to insert in the CKEditor.
-   */
-  Drupal.theme.mediaEmbedEditButton = function() {
-    return `<button class="media-library-item__edit">${Drupal.t(
-      'Edit media',
-    )}</button>`;
-  };
-
   CKEDITOR.plugins.add('drupalmedia', {
     requires: 'widget',
 
@@ -506,7 +481,7 @@
               callback(this);
             },
             error: () => {
-              this.element.setHtml(Drupal.theme('mediaEmbedError'));
+              this.element.setHtml(Drupal.theme('mediaEmbedPreviewError'));
             },
           });
         },

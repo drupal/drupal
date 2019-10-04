@@ -97,3 +97,14 @@ user:
   css:
     component:
       css/components/user.css: { weight: -10 }
+
+media_embed_error:
+  version: VERSION
+  css:
+    component:
+      css/components/media-embed-error.css: {}
+
+media_embed_ckeditor_theme:
+  version: VERSION
+  js:
+    js/media_embed_ckeditor.theme.js: {}

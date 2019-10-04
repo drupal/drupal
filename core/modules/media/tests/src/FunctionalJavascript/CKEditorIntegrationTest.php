@@ -187,10 +187,12 @@ class CKEditorIntegrationTest extends WebDriverTestBase {
   /**
    * Tests that failed media embed preview requests inform the end user.
    */
-  public function testPreviewFailure() {
+  public function testErrorMessages() {
     // Assert that a request to the `media.filter.preview` route that does not
     // result in a 200 response (due to server error or network error) is
     // handled in the JavaScript by displaying the expected error message.
+    // @see core/modules/media/js/media_embed_ckeditor.theme.js
+    // @see core/modules/media/js/plugins/drupalmedia/plugin.js
     $this->container->get('state')->set('test_media_filter_controller_throw_error', TRUE);
     $this->drupalGet($this->host->toUrl('edit-form'));
     $this->waitForEditor();
@@ -199,9 +201,7 @@ class CKEditorIntegrationTest extends WebDriverTestBase {
     $assert_session = $this->assertSession();
     $this->assertEmpty($assert_session->waitForElementVisible('css', 'img[src*="image-test.png"]', 1000));
     $assert_session->elementNotExists('css', 'figure');
-    $error_message = $assert_session->elementExists('css', '.media-embed-error.media-embed-error--preview-error')
-      ->getText();
-    $this->assertSame('An error occurred while trying to preview the media. Please save your work and reload this page.', $error_message);
+    $this->assertNotEmpty($assert_session->waitForText('An error occurred while trying to preview the media. Please save your work and reload this page.'));
     // Now assert that the error doesn't appear when the override to force an
     // error is removed.
     $this->container->get('state')->set('test_media_filter_controller_throw_error', FALSE);
@@ -210,6 +210,48 @@ class CKEditorIntegrationTest extends WebDriverTestBase {
     $this->assignNameToCkeditorIframe();
     $this->getSession()->switchToIFrame('ckeditor');
     $this->assertNotEmpty($assert_session->waitForElementVisible('css', 'img[src*="image-test.png"]'));
+
+    // There's a second kind of error message that comes from the back end
+    // that happens when the media uuid can't be converted to a media preview.
+    // In this case, the error will appear in a the themable
+    // media-embed-error.html template.  We have a hook altering the css
+    // classes to test the twi template is working properly and picking up our
+    // extra class.
+    // @see \Drupal\media\Plugin\Filter\MediaEmbed::renderMissingMediaIndicator()
+    // @see core/modules/media/templates/media-embed-error.html.twig
+    // @see media_test_ckeditor_preprocess_media_embed_error()
+    $original_value = $this->host->body->value;
+    $this->host->body->value = str_replace($this->media->uuid(), 'invalid_uuid', $original_value);
+    $this->host->save();
+    $this->drupalGet($this->host->toUrl('edit-form'));
+    $this->waitForEditor();
+    $this->assignNameToCkeditorIframe();
+    $this->getSession()->switchToIFrame('ckeditor');
+    $this->assertNotEmpty($assert_session->waitForElement('css', 'drupal-media figure.caption-drupal-media .this-error-message-is-themeable'));
+
+    // Test when using the classy theme, an additional class is added in
+    // classy/templates/content/media-embed-error.html.twig.
+    $this->assertTrue($this->container->get('theme_installer')->install(['classy']));
+    $this->config('system.theme')
+      ->set('default', 'classy')
+      ->save();
+    $this->drupalGet($this->host->toUrl('edit-form'));
+    $this->waitForEditor();
+    $this->assignNameToCkeditorIframe();
+    $this->getSession()->switchToIFrame('ckeditor');
+    $this->assertNotEmpty($assert_session->waitForElement('css', 'drupal-media figure.caption-drupal-media .this-error-message-is-themeable.media-embed-error--missing-source'));
+    $assert_session->responseContains('classy/css/components/media-embed-error.css');
+
+    // Test that restoring a valid UUID results in the media embed preview
+    // displaying.
+    $this->host->body->value = $original_value;
+    $this->host->save();
+    $this->drupalGet($this->host->toUrl('edit-form'));
+    $this->waitForEditor();
+    $this->assignNameToCkeditorIframe();
+    $this->getSession()->switchToIFrame('ckeditor');
+    $this->assertNotEmpty($assert_session->waitForElementVisible('css', 'img[src*="image-test.png"]'));
+    $assert_session->elementNotExists('css', 'drupal-media figure.caption-drupal-media .this-error-message-is-themeable');
   }
 
   /**

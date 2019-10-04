@@ -82,6 +82,12 @@ function media_theme() {
         'placeholder_token' => '',
       ],
     ],
+    'media_embed_error' => [
+      'variables' => [
+        'message' => NULL,
+        'attributes' => [],
+      ],
+    ],
   ];
 }
 

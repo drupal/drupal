@@ -32,8 +32,9 @@ filter.caption:
   dependencies:
     - filter/caption
 
-media_embed:
+media_embed_ckeditor_theme:
   version: VERSION
-  css:
-    component:
-      css/filter.media_embed.css: {}
+  js:
+    js/media_embed_ckeditor.theme.js: {}
+  dependencies:
+    - core/drupal

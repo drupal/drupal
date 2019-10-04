@@ -263,25 +263,11 @@ class MediaEmbed extends FilterBase implements ContainerFactoryPluginInterface, 
    *
    * @return array
    *   A render array.
-   *
-   * @todo Make this themeable in https://www.drupal.org/project/drupal/issues/3071713
    */
   protected function renderMissingMediaIndicator() {
     return [
-      '#type' => 'html_tag',
-      '#tag' => 'div',
-      '#value' => $this->t('The referenced media source is missing and needs to be re-embedded.'),
-      '#attached' => [
-        'library' => [
-          'media/media_embed',
-        ],
-      ],
-      '#attributes' => [
-        'class' => [
-          'media-embed-error',
-          'media-embed-error--missing-source',
-        ],
-      ],
+      '#theme' => 'media_embed_error',
+      '#message' => $this->t('The referenced media source is missing and needs to be re-embedded.'),
     ];
   }
 

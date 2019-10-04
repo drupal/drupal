@@ -23,3 +23,8 @@ libraries-extend:
     - classy/file
   core/drupal.progress:
     - classy/progress
+  media/media_embed_ckeditor_theme:
+    - classy/media_embed_ckeditor_theme
+
+ckeditor_stylesheets:
+  - css/components/media-embed-error.css

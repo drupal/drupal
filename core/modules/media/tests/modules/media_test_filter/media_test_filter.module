@@ -23,3 +23,10 @@ function media_test_filter_entity_access(EntityInterface $entity, $operation, Ac
 function media_test_filter_entity_view_alter(&$build, EntityInterface $entity, EntityViewDisplayInterface $display) {
   $build['#attributes']['data-media-embed-test-view-mode'] = $display->getMode();
 }
+
+/**
+ * Implements hook_preprocess_HOOK().
+ */
+function media_test_filter_preprocess_media_embed_error(&$variables) {
+  $variables['attributes']['class'][] = 'this-error-message-is-themeable';
+}

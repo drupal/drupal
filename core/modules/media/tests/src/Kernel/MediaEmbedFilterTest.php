@@ -292,17 +292,14 @@ class MediaEmbedFilterTest extends MediaEmbedFilterTestBase {
       $this->assertCount(1, $this->cssSelect('div[data-media-embed-test-view-mode="foobar"]'));
       $this->embeddedEntity->delete();
     }
-
     $result = $this->processText($content, 'en', $filter_ids);
     $this->setRawContent($result->getProcessedText());
     $this->assertCount(0, $this->cssSelect('div[data-media-embed-test-view-mode="foobar"]'));
-    $this->assertCount(1, $this->cssSelect('div.media-embed-error'));
-    $error_element = $this->cssSelect('div.media-embed-error')[0];
-    $expected_class = 'media-embed-error media-embed-error--missing-source';
+    $this->assertCount(1, $this->cssSelect('div.this-error-message-is-themeable'));
     if (in_array('filter_align', $filter_ids, TRUE) && !empty($additional_attributes['data-align'])) {
-      $expected_class .= ' align-' . $additional_attributes['data-align'];
+      $this->assertCount(1, $this->cssSelect('div.align-' . $additional_attributes['data-align']));
     }
-    $this->assertSame($expected_class, (string) $error_element['class']);
+
   }
 
   /**
