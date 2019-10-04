@@ -1,5 +1,8 @@
-<meta name="help_topic:label" content="Defining how user accounts are created"/>
-<meta name="help_topic:related" content="core.security"/>
+---
+label: 'Defining how user accounts are created'
+related:
+  - core.security
+---
 {% set account_settings_url = render_var(url('entity.user.admin_form')) %}
 <p>{% trans %}On the <a href="{{ account_settings_url }}"><em>Account settings</em></a> page, which you can reach from the <em>Manage</em> administrative menu, by navigating to <em>Configuration</em> &gt; <em>People</em> &gt; <em>Account settings</em> (requires the <em>Administer account settings</em> permission), you can configure several settings related to how user accounts are created:{% endtrans %}</p>
 <ul>

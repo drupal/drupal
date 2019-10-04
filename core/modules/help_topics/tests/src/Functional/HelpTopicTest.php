@@ -196,12 +196,7 @@ class HelpTopicTest extends BrowserTestBase {
     // Verify theme provided help topics work and can be related.
     $this->drupalGet('admin/help/topic/help_topics_test_theme.test');
     $session->pageTextContains('This is a theme provided topic.');
-    // Use the article element to provide a positive assertion to improve the
-    // assertion that the help html does not contain meta tags.
     $this->assertContains('This is a theme provided topic.', $session->elementExists('css', 'article')->getText());
-    // Ensure that meta tags containing plugin information do not appear on
-    // topic pages
-    $session->elementNotExists('css', 'article meta');
     $this->clickLink('Additional topic');
     $session->linkExists('XYZ Help Test theme');
 

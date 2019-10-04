@@ -17,18 +17,20 @@ use Drupal\Core\Plugin\Discovery\ContainerDerivativeDiscoveryDecorator;
  * help_topics. The provider is validated to be the extension that provides the
  * help topic.
  *
- * The Twig file must contain a meta tag named 'help_topic:label'. It can also
- * contain meta tags named 'help_topic:top_level' and 'help_topic:related'. For
- * example:
+ * The Twig file must contain YAML front matter with a key named 'label'. It can
+ * also contain keys named 'top_level' and 'related'. For example:
  * @code
- * <!–– The label/title of the topic. -->
- * <meta name="help_topic:label" content="Configuring error responses, including 403/404 pages"/>
+ * ---
+ * label: 'Configuring error responses, including 403/404 pages'
  *
- * <!–– Related help topics in a comma separated help topic ID list. -->
- * <meta name="help_topic:related" content="core.config_basic,core.maintenance"/>
+ * # Related help topics in an array.
+ * related:
+ *   - core.config_basic
+ *   - core.maintenance
  *
- * <!–– If present then the help topic will appear on admin/help. -->
- * <meta name="help_topic:top_level"/>
+ * # If the value is true then the help topic will appear on admin/help.
+ * top_level: true
+ * ---
  * @endcode
  *
  * In addition, modules wishing to add plugins can define them in a

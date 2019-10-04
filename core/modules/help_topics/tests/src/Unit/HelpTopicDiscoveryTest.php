@@ -41,7 +41,7 @@ class HelpTopicDiscoveryTest extends UnitTestCase {
   /**
    * @covers ::findAll
    */
-  public function testDiscoveryExceptionMissingLabelMetaTag() {
+  public function testDiscoveryExceptionMissingLabel() {
     vfsStream::setup('root');
 
     vfsStream::create([
@@ -57,21 +57,20 @@ class HelpTopicDiscoveryTest extends UnitTestCase {
     $discovery = new HelpTopicDiscovery(['test' => vfsStream::url('root/modules/test/help_topics')]);
 
     $this->expectException(DiscoveryException::class);
-    $this->expectExceptionMessage("vfs://root/modules/test/help_topics/test.topic.html.twig does not contain the required meta tag with name='help_topic:label'");
+    $this->expectExceptionMessage("vfs://root/modules/test/help_topics/test.topic.html.twig does not contain the required key with name='label'");
     $discovery->getDefinitions();
   }
 
   /**
    * @covers ::findAll
    */
-  public function testDiscoveryExceptionInvalidMetaTag() {
+  public function testDiscoveryExceptionInvalidYamlKey() {
     vfsStream::setup('root');
-    // Note a blank line is required after the last meta tag otherwise the last
-    // meta tag is not parsed.
     $topic_content = <<<EOF
-<meta name="help_topic:label" content="A label"/>
-<meta name="help_topic:foo" content="bar"/>
-
+---
+label: 'A label'
+foo: bar
+---
 EOF;
 
     vfsStream::create([
@@ -86,7 +85,7 @@ EOF;
     $discovery = new HelpTopicDiscovery(['test' => vfsStream::url('root/modules/test/help_topics')]);
 
     $this->expectException(DiscoveryException::class);
-    $this->expectExceptionMessage("vfs://root/modules/test/help_topics/test.topic.html.twig contains invalid meta tag with name='foo'");
+    $this->expectExceptionMessage("vfs://root/modules/test/help_topics/test.topic.html.twig contains invalid key='foo'");
     $discovery->getDefinitions();
   }
 
@@ -95,12 +94,11 @@ EOF;
    */
   public function testDiscoveryExceptionInvalidTopLevel() {
     vfsStream::setup('root');
-    // Note a blank line is required after the last meta tag otherwise the last
-    // meta tag is not parsed.
     $topic_content = <<<EOF
-<meta name="help_topic:label" content="A label"/>
-<meta name="help_topic:top_level" content="bar"/>
-
+---
+label: 'A label'
+top_level: bar
+---
 EOF;
 
     vfsStream::create([
@@ -115,7 +113,35 @@ EOF;
     $discovery = new HelpTopicDiscovery(['test' => vfsStream::url('root/modules/test/help_topics')]);
 
     $this->expectException(DiscoveryException::class);
-    $this->expectExceptionMessage("vfs://root/modules/test/help_topics/test.topic.html.twig contains invalid meta tag with name='help_topic:top_level', the 'content' property should not exist");
+    $this->expectExceptionMessage("vfs://root/modules/test/help_topics/test.topic.html.twig contains invalid value for 'top_level' key, the value must be a Boolean");
+    $discovery->getDefinitions();
+  }
+
+  /**
+   * @covers ::findAll
+   */
+  public function testDiscoveryExceptionInvalidRelated() {
+    vfsStream::setup('root');
+    $topic_content = <<<EOF
+---
+label: 'A label'
+related: "one, two"
+---
+EOF;
+
+    vfsStream::create([
+      'modules' => [
+        'test' => [
+          'help_topics' => [
+            'test.topic.html.twig' => $topic_content,
+          ],
+        ],
+      ],
+    ]);
+    $discovery = new HelpTopicDiscovery(['test' => vfsStream::url('root/modules/test/help_topics')]);
+
+    $this->expectException(DiscoveryException::class);
+    $this->expectExceptionMessage("vfs://root/modules/test/help_topics/test.topic.html.twig contains invalid value for 'related' key, the value must be an array of strings");
     $discovery->getDefinitions();
   }
 
@@ -125,7 +151,9 @@ EOF;
   public function testHelpTopicsExtensionProviderSpecialCase() {
     vfsStream::setup('root');
     $topic_content = <<<EOF
-<meta name="help_topic:label" content="Test"/>
+---
+label: Test
+---
 <h2>Test</h2>
 EOF;
 
@@ -145,6 +173,33 @@ EOF;
   /**
    * @covers ::findAll
    */
+  public function testHelpTopicsBrokenYaml() {
+    vfsStream::setup('root');
+    $topic_content = <<<EOF
+---
+foo : [bar}
+---
+<h2>Test</h2>
+EOF;
+
+    vfsStream::create([
+      'modules' => [
+        'help_topics' => [
+          'help_topics' => [
+            'core.topic.html.twig' => $topic_content,
+          ],
+        ],
+      ],
+    ]);
+    $discovery = new HelpTopicDiscovery(['help_topics' => vfsStream::url('root/modules/help_topics/help_topics')]);
+    $this->expectException(DiscoveryException::class);
+    $this->expectExceptionMessage("Malformed YAML in help topic \"vfs://root/modules/help_topics/help_topics/core.topic.html.twig\":");
+    $discovery->getDefinitions();
+  }
+
+  /**
+   * @covers ::findAll
+   */
   public function testHelpTopicsDefinition() {
     $container = new ContainerBuilder();
     $container->set('string_translation', $this->getStringTranslationStub());
@@ -152,9 +207,14 @@ EOF;
 
     vfsStream::setup('root');
     $topic_content = <<<EOF
-<meta name="help_topic:label" content="Test"/>
-<meta name="help_topic:top_level"/>
-<meta name="help_topic:related" content="one, two ,three"/>
+---
+label: 'Test'
+top_level: true
+related:
+  - one
+  - two
+  - three
+---
 <h2>Test</h2>
 EOF;
 

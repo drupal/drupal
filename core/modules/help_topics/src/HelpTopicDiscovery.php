@@ -7,6 +7,8 @@ use Drupal\Component\FileCache\FileCacheFactory;
 use Drupal\Component\FileSystem\RegexDirectoryIterator;
 use Drupal\Component\Plugin\Discovery\DiscoveryInterface;
 use Drupal\Component\Plugin\Discovery\DiscoveryTrait;
+use Drupal\Component\Serialization\Exception\InvalidDataTypeException;
+use Drupal\Core\Serialization\Yaml;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 
 /**
@@ -113,29 +115,37 @@ class HelpTopicDiscovery implements DiscoveryInterface {
           static::FILE_KEY => $file,
         ];
 
-        // Get the rest of the plugin definition from meta tags contained in the
-        // help topic Twig file.
-        foreach (get_meta_tags($file) as $key => $value) {
-          $key = substr($key, 11);
+        // Get the rest of the plugin definition from front matter contained in
+        // the help topic Twig file.
+        try {
+          $front_matter = FrontMatter::load(file_get_contents($file), Yaml::class)->getData();
+        }
+        catch (InvalidDataTypeException $e) {
+          throw new DiscoveryException(sprintf('Malformed YAML in help topic "%s": %s.', $file, $e->getMessage()));
+        }
+        foreach ($front_matter as $key => $value) {
           switch ($key) {
             case 'related':
-              $data[$key] = array_map('trim', explode(',', $value));
+              if (!is_array($value)) {
+                throw new DiscoveryException("$file contains invalid value for 'related' key, the value must be an array of strings");
+              }
+              $data[$key] = $value;
               break;
             case 'top_level':
-              $data[$key] = TRUE;
-              if ($value !== '') {
-                throw new DiscoveryException("$file contains invalid meta tag with name='help_topic:top_level', the 'content' property should not exist");
+              if (!is_bool($value)) {
+                throw new DiscoveryException("$file contains invalid value for 'top_level' key, the value must be a Boolean");
               }
+              $data[$key] = $value;
               break;
             case 'label':
               $data[$key] = new TranslatableMarkup($value);
               break;
             default:
-              throw new DiscoveryException("$file contains invalid meta tag with name='$key'");
+              throw new DiscoveryException("$file contains invalid key='$key'");
           }
         }
         if (!isset($data['label'])) {
-          throw new DiscoveryException("$file does not contain the required meta tag with name='help_topic:label'");
+          throw new DiscoveryException("$file does not contain the required key with name='label'");
         }
 
         $all[$provider][$data['id']] = $data;

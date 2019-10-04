@@ -5,6 +5,7 @@ namespace Drupal\Tests\help_topics\Unit;
 use Drupal\help_topics\HelpTopicTwigLoader;
 use Drupal\Tests\UnitTestCase;
 use org\bovigo\vfs\vfsStream;
+use Twig\Error\LoaderError;
 
 /**
  * Unit test for the HelpTopicTwigLoader class.
@@ -52,6 +53,24 @@ class HelpTopicTwigLoaderTest extends UnitTestCase {
   }
 
   /**
+   * @covers ::getSourceContext
+   */
+  public function testGetSourceContext() {
+    $source = $this->helpLoader->getSourceContext('@' . HelpTopicTwigLoader::MAIN_NAMESPACE . '/test.topic.html.twig');
+    $this->assertEquals('{% line 4 %}<h2>Test</h2>', $source->getCode());
+  }
+
+  /**
+   * @covers ::getSourceContext
+   */
+  public function testGetSourceContextException() {
+    $this->expectException(LoaderError::class);
+    $this->expectExceptionMessage("Malformed YAML in help topic \"vfs://root/modules/test/help_topics/test.invalid_yaml.html.twig\":");
+
+    $source = $this->helpLoader->getSourceContext('@' . HelpTopicTwigLoader::MAIN_NAMESPACE . '/test.invalid_yaml.html.twig');
+  }
+
+  /**
    * Creates a mock module or theme handler class for the test.
    *
    * @param string $type
@@ -86,9 +105,22 @@ class HelpTopicTwigLoaderTest extends UnitTestCase {
    * Sets up the virtual file system.
    */
   protected function setUpVfs() {
+    $content = <<<EOF
+---
+label: Test
+---
+<h2>Test</h2>
+EOF;
+    $invalid_content = <<<EOF
+---
+foo : [bar}
+---
+<h2>Test</h2>
+EOF;
     $help_topics_dir = [
       'help_topics' => [
-        'test.topic.html.twig' => '',
+        'test.topic.html.twig' => $content,
+        'test.invalid_yaml.html.twig' => $invalid_content,
       ],
     ];
 

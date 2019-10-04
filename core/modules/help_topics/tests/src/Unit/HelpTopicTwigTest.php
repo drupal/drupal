@@ -65,7 +65,7 @@ class HelpTopicTwigTest extends UnitTestCase {
    * @covers ::isTopLevel
    * @covers ::getRelated
    */
-  public function testMeta() {
+  public function testDefinition() {
     $this->assertEquals($this->helpTopic->getProvider(),
       self::PLUGIN_INFORMATION['provider']);
     $this->assertEquals($this->helpTopic->isTopLevel(),
