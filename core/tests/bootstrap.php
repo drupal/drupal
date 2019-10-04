@@ -137,6 +137,7 @@ function drupal_phpunit_populate_class_loader() {
   $loader = require __DIR__ . '/../../autoload.php';
 
   // Start with classes in known locations.
+  $loader->add('Drupal\\BuildTests', __DIR__);
   $loader->add('Drupal\\Tests', __DIR__);
   $loader->add('Drupal\\TestSite', __DIR__);
   $loader->add('Drupal\\KernelTests', __DIR__);

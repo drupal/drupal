@@ -45,6 +45,9 @@
     <testsuite name="functional-javascript">
       <file>./tests/TestSuites/FunctionalJavascriptTestSuite.php</file>
     </testsuite>
+    <testsuite name="build">
+      <file>./tests/TestSuites/BuildTestSuite.php</file>
+    </testsuite>
   </testsuites>
   <listeners>
     <listener class="\Drupal\Tests\Listeners\DrupalListener">

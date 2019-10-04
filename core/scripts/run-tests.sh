@@ -18,6 +18,7 @@ use Drupal\Core\Test\TestRunnerKernel;
 use Drupal\Core\Test\TestDiscovery;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Output\ConsoleOutput;
+use Symfony\Component\Filesystem\Filesystem as SymfonyFilesystem;
 use Symfony\Component\HttpFoundation\Request;
 
 // Define some colors for display.

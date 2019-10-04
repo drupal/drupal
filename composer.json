@@ -22,7 +22,10 @@
         "symfony/css-selector": "^3.4.0",
         "symfony/phpunit-bridge": "^3.4.3",
         "symfony/debug": "^3.4.0",
-        "justinrainbow/json-schema": "^5.2"
+        "justinrainbow/json-schema": "^5.2",
+        "symfony/filesystem": "~3.4.0",
+        "symfony/finder": "~3.4.0",
+        "symfony/lock": "~3.4.0"
     },
     "minimum-stability": "dev",
     "prefer-stable": true,
