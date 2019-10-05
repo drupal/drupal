@@ -91,9 +91,8 @@ class ManageGitIgnore {
     }
 
     // If the composer.json did not specify whether or not .gitignore files
-    // should be managed, then manage them if the vendor directory is not
-    // committed.
-    return !Git::checkTracked($this->io, 'vendor', $this->dir);
+    // should be managed, then manage them if the vendor directory is ignored.
+    return Git::checkIgnore($this->io, 'vendor', $this->dir);
   }
 
   /**

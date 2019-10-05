@@ -302,7 +302,7 @@ manage `.gitignore` files for files written during the scaffold operation.
 - true: `.gitignore` files will be updated when scaffold files are written.
 - false: `.gitignore` files will never be modified.
 - Not set: `.gitignore` files will be updated if the target directory is a local
-working copy of a git repository, and the `vendor` directory is not committed
+working copy of a git repository, and the `vendor` directory is ignored
 in that repository.
 
 ### locations
