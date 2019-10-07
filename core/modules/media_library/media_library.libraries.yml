@@ -19,6 +19,7 @@ view:
   js:
     js/media_library.view.js: {}
   dependencies:
+    - core/drupal.announce
     - core/drupal.checkbox
     - media_library/style
     - media_library/click_to_select

@@ -138,8 +138,15 @@ class MediaLibraryTest extends WebDriverTestBase {
     $assert_session->pageTextNotContains('Dog');
     $assert_session->pageTextContains('Cat');
 
-    // Test 'Select all media'.
-    $this->getSession()->getPage()->checkField('Select all media');
+    // Test the 'Select all media' checkbox and assert that it makes the
+    // expected announcements.
+    $select_all = $assert_session->waitForField('Select all media');
+    $this->assertNotEmpty($select_all);
+    $select_all->check();
+    $this->assertNotEmpty($assert_session->waitForText('All 7 items selected'));
+    $select_all->uncheck();
+    $this->assertNotEmpty($assert_session->waitForText('Zero items selected'));
+    $select_all->check();
     $this->getSession()->getPage()->selectFieldOption('Action', 'media_delete_action');
     $this->submitForm([], 'Apply to selected items');
     $this->getSession()->getPage()->pressButton('Delete');

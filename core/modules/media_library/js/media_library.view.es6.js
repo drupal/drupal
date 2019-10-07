@@ -28,10 +28,10 @@
               .trigger('change');
             // Announce the selection.
             const announcement = $(currentTarget).prop('checked')
-              ? Drupal.t('Zero items selected')
-              : Drupal.t('All @count items selected', {
+              ? Drupal.t('All @count items selected', {
                   '@count': $checkboxes.length,
-                });
+                })
+              : Drupal.t('Zero items selected');
             Drupal.announce(announcement);
           },
         );
