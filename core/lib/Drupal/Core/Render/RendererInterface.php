@@ -219,7 +219,7 @@ interface RendererInterface {
    *       prepended to #children.
    *   - If this element has #states defined then JavaScript state information
    *     is added to this element's #attached attribute by
-   *     drupal_process_states().
+   *     \Drupal\Core\Form\FormHelper::processStates().
    *   - If this element has #attached defined then any required libraries,
    *     JavaScript, CSS, or other custom data are added to the current page by
    *     \Drupal\Core\Render\AttachmentsResponseProcessorInterface::processAttachments().
@@ -328,7 +328,7 @@ interface RendererInterface {
    *
    * @see \Drupal\Core\Render\ElementInfoManagerInterface::getInfo()
    * @see \Drupal\Core\Theme\ThemeManagerInterface::render()
-   * @see drupal_process_states()
+   * @see \Drupal\Core\Form\FormHelper::processStates()
    * @see \Drupal\Core\Render\AttachmentsResponseProcessorInterface::processAttachments()
    * @see \Drupal\Core\Render\RendererInterface::renderRoot()
    */

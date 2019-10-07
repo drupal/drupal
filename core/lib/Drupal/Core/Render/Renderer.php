@@ -9,6 +9,7 @@ use Drupal\Core\Access\AccessResultInterface;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Controller\ControllerResolverInterface;
+use Drupal\Core\Form\FormHelper;
 use Drupal\Core\Render\Element\RenderCallbackInterface;
 use Drupal\Core\Security\TrustedCallbackInterface;
 use Drupal\Core\Security\DoTrustedCallbackTrait;
@@ -394,7 +395,7 @@ class Renderer implements RendererInterface {
 
     // Add any JavaScript state information associated with the element.
     if (!empty($elements['#states'])) {
-      drupal_process_states($elements);
+      FormHelper::processStates($elements);
     }
 
     // Get the children of the element, sorted by weight.

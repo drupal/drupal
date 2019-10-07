@@ -60,7 +60,7 @@ use Drupal\Core\Url;
  * - #required: (bool) Whether or not input is required on the element.
  * - #states: (array) Information about JavaScript states, such as when to
  *   hide or show the element based on input on other elements.
- *   See drupal_process_states() for documentation.
+ *   See \Drupal\Core\Form\FormHelper::processStates() for documentation.
  * - #title: (string) Title of the form element. Should be translated.
  * - #title_display: (string) Where and how to display the #title. Possible
  *   values:

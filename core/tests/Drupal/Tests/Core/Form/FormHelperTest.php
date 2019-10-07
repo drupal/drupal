@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\Core\Form;
 
+use Drupal\Component\Serialization\Json;
 use Drupal\Core\Form\FormHelper;
 use Drupal\Tests\UnitTestCase;
 
@@ -80,6 +81,47 @@ class FormHelperTest extends UnitTestCase {
     ];
     FormHelper::rewriteStatesSelector($form, 'menu', 'options');
     $this->assertSame($expected, $form, 'The #states selectors were properly rewritten.');
+  }
+
+  /**
+   * @covers ::processStates
+   * @dataProvider providerElements
+   */
+  public function testProcessStates($elements, $key) {
+    $json = Json::encode($elements['#states']);
+    FormHelper::processStates($elements);
+    $this->assertEquals(['core/drupal.states'], $elements['#attached']['library']);
+    $this->assertEquals($json, $elements[$key]['data-drupal-states']);
+  }
+
+  /**
+   * Provides a list of elements to test.
+   */
+  public function providerElements() {
+    return [
+      [
+        [
+          '#type' => 'date',
+          '#states' => [
+            'visible' => [
+              ':input[name="toggle_me"]' => ['checked' => TRUE],
+            ],
+          ],
+        ],
+        '#attributes',
+      ],
+      [
+        [
+          '#type' => 'item',
+          '#states' => [
+            'visible' => [
+              ':input[name="foo"]' => ['value' => 'bar'],
+            ],
+          ],
+        ],
+        '#wrapper_attributes',
+      ],
+    ];
   }
 
 }

@@ -9,13 +9,13 @@
  */
 
 use Drupal\Component\Gettext\PoItem;
-use Drupal\Component\Serialization\Json;
 use Drupal\Component\Utility\Bytes;
 use Drupal\Component\Utility\Environment;
 use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\SortArray;
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Cache\Cache;
+use Drupal\Core\Form\FormHelper;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Render\Element\Link;
 use Drupal\Core\Render\HtmlResponseAttachmentsProcessor;
@@ -588,16 +588,15 @@ function drupal_js_defaults($data = NULL) {
  * @param $elements
  *   A renderable array element having a #states property as described above.
  *
- * @see form_example_states_form()
+ * @deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. Use
+ *   \Drupal\Core\Form\FormHelper::processStates() instead.
+ *
+ * @see https://www.drupal.org/node/3000069
+ * @see \Drupal\Core\Form\FormHelper::processStates()
  */
 function drupal_process_states(&$elements) {
-  $elements['#attached']['library'][] = 'core/drupal.states';
-  // Elements of '#type' => 'item' are not actual form input elements, but we
-  // still want to be able to show/hide them. Since there's no actual HTML input
-  // element available, setting #attributes does not make sense, but a wrapper
-  // is available, so setting #wrapper_attributes makes it work.
-  $key = ($elements['#type'] == 'item') ? '#wrapper_attributes' : '#attributes';
-  $elements[$key]['data-drupal-states'] = Json::encode($elements['#states']);
+  @trigger_error('drupal_process_states() is deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. Use \Drupal\Core\Form\FormHelper::processStates() instead. See https://www.drupal.org/node/3000069', E_USER_DEPRECATED);
+  FormHelper::processStates($elements);
 }
 
 /**
