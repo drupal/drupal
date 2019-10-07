@@ -45,6 +45,7 @@ final class ConfigEvents {
    *
    * @see \Drupal\Core\Config\StorageTransformEvent
    * @see \Drupal\Core\Config\ConfigEvents::STORAGE_TRANSFORM_EXPORT
+   * @see \Drupal\Core\Config\ImportStorageTransformer::transform
    *
    * @var string
    */

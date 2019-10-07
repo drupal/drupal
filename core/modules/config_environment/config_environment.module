@@ -13,6 +13,7 @@
 @class_alias('Drupal\config_environment\Core\Config\StorageManagerInterface', 'Drupal\Core\Config\StorageManagerInterface');
 @class_alias('Drupal\config_environment\Core\Config\ExportStorageManager', 'Drupal\Core\Config\ExportStorageManager');
 @class_alias('Drupal\config_environment\Core\Config\ImportStorageTransformer', 'Drupal\Core\Config\ImportStorageTransformer');
+@class_alias('Drupal\config_environment\Core\Config\StorageTransformerException', 'Drupal\Core\Config\StorageTransformerException');
 
 use Drupal\Core\Routing\RouteMatchInterface;
 

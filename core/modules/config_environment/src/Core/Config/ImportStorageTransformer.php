@@ -6,7 +6,9 @@
 // @codingStandardsIgnoreEnd
 namespace Drupal\config_environment\Core\Config;
 
+use Drupal\Core\Config\ConfigImporter;
 use Drupal\Core\Database\Connection;
+use Drupal\Core\Lock\LockBackendInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Drupal\Core\Config\DatabaseStorage;
 use Drupal\Core\Config\StorageCopyTrait;
@@ -20,6 +22,11 @@ use Drupal\Core\Config\StorageInterface;
 class ImportStorageTransformer {
 
   use StorageCopyTrait;
+
+  /**
+   * The name used to identify the lock.
+   */
+  const LOCK_NAME = 'config_import_transformer';
 
   /**
    * The event dispatcher to get changes to the configuration.
@@ -36,16 +43,38 @@ class ImportStorageTransformer {
   protected $connection;
 
   /**
+   * The normal lock for the duration of the request.
+   *
+   * @var \Drupal\Core\Lock\LockBackendInterface
+   */
+  protected $requestLock;
+
+  /**
+   * The persistent lock which the config importer uses across requests.
+   *
+   * @see \Drupal\Core\Config\ConfigImporter::alreadyImporting()
+   *
+   * @var \Drupal\Core\Lock\LockBackendInterface
+   */
+  protected $persistentLock;
+
+  /**
    * ImportStorageTransformer constructor.
    *
    * @param \Symfony\Component\EventDispatcher\EventDispatcherInterface $event_dispatcher
    *   The event dispatcher.
    * @param \Drupal\Core\Database\Connection $connection
    *   The database connection.
+   * @param \Drupal\Core\Lock\LockBackendInterface $requestLock
+   *   The lock for the request.
+   * @param \Drupal\Core\Lock\LockBackendInterface $persistentLock
+   *   The persistent lock used by the config importer.
    */
-  public function __construct(EventDispatcherInterface $event_dispatcher, Connection $connection) {
+  public function __construct(EventDispatcherInterface $event_dispatcher, Connection $connection, LockBackendInterface $requestLock, LockBackendInterface $persistentLock) {
     $this->eventDispatcher = $event_dispatcher;
     $this->connection = $connection;
+    $this->requestLock = $requestLock;
+    $this->persistentLock = $persistentLock;
   }
 
   /**
@@ -63,10 +92,31 @@ class ImportStorageTransformer {
    *
    * @return \Drupal\Core\Config\StorageInterface
    *   The transformed storage ready to be imported from.
+   *
+   * @throws \Drupal\Core\Config\StorageTransformerException
+   *   Thrown when the lock could not be acquired.
    */
   public function transform(StorageInterface $storage) {
     // We use a database storage to reduce the memory requirement.
     $mutable = new DatabaseStorage($this->connection, 'config_import');
+
+    if (!$this->persistentLock->lockMayBeAvailable(ConfigImporter::LOCK_NAME)) {
+      // If the config importer is already importing, the transformation will
+      // always be the one the config importer is already using. This makes sure
+      // that even if the storage changes the importer continues importing the
+      // same configuration.
+      return $mutable;
+    }
+
+    // Acquire a lock to ensure that the storage is not changed when a
+    // concurrent request tries to transform the storage. The lock will be
+    // released at the end of the request.
+    if (!$this->requestLock->acquire(self::LOCK_NAME)) {
+      $this->requestLock->wait(self::LOCK_NAME);
+      if (!$this->requestLock->acquire(self::LOCK_NAME)) {
+        throw new StorageTransformerException("Cannot acquire config import transformer lock.");
+      }
+    }
 
     // Copy the sync configuration to the created mutable storage.
     self::replaceStorageContents($storage, $mutable);

@@ -18,6 +18,9 @@ interface StorageManagerInterface {
    *
    * @return \Drupal\Core\Config\StorageInterface
    *   The config storage.
+   *
+   * @throws \Drupal\Core\Config\StorageTransformerException
+   *   Thrown when the lock could not be acquired.
    */
   public function getStorage();
 
