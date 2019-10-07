@@ -844,6 +844,8 @@ function template_preprocess_image(&$variables) {
  *     - sort: A default sort order for this column ("asc" or "desc"). Only
  *       one column should be given a default sort order because table sorting
  *       only applies to one column at a time.
+ *     - initial_click_sort: Set the initial sort of the column when clicked.
+ *       Defaults to "asc".
  *     - class: An array of values for the 'class' attribute. In particular,
  *       the least important columns that can be hidden on narrow and medium
  *       width screens should have a 'priority-low' class, referenced with the
@@ -997,7 +999,8 @@ function template_preprocess_table(&$variables) {
 
         TableSort::header($cell_content, $cell, $variables['header'], $ts);
 
-        // TableSort::header() removes the 'sort' and 'field' keys.
+        // TableSort::header() removes the 'sort', 'initial_click_sort' and
+        // 'field' keys.
         $cell_attributes = new Attribute($cell);
       }
       $variables['header'][$col_key] = [];

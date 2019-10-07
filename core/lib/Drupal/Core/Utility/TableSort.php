@@ -73,9 +73,11 @@ class TableSort {
         $image = \Drupal::service('renderer')->render($tablesort_indicator);
       }
       else {
-        // If the user clicks a different header, we want to sort ascending
-        // initially.
-        $context['sort'] = self::ASC;
+        // This determines the sort order when the column gets first clicked by
+        // the user. It is "asc" by default but the sort can be changed if
+        // $cell['initial_click_sort'] is defined. The possible values are "asc"
+        // or "desc".
+        $context['sort'] = $cell_attributes['initial_click_sort'] ?? self::ASC;
         $image = '';
       }
       $cell_content = Link::createFromRoute(new FormattableMarkup('@cell_content@image', ['@cell_content' => $cell_content, '@image' => $image]), '<current>', [], [
@@ -86,7 +88,7 @@ class TableSort {
         ]),
       ]);
 
-      unset($cell_attributes['field'], $cell_attributes['sort']);
+      unset($cell_attributes['field'], $cell_attributes['sort'], $cell_attributes['initial_click_sort']);
     }
   }
 
@@ -150,8 +152,13 @@ class TableSort {
     // Find out which header is currently being sorted.
     $order = static::getOrder($headers, $request);
     foreach ($headers as $header) {
-      if (is_array($header) && isset($header['data']) && $header['data'] == $order['name'] && isset($header['sort'])) {
-        return $header['sort'];
+      if (is_array($header) && isset($header['data']) && $header['data'] == $order['name']) {
+        if (isset($header['sort'])) {
+          return $header['sort'];
+        }
+        if (isset($header['initial_click_sort'])) {
+          return $header['initial_click_sort'];
+        }
       }
     }
     return self::ASC;
