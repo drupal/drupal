@@ -8,6 +8,10 @@
     "node": ">= 8.11"
   },
   "scripts": {
+    "build": "yarn build:css & yarn build:js",
+    "watch": "yarn watch:css & yarn watch:js",
+    "build:css": "cross-env BABEL_ENV=legacy node ./scripts/css/postcss-build.js",
+    "watch:css": "cross-env BABEL_ENV=legacy node ./scripts/css/postcss-watch.js",
     "build:js": "cross-env BABEL_ENV=legacy node ./scripts/js/babel-es6-build.js",
     "build:js-dev": "cross-env NODE_ENV=development BABEL_ENV=legacy node ./scripts/js/babel-es6-build.js",
     "watch:js": "cross-env BABEL_ENV=legacy node ./scripts/js/babel-es6-watch.js",
@@ -21,6 +25,7 @@
     "prettier": "prettier --write \"./**/*.es6.js\" \"./tests/Drupal/Nightwatch/**/*.js\""
   },
   "devDependencies": {
+    "autoprefixer": "^9.6.1",
     "babel-core": "^6.26.0",
     "babel-plugin-add-header-comment": "^1.0.3",
     "babel-preset-env": "^1.4.0",
@@ -40,6 +45,11 @@
     "minimist": "^1.2.0",
     "mkdirp": "^0.5.1",
     "nightwatch": "^1.2.1",
+    "postcss": "^7.0.18",
+    "postcss-calc": "^7.0.1",
+    "postcss-custom-properties": "^9.0.2",
+    "postcss-header": "^1.0.0",
+    "postcss-import": "^12.0.1",
     "prettier": "^1.14.0",
     "stylelint": "^9.10.1",
     "stylelint-checkstyle-formatter": "^0.1.1",
@@ -68,21 +78,19 @@
           [
             "env",
             {
-              "modules": false,
-              "targets": {
-                "browsers": [
-                  "ie >= 9",
-                  "edge >= 13",
-                  "firefox >= 5",
-                  "opera >= 12",
-                  "safari >= 5",
-                  "chrome >= 56"
-                ]
-              }
+              "modules": false
             }
           ]
         ]
       }
     }
-  }
+  },
+  "browserslist": [
+    "ie >= 9",
+    "edge >= 13",
+    "firefox >= 5",
+    "opera >= 12",
+    "safari >= 5",
+    "chrome >= 56"
+  ]
 }
