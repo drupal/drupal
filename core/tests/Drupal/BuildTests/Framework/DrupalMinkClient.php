@@ -30,7 +30,7 @@ class DrupalMinkClient extends Client {
    * @param bool $followMetaRefresh
    *   (optional) Whether to follow meta redirects. Defaults to TRUE.
    */
-  public function followMetaRefresh($followMetaRefresh = TRUE) {
+  public function followMetaRefresh(bool $followMetaRefresh = TRUE) {
     $this->followMetaRefresh = $followMetaRefresh;
   }
 
