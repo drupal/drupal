@@ -82,6 +82,7 @@ class MediaLibrarySelectForm extends FieldPluginBase {
     // AJAX path like /views/ajax, which cannot process AJAX form submits.
     $query = $this->view->getRequest()->query->all();
     $query[FormBuilderInterface::AJAX_FORM_REQUEST] = TRUE;
+    $query['views_display_id'] = $this->view->getDisplay()->display['id'];
     $form['actions']['submit']['#ajax'] = [
       'url' => Url::fromRoute('media_library.ui'),
       'options' => [

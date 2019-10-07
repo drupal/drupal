@@ -937,7 +937,8 @@ class MediaLibraryTest extends WebDriverTestBase {
     $assert_session->pageTextNotContains('Bear');
     $assert_session->pageTextNotContains('Turtle');
     $assert_session->linkExists('Grid');
-    $assert_session->linkExists('Table');
+    $page->clickLink('Table');
+    $this->assertNotEmpty($assert_session->waitForElementVisible('css', '.media-library-view .media-library-item--table'));
 
     // Select the item.
     $assert_session->elementExists('css', '.ui-dialog-buttonpane')->pressButton('Insert selected');
