@@ -34,7 +34,7 @@ class HelpTopicDiscoveryTest extends UnitTestCase {
     $discovery = new HelpTopicDiscovery(['foo' => vfsStream::url('root/modules/foo/help_topics')]);
 
     $this->expectException(DiscoveryException::class);
-    $this->expectExceptionMessage("vfs://root/modules/foo/help_topics/test.topic.html.twig should begin with 'foo.'");
+    $this->expectExceptionMessage("vfs://root/modules/foo/help_topics/test.topic.html.twig file name should begin with 'foo'");
     $discovery->getDefinitions();
   }
 
