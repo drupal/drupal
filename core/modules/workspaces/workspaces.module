@@ -45,6 +45,15 @@ function workspaces_entity_type_build(array &$entity_types) {
 }
 
 /**
+ * Implements hook_entity_type_alter().
+ */
+function workspaces_entity_type_alter(array &$entity_types) {
+  \Drupal::service('class_resolver')
+    ->getInstanceFromDefinition(EntityTypeInfo::class)
+    ->entityTypeAlter($entity_types);
+}
+
+/**
  * Implements hook_form_alter().
  */
 function workspaces_form_alter(&$form, FormStateInterface $form_state, $form_id) {

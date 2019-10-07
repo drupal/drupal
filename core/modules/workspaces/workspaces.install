@@ -15,12 +15,6 @@ use Drupal\workspaces\Entity\Workspace;
 function workspaces_requirements($phase) {
   $requirements = [];
   if ($phase === 'install') {
-    if (\Drupal::moduleHandler()->moduleExists('content_moderation')) {
-      $requirements['content_moderation_incompatibility'] = [
-        'severity' => REQUIREMENT_ERROR,
-        'description' => t('Workspaces can not be installed when Content Moderation is also installed.'),
-      ];
-    }
     if (\Drupal::moduleHandler()->moduleExists('workspace')) {
       $requirements['workspace_incompatibility'] = [
         'severity' => REQUIREMENT_ERROR,

@@ -227,8 +227,9 @@ class WorkspaceCRUDTest extends KernelTestBase {
     $admin = $this->createUser([
       'administer nodes',
       'create workspace',
-      'view any workspace',
-      'delete any workspace',
+      'view own workspace',
+      'edit own workspace',
+      'delete own workspace',
     ]);
     $this->setCurrentUser($admin);
 

@@ -6,21 +6,6 @@
  */
 
 /**
- * Implements hook_requirements().
- */
-function content_moderation_requirements($phase) {
-  $requirements = [];
-  if ($phase === 'install' && \Drupal::moduleHandler()->moduleExists('workspaces')) {
-    $requirements['workspaces_incompatibility'] = [
-      'severity' => REQUIREMENT_ERROR,
-      'description' => t('Content Moderation can not be installed when Workspaces is also installed.'),
-    ];
-  }
-
-  return $requirements;
-}
-
-/**
  * Remove the 'content_revision_tracker' table.
  */
 function content_moderation_update_8401() {

@@ -8,6 +8,7 @@ use Drupal\Core\Entity\EntityRepositoryInterface;
 use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Messenger\MessengerInterface;
+use Drupal\workspaces\WorkspaceAccessException;
 use Drupal\workspaces\WorkspaceOperationFactory;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -152,6 +153,9 @@ class WorkspaceDeployForm extends ContentEntityForm implements WorkspaceFormInte
     try {
       $workspace->publish();
       $this->messenger->addMessage($this->t('Successful deployment.'));
+    }
+    catch (WorkspaceAccessException $e) {
+      $this->messenger->addMessage($e->getMessage(), 'error');
     }
     catch (\Exception $e) {
       $this->messenger->addMessage($this->t('Deployment failed. All errors have been logged.'), 'error');

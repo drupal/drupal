@@ -2,6 +2,7 @@
 
 namespace Drupal\workspaces;
 
+use Drupal\Core\Access\AccessResultReasonInterface;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
@@ -74,6 +75,12 @@ class WorkspacePublisher implements WorkspacePublisherInterface {
    * {@inheritdoc}
    */
   public function publish() {
+    $publish_access = $this->sourceWorkspace->access('publish', NULL, TRUE);
+    if (!$publish_access->isAllowed()) {
+      $message = $publish_access instanceof AccessResultReasonInterface ? $publish_access->getReason() : '';
+      throw new WorkspaceAccessException($message);
+    }
+
     if ($this->checkConflictsOnTarget()) {
       throw new WorkspaceConflictException();
     }

@@ -49,6 +49,12 @@ class DeleteActionTest extends KernelTestBase {
         'action_label' => 'Delete',
         'confirm_form_route_name' => 'entity.entity_test_mulrevpub.delete_multiple_form',
       ],
+      'entity_test_revpub' => [
+        'type' => 'entity_test_revpub',
+        'label' => 'Delete test entity - revisions and publishing status',
+        'action_label' => 'Delete',
+        'confirm_form_route_name' => 'entity.entity_test_revpub.delete_multiple_form',
+      ],
       'entity_test_rev' => [
         'type' => 'entity_test_rev',
         'label' => 'Delete test entity - revisions',

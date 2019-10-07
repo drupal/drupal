@@ -38,9 +38,9 @@ trait WorkspaceTestTrait {
     $this->installSchema('workspaces', ['workspace_association']);
 
     // Create two workspaces by default, 'live' and 'stage'.
-    $this->workspaces['live'] = Workspace::create(['id' => 'live']);
+    $this->workspaces['live'] = Workspace::create(['id' => 'live', 'label' => 'Live']);
     $this->workspaces['live']->save();
-    $this->workspaces['stage'] = Workspace::create(['id' => 'stage']);
+    $this->workspaces['stage'] = Workspace::create(['id' => 'stage', 'label' => 'Stage']);
     $this->workspaces['stage']->save();
 
     $permissions = array_intersect([

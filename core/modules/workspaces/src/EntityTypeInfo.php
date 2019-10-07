@@ -78,6 +78,24 @@ class EntityTypeInfo implements ContainerInjectionInterface {
   }
 
   /**
+   * Removes the 'latest-version' link template provided by Content Moderation.
+   *
+   * @param \Drupal\Core\Entity\EntityTypeInterface[] $entity_types
+   *   An array of entity types.
+   *
+   * @see hook_entity_type_alter()
+   */
+  public function entityTypeAlter(array &$entity_types) {
+    foreach ($entity_types as $entity_type_id => $entity_type) {
+      // Non-default workspaces display the active revision on the canonical
+      // route of an entity, so the latest version route is no longer needed.
+      $link_templates = $entity_type->get('links');
+      unset($link_templates['latest-version']);
+      $entity_type->set('links', $link_templates);
+    }
+  }
+
+  /**
    * Alters field plugin definitions.
    *
    * @param array[] $definitions
