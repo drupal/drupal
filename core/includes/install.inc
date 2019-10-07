@@ -109,7 +109,7 @@ function drupal_install_profile_distribution_name() {
   // At all other times, we load the profile via standard methods.
   else {
     $profile = \Drupal::installProfile();
-    $info = system_get_info('module', $profile);
+    $info = \Drupal::service('extension.list.profile')->getExtensionInfo($profile);
   }
   return isset($info['distribution']['name']) ? $info['distribution']['name'] : 'Drupal';
 }
@@ -134,7 +134,7 @@ function drupal_install_profile_distribution_version() {
   // At all other times, we load the profile via standard methods.
   else {
     $profile = \Drupal::installProfile();
-    $info = system_get_info('module', $profile);
+    $info = \Drupal::service('extension.list.profile')->getExtensionInfo($profile);
     return $info['version'];
   }
 }
@@ -1095,7 +1095,8 @@ function drupal_check_module($module) {
  *
  * Note that this function does an expensive file system scan to get info file
  * information for dependencies. If you only need information from the info
- * file itself, use system_get_info().
+ * file itself, use
+ * \Drupal::service('extension.list.profile')->getExtensionInfo().
  *
  * Example of .info.yml file:
  * @code

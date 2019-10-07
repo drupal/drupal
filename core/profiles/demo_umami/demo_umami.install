@@ -15,7 +15,7 @@ function demo_umami_requirements($phase) {
   $requirements = [];
   if ($phase == 'runtime') {
     $profile = \Drupal::installProfile();
-    $info = system_get_info('module', $profile);
+    $info = \Drupal::service('extension.list.profile')->getExtensionInfo($profile);
     $requirements['experimental_profile_used'] = [
       'title' => t('Experimental installation profile used'),
       'value' => $info['name'],

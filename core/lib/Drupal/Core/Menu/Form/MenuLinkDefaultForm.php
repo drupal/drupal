@@ -50,13 +50,6 @@ class MenuLinkDefaultForm implements MenuLinkFormInterface, ContainerInjectionIn
   protected $moduleHandler;
 
   /**
-   * The module data from system_get_info().
-   *
-   * @var array
-   */
-  protected $moduleData;
-
-  /**
    * Constructs a new \Drupal\Core\Menu\Form\MenuLinkDefaultForm.
    *
    * @param \Drupal\Core\Menu\MenuLinkManagerInterface $menu_link_manager

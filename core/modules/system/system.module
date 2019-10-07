@@ -979,10 +979,16 @@ function system_check_directory($form_element, FormStateInterface $form_state) {
  *   information for $name, if given. If no records are available, an empty
  *   array is returned.
  *
+ * @deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. Use
+ *   \Drupal::service('extension.list.$type')->getExtensionInfo() or
+ *   \Drupal::service('extension.list.$type')->getAllInstalledInfo() instead.
+ *
+ * @see https://www.drupal.org/node/2709919
  * @see \Drupal\Core\Extension\ModuleExtensionList::getList()
  * @see \Drupal\Core\Extension\ThemeExtensionList
  */
 function system_get_info($type, $name = NULL) {
+  @trigger_error("system_get_info() is deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. Use \Drupal::service('extension.list.$type')->getExtensionInfo() or \Drupal::service('extension.list.$type')->getAllInstalledInfo() instead. See https://www.drupal.org/node/2709919", E_USER_DEPRECATED);
   /** @var \Drupal\Core\Extension\ExtensionList $extension_list */
   $extension_list = \Drupal::service('extension.list.' . $type);
   if (isset($name)) {
@@ -1168,7 +1174,8 @@ function system_admin_compact_mode() {
  * @param string $module
  *   Module name.
  * @param array $info
- *   The module's information, as provided by system_get_info().
+ *   The module's information, as provided by
+ *   \Drupal::service('extension.list.module')->getExtensionInfo().
  *
  * @return array
  *   An array of task links.

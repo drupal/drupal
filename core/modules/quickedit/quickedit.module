@@ -80,7 +80,7 @@ function quickedit_library_info_alter(&$libraries, $extension) {
     // First let the base theme modify the library, then the actual theme.
     $alter_library = function (&$library, $theme) use (&$alter_library) {
       if (!empty($theme) && $theme_path = drupal_get_path('theme', $theme)) {
-        $info = system_get_info('theme', $theme);
+        $info = \Drupal::service('extension.list.theme')->getExtensionInfo($theme);
         // Recurse to process base theme(s) first.
         if (isset($info['base theme'])) {
           $alter_library($library, $info['base theme']);

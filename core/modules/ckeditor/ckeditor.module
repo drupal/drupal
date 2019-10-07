@@ -85,7 +85,7 @@ function _ckeditor_theme_css($theme = NULL) {
     $theme = \Drupal::config('system.theme')->get('default');
   }
   if (isset($theme) && $theme_path = drupal_get_path('theme', $theme)) {
-    $info = system_get_info('theme', $theme);
+    $info = \Drupal::service('extension.list.theme')->getExtensionInfo($theme);
     if (isset($info['ckeditor_stylesheets'])) {
       $css = $info['ckeditor_stylesheets'];
       foreach ($css as $key => $url) {

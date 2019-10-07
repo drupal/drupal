@@ -3,11 +3,44 @@
 namespace Drupal\system\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
+use Drupal\Core\Extension\ModuleExtensionList;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Controller for admin section.
  */
 class AdminController extends ControllerBase {
+
+  /**
+   * The module extension list.
+   *
+   * @var \Drupal\Core\Extension\ModuleExtensionList
+   */
+  protected $moduleExtensionList;
+
+  /**
+   * AdminController constructor.
+   *
+   * @param \Drupal\Core\Extension\ModuleExtensionList|null $extension_list_module
+   *   The module extension list. This is left optional for BC reasons, but the
+   *   optional usage is deprecated and will become required in Drupal 9.0.0.
+   */
+  public function __construct(ModuleExtensionList $extension_list_module = NULL) {
+    if ($extension_list_module === NULL) {
+      @trigger_error('Calling AdminController::__construct() with the $module_extension_list argument is supported in drupal:8.8.0 and will be required before drupal:9.0.0. See https://www.drupal.org/node/2709919.', E_USER_DEPRECATED);
+      $extension_list_module = \Drupal::service('extension.list.module');
+    }
+    $this->moduleExtensionList = $extension_list_module;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container) {
+    return new static(
+      $container->get('extension.list.module')
+    );
+  }
 
   /**
    * Prints a listing of admin tasks, organized by module.
@@ -16,7 +49,7 @@ class AdminController extends ControllerBase {
    *   A render array containing the listing.
    */
   public function index() {
-    $module_info = system_get_info('module');
+    $module_info = $this->moduleExtensionList->getAllInstalledInfo();
     foreach ($module_info as $module => $info) {
       $module_info[$module] = new \stdClass();
       $module_info[$module]->info = $info;

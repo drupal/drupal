@@ -8,6 +8,7 @@ use Drupal\KernelTests\KernelTestBase;
  * Tests system_get_info().
  *
  * @group system
+ * @group legacy
  */
 class SystemGetInfoTest extends KernelTestBase {
 
@@ -15,6 +16,9 @@ class SystemGetInfoTest extends KernelTestBase {
 
   /**
    * Tests system_get_info().
+   *
+   * @expectedDeprecation system_get_info() is deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. Use \Drupal::service('extension.list.module')->getExtensionInfo() or \Drupal::service('extension.list.module')->getAllInstalledInfo() instead. See https://www.drupal.org/node/2709919
+   * @expectedDeprecation system_get_info() is deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. Use \Drupal::service('extension.list.theme')->getExtensionInfo() or \Drupal::service('extension.list.theme')->getAllInstalledInfo() instead. See https://www.drupal.org/node/2709919
    */
   public function testSystemGetInfo() {
     $system_module_info = system_get_info('module', 'system');

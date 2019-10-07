@@ -50,7 +50,7 @@ function system_requirements($phase) {
     // is not running the default installation profile.
     $profile = \Drupal::installProfile();
     if ($profile != 'standard') {
-      $info = system_get_info('module', $profile);
+      $info = \Drupal::service('extension.list.module')->getExtensionInfo($profile);
       $requirements['install_profile'] = [
         'title' => t('Installation profile'),
         'value' => t('%profile_name (%profile-%version)', [
@@ -67,7 +67,7 @@ function system_requirements($phase) {
     $experimental = [];
     $enabled_modules = \Drupal::moduleHandler()->getModuleList();
     foreach ($enabled_modules as $module => $data) {
-      $info = system_get_info('module', $module);
+      $info = \Drupal::service('extension.list.module')->getExtensionInfo($module);
       if (isset($info['package']) && $info['package'] === 'Core (Experimental)') {
         $experimental[$module] = $info['name'];
       }
