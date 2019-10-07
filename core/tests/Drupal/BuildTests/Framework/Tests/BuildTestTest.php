@@ -129,6 +129,11 @@ class BuildTestTest extends BuildTestBase {
       $this->assertTrue($processes[$port]->isRunning(), 'Process on port ' . $port . ' is not still running.');
       $this->assertFalse($this->checkPortIsAvailable($port));
     }
+
+    // Clean up after ourselves.
+    foreach ($processes as $process) {
+      $process->stop();
+    }
   }
 
 }
