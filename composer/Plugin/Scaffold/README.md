@@ -348,7 +348,7 @@ Sample composer.json for a project that relies on packages that use composer-sca
 {
   "name": "my/project",
   "require": {
-    "drupal/composer-scaffold": "*",
+    "drupal/core-composer-scaffold": "*",
     "composer/installers": "^1.2",
     "cweagans/composer-patches": "^1.6.5",
     "drupal/core": "^8.8.x-dev",
@@ -361,7 +361,7 @@ Sample composer.json for a project that relies on packages that use composer-sca
   "extra": {
     "composer-scaffold": {
       "allowed-packages": [
-        "drupal/core",
+        "drupal/core"
       ],
       "locations": {
         "web-root": "./docroot"
