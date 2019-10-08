@@ -27,7 +27,7 @@ node.add_page:
 node.add:
   path: '/node/add/{node_type}'
   defaults:
-    _controller: '\Drupal\node\Controller\NodeController::add'
+    _entity_form: 'node.default'
     _title_callback: '\Drupal\node\Controller\NodeController::addPageTitle'
   requirements:
     _node_add_access: 'node:{node_type}'
@@ -35,6 +35,7 @@ node.add:
     _node_operation_route: TRUE
     parameters:
       node_type:
+        type: entity:node_type
         with_config_overrides: TRUE
 
 entity.node.preview:

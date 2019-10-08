@@ -121,8 +121,13 @@ class NodeController extends ControllerBase implements ContainerInjectionInterfa
    *
    * @return array
    *   A node submission form.
+   *
+   * @deprecated in Drupal 8.8.0 and will be removed before Drupal 9.0.0. Define
+   *   entity form routes through the _entity_form instead through the
+   *   _controller directive.
    */
   public function add(NodeTypeInterface $node_type) {
+    @trigger_error(__METHOD__ . ' is deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. Define entity form routes through the _entity_form instead through the _controller directive. See https://www.drupal.org/node/3084856', E_USER_DEPRECATED);
     $node = $this->entityTypeManager()->getStorage('node')->create([
       'type' => $node_type->id(),
     ]);
