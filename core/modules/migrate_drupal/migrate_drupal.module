@@ -46,7 +46,7 @@ function migrate_drupal_migration_plugins_alter(&$definitions) {
       ],
     ];
     $vocabulary_migration = \Drupal::service('plugin.manager.migration')->createStubMigration($vocabulary_migration_definition);
-    $translation_active = \Drupal::service('module_handler')->moduleExists('config_translation');
+    $translation_active = \Drupal::service('module_handler')->moduleExists('content_translation');
 
     try {
       $source_plugin = $vocabulary_migration->getSourcePlugin();
@@ -65,7 +65,7 @@ function migrate_drupal_migration_plugins_alter(&$definitions) {
         if ($translation_active) {
           $plugin_ids[] = 'd6_term_node_translation:' . $source_vid;
         }
-        foreach ($plugin_ids as $plugin_id) {
+        foreach (array_intersect($plugin_ids, array_keys($definitions)) as $plugin_id) {
           // Match the field name derivation in d6_vocabulary_field.yml.
           $field_name = substr('field_' . $row->getDestinationProperty('vid'), 0, 32);
 
