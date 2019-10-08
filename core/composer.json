@@ -187,7 +187,7 @@
         "autoloader-suffix": "Drupal8"
     },
     "extra": {
-        "composer-scaffold": {
+        "drupal-scaffold": {
             "file-mapping": {
                 "[project-root]/.editorconfig": "assets/scaffold/files/editorconfig",
                 "[project-root]/.gitattributes": "assets/scaffold/files/gitattributes",

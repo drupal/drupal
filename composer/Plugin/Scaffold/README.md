@@ -53,9 +53,9 @@ Example: Permit scaffolding from the project `drupal/core`
   "name": "my/project",
   ...
   "extra": {
-    "composer-scaffold": {
+    "drupal-scaffold": {
       "allowed-packages": [
-        "drupal/core",
+        "drupal/core"
       ],
       ...
     }
@@ -89,7 +89,7 @@ so via the `locations` mapping, as shown below:
   "name": "my/project",
   ...
   "extra": {
-    "composer-scaffold": {
+    "drupal-scaffold": {
       "locations": {
         "web-root": "./docroot"
       },
@@ -115,7 +115,7 @@ of the `robots.txt` file provided by `drupal/core`:
   "name": "my/project",
   ...
   "extra": {
-    "composer-scaffold": {
+    "drupal-scaffold": {
       "file-mapping": {
         "[web-root]/robots.txt": {
           "append": "assets/my-robots-additions.txt",
@@ -128,13 +128,13 @@ It is also possible to prepend to a scaffold file instead of, or in addition to
 appending by including a "prepend" entry that provides the relative path to the
 file to prepend to the scaffold file.
 
-The example below demonstrates the use of the `post-composer-scaffold-cmd` hook
+The example below demonstrates the use of the `post-drupal-scaffold-cmd` hook
 to patch the `.htaccess` file using a patch.
 ```
   "name": "my/project",
   ...
   "scripts": {
-    "post-composer-scaffold-cmd": [
+    "post-drupal-scaffold-cmd": [
       "cd docroot && patch -p1 <../patches/htaccess-ssl.patch"
     ]
   }
@@ -152,7 +152,7 @@ web root in the snippet below.
   "name": "drupal/assets",
   ...
   "extra": {
-    "composer-scaffold": {
+    "drupal-scaffold": {
       "file-mapping": {
         "[web-root]/robots.txt": "assets/robots.txt",
         ...
@@ -171,7 +171,7 @@ setting the value for the scaffold file to exclude to `false`:
   "name": "my/project",
   ...
   "extra": {
-    "composer-scaffold": {
+    "drupal-scaffold": {
       "file-mapping": {
         "[web-root]/robots.txt": false
       }
@@ -193,7 +193,7 @@ the `overwrite` flag to `false`, as shown in the example below:
 {
   "name": "service-provider/d8-scaffold-files",
   "extra": {
-    "composer-scaffold": {
+    "drupal-scaffold": {
       "file-mapping": {
         "[web-root]/sites/default/settings.php": {
           "mode": "replace",
@@ -221,7 +221,7 @@ to update it.
 
 ## Specifications
 
-Reference section for the configuration directives for the "composer-scaffold"
+Reference section for the configuration directives for the "drupal-scaffold"
 section of the "extra" section of a `composer.json` file appear below.
 
 ### allowed-packages
@@ -367,7 +367,7 @@ Sample composer.json for a project that relies on packages that use composer-sca
     "sort-packages": true
   },
   "extra": {
-    "composer-scaffold": {
+    "drupal-scaffold": {
       "allowed-packages": [
         "drupal/core"
       ],
@@ -391,7 +391,7 @@ Sample composer.json for drupal/core, with assets placed in a different project:
 {
   "name": "drupal/core",
   "extra": {
-    "composer-scaffold": {
+    "drupal-scaffold": {
       "allowed-packages": [
         "drupal/assets",
       ]
@@ -406,7 +406,7 @@ Sample composer.json for composer-scaffold files in drupal/assets:
 {
   "name": "drupal/assets",
   "extra": {
-    "composer-scaffold": {
+    "drupal-scaffold": {
       "file-mapping": {
         "[web-root]/.csslintrc": "assets/.csslintrc",
         "[web-root]/.editorconfig": "assets/.editorconfig",
@@ -435,7 +435,7 @@ Sample composer.json for a library that implements composer-scaffold:
 {
   "name": "service-provider/d8-scaffold-files",
   "extra": {
-    "composer-scaffold": {
+    "drupal-scaffold": {
       "file-mapping": {
         "[web-root]/sites/default/settings.php": "assets/sites/default/settings.php"
       }
@@ -450,7 +450,7 @@ Append to robots.txt:
 {
   "name": "service-provider/d8-scaffold-files",
   "extra": {
-    "composer-scaffold": {
+    "drupal-scaffold": {
       "file-mapping": {
         "[web-root]/robots.txt": {
           "append": "assets/my-robots-additions.txt",
@@ -464,7 +464,7 @@ Append to robots.txt:
 Patch a file after it's copied:
 
 ```
-"post-composer-scaffold-cmd": [
+"post-drupal-scaffold-cmd": [
   "cd docroot && patch -p1 <../patches/htaccess-ssl.patch"
 ]
 ```

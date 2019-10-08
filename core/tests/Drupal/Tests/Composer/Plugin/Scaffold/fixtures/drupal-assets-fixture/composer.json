@@ -1,7 +1,7 @@
 {
   "name": "fixtures/drupal-assets-fixture",
   "extra": {
-    "composer-scaffold": {
+    "drupal-scaffold": {
       "file-mapping": {
         "[web-root]/.csslintrc": "assets/.csslintrc",
         "[web-root]/.editorconfig": "assets/.editorconfig",

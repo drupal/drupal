@@ -1,7 +1,7 @@
 {
   "name": "fixtures/scaffold-override-fixture",
   "extra": {
-    "composer-scaffold": {
+    "drupal-scaffold": {
       "file-mapping": {
         "[web-root]/sites/default/default.settings.php": "assets/override-settings.php"
       }

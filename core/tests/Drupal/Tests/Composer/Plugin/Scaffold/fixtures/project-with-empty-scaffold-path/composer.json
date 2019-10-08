@@ -1,7 +1,7 @@
 {
   "name": "fixtures/project-with-empty-scaffold-path",
   "extra": {
-    "composer-scaffold": {
+    "drupal-scaffold": {
       "locations": {
         "web-root": "./"
       },

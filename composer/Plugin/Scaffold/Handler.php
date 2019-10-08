@@ -24,12 +24,12 @@ class Handler {
   /**
    * Composer hook called before scaffolding begins.
    */
-  const PRE_COMPOSER_SCAFFOLD_CMD = 'pre-composer-scaffold-cmd';
+  const PRE_DRUPAL_SCAFFOLD_CMD = 'pre-drupal-scaffold-cmd';
 
   /**
    * Composer hook called after scaffolding completes.
    */
-  const POST_COMPOSER_SCAFFOLD_CMD = 'post-composer-scaffold-cmd';
+  const POST_DRUPAL_SCAFFOLD_CMD = 'post-drupal-scaffold-cmd';
 
   /**
    * The Composer service.
@@ -148,7 +148,7 @@ class Handler {
 
     // Call any pre-scaffold scripts that may be defined.
     $dispatcher = new EventDispatcher($this->composer, $this->io);
-    $dispatcher->dispatch(self::PRE_COMPOSER_SCAFFOLD_CMD);
+    $dispatcher->dispatch(self::PRE_DRUPAL_SCAFFOLD_CMD);
 
     // Fetch the list of file mappings from each allowed package and normalize
     // them.
@@ -177,7 +177,7 @@ class Handler {
     $gitIgnoreManager->manageIgnored($scaffold_results, $scaffold_options);
 
     // Call post-scaffold scripts.
-    $dispatcher->dispatch(self::POST_COMPOSER_SCAFFOLD_CMD);
+    $dispatcher->dispatch(self::POST_DRUPAL_SCAFFOLD_CMD);
   }
 
   /**

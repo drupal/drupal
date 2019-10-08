@@ -10,7 +10,7 @@ use Composer\Util\Filesystem;
  * Per-project options from the 'extras' section of the composer.json file.
  *
  * Projects that describe scaffold files do so via their scaffold options.
- * This data is pulled from the 'composer-scaffold' portion of the extras
+ * This data is pulled from the 'drupal-scaffold' portion of the extras
  * section of the project data.
  */
 class ManageOptions {

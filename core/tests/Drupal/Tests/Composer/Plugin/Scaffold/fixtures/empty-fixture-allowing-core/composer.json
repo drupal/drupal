@@ -1,7 +1,7 @@
 {
   "name": "fixtures/empty-fixture-allowing-core",
   "extra": {
-    "composer-scaffold": {
+    "drupal-scaffold": {
       "allowed-packages": [
         "fixtures/drupal-core-fixture"
       ],

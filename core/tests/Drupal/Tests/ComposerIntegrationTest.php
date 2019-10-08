@@ -204,7 +204,7 @@ class ComposerIntegrationTest extends UnitTestCase {
   }
 
   /**
-   * Tests core's composer.json extra composer-scaffold file-mappings section.
+   * Tests core's composer.json extra drupal-scaffold file-mappings section.
    *
    * Verify that every file listed in file-mappings exists in its destination
    * path (mapping key) and also at its source path (mapping value), and that
@@ -229,7 +229,7 @@ class ComposerIntegrationTest extends UnitTestCase {
   public function testExpectedScaffoldFiles($destRelPath, $sourceRelPath, $expectedDestination = '[web-root]') {
     // Grab the 'file-mapping' section of the core composer.json file.
     $json = json_decode(file_get_contents($this->root . '/core/composer.json'));
-    $scaffold_file_mapping = (array) $json->extra->{'composer-scaffold'}->{'file-mapping'};
+    $scaffold_file_mapping = (array) $json->extra->{'drupal-scaffold'}->{'file-mapping'};
 
     // Assert that the 'file-mapping' section has the expected entry.
     $this->assertArrayHasKey("$expectedDestination/$destRelPath", $scaffold_file_mapping);

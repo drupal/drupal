@@ -6,7 +6,7 @@ namespace Drupal\Composer\Plugin\Scaffold;
  * Per-project options from the 'extras' section of the composer.json file.
  *
  * Projects that describe scaffold files do so via their scaffold options. This
- * data is pulled from the 'composer-scaffold' portion of the extras section of
+ * data is pulled from the 'drupal-scaffold' portion of the extras section of
  * the project data.
  */
 class ScaffoldOptions {
@@ -22,7 +22,7 @@ class ScaffoldOptions {
    * ScaffoldOptions constructor.
    *
    * @param array $options
-   *   The scaffold options taken from the 'composer-scaffold' section.
+   *   The scaffold options taken from the 'drupal-scaffold' section.
    */
   protected function __construct(array $options) {
     $this->options = $options + [
@@ -49,7 +49,7 @@ class ScaffoldOptions {
    *   True if scaffold options have been declared
    */
   public static function hasOptions(array $extras) {
-    return array_key_exists('composer-scaffold', $extras);
+    return array_key_exists('drupal-scaffold', $extras);
   }
 
   /**
@@ -62,7 +62,7 @@ class ScaffoldOptions {
    *   The scaffold options object representing the provided scaffold options
    */
   public static function create(array $extras) {
-    $options = static::hasOptions($extras) ? $extras['composer-scaffold'] : [];
+    $options = static::hasOptions($extras) ? $extras['drupal-scaffold'] : [];
     return new self($options);
   }
 

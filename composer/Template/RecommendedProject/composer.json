@@ -26,7 +26,7 @@
         "sort-packages": true
     },
     "extra": {
-        "composer-scaffold": {
+        "drupal-scaffold": {
             "locations": {
                 "web-root": "web/"
             }

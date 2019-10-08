@@ -133,7 +133,7 @@ class ComposerHookTest extends TestCase {
     // get a warning, and it does not scaffold.
     $stdout = $this->mustExec("composer require --no-ansi --no-interaction fixtures/scaffold-override-fixture:dev-master", $sut);
     $this->assertFileNotExists($sut . '/sites/default/default.settings.php');
-    $this->assertContains("Not scaffolding files for fixtures/scaffold-override-fixture, because it is not listed in the element 'extra.composer-scaffold.allowed-packages' in the root-level composer.json file.", $stdout);
+    $this->assertContains("Not scaffolding files for fixtures/scaffold-override-fixture, because it is not listed in the element 'extra.drupal-scaffold.allowed-packages' in the root-level composer.json file.", $stdout);
   }
 
 }

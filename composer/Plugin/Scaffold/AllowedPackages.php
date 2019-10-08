@@ -160,7 +160,7 @@ class AllowedPackages implements PostPackageEventListenerInterface {
   protected function evaluateNewPackages(array $allowed_packages) {
     foreach ($this->newPackages as $name => $newPackage) {
       if (!array_key_exists($name, $allowed_packages)) {
-        $this->io->write("Not scaffolding files for <comment>{$name}</comment>, because it is not listed in the element 'extra.composer-scaffold.allowed-packages' in the root-level composer.json file.");
+        $this->io->write("Not scaffolding files for <comment>{$name}</comment>, because it is not listed in the element 'extra.drupal-scaffold.allowed-packages' in the root-level composer.json file.");
       }
       else {
         $this->io->write("Package <comment>{$name}</comment> has scaffold operations, and is already allowed in the root-level composer.json file.");

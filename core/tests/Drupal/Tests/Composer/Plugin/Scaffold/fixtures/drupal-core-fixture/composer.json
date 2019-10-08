@@ -4,7 +4,7 @@
     "fixtures/drupal-assets-fixture": "*"
   },
   "extra": {
-    "composer-scaffold": {
+    "drupal-scaffold": {
       "allowed-packages": [
         "fixtures/drupal-assets-fixture"
       ]
