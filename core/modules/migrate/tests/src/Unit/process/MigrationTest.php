@@ -2,14 +2,11 @@
 
 namespace Drupal\Tests\migrate\Unit\process;
 
-use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\migrate\MigrateSkipProcessException;
 use Drupal\migrate\Plugin\MigrationInterface;
 use Drupal\migrate\Plugin\migrate\process\Migration;
-use Drupal\migrate\Plugin\MigrateDestinationInterface;
 use Drupal\migrate\Plugin\MigrateIdMapInterface;
 use Drupal\migrate\Plugin\MigratePluginManager;
-use Drupal\migrate\Plugin\MigrateSourceInterface;
 use Drupal\migrate\Plugin\MigrationPluginManagerInterface;
 use Prophecy\Argument;
 
@@ -18,7 +15,7 @@ use Prophecy\Argument;
  * @group migrate
  * @group legacy
  */
-class MigrationTest extends MigrateProcessTestCase {
+class MigrationTest extends MigrationLookupTestCase {
 
   /**
    * @var \Drupal\migrate\Plugin\MigrationInterface
@@ -47,54 +44,42 @@ class MigrationTest extends MigrateProcessTestCase {
   }
 
   /**
+   * Tests a lookup with no stubbing.
+   *
    * @covers ::transform
+   *
+   * @expectedDeprecation Not passing the migrate lookup service as the fifth parameter to Drupal\migrate\Plugin\migrate\process\MigrationLookup::__construct is deprecated in drupal:8.8.0 and will throw a type error in drupal:9.0.0. Pass an instance of \Drupal\migrate\MigrateLookupInterface. See https://www.drupal.org/node/3047268
+   * @expectedDeprecation Not passing the migrate stub service as the sixth parameter to Drupal\migrate\Plugin\migrate\process\MigrationLookup::__construct is deprecated in drupal:8.8.0 and will throw a type error in drupal:9.0.0. Pass an instance of \Drupal\migrate\MigrateStubInterface. See https://www.drupal.org/node/3047268
    */
   public function testTransformWithStubSkipping() {
-    $destination_migration = $this->getMigration();
-    $destination_migration->getDestinationPlugin(TRUE)->shouldNotBeCalled();
-
-    // Ensure the migration plugin manager returns our migration.
-    $this->migration_plugin_manager->createInstances(Argument::exact(['destination_migration']))
-      ->willReturn(['destination_migration' => $destination_migration->reveal()]);
-
     $configuration = [
       'no_stub' => TRUE,
       'migration' => 'destination_migration',
     ];
 
-    $this->migration_plugin->id()->willReturn('actual_migration');
-
+    $this->migrateLookup->lookup('destination_migration', [1])->willReturn([]);
+    $this->prepareContainer();
     $migration = new Migration($configuration, '', [], $this->migration_plugin->reveal(), $this->migration_plugin_manager->reveal(), $this->process_plugin_manager->reveal());
     $result = $migration->transform(1, $this->migrateExecutable, $this->row, '');
     $this->assertNull($result);
   }
 
   /**
+   * Tests a lookup with stubbing.
+   *
    * @covers ::transform
+   *
+   * @expectedDeprecation Not passing the migrate lookup service as the fifth parameter to Drupal\migrate\Plugin\migrate\process\MigrationLookup::__construct is deprecated in drupal:8.8.0 and will throw a type error in drupal:9.0.0. Pass an instance of \Drupal\migrate\MigrateLookupInterface. See https://www.drupal.org/node/3047268
+   * @expectedDeprecation Not passing the migrate stub service as the sixth parameter to Drupal\migrate\Plugin\migrate\process\MigrationLookup::__construct is deprecated in drupal:8.8.0 and will throw a type error in drupal:9.0.0. Pass an instance of \Drupal\migrate\MigrateStubInterface. See https://www.drupal.org/node/3047268
    */
   public function testTransformWithStubbing() {
-    $destination_migration = $this->getMigration();
-    $this->migration_plugin_manager->createInstances(['destination_migration'])
-      ->willReturn(['destination_migration' => $destination_migration->reveal()]);
-
     $configuration = [
       'no_stub' => FALSE,
       'migration' => 'destination_migration',
     ];
-
-    $this->migration_plugin->id()->willReturn('actual_migration');
-    $destination_migration->id()->willReturn('destination_migration');
-    $destination_migration->getDestinationPlugin(TRUE)->shouldBeCalled();
-    $destination_migration->getProcess()->willReturn([]);
-    $destination_migration->getSourceConfiguration()->willReturn([]);
-
-    $source_plugin = $this->prophesize(MigrateSourceInterface::class);
-    $source_plugin->getIds()->willReturn(['nid']);
-    $destination_migration->getSourcePlugin()->willReturn($source_plugin->reveal());
-    $destination_plugin = $this->prophesize(MigrateDestinationInterface::class);
-    $destination_plugin->import(Argument::any())->willReturn([2]);
-    $destination_migration->getDestinationPlugin(TRUE)->willReturn($destination_plugin->reveal());
-
+    $this->migrateLookup->lookup('destination_migration', [1])->willReturn([]);
+    $this->migrateStub->createStub('destination_migration', [1], [], FALSE)->willReturn([2]);
+    $this->prepareContainer();
     $migration = new Migration($configuration, '', [], $this->migration_plugin->reveal(), $this->migration_plugin_manager->reveal(), $this->process_plugin_manager->reveal());
     $result = $migration->transform(1, $this->migrateExecutable, $this->row, '');
     $this->assertEquals(2, $result);
@@ -118,6 +103,9 @@ class MigrationTest extends MigrateProcessTestCase {
 
   /**
    * Tests that processing is skipped when the input value is empty.
+   *
+   * @expectedDeprecation Not passing the migrate lookup service as the fifth parameter to Drupal\migrate\Plugin\migrate\process\MigrationLookup::__construct is deprecated in drupal:8.8.0 and will throw a type error in drupal:9.0.0. Pass an instance of \Drupal\migrate\MigrateLookupInterface. See https://www.drupal.org/node/3047268
+   * @expectedDeprecation Not passing the migrate stub service as the sixth parameter to Drupal\migrate\Plugin\migrate\process\MigrationLookup::__construct is deprecated in drupal:8.8.0 and will throw a type error in drupal:9.0.0. Pass an instance of \Drupal\migrate\MigrateStubInterface. See https://www.drupal.org/node/3047268
    */
   public function testSkipOnEmpty() {
     $configuration = [
@@ -126,6 +114,7 @@ class MigrationTest extends MigrateProcessTestCase {
     $this->migration_plugin->id()->willReturn(uniqid());
     $this->migration_plugin_manager->createInstances(['foobaz'])
       ->willReturn(['foobaz' => $this->migration_plugin->reveal()]);
+    $this->prepareContainer();
     $migration = new Migration($configuration, 'migration', [], $this->migration_plugin->reveal(), $this->migration_plugin_manager->reveal(), $this->process_plugin_manager->reveal());
     $this->expectException(MigrateSkipProcessException::class);
     $migration->transform(FALSE, $this->migrateExecutable, $this->row, 'foo');
@@ -133,8 +122,6 @@ class MigrationTest extends MigrateProcessTestCase {
 
   /**
    * Tests a successful lookup.
-   *
-   * @dataProvider successfulLookupDataProvider
    *
    * @param array $source_id_values
    *   The source id(s) of the migration map.
@@ -144,25 +131,20 @@ class MigrationTest extends MigrateProcessTestCase {
    *   The source value(s) for the migration process plugin.
    * @param string|array $expected_value
    *   The expected value(s) of the migration process plugin.
+   *
+   * @dataProvider successfulLookupDataProvider
+   *
+   * @expectedDeprecation Not passing the migrate lookup service as the fifth parameter to Drupal\migrate\Plugin\migrate\process\MigrationLookup::__construct is deprecated in drupal:8.8.0 and will throw a type error in drupal:9.0.0. Pass an instance of \Drupal\migrate\MigrateLookupInterface. See https://www.drupal.org/node/3047268
+   * @expectedDeprecation Not passing the migrate stub service as the sixth parameter to Drupal\migrate\Plugin\migrate\process\MigrationLookup::__construct is deprecated in drupal:8.8.0 and will throw a type error in drupal:9.0.0. Pass an instance of \Drupal\migrate\MigrateStubInterface. See https://www.drupal.org/node/3047268
+   *
+   * @throws \Drupal\migrate\MigrateSkipProcessException
    */
-  public function testSuccessfulLookup($source_id_values, $destination_id_values, $source_value, $expected_value) {
+  public function testSuccessfulLookup(array $source_id_values, array $destination_id_values, $source_value, $expected_value) {
     $configuration = [
       'migration' => 'foobaz',
     ];
-    $this->migration_plugin->id()->willReturn(uniqid());
-
-    $id_map = $this->prophesize(MigrateIdMapInterface::class);
-    $id_map->lookupDestinationIds($source_id_values)->willReturn([$destination_id_values]);
-    $this->migration_plugin->getIdMap()->willReturn($id_map->reveal());
-
-    $this->migration_plugin_manager->createInstances(['foobaz'])
-      ->willReturn(['foobaz' => $this->migration_plugin->reveal()]);
-
-    $migrationStorage = $this->prophesize(EntityStorageInterface::class);
-    $migrationStorage
-      ->loadMultiple(['foobaz'])
-      ->willReturn([$this->migration_plugin->reveal()]);
-
+    $this->migrateLookup->lookup('foobaz', $source_id_values)->willReturn([$destination_id_values]);
+    $this->prepareContainer();
     $migration = new Migration($configuration, 'migration', [], $this->migration_plugin->reveal(), $this->migration_plugin_manager->reveal(), $this->process_plugin_manager->reveal());
     $this->assertSame($expected_value, $migration->transform($source_value, $this->migrateExecutable, $this->row, 'foo'));
   }
@@ -171,6 +153,7 @@ class MigrationTest extends MigrateProcessTestCase {
    * Provides data for the successful lookup test.
    *
    * @return array
+   *   The data.
    */
   public function successfulLookupDataProvider() {
     return [

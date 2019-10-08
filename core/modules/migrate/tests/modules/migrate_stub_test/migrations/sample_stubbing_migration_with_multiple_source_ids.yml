@@ -1,0 +1,27 @@
+id: sample_stubbing_migration_with_multiple_source_ids
+label: "Sample stubbing migration with multiple source ids."
+source:
+  plugin: embedded_data
+  data_rows:
+    - id: 17
+      version_id: 17
+      title: "Sample 1"
+      bodyvalue: "This is the body for ID 17"
+      bodyformat: "plain_text"
+    - id: 25
+      version_id: 25
+      title: "Sample 2"
+      bodyvalue: "This is the body for ID 25"
+      bodyformat: "plain_text"
+  ids:
+    id:
+      type: integer
+    version_id:
+      type: integer
+process:
+  title: title
+  body/0/value: bodyvalue
+  body/0/format: bodyformat
+destination:
+  default_bundle: node_stub
+  plugin: entity:node

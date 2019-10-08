@@ -2,22 +2,18 @@
 
 namespace Drupal\Tests\migrate\Unit\process;
 
-use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\migrate\MigrateSkipProcessException;
 use Drupal\migrate\Plugin\MigrationInterface;
 use Drupal\migrate\Plugin\migrate\process\MigrationLookup;
-use Drupal\migrate\Plugin\MigrateDestinationInterface;
 use Drupal\migrate\Plugin\MigrateIdMapInterface;
-use Drupal\migrate\Plugin\MigrateSourceInterface;
 use Drupal\migrate\Plugin\MigrationPluginManagerInterface;
-use Drupal\migrate\Row;
 use Prophecy\Argument;
 
 /**
  * @coversDefaultClass \Drupal\migrate\Plugin\migrate\process\MigrationLookup
  * @group migrate
  */
-class MigrationLookupTest extends MigrateProcessTestCase {
+class MigrationLookupTest extends MigrationLookupTestCase {
 
   /**
    * @covers ::transform
@@ -43,7 +39,7 @@ class MigrationLookupTest extends MigrateProcessTestCase {
     $migration_plugin->id()->willReturn('actual_migration');
     $destination_migration->getDestinationPlugin(TRUE)->shouldNotBeCalled();
 
-    $migration = new MigrationLookup($configuration, '', [], $migration_plugin->reveal(), $migration_plugin_manager->reveal());
+    $migration = MigrationLookup::create($this->prepareContainer(), $configuration, '', [], $migration_plugin->reveal());
     $result = $migration->transform(1, $this->migrateExecutable, $this->row, '');
     $this->assertNull($result);
   }
@@ -53,35 +49,15 @@ class MigrationLookupTest extends MigrateProcessTestCase {
    */
   public function testTransformWithStubbing() {
     $migration_plugin = $this->prophesize(MigrationInterface::class);
-    $migration_plugin_manager = $this->prophesize(MigrationPluginManagerInterface::class);
-
-    $destination_id_map = $this->prophesize(MigrateIdMapInterface::class);
-    $destination_migration = $this->prophesize('Drupal\migrate\Plugin\Migration');
-    $destination_migration->getIdMap()->willReturn($destination_id_map->reveal());
-    $migration_plugin_manager->createInstances(['destination_migration'])
-      ->willReturn(['destination_migration' => $destination_migration->reveal()]);
-    $destination_id_map->lookupDestinationIds([1])->willReturn(NULL);
-    $destination_id_map->saveIdMapping(Argument::any(), Argument::any(), MigrateIdMapInterface::STATUS_NEEDS_UPDATE)->willReturn(NULL);
+    $this->migrateLookup->lookup('destination_migration', [1])->willReturn(NULL);
+    $this->migrateStub->createStub('destination_migration', [1], [], FALSE)->willReturn([2]);
 
     $configuration = [
       'no_stub' => FALSE,
       'migration' => 'destination_migration',
     ];
 
-    $migration_plugin->id()->willReturn('actual_migration');
-    $destination_migration->id()->willReturn('destination_migration');
-    $destination_migration->getDestinationPlugin(TRUE)->shouldBeCalled();
-    $destination_migration->getProcess()->willReturn([]);
-    $destination_migration->getSourceConfiguration()->willReturn([]);
-
-    $source_plugin = $this->prophesize(MigrateSourceInterface::class);
-    $source_plugin->getIds()->willReturn(['nid']);
-    $destination_migration->getSourcePlugin()->willReturn($source_plugin->reveal());
-    $destination_plugin = $this->prophesize(MigrateDestinationInterface::class);
-    $destination_plugin->import(Argument::any())->willReturn([2]);
-    $destination_migration->getDestinationPlugin(TRUE)->willReturn($destination_plugin->reveal());
-
-    $migration = new MigrationLookup($configuration, '', [], $migration_plugin->reveal(), $migration_plugin_manager->reveal());
+    $migration = MigrationLookup::create($this->prepareContainer(), $configuration, '', [], $migration_plugin->reveal());
     $result = $migration->transform(1, $this->migrateExecutable, $this->row, '');
     $this->assertEquals(2, $result);
   }
@@ -104,7 +80,7 @@ class MigrationLookupTest extends MigrateProcessTestCase {
     $migration_plugin->id()->willReturn(uniqid());
     $migration_plugin_manager->createInstances(['foobaz'])
       ->willReturn(['foobaz' => $migration_plugin->reveal()]);
-    $migration = new MigrationLookup($configuration, 'migration_lookup', [], $migration_plugin->reveal(), $migration_plugin_manager->reveal());
+    $migration = MigrationLookup::create($this->prepareContainer(), $configuration, '', [], $migration_plugin->reveal());
     $this->expectException(MigrateSkipProcessException::class);
     $migration->transform($value, $this->migrateExecutable, $this->row, 'foo');
   }
@@ -147,7 +123,7 @@ class MigrationLookupTest extends MigrateProcessTestCase {
     $migration_plugin->id()->willReturn(uniqid());
     $migration_plugin_manager->createInstances(['foobaz'])
       ->willReturn(['foobaz' => $migration_plugin->reveal()]);
-    $migration = new MigrationLookup($configuration, 'migration_lookup', [], $migration_plugin->reveal(), $migration_plugin_manager->reveal(), $process_plugin_manager->reveal());
+    $migration = MigrationLookup::create($this->prepareContainer(), $configuration, '', [], $migration_plugin->reveal());
     $lookup = $migration->transform($value, $this->migrateExecutable, $this->row, 'foo');
 
     /* We provided no values and asked for no stub, so we should get NULL. */
@@ -171,8 +147,6 @@ class MigrationLookupTest extends MigrateProcessTestCase {
   /**
    * Tests a successful lookup.
    *
-   * @dataProvider successfulLookupDataProvider
-   *
    * @param array $source_id_values
    *   The source id(s) of the migration map.
    * @param array $destination_id_values
@@ -181,29 +155,20 @@ class MigrationLookupTest extends MigrateProcessTestCase {
    *   The source value(s) for the migration process plugin.
    * @param string|array $expected_value
    *   The expected value(s) of the migration process plugin.
+   *
+   * @dataProvider successfulLookupDataProvider
+   *
+   * @throws \Drupal\migrate\MigrateSkipProcessException
    */
-  public function testSuccessfulLookup($source_id_values, $destination_id_values, $source_value, $expected_value) {
+  public function testSuccessfulLookup(array $source_id_values, array $destination_id_values, $source_value, $expected_value) {
     $migration_plugin = $this->prophesize(MigrationInterface::class);
-    $migration_plugin_manager = $this->prophesize(MigrationPluginManagerInterface::class);
+    $this->migrateLookup->lookup('foobaz', $source_id_values)->willReturn([$destination_id_values]);
 
     $configuration = [
       'migration' => 'foobaz',
     ];
-    $migration_plugin->id()->willReturn(uniqid());
 
-    $id_map = $this->prophesize(MigrateIdMapInterface::class);
-    $id_map->lookupDestinationIds($source_id_values)->willReturn([$destination_id_values]);
-    $migration_plugin->getIdMap()->willReturn($id_map->reveal());
-
-    $migration_plugin_manager->createInstances(['foobaz'])
-      ->willReturn(['foobaz' => $migration_plugin->reveal()]);
-
-    $migrationStorage = $this->prophesize(EntityStorageInterface::class);
-    $migrationStorage
-      ->loadMultiple(['foobaz'])
-      ->willReturn([$migration_plugin->reveal()]);
-
-    $migration = new MigrationLookup($configuration, 'migration_lookup', [], $migration_plugin->reveal(), $migration_plugin_manager->reveal());
+    $migration = MigrationLookup::create($this->prepareContainer(), $configuration, '', [], $migration_plugin->reveal());
     $this->assertSame($expected_value, $migration->transform($source_value, $this->migrateExecutable, $this->row, 'foo'));
   }
 
@@ -211,6 +176,7 @@ class MigrationLookupTest extends MigrateProcessTestCase {
    * Provides data for the successful lookup test.
    *
    * @return array
+   *   The data.
    */
   public function successfulLookupDataProvider() {
     return [
@@ -273,90 +239,16 @@ class MigrationLookupTest extends MigrateProcessTestCase {
   }
 
   /**
-   * Tests that a message is successfully created if import fails.
-   */
-  public function testImportException() {
-    $migration_plugin = $this->prophesize(MigrationInterface::class);
-    $migration_plugin_manager = $this->prophesize(MigrationPluginManagerInterface::class);
-
-    $destination_id_map = $this->prophesize(MigrateIdMapInterface::class);
-    $destination_migration = $this->prophesize('Drupal\migrate\Plugin\Migration');
-    $destination_migration->getIdMap()->willReturn($destination_id_map->reveal());
-    $migration_plugin_manager->createInstances(['destination_migration'])
-      ->willReturn(['destination_migration' => $destination_migration->reveal()]);
-    $destination_id_map->lookupDestinationIds([1])->willReturn(NULL);
-    $destination_id_map->saveMessage(Argument::any(), Argument::any())->willReturn(NULL);
-    $destination_id_map->saveIdMapping(Argument::any(), Argument::any(), Argument::any())->shouldNotBeCalled();
-
-    $configuration = [
-      'no_stub' => FALSE,
-      'migration' => 'destination_migration',
-    ];
-
-    $destination_migration->id()->willReturn('destination_migration');
-    $destination_migration->getDestinationPlugin(TRUE)->shouldBeCalled();
-    $destination_migration->getProcess()->willReturn([]);
-    $destination_migration->getSourceConfiguration()->willReturn([]);
-
-    $source_plugin = $this->prophesize(MigrateSourceInterface::class);
-    $source_plugin->getIds()->willReturn(['nid']);
-    $destination_migration->getSourcePlugin()->willReturn($source_plugin->reveal());
-    $destination_plugin = $this->prophesize(MigrateDestinationInterface::class);
-    $e = new \Exception();
-    $destination_plugin->import(Argument::any())->willThrow($e);
-    $destination_migration->getDestinationPlugin(TRUE)->willReturn($destination_plugin->reveal());
-
-    $migration = new MigrationLookup($configuration, '', [], $migration_plugin->reveal(), $migration_plugin_manager->reveal());
-    $migration->transform(1, $this->migrateExecutable, $this->row, '');
-  }
-
-  /**
    * Tests processing multiple source IDs.
    */
   public function testMultipleSourceIds() {
     $migration_plugin = $this->prophesize(MigrationInterface::class);
-    $migration_plugin_manager = $this->prophesize(MigrationPluginManagerInterface::class);
-    $foobaz_migration = $this->prophesize(MigrationInterface::class);
-
-    $id_map = $this->prophesize(MigrateIdMapInterface::class);
-    $destination_plugin = $this->prophesize(MigrateDestinationInterface::class);
-    $source_plugin = $this->prophesize(MigrateSourceInterface::class);
-
-    $migration_plugin_manager->createInstances(['foobaz'])
-      ->willReturn(['foobaz' => $foobaz_migration->reveal()]);
-
-    $foobaz_migration->getIdMap()->willReturn($id_map->reveal());
-    $foobaz_migration->getDestinationPlugin(TRUE)->willReturn($destination_plugin->reveal());
-    $foobaz_migration->getProcess()->willReturn([]);
-    $foobaz_migration->getSourcePlugin()->willReturn($source_plugin->reveal());
-    $foobaz_migration->id()->willReturn('foobaz');
-    $foobaz_migration->getSourceConfiguration()->willReturn([]);
-
-    $source_plugin_ids = [
-      'string_id' => [
-        'type' => 'string',
-        'max_length' => 128,
-        'is_ascii' => TRUE,
-        'alias' => 'wpt',
-      ],
-      'integer_id' => [
-        'type' => 'integer',
-        'unsigned' => FALSE,
-        'alias' => 'wpt',
-      ],
-    ];
-
-    $stub_row = new Row(['string_id' => 'example_string', 'integer_id' => 99], $source_plugin_ids, TRUE);
-    $destination_plugin->import($stub_row)->willReturn([2]);
-
-    $source_plugin->getIds()->willReturn($source_plugin_ids);
-
+    $this->migrateLookup->lookup('foobaz', ['id', 6])->willReturn([[2]]);
     $configuration = [
       'migration' => 'foobaz',
-      'source_ids' => ['foobaz' => ['string_id', 'integer_id']],
     ];
-    $migration = new MigrationLookup($configuration, 'migration', [], $migration_plugin->reveal(), $migration_plugin_manager->reveal());
-    $result = $migration->transform(NULL, $this->migrateExecutable, $stub_row, 'foo');
+    $migration = MigrationLookup::create($this->prepareContainer(), $configuration, '', [], $migration_plugin->reveal());
+    $result = $migration->transform(['id', 6], $this->migrateExecutable, $this->row, '');
     $this->assertEquals(2, $result);
   }
 

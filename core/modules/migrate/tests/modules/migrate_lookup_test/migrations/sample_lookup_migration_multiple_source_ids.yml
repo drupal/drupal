@@ -1,0 +1,28 @@
+id: sample_lookup_migration_multiple_source_ids
+label: "Sample Lookup Migration With Multiple Source Ids."
+source:
+  plugin: embedded_data
+  data_rows:
+    - id: 17
+      version_id: 17
+      nid: 1
+      title: "Node 1"
+    - id: 25
+      version_id: 25
+      nid: 2
+      title: "Node 2"
+    - id: 25
+      version_id: 26
+      nid: 3
+      title: "Node 3"
+  ids:
+    id:
+      type: integer
+    version_id:
+      type: integer
+process:
+  nid: nid
+  title: title
+destination:
+  default_bundle: node_lookup
+  plugin: entity:node
