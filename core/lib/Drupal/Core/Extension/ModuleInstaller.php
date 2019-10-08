@@ -248,10 +248,17 @@ class ModuleInstaller implements ModuleInstallerInterface {
         /** @var \Drupal\Core\Entity\EntityFieldManagerInterface $entity_field_manager */
         $entity_field_manager = \Drupal::service('entity_field.manager');
         foreach ($entity_type_manager->getDefinitions() as $entity_type) {
+          $is_fieldable_entity_type = $entity_type->entityClassImplements(FieldableEntityInterface::class);
+
           if ($entity_type->getProvider() == $module) {
-            $update_manager->installEntityType($entity_type);
+            if ($is_fieldable_entity_type) {
+              $update_manager->installFieldableEntityType($entity_type, $entity_field_manager->getFieldStorageDefinitions($entity_type->id()));
+            }
+            else {
+              $update_manager->installEntityType($entity_type);
+            }
           }
-          elseif ($entity_type->entityClassImplements(FieldableEntityInterface::CLASS)) {
+          elseif ($is_fieldable_entity_type) {
             // The module being installed may be adding new fields to existing
             // entity types. Field definitions for any entity type defined by
             // the module are handled in the if branch.

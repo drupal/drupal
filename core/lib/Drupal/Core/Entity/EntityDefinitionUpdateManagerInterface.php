@@ -153,6 +153,16 @@ interface EntityDefinitionUpdateManagerInterface {
   public function installEntityType(EntityTypeInterface $entity_type);
 
   /**
+   * Installs a new fieldable entity type definition.
+   *
+   * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
+   *   The entity type definition.
+   * @param \Drupal\Core\Field\FieldStorageDefinitionInterface[] $field_storage_definitions
+   *   The entity type's field storage definitions.
+   */
+  public function installFieldableEntityType(EntityTypeInterface $entity_type, array $field_storage_definitions);
+
+  /**
    * Applies any change performed to the passed entity type definition.
    *
    * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type

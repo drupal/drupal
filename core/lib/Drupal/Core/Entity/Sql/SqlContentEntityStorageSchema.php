@@ -358,37 +358,7 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
    * {@inheritdoc}
    */
   public function onEntityTypeCreate(EntityTypeInterface $entity_type) {
-    // When installing an entity type, we have to use the live (in-code) entity
-    // type and field storage definitions.
-    $this->entityType = $entity_type;
-    $this->fieldStorageDefinitions = $this->entityFieldManager->getFieldStorageDefinitions($entity_type->id());
-
-    $this->checkEntityType($entity_type);
-    $schema_handler = $this->database->schema();
-
-    // Create entity tables.
-    $schema = $this->getEntitySchema($entity_type, TRUE);
-    foreach ($schema as $table_name => $table_schema) {
-      if (!$schema_handler->tableExists($table_name)) {
-        $schema_handler->createTable($table_name, $table_schema);
-      }
-    }
-
-    // Create dedicated field tables.
-    $table_mapping = $this->getTableMapping($this->entityType);
-    foreach ($this->fieldStorageDefinitions as $field_storage_definition) {
-      if ($table_mapping->requiresDedicatedTableStorage($field_storage_definition)) {
-        $this->createDedicatedTableSchema($field_storage_definition);
-      }
-      elseif ($table_mapping->allowsSharedTableStorage($field_storage_definition)) {
-        // The shared tables are already fully created, but we need to save the
-        // per-field schema definitions for later use.
-        $this->createSharedTableSchema($field_storage_definition, TRUE);
-      }
-    }
-
-    // Save data about entity indexes and keys.
-    $this->saveEntitySchemaData($entity_type, $schema);
+    $this->onFieldableEntityTypeCreate($entity_type, $this->entityFieldManager->getFieldStorageDefinitions($entity_type->id()));
   }
 
   /**
@@ -440,6 +410,43 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
 
     // Delete the entity schema.
     $this->deleteEntitySchemaData($entity_type);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function onFieldableEntityTypeCreate(EntityTypeInterface $entity_type, array $field_storage_definitions) {
+    // When installing a fieldable entity type, we have to use the provided
+    // entity type and field storage definitions.
+    $this->entityType = $entity_type;
+    $this->fieldStorageDefinitions = $field_storage_definitions;
+
+    $this->checkEntityType($entity_type);
+    $schema_handler = $this->database->schema();
+
+    // Create entity tables.
+    $schema = $this->getEntitySchema($entity_type, TRUE);
+    foreach ($schema as $table_name => $table_schema) {
+      if (!$schema_handler->tableExists($table_name)) {
+        $schema_handler->createTable($table_name, $table_schema);
+      }
+    }
+
+    // Create dedicated field tables.
+    $table_mapping = $this->getTableMapping($this->entityType);
+    foreach ($this->fieldStorageDefinitions as $field_storage_definition) {
+      if ($table_mapping->requiresDedicatedTableStorage($field_storage_definition)) {
+        $this->createDedicatedTableSchema($field_storage_definition);
+      }
+      elseif ($table_mapping->allowsSharedTableStorage($field_storage_definition)) {
+        // The shared tables are already fully created, but we need to save the
+        // per-field schema definitions for later use.
+        $this->createSharedTableSchema($field_storage_definition, TRUE);
+      }
+    }
+
+    // Save data about entity indexes and keys.
+    $this->saveEntitySchemaData($entity_type, $schema);
   }
 
   /**

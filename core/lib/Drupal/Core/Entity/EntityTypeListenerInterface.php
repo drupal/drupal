@@ -16,6 +16,16 @@ interface EntityTypeListenerInterface {
   public function onEntityTypeCreate(EntityTypeInterface $entity_type);
 
   /**
+   * Reacts to the creation of the fieldable entity type.
+   *
+   * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
+   *   The entity type being created.
+   * @param \Drupal\Core\Field\FieldStorageDefinitionInterface[] $field_storage_definitions
+   *   The entity type's field storage definitions.
+   */
+  public function onFieldableEntityTypeCreate(EntityTypeInterface $entity_type, array $field_storage_definitions);
+
+  /**
    * Reacts to the update of the entity type.
    *
    * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type

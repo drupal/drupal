@@ -55,6 +55,25 @@ class EntitySchemaSubscriber implements EntityTypeListenerInterface, EventSubscr
   /**
    * {@inheritdoc}
    */
+  public function onEntityTypeCreate(EntityTypeInterface $entity_type) {
+    // Only add the new base field when a test needs it.
+    if (!$this->state->get('entity_test_update.install_new_base_field_during_create', FALSE)) {
+      return;
+    }
+
+    // Add a new base field when the entity type is created.
+    $definitions = $this->state->get('entity_test_update.additional_base_field_definitions', []);
+    $definitions['new_base_field'] = BaseFieldDefinition::create('string')
+      ->setName('new_base_field')
+      ->setLabel(new TranslatableMarkup('A new base field'));
+    $this->state->set('entity_test_update.additional_base_field_definitions', $definitions);
+
+    $this->entityDefinitionUpdateManager->installFieldStorageDefinition('new_base_field', 'entity_test_update', 'entity_test_update', $definitions['new_base_field']);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function onEntityTypeUpdate(EntityTypeInterface $entity_type, EntityTypeInterface $original) {
     // Only add the new base field when a test needs it.
     if (!$this->state->get('entity_test_update.install_new_base_field_during_update', FALSE)) {

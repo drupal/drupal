@@ -218,6 +218,23 @@ class EntityDefinitionUpdateManager implements EntityDefinitionUpdateManagerInte
   /**
    * {@inheritdoc}
    */
+  public function installFieldableEntityType(EntityTypeInterface $entity_type, array $field_storage_definitions) {
+    $this->clearCachedDefinitions();
+    foreach ($field_storage_definitions as $name => $field_storage_definition) {
+      if ($field_storage_definition instanceof BaseFieldDefinition) {
+        $field_storage_definition
+          ->setName($name)
+          ->setTargetEntityTypeId($entity_type->id())
+          ->setProvider($entity_type->getProvider())
+          ->setTargetBundle(NULL);
+      }
+    }
+    $this->entityTypeListener->onFieldableEntityTypeCreate($entity_type, $field_storage_definitions);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function updateFieldableEntityType(EntityTypeInterface $entity_type, array $field_storage_definitions, array &$sandbox = NULL) {
     $original = $this->getEntityType($entity_type->id());
 

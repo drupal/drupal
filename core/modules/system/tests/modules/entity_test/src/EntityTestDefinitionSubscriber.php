@@ -104,6 +104,13 @@ class EntityTestDefinitionSubscriber implements EventSubscriberInterface, Entity
   /**
    * {@inheritdoc}
    */
+  public function onFieldableEntityTypeCreate(EntityTypeInterface $entity_type, array $field_storage_definitions) {
+    $this->storeEvent(EntityTypeEvents::CREATE);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function onEntityTypeUpdate(EntityTypeInterface $entity_type, EntityTypeInterface $original) {
     $last_installed_definition = $this->entityLastInstalledSchemaRepository->getLastInstalledDefinition($entity_type->id());
     if ((string) $last_installed_definition->getLabel() === 'Updated entity test rev') {

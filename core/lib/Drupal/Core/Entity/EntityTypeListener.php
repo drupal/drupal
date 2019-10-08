@@ -83,6 +83,28 @@ class EntityTypeListener implements EntityTypeListenerInterface {
   /**
    * {@inheritdoc}
    */
+  public function onFieldableEntityTypeCreate(EntityTypeInterface $entity_type, array $field_storage_definitions) {
+    $entity_type_id = $entity_type->id();
+
+    // @todo Forward this to all interested handlers, not only storage, once
+    //   iterating handlers is possible: https://www.drupal.org/node/2332857.
+    $storage = $this->entityTypeManager->createHandlerInstance($entity_type->getStorageClass(), $entity_type);
+    if ($storage instanceof EntityTypeListenerInterface) {
+      $storage->onFieldableEntityTypeCreate($entity_type, $field_storage_definitions);
+    }
+
+    $this->entityLastInstalledSchemaRepository->setLastInstalledDefinition($entity_type);
+    if ($entity_type->entityClassImplements(FieldableEntityInterface::class)) {
+      $this->entityLastInstalledSchemaRepository->setLastInstalledFieldStorageDefinitions($entity_type_id, $field_storage_definitions);
+    }
+
+    $this->eventDispatcher->dispatch(EntityTypeEvents::CREATE, new EntityTypeEvent($entity_type));
+    $this->clearCachedDefinitions();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function onEntityTypeUpdate(EntityTypeInterface $entity_type, EntityTypeInterface $original) {
     // An entity type can be updated even when its live (in-code) definition has
     // been removed from the codebase, so we need to instantiate a custom

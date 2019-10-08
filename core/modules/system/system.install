@@ -20,6 +20,7 @@ use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Extension\Extension;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\File\FileSystemInterface;
+use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Path\Entity\PathAlias;
 use Drupal\Core\Path\PathAliasStorage;
 use Drupal\Core\Path\PathAliasStorageSchema;
@@ -2381,7 +2382,45 @@ function system_update_8803() {
         'uuid' => 'uuid',
       ],
     ]);
-    $entity_definition_update_manager->installEntityType($entity_type);
+
+    $field_storage_definitions['id'] = BaseFieldDefinition::create('integer')
+      ->setLabel(new TranslatableMarkup('ID'))
+      ->setReadOnly(TRUE)
+      ->setSetting('unsigned', TRUE);
+
+    $field_storage_definitions['uuid'] = BaseFieldDefinition::create('uuid')
+      ->setLabel(new TranslatableMarkup('UUID'))
+      ->setReadOnly(TRUE);
+
+    $field_storage_definitions['revision_id'] = BaseFieldDefinition::create('integer')
+      ->setLabel(new TranslatableMarkup('Revision ID'))
+      ->setReadOnly(TRUE)
+      ->setSetting('unsigned', TRUE);
+
+    $field_storage_definitions['langcode'] = BaseFieldDefinition::create('language')
+      ->setLabel(new TranslatableMarkup('Language'))
+      ->setRevisionable(TRUE)
+      ->setDefaultValue(LanguageInterface::LANGCODE_NOT_SPECIFIED);
+
+    $field_storage_definitions['revision_default'] = BaseFieldDefinition::create('boolean')
+      ->setLabel(new TranslatableMarkup('Default revision'))
+      ->setStorageRequired(TRUE)
+      ->setInternal(TRUE)
+      ->setRevisionable(TRUE);
+
+    $field_storage_definitions['path'] = BaseFieldDefinition::create('string')
+      ->setLabel(new TranslatableMarkup('System path'))
+      ->setDescription(new TranslatableMarkup('The path that this alias belongs to.'))
+      ->setRequired(TRUE)
+      ->setRevisionable(TRUE);
+
+    $field_storage_definitions['alias'] = BaseFieldDefinition::create('string')
+      ->setLabel(new TranslatableMarkup('Path alias'))
+      ->setDescription(new TranslatableMarkup('An alias used with this path.'))
+      ->setRequired(TRUE)
+      ->setRevisionable(TRUE);
+
+    $entity_definition_update_manager->installFieldableEntityType($entity_type, $field_storage_definitions);
 
     return t('The "path_alias" entity type has been installed.');
   }

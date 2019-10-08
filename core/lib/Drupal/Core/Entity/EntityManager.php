@@ -649,6 +649,19 @@ class EntityManager implements EntityManagerInterface, ContainerAwareInterface {
   /**
    * {@inheritdoc}
    *
+   * @deprecated in Drupal 8.8.0, will be removed before Drupal 9.0.0.
+   *   Use \Drupal\Core\Entity\EntityTypeListenerInterface::onFieldableEntityTypeCreate()
+   *   instead.
+   *
+   * @see https://www.drupal.org/project/drupal/issues/3043455
+   */
+  public function onFieldableEntityTypeCreate(EntityTypeInterface $entity_type, array $field_storage_definitions) {
+    $this->container->get('entity_type.listener')->onFieldableEntityTypeCreate($entity_type, $field_storage_definitions);
+  }
+
+  /**
+   * {@inheritdoc}
+   *
    * @deprecated in Drupal 8.0.0, will be removed before Drupal 9.0.0.
    *   Use \Drupal\Core\Entity\EntityTypeListenerInterface::onEntityTypeUpdate()
    *   instead.

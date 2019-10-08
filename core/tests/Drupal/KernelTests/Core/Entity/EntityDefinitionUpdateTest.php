@@ -149,6 +149,46 @@ class EntityDefinitionUpdateTest extends EntityKernelTestBase {
   }
 
   /**
+   * Tests installing an additional base field while installing an entity type.
+   *
+   * @covers ::installFieldableEntityType
+   */
+  public function testInstallAdditionalBaseFieldDuringFieldableEntityTypeInstallation() {
+    $entity_type = clone $this->entityTypeManager->getDefinition('entity_test_update');
+    $field_storage_definitions = \Drupal::service('entity_field.manager')->getFieldStorageDefinitions('entity_test_update');
+
+    // Enable the creation of a new base field during the installation of a
+    // fieldable entity type.
+    $this->state->set('entity_test_update.install_new_base_field_during_create', TRUE);
+
+    // Install the entity type and check that the additional base field was also
+    // installed.
+    $this->entityDefinitionUpdateManager->installFieldableEntityType($entity_type, $field_storage_definitions);
+
+    // Check whether the 'new_base_field' field has been installed correctly.
+    $field_storage_definition = $this->entityDefinitionUpdateManager->getFieldStorageDefinition('new_base_field', 'entity_test_update');
+    $this->assertNotNull($field_storage_definition);
+  }
+
+  /**
+   * Tests creating a fieldable entity type that doesn't exist in code anymore.
+   *
+   * @covers ::installFieldableEntityType
+   */
+  public function testInstallFieldableEntityTypeWithoutInCodeDefinition() {
+    $entity_type = clone $this->entityTypeManager->getDefinition('entity_test_update');
+    $field_storage_definitions = \Drupal::service('entity_field.manager')->getFieldStorageDefinitions('entity_test_update');
+
+    // Remove the entity type definition. This is the same thing as removing the
+    // code that defines it.
+    $this->deleteEntityType();
+
+    // Install the entity type and check that its tables have been created.
+    $this->entityDefinitionUpdateManager->installFieldableEntityType($entity_type, $field_storage_definitions);
+    $this->assertTrue($this->database->schema()->tableExists('entity_test_update'), 'The base table of the entity type has been created.');
+  }
+
+  /**
    * Tests updating an entity type that doesn't exist in code anymore.
    *
    * @covers ::updateEntityType
