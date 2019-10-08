@@ -1,0 +1,211 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.default
+  module:
+    - node
+id: test_entity_field_renderered_entity
+label: test_entity_field_renderered_entity
+module: views
+description: ''
+tag: ''
+base_table: node_field_data
+base_field: nid
+core: 8.x
+display:
+  default:
+    display_plugin: default
+    id: default
+    display_title: Master
+    position: 0
+    display_options:
+      defaults:
+        fields: false
+        pager: false
+        sorts: false
+      pager:
+        options:
+          offset: 0
+        type: none
+      row:
+        type: fields
+      sorts:
+        nid:
+          id: nid
+          table: node_field_data
+          field: nid
+          relationship: none
+          group_type: group
+          admin_label: ''
+          order: ASC
+          exposed: false
+          expose:
+            label: ''
+          entity_type: node
+          entity_field: nid
+          plugin_id: standard
+        title:
+          id: title
+          table: node_field_data
+          field: title
+          plugin_id: standard
+          entity_type: node
+          entity_field: title
+      rendering_language: '***LANGUAGE_entity_translation***'
+      fields:
+        rendered_entity:
+          id: rendered_entity
+          table: node
+          field: rendered_entity
+          relationship: none
+          group_type: group
+          admin_label: ''
+          label: ''
+          exclude: false
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: false
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          view_mode: default
+          entity_type: node
+          plugin_id: rendered_entity
+      display_extenders: {  }
+    cache_metadata:
+      max-age: -1
+      contexts:
+        - 'languages:language_interface'
+        - 'user.node_grants:view'
+      tags:
+        - 'config:core.entity_view_display.node.article.default'
+  page_1:
+    display_plugin: page
+    id: page_1
+    display_title: Page
+    position: 1
+    display_options:
+      rendering_language: '***LANGUAGE_entity_translation***'
+      path: test_entity_field_renderered_entity/entity_translation
+      display_extenders: {  }
+    cache_metadata:
+      max-age: -1
+      contexts:
+        - 'languages:language_interface'
+        - 'user.node_grants:view'
+      tags:
+        - 'config:core.entity_view_display.node.article.default'
+  page_2:
+    display_plugin: page
+    id: page_2
+    display_title: Page
+    position: 2
+    display_options:
+      rendering_language: '***LANGUAGE_entity_default***'
+      path: test_entity_field_renderered_entity/entity_default
+      display_extenders: {  }
+    cache_metadata:
+      max-age: -1
+      contexts:
+        - 'languages:language_interface'
+        - 'user.node_grants:view'
+      tags:
+        - 'config:core.entity_view_display.node.article.default'
+  page_3:
+    display_plugin: page
+    id: page_3
+    display_title: Page
+    position: 3
+    display_options:
+      rendering_language: '***LANGUAGE_site_default***'
+      path: test_entity_field_renderered_entity/site_default
+      display_extenders: {  }
+    cache_metadata:
+      max-age: -1
+      contexts:
+        - 'languages:language_interface'
+        - 'user.node_grants:view'
+      tags:
+        - 'config:core.entity_view_display.node.article.default'
+  page_4:
+    display_plugin: page
+    id: page_4
+    display_title: Page
+    position: 4
+    display_options:
+      rendering_language: '***LANGUAGE_language_interface***'
+      path: test_entity_field_renderered_entity/language_interface
+      display_extenders: {  }
+    cache_metadata:
+      max-age: -1
+      contexts:
+        - 'languages:language_interface'
+        - 'user.node_grants:view'
+      tags:
+        - 'config:core.entity_view_display.node.article.default'
+  page_5:
+    display_plugin: page
+    id: page_5
+    display_title: Page
+    position: 5
+    display_options:
+      rendering_language: en
+      path: test_entity_field_renderered_entity/en
+      display_extenders: {  }
+    cache_metadata:
+      max-age: -1
+      contexts:
+        - 'languages:language_interface'
+        - 'user.node_grants:view'
+      tags:
+        - 'config:core.entity_view_display.node.article.default'
+  page_6:
+    display_plugin: page
+    id: page_6
+    display_title: Page
+    position: 6
+    display_options:
+      rendering_language: es
+      path: test_entity_field_renderered_entity/es
+      display_extenders: {  }
+    cache_metadata:
+      max-age: -1
+      contexts:
+        - 'languages:language_interface'
+        - 'user.node_grants:view'
+      tags:
+        - 'config:core.entity_view_display.node.article.default'
