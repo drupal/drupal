@@ -62,7 +62,7 @@ class AssetDumper implements AssetDumperInterface {
     // generating a file that won't be used.
     if (extension_loaded('zlib') && \Drupal::config('system.performance')->get($file_extension . '.gzip')) {
       try {
-        if (!file_exists($uri . '.gz') && !$this->getFileSystem()->saveData(gzencode($data, 9, FORCE_GZIP), $uri . '.gz', FILE_EXISTS_REPLACE)) {
+        if (!file_exists($uri . '.gz') && !$this->getFileSystem()->saveData(gzencode($data, 9, FORCE_GZIP), $uri . '.gz', FileSystemInterface::EXISTS_REPLACE)) {
           return FALSE;
         }
       }

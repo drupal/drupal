@@ -3,6 +3,7 @@
 namespace Drupal\Tests\file\Kernel;
 
 use Drupal\Component\Render\FormattableMarkup;
+use Drupal\Core\File\FileSystemInterface;
 use Drupal\file\Entity\File;
 
 /**
@@ -22,7 +23,7 @@ class MoveTest extends FileManagedUnitTestBase {
 
     // Clone the object so we don't have to worry about the function changing
     // our reference copy.
-    $result = file_move(clone $source, $desired_filepath, FILE_EXISTS_ERROR);
+    $result = file_move(clone $source, $desired_filepath, FileSystemInterface::EXISTS_ERROR);
 
     // Check the return status and that the contents changed.
     $this->assertTrue($result, 'File moved successfully.');
@@ -54,7 +55,7 @@ class MoveTest extends FileManagedUnitTestBase {
 
     // Clone the object so we don't have to worry about the function changing
     // our reference copy.
-    $result = file_move(clone $source, $target->getFileUri(), FILE_EXISTS_RENAME);
+    $result = file_move(clone $source, $target->getFileUri(), FileSystemInterface::EXISTS_RENAME);
 
     // Check the return status and that the contents changed.
     $this->assertTrue($result, 'File moved successfully.');
@@ -89,7 +90,7 @@ class MoveTest extends FileManagedUnitTestBase {
 
     // Clone the object so we don't have to worry about the function changing
     // our reference copy.
-    $result = file_move(clone $source, $target->getFileUri(), FILE_EXISTS_REPLACE);
+    $result = file_move(clone $source, $target->getFileUri(), FileSystemInterface::EXISTS_REPLACE);
 
     // Look at the results.
     $this->assertEqual($contents, file_get_contents($result->getFileUri()), 'Contents of file were overwritten.');
@@ -119,7 +120,7 @@ class MoveTest extends FileManagedUnitTestBase {
 
     // Copy the file over itself. Clone the object so we don't have to worry
     // about the function changing our reference copy.
-    $result = file_move(clone $source, $source->getFileUri(), FILE_EXISTS_REPLACE);
+    $result = file_move(clone $source, $source->getFileUri(), FileSystemInterface::EXISTS_REPLACE);
     $this->assertFalse($result, 'File move failed.');
     $this->assertEqual($contents, file_get_contents($source->getFileUri()), 'Contents of file were not altered.');
 
@@ -132,8 +133,7 @@ class MoveTest extends FileManagedUnitTestBase {
   }
 
   /**
-   * Test that moving onto an existing file fails when FILE_EXISTS_ERROR is
-   * specified.
+   * Test that moving onto an existing file fails when instructed to do so.
    */
   public function testExistingError() {
     $contents = $this->randomMachineName(10);
@@ -143,7 +143,7 @@ class MoveTest extends FileManagedUnitTestBase {
 
     // Clone the object so we don't have to worry about the function changing
     // our reference copy.
-    $result = file_move(clone $source, $target->getFileUri(), FILE_EXISTS_ERROR);
+    $result = file_move(clone $source, $target->getFileUri(), FileSystemInterface::EXISTS_ERROR);
 
     // Check the return status and that the contents did not change.
     $this->assertFalse($result, 'File move failed.');

@@ -38,6 +38,7 @@
 
 use Drupal\Core\Url;
 use Drupal\Core\File\Exception\FileException;
+use Drupal\Core\File\FileSystemInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
@@ -226,7 +227,7 @@ function update_manager_file_get($url) {
   $local = $cache_directory . '/' . \Drupal::service('file_system')->basename($parsed_url['path']);
 
   if (!file_exists($local) || update_delete_file_if_stale($local)) {
-    return system_retrieve_file($url, $local, FALSE, FILE_EXISTS_REPLACE);
+    return system_retrieve_file($url, $local, FALSE, FileSystemInterface::EXISTS_REPLACE);
   }
   else {
     return $local;

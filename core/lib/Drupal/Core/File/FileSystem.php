@@ -446,10 +446,10 @@ class FileSystem implements FileSystemInterface {
    *   default scheme (file://) will be used.
    * @param int $replace
    *   Replace behavior when the destination file already exists:
-   *   - FILE_EXISTS_REPLACE - Replace the existing file.
-   *   - FILE_EXISTS_RENAME - Append _{incrementing number} until the filename
-   *     is unique.
-   *   - FILE_EXISTS_ERROR - Do nothing and return FALSE.
+   *   - FileSystemInterface::EXISTS_REPLACE - Replace the existing file.
+   *   - FileSystemInterface::EXISTS_RENAME - Append _{incrementing number}
+   *     until the filename is unique.
+   *   - FileSystemInterface::EXISTS_ERROR - Do nothing and return FALSE.
    *
    * @see \Drupal\Core\File\FileSystemInterface::copy()
    * @see \Drupal\Core\File\FileSystemInterface::move()

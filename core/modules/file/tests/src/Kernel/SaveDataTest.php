@@ -3,6 +3,7 @@
 namespace Drupal\Tests\file\Kernel;
 
 use Drupal\Core\StreamWrapper\StreamWrapperManagerInterface;
+use Drupal\Core\File\FileSystemInterface;
 use Drupal\file\Entity\File;
 
 /**
@@ -71,7 +72,7 @@ class SaveDataTest extends FileManagedUnitTestBase {
     $existing = $this->createFile();
     $contents = $this->randomMachineName(8);
 
-    $result = file_save_data($contents, $existing->getFileUri(), FILE_EXISTS_RENAME);
+    $result = file_save_data($contents, $existing->getFileUri(), FileSystemInterface::EXISTS_RENAME);
     $this->assertTrue($result, 'File saved successfully.');
 
     $stream_wrapper_manager = \Drupal::service('stream_wrapper_manager');
@@ -101,7 +102,7 @@ class SaveDataTest extends FileManagedUnitTestBase {
     $existing = $this->createFile();
     $contents = $this->randomMachineName(8);
 
-    $result = file_save_data($contents, $existing->getFileUri(), FILE_EXISTS_REPLACE);
+    $result = file_save_data($contents, $existing->getFileUri(), FileSystemInterface::EXISTS_REPLACE);
     $this->assertTrue($result, 'File saved successfully.');
 
     $stream_wrapper_manager = \Drupal::service('stream_wrapper_manager');
@@ -130,8 +131,8 @@ class SaveDataTest extends FileManagedUnitTestBase {
     $existing = $this->createFile(NULL, $contents);
 
     // Check the overwrite error.
-    $result = file_save_data('asdf', $existing->getFileUri(), FILE_EXISTS_ERROR);
-    $this->assertFalse($result, 'Overwriting a file fails when FILE_EXISTS_ERROR is specified.');
+    $result = file_save_data('asdf', $existing->getFileUri(), FileSystemInterface::EXISTS_ERROR);
+    $this->assertFalse($result, 'Overwriting a file fails when FileSystemInterface::EXISTS_ERROR is specified.');
     $this->assertEqual($contents, file_get_contents($existing->getFileUri()), 'Contents of existing file were unchanged.');
 
     // Check that no hooks were called while failing.

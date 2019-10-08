@@ -281,8 +281,10 @@ interface FileSystemInterface {
    * - If file already exists in $destination either the call will error out,
    *   replace the file or rename the file based on the $replace parameter.
    * - If the $source and $destination are equal, the behavior depends on the
-   *   $replace parameter. FILE_EXISTS_REPLACE will error out.
-   *   FILE_EXISTS_RENAME will rename the file until the $destination is unique.
+   *   $replace parameter. FileSystemInterface::EXISTS_REPLACE will replace the
+   *   existing file. FileSystemInterface::EXISTS_ERROR will error out.
+   *   FileSystemInterface::EXISTS_RENAME will rename the file until the
+   *   $destination is unique.
    * - Provides a fallback using realpaths if the move fails using stream
    *   wrappers. This can occur because PHP's copy() function does not properly
    *   support streams if open_basedir is enabled. See
@@ -295,10 +297,10 @@ interface FileSystemInterface {
    *   URI may be a bare filepath (without a scheme).
    * @param int $replace
    *   Replace behavior when the destination file already exists:
-   *   - FileManagerInterface::FILE_EXISTS_REPLACE - Replace the existing file.
-   *   - FileManagerInterface::FILE_EXISTS_RENAME - Append _{incrementing
-   *     number} until the filename is unique.
-   *   - FileManagerInterface::FILE_EXISTS_ERROR - Throw an exception.
+   *   - FileSystemInterface::EXISTS_REPLACE - Replace the existing file.
+   *   - FileSystemInterface::EXISTS_RENAME - Append _{incrementing number}
+   *     until the filename is unique.
+   *   - FileSystemInterface::EXISTS_ERROR - Throw an exception.
    *
    * @return string
    *   The path to the new file.
@@ -367,10 +369,10 @@ interface FileSystemInterface {
    *   default scheme (public://) will be used.
    * @param int $replace
    *   Replace behavior when the destination file already exists:
-   *   - FILE_EXISTS_REPLACE - Replace the existing file.
-   *   - FILE_EXISTS_RENAME - Append _{incrementing number} until the filename
-   *      is unique.
-   *   - FILE_EXISTS_ERROR - Do nothing and return FALSE.
+   *   - FileSystemInterface::EXISTS_REPLACE - Replace the existing file.
+   *   - FileSystemInterface::EXISTS_RENAME - Append _{incrementing number}
+   *     until the filename is unique.
+   *   - FileSystemInterface::EXISTS_ERROR - Do nothing and return FALSE.
    *
    * @return string
    *   The path to the new file.
@@ -396,10 +398,10 @@ interface FileSystemInterface {
    *   wrapper URI.
    * @param int $replace
    *   Replace behavior when the destination file already exists:
-   *   - FILE_EXISTS_REPLACE - Replace the existing file.
-   *   - FILE_EXISTS_RENAME - Append _{incrementing number} until the filename
-   *     is unique.
-   *   - FILE_EXISTS_ERROR - Do nothing and return FALSE.
+   *   - FileSystemInterface::EXISTS_REPLACE - Replace the existing file.
+   *   - FileSystemInterface::EXISTS_RENAME - Append _{incrementing number}
+   *     until the filename is unique.
+   *   - FileSystemInterface::EXISTS_ERROR - Do nothing and return FALSE.
    *
    * @return string
    *   A string with the path of the resulting file, or FALSE on error.

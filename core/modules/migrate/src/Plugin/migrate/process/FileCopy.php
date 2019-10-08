@@ -167,7 +167,8 @@ class FileCopy extends FileProcessBase implements ContainerFactoryPluginInterfac
    * @param string $destination
    *   The destination path or URI.
    * @param int $replace
-   *   (optional) FILE_EXISTS_REPLACE (default) or FILE_EXISTS_RENAME.
+   *   (optional) FileSystemInterface::EXISTS_REPLACE (default) or
+   *   FileSystemInterface::EXISTS_RENAME.
    *
    * @return string|bool
    *   File destination on success, FALSE on failure.

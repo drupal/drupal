@@ -187,8 +187,8 @@ class TemporaryJsonapiFileFieldUploader {
     }
 
     // Move the file to the correct location after validation. Use
-    // FILE_EXISTS_ERROR as the file location has already been determined above
-    // in FileSystem::getDestinationFilename().
+    // FileSystemInterface::EXISTS_ERROR as the file location has already been
+    // determined above in FileSystem::getDestinationFilename().
     try {
       $this->fileSystem->move($temp_file_path, $file_uri, FileSystemInterface::EXISTS_ERROR);
     }

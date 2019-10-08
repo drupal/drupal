@@ -156,9 +156,9 @@ class DirectoryTest extends FileTestBase {
    *
    * If a file exists, ::getDestinationFilename($destination, $replace) will
    * either return:
-   * - the existing filepath, if $replace is FILE_EXISTS_REPLACE
-   * - a new filepath if FILE_EXISTS_RENAME
-   * - an error (returning FALSE) if FILE_EXISTS_ERROR.
+   * - the existing filepath, if $replace is FileSystemInterface::EXISTS_REPLACE
+   * - a new filepath if FileSystemInterface::EXISTS_RENAME
+   * - an error (returning FALSE) if FileSystemInterface::EXISTS_ERROR.
    * If the file doesn't currently exist, then it will simply return the
    * filepath.
    */

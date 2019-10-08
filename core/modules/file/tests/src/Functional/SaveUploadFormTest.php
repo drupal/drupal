@@ -77,7 +77,7 @@ class SaveUploadFormTest extends FileManagedTestBase {
     $file_system = \Drupal::service('file_system');
     // Upload with replace to guarantee there's something there.
     $edit = [
-      'file_test_replace' => FILE_EXISTS_REPLACE,
+      'file_test_replace' => FileSystemInterface::EXISTS_REPLACE,
       'files[file_test_upload][]' => $file_system->realpath($this->image->getFileUri()),
     ];
     $this->drupalPostForm('file-test/save_upload_from_form_test', $edit, t('Submit'));
@@ -153,7 +153,7 @@ class SaveUploadFormTest extends FileManagedTestBase {
     // _file_save_upload_from_form() to only allow ".foo".
     $extensions = 'foo';
     $edit = [
-      'file_test_replace' => FILE_EXISTS_REPLACE,
+      'file_test_replace' => FileSystemInterface::EXISTS_REPLACE,
       'files[file_test_upload][]' => $file_system->realpath($this->image->getFileUri()),
       'extensions' => $extensions,
     ];
@@ -173,7 +173,7 @@ class SaveUploadFormTest extends FileManagedTestBase {
     $extensions = 'foo ' . $this->imageExtension;
     // Now tell _file_save_upload_from_form() to allow the extension of our test image.
     $edit = [
-      'file_test_replace' => FILE_EXISTS_REPLACE,
+      'file_test_replace' => FileSystemInterface::EXISTS_REPLACE,
       'files[file_test_upload][]' => $file_system->realpath($this->image->getFileUri()),
       'extensions' => $extensions,
     ];
@@ -191,7 +191,7 @@ class SaveUploadFormTest extends FileManagedTestBase {
 
     // Now tell _file_save_upload_from_form() to allow any extension.
     $edit = [
-      'file_test_replace' => FILE_EXISTS_REPLACE,
+      'file_test_replace' => FileSystemInterface::EXISTS_REPLACE,
       'files[file_test_upload][]' => $file_system->realpath($this->image->getFileUri()),
       'allow_all_extensions' => TRUE,
     ];
@@ -214,7 +214,7 @@ class SaveUploadFormTest extends FileManagedTestBase {
     // Allow the .php extension and make sure it gets renamed to .txt for
     // safety. Also check to make sure its MIME type was changed.
     $edit = [
-      'file_test_replace' => FILE_EXISTS_REPLACE,
+      'file_test_replace' => FileSystemInterface::EXISTS_REPLACE,
       'files[file_test_upload][]' => $file_system->realpath($this->phpfile->uri),
       'is_image_file' => FALSE,
       'extensions' => 'php',
@@ -325,7 +325,7 @@ class SaveUploadFormTest extends FileManagedTestBase {
     /** @var \Drupal\Core\File\FileSystemInterface $file_system */
     $file_system = \Drupal::service('file_system');
     $edit = [
-      'file_test_replace' => FILE_EXISTS_REPLACE,
+      'file_test_replace' => FileSystemInterface::EXISTS_REPLACE,
       'files[file_test_upload][]' => $file_system->realpath($this->image->getFileUri()),
     ];
     $this->drupalPostForm('file-test/save_upload_from_form_test', $edit, t('Submit'));
@@ -343,7 +343,7 @@ class SaveUploadFormTest extends FileManagedTestBase {
     /** @var \Drupal\Core\File\FileSystemInterface $file_system */
     $file_system = \Drupal::service('file_system');
     $edit = [
-      'file_test_replace' => FILE_EXISTS_ERROR,
+      'file_test_replace' => FileSystemInterface::EXISTS_ERROR,
       'files[file_test_upload][]' => $file_system->realpath($this->image->getFileUri()),
     ];
     $this->drupalPostForm('file-test/save_upload_from_form_test', $edit, t('Submit'));
