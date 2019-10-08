@@ -1,17 +1,10 @@
 <?php
 
-// @codingStandardsIgnoreStart
-// @todo: Move this back to \Drupal\KernelTests\Core\Config\Storage in #2991683.
-// @codingStandardsIgnoreEnd
-namespace Drupal\Tests\config_environment\Kernel\Core\Config\Storage;
-
-// include class aliases. @todo: remove in #2991683.
-include_once __DIR__ . '/../../../../../../config_environment.module';
+namespace Drupal\KernelTests\Core\Config\Storage;
 
 use Drupal\Core\Config\StorageManagerInterface;
 use Drupal\Core\Config\ManagedStorage;
 use Drupal\Core\Config\MemoryStorage;
-use Drupal\KernelTests\Core\Config\Storage\ConfigStorageTestBase;
 
 /**
  * Tests ManagedStorage operations.

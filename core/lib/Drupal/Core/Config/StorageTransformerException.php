@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\config_environment\Core\Config;
+namespace Drupal\Core\Config;
 
 /**
  * Thrown by config storage transformers if they cannot acquire a lock.

@@ -1,15 +1,9 @@
 <?php
 
-// @codingStandardsIgnoreStart
-// @todo: Move this back to \Drupal\Core\Config in #2991683.
-// Use this class with its class alias Drupal\Core\Config\StorageManagerInterface
-// @codingStandardsIgnoreEnd
-namespace Drupal\config_environment\Core\Config;
+namespace Drupal\Core\Config;
 
 /**
  * Interface for a storage manager.
- *
- * @internal
  */
 interface StorageManagerInterface {
 

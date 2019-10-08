@@ -4,6 +4,7 @@ namespace Drupal\config\Controller;
 
 use Drupal\Core\Archiver\ArchiveTar;
 use Drupal\Core\Config\ConfigManagerInterface;
+use Drupal\Core\Config\ImportStorageTransformer;
 use Drupal\Core\Config\StorageInterface;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Diff\DiffFormatter;
@@ -28,11 +29,18 @@ class ConfigController implements ContainerInjectionInterface {
   protected $targetStorage;
 
   /**
-   * The source storage.
+   * The sync storage.
    *
    * @var \Drupal\Core\Config\StorageInterface
    */
-  protected $sourceStorage;
+  protected $syncStorage;
+
+  /**
+   * The import transformer service.
+   *
+   * @var \Drupal\Core\Config\ImportStorageTransformer
+   */
+  protected $importTransformer;
 
   /**
    * The configuration manager.
@@ -80,7 +88,8 @@ class ConfigController implements ContainerInjectionInterface {
       FileDownloadController::create($container),
       $container->get('diff.formatter'),
       $container->get('file_system'),
-      $container->get('config.storage.export')
+      $container->get('config.storage.export'),
+      $container->get('config.import_transformer')
     );
   }
 
@@ -89,8 +98,8 @@ class ConfigController implements ContainerInjectionInterface {
    *
    * @param \Drupal\Core\Config\StorageInterface $target_storage
    *   The target storage.
-   * @param \Drupal\Core\Config\StorageInterface $source_storage
-   *   The source storage.
+   * @param \Drupal\Core\Config\StorageInterface $sync_storage
+   *   The sync storage.
    * @param \Drupal\Core\Config\ConfigManagerInterface $config_manager
    *   The config manager.
    * @param \Drupal\system\FileDownloadController $file_download_controller
@@ -101,10 +110,12 @@ class ConfigController implements ContainerInjectionInterface {
    *   The file system.
    * @param \Drupal\Core\Config\StorageInterface $export_storage
    *   The export storage.
+   * @param \Drupal\Core\Config\ImportStorageTransformer $import_transformer
+   *   The import transformer service.
    */
-  public function __construct(StorageInterface $target_storage, StorageInterface $source_storage, ConfigManagerInterface $config_manager, FileDownloadController $file_download_controller, DiffFormatter $diff_formatter, FileSystemInterface $file_system, StorageInterface $export_storage = NULL) {
+  public function __construct(StorageInterface $target_storage, StorageInterface $sync_storage, ConfigManagerInterface $config_manager, FileDownloadController $file_download_controller, DiffFormatter $diff_formatter, FileSystemInterface $file_system, StorageInterface $export_storage = NULL, ImportStorageTransformer $import_transformer = NULL) {
     $this->targetStorage = $target_storage;
-    $this->sourceStorage = $source_storage;
+    $this->syncStorage = $sync_storage;
     $this->configManager = $config_manager;
     $this->fileDownloadController = $file_download_controller;
     $this->diffFormatter = $diff_formatter;
@@ -114,6 +125,11 @@ class ConfigController implements ContainerInjectionInterface {
       $export_storage = \Drupal::service('config.storage.export');
     }
     $this->exportStorage = $export_storage;
+    if (is_null($import_transformer)) {
+      @trigger_error('The config.import_transformer service must be passed to ConfigController::__construct(), it is required before Drupal 9.0.0. See https://www.drupal.org/node/3066005.', E_USER_DEPRECATED);
+      $import_transformer = \Drupal::service('config.import_transformer');
+    }
+    $this->importTransformer = $import_transformer;
   }
 
   /**
@@ -163,7 +179,8 @@ class ConfigController implements ContainerInjectionInterface {
     if (!isset($collection)) {
       $collection = StorageInterface::DEFAULT_COLLECTION;
     }
-    $diff = $this->configManager->diff($this->targetStorage, $this->sourceStorage, $source_name, $target_name, $collection);
+    $syncStorage = $this->importTransformer->transform($this->syncStorage);
+    $diff = $this->configManager->diff($this->targetStorage, $syncStorage, $source_name, $target_name, $collection);
     $this->diffFormatter->show_header = FALSE;
 
     $build = [];

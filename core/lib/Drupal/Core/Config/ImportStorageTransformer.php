@@ -1,25 +1,20 @@
 <?php
 
-// @codingStandardsIgnoreStart
-// @todo: Move this back to \Drupal\Core\Config in #2991683.
-// Use this class with its class alias Drupal\Core\Config\ImportStorageTransformer
-// @codingStandardsIgnoreEnd
-namespace Drupal\config_environment\Core\Config;
+namespace Drupal\Core\Config;
 
-use Drupal\Core\Config\ConfigImporter;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Lock\LockBackendInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Drupal\Core\Config\DatabaseStorage;
-use Drupal\Core\Config\StorageCopyTrait;
-use Drupal\Core\Config\StorageInterface;
 
 /**
- * Class ImportStorageTransformer.
+ * The import storage transformer helps to use the configuration management api.
  *
- * @internal
+ * This service does not implement an interface and is final because it is not
+ * meant to be replaced, extended or used in a different context.
+ * Its single purpose is to transform a storage for the import step of a
+ * configuration synchronisation by dispatching the import transformation event.
  */
-class ImportStorageTransformer {
+final class ImportStorageTransformer {
 
   use StorageCopyTrait;
 
@@ -122,8 +117,7 @@ class ImportStorageTransformer {
     self::replaceStorageContents($storage, $mutable);
 
     // Dispatch the event so that event listeners can alter the configuration.
-    // @todo: Use ConfigEvents::STORAGE_TRANSFORM_IMPORT in #2991683
-    $this->eventDispatcher->dispatch('config.transform.import', new StorageTransformEvent($mutable));
+    $this->eventDispatcher->dispatch(ConfigEvents::STORAGE_TRANSFORM_IMPORT, new StorageTransformEvent($mutable));
 
     // Return the storage with the altered configuration.
     return $mutable;

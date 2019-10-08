@@ -1,14 +1,8 @@
 <?php
 
-// @codingStandardsIgnoreStart
-// @todo: Move this back to \Drupal\Core\Config in #2991683.
-// Use this class with its class alias Drupal\Core\Config\StorageTransformEvent
-// @codingStandardsIgnoreEnd
-namespace Drupal\config_environment\Core\Config;
+namespace Drupal\Core\Config;
 
 use Symfony\Component\EventDispatcher\Event;
-// @todo: below removed when namespace is \Drupal\Core\Config in 2991683.
-use Drupal\Core\Config\StorageInterface;
 
 /**
  * Class StorageTransformEvent.

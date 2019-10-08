@@ -1,12 +1,6 @@
 <?php
 
-// @codingStandardsIgnoreStart
-// @todo: Move this back to \Drupal\Core\Config in #2991683.
-// Use this class with its class alias Drupal\Core\Config\ManagedStorage
-// @codingStandardsIgnoreEnd
-namespace Drupal\config_environment\Core\Config;
-
-use Drupal\Core\Config\StorageInterface;
+namespace Drupal\Core\Config;
 
 /**
  * The managed storage defers all the storage method calls to the manager.
@@ -16,9 +10,10 @@ use Drupal\Core\Config\StorageInterface;
  * the storage can be used so we can't do it in the constructor but we also
  * don't know which method is called first.
  *
- * @internal
+ * This class is not meant to be extended and is final to make sure the
+ * assumptions that the storage is retrieved only once are upheld.
  */
-class ManagedStorage implements StorageInterface {
+final class ManagedStorage implements StorageInterface {
 
   /**
    * The decorated storage.

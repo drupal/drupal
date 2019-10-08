@@ -1,9 +1,6 @@
 <?php
 
-// @codingStandardsIgnoreStart
-// @todo: Move this back to \Drupal\Tests\config\Functional in #2991683.
-// @codingStandardsIgnoreEnd
-namespace Drupal\Tests\config_environment\Functional;
+namespace Drupal\Tests\config\Functional;
 
 use Drupal\Component\Utility\Html;
 use Drupal\Tests\BrowserTestBase;
@@ -21,7 +18,6 @@ class TransformedConfigExportImportUITest extends BrowserTestBase {
   public static $modules = [
     'config',
     'config_transformer_test',
-    'config_environment',
   ];
 
   /**

@@ -73,10 +73,14 @@ class ExcludedModulesEventSubscriberTest extends KernelTestBase {
       $this->assertEquals($active->read($config), $import->read($config));
     }
 
-    // Changing the settings triggers the export storage manager to re-dispatch
-    // the events so the config_text will not be excluded.
+    // When the settings are changed, the next request will get the export
+    // storage without the config_test excluded.
     $this->setSetting('config_exclude_modules', []);
-    $export = $this->container->get('config.storage.export.manager')->getStorage();
+    // We rebuild the container to simulate a new request. The managed storage
+    // gets the storage from the manager only once.
+    $this->container->get('kernel')->rebuildContainer();
+    $export = $this->container->get('config.storage.export');
+
     $this->assertArrayHasKey('config_test', $export->read('core.extension')['module']);
   }
 

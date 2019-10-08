@@ -1,15 +1,7 @@
 <?php
 
-// @codingStandardsIgnoreStart
-// @todo: Move this back to \Drupal\Core\Config in #2991683.
-// Use this class with its class alias Drupal\Core\Config\ExportStorageManager
-// @codingStandardsIgnoreEnd
-namespace Drupal\config_environment\Core\Config;
+namespace Drupal\Core\Config;
 
-use Drupal\Core\Config\DatabaseStorage;
-use Drupal\Core\Config\ReadOnlyStorage;
-use Drupal\Core\Config\StorageCopyTrait;
-use Drupal\Core\Config\StorageInterface;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Lock\LockBackendInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -17,9 +9,11 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 /**
  * The export storage manager dispatches an event for the export storage.
  *
- * @internal
+ * This class is not meant to be extended and is final to make sure the
+ * constructor and the getStorage method are both changed when this pattern is
+ * used in other circumstances.
  */
-class ExportStorageManager implements StorageManagerInterface {
+final class ExportStorageManager implements StorageManagerInterface {
 
   use StorageCopyTrait;
 
@@ -91,8 +85,7 @@ class ExportStorageManager implements StorageManagerInterface {
     }
 
     self::replaceStorageContents($this->active, $this->storage);
-    // @todo: Use ConfigEvents::STORAGE_TRANSFORM_EXPORT in #2991683
-    $this->eventDispatcher->dispatch('config.transform.export', new StorageTransformEvent($this->storage));
+    $this->eventDispatcher->dispatch(ConfigEvents::STORAGE_TRANSFORM_EXPORT, new StorageTransformEvent($this->storage));
 
     return new ReadOnlyStorage($this->storage);
   }

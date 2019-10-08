@@ -5,6 +5,7 @@ namespace Drupal\config\Form;
 use Drupal\Core\Config\ConfigImporterException;
 use Drupal\Core\Config\ConfigImporter;
 use Drupal\Core\Config\Importer\ConfigImporterBatch;
+use Drupal\Core\Config\ImportStorageTransformer;
 use Drupal\Core\Config\TypedConfigManagerInterface;
 use Drupal\Core\Extension\ModuleExtensionList;
 use Drupal\Core\Extension\ModuleHandlerInterface;
@@ -113,6 +114,13 @@ class ConfigSync extends FormBase {
   protected $moduleExtensionList;
 
   /**
+   * The import transformer service.
+   *
+   * @var \Drupal\Core\Config\ImportStorageTransformer
+   */
+  protected $importTransformer;
+
+  /**
    * Constructs the object.
    *
    * @param \Drupal\Core\Config\StorageInterface $sync_storage
@@ -139,8 +147,10 @@ class ConfigSync extends FormBase {
    *   The renderer.
    * @param \Drupal\Core\Extension\ModuleExtensionList $extension_list_module
    *   The module extension list
+   * @param \Drupal\Core\Config\ImportStorageTransformer $import_transformer
+   *   The import transformer service.
    */
-  public function __construct(StorageInterface $sync_storage, StorageInterface $active_storage, StorageInterface $snapshot_storage, LockBackendInterface $lock, EventDispatcherInterface $event_dispatcher, ConfigManagerInterface $config_manager, TypedConfigManagerInterface $typed_config, ModuleHandlerInterface $module_handler, ModuleInstallerInterface $module_installer, ThemeHandlerInterface $theme_handler, RendererInterface $renderer, ModuleExtensionList $extension_list_module) {
+  public function __construct(StorageInterface $sync_storage, StorageInterface $active_storage, StorageInterface $snapshot_storage, LockBackendInterface $lock, EventDispatcherInterface $event_dispatcher, ConfigManagerInterface $config_manager, TypedConfigManagerInterface $typed_config, ModuleHandlerInterface $module_handler, ModuleInstallerInterface $module_installer, ThemeHandlerInterface $theme_handler, RendererInterface $renderer, ModuleExtensionList $extension_list_module, ImportStorageTransformer $import_transformer = NULL) {
     $this->syncStorage = $sync_storage;
     $this->activeStorage = $active_storage;
     $this->snapshotStorage = $snapshot_storage;
@@ -153,6 +163,11 @@ class ConfigSync extends FormBase {
     $this->themeHandler = $theme_handler;
     $this->renderer = $renderer;
     $this->moduleExtensionList = $extension_list_module;
+    if (is_null($import_transformer)) {
+      @trigger_error('The config.import_transformer service must be passed to ConfigSync::__construct(), it is required before Drupal 9.0.0. See https://www.drupal.org/node/3066005.', E_USER_DEPRECATED);
+      $import_transformer = \Drupal::service('config.import_transformer');
+    }
+    $this->importTransformer = $import_transformer;
   }
 
   /**
@@ -171,7 +186,8 @@ class ConfigSync extends FormBase {
       $container->get('module_installer'),
       $container->get('theme_handler'),
       $container->get('renderer'),
-      $container->get('extension.list.module')
+      $container->get('extension.list.module'),
+      $container->get('config.import_transformer')
     );
   }
 
@@ -191,8 +207,9 @@ class ConfigSync extends FormBase {
       '#type' => 'submit',
       '#value' => $this->t('Import all'),
     ];
-    $source_list = $this->syncStorage->listAll();
-    $storage_comparer = new StorageComparer($this->syncStorage, $this->activeStorage);
+    $syncStorage = $this->importTransformer->transform($this->syncStorage);
+    $source_list = $syncStorage->listAll();
+    $storage_comparer = new StorageComparer($syncStorage, $this->activeStorage);
     if (empty($source_list) || !$storage_comparer->createChangelist()->hasChanges()) {
       $form['no_changes'] = [
         '#type' => 'table',

@@ -1,9 +1,6 @@
 <?php
 
-// @codingStandardsIgnoreStart
-// @todo: Move this back to \Drupal\KernelTests\Core\Config in #2991683.
-// @codingStandardsIgnoreEnd
-namespace Drupal\Tests\config_environment\Kernel\Core\Config;
+namespace Drupal\KernelTests\Core\Config;
 
 use Drupal\Core\Config\ConfigImporter;
 use Drupal\Core\Config\ImportStorageTransformer;
@@ -25,7 +22,6 @@ class ImportStorageTransformerTest extends KernelTestBase {
   protected static $modules = [
     'system',
     'config_transformer_test',
-    'config_environment',
   ];
 
   /**
