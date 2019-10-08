@@ -9,6 +9,9 @@
     "composer-plugin-api": "^1.0.0",
     "php": ">=7.0.8"
   },
+  "conflict": {
+    "drupal-composer/drupal-scaffold": "*"
+  },
   "autoload": {
     "psr-4": {
       "Drupal\\Composer\\Plugin\\Scaffold\\": ""

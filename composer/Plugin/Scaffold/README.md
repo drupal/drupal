@@ -1,4 +1,4 @@
-# composer-scaffold
+# Drupal Composer Scaffold
 
 This project provides a composer plugin for placing scaffold files (like
 `index.php`, `update.php`, …) from the `drupal/core` project into their desired
@@ -22,7 +22,7 @@ explicitly granted that right in the top-level composer.json file. See
 
 ## Usage
 
-Composer-scaffold is used by requiring `drupal/core-composer-scaffold` in your
+Drupal Composer Scaffold is used by requiring `drupal/core-composer-scaffold` in your
 project, and providing configuration settings in the `extra` section of your
 project's composer.json file. Additional configuration from the composer.json
 file of your project's dependencies is also consulted in order to scaffold the
@@ -30,6 +30,14 @@ files a project needs. Additional information may be added to the beginning or
 end of scaffold files, as is commonly done to `.htaccess` and `robots.txt`
 files. See [altering scaffold files](#altering-scaffold-files) for more
 information.
+
+Typically, the scaffold operations run automatically as needed, e.g. after
+`composer install`, so it is usually not necessary to do anything different
+to scaffold a project once the configuration is set up in the project
+composer.json file, as described below. To scaffold files directly, run:
+```
+composer drupal:scaffold
+```
 
 ### Allowed Packages
 
@@ -465,7 +473,7 @@ Patch a file after it's copied:
 
 ### drupal-composer/drupal-scaffold
 
-Previous versions of drupal-scaffold (see community project,
+Previous versions of Drupal Composer Scaffold (see community project,
 [drupal-composer/drupal-scaffold](https://github.com/drupal-composer/drupal-project))
 downloaded each scaffold file directly from its distribution server (e.g.
 `https://git.drupalcode.org`) to the desired destination directory. This was

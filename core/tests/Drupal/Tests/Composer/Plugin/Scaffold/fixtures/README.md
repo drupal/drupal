@@ -13,7 +13,7 @@ Example:
 $ SCAFFOLD_FIXTURE_DIR=$HOME/tmp/scaffold-fixtures composer unit
 $ cd $HOME/tmp/scaffold-fixtures
 $ cd drupal-drupal
-$ composer composer:scaffold
+$ composer drupal:scaffold
 
 Scaffolding files for fixtures/drupal-assets-fixture:
   - Link [web-root]/.csslintrc from assets/.csslintrc

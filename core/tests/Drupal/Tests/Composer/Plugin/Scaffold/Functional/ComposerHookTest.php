@@ -104,7 +104,7 @@ class ComposerHookTest extends TestCase {
     $this->mustExec("composer update --no-ansi", $sut);
     $this->assertScaffoldedFile($sut . '/sites/default/default.settings.php', FALSE, 'scaffolded from the scaffold-override-fixture');
     // Delete the same test scaffold file again, then run
-    // 'composer composer:scaffold' and see if the scaffold file is
+    // 'composer drupal:scaffold' and see if the scaffold file is
     // re-scaffolded.
     @unlink($sut . '/sites/default/default.settings.php');
     $this->assertFileNotExists($sut . '/sites/default/default.settings.php');
@@ -114,7 +114,7 @@ class ComposerHookTest extends TestCase {
     // 'composer install' and see if the scaffold file is re-scaffolded.
     @unlink($sut . '/sites/default/default.settings.php');
     $this->assertFileNotExists($sut . '/sites/default/default.settings.php');
-    $this->mustExec("composer composer:scaffold --no-ansi", $sut);
+    $this->mustExec("composer drupal:scaffold --no-ansi", $sut);
     $this->assertScaffoldedFile($sut . '/sites/default/default.settings.php', FALSE, 'scaffolded from the scaffold-override-fixture');
     // Run 'composer create-project' to create a new test project called
     // 'create-project-test', which is a copy of 'fixtures/drupal-drupal'.

@@ -112,7 +112,7 @@ class ScaffoldTest extends TestCase {
     $sut = $this->createSut($fixture_name, ['SYMLINK' => $is_link ? 'true' : 'false']);
     // Run composer install to get the dependencies we need to test.
     $this->fixtures->runComposer("install --no-ansi --no-scripts", $sut);
-    // Test composer:scaffold.
+    // Test drupal:scaffold.
     $scaffoldOutput = $this->fixtures->runScaffold($sut);
 
     // Calculate the docroot directory and assert that our fixture layout
