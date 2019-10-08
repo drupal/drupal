@@ -24,4 +24,21 @@ trait AssertUtilsTrait {
     $this->assertSame($is_link, is_link($path));
   }
 
+  /**
+   * Asserts that a file does not exist or exists and does not contain a value.
+   *
+   * @param string $path
+   *   The path to check exists.
+   * @param string $contents_not_contains
+   *   A string that is expected should NOT occur in the file contents.
+   */
+  protected function assertScaffoldedFileDoesNotContain($path, $contents_not_contains) {
+    // If the file does not exist at all, we'll count that as a pass.
+    if (!file_exists($path)) {
+      return;
+    }
+    $contents = file_get_contents($path);
+    $this->assertNotContains($contents_not_contains, $contents, basename($path) . ' contains unexpected contents:');
+  }
+
 }

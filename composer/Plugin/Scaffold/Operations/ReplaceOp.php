@@ -10,7 +10,7 @@ use Drupal\Composer\Plugin\Scaffold\ScaffoldOptions;
 /**
  * Scaffold operation to copy or symlink from source to destination.
  */
-class ReplaceOp implements OperationInterface {
+class ReplaceOp extends AbstractOperation {
 
   /**
    * Identifies Replace operations.
