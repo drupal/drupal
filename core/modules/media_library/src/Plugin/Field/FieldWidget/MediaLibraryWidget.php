@@ -547,8 +547,12 @@ class MediaLibraryWidget extends WidgetBase implements ContainerFactoryPluginInt
       ],
       '#validate' => [[static::class, 'validateItems']],
       '#submit' => [[static::class, 'addItems']],
-      // Prevent errors in other widgets from preventing updates.
-      '#limit_validation_errors' => $limit_validation_errors,
+      // We need to prevent the widget from being validated when no media items
+      // are selected. When a media field is added in a subform, entity
+      // validation is triggered in EntityFormDisplay::validateFormValues().
+      // Since the media item is not added to the form yet, this triggers errors
+      // for required media fields.
+      '#limit_validation_errors' => !empty($referenced_entities) ? $limit_validation_errors : [],
     ];
 
     return $element;
@@ -839,8 +843,11 @@ class MediaLibraryWidget extends WidgetBase implements ContainerFactoryPluginInt
    *   An array of selected media items.
    */
   protected static function getNewMediaItems(array $element, FormStateInterface $form_state) {
-    // Get the new media IDs passed to our hidden button.
-    $values = $form_state->getValues();
+    // Get the new media IDs passed to our hidden button. We need to use the
+    // actual user input, since when #limit_validation_errors is used, the
+    // unvalidated user input is not added to the form state.
+    // @see FormValidator::handleErrorsWithLimitedValidation()
+    $values = $form_state->getUserInput();
     $path = $element['#parents'];
     $value = NestedArray::getValue($values, $path);
 
@@ -872,7 +879,10 @@ class MediaLibraryWidget extends WidgetBase implements ContainerFactoryPluginInt
   protected static function getFieldState(array $element, FormStateInterface $form_state) {
     // Default to using the current selection if the form is new.
     $path = $element['#parents'];
-    $values = NestedArray::getValue($form_state->getValues(), $path);
+    // We need to use the actual user input, since when #limit_validation_errors
+    // is used, the unvalidated user input is not added to the form state.
+    // @see FormValidator::handleErrorsWithLimitedValidation()
+    $values = NestedArray::getValue($form_state->getUserInput(), $path);
     $selection = isset($values['selection']) ? $values['selection'] : [];
 
     $widget_state = static::getWidgetState($element['#field_parents'], $element['#field_name'], $form_state);
