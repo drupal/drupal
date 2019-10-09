@@ -302,6 +302,30 @@ path, and it is not possible for multiple entries to have the same key. If
 "prepend" were a separate mode, then it would not be possible to both prepend
 and append to the same file.
 
+By default, append operations may only be applied to files that were scaffolded
+by a previously evaluated project. If the `force-append` attribute is added to
+an `append` operation, though, then the append will be made to non-scaffolded
+files if and only if the append text does not already appear in the file. When
+using this mode, it is also possible to provide default contents to use in the
+event that the destination file is entirely missing.
+
+The example below demonstrates scaffolding a settings-custom.php file, and
+including it from the existing `settings.php` file.
+
+```
+"file-mapping": {
+  "[web-root]/sites/default/settings-custom.php": "assets/settings-custom.php",
+  "[web-root]/sites/default/settings.php": {
+    "append": "assets/include-settings-custom.txt",
+    "force-append": true,
+    "default": "assets/initial-default-settings.txt"
+  }
+}
+```
+
+Note that the example above still works if used with a project that scaffolds
+the settings.php file.
+
 ### gitignore
 
 The `gitignore` configuration setting controls whether or not this plugin will

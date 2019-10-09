@@ -42,6 +42,7 @@ class ScaffoldFileCollection implements \IteratorAggregate {
     foreach ($file_mappings as $package_name => $package_file_mappings) {
       foreach ($package_file_mappings as $destination_rel_path => $op) {
         $destination = ScaffoldFilePath::destinationPath($package_name, $destination_rel_path, $location_replacements);
+
         // If there was already a scaffolding operation happening at this path,
         // and the new operation is Conjoinable, then use a ConjunctionOp to
         // join together both operations. This will cause both operations to
@@ -50,13 +51,20 @@ class ScaffoldFileCollection implements \IteratorAggregate {
         // path.
         if (isset($scaffoldFiles[$destination_rel_path])) {
           $previous_scaffold_file = $scaffoldFiles[$destination_rel_path];
-          if ($op instanceof ConjoinableInterface) {
-            $op = new ConjunctionOp($previous_scaffold_file->op(), $op);
-          }
+          $op = $op->combineWithConjunctionTarget($previous_scaffold_file->op());
+
           // Remove the previous op so we only touch the destination once.
           $message = "  - Skip <info>[dest-rel-path]</info>: overridden in <comment>{$package_name}</comment>";
           $this->scaffoldFilesByProject[$previous_scaffold_file->packageName()][$destination_rel_path] = new ScaffoldFileInfo($destination, new SkipOp($message));
         }
+        // If there is NOT already a scaffolding operation happening at this
+        // path, but the operation is a ConjunctionOp, then we need to check
+        // to see if there is a strategy for non-conjunction use.
+        else {
+          $op = $op->missingConjunctionTarget($destination);
+        }
+
+        // Combine the scaffold operation with the destination and record it.
         $scaffold_file = new ScaffoldFileInfo($destination, $op);
         $scaffoldFiles[$destination_rel_path] = $scaffold_file;
         $this->scaffoldFilesByProject[$package_name][$destination_rel_path] = $scaffold_file;
