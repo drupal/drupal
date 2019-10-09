@@ -123,10 +123,14 @@ class ConfigInstaller implements ConfigInstallerInterface {
       $collection_info = $this->configManager->getConfigCollectionInfo();
       foreach ($collection_info->getCollectionNames() as $collection) {
         $config_to_create = $this->getConfigToCreate($storage, $collection, $prefix, $profile_storages);
-        // If we're installing a profile ensure configuration that is overriding
-        // is excluded.
         if ($name == $this->drupalGetProfile()) {
-          $existing_configuration = $this->getActiveStorages($collection)->listAll();
+          // If we're installing a profile ensure simple configuration that
+          // already exists is excluded as it will have already been written.
+          // This means that if the configuration is changed by something else
+          // during the install it will not be overwritten again.
+          $existing_configuration = array_filter($this->getActiveStorages($collection)->listAll(), function ($config_name) {
+            return !$this->configManager->getEntityTypeIdByName($config_name);
+          });
           $config_to_create = array_diff_key($config_to_create, array_flip($existing_configuration));
         }
         if (!empty($config_to_create)) {
@@ -266,12 +270,35 @@ class ConfigInstaller implements ConfigInstallerInterface {
     }
     $data = $storage->readMultiple($storage->listAll($prefix));
 
-    // Check to see if the corresponding override storage has any overrides.
+    // Check to see if configuration provided by the install profile has any
+    // overrides.
     foreach ($profile_storages as $profile_storage) {
       if ($profile_storage->getCollectionName() != $collection) {
         $profile_storage = $profile_storage->createCollection($collection);
       }
-      $data = $profile_storage->readMultiple(array_keys($data)) + $data;
+      $profile_overrides = $profile_storage->readMultiple(array_keys($data));
+      if (InstallerKernel::installationAttempted()) {
+        // During installation overrides of simple configuration are applied
+        // immediately. Configuration entities that are overridden will be
+        // updated when the profile is installed. This allows install profiles
+        // to provide configuration entity overrides that have dependencies that
+        // cannot be met when the module provided configuration entity is
+        // created.
+        foreach ($profile_overrides as $name => $override_data) {
+          // The only way to determine if they are configuration entities is the
+          // presence of a dependencies key.
+          if (!isset($override_data['dependencies'])) {
+            $data[$name] = $override_data;
+          }
+        }
+      }
+      else {
+        // Allow install profiles to provide overridden configuration for new
+        // extensions that are being enabled after Drupal has already been
+        // installed. This allows profiles to ship new extensions in version
+        // updates without requiring additional code to apply the overrides.
+        $data = $profile_overrides + $data;
+      }
     }
     return $data;
   }

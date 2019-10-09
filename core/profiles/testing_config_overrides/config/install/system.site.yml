@@ -1,0 +1,12 @@
+uuid: ''
+name: 'Test - this is overridden by the installer site configure form'
+mail: ''
+slogan: ''
+page:
+  403: ''
+  404: ''
+  front: /user/login
+admin_compact_mode: false
+weight_select_max: 91
+langcode: en
+default_langcode: en

@@ -3,11 +3,13 @@
 namespace Drupal\Tests\config\Functional;
 
 use Drupal\Component\Utility\Crypt;
+use Drupal\Component\Uuid\Uuid;
 use Drupal\Core\Config\InstallStorage;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Core\Config\FileStorage;
 use Drupal\system\Entity\Action;
 use Drupal\tour\Entity\Tour;
+use Drupal\user\Entity\Role;
 
 /**
  * Tests installation and removal of configuration objects in install, disable
@@ -60,6 +62,16 @@ class ConfigInstallProfileOverrideTest extends BrowserTestBase {
     // created from the testing install profile's system.cron.yml file.
     $config = $this->config($config_name);
     $this->assertIdentical($config->get(), $expected_profile_data);
+
+    $config = $this->config('system.site');
+    // Verify the system.site config has a valid UUID.
+    $site_uuid = $config->get('uuid');
+    $this->assertTrue(Uuid::isValid($site_uuid) && strlen($site_uuid) > 0, "Site UUID '$site_uuid' is valid");
+    // Verify the profile overrides have been used.
+    $this->assertEquals(91, $config->get('weight_select_max'));
+    // Ensure the site configure form is used.
+    $this->assertEquals('Drupal', $config->get('name'));
+    $this->assertEquals('simpletest@example.com', $config->get('mail'));
 
     // Ensure that the configuration entity has the expected dependencies and
     // overrides.
@@ -117,6 +129,10 @@ class ConfigInstallProfileOverrideTest extends BrowserTestBase {
     $this->rebuildContainer();
     $config_test_storage = \Drupal::entityTypeManager()->getStorage('config_test');
     $this->assertNull($config_test_storage->load('completely_new'));
+
+    // Ensure the authenticated role has the access tour permission.
+    $role = Role::load(Role::AUTHENTICATED_ID);
+    $this->assertTrue($role->hasPermission('access tour'), 'The Authenticated role has the "access tour" permission.');
   }
 
 }
