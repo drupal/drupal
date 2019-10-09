@@ -160,27 +160,6 @@ EOT;
   }
 
   /**
-   * Test appending to an unmanaged file, and confirm it is not .gitignored.
-   *
-   * If we append to an unmanaged (not scaffolded) file, and we are managing
-   * .gitignore files, then we expect that the unmanaged file should not be
-   * added to the .gitignore file, because unmanaged files should be committed.
-   */
-  public function testAppendToEmptySettingsIsUnmanaged() {
-    $sut = $this->createSutWithGit('drupal-drupal-append-settings');
-    $this->assertFileNotExists($sut . '/autoload.php');
-    $this->assertFileNotExists($sut . '/index.php');
-    $this->assertFileNotExists($sut . '/sites/.gitignore');
-    // Run the scaffold command.
-    $this->fixtures->runScaffold($sut);
-    $this->assertFileExists($sut . '/autoload.php');
-    $this->assertFileExists($sut . '/index.php');
-
-    $this->assertScaffoldedFile($sut . '/sites/.gitignore', FALSE, 'example.sites.php');
-    $this->assertScaffoldedFileDoesNotContain($sut . '/sites/.gitignore', 'settings.php');
-  }
-
-  /**
    * Tests scaffold command disables .gitignore management when git not present.
    *
    * The scaffold operation should still succeed if there is no 'git'

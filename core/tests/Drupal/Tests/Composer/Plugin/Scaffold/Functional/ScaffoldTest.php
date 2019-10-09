@@ -260,20 +260,7 @@ class ScaffoldTest extends TestCase {
   public function scaffoldAppendTestValues() {
     return array_merge(
       $this->scaffoldAppendTestValuesToPermute(FALSE),
-      $this->scaffoldAppendTestValuesToPermute(TRUE),
-      [
-        [
-          'drupal-drupal-append-settings',
-          FALSE,
-          'sites/default/settings.php',
-          '<?php
-
-// Default settings.php contents
-
-include __DIR__ . "/settings-custom-additions.php";',
-          'NOTICE Creating a new file at [web-root]/sites/default/settings.php. Examine the contents and ensure that it came out correctly.',
-        ],
-      ]
+      $this->scaffoldAppendTestValuesToPermute(TRUE)
     );
   }
 
@@ -288,7 +275,6 @@ include __DIR__ . "/settings-custom-additions.php";',
       [
         'drupal-drupal-test-append',
         $is_link,
-        'robots.txt',
         '# robots.txt fixture scaffolded from "file-mappings" in drupal-drupal-test-append composer.json fixture.
 # This content is prepended to the top of the existing robots.txt fixture.
 # ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
@@ -299,13 +285,11 @@ include __DIR__ . "/settings-custom-additions.php";',
 # This content is appended to the bottom of the existing robots.txt fixture.
 # robots.txt fixture scaffolded from "file-mappings" in drupal-drupal-test-append composer.json fixture.
 ',
-        'Prepend to [web-root]/robots.txt from assets/prepend-to-robots.txt',
       ],
 
       [
         'drupal-drupal-append-to-append',
         $is_link,
-        'robots.txt',
         '# robots.txt fixture scaffolded from "file-mappings" in drupal-drupal-append-to-append composer.json fixture.
 # This content is prepended to the top of the existing robots.txt fixture.
 # ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
@@ -319,7 +303,6 @@ include __DIR__ . "/settings-custom-additions.php";',
 # ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 # This content is appended to the bottom of the existing robots.txt fixture.
 # robots.txt fixture scaffolded from "file-mappings" in drupal-drupal-append-to-append composer.json fixture.',
-        'Append to [web-root]/robots.txt from assets/append-to-robots.txt',
       ],
     ];
   }
@@ -332,20 +315,15 @@ include __DIR__ . "/settings-custom-additions.php";',
    *   core/tests/Drupal/Tests/Component/Scaffold/fixtures.
    * @param bool $is_link
    *   Whether or not symlinking should be used.
-   * @param string $scaffold_file_path
-   *   Relative path to the scaffold file target we are testing.
-   * @param string $scaffold_file_contents
-   *   A string expected to be contained inside the scaffold file we are testing.
-   * @param string $scaffoldOutputContains
-   *   A string expected to be contained in the scaffold command output.
+   * @param string $robots_txt_contents
+   *   Regular expression matching expectations for robots.txt.
    *
    * @dataProvider scaffoldAppendTestValues
    */
-  public function testDrupalDrupalFileWasAppended($fixture_name, $is_link, $scaffold_file_path, $scaffold_file_contents, $scaffoldOutputContains) {
+  public function testDrupalDrupalFileWasAppended($fixture_name, $is_link, $robots_txt_contents) {
     $result = $this->scaffoldSut($fixture_name, $is_link, FALSE);
-    $this->assertContains($scaffoldOutputContains, $result->scaffoldOutput());
 
-    $this->assertScaffoldedFile($result->docroot() . '/' . $scaffold_file_path, FALSE, $scaffold_file_contents);
+    $this->assertScaffoldedFile($result->docroot() . '/robots.txt', FALSE, $robots_txt_contents);
     $this->assertCommonDrupalAssetsWereScaffolded($result->docroot(), $is_link);
     $this->assertAutoloadFileCorrect($result->docroot());
   }

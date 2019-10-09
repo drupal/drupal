@@ -12,8 +12,6 @@ class OperationData {
   const OVERWRITE = 'overwrite';
   const PREPEND = 'prepend';
   const APPEND = 'append';
-  const DEFAULT = 'default';
-  const FORCE_APPEND = 'force-append';
 
   /**
    * The parameter data.
@@ -87,20 +85,7 @@ class OperationData {
    *   Returns true if overwrite mode was selected.
    */
   public function overwrite() {
-    return !empty($this->data[self::OVERWRITE]);
-  }
-
-  /**
-   * Determines whether 'force-append' has been set.
-   *
-   * @return bool
-   *   Returns true if 'force-append' mode was selected.
-   */
-  public function forceAppend() {
-    if ($this->hasDefault()) {
-      return TRUE;
-    }
-    return !empty($this->data[self::FORCE_APPEND]);
+    return isset($this->data[self::OVERWRITE]) ? $this->data[self::OVERWRITE] : TRUE;
   }
 
   /**
@@ -144,26 +129,6 @@ class OperationData {
   }
 
   /**
-   * Checks if default path exists.
-   *
-   * @return bool
-   *   Returns true if there is default data available.
-   */
-  public function hasDefault() {
-    return isset($this->data[self::DEFAULT]);
-  }
-
-  /**
-   * Gets default path.
-   *
-   * @return string
-   *   Path to default data
-   */
-  public function default() {
-    return $this->data[self::DEFAULT];
-  }
-
-  /**
    * Normalizes metadata by converting literal values into arrays.
    *
    * Conversions performed include:
@@ -176,32 +141,9 @@ class OperationData {
    *   The metadata for this operation object, which varies by operation type.
    *
    * @return array
-   *   Normalized scaffold metadata with default values.
-   */
-  protected function normalizeScaffoldMetadata($destination, $value) {
-    $defaultScaffoldMetadata = [
-      self::MODE => ReplaceOp::ID,
-      self::PREPEND => NULL,
-      self::APPEND => NULL,
-      self::DEFAULT => NULL,
-      self::OVERWRITE => TRUE,
-    ];
-
-    return $this->convertScaffoldMetadata($destination, $value) + $defaultScaffoldMetadata;
-  }
-
-  /**
-   * Performs the conversion-to-array step in normalizeScaffoldMetadata.
-   *
-   * @param string $destination
-   *   The destination path for the scaffold file.
-   * @param mixed $value
-   *   The metadata for this operation object, which varies by operation type.
-   *
-   * @return array
    *   Normalized scaffold metadata.
    */
-  protected function convertScaffoldMetadata($destination, $value) {
+  protected function normalizeScaffoldMetadata($destination, $value) {
     if (is_bool($value)) {
       if (!$value) {
         return [self::MODE => SkipOp::ID];
@@ -218,6 +160,10 @@ class OperationData {
     // then the mode is 'append' (append + prepend).
     if (!isset($value[self::MODE]) && (isset($value[self::APPEND]) || isset($value[self::PREPEND]))) {
       $value[self::MODE] = AppendOp::ID;
+    }
+    // If there is no 'mode', then the default is 'replace'.
+    if (!isset($value[self::MODE])) {
+      $value[self::MODE] = ReplaceOp::ID;
     }
     return $value;
   }

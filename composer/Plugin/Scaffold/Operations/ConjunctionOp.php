@@ -9,7 +9,7 @@ use Drupal\Composer\Plugin\Scaffold\ScaffoldOptions;
 /**
  * Joins two operations on the same file into a single operation.
  */
-class ConjunctionOp extends AbstractOperation {
+class ConjunctionOp implements OperationInterface {
 
   /**
    * The first operation.

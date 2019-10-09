@@ -9,7 +9,7 @@ use Drupal\Composer\Plugin\Scaffold\ScaffoldOptions;
 /**
  * Scaffold operation to skip a scaffold file (do nothing).
  */
-class SkipOp extends AbstractOperation {
+class SkipOp implements OperationInterface {
 
   /**
    * Identifies Skip operations.
