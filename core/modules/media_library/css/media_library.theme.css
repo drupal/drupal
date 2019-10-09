@@ -322,6 +322,11 @@
   border: 1px solid #dbdbdb;
 }
 
+/* Media library widget weight field styles. */
+.media-library-item--grid .form-item {
+  margin: 0.75em;
+}
+
 /* The selected items in the add form should be shown a bit smaller. */
 .media-library-add-form__selected-media .media-library-item--small {
   width: 33.3%;
@@ -404,12 +409,12 @@
   border-color: #0076c0;
 }
 
-.media-library-item--grid .js-click-to-select-checkbox input {
+.media-library-item__click-to-select-checkbox input {
   width: 20px;
   height: 20px;
 }
 
-.media-library-item--grid .js-click-to-select-checkbox .form-item {
+.media-library-item__click-to-select-checkbox .form-item {
   margin: 0;
 }
 
@@ -501,11 +506,6 @@
 /* Add negative margin for flex grid. */
 .media-library-selection {
   margin: 1em -8px;
-}
-
-/* Media library widget weight field styles. */
-.media-library-item--grid .form-item {
-  margin: 0.75em;
 }
 
 /**

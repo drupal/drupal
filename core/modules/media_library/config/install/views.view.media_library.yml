@@ -121,7 +121,7 @@ display:
             preserve_tags: ''
             html: false
           element_type: ''
-          element_class: js-click-to-select-checkbox
+          element_class: js-click-to-select-checkbox media-library-item__click-to-select-checkbox
           element_label_type: ''
           element_label_class: ''
           element_label_colon: false
@@ -492,7 +492,7 @@ display:
             preserve_tags: ''
             html: false
           element_type: ''
-          element_class: js-click-to-select-checkbox
+          element_class: js-click-to-select-checkbox media-library-item__click-to-select-checkbox
           element_label_type: ''
           element_label_class: ''
           element_label_colon: false
@@ -846,7 +846,7 @@ display:
           element_label_class: ''
           element_label_colon: false
           element_wrapper_type: ''
-          element_wrapper_class: js-click-to-select-checkbox
+          element_wrapper_class: js-click-to-select-checkbox media-library-item__click-to-select-checkbox
           element_default_classes: true
           empty: ''
           hide_empty: false
@@ -1057,7 +1057,7 @@ display:
           relationship: none
           entity_type: media
           plugin_id: media_library_select_form
-          element_wrapper_class: js-click-to-select-checkbox
+          element_wrapper_class: js-click-to-select-checkbox media-library-item__click-to-select-checkbox
           element_class: ''
         thumbnail__target_id:
           id: thumbnail__target_id

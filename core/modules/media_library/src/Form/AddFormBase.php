@@ -429,7 +429,7 @@ abstract class AddFormBase extends FormBase {
         '#type' => 'container',
         '#attributes' => [
           'class' => [
-            'js-click-to-select-checkbox',
+            'js-click-to-select-checkbox media-library-item__click-to-select-checkbox',
           ],
         ],
         'select_checkbox' => [

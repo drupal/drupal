@@ -529,3 +529,57 @@ function media_library_post_update_add_buttons_to_page_view() {
     $view->storage->save(TRUE);
   }
 }
+
+/**
+ * Add non js prefixed classes to checkboxes if not present.
+ *
+ * Note the inclusion of "update_8001" in the function name. This ensures the
+ * function is executed after media_library_post_update_table_display(), as
+ * hook_post_update_NAME() implementations within the same file are executed in
+ * alphanumeric order.
+ */
+function media_library_post_update_update_8001_checkbox_classes() {
+  $view = Views::getView('media_library');
+  if (!$view) {
+    return;
+  }
+  $display_items = [
+    [
+      'display_id' => 'default',
+      'option' => 'element_class',
+      'field' => 'media_bulk_form',
+    ],
+    [
+      'display_id' => 'page',
+      'option' => 'element_class',
+      'field' => 'media_bulk_form',
+    ],
+    [
+      'display_id' => 'widget',
+      'option' => 'element_wrapper_class',
+      'field' => 'media_library_select_form',
+    ],
+    [
+      'display_id' => 'widget_table',
+      'option' => 'element_wrapper_class',
+      'field' => 'media_library_select_form',
+    ],
+  ];
+  foreach ($display_items as $item) {
+    $display_id = $item['display_id'];
+    $option = $item['option'];
+    $field = $item['field'];
+    $display = &$view->storage->getDisplay($display_id);
+
+    // Only proceed if the display, field and option exist.
+    if (!$display || !isset($display['display_options']['fields'][$field][$option])) {
+      continue;
+    }
+    $classes = $display['display_options']['fields'][$field][$option];
+    $classes_array = preg_split('/\s+/', $classes);
+    if (!in_array('media-library-item__click-to-select-checkbox', $classes_array, TRUE)) {
+      $display['display_options']['fields'][$field][$option] = "$classes media-library-item__click-to-select-checkbox";
+      $view->save();
+    }
+  }
+}

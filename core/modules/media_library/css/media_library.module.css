@@ -47,7 +47,7 @@
   position: relative;
 }
 
-.media-library-item .click-to-select-trigger {
+.media-library-item__click-to-select-trigger {
   overflow: hidden;
   height: 100%;
   cursor: pointer;
@@ -57,14 +57,14 @@
   align-self: flex-end;
 }
 
-.media-library-item .js-click-to-select-checkbox {
+.media-library-item__click-to-select-checkbox {
   position: absolute;
   z-index: 1;
   top: 16px;
   left: 16px; /* LTR */
   display: block;
 }
-[dir="rtl"] .media-library-item .js-click-to-select-checkbox {
+[dir="rtl"] .media-library-item__click-to-select-checkbox {
   right: 16px;
   left: auto;
 }
