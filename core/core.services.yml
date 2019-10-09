@@ -1280,6 +1280,11 @@ services:
     tags:
       - { name: event_subscriber }
     arguments: ['@config.manager', '@config.storage', '@config.storage.snapshot']
+  config_exclude_modules_subscriber:
+    class: Drupal\Core\EventSubscriber\ExcludedModulesEventSubscriber
+    arguments: ['@config.storage', '@settings', '@config.manager']
+    tags:
+      - { name: event_subscriber }
   exception.needs_installer:
     class: Drupal\Core\EventSubscriber\ExceptionDetectNeedsInstallSubscriber
     arguments: ['@database']

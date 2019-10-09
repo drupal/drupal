@@ -1,6 +1,0 @@
-services:
-  config_environment.excluded_modules.event_subscriber:
-    class: Drupal\config_environment\EventSubscriber\ExcludedModulesEventSubscriber
-    arguments: ['@config.storage', '@settings', '@config.manager']
-    tags:
-      - { name: event_subscriber }

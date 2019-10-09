@@ -1,4 +1,3 @@
-# @todo: Move this test module under the config module in #3079029.
 name: 'Configuration Module Exclude Test'
 type: module
 package: Testing

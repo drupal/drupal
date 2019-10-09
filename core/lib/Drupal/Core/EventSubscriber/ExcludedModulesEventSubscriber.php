@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\config_environment\EventSubscriber;
+namespace Drupal\Core\EventSubscriber;
 
 use Drupal\Core\Config\ConfigManagerInterface;
 use Drupal\Core\Config\StorageInterface;

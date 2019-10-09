@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\Tests\config_environment\Kernel\EventSubscriber;
+namespace Drupal\KernelTests\Core\Config;
 
 use Drupal\KernelTests\KernelTestBase;
 
@@ -16,7 +16,6 @@ class ExcludedModulesEventSubscriberTest extends KernelTestBase {
    */
   protected static $modules = [
     'system',
-    'config_environment',
     'config_test',
     'config_exclude_test',
   ];
