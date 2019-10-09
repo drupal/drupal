@@ -197,6 +197,7 @@ class SystemController extends ControllerBase {
       }
       $theme->is_default = ($theme->getName() == $theme_default);
       $theme->is_admin = ($theme->getName() == $admin_theme || ($theme->is_default && empty($admin_theme)));
+      $theme->is_experimental = isset($theme->info['experimental']) && $theme->info['experimental'];
 
       // Identify theme screenshot.
       $theme->screenshot = NULL;
@@ -269,7 +270,7 @@ class SystemController extends ControllerBase {
               'attributes' => ['title' => $this->t('Set @theme as default theme', ['@theme' => $theme->info['name']])],
             ];
           }
-          $admin_theme_options[$theme->getName()] = $theme->info['name'];
+          $admin_theme_options[$theme->getName()] = $theme->info['name'] . ($theme->is_experimental ? ' (' . t('Experimental') . ')' : '');
         }
         else {
           $theme->operations[] = [
@@ -287,13 +288,17 @@ class SystemController extends ControllerBase {
         }
       }
 
-      // Add notes to default and administration theme.
+      // Add notes to default theme, administration theme and experimental
+      // themes.
       $theme->notes = [];
       if ($theme->is_default) {
         $theme->notes[] = $this->t('default theme');
       }
       if ($theme->is_admin) {
         $theme->notes[] = $this->t('administration theme');
+      }
+      if ($theme->is_experimental) {
+        $theme->notes[] = $this->t('experimental theme');
       }
 
       // Sort installed and uninstalled themes into their own groups.
