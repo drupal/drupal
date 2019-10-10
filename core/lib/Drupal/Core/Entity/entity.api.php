@@ -634,6 +634,10 @@ use Drupal\node\Entity\NodeType;
 /**
  * Control entity operation access.
  *
+ * Note that this hook is not called for listings (e.g., from entity queries
+ * and Views). For nodes, see @link node_access Node access rights @endlink for
+ * a full explanation. For other entity types, see hook_query_TAG_alter().
+ *
  * @param \Drupal\Core\Entity\EntityInterface $entity
  *   The entity to check access to.
  * @param string $operation
@@ -654,6 +658,7 @@ use Drupal\node\Entity\NodeType;
  * @see \Drupal\Core\Entity\EntityAccessControlHandler
  * @see hook_entity_create_access()
  * @see hook_ENTITY_TYPE_access()
+ * @see hook_query_TAG_alter()
  *
  * @ingroup entity_api
  */
@@ -664,6 +669,10 @@ function hook_entity_access(\Drupal\Core\Entity\EntityInterface $entity, $operat
 
 /**
  * Control entity operation access for a specific entity type.
+ *
+ * Note that this hook is not called for listings (e.g., from entity queries
+ * and Views). For nodes, see @link node_access Node access rights @endlink for
+ * a full explanation. For other entity types, see hook_query_TAG_alter().
  *
  * @param \Drupal\Core\Entity\EntityInterface $entity
  *   The entity to check access to.
@@ -678,6 +687,7 @@ function hook_entity_access(\Drupal\Core\Entity\EntityInterface $entity, $operat
  * @see \Drupal\Core\Entity\EntityAccessControlHandler
  * @see hook_ENTITY_TYPE_create_access()
  * @see hook_entity_access()
+ * @see hook_query_TAG_alter()
  *
  * @ingroup entity_api
  */

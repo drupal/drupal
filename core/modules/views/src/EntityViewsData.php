@@ -178,6 +178,7 @@ class EntityViewsData implements EntityHandlerInterface, EntityViewsDataInterfac
       'field' => $base_field,
       'title' => $this->entityType->getLabel(),
       'cache_contexts' => $this->entityType->getListCacheContexts(),
+      'access query tag' => $this->entityType->id() . '_access',
     ];
     $data[$base_table]['table']['entity revision'] = FALSE;
 

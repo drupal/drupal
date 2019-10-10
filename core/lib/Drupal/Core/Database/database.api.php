@@ -5,7 +5,7 @@
  * Hooks related to the Database system and the Schema API.
  */
 
-use Drupal\Core\Database\Query\Condition;
+use Drupal\Core\Database\Query\SelectInterface;
 
 /**
  * @defgroup database Database abstraction layer
@@ -425,6 +425,12 @@ function hook_query_alter(Drupal\Core\Database\Query\AlterableInterface $query) 
 /**
  * Perform alterations to a structured query for a given tag.
  *
+ * Some common tags include:
+ * - 'entity_reference': For queries that return entities that may be referenced
+ *   by an entity reference field.
+ * - ENTITY_TYPE . '_access': For queries of entities that will be displayed in
+ *   a listing (e.g., from Views) and therefore require access control.
+ *
  * @param $query
  *   An Query object describing the composite parts of a SQL query.
  *
@@ -436,34 +442,40 @@ function hook_query_alter(Drupal\Core\Database\Query\AlterableInterface $query) 
  * @ingroup database
  */
 function hook_query_TAG_alter(Drupal\Core\Database\Query\AlterableInterface $query) {
-  // Skip the extra expensive alterations if site has no node access control modules.
-  if (!node_access_view_all_nodes()) {
-    // Prevent duplicates records.
-    $query->distinct();
-    // The recognized operations are 'view', 'update', 'delete'.
-    if (!$op = $query->getMetaData('op')) {
-      $op = 'view';
+  // This is an example of a possible hook_query_media_access_alter()
+  // implementation. In other words, alter queries of media entities that
+  // require access control (have the 'media_access' query tag).
+
+  // Determine which media entities we want to remove from the query. In this
+  // example, we hard-code some media IDs.
+  $media_entities_to_hide = [1, 3];
+
+  // In this example, we're only interested in applying our media access
+  // restrictions to SELECT queries. hook_media_access() can be used to apply
+  // access control to 'update' and 'delete' operations.
+  if (!($query instanceof SelectInterface)) {
+    return;
+  }
+
+  // The tables in the query. This can include media entity tables and other
+  // tables. Tables might be joined more than once, with aliases.
+  $query_tables = $query->getTables();
+
+  // The tables belonging to media entity storage.
+  $table_mapping = \Drupal::entityTypeManager()->getStorage('media')->getTableMapping();
+  $media_tables = $table_mapping->getTableNames();
+
+  // For each table in the query, if it's a media entity storage table, add a
+  // condition to filter out records belonging to a media entity that we wish
+  // to hide.
+  foreach ($query_tables as $alias => $info) {
+    // Skip over subqueries.
+    if ($info['table'] instanceof SelectInterface) {
+      continue;
     }
-    // Skip the extra joins and conditions for node admins.
-    if (!\Drupal::currentUser()->hasPermission('bypass node access')) {
-      // The node_access table has the access grants for any given node.
-      $access_alias = $query->join('node_access', 'na', '%alias.nid = n.nid');
-      $or = new Condition('OR');
-      // If any grant exists for the specified user, then user has access to the node for the specified operation.
-      foreach (node_access_grants($op, $query->getMetaData('account')) as $realm => $gids) {
-        foreach ($gids as $gid) {
-          $or->condition((new Condition('AND'))
-            ->condition($access_alias . '.gid', $gid)
-            ->condition($access_alias . '.realm', $realm)
-          );
-        }
-      }
-
-      if (count($or->conditions())) {
-        $query->condition($or);
-      }
-
-      $query->condition($access_alias . 'grant_' . $op, 1, '>=');
+    $real_table_name = $info['table'];
+    if (in_array($real_table_name, $media_tables)) {
+      $query->condition("$alias.mid", $media_entities_to_hide, 'NOT IN');
     }
   }
 }
