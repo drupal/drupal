@@ -7,6 +7,15 @@ use Drupal\Core\Asset\AttachedAssets;
 /**
  * AJAX command for a JavaScript Drupal.announce() call.
  *
+ * Developers should be extra careful if this command and
+ * \Drupal\Core\Ajax\MessageCommand are included in the same response. By
+ * default, MessageCommmand will also call Drupal.announce() and announce the
+ * message to the screen reader (unless the option to suppress announcements is
+ * passed to the constructor). Manual testing with a screen reader is strongly
+ * recommended.
+ *
+ * @see \Drupal\Core\Ajax\MessageCommand
+ *
  * @ingroup ajax
  */
 class AnnounceCommand implements CommandInterface, CommandWithAttachedAssetsInterface {

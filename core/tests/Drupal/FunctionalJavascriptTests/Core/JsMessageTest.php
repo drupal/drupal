@@ -6,7 +6,7 @@ use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 use Drupal\js_message_test\Controller\JSMessageTestController;
 
 /**
- * Tests core/drupal.messages library.
+ * Tests core/drupal.message library.
  *
  * @group Javascript
  */

@@ -1562,5 +1562,31 @@
         } while (match);
       }
     },
+
+    /**
+     * Command to add a message to the message area.
+     *
+     * @param {Drupal.Ajax} [ajax]
+     *   {@link Drupal.Ajax} object created by {@link Drupal.ajax}.
+     * @param {object} response
+     *   The response from the Ajax request.
+     * @param {string} response.messageWrapperQuerySelector
+     *   The zone where to add the message. If null, the default will be used.
+     * @param {string} response.message
+     *   The message text.
+     * @param {string} response.messageOptions
+     *   The options argument for Drupal.Message().add().
+     * @param {bool} response.clearPrevious
+     *   If true, clear previous messages.
+     */
+    message(ajax, response) {
+      const messages = new Drupal.Message(
+        document.querySelector(response.messageWrapperQuerySelector),
+      );
+      if (response.clearPrevious) {
+        messages.clear();
+      }
+      messages.add(response.message, response.messageOptions);
+    },
   };
 })(jQuery, window, Drupal, drupalSettings);

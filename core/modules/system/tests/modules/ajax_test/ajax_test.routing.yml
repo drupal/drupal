@@ -77,3 +77,11 @@ ajax_test.render_error:
     _controller: '\Drupal\ajax_test\Controller\AjaxTestController::renderError'
   requirements:
     _access: 'TRUE'
+
+ajax_test.message_form:
+  path: '/ajax-test/message'
+  defaults:
+    _title: 'Ajax Message Form'
+    _form: '\Drupal\ajax_test\Form\AjaxTestMessageCommandForm'
+  requirements:
+    _access: 'TRUE'

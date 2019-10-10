@@ -639,6 +639,13 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
           document.styleSheets[0].addImport(match[1]);
         } while (match);
       }
+    },
+    message: function message(ajax, response) {
+      var messages = new Drupal.Message(document.querySelector(response.messageWrapperQuerySelector));
+      if (response.clearPrevious) {
+        messages.clear();
+      }
+      messages.add(response.message, response.messageOptions);
     }
   };
 })(jQuery, window, Drupal, drupalSettings);
