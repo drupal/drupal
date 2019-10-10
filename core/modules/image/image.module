@@ -275,7 +275,6 @@ function image_style_options($include_empty = TRUE) {
  *   - width: The width of the image.
  *   - height: The height of the image.
  *   - style_name: The name of the image style to be applied.
- *   - attributes: Additional attributes to apply to the image.
  *   - uri: URI of the source image before styling.
  *   - alt: The alternative text for text-based browsers. HTML 4 and XHTML 1.0
  *     always require an alt attribute. The HTML 5 draft allows the alt
@@ -289,7 +288,8 @@ function image_style_options($include_empty = TRUE) {
  *     - http://dev.w3.org/html5/spec/Overview.html#alt
  *   - title: The title text is displayed when the image is hovered in some
  *     popular browsers.
- *   - attributes: Associative array of attributes to be placed in the img tag.
+ *   - attributes: Associative array of additional attributes to be placed in
+ *     the img tag.
  */
 function template_preprocess_image_style(&$variables) {
   $style = ImageStyle::load($variables['style_name']);
