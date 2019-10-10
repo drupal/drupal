@@ -5,6 +5,8 @@
  * Module install file.
  */
 
+use Drupal\Core\Url;
+
 /**
  * Implements hook_install().
  */
@@ -58,7 +60,18 @@ function jsonapi_requirements($phase) {
         ':jsonapi-docs' => 'https://www.drupal.org/docs/8/modules/jsonapi/revisions',
       ]),
     ];
-
+    $requirements['jsonapi_read_only_mode'] = [
+      'title' => t('JSON:API allowed operations'),
+      'value' => t('Read-only'),
+      'severity' => REQUIREMENT_INFO,
+    ];
+    if (!\Drupal::configFactory()->get('jsonapi.settings')->get('read_only')) {
+      $requirements['jsonapi_read_only_mode']['value'] = t('All (create, read, update, delete)');
+      $requirements['jsonapi_read_only_mode']['description'] = t('It is recommended to <a href=":configure-url">configure</a> JSON:API to only accept all operations if the site requires it. <a href=":docs">Learn more about securing your site with JSON:API.</a>', [
+        ':docs' => 'https://www.drupal.org/docs/8/modules/jsonapi/security-considerations',
+        ':configure-url' => Url::fromRoute('jsonapi.settings')->toString(),
+      ]);
+    }
   }
   return $requirements;
 }
