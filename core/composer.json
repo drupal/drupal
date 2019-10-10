@@ -35,7 +35,7 @@
         "twig/twig": "^1.38.2",
         "doctrine/common": "^2.5",
         "doctrine/annotations": "^1.2",
-        "guzzlehttp/guzzle": "^6.2.1",
+        "guzzlehttp/guzzle": "^6.3",
         "symfony-cmf/routing": "^1.4",
         "easyrdf/easyrdf": "^0.9",
         "zendframework/zend-feed": "^2.4",
