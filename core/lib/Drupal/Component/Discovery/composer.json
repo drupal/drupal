@@ -6,8 +6,8 @@
   "license": "GPL-2.0-or-later",
   "require": {
     "php": ">=7.0.8",
-    "drupal/core-file-cache": "^8.2",
-    "drupal/core-serialization": "^8.2"
+    "drupal/core-file-cache": "^8.8",
+    "drupal/core-serialization": "^8.8"
   },
   "autoload": {
     "psr-4": {

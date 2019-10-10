@@ -6,7 +6,7 @@
   "license": "GPL-2.0-or-later",
   "require": {
     "php": ">=7.0.8",
-    "doctrine/common": "^2.5"
+    "doctrine/common": "^2.7"
   },
   "autoload": {
     "psr-4": {

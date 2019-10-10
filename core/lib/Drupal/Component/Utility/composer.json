@@ -6,10 +6,7 @@
   "license": "GPL-2.0-or-later",
   "require": {
     "php": ">=7.0.8",
-    "paragonie/random_compat": "^1.0|^2.0",
-    "drupal/core-render": "^8.2",
-    "symfony/polyfill-iconv": "~1.0",
-    "symfony/polyfill-mbstring": "~1.0"
+    "drupal/core-render": "^8.8"
   },
   "autoload": {
     "psr-4": {
