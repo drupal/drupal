@@ -51,6 +51,11 @@ class MediaLibrarySelectForm extends FieldPluginBase {
       'class' => ['media-library-views-form', 'js-media-library-views-form'],
     ];
 
+    // Add an attribute that identifies the media type displayed in the form.
+    if (isset($this->view->args[0])) {
+      $form['#attributes']['data-drupal-media-type'] = $this->view->args[0];
+    }
+
     // Render checkboxes for all rows.
     $form[$this->options['id']]['#tree'] = TRUE;
     foreach ($this->view->result as $row_index => $row) {
