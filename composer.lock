@@ -685,7 +685,7 @@
         },
         {
             "name": "drupal/core",
-            "version": "8.9.x-dev",
+            "version": "9.0.x-dev",
             "dist": {
                 "type": "path",
                 "url": "core",
