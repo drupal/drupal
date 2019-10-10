@@ -176,6 +176,7 @@ function media_library_post_update_table_display() {
   $table_display->overrideOption('access', $grid_display->getOption('access'));
   $table_display->overrideOption('filters', $grid_display->getOption('filters'));
   $table_display->overrideOption('arguments', $grid_display->getOption('arguments'));
+  $table_display->overrideOption('rendering_language', $grid_display->getOption('rendering_language'));
 
   // Also override the sorts and pager if the grid display has overrides.
   $defaults = $grid_display->getOption('defaults');
@@ -611,5 +612,165 @@ function media_library_post_update_default_administrative_list_to_table_display(
       unset($display['display_options']['menu']);
     }
     $view->storage->save();
+  }
+}
+
+/**
+ * Add langcode filters to media library view displays.
+ */
+function media_library_post_update_add_langcode_filters() {
+  $view = Views::getView('media_library');
+
+  if (!$view) {
+    return;
+  }
+
+  // Fetch the filters from the default display and add the new 'langcode'
+  // filter if it does not yet exist.
+  $default_display = $view->getDisplay();
+  $filters = $default_display->getOption('filters');
+
+  $added_langcode = FALSE;
+  if (!isset($filters['langcode'])) {
+    $filters['langcode'] = [
+      'id' => 'langcode',
+      'table' => 'media_field_data',
+      'field' => 'langcode',
+      'relationship' => 'none',
+      'group_type' => 'group',
+      'admin_label' => '',
+      'operator' => 'in',
+      'value' => [],
+      'group' => 1,
+      'exposed' => TRUE,
+      'expose' => [
+        'use_operator' => FALSE,
+        'remember' => FALSE,
+        'operator_id' => 'langcode_op',
+        'multiple' => FALSE,
+        'description' => '',
+        'required' => FALSE,
+        'reduce' => FALSE,
+        'label' => 'Language',
+        'operator_limit_selection' => FALSE,
+        'operator' => 'langcode_op',
+        'identifier' => 'langcode',
+        'operator_list' => [],
+        'remember_roles' => [
+          'administrator' => '0',
+          'authenticated' => 'authenticated',
+          'anonymous' => '0',
+        ],
+      ],
+      'is_grouped' => FALSE,
+      'group_info' => [
+        'widget' => 'select',
+        'group_items' => [],
+        'multiple' => FALSE,
+        'description' => '',
+        'default_group_multiple' => [],
+        'default_group' => 'All',
+        'label' => '',
+        'identifier' => '',
+        'optional' => TRUE,
+        'remember' => FALSE,
+      ],
+      'entity_type' => 'media',
+      'entity_field' => 'langcode',
+      'plugin_id' => 'language',
+    ];
+    $default_display->setOption('filters', $filters);
+    $added_langcode = TRUE;
+  }
+
+  $added_default_langcode_displays = [];
+  foreach (['widget', 'widget_table'] as $display_id) {
+    // Check if the display still exists, or else skip it.
+    if (!$view->displayHandlers->has($display_id)) {
+      continue;
+    }
+
+    $view->setDisplay($display_id);
+    $display = $view->getDisplay();
+
+    // Fetch the filters from the display and add the 'default_langcode' filter
+    // if it does not yet exist.
+    $filters = $display->getOption('filters');
+    if (!isset($filters['default_langcode'])) {
+      $filters['default_langcode'] = [
+        'id' => 'default_langcode',
+        'table' => 'media_field_data',
+        'field' => 'default_langcode',
+        'relationship' => 'none',
+        'group_type' => 'group',
+        'admin_label' => '',
+        'operator' => '=',
+        'value' => '1',
+        'group' => 1,
+        'exposed' => FALSE,
+        'expose' => [
+          'use_operator' => FALSE,
+          'remember' => FALSE,
+          'operator_id' => '',
+          'multiple' => FALSE,
+          'description' => '',
+          'required' => FALSE,
+          'label' => '',
+          'operator_limit_selection' => FALSE,
+          'operator' => '',
+          'identifier' => '',
+          'operator_list' => [],
+          'remember_roles' => [
+            RoleInterface::AUTHENTICATED_ID => RoleInterface::AUTHENTICATED_ID,
+          ],
+        ],
+        'is_grouped' => FALSE,
+        'group_info' => [
+          'widget' => 'select',
+          'group_items' => [],
+          'multiple' => FALSE,
+          'description' => '',
+          'default_group_multiple' => [],
+          'default_group' => 'All',
+          'label' => '',
+          'identifier' => '',
+          'optional' => TRUE,
+          'remember' => FALSE,
+        ],
+        'entity_type' => 'media',
+        'entity_field' => 'default_langcode',
+        'plugin_id' => 'boolean',
+      ];
+      $display->setOption('filters', $filters);
+
+      // Change the rendering language of the rows to the interface language.
+      $display->setOption('rendering_language', '***LANGUAGE_language_interface***');
+
+      $added_default_langcode_displays[] = $view->storage->get('display')[$display_id]['display_title'];
+    }
+  }
+
+  if ($added_langcode && $added_default_langcode_displays) {
+    $view->save();
+    return t("The 'Language' filter was added to the default display of the %label view and the 'Default translation' filter was added to the following displays: %displays", [
+      '%label' => $view->storage->label(),
+      '%displays' => implode(', ', $added_default_langcode_displays),
+    ]);
+  }
+
+  if ($added_langcode) {
+    $view->save();
+    return t("The 'Language' filter was added to the default display of the %label view.", [
+      '%label' => $view->storage->label(),
+      '%displays' => implode(', ', $added_default_langcode_displays),
+    ]);
+  }
+
+  if ($added_default_langcode_displays) {
+    $view->save();
+    return t("The 'Default translation' filter was added to the following %label view displays: %displays", [
+      '%label' => $view->storage->label(),
+      '%displays' => implode(', ', $added_default_langcode_displays),
+    ]);
   }
 }
