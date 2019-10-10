@@ -100,6 +100,18 @@ class MediaLibraryTest extends WebDriverTestBase {
     // Visit the administration page.
     $this->drupalGet('admin/content/media');
 
+    // There should be links to both the grid and table displays.
+    $assert_session->linkExists('Grid');
+    $assert_session->linkExists('Table');
+
+    // We should see the table view and a link to add media.
+    $assert_session->elementExists('css', '.view-media .views-table');
+    $assert_session->linkExists('Add media');
+
+    // Go to the grid display for the rest of the test.
+    $page->clickLink('Grid');
+    $assert_session->addressEquals('admin/content/media-grid');
+
     // Verify that the "Add media" link is present.
     $assert_session->linkExists('Add media');
 
@@ -157,13 +169,6 @@ class MediaLibraryTest extends WebDriverTestBase {
 
     // Test empty text.
     $assert_session->pageTextContains('No media available.');
-
-    // Verify that the "Table" link is present, click it and check address.
-    $assert_session->linkExists('Table');
-    $page->clickLink('Table');
-    $assert_session->addressEquals('admin/content/media-table');
-    // Verify that the "Add media" link is present.
-    $assert_session->linkExists('Add media');
   }
 
   /**

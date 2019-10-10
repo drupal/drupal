@@ -583,3 +583,33 @@ function media_library_post_update_update_8001_checkbox_classes() {
     }
   }
 }
+
+/**
+ * Sets /admin/content/media to the table display of the 'media' view.
+ */
+function media_library_post_update_default_administrative_list_to_table_display() {
+  $view = Views::getView('media');
+  if ($view) {
+    $display = &$view->storage->getDisplay('media_page_list');
+
+    if ($display && $display['display_options']['path'] === 'admin/content/media-table') {
+      $display['display_options']['path'] = 'admin/content/media';
+      $view->storage->save();
+    }
+  }
+
+  $view = Views::getView('media_library');
+  if (!$view) {
+    return;
+  }
+  $display = &$view->storage->getDisplay('page');
+  if ($display && $display['display_options']['path'] === 'admin/content/media') {
+    $display['display_options']['path'] .= '-grid';
+
+    // Only delete the menu settings if they have not been changed.
+    if (isset($display['display_options']['menu']) && $display['display_options']['menu']['type'] === 'tab' && $display['display_options']['menu']['title'] === 'Media') {
+      unset($display['display_options']['menu']);
+    }
+    $view->storage->save();
+  }
+}

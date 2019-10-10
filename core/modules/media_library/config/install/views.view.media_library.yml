@@ -444,16 +444,7 @@ display:
     position: 1
     display_options:
       display_extenders: {  }
-      path: admin/content/media
-      menu:
-        type: tab
-        title: Media
-        description: 'Allows users to browse and administer media items'
-        expanded: false
-        parent: system.admin_content
-        weight: 5
-        context: '0'
-        menu_name: admin
+      path: admin/content/media-grid
       fields:
         media_bulk_form:
           id: media_bulk_form
