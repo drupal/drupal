@@ -110,7 +110,12 @@ abstract class ViewsBlockBase extends BlockBase implements ContainerFactoryPlugi
    * {@inheritdoc}
    */
   public function getPreviewFallbackString() {
-    return $this->t('"@view" views block', ['@view' => $this->view->storage->label()]);
+    if (!empty($this->pluginDefinition["admin_label"])) {
+      return $this->t('"@view" views block', ['@view' => $this->pluginDefinition["admin_label"]]);
+    }
+    else {
+      return $this->t('"@view" views block', ['@view' => $this->view->storage->label() . '::' . $this->displayID]);
+    }
   }
 
   /**

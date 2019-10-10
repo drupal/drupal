@@ -127,4 +127,19 @@ class ViewsBlockTest extends ViewsKernelTestBase {
     $this->assertEquals('Overridden title', $build['#title']['#markup']);
   }
 
+  /**
+   * Tests that ViewsBlock::getPreviewFallbackString() produces the right value.
+   *
+   * @see \Drupal\views\Plugin\Block\ViewsBlockBase::getPreviewFallbackString()
+   */
+  public function testGetPreviewFallbackString() {
+    $plugin_definition = [
+      'provider' => 'views',
+    ];
+    $plugin_id = 'views_block:test_view_block-block_1';
+    $views_block = ViewsBlock::create($this->container, [], $plugin_id, $plugin_definition);
+
+    $this->assertEqual($views_block->getPreviewFallbackString(), '"test_view_block::block_1" views block');
+  }
+
 }
