@@ -35,6 +35,11 @@ services:
     arguments: ['@entity.definition_update_manager', '@entity.last_installed_schema.repository', '@workspaces.manager']
     tags:
       - { name: 'event_subscriber' }
+  workspaces.workspace_subscriber:
+    class: Drupal\workspaces\EventSubscriber\WorkspaceRequestSubscriber
+    arguments: ['@path.alias_manager', '@path.current', '@router.route_provider', '@workspaces.manager']
+    tags:
+      - { name: event_subscriber }
 
   cache_context.workspace:
     class: Drupal\workspaces\WorkspaceCacheContext

@@ -17,8 +17,8 @@ class PathAliasStorageSchema extends SqlContentEntityStorageSchema {
     $schema = parent::getEntitySchema($entity_type, $reset);
 
     $schema[$this->storage->getBaseTable()]['indexes'] += [
-      'path_alias__alias_langcode_id' => ['alias', 'langcode', 'id'],
-      'path_alias__path_langcode_id' => ['path', 'langcode', 'id'],
+      'path_alias__alias_langcode_id_status' => ['alias', 'langcode', 'id', 'status'],
+      'path_alias__path_langcode_id_status' => ['path', 'langcode', 'id', 'status'],
     ];
 
     return $schema;

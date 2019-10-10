@@ -38,6 +38,11 @@ class PathAliasToEntityUpdateTest extends UpdatePathTestBase {
     $query->addField('url_alias', 'source', 'path');
     $query->addField('url_alias', 'alias');
     $query->addField('url_alias', 'langcode');
+
+    // Path aliases did not have a 'status' value before the conversion to
+    // entities, but we're adding it here to ensure that the field was installed
+    // and populated correctly.
+    $query->addExpression('1', 'status');
     $original_records = $query->execute()->fetchAllAssoc('id');
 
     // drupal-8.filled.standard.php.gz contains one URL alias and
@@ -90,12 +95,12 @@ class PathAliasToEntityUpdateTest extends UpdatePathTestBase {
     // Check that correct data was written in both the base and the revision
     // tables.
     $base_table_records = $database->select('path_alias')
-      ->fields('path_alias', ['id', 'path', 'alias', 'langcode'])
+      ->fields('path_alias', ['id', 'path', 'alias', 'langcode', 'status'])
       ->execute()->fetchAllAssoc('id');
     $this->assertEquals($original_records, $base_table_records);
 
     $revision_table_records = $database->select('path_alias_revision')
-      ->fields('path_alias_revision', ['id', 'path', 'alias', 'langcode'])
+      ->fields('path_alias_revision', ['id', 'path', 'alias', 'langcode', 'status'])
       ->execute()->fetchAllAssoc('id');
     $this->assertEquals($original_records, $revision_table_records);
   }

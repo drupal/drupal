@@ -262,6 +262,10 @@ class WorkspaceManager implements WorkspaceManagerInterface {
       return 'entity.memory_cache:' . $entity_type_id;
     }, array_keys($this->getSupportedEntityTypes()));
     $this->entityMemoryCache->invalidateTags($cache_tags_to_invalidate);
+
+    // Clear the static cache for path aliases. We can't inject the path alias
+    // manager service because it would create a circular dependency.
+    \Drupal::service('path.alias_manager')->cacheClear();
   }
 
   /**

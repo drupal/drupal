@@ -83,6 +83,11 @@ abstract class PathAliasResourceTestBase extends EntityResourceTestBase {
           'value' => '/frontpage1',
         ],
       ],
+      'status' => [
+        [
+          'value' => TRUE,
+        ],
+      ],
       'uuid' => [
         [
           'value' => $this->entity->uuid(),

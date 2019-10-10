@@ -3,6 +3,7 @@
 namespace Drupal\Core\Path\Entity;
 
 use Drupal\Core\Entity\ContentEntityBase;
+use Drupal\Core\Entity\EntityPublishedTrait;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
@@ -34,12 +35,15 @@ use Drupal\Core\Path\PathAliasInterface;
  *     "revision" = "revision_id",
  *     "langcode" = "langcode",
  *     "uuid" = "uuid",
+ *     "published" = "status",
  *   },
  *   admin_permission = "administer url aliases",
  *   list_cache_tags = { "route_match" },
  * )
  */
 class PathAlias extends ContentEntityBase implements PathAliasInterface {
+
+  use EntityPublishedTrait;
 
   /**
    * {@inheritdoc}
@@ -60,6 +64,10 @@ class PathAlias extends ContentEntityBase implements PathAliasInterface {
       ->setRevisionable(TRUE);
 
     $fields['langcode']->setDefaultValue(LanguageInterface::LANGCODE_NOT_SPECIFIED);
+
+    // Add the published field.
+    $fields += static::publishedBaseFieldDefinitions($entity_type);
+    $fields['status']->setTranslatable(FALSE);
 
     return $fields;
   }

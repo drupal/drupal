@@ -3,11 +3,12 @@
 namespace Drupal\Core\Path;
 
 use Drupal\Core\Entity\ContentEntityInterface;
+use Drupal\Core\Entity\EntityPublishedInterface;
 
 /**
  * Provides an interface defining a path_alias entity.
  */
-interface PathAliasInterface extends ContentEntityInterface {
+interface PathAliasInterface extends ContentEntityInterface, EntityPublishedInterface {
 
   /**
    * Gets the source path of the alias.

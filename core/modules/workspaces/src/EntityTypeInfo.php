@@ -107,6 +107,11 @@ class EntityTypeInfo implements ContainerInjectionInterface {
     if (isset($definitions['entity_reference'])) {
       $definitions['entity_reference']['constraints']['EntityReferenceSupportedNewEntities'] = [];
     }
+
+    // Allow path aliases to be changed in workspace-specific pending revisions.
+    if (isset($definitions['path'])) {
+      unset($definitions['path']['constraints']['PathAlias']);
+    }
   }
 
   /**

@@ -546,7 +546,7 @@ class RouteProviderTest extends KernelTestBase {
     $request = Request::create($path, 'GET');
     $provider->getRouteCollectionForRequest($request);
 
-    $cache = $this->cache->get('route:en:/path/add/one:');
+    $cache = $this->cache->get('route:[language]=en:/path/add/one:');
     $this->assertEqual('/path/add/one', $cache->data['path']);
     $this->assertEqual([], $cache->data['query']);
     $this->assertEqual(3, count($cache->data['routes']));
@@ -556,7 +556,7 @@ class RouteProviderTest extends KernelTestBase {
     $request = Request::create($path, 'GET');
     $provider->getRouteCollectionForRequest($request);
 
-    $cache = $this->cache->get('route:en:/path/add/one:foo=bar');
+    $cache = $this->cache->get('route:[language]=en:/path/add/one:foo=bar');
     $this->assertEqual('/path/add/one', $cache->data['path']);
     $this->assertEqual(['foo' => 'bar'], $cache->data['query']);
     $this->assertEqual(3, count($cache->data['routes']));
@@ -566,7 +566,7 @@ class RouteProviderTest extends KernelTestBase {
     $request = Request::create($path, 'GET');
     $provider->getRouteCollectionForRequest($request);
 
-    $cache = $this->cache->get('route:en:/path/1/one:');
+    $cache = $this->cache->get('route:[language]=en:/path/1/one:');
     $this->assertEqual('/path/1/one', $cache->data['path']);
     $this->assertEqual([], $cache->data['query']);
     $this->assertEqual(2, count($cache->data['routes']));
@@ -583,7 +583,7 @@ class RouteProviderTest extends KernelTestBase {
     $request = Request::create($path, 'GET');
     $provider->getRouteCollectionForRequest($request);
 
-    $cache = $this->cache->get('route:en:/path/add-one:');
+    $cache = $this->cache->get('route:[language]=en:/path/add-one:');
     $this->assertEqual('/path/add/one', $cache->data['path']);
     $this->assertEqual([], $cache->data['query']);
     $this->assertEqual(3, count($cache->data['routes']));
@@ -598,7 +598,7 @@ class RouteProviderTest extends KernelTestBase {
     $request = Request::create($path, 'GET');
     $provider->getRouteCollectionForRequest($request);
 
-    $cache = $this->cache->get('route:gsw-berne:/path/add-one:');
+    $cache = $this->cache->get('route:[language]=gsw-berne:/path/add-one:');
     $this->assertEquals('/path/add/one', $cache->data['path']);
     $this->assertEquals([], $cache->data['query']);
     $this->assertEquals(3, count($cache->data['routes']));

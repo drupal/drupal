@@ -9,6 +9,7 @@ use Drupal\Core\Url;
  * JSON:API integration test for the "PathAlias" content entity type.
  *
  * @group jsonapi
+ * @group path
  */
 class PathAliasTest extends ResourceTestBase {
 
@@ -86,6 +87,7 @@ class PathAliasTest extends ResourceTestBase {
           'alias' => '/frontpage1',
           'path' => '/<front>',
           'langcode' => 'en',
+          'status' => TRUE,
           'drupal_internal__id' => 1,
           'drupal_internal__revision_id' => 1,
         ],

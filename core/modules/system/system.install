@@ -2395,6 +2395,7 @@ function system_update_8803() {
         'revision' => 'revision_id',
         'langcode' => 'langcode',
         'uuid' => 'uuid',
+        'published' => 'status',
       ],
     ]);
 
@@ -2422,6 +2423,11 @@ function system_update_8803() {
       ->setStorageRequired(TRUE)
       ->setInternal(TRUE)
       ->setRevisionable(TRUE);
+
+    $field_storage_definitions['status'] = BaseFieldDefinition::create('boolean')
+      ->setLabel(new TranslatableMarkup('Published'))
+      ->setRevisionable(TRUE)
+      ->setDefaultValue(TRUE);
 
     $field_storage_definitions['path'] = BaseFieldDefinition::create('string')
       ->setLabel(new TranslatableMarkup('System path'))
@@ -2472,9 +2478,9 @@ function system_update_8804(&$sandbox = NULL) {
     $uuid = \Drupal::service('uuid');
 
     $base_table_insert = $database->insert('path_alias');
-    $base_table_insert->fields(['id', 'revision_id', 'uuid', 'path', 'alias', 'langcode']);
+    $base_table_insert->fields(['id', 'revision_id', 'uuid', 'path', 'alias', 'langcode', 'status']);
     $revision_table_insert = $database->insert('path_alias_revision');
-    $revision_table_insert->fields(['id', 'revision_id', 'path', 'alias', 'langcode', 'revision_default']);
+    $revision_table_insert->fields(['id', 'revision_id', 'path', 'alias', 'langcode', 'status', 'revision_default']);
     foreach ($url_aliases as $url_alias) {
       $values = [
         'id' => $url_alias->pid,
@@ -2483,6 +2489,7 @@ function system_update_8804(&$sandbox = NULL) {
         'path' => $url_alias->source,
         'alias' => $url_alias->alias,
         'langcode' => $url_alias->langcode,
+        'status' => 1,
       ];
       $base_table_insert->values($values);
 

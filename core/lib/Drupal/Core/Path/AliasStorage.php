@@ -172,16 +172,29 @@ class AliasStorage implements AliasStorageInterface {
   }
 
   /**
+   * Returns a SELECT query for the path_alias base table.
+   *
+   * @return \Drupal\Core\Database\Query\SelectInterface
+   *   A Select query object.
+   */
+  protected function getBaseQuery() {
+    $query = $this->connection->select(static::TABLE, 'base_table');
+    $query->condition('base_table.status', 1);
+
+    return $query;
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function preloadPathAlias($preloaded, $langcode) {
-    $select = $this->connection->select(static::TABLE)
-      ->fields(static::TABLE, ['path', 'alias']);
+    $select = $this->getBaseQuery()
+      ->fields('base_table', ['path', 'alias']);
 
     if (!empty($preloaded)) {
       $conditions = new Condition('OR');
       foreach ($preloaded as $preloaded_item) {
-        $conditions->condition('path', $this->connection->escapeLike($preloaded_item), 'LIKE');
+        $conditions->condition('base_table.path', $this->connection->escapeLike($preloaded_item), 'LIKE');
       }
       $select->condition($conditions);
     }
@@ -191,7 +204,7 @@ class AliasStorage implements AliasStorageInterface {
     // We order by ID ASC so that fetchAllKeyed() returns the most recently
     // created alias for each source. Subsequent queries using fetchField() must
     // use ID DESC to have the same effect.
-    $select->orderBy('id', 'ASC');
+    $select->orderBy('base_table.id', 'ASC');
 
     return $select->execute()->fetchAllKeyed();
   }
@@ -201,13 +214,13 @@ class AliasStorage implements AliasStorageInterface {
    */
   public function lookupPathAlias($path, $langcode) {
     // See the queries above. Use LIKE for case-insensitive matching.
-    $select = $this->connection->select(static::TABLE)
-      ->fields(static::TABLE, ['alias'])
-      ->condition('path', $this->connection->escapeLike($path), 'LIKE');
+    $select = $this->getBaseQuery()
+      ->fields('base_table', ['alias'])
+      ->condition('base_table.path', $this->connection->escapeLike($path), 'LIKE');
 
     $this->addLanguageFallback($select, $langcode);
 
-    $select->orderBy('id', 'DESC');
+    $select->orderBy('base_table.id', 'DESC');
 
     return $select->execute()->fetchField();
   }
@@ -217,13 +230,13 @@ class AliasStorage implements AliasStorageInterface {
    */
   public function lookupPathSource($alias, $langcode) {
     // See the queries above. Use LIKE for case-insensitive matching.
-    $select = $this->connection->select(static::TABLE)
-      ->fields(static::TABLE, ['path'])
-      ->condition('alias', $this->connection->escapeLike($alias), 'LIKE');
+    $select = $this->getBaseQuery()
+      ->fields('base_table', ['path'])
+      ->condition('base_table.alias', $this->connection->escapeLike($alias), 'LIKE');
 
     $this->addLanguageFallback($select, $langcode);
 
-    $select->orderBy('id', 'DESC');
+    $select->orderBy('base_table.id', 'DESC');
 
     return $select->execute()->fetchField();
   }
@@ -246,12 +259,12 @@ class AliasStorage implements AliasStorageInterface {
       array_pop($langcode_list);
     }
     elseif ($langcode > LanguageInterface::LANGCODE_NOT_SPECIFIED) {
-      $query->orderBy('langcode', 'DESC');
+      $query->orderBy('base_table.langcode', 'DESC');
     }
     else {
-      $query->orderBy('langcode', 'ASC');
+      $query->orderBy('base_table.langcode', 'ASC');
     }
-    $query->condition('langcode', $langcode_list, 'IN');
+    $query->condition('base_table.langcode', $langcode_list, 'IN');
   }
 
   /**
@@ -304,11 +317,11 @@ class AliasStorage implements AliasStorageInterface {
    * {@inheritdoc}
    */
   public function pathHasMatchingAlias($initial_substring) {
-    $query = $this->connection->select(static::TABLE);
+    $query = $this->getBaseQuery();
     $query->addExpression(1);
 
     return (bool) $query
-      ->condition('path', $this->connection->escapeLike($initial_substring) . '%', 'LIKE')
+      ->condition('base_table.path', $this->connection->escapeLike($initial_substring) . '%', 'LIKE')
       ->range(0, 1)
       ->execute()
       ->fetchField();
