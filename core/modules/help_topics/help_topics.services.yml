@@ -15,3 +15,11 @@ services:
     tags:
     - { name: twig.loader, priority: -200 }
     public: false
+  help_topics.plugin.manager.help_section:
+    class: Drupal\help_topics\HelpSectionManager
+    decorates: plugin.manager.help_section
+    parent: plugin.manager.help_section
+    calls:
+      - [setSearchManager, ['@?plugin.manager.search']]
+    tags:
+      - { name: plugin_manager_cache_clear }

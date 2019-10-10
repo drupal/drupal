@@ -7,4 +7,5 @@ related:
 ---
 {% set help_topic_url = render_var(url('help_topics.help_topic', {id: 'help_topics_test.additional'})) %}
 <p>{% trans %}This is a test. It should <a href="{{ help_topic_url }}">link to the additional topic</a>. Also there should be a related topic link below to the Help module topic page and the linked topic.{% endtrans %}</p>
+<p>{% trans %}Nonworditem totranslate.{% endtrans %}</p>
 <p>{% trans %}Test translation.{% endtrans %}</p>

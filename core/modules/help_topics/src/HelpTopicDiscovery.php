@@ -108,7 +108,7 @@ class HelpTopicDiscovery implements DiscoveryInterface {
         }
         $data = [
           // The plugin ID is derived from the filename. The extension
-          // '.html.twig' is removed
+          // '.html.twig' is removed.
           'id' => $plugin_id,
           'provider' => $file_name_provider,
           'class' => HelpTopicTwig::class,
@@ -131,15 +131,18 @@ class HelpTopicDiscovery implements DiscoveryInterface {
               }
               $data[$key] = $value;
               break;
+
             case 'top_level':
               if (!is_bool($value)) {
                 throw new DiscoveryException("$file contains invalid value for 'top_level' key, the value must be a Boolean");
               }
               $data[$key] = $value;
               break;
+
             case 'label':
               $data[$key] = new TranslatableMarkup($value);
               break;
+
             default:
               throw new DiscoveryException("$file contains invalid key='$key'");
           }

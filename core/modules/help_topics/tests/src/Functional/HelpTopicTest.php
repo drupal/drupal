@@ -239,10 +239,10 @@ class HelpTopicTest extends BrowserTestBase {
   public function verifyBreadCrumb() {
     // Verify Help Topics administration breadcrumbs.
     $trail = [
-        '' => 'Home',
-        'admin' => 'Administration',
-        'admin/help' => 'Help',
-      ];
+      '' => 'Home',
+      'admin' => 'Administration',
+      'admin/help' => 'Help',
+    ];
     $this->assertBreadcrumb('admin/help/topic/help_topics_test.test', $trail);
     // Ensure we are on the expected help topic page.
     $this->assertSession()->pageTextContains('Also there should be a related topic link below to the Help module topic page and the linked topic.');
@@ -253,7 +253,7 @@ class HelpTopicTest extends BrowserTestBase {
       'admin' => 'Administration',
       'admin/config' => 'Configuration',
       'admin/config/system' => 'System',
-      ];
+    ];
     $this->assertBreadcrumb('admin/config/system/site-information', $trail);
   }
 

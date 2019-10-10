@@ -14,7 +14,10 @@ class TestHelpTopicPlugin extends HelpTopicPluginBase {
    * {@inheritdoc}
    */
   public function getBody() {
-    return $this->pluginDefinition['body'];
+    return [
+      '#type' => 'markup',
+      '#markup' => $this->pluginDefinition['body'],
+    ];
   }
 
   /**
