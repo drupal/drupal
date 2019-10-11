@@ -36,6 +36,11 @@ class HelpTopicsSyntaxTest extends BrowserTestBase {
     // Enable all modules and themes, so that all routes mentioned in topics
     // will be defined.
     $module_directories = $this->listDirectories('module');
+
+    // @todo Temporary exclusion of a deprecated Place block module.
+    // @see https://www.drupal.org/project/drupal/issues/3084471
+    unset($module_directories['block_place']);
+
     \Drupal::service('module_installer')->install(array_keys($module_directories));
     $theme_directories = $this->listDirectories('theme');
     \Drupal::service('theme_installer')->install(array_keys($theme_directories));

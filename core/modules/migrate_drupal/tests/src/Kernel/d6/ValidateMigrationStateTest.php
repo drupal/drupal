@@ -8,6 +8,7 @@ use Drupal\Tests\migrate_drupal\Traits\ValidateMigrationStateTestTrait;
  * Tests the migration state information in module.migrate_drupal.yml.
  *
  * @group migrate_drupal
+ * @group legacy
  */
 class ValidateMigrationStateTest extends MigrateDrupal6TestBase {
 

@@ -11,6 +11,7 @@ use Drupal\entity_test\Entity\EntityTest;
  * Tests the field type manager.
  *
  * @group field
+ * @group legacy
  */
 class FieldTypePluginManagerTest extends FieldKernelTestBase {
 

@@ -15,6 +15,7 @@ use Drupal\migrate_drupal\MigrationConfigurationTrait;
  * to determine that all the required files exits.
  *
  * @group migrate_drupal
+ * @group legacy
  */
 class StateFileExists extends MigrateDrupalTestBase {
 
