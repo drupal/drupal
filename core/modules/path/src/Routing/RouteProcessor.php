@@ -38,6 +38,7 @@ class RouteProcessor implements OutboundRouteProcessorInterface {
       'path.admin_edit' => 'entity.path_alias.edit_form',
       'path.delete' => 'entity.path_alias.delete_form',
       'path.admin_overview' => 'entity.path_alias.collection',
+      'path.admin_overview_filter' => 'entity.path_alias.collection',
     ];
 
     if (in_array($route_name, array_keys($redirected_route_names), TRUE)) {
