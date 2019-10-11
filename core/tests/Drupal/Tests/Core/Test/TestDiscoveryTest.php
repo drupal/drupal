@@ -529,6 +529,7 @@ EOF;
     $data['core-kerneltest'] = ['\Drupal\KernelTests\KernelTestBaseTest', 'Kernel'];
     $data['core-functionaltest'] = ['\Drupal\FunctionalTests\ExampleTest', 'Functional'];
     $data['core-functionaljavascripttest'] = ['\Drupal\FunctionalJavascriptTests\ExampleTest', 'FunctionalJavascript'];
+    $data['core-buildtest'] = ['\Drupal\BuildTests\Framework\Tests\BuildTestTest', 'Build'];
 
     return $data;
   }
