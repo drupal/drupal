@@ -11,6 +11,7 @@ use Drupal\Tests\migrate_drupal\Kernel\MigrateDrupalTestBase;
  * Tests that modules exist for all source and destination plugins.
  *
  * @group migrate_drupal_ui
+ * @group legacy
  */
 class MigrationProvidersExistTest extends MigrateDrupalTestBase {
 

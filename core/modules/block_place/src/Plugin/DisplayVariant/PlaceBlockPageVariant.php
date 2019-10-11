@@ -2,6 +2,12 @@
 
 namespace Drupal\block_place\Plugin\DisplayVariant;
 
+@trigger_error('The ' . __NAMESPACE__ . '\PlaceBlockPageVariant is
+  deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. Using Layout
+  Builder (available in Drupal 8.7.0) module is recommended. See
+  https://www.drupal.org/node/3081957. Alternatively you may use the
+  contrib module Place Blocks.', E_USER_DEPRECATED);
+
 use Drupal\block\BlockRepositoryInterface;
 use Drupal\block\Plugin\DisplayVariant\BlockPageVariant;
 use Drupal\Component\Serialization\Json;
@@ -18,6 +24,12 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *   id = "block_place_page",
  *   admin_label = @Translation("Page with blocks and place block buttons")
  * )
+ *
+ * @deprecated in drupal:8.8.0 and is removed from drupal:9.0.0.
+ * Using Layout Builder (available in Drupal 8.7.0) module is recommended.
+ * Alternatively you may use the contrib module Place Blocks.
+ *
+ * @see https://www.drupal.org/node/3081957
  */
 class PlaceBlockPageVariant extends BlockPageVariant {
 
@@ -57,6 +69,12 @@ class PlaceBlockPageVariant extends BlockPageVariant {
    */
   public function __construct(array $configuration, $plugin_id, $plugin_definition, BlockRepositoryInterface $block_repository, EntityViewBuilderInterface $block_view_builder, array $block_list_cache_tags, ThemeManagerInterface $theme_manager, RedirectDestinationInterface $redirect_destination) {
     parent::__construct($configuration, $plugin_id, $plugin_definition, $block_repository, $block_view_builder, $block_list_cache_tags);
+
+    @trigger_error('The ' . __NAMESPACE__ . '\PlaceBlockPageVariant is
+      deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. Using
+      Layout Builder (available in Drupal 8.7.0) module is recommended.
+      See https://www.drupal.org/node/3081957. Alternatively you may use the
+      contrib module Place Blocks.', E_USER_DEPRECATED);
 
     $this->themeManager = $theme_manager;
     $this->redirectDestination = $redirect_destination;
