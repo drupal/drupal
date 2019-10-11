@@ -10,6 +10,7 @@ use Drupal\Core\Entity\Display\EntityDisplayInterface;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Entity\Entity\EntityFormDisplay;
 use Drupal\Core\Entity\Entity\EntityViewDisplay;
+use Drupal\Core\Field\Plugin\Field\FieldWidget\EntityReferenceAutocompleteWidget;
 
 /**
  * Re-save all configuration entities to recalculate dependencies.
@@ -212,4 +213,30 @@ function system_post_update_clear_menu_cache() {
  */
 function system_post_update_layout_plugin_schema_change() {
   // Empty post-update hook.
+}
+
+/**
+ * Populate the new 'match_limit' setting for the ER autocomplete widget.
+ */
+function system_post_update_entity_reference_autocomplete_match_limit(&$sandbox = NULL) {
+  $config_entity_updater = \Drupal::classResolver(ConfigEntityUpdater::class);
+  /** @var \Drupal\Core\Field\WidgetPluginManager $field_widget_manager */
+  $field_widget_manager = \Drupal::service('plugin.manager.field.widget');
+
+  $callback = function (EntityDisplayInterface $display) use ($field_widget_manager) {
+    foreach ($display->getComponents() as $field_name => $component) {
+      if (empty($component['type'])) {
+        continue;
+      }
+
+      $plugin_definition = $field_widget_manager->getDefinition($component['type'], FALSE);
+      if (is_a($plugin_definition['class'], EntityReferenceAutocompleteWidget::class, TRUE)) {
+        return TRUE;
+      }
+    }
+
+    return FALSE;
+  };
+
+  $config_entity_updater->update($sandbox, 'entity_form_display', $callback);
 }
