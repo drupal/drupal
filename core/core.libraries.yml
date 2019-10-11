@@ -50,6 +50,8 @@ drupal:
   dependencies:
     - core/domready
     - core/drupalSettings
+  drupalSettings:
+    suppressDeprecationErrors: true
 
 drupalSettings:
   version: VERSION

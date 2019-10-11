@@ -25,7 +25,7 @@ exports.command = function drupalInstall({ setupFile = '' } = {}, callback) {
         : '';
     const install = execSync(
       commandAsWebserver(
-        `php ./scripts/test-site.php install ${setupFile} --base-url ${process.env.DRUPAL_TEST_BASE_URL} ${dbOption} --json`,
+        `php ./scripts/test-site.php install ${setupFile} --install-profile nightwatch_testing --base-url ${process.env.DRUPAL_TEST_BASE_URL} ${dbOption} --json`,
       ),
     );
     const installData = JSON.parse(install.toString());

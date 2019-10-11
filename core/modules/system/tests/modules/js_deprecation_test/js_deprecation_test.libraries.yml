@@ -1,0 +1,6 @@
+deprecation_test:
+  version: VERSION
+  js:
+    js/js_deprecation_test.js: {}
+  dependencies:
+    - core/drupal

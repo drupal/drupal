@@ -42,7 +42,7 @@ window.Drupal = { behaviors: {}, locale: {} };
 
 // JavaScript should be made compatible with libraries other than jQuery by
 // wrapping it in an anonymous closure.
-(function(Drupal, drupalSettings, drupalTranslations) {
+(function(Drupal, drupalSettings, drupalTranslations, console, Proxy, Reflect) {
   /**
    * Helper to rethrow errors asynchronously.
    *
@@ -542,6 +542,61 @@ window.Drupal = { behaviors: {}, locale: {} };
   };
 
   /**
+   * Triggers deprecation error.
+   *
+   * Deprecation errors are only triggered if deprecation errors haven't
+   * been suppressed.
+   *
+   * @param {Object} deprecation
+   *   The deprecation options.
+   * @param {string} deprecation.message
+   *   The deprecation message.
+   *
+   * @see https://www.drupal.org/core/deprecation#javascript
+   */
+  Drupal.deprecationError = ({ message }) => {
+    if (
+      drupalSettings.suppressDeprecationErrors === false &&
+      typeof console !== 'undefined' &&
+      console.warn
+    ) {
+      console.warn(`[Deprecation] ${message}`);
+    }
+  };
+
+  /**
+   * Triggers deprecation error when object property is being used.
+   *
+   * @param {Object} deprecation
+   *   The deprecation options.
+   * @param {Object} deprecation.target
+   *   The targeted object.
+   * @param {string} deprecation.deprecatedProperty
+   *   A key of the deprecated property.
+   * @param {string} deprecation.message
+   *   The deprecation message.
+   * @returns {Object}
+   *
+   * @see https://www.drupal.org/core/deprecation#javascript
+   */
+  Drupal.deprecatedProperty = ({ target, deprecatedProperty, message }) => {
+    // Proxy and Reflect are not supported by all browsers. Unsupported browsers
+    // are ignored since this is a development feature.
+    if (!Proxy || !Reflect) {
+      return target;
+    }
+
+    return new Proxy(target, {
+      get: (target, key, ...rest) => {
+        if (key === deprecatedProperty) {
+          Drupal.deprecationError({ message });
+        }
+        return Reflect.get(target, key, ...rest);
+      },
+    });
+  };
+
+  /**
    * Generates the themed representation of a Drupal object.
    *
    * All requests for themed output must go through this function. It examines
@@ -583,4 +638,11 @@ window.Drupal = { behaviors: {}, locale: {} };
   Drupal.theme.placeholder = function(str) {
     return `<em class="placeholder">${Drupal.checkPlain(str)}</em>`;
   };
-})(Drupal, window.drupalSettings, window.drupalTranslations);
+})(
+  Drupal,
+  window.drupalSettings,
+  window.drupalTranslations,
+  window.console,
+  window.Proxy,
+  window.Reflect,
+);
