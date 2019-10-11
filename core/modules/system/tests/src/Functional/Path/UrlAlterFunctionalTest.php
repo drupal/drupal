@@ -50,7 +50,7 @@ class UrlAlterFunctionalTest extends BrowserTestBase {
     $this->assertUrlOutboundAlter("/user/$uid/test1", '/alias/test1');
 
     // Test adding an alias via the UI.
-    $edit = ['source' => "/user/$uid/edit", 'alias' => '/alias/test2'];
+    $edit = ['path[0][value]' => "/user/$uid/edit", 'alias[0][value]' => '/alias/test2'];
     $this->drupalPostForm('admin/config/search/path/add', $edit, t('Save'));
     $this->assertText(t('The alias has been saved.'));
     $this->drupalGet('alias/test2');

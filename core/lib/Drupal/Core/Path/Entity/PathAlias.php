@@ -39,6 +39,9 @@ use Drupal\Core\Path\PathAliasInterface;
  *   },
  *   admin_permission = "administer url aliases",
  *   list_cache_tags = { "route_match" },
+ *   constraints = {
+ *     "UniquePathAlias" = {}
+ *   }
  * )
  */
 class PathAlias extends ContentEntityBase implements PathAliasInterface {
@@ -55,13 +58,26 @@ class PathAlias extends ContentEntityBase implements PathAliasInterface {
       ->setLabel(new TranslatableMarkup('System path'))
       ->setDescription(new TranslatableMarkup('The path that this alias belongs to.'))
       ->setRequired(TRUE)
-      ->setRevisionable(TRUE);
+      ->setRevisionable(TRUE)
+      ->addPropertyConstraints('value', [
+        'Regex' => [
+          'pattern' => '/^\//i',
+          'message' => new TranslatableMarkup('The source path has to start with a slash.'),
+        ],
+      ])
+      ->addPropertyConstraints('value', ['ValidPath' => []]);
 
     $fields['alias'] = BaseFieldDefinition::create('string')
       ->setLabel(new TranslatableMarkup('Path alias'))
       ->setDescription(new TranslatableMarkup('An alias used with this path.'))
       ->setRequired(TRUE)
-      ->setRevisionable(TRUE);
+      ->setRevisionable(TRUE)
+      ->addPropertyConstraints('value', [
+        'Regex' => [
+          'pattern' => '/^\//i',
+          'message' => new TranslatableMarkup('The alias path has to start with a slash.'),
+        ],
+      ]);
 
     $fields['langcode']->setDefaultValue(LanguageInterface::LANGCODE_NOT_SPECIFIED);
 

@@ -65,7 +65,7 @@ class PathFilterForm extends FormBase {
    * Resets the filter selections.
    */
   public function resetForm(array &$form, FormStateInterface $form_state) {
-    $form_state->setRedirect('path.admin_overview');
+    $form_state->setRedirect('entity.path_alias.collection');
   }
 
 }
