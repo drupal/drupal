@@ -21,7 +21,6 @@ use Drupal\user\Plugin\migrate\destination\UserData;
  * Tests that all migrations are tagged as either content or configuration.
  *
  * @group migrate_drupal
- * @group legacy
  */
 class DestinationCategoryTest extends MigrateDrupalTestBase {
 
