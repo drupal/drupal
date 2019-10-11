@@ -25,6 +25,7 @@ class RouteSubscriber implements EventSubscriberInterface {
     $route_collection->add('path.admin_edit', new BcRoute());
     $route_collection->add('path.delete', new BcRoute());
     $route_collection->add('path.admin_overview', new BcRoute());
+    $route_collection->add('path.admin_overview_filter', new BcRoute());
   }
 
   /**

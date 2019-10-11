@@ -16,13 +16,13 @@ use Drupal\Core\Path\PathAliasInterface;
  *
  * @ContentEntityType(
  *   id = "path_alias",
- *   label = @Translation("Path alias"),
- *   label_collection = @Translation("Path aliases"),
- *   label_singular = @Translation("path alias"),
- *   label_plural = @Translation("path aliases"),
+ *   label = @Translation("URL alias"),
+ *   label_collection = @Translation("URL aliases"),
+ *   label_singular = @Translation("URL alias"),
+ *   label_plural = @Translation("URL aliases"),
  *   label_count = @PluralTranslation(
- *     singular = "@count path alias",
- *     plural = "@count path aliases"
+ *     singular = "@count URL alias",
+ *     plural = "@count URL aliases"
  *   ),
  *   handlers = {
  *     "storage" = "Drupal\Core\Path\PathAliasStorage",
@@ -68,7 +68,7 @@ class PathAlias extends ContentEntityBase implements PathAliasInterface {
       ->addPropertyConstraints('value', ['ValidPath' => []]);
 
     $fields['alias'] = BaseFieldDefinition::create('string')
-      ->setLabel(new TranslatableMarkup('Path alias'))
+      ->setLabel(new TranslatableMarkup('URL alias'))
       ->setDescription(new TranslatableMarkup('An alias used with this path.'))
       ->setRequired(TRUE)
       ->setRevisionable(TRUE)
