@@ -12,6 +12,7 @@ use Drupal\views\Views;
  * Tests the views integration of content_moderation.
  *
  * @group content_moderation
+ * @group legacy
  */
 class ViewsDataIntegrationTest extends ViewsKernelTestBase {
 

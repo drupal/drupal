@@ -5,6 +5,7 @@ dependencies:
     - system.menu.main
   module:
     - content_moderation
+    - node
     - user
 id: latest
 label: Latest
@@ -251,11 +252,11 @@ display:
           multi_type: separator
           separator: ', '
           field_api_classes: false
-        moderation_state:
-          id: moderation_state
-          table: content_moderation_state_field_revision
+        moderation_state_1:
+          id: moderation_state_1
+          table: node_field_revision
           field: moderation_state
-          relationship: moderation_state
+          relationship: none
           group_type: group
           admin_label: ''
           label: 'Moderation state'
@@ -299,9 +300,10 @@ display:
           hide_empty: false
           empty_zero: false
           hide_alter_empty: true
-          click_sort_column: target_id
+          click_sort_column: value
           type: content_moderation_state
-          group_column: target_id
+          settings: {  }
+          group_column: value
           group_columns: {  }
           group_rows: true
           delta_limit: 0
@@ -311,9 +313,8 @@ display:
           multi_type: separator
           separator: ', '
           field_api_classes: false
-          entity_type: content_moderation_state
-          entity_field: moderation_state
-          plugin_id: field
+          entity_type: node
+          plugin_id: moderation_state_field
       filters:
         latest_revision:
           id: latest_revision
@@ -338,6 +339,8 @@ display:
             multiple: false
             remember_roles:
               authenticated: authenticated
+            operator_limit_selection: false
+            operator_list: {  }
           is_grouped: false
           group_info:
             label: ''
@@ -357,21 +360,11 @@ display:
       header: {  }
       footer: {  }
       empty: {  }
-      relationships:
-        moderation_state:
-          id: moderation_state
-          table: node_field_revision
-          field: moderation_state
-          relationship: none
-          group_type: group
-          admin_label: 'Content moderation state'
-          required: false
-          entity_type: node
-          plugin_id: standard
+      relationships: {  }
       arguments: {  }
       display_extenders: {  }
     cache_metadata:
-      max-age: 0
+      max-age: -1
       contexts:
         - 'languages:language_content'
         - 'languages:language_interface'
@@ -397,7 +390,7 @@ display:
         context: '0'
         menu_name: main
     cache_metadata:
-      max-age: 0
+      max-age: -1
       contexts:
         - 'languages:language_content'
         - 'languages:language_interface'
