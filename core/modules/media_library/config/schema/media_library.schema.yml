@@ -8,3 +8,11 @@ field.widget.settings.media_library_widget:
       sequence:
         type: string
         label: 'Media type ID'
+
+media_library.settings:
+  type: config_object
+  label: 'Media library settings'
+  mapping:
+    advanced_ui:
+      type: boolean
+      label: 'Enable advanced UI'

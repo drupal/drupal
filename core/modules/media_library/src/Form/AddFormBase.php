@@ -379,7 +379,7 @@ abstract class AddFormBase extends FormBase {
   protected function buildCurrentSelectionArea(array $form, FormStateInterface $form_state) {
     $pre_selected_items = $this->getPreSelectedMediaItems($form_state);
 
-    if (!$pre_selected_items) {
+    if (!$pre_selected_items || !$this->isAdvancedUi()) {
       return [];
     }
 
@@ -461,26 +461,32 @@ abstract class AddFormBase extends FormBase {
    *   An actions element containing the actions of the form.
    */
   protected function buildActions(array $form, FormStateInterface $form_state) {
-    return [
+    $actions = [
       '#type' => 'actions',
       'save_select' => [
         '#type' => 'submit',
         '#button_type' => 'primary',
-        '#value' => $this->t('Save and select'),
+        '#value' => $this->t('Save'),
         '#ajax' => [
           'callback' => '::updateLibrary',
           'wrapper' => 'media-library-add-form-wrapper',
         ],
       ],
-      'save_insert' => [
-        '#type' => 'submit',
-        '#value' => $this->t('Save and insert'),
-        '#ajax' => [
-          'callback' => '::updateWidget',
-          'wrapper' => 'media-library-add-form-wrapper',
-        ],
-      ],
     ];
+    if ($this->isAdvancedUi()) {
+      $actions['save_select']['#value'] = $this->t('Save and select');
+      $actions['save_insert'] = [
+        'save_insert' => [
+          '#type' => 'submit',
+          '#value' => $this->t('Save and insert'),
+          '#ajax' => [
+            'callback' => '::updateWidget',
+            'wrapper' => 'media-library-add-form-wrapper',
+          ],
+        ],
+      ];
+    }
+    return $actions;
   }
 
   /**
@@ -838,6 +844,21 @@ abstract class AddFormBase extends FormBase {
     $added_media = $this->getAddedMediaItems($form_state);
     // Using array_merge will renumber the numeric keys.
     return array_merge($pre_selected_media, $added_media);
+  }
+
+  /**
+   * Determines if the "advanced UI" of the Media Library is enabled.
+   *
+   * This exposes additional features that are useful to power users.
+   *
+   * @return bool
+   *   TRUE if the advanced UI is enabled, FALSE otherwise.
+   *
+   * @see ::buildActions()
+   * @see ::buildCurrentSelectionArea()
+   */
+  protected function isAdvancedUi() {
+    return (bool) $this->config('media_library.settings')->get('advanced_ui');
   }
 
 }
