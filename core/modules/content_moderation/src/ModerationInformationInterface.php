@@ -69,6 +69,12 @@ interface ModerationInformationInterface {
    * @return \Drupal\Core\Entity\ContentEntityInterface|null
    *   The latest entity revision or NULL, if the entity type / entity doesn't
    *   exist.
+   *
+   * @deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. Use
+   *   RevisionableStorageInterface::getLatestRevisionId and
+   *   RevisionableStorageInterface::loadRevision instead.
+   *
+   * @see https://www.drupal.org/node/3087295
    */
   public function getLatestRevision($entity_type_id, $entity_id);
 
@@ -83,6 +89,11 @@ interface ModerationInformationInterface {
    * @return int
    *   The revision ID of the latest revision for the specified entity, or
    *   NULL if there is no such entity.
+   *
+   * @deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. Use
+   *   RevisionableStorageInterface::getLatestRevisionId instead.
+   *
+   * @see https://www.drupal.org/node/3087295
    */
   public function getLatestRevisionId($entity_type_id, $entity_id);
 
@@ -120,6 +131,11 @@ interface ModerationInformationInterface {
    * @return bool
    *   TRUE if the specified object is the latest revision of its entity,
    *   FALSE otherwise.
+   *
+   * @deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. Use
+   *   RevisionableInterface::isLatestRevision instead.
+   *
+   * @see https://www.drupal.org/node/3087295
    */
   public function isLatestRevision(ContentEntityInterface $entity);
 
