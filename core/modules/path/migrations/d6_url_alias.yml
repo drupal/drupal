@@ -8,7 +8,10 @@ source:
   constants:
     slash: '/'
 process:
-  source:
+  # If you are using this file to build a custom migration consider removing
+  # the id field to allow incremental migrations.
+  id: pid
+  _path:
     plugin: concat
     source:
       - constants/slash
@@ -18,9 +21,7 @@ process:
     source:
       - constants/slash
       - dst
-  langcode:
-    plugin: d6_url_alias_language
-    source: language
+
   node_translation:
     -
       plugin: explode
@@ -35,5 +36,19 @@ process:
     -
       plugin: migration_lookup
       migration: d6_node_translation
+  langcode:
+    -
+      plugin: null_coalesce
+      source:
+        - '@node_translation/1'
+        - language
+    -
+      plugin: default_value
+      default_value: 'und'
+  path:
+    plugin: path_set_translated
+    source:
+      - '@_path'
+      - '@node_translation'
 destination:
-  plugin: url_alias
+  plugin: entity:path_alias
