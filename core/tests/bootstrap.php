@@ -88,7 +88,7 @@ function drupal_phpunit_contrib_extension_directory_roots($root = NULL) {
  *   An associative array of extension directories, keyed by their namespace.
  */
 function drupal_phpunit_get_extension_namespaces($dirs) {
-  $suite_names = ['Unit', 'Kernel', 'Functional', 'FunctionalJavascript'];
+  $suite_names = ['Unit', 'Kernel', 'Functional', 'Build', 'FunctionalJavascript'];
   $namespaces = [];
   foreach ($dirs as $extension => $dir) {
     if (is_dir($dir . '/src')) {
