@@ -44,6 +44,13 @@ class SearchPageListBuilder extends DraggableListBuilder implements FormInterfac
   protected $searchManager;
 
   /**
+   * The search index.
+   *
+   * @var \Drupal\search\SearchIndexInterface
+   */
+  protected $searchIndex;
+
+  /**
    * The messenger.
    *
    * @var \Drupal\Core\Messenger\MessengerInterface
@@ -63,12 +70,19 @@ class SearchPageListBuilder extends DraggableListBuilder implements FormInterfac
    *   The factory for configuration objects.
    * @param \Drupal\Core\Messenger\MessengerInterface $messenger
    *   The messenger.
+   * @param \Drupal\search\SearchIndexInterface $search_index
+   *   The search index.
    */
-  public function __construct(EntityTypeInterface $entity_type, EntityStorageInterface $storage, SearchPluginManager $search_manager, ConfigFactoryInterface $config_factory, MessengerInterface $messenger) {
+  public function __construct(EntityTypeInterface $entity_type, EntityStorageInterface $storage, SearchPluginManager $search_manager, ConfigFactoryInterface $config_factory, MessengerInterface $messenger, SearchIndexInterface $search_index = NULL) {
     parent::__construct($entity_type, $storage);
     $this->configFactory = $config_factory;
     $this->searchManager = $search_manager;
     $this->messenger = $messenger;
+    if (!$search_index) {
+      @trigger_error('Calling SearchPageListBuilder::__construct() without the $search_index argument is deprecated in drupal:8.8.0 and is required in drupal:9.0.0. See https://www.drupal.org/node/3075696', E_USER_DEPRECATED);
+      $search_index = \Drupal::service('search.index');
+    }
+    $this->searchIndex = $search_index;
   }
 
   /**
@@ -80,7 +94,8 @@ class SearchPageListBuilder extends DraggableListBuilder implements FormInterfac
       $container->get('entity_type.manager')->getStorage($entity_type->id()),
       $container->get('plugin.manager.search'),
       $container->get('config.factory'),
-      $container->get('messenger')
+      $container->get('messenger'),
+      $container->get('search.index')
     );
   }
 
@@ -344,9 +359,9 @@ class SearchPageListBuilder extends DraggableListBuilder implements FormInterfac
       $search_settings->set('index.minimum_word_size', $form_state->getValue('minimum_word_size'));
       $search_settings->set('index.overlap_cjk', $form_state->getValue('overlap_cjk'));
       // Specifically mark items in the default index for reindexing, since
-      // these settings are used in the search_index() function.
+      // these settings are used in the SearchIndex::index() function.
       $this->messenger->addStatus($this->t('The default search index will be rebuilt.'));
-      search_mark_for_reindex();
+      $this->searchIndex->markForReindex();
     }
 
     $search_settings

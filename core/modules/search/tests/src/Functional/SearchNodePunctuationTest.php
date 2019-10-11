@@ -43,7 +43,6 @@ class SearchNodePunctuationTest extends BrowserTestBase {
 
     // Update the search index.
     $this->container->get('plugin.manager.search')->createInstance('node_search')->updateIndex();
-    search_update_totals();
 
     // Refresh variables after the treatment.
     $this->refreshVariables();
