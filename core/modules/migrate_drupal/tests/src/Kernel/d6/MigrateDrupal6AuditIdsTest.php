@@ -14,7 +14,6 @@ use Drupal\Tests\migrate_drupal\Traits\CreateTestContentEntitiesTrait;
  * Tests the migration auditor for ID conflicts.
  *
  * @group migrate_drupal
- * @group legacy
  */
 class MigrateDrupal6AuditIdsTest extends MigrateDrupal6TestBase {
 
