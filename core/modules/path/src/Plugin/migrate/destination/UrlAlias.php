@@ -2,100 +2,51 @@
 
 namespace Drupal\path\Plugin\migrate\destination;
 
-use Drupal\Core\Path\AliasStorageInterface;
-use Drupal\migrate\Plugin\MigrationInterface;
+use Drupal\migrate\Plugin\migrate\destination\EntityContentBase;
 use Drupal\migrate\Row;
-use Drupal\migrate\Plugin\migrate\destination\DestinationBase;
-use Symfony\Component\DependencyInjection\ContainerInterface;
-use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+
+@trigger_error('UrlAlias is deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. Use the entity:path_alias destination instead. See https://www.drupal.org/node/3013865', E_USER_DEPRECATED);
 
 /**
+ * Legacy destination class for non-entity path aliases.
+ *
  * @MigrateDestination(
  *   id = "url_alias"
  * )
+ *
+ * @deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. Use
+ * the entity:path_alias destination instead.
+ *
+ * @see https://www.drupal.org/node/3013865
  */
-class UrlAlias extends DestinationBase implements ContainerFactoryPluginInterface {
-
-  /**
-   * The alias storage service.
-   *
-   * @var \Drupal\Core\Path\AliasStorageInterface
-   */
-  protected $aliasStorage;
-
-  /**
-   * Constructs an entity destination plugin.
-   *
-   * @param array $configuration
-   *   A configuration array containing information about the plugin instance.
-   * @param string $plugin_id
-   *   The plugin_id for the plugin instance.
-   * @param mixed $plugin_definition
-   *   The plugin implementation definition.
-   * @param \Drupal\migrate\Plugin\MigrationInterface $migration
-   *   The migration.
-   * @param \Drupal\Core\Path\AliasStorageInterface $alias_storage
-   *   The alias storage service.
-   */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, MigrationInterface $migration, AliasStorageInterface $alias_storage) {
-    parent::__construct($configuration, $plugin_id, $plugin_definition, $migration);
-    $this->aliasStorage = $alias_storage;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition, MigrationInterface $migration = NULL) {
-    return new static(
-      $configuration,
-      $plugin_id,
-      $plugin_definition,
-      $migration,
-      $container->get('path.alias_storage')
-    );
-  }
+class UrlAlias extends EntityContentBase {
 
   /**
    * {@inheritdoc}
    */
   public function import(Row $row, array $old_destination_id_values = []) {
-    $source = $row->getDestinationProperty('source');
-    $alias = $row->getDestinationProperty('alias');
-    $langcode = $row->getDestinationProperty('langcode');
-    $pid = $old_destination_id_values ? $old_destination_id_values[0] : NULL;
+    if ($row->getDestinationProperty('source')) {
+      $row->setDestinationProperty('path', $row->getDestinationProperty('source'));
+    }
+    $path = $row->getDestinationProperty('path');
 
     // Check if this alias is for a node and if that node is a translation.
-    if (preg_match('/^\/node\/\d+$/', $source) && $row->hasDestinationProperty('node_translation')) {
+    if (preg_match('/^\/node\/\d+$/', $path) && $row->hasDestinationProperty('node_translation')) {
 
       // Replace the alias source with the translation source path.
       $node_translation = $row->getDestinationProperty('node_translation');
-      $source = '/node/' . $node_translation[0];
-      $langcode = $node_translation[1];
+      $row->setDestinationProperty('path', '/node/' . $node_translation[0]);
+      $row->setDestinationProperty('langcode', $node_translation[1]);
     }
 
-    $path = $this->aliasStorage->save($source, $alias, $langcode, $pid);
-
-    return [$path['pid']];
+    return parent::import($row, $old_destination_id_values);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getIds() {
-    $ids['pid']['type'] = 'integer';
-    return $ids;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function fields(MigrationInterface $migration = NULL) {
-    return [
-      'pid' => 'The path id',
-      'source' => 'The source path.',
-      'alias' => 'The URL alias.',
-      'langcode' => 'The language code for the URL.',
-    ];
+  protected static function getEntityTypeId($plugin_id) {
+    return 'path_alias';
   }
 
 }
