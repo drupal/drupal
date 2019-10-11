@@ -234,6 +234,9 @@ field.widget.settings.entity_reference_autocomplete_tags:
     match_operator:
       type: string
       label: 'Autocomplete matching'
+    match_limit:
+      type: integer
+      label: 'Maximum number of autocomplete suggestions.'
     size:
       type: integer
       label: 'Size of textfield'
@@ -248,6 +251,9 @@ field.widget.settings.entity_reference_autocomplete:
     match_operator:
       type: string
       label: 'Autocomplete matching'
+    match_limit:
+      type: integer
+      label: 'Maximum number of autocomplete suggestions.'
     size:
       type: integer
       label: 'Size of textfield'
