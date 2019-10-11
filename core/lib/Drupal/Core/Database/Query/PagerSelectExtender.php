@@ -73,8 +73,10 @@ class PagerSelectExtender extends SelectExtender {
     $this->ensureElement();
 
     $total_items = $this->getCountQuery()->execute()->fetchField();
-    $current_page = pager_default_initialize($total_items, $this->limit, $this->element);
-    $this->range($current_page * $this->limit, $this->limit);
+    /** @var \Drupal\Core\Pager\PagerManagerInterface $pager_manager */
+    $pager_manager = \Drupal::service('pager.manager');
+    $pager = $pager_manager->createPager($total_items, $this->limit, $this->element);
+    $this->range($pager->getCurrentPage() * $this->limit, $this->limit);
 
     // Now that we've added our pager-based range instructions, run the query normally.
     return $this->query->execute();

@@ -5,12 +5,38 @@ namespace Drupal\pager_test\Controller;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Database\Query\PagerSelectExtender;
+use Drupal\Core\Pager\PagerParametersInterface;
 use Drupal\Core\Security\TrustedCallbackInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Controller routine for testing the pager.
  */
 class PagerTestController extends ControllerBase implements TrustedCallbackInterface {
+
+  /**
+   * The pager request service.
+   *
+   * @var \Drupal\Core\Pager\PagerParametersInterface
+   */
+  protected $pagerParams;
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container) {
+    return new static($container->get('pager.parameters'));
+  }
+
+  /**
+   * Construct a new PagerTestController object.
+   *
+   * @param \Drupal\Core\Pager\PagerParametersInterface $pager_params
+   *   The pager parameters.
+   */
+  public function __construct(PagerParametersInterface $pager_params) {
+    $this->pagerParams = $pager_params;
+  }
 
   /**
    * Builds a render array for a pageable test table.
@@ -59,7 +85,7 @@ class PagerTestController extends ControllerBase implements TrustedCallbackInter
     $build['pager_table_0'] = $this->buildTestTable(0, 5);
 
     // Counter of calls to the current pager.
-    $query_params = pager_get_query_parameters();
+    $query_params = $this->pagerParams->getQueryParameters();
     $pager_calls = isset($query_params['pager_calls']) ? ($query_params['pager_calls'] ? $query_params['pager_calls'] : 0) : 0;
     $build['l_pager_pager_0'] = ['#markup' => $this->t('Pager calls: @pager_calls', ['@pager_calls' => $pager_calls])];
 

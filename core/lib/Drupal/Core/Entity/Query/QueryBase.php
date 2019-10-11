@@ -310,11 +310,11 @@ abstract class QueryBase implements QueryInterface {
    */
   protected function initializePager() {
     if ($this->pager && !empty($this->pager['limit']) && !$this->count) {
-      $page = pager_find_page($this->pager['element']);
+      $page = \Drupal::service('pager.parameters')->findPage($this->pager['element']);
       $count_query = clone $this;
       $this->pager['total'] = $count_query->count()->execute();
       $this->pager['start'] = $page * $this->pager['limit'];
-      pager_default_initialize($this->pager['total'], $this->pager['limit'], $this->pager['element']);
+      \Drupal::service('pager.manager')->createPager($this->pager['total'], $this->pager['limit'], $this->pager['element']);
       $this->range($this->pager['start'], $this->pager['limit']);
     }
   }

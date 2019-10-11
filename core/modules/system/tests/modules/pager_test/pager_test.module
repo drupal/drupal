@@ -9,11 +9,12 @@
  * Implements hook_preprocess_HOOK().
  */
 function pager_test_preprocess_pager(&$variables) {
-  global $pager_total;
-
   // Nothing to do if there is only one page.
   $element = $variables['pager']['#element'];
-  if ($pager_total[$element] <= 1) {
+  /** @var \Drupal\Core\Pager\PagerManagerInterface $pager_manager */
+  $pager_manager = \Drupal::service('pager.manager');
+  $pager = $pager_manager->getPager($element);
+  if ($pager->getTotalPages() <= 1) {
     return;
   }
 
