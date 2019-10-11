@@ -1421,7 +1421,7 @@ function node_configurable_language_delete(ConfigurableLanguageInterface $langua
 function node_reindex_node_search($nid) {
   if (\Drupal::moduleHandler()->moduleExists('search')) {
     // Reindex node context indexed by the node module search plugin.
-    search_mark_for_reindex('node_search', $nid);
+    \Drupal::service('search.index')->markForReindex('node_search', $nid);
   }
 }
 

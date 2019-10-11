@@ -5,6 +5,7 @@ namespace Drupal\Tests\search\Kernel;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\KernelTests\KernelTestBase;
+use Drupal\search\SearchIndexInterface;
 
 /**
  * Indexes content and queries it.
@@ -49,11 +50,13 @@ class SearchMatchTest extends KernelTestBase {
   public function _setup() {
     $this->config('search.settings')->set('index.minimum_word_size', 3)->save();
 
+    $search_index = \Drupal::service('search.index');
+    assert($search_index instanceof SearchIndexInterface);
     for ($i = 1; $i <= 7; ++$i) {
-      search_index(static::SEARCH_TYPE, $i, LanguageInterface::LANGCODE_NOT_SPECIFIED, $this->getText($i));
+      $search_index->index(static::SEARCH_TYPE, $i, LanguageInterface::LANGCODE_NOT_SPECIFIED, $this->getText($i));
     }
     for ($i = 1; $i <= 5; ++$i) {
-      search_index(static::SEARCH_TYPE_2, $i + 7, LanguageInterface::LANGCODE_NOT_SPECIFIED, $this->getText2($i));
+      $search_index->index(static::SEARCH_TYPE_2, $i + 7, LanguageInterface::LANGCODE_NOT_SPECIFIED, $this->getText2($i));
     }
     // No getText builder function for Japanese text; just a simple array.
     foreach ([
@@ -61,9 +64,8 @@ class SearchMatchTest extends KernelTestBase {
       14 => 'ドルーパルが大好きよ！',
       15 => 'コーヒーとケーキ',
     ] as $i => $jpn) {
-      search_index(static::SEARCH_TYPE_JPN, $i, LanguageInterface::LANGCODE_NOT_SPECIFIED, $jpn);
+      $search_index->index(static::SEARCH_TYPE_JPN, $i, LanguageInterface::LANGCODE_NOT_SPECIFIED, $jpn);
     }
-    search_update_totals();
   }
 
   /**

@@ -55,7 +55,6 @@ class SearchPageCacheTagsTest extends BrowserTestBase {
     $this->node->setOwner($this->searchingUser);
     $this->node->save();
     $this->container->get('plugin.manager.search')->createInstance('node_search')->updateIndex();
-    search_update_totals();
   }
 
   /**
@@ -174,7 +173,6 @@ class SearchPageCacheTagsTest extends BrowserTestBase {
 
     // Refresh the search index.
     $this->container->get('plugin.manager.search')->createInstance('node_search')->updateIndex();
-    search_update_totals();
 
     // Log in with searching user again.
     $this->drupalLogin($this->searchingUser);

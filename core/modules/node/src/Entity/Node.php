@@ -163,9 +163,11 @@ class Node extends EditorialContentEntityBase implements NodeInterface {
     parent::preDelete($storage, $entities);
 
     // Ensure that all nodes deleted are removed from the search index.
-    if (\Drupal::moduleHandler()->moduleExists('search')) {
+    if (\Drupal::hasService('search.index')) {
+      /** @var \Drupal\search\SearchIndexInterface $search_index */
+      $search_index = \Drupal::service('search.index');
       foreach ($entities as $entity) {
-        search_index_clear('node_search', $entity->nid->value);
+        $search_index->clear('node_search', $entity->nid->value);
       }
     }
   }

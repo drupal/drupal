@@ -18,6 +18,7 @@ use Drupal\help\HelpSectionManager;
 use Drupal\help_topics\SearchableHelpInterface;
 use Drupal\search\Plugin\SearchIndexingInterface;
 use Drupal\search\Plugin\SearchPluginBase;
+use Drupal\search\SearchIndexInterface;
 use Drupal\search\SearchQuery;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -92,6 +93,13 @@ class HelpSearch extends SearchPluginBase implements AccessibleInterface, Search
   protected $helpSectionManager;
 
   /**
+   * The search index.
+   *
+   * @var \Drupal\search\SearchIndexInterface
+   */
+  protected $searchIndex;
+
+  /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
@@ -105,7 +113,8 @@ class HelpSearch extends SearchPluginBase implements AccessibleInterface, Search
       $container->get('messenger'),
       $container->get('current_user'),
       $container->get('state'),
-      $container->get('plugin.manager.help_section')
+      $container->get('plugin.manager.help_section'),
+      $container->get('search.index')
     );
   }
 
@@ -132,8 +141,10 @@ class HelpSearch extends SearchPluginBase implements AccessibleInterface, Search
    *   The state object.
    * @param \Drupal\help\HelpSectionManager $help_section_manager
    *   The help section manager.
+   * @param \Drupal\search\SearchIndexInterface $search_index
+   *   The search index.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, Connection $database, Config $search_settings, LanguageManagerInterface $language_manager, MessengerInterface $messenger, AccountInterface $account, StateInterface $state, HelpSectionManager $help_section_manager) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, Connection $database, Config $search_settings, LanguageManagerInterface $language_manager, MessengerInterface $messenger, AccountInterface $account, StateInterface $state, HelpSectionManager $help_section_manager, SearchIndexInterface $search_index) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->database = $database;
     $this->searchSettings = $search_settings;
@@ -142,6 +153,7 @@ class HelpSearch extends SearchPluginBase implements AccessibleInterface, Search
     $this->account = $account;
     $this->state = $state;
     $this->helpSectionManager = $help_section_manager;
+    $this->searchIndex = $search_index;
   }
 
   /**
@@ -327,27 +339,33 @@ class HelpSearch extends SearchPluginBase implements AccessibleInterface, Search
     $language_list = $this->languageManager->getLanguages(LanguageInterface::STATE_CONFIGURABLE);
     $section_plugins = [];
 
-    foreach ($items as $item) {
-      $section_plugin_id = $item->section_plugin_id;
-      if (!isset($section_plugins[$section_plugin_id])) {
-        $section_plugins[$section_plugin_id] = $this->getSectionPlugin($section_plugin_id);
-      }
+    $words = [];
+    try {
+      foreach ($items as $item) {
+        $section_plugin_id = $item->section_plugin_id;
+        if (!isset($section_plugins[$section_plugin_id])) {
+          $section_plugins[$section_plugin_id] = $this->getSectionPlugin($section_plugin_id);
+        }
 
-      if (!$section_plugins[$section_plugin_id]) {
-        $this->removeItemsFromIndex($item->sid);
-        continue;
-      }
+        if (!$section_plugins[$section_plugin_id]) {
+          $this->removeItemsFromIndex($item->sid);
+          continue;
+        }
 
-      $section_plugin = $section_plugins[$section_plugin_id];
-      search_index_clear($this->getType(), $item->sid);
-      foreach ($language_list as $langcode => $language) {
-        $topic = $section_plugin->renderTopicForSearch($item->topic_id, $language);
-        if ($topic) {
-          // Index the title plus body text.
-          $text = '<h1>' . $topic['title'] . '</h1>' . "\n" . $topic['text'];
-          search_index($this->getType(), $item->sid, $langcode, $text);
+        $section_plugin = $section_plugins[$section_plugin_id];
+        $this->searchIndex->clear($this->getType(), $item->sid);
+        foreach ($language_list as $langcode => $language) {
+          $topic = $section_plugin->renderTopicForSearch($item->topic_id, $language);
+          if ($topic) {
+            // Index the title plus body text.
+            $text = '<h1>' . $topic['title'] . '</h1>' . "\n" . $topic['text'];
+            $words += $this->searchIndex->index($this->getType(), $item->sid, $langcode, $text);
+          }
         }
       }
+    }
+    finally {
+      $this->searchIndex->updateWordWeights($words);
     }
   }
 
@@ -355,7 +373,7 @@ class HelpSearch extends SearchPluginBase implements AccessibleInterface, Search
    * {@inheritdoc}
    */
   public function indexClear() {
-    search_index_clear($this->getType());
+    $this->searchIndex->clear($this->getType());
   }
 
   /**
@@ -419,7 +437,7 @@ class HelpSearch extends SearchPluginBase implements AccessibleInterface, Search
    */
   public function markForReindex() {
     $this->updateTopicList();
-    search_mark_for_reindex($this->getType());
+    $this->searchIndex->markForReindex($this->getType());
   }
 
   /**
@@ -466,7 +484,7 @@ class HelpSearch extends SearchPluginBase implements AccessibleInterface, Search
     // Remove items from the search tables individually, as there is no bulk
     // function to delete items from the search index.
     foreach ($sids as $sid) {
-      search_index_clear($this->getType(), $sid);
+      $this->searchIndex->clear($this->getType(), $sid);
     }
   }
 

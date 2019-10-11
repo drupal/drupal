@@ -53,7 +53,6 @@ class SearchConfigSettingsFormTest extends BrowserTestBase {
     $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, t('Save'));
 
     $this->container->get('plugin.manager.search')->createInstance('node_search')->updateIndex();
-    search_update_totals();
 
     // Enable the search block.
     $this->drupalPlaceBlock('search_form_block');

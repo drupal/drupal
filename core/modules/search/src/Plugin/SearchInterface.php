@@ -66,8 +66,8 @@ interface SearchInterface extends PluginInspectionInterface {
    *   The type used by this search plugin in the search index, or NULL if this
    *   plugin does not use the search index.
    *
-   * @see search_index()
-   * @see search_index_clear()
+   * @see \Drupal\search\SearchIndexInterface::index()
+   * @see \Drupal\search\SearchIndexInterface::clear()
    */
   public function getType();
 

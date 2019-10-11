@@ -5,13 +5,11 @@
  * Enables site-wide keyword searching.
  */
 
-use Drupal\Core\Url;
 use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\Unicode;
-use Drupal\Core\Cache\Cache;
-use Drupal\Core\Database\Query\Condition;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\Url;
 
 /**
  * Matches all 'N' Unicode character classes (numbers)
@@ -140,35 +138,15 @@ function search_preprocess_block(&$variables) {
  * @param string|null $langcode
  *   (optional) Language code of the item to remove from the search index. If
  *   omitted, all items matching $sid and $type are cleared.
+ *
+ * @deprecated in drupal:8.8.0 and is removed in drupal:9.0.0. Use
+ *   \Drupal\search\SearchIndex::clear() instead.
+ *
+ * @see https://www.drupal.org/node/3075696
  */
 function search_index_clear($type = NULL, $sid = NULL, $langcode = NULL) {
-  $connection = \Drupal::database();
-  $query_index = $connection->delete('search_index');
-  $query_dataset = $connection->delete('search_dataset');
-  if ($type) {
-    $query_index->condition('type', $type);
-    $query_dataset->condition('type', $type);
-    if ($sid) {
-      $query_index->condition('sid', $sid);
-      $query_dataset->condition('sid', $sid);
-      if ($langcode) {
-        $query_index->condition('langcode', $langcode);
-        $query_dataset->condition('langcode', $langcode);
-      }
-    }
-  }
-
-  $query_index->execute();
-  $query_dataset->execute();
-
-  if ($type) {
-    // Invalidate all render cache items that contain data from this index.
-    Cache::invalidateTags(['search_index:' . $type]);
-  }
-  else {
-    // Invalidate all render cache items that contain data from any index.
-    Cache::invalidateTags(['search_index']);
-  }
+  @trigger_error("search_index_clear() is deprecated in drupal:8.8.0 and is removed in drupal:9.0.0. Use \Drupal\search\SearchIndex::clear() instead. See https://www.drupal.org/node/3075696", E_USER_DEPRECATED);
+  \Drupal::service('search.index')->clear($type, $sid, $langcode);
 }
 
 /**
@@ -176,14 +154,17 @@ function search_index_clear($type = NULL, $sid = NULL, $langcode = NULL) {
  *
  * This is used during indexing (cron). Words that are dirty have outdated
  * total counts in the search_total table, and need to be recounted.
+ *
+ * @deprecated in drupal:8.8.0 and is removed in drupal:9.0.0. Use custom
+ *   implementation of \Drupal\search\SearchIndexInterface instead.
+ *
+ * @see https://www.drupal.org/node/3075696
  */
 function search_dirty($word = NULL) {
-  $dirty = &drupal_static(__FUNCTION__, []);
-  if ($word !== NULL) {
-    $dirty[$word] = TRUE;
-  }
-  else {
-    return $dirty;
+  @trigger_error("search_dirty() is deprecated in drupal:8.8.0 and is removed in drupal:9.0.0. Use custom implementation of \Drupal\search\SearchIndexInterface instead. See https://www.drupal.org/node/3075696", E_USER_DEPRECATED);
+  // Keep return result type for backward compatibility.
+  if ($word === NULL) {
+    return [];
   }
 }
 
@@ -192,14 +173,8 @@ function search_dirty($word = NULL) {
  *
  * Fires updateIndex() in the plugins for all indexable active search pages,
  * and cleans up dirty words.
- *
- * @see search_dirty()
  */
 function search_cron() {
-  // We register a shutdown function to ensure that search_total is always up
-  // to date.
-  drupal_register_shutdown_function('search_update_totals');
-
   /** @var $search_page_repository \Drupal\search\SearchPageRepositoryInterface */
   $search_page_repository = \Drupal::service('search.search_page_repository');
   foreach ($search_page_repository->getIndexableSearchPages() as $entity) {
@@ -212,34 +187,14 @@ function search_cron() {
  *
  * This function is called on shutdown to ensure that {search_total} is always
  * up to date (even if cron times out or otherwise fails).
+ *
+ * @deprecated in drupal:8.8.0 and is removed in drupal:9.0.0. Use custom
+ *   implementation of \Drupal\search\SearchIndexInterface instead.
+ *
+ * @see https://www.drupal.org/node/3075696
  */
 function search_update_totals() {
-  $connection = \Drupal::database();
-  $replica = \Drupal::service('database.replica');
-  // Update word IDF (Inverse Document Frequency) counts for new/changed words.
-  foreach (search_dirty() as $word => $dummy) {
-    // Get total count
-    $total = $replica->query("SELECT SUM(score) FROM {search_index} WHERE word = :word", [':word' => $word])->fetchField();
-    // Apply Zipf's law to equalize the probability distribution.
-    $total = log10(1 + 1 / (max(1, $total)));
-    $connection->merge('search_total')
-      ->key('word', $word)
-      ->fields(['count' => $total])
-      ->execute();
-  }
-  // Find words that were deleted from search_index, but are still in
-  // search_total. We use a LEFT JOIN between the two tables and keep only the
-  // rows which fail to join.
-  $result = $replica->query("SELECT t.word AS realword, i.word FROM {search_total} t LEFT JOIN {search_index} i ON t.word = i.word WHERE i.word IS NULL");
-  $or = new Condition('OR');
-  foreach ($result as $word) {
-    $or->condition('word', $word->realword);
-  }
-  if (count($or) > 0) {
-    $connection->delete('search_total')
-      ->condition($or)
-      ->execute();
-  }
+  @trigger_error("search_update_totals() is deprecated in drupal:8.8.0 and is removed in drupal:9.0.0. Use custom implementation of \Drupal\search\SearchIndexInterface instead. See https://www.drupal.org/node/3075696", E_USER_DEPRECATED);
 }
 
 /**
@@ -439,137 +394,15 @@ function search_invoke_preprocess(&$text, $langcode = NULL) {
  *   The content of this item. Must be a piece of HTML or plain text.
  *
  * @ingroup search
+ *
+ * @deprecated in drupal:8.8.0 and is removed in drupal:9.0.0. Use
+ *   \Drupal\search\SearchIndex::index() instead.
+ *
+ * @see https://www.drupal.org/node/3075696
  */
 function search_index($type, $sid, $langcode, $text) {
-  $minimum_word_size = \Drupal::config('search.settings')->get('index.minimum_word_size');
-
-  // Multipliers for scores of words inside certain HTML tags. The weights are
-  // stored in config so that modules can overwrite the default weights.
-  // Note: 'a' must be included for link ranking to work.
-  $tags = \Drupal::config('search.settings')->get('index.tag_weights');
-
-  // Strip off all ignored tags to speed up processing, but insert space before
-  // and after them to keep word boundaries.
-  $text = str_replace(['<', '>'], [' <', '> '], $text);
-  $text = strip_tags($text, '<' . implode('><', array_keys($tags)) . '>');
-
-  // Split HTML tags from plain text.
-  $split = preg_split('/\s*<([^>]+?)>\s*/', $text, -1, PREG_SPLIT_DELIM_CAPTURE);
-  // Note: PHP ensures the array consists of alternating delimiters and literals
-  // and begins and ends with a literal (inserting $null as required).
-
-  // Odd/even counter. Tag or no tag.
-  $tag = FALSE;
-  // Starting score per word.
-  $score = 1;
-  // Accumulator for cleaned up data.
-  $accum = ' ';
-  // Stack with open tags.
-  $tagstack = [];
-  // Counter for consecutive words.
-  $tagwords = 0;
-  // Focus state.
-  $focus = 1;
-
-  // Accumulator for words for index.
-  $scored_words = [];
-
-  foreach ($split as $value) {
-    if ($tag) {
-      // Increase or decrease score per word based on tag
-      list($tagname) = explode(' ', $value, 2);
-      $tagname = mb_strtolower($tagname);
-      // Closing or opening tag?
-      if ($tagname[0] == '/') {
-        $tagname = substr($tagname, 1);
-        // If we encounter unexpected tags, reset score to avoid incorrect boosting.
-        if (!count($tagstack) || $tagstack[0] != $tagname) {
-          $tagstack = [];
-          $score = 1;
-        }
-        else {
-          // Remove from tag stack and decrement score
-          $score = max(1, $score - $tags[array_shift($tagstack)]);
-        }
-      }
-      else {
-        if (isset($tagstack[0]) && $tagstack[0] == $tagname) {
-          // None of the tags we look for make sense when nested identically.
-          // If they are, it's probably broken HTML.
-          $tagstack = [];
-          $score = 1;
-        }
-        else {
-          // Add to open tag stack and increment score
-          array_unshift($tagstack, $tagname);
-          $score += $tags[$tagname];
-        }
-      }
-      // A tag change occurred, reset counter.
-      $tagwords = 0;
-    }
-    else {
-      // Note: use of PREG_SPLIT_DELIM_CAPTURE above will introduce empty values
-      if ($value != '') {
-        $words = search_index_split($value, $langcode);
-        foreach ($words as $word) {
-          // Add word to accumulator
-          $accum .= $word . ' ';
-          // Check word length.
-          if (is_numeric($word) || mb_strlen($word) >= $minimum_word_size) {
-            if (!isset($scored_words[$word])) {
-              $scored_words[$word] = 0;
-            }
-            $scored_words[$word] += $score * $focus;
-            // Focus is a decaying value in terms of the amount of unique words up to this point.
-            // From 100 words and more, it decays, to e.g. 0.5 at 500 words and 0.3 at 1000 words.
-            $focus = min(1, .01 + 3.5 / (2 + count($scored_words) * .015));
-          }
-          $tagwords++;
-          // Too many words inside a single tag probably mean a tag was accidentally left open.
-          if (count($tagstack) && $tagwords >= 15) {
-            $tagstack = [];
-            $score = 1;
-          }
-        }
-      }
-    }
-    $tag = !$tag;
-  }
-
-  // Remove the item $sid from the search index, and invalidate the relevant
-  // cache tags.
-  search_index_clear($type, $sid, $langcode);
-
-  $connection = \Drupal::database();
-  // Insert cleaned up data into dataset
-  $connection->insert('search_dataset')
-    ->fields([
-      'sid' => $sid,
-      'langcode' => $langcode,
-      'type' => $type,
-      'data' => $accum,
-      'reindex' => 0,
-    ])
-    ->execute();
-
-  // Insert results into search index
-  foreach ($scored_words as $word => $score) {
-    // If a word already exists in the database, its score gets increased
-    // appropriately. If not, we create a new record with the appropriate
-    // starting score.
-    $connection->merge('search_index')
-      ->keys([
-        'word' => $word,
-        'sid' => $sid,
-        'langcode' => $langcode,
-        'type' => $type,
-      ])
-      ->fields(['score' => $score])
-      ->expression('score', 'score + :score', [':score' => $score])
-      ->execute();
-    search_dirty($word);
-  }
+  @trigger_error("search_index() is deprecated in drupal:8.8.0 and is removed in drupal:9.0.0. Use \Drupal\search\SearchIndex::index() instead. See https://www.drupal.org/node/3075696", E_USER_DEPRECATED);
+  \Drupal::service('search.index')->index($type, $sid, $langcode, $text);
 }
 
 /**
@@ -589,25 +422,15 @@ function search_index($type, $sid, $langcode, $text) {
  * @param string $langcode
  *   (optional) The language code to clear. If omitted, everything matching
  *   $type and $sid is marked.
+ *
+ * @deprecated in drupal:8.8.0 and is removed in drupal:9.0.0. Use
+ *   \Drupal\search\SearchIndex::markForReindex() instead.
+ *
+ * @see https://www.drupal.org/node/3075696
  */
 function search_mark_for_reindex($type = NULL, $sid = NULL, $langcode = NULL) {
-  $query = \Drupal::database()->update('search_dataset')
-    ->fields(['reindex' => REQUEST_TIME])
-    // Only mark items that were not previously marked for reindex, so that
-    // marked items maintain their priority by request time.
-    ->condition('reindex', 0);
-
-  if ($type) {
-    $query->condition('type', $type);
-    if ($sid) {
-      $query->condition('sid', $sid);
-      if ($langcode) {
-        $query->condition('langcode', $langcode);
-      }
-    }
-  }
-
-  $query->execute();
+  @trigger_error("search_mark_for_reindex() is deprecated in drupal:8.8.0 and is removed in drupal:9.0.0. Use \Drupal\search\SearchIndex::markForReindex() instead. See https://www.drupal.org/node/3075696", E_USER_DEPRECATED);
+  \Drupal::service('search.index')->markForReindex($type, $sid, $langcode);
 }
 
 /**
