@@ -10,7 +10,6 @@ use Drupal\Tests\migrate_drupal\Kernel\MigrateDrupalTestBase;
  * Tests that labels exist for all migrations.
  *
  * @group migrate_drupal_ui
- * @group legacy
  */
 class MigrationLabelExistTest extends MigrateDrupalTestBase {
 

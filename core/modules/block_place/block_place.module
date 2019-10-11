@@ -3,18 +3,7 @@
 /**
  * @file
  * Controls the placement of blocks from all pages.
- *
- * @deprecated in drupal:8.8.0 and is removed from drupal:9.0.0.
- *   See each function in the file for individual deprecation notices with
- *   upgrade instructions.
- *
- * @see https://www.drupal.org/node/3081957
  */
-
-@trigger_error('The Place Blocks module is deprecated in drupal:8.8.0 and is removed
-  from drupal:9.0.0. Using Layout Builder (available in Drupal 8.7.0) module is
-  recommended. See https://www.drupal.org/node/3081957. Alternatively you may use
-  the contrib module Place Blocks.', E_USER_DEPRECATED);
 
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Url;
@@ -26,10 +15,6 @@ function block_place_help($route_name, RouteMatchInterface $route_match) {
   switch ($route_name) {
     case 'help.page.block_place':
       $output = '<h3>' . t('About') . '</h3>';
-      $output .= '<p><strong>' . t('Place Blocks (Core, Experimental) is deprecated in Drupal 8.8.0 and  will be removed in Drupal 9.0.0. Using Layout Builder (available in Drupal 8.7.0) module is recommended. See <a href=":change-record">the change record</a>. Alternatively you may use the contrib module <a href=":contrib-link">Place Blocks</a>.', [
-          ':change-record' => 'https://www.drupal.org/node/3081957',
-          ':contrib-link' => 'https://www.drupal.org/project/block_place',
-        ]) . '</strong></p>';
       $output .= '<p>' . t('The Place Blocks module allows you to place blocks from every page. For more information, see the <a href=":blocks-documentation">online documentation for the Place Blocks module</a>.', [':blocks-documentation' => 'https://www.drupal.org/documentation/modules/block_place/']) . '</p>';
       $output .= '<h3>' . t('Uses') . '</h3>';
       $output .= '<p>' . t('Block placement is specific to each theme on your site. This module allows you to place blocks in the context of your content pages.') . '</p>';
