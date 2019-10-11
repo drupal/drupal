@@ -4,3 +4,11 @@ media_library.ui:
     _controller: 'media_library.ui_builder:buildUi'
   requirements:
     _custom_access: 'media_library.ui_builder:checkAccess'
+
+media_library.settings:
+  path: '/admin/config/media/media-library'
+  defaults:
+    _form: '\Drupal\media_library\Form\SettingsForm'
+    _title: 'Media Library settings'
+  requirements:
+    _permission: 'administer media'

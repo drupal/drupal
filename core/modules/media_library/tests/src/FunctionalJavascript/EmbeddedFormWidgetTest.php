@@ -69,6 +69,10 @@ class EmbeddedFormWidgetTest extends WebDriverTestBase {
       ])
       ->save();
 
+    $this->config('media_library.settings')
+      ->set('advanced_ui', TRUE)
+      ->save();
+
     $user = $this->drupalCreateUser([
       'access content',
       'access media overview',
