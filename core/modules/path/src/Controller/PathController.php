@@ -99,11 +99,11 @@ class PathController extends ControllerBase {
       $operations = [];
       $operations['edit'] = [
         'title' => $this->t('Edit'),
-        'url' => Url::fromRoute('path.admin_edit', ['pid' => $data->pid], ['query' => $destination]),
+        'url' => Url::fromRoute('entity.path_alias.edit_form', ['path_alias' => $data->pid], ['query' => $destination]),
       ];
       $operations['delete'] = [
         'title' => $this->t('Delete'),
-        'url' => Url::fromRoute('path.delete', ['pid' => $data->pid], ['query' => $destination]),
+        'url' => Url::fromRoute('entity.path_alias.delete_form', ['path_alias' => $data->pid], ['query' => $destination]),
       ];
       $row['data']['operations'] = [
         'data' => [
@@ -125,7 +125,7 @@ class PathController extends ControllerBase {
       '#type' => 'table',
       '#header' => $header,
       '#rows' => $rows,
-      '#empty' => $this->t('No URL aliases available. <a href=":link">Add URL alias</a>.', [':link' => Url::fromRoute('path.admin_add')->toString()]),
+      '#empty' => $this->t('No URL aliases available. <a href=":link">Add URL alias</a>.', [':link' => Url::fromRoute('entity.path_alias.add_form')->toString()]),
     ];
     $build['path_pager'] = ['#type' => 'pager'];
 
