@@ -5,10 +5,10 @@ namespace Drupal\Core\Render\Element;
 /**
  * Provides a render element for a pager.
  *
- * The pager must be initialized with a call to pager_default_initialize() in
- * order to render properly. When used with database queries, this is performed
- * for you when you extend a select query with
- * \Drupal\Core\Database\Query\PagerSelectExtender.
+ * The pager must be initialized with a call to
+ * \Drupal\Core\Pager\PagerManagerInterface::createPager() in order to render
+ * properly. When used with database queries, this is performed for you when you
+ * extend a select query with \Drupal\Core\Database\Query\PagerSelectExtender.
  *
  * Properties:
  * - #element: (optional, int) The pager ID, to distinguish between multiple
@@ -68,11 +68,12 @@ class Pager extends RenderElement {
    */
   public static function preRenderPager(array $pager) {
     // Note: the default pager theme process function
-    // template_preprocess_pager() also calls pager_query_add_page(), which
-    // maintains the existing query string. Therefore
-    // template_preprocess_pager() adds the 'url.query_args' cache context,
-    // which causes the more specific cache context below to be optimized away.
-    // In other themes, however, that may not be the case.
+    // template_preprocess_pager() also calls
+    // \Drupal\Core\Pager\PagerManagerInterface::queryAddPage(), which maintains
+    // the existing query string. Therefore template_preprocess_pager() adds the
+    // 'url.query_args' cache context, which causes the more specific cache
+    // context below to be optimized away. In other themes, however, that may
+    // not be the case.
     $pager['#cache']['contexts'][] = 'url.query_args.pagers:' . $pager['#element'];
     return $pager;
   }
