@@ -1,0 +1,6 @@
+name: 'JS Deprecation test'
+description: 'Provides deprecated code that can be used for tests'
+type: module
+package: Testing
+version: VERSION
+core: 8.x
