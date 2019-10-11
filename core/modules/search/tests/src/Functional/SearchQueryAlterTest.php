@@ -41,7 +41,6 @@ class SearchQueryAlterTest extends BrowserTestBase {
 
     // Update the search index.
     $this->container->get('plugin.manager.search')->createInstance('node_search')->updateIndex();
-    search_update_totals();
 
     // Search for the body keyword 'pizza'.
     $this->drupalPostForm('search/node', ['keys' => 'pizza'], t('Search'));

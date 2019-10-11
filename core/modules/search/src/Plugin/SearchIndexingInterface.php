@@ -30,8 +30,8 @@ interface SearchIndexingInterface {
    * This method is called every cron run if the plugin has been set as
    * an active search module on the Search settings page
    * (admin/config/search/pages). It allows your module to add items to the
-   * built-in search index using search_index(), or to add them to your module's
-   * own indexing mechanism.
+   * built-in search index by calling the index() method on the search.index
+   * service class, or to add them to your module's own indexing mechanism.
    *
    * When implementing this method, your module should index content items that
    * were modified or added since the last run. There is a time limit for cron,
@@ -49,10 +49,10 @@ interface SearchIndexingInterface {
    *
    * When a request is made to clear all items from the search index related to
    * this plugin, this method will be called. If this plugin uses the default
-   * search index, this method can call search_index_clear($type) to remove
-   * indexed items from the search database.
+   * search index, this method can call clear($type) method on the search.index
+   * service class to remove indexed items from the search database.
    *
-   * @see search_index_clear()
+   * @see \Drupal\search\SearchIndexInterface::clear()
    */
   public function indexClear();
 
@@ -61,11 +61,11 @@ interface SearchIndexingInterface {
    *
    * When a request is made to mark all items from the search index related to
    * this plugin for reindexing, this method will be called. If this plugin uses
-   * the default search index, this method can call
-   * search_mark_for_reindex($type) to mark the items in the search database for
-   * reindexing.
+   * the default search index, this method can call markForReindex($type) method
+   * on the search.index service class to mark the items in the search database
+   * for reindexing.
    *
-   * @see search_mark_for_reindex()
+   * @see \Drupal\search\SearchIndexInterface::markForReindex()
    */
   public function markForReindex();
 

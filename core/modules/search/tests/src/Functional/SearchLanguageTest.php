@@ -85,7 +85,6 @@ class SearchLanguageTest extends BrowserTestBase {
     // Update the index and then run the shutdown method.
     $plugin = $this->container->get('plugin.manager.search')->createInstance('node_search');
     $plugin->updateIndex();
-    search_update_totals();
   }
 
   public function testLanguages() {

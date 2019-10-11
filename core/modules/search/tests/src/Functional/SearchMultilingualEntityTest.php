@@ -5,6 +5,7 @@ namespace Drupal\Tests\search\Functional;
 use Drupal\Core\Database\Database;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\language\Entity\ConfigurableLanguage;
+use Drupal\search\SearchIndexInterface;
 use Drupal\Tests\BrowserTestBase;
 
 /**
@@ -128,7 +129,8 @@ class SearchMultilingualEntityTest extends BrowserTestBase {
     // Run the shutdown function. Testing is a unique case where indexing
     // and searching has to happen in the same request, so running the shutdown
     // function manually is needed to finish the indexing process.
-    search_update_totals();
+    $search_index = \Drupal::service('search.index');
+    assert($search_index instanceof SearchIndexInterface);
     $this->assertIndexCounts(6, 8, 'after updating partially');
     $this->assertDatabaseCounts(2, 0, 'after updating partially');
 
@@ -140,7 +142,6 @@ class SearchMultilingualEntityTest extends BrowserTestBase {
     $this->plugin = $this->container->get('plugin.manager.search')->createInstance('node_search');
 
     $this->plugin->updateIndex();
-    search_update_totals();
     $this->assertIndexCounts(0, 8, 'after updating fully');
     $this->assertDatabaseCounts(8, 0, 'after updating fully');
 
@@ -150,7 +151,6 @@ class SearchMultilingualEntityTest extends BrowserTestBase {
     $this->assertIndexCounts(8, 8, 'after reindex');
     $this->assertDatabaseCounts(8, 0, 'after reindex');
     $this->plugin->updateIndex();
-    search_update_totals();
 
     // Test search results.
 
@@ -190,13 +190,12 @@ class SearchMultilingualEntityTest extends BrowserTestBase {
 
     // Mark one of the nodes for reindexing, using the API function, and
     // verify indexing status.
-    search_mark_for_reindex('node_search', $this->searchableNodes[0]->id());
+    $search_index->markForReindex('node_search', $this->searchableNodes[0]->id());
     $this->assertIndexCounts(1, 8, 'after marking one node to reindex via API function');
 
     // Update the index and verify the totals again.
     $this->plugin = $this->container->get('plugin.manager.search')->createInstance('node_search');
     $this->plugin->updateIndex();
-    search_update_totals();
     $this->assertIndexCounts(0, 8, 'after indexing again');
 
     // Mark one node for reindexing by saving it, and verify indexing status.
@@ -227,32 +226,32 @@ class SearchMultilingualEntityTest extends BrowserTestBase {
     // Add a bogus entry to the search index table using a different search
     // type. This will not appear in the index status, because it is not
     // managed by a plugin.
-    search_index('foo', $this->searchableNodes[0]->id(), 'en', 'some text');
+    $search_index->index('foo', $this->searchableNodes[0]->id(), 'en', 'some text');
     $this->assertIndexCounts(1, 8, 'after adding a different index item');
 
     // Mark just this "foo" index for reindexing.
-    search_mark_for_reindex('foo');
+    $search_index->markForReindex('foo');
     $this->assertIndexCounts(1, 8, 'after reindexing the other search type');
 
     // Mark everything for reindexing.
-    search_mark_for_reindex();
+    $search_index->markForReindex();
     $this->assertIndexCounts(8, 8, 'after reindexing everything');
 
     // Clear one item from the index, but with wrong language.
     $this->assertDatabaseCounts(8, 1, 'before clear');
-    search_index_clear('node_search', $this->searchableNodes[0]->id(), 'hu');
+    $search_index->clear('node_search', $this->searchableNodes[0]->id(), 'hu');
     $this->assertDatabaseCounts(8, 1, 'after clear with wrong language');
     // Clear using correct language.
-    search_index_clear('node_search', $this->searchableNodes[0]->id(), 'en');
+    $search_index->clear('node_search', $this->searchableNodes[0]->id(), 'en');
     $this->assertDatabaseCounts(7, 1, 'after clear with right language');
     // Don't specify language.
-    search_index_clear('node_search', $this->searchableNodes[1]->id());
+    $search_index->clear('node_search', $this->searchableNodes[1]->id());
     $this->assertDatabaseCounts(6, 1, 'unspecified language clear');
     // Clear everything in 'foo'.
-    search_index_clear('foo');
+    $search_index->clear('foo');
     $this->assertDatabaseCounts(6, 0, 'other index clear');
     // Clear everything.
-    search_index_clear();
+    $search_index->clear();
     $this->assertDatabaseCounts(0, 0, 'complete clear');
   }
 

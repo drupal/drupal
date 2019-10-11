@@ -9,6 +9,7 @@ use Drupal\Core\Link;
 use Drupal\Core\Url;
 use Drupal\filter\Entity\FilterFormat;
 use Drupal\search\Entity\SearchPage;
+use Drupal\search\SearchIndexInterface;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\Traits\Core\CronRunTrait;
 
@@ -239,7 +240,8 @@ class SearchRankingTest extends BrowserTestBase {
 
     // Update the search index.
     $this->nodeSearch->getPlugin()->updateIndex();
-    search_update_totals();
+    $search_index = \Drupal::service('search.index');
+    assert($search_index instanceof SearchIndexInterface);
 
     $this->nodeSearch->getPlugin()->setSearch('rocks', [], []);
     // Do the search and assert the results.
@@ -264,7 +266,6 @@ class SearchRankingTest extends BrowserTestBase {
 
       // Update the search index.
       $this->nodeSearch->getPlugin()->updateIndex();
-      search_update_totals();
 
       $this->nodeSearch->getPlugin()->setSearch('rocks', [], []);
       // Do the search and assert the results.

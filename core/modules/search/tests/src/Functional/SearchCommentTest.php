@@ -294,7 +294,7 @@ class SearchCommentTest extends BrowserTestBase {
    */
   public function assertCommentAccess($assume_access, $message) {
     // Invoke search index update.
-    search_mark_for_reindex('node_search', $this->node->id());
+    \Drupal::service('search.index')->markForReindex('node_search', $this->node->id());
     $this->cronRun();
 
     // Search for the comment subject.

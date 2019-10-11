@@ -34,7 +34,6 @@ class SearchSetLocaleTest extends BrowserTestBase {
     $this->drupalCreateNode(['body' => [['value' => 'tapir']]]);
     // Update the search index.
     $this->nodeSearchPlugin->updateIndex();
-    search_update_totals();
   }
 
   /**

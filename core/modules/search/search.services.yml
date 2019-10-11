@@ -6,3 +6,7 @@ services:
   search.search_page_repository:
     class: Drupal\search\SearchPageRepository
     arguments: ['@config.factory', '@entity_type.manager']
+
+  search.index:
+    class: Drupal\search\SearchIndex
+    arguments: ['@config.factory', '@database','@database.replica', '@cache_tags.invalidator']
