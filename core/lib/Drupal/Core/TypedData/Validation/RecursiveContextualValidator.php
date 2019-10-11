@@ -2,6 +2,7 @@
 
 namespace Drupal\Core\TypedData\Validation;
 
+use Drupal\Core\Entity\Plugin\DataType\EntityAdapter;
 use Drupal\Core\TypedData\ComplexDataInterface;
 use Drupal\Core\TypedData\ListInterface;
 use Drupal\Core\TypedData\TypedDataInterface;
@@ -136,6 +137,7 @@ class RecursiveContextualValidator implements ContextualValidatorInterface {
     // constraint validators, such that they do not have to care about Typed
     // Data.
     $value = $typed_data_manager->getCanonicalRepresentation($data);
+    $constraints_given = isset($constraints);
     $this->context->setNode($value, $data, $metadata, $property_path);
 
     if (isset($constraints) || !$this->context->isGroupValidated($cache_key, Constraint::DEFAULT_GROUP)) {
@@ -148,7 +150,10 @@ class RecursiveContextualValidator implements ContextualValidatorInterface {
 
     // If the data is a list or complex data, validate the contained list items
     // or properties. However, do not recurse if the data is empty.
-    if (($data instanceof ListInterface || $data instanceof ComplexDataInterface) && !$data->isEmpty()) {
+    // Next, we do not recurse if given constraints are validated against an
+    // entity, since we should determine whether the entity matches the
+    // constraints and not whether the entity validates.
+    if (($data instanceof ListInterface || $data instanceof ComplexDataInterface) && !$data->isEmpty() && !($data instanceof EntityAdapter && $constraints_given)) {
       foreach ($data as $name => $property) {
         $this->validateNode($property);
       }
