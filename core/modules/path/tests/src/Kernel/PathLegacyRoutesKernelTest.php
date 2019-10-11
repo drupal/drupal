@@ -46,4 +46,11 @@ class PathLegacyRoutesKernelTest extends KernelTestBase {
     $this->assertNotEmpty(Url::fromRoute('path.admin_overview')->toString());
   }
 
+  /**
+   * @expectedDeprecation The 'path.admin_overview_filter' route is deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. Use the 'entity.path_alias.collection' route instead. See https://www.drupal.org/node/3013865
+   */
+  public function testLegacyCollectionFilterRoute() {
+    $this->assertNotEmpty(Url::fromRoute('path.admin_overview_filter')->toString());
+  }
+
 }
