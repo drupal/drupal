@@ -60,9 +60,8 @@ class ModerationInformationTest extends KernelTestBase {
 
   /**
    * @covers ::getDefaultRevisionId
-   * @covers ::getLatestRevisionId
    */
-  public function testDefaultAndLatestRevisionId() {
+  public function testGetDefaultRevisionId() {
     $entity_test_rev = EntityTestRev::create([
       'name' => 'Default Revision',
       'moderation_state' => 'published',
@@ -77,11 +76,70 @@ class ModerationInformationTest extends KernelTestBase {
     // revision ID.
     $default_revision_id = $this->moderationInformation->getDefaultRevisionId('entity_test_rev', $entity_test_rev->id());
     $this->assertSame(1, $default_revision_id);
+  }
+
+  /**
+   * @covers ::getLatestRevisionId
+   * @group legacy
+   * @expectedDeprecation Drupal\content_moderation\ModerationInformation::getLatestRevisionId is deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. Use RevisionableStorageInterface::getLatestRevisionId() instead. See https://www.drupal.org/node/3087295
+   */
+  public function testGetLatestRevisionId() {
+    $entity_test_rev = EntityTestRev::create([
+      'name' => 'Default Revision',
+      'moderation_state' => 'published',
+    ]);
+    $entity_test_rev->save();
+
+    $entity_test_rev->name = 'Pending revision';
+    $entity_test_rev->moderation_state = 'draft';
+    $entity_test_rev->save();
 
     // Check that moderation information service returns the correct latest
     // revision ID.
     $latest_revision_id = $this->moderationInformation->getLatestRevisionId('entity_test_rev', $entity_test_rev->id());
     $this->assertSame(2, $latest_revision_id);
+  }
+
+  /**
+   * @covers ::getLatestRevision
+   * @group legacy
+   * @expectedDeprecation Drupal\content_moderation\ModerationInformation::getLatestRevision is deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. Use RevisionableStorageInterface::getLatestRevisionId() and RevisionableStorageInterface::loadRevision() instead. See https://www.drupal.org/node/3087295
+   */
+  public function testGetLatestRevision() {
+    $entity_test_rev = EntityTestRev::create([
+      'name' => 'Default Revision',
+      'moderation_state' => 'published',
+    ]);
+    $entity_test_rev->save();
+
+    $entity_test_rev->name = 'Pending revision';
+    $entity_test_rev->moderation_state = 'draft';
+    $entity_test_rev->save();
+
+    $latest_revision = $this->moderationInformation->getLatestRevision('entity_test_rev', $entity_test_rev->id());
+    $this->assertEquals(2, $latest_revision->getRevisionId());
+  }
+
+  /**
+   * @covers ::isLatestRevision
+   * @group legacy
+   * @expectedDeprecation Drupal\content_moderation\ModerationInformation::isLatestRevision is deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. Use RevisionableInterface::isLatestRevision() instead. See https://www.drupal.org/node/3087295
+   */
+  public function testIsLatestRevision() {
+    $entity_test_rev = EntityTestRev::create([
+      'name' => 'Default Revision',
+      'moderation_state' => 'published',
+    ]);
+    $entity_test_rev->save();
+
+    $old_revision = clone $entity_test_rev;
+
+    $entity_test_rev->name = 'Pending revision';
+    $entity_test_rev->moderation_state = 'draft';
+    $entity_test_rev->save();
+
+    $this->assertFalse($this->moderationInformation->isLatestRevision($old_revision));
+    $this->assertTrue($this->moderationInformation->isLatestRevision($entity_test_rev));
   }
 
   /**
