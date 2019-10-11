@@ -1000,18 +1000,25 @@ function template_preprocess_views_exposed_form(&$variables) {
  *     exposed input.
  */
 function template_preprocess_views_mini_pager(&$variables) {
-  global $pager_page_array, $pager_total;
+  /* @var $pager_manager \Drupal\Core\Pager\PagerManagerInterface */
+  $pager_manager = \Drupal::service('pager.manager');
 
   $tags = &$variables['tags'];
   $element = $variables['element'];
   $parameters = $variables['parameters'];
+  $pager = $pager_manager->getPager($element);
+  if (!$pager) {
+    return;
+  }
+  $current = $pager->getCurrentPage();
+  $total = $pager->getTotalPages();
 
   // Current is the page we are currently paged to.
-  $variables['items']['current'] = $pager_page_array[$element] + 1;
+  $variables['items']['current'] = $current + 1;
 
-  if ($pager_total[$element] > 1 && $pager_page_array[$element] > 0) {
+  if ($total > 1 && $current > 0) {
     $options = [
-      'query' => pager_query_add_page($parameters, $element, $pager_page_array[$element] - 1),
+      'query' => $pager_manager->getUpdatedParameters($parameters, $element, $current - 1),
     ];
     $variables['items']['previous']['href'] = Url::fromRoute('<current>', [], $options)->toString();
     if (isset($tags[1])) {
@@ -1020,9 +1027,9 @@ function template_preprocess_views_mini_pager(&$variables) {
     $variables['items']['previous']['attributes'] = new Attribute();
   }
 
-  if ($pager_page_array[$element] < ($pager_total[$element] - 1)) {
+  if ($current < ($total - 1)) {
     $options = [
-      'query' => pager_query_add_page($parameters, $element, $pager_page_array[$element] + 1),
+      'query' => $pager_manager->getUpdatedParameters($parameters, $element, $current + 1),
     ];
     $variables['items']['next']['href'] = Url::fromRoute('<current>', [], $options)->toString();
     if (isset($tags[3])) {

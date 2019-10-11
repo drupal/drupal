@@ -106,7 +106,7 @@ services:
       - { name: cache.context }
   cache_context.url.query_args.pagers:
     class: Drupal\Core\Cache\Context\PagersCacheContext
-    arguments: ['@request_stack']
+    arguments: ['@pager.parameters']
     tags:
       - { name: cache.context }
 
@@ -1742,3 +1742,9 @@ services:
     arguments: ['@keyvalue.expirable', '@lock', '@request_stack', '%tempstore.expire%']
     tags:
       - { name: backend_overridable }
+  pager.manager:
+    class: Drupal\Core\Pager\PagerManager
+    arguments: ['@pager.parameters']
+  pager.parameters:
+    class: Drupal\Core\Pager\PagerParameters
+    arguments: ['@request_stack']

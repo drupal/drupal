@@ -7,7 +7,6 @@
 
 use Drupal\Core\Template\Attribute;
 use Drupal\Core\Url;
-use Drupal\Component\Utility\UrlHelper;
 use Drupal\Component\Utility\Html;
 
 /**
@@ -26,15 +25,17 @@ use Drupal\Component\Utility\Html;
  *   even though the default pager implementation adjusts for this and still
  *   displays the third page of search results at that URL.
  *
- * @see pager_default_initialize()
+ * @deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. Use
+ *   \Drupal\Core\Pager\RequestPagerInterface->findPage() instead.
+ *
+ * @see https://www.drupal.org/node/2779457
+ * @see \Drupal\Core\Pager\PagerParametersInterface::findPage()
  */
 function pager_find_page($element = 0) {
-  $page = \Drupal::request()->query->get('page', '');
-  $page_array = explode(',', $page);
-  if (!isset($page_array[$element])) {
-    $page_array[$element] = 0;
-  }
-  return (int) $page_array[$element];
+  @trigger_error(__FUNCTION__ . ' is deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. Use \Drupal\Core\Pager\RequestPagerInterface->findPage() instead. See https://www.drupal.org/node/2779457', E_USER_DEPRECATED);
+  /* @var $pager_parameters \Drupal\Core\Pager\PagerParametersInterface */
+  $pager_parameters = \Drupal::service('pager.parameters');
+  return $pager_parameters->findPage($element);
 }
 
 /**
@@ -126,18 +127,19 @@ function pager_find_page($element = 0) {
  *   that does not correspond to the actual range of the result set was
  *   requested, this function will return the closest page actually within the
  *   result set.
+ *
+ * @deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. Use
+ *   \Drupal\Core\Pager\PagerManagerInterface->defaultInitialize() instead.
+ *
+ * @see https://www.drupal.org/node/2779457
+ * @see \Drupal\Core\Pager\PagerManagerInterface::createPager()
  */
 function pager_default_initialize($total, $limit, $element = 0) {
-  global $pager_page_array, $pager_total, $pager_total_items, $pager_limits;
-
-  $page = pager_find_page($element);
-
-  // We calculate the total of pages as ceil(items / limit).
-  $pager_total_items[$element] = $total;
-  $pager_total[$element] = ceil($pager_total_items[$element] / $limit);
-  $pager_page_array[$element] = max(0, min($page, ((int) $pager_total[$element]) - 1));
-  $pager_limits[$element] = $limit;
-  return $pager_page_array[$element];
+  @trigger_error(__FUNCTION__ . ' is deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. Use \Drupal\Core\Pager\PagerManagerInterface->createPager() instead. See https://www.drupal.org/node/2779457', E_USER_DEPRECATED);
+  /* @var $pager_manager \Drupal\Core\Pager\PagerManagerInterface */
+  $pager_manager = \Drupal::service('pager.manager');
+  $pager = $pager_manager->createPager($total, $limit, $element);
+  return $pager->getCurrentPage();
 }
 
 /**
@@ -146,13 +148,18 @@ function pager_default_initialize($total, $limit, $element = 0) {
  * @return array
  *   A URL query parameter array that consists of all components of the current
  *   page request except for those pertaining to paging.
+ *
+ * @deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. Use
+ *   \Drupal\Core\Pager\RequestPagerInterface->getQueryParameters() instead.
+ *
+ * @see https://www.drupal.org/node/2779457
+ * @see \Drupal\Core\Pager\PagerParametersInterface::getQueryParameters()
  */
 function pager_get_query_parameters() {
-  $query = &drupal_static(__FUNCTION__);
-  if (!isset($query)) {
-    $query = UrlHelper::filterQueryParameters(\Drupal::request()->query->all(), ['page']);
-  }
-  return $query;
+  @trigger_error(__FUNCTION__ . ' is deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. Use \Drupal\Core\Pager\RequestPagerInterface->getQueryParameters() instead. See https://www.drupal.org/node/2779457', E_USER_DEPRECATED);
+  /* @var $pager_params \Drupal\Core\Pager\PagerParametersInterface */
+  $pager_params = \Drupal::service('pager.parameters');
+  return $pager_params->getQueryParameters();
 }
 
 /**
@@ -181,10 +188,21 @@ function template_preprocess_pager(&$variables) {
   $quantity = $variables['pager']['#quantity'];
   $route_name = $variables['pager']['#route_name'];
   $route_parameters = isset($variables['pager']['#route_parameters']) ? $variables['pager']['#route_parameters'] : [];
-  global $pager_page_array, $pager_total;
+
+  /* @var $pager_manager \Drupal\Core\Pager\PagerManagerInterface */
+  $pager_manager = \Drupal::service('pager.manager');
+
+  $pager = $pager_manager->getPager($element);
+
+  // Nothing to do if there is no pager.
+  if (!isset($pager)) {
+    return;
+  }
+
+  $pager_max = $pager->getTotalPages();
 
   // Nothing to do if there is only one page.
-  if ($pager_total[$element] <= 1) {
+  if ($pager_max <= 1) {
     return;
   }
 
@@ -193,14 +211,13 @@ function template_preprocess_pager(&$variables) {
   // Calculate various markers within this pager piece:
   // Middle is used to "center" pages around the current page.
   $pager_middle = ceil($quantity / 2);
-  // current is the page we are currently paged to.
-  $pager_current = $pager_page_array[$element] + 1;
-  // first is the first page listed by this pager piece (re quantity).
+  $current_page = $pager->getCurrentPage();
+  // The current pager is the page we are currently paged to.
+  $pager_current = $current_page + 1;
+  // The first pager is the first page listed by this pager piece (re quantity).
   $pager_first = $pager_current - $pager_middle + 1;
-  // last is the last page listed by this pager piece (re quantity).
+  // The last is the last page listed by this pager piece (re quantity).
   $pager_last = $pager_current + $quantity - $pager_middle;
-  // max is the maximum page number.
-  $pager_max = $pager_total[$element];
   // End of marker calculations.
 
   // Prepare for generation loop.
@@ -218,11 +235,11 @@ function template_preprocess_pager(&$variables) {
   // End of generation loop preparation.
 
   // Create the "first" and "previous" links if we are not on the first page.
-  if ($pager_page_array[$element] > 0) {
+  if ($current_page > 0) {
     $items['first'] = [];
     $items['first']['attributes'] = new Attribute();
     $options = [
-      'query' => pager_query_add_page($parameters, $element, 0),
+      'query' => $pager_manager->getUpdatedParameters($parameters, $element, 0),
     ];
     $items['first']['href'] = Url::fromRoute($route_name, $route_parameters, $options)->toString();
     if (isset($tags[0])) {
@@ -232,7 +249,7 @@ function template_preprocess_pager(&$variables) {
     $items['previous'] = [];
     $items['previous']['attributes'] = new Attribute();
     $options = [
-      'query' => pager_query_add_page($parameters, $element, $pager_page_array[$element] - 1),
+      'query' => $pager_manager->getUpdatedParameters($parameters, $element, $current_page - 1),
     ];
     $items['previous']['href'] = Url::fromRoute($route_name, $route_parameters, $options)->toString();
     if (isset($tags[1])) {
@@ -248,7 +265,7 @@ function template_preprocess_pager(&$variables) {
     // Now generate the actual pager piece.
     for (; $i <= $pager_last && $i <= $pager_max; $i++) {
       $options = [
-        'query' => pager_query_add_page($parameters, $element, $i - 1),
+        'query' => $pager_manager->getUpdatedParameters($parameters, $element, $i - 1),
       ];
       $items['pages'][$i]['href'] = Url::fromRoute($route_name, $route_parameters, $options)->toString();
       $items['pages'][$i]['attributes'] = new Attribute();
@@ -263,11 +280,11 @@ function template_preprocess_pager(&$variables) {
   }
 
   // Create the "next" and "last" links if we are not on the last page.
-  if ($pager_page_array[$element] < ($pager_max - 1)) {
+  if ($current_page < ($pager_max - 1)) {
     $items['next'] = [];
     $items['next']['attributes'] = new Attribute();
     $options = [
-      'query' => pager_query_add_page($parameters, $element, $pager_page_array[$element] + 1),
+      'query' => $pager_manager->getUpdatedParameters($parameters, $element, $current_page + 1),
     ];
     $items['next']['href'] = Url::fromRoute($route_name, $route_parameters, $options)->toString();
     if (isset($tags[3])) {
@@ -277,7 +294,7 @@ function template_preprocess_pager(&$variables) {
     $items['last'] = [];
     $items['last']['attributes'] = new Attribute();
     $options = [
-      'query' => pager_query_add_page($parameters, $element, $pager_max - 1),
+      'query' => $pager_manager->getUpdatedParameters($parameters, $element, $pager_max - 1),
     ];
     $items['last']['href'] = Url::fromRoute($route_name, $route_parameters, $options)->toString();
     if (isset($tags[4])) {
@@ -316,25 +333,16 @@ function template_preprocess_pager(&$variables) {
  *
  * @return array
  *   The altered $query parameter array.
+ *
+ * @deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. Use
+ *   \Drupal\Core\Pager\PagerManagerInterface->queryAddPage() instead.
+ *
+ * @see https://www.drupal.org/node/2779457
+ * @see \Drupal\Core\Pager\PagerManagerInterface::getUpdatedParameters()
  */
 function pager_query_add_page(array $query, $element, $index) {
-  global $pager_page_array;
-
-  // Build the 'page' query parameter. This is built based on the current
-  // page of each pager element (or NULL if the pager is not set), with the
-  // exception of the requested page index for the current element.
-  $max_element = max(array_keys($pager_page_array));
-  $element_pages = [];
-  for ($i = 0; $i <= $max_element; $i++) {
-    $element_pages[] = ($i == $element) ? $index : (isset($pager_page_array[$i]) ? $pager_page_array[$i] : NULL);
-  }
-  $query['page'] = implode(',', $element_pages);
-
-  // Merge the query parameters passed to this function with the parameters
-  // from the current request. In case of collision, the parameters passed into
-  // this function take precedence.
-  if ($current_request_query = pager_get_query_parameters()) {
-    $query = array_merge($current_request_query, $query);
-  }
-  return $query;
+  @trigger_error(__FUNCTION__ . ' is deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. Use \Drupal\Core\Pager\PagerManagerInterface->queryAddPage() instead. See https://www.drupal.org/node/2779457', E_USER_DEPRECATED);
+  /* @var $pager_manager \Drupal\Core\Pager\PagerManagerInterface */
+  $pager_manager = \Drupal::service('pager.manager');
+  return $pager_manager->getUpdatedParameters($query, $element, $index);
 }
