@@ -1,0 +1,8 @@
+langcode: en
+status: true
+dependencies: {  }
+id: path_alias.path_alias
+target_entity_type_id: path_alias
+target_bundle: path_alias
+default_langcode: und
+language_alterable: true

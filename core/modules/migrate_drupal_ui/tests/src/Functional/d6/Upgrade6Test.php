@@ -75,7 +75,7 @@ class Upgrade6Test extends MigrateUpgradeExecuteTestBase {
       'file' => 7,
       'filter_format' => 7,
       'image_style' => 5,
-      'language_content_settings' => 14,
+      'language_content_settings' => 15,
       'node' => 18,
       // The 'book' module provides the 'book' node type, and the migration
       // creates 12 node types.

@@ -69,18 +69,18 @@ class LocalePathTest extends BrowserTestBase {
     $path = 'admin/config/search/path/add';
     $english_path = $this->randomMachineName(8);
     $edit = [
-      'source'   => '/node/' . $node->id(),
-      'alias'    => '/' . $english_path,
-      'langcode' => 'en',
+      'path[0][value]' => '/node/' . $node->id(),
+      'alias[0][value]' => '/' . $english_path,
+      'langcode[0][value]' => 'en',
     ];
     $this->drupalPostForm($path, $edit, t('Save'));
 
     // Create a path alias in new custom language.
     $custom_language_path = $this->randomMachineName(8);
     $edit = [
-      'source'   => '/node/' . $node->id(),
-      'alias'    => '/' . $custom_language_path,
-      'langcode' => $langcode,
+      'path[0][value]' => '/node/' . $node->id(),
+      'alias[0][value]' => '/' . $custom_language_path,
+      'langcode[0][value]' => $langcode,
     ];
     $this->drupalPostForm($path, $edit, t('Save'));
 
@@ -97,17 +97,22 @@ class LocalePathTest extends BrowserTestBase {
 
     // Check priority of language for alias by source path.
     $edit = [
-      'source'   => '/node/' . $node->id(),
-      'alias'    => '/' . $custom_path,
-      'langcode' => LanguageInterface::LANGCODE_NOT_SPECIFIED,
+      'path[0][value]' => '/node/' . $node->id(),
+      'alias[0][value]' => '/' . $custom_path,
+      'langcode[0][value]' => LanguageInterface::LANGCODE_NOT_SPECIFIED,
     ];
-    $this->container->get('path.alias_storage')->save($edit['source'], $edit['alias'], $edit['langcode']);
+    $this->container->get('path.alias_storage')->save($edit['path[0][value]'], $edit['alias[0][value]'], $edit['langcode[0][value]']);
     $lookup_path = $this->container->get('path.alias_manager')->getAliasByPath('/node/' . $node->id(), 'en');
     $this->assertEqual('/' . $english_path, $lookup_path, 'English language alias has priority.');
     // Same check for language 'xx'.
     $lookup_path = $this->container->get('path.alias_manager')->getAliasByPath('/node/' . $node->id(), $prefix);
     $this->assertEqual('/' . $custom_language_path, $lookup_path, 'Custom language alias has priority.');
-    $this->container->get('path.alias_storage')->delete($edit);
+    $path_alias = [
+      'path' => $edit['path[0][value]'],
+      'alias' => $edit['alias[0][value]'],
+      'langcode' => $edit['langcode[0][value]'],
+    ];
+    $this->container->get('path.alias_storage')->delete($path_alias);
 
     // Create language nodes to check priority of aliases.
     $first_node = $this->drupalCreateNode(['type' => 'page', 'promote' => 1, 'langcode' => 'en']);
@@ -115,20 +120,20 @@ class LocalePathTest extends BrowserTestBase {
 
     // Assign a custom path alias to the first node with the English language.
     $edit = [
-      'source'   => '/node/' . $first_node->id(),
-      'alias'    => '/' . $custom_path,
-      'langcode' => $first_node->language()->getId(),
+      'path[0][value]' => '/node/' . $first_node->id(),
+      'alias[0][value]' => '/' . $custom_path,
+      'langcode[0][value]' => $first_node->language()->getId(),
     ];
-    $this->container->get('path.alias_storage')->save($edit['source'], $edit['alias'], $edit['langcode']);
+    $this->container->get('path.alias_storage')->save($edit['path[0][value]'], $edit['alias[0][value]'], $edit['langcode[0][value]']);
 
     // Assign a custom path alias to second node with
     // LanguageInterface::LANGCODE_NOT_SPECIFIED.
     $edit = [
-      'source'   => '/node/' . $second_node->id(),
-      'alias'    => '/' . $custom_path,
-      'langcode' => $second_node->language()->getId(),
+      'path[0][value]' => '/node/' . $second_node->id(),
+      'alias[0][value]' => '/' . $custom_path,
+      'langcode[0][value]' => $second_node->language()->getId(),
     ];
-    $this->container->get('path.alias_storage')->save($edit['source'], $edit['alias'], $edit['langcode']);
+    $this->container->get('path.alias_storage')->save($edit['path[0][value]'], $edit['alias[0][value]'], $edit['langcode[0][value]']);
 
     // Test that both node titles link to our path alias.
     $this->drupalGet('admin/content');
