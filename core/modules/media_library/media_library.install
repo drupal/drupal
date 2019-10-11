@@ -191,3 +191,14 @@ function media_library_update_8703() {
   // items in the 'media' view. It has been converted to a post-update hook.
   // @see media_library_post_update_add_buttons_to_page_view()
 }
+
+/**
+ * Creates the media_library.settings config object.
+ */
+function media_library_update_8704() {
+  \Drupal::configFactory()
+    ->getEditable('media_library.settings')
+    // Enable the advanced UI by default, to preserve existing behavior.
+    ->set('advanced_ui', TRUE)
+    ->save();
+}
