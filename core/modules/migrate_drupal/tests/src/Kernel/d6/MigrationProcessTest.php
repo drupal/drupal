@@ -8,6 +8,7 @@ use Drupal\KernelTests\FileSystemModuleDiscoveryDataProviderTrait;
  * Tests the getProcess() method of all Drupal 6 migrations.
  *
  * @group migrate_drupal
+ * @group legacy
  */
 class MigrationProcessTest extends MigrateDrupal6TestBase {
   use FileSystemModuleDiscoveryDataProviderTrait;
