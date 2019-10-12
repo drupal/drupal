@@ -488,41 +488,40 @@ class SelectTest extends DatabaseTestBase {
   }
 
   /**
-   * Tests that filter by a regular expression works as expected.
+   * Data provider for testRegularExpressionCondition().
+   *
+   * @return array[]
+   *   Returns data-set elements with:
+   *     - the expected result of the query
+   *     - the table column to do the search on.
+   *     - the regular expression pattern to search for.
+   *     - the regular expression operator 'REGEXP' or 'NOT REGEXP'.
    */
-  public function testRegexCondition() {
+  public function providerRegularExpressionCondition() {
+    return [
+      [['John'], 'name', 'hn$', 'REGEXP'],
+      [['Paul'], 'name', '^Pau', 'REGEXP'],
+      [['George', 'Ringo'], 'name', 'Ringo|George', 'REGEXP'],
+      [['Pete'], 'job', '#Drummer', 'REGEXP'],
+      [[], 'job', '#Singer', 'REGEXP'],
+      [['Paul', 'Pete'], 'age', '2[6]', 'REGEXP'],
 
-    $test_groups[] = [
-      'regex' => 'hn$',
-      'expected' => [
-        'John',
-      ],
+      [['George', 'Paul', 'Pete', 'Ringo'], 'name', 'hn$', 'NOT REGEXP'],
+      [['George', 'John', 'Pete', 'Ringo'], 'name', '^Pau', 'NOT REGEXP'],
+      [['John', 'Paul', 'Pete'], 'name', 'Ringo|George', 'NOT REGEXP'],
+      [['George', 'John', 'Paul', 'Ringo'], 'job', '#Drummer', 'NOT REGEXP'],
+      [['George', 'John', 'Paul', 'Pete', 'Ringo'], 'job', '#Singer', 'NOT REGEXP'],
+      [['George', 'John', 'Ringo'], 'age', '2[6]', 'NOT REGEXP'],
     ];
-    $test_groups[] = [
-      'regex' => '^Pau',
-      'expected' => [
-        'Paul',
-      ],
-    ];
-    $test_groups[] = [
-      'regex' => 'Ringo|George',
-      'expected' => [
-        'Ringo', 'George',
-      ],
-    ];
+  }
 
+  /**
+   * Tests that filter by 'REGEXP' and 'NOT REGEXP' works as expected.
+   *
+   * @dataProvider providerRegularExpressionCondition
+   */
+  public function testRegularExpressionCondition($expected, $column, $pattern, $operator) {
     $database = $this->container->get('database');
-    foreach ($test_groups as $test_group) {
-      $query = $database->select('test', 't');
-      $query->addField('t', 'name');
-      $query->condition('t.name', $test_group['regex'], 'REGEXP');
-      $result = $query->execute()->fetchCol();
-
-      $this->assertEqual(count($result), count($test_group['expected']), 'Returns the expected number of rows.');
-      $this->assertEqual(sort($result), sort($test_group['expected']), 'Returns the expected rows.');
-    }
-
-    // Ensure that filter by "#" still works due to the quoting.
     $database->insert('test')
       ->fields([
         'name' => 'Pete',
@@ -531,34 +530,13 @@ class SelectTest extends DatabaseTestBase {
       ])
       ->execute();
 
-    $test_groups = [];
-    $test_groups[] = [
-      'regex' => '#Drummer',
-      'expected' => [
-        'Pete',
-      ],
-    ];
-    $test_groups[] = [
-      'regex' => '#Singer',
-      'expected' => [],
-    ];
-
-    foreach ($test_groups as $test_group) {
-      $query = $database->select('test', 't');
-      $query->addField('t', 'name');
-      $query->condition('t.job', $test_group['regex'], 'REGEXP');
-      $result = $query->execute()->fetchCol();
-
-      $this->assertEqual(count($result), count($test_group['expected']), 'Returns the expected number of rows.');
-      $this->assertEqual(sort($result), sort($test_group['expected']), 'Returns the expected rows.');
-    }
-
-    // Ensure that REGEXP filter still works with no-string type field.
     $query = $database->select('test', 't');
-    $query->addField('t', 'age');
-    $query->condition('t.age', '2[6]', 'REGEXP');
-    $result = $query->execute()->fetchField();
-    $this->assertEquals($result, '26', 'Regexp with number type.');
+    $query->addField('t', 'name');
+    $query->condition("t.$column", $pattern, $operator);
+    $result = $query->execute()->fetchCol();
+    sort($result);
+
+    $this->assertEquals($expected, $result);
   }
 
   /**
