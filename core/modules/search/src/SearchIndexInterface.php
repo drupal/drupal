@@ -22,7 +22,12 @@ interface SearchIndexInterface {
    * @param string $text
    *   The content of this item. Must be a piece of HTML or plain text.
    * @param bool $update_weights
-   *   (optional) TRUE if word weights should be updated. FALSE otherwise.
+   *   (optional) TRUE if word weights should be updated. FALSE otherwise;
+   *   defaults to TRUE. If you pass in FALSE, then you need to have your
+   *   calls to this method in a try/finally block, and at the end of your
+   *   index run in the finally clause, you will need to call
+   *   self::updateWordWeights(), passing in all of the returned words, to
+   *   update the word weights.
    *
    * @return string[]
    *   The words to be updated.
