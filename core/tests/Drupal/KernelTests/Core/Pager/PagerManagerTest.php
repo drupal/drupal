@@ -90,6 +90,13 @@ class PagerManagerTest extends KernelTestBase {
     $this->assertEquals(30, $GLOBALS['pager_total_items'][0]);
     $this->assertEquals(3, $GLOBALS['pager_total'][0]);
     $this->assertEquals(10, $GLOBALS['pager_limits'][0]);
+
+    // Assert array is iterable.
+    foreach ($GLOBALS['pager_total_items'] as $pager_id => $total_items) {
+      // We only have one pager.
+      $this->assertEquals(0, $pager_id);
+      $this->assertEquals(30, $total_items);
+    }
   }
 
 }
