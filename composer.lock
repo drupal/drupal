@@ -689,7 +689,7 @@
             "dist": {
                 "type": "path",
                 "url": "core",
-                "reference": "57abe59512b004ec4634f670d65f2b79d505d5a5"
+                "reference": "31a1704b02a57fad76cd5bdf898d5677154ed351"
             },
             "require": {
                 "asm89/stack-cors": "^1.1",
@@ -713,7 +713,7 @@
                 "ext-xml": "*",
                 "guzzlehttp/guzzle": "^6.3",
                 "masterminds/html5": "^2.1",
-                "pear/archive_tar": "^1.4",
+                "pear/archive_tar": "^1.4.5",
                 "php": ">=7.0.8",
                 "stack/builder": "^1.0",
                 "symfony-cmf/routing": "^1.4",
@@ -733,7 +733,7 @@
                 "symfony/yaml": "~3.4.5",
                 "twig/twig": "^1.38.2",
                 "typo3/phar-stream-wrapper": "^2.1.1",
-                "zendframework/zend-diactoros": "^1.1",
+                "zendframework/zend-diactoros": ">=1.7 <1.8",
                 "zendframework/zend-feed": "^2.12"
             },
             "conflict": {
