@@ -1,0 +1,175 @@
+# This theme is marked as @internal. It is intended to evolve and change over
+# minor releases.
+# Change record https://www.drupal.org/node/2582945.
+# As the UI of Drupal improves between minor versions, the markup and assets
+# in the Claro theme will change. The Claro theme is not backwards compatible.
+# If you wish to modify the output or assets of Claro you can:
+# 1. Copy the whole of Claro and rename it as your own administration theme. You
+# will need to manually manage your own updates if you want to stay up to
+# date with Claro's bug fixes and feature support.
+#
+# 2. Sub-theme Claro. This is only recommended if you want to make minor tweaks
+# and understand that Claro could break your modifications as it changes.
+name: Claro
+type: theme
+base theme: classy
+description: 'A clean, accessible, and powerful Drupal administration theme.'
+alt text: 'Screenshot of Claro, Drupal administration theme.'
+package: Core
+version: VERSION
+experimental: true
+core: 8.x
+libraries:
+ - claro/global-styling
+libraries-override:
+  system/base:
+    css:
+      component:
+        /core/themes/stable/css/system/components/ajax-progress.module.css: css/src/components/ajax-progress.module.css
+        /core/themes/stable/css/system/components/autocomplete-loading.module.css: css/src/components/autocomplete-loading.module.css
+        /core/themes/stable/css/system/components/system-status-counter.css: css/src/components/system-status-counter.css
+        /core/themes/stable/css/system/components/system-status-report-counters.css: css/src/components/system-status-report-counters.css
+        /core/themes/stable/css/system/components/system-status-report-general-info.css: css/src/components/system-status-report-general-info.css
+        /core/themes/stable/css/system/components/tabledrag.module.css: css/src/components/tabledrag.css
+
+  system/admin:
+    css:
+      theme:
+        /core/themes/stable/css/system/system.admin.css: false
+
+  core/drupal.dropbutton:
+    css:
+      component:
+        /core/themes/stable/css/core/dropbutton/dropbutton.css: css/src/components/dropbutton.css
+
+  core/drupal.tabledrag:
+    js:
+      misc/tabledrag.js: js/tabledrag.js
+
+  core/drupal.vertical-tabs:
+    css:
+      component:
+        /core/themes/stable/css/core/vertical-tabs.css: false
+    js:
+      misc/vertical-tabs.js: js/vertical-tabs.js
+
+  core/jquery.ui:
+    css:
+      theme:
+        assets/vendor/jquery.ui/themes/base/theme.css: false
+
+  core/jquery.ui.dialog:
+    css:
+      component:
+        assets/vendor/jquery.ui/themes/base/dialog.css: false
+
+  classy/dialog: claro/claro.drupal.dialog
+
+  classy/base:
+    css:
+      component:
+        css/components/action-links.css: false
+        css/components/breadcrumb.css: false
+        css/components/button.css: false
+        css/components/details.css: false
+        css/components/dropbutton.css: false
+        css/components/form.css: false
+        css/components/tabs.css: false
+        css/components/pager.css: false
+        css/components/tableselect.css: css/src/components/tableselect.css
+        css/components/tabledrag.css: false
+        css/components/collapse-processed.css: false
+
+  classy/dropbutton:
+    css:
+      component:
+        css/components/dropbutton.css: false
+
+  classy/messages:
+    css:
+      component:
+        css/components/messages.css: false
+
+  classy/progress:
+    css:
+      component:
+        css/components/progress.css: css/src/components/progress.css
+  # @todo Refactor when https://www.drupal.org/node/2642122 is fixed.
+
+  classy/user: false
+
+  user/drupal.user: claro/form.password-confirm
+
+  field_ui/drupal.field_ui:
+    css:
+      theme:
+        /core/themes/stable/css/field_ui/field_ui.admin.css: css/src/theme/field-ui.admin.css
+
+  filter/drupal.filter.admin:
+    css:
+      theme:
+        /core/themes/stable/css/filter/filter.admin.css: css/src/theme/filter.theme.css
+
+  filter/drupal.filter:
+    css:
+      theme:
+        /core/themes/stable/css/filter/filter.admin.css: css/src/theme/filter.theme.css
+
+  views_ui/admin.styling:
+    css:
+      theme:
+        /core/themes/stable/css/views_ui/views_ui.admin.theme.css: css/src/theme/views_ui.admin.theme.css
+
+libraries-extend:
+  ckeditor/drupal.ckeditor:
+    - claro/ckeditor-editor
+  classy/image-widget:
+    - claro/image-widget
+  core/ckeditor:
+    - claro/ckeditor-dialog
+  core/drupal.collapse:
+    - claro/details-focus
+  core/drupal.dropbutton:
+    - claro/dropbutton
+  core/drupal.checkbox:
+    - claro/checkbox
+  core/drupal.message:
+    - claro/messages
+  core/drupal.vertical-tabs:
+    - claro/vertical-tabs
+  core/jquery.ui:
+    - claro/claro.jquery.ui
+  file/drupal.file:
+    - claro/file
+  system/admin:
+    - claro/system.admin
+  core/drupal.autocomplete:
+    - claro/autocomplete
+  tour/tour-styling:
+    - claro/tour-styling
+  shortcut/drupal.shortcut:
+    - claro/drupal.shortcut
+  core/drupal.ajax:
+    - claro/ajax
+  views/views.module:
+    - claro/views
+
+quickedit_stylesheets:
+  - css/src/components/quickedit.css
+ckeditor_stylesheets:
+  - css/src/base/elements.css
+  - css/src/base/typography.css
+  - css/src/theme/ckeditor-frame.css
+
+regions:
+  header: 'Header'
+  pre_content: 'Pre-content'
+  breadcrumb: Breadcrumb
+  highlighted: Highlighted
+  help: Help
+  content: Content
+  page_top: 'Page top'
+  page_bottom: 'Page bottom'
+  sidebar_first: 'First sidebar'
+regions_hidden:
+  - sidebar_first

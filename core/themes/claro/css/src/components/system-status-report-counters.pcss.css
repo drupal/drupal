@@ -1,0 +1,26 @@
+/**
+ * @file
+ * Styles for the system status report counters.
+ */
+
+.system-status-report-counters__item {
+  width: 100%;
+  margin: 10px 0;
+}
+
+@media screen and (min-width: 60em) {
+  .system-status-report-counters__item {
+    margin-bottom: 20px;
+  }
+  .system-status-report-counters {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+  }
+  .system-status-report-counters__item--half-width {
+    width: 49%;
+  }
+  .system-status-report-counters__item--third-width {
+    width: 32%;
+  }
+}

@@ -1,0 +1,8 @@
+/**
+ * @file
+ * Extends classy/image-widget.
+ */
+
+.image-widget-data {
+  max-width: 100%;
+}

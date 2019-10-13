@@ -1,0 +1,64 @@
+{#
+/**
+ * @file
+ * Theme override for a form element.
+ *
+ * @todo Remove when https://www.drupal.org/node/3010558 is fixed.
+ *
+ * @see template_preprocess_form_element()
+ */
+#}
+{#
+  Most of core-provided js assumes that the CSS class pattern js-form-item-[something] or
+  js-form-type-[something] exists on form items. We have to keep them.
+#}
+{%
+  set classes = [
+    'js-form-item',
+    'form-item',
+    'js-form-type-' ~ type|clean_class,
+    'form-type--' ~ type|clean_class,
+    type in ['checkbox', 'radio'] ? 'form-type--boolean',
+    'js-form-item-' ~ name|clean_class,
+    'form-item--' ~ name|clean_class,
+    title_display not in ['after', 'before'] ? 'form-item--no-label',
+    disabled == 'disabled' ? 'form-item--disabled',
+    errors ? 'form-item--error',
+  ]
+%}
+{%
+  set description_classes = [
+    'form-item__description',
+    description_display == 'invisible' ? 'visually-hidden',
+  ]
+%}
+<div{{ attributes.addClass(classes) }}>
+  {% if label_display in ['before', 'invisible'] %}
+    {{ label }}
+  {% endif %}
+  {% if prefix is not empty %}
+    <span class="form-item__prefix{{disabled == 'disabled' ? ' is-disabled'}}">{{ prefix }}</span>
+  {% endif %}
+  {% if description_display == 'before' and description.content %}
+    <div{{ description.attributes.addClass(description_classes) }}>
+      {{ description.content }}
+    </div>
+  {% endif %}
+  {{ children }}
+  {% if suffix is not empty %}
+    <span class="form-item__suffix{{disabled == 'disabled' ? ' is-disabled'}}">{{ suffix }}</span>
+  {% endif %}
+  {% if label_display == 'after' %}
+    {{ label }}
+  {% endif %}
+  {% if errors %}
+    <div class="form-item__error-message">
+      {{ errors }}
+    </div>
+  {% endif %}
+  {% if description_display in ['after', 'invisible'] and description.content %}
+    <div{{ description.attributes.addClass(description_classes) }}>
+      {{ description.content }}
+    </div>
+  {% endif %}
+</div>

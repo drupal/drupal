@@ -1,0 +1,249 @@
+global-styling:
+  version: VERSION
+  css:
+    base:
+      css/src/base/elements.css: {}
+      css/src/base/typography.css: {}
+      css/src/base/print.css: {}
+    component:
+      css/src/components/accordion.css: {}
+      css/src/components/action-link.css: {}
+      css/src/components/content-header.css: {}
+      css/src/components/container-inline.css: {}
+      css/src/components/container-inline.module.css: {}
+      css/src/components/breadcrumb.css: {}
+      css/src/components/button.css: {}
+      css/src/components/details.css: {}
+      css/src/components/divider.css: {}
+      css/src/components/messages.css: {}
+      css/src/components/entity-meta.css: {}
+      css/src/components/fieldset.css: {}
+      css/src/components/form.css: {}
+      css/src/components/form--checkbox-radio.css: {}
+      css/src/components/form--checkbox-radio--ie.css: {}
+      css/src/components/form--field-multiple.css: {}
+      css/src/components/form--managed-file.css: {}
+      css/src/components/form--text.css: {}
+      css/src/components/form--select.css: {}
+      css/src/components/help.css: {}
+      css/src/components/image-preview.css: {}
+      css/src/components/menus-and-lists.css: {}
+      css/src/components/modules-page.css: {}
+      css/src/components/node.css: {}
+      css/src/components/page-title.css: {}
+      css/src/components/pager.css: {}
+      css/src/components/skip-link.css: {}
+      css/src/components/tables.css: {}
+      css/src/components/table--file-multiple-widget.css: {}
+      css/src/components/search-admin-settings.css: {}
+      css/src/components/tablesort-indicator.css: {}
+      css/src/components/system-status-report-general-info.css: {}
+      css/src/components/system-status-report.css: {}
+      css/src/components/system-status-report-counters.css: {}
+      css/src/components/system-status-counter.css: {}
+      css/src/components/tabs.css: {}
+      css/src/components/views-ui.css: {}
+    theme:
+      css/src/theme/colors.css: {}
+    layout:
+      css/src/layout/breadcrumb.css: {}
+      css/src/layout/local-actions.css: {}
+      css/src/layout/layout.css: {}
+  dependencies:
+    - system/admin
+    - core/jquery
+    - core/drupal
+    # Claro has small and extra small variation for most of the control elements
+    # such as inputs, action links, buttons, dropbuttons. For usability and
+    # accessibility reasons, we keep target sizes big enough on touch screen
+    # devices (by not making these elements smaller than their default size).
+    # Modernizr is used for recognising whether user is using a touch device or
+    # not. This allows conditionally rendering small variation of the control
+    # elements on non-touch devices. In some cases, such as when rendering
+    # links, it is hard recognize when Modernizr should be attached, therefore
+    # it has to be always attached.
+    - core/modernizr
+
+node-form:
+  version: VERSION
+  css:
+    layout:
+      css/src/layout/node-add.css: {}
+  dependencies:
+    - node/form
+
+maintenance-page:
+  version: VERSION
+  js:
+    js/mobile.install.js: {}
+  css:
+    theme:
+      css/src/theme/maintenance-page.css: {}
+  dependencies:
+    - system/maintenance
+    - claro/global-styling
+
+install-page:
+  version: VERSION
+  js:
+    js/mobile.install.js: {}
+  css:
+    theme:
+      css/src/theme/install-page.css: {}
+  dependencies:
+    - claro/maintenance-page
+
+drupal.nav-tabs:
+  version: VERSION
+  js:
+    js/nav-tabs.js: {}
+  dependencies:
+    - core/matchmedia
+    - core/jquery
+    - core/drupal
+    - core/jquery.once
+    - core/drupal.debounce
+    - core/collapse
+
+drupal.responsive-detail:
+  version: VERSION
+  js:
+    js/responsive-details.js: {}
+  dependencies:
+    - core/matchmedia
+    - core/matchmedia.addListener
+    - core/jquery
+    - core/jquery.once
+    - core/collapse
+
+claro.jquery.ui:
+  version: VERSION
+  css:
+    component:
+      css/src/components/jquery.ui/theme.css: { weight: -1 }
+
+claro.drupal.dialog:
+  version: VERSION
+  css:
+    theme:
+      css/src/components/dialog.css: {}
+
+ckeditor-dialog:
+  version: VERSION
+  css:
+    theme:
+      css/src/theme/ckeditor-dialog.css: {}
+
+ckeditor-editor:
+  version: VERSION
+  css:
+    theme:
+      css/src/theme/ckeditor-editor.css: {}
+
+tour-styling:
+  version: VERSION
+  css:
+    theme:
+      css/src/components/tour.theme.css: {}
+
+media-form:
+  version: VERSION
+  css:
+    layout:
+      css/src/components/media.css: {}
+  dependencies:
+    - media/form
+
+image-widget:
+  version: VERSION
+  css:
+    component:
+      css/src/layout/image-widget.css: {}
+
+system.admin:
+  version: VERSION
+  css:
+    component:
+      css/src/components/system-admin--admin-list.css: { weight: -10 }
+      css/src/components/system-admin--links.css: { weight: -10 }
+      css/src/components/system-admin--modules.css: { weight: -10 }
+      css/src/components/system-admin--panel.css: { weight: -10 }
+      css/src/components/system-admin--status-report.css: { weight: -10 }
+    layout:
+      css/src/layout/system-admin--layout.css: { weight: -10 }
+  dependencies:
+    - claro/card
+
+checkbox:
+  version: VERSION
+  js:
+    js/checkbox.js: {}
+  dependencies:
+    - core/drupal
+
+dropbutton:
+  version: VERSION
+  js:
+    js/dropbutton.js: {}
+  dependencies:
+    - core/drupal
+
+autocomplete:
+  version: VERSION
+  js:
+    js/autocomplete.js: {}
+
+drupal.shortcut:
+  version: VERSION
+  css:
+    # @todo move this to components after
+    #   https://www.drupal.org/project/drupal/issues/3045467 is in.
+    theme:
+      css/src/components/shortcut.css: {}
+
+details-focus:
+  js:
+    js/details.js: {}
+
+ajax:
+  js:
+    js/ajax.js: {}
+
+form.password-confirm:
+  css:
+    component:
+      css/src/components/form--password-confirm.css: {}
+  js:
+    js/user.js: {}
+  dependencies:
+    - core/jquery
+    - core/drupal
+    - core/jquery.once
+    - claro/global-styling
+
+views:
+  css:
+    component:
+      css/src/components/views-exposed-form.css: {}
+
+messages:
+  js:
+    js/messages.js: {}
+
+card:
+  css:
+    component:
+      css/src/layout/card-list.css: {}
+      css/src/components/card.css: {}
+
+vertical-tabs:
+  css:
+    component:
+      css/src/components/vertical-tabs.css: {}
+  dependencies:
+    - claro/global-styling
+
+file:
+  css:
+    component:
+      css/src/components/file.css: {}

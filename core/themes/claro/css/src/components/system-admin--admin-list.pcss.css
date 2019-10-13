@@ -1,0 +1,71 @@
+/**
+ * @file
+ * Admin list and admin item modules.
+ */
+
+@import "../base/variables.pcss.css";
+
+/**
+ * Admin list (wrapper of admin items).
+ */
+.admin-list {
+  margin-top: 1em;
+  margin-bottom: 2em;
+  padding: 0;
+}
+.admin-list--panel {
+  margin: -1em -1.5em;
+}
+
+/**
+ * Admin item.
+ */
+.admin-item {
+  padding: 0.75em 1.5em 0.75em 3em;
+}
+[dir="rtl"] .admin-item {
+  padding-right: 3em;
+  padding-left: 1.5em;
+}
+.admin-item:not(:last-child) {
+  border-bottom: calc(1em / 16) solid var(--color-lightgray);
+}
+.admin-item__title {
+  font-weight: bold;
+}
+.admin-item__link {
+  position: relative;
+  display: inline-block;
+  margin-left: -1.5em;
+  padding-left: 1.5em;
+  text-decoration: none;
+}
+[dir="rtl"] .admin-item__link {
+  margin-right: -1.5em;
+  margin-left: 0;
+  padding-right: 1.5em;
+  padding-left: 0;
+}
+.admin-item__link::before {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: block;
+  width: 1em;
+  height: 1.5em;
+  content: "";
+  background: transparent no-repeat 50% 50%;
+  background-image: url("data:image/svg+xml,%3Csvg width='9' height='14' viewBox='0 0 9 14' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M 1.7109375,0.31445312 0.2890625,1.7226562 5.5917969,7.0761719 0.2890625,12.429688 1.7109375,13.837891 8.4082031,7.0761719 Z' fill='%23004adc'/%3E%3C/svg%3E");
+}
+[dir="rtl"] .admin-item__link::before {
+  right: 0;
+  left: auto;
+  background-image: url("data:image/svg+xml,%3Csvg width='9' height='14' viewBox='0 0 9 14' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M 6.9863281,0.31445312 8.4082031,1.7226562 3.1054687,7.0761719 8.4082031,12.429688 6.9863281,13.837891 0.2890625,7.0761719 Z' fill='%23004adc'/%3E%3C/svg%3E");
+}
+.admin-item__description {
+  margin: 0.5em 0 0.25em;
+  color: var(--color-oldsilver);
+}
+[dir="rtl"] .admin-item__description {
+  margin-right: 0;
+}

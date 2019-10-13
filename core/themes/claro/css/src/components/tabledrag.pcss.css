@@ -1,0 +1,326 @@
+/**
+ * @file
+ * Replacement styles for table drag.
+ *
+ * Replaces both of tabledrag.module.css (from core/stable) and tabledrag.css
+ * (from Classy theme).
+ *
+ * @see tabledrag.js
+ */
+
+@import "../base/variables.pcss.css";
+
+:root {
+  --table-row--dragging-bg-color: #fe7;
+  --table-row--last-dragged-bg-color: #ffb;
+}
+
+body.drag {
+  cursor: move;
+}
+/* The block region's title row in table. */
+.region-title {
+  font-weight: bold;
+}
+/* Empty region message row in table. */
+.region-message {
+  color: var(--color-oldsilver);
+}
+/* If the region is populated, we shouldn't display the empty message. */
+.region-message.region-populated {
+  display: none;
+}
+/**
+ * Remove border-bottom from abbr element. Class is duplicated in the selector
+ * to increase weight to be able to win normalize.css selectors.
+ */
+.tabledrag-changed.tabledrag-changed {
+  border-bottom: none;
+}
+/* Dont display the abbreviation of 'add-new' table rows. */
+.add-new .tabledrag-changed {
+  display: none;
+}
+
+.draggable .tabledrag-changed {
+  position: relative;
+  left: calc(var(--space-xs) * -1); /* LTR */
+}
+[dir="rtl"] .draggable .tabledrag-changed {
+  right: calc(var(--space-xs) * -1); /* LTR */
+  left: auto;
+}
+.tabledrag-cell--only-drag .tabledrag-changed {
+  width: var(--space-l);
+  min-width: var(--space-l);
+}
+
+/**
+ * Draggable row state colors.
+ */
+.draggable.drag,
+.draggable.drag:focus {
+  background-color: var(--table-row--dragging-bg-color);
+}
+.draggable.drag-previous {
+  background-color: var(--table-row--last-dragged-bg-color);
+}
+
+/**
+ * Reduce the spacing of draggable table cells.
+ */
+.draggable-table td:first-child ~ td,
+.draggable-table th:first-child ~ th {
+  padding-left: 0 /* LTR */;
+}
+[dir="rtl"] .draggable-table td:first-child ~ td,
+[dir="rtl"] .draggable-table th:first-child ~ th {
+  padding-right: 0;
+  padding-left: var(--space-m);
+}
+
+/* Auto width for weight selects and number inputs. */
+.draggable td .form-element--type-select[name$="][_weight]"], /* Multiple field */
+.draggable td .term-weight, /* Taxonomy term list */
+.draggable td .field-weight /* Field UI table */ {
+  width: auto;
+}
+
+/**
+ * Handle styles.
+ */
+.tabledrag-handle {
+  position: relative;
+  z-index: 1;
+  overflow: visible;
+  cursor: move;
+  text-align: center;
+  vertical-align: text-top;
+}
+
+.tabledrag-handle::after {
+  display: inline-block;
+  width: var(--tabledrag-handle-icon-size);
+  height: var(--tabledrag-handle-icon-size);
+  margin-left: calc(var(--space-m) * -1); /* LTR */
+  padding: var(--space-xs) var(--space-m);
+  content: "";
+  transition: transform 0.1s ease-in-out 0s;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='17' height='17' viewBox='0 0 16 16'%3E%3Cpath fill='%23000' d='m 14.102955,5.47562 c -0.1819,-0.20654 -0.4917,-0.23016 -0.7014,-0.05265 -0.2098,0.17684 -0.2462,0.4914 -0.0814,0.71278 l 1.0998,1.34591 H 8.5124153 V 1.62014 l 1.31954,1.11304 c 0.1033,0.0945 0.2395997,0.14242 0.3771997,0.13162 0.1383,-0.01013 0.2667,-0.07762 0.3548,-0.18629 0.088,-0.10935 0.129,-0.24974 0.1131,-0.39014 -0.0159,-0.14039 -0.0873,-0.26796 -0.1979,-0.35369 L 8.3278353,0.118965 c -0.1879501,-0.1586199 -0.4592601,-0.1586199 -0.6472101,0 l -2.15136,1.815715 c -0.11052,0.08572 -0.1819799,0.2133 -0.19787,0.35369 -0.0159,0.1404 0.02514,0.2808 0.1131601,0.39014 0.08801,0.10867 0.2163899,0.17616 0.35471,0.18629 0.1376499,0.0108 0.2739799,-0.03712 0.3772199,-0.13162 l 1.31956,-1.11304 v 5.86152 h -5.90757 L 2.6797353,6.13575 c 0.13963,-0.22004 0.09661,-0.51163 -0.10059,-0.6797 -0.19722,-0.16875 -0.4864,-0.15997 -0.67369,0.01957 L 0.11663625,7.66993 c -0.155515,0.1917 -0.155515,0.46843 0,0.66013 L 1.9054553,10.5244 c 0.18199,0.2065 0.49169,0.2301 0.70147,0.0526 0.20978,-0.1768 0.24617,-0.4914 0.0814,-0.71276 l -1.09986,-1.34591 h 5.9075699 v 5.86147 l -1.3195699,-1.113 c -0.2170501,-0.1681 -0.52545,-0.1316 -0.6988201,0.0824 -0.1740399,0.2146 -0.15089,0.5298 0.05162,0.7161 l 2.15136,1.8164 v -7e-4 c 0.18794,0.1587 0.4592601,0.1587 0.6472001,0 l 2.1513297,-1.8157 c 0.2025,-0.1863 0.2257,-0.5015 0.0517,-0.7161 -0.1734,-0.214 -0.4818,-0.2504 -0.6988997,-0.0824 l -1.31954,1.1131 V 8.51835 h 5.9075397 l -1.0912,1.3459 c -0.1059,0.10193 -0.1641,0.24505 -0.1602,0.39285 0.004,0.1485 0.0702,0.2875 0.182,0.3827 0.1119,0.0952 0.2581,0.137 0.4017,0.1154 0.1436,-0.0223 0.2713,-0.106 0.3507,-0.2308 l 1.7809,-2.19434 c 0.1549,-0.19169 0.1549,-0.46842 0,-0.66012 z'/%3E%3C/svg%3E") no-repeat center;
+}
+[dir="rtl"] .tabledrag-handle::after {
+  margin-right: calc(var(--space-m) * -1);
+  margin-left: 0;
+}
+
+.tabledrag-handle::after,
+.tabledrag-disabled .tabledrag-handle.tabledrag-handle.tabledrag-handle::after {
+  transform: scale(1);
+}
+
+.tabledrag-handle:hover::after,
+.tabledrag-handle:focus::after,
+.draggable.drag .tabledrag-handle::after {
+  transform: scale(1.25);
+}
+
+.tabledrag-handle:focus {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+.tabledrag-handle:focus::before {
+  display: block;
+  width: calc(var(--space-m) + (var(--space-xs) * 2)); /* Same as height. */
+  height: calc(var(--space-m) + (var(--space-xs) * 2)); /* Hande svg height + its vertical padding */
+  margin: 0 calc(var(--space-xs) * -1) calc((var(--space-m) + (var(--space-xs) * 2)) * -1); /* Bottom: handle height as negative value. */
+  content: "";
+  border-radius: var(--base-border-radius);
+  outline: var(--outline-size) dotted transparent;
+  box-shadow: 0 0 0 var(--focus-border-size) var(--color-focus);
+}
+
+/* Disabled tabledrag handle. */
+.tabledrag-disabled .tabledrag-handle {
+  cursor: default;
+  opacity: 0.4;
+}
+
+.tabledrag-disabled .tabledrag-handle.tabledrag-handle::before {
+  content: normal;
+}
+
+/**
+ * Enhancements for touch-capable screens.
+ */
+
+/**
+ * Increase handle size.
+ */
+.touchevents .tabledrag-handle::after {
+  padding-top: var(--space-s);
+  padding-bottom: var(--space-s);
+}
+
+.touchevents .draggable .menu-item__link {
+  padding-top: var(--space-xs);
+  padding-bottom: var(--space-xs);
+}
+
+/**
+ * Wrapper of the toggle weight button (styled as a link).
+ */
+.tabledrag-toggle-weight-wrapper {
+  text-align: right; /* LTR */
+}
+[dir="rtl"] .tabledrag-toggle-weight-wrapper {
+  text-align: left;
+}
+
+/**
+ * Keep crowded tabledrag cells vertically centered.
+ */
+.tabledrag-cell {
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+/**
+ * If the first table cell is empty (like in a multiple field widget table),
+ * we can save some space for the following cells.
+ * If it isn't empty (Field UI table, taxonomy term overview page), this CSS
+ * class won't be added.
+ */
+.tabledrag-cell--only-drag {
+  width: 1px; /* This forces this cell to use the smallest possible width. */
+  padding-right: 0; /* LTR */
+}
+[dir="rtl"] .tabledrag-cell--only-drag {
+  padding-right: var(--space-m);
+  padding-left: 0;
+}
+
+.tabledrag-cell-content {
+  display: table;
+  height: 100%;
+}
+
+.tabledrag-cell-content > * {
+  display: table-cell;
+  vertical-align: middle;
+}
+
+.tabledrag-cell-content__item {
+  padding-right: var(--space-xs); /* LTR */
+}
+[dir="rtl"] .tabledrag-cell-content__item {
+  padding-right: 0;
+  padding-left: var(--space-xs);
+}
+.tabledrag-cell-content__item:empty {
+  display: none;
+}
+
+.tabledrag-cell-content .indentation,
+[dir="rtl"] .tabledrag-cell-content .indentation {
+  float: none;
+  overflow: hidden;
+  height: 100%;
+}
+
+.tabledrag-cell-content .tree {
+  min-height: 100%; /* Using simply 'height: 100%' would make IE11 rendering ugly. */
+}
+
+/**
+ * Safari (at least version 13.0) thinks that if we define a width or height for
+ * and SVG, then we refer to the elements total size inside the SVG.
+ * We only want to inherit the height of the parent element.
+ */
+/* stylelint-disable-next-line unit-whitelist */
+@media not all and (min-resolution: 0.001dpcm) {
+  @media {
+    .tabledrag-cell-content .tree {
+      overflow: visible;
+      min-height: 0;
+    }
+  }
+}
+
+.tabledrag-cell-content .tabledrag-handle::after {
+  vertical-align: middle;
+}
+
+/**
+ * Indentation.
+ */
+.indentation {
+  position: relative;
+  left: calc(var(--space-xs) * -0.5); /* LTR */
+  float: left; /* LTR */
+  width: calc(25rem / 16); /* 25px */
+  height: calc(25rem / 16); /* 25px */
+  background: none !important;
+  line-height: 0;
+}
+[dir="rtl"] .indentation {
+  right: calc(var(--space-xs) * -0.5);
+  left: auto;
+  float: right;
+}
+
+/**
+ * Tree is the visual representation for the simultaneously moved draggable
+ * rows.
+ *
+ * These rules are styleing the inline SVG that is placed inside the .indetation
+ * element.
+ */
+.tree {
+  width: calc(25rem / 16); /* 25px */
+  height: calc(25rem / 16); /* 25px */
+}
+
+.tree__item {
+  display: none;
+}
+
+/* LTR tree child. */
+.tree-child path:not(.tree__item-child-ltr) {
+  display: none;
+}
+.tree-child path.tree__item-child-ltr {
+  display: block;
+}
+
+/* RTL tree child. */
+[dir="rtl"] .tree-child path:not(.tree__item-child-rtl) {
+  display: none;
+}
+[dir="rtl"] .tree-child path.tree__item-child-rtl {
+  display: block;
+}
+
+/* Last LTR tree child. */
+.tree-child-last path:not(.tree__item-child-last-ltr) {
+  display: none;
+}
+.tree-child-last path.tree__item-child-last-ltr {
+  display: block;
+}
+
+/* Last RTL tree child. */
+[dir="rtl"] .tree-child-last path:not(.tree__item-child-last-rtl) {
+  display: none;
+}
+[dir="rtl"] .tree-child-last path.tree__item-child-last-rtl {
+  display: block;
+}
+
+/* Horizontal line. */
+.tree-child-horizontal path:not(.tree__item-horizontal) {
+  display: none;
+}
+.tree-child-horizontal path.tree__item-horizontal {
+  display: block;
+}

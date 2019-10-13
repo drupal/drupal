@@ -1,0 +1,31 @@
+/**
+ * Layout overrides for node add/edit form.
+ */
+
+@import "../base/variables.pcss.css";
+
+.layout-region-node-footer__content {
+  margin-top: 1.5em;
+}
+
+/**
+ * Widescreen
+ *
+ * Both of the following media queries must *exactly* match what is in
+ * node.module.css. This is rather crazy.
+ *
+ * @todo Figure out how to reduce media query duplication across files
+ *       and modules. Layout styles only allowed in themes?
+ */
+@media
+  screen and (min-width: 780px),
+  (orientation: landscape) and (min-device-height: 780px) {
+  .layout-region-node-footer__content {
+    margin-top: 0.5em;
+  }
+}
+
+/* Push sidebar down to horizontal align with form section */
+.layout-region-node-secondary {
+  margin-top: var(--space-l);
+}

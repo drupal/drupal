@@ -1,0 +1,103 @@
+/**
+ * @file
+ * Styles for Tour theme.
+ */
+
+/* Default styles for the container */
+.joyride-tip-guide {
+  color: #fff;
+  border-radius: 5px;
+  background: #000;
+  background: rgba(0, 0, 0, 0.8);
+}
+
+/* Mobile */
+@media only screen and (max-width: 767px) {
+  .joyride-tip-guide {
+    border-radius: 0;
+  }
+}
+
+/* Add a little css triangle pip, older browser just miss out on the fanciness of it. */
+.joyride-tip-guide .joyride-nub {
+  border: solid 14px rgba(0, 0, 0, 0.8);
+}
+.joyride-tip-guide .joyride-nub.top {
+  border-top-color: transparent;
+  border-right-color: transparent;
+  border-left-color: transparent;
+}
+.joyride-tip-guide .joyride-nub.bottom {
+  border-right-color: transparent;
+  border-bottom-color: transparent;
+  border-left-color: transparent;
+}
+.joyride-tip-guide .joyride-nub.right {
+  border-top-color: transparent;
+  border-right-color: transparent; /* LTR */
+  border-bottom-color: transparent;
+}
+[dir="rtl"] .joyride-tip-guide .joyride-nub.right {
+  border-right-color: rgba(0, 0, 0, 0.8);
+  border-left-color: transparent;
+}
+.joyride-tip-guide .joyride-nub.left {
+  border-top-color: transparent;
+  border-bottom-color: transparent;
+  border-left-color: transparent; /* LTR */
+}
+[dir="rtl"] .joyride-tip-guide .joyride-nub.left {
+  border-right-color: transparent;
+  border-left-color: rgba(0, 0, 0, 0.8);
+}
+.joyride-tip-guide .joyride-nub.top-right {
+  border-top-color: transparent;
+  border-right-color: transparent;
+  border-left-color: transparent;
+}
+
+/* Typography */
+.joyride-tip-guide h2 {
+  color: #fff;
+}
+.joyride-tip-guide p {
+  line-height: 1.385em;
+}
+.joyride-tip-guide a {
+  color: #fff;
+}
+
+/* Button Style */
+.joyride-tip-guide .joyride-next-tip {
+  margin: 0;
+}
+.joyride-timer-indicator-wrap {
+  border: solid 1px rgba(255, 255, 255, 0.1);
+}
+.joyride-timer-indicator {
+  background: rgba(255, 255, 255, 0.25);
+}
+
+.joyride-close-tip {
+  text-decoration: none;
+  color: rgba(255, 255, 255, 0.4);
+  font-size: 1.4em;
+  font-weight: bold;
+}
+.joyride-close-tip:hover,
+.joyride-close-tip:focus {
+  text-decoration: none;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.joyride-modal-bg {
+  background: rgba(0, 0, 0, 0.5);
+}
+
+.joyride-expose-wrapper {
+  background-color: #fff;
+}
+
+.joyride-expose-cover {
+  background: transparent;
+}

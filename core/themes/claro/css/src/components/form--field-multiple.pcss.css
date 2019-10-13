@@ -1,0 +1,16 @@
+/**
+ * @file
+ * Styles for multiple field tables.
+ */
+
+@import "../base/variables.pcss.css";
+
+.field-multiple-table {
+  margin-top: var(--space-m);
+  margin-bottom: var(--space-m);
+}
+
+.form-item--multiple .field-add-more-submit {
+  margin-top: 0;
+  margin-bottom: 0;
+}
