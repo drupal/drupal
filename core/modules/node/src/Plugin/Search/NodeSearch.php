@@ -540,7 +540,7 @@ class NodeSearch extends ConfigurableSearchPluginBase implements AccessibleInter
       }
 
       // Update index, using search index "type" equal to the plugin ID.
-      $words += $this->searchIndex->index($this->getPluginId(), $node->id(), $language->getId(), $text);
+      $words += $this->searchIndex->index($this->getPluginId(), $node->id(), $language->getId(), $text, FALSE);
     }
   }
 
