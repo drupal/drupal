@@ -359,7 +359,7 @@ class HelpSearch extends SearchPluginBase implements AccessibleInterface, Search
           if ($topic) {
             // Index the title plus body text.
             $text = '<h1>' . $topic['title'] . '</h1>' . "\n" . $topic['text'];
-            $words += $this->searchIndex->index($this->getType(), $item->sid, $langcode, $text);
+            $words += $this->searchIndex->index($this->getType(), $item->sid, $langcode, $text, FALSE);
           }
         }
       }
