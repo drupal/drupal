@@ -1,0 +1,86 @@
+/**
+ * @file
+ * Visual styles for progress bar.
+ *
+ * @see progress.js
+ */
+
+@import "../base/variables.pcss.css";
+
+:root {
+  --progress-bar-bg-color: var(--color-absolutezero);
+  --progress-bar-border-color: var(--color-absolutezero);
+  --progress-bar-label-font-size: var(--font-size-base);
+  --progress-bar-small-label-font-size: var(--font-size-label);
+  --progress-bar-default-size: calc(var(--space-m) - (2 * var(--progress-bar-border-size)));
+  --progress-bar-default-size-radius: var(--space-m);
+}
+
+.progress::after {
+  display: table;
+  clear: both;
+  content: "";
+}
+
+.progress--small .progress__track {
+  height: var(--progress-bar-small-size);
+}
+.progress--small .progress__bar {
+  width: var(--progress-bar-small-size);
+  min-width: var(--progress-bar-small-size);
+  height: var(--progress-bar-small-size);
+}
+
+.progress--small .progress__label {
+  font-size: var(--progress-bar-small-label-font-size);
+}
+
+.progress__track {
+  height: var(--progress-bar-default-size);
+  margin-top: 0;
+  border: var(--progress-bar-border-size) var(--progress-track-border-color) solid;
+  border-radius: var(--progress-bar-default-size-radius);
+  background-color: var(--progress-track-bg-color);
+}
+
+.progress__bar {
+  width: var(--progress-bar-default-size);
+  min-width: var(--progress-bar-default-size);
+  height: var(--progress-bar-default-size);
+  margin-top: calc(var(--progress-bar-border-size) * -1);
+  margin-left: calc(var(--progress-bar-border-size) * -1); /* LTR */
+  transition: var(--progress-bar-transition);
+  border: var(--progress-bar-border-size) var(--progress-bar-border-color) solid;
+  border-radius: var(--progress-bar-default-size-radius);
+  background-color: var(--progress-bar-bg-color);
+}
+[dir="rtl"] .progress__bar {
+  margin-right: calc(var(--progress-bar-border-size) * -1);
+  margin-left: 0;
+}
+
+@media screen and (-ms-high-contrast: active) {
+  .progress__bar {
+    background-color: windowText;
+  }
+}
+
+.progress__label {
+  margin-bottom: var(--progress-bar-spacing-size);
+  font-size: var(--progress-bar-label-font-size);
+  font-weight: bold;
+}
+
+.progress__description,
+.progress__percentage {
+  overflow: hidden;
+  margin-top: var(--progress-bar-spacing-size);
+  color: var(--progress-bar-description-color);
+  font-size: var(--progress-bar-description-font-size);
+}
+
+@media screen and (prefers-reduced-motion: reduce) {
+  .progress__bar {
+    transition: none;
+  }
+}

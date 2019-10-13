@@ -1,0 +1,29 @@
+/**
+ * @file
+ * System admin module: admin and compact links.
+ */
+
+/**
+ * System compact link: to toggle the display of description text.
+ */
+.compact-link {
+  margin: 0 0 0.5em 0;
+}
+
+/**
+ * Quick inline admin links.
+ */
+small .admin-link:before {
+  content: " [";
+}
+small .admin-link:after {
+  content: "]";
+}
+
+/**
+ * Cron external link on cron configuration form.
+ */
+.system-cron-settings__link {
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+}

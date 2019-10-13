@@ -1,0 +1,213 @@
+/**
+ * Generic elements.
+ */
+
+@import "./variables.pcss.css";
+
+html {
+  font-family: var(--font-family);
+  font-size: 100%;
+  font-weight: normal;
+  font-style: normal;
+  line-height: var(--line-height);
+}
+body {
+  color: var(--color-fg);
+  background: var(--color-bg);
+}
+
+a,
+.link {
+  color: var(--color-link);
+}
+a:hover,
+a:focus,
+.link:hover,
+.link:focus {
+  text-decoration: none;
+  outline: 0;
+}
+a:hover,
+.link:hover {
+  color: var(--color-link-hover);
+}
+a:active,
+.link:active {
+  color: var(--color-link-active);
+}
+hr {
+  height: 1px;
+  margin: var(--space-m) 0;
+  padding: 0;
+  border: none;
+  background: var(--color-divider);
+}
+
+summary {
+  font-weight: bold;
+}
+
+/**
+ * Reusable heading classes are included to help modules change the styling of
+ * headings on a page without affecting accessibility.
+ */
+h1,
+.heading-a {
+  margin: var(--space-m) 0 var(--space-s);
+  font-size: var(--font-size-h1);
+  font-weight: bold;
+  line-height: var(--line-height-heading);
+}
+h2,
+.heading-b {
+  margin: var(--space-m) 0 var(--space-s);
+  font-size: var(--font-size-h2);
+  font-weight: bold;
+  line-height: var(--line-height-heading);
+}
+h3,
+.heading-c {
+  margin: var(--space-m) 0 var(--space-s);
+  font-size: var(--font-size-h3);
+  font-weight: bold;
+  line-height: var(--line-height-heading);
+}
+h4,
+.heading-d {
+  margin: var(--space-m) 0 var(--space-s);
+  font-size: var(--font-size-h4);
+  font-weight: bold;
+  line-height: var(--line-height-heading);
+}
+h5,
+.heading-e {
+  margin: var(--space-m) 0 var(--space-s);
+  font-size: var(--font-size-h5);
+  font-weight: bold;
+  line-height: var(--line-height-heading);
+}
+h6,
+.heading-f {
+  margin: var(--space-m) 0 var(--space-s);
+  font-size: var(--font-size-h6);
+  font-weight: bold;
+  line-height: var(--line-height-heading);
+}
+p {
+  margin: 1em 0;
+}
+dl {
+  margin: 0 0 20px;
+}
+dl dd,
+dl dl {
+  margin-bottom: 10px;
+  margin-left: 20px; /* LTR */
+}
+[dir="rtl"] dl dd,
+[dir="rtl"] dl dl {
+  margin-right: 20px;
+}
+blockquote {
+  margin: 1em 40px;
+}
+address {
+  font-style: italic;
+}
+u,
+ins {
+  text-decoration: none;
+}
+s,
+strike,
+del {
+  text-decoration: line-through;
+}
+big {
+  font-size: larger;
+}
+small {
+  font-size: smaller;
+}
+sub {
+  vertical-align: sub;
+  font-size: smaller;
+  line-height: normal;
+}
+sup {
+  vertical-align: super;
+  font-size: smaller;
+  line-height: normal;
+}
+abbr,
+acronym {
+  border-bottom: dotted 1px;
+}
+ul {
+  margin: 0.25em 0 0.25em 1.5em; /* LTR */
+  padding-left: 0;
+  list-style-type: disc;
+  list-style-image: none;
+}
+[dir="rtl"] ul {
+  margin-right: 1.5em;
+  margin-left: 0;
+  padding-right: 0;
+}
+/* This is required to win over specificity of [dir="rtl"] ul */
+[dir="rtl"] .messages__list {
+  margin-right: 0;
+}
+ol {
+  margin: 0.25em 0 0.25em 2em; /* LTR */
+  padding: 0;
+  list-style-type: decimal;
+}
+[dir="rtl"] ol {
+  margin-right: 2em;
+  margin-left: 0;
+}
+
+/**
+ * Fix duplicate border caused by normalize.css adding border-bottom without
+ * removing the text-decoration.
+ */
+abbr[title] {
+  text-decoration: none;
+}
+
+code {
+  margin: 0.5em 0;
+}
+pre {
+  margin: 0.5em 0;
+  white-space: pre-wrap;
+}
+details {
+  line-height: 1.295em;
+}
+details summary {
+  padding: 0.95em 1.45em;
+}
+details summary:focus {
+  outline: none;
+}
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+/**
+ * Default focus styles for focused elements.
+ *
+ * This is applied globally to all interactive elements except Toolbar and
+ * Settings Tray since they have their own styles.
+ *
+ * @todo https://www.drupal.org/project/claro/issues/3048785 :focus selector is
+ *   active for non-interactive elements in Internet Explorer 11.
+ */
+.page-wrapper *:focus,
+.ui-dialog *:focus {
+  outline: 2px dotted transparent;
+  box-shadow: 0 0 0 2px var(--color-white), 0 0 0 5px var(--color-focus);
+}

@@ -1,0 +1,12 @@
+{#
+/**
+ * @file
+ * Template override for a form element label.
+ */
+#}
+
+{% extends '@classy/form/form-element-label.html.twig' %}
+
+{%
+  set attributes = attributes.addClass('form-item__label')
+%}

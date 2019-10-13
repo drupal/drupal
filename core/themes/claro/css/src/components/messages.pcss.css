@@ -1,0 +1,149 @@
+/**
+ * Messages.
+ *
+ * @todo revisit this after https://www.drupal.org/project/drupal/issues/3078400
+ *   has been resolved.
+ */
+
+@import "../base/variables.pcss.css";
+
+:root {
+  --messages-bg-color: #353641;
+  --messages-fg-color: var(--color-white);
+  --messages-border-radius: 2px;
+  --messages-border-width: 5px;
+  --messages--status-color: #42a877;
+  --messages--warning-color: #e0ac00;
+  --messages--error-color: #e34f4f;
+  --messages__link-color: var(--color-sunglow);
+  --messages__link--hover-color: var(--color-white);
+  --messages__icon-size: 1rem;
+  --messages__text-margin: calc(var(--messages__icon-size) + var(--space-l));
+}
+
+.messages-list {
+  margin-top: calc(var(--space-m) + var(--space-l));
+  margin-bottom: calc(var(--space-m) + var(--space-l));
+  padding: 0;
+  list-style: none;
+}
+
+.field .messages-list,
+.form-wrapper .messages-list {
+  margin-bottom: 0;
+}
+
+.messages {
+  box-sizing: border-box;
+  margin-top: var(--space-m);
+  margin-bottom: var(--space-m);
+  padding: var(--space-l) var(--space-l) 2rem calc(var(--space-l) - 5px); /* LTR */
+  color: var(--messages-fg-color);
+  border-width: 0 0 0 var(--messages-border-width); /* LTR */
+  border-style: solid;
+  border-color: var(--messages-bg-color);
+  border-radius: var(--messages-border-radius);
+  background-color: var(--messages-bg-color);
+}
+
+[dir="rtl"] .messages {
+  padding-right: calc(var(--space-l) - 5px);
+  padding-left: var(--space-l);
+  border-right-width: var(--messages-border-width);
+  border-left-width: 0;
+}
+
+.messages--error {
+  border-color: var(--messages--error-color);
+}
+
+.messages--status {
+  border-color: var(--messages--status-color);
+}
+
+.messages--warning {
+  border-color: var(--messages--warning-color);
+}
+
+.messages__title {
+  margin: 0 0 0 var(--messages__text-margin); /* LTR */
+  font-size: var(--font-size-base);
+}
+[dir="rtl"] .messages__title {
+  margin-right: var(--messages__text-margin);
+  margin-left: 0;
+}
+
+.messages--error .messages__header {
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 14 14'%3E%3Cpath d='M3 11.1931L11.4501 2.99995' stroke='%23e34f4f' stroke-width='2'/%3E%3Ccircle cx='7' cy='7' r='6' fill='none' stroke='%23e34f4f' stroke-width='2'/%3E%3C/svg%3E%0A") no-repeat center left; /* LTR */
+}
+[dir="rtl"] .messages--error .messages__header {
+  background-position: center right;
+}
+
+.messages--status .messages__header {
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 13'%3E%3Cpath d='M2 6.57143L5.6 10L14 2' fill='none' stroke='%2342a877' stroke-width='3'/%3E%3C/svg%3E%0A") no-repeat center left; /* LTR */
+}
+[dir="rtl"] .messages--status .messages__header {
+  background-position: center right;
+}
+
+.messages--warning .messages__header {
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 4 14' fill='%23e0ac00'%3E%3Crect x='0.5' width='3' height='9'/%3E%3Ccircle cx='2' cy='12.5' r='1.5'/%3E%3C/svg%3E%0A") no-repeat center left; /* LTR */
+}
+[dir="rtl"] .messages--warning .messages__header {
+  background-position: center right;
+}
+
+.messages__header {
+  display: flex;
+  align-items: center;
+  margin-bottom: var(--space-m);
+}
+
+@media screen and (min-width: 48rem) {
+  .messages__content {
+    margin-left: var(--messages__text-margin); /* LTR */
+  }
+
+  [dir="rtl"] .messages__content {
+    margin-right: var(--messages__text-margin);
+    margin-left: 0;
+  }
+}
+
+.messages a {
+  text-decoration: underline;
+  color: var(--messages__link-color);
+}
+
+.messages a:hover {
+  color: var(--messages__link--hover-color);
+}
+
+.messages pre {
+  margin: 0;
+}
+
+.messages__list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.messages__item + .messages__item {
+  margin-top: var(--space-s);
+}
+
+@media screen and (-ms-high-contrast: active) {
+  .messages {
+    border-width: 1px 1px 1px var(--messages-border-width); /* LTR */
+  }
+  [dir="rtl"] .messages {
+    border-right-width: var(--messages-border-width);
+    border-left-width: 1px;
+  }
+  .messages__header {
+    filter: grayscale(1) brightness(1.5) contrast(10);
+  }
+}

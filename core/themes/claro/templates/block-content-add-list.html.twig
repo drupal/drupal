@@ -1,0 +1,20 @@
+{#
+/**
+ * @file
+ * Claro's theme implementation to display a list of custom block types.
+ *
+ * Available variables:
+ * - bundles: List of blockcontent types, each with the following properties:
+ *   - label: Block content type label
+ *   - add_link: \Drupal\Core\Link link instance to create an entity of this
+ *     block content type. This is a GeneratedLink originally and is switched by
+ *     claro_preprocess_block_content_add_list().
+ *   - description: A description of this custom block type.
+ *
+ * @todo Revisit after https://www.drupal.org/node/3026221 has been solved.
+ *
+ * @see template_preprocess_block_content_add_list()
+ * @see claro_preprocess_block_content_add_list()
+ */
+ #}
+{% extends '@claro/entity-add-list.html.twig' %}

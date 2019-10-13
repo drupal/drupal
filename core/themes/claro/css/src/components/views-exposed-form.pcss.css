@@ -1,0 +1,49 @@
+/**
+ * Visual styles for views exposed form.
+ */
+
+@import "../base/variables.pcss.css";
+
+/**
+ * Use flexbox and some margin resets to make the fields + actions go inline
+ */
+
+.views-exposed-form {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  margin-top: var(--space-l);
+  margin-bottom: var(--space-l);
+  padding: var(--space-xs) var(--space-l) var(--space-l) var(--space-l);
+  border: var(--details-border-size) solid var(--details-border-color);
+  border-radius: var(--details-border-size-radius);
+  background-color: var(--color-white);
+  box-shadow: var(--details-box-shadow);
+}
+
+.views-exposed-form__item {
+  margin: var(--space-s) var(--space-xs) 0 0; /* LTR */
+}
+[dir="rtl"] .views-exposed-form__item {
+  margin-right: 0;
+  margin-left: var(--space-xs);
+}
+
+.views-exposed-form__item--preceding-actions {
+  margin-right: var(--space-m); /* LTR */
+}
+[dir="rtl"] .views-exposed-form__item--preceding-actions {
+  margin-right: 0;
+  margin-left: var(--space-m);
+}
+
+.views-exposed-form__item--actions .button {
+  margin-bottom: 0;
+}
+
+.views-exposed-form__item--actions .button:last-child {
+  margin-right: 0;
+}
+[dir="rtl"] .views-exposed-form__item--actions:last-child {
+  margin-left: 0;
+}

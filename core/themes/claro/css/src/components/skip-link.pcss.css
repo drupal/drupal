@@ -1,0 +1,25 @@
+/**
+ * @file
+ * Skip link
+ *
+ * Allows keyboard users to quickly skip to the main content of the page.
+ */
+
+.skip-link {
+  z-index: 50;
+  left: 50%;
+  padding: 1px 10px 2px;
+  -webkit-transform: translateX(-50%);
+  -ms-transform: translateX(-50%);
+  transform: translateX(-50%);
+  color: #fff;
+  border-radius: 0 0 10px 10px;
+  background: #444;
+  font-size: 0.94em;
+}
+.skip-link:focus {
+  text-decoration: none;
+}
+.skip-link.visually-hidden.focusable:focus {
+  position: absolute !important;
+}

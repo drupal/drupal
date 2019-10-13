@@ -1,0 +1,28 @@
+{#
+/**
+ * @file
+ * Theme override for displaying a tablesort indicator.
+ *
+ * Available variables:
+ * - style: Either 'asc' or 'desc', indicating the sorting direction.
+ *
+ * @todo Remove after https://www.drupal.org/node/1973418 is in.
+ */
+#}
+{%
+  set classes = [
+    'tablesort',
+    'tablesort--' ~ style,
+  ]
+%}
+<span{{ attributes.addClass(classes) }}>
+  {% if style in ['asc', 'desc'] %}
+    <span class="visually-hidden">
+      {% if style == 'asc' -%}
+        {{ 'Sort ascending'|t }}
+      {% else -%}
+        {{ 'Sort descending'|t }}
+      {% endif %}
+    </span>
+  {% endif %}
+</span>

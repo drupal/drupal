@@ -1,0 +1,155 @@
+/**
+ * @file
+ * Styles for Claro's Pagination.
+ */
+
+@import "../base/variables.pcss.css";
+
+:root {
+  /**
+  * Pager.
+  */
+  --pager-size: 2rem; /* --space-m Ã— 2 */
+  --pager-border-width: 0.125rem; /* 2px */
+  --pager-fg-color: var(--color-davysgrey);
+  --pager-bg-color: var(--color-white);
+  --pager--hover-bg-color: var(--color-bgblue-active);
+  --pager--focus-bg-color: var(--color-focus);
+  --pager--active-fg-color: var(--color-white);
+  --pager--active-bg-color: var(--color-absolutezero);
+  --pager-border-radius--action: var(--pager-border-width);
+}
+
+.pager {
+  margin-top: var(--space-m);
+  margin-bottom: var(--space-m);
+}
+
+.pager__items {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: center;
+  margin: var(--space-m) 0; /* LTR */
+  list-style: none;
+  text-align: center;
+  font-weight: bold;
+}
+[dir="rtl"] .pager__items {
+  margin: var(--space-m) 0;
+}
+
+.pager__item {
+  display: inline-block;
+  margin-right: calc(var(--space-xs) / 2);
+  margin-left: calc(var(--space-xs) / 2);
+  vertical-align: top;
+}
+
+.pager__link,
+.pager__item--current {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  min-width: var(--pager-size);
+  height: var(--pager-size);
+  padding-right: var(--space-xs);
+  padding-left: var(--space-xs);
+  text-decoration: none;
+  color: var(--pager-fg-color);
+  border-radius: var(--space-m); /* Pager size ÷ 2 */
+  background: var(--pager-bg-color); /* Make sure that the text is visible on dark background. */
+  line-height: 1;
+}
+.pager__link:hover,
+.pager__link:focus,
+.pager__link:active {
+  text-decoration: none;
+}
+.pager__link:hover,
+.pager__link.is-active:hover {
+  color: var(--pager-fg-color);
+  background: var(--pager--hover-bg-color);
+}
+.pager__link--action-link {
+  border-radius: var(--pager-border-radius--action);
+}
+/* Active number link. */
+.pager__link.is-active,
+.pager__item--current {
+  color: var(--pager--active-fg-color);
+  background: var(--pager--active-bg-color);
+}
+.pager__item--first .pager__link::before {
+  background-image: url("data:image/svg+xml,%3Csvg width='16' height='16' viewBox='0 0 16 16' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M2 2V14' stroke='%23545560' stroke-width='2'/%3E%3Cpath d='M14 2L8 8L14 14' stroke='%23545560' stroke-width='2'/%3E%3C/svg%3E%0A");
+}
+.pager__item--previous .pager__link::before {
+  background-image: url("data:image/svg+xml,%3Csvg width='16' height='16' viewBox='0 0 16 16' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 2L5 8L11 14' stroke='%23545560' stroke-width='2'/%3E%3C/svg%3E%0A");
+}
+.pager__item--next .pager__link::after {
+  background-image: url("data:image/svg+xml,%3Csvg width='16' height='16' viewBox='0 0 16 16' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M5 14L11 8L5 2' stroke='%23545560' stroke-width='2'/%3E%3C/svg%3E%0A");
+}
+.pager__item--last .pager__link::after {
+  background-image: url("data:image/svg+xml,%3Csvg width='16' height='16' viewBox='0 0 16 16' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M14 14L14 2.00001' stroke='%23545560' stroke-width='2'/%3E%3Cpath d='M2 14L8 8.00001L2 2.00001' stroke='%23545560' stroke-width='2'/%3E%3C/svg%3E%0A");
+}
+.pager__item--first .pager__link::before,
+.pager__item--previous .pager__link::before,
+.pager__item--next .pager__link::after,
+.pager__item--last .pager__link::after {
+  position: relative;
+  display: inline-block;
+  width: 1rem;
+  height: 1rem;
+  content: "";
+  background-repeat: no-repeat;
+  background-position: center;
+}
+[dir="rtl"] .pager__item--first .pager__link::before,
+[dir="rtl"] .pager__item--previous .pager__link::before,
+[dir="rtl"] .pager__item--next .pager__link::after,
+[dir="rtl"] .pager__item--last .pager__link::after {
+  transform: scaleX(-1);
+}
+
+.pager__item--mini {
+  margin-right: calc(var(--space-m) / 2);
+  margin-left: calc(var(--space-m) / 2);
+}
+.pager__link--mini {
+  border-radius: 50%;
+}
+
+/**
+ * On the mini pager, remove margins for the previous and next icons.
+ * Margins are not needed here as there is no accompanying text.
+ */
+.pager__link--mini::before {
+  margin-right: 0;
+  margin-left: 0;
+}
+
+.pager__item-title--backwards {
+  margin-left: 0.5rem; /* LTR */
+}
+[dir="rtl"] .pager__item-title--backwards {
+  margin-right: 0.5rem;
+  margin-left: 0;
+}
+
+.pager__item-title--forward {
+  margin-right: 0.5rem; /* LTR */
+}
+[dir="rtl"] .pager__item-title--forward {
+  margin-right: 0;
+  margin-left: 0.5rem;
+}
+
+@media (-ms-high-contrast: active) {
+  .pager__item a:hover {
+    text-decoration: underline;
+  }
+  .pager__link.is-active {
+    border: var(--pager-border-width) solid var(--color-white);
+  }
+}
