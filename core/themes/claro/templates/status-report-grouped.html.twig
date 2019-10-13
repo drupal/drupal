@@ -1,0 +1,55 @@
+{#
+/**
+ * @file
+ * Theme override to display status report.
+ *
+ * - grouped_requirements: Contains grouped requirements.
+ *   Each group contains:
+ *   - title: The title of the group.
+ *   - type: The severity of the group.
+ *   - items: The requirement instances.
+ *     Each requirement item contains:
+ *     - title: The title of the requirement.
+ *     - value: (optional) The requirement's status.
+ *     - description: (optional) The requirement's description.
+ *     - severity_title: The title of the severity.
+ *     - severity_status: Indicates the severity status.
+ */
+#}
+{{ attach_library('core/drupal.collapse') }}
+{{ attach_library('claro/drupal.responsive-detail') }}
+
+<div class="system-status-report">
+  {% for group in grouped_requirements %}
+    <div class="system-status-report__requirements-group">
+      <h3 id="{{ group.type }}">{{ group.title }}</h3>
+      {% for requirement in group.items %}
+        <div class="divider"></div>
+        <details class="system-status-report__entry system-status-report__entry--{{ group.type }} color-{{ group.type }}" open>
+          {%
+            set summary_classes = [
+              'system-status-report__status-title',
+              group.type in ['warning', 'error'] ? 'system-status-report__status-icon system-status-report__status-icon--' ~ group.type
+            ]
+          %}
+          <summary{{ create_attribute({'class': summary_classes}) }} role="button">
+            {% if requirement.severity_title  %}
+              <span class="visually-hidden">{{ requirement.severity_title }}</span>
+            {% endif %}
+            {{ requirement.title }}
+          </summary>
+          <div class="system-status-report__entry__value">
+            {{ requirement.value }}
+            {% if requirement.description %}
+              <div class="description">{{ requirement.description }}</div>
+            {% endif %}
+          </div>
+        </details>
+
+        {% if loop.last %}
+          <div class="divider"></div>
+        {% endif %}
+      {% endfor %}
+    </div>
+  {% endfor %}
+</div>

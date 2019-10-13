@@ -1,0 +1,24 @@
+/**
+ * @file
+ * System admin module: Panel styling.
+ */
+
+@import "../base/variables.pcss.css";
+
+.panel {
+  margin-top: 1em;
+  margin-bottom: 3em;
+  padding: 0;
+  border-bottom: calc(1em / 16) solid var(--color-lightgray);
+}
+.panel__title {
+  margin: 0;
+  padding: calc(12em / 18) calc(24em / 18);
+  background: var(--color-whitesmoke);
+  font-size: calc(18em / 16);
+  line-height: calc(24em / 18);
+}
+.panel__content,
+.panel__description {
+  padding: 1em 1.5em;
+}

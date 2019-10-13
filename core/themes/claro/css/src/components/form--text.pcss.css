@@ -1,0 +1,142 @@
+/**
+ * @file
+ * Text and textarea input elements.
+ */
+
+@import "../base/variables.pcss.css";
+
+.form-element {
+  box-sizing: border-box;
+  max-width: 100%;
+  min-height: calc(((var(--input-padding-vertical) + var(--input-border-size)) * 2) + var(--input-line-height)); /* iOS. */
+  padding: var(--input-padding-vertical) var(--input-padding-horizontal);
+  color: var(--input-fg-color);
+  border: var(--input-border-size) solid var(--input-border-color);
+  border-radius: var(--input-border-radius-size);
+  background: var(--input-bg-color);
+  font-size: var(--input-font-size);
+  line-height: var(--input-line-height);
+  appearance: none; /* Being able to control inner box shadow on iOS. */
+}
+
+.no-touchevents .form-element--extrasmall,
+.no-touchevents .form-element[name$="][_weight]"] {
+  min-height: calc(((var(--input--extrasmall-padding-vertical) + var(--input-border-size)) * 2) + var(--input--extrasmall-line-height)); /* iOS. */
+  padding: var(--input--extrasmall-padding-vertical) var(--input--extrasmall-padding-horizontal);
+  font-size: var(--input--extrasmall-font-size);
+  line-height: var(--input--extrasmall-line-height);
+}
+
+/**
+ * Override normalize.css's search appearance.
+ */
+.form-element--type-search[type="search"] {
+  appearance: none;
+  box-sizing: border-box;
+}
+
+/**
+ * Fix minor things for specific types.
+ */
+.form-element--type-date,
+.form-element--type-time {
+  vertical-align: -webkit-baseline-middle; /* Prevent iOS input jump while filling. */
+}
+.form-element--type-date {
+  min-width: 9.5rem; /* Prevent input width change while filling. */
+}
+.form-element--type-time {
+  min-width: 7.5rem; /* Prevent input width change while filling. */
+}
+
+.form-element--type-color {
+  min-width: 3rem; /* Bigger input for webkit */
+  padding: 0; /* Bigger pickable area */
+  text-indent: calc(0.75rem - var(--input-border-size)); /* Text-input fallback for non-supporting browsers like Safari */
+}
+
+/**
+ * Reset value border and background of the file input on IE11 and Edge.
+ */
+.form-element--type-file::-ms-value {
+  border: 0;
+  background: inherit;
+}
+/**
+ * Better upload button alignment for Chrome.
+ */
+.form-element--type-file::-webkit-file-upload-button {
+  vertical-align: top;
+}
+
+/**
+ * Target IE 11 and Edge.
+ *
+ * Reduce the vertical padding of the file input element to make the browse
+ * button fit into the needed input height.
+ */
+/* stylelint-disable-next-line selector-type-no-unknown */
+_:-ms-fullscreen,
+:root .form-element--type-file {
+  padding-top: 0.25rem;
+  padding-bottom: 0.25rem;
+}
+
+/**
+ * States.
+ */
+.form-element:active {
+  border-color: var(--input--focus-border-color);
+}
+.form-element:hover {
+  border-color: var(--input--hover-border-color);
+  box-shadow: inset 0 0 0 var(--input-border-size) var(--input--hover-border-color);
+}
+.form-element:focus {
+  box-shadow: 0 0 0 2px var(--color-white), 0 0 0 5px var(--color-focus);
+}
+.form-element:hover:focus {
+  box-shadow: 0 0 0 2px var(--color-white), 0 0 0 5px var(--color-focus), inset 0 0 0 var(--input-border-size) var(--input--hover-border-color);
+}
+
+.form-element.error {
+  border-width: var(--input--error-border-size);
+  border-color: var(--input--error-border-color);
+}
+.form-element.error:hover {
+  box-shadow: none;
+}
+.form-element.error:hover:focus {
+  box-shadow: 0 0 0 2px var(--color-white), 0 0 0 5px var(--color-focus);
+}
+.form-element--type-textarea.error + .cke {
+  border-color: var(--input--error-border-color);
+}
+
+.form-element[disabled] {
+  -webkit-opacity: 1;
+  color: var(--input--disabled-fg-color);
+  border-color: var(--input--disabled-border-color);
+  background-color: var(--input--disabled-bg-color);
+  box-shadow: none;
+  /* https://stackoverflow.com/q/262158#answer-23511280 */
+  -webkit-text-fill-color: var(--input--disabled-fg-color);
+}
+
+/**
+ * Improve form element usability on narrow devices.
+ */
+@media screen and (max-width: 600px) {
+  /* Number, date and time are skipped here */
+  .form-element {
+    float: none;
+    width: 100%;
+    margin-top: 0.75rem;
+    margin-right: 0;
+    margin-left: 0;
+  }
+  .form-element:first-child,
+  .form-item__label + .form-element {
+    margin-top: 0;
+  }
+}

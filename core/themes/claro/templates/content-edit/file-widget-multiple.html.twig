@@ -1,0 +1,20 @@
+{#
+/**
+ * @file
+ * Theme override to display a multiple file upload form widget.
+ *
+ * Available variables:
+ * - table: Table of previously uploaded files.
+ * - element: The form element for uploading another file.
+ * - has_table: True when the table is not empty AND can be accessed.
+ *
+ * @see template_preprocess_file_widget_multiple()
+ * @see claro_preprocess_file_widget_multiple()
+ */
+#}
+<div class="file-widget-multiple{{ has_table ? ' has-table' }}">
+  <div class="file-widget-multiple__table-wrapper">
+    {{ table }}
+    {{ element }}
+  </div>
+</div>

@@ -1,0 +1,20 @@
+/**
+ * @file
+ * Inline items.
+ */
+
+.container-inline div,
+.container-inline label {
+  display: inline-block;
+}
+
+.form-items-inline {
+  margin-top: -0.125em; /* 2px */
+  margin-bottom: -0.125em;
+}
+
+.form-items-inline > .form-item {
+  display: inline-block;
+  margin-top: 0.125em;
+  margin-bottom: 0.125em;
+}
