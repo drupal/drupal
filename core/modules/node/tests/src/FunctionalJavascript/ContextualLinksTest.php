@@ -111,7 +111,7 @@ class ContextualLinksTest extends WebDriverTestBase {
 
     $this->toggleContextualTriggerVisibility('main');
     $contextual_button = $page->find('css', 'main .contextual button');
-    $this->assertEmpty(0, $contextual_button);
+    $this->assertEmpty(0, $contextual_button ?: '');
   }
 
 }

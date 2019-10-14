@@ -689,18 +689,6 @@ abstract class BrowserTestBase extends TestCase {
   }
 
   /**
-   * {@inheritdoc}
-   */
-  public static function assertEquals($expected, $actual, $message = '', $delta = 0.0, $maxDepth = 10, $canonicalize = FALSE, $ignoreCase = FALSE) {
-    // Cast objects implementing MarkupInterface to string instead of
-    // relying on PHP casting them to string depending on what they are being
-    // comparing with.
-    $expected = static::castSafeStrings($expected);
-    $actual = static::castSafeStrings($actual);
-    parent::assertEquals($expected, $actual, $message, $delta, $maxDepth, $canonicalize, $ignoreCase);
-  }
-
-  /**
    * Retrieves the current calling line in the class under test.
    *
    * @return array
@@ -710,9 +698,14 @@ abstract class BrowserTestBase extends TestCase {
     $backtrace = debug_backtrace();
     // Find the test class that has the test method.
     while ($caller = Error::getLastCaller($backtrace)) {
-      if (isset($caller['class']) && $caller['class'] === get_class($this)) {
+      // If we match PHPUnit's TestCase::runTest, then the previously processed
+      // caller entry is where our test method sits.
+      if (isset($last_caller) && isset($caller['function']) && $caller['function'] === 'PHPUnit\Framework\TestCase->runTest()') {
+        // Return the last caller since that has to be the test class.
+        $caller = $last_caller;
         break;
       }
+
       // If the test method is implemented by a test class's parent then the
       // class name of $this will not be part of the backtrace.
       // In that case we process the backtrace until the caller is not a
@@ -722,6 +715,11 @@ abstract class BrowserTestBase extends TestCase {
         $caller = $last_caller;
         break;
       }
+
+      if (isset($caller['class']) && $caller['class'] === get_class($this)) {
+        break;
+      }
+
       // Otherwise we have not reached our test class yet: save the last caller
       // and remove an element from to backtrace to process the next call.
       $last_caller = $caller;
