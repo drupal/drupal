@@ -34,7 +34,7 @@ function help_topics_help($route_name, RouteMatchInterface $route_match) {
       $output .= '</dl>';
       return ['#markup' => $output];
 
-    case 'help_topics.help_topic':
+    case 'help.help_topic':
       $help_home = Url::fromRoute('help.main')->toString();
       return '<p>' . t('See the <a href=":help_page">Help page</a> for more topics.', [
         ':help_page' => $help_home,

@@ -1,4 +1,4 @@
-help_topics.help_topic:
+help.help_topic:
   path: '/admin/help/topic/{id}'
   defaults:
     _controller: '\Drupal\help_topics\Controller\HelpTopicPluginController::viewHelpTopic'

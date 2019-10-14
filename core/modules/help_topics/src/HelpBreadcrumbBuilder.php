@@ -13,7 +13,7 @@ use Drupal\Core\StringTranslation\TranslationInterface;
  * Provides a breadcrumb builder for help topic pages.
  *
  * @internal
- *   Help Topic is currently experimental and should only be leveraged by
+ *   Help Topics is currently experimental and should only be leveraged by
  *   experimental modules and development releases of contributed modules.
  *   See https://www.drupal.org/core/experimental for more information.
  */
@@ -35,7 +35,7 @@ class HelpBreadcrumbBuilder implements BreadcrumbBuilderInterface {
    * {@inheritdoc}
    */
   public function applies(RouteMatchInterface $route_match) {
-    return $route_match->getRouteName() == 'help_topics.help_topic';
+    return $route_match->getRouteName() == 'help.help_topic';
   }
 
   /**
