@@ -18,7 +18,7 @@
         "jcalderonzumba/gastonjs": "^1.0.2",
         "jcalderonzumba/mink-phantomjs-driver": "^0.3.1",
         "mikey179/vfsstream": "^1.2",
-        "phpunit/phpunit": "^6.5",
+        "phpunit/phpunit": "^6.5 || ^7",
         "phpspec/prophecy": "^1.7",
         "symfony/css-selector": "^3.4.0",
         "symfony/phpunit-bridge": "^3.4.3",
@@ -73,6 +73,8 @@
         "pre-install-cmd": "Drupal\\Core\\Composer\\Composer::ensureComposerVersion",
         "pre-update-cmd": "Drupal\\Core\\Composer\\Composer::ensureComposerVersion",
         "pre-autoload-dump": "Drupal\\Core\\Composer\\Composer::preAutoloadDump",
+        "drupal-phpunit-upgrade-check": "Drupal\\Core\\Composer\\Composer::upgradePHPUnit",
+        "drupal-phpunit-upgrade": "@composer update phpunit/phpunit symfony/phpunit-bridge phpspec/prophecy symfony/yaml --with-dependencies --no-progress",
         "phpcs": "phpcs --standard=core/phpcs.xml.dist --runtime-set installed_paths $($COMPOSER_BINARY config vendor-dir)/drupal/coder/coder_sniffer --",
         "phpcbf": "phpcbf --standard=core/phpcs.xml.dist --runtime-set installed_paths $($COMPOSER_BINARY config vendor-dir)/drupal/coder/coder_sniffer --"
     },

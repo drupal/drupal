@@ -28,37 +28,13 @@ trait AssertLegacyTrait {
   }
 
   /**
-   * @see \Drupal\simpletest\TestBase::assertTrue()
-   */
-  public static function assertTrue($actual, $message = '') {
-    if (is_bool($actual)) {
-      parent::assertTrue($actual, $message);
-    }
-    else {
-      parent::assertNotEmpty($actual, $message);
-    }
-  }
-
-  /**
-   * @see \Drupal\simpletest\TestBase::assertFalse()
-   */
-  public static function assertFalse($actual, $message = '') {
-    if (is_bool($actual)) {
-      parent::assertFalse($actual, $message);
-    }
-    else {
-      parent::assertEmpty($actual, $message);
-    }
-  }
-
-  /**
    * @see \Drupal\simpletest\TestBase::assertEqual()
    *
    * Deprecated Scheduled for removal in Drupal 10.0.0. Use self::assertEquals()
    *   instead.
    */
   protected function assertEqual($actual, $expected, $message = '') {
-    $this->assertEquals($expected, $actual, $message);
+    $this->assertEquals($expected, $actual, (string) $message);
   }
 
   /**
@@ -68,7 +44,7 @@ trait AssertLegacyTrait {
    *   self::assertNotEquals() instead.
    */
   protected function assertNotEqual($actual, $expected, $message = '') {
-    $this->assertNotEquals($expected, $actual, $message);
+    $this->assertNotEquals($expected, $actual, (string) $message);
   }
 
   /**
@@ -78,7 +54,7 @@ trait AssertLegacyTrait {
    *   instead.
    */
   protected function assertIdentical($actual, $expected, $message = '') {
-    $this->assertSame($expected, $actual, $message);
+    $this->assertSame($expected, $actual, (string) $message);
   }
 
   /**
@@ -88,7 +64,7 @@ trait AssertLegacyTrait {
    *   self::assertNotSame() instead.
    */
   protected function assertNotIdentical($actual, $expected, $message = '') {
-    $this->assertNotSame($expected, $actual, $message);
+    $this->assertNotSame($expected, $actual, (string) $message);
   }
 
   /**
@@ -101,7 +77,7 @@ trait AssertLegacyTrait {
     // Note: ::assertSame checks whether its the same object. ::assertEquals
     // though compares
 
-    $this->assertEquals($expected, $actual, $message);
+    $this->assertEquals($expected, $actual, (string) $message);
   }
 
   /**

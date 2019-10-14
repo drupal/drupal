@@ -3,6 +3,7 @@
 namespace Drupal\Tests;
 
 use Drupal\Core\Extension\ExtensionDiscovery;
+use PHPUnit\Util\Test;
 use PHPUnit\Framework\SkippedTestError;
 
 /**
@@ -34,7 +35,18 @@ trait TestRequirementsTrait {
    *   skipped. Callers should not catch this exception.
    */
   protected function checkRequirements() {
-    parent::checkRequirements();
+    if (!$this->getName(FALSE) || !method_exists($this, $this->getName(FALSE))) {
+      return;
+    }
+
+    $missingRequirements = Test::getMissingRequirements(
+      get_class($this),
+      $this->getName(FALSE)
+    );
+
+    if (!empty($missingRequirements)) {
+      $this->markTestSkipped(implode(PHP_EOL, $missingRequirements));
+    }
 
     $root = static::getDrupalRoot();
 
