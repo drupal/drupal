@@ -10,7 +10,7 @@ use Drupal\Core\Url;
  * Base class for help topic plugins.
  *
  * @internal
- *   Help Topic is currently experimental and should only be leveraged by
+ *   Help Topics is currently experimental and should only be leveraged by
  *   experimental modules and development releases of contributed modules.
  *   See https://www.drupal.org/core/experimental for more information.
  */
@@ -48,7 +48,7 @@ abstract class HelpTopicPluginBase extends PluginBase implements HelpTopicPlugin
    * {@inheritdoc}
    */
   public function toUrl(array $options = []) {
-    return Url::fromRoute('help_topics.help_topic', ['id' => $this->getPluginId()], $options);
+    return Url::fromRoute('help.help_topic', ['id' => $this->getPluginId()], $options);
   }
 
   /**
@@ -58,7 +58,7 @@ abstract class HelpTopicPluginBase extends PluginBase implements HelpTopicPlugin
     if (!$text) {
       $text = $this->getLabel();
     }
-    return Link::createFromRoute($text, 'help_topics.help_topic', ['id' => $this->getPluginId()], $options);
+    return Link::createFromRoute($text, 'help.help_topic', ['id' => $this->getPluginId()], $options);
   }
 
 }
