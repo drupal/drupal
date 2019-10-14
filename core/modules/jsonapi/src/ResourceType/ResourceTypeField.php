@@ -96,6 +96,16 @@ abstract class ResourceTypeField {
   }
 
   /**
+   * Gets a new instance of the field that is disabled.
+   *
+   * @return static
+   *   A new instance of the field that is disabled.
+   */
+  public function disabled() {
+    return new static($this->internalName, $this->publicName, FALSE, $this->hasOne);
+  }
+
+  /**
    * Whether the field is enabled.
    *
    * @return bool

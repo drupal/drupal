@@ -60,4 +60,14 @@ class ResourceTypeRelationship extends ResourceTypeField {
       : $relationship;
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function disabled() {
+    $relationship = parent::disabled();
+    return isset($this->relatableResourceTypes)
+      ? $relationship->withRelatableResourceTypes($this->relatableResourceTypes)
+      : $relationship;
+  }
+
 }
