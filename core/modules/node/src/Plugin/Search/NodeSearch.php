@@ -497,7 +497,7 @@ class NodeSearch extends ConfigurableSearchPluginBase implements AccessibleInter
     $words = [];
     try {
       foreach ($node_storage->loadMultiple($nids) as $node) {
-        $this->indexNode($node, $words);
+        $words += $this->indexNode($node);
       }
     }
     finally {
@@ -510,10 +510,12 @@ class NodeSearch extends ConfigurableSearchPluginBase implements AccessibleInter
    *
    * @param \Drupal\node\NodeInterface $node
    *   The node to index.
-   * @param array $words
-   *   Words that need updating after the index run.
+   *
+   * @return array
+   *   An array of words to update after indexing.
    */
-  protected function indexNode(NodeInterface $node, array &$words) {
+  protected function indexNode(NodeInterface $node) {
+    $words = [];
     $languages = $node->getTranslationLanguages();
     $node_render = $this->entityTypeManager->getViewBuilder('node');
 
@@ -542,6 +544,7 @@ class NodeSearch extends ConfigurableSearchPluginBase implements AccessibleInter
       // Update index, using search index "type" equal to the plugin ID.
       $words += $this->searchIndex->index($this->getPluginId(), $node->id(), $language->getId(), $text, FALSE);
     }
+    return $words;
   }
 
   /**
