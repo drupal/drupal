@@ -17,7 +17,13 @@ class ResourceTypeBuildEventSubscriber implements EventSubscriberInterface {
    * {@inheritdoc}
    */
   public static function getSubscribedEvents() {
-    return [ResourceTypeBuildEvents::BUILD => 'disableResourceType'];
+    return [
+      ResourceTypeBuildEvents::BUILD => [
+        ['disableResourceType'],
+        ['aliasResourceTypeFields'],
+        ['disableResourceTypeFields'],
+      ],
+    ];
   }
 
   /**
@@ -30,6 +36,42 @@ class ResourceTypeBuildEventSubscriber implements EventSubscriberInterface {
     $disabled_resource_types = \Drupal::state()->get('jsonapi_test_resource_type_builder.disabled_resource_types', []);
     if (in_array($event->getResourceTypeName(), $disabled_resource_types, TRUE)) {
       $event->disableResourceType();
+    }
+  }
+
+  /**
+   * Aliases any resource type fields that have been aliased by a test.
+   *
+   * @param \Drupal\jsonapi\ResourceType\ResourceTypeBuildEvent $event
+   *   The build event.
+   */
+  public function aliasResourceTypeFields(ResourceTypeBuildEvent $event) {
+    $aliases = \Drupal::state()->get('jsonapi_test_resource_type_builder.resource_type_field_aliases', []);
+    $resource_type_name = $event->getResourceTypeName();
+    if (in_array($resource_type_name, array_keys($aliases), TRUE)) {
+      foreach ($event->getFields() as $field) {
+        if (isset($aliases[$resource_type_name][$field->getInternalName()])) {
+          $event->setPublicFieldName($field, $aliases[$resource_type_name][$field->getInternalName()]);
+        }
+      }
+    }
+  }
+
+  /**
+   * Disables any resource type fields that have been aliased by a test.
+   *
+   * @param \Drupal\jsonapi\ResourceType\ResourceTypeBuildEvent $event
+   *   The build event.
+   */
+  public function disableResourceTypeFields(ResourceTypeBuildEvent $event) {
+    $aliases = \Drupal::state()->get('jsonapi_test_resource_type_builder.disabled_resource_type_fields', []);
+    $resource_type_name = $event->getResourceTypeName();
+    if (in_array($resource_type_name, array_keys($aliases), TRUE)) {
+      foreach ($event->getFields() as $field) {
+        if (isset($aliases[$resource_type_name][$field->getInternalName()]) && $aliases[$resource_type_name][$field->getInternalName()] === TRUE) {
+          $event->disableField($field);
+        }
+      }
     }
   }
 

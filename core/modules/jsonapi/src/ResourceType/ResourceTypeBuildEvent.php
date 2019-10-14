@@ -2,6 +2,7 @@
 
 namespace Drupal\jsonapi\ResourceType;
 
+use Drupal\Component\Assertion\Inspector;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Symfony\Component\EventDispatcher\Event;
 
@@ -21,6 +22,13 @@ class ResourceTypeBuildEvent extends Event {
   protected $resourceTypeName;
 
   /**
+   * The fields of the resource type to be built.
+   *
+   * @var \Drupal\jsonapi\ResourceType\ResourceTypeField[]
+   */
+  protected $fields;
+
+  /**
    * Whether the JSON:API resource type to be built should be disabled.
    *
    * @var bool
@@ -35,9 +43,13 @@ class ResourceTypeBuildEvent extends Event {
    *
    * @param string $resource_type_name
    *   A JSON:API resource type name.
+   * @param \Drupal\jsonapi\ResourceType\ResourceTypeField[] $fields
+   *   The fields of the resource type to be built.
    */
-  protected function __construct($resource_type_name) {
+  protected function __construct($resource_type_name, array $fields) {
+    assert(Inspector::assertAllObjects($fields, ResourceTypeField::class));
     $this->resourceTypeName = $resource_type_name;
+    $this->fields = $fields;
   }
 
   /**
@@ -48,12 +60,14 @@ class ResourceTypeBuildEvent extends Event {
    * @param string $bundle
    *   A bundle name for the resource type to be built. If the entity type does
    *   not have bundles, the entity type ID.
+   * @param \Drupal\jsonapi\ResourceType\ResourceTypeField[] $fields
+   *   The fields of the resource type to be built.
    *
    * @return \Drupal\jsonapi\ResourceType\ResourceTypeBuildEvent
    *   A new event.
    */
-  public static function createFromEntityTypeAndBundle(EntityTypeInterface $entity_type, $bundle) {
-    return new static(sprintf('%s--%s', $entity_type->id(), $bundle));
+  public static function createFromEntityTypeAndBundle(EntityTypeInterface $entity_type, $bundle, array $fields) {
+    return new static(sprintf('%s--%s', $entity_type->id(), $bundle), $fields);
   }
 
   /**
@@ -81,6 +95,48 @@ class ResourceTypeBuildEvent extends Event {
    */
   public function resourceTypeShouldBeDisabled() {
     return $this->disabled;
+  }
+
+  /**
+   * Gets the current fields of the resource type to be built.
+   *
+   * @return \Drupal\jsonapi\ResourceType\ResourceTypeField[]
+   *   The current fields of the resource type to be built.
+   */
+  public function getFields() {
+    return $this->fields;
+  }
+
+  /**
+   * Sets the public name of the given field on the resource type to be built.
+   *
+   * @param \Drupal\jsonapi\ResourceType\ResourceTypeField $field
+   *   The field for which to set a public name.
+   * @param string $public_field_name
+   *   The public field name to set.
+   */
+  public function setPublicFieldName(ResourceTypeField $field, $public_field_name) {
+    foreach ($this->fields as $index => $value) {
+      if ($field === $value) {
+        $this->fields[$index] = $value->withPublicName($public_field_name);
+        return;
+      }
+    }
+  }
+
+  /**
+   * Disables the given field on the resource type to be built.
+   *
+   * @param \Drupal\jsonapi\ResourceType\ResourceTypeField $field
+   *   The field for which to set a public name.
+   */
+  public function disableField(ResourceTypeField $field) {
+    foreach ($this->fields as $index => $value) {
+      if ($field === $value) {
+        $this->fields[$index] = $value->disabled();
+        return;
+      }
+    }
   }
 
 }
