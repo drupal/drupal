@@ -2,6 +2,8 @@
 
 namespace Drupal\Tests\Listeners;
 
+use Drupal\Component\Utility\Html;
+
 /**
  * Defines a class for providing html output results for functional tests.
  *
@@ -15,6 +17,15 @@ trait HtmlOutputPrinterTrait {
    * @var string
    */
   protected $browserOutputFile;
+
+  /**
+   * {@inheritdoc}
+   */
+  public function __construct($out = NULL, $verbose = FALSE, $colors = self::COLOR_DEFAULT, $debug = FALSE, $numberOfColumns = 80, $reverse = FALSE) {
+    parent::__construct($out, $verbose, $colors, $debug, $numberOfColumns, $reverse);
+
+    $this->setUpHtmlOutput();
+  }
 
   /**
    * Creates the file to list the HTML output created during the test.
@@ -67,6 +78,20 @@ trait HtmlOutputPrinterTrait {
       // No need to keep the file around any more.
       unlink($this->browserOutputFile);
     }
+  }
+
+  /**
+   * Prints HTML output links for the Simpletest UI.
+   */
+  public function simpletestUiWrite($buffer) {
+    $buffer = Html::escape($buffer);
+    // Turn HTML output URLs into clickable link <a> tags.
+    $url_pattern = '@https?://[^\s]+@';
+    $buffer = preg_replace($url_pattern, '<a href="$0" target="_blank" title="$0">$0</a>', $buffer);
+    // Make the output readable in HTML by breaking up lines properly.
+    $buffer = nl2br($buffer);
+
+    print $buffer;
   }
 
 }

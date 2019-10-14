@@ -90,7 +90,7 @@ abstract class UnitTestCase extends TestCase {
   protected function assertArrayEquals(array $expected, array $actual, $message = NULL) {
     ksort($expected);
     ksort($actual);
-    $this->assertEquals($expected, $actual, $message);
+    $this->assertEquals($expected, $actual, !empty($message) ? $message : '');
   }
 
   /**

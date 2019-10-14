@@ -72,8 +72,8 @@ class NumberItemTest extends FieldKernelTestBase {
     $this->assertEqual($entity->field_float[0]->value, $float);
     $this->assertTrue($entity->field_decimal instanceof FieldItemListInterface, 'Field implements interface.');
     $this->assertTrue($entity->field_decimal[0] instanceof FieldItemInterface, 'Field item implements interface.');
-    $this->assertEqual($entity->field_decimal->value, $decimal);
-    $this->assertEqual($entity->field_decimal[0]->value, $decimal);
+    $this->assertEqual($entity->field_decimal->value, (float) $decimal);
+    $this->assertEqual($entity->field_decimal[0]->value, (float) $decimal);
 
     // Verify changing the number value.
     $new_integer = rand(11, 20);
@@ -84,14 +84,14 @@ class NumberItemTest extends FieldKernelTestBase {
     $entity->field_float->value = $new_float;
     $this->assertEqual($entity->field_float->value, $new_float);
     $entity->field_decimal->value = $new_decimal;
-    $this->assertEqual($entity->field_decimal->value, $new_decimal);
+    $this->assertEqual($entity->field_decimal->value, (float) $new_decimal);
 
     // Read changed entity and assert changed values.
     $entity->save();
     $entity = EntityTest::load($id);
     $this->assertEqual($entity->field_integer->value, $new_integer);
     $this->assertEqual($entity->field_float->value, $new_float);
-    $this->assertEqual($entity->field_decimal->value, $new_decimal);
+    $this->assertEqual($entity->field_decimal->value, (float) $new_decimal);
 
     // Test sample item generation.
     $entity = EntityTest::create();

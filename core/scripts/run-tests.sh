@@ -8,6 +8,7 @@
 use Drupal\Component\FileSystem\FileSystem;
 use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\Timer;
+use Drupal\Core\Composer\Composer;
 use Drupal\Core\Database\Database;
 use Drupal\Core\File\Exception\FileException;
 use Drupal\Core\Test\EnvironmentCleaner;
@@ -17,6 +18,7 @@ use Drupal\Core\Test\TestDatabase;
 use Drupal\Core\Test\TestRunnerKernel;
 use Drupal\Core\Test\TestDiscovery;
 use PHPUnit\Framework\TestCase;
+use PHPUnit\Runner\Version;
 use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Filesystem\Filesystem as SymfonyFilesystem;
 use Symfony\Component\HttpFoundation\Request;
@@ -147,6 +149,11 @@ if ($args['clean']) {
     echo " - " . $text . "\n";
   }
   exit(SIMPLETEST_SCRIPT_EXIT_SUCCESS);
+}
+
+if (!Composer::upgradePHPUnitCheck(Version::id())) {
+  simpletest_script_print_error("PHPUnit testing framework version 7 or greater is required when running on PHP 7.3 or greater. Run the command 'composer run-script drupal-phpunit-upgrade' in order to fix this.");
+  exit(SIMPLETEST_SCRIPT_EXIT_FAILURE);
 }
 
 $test_list = simpletest_script_get_test_list();
@@ -483,7 +490,24 @@ function simpletest_script_init() {
     exit(SIMPLETEST_SCRIPT_EXIT_FAILURE);
   }
 
+  // Detect if we're in the top-level process using the private 'execute-test'
+  // argument. Determine if being run on drupal.org's testing infrastructure
+  // using the presence of 'drupalci' in the sqlite argument.
+  // @todo https://www.drupal.org/project/drupalci_testbot/issues/2860941 Use
+  //   better environment variable to detect DrupalCI.
+  if (!$args['execute-test'] && preg_match('/drupalci/', $args['sqlite'])) {
+    // Update PHPUnit if needed and possible. There is a later check once the
+    // autoloader is in place to ensure we're on the correct version. We need to
+    // do this before the autoloader is in place to ensure that it is correct.
+    $composer = ($composer = rtrim('\\' === DIRECTORY_SEPARATOR ? preg_replace('/[\r\n].*/', '', `where.exe composer.phar`) : `which composer.phar`))
+      ? $php . ' ' . escapeshellarg($composer)
+      : 'composer';
+    passthru("$composer run-script drupal-phpunit-upgrade-check");
+  }
+
   $autoloader = require_once __DIR__ . '/../../autoload.php';
+  // The PHPUnit compatibility layer needs to be available to autoload tests.
+  $autoloader->add('Drupal\\TestTools', __DIR__ . '/../tests');
 
   // Get URL from arguments.
   if (!empty($args['url'])) {

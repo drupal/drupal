@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\Core\Test;
 
+use Drupal\TestTools\PhpUnitCompatibility\RunnerVersion;
 use Drupal\Tests\TestSuites\TestSuiteBase;
 use org\bovigo\vfs\vfsStream;
 use PHPUnit\Framework\TestCase;
@@ -9,6 +10,13 @@ use PHPUnit\Framework\TestCase;
 // The test suite class is not part of the autoloader, we need to include it
 // manually.
 require_once __DIR__ . '/../../../../TestSuites/TestSuiteBase.php';
+
+// In order to manage different method signatures between PHPUnit versions, we
+// dynamically load a compatibility trait dependent on the PHPUnit runner
+// version.
+if (!trait_exists(PhpunitVersionDependentStubTestSuiteBaseTrait::class, FALSE)) {
+  class_alias("Drupal\TestTools\PhpUnitCompatibility\PhpUnit" . RunnerVersion::getMajor() . "\StubTestSuiteBaseTrait", PhpunitVersionDependentStubTestSuiteBaseTrait::class);
+}
 
 /**
  * @coversDefaultClass \Drupal\Tests\TestSuites\TestSuiteBase
@@ -120,6 +128,8 @@ class TestSuiteBaseTest extends TestCase {
  */
 class StubTestSuiteBase extends TestSuiteBase {
 
+  use PhpunitVersionDependentStubTestSuiteBaseTrait;
+
   /**
    * Test files discovered by addTestsBySuiteNamespace().
    *
@@ -137,18 +147,6 @@ class StubTestSuiteBase extends TestSuiteBase {
     // stream-based paths to an empty string. See
     // https://github.com/mikey179/vfsStream/wiki/Known-Issues
     return [];
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function addTestFiles($filenames) {
-    // We stub addTestFiles() because the parent implementation can't deal with
-    // vfsStream-based filesystems due to an error in
-    // stream_resolve_include_path(). See
-    // https://github.com/mikey179/vfsStream/issues/5 Here we just store the
-    // test file being added in $this->testFiles.
-    $this->testFiles = array_merge($this->testFiles, $filenames);
   }
 
 }

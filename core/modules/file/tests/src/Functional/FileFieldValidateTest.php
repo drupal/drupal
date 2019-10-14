@@ -4,8 +4,10 @@ namespace Drupal\Tests\file\Functional;
 
 use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
+use Drupal\TestTools\PhpUnitCompatibility\RunnerVersion;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\file\Entity\File;
+use Drupal\Tests\Traits\ExpectDeprecationTrait;
 
 /**
  * Tests validation functions such as file type, max file size, max size per
@@ -14,6 +16,8 @@ use Drupal\file\Entity\File;
  * @group file
  */
 class FileFieldValidateTest extends FileFieldTestBase {
+
+  use ExpectDeprecationTrait;
 
   /**
    * Tests the required property on file fields.
@@ -193,10 +197,19 @@ class FileFieldValidateTest extends FileFieldTestBase {
    *
    * @group legacy
    *
-   * @expectedDeprecation Passing a File entity as $file argument to FileFieldTestBase::assertFileExists is deprecated in drupal:8.8.0. It will be removed from drupal:9.0.0. Instead, pass the File entity URI via File::getFileUri(). See https://www.drupal.org/node/3057326
-   * @expectedDeprecation Passing a File entity as $file argument to FileFieldTestBase::assertFileNotExists is deprecated in drupal:8.8.0. It will be removed from drupal:9.0.0. Instead, pass the File entity URI via File::getFileUri(). See https://www.drupal.org/node/3057326
+   * @todo the expectedDeprecation annotation does not work if tests are marked
+   *   skipped.
+   * @see https://github.com/symfony/symfony/pull/25757
    */
   public function testAssertFileExistsDeprecation() {
+    if (RunnerVersion::getMajor() == 6) {
+      $this->expectDeprecation('Passing a File entity as $file argument to FileFieldTestBase::assertFileExists is deprecated in drupal:8.8.0. It will be removed from drupal:9.0.0. Instead, pass the File entity URI via File::getFileUri(). See https://www.drupal.org/node/3057326');
+      $this->expectDeprecation('Passing a File entity as $file argument to FileFieldTestBase::assertFileNotExists is deprecated in drupal:8.8.0. It will be removed from drupal:9.0.0. Instead, pass the File entity URI via File::getFileUri(). See https://www.drupal.org/node/3057326');
+    }
+    else {
+      $this->markTestSkipped('This test does not work in PHPUnit 7+ since assertFileExists only accepts string arguments for $file');
+    }
+
     $node_storage = $this->container->get('entity.manager')->getStorage('node');
     $type_name = 'article';
     $field_name = 'file_test';

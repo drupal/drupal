@@ -1,36 +1,15 @@
 <?php
 
-namespace Drupal\Tests\Listeners;
-
-use PHPUnit\Framework\Test;
-use PHPUnit\Framework\TestListener;
-use PHPUnit\Framework\TestListenerDefaultImplementation;
-
 /**
+ * @file
  * Listens to PHPUnit test runs.
  *
- * @internal
+ * In order to manage different method signatures between PHPUnit versions, we
+ * dynamically load a class dependent on the PHPUnit runner version.
  */
-class DrupalListener implements TestListener {
-  use TestListenerDefaultImplementation;
-  use DeprecationListenerTrait;
-  use DrupalComponentTestListenerTrait;
-  use DrupalStandardsListenerTrait;
 
-  /**
-   * {@inheritdoc}
-   */
-  public function startTest(Test $test) {
-    $this->deprecationStartTest($test);
-  }
+namespace Drupal\Tests\Listeners;
 
-  /**
-   * {@inheritdoc}
-   */
-  public function endTest(Test $test, $time) {
-    $this->deprecationEndTest($test, $time);
-    $this->componentEndTest($test, $time);
-    $this->standardsEndTest($test, $time);
-  }
+use Drupal\TestTools\PhpUnitCompatibility\RunnerVersion;
 
-}
+class_alias("Drupal\TestTools\PhpUnitCompatibility\PhpUnit" . RunnerVersion::getMajor() . "\DrupalListener", DrupalListener::class);
