@@ -62,7 +62,7 @@ class HelpTopicPluginController extends ControllerBase {
    *
    * @param string $id
    *   The plugin ID. Maps to the {id} placeholder in the
-   *   help_topics.help_topic route.
+   *   help.help_topic route.
    *
    * @return array
    *   A render array with the contents of a help topic page.
@@ -91,7 +91,7 @@ class HelpTopicPluginController extends ControllerBase {
         $topic = $this->helpTopicPluginManager->createInstance($other_id);
         $links[$other_id] = [
           'title' => $topic->getLabel(),
-          'url' => Url::fromRoute('help_topics.help_topic', ['id' => $other_id]),
+          'url' => Url::fromRoute('help.help_topic', ['id' => $other_id]),
         ];
         $this->renderer->addCacheableDependency($build, $topic);
       }
