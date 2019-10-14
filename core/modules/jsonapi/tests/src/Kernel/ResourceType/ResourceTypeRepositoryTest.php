@@ -167,4 +167,44 @@ class ResourceTypeRepositoryTest extends JsonapiKernelTestBase {
     $this->assertTrue($this->resourceTypeRepository->getByTypeName('user--user')->isInternal());
   }
 
+  /**
+   * Tests that resource type fields can be aliased per resource type.
+   */
+  public function testResourceTypeFieldAliasing() {
+    $this->assertSame($this->resourceTypeRepository->getByTypeName('node--article')->getPublicName('uid'), 'uid');
+    $this->assertSame($this->resourceTypeRepository->getByTypeName('node--page')->getPublicName('uid'), 'uid');
+    $resource_type_field_aliases = [
+      'node--article' => [
+        'uid' => 'author',
+      ],
+      'node--page' => [
+        'uid' => 'owner',
+      ],
+    ];
+    \Drupal::state()->set('jsonapi_test_resource_type_builder.resource_type_field_aliases', $resource_type_field_aliases);
+    Cache::invalidateTags(['jsonapi_resource_types']);
+    $this->assertSame($this->resourceTypeRepository->getByTypeName('node--article')->getPublicName('uid'), 'author');
+    $this->assertSame($this->resourceTypeRepository->getByTypeName('node--page')->getPublicName('uid'), 'owner');
+  }
+
+  /**
+   * Tests that resource type fields can be disabled per resource type.
+   */
+  public function testResourceTypeFieldDisabling() {
+    $this->assertTrue($this->resourceTypeRepository->getByTypeName('node--article')->isFieldEnabled('uid'));
+    $this->assertTrue($this->resourceTypeRepository->getByTypeName('node--page')->isFieldEnabled('uid'));
+    $disabled_resource_type_fields = [
+      'node--article' => [
+        'uid' => TRUE,
+      ],
+      'node--page' => [
+        'uid' => FALSE,
+      ],
+    ];
+    \Drupal::state()->set('jsonapi_test_resource_type_builder.disabled_resource_type_fields', $disabled_resource_type_fields);
+    Cache::invalidateTags(['jsonapi_resource_types']);
+    $this->assertFalse($this->resourceTypeRepository->getByTypeName('node--article')->isFieldEnabled('uid'));
+    $this->assertTrue($this->resourceTypeRepository->getByTypeName('node--page')->isFieldEnabled('uid'));
+  }
+
 }
