@@ -5,12 +5,13 @@ namespace Drupal\Composer\Plugin\VendorHardening;
 use Composer\Composer;
 use Composer\EventDispatcher\EventSubscriberInterface;
 use Composer\Installer\PackageEvent;
+use Composer\Installer\PackageEvents;
 use Composer\IO\IOInterface;
+use Composer\Package\CompletePackage;
 use Composer\Plugin\PluginInterface;
+use Composer\Script\Event;
 use Composer\Script\ScriptEvents;
 use Composer\Util\Filesystem;
-use Composer\Script\Event;
-use Composer\Installer\PackageEvents;
 
 /**
  * A Composer plugin to clean out your project's vendor directory.
@@ -70,6 +71,8 @@ class VendorHardeningPlugin implements PluginInterface, EventSubscriberInterface
       ScriptEvents::POST_AUTOLOAD_DUMP => 'onPostAutoloadDump',
       ScriptEvents::POST_UPDATE_CMD => 'onPostCmd',
       ScriptEvents::POST_INSTALL_CMD => 'onPostCmd',
+      PackageEvents::PRE_PACKAGE_INSTALL => 'onPrePackageInstall',
+      PackageEvents::PRE_PACKAGE_UPDATE => 'onPrePackageUpdate',
       PackageEvents::POST_PACKAGE_INSTALL => 'onPostPackageInstall',
       PackageEvents::POST_PACKAGE_UPDATE => 'onPostPackageUpdate',
     ];
@@ -96,6 +99,28 @@ class VendorHardeningPlugin implements PluginInterface, EventSubscriberInterface
   }
 
   /**
+   * PRE_PACKAGE_INSTALL event handler.
+   *
+   * @param \Composer\Installer\PackageEvent $event
+   */
+  public function onPrePackageInstall(PackageEvent $event) {
+    /** @var \Composer\Package\CompletePackage $package */
+    $package = $event->getOperation()->getPackage();
+    $this->removeBinBeforeCleanup($package);
+  }
+
+  /**
+   * PRE_PACKAGE_UPDATE event handler.
+   *
+   * @param \Composer\Installer\PackageEvent $event
+   */
+  public function onPrePackageUpdate(PackageEvent $event) {
+    /** @var \Composer\Package\CompletePackage $package */
+    $package = $event->getOperation()->getTargetPackage();
+    $this->removeBinBeforeCleanup($package);
+  }
+
+  /**
    * POST_PACKAGE_INSTALL event handler.
    *
    * @param \Composer\Installer\PackageEvent $event
@@ -117,6 +142,84 @@ class VendorHardeningPlugin implements PluginInterface, EventSubscriberInterface
     $package = $event->getOperation()->getTargetPackage();
     $package_name = $package->getName();
     $this->cleanPackage($this->composer->getConfig()->get('vendor-dir'), $package_name);
+  }
+
+  /**
+   * Remove bin config for packages that would have the bin file removed.
+   *
+   * Where the configured bin files are in the directories to be removed, remove
+   * the bin config.
+   *
+   * @param \Composer\Package\CompletePackage $package
+   *   The package we're cleaning up.
+   */
+  protected function removeBinBeforeCleanup(CompletePackage $package) {
+    // Only do this if there are binaries and cleanup paths.
+    $binaries = $package->getBinaries();
+    $clean_paths = $this->config->getPathsForPackage($package->getName());
+    if (!$binaries || !$clean_paths) {
+      return;
+    }
+    if ($unset_these_binaries = $this->findBinOverlap($binaries, $clean_paths)) {
+      $this->io->writeError(
+        sprintf('%sModifying bin config for <info>%s</info> which overlaps with cleanup directories.', str_repeat(' ', 4), $package->getName()),
+        TRUE,
+        IOInterface::VERBOSE
+      );
+      $modified_binaries = [];
+      foreach ($binaries as $binary) {
+        if (!in_array($binary, $unset_these_binaries)) {
+          $modified_binaries[] = $binary;
+        }
+      }
+      $package->setBinaries($modified_binaries);
+    }
+  }
+
+  /**
+   * Find bin files which are inside cleanup directories.
+   *
+   * @param string[] $binaries
+   *   'Bin' configuration from the package we're cleaning up.
+   * @param string[] $clean_paths
+   *   The paths we're cleaning up.
+   *
+   * @return string[]
+   *   Bin files to remove, with the file as both the key and the value.
+   */
+  protected function findBinOverlap($binaries, $clean_paths) {
+    // Make a filesystem model to explore. This is a keyed array that looks like
+    // all the places that will be removed by cleanup. 'tests/src' becomes
+    // $filesystem['tests']['src'] = TRUE;
+    $filesystem = [];
+    foreach ($clean_paths as $clean_path) {
+      $clean_pieces = explode("/", $clean_path);
+      $current = &$filesystem;
+      foreach ($clean_pieces as $clean_piece) {
+        $current = &$current[$clean_piece];
+      }
+      $current = TRUE;
+    }
+    // Explore the filesystem with our bin config.
+    $unset_these_binaries = [];
+    foreach ($binaries as $binary) {
+      $binary_pieces = explode('/', $binary);
+      $current = &$filesystem;
+      foreach ($binary_pieces as $binary_piece) {
+        if (!isset($current[$binary_piece])) {
+          break;
+        }
+        else {
+          // Value of TRUE means we're at the end of the path.
+          if ($current[$binary_piece] === TRUE) {
+            $unset_these_binaries[$binary] = $binary;
+            break;
+          }
+        }
+        $current = &$filesystem[$binary_piece];
+      }
+    }
+    return $unset_these_binaries;
   }
 
   /**

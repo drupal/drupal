@@ -6,6 +6,7 @@
     "require": {
         "composer/installers": "^1.0.24",
         "drupal/core": "self.version",
+        "drupal/core-vendor-hardening": "self.version",
         "wikimedia/composer-merge-plugin": "^1.4"
     },
     "require-dev": {
@@ -72,9 +73,6 @@
         "pre-install-cmd": "Drupal\\Core\\Composer\\Composer::ensureComposerVersion",
         "pre-update-cmd": "Drupal\\Core\\Composer\\Composer::ensureComposerVersion",
         "pre-autoload-dump": "Drupal\\Core\\Composer\\Composer::preAutoloadDump",
-        "post-autoload-dump": "Drupal\\Core\\Composer\\Composer::ensureHtaccess",
-        "post-package-install": "Drupal\\Core\\Composer\\Composer::vendorTestCodeCleanup",
-        "post-package-update": "Drupal\\Core\\Composer\\Composer::vendorTestCodeCleanup",
         "phpcs": "phpcs --standard=core/phpcs.xml.dist --runtime-set installed_paths $($COMPOSER_BINARY config vendor-dir)/drupal/coder/coder_sniffer --",
         "phpcbf": "phpcbf --standard=core/phpcs.xml.dist --runtime-set installed_paths $($COMPOSER_BINARY config vendor-dir)/drupal/coder/coder_sniffer --"
     },
@@ -86,6 +84,10 @@
         {
             "type": "path",
             "url": "core"
+        },
+        {
+            "type": "path",
+            "url": "composer/Plugin/VendorHardening"
         }
     ]
 }
