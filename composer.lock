@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "bc036f74a7ef48097e813b50a2d5aea8",
+    "content-hash": "63b940ec40ef24930a101dfce6eed82a",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -910,6 +910,36 @@
                 "GPL-2.0-or-later"
             ],
             "description": "Drupal is an open source content management platform powering millions of websites and applications."
+        },
+        {
+            "name": "drupal/core-vendor-hardening",
+            "version": "9.0.x-dev",
+            "dist": {
+                "type": "path",
+                "url": "composer/Plugin/VendorHardening",
+                "reference": "2db54f089065dedbe4a040b01f7b527f2bad68f6"
+            },
+            "require": {
+                "composer-plugin-api": "^1.1",
+                "php": ">=7.0.8"
+            },
+            "type": "composer-plugin",
+            "extra": {
+                "class": "Drupal\\Composer\\Plugin\\VendorHardening\\VendorHardeningPlugin"
+            },
+            "autoload": {
+                "psr-4": {
+                    "Drupal\\Composer\\Plugin\\VendorHardening\\": "."
+                }
+            },
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "description": "Hardens the vendor directory for when it's in the docroot.",
+            "homepage": "https://www.drupal.org/project/drupal",
+            "keywords": [
+                "drupal"
+            ]
         },
         {
             "name": "easyrdf/easyrdf",
@@ -6229,6 +6259,7 @@
     "minimum-stability": "dev",
     "stability-flags": {
         "drupal/core": 20,
+        "drupal/core-vendor-hardening": 20,
         "behat/mink": 20,
         "behat/mink-selenium2-driver": 20
     },

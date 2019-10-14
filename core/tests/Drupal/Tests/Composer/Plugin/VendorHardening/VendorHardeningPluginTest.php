@@ -122,6 +122,9 @@ class VendorHardeningPluginTest extends TestCase {
     $this->assertFileNotExists(vfsStream::url('vendor/drupal/package/tests'));
   }
 
+  /**
+   * @covers ::writeAccessRestrictionFiles
+   */
   public function testWriteAccessRestrictionFiles() {
     $dir = vfsStream::url('vendor');
 
@@ -146,6 +149,66 @@ class VendorHardeningPluginTest extends TestCase {
 
     $this->assertFileExists($dir . '/.htaccess');
     $this->assertFileExists($dir . '/web.config');
+  }
+
+  public function providerFindBinOverlap() {
+    return [
+      [
+        [],
+        ['bin/script'],
+        ['tests'],
+      ],
+      [
+        ['bin/composer' => 'bin/composer'],
+        ['bin/composer'],
+        ['bin', 'tests'],
+      ],
+      [
+        ['bin/composer' => 'bin/composer'],
+        ['bin/composer'],
+        ['bin/composer'],
+      ],
+      [
+        [],
+        ['bin/composer'],
+        ['bin/something_else'],
+      ],
+      [
+        [],
+        ['test/script'],
+        ['test/longer'],
+      ],
+      [
+        ['bin/very/long/path/script' => 'bin/very/long/path/script'],
+        ['bin/very/long/path/script'],
+        ['bin'],
+      ],
+      [
+        ['bin/bin/bin' => 'bin/bin/bin'],
+        ['bin/bin/bin'],
+        ['bin/bin'],
+      ],
+      [
+        [],
+        ['bin/bin'],
+        ['bin/bin/bin'],
+      ],
+    ];
+  }
+
+  /**
+   * @covers ::findBinOverlap
+   * @dataProvider providerFindBinOverlap
+   */
+  public function testFindBinOverlap($expected, $binaries, $clean_paths) {
+    $plugin = $this->getMockBuilder(VendorHardeningPlugin::class)
+      ->disableOriginalConstructor()
+      ->getMock();
+
+    $ref_find_bin_overlap = new \ReflectionMethod($plugin, 'findBinOverlap');
+    $ref_find_bin_overlap->setAccessible(TRUE);
+
+    $this->assertSame($expected, $ref_find_bin_overlap->invokeArgs($plugin, [$binaries, $clean_paths]));
   }
 
 }
