@@ -3,4 +3,3 @@ type: module
 description: 'Provides a malfunctioning mail service for testing purposes.'
 package: Testing
 version: VERSION
-core: 8.x

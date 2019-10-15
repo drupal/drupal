@@ -3,7 +3,6 @@ type: module
 description: Child of test module used to test adding modules with child module.
 package: Testing
 version: VERSION
-core: 8.x
 hidden: true
 dependencies:
   - drupal:module_handler_test_multiple

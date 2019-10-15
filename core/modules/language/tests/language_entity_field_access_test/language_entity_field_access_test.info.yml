@@ -1,7 +1,6 @@
 name: 'Language entity field access test'
 type: module
 description: 'Support module for verifying entity field access and the language selector.'
-core: 8.x
 package: Testing
 version: VERSION
 dependencies:

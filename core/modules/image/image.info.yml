@@ -3,7 +3,6 @@ type: module
 description: 'Defines an image field type and provides image manipulation tools.'
 package: Field types
 version: VERSION
-core: 8.x
 dependencies:
   - drupal:file
 configure: entity.image_style.collection

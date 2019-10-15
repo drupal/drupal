@@ -4,6 +4,5 @@ name: 'Config collection clash test module'
 type: module
 package: Testing
 version: VERSION
-core: 8.x
 dependencies:
   - drupal:config_collection_install_test

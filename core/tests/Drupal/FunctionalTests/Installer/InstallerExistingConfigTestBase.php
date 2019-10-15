@@ -33,10 +33,11 @@ abstract class InstallerExistingConfigTestBase extends InstallerTestBase {
       $this->profile = $core_extension['profile'];
     }
 
-    // Create a profile for testing.
+    // Create a profile for testing. We set core_version_requirement to '*' for
+    // the test so that it does not need to be updated between major versions.
     $info = [
       'type' => 'profile',
-      'core' => \Drupal::CORE_COMPATIBILITY,
+      'core_version_requirement' => '*',
       'name' => 'Configuration installation test profile (' . $this->profile . ')',
     ];
 

@@ -3,5 +3,4 @@ type: module
 description: Test module used to test adding modules with child module.
 package: Testing
 version: VERSION
-core: 8.x
 hidden: true

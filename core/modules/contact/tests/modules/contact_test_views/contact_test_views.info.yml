@@ -3,7 +3,6 @@ type: module
 description: 'Provides default views for views contact tests.'
 package: Testing
 version: VERSION
-core: 8.x
 dependencies:
   - drupal:contact
   - drupal:views

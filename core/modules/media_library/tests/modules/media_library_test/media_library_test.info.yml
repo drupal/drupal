@@ -2,7 +2,6 @@ name: 'Media Library test'
 type: module
 description: 'Test module for Media Library.'
 package: Testing
-core: 8.x
 dependencies:
   - drupal:image
   - drupal:media_library

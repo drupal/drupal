@@ -3,5 +3,4 @@ type: module
 description: 'Helper module to test the behaviour when the core verison is a development release.'
 package: Testing
 version: VERSION
-core: 8.x
 hidden: true

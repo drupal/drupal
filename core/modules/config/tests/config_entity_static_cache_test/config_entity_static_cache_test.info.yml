@@ -2,4 +2,3 @@ name: 'Configuration entity static cache test'
 type: module
 package: Testing
 version: VERSION
-core: 8.x

@@ -3,4 +3,3 @@ type: module
 description: 'Provides an entity field access hook implementation to set an image field as hidden.'
 package: Testing
 version: VERSION
-core: 8.x

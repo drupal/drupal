@@ -22,7 +22,7 @@ class DistributionProfileTest extends InstallerTestBase {
     parent::prepareEnvironment();
     $this->info = [
       'type' => 'profile',
-      'core' => \Drupal::CORE_COMPATIBILITY,
+      'core_version_requirement' => '*',
       'name' => 'Distribution profile',
       'distribution' => [
         'name' => 'My Distribution',

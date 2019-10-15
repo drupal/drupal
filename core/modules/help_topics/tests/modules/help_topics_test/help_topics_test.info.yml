@@ -4,4 +4,3 @@ name: 'ABC Help Test'
 type: module
 description: 'Support module for help testing.'
 package: Testing
-core: 8.x

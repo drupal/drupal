@@ -2,7 +2,6 @@ name: 'Module install class loader test2'
 description: 'Support module for tests that the class loader behaves as expected during module install.'
 type: module
 package: Testing
-core: 8.x
 version: VERSION
 dependencies:
   - drupal:module_install_class_loader_test1

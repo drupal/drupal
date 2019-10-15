@@ -3,5 +3,4 @@ type: module
 description: Test cache bins defined by modules.
 package: Testing
 version: VERSION
-core: 8.x
 hidden: true

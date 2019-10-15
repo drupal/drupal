@@ -3,4 +3,3 @@ type: theme
 base theme: stable
 description: Theme for testing Views rendering of checkboxes.
 version: VERSION
-core: 8.x

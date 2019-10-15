@@ -1,7 +1,6 @@
 name: 'Field Timestamp Test'
 type: module
 description: 'Support module for the Timestamp field item test.'
-core: 8.x
 package: Testing
 version: VERSION
 dependencies:

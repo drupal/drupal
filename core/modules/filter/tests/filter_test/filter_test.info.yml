@@ -3,6 +3,5 @@ type: module
 description: 'Tests filter hooks and functions.'
 package: Testing
 version: VERSION
-core: 8.x
 dependencies:
   - drupal:filter

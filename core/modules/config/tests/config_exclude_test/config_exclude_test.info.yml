@@ -2,4 +2,3 @@ name: 'Configuration Module Exclude Test'
 type: module
 package: Testing
 version: VERSION
-core: 8.x

@@ -3,4 +3,3 @@ type: module
 description: Does not have a migration or migrate_drupal.yml file.
 package: Testing
 version: VERSION
-core: 8.x

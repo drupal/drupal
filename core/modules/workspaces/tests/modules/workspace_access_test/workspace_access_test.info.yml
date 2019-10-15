@@ -3,6 +3,5 @@ type: module
 description: 'Provides supporting code for testing access for workspaces.'
 package: Testing
 version: VERSION
-core: 8.x
 dependencies:
   - drupal:workspaces

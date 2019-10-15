@@ -3,7 +3,6 @@ type: theme
 description: A default base theme using Drupal 8.0.0's core markup and CSS.
 package: Core
 version: VERSION
-core: 8.x
 base theme: false
 hidden: true
 

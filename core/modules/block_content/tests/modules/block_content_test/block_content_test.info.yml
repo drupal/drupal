@@ -3,6 +3,5 @@ type: module
 description: "Support module for custom block related testing."
 package: Testing
 version: VERSION
-core: 8.x
 dependencies:
   - drupal:block_content

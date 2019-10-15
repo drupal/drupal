@@ -3,7 +3,6 @@ type: module
 description: 'Allows administrators to customize the site navigation menu.'
 package: Core
 version: VERSION
-core: 8.x
 configure: entity.menu.collection
 dependencies:
   - drupal:menu_link_content

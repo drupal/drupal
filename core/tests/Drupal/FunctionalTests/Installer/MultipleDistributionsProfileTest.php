@@ -27,7 +27,7 @@ class MultipleDistributionsProfileTest extends InstallerTestBase {
     foreach (['distribution_one', 'distribution_two'] as $name) {
       $info = [
         'type' => 'profile',
-        'core' => \Drupal::CORE_COMPATIBILITY,
+        'core_version_requirement' => '*',
         'name' => $name . ' profile',
         'distribution' => [
           'name' => $name,

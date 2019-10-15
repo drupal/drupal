@@ -2,4 +2,3 @@ name: 'JSON API field access'
 type: module
 description: 'Provides a custom field access hook to test JSON API field access security.'
 package: Testing
-core: 8.x

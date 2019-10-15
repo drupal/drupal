@@ -1,7 +1,6 @@
 name: 'Options config install test'
 type: module
 description: 'Support module for the Options module tests.'
-core: 8.x
 package: Testing
 version: VERSION
 dependencies:

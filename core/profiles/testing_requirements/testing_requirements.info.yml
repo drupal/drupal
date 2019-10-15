@@ -2,5 +2,4 @@ name: 'Testing requirements'
 type: profile
 description: 'Profile for testing hook_requirements().'
 version: VERSION
-core: 8.x
 hidden: true

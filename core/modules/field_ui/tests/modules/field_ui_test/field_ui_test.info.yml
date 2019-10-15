@@ -1,6 +1,5 @@
 name: 'Field UI test'
 type: module
 description: 'Support module for Field UI tests.'
-core: 8.x
 package: Testing
 version: VERSION

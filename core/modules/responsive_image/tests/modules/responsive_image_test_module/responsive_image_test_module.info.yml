@@ -3,4 +3,3 @@ type: module
 description: 'Test theme for responsive image.'
 package: Testing
 version: VERSION
-core: 8.x

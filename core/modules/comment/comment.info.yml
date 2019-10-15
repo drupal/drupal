@@ -3,7 +3,6 @@ type: module
 description: 'Allows users to comment on and discuss published content.'
 package: Core
 version: VERSION
-core: 8.x
 dependencies:
   - drupal:text
 configure: comment.admin

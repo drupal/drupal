@@ -3,4 +3,3 @@ type: module
 description: 'Provides a service for (de)serializing data to/from formats such as JSON and XML.'
 package: Web services
 version: VERSION
-core: 8.x

@@ -3,4 +3,3 @@ type: module
 description: 'Support module for book module testing.'
 package: Testing
 version: VERSION
-core: 8.x

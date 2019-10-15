@@ -1,6 +1,5 @@
 name: 'Database Test'
 type: module
 description: 'Support module for Database layer tests.'
-core: 8.x
 package: Testing
 version: VERSION

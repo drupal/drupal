@@ -3,4 +3,3 @@ type: module
 description: 'Example module demonstrating the field plugin manager in the Migrate API.'
 package: Testing
 version: VERSION
-core: 8.x

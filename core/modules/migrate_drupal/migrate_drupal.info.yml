@@ -3,6 +3,5 @@ type: module
 description: 'Contains migrations from older Drupal versions.'
 package: Migration
 version: VERSION
-core: 8.x
 dependencies:
   - drupal:migrate

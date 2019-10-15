@@ -3,7 +3,6 @@ type: module
 description: 'Translation test module for locale module testing.'
 package: Testing
 version: '1.3'
-core: 8.x
 hidden: true
 'interface translation project': locale_test_translate
 'interface translation server pattern': core/modules/locale/tests/test.%language.po

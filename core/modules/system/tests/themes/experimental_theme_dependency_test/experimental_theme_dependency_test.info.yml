@@ -2,5 +2,4 @@ name: 'Experimental dependency test'
 type: theme
 description: 'Experimental dependency test theme.'
 version: VERSION
-core: 8.x
 base theme: experimental_theme_test

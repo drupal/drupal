@@ -3,7 +3,6 @@ type: module
 description: 'Enhances the media list with additional features to more easily find and use existing media items.'
 package: Core (Experimental)
 version: VERSION
-core: 8.x
 dependencies:
   - drupal:media
   - drupal:views

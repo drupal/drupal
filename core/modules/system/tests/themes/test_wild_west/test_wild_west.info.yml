@@ -3,4 +3,3 @@ type: theme
 description: A theme that doesn't use Stable as its base. It tests the wild west instead.
 version: VERSION
 base theme: false
-core: 8.x

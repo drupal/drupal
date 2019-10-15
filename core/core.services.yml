@@ -1623,6 +1623,7 @@ services:
     arguments: ['@library.discovery', '@library.dependency_resolver', '@module_handler', '@theme.manager', '@language_manager', '@cache.data']
   info_parser:
     class: Drupal\Core\Extension\InfoParser
+    arguments: ['@app.root']
   twig:
     class: Drupal\Core\Template\TwigEnvironment
     arguments: ['@app.root', '@cache.default', '%twig_extension_hash%', '@state', '@twig.loader', '%twig.config%']

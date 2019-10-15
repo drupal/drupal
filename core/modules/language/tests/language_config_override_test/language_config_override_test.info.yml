@@ -1,6 +1,5 @@
 name: 'Language config overridetest'
 type: module
 description: 'Support module for the language config override test.'
-core: 8.x
 package: Testing
 version: VERSION

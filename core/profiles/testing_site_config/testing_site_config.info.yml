@@ -2,5 +2,4 @@ name: Testing site config
 type: profile
 description: 'Minimal profile for testing with default site config.'
 version: VERSION
-core: 8.x
 hidden: true

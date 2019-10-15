@@ -3,4 +3,3 @@ type: theme
 base theme: stable
 description: 'Test theme which acts as a base theme for other test subthemes.'
 version: VERSION
-core: 8.x

@@ -6,4 +6,3 @@ dependencies:
   - drupal:comment
 package: Testing
 version: VERSION
-core: 8.x

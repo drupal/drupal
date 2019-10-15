@@ -1,6 +1,5 @@
 name: 'Text Editor test'
 type: module
 description: 'Support module for the Text Editor module tests.'
-core: 8.x
 package: Testing
 version: VERSION

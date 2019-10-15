@@ -2,7 +2,6 @@ name: 'Media Library test widget'
 type: module
 description: 'Test widget that has a nested media library widget'
 package: Testing
-core: 8.x
 dependencies:
   - drupal:image
   - drupal:media_library

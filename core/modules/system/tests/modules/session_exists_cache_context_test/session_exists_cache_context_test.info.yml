@@ -3,4 +3,3 @@ type: module
 description: 'Support module for session.exists cache context testing.'
 package: Testing
 version: VERSION
-core: 8.x

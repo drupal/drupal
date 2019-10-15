@@ -3,6 +3,5 @@ type: module
 description: 'Provides test hook implementations for taxonomy tests'
 package: Testing
 version: VERSION
-core: 8.x
 dependencies:
   - drupal:taxonomy

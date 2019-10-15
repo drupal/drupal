@@ -3,6 +3,5 @@ type: module
 description: 'Tests extending and altering entity constraints.'
 package: Testing
 version: VERSION
-core: 8.x
 dependencies:
   - drupal:entity_test

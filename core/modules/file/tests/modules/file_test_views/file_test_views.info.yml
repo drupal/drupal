@@ -3,7 +3,6 @@ type: module
 description: 'Provides default views for views file tests.'
 package: Testing
 version: VERSION
-core: 8.x
 dependencies:
   - drupal:file
   - drupal:views

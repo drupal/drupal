@@ -3,4 +3,3 @@ type: module
 description: 'Support module for node permission testing. Provides a route which does a node access query without explicitly specifying the corresponding cache context.'
 package: Testing
 version: VERSION
-core: 8.x

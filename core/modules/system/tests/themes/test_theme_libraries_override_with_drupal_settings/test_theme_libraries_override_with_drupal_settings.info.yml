@@ -3,7 +3,6 @@ type: theme
 description: 'Theme with drupalSettings libraries-override'
 version: VERSION
 base theme: classy
-core: 8.x
 libraries-override:
   # drupalSettings libraries override. Should throw a
   # \Drupal\Core\Asset\Exception\InvalidLibrariesOverrideSpecificationException.

@@ -3,7 +3,5 @@ type: theme
 description: 'A theme that uses an external CKEditor stylesheet.'
 version: VERSION
 base theme: false
-core: 8.x
-
 ckeditor_stylesheets:
   - https://fonts.googleapis.com/css?family=Open+Sans

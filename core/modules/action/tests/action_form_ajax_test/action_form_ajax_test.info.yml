@@ -3,5 +3,4 @@ type: module
 description: 'module used for testing ajax in action config entity forms.'
 package: Core
 version: VERSION
-core: 8.x
 hidden: true

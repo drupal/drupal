@@ -2,4 +2,3 @@ name: 'Element info test'
 type: module
 package: Testing
 version: VERSION
-core: 8.x

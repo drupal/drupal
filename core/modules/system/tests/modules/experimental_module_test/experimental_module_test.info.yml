@@ -3,4 +3,3 @@ type: module
 description: 'Module in the experimental package to test experimental functionality.'
 package: Core (Experimental)
 version: 8.y.x-unstable
-core: 8.x

@@ -2,6 +2,5 @@ name: 'Experimental test'
 type: theme
 description: 'Experimental test theme.'
 version: VERSION
-core: 8.x
 base theme: false
 experimental: true

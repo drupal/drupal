@@ -1,5 +1,4 @@
 type: theme_engine
 name: Twig
-core: 8.x
 version: VERSION
 package: Core

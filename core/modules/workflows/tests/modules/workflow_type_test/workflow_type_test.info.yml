@@ -3,6 +3,5 @@ type: module
 description: 'Provides a workflow type plugin for testing.'
 package: Testing
 version: VERSION
-core: 8.x
 dependencies:
   - drupal:workflows

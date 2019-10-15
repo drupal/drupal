@@ -2,6 +2,5 @@ type: module
 name: Migration Track Changes Test
 description: 'Provides test fixtures for testing track changes marks.'
 package: Testing
-core: 8.x
 dependencies:
   - drupal:migrate

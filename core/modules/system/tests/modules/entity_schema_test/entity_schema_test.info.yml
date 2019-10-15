@@ -3,6 +3,5 @@ type: module
 description: 'Provides entity and field definitions to test entity schema.'
 package: Testing
 version: VERSION
-core: 8.x
 dependencies:
   - drupal:entity_test

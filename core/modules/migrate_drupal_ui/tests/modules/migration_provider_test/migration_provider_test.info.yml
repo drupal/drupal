@@ -3,4 +3,3 @@ type: module
 description: 'Add a migration missing a source and destination migration provider and a source plugin missing a migration provider.'
 package: Testing
 version: VERSION
-core: 8.x

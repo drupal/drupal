@@ -1,4 +1,3 @@
 name: 'JSON API test: normalizers kernel tests, public aliases for select JSON API normalizers'
 type: module
 package: Testing
-core: 8.x

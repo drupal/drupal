@@ -3,4 +3,3 @@ type: module
 description: 'Provides two entity types with revision logging capabilities.'
 package: Testing
 version: VERSION
-core: 8.x

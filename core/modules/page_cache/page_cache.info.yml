@@ -3,4 +3,3 @@ type: module
 description: 'Caches pages for anonymous users. Use when an external page cache is not available.'
 package: Core
 version: VERSION
-core: 8.x

@@ -3,5 +3,4 @@ type: module
 description: 'Enables site-wide keyword searching.'
 package: Core
 version: VERSION
-core: 8.x
 configure: entity.search_page.collection

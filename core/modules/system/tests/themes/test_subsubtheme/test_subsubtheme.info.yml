@@ -2,5 +2,4 @@ name: 'Theme test subsubtheme'
 type: theme
 description: 'Test theme which uses test_subtheme as the base theme.'
 version: VERSION
-core: 8.x
 base theme: test_subtheme

@@ -2,7 +2,6 @@ name: 'Migration external translated test'
 type: module
 package: Testing
 version: VERSION
-core: 8.x
 dependencies:
   - drupal:node
   - drupal:migrate

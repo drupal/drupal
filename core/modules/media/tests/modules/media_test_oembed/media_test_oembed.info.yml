@@ -3,6 +3,5 @@ description: 'Provides functionality to mimic an oEmbed provider.'
 type: module
 package: Testing
 version: VERSION
-core: 8.x
 dependencies:
   - drupal:media

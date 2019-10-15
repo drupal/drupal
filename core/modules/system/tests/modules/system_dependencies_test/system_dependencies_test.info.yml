@@ -3,6 +3,5 @@ type: module
 description: 'Support module for testing system dependencies.'
 package: Testing
 version: VERSION
-core: 8.x
 dependencies:
   - drupal:_missing_dependency

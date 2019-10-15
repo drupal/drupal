@@ -3,6 +3,5 @@ type: module
 description: 'Test namespace declaration.'
 package: Testing
 version: VERSION
-core: 8.x
 dependencies:
   - drupal:rdf

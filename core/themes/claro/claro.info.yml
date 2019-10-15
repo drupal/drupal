@@ -18,7 +18,6 @@ alt text: 'Screenshot of Claro, Drupal administration theme.'
 package: Core
 version: VERSION
 experimental: true
-core: 8.x
 libraries:
  - claro/global-styling
 libraries-override:

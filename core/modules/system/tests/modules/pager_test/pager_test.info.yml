@@ -1,5 +1,4 @@
 type: module
-core: 8.x
 name: 'Pager Test'
 description: 'Support module for pager tests.'
 package: Testing

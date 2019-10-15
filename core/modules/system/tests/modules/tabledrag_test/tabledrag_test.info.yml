@@ -1,6 +1,5 @@
 type: module
 name: 'TableDrag test'
 description: 'Draggable table test module.'
-core: 8.x
 package: Testing
 version: VERSION

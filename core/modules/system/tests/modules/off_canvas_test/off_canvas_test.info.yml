@@ -3,4 +3,3 @@ type: module
 description: 'Provides off-canvas test links.'
 package: Testing
 version: VERSION
-core: 8.x

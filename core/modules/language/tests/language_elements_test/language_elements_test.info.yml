@@ -1,7 +1,6 @@
 name: 'Language form elements test'
 type: module
 description: 'Support module for the language form elements tests.'
-core: 8.x
 package: Testing
 version: VERSION
 dependencies:

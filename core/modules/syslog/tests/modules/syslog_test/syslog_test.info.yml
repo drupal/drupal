@@ -3,6 +3,5 @@ type: module
 description: 'Provides a test logger for syslog module.'
 package: Testing
 version: VERSION
-core: 8.x
 dependencies:
   - drupal:syslog
