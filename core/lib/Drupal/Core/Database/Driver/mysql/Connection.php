@@ -7,7 +7,6 @@ use Drupal\Core\Database\DatabaseExceptionWrapper;
 
 use Drupal\Core\Database\Database;
 use Drupal\Core\Database\DatabaseNotFoundException;
-use Drupal\Core\Database\TransactionCommitFailedException;
 use Drupal\Core\Database\DatabaseException;
 use Drupal\Core\Database\Connection as DatabaseConnection;
 use Drupal\Component\Utility\Unicode;
@@ -634,9 +633,7 @@ class Connection extends DatabaseConnection {
       // If there are no more layers left then we should commit.
       unset($this->transactionLayers[$name]);
       if (empty($this->transactionLayers)) {
-        if (!$this->connection->commit()) {
-          throw new TransactionCommitFailedException();
-        }
+        $this->doCommit();
       }
       else {
         // Attempt to release this savepoint in the standard way.
@@ -657,7 +654,7 @@ class Connection extends DatabaseConnection {
             $this->transactionLayers = [];
             // We also have to explain to PDO that the transaction stack has
             // been cleaned-up.
-            $this->connection->commit();
+            $this->doCommit();
           }
           else {
             throw $e;

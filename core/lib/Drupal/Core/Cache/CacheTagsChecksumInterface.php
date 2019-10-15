@@ -19,6 +19,23 @@ namespace Drupal\Core\Cache;
 interface CacheTagsChecksumInterface {
 
   /**
+   * The invalid checksum returned if a database transaction is in progress.
+   *
+   * Every cache backend SHOULD detect this and not write cache items that have
+   * this checksum. Not detecting this would not yield incorrect cache reads,
+   * but would be a useless write.
+   *
+   * While a database transaction is progress, cache tag invalidations are
+   * delayed to occur just before the commit, to allow:
+   * - deadlock potential to be minimized, since semaphores to avoid concurrent
+   *   writes can be acquired for the shortest period possible
+   * - Non-database-based implementations of this service can delay tag
+   *   invalidations until the transaction is committed to avoid
+   *   race conditions.
+   */
+  const INVALID_CHECKSUM_WHILE_IN_TRANSACTION = -1;
+
+  /**
    * Returns the sum total of validations for a given set of tags.
    *
    * Called by a backend when storing a cache item.
