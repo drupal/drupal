@@ -1,0 +1,47 @@
+<?php
+
+/**
+ * @file
+ * Functions to test delayed cache tags invalidation.
+ */
+
+use Drupal\Core\Cache\Cache;
+use Drupal\entity_test\Entity\EntityTest;
+use Drupal\user\Entity\User;
+use Drupal\user\UserInterface;
+
+/**
+ * Implements hook_ENTITY_TYPE_insert().
+ */
+function delay_cache_tags_invalidation_entity_test_insert(EntityTest $entity) {
+  if (\Drupal::state()->get('delay_cache_tags_invalidation_exception')) {
+    throw new \Exception('Abort entity save to trigger transaction rollback.');
+  }
+
+  // Read the pre-transaction cache writes.
+  // @see \Drupal\KernelTests\Core\Cache\EndOfTransactionQueriesTest::testEntitySave()
+  \Drupal::state()->set(__FUNCTION__ . '__pretransaction_foobar', \Drupal::cache()->get('test_cache_pretransaction_foobar'));
+  \Drupal::state()->set(__FUNCTION__ . '__pretransaction_entity_test_list', \Drupal::cache()->get('test_cache_pretransaction_entity_test_list'));
+
+  // Write during the transaction.
+  \Drupal::cache()->set(__FUNCTION__ . '__during_transaction_foobar', 'something', Cache::PERMANENT, ['foobar']);
+  \Drupal::cache()->set(__FUNCTION__ . '__during_transaction_entity_test_list', 'something', Cache::PERMANENT, ['entity_test_list']);
+
+  // Trigger a nested entity save and hence a nested transaction.
+  User::create([
+    'name' => 'johndoe',
+    'status' => 1,
+  ])->save();
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_insert().
+ */
+function delay_cache_tags_invalidation_user_insert(UserInterface $entity) {
+  if ($entity->getAccountName() === 'johndoe') {
+    // Read the in-transaction cache writes.
+    // @see  delay_cache_tags_invalidation_entity_test_insert()
+    \Drupal::state()->set(__FUNCTION__ . '__during_transaction_foobar', \Drupal::cache()->get('delay_cache_tags_invalidation_entity_test_insert__during_transaction_foobar'));
+    \Drupal::state()->set(__FUNCTION__ . '__during_transaction_entity_test_list', \Drupal::cache()->get('delay_cache_tags_invalidation_entity_test_insert__during_transaction_entity_test_list'));
+  }
+}
