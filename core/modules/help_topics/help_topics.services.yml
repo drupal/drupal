@@ -7,7 +7,7 @@ services:
     public: false
   plugin.manager.help_topic:
     class: Drupal\help_topics\HelpTopicPluginManager
-    arguments: ['@module_handler', '@theme_handler', '@cache.discovery']
+    arguments: ['@module_handler', '@theme_handler', '@cache.discovery', '@app.root']
   help.twig.loader:
     class: Drupal\help_topics\HelpTopicTwigLoader
     arguments: ['@app.root', '@module_handler', '@theme_handler']
