@@ -142,6 +142,7 @@ trait DeprecationListenerTrait {
       'The "Symfony\Component\BrowserKit\Response::getStatus()" method is deprecated since Symfony 4.3, use getStatusCode() instead.',
       // @todo Remove in https://www.drupal.org/project/drupal/issues/3082655
       'Drupal\Tests\BrowserTestBase::$defaultTheme is required in drupal:9.0.0 when using an install profile that does not set a default theme. See https://www.drupal.org/node/2352949, which includes recommendations on which theme to use.',
+      'The "core/html5shiv" asset library is deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. See https://www.drupal.org/node/3086383',
     ];
   }
 

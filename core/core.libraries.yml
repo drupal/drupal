@@ -356,6 +356,7 @@ html5shiv:
     gpl-compatible: true
   js:
     assets/vendor/html5shiv/html5shiv.min.js: { weight: -22, browsers: { IE: 'lte IE 8', '!IE': false }, minified: true }
+  deprecated: The "%library_id%" asset library is deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. See https://www.drupal.org/node/3086383
 
 jquery:
   remote: https://github.com/jquery/jquery
