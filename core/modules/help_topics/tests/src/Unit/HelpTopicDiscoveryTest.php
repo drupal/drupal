@@ -173,6 +173,29 @@ EOF;
   /**
    * @covers ::findAll
    */
+  public function testHelpTopicsInCore() {
+    vfsStream::setup('root');
+    $topic_content = <<<EOF
+---
+label: Test
+---
+<h2>Test</h2>
+EOF;
+
+    vfsStream::create([
+      'core' => [
+        'help_topics' => [
+          'core.topic.html.twig' => $topic_content,
+        ],
+      ],
+    ]);
+    $discovery = new HelpTopicDiscovery(['core' => vfsStream::url('root/core/help_topics')]);
+    $this->assertArrayHasKey('core.topic', $discovery->getDefinitions());
+  }
+
+  /**
+   * @covers ::findAll
+   */
   public function testHelpTopicsBrokenYaml() {
     vfsStream::setup('root');
     $topic_content = <<<EOF

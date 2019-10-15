@@ -44,7 +44,8 @@ class HelpTopicTwigLoader extends \Twig_Loader_Filesystem {
   public function __construct($root_path, ModuleHandlerInterface $module_handler, ThemeHandlerInterface $theme_handler) {
     parent::__construct([], $root_path);
     // Add help_topics directories for modules and themes in the 'help_topic'
-    // namespace.
+    // namespace, plus core.
+    $this->addExtension($root_path . '/core');
     array_map([$this, 'addExtension'], $module_handler->getModuleDirectories());
     array_map([$this, 'addExtension'], $theme_handler->getThemeDirectories());
   }

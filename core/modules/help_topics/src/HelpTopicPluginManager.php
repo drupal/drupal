@@ -94,6 +94,13 @@ class HelpTopicPluginManager extends DefaultPluginManager implements HelpTopicPl
   protected $themeHandler;
 
   /**
+   * The app root.
+   *
+   * @var string
+   */
+  protected $root;
+
+  /**
    * Constructs a new HelpTopicManager object.
    *
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
@@ -102,8 +109,10 @@ class HelpTopicPluginManager extends DefaultPluginManager implements HelpTopicPl
    *   The theme handler.
    * @param \Drupal\Core\Cache\CacheBackendInterface $cache_backend
    *   Cache backend instance to use.
+   * @param string $root
+   *   The app root.
    */
-  public function __construct(ModuleHandlerInterface $module_handler, ThemeHandlerInterface $theme_handler, CacheBackendInterface $cache_backend) {
+  public function __construct(ModuleHandlerInterface $module_handler, ThemeHandlerInterface $theme_handler, CacheBackendInterface $cache_backend, $root) {
     // Note that the parent construct is not called because this not use
     // annotated class discovery.
     $this->moduleHandler = $module_handler;
@@ -112,6 +121,7 @@ class HelpTopicPluginManager extends DefaultPluginManager implements HelpTopicPl
     // Use the 'config:core.extension' cache tag so the plugin cache is
     // invalidated on theme install and uninstall.
     $this->setCacheBackend($cache_backend, 'help_topics', ['config:core.extension']);
+    $this->root = (string) $root;
   }
 
   /**
@@ -121,7 +131,7 @@ class HelpTopicPluginManager extends DefaultPluginManager implements HelpTopicPl
     if (!isset($this->discovery)) {
       $module_directories = $this->moduleHandler->getModuleDirectories();
       $all_directories = array_merge(
-        ['core'],
+        ['core' => $this->root . '/core'],
         $module_directories,
         $this->themeHandler->getThemeDirectories()
       );
