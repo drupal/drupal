@@ -3,4 +3,4 @@ type: module
 description: 'Support module for update testing with core semver value.'
 package: Testing
 version: VERSION
-core_version_requirement: ^8
+core_version_requirement: ^9
