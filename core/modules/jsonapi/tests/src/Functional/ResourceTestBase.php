@@ -377,7 +377,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
     // Don't use cached normalizations in tests.
     $this->container->get('cache.jsonapi_normalizations')->deleteAll();
 
-    $self_link = new Link(new CacheableMetadata(), $url, ['self']);
+    $self_link = new Link(new CacheableMetadata(), $url, 'self');
     $resource_type = $this->container->get('jsonapi.resource_type.repository')->getByTypeName(static::$resourceTypeName);
     $doc = new JsonApiDocumentTopLevel(new ResourceObjectData([ResourceObject::createFromEntity($resource_type, $entity)], 1), new NullIncludedData(), new LinkCollection(['self' => $self_link]));
     return $this->serializer->normalize($doc, 'api_json', [
