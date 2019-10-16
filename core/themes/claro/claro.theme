@@ -521,68 +521,71 @@ function claro_form_media_form_alter(&$form, FormStateInterface $form_state) {
 }
 
 /**
- * Implements hook_form_FORM_ID_alter() for view_edit_form.
+ * Implements hook_views_ui_display_top_alter().
  */
-function claro_form_view_edit_form_alter(&$form, FormStateInterface $form_state) {
+function claro_views_ui_display_top_alter(&$element) {
   // @todo remove this after https://www.drupal.org/node/3051605 has been
   //   solved.
-  $form['displays']['top']['tabs']['#prefix'] = preg_replace('/(class="(.+\s)?)tabs(\s.+"|")/', '$1views-tabs$3', $form['displays']['top']['tabs']['#prefix']);
-  $form['displays']['top']['tabs']['#prefix'] = preg_replace('/(class="(.+\s)?)secondary(\s.+"|")/', '$1views-tabs--secondary$3', $form['displays']['top']['tabs']['#prefix']);
+  $element['tabs']['#prefix'] = preg_replace('/(class="(.+\s)?)tabs(\s.+"|")/', '$1views-tabs$3', $element['tabs']['#prefix']);
+  $element['tabs']['#prefix'] = preg_replace('/(class="(.+\s)?)secondary(\s.+"|")/', '$1views-tabs--secondary$3', $element['tabs']['#prefix']);
 
-  foreach (Element::children($form['displays']['top']['tabs']) as $tab) {
-    $form['displays']['top']['tabs'][$tab]['#theme'] = 'menu_local_task__views_ui';
+  foreach (Element::children($element['tabs']) as $tab) {
+    $element['tabs'][$tab]['#theme'] = 'menu_local_task__views_ui';
   }
 
-  if (!empty($form['displays'])) {
-    // Change top extra actions to use the small dropbutton variant.
-    // @todo Revisit after https://www.drupal.org/node/3057581 is added.
-    if (!empty($form['displays']['top']['extra_actions'])) {
-      $form['displays']['top']['extra_actions']['#dropbutton_type'] = 'small';
+  // Change top extra actions to use the small dropbutton variant.
+  // @todo Revisit after https://www.drupal.org/node/3057581 is added.
+  if (!empty($element['extra_actions'])) {
+    $element['extra_actions']['#dropbutton_type'] = 'small';
+  }
+}
+
+/**
+ * Implements hook_views_ui_display_tab_alter().
+ */
+function claro_views_ui_display_tab_alter(&$element) {
+  // We process the dropbutton-like element on views edit form's
+  // display settings top section.
+  //
+  // That element should be a regular Dropbutton.
+  //
+  // After that the reported issue is fixed and the element is rendered with
+  // the Dropbutton type, we just have to set it's '#dropbutton_type' to
+  // 'extrasmall'.
+  //
+  // @todo: revisit after https://www.drupal.org/node/3057577 is fixed.
+  $dummy_dropbutton = &$element['details']['top']['actions'];
+
+  if ($dummy_dropbutton) {
+    $child_keys = Element::children($dummy_dropbutton);
+    $prefix_regex = '/(<.*class\s*= *["\']?)([^"\']*)(.*)/i';
+    $child_count = 0;
+
+    foreach ($child_keys as $key) {
+      if (in_array($key, ['prefix', 'suffix'])) {
+        continue;
+      }
+      $nested_child_keys = Element::children($dummy_dropbutton[$key], TRUE);
+
+      if (!empty($nested_child_keys)) {
+        foreach ($nested_child_keys as $nested_key) {
+          $child_count++;
+          $prefix = $dummy_dropbutton[$key][$nested_key]['#prefix'];
+          $dummy_dropbutton[$key][$nested_key]['#prefix'] = preg_replace($prefix_regex, '$1$2 dropbutton__item dropbutton__item--extrasmall$3', $prefix);
+        }
+      }
+      else {
+        $child_count++;
+        $prefix = $dummy_dropbutton[$key]['#prefix'];
+        $dummy_dropbutton[$key]['#prefix'] = preg_replace($prefix_regex, '$1$2 dropbutton__item dropbutton__item--extrasmall$3', $prefix);
+      }
     }
 
-    // We process the dropbutton-like element on views edit form's
-    // display settings top section.
-    //
-    // That element should be a regular Dropbutton.
-    //
-    // After that the reported issue is fixed and the element is rendered with
-    // the Dropbutton type, we just have to set it's '#dropbutton_type' to
-    // 'extrasmall'.
-    //
-    // @todo: revisit after https://www.drupal.org/node/3057577 is fixed.
-    $dummy_dropbutton = &$form['displays']['settings']['settings_content']['tab_content']['details']['top']['actions'];
-
-    if ($dummy_dropbutton) {
-      $child_keys = Element::children($dummy_dropbutton);
-      $prefix_regex = '/(<.*class\s*= *["\']?)([^"\']*)(.*)/i';
-      $child_count = 0;
-
-      foreach ($child_keys as $key) {
-        if (in_array($key, ['prefix', 'suffix'])) {
-          continue;
-        }
-        $nested_child_keys = Element::children($dummy_dropbutton[$key], TRUE);
-
-        if (!empty($nested_child_keys)) {
-          foreach ($nested_child_keys as $nested_key) {
-            $child_count++;
-            $prefix = $dummy_dropbutton[$key][$nested_key]['#prefix'];
-            $dummy_dropbutton[$key][$nested_key]['#prefix'] = preg_replace($prefix_regex, '$1$2 dropbutton__item dropbutton__item--extrasmall$3', $prefix);
-          }
-        }
-        else {
-          $child_count++;
-          $prefix = $dummy_dropbutton[$key]['#prefix'];
-          $dummy_dropbutton[$key]['#prefix'] = preg_replace($prefix_regex, '$1$2 dropbutton__item dropbutton__item--extrasmall$3', $prefix);
-        }
-      }
-
-      if (!empty($dummy_dropbutton['prefix']) && !empty($dummy_dropbutton['prefix']['#markup'])) {
-        $classes = 'dropbutton--extrasmall ';
-        $classes .= ($child_count > 1) ? 'dropbutton--multiple' : 'dropbutton--single';
-        $prefix = $dummy_dropbutton['prefix']['#markup'];
-        $dummy_dropbutton['prefix']['#markup'] = preg_replace($prefix_regex, '$1$2 ' . $classes . '$3', $prefix);
-      }
+    if (!empty($dummy_dropbutton['prefix']) && !empty($dummy_dropbutton['prefix']['#markup'])) {
+      $classes = 'dropbutton--extrasmall ';
+      $classes .= ($child_count > 1) ? 'dropbutton--multiple' : 'dropbutton--single';
+      $prefix = $dummy_dropbutton['prefix']['#markup'];
+      $dummy_dropbutton['prefix']['#markup'] = preg_replace($prefix_regex, '$1$2 ' . $classes . '$3', $prefix);
     }
   }
 }
