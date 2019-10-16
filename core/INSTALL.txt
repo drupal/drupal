@@ -15,7 +15,7 @@ QUICKSTART
 ----------------------
 
 Prerequisites:
-- PHP 7.0.8 (or greater) (https://php.net).
+- PHP 7.2.3 (or greater) (https://php.net).
 
 In the instructions below, replace the version x.y.z with the specific version
 you wish to download. Example: 8.6.0.zip. You can find the latest stable version

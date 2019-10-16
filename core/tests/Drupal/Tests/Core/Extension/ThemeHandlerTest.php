@@ -147,5 +147,5 @@ class StubThemeHandler extends ThemeHandler {
 }
 
 if (!defined('DRUPAL_MINIMUM_PHP')) {
-  define('DRUPAL_MINIMUM_PHP', '5.5.9');
+  define('DRUPAL_MINIMUM_PHP', '7.2.3');
 }

@@ -14,7 +14,7 @@
     "class": "Drupal\\Composer\\Plugin\\VendorHardening\\VendorHardeningPlugin"
   },
   "require": {
-    "php": ">=7.0.8",
+    "php": ">=7.2.3",
     "composer-plugin-api": "^1.1"
   }
 }

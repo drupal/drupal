@@ -34,7 +34,7 @@ use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
  * @todo Move this to an appropriate autoloadable class. See
  *   https://www.drupal.org/project/drupal/issues/2908079
  */
-const DRUPAL_MINIMUM_PHP = '7.0.8';
+const DRUPAL_MINIMUM_PHP = '7.2.3';
 
 /**
  * Minimum supported version of PHP.
@@ -48,7 +48,7 @@ const DRUPAL_MINIMUM_PHP = '7.0.8';
  * @todo Move this to an appropriate autoloadable class. See
  *   https://www.drupal.org/project/drupal/issues/2908079
  */
-const DRUPAL_MINIMUM_SUPPORTED_PHP = '7.0.8';
+const DRUPAL_MINIMUM_SUPPORTED_PHP = '7.2.3';
 
 /**
  * Minimum recommended version of PHP.
@@ -60,7 +60,7 @@ const DRUPAL_MINIMUM_SUPPORTED_PHP = '7.0.8';
  * @todo Move this to an appropriate autoloadable class. See
  *   https://www.drupal.org/project/drupal/issues/2908079
  */
-const DRUPAL_RECOMMENDED_PHP = '7.2';
+const DRUPAL_RECOMMENDED_PHP = '7.3';
 
 /**
  * Minimum recommended value of PHP memory_limit.
