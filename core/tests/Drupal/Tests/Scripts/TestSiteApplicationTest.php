@@ -211,7 +211,7 @@ class TestSiteApplicationTest extends UnitTestCase {
       $this->markTestSkipped("Requires the directory $simpletest_path to exist and be writable");
     }
 
-    $command_line = $this->php . ' core/scripts/test-site.php install --json --langcode fr --setup-file core/tests/Drupal/TestSite/TestSiteInstallTestScript.php --db-url "' . getenv('SIMPLETEST_DB') . '"';
+    $command_line = $this->php . ' core/scripts/test-site.php install --json --langcode fr --setup-file core/tests/Drupal/TestSite/TestSiteMultilingualInstallTestScript.php --db-url "' . getenv('SIMPLETEST_DB') . '"';
     $process = new Process($command_line, $this->root);
     $process->setTimeout(500);
     $process->run();
