@@ -361,8 +361,16 @@ class ViewEditForm extends ViewFormBase {
       $build['details'] = $this->getDisplayDetails($view, $display->display);
     }
     // In AJAX context, ViewUI::rebuildCurrentTab() returns this outside of form
-    // context, so hook_form_views_ui_edit_form_alter() is insufficient.
+    // context, so hook_form_view_edit_form_alter() is insufficient.
+    // @todo remove this after
+    //   https://www.drupal.org/project/drupal/issues/3087455 has been resolved.
     \Drupal::moduleHandler()->alter('views_ui_display_tab', $build, $view, $display_id);
+    // Because themes can implement hook_form_FORM_ID_alter() and because this
+    // is a workaround for hook_form_view_edit_form_alter() being insufficient,
+    // also invoke this on themes.
+    // @todo remove this after
+    //   https://www.drupal.org/project/drupal/issues/3087455 has been resolved.
+    \Drupal::theme()->alter('views_ui_display_tab', $build, $view, $display_id);
     return $build;
   }
 
@@ -775,6 +783,18 @@ class ViewEditForm extends ViewFormBase {
         '#values' => [$this->t('Add @display', ['@display' => $label]), $label],
       ];
     }
+
+    // In AJAX context, ViewUI::rebuildCurrentTab() returns this outside of form
+    // context, so hook_form_view_edit_form_alter() is insufficient.
+    // @todo remove this after
+    //   https://www.drupal.org/project/drupal/issues/3087455 has been resolved.
+    \Drupal::moduleHandler()->alter('views_ui_display_top', $element, $view, $display_id);
+    // Because themes can implement hook_form_FORM_ID_alter() and because this
+    // is a workaround for hook_form_view_edit_form_alter() being insufficient,
+    // also invoke this on themes.
+    // @todo remove this after
+    //   https://www.drupal.org/project/drupal/issues/3087455 has been resolved.
+    \Drupal::theme()->alter('views_ui_display_top', $element, $view, $display_id);
 
     return $element;
   }
