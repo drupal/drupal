@@ -122,4 +122,29 @@ class DisplayTest extends WebDriverTestBase {
     $this->getSession()->executeScript("jQuery('{$selector} .contextual .trigger').toggleClass('visually-hidden');");
   }
 
+  /**
+   * Confirms that form_alter is triggered after ajax rebuilds.
+   */
+  public function testAjaxRebuild() {
+    \Drupal::service('theme_installer')->install(['views_test_classy_subtheme']);
+
+    $this->config('system.theme')
+      ->set('default', 'views_test_classy_subtheme')
+      ->save();
+
+    $page = $this->getSession()->getPage();
+    $assert_session = $this->assertSession();
+
+    $this->drupalGet('admin/structure/views/view/content');
+    $assert_session->pageTextContains('This is text added to the display tabs at the top');
+    $assert_session->pageTextContains('This is text added to the display edit form');
+    $page->clickLink('Content: Title (Title)');
+    $assert_session->waitForElementVisible('css', '.views-ui-dialog');
+    $page->fillField('Label', 'New Title');
+    $page->find('css', '.ui-dialog-buttonset button:contains("Apply")')->press();
+    $assert_session->waitForElementRemoved('css', '.views-ui-dialog');
+    $assert_session->pageTextContains('This is text added to the display tabs at the top');
+    $assert_session->pageTextContains('This is text added to the display edit form');
+  }
+
 }
