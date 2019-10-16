@@ -19,6 +19,7 @@
     "matchMedia": true,
     "Backbone": true,
     "Modernizr": true,
+    "Popper": true,
     "CKEDITOR": true
   },
   "rules": {
