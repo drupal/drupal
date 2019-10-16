@@ -1,0 +1,22 @@
+<?php
+
+/**
+ * @file
+ * Implements Views UI alter hooks in a theme to provide test coverage.
+ */
+
+use Drupal\views_ui\ViewUI;
+
+/**
+ * Implements hook_views_ui_display_tab_alter().
+ */
+function views_test_classy_subtheme_views_ui_display_tab_alter(&$build, ViewUI $view, $display_id) {
+  $build['details']['top']['display_title']['#description'] = 'This is text added to the display edit form';
+}
+
+/**
+ * Implements hook_views_ui_display_top_alter().
+ */
+function views_test_classy_subtheme_views_ui_display_top_alter(&$build, ViewUI $view, $display_id) {
+  $build['tabs']['#suffix'] .= 'This is text added to the display tabs at the top';
+}
