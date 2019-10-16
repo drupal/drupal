@@ -71,8 +71,9 @@ final class LinkCollection implements \IteratorAggregate {
    * Gets a new LinkCollection with the given link inserted.
    *
    * @param string $key
-   *   A key for the link. If the key already exists and the link shares an href
-   *   with an existing link with that key, those links will be merged together.
+   *   A key for the link. If the key already exists and the link shares an
+   *   href, link relation type and attributes with an existing link with that
+   *   key, those links will be merged together.
    * @param \Drupal\jsonapi\JsonApiResource\Link $new_link
    *   The link to insert.
    *

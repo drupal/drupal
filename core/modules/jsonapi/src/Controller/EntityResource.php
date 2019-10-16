@@ -991,7 +991,7 @@ class EntityResource {
   protected function buildWrappedResponse(TopLevelDataInterface $data, Request $request, IncludedData $includes, $response_code = 200, array $headers = [], LinkCollection $links = NULL, array $meta = []) {
     $links = ($links ?: new LinkCollection([]));
     if (!$links->hasLinkWithKey('self')) {
-      $self_link = new Link(new CacheableMetadata(), self::getRequestLink($request), ['self']);
+      $self_link = new Link(new CacheableMetadata(), self::getRequestLink($request), 'self');
       $links = $links->withLink('self', $self_link);
     }
     $response = new ResourceResponse(new JsonApiDocumentTopLevel($data, $includes, $links, $meta), $response_code, $headers);
@@ -1274,20 +1274,20 @@ class EntityResource {
     // Check if this is not the last page.
     if ($link_context['has_next_page']) {
       $next_url = static::getRequestLink($request, static::getPagerQueries('next', $offset, $size, $query));
-      $pager_links = $pager_links->withLink('next', new Link(new CacheableMetadata(), $next_url, ['next']));
+      $pager_links = $pager_links->withLink('next', new Link(new CacheableMetadata(), $next_url, 'next'));
 
       if (!empty($total)) {
         $last_url = static::getRequestLink($request, static::getPagerQueries('last', $offset, $size, $query, $total));
-        $pager_links = $pager_links->withLink('last', new Link(new CacheableMetadata(), $last_url, ['last']));
+        $pager_links = $pager_links->withLink('last', new Link(new CacheableMetadata(), $last_url, 'last'));
       }
     }
 
     // Check if this is not the first page.
     if ($offset > 0) {
       $first_url = static::getRequestLink($request, static::getPagerQueries('first', $offset, $size, $query));
-      $pager_links = $pager_links->withLink('first', new Link(new CacheableMetadata(), $first_url, ['first']));
+      $pager_links = $pager_links->withLink('first', new Link(new CacheableMetadata(), $first_url, 'first'));
       $prev_url = static::getRequestLink($request, static::getPagerQueries('prev', $offset, $size, $query));
-      $pager_links = $pager_links->withLink('prev', new Link(new CacheableMetadata(), $prev_url, ['prev']));
+      $pager_links = $pager_links->withLink('prev', new Link(new CacheableMetadata(), $prev_url, 'prev'));
     }
 
     return $pager_links;
