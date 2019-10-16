@@ -934,6 +934,15 @@ picturefill:
   dependencies:
     - core/matchmedia
 
+popperjs:
+  version: "1.15.0"
+  license:
+    name: MIT
+    url: https://github.com/FezVrasta/popper.js/blob/v1.15.0/LICENSE.md
+    gpl-compatible: true
+  js:
+    assets/vendor/popperjs/popper.min.js: { minified: true }
+
 underscore:
   remote: https://github.com/jashkenas/underscore
   version: "1.8.3"

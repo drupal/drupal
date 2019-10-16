@@ -5,7 +5,7 @@
 * @preserve
 **/
 
-(function ($, _, Backbone, Drupal, debounce) {
+(function ($, _, Backbone, Drupal, debounce, Popper) {
   Drupal.quickedit.EntityToolbarView = Backbone.View.extend({
     _fieldToolbarRoot: null,
 
@@ -163,42 +163,59 @@
         check++;
       } while (!of);
 
-      function refinePosition(view, suggested, info) {
-        var isBelow = suggested.top > info.target.top;
-        info.element.element.toggleClass('quickedit-toolbar-pointer-top', isBelow);
+      function refinePopper(data) {
+        var isBelow = data.offsets.popper.top > data.offsets.reference.top;
+        data.instance.popper.classList.toggle('quickedit-toolbar-pointer-top', isBelow);
 
-        if (view.$entity[0] === info.target.element[0]) {
-          var $field = view.$entity.find('.quickedit-editable').eq(isBelow ? -1 : 0);
+        if (that.$entity[0] === data.instance.reference) {
+          var $field = that.$entity.find('.quickedit-editable').eq(isBelow ? -1 : 0);
           if ($field.length > 0) {
-            suggested.top = isBelow ? $field.offset().top + $field.outerHeight(true) : $field.offset().top - info.element.element.outerHeight(true);
+            data.offsets.popper.top = isBelow ? $field.offset().top + $field.outerHeight(true) : $field.offset().top - $(data.instance.reference).outerHeight(true);
           }
         }
 
-        var fenceTop = view.$fence.offset().top;
-        var fenceHeight = view.$fence.height();
-        var toolbarHeight = info.element.element.outerHeight(true);
-        if (suggested.top < fenceTop) {
-          suggested.top = fenceTop;
-        } else if (suggested.top + toolbarHeight > fenceTop + fenceHeight) {
-          suggested.top = fenceTop + fenceHeight - toolbarHeight;
+        var fenceTop = that.$fence.offset().top;
+        var fenceHeight = that.$fence.height();
+        var toolbarHeight = $(data.instance.popper).outerHeight(true);
+        if (data.offsets.popper.top < fenceTop) {
+          data.offsets.popper.top = fenceTop;
+        } else if (data.offsets.popper.top + toolbarHeight > fenceTop + fenceHeight) {
+          data.offsets.popper.top = fenceTop + fenceHeight - toolbarHeight;
         }
-
-        info.element.element.css({
-          left: Math.floor(suggested.left),
-          top: Math.floor(suggested.top)
-        });
       }
 
       function positionToolbar() {
-        that.$el.position({
-          my: edge + ' bottom',
+        var popperElement = that.el;
+        var referenceElement = of;
+        var boundariesElement = that.$fence[0];
+        var popperedge = edge === 'left' ? 'start' : 'end';
+        if (referenceElement !== undefined) {
+          if (!popperElement.classList.contains('js-popper-processed')) {
+            that.popper = new Popper(referenceElement, popperElement, {
+              placement: 'top-' + popperedge,
+              modifiers: {
+                flip: {
+                  behavior: ['top', 'bottom']
+                },
+                computeStyle: {
+                  gpuAcceleration: false
+                },
+                preventOverflow: {
+                  boundariesElement: boundariesElement
+                }
+              },
+              onCreate: refinePopper,
+              onUpdate: refinePopper
+            });
+            popperElement.classList.add('js-popper-processed');
+          } else {
+            that.popper.options.placement = 'top-' + popperedge;
+            that.popper.reference = referenceElement[0] ? referenceElement[0] : referenceElement;
+            that.popper.update();
+          }
+        }
 
-          at: edge + '+' + (1 + horizontalPadding) + ' top',
-          of: of,
-          collision: 'flipfit',
-          using: refinePosition.bind(null, that),
-          within: that.$fence
-        }).css({
+        that.$el.css({
           'max-width': document.documentElement.clientWidth < 450 ? document.documentElement.clientWidth : 450,
 
           'min-width': document.documentElement.clientWidth < 240 ? document.documentElement.clientWidth : 240,
@@ -292,4 +309,4 @@
       this.$el.removeClass('quickedit-animate-invisible');
     }
   });
-})(jQuery, _, Backbone, Drupal, Drupal.debounce);
+})(jQuery, _, Backbone, Drupal, Drupal.debounce, Popper);
