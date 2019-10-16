@@ -481,6 +481,7 @@ jquery.ui.accordion:
   dependencies:
     - core/jquery.ui
     - core/jquery.ui.widget
+  deprecated: &jquery_ui_unused_deprecated The "%library_id%" asset library is deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. See https://www.drupal.org/node/3067969
 
 jquery.ui.autocomplete:
   version: *jquery_ui_version
@@ -523,6 +524,7 @@ jquery.ui.checkboxradio:
   dependencies:
     - core/jquery.ui
     - core/jquery.ui.widget
+  deprecated: *jquery_ui_unused_deprecated
 
 jquery.ui.controlgroup:
   version: *jquery_ui_version
@@ -535,6 +537,7 @@ jquery.ui.controlgroup:
   dependencies:
     - core/jquery.ui
     - core/jquery.ui.widget
+  deprecated: *jquery_ui_unused_deprecated
 
 jquery.ui.datepicker:
   version: *jquery_ui_version
@@ -584,12 +587,14 @@ jquery.ui.droppable:
     - core/jquery.ui.widget
     - core/jquery.ui.mouse
     - core/jquery.ui.draggable
+  deprecated: *jquery_ui_unused_deprecated
 
 jquery.ui.effects.core:
   version: *jquery_ui_version
   license: *jquery_ui_license
   js:
     assets/vendor/jquery.ui/ui/effect-min.js: { weight: -9, minified: true }
+  deprecated: *jquery_ui_unused_deprecated
 
 jquery.ui.effects.blind:
   version: *jquery_ui_version
@@ -598,6 +603,7 @@ jquery.ui.effects.blind:
     assets/vendor/jquery.ui/ui/effects/effect-blind-min.js: { minified: true }
   dependencies:
     - core/jquery.ui.effects.core
+  deprecated: *jquery_ui_unused_deprecated
 
 jquery.ui.effects.bounce:
   version: *jquery_ui_version
@@ -606,6 +612,7 @@ jquery.ui.effects.bounce:
     assets/vendor/jquery.ui/ui/effects/effect-bounce-min.js: { minified: true }
   dependencies:
     - core/jquery.ui.effects.core
+  deprecated: *jquery_ui_unused_deprecated
 
 jquery.ui.effects.clip:
   version: *jquery_ui_version
@@ -614,6 +621,7 @@ jquery.ui.effects.clip:
     assets/vendor/jquery.ui/ui/effects/effect-clip-min.js: { minified: true }
   dependencies:
     - core/jquery.ui.effects.core
+  deprecated: *jquery_ui_unused_deprecated
 
 jquery.ui.effects.drop:
   version: *jquery_ui_version
@@ -622,6 +630,7 @@ jquery.ui.effects.drop:
     assets/vendor/jquery.ui/ui/effects/effect-drop-min.js: { minified: true }
   dependencies:
     - core/jquery.ui.effects.core
+  deprecated: *jquery_ui_unused_deprecated
 
 jquery.ui.effects.explode:
   version: *jquery_ui_version
@@ -630,6 +639,7 @@ jquery.ui.effects.explode:
     assets/vendor/jquery.ui/ui/effects/effect-explode-min.js: { minified: true }
   dependencies:
     - core/jquery.ui.effects.core
+  deprecated: *jquery_ui_unused_deprecated
 
 jquery.ui.effects.fade:
   version: *jquery_ui_version
@@ -638,6 +648,7 @@ jquery.ui.effects.fade:
     assets/vendor/jquery.ui/ui/effects/effect-fade-min.js: { minified: true }
   dependencies:
     - core/jquery.ui.effects.core
+  deprecated: *jquery_ui_unused_deprecated
 
 jquery.ui.effects.fold:
   version: *jquery_ui_version
@@ -646,6 +657,7 @@ jquery.ui.effects.fold:
     assets/vendor/jquery.ui/ui/effects/effect-fold-min.js: { minified: true }
   dependencies:
     - core/jquery.ui.effects.core
+  deprecated: *jquery_ui_unused_deprecated
 
 jquery.ui.effects.highlight:
   version: *jquery_ui_version
@@ -654,6 +666,7 @@ jquery.ui.effects.highlight:
     assets/vendor/jquery.ui/ui/effects/effect-highlight-min.js: { minified: true }
   dependencies:
     - core/jquery.ui.effects.core
+  deprecated: *jquery_ui_unused_deprecated
 
 jquery.ui.effects.puff:
   version: *jquery_ui_version
@@ -663,6 +676,7 @@ jquery.ui.effects.puff:
   dependencies:
     - core/jquery.ui.effects.core
     - core/jquery.ui.effects.scale
+  deprecated: *jquery_ui_unused_deprecated
 
 jquery.ui.effects.pulsate:
   version: *jquery_ui_version
@@ -671,6 +685,7 @@ jquery.ui.effects.pulsate:
     assets/vendor/jquery.ui/ui/effects/effect-pulsate-min.js: { minified: true }
   dependencies:
     - core/jquery.ui.effects.core
+  deprecated: *jquery_ui_unused_deprecated
 
 jquery.ui.effects.scale:
   version: *jquery_ui_version
@@ -680,6 +695,7 @@ jquery.ui.effects.scale:
   dependencies:
     - core/jquery.ui.effects.core
     - core/jquery.ui.effects.size
+  deprecated: *jquery_ui_unused_deprecated
 
 jquery.ui.effects.shake:
   version: *jquery_ui_version
@@ -688,6 +704,7 @@ jquery.ui.effects.shake:
     assets/vendor/jquery.ui/ui/effects/effect-shake-min.js: { minified: true }
   dependencies:
     - core/jquery.ui.effects.core
+  deprecated: *jquery_ui_unused_deprecated
 
 jquery.ui.effects.size:
   version: *jquery_ui_version
@@ -696,6 +713,7 @@ jquery.ui.effects.size:
     assets/vendor/jquery.ui/ui/effects/effect-size-min.js: { minified: true }
   dependencies:
     - core/jquery.ui.effects.core
+  deprecated: *jquery_ui_unused_deprecated
 
 jquery.ui.effects.slide:
   version: *jquery_ui_version
@@ -704,6 +722,7 @@ jquery.ui.effects.slide:
     assets/vendor/jquery.ui/ui/effects/effect-slide-min.js: { minified: true }
   dependencies:
     - core/jquery.ui.effects.core
+  deprecated: *jquery_ui_unused_deprecated
 
 jquery.ui.effects.transfer:
   version: *jquery_ui_version
@@ -712,6 +731,7 @@ jquery.ui.effects.transfer:
     assets/vendor/jquery.ui/ui/effects/effect-transfer-min.js: { minified: true }
   dependencies:
     - core/jquery.ui.effects.core
+  deprecated: *jquery_ui_unused_deprecated
 
 jquery.ui.menu:
   version: *jquery_ui_version
@@ -754,6 +774,7 @@ jquery.ui.progressbar:
   dependencies:
     - core/jquery.ui
     - core/jquery.ui.widget
+  deprecated: *jquery_ui_unused_deprecated
 
 jquery.ui.resizable:
   version: *jquery_ui_version
@@ -780,6 +801,7 @@ jquery.ui.selectable:
     - core/jquery.ui
     - core/jquery.ui.mouse
     - core/jquery.ui.widget
+  deprecated: *jquery_ui_unused_deprecated
 
 jquery.ui.selectmenu:
   version: *jquery_ui_version
@@ -796,6 +818,7 @@ jquery.ui.selectmenu:
     - core/jquery.ui.menu
     - core/jquery.ui.position
     - core/jquery.ui.widget
+  deprecated: *jquery_ui_unused_deprecated
 
 jquery.ui.slider:
   version: *jquery_ui_version
@@ -809,6 +832,7 @@ jquery.ui.slider:
     - core/jquery.ui
     - core/jquery.ui.mouse
     - core/jquery.ui.widget
+  deprecated: *jquery_ui_unused_deprecated
 
 jquery.ui.sortable:
   version: *jquery_ui_version
@@ -832,6 +856,7 @@ jquery.ui.spinner:
     - core/jquery.ui
     - core/jquery.ui.widget
     - core/jquery.ui.button
+  deprecated: *jquery_ui_unused_deprecated
 
 jquery.ui.tabs:
   version: *jquery_ui_version
@@ -844,6 +869,7 @@ jquery.ui.tabs:
   dependencies:
     - core/jquery.ui
     - core/jquery.ui.widget
+  deprecated: *jquery_ui_unused_deprecated
 
 jquery.ui.tooltip:
   version: *jquery_ui_version
@@ -857,6 +883,7 @@ jquery.ui.tooltip:
     - core/jquery.ui
     - core/jquery.ui.widget
     - core/jquery.ui.position
+  deprecated: *jquery_ui_unused_deprecated
 
 jquery.ui.touch-punch:
   remote: https://github.com/furf/jquery-ui-touch-punch
