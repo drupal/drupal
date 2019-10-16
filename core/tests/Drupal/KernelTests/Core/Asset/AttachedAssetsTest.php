@@ -235,7 +235,7 @@ class AttachedAssetsTest extends KernelTestBase {
     $query_string = $this->container->get('state')->get('system.css_js_query_string') ?: '0';
     $this->assertNotIdentical(strpos($rendered_js, '<script src="' . file_url_transform_relative(file_create_url('core/modules/system/tests/modules/common_test/header.js')) . '?' . $query_string . '"></script>'), FALSE, 'The JS asset in common_test/js-header appears in the header.');
     $this->assertNotIdentical(strpos($rendered_js, '<script src="' . file_url_transform_relative(file_create_url('core/misc/drupal.js'))), FALSE, 'The JS asset of the direct dependency (core/drupal) of common_test/js-header appears in the header.');
-    $this->assertNotIdentical(strpos($rendered_js, '<script src="' . file_url_transform_relative(file_create_url('core/assets/vendor/domready/ready.min.js'))), FALSE, 'The JS asset of the indirect dependency (core/domready) of common_test/js-header appears in the header.');
+    $this->assertNotIdentical(strpos($rendered_js, '<script src="' . file_url_transform_relative(file_create_url('core/misc/drupalSettingsLoader.js'))), FALSE, 'The JS asset of the indirect dependency (core/drupalSettings) of common_test/js-header appears in the header.');
   }
 
   /**
@@ -275,14 +275,13 @@ class AttachedAssetsTest extends KernelTestBase {
    */
   public function testVersionQueryString() {
     $build['#attached']['library'][] = 'core/backbone';
-    $build['#attached']['library'][] = 'core/domready';
     $assets = AttachedAssets::createFromRenderArray($build);
 
     $js = $this->assetResolver->getJsAssets($assets, FALSE)[1];
     $js_render_array = \Drupal::service('asset.js.collection_renderer')->render($js);
 
     $rendered_js = $this->renderer->renderPlain($js_render_array);
-    $this->assertTrue(strpos($rendered_js, 'core/assets/vendor/backbone/backbone-min.js?v=1.2.3') > 0 && strpos($rendered_js, 'core/assets/vendor/domready/ready.min.js?v=1.0.8') > 0, 'JavaScript version identifiers correctly appended to URLs');
+    $this->assertTrue(strpos($rendered_js, 'core/assets/vendor/backbone/backbone-min.js?v=1.2.3') > 0, 'JavaScript version identifiers correctly appended to URLs');
   }
 
   /**
