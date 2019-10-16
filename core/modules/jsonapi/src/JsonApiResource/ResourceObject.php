@@ -244,19 +244,19 @@ class ResourceObject implements CacheableDependencyInterface, ResourceIdentifier
           // revision changes and to disambiguate resource objects with the same
           // `type` and `id` in a `version-history` collection.
           $self_with_version_url = $self_url->setOption('query', [JsonApiSpec::VERSION_QUERY_PARAMETER => 'id:' . $entity->getRevisionId()]);
-          $links = $links->withLink('self', new Link(new CacheableMetadata(), $self_with_version_url, ['self']));
+          $links = $links->withLink('self', new Link(new CacheableMetadata(), $self_with_version_url, 'self'));
         }
         if (!$entity->isDefaultRevision()) {
           $latest_version_url = $self_url->setOption('query', [JsonApiSpec::VERSION_QUERY_PARAMETER => 'rel:' . VersionByRel::LATEST_VERSION]);
-          $links = $links->withLink(VersionByRel::LATEST_VERSION, new Link(new CacheableMetadata(), $latest_version_url, [VersionByRel::LATEST_VERSION]));
+          $links = $links->withLink(VersionByRel::LATEST_VERSION, new Link(new CacheableMetadata(), $latest_version_url, VersionByRel::LATEST_VERSION));
         }
         if (!$entity->isLatestRevision()) {
           $working_copy_url = $self_url->setOption('query', [JsonApiSpec::VERSION_QUERY_PARAMETER => 'rel:' . VersionByRel::WORKING_COPY]);
-          $links = $links->withLink(VersionByRel::WORKING_COPY, new Link(new CacheableMetadata(), $working_copy_url, [VersionByRel::WORKING_COPY]));
+          $links = $links->withLink(VersionByRel::WORKING_COPY, new Link(new CacheableMetadata(), $working_copy_url, VersionByRel::WORKING_COPY));
         }
       }
       if (!$links->hasLinkWithKey('self')) {
-        $links = $links->withLink('self', new Link(new CacheableMetadata(), $self_url, ['self']));
+        $links = $links->withLink('self', new Link(new CacheableMetadata(), $self_url, 'self'));
       }
     }
     return $links;

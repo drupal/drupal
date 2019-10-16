@@ -236,7 +236,7 @@ class Relationship implements TopLevelDataInterface {
         if ($context_is_versionable) {
           $self_link->setOption('query', [JsonApiSpec::VERSION_QUERY_PARAMETER => $context->getVersionIdentifier()]);
         }
-        $links = $links->withLink('self', new Link(new CacheableMetadata(), $self_link, ['self']));
+        $links = $links->withLink('self', new Link(new CacheableMetadata(), $self_link, 'self'));
       }
       $has_non_internal_resource_type = array_reduce($context_resource_type->getRelatableResourceTypesByField($public_field_name), function ($carry, ResourceType $target) {
         return $carry ?: !$target->isInternal();
@@ -252,7 +252,7 @@ class Relationship implements TopLevelDataInterface {
         if ($context_is_versionable) {
           $related_link->setOption('query', [JsonApiSpec::VERSION_QUERY_PARAMETER => $context->getVersionIdentifier()]);
         }
-        $links = $links->withLink('related', new Link(new CacheableMetadata(), $related_link, ['related']));
+        $links = $links->withLink('related', new Link(new CacheableMetadata(), $related_link, 'related'));
       }
     }
     return $links;
