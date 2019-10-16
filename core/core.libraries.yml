@@ -889,6 +889,7 @@ matchmedia:
     gpl-compatible: true
   js:
     assets/vendor/matchMedia/matchMedia.min.js: { minified: true }
+  deprecated: &matchmedia_deprecated The "%library_id%" asset library is deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. See https://www.drupal.org/node/3086653
 
 matchmedia.addListener:
   version: *matchmedia_version
@@ -897,6 +898,7 @@ matchmedia.addListener:
     assets/vendor/matchMedia/matchMedia.addListener.min.js: { minified: true }
   dependencies:
     - core/matchmedia
+  deprecated: *matchmedia_deprecated
 
 modernizr:
   # Block the page from being loaded until Modernizr is initialized.
