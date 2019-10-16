@@ -41,6 +41,7 @@ domready:
     gpl-compatible: true
   js:
     assets/vendor/domready/ready.min.js: { weight: -21, minified: true }
+  deprecated: The "%library_id%" asset library is deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. See https://www.drupal.org/node/3086669
 
 drupal:
   version: VERSION
@@ -48,7 +49,6 @@ drupal:
     misc/drupal.js: { weight: -18 }
     misc/drupal.init.js: { weight: -17 }
   dependencies:
-    - core/domready
     - core/drupalSettings
   drupalSettings:
     suppressDeprecationErrors: true
