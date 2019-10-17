@@ -1,9 +1,0 @@
-help_topics_test_direct_yml:
-  class: 'Drupal\help_topics_test\Plugin\HelpTopic\TestHelpTopicPlugin'
-  top_level: true
-  related: {}
-  label: "Test direct yaml topic label"
-  body: "Test direct yaml body"
-
-help_topics_derivatives:
-  deriver: 'Drupal\help_topics_test\Plugin\Deriver\TestHelpTopicDeriver'

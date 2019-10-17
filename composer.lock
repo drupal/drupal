@@ -653,7 +653,7 @@
             "dist": {
                 "type": "path",
                 "url": "core",
-                "reference": "f5caa987fc01923d57a6dba206ad8207c073beab"
+                "reference": "9ca17c23169d1d6f4316ccc39743e79ccd0e991f"
             },
             "require": {
                 "asm89/stack-cors": "^1.1",
@@ -722,7 +722,6 @@
                 "drupal/color": "self.version",
                 "drupal/comment": "self.version",
                 "drupal/config": "self.version",
-                "drupal/config_environment": "self.version",
                 "drupal/config_translation": "self.version",
                 "drupal/contact": "self.version",
                 "drupal/content_moderation": "self.version",
@@ -766,7 +765,6 @@
                 "drupal/forum": "self.version",
                 "drupal/hal": "self.version",
                 "drupal/help": "self.version",
-                "drupal/help_topics": "self.version",
                 "drupal/history": "self.version",
                 "drupal/image": "self.version",
                 "drupal/inline_form_errors": "self.version",
