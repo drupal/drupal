@@ -8,9 +8,6 @@ use Doctrine\Common\Annotations\DocParser;
 use Doctrine\Common\Annotations\SimpleAnnotationReader;
 use PHPUnit\Framework\TestCase;
 
-//Some class named Entity in the global namespace
-include __DIR__ .'/DCOM58Entity.php';
-
 /**
  * This class is a near-copy of
  * \Doctrine\Tests\Common\Annotations\Ticket\DCOM58Test, which is part of the
@@ -18,9 +15,19 @@ include __DIR__ .'/DCOM58Entity.php';
  * version 1.2.7.
  *
  * @group DCOM58
+ *
+ * Run this test in a separate process as it includes code that might have side
+ * effects.
+ * @runTestsInSeparateProcesses
  */
 class DCOM58Test extends TestCase
 {
+    public function setUp()
+    {
+        // Some class named Entity in the global namespace.
+        include __DIR__ .'/DCOM58Entity.php';
+    }
+
     public function testIssue()
     {
         $reader     = new AnnotationReader();
