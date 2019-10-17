@@ -547,13 +547,12 @@ abstract class BuildTestBase extends TestCase {
     if ($iterator === NULL) {
       $finder = new Finder();
       $finder->files()
+        ->ignoreUnreadableDirs()
         ->in($this->getDrupalRoot())
-        ->exclude([
-          'sites/default/files',
-          'sites/simpletest',
-          'vendor',
-        ])
-        ->notPath('/sites\/default\/settings\..*php/')
+        ->notPath('#^sites/default/files#')
+        ->notPath('#^sites/simpletest#')
+        ->notPath('#^vendor#')
+        ->notPath('#^sites/default/settings\..*php#')
         ->ignoreDotFiles(FALSE)
         ->ignoreVCS(FALSE);
       $iterator = $finder->getIterator();
