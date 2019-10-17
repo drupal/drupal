@@ -393,6 +393,10 @@ abstract class BuildTestBase extends TestCase {
    *
    * Test authors should call visit() or assertVisit() instead.
    *
+   * When initializing the server, if '.ht.router.php' exists in the root, it is
+   * leveraged. If testing with a version of Drupal before 8.5.x., this file
+   * does not exist.
+   *
    * @param int $port
    *   The port number for the server.
    * @param string|null $working_dir
@@ -415,6 +419,9 @@ abstract class BuildTestBase extends TestCase {
       '-t',
       $working_path,
     ];
+    if (file_exists($working_path . DIRECTORY_SEPARATOR . '.ht.router.php')) {
+      $server[] = $working_path . DIRECTORY_SEPARATOR . '.ht.router.php';
+    }
     $ps = new Process($server, $working_path);
     $ps->setIdleTimeout(30)
       ->setTimeout(30)
