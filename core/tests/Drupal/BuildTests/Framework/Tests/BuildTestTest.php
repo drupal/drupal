@@ -4,6 +4,7 @@ namespace Drupal\BuildTests\Framework\Tests;
 
 use Drupal\BuildTests\Framework\BuildTestBase;
 use org\bovigo\vfs\vfsStream;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 
 /**
@@ -56,8 +57,8 @@ class BuildTestTest extends BuildTestBase {
    * @covers ::copyCodebase
    */
   public function testCopyCodebaseExclude() {
-    // Create a virtual file system containing only items that should be
-    // excluded.
+    // Create a virtual file system containing items that should be
+    // excluded. Exception being modules directory.
     vfsStream::setup('drupal', NULL, [
       'sites' => [
         'default' => [
@@ -65,6 +66,7 @@ class BuildTestTest extends BuildTestBase {
             'a_file.txt' => 'some file.',
           ],
           'settings.php' => '<?php $settings = stuff;',
+          'settings.local.php' => '<?php $settings = override;',
         ],
         'simpletest' => [
           'simpletest_hash' => [
@@ -76,6 +78,15 @@ class BuildTestTest extends BuildTestBase {
         'composer' => [
           'composer' => [
             'installed.json' => '"items": {"things"}',
+          ],
+        ],
+      ],
+      'modules' => [
+        'my_module' => [
+          'vendor' => [
+            'my_vendor' => [
+              'composer.json' => "{\n}",
+            ],
           ],
         ],
       ],
@@ -98,6 +109,13 @@ class BuildTestTest extends BuildTestBase {
     $full_path = $base->getWorkspaceDirectory() . '/' . $test_directory;
 
     $this->assertDirectoryExists($full_path);
+
+    // Verify nested vendor directory was not excluded. Then remove it for next
+    // validation.
+    $this->assertFileExists($full_path . DIRECTORY_SEPARATOR . 'modules/my_module/vendor/my_vendor/composer.json');
+    $file_system = new Filesystem();
+    $file_system->remove($full_path . DIRECTORY_SEPARATOR . 'modules');
+
     // Use scandir() to determine if our target directory is empty. It should
     // only contain the system dot directories.
     $this->assertTrue(
