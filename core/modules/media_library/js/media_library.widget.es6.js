@@ -58,7 +58,7 @@
                 ? strings.hide
                 : strings.show,
             )
-            .parent()
+            .closest('.js-media-library-widget')
             .find('.js-media-library-item-weight')
             .parent()
             .toggle();
