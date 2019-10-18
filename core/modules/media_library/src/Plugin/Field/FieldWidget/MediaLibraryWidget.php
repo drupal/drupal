@@ -317,7 +317,7 @@ class MediaLibraryWidget extends WidgetBase implements ContainerFactoryPluginInt
       '#target_bundles' => isset($settings['target_bundles']) ? $settings['target_bundles'] : FALSE,
       '#attributes' => [
         'id' => $wrapper_id,
-        'class' => ['media-library-widget'],
+        'class' => ['js-media-library-widget', 'media-library-widget'],
       ],
       '#attached' => [
         'library' => ['media_library/widget'],
