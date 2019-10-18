@@ -173,6 +173,7 @@ abstract class AddFormBase extends FormBase {
         '#type' => 'container',
         '#attributes' => [
           'class' => [
+            'js-media-library-add-form-added-media',
             'media-library-add-form__added-media',
           ],
           'aria-label' => $this->t('Added media items'),
