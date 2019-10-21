@@ -38,13 +38,18 @@ class SelectProfileFormTest extends WebDriverTestBase {
       'pass_raw' => $this->randomMachineName(),
     ]);
 
-    // If any $settings are defined for this test, copy and prepare an actual
-    // settings.php, so as to resemble a regular installation.
-    if (!empty($this->settings)) {
-      // Not using File API; a potential error must trigger a PHP warning.
-      copy(DRUPAL_ROOT . '/sites/default/default.settings.php', DRUPAL_ROOT . '/' . $this->siteDirectory . '/settings.php');
-      $this->writeSettings($this->settings);
-    }
+    // Create a regular settings.php for testing.
+    $this->prepareSettings();
+    // @todo Using the APCu file cache causes problems in this test when
+    //   combined with Symfony 4.4. This seems to be a memory issue caused by
+    //   excessive deprecation errors caused by
+    //   https://github.com/symfony/symfony/commit/7c01c4c80c69159b2b39ea8bc53431196d7b29fb
+    //   The deprecations will be fixed in https://www.drupal.org/project/drupal/issues/3074585
+    $settings['settings']['file_cache']['file_cache_disable'] = (object) [
+      'value' => TRUE,
+      'required' => TRUE,
+    ];
+    $this->writeSettings($settings);
 
     // Note that FunctionalTestSetupTrait::installParameters() returns form
     // input values suitable for a programmed

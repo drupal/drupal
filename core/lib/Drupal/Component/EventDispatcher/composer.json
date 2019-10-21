@@ -6,8 +6,8 @@
   "license": "GPL-2.0-or-later",
   "require": {
     "php": ">=7.2.3",
-    "symfony/dependency-injection": ">=3.4 <4.0.0",
-    "symfony/event-dispatcher": ">=3.4 <4.0.0"
+    "symfony/dependency-injection": "^4.4",
+    "symfony/event-dispatcher": "^4.4"
   },
   "autoload": {
     "psr-4": {

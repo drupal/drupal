@@ -708,7 +708,7 @@ abstract class WebTestBase extends TestBase {
         if (getenv('SYMFONY_DEPRECATIONS_HELPER') !== 'disabled') {
           $message = (string) $parameters[0];
           $test_info = TestDiscovery::getTestInfo(get_called_class());
-          if (!in_array('legacy', $test_info['groups']) && !in_array($message, DeprecationListenerTrait::getSkippedDeprecations())) {
+          if (!in_array('legacy', $test_info['groups']) && !DeprecationListenerTrait::isDeprecationSkipped($message)) {
             call_user_func_array([&$this, 'error'], $parameters);
           }
         }
