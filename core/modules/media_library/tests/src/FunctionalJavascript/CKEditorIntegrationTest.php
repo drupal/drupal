@@ -220,9 +220,9 @@ class CKEditorIntegrationTest extends WebDriverTestBase {
     }
 
     $assert_session->pageTextContains('0 of 1 item selected');
-    $assert_session->elementExists('css', '.media-library-item')->click();
+    $assert_session->elementExists('css', '.js-media-library-item')->click();
     $assert_session->pageTextContains('1 of 1 item selected');
-    $assert_session->elementExists('css', 'button.media-library-select.button.button--primary')->click();
+    $assert_session->elementExists('css', '.ui-dialog-buttonpane')->pressButton('Insert selected');
     $this->assignNameToCkeditorIframe();
     $this->getSession()->switchToIFrame('ckeditor');
     $this->assertNotEmpty($assert_session->waitForElementVisible('css', '.cke_widget_drupalmedia drupal-media .media', 2000));
