@@ -122,8 +122,8 @@ class EmbeddedFormWidgetTest extends WebDriverTestBase {
     $page->fillField('Alternative text', $this->randomString());
     $assert_session->elementExists('css', '.ui-dialog-buttonpane')->pressButton('Save and insert');
     $first_item_locator = "(//div[@data-drupal-selector='edit-media-image-field-selection-0'])[1]";
-    $this->assertTrue($assert_session->waitForElementVisible('xpath', $first_item_locator));
-    $assert_session->elementExists('css', '.media-library-item__remove')->click();
+    $this->assertTrue($first_item = $assert_session->waitForElementVisible('xpath', $first_item_locator));
+    $first_item->pressButton('Remove');
     $assert_session->waitForElementRemoved('xpath', $first_item_locator);
     $page->waitFor(10, function () use ($wrapper) {
       return $wrapper->hasButton('Add media');

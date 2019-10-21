@@ -21,7 +21,7 @@
           ({ currentTarget }) => {
             // Toggle all checkboxes.
             const $checkboxes = $(currentTarget)
-              .closest('.media-library-view')
+              .closest('.js-media-library-view')
               .find('.js-media-library-item input[type="checkbox"]');
             $checkboxes
               .prop('checked', $(currentTarget).prop('checked'))

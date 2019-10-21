@@ -485,7 +485,7 @@ class MediaLibraryTest extends WebDriverTestBase {
     // the selected item.
     $this->selectMediaItem(0);
     $assert_session->hiddenFieldValueEquals('media-library-modal-selection', '4');
-    $assert_session->elementTextContains('css', '.media-library-selected-count', '1 of 1 item selected');
+    $this->assertSelectedMediaCount('1 of 1 item selected');
     $assert_session->elementNotExists('css', '.js-media-library-menu');
     $assert_session->elementExists('css', '.ui-dialog-titlebar-close')->click();
 
@@ -558,11 +558,6 @@ class MediaLibraryTest extends WebDriverTestBase {
     $this->pressInsertSelected('Added one media item.');
     // Assert the focus is set back on the open button of the media field.
     $this->assertJsCondition('jQuery("#field_twin_media-media-library-wrapper .js-media-library-open-button").is(":focus")');
-
-    // Assert the weight field can be focused via a mouse click.
-    $assert_session->elementExists('named', ['button', 'Show media item weights'])->click();
-    $assert_session->elementExists('css', '#field_twin_media-media-library-wrapper .media-library-item__weight')->click();
-    $assert_session->elementExists('css', '#field_twin_media-media-library-wrapper .js-media-library-widget-toggle-weight')->click();
 
     // Assert that we can toggle the visibility of the weight inputs.
     $wrapper = $assert_session->elementExists('css', '.field--name-field-twin-media');
@@ -819,8 +814,6 @@ class MediaLibraryTest extends WebDriverTestBase {
 
     $this->drupalGet('node/add/basic_page');
 
-    // Assert the media library contains header links to switch between the grid
-    // and table display.
     $this->openMediaLibraryForField('field_unlimited_media');
 
     // Assert the 'Apply filter' button is not moved to the button pane.
@@ -829,13 +822,13 @@ class MediaLibraryTest extends WebDriverTestBase {
     $assert_session->buttonNotExists('Apply filters', $button_pane);
 
     // Assert the pager works as expected.
-    $assert_session->elementTextContains('css', '.view-media-library .pager__item.is-active', 'Page 1');
+    $assert_session->elementTextContains('css', '.js-media-library-view .pager__item.is-active', 'Page 1');
     $this->assertCount(24, $this->getCheckboxes());
     $page->clickLink('Next page');
-    $this->waitForElementTextContains('.view-media-library .pager__item.is-active', 'Page 2');
+    $this->waitForElementTextContains('.js-media-library-view .pager__item.is-active', 'Page 2');
     $this->assertCount(1, $this->getCheckboxes());
     $page->clickLink('Previous page');
-    $this->waitForElementTextContains('.view-media-library .pager__item.is-active', 'Page 1');
+    $this->waitForElementTextContains('.js-media-library-view .pager__item.is-active', 'Page 1');
     $this->assertCount(24, $this->getCheckboxes());
 
     $this->switchToMediaLibraryTable();
@@ -878,7 +871,6 @@ class MediaLibraryTest extends WebDriverTestBase {
    */
   public function testWidgetAnonymous() {
     $assert_session = $this->assertSession();
-    $page = $this->getSession()->getPage();
 
     $this->drupalLogout();
 
@@ -952,7 +944,6 @@ class MediaLibraryTest extends WebDriverTestBase {
     // Visit a node create page and open the media library.
     $this->drupalGet('node/add/basic_page');
     $this->openMediaLibraryForField('field_twin_media');
-    $assert_session->pageTextContains('Add or select media');
 
     // Assert the upload form is not visible for default tab type_three without
     // the proper permissions.
@@ -1042,7 +1033,6 @@ class MediaLibraryTest extends WebDriverTestBase {
     $this->waitForNoText($png_image->filename);
 
     $this->openMediaLibraryForField('field_twin_media');
-    $assert_session->pageTextContains('Add or select media');
     $this->switchToMediaType('Three');
     $png_uri_2 = $file_system->copy($png_image->uri, 'public://');
     $this->addMediaFileToField('Add files', $this->container->get('file_system')->realpath($png_uri_2));
@@ -1165,17 +1155,16 @@ class MediaLibraryTest extends WebDriverTestBase {
     $this->addMediaFileToField('Add files', $this->container->get('file_system')->realpath($png_image->uri));
     // Assert the media item fields are shown and the vertical tabs are no
     // longer shown.
+    $this->waitForFieldExists('Alternative text');
     $this->assertMediaAdded();
     // Press the 'Remove button' and assert the user is sent back to the media
     // library.
-    $assert_session->elementExists('css', '.media-library-add-form__remove-button')->click();
+    $page->pressButton('media-0-remove-button');
     // Assert the remove message is shown.
     $this->waitForText("The media item $png_image->filename has been removed.");
     // Assert the focus is shifted to the first tabbable element of the add
     // form, which should be the source field.
-    $this->assertJsCondition('jQuery("#media-library-add-form-wrapper :tabbable").is(":focus")');
-    $assert_session->elementNotExists('css', '.media-library-add-form__fields');
-    $assert_session->elementExists('css', '.js-media-library-menu');
+    $this->assertNoMediaAdded();
     $assert_session->elementExists('css', '.ui-dialog-titlebar-close')->click();
 
     // Assert uploading multiple files.
@@ -1297,7 +1286,6 @@ class MediaLibraryTest extends WebDriverTestBase {
     // Visit a node create page and open the media library.
     $this->drupalGet('node/add/basic_page');
     $this->openMediaLibraryForField('field_twin_media');
-    $assert_session->pageTextContains('Add or select media');
 
     // Assert the upload form is not visible for default tab type_three without
     // the proper permissions.
@@ -1346,7 +1334,7 @@ class MediaLibraryTest extends WebDriverTestBase {
     $assert_session->elementNotExists('css', '.media-library-add-form--without-input');
     // We do not have a pre-selected items, so the container should not be added
     // to the form.
-    $assert_session->elementNotExists('css', '.media-library-add-form__selected-media');
+    $assert_session->elementNotExists('css', 'details summary:contains(Additional selected media)');
     // Files are temporary until the form is saved.
     $files = $file_storage->loadMultiple();
     $file = array_pop($files);
@@ -1383,7 +1371,7 @@ class MediaLibraryTest extends WebDriverTestBase {
     $this->waitForText($png_image->filename);
 
     // Remove the item.
-    $assert_session->elementExists('css', '.media-library-item__remove')->click();
+    $assert_session->elementExists('css', '.field--name-field-twin-media')->pressButton('Remove');
     $this->waitForNoText($png_image->filename);
 
     $this->openMediaLibraryForField('field_twin_media');
@@ -1501,7 +1489,7 @@ class MediaLibraryTest extends WebDriverTestBase {
     // Close the details element so that clicking the Save and select works.
     // @todo Fix dialog or test so this is not necessary to prevent random
     //   fails. https://www.drupal.org/project/drupal/issues/3055648
-    $this->click('details.media-library-add-form__selected-media summary');
+    $selection_area->find('css', 'summary')->click();
     $this->saveAnd('select');
     $this->waitForText("Select $existing_media_name");
     $media_items = Media::loadMultiple();
@@ -1523,14 +1511,10 @@ class MediaLibraryTest extends WebDriverTestBase {
     $this->assertMediaAdded();
     // Press the 'Remove button' and assert the user is sent back to the media
     // library.
-    $assert_session->elementExists('css', '.media-library-add-form__remove-button')->click();
+    $page->pressButton('media-0-remove-button');
     // Assert the remove message is shown.
     $this->waitForText("The media item $png_image->filename has been removed.");
-    // Assert the focus is shifted to the first tabbable element of the add
-    // form, which should be the source field.
-    $this->assertJsCondition('jQuery("#media-library-add-form-wrapper :tabbable").is(":focus")');
-    $assert_session->elementNotExists('css', '.media-library-add-form__fields');
-    $assert_session->elementExists('css', '.js-media-library-menu');
+    $this->assertNoMediaAdded();
     $assert_session->elementExists('css', '.ui-dialog-titlebar-close')->click();
 
     // Assert uploading multiple files.
@@ -1785,7 +1769,6 @@ class MediaLibraryTest extends WebDriverTestBase {
 
     // Assert removing an added oEmbed media item before save works as expected.
     $this->openMediaLibraryForField('field_unlimited_media');
-    $assert_session->pageTextContains('Add or select media');
     $this->switchToMediaType('Five');
     $page->fillField('Add Type Five via URL', $youtube_url);
     $page->pressButton('Add');
@@ -1794,14 +1777,10 @@ class MediaLibraryTest extends WebDriverTestBase {
     $this->assertMediaAdded();
     // Press the 'Remove button' and assert the user is sent back to the media
     // library.
-    $assert_session->elementExists('css', '.media-library-add-form__remove-button')->click();
+    $page->pressButton('media-0-remove-button');
     // Assert the remove message is shown.
     $this->waitForText("The media item $youtube_title has been removed.");
-    // Assert the focus is shifted to the first tabbable element of the add
-    // form, which should be the source field.
-    $this->assertJsCondition('jQuery("#media-library-add-form-wrapper :tabbable").is(":focus")');
-    $assert_session->elementNotExists('css', '.media-library-add-form__fields');
-    $assert_session->elementExists('css', '.js-media-library-menu');
+    $this->assertNoMediaAdded();
   }
 
   /**
@@ -1953,7 +1932,6 @@ class MediaLibraryTest extends WebDriverTestBase {
     // Assert we can remove selected items from the selection area in the oEmbed
     // form.
     $this->openMediaLibraryForField('field_unlimited_media');
-    $assert_session->pageTextContains('Add or select media');
     $this->switchToMediaType('Five');
     $checkbox = $page->findField("Select $vimeo_title");
     $selected_item_id = $checkbox->getAttribute('value');
@@ -1995,14 +1973,10 @@ class MediaLibraryTest extends WebDriverTestBase {
     $this->assertMediaAdded();
     // Press the 'Remove button' and assert the user is sent back to the media
     // library.
-    $assert_session->elementExists('css', '.media-library-add-form__remove-button')->click();
+    $page->pressButton('media-0-remove-button');
     // Assert the remove message is shown.
     $this->waitForText("The media item $youtube_title has been removed.");
-    // Assert the focus is shifted to the first tabbable element of the add
-    // form, which should be the source field.
-    $this->assertJsCondition('jQuery("#media-library-add-form-wrapper :tabbable").is(":focus")');
-    $assert_session->elementNotExists('css', '.media-library-add-form__fields');
-    $assert_session->elementExists('css', '.js-media-library-menu');
+    $this->assertNoMediaAdded();
   }
 
   /**
@@ -2023,11 +1997,11 @@ class MediaLibraryTest extends WebDriverTestBase {
     $page->selectFieldOption('new_storage_type', 'field_ui:entity_reference:media');
     $this->assertTrue($assert_session->waitForField('label'));
     $page->fillField('label', 'Shatner');
-    $this->assertTrue($assert_session->waitForText('field_shatner'));
+    $this->waitForText('field_shatner');
     $page->pressButton('Save and continue');
     $page->pressButton('Save field settings');
     $assert_session->pageTextNotContains('Undefined index: target_bundles');
-    $page->checkField('settings[handler_settings][target_bundles][type_one]');
+    $this->waitForFieldExists('Type One')->check();
     $this->assertElementExistsAfterWait('css', '[name="settings[handler_settings][target_bundles][type_one]"][checked="checked"]');
     $page->checkField('settings[handler_settings][target_bundles][type_two]');
     $this->assertElementExistsAfterWait('css', '[name="settings[handler_settings][target_bundles][type_two]"][checked="checked"]');
@@ -2143,6 +2117,7 @@ class MediaLibraryTest extends WebDriverTestBase {
       /** @var \Behat\Mink\Element\NodeElement $link */
       return $link->hasClass('active');
     });
+    $this->assertNotEmpty($result);
 
     // assertWaitOnAjaxRequest() required for input "id" attributes to
     // consistently match their label's "for" attribute.
@@ -2265,6 +2240,13 @@ class MediaLibraryTest extends WebDriverTestBase {
       ->pressButton('Add media');
     $this->waitForText('Add or select media');
 
+    // Assert that the grid display is visible and the links to toggle between
+    // the grid and table displays are present.
+    $this->assertMediaLibraryGrid();
+    $assert_session = $this->assertSession();
+    $assert_session->linkExists('Grid');
+    $assert_session->linkExists('Table');
+
     return $this->assertElementExistsAfterWait('css', $after_open_selector);
   }
 
@@ -2310,6 +2292,10 @@ class MediaLibraryTest extends WebDriverTestBase {
    * Asserts that media was not added, i.e. due to a validation error.
    */
   protected function assertNoMediaAdded() {
+    // Assert the focus is shifted to the first tabbable element of the add
+    // form, which should be the source field.
+    $this->assertJsCondition('jQuery("#media-library-add-form-wrapper :tabbable").is(":focus")');
+
     $this->assertSession()
       ->elementNotExists('css', '[data-drupal-selector="edit-media-0-fields"]');
     $this->getTypesMenu();
@@ -2415,7 +2401,7 @@ class MediaLibraryTest extends WebDriverTestBase {
    */
   protected function assertSelectedMediaCount($text) {
     $selected_count = $this->assertSession()
-      ->elementExists('css', '.media-library-selected-count');
+      ->elementExists('css', '.js-media-library-selected-count');
 
     $this->assertSame('status', $selected_count->getAttribute('role'));
     $this->assertSame('polite', $selected_count->getAttribute('aria-live'));
