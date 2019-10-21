@@ -13,7 +13,7 @@
         var $checkbox = $(Drupal.theme('checkbox')).on('click', function (_ref) {
           var currentTarget = _ref.currentTarget;
 
-          var $checkboxes = $(currentTarget).closest('.media-library-view').find('.js-media-library-item input[type="checkbox"]');
+          var $checkboxes = $(currentTarget).closest('.js-media-library-view').find('.js-media-library-item input[type="checkbox"]');
           $checkboxes.prop('checked', $(currentTarget).prop('checked')).trigger('change');
 
           var announcement = $(currentTarget).prop('checked') ? Drupal.t('All @count items selected', {

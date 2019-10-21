@@ -119,7 +119,7 @@ class TranslationsTest extends WebDriverTestBase {
     // All translations should be shown in the administration overview,
     // regardless of the interface language.
     $this->drupalGet('nl/admin/content/media-grid');
-    $assert_session->elementsCount('css', '.media-library-item', 6);
+    $assert_session->elementsCount('css', '.js-media-library-item', 6);
     $media_items = $page->findAll('css', '.media-library-item__name');
     $media_names = [];
     foreach ($media_items as $media_item) {
@@ -129,7 +129,7 @@ class TranslationsTest extends WebDriverTestBase {
     $this->assertSame(['Ardilla', 'Eekhoorn', 'Hert', 'Tejón', 'Vos', 'Zorro'], $media_names);
 
     $this->drupalGet('es/admin/content/media-grid');
-    $assert_session->elementsCount('css', '.media-library-item', 6);
+    $assert_session->elementsCount('css', '.js-media-library-item', 6);
     $media_items = $page->findAll('css', '.media-library-item__name');
     $media_names = [];
     foreach ($media_items as $media_item) {
@@ -141,9 +141,9 @@ class TranslationsTest extends WebDriverTestBase {
     // All media should only be shown once, and should be shown in the interface
     // language.
     $this->drupalGet('nl/node/add/article');
-    $assert_session->elementExists('css', '.media-library-open-button[name^="field_media"]')->click();
+    $assert_session->elementExists('css', '.js-media-library-open-button[name^="field_media"]')->click();
     $assert_session->waitForText('Add or select media');
-    $assert_session->elementsCount('css', '.media-library-item', 4);
+    $assert_session->elementsCount('css', '.js-media-library-item', 4);
     $media_items = $page->findAll('css', '.media-library-item__name');
     $media_names = [];
     foreach ($media_items as $media_item) {
@@ -153,9 +153,9 @@ class TranslationsTest extends WebDriverTestBase {
     $this->assertSame(['Eekhoorn', 'Hert', 'Tejón', 'Vos'], $media_names);
 
     $this->drupalGet('es/node/add/article');
-    $assert_session->elementExists('css', '.media-library-open-button[name^="field_media"]')->click();
+    $assert_session->elementExists('css', '.js-media-library-open-button[name^="field_media"]')->click();
     $assert_session->waitForText('Add or select media');
-    $assert_session->elementsCount('css', '.media-library-item', 4);
+    $assert_session->elementsCount('css', '.js-media-library-item', 4);
     $media_items = $page->findAll('css', '.media-library-item__name');
     $media_names = [];
     foreach ($media_items as $media_item) {

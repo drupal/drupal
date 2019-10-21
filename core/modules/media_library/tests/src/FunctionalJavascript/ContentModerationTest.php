@@ -247,27 +247,27 @@ class ContentModerationTest extends WebDriverTestBase {
     // All users should only be able to see published media items.
     $this->drupalLogin($this->rootUser);
     $this->drupalGet('node/add/article');
-    $assert_session->elementExists('css', '.media-library-open-button[name^="field_media"]')->click();
+    $assert_session->elementExists('css', '.js-media-library-open-button[name^="field_media"]')->click();
     $assert_session->assertWaitOnAjaxRequest();
     $this->assertOnlyPublishedMedia();
     $this->drupalLogin($this->userAdmin);
     $this->drupalGet('node/add/article');
-    $assert_session->elementExists('css', '.media-library-open-button[name^="field_media"]')->click();
+    $assert_session->elementExists('css', '.js-media-library-open-button[name^="field_media"]')->click();
     $assert_session->assertWaitOnAjaxRequest();
     $this->assertOnlyPublishedMedia();
     $this->drupalLogin($this->userViewer);
     $this->drupalGet('node/add/article');
-    $assert_session->elementExists('css', '.media-library-open-button[name^="field_media"]')->click();
+    $assert_session->elementExists('css', '.js-media-library-open-button[name^="field_media"]')->click();
     $assert_session->assertWaitOnAjaxRequest();
     $this->assertOnlyPublishedMedia();
     $this->drupalLogin($this->userViewOwnUnpublished);
     $this->drupalGet('node/add/article');
-    $assert_session->elementExists('css', '.media-library-open-button[name^="field_media"]')->click();
+    $assert_session->elementExists('css', '.js-media-library-open-button[name^="field_media"]')->click();
     $assert_session->assertWaitOnAjaxRequest();
     $this->assertOnlyPublishedMedia();
     $this->drupalLogin($this->userViewAnyUnpublished);
     $this->drupalGet('node/add/article');
-    $assert_session->elementExists('css', '.media-library-open-button[name^="field_media"]')->click();
+    $assert_session->elementExists('css', '.js-media-library-open-button[name^="field_media"]')->click();
     $assert_session->assertWaitOnAjaxRequest();
     $this->assertOnlyPublishedMedia();
 
@@ -280,27 +280,27 @@ class ContentModerationTest extends WebDriverTestBase {
 
     $this->drupalLogin($this->rootUser);
     $this->drupalGet('node/add/article');
-    $assert_session->elementExists('css', '.media-library-open-button[name^="field_media"]')->click();
+    $assert_session->elementExists('css', '.js-media-library-open-button[name^="field_media"]')->click();
     $assert_session->assertWaitOnAjaxRequest();
     $this->assertOnlyPublishedMedia();
     $this->drupalLogin($this->userAdmin);
     $this->drupalGet('node/add/article');
-    $assert_session->elementExists('css', '.media-library-open-button[name^="field_media"]')->click();
+    $assert_session->elementExists('css', '.js-media-library-open-button[name^="field_media"]')->click();
     $assert_session->assertWaitOnAjaxRequest();
     $this->assertOnlyPublishedMedia();
     $this->drupalLogin($this->userViewer);
     $this->drupalGet('node/add/article');
-    $assert_session->elementExists('css', '.media-library-open-button[name^="field_media"]')->click();
+    $assert_session->elementExists('css', '.js-media-library-open-button[name^="field_media"]')->click();
     $assert_session->assertWaitOnAjaxRequest();
     $this->assertOnlyPublishedMedia();
     $this->drupalLogin($this->userViewOwnUnpublished);
     $this->drupalGet('node/add/article');
-    $assert_session->elementExists('css', '.media-library-open-button[name^="field_media"]')->click();
+    $assert_session->elementExists('css', '.js-media-library-open-button[name^="field_media"]')->click();
     $assert_session->assertWaitOnAjaxRequest();
     $this->assertOnlyPublishedMedia();
     $this->drupalLogin($this->userViewAnyUnpublished);
     $this->drupalGet('node/add/article');
-    $assert_session->elementExists('css', '.media-library-open-button[name^="field_media"]')->click();
+    $assert_session->elementExists('css', '.js-media-library-open-button[name^="field_media"]')->click();
     $assert_session->assertWaitOnAjaxRequest();
     $this->assertOnlyPublishedMedia();
   }

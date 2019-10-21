@@ -629,13 +629,13 @@ abstract class AddFormBase extends FormBase {
             break;
           }
         }
-        $response->addCommand(new InvokeCommand(".media-library-add-form__media[data-media-library-added-delta=$delta_to_focus]", 'focus'));
+        $response->addCommand(new InvokeCommand("[data-media-library-added-delta=$delta_to_focus]", 'focus'));
       }
     }
     // Update the form and shift focus to the added media items.
     else {
       $response->addCommand(new ReplaceCommand("#$wrapper_id", $form));
-      $response->addCommand(new InvokeCommand('.media-library-add-form__added-media', 'focus'));
+      $response->addCommand(new InvokeCommand('.js-media-library-add-form-added-media', 'focus'));
     }
 
     return $response;
