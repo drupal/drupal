@@ -14,7 +14,6 @@ description: 'Find and manage media.'
 tag: ''
 base_table: media_field_data
 base_field: mid
-core: 8.x
 display:
   default:
     display_plugin: default

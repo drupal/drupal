@@ -11,7 +11,6 @@ description: 'Find and manage files.'
 tag: default
 base_table: file_managed
 base_field: fid
-core: 8.x
 display:
   default:
     display_plugin: default

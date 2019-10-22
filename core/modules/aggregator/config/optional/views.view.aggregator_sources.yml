@@ -14,7 +14,6 @@ description: ''
 tag: aggregator
 base_table: aggregator_feed
 base_field: fid
-core: 8.x
 display:
   default:
     display_plugin: default

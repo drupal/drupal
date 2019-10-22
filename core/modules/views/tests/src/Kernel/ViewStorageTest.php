@@ -30,7 +30,6 @@ class ViewStorageTest extends ViewsKernelTestBase {
     'tag',
     'base_table',
     'label',
-    'core',
     'display',
   ];
 
@@ -334,7 +333,6 @@ class ViewStorageTest extends ViewsKernelTestBase {
       'tag',
       'base_table',
       'label',
-      'core',
     ];
 
     foreach ($config_properties as $property) {

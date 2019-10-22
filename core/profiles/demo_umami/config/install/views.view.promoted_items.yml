@@ -16,7 +16,6 @@ description: 'A view to list the items promoted to the top of the homepage.'
 tag: ''
 base_table: node_field_data
 base_field: nid
-core: 8.x
 display:
   default:
     display_plugin: default

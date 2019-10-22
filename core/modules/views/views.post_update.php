@@ -426,3 +426,13 @@ function views_post_update_limit_operator_defaults(&$sandbox = NULL) {
     return $update;
   });
 }
+
+/**
+ * Remove core key from views configuration.
+ */
+function views_post_update_remove_core_key(&$sandbox = NULL) {
+  \Drupal::classResolver(ConfigEntityUpdater::class)->update($sandbox, 'view', function () {
+    // Re-save all views.
+    return TRUE;
+  });
+}

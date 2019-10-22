@@ -8,7 +8,6 @@ description: 'Test view to invalid token replacement tests.'
 tag: ''
 base_table: views_test_data
 base_field: id
-core: 8.x
 display:
   default:
     display_options:
