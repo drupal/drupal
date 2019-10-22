@@ -653,7 +653,7 @@
             "dist": {
                 "type": "path",
                 "url": "core",
-                "reference": "1d60dcc9ae7937cd50c1fb7f4ea3bf7bdc5a2e3c"
+                "reference": "8830b3c971fde18c39a7818d1722fbcab385641a"
             },
             "require": {
                 "asm89/stack-cors": "^1.1",
@@ -677,7 +677,7 @@
                 "ext-xml": "*",
                 "guzzlehttp/guzzle": "^6.3",
                 "masterminds/html5": "^2.1",
-                "pear/archive_tar": "^1.4.5",
+                "pear/archive_tar": "^1.4.8",
                 "php": ">=7.2.3",
                 "stack/builder": "^1.0",
                 "symfony-cmf/routing": "^2.1",
@@ -696,7 +696,7 @@
                 "symfony/validator": "^4.4",
                 "symfony/yaml": "^4.4",
                 "twig/twig": "^1.38.2",
-                "typo3/phar-stream-wrapper": "^3.1.2",
+                "typo3/phar-stream-wrapper": "^3.1.3",
                 "zendframework/zend-diactoros": ">=1.7 <1.8",
                 "zendframework/zend-feed": "^2.12"
             },
@@ -1282,16 +1282,16 @@
         },
         {
             "name": "pear/archive_tar",
-            "version": "1.4.7",
+            "version": "1.4.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/pear/Archive_Tar.git",
-                "reference": "7e48add6f8edc3027dd98ad15964b1a28fd0c845"
+                "reference": "442bdffb7edb84c898cfd94f7ac8500e49d5bbb5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/pear/Archive_Tar/zipball/7e48add6f8edc3027dd98ad15964b1a28fd0c845",
-                "reference": "7e48add6f8edc3027dd98ad15964b1a28fd0c845",
+                "url": "https://api.github.com/repos/pear/Archive_Tar/zipball/442bdffb7edb84c898cfd94f7ac8500e49d5bbb5",
+                "reference": "442bdffb7edb84c898cfd94f7ac8500e49d5bbb5",
                 "shasum": ""
             },
             "require": {
@@ -1344,7 +1344,7 @@
                 "archive",
                 "tar"
             ],
-            "time": "2019-04-08T13:15:55+00:00"
+            "time": "2019-10-21T13:31:24+00:00"
         },
         {
             "name": "pear/console_getopt",
@@ -3537,16 +3537,16 @@
         },
         {
             "name": "typo3/phar-stream-wrapper",
-            "version": "v3.1.2",
+            "version": "v3.1.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/TYPO3/phar-stream-wrapper.git",
-                "reference": "df7609a2f6cc4013d7bd12f1a2412d127b28f771"
+                "reference": "586ff60beea128e069a5dc271d3d8133a9bc460a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/TYPO3/phar-stream-wrapper/zipball/df7609a2f6cc4013d7bd12f1a2412d127b28f771",
-                "reference": "df7609a2f6cc4013d7bd12f1a2412d127b28f771",
+                "url": "https://api.github.com/repos/TYPO3/phar-stream-wrapper/zipball/586ff60beea128e069a5dc271d3d8133a9bc460a",
+                "reference": "586ff60beea128e069a5dc271d3d8133a9bc460a",
                 "shasum": ""
             },
             "require": {
@@ -3583,7 +3583,7 @@
                 "security",
                 "stream-wrapper"
             ],
-            "time": "2019-05-14T13:14:14+00:00"
+            "time": "2019-10-18T11:57:16+00:00"
         },
         {
             "name": "wikimedia/composer-merge-plugin",
