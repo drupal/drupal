@@ -79,7 +79,6 @@ class ViewTest extends ResourceTestBase {
         'attributes' => [
           'base_field' => 'nid',
           'base_table' => 'node',
-          'core' => '8.x',
           'dependencies' => [],
           'description' => '',
           'display' => [

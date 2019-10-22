@@ -7,7 +7,6 @@ description: ''
 tag: ''
 base_table: views_test_data
 base_field: nid
-core: '8'
 id: test_argument
 display:
   default:

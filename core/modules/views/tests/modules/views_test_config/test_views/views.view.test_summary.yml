@@ -7,7 +7,6 @@ description: ''
 tag: default
 base_table: entity_test
 base_field: id
-core: '8'
 display:
   default:
     id: default

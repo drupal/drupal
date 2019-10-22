@@ -41,7 +41,6 @@ use Drupal\views\ViewEntityInterface;
  *     "tag",
  *     "base_table",
  *     "base_field",
- *     "core",
  *     "display",
  *   }
  * )
@@ -85,13 +84,6 @@ class View extends ConfigEntityBase implements ViewEntityInterface {
    * @var string
    */
   protected $tag = '';
-
-  /**
-   * The core version the view was created for.
-   *
-   * @var string
-   */
-  protected $core = \Drupal::CORE_COMPATIBILITY;
 
   /**
    * Stores all display handlers of this view.

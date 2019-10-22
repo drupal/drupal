@@ -14,7 +14,6 @@ description: 'Find and moderate content.'
 tag: ''
 base_table: node_field_revision
 base_field: vid
-core: 8.x
 display:
   default:
     display_plugin: default

@@ -10,7 +10,6 @@ description: ''
 tag: ''
 base_table: node_field_data
 base_field: nid
-core: '8'
 display:
   default:
     display_plugin: default

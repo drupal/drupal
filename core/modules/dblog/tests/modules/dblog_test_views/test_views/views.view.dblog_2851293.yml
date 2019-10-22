@@ -10,7 +10,6 @@ description: 'Base view to test upgrade from issue #2851293'
 tag: ''
 base_table: watchdog
 base_field: wid
-core: 8.x
 display:
   default:
     display_plugin: default

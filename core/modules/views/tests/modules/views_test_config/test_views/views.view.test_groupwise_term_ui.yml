@@ -12,7 +12,6 @@ description: ''
 tag: default
 base_table: taxonomy_term_field_data
 base_field: tid
-core: 8.0-dev
 display:
   default:
     display_options:

@@ -10,7 +10,6 @@ description: ''
 tag: default
 base_table: aggregator_feed
 base_field: fid
-core: '8'
 display:
   default:
     display_plugin: default

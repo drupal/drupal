@@ -12,7 +12,6 @@ description: 'Recent comments.'
 tag: default
 base_table: comment_field_data
 base_field: cid
-core: 8.x
 display:
   default:
     display_plugin: default

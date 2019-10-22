@@ -10,7 +10,6 @@ description: ''
 tag: ''
 base_table: entity_test_mul_changed_property
 base_field: id
-core: 8.x
 display:
   default:
     display_plugin: default

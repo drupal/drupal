@@ -11,7 +11,6 @@ description: 'Recent log messages'
 tag: ''
 base_table: watchdog
 base_field: wid
-core: 8.x
 display:
   default:
     display_plugin: default
