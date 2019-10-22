@@ -172,7 +172,26 @@ class LibraryDiscoveryParserTest extends UnitTestCase {
   }
 
   /**
-   * Tests that an exception is thrown when no CSS/JS/setting is specified.
+   * Tests that no exception is thrown when only dependencies are specified.
+   *
+   * @covers ::buildByExtension
+   */
+  public function testBuildByExtensionWithOnlyDependencies() {
+    $this->moduleHandler->expects($this->atLeastOnce())
+      ->method('moduleExists')
+      ->with('example_module_only_dependencies')
+      ->will($this->returnValue(TRUE));
+
+    $path = __DIR__ . '/library_test_files';
+    $path = substr($path, strlen($this->root) + 1);
+    $this->libraryDiscoveryParser->setPaths('module', 'example_module_only_dependencies', $path);
+
+    $libraries = $this->libraryDiscoveryParser->buildByExtension('example_module_only_dependencies');
+    $this->assertArrayHasKey('example', $libraries);
+  }
+
+  /**
+   * Tests that an exception is thrown with only the version property specified.
    *
    * @covers ::buildByExtension
    */
