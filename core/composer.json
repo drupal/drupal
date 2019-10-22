@@ -49,6 +49,7 @@
         "pear/archive_tar": "^1.4.8"
     },
     "conflict": {
+        "drupal/pathauto": "<1.6",
         "drush/drush": "<8.1.10"
     },
     "replace": {

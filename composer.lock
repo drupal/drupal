@@ -653,7 +653,7 @@
             "dist": {
                 "type": "path",
                 "url": "core",
-                "reference": "8830b3c971fde18c39a7818d1722fbcab385641a"
+                "reference": "98e264668acbc33027a30953a7e194715b3ce33f"
             },
             "require": {
                 "asm89/stack-cors": "^1.1",
@@ -701,6 +701,7 @@
                 "zendframework/zend-feed": "^2.12"
             },
             "conflict": {
+                "drupal/pathauto": "<1.6",
                 "drush/drush": "<8.1.10"
             },
             "replace": {
