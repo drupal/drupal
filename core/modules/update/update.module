@@ -806,7 +806,9 @@ function update_clear_update_disk_cache() {
 
   // Search for files and directories in base folder only without recursion.
   foreach ($directories as $directory) {
-    \Drupal::service('file_system')->scanDirectory($directory, '/.*/', ['callback' => 'update_delete_file_if_stale', 'recurse' => FALSE]);
+    if (is_dir($directory)) {
+      \Drupal::service('file_system')->scanDirectory($directory, '/.*/', ['callback' => 'update_delete_file_if_stale', 'recurse' => FALSE]);
+    }
   }
 }
 

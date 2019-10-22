@@ -386,6 +386,23 @@ class UpdateCoreTest extends UpdateTestBase {
   }
 
   /**
+   * Checks that clearing the disk cache works.
+   */
+  public function testClearDiskCache() {
+    $directories = [
+      _update_manager_cache_directory(FALSE),
+      _update_manager_extract_directory(FALSE),
+    ];
+    // Check that update directories does not exists.
+    foreach ($directories as $directory) {
+      $this->assertDirectoryNotExists($directory);
+    }
+
+    // Method must not fail if update directories do not exists.
+    update_clear_update_disk_cache();
+  }
+
+  /**
    * Checks the messages at admin/modules when the site is up to date.
    */
   public function testModulePageUpToDate() {
