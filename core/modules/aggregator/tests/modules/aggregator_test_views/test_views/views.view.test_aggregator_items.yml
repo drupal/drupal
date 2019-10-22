@@ -10,7 +10,6 @@ description: ''
 tag: ''
 base_table: aggregator_item
 base_field: iid
-core: 8.x
 display:
   default:
     display_plugin: default

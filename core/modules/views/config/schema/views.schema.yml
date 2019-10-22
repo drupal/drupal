@@ -90,9 +90,6 @@ views.view.*:
     base_field:
       type: string
       label: 'Base field'
-    core:
-      type: string
-      label: 'Drupal version'
     display:
       type: sequence
       label: 'Displays'

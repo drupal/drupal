@@ -10,7 +10,6 @@ description: 'Shows the user names of the most recently active users, and the to
 tag: default
 base_table: users_field_data
 base_field: uid
-core: 8.x
 display:
   default:
     display_plugin: default
