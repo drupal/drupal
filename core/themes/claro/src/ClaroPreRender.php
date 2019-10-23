@@ -160,7 +160,6 @@ class ClaroPreRender implements TrustedCallbackInterface {
     // Add clearfix for filter wrapper.
     $element['format']['#attributes']['class'][] = 'clearfix';
     // Hide format select label visually.
-    $element['format']['format']['#title_display'] = 'invisible';
     $element['format']['format']['#wrapper_attributes']['class'][] = 'form-item--editor-format';
     $element['format']['format']['#attributes']['class'][] = 'form-element--extrasmall';
     $element['format']['format']['#attributes']['class'][] = 'form-element--editor-format';
