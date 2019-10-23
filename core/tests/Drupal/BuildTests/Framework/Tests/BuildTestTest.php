@@ -154,4 +154,35 @@ class BuildTestTest extends BuildTestBase {
     }
   }
 
+  /**
+   * @covers ::standUpServer
+   */
+  public function testStandUpServer() {
+    // Stand up a server with working directory 'first'.
+    $this->standUpServer('first');
+
+    // Get the process object for the server.
+    $ref_process = new \ReflectionProperty(parent::class, 'serverProcess');
+    $ref_process->setAccessible(TRUE);
+    $first_process = $ref_process->getValue($this);
+
+    // Standing up the server again should not change the server process.
+    $this->standUpServer('first');
+    $this->assertSame($first_process, $ref_process->getValue($this));
+
+    // Standing up the server with working directory 'second' should give us a
+    // new server process.
+    $this->standUpServer('second');
+    $this->assertNotSame(
+      $first_process,
+      $second_process = $ref_process->getValue($this)
+    );
+
+    // And even with the original working directory name, we should get a new
+    // server process.
+    $this->standUpServer('first');
+    $this->assertNotSame($first_process, $ref_process->getValue($this));
+    $this->assertNotSame($second_process, $ref_process->getValue($this));
+  }
+
 }

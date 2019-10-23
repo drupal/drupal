@@ -382,9 +382,11 @@ abstract class BuildTestBase extends TestCase {
       $this->stopServer();
     }
     // If there's not a server at this point, make one.
-    $this->serverProcess = $this->instantiateServer($this->getPortNumber(), $working_dir);
-    if ($this->serverProcess) {
-      $this->serverDocroot = $working_dir;
+    if (!$this->serverProcess || $this->serverProcess->isTerminated()) {
+      $this->serverProcess = $this->instantiateServer($this->getPortNumber(), $working_dir);
+      if ($this->serverProcess) {
+        $this->serverDocroot = $working_dir;
+      }
     }
   }
 
