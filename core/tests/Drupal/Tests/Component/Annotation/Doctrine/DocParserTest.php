@@ -3,7 +3,7 @@
 
 namespace Drupal\Tests\Component\Annotation\Doctrine;
 
-use Doctrine\Common\Annotations\DocParser;
+use Drupal\Component\Annotation\Doctrine\DocParser;
 use Doctrine\Common\Annotations\AnnotationRegistry;
 use Doctrine\Common\Annotations\Annotation\Target;
 use Drupal\Tests\Component\Annotation\Doctrine\Fixtures\AnnotationWithConstants;
