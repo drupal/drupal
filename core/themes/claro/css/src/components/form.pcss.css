@@ -151,6 +151,41 @@ tr .form-item,
 }
 
 /**
+ * Custom label placement for editor filter format select.
+ */
+.form-item--editor-format {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  max-width: 100%;
+}
+
+.form-item--editor-format .form-item__label,
+.form-item--editor-format .form-item__prefix,
+.form-item--editor-format .form-item__suffix,
+.form-item--editor-format .form-element--editor-format {
+  min-width: 1px;
+}
+
+.form-item--editor-format .form-item__label,
+.form-item--editor-format .form-item__prefix,
+.form-item--editor-format .form-item__suffix {
+  margin-right: var(--space-xs); /* LTR */
+}
+[dir="rtl"] .form-item--editor-format .form-item__label,
+[dir="rtl"] .form-item--editor-format .form-item__prefix,
+[dir="rtl"] .form-item--editor-format .form-item__suffix {
+  margin-right: 0;
+  margin-left: var(--space-xs);
+}
+
+.form-item--editor-format .form-item__description,
+.form-item--editor-format .form-item__error-message {
+  flex: 0 1 100%;
+  min-width: 1px;
+}
+
+/**
  * Improve form element usability on narrow devices.
  *
  * @legacy
