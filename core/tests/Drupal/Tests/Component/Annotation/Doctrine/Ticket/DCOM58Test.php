@@ -3,9 +3,8 @@
 
 namespace Drupal\Tests\Component\Annotation\Doctrine\Ticket;
 
-use Doctrine\Common\Annotations\AnnotationReader;
-use Doctrine\Common\Annotations\DocParser;
-use Doctrine\Common\Annotations\SimpleAnnotationReader;
+use Drupal\Component\Annotation\Doctrine\DocParser;
+use Drupal\Component\Annotation\Doctrine\SimpleAnnotationReader;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -26,18 +25,6 @@ class DCOM58Test extends TestCase
     {
         // Some class named Entity in the global namespace.
         include __DIR__ .'/DCOM58Entity.php';
-    }
-
-    public function testIssue()
-    {
-        $reader     = new AnnotationReader();
-        $result     = $reader->getClassAnnotations(new \ReflectionClass(__NAMESPACE__."\MappedClass"));
-
-        foreach ($result as $annot) {
-            $classAnnotations[get_class($annot)] = $annot;
-        }
-
-        $this->assertTrue(!isset($classAnnotations['']), 'Class "xxx" is not a valid entity or mapped super class.');
     }
 
     public function testIssueGlobalNamespace()
