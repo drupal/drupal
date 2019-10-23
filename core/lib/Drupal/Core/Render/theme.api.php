@@ -433,7 +433,7 @@
  *
  * There are in fact multiple render pipelines:
  * - Drupal always uses the Symfony render pipeline. See
- *   http://symfony.com/doc/2.7/components/http_kernel/introduction.html
+ *   https://symfony.com/doc/3.4/components/http_kernel.html
  * - Within the Symfony render pipeline, there is a Drupal render pipeline,
  *   which handles controllers that return render arrays. (Symfony's render
  *   pipeline only knows how to deal with Response objects; this pipeline
