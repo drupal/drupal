@@ -999,9 +999,6 @@ function _file_save_upload_single(\SplFileInfo $file_info, $form_field_name, $va
   $values['filemime'] = \Drupal::service('file.mime_type.guesser')->guess($values['filename']);
   $file = File::create($values);
 
-  // Ensure that the file object is validated.
-  $file->setValidationRequired(TRUE);
-
   $extensions = '';
   if (isset($validators['file_validate_extensions'])) {
     if (isset($validators['file_validate_extensions'][0])) {
