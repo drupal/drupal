@@ -387,31 +387,12 @@
   overflow: hidden;
   text-align: center;
   background-color: #ebebeb;
-  background-size: 0;
-}
-
-/* Required for IE11 due to it not supporting object-fit */
-/* @todo Remove this cruft when core officially drops support for IE11. */
-/* @see https://www.drupal.org/project/drupal/issues/3089196 */
-@media screen and (-ms-high-contrast: active), screen and (-ms-high-contrast: none) {
-  .media-library-item--grid .field--name-thumbnail {
-    background-size: auto;
-  }
 }
 
 .media-library-item--grid .field--name-thumbnail img {
   height: 180px;
   object-fit: contain;
   object-position: center center;
-}
-
-/* Required for IE11 due to it not supporting object-fit */
-/* @todo Remove this cruft when core officially drops support for IE11. */
-/* @see https://www.drupal.org/project/drupal/issues/3089196 */
-@media screen and (-ms-high-contrast: active), screen and (-ms-high-contrast: none) {
-  .media-library-item--grid .field--name-thumbnail img {
-    opacity: 0;
-  }
 }
 
 .media-library-item--grid.is-hover:before,

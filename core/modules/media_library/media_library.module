@@ -17,7 +17,6 @@ use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Template\Attribute;
 use Drupal\Core\Url;
-use Drupal\file\Entity\File;
 use Drupal\image\Entity\ImageStyle;
 use Drupal\image\Plugin\Field\FieldType\ImageItem;
 use Drupal\media\MediaTypeForm;
@@ -93,27 +92,6 @@ function media_library_theme() {
       'base hook' => 'media',
     ],
   ];
-}
-
-/**
- * Implements hook_preprocess_field().
- *
- * @todo Remove this cruft when core officially drops support for IE11.
- * @see https://www.drupal.org/project/drupal/issues/3089196
- */
-function media_library_preprocess_field(&$variables, $hook) {
-  // IE11 does not support object-fit, so the thumbnail image is added as a
-  // background image that is seen only in IE11.
-  $element = $variables['element'];
-  if ($element['#view_mode'] === 'media_library' && $element['#field_name'] === 'thumbnail' && !empty($element[0]['#item'])) {
-    if (get_class($element[0]['#item']) === ImageItem::class) {
-      if ($fid = $element[0]['#item']->target_id) {
-        $uri = File::load($fid)->getFileUri();
-        $image_url = ImageStyle::load($element[0]['#image_style'])->buildUrl($uri);
-        $variables['attributes']['style'] = "background-image: url($image_url); background-repeat: no-repeat; background-position: center;";
-      }
-    }
-  }
 }
 
 /**
