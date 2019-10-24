@@ -15,10 +15,6 @@ class Html extends RenderElement {
   public function getInfo() {
     return [
       '#theme' => 'html',
-      // HTML5 Shiv
-      '#attached' => [
-        'library' => ['core/html5shiv'],
-      ],
     ];
   }
 

@@ -345,19 +345,6 @@ drupal.vertical-tabs:
     - core/drupal.form
     - core/matchmedia
 
-html5shiv:
-  # Block the page from being loaded until html5shiv is initialized.
-  header: true
-  remote: https://github.com/aFarkas/html5shiv
-  version: "3.7.3"
-  license:
-    name: GNU-GPL-2.0-or-later
-    url: http://www.gnu.org/licenses/gpl-2.0.html
-    gpl-compatible: true
-  js:
-    assets/vendor/html5shiv/html5shiv.min.js: { weight: -22, browsers: { IE: 'lte IE 8', '!IE': false }, minified: true }
-  deprecated: The "%library_id%" asset library is deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. See https://www.drupal.org/node/3086383
-
 jquery:
   remote: https://github.com/jquery/jquery
   version: "3.4.1"
