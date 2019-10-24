@@ -34,7 +34,7 @@ class PagerDeprecationTest extends KernelTestBase {
   }
 
   /**
-   * @expectedDeprecation pager_query_add_page is deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. Use \Drupal\Core\Pager\PagerManagerInterface->queryAddPage() instead. See https://www.drupal.org/node/2779457
+   * @expectedDeprecation pager_query_add_page is deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. Use \Drupal\Core\Pager\PagerManagerInterface->getUpdatedParameters() instead. See https://www.drupal.org/node/2779457
    */
   public function testQueryAddPage() {
     $this->assertArrayHasKey('page', pager_query_add_page([], 1, 1));

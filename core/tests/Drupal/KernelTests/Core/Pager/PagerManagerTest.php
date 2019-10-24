@@ -38,7 +38,7 @@ class PagerManagerTest extends KernelTestBase {
   /**
    * @covers ::getUpdatedParameters
    */
-  public function testQueryAddPage() {
+  public function testGetUpdatedParameters() {
     $element = 2;
     $index = 5;
     $test_parameters = [
