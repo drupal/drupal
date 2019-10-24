@@ -1,0 +1,6 @@
+name: Test Help Topics
+type: theme
+base theme: stable
+description: A theme to test help topics.
+version: VERSION
+core: 8.x

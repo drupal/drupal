@@ -1,0 +1,20 @@
+---
+label: 'Configuring help search'
+top_level: true
+---
+<h2>{% trans %}Goal{% endtrans %}</h2>
+<p>{% trans %}Set up your site so that users can search for help.{% endtrans %}</p>
+<h2>{% trans %}Steps{% endtrans %}</h2>
+<ol>
+  <li>{% trans %}From the <em>Extend</em> administrative page (<em>admin/modules</em>), verify that the Search, Help, Help Topics, and Block modules are installed (or install them if they are not already installed).{% endtrans %}</li>
+  <li>{% trans %}In the <em>Manage</em> administrative menu, navigate to <em>Configuration</em> &gt; <em>Search and metadata</em> &gt; <em>Search pages</em> (<em>admin/config/search/pages</em>).{% endtrans %}</li>
+  <li>{% trans %}Verify that a Help search page is listed in the <em>Search pages</em> section. If not, add a new page of type <em>Help</em>.{% endtrans %}</li>
+  <li>{% trans %}Check the indexing status of the Help search page. If it is not fully indexed, run Cron until indexing is complete.{% endtrans %}</li>
+  <li>{% trans %}In the future, you can click <em>Rebuild search index</em> on this page, or clear the site cache, in order to force help topic text to be reindexed for searching. This should be done whenever a module, theme, language, or string translation is updated.{% endtrans %}</li>
+  <li>{% trans %}In the  <em>Manage</em> administrative menu, navigate to <em>Structure</em> &gt; <em>Block layout</em> (<em>admin/structure/block</em>).{% endtrans %}</li>
+  <li>{% trans %}Click the link for your administrative theme (such as the core Seven theme), near the top of the page.{% endtrans %}</li>
+  <li>{% trans %}See if there is already a help search block placed in the Help region of your administrative theme.{% endtrans %}</li>
+  <li>{% trans %}If there is not already a help search block placed, click <em>Place block</em>, and then click <em>Place block</em> in the row next to <em>Search form</em> in the dialog. Choose <em>Help</em> as the search page for the block, and in the <em>Visibility</em> &gt; <em>Pages</em> field, enter <em>/admin/help</em> to make the search form only visible on the main <em>Help</em> page.{% endtrans %}</li>
+  <li>{% trans %}Fill in the rest of the form and save the block.{% endtrans %}</li>
+  <li>{% trans %}Visit the main <em>Help</em> page (<em>admin/help</em>) to verify that the search block is visible, and try a search.{% endtrans %}</li>
+</ol>

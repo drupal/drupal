@@ -653,7 +653,7 @@
             "dist": {
                 "type": "path",
                 "url": "core",
-                "reference": "c52542b8ded961942356aae5de373c09f484e4b2"
+                "reference": "0d37d40cb2086fd922c8e2a942793e80d1707f1f"
             },
             "require": {
                 "asm89/stack-cors": "^1.1",
@@ -766,6 +766,7 @@
                 "drupal/forum": "self.version",
                 "drupal/hal": "self.version",
                 "drupal/help": "self.version",
+                "drupal/help_topics": "self.version",
                 "drupal/history": "self.version",
                 "drupal/image": "self.version",
                 "drupal/inline_form_errors": "self.version",
