@@ -13,6 +13,7 @@ use Drupal\link\LinkItemInterface;
 use Drupal\node\NodeInterface;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\field\Entity\FieldStorageConfig;
+use Drupal\Tests\Traits\Core\PathAliasTestTrait;
 
 /**
  * Tests link field widgets and formatters.
@@ -20,6 +21,8 @@ use Drupal\field\Entity\FieldStorageConfig;
  * @group link
  */
 class LinkFieldTest extends BrowserTestBase {
+
+  use PathAliasTestTrait;
 
   /**
    * Modules to enable.
@@ -100,7 +103,7 @@ class LinkFieldTest extends BrowserTestBase {
     $this->assertRaw('placeholder="http://example.com"');
 
     // Create a path alias.
-    \Drupal::service('path.alias_storage')->save('/admin', '/a/path/alias');
+    $this->createPathAlias('/admin', '/a/path/alias');
 
     // Create a node to test the link widget.
     $node = $this->drupalCreateNode();

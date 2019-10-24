@@ -8,6 +8,7 @@ use Drupal\Core\Url;
 use Drupal\shortcut\Entity\Shortcut;
 use Drupal\shortcut\Entity\ShortcutSet;
 use Drupal\Tests\block\Functional\AssertBlockAppearsTrait;
+use Drupal\Tests\Traits\Core\PathAliasTestTrait;
 use Drupal\views\Entity\View;
 
 /**
@@ -18,6 +19,7 @@ use Drupal\views\Entity\View;
 class ShortcutLinksTest extends ShortcutTestBase {
 
   use AssertBlockAppearsTrait;
+  use PathAliasTestTrait;
 
   /**
    * Modules to enable.
@@ -42,11 +44,7 @@ class ShortcutLinksTest extends ShortcutTestBase {
     $set = $this->set;
 
     // Create an alias for the node so we can test aliases.
-    $path = [
-      'source' => '/node/' . $this->node->id(),
-      'alias' => '/' . $this->randomMachineName(8),
-    ];
-    $this->container->get('path.alias_storage')->save($path['source'], $path['alias']);
+    $path_alias = $this->createPathAlias('/node/' . $this->node->id(), '/' . $this->randomMachineName(8));
 
     // Create some paths to test.
     $test_cases = [
@@ -54,7 +52,7 @@ class ShortcutLinksTest extends ShortcutTestBase {
       '/admin',
       '/admin/config/system/site-information',
       '/node/' . $this->node->id() . '/edit',
-      $path['alias'],
+      $path_alias->getAlias(),
       '/router_test/test2',
       '/router_test/test3/value',
     ];
