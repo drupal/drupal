@@ -8,6 +8,7 @@ use Drupal\Core\Config\DatabaseStorage;
 use Drupal\Core\Database\Database;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\KernelTests\KernelTestBase;
+use Drupal\Tests\Traits\Core\PathAliasTestTrait;
 use Drupal\user\Entity\User;
 use Symfony\Component\Console\Tester\CommandTester;
 use Symfony\Component\DependencyInjection\Reference;
@@ -18,6 +19,8 @@ use Symfony\Component\DependencyInjection\Reference;
  * @group Update
  */
 class DbDumpTest extends KernelTestBase {
+
+  use PathAliasTestTrait;
 
   /**
    * {@inheritdoc}
@@ -109,7 +112,7 @@ class DbDumpTest extends KernelTestBase {
     $account->save();
 
     // Create a path alias.
-    $this->container->get('path.alias_storage')->save('/user/' . $account->id(), '/user/example');
+    $this->createPathAlias('/user/' . $account->id(), '/user/example');
 
     // Create a cache table (this will create 'cache_discovery').
     \Drupal::cache('discovery')->set('test', $this->data);

@@ -18,6 +18,7 @@ use Drupal\Core\State\State;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\Tests\Core\Routing\RoutingFixtures;
+use Drupal\Tests\Traits\Core\PathAliasTestTrait;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
@@ -31,6 +32,8 @@ use Symfony\Component\Routing\RouteCollection;
  * @group Routing
  */
 class RouteProviderTest extends KernelTestBase {
+
+  use PathAliasTestTrait;
 
   /**
    * Modules to enable.
@@ -572,9 +575,7 @@ class RouteProviderTest extends KernelTestBase {
     $this->assertEqual(2, count($cache->data['routes']));
 
     // A path with a path alias.
-    /** @var \Drupal\Core\Path\AliasStorageInterface $path_storage */
-    $path_storage = \Drupal::service('path.alias_storage');
-    $path_storage->save('/path/add/one', '/path/add-one');
+    $this->createPathAlias('/path/add/one', '/path/add-one');
     /** @var \Drupal\Core\Path\AliasManagerInterface $alias_manager */
     $alias_manager = \Drupal::service('path.alias_manager');
     $alias_manager->cacheClear();

@@ -2,9 +2,11 @@
 
 namespace Drupal\Tests\path\Kernel\Migrate\d6;
 
+use Drupal\Core\Path\PathAliasInterface;
 use Drupal\migrate\Plugin\MigrateIdMapInterface;
 use Drupal\Core\Database\Database;
 use Drupal\Tests\migrate_drupal\Kernel\d6\MigrateDrupal6TestBase;
+use Drupal\Tests\Traits\Core\PathAliasTestTrait;
 
 /**
  * URL alias migration.
@@ -12,6 +14,8 @@ use Drupal\Tests\migrate_drupal\Kernel\d6\MigrateDrupal6TestBase;
  * @group migrate_drupal_6
  */
 class MigrateUrlAliasTest extends MigrateDrupal6TestBase {
+
+  use PathAliasTestTrait;
 
   /**
    * {@inheritdoc}
@@ -47,20 +51,20 @@ class MigrateUrlAliasTest extends MigrateDrupal6TestBase {
   }
 
   /**
-   * Assert a path.
+   * Asserts that a path alias matches a set of conditions.
    *
-   * @param string $pid
-   *   The path id.
+   * @param int $pid
+   *   The path alias ID.
    * @param array $conditions
    *   The path conditions.
-   * @param array $path
-   *   The path.
+   * @param \Drupal\Core\Path\PathAliasInterface $path_alias
+   *   The path alias.
    */
-  private function assertPath($pid, $conditions, $path) {
-    $this->assertTrue($path, "Path alias for " . $conditions['source'] . " successfully loaded.");
-    $this->assertIdentical($conditions['alias'], $path['alias']);
-    $this->assertIdentical($conditions['langcode'], $path['langcode']);
-    $this->assertIdentical($conditions['source'], $path['source']);
+  private function assertPath($pid, $conditions, PathAliasInterface $path_alias) {
+    $this->assertSame($pid, (int) $path_alias->id());
+    $this->assertSame($conditions['alias'], $path_alias->getAlias());
+    $this->assertSame($conditions['langcode'], $path_alias->get('langcode')->value);
+    $this->assertSame($conditions['path'], $path_alias->getPath());
   }
 
   /**
@@ -70,21 +74,21 @@ class MigrateUrlAliasTest extends MigrateDrupal6TestBase {
     $id_map = $this->getMigration('d6_url_alias')->getIdMap();
     // Test that the field exists.
     $conditions = [
-      'source' => '/node/1',
+      'path' => '/node/1',
       'alias' => '/alias-one',
       'langcode' => 'af',
     ];
-    $path = \Drupal::service('path.alias_storage')->load($conditions);
-    $this->assertPath('1', $conditions, $path);
-    $this->assertIdentical($id_map->lookupDestinationIds([$path['pid']]), [['1']], "Test IdMap");
+    $path_alias = $this->loadPathAliasByConditions($conditions);
+    $this->assertPath(1, $conditions, $path_alias);
+    $this->assertSame([['1']], $id_map->lookupDestinationIds([$path_alias->id()]), "Test IdMap");
 
     $conditions = [
-      'source' => '/node/2',
+      'path' => '/node/2',
       'alias' => '/alias-two',
       'langcode' => 'en',
     ];
-    $path = \Drupal::service('path.alias_storage')->load($conditions);
-    $this->assertPath('2', $conditions, $path);
+    $path_alias = $this->loadPathAliasByConditions($conditions);
+    $this->assertPath(2, $conditions, $path_alias);
 
     // Test that we can re-import using the UrlAlias destination.
     Database::getConnection('default', 'migrate')
@@ -100,54 +104,53 @@ class MigrateUrlAliasTest extends MigrateDrupal6TestBase {
     $migration = $this->getMigration('d6_url_alias');
     $this->executeMigration($migration);
 
-    $path = \Drupal::service('path.alias_storage')->load(['pid' => $path['pid']]);
+    $path_alias = $this->loadPathAliasByConditions(['id' => $path_alias->id()]);
     $conditions['alias'] = '/new-url-alias';
-    $this->assertPath('2', $conditions, $path);
+    $this->assertPath(2, $conditions, $path_alias);
 
     $conditions = [
-      'source' => '/node/3',
+      'path' => '/node/3',
       'alias' => '/alias-three',
       'langcode' => 'und',
     ];
-    $path = \Drupal::service('path.alias_storage')->load($conditions);
-    $this->assertPath('3', $conditions, $path);
+    $path_alias = $this->loadPathAliasByConditions($conditions);
+    $this->assertPath(3, $conditions, $path_alias);
 
-    $path = \Drupal::service('path.alias_storage')->load(['alias' => '/source-noslash']);
+    $path_alias = $this->loadPathAliasByConditions(['alias' => '/source-noslash']);
     $conditions = [
-      'source' => '/admin',
+      'path' => '/admin',
       'alias' => '/source-noslash',
       'langcode' => 'und',
     ];
-    $this->assertPath('2', $conditions, $path);
+    $this->assertPath(8, $conditions, $path_alias);
   }
 
   /**
    * Test the URL alias migration with translated nodes.
    */
   public function testUrlAliasWithTranslatedNodes() {
-    $alias_storage = $this->container->get('path.alias_storage');
-
     // Alias for the 'The Real McCoy' node in English.
-    $path = $alias_storage->load(['alias' => '/the-real-mccoy']);
-    $this->assertSame('/node/10', $path['source']);
-    $this->assertSame('en', $path['langcode']);
+
+    $path_alias = $this->loadPathAliasByConditions(['alias' => '/the-real-mccoy']);
+    $this->assertSame('/node/10', $path_alias->getPath());
+    $this->assertSame('en', $path_alias->get('langcode')->value);
 
     // Alias for the 'The Real McCoy' French translation,
     // which should now point to node/10 instead of node/11.
-    $path = $alias_storage->load(['alias' => '/le-vrai-mccoy']);
-    $this->assertSame('/node/10', $path['source']);
-    $this->assertSame('fr', $path['langcode']);
+    $path_alias = $this->loadPathAliasByConditions(['alias' => '/le-vrai-mccoy']);
+    $this->assertSame('/node/10', $path_alias->getPath());
+    $this->assertSame('fr', $path_alias->get('langcode')->value);
 
     // Alias for the 'Abantu zulu' node in Zulu.
-    $path = $alias_storage->load(['alias' => '/abantu-zulu']);
-    $this->assertSame('/node/12', $path['source']);
-    $this->assertSame('zu', $path['langcode']);
+    $path_alias = $this->loadPathAliasByConditions(['alias' => '/abantu-zulu']);
+    $this->assertSame('/node/12', $path_alias->getPath());
+    $this->assertSame('zu', $path_alias->get('langcode')->value);
 
     // Alias for the 'Abantu zulu' English translation,
     // which should now point to node/12 instead of node/13.
-    $path = $alias_storage->load(['alias' => '/the-zulu-people']);
-    $this->assertSame('/node/12', $path['source']);
-    $this->assertSame('en', $path['langcode']);
+    $path_alias = $this->loadPathAliasByConditions(['alias' => '/the-zulu-people']);
+    $this->assertSame('/node/12', $path_alias->getPath());
+    $this->assertSame('en', $path_alias->get('langcode')->value);
   }
 
 }

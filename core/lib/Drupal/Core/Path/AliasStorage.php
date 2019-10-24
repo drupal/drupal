@@ -9,12 +9,21 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Language\LanguageInterface;
 
+@trigger_error('\Drupal\Core\Path\AliasStorage is deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. Use the "path.alias_repository" service instead, or the entity storage handler for the "path_alias" entity type for CRUD methods. See https://www.drupal.org/node/3013865.', E_USER_DEPRECATED);
+
 /**
  * Provides a class for CRUD operations on path aliases.
  *
  * All queries perform case-insensitive matching on the 'source' and 'alias'
  * fields, so the aliases '/test-alias' and '/test-Alias' are considered to be
  * the same, and will both refer to the same internal system path.
+ *
+ * @deprecated \Drupal\Core\Path\AliasStorage is deprecated in drupal:8.8.0 and
+ *   is removed from drupal:9.0.0. Use the "path.alias_repository" service
+ *   instead, or the entity storage handler for the "path_alias" entity type
+ *   for CRUD methods.
+ *
+ * @see https://www.drupal.org/node/3013865
  */
 class AliasStorage implements AliasStorageInterface {
 

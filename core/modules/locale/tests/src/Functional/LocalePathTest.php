@@ -5,13 +5,17 @@ namespace Drupal\Tests\locale\Functional;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Url;
 use Drupal\Tests\BrowserTestBase;
+use Drupal\Tests\Traits\Core\PathAliasTestTrait;
 
 /**
  * Tests you can configure a language for individual URL aliases.
  *
  * @group locale
+ * @group path
  */
 class LocalePathTest extends BrowserTestBase {
+
+  use PathAliasTestTrait;
 
   /**
    * Modules to enable.
@@ -96,44 +100,24 @@ class LocalePathTest extends BrowserTestBase {
     $custom_path = $this->randomMachineName(8);
 
     // Check priority of language for alias by source path.
-    $edit = [
-      'path[0][value]' => '/node/' . $node->id(),
-      'alias[0][value]' => '/' . $custom_path,
-      'langcode[0][value]' => LanguageInterface::LANGCODE_NOT_SPECIFIED,
-    ];
-    $this->container->get('path.alias_storage')->save($edit['path[0][value]'], $edit['alias[0][value]'], $edit['langcode[0][value]']);
+    $path_alias = $this->createPathAlias('/node/' . $node->id(), '/' . $custom_path, LanguageInterface::LANGCODE_NOT_SPECIFIED);
     $lookup_path = $this->container->get('path.alias_manager')->getAliasByPath('/node/' . $node->id(), 'en');
     $this->assertEqual('/' . $english_path, $lookup_path, 'English language alias has priority.');
     // Same check for language 'xx'.
     $lookup_path = $this->container->get('path.alias_manager')->getAliasByPath('/node/' . $node->id(), $prefix);
     $this->assertEqual('/' . $custom_language_path, $lookup_path, 'Custom language alias has priority.');
-    $path_alias = [
-      'path' => $edit['path[0][value]'],
-      'alias' => $edit['alias[0][value]'],
-      'langcode' => $edit['langcode[0][value]'],
-    ];
-    $this->container->get('path.alias_storage')->delete($path_alias);
+    $path_alias->delete();
 
     // Create language nodes to check priority of aliases.
     $first_node = $this->drupalCreateNode(['type' => 'page', 'promote' => 1, 'langcode' => 'en']);
     $second_node = $this->drupalCreateNode(['type' => 'page', 'promote' => 1, 'langcode' => LanguageInterface::LANGCODE_NOT_SPECIFIED]);
 
     // Assign a custom path alias to the first node with the English language.
-    $edit = [
-      'path[0][value]' => '/node/' . $first_node->id(),
-      'alias[0][value]' => '/' . $custom_path,
-      'langcode[0][value]' => $first_node->language()->getId(),
-    ];
-    $this->container->get('path.alias_storage')->save($edit['path[0][value]'], $edit['alias[0][value]'], $edit['langcode[0][value]']);
+    $this->createPathAlias('/node/' . $first_node->id(), '/' . $custom_path, $first_node->language()->getId());
 
     // Assign a custom path alias to second node with
     // LanguageInterface::LANGCODE_NOT_SPECIFIED.
-    $edit = [
-      'path[0][value]' => '/node/' . $second_node->id(),
-      'alias[0][value]' => '/' . $custom_path,
-      'langcode[0][value]' => $second_node->language()->getId(),
-    ];
-    $this->container->get('path.alias_storage')->save($edit['path[0][value]'], $edit['alias[0][value]'], $edit['langcode[0][value]']);
+    $this->createPathAlias('/node/' . $second_node->id(), '/' . $custom_path, $second_node->language()->getId());
 
     // Test that both node titles link to our path alias.
     $this->drupalGet('admin/content');

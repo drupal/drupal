@@ -3,17 +3,20 @@
 namespace Drupal\Tests\menu_link_content\Kernel;
 
 use Drupal\Core\DependencyInjection\ContainerBuilder;
-use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Menu\MenuTreeParameters;
 use Drupal\menu_link_content\Entity\MenuLinkContent;
 use Drupal\KernelTests\KernelTestBase;
+use Drupal\Tests\Traits\Core\PathAliasTestTrait;
 
 /**
  * Ensures that the menu tree adapts to path alias changes.
  *
  * @group menu_link_content
+ * @group path
  */
 class PathAliasMenuLinkContentTest extends KernelTestBase {
+
+  use PathAliasTestTrait;
 
   /**
    * {@inheritdoc}
@@ -52,11 +55,7 @@ class PathAliasMenuLinkContentTest extends KernelTestBase {
   public function testPathAliasChange() {
     \Drupal::service('router.builder')->rebuild();
 
-    /** @var \Drupal\Core\Path\AliasStorageInterface $path_alias_storage */
-    $path_alias_storage = \Drupal::service('path.alias_storage');
-    $alias = $path_alias_storage->save('/test-page', '/my-blog');
-    $pid = $alias['pid'];
-
+    $path_alias = $this->createPathAlias('/test-page', '/my-blog');
     $menu_link_content = MenuLinkContent::create([
       'title' => 'Menu title',
       'link' => ['uri' => 'internal:/my-blog'],
@@ -68,13 +67,15 @@ class PathAliasMenuLinkContentTest extends KernelTestBase {
     $this->assertEqual('test_page_test.test_page', $tree[$menu_link_content->getPluginId()]->link->getPluginDefinition()['route_name']);
 
     // Saving an alias should clear the alias manager cache.
-    $path_alias_storage->save('/test-render-title', '/my-blog', LanguageInterface::LANGCODE_NOT_SPECIFIED, $pid);
+    $path_alias->setPath('/test-render-title');
+    $path_alias->setAlias('/my-blog');
+    $path_alias->save();
 
     $tree = \Drupal::menuTree()->load('tools', new MenuTreeParameters());
     $this->assertEqual('test_page_test.render_title', $tree[$menu_link_content->getPluginId()]->link->getPluginDefinition()['route_name']);
 
     // Delete the alias.
-    $path_alias_storage->delete(['pid' => $pid]);
+    $path_alias->delete();
     $tree = \Drupal::menuTree()->load('tools', new MenuTreeParameters());
     $this->assertTrue(isset($tree[$menu_link_content->getPluginId()]));
     $this->assertEqual('', $tree[$menu_link_content->getPluginId()]->link->getRouteName());
