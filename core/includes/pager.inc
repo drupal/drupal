@@ -335,13 +335,13 @@ function template_preprocess_pager(&$variables) {
  *   The altered $query parameter array.
  *
  * @deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. Use
- *   \Drupal\Core\Pager\PagerManagerInterface->queryAddPage() instead.
+ *   \Drupal\Core\Pager\PagerManagerInterface::getUpdatedParameters() instead.
  *
  * @see https://www.drupal.org/node/2779457
  * @see \Drupal\Core\Pager\PagerManagerInterface::getUpdatedParameters()
  */
 function pager_query_add_page(array $query, $element, $index) {
-  @trigger_error(__FUNCTION__ . ' is deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. Use \Drupal\Core\Pager\PagerManagerInterface->queryAddPage() instead. See https://www.drupal.org/node/2779457', E_USER_DEPRECATED);
+  @trigger_error(__FUNCTION__ . ' is deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. Use \Drupal\Core\Pager\PagerManagerInterface->getUpdatedParameters() instead. See https://www.drupal.org/node/2779457', E_USER_DEPRECATED);
   /* @var $pager_manager \Drupal\Core\Pager\PagerManagerInterface */
   $pager_manager = \Drupal::service('pager.manager');
   return $pager_manager->getUpdatedParameters($query, $element, $index);
