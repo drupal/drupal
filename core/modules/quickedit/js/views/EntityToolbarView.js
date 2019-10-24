@@ -165,7 +165,8 @@
 
       function refinePopper(data) {
         var isBelow = data.offsets.popper.top > data.offsets.reference.top;
-        data.instance.popper.classList.toggle('quickedit-toolbar-pointer-top', isBelow);
+        var classListMethod = isBelow ? 'add' : 'remove';
+        data.instance.popper.classList[classListMethod]('quickedit-toolbar-pointer-top');
 
         if (that.$entity[0] === data.instance.reference) {
           var $field = that.$entity.find('.quickedit-editable').eq(isBelow ? -1 : 0);

@@ -299,9 +299,9 @@
         function refinePopper(data) {
           // Determine if the pointer should be on the top or bottom.
           const isBelow = data.offsets.popper.top > data.offsets.reference.top;
-          data.instance.popper.classList.toggle(
+          const classListMethod = isBelow ? 'add' : 'remove';
+          data.instance.popper.classList[classListMethod](
             'quickedit-toolbar-pointer-top',
-            isBelow,
           );
           // Don't position the toolbar past the first or last editable field if
           // the entity is the target.
