@@ -2,15 +2,12 @@
 
 namespace Drupal\workspaces;
 
-use Drupal\Core\Database\Connection;
-use Drupal\Core\Entity\EntityTypeManagerInterface;
-use Drupal\Core\Extension\ModuleHandlerInterface;
-use Drupal\Core\Path\AliasStorage as CoreAliasStorage;
+use Drupal\Core\Path\AliasRepository;
 
 /**
  * Provides workspace-specific path alias lookup queries.
  */
-class AliasStorage extends CoreAliasStorage {
+class WorkspacesAliasRepository extends AliasRepository {
 
   /**
    * The workspace manager.
@@ -20,20 +17,16 @@ class AliasStorage extends CoreAliasStorage {
   protected $workspaceManager;
 
   /**
-   * AliasStorage constructor.
+   * Sets the workspace manager.
    *
-   * @param \Drupal\Core\Database\Connection $connection
-   *   A database connection for reading and writing path aliases.
-   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
-   *   The module handler.
-   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
-   *   The entity type manager.
    * @param \Drupal\workspaces\WorkspaceManagerInterface $workspace_manager
    *   The workspace manager service.
+   *
+   * @return $this
    */
-  public function __construct(Connection $connection, ModuleHandlerInterface $module_handler, EntityTypeManagerInterface $entity_type_manager, WorkspaceManagerInterface $workspace_manager) {
-    parent::__construct($connection, $module_handler, $entity_type_manager);
+  public function setWorkspacesManager(WorkspaceManagerInterface $workspace_manager) {
     $this->workspaceManager = $workspace_manager;
+    return $this;
   }
 
   /**

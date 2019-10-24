@@ -44,9 +44,8 @@ class PathItemTest extends KernelTestBase {
    * Test creating, loading, updating and deleting aliases through PathItem.
    */
   public function testPathItem() {
-
-    /** @var \Drupal\Core\Path\AliasStorageInterface $alias_storage */
-    $alias_storage = \Drupal::service('path.alias_storage');
+    /** @var \Drupal\Core\Path\AliasRepositoryInterface $alias_repository */
+    $alias_repository = \Drupal::service('path.alias_repository');
 
     $node_storage = \Drupal::entityTypeManager()->getStorage('node');
 
@@ -62,8 +61,8 @@ class PathItemTest extends KernelTestBase {
     $this->assertFalse($node->get('path')->isEmpty());
     $this->assertEquals('/foo', $node->get('path')->alias);
 
-    $stored_alias = $alias_storage->lookupPathAlias('/' . $node->toUrl()->getInternalPath(), $node->language()->getId());
-    $this->assertEquals('/foo', $stored_alias);
+    $stored_alias = $alias_repository->lookupBySystemPath('/' . $node->toUrl()->getInternalPath(), $node->language()->getId());
+    $this->assertEquals('/foo', $stored_alias['alias']);
 
     $node_storage->resetCache();
 
@@ -97,10 +96,10 @@ class PathItemTest extends KernelTestBase {
     $translation = $loaded_node->getTranslation('de');
     $this->assertEquals('/furchtbar', $translation->path->alias);
 
-    $stored_alias = $alias_storage->lookupPathAlias('/' . $node->toUrl()->getInternalPath(), $node->language()->getId());
-    $this->assertEquals('/foo', $stored_alias);
-    $stored_alias = $alias_storage->lookupPathAlias('/' . $node->toUrl()->getInternalPath(), $translation->language()->getId());
-    $this->assertEquals('/furchtbar', $stored_alias);
+    $stored_alias = $alias_repository->lookupBySystemPath('/' . $node->toUrl()->getInternalPath(), $node->language()->getId());
+    $this->assertEquals('/foo', $stored_alias['alias']);
+    $stored_alias = $alias_repository->lookupBySystemPath('/' . $node->toUrl()->getInternalPath(), $translation->language()->getId());
+    $this->assertEquals('/furchtbar', $stored_alias['alias']);
 
     $loaded_node->get('path')->alias = '/bar';
     $this->assertFalse($loaded_node->get('path')->isEmpty());
@@ -123,11 +122,11 @@ class PathItemTest extends KernelTestBase {
     $this->assertFalse($loaded_node->get('path')->isEmpty());
     $this->assertEquals('/bar', $loaded_node->get('path')->alias);
 
-    $stored_alias = $alias_storage->lookupPathAlias('/' . $node->toUrl()->getInternalPath(), $node->language()->getId());
-    $this->assertEquals('/bar', $stored_alias);
+    $stored_alias = $alias_repository->lookupBySystemPath('/' . $node->toUrl()->getInternalPath(), $node->language()->getId());
+    $this->assertEquals('/bar', $stored_alias['alias']);
 
-    $old_alias = $alias_storage->lookupPathSource('/foo', $node->language()->getId());
-    $this->assertFalse($old_alias);
+    $old_alias = $alias_repository->lookupByAlias('/foo', $node->language()->getId());
+    $this->assertNull($old_alias);
 
     // Reload the node to make sure that it is possible to set a value
     // immediately after loading.
@@ -140,19 +139,19 @@ class PathItemTest extends KernelTestBase {
     $loaded_node = $node_storage->load($node->id());
     $this->assertFalse($loaded_node->get('path')->isEmpty());
     $this->assertEquals('/foobar', $loaded_node->get('path')->alias);
-    $stored_alias = $alias_storage->lookupPathAlias('/' . $node->toUrl()->getInternalPath(), $node->language()->getId());
-    $this->assertEquals('/foobar', $stored_alias);
+    $stored_alias = $alias_repository->lookupBySystemPath('/' . $node->toUrl()->getInternalPath(), $node->language()->getId());
+    $this->assertEquals('/foobar', $stored_alias['alias']);
 
-    $old_alias = $alias_storage->lookupPathSource('/bar', $node->language()->getId());
-    $this->assertFalse($old_alias);
+    $old_alias = $alias_repository->lookupByAlias('/bar', $node->language()->getId());
+    $this->assertNull($old_alias);
 
     $loaded_node->get('path')->alias = '';
     $this->assertEquals('', $loaded_node->get('path')->alias);
 
     $loaded_node->save();
 
-    $stored_alias = $alias_storage->lookupPathAlias('/' . $node->toUrl()->getInternalPath(), $node->language()->getId());
-    $this->assertFalse($stored_alias);
+    $stored_alias = $alias_repository->lookupBySystemPath('/' . $node->toUrl()->getInternalPath(), $node->language()->getId());
+    $this->assertNull($stored_alias);
 
     // Check that reading, updating and reading the computed alias again in the
     // same request works without clearing any caches in between.
@@ -162,16 +161,16 @@ class PathItemTest extends KernelTestBase {
 
     $this->assertFalse($loaded_node->get('path')->isEmpty());
     $this->assertEquals('/foo', $loaded_node->get('path')->alias);
-    $stored_alias = $alias_storage->lookupPathAlias('/' . $node->toUrl()->getInternalPath(), $node->language()->getId());
-    $this->assertEquals('/foo', $stored_alias);
+    $stored_alias = $alias_repository->lookupBySystemPath('/' . $node->toUrl()->getInternalPath(), $node->language()->getId());
+    $this->assertEquals('/foo', $stored_alias['alias']);
 
     $loaded_node->get('path')->alias = '/foobar';
     $loaded_node->save();
 
     $this->assertFalse($loaded_node->get('path')->isEmpty());
     $this->assertEquals('/foobar', $loaded_node->get('path')->alias);
-    $stored_alias = $alias_storage->lookupPathAlias('/' . $node->toUrl()->getInternalPath(), $node->language()->getId());
-    $this->assertEquals('/foobar', $stored_alias);
+    $stored_alias = $alias_repository->lookupBySystemPath('/' . $node->toUrl()->getInternalPath(), $node->language()->getId());
+    $this->assertEquals('/foobar', $stored_alias['alias']);
 
     // Check that \Drupal\Core\Field\FieldItemList::equals() for the path field
     // type.

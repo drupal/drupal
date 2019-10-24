@@ -465,10 +465,10 @@ services:
     class: Drupal\Core\Path\AliasWhitelist
     tags:
       - { name: needs_destruction }
-    arguments: [path_alias_whitelist, '@cache.bootstrap', '@lock', '@state', '@path.alias_storage']
+    arguments: [path_alias_whitelist, '@cache.bootstrap', '@lock', '@state', '@path.alias_repository']
   path.alias_manager:
     class: Drupal\Core\Path\AliasManager
-    arguments: ['@path.alias_storage', '@path.alias_whitelist', '@language_manager', '@cache.data']
+    arguments: ['@path.alias_repository', '@path.alias_whitelist', '@language_manager', '@cache.data']
   path.current:
     class: Drupal\Core\Path\CurrentPathStack
     arguments: ['@request_stack']
@@ -960,11 +960,17 @@ services:
     arguments: ['@lock', '@plugin.manager.menu.link', '@database', '@database.replica_kill_switch']
     tags:
       - { name: event_subscriber }
+  path.alias_repository:
+    class: Drupal\Core\Path\AliasRepository
+    arguments: ['@database']
+    tags:
+      - { name: backend_overridable }
   path.alias_storage:
     class: Drupal\Core\Path\AliasStorage
     arguments: ['@database', '@module_handler', '@entity_type.manager']
     tags:
       - { name: backend_overridable }
+    deprecated: The "%service_id%" service is deprecated. Use the "path.alias_repository" service instead, or the entity storage handler for the "path_alias" entity type for CRUD methods. See https://www.drupal.org/node/3013865
   path.matcher:
     class: Drupal\Core\Path\PathMatcher
     arguments: ['@config.factory', '@current_route_match']

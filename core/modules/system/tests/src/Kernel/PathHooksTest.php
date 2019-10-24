@@ -2,13 +2,15 @@
 
 namespace Drupal\Tests\system\Kernel;
 
-use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Path\AliasManagerInterface;
+use Drupal\Core\Path\Entity\PathAlias;
 use Drupal\KernelTests\KernelTestBase;
 use Prophecy\Argument;
 
 /**
- * @group Drupal
+ * @coversDefaultClass \Drupal\Core\Path\Entity\PathAlias
+ *
+ * @group path
  */
 class PathHooksTest extends KernelTestBase {
 
@@ -27,38 +29,43 @@ class PathHooksTest extends KernelTestBase {
   }
 
   /**
-   * Test system_path_alias_*() correctly clears caches.
+   * Tests that the PathAlias entity clears caches correctly.
+   *
+   * @covers ::postSave
+   * @covers ::postDelete
    */
   public function testPathHooks() {
-    $source = '/' . $this->randomMachineName();
-    $alias = '/' . $this->randomMachineName();
+    $path_alias = PathAlias::create([
+      'path' => '/' . $this->randomMachineName(),
+      'alias' => '/' . $this->randomMachineName(),
+    ]);
 
-    // Check system_path_alias_insert();
+    // Check \Drupal\Core\Path\Entity\PathAlias::postSave() for new path alias
+    // entities.
     $alias_manager = $this->prophesize(AliasManagerInterface::class);
     $alias_manager->cacheClear(Argument::any())->shouldBeCalledTimes(1);
-    $alias_manager->cacheClear($source)->shouldBeCalledTimes(1);
+    $alias_manager->cacheClear($path_alias->getPath())->shouldBeCalledTimes(1);
     \Drupal::getContainer()->set('path.alias_manager', $alias_manager->reveal());
-    $alias_storage = \Drupal::service('path.alias_storage');
-    $alias_storage->save($source, $alias);
+    $path_alias->save();
 
     $new_source = '/' . $this->randomMachineName();
-    $path = $alias_storage->load(['source' => $source]);
 
-    // Check system_path_alias_update();
+    // Check \Drupal\Core\Path\Entity\PathAlias::postSave() for existing path
+    // alias entities.
     $alias_manager = $this->prophesize(AliasManagerInterface::class);
     $alias_manager->cacheClear(Argument::any())->shouldBeCalledTimes(2);
-    $alias_manager->cacheClear($source)->shouldBeCalledTimes(1);
+    $alias_manager->cacheClear($path_alias->getPath())->shouldBeCalledTimes(1);
     $alias_manager->cacheClear($new_source)->shouldBeCalledTimes(1);
     \Drupal::getContainer()->set('path.alias_manager', $alias_manager->reveal());
-    $alias_storage->save($new_source, $alias, LanguageInterface::LANGCODE_NOT_SPECIFIED, $path['pid']);
+    $path_alias->setPath($new_source);
+    $path_alias->save();
 
-    // Check system_path_alias_delete();
+    // Check \Drupal\Core\Path\Entity\PathAlias::postDelete().
     $alias_manager = $this->prophesize(AliasManagerInterface::class);
     $alias_manager->cacheClear(Argument::any())->shouldBeCalledTimes(1);
     $alias_manager->cacheClear($new_source)->shouldBeCalledTimes(1);
     \Drupal::getContainer()->set('path.alias_manager', $alias_manager->reveal());
-    $alias_storage->delete(['pid' => $path['pid']]);
-
+    $path_alias->delete();
   }
 
 }

@@ -7,13 +7,16 @@ use Drupal\Core\Database\Database;
 use Drupal\Core\Url;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\taxonomy\Entity\Term;
+use Drupal\Tests\Traits\Core\PathAliasTestTrait;
 
 /**
  * Tests altering the inbound path and the outbound path.
  *
- * @group Path
+ * @group path
  */
 class UrlAlterFunctionalTest extends BrowserTestBase {
+
+  use PathAliasTestTrait;
 
   /**
    * Modules to enable.
@@ -43,8 +46,7 @@ class UrlAlterFunctionalTest extends BrowserTestBase {
     $this->assertUrlOutboundAlter("/user/$uid", "/user/$name");
 
     // Test that a path always uses its alias.
-    $path = ['source' => "/user/$uid/test1", 'alias' => '/alias/test1'];
-    $this->container->get('path.alias_storage')->save($path['source'], $path['alias']);
+    $this->createPathAlias("/user/$uid/test1", '/alias/test1');
     $this->rebuildContainer();
     $this->assertUrlInboundAlter('/alias/test1', "/user/$uid/test1");
     $this->assertUrlOutboundAlter("/user/$uid/test1", '/alias/test1');

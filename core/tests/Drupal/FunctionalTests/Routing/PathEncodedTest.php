@@ -4,13 +4,17 @@ namespace Drupal\FunctionalTests\Routing;
 
 use Drupal\Core\Url;
 use Drupal\Tests\BrowserTestBase;
+use Drupal\Tests\Traits\Core\PathAliasTestTrait;
 
 /**
  * Tests url generation and routing for route paths with encoded characters.
  *
+ * @group path
  * @group routing
  */
 class PathEncodedTest extends BrowserTestBase {
+
+  use PathAliasTestTrait;
 
   /**
    * {@inheritdoc}
@@ -35,12 +39,10 @@ class PathEncodedTest extends BrowserTestBase {
       'path_encoded_test.atsign' => '/bloggy/@Dries',
       'path_encoded_test.parens' => '/cat(box)',
     ];
-    /** @var \Drupal\Core\Path\AliasStorageInterface $alias_storage */
-    $alias_storage = $this->container->get('path.alias_storage');
     $aliases = [];
     foreach ($route_paths as $route_name => $path) {
       $aliases[$route_name] = $this->randomMachineName();
-      $alias_storage->save($path, '/' . $aliases[$route_name]);
+      $this->createPathAlias($path, '/' . $aliases[$route_name]);
     }
     foreach ($route_paths as $route_name => $path) {
       // The alias may be only a suffix of the generated path when the test is
