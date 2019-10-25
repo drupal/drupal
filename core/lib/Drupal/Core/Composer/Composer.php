@@ -2,10 +2,8 @@
 
 namespace Drupal\Core\Composer;
 
-use Composer\Composer as ComposerApp;
 use Composer\Installer\PackageEvent;
 use Composer\Script\Event;
-use Composer\Semver\Comparator;
 use Composer\Semver\Constraint\Constraint;
 use Composer\Util\ProcessExecutor;
 use Drupal\Component\FileSecurity\FileSecurity;
@@ -97,19 +95,9 @@ class Composer {
   ];
 
   /**
-   * Ensure that the minimum required version of Composer is running.
-   * Throw an exception if Composer is too old.
-   */
-  public static function ensureComposerVersion() {
-    $composerVersion = method_exists(ComposerApp::class, 'getVersion') ?
-      ComposerApp::getVersion() : ComposerApp::VERSION;
-    if (Comparator::lessThan($composerVersion, '1.9.0')) {
-      throw new \RuntimeException("Drupal core development requires Composer 1.9.0, but Composer $composerVersion is installed. Please run 'composer self-update'.");
-    }
-  }
-
-  /**
    * Add vendor classes to Composer's static classmap.
+   *
+   * @param \Composer\Script\Event $event
    */
   public static function preAutoloadDump(Event $event) {
     // Get the configured vendor directory.
