@@ -54,8 +54,6 @@ process:
       - constants/target_type
 destination:
   plugin: entity:language_content_settings
-  content_translation_update_definitions:
-    - comment
 migration_dependencies:
   required:
     - d7_comment_type

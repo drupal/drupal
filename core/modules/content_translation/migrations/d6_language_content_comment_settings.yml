@@ -56,8 +56,6 @@ process:
       2: false
 destination:
   plugin: entity:language_content_settings
-  content_translation_update_definitions:
-    - comment
 migration_dependencies:
   required:
     - d6_comment_type
