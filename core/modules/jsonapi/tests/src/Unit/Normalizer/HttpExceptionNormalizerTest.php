@@ -36,8 +36,8 @@ class HttpExceptionNormalizerTest extends UnitTestCase {
     $error = $normalized[0];
     $this->assertNotEmpty($error['meta']);
     $this->assertNotEmpty($error['source']);
-    $this->assertEquals(13, $error['code']);
-    $this->assertEquals(403, $error['status']);
+    $this->assertSame('13', $error['code']);
+    $this->assertSame('403', $error['status']);
     $this->assertEquals('Forbidden', $error['title']);
     $this->assertEquals('lorem', $error['detail']);
     $this->assertArrayHasKey('trace', $error['meta']);
