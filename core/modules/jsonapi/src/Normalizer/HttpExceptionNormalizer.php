@@ -87,7 +87,7 @@ class HttpExceptionNormalizer extends NormalizerBase {
     // Exceptions thrown without an explicitly defined code get assigned zero by
     // default. Since this is no helpful information, omit it.
     if ($exception->getCode() !== 0) {
-      $error['code'] = $exception->getCode();
+      $error['code'] = (string) $exception->getCode();
     }
     if ($this->currentUser->hasPermission('access site reports')) {
       // The following information may contain sensitive information. Only show
