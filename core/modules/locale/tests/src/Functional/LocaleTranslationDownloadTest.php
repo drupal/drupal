@@ -49,7 +49,7 @@ class LocaleTranslationDownloadTest extends LocaleUpdateBase {
     ], $this->translationsStream);
 
     $url = \Drupal::service('url_generator')->generateFromRoute('<front>', [], ['absolute' => TRUE]);
-    $uri = $url . PublicStream::basePath() . '/remote/8.x/contrib_module_one/contrib_module_one-8.x-1.1.de._po';
+    $uri = $url . PublicStream::basePath() . '/remote/all/contrib_module_one/contrib_module_one-8.x-1.1.de._po';
     $source_file = (object) [
       'uri' => $uri,
     ];

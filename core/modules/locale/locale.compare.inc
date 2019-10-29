@@ -69,7 +69,7 @@ function locale_translation_build_projects() {
     $data += [
       'name' => $name,
       'version' => isset($data['info']['version']) ? $data['info']['version'] : '',
-      'core' => \Drupal::CORE_COMPATIBILITY,
+      'core' => 'all',
       // A project can provide the path and filename pattern to download the
       // gettext file. Use the default if not.
       'server_pattern' => isset($data['info']['interface translation server pattern']) && $data['info']['interface translation server pattern'] ? $data['info']['interface translation server pattern'] : $default_server['pattern'],

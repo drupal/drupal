@@ -194,9 +194,9 @@ EOF;
     // Add a number of files to the local file system to serve as remote
     // translation server and match the project definitions set in
     // locale_test_locale_translation_projects_alter().
-    $this->makePoFile('remote/8.x/contrib_module_one', 'contrib_module_one-8.x-1.1.de._po', $this->timestampNew, $translations_one);
-    $this->makePoFile('remote/8.x/contrib_module_two', 'contrib_module_two-8.x-2.0-beta4.de._po', $this->timestampOld, $translations_two);
-    $this->makePoFile('remote/8.x/contrib_module_three', 'contrib_module_three-8.x-1.0.de._po', $this->timestampOld, $translations_three);
+    $this->makePoFile('remote/all/contrib_module_one', 'contrib_module_one-8.x-1.1.de._po', $this->timestampNew, $translations_one);
+    $this->makePoFile('remote/all/contrib_module_two', 'contrib_module_two-8.x-2.0-beta4.de._po', $this->timestampOld, $translations_two);
+    $this->makePoFile('remote/all/contrib_module_three', 'contrib_module_three-8.x-1.0.de._po', $this->timestampOld, $translations_three);
 
     // Add a number of files to the local file system to serve as local
     // translation files and match the project definitions set in
