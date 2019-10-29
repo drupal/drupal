@@ -23,13 +23,6 @@ abstract class SqlBase extends PagerPluginBase implements CacheableDependencyInt
   protected $pagerManager;
 
   /**
-   * The request stack.
-   *
-   * @var \Symfony\Component\HttpFoundation\RequestStack
-   */
-  protected $requestStack;
-
-  /**
    * The pager parameters.
    *
    * @var \Drupal\Core\Pager\PagerParametersInterface
