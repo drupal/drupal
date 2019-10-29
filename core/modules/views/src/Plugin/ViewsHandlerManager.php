@@ -82,7 +82,7 @@ class ViewsHandlerManager extends DefaultPluginManager implements FallbackPlugin
     $table = $item['table'];
     $field = $item['field'];
     // Get the plugin manager for this type.
-    $data = $this->viewsData->get($table);
+    $data = $table ? $this->viewsData->get($table) : $this->viewsData->getAll();
 
     if (isset($data[$field][$this->handlerType])) {
       $definition = $data[$field][$this->handlerType];

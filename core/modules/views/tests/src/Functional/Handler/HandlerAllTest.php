@@ -52,7 +52,7 @@ class HandlerAllTest extends ViewTestBase {
     $this->addDefaultCommentField('node', 'article');
 
     $object_types = array_keys(ViewExecutable::getHandlerTypes());
-    foreach ($this->container->get('views.views_data')->get() as $base_table => $info) {
+    foreach ($this->container->get('views.views_data')->getAll() as $base_table => $info) {
       if (!isset($info['table']['base'])) {
         continue;
       }
