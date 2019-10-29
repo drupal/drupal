@@ -184,7 +184,8 @@ abstract class MigrateTestBase extends KernelTestBase implements MigrateMessageI
    * Executes a set of migrations in dependency order.
    *
    * @param string[] $ids
-   *   Array of migration IDs, in any order.
+   *   Array of migration IDs, in any order. If any of these migrations use a
+   *   deriver, the derivatives will be made before execution.
    */
   protected function executeMigrations(array $ids) {
     $manager = $this->container->get('plugin.manager.migration');
