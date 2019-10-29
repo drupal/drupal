@@ -137,12 +137,14 @@ class ViewsData {
    *   removed in 9.0.0. Use getAll() instead.
    *
    * @see https://www.drupal.org/node/2723553
+   * @see https://www.drupal.org/node/3090442
    *
    * @return array
    *   An array of table data.
    */
   public function get($key = NULL) {
     if (!$key) {
+      @trigger_error('Calling get() without the $key argument is deprecated in drupal:8.2.0 and is required in drupal:9.0.0. See https://www.drupal.org/node/3090442', E_USER_DEPRECATED);
       return $this->getAll();
     }
     if (!isset($this->storage[$key])) {
@@ -297,7 +299,7 @@ class ViewsData {
   public function fetchBaseTables() {
     $tables = [];
 
-    foreach ($this->get() as $table => $info) {
+    foreach ($this->getAll() as $table => $info) {
       if (!empty($info['table']['base'])) {
         $tables[$table] = [
           'title' => $info['table']['base']['title'],
