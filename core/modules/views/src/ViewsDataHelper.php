@@ -51,7 +51,7 @@ class ViewsDataHelper {
    */
   public function fetchFields($base, $type, $grouping = FALSE, $sub_type = NULL) {
     if (!$this->fields) {
-      $data = $this->data->get();
+      $data = $this->data->getAll();
       // This constructs this ginormous multi dimensional array to
       // collect the important data about fields. In the end,
       // the structure looks a bit like this (using nid as an example)

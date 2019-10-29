@@ -642,6 +642,9 @@ class ViewsDataTest extends UnitTestCase {
    * logic.
    *
    * @covers ::getAll
+   * @group legacy
+   *
+   * @expectedDeprecation Calling get() without the $key argument is deprecated in drupal:8.2.0 and is required in drupal:9.0.0. See https://www.drupal.org/node/3090442
    */
   public function testGetAllEqualsToGetNull() {
     $expected_views_data = $this->viewsDataWithProvider();
