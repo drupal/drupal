@@ -328,3 +328,10 @@ function locale_update_8500() {
       ->save();
   }
 }
+
+/**
+ * Clear Locale project storage to use new 'all' instead of 8.x in URLs.
+ */
+function locale_update_8800() {
+  \Drupal::service('locale.project')->deleteAll();
+}

@@ -1939,7 +1939,7 @@ function install_check_translations($langcode, $server_pattern) {
   $variables = [
     '%project' => 'drupal',
     '%version' => $version,
-    '%core' => \Drupal::CORE_COMPATIBILITY,
+    '%core' => 'all',
     '%language' => $langcode,
   ];
   $translation_url = strtr($server_pattern, $variables);
