@@ -19,6 +19,7 @@ drupal.locale.datepicker:
     - core/jquery
     - core/drupal
     - core/drupalSettings
+  deprecated: The "%library_id%" asset library is deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. See https://www.drupal.org/node/3081864
 
 translations:
   # No sensible version can be specified, since the translations may change at

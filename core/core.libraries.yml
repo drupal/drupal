@@ -550,6 +550,7 @@ jquery.ui.datepicker:
       assets/vendor/jquery.ui/themes/base/datepicker.css: {}
   dependencies:
     - core/jquery.ui
+  deprecated: The "%library_id%" asset library is deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. See https://www.drupal.org/node/3081864
 
 jquery.ui.dialog:
   version: *jquery_ui_version
