@@ -11,6 +11,7 @@ use Drupal\Core\Entity\DynamicallyFieldableEntityStorageInterface;
 use Drupal\field\ConfigImporterFieldPurger;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
+use Drupal\field\EntityDisplayRebuilder;
 use Drupal\field\FieldConfigInterface;
 use Drupal\field\FieldStorageConfigInterface;
 use Drupal\Core\Form\FormStateInterface;
@@ -333,6 +334,22 @@ function field_form_config_admin_import_form_alter(&$form, FormStateInterface $f
       ));
     }
   }
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_insert() for 'field_config'.
+ */
+function field_field_config_insert(FieldConfigInterface $field) {
+  if ($field->isSyncing()) {
+    // Don't change anything during a configuration sync.
+    return;
+  }
+
+  // Allow other view modes to update their configuration for the new field.
+  // Otherwise, configuration for view modes won't get updated until the mode
+  // is used for the first time, creating noise in config diffs.
+  \Drupal::classResolver(EntityDisplayRebuilder::class)
+    ->rebuildEntityTypeDisplays($field->getTargetEntityTypeId(), $field->getTargetBundle());
 }
 
 /**
