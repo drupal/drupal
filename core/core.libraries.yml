@@ -157,7 +157,6 @@ drupal.date:
     - core/drupal
     - core/modernizr
     - core/jquery.once
-    - core/jquery.ui.datepicker
 
 drupal.debounce:
   version: VERSION
@@ -526,17 +525,6 @@ jquery.ui.controlgroup:
     - core/jquery.ui
     - core/jquery.ui.widget
   deprecated: *jquery_ui_unused_deprecated
-
-jquery.ui.datepicker:
-  version: *jquery_ui_version
-  license: *jquery_ui_license
-  js:
-    assets/vendor/jquery.ui/ui/widgets/datepicker-min.js: { minified: true }
-  css:
-    component:
-      assets/vendor/jquery.ui/themes/base/datepicker.css: {}
-  dependencies:
-    - core/jquery.ui
 
 jquery.ui.dialog:
   version: *jquery_ui_version

@@ -4,35 +4,102 @@
 * https://www.drupal.org/node/2815083
 * @preserve
 **/
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 (function ($, Modernizr, Drupal) {
   Drupal.behaviors.date = {
     attach: function attach(context, settings) {
-      var $context = $(context);
+      var dataFieldElements = 'data-drupal-field-elements';
+      var dataDatepickerProcessed = 'data-datepicker-is-processed';
 
-      if (Modernizr.inputtypes.date === true) {
-        return;
-      }
-      $context.find('input[data-drupal-date-format]').once('datePicker').each(function () {
-        var $input = $(this);
-        var datepickerSettings = {};
-        var dateFormat = $input.data('drupalDateFormat');
+      var getDateSelector = function getDateSelector(elements) {
+        return ['[' + dataFieldElements + '="' + elements + '"]', ':not([' + dataDatepickerProcessed + '="' + elements + '"])'].join('');
+      };
 
-        datepickerSettings.dateFormat = dateFormat.replace('Y', 'yy').replace('m', 'mm').replace('d', 'dd');
+      if (Modernizr.inputtypes.date === false) {
+        Array.prototype.forEach.call(document.querySelectorAll(getDateSelector('date-time')), function (dateTime) {
+          var dateInput = dateTime.querySelector('input[type="date"]');
+          var timeInput = dateTime.querySelector('input[type="time"]');
+          var help = Drupal.theme.dateTimeHelp({
+            dateId: dateInput.id + '--description',
+            dateDesc: dateInput.dataset.help,
+            timeId: timeInput.id + '--description',
+            timeDesc: timeInput.dataset.help
+          });
 
-        if ($input.attr('min')) {
-          datepickerSettings.minDate = $input.attr('min');
-        }
-        if ($input.attr('max')) {
-          datepickerSettings.maxDate = $input.attr('max');
-        }
-        $input.datepicker(datepickerSettings);
-      });
-    },
-    detach: function detach(context, settings, trigger) {
-      if (trigger === 'unload') {
-        $(context).find('input[data-drupal-date-format]').findOnce('datePicker').datepicker('destroy');
+          [dateInput, timeInput].forEach(function (input) {
+            input.setAttribute('aria-describedby', input.id + '--description');
+
+            input.setAttribute('type', 'text');
+          });
+
+          Drupal.DatepickerPolyfill.attachDescription(dateTime, help);
+
+          dateTime.setAttribute(dataDatepickerProcessed, 'date-time');
+        });
+
+        Array.prototype.forEach.call(document.querySelectorAll(getDateSelector('date')), function (date) {
+          var dateInput = date.querySelector('input[type="date"]');
+          var help = Drupal.theme.dateHelp({
+            dateDesc: dateInput.dataset.help
+          });
+
+          var id = date.id + '--description';
+          dateInput.setAttribute('aria-describedby', id);
+
+          dateInput.setAttribute('type', 'text');
+          Drupal.DatepickerPolyfill.attachDescription(date, help, id);
+
+          date.setAttribute(dataDatepickerProcessed, 'date');
+        });
       }
     }
+  };
+
+  Drupal.DatepickerPolyfill = function () {
+    function _class() {
+      _classCallCheck(this, _class);
+    }
+
+    _createClass(_class, null, [{
+      key: 'attachDescription',
+      value: function attachDescription(element, help, id) {
+        var description = element.nextElementSibling;
+
+        if (!(description && description.getAttribute('data-drupal-field-elements') === 'description')) {
+          description = Drupal.DatepickerPolyfill.descriptionWrapperElement(id);
+          element.parentNode.insertBefore(description, element.nextSibling);
+        }
+        description.insertAdjacentHTML('beforeend', help);
+      }
+    }, {
+      key: 'descriptionWrapperElement',
+      value: function descriptionWrapperElement(id) {
+        var description = document.createElement('div');
+        description.classList.add('description');
+        description.setAttribute('data-drupal-field-elements', 'description');
+        if (id) {
+          description.setAttribute('id', id);
+        }
+        return description;
+      }
+    }]);
+
+    return _class;
+  }();
+
+  Drupal.theme.dateHelp = function (_ref) {
+    var dateDesc = _ref.dateDesc;
+    return '<div class="no-native-datepicker-help">' + dateDesc + '</div>';
+  };
+
+  Drupal.theme.dateTimeHelp = function (_ref2) {
+    var dateId = _ref2.dateId,
+        timeId = _ref2.timeId,
+        dateDesc = _ref2.dateDesc,
+        timeDesc = _ref2.timeDesc;
+    return '<div class="no-native-datepicker-help">\n       <span id="' + dateId + '">' + dateDesc + '</span> <span id="' + timeId + '">' + timeDesc + '</span>\n     </div>';
   };
 })(jQuery, Modernizr, Drupal);

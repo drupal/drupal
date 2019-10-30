@@ -216,6 +216,7 @@ function template_preprocess_fieldset(&$variables) {
   if (!empty($element['#description'])) {
     $description_id = $element['#attributes']['id'] . '--description';
     $description_attributes['id'] = $description_id;
+    $description_attributes['data-drupal-field-elements'] = 'description';
     $variables['description']['attributes'] = new Attribute($description_attributes);
     $variables['description']['content'] = $element['#description'];
 
