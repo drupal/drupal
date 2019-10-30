@@ -3,7 +3,7 @@
 namespace Drupal\Composer\Generator\Builder;
 
 /**
- * Builder to produce metapackage for drupal/dev-dependencies.
+ * Builder to produce metapackage for drupal/core-dev.
  */
 class DrupalDevDependenciesBuilder extends DrupalPackageBuilder {
 
@@ -49,7 +49,7 @@ class DrupalDevDependenciesBuilder extends DrupalPackageBuilder {
    */
   protected function initialPackageMetadata() {
     return [
-      "name" => "drupal/dev-dependencies",
+      "name" => "drupal/core-dev",
       "type" => "metapackage",
       "description" => "require-dev dependencies from drupal/drupal; use in addition to drupal/core-recommended to run tests from drupal/core.",
       "license" => "GPL-2.0-or-later",

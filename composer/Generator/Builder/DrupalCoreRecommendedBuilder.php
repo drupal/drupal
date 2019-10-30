@@ -33,8 +33,8 @@ class DrupalCoreRecommendedBuilder extends DrupalPackageBuilder {
     // Copy the 'packages' section from the Composer lock into our 'require'
     // section. There is also a 'packages-dev' section, but we do not need
     // to pin 'require-dev' versions, as 'require-dev' dependencies are never
-    // included from subprojects. Use 'drupal/core-dev-dependencies' to get
-    // Drupal's dev dependencies.
+    // included from subprojects. Use 'drupal/core-dev' to get Drupal's
+    // dev dependencies.
     foreach ($composerLockData['packages'] as $package) {
       // If there is no 'source' record, then this is a path repository
       // or something else that we do not want to include.
