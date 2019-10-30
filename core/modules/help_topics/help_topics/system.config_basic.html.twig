@@ -1,0 +1,27 @@
+---
+label: 'Changing basic site settings'
+top_level: true
+related:
+  - user.security_account_settings
+---
+{% set regional_url = render_var(url('system.regional_settings')) %}
+{% set information_url = render_var(url('system.site_information_settings')) %}
+{% set datetime_url = render_var(url('entity.date_format.collection')) %}
+<h2>{% trans %}Goal{% endtrans %}</h2>
+<p>{% trans %}Configure the basic settings of your site, including the site name, slogan, main email address, default time zone, default country, and the date formats to use.{% endtrans %}</p>
+<h2>{% trans %}Steps{% endtrans %}</h2>
+<ol>
+  <li>{% trans %}In the <em>Manage</em> administrative menu, navigate to <em>Configuration</em> &gt; <em>System</em> &gt; <em><a href="{{ information_url }}">Basic site settings</a></em>.{% endtrans %}</li>
+  <li>{% trans %}Enter the site name, slogan, and main email address for your site. {% endtrans %}</li>
+  <li>{% trans %}Click <em>Save configuration</em>. You should see a message indicating that the settings were saved.{% endtrans %}</li>
+  <li>{% trans %}In the <em>Manage</em> administrative menu, navigate to <em>Configuration</em> &gt; <em>Regional and language</em> &gt; <em><a href="{{ regional_url }}">Regional settings</a></em>.{% endtrans %}</li>
+  <li>{% trans %}Select the default country and default time zone for your site.{% endtrans %}</li>
+  <li>{% trans %}Click <em>Save configuration</em>. You should see a message indicating that the settings were saved.{% endtrans %}</li>
+  <li>{% trans %}In the <em>Manage</em> administrative menu, navigate to <em>Configuration</em> &gt; <em>Regional and language</em> &gt; <em><a href="{{ datetime_url }}">Date and time formats</a></em>.{% endtrans %}</li>
+  <li>{% trans %}Look at the <em>Patterns</em> for the Default long, medium, and short date formats. If any of them does not match the date format you want to use on your site, click <em>Edit</em> in that row to edit the format.{% endtrans %}</li>
+  <li>{% trans %}Adjust the <em>Format string</em> until the <em>Displayed</em> format matches what you want. (Date format strings are composed of PHP date format codes.){% endtrans %}</li>
+  <li>{% trans %}Click <em>Save format</em>. You should see a message indicating that the format was saved.{% endtrans %}</li>
+  <li>{% trans %}Repeat the previous three steps for any other date formats that need to be changed.{% endtrans %}</li>
+</ol>
+<h2>{% trans %}Additional resources{% endtrans %}</h2>
+<p>{% trans %}<a href="https://php.net/manual/function.date.php">PHP date format codes reference</a>{% endtrans %}</p>
