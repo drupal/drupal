@@ -16,7 +16,7 @@
         "drupal/core-vendor-hardening": "^8.8"
     },
     "require-dev": {
-        "drupal/dev-dependencies": "^8.8"
+        "drupal/core-dev": "^8.8"
     },
     "conflict": {
         "drupal/drupal": "*"

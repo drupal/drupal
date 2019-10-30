@@ -42,7 +42,7 @@ class BuilderTest extends TestCase {
       [
         DrupalDevDependenciesBuilder::class,
         [
-          'name' => 'drupal/dev-dependencies',
+          'name' => 'drupal/core-dev',
           'type' => 'metapackage',
           'description' => 'require-dev dependencies from drupal/drupal; use in addition to drupal/core-recommended to run tests from drupal/core.',
           'license' => 'GPL-2.0-or-later',
@@ -60,7 +60,7 @@ class BuilderTest extends TestCase {
       [
         DrupalPinnedDevDependenciesBuilder::class,
         [
-          'name' => 'drupal/pinned-dev-dependencies',
+          'name' => 'drupal/core-dev-pinned',
           'type' => 'metapackage',
           'description' => 'Pinned require-dev dependencies from drupal/drupal; use in addition to drupal/core-recommended to run tests from drupal/core.',
           'license' => 'GPL-2.0-or-later',
