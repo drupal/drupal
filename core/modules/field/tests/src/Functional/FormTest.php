@@ -713,6 +713,10 @@ class FormTest extends FieldTestBase {
       ])
       ->save();
 
+    // We need to rebuild hook information after setting the component through
+    // the API.
+    $this->rebuildAll();
+
     $this->drupalGet('entity_test/add');
     $this->assertUniqueText("From $hook(): prefix on $field_name parent element.");
     if ($widget === 'test_field_widget_multiple_single_value') {

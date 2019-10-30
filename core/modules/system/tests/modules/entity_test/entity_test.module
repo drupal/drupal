@@ -282,11 +282,9 @@ function entity_test_entity_form_mode_info_alter(&$form_modes) {
   $entity_info = \Drupal::entityTypeManager()->getDefinitions();
   foreach ($entity_info as $entity_type => $info) {
     if ($entity_info[$entity_type]->getProvider() == 'entity_test') {
-      $form_modes[$entity_type] = [
-        'compact' => [
-          'label' => t('Compact version'),
-          'status' => TRUE,
-        ],
+      $form_modes[$entity_type]['compact'] = [
+        'label' => t('Compact version'),
+        'status' => TRUE,
       ];
     }
   }
