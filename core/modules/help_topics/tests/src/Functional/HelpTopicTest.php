@@ -132,6 +132,18 @@ class HelpTopicTest extends BrowserTestBase {
     $this->container->get('theme_installer')->uninstall(['help_topics_test_theme']);
     $this->drupalGet('admin/help');
     $session->linkNotExists('XYZ Help Test theme');
+
+    // Verify the Help Topics provided by the Help Topics module for optional
+    // extensions do not exist.
+    $this->drupalGet('admin/help/topic/core.ui_components');
+    $session->linkNotExists('Shortcuts');
+    $session->linkExists('Accessibility features');
+    $this->container->get('module_installer')->install(['shortcut']);
+    $this->drupalGet('admin/help/topic/core.ui_components');
+    $session->linkExists('Shortcuts');
+    $session->linkExists('Accessibility features');
+    $this->clickLink('Shortcuts');
+    $session->pageTextContains('What are shortcuts?');
   }
 
   /**
