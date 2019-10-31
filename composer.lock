@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "0f1805164a2b3a10914c98065de051af",
+    "content-hash": "8ba406bd7f3522d51f0e55fe33e51aff",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -876,36 +876,6 @@
                 "GPL-2.0-or-later"
             ],
             "description": "Drupal is an open source content management platform powering millions of websites and applications."
-        },
-        {
-            "name": "drupal/core-project-message",
-            "version": "8.9.x-dev",
-            "dist": {
-                "type": "path",
-                "url": "composer/Plugin/ProjectMessage",
-                "reference": "3b795f469441eb27854798f70cb38e717d80bbfc"
-            },
-            "require": {
-                "composer-plugin-api": "^1.1",
-                "php": ">=7.0.8"
-            },
-            "type": "composer-plugin",
-            "extra": {
-                "class": "Drupal\\Composer\\Plugin\\ProjectMessage\\MessagePlugin"
-            },
-            "autoload": {
-                "psr-4": {
-                    "Drupal\\Composer\\Plugin\\ProjectMessage\\": "."
-                }
-            },
-            "license": [
-                "GPL-2.0-or-later"
-            ],
-            "description": "Adds a message after Composer installation.",
-            "homepage": "https://www.drupal.org/project/drupal",
-            "keywords": [
-                "drupal"
-            ]
         },
         {
             "name": "drupal/core-vendor-hardening",
@@ -6265,7 +6235,6 @@
     "minimum-stability": "dev",
     "stability-flags": {
         "drupal/core": 20,
-        "drupal/core-project-message": 20,
         "drupal/core-vendor-hardening": 20,
         "behat/mink": 20,
         "behat/mink-selenium2-driver": 20
