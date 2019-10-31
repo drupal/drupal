@@ -13,7 +13,6 @@
     "Drupal": true,
     "drupalSettings": true,
     "drupalTranslations": true,
-    "domready": true,
     "jQuery": true,
     "_": true,
     "matchMedia": true,

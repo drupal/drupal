@@ -22,17 +22,6 @@ ckeditor:
   js:
     assets/vendor/ckeditor/ckeditor.js: { preprocess: false, minified: true }
 
-domready:
-  remote: https://github.com/ded/domready
-  version: "1.0.8"
-  license:
-    name: MIT
-    url: https://github.com/ded/domready/blob/v1.0.8/LICENSE
-    gpl-compatible: true
-  js:
-    assets/vendor/domready/ready.min.js: { weight: -21, minified: true }
-  deprecated: The "%library_id%" asset library is deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. See https://www.drupal.org/node/3086669
-
 drupal:
   version: VERSION
   js:
