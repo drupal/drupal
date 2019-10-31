@@ -320,7 +320,6 @@ drupal.vertical-tabs:
     - core/drupal
     - core/drupalSettings
     - core/drupal.form
-    - core/matchmedia
 
 jquery:
   remote: https://github.com/jquery/jquery
@@ -860,26 +859,6 @@ jquery.ui.widget:
   dependencies:
     - core/jquery.ui
 
-matchmedia:
-  remote: https://github.com/paulirish/matchMedia.js
-  version: &matchmedia_version 0.2.0
-  license: &matchmedia_license
-    name: MIT
-    url: https://github.com/paulirish/matchMedia.js/blob/0.2.0/LICENSE.txt
-    gpl-compatible: true
-  js:
-    assets/vendor/matchMedia/matchMedia.min.js: { minified: true }
-  deprecated: &matchmedia_deprecated The "%library_id%" asset library is deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. See https://www.drupal.org/node/3086653
-
-matchmedia.addListener:
-  version: *matchmedia_version
-  license: *matchmedia_license
-  js:
-    assets/vendor/matchMedia/matchMedia.addListener.min.js: { minified: true }
-  dependencies:
-    - core/matchmedia
-  deprecated: *matchmedia_deprecated
-
 modernizr:
   # Block the page from being loaded until Modernizr is initialized.
   header: true
@@ -913,8 +892,6 @@ picturefill:
     gpl-compatible: true
   js:
     assets/vendor/picturefill/picturefill.min.js: { weight: -10, minified: true }
-  dependencies:
-    - core/matchmedia
 
 popperjs:
   version: "1.15.0"

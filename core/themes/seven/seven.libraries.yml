@@ -76,7 +76,6 @@ drupal.nav-tabs:
   js:
     js/nav-tabs.js: {}
   dependencies:
-    - core/matchmedia
     - core/jquery
     - core/drupal
     - core/jquery.once
@@ -88,8 +87,6 @@ drupal.responsive-detail:
   js:
     js/responsive-details.js: {}
   dependencies:
-    - core/matchmedia
-    - core/matchmedia.addListener
     - core/jquery
     - core/jquery.once
     - core/collapse

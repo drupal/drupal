@@ -15,7 +15,6 @@
     "drupalTranslations": true,
     "jQuery": true,
     "_": true,
-    "matchMedia": true,
     "Backbone": true,
     "Modernizr": true,
     "Popper": true,
