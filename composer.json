@@ -3,9 +3,15 @@
     "description": "Drupal is an open source content management platform powering millions of websites and applications.",
     "type": "project",
     "license": "GPL-2.0-or-later",
+    "homepage": "https://www.drupal.org/project/drupal",
+    "support": {
+        "docs": "https://www.drupal.org/docs/user_guide/en/index.html",
+        "chat": "https://www.drupal.org/node/314178"
+    },
     "require": {
         "composer/installers": "^1.0.24",
         "drupal/core": "self.version",
+        "drupal/core-project-message": "self.version",
         "drupal/core-vendor-hardening": "self.version",
         "wikimedia/composer-merge-plugin": "^1.4"
     },
@@ -58,6 +64,18 @@
             "drush/Commands/contrib/{$name}": ["type:drupal-drush"],
             "modules/custom/{$name}": ["type:drupal-custom-module"],
             "themes/custom/{$name}": ["type:drupal-custom-theme"]
+        },
+        "drupal-core-project-message": {
+            "post-install-cmd-message": [
+                "<bg=blue;fg=white>drupal/drupal</>: This package is meant for core development,",
+                "               and not intended to be used for production sites.",
+                "               See: https://www.drupal.org/node/3082474"
+            ],
+            "post-create-project-cmd-message": [
+                "<bg=red;fg=white>drupal/drupal</>: This package is meant for core development,",
+                "               and not intended to be used for production sites.",
+                "               See: https://www.drupal.org/node/3082474"
+            ]
         }
     },
     "autoload": {
@@ -91,6 +109,10 @@
         {
             "type": "path",
             "url": "core"
+        },
+        {
+            "type": "path",
+            "url": "composer/Plugin/ProjectMessage"
         },
         {
             "type": "path",
