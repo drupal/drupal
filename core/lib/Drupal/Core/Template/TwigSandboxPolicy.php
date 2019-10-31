@@ -3,6 +3,8 @@
 namespace Drupal\Core\Template;
 
 use Drupal\Core\Site\Settings;
+use Twig\Sandbox\SecurityError;
+use Twig\Sandbox\SecurityPolicyInterface;
 
 /**
  * Default sandbox policy for Twig templates.
@@ -13,7 +15,7 @@ use Drupal\Core\Site\Settings;
  * objects can do by whitelisting certain classes, method names, and method
  * names with an allowed prefix. All object properties may be accessed.
  */
-class TwigSandboxPolicy implements \Twig_Sandbox_SecurityPolicyInterface {
+class TwigSandboxPolicy implements SecurityPolicyInterface {
 
   /**
    * An array of whitelisted methods in the form of methodName => TRUE.
@@ -102,7 +104,7 @@ class TwigSandboxPolicy implements \Twig_Sandbox_SecurityPolicyInterface {
       }
     }
 
-    throw new \Twig_Sandbox_SecurityError(sprintf('Calling "%s" method on a "%s" object is not allowed.', $method, get_class($obj)));
+    throw new SecurityError(sprintf('Calling "%s" method on a "%s" object is not allowed.', $method, get_class($obj)));
   }
 
 }

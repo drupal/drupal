@@ -11,4 +11,4 @@
  * @ingroup themeable
  */
 #}
-{% for i in 1..size if size > 0 %}<div class="js-indentation indentation">&nbsp;</div>{% endfor %}
+{% if size > 0 %}{% for i in 1..size %}<div class="js-indentation indentation">&nbsp;</div>{% endfor %}{% endif %}

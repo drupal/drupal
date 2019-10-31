@@ -13,6 +13,7 @@ use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\Render\ViewsRenderPipelineMarkup;
 use Drupal\views\ResultRow;
 use Drupal\views\ViewExecutable;
+use Twig\Environment;
 
 /**
  * @defgroup views_field_handlers Views field handler plugins
@@ -726,7 +727,7 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
         '#default_value' => $this->options['alter']['text'],
         // The tag list will be escaped.
         '#description' => $this->t('The text to display for this field. You may enter data from this view as per the "Replacement patterns" below. You may include <a href="@twig_docs">Twig</a> or the following allowed HTML tags: <code>@tags</code>', [
-          '@twig_docs' => 'https://twig.symfony.com/doc/' . \Twig_Environment::MAJOR_VERSION . '.x',
+          '@twig_docs' => 'https://twig.symfony.com/doc/' . Environment::MAJOR_VERSION . '.x',
           '@tags' => '<' . implode('> <', Xss::getAdminTagList()) . '>',
         ]),
         '#states' => [

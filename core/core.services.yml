@@ -1643,11 +1643,11 @@ services:
   # @todo Figure out what to do about debugging functions.
   # @see https://www.drupal.org/node/1804998
   twig.extension.debug:
-    class: Twig_Extension_Debug
+    class: Twig\Extension\DebugExtension
     tags:
       - { name: twig.extension }
   twig.loader:
-    class: Twig_Loader_Chain
+    class: Twig\Loader\ChainLoader
     public: false
     tags:
       - { name: service_collector, tag: twig.loader, call: addLoader, required: TRUE }

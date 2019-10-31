@@ -11,6 +11,9 @@ use Drupal\Core\Template\Attribute;
 use Drupal\Core\Template\TwigSandboxPolicy;
 use Drupal\Core\Template\Loader\StringLoader;
 use Drupal\Tests\UnitTestCase;
+use Twig\Environment;
+use Twig\Extension\SandboxExtension;
+use Twig\Sandbox\SecurityError;
 
 /**
  * Tests the twig sandbox policy.
@@ -24,7 +27,7 @@ class TwigSandboxTest extends UnitTestCase {
   /**
    * The Twig environment loaded with the sandbox extension.
    *
-   * @var \Twig_Environment
+   * @var \Twig\Environment
    */
   protected $twig;
 
@@ -35,9 +38,9 @@ class TwigSandboxTest extends UnitTestCase {
     parent::setUp();
 
     $loader = new StringLoader();
-    $this->twig = new \Twig_Environment($loader);
+    $this->twig = new Environment($loader);
     $policy = new TwigSandboxPolicy();
-    $sandbox = new \Twig_Extension_Sandbox($policy, TRUE);
+    $sandbox = new SandboxExtension($policy, TRUE);
     $this->twig->addExtension($sandbox);
   }
 
@@ -48,7 +51,7 @@ class TwigSandboxTest extends UnitTestCase {
    */
   public function testEntityDangerousMethods($template) {
     $entity = $this->createMock('Drupal\Core\Entity\EntityInterface');
-    $this->expectException(\Twig_Sandbox_SecurityError::class);
+    $this->expectException(SecurityError::class);
     $this->twig->render($template, ['entity' => $entity]);
   }
 

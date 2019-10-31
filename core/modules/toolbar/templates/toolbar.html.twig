@@ -29,7 +29,7 @@
       {% set tray = trays[key] %}
       <div{{ tab.attributes.addClass('toolbar-tab') }}>
         {{ tab.link }}
-        {% spaceless %}
+        {% apply spaceless %}
           <div{{ tray.attributes }}>
             {% if tray.label %}
               <nav class="toolbar-lining clearfix" role="navigation" aria-label="{{ tray.label }}">
@@ -40,7 +40,7 @@
             {{ tray.links }}
             </nav>
           </div>
-        {% endspaceless %}
+        {% endapply %}
       </div>
     {% endfor %}
   </nav>

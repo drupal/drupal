@@ -104,7 +104,7 @@ class HelpTopicTwigTest extends UnitTestCase {
 }
 
 /**
- * Defines a fake template class to mock \Twig_TemplateWrapper.
+ * Defines a fake template class to mock \Twig\TemplateWrapper.
  *
  * We cannot use getMockBuilder() for this, because the Twig TemplateWrapper
  * class is declared "final" and cannot be mocked.
@@ -129,7 +129,7 @@ class FakeTemplateWrapper {
   }
 
   /**
-   * Mocks the \Twig_TemplateWrapper render() method.
+   * Mocks the \Twig\TemplateWrapper render() method.
    *
    * @param array $context
    *   (optional) Render context.

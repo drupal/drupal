@@ -11,7 +11,7 @@
  * @see claro_preprocess_input()
  */
 #}
-{% spaceless %}
+{% apply spaceless %}
 {% if autocomplete_message %}
   <div class="claro-autocomplete">
     <input{{ attributes }}/>
@@ -21,4 +21,4 @@
 {% else %}
   <input{{ attributes }}/>{{ children }}
 {% endif %}
-{% endspaceless %}
+{% endapply %}

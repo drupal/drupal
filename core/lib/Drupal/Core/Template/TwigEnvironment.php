@@ -6,16 +6,17 @@ use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\PhpStorage\PhpStorageFactory;
 use Drupal\Core\Render\Markup;
 use Drupal\Core\State\StateInterface;
+use Twig\Environment;
+use Twig\Extension\SandboxExtension;
+use Twig\Loader\LoaderInterface;
 
 /**
  * A class that defines a Twig environment for Drupal.
  *
  * Instances of this class are used to store the configuration and extensions,
  * and are used to load templates from the file system or other locations.
- *
- * @see core\vendor\twig\twig\lib\Twig\Environment.php
  */
-class TwigEnvironment extends \Twig_Environment {
+class TwigEnvironment extends Environment {
 
   /**
    * Key name of the Twig cache prefix metadata key-value pair in State.
@@ -55,12 +56,12 @@ class TwigEnvironment extends \Twig_Environment {
    *   The Twig extension hash.
    * @param \Drupal\Core\State\StateInterface $state
    *   The state service.
-   * @param \Twig_LoaderInterface $loader
+   * @param \Twig\Loader\LoaderInterface $loader
    *   The Twig loader or loader chain.
    * @param array $options
    *   The options for the Twig environment.
    */
-  public function __construct($root, CacheBackendInterface $cache, $twig_extension_hash, StateInterface $state, \Twig_LoaderInterface $loader = NULL, array $options = []) {
+  public function __construct($root, CacheBackendInterface $cache, $twig_extension_hash, StateInterface $state, LoaderInterface $loader = NULL, array $options = []) {
     $this->state = $state;
 
     // Ensure that twig.engine is loaded, given that it is needed to render a
@@ -97,7 +98,7 @@ class TwigEnvironment extends \Twig_Environment {
     $this->setLoader($loader);
     parent::__construct($this->getLoader(), $options);
     $policy = new TwigSandboxPolicy();
-    $sandbox = new \Twig_Extension_Sandbox($policy, TRUE);
+    $sandbox = new SandboxExtension($policy, TRUE);
     $this->addExtension($sandbox);
   }
 

@@ -9,7 +9,7 @@
  * - size: Optional. The number of indentations to create.
  */
 #}
-{% for i in 1..size if size > 0 %}<div class="js-indentation indentation">
+{% if size > 0 %}{% for i in 1..size %}<div class="js-indentation indentation">
   <svg
     xmlns="http://www.w3.org/2000/svg"
     class="tree"
@@ -33,4 +33,4 @@
       d="M12.5,12 v99"
       stroke="#888"/>
   </svg>
-</div>{% endfor %}
+</div>{% endfor %}{% endif %}

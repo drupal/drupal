@@ -22,13 +22,13 @@
     <h4{{ title_attributes.addClass('visually-hidden').setAttribute('id', heading_id) }}>{{ 'Pagination'|t }}</h4>
     <ul{{ content_attributes.addClass('pager__items', 'js-pager__items') }}>
       {% if items.previous %}
-        {% spaceless %}
+        {% apply spaceless %}
           <li class="pager__item pager__item--mini pager__item--action pager__item--previous">
             <a{{ items.previous.attributes.addClass(pager_action_classes).setAttribute('title', 'Go to previous page'|t).setAttribute('href', items.previous.href) }}>
               <span class="visually-hidden">{{ 'Previous page'|t }}</span>
             </a>
           </li>
-        {% endspaceless %}
+        {% endapply %}
       {% endif %}
 
       {% if items.current %}
@@ -41,13 +41,13 @@
       {% endif %}
 
       {% if items.next %}
-        {% spaceless %}
+        {% apply spaceless %}
           <li class="pager__item pager__item--mini pager__item--action pager__item--next">
             <a{{ items.next.attributes.addClass(pager_action_classes).setAttribute('title', 'Go to next page'|t).setAttribute('href', items.next.href) }}>
               <span class="visually-hidden">{{ 'Next page'|t }}</span>
             </a>
           </li>
-        {% endspaceless %}
+        {% endapply %}
       {% endif %}
     </ul>
   </nav>

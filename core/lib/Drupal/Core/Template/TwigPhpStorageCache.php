@@ -5,6 +5,7 @@ namespace Drupal\Core\Template;
 use Drupal\Component\Utility\Crypt;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\PhpStorage\PhpStorageFactory;
+use Twig\Cache\CacheInterface;
 
 /**
  * Provides an alternate cache storage for Twig using PhpStorage.
@@ -16,7 +17,7 @@ use Drupal\Core\PhpStorage\PhpStorageFactory;
  *
  * @see \Drupal\Core\DependencyInjection\Compiler\TwigExtensionPass
  */
-class TwigPhpStorageCache implements \Twig_CacheInterface {
+class TwigPhpStorageCache implements CacheInterface {
 
   /**
    * The maximum length for each part of the cache key suffix.

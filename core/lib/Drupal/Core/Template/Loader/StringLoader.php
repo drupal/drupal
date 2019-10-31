@@ -2,7 +2,7 @@
 
 namespace Drupal\Core\Template\Loader;
 
-use Twig\Loader\ExistsLoaderInterface;
+use Twig\Loader\LoaderInterface;
 use Twig\Loader\SourceContextLoaderInterface;
 use Twig\Source;
 
@@ -18,13 +18,13 @@ use Twig\Source;
  * This class override ensures that the string loader behaves as expected in
  * the loader chain. If Twig's string loader is used as is, any string (even a
  * reference to a file-based Twig template) is treated as a valid template and
- * is rendered instead of a \Twig_Error_Loader exception being thrown.
+ * is rendered instead of a \Twig\Error\LoaderError exception being thrown.
  *
  * @see \Drupal\Core\Template\TwigEnvironment::renderInline()
  * @see \Drupal\Core\Render\Element\InlineTemplate
  * @see twig_render_template()
  */
-class StringLoader implements \Twig_LoaderInterface, ExistsLoaderInterface, SourceContextLoaderInterface {
+class StringLoader implements LoaderInterface, SourceContextLoaderInterface {
 
   /**
    * {@inheritdoc}

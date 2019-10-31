@@ -2,12 +2,15 @@
 
 namespace Drupal\twig_loader_test\Loader;
 
+use Twig\Loader\ExistsLoaderInterface;
+use Twig\Loader\LoaderInterface;
+use Twig\Loader\SourceContextLoaderInterface;
 use Twig\Source;
 
 /**
  * A test Twig loader.
  */
-class TestLoader implements \Twig_LoaderInterface, \Twig_ExistsLoaderInterface, \Twig_SourceContextLoaderInterface {
+class TestLoader implements LoaderInterface, ExistsLoaderInterface, SourceContextLoaderInterface {
 
   /**
    * {@inheritdoc}

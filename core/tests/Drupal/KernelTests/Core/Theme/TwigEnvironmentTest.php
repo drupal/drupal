@@ -9,6 +9,8 @@ use Drupal\Core\Site\Settings;
 use Drupal\Core\Template\TwigPhpStorageCache;
 use Drupal\KernelTests\KernelTestBase;
 use Symfony\Component\DependencyInjection\Definition;
+use Twig\Environment;
+use Twig\Error\LoaderError;
 
 /**
  * Tests the twig environment.
@@ -106,7 +108,7 @@ class TwigEnvironmentTest extends KernelTestBase {
       $environment->loadTemplate('this-template-does-not-exist.html.twig')->render([]);
       $this->fail('Did not throw an exception as expected.');
     }
-    catch (\Twig_Error_Loader $e) {
+    catch (LoaderError $e) {
       $this->assertTrue(strpos($e->getMessage(), 'Template "this-template-does-not-exist.html.twig" is not defined') === 0);
     }
   }
@@ -184,7 +186,7 @@ class TwigEnvironmentTest extends KernelTestBase {
   public function register(ContainerBuilder $container) {
     parent::register($container);
 
-    $container->setDefinition('twig_loader__file_system', new Definition('Twig_Loader_Filesystem', [[sys_get_temp_dir()]]))
+    $container->setDefinition('twig_loader__file_system', new Definition('Twig\Loader\FilesystemLoader', [[sys_get_temp_dir()]]))
       ->addTag('twig.loader');
   }
 
@@ -216,7 +218,7 @@ TWIG;
     // Manually change $templateClassPrefix to force a different template
     // classname, as the other class is still loaded. This wouldn't be a problem
     // on a real site where you reload the page.
-    $reflection = new \ReflectionClass(\Twig_Environment::class);
+    $reflection = new \ReflectionClass(Environment::class);
     $property_reflection = $reflection->getProperty('templateClassPrefix');
     $property_reflection->setAccessible(TRUE);
     $property_reflection->setValue($environment, 'otherPrefix');
