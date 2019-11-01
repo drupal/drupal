@@ -89,6 +89,7 @@
 .layout-builder-block {
   padding: 1.5em;
   cursor: move;
+  background-color: #fff;
 }
 
 .layout-builder-block [tabindex="-1"] {

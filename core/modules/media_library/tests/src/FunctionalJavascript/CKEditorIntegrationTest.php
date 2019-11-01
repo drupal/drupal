@@ -9,6 +9,7 @@ use Drupal\filter\Entity\FilterFormat;
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 use Drupal\media\Entity\Media;
 use Drupal\Tests\ckeditor\Traits\CKEditorTestTrait;
+use Drupal\Tests\ckeditor\Traits\CKEditorAdminSortTrait;
 use Drupal\Tests\media\Traits\MediaTypeCreationTrait;
 use Drupal\Tests\TestFileCreationTrait;
 
@@ -19,6 +20,7 @@ use Drupal\Tests\TestFileCreationTrait;
 class CKEditorIntegrationTest extends WebDriverTestBase {
 
   use CKEditorTestTrait;
+  use CKEditorAdminSortTrait;
   use MediaTypeCreationTrait;
   use TestFileCreationTrait;
 
@@ -161,9 +163,12 @@ class CKEditorIntegrationTest extends WebDriverTestBase {
     $this->assertNotEmpty($assert_session->waitForText('sulaco'));
     $page->checkField('roles[authenticated]');
     $page->selectFieldOption('editor[editor]', 'ckeditor');
-    $this->assertNotEmpty($target = $assert_session->waitForElementVisible('css', 'ul.ckeditor-toolbar-group-buttons'));
-    $this->assertNotEmpty($button = $assert_session->elementExists('css', 'li[data-drupal-ckeditor-button-name="DrupalMediaLibrary"]'));
-    $button->dragTo($target);
+
+    $targetSelector = 'ul.ckeditor-toolbar-group-buttons';
+    $buttonSelector = 'li[data-drupal-ckeditor-button-name="DrupalMediaLibrary"]';
+    $this->assertNotEmpty($target = $assert_session->waitForElementVisible('css', $targetSelector));
+    $this->assertNotEmpty($button = $assert_session->elementExists('css', $buttonSelector));
+    $this->sortableTo($buttonSelector, 'ul.ckeditor-available-buttons', $targetSelector);
     $page->pressButton('Save configuration');
     $assert_session->pageTextContains('The Embed media filter must be enabled to use the Insert from Media Library button.');
     $page->checkField('filters[media_embed][status]');

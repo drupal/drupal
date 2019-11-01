@@ -52,13 +52,11 @@ drupal.ckeditor.admin:
     - core/drupal
     - core/drupalSettings
     - core/jquery.once
-    - core/jquery.ui.sortable
-    - core/jquery.ui.draggable
-    - core/jquery.ui.touch-punch
     - core/backbone
     - core/drupal.dialog
     - core/drupal.announce
     - core/ckeditor
+    - core/sortable
     - editor/drupal.editor.admin
     # Ensure to run after core/drupal.vertical-tabs.
     - core/drupal.vertical-tabs
