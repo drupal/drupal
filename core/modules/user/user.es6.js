@@ -47,9 +47,7 @@
 
         // If the password strength indicator is enabled, add its markup.
         if (settings.password.showStrengthIndicator) {
-          const passwordMeter = `<div class="password-strength"><div class="password-strength__meter"><div class="password-strength__indicator js-password-strength__indicator"></div></div><div aria-live="polite" aria-atomic="true" class="password-strength__title">${
-            translate.strengthTitle
-          } <span class="password-strength__text js-password-strength__text"></span></div></div>`;
+          const passwordMeter = `<div class="password-strength"><div class="password-strength__meter"><div class="password-strength__indicator js-password-strength__indicator"></div></div><div aria-live="polite" aria-atomic="true" class="password-strength__title">${translate.strengthTitle} <span class="password-strength__text js-password-strength__text"></span></div></div>`;
           $confirmInput
             .parent()
             .after('<div class="password-suggestions description"></div>');
