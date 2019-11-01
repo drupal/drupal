@@ -231,9 +231,7 @@
        *   A string representing a DOM fragment.
        */
       dropbuttonToggle(options) {
-        return `<li class="dropbutton-toggle"><button type="button"><span class="dropbutton-arrow"><span class="visually-hidden">${
-          options.title
-        }</span></span></button></li>`;
+        return `<li class="dropbutton-toggle"><button type="button"><span class="dropbutton-arrow"><span class="visually-hidden">${options.title}</span></span></button></li>`;
       },
     },
   );

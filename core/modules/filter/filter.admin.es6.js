@@ -56,11 +56,10 @@
 
           // Attach summary for configurable filters (only for screen readers).
           if (filterSettingsTab) {
-            filterSettingsTab.details.drupalSetSummary(
-              () =>
-                $checkbox.is(':checked')
-                  ? Drupal.t('Enabled')
-                  : Drupal.t('Disabled'),
+            filterSettingsTab.details.drupalSetSummary(() =>
+              $checkbox.is(':checked')
+                ? Drupal.t('Enabled')
+                : Drupal.t('Disabled'),
             );
           }
 

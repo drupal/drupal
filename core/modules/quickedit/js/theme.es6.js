@@ -34,9 +34,7 @@
    */
   Drupal.theme.quickeditEntityToolbar = function(settings) {
     let html = '';
-    html += `<div id="${
-      settings.id
-    }" class="quickedit quickedit-toolbar-container clearfix">`;
+    html += `<div id="${settings.id}" class="quickedit quickedit-toolbar-container clearfix">`;
     html += '<i class="quickedit-toolbar-pointer"></i>';
     html += '<div class="quickedit-toolbar-content">';
     html +=
