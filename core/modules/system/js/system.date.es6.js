@@ -38,9 +38,8 @@
        */
       function dateFormatHandler(e) {
         const baseValue = $(e.target).val() || '';
-        const dateString = baseValue.replace(
-          /\\?(.?)/gi,
-          (key, value) => (dateFormats[key] ? dateFormats[key] : value),
+        const dateString = baseValue.replace(/\\?(.?)/gi, (key, value) =>
+          dateFormats[key] ? dateFormats[key] : value,
         );
 
         $preview.text(dateString);
