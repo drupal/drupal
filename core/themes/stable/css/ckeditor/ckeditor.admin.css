@@ -228,6 +228,7 @@
   border-bottom-left-radius: 2px;
 }
 .ckeditor-button-placeholder,
+.ckeditor-buttons .ckeditor-button-placeholder a,
 .ckeditor-toolbar-group-placeholder {
   background: #9dcae7;
 }

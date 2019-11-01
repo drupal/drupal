@@ -1,7 +1,7 @@
 /**
  * @file media_library.widget.js
  */
-(($, Drupal) => {
+(($, Drupal, Sortable) => {
   /**
    * Allows users to re-order their selection with drag+drop.
    *
@@ -13,15 +13,13 @@
   Drupal.behaviors.MediaLibraryWidgetSortable = {
     attach(context) {
       // Allow media items to be re-sorted with drag+drop in the widget.
-      $('.js-media-library-selection', context)
-        .once('media-library-sortable')
-        .sortable({
-          tolerance: 'pointer',
-          helper: 'clone',
+      const selection = context.querySelectorAll('.js-media-library-selection');
+      selection.forEach(widget => {
+        Sortable.create(widget, {
+          draggable: '.js-media-library-item',
           handle: '.js-media-library-item-preview',
-          stop: ({ target }) => {
-            // Update all the hidden "weight" fields.
-            $(target)
+          onEnd: () => {
+            $(widget)
               .children()
               .each((index, child) => {
                 $(child)
@@ -30,6 +28,7 @@
               });
           },
         });
+      });
     },
   };
 
@@ -100,4 +99,4 @@
         });
     },
   };
-})(jQuery, Drupal);
+})(jQuery, Drupal, Sortable);

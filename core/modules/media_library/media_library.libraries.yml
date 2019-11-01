@@ -30,9 +30,9 @@ widget:
     js/media_library.widget.js: {}
   dependencies:
     - core/drupal.dialog.ajax
-    - core/jquery.ui.sortable
     - core/jquery.once
     - media_library/style
+    - core/sortable
 
 ui:
   version: VERSION

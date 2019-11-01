@@ -845,6 +845,7 @@ jquery.ui.sortable:
     - core/jquery.ui
     - core/jquery.ui.mouse
     - core/jquery.ui.widget
+  deprecated: The "%library_id%" asset library is deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. See https://www.drupal.org/node/3084730
 
 jquery.ui.spinner:
   version: *jquery_ui_version
@@ -900,6 +901,7 @@ jquery.ui.touch-punch:
     - core/jquery.ui
     - core/jquery.ui.mouse
     - core/jquery.ui.widget
+  deprecated: The "%library_id%" asset library is deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. See https://www.drupal.org/node/3084730
 
 jquery.ui.widget:
   version: *jquery_ui_version
@@ -973,6 +975,16 @@ popperjs:
     gpl-compatible: true
   js:
     assets/vendor/popperjs/popper.min.js: { minified: true }
+
+sortable:
+  remote: https://github.com/SortableJS/Sortable
+  version: "1.10.0"
+  license:
+    name: MIT
+    url: https://github.com/SortableJS/Sortable/tree/master#mit-license
+    gpl-compatible: true
+  js:
+    assets/vendor/sortable/Sortable.min.js: { minified: true }
 
 underscore:
   remote: https://github.com/jashkenas/underscore
