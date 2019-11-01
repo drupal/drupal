@@ -5,20 +5,20 @@
 * @preserve
 **/
 
-(function ($, Drupal) {
+(function ($, Drupal, Sortable) {
   Drupal.behaviors.MediaLibraryWidgetSortable = {
     attach: function attach(context) {
-      $('.js-media-library-selection', context).once('media-library-sortable').sortable({
-        tolerance: 'pointer',
-        helper: 'clone',
-        handle: '.js-media-library-item-preview',
-        stop: function stop(_ref) {
-          var target = _ref.target;
-
-          $(target).children().each(function (index, child) {
-            $(child).find('.js-media-library-item-weight').val(index);
-          });
-        }
+      var selection = context.querySelectorAll('.js-media-library-selection');
+      selection.forEach(function (widget) {
+        Sortable.create(widget, {
+          draggable: '.js-media-library-item',
+          handle: '.js-media-library-item-preview',
+          onEnd: function onEnd() {
+            $(widget).children().each(function (index, child) {
+              $(child).find('.js-media-library-item-weight').val(index);
+            });
+          }
+        });
       });
     }
   };
@@ -50,4 +50,4 @@
       });
     }
   };
-})(jQuery, Drupal);
+})(jQuery, Drupal, Sortable);

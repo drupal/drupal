@@ -5,7 +5,7 @@
 * @preserve
 **/
 
-(function ($, Drupal) {
+(function ($, Drupal, Sortable) {
   var ajax = Drupal.ajax,
       behaviors = Drupal.behaviors,
       debounce = Drupal.debounce,
@@ -53,26 +53,35 @@
     }
   };
 
+  Drupal.layoutBuilderBlockUpdate = function (item, from, to) {
+    var $item = $(item);
+    var $from = $(from);
+
+    var itemRegion = $item.closest('.js-layout-builder-region');
+    if (to === itemRegion[0]) {
+      var deltaTo = $item.closest('[data-layout-delta]').data('layout-delta');
+
+      var deltaFrom = $from ? $from.closest('[data-layout-delta]').data('layout-delta') : deltaTo;
+      ajax({
+        url: [$item.closest('[data-layout-update-url]').data('layout-update-url'), deltaFrom, deltaTo, itemRegion.data('region'), $item.data('layout-block-uuid'), $item.prev('[data-layout-block-uuid]').data('layout-block-uuid')].filter(function (element) {
+          return element !== undefined;
+        }).join('/')
+      }).execute();
+    }
+  };
+
   behaviors.layoutBuilderBlockDrag = {
     attach: function attach(context) {
-      $(context).find('.js-layout-builder-region').sortable({
-        items: '> .js-layout-builder-block',
-        connectWith: '.js-layout-builder-region',
-        placeholder: 'ui-state-drop',
-
-        update: function update(event, ui) {
-          var itemRegion = ui.item.closest('.js-layout-builder-region');
-          if (event.target === itemRegion[0]) {
-            var deltaTo = ui.item.closest('[data-layout-delta]').data('layout-delta');
-
-            var deltaFrom = ui.sender ? ui.sender.closest('[data-layout-delta]').data('layout-delta') : deltaTo;
-            ajax({
-              url: [ui.item.closest('[data-layout-update-url]').data('layout-update-url'), deltaFrom, deltaTo, itemRegion.data('region'), ui.item.data('layout-block-uuid'), ui.item.prev('[data-layout-block-uuid]').data('layout-block-uuid')].filter(function (element) {
-                return element !== undefined;
-              }).join('/')
-            }).execute();
+      var regionSelector = '.js-layout-builder-region';
+      Array.prototype.forEach.call(context.querySelectorAll(regionSelector), function (region) {
+        Sortable.create(region, {
+          draggable: '.js-layout-builder-block',
+          ghostClass: 'ui-state-drop',
+          group: 'builder-region',
+          onEnd: function onEnd(event) {
+            return Drupal.layoutBuilderBlockUpdate(event.item, event.from, event.to);
           }
-        }
+        });
       });
     }
   };
@@ -213,4 +222,4 @@
 
     return '<div class="layout-builder-block__content-preview-placeholder-label js-layout-builder-content-preview-placeholder-label">' + contentPreviewPlaceholderText + '</div>';
   };
-})(jQuery, Drupal);
+})(jQuery, Drupal, Sortable);

@@ -3,7 +3,7 @@
  * Attaches the behaviors for the Layout Builder module.
  */
 
-(($, Drupal) => {
+(($, Drupal, Sortable) => {
   const { ajax, behaviors, debounce, announce, formatPlural } = Drupal;
 
   /*
@@ -101,6 +101,48 @@
   };
 
   /**
+   * Callback used in {@link Drupal.behaviors.layoutBuilderBlockDrag}.
+   *
+   * @param {HTMLElement} item
+   *   The HTML element representing the repositioned block.
+   * @param {HTMLElement} from
+   *   The HTML element representing the previous parent of item
+   * @param {HTMLElement} to
+   *   The HTML element representing the current parent of item
+   *
+   * @internal This method is a callback for layoutBuilderBlockDrag and is used
+   *  in FunctionalJavascript tests. It may be renamed if the test changes.
+   *  @see https://www.drupal.org/node/3084730
+   */
+  Drupal.layoutBuilderBlockUpdate = function(item, from, to) {
+    const $item = $(item);
+    const $from = $(from);
+
+    // Check if the region from the event and region for the item match.
+    const itemRegion = $item.closest('.js-layout-builder-region');
+    if (to === itemRegion[0]) {
+      // Find the destination delta.
+      const deltaTo = $item.closest('[data-layout-delta]').data('layout-delta');
+      // If the block didn't leave the original delta use the destination.
+      const deltaFrom = $from
+        ? $from.closest('[data-layout-delta]').data('layout-delta')
+        : deltaTo;
+      ajax({
+        url: [
+          $item.closest('[data-layout-update-url]').data('layout-update-url'),
+          deltaFrom,
+          deltaTo,
+          itemRegion.data('region'),
+          $item.data('layout-block-uuid'),
+          $item.prev('[data-layout-block-uuid]').data('layout-block-uuid'),
+        ]
+          .filter(element => element !== undefined)
+          .join('/'),
+      }).execute();
+    }
+  };
+
+  /**
    * Provides the ability to drag blocks to new positions in the layout.
    *
    * @type {Drupal~behavior}
@@ -110,52 +152,19 @@
    */
   behaviors.layoutBuilderBlockDrag = {
     attach(context) {
-      $(context)
-        .find('.js-layout-builder-region')
-        .sortable({
-          items: '> .js-layout-builder-block',
-          connectWith: '.js-layout-builder-region',
-          placeholder: 'ui-state-drop',
-
-          /**
-           * Updates the layout with the new position of the block.
-           *
-           * @param {jQuery.Event} event
-           *   The jQuery Event object.
-           * @param {Object} ui
-           *   An object containing information about the item being sorted.
-           */
-          update(event, ui) {
-            // Check if the region from the event and region for the item match.
-            const itemRegion = ui.item.closest('.js-layout-builder-region');
-            if (event.target === itemRegion[0]) {
-              // Find the destination delta.
-              const deltaTo = ui.item
-                .closest('[data-layout-delta]')
-                .data('layout-delta');
-              // If the block didn't leave the original delta use the destination.
-              const deltaFrom = ui.sender
-                ? ui.sender.closest('[data-layout-delta]').data('layout-delta')
-                : deltaTo;
-              ajax({
-                url: [
-                  ui.item
-                    .closest('[data-layout-update-url]')
-                    .data('layout-update-url'),
-                  deltaFrom,
-                  deltaTo,
-                  itemRegion.data('region'),
-                  ui.item.data('layout-block-uuid'),
-                  ui.item
-                    .prev('[data-layout-block-uuid]')
-                    .data('layout-block-uuid'),
-                ]
-                  .filter(element => element !== undefined)
-                  .join('/'),
-              }).execute();
-            }
-          },
-        });
+      const regionSelector = '.js-layout-builder-region';
+      Array.prototype.forEach.call(
+        context.querySelectorAll(regionSelector),
+        region => {
+          Sortable.create(region, {
+            draggable: '.js-layout-builder-block',
+            ghostClass: 'ui-state-drop',
+            group: 'builder-region',
+            onEnd: event =>
+              Drupal.layoutBuilderBlockUpdate(event.item, event.from, event.to),
+          });
+        },
+      );
     },
   };
 
@@ -441,4 +450,4 @@
 
     return `<div class="layout-builder-block__content-preview-placeholder-label js-layout-builder-content-preview-placeholder-label">${contentPreviewPlaceholderText}</div>`;
   };
-})(jQuery, Drupal);
+})(jQuery, Drupal, Sortable);
