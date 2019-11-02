@@ -23,7 +23,7 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
  *
  * To provide replacement values for placeholders, use the "arguments" array:
  * @code
- *   title = @ Translation("Bundle !title", arguments = {"!title" = "Foo"}),
+ *   title = @ Translation("Bundle @title", arguments = {"@title" = "Foo"}),
  * @endcode
  *
  * It is also possible to provide a context with the text, similar to t():
