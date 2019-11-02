@@ -1,6 +1,8 @@
 ---
 label: 'Configuring help search'
 top_level: true
+related:
+  - block.place
 ---
 {% set extend_url = render_var(url('system.modules_list')) %}
 {% set help_url = render_var(url('help.main')) %}
@@ -14,9 +16,6 @@ top_level: true
   <li>{% trans %}Check the indexing status of the Help search page. If it is not fully indexed, run Cron until indexing is complete.{% endtrans %}</li>
   <li>{% trans %}In the future, you can click <em>Rebuild search index</em> on this page, or clear the site cache, in order to force help topic text to be reindexed for searching. This should be done whenever a module, theme, language, or string translation is updated.{% endtrans %}</li>
   <li>{% trans %}In the  <em>Manage</em> administrative menu, navigate to <em>Structure</em> &gt; <em>Block layout</em>.{% endtrans %}</li>
-  <li>{% trans %}Click the link for your administrative theme (such as the core Seven theme), near the top of the page.{% endtrans %}</li>
-  <li>{% trans %}See if there is already a help search block placed in the Help region of your administrative theme.{% endtrans %}</li>
-  <li>{% trans %}If there is not already a help search block placed, click <em>Place block</em>, and then click <em>Place block</em> in the row next to <em>Search form</em> in the dialog. Choose <em>Help</em> as the search page for the block, and in the <em>Visibility</em> &gt; <em>Pages</em> field, enter <em>/admin/help</em> to make the search form only visible on the main <em>Help</em> page.{% endtrans %}</li>
-  <li>{% trans %}Fill in the rest of the form and save the block.{% endtrans %}</li>
+  <li>{% trans %}Click the link for your administrative theme (such as the core Seven theme), near the top of the page, and verify that there is already a search block for help located in the Help region. If not, follow the steps in the related topic to place the <em>Search form</em> block in the Help region. When configuring the block, choose <em>Help</em> as the search page, and in the <em>Pages</em> tab under <em>Visibility</em>, enter <em>/admin/help</em> to make the search form only visible on the main <em>Help</em> page.{% endtrans %}</li>
   <li>{% trans %}In the  <em>Manage</em> administrative menu, navigate to <em><a href="{{ help_url }}">Help</a></em>. Verify that the search block is visible, and try a search.{% endtrans %}</li>
 </ol>
