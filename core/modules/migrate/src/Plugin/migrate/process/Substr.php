@@ -75,7 +75,7 @@ class Substr extends ProcessPluginBase {
       throw new MigrateException('The start position configuration value should be an integer. Omit this key to capture from the beginning of the string.');
     }
     $length = isset($this->configuration['length']) ? $this->configuration['length'] : NULL;
-    if (!is_null($length) && !is_int($length)) {
+    if ($length !== NULL && !is_int($length)) {
       throw new MigrateException('The character length configuration value should be an integer. Omit this key to capture from the start position to the end of the string.');
     }
     if (!is_string($value)) {
@@ -83,8 +83,7 @@ class Substr extends ProcessPluginBase {
     }
 
     // Use optional start or length to return a portion of $value.
-    $new_value = mb_substr($value, $start, $length);
-    return $new_value;
+    return mb_substr($value, $start, $length);
   }
 
 }
