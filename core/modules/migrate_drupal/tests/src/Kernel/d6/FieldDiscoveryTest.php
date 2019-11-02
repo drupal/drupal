@@ -246,7 +246,7 @@ class FieldDiscoveryTest extends MigrateDrupal6TestBase {
                 'method' => 'process',
               ],
               2 => [
-                'plugin' => 'migration',
+                'plugin' => 'migration_lookup',
                 'migration' => [
                   0 => 'd6_filter_format',
                   1 => 'd7_filter_format',

@@ -2,7 +2,9 @@
 
 namespace Drupal\Tests\file\Unit\Plugin\migrate\process\d6;
 
+use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\file\Plugin\migrate\process\d6\CckFile;
+use Drupal\migrate\MigrateLookupInterface;
 use Drupal\migrate\Plugin\MigrationInterface;
 use Drupal\migrate\MigrateExecutableInterface;
 use Drupal\migrate\Plugin\MigrateProcessInterface;
@@ -21,6 +23,10 @@ class CckFileTest extends UnitTestCase {
    * @expectedDeprecation CckFile is deprecated in Drupal 8.3.x and will be be removed before Drupal 9.0.x. Use \Drupal\file\Plugin\migrate\process\d6\FieldFile instead.
    */
   public function testTransformAltTitle() {
+    $migrate_lookup = $this->prophesize(MigrateLookupInterface::class);
+    $container = new ContainerBuilder();
+    $container->set('migrate.lookup', $migrate_lookup->reveal());
+    \Drupal::setContainer($container);
     $executable = $this->prophesize(MigrateExecutableInterface::class)->reveal();
     $row = $this->prophesize(Row::class)->reveal();
     $migration = $this->prophesize(MigrationInterface::class)->reveal();

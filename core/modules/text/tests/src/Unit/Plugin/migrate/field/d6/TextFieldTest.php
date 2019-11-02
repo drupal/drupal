@@ -61,7 +61,7 @@ class TextFieldTest extends UnitTestCase {
     // Ensure that filter format IDs will be looked up in the filter format
     // migrations.
     $lookup = $process['process']['format'][2];
-    $this->assertSame('migration', $lookup['plugin']);
+    $this->assertSame('migration_lookup', $lookup['plugin']);
     $this->assertContains('d6_filter_format', $lookup['migration']);
     $this->assertContains('d7_filter_format', $lookup['migration']);
     $this->assertSame('format', $lookup['source']);
