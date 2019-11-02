@@ -7,7 +7,7 @@ use Composer\EventDispatcher\EventSubscriberInterface;
 use Composer\Installer\PackageEvent;
 use Composer\Installer\PackageEvents;
 use Composer\IO\IOInterface;
-use Composer\Package\CompletePackage;
+use Composer\Package\BasePackage;
 use Composer\Plugin\PluginInterface;
 use Composer\Script\Event;
 use Composer\Script\ScriptEvents;
@@ -150,13 +150,21 @@ class VendorHardeningPlugin implements PluginInterface, EventSubscriberInterface
    * Where the configured bin files are in the directories to be removed, remove
    * the bin config.
    *
-   * @param \Composer\Package\CompletePackage $package
+   * @param \Composer\Package\BasePackage $package
    *   The package we're cleaning up.
    */
-  protected function removeBinBeforeCleanup(CompletePackage $package) {
-    // Only do this if there are binaries and cleanup paths.
+  protected function removeBinBeforeCleanup(BasePackage $package) {
+    // We can process AliasPackage and Package objects, and they share the
+    // BasePackage parent class. However, since there is no common interface for
+    // these package types that allow for the setBinaries() method, and since
+    // BasePackage does not include the setBinaries() method, we have to make
+    // sure we're processing a class with a setBinaries() method.
+    if (!method_exists($package, 'setBinaries')) {
+      return;
+    }
     $binaries = $package->getBinaries();
     $clean_paths = $this->config->getPathsForPackage($package->getName());
+    // Only do this if there are binaries and cleanup paths.
     if (!$binaries || !$clean_paths) {
       return;
     }
