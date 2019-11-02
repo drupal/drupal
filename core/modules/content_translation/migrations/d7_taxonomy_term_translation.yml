@@ -25,7 +25,7 @@ process:
   tid: tid
   langcode: language
   vid:
-    plugin: migration
+    plugin: migration_lookup
     migration: d7_taxonomy_vocabulary
     source: vid
   name: name
@@ -39,7 +39,7 @@ process:
       method: process
       source: parent
     -
-      plugin: migration
+      plugin: migration_lookup
       migration: d7_taxonomy_term
   parent:
     plugin: default_value

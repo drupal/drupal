@@ -14,7 +14,7 @@ process:
   # Use the language from the locales_target table.
   langcode: ltlanguage
   vid:
-    plugin: migration
+    plugin: migration_lookup
     migration: d7_taxonomy_vocabulary
     source: vid
   name:
