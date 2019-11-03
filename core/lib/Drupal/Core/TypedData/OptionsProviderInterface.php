@@ -24,7 +24,7 @@ use Drupal\Core\Session\AccountInterface;
  * specified. In that case, the allowed values and options apply to the main
  * property only.
  *
- * @see \Drupal\options\Plugin\Field\FieldWidget\OptionsWidgetBase
+ * @see \Drupal\Core\Field\Plugin\Field\FieldWidget\OptionsWidgetBase
  */
 interface OptionsProviderInterface {
 
