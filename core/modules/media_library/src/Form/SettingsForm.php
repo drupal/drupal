@@ -7,6 +7,9 @@ use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Defines a form for configuring the Media Library module.
+ *
+ * @internal
+ *   Form classes are internal.
  */
 class SettingsForm extends ConfigFormBase {
 

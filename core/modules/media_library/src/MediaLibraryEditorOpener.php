@@ -14,9 +14,7 @@ use Drupal\editor\Ajax\EditorDialogSave;
  * @see \Drupal\media_library\Plugin\CKEditorPlugin\DrupalMediaLibrary
  *
  * @internal
- *   This is an internal part of the media system in Drupal core and may be
- *   subject to change in minor releases. This class should not be
- *   instantiated or extended by external code.
+ *   This service is an internal part of Media Library's CKEditor integration.
  */
 class MediaLibraryEditorOpener implements MediaLibraryOpenerInterface {
 

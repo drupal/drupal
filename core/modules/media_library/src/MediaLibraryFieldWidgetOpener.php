@@ -12,6 +12,9 @@ use Drupal\Core\Session\AccountInterface;
 
 /**
  * The media library opener for field widgets.
+ *
+ * @internal
+ *   This service is an internal part of Media Library's field widget.
  */
 class MediaLibraryFieldWidgetOpener implements MediaLibraryOpenerInterface {
 

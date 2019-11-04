@@ -11,6 +11,10 @@ use Symfony\Component\DependencyInjection\ContainerAwareTrait;
  * services which implement \Drupal\media_library\MediaLibraryOpenerInterface.
  * It is not an API and should not be extended or used by code that does not
  * interact with the Media Library module.
+ *
+ * @internal
+ *   This service is an internal part of the modal media library dialog and
+ *   does not provide any extension points or public API.
  */
 class OpenerResolver implements OpenerResolverInterface {
 

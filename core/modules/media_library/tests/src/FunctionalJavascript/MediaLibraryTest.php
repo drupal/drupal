@@ -128,16 +128,16 @@ class MediaLibraryTest extends WebDriverTestBase {
     // Test that users can filter by type.
     $page->selectFieldOption('Media type', 'Type One');
     $page->pressButton('Apply filters');
-    $this->waitForText('Dog');
     $this->waitForNoText('Turtle');
+    $assert_session->pageTextContains('Dog');
     $page->selectFieldOption('Media type', 'Type Two');
     $page->pressButton('Apply filters');
-    $this->waitForNoText('Dog');
     $this->waitForText('Turtle');
+    $assert_session->pageTextNotContains('Dog');
 
     // Test that selecting elements as a part of bulk operations works.
     $page->selectFieldOption('Media type', '- Any -');
-    $page->pressButton('Apply filters');
+    $assert_session->elementExists('css', '#views-exposed-form-media-library-page')->submit();
     $this->waitForText('Dog');
 
     // This tests that anchor tags clicked inside the preview are suppressed.
@@ -145,14 +145,17 @@ class MediaLibraryTest extends WebDriverTestBase {
     $this->submitForm([], 'Apply to selected items');
     $assert_session->pageTextContains('Dog');
     $assert_session->pageTextNotContains('Cat');
-    $this->submitForm([], 'Delete');
+    // For reasons that are not clear, deleting media items by pressing the
+    // "Delete" button can fail (the button is found, but never actually pressed
+    // by the Mink driver). This workaround allows the delete form to be
+    // submitted.
+    $assert_session->elementExists('css', 'form')->submit();
     $assert_session->pageTextNotContains('Dog');
     $assert_session->pageTextContains('Cat');
 
     // Test the 'Select all media' checkbox and assert that it makes the
     // expected announcements.
-    $select_all = $assert_session->waitForField('Select all media');
-    $this->assertNotEmpty($select_all);
+    $select_all = $this->waitForFieldExists('Select all media');
     $select_all->check();
     $this->waitForText('All 7 items selected');
     $select_all->uncheck();
@@ -160,7 +163,11 @@ class MediaLibraryTest extends WebDriverTestBase {
     $select_all->check();
     $page->selectFieldOption('Action', 'media_delete_action');
     $this->submitForm([], 'Apply to selected items');
-    $page->pressButton('Delete');
+    // For reasons that are not clear, deleting media items by pressing the
+    // "Delete" button can fail (the button is found, but never actually pressed
+    // by the Mink driver). This workaround allows the delete form to be
+    // submitted.
+    $assert_session->elementExists('css', 'form')->submit();
 
     $assert_session->pageTextNotContains('Cat');
     $assert_session->pageTextNotContains('Turtle');
@@ -439,7 +446,6 @@ class MediaLibraryTest extends WebDriverTestBase {
 
     // Assert generic media library elements.
     $this->openMediaLibraryForField('field_unlimited_media');
-    $this->assertFalse($assert_session->elementExists('css', '.media-library-select-all')->isVisible());
     $assert_session->elementExists('css', '.ui-dialog-titlebar-close')->click();
 
     // Assert that the media type menu is available when more than 1 type is
@@ -984,13 +990,11 @@ class MediaLibraryTest extends WebDriverTestBase {
     $assert_session->fieldExists('Add files');
 
     // Assert we can upload a file to the default tab type_three.
-    $assert_session->elementExists('css', '.media-library-add-form--without-input');
-    $assert_session->elementNotExists('css', '.media-library-add-form--with-input');
+    $assert_session->elementNotExists('css', '.js-media-library-add-form[data-input]');
     $this->addMediaFileToField('Add files', $this->container->get('file_system')->realpath($png_image->uri));
     $this->assertMediaAdded();
-    $assert_session->elementExists('css', '.media-library-add-form--with-input');
-    $assert_session->elementNotExists('css', '.media-library-add-form--without-input');
-    // We do not have a pre-selected items, so the container should not be added
+    $assert_session->elementExists('css', '.js-media-library-add-form[data-input]');
+    // We do not have pre-selected items, so the container should not be added
     // to the form.
     $assert_session->pageTextNotContains('Additional selected media');
     // Files are temporary until the form is saved.
@@ -1326,12 +1330,10 @@ class MediaLibraryTest extends WebDriverTestBase {
     $assert_session->fieldExists('Add files');
 
     // Assert we can upload a file to the default tab type_three.
-    $assert_session->elementExists('css', '.media-library-add-form--without-input');
-    $assert_session->elementNotExists('css', '.media-library-add-form--with-input');
+    $assert_session->elementNotExists('css', '.js-media-library-add-form[data-input]');
     $this->addMediaFileToField('Add files', $this->container->get('file_system')->realpath($png_image->uri));
     $this->assertMediaAdded();
-    $assert_session->elementExists('css', '.media-library-add-form--with-input');
-    $assert_session->elementNotExists('css', '.media-library-add-form--without-input');
+    $assert_session->elementExists('css', '.js-media-library-add-form[data-input]');
     // We do not have a pre-selected items, so the container should not be added
     // to the form.
     $assert_session->elementNotExists('css', 'details summary:contains(Additional selected media)');
@@ -2247,6 +2249,9 @@ class MediaLibraryTest extends WebDriverTestBase {
     $assert_session->linkExists('Grid');
     $assert_session->linkExists('Table');
 
+    // The "select all" checkbox should never be present in the modal.
+    $assert_session->elementNotExists('css', '.media-library-select-all');
+
     return $this->assertElementExistsAfterWait('css', $after_open_selector);
   }
 
@@ -2379,18 +2384,16 @@ class MediaLibraryTest extends WebDriverTestBase {
    * Asserts that the grid display of the widget view is visible.
    */
   protected function assertMediaLibraryGrid() {
-    $assert_session = $this->assertSession();
-    $assert_session->elementExists('css', '.view-media-library.view-display-id-widget');
-    $assert_session->elementNotExists('css', '.view-media-library.view-display-id-widget_table');
+    $this->assertSession()
+      ->elementExists('css', '.js-media-library-view[data-view-display-id="widget"]');
   }
 
   /**
    * Asserts that the table display of the widget view is visible.
    */
   protected function assertMediaLibraryTable() {
-    $assert_session = $this->assertSession();
-    $assert_session->elementExists('css', '.view-media-library.view-display-id-widget_table');
-    $assert_session->elementNotExists('css', '.view-media-library.view-display-id-widget');
+    $this->assertSession()
+      ->elementExists('css', '.js-media-library-view[data-view-display-id="widget_table"]');
   }
 
   /**
