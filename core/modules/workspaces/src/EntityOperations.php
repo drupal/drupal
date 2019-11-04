@@ -9,6 +9,7 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Entity\RevisionableInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\workspaces\Plugin\Validation\Constraint\EntityWorkspaceConflictConstraint;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -270,18 +271,16 @@ class EntityOperations implements ContainerInjectionInterface {
       $form['#entity_builders'][] = [get_called_class(), 'entityFormEntityBuild'];
     }
 
-    if ($workspace_ids = $this->workspaceAssociation->getEntityTrackingWorkspaceIds($entity)) {
-      // An entity can only be edited in one workspace.
-      $workspace_id = reset($workspace_ids);
-
-      $active_workspace = $this->workspaceManager->getActiveWorkspace();
-      if ($workspace_id && (!$active_workspace || $workspace_id !== $active_workspace->id())) {
-        $workspace = $this->entityTypeManager->getStorage('workspace')->load($workspace_id);
-
-        $form['#markup'] = $this->t('The content is being edited in the %label workspace.', ['%label' => $workspace->label()]);
+    // Run the workspace conflict validation constraint when the entity form is
+    // being built so we can "disable" it early and display a message to the
+    // user, instead of allowing them to enter data that can never be saved.
+    foreach ($entity->validate()->getEntityViolations() as $violation) {
+      if ($violation->getConstraint() instanceof EntityWorkspaceConflictConstraint) {
+        $form['#markup'] = $violation->getMessage();
         $form['#access'] = FALSE;
+        continue;
       }
-    }
+    };
   }
 
   /**

@@ -19,9 +19,9 @@ class WorkspaceConcurrentEditingTest extends BrowserTestBase {
   public static $modules = ['block', 'node', 'workspaces'];
 
   /**
-   * Test switching workspace via the switcher block and admin page.
+   * Test editing a node in multiple workspaces.
    */
-  public function testSwitchingWorkspaces() {
+  public function testConcurrentEditing() {
     // Create a test node.
     $this->createContentType(['type' => 'test', 'label' => 'Test']);
     $this->setupWorkspaceSwitcherBlock();
@@ -64,7 +64,7 @@ class WorkspaceConcurrentEditingTest extends BrowserTestBase {
     $this->drupalGet('/node/' . $test_node->id() . '/edit');
     $page = $this->getSession()->getPage();
     $this->assertFalse($page->hasField('title[0][value]'));
-    $page->hasContent('The content is being edited in the Vultures workspace.');
+    $page->hasContent('The content is being edited in the Vultures workspace. As a result, your changes cannot be saved.');
 
     // Check that the node fails validation for API calls.
     $violations = $test_node->validate();
@@ -77,7 +77,7 @@ class WorkspaceConcurrentEditingTest extends BrowserTestBase {
     $this->drupalGet('/node/' . $test_node->id() . '/edit');
     $page = $this->getSession()->getPage();
     $this->assertFalse($page->hasField('title[0][value]'));
-    $page->hasContent('The content is being edited in the Vultures workspace.');
+    $page->hasContent('The content is being edited in the Vultures workspace. As a result, your changes cannot be saved.');
 
     // Check that the node fails validation for API calls.
     $violations = $test_node->validate();

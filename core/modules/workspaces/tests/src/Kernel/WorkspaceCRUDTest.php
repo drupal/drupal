@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\workspaces\Kernel;
 
+use Drupal\Core\Entity\EntityStorageException;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\Tests\node\Traits\ContentTypeCreationTrait;
 use Drupal\Tests\node\Traits\NodeCreationTrait;
@@ -292,6 +293,34 @@ class WorkspaceCRUDTest extends KernelTestBase {
     $this->assertTrue($revisions[3]->isDefaultRevision());
     $this->assertFalse(isset($revisions[4]));
     $this->assertFalse(isset($revisions[5]));
+  }
+
+  /**
+   * Tests that a workspace with children can not be deleted.
+   */
+  public function testDeletingWorkspaceWithChildren() {
+    $stage = Workspace::create(['id' => 'stage', 'label' => 'Stage']);
+    $stage->save();
+
+    $dev = Workspace::create(['id' => 'dev', 'label' => 'Dev', 'parent' => 'stage']);
+    $dev->save();
+
+    // Check that a workspace which has children can not be deleted.
+    try {
+      $stage->delete();
+      $this->fail('The Stage workspace has children and should not be deletable.');
+    }
+    catch (EntityStorageException $e) {
+      $this->assertEquals('The Stage workspace can not be deleted because it has child workspaces.', $e->getMessage());
+      $this->assertNotNull(Workspace::load('stage'));
+    }
+
+    // Check that if we delete its child first, the parent workspace can also be
+    // deleted.
+    $dev->delete();
+    $stage->delete();
+    $this->assertNull(Workspace::load('dev'));
+    $this->assertNull(Workspace::load('stage'));
   }
 
 }

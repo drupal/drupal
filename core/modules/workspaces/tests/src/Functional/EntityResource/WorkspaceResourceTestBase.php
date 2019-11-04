@@ -111,6 +111,7 @@ abstract class WorkspaceResourceTestBase extends EntityResourceTestBase {
           'value' => 2,
         ],
       ],
+      'parent' => [],
       'uid' => [
         [
           'target_id' => (int) $author->id(),

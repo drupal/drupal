@@ -49,14 +49,17 @@ trait WorkspaceTestUtilities {
    *   The label of the workspace to create.
    * @param string $id
    *   The ID of the workspace to create.
+   * @param string $parent
+   *   (optional) The ID of the parent workspace. Defaults to '_none'.
    *
    * @return \Drupal\workspaces\WorkspaceInterface
    *   The workspace that was just created.
    */
-  protected function createWorkspaceThroughUi($label, $id) {
+  protected function createWorkspaceThroughUi($label, $id, $parent = '_none') {
     $this->drupalPostForm('/admin/config/workflow/workspaces/add', [
       'id' => $id,
       'label' => $label,
+      'parent' => $parent,
     ], 'Save');
 
     $this->getSession()->getPage()->hasContent("$label ($id)");
