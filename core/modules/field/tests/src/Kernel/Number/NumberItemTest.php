@@ -101,4 +101,69 @@ class NumberItemTest extends FieldKernelTestBase {
     $this->entityValidateAndSave($entity);
   }
 
+  /**
+   * Tests constraints on numeric item fields.
+   *
+   * @dataProvider dataNumberFieldSettingsProvider
+   *
+   * @param string $type
+   *   The field type.
+   * @param int|float $min
+   *   The minimum field value.
+   * @param int|float $max
+   *   The maximum field value.
+   * @param int|float $value
+   *   The test value.
+   * @param bool $expect_constraints
+   *   If TRUE this data set will trigger a validation constraint.
+   * @param string $expected_constraint_message
+   *   The expected constraint violation message.
+   *
+   * @throws \Drupal\Core\Entity\EntityStorageException
+   */
+  public function testConstraints($type, $min, $max, $value, $expect_constraints, $expected_constraint_message = '') {
+    $field = FieldConfig::loadByName('entity_test', 'entity_test', 'field_' . $type);
+    $field->setSetting('min', $min);
+    $field->setSetting('max', $max);
+    $field->save();
+
+    $entity = EntityTest::create();
+    $entity->{'field_' . $type} = $value;
+    $violations = $entity->validate();
+    $this->assertEquals($expect_constraints, $violations->count() > 0);
+    if ($expect_constraints) {
+      $this->assertEquals($expected_constraint_message, $violations->get(0)->getMessage());
+    }
+
+  }
+
+  /**
+   * Data provider for testConstraints.
+   *
+   * @return \Generator
+   *   The test data.
+   */
+  public function dataNumberFieldSettingsProvider() {
+    yield ['integer', NULL, NULL, -100, FALSE];
+    yield ['integer', 0, NULL, -100, TRUE, '<em class="placeholder">field_integer</em>: the value may be no less than <em class="placeholder">0</em>.'];
+    yield ['integer', 10, NULL, 100, FALSE];
+    yield ['integer', 10, NULL, 5, TRUE, '<em class="placeholder">field_integer</em>: the value may be no less than <em class="placeholder">10</em>.'];
+    yield ['integer', 10, 20, 25, TRUE, '<em class="placeholder">field_integer</em>: the value may be no greater than <em class="placeholder">20</em>.'];
+    yield ['integer', 10, 20, 15, FALSE];
+
+    yield ['float', NULL, NULL, -100, FALSE];
+    yield ['float', 0.003, NULL, 0.0029, TRUE, '<em class="placeholder">field_float</em>: the value may be no less than <em class="placeholder">0.003</em>.'];
+    yield ['float', 10.05, NULL, 13.4, FALSE];
+    yield ['float', 10, NULL, 9.999, TRUE, '<em class="placeholder">field_float</em>: the value may be no less than <em class="placeholder">10</em>.'];
+    yield ['float', 1, 2, 2.5, TRUE, '<em class="placeholder">field_float</em>: the value may be no greater than <em class="placeholder">2</em>.'];
+    yield ['float', 1, 2, 1.5, FALSE];
+
+    yield ['decimal', NULL, NULL, -100, FALSE];
+    yield ['decimal', 0.001, NULL, -0.05, TRUE, '<em class="placeholder">field_decimal</em>: the value may be no less than <em class="placeholder">0.001</em>.'];
+    yield ['decimal', 10.05, NULL, 13.4, FALSE];
+    yield ['decimal', 10, NULL, 9.999, TRUE, '<em class="placeholder">field_decimal</em>: the value may be no less than <em class="placeholder">10</em>.'];
+    yield ['decimal', 1, 2, 2.5, TRUE, '<em class="placeholder">field_decimal</em>: the value may be no greater than <em class="placeholder">2</em>.'];
+    yield ['decimal', 1, 2, 1.5, FALSE];
+  }
+
 }
