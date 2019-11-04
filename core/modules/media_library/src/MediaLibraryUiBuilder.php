@@ -17,9 +17,8 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
  * Service which builds the media library.
  *
  * @internal
- *   Media Library is an experimental module and its internal code may be
- *   subject to change in minor releases. External code should not instantiate
- *   or extend this class.
+ *   This service is an internal part of the modal media library dialog and
+ *   does not provide any extension points.
  */
 class MediaLibraryUiBuilder {
 
@@ -123,11 +122,9 @@ class MediaLibraryUiBuilder {
     }
     else {
       return [
-        '#type' => 'html_tag',
-        '#tag' => 'div',
+        '#theme' => 'media_library_wrapper',
         '#attributes' => [
           'id' => 'media-library-wrapper',
-          'class' => ['media-library-wrapper'],
         ],
         'menu' => $this->buildMediaTypeMenu($state),
         'content' => $this->buildLibraryContent($state),
@@ -157,11 +154,12 @@ class MediaLibraryUiBuilder {
    */
   protected function buildLibraryContent(MediaLibraryState $state) {
     return [
-      '#type' => 'html_tag',
-      '#tag' => 'div',
+      '#type' => 'container',
+      '#theme_wrappers' => [
+        'container__media_library_content',
+      ],
       '#attributes' => [
         'id' => 'media-library-content',
-        'class' => ['media-library-content'],
       ],
       'form' => $this->buildMediaTypeAddForm($state),
       'view' => $this->buildMediaLibraryView($state),
@@ -234,10 +232,10 @@ class MediaLibraryUiBuilder {
     // @todo: Add a class to the li element.
     //   https://www.drupal.org/project/drupal/issues/3029227
     $menu = [
-      '#theme' => 'links',
+      '#theme' => 'links__media_library_menu',
       '#links' => [],
       '#attributes' => [
-        'class' => ['media-library-menu', 'js-media-library-menu'],
+        'class' => ['js-media-library-menu'],
       ],
     ];
 
@@ -267,7 +265,6 @@ class MediaLibraryUiBuilder {
           'query' => $link_state->all(),
         ]),
         'attributes' => [
-          'class' => ['media-library-menu__link'],
           'role' => 'button',
           'data-title' => $title,
         ],

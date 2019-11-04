@@ -1,11 +1,3 @@
-style:
-  version: VERSION
-  css:
-    component:
-      css/media_library.module.css: {}
-    theme:
-      css/media_library.theme.css: {}
-
 click_to_select:
   version: VERSION
   js:
@@ -21,7 +13,6 @@ view:
   dependencies:
     - core/drupal.announce
     - core/drupal.checkbox
-    - media_library/style
     - media_library/click_to_select
 
 widget:
@@ -31,7 +22,6 @@ widget:
   dependencies:
     - core/drupal.dialog.ajax
     - core/jquery.once
-    - media_library/style
     - core/sortable
 
 ui:

@@ -283,6 +283,10 @@ Media
 - Christian Fritsch 'chr.fritsch' https://www.drupal.org/u/chr.fritsch
 - Adam Globus-Hoenich 'phenaproxima' https://www.drupal.org/u/phenaproxima
 
+  Media Library
+  - Sean Blommaert 'seanB' https://www.drupal.org/u/seanb
+  - Adam Globus-Hoenich 'phenaproxima' https://www.drupal.org/u/phenaproxima
+
 Menu
 - Daniel Wehner 'dawehner' https://www.drupal.org/u/dawehner
 - Peter Wolanin 'pwolanin' https://www.drupal.org/u/pwolanin

@@ -18,9 +18,7 @@ use Symfony\Component\HttpFoundation\Request;
  * @ViewsField("media_library_select_form")
  *
  * @internal
- *   Media Library is an experimental module and its internal code may be
- *   subject to change in minor releases. External code should not instantiate
- *   or extend this class.
+ *   Plugin classes are internal.
  */
 class MediaLibrarySelectForm extends FieldPluginBase {
 
@@ -47,9 +45,7 @@ class MediaLibrarySelectForm extends FieldPluginBase {
    *   The current state of the form.
    */
   public function viewsForm(array &$form, FormStateInterface $form_state) {
-    $form['#attributes'] = [
-      'class' => ['media-library-views-form', 'js-media-library-views-form'],
-    ];
+    $form['#attributes']['class'] = ['js-media-library-views-form'];
 
     // Add an attribute that identifies the media type displayed in the form.
     if (isset($this->view->args[0])) {
@@ -107,10 +103,7 @@ class MediaLibrarySelectForm extends FieldPluginBase {
     // the opener, and the opener should be responsible for moving the focus. An
     // example of this can be seen in MediaLibraryWidget::updateWidget().
     // @see \Drupal\media_library\Plugin\Field\FieldWidget\MediaLibraryWidget::updateWidget()
-    $form['actions']['submit']['#attributes'] = [
-      'class' => ['media-library-select'],
-      'data-disable-refocus' => 'true',
-    ];
+    $form['actions']['submit']['#attributes']['data-disable-refocus'] = 'true';
   }
 
   /**
