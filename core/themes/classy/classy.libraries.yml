@@ -68,6 +68,12 @@ indented:
     component:
       css/components/indented.css: {}
 
+media_library:
+  version: VERSION
+  css:
+    layout:
+      css/layout/media-library.css: {}
+
 messages:
   version: VERSION
   css:

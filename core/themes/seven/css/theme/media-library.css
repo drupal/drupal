@@ -1,11 +1,11 @@
 /**
- * @file media_library.theme.css
- *
- * @todo Move into the Seven theme when this module is marked as stable.
- * @see https://www.drupal.org/project/drupal/issues/2980769
+ * @file media-library.css
+
+ * Styling for Media Library.
  */
 
 .media-library-wrapper {
+  display: flex;
   margin: -1em;
 }
 
@@ -33,6 +33,8 @@
  */
 .media-library-menu li {
   display: block;
+  padding: 0;
+  list-style: none;
 }
 
 .media-library-menu__link {
@@ -91,12 +93,14 @@
 }
 
 /**
- * Remove outline from added media container.
+ * Remove outline from added media list.
  *
- * The added media container receives focus after adding new media, but since
- * it is not an interactive element it does not need an outline.
+ * The added media list receives focus after adding new media, but since it is
+ * not an interactive element, it does not need an outline.
  */
 .media-library-add-form__added-media {
+  margin: 0;
+  padding: 0;
   outline: none;
 }
 
@@ -114,10 +118,6 @@
 
 .media-library-add-form .file-upload-help {
   margin: 8px 0 0;
-}
-
-.media-library-add-form__description {
-  margin: 0;
 }
 
 /* Style the media add oEmbed form. */
@@ -163,19 +163,54 @@
 
 /* Generic media library view styles. */
 .media-library-select-all {
-  margin: 10px 0 10px 0;
+  flex-basis: 100%;
+  width: 100%;
+  margin: 10px 8px;
 }
-
 .media-library-select-all input {
   margin-right: 10px;
+}
+[dir="rtl"] .media-library-select-all input {
+  margin-left: 10px;
+}
+
+.media-library-views-form,
+.media-library-selection,
+.media-library-add-form__selected-media .details-wrapper,
+.media-library-views-form__bulk_form,
+.media-library-view .form--inline {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.media-library-views-form > .form-actions {
+  flex-basis: 100%;
+}
+
+.media-library-views-form__header {
+  flex-basis: 100%;
 }
 
 .media-library-views-form__header .form-item {
   margin-right: 8px;
 }
 
+.media-library-views-form__rows {
+  display: flex;
+  flex-wrap: wrap;
+  flex-basis: 100%;
+  margin: 0 -8px;
+}
+
 .media-library-view .form-actions {
+  align-self: flex-end;
   margin: 0.75em 0;
+}
+
+@media screen and (max-width: 600px) {
+  .media-library-view .form-actions {
+    flex-basis: 100%;
+  }
 }
 
 .media-library-view .media-library-view--form-actions {
@@ -203,13 +238,8 @@
   justify-content: space-between;
 }
 
-/**
- * @todo Remove order and reorder the views header and filters via a views
- *   template in https://www.drupal.org/project/drupal/issues/3035994
- */
 .media-library-wrapper .view-header {
   align-self: flex-end;
-  order: 2;
   margin: 1em 0;
   text-align: right; /* LTR */
 }
@@ -217,29 +247,8 @@
   text-align: left;
 }
 
-/**
- * @todo Remove order and reorder the views header and filters via a views
- *   template in https://www.drupal.org/project/drupal/issues/3035994
- */
-.media-library-wrapper .media-library-view .view-filters {
-  order: 1;
-}
-
-/**
- * @todo Remove order and reorder the views header and filters via a views
- *   template in https://www.drupal.org/project/drupal/issues/3035994
- */
 .media-library-wrapper .media-library-view .view-content {
   flex: 0 0 100%;
-  order: 3;
-}
-
-/**
- * @todo Remove order and reorder the views header and filters via a views
- *   template in https://www.drupal.org/project/drupal/issues/3035994
- */
-.media-library-wrapper .media-library-view .pager {
-  order: 4;
 }
 
 .media-library-wrapper .views-display-link {
@@ -260,46 +269,31 @@
 
 .media-library-wrapper .views-display-link-widget {
   margin-right: 15px;
-  background: url(../../../misc/icons/333333/grid.svg) left 0 no-repeat; /* LTR */
+  background: url(../../../../misc/icons/333333/grid.svg) left 0 no-repeat; /* LTR */
 }
 [dir="rtl"] .media-library-wrapper .views-display-link-widget {
   background-position: right 0;
 }
 
 .media-library-wrapper .views-display-link-widget_table {
-  background: url(../../../misc/icons/333333/table.svg) left 0 no-repeat; /* LTR */
+  background: url(../../../../misc/icons/333333/table.svg) left 0 no-repeat; /* LTR */
 }
 [dir="rtl"] .media-library-wrapper .views-display-link-widget_table {
   background-position: right 0;
 }
 
-/* Media library item grid styles. */
-.media-library-views-form {
-  margin: 0 -8px;
-}
-
-/**
- * Fix the negative margin of the grid.
- *
- * We need to fix the negative margin of the grid for table based displays and
- * form elements that should not be part of the grid.
- *
- * @todo: Remove when new wrapper is added to apply negative margins in
- *    https://www.drupal.org/project/drupal/issues/3038489
- */
-.media-library-views-form__header,
-.media-library-select-all,
-.media-library-views-form > .views-table {
-  margin: 0 8px;
-}
-
 /**
  * Style the media library grid items.
- *
- * The media library item container receives screen reader focus when items are
- * removed. Since it is not an interactive element, it does not need an
- * outline.
  */
+.media-library-item {
+  position: relative;
+}
+
+/**
+* The media library item container receives screen reader focus when items are
+* removed. Since it is not an interactive element, it does not need an
+* outline.
+*/
 .media-library-item--grid {
   justify-content: center;
   box-sizing: border-box;
@@ -330,6 +324,23 @@
 /* The selected items in the add form should be shown a bit smaller. */
 .media-library-add-form__selected-media .media-library-item--small {
   width: 33.3%;
+}
+
+.media-library-widget-modal .ui-dialog-buttonpane {
+  display: flex;
+  align-items: center;
+}
+
+.media-library-widget-modal .ui-dialog-buttonpane .form-actions {
+  flex: 1;
+}
+
+/**
+ * By default, the dialog is too narrow to be usable.
+ * @see Drupal.ckeditor.openDialog()
+ */
+.ui-dialog--narrow.media-library-widget-modal {
+  max-width: 75%;
 }
 
 @media screen and (min-width: 45em) {
@@ -409,6 +420,18 @@
   border-color: #0076c0;
 }
 
+.media-library-item__click-to-select-checkbox {
+  position: absolute;
+  z-index: 1;
+  top: 16px;
+  left: 16px; /* LTR */
+  display: block;
+}
+[dir="rtl"] .media-library-item__click-to-select-checkbox {
+  right: 16px;
+  left: auto;
+}
+
 .media-library-item__click-to-select-checkbox input {
   width: 20px;
   height: 20px;
@@ -416,6 +439,12 @@
 
 .media-library-item__click-to-select-checkbox .form-item {
   margin: 0;
+}
+
+.media-library-item__click-to-select-trigger {
+  overflow: hidden;
+  height: 100%;
+  cursor: pointer;
 }
 
 /* Media library item table styles. */
@@ -427,14 +456,23 @@
 /* Media library entity view display styles. */
 .media-library-item__preview {
   padding-bottom: 34px;
+  cursor: move;
 }
 
 .media-library-item__status {
+  position: absolute;
+  top: 40px;
+  left: 5px; /* LTR */
   padding: 5px 10px;
+  pointer-events: none;
   color: #e4e4e4;
   background: #666;
   font-size: 12px;
   font-style: italic;
+}
+[dir="rtl"] .media-library-item__status {
+  right: 5px;
+  left: auto;
 }
 
 .media-library-item__attributes {
@@ -472,6 +510,7 @@
 }
 
 .media-library-item--disabled {
+  pointer-events: none;
   opacity: 0.5;
 }
 
@@ -560,7 +599,7 @@
 }
 
 .media-library-item__edit {
-  background: url("../../../misc/icons/787878/pencil.svg") #fff center no-repeat;
+  background: url("../../../../misc/icons/787878/pencil.svg") #fff center no-repeat;
   background-size: 13px;
 }
 .media-library-item__remove,
@@ -570,7 +609,7 @@
 .media-library-item__remove.button:disabled:active,
 .media-library-item__remove.button:hover,
 .media-library-item__remove.button:focus {
-  background: url("../../../misc/icons/787878/ex.svg") #fff center no-repeat;
+  background: url("../../../../misc/icons/787878/ex.svg") #fff center no-repeat;
   background-size: 13px;
 }
 .media-library-item__edit:hover,
@@ -656,7 +695,7 @@
   color: transparent;
   border: 0;
   border-radius: 0;
-  background: transparent url(../../../misc/icons/787878/ex.svg) right 2px no-repeat; /* LTR */
+  background: transparent url(../../../../misc/icons/787878/ex.svg) right 2px no-repeat; /* LTR */
   font-weight: normal;
   line-height: 16px;
 }
@@ -673,7 +712,7 @@
 .media-library-add-form__remove-button.button:focus {
   color: #787878;
   border: 0;
-  background: transparent url(../../../misc/icons/787878/ex.svg) right 2px no-repeat; /* LTR */
+  background: transparent url(../../../../misc/icons/787878/ex.svg) right 2px no-repeat; /* LTR */
 }
 [dir="rtl"] .media-library-add-form__remove-button:focus,
 [dir="rtl"] .media-library-add-form__remove-button.button:disabled,
@@ -686,10 +725,15 @@
 .media-library-add-form__remove-button.button:hover {
   color: #e00;
   border: 0;
-  background: transparent url(../../../misc/icons/ee0000/ex.svg) right 2px no-repeat; /* LTR */
+  background: transparent url(../../../../misc/icons/ee0000/ex.svg) right 2px no-repeat; /* LTR */
   box-shadow: none;
 }
 [dir="rtl"] .media-library-add-form__remove-button:hover,
 [dir="rtl"] .media-library-add-form__remove-button.button:hover {
   background-position: left 2px;
+}
+
+/* @todo Remove in https://www.drupal.org/project/drupal/issues/3064914 */
+.views-live-preview .media-library-view div.views-row + div.views-row {
+  margin-top: 0;
 }

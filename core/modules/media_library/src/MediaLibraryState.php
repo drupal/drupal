@@ -36,11 +36,6 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
  * with them either.
  *
  * @see \Drupal\media_library\MediaLibraryOpenerInterface
- *
- * @internal
- *   Media Library is an experimental module and its internal code may be
- *   subject to change in minor releases. External code should not instantiate
- *   or extend this class.
  */
 class MediaLibraryState extends ParameterBag {
 

@@ -46,6 +46,10 @@ libraries-override:
     css:
       component:
         css/components/details.css: false
+  classy/media_library:
+    css:
+      layout:
+        css/layout/media-library.css: false
 
 libraries-extend:
   core/ckeditor:
@@ -54,6 +58,10 @@ libraries-extend:
     - seven/vertical-tabs
   core/jquery.ui:
     - seven/seven.jquery.ui
+  media_library/view:
+    - seven/media_library
+  media_library/widget:
+    - seven/media_library
   tour/tour-styling:
     - seven/tour-styling
 quickedit_stylesheets:

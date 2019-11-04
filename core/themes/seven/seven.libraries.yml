@@ -132,6 +132,12 @@ media-form:
   dependencies:
     - media/form
 
+media_library:
+  version: VERSION
+  css:
+    theme:
+      css/theme/media-library.css: {}
+
 layout_builder_content_translation_admin:
   version: VERSION
   css:

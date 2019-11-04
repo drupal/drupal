@@ -7,6 +7,9 @@ use Symfony\Component\Routing\RouteCollection;
 
 /**
  * Subscriber for media library routes.
+ *
+ * @internal
+ *   Tagged services are internal.
  */
 class RouteSubscriber extends RouteSubscriberBase {
 

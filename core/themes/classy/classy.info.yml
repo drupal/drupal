@@ -25,6 +25,10 @@ libraries-extend:
     - classy/progress
   media/media_embed_ckeditor_theme:
     - classy/media_embed_ckeditor_theme
+  media_library/view:
+    - classy/media_library
+  media_library/widget:
+    - classy/media_library
 
 ckeditor_stylesheets:
   - css/components/media-embed-error.css

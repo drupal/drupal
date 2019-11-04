@@ -9,6 +9,11 @@ namespace Drupal\media_library;
  * services which implement \Drupal\media_library\MediaLibraryOpenerInterface.
  * It is not an API and should not be extended or used by code that does not
  * interact with the Media Library module.
+ *
+ * @internal
+ *   This interface is an internal part of the modal media library dialog and
+ *   is only implemented by \Drupal\media_library\OpenerResolver. It is not a
+ *   public API.
  */
 interface OpenerResolverInterface {
 

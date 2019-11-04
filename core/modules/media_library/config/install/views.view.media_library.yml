@@ -73,7 +73,7 @@ display:
         type: default
         options:
           grouping: {  }
-          row_class: 'media-library-item media-library-item--grid js-media-library-item js-click-to-select'
+          row_class: ''
           default_row_class: true
       row:
         type: fields
@@ -120,7 +120,7 @@ display:
             preserve_tags: ''
             html: false
           element_type: ''
-          element_class: js-click-to-select-checkbox media-library-item__click-to-select-checkbox
+          element_class: ''
           element_label_type: ''
           element_label_class: ''
           element_label_colon: false
@@ -173,7 +173,7 @@ display:
             preserve_tags: ''
             html: false
           element_type: ''
-          element_class: media-library-item__content
+          element_class: ''
           element_label_type: ''
           element_label_class: ''
           element_label_colon: false
@@ -468,7 +468,7 @@ display:
       relationships: {  }
       display_extenders: {  }
       use_ajax: true
-      css_class: 'media-library-view js-media-library-view'
+      css_class: ''
     cache_metadata:
       max-age: 0
       contexts:
@@ -525,7 +525,7 @@ display:
             preserve_tags: ''
             html: false
           element_type: ''
-          element_class: js-click-to-select-checkbox media-library-item__click-to-select-checkbox
+          element_class: ''
           element_label_type: ''
           element_label_class: ''
           element_label_colon: false
@@ -627,7 +627,7 @@ display:
             trim_whitespace: false
             alt: 'Edit {{ name }}'
             rel: ''
-            link_class: media-library-item__edit
+            link_class: ''
             prefix: ''
             suffix: ''
             target: ''
@@ -680,7 +680,7 @@ display:
             trim_whitespace: false
             alt: 'Delete {{ name }}'
             rel: ''
-            link_class: media-library-item__remove
+            link_class: ''
             prefix: ''
             suffix: ''
             target: ''
@@ -749,7 +749,7 @@ display:
             preserve_tags: ''
             html: false
           element_type: ''
-          element_class: media-library-item__content
+          element_class: ''
           element_label_type: ''
           element_label_class: ''
           element_label_colon: false
@@ -786,57 +786,6 @@ display:
       display_extenders: {  }
       path: admin/content/media-widget
       fields:
-        rendered_entity:
-          id: rendered_entity
-          table: media
-          field: rendered_entity
-          relationship: none
-          group_type: group
-          admin_label: ''
-          label: ''
-          exclude: false
-          alter:
-            alter_text: false
-            text: ''
-            make_link: false
-            path: ''
-            absolute: false
-            external: false
-            replace_spaces: false
-            path_case: none
-            trim_whitespace: false
-            alt: ''
-            rel: ''
-            link_class: ''
-            prefix: ''
-            suffix: ''
-            target: ''
-            nl2br: false
-            max_length: 0
-            word_boundary: true
-            ellipsis: true
-            more_link: false
-            more_link_text: ''
-            more_link_path: ''
-            strip_tags: false
-            trim: false
-            preserve_tags: ''
-            html: false
-          element_type: ''
-          element_class: media-library-item__content
-          element_label_type: ''
-          element_label_class: ''
-          element_label_colon: false
-          element_wrapper_type: ''
-          element_wrapper_class: ''
-          element_default_classes: true
-          empty: ''
-          hide_empty: false
-          empty_zero: false
-          hide_alter_empty: true
-          view_mode: media_library
-          entity_type: media
-          plugin_id: rendered_entity
         media_library_select_form:
           id: media_library_select_form
           table: media
@@ -879,7 +828,7 @@ display:
           element_label_class: ''
           element_label_colon: false
           element_wrapper_type: ''
-          element_wrapper_class: js-click-to-select-checkbox media-library-item__click-to-select-checkbox
+          element_wrapper_class: ''
           element_default_classes: true
           empty: ''
           hide_empty: false
@@ -887,6 +836,57 @@ display:
           hide_alter_empty: true
           entity_type: media
           plugin_id: media_library_select_form
+        rendered_entity:
+          id: rendered_entity
+          table: media
+          field: rendered_entity
+          relationship: none
+          group_type: group
+          admin_label: ''
+          label: ''
+          exclude: false
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: false
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          view_mode: media_library
+          entity_type: media
+          plugin_id: rendered_entity
       defaults:
         fields: false
         access: false
@@ -1086,7 +1086,7 @@ display:
           label: 'Table'
           plugin_id: display_link
           empty: true
-      css_class: 'media-library-view js-media-library-view media-library-view--widget'
+      css_class: ''
       rendering_language: '***LANGUAGE_language_interface***'
     cache_metadata:
       max-age: -1
@@ -1131,7 +1131,7 @@ display:
           relationship: none
           entity_type: media
           plugin_id: media_library_select_form
-          element_wrapper_class: js-click-to-select-checkbox media-library-item__click-to-select-checkbox
+          element_wrapper_class: ''
           element_class: ''
         thumbnail__target_id:
           id: thumbnail__target_id
@@ -1374,7 +1374,7 @@ display:
           label: 'Table'
           plugin_id: display_link
           empty: true
-      css_class: 'media-library-view js-media-library-view media-library-view--widget'
+      css_class: ''
       rendering_language: '***LANGUAGE_language_interface***'
     cache_metadata:
       max-age: -1

@@ -18,9 +18,8 @@ use Drupal\Core\Ajax\CommandInterface;
  * @ingroup ajax
  *
  * @internal
- *   Media Library is an experimental module and its internal code may be
- *   subject to change in minor releases. External code should not instantiate
- *   or extend this class.
+ *   This is an internal part of Media Library and may be subject to change in
+ *   minor releases. External code should not instantiate or extend this class.
  */
 class UpdateSelectionCommand implements CommandInterface {
 
