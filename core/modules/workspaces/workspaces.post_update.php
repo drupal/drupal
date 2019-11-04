@@ -6,6 +6,7 @@
  */
 
 use Drupal\Core\Entity\ContentEntityNullStorage;
+use Drupal\Core\Entity\Entity\EntityFormDisplay;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\Sql\SqlContentEntityStorage;
 use Drupal\Core\Site\Settings;
@@ -141,5 +142,14 @@ function workspaces_post_update_move_association_data(&$sandbox) {
     $database->schema()->dropTable('workspace_association_revision');
 
     $database->schema()->renameTable('tmp_workspace_association', 'workspace_association');
+  }
+}
+
+/**
+ * Add the workspace 'parent' field to the 'deploy' form display.
+ */
+function workspaces_post_update_update_deploy_form_display() {
+  if ($form_display = EntityFormDisplay::load('workspace.workspace.deploy')) {
+    $form_display->removeComponent('parent')->save();
   }
 }

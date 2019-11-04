@@ -11,4 +11,5 @@ bundle: workspace
 mode: deploy
 content: {  }
 hidden:
+  parent: true
   uid: true

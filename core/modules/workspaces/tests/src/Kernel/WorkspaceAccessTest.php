@@ -110,4 +110,115 @@ class WorkspaceAccessTest extends KernelTestBase {
     $workspace->publish();
   }
 
+  /**
+   * @coversDefaultClass \Drupal\workspaces\Plugin\EntityReferenceSelection\WorkspaceSelection
+   */
+  public function testWorkspaceSelection() {
+    $own_permission_user = $this->createUser(['view own workspace']);
+    $any_permission_user = $this->createUser(['view any workspace']);
+    $admin_permission_user = $this->createUser(['administer workspaces']);
+
+    // Create the following workspace hierarchy:
+    // - top1 ($own_permission_user)
+    // --- child1_1 ($own_permission_user)
+    // --- child1_2 ($any_permission_user)
+    // ----- child1_2_1 ($any_permission_user)
+    // - top2 ($admin_permission_user)
+    // --- child2_1 ($admin_permission_user)
+    $created_time = \Drupal::time()->getCurrentTime();
+    Workspace::create([
+      'uid' => $own_permission_user->id(),
+      'id' => 'top1',
+      'label' => 'top1',
+      'created' => ++$created_time,
+    ])->save();
+    Workspace::create([
+      'uid' => $own_permission_user->id(),
+      'id' => 'child1_1',
+      'parent' => 'top1',
+      'label' => 'child1_1',
+      'created' => ++$created_time,
+    ])->save();
+    Workspace::create([
+      'uid' => $any_permission_user->id(),
+      'id' => 'child1_2',
+      'parent' => 'top1',
+      'label' => 'child1_2',
+      'created' => ++$created_time,
+    ])->save();
+    Workspace::create([
+      'uid' => $any_permission_user->id(),
+      'id' => 'child1_2_1',
+      'parent' => 'child1_2',
+      'label' => 'child1_2_1',
+      'created' => ++$created_time,
+    ])->save();
+    Workspace::create([
+      'uid' => $admin_permission_user->id(),
+      'id' => 'top2',
+      'label' => 'top2',
+      'created' => ++$created_time,
+    ])->save();
+    Workspace::create([
+      'uid' => $admin_permission_user->id(),
+      'id' => 'child2_1',
+      'parent' => 'top2',
+      'label' => 'child2_1',
+      'created' => ++$created_time,
+    ])->save();
+
+    /** @var \Drupal\Core\Entity\EntityReferenceSelection\SelectionInterface $selection_handler */
+    $selection_handler = \Drupal::service('plugin.manager.entity_reference_selection')->getInstance([
+      'target_type' => 'workspace',
+      'handler' => 'default',
+      'sort' => [
+        'field' => 'created',
+        'direction' => 'asc',
+      ],
+    ]);
+
+    // The $own_permission_user should only be allowed to reference 'top1' and
+    // 'child1_1'.
+    $this->setCurrentUser($own_permission_user);
+    $expected = [
+      'top1',
+      'child1_1',
+    ];
+    $this->assertEquals($expected, array_keys($selection_handler->getReferenceableEntities()['workspace']));
+    $this->assertEquals($expected, array_keys($selection_handler->getReferenceableEntities(NULL, 'CONTAINS', 3)['workspace']));
+    $expected = [
+      'top1',
+    ];
+    $this->assertEquals($expected, array_keys($selection_handler->getReferenceableEntities('top')['workspace']));
+
+    // The $any_permission_user and $admin_permission_user should be allowed to
+    // reference any workspace.
+    $expected_all = [
+      'top1',
+      'child1_1',
+      'child1_2',
+      'child1_2_1',
+      'top2',
+      'child2_1',
+    ];
+    $expected_3 = [
+      'top1',
+      'child1_1',
+      'child1_2',
+    ];
+    $expected_top = [
+      'top1',
+      'top2',
+    ];
+    $this->setCurrentUser($any_permission_user);
+    $this->assertEquals($expected_all, array_keys($selection_handler->getReferenceableEntities()['workspace']));
+    $this->assertEquals($expected_3, array_keys($selection_handler->getReferenceableEntities(NULL, 'CONTAINS', 3)['workspace']));
+    $this->assertEquals($expected_top, array_keys($selection_handler->getReferenceableEntities('top')['workspace']));
+
+    $this->setCurrentUser($admin_permission_user);
+    $this->assertEquals($expected_all, array_keys($selection_handler->getReferenceableEntities()['workspace']));
+    $this->assertEquals($expected_3, array_keys($selection_handler->getReferenceableEntities(NULL, 'CONTAINS', 3)['workspace']));
+    $this->assertEquals($expected_top, array_keys($selection_handler->getReferenceableEntities('top')['workspace']));
+  }
+
 }

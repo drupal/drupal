@@ -8,6 +8,7 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityListBuilder;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\Core\Render\RendererInterface;
 use Drupal\Core\Url;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -28,6 +29,20 @@ class WorkspaceListBuilder extends EntityListBuilder {
   protected $workspaceManager;
 
   /**
+   * The workspace repository service.
+   *
+   * @var \Drupal\workspaces\WorkspaceRepositoryInterface
+   */
+  protected $workspaceRepository;
+
+  /**
+   * The renderer service.
+   *
+   * @var \Drupal\Core\Render\RendererInterface
+   */
+  protected $renderer;
+
+  /**
    * Constructs a new EntityListBuilder object.
    *
    * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
@@ -36,10 +51,14 @@ class WorkspaceListBuilder extends EntityListBuilder {
    *   The entity storage class.
    * @param \Drupal\workspaces\WorkspaceManagerInterface $workspace_manager
    *   The workspace manager service.
+   * @param \Drupal\Core\Render\RendererInterface $renderer
+   *   The renderer service.
    */
-  public function __construct(EntityTypeInterface $entity_type, EntityStorageInterface $storage, WorkspaceManagerInterface $workspace_manager) {
+  public function __construct(EntityTypeInterface $entity_type, EntityStorageInterface $storage, WorkspaceManagerInterface $workspace_manager, WorkspaceRepositoryInterface $workspace_repository, RendererInterface $renderer) {
     parent::__construct($entity_type, $storage);
     $this->workspaceManager = $workspace_manager;
+    $this->workspaceRepository = $workspace_repository;
+    $this->renderer = $renderer;
   }
 
   /**
@@ -49,8 +68,24 @@ class WorkspaceListBuilder extends EntityListBuilder {
     return new static(
       $entity_type,
       $container->get('entity_type.manager')->getStorage($entity_type->id()),
-      $container->get('workspaces.manager')
+      $container->get('workspaces.manager'),
+      $container->get('workspaces.repository'),
+      $container->get('renderer')
     );
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function load() {
+    // Get all the workspace entities and sort them in tree order.
+    $workspace_tree = $this->workspaceRepository->loadTree();
+    $entities = array_replace($workspace_tree, $this->storage->loadMultiple());
+    foreach ($entities as $id => $entity) {
+      $entity->_depth = $workspace_tree[$id]['depth'];
+    }
+
+    return $entities;
   }
 
   /**
@@ -68,8 +103,20 @@ class WorkspaceListBuilder extends EntityListBuilder {
    */
   public function buildRow(EntityInterface $entity) {
     /** @var \Drupal\workspaces\WorkspaceInterface $entity */
+    if (isset($entity->_depth) && $entity->_depth > 0) {
+      $indentation = [
+        '#theme' => 'indentation',
+        '#size' => $entity->_depth,
+      ];
+    }
+
     $row['data'] = [
-      'label' => $entity->label(),
+      'label' => [
+        'data' => [
+          '#prefix' => isset($indentation) ? $this->renderer->render($indentation) : '',
+          '#markup' => $entity->label(),
+        ],
+      ],
       'owner' => $entity->getOwner()->getDisplayname(),
     ];
     $row['data'] = $row['data'] + parent::buildRow($entity);
@@ -102,13 +149,34 @@ class WorkspaceListBuilder extends EntityListBuilder {
       ];
     }
 
-    $operations['deploy'] = [
-      'title' => $this->t('Deploy content'),
-      // The 'Deploy' operation should be the default one for the currently
-      // active workspace.
-      'weight' => ($active_workspace && $entity->id() == $active_workspace->id()) ? 0 : 20,
-      'url' => $entity->toUrl('deploy-form', ['query' => ['destination' => $entity->toUrl('collection')->toString()]]),
-    ];
+    if (!$entity->hasParent()) {
+      $operations['deploy'] = [
+        'title' => $this->t('Deploy content'),
+        // The 'Deploy' operation should be the default one for the currently
+        // active workspace.
+        'weight' => ($active_workspace && $entity->id() == $active_workspace->id()) ? 0 : 20,
+        'url' => $entity->toUrl('deploy-form', ['query' => ['destination' => $entity->toUrl('collection')->toString()]]),
+      ];
+    }
+    else {
+      /** @var \Drupal\workspaces\WorkspaceInterface $parent */
+      $parent = $entity->parent->entity;
+      $operations['merge'] = [
+        'title' => $this->t('Merge into @target_label', [
+          '@target_label' => $parent->label(),
+        ]),
+        'weight' => 5,
+        'url' => Url::fromRoute('entity.workspace.merge_form',
+          [
+            'source_workspace' => $entity->id(),
+            'target_workspace' => $parent->id(),
+          ],
+          [
+            'query' => ['destination' => $entity->toUrl('collection')->toString()],
+          ]
+        ),
+      ];
+    }
 
     return $operations;
   }
@@ -180,15 +248,35 @@ class WorkspaceListBuilder extends EntityListBuilder {
         '#attributes' => [
           'class' => ['active-workspace__actions'],
         ],
-        'deploy' => [
+      ];
+      if (!$active_workspace->hasParent()) {
+        $build['active_workspace']['actions']['deploy'] = [
           '#type' => 'link',
           '#title' => $this->t('Deploy content'),
           '#url' => $active_workspace->toUrl('deploy-form', ['query' => ['destination' => $active_workspace->toUrl('collection')->toString()]]),
           '#attributes' => [
             'class' => ['button', 'active-workspace__button'],
           ],
-        ],
-      ];
+        ];
+      }
+      else {
+        $build['active_workspace']['actions']['merge'] = [
+          '#type' => 'link',
+          '#title' => $this->t('Merge content'),
+          '#url' => Url::fromRoute('entity.workspace.merge_form',
+            [
+              'source_workspace' => $active_workspace->id(),
+              'target_workspace' => $active_workspace->parent->target_id,
+            ],
+            [
+              'query' => ['destination' => $active_workspace->toUrl('collection')->toString()],
+            ]
+          ),
+          '#attributes' => [
+            'class' => ['button', 'active-workspace__button'],
+          ],
+        ];
+      }
     }
     if ($row_count > 2) {
       $build['all_workspaces'] = [
