@@ -57,4 +57,12 @@ interface WorkspaceInterface extends ContentEntityInterface, EntityChangedInterf
    */
   public function setCreatedTime($timestamp);
 
+  /**
+   * Determines whether the workspace has a parent.
+   *
+   * @return bool
+   *   TRUE if the workspace has a parent, FALSE otherwise.
+   */
+  public function hasParent();
+
 }

@@ -29,6 +29,14 @@ interface WorkspaceAssociationInterface {
   public function trackEntity(RevisionableInterface $entity, WorkspaceInterface $workspace);
 
   /**
+   * Responds to the creation of a new workspace entity.
+   *
+   * @param \Drupal\workspaces\WorkspaceInterface $workspace
+   *   The workspaces that was inserted.
+   */
+  public function workspaceInsert(WorkspaceInterface $workspace);
+
+  /**
    * Retrieves the entities tracked by a given workspace.
    *
    * @param string $workspace_id
@@ -99,5 +107,13 @@ interface WorkspaceAssociationInterface {
    *   to NULL.
    */
   public function deleteAssociations($workspace_id, $entity_type_id = NULL, $entity_ids = NULL);
+
+  /**
+   * Initializes a workspace with all the associations of its parent.
+   *
+   * @param \Drupal\workspaces\WorkspaceInterface $workspace
+   *   The workspace to be initialized.
+   */
+  public function initializeWorkspace(WorkspaceInterface $workspace);
 
 }

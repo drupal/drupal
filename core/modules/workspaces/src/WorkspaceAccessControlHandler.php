@@ -19,6 +19,11 @@ class WorkspaceAccessControlHandler extends EntityAccessControlHandler {
    */
   protected function checkAccess(EntityInterface $entity, $operation, AccountInterface $account) {
     /** @var \Drupal\workspaces\WorkspaceInterface $entity */
+    if ($operation === 'publish' && $entity->hasParent()) {
+      $message = $this->t('Only top-level workspaces can be published.');
+      return AccessResult::forbidden((string) $message)->addCacheableDependency($entity);
+    }
+
     if ($account->hasPermission('administer workspaces')) {
       return AccessResult::allowed()->cachePerPermissions();
     }

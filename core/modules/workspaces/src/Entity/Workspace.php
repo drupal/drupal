@@ -100,6 +100,17 @@ class Workspace extends ContentEntityBase implements WorkspaceInterface {
       ])
       ->setDisplayConfigurable('form', TRUE);
 
+    $fields['parent'] = BaseFieldDefinition::create('entity_reference')
+      ->setLabel(new TranslatableMarkup('Parent'))
+      ->setDescription(new TranslatableMarkup('The parent workspace.'))
+      ->setSetting('target_type', 'workspace')
+      ->setReadOnly(TRUE)
+      ->setDisplayConfigurable('form', TRUE)
+      ->setDisplayOptions('form', [
+        'type' => 'options_select',
+        'weight' => 10,
+      ]);
+
     $fields['changed'] = BaseFieldDefinition::create('changed')
       ->setLabel(new TranslatableMarkup('Changed'))
       ->setDescription(new TranslatableMarkup('The time that the workspace was last edited.'))
@@ -139,6 +150,29 @@ class Workspace extends ContentEntityBase implements WorkspaceInterface {
    */
   public function setCreatedTime($created) {
     return $this->set('created', (int) $created);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function hasParent() {
+    return !$this->get('parent')->isEmpty();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function preDelete(EntityStorageInterface $storage, array $entities) {
+    parent::preDelete($storage, $entities);
+
+    $workspace_tree = \Drupal::service('workspaces.repository')->loadTree();
+
+    // Ensure that workspaces that have descendants can not be deleted.
+    foreach ($entities as $entity) {
+      if (!empty($workspace_tree[$entity->id()]['descendants'])) {
+        throw new \InvalidArgumentException("The {$entity->label()} workspace can not be deleted because it has child workspaces.");
+      }
+    }
   }
 
   /**

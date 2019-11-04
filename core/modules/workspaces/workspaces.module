@@ -107,6 +107,11 @@ function workspaces_entity_presave(EntityInterface $entity) {
  * Implements hook_entity_insert().
  */
 function workspaces_entity_insert(EntityInterface $entity) {
+  if ($entity->getEntityTypeId() === 'workspace') {
+    \Drupal::service('workspaces.association')->workspaceInsert($entity);
+    \Drupal::service('workspaces.repository')->resetCache();
+  }
+
   return \Drupal::service('class_resolver')
     ->getInstanceFromDefinition(EntityOperations::class)
     ->entityInsert($entity);
@@ -116,6 +121,10 @@ function workspaces_entity_insert(EntityInterface $entity) {
  * Implements hook_entity_update().
  */
 function workspaces_entity_update(EntityInterface $entity) {
+  if ($entity->getEntityTypeId() === 'workspace') {
+    \Drupal::service('workspaces.repository')->resetCache();
+  }
+
   return \Drupal::service('class_resolver')
     ->getInstanceFromDefinition(EntityOperations::class)
     ->entityUpdate($entity);
@@ -125,6 +134,10 @@ function workspaces_entity_update(EntityInterface $entity) {
  * Implements hook_entity_predelete().
  */
 function workspaces_entity_predelete(EntityInterface $entity) {
+  if ($entity->getEntityTypeId() === 'workspace') {
+    \Drupal::service('workspaces.repository')->resetCache();
+  }
+
   return \Drupal::service('class_resolver')
     ->getInstanceFromDefinition(EntityOperations::class)
     ->entityPredelete($entity);

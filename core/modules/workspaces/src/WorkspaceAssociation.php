@@ -32,32 +32,99 @@ class WorkspaceAssociation implements WorkspaceAssociationInterface {
   protected $entityTypeManager;
 
   /**
+   * The workspace repository service.
+   *
+   * @var \Drupal\workspaces\WorkspaceRepositoryInterface
+   */
+  protected $workspaceRepository;
+
+  /**
    * Constructs a WorkspaceAssociation object.
    *
    * @param \Drupal\Core\Database\Connection $connection
    *   A database connection for reading and writing path aliases.
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   The entity type manager for querying revisions.
+   * @param \Drupal\workspaces\WorkspaceRepositoryInterface $workspace_repository
+   *   The Workspace repository service.
    */
-  public function __construct(Connection $connection, EntityTypeManagerInterface $entity_type_manager) {
+  public function __construct(Connection $connection, EntityTypeManagerInterface $entity_type_manager, WorkspaceRepositoryInterface $workspace_repository) {
     $this->database = $connection;
     $this->entityTypeManager = $entity_type_manager;
+    $this->workspaceRepository = $workspace_repository;
   }
 
   /**
    * {@inheritdoc}
    */
   public function trackEntity(RevisionableInterface $entity, WorkspaceInterface $workspace) {
-    $this->database->merge(static::TABLE)
-      ->fields([
-        'target_entity_revision_id' => $entity->getRevisionId(),
-      ])
-      ->keys([
-        'workspace' => $workspace->id(),
-        'target_entity_type_id' => $entity->getEntityTypeId(),
-        'target_entity_id' => $entity->id(),
-      ])
-      ->execute();
+    // Determine all workspaces that might be affected by this change.
+    $affected_workspaces = $this->workspaceRepository->getDescendantsAndSelf($workspace->id());
+
+    // Get the currently tracked revision for this workspace.
+    $tracked = $this->getTrackedEntities($workspace->id(), $entity->getEntityTypeId(), [$entity->id()]);
+
+    $tracked_revision_id = NULL;
+    if (isset($tracked[$entity->getEntityTypeId()])) {
+      $tracked_revision_id = key($tracked[$entity->getEntityTypeId()]);
+    }
+
+    $transaction = $this->database->startTransaction();
+    try {
+      // Update all affected workspaces that were tracking the current revision.
+      // This means they are inheriting content and should be updated.
+      if ($tracked_revision_id) {
+        $this->database->update(static::TABLE)
+          ->fields([
+            'target_entity_revision_id' => $entity->getRevisionId(),
+          ])
+          ->condition('workspace', $affected_workspaces, 'IN')
+          ->condition('target_entity_type_id', $entity->getEntityTypeId())
+          ->condition('target_entity_id', $entity->id())
+          // Only update descendant workspaces if they have the same initial
+          // revision, which means they are currently inheriting content.
+          ->condition('target_entity_revision_id', $tracked_revision_id)
+          ->execute();
+      }
+
+      // Insert a new index entry for each workspace that is not tracking this
+      // entity yet.
+      $missing_workspaces = array_diff($affected_workspaces, $this->getEntityTrackingWorkspaceIds($entity));
+      if ($missing_workspaces) {
+        $insert_query = $this->database->insert(static::TABLE)
+          ->fields([
+            'workspace',
+            'target_entity_revision_id',
+            'target_entity_type_id',
+            'target_entity_id',
+          ]);
+        foreach ($missing_workspaces as $workspace_id) {
+          $insert_query->values([
+            'workspace' => $workspace_id,
+            'target_entity_type_id' => $entity->getEntityTypeId(),
+            'target_entity_id' => $entity->id(),
+            'target_entity_revision_id' => $entity->getRevisionId(),
+          ]);
+        }
+        $insert_query->execute();
+      }
+    }
+    catch (\Exception $e) {
+      $transaction->rollBack();
+      watchdog_exception('workspaces', $e);
+      throw $e;
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function workspaceInsert(WorkspaceInterface $workspace) {
+    // When a new workspace has been saved, we need to copy all the associations
+    // of its parent.
+    if ($workspace->hasParent()) {
+      $this->initializeWorkspace($workspace);
+    }
   }
 
   /**
@@ -158,6 +225,25 @@ class WorkspaceAssociation implements WorkspaceAssociationInterface {
     }
 
     $query->execute();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function initializeWorkspace(WorkspaceInterface $workspace) {
+    if ($parent_id = $workspace->parent->target_id) {
+      $indexed_rows = $this->database->select(static::TABLE);
+      $indexed_rows->addExpression(':new_id', 'workspace', [
+        ':new_id' => $workspace->id(),
+      ]);
+      $indexed_rows->fields(static::TABLE, [
+        'target_entity_type_id',
+        'target_entity_id',
+        'target_entity_revision_id',
+      ]);
+      $indexed_rows->condition('workspace', $parent_id);
+      $this->database->insert(static::TABLE)->from($indexed_rows)->execute();
+    }
   }
 
 }

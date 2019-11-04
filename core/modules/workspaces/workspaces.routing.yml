@@ -26,6 +26,21 @@ entity.workspace.deploy_form:
   requirements:
     _permission: 'administer workspaces'
 
+entity.workspace.merge_form:
+  path: '/admin/config/workflow/workspaces/manage/{source_workspace}/{target_workspace}/merge'
+  defaults:
+    _form: '\Drupal\workspaces\Form\WorkspaceMergeForm'
+    _title: 'Merge workspace'
+  options:
+    _admin_route: TRUE
+    parameters:
+      source_workspace:
+        type: entity:workspace
+      target_workspace:
+        type: entity:workspace
+  requirements:
+    _permission: 'administer workspaces'
+
 workspaces.switch_to_live:
   path: '/admin/config/workflow/workspaces/switch-to-live'
   defaults:
