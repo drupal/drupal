@@ -4,7 +4,7 @@ dependencies:
   config:
     - core.entity_view_mode.node.rss
     - field.field.node.article.body
-    - field.field.node.article.field_image
+    - field.field.node.article.field_media_image
     - field.field.node.article.field_tags
     - node.type.article
   module:
@@ -20,6 +20,6 @@ content:
 hidden:
   body: true
   content_moderation_control: true
-  field_image: true
+  field_media_image: true
   field_tags: true
   langcode: true

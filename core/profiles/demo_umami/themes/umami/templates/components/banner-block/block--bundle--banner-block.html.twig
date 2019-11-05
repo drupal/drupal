@@ -34,7 +34,7 @@
   ]
 %}
 
-{% set background_image = file_url(content.field_banner_image.0['#item'].entity.uri.value) %}
+{% set background_image = file_url(content.field_media_image[0]['#media'].field_media_image.entity.uri.value) %}
 
 <div{{ attributes.addClass(classes) }} style="background-image: url({{ background_image }})">
   <div class="block-inner">
@@ -44,9 +44,9 @@
     {% endif %}
     {{ title_suffix }}
     {% block content %}
-      {{ content.field_banner_image }}
+      {{ content.field_media_image }}
       <div class="summary">
-        {{ content|without('field_banner_image') }}
+        {{ content|without('field_media_image') }}
       </div>
     {% endblock %}
   </div>

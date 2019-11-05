@@ -5,8 +5,8 @@ dependencies:
     - core.entity_view_mode.node.card_common_alt
     - field.field.node.recipe.field_cooking_time
     - field.field.node.recipe.field_difficulty
-    - field.field.node.recipe.field_image
     - field.field.node.recipe.field_ingredients
+    - field.field.node.recipe.field_media_image
     - field.field.node.recipe.field_number_of_servings
     - field.field.node.recipe.field_preparation_time
     - field.field.node.recipe.field_recipe_category
@@ -15,24 +15,22 @@ dependencies:
     - field.field.node.recipe.field_tags
     - field.field.node.recipe.layout_builder__layout
     - node.type.recipe
-    - responsive_image.styles.square
   module:
-    - responsive_image
     - user
 id: node.recipe.card_common_alt
 targetEntityType: node
 bundle: recipe
 mode: card_common_alt
 content:
-  field_image:
-    weight: 0
+  field_media_image:
+    type: entity_reference_entity_view
+    weight: 1
+    region: content
     label: hidden
     settings:
-      responsive_image_style: square
-      image_link: ''
+      view_mode: square
+      link: false
     third_party_settings: {  }
-    type: responsive_image
-    region: content
 hidden:
   content_moderation_control: true
   field_cooking_time: true

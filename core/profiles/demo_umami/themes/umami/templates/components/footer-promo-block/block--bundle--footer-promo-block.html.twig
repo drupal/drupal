@@ -26,7 +26,7 @@
  */
 #}
 <div{{ attributes }}>
-  {{ content.field_promo_image }}
+  {{ content.field_media_image }}
   {{ title_prefix }}
   {% if label %}
     <h2{{ title_attributes }}>{{ label }}</h2>
@@ -37,9 +37,9 @@
   {% block content %}
     <div class="footer-promo-content">
       {% if not label %}
-        {{ content|without('field_title')|without('field_promo_image') }}
+        {{ content|without('field_title')|without('field_media_image') }}
       {% else %}
-        {{ content|without('field_promo_image') }}
+        {{ content|without('field_media_image') }}
       {% endif %}
     </div>
   {% endblock %}
