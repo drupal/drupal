@@ -13,17 +13,17 @@
   max-width: 796px;
 }
 
-.node--type-recipe.node--view-mode-full .field--name-field-image {
+.node--type-recipe.node--view-mode-full .field--name-field-media-image {
   background-color: #fcece7;
   background-image: url(../../../../images/png/umami-background-pattern-1.png);
 }
 
-.node--type-recipe.node--view-mode-full .field--name-field-image img {
+.node--type-recipe.node--view-mode-full .field--name-field-media-image img {
   display: block;
 }
 
 @media screen and (min-width: 786px) {
-  .node--type-recipe.node--view-mode-full .field--name-field-image img {
+  .node--type-recipe.node--view-mode-full .field--name-field-media-image img {
     max-width: 796px;
   }
 }

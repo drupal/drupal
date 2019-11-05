@@ -24,6 +24,7 @@ install:
   - help
   - image
   - media
+  - media_library
   - menu_ui
   - options
   - path

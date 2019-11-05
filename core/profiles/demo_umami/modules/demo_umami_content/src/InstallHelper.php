@@ -76,6 +76,17 @@ class InstallHelper implements ContainerInjectionInterface {
   protected $termIdMap;
 
   /**
+   * Media Image CSV ID map.
+   *
+   * Used to store media image CSV IDs created in the import process.
+   * This allows the created media images to be cross referenced when creating
+   * article, recipes and blocks.
+   *
+   * @var array
+   */
+  protected $mediaImageIdMap;
+
+  /**
    * Node CSV ID map.
    *
    * Used to store node CSV IDs created in the import process. This allows the
@@ -106,6 +117,7 @@ class InstallHelper implements ContainerInjectionInterface {
     $this->state = $state;
     $this->fileSystem = $fileSystem;
     $this->termIdMap = [];
+    $this->mediaImageIdMap = [];
     $this->nodeIdMap = [];
     $this->enabledLanguages = array_keys(\Drupal::languageManager()->getLanguages());
   }
@@ -135,6 +147,7 @@ class InstallHelper implements ContainerInjectionInterface {
       ->importEditors()
       ->importContentFromFile('taxonomy_term', 'tags')
       ->importContentFromFile('taxonomy_term', 'recipe_category')
+      ->importContentFromFile('media', 'image')
       ->importContentFromFile('node', 'recipe')
       ->importContentFromFile('node', 'article')
       ->importContentFromFile('node', 'page')
@@ -222,6 +235,34 @@ class InstallHelper implements ContainerInjectionInterface {
    */
   protected function saveTermId($vocabulary, $term_csv_id, $tid) {
     $this->termIdMap[$vocabulary][$term_csv_id] = $tid;
+  }
+
+  /**
+   * Retrieves the Media Image ID of a media image saved during the import process.
+   *
+   * @param int $media_image_csv_id
+   *   The media image's ID from the CSV file.
+   *
+   * @return int
+   *   Media Image ID, or 0 if Media Image ID could not be found.
+   */
+  protected function getMediaImageId($media_image_csv_id) {
+    if (array_key_exists($media_image_csv_id, $this->mediaImageIdMap)) {
+      return $this->mediaImageIdMap[$media_image_csv_id];
+    }
+    return 0;
+  }
+
+  /**
+   * Saves a Media Image ID generated when saving a media image.
+   *
+   * @param int $media_image_csv_id
+   *   The media image's ID from the CSV file.
+   * @param int $media_image_id
+   *   Media Image ID generated when saved in the Drupal database.
+   */
+  protected function saveMediaImageId($media_image_csv_id, $media_image_id) {
+    $this->mediaImageIdMap[$media_image_csv_id] = $media_image_id;
   }
 
   /**
@@ -315,6 +356,35 @@ class InstallHelper implements ContainerInjectionInterface {
   }
 
   /**
+   * Process images into media entities.
+   *
+   * @param array $data
+   *   Data of line that was read from the file.
+   *
+   * @return array
+   *   Data structured as a image.
+   */
+  protected function processImage(array $data) {
+    // Set article author.
+    if (!empty($data['author'])) {
+      $values['uid'] = $this->getUser($data['author']);
+    }
+
+    $image_path = $this->module_path . '/default_content/images/' . $data['image'];
+    // Prepare content.
+    $values = [
+      'name' => $data['title'],
+      'bundle' => 'image',
+      'langcode' => 'en',
+      'field_media_image' => [
+        'target_id' => $this->createFileEntity($image_path),
+        'alt' => $data['alt'],
+      ],
+    ];
+    return $values;
+  }
+
+  /**
    * Process pages data into page node structure.
    *
    * @param array $data
@@ -379,13 +449,10 @@ class InstallHelper implements ContainerInjectionInterface {
     }
     // Save node alias
     $this->saveNodePath($langcode, 'recipe', $data['id'], $data['slug']);
-
-    // Set field_image field.
-    if (!empty($data['image'])) {
-      $image_path = $this->module_path . '/default_content/images/' . $data['image'];
-      $values['field_image'] = [
-        'target_id' => $this->createFileEntity($image_path),
-        'alt' => $data['alt'],
+    // Set field_media_image field.
+    if (!empty($data['image_reference'])) {
+      $values['field_media_image'] = [
+        'target_id' => $this->getMediaImageId($data['image_reference']),
       ];
     }
     // Set field_summary field.
@@ -486,12 +553,10 @@ class InstallHelper implements ContainerInjectionInterface {
     if (!empty($data['author'])) {
       $values['uid'] = $this->getUser($data['author']);
     }
-    // Set Image field.
-    if (!empty($data['image'])) {
-      $path = $this->module_path . '/default_content/images/' . $data['image'];
-      $values['field_image'] = [
-        'target_id' => $this->createFileEntity($path),
-        'alt' => $data['alt'],
+    // Set field_media_image field.
+    if (!empty($data['image_reference'])) {
+      $values['field_media_image'] = [
+        'target_id' => $this->getMediaImageId($data['image_reference']),
       ];
     }
     // Set field_tags if exists.
@@ -535,9 +600,8 @@ class InstallHelper implements ContainerInjectionInterface {
       'field_summary' => [
         'value' => $data['field_summary'],
       ],
-      'field_banner_image' => [
-        'target_id' => $this->createFileEntity($this->module_path . '/default_content/images/' . $data['field_banner_image_target_id']),
-        'alt' => $data['field_banner_image_alt'],
+      'field_media_image' => [
+        'target_id' => $this->getMediaImageId($data['image_reference']),
       ],
     ];
     return $values;
@@ -598,9 +662,8 @@ class InstallHelper implements ContainerInjectionInterface {
       'field_summary' => [
         'value' => $data['field_summary'],
       ],
-      'field_promo_image' => [
-        'target_id' => $this->createFileEntity($this->module_path . '/default_content/images/' . $data['field_promo_image_target_id']),
-        'alt' => $data['field_promo_image_alt'],
+      'field_media_image' => [
+        'target_id' => $this->getMediaImageId($data['image_reference']),
       ],
     ];
     return $values;
@@ -638,6 +701,9 @@ class InstallHelper implements ContainerInjectionInterface {
         break;
       case 'footer_promo_block':
         $structured_content = $this->processFooterPromoBlock($content, $langcode);
+        break;
+      case 'image':
+        $structured_content = $this->processImage($content);
         break;
       case 'recipe_category':
       case 'tags':
@@ -679,9 +745,14 @@ class InstallHelper implements ContainerInjectionInterface {
       $entity->save();
       $this->storeCreatedContentUuids([$entity->uuid() => $entity_type]);
 
-      // Taxonomy entities - save ID internally to reference nodes later.
+      // Save taxonomy entity Drupal ID, so we can reference it in nodes.
       if ($entity_type == 'taxonomy_term') {
         $this->saveTermId($bundle_machine_name, $current_content['id'], $entity->id());
+      }
+
+      // Save media entity Drupal ID, so we can reference it in nodes & blocks.
+      if ($entity_type == 'media') {
+        $this->saveMediaImageId($current_content['id'], $entity->id());
       }
 
       // Go through all the languages that have translations.
