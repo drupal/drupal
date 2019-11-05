@@ -79,6 +79,7 @@ var CKBUILDER_CONFIG = {
 		list: 1,
 		magicline: 1,
 		maximize: 1,
+    pastefromgdocs: 1,
 		pastefromword: 1,
 		pastetext: 1,
 		removeformat: 1,
