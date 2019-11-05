@@ -5,7 +5,7 @@
  *
  * Available variables:
  * - url: URL of the current term.
- * - name: Name of the current term.
+ * - name: (optional) Name of the current term.
  * - content: Items for the content of the term (fields and description).
  *   Use 'content' to print them all, or print a subset such as
  *   'content.description'. Use the following code to exclude the
@@ -27,7 +27,7 @@
 #}
 <div{{ attributes }}>
   {{ title_prefix }}
-  {% if not page %}
+  {% if name and not page %}
     <h2><a href="{{ url }}">{{ name }}</a></h2>
   {% endif %}
   {{ title_suffix }}

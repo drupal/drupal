@@ -5,7 +5,7 @@
  *
  * Available variables:
  * - url: URL to the originating feed item.
- * - title: Title of the feed item.
+ * - title: (optional) Title of the feed item.
  * - content: All field items. Use {{ content }} to print them all,
  *   or print a subset such as {{ content.field_example }}. Use
  *   {{ content|without('field_example') }} to temporarily suppress the printing
@@ -21,9 +21,11 @@
 #}
 <article{{ attributes }}>
   {{ title_prefix }}
-  <h3>
-    <a href="{{ url }}">{{ title }}</a>
-  </h3>
+  {% if title %}
+    <h3>
+      <a href="{{ url }}">{{ title }}</a>
+    </h3>
+  {% endif %}
   {{ title_suffix }}
   {{ content }}
 </article>
