@@ -85,9 +85,19 @@ function aggregator_theme() {
 
 /**
  * Implements hook_entity_extra_field_info().
+ *
+ * By default this function creates pseudo-fields that mask the description and
+ * image base fields. These pseudo-fields are omitted if:
+ * - a module makes the field's display configurable via the field UI by means
+ *   of BaseFieldDefinition::setDisplayConfigurable()
+ * - AND the additional entity type property
+ *   'enable_base_field_custom_preprocess_skipping' has been set using
+ *   hook_entity_type_build().
  */
 function aggregator_entity_extra_field_info() {
   $extra = [];
+  $entity_type_manager = \Drupal::entityTypeManager();
+  $entity_field_manager = \Drupal::service('entity_field.manager');
 
   $extra['aggregator_feed']['aggregator_feed'] = [
     'display' => [
@@ -95,18 +105,6 @@ function aggregator_entity_extra_field_info() {
         'label' => t('Items'),
         'description' => t('Items associated with this feed'),
         'weight' => 0,
-      ],
-      // @todo Move to a formatter at https://www.drupal.org/node/2339917.
-      'image' => [
-        'label' => t('Image'),
-        'description' => t('The feed image'),
-        'weight' => 2,
-      ],
-      // @todo Move to a formatter at https://www.drupal.org/node/2149845.
-      'description' => [
-        'label' => t('Description'),
-        'description' => t('The description of this feed'),
-        'weight' => 3,
       ],
       'more_link' => [
         'label' => t('More link'),
@@ -121,16 +119,45 @@ function aggregator_entity_extra_field_info() {
     ],
   ];
 
-  $extra['aggregator_item']['aggregator_item'] = [
-    'display' => [
-      // @todo Move to a formatter at https://www.drupal.org/node/2149845.
-      'description' => [
-        'label' => t('Description'),
-        'description' => t('The description of this feed item'),
-        'weight' => 2,
-      ],
-    ],
-  ];
+  // Create Feed image and description pseudo-fields. Skip this if the field
+  // display is configurable and skipping has been enabled.
+  // @todo https://www.drupal.org/project/drupal/issues/3015623
+  //   Eventually delete this code and matching lines in FeedViewBuilder. Using
+  //   field formatters is more flexible and consistent.
+  $skip_custom_preprocessing = $entity_type_manager->getDefinition('aggregator_feed')->get('enable_base_field_custom_preprocess_skipping');
+  $base_field_definitions = $entity_field_manager->getBaseFieldDefinitions('aggregator_feed');
+
+  if (!$skip_custom_preprocessing || !$base_field_definitions['image']->isDisplayConfigurable('view')) {
+    $extra['aggregator_feed']['aggregator_feed']['display']['image'] = [
+      'label' => t('Image'),
+      'description' => t('The feed image'),
+      'weight' => 2,
+    ];
+  }
+
+  if (!$skip_custom_preprocessing || !$base_field_definitions['description']->isDisplayConfigurable('view')) {
+    $extra['aggregator_feed']['aggregator_feed']['display']['description'] = [
+      'label' => t('Description'),
+      'description' => t('The description of this feed'),
+      'weight' => 3,
+    ];
+  }
+
+  // Create Item description pseudo-field. Skip this if the field display is
+  // configurable and skipping has been enabled.
+  // @todo https://www.drupal.org/project/drupal/issues/3015623
+  //   Eventually delete this code and matching lines in ItemViewBuilder. Using
+  //   field formatters is more flexible and consistent.
+  $skip_custom_preprocessing = $entity_type_manager->getDefinition('aggregator_item')->get('enable_base_field_custom_preprocess_skipping');
+  $base_field_definitions = $entity_field_manager->getBaseFieldDefinitions('aggregator_item');
+
+  if (!$skip_custom_preprocessing || !$base_field_definitions['description']->isDisplayConfigurable('view')) {
+    $extra['aggregator_item']['aggregator_item']['display']['description'] = [
+      'label' => t('Description'),
+      'description' => t('The description of this feed item'),
+      'weight' => 2,
+    ];
+  }
 
   return $extra;
 }

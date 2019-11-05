@@ -638,7 +638,7 @@ function template_preprocess_node(&$variables) {
   // preprocessing if the field display is configurable and skipping has been
   // enabled.
   // @todo https://www.drupal.org/project/drupal/issues/3015623
-  //   In D9 delete this code and matching template lines. Using
+  //   Eventually delete this code and matching template lines. Using
   //   $variables['content'] is more flexible and consistent.
   $submitted_configurable = $node->getFieldDefinition('created')->isDisplayConfigurable('view') || $node->getFieldDefinition('uid')->isDisplayConfigurable('view');
   if (!$skip_custom_preprocessing || !$submitted_configurable) {
@@ -670,7 +670,7 @@ function template_preprocess_node(&$variables) {
     // Display post information on certain node types. This only occurs if
     // custom preprocessing occurred for both of the created and uid fields.
     // @todo https://www.drupal.org/project/drupal/issues/3015623
-    //   In D9 delete this code and matching template lines. Using a field
+    //   Eventually delete this code and matching template lines. Using a field
     //   formatter is more flexible and consistent.
     $node_type = $node->type->entity;
     // Used by RDF to add attributes around the author and date submitted.
