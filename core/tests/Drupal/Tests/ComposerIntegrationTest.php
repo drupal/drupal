@@ -2,6 +2,8 @@
 
 namespace Drupal\Tests;
 
+use Drupal\Tests\Composer\ComposerIntegrationTrait;
+
 /**
  * Tests Composer integration.
  *
@@ -9,75 +11,7 @@ namespace Drupal\Tests;
  */
 class ComposerIntegrationTest extends UnitTestCase {
 
-  /**
-   * Gets human-readable JSON error messages.
-   *
-   * @return string[]
-   *   Keys are JSON_ERROR_* constants.
-   */
-  protected function getErrorMessages() {
-    $messages = [
-      0 => 'No errors found',
-      JSON_ERROR_DEPTH => 'The maximum stack depth has been exceeded',
-      JSON_ERROR_STATE_MISMATCH => 'Invalid or malformed JSON',
-      JSON_ERROR_CTRL_CHAR => 'Control character error, possibly incorrectly encoded',
-      JSON_ERROR_SYNTAX => 'Syntax error',
-      JSON_ERROR_UTF8 => 'Malformed UTF-8 characters, possibly incorrectly encoded',
-      JSON_ERROR_RECURSION => 'One or more recursive references in the value to be encoded',
-      JSON_ERROR_INF_OR_NAN => 'One or more NAN or INF values in the value to be encoded',
-      JSON_ERROR_UNSUPPORTED_TYPE => 'A value of a type that cannot be encoded was given',
-    ];
-
-    return $messages;
-  }
-
-  /**
-   * Gets the paths to the folders that contain the Composer integration.
-   *
-   * @return string[]
-   *   The paths.
-   */
-  protected function getPaths() {
-    return [
-      $this->root,
-      $this->root . '/core',
-      $this->root . '/core/lib/Drupal/Component/Annotation',
-      $this->root . '/core/lib/Drupal/Component/Assertion',
-      $this->root . '/core/lib/Drupal/Component/Bridge',
-      $this->root . '/core/lib/Drupal/Component/ClassFinder',
-      $this->root . '/core/lib/Drupal/Component/Datetime',
-      $this->root . '/core/lib/Drupal/Component/DependencyInjection',
-      $this->root . '/core/lib/Drupal/Component/Diff',
-      $this->root . '/core/lib/Drupal/Component/Discovery',
-      $this->root . '/core/lib/Drupal/Component/EventDispatcher',
-      $this->root . '/core/lib/Drupal/Component/FileCache',
-      $this->root . '/core/lib/Drupal/Component/FileSystem',
-      $this->root . '/core/lib/Drupal/Component/Gettext',
-      $this->root . '/core/lib/Drupal/Component/Graph',
-      $this->root . '/core/lib/Drupal/Component/HttpFoundation',
-      $this->root . '/core/lib/Drupal/Component/PhpStorage',
-      $this->root . '/core/lib/Drupal/Component/Plugin',
-      $this->root . '/core/lib/Drupal/Component/ProxyBuilder',
-      $this->root . '/core/lib/Drupal/Component/Render',
-      $this->root . '/core/lib/Drupal/Component/Serialization',
-      $this->root . '/core/lib/Drupal/Component/Transliteration',
-      $this->root . '/core/lib/Drupal/Component/Utility',
-      $this->root . '/core/lib/Drupal/Component/Uuid',
-      $this->root . '/core/lib/Drupal/Component/Version',
-      $this->root . '/composer/Plugin/VendorHardening',
-    ];
-  }
-
-  /**
-   * Tests composer.json.
-   */
-  public function testComposerJson() {
-    foreach ($this->getPaths() as $path) {
-      $json = file_get_contents($path . '/composer.json');
-      $result = json_decode($json);
-      $this->assertNotNull($result, $this->getErrorMessages()[json_last_error()]);
-    }
-  }
+  use ComposerIntegrationTrait;
 
   /**
    * Tests composer.lock content-hash.
@@ -120,17 +54,12 @@ class ComposerIntegrationTest extends UnitTestCase {
    * @return array
    */
   public function providerTestComposerJson() {
-    $root = realpath(__DIR__ . '/../../../../');
-    $tests = [[$root . '/composer.json']];
-    $directory = new \RecursiveDirectoryIterator($root . '/core');
-    $iterator = new \RecursiveIteratorIterator($directory);
-    /** @var \SplFileInfo $file */
-    foreach ($iterator as $file) {
-      if ($file->getFilename() === 'composer.json' && strpos($file->getPath(), 'core/modules/system/tests/fixtures/HtaccessTest') === FALSE) {
-        $tests[] = [$file->getRealPath()];
-      }
+    $data = [];
+    $composer_json_finder = $this->getComposerJsonFinder(realpath(__DIR__ . '/../../../../'));
+    foreach ($composer_json_finder->getIterator() as $composer_json) {
+      $data[] = [$composer_json->getPathname()];
     }
-    return $tests;
+    return $data;
   }
 
   /**
