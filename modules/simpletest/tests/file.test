@@ -963,7 +963,7 @@ class FileDirectoryTest extends FileTestCase {
       $this->fail('Expected exception not thrown');
     }
     catch (RuntimeException $e) {
-      $this->assertEqual("Invalid filename '$filename'", $e->getMessage());
+      $this->assertEqual("Invalid filename '$filename'", $e->getMessage(), 'The invalid filename has been detected and RuntimeException has been thrown.');
     }
 
     // @TODO: Finally we copy a file into a directory several times, to ensure a properly iterating filename suffix.
@@ -1004,7 +1004,7 @@ class FileDirectoryTest extends FileTestCase {
       $this->fail('Expected exception not thrown');
     }
     catch (RuntimeException $e) {
-      $this->assertEqual("Invalid filename 'a\xFFtest\x80€.txt'", $e->getMessage());
+      $this->assertEqual("Invalid filename 'a\xFFtest\x80€.txt'", $e->getMessage(), 'The invalid destination has been detected and RuntimeException has been thrown.');
     }
   }
 
