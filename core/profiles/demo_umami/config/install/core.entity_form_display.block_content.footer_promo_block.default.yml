@@ -4,36 +4,34 @@ dependencies:
   config:
     - block_content.type.footer_promo_block
     - field.field.block_content.footer_promo_block.field_content_link
-    - field.field.block_content.footer_promo_block.field_promo_image
+    - field.field.block_content.footer_promo_block.field_media_image
     - field.field.block_content.footer_promo_block.field_summary
     - field.field.block_content.footer_promo_block.field_title
-    - image.style.thumbnail
   module:
-    - image
     - link
+    - media_library
 id: block_content.footer_promo_block.default
 targetEntityType: block_content
 bundle: footer_promo_block
 mode: default
 content:
   field_content_link:
-    weight: 3
+    weight: 4
     settings:
       placeholder_url: ''
       placeholder_title: ''
     third_party_settings: {  }
     type: link_default
     region: content
-  field_promo_image:
-    weight: 4
+  field_media_image:
+    weight: 6
     settings:
-      progress_indicator: throbber
-      preview_image_style: thumbnail
+      media_types: {  }
     third_party_settings: {  }
-    type: image_image
+    type: media_library_widget
     region: content
   field_summary:
-    weight: 2
+    weight: 3
     settings:
       rows: 5
       placeholder: ''
@@ -64,9 +62,9 @@ content:
       include_locked: true
     third_party_settings: {  }
   translation:
-    weight: 10
+    weight: 7
+    region: content
     settings: {  }
     third_party_settings: {  }
-    region: content
 hidden:
   moderation_state: true

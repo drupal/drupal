@@ -34,13 +34,13 @@
   font-size: 2em;
 }
 
-.node--view-mode-full .field--name-field-image {
+.node--view-mode-full .field--name-field-media-image {
   margin-bottom: 1.184rem;
 }
 /* Large */
 @media screen and (min-width: 60rem) {
   /* 960px */
-  .node--view-mode-full .field--name-field-image {
+  .node--view-mode-full .field--name-field-media-image {
     margin-bottom: 2.369rem;
   }
 }
