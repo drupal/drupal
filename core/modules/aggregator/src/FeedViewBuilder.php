@@ -99,7 +99,12 @@ class FeedViewBuilder extends EntityViewBuilder {
         }
       }
 
-      if ($display->getComponent('description')) {
+      // By default, the description and image fields are exposed as
+      // pseudo-fields rendered in this function. However they can optionally
+      // be rendered directly using a field formatter. Skip rendering here if a
+      // field formatter type is set.
+      $component = $display->getComponent('description');
+      if ($component && !isset($component['type'])) {
         $build[$id]['description'] = [
           '#markup' => $entity->getDescription(),
           '#allowed_tags' => _aggregator_allowed_tags(),
@@ -108,7 +113,8 @@ class FeedViewBuilder extends EntityViewBuilder {
         ];
       }
 
-      if ($display->getComponent('image')) {
+      $component = $display->getComponent('image');
+      if ($component && !isset($component['type'])) {
         $image_link = [];
         // Render the image as link if it is available.
         $image = $entity->getImage();

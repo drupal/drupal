@@ -7,7 +7,7 @@
  * For example, "example.com/aggregator/sources/1".
  *
  * Available variables:
- * - title: Title of the feed item.
+ * - title: (optional) Title of the feed item.
  * - content: All field items. Use {{ content }} to print them all,
  *   or print a subset such as {{ content.field_example }}. Use
  *   {{ content|without('field_example') }} to temporarily suppress the printing
@@ -26,7 +26,7 @@
 <div{{ attributes.addClass('aggregator-feed') }}>
 
   {{ title_prefix }}
-  {% if not full %}
+  {% if title and not full %}
     <h2{{ title_attributes }}>{{ title }}</h2>
   {% endif %}
   {{ title_suffix }}

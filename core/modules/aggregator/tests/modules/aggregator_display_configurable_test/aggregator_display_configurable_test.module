@@ -1,0 +1,40 @@
+<?php
+
+/**
+ * @file
+ * A module for testing making aggregator_feed base fields' displays
+ * configurable.
+ */
+
+use Drupal\Core\Entity\EntityTypeInterface;
+
+/**
+ * Implements hook_entity_base_field_info_alter().
+ */
+function aggregator_display_configurable_test_entity_base_field_info_alter(&$base_field_definitions, EntityTypeInterface $entity_type) {
+  /** @var \Drupal\Core\Field\BaseFieldDefinition[] $base_field_definitions */
+
+  if ($entity_type->id() === 'aggregator_feed') {
+    $base_field_definitions['title']->setDisplayConfigurable('view', TRUE);
+    $base_field_definitions['description']->setDisplayConfigurable('view', TRUE);
+    $base_field_definitions['image']->setDisplayConfigurable('view', TRUE);
+  }
+
+  if ($entity_type->id() === 'aggregator_item') {
+    $base_field_definitions['title']->setDisplayConfigurable('view', TRUE);
+    $options = [
+      'type' => 'text_default',
+      'label' => 'above',
+    ];
+    $base_field_definitions['title']->setDisplayOptions('view', $options);
+  }
+}
+
+/**
+ * Implements hook_entity_type_build().
+ */
+function aggregator_display_configurable_test_entity_type_build(array &$entity_types) {
+  // Allow skipping of extra preprocessing for configurable display.
+  $entity_types['aggregator_feed']->set('enable_base_field_custom_preprocess_skipping', TRUE);
+  $entity_types['aggregator_item']->set('enable_base_field_custom_preprocess_skipping', TRUE);
+}
