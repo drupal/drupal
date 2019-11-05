@@ -23,7 +23,7 @@
         "jcalderonzumba/gastonjs": "v1.0.2",
         "jcalderonzumba/mink-phantomjs-driver": "v0.3.2",
         "justinrainbow/json-schema": "5.2.8",
-        "mikey179/vfsstream": "v1.6.7",
+        "mikey179/vfsstream": "v1.6.8",
         "myclabs/deep-copy": "1.7.0",
         "phar-io/manifest": "1.0.1",
         "phar-io/version": "1.0.1",
