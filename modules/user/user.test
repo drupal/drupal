@@ -321,6 +321,10 @@ class UserLoginTestCase extends DrupalWebTestCase {
     );
   }
 
+  function setUp() {
+    parent::setUp('user_session_test');
+  }
+
   /**
    * Test the global login flood control.
    */
@@ -419,6 +423,17 @@ class UserLoginTestCase extends DrupalWebTestCase {
     // Load the stored user, which should have a different password hash now.
     $account = user_load($account->uid, TRUE);
     $this->assertIdentical(_password_get_count_log2($account->pass), DRUPAL_HASH_COUNT + 1);
+  }
+
+  /**
+   * Test logging in when an anon session already exists.
+   */
+  function testLoginWithAnonSession() {
+    // Visit the callback to generate a session for this anon user.
+    $this->drupalGet('user_session_test_anon_session');
+    // Now login.
+    $account = $this->drupalCreateUser(array());
+    $this->drupalLogin($account);
   }
 
   /**

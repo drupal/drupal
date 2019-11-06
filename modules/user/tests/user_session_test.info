@@ -1,0 +1,6 @@
+name = "User module session tests"
+description = "Support module for user session testing."
+package = Testing
+version = VERSION
+core = 7.x
+hidden = TRUE

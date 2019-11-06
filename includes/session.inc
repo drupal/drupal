@@ -371,8 +371,11 @@ function drupal_session_regenerate() {
 
   if (drupal_session_started()) {
     $old_session_id = session_id();
+    _drupal_session_regenerate_existing();
   }
-  session_id(drupal_random_key());
+  else {
+    session_id(drupal_random_key());
+  }
 
   if (isset($old_session_id)) {
     $params = session_get_cookie_params();
@@ -410,6 +413,26 @@ function drupal_session_regenerate() {
     $user = $account;
   }
   date_default_timezone_set(drupal_get_user_timezone());
+}
+
+/**
+ * Regenerates an existing session.
+ */
+function _drupal_session_regenerate_existing() {
+  global $user;
+  // Preserve existing settings for the saving of sessions.
+  $original_save_session_status = drupal_save_session();
+  // Turn off saving of sessions.
+  drupal_save_session(FALSE);
+  session_write_close();
+  drupal_session_started(FALSE);
+  // Preserve the user object, as starting a new session will reset it.
+  $original_user = $user;
+  session_id(drupal_random_key());
+  drupal_session_start();
+  $user = $original_user;
+  // Restore the original settings for the saving of sessions.
+  drupal_save_session($original_save_session_status);
 }
 
 /**

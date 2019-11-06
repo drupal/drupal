@@ -1,0 +1,29 @@
+<?php
+
+/**
+ * @file
+ * Dummy module implementing a page callback to create an anon session.
+ */
+
+/**
+ * Implements hook_menu().
+ */
+function user_session_test_menu() {
+  $items = array();
+  $items['user_session_test_anon_session'] = array(
+    'page callback' => 'user_session_test_anon_session',
+    'access callback' => TRUE,
+  );
+  return $items;
+}
+
+/**
+ * Page callback.
+ *
+ * Creates an anonymous user session.
+ */
+function user_session_test_anon_session() {
+  $data = 'This dummy data will be stored in a user session.';
+  $_SESSION[__FUNCTION__] = $data;
+  return $data;
+}
