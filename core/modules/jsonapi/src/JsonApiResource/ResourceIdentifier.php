@@ -419,7 +419,8 @@ class ResourceIdentifier implements ResourceIdentifierInterface {
     assert($host_entity instanceof EntityInterface);
     $resource_type = $resource_type_repository->get($host_entity->getEntityTypeId(), $host_entity->bundle());
     assert($resource_type instanceof ResourceType);
-    $relatable_resource_types = $resource_type->getRelatableResourceTypesByField($field->getName());
+    $relatable_resource_types = $resource_type->getRelatableResourceTypesByField($resource_type->getPublicName($field->getName()));
+    assert(!empty($relatable_resource_types));
     $get_metadata = function ($type) {
       return [
         'links' => [
