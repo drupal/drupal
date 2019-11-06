@@ -1192,4 +1192,52 @@ class JsonApiRegressionTest extends JsonApiFunctionalTestBase {
     $this->assertEquals($term->uuid(), Json::decode((string) $response->getBody())['included'][0]['id'], 'JSON API response contains "included" taxonomy term as it became published, i.e accessible.');
   }
 
+  /**
+   * Tests that "virtual/missing" resources can exist for renamed fields.
+   *
+   * @see https://www.drupal.org/project/jsonapi/issues/3034786
+   * @see https://www.drupal.org/project/jsonapi_extras/issues/3035544
+   */
+  public function testAliasedFieldsWithVirtualRelationships() {
+    // Set up the data model.
+    $this->assertTrue($this->container->get('module_installer')->install([
+      'taxonomy',
+      'jsonapi_test_resource_type_building',
+    ], TRUE), 'Installed modules.');
+    \Drupal::state()->set('jsonapi_test_resource_type_builder.resource_type_field_aliases', [
+      'node--article' => [
+        'field_tags' => 'field_aliased',
+      ],
+    ]);
+    $this->rebuildAll();
+
+    $tag_term = Term::create([
+      'vid' => 'tags',
+      'name' => 'test_tag',
+    ]);
+    $tag_term->save();
+
+    $article_node = Node::create([
+      'type' => 'article',
+      'title' => 'test_article',
+      'field_tags' => ['target_id' => $tag_term->id()],
+    ]);
+    $article_node->save();
+
+    // Make a broken reference.
+    $tag_term->delete();
+
+    // Make sure that accessing a node that references a deleted term does not
+    // cause an error.
+    $user = $this->drupalCreateUser(['bypass node access']);
+    $request_options = [
+      RequestOptions::AUTH => [
+        $user->getAccountName(),
+        $user->pass_raw,
+      ],
+    ];
+    $response = $this->request('GET', Url::fromUri('internal:/jsonapi/node/article/' . $article_node->uuid()), $request_options);
+    $this->assertSame(200, $response->getStatusCode());
+  }
+
 }
