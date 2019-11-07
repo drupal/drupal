@@ -326,7 +326,7 @@ class PathAliasTest extends PathTestBase {
 
     // Delete the node and check that the path alias is also deleted.
     $node5->delete();
-    $path_alias = \Drupal::service('path.alias_repository')->lookUpBySystemPath('/node/' . $node5->id(), $node5->language()->getId());
+    $path_alias = \Drupal::service('path_alias.repository')->lookUpBySystemPath('/node/' . $node5->id(), $node5->language()->getId());
     $this->assertFalse($path_alias, 'Alias was successfully deleted when the referenced node was deleted.');
 
     // Create sixth test node.

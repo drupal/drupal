@@ -138,6 +138,7 @@
         "drupal/options": "self.version",
         "drupal/page_cache": "self.version",
         "drupal/path": "self.version",
+        "drupal/path_alias": "self.version",
         "drupal/quickedit": "self.version",
         "drupal/rdf": "self.version",
         "drupal/responsive_image": "self.version",

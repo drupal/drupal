@@ -43,7 +43,7 @@ class UniquePathAliasConstraintValidator extends ConstraintValidator implements 
    * {@inheritdoc}
    */
   public function validate($entity, Constraint $constraint) {
-    /** @var \Drupal\Core\Path\PathAliasInterface $entity */
+    /** @var \Drupal\path_alias\PathAliasInterface $entity */
     $path = $entity->getPath();
     $alias = $entity->getAlias();
     $langcode = $entity->language()->getId();

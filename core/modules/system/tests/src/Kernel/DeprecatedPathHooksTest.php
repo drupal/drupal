@@ -16,7 +16,7 @@ class DeprecatedPathHooksTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['system', 'path_deprecated_test'];
+  public static $modules = ['system', 'path_alias', 'path_deprecated_test'];
 
   /**
    * {@inheritdoc}

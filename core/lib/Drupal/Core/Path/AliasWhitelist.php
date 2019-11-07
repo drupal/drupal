@@ -10,6 +10,11 @@ use Drupal\Core\Lock\LockBackendInterface;
 
 /**
  * Extends CacheCollector to build the path alias whitelist over time.
+ *
+ *   @deprecated in drupal:8.8.0 and is removed from drupal:9.0.0.
+ *   Use \Drupal\path_alias\AliasWhitelist.
+ *
+ *   @see https://www.drupal.org/node/3092086
  */
 class AliasWhitelist extends CacheCollector implements AliasWhitelistInterface {
 
@@ -54,9 +59,16 @@ class AliasWhitelist extends CacheCollector implements AliasWhitelistInterface {
 
     if (!$alias_repository instanceof AliasRepositoryInterface) {
       @trigger_error('Passing the path.alias_storage service to AliasWhitelist::__construct() is deprecated in drupal:8.8.0 and will be removed before drupal:9.0.0. Pass the new dependencies instead. See https://www.drupal.org/node/3013865.', E_USER_DEPRECATED);
-      $alias_repository = \Drupal::service('path.alias_repository');
+      $alias_repository = \Drupal::service('path_alias.repository');
     }
     $this->pathAliasRepository = $alias_repository;
+
+    // This is used as base class by the new class, so we do not trigger
+    // deprecation notices when that or any child class is instantiated.
+    $new_class = 'Drupal\path_alias\AliasWhitelist';
+    if (!is_a($this, $new_class) && class_exists($new_class)) {
+      @trigger_error('The \\' . __CLASS__ . ' class is deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. Instead, use \\' . $new_class . '. See https://drupal.org/node/3092086', E_USER_DEPRECATED);
+    }
   }
 
   /**

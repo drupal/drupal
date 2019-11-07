@@ -2,7 +2,7 @@
 
 namespace Drupal\Tests\jsonapi\Functional;
 
-use Drupal\Core\Path\Entity\PathAlias;
+use Drupal\path_alias\Entity\PathAlias;
 use Drupal\Core\Url;
 
 /**

@@ -21,7 +21,7 @@ class PathAliasMenuLinkContentTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['menu_link_content', 'system', 'link', 'test_page_test', 'user'];
+  public static $modules = ['menu_link_content', 'system', 'link', 'path_alias', 'test_page_test', 'user'];
 
   /**
    * {@inheritdoc}
@@ -44,7 +44,7 @@ class PathAliasMenuLinkContentTest extends KernelTestBase {
   public function register(ContainerBuilder $container) {
     parent::register($container);
 
-    $definition = $container->getDefinition('path_processor_alias');
+    $definition = $container->getDefinition('path_alias.path_processor');
     $definition
       ->addTag('path_processor_inbound', ['priority' => 100]);
   }

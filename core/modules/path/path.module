@@ -47,15 +47,19 @@ function path_help($route_name, RouteMatchInterface $route_match) {
  * Implements hook_entity_type_alter().
  */
 function path_entity_type_alter(array &$entity_types) {
+  // @todo Remove the conditional once core fully supports "path_alias" as an
+  //   optional module. See https://drupal.org/node/3092090.
   /** @var $entity_types \Drupal\Core\Entity\EntityTypeInterface[] */
-  $entity_types['path_alias']->setFormClass('default', PathAliasForm::class);
-  $entity_types['path_alias']->setFormClass('delete', ContentEntityDeleteForm::class);
-  $entity_types['path_alias']->setHandlerClass('route_provider', ['html' => AdminHtmlRouteProvider::class]);
-  $entity_types['path_alias']->setListBuilderClass(PathAliasListBuilder::class);
-  $entity_types['path_alias']->setLinkTemplate('collection', '/admin/config/search/path');
-  $entity_types['path_alias']->setLinkTemplate('add-form', '/admin/config/search/path/add');
-  $entity_types['path_alias']->setLinkTemplate('edit-form', '/admin/config/search/path/edit/{path_alias}');
-  $entity_types['path_alias']->setLinkTemplate('delete-form', '/admin/config/search/path/delete/{path_alias}');
+  if (isset($entity_types['path_alias'])) {
+    $entity_types['path_alias']->setFormClass('default', PathAliasForm::class);
+    $entity_types['path_alias']->setFormClass('delete', ContentEntityDeleteForm::class);
+    $entity_types['path_alias']->setHandlerClass('route_provider', ['html' => AdminHtmlRouteProvider::class]);
+    $entity_types['path_alias']->setListBuilderClass(PathAliasListBuilder::class);
+    $entity_types['path_alias']->setLinkTemplate('collection', '/admin/config/search/path');
+    $entity_types['path_alias']->setLinkTemplate('add-form', '/admin/config/search/path/add');
+    $entity_types['path_alias']->setLinkTemplate('edit-form', '/admin/config/search/path/edit/{path_alias}');
+    $entity_types['path_alias']->setLinkTemplate('delete-form', '/admin/config/search/path/delete/{path_alias}');
+  }
 }
 
 /**

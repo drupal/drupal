@@ -22,6 +22,7 @@ abstract class MigrateUrlAliasTestBase extends MigrateDrupal7TestBase {
     'menu_ui',
     'node',
     'path',
+    'path_alias',
     'text',
   ];
 

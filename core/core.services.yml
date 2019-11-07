@@ -461,14 +461,18 @@ services:
   queue.database:
     class: Drupal\Core\Queue\QueueDatabaseFactory
     arguments: ['@database']
+  # @deprecated in Drupal 8.8.x and will be removed before 9.0.0. Use the
+  #   "path_alias.whitelist" service instead.
+  #   See https://www.drupal.org/node/3092086
   path.alias_whitelist:
-    class: Drupal\Core\Path\AliasWhitelist
-    tags:
-      - { name: needs_destruction }
-    arguments: [path_alias_whitelist, '@cache.bootstrap', '@lock', '@state', '@path.alias_repository']
+    alias: path_alias.whitelist
+    deprecated: 'The "%alias_id%" service alias is deprecated. Use "path_alias.whitelist" instead. See https://drupal.org/node/3092086'
+  # @deprecated in Drupal 8.8.x and will be removed before 9.0.0. Use the
+  #   "path_alias.manager" service instead.
+  #   See https://www.drupal.org/node/3092086
   path.alias_manager:
     class: Drupal\Core\Path\AliasManager
-    arguments: ['@path.alias_repository', '@path.alias_whitelist', '@language_manager', '@cache.data']
+    arguments: ['@path_alias.repository', '@path_alias.whitelist', '@language_manager', '@cache.data']
   path.current:
     class: Drupal\Core\Path\CurrentPathStack
     arguments: ['@request_stack']
@@ -960,17 +964,12 @@ services:
     arguments: ['@lock', '@plugin.manager.menu.link', '@database', '@database.replica_kill_switch']
     tags:
       - { name: event_subscriber }
-  path.alias_repository:
-    class: Drupal\Core\Path\AliasRepository
-    arguments: ['@database']
-    tags:
-      - { name: backend_overridable }
   path.alias_storage:
     class: Drupal\Core\Path\AliasStorage
     arguments: ['@database', '@module_handler', '@entity_type.manager']
     tags:
       - { name: backend_overridable }
-    deprecated: The "%service_id%" service is deprecated. Use the "path.alias_repository" service instead, or the entity storage handler for the "path_alias" entity type for CRUD methods. See https://www.drupal.org/node/3013865
+    deprecated: The "%service_id%" service is deprecated. Use the "path_alias.repository" service instead, or the entity storage handler for the "path_alias" entity type for CRUD methods. See https://www.drupal.org/node/3013865
   path.matcher:
     class: Drupal\Core\Path\PathMatcher
     arguments: ['@config.factory', '@current_route_match']
@@ -1222,11 +1221,6 @@ services:
     arguments: ['@maintenance_mode', '@config.factory', '@string_translation', '@url_generator', '@current_user', '@bare_html_page_renderer', '@messenger']
     tags:
       - { name: event_subscriber }
-  path_subscriber:
-    class: Drupal\Core\EventSubscriber\PathSubscriber
-    tags:
-      - { name: event_subscriber }
-    arguments: ['@path.alias_manager', '@path.current']
   route_access_response_subscriber:
     class: Drupal\Core\EventSubscriber\RouteAccessResponseSubscriber
     tags:
@@ -1357,12 +1351,6 @@ services:
     arguments: ['@current_route_match']
     tags:
       - { name: route_processor_outbound, priority: 200 }
-  path_processor_alias:
-    class: Drupal\Core\PathProcessor\PathProcessorAlias
-    tags:
-      - { name: path_processor_inbound, priority: 100 }
-      - { name: path_processor_outbound, priority: 300 }
-    arguments: ['@path.alias_manager']
   route_processor_csrf:
     class: Drupal\Core\Access\RouteProcessorCsrf
     tags:
@@ -1755,3 +1743,34 @@ services:
   pager.parameters:
     class: Drupal\Core\Pager\PagerParameters
     arguments: ['@request_stack']
+
+  # Path Alias services, defined here to be available even when "path_alias" is
+  # not enabled yet. These will replace the legacy core services, which are now
+  # deprecated and will be removed in Drupal 9.
+  # See https://www.drupal.org/node/3092086
+  # @todo Move these to "path_alias" once core fully supports it as an optional
+  #   module. See https://www.drupal.org/node/3092090.
+  path_alias.subscriber:
+    class: Drupal\Core\EventSubscriber\PathSubscriber
+    tags:
+      - { name: event_subscriber }
+    arguments: ['@path.alias_manager', '@path.current']
+  path_alias.path_processor:
+    class: Drupal\Core\PathProcessor\PathProcessorAlias
+    tags:
+      - { name: path_processor_inbound, priority: 100 }
+      - { name: path_processor_outbound, priority: 300 }
+    arguments: ['@path.alias_manager']
+  path_alias.manager:
+    class: Drupal\Core\Path\AliasManager
+    arguments: ['@path_alias.repository', '@path_alias.whitelist', '@language_manager', '@cache.data']
+  path_alias.repository:
+    class: Drupal\Core\Path\AliasRepository
+    arguments: ['@database']
+    tags:
+      - { name: backend_overridable }
+  path_alias.whitelist:
+    class: Drupal\Core\Path\AliasWhitelist
+    tags:
+      - { name: needs_destruction }
+    arguments: [path_alias_whitelist, '@cache.bootstrap', '@lock', '@state', '@path_alias.repository']

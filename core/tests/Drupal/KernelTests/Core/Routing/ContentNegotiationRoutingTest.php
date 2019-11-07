@@ -20,7 +20,7 @@ class ContentNegotiationRoutingTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['conneg_test'];
+  public static $modules = ['conneg_test', 'path_alias'];
 
   /**
    * {@inheritdoc}
@@ -39,8 +39,8 @@ class ContentNegotiationRoutingTest extends KernelTestBase {
 
     // \Drupal\KernelTests\KernelTestBase::register() removes the alias path
     // processor.
-    if ($container->hasDefinition('path_processor_alias')) {
-      $definition = $container->getDefinition('path_processor_alias');
+    if ($container->hasDefinition('path_alias.path_processor')) {
+      $definition = $container->getDefinition('path_alias.path_processor');
       $definition->addTag('path_processor_inbound', ['priority' => 100])->addTag('path_processor_outbound', ['priority' => 300]);
     }
   }

@@ -15,7 +15,7 @@ class LegacyAliasStorageTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['system'];
+  public static $modules = ['system', 'path_alias'];
 
   /**
    * @var \Drupal\Core\Path\AliasStorage
@@ -34,7 +34,7 @@ class LegacyAliasStorageTest extends KernelTestBase {
 
   /**
    * @covers ::load
-   * @expectedDeprecation \Drupal\Core\Path\AliasStorage is deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. Use the "path.alias_repository" service instead, or the entity storage handler for the "path_alias" entity type for CRUD methods. See https://www.drupal.org/node/3013865.
+   * @expectedDeprecation \Drupal\Core\Path\AliasStorage is deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. Use the "path_alias.repository" service instead, or the entity storage handler for the "path_alias" entity type for CRUD methods. See https://www.drupal.org/node/3013865.
    */
   public function testLoad() {
     $this->storage->save('/test-source-Case', '/test-alias-Case');
@@ -56,7 +56,7 @@ class LegacyAliasStorageTest extends KernelTestBase {
    * @covers ::load
    * @covers ::save
    * @covers ::delete
-   * @expectedDeprecation \Drupal\Core\Path\AliasStorage is deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. Use the "path.alias_repository" service instead, or the entity storage handler for the "path_alias" entity type for CRUD methods. See https://www.drupal.org/node/3013865.
+   * @expectedDeprecation \Drupal\Core\Path\AliasStorage is deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. Use the "path_alias.repository" service instead, or the entity storage handler for the "path_alias" entity type for CRUD methods. See https://www.drupal.org/node/3013865.
    */
   public function testCRUD() {
     $entity_storage = \Drupal::entityTypeManager()->getStorage('path_alias');
@@ -148,7 +148,7 @@ class LegacyAliasStorageTest extends KernelTestBase {
 
   /**
    * @covers ::preloadPathAlias
-   * @expectedDeprecation \Drupal\Core\Path\AliasStorage is deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. Use the "path.alias_repository" service instead, or the entity storage handler for the "path_alias" entity type for CRUD methods. See https://www.drupal.org/node/3013865.
+   * @expectedDeprecation \Drupal\Core\Path\AliasStorage is deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. Use the "path_alias.repository" service instead, or the entity storage handler for the "path_alias" entity type for CRUD methods. See https://www.drupal.org/node/3013865.
    */
   public function testPreLoadPathAlias() {
     $this->storage->save('/test-source-Case', '/test-alias');
@@ -158,7 +158,7 @@ class LegacyAliasStorageTest extends KernelTestBase {
 
   /**
    * @covers ::lookupPathAlias
-   * @expectedDeprecation \Drupal\Core\Path\AliasStorage is deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. Use the "path.alias_repository" service instead, or the entity storage handler for the "path_alias" entity type for CRUD methods. See https://www.drupal.org/node/3013865.
+   * @expectedDeprecation \Drupal\Core\Path\AliasStorage is deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. Use the "path_alias.repository" service instead, or the entity storage handler for the "path_alias" entity type for CRUD methods. See https://www.drupal.org/node/3013865.
    */
   public function testLookupPathAlias() {
     $this->storage->save('/test-source-Case', '/test-alias');
@@ -169,7 +169,7 @@ class LegacyAliasStorageTest extends KernelTestBase {
 
   /**
    * @covers ::lookupPathSource
-   * @expectedDeprecation \Drupal\Core\Path\AliasStorage is deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. Use the "path.alias_repository" service instead, or the entity storage handler for the "path_alias" entity type for CRUD methods. See https://www.drupal.org/node/3013865.
+   * @expectedDeprecation \Drupal\Core\Path\AliasStorage is deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. Use the "path_alias.repository" service instead, or the entity storage handler for the "path_alias" entity type for CRUD methods. See https://www.drupal.org/node/3013865.
    */
   public function testLookupPathSource() {
     $this->storage->save('/test-source', '/test-alias-Case');
@@ -180,7 +180,7 @@ class LegacyAliasStorageTest extends KernelTestBase {
 
   /**
    * @covers ::aliasExists
-   * @expectedDeprecation \Drupal\Core\Path\AliasStorage is deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. Use the "path.alias_repository" service instead, or the entity storage handler for the "path_alias" entity type for CRUD methods. See https://www.drupal.org/node/3013865.
+   * @expectedDeprecation \Drupal\Core\Path\AliasStorage is deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. Use the "path_alias.repository" service instead, or the entity storage handler for the "path_alias" entity type for CRUD methods. See https://www.drupal.org/node/3013865.
    */
   public function testAliasExists() {
     $this->storage->save('/test-source-Case', '/test-alias-Case');
@@ -191,7 +191,7 @@ class LegacyAliasStorageTest extends KernelTestBase {
 
   /**
    * @covers ::languageAliasExists
-   * @expectedDeprecation \Drupal\Core\Path\AliasStorage is deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. Use the "path.alias_repository" service instead, or the entity storage handler for the "path_alias" entity type for CRUD methods. See https://www.drupal.org/node/3013865.
+   * @expectedDeprecation \Drupal\Core\Path\AliasStorage is deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. Use the "path_alias.repository" service instead, or the entity storage handler for the "path_alias" entity type for CRUD methods. See https://www.drupal.org/node/3013865.
    */
   public function testLanguageAliasExists() {
     $this->assertFalse($this->storage->languageAliasExists());
@@ -202,7 +202,7 @@ class LegacyAliasStorageTest extends KernelTestBase {
 
   /**
    * @covers ::getAliasesForAdminListing
-   * @expectedDeprecation \Drupal\Core\Path\AliasStorage is deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. Use the "path.alias_repository" service instead, or the entity storage handler for the "path_alias" entity type for CRUD methods. See https://www.drupal.org/node/3013865.
+   * @expectedDeprecation \Drupal\Core\Path\AliasStorage is deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. Use the "path_alias.repository" service instead, or the entity storage handler for the "path_alias" entity type for CRUD methods. See https://www.drupal.org/node/3013865.
    */
   public function testGetAliasesForAdminListing() {
     $this->storage->save('/test-source-Case', '/test-alias-Case');
@@ -226,7 +226,7 @@ class LegacyAliasStorageTest extends KernelTestBase {
 
   /**
    * @covers ::pathHasMatchingAlias
-   * @expectedDeprecation \Drupal\Core\Path\AliasStorage is deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. Use the "path.alias_repository" service instead, or the entity storage handler for the "path_alias" entity type for CRUD methods. See https://www.drupal.org/node/3013865.
+   * @expectedDeprecation \Drupal\Core\Path\AliasStorage is deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. Use the "path_alias.repository" service instead, or the entity storage handler for the "path_alias" entity type for CRUD methods. See https://www.drupal.org/node/3013865.
    */
   public function testPathHasMatchingAlias() {
     $this->storage->save('/test-source-Case', '/test-alias-Case');

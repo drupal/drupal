@@ -15,7 +15,7 @@ class PathAliasForm extends ContentEntityForm {
   /**
    * The path_alias entity.
    *
-   * @var \Drupal\Core\Path\PathAliasInterface
+   * @var \Drupal\path_alias\PathAliasInterface
    */
   protected $entity;
 
