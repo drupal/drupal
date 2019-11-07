@@ -13,6 +13,7 @@ class MigrateUrlAliasTest extends MigrateUrlAliasTestBase {
    * {@inheritdoc}
    */
   public static $modules = [
+    'path_alias',
     'content_translation',
     'migrate_drupal_multilingual',
   ];

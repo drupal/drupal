@@ -2,7 +2,7 @@
 
 namespace Drupal\workspaces;
 
-use Drupal\Core\Path\AliasRepository;
+use Drupal\path_alias\AliasRepository;
 
 /**
  * Provides workspace-specific path alias lookup queries.

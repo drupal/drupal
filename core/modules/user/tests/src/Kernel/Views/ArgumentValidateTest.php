@@ -23,6 +23,7 @@ class ArgumentValidateTest extends ViewsKernelTestBase {
    */
   public static $modules = [
     'node',
+    'path_alias',
     'user_test_views',
   ];
 

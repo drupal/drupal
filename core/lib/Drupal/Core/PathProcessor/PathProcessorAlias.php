@@ -8,6 +8,11 @@ use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Processes the inbound path using path alias lookups.
+ *
+ *   @deprecated in drupal:8.8.0 and is removed from drupal:9.0.0.
+ *   Use \Drupal\path_alias\PathProcessor\AliasPathProcessor.
+ *
+ *   @see https://www.drupal.org/node/3092086
  */
 class PathProcessorAlias implements InboundPathProcessorInterface, OutboundPathProcessorInterface {
 
@@ -26,6 +31,13 @@ class PathProcessorAlias implements InboundPathProcessorInterface, OutboundPathP
    */
   public function __construct(AliasManagerInterface $alias_manager) {
     $this->aliasManager = $alias_manager;
+
+    // This is used as base class by the new class, so we do not trigger
+    // deprecation notices when that or any child class is instantiated.
+    $new_class = 'Drupal\path_alias\PathProcessor\AliasPathProcessor';
+    if (!is_a($this, $new_class) && class_exists($new_class)) {
+      @trigger_error('The \\' . __CLASS__ . ' class is deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. Instead, use \\' . $new_class . '. See https://drupal.org/node/3092086', E_USER_DEPRECATED);
+    }
   }
 
   /**

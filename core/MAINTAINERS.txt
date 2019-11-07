@@ -322,6 +322,9 @@ Page Cache
 Path
 - Nathaniel Catchpole 'catch' https://www.drupal.org/u/catch
 
+Path Alias
+- Nathaniel Catchpole 'catch' https://www.drupal.org/u/catch
+
 Plugin
 - Kris Vanderwater 'EclipseGc' https://www.drupal.org/u/eclipseGc
 - Alex Bronstein 'effulgentsia' https://www.drupal.org/u/effulgentsia

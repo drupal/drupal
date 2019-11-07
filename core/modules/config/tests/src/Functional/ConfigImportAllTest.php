@@ -90,7 +90,7 @@ class ConfigImportAllTest extends ModuleTestBase {
 
     // Ensure that only core required modules and the install profile can not be uninstalled.
     $validation_reasons = \Drupal::service('module_installer')->validateUninstall(array_keys($all_modules));
-    $this->assertEquals(['system', 'user', 'standard'], array_keys($validation_reasons));
+    $this->assertEquals(['path_alias', 'system', 'user', 'standard'], array_keys($validation_reasons));
 
     $modules_to_uninstall = array_filter($all_modules, function ($module) use ($validation_reasons) {
       // Filter required and not enabled modules.

@@ -2,7 +2,7 @@
 
 namespace Drupal\Tests\path\Kernel\Migrate\d6;
 
-use Drupal\Core\Path\PathAliasInterface;
+use Drupal\path_alias\PathAliasInterface;
 use Drupal\migrate\Plugin\MigrateIdMapInterface;
 use Drupal\Core\Database\Database;
 use Drupal\Tests\migrate_drupal\Kernel\d6\MigrateDrupal6TestBase;
@@ -24,6 +24,7 @@ class MigrateUrlAliasTest extends MigrateDrupal6TestBase {
     'language',
     'content_translation',
     'path',
+    'path_alias',
     'menu_ui',
     // Required for translation migrations.
     'migrate_drupal_multilingual',
@@ -57,7 +58,7 @@ class MigrateUrlAliasTest extends MigrateDrupal6TestBase {
    *   The path alias ID.
    * @param array $conditions
    *   The path conditions.
-   * @param \Drupal\Core\Path\PathAliasInterface $path_alias
+   * @param \Drupal\path_alias\PathAliasInterface $path_alias
    *   The path alias.
    */
   private function assertPath($pid, $conditions, PathAliasInterface $path_alias) {

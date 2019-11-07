@@ -20,8 +20,8 @@ class WorkspacesServiceProvider extends ServiceProviderBase {
     $renderer_config['required_cache_contexts'][] = 'workspace';
     $container->setParameter('renderer.config', $renderer_config);
 
-    // Replace the class of the 'path.alias_repository' service.
-    $container->getDefinition('path.alias_repository')
+    // Replace the class of the 'path_alias.repository' service.
+    $container->getDefinition('path_alias.repository')
       ->setClass(WorkspacesAliasRepository::class)
       ->addMethodCall('setWorkspacesManager', [new Reference('workspaces.manager')]);
   }

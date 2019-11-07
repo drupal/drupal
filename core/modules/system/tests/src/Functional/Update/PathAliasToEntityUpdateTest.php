@@ -3,6 +3,7 @@
 namespace Drupal\Tests\system\Functional\Update;
 
 use Drupal\FunctionalTests\Update\UpdatePathTestBase;
+use Drupal\path_alias\Entity\PathAlias;
 
 /**
  * Tests the conversion of path aliases to entities.
@@ -51,6 +52,23 @@ class PathAliasToEntityUpdateTest extends UpdatePathTestBase {
     $this->assertCount($url_alias_count, $original_records);
 
     $this->runUpdates();
+
+    /** @var \Drupal\Core\Extension\ModuleHandlerInterface $module_handler */
+    $module_handler = $this->container->get('module_handler');
+    $this->assertTrue($module_handler->moduleExists('path_alias'));
+
+    $entity_type = \Drupal::entityDefinitionUpdateManager()->getEntityType('path_alias');
+    $this->assertEquals('path_alias', $entity_type->getProvider());
+    $this->assertEquals(PathAlias::class, $entity_type->getClass());
+
+    $field_storage_definitions = \Drupal::service('entity.last_installed_schema.repository')->getLastInstalledFieldStorageDefinitions('path_alias');
+    $this->assertEquals('path_alias', $field_storage_definitions['id']->getProvider());
+    $this->assertEquals('path_alias', $field_storage_definitions['revision_id']->getProvider());
+    $this->assertEquals('path_alias', $field_storage_definitions['langcode']->getProvider());
+    $this->assertEquals('path_alias', $field_storage_definitions['uuid']->getProvider());
+    $this->assertEquals('path_alias', $field_storage_definitions['status']->getProvider());
+    $this->assertEquals('path_alias', $field_storage_definitions['path']->getProvider());
+    $this->assertEquals('path_alias', $field_storage_definitions['alias']->getProvider());
 
     // Check that the 'path_alias' entity tables have been created and the
     // 'url_alias' table has been deleted.
