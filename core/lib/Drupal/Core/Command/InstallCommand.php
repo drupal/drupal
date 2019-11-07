@@ -314,7 +314,7 @@ class InstallCommand extends Command {
     $listing = new ExtensionDiscovery(getcwd(), FALSE);
     $listing->setProfileDirectories([]);
     $profiles = [];
-    $info_parser = new InfoParserDynamic();
+    $info_parser = new InfoParserDynamic(getcwd());
     foreach ($listing->scan('profile') as $profile) {
       $details = $info_parser->parse($profile->getPathname());
       // Don't show hidden profiles.

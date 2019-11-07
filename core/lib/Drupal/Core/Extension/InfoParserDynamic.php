@@ -12,9 +12,31 @@ use Drupal\Core\Serialization\Yaml;
 class InfoParserDynamic implements InfoParserInterface {
 
   /**
+   * The root directory of the Drupal installation.
+   *
+   * @var string
+   */
+  protected $root;
+
+  /**
    * The earliest Drupal version that supports the 'core_version_requirement'.
    */
   const FIRST_CORE_VERSION_REQUIREMENT_SUPPORTED_VERSION = '8.7.7';
+
+  /**
+   * InfoParserDynamic constructor.
+   *
+   * @param string|null $app_root
+   *   The root directory of the Drupal installation.
+   */
+  public function __construct(string $app_root = NULL) {
+    if ($app_root === NULL) {
+      // @todo https://www.drupal.org/project/drupal/issues/3087975 Require
+      //   $app_root argument.
+      $app_root = \Drupal::hasService('app.root') ? (string) \Drupal::service('app.root') : DRUPAL_ROOT;
+    }
+    $this->root = $app_root;
+  }
 
   /**
    * {@inheritdoc}
@@ -34,13 +56,17 @@ class InfoParserDynamic implements InfoParserInterface {
       if (!empty($missing_keys)) {
         throw new InfoParserException('Missing required keys (' . implode(', ', $missing_keys) . ') in ' . $filename);
       }
-      if ($parsed_info['type'] === 'profile' && isset($parsed_info['core_version_requirement'])) {
-        // @todo Support the 'core_version_requirement' key in profiles in
-        //   https://www.drupal.org/node/3070401.
-        throw new InfoParserException("The 'core_version_requirement' key is not supported in profiles in $filename");
-      }
       if (!isset($parsed_info['core']) && !isset($parsed_info['core_version_requirement'])) {
-        throw new InfoParserException("The 'core' or the 'core_version_requirement' key must be present in " . $filename);
+        if (strpos($filename, 'core/') === 0 || strpos($filename, $this->root . '/core/') === 0) {
+          // Core extensions do not need to specify core compatibility: they are
+          // by definition compatible so a sensible default is used. Core
+          // modules are allowed to provide these for testing purposes.
+          $parsed_info['core_version_requirement'] = \Drupal::VERSION;
+        }
+        else {
+          // Non-core extensions must specify core compatibility.
+          throw new InfoParserException("The 'core' or the 'core_version_requirement' key must be present in " . $filename);
+        }
       }
       if (isset($parsed_info['core']) && !preg_match("/^\d\.x$/", $parsed_info['core'])) {
         throw new InfoParserException("Invalid 'core' value \"{$parsed_info['core']}\" in " . $filename);

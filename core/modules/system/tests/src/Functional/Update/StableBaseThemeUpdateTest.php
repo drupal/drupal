@@ -67,9 +67,7 @@ class StableBaseThemeUpdateTest extends UpdatePathTestBase implements ServicePro
     $this->themeHandler = $this->container->get('theme_handler');
     $this->themeHandler->refreshInfo();
 
-    $vfs_root = vfsStream::setup('root');
-    $vfs_root->addChild(vfsStream::newDirectory($this->siteDirectory));
-    $site_dir = $vfs_root->getChild($this->siteDirectory);
+    $vfs_root = vfsStream::setup('core');
     vfsStream::create([
       'themes' => [
         'test_stable' => [
@@ -81,7 +79,7 @@ class StableBaseThemeUpdateTest extends UpdatePathTestBase implements ServicePro
           'stable.theme' => file_get_contents(DRUPAL_ROOT . '/core/themes/stable/stable.theme'),
         ],
       ],
-    ], $site_dir);
+    ], $vfs_root);
   }
 
   /**
@@ -116,8 +114,8 @@ class VfsThemeExtensionList extends ThemeExtensionList {
    */
   public function __construct(string $root, string $type, CacheBackendInterface $cache, InfoParserInterface $info_parser, ModuleHandlerInterface $module_handler, StateInterface $state, ConfigFactoryInterface $config_factory, ThemeEngineExtensionList $engine_list, $install_profile) {
     parent::__construct($root, $type, $cache, $info_parser, $module_handler, $state, $config_factory, $engine_list, $install_profile);
-    $this->extensionDiscovery = new ExtensionDiscovery('vfs://root');
-    $this->infoParser = new VfsInfoParser();
+    $this->extensionDiscovery = new ExtensionDiscovery('vfs://core');
+    $this->infoParser = new VfsInfoParser('vfs:/');
   }
 
   /**
@@ -135,7 +133,7 @@ class VfsInfoParser extends InfoParser {
    * {@inheritdoc}
    */
   public function parse($filename) {
-    return parent::parse("vfs://root/$filename");
+    return parent::parse("vfs://core/$filename");
   }
 
 }

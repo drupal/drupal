@@ -99,7 +99,7 @@ class UpdateUploadTest extends UpdateTestBase {
     // child site has access to, standard module API functions won't find it
     // when called here. To get the version, the info file must be parsed
     // directly instead.
-    $info_parser = new InfoParserDynamic();
+    $info_parser = new InfoParserDynamic(DRUPAL_ROOT);
     $info = $info_parser->parse($installedInfoFilePath);
     $this->assertEqual($info['version'], '8.x-1.0');
 

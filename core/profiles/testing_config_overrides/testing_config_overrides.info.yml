@@ -2,7 +2,9 @@ name: Testing config overrides
 type: profile
 description: 'Minimal profile for running tests with config overrides in a profile.'
 version: VERSION
-core: 8.x
+# This profile is copied to a non-core location by
+# \Drupal\Tests\config\Functional\ConfigInstallProfileUnmetDependenciesTest.
+core_version_requirement: '*'
 hidden: true
 install:
   - action
