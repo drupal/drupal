@@ -88,8 +88,12 @@ class Roles extends ManyToOne {
     }
 
     foreach ((array) $this->value as $role_id) {
-      $role = $this->roleStorage->load($role_id);
-      $dependencies[$role->getConfigDependencyKey()][] = $role->getConfigDependencyName();
+      if ($role = $this->roleStorage->load($role_id)) {
+        $dependencies[$role->getConfigDependencyKey()][] = $role->getConfigDependencyName();
+      }
+      else {
+        trigger_error("The {$role_id} role does not exist. You should review and fix the configuration of the {$this->view->id()} view.", E_USER_WARNING);
+      }
     }
     return $dependencies;
   }
