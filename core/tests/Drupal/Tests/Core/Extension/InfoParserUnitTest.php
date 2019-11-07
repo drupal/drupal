@@ -32,8 +32,8 @@ class InfoParserUnitTest extends UnitTestCase {
    */
   protected function setUp() {
     parent::setUp();
-
-    $this->infoParser = new InfoParser();
+    // Use a fake DRUPAL_ROOT.
+    $this->infoParser = new InfoParser('vfs:/');
   }
 
   /**
@@ -349,7 +349,7 @@ MISSINGKEY;
    */
   public function testInfoParserCommonInfo() {
     $common = <<<COMMONTEST
-core: 8.x
+core_version_requirement: '*'
 name: common_test
 type: module
 description: 'testing info file parsing'
@@ -371,10 +371,35 @@ COMMONTEST;
       $this->assertEquals($info_values['simple_string'], 'A simple string', 'Simple string value was parsed correctly.');
       $this->assertEquals($info_values['version'], \Drupal::VERSION, 'Constant value was parsed correctly.');
       $this->assertEquals($info_values['double_colon'], 'dummyClassName::method', 'Value containing double-colon was parsed correctly.');
-      $this->assertSame('8.x', $info_values['core']);
-      $this->assertFalse(isset($info_values['core_version_requirement']));
       $this->assertFalse($info_values['core_incompatible']);
     }
+  }
+
+  /**
+   * Tests common info file.
+   *
+   * @covers ::parse
+   */
+  public function testInfoParserCoreInfo() {
+    $common = <<<CORETEST
+name: core_test
+type: module
+version: "VERSION"
+description: 'testing info file parsing'
+CORETEST;
+
+    vfsStream::setup('core');
+
+    $filename = "core_test.info.txt";
+    vfsStream::create([
+      'fixtures' => [
+        $filename => $common,
+      ],
+    ]);
+    $info_values = $this->infoParser->parse(vfsStream::url("core/fixtures/$filename"));
+    $this->assertEquals($info_values['version'], \Drupal::VERSION, 'Constant value was parsed correctly.');
+    $this->assertFalse($info_values['core_incompatible']);
+    $this->assertEquals(\Drupal::VERSION, $info_values['core_version_requirement']);
   }
 
   /**
@@ -439,12 +464,11 @@ CORE_INCOMPATIBILITY;
   }
 
   /**
-   * Test a profile info file with the 'core_version_requirement' key.
+   * Test a profile info file.
    */
-  public function testInvalidProfile() {
+  public function testProfile() {
     $profile = <<<PROFILE_TEST
-core: 8.x
-core_version_requirement: ^8
+core_version_requirement: '*'
 name: The Perfect Profile
 type: profile
 description: 'This profile makes Drupal perfect. You should have no complaints.'
@@ -456,9 +480,8 @@ PROFILE_TEST;
         'invalid_profile.info.txt' => $profile,
       ],
     ]);
-    $this->expectException('\Drupal\Core\Extension\InfoParserException');
-    $this->expectExceptionMessage("The 'core_version_requirement' key is not supported in profiles in vfs://profiles/fixtures/invalid_profile.info.txt");
-    $this->infoParser->parse(vfsStream::url('profiles/fixtures/invalid_profile.info.txt'));
+    $info = $this->infoParser->parse(vfsStream::url('profiles/fixtures/invalid_profile.info.txt'));
+    $this->assertFalse($info['core_incompatible']);
   }
 
   /**

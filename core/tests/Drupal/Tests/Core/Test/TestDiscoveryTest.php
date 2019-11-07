@@ -314,13 +314,13 @@ EOF;
     $test_profile_info = <<<EOF
 name: Testing
 type: profile
-core: 8.x
+core_version_requirement: '*'
 EOF;
 
     $test_module_info = <<<EOF
 name: Testing
 type: module
-core: 8.x
+core_version_requirement: '*'
 EOF;
 
     vfsStream::create([

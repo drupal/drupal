@@ -7,7 +7,6 @@ use Drupal\Core\Extension\ExtensionDiscovery;
 use Drupal\Core\Extension\InfoParser;
 use Drupal\Core\Extension\InfoParserInterface;
 use Drupal\Core\Extension\ThemeExtensionList;
-use Drupal\Core\Test\TestDatabase;
 use Drupal\KernelTests\KernelTestBase;
 use org\bovigo\vfs\vfsStream;
 
@@ -63,10 +62,7 @@ class BaseThemeDefaultDeprecationTest extends KernelTestBase {
   protected function setUpFilesystem() {
     parent::setUpFilesystem();
 
-    $test_db = new TestDatabase($this->databasePrefix);
-    $test_site_path = $test_db->getTestSitePath();
-
-    $test_site_dir = $this->vfsRoot->getChild($test_site_path);
+    $vfs_root = vfsStream::setup('core');
     vfsStream::create([
       'themes' => [
         'test_stable' => [
@@ -78,17 +74,7 @@ class BaseThemeDefaultDeprecationTest extends KernelTestBase {
           'stable.theme' => file_get_contents(DRUPAL_ROOT . '/core/themes/stable/stable.theme'),
         ],
       ],
-    ], $test_site_dir);
-
-    // The origin site search directory used by the extension discovery service
-    // relies on the \Drupal::service('site.path') service to determine which
-    // directories to scan. It then prepends the root to each of those
-    // directories. But ::bootKernel() sets the origin site to
-    // $this->siteDirectory, which was in turns updated by ::setUpFileSystem()
-    // to include the virtual file system root. We must undo this if we want to
-    // use extension discovery on a virtual system.
-    // @see \Drupal\Core\Extension\ExtensionDiscovery::ORIGIN_SITE
-    $this->siteDirectory = $test_site_path;
+    ], $vfs_root);
   }
 
   /**
@@ -99,8 +85,8 @@ class BaseThemeDefaultDeprecationTest extends KernelTestBase {
    */
   public function testStableIsDefault() {
     $this->container->get('extension.list.theme')
-      ->setExtensionDiscovery(new ExtensionDiscovery('vfs://root'))
-      ->setInfoParser(new VfsInfoParser());
+      ->setExtensionDiscovery(new ExtensionDiscovery('vfs://core'))
+      ->setInfoParser(new VfsInfoParser('vfs:/'));
 
     $this->themeInstaller->install(['test_stable']);
     $this->config('system.theme')->set('default', 'test_stable')->save();
@@ -165,7 +151,7 @@ class VfsInfoParser extends InfoParser {
    * {@inheritdoc}
    */
   public function parse($filename) {
-    return parent::parse("vfs://root/$filename");
+    return parent::parse("vfs://core/$filename");
   }
 
 }
