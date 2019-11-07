@@ -13,17 +13,14 @@ use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Database\Database;
 use Drupal\Core\DrupalKernel;
-use Drupal\Core\Entity\ContentEntityType;
 use Drupal\Core\Entity\ContentEntityTypeInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Extension\Extension;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\File\FileSystemInterface;
-use Drupal\Core\Language\LanguageInterface;
-use Drupal\Core\Path\Entity\PathAlias;
-use Drupal\Core\Path\PathAliasStorage;
-use Drupal\Core\Path\PathAliasStorageSchema;
+use Drupal\path_alias\Entity\PathAlias;
+use Drupal\path_alias\PathAliasStorage;
 use Drupal\Core\Site\Settings;
 use Drupal\Core\StreamWrapper\PrivateStream;
 use Drupal\Core\StreamWrapper\PublicStream;
@@ -2395,71 +2392,9 @@ function system_update_8802() {
  * Install the 'path_alias' entity type.
  */
 function system_update_8803() {
-  $entity_definition_update_manager = \Drupal::entityDefinitionUpdateManager();
-  if (!$entity_definition_update_manager->getEntityType('path_alias')) {
-    $entity_type = new ContentEntityType([
-      'id' => 'path_alias',
-      'class' => PathAlias::class,
-      'label' => new TranslatableMarkup('Path alias'),
-      'handlers' => [
-        'storage' => PathAliasStorage::class,
-        'storage_schema' => PathAliasStorageSchema::class,
-      ],
-      'base_table' => 'path_alias',
-      'revision_table' => 'path_alias_revision',
-      'entity_keys' => [
-        'id' => 'id',
-        'revision' => 'revision_id',
-        'langcode' => 'langcode',
-        'uuid' => 'uuid',
-        'published' => 'status',
-      ],
-    ]);
-
-    $field_storage_definitions['id'] = BaseFieldDefinition::create('integer')
-      ->setLabel(new TranslatableMarkup('ID'))
-      ->setReadOnly(TRUE)
-      ->setSetting('unsigned', TRUE);
-
-    $field_storage_definitions['uuid'] = BaseFieldDefinition::create('uuid')
-      ->setLabel(new TranslatableMarkup('UUID'))
-      ->setReadOnly(TRUE);
-
-    $field_storage_definitions['revision_id'] = BaseFieldDefinition::create('integer')
-      ->setLabel(new TranslatableMarkup('Revision ID'))
-      ->setReadOnly(TRUE)
-      ->setSetting('unsigned', TRUE);
-
-    $field_storage_definitions['langcode'] = BaseFieldDefinition::create('language')
-      ->setLabel(new TranslatableMarkup('Language'))
-      ->setRevisionable(TRUE)
-      ->setDefaultValue(LanguageInterface::LANGCODE_NOT_SPECIFIED);
-
-    $field_storage_definitions['revision_default'] = BaseFieldDefinition::create('boolean')
-      ->setLabel(new TranslatableMarkup('Default revision'))
-      ->setStorageRequired(TRUE)
-      ->setInternal(TRUE)
-      ->setRevisionable(TRUE);
-
-    $field_storage_definitions['status'] = BaseFieldDefinition::create('boolean')
-      ->setLabel(new TranslatableMarkup('Published'))
-      ->setRevisionable(TRUE)
-      ->setDefaultValue(TRUE);
-
-    $field_storage_definitions['path'] = BaseFieldDefinition::create('string')
-      ->setLabel(new TranslatableMarkup('System path'))
-      ->setDescription(new TranslatableMarkup('The path that this alias belongs to.'))
-      ->setRequired(TRUE)
-      ->setRevisionable(TRUE);
-
-    $field_storage_definitions['alias'] = BaseFieldDefinition::create('string')
-      ->setLabel(new TranslatableMarkup('Path alias'))
-      ->setDescription(new TranslatableMarkup('An alias used with this path.'))
-      ->setRequired(TRUE)
-      ->setRevisionable(TRUE);
-
-    $entity_definition_update_manager->installFieldableEntityType($entity_type, $field_storage_definitions);
-
+  // Enable the Path Alias module if needed.
+  if (!\Drupal::moduleHandler()->moduleExists('path_alias')) {
+    \Drupal::service('module_installer')->install(['path_alias'], FALSE);
     return t('The "path_alias" entity type has been installed.');
   }
 }
@@ -2548,5 +2483,41 @@ function system_update_8804(&$sandbox = NULL) {
     }
 
     return t('Path aliases have been converted to entities.');
+  }
+}
+
+/**
+ * Change the provider of the 'path_alias' entity type and its base fields.
+ */
+function system_update_8805() {
+  // If the path alias module is not installed, it means that
+  // system_update_8803() ran as part of Drupal 8.8.0-alpha1, in which case we
+  // need to enable the module and change the provider of the 'path_alias'
+  // entity type.
+  if (!\Drupal::moduleHandler()->moduleExists('path_alias')) {
+    \Drupal::service('module_installer')->install(['path_alias'], FALSE);
+
+    /** @var \Drupal\Core\Entity\EntityLastInstalledSchemaRepositoryInterface $last_installed_schema_repository */
+    $last_installed_schema_repository = \Drupal::service('entity.last_installed_schema.repository');
+    $entity_type = $last_installed_schema_repository->getLastInstalledDefinition('path_alias');
+
+    // Set the new class for the entity type.
+    $entity_type->setClass(PathAlias::class);
+
+    // Set the new provider for the entity type.
+    $reflection = new ReflectionClass($entity_type);
+    $property = $reflection->getProperty('provider');
+    $property->setAccessible(TRUE);
+    $property->setValue($entity_type, 'path_alias');
+
+    $last_installed_schema_repository->setLastInstalledDefinition($entity_type);
+
+    $field_storage_definitions = $last_installed_schema_repository->getLastInstalledFieldStorageDefinitions('path_alias');
+    foreach ($field_storage_definitions as $field_storage_definition) {
+      if ($field_storage_definition->isBaseField()) {
+        $field_storage_definition->setProvider('path_alias');
+        $last_installed_schema_repository->setLastInstalledFieldStorageDefinition($field_storage_definition);
+      }
+    }
   }
 }

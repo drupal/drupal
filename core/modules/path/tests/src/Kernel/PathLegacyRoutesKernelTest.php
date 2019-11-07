@@ -16,7 +16,7 @@ class PathLegacyRoutesKernelTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['path'];
+  protected static $modules = ['path', 'path_alias'];
 
   /**
    * @expectedDeprecation The 'path.admin_add' route is deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. Use the 'entity.path_alias.add_form' route instead. See https://www.drupal.org/node/3013865

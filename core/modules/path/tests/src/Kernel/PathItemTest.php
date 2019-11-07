@@ -19,7 +19,7 @@ class PathItemTest extends KernelTestBase {
    *
    * @var array
    */
-  public static $modules = ['path', 'node', 'user', 'system', 'language', 'content_translation'];
+  public static $modules = ['path', 'path_alias', 'node', 'user', 'system', 'language', 'content_translation'];
 
   /**
    * {@inheritdoc}
@@ -45,7 +45,7 @@ class PathItemTest extends KernelTestBase {
    */
   public function testPathItem() {
     /** @var \Drupal\Core\Path\AliasRepositoryInterface $alias_repository */
-    $alias_repository = \Drupal::service('path.alias_repository');
+    $alias_repository = \Drupal::service('path_alias.repository');
 
     $node_storage = \Drupal::entityTypeManager()->getStorage('node');
 

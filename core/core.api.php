@@ -762,8 +762,8 @@
  * A typical service definition in a *.services.yml file looks like this:
  * @code
  * path.alias_manager:
- *   class: Drupal\Core\Path\AliasManager
- *   arguments: ['@path.crud', '@path.alias_whitelist', '@language_manager']
+ *   class: Drupal\path_alias\AliasManager
+ *   arguments: ['@path.crud', '@path_alias.whitelist', '@language_manager']
  * @endcode
  * Some services use other services as factories; a typical service definition
  * is:

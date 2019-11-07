@@ -22,11 +22,11 @@ trait PathAliasTestTrait {
    *   (optional) A language code for the path alias. Defaults to
    *   \Drupal\Core\Language\LanguageInterface::LANGCODE_NOT_SPECIFIED.
    *
-   * @return \Drupal\Core\Path\PathAliasInterface
+   * @return \Drupal\path_alias\PathAliasInterface
    *   A path alias entity.
    */
   protected function createPathAlias($path, $alias, $langcode = LanguageInterface::LANGCODE_NOT_SPECIFIED) {
-    /** @var \Drupal\Core\Path\PathAliasInterface $path_alias */
+    /** @var \Drupal\path_alias\PathAliasInterface $path_alias */
     $path_alias = \Drupal::entityTypeManager()->getStorage('path_alias')->create([
       'path' => $path,
       'alias' => $alias,
@@ -43,7 +43,7 @@ trait PathAliasTestTrait {
    * @param array $conditions
    *   An array of query conditions.
    *
-   * @return \Drupal\Core\Path\PathAliasInterface|null
+   * @return \Drupal\path_alias\PathAliasInterface|null
    *   A path alias entity or NULL.
    */
   protected function loadPathAliasByConditions($conditions) {

@@ -1,0 +1,7 @@
+name: Path alias
+type: module
+description: 'Provides the API allowing to rename URLs.'
+package: Core
+version: VERSION
+required: true
+hidden: true

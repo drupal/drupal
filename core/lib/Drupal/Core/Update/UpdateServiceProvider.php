@@ -41,8 +41,8 @@ class UpdateServiceProvider implements ServiceProviderInterface, ServiceModifier
     // manager. We do this by removing the tags that the compiler pass looks
     // for. This means that the URL generator can safely be used during the
     // database update process.
-    if ($container->hasDefinition('path_processor_alias')) {
-      $container->getDefinition('path_processor_alias')
+    if ($container->hasDefinition('path_alias.path_processor')) {
+      $container->getDefinition('path_alias.path_processor')
         ->clearTag('path_processor_inbound')
         ->clearTag('path_processor_outbound');
     }

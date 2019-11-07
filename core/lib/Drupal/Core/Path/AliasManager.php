@@ -7,9 +7,15 @@ use Drupal\Core\CacheDecorator\CacheDecoratorInterface;
 use Drupal\Core\DependencyInjection\DeprecatedServicePropertyTrait;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
+use Symfony\Component\DependencyInjection\Exception\ServiceCircularReferenceException;
 
 /**
  * The default alias manager implementation.
+ *
+ *   @deprecated in drupal:8.8.0 and is removed from drupal:9.0.0.
+ *   Use \Drupal\path_alias\AliasManager.
+ *
+ *   @see https://www.drupal.org/node/3092086
  */
 class AliasManager implements AliasManagerInterface, CacheDecoratorInterface {
 
@@ -115,12 +121,37 @@ class AliasManager implements AliasManagerInterface, CacheDecoratorInterface {
   public function __construct($alias_repository, AliasWhitelistInterface $whitelist, LanguageManagerInterface $language_manager, CacheBackendInterface $cache) {
     if (!$alias_repository instanceof AliasRepositoryInterface) {
       @trigger_error('Passing the path.alias_storage service to AliasManager::__construct() is deprecated in drupal:8.8.0 and will be removed before drupal:9.0.0. Pass the new dependencies instead. See https://www.drupal.org/node/3013865.', E_USER_DEPRECATED);
-      $alias_repository = \Drupal::service('path.alias_repository');
+      $alias_repository = \Drupal::service('path_alias.repository');
     }
     $this->pathAliasRepository = $alias_repository;
     $this->languageManager = $language_manager;
     $this->whitelist = $whitelist;
     $this->cache = $cache;
+
+    // This is used as base class by the new class, so we do not trigger
+    // deprecation notices when that or any child class is instantiated.
+    $new_class = 'Drupal\path_alias\AliasManager';
+    if (!is_a($this, $new_class) && class_exists($new_class)) {
+      @trigger_error('The \\' . __CLASS__ . ' class is deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. Instead, use \\' . $new_class . '. See https://drupal.org/node/3092086', E_USER_DEPRECATED);
+
+      // Despite being two different services, hence two different class
+      // instances, both the new and the legacy alias managers need to share the
+      // same internal state to keep the path/alias lookup optimizations
+      // working.
+      try {
+        $alias_manager = \Drupal::service('path_alias.manager');
+        if ($alias_manager instanceof $new_class) {
+          $synced_properties = ['cacheKey', 'langcodePreloaded', 'lookupMap', 'noAlias', 'noPath', 'preloadedPathLookups'];
+          foreach ($synced_properties as $property) {
+            $this->{$property} = &$alias_manager->{$property};
+          }
+        }
+      }
+      catch (ServiceCircularReferenceException $e) {
+        // This may happen during installation when "path_alias" has not swapped
+        // the alias manager class yet. Nothing to do in this case.
+      }
+    }
   }
 
   /**

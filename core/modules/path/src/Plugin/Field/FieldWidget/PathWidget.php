@@ -87,7 +87,7 @@ class PathWidget extends WidgetBase {
     if (!empty($alias)) {
       $form_state->setValueForElement($element['alias'], $alias);
 
-      /** @var \Drupal\Core\Path\PathAliasInterface $path_alias */
+      /** @var \Drupal\path_alias\PathAliasInterface $path_alias */
       $path_alias = \Drupal::entityTypeManager()->getStorage('path_alias')->create([
         'path' => $element['source']['#value'],
         'alias' => $alias,

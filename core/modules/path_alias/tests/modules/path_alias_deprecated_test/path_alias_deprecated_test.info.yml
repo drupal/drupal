@@ -1,0 +1,5 @@
+name: 'Path Alias deprecated test'
+type: module
+description: 'Support module for testing deprecated functionality for path aliases.'
+package: Testing
+version: VERSION

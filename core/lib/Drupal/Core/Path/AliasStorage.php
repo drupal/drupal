@@ -9,7 +9,7 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Language\LanguageInterface;
 
-@trigger_error('\Drupal\Core\Path\AliasStorage is deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. Use the "path.alias_repository" service instead, or the entity storage handler for the "path_alias" entity type for CRUD methods. See https://www.drupal.org/node/3013865.', E_USER_DEPRECATED);
+@trigger_error('\Drupal\Core\Path\AliasStorage is deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. Use the "path_alias.repository" service instead, or the entity storage handler for the "path_alias" entity type for CRUD methods. See https://www.drupal.org/node/3013865.', E_USER_DEPRECATED);
 
 /**
  * Provides a class for CRUD operations on path aliases.
@@ -19,7 +19,7 @@ use Drupal\Core\Language\LanguageInterface;
  * the same, and will both refer to the same internal system path.
  *
  * @deprecated \Drupal\Core\Path\AliasStorage is deprecated in drupal:8.8.0 and
- *   is removed from drupal:9.0.0. Use the "path.alias_repository" service
+ *   is removed from drupal:9.0.0. Use the "path_alias.repository" service
  *   instead, or the entity storage handler for the "path_alias" entity type
  *   for CRUD methods.
  *
@@ -82,7 +82,7 @@ class AliasStorage implements AliasStorageInterface {
     }
 
     if ($pid) {
-      /** @var \Drupal\Core\Path\PathAliasInterface $path_alias */
+      /** @var \Drupal\path_alias\PathAliasInterface $path_alias */
       $path_alias = $this->getPathAliasEntityStorage()->load($pid);
       $original_values = [
         'source' => $path_alias->getPath(),
@@ -142,7 +142,7 @@ class AliasStorage implements AliasStorageInterface {
       ->execute();
     $entities = $this->getPathAliasEntityStorage()->loadMultiple($result);
 
-    /** @var \Drupal\Core\Path\PathAliasInterface $path_alias */
+    /** @var \Drupal\path_alias\PathAliasInterface $path_alias */
     $path_alias = reset($entities);
     if ($path_alias) {
       return [
@@ -326,6 +326,10 @@ class AliasStorage implements AliasStorageInterface {
    * {@inheritdoc}
    */
   public function pathHasMatchingAlias($initial_substring) {
+    if (!$this->moduleHandler->moduleExists('path_alias')) {
+      return FALSE;
+    }
+
     $query = $this->getBaseQuery();
     $query->addExpression(1);
 
