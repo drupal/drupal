@@ -23,7 +23,7 @@ class SystemGetInfoTest extends KernelTestBase {
   public function testSystemGetInfo() {
     $system_module_info = system_get_info('module', 'system');
     $this->assertSame('System', $system_module_info['name']);
-    $this->assertSame(['system' => $system_module_info], system_get_info('module'));
+    $this->assertSame(['path_alias' => system_get_info('module', 'path_alias'), 'system' => $system_module_info], system_get_info('module'));
 
     // The User module is not installed so system_get_info() should return
     // an empty array.
@@ -34,7 +34,7 @@ class SystemGetInfoTest extends KernelTestBase {
     $this->container->get('module_installer')->install(['user']);
     $user_module_info = system_get_info('module', 'user');
     $this->assertSame('User', $user_module_info['name']);
-    $this->assertSame(['system' => $system_module_info, 'user' => $user_module_info], system_get_info('module'));
+    $this->assertSame(['path_alias' => system_get_info('module', 'path_alias'), 'system' => $system_module_info, 'user' => $user_module_info], system_get_info('module'));
 
     // Test theme info. There are no themes installed yet.
     $this->assertSame([], system_get_info('theme', 'stable'));

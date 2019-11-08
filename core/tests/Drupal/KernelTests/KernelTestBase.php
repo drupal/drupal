@@ -164,12 +164,17 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
    * it extends, and so on up the class hierarchy. It is not necessary to
    * include modules in your list that a parent class has already declared.
    *
+   * The Path Alias module is always installed because the functionality has
+   * moved from core to a required module in Drupal 8.8.0. If a kernel test
+   * requires path alias functionality it is recommended to add the module to
+   * the test's own $modules property for Drupal 9 compatibility.
+   *
    * @see \Drupal\Tests\KernelTestBase::enableModules()
    * @see \Drupal\Tests\KernelTestBase::bootKernel()
    *
    * @var array
    */
-  protected static $modules = [];
+  protected static $modules = ['path_alias'];
 
   /**
    * The virtual filesystem root directory.

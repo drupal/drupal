@@ -24,7 +24,7 @@ class ModuleHandlerTest extends KernelTestBase {
    * The basic functionality of retrieving enabled modules.
    */
   public function testModuleList() {
-    $module_list = ['system'];
+    $module_list = ['path_alias', 'system'];
 
     $this->assertModuleList($module_list, 'Initial');
 
