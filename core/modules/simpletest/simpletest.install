@@ -22,6 +22,12 @@ const SIMPLETEST_MINIMUM_PHP_MEMORY_LIMIT = '128M';
 function simpletest_requirements($phase) {
   $requirements = [];
 
+  $requirements['deprecation'] = [
+    'title' => t('Testing (SimpleTest)'),
+    'value' => t('The <em>Testing</em> (SimpleTest) module is deprecated for removal in Drupal 9. It should not be enabled on production sites. Read <a href="https://www.drupal.org/node/3091784">The Drupal core SimpleTest module is deprecated</a> for alternative ways to run tests during development.'),
+    'severity' => $phase === 'runtime' ? REQUIREMENT_WARNING : REQUIREMENT_INFO,
+  ];
+
   $has_phpunit = class_exists(TestCase::class);
   $has_curl = function_exists('curl_init');
 

@@ -384,7 +384,6 @@ class UpdatePathRC1TestBaseFilledTest extends UpdatePathRC1TestBaseTest {
       'search',
       'serialization',
       'shortcut',
-      'simpletest',
       'statistics',
       'syslog',
       'system',
