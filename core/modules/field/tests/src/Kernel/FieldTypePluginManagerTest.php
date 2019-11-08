@@ -6,6 +6,7 @@ use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Extension\ExtensionDiscovery;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\entity_test\Entity\EntityTest;
+use Drupal\Tests\DeprecatedModulesTestTrait;
 
 /**
  * Tests the field type manager.
@@ -13,6 +14,8 @@ use Drupal\entity_test\Entity\EntityTest;
  * @group field
  */
 class FieldTypePluginManagerTest extends FieldKernelTestBase {
+
+  use DeprecatedModulesTestTrait;
 
   /**
    * Tests the default settings convenience methods.

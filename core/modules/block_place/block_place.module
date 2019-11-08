@@ -3,10 +3,17 @@
 /**
  * @file
  * Controls the placement of blocks from all pages.
+ *
+ * @deprecated in drupal:8.8.0 and will be removed from drupal:9.0.0. See the
+ * change record for a list of alternatives.
+ *
+ * @see https://www.drupal.org/node/3081957
  */
 
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Url;
+
+@trigger_error('The Place Blocks module is deprecated in drupal:8.8.0 and will be removed from drupal:9.0.0. See the change record for a list of alternatives. See https://www.drupal.org/node/3081957.', E_USER_DEPRECATED);
 
 /**
  * Implements hook_help().
@@ -15,6 +22,9 @@ function block_place_help($route_name, RouteMatchInterface $route_match) {
   switch ($route_name) {
     case 'help.page.block_place':
       $output = '<h3>' . t('About') . '</h3>';
+      $output .= '<p><strong>' . t('Place Blocks (Core, Experimental) is deprecated in Drupal 8.8.0 and will be removed in Drupal 9.0.0. See the change record for a list of alternatives. See <a href=":change-record">the change record</a>.', [
+        ':change-record' => 'https://www.drupal.org/node/3081957',
+      ]) . '</strong></p>';
       $output .= '<p>' . t('The Place Blocks module allows you to place blocks from every page. For more information, see the <a href=":blocks-documentation">online documentation for the Place Blocks module</a>.', [':blocks-documentation' => 'https://www.drupal.org/documentation/modules/block_place/']) . '</p>';
       $output .= '<h3>' . t('Uses') . '</h3>';
       $output .= '<p>' . t('Block placement is specific to each theme on your site. This module allows you to place blocks in the context of your content pages.') . '</p>';
