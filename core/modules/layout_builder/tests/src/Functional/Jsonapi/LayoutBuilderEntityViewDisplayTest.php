@@ -21,6 +21,11 @@ class LayoutBuilderEntityViewDisplayTest extends EntityViewDisplayTest {
   /**
    * {@inheritdoc}
    */
+  protected $defaultTheme = 'stark';
+
+  /**
+   * {@inheritdoc}
+   */
   protected function createEntity() {
     /** @var \Drupal\layout_builder\Entity\LayoutBuilderEntityViewDisplay $entity */
     $entity = parent::createEntity();

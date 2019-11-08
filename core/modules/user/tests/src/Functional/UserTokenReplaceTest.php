@@ -27,6 +27,11 @@ class UserTokenReplaceTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
+  protected $defaultTheme = 'stark';
+
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp() {
     parent::setUp();
     ConfigurableLanguage::createFromLangcode('de')->save();

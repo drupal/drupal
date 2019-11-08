@@ -45,6 +45,11 @@ class DateFilterTest extends ViewTestBase {
   /**
    * {@inheritdoc}
    */
+  protected $defaultTheme = 'stark';
+
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp($import_test_views = TRUE) {
     parent::setUp($import_test_views);
     ViewTestData::createTestViews(get_class($this), ['datetime_test']);

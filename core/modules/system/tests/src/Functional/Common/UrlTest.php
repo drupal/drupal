@@ -25,6 +25,11 @@ class UrlTest extends BrowserTestBase {
   public static $modules = ['common_test', 'url_alter_test'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Confirms that invalid URLs are filtered in link generating functions.
    */
   public function testLinkXSS() {

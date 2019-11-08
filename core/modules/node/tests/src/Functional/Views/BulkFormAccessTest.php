@@ -25,6 +25,11 @@ class BulkFormAccessTest extends NodeTestBase {
   public static $modules = ['node_test_views', 'node_access_test'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Views used by this test.
    *
    * @var array

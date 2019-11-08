@@ -20,6 +20,11 @@ class NumberFieldTest extends BrowserTestBase {
    */
   public static $modules = ['node', 'entity_test', 'field_ui'];
 
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
   protected function setUp() {
     parent::setUp();
     $this->drupalLogin($this->drupalCreateUser([

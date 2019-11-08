@@ -20,6 +20,11 @@ class SearchPageTest extends ResourceTestBase {
   /**
    * {@inheritdoc}
    */
+  protected $defaultTheme = 'stark';
+
+  /**
+   * {@inheritdoc}
+   */
   protected static $entityTypeId = 'search_page';
 
   /**

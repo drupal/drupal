@@ -19,6 +19,11 @@ class HtmlAttributesTest extends BrowserTestBase {
   public static $modules = ['theme_test'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Tests that attributes in the 'html' and 'body' elements can be altered.
    */
   public function testThemeHtmlAttributes() {

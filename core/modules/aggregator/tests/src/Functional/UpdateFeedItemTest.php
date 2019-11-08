@@ -14,6 +14,11 @@ use Drupal\aggregator\Entity\Item;
 class UpdateFeedItemTest extends AggregatorTestBase {
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Tests running "update items" from 'admin/config/services/aggregator' page.
    */
   public function testUpdateFeedItem() {

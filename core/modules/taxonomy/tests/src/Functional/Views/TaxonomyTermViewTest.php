@@ -24,6 +24,11 @@ class TaxonomyTermViewTest extends TaxonomyTestBase {
   public static $modules = ['taxonomy', 'views'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * An user with permissions to administer taxonomy.
    *
    * @var \Drupal\user\UserInterface

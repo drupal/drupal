@@ -11,6 +11,11 @@ use Drupal\Core\File\FileSystemInterface;
  */
 class DownloadTest extends FileManagedTestBase {
 
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
   protected function setUp() {
     parent::setUp();
     // Clear out any hook calls.

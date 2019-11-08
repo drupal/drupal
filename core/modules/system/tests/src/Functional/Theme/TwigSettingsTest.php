@@ -20,6 +20,11 @@ class TwigSettingsTest extends BrowserTestBase {
   public static $modules = ['theme_test'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Ensures Twig template auto reload setting can be overridden.
    */
   public function testTwigAutoReloadOverride() {

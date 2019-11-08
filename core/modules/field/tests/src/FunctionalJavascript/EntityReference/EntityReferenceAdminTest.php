@@ -28,6 +28,11 @@ class EntityReferenceAdminTest extends WebDriverTestBase {
   public static $modules = ['node', 'field_ui', 'path', 'taxonomy', 'block', 'views_ui'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * The name of the content type created for testing purposes.
    *
    * @var string

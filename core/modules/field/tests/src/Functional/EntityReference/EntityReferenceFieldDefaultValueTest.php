@@ -25,6 +25,11 @@ class EntityReferenceFieldDefaultValueTest extends BrowserTestBase {
   public static $modules = ['field_ui', 'node'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * A user with permission to administer content types, node fields, etc.
    *
    * @var \Drupal\user\UserInterface

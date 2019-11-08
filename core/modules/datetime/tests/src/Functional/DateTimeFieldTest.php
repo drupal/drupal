@@ -28,6 +28,11 @@ class DateTimeFieldTest extends DateTestBase {
   /**
    * {@inheritdoc}
    */
+  protected $defaultTheme = 'classy';
+
+  /**
+   * {@inheritdoc}
+   */
   protected function getTestFieldType() {
     return 'datetime';
   }

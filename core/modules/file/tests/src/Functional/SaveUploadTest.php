@@ -27,6 +27,11 @@ class SaveUploadTest extends FileManagedTestBase {
   public static $modules = ['dblog'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * An image file path for uploading.
    *
    * @var \Drupal\file\FileInterface

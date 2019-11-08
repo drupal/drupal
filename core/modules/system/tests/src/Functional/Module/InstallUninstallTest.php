@@ -17,6 +17,11 @@ class InstallUninstallTest extends ModuleTestBase {
   /**
    * {@inheritdoc}
    */
+  protected $defaultTheme = 'stark';
+
+  /**
+   * {@inheritdoc}
+   */
   public static $modules = ['system_test', 'dblog', 'taxonomy', 'update_test_postupdate'];
 
   /**

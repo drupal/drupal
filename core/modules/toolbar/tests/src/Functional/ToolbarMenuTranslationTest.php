@@ -25,6 +25,11 @@ class ToolbarMenuTranslationTest extends BrowserTestBase {
    */
   public static $modules = ['toolbar', 'toolbar_test', 'locale', 'locale_test'];
 
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
   protected function setUp() {
     parent::setUp();
 

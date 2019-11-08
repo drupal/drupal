@@ -29,6 +29,11 @@ class ExcludedFieldTokenTest extends ViewTestBase {
   public static $testViews = ['test_excluded_field_token_display'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * The modules that need to be installed for this test.
    *
    * @var array

@@ -20,6 +20,11 @@ class RestExportAuthTest extends ViewTestBase {
   /**
    * {@inheritdoc}
    */
+  protected $defaultTheme = 'stark';
+
+  /**
+   * {@inheritdoc}
+   */
   public function setUp($import_test_views = TRUE) {
     parent::setUp($import_test_views);
 

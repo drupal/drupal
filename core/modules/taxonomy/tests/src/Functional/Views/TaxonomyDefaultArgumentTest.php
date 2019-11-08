@@ -17,6 +17,11 @@ class TaxonomyDefaultArgumentTest extends TaxonomyTestBase {
   public static $testViews = ['taxonomy_default_argument_test'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Tests escaping of page title when the taxonomy plugin provides it.
    */
   public function testTermTitleEscaping() {

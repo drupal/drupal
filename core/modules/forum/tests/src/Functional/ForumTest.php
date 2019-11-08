@@ -29,6 +29,11 @@ class ForumTest extends BrowserTestBase {
   public static $modules = ['taxonomy', 'comment', 'forum', 'node', 'block', 'menu_ui', 'help'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'classy';
+
+  /**
    * A user with various administrative privileges.
    */
   protected $adminUser;

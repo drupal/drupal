@@ -25,6 +25,11 @@ class LayoutBuilderTranslationTest extends ContentTranslationTestBase {
   ];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * The entity used for testing.
    *
    * @var \Drupal\Core\Entity\EntityInterface

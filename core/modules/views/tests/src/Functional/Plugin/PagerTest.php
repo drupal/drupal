@@ -31,6 +31,11 @@ class PagerTest extends ViewTestBase {
   public static $modules = ['node', 'views_ui'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * String translation storage object.
    *
    * @var \Drupal\locale\StringStorageInterface

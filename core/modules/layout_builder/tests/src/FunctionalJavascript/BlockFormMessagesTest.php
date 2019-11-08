@@ -29,6 +29,11 @@ class BlockFormMessagesTest extends WebDriverTestBase {
   /**
    * {@inheritdoc}
    */
+  protected $defaultTheme = 'classy';
+
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp() {
     parent::setUp();
     $this->createContentType(['type' => 'bundle_with_section_field']);

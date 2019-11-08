@@ -30,6 +30,11 @@ class BlockContentTranslationUITest extends ContentTranslationUITestBase {
   /**
    * {@inheritdoc}
    */
+  protected $defaultTheme = 'classy';
+
+  /**
+   * {@inheritdoc}
+   */
   protected $defaultCacheContexts = [
     'languages:language_interface',
     'session',

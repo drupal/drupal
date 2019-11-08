@@ -21,6 +21,11 @@ class EntityTranslationFormTest extends BrowserTestBase {
    */
   public static $modules = ['entity_test', 'language', 'node'];
 
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
   protected $langcodes;
 
   protected function setUp() {

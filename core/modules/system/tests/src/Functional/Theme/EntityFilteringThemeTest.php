@@ -22,6 +22,11 @@ class EntityFilteringThemeTest extends BrowserTestBase {
   use CommentTestTrait;
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Use the standard profile.
    *
    * We test entity theming with the default node, user, comment, and taxonomy

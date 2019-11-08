@@ -19,6 +19,11 @@ class TermNameFieldTest extends TaxonomyTestBase {
   public static $testViews = ['test_taxonomy_term_name'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Tests term name field plugin functionality.
    */
   public function testTermNameField() {

@@ -18,6 +18,11 @@ class StatusExtraTest extends NodeTestBase {
   public static $modules = ['node_test_views', 'content_moderation'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Views used by this test.
    *
    * @var array

@@ -20,6 +20,11 @@ class GroupedExposedFilterTest extends WebDriverTestBase {
   public static $modules = ['node', 'views', 'views_ui', 'user', 'views_test_config'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Views used by this test.
    *
    * @var array

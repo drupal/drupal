@@ -35,6 +35,11 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
   public static $modules = ['field_ui'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'classy';
+
+  /**
    * Test image formatters on node display for public files.
    */
   public function testImageFieldFormattersPublic() {

@@ -23,6 +23,11 @@ class EditorLoadingTest extends BrowserTestBase {
   public static $modules = ['filter', 'editor', 'editor_test', 'node'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * An untrusted user, with access to the 'plain_text' format.
    *
    * @var \Drupal\user\UserInterface

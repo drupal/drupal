@@ -19,6 +19,11 @@ class AggregatorRenderingTest extends AggregatorTestBase {
    */
   public static $modules = ['block', 'test_page_test'];
 
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
   protected function setUp() {
     parent::setUp();
 

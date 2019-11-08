@@ -15,6 +15,11 @@ class PrepareUninstallTest extends BrowserTestBase {
   use TaxonomyTestTrait;
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * An array of node objects.
    *
    * @var \Drupal\node\NodeInterface[]

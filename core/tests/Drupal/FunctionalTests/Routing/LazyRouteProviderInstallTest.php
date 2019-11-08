@@ -15,6 +15,11 @@ class LazyRouteProviderInstallTest extends BrowserTestBase {
   protected static $modules = ['lazy_route_provider_install_test'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Tests that the lazy route provider is used during a module install.
    */
   public function testInstallation() {

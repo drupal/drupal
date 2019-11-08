@@ -14,6 +14,11 @@ class NodeRevisionPermissionsTest extends NodeTestBase {
   use GeneratePermutationsTrait;
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * The node revisions.
    *
    * @var array

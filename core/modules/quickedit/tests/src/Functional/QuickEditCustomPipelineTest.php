@@ -23,6 +23,11 @@ class QuickEditCustomPipelineTest extends BrowserTestBase {
   ];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Tests that Quick Edit works with custom render pipelines.
    */
   public function testCustomPipeline() {

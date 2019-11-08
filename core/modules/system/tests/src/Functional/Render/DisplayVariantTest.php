@@ -19,6 +19,11 @@ class DisplayVariantTest extends BrowserTestBase {
   public static $modules = ['display_variant_test'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Tests selecting the variant and passing configuration.
    */
   public function testPageDisplayVariantSelectionEvent() {

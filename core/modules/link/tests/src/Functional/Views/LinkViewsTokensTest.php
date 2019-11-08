@@ -22,6 +22,11 @@ class LinkViewsTokensTest extends ViewTestBase {
   public static $modules = ['link_test_views'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Views used by this test.
    *
    * @var array

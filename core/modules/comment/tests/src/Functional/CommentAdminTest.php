@@ -15,6 +15,11 @@ use Drupal\comment\Entity\Comment;
  */
 class CommentAdminTest extends CommentTestBase {
 
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'classy';
+
   protected function setUp() {
     parent::setUp();
 

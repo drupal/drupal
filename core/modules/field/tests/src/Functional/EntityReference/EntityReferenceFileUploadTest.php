@@ -20,6 +20,11 @@ class EntityReferenceFileUploadTest extends BrowserTestBase {
   public static $modules = ['entity_reference', 'node', 'file'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * The name of a content type that will reference $referencedType.
    *
    * @var string

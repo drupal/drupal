@@ -60,6 +60,11 @@ class LanguageUILanguageNegotiationTest extends BrowserTestBase {
    */
   public static $modules = ['locale', 'language_test', 'block', 'user', 'content_translation'];
 
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'classy';
+
   protected function setUp() {
     parent::setUp();
 

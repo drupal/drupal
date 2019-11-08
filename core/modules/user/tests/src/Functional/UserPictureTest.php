@@ -31,6 +31,11 @@ class UserPictureTest extends BrowserTestBase {
   protected $profile = 'standard';
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'classy';
+
+  /**
    * A regular user.
    *
    * @var \Drupal\user\UserInterface

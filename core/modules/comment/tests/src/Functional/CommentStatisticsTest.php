@@ -20,6 +20,11 @@ class CommentStatisticsTest extends CommentTestBase {
    */
   protected $webUser2;
 
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
   protected function setUp() {
     parent::setUp();
 

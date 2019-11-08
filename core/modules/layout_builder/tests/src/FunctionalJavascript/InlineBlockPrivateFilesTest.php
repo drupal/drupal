@@ -27,6 +27,11 @@ class InlineBlockPrivateFilesTest extends InlineBlockTestBase {
   ];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'classy';
+
+  /**
    * The file system service.
    *
    * @var \Drupal\Core\File\FileSystemInterface

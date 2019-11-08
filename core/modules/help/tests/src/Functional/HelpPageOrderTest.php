@@ -17,6 +17,11 @@ class HelpPageOrderTest extends BrowserTestBase {
   protected static $modules = ['help', 'tour'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Strings to search for on admin/help, in order.
    *
    * @var string[]

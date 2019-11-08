@@ -20,6 +20,11 @@ class BookJavascriptTest extends WebDriverTestBase {
   public static $modules = ['book'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Tests re-ordering of books.
    */
   public function testBookOrdering() {

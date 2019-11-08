@@ -13,6 +13,11 @@ use Drupal\Component\Utility\Html;
 class NodeTitleXSSTest extends NodeTestBase {
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Tests XSS functionality with a node entity.
    */
   public function testNodeTitleXSS() {

@@ -24,6 +24,11 @@ class FrontPageTest extends ViewTestBase {
   /**
    * {@inheritdoc}
    */
+  protected $defaultTheme = 'classy';
+
+  /**
+   * {@inheritdoc}
+   */
   protected $dumpHeaders = TRUE;
 
   /**

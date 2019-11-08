@@ -15,6 +15,11 @@ class UpdateCacheTest extends BrowserTestBase {
   use RequirementsPageTrait;
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Tests that caches are cleared during updates.
    *
    * @see \Drupal\Core\Update\UpdateServiceProvider

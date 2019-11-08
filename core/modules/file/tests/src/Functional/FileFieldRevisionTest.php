@@ -13,6 +13,11 @@ use Drupal\file\Entity\File;
 class FileFieldRevisionTest extends FileFieldTestBase {
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Tests creating multiple revisions of a node and managing attached files.
    *
    * Expected behaviors:

@@ -15,6 +15,11 @@ use Drupal\Tests\BrowserTestBase;
 class HtmlToTextTest extends BrowserTestBase {
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Converts a string to its PHP source equivalent for display in test messages.
    *
    * @param $text

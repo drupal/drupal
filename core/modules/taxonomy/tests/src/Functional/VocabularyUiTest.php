@@ -19,6 +19,11 @@ class VocabularyUiTest extends TaxonomyTestBase {
    */
   protected $vocabulary;
 
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
   protected function setUp() {
     parent::setUp();
     $this->drupalLogin($this->drupalCreateUser(['administer taxonomy']));

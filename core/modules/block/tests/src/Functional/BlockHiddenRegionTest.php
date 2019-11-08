@@ -24,6 +24,11 @@ class BlockHiddenRegionTest extends BrowserTestBase {
    */
   public static $modules = ['block', 'block_test', 'search'];
 
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'classy';
+
   protected function setUp() {
     parent::setUp();
 

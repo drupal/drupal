@@ -26,6 +26,11 @@ class ConfigSingleImportExportTest extends BrowserTestBase {
     'language',
   ];
 
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
   protected function setUp() {
     parent::setUp();
 

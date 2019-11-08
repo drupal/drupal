@@ -20,6 +20,11 @@ use Drupal\Component\Serialization\Json;
 class NodeRevisionsTest extends NodeTestBase {
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * An array of node revisions.
    *
    * @var \Drupal\node\NodeInterface[]

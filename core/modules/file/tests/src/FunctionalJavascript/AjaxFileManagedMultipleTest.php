@@ -23,6 +23,11 @@ class AjaxFileManagedMultipleTest extends WebDriverTestBase {
   protected static $modules = ['file_test', 'file', 'file_module_test'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Test if managed file form element works well with multiple files upload.
    */
   public function testMultipleFilesUpload() {

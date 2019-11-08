@@ -19,6 +19,11 @@ class SettingsTest extends UITestBase {
   /**
    * {@inheritdoc}
    */
+  protected $defaultTheme = 'stark';
+
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp($import_test_views = TRUE) {
     parent::setUp($import_test_views);
     $this->drupalPlaceBlock('local_tasks_block');

@@ -12,6 +12,11 @@ use Drupal\Core\Serialization\Yaml;
 class InstallerNonEnglishProfileWithoutLocaleModuleTest extends InstallerTestBase {
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * The testing profile name.
    *
    * @var string

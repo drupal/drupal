@@ -12,6 +12,11 @@ use Drupal\Tests\BrowserTestBase;
 class DefaultMetatagsTest extends BrowserTestBase {
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Tests meta tags.
    */
   public function testMetaTag() {

@@ -17,6 +17,11 @@ class SearchQueryAlterTest extends BrowserTestBase {
   protected static $modules = ['node', 'search', 'search_query_alter'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Tests that the query alter works.
    */
   public function testQueryAlter() {

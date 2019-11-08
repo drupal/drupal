@@ -22,6 +22,11 @@ class RebuildTest extends WebDriverTestBase {
   protected static $modules = ['node', 'form_test'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * A user for testing.
    *
    * @var \Drupal\user\UserInterface

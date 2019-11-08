@@ -26,6 +26,11 @@ class ResourceTest extends BrowserTestBase {
   public static $modules = ['hal', 'rest', 'entity_test', 'rest_test'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * The entity.
    *
    * @var \Drupal\Core\Entity\EntityInterface

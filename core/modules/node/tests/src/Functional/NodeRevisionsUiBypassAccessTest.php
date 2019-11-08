@@ -16,6 +16,11 @@ use Drupal\node\Entity\NodeType;
 class NodeRevisionsUiBypassAccessTest extends NodeTestBase {
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * User with bypass node access permission.
    *
    * @var \Drupal\user\Entity\User

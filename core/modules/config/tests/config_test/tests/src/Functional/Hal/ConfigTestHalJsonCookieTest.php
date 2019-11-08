@@ -20,6 +20,11 @@ class ConfigTestHalJsonCookieTest extends ConfigTestResourceTestBase {
   /**
    * {@inheritdoc}
    */
+  protected $defaultTheme = 'stark';
+
+  /**
+   * {@inheritdoc}
+   */
   protected static $format = 'hal_json';
 
   /**

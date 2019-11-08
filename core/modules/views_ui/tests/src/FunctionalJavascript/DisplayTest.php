@@ -28,6 +28,11 @@ class DisplayTest extends WebDriverTestBase {
     'views_test_config',
   ];
 
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'classy';
+
   public static $testViews = ['test_content_ajax', 'test_display'];
 
   /**

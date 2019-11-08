@@ -20,6 +20,11 @@ class ElementsTableSelectTest extends BrowserTestBase {
   public static $modules = ['form_test'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Test the display of checkboxes when #multiple is TRUE.
    */
   public function testMultipleTrue() {

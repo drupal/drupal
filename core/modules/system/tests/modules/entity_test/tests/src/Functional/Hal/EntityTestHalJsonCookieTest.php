@@ -16,4 +16,9 @@ class EntityTestHalJsonCookieTest extends EntityTestHalJsonAnonTest {
    */
   protected static $auth = 'cookie';
 
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
 }

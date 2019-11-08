@@ -18,6 +18,11 @@ class EntityUpdateToPublishableTest extends UpdatePathTestBase {
   use DbUpdatesTrait;
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * The entity type manager service.
    *
    * @var \Drupal\Core\Entity\EntityTypeManagerInterface

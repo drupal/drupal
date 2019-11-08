@@ -20,6 +20,11 @@ class RdfMappingHalJsonBasicAuthTest extends RdfMappingResourceTestBase {
   /**
    * {@inheritdoc}
    */
+  protected $defaultTheme = 'stark';
+
+  /**
+   * {@inheritdoc}
+   */
   protected static $format = 'hal_json';
 
   /**

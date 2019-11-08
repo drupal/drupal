@@ -28,6 +28,11 @@ class LinkFieldUITest extends BrowserTestBase {
   public static $modules = ['node', 'link', 'field_ui', 'block'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'classy';
+
+  /**
    * A user that can edit content types.
    *
    * @var \Drupal\user\UserInterface

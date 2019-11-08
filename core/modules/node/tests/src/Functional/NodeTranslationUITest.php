@@ -19,6 +19,11 @@ use Drupal\language\Entity\ConfigurableLanguage;
 class NodeTranslationUITest extends ContentTranslationUITestBase {
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * {inheritdoc}
    */
   protected $defaultCacheContexts = [

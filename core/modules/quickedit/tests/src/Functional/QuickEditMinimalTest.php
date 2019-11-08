@@ -25,6 +25,11 @@ class QuickEditMinimalTest extends BrowserTestBase {
   ];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Tests that Quick Edit works with no admin theme.
    *
    * @see \quickedit_library_info_alter()

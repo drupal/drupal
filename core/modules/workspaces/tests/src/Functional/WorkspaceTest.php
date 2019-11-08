@@ -19,6 +19,11 @@ class WorkspaceTest extends BrowserTestBase {
   public static $modules = ['workspaces', 'toolbar', 'field_ui'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * A test user.
    *
    * @var \Drupal\user\Entity\User

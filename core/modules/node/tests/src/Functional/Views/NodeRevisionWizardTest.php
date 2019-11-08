@@ -14,6 +14,11 @@ use Drupal\views\Views;
 class NodeRevisionWizardTest extends WizardTestBase {
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Tests creating a node revision view.
    */
   public function testViewAdd() {

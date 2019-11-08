@@ -23,6 +23,11 @@ class OverrideSectionsTest extends LayoutRestTestBase {
   /**
    * {@inheritdoc}
    */
+  protected $defaultTheme = 'stark';
+
+  /**
+   * {@inheritdoc}
+   */
   public function setUp() {
     parent::setUp();
     // @todo Figure why field definitions have to cleared in

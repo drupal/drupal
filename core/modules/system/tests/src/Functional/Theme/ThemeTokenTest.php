@@ -21,6 +21,11 @@ class ThemeTokenTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
+  protected $defaultTheme = 'stark';
+
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp() {
     parent::setUp();
     $account = $this->drupalCreateUser(['administer blocks', 'view the administration theme']);

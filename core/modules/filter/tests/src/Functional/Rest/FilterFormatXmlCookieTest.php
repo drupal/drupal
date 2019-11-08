@@ -28,4 +28,9 @@ class FilterFormatXmlCookieTest extends FilterFormatResourceTestBase {
    */
   protected static $auth = 'cookie';
 
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
 }

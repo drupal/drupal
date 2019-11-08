@@ -12,6 +12,11 @@ use Drupal\Component\Utility\Html;
 class MediaReferenceFieldHelpTest extends MediaJavascriptTestBase {
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Test our custom help texts when creating a field.
    *
    * @see media_form_field_ui_field_storage_add_form_alter()

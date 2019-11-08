@@ -12,6 +12,11 @@ use Drupal\Tests\BrowserTestBase;
 class BrowserTestBaseUserAgentTest extends BrowserTestBase {
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * The user agent string to use.
    *
    * @var string

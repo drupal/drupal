@@ -12,6 +12,11 @@ class InstallerProfileRequirementsTest extends InstallerTestBase {
   /**
    * {@inheritdoc}
    */
+  protected $defaultTheme = 'stark';
+
+  /**
+   * {@inheritdoc}
+   */
   protected $profile = 'testing_requirements';
 
   /**

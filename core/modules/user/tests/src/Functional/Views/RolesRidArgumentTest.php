@@ -18,6 +18,11 @@ class RolesRidArgumentTest extends UserTestBase {
   public static $testViews = ['test_user_roles_rid'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Tests the generated title of a user: roles argument.
    */
   public function testArgumentTitle() {

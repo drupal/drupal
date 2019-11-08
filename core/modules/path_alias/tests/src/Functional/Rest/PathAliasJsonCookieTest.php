@@ -28,4 +28,9 @@ class PathAliasJsonCookieTest extends PathAliasResourceTestBase {
    */
   protected static $auth = 'cookie';
 
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
 }

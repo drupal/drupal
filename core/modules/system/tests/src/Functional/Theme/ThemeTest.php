@@ -23,6 +23,11 @@ class ThemeTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
+  protected $defaultTheme = 'classy';
+
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp() {
     parent::setUp();
     \Drupal::service('theme_installer')->install(['test_theme']);

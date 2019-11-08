@@ -14,6 +14,11 @@ use Drupal\user\Entity\User;
 class UserAdminListingTest extends BrowserTestBase {
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'classy';
+
+  /**
    * Tests the listing.
    */
   public function testUserListing() {

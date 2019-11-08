@@ -24,6 +24,11 @@ class FieldImportDeleteUninstallUiTest extends FieldTestBase {
    */
   public static $modules = ['entity_test', 'telephone', 'config', 'filter', 'datetime'];
 
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
   protected function setUp() {
     parent::setUp();
 

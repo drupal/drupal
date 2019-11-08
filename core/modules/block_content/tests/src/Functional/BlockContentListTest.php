@@ -23,6 +23,11 @@ class BlockContentListTest extends BlockContentTestBase {
   public static $modules = ['block', 'block_content', 'config_translation'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'classy';
+
+  /**
    * Tests the custom block listing page.
    */
   public function testListing() {

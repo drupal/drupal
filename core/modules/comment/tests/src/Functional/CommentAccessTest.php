@@ -25,6 +25,11 @@ class CommentAccessTest extends BrowserTestBase {
   ];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Node for commenting.
    *
    * @var \Drupal\node\NodeInterface

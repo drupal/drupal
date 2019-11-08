@@ -22,6 +22,11 @@ class InstallTest extends BrowserTestBase {
   public static $modules = ['module_test'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Verify that drupal_get_schema() can be used during module installation.
    */
   public function testGetSchemaAtInstallTime() {

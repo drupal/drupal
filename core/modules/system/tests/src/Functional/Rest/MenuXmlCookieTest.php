@@ -28,4 +28,9 @@ class MenuXmlCookieTest extends MenuResourceTestBase {
    */
   protected static $auth = 'cookie';
 
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
 }

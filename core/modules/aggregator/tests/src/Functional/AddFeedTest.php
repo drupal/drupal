@@ -11,6 +11,11 @@ use Drupal\Core\Url;
  */
 class AddFeedTest extends AggregatorTestBase {
 
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
   protected function setUp() {
     parent::setUp();
 

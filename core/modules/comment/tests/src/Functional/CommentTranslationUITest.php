@@ -17,6 +17,11 @@ class CommentTranslationUITest extends ContentTranslationUITestBase {
   use CommentTestTrait;
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * The subject of the test comment.
    *
    * @var string

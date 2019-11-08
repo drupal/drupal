@@ -20,6 +20,11 @@ class NodeTypeTest extends ResourceTestBase {
   /**
    * {@inheritdoc}
    */
+  protected $defaultTheme = 'stark';
+
+  /**
+   * {@inheritdoc}
+   */
   protected static $entityTypeId = 'node_type';
 
   /**

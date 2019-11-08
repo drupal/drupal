@@ -13,6 +13,11 @@ use Drupal\comment\CommentManagerInterface;
 class CommentThreadingTest extends CommentTestBase {
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'classy';
+
+  /**
    * Tests the comment threading.
    */
   public function testCommentThreading() {

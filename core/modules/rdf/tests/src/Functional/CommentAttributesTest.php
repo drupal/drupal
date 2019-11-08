@@ -24,6 +24,11 @@ class CommentAttributesTest extends CommentTestBase {
   public static $modules = ['views', 'node', 'comment', 'rdf'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * URI of the front page of the Drupal site.
    *
    * @var string

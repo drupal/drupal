@@ -24,6 +24,11 @@ class FieldEntityTranslationTest extends ViewTestBase {
   /**
    * {@inheritdoc}
    */
+  protected $defaultTheme = 'stark';
+
+  /**
+   * {@inheritdoc}
+   */
   public static $testViews = ['test_entity_field_renderers'];
 
   /**

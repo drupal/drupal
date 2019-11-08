@@ -23,4 +23,9 @@ class CommentTypeXmlAnonTest extends CommentTypeResourceTestBase {
    */
   protected static $mimeType = 'text/xml; charset=UTF-8';
 
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
 }

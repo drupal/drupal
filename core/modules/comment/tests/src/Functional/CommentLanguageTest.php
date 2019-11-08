@@ -29,6 +29,11 @@ class CommentLanguageTest extends BrowserTestBase {
    */
   public static $modules = ['node', 'language', 'language_test', 'comment_test'];
 
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
   protected function setUp() {
     parent::setUp();
 

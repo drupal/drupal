@@ -25,6 +25,11 @@ class BlockLanguageTest extends BrowserTestBase {
    */
   public static $modules = ['language', 'block', 'content_translation'];
 
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
   protected function setUp() {
     parent::setUp();
 

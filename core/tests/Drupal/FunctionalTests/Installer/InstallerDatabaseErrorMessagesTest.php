@@ -14,6 +14,11 @@ class InstallerDatabaseErrorMessagesTest extends InstallerTestBase {
   /**
    * {@inheritdoc}
    */
+  protected $defaultTheme = 'stark';
+
+  /**
+   * {@inheritdoc}
+   */
   protected function setUpSettings() {
     // We are creating a table here to force an error in the installer because
     // it will try and create the drupal_install_test table as this is part of

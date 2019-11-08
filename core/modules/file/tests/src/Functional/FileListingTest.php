@@ -21,6 +21,11 @@ class FileListingTest extends FileFieldTestBase {
   public static $modules = ['views', 'file', 'image', 'entity_test'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * An authenticated user.
    *
    * @var \Drupal\user\UserInterface

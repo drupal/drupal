@@ -43,6 +43,11 @@ abstract class JsonApiFunctionalTestBase extends BrowserTestBase {
   ];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Test user.
    *
    * @var \Drupal\user\Entity\User

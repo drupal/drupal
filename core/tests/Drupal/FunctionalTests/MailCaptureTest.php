@@ -18,6 +18,11 @@ class MailCaptureTest extends BrowserTestBase {
   }
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Test to see if the wrapper function is executed correctly.
    */
   public function testMailSend() {

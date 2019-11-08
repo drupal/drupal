@@ -19,6 +19,11 @@ class DefaultMobileMetaTagsTest extends BrowserTestBase {
    */
   protected $defaultMetaTags;
 
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
   protected function setUp() {
     parent::setUp();
     $this->defaultMetaTags = [

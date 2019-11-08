@@ -15,6 +15,11 @@ class NoDependenciesUpdateTest extends UpdatePathTestBase {
   /**
    * {@inheritdoc}
    */
+  protected $defaultTheme = 'stark';
+
+  /**
+   * {@inheritdoc}
+   */
   protected $installProfile = 'testing';
 
   /**

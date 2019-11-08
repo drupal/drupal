@@ -20,6 +20,11 @@ class StyleUITest extends UITestBase {
   public static $testViews = ['test_view'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Tests changing the style plugin and changing some options of a style.
    */
   public function testStyleUI() {

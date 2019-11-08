@@ -19,6 +19,11 @@ class ServiceProviderWebTest extends BrowserTestBase {
   public static $modules = ['file', 'service_provider_test'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Tests that module service providers get registered to the DIC.
    *
    * Also tests that services provided by module service providers get

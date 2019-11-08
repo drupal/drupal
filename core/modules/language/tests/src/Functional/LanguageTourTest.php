@@ -28,6 +28,11 @@ class LanguageTourTest extends TourTestBase {
   /**
    * {@inheritdoc}
    */
+  protected $defaultTheme = 'stark';
+
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp() {
     parent::setUp();
     $this->adminUser = $this->drupalCreateUser(['administer languages', 'access tour']);

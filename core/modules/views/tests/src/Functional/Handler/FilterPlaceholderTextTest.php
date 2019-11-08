@@ -24,6 +24,11 @@ class FilterPlaceholderTextTest extends ViewTestBase {
   public static $modules = ['node'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Tests that HTML placeholders are added, when appropriate.
    */
   public function testPlaceholderText() {

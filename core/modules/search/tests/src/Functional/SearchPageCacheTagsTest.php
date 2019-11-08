@@ -23,6 +23,11 @@ class SearchPageCacheTagsTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
+  protected $defaultTheme = 'stark';
+
+  /**
+   * {@inheritdoc}
+   */
   protected $dumpHeaders = TRUE;
 
   /**

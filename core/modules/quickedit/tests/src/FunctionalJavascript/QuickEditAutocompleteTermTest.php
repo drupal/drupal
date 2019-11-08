@@ -32,6 +32,11 @@ class QuickEditAutocompleteTermTest extends WebDriverTestBase {
   ];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Stores the node used for the tests.
    *
    * @var \Drupal\node\NodeInterface

@@ -15,6 +15,11 @@ class InstallerExistingSettingsNoProfileTest extends InstallerTestBase {
 
   /**
    * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
+   * {@inheritdoc}
    *
    * Configures a preexisting settings.php file without an install_profile
    * setting before invoking the interactive installer.

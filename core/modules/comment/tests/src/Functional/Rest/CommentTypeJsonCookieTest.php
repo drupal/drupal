@@ -26,4 +26,9 @@ class CommentTypeJsonCookieTest extends CommentTypeResourceTestBase {
    */
   protected static $auth = 'cookie';
 
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
 }

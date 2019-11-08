@@ -23,4 +23,9 @@ class BlockXmlAnonTest extends BlockResourceTestBase {
    */
   protected static $mimeType = 'text/xml; charset=UTF-8';
 
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'classy';
+
 }

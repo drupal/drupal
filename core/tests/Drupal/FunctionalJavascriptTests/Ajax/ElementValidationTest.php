@@ -17,6 +17,11 @@ class ElementValidationTest extends WebDriverTestBase {
   public static $modules = ['ajax_test', 'ajax_forms_test'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'classy';
+
+  /**
    * Tries to post an Ajax change to a form that has a validated element.
    *
    * Drupal AJAX commands update the DOM echoing back the validated values in

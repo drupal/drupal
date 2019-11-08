@@ -21,6 +21,11 @@ class ContentTranslationOperationsTest extends NodeTestBase {
   protected $baseUser1;
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * A base user.
    *
    * @var \Drupal\user\Entity\User|false

@@ -22,6 +22,11 @@ class BulkFormTest extends NodeTestBase {
   public static $modules = ['node_test_views', 'language'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Views used by this test.
    *
    * @var array

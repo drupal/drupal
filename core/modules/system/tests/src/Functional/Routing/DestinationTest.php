@@ -23,6 +23,11 @@ class DestinationTest extends BrowserTestBase {
   public static $modules = ['system_test'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Tests that $_GET/$_REQUEST['destination'] only contain internal URLs.
    */
   public function testDestination() {

@@ -30,6 +30,11 @@ class ContactLinkTest extends ViewTestBase {
   public static $modules = ['contact_test_views'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'classy';
+
+  /**
    * Views used by this test.
    *
    * @var array

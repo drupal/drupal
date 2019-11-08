@@ -16,6 +16,11 @@ class FileFieldAnonymousSubmissionTest extends FileFieldTestBase {
   /**
    * {@inheritdoc}
    */
+  protected $defaultTheme = 'stark';
+
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp() {
     parent::setUp();
     // Set up permissions for anonymous attacker user.

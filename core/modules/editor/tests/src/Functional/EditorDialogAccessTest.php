@@ -21,6 +21,11 @@ class EditorDialogAccessTest extends BrowserTestBase {
   public static $modules = ['editor', 'filter', 'ckeditor'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Test access to the editor image dialog.
    */
   public function testEditorImageDialogAccess() {

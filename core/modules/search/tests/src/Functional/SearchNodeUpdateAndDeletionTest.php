@@ -19,6 +19,11 @@ class SearchNodeUpdateAndDeletionTest extends BrowserTestBase {
   protected static $modules = ['node', 'search'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * A user with permission to access and search content.
    *
    * @var \Drupal\user\UserInterface

@@ -24,6 +24,11 @@ class DbLogViewsTest extends DbLogTest {
   /**
    * {@inheritdoc}
    */
+  protected $defaultTheme = 'classy';
+
+  /**
+   * {@inheritdoc}
+   */
   protected function getLogsEntriesTable() {
     return $this->xpath('.//table[contains(@class, "views-view-table")]/tbody/tr');
   }

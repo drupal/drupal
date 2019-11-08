@@ -14,6 +14,11 @@ class TestSettingSummariesContentType extends WebDriverTestBase {
   /**
    * {@inheritdoc}
    */
+  protected $defaultTheme = 'stark';
+
+  /**
+   * {@inheritdoc}
+   */
   public static $modules = ['node'];
 
   /**

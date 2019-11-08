@@ -26,4 +26,9 @@ class MenuJsonCookieTest extends MenuResourceTestBase {
    */
   protected static $auth = 'cookie';
 
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
 }

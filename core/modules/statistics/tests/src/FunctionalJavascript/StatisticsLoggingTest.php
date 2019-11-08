@@ -20,6 +20,11 @@ class StatisticsLoggingTest extends WebDriverTestBase {
   public static $modules = ['node', 'statistics', 'language'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'classy';
+
+  /**
    * Node for tests.
    *
    * @var \Drupal\node\Entity\Node

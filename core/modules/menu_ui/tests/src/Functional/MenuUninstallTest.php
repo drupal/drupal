@@ -20,6 +20,11 @@ class MenuUninstallTest extends BrowserTestBase {
   public static $modules = ['menu_ui'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Tests Menu uninstall.
    */
   public function testMenuUninstall() {

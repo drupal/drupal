@@ -35,6 +35,11 @@ class PagePreviewTest extends NodeTestBase {
   public static $modules = ['node', 'taxonomy', 'comment', 'image', 'file', 'text', 'node_test', 'menu_ui'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'classy';
+
+  /**
    * The name of the created field.
    *
    * @var string

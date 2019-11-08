@@ -22,6 +22,11 @@ class IntegrationTest extends ViewTestBase {
   public static $modules = ['statistics', 'statistics_test_views', 'node'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Stores the user object that accesses the page.
    *
    * @var \Drupal\user\UserInterface

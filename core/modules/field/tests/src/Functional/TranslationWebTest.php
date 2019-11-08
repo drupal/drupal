@@ -22,6 +22,11 @@ class TranslationWebTest extends FieldTestBase {
   public static $modules = ['language', 'field_test', 'entity_test'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * The name of the field to use in this test.
    *
    * @var string

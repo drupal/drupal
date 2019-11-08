@@ -19,6 +19,11 @@ class PathTaxonomyTermTest extends PathTestBase {
    */
   public static $modules = ['taxonomy'];
 
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
   protected function setUp() {
     parent::setUp();
 

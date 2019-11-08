@@ -12,6 +12,11 @@ use Drupal\Component\Render\FormattableMarkup;
 class BlockContentValidationTest extends BlockContentTestBase {
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Tests the block content validation constraints.
    */
   public function testValidation() {

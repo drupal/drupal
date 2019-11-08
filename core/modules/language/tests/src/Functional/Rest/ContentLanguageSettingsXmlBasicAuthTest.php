@@ -21,6 +21,11 @@ class ContentLanguageSettingsXmlBasicAuthTest extends ContentLanguageSettingsRes
   /**
    * {@inheritdoc}
    */
+  protected $defaultTheme = 'stark';
+
+  /**
+   * {@inheritdoc}
+   */
   protected static $format = 'xml';
 
   /**

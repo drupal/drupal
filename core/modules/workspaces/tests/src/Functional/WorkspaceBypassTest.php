@@ -21,6 +21,11 @@ class WorkspaceBypassTest extends BrowserTestBase {
   public static $modules = ['node', 'user', 'block', 'workspaces'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Verifies that a user can edit anything in a workspace they own.
    */
   public function testBypassOwnWorkspace() {

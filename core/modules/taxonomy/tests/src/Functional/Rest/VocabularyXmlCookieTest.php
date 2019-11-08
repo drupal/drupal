@@ -28,4 +28,9 @@ class VocabularyXmlCookieTest extends VocabularyResourceTestBase {
    */
   protected static $auth = 'cookie';
 
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
 }

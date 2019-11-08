@@ -17,6 +17,11 @@ class SearchPreprocessLangcodeTest extends BrowserTestBase {
   protected static $modules = ['node', 'search', 'search_langcode_test'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Test node for searching.
    *
    * @var \Drupal\node\NodeInterface

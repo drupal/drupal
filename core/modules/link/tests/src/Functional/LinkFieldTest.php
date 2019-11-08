@@ -37,6 +37,11 @@ class LinkFieldTest extends BrowserTestBase {
   ];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'classy';
+
+  /**
    * A field to use in this test class.
    *
    * @var \Drupal\field\Entity\FieldStorageConfig

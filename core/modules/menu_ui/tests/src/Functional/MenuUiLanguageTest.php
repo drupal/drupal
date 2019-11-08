@@ -30,6 +30,11 @@ class MenuUiLanguageTest extends BrowserTestBase {
     'menu_ui',
   ];
 
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
   protected function setUp() {
     parent::setUp();
 

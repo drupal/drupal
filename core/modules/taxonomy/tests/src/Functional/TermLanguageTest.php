@@ -15,6 +15,11 @@ class TermLanguageTest extends TaxonomyTestBase {
   public static $modules = ['language'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Vocabulary for testing.
    *
    * @var \Drupal\taxonomy\VocabularyInterface

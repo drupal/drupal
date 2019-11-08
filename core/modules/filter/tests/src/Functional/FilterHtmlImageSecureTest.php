@@ -27,6 +27,11 @@ class FilterHtmlImageSecureTest extends BrowserTestBase {
   public static $modules = ['filter', 'node', 'comment'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * An authenticated user.
    *
    * @var \Drupal\user\UserInterface

@@ -23,6 +23,11 @@ class EditorSecurityTest extends BrowserTestBase {
   protected static $sampleContent = '<p style="color: red">Hello, Dumbo Octopus!</p><script>alert(0)</script><embed type="image/svg+xml" src="image.svg" />';
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * The secured sample content to use in most tests.
    *
    * @var string

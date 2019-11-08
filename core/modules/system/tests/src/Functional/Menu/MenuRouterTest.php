@@ -20,18 +20,16 @@ class MenuRouterTest extends BrowserTestBase {
   public static $modules = ['block', 'menu_test', 'test_page_test'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Name of the administrative theme to use for tests.
    *
    * @var string
    */
   protected $adminTheme;
-
-  /**
-   * Name of the default theme to use for tests.
-   *
-   * @var string
-   */
-  protected $defaultTheme;
 
   protected function setUp() {
     // Enable dummy module that implements hook_menu.

@@ -12,6 +12,11 @@ class LocaleNonInteractiveDevInstallTest extends LocaleNonInteractiveInstallTest
   /**
    * {@inheritdoc}
    */
+  protected $defaultTheme = 'stark';
+
+  /**
+   * {@inheritdoc}
+   */
   protected function getVersionStringToTest() {
     include_once $this->root . '/core/includes/install.core.inc';
     $version = _install_get_version_info(\Drupal::VERSION);

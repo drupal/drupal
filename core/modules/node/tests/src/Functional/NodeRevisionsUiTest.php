@@ -15,6 +15,11 @@ use Drupal\node\Entity\NodeType;
 class NodeRevisionsUiTest extends NodeTestBase {
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * @var \Drupal\user\Entity\User
    */
   protected $editor;

@@ -25,6 +25,11 @@ class TelephoneFieldTest extends BrowserTestBase {
   ];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * A user with permission to create articles.
    *
    * @var \Drupal\user\UserInterface

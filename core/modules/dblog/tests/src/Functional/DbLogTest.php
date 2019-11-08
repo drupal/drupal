@@ -29,6 +29,11 @@ class DbLogTest extends BrowserTestBase {
   public static $modules = ['dblog', 'node', 'forum', 'help', 'block'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'classy';
+
+  /**
    * A user with some relevant administrative permissions.
    *
    * @var \Drupal\user\UserInterface

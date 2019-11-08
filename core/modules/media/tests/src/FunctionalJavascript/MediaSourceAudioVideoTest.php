@@ -15,6 +15,11 @@ use Drupal\file\Entity\File;
 class MediaSourceAudioVideoTest extends MediaSourceTestBase {
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'classy';
+
+  /**
    * Check the Audio source functionality.
    */
   public function testAudioTypeCreation() {

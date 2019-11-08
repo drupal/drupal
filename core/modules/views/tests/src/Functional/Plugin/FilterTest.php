@@ -29,6 +29,11 @@ class FilterTest extends ViewTestBase {
    */
   public static $modules = ['views_ui', 'node'];
 
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
   protected function setUp($import_test_views = TRUE) {
     parent::setUp($import_test_views);
 

@@ -24,6 +24,11 @@ class ManageDisplayTest extends WebDriverTestBase {
   ];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * @var string
    */
   protected $type;

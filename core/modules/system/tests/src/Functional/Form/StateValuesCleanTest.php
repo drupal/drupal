@@ -22,6 +22,11 @@ class StateValuesCleanTest extends BrowserTestBase {
   public static $modules = ['form_test'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Tests \Drupal\Core\Form\FormState::cleanValues().
    */
   public function testFormStateValuesClean() {

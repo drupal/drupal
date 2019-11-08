@@ -21,4 +21,9 @@ class ActionJsonAnonTest extends ActionResourceTestBase {
    */
   protected static $mimeType = 'application/json';
 
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
 }

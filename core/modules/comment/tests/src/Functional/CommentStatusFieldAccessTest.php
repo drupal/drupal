@@ -21,6 +21,11 @@ class CommentStatusFieldAccessTest extends BrowserTestBase {
   public $profile = 'testing';
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Comment admin.
    *
    * @var \Drupal\user\UserInterface

@@ -19,6 +19,11 @@ class NodeContextualLinksTest extends NodeTestBase {
   ];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Tests contextual links.
    */
   public function testNodeContextualLinks() {

@@ -34,6 +34,11 @@ class TaxonomyImageTest extends TaxonomyTestBase {
    */
   public static $modules = ['image'];
 
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
   protected function setUp() {
     parent::setUp();
 

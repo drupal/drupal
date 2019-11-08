@@ -10,6 +10,11 @@ namespace Drupal\Tests\options\Functional;
 class OptionsDynamicValuesApiTest extends OptionsDynamicValuesTestBase {
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Tests options_allowed_values().
    *
    * @see options_test_dynamic_values_callback()

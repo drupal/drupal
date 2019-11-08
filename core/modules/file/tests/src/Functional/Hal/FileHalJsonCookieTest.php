@@ -16,4 +16,9 @@ class FileHalJsonCookieTest extends FileHalJsonAnonTest {
    */
   protected static $auth = 'cookie';
 
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
 }

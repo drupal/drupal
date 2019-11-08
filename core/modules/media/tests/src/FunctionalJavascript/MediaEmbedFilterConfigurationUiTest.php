@@ -13,6 +13,11 @@ class MediaEmbedFilterConfigurationUiTest extends MediaJavascriptTestBase {
   /**
    * {@inheritdoc}
    */
+  protected $defaultTheme = 'stark';
+
+  /**
+   * {@inheritdoc}
+   */
   public static function setUpBeforeClass() {
     parent::setUpBeforeClass();
     // Necessary for @covers to work.

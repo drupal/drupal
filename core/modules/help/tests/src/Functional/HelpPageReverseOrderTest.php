@@ -15,6 +15,11 @@ class HelpPageReverseOrderTest extends HelpPageOrderTest {
   protected static $modules = ['more_help_page_test'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Strings to search for on admin/help, in order.
    *
    * These are reversed, due to the alter hook.

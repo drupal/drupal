@@ -24,6 +24,11 @@ class UserRegistrationTest extends BrowserTestBase {
    */
   public static $modules = ['field_test'];
 
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
   public function testRegistrationWithEmailVerification() {
     $config = $this->config('user.settings');
     // Require email verification.

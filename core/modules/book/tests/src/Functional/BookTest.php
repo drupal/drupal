@@ -24,6 +24,11 @@ class BookTest extends BrowserTestBase {
   public static $modules = ['book', 'block', 'node_access_test', 'book_test'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'classy';
+
+  /**
    * A user with permission to view a book and access printer-friendly version.
    *
    * @var object

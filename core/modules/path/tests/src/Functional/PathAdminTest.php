@@ -16,6 +16,11 @@ class PathAdminTest extends PathTestBase {
    */
   public static $modules = ['path'];
 
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
   protected function setUp() {
     parent::setUp();
 

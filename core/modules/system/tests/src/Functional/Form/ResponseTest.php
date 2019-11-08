@@ -20,6 +20,11 @@ class ResponseTest extends BrowserTestBase {
   public static $modules = ['form_test'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Tests that enforced responses propagate through subscribers and middleware.
    */
   public function testFormResponse() {

@@ -22,6 +22,11 @@ class ResponseGeneratorTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
+  protected $defaultTheme = 'stark';
+
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp() {
     parent::setUp();
     $this->drupalCreateContentType(['type' => 'page', 'name' => 'Basic page']);

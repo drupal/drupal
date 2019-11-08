@@ -17,6 +17,11 @@ class RedirectTest extends UITestBase {
   public static $testViews = ['test_view', 'test_redirect_view'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Tests the redirecting.
    */
   public function testRedirect() {

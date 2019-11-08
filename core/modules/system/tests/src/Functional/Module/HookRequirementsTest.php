@@ -10,6 +10,11 @@ namespace Drupal\Tests\system\Functional\Module;
 class HookRequirementsTest extends ModuleTestBase {
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Assert that a module cannot be installed if it fails hook_requirements().
    */
   public function testHookRequirementsFailure() {

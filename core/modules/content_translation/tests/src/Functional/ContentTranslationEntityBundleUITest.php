@@ -13,6 +13,11 @@ class ContentTranslationEntityBundleUITest extends BrowserTestBase {
 
   public static $modules = ['language', 'content_translation', 'node', 'comment', 'field_ui'];
 
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
   protected function setUp() {
     parent::setUp();
     $user = $this->drupalCreateUser(['access administration pages', 'administer languages', 'administer content translation', 'administer content types']);

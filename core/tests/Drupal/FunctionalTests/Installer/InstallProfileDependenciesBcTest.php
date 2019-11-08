@@ -15,6 +15,11 @@ class InstallProfileDependenciesBcTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
+  protected $defaultTheme = 'stark';
+
+  /**
+   * {@inheritdoc}
+   */
   protected $profile = 'testing_install_profile_dependencies_bc';
 
   /**

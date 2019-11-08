@@ -19,6 +19,11 @@ class DialogTest extends WebDriverTestBase {
   protected static $modules = ['ajax_test', 'ajax_forms_test', 'contact'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'classy';
+
+  /**
    * Test sending non-JS and AJAX requests to open and manipulate modals.
    */
   public function testDialog() {

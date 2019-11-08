@@ -12,6 +12,11 @@ use Drupal\Component\Render\FormattableMarkup;
 class UpdateFeedTest extends AggregatorTestBase {
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Creates a feed and attempts to update it.
    */
   public function testUpdateFeed() {

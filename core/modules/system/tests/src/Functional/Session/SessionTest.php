@@ -20,6 +20,11 @@ class SessionTest extends BrowserTestBase {
    */
   public static $modules = ['session_test'];
 
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
   protected $dumpHeaders = TRUE;
 
   /**

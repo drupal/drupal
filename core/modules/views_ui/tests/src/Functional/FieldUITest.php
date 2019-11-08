@@ -14,6 +14,11 @@ use Drupal\views\Views;
 class FieldUITest extends UITestBase {
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'classy';
+
+  /**
    * Views used by this test.
    *
    * @var array

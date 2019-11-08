@@ -19,6 +19,11 @@ class EntityUpdateAddRevisionDefaultTest extends UpdatePathTestBase {
   use DbUpdatesTrait;
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * The state service.
    *
    * @var \Drupal\Core\State\StateInterface

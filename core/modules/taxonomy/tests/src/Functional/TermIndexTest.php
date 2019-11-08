@@ -21,6 +21,11 @@ class TermIndexTest extends TaxonomyTestBase {
   public static $modules = ['views'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Vocabulary for testing.
    *
    * @var \Drupal\taxonomy\VocabularyInterface

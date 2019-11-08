@@ -26,4 +26,9 @@ class ModeratedNodeJsonCookieTest extends ModeratedNodeResourceTestBase {
    */
   protected static $auth = 'cookie';
 
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
 }

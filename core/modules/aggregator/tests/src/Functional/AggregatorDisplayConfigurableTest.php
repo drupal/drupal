@@ -16,6 +16,11 @@ class AggregatorDisplayConfigurableTest extends AggregatorTestBase {
   /**
    * {@inheritdoc}
    */
+  protected $defaultTheme = 'classy';
+
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp() {
     parent::setUp();
 

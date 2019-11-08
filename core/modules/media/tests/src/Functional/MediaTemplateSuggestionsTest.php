@@ -19,6 +19,11 @@ class MediaTemplateSuggestionsTest extends MediaFunctionalTestBase {
   public static $modules = ['media'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Tests template suggestions from media_theme_suggestions_media().
    */
   public function testMediaThemeHookSuggestions() {

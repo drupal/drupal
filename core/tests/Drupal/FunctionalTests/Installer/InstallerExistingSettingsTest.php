@@ -15,6 +15,11 @@ class InstallerExistingSettingsTest extends InstallerTestBase {
 
   /**
    * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
+   * {@inheritdoc}
    *
    * Fully configures a preexisting settings.php file before invoking the
    * interactive installer.

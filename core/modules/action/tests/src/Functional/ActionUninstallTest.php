@@ -21,6 +21,11 @@ class ActionUninstallTest extends BrowserTestBase {
   public static $modules = ['views', 'action'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Tests Action uninstall.
    */
   public function testActionUninstall() {

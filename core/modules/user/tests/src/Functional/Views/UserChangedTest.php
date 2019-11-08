@@ -20,6 +20,11 @@ class UserChangedTest extends ViewTestBase {
   public static $modules = ['views_ui', 'user_test_views'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Views used by this test.
    *
    * @var array

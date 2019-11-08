@@ -14,6 +14,11 @@ use Drupal\media\OEmbed\ProviderException;
 class ProviderRepositoryTest extends MediaFunctionalTestBase {
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Tests that provider discovery fails if the provider database is empty.
    *
    * @param string $content

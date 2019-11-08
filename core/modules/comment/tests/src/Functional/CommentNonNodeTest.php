@@ -29,6 +29,11 @@ class CommentNonNodeTest extends BrowserTestBase {
   public static $modules = ['comment', 'user', 'field_ui', 'entity_test', 'block'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'classy';
+
+  /**
    * An administrative user with permission to configure comment settings.
    *
    * @var \Drupal\user\UserInterface

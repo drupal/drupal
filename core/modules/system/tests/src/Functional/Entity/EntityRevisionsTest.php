@@ -25,6 +25,11 @@ class EntityRevisionsTest extends BrowserTestBase {
   public static $modules = ['entity_test', 'language'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * A user with permission to administer entity_test content.
    *
    * @var \Drupal\user\UserInterface

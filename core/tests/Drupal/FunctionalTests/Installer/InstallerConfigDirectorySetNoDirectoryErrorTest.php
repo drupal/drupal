@@ -12,6 +12,11 @@ use Drupal\Component\Utility\Crypt;
 class InstallerConfigDirectorySetNoDirectoryErrorTest extends InstallerTestBase {
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * The directory where the sync directory should be created during install.
    *
    * @var string

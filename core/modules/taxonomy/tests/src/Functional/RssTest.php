@@ -21,6 +21,11 @@ class RssTest extends TaxonomyTestBase {
   public static $modules = ['node', 'field_ui', 'views'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Vocabulary for testing.
    *
    * @var \Drupal\taxonomy\VocabularyInterface

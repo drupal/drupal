@@ -20,6 +20,11 @@ class EntityFormTest extends BrowserTestBase {
    */
   public static $modules = ['entity_test', 'language'];
 
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
   protected function setUp() {
     parent::setUp();
     $web_user = $this->drupalCreateUser(['administer entity_test content', 'view test entity']);

@@ -27,6 +27,11 @@ class SearchCommentTest extends BrowserTestBase {
   protected static $modules = ['filter', 'node', 'comment', 'search'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Test subject for comments.
    *
    * @var string

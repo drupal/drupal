@@ -23,4 +23,9 @@ class PathAliasJsonAnonTest extends PathAliasResourceTestBase {
    */
   protected static $mimeType = 'application/json';
 
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
 }

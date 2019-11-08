@@ -22,6 +22,11 @@ class SearchIntegrationTest extends ViewTestBase {
   public static $modules = ['node', 'search'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Views used by this test.
    *
    * @var array

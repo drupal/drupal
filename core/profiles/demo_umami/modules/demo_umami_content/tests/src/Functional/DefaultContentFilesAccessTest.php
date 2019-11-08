@@ -12,6 +12,11 @@ use Drupal\Tests\BrowserTestBase;
 class DefaultContentFilesAccessTest extends BrowserTestBase {
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Tests that sample images, recipes and articles are not accessible.
    */
   public function testAccessDeniedToFiles() {

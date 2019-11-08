@@ -35,6 +35,11 @@ class SearchRankingTest extends BrowserTestBase {
    */
   protected static $modules = ['node', 'search', 'statistics', 'comment'];
 
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
   protected function setUp() {
     parent::setUp();
 

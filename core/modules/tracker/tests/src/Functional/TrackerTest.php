@@ -32,6 +32,11 @@ class TrackerTest extends BrowserTestBase {
   public static $modules = ['block', 'comment', 'tracker', 'history', 'node_test'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * The main user for testing.
    *
    * @var \Drupal\user\UserInterface
