@@ -25,7 +25,7 @@ class CopyTest extends FileManagedUnitTestBase {
     $result = file_copy(clone $source, $desired_uri, FileSystemInterface::EXISTS_ERROR);
 
     // Check the return status and that the contents changed.
-    $this->assertTrue($result, 'File copied successfully.');
+    $this->assertNotFalse($result, 'File copied successfully.');
     $this->assertEqual($contents, file_get_contents($result->getFileUri()), 'Contents of file were copied correctly.');
 
     // Check that the correct hooks were called.
@@ -56,7 +56,7 @@ class CopyTest extends FileManagedUnitTestBase {
     $result = file_copy(clone $source, $target->getFileUri(), FileSystemInterface::EXISTS_RENAME);
 
     // Check the return status and that the contents changed.
-    $this->assertTrue($result, 'File copied successfully.');
+    $this->assertNotFalse($result, 'File copied successfully.');
     $this->assertEqual($contents, file_get_contents($result->getFileUri()), 'Contents of file were copied correctly.');
     $this->assertNotEqual($result->getFileUri(), $source->getFileUri(), 'Returned file path has changed from the original.');
 
@@ -96,7 +96,7 @@ class CopyTest extends FileManagedUnitTestBase {
     $result = file_copy(clone $source, $target->getFileUri(), FileSystemInterface::EXISTS_REPLACE);
 
     // Check the return status and that the contents changed.
-    $this->assertTrue($result, 'File copied successfully.');
+    $this->assertNotFalse($result, 'File copied successfully.');
     $this->assertEqual($contents, file_get_contents($result->getFileUri()), 'Contents of file were overwritten.');
     $this->assertDifferentFile($source, $result);
 

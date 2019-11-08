@@ -114,7 +114,7 @@ class EntityReferenceAutoCreateTest extends BrowserTestBase {
 
     $query = clone $base_query;
     $result = $query->execute();
-    $this->assertFalse($result, 'Referenced node does not exist yet.');
+    $this->assertEmpty($result, 'Referenced node does not exist yet.');
 
     $edit = [
       'title[0][value]' => $this->randomMachineName(),
@@ -125,7 +125,7 @@ class EntityReferenceAutoCreateTest extends BrowserTestBase {
     // Assert referenced node was created.
     $query = clone $base_query;
     $result = $query->execute();
-    $this->assertTrue($result, 'Referenced node was created.');
+    $this->assertNotEmpty($result, 'Referenced node was created.');
     $referenced_nid = key($result);
     $referenced_node = Node::load($referenced_nid);
 

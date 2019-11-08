@@ -117,7 +117,7 @@ class SearchConfigSettingsFormTest extends BrowserTestBase {
     $this->clickLink(t('Edit'), 1);
 
     // Ensure that the default setting was picked up from the default config
-    $this->assertTrue($this->xpath('//select[@id="edit-extra-type-settings-boost"]//option[@value="bi" and @selected="selected"]'), 'Module specific settings are picked up from the default config');
+    $this->assertSession()->elementExists('xpath', '//select[@id="edit-extra-type-settings-boost"]//option[@value="bi" and @selected="selected"]');
 
     // Change extra type setting and also modify a common search setting.
     $edit = [
@@ -128,7 +128,7 @@ class SearchConfigSettingsFormTest extends BrowserTestBase {
     // Ensure that the modifications took effect.
     $this->assertRaw(t('The %label search page has been updated.', ['%label' => 'Dummy search type']));
     $this->drupalGet('admin/config/search/pages/manage/dummy_search_type');
-    $this->assertTrue($this->xpath('//select[@id="edit-extra-type-settings-boost"]//option[@value="ii" and @selected="selected"]'), 'Module specific settings can be changed');
+    $this->assertSession()->elementExists('xpath', '//select[@id="edit-extra-type-settings-boost"]//option[@value="ii" and @selected="selected"]');
   }
 
   /**

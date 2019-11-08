@@ -2,8 +2,6 @@
 
 namespace Drupal\Tests\views_ui\Functional;
 
-use Drupal\Component\Render\FormattableMarkup;
-
 /**
  * Tests the views analyze system.
  *
@@ -44,8 +42,8 @@ class AnalyzeTest extends UITestBase {
     $this->assertSession()->titleEquals('View analysis | Drupal');
 
     foreach (['ok', 'warning', 'error'] as $type) {
-      $xpath = $this->xpath('//div[contains(@class, :class)]', [':class' => $type]);
-      $this->assertTrue(count($xpath), new FormattableMarkup('Analyse messages with @type found', ['@type' => $type]));
+      // Check that analyse messages with the expected type found.
+      $this->assertSession()->elementExists('css', 'div.' . $type);
     }
 
     // This redirects the user back to the main views edit page.

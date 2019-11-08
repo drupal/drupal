@@ -317,7 +317,7 @@ class LocaleImportFunctionalTest extends BrowserTestBase {
     $locale_storage = $this->container->get('locale.storage');
     foreach ($config_strings as $config_string) {
       $string = $locale_storage->findString(['source' => $config_string[0], 'context' => '', 'type' => 'configuration']);
-      $this->assertTrue($string, 'Configuration strings have been created upon installation.');
+      $this->assertNotEmpty($string, 'Configuration strings have been created upon installation.');
     }
 
     // Import a .po file to translate.

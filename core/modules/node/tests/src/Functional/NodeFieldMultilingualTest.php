@@ -76,7 +76,7 @@ class NodeFieldMultilingualTest extends BrowserTestBase {
 
     // Check that the node exists in the database.
     $node = $this->drupalGetNodeByTitle($edit[$title_key]);
-    $this->assertTrue($node, 'Node found in database.');
+    $this->assertNotEmpty($node, 'Node found in database.');
     $this->assertTrue($node->language()->getId() == $langcode && $node->body->value == $body_value, 'Field language correctly set.');
 
     // Change node language.
@@ -88,7 +88,7 @@ class NodeFieldMultilingualTest extends BrowserTestBase {
     ];
     $this->drupalPostForm(NULL, $edit, t('Save'));
     $node = $this->drupalGetNodeByTitle($edit[$title_key], TRUE);
-    $this->assertTrue($node, 'Node found in database.');
+    $this->assertNotEmpty($node, 'Node found in database.');
     $this->assertTrue($node->language()->getId() == $langcode && $node->body->value == $body_value, 'Field language correctly changed.');
 
     // Enable content language URL detection.
@@ -120,7 +120,7 @@ class NodeFieldMultilingualTest extends BrowserTestBase {
 
     // Check that the node exists in the database.
     $node = $this->drupalGetNodeByTitle($edit[$title_key]);
-    $this->assertTrue($node, 'Node found in database.');
+    $this->assertNotEmpty($node, 'Node found in database.');
 
     // Check if node body is showed.
     $this->drupalGet('node/' . $node->id());

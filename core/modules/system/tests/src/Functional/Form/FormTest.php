@@ -134,13 +134,13 @@ class FormTest extends BrowserTestBase {
             $this->assertTrue(isset($errors[$element]), "Check empty($key) '$type' field '$element'");
             if (!empty($form_output)) {
               // Make sure the form element is marked as required.
-              $this->assertTrue(preg_match($required_marker_preg, $form_output), "Required '$type' field is marked as required");
+              $this->assertRegExp($required_marker_preg, (string) $form_output, "Required '$type' field is marked as required");
             }
           }
           else {
             if (!empty($form_output)) {
               // Make sure the form element is *not* marked as required.
-              $this->assertFalse(preg_match($required_marker_preg, $form_output), "Optional '$type' field is not marked as required");
+              $this->assertNotRegExp($required_marker_preg, (string) $form_output, "Optional '$type' field is not marked as required");
             }
             if ($type == 'select') {
               // Select elements are going to have validation errors with empty
@@ -149,7 +149,8 @@ class FormTest extends BrowserTestBase {
               $this->assertTrue((empty($errors[$element]) || strpos('field is required', (string) $errors[$element]) === FALSE), "Optional '$type' field '$element' is not treated as a required element");
             }
             else {
-              // Make sure there is *no* form error for this element.
+              // Make sure there is *no* form error for this element. We're
+              // not using assertEmpty() because the array key might not exist.
               $this->assertTrue(empty($errors[$element]), "Optional '$type' field '$element' has no errors with empty input");
             }
           }

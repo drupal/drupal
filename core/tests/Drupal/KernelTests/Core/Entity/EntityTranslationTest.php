@@ -52,7 +52,7 @@ class EntityTranslationTest extends EntityLanguageTestBase {
       ]);
 
     $this->assertEqual($entity->language()->getId(), LanguageInterface::LANGCODE_NOT_SPECIFIED, new FormattableMarkup('%entity_type: Entity language not specified.', ['%entity_type' => $entity_type]));
-    $this->assertFalse($entity->getTranslationLanguages(FALSE), new FormattableMarkup('%entity_type: No translations are available', ['%entity_type' => $entity_type]));
+    $this->assertEmpty($entity->getTranslationLanguages(FALSE), new FormattableMarkup('%entity_type: No translations are available', ['%entity_type' => $entity_type]));
 
     // Set the value in default language.
     $entity->set($this->fieldName, [0 => ['value' => 'default value']]);
@@ -77,7 +77,7 @@ class EntityTranslationTest extends EntityLanguageTestBase {
     $entity->{$langcode_key}->value = $default_langcode;
     $entity->{$this->fieldName} = [];
     $this->assertEqual($entity->language(), \Drupal::languageManager()->getLanguage($this->langcodes[0]), new FormattableMarkup('%entity_type: Entity language retrieved.', ['%entity_type' => $entity_type]));
-    $this->assertFalse($entity->getTranslationLanguages(FALSE), new FormattableMarkup('%entity_type: No translations are available', ['%entity_type' => $entity_type]));
+    $this->assertEmpty($entity->getTranslationLanguages(FALSE), new FormattableMarkup('%entity_type: No translations are available', ['%entity_type' => $entity_type]));
 
     // Set the value in default language.
     $entity->set($this->fieldName, [0 => ['value' => 'default value']]);
@@ -336,7 +336,7 @@ class EntityTranslationTest extends EntityLanguageTestBase {
 
     $entity->save();
     $hooks = $this->getHooksInfo();
-    $this->assertFalse($hooks, 'No entity translation hooks are fired when creating an entity.');
+    $this->assertEmpty($hooks, 'No entity translation hooks are fired when creating an entity.');
 
     // Verify that we obtain the entity object itself when we attempt to
     // retrieve a translation referring to it.
@@ -508,7 +508,7 @@ class EntityTranslationTest extends EntityLanguageTestBase {
     $this->assertTrue(isset($hooks[$entity_type . '_translation_create']), 'The entity-type-specific entity translation creation hook is run when adding and removing a translation without storing it.');
     unset($hooks[$entity_type . '_translation_create']);
 
-    $this->assertFalse($hooks, 'No other hooks beyond the entity translation creation hooks are run when adding and removing a translation without storing it.');
+    $this->assertEmpty($hooks, 'No other hooks beyond the entity translation creation hooks are run when adding and removing a translation without storing it.');
 
     // Check that hooks are fired only when actually storing data.
     $entity = $this->reloadEntity($entity);

@@ -146,7 +146,7 @@ class BrowserTestBaseTest extends BrowserTestBase {
 
     // Test drupalPostForm() with no-html response.
     $values = Json::decode($this->drupalPostForm('form_test/form-state-values-clean', [], t('Submit')));
-    $this->assertTrue(1000, $values['beer']);
+    $this->assertSame(1000, $values['beer']);
 
     // Test drupalPostForm() with form by HTML id.
     $this->drupalCreateContentType(['type' => 'page']);

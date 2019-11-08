@@ -58,7 +58,7 @@ class QueryTest extends DatabaseTestBase {
       ->countQuery()
       ->execute()
       ->fetchField();
-    $this->assertFalse($result, 'SQL injection attempt did not result in a row being inserted in the database table.');
+    $this->assertEquals(0, $result, 'SQL injection attempt did not result in a row being inserted in the database table.');
   }
 
   /**
@@ -95,7 +95,7 @@ class QueryTest extends DatabaseTestBase {
       ->countQuery()
       ->execute()
       ->fetchField();
-    $this->assertFalse($result, 'SQL injection attempt did not result in a row being inserted in the database table.');
+    $this->assertEquals(0, $result, 'SQL injection attempt did not result in a row being inserted in the database table.');
 
     // Attempt SQLi via union query with no unsafe characters.
     $this->enableModules(['user']);

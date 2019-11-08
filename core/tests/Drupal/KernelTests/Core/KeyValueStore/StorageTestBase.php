@@ -57,13 +57,13 @@ abstract class StorageTestBase extends KernelTestBase {
     $this->assertIdenticalObject($this->objects[0], $stores[0]->get('foo'));
     // Verify that the other collection is not affected.
     $this->assertFalse($stores[1]->has('foo'));
-    $this->assertFalse($stores[1]->get('foo'));
+    $this->assertNull($stores[1]->get('foo'));
 
     // Verify that an item can be updated.
     $stores[0]->set('foo', $this->objects[1]);
     $this->assertIdenticalObject($this->objects[1], $stores[0]->get('foo'));
     // Verify that the other collection is still not affected.
-    $this->assertFalse($stores[1]->get('foo'));
+    $this->assertNull($stores[1]->get('foo'));
 
     // Verify that a collection/name pair is unique.
     $stores[1]->set('foo', $this->objects[2]);
@@ -73,13 +73,13 @@ abstract class StorageTestBase extends KernelTestBase {
     // Verify that an item can be deleted.
     $stores[0]->delete('foo');
     $this->assertFalse($stores[0]->has('foo'));
-    $this->assertFalse($stores[0]->get('foo'));
+    $this->assertNull($stores[0]->get('foo'));
 
     // Verify that the other collection is not affected.
     $this->assertTrue($stores[1]->has('foo'));
     $this->assertIdenticalObject($this->objects[2], $stores[1]->get('foo'));
     $stores[1]->delete('foo');
-    $this->assertFalse($stores[1]->get('foo'));
+    $this->assertNull($stores[1]->get('foo'));
 
     // Verify that multiple items can be stored.
     $values = [
@@ -95,8 +95,8 @@ abstract class StorageTestBase extends KernelTestBase {
     }
 
     // Verify that the other collection was not affected.
-    $this->assertFalse($stores[1]->get('foo'));
-    $this->assertFalse($stores[1]->get('bar'));
+    $this->assertNull($stores[1]->get('foo'));
+    $this->assertNull($stores[1]->get('bar'));
 
     // Verify that all items in a collection can be retrieved.
     // Ensure that an item with the same name exists in the other collection.
@@ -113,9 +113,9 @@ abstract class StorageTestBase extends KernelTestBase {
 
     // Verify that multiple items can be deleted.
     $stores[0]->deleteMultiple(array_keys($values));
-    $this->assertFalse($stores[0]->get('foo'));
-    $this->assertFalse($stores[0]->get('bar'));
-    $this->assertFalse($stores[0]->getMultiple(['foo', 'bar']));
+    $this->assertNull($stores[0]->get('foo'));
+    $this->assertNull($stores[0]->get('bar'));
+    $this->assertEmpty($stores[0]->getMultiple(['foo', 'bar']));
     // Verify that deleting no items does not cause an error.
     $stores[0]->deleteMultiple([]);
     // Verify that the item in the other collection still exists.
@@ -165,7 +165,7 @@ abstract class StorageTestBase extends KernelTestBase {
       $this->assertEqual(!$i, $stores[0]->setIfNotExists($key, $this->objects[$i]));
       $this->assertIdenticalObject($this->objects[0], $stores[0]->get($key));
       // Verify that the other collection is not affected.
-      $this->assertFalse($stores[1]->get($key));
+      $this->assertNull($stores[1]->get($key));
     }
 
     // Remove the item and try to set it again.
@@ -174,7 +174,7 @@ abstract class StorageTestBase extends KernelTestBase {
     // This time it should succeed.
     $this->assertIdenticalObject($this->objects[1], $stores[0]->get($key));
     // Verify that the other collection is still not affected.
-    $this->assertFalse($stores[1]->get($key));
+    $this->assertNull($stores[1]->get($key));
   }
 
   /**

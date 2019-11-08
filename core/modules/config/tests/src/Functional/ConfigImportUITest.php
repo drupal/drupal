@@ -151,9 +151,7 @@ class ConfigImportUITest extends BrowserTestBase {
     $this->assertTrue(\Drupal::moduleHandler()->moduleExists('action'), 'Action module installed during import.');
     $this->assertTrue(\Drupal::moduleHandler()->moduleExists('options'), 'Options module installed during import.');
     $this->assertTrue(\Drupal::moduleHandler()->moduleExists('text'), 'Text module installed during import.');
-
-    $theme_info = \Drupal::service('theme_handler')->listInfo();
-    $this->assertTrue($theme_info['bartik']->status, 'Bartik theme installed during import.');
+    $this->assertTrue(\Drupal::service('theme_handler')->themeExists('bartik'), 'Bartik theme installed during import.');
 
     // Ensure installations and uninstallation occur as expected.
     $installed = \Drupal::state()->get('ConfigImportUITest.core.extension.modules_installed', []);

@@ -91,7 +91,7 @@ abstract class LocaleUpdateBase extends BrowserTestBase {
     $edit = ['predefined_langcode' => $langcode];
     $this->drupalPostForm('admin/config/regional/language/add', $edit, t('Add language'));
     $this->container->get('language_manager')->reset();
-    $this->assertTrue(\Drupal::languageManager()->getLanguage($langcode), new FormattableMarkup('Language %langcode added.', ['%langcode' => $langcode]));
+    $this->assertNotEmpty(\Drupal::languageManager()->getLanguage($langcode), new FormattableMarkup('Language %langcode added.', ['%langcode' => $langcode]));
   }
 
   /**

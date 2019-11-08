@@ -105,8 +105,8 @@ class CronQueueTest extends KernelTestBase {
     $queue->createItem([]);
     $this->cron->run();
 
-    $this->assertEqual(\Drupal::state()->get('cron_queue_test_requeue_exception'), 2);
-    $this->assertFalse($queue->numberOfItems());
+    $this->assertEquals(2, \Drupal::state()->get('cron_queue_test_requeue_exception'));
+    $this->assertEquals(0, $queue->numberOfItems());
   }
 
 }

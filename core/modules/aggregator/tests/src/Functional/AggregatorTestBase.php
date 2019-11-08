@@ -221,10 +221,10 @@ abstract class AggregatorTestBase extends BrowserTestBase {
     $count_query = \Drupal::entityQuery('aggregator_item')->condition('fid', $feed->id())->count();
     $this->updateFeedItems($feed, $expected_count);
     $count = $count_query->execute();
-    $this->assertTrue($count);
+    $this->assertGreaterThan(0, $count);
     $this->deleteFeedItems($feed);
     $count = $count_query->execute();
-    $this->assertTrue($count == 0);
+    $this->assertEquals(0, $count);
   }
 
   /**

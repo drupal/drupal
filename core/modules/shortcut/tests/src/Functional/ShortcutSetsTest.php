@@ -64,7 +64,7 @@ class ShortcutSetsTest extends ShortcutTestBase {
 
     // Test for the table.
     $element = $this->xpath('//div[@class="layout-content"]//table');
-    $this->assertTrue($element, 'Shortcut entity list table found.');
+    $this->assertNotEmpty($element, 'Shortcut entity list table found.');
 
     // Test the table header.
     $elements = $this->xpath('//div[@class="layout-content"]//table/thead/tr/th');

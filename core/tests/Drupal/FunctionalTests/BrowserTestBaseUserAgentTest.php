@@ -32,7 +32,7 @@ class BrowserTestBaseUserAgentTest extends BrowserTestBase {
     $http_path = $system_path . '/tests/http.php/user/login';
     $https_path = $system_path . '/tests/https.php/user/login';
     // Generate a valid simpletest User-Agent to pass validation.
-    $this->assertTrue(preg_match('/test\d+/', $this->databasePrefix, $matches), 'Database prefix contains test prefix.');
+    $this->assertNotFalse(preg_match('/test\d+/', $this->databasePrefix, $matches), 'Database prefix contains test prefix.');
     $this->agent = drupal_generate_test_ua($matches[0]);
 
     // Test pages only available for testing.

@@ -52,15 +52,15 @@ class ReadOnlyStreamWrapperTest extends FileTestBase {
     $this->assertFalse($handle, 'Unable to open a file for reading and writing with the read-only stream wrapper.');
     // Attempt to open a file in binary read mode
     $handle = fopen($uri, 'rb');
-    $this->assertTrue($handle, 'Able to open a file for reading in binary mode with the read-only stream wrapper.');
+    $this->assertNotFalse($handle, 'Able to open a file for reading in binary mode with the read-only stream wrapper.');
     $this->assertTrue(fclose($handle), 'Able to close file opened in binary mode using the read_only stream wrapper.');
     // Attempt to open a file in text read mode
     $handle = fopen($uri, 'rt');
-    $this->assertTrue($handle, 'Able to open a file for reading in text mode with the read-only stream wrapper.');
+    $this->assertNotFalse($handle, 'Able to open a file for reading in text mode with the read-only stream wrapper.');
     $this->assertTrue(fclose($handle), 'Able to close file opened in text mode using the read_only stream wrapper.');
     // Attempt to open a file in read mode
     $handle = fopen($uri, 'r');
-    $this->assertTrue($handle, 'Able to open a file for reading with the read-only stream wrapper.');
+    $this->assertNotFalse($handle, 'Able to open a file for reading with the read-only stream wrapper.');
     // Attempt to change file permissions
     $this->assertFalse(@chmod($uri, 0777), 'Unable to change file permissions when using read-only stream wrapper.');
     // Attempt to acquire an exclusive lock for writing
@@ -72,7 +72,7 @@ class ReadOnlyStreamWrapperTest extends FileTestBase {
     // Attempt to truncate the file
     $this->assertFalse(@ftruncate($handle, 0), 'Unable to truncate using the read-only stream wrapper.');
     // Attempt to write to the file
-    $this->assertFalse(@fwrite($handle, $this->randomMachineName()), 'Unable to write to file using the read-only stream wrapper.');
+    $this->assertEquals(0, @fwrite($handle, $this->randomMachineName()), 'Unable to write to file using the read-only stream wrapper.');
     // Attempt to flush output to the file
     $this->assertFalse(@fflush($handle), 'Unable to flush output to file using the read-only stream wrapper.');
     // Attempt to close the stream.  (Suppress errors, as fclose triggers fflush.)

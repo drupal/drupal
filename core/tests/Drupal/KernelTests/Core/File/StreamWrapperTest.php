@@ -85,8 +85,8 @@ class StreamWrapperTest extends FileTestBase {
     $this->assertEqual($stream_wrapper_manager::getTarget('public://foo/bar.txt'), 'foo/bar.txt', 'Got a valid stream target from public://foo/bar.txt.');
     $this->assertEqual($stream_wrapper_manager::getTarget('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg=='), 'image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==', t('Got a valid stream target from a data URI.'));
     $this->assertFalse($stream_wrapper_manager::getTarget('foo/bar.txt'), 'foo/bar.txt is not a valid stream.');
-    $this->assertFalse($stream_wrapper_manager::getTarget('public://'), 'public:// has no target.');
-    $this->assertFalse($stream_wrapper_manager::getTarget('data:'), 'data: has no target.');
+    $this->assertSame($stream_wrapper_manager::getTarget('public://'), '');
+    $this->assertSame($stream_wrapper_manager::getTarget('data:'), '');
 
     // Test file_build_uri() and
     // Drupal\Core\StreamWrapper\LocalStream::getDirectoryPath().
@@ -102,9 +102,9 @@ class StreamWrapperTest extends FileTestBase {
     // TemporaryStream::getExternalUrl() uses Url::fromRoute(), which needs
     // route information to work.
     $this->container->get('router.builder')->rebuild();
-    $this->assertTrue(strpos(file_create_url('temporary://test.txt'), 'system/temporary?file=test.txt'), 'Temporary external URL correctly built.');
-    $this->assertTrue(strpos(file_create_url('public://test.txt'), Settings::get('file_public_path') . '/test.txt'), 'Public external URL correctly built.');
-    $this->assertTrue(strpos(file_create_url('private://test.txt'), 'system/files/test.txt'), 'Private external URL correctly built.');
+    $this->assertContains('system/temporary?file=test.txt', file_create_url('temporary://test.txt'), 'Temporary external URL correctly built.');
+    $this->assertContains(Settings::get('file_public_path') . '/test.txt', file_create_url('public://test.txt'), 'Public external URL correctly built.');
+    $this->assertContains('system/files/test.txt', file_create_url('private://test.txt'), 'Private external URL correctly built.');
   }
 
   /**
@@ -116,7 +116,7 @@ class StreamWrapperTest extends FileTestBase {
 
     // Open for rw and place pointer at beginning of file so select will return.
     $handle = fopen($filename, 'c+');
-    $this->assertTrue($handle, 'Able to open a file for appending, reading and writing.');
+    $this->assertNotFalse($handle, 'Able to open a file for appending, reading and writing.');
 
     // Attempt to change options on the file stream: should all fail.
     $this->assertFalse(@stream_set_blocking($handle, 0), 'Unable to set to non blocking using a local stream wrapper.');

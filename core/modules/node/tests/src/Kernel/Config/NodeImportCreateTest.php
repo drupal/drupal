@@ -39,13 +39,13 @@ class NodeImportCreateTest extends KernelTestBase {
     $node_type_id = 'default';
 
     // Check that the content type does not exist yet.
-    $this->assertFalse(NodeType::load($node_type_id));
+    $this->assertNull(NodeType::load($node_type_id));
 
     // Enable node_test_config module and check that the content type
     // shipped in the module's default config is created.
     $this->container->get('module_installer')->install(['node_test_config']);
     $node_type = NodeType::load($node_type_id);
-    $this->assertTrue($node_type, 'The default content type was created.');
+    $this->assertNotEmpty($node_type, 'The default content type was created.');
   }
 
   /**
@@ -62,15 +62,15 @@ class NodeImportCreateTest extends KernelTestBase {
     // Manually add new node type.
     $src_dir = __DIR__ . '/../../../modules/node_test_config/sync';
     $target_dir = Settings::get('config_sync_directory');
-    $this->assertTrue(\Drupal::service('file_system')->copy("$src_dir/$node_type_config_name.yml", "$target_dir/$node_type_config_name.yml"));
+    $this->assertNotFalse(\Drupal::service('file_system')->copy("$src_dir/$node_type_config_name.yml", "$target_dir/$node_type_config_name.yml"));
 
     // Import the content of the sync directory.
     $this->configImporter()->import();
 
     // Check that the content type was created.
     $node_type = NodeType::load($node_type_id);
-    $this->assertTrue($node_type, 'Import node type from sync was created.');
-    $this->assertFalse(FieldConfig::loadByName('node', $node_type_id, 'body'));
+    $this->assertNotEmpty($node_type, 'Import node type from sync was created.');
+    $this->assertNull(FieldConfig::loadByName('node', $node_type_id, 'body'));
   }
 
 }

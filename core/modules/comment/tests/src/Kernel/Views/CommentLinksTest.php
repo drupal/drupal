@@ -92,7 +92,7 @@ class CommentLinksTest extends CommentViewsKernelTestBase {
 
     // Check if I can see the comment approve link on an approved comment.
     $approve_comment = $view->style_plugin->getField(1, 'approve_comment');
-    $this->assertFalse((string) $approve_comment, "Didn't find a comment approve link for an already approved comment.");
+    $this->assertEmpty((string) $approve_comment, "Didn't find a comment approve link for an already approved comment.");
 
     // Check if I can see the comment approve link on an approved comment as an
     // anonymous user.
@@ -104,7 +104,7 @@ class CommentLinksTest extends CommentViewsKernelTestBase {
     $view = Views::getView('test_comment');
     $view->preview();
     $replyto_comment = $view->style_plugin->getField(0, 'approve_comment');
-    $this->assertFalse((string) $replyto_comment, "I can't approve the comment as an anonymous user.");
+    $this->assertEmpty((string) $replyto_comment, "I can't approve the comment as an anonymous user.");
   }
 
   /**
@@ -166,7 +166,7 @@ class CommentLinksTest extends CommentViewsKernelTestBase {
 
     // Check if I can see the reply link on an unapproved comment.
     $replyto_comment = $view->style_plugin->getField(0, 'replyto_comment');
-    $this->assertFalse((string) $replyto_comment, "I can't reply to an unapproved comment.");
+    $this->assertEmpty((string) $replyto_comment, "I can't reply to an unapproved comment.");
 
     // Approve the comment.
     $comment->setPublished();
@@ -189,7 +189,7 @@ class CommentLinksTest extends CommentViewsKernelTestBase {
     $view = Views::getView('test_comment');
     $view->preview();
     $replyto_comment = $view->style_plugin->getField(0, 'replyto_comment');
-    $this->assertFalse((string) $replyto_comment, "Didn't find the comment reply link as an anonymous user.");
+    $this->assertEmpty((string) $replyto_comment, "Didn't find the comment reply link as an anonymous user.");
   }
 
 }

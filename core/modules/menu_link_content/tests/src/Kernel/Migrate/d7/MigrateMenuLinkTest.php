@@ -131,7 +131,7 @@ class MigrateMenuLinkTest extends MigrateDrupal7TestBase {
     $tree = $menu_link_tree_service->load(static::MENU_NAME, $parameters);
     $found = FALSE;
     foreach ($tree as $menu_link_tree_element) {
-      $this->assertTrue($menu_link_tree_element->link->getUrlObject()->toString());
+      $this->assertNotEmpty($menu_link_tree_element->link->getUrlObject()->toString());
       if ($menu_link_tree_element->link->getTitle() == 'custom link test') {
         $found = TRUE;
         break;

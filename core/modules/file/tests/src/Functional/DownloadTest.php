@@ -75,7 +75,7 @@ class DownloadTest extends FileManagedTestBase {
     file_test_set_return('download', ['x-foo' => 'Bar']);
     $this->drupalGet($url);
     $this->assertEqual($this->drupalGetHeader('x-foo'), 'Bar', 'Found header set by file_test module on private download.');
-    $this->assertFalse($this->drupalGetHeader('x-drupal-cache'), 'Page cache is disabled on private file download.');
+    $this->assertNull($this->drupalGetHeader('x-drupal-cache'), 'Page cache is disabled on private file download.');
     $this->assertResponse(200, 'Correctly allowed access to a file when file_test provides headers.');
 
     // Test that the file transferred correctly.

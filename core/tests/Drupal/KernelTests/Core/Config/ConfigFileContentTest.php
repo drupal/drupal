@@ -56,7 +56,7 @@ class ConfigFileContentTest extends KernelTestBase {
 
     // Verify a configuration object is returned.
     $this->assertEqual($config->getName(), $name);
-    $this->assertTrue($config, 'Config object created.');
+    $this->assertNotEmpty($config, 'Config object created.');
 
     // Verify the configuration object is empty.
     $this->assertEqual($config->get(), [], 'New config object is empty.');
@@ -93,12 +93,12 @@ class ConfigFileContentTest extends KernelTestBase {
 
     // Verify the database entry exists.
     $data = $storage->read($name);
-    $this->assertTrue($data);
+    $this->assertNotEmpty($data);
 
     // Read top level value.
     $config = $this->config($name);
     $this->assertEqual($config->getName(), $name);
-    $this->assertTrue($config, 'Config object created.');
+    $this->assertNotEmpty($config, 'Config object created.');
     $this->assertEqual($config->get($key), 'bar', 'Top level configuration value found.');
 
     // Read nested value.

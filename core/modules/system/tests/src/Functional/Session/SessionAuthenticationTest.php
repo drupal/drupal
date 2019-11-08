@@ -72,7 +72,7 @@ class SessionAuthenticationTest extends BrowserTestBase {
     // should no longer be logged in.
     $this->drupalGet($unprotected_url);
     $this->assertResponse(200, 'An unprotected route can be accessed without basic authentication.');
-    $this->assertFalse(json_decode($session->getPage()->getContent())->user, 'The user is no longer authenticated after visiting a page without basic authentication.');
+    $this->assertEquals(0, json_decode($session->getPage()->getContent())->user, 'The user is no longer authenticated after visiting a page without basic authentication.');
 
     // If we access the protected page again without basic authentication we
     // should get 401 Unauthorized.

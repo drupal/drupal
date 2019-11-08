@@ -72,10 +72,10 @@ class NodeSaveTest extends NodeTestBase {
     $node->save();
     // Test the import.
     $node_by_nid = Node::load($test_nid);
-    $this->assertTrue($node_by_nid, 'Node load by node ID.');
+    $this->assertNotEmpty($node_by_nid, 'Node load by node ID.');
 
     $node_by_title = $this->drupalGetNodeByTitle($title);
-    $this->assertTrue($node_by_title, 'Node load by node title.');
+    $this->assertNotEmpty($node_by_title, 'Node load by node title.');
   }
 
   /**

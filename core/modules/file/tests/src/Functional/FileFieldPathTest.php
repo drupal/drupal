@@ -93,7 +93,7 @@ class FileFieldPathTest extends FileFieldTestBase {
     $base_path = substr($expected_path, 0, $pos);
     $extension = substr($expected_path, $pos + 1);
 
-    $result = preg_match('/' . preg_quote($base_path, '/') . '(_[0-9]+)?\.' . preg_quote($extension, '/') . '/', $actual_path);
+    $result = (bool) preg_match('/' . preg_quote($base_path, '/') . '(_[0-9]+)?\.' . preg_quote($extension, '/') . '/', $actual_path);
     $this->assertTrue($result, $message);
   }
 

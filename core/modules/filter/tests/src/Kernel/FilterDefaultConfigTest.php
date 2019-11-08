@@ -39,7 +39,7 @@ class FilterDefaultConfigTest extends KernelTestBase {
     $this->assertEqual($format->get('weight'), 2);
 
     // Verify that format default property values have been added/injected.
-    $this->assertTrue($format->uuid());
+    $this->assertNotEmpty($format->uuid());
 
     // Verify that the loaded format does not contain any roles.
     $this->assertEqual($format->get('roles'), NULL);

@@ -62,7 +62,7 @@ class WorkspaceCacheContextTest extends BrowserTestBase {
     // Test that a cache entry is created.
     $cid = implode(':', $cid_parts);
     $bin = $build['#cache']['bin'];
-    $this->assertTrue($this->container->get('cache.' . $bin)->get($cid), 'The entity render element has been cached.');
+    $this->assertInstanceOf(\stdClass::class, $this->container->get('cache.' . $bin)->get($cid), 'The entity render element has been cached.');
 
     // Switch to the 'stage' workspace and check that the correct workspace
     // cache context is used.
@@ -88,7 +88,7 @@ class WorkspaceCacheContextTest extends BrowserTestBase {
     // Test that a cache entry is created.
     $cid = implode(':', $cid_parts);
     $bin = $build['#cache']['bin'];
-    $this->assertTrue($this->container->get('cache.' . $bin)->get($cid), 'The entity render element has been cached.');
+    $this->assertInstanceOf(\stdClass::class, $this->container->get('cache.' . $bin)->get($cid), 'The entity render element has been cached.');
   }
 
 }

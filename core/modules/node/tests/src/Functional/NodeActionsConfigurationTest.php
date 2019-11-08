@@ -82,7 +82,7 @@ class NodeActionsConfigurationTest extends BrowserTestBase {
     $this->assertNoText($new_action_label, 'The label for the node_assign_owner_action action does not appear on the actions administration page after deleting.');
 
     $action = Action::load($action_id);
-    $this->assertFalse($action, 'The node_assign_owner_action action is not available after being deleted.');
+    $this->assertNull($action, 'The node_assign_owner_action action is not available after being deleted.');
   }
 
 }

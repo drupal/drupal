@@ -353,7 +353,7 @@ class MenuTreeStorageTest extends KernelTestBase {
         $this->fail($message);
       }
       catch (\InvalidArgumentException $e) {
-        $this->assertTrue(preg_match('/^An invalid property name, .+ was specified. Allowed property names are:/', $e->getMessage()), 'Found expected exception message.');
+        $this->assertRegExp('/^An invalid property name, .+ was specified. Allowed property names are:/', $e->getMessage(), 'Found expected exception message.');
         $this->pass($message);
       }
     }

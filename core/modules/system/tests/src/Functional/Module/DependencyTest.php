@@ -53,7 +53,7 @@ class DependencyTest extends ModuleTestBase {
 
     // Assert that the language YAML files were created.
     $storage = $this->container->get('config.storage');
-    $this->assertTrue(count($storage->listAll('language.entity.')) > 0, 'Language config entity files exist.');
+    $this->assertNotEmpty($storage->listAll('language.entity.'), 'Language config entity files exist.');
   }
 
   /**

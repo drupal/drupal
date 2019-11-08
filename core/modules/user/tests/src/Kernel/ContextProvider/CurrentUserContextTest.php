@@ -46,7 +46,7 @@ class CurrentUserContextTest extends KernelTestBase {
     $this->assertArrayHasKey('@user.current_user_context:current_user', $contexts);
     $this->assertSame('entity:user', $contexts['@user.current_user_context:current_user']->getContextDefinition()->getDataType());
     $this->assertTrue($contexts['@user.current_user_context:current_user']->hasContextValue());
-    $this->assertTrue($contexts['@user.current_user_context:current_user']->getContextValue());
+    $this->assertNotNull($contexts['@user.current_user_context:current_user']->getContextValue());
 
     // Test an anonymous account.
     $anonymous = $this->prophesize(AccountInterface::class);

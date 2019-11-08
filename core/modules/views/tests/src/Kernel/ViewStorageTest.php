@@ -107,7 +107,7 @@ class ViewStorageTest extends ViewsKernelTestBase {
 
     // Make sure that loaded default views get a UUID.
     $view = Views::getView('test_view_storage');
-    $this->assertTrue($view->storage->uuid());
+    $this->assertNotEmpty($view->storage->uuid());
   }
 
   /**

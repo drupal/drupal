@@ -122,7 +122,7 @@ class LocaleUpdateInterfaceTest extends LocaleUpdateBase {
       '@date' => $this->container->get('date.formatter')->format(REQUEST_TIME, 'html_date'),
     ]), 'Core translation update');
     $update_button = $this->xpath('//input[@type="submit"][@value="' . t('Update translations') . '"]');
-    $this->assertTrue($update_button, 'Update translations button');
+    $this->assertNotEmpty($update_button, 'Update translations button');
   }
 
 }

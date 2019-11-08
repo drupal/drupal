@@ -55,36 +55,36 @@ class ViewsMenuLinkTest extends ViewsKernelTestBase {
   public function testMenuLinkOverrides() {
     // Link from views module.
     $views_link = $this->menuLinkManager->getDefinition('views_view:views.test_page_display_menu.page_3');
-    $this->assertTrue($views_link['enabled'], 'Menu link is enabled.');
-    $this->assertFalse($views_link['expanded'], 'Menu link is not expanded.');
+    $this->assertTrue((bool) $views_link['enabled'], 'Menu link is enabled.');
+    $this->assertFalse((bool) $views_link['expanded'], 'Menu link is not expanded.');
     $views_link['enabled'] = 0;
     $views_link['expanded'] = 1;
     $this->menuLinkManager->updateDefinition($views_link['id'], $views_link);
     $views_link = $this->menuLinkManager->getDefinition($views_link['id']);
-    $this->assertFalse($views_link['enabled'], 'Menu link is disabled.');
-    $this->assertTrue($views_link['expanded'], 'Menu link is expanded.');
+    $this->assertFalse((bool) $views_link['enabled'], 'Menu link is disabled.');
+    $this->assertTrue((bool) $views_link['expanded'], 'Menu link is expanded.');
     $this->menuLinkManager->rebuild();
-    $this->assertFalse($views_link['enabled'], 'Menu link is disabled.');
-    $this->assertTrue($views_link['expanded'], 'Menu link is expanded.');
+    $this->assertFalse((bool) $views_link['enabled'], 'Menu link is disabled.');
+    $this->assertTrue((bool) $views_link['expanded'], 'Menu link is expanded.');
 
     // Link from user module.
     $user_link = $this->menuLinkManager->getDefinition('user.page');
-    $this->assertTrue($user_link['enabled'], 'Menu link is enabled.');
+    $this->assertTrue((bool) $user_link['enabled'], 'Menu link is enabled.');
     $user_link['enabled'] = 0;
     $views_link['expanded'] = 1;
     $this->menuLinkManager->updateDefinition($user_link['id'], $user_link);
-    $this->assertFalse($user_link['enabled'], 'Menu link is disabled.');
+    $this->assertFalse((bool) $user_link['enabled'], 'Menu link is disabled.');
     $this->menuLinkManager->rebuild();
-    $this->assertFalse($user_link['enabled'], 'Menu link is disabled.');
+    $this->assertFalse((bool) $user_link['enabled'], 'Menu link is disabled.');
 
     $this->menuLinkOverrides->reload();
 
     $views_link = $this->menuLinkManager->getDefinition('views_view:views.test_page_display_menu.page_3');
-    $this->assertFalse($views_link['enabled'], 'Menu link is disabled.');
-    $this->assertTrue($views_link['expanded'], 'Menu link is expanded.');
+    $this->assertFalse((bool) $views_link['enabled'], 'Menu link is disabled.');
+    $this->assertTrue((bool) $views_link['expanded'], 'Menu link is expanded.');
 
     $user_link = $this->menuLinkManager->getDefinition('user.page');
-    $this->assertFalse($user_link['enabled'], 'Menu link is disabled.');
+    $this->assertFalse((bool) $user_link['enabled'], 'Menu link is disabled.');
   }
 
 }

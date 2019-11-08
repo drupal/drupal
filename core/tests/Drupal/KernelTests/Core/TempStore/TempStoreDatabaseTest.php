@@ -134,8 +134,8 @@ class TempStoreDatabaseTest extends KernelTestBase {
       ->condition('collection', "tempstore.shared.$collection")
       ->condition('name', $key)
       ->execute();
-    $this->assertFalse($stores[0]->get($key));
-    $this->assertFalse($stores[1]->get($key));
+    $this->assertNull($stores[0]->get($key));
+    $this->assertNull($stores[1]->get($key));
   }
 
 }

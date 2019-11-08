@@ -52,7 +52,7 @@ class ContactFieldsTest extends KernelTestBase {
     // entities have no storage.
     $table_name = 'contact_message__' . $field_name;
     $data = $this->container->get('views.views_data')->get($table_name);
-    $this->assertFalse($data);
+    $this->assertEmpty($data);
   }
 
 }

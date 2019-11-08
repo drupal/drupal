@@ -88,10 +88,10 @@ class WizardTest extends WizardTestBase {
     // Check for the default filters.
     $this->assertEqual($view->filter['status']->table, 'comment_field_data');
     $this->assertEqual($view->filter['status']->field, 'status');
-    $this->assertTrue($view->filter['status']->value);
+    $this->assertEquals('1', $view->filter['status']->value);
     $this->assertEqual($view->filter['status_node']->table, 'node_field_data');
     $this->assertEqual($view->filter['status_node']->field, 'status');
-    $this->assertTrue($view->filter['status_node']->value);
+    $this->assertEquals('1', $view->filter['status_node']->value);
 
     // Check for the default fields.
     $this->assertEqual($view->field['subject']->table, 'comment_field_data');

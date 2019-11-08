@@ -53,7 +53,7 @@ class BulkFormTest extends BrowserTestBase {
 
     // Test that the views edit header appears first.
     $first_form_element = $this->xpath('//form/div[1][@id = :id]', [':id' => 'edit-header']);
-    $this->assertTrue($first_form_element, 'The views form edit header appears first.');
+    $this->assertNotEmpty($first_form_element, 'The views form edit header appears first.');
 
     $this->assertFieldById('edit-action', NULL, 'The action select field appears.');
 
@@ -152,7 +152,7 @@ class BulkFormTest extends BrowserTestBase {
     // Make sure we don't show an action message while we are still on the
     // confirmation page.
     $errors = $this->xpath('//div[contains(@class, "messages--status")]');
-    $this->assertFalse($errors, 'No action message shown.');
+    $this->assertEmpty($errors, 'No action message shown.');
     $this->drupalPostForm(NULL, [], t('Delete'));
     $this->assertText(t('Deleted 5 content items.'));
     // Check if we got redirected to the original page.

@@ -121,13 +121,13 @@ class EmbeddedFormWidgetTest extends WebDriverTestBase {
     $this->drupalGet('node/add/basic_page');
     $wrapper = $assert_session->elementExists('css', '#media_image_field-media-library-wrapper');
     $wrapper->pressButton('Add media');
-    $this->assertTrue($assert_session->waitForText('Add or select media'));
+    $this->assertNotNull($assert_session->waitForText('Add or select media'));
     $page->attachFileToField('Add file', $this->container->get('file_system')->realpath($jpg_image->uri));
-    $this->assertTrue($assert_session->waitForText('Alternative text'));
+    $this->assertNotNull($assert_session->waitForText('Alternative text'));
     $page->fillField('Alternative text', $this->randomString());
     $assert_session->elementExists('css', '.ui-dialog-buttonpane')->pressButton('Save and insert');
     $first_item_locator = "(//div[@data-drupal-selector='edit-media-image-field-selection-0'])[1]";
-    $this->assertTrue($first_item = $assert_session->waitForElementVisible('xpath', $first_item_locator));
+    $this->assertNotNull($first_item = $assert_session->waitForElementVisible('xpath', $first_item_locator));
     $first_item->pressButton('Remove');
     $assert_session->waitForElementRemoved('xpath', $first_item_locator);
     $page->waitFor(10, function () use ($wrapper) {
@@ -135,11 +135,11 @@ class EmbeddedFormWidgetTest extends WebDriverTestBase {
     });
     // Test reinserting the same selection.
     $wrapper->pressButton('Add media');
-    $this->assertTrue($assert_session->waitForText('Add or select media'));
+    $this->assertNotNull($assert_session->waitForText('Add or select media'));
     $assert_session->elementExists('xpath', "(//div[contains(@class, 'media-library-item')])[1]")->click();
     $assert_session->checkboxChecked('media_library_select_form[0]');
     $assert_session->elementExists('css', '.ui-dialog-buttonpane')->pressButton('Insert selected');
-    $this->assertTrue($assert_session->waitForElementVisible('xpath', $first_item_locator));
+    $this->assertNotNull($assert_session->waitForElementVisible('xpath', $first_item_locator));
   }
 
   /**

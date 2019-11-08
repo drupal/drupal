@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\config\Functional;
 
+use Drupal\config_test\Entity\ConfigTest;
 use Drupal\Core\Config\PreExistingConfigException;
 use Drupal\Core\Config\StorageInterface;
 use Drupal\Core\File\Exception\FileException;
@@ -197,7 +198,7 @@ class ConfigInstallWebTest extends BrowserTestBase {
     $this->drupalPostForm('admin/modules', ['modules[config_other_module_config_test][enable]' => TRUE], t('Install'));
     $this->drupalPostForm('admin/modules', ['modules[config_install_dependency_test][enable]' => TRUE], t('Install'));
     $this->rebuildContainer();
-    $this->assertTrue(\Drupal::entityTypeManager()->getStorage('config_test')->load('other_module_test_with_dependency'), 'The config_test.dynamic.other_module_test_with_dependency configuration has been created during install.');
+    $this->assertInstanceOf(ConfigTest::class, \Drupal::entityTypeManager()->getStorage('config_test')->load('other_module_test_with_dependency'), 'The config_test.dynamic.other_module_test_with_dependency configuration has been created during install.');
   }
 
   /**

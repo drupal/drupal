@@ -64,7 +64,7 @@ class ResponsiveImageIntegrationTest extends KernelTestBase {
 
     // Check that the 'foo' field is on the display.
     $this->assertNotNull($display = EntityViewDisplay::load('entity_test.entity_test.default'));
-    $this->assertTrue($display->getComponent('bar'));
+    $this->assertNotEmpty($display->getComponent('bar'));
     $this->assertArrayNotHasKey('bar', $display->get('hidden'));
 
     // Delete the responsive image style.
