@@ -24,6 +24,11 @@ class UserCancelTest extends BrowserTestBase {
    */
   public static $modules = ['node', 'comment'];
 
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
   protected function setUp() {
     parent::setUp();
 

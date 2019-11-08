@@ -18,6 +18,11 @@ class PathLanguageUiTest extends PathTestBase {
    */
   public static $modules = ['path', 'locale', 'locale_test'];
 
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
   protected function setUp() {
     parent::setUp();
 

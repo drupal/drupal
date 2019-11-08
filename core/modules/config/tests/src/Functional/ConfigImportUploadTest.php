@@ -29,6 +29,11 @@ class ConfigImportUploadTest extends BrowserTestBase {
    */
   public static $modules = ['config'];
 
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
   protected function setUp() {
     parent::setUp();
 

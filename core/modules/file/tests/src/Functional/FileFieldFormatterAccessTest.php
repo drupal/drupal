@@ -16,6 +16,11 @@ class FileFieldFormatterAccessTest extends FileFieldTestBase {
   public static $modules = ['node', 'file', 'field_ui', 'file_test'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Tests the custom access handler is invoked.
    */
   public function testFileAccessHandler() {

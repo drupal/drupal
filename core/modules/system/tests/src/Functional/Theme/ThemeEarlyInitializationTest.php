@@ -20,6 +20,11 @@ class ThemeEarlyInitializationTest extends BrowserTestBase {
   public static $modules = ['theme_test'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'classy';
+
+  /**
    * Test that the theme system can generate output in a request listener.
    */
   public function testRequestListener() {

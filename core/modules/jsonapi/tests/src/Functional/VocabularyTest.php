@@ -20,6 +20,11 @@ class VocabularyTest extends ResourceTestBase {
   /**
    * {@inheritdoc}
    */
+  protected $defaultTheme = 'stark';
+
+  /**
+   * {@inheritdoc}
+   */
   protected static $entityTypeId = 'taxonomy_vocabulary';
 
   /**

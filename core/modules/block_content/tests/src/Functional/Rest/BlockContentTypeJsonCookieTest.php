@@ -26,4 +26,9 @@ class BlockContentTypeJsonCookieTest extends BlockContentTypeResourceTestBase {
    */
   protected static $auth = 'cookie';
 
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
 }

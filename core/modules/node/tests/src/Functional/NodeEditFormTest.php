@@ -13,6 +13,11 @@ use Drupal\user\Entity\User;
 class NodeEditFormTest extends NodeTestBase {
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * A normal logged in user.
    *
    * @var \Drupal\user\UserInterface

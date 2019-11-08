@@ -10,6 +10,11 @@ namespace Drupal\FunctionalTests\Installer;
 class InstallerExistingConfigDirectoryTest extends InstallerTestBase {
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * The expected file perms of the folder.
    *
    * @var int

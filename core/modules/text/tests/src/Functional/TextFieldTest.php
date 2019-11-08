@@ -28,6 +28,11 @@ class TextFieldTest extends StringFieldTest {
    */
   protected $adminUser;
 
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
   protected function setUp() {
     parent::setUp();
 

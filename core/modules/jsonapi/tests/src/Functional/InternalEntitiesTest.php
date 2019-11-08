@@ -31,6 +31,11 @@ class InternalEntitiesTest extends BrowserTestBase {
   ];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * A test user.
    *
    * @var \Drupal\user\UserInterface

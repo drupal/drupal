@@ -19,6 +19,11 @@ class UserAttributesTest extends BrowserTestBase {
    */
   public static $modules = ['rdf', 'node'];
 
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
   protected function setUp() {
     parent::setUp();
     rdf_get_mapping('user', 'user')

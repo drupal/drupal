@@ -12,6 +12,11 @@ use Drupal\Component\Utility\Unicode;
 class DependencyTest extends ModuleTestBase {
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Checks functionality of project namespaces for dependencies.
    */
   public function testProjectNamespaceForDependencies() {

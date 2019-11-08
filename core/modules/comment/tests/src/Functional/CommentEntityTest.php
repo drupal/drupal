@@ -25,6 +25,11 @@ class CommentEntityTest extends CommentTestBase {
    */
   public static $modules = ['block', 'comment', 'node', 'history', 'field_ui', 'datetime', 'taxonomy'];
 
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
   protected $vocab;
   protected $commentType;
 

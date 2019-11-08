@@ -20,6 +20,11 @@ class ElementsLabelsTest extends BrowserTestBase {
   public static $modules = ['form_test'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Test form elements, labels, title attributes and required marks output
    * correctly and have the correct label option class if needed.
    */

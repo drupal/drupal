@@ -31,6 +31,11 @@ class JsonApiFunctionalMultilingualTest extends JsonApiFunctionalTestBase {
   /**
    * {@inheritdoc}
    */
+  protected $defaultTheme = 'stark';
+
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp() {
     parent::setUp();
     $language = ConfigurableLanguage::createFromLangcode('ca');

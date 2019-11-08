@@ -20,6 +20,11 @@ class EmailTest extends BrowserTestBase {
   public static $modules = ['form_test'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Tests that #type 'email' fields are properly validated.
    */
   public function testFormEmail() {

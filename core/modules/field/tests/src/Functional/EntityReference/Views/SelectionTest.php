@@ -30,6 +30,11 @@ class SelectionTest extends BrowserTestBase {
   ];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * An array of node titles, keyed by content type and node ID.
    *
    * @var \Drupal\node\NodeInterface[]

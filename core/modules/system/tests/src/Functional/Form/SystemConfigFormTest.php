@@ -19,6 +19,11 @@ class SystemConfigFormTest extends BrowserTestBase {
   public static $modules = ['form_test'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Tests the SystemConfigFormTestBase class.
    */
   public function testSystemConfigForm() {

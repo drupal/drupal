@@ -24,6 +24,11 @@ class RouteCachingNonPathLanguageNegotiationTest extends BrowserTestBase {
   public static $modules = ['language', 'block'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * The admin user.
    *
    * @var \Drupal\user\UserInterface

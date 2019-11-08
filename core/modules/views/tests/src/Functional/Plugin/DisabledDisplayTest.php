@@ -26,6 +26,11 @@ class DisabledDisplayTest extends ViewTestBase {
    */
   public static $modules = ['block', 'node', 'views'];
 
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'classy';
+
   protected function setUp($import_test_views = TRUE) {
     parent::setUp($import_test_views);
 

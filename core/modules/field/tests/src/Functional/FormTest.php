@@ -28,6 +28,11 @@ class FormTest extends FieldTestBase {
   public static $modules = ['node', 'field_test', 'options', 'entity_test', 'locale'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * An array of values defining a field single.
    *
    * @var array

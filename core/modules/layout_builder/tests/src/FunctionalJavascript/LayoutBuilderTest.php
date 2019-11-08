@@ -30,6 +30,11 @@ class LayoutBuilderTest extends WebDriverTestBase {
   ];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'classy';
+
+  /**
    * The node to customize with Layout Builder.
    *
    * @var \Drupal\node\NodeInterface

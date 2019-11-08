@@ -34,6 +34,11 @@ class EditorPrivateFileReferenceFilterTest extends BrowserTestBase {
   ];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Tests the editor file reference filter with private files.
    */
   public function testEditorPrivateFileReferenceFilter() {

@@ -27,4 +27,9 @@ class LayoutBuilderEntityViewDisplayJsonCookieTest extends LayoutBuilderEntityVi
    */
   protected static $auth = 'cookie';
 
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
 }

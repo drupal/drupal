@@ -19,6 +19,11 @@ class BookBreadcrumbTest extends BrowserTestBase {
   public static $modules = ['book', 'block', 'book_breadcrumb_test'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'classy';
+
+  /**
    * A book node.
    *
    * @var \Drupal\node\NodeInterface

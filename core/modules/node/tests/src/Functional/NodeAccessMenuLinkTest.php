@@ -19,6 +19,11 @@ class NodeAccessMenuLinkTest extends NodeTestBase {
   public static $modules = ['menu_ui', 'block'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * A user with permission to manage menu links and create nodes.
    *
    * @var \Drupal\user\UserInterface

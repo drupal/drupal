@@ -13,6 +13,11 @@ use Drupal\Tests\BrowserTestBase;
 class UserEditTest extends BrowserTestBase {
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Test user edit page.
    */
   public function testUserEdit() {

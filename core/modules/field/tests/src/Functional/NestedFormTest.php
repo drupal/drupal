@@ -20,6 +20,11 @@ class NestedFormTest extends FieldTestBase {
    */
   public static $modules = ['field_test', 'entity_test'];
 
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
   protected function setUp() {
     parent::setUp();
 

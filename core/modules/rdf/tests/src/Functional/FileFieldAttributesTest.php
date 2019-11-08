@@ -21,6 +21,11 @@ class FileFieldAttributesTest extends FileFieldTestBase {
   public static $modules = ['rdf', 'file'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * The name of the file field used in the test.
    *
    * @var string

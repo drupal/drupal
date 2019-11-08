@@ -17,6 +17,11 @@ class TemporaryQueryTest extends DatabaseTestBase {
   public static $modules = ['database_test'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Returns the number of rows of a table.
    */
   public function countTableRows($table_name) {

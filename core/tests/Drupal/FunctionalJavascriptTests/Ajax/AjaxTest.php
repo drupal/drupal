@@ -16,6 +16,11 @@ class AjaxTest extends WebDriverTestBase {
    */
   public static $modules = ['ajax_test'];
 
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
   public function testAjaxWithAdminRoute() {
     \Drupal::service('theme_installer')->install(['stable', 'seven']);
     $theme_config = \Drupal::configFactory()->getEditable('system.theme');

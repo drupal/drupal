@@ -21,6 +21,11 @@ class UnpublishedBlockTest extends BrowserTestBase {
   public static $modules = ['block_content'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'classy';
+
+  /**
    * Tests unpublishing of block_content entities.
    */
   public function testViewShowsCorrectStates() {

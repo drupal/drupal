@@ -26,4 +26,9 @@ class FieldStorageConfigJsonCookieTest extends FieldStorageConfigResourceTestBas
    */
   protected static $auth = 'cookie';
 
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
 }

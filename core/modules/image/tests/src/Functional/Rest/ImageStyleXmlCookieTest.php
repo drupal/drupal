@@ -31,6 +31,11 @@ class ImageStyleXmlCookieTest extends ImageStyleResourceTestBase {
   /**
    * {@inheritdoc}
    */
+  protected $defaultTheme = 'stark';
+
+  /**
+   * {@inheritdoc}
+   */
   public function testGet() {
     // @todo Remove this method override in https://www.drupal.org/node/2905655
     $this->markTestSkipped();

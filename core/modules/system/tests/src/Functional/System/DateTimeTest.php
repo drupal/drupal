@@ -21,6 +21,11 @@ class DateTimeTest extends BrowserTestBase {
    */
   public static $modules = ['block', 'node', 'language', 'field', 'field_ui', 'datetime', 'options'];
 
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
   protected function setUp() {
     parent::setUp();
 

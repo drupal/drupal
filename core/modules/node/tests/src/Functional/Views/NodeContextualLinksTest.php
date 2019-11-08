@@ -19,6 +19,11 @@ class NodeContextualLinksTest extends NodeTestBase {
   public static $modules = ['contextual'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Tests if the node page works if Contextual Links is disabled.
    *
    * All views have Contextual links enabled by default, even with the

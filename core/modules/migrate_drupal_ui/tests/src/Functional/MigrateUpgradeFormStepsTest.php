@@ -25,6 +25,11 @@ class MigrateUpgradeFormStepsTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
+  protected $defaultTheme = 'stark';
+
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp() {
     parent::setUp();
     // Log in as user 1. Migrations in the UI can only be performed as user 1.

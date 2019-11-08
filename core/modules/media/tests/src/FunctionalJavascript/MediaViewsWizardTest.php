@@ -15,6 +15,11 @@ use Drupal\views\Views;
 class MediaViewsWizardTest extends MediaJavascriptTestBase {
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Tests adding a view of media.
    */
   public function testMediaWizard() {

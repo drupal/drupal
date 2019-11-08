@@ -24,6 +24,11 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
   }
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Given an image style, generate an image.
    */
   public function createSampleImage(ImageStyleInterface $style) {

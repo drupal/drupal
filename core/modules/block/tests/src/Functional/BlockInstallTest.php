@@ -11,6 +11,11 @@ use Drupal\Tests\BrowserTestBase;
  */
 class BlockInstallTest extends BrowserTestBase {
 
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
   public function testCacheTagInvalidationUponInstallation() {
     // Warm the page cache.
     $this->drupalGet('');

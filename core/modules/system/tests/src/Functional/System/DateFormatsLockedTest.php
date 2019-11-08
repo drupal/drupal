@@ -12,6 +12,11 @@ use Drupal\Tests\BrowserTestBase;
 class DateFormatsLockedTest extends BrowserTestBase {
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Tests attempts at listing, editing, and deleting locked date formats.
    */
   public function testDateLocking() {

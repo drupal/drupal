@@ -19,6 +19,11 @@ class ElementsAccessTest extends BrowserTestBase {
   public static $modules = ['form_test'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Ensures that child values are still processed when #access = FALSE.
    */
   public function testAccessFalse() {

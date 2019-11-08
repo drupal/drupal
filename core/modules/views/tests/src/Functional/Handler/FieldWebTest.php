@@ -34,6 +34,11 @@ class FieldWebTest extends ViewTestBase {
   public static $modules = ['node'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Maps between the key in the expected result and the query result.
    *
    * @var array

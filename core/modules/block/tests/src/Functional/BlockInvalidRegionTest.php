@@ -20,6 +20,11 @@ class BlockInvalidRegionTest extends BrowserTestBase {
    */
   public static $modules = ['block', 'block_test'];
 
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'classy';
+
   protected function setUp() {
     parent::setUp();
     // Create an admin user.

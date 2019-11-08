@@ -28,6 +28,11 @@ class DisplayTest extends UITestBase {
   public static $modules = ['contextual'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Tests adding a display.
    */
   public function testAddDisplay() {

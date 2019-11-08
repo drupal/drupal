@@ -21,4 +21,9 @@ class EntityFormDisplayJsonAnonTest extends EntityFormDisplayResourceTestBase {
    */
   protected static $mimeType = 'application/json';
 
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
 }

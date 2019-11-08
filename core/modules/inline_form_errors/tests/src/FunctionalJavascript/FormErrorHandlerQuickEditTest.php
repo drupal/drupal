@@ -24,6 +24,11 @@ class FormErrorHandlerQuickEditTest extends WebDriverTestBase {
   ];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'classy';
+
+  /**
    * An editor user with permissions to access the in-place editor.
    *
    * @var \Drupal\user\UserInterface

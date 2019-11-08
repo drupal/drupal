@@ -17,6 +17,11 @@ class FileManagedFileElementTest extends WebDriverTestBase {
   protected static $modules = ['node', 'file', 'file_module_test', 'field_ui'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * A user with administration permissions.
    *
    * @var \Drupal\user\UserInterface

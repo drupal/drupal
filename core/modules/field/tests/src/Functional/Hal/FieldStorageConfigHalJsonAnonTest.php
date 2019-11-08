@@ -20,6 +20,11 @@ class FieldStorageConfigHalJsonAnonTest extends FieldStorageConfigResourceTestBa
   /**
    * {@inheritdoc}
    */
+  protected $defaultTheme = 'stark';
+
+  /**
+   * {@inheritdoc}
+   */
   protected static $format = 'hal_json';
 
   /**

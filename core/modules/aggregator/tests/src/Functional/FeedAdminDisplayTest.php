@@ -10,6 +10,11 @@ namespace Drupal\Tests\aggregator\Functional;
 class FeedAdminDisplayTest extends AggregatorTestBase {
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Tests the "Next update" and "Last update" fields.
    */
   public function testFeedUpdateFields() {

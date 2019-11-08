@@ -22,6 +22,11 @@ class BulkFormTest extends UserTestBase {
   public static $modules = ['views_ui'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Views used by this test.
    *
    * @var array

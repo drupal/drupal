@@ -19,6 +19,11 @@ class NodeViewLanguageTest extends NodeTestBase {
   public static $modules = ['node', 'datetime', 'language'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Tests the language extra field display.
    */
   public function testViewLanguage() {

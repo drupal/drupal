@@ -12,6 +12,11 @@ use Drupal\user\UserInterface;
  */
 class UserEditedOwnAccountTest extends BrowserTestBase {
 
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
   public function testUserEditedOwnAccount() {
     // Change account setting 'Who can register accounts?' to Administrators
     // only.

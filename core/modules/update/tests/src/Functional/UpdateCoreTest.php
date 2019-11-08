@@ -23,6 +23,11 @@ class UpdateCoreTest extends UpdateTestBase {
    */
   public static $modules = ['update_test', 'update', 'language', 'block'];
 
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
   protected function setUp() {
     parent::setUp();
     $admin_user = $this->drupalCreateUser(['administer site configuration', 'administer modules', 'administer themes']);

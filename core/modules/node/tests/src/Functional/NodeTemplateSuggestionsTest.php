@@ -10,6 +10,11 @@ namespace Drupal\Tests\node\Functional;
 class NodeTemplateSuggestionsTest extends NodeTestBase {
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Tests if template_preprocess_node() generates the correct suggestions.
    */
   public function testNodeThemeHookSuggestions() {

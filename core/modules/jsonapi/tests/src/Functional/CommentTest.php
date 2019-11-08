@@ -44,6 +44,11 @@ class CommentTest extends ResourceTestBase {
   /**
    * {@inheritdoc}
    */
+  protected $defaultTheme = 'stark';
+
+  /**
+   * {@inheritdoc}
+   */
   protected static $patchProtectedFieldNames = [
     'status' => "The 'administer comments' permission is required.",
     'name' => "The 'administer comments' permission is required.",

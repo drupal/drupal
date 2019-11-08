@@ -22,6 +22,11 @@ class ForumBlockTest extends BrowserTestBase {
   public static $modules = ['forum', 'block'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * A user with various administrative privileges.
    */
   protected $adminUser;

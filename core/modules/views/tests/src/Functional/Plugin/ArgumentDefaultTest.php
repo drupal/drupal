@@ -32,6 +32,11 @@ class ArgumentDefaultTest extends ViewTestBase {
     ];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Modules to enable.
    *
    * @var array

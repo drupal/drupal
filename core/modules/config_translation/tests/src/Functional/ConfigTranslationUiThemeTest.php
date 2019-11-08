@@ -20,6 +20,11 @@ class ConfigTranslationUiThemeTest extends BrowserTestBase {
   public static $modules = ['config_translation', 'config_translation_test'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Languages to enable.
    *
    * @var array

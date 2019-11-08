@@ -18,6 +18,11 @@ class FastTest extends BrowserTestBase {
    */
   public static $modules = ['theme_test'];
 
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
   protected function setUp() {
     parent::setUp();
     $this->account = $this->drupalCreateUser(['access user profiles']);

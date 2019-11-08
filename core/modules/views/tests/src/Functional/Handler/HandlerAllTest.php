@@ -45,6 +45,11 @@ class HandlerAllTest extends ViewTestBase {
   ];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Tests most of the handlers.
    */
   public function testHandlers() {

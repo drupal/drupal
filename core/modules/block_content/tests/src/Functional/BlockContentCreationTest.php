@@ -24,6 +24,11 @@ class BlockContentCreationTest extends BlockContentTestBase {
   public static $modules = ['block_content_test', 'dblog', 'field_ui'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'classy';
+
+  /**
    * Permissions to grant admin user.
    *
    * @var array

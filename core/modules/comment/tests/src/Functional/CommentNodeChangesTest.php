@@ -14,6 +14,11 @@ use Drupal\field\Entity\FieldStorageConfig;
 class CommentNodeChangesTest extends CommentTestBase {
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Tests that comments are deleted with the node.
    */
   public function testNodeDeletion() {

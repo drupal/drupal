@@ -13,6 +13,11 @@ use Drupal\media\Plugin\media\Source\File;
 class MediaSourceFileTest extends MediaSourceTestBase {
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'classy';
+
+  /**
    * Tests the file media source.
    */
   public function testMediaFileSource() {

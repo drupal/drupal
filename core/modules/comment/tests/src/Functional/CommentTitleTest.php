@@ -11,6 +11,11 @@ namespace Drupal\Tests\comment\Functional;
 class CommentTitleTest extends CommentTestBase {
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'classy';
+
+  /**
    * Tests markup for comments with empty titles.
    */
   public function testCommentEmptyTitles() {

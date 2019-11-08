@@ -34,6 +34,11 @@ class DisplayBlockTest extends ViewTestBase {
   public static $modules = ['node', 'block_test_views', 'test_page_test', 'contextual', 'views_ui'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'classy';
+
+  /**
    * Views used by this test.
    *
    * @var array

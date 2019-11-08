@@ -22,6 +22,11 @@ class DisplayAttachmentTest extends UITestBase {
   public static $testViews = ['test_attachment_ui'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Tests the attachment UI.
    */
   public function testAttachmentUI() {

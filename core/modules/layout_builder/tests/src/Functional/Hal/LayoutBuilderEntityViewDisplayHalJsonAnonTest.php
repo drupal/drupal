@@ -28,4 +28,9 @@ class LayoutBuilderEntityViewDisplayHalJsonAnonTest extends LayoutBuilderEntityV
    */
   protected static $mimeType = 'application/hal+json';
 
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
 }

@@ -23,6 +23,11 @@ class NodeCreationTest extends NodeTestBase {
    */
   public static $modules = ['node_test_exception', 'dblog', 'test_page_test'];
 
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
   protected function setUp() {
     parent::setUp();
 

@@ -20,6 +20,11 @@ class ErrorHandlerTest extends BrowserTestBase {
   public static $modules = ['error_test'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Test the error handler.
    */
   public function testErrorHandler() {

@@ -17,6 +17,11 @@ class FileOnTranslatedEntityTest extends FileFieldTestBase {
   public static $modules = ['language', 'content_translation'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * The name of the file field used in the test.
    *
    * @var string

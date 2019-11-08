@@ -29,6 +29,11 @@ class BookRelationshipTest extends ViewTestBase {
   public static $modules = ['book_test_views', 'book', 'views'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * A book node.
    *
    * @var object

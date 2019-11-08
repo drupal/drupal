@@ -21,6 +21,11 @@ class BooleanFormatterSettingsTest extends WebDriverTestBase {
   public static $modules = ['field', 'field_ui', 'text', 'node', 'user'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * The name of the entity bundle that is created in the test.
    *
    * @var string

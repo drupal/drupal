@@ -34,6 +34,11 @@ class SearchMultilingualEntityTest extends BrowserTestBase {
    */
   protected static $modules = ['language', 'locale', 'comment', 'node', 'search'];
 
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
   protected function setUp() {
     parent::setUp();
 

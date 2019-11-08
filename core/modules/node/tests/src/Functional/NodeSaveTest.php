@@ -25,6 +25,11 @@ class NodeSaveTest extends NodeTestBase {
    */
   public static $modules = ['node_test'];
 
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
   protected function setUp() {
     parent::setUp();
 

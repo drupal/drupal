@@ -25,6 +25,11 @@ class EditorUploadImageScaleTest extends BrowserTestBase {
   public static $modules = ['editor', 'editor_test'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * A user with permission as administer for testing.
    *
    * @var \Drupal\user\Entity\User

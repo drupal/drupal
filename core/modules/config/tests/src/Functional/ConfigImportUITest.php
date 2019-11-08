@@ -22,6 +22,11 @@ class ConfigImportUITest extends BrowserTestBase {
   public static $modules = ['config', 'config_test', 'config_import_test', 'text', 'options'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'classy';
+
+  /**
    * A user with the 'synchronize configuration' permission.
    *
    * @var \Drupal\user\UserInterface

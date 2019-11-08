@@ -20,6 +20,11 @@ class RestResourceConfigTest extends ResourceTestBase {
   /**
    * {@inheritdoc}
    */
+  protected $defaultTheme = 'stark';
+
+  /**
+   * {@inheritdoc}
+   */
   protected static $entityTypeId = 'rest_resource_config';
 
   /**

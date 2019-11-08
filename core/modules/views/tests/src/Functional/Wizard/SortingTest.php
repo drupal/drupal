@@ -9,6 +9,11 @@ namespace Drupal\Tests\views\Functional\Wizard;
  */
 class SortingTest extends WizardTestBase {
 
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
   protected function setUp($import_test_views = TRUE) {
     parent::setUp($import_test_views);
 

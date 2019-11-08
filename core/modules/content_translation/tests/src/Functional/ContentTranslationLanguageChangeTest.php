@@ -27,6 +27,11 @@ class ContentTranslationLanguageChangeTest extends NodeTestBase {
   /**
    * {@inheritdoc}
    */
+  protected $defaultTheme = 'stark';
+
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp() {
     parent::setUp();
     $langcodes = ['de', 'fr'];

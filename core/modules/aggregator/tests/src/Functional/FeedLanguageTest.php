@@ -22,6 +22,11 @@ class FeedLanguageTest extends AggregatorTestBase {
   public static $modules = ['language'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * List of langcodes.
    *
    * @var string[]

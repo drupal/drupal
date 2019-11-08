@@ -28,6 +28,11 @@ class FileMoveTest extends BrowserTestBase {
   public static $modules = ['image'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Tests moving a randomly generated image.
    */
   public function testNormal() {

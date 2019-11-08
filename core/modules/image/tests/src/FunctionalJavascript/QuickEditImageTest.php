@@ -23,6 +23,11 @@ class QuickEditImageTest extends QuickEditJavascriptTestBase {
   public static $modules = ['node', 'image', 'field_ui'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * A user with permissions to edit Articles and use Quick Edit.
    *
    * @var \Drupal\user\UserInterface

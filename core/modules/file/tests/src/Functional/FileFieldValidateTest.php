@@ -20,6 +20,11 @@ class FileFieldValidateTest extends FileFieldTestBase {
   use ExpectDeprecationTrait;
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Tests the required property on file fields.
    */
   public function testRequired() {

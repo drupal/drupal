@@ -29,6 +29,11 @@ class LayoutBuilderQuickEditTest extends QuickEditJavascriptTestBase {
   ];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'classy';
+
+  /**
    * The article node under test.
    *
    * @var \Drupal\node\NodeInterface

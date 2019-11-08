@@ -26,4 +26,9 @@ class ContentLanguageSettingsJsonCookieTest extends ContentLanguageSettingsResou
    */
   protected static $auth = 'cookie';
 
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
 }

@@ -13,6 +13,11 @@ use Drupal\node\Entity\Node;
 class InlineBlockTest extends InlineBlockTestBase {
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'classy';
+
+  /**
    * Tests adding and editing of inline blocks.
    */
   public function testInlineBlocks() {

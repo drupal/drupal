@@ -17,6 +17,11 @@ class PreviewTest extends UITestBase {
   public static $testViews = ['test_preview', 'test_preview_error', 'test_pager_full', 'test_mini_pager', 'test_click_sort'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'classy';
+
+  /**
    * Tests contextual links in the preview form.
    */
   public function testPreviewContextual() {

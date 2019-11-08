@@ -29,6 +29,11 @@ class FileUploadTest extends ResourceTestBase {
 
   /**
    * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
+   * {@inheritdoc}
    *
    * @see $entity
    */

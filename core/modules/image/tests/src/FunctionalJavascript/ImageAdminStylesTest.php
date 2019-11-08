@@ -12,6 +12,11 @@ use Drupal\image\Entity\ImageStyle;
 class ImageAdminStylesTest extends ImageFieldTestBase {
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Tests editing Ajax-enabled image effect forms.
    */
   public function testAjaxEnabledEffectForm() {

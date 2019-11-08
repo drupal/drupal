@@ -20,6 +20,11 @@ class ShortcutSetTest extends ResourceTestBase {
   /**
    * {@inheritdoc}
    */
+  protected $defaultTheme = 'stark';
+
+  /**
+   * {@inheritdoc}
+   */
   protected static $entityTypeId = 'shortcut_set';
 
   /**

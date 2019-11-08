@@ -19,6 +19,11 @@ class WorkflowJsonBasicAuthTest extends WorkflowResourceTestBase {
   /**
    * {@inheritdoc}
    */
+  protected $defaultTheme = 'stark';
+
+  /**
+   * {@inheritdoc}
+   */
   protected static $format = 'json';
 
   /**

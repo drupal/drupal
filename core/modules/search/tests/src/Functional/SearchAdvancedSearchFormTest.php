@@ -17,6 +17,11 @@ class SearchAdvancedSearchFormTest extends BrowserTestBase {
   protected static $modules = ['node', 'search', 'dblog'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * A node to use for testing.
    *
    * @var \Drupal\node\NodeInterface

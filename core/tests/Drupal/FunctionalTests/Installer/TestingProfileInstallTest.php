@@ -17,6 +17,11 @@ class TestingProfileInstallTest extends BrowserTestBase {
   protected $profile = 'testing';
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Ensure the Update module and its dependencies are installed.
    */
   public function testUpdateModuleInstall() {

@@ -21,6 +21,11 @@ class StorageTest extends UITestBase {
   public static $testViews = ['test_view'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Modules to enable.
    *
    * @var array

@@ -12,6 +12,11 @@ use Drupal\node\Entity\Node;
 class PageViewTest extends NodeTestBase {
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Tests an anonymous and unpermissioned user attempting to edit the node.
    */
   public function testPageView() {

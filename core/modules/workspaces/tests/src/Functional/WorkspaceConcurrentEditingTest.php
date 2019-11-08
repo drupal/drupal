@@ -19,6 +19,11 @@ class WorkspaceConcurrentEditingTest extends BrowserTestBase {
   public static $modules = ['block', 'node', 'workspaces'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Test editing a node in multiple workspaces.
    */
   public function testConcurrentEditing() {

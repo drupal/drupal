@@ -16,6 +16,11 @@ use Drupal\file\Entity\File;
 class FileTokenReplaceTest extends FileFieldTestBase {
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Creates a file, then tests the tokens generated from it.
    */
   public function testFileTokenReplacement() {

@@ -24,6 +24,11 @@ class FilterSecurityTest extends BrowserTestBase {
   public static $modules = ['node', 'filter_test'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * A user with administrative permissions.
    *
    * @var \Drupal\user\UserInterface

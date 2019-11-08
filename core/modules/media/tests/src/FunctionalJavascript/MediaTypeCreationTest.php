@@ -12,6 +12,11 @@ use Drupal\Component\Utility\Html;
 class MediaTypeCreationTest extends MediaJavascriptTestBase {
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Tests the source field behavior on the add media type form.
    */
   public function testSourceChangeOnMediaTypeCreationForm() {

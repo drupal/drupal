@@ -28,4 +28,9 @@ class ItemXmlCookieTest extends ItemResourceTestBase {
    */
   protected static $auth = 'cookie';
 
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
 }

@@ -19,6 +19,11 @@ class MinimalInstallerTest extends ConfigAfterInstallerTestBase {
   protected $profile = 'minimal';
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Ensures that the exported minimal configuration is up to date.
    */
   public function testMinimalConfig() {

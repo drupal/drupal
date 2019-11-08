@@ -16,4 +16,9 @@ class JSWebWithWebDriverAssertTest extends JSWebAssertTest {
    */
   protected $minkDefaultDriverClass = DrupalSelenium2Driver::class;
 
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
 }

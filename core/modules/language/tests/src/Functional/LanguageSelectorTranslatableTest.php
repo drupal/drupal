@@ -27,6 +27,11 @@ class LanguageSelectorTranslatableTest extends BrowserTestBase {
   ];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * The user with administrator privileges.
    *
    * @var \Drupal\user\Entity\User

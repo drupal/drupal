@@ -26,4 +26,9 @@ class RoleJsonCookieTest extends RoleResourceTestBase {
    */
   protected static $auth = 'cookie';
 
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
 }

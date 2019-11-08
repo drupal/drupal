@@ -25,6 +25,11 @@ class TaxonomyFieldFilterTest extends ViewTestBase {
   public static $modules = ['language', 'taxonomy', 'taxonomy_test_views', 'text', 'views', 'node'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Views used by this test.
    *
    * @var array

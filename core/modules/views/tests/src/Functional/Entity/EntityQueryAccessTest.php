@@ -26,6 +26,11 @@ class EntityQueryAccessTest extends ViewTestBase {
   ];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Tests that the 'media_access' query tag is respected by Views.
    */
   public function testMediaEntityQueryAccess() {

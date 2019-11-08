@@ -21,4 +21,9 @@ class RoleJsonAnonTest extends RoleResourceTestBase {
    */
   protected static $mimeType = 'application/json';
 
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
 }

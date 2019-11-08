@@ -22,6 +22,11 @@ class OptionsWidgetsTest extends FieldTestBase {
   public static $modules = ['node', 'options', 'entity_test', 'options_test', 'taxonomy', 'field_ui'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * A field storage with cardinality 1 to use in this test class.
    *
    * @var \Drupal\field\Entity\FieldStorageConfig

@@ -28,6 +28,11 @@ class AreaHTTPStatusCodeTest extends ViewTestBase {
   public static $modules = ['node'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Tests the area handler.
    */
   public function testHTTPStatusCodeHandler() {

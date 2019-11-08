@@ -26,6 +26,11 @@ class DrupalSelenium2DriverTest extends WebDriverTestBase {
   /**
    * {@inheritdoc}
    */
+  protected $defaultTheme = 'stark';
+
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp() {
     parent::setUp();
     $storage_settings = ['cardinality' => 3];

@@ -11,6 +11,11 @@ namespace Drupal\Tests\views\Functional\Wizard;
 class NodeWizardTest extends WizardTestBase {
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Tests creating a view with node titles.
    */
   public function testViewAddWithNodeTitles() {

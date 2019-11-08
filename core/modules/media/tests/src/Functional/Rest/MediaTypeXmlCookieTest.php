@@ -28,4 +28,9 @@ class MediaTypeXmlCookieTest extends MediaTypeResourceTestBase {
    */
   protected static $auth = 'cookie';
 
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
 }

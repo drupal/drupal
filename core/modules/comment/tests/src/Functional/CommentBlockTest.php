@@ -19,6 +19,11 @@ class CommentBlockTest extends CommentTestBase {
    */
   public static $modules = ['block', 'views'];
 
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
   protected function setUp() {
     parent::setUp();
     // Update admin user to have the 'administer blocks' permission.

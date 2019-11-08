@@ -21,4 +21,9 @@ class BlockContentTypeJsonAnonTest extends BlockContentTypeResourceTestBase {
    */
   protected static $mimeType = 'application/json';
 
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
 }

@@ -20,6 +20,11 @@ class CsrfRequestHeaderTest extends BrowserTestBase {
   public static $modules = ['system', 'csrf_test'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Tests access to routes protected by CSRF request header requirements.
    *
    * This checks one route that uses _csrf_request_header_token and one that

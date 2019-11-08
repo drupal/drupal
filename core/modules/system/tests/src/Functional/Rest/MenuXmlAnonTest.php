@@ -23,4 +23,9 @@ class MenuXmlAnonTest extends MenuResourceTestBase {
    */
   protected static $mimeType = 'text/xml; charset=UTF-8';
 
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
 }

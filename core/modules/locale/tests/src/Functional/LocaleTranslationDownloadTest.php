@@ -23,6 +23,11 @@ class LocaleTranslationDownloadTest extends LocaleUpdateBase {
   /**
    * {@inheritdoc}
    */
+  protected $defaultTheme = 'stark';
+
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp() {
     parent::setUp();
     $moduleHandler = $this->container->get('module_handler');

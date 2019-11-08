@@ -17,6 +17,11 @@ class SearchDateIntervalTest extends BrowserTestBase {
    */
   protected static $modules = ['language', 'search_date_query_alter', 'node', 'search'];
 
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
   protected function setUp() {
     parent::setUp();
 

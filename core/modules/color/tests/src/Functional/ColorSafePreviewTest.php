@@ -20,6 +20,11 @@ class ColorSafePreviewTest extends BrowserTestBase {
   public static $modules = ['color', 'color_test'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * A user with administrative permissions.
    *
    * @var \Drupal\user\UserInterface

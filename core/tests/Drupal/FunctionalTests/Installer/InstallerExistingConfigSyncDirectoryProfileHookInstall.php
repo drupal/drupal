@@ -12,6 +12,11 @@ class InstallerExistingConfigSyncDirectoryProfileHookInstall extends InstallerEx
   /**
    * {@inheritdoc}
    */
+  protected $defaultTheme = 'stark';
+
+  /**
+   * {@inheritdoc}
+   */
   protected $profile = 'testing_config_install_multilingual';
 
   /**

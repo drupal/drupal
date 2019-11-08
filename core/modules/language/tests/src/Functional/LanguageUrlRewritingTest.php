@@ -24,6 +24,11 @@ class LanguageUrlRewritingTest extends BrowserTestBase {
   public static $modules = ['language', 'language_test'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * An user with permissions to administer languages.
    *
    * @var \Drupal\user\UserInterface

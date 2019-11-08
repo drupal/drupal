@@ -19,6 +19,11 @@ class SimpletestTest extends BrowserTestBase {
   public static $modules = ['simpletest'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Test that we can uninstall the module without mishap.
    *
    * Upon uninstall, simpletest will clean up after itself. This should neither

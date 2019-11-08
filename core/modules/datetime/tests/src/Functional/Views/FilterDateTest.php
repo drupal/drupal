@@ -27,6 +27,11 @@ class FilterDateTest extends BrowserTestBase {
   protected $fieldName = 'field_date';
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'classy';
+
+  /**
    * Nodes to test.
    *
    * @var \Drupal\node\NodeInterface[]

@@ -19,6 +19,11 @@ class ImageStyleFlushTest extends ImageFieldTestBase {
   }
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Given an image style and a wrapper, generate an image.
    */
   public function createSampleImage($style, $wrapper) {

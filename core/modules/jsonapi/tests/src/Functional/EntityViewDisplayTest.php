@@ -21,6 +21,11 @@ class EntityViewDisplayTest extends ResourceTestBase {
   /**
    * {@inheritdoc}
    */
+  protected $defaultTheme = 'stark';
+
+  /**
+   * {@inheritdoc}
+   */
   protected static $entityTypeId = 'entity_view_display';
 
   /**

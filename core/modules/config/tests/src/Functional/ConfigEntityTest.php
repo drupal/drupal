@@ -30,6 +30,11 @@ class ConfigEntityTest extends BrowserTestBase {
   public static $modules = ['config_test'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Tests CRUD operations.
    */
   public function testCRUD() {

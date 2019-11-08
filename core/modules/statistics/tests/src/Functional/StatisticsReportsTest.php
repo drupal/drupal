@@ -16,6 +16,11 @@ class StatisticsReportsTest extends StatisticsTestBase {
   use AssertPageCacheContextsAndTagsTrait;
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Tests the "popular content" block.
    */
   public function testPopularContentBlock() {

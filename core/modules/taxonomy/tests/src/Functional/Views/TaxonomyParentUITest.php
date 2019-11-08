@@ -21,6 +21,11 @@ class TaxonomyParentUITest extends UITestBase {
   public static $testViews = ['test_taxonomy_parent'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Modules to enable.
    *
    * @var array

@@ -22,6 +22,11 @@ class FilterFormatAccessTest extends BrowserTestBase {
   public static $modules = ['block', 'filter', 'node'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * A user with administrative permissions.
    *
    * @var \Drupal\user\UserInterface

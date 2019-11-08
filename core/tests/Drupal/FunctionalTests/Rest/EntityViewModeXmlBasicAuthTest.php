@@ -21,6 +21,11 @@ class EntityViewModeXmlBasicAuthTest extends EntityViewModeResourceTestBase {
   /**
    * {@inheritdoc}
    */
+  protected $defaultTheme = 'stark';
+
+  /**
+   * {@inheritdoc}
+   */
   protected static $format = 'xml';
 
   /**

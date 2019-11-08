@@ -32,6 +32,11 @@ class MenuLinkContentTranslationUITest extends ContentTranslationUITestBase {
   /**
    * {@inheritdoc}
    */
+  protected $defaultTheme = 'classy';
+
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp() {
     $this->entityTypeId = 'menu_link_content';
     $this->bundle = 'menu_link_content';

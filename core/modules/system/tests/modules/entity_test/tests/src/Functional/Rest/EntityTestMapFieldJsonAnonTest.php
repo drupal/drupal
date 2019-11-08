@@ -21,4 +21,9 @@ class EntityTestMapFieldJsonAnonTest extends EntityTestMapFieldResourceTestBase 
    */
   protected static $mimeType = 'application/json';
 
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
 }

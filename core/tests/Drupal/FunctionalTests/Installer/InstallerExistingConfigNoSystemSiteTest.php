@@ -12,6 +12,11 @@ class InstallerExistingConfigNoSystemSiteTest extends InstallerExistingConfigTes
   /**
    * {@inheritdoc}
    */
+  protected $defaultTheme = 'stark';
+
+  /**
+   * {@inheritdoc}
+   */
   protected function prepareEnvironment() {
     parent::prepareEnvironment();
     // File API functions are not available yet.

@@ -20,6 +20,11 @@ class ResponsiveImageAdminUITest extends BrowserTestBase {
   public static $modules = ['responsive_image', 'responsive_image_test_module'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Drupal\simpletest\WebTestBase\setUp().
    */
   protected function setUp() {

@@ -20,6 +20,11 @@ class ProcessingTest extends BrowserTestBase {
   public static $modules = ['batch_test', 'test_page_test'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'classy';
+
+  /**
    * Tests batches triggered outside of form submission.
    */
   public function testBatchNoForm() {

@@ -18,6 +18,11 @@ class FeedParserTest extends AggregatorTestBase {
   /**
    * {@inheritdoc}
    */
+  protected $defaultTheme = 'stark';
+
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp() {
     parent::setUp();
     // Do not delete old aggregator items during these tests, since our sample

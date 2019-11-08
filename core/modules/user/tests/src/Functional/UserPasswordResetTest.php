@@ -37,6 +37,11 @@ class UserPasswordResetTest extends PageCacheTagsTestBase {
   /**
    * {@inheritdoc}
    */
+  protected $defaultTheme = 'stark';
+
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp() {
     parent::setUp();
 

@@ -17,6 +17,11 @@ use Drupal\user\RoleInterface;
 class BlockTest extends BlockTestBase {
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'classy';
+
+  /**
    * Tests block visibility.
    */
   public function testBlockVisibility() {

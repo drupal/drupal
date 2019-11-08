@@ -35,6 +35,11 @@ class DisplayEntityReferenceTest extends ViewTestBase {
   public static $modules = ['entity_test', 'field', 'views_ui'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * The used field name in the test.
    *
    * @var string

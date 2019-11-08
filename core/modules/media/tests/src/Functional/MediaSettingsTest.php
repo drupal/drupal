@@ -12,6 +12,11 @@ class MediaSettingsTest extends MediaFunctionalTestBase {
   /**
    * {@inheritdoc}
    */
+  protected $defaultTheme = 'stark';
+
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp() {
     parent::setUp();
     $this->drupalLogin($this->createUser(['administer site configuration']));

@@ -12,6 +12,11 @@ namespace Drupal\Tests\file\Functional;
 class FileManagedFileElementTest extends FileFieldTestBase {
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Tests the managed_file element type.
    */
   public function testManagedFile() {

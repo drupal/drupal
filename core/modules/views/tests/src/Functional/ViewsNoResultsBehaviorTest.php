@@ -19,6 +19,11 @@ class ViewsNoResultsBehaviorTest extends ViewTestBase {
   /**
    * {@inheritdoc}
    */
+  protected $defaultTheme = 'stark';
+
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp($import_test_views = TRUE) {
     parent::setUp();
     $this->enableViewsTestModule();

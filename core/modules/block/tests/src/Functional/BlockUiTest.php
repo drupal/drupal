@@ -21,6 +21,11 @@ class BlockUiTest extends BrowserTestBase {
    */
   public static $modules = ['block', 'block_test', 'help', 'condition_test'];
 
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'classy';
+
   protected $regions;
 
   /**

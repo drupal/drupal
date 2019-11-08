@@ -22,6 +22,11 @@ class CronRunTest extends BrowserTestBase {
   public static $modules = ['common_test', 'common_test_cron_helper', 'automated_cron'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Test cron runs.
    */
   public function testCronRun() {

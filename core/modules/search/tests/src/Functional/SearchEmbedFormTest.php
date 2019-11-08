@@ -17,6 +17,11 @@ class SearchEmbedFormTest extends BrowserTestBase {
   protected static $modules = ['node', 'search', 'search_embedded_form'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Node used for testing.
    *
    * @var \Drupal\node\NodeInterface

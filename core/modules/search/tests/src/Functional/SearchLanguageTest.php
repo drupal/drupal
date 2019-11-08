@@ -20,6 +20,11 @@ class SearchLanguageTest extends BrowserTestBase {
   protected static $modules = ['language', 'node', 'search'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Array of nodes available to search.
    *
    * @var \Drupal\node\NodeInterface[]

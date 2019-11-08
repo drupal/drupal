@@ -16,6 +16,11 @@ class SitesDirectoryHardeningTest extends BrowserTestBase {
   use StringTranslationTrait;
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Tests the default behavior to restrict directory permissions is enforced.
    *
    * Checks both the the current sites directory and settings.php.

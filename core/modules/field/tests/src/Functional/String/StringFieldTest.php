@@ -23,6 +23,11 @@ class StringFieldTest extends BrowserTestBase {
   public static $modules = ['entity_test', 'file'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * A user without any special permissions.
    *
    * @var \Drupal\user\UserInterface

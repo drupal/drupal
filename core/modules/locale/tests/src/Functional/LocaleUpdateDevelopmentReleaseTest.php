@@ -13,6 +13,11 @@ class LocaleUpdateDevelopmentReleaseTest extends BrowserTestBase {
 
   public static $modules = ['locale', 'locale_test_development_release'];
 
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
   protected function setUp() {
     parent::setUp();
     module_load_include('compare.inc', 'locale');

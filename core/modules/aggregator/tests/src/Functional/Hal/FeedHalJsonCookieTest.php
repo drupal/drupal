@@ -16,4 +16,9 @@ class FeedHalJsonCookieTest extends FeedHalJsonTestBase {
    */
   protected static $auth = 'cookie';
 
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
 }

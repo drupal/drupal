@@ -23,6 +23,11 @@ class PageNotFoundTest extends BrowserTestBase {
    */
   public static $modules = ['system_test'];
 
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
   protected $adminUser;
 
   protected function setUp() {

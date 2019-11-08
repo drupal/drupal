@@ -31,6 +31,11 @@ class ConfigTranslationOverviewTest extends BrowserTestBase {
   ];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Languages to enable.
    *
    * @var array

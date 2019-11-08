@@ -28,4 +28,9 @@ class RestResourceConfigXmlCookieTest extends RestResourceConfigResourceTestBase
    */
   protected static $auth = 'cookie';
 
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
 }

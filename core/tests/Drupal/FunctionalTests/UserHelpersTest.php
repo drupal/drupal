@@ -12,6 +12,11 @@ use Drupal\Tests\BrowserTestBase;
 class UserHelpersTest extends BrowserTestBase {
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Tests WebTestBase::drupalUserIsLoggedIn().
    */
   public function testDrupalUserIsLoggedIn() {

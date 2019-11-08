@@ -18,6 +18,11 @@ class ImageFieldValidateTest extends ImageFieldTestBase {
   }
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Test image validity.
    */
   public function testValid() {

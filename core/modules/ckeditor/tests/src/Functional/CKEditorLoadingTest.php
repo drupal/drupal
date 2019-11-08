@@ -21,6 +21,11 @@ class CKEditorLoadingTest extends BrowserTestBase {
   public static $modules = ['filter', 'editor', 'ckeditor', 'node'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * An untrusted user with access to only the 'plain_text' format.
    *
    * @var \Drupal\user\UserInterface

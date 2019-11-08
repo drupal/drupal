@@ -21,6 +21,11 @@ class BlockPlaceTest extends BrowserTestBase {
   public static $modules = ['block', 'block_place', 'toolbar'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Tests placing blocks as an admin.
    */
   public function testPlacingBlocksAdmin() {

@@ -18,6 +18,11 @@ class FrameworkTest extends WebDriverTestBase {
   protected static $modules = ['node', 'ajax_test', 'ajax_forms_test'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'classy';
+
+  /**
    * Tests that new JavaScript and CSS files are lazy-loaded on an AJAX request.
    */
   public function testLazyLoad() {

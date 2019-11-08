@@ -15,6 +15,11 @@ class InstallerExistingDatabaseSettingsTest extends InstallerTestBase {
   /**
    * {@inheritdoc}
    */
+  protected $defaultTheme = 'stark';
+
+  /**
+   * {@inheritdoc}
+   */
   protected function prepareEnvironment() {
     parent::prepareEnvironment();
     // Pre-configure database credentials in settings.php.

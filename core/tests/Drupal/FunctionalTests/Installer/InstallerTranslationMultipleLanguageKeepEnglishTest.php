@@ -10,6 +10,11 @@ namespace Drupal\FunctionalTests\Installer;
 class InstallerTranslationMultipleLanguageKeepEnglishTest extends InstallerTranslationMultipleLanguageForeignTest {
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Switch to the multilingual testing profile with English kept.
    *
    * @var string

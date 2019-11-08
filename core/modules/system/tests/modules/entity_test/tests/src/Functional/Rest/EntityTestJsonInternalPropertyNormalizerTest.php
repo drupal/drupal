@@ -29,6 +29,11 @@ class EntityTestJsonInternalPropertyNormalizerTest extends EntityTestResourceTes
   /**
    * {@inheritdoc}
    */
+  protected $defaultTheme = 'stark';
+
+  /**
+   * {@inheritdoc}
+   */
   protected function getExpectedNormalizedEntity() {
     $expected = parent::getExpectedNormalizedEntity();
     // The 'internal_value' property in test field type is not exposed in the

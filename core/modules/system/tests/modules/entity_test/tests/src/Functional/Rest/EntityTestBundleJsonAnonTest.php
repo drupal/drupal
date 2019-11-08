@@ -21,4 +21,9 @@ class EntityTestBundleJsonAnonTest extends EntityTestBundleResourceTestBase {
    */
   protected static $mimeType = 'application/json';
 
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
 }

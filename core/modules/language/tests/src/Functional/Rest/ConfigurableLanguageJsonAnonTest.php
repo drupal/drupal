@@ -21,4 +21,9 @@ class ConfigurableLanguageJsonAnonTest extends ConfigurableLanguageResourceTestB
    */
   protected static $mimeType = 'application/json';
 
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
 }

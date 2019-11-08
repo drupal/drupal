@@ -20,6 +20,11 @@ class ContactFormHalJsonBasicAuthTest extends ContactFormResourceTestBase {
   /**
    * {@inheritdoc}
    */
+  protected $defaultTheme = 'stark';
+
+  /**
+   * {@inheritdoc}
+   */
   protected static $format = 'hal_json';
 
   /**

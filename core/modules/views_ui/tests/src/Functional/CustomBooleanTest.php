@@ -21,6 +21,11 @@ class CustomBooleanTest extends UITestBase {
   public static $testViews = ['test_view'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * \Drupal\views\Tests\ViewTestBase::viewsData().
    */
   public function viewsData() {

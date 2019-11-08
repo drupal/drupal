@@ -28,6 +28,11 @@ class ContactPersonalTest extends BrowserTestBase {
   public static $modules = ['contact', 'dblog'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * A user with some administrative permissions.
    *
    * @var \Drupal\user\UserInterface

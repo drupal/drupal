@@ -23,6 +23,11 @@ class AccessDeniedTest extends BrowserTestBase {
    */
   public static $modules = ['block', 'node', 'system_test'];
 
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
   protected $adminUser;
 
   protected function setUp() {

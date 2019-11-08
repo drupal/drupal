@@ -17,6 +17,11 @@ class HelpBlockTest extends BrowserTestBase {
   public static $modules = ['help', 'help_page_test', 'block', 'more_help_page_test'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * The help block instance.
    *
    * @var \Drupal\block\Entity\Block

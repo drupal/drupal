@@ -16,6 +16,11 @@ class XssTest extends UITestBase {
    */
   public static $modules = ['node', 'user', 'views_ui', 'views_ui_test'];
 
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
   public function testViewsUi() {
     $this->drupalGet('admin/structure/views/view/sa_contrib_2013_035');
     $this->assertEscaped('<marquee>test</marquee>', 'Field admin label is properly escaped.');

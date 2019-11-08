@@ -23,6 +23,11 @@ class InvalidUpdateHookTest extends BrowserTestBase {
   public static $modules = ['update_test_invalid_hook', 'update_script_test', 'dblog'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * URL for the upgrade script.
    *
    * @var string

@@ -23,6 +23,11 @@ class WorkspaceCacheContextTest extends BrowserTestBase {
   public static $modules = ['block', 'node', 'workspaces'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Tests the 'workspace' cache context.
    */
   public function testWorkspaceCacheContext() {

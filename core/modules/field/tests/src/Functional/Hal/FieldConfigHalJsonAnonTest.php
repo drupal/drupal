@@ -20,6 +20,11 @@ class FieldConfigHalJsonAnonTest extends FieldConfigResourceTestBase {
   /**
    * {@inheritdoc}
    */
+  protected $defaultTheme = 'stark';
+
+  /**
+   * {@inheritdoc}
+   */
   protected static $format = 'hal_json';
 
   /**

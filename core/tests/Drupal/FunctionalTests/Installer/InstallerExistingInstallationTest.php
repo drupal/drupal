@@ -10,6 +10,11 @@ namespace Drupal\FunctionalTests\Installer;
 class InstallerExistingInstallationTest extends InstallerTestBase {
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Verifies that Drupal can't be reinstalled while an existing installation is
    * available.
    */

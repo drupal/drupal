@@ -21,4 +21,9 @@ class BaseFieldOverrideJsonAnonTest extends BaseFieldOverrideResourceTestBase {
    */
   protected static $mimeType = 'application/json';
 
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
 }

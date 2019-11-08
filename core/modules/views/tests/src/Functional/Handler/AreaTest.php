@@ -29,6 +29,11 @@ class AreaTest extends ViewTestBase {
    */
   public static $modules = ['node', 'views_ui'];
 
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
   protected function setUp($import_test_views = TRUE) {
     parent::setUp($import_test_views);
 

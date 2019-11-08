@@ -21,6 +21,11 @@ class DefaultViewsTest extends UITestBase {
    */
   public static $testViews = ['test_view_status', 'test_page_display_menu', 'test_page_display_arguments'];
 
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
   protected function setUp($import_test_views = TRUE) {
     parent::setUp($import_test_views);
 

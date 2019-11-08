@@ -20,6 +20,11 @@ class EarlyDateTest extends TaxonomyTestBase {
    */
   public static $modules = ['node', 'datetime'];
 
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
   protected function setUp() {
     parent::setUp();
 

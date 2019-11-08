@@ -17,6 +17,11 @@ class MessageCommandTest extends WebDriverTestBase {
   protected static $modules = ['ajax_test'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Test AJAX MessageCommand use in a form.
    */
   public function testMessageCommand() {

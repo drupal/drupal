@@ -18,6 +18,11 @@ class UserRolesAssignmentTest extends BrowserTestBase {
   }
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Tests that a user can be assigned a role and that the role can be removed
    * again.
    */

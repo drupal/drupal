@@ -38,6 +38,11 @@ class BlockTest extends ResourceTestBase {
   /**
    * {@inheritdoc}
    */
+  protected $defaultTheme = 'classy';
+
+  /**
+   * {@inheritdoc}
+   */
   protected function setUpAuthorization($method) {
     switch ($method) {
       case 'GET':

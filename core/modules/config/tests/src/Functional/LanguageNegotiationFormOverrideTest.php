@@ -15,6 +15,11 @@ class LanguageNegotiationFormOverrideTest extends BrowserTestBase {
   public static $modules = ['language', 'locale', 'locale_test'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Tests that overrides do not affect language-negotiation form values.
    */
   public function testFormWithOverride() {

@@ -23,6 +23,11 @@ class StatisticsAdminTest extends BrowserTestBase {
   public static $modules = ['node', 'statistics'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * A user that has permission to administer statistics.
    *
    * @var \Drupal\user\UserInterface

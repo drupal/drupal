@@ -22,6 +22,11 @@ class OptionsFieldUITest extends FieldTestBase {
   public static $modules = ['node', 'options', 'field_test', 'taxonomy', 'field_ui'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * The name of the created content type.
    *
    * @var string

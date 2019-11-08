@@ -12,6 +12,11 @@ use Drupal\Tests\BrowserTestBase;
 class TokenScanTest extends BrowserTestBase {
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Scans dummy text, then tests the output.
    */
   public function testTokenScan() {
