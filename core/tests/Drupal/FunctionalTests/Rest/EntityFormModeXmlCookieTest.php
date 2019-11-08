@@ -28,4 +28,9 @@ class EntityFormModeXmlCookieTest extends EntityFormModeResourceTestBase {
    */
   protected static $auth = 'cookie';
 
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
 }

@@ -12,6 +12,11 @@ use Drupal\Core\Cache\Cache;
 
 class ClearTest extends CacheTestBase {
 
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
   protected function setUp() {
     $this->defaultBin = 'render';
     $this->defaultValue = $this->randomMachineName(10);

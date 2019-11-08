@@ -23,6 +23,11 @@ class PagerTest extends BrowserTestBase {
   public static $modules = ['dblog', 'image', 'pager_test'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * A user with permission to access site reports.
    *
    * @var \Drupal\user\UserInterface

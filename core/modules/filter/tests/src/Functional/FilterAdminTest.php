@@ -23,6 +23,11 @@ class FilterAdminTest extends BrowserTestBase {
   public static $modules = ['block', 'filter', 'node', 'filter_test_plugin', 'dblog'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'classy';
+
+  /**
    * An user with administration permissions.
    *
    * @var \Drupal\user\UserInterface

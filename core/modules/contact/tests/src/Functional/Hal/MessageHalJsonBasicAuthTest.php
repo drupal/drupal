@@ -19,6 +19,11 @@ class MessageHalJsonBasicAuthTest extends MessageHalJsonAnonTest {
   /**
    * {@inheritdoc}
    */
+  protected $defaultTheme = 'stark';
+
+  /**
+   * {@inheritdoc}
+   */
   protected static $auth = 'basic_auth';
 
 }

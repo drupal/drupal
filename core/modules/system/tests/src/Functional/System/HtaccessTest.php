@@ -19,6 +19,11 @@ class HtaccessTest extends BrowserTestBase {
   public static $modules = ['node', 'path'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Get an array of file paths for access testing.
    *
    * @return int[]

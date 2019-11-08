@@ -13,6 +13,11 @@ use Drupal\user\Entity\User;
 class InstallerTranslationTest extends InstallerTestBase {
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'classy';
+
+  /**
    * Overrides the language code in which to install Drupal.
    *
    * @var string

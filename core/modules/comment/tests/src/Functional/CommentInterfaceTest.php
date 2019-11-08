@@ -19,6 +19,11 @@ use Drupal\filter\Entity\FilterFormat;
 class CommentInterfaceTest extends CommentTestBase {
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'classy';
+
+  /**
    * Set up comments to have subject and preview disabled.
    */
   protected function setUp() {

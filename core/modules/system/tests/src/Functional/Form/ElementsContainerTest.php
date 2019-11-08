@@ -19,6 +19,11 @@ class ElementsContainerTest extends BrowserTestBase {
   public static $modules = ['form_test'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Tests the #optional container property.
    */
   public function testOptionalContainerElements() {

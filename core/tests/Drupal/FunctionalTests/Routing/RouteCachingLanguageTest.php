@@ -23,6 +23,11 @@ class RouteCachingLanguageTest extends BrowserTestBase {
   public static $modules = ['path', 'node', 'content_translation', 'link', 'block'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * An user with permissions to administer content types.
    *
    * @var \Drupal\user\UserInterface

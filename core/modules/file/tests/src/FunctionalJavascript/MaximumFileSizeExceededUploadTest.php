@@ -23,6 +23,11 @@ class MaximumFileSizeExceededUploadTest extends WebDriverTestBase {
   public static $modules = ['node', 'file'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * The file system service.
    *
    * @var \Drupal\Core\File\FileSystemInterface

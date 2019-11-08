@@ -17,6 +17,11 @@ class NewViewConfigSchemaTest extends UITestBase {
   public static $modules = ['views_ui', 'node', 'comment', 'file', 'taxonomy', 'dblog', 'aggregator'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Tests creating brand new views.
    */
   public function testNewViews() {

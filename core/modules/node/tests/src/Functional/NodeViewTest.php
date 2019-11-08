@@ -13,6 +13,11 @@ use Drupal\Component\Utility\Html;
 class NodeViewTest extends NodeTestBase {
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'classy';
+
+  /**
    * Tests the html head links.
    */
   public function testHtmlHeadLinks() {

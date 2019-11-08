@@ -25,6 +25,11 @@ class LocaleTranslationUiTest extends BrowserTestBase {
   public static $modules = ['locale'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Enable interface translation to English.
    */
   public function testEnglishTranslation() {

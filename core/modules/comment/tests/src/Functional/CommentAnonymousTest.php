@@ -12,6 +12,11 @@ use Drupal\user\RoleInterface;
  */
 class CommentAnonymousTest extends CommentTestBase {
 
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'classy';
+
   protected function setUp() {
     parent::setUp();
 

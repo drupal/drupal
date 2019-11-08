@@ -36,6 +36,11 @@ class ContentModerationTest extends WebDriverTestBase {
   ];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'classy';
+
+  /**
    * User with the 'administer media' permission.
    *
    * @var \Drupal\Core\Session\AccountInterface

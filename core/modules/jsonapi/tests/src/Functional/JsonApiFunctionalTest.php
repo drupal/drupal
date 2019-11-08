@@ -24,6 +24,11 @@ class JsonApiFunctionalTest extends JsonApiFunctionalTestBase {
   ];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Test the GET method.
    */
   public function testRead() {

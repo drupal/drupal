@@ -20,6 +20,11 @@ class RenderArrayNonHtmlSubscriberTest extends BrowserTestBase {
   public static $modules = ['render_array_non_html_subscriber_test'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Tests handling of responses by events subscriber.
    */
   public function testResponses() {

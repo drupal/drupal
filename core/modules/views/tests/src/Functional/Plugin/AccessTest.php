@@ -30,6 +30,11 @@ class AccessTest extends ViewTestBase {
   public static $modules = ['node'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Web user for testing.
    *
    * @var \Drupal\user\UserInterface

@@ -10,6 +10,11 @@ namespace Drupal\Tests\options\Functional;
 class OptionsSelectDynamicValuesTest extends OptionsDynamicValuesTestBase {
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Tests the 'options_select' widget (single select).
    */
   public function testSelectListDynamic() {

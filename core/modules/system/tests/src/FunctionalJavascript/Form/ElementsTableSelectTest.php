@@ -17,6 +17,11 @@ class ElementsTableSelectTest extends WebDriverTestBase {
   protected static $modules = ['form_test'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Test the presence of ajax functionality for all options.
    */
   public function testAjax() {

@@ -19,6 +19,11 @@ class NodeHalJsonBasicAuthTest extends NodeHalJsonAnonTest {
   /**
    * {@inheritdoc}
    */
+  protected $defaultTheme = 'stark';
+
+  /**
+   * {@inheritdoc}
+   */
   protected static $auth = 'basic_auth';
 
 }

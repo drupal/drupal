@@ -18,6 +18,11 @@ class FilterBooleanWebTest extends UITestBase {
   public static $testViews = ['test_view'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Tests the filter boolean UI.
    */
   public function testFilterBooleanUI() {

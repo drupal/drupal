@@ -20,6 +20,11 @@ class EntityViewControllerTest extends BrowserTestBase {
   public static $modules = ['entity_test'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'classy';
+
+  /**
    * Array of test entities.
    *
    * @var array

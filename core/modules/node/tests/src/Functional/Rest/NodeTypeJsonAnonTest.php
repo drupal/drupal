@@ -21,4 +21,9 @@ class NodeTypeJsonAnonTest extends NodeTypeResourceTestBase {
    */
   protected static $mimeType = 'application/json';
 
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
 }

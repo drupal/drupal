@@ -13,6 +13,11 @@ use Drupal\Tests\BrowserTestBase;
 class RebuildScriptTest extends BrowserTestBase {
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Test redirect in rebuild.php.
    */
   public function testRebuild() {

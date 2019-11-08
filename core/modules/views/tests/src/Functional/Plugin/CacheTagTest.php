@@ -30,6 +30,11 @@ class CacheTagTest extends ViewTestBase {
   public static $modules = ['node'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * The node storage.
    *
    * @var \Drupal\node\NodeStorage

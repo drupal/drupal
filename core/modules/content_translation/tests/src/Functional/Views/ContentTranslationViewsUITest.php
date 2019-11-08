@@ -26,6 +26,11 @@ class ContentTranslationViewsUITest extends UITestBase {
   public static $modules = ['content_translation'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Tests the views UI.
    */
   public function testViewsUI() {

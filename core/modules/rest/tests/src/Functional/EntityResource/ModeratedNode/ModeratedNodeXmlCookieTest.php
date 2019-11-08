@@ -31,6 +31,11 @@ class ModeratedNodeXmlCookieTest extends ModeratedNodeResourceTestBase {
   /**
    * {@inheritdoc}
    */
+  protected $defaultTheme = 'stark';
+
+  /**
+   * {@inheritdoc}
+   */
   public function testPatchPath() {
     // Deserialization of the XML format is not supported.
     $this->markTestSkipped();

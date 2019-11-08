@@ -22,6 +22,11 @@ class MenuLinkContentFormTest extends BrowserTestBase {
   ];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * User with 'administer menu' and 'link to any page' permission.
    *
    * @var \Drupal\user\Entity\User

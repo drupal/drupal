@@ -21,6 +21,11 @@ class LocaleJavascriptTranslationTest extends BrowserTestBase {
    */
   public static $modules = ['locale', 'locale_test'];
 
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
   public function testFileParsing() {
 
     // This test is for ensuring that the regular expression in

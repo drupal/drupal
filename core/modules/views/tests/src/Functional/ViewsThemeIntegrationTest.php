@@ -18,6 +18,11 @@ class ViewsThemeIntegrationTest extends ViewTestBase {
    */
   public static $testViews = ['test_page_display'];
 
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
 
   /**
    * Used by WebTestBase::setup()

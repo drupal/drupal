@@ -33,6 +33,11 @@ class DefaultViewsTest extends ViewTestBase {
   public static $modules = ['views', 'node', 'search', 'comment', 'taxonomy', 'block', 'user'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * An array of argument arrays to use for default views.
    *
    * @var array

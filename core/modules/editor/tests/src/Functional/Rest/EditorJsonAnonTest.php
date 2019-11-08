@@ -21,4 +21,9 @@ class EditorJsonAnonTest extends EditorResourceTestBase {
    */
   protected static $mimeType = 'application/json';
 
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
 }

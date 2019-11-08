@@ -14,6 +14,11 @@ use Drupal\node\NodeInterface;
 class NodeRevisionsAllTest extends NodeTestBase {
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * A list of nodes created to be used as starting point of different tests.
    *
    * @var Drupal\node\NodeInterface[]

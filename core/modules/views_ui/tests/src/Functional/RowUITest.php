@@ -21,6 +21,11 @@ class RowUITest extends UITestBase {
   public static $testViews = ['test_view'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Tests changing the row plugin and changing some options of a row.
    */
   public function testRowUI() {

@@ -27,6 +27,11 @@ class ConfigInstallProfileOverrideTest extends BrowserTestBase {
   protected $profile = 'testing_config_overrides';
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Tests install profile config changes.
    */
   public function testInstallProfileConfigOverwrite() {

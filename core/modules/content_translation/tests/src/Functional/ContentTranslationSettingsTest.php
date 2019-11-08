@@ -27,6 +27,11 @@ class ContentTranslationSettingsTest extends BrowserTestBase {
    */
   public static $modules = ['language', 'content_translation', 'node', 'comment', 'field_ui', 'entity_test'];
 
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'classy';
+
   protected function setUp() {
     parent::setUp();
 

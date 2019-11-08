@@ -24,6 +24,11 @@ class StatisticsLoggingTest extends BrowserTestBase {
   public static $modules = ['node', 'statistics', 'block', 'locale'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * User with permissions to create and edit pages.
    *
    * @var \Drupal\user\UserInterface

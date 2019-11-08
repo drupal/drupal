@@ -17,6 +17,11 @@ class PathLanguageTest extends PathTestBase {
   public static $modules = ['path', 'locale', 'locale_test', 'content_translation'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * An user with permissions to administer content types.
    *
    * @var \Drupal\user\UserInterface

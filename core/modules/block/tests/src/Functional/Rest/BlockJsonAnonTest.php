@@ -21,4 +21,9 @@ class BlockJsonAnonTest extends BlockResourceTestBase {
    */
   protected static $mimeType = 'application/json';
 
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'classy';
+
 }

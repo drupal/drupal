@@ -21,4 +21,9 @@ class MenuLinkContentJsonAnonTest extends MenuLinkContentResourceTestBase {
    */
   protected static $mimeType = 'application/json';
 
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
 }

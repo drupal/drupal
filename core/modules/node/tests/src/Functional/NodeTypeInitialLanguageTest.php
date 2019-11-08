@@ -18,6 +18,11 @@ class NodeTypeInitialLanguageTest extends NodeTestBase {
    */
   public static $modules = ['language', 'field_ui'];
 
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
   protected function setUp() {
     parent::setUp();
 

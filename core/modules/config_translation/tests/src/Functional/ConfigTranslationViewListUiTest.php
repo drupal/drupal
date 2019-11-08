@@ -25,6 +25,11 @@ class ConfigTranslationViewListUiTest extends UITestBase {
    */
   public static $modules = ['config_translation', 'views_ui'];
 
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
   protected function setUp($import_test_views = TRUE) {
     parent::setUp($import_test_views);
 

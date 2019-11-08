@@ -19,6 +19,11 @@ class MediaTypeCreationTest extends MediaFunctionalTestBase {
   ];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Tests the media type creation form with only the mandatory options.
    */
   public function testMediaTypeCreationForm() {

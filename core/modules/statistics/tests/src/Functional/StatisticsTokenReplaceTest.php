@@ -13,6 +13,11 @@ use Drupal\Component\Render\FormattableMarkup;
 class StatisticsTokenReplaceTest extends StatisticsTestBase {
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Creates a node, then tests the statistics tokens generated from it.
    */
   public function testStatisticsTokenReplacement() {

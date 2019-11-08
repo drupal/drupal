@@ -24,6 +24,11 @@ class GlossaryTest extends ViewTestBase {
   public static $modules = ['node'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Tests the default glossary view.
    */
   public function testGlossaryView() {

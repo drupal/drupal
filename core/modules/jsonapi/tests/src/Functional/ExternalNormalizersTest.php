@@ -22,6 +22,11 @@ use GuzzleHttp\RequestOptions;
 class ExternalNormalizersTest extends BrowserTestBase {
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * The original value for the test field.
    *
    * @var string

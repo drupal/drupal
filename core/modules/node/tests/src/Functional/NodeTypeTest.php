@@ -26,6 +26,11 @@ class NodeTypeTest extends NodeTestBase {
   public static $modules = ['field_ui', 'block'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'classy';
+
+  /**
    * Ensures that node type functions (node_type_get_*) work correctly.
    *
    * Load available node types and validate the returned data.

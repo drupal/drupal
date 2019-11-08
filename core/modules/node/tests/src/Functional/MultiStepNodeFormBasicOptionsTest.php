@@ -13,6 +13,11 @@ use Drupal\field\Entity\FieldStorageConfig;
 class MultiStepNodeFormBasicOptionsTest extends NodeTestBase {
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * The field name to create.
    *
    * @var string

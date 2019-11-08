@@ -21,4 +21,9 @@ class MediaTypeJsonAnonTest extends MediaTypeResourceTestBase {
    */
   protected static $mimeType = 'application/json';
 
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
 }

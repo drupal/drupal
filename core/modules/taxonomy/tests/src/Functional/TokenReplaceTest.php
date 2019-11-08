@@ -28,6 +28,11 @@ class TokenReplaceTest extends TaxonomyTestBase {
    */
   protected $fieldName;
 
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
   protected function setUp() {
     parent::setUp();
     $this->drupalLogin($this->drupalCreateUser(['administer taxonomy', 'bypass node access']));

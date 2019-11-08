@@ -21,6 +21,11 @@ class SearchConfigSettingsFormTest extends BrowserTestBase {
   protected static $modules = ['block', 'dblog', 'node', 'search', 'search_extra_type', 'test_page_test'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'classy';
+
+  /**
    * User who can search and administer search.
    *
    * @var \Drupal\user\UserInterface

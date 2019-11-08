@@ -18,6 +18,11 @@ class ViewAjaxTest extends ViewTestBase {
    */
   public static $testViews = ['test_ajax_view', 'test_view'];
 
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
   protected function setUp($import_test_views = TRUE) {
     parent::setUp($import_test_views);
 

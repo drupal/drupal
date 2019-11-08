@@ -10,6 +10,11 @@ namespace Drupal\Tests\block_content\Functional\Views;
 class BlockContentIntegrationTest extends BlockContentTestBase {
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Views used by this test.
    *
    * @var array

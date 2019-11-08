@@ -14,6 +14,11 @@ use Symfony\Component\HttpFoundation\Request;
 class SelectPagerDefaultTest extends DatabaseTestBase {
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Confirms that a pager query returns the correct results.
    *
    * Note that we have to make an HTTP request to a test page handler

@@ -22,6 +22,11 @@ class BulkFormTest extends BrowserTestBase {
   public static $modules = ['node', 'action_bulk_test'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Tests the bulk form.
    */
   public function testBulkForm() {

@@ -25,6 +25,11 @@ class GlossaryViewTest extends WebDriverTestBase {
   public static $modules = ['language', 'node', 'views', 'views_test_config'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'classy';
+
+  /**
    * @var array
    * The test Views to enable.
    */

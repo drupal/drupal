@@ -21,6 +21,11 @@ class FieldDefaultValueCallbackTest extends BrowserTestBase {
   public static $modules = ['node', 'field_test', 'field_ui'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * The field name.
    *
    * @var string

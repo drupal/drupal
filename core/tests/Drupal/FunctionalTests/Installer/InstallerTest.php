@@ -10,6 +10,11 @@ namespace Drupal\FunctionalTests\Installer;
 class InstallerTest extends InstallerTestBase {
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Ensures that the user page is available after installation.
    */
   public function testInstaller() {

@@ -14,6 +14,11 @@ class AdminPathEntityConverterLanguageTest extends BrowserTestBase {
 
   public static $modules = ['language', 'language_test'];
 
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
   protected function setUp() {
     parent::setUp();
     $permissions = [

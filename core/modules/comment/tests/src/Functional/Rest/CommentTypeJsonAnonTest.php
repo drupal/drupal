@@ -21,4 +21,9 @@ class CommentTypeJsonAnonTest extends CommentTypeResourceTestBase {
    */
   protected static $mimeType = 'application/json';
 
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
 }

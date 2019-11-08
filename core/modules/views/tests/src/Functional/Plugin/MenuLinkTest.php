@@ -27,6 +27,11 @@ class MenuLinkTest extends ViewTestBase {
   public static $modules = ['views', 'views_ui', 'user', 'node', 'menu_ui', 'block'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * A user with permission to administer views, menus and view content.
    *
    * @var \Drupal\user\UserInterface

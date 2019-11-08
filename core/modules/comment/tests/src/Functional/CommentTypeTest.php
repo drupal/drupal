@@ -18,6 +18,11 @@ use Drupal\node\Entity\Node;
 class CommentTypeTest extends CommentTestBase {
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Admin user.
    *
    * @var \Drupal\Core\Session\AccountInterface

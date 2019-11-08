@@ -20,6 +20,11 @@ class LanguageConfigOverrideImportTest extends BrowserTestBase {
   public static $modules = ['language', 'config', 'locale', 'config_translation'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Tests that language can be enabled and overrides are created during a sync.
    */
   public function testConfigOverrideImport() {

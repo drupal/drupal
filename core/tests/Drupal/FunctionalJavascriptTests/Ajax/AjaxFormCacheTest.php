@@ -20,6 +20,11 @@ class AjaxFormCacheTest extends WebDriverTestBase {
   public static $modules = ['ajax_test', 'ajax_forms_test'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Tests the usage of form cache for AJAX forms.
    */
   public function testFormCacheUsage() {

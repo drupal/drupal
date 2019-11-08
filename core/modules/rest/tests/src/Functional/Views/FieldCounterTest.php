@@ -29,6 +29,11 @@ class FieldCounterTest extends ViewTestBase {
   public static $testViews = ['test_field_counter_display'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * The modules that need to be installed for this test.
    *
    * @var array

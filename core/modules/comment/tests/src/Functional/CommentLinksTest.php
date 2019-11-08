@@ -39,6 +39,11 @@ class CommentLinksTest extends CommentTestBase {
   public static $modules = ['views'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Tests that comment links are output and can be hidden.
    */
   public function testCommentLinks() {

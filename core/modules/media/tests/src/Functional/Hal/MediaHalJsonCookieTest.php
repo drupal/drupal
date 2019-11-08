@@ -16,4 +16,9 @@ class MediaHalJsonCookieTest extends MediaHalJsonAnonTest {
    */
   protected static $auth = 'cookie';
 
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
 }

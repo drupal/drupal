@@ -15,6 +15,11 @@ use Drupal\Tests\BrowserTestBase;
 class OffCanvasDialogTest extends BrowserTestBase {
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Modules to enable.
    *
    * @var array

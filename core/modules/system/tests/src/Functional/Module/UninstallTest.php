@@ -24,6 +24,11 @@ class UninstallTest extends BrowserTestBase {
   public static $modules = ['module_test', 'user', 'views', 'node'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Tests the hook_modules_uninstalled() of the user module.
    */
   public function testUserPermsUninstalled() {

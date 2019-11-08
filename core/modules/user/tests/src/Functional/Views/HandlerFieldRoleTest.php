@@ -20,6 +20,11 @@ class HandlerFieldRoleTest extends UserTestBase {
    */
   public static $testViews = ['test_views_handler_field_role'];
 
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
   public function testRole() {
     // Create a couple of roles for the view.
     $rolename_a = 'a' . $this->randomMachineName(8);

@@ -12,6 +12,11 @@ class HelpTopicTranslationTest extends HelpTopicTranslatedTestBase {
   /**
    * {@inheritdoc}
    */
+  protected $defaultTheme = 'stark';
+
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp() {
     parent::setUp();
 

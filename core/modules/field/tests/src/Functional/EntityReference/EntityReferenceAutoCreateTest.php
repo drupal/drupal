@@ -22,6 +22,11 @@ class EntityReferenceAutoCreateTest extends BrowserTestBase {
   public static $modules = ['node', 'taxonomy'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * The name of a content type that will reference $referencedType.
    *
    * @var string

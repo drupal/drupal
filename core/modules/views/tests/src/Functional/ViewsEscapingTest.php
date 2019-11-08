@@ -17,6 +17,11 @@ class ViewsEscapingTest extends ViewTestBase {
   public static $testViews = ['test_page_display', 'test_field_header'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Used by WebTestBase::setup()
    *
    * We need theme_test for testing against test_basetheme and test_subtheme.

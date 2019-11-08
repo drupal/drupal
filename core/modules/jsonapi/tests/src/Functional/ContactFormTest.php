@@ -37,6 +37,11 @@ class ContactFormTest extends ResourceTestBase {
   /**
    * {@inheritdoc}
    */
+  protected $defaultTheme = 'stark';
+
+  /**
+   * {@inheritdoc}
+   */
   protected function setUpAuthorization($method) {
     $this->grantPermissionsToTestedRole(['access site-wide contact form']);
   }

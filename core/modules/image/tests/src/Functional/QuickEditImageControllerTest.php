@@ -25,6 +25,11 @@ class QuickEditImageControllerTest extends BrowserTestBase {
   public static $modules = ['node', 'image', 'quickedit'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * The machine name of our image field.
    *
    * @var string

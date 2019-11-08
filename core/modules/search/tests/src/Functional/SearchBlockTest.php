@@ -18,6 +18,11 @@ class SearchBlockTest extends BrowserTestBase {
   protected static $modules = ['block', 'node', 'search', 'dblog', 'user'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'classy';
+
+  /**
    * The administrative user.
    *
    * @var \Drupal\Core\Session\AccountInterface

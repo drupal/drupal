@@ -26,4 +26,9 @@ class FeedJsonCookieTest extends FeedResourceTestBase {
    */
   protected static $auth = 'cookie';
 
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
 }

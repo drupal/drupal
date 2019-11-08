@@ -13,6 +13,11 @@ use Drupal\node\Entity\NodeType;
 class NodeAccessRebuildNodeGrantsTest extends NodeTestBase {
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * A user to create nodes that only it has access to.
    *
    * @var \Drupal\user\UserInterface

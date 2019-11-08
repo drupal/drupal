@@ -15,6 +15,11 @@ class InstallerCustomConfigDirectoryCreateTest extends InstallerTestBase {
   /**
    * {@inheritdoc}
    */
+  protected $defaultTheme = 'stark';
+
+  /**
+   * {@inheritdoc}
+   */
   protected function prepareEnvironment() {
     parent::prepareEnvironment();
     // Other directories will be created too.

@@ -21,6 +21,11 @@ class ValidationTest extends BrowserTestBase {
   public static $modules = ['form_test'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Tests #element_validate and #validate.
    */
   public function testValidate() {

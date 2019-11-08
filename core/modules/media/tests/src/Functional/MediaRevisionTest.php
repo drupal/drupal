@@ -16,6 +16,11 @@ use Drupal\user\RoleInterface;
 class MediaRevisionTest extends MediaFunctionalTestBase {
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Checks media revision operations.
    */
   public function testRevisions() {

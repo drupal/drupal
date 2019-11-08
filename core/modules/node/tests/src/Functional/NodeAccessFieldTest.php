@@ -20,6 +20,11 @@ class NodeAccessFieldTest extends NodeTestBase {
   public static $modules = ['node_access_test', 'field_ui'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * A user with permission to bypass access content.
    *
    * @var \Drupal\user\UserInterface

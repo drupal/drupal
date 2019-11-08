@@ -24,6 +24,11 @@ class RouterTest extends BrowserTestBase {
   public static $modules = ['router_test'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Confirms that our FinishResponseSubscriber logic works properly.
    */
   public function testFinishResponseSubscriber() {

@@ -21,6 +21,11 @@ class ContentTranslationSyncImageTest extends ContentTranslationTestBase {
   }
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * The cardinality of the image field.
    *
    * @var int

@@ -12,6 +12,11 @@ use Drupal\block_content\Entity\BlockContent;
  */
 class PageEditTest extends BlockContentTestBase {
 
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
   protected function setUp() {
     parent::setUp();
 

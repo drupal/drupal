@@ -16,6 +16,11 @@ class PathNodeFormTest extends PathTestBase {
    */
   public static $modules = ['node', 'path'];
 
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'classy';
+
   protected function setUp() {
     parent::setUp();
 

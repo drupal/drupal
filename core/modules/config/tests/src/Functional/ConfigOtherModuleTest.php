@@ -12,6 +12,11 @@ use Drupal\Tests\BrowserTestBase;
 class ConfigOtherModuleTest extends BrowserTestBase {
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Tests enabling the provider of the default configuration first.
    */
   public function testInstallOtherModuleFirst() {

@@ -17,6 +17,11 @@ class SearchSetLocaleTest extends BrowserTestBase {
   protected static $modules = ['comment', 'node', 'search'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * A node search plugin instance.
    *
    * @var \Drupal\search\Plugin\SearchInterface

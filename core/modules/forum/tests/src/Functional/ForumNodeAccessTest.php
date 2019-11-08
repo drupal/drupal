@@ -19,6 +19,11 @@ class ForumNodeAccessTest extends BrowserTestBase {
    */
   public static $modules = ['node', 'comment', 'forum', 'taxonomy', 'tracker', 'node_access_test', 'block'];
 
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
   protected function setUp() {
     parent::setUp();
     node_access_rebuild();

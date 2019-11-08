@@ -23,6 +23,11 @@ class LanguageConfigurationTest extends BrowserTestBase {
   public static $modules = ['language'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Functional tests for adding, editing and deleting languages.
    */
   public function testLanguageConfiguration() {

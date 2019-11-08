@@ -12,6 +12,11 @@ use Drupal\Tests\BrowserTestBase;
 class ContentNegotiationTest extends BrowserTestBase {
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Verifies HTML responses for bogus Accept headers.
    *
    * Drupal does not fully support older browsers, but a page output is still

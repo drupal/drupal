@@ -16,6 +16,11 @@ class RemoteFileSaveUploadTest extends SaveUploadTest {
    */
   public static $modules = ['file_test'];
 
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
   protected function setUp() {
     parent::setUp();
     $this->config('system.file')->set('default_scheme', 'dummy-remote')->save();

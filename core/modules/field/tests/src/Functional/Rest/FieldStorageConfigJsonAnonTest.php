@@ -21,4 +21,9 @@ class FieldStorageConfigJsonAnonTest extends FieldStorageConfigResourceTestBase 
    */
   protected static $mimeType = 'application/json';
 
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
 }

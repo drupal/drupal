@@ -15,4 +15,9 @@ class TermHalJsonCookieTest extends TermHalJsonAnonTest {
    */
   protected static $auth = 'cookie';
 
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
 }

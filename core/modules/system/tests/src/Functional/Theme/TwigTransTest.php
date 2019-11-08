@@ -25,6 +25,11 @@ class TwigTransTest extends BrowserTestBase {
   ];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * An administrative user for testing.
    *
    * @var \Drupal\user\Entity\User

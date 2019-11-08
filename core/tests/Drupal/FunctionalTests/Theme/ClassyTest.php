@@ -14,15 +14,7 @@ class ClassyTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
-    parent::setUp();
-
-    $this->assertTrue($this->container->get('theme_installer')->install(['classy']));
-    $this->container->get('config.factory')
-      ->getEditable('system.theme')
-      ->set('default', 'classy')
-      ->save();
-  }
+  protected $defaultTheme = 'classy';
 
   /**
    * Tests that the Classy theme always adds its message CSS.

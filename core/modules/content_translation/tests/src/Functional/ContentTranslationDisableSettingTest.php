@@ -21,6 +21,11 @@ class ContentTranslationDisableSettingTest extends BrowserTestBase {
   ];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Tests that entity schemas are up-to-date after enabling translation.
    */
   public function testDisableSetting() {

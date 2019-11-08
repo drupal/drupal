@@ -21,6 +21,11 @@ class SettingsTrayTest extends BrowserTestBase {
   ];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Gets the block CSS selector.
    *
    * @param \Drupal\block\Entity\Block $block

@@ -21,6 +21,11 @@ class TermXmlCookieTest extends TermResourceTestBase {
   /**
    * {@inheritdoc}
    */
+  protected $defaultTheme = 'stark';
+
+  /**
+   * {@inheritdoc}
+   */
   protected static $mimeType = 'text/xml; charset=UTF-8';
 
   /**

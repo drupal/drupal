@@ -14,6 +14,11 @@ use Drupal\user\Entity\User;
 class UserLoginTest extends BrowserTestBase {
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Tests login with destination.
    */
   public function testLoginCacheTagsAndDestination() {

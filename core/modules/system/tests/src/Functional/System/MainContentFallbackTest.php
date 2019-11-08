@@ -18,6 +18,11 @@ class MainContentFallbackTest extends BrowserTestBase {
    */
   public static $modules = ['block', 'system_test'];
 
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
   protected $adminUser;
   protected $webUser;
 

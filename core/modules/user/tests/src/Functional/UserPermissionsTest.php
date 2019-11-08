@@ -28,6 +28,11 @@ class UserPermissionsTest extends BrowserTestBase {
    */
   protected $rid;
 
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
   protected function setUp() {
     parent::setUp();
 

@@ -20,6 +20,11 @@ class ElementTest extends BrowserTestBase {
   public static $modules = ['form_test'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'classy';
+
+  /**
    * Tests placeholder text for elements that support placeholders.
    */
   public function testPlaceHolderText() {

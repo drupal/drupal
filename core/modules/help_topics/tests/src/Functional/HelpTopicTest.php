@@ -26,6 +26,11 @@ class HelpTopicTest extends BrowserTestBase {
   ];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * The admin user that will be created.
    *
    * @var \Drupal\user\UserInterface

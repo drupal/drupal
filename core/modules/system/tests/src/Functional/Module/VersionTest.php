@@ -10,6 +10,11 @@ namespace Drupal\Tests\system\Functional\Module;
 class VersionTest extends ModuleTestBase {
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Test version dependencies.
    */
   public function testModuleVersions() {

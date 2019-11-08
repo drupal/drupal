@@ -19,6 +19,11 @@ class ColorConfigSchemaTest extends BrowserTestBase {
   public static $modules = ['color'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * A user with administrative permissions.
    *
    * @var \Drupal\user\UserInterface

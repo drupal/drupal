@@ -12,6 +12,11 @@ use Drupal\Component\Render\FormattableMarkup;
 class AggregatorAdminTest extends AggregatorTestBase {
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Tests the settings form to ensure the correct default values are used.
    */
   public function testSettingsPage() {

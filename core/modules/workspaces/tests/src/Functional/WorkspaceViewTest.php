@@ -20,6 +20,11 @@ class WorkspaceViewTest extends BrowserTestBase {
   public static $modules = ['workspaces'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Verifies that a user can view their own workspace.
    */
   public function testViewOwnWorkspace() {

@@ -22,6 +22,11 @@ class LanguageConfigSchemaTest extends BrowserTestBase {
   public static $modules = ['language', 'menu_link_content'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * A user with administrative permissions.
    *
    * @var \Drupal\user\UserInterface

@@ -10,6 +10,11 @@ namespace Drupal\Tests\taxonomy\Functional\Views;
 class TermDisplayConfigurableTest extends TaxonomyTestBase {
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'classy';
+
+  /**
    * Views used by this test.
    *
    * @var array

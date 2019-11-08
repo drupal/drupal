@@ -17,6 +17,11 @@ class GroupByTest extends UITestBase {
   public static $testViews = ['test_views_groupby_save'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Tests whether basic saving works.
    *
    * @todo This should check the change of the settings as well.

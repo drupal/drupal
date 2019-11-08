@@ -12,6 +12,11 @@ namespace Drupal\FunctionalTests\Installer;
 class InstallerTranslationQueryTest extends InstallerTestBase {
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Overrides the language code in which to install Drupal.
    *
    * @var string

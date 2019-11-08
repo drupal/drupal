@@ -29,6 +29,11 @@ class MenuUiJavascriptTest extends WebDriverTestBase {
   ];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Tests the contextual links on a menu block.
    */
   public function testBlockContextualLinks() {

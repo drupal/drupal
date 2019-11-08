@@ -42,6 +42,11 @@ class QuickEditLoadingTest extends WebDriverTestBase {
   ];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'classy';
+
+  /**
    * An user with permissions to create and edit articles.
    *
    * @var \Drupal\user\UserInterface

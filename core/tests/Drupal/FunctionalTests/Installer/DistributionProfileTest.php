@@ -18,6 +18,11 @@ class DistributionProfileTest extends InstallerTestBase {
    */
   protected $info;
 
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
   protected function prepareEnvironment() {
     parent::prepareEnvironment();
     $this->info = [

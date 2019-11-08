@@ -26,6 +26,11 @@ class LanguageEntityFieldAccessHookTest extends BrowserTestBase {
   ];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Tests compatibility with hook_entity_field_access().
    */
   public function testHookEntityFieldAccess() {

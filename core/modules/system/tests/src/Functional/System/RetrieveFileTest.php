@@ -12,6 +12,11 @@ use Drupal\Tests\BrowserTestBase;
 class RetrieveFileTest extends BrowserTestBase {
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Invokes system_retrieve_file() in several scenarios.
    */
   public function testFileRetrieving() {

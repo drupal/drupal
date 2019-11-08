@@ -24,6 +24,11 @@ class RelationshipUserFileDataTest extends ViewTestBase {
   public static $modules = ['file', 'file_test_views', 'user'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Views used by this test.
    *
    * @var array

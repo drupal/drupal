@@ -20,6 +20,11 @@ class FilterFormatHalJsonCookieTest extends FilterFormatResourceTestBase {
   /**
    * {@inheritdoc}
    */
+  protected $defaultTheme = 'stark';
+
+  /**
+   * {@inheritdoc}
+   */
   protected static $format = 'hal_json';
 
   /**

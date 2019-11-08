@@ -20,6 +20,11 @@ class ViewEditTest extends UITestBase {
   public static $testViews = ['test_view', 'test_display', 'test_groupwise_term_ui'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Tests the delete link on a views UI.
    */
   public function testDeleteLink() {

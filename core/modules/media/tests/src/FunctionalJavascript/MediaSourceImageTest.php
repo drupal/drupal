@@ -19,6 +19,11 @@ use Drupal\user\RoleInterface;
 class MediaSourceImageTest extends MediaSourceTestBase {
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'classy';
+
+  /**
    * Tests the image media source.
    */
   public function testMediaImageSource() {

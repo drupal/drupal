@@ -33,6 +33,11 @@ class ThemeTest extends BrowserTestBase {
    */
   public static $modules = ['node', 'block', 'file'];
 
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'classy';
+
   protected function setUp() {
     parent::setUp();
 

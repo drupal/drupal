@@ -71,6 +71,11 @@ class ConfigExportImportUITest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
+  protected $defaultTheme = 'stark';
+
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp() {
     parent::setUp();
     // The initial import must be done with uid 1 because if separately named

@@ -27,6 +27,11 @@ class CommentTokenReplaceTest extends CommentTestBase {
   public static $modules = ['taxonomy'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Creates a comment, then tests the tokens generated from it.
    */
   public function testCommentTokenReplacement() {

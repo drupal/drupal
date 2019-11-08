@@ -44,6 +44,11 @@ class JsonApiRegressionTest extends JsonApiFunctionalTestBase {
   ];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Ensure filtering on relationships works with bundle-specific target types.
    *
    * @see https://www.drupal.org/project/jsonapi/issues/2953207

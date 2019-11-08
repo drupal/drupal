@@ -26,6 +26,11 @@ class AccessRoleTest extends AccessTestBase {
   public static $testViews = ['test_access_role'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Tests role access plugin.
    */
   public function testAccessRole() {

@@ -19,6 +19,11 @@ class DisplayExtenderUITest extends UITestBase {
   public static $testViews = ['test_view'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Tests the display extender UI.
    */
   public function testDisplayExtenderUI() {

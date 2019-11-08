@@ -26,6 +26,11 @@ class DefaultViewRecentCommentsTest extends ViewTestBase {
   public static $modules = ['node', 'comment', 'block'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Number of results for the Master display.
    *
    * @var int

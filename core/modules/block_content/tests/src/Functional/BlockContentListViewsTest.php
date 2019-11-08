@@ -21,6 +21,11 @@ class BlockContentListViewsTest extends BlockContentTestBase {
   public static $modules = ['block', 'block_content', 'config_translation', 'views'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Tests the custom block listing page.
    */
   public function testListing() {

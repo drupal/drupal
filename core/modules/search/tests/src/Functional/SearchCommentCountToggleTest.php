@@ -28,6 +28,11 @@ class SearchCommentCountToggleTest extends BrowserTestBase {
   protected static $modules = ['node', 'comment', 'search', 'dblog'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * A user with permission to search and post comments.
    *
    * @var \Drupal\user\UserInterface

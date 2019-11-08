@@ -21,6 +21,11 @@ class WorkflowCustomStateTransitionAccessTest extends BrowserTestBase {
   ];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * A test admin user.
    *
    * @var \Drupal\Core\Session\AccountInterface

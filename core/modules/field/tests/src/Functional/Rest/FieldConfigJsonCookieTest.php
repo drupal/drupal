@@ -26,4 +26,9 @@ class FieldConfigJsonCookieTest extends FieldConfigResourceTestBase {
    */
   protected static $auth = 'cookie';
 
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
 }

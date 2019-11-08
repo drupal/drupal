@@ -23,6 +23,11 @@ class ConfigTranslationUiTest extends WebDriverTestBase {
   ];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Tests that contextual link related to views.
    */
   public function testViewContextualLink() {

@@ -40,6 +40,11 @@ class MenuUiTest extends BrowserTestBase {
   ];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * A user with administration rights.
    *
    * @var \Drupal\user\UserInterface

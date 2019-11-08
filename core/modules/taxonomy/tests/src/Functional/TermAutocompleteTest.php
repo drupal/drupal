@@ -24,6 +24,11 @@ class TermAutocompleteTest extends TaxonomyTestBase {
   public static $modules = ['node'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * The vocabulary.
    *
    * @var \Drupal\taxonomy\Entity\Vocabulary

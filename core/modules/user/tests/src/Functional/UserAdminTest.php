@@ -26,6 +26,11 @@ class UserAdminTest extends BrowserTestBase {
   public static $modules = ['taxonomy', 'views'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Registers a user and deletes it.
    */
   public function testUserAdmin() {

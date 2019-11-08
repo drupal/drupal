@@ -25,15 +25,7 @@ class ClaroTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
-    parent::setUp();
-
-    $this->assertTrue(\Drupal::service('theme_installer')->install(['claro']));
-    $this->container->get('config.factory')
-      ->getEditable('system.theme')
-      ->set('default', 'claro')
-      ->save();
-  }
+  protected $defaultTheme = 'claro';
 
   /**
    * Tests that the Claro theme always adds its elements.css.

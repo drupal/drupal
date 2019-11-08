@@ -17,6 +17,11 @@ class LibraryCachingTest extends WebDriverTestBase {
   public static $modules = ['node', 'views', 'views_ui'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Tests if the Views UI dialogs open on consecutive requests.
    */
   public function testConsecutiveDialogRequests() {

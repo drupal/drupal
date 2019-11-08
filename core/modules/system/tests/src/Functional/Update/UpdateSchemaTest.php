@@ -22,6 +22,11 @@ class UpdateSchemaTest extends BrowserTestBase {
   public static $modules = ['update_test_schema'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * @var \Drupal\user\UserInterface
    */
   protected $user;

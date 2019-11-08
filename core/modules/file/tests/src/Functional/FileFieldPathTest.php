@@ -13,6 +13,11 @@ use Drupal\file\Entity\File;
 class FileFieldPathTest extends FileFieldTestBase {
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Tests the normal formatter display on node display.
    */
   public function testUploadPath() {

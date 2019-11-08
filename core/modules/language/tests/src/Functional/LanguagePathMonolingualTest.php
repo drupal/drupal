@@ -18,6 +18,11 @@ class LanguagePathMonolingualTest extends BrowserTestBase {
    */
   public static $modules = ['block', 'language', 'path'];
 
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
   protected function setUp() {
     parent::setUp();
 

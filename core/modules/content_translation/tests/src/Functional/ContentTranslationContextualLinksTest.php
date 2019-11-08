@@ -22,6 +22,11 @@ class ContentTranslationContextualLinksTest extends BrowserTestBase {
   protected $bundle;
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * The content type being tested.
    *
    * @var \Drupal\node\Entity\NodeType

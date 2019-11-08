@@ -15,6 +15,11 @@ class FileSaveHtaccessLoggingTest extends BrowserTestBase {
   protected static $modules = ['dblog'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Tests file_save_htaccess().
    */
   public function testHtaccessSave() {

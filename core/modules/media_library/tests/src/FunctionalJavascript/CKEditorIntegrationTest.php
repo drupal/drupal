@@ -25,6 +25,11 @@ class CKEditorIntegrationTest extends WebDriverTestBase {
   use TestFileCreationTrait;
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'classy';
+
+  /**
    * The user to use during testing.
    *
    * @var \Drupal\user\UserInterface

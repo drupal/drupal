@@ -21,6 +21,11 @@ class IpAddressBlockingTest extends BrowserTestBase {
   public static $modules = ['ban'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Tests various user input to confirm correct validation and saving of data.
    */
   public function testIPAddressValidation() {

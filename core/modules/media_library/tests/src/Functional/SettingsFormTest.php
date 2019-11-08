@@ -21,6 +21,11 @@ class SettingsFormTest extends BrowserTestBase {
   protected static $modules = ['media_library'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Tests the Media Library settings form.
    */
   public function testSettingsForm() {

@@ -19,6 +19,11 @@ class ActionListTest extends BrowserTestBase {
   public static $modules = ['action'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Tests the behavior when there are no actions to list in the admin page.
    */
   public function testEmptyActionList() {

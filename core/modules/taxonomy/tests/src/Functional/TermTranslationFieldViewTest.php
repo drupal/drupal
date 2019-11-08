@@ -41,6 +41,11 @@ class TermTranslationFieldViewTest extends TaxonomyTestBase {
    */
   public static $modules = ['language', 'content_translation', 'taxonomy'];
 
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
   protected function setUp() {
     parent::setUp();
     $this->setupLanguages();

@@ -28,4 +28,9 @@ class ResponsiveImageStyleXmlCookieTest extends ResponsiveImageStyleResourceTest
    */
   protected static $auth = 'cookie';
 
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
 }

@@ -33,6 +33,11 @@ class ExposedFormTest extends ViewTestBase {
    */
   public static $modules = ['node', 'views_ui', 'block', 'entity_test'];
 
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'classy';
+
   protected function setUp($import_test_views = TRUE) {
     parent::setUp($import_test_views);
 

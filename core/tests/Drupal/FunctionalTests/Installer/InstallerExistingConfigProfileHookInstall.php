@@ -14,6 +14,11 @@ class InstallerExistingConfigProfileHookInstall extends InstallerExistingConfigT
   /**
    * {@inheritdoc}
    */
+  protected $defaultTheme = 'stark';
+
+  /**
+   * {@inheritdoc}
+   */
   protected function visitInstaller() {
     // Create an .install file with a hook_install() implementation.
     $path = $this->siteDirectory . '/profiles/' . $this->profile;

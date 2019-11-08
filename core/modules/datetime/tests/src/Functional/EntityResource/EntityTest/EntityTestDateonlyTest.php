@@ -28,6 +28,11 @@ class EntityTestDateonlyTest extends EntityTestResourceTestBase {
   protected static $dateString = '2017-03-01';
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Datetime test field name.
    *
    * @var string

@@ -22,6 +22,11 @@ class NodeRSSContentTest extends NodeTestBase {
    */
   public static $modules = ['node_test', 'views'];
 
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
   protected function setUp() {
     parent::setUp();
 

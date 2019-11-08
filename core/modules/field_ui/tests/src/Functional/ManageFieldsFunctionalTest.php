@@ -30,6 +30,11 @@ class ManageFieldsFunctionalTest extends BrowserTestBase {
   public static $modules = ['node', 'field_ui', 'field_test', 'taxonomy', 'image', 'block'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * The ID of the custom content type created for testing.
    *
    * @var string

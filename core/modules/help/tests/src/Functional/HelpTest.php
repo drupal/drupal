@@ -24,6 +24,11 @@ class HelpTest extends BrowserTestBase {
   public static $modules = ['help_test', 'help_page_test'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Use the Standard profile to test help implementations of many core modules.
    *
    * @var string

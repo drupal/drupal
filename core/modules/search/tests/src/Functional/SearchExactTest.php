@@ -17,6 +17,11 @@ class SearchExactTest extends BrowserTestBase {
   protected static $modules = ['node', 'search'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Tests that the correct number of pager links are found for both keywords and phrases.
    */
   public function testExactQuery() {

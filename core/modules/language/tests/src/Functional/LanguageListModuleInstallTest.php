@@ -20,6 +20,11 @@ class LanguageListModuleInstallTest extends BrowserTestBase {
   public static $modules = ['language_test'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Tests enabling Language.
    */
   public function testModuleInstallLanguageList() {

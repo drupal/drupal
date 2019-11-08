@@ -12,6 +12,11 @@ use Drupal\field\Entity\FieldConfig;
 class ImageFieldWidgetTest extends ImageFieldTestBase {
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Tests file widget element.
    */
   public function testWidgetElement() {

@@ -26,6 +26,11 @@ class BasicAuthTest extends BrowserTestBase {
   public static $modules = ['basic_auth', 'router_test', 'locale', 'basic_auth_test'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Test http basic authentication.
    */
   public function testBasicAuth() {

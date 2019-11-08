@@ -15,6 +15,11 @@ class UpcastingTest extends BrowserTestBase {
   public static $modules = ['paramconverter_test', 'node', 'language'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Confirms that all parameters are converted as expected.
    *
    * All of these requests end up being processed by a controller with the

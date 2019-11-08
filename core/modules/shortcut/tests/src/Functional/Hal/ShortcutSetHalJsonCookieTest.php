@@ -16,4 +16,9 @@ class ShortcutSetHalJsonCookieTest extends ShortcutSetHalJsonAnonTest {
    */
   protected static $auth = 'cookie';
 
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
 }

@@ -19,6 +19,11 @@ class EntityOperationsTest extends BrowserTestBase {
    */
   public static $modules = ['entity_test'];
 
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
   protected function setUp() {
     parent::setUp();
 

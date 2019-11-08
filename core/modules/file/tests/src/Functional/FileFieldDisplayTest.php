@@ -15,6 +15,11 @@ use Drupal\node\Entity\Node;
 class FileFieldDisplayTest extends FileFieldTestBase {
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Tests normal formatter display on node display.
    */
   public function testNodeDisplay() {

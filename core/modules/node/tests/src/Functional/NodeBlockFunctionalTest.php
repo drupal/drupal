@@ -18,6 +18,11 @@ class NodeBlockFunctionalTest extends NodeTestBase {
   use AssertPageCacheContextsAndTagsTrait;
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * An administrative user for testing.
    *
    * @var \Drupal\user\UserInterface

@@ -28,4 +28,9 @@ class ContentLanguageSettingsXmlCookieTest extends ContentLanguageSettingsResour
    */
   protected static $auth = 'cookie';
 
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
 }

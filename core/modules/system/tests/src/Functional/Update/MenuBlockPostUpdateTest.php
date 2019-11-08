@@ -16,6 +16,11 @@ class MenuBlockPostUpdateTest extends UpdatePathTestBase {
   /**
    * {@inheritdoc}
    */
+  protected $defaultTheme = 'stark';
+
+  /**
+   * {@inheritdoc}
+   */
   protected function setDatabaseDumpFiles() {
     $this->databaseDumpFiles = [
       // Use a more recent fixture for performance, do not run all pre-8.4

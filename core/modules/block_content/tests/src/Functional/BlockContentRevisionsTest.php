@@ -15,6 +15,11 @@ use Drupal\user\UserInterface;
 class BlockContentRevisionsTest extends BlockContentTestBase {
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Stores blocks created during the test.
    * @var array
    */

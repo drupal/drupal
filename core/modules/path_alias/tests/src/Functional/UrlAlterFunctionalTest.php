@@ -26,6 +26,11 @@ class UrlAlterFunctionalTest extends BrowserTestBase {
   public static $modules = ['path', 'forum', 'url_alter_test'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Test that URL altering works and that it occurs in the correct order.
    */
   public function testUrlAlter() {

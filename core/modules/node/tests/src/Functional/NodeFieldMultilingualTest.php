@@ -22,6 +22,11 @@ class NodeFieldMultilingualTest extends BrowserTestBase {
    */
   public static $modules = ['node', 'language'];
 
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'classy';
+
   protected function setUp() {
     parent::setUp();
 

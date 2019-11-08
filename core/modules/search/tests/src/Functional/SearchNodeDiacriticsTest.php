@@ -17,6 +17,11 @@ class SearchNodeDiacriticsTest extends BrowserTestBase {
   protected static $modules = ['node', 'search'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * A user with permission to use advanced search.
    *
    * @var \Drupal\user\UserInterface
