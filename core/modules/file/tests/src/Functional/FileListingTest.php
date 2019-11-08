@@ -23,7 +23,7 @@ class FileListingTest extends FileFieldTestBase {
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'stark';
+  protected $defaultTheme = 'classy';
 
   /**
    * An authenticated user.
