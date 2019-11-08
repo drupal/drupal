@@ -9,6 +9,7 @@ use Drupal\Tests\BrowserTestBase;
  * Tests the placing a block.
  *
  * @group block_place
+ * @group legacy
  */
 class BlockPlaceTest extends BrowserTestBase {
 

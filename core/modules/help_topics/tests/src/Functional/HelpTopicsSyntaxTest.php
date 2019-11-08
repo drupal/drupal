@@ -4,6 +4,7 @@ namespace Drupal\Tests\help_topics\Functional;
 
 use Drupal\Tests\BrowserTestBase;
 use Drupal\help_topics\HelpTopicDiscovery;
+use Drupal\Tests\DeprecatedModulesTestTrait;
 use PHPUnit\Framework\ExpectationFailedException;
 
 /**
@@ -18,6 +19,8 @@ use PHPUnit\Framework\ExpectationFailedException;
  * @group help_topics
  */
 class HelpTopicsSyntaxTest extends BrowserTestBase {
+
+  use DeprecatedModulesTestTrait;
 
   /**
    * {@inheritdoc}
@@ -36,7 +39,9 @@ class HelpTopicsSyntaxTest extends BrowserTestBase {
     // Enable all modules and themes, so that all routes mentioned in topics
     // will be defined.
     $module_directories = $this->listDirectories('module');
-    \Drupal::service('module_installer')->install(array_keys($module_directories));
+    $modules_to_install = array_keys($module_directories);
+    $modules_to_install = $this->removeDeprecatedModules($modules_to_install);
+    \Drupal::service('module_installer')->install($modules_to_install);
     $theme_directories = $this->listDirectories('theme');
     \Drupal::service('theme_installer')->install(array_keys($theme_directories));
 

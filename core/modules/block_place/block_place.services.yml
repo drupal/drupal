@@ -4,3 +4,4 @@ services:
     arguments: ['@request_stack', '@current_user']
     tags:
       - { name: event_subscriber }
+    deprecated: The "%service_id%" service is deprecated in drupal:8.8.0 and will be removed in drupal:9.0.0. See the change record for a list of alternatives. See https://www.drupal.org/node/3081957.
