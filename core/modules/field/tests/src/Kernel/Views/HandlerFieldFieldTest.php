@@ -138,7 +138,7 @@ class HandlerFieldFieldTest extends KernelTestBase {
       $field_name = $this->fieldStorages[6]->getName();
       $rendered_field = $view->style_plugin->getField($i, $field_name);
       // Check that a hidden field is not rendered.
-      $this->assertFalse($rendered_field);
+      $this->assertNull($rendered_field);
     }
   }
 

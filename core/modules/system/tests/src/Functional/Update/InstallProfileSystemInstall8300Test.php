@@ -37,7 +37,7 @@ class InstallProfileSystemInstall8300Test extends UpdatePathTestBase {
     // expected state before updating.
     $this->assertEqual('standard', \Drupal::installProfile());
     $this->assertEqual('standard', Settings::get('install_profile'), 'The install profile has not been written to settings.php.');
-    $this->assertFalse($this->config('core.extension')->get('profile'), 'The install profile is not present in core.extension configuration.');
+    $this->assertNull($this->config('core.extension')->get('profile'), 'The install profile is not present in core.extension configuration.');
 
     $this->runUpdates();
     // Confirm that Drupal recognizes this distribution as the current profile.

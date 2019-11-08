@@ -168,7 +168,7 @@ class AreaTest extends ViewTestBase {
 
     // Test that the list is token present.
     $element = $this->xpath('//ul[@class="global-tokens"]');
-    $this->assertTrue($element, 'Token list found on the options form.');
+    $this->assertNotEmpty($element, 'Token list found on the options form.');
 
     $empty_handler = &$view->empty['test_example'];
 

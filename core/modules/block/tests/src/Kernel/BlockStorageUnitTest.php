@@ -117,7 +117,7 @@ class BlockStorageUnitTest extends KernelTestBase {
     $this->assertSame('content', $entity->getRegion());
     $this->assertTrue($entity->status());
     $this->assertEqual($entity->getTheme(), 'stark');
-    $this->assertTrue($entity->uuid());
+    $this->assertNotEmpty($entity->uuid());
   }
 
   /**

@@ -20,7 +20,7 @@ class SaveDataTest extends FileManagedUnitTestBase {
     $contents = $this->randomMachineName(8);
 
     $result = file_save_data($contents);
-    $this->assertTrue($result, 'Unnamed file saved correctly.');
+    $this->assertNotFalse($result, 'Unnamed file saved correctly.');
 
     $stream_wrapper_manager = \Drupal::service('stream_wrapper_manager');
     assert($stream_wrapper_manager instanceof StreamWrapperManagerInterface);
@@ -47,7 +47,7 @@ class SaveDataTest extends FileManagedUnitTestBase {
     $filename = 'Текстовый файл.txt';
 
     $result = file_save_data($contents, 'public://' . $filename);
-    $this->assertTrue($result, 'Unnamed file saved correctly.');
+    $this->assertNotFalse($result, 'Unnamed file saved correctly.');
 
     $stream_wrapper_manager = \Drupal::service('stream_wrapper_manager');
     assert($stream_wrapper_manager instanceof StreamWrapperManagerInterface);
@@ -73,7 +73,7 @@ class SaveDataTest extends FileManagedUnitTestBase {
     $contents = $this->randomMachineName(8);
 
     $result = file_save_data($contents, $existing->getFileUri(), FileSystemInterface::EXISTS_RENAME);
-    $this->assertTrue($result, 'File saved successfully.');
+    $this->assertNotFalse($result, 'File saved successfully.');
 
     $stream_wrapper_manager = \Drupal::service('stream_wrapper_manager');
     assert($stream_wrapper_manager instanceof StreamWrapperManagerInterface);
@@ -103,7 +103,7 @@ class SaveDataTest extends FileManagedUnitTestBase {
     $contents = $this->randomMachineName(8);
 
     $result = file_save_data($contents, $existing->getFileUri(), FileSystemInterface::EXISTS_REPLACE);
-    $this->assertTrue($result, 'File saved successfully.');
+    $this->assertNotFalse($result, 'File saved successfully.');
 
     $stream_wrapper_manager = \Drupal::service('stream_wrapper_manager');
     assert($stream_wrapper_manager instanceof StreamWrapperManagerInterface);

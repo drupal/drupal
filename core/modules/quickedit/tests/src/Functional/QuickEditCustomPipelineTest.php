@@ -98,10 +98,10 @@ class QuickEditCustomPipelineTest extends BrowserTestBase {
     $ajax_commands = Json::decode($response->getBody());
     $this->assertIdentical(1, count($ajax_commands), 'The field form HTTP request results in one AJAX command.');
     $this->assertIdentical('quickeditFieldFormSaved', $ajax_commands[0]['command'], 'The first AJAX command is a quickeditFieldFormSaved command.');
-    $this->assertTrue(strpos($ajax_commands[0]['data'], 'Fine thanks.'), 'Form value saved and printed back.');
-    $this->assertTrue(strpos($ajax_commands[0]['data'], '<div class="quickedit-test-wrapper">') !== FALSE, 'Custom render pipeline used to render the value.');
+    $this->assertContains('Fine thanks.', $ajax_commands[0]['data'], 'Form value saved and printed back.');
+    $this->assertContains('<div class="quickedit-test-wrapper">', $ajax_commands[0]['data'], 'Custom render pipeline used to render the value.');
     $this->assertIdentical(array_keys($ajax_commands[0]['other_view_modes']), ['full'], 'Field was also rendered in the "full" view mode.');
-    $this->assertTrue(strpos($ajax_commands[0]['other_view_modes']['full'], 'Fine thanks.'), '"full" version of field contains the form value.');
+    $this->assertContains('Fine thanks.', $ajax_commands[0]['other_view_modes']['full'], '"full" version of field contains the form value.');
   }
 
 }

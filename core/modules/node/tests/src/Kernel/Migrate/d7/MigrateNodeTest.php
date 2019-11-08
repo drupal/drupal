@@ -153,7 +153,7 @@ class MigrateNodeTest extends MigrateDrupal7TestBase {
     $this->assertRevision(1, 'An English Node', '1', NULL, '1441032132');
 
     $node = Node::load(1);
-    $this->assertTrue($node->field_boolean->value);
+    $this->assertNotEmpty($node->field_boolean->value);
     $this->assertEquals('99-99-99-99', $node->field_phone->value);
     $this->assertSame('2015-01-20T04:15:00', $node->field_date->value);
     $this->assertSame('2015-01-20', $node->field_date_without_time->value);
@@ -165,7 +165,7 @@ class MigrateNodeTest extends MigrateDrupal7TestBase {
     $this->assertEquals('qwerty', $node->field_text->value);
     $this->assertEquals('2', $node->field_file->target_id);
     $this->assertEquals('file desc', $node->field_file->description);
-    $this->assertTrue($node->field_file->display);
+    $this->assertNotEmpty($node->field_file->display);
     $this->assertEquals('1', $node->field_images->target_id);
     $this->assertEquals('alt text', $node->field_images->alt);
     $this->assertEquals('title text', $node->field_images->title);

@@ -73,17 +73,17 @@ class CustomBooleanTest extends UITestBase {
       'plain' => [
         'true' => $custom_true,
         'false' => $custom_false,
-        'test' => 'assertTrue',
+        'test' => 'assertContains',
       ],
       'allowed tag' => [
         'true' => '<p>' . $custom_true . '</p>',
         'false' => '<p>' . $custom_false . '</p>',
-        'test' => 'assertTrue',
+        'test' => 'assertContains',
       ],
       'disallowed tag' => [
         'true' => '<script>' . $custom_true . '</script>',
         'false' => '<script>' . $custom_false . '</script>',
-        'test' => 'assertFalse',
+        'test' => 'assertNotContains',
       ],
     ];
 
@@ -102,8 +102,8 @@ class CustomBooleanTest extends UITestBase {
       $view = Views::getView('test_view');
       $output = $view->preview();
       $output = \Drupal::service('renderer')->renderRoot($output);
-      $this->{$values['test']}(strpos($output, $values['true']), new FormattableMarkup('Expected custom boolean TRUE value %value in output for %type', ['%value' => $values['true'], '%type' => $type]));
-      $this->{$values['test']}(strpos($output, $values['false']), new FormattableMarkup('Expected custom boolean FALSE value %value in output for %type', ['%value' => $values['false'], '%type' => $type]));
+      $this->{$values['test']}($values['true'], (string) $output, new FormattableMarkup('Expected custom boolean TRUE value %value in output for %type', ['%value' => $values['true'], '%type' => $type]));
+      $this->{$values['test']}($values['false'], (string) $output, new FormattableMarkup('Expected custom boolean FALSE value %value in output for %type', ['%value' => $values['false'], '%type' => $type]));
     }
   }
 
@@ -145,17 +145,17 @@ class CustomBooleanTest extends UITestBase {
       'plain' => [
         'true' => $custom_true,
         'false' => $custom_false,
-        'test' => 'assertTrue',
+        'test' => 'assertContains',
       ],
       'allowed tag' => [
         'true' => '<p>' . $custom_true . '</p>',
         'false' => '<p>' . $custom_false . '</p>',
-        'test' => 'assertTrue',
+        'test' => 'assertContains',
       ],
       'disallowed tag' => [
         'true' => '<script>' . $custom_true . '</script>',
         'false' => '<script>' . $custom_false . '</script>',
-        'test' => 'assertFalse',
+        'test' => 'assertNotContains',
       ],
     ];
 
@@ -174,8 +174,8 @@ class CustomBooleanTest extends UITestBase {
       $view = Views::getView('test_view');
       $output = $view->preview();
       $output = \Drupal::service('renderer')->renderRoot($output);
-      $this->{$values['test']}(strpos($output, $values['true']), new FormattableMarkup('Expected custom boolean TRUE value %value in output for %type', ['%value' => $values['true'], '%type' => $type]));
-      $this->{$values['test']}(strpos($output, $values['false']), new FormattableMarkup('Expected custom boolean FALSE value %value in output for %type', ['%value' => $values['false'], '%type' => $type]));
+      $this->{$values['test']}($values['true'], (string) $output, new FormattableMarkup('Expected custom boolean TRUE value %value in output for %type', ['%value' => $values['true'], '%type' => $type]));
+      $this->{$values['test']}($values['false'], (string) $output, new FormattableMarkup('Expected custom boolean FALSE value %value in output for %type', ['%value' => $values['false'], '%type' => $type]));
 
       // Assert that we are using the correct template.
       $this->assertContains('llama', (string) $output);

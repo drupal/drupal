@@ -523,10 +523,10 @@ class RouteProviderTest extends KernelTestBase {
     $request = Request::create($path, 'GET');
 
     $routes = $provider->getRoutesByPattern($path);
-    $this->assertFalse(count($routes), 'No path found with this pattern.');
+    $this->assertEmpty($routes, 'No path found with this pattern.');
 
     $collection = $provider->getRouteCollectionForRequest($request);
-    $this->assertTrue(count($collection) == 0, 'Empty route collection found with this pattern.');
+    $this->assertEmpty($collection, 'Empty route collection found with this pattern.');
   }
 
   /**

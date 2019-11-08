@@ -61,7 +61,7 @@ class NodeCreationTest extends NodeTestBase {
 
     // Check that the node exists in the database.
     $node = $this->drupalGetNodeByTitle($edit['title[0][value]']);
-    $this->assertTrue($node, 'Node found in database.');
+    $this->assertNotEmpty($node, 'Node found in database.');
 
     // Verify that pages do not show submitted information by default.
     $this->drupalGet('node/' . $node->id());

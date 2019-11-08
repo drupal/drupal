@@ -69,13 +69,13 @@ class StatisticsAdminTest extends BrowserTestBase {
    */
   public function testStatisticsSettings() {
     $config = $this->config('statistics.settings');
-    $this->assertFalse($config->get('count_content_views'), 'Count content view log is disabled by default.');
+    $this->assertEmpty($config->get('count_content_views'), 'Count content view log is disabled by default.');
 
     // Enable counter on content view.
     $edit['statistics_count_content_views'] = 1;
     $this->drupalPostForm('admin/config/system/statistics', $edit, t('Save configuration'));
     $config = $this->config('statistics.settings');
-    $this->assertTrue($config->get('count_content_views'), 'Count content view log is enabled.');
+    $this->assertNotEmpty($config->get('count_content_views'), 'Count content view log is enabled.');
 
     // Hit the node.
     $this->drupalGet('node/' . $this->testNode->id());
@@ -174,7 +174,7 @@ class StatisticsAdminTest extends BrowserTestBase {
       ->condition('nid', $this->testNode->id(), '=')
       ->execute()
       ->fetchField();
-    $this->assertFalse($result, 'Daycounter is zero.');
+    $this->assertEmpty($result, 'Daycounter is zero.');
   }
 
 }

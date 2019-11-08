@@ -92,7 +92,7 @@ class ResponsiveImageAdminUITest extends BrowserTestBase {
 
       foreach ($image_styles as $image_style_name) {
         // Check if the image styles are available in the dropdowns.
-        $this->assertTrue($this->xpath(
+        $this->assertNotEmpty($this->xpath(
           '//select[@name=:name]//option[@value=:style]',
           [
             ':name' => 'keyed_styles[responsive_image_test_module.' . $case[0] . '][' . $case[1] . '][image_style]',

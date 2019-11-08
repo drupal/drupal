@@ -1165,10 +1165,8 @@ class ConfigTranslationUiTest extends BrowserTestBase {
     ]));
     // Make sure the text format select is not shown.
     $select_id = str_replace('value', 'format--2', $id);
-    $select = $this->xpath('//select[@id=:id]', [':id' => $select_id]);
-    return $this->assertFalse($select, new FormattableMarkup('Field @id does not exist.', [
-      '@id' => $id,
-    ]));
+    $xpath = $this->assertSession()->buildXPathQuery('//select[@id=:id]', [':id' => $select_id]);
+    $this->assertSession()->elementNotExists('xpath', $xpath);
   }
 
   /**

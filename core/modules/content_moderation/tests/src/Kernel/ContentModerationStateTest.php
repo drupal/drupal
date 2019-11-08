@@ -184,7 +184,7 @@ class ContentModerationStateTest extends KernelTestBase {
     $entity = $this->reloadEntity($entity);
     $entity->delete();
     $content_moderation_state = ContentModerationState::loadFromModeratedEntity($entity);
-    $this->assertFalse($content_moderation_state);
+    $this->assertNull($content_moderation_state);
   }
 
   /**
@@ -233,13 +233,13 @@ class ContentModerationStateTest extends KernelTestBase {
     $entity->save();
 
     $content_moderation_state = ContentModerationState::loadFromModeratedEntity($entity);
-    $this->assertTrue($content_moderation_state);
+    $this->assertNotEmpty($content_moderation_state);
 
     $entity_storage = $this->entityTypeManager->getStorage($entity_type_id);
     $entity_storage->deleteRevision($entity->getRevisionId());
 
     $content_moderation_state = ContentModerationState::loadFromModeratedEntity($entity);
-    $this->assertFalse($content_moderation_state);
+    $this->assertNull($content_moderation_state);
   }
 
   /**

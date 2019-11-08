@@ -341,7 +341,7 @@ class CacheTest extends ViewsKernelTestBase {
 
     // Assert there are results, empty results would mean this test case would
     // pass otherwise.
-    $this->assertTrue(count($cache->data['result']), 'Results saved in cached data.');
+    $this->assertGreaterThan(0, count($cache->data['result']), 'Results saved in cached data.');
 
     // Assert each row doesn't contain '_entity' or '_relationship_entities'
     // items.

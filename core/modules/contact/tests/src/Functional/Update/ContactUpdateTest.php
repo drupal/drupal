@@ -31,7 +31,7 @@ class ContactUpdateTest extends UpdatePathTestBase {
     $config_factory = \Drupal::configFactory();
     // Check that contact_form entities are more than zero.
     $contact_forms = $config_factory->listAll('contact.form.');
-    $this->assertTrue(count($contact_forms), 'There are contact forms to update.');
+    $this->assertGreaterThan(0, count($contact_forms), 'There are contact forms to update.');
     foreach ($contact_forms as $contact_config_name) {
       $contact_form_data = $config_factory->get($contact_config_name)->get();
       $this->assertFalse(isset($contact_form_data['message']), 'Prior to running the update the "message" key does not exist.');

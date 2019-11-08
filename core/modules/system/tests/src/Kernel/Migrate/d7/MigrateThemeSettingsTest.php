@@ -34,7 +34,7 @@ class MigrateThemeSettingsTest extends MigrateDrupal7TestBase {
     $this->assertTrue($config->get('features.comment_user_verification'));
     $this->assertTrue($config->get('features.favicon'));
     $this->assertTrue($config->get('features.node_user_picture'));
-    $this->assertFalse($config->get('features.logo'));
+    $this->assertNull($config->get('features.logo'));
     $this->assertTrue($config->get('features.name'));
     $this->assertTrue($config->get('features.slogan'));
     $this->assertSame('public://gnu.png', $config->get('logo.path'));
@@ -47,7 +47,7 @@ class MigrateThemeSettingsTest extends MigrateDrupal7TestBase {
     $this->assertTrue($config->get('features.comment_user_verification'));
     $this->assertTrue($config->get('features.favicon'));
     $this->assertTrue($config->get('features.node_user_picture'));
-    $this->assertFalse($config->get('features.logo'));
+    $this->assertNull($config->get('features.logo'));
     $this->assertTrue($config->get('features.name'));
     $this->assertTrue($config->get('features.slogan'));
     $this->assertSame('', $config->get('logo.path'));

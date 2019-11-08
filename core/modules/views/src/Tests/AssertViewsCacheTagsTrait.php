@@ -66,14 +66,14 @@ trait AssertViewsCacheTagsTrait {
       $view->build();
       $results_cache_item = \Drupal::cache('data')->get($cache_plugin->generateResultsKey());
       if (is_array($expected_results_cache)) {
-        $this->assertTrue($results_cache_item, 'Results cache item found.');
+        $this->assertNotEmpty($results_cache_item, 'Results cache item found.');
         if ($results_cache_item) {
           sort($expected_results_cache);
           $this->assertEqual($results_cache_item->tags, $expected_results_cache);
         }
       }
       else {
-        $this->assertFalse($results_cache_item, 'Results cache item not found.');
+        $this->assertNull($results_cache_item, 'Results cache item not found.');
       }
 
       $this->pass('Checking Views render cache item cache tags.');
@@ -83,13 +83,13 @@ trait AssertViewsCacheTagsTrait {
 
       $render_cache_item = $render_cache->get($original);
       if ($views_caching_is_enabled === TRUE) {
-        $this->assertTrue(!empty($render_cache_item), 'Render cache item found.');
+        $this->assertNotEmpty($render_cache_item, 'Render cache item found.');
         if ($render_cache_item) {
           $this->assertEqual($render_cache_item['#cache']['tags'], $expected_render_array_cache_tags);
         }
       }
       else {
-        $this->assertFalse($render_cache_item, 'Render cache item not found.');
+        $this->assertNull($render_cache_item, 'Render cache item not found.');
       }
     }
 

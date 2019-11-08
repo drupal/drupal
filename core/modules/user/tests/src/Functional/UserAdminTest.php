@@ -196,7 +196,7 @@ class UserAdminTest extends BrowserTestBase {
       'from' => $server_address,
       'subject' => $subject,
     ]);
-    $this->assertTrue(count($admin_mail), 'New user mail to admin is sent to configured Notification Email address');
+    $this->assertCount(1, $admin_mail, 'New user mail to admin is sent to configured Notification Email address');
     // Ensure that user notification mail is sent from the configured
     // Notification Email address.
     $user_mail = $this->drupalGetMails([
@@ -205,7 +205,7 @@ class UserAdminTest extends BrowserTestBase {
       'reply-to' => $notify_address,
       'subject' => $subject,
     ]);
-    $this->assertTrue(count($user_mail), 'New user mail to user is sent from configured Notification Email address');
+    $this->assertCount(1, $user_mail, 'New user mail to user is sent from configured Notification Email address');
   }
 
 }

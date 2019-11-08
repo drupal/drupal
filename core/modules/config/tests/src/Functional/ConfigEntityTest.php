@@ -3,6 +3,7 @@
 namespace Drupal\Tests\config\Functional;
 
 use Drupal\Component\Render\FormattableMarkup;
+use Drupal\Component\Uuid\Uuid;
 use Drupal\Core\Entity\EntityMalformedException;
 use Drupal\Core\Entity\EntityStorageException;
 use Drupal\Core\Config\Entity\ConfigEntityStorage;
@@ -42,7 +43,6 @@ class ConfigEntityTest extends BrowserTestBase {
     // Verify default properties on a newly created empty entity.
     $storage = \Drupal::entityTypeManager()->getStorage('config_test');
     $empty = $storage->create();
-    $this->assertTrue($empty->uuid());
     $this->assertIdentical($empty->label, NULL);
     $this->assertIdentical($empty->style, NULL);
     $this->assertIdentical($empty->language()->getId(), $default_langcode);
@@ -52,11 +52,11 @@ class ConfigEntityTest extends BrowserTestBase {
     $this->assertIdentical($empty->getOriginalId(), NULL);
     $this->assertIdentical($empty->bundle(), 'config_test');
     $this->assertIdentical($empty->id(), NULL);
-    $this->assertTrue($empty->uuid());
+    $this->assertTrue(Uuid::isValid($empty->uuid()));
     $this->assertIdentical($empty->label(), NULL);
 
     $this->assertIdentical($empty->get('id'), NULL);
-    $this->assertTrue($empty->get('uuid'));
+    $this->assertTrue(Uuid::isValid($empty->get('uuid')));
     $this->assertIdentical($empty->get('label'), NULL);
     $this->assertIdentical($empty->get('style'), NULL);
     $this->assertIdentical($empty->language()->getId(), $default_langcode);
@@ -100,7 +100,6 @@ class ConfigEntityTest extends BrowserTestBase {
       'label' => $this->randomString(),
       'style' => $this->randomMachineName(),
     ]);
-    $this->assertTrue($config_test->uuid());
     $this->assertNotEqual($config_test->uuid(), $empty->uuid());
     $this->assertIdentical($config_test->label, $expected['label']);
     $this->assertIdentical($config_test->style, $expected['style']);
@@ -110,7 +109,7 @@ class ConfigEntityTest extends BrowserTestBase {
     $this->assertIdentical($config_test->isNew(), TRUE);
     $this->assertIdentical($config_test->getOriginalId(), $expected['id']);
     $this->assertIdentical($config_test->id(), $expected['id']);
-    $this->assertTrue($config_test->uuid());
+    $this->assertTrue(Uuid::isValid($config_test->uuid()));
     $expected['uuid'] = $config_test->uuid();
     $this->assertIdentical($config_test->label(), $expected['label']);
 

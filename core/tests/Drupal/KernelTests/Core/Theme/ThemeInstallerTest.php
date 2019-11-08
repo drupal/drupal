@@ -41,13 +41,13 @@ class ThemeInstallerTest extends KernelTestBase {
    * Verifies that no themes are installed by default.
    */
   public function testEmpty() {
-    $this->assertFalse($this->extensionConfig()->get('theme'));
+    $this->assertEmpty($this->extensionConfig()->get('theme'));
 
-    $this->assertFalse(array_keys($this->themeHandler()->listInfo()));
-    $this->assertFalse(array_keys(\Drupal::service('theme_handler')->listInfo()));
+    $this->assertEmpty(array_keys($this->themeHandler()->listInfo()));
+    $this->assertEmpty(array_keys(\Drupal::service('theme_handler')->listInfo()));
 
     // Rebuilding available themes should always yield results though.
-    $this->assertTrue($this->themeHandler()->rebuildThemeData()['stark'], 'ThemeHandler::rebuildThemeData() yields all available themes.');
+    $this->assertNotEmpty($this->themeHandler()->rebuildThemeData()['stark'], 'ThemeHandler::rebuildThemeData() yields all available themes.');
 
     // theme_get_setting() should return global default theme settings.
     $this->assertIdentical(theme_get_setting('features.favicon'), TRUE);
@@ -84,7 +84,7 @@ class ThemeInstallerTest extends KernelTestBase {
     $base_name = 'test_basetheme';
 
     $themes = $this->themeHandler()->listInfo();
-    $this->assertFalse(array_keys($themes));
+    $this->assertEmpty(array_keys($themes));
 
     $this->themeInstaller()->install([$name]);
 
@@ -106,7 +106,7 @@ class ThemeInstallerTest extends KernelTestBase {
     $name = 'non_existing_theme';
 
     $themes = $this->themeHandler()->listInfo();
-    $this->assertFalse(array_keys($themes));
+    $this->assertEmpty(array_keys($themes));
 
     try {
       $message = 'ThemeInstaller::install() throws UnknownExtensionException upon installing a non-existing theme.';
@@ -118,7 +118,7 @@ class ThemeInstallerTest extends KernelTestBase {
     }
 
     $themes = $this->themeHandler()->listInfo();
-    $this->assertFalse(array_keys($themes));
+    $this->assertEmpty(array_keys($themes));
   }
 
   /**
@@ -243,7 +243,7 @@ class ThemeInstallerTest extends KernelTestBase {
     $name = 'non_existing_theme';
 
     $themes = $this->themeHandler()->listInfo();
-    $this->assertFalse(array_keys($themes));
+    $this->assertEmpty(array_keys($themes));
 
     try {
       $message = 'ThemeInstaller::uninstall() throws UnknownExtensionException upon uninstalling a non-existing theme.';
@@ -255,7 +255,7 @@ class ThemeInstallerTest extends KernelTestBase {
     }
 
     $themes = $this->themeHandler()->listInfo();
-    $this->assertFalse(array_keys($themes));
+    $this->assertEmpty(array_keys($themes));
   }
 
   /**
@@ -265,20 +265,20 @@ class ThemeInstallerTest extends KernelTestBase {
     $name = 'test_basetheme';
 
     $this->themeInstaller()->install([$name]);
-    $this->assertTrue($this->config("$name.settings")->get());
+    $this->assertNotEmpty($this->config("$name.settings")->get());
 
     $this->themeInstaller()->uninstall([$name]);
 
-    $this->assertFalse(array_keys($this->themeHandler()->listInfo()));
+    $this->assertEmpty(array_keys($this->themeHandler()->listInfo()));
 
-    $this->assertFalse($this->config("$name.settings")->get());
+    $this->assertEmpty($this->config("$name.settings")->get());
 
     // Ensure that the uninstalled theme can be installed again.
     $this->themeInstaller()->install([$name]);
     $themes = $this->themeHandler()->listInfo();
     $this->assertTrue(isset($themes[$name]));
     $this->assertEqual($themes[$name]->getName(), $name);
-    $this->assertTrue($this->config("$name.settings")->get());
+    $this->assertNotEmpty($this->config("$name.settings")->get());
   }
 
   /**

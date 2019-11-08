@@ -64,7 +64,7 @@ class MigrateFieldWidgetSettingsTest extends MigrateDrupal6TestBase {
     $component = $form_display->getComponent('field_test_link');
     $this->assertIdentical('link_default', $component['type']);
     $this->assertIdentical(7, $component['weight']);
-    $this->assertFalse(array_filter($component['settings']));
+    $this->assertEmpty(array_filter($component['settings']));
 
     // File field.
     $component = $form_display->getComponent('field_test_filefield');

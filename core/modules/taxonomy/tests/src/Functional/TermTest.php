@@ -367,12 +367,12 @@ class TermTest extends TaxonomyTestBase {
     $this->assertText($edit['description[0][value]'], 'The randomly generated term description is present.');
 
     // Did this page request display a 'term-listing-heading'?
-    $this->assertTrue($this->xpath('//div[contains(@class, "field--name-description")]'), 'Term page displayed the term description element.');
+    $this->assertSession()->elementExists('xpath', '//div[contains(@class, "field--name-description")]');
     // Check that it does NOT show a description when description is blank.
     $term->setDescription(NULL);
     $term->save();
     $this->drupalGet('taxonomy/term/' . $term->id());
-    $this->assertFalse($this->xpath('//div[contains(@class, "field--entity-taxonomy-term--description")]'), 'Term page did not display the term description when description was blank.');
+    $this->assertSession()->elementNotExists('xpath', '//div[contains(@class, "field--entity-taxonomy-term--description")]');
 
     // Check that the description value is processed.
     $value = $this->randomMachineName();
@@ -513,11 +513,11 @@ class TermTest extends TaxonomyTestBase {
 
     // Try to load an invalid term name.
     $terms = taxonomy_term_load_multiple_by_name('Banana');
-    $this->assertFalse($terms, 'No term loaded with an invalid name.');
+    $this->assertEmpty($terms, 'No term loaded with an invalid name.');
 
     // Try to load the term using a substring of the name.
     $terms = taxonomy_term_load_multiple_by_name(mb_substr($term->getName(), 2), 'No term loaded with a substring of the name.');
-    $this->assertFalse($terms);
+    $this->assertEmpty($terms);
 
     // Create a new term in a different vocabulary with the same name.
     $new_vocabulary = $this->createVocabulary();
@@ -542,7 +542,7 @@ class TermTest extends TaxonomyTestBase {
     // Try to load a term by name that doesn't exist in this vocabulary but
     // exists in another vocabulary.
     $terms = taxonomy_term_load_multiple_by_name($term2->getName(), $new_vocabulary->id());
-    $this->assertFalse($terms, 'Invalid term name restricted by vocabulary machine name not loaded.');
+    $this->assertEmpty($terms, 'Invalid term name restricted by vocabulary machine name not loaded.');
 
     // Try to load terms filtering by a non-existing vocabulary.
     $terms = taxonomy_term_load_multiple_by_name($term2->getName(), 'non_existing_vocabulary');

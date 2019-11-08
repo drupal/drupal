@@ -53,7 +53,7 @@ class LocaleStringTest extends KernelTestBase {
   public function testStringCrudApi() {
     // Create source string.
     $source = $this->buildSourceString()->save();
-    $this->assertTrue($source->lid);
+    $this->assertNotEmpty($source->lid);
 
     // Load strings by lid and source.
     $string1 = $this->storage->findString(['lid' => $source->lid]);
@@ -61,7 +61,7 @@ class LocaleStringTest extends KernelTestBase {
     $string2 = $this->storage->findString(['source' => $source->source, 'context' => $source->context]);
     $this->assertEquals($source, $string2);
     $string3 = $this->storage->findString(['source' => $source->source, 'context' => '']);
-    $this->assertFalse($string3);
+    $this->assertNull($string3);
 
     // Check version handling and updating.
     $this->assertEquals('none', $source->version);
@@ -96,9 +96,9 @@ class LocaleStringTest extends KernelTestBase {
 
     $source->delete();
     $string = $this->storage->findString(['lid' => $lid]);
-    $this->assertFalse($string);
+    $this->assertNull($string);
     $deleted = $search = $this->storage->getTranslations(['lid' => $lid]);
-    $this->assertFalse($deleted);
+    $this->assertEmpty($deleted);
 
     // Tests that locations of different types and arbitrary lengths can be
     // added to a source string. Too long locations will be cut off.

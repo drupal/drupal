@@ -22,7 +22,7 @@ class PageViewTest extends NodeTestBase {
   public function testPageView() {
     // Create a node to view.
     $node = $this->drupalCreateNode();
-    $this->assertTrue(Node::load($node->id()), 'Node created.');
+    $this->assertNotEmpty(Node::load($node->id()), 'Node created.');
 
     // Try to edit with anonymous user.
     $this->drupalGet("node/" . $node->id() . "/edit");

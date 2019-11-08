@@ -310,15 +310,15 @@ class HandlerTest extends ViewTestBase {
 
     $field->options['relationship'] = NULL;
     $field->setRelationship();
-    $this->assertFalse($field->relationship, 'Make sure that an empty relationship does not create a relationship on the field.');
+    $this->assertNull($field->relationship, 'Make sure that an empty relationship does not create a relationship on the field.');
 
     $field->options['relationship'] = $this->randomMachineName();
     $field->setRelationship();
-    $this->assertFalse($field->relationship, 'Make sure that a random relationship does not create a relationship on the field.');
+    $this->assertNull($field->relationship, 'Make sure that a random relationship does not create a relationship on the field.');
 
     $field->options['relationship'] = 'broken_relationship';
     $field->setRelationship();
-    $this->assertFalse($field->relationship, 'Make sure that a broken relationship does not create a relationship on the field.');
+    $this->assertNull($field->relationship, 'Make sure that a broken relationship does not create a relationship on the field.');
 
     $field->options['relationship'] = 'valid_relationship';
     $field->setRelationship();

@@ -528,7 +528,7 @@ class EntityQueryTest extends EntityKernelTestBase {
       ->exists("$field_name.color")
       ->count()
       ->execute();
-    $this->assertFalse($count);
+    $this->assertEquals(0, $count);
   }
 
   /**

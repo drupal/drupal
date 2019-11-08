@@ -140,19 +140,19 @@ class PreviewTest extends WebDriverTestBase {
     // We expect to find 5 elements: current page == 1, links to pages 2 and
     // and 3, links to 'next >' and 'last >>' pages.
     $this->assertClass($elements[0], 'is-active', 'Element for current page has .is-active class.');
-    $this->assertTrue($elements[0]->find('css', 'a'), 'Element for current page has link.');
+    $this->assertNotEmpty($elements[0]->find('css', 'a'), 'Element for current page has link.');
 
     $this->assertClass($elements[1], 'pager__item', 'Element for page 2 has .pager__item class.');
-    $this->assertTrue($elements[1]->find('css', 'a'), 'Link to page 2 found.');
+    $this->assertNotEmpty($elements[1]->find('css', 'a'), 'Link to page 2 found.');
 
     $this->assertClass($elements[2], 'pager__item', 'Element for page 3 has .pager__item class.');
-    $this->assertTrue($elements[2]->find('css', 'a'), 'Link to page 3 found.');
+    $this->assertNotEmpty($elements[2]->find('css', 'a'), 'Link to page 3 found.');
 
     $this->assertClass($elements[3], 'pager__item--next', 'Element for next page has .pager__item--next class.');
-    $this->assertTrue($elements[3]->find('css', 'a'), 'Link to next page found.');
+    $this->assertNotEmpty($elements[3]->find('css', 'a'), 'Link to next page found.');
 
     $this->assertClass($elements[4], 'pager__item--last', 'Element for last page has .pager__item--last class.');
-    $this->assertTrue($elements[4]->find('css', 'a'), 'Link to last page found.');
+    $this->assertNotEmpty($elements[4]->find('css', 'a'), 'Link to last page found.');
 
     // Navigate to next page.
     $elements = $this->xpath('//li[contains(@class, :class)]/a', [':class' => 'pager__item--next']);
@@ -167,25 +167,25 @@ class PreviewTest extends WebDriverTestBase {
     // pages, link to page 1, current page == 2, link to page 3 and links
     // to 'next >' and 'last >>' pages.
     $this->assertClass($elements[0], 'pager__item--first', 'Element for first page has .pager__item--first class.');
-    $this->assertTrue($elements[0]->find('css', 'a'), 'Link to first page found.');
+    $this->assertNotEmpty($elements[0]->find('css', 'a'), 'Link to first page found.');
 
     $this->assertClass($elements[1], 'pager__item--previous', 'Element for previous page has .pager__item--previous class.');
-    $this->assertTrue($elements[1]->find('css', 'a'), 'Link to previous page found.');
+    $this->assertNotEmpty($elements[1]->find('css', 'a'), 'Link to previous page found.');
 
     $this->assertClass($elements[2], 'pager__item', 'Element for page 1 has .pager__item class.');
-    $this->assertTrue($elements[2]->find('css', 'a'), 'Link to page 1 found.');
+    $this->assertNotEmpty($elements[2]->find('css', 'a'), 'Link to page 1 found.');
 
     $this->assertClass($elements[3], 'is-active', 'Element for current page has .is-active class.');
-    $this->assertTrue($elements[3]->find('css', 'a'), 'Element for current page has link.');
+    $this->assertNotEmpty($elements[3]->find('css', 'a'), 'Element for current page has link.');
 
     $this->assertClass($elements[4], 'pager__item', 'Element for page 3 has .pager__item class.');
-    $this->assertTrue($elements[4]->find('css', 'a'), 'Link to page 3 found.');
+    $this->assertNotEmpty($elements[4]->find('css', 'a'), 'Link to page 3 found.');
 
     $this->assertClass($elements[5], 'pager__item--next', 'Element for next page has .pager__item--next class.');
-    $this->assertTrue($elements[5]->find('css', 'a'), 'Link to next page found.');
+    $this->assertNotEmpty($elements[5]->find('css', 'a'), 'Link to next page found.');
 
     $this->assertClass($elements[6], 'pager__item--last', 'Element for last page has .pager__item--last class.');
-    $this->assertTrue($elements[6]->find('css', 'a'), 'Link to last page found.');
+    $this->assertNotEmpty($elements[6]->find('css', 'a'), 'Link to last page found.');
 
     // Test Mini Pager.
     $this->getPreviewAJAX('test_mini_pager_ajax', 'default', 3);
@@ -200,7 +200,7 @@ class PreviewTest extends WebDriverTestBase {
     $this->assertClass($elements[0], 'is-active', 'Element for current page has .is-active class.');
 
     $this->assertClass($elements[1], 'pager__item--next', 'Element for next page has .pager__item--next class.');
-    $this->assertTrue($elements[1]->find('css', 'a'), 'Link to next page found.');
+    $this->assertNotEmpty($elements[1]->find('css', 'a'), 'Link to next page found.');
 
     // Navigate to next page.
     $elements = $this->xpath('//li[contains(@class, :class)]/a', [':class' => 'pager__item--next']);
@@ -214,13 +214,13 @@ class PreviewTest extends WebDriverTestBase {
     // We expect to find 3 elements: previous page with a link, current
     // page with no link, and next page with a link.
     $this->assertClass($elements[0], 'pager__item--previous', 'Element for previous page has .pager__item--previous class.');
-    $this->assertTrue($elements[0]->find('css', 'a'), 'Link to previous page found.');
+    $this->assertNotEmpty($elements[0]->find('css', 'a'), 'Link to previous page found.');
 
     $this->assertClass($elements[1], 'is-active', 'Element for current page has .is-active class.');
     $this->assertEmpty($elements[1]->find('css', 'a'), 'Element for current page has no link.');
 
     $this->assertClass($elements[2], 'pager__item--next', 'Element for next page has .pager__item--next class.');
-    $this->assertTrue($elements[2]->find('css', 'a'), 'Link to next page found.');
+    $this->assertNotEmpty($elements[2]->find('css', 'a'), 'Link to next page found.');
   }
 
   /**

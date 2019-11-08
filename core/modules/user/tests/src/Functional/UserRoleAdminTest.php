@@ -88,7 +88,7 @@ class UserRoleAdminTest extends BrowserTestBase {
     $this->assertRaw(t('The role %label has been deleted.', ['%label' => $role_name]));
     $this->assertNoLinkByHref("admin/people/roles/manage/{$role->id()}", 'Role edit link removed.');
     \Drupal::entityTypeManager()->getStorage('user_role')->resetCache([$role->id()]);
-    $this->assertFalse(Role::load($role->id()), 'A deleted role can no longer be loaded.');
+    $this->assertNull(Role::load($role->id()), 'A deleted role can no longer be loaded.');
 
     // Make sure that the system-defined roles can be edited via the user
     // interface.

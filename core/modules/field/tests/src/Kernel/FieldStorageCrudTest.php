@@ -42,7 +42,7 @@ class FieldStorageCrudTest extends FieldKernelTestBase {
     $field_storage->save();
 
     $field_storage = FieldStorageConfig::load($field_storage->id());
-    $this->assertTrue($field_storage->getSetting('storage_setting_from_config_data'));
+    $this->assertEquals('TRUE', $field_storage->getSetting('storage_setting_from_config_data'));
     $this->assertNull($field_storage->getSetting('config_data_from_storage_setting'));
 
     $mem = field_test_memorize();

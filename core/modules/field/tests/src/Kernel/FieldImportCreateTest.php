@@ -26,11 +26,11 @@ class FieldImportCreateTest extends FieldKernelTestBase {
     $field_id_2b = "entity_test.test_bundle.$field_name_2";
 
     // Check that the field storages and fields do not exist yet.
-    $this->assertFalse(FieldStorageConfig::load($field_storage_id));
-    $this->assertFalse(FieldConfig::load($field_id));
-    $this->assertFalse(FieldStorageConfig::load($field_storage_id_2));
-    $this->assertFalse(FieldConfig::load($field_id_2a));
-    $this->assertFalse(FieldConfig::load($field_id_2b));
+    $this->assertNull(FieldStorageConfig::load($field_storage_id));
+    $this->assertNull(FieldConfig::load($field_id));
+    $this->assertNull(FieldStorageConfig::load($field_storage_id_2));
+    $this->assertNull(FieldConfig::load($field_id_2a));
+    $this->assertNull(FieldConfig::load($field_id_2b));
 
     // Create a second bundle for the 'Entity test' entity type.
     entity_test_create_bundle('test_bundle');
@@ -41,15 +41,17 @@ class FieldImportCreateTest extends FieldKernelTestBase {
 
     // A field storage with one single field.
     $field_storage = FieldStorageConfig::load($field_storage_id);
-    $this->assertTrue($field_storage, 'The field was created.');
+    $this->assertNotEmpty($field_storage, 'The field was created.');
     $field = FieldConfig::load($field_id);
-    $this->assertTrue($field, 'The field was deleted.');
+    $this->assertNotEmpty($field, 'The field was deleted.');
 
     // A field storage with two fields.
     $field_storage_2 = FieldStorageConfig::load($field_storage_id_2);
-    $this->assertTrue($field_storage_2, 'The second field was created.');
-    $this->assertTrue($field->getTargetBundle(), 'test_bundle', 'The second field was created on bundle test_bundle.');
-    $this->assertTrue($field->getTargetBundle(), 'test_bundle_2', 'The second field was created on bundle test_bundle_2.');
+    $this->assertNotEmpty($field_storage_2, 'The second field was created.');
+    $field2a = FieldConfig::load($field_id_2a);
+    $this->assertEquals('entity_test', $field2a->getTargetBundle(), 'The second field was created on bundle entity_test.');
+    $field2b = FieldConfig::load($field_id_2b);
+    $this->assertEquals('test_bundle', $field2b->getTargetBundle(), 'The second field was created on bundle test_bundle.');
 
     // Tests fields.
     $ids = \Drupal::entityQuery('field_config')
@@ -96,26 +98,26 @@ class FieldImportCreateTest extends FieldKernelTestBase {
     $target_dir = Settings::get('config_sync_directory');
     /** @var \Drupal\Core\File\FileSystemInterface $file_system */
     $file_system = \Drupal::service('file_system');
-    $this->assertTrue($file_system->copy("$src_dir/$field_storage_config_name.yml", "$target_dir/$field_storage_config_name.yml"));
-    $this->assertTrue($file_system->copy("$src_dir/$field_config_name.yml", "$target_dir/$field_config_name.yml"));
-    $this->assertTrue($file_system->copy("$src_dir/$field_storage_config_name_2.yml", "$target_dir/$field_storage_config_name_2.yml"));
-    $this->assertTrue($file_system->copy("$src_dir/$field_config_name_2a.yml", "$target_dir/$field_config_name_2a.yml"));
-    $this->assertTrue($file_system->copy("$src_dir/$field_config_name_2b.yml", "$target_dir/$field_config_name_2b.yml"));
+    $this->assertNotFalse($file_system->copy("$src_dir/$field_storage_config_name.yml", "$target_dir/$field_storage_config_name.yml"));
+    $this->assertNotFalse($file_system->copy("$src_dir/$field_config_name.yml", "$target_dir/$field_config_name.yml"));
+    $this->assertNotFalse($file_system->copy("$src_dir/$field_storage_config_name_2.yml", "$target_dir/$field_storage_config_name_2.yml"));
+    $this->assertNotFalse($file_system->copy("$src_dir/$field_config_name_2a.yml", "$target_dir/$field_config_name_2a.yml"));
+    $this->assertNotFalse($file_system->copy("$src_dir/$field_config_name_2b.yml", "$target_dir/$field_config_name_2b.yml"));
 
     // Import the content of the sync directory.
     $this->configImporter()->import();
 
     // Check that the field and storage were created.
     $field_storage = FieldStorageConfig::load($field_storage_id);
-    $this->assertTrue($field_storage, 'Test import storage field from sync exists');
+    $this->assertNotEmpty($field_storage, 'Test import storage field from sync exists');
     $field = FieldConfig::load($field_id);
-    $this->assertTrue($field, 'Test import field  from sync exists');
+    $this->assertNotEmpty($field, 'Test import field  from sync exists');
     $field_storage = FieldStorageConfig::load($field_storage_id_2);
-    $this->assertTrue($field_storage, 'Test import storage field 2 from sync exists');
+    $this->assertNotEmpty($field_storage, 'Test import storage field 2 from sync exists');
     $field = FieldConfig::load($field_id_2a);
-    $this->assertTrue($field, 'Test import field 2a from sync exists');
+    $this->assertNotEmpty($field, 'Test import field 2a from sync exists');
     $field = FieldConfig::load($field_id_2b);
-    $this->assertTrue($field, 'Test import field 2b from sync exists');
+    $this->assertNotEmpty($field, 'Test import field 2b from sync exists');
   }
 
 }

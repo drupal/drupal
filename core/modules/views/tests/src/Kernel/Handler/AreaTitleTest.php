@@ -29,7 +29,7 @@ class AreaTitleTest extends ViewsKernelTestBase {
     $view->setDisplay('default');
     $this->executeView($view);
     $view->render();
-    $this->assertFalse($view->getTitle(), 'The title area does not override the title if the view is not empty.');
+    $this->assertEmpty($view->getTitle(), 'The title area does not override the title if the view is not empty.');
     $view->destroy();
 
     $view->setDisplay('default');

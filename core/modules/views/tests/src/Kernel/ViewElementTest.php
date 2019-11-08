@@ -33,7 +33,7 @@ class ViewElementTest extends ViewsKernelTestBase {
     $this->setRawContent($renderer->renderRoot($render));
 
     $xpath = $this->xpath('//div[@class="views-element-container"]');
-    $this->assertTrue($xpath, 'The view container has been found in the rendered output.');
+    $this->assertNotEmpty($xpath, 'The view container has been found in the rendered output.');
 
     // There should be 5 rows in the results.
     $xpath = $this->xpath('//div[@class="views-row"]');
@@ -86,7 +86,7 @@ class ViewElementTest extends ViewsKernelTestBase {
     serialize($render);
 
     $xpath = $this->xpath('//div[@class="views-element-container"]');
-    $this->assertTrue($xpath, 'The view container has been found in the rendered output.');
+    $this->assertNotEmpty($xpath, 'The view container has been found in the rendered output.');
 
     // There should be 5 rows in the results.
     $xpath = $this->xpath('//div[@class="views-row"]');

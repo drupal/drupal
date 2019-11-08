@@ -126,7 +126,7 @@ class DateTimeTest extends BrowserTestBase {
 
     // Make sure the date does not exist in config.
     $date_format = DateFormat::load($date_format_id);
-    $this->assertFalse($date_format);
+    $this->assertNull($date_format);
 
     // Add a new date format with an existing format.
     $date_format_id = strtolower($this->randomMachineName(8));

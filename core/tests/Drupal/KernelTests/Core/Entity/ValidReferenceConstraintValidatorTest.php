@@ -61,18 +61,18 @@ class ValidReferenceConstraintValidatorTest extends EntityKernelTestBase {
 
     $typed_data = $this->typedData->create($definition, ['target_id' => $entity->id()]);
     $violations = $typed_data->validate();
-    $this->assertFalse($violations->count(), 'Validation passed for correct value.');
+    $this->assertEquals(0, $violations->count(), 'Validation passed for correct value.');
 
     // NULL is also considered a valid reference.
     $typed_data = $this->typedData->create($definition, ['target_id' => NULL]);
     $violations = $typed_data->validate();
-    $this->assertFalse($violations->count(), 'Validation passed for correct value.');
+    $this->assertEquals(0, $violations->count(), 'Validation passed for correct value.');
 
     $typed_data = $this->typedData->create($definition, ['target_id' => $entity->id()]);
     // Delete the referenced entity.
     $entity->delete();
     $violations = $typed_data->validate();
-    $this->assertTrue($violations->count(), 'Validation failed for incorrect value.');
+    $this->assertGreaterThan(0, $violations->count(), 'Validation failed for incorrect value.');
 
     // Make sure the information provided by a violation is correct.
     $violation = $violations[0];

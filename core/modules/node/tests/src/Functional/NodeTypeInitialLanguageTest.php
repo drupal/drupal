@@ -102,7 +102,7 @@ class NodeTypeInitialLanguageTest extends NodeTestBase {
     ];
     $this->drupalPostForm('node/add/article', $edit, t('Save'));
     $node = $this->drupalGetNodeByTitle($edit['title[0][value]']);
-    $this->assertTrue($node, 'Node found in database.');
+    $this->assertNotEmpty($node, 'Node found in database.');
 
     // Loads node page and check if Language field is hidden by default.
     $this->drupalGet('node/' . $node->id());

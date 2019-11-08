@@ -131,7 +131,7 @@ class QuickEditImageControllerTest extends BrowserTestBase {
         break;
       }
     }
-    $this->assertTrue($valid_image);
+    $this->assertNotFalse($valid_image);
 
     $this->drupalLogin($this->contentAuthorUser);
     $this->uploadImage($valid_image, $node->id(), $this->fieldName, $node->language()->getId());
@@ -160,7 +160,7 @@ class QuickEditImageControllerTest extends BrowserTestBase {
         break;
       }
     }
-    $this->assertTrue($invalid_image);
+    $this->assertNotFalse($invalid_image);
 
     $this->drupalLogin($this->contentAuthorUser);
     $this->uploadImage($invalid_image, $node->id(), $this->fieldName, $node->language()->getId());

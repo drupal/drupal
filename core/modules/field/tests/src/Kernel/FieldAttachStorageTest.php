@@ -278,9 +278,9 @@ class FieldAttachStorageTest extends FieldKernelTestBase {
     $controller->resetCache();
     foreach ([0, 1, 2] as $vid) {
       $revision = $controller->loadRevision($vid);
-      $this->assertFalse($revision);
+      $this->assertNull($revision);
     }
-    $this->assertFalse($controller->load($entity->id()));
+    $this->assertNull($controller->load($entity->id()));
   }
 
   /**
@@ -370,8 +370,8 @@ class FieldAttachStorageTest extends FieldKernelTestBase {
     $this->assertTrue(empty($entity->{$field_name}), 'No data for second field');
 
     // Verify that the fields are gone.
-    $this->assertFalse(FieldConfig::load('entity_test.' . $this->fieldTestData->field->getTargetBundle() . '.' . $this->fieldTestData->field_name), "First field is deleted");
-    $this->assertFalse(FieldConfig::load('entity_test.' . $field['bundle'] . '.' . $field_name), "Second field is deleted");
+    $this->assertNull(FieldConfig::load('entity_test.' . $this->fieldTestData->field->getTargetBundle() . '.' . $this->fieldTestData->field_name), "First field is deleted");
+    $this->assertNull(FieldConfig::load('entity_test.' . $field['bundle'] . '.' . $field_name), "Second field is deleted");
   }
 
 }

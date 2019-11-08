@@ -41,7 +41,7 @@ class DatabaseBackendTagTest extends KernelTestBase {
     foreach ($bins as $bin) {
       $bin = \Drupal::cache($bin);
       $bin->set('test', 'value', Cache::PERMANENT, $tags);
-      $this->assertTrue($bin->get('test'), 'Cache item was set in bin.');
+      $this->assertNotEmpty($bin->get('test'), 'Cache item was set in bin.');
     }
 
     $connection = Database::getConnection();

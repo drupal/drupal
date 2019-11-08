@@ -162,10 +162,10 @@ class DisplayBlockTest extends ViewTestBase {
     $view->displayHandlers->remove('block_1');
     $view->storage->save();
 
-    $this->assertFalse($block_storage->load($block_1->id()), 'The block for this display was removed.');
-    $this->assertFalse($block_storage->load($block_2->id()), 'The block for this display was removed.');
-    $this->assertTrue($block_storage->load($block_3->id()), 'A block from another view was unaffected.');
-    $this->assertTrue($block_storage->load($block_4->id()), 'A block from another view was unaffected.');
+    $this->assertNull($block_storage->load($block_1->id()), 'The block for this display was removed.');
+    $this->assertNull($block_storage->load($block_2->id()), 'The block for this display was removed.');
+    $this->assertNotEmpty($block_storage->load($block_3->id()), 'A block from another view was unaffected.');
+    $this->assertNotEmpty($block_storage->load($block_4->id()), 'A block from another view was unaffected.');
     $this->drupalGet('test-page');
     $this->assertNoBlockAppears($block_1);
     $this->assertNoBlockAppears($block_2);
@@ -179,8 +179,8 @@ class DisplayBlockTest extends ViewTestBase {
     $view->displayHandlers->remove('block_1');
     $view->storage->save();
 
-    $this->assertFalse($block_storage->load($block_3->id()), 'The block for this display was removed.');
-    $this->assertTrue($block_storage->load($block_4->id()), 'A block from another display on the same view was unaffected.');
+    $this->assertNull($block_storage->load($block_3->id()), 'The block for this display was removed.');
+    $this->assertNotEmpty($block_storage->load($block_4->id()), 'A block from another display on the same view was unaffected.');
     $this->drupalGet('test-page');
     $this->assertNoBlockAppears($block_3);
     $this->assertBlockAppears($block_4);

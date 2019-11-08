@@ -176,7 +176,7 @@ JS;
       $this->assertSame($expected_field_label, $field_label);
     }
     else {
-      $this->assertFalse($quickedit_entity_toolbar->find('css', '.quickedit-toolbar-label > .field'));
+      $this->assertEmpty($quickedit_entity_toolbar->find('css', '.quickedit-toolbar-label > .field'));
     }
   }
 

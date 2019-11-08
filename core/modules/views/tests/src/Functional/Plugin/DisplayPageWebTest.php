@@ -140,7 +140,7 @@ class DisplayPageWebTest extends ViewTestBase {
 
     $view = Views::getView('test_page_display');
     $xpath = $this->cssSelect('div.view:contains("' . $view->getTitle() . '")');
-    $this->assertFalse($xpath, 'The view title was not displayed in the view markup.');
+    $this->assertEmpty($xpath, 'The view title was not displayed in the view markup.');
   }
 
   /**

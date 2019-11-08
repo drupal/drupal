@@ -221,7 +221,7 @@ class PagerTest extends BrowserTestBase {
    */
   protected function assertPagerItems($current_page) {
     $elements = $this->xpath('//ul[contains(@class, :class)]/li', [':class' => 'pager__items']);
-    $this->assertTrue(!empty($elements), 'Pager found.');
+    $this->assertNotEmpty($elements, 'Pager found.');
 
     // Make current page 1-based.
     $current_page++;
@@ -250,7 +250,7 @@ class PagerTest extends BrowserTestBase {
       if ($current_page == $page) {
         $this->assertClass($element, 'is-active', 'Element for current page has .is-active class.');
         $link = $element->find('css', 'a');
-        $this->assertTrue($link, 'Element for current page has link.');
+        $this->assertNotEmpty($link, 'Element for current page has link.');
         $destination = $link->getAttribute('href');
         // URL query string param is 0-indexed.
         $this->assertEqual($destination, '?page=' . ($page - 1));
@@ -259,7 +259,7 @@ class PagerTest extends BrowserTestBase {
         $this->assertNoClass($element, 'is-active', "Element for page $page has no .is-active class.");
         $this->assertClass($element, 'pager__item', "Element for page $page has .pager__item class.");
         $link = $element->find('css', 'a');
-        $this->assertTrue($link, "Link to page $page found.");
+        $this->assertNotEmpty($link, "Link to page $page found.");
         // Pager link has an attribute set in pager_test_preprocess_pager().
         $this->assertEquals('yes', $link->getAttribute('pager-test'));
         $destination = $link->getAttribute('href');
@@ -268,13 +268,13 @@ class PagerTest extends BrowserTestBase {
       unset($elements[--$page]);
     }
     // Verify that no other items remain untested.
-    $this->assertTrue(empty($elements), 'All expected items found.');
+    $this->assertEmpty($elements, 'All expected items found.');
 
     // Verify first/previous and next/last items and links.
     if (isset($first)) {
       $this->assertClass($first, 'pager__item--first', 'Element for first page has .pager__item--first class.');
       $link = $first->find('css', 'a');
-      $this->assertTrue($link, 'Link to first page found.');
+      $this->assertNotEmpty($link, 'Link to first page found.');
       $this->assertNoClass($link, 'is-active', 'Link to first page is not active.');
       $this->assertEquals('first', $link->getAttribute('pager-test'));
       $destination = $link->getAttribute('href');
@@ -283,7 +283,7 @@ class PagerTest extends BrowserTestBase {
     if (isset($previous)) {
       $this->assertClass($previous, 'pager__item--previous', 'Element for first page has .pager__item--previous class.');
       $link = $previous->find('css', 'a');
-      $this->assertTrue($link, 'Link to previous page found.');
+      $this->assertNotEmpty($link, 'Link to previous page found.');
       $this->assertNoClass($link, 'is-active', 'Link to previous page is not active.');
       $this->assertEquals('previous', $link->getAttribute('pager-test'));
       $destination = $link->getAttribute('href');
@@ -293,7 +293,7 @@ class PagerTest extends BrowserTestBase {
     if (isset($next)) {
       $this->assertClass($next, 'pager__item--next', 'Element for next page has .pager__item--next class.');
       $link = $next->find('css', 'a');
-      $this->assertTrue($link, 'Link to next page found.');
+      $this->assertNotEmpty($link, 'Link to next page found.');
       $this->assertNoClass($link, 'is-active', 'Link to next page is not active.');
       $this->assertEquals('next', $link->getAttribute('pager-test'));
       $destination = $link->getAttribute('href');
@@ -303,7 +303,7 @@ class PagerTest extends BrowserTestBase {
     if (isset($last)) {
       $link = $last->find('css', 'a');
       $this->assertClass($last, 'pager__item--last', 'Element for last page has .pager__item--last class.');
-      $this->assertTrue($link, 'Link to last page found.');
+      $this->assertNotEmpty($link, 'Link to last page found.');
       $this->assertNoClass($link, 'is-active', 'Link to last page is not active.');
       $this->assertEquals('last', $link->getAttribute('pager-test'));
       $destination = $link->getAttribute('href');
