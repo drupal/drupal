@@ -18,6 +18,11 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *   id = "block_place_page",
  *   admin_label = @Translation("Page with blocks and place block buttons")
  * )
+ *
+ * @deprecated in drupal:8.8.0 and will be removed from drupal:9.0.0. See the
+ * change record for a list of alternatives.
+ *
+ * @see https://www.drupal.org/node/3081957
  */
 class PlaceBlockPageVariant extends BlockPageVariant {
 
@@ -56,6 +61,8 @@ class PlaceBlockPageVariant extends BlockPageVariant {
    *   The redirect destination.
    */
   public function __construct(array $configuration, $plugin_id, $plugin_definition, BlockRepositoryInterface $block_repository, EntityViewBuilderInterface $block_view_builder, array $block_list_cache_tags, ThemeManagerInterface $theme_manager, RedirectDestinationInterface $redirect_destination) {
+    @trigger_error('The ' . __NAMESPACE__ . '\PlaceBlockPageVariant is deprecated in drupal:8.8.0 and will be removed from drupal:9.0.0. See the change record for a list of alternatives. See https://www.drupal.org/node/3081957.', E_USER_DEPRECATED);
+
     parent::__construct($configuration, $plugin_id, $plugin_definition, $block_repository, $block_view_builder, $block_list_cache_tags);
 
     $this->themeManager = $theme_manager;

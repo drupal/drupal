@@ -1,0 +1,34 @@
+<?php
+
+/**
+ * @file
+ * Contains install and update functions for Place Blocks.
+ */
+
+/**
+ * Implements hook_requirements().
+ */
+function block_place_requirements($phase) {
+  $requirements = [];
+  // Notify about the module being deprecated.
+  if ($phase == 'runtime') {
+    $requirements['block_place'] = [
+      'title' => t('Place blocks'),
+      'severity' => REQUIREMENT_INFO,
+      'description' => t('Place Blocks (Core, Experimental) is deprecated in Drupal 8.8.0 and will be removed in Drupal 9.0.0. See <a href=":change-record">See the change record for a list of alternatives</a>.', [
+        ':change-record' => 'https://www.drupal.org/node/3081957',
+      ]),
+    ];
+  }
+
+  return $requirements;
+}
+
+/**
+ * Implements hook_install().
+ */
+function block_place_install() {
+  \Drupal::messenger()->addWarning(t('Place Blocks (Core, Experimental) is deprecated in Drupal 8.8.0 and will be removed in Drupal 9.0.0. See the change record for a list of alternatives. See <a href=":change-record">the change record</a>.', [
+    ':change-record' => 'https://www.drupal.org/node/3081957',
+  ]));
+}

@@ -1,0 +1,20 @@
+<?php
+
+namespace Drupal\Tests\migrate_drupal\Kernel\d7;
+
+/**
+ * Extends MigrateDrupal7AuditIdsTest to test with deprecated modules.
+ *
+ * @see \Drupal\Tests\DeprecatedModulesTestTrait::removeDeprecatedModules()
+ *
+ * @group migrate_drupal
+ * @group legacy
+ */
+class LegacyMigrateDrupal7AuditIdsTest extends MigrateDrupal7AuditIdsTest {
+
+  /**
+   * {@inheritdoc}
+   */
+  protected $excludeDeprecated = FALSE;
+
+}
