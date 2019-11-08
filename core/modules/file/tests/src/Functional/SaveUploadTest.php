@@ -97,7 +97,7 @@ class SaveUploadTest extends FileManagedTestBase {
     $max_fid_after = (int) \Drupal::entityQueryAggregate('file')->aggregate('fid', 'max')->execute()[0]['fid_max'];
     $this->assertTrue($max_fid_after > $this->maxFidBefore, 'A new file was created.');
     $file1 = File::load($max_fid_after);
-    $this->assertTrue($file1, 'Loaded the file.');
+    $this->assertInstanceOf(File::class, $file1, 'Loaded the file.');
     // MIME type of the uploaded image may be either image/jpeg or image/png.
     $this->assertEqual(substr($file1->getMimeType(), 0, 5), 'image', 'A MIME type was set.');
 
@@ -116,7 +116,7 @@ class SaveUploadTest extends FileManagedTestBase {
     $this->assertFileHooksCalled(['validate', 'insert']);
 
     $file2 = File::load($max_fid_after);
-    $this->assertTrue($file2, 'Loaded the file');
+    $this->assertInstanceOf(File::class, $file2, 'Loaded the file');
     // MIME type of the uploaded image may be either image/jpeg or image/png.
     $this->assertEqual(substr($file2->getMimeType(), 0, 5), 'image', 'A MIME type was set.');
 

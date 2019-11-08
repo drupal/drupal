@@ -300,10 +300,10 @@ class InstallUninstallTest extends ModuleTestBase {
     $existing_updates = \Drupal::keyValue('post_update')->get('existing_updates', []);
     switch ($module) {
       case 'block':
-        $this->assertFalse(array_diff(['block_post_update_disable_blocks_with_missing_contexts'], $existing_updates));
+        $this->assertEmpty(array_diff(['block_post_update_disable_blocks_with_missing_contexts'], $existing_updates));
         break;
       case 'update_test_postupdate':
-        $this->assertFalse(array_diff(['update_test_postupdate_post_update_first', 'update_test_postupdate_post_update_second', 'update_test_postupdate_post_update_test1', 'update_test_postupdate_post_update_test0'], $existing_updates));
+        $this->assertEmpty(array_diff(['update_test_postupdate_post_update_first', 'update_test_postupdate_post_update_second', 'update_test_postupdate_post_update_test1', 'update_test_postupdate_post_update_test0'], $existing_updates));
         break;
     }
   }
@@ -321,10 +321,10 @@ class InstallUninstallTest extends ModuleTestBase {
 
     switch ($module) {
       case 'block':
-        $this->assertFalse(array_intersect(['block_post_update_disable_blocks_with_missing_contexts'], $all_update_functions), 'Asserts that no pending post update functions are available.');
+        $this->assertEmpty(array_intersect(['block_post_update_disable_blocks_with_missing_contexts'], $all_update_functions), 'Asserts that no pending post update functions are available.');
 
         $existing_updates = \Drupal::keyValue('post_update')->get('existing_updates', []);
-        $this->assertFalse(array_intersect(['block_post_update_disable_blocks_with_missing_contexts'], $existing_updates), 'Asserts that no post update functions are stored in keyvalue store.');
+        $this->assertEmpty(array_intersect(['block_post_update_disable_blocks_with_missing_contexts'], $existing_updates), 'Asserts that no post update functions are stored in keyvalue store.');
         break;
     }
   }

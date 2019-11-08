@@ -432,7 +432,7 @@ class CommentNonNodeTest extends BrowserTestBase {
 
     // Check the field contains the correct comment type.
     $field_storage = FieldStorageConfig::load('entity_test.field_barfoo');
-    $this->assertTrue($field_storage);
+    $this->assertInstanceOf(FieldStorageConfig::class, $field_storage);
     $this->assertEqual($field_storage->getSetting('comment_type'), 'foobar');
     $this->assertEqual($field_storage->getCardinality(), 1);
 

@@ -55,10 +55,10 @@ class ContactSitewideTest extends BrowserTestBase {
     $this->drupalGet('contact');
 
     // Ensure that there is no textfield for name.
-    $this->assertFalse($this->xpath('//input[@name=:name]', [':name' => 'name']));
+    $this->assertEmpty($this->xpath('//input[@name=:name]', [':name' => 'name']));
 
     // Ensure that there is no textfield for email.
-    $this->assertFalse($this->xpath('//input[@name=:name]', [':name' => 'mail']));
+    $this->assertEmpty($this->xpath('//input[@name=:name]', [':name' => 'mail']));
 
     // Logout and retrieve the page as an anonymous user
     $this->drupalLogout();
@@ -66,10 +66,10 @@ class ContactSitewideTest extends BrowserTestBase {
     $this->drupalGet('contact');
 
     // Ensure that there is textfield for name.
-    $this->assertTrue($this->xpath('//input[@name=:name]', [':name' => 'name']));
+    $this->assertNotEmpty($this->xpath('//input[@name=:name]', [':name' => 'name']));
 
     // Ensure that there is textfield for email.
-    $this->assertTrue($this->xpath('//input[@name=:name]', [':name' => 'mail']));
+    $this->assertNotEmpty($this->xpath('//input[@name=:name]', [':name' => 'mail']));
 
     // Create and log in administrative user.
     $admin_user = $this->drupalCreateUser([
@@ -329,8 +329,8 @@ class ContactSitewideTest extends BrowserTestBase {
     $mails = $this->getMails();
     $mail = array_pop($mails);
     $this->assertEqual($mail['subject'], t('[@label] @subject', ['@label' => $label, '@subject' => $edit['subject[0][value]']]));
-    $this->assertTrue(strpos($mail['body'], $field_label));
-    $this->assertTrue(strpos($mail['body'], $edit[$field_name . '[0][value]']));
+    $this->assertContains($field_label, $mail['body']);
+    $this->assertContains($edit[$field_name . '[0][value]'], $mail['body']);
 
     // Test messages and redirect.
     /** @var \Drupal\contact\ContactFormInterface $form */
@@ -573,7 +573,7 @@ class ContactSitewideTest extends BrowserTestBase {
       else {
         $this->drupalPostForm("admin/structure/contact/manage/$id/delete", [], t('Delete'));
         $this->assertRaw(t('The contact form %label has been deleted.', ['%label' => $contact_form->label()]));
-        $this->assertFalse(ContactForm::load($id), new FormattableMarkup('Form %contact_form not found', ['%contact_form' => $contact_form->label()]));
+        $this->assertNull(ContactForm::load($id), new FormattableMarkup('Form %contact_form not found', ['%contact_form' => $contact_form->label()]));
       }
     }
   }

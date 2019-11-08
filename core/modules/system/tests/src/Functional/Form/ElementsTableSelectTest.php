@@ -51,7 +51,7 @@ class ElementsTableSelectTest extends BrowserTestBase {
     $this->assertSession()->pageTextNotContains('Empty text.');
 
     // Test for the absence of the Select all rows tableheader.
-    $this->assertFalse($this->xpath('//th[@class="select-all"]'));
+    $this->assertSession()->elementNotExists('xpath', '//th[@class="select-all"]');
 
     $rows = ['row1', 'row2', 'row3'];
     foreach ($rows as $row) {
@@ -132,18 +132,18 @@ class ElementsTableSelectTest extends BrowserTestBase {
   public function testAdvancedSelect() {
     // When #multiple = TRUE a Select all checkbox should be displayed by default.
     $this->drupalGet('form_test/tableselect/advanced-select/multiple-true-default');
-    $this->xpath('//th[@class="select-all"]');
+    $this->assertSession()->elementExists('xpath', '//th[@class="select-all"]');
 
     // When #js_select is set to FALSE, a "Select all" checkbox should not be displayed.
     $this->drupalGet('form_test/tableselect/advanced-select/multiple-true-no-advanced-select');
-    $this->assertFalse($this->xpath('//th[@class="select-all"]'));
+    $this->assertSession()->elementNotExists('xpath', '//th[@class="select-all"]');
 
     // A "Select all" checkbox never makes sense when #multiple = FALSE, regardless of the value of #js_select.
     $this->drupalGet('form_test/tableselect/advanced-select/multiple-false-default');
-    $this->assertFalse($this->xpath('//th[@class="select-all"]'));
+    $this->assertSession()->elementNotExists('xpath', '//th[@class="select-all"]');
 
     $this->drupalGet('form_test/tableselect/advanced-select/multiple-false-advanced-select');
-    $this->assertFalse($this->xpath('//th[@class="select-all"]'));
+    $this->assertSession()->elementNotExists('xpath', '//th[@class="select-all"]');
   }
 
   /**

@@ -86,7 +86,7 @@ class FieldCustomTest extends ViewsKernelTestBase {
     $output = $renderer->renderRoot($preview);
 
     $expected_text = 'Amount of kittens: ' . $view->style_plugin->getField(0, 'age');
-    $this->assertTrue(strpos((string) $output, $expected_text), 'The views token has been successfully replaced.');
+    $this->assertContains($expected_text, (string) $output, 'The views token has been successfully replaced.');
   }
 
   /**

@@ -257,7 +257,7 @@ class SessionHttpsTest extends BrowserTestBase {
     $args = [
       ':sid' => Crypt::hashBase64($sid),
     ];
-    return $this->assertTrue(\Drupal::database()->query('SELECT timestamp FROM {sessions} WHERE sid = :sid', $args)->fetchField(), $assertion_text);
+    return $this->assertNotEmpty(\Drupal::database()->query('SELECT timestamp FROM {sessions} WHERE sid = :sid', $args)->fetchField(), $assertion_text);
   }
 
   /**

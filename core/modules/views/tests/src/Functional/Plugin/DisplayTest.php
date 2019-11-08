@@ -389,7 +389,7 @@ class DisplayTest extends ViewTestBase {
     ];
     $view->setHandler('default', 'filter', 'id', $item);
     $this->executeView($view);
-    $this->assertFalse(count($view->result), 'Ensure the result of the view is empty.');
+    $this->assertEmpty($view->result, 'Ensure the result of the view is empty.');
     $this->assertFalse($view->display_handler->outputIsEmpty(), 'Ensure the view output is marked as not empty, because the empty text still appears.');
     $view->destroy();
 
@@ -399,7 +399,7 @@ class DisplayTest extends ViewTestBase {
     $item['empty'] = TRUE;
     $view->setHandler('default', 'header', 'area', $item);
     $this->executeView($view);
-    $this->assertFalse(count($view->result), 'Ensure the result of the view is empty.');
+    $this->assertEmpty($view->result, 'Ensure the result of the view is empty.');
     $this->assertFalse($view->display_handler->outputIsEmpty(), 'Ensure the view output is marked as not empty, because the header text still appears.');
     $view->destroy();
 
@@ -408,7 +408,7 @@ class DisplayTest extends ViewTestBase {
     $item['empty'] = FALSE;
     $view->setHandler('default', 'header', 'area', $item);
     $this->executeView($view);
-    $this->assertFalse(count($view->result), 'Ensure the result of the view is empty.');
+    $this->assertEmpty($view->result, 'Ensure the result of the view is empty.');
     $this->assertTrue($view->display_handler->outputIsEmpty(), 'Ensure the view output is marked as empty.');
   }
 

@@ -90,21 +90,21 @@ class GroupedExposedFilterTest extends WebDriverTestBase {
     $weight = $page->findField('options[group_info][group_items][1][weight]');
 
     // If there are 3 items, values from -3 to 3 should be available.
-    $this->assertFalse($weight->find('named', ['option', -4]));
+    $this->assertNull($weight->find('named', ['option', -4]));
     foreach (range(-3, 3) as $value) {
-      $this->assertTrue($weight->find('named', ['option', $value]));
+      $this->assertNotEmpty($weight->find('named', ['option', $value]));
     }
-    $this->assertFalse($weight->find('named', ['option', 4]));
+    $this->assertEmpty($weight->find('named', ['option', 4]));
 
     $page->pressButton("Add another item");
     $web_assert->waitForField('options[group_info][group_items][4][title]');
 
     // A new items was added, weight options should now be -4 to 4.
-    $this->assertFalse($weight->find('named', ['option', -5]));
+    $this->assertEmpty($weight->find('named', ['option', -5]));
     foreach (range(-4, 4) as $value) {
-      $this->assertTrue($weight->find('named', ['option', $value]));
+      $this->assertNotEmpty($weight->find('named', ['option', $value]));
     }
-    $this->assertFalse($weight->find('named', ['option', 5]));
+    $this->assertEmpty($weight->find('named', ['option', 5]));
   }
 
 }

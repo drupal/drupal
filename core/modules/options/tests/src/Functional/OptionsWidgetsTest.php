@@ -285,7 +285,7 @@ class OptionsWidgetsTest extends FieldTestBase {
     // Display form.
     $this->drupalGet('entity_test/manage/' . $entity->id() . '/edit');
     // A required field without any value has a "none" option.
-    $this->assertTrue($this->xpath('//select[@id=:id]//option[@value="_none" and text()=:label]', [':id' => 'edit-card-1', ':label' => '- Select a value -']), 'A required select list has a "Select a value" choice.');
+    $this->assertNotEmpty($this->xpath('//select[@id=:id]//option[@value="_none" and text()=:label]', [':id' => 'edit-card-1', ':label' => '- Select a value -']), 'A required select list has a "Select a value" choice.');
 
     // With no field data, nothing is selected.
     $this->assertTrue($this->assertSession()->optionExists('card_1', '_none')->isSelected());
@@ -307,7 +307,7 @@ class OptionsWidgetsTest extends FieldTestBase {
     // Display form: check that the right options are selected.
     $this->drupalGet('entity_test/manage/' . $entity->id() . '/edit');
     // A required field with a value has no 'none' option.
-    $this->assertFalse($this->xpath('//select[@id=:id]//option[@value="_none"]', [':id' => 'edit-card-1']), 'A required select list with an actual value has no "none" choice.');
+    $this->assertEmpty($this->xpath('//select[@id=:id]//option[@value="_none"]', [':id' => 'edit-card-1']), 'A required select list with an actual value has no "none" choice.');
     $this->assertTrue($this->assertSession()->optionExists('card_1', 0)->isSelected());
     $this->assertFalse($this->assertSession()->optionExists('card_1', 1)->isSelected());
     $this->assertFalse($this->assertSession()->optionExists('card_1', 2)->isSelected());
@@ -319,7 +319,7 @@ class OptionsWidgetsTest extends FieldTestBase {
     // Display form.
     $this->drupalGet('entity_test/manage/' . $entity->id() . '/edit');
     // A non-required field has a 'none' option.
-    $this->assertTrue($this->xpath('//select[@id=:id]//option[@value="_none" and text()=:label]', [':id' => 'edit-card-1', ':label' => '- None -']), 'A non-required select list has a "None" choice.');
+    $this->assertNotEmpty($this->xpath('//select[@id=:id]//option[@value="_none" and text()=:label]', [':id' => 'edit-card-1', ':label' => '- None -']), 'A non-required select list has a "None" choice.');
     // Submit form: Unselect the option.
     $edit = ['card_1' => '_none'];
     $this->drupalPostForm('entity_test/manage/' . $entity->id() . '/edit', $edit, t('Save'));
@@ -439,7 +439,7 @@ class OptionsWidgetsTest extends FieldTestBase {
     $field->setRequired(TRUE);
     $field->save();
     $this->drupalGet('entity_test/manage/' . $entity->id() . '/edit');
-    $this->assertFalse($this->xpath('//select[@id=:id]//option[@value=""]', [':id' => 'edit-card-2']), 'A required select list does not have an empty key.');
+    $this->assertEmpty($this->xpath('//select[@id=:id]//option[@value=""]', [':id' => 'edit-card-2']), 'A required select list does not have an empty key.');
 
     // We do not have to test that a required select list with one option is
     // auto-selected because the browser does it for us.
@@ -556,8 +556,8 @@ class OptionsWidgetsTest extends FieldTestBase {
 
     // Display form: check that _none options are present and has label.
     $this->drupalGet('entity_test/manage/' . $entity->id() . '/edit');
-    $this->assertTrue($this->xpath('//div[@id=:id]//input[@value=:value]', [':id' => 'edit-card-1', ':value' => '_none']), 'A test radio button has a "None" choice.');
-    $this->assertTrue($this->xpath('//div[@id=:id]//label[@for=:for and text()=:label]', [':id' => 'edit-card-1', ':for' => 'edit-card-1-none', ':label' => 'N/A']), 'A test radio button has a "N/A" choice.');
+    $this->assertNotEmpty($this->xpath('//div[@id=:id]//input[@value=:value]', [':id' => 'edit-card-1', ':value' => '_none']), 'A test radio button has a "None" choice.');
+    $this->assertNotEmpty($this->xpath('//div[@id=:id]//label[@for=:for and text()=:label]', [':id' => 'edit-card-1', ':for' => 'edit-card-1-none', ':label' => 'N/A']), 'A test radio button has a "N/A" choice.');
 
     // Change it to the select widget.
     $display_repository->getFormDisplay('entity_test', 'entity_test')
@@ -569,7 +569,7 @@ class OptionsWidgetsTest extends FieldTestBase {
     // Display form: check that _none options are present and has label.
     $this->drupalGet('entity_test/manage/' . $entity->id() . '/edit');
     // A required field without any value has a "none" option.
-    $this->assertTrue($this->xpath('//select[@id=:id]//option[@value="_none" and text()=:label]', [':id' => 'edit-card-1', ':label' => '- None -']), 'A test select has a "None" choice.');
+    $this->assertNotEmpty($this->xpath('//select[@id=:id]//option[@value="_none" and text()=:label]', [':id' => 'edit-card-1', ':label' => '- None -']), 'A test select has a "None" choice.');
   }
 
 }

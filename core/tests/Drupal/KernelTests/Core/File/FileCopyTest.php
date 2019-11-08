@@ -25,7 +25,7 @@ class FileCopyTest extends FileTestBase {
     // Copying to a new name.
     $desired_filepath = 'public://' . $this->randomMachineName();
     $new_filepath = \Drupal::service('file_system')->copy($uri, $desired_filepath, FileSystemInterface::EXISTS_ERROR);
-    $this->assertTrue($new_filepath, 'Copy was successful.');
+    $this->assertNotFalse($new_filepath, 'Copy was successful.');
     $this->assertEqual($new_filepath, $desired_filepath, 'Returned expected filepath.');
     $this->assertTrue(file_exists($uri), 'Original file remains.');
     $this->assertTrue(file_exists($new_filepath), 'New file exists.');
@@ -33,9 +33,9 @@ class FileCopyTest extends FileTestBase {
 
     // Copying with rename.
     $desired_filepath = 'public://' . $this->randomMachineName();
-    $this->assertTrue(file_put_contents($desired_filepath, ' '), 'Created a file so a rename will have to happen.');
+    $this->assertNotFalse(file_put_contents($desired_filepath, ' '), 'Created a file so a rename will have to happen.');
     $newer_filepath = \Drupal::service('file_system')->copy($uri, $desired_filepath, FileSystemInterface::EXISTS_RENAME);
-    $this->assertTrue($newer_filepath, 'Copy was successful.');
+    $this->assertNotFalse($newer_filepath, 'Copy was successful.');
     $this->assertNotEqual($newer_filepath, $desired_filepath, 'Returned expected filepath.');
     $this->assertTrue(file_exists($uri), 'Original file remains.');
     $this->assertTrue(file_exists($newer_filepath), 'New file exists.');
@@ -68,7 +68,7 @@ class FileCopyTest extends FileTestBase {
     /** @var \Drupal\Core\File\FileSystemInterface $file_system */
     $file_system = \Drupal::service('file_system');
     $new_filepath = $file_system->copy($uri, $uri, FileSystemInterface::EXISTS_RENAME);
-    $this->assertTrue($new_filepath, 'Copying onto itself with renaming works.');
+    $this->assertNotFalse($new_filepath, 'Copying onto itself with renaming works.');
     $this->assertNotEqual($new_filepath, $uri, 'Copied file has a new name.');
     $this->assertTrue(file_exists($uri), 'Original file exists after copying onto itself.');
     $this->assertTrue(file_exists($new_filepath), 'Copied file exists after copying onto itself.');
@@ -87,7 +87,7 @@ class FileCopyTest extends FileTestBase {
 
     // Copy the file into same directory with renaming works.
     $new_filepath = $file_system->copy($uri, $file_system->dirname($uri), FileSystemInterface::EXISTS_RENAME);
-    $this->assertTrue($new_filepath, 'Copying into same directory works.');
+    $this->assertNotFalse($new_filepath, 'Copying into same directory works.');
     $this->assertNotEqual($new_filepath, $uri, 'Copied file has a new name.');
     $this->assertTrue(file_exists($uri), 'Original file exists after copying onto itself.');
     $this->assertTrue(file_exists($new_filepath), 'Copied file exists after copying onto itself.');

@@ -16,7 +16,7 @@ class LoadTest extends FileManagedUnitTestBase {
    * Try to load a non-existent file by fid.
    */
   public function testLoadMissingFid() {
-    $this->assertFalse(File::load(-1), 'Try to load an invalid fid fails.');
+    $this->assertNull(File::load(-1), 'Try to load an invalid fid fails.');
     $this->assertFileHooksCalled([]);
   }
 

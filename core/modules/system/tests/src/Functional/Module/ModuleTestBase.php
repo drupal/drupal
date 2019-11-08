@@ -44,9 +44,9 @@ abstract class ModuleTestBase extends BrowserTestBase {
     $tables = $connection->schema()->findTables($connection->prefixTables('{' . $base_table . '}') . '%');
 
     if ($count) {
-      return $this->assertTrue($tables, new FormattableMarkup('Tables matching "@base_table" found.', ['@base_table' => $base_table]));
+      return $this->assertNotEmpty($tables, new FormattableMarkup('Tables matching "@base_table" found.', ['@base_table' => $base_table]));
     }
-    return $this->assertFalse($tables, new FormattableMarkup('Tables matching "@base_table" not found.', ['@base_table' => $base_table]));
+    return $this->assertEmpty($tables, new FormattableMarkup('Tables matching "@base_table" not found.', ['@base_table' => $base_table]));
   }
 
   /**
@@ -111,7 +111,7 @@ abstract class ModuleTestBase extends BrowserTestBase {
       // schema directory.
       return;
     }
-    $this->assertTrue($all_names);
+    $this->assertNotEmpty($all_names);
 
     $module_config_dependencies = \Drupal::service('config.manager')->findConfigEntityDependents('module', [$module]);
     // Look up each default configuration object name in the active
@@ -128,7 +128,7 @@ abstract class ModuleTestBase extends BrowserTestBase {
     }
     // Verify that all configuration has been installed (which means that $names
     // is empty).
-    return $this->assertFalse($names, new FormattableMarkup('All default configuration of @module module found.', ['@module' => $module]));
+    return $this->assertEmpty($names, new FormattableMarkup('All default configuration of @module module found.', ['@module' => $module]));
   }
 
   /**
@@ -142,7 +142,7 @@ abstract class ModuleTestBase extends BrowserTestBase {
    */
   public function assertNoModuleConfig($module) {
     $names = \Drupal::configFactory()->listAll($module . '.');
-    return $this->assertFalse($names, new FormattableMarkup('No configuration found for @module module.', ['@module' => $module]));
+    return $this->assertEmpty($names, new FormattableMarkup('No configuration found for @module module.', ['@module' => $module]));
   }
 
   /**

@@ -2002,7 +2002,7 @@ class MediaLibraryTest extends WebDriverTestBase {
 
     $this->drupalGet('/admin/structure/types/manage/article/fields/add-field');
     $page->selectFieldOption('new_storage_type', 'field_ui:entity_reference:media');
-    $this->assertTrue($assert_session->waitForField('label'));
+    $this->assertNotNull($assert_session->waitForField('label'));
     $page->fillField('label', 'Shatner');
     $this->waitForText('field_shatner');
     $page->pressButton('Save and continue');

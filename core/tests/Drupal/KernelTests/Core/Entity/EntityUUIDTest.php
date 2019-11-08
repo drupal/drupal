@@ -55,7 +55,7 @@ class EntityUUIDTest extends EntityKernelTestBase {
       ->getStorage($entity_type)
       ->create(['name' => $this->randomMachineName()]);
     $uuid = $entity->uuid();
-    $this->assertTrue($uuid);
+    $this->assertNotEmpty($uuid);
 
     // Verify that the new UUID is different.
     $this->assertNotEqual($custom_entity->uuid(), $uuid);

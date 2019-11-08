@@ -86,7 +86,7 @@ class SummaryLengthTest extends KernelTestBase {
       'promote' => 1,
     ];
     $node = $this->drupalCreateNode($settings);
-    $this->assertTrue(Node::load($node->id()), 'Node created.');
+    $this->assertNotEmpty(Node::load($node->id()), 'Node created.');
 
     // Render the node as a teaser.
     $content = $this->drupalBuildEntityView($node, 'teaser');

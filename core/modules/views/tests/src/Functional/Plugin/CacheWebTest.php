@@ -70,7 +70,7 @@ class CacheWebTest extends ViewTestBase {
 
     $this->drupalGet('test-display');
     $this->assertResponse(200);
-    $this->assertTrue($render_cache->get($cache_element));
+    $this->assertNotEmpty($render_cache->get($cache_element));
     $cache_tags = [
       'config:user.role.anonymous',
       'config:views.view.test_display',
@@ -81,7 +81,7 @@ class CacheWebTest extends ViewTestBase {
 
     $this->drupalGet('test-display');
     $this->assertResponse(200);
-    $this->assertTrue($render_cache->get($cache_element));
+    $this->assertNotEmpty($render_cache->get($cache_element));
     $this->assertCacheTags($cache_tags);
   }
 

@@ -212,7 +212,7 @@ class UrlTest extends BrowserTestBase {
    *   TRUE if the class is found, FALSE otherwise.
    */
   private function hasAttribute($attribute, $link, $class) {
-    return preg_match('|' . $attribute . '="([^\"\s]+\s+)*' . $class . '|', $link);
+    return (bool) preg_match('|' . $attribute . '="([^\"\s]+\s+)*' . $class . '|', $link);
   }
 
   /**

@@ -200,7 +200,7 @@ class BulkDeleteTest extends FieldKernelTestBase {
       ->condition('type', $bundle)
       ->condition("$field_name.deleted", 0)
       ->execute();
-    $this->assertFalse($found, 'No entities found after deleting');
+    $this->assertEmpty($found, 'No entities found after deleting');
 
     // There are 10 entities of this bundle when deleted fields are allowed, and
     // their values are correct.
@@ -210,8 +210,8 @@ class BulkDeleteTest extends FieldKernelTestBase {
       ->condition("$field_name.deleted", 1)
       ->sort('id')
       ->execute();
-    $this->assertEqual(count($found), 10, 'Correct number of entities found after deleting');
-    $this->assertFalse(array_diff($found, array_keys($this->entities)));
+    $this->assertCount(10, $found, 'Correct number of entities found after deleting');
+    $this->assertEmpty(array_diff($found, array_keys($this->entities)));
   }
 
   /**

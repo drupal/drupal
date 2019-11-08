@@ -23,7 +23,7 @@ class NumberFieldRdfaTest extends FieldRdfaTestBase {
 
     // Test that the content attribute is not created.
     $result = $this->xpathContent($this->getRawContent(), '//div[contains(@class, "field__items") and @content]');
-    $this->assertFalse($result);
+    $this->assertEmpty($result);
   }
 
   /**
@@ -51,7 +51,7 @@ class NumberFieldRdfaTest extends FieldRdfaTestBase {
 
     // Test that the content attribute is created.
     $result = $this->xpathContent($this->getRawContent(), '//div[contains(@class, "field__item") and @content=:testValue]', [':testValue' => $testValue]);
-    $this->assertTrue($result);
+    $this->assertNotEmpty($result);
   }
 
   /**
@@ -66,7 +66,7 @@ class NumberFieldRdfaTest extends FieldRdfaTestBase {
 
     // Test that the content attribute is not created.
     $result = $this->xpathContent($this->getRawContent(), '//div[contains(@class, "field__items") and @content]');
-    $this->assertFalse($result);
+    $this->assertEmpty($result);
   }
 
   /**
@@ -95,7 +95,7 @@ class NumberFieldRdfaTest extends FieldRdfaTestBase {
 
     // Test that the content attribute is created.
     $result = $this->xpathContent($this->getRawContent(), '//div[contains(@class, "field__item") and @content=:testValue]', [':testValue' => $testValue]);
-    $this->assertTrue($result);
+    $this->assertNotEmpty($result);
   }
 
   /**
@@ -116,7 +116,7 @@ class NumberFieldRdfaTest extends FieldRdfaTestBase {
 
     // Test that the content attribute is not created.
     $result = $this->xpathContent($this->getRawContent(), '//div[contains(@class, "field__items") and @content]');
-    $this->assertFalse($result);
+    $this->assertEmpty($result);
   }
 
   /**
@@ -139,7 +139,7 @@ class NumberFieldRdfaTest extends FieldRdfaTestBase {
 
     // Test that the content attribute is created.
     $result = $this->xpathContent($this->getRawContent(), '//div[contains(@class, "field__item") and @content=:testValue]', [':testValue' => $testValue]);
-    $this->assertTrue($result);
+    $this->assertNotEmpty($result);
   }
 
   /**
@@ -154,7 +154,7 @@ class NumberFieldRdfaTest extends FieldRdfaTestBase {
 
     // Test that the content attribute is not created.
     $result = $this->xpathContent($this->getRawContent(), '//div[contains(@class, "field__items") and @content]');
-    $this->assertFalse($result);
+    $this->assertEmpty($result);
   }
 
   /**
@@ -183,7 +183,7 @@ class NumberFieldRdfaTest extends FieldRdfaTestBase {
 
     // Test that the content attribute is created.
     $result = $this->xpathContent($this->getRawContent(), '//div[contains(@class, "field__item") and @content=:testValue]', [':testValue' => $testValue]);
-    $this->assertTrue($result);
+    $this->assertNotEmpty($result);
   }
 
   /**

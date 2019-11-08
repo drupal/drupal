@@ -87,7 +87,7 @@ class UserAdminListingTest extends BrowserTestBase {
       ];
     }
 
-    $this->assertFalse(array_keys(array_diff_key($result_accounts, $accounts)), 'Ensure all accounts are listed.');
+    $this->assertEmpty(array_keys(array_diff_key($result_accounts, $accounts)), 'Ensure all accounts are listed.');
     foreach ($result_accounts as $name => $values) {
       $this->assertEqual($values['status'] == t('active'), $accounts[$name]->status->value, 'Ensure the status is displayed properly.');
     }

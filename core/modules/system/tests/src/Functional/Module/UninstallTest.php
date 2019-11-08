@@ -37,7 +37,7 @@ class UninstallTest extends BrowserTestBase {
     $this->container->get('module_installer')->uninstall(['module_test']);
 
     // Are the perms defined by module_test removed?
-    $this->assertFalse(user_roles(FALSE, 'module_test perm'), 'Permissions were all removed.');
+    $this->assertEmpty(user_roles(FALSE, 'module_test perm'), 'Permissions were all removed.');
   }
 
   /**

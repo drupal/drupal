@@ -48,7 +48,7 @@ class HandlerArgumentUserUidTest extends KernelTestBase {
 
     // Tests an invalid user uid.
     $view->preview(NULL, [rand(1000, 10000)]);
-    $this->assertFalse($view->getTitle());
+    $this->assertEmpty($view->getTitle());
     $view->destroy();
 
     // Tests a valid user.

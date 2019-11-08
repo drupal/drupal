@@ -59,7 +59,7 @@ class CommentTypeTest extends CommentTestBase {
     $type = $this->createCommentType('other');
 
     $comment_type = CommentType::load('other');
-    $this->assertTrue($comment_type, 'The new comment type has been created.');
+    $this->assertInstanceOf(CommentType::class, $comment_type, 'The new comment type has been created.');
 
     // Log in a test user.
     $this->drupalLogin($this->adminUser);
@@ -76,7 +76,7 @@ class CommentTypeTest extends CommentTestBase {
     ];
     $this->drupalPostForm('admin/structure/comment/types/add', $edit, t('Save'));
     $comment_type = CommentType::load('foo');
-    $this->assertTrue($comment_type, 'The new comment type has been created.');
+    $this->assertInstanceOf(CommentType::class, $comment_type, 'The new comment type has been created.');
 
     // Check that the comment type was created in site default language.
     $default_langcode = \Drupal::languageManager()->getDefaultLanguage()->getId();
@@ -114,7 +114,7 @@ class CommentTypeTest extends CommentTestBase {
     $this->assertRaw('Bar', 'New name was displayed.');
     $this->clickLink('Manage fields');
     $this->assertUrl(Url::fromRoute('entity.comment.field_ui_fields', ['comment_type' => 'comment'], ['absolute' => TRUE])->toString(), [], 'Original machine name was used in URL.');
-    $this->assertTrue($this->cssSelect('tr#comment-body'), 'Body field exists.');
+    $this->assertCount(1, $this->cssSelect('tr#comment-body'), 'Body field exists.');
 
     // Remove the body field.
     $this->drupalPostForm('admin/structure/comment/manage/comment/fields/comment.comment.comment_body/delete', [], t('Delete'));
@@ -122,7 +122,7 @@ class CommentTypeTest extends CommentTestBase {
     $this->drupalPostForm('admin/structure/comment/manage/comment', [], t('Save'));
     // Check that the body field doesn't exist.
     $this->drupalGet('admin/structure/comment/manage/comment/fields');
-    $this->assertFalse($this->cssSelect('tr#comment-body'), 'Body field does not exist.');
+    $this->assertCount(0, $this->cssSelect('tr#comment-body'), 'Body field does not exist.');
   }
 
   /**

@@ -289,7 +289,7 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
     $directory = 'public://styles/' . $style_name;
     $this->assertFalse(is_dir($directory), new FormattableMarkup('Image style %style directory removed on style deletion.', ['%style' => $style->label()]));
 
-    $this->assertFalse(ImageStyle::load($style_name), new FormattableMarkup('Image style %style successfully deleted.', ['%style' => $style->label()]));
+    $this->assertNull(ImageStyle::load($style_name), new FormattableMarkup('Image style %style successfully deleted.', ['%style' => $style->label()]));
 
     // Test empty text when there are no image styles.
 
@@ -499,7 +499,7 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
     $sync->delete('image.style.' . $style_name);
     $this->configImporter()->import();
 
-    $this->assertFalse(ImageStyle::load($style_name), 'Style deleted after config import.');
+    $this->assertNull(ImageStyle::load($style_name), 'Style deleted after config import.');
     $this->assertEqual($this->getImageCount($style), 0, 'Image style was flushed after being deleted by config import.');
   }
 

@@ -26,7 +26,7 @@ class MoveTest extends FileManagedUnitTestBase {
     $result = file_move(clone $source, $desired_filepath, FileSystemInterface::EXISTS_ERROR);
 
     // Check the return status and that the contents changed.
-    $this->assertTrue($result, 'File moved successfully.');
+    $this->assertNotFalse($result, 'File moved successfully.');
     $this->assertFalse(file_exists($source->getFileUri()));
     $this->assertEqual($contents, file_get_contents($result->getFileUri()), 'Contents of file correctly written.');
 
@@ -39,7 +39,7 @@ class MoveTest extends FileManagedUnitTestBase {
     // Reload the file from the database and check that the changes were
     // actually saved.
     $loaded_file = File::load($result->id());
-    $this->assertTrue($loaded_file, 'File can be loaded from the database.');
+    $this->assertNotEmpty($loaded_file, 'File can be loaded from the database.');
     $this->assertFileUnchanged($result, $loaded_file);
   }
 
@@ -58,7 +58,7 @@ class MoveTest extends FileManagedUnitTestBase {
     $result = file_move(clone $source, $target->getFileUri(), FileSystemInterface::EXISTS_RENAME);
 
     // Check the return status and that the contents changed.
-    $this->assertTrue($result, 'File moved successfully.');
+    $this->assertNotFalse($result, 'File moved successfully.');
     $this->assertFalse(file_exists($source->getFileUri()));
     $this->assertEqual($contents, file_get_contents($result->getFileUri()), 'Contents of file correctly written.');
 
@@ -95,7 +95,7 @@ class MoveTest extends FileManagedUnitTestBase {
     // Look at the results.
     $this->assertEqual($contents, file_get_contents($result->getFileUri()), 'Contents of file were overwritten.');
     $this->assertFalse(file_exists($source->getFileUri()));
-    $this->assertTrue($result, 'File moved successfully.');
+    $this->assertNotEmpty($result, 'File moved successfully.');
 
     // Check that the correct hooks were called.
     $this->assertFileHooksCalled(['move', 'update', 'delete', 'load']);

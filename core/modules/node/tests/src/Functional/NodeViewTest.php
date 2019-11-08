@@ -30,10 +30,10 @@ class NodeViewTest extends NodeTestBase {
 
     // Link relations are checked for access for anonymous users.
     $result = $this->xpath('//link[@rel = "version-history"]');
-    $this->assertFalse($result, 'Version history not present for anonymous users without access.');
+    $this->assertEmpty($result, 'Version history not present for anonymous users without access.');
 
     $result = $this->xpath('//link[@rel = "edit-form"]');
-    $this->assertFalse($result, 'Edit form not present for anonymous users without access.');
+    $this->assertEmpty($result, 'Edit form not present for anonymous users without access.');
 
     $this->drupalLogin($this->createUser(['access content']));
     $this->drupalGet($node->toUrl());
@@ -64,7 +64,7 @@ class NodeViewTest extends NodeTestBase {
     $this->assertEqual($result[0]->getAttribute('href'), $node->toUrl()->setAbsolute()->toString());
 
     $result = $this->xpath('//link[@rel = "version-history"]');
-    $this->assertFalse($result, 'Version history not present for anonymous users without access.');
+    $this->assertEmpty($result, 'Version history not present for anonymous users without access.');
 
     $result = $this->xpath('//link[@rel = "edit-form"]');
     $this->assertEqual($result[0]->getAttribute('href'), $node->toUrl('edit-form')->setAbsolute()->toString());

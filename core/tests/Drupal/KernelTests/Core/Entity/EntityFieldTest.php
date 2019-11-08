@@ -3,6 +3,7 @@
 namespace Drupal\KernelTests\Core\Entity;
 
 use Drupal\Component\Render\FormattableMarkup;
+use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityStorageException;
 use Drupal\Core\Entity\RevisionLogInterface;
@@ -619,12 +620,12 @@ class EntityFieldTest extends EntityKernelTestBase {
   public function testDataTypes() {
     $types = \Drupal::typedDataManager()->getDefinitions();
     foreach (entity_test_entity_types() as $entity_type) {
-      $this->assertTrue($types['entity:' . $entity_type]['class'], 'Entity data type registered.');
+      $this->assertNotEmpty($types['entity:' . $entity_type]['class'], 'Entity data type registered.');
     }
     // Check bundle types are provided as well.
     entity_test_create_bundle('bundle');
     $types = \Drupal::typedDataManager()->getDefinitions();
-    $this->assertTrue($types['entity:entity_test:bundle']['class'], 'Entity bundle data type registered.');
+    $this->assertNotEmpty($types['entity:entity_test:bundle']['class'], 'Entity bundle data type registered.');
   }
 
   /**
@@ -937,12 +938,12 @@ class EntityFieldTest extends EntityKernelTestBase {
     $this->assertSame($entity_id, $entity->id());
     $storage->save($entity);
     $entity = $storage->loadUnchanged($entity->id());
-    $this->assertTrue($entity);
+    $this->assertInstanceOf(ContentEntityInterface::class, $entity);
 
     // Check that an explicitly-assigned ID is preserved on update.
     $storage->save($entity);
     $entity = $storage->loadUnchanged($entity->id());
-    $this->assertTrue($entity);
+    $this->assertInstanceOf(ContentEntityInterface::class, $entity);
 
     // Check that an ID cannot be explicitly assigned on update.
     $this->expectException(EntityStorageException::class);

@@ -39,7 +39,7 @@ class CommentAdminViewUpdateTest extends UpdatePathTestBase {
     /** @var \Drupal\views\ViewEntityInterface $comment_admin_view */
     $comment_admin_view = $entity_type_manager->getStorage('view')->load('comment');
     $this->assertNotNull($comment_admin_view, 'Comment admin view exist in storage.');
-    $this->assertTrue($comment_admin_view->enable(), 'Comment admin view is enabled.');
+    $this->assertTrue((bool) $comment_admin_view->enable()->get('status'), 'Comment admin view is enabled.');
     $comment_delete_action = $entity_type_manager->getStorage('action')->load('comment_delete_action');
     $this->assertNotNull($comment_delete_action, 'Comment delete action imported');
     // Verify comment admin page is working after updates.

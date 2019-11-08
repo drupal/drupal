@@ -118,7 +118,7 @@ class ConfigImporterTest extends KernelTestBase {
       $expected = static::FAIL_MESSAGE . PHP_EOL . 'Site UUID in source storage does not match the target storage.';
       $this->assertEquals($expected, $actual_message);
       foreach ($expected_error_log as $log_row) {
-        $this->assertTrue(preg_match("/$log_row/", $actual_message));
+        $this->assertRegExp("/$log_row/", $actual_message);
       }
     }
   }
@@ -376,7 +376,7 @@ class ConfigImporterTest extends KernelTestBase {
 
     // The deletee was deleted in
     // \Drupal\config_test\Entity\ConfigTest::postSave().
-    $this->assertFalse($entity_storage->load('deletee'));
+    $this->assertNull($entity_storage->load('deletee'));
 
     $other = $entity_storage->load('other');
     $this->assertEqual($other->id(), 'other');
@@ -432,8 +432,8 @@ class ConfigImporterTest extends KernelTestBase {
     // Both entities are deleted. ConfigTest::postSave() causes updates of the
     // deleter entity to delete the deletee entity. Since the deleter depends on
     // the deletee, removing the deletee causes the deleter to be removed.
-    $this->assertFalse($entity_storage->load('deleter'));
-    $this->assertFalse($entity_storage->load('deletee'));
+    $this->assertNull($entity_storage->load('deleter'));
+    $this->assertNull($entity_storage->load('deletee'));
     $logs = $this->configImporter->getErrors();
     $this->assertEqual(count($logs), 0);
   }
@@ -471,8 +471,8 @@ class ConfigImporterTest extends KernelTestBase {
     $this->configImporter->reset()->import();
 
     $entity_storage = \Drupal::entityTypeManager()->getStorage('config_test');
-    $this->assertFalse($entity_storage->load('deleter'));
-    $this->assertFalse($entity_storage->load('deletee'));
+    $this->assertNull($entity_storage->load('deleter'));
+    $this->assertNull($entity_storage->load('deletee'));
     // The deletee entity does not exist as the delete worked and although the
     // delete occurred in \Drupal\config_test\Entity\ConfigTest::postDelete()
     // this does not matter.

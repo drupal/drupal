@@ -32,7 +32,7 @@ class OptionsSelectDynamicValuesTest extends OptionsDynamicValuesTestBase {
     foreach ($options as $option) {
       $value = $option->getValue();
       if ($value != '_none') {
-        $this->assertTrue(array_search($value, $this->test));
+        $this->assertContains($value, $this->test);
       }
     }
   }

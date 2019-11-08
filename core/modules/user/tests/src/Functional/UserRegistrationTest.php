@@ -215,7 +215,7 @@ class UserRegistrationTest extends BrowserTestBase {
 
     $user_storage = \Drupal::entityTypeManager()->getStorage('user');
 
-    $this->assertTrue($user_storage->loadByProperties(['name' => $edit['name']]));
+    $this->assertNotEmpty($user_storage->loadByProperties(['name' => $edit['name']]));
     $this->drupalLogout();
 
     // Create a second account.
@@ -226,7 +226,7 @@ class UserRegistrationTest extends BrowserTestBase {
     $this->drupalPostForm('user/register', $edit, t('Create new account'));
     $this->assertResponse(200);
 
-    $this->assertTrue($user_storage->loadByProperties(['name' => $edit['name']]));
+    $this->assertNotEmpty($user_storage->loadByProperties(['name' => $edit['name']]));
   }
 
   public function testRegistrationDefaultValues() {

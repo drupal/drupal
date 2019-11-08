@@ -51,7 +51,7 @@ class SessionTest extends BrowserTestBase {
     // Start a new session by setting a message.
     $this->drupalGet('session-test/set-message');
     $this->assertSessionCookie(TRUE);
-    $this->assertTrue(preg_match('/HttpOnly/i', $this->drupalGetHeader('Set-Cookie', TRUE)), 'Session cookie is set as HttpOnly.');
+    $this->assertRegExp('/HttpOnly/i', $this->drupalGetHeader('Set-Cookie', TRUE), 'Session cookie is set as HttpOnly.');
 
     // Verify that the session is regenerated if a module calls exit
     // in hook_user_login().
@@ -192,16 +192,16 @@ class SessionTest extends BrowserTestBase {
     // Start a new session by setting a message.
     $this->drupalGet('session-test/set-message');
     $this->assertSessionCookie(TRUE);
-    $this->assertTrue($this->drupalGetHeader('Set-Cookie'), 'New session was started.');
+    $this->assertNotEmpty($this->drupalGetHeader('Set-Cookie'), 'New session was started.');
 
     // Display the message, during the same request the session is destroyed
     // and the session cookie is unset.
     $this->drupalGet('');
     $this->assertSessionCookie(FALSE);
     $this->assertSessionEmpty(FALSE);
-    $this->assertFalse($this->drupalGetHeader('X-Drupal-Cache'), 'Caching was bypassed.');
+    $this->assertNull($this->drupalGetHeader('X-Drupal-Cache'), 'Caching was bypassed.');
     $this->assertText(t('This is a dummy message.'), 'Message was displayed.');
-    $this->assertTrue(preg_match('/SESS\w+=deleted/', $this->drupalGetHeader('Set-Cookie')), 'Session cookie was deleted.');
+    $this->assertRegExp('/SESS\w+=deleted/', $this->drupalGetHeader('Set-Cookie'), 'Session cookie was deleted.');
 
     // Verify that session was destroyed.
     $this->drupalGet('');
@@ -210,7 +210,7 @@ class SessionTest extends BrowserTestBase {
     // $this->assertSessionEmpty(TRUE);
     $this->assertNoText(t('This is a dummy message.'), 'Message was not cached.');
     $this->assertEqual($this->drupalGetHeader('X-Drupal-Cache'), 'HIT', 'Page was cached.');
-    $this->assertFalse($this->drupalGetHeader('Set-Cookie'), 'New session was not started.');
+    $this->assertNull($this->drupalGetHeader('Set-Cookie'), 'New session was not started.');
 
     // Verify that no session is created if drupal_save_session(FALSE) is called.
     $this->drupalGet('session-test/set-message-but-dont-save');

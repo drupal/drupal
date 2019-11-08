@@ -356,11 +356,11 @@ class BlockUiTest extends BrowserTestBase {
     $arguments = [':message' => 'Only digits are allowed'];
     $pattern = '//div[contains(@class,"messages messages--error")]/div[contains(text()[2],:message)]';
     $elements = $this->xpath($pattern, $arguments);
-    $this->assertTrue($elements, 'Plugin error message found in parent form.');
+    $this->assertNotEmpty($elements, 'Plugin error message found in parent form.');
 
     $error_class_pattern = '//div[contains(@class,"form-item-settings-digits")]/input[contains(@class,"error")]';
     $error_class = $this->xpath($error_class_pattern);
-    $this->assertTrue($error_class, 'Plugin error class found in parent form.');
+    $this->assertNotEmpty($error_class, 'Plugin error class found in parent form.');
   }
 
   /**

@@ -26,7 +26,7 @@ class NodeAccessRecordsTest extends NodeAccessTestBase {
   public function testNodeAccessRecords() {
     // Create an article node.
     $node1 = $this->drupalCreateNode(['type' => 'article']);
-    $this->assertTrue(Node::load($node1->id()), 'Article node created.');
+    $this->assertNotEmpty(Node::load($node1->id()), 'Article node created.');
 
     // Check to see if grants added by node_test_node_access_records made it in.
     $connection = Database::getConnection();
@@ -37,7 +37,7 @@ class NodeAccessRecordsTest extends NodeAccessTestBase {
 
     // Create an unpromoted "Basic page" node.
     $node2 = $this->drupalCreateNode(['type' => 'page', 'promote' => 0]);
-    $this->assertTrue(Node::load($node2->id()), 'Unpromoted basic page node created.');
+    $this->assertNotEmpty(Node::load($node2->id()), 'Unpromoted basic page node created.');
 
     // Check to see if grants added by node_test_node_access_records made it in.
     $records = $connection->query('SELECT realm, gid FROM {node_access} WHERE nid = :nid', [':nid' => $node2->id()])->fetchAll();
@@ -47,7 +47,7 @@ class NodeAccessRecordsTest extends NodeAccessTestBase {
 
     // Create an unpromoted, unpublished "Basic page" node.
     $node3 = $this->drupalCreateNode(['type' => 'page', 'promote' => 0, 'status' => 0]);
-    $this->assertTrue(Node::load($node3->id()), 'Unpromoted, unpublished basic page node created.');
+    $this->assertNotEmpty(Node::load($node3->id()), 'Unpromoted, unpublished basic page node created.');
 
     // Check to see if grants added by node_test_node_access_records made it in.
     $records = $connection->query('SELECT realm, gid FROM {node_access} WHERE nid = :nid', [':nid' => $node3->id()])->fetchAll();
@@ -57,7 +57,7 @@ class NodeAccessRecordsTest extends NodeAccessTestBase {
 
     // Create a promoted "Basic page" node.
     $node4 = $this->drupalCreateNode(['type' => 'page', 'promote' => 1]);
-    $this->assertTrue(Node::load($node4->id()), 'Promoted basic page node created.');
+    $this->assertNotEmpty(Node::load($node4->id()), 'Promoted basic page node created.');
 
     // Check to see if grant added by node_test_node_access_records was altered
     // by node_test_node_access_records_alter.

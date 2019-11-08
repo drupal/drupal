@@ -81,7 +81,7 @@ abstract class ContentTranslationUITestBase extends ContentTranslationTestBase {
       ->getStorage($this->entityTypeId);
     $storage->resetCache([$this->entityId]);
     $entity = $storage->load($this->entityId);
-    $this->assertTrue($entity, 'Entity found in the database.');
+    $this->assertNotEmpty($entity, 'Entity found in the database.');
     $this->drupalGet($entity->toUrl());
     $this->assertResponse(200, 'Entity URL is valid.');
 
@@ -257,11 +257,11 @@ abstract class ContentTranslationUITestBase extends ContentTranslationTestBase {
       $this->drupalGet($url);
       if ($added_langcode == $langcode) {
         $this->assertFieldByXPath('//input[@name="content_translation[retranslate]"]', FALSE, 'The retranslate flag is not checked by default.');
-        $this->assertFalse($this->xpath('//details[@id="edit-content-translation" and @open="open"]'), 'The translation tab should be collapsed by default.');
+        $this->assertEmpty($this->xpath('//details[@id="edit-content-translation" and @open="open"]'), 'The translation tab should be collapsed by default.');
       }
       else {
         $this->assertFieldByXPath('//input[@name="content_translation[outdated]"]', TRUE, 'The translate flag is checked by default.');
-        $this->assertTrue($this->xpath('//details[@id="edit-content-translation" and @open="open"]'), 'The translation tab is correctly expanded when the translation is outdated.');
+        $this->assertNotEmpty($this->xpath('//details[@id="edit-content-translation" and @open="open"]'), 'The translation tab is correctly expanded when the translation is outdated.');
         $edit = ['content_translation[outdated]' => FALSE];
         $this->drupalPostForm($url, $edit, $this->getFormSubmitAction($entity, $added_langcode));
         $this->drupalGet($url);
@@ -346,7 +346,7 @@ abstract class ContentTranslationUITestBase extends ContentTranslationTestBase {
       'content_translation[created]' => '19/11/1978',
     ];
     $this->drupalPostForm($entity->toUrl('edit-form'), $edit, $this->getFormSubmitAction($entity, $langcode));
-    $this->assertTrue($this->xpath('//div[contains(@class, "error")]//ul'), 'Invalid values generate a list of form errors.');
+    $this->assertNotEmpty($this->xpath('//div[contains(@class, "error")]//ul'), 'Invalid values generate a list of form errors.');
     $metadata = $this->manager->getTranslationMetadata($entity->getTranslation($langcode));
     $this->assertEqual($metadata->getAuthor()->id(), $values[$langcode]['uid'], 'Translation author correctly kept.');
     $this->assertEqual($metadata->getCreatedTime(), $values[$langcode]['created'], 'Translation date correctly kept.');

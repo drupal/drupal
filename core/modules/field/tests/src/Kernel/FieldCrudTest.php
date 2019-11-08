@@ -69,7 +69,7 @@ class FieldCrudTest extends FieldKernelTestBase {
     $field->save();
 
     $field = FieldConfig::load($field->id());
-    $this->assertTrue($field->getSetting('field_setting_from_config_data'));
+    $this->assertEquals('TRUE', $field->getSetting('field_setting_from_config_data'));
     $this->assertNull($field->getSetting('config_data_from_field_setting'));
 
     // Read the configuration. Check against raw configuration data rather than
@@ -314,8 +314,8 @@ class FieldCrudTest extends FieldKernelTestBase {
     FieldConfig::create($this->fieldDefinition)->save();
     FieldConfig::create($field_definition_2)->save();
     $field_storage->delete();
-    $this->assertFalse(FieldConfig::loadByName('entity_test', $this->fieldDefinition['bundle'], $field_storage->getName()));
-    $this->assertFalse(FieldConfig::loadByName('entity_test', $field_definition_2['bundle'], $field_storage->getName()));
+    $this->assertNull(FieldConfig::loadByName('entity_test', $this->fieldDefinition['bundle'], $field_storage->getName()));
+    $this->assertNull(FieldConfig::loadByName('entity_test', $field_definition_2['bundle'], $field_storage->getName()));
 
     // Check that deletion of the last field deletes the storage.
     $field_storage = FieldStorageConfig::create($this->fieldStorageDefinition);
@@ -325,9 +325,9 @@ class FieldCrudTest extends FieldKernelTestBase {
     $field_2 = FieldConfig::create($field_definition_2);
     $field_2->save();
     $field->delete();
-    $this->assertTrue(FieldStorageConfig::loadByName('entity_test', $field_storage->getName()));
+    $this->assertNotEmpty(FieldStorageConfig::loadByName('entity_test', $field_storage->getName()));
     $field_2->delete();
-    $this->assertFalse(FieldStorageConfig::loadByName('entity_test', $field_storage->getName()));
+    $this->assertNull(FieldStorageConfig::loadByName('entity_test', $field_storage->getName()));
 
     // Check that deletion of all fields using a storage simultaneously deletes
     // the storage.
@@ -338,7 +338,7 @@ class FieldCrudTest extends FieldKernelTestBase {
     $field_2 = FieldConfig::create($field_definition_2);
     $field_2->save();
     $this->container->get('entity_type.manager')->getStorage('field_config')->delete([$field, $field_2]);
-    $this->assertFalse(FieldStorageConfig::loadByName('entity_test', $field_storage->getName()));
+    $this->assertNull(FieldStorageConfig::loadByName('entity_test', $field_storage->getName()));
   }
 
 }

@@ -88,7 +88,7 @@ class ElementTest extends BrowserTestBase {
         ':id' => 'edit-' . $type . '-foo',
         ':class' => 'description',
       ]);
-      $this->assertTrue(count($elements), new FormattableMarkup('Custom %type option description found.', [
+      $this->assertGreaterThan(0, count($elements), new FormattableMarkup('Custom %type option description found.', [
         '%type' => $type,
       ]));
     }
@@ -188,13 +188,13 @@ class ElementTest extends BrowserTestBase {
    */
   public function testRequiredFieldsetsAndDetails() {
     $this->drupalGet('form-test/group-details');
-    $this->assertFalse($this->cssSelect('summary.form-required'));
+    $this->assertEmpty($this->cssSelect('summary.form-required'));
     $this->drupalGet('form-test/group-details/1');
-    $this->assertTrue($this->cssSelect('summary.form-required'));
+    $this->assertNotEmpty($this->cssSelect('summary.form-required'));
     $this->drupalGet('form-test/group-fieldset');
-    $this->assertFalse($this->cssSelect('span.form-required'));
+    $this->assertEmpty($this->cssSelect('span.form-required'));
     $this->drupalGet('form-test/group-fieldset/1');
-    $this->assertTrue($this->cssSelect('span.form-required'));
+    $this->assertNotEmpty($this->cssSelect('span.form-required'));
   }
 
   /**
@@ -234,7 +234,7 @@ class ElementTest extends BrowserTestBase {
    */
   public function testDetailsSummaryAttributes() {
     $this->drupalGet('form-test/group-details');
-    $this->assertTrue($this->cssSelect('summary[data-summary-attribute="test"]'));
+    $this->assertSession()->elementExists('css', 'summary[data-summary-attribute="test"]');
   }
 
 }

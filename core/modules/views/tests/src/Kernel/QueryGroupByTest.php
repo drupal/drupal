@@ -187,8 +187,8 @@ class QueryGroupByTest extends ViewsKernelTestBase {
     $view = Views::getView('test_group_by_in_filters');
     $this->executeView($view);
 
-    $this->assertTrue(strpos($view->build_info['query'], 'GROUP BY'), 'Make sure that GROUP BY is in the query');
-    $this->assertTrue(strpos($view->build_info['query'], 'HAVING'), 'Make sure that HAVING is in the query');
+    $this->assertContains('GROUP BY', (string) $view->build_info['query'], 'Make sure that GROUP BY is in the query');
+    $this->assertContains('HAVING', (string) $view->build_info['query'], 'Make sure that HAVING is in the query');
   }
 
   /**
@@ -204,7 +204,7 @@ class QueryGroupByTest extends ViewsKernelTestBase {
     $view->displayHandlers->get('default')->options['fields']['name']['group_type'] = 'min';
     unset($view->displayHandlers->get('default')->options['fields']['id']['group_type']);
     $this->executeView($view);
-    $this->assertTrue(strpos($view->build_info['query'], 'GROUP BY entity_test.id'), 'GROUP BY field includes the base table name when grouping on the base field.');
+    $this->assertContains('GROUP BY entity_test.id', (string) $view->build_info['query'], 'GROUP BY field includes the base table name when grouping on the base field.');
   }
 
   /**

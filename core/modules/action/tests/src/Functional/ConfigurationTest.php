@@ -89,7 +89,7 @@ class ConfigurationTest extends BrowserTestBase {
     $this->assertNoText($new_action_label, "Make sure the action label does not appear on the overview page after we've deleted the action.");
 
     $action = Action::load($action_id);
-    $this->assertFalse($action, 'Make sure the action is gone after being deleted.');
+    $this->assertNull($action, 'Make sure the action is gone after being deleted.');
   }
 
 }

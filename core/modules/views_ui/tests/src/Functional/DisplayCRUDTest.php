@@ -138,11 +138,11 @@ class DisplayCRUDTest extends UITestBase {
     $view->initDisplay();
 
     $page_2 = $view->displayHandlers->get('page_2');
-    $this->assertTrue($page_2, 'The new page display got saved.');
+    $this->assertNotEmpty($page_2, 'The new page display got saved.');
     $this->assertEqual($page_2->display['display_title'], 'Page');
     $this->assertEqual($page_2->display['display_options']['path'], $path);
     $block_1 = $view->displayHandlers->get('block_1');
-    $this->assertTrue($block_1, 'The new block display got saved.');
+    $this->assertNotEmpty($block_1, 'The new block display got saved.');
     $this->assertEqual($block_1->display['display_plugin'], 'block');
     $this->assertEqual($block_1->display['display_title'], 'Block', 'The new display title got generated as expected.');
     $this->assertFalse(isset($block_1->display['display_options']['path']));

@@ -131,8 +131,8 @@ class NodeAccessBaseTableTest extends NodeTestBase {
     $connection = Database::getConnection();
     $this->publicTid = $connection->query('SELECT tid FROM {taxonomy_term_field_data} WHERE name = :name AND default_langcode = 1', [':name' => 'public'])->fetchField();
     $this->privateTid = $connection->query('SELECT tid FROM {taxonomy_term_field_data} WHERE name = :name AND default_langcode = 1', [':name' => 'private'])->fetchField();
-    $this->assertTrue($this->publicTid, 'Public tid was found');
-    $this->assertTrue($this->privateTid, 'Private tid was found');
+    $this->assertNotEmpty($this->publicTid, 'Public tid was found');
+    $this->assertNotEmpty($this->privateTid, 'Private tid was found');
     foreach ($simple_users as $this->webUser) {
       $this->drupalLogin($this->webUser);
       // Check own nodes to see that all are readable.
@@ -205,7 +205,7 @@ class NodeAccessBaseTableTest extends NodeTestBase {
       $this->nidsVisible = [];
       foreach ($this->xpath("//a[text()='Read more']") as $link) {
         // See also testTranslationRendering() in NodeTranslationUITest.
-        $this->assertTrue(preg_match('|node/(\d+)$|', $link->getAttribute('href'), $matches), 'Read more points to a node');
+        $this->assertEquals(1, preg_match('|node/(\d+)$|', $link->getAttribute('href'), $matches), 'Read more points to a node');
         $this->nidsVisible[$matches[1]] = TRUE;
       }
       foreach ($this->nodesByUser as $uid => $data) {

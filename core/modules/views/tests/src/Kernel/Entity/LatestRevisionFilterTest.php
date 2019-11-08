@@ -131,7 +131,7 @@ class LatestRevisionFilterTest extends ViewsKernelTestBase {
     $found_revision_ids = array_filter($view->result, function ($row) use ($not_expected_revision_ids) {
       return in_array($row->vid, $not_expected_revision_ids);
     });
-    $this->assertFalse($found_revision_ids);
+    $this->assertEmpty($found_revision_ids);
   }
 
 }

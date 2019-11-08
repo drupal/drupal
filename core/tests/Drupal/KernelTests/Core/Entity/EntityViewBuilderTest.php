@@ -65,7 +65,7 @@ class EntityViewBuilderTest extends EntityKernelTestBase {
 
     // Test that a cache entry is created.
     $renderer->renderRoot($build);
-    $this->assertTrue($this->container->get('cache.' . $bin)->get($cid), 'The entity render element has been cached.');
+    $this->assertNotEmpty($this->container->get('cache.' . $bin)->get($cid), 'The entity render element has been cached.');
 
     // Re-save the entity and check that the cache entry has been deleted.
     $cache->set('kittens', 'Kitten data', Cache::PERMANENT, $build['#cache']['tags']);
@@ -77,7 +77,7 @@ class EntityViewBuilderTest extends EntityKernelTestBase {
     // delete the entity to check the cache entry is deleted.
     unset($build['#printed']);
     $renderer->renderRoot($build);
-    $this->assertTrue($this->container->get('cache.' . $bin)->get($cid), 'The entity render element has been cached.');
+    $this->assertNotEmpty($this->container->get('cache.' . $bin)->get($cid), 'The entity render element has been cached.');
     $entity_test->delete();
     $this->assertFalse($this->container->get('cache.' . $bin)->get($cid), 'The entity render cache has been cleared when the entity was deleted.');
 
@@ -121,7 +121,7 @@ class EntityViewBuilderTest extends EntityKernelTestBase {
     $renderer->renderRoot($build);
 
     // Test that a cache entry was created for the referenced entity.
-    $this->assertTrue($this->container->get('cache.' . $bin_reference)->get($cid_reference), 'The entity render element for the referenced entity has been cached.');
+    $this->assertNotEmpty($this->container->get('cache.' . $bin_reference)->get($cid_reference), 'The entity render element for the referenced entity has been cached.');
 
     // Create another entity that references the first one.
     $entity_test = $this->createTestEntity('entity_test');
@@ -140,7 +140,7 @@ class EntityViewBuilderTest extends EntityKernelTestBase {
     $renderer->renderRoot($build);
 
     // Test that a cache entry is created.
-    $this->assertTrue($this->container->get('cache.' . $bin)->get($cid), 'The entity render element has been cached.');
+    $this->assertNotEmpty($this->container->get('cache.' . $bin)->get($cid), 'The entity render element has been cached.');
 
     // Save the entity and verify that both cache entries have been deleted.
     $entity_test_reference->save();

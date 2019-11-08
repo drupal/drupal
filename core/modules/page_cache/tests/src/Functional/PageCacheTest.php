@@ -233,7 +233,7 @@ class PageCacheTest extends BrowserTestBase {
     $this->drupalLogin($user);
     $this->drupalGet('', [], ['If-Modified-Since' => $last_modified, 'If-None-Match' => $etag]);
     $this->assertResponse(200, 'Conditional request returned 200 OK for authenticated user.');
-    $this->assertFalse($this->drupalGetHeader('X-Drupal-Cache'), 'Absence of Page was not cached.');
+    $this->assertNull($this->drupalGetHeader('X-Drupal-Cache'), 'Absence of Page was not cached.');
   }
 
   /**
@@ -273,8 +273,8 @@ class PageCacheTest extends BrowserTestBase {
     $user = $this->drupalCreateUser();
     $this->drupalLogin($user);
     $this->drupalGet('system-test/set-header', ['query' => ['name' => 'Foo', 'value' => 'bar']]);
-    $this->assertFalse($this->drupalGetHeader('X-Drupal-Cache'), 'Caching was bypassed.');
-    $this->assertTrue(strpos(strtolower($this->drupalGetHeader('Vary')), 'cookie') === FALSE, 'Vary: Cookie header was not sent.');
+    $this->assertNull($this->drupalGetHeader('X-Drupal-Cache'), 'Caching was bypassed.');
+    $this->assertNotContains('cookie', $this->drupalGetHeader('Vary'), 'Vary: Cookie header was not sent.', TRUE);
     $this->assertEqual($this->drupalGetHeader('Cache-Control'), 'must-revalidate, no-cache, private', 'Cache-Control header was sent.');
     $this->assertEqual($this->drupalGetHeader('Expires'), 'Sun, 19 Nov 1978 05:00:00 GMT', 'Expires header was sent.');
     $this->assertEqual($this->drupalGetHeader('Foo'), 'bar', 'Custom header was sent.');
@@ -441,13 +441,13 @@ class PageCacheTest extends BrowserTestBase {
     // Fill the cache.
     $this->drupalGet('');
     $this->assertEqual($this->drupalGetHeader('X-Drupal-Cache'), 'MISS', 'Page was not cached.');
-    $this->assertTrue(strpos($this->drupalGetHeader('Vary'), 'Cookie') === FALSE, 'Vary: Cookie header was not sent.');
+    $this->assertNotContains('cookie', $this->drupalGetHeader('Vary'), 'Vary: Cookie header was not sent.', TRUE);
     $this->assertEqual($this->drupalGetHeader('Cache-Control'), 'max-age=300, public', 'Cache-Control header was sent.');
 
     // Check cache.
     $this->drupalGet('');
     $this->assertEqual($this->drupalGetHeader('X-Drupal-Cache'), 'HIT', 'Page was cached.');
-    $this->assertTrue(strpos($this->drupalGetHeader('Vary'), 'Cookie') === FALSE, 'Vary: Cookie header was not sent.');
+    $this->assertNotContains('cookie', $this->drupalGetHeader('Vary'), 'Vary: Cookie header was not sent.', TRUE);
     $this->assertEqual($this->drupalGetHeader('Cache-Control'), 'max-age=300, public', 'Cache-Control header was sent.');
   }
 
@@ -493,22 +493,22 @@ class PageCacheTest extends BrowserTestBase {
 
     // GET a URL, which would be marked as a cache miss if it were cacheable.
     $this->drupalGet('/system-test/respond-reponse');
-    $this->assertFalse($this->drupalGetHeader('X-Drupal-Cache'), 'Drupal page cache header not found.');
+    $this->assertNull($this->drupalGetHeader('X-Drupal-Cache'), 'Drupal page cache header not found.');
     $this->assertEqual($this->drupalGetHeader('Cache-Control'), 'must-revalidate, no-cache, private', 'Cache-Control header was sent');
 
     // GET it again, verify it's still not cached.
     $this->drupalGet('/system-test/respond-reponse');
-    $this->assertFalse($this->drupalGetHeader('X-Drupal-Cache'), 'Drupal page cache header not found.');
+    $this->assertNull($this->drupalGetHeader('X-Drupal-Cache'), 'Drupal page cache header not found.');
     $this->assertEqual($this->drupalGetHeader('Cache-Control'), 'must-revalidate, no-cache, private', 'Cache-Control header was sent');
 
     // GET a URL, which would be marked as a cache miss if it were cacheable.
     $this->drupalGet('/system-test/respond-public-response');
-    $this->assertFalse($this->drupalGetHeader('X-Drupal-Cache'), 'Drupal page cache header not found.');
+    $this->assertNull($this->drupalGetHeader('X-Drupal-Cache'), 'Drupal page cache header not found.');
     $this->assertEqual($this->drupalGetHeader('Cache-Control'), 'max-age=60, public', 'Cache-Control header was sent');
 
     // GET it again, verify it's still not cached.
     $this->drupalGet('/system-test/respond-public-response');
-    $this->assertFalse($this->drupalGetHeader('X-Drupal-Cache'), 'Drupal page cache header not found.');
+    $this->assertNull($this->drupalGetHeader('X-Drupal-Cache'), 'Drupal page cache header not found.');
     $this->assertEqual($this->drupalGetHeader('Cache-Control'), 'max-age=60, public', 'Cache-Control header was sent');
 
     // GET a URL, which should be marked as a cache miss.
@@ -528,7 +528,7 @@ class PageCacheTest extends BrowserTestBase {
 
     // GET a URL that was cached by Page Cache before, it should not be now.
     $this->drupalGet('/respond-cacheable-reponse');
-    $this->assertFalse($this->drupalGetHeader('X-Drupal-Cache'), 'Drupal page cache header not found.');
+    $this->assertNull($this->drupalGetHeader('X-Drupal-Cache'), 'Drupal page cache header not found.');
   }
 
   /**

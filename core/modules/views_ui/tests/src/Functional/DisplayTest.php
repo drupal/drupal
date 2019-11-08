@@ -55,9 +55,9 @@ class DisplayTest extends UITestBase {
     $view = $this->randomView($view);
 
     $this->clickLink(t('Reorder displays'));
-    $this->assertTrue($this->xpath('//tr[@id="display-row-default"]'), 'Make sure the default display appears on the reorder listing');
-    $this->assertTrue($this->xpath('//tr[@id="display-row-page_1"]'), 'Make sure the page display appears on the reorder listing');
-    $this->assertTrue($this->xpath('//tr[@id="display-row-block_1"]'), 'Make sure the block display appears on the reorder listing');
+    $this->assertNotEmpty($this->xpath('//tr[@id="display-row-default"]'), 'Make sure the default display appears on the reorder listing');
+    $this->assertNotEmpty($this->xpath('//tr[@id="display-row-page_1"]'), 'Make sure the page display appears on the reorder listing');
+    $this->assertNotEmpty($this->xpath('//tr[@id="display-row-block_1"]'), 'Make sure the block display appears on the reorder listing');
 
     // Ensure the view displays are in the expected order in configuration.
     $expected_display_order = ['default', 'block_1', 'page_1'];
@@ -88,17 +88,17 @@ class DisplayTest extends UITestBase {
     $path_prefix = 'admin/structure/views/view/' . $view['id'] . '/edit';
 
     $this->drupalGet($path_prefix);
-    $this->assertFalse($this->xpath('//div[contains(@class, :class)]', [':class' => 'views-display-disabled']), 'Make sure the disabled display css class does not appear after initial adding of a view.');
+    $this->assertEmpty($this->xpath('//div[contains(@class, :class)]', [':class' => 'views-display-disabled']), 'Make sure the disabled display css class does not appear after initial adding of a view.');
 
     $this->assertFieldById('edit-displays-settings-settings-content-tab-content-details-top-actions-disable', NULL, 'Make sure the disable button is visible.');
     $this->assertNoFieldById('edit-displays-settings-settings-content-tab-content-details-top-actions-enable', NULL, 'Make sure the enable button is not visible.');
     $this->drupalPostForm(NULL, [], 'Disable Page');
-    $this->assertTrue($this->xpath('//div[contains(@class, :class)]', [':class' => 'views-display-disabled']), 'Make sure the disabled display css class appears once the display is marked as such.');
+    $this->assertNotEmpty($this->xpath('//div[contains(@class, :class)]', [':class' => 'views-display-disabled']), 'Make sure the disabled display css class appears once the display is marked as such.');
 
     $this->assertNoFieldById('edit-displays-settings-settings-content-tab-content-details-top-actions-disable', NULL, 'Make sure the disable button is not visible.');
     $this->assertFieldById('edit-displays-settings-settings-content-tab-content-details-top-actions-enable', NULL, 'Make sure the enable button is visible.');
     $this->drupalPostForm(NULL, [], 'Enable Page');
-    $this->assertFalse($this->xpath('//div[contains(@class, :class)]', [':class' => 'views-display-disabled']), 'Make sure the disabled display css class does not appears once the display is enabled again.');
+    $this->assertEmpty($this->xpath('//div[contains(@class, :class)]', [':class' => 'views-display-disabled']), 'Make sure the disabled display css class does not appears once the display is enabled again.');
   }
 
   /**
@@ -192,14 +192,14 @@ class DisplayTest extends UITestBase {
     // The view should initially have the enabled class on its form wrapper.
     $this->drupalGet('admin/structure/views/view/' . $id);
     $elements = $this->xpath('//div[contains(@class, :edit) and contains(@class, :status)]', [':edit' => 'views-edit-view', ':status' => 'enabled']);
-    $this->assertTrue($elements, 'The enabled class was found on the form wrapper');
+    $this->assertNotEmpty($elements, 'The enabled class was found on the form wrapper');
 
     $view = Views::getView($id);
     $view->storage->disable()->save();
 
     $this->drupalGet('admin/structure/views/view/' . $id);
     $elements = $this->xpath('//div[contains(@class, :edit) and contains(@class, :status)]', [':edit' => 'views-edit-view', ':status' => 'disabled']);
-    $this->assertTrue($elements, 'The disabled class was found on the form wrapper.');
+    $this->assertNotEmpty($elements, 'The disabled class was found on the form wrapper.');
   }
 
   /**

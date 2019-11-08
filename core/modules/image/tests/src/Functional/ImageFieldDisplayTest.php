@@ -287,7 +287,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     $file = $node->{$field_name}->entity;
 
     $url = file_url_transform_relative(ImageStyle::load('medium')->buildUrl($file->getFileUri()));
-    $this->assertTrue($this->cssSelect('img[width=40][height=20][class=image-style-medium][src="' . $url . '"]'));
+    $this->assertSession()->elementExists('css', 'img[width=40][height=20][class=image-style-medium][src="' . $url . '"]');
 
     // Add alt/title fields to the image and verify that they are displayed.
     $image = [
@@ -439,7 +439,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     \Drupal::service('entity_field.manager')->clearCachedFieldDefinitions();
     $field_storage = FieldStorageConfig::loadByName('node', $field_name);
     $default_image = $field_storage->getSetting('default_image');
-    $this->assertFalse($default_image['uuid'], 'Default image removed from field.');
+    $this->assertEmpty($default_image['uuid'], 'Default image removed from field.');
     // Create an image field that uses the private:// scheme and test that the
     // default image works as expected.
     $private_field_name = strtolower($this->randomMachineName());

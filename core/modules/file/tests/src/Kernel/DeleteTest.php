@@ -23,7 +23,7 @@ class DeleteTest extends FileManagedUnitTestBase {
     $file->delete();
     $this->assertFileHooksCalled(['delete']);
     $this->assertFalse(file_exists($file->getFileUri()), 'Test file has actually been deleted.');
-    $this->assertFalse(File::load($file->id()), 'File was removed from the database.');
+    $this->assertNull(File::load($file->id()), 'File was removed from the database.');
   }
 
   /**
@@ -44,7 +44,7 @@ class DeleteTest extends FileManagedUnitTestBase {
     $usage = $file_usage->listUsage($file);
     $this->assertEqual($usage['testing']['test'], [1 => 1], 'Test file is still in use.');
     $this->assertTrue(file_exists($file->getFileUri()), 'File still exists on the disk.');
-    $this->assertTrue(File::load($file->id()), 'File still exists in the database.');
+    $this->assertNotEmpty(File::load($file->id()), 'File still exists in the database.');
 
     // Clear out the call to hook_file_load().
     file_test_reset();
@@ -55,7 +55,7 @@ class DeleteTest extends FileManagedUnitTestBase {
     $this->assertTrue(empty($usage), 'File usage data was removed.');
     $this->assertTrue(file_exists($file->getFileUri()), 'File still exists on the disk.');
     $file = File::load($file->id());
-    $this->assertTrue($file, 'File still exists in the database.');
+    $this->assertNotEmpty($file, 'File still exists in the database.');
     $this->assertTrue($file->isTemporary(), 'File is temporary.');
     file_test_reset();
 
@@ -74,7 +74,7 @@ class DeleteTest extends FileManagedUnitTestBase {
     // file_cron() loads
     $this->assertFileHooksCalled(['delete']);
     $this->assertFalse(file_exists($file->getFileUri()), 'File has been deleted after its last usage was removed.');
-    $this->assertFalse(File::load($file->id()), 'File was removed from the database.');
+    $this->assertNull(File::load($file->id()), 'File was removed from the database.');
   }
 
   /**
@@ -85,7 +85,7 @@ class DeleteTest extends FileManagedUnitTestBase {
     // Delete the file, but leave it in the file_managed table.
     \Drupal::service('file_system')->delete($file->getFileUri());
     $this->assertFalse(file_exists($file->getFileUri()), 'File is deleted from the filesystem.');
-    $this->assertTrue(File::load($file->id()), 'File exist in file_managed table');
+    $this->assertInstanceOf(File::class, File::load($file->id()), 'File exist in file_managed table');
 
     // Call file_cron() to clean up the file. Make sure the changed timestamp
     // of the file is older than the system.file.temporary_maximum_age
@@ -98,7 +98,7 @@ class DeleteTest extends FileManagedUnitTestBase {
       ->execute();
     \Drupal::service('cron')->run();
 
-    $this->assertFalse(File::load($file->id()), 'File was removed from the database.');
+    $this->assertNull(File::load($file->id()), 'File was removed from the database.');
   }
 
 }

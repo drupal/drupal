@@ -470,7 +470,7 @@ abstract class GenericCacheBackendUnitTestBase extends KernelTestBase {
     $this->assertSame(FALSE, $backend->get('test21'), "Cache id test21 does not exist.");
 
     // Calling deleteMultiple() with an empty array should not cause an error.
-    $this->assertFalse($backend->deleteMultiple([]));
+    $this->assertNull($backend->deleteMultiple([]));
   }
 
   /**
@@ -489,7 +489,7 @@ abstract class GenericCacheBackendUnitTestBase extends KernelTestBase {
 
     $this->assertFalse($backend_a->get('test1'), 'First key has been deleted.');
     $this->assertFalse($backend_a->get('test2'), 'Second key has been deleted.');
-    $this->assertTrue($backend_b->get('test3'), 'Item in other bin is preserved.');
+    $this->assertNotEmpty($backend_b->get('test3'), 'Item in other bin is preserved.');
   }
 
   /**
@@ -522,7 +522,7 @@ abstract class GenericCacheBackendUnitTestBase extends KernelTestBase {
 
     // Calling invalidateMultiple() with an empty array should not cause an
     // error.
-    $this->assertFalse($backend->invalidateMultiple([]));
+    $this->assertNull($backend->invalidateMultiple([]));
   }
 
   /**
@@ -567,7 +567,7 @@ abstract class GenericCacheBackendUnitTestBase extends KernelTestBase {
     $bins = ['path', 'bootstrap', 'page'];
     foreach ($bins as $bin) {
       $this->getCacheBackend($bin)->set('test', $this->defaultValue, Cache::PERMANENT, $tags);
-      $this->assertTrue($this->getCacheBackend($bin)->get('test'), 'Cache item was set in bin.');
+      $this->assertNotEmpty($this->getCacheBackend($bin)->get('test'), 'Cache item was set in bin.');
     }
 
     Cache::invalidateTags(['test_tag:2']);
@@ -579,7 +579,7 @@ abstract class GenericCacheBackendUnitTestBase extends KernelTestBase {
     // Test that the cache entry with a matching tag has been invalidated.
     $this->assertFalse($this->getCacheBackend($bin)->get('test_cid_invalidate2'), 'Cache items matching tag were invalidated.');
     // Test that the cache entry with without a matching tag still exists.
-    $this->assertTrue($this->getCacheBackend($bin)->get('test_cid_invalidate1'), 'Cache items not matching tag were not invalidated.');
+    $this->assertNotEmpty($this->getCacheBackend($bin)->get('test_cid_invalidate1'), 'Cache items not matching tag were not invalidated.');
   }
 
   /**
@@ -598,9 +598,9 @@ abstract class GenericCacheBackendUnitTestBase extends KernelTestBase {
 
     $this->assertFalse($backend_a->get('test1'), 'First key has been invalidated.');
     $this->assertFalse($backend_a->get('test2'), 'Second key has been invalidated.');
-    $this->assertTrue($backend_b->get('test3'), 'Item in other bin is preserved.');
-    $this->assertTrue($backend_a->get('test1', TRUE), 'First key has not been deleted.');
-    $this->assertTrue($backend_a->get('test2', TRUE), 'Second key has not been deleted.');
+    $this->assertNotEmpty($backend_b->get('test3'), 'Item in other bin is preserved.');
+    $this->assertNotEmpty($backend_a->get('test1', TRUE), 'First key has not been deleted.');
+    $this->assertNotEmpty($backend_a->get('test2', TRUE), 'Second key has not been deleted.');
   }
 
   /**
@@ -619,7 +619,7 @@ abstract class GenericCacheBackendUnitTestBase extends KernelTestBase {
 
     $this->assertFalse($backend_a->get('test1'), 'First key has been deleted.');
     $this->assertFalse($backend_a->get('test2', TRUE), 'Second key has been deleted.');
-    $this->assertTrue($backend_b->get('test3'), 'Item in other bin is preserved.');
+    $this->assertNotEmpty($backend_b->get('test3'), 'Item in other bin is preserved.');
   }
 
 }

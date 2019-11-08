@@ -141,7 +141,7 @@ class MigrateUserTest extends MigrateDrupal6TestBase {
       }
       else {
         // Ensure the user does not have a picture.
-        $this->assertFalse($user->user_picture->target_id, sprintf('User %s does not have a picture', $user->id()));
+        $this->assertEmpty($user->user_picture->target_id, sprintf('User %s does not have a picture', $user->id()));
       }
 
       // Use the API to check if the password has been salted and re-hashed to
