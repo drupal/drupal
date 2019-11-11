@@ -653,7 +653,7 @@
             "dist": {
                 "type": "path",
                 "url": "core",
-                "reference": "ae05b62ba90c6bb364ba715d7005d99e188b8b85"
+                "reference": "97ddf51eb80dace3a9990a7b8509a3d16269167a"
             },
             "require": {
                 "asm89/stack-cors": "^1.1",
@@ -790,6 +790,7 @@
                 "drupal/options": "self.version",
                 "drupal/page_cache": "self.version",
                 "drupal/path": "self.version",
+                "drupal/path_alias": "self.version",
                 "drupal/quickedit": "self.version",
                 "drupal/rdf": "self.version",
                 "drupal/responsive_image": "self.version",
