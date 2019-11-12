@@ -328,11 +328,8 @@ abstract class AddFormBase extends FormBase implements BaseFormIdInterface, Trus
     }
     $form_display->buildForm($media, $element['fields'], $form_state);
 
-    // We hide the preview of the uploaded file in the image widget with CSS, so
-    // set a property so themes and form_alter hooks can easily identify the
-    // source field.
-    // @todo Improve hiding file widget elements in
-    //   https://www.drupal.org/project/drupal/issues/2987921
+    // Add source field name so that it can be identified in form alter and
+    // widget alter hooks.
     $element['fields']['#source_field_name'] = $this->getSourceFieldName($media->bundle->entity);
 
     // The revision log field is currently not configurable from the form
