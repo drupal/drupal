@@ -245,6 +245,52 @@ class FileUploadForm extends AddFormBase {
   }
 
   /**
+   * {@inheritdoc}
+   */
+  protected function buildEntityFormElement(MediaInterface $media, array $form, FormStateInterface $form_state, $delta) {
+    $element = parent::buildEntityFormElement($media, $form, $form_state, $delta);
+    $source_field = $this->getSourceFieldName($media->bundle->entity);
+    if (isset($element['fields'][$source_field])) {
+      $element['fields'][$source_field]['widget'][0]['#process'][] = [static::class, 'hideExtraSourceFieldComponents'];
+    }
+    return $element;
+  }
+
+  /**
+   * Processes an image or file source field element.
+   *
+   * @param array $element
+   *   The entity form source field element.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The current form state.
+   * @param $form
+   *   The complete form.
+   *
+   * @return array
+   *   The processed form element.
+   */
+  public static function hideExtraSourceFieldComponents($element, FormStateInterface $form_state, $form) {
+    // Remove original button added by ManagedFile::processManagedFile().
+    if (!empty($element['remove_button'])) {
+      $element['remove_button']['#access'] = FALSE;
+    }
+    // Remove preview added by ImageWidget::process().
+    if (!empty($element['preview'])) {
+      $element['preview']['#access'] = FALSE;
+    }
+
+    $element['#title_display'] = 'none';
+    $element['#description_display'] = 'none';
+
+    // Remove the filename display.
+    foreach ($element['#files'] as $file) {
+      $element['file_' . $file->id()]['filename']['#access'] = FALSE;
+    }
+
+    return $element;
+  }
+
+  /**
    * Submit handler for the upload button, inside the managed_file element.
    *
    * @param array $form
