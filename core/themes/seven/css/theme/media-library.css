@@ -658,15 +658,6 @@
   border-bottom: 0;
 }
 
-/* @todo Remove in https://www.drupal.org/project/drupal/issues/2987921 */
-.media-library-add-form__source-field .file,
-.media-library-add-form__source-field .button,
-.media-library-add-form__source-field .image-preview,
-.media-library-add-form__source-field .form-type-managed-file > label,
-.media-library-add-form__source-field .file-size {
-  display: none;
-}
-
 .media-library-add-form__preview {
   display: flex;
   align-items: center;

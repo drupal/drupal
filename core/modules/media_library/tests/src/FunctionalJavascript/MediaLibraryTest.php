@@ -2294,8 +2294,15 @@ class MediaLibraryTest extends WebDriverTestBase {
     $assert_session->pageTextMatches('/The media items? ha(s|ve) been created but ha(s|ve) not yet been saved. Fill in any required fields and save to add (it|them) to the media library./');
     $assert_session->elementAttributeContains('css', $selector, 'aria-label', 'Added media items');
 
-    $this->assertElementExistsAfterWait('css', '[data-drupal-selector="edit-media-' . $index . '-fields"]');
+    $fields = $this->assertElementExistsAfterWait('css', '[data-drupal-selector="edit-media-' . $index . '-fields"]');
     $assert_session->elementNotExists('css', '.js-media-library-menu');
+
+    // Assert extraneous components were removed in
+    // FileUploadForm::hideExtraSourceFieldComponents().
+    $assert_session->elementNotExists('css', '[data-drupal-selector$="preview"]', $fields);
+    $assert_session->buttonNotExists('Remove', $fields);
+    $assert_session->elementNotExists('css', '[data-drupal-selector$="filename"]', $fields);
+    $assert_session->elementNotExists('css', '.file-size', $fields);
   }
 
   /**
