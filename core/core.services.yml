@@ -461,18 +461,13 @@ services:
   queue.database:
     class: Drupal\Core\Queue\QueueDatabaseFactory
     arguments: ['@database']
-  # @deprecated in Drupal 8.8.x and will be removed before 9.0.0. Use the
-  #   "path_alias.whitelist" service instead.
-  #   See https://www.drupal.org/node/3092086
   path.alias_whitelist:
     alias: path_alias.whitelist
-    deprecated: 'The "%alias_id%" service alias is deprecated. Use "path_alias.whitelist" instead. See https://drupal.org/node/3092086'
-  # @deprecated in Drupal 8.8.x and will be removed before 9.0.0. Use the
-  #   "path_alias.manager" service instead.
-  #   See https://www.drupal.org/node/3092086
+    deprecated: 'The "%service_id%" service is deprecated. Use "path_alias.whitelist" instead. See https://drupal.org/node/3092086'
   path.alias_manager:
     class: Drupal\Core\Path\AliasManager
     arguments: ['@path_alias.repository', '@path_alias.whitelist', '@language_manager', '@cache.data']
+    deprecated: 'The "%service_id%" service is deprecated. Use "path_alias.manager" instead. See https://drupal.org/node/3092086'
   path.current:
     class: Drupal\Core\Path\CurrentPathStack
     arguments: ['@request_stack']
@@ -1221,6 +1216,10 @@ services:
     arguments: ['@maintenance_mode', '@config.factory', '@string_translation', '@url_generator', '@current_user', '@bare_html_page_renderer', '@messenger']
     tags:
       - { name: event_subscriber }
+  path_subscriber:
+    class: Drupal\Core\EventSubscriber\PathSubscriber
+    arguments: ['@path.alias_manager', '@path.current']
+    deprecated: 'The "%service_id%" service is deprecated. Use "path_alias.subscriber" instead. See https://drupal.org/node/3092086'
   route_access_response_subscriber:
     class: Drupal\Core\EventSubscriber\RouteAccessResponseSubscriber
     tags:
@@ -1351,6 +1350,10 @@ services:
     arguments: ['@current_route_match']
     tags:
       - { name: route_processor_outbound, priority: 200 }
+  path_processor_alias:
+    class: Drupal\Core\PathProcessor\PathProcessorAlias
+    arguments: ['@path.alias_manager']
+    deprecated: 'The "%service_id%" service is deprecated. Use "path_alias.path_processor" instead. See https://drupal.org/node/3092086'
   route_processor_csrf:
     class: Drupal\Core\Access\RouteProcessorCsrf
     tags:
@@ -1743,34 +1746,3 @@ services:
   pager.parameters:
     class: Drupal\Core\Pager\PagerParameters
     arguments: ['@request_stack']
-
-  # Path Alias services, defined here to be available even when "path_alias" is
-  # not enabled yet. These will replace the legacy core services, which are now
-  # deprecated and will be removed in Drupal 9.
-  # See https://www.drupal.org/node/3092086
-  # @todo Move these to "path_alias" once core fully supports it as an optional
-  #   module. See https://www.drupal.org/node/3092090.
-  path_alias.subscriber:
-    class: Drupal\Core\EventSubscriber\PathSubscriber
-    tags:
-      - { name: event_subscriber }
-    arguments: ['@path.alias_manager', '@path.current']
-  path_alias.path_processor:
-    class: Drupal\Core\PathProcessor\PathProcessorAlias
-    tags:
-      - { name: path_processor_inbound, priority: 100 }
-      - { name: path_processor_outbound, priority: 300 }
-    arguments: ['@path.alias_manager']
-  path_alias.manager:
-    class: Drupal\Core\Path\AliasManager
-    arguments: ['@path_alias.repository', '@path_alias.whitelist', '@language_manager', '@cache.data']
-  path_alias.repository:
-    class: Drupal\Core\Path\AliasRepository
-    arguments: ['@database']
-    tags:
-      - { name: backend_overridable }
-  path_alias.whitelist:
-    class: Drupal\Core\Path\AliasWhitelist
-    tags:
-      - { name: needs_destruction }
-    arguments: [path_alias_whitelist, '@cache.bootstrap', '@lock', '@state', '@path_alias.repository']
