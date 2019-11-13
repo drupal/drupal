@@ -86,7 +86,7 @@ abstract class HttpExceptionSubscriberBase implements EventSubscriberInterface {
    *   The event to process.
    */
   public function onException(GetResponseForExceptionEvent $event) {
-    $exception = $event->getException();
+    $exception = $event->getThrowable();
 
     // Make the exception available for example when rendering a block.
     $request = $event->getRequest();

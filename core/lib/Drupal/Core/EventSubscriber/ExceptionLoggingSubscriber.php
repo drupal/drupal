@@ -60,7 +60,7 @@ class ExceptionLoggingSubscriber implements EventSubscriberInterface {
    *   The event to process.
    */
   public function onError(GetResponseForExceptionEvent $event) {
-    $exception = $event->getException();
+    $exception = $event->getThrowable();
     $error = Error::decodeException($exception);
     $this->logger->get('php')->log($error['severity_level'], '%type: @message in %function (line %line of %file).', $error);
 
@@ -77,7 +77,7 @@ class ExceptionLoggingSubscriber implements EventSubscriberInterface {
    *   The event to process.
    */
   public function onException(GetResponseForExceptionEvent $event) {
-    $exception = $event->getException();
+    $exception = $event->getThrowable();
 
     $method = 'onError';
 

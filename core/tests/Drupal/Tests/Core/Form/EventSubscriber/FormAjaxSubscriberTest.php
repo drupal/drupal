@@ -147,7 +147,7 @@ class FormAjaxSubscriberTest extends UnitTestCase {
       ->willThrowException($expected_exception);
 
     $event = $this->assertResponseFromException($request, $exception, NULL);
-    $this->assertSame($expected_exception, $event->getException());
+    $this->assertSame($expected_exception, $event->getThrowable());
   }
 
   /**

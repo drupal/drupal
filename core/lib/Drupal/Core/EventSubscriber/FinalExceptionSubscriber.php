@@ -77,7 +77,7 @@ class FinalExceptionSubscriber implements EventSubscriberInterface {
    *   The event to process.
    */
   public function onException(GetResponseForExceptionEvent $event) {
-    $exception = $event->getException();
+    $exception = $event->getThrowable();
     $error = Error::decodeException($exception);
 
     // Display the message if the current error reporting level allows this type

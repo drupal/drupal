@@ -111,11 +111,11 @@ class AuthenticationSubscriber implements EventSubscriberInterface {
   public function onExceptionSendChallenge(GetResponseForExceptionEvent $event) {
     if (isset($this->challengeProvider) && $event->isMasterRequest()) {
       $request = $event->getRequest();
-      $exception = $event->getException();
+      $exception = $event->getThrowable();
       if ($exception instanceof AccessDeniedHttpException && !$this->authenticationProvider->applies($request) && (!isset($this->filter) || $this->filter->appliesToRoutedRequest($request, FALSE))) {
         $challenge_exception = $this->challengeProvider->challengeException($request, $exception);
         if ($challenge_exception) {
-          $event->setException($challenge_exception);
+          $event->setThrowable($challenge_exception);
         }
       }
     }
@@ -129,9 +129,9 @@ class AuthenticationSubscriber implements EventSubscriberInterface {
   public function onExceptionAccessDenied(GetResponseForExceptionEvent $event) {
     if (isset($this->filter) && $event->isMasterRequest()) {
       $request = $event->getRequest();
-      $exception = $event->getException();
+      $exception = $event->getThrowable();
       if ($exception instanceof AccessDeniedHttpException && $this->authenticationProvider->applies($request) && !$this->filter->appliesToRoutedRequest($request, TRUE)) {
-        $event->setException(new AccessDeniedHttpException('The used authentication method is not allowed on this route.', $exception));
+        $event->setThrowable(new AccessDeniedHttpException('The used authentication method is not allowed on this route.', $exception));
       }
     }
   }

@@ -44,9 +44,9 @@ class DefaultExceptionSubscriber extends SerializationDefaultExceptionSubscriber
     if (!$this->isJsonApiExceptionEvent($event)) {
       return;
     }
-    if (($exception = $event->getException()) && !$exception instanceof HttpException) {
+    if (($exception = $event->getThrowable()) && !$exception instanceof HttpException) {
       $exception = new HttpException(500, $exception->getMessage(), $exception);
-      $event->setException($exception);
+      $event->setThrowable($exception);
     }
 
     $this->setEventResponse($event, $exception->getStatusCode());
@@ -57,7 +57,7 @@ class DefaultExceptionSubscriber extends SerializationDefaultExceptionSubscriber
    */
   protected function setEventResponse(GetResponseForExceptionEvent $event, $status) {
     /* @var \Symfony\Component\HttpKernel\Exception\HttpException $exception */
-    $exception = $event->getException();
+    $exception = $event->getThrowable();
     $response = new ResourceResponse(new JsonApiDocumentTopLevel(new ErrorCollection([$exception]), new NullIncludedData(), new LinkCollection([])), $exception->getStatusCode(), $exception->getHeaders());
     $response->addCacheableDependency($exception);
     $event->setResponse($response);

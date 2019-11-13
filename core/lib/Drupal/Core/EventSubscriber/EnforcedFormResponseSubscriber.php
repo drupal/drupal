@@ -17,7 +17,7 @@ class EnforcedFormResponseSubscriber implements EventSubscriberInterface {
    * Replaces the response in case an EnforcedResponseException was thrown.
    */
   public function onKernelException(GetResponseForExceptionEvent $event) {
-    if ($response = EnforcedResponse::createFromException($event->getException())) {
+    if ($response = EnforcedResponse::createFromException($event->getThrowable())) {
       // Setting the response stops the event propagation.
       $event->setResponse($response);
     }

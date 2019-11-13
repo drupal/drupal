@@ -84,7 +84,7 @@ class NodeTranslationExceptionSubscriber implements EventSubscriberInterface {
    *   The exception event.
    */
   public function onException(GetResponseForExceptionEvent $event) {
-    $exception = $event->getException();
+    $exception = $event->getThrowable();
 
     // If this is not a 404, we don't need to check for a redirection.
     if (!($exception instanceof NotFoundHttpException)) {

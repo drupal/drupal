@@ -75,9 +75,9 @@ class ParamConversionEnhancer implements EnhancerInterface, EventSubscriberInter
    * @param \Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent $event
    */
   public function onException(GetResponseForExceptionEvent $event) {
-    $exception = $event->getException();
+    $exception = $event->getThrowable();
     if ($exception instanceof ParamNotConvertedException) {
-      $event->setException(new NotFoundHttpException($exception->getMessage(), $exception));
+      $event->setThrowable(new NotFoundHttpException($exception->getMessage(), $exception));
     }
   }
 

@@ -69,7 +69,7 @@ class DefaultExceptionSubscriber extends HttpExceptionSubscriberBase {
    */
   public function on4xx(GetResponseForExceptionEvent $event) {
     /** @var \Symfony\Component\HttpKernel\Exception\HttpExceptionInterface $exception */
-    $exception = $event->getException();
+    $exception = $event->getThrowable();
     $request = $event->getRequest();
 
     $format = $request->getRequestFormat();

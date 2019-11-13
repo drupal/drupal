@@ -39,7 +39,7 @@ class ExceptionDetectNeedsInstallSubscriber implements EventSubscriberInterface 
    *   The event to process.
    */
   public function onException(GetResponseForExceptionEvent $event) {
-    $exception = $event->getException();
+    $exception = $event->getThrowable();
     if ($this->shouldRedirectToInstaller($exception, $this->connection)) {
       // Only redirect if this is an HTML response (i.e., a user trying to view
       // the site in a web browser before installing it).

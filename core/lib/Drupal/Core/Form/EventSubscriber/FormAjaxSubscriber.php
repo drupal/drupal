@@ -80,7 +80,7 @@ class FormAjaxSubscriber implements EventSubscriberInterface {
    *   The event to process.
    */
   public function onException(GetResponseForExceptionEvent $event) {
-    $exception = $event->getException();
+    $exception = $event->getThrowable();
     $request = $event->getRequest();
 
     // Render a nice error message in case we have a file upload which exceeds
@@ -116,7 +116,7 @@ class FormAjaxSubscriber implements EventSubscriberInterface {
       }
       catch (\Exception $e) {
         // Otherwise, replace the existing exception with the new one.
-        $event->setException($e);
+        $event->setThrowable($e);
       }
     }
   }

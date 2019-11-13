@@ -87,7 +87,7 @@ class DefaultExceptionHtmlSubscriber extends HttpExceptionSubscriberBase {
    *   The event to process.
    */
   public function on4xx(GetResponseForExceptionEvent $event) {
-    if (($exception = $event->getException()) && $exception instanceof HttpExceptionInterface) {
+    if (($exception = $event->getThrowable()) && $exception instanceof HttpExceptionInterface) {
       $this->makeSubrequest($event, '/system/4xx', $exception->getStatusCode());
     }
   }
@@ -134,7 +134,7 @@ class DefaultExceptionHtmlSubscriber extends HttpExceptionSubscriberBase {
    */
   protected function makeSubrequest(GetResponseForExceptionEvent $event, $url, $status_code) {
     $request = $event->getRequest();
-    $exception = $event->getException();
+    $exception = $event->getThrowable();
 
     try {
       // Reuse the exact same request (so keep the same URL, keep the access

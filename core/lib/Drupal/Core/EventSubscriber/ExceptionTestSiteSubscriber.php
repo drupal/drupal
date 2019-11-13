@@ -34,7 +34,7 @@ class ExceptionTestSiteSubscriber extends HttpExceptionSubscriberBase {
    * @param \Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent $event
    */
   public function on500(GetResponseForExceptionEvent $event) {
-    $exception = $event->getException();
+    $exception = $event->getThrowable();
     $error = Error::decodeException($exception);
 
     $headers = [];

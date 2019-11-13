@@ -45,7 +45,7 @@ class AccessDeniedSubscriber implements EventSubscriberInterface {
    *   The event to process.
    */
   public function onException(GetResponseForExceptionEvent $event) {
-    $exception = $event->getException();
+    $exception = $event->getThrowable();
     if ($exception instanceof AccessDeniedHttpException) {
       $route_name = RouteMatch::createFromRequest($event->getRequest())->getRouteName();
       $redirect_url = NULL;
