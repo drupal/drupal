@@ -148,8 +148,8 @@ class AliasManager implements AliasManagerInterface, CacheDecoratorInterface {
         }
       }
       catch (ServiceCircularReferenceException $e) {
-        // This may happen during installation when "path_alias" has not swapped
-        // the alias manager class yet. Nothing to do in this case.
+        // This may happen during installation when the "path_alias" module has
+        // not been installed yet. Nothing to do in this case.
       }
     }
   }
