@@ -22,9 +22,7 @@ drupal-media {
 }
 
 /**
- * Fix positioning without delete button. Overrides
- * core/modules/media_library/css/media_library.theme.css.
- * Can be removed with this issue:
+ * Fix positioning without delete button. Can be removed with this issue:
  * @see https://www.drupal.org/project/drupal/issues/3074859
  */
 drupal-media .media-library-item__edit {
