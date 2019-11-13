@@ -86,11 +86,17 @@
     }
   },
   "browserslist": [
-    "ie >= 9",
-    "edge >= 13",
-    "firefox >= 5",
-    "opera >= 12",
-    "safari >= 5",
-    "chrome >= 56"
+    "last 2 Chrome major versions",
+    "last 2 Firefox major versions",
+    "last 2 Safari major versions",
+    "last 2 Edge major versions",
+    "last 2 Opera versions",
+    "last 2 iOS major versions",
+    "last 1 Explorer major version",
+    "last 1 ChromeAndroid version",
+    "last 1 UCAndroid version",
+    "last 1 Samsung version",
+    "last 1 OperaMini version",
+    "Firefox ESR"
   ]
 }
