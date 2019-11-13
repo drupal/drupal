@@ -35,9 +35,13 @@ class DeprecatedServicesTest extends KernelTestBase {
 
   /**
    * @expectedDeprecation The "path.alias_manager" service is deprecated. Use "path_alias.manager" instead. See https://drupal.org/node/3092086
+   * @expectedDeprecation The "path_processor_alias" service is deprecated. Use "path_alias.path_processor" instead. See https://drupal.org/node/3092086
+   * @expectedDeprecation The "path_subscriber" service is deprecated. Use "path_alias.subscriber" instead. See https://drupal.org/node/3092086
    */
-  public function testAliasManagerDeprecation() {
+  public function testAliasServicesDeprecation() {
     $this->container->get('path.alias_manager');
+    $this->container->get('path_processor_alias');
+    $this->container->get('path_subscriber');
   }
 
   /**
