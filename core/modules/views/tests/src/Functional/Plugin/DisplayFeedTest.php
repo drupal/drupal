@@ -67,8 +67,8 @@ class DisplayFeedTest extends ViewTestBase {
     $this->config('system.site')->set('name', $site_name)->save();
 
     $this->drupalGet('test-feed-display.xml');
-    $this->assertEquals($site_name, $this->getSession()->getDriver()->getText('//title'));
-    $this->assertEquals($frontpage_url, $this->getSession()->getDriver()->getText('//link'));
+    $this->assertEquals($site_name, $this->getSession()->getDriver()->getText('//channel/title'));
+    $this->assertEquals($frontpage_url, $this->getSession()->getDriver()->getText('//channel/link'));
     $this->assertEquals('Copyright 2019 Dries Buytaert', $this->getSession()->getDriver()->getText('//channel/copyright'));
     $this->assertEquals($node_title, $this->getSession()->getDriver()->getText('//item/title'));
     $this->assertEquals($node_link, $this->getSession()->getDriver()->getText('//item/link'));
@@ -81,7 +81,7 @@ class DisplayFeedTest extends ViewTestBase {
     $view->save();
 
     $this->drupalGet('test-feed-display.xml');
-    $this->assertEquals('test_display_feed', $this->getSession()->getDriver()->getText('//title'));
+    $this->assertEquals('test_display_feed', $this->getSession()->getDriver()->getText('//channel/title'));
 
     // Add a block display and attach the feed.
     $view->getExecutable()->newDisplay('block', NULL, 'test');
@@ -125,7 +125,7 @@ class DisplayFeedTest extends ViewTestBase {
     $node_link = $node->toUrl()->setAbsolute()->toString();
 
     $this->drupalGet('test-feed-display-fields.xml');
-    $this->assertEquals($node_title, $this->getSession()->getDriver()->getText('//title/a'));
+    $this->assertEquals($node_title, $this->getSession()->getDriver()->getText('//item/title'));
     $this->assertEquals($node_link, $this->getSession()->getDriver()->getText('//item/link'));
     // Verify HTML is properly escaped in the description field.
     $this->assertRaw('&lt;p&gt;A paragraph&lt;/p&gt;');
