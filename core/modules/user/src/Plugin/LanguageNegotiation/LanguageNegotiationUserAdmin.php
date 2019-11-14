@@ -101,7 +101,7 @@ class LanguageNegotiationUserAdmin extends LanguageNegotiationMethodBase impleme
     $langcode = NULL;
 
     // User preference (only for administrators).
-    if ($this->currentUser->hasPermission('access administration pages') && ($preferred_admin_langcode = $this->currentUser->getPreferredAdminLangcode(FALSE)) && $this->isAdminPath($request)) {
+    if (($this->currentUser->hasPermission('access administration pages') || $this->currentUser->hasPermission('view the administration theme')) && ($preferred_admin_langcode = $this->currentUser->getPreferredAdminLangcode(FALSE)) && $this->isAdminPath($request)) {
       $langcode = $preferred_admin_langcode;
     }
 
