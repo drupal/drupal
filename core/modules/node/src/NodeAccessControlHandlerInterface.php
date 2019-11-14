@@ -44,7 +44,7 @@ interface NodeAccessControlHandlerInterface {
    *   purposes, and assumes the caller has already performed a mass delete of
    *   some form. Defaults to TRUE.
    *
-   * @deprecated in Drupal 8.x, will be removed before Drupal 9.0.
+   * @deprecated in drupal:8.0.0 and is removed from drupal:9.0.0.
    *   Use \Drupal\node\NodeAccessControlHandlerInterface::acquireGrants().
    */
   public function writeGrants(NodeInterface $node, $delete = TRUE);

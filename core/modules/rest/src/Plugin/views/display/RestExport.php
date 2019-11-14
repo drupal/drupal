@@ -102,7 +102,7 @@ class RestExport extends PathPluginBase implements ResponseDisplayPluginInterfac
    *   ['cookie' => 'user', 'basic_auth' => 'basic_auth']
    * @endcode
    *
-   * @deprecated as of 8.4.x, will be removed in before Drupal 9.0.0, see
+   * @deprecated in drupal:8.4.0 and is removed from drupal:9.0.0. see
    *   https://www.drupal.org/node/2825204.
    *
    * @var string[]

@@ -123,7 +123,7 @@ EOD;
    * @param int $status
    *   The new status of multibyte support.
    *
-   * @deprecated in Drupal 8.6.0 and will be removed before Drupal 9.0.0. In
+   * @deprecated in drupal:8.6.0 and is removed from drupal:9.0.0. In
    *   Drupal 9 there will be no way to set the status and in Drupal 8 this
    *   ability has been removed because mb_*() functions are supplied using
    *   Symfony's polyfill.
@@ -260,7 +260,7 @@ EOD;
    * @return int
    *   The length of the string.
    *
-   * @deprecated in Drupal 8.6.0, will be removed before Drupal 9.0.0. Use
+   * @deprecated in drupal:8.6.0 and is removed from drupal:9.0.0. Use
    *   mb_strlen() instead.
    *
    * @see https://www.drupal.org/node/2850048
@@ -279,7 +279,7 @@ EOD;
    * @return string
    *   The string in uppercase.
    *
-   * @deprecated in Drupal 8.6.0, will be removed before Drupal 9.0.0. Use
+   * @deprecated in drupal:8.6.0 and is removed from drupal:9.0.0. Use
    *   mb_strtoupper() instead.
    *
    * @see https://www.drupal.org/node/2850048
@@ -298,7 +298,7 @@ EOD;
    * @return string
    *   The string in lowercase.
    *
-   * @deprecated in Drupal 8.6.0, will be removed before Drupal 9.0.0. Use
+   * @deprecated in drupal:8.6.0 and is removed from drupal:9.0.0. Use
    *   mb_strtolower() instead.
    *
    * @see https://www.drupal.org/node/2850048
@@ -372,7 +372,7 @@ EOD;
    * @return string
    *   The shortened string.
    *
-   * @deprecated in Drupal 8.6.0, will be removed before Drupal 9.0.0. Use
+   * @deprecated in drupal:8.6.0 and is removed from drupal:9.0.0. Use
    *   mb_substr() instead.
    *
    * @see https://www.drupal.org/node/2850048
@@ -557,7 +557,7 @@ EOD;
    * @return string
    *   The flipped text.
    *
-   * @deprecated in Drupal 8.8.0, will be removed before Drupal 9.0.0. There is
+   * @deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. There is
    *   no direct replacement.
    *
    * @see https://www.drupal.org/node/3057322
@@ -617,7 +617,7 @@ EOD;
    *   beginning (independent of $offset), or FALSE if not found. Note that
    *   a return value of 0 is not the same as FALSE.
    *
-   * @deprecated in Drupal 8.6.0, will be removed before Drupal 9.0.0. Use
+   * @deprecated in drupal:8.6.0 and is removed from drupal:9.0.0. Use
    *   mb_strpos() instead.
    *
    * @see https://www.drupal.org/node/2850048

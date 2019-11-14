@@ -597,7 +597,7 @@ abstract class ContentEntityStorageBase extends EntityStorageBase implements Con
    * @return \Drupal\Core\Entity\EntityInterface|null
    *   The specified entity revision or NULL if not found.
    *
-   * @deprecated in Drupal 8.5.x and will be removed before Drupal 9.0.0.
+   * @deprecated in drupal:8.5.0 and is removed from drupal:9.0.0.
    *   \Drupal\Core\Entity\ContentEntityStorageBase::doLoadMultipleRevisionsFieldItems()
    *   should be implemented instead.
    *

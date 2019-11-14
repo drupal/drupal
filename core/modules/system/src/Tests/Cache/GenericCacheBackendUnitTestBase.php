@@ -18,7 +18,7 @@ use Drupal\simpletest\KernelTestBase;
  * @see DatabaseBackendUnitTestCase
  *   For a full working implementation.
  *
- * @deprecated as of Drupal 8.2.x, will be removed before Drupal 9.0.0. Use
+ * @deprecated in drupal:8.2.0 and is removed from drupal:9.0.0. Use
  *    \Drupal\KernelTests\Core\Cache\GenericCacheBackendUnitTestBase instead.
  */
 abstract class GenericCacheBackendUnitTestBase extends KernelTestBase {

@@ -23,7 +23,7 @@ class FieldMigration extends Migration implements ContainerFactoryPluginInterfac
    * fallback to the old 'cck_plugin_method'.
    *
    * @const string
-   * @deprecated This constant is deprecated in Drupal 8.7.0 and will be removed before Drupal 9.0.0. Use the migrate_drupal.field_discovery service instead. See https://www.drupal.org/node/3006076.
+   * @deprecated in drupal:8.7.0 and is removed from drupal:9.0.0. Use the migrate_drupal.field_discovery service instead. See https://www.drupal.org/node/3006076.
    */
   const PLUGIN_METHOD = 'field_plugin_method';
 

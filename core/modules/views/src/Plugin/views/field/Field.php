@@ -13,7 +13,7 @@ use Drupal\Core\Render\RendererInterface;
 /**
  * A stub class to provide backward compatibility for EntityField.
  *
- * @deprecated in Drupal 8.3.x and will be removed before 9.0.0
+ * @deprecated in drupal:8.3.0 and is removed from drupal:9.0.0.
  *   Use \Drupal\views\Plugin\views\field\EntityField instead.
  *
  * @see https://www.drupal.org/node/3089106

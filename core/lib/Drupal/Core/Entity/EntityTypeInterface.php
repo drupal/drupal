@@ -364,7 +364,7 @@ interface EntityTypeInterface extends PluginDefinitionInterface {
    * @return bool
    *   TRUE if the entity type is a subclass of the class or interface.
    *
-   * @deprecated in Drupal 8.3.0 and will be removed before Drupal 9.0.0.
+   * @deprecated in drupal:8.3.0 and is removed from drupal:9.0.0.
    *   Use Drupal\Core\Entity\EntityTypeInterface::entityClassImplements()
    *   instead.
    */
@@ -659,7 +659,7 @@ interface EntityTypeInterface extends PluginDefinitionInterface {
    * @return string
    *   The lowercase form of the human-readable entity type name.
    *
-   * @deprecated deprecated in drupal:8.8.0 and is removed from drupal:9.0.0.
+   * @deprecated in drupal:8.8.0 and is removed from drupal:9.0.0.
    *   Instead, you should call getSingularLabel().
    *   See https://www.drupal.org/node/3075567
    *

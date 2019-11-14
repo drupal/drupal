@@ -317,7 +317,7 @@ class RequestHandler implements ContainerInjectionInterface {
    * @param \Symfony\Component\HttpFoundation\Request $request
    *   The request.
    *
-   * @deprecated in Drupal 8.4.0, will be removed before Drupal 9.0.0. Use the
+   * @deprecated in drupal:8.4.0 and is removed from drupal:9.0.0. Use the
    *   argument resolver method instead, see ::createArgumentResolver().
    *
    * @see https://www.drupal.org/node/2894819

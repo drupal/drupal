@@ -9,7 +9,7 @@ use Symfony\Component\Routing\Route;
 /**
  * A route filter service to filter down the collection of route instances.
  *
- * @deprecated in Drupal 8.4.0 and will be removed before Drupal 9.0.0. Instead,
+ * @deprecated in drupal:8.4.0 and is removed from drupal:9.0.0. Instead,
  * you should use \Drupal\Core\Routing\FilterInterface.
  * See https://www.drupal.org/node/2894934
  */

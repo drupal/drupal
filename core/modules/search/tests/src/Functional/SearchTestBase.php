@@ -9,7 +9,7 @@ use Drupal\Tests\BrowserTestBase;
 /**
  * Defines the common search test code.
  *
- * @deprecated in Drupal 8.6.0 and will be removed in Drupal 9.0.0. Use
+ * @deprecated in drupal:8.6.0 and is removed from drupal:9.0.0. Use
  *   \Drupal\Tests\BrowserTestBase instead.
  *
  * @see https://www.drupal.org/node/2979950
@@ -48,7 +48,7 @@ abstract class SearchTestBase extends BrowserTestBase {
    * @param string $form_html_id
    *   (optional) HTML ID of the form, to disambiguate.
    *
-   * @deprecated in Drupal 8.6.x, to be removed before Drupal 9.0.x. Use
+   * @deprecated in drupal:8.6.0 and is removed from drupal:9.0.0. Use
    *   \Drupal\Tests\BrowserTestBase::drupalPostForm() instead.
    *
    * @see https://www.drupal.org/node/2979950

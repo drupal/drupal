@@ -73,7 +73,7 @@ interface SectionStorageManagerInterface extends DiscoveryInterface {
    * @throws \InvalidArgumentException
    *   Thrown if the ID is invalid.
    *
-   * @deprecated in Drupal 8.7.0 and will be removed before Drupal 9.0.0.
+   * @deprecated in drupal:8.7.0 and is removed from drupal:9.0.0.
    *   \Drupal\layout_builder\SectionStorage\SectionStorageManagerInterface::load()
    *   should be used instead. See https://www.drupal.org/node/3012353.
    */
@@ -98,7 +98,7 @@ interface SectionStorageManagerInterface extends DiscoveryInterface {
    *
    * @see \Drupal\Core\ParamConverter\ParamConverterInterface::convert()
    *
-   * @deprecated in Drupal 8.7.0 and will be removed before Drupal 9.0.0.
+   * @deprecated in drupal:8.7.0 and is removed from drupal:9.0.0.
    *   \Drupal\layout_builder\SectionStorageInterface::deriveContextsFromRoute()
    *   and \Drupal\layout_builder\SectionStorage\SectionStorageManagerInterface::load()
    *   should be used instead. See https://www.drupal.org/node/3012353.

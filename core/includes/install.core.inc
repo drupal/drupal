@@ -2288,7 +2288,7 @@ function install_display_requirements($install_state, $requirements) {
  *
  * @see _install_select_profile()
  *
- * @deprecated in Drupal 8.3.0 and will be removed before Drupal 9.0.0. The
+ * @deprecated in drupal:8.3.0 and is removed from drupal:9.0.0. The
  *    install profile is written to core.extension.
  */
 function install_write_profile($install_state) {

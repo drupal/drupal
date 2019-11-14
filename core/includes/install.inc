@@ -541,7 +541,7 @@ function drupal_install_config_directories() {
  * @return bool
  *   TRUE if the config directory exists and is writable.
  *
- * @deprecated in Drupal 8.1.x, will be removed before Drupal 9.0.x. Use
+ * @deprecated in drupal:8.1.0 and is removed from drupal:9.0.0. Use
  *   config_get_config_directory() and
  *  \Drupal\Core\File\FileSystemInterface::prepareDirectory() instead.
  *

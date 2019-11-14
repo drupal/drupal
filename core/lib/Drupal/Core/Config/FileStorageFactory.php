@@ -14,7 +14,7 @@ class FileStorageFactory {
    *
    * @return \Drupal\Core\Config\FileStorage FileStorage
    *
-   * @deprecated in Drupal 8.0.x and will be removed before 9.0.0. Drupal core
+   * @deprecated in drupal:8.0.0 and is removed from drupal:9.0.0. Drupal core
    * no longer creates an active directory.
    */
   public static function getActive() {

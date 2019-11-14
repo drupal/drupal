@@ -341,7 +341,7 @@ interface SelectInterface extends ConditionInterface, AlterableInterface, Extend
    * @return
    *   The unique alias that was assigned for this table.
    *
-   * @deprecated as of Drupal 8.1.x, will be removed in Drupal 9.0.0. Instead,
+   * @deprecated in drupal:8.1.0 and is removed from drupal:9.0.0. Instead,
    *   change the query to use leftJoin(). For instance:
    *   $injected_connection->query('A')->rightJoin('B') is identical to
    *   $injected_connection->query('B')->leftJoin('A'). This functionality has

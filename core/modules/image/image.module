@@ -18,7 +18,7 @@ use Drupal\image\Entity\ImageStyle;
 /**
  * Image style constant for user presets in the database.
  *
- * @deprecated in Drupal 8.1.x, will be removed before Drupal 9.0.0.
+ * @deprecated in drupal:8.1.0 and is removed from drupal:9.0.0.
  *
  * @see https://www.drupal.org/node/1820974
  */
@@ -27,7 +27,7 @@ const IMAGE_STORAGE_NORMAL = 1;
 /**
  * Image style constant for user presets that override module-defined presets.
  *
- * @deprecated in Drupal 8.1.x, will be removed before Drupal 9.0.0.
+ * @deprecated in drupal:8.1.0 and is removed from drupal:9.0.0.
  *
  * @see https://www.drupal.org/node/1820974
  */
@@ -36,7 +36,7 @@ const IMAGE_STORAGE_OVERRIDE = 2;
 /**
  * Image style constant for module-defined presets in code.
  *
- * @deprecated in Drupal 8.1.x, will be removed before Drupal 9.0.0.
+ * @deprecated in drupal:8.1.0 and is removed from drupal:9.0.0.
  *
  * @see https://www.drupal.org/node/1820974
  */
@@ -45,7 +45,7 @@ const IMAGE_STORAGE_DEFAULT = 4;
 /**
  * Image style constant to represent an editable preset.
  *
- * @deprecated in Drupal 8.1.x, will be removed before Drupal 9.0.0.
+ * @deprecated in drupal:8.1.0 and is removed from drupal:9.0.0.
  *
  * @see https://www.drupal.org/node/1820974
  */
@@ -54,7 +54,7 @@ define('IMAGE_STORAGE_EDITABLE', IMAGE_STORAGE_NORMAL | IMAGE_STORAGE_OVERRIDE);
 /**
  * Image style constant to represent any module-based preset.
  *
- * @deprecated in Drupal 8.1.x, will be removed before Drupal 9.0.0.
+ * @deprecated in drupal:8.1.0 and is removed from drupal:9.0.0.
  *
  * @see https://www.drupal.org/node/1820974
  */

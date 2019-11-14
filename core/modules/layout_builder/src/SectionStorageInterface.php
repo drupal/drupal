@@ -47,7 +47,7 @@ interface SectionStorageInterface extends SectionListInterface, PluginInspection
    * @internal
    *   This should only be called during section storage instantiation.
    *
-   * @deprecated in Drupal 8.7.0 and will be removed before Drupal 9.0.0. The
+   * @deprecated in drupal:8.7.0 and is removed from drupal:9.0.0. The
    *   section list should be derived from context. See
    *   https://www.drupal.org/node/3016262.
    */
@@ -105,7 +105,7 @@ interface SectionStorageInterface extends SectionListInterface, PluginInspection
    * @internal
    *   This should only be called during section storage instantiation.
    *
-   * @deprecated in Drupal 8.7.0 and will be removed before Drupal 9.0.0.
+   * @deprecated in drupal:8.7.0 and is removed from drupal:9.0.0.
    *   \Drupal\layout_builder\SectionStorageInterface::deriveContextsFromRoute()
    *   should be used instead. See https://www.drupal.org/node/3016262.
    */

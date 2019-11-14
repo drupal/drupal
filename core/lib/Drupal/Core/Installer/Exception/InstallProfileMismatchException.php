@@ -23,7 +23,7 @@ class InstallProfileMismatchException extends InstallerException {
    * @param \Drupal\Core\StringTranslation\TranslationInterface $string_translation
    *   The string translation manager.
    *
-   * @deprecated in Drupal 8.3.0 and will be removed before Drupal 9.0.0. The
+   * @deprecated in drupal:8.3.0 and is removed from drupal:9.0.0. The
    *    install profile is written to core.extension.
    *
    * @see _install_select_profile()

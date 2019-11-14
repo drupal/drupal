@@ -24,7 +24,7 @@ use Drupal\simpletest\WebTestBase;
 /**
  * This class provides methods specifically for testing Image's field handling.
  *
- * @deprecated Scheduled for removal in Drupal 9.0.0.
+ * @deprecated in drupal:8.?.? and is removed from drupal:9.0.0.
  *   Use \Drupal\Tests\image\Functional\ImageFieldTestBase instead.
  */
 abstract class ImageFieldTestBase extends WebTestBase {

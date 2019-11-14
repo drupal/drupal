@@ -16,7 +16,7 @@ use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
  *   source_module = "comment"
  * )
  *
- * @deprecated in Drupal 8.4.x, to be removed before Drupal 9.0.x. Use
+ * @deprecated in drupal:8.4.0 and is removed from drupal:9.0.0. Use
  * \Drupal\node\Plugin\migrate\source\d7\NodeType instead.
  */
 class CommentType extends DrupalSqlBase {

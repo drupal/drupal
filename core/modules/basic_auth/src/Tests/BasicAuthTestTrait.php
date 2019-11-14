@@ -7,7 +7,7 @@ namespace Drupal\basic_auth\Tests;
 /**
  * Provides common functionality for Basic Authentication test classes.
  *
- * @deprecated in Drupal 8.3.0 and will be removed before Drupal 9.0.0.
+ * @deprecated in drupal:8.3.0 and is removed from drupal:9.0.0.
  *   Use \Drupal\Tests\basic_auth\Traits\BasicAuthTestTrait instead.
  *
  * @see https://www.drupal.org/node/2862800

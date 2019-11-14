@@ -137,7 +137,7 @@ function tracker_cron() {
 /**
  * Access callback: Determines access permission for a user's own account.
  *
- * @deprecated in Drupal 8.4.0 and will be removed before Drupal 9.0.0. As
+ * @deprecated in drupal:8.4.0 and is removed from drupal:9.0.0. As
  *   internal API, _tracker_user_access() may also be removed in a minor
  *   release.
  *
@@ -159,7 +159,7 @@ function _tracker_myrecent_access(AccountInterface $account) {
 /**
  * Access callback: Determines access permission for an account.
  *
- * @deprecated in Drupal 8.4.0 and will be removed before Drupal 9.0.0. As
+ * @deprecated in drupal:8.4.0 and is removed from drupal:9.0.0. As
  *   internal API, _tracker_user_access() may also be removed in a minor
  *   release.
  *

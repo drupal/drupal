@@ -9,7 +9,7 @@ use Drupal\Core\TempStore\PrivateTempStoreFactory as CorePrivateTempStoreFactory
 /**
  * Creates a PrivateTempStore object for a given collection.
  *
- * @deprecated in Drupal 8.5.x, to be removed before Drupal 9.0.0.
+ * @deprecated in drupal:8.5.0 and is removed from drupal:9.0.0.
  *   Use \Drupal\Core\TempStore\PrivateTempStoreFactory instead.
  *
  * @see \Drupal\Core\TempStore\PrivateTempStoreFactory

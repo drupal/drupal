@@ -8,7 +8,7 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 /**
  * Publishes a comment.
  *
- * @deprecated in Drupal 8.5.x, to be removed before Drupal 9.0.0.
+ * @deprecated in drupal:8.5.0 and is removed from drupal:9.0.0.
  *   Use \Drupal\Core\Action\Plugin\Action\PublishAction instead.
  *
  * @see \Drupal\Core\Action\Plugin\Action\PublishAction

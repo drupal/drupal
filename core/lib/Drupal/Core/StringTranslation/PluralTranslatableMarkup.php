@@ -16,7 +16,7 @@ class PluralTranslatableMarkup extends TranslatableMarkup {
    * separate singular and plural variants in source and translation text. It
    * was found to be the most compatible delimiter for the supported databases.
    *
-   * @deprecated in Drupal 8.7.x, will be removed before Drupal 9.0.0.
+   * @deprecated in drupal:8.7.0 and is removed from drupal:9.0.0.
    *   Use Drupal\Component\Gettext\PoItem::DELIMITER instead.
    */
   const DELIMITER = PoItem::DELIMITER;

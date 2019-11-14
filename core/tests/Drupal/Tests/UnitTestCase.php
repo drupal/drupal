@@ -194,7 +194,7 @@ abstract class UnitTestCase extends TestCase {
    * @return \Drupal\block\BlockInterface|\PHPUnit\Framework\MockObject\MockObject
    *   The mocked block.
    *
-   * @deprecated in Drupal 8.5.x, will be removed before Drupal 9.0.0. Unit test
+   * @deprecated in drupal:8.5.0 and is removed from drupal:9.0.0. Unit test
    *   base classes should not have dependencies on extensions. Set up mocks in
    *   individual tests.
    *

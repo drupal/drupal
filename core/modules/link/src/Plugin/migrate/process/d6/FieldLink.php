@@ -11,7 +11,7 @@ use Drupal\link\Plugin\migrate\process\FieldLink as GeneralPurposeFieldLink;
  *   id = "d6_field_link"
  * )
  *
- * @deprecated in Drupal 8.4.x, to be removed before Drupal 9.0.x. Use
+ * @deprecated in drupal:8.4.0 and is removed from drupal:9.0.0. Use
  * \Drupal\link\Plugin\migrate\process\FieldLink instead.
  */
 class FieldLink extends GeneralPurposeFieldLink {}

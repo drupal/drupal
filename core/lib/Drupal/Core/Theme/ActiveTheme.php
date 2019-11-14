@@ -52,7 +52,7 @@ class ActiveTheme {
    *
    * @var static[]
    *
-   * @deprecated in Drupal 8.7.0 and will be removed before Drupal 9. Use
+   * @deprecated in drupal:8.7.0 and is removed from drupal:9.0.0. Use
    *   $this->baseThemeExtensions instead.
    *
    * @see https://www.drupal.org/node/3019948
@@ -211,7 +211,7 @@ class ActiveTheme {
    *
    * @return mixed
    *
-   * @deprecated in Drupal 8.0.0, will be removed before Drupal 9.0.0.
+   * @deprecated in drupal:8.0.0 and is removed from drupal:9.0.0.
    *
    * @see https://www.drupal.org/node/2497313
    */
@@ -227,7 +227,7 @@ class ActiveTheme {
    *
    * @return static[]
    *
-   * @deprecated in Drupal 8.7.0 and will be removed before Drupal 9.0.0. Use
+   * @deprecated in drupal:8.7.0 and is removed from drupal:9.0.0. Use
    *   \Drupal\Core\Theme\ActiveTheme::getBaseThemeExtensions() instead.
    *
    * @see https://www.drupal.org/node/3019948

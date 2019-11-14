@@ -517,7 +517,7 @@ class ImageStyle extends ConfigEntityBase implements ImageStyleInterface, Entity
    *   A string containing the name of the scheme, or FALSE if none. For
    *   example, the URI "public://example.txt" would return "public".
    *
-   * @deprecated in drupal:8.8.0 and will be removed from drupal:9.0.0. Use
+   * @deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. Use
    *   \Drupal\Core\StreamWrapper\StreamWrapperManager::getTarget() instead.
    *
    * @see https://www.drupal.org/node/3035273
@@ -540,7 +540,7 @@ class ImageStyle extends ConfigEntityBase implements ImageStyleInterface, Entity
    *   For example, the URI "public://sample/test.txt" would return
    *   "sample/test.txt".
    *
-   * @deprecated in drupal:8.8.0 and will be removed from drupal:9.0.0. Use
+   * @deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. Use
    *   \Drupal\Core\StreamWrapper\StreamWrapperManager::getUriTarget() instead.
    *
    * @see https://www.drupal.org/node/3035273

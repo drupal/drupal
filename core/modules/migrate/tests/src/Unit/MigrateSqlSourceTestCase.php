@@ -11,7 +11,7 @@ use Drupal\Core\KeyValueStore\KeyValueStoreInterface;
 /**
  * Base class for Migrate module source unit tests.
  *
- * @deprecated in Drupal 8.2.0, will be removed before Drupal 9.0.0. Use
+ * @deprecated in drupal:8.2.0 and is removed from drupal:9.0.0. Use
  * \Drupal\Tests\migrate\Kernel\MigrateSqlSourceTestBase instead.
  */
 abstract class MigrateSqlSourceTestCase extends MigrateTestCase {

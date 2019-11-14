@@ -9,7 +9,7 @@ use Drupal\action\Form\ActionFormBase as ActionFormBaseCurrent;
 /**
  * Provides a base form for action forms.
  *
- * @deprecated in Drupal 8.8.x and will be removed before Drupal 9.0.0. Use
+ * @deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. Use
  *   \Drupal\action\Form\ActionFormBase instead.
  *
  * @see https://www.drupal.org/node/3033540

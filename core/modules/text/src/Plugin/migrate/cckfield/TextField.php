@@ -21,7 +21,7 @@ use Drupal\migrate_drupal\Plugin\migrate\cckfield\CckFieldPluginBase;
  *   destination_module = "text",
  * )
  *
- * @deprecated in Drupal 8.3.x, to be removed before Drupal 9.0.x. Use
+ * @deprecated in drupal:8.3.0 and is removed from drupal:9.0.0. Use
  * \Drupal\text\Plugin\migrate\field\d6\TextField or
  * \Drupal\text\Plugin\migrate\field\d7\TextField instead.
  *

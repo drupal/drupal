@@ -305,7 +305,7 @@ class BaseFieldDefinition extends ListDataDefinition implements FieldDefinitionI
    * @return static
    *   The object itself for chaining.
    *
-   * @deprecated in Drupal 8.4.0 and will be removed before Drupal 9.0.0. Use
+   * @deprecated in drupal:8.4.0 and is removed from drupal:9.0.0. Use
    *   \Drupal\Core\Field\BaseFieldDefinition::setCustomStorage() instead.
    *
    * @see https://www.drupal.org/node/2856563
@@ -637,7 +637,7 @@ class BaseFieldDefinition extends ListDataDefinition implements FieldDefinitionI
   /**
    * Helper to retrieve the field item class.
    *
-   * @deprecated in Drupal 8.5.0 and will be removed before Drupal 9.0.0. Use
+   * @deprecated in drupal:8.5.0 and is removed from drupal:9.0.0. Use
    *   \Drupal\Core\TypedData\ListDataDefinition::getClass() instead.
    */
   protected function getFieldItemClass() {

@@ -307,7 +307,7 @@ function check_markup($text, $format_id = NULL, $langcode = '', $filter_types_to
 /**
  * Render API callback: Hides the field value of 'text_format' elements.
  *
- * @deprecated in Drupal 8.8.0 and will be removed before Drupal 9.0.0. Use
+ * @deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. Use
  *   \Drupal\filter\Element\TextFormat::accessDeniedCallback() instead.
  *
  * @see https://www.drupal.org/node/2966725

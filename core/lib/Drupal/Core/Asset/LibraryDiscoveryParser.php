@@ -410,7 +410,7 @@ class LibraryDiscoveryParser {
   /**
    * Wraps \Drupal\Core\StreamWrapper\StreamWrapperManagerInterface::isValidUri().
    *
-   * @deprecated in drupal:8.8.0 and will be removed before drupal:9.0.0. Use
+   * @deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. Use
    *   \Drupal\Core\StreamWrapper\StreamWrapperManagerInterface::isValidUri()
    *   instead.
    */

@@ -10,7 +10,7 @@ use Symfony\Component\Routing\Route;
 /**
  * A route enhance service to determine route enhance rules.
  *
- * @deprecated in Drupal 8.4.0 and will be removed before Drupal 9.0.0. Instead,
+ * @deprecated in drupal:8.4.0 and is removed from drupal:9.0.0. Instead,
  * you should use \Drupal\Core\Routing\EnhancerInterface.
  * See https://www.drupal.org/node/2894934
  * Part of the deprecation means that applies() is now called on runtime instead

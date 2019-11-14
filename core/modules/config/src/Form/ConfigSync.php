@@ -400,7 +400,7 @@ class ConfigSync extends FormBase {
    * @param array $context
    *   The batch context.
    *
-   * @deprecated in Drupal 8.6.0 and will be removed before 9.0.0. Use
+   * @deprecated in drupal:8.6.0 and is removed from drupal:9.0.0. Use
    *   \Drupal\Core\Config\Importer\ConfigImporterBatch::process() instead.
    *
    * @see https://www.drupal.org/node/2897299
@@ -416,7 +416,7 @@ class ConfigSync extends FormBase {
    * This function is a static function to avoid serializing the ConfigSync
    * object unnecessarily.
    *
-   * @deprecated in Drupal 8.6.0 and will be removed before 9.0.0. Use
+   * @deprecated in drupal:8.6.0 and is removed from drupal:9.0.0. Use
    *   \Drupal\Core\Config\Importer\ConfigImporterBatch::finish() instead.
    *
    * @see https://www.drupal.org/node/2897299

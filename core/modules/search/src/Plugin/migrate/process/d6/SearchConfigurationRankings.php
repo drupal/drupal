@@ -7,7 +7,7 @@ use Drupal\search\Plugin\migrate\process\SearchConfigurationRankings as BaseSear
 /**
  * Generate configuration rankings.
  *
- * @deprecated in Drupal 8.7.x and will be removed before Drupal 9.0.x. Use
+ * @deprecated in drupal:8.7.0 and is removed from drupal:9.0.0. Use
  *   \Drupal\search\Plugin\migrate\process\SearchConfigurationRankings instead.
  *
  * @MigrateProcessPlugin(

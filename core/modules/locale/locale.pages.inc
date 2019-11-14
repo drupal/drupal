@@ -14,7 +14,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
  *
  * Manually checks the translation status without the use of cron.
  *
- * @deprecated in Drupal 8.5.0 and will be removed before 9.0.0. It is unused by
+ * @deprecated in drupal:8.5.0 and is removed from drupal:9.0.0. It is unused by
  *   Drupal core. Duplicate this function in your own extension if you need its
  *   behavior.
  *

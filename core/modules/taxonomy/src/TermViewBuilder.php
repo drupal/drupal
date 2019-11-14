@@ -9,7 +9,7 @@ use Drupal\Core\Entity\EntityViewBuilder;
 /**
  * View builder handler for taxonomy terms.
  *
- * @deprecated in Drupal 8.5.x and will be removed before Drupal 9.0.0.
+ * @deprecated in drupal:8.5.0 and is removed from drupal:9.0.0.
  *   Use \Drupal\Core\Entity\EntityViewBuilder instead.
  *
  * @see \Drupal\Core\Entity\EntityViewBuilder

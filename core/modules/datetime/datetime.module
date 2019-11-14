@@ -11,7 +11,7 @@ use Drupal\Core\Routing\RouteMatchInterface;
 /**
  * Defines the timezone that dates should be stored in.
  *
- * @deprecated in Drupal 8.5.x and will be removed before Drupal 9.0.x. Use
+ * @deprecated in drupal:8.5.0 and is removed from drupal:9.0.0. Use
  * \Drupal\datetime\Plugin\Field\FieldType\DateTimeItemInterface::STORAGE_TIMEZONE
  * instead.
  *
@@ -22,7 +22,7 @@ const DATETIME_STORAGE_TIMEZONE = 'UTC';
 /**
  * Defines the format that date and time should be stored in.
  *
- * @deprecated in Drupal 8.5.x and will be removed before Drupal 9.0.x. Use
+ * @deprecated in drupal:8.5.0 and is removed from drupal:9.0.0. Use
  * \Drupal\datetime\Plugin\Field\FieldType\DateTimeItemInterface::DATETIME_STORAGE_FORMAT
  * instead.
  *
@@ -33,7 +33,7 @@ const DATETIME_DATETIME_STORAGE_FORMAT = 'Y-m-d\TH:i:s';
 /**
  * Defines the format that dates should be stored in.
  *
- * @deprecated in Drupal 8.5.x and will be removed before Drupal 9.0.x. Use
+ * @deprecated in drupal:8.5.0 and is removed from drupal:9.0.0. Use
  * \Drupal\datetime\Plugin\Field\FieldType\DateTimeItemInterface::DATE_STORAGE_FORMAT
  * instead.
  *
@@ -70,7 +70,7 @@ function datetime_help($route_name, RouteMatchInterface $route_match) {
  *
  * @param $date
  *
- * @deprecated in Drupal 8.5.0 and will be removed before Drupal 9.0.0. Use
+ * @deprecated in drupal:8.5.0 and is removed from drupal:9.0.0. Use
  *   \Drupal\Component\Datetime\DateTimePlus::setDefaultDateTime() or
  *   \Drupal\Core\Datetime\DrupalDateTime::setDefaultDateTime() instead.
  *

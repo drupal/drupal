@@ -133,7 +133,7 @@ trait LayoutEntityHelperTrait {
    * @return bool
    *   TRUE if the entity is using a field for a layout override.
    *
-   * @deprecated in Drupal 8.7.0 and will be removed before Drupal 9.0.0.
+   * @deprecated in drupal:8.7.0 and is removed from drupal:9.0.0.
    *   To determine if an entity has a layout override, use
    *   \Drupal\layout_builder\LayoutEntityHelperTrait::getSectionStorageForEntity()
    *   and check whether the result is an instance of

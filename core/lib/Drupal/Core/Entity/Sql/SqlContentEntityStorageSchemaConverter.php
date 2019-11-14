@@ -10,7 +10,7 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
 /**
  * Defines a schema converter for entity types with existing data.
  *
- * @deprecated in Drupal 8.7.0, will be removed before Drupal 9.0.0.
+ * @deprecated in drupal:8.7.0 and is removed from drupal:9.0.0.
  *   Use \Drupal\Core\Entity\EntityDefinitionUpdateManagerInterface::updateFieldableEntityType()
  *   instead.
  *

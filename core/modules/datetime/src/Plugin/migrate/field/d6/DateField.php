@@ -20,7 +20,7 @@ use Drupal\migrate_drupal\Plugin\migrate\field\FieldPluginBase;
  *   weight = 9999999,
  * )
  *
- * @deprecated in Drupal 8.4.x, to be removed before Drupal 9.0.x. Use
+ * @deprecated in drupal:8.4.0 and is removed from drupal:9.0.0. Use
  * \Drupal\datetime\Plugin\migrate\field\DateField instead.
  */
 class DateField extends FieldPluginBase {

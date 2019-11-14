@@ -190,7 +190,7 @@ function history_user_delete($account) {
  * @return array
  *   A renderable array containing the last read timestamp.
  *
- * @deprecated in Drupal 8.8.0 and will be removed before Drupal 9.0.0. Use
+ * @deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. Use
  *   \Drupal\history\HistoryRenderCallback::lazyBuilder() instead.
  *
  * @see https://www.drupal.org/node/2966725

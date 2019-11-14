@@ -34,7 +34,7 @@ use Zend\Diactoros\Uri;
  *
  * @ingroup testing
  *
- * @deprecated in Drupal 8.8.0 and will be removed before Drupal 9.0.0. Instead,
+ * @deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. Instead,
  *   use \Drupal\Tests\BrowserTestBase. See https://www.drupal.org/node/3030340.
  */
 abstract class WebTestBase extends TestBase {

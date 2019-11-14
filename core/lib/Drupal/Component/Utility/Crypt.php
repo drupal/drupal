@@ -28,7 +28,7 @@ class Crypt {
    * @return string
    *   A randomly generated string.
    *
-   * @deprecated in Drupal 8.8.0 and will be removed before Drupal 9.0.0.
+   * @deprecated in drupal:8.8.0 and is removed from drupal:9.0.0.
    *   Use PHP's built-in random_bytes() function instead.
    *
    * @see https://www.drupal.org/node/3054488

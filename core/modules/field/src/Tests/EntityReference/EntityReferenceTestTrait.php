@@ -9,7 +9,7 @@ use Drupal\Tests\field\Traits\EntityReferenceTestTrait as nonDeprecatedEntityRef
 /**
  * Provides common functionality for the EntityReference test classes.
  *
- * @deprecated in Drupal 8.6.2 for removal before 9.0.0. Use
+ * @deprecated in drupal:8.6.2 and is removed from drupal:9.0.0. Use
  *   Drupal\Tests\field\Traits\EntityReferenceTestTrait instead.
  *
  * @see https://www.drupal.org/node/2998888

@@ -11,7 +11,7 @@
  * @return string
  *   A known return value of 'known_return_value'.
  *
- * @deprecated in Drupal 8.4.x. Might be removed before Drupal 9.0.0. This is
+ * @deprecated in drupal:8.4.0 and is removed from drupal:9.0.0. This is
  *   the deprecation message for deprecated_test_function().
  */
 function deprecation_test_function() {

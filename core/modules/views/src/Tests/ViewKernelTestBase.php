@@ -15,7 +15,7 @@ use Drupal\simpletest\KernelTestBase;
  * requires the full web test environment provided by WebTestBase, extend
  * ViewTestBase instead.
  *
- * @deprecated in Drupal 8.0.0 and will be removed before Drupal 9.0.0. Use
+ * @deprecated in drupal:8.0.0 and is removed from drupal:9.0.0. Use
  *   \Drupal\Tests\views\Kernel\ViewsKernelTestBase instead.
  *
  * @see \Drupal\Tests\views\Kernel\ViewsKernelTestBase

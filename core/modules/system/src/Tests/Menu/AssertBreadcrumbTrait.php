@@ -11,7 +11,7 @@ use Drupal\Core\Url;
 /**
  * Provides test assertions for verifying breadcrumbs.
  *
- * @deprecated Scheduled for removal in Drupal 9.0.0.
+ * @deprecated in drupal:8.?.? and is removed from drupal:9.0.0.
  *   Use \Drupal\Tests\system\Functional\Menu\AssertBreadcrumbTrait instead.
  */
 trait AssertBreadcrumbTrait {

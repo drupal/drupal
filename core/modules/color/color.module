@@ -122,7 +122,7 @@ function color_block_view_system_branding_block_alter(array &$build, BlockPlugin
 /**
  * #pre_render callback: Sets color preset logo.
  *
- * @deprecated in Drupal 8.8.0 and will be removed before Drupal 9.0.0. Use
+ * @deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. Use
  *   \Drupal\color\ColorSystemBrandingBlockAlter::preRender() instead.
  *
  * @see https://www.drupal.org/node/2966725

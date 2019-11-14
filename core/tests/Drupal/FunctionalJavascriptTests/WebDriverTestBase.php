@@ -141,7 +141,7 @@ abstract class WebDriverTestBase extends BrowserTestBase {
    * @param string $message
    *   Optional message to show alongside the assertion.
    *
-   * @deprecated in Drupal 8.1.0, will be removed before Drupal 9.0.0. Use
+   * @deprecated in drupal:8.1.0 and is removed from drupal:9.0.0. Use
    *   \Behat\Mink\Element\NodeElement::isVisible() instead.
    */
   protected function assertElementVisible($css_selector, $message = '') {
@@ -157,7 +157,7 @@ abstract class WebDriverTestBase extends BrowserTestBase {
    * @param string $message
    *   Optional message to show alongside the assertion.
    *
-   * @deprecated in Drupal 8.1.0, will be removed before Drupal 9.0.0. Use
+   * @deprecated in drupal:8.1.0 and is removed from drupal:9.0.0. Use
    *   \Behat\Mink\Element\NodeElement::isVisible() instead.
    */
   protected function assertElementNotVisible($css_selector, $message = '') {

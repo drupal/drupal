@@ -7,7 +7,7 @@ namespace Drupal\field_ui\Tests;
 /**
  * Provides common functionality for the Field UI test classes.
  *
- * @deprecated in Drupal 8.7.x and will be removed before Drupal 9.0.0.
+ * @deprecated in drupal:8.7.0 and is removed from drupal:9.0.0.
  *   Use \Drupal\Tests\field_ui\Traits\FieldUiTestTrait. See
  *   https://www.drupal.org/node/3001664
  */

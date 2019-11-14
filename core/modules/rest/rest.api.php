@@ -31,7 +31,7 @@ function hook_rest_resource_alter(&$definitions) {
 /**
  * Alter the REST type URI.
  *
- * @deprecated in Drupal 8.3.x and will be removed before Drupal 9.0.0. Use
+ * @deprecated in drupal:8.3.0 and is removed from drupal:9.0.0. Use
  *   hook_serialization_type_uri_alter() instead. This exists solely for BC.
  *
  * @see https://www.drupal.org/node/2830467
@@ -59,7 +59,7 @@ function hook_rest_type_uri_alter(&$uri, $context = []) {
 /**
  * Alter the REST relation URI.
  *
- * @deprecated in Drupal 8.3.x and will be removed before Drupal 9.0.0. Use
+ * @deprecated in drupal:8.3.0 and is removed from drupal:9.0.0. Use
  *   hook_serialization_relation_uri_alter() instead. This exists solely for BC.
  *
  * @see https://www.drupal.org/node/2830467

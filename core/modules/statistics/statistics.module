@@ -93,7 +93,7 @@ function statistics_cron() {
  *   and the username for the selected node(s), or FALSE if the query could not
  *   be executed correctly.
  *
- * @deprecated in Drupal 8.6.0 and will be removed before Drupal 9.0.0.
+ * @deprecated in drupal:8.6.0 and is removed from drupal:9.0.0.
  *   Use \Drupal\statistics\NodeStatisticsDatabaseStorage::fetchAll() instead.
  */
 function statistics_title_list($dbfield, $dbrows) {

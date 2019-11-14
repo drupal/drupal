@@ -218,7 +218,7 @@ function _drupal_schema_initialize(&$schema, $module, $remove_descriptions = TRU
  * @return mixed
  *   The converted value.
  *
- * @deprecated in drupal:8.8.0 and will be removed from drupal:9.0.0. Use
+ * @deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. Use
  *   \Drupal\Core\Entity\Sql\SqlContentEntityStorageSchema::castValue() instead.
  *
  * @see https://www.drupal.org/node/3051983

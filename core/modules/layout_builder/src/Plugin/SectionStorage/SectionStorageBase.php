@@ -30,7 +30,7 @@ abstract class SectionStorageBase extends ContextAwarePluginBase implements Sect
    *
    * @throws \Exception
    *
-   * @deprecated in Drupal 8.7.0 and will be removed before Drupal 9.0.0. This
+   * @deprecated in drupal:8.7.0 and is removed from drupal:9.0.0. This
    *   method should no longer be used. The section list should be derived from
    *   context. See https://www.drupal.org/node/3016262.
    */

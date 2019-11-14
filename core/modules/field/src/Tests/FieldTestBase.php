@@ -12,7 +12,7 @@ use Drupal\simpletest\WebTestBase;
 /**
  * Parent class for Field API tests.
  *
- * @deprecated Scheduled for removal in Drupal 9.0.0.
+ * @deprecated in drupal:8.?.? and is removed from drupal:9.0.0.
  *   Use \Drupal\Tests\field\Functional\FieldTestBase instead.
  *
  * @see https://www.drupal.org/node/2999939

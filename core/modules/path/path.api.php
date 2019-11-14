@@ -17,7 +17,7 @@
  *   The array structure is identical to that of the return value of
  *   \Drupal\Core\Path\AliasStorageInterface::save().
  *
- * @deprecated in drupal:8.8.0 and will be removed from drupal:9.0.0. Use
+ * @deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. Use
  *   hook_path_alias_insert() instead.
  *
  * @see https://www.drupal.org/node/3013865
@@ -38,7 +38,7 @@ function hook_path_insert($path) {
  *   The array structure is identical to that of the return value of
  *   \Drupal\Core\Path\AliasStorageInterface::save().
  *
- * @deprecated in drupal:8.8.0 and will be removed from drupal:9.0.0. Use
+ * @deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. Use
  *   hook_path_alias_update() instead.
  *
  * @see https://www.drupal.org/node/3013865
@@ -59,7 +59,7 @@ function hook_path_update($path) {
  *   The array structure is identical to that of the return value of
  *   \Drupal\Core\Path\AliasStorageInterface::save().
  *
- * @deprecated in drupal:8.8.0 and will be removed from drupal:9.0.0. Use
+ * @deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. Use
  *   hook_path_alias_delete() instead.
  *
  * @see https://www.drupal.org/node/3013865

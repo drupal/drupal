@@ -222,7 +222,7 @@ class ConfigDependencyManager {
   /**
    * Sorts the dependency graph by weight and alphabetically.
    *
-   * @deprecated in Drupal 8.2.0, will be removed before Drupal 9.0.0. Use
+   * @deprecated in drupal:8.2.0 and is removed from drupal:9.0.0. Use
    * \Drupal\Core\Config\Entity\ConfigDependencyManager::prepareMultisort() and
    * array_multisort() instead.
    *
@@ -247,7 +247,7 @@ class ConfigDependencyManager {
   /**
    * Sorts the dependency graph by reverse weight and alphabetically.
    *
-   * @deprecated in Drupal 8.2.0, will be removed before Drupal 9.0.0. Use
+   * @deprecated in drupal:8.2.0 and is removed from drupal:9.0.0. Use
    * \Drupal\Core\Config\Entity\ConfigDependencyManager::prepareMultisort() and
    * array_multisort() instead.
    *

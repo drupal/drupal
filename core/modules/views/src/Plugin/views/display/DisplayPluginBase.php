@@ -2188,7 +2188,7 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
    * @param array $element
    *   The render array with updated cacheability metadata.
    *
-   * @deprecated in Drupal 8.4.0, will be removed before Drupal 9.0. Use
+   * @deprecated in drupal:8.4.0 and is removed from drupal:9.0.0. Use
    *   DisplayPluginBase::applyDisplayCacheabilityMetadata instead.
    *
    * @see \Drupal\views\Plugin\views\display\DisplayPluginBase::applyDisplayCacheabilityMetadata()

@@ -3,7 +3,7 @@
 namespace Drupal\quickedit\Access;
 
 /**
- * @deprecated in Drupal 8.4.x and will be removed before Drupal 9.0.0.
+ * @deprecated in drupal:8.4.0 and is removed from drupal:9.0.0.
  */
 class EditEntityFieldAccessCheck extends QuickEditEntityFieldAccessCheck {
 

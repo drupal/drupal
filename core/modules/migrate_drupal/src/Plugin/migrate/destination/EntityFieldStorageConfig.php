@@ -17,7 +17,7 @@ use Drupal\migrate\Plugin\migrate\destination\EntityFieldStorageConfig as BaseEn
  *   id = "md_entity:field_storage_config"
  * )
  *
- * @deprecated in Drupal 8.2.x and will be removed in Drupal 9.0.x. Use
+ * @deprecated in drupal:8.2.0 and is removed from drupal:9.0.0. Use
  *   \Drupal\migrate\Plugin\migrate\destination\EntityFieldStorageConfig
  *   instead.
  *

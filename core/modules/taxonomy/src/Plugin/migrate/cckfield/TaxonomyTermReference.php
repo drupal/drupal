@@ -18,7 +18,7 @@ use Drupal\migrate_drupal\Plugin\migrate\cckfield\CckFieldPluginBase;
  *   destination_module = "core",
  * )
  *
- * @deprecated in Drupal 8.4.x, to be removed before Drupal 9.0.x. Use
+ * @deprecated in drupal:8.4.0 and is removed from drupal:9.0.0. Use
  * \Drupal\taxonomy\Plugin\migrate\field\TaxonomyTermReference instead.
  *
  * @see https://www.drupal.org/node/2751897

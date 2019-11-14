@@ -15,7 +15,7 @@ use Drupal\Core\Config\Development\ConfigSchemaChecker as SchemaChecker;
  * @see \Drupal\simpletest\WebTestBase::setUp()
  * @see \Drupal\simpletest\KernelTestBase::containerBuild()
  *
- * @deprecated in Drupal 8.3.0 and will be removed before Drupal 9.0.0.
+ * @deprecated in drupal:8.3.0 and is removed from drupal:9.0.0.
  *   Use Drupal\Core\Config\Development\ConfigSchemaChecker.
  */
 class ConfigSchemaChecker extends SchemaChecker {

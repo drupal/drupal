@@ -164,7 +164,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
    *   The array of base field definitions for the entity type, keyed by field
    *   name.
    *
-   * @deprecated in Drupal 8.7.0, will be removed before Drupal 9.0.0.
+   * @deprecated in drupal:8.7.0 and is removed from drupal:9.0.0.
    *   Use \Drupal\Core\Entity\EntityFieldManagerInterface::getActiveFieldStorageDefinitions()
    *   instead.
    *
@@ -1820,7 +1820,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
    * @return bool
    *   Whether the field has been already deleted.
    *
-   * @deprecated in Drupal 8.5.x, will be removed before Drupal 9.0.0. Use
+   * @deprecated in drupal:8.5.0 and is removed from drupal:9.0.0. Use
    *   \Drupal\Core\Field\FieldStorageDefinitionInterface::isDeleted() instead.
    *
    * @see https://www.drupal.org/node/2907785
