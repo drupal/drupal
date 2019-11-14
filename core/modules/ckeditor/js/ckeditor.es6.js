@@ -346,6 +346,9 @@
   // Set autoGrow to make the editor grow the moment it is created.
   CKEDITOR.config.autoGrow_onStartup = true;
 
+  // Default max height. Will be updated as the viewport changes.
+  CKEDITOR.config.autoGrow_maxHeight = 0.7 * window.innerHeight;
+
   // Set the CKEditor cache-busting string to the same value as Drupal.
   CKEDITOR.timestamp = drupalSettings.ckeditor.timestamp;
 
