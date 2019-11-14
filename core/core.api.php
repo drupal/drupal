@@ -1595,10 +1595,10 @@
  *   files, by defining functions whose name starts with "hook_" (these
  *   files and their functions are never loaded by Drupal -- they exist solely
  *   for documentation). The function should have a documentation header, as
- *   well as a sample function body. For example, in the core file
- *   system.api.php, you can find hooks such as hook_batch_alter(). Also, if
- *   you are viewing this documentation on an API reference site, the Core
- *   hooks will be listed in this topic.
+ *   well as a sample function body. For example, in the core file form.api.php,
+ *   you can find hooks such as hook_batch_alter(). Also, if you are viewing
+ *   this documentation on an API reference site, the Core hooks will be listed
+ *   in this topic.
  * - Copy the function to your module's .module file.
  * - Change the name of the function, substituting your module's short name
  *   (name of the module's directory, and .info.yml file without the extension)
