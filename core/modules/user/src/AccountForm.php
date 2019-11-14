@@ -252,7 +252,7 @@ abstract class AccountForm extends ContentEntityForm implements TrustedCallbackI
     // Only show the account setting for Administration pages language to users
     // if one of the detection and selection methods uses it.
     $show_admin_language = FALSE;
-    if ($account->hasPermission('access administration pages') && $this->languageManager instanceof ConfigurableLanguageManagerInterface) {
+    if (($account->hasPermission('access administration pages') || $account->hasPermission('view the administration theme')) && $this->languageManager instanceof ConfigurableLanguageManagerInterface) {
       $negotiator = $this->languageManager->getNegotiator();
       $show_admin_language = $negotiator && $negotiator->isNegotiationMethodEnabled(LanguageNegotiationUserAdmin::METHOD_ID);
     }
