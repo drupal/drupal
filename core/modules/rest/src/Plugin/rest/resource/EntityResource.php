@@ -115,6 +115,8 @@ class EntityResource extends ResourceBase implements DependentPluginInterface {
    *
    * @param \Drupal\Core\Entity\EntityInterface $entity
    *   The entity object.
+   * @param \Symfony\Component\HttpFoundation\Request $request
+   *   The incoming request.
    *
    * @return \Drupal\rest\ResourceResponse
    *   The response containing the entity with its accessible fields.
