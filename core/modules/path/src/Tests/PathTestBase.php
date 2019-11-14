@@ -9,7 +9,7 @@ use Drupal\simpletest\WebTestBase;
 /**
  * Provides a base class for testing the Path module.
  *
- * @deprecated Scheduled for removal in Drupal 9.0.0.
+ * @deprecated in drupal:8.?.? and is removed from drupal:9.0.0.
  *   Use \Drupal\Tests\path\Functional\PathTestBase instead.
  *
  * @see https://www.drupal.org/node/2999939

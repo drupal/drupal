@@ -16,7 +16,7 @@ use Drupal\views\ViewExecutable;
  * When possible, ViewsKernelTestBase should be used instead. Both base classes
  * include the same methods.
  *
- * @deprecated in Drupal 8.4.0 and will be removed before Drupal 9.0.0.
+ * @deprecated in drupal:8.4.0 and is removed from drupal:9.0.0.
  *   Use \Drupal\Tests\views\Functional\ViewTestBase.
  *
  * @see \Drupal\Tests\views\Kernel\ViewsKernelTestBase

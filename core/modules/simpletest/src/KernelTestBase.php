@@ -62,7 +62,7 @@ use Symfony\Component\HttpFoundation\Request;
  * @see \Drupal\Tests\KernelTestBase::installSchema()
  * @see \Drupal\Tests\BrowserTestBase
  *
- * @deprecated in Drupal 8.0.x, will be removed before Drupal 9.0.0. Use
+ * @deprecated in drupal:8.0.0 and is removed from drupal:9.0.0. Use
  *   \Drupal\KernelTests\KernelTestBase instead.
  *
  * @ingroup testing

@@ -7,7 +7,7 @@ namespace Drupal\config\Tests;
 /**
  * Provides a class for checking configuration schema.
  *
- * @deprecated as of 8.3.x, will be removed in before Drupal 9.0.0. Use
+ * @deprecated in drupal:8.3.0 and is removed from drupal:9.0.0. Use
  *   \Drupal\Tests\SchemaCheckTestTrait instead.
  */
 trait SchemaCheckTestTrait {

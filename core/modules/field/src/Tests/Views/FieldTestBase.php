@@ -20,7 +20,7 @@ use Drupal\field\Entity\FieldStorageConfig;
  *   - Use relationships between different entity types, for example node and
  *     the node author(user).
  *
- * @deprecated in Drupal 8.6.0. Will be removed before Drupal 9.0.0. Use
+ * @deprecated in drupal:8.6.0 and is removed from drupal:9.0.0. Use
  * \Drupal\Tests\field\Functional\Views\FieldTestBase instead.
  *
  * @see https://www.drupal.org/node/2989020

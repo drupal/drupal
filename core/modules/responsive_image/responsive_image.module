@@ -18,7 +18,7 @@ use Drupal\breakpoint\BreakpointInterface;
 /**
  * The machine name for the empty image breakpoint image style option.
  *
- * @deprecated in Drupal 8.3.x and will be removed before Drupal 9.0.0. Use
+ * @deprecated in drupal:8.3.0 and is removed from drupal:9.0.0. Use
  *   Drupal\responsive_image\ResponsiveImageStyleInterface::EMPTY_IMAGE
  *   instead.
  *
@@ -29,7 +29,7 @@ const RESPONSIVE_IMAGE_EMPTY_IMAGE = '_empty image_';
 /**
  * The machine name for the original image breakpoint image style option.
  *
- * @deprecated in Drupal 8.3.x and will be removed before Drupal 9.0.0. Use
+ * @deprecated in drupal:8.3.0 and is removed from drupal:9.0.0. Use
  *   \Drupal\responsive_image\ResponsiveImageStyleInterface::ORIGINAL_IMAGE
  *   instead.
  *
@@ -256,7 +256,7 @@ function template_preprocess_responsive_image(&$variables) {
  * @return \Drupal\Core\Template\Attribute[]
  *   An array of attributes for the source tag.
  *
- * @deprecated in Drupal 8.3.x and will be removed before 9.0.0.
+ * @deprecated in drupal:8.3.0 and is removed from drupal:9.0.0.
  */
 function responsive_image_build_source_attributes(ImageInterface $image, array $variables, BreakpointInterface $breakpoint, array $multipliers) {
   return _responsive_image_build_source_attributes($variables, $breakpoint, $multipliers);

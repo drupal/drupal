@@ -88,7 +88,7 @@ class TwigExtension extends AbstractExtension {
    *
    * @return $this
    *
-   * @deprecated in Drupal 8.0.x-dev, will be removed before Drupal 9.0.0.
+   * @deprecated in drupal:8.0.0 and is removed from drupal:9.0.0.
    */
   public function setGenerators(UrlGeneratorInterface $url_generator) {
     return $this->setUrlGenerator($url_generator);
@@ -102,7 +102,7 @@ class TwigExtension extends AbstractExtension {
    *
    * @return $this
    *
-   * @deprecated in Drupal 8.3.x-dev, will be removed before Drupal 9.0.0.
+   * @deprecated in drupal:8.3.0 and is removed from drupal:9.0.0.
    */
   public function setUrlGenerator(UrlGeneratorInterface $url_generator) {
     $this->urlGenerator = $url_generator;
@@ -117,7 +117,7 @@ class TwigExtension extends AbstractExtension {
    *
    * @return $this
    *
-   * @deprecated in Drupal 8.3.x-dev, will be removed before Drupal 9.0.0.
+   * @deprecated in drupal:8.3.0 and is removed from drupal:9.0.0.
    */
   public function setThemeManager(ThemeManagerInterface $theme_manager) {
     $this->themeManager = $theme_manager;
@@ -132,7 +132,7 @@ class TwigExtension extends AbstractExtension {
    *
    * @return $this
    *
-   * @deprecated in Drupal 8.3.x-dev, will be removed before Drupal 9.0.0.
+   * @deprecated in drupal:8.3.0 and is removed from drupal:9.0.0.
    */
   public function setDateFormatter(DateFormatterInterface $date_formatter) {
     $this->dateFormatter = $date_formatter;

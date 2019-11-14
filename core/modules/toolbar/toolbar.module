@@ -215,7 +215,7 @@ function toolbar_toolbar() {
  * @return array
  *   The updated renderable array.
  *
- * @deprecated in Drupal 8.8.0 and will be removed before Drupal 9.0.0. Use
+ * @deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. Use
  *   \Drupal\toolbar\Controller\ToolbarController::preRenderAdministrationTray()
  *   instead.
  *
@@ -303,7 +303,7 @@ function toolbar_get_rendered_subtrees() {
 /**
  * #pre_render callback for toolbar_get_rendered_subtrees().
  *
- * @deprecated in Drupal 8.8.0 and will be removed before Drupal 9.0.0. Use
+ * @deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. Use
  *   \Drupal\toolbar\Controller\ToolbarController::preRenderGetRenderedSubtrees()
  *   instead.
  *

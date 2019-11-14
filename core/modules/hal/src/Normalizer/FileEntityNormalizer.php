@@ -14,7 +14,7 @@ use Drupal\hal\LinkManager\LinkManagerInterface;
 /**
  * Converts the Drupal entity object structure to a HAL array structure.
  *
- * @deprecated in Drupal 8.5.0, to be removed before Drupal 9.0.0.
+ * @deprecated in drupal:8.5.0 and is removed from drupal:9.0.0.
  */
 class FileEntityNormalizer extends ContentEntityNormalizer {
 

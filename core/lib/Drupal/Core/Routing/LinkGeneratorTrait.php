@@ -13,7 +13,7 @@ use Drupal\Core\Utility\LinkGeneratorInterface;
  * in the Container should not use this trait but inject the appropriate service
  * directly for easier testing.
  *
- * @deprecated in Drupal 8.0.0 and will be removed before Drupal 9.0.0.
+ * @deprecated in drupal:8.0.0 and is removed from drupal:9.0.0.
  *   Use \Drupal\Core\Link instead.
  *
  * @see https://www.drupal.org/node/2614344

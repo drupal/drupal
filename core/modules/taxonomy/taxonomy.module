@@ -19,7 +19,7 @@ use Drupal\taxonomy\VocabularyInterface;
 /**
  * Denotes that no term in the vocabulary has a parent.
  *
- * @deprecated in Drupal 8.2.x and will be removed before 9.0.0. Use
+ * @deprecated in drupal:8.2.0 and is removed from drupal:9.0.0. Use
  *   \Drupal\taxonomy\VocabularyInterface::HIERARCHY_DISABLED instead.
  *
  * @see https://www.drupal.org/node/2807795
@@ -29,7 +29,7 @@ const TAXONOMY_HIERARCHY_DISABLED = 0;
 /**
  * Denotes that one or more terms in the vocabulary has a single parent.
  *
- * @deprecated in Drupal 8.2.x and will be removed before 9.0.0. Use
+ * @deprecated in drupal:8.2.0 and is removed from drupal:9.0.0. Use
  *   \Drupal\taxonomy\VocabularyInterface::HIERARCHY_SINGLE instead.
  *
  * @see https://www.drupal.org/node/2807795
@@ -39,7 +39,7 @@ const TAXONOMY_HIERARCHY_SINGLE = 1;
 /**
  * Denotes that one or more terms in the vocabulary have multiple parents.
  *
- * @deprecated in Drupal 8.2.x and will be removed before 9.0.0. Use
+ * @deprecated in drupal:8.2.0 and is removed from drupal:9.0.0. Use
  *   \Drupal\taxonomy\VocabularyInterface::HIERARCHY_MULTIPLE instead.
  *
  * @see https://www.drupal.org/node/2807795
@@ -160,7 +160,7 @@ function taxonomy_theme() {
  * @return int
  *   An integer that represents the level of the vocabulary's hierarchy.
  *
- * @deprecated in Drupal 8.7.x. Will be removed before Drupal 9.0.0. Use
+ * @deprecated in drupal:8.7.0 and is removed from drupal:9.0.0. Use
  *   \Drupal\taxonomy\TermStorage::getVocabularyHierarchyType() instead.
  */
 function taxonomy_check_vocabulary_hierarchy(VocabularyInterface $vocabulary, $changed_term) {
@@ -183,7 +183,7 @@ function taxonomy_check_vocabulary_hierarchy(VocabularyInterface $vocabulary, $c
  *   A $page element suitable for use by
  *   \Drupal\Core\Render\RendererInterface::render().
  *
- * @deprecated in Drupal 8.7.0 and will be removed before Drupal 9.0.0. Use
+ * @deprecated in drupal:8.7.0 and is removed from drupal:9.0.0. Use
  *   \Drupal::entityTypeManager()->getViewBuilder('taxonomy_term')->view()
  *   instead.
  *
@@ -211,7 +211,7 @@ function taxonomy_term_view(Term $term, $view_mode = 'full', $langcode = NULL) {
  *   An array in the format expected by
  *   \Drupal\Core\Render\RendererInterface::render().
  *
- * @deprecated in Drupal 8.7.0 and will be removed before Drupal 9.0.0. Use
+ * @deprecated in drupal:8.7.0 and is removed from drupal:9.0.0. Use
  *   \Drupal::entityTypeManager()->getViewBuilder('taxonomy_term')->viewMultiple()
  *   instead.
  *
@@ -385,7 +385,7 @@ function taxonomy_term_load_multiple_by_name($name, $vocabulary = NULL) {
  *   An array of taxonomy term entities, indexed by tid. When no results are
  *   found, an empty array is returned.
  *
- * @deprecated in Drupal 8.0.0 and will be removed before Drupal 9.0.0. Use
+ * @deprecated in drupal:8.0.0 and is removed from drupal:9.0.0. Use
  *   \Drupal\taxonomy\Entity\Term::loadMultiple().
  *
  * @see https://www.drupal.org/node/2266845
@@ -408,7 +408,7 @@ function taxonomy_term_load_multiple(array $tids = NULL) {
  * @return array
  *   An array of vocabulary objects, indexed by vid.
  *
- * @deprecated in Drupal 8.0.0 and will be removed before Drupal 9.0.0. Use
+ * @deprecated in drupal:8.0.0 and is removed from drupal:9.0.0. Use
  *   \Drupal\taxonomy\Entity\Vocabulary::loadMultiple().
  *
  * @see https://www.drupal.org/node/2266845
@@ -428,7 +428,7 @@ function taxonomy_vocabulary_load_multiple(array $vids = NULL) {
  *   The taxonomy vocabulary entity, if exists, NULL otherwise. Results are
  *   statically cached.
  *
- * @deprecated in Drupal 8.0.0 and will be removed before Drupal 9.0.0. Use
+ * @deprecated in drupal:8.0.0 and is removed from drupal:9.0.0. Use
  *   \Drupal\taxonomy\Entity\Vocabulary::load().
  *
  * @see https://www.drupal.org/node/2266845
@@ -448,7 +448,7 @@ function taxonomy_vocabulary_load($vid) {
  *   A taxonomy term entity, or NULL if the term was not found. Results are
  *   statically cached.
  *
- * @deprecated in Drupal 8.0.0 and will be removed before Drupal 9.0.0. Use
+ * @deprecated in drupal:8.0.0 and is removed from drupal:9.0.0. Use
  *   Drupal\taxonomy\Entity\Term::load().
  *
  * @see https://www.drupal.org/node/2266845

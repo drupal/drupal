@@ -350,7 +350,7 @@ class LayoutBuilderEntityViewDisplay extends BaseEntityViewDisplay implements La
    * @return \Drupal\layout_builder\Section[]
    *   The sections.
    *
-   * @deprecated in Drupal 8.7.0 and will be removed before Drupal 9.0.0.
+   * @deprecated in drupal:8.7.0 and is removed from drupal:9.0.0.
    *   \Drupal\layout_builder\SectionStorage\SectionStorageManagerInterface::findByContext()
    *   should be used instead. See https://www.drupal.org/node/3022574.
    */

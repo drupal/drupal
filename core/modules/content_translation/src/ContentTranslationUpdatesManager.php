@@ -12,7 +12,7 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 /**
  * Provides the logic needed to update field storage definitions when needed.
  *
- * @deprecated in Drupal 8.7.x, to be removed before Drupal 9.0.0.
+ * @deprecated in drupal:8.7.0 and is removed from drupal:9.0.0.
  *   Definitions are updated automatically now so no replacement is needed.
  *
  * @see https://www.drupal.org/node/2973222

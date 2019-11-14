@@ -23,7 +23,7 @@ use Drupal\Core\Site\Settings;
 /**
  * Project is missing security update(s).
  *
- * @deprecated in Drupal 8.3.x and will be removed before Drupal 9.0.0.
+ * @deprecated in drupal:8.3.0 and is removed from drupal:9.0.0.
  *   Use \Drupal\update\UpdateManagerInterface::NOT_SECURE instead.
  *
  * @see https://www.drupal.org/node/2831620
@@ -33,7 +33,7 @@ const UPDATE_NOT_SECURE = 1;
 /**
  * Current release has been unpublished and is no longer available.
  *
- * @deprecated in Drupal 8.3.x and will be removed before Drupal 9.0.0.
+ * @deprecated in drupal:8.3.0 and is removed from drupal:9.0.0.
  *   Use \Drupal\update\UpdateManagerInterface::REVOKED instead.
  *
  * @see https://www.drupal.org/node/2831620
@@ -43,7 +43,7 @@ const UPDATE_REVOKED = 2;
 /**
  * Current release is no longer supported by the project maintainer.
  *
- * @deprecated in Drupal 8.3.x and will be removed before Drupal 9.0.0.
+ * @deprecated in drupal:8.3.0 and is removed from drupal:9.0.0.
  *   Use \Drupal\update\UpdateManagerInterface::NOT_SUPPORTED instead.
  *
  * @see https://www.drupal.org/node/2831620
@@ -53,7 +53,7 @@ const UPDATE_NOT_SUPPORTED = 3;
 /**
  * Project has a new release available, but it is not a security release.
  *
- * @deprecated in Drupal 8.3.x and will be removed before Drupal 9.0.0.
+ * @deprecated in drupal:8.3.0 and is removed from drupal:9.0.0.
  *   Use \Drupal\update\UpdateManagerInterface::NOT_CURRENT instead.
  *
  * @see https://www.drupal.org/node/2831620
@@ -63,7 +63,7 @@ const UPDATE_NOT_CURRENT = 4;
 /**
  * Project is up to date.
  *
- * @deprecated in Drupal 8.3.x and will be removed before Drupal 9.0.0.
+ * @deprecated in drupal:8.3.0 and is removed from drupal:9.0.0.
  *   Use \Drupal\update\UpdateManagerInterface::CURRENT instead.
  *
  * @see https://www.drupal.org/node/2831620
@@ -73,7 +73,7 @@ const UPDATE_CURRENT = 5;
 /**
  * Project's status cannot be checked.
  *
- * @deprecated in Drupal 8.3.x and will be removed before Drupal 9.0.0.
+ * @deprecated in drupal:8.3.0 and is removed from drupal:9.0.0.
  *   Use \Drupal\update\UpdateFetcherInterface::NOT_CHECKED instead.
  *
  * @see https://www.drupal.org/node/2831620
@@ -83,7 +83,7 @@ const UPDATE_NOT_CHECKED = -1;
 /**
  * No available update data was found for project.
  *
- * @deprecated in Drupal 8.3.x and will be removed before Drupal 9.0.0.
+ * @deprecated in drupal:8.3.0 and is removed from drupal:9.0.0.
  *   Use \Drupal\update\UpdateFetcherInterface::UNKNOWN instead.
  *
  * @see https://www.drupal.org/node/2831620
@@ -93,7 +93,7 @@ const UPDATE_UNKNOWN = -2;
 /**
  * There was a failure fetching available update data for this project.
  *
- * @deprecated in Drupal 8.3.x and will be removed before Drupal 9.0.0.
+ * @deprecated in drupal:8.3.0 and is removed from drupal:9.0.0.
  *   Use \Drupal\update\UpdateFetcherInterface::NOT_FETCHED instead.
  *
  * @see https://www.drupal.org/node/2831620
@@ -103,7 +103,7 @@ const UPDATE_NOT_FETCHED = -3;
 /**
  * We need to (re)fetch available update data for this project.
  *
- * @deprecated in Drupal 8.3.x and will be removed before Drupal 9.0.0.
+ * @deprecated in drupal:8.3.0 and is removed from drupal:9.0.0.
  *   Use \Drupal\update\UpdateFetcherInterface::FETCH_PENDING instead.
  *
  * @see https://www.drupal.org/node/2831620
@@ -425,7 +425,7 @@ function update_get_available($refresh = FALSE) {
  *
  * @internal
  *
- * @deprecated in Drupal 8.6.0 and will be removed before Drupal 9.0.0. Use the
+ * @deprecated in drupal:8.6.0 and is removed from drupal:9.0.0. Use the
  *   'Insecure' release type tag in update XML provided by Drupal.org to
  *   determine if releases are insecure.
  */

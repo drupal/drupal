@@ -295,7 +295,7 @@ class Node extends DrupalSqlBase {
   /**
    * Retrieves raw field data for a node.
    *
-   * @deprecated in Drupal 8.2.x, to be removed in Drupal 9.0.x. Use
+   * @deprecated in drupal:8.2.0 and is removed from drupal:9.0.0. Use
    *   getFieldData() instead.
    *
    * @param array $field

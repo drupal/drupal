@@ -9,7 +9,7 @@ use Drupal\views\Tests\ViewTestBase;
 /**
  * Provides a base class for testing the Views UI.
  *
- * @deprecated in Drupal 8.4.0 and will be removed before Drupal 9.0.x.
+ * @deprecated in drupal:8.4.0 and is removed from drupal:9.0.0.
  *   Use \Drupal\Tests\views_ui\Functional\UITestBase.
  *
  * @see https://www.drupal.org/node/2999939

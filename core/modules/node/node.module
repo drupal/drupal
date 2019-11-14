@@ -35,7 +35,7 @@ use Drupal\user\UserInterface;
 /**
  * Denotes that the node is not published.
  *
- * @deprecated Scheduled for removal in Drupal 9.0.x.
+ * @deprecated in drupal:8.?.? and is removed from drupal:9.0.0.
  *   Use \Drupal\node\NodeInterface::NOT_PUBLISHED instead.
  *
  * @see https://www.drupal.org/node/2316145
@@ -45,7 +45,7 @@ const NODE_NOT_PUBLISHED = 0;
 /**
  * Denotes that the node is published.
  *
- * @deprecated Scheduled for removal in Drupal 9.0.x.
+ * @deprecated in drupal:8.?.? and is removed from drupal:9.0.0.
  *   Use \Drupal\node\NodeInterface::PUBLISHED instead.
  *
  * @see https://www.drupal.org/node/2316145
@@ -55,7 +55,7 @@ const NODE_PUBLISHED = 1;
 /**
  * Denotes that the node is not promoted to the front page.
  *
- * @deprecated Scheduled for removal in Drupal 9.0.x.
+ * @deprecated in drupal:8.?.? and is removed from drupal:9.0.0.
  *   Use \Drupal\node\NodeInterface::NOT_PROMOTED instead.
  *
  * @see https://www.drupal.org/node/2316145
@@ -65,7 +65,7 @@ const NODE_NOT_PROMOTED = 0;
 /**
  * Denotes that the node is promoted to the front page.
  *
- * @deprecated Scheduled for removal in Drupal 9.0.x.
+ * @deprecated in drupal:8.?.? and is removed from drupal:9.0.0.
  *   Use \Drupal\node\NodeInterface::PROMOTED instead.
  *
  * @see https://www.drupal.org/node/2316145
@@ -75,7 +75,7 @@ const NODE_PROMOTED = 1;
 /**
  * Denotes that the node is not sticky at the top of the page.
  *
- * @deprecated Scheduled for removal in Drupal 9.0.x.
+ * @deprecated in drupal:8.?.? and is removed from drupal:9.0.0.
  *   Use \Drupal\node\NodeInterface::NOT_STICKY instead.
  *
  * @see https://www.drupal.org/node/2316145
@@ -85,7 +85,7 @@ const NODE_NOT_STICKY = 0;
 /**
  * Denotes that the node is sticky at the top of the page.
  *
- * @deprecated Scheduled for removal in Drupal 9.0.x.
+ * @deprecated in drupal:8.?.? and is removed from drupal:9.0.0.
  *   Use \Drupal\node\NodeInterface::STICKY instead.
  *
  * @see https://www.drupal.org/node/2316145
@@ -272,7 +272,7 @@ function node_mark($nid, $timestamp) {
  * @return \Drupal\node\NodeTypeInterface[]
  *   An array of node type entities, keyed by ID.
  *
- * @deprecated in Drupal 8.x, will be removed before Drupal 9.0.
+ * @deprecated in drupal:8.0.0 and is removed from drupal:9.0.0.
  *   Use \Drupal\node\Entity\NodeType::loadMultiple().
  *
  * @see \Drupal\node\Entity\NodeType::load()
@@ -334,7 +334,7 @@ function node_type_get_description(NodeTypeInterface $node_type) {
  * @return \Drupal\node\NodeTypeInterface
  *   A node type object or NULL if $name does not exist.
  *
- * @deprecated iin Drupal 8.0.0 and will be removed before Drupal 9.0.0. Use
+ * @deprecated in drupal:8.0.0 and is removed from drupal:9.0.0. Use
  *   \Drupal\node\Entity\NodeType::load().
  *
  * @see https://www.drupal.org/node/2266845
@@ -451,7 +451,7 @@ function node_type_update_nodes($old_id, $new_id) {
  * @return \Drupal\node\NodeInterface[]
  *   An array of node entities indexed by nid.
  *
- * @deprecated in Drupal 8.0.0 and will be removed before Drupal 9.0.0. Use
+ * @deprecated in drupal:8.0.0 and is removed from drupal:9.0.0. Use
  *   \Drupal\node\Entity\Node::loadMultiple().
  *
  * @see https://www.drupal.org/node/2266845
@@ -476,7 +476,7 @@ function node_load_multiple(array $nids = NULL, $reset = FALSE) {
  * @return \Drupal\node\NodeInterface|null
  *   A fully-populated node entity, or NULL if the node is not found.
  *
- * @deprecated in Drupal 8.0.0 and will be removed before Drupal 9.0.0. Use
+ * @deprecated in drupal:8.0.0 and is removed from drupal:9.0.0. Use
  *   \Drupal\node\Entity\Node::load().
  *
  * @see https://www.drupal.org/node/2266845
@@ -858,7 +858,7 @@ function node_get_recent($number = 10) {
  * @return array
  *   An array as expected by \Drupal\Core\Render\RendererInterface::render().
  *
- * @deprecated in Drupal 8.7.0 and will be removed before Drupal 9.0.0.
+ * @deprecated in drupal:8.7.0 and is removed from drupal:9.0.0.
  *   Use \Drupal::entityTypeManager()->getViewBuilder('node')->view() instead.
  *
  * @see https://www.drupal.org/node/3033656
@@ -885,7 +885,7 @@ function node_view(NodeInterface $node, $view_mode = 'full', $langcode = NULL) {
  *   An array in the format expected by
  *   \Drupal\Core\Render\RendererInterface::render().
  *
- * @deprecated in Drupal 8.7.0 and will be removed before Drupal 9.0.0. Use
+ * @deprecated in drupal:8.7.0 and is removed from drupal:9.0.0. Use
  *   \Drupal::entityTypeManager()->getViewBuilder('node')->viewMultiple()
  *   instead.
  *

@@ -18,7 +18,7 @@ use Drupal\views\ViewExecutable;
  *
  * @ViewsField("node_path")
  *
- * @deprecated in Drupal 8.5.x, will be removed before Drupal 9.0.0.
+ * @deprecated in drupal:8.5.0 and is removed from drupal:9.0.0.
  *  Use @ViewsField("entity_link") with 'output_url_as_text' set.
  */
 class Path extends FieldPluginBase {

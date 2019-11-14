@@ -10,7 +10,7 @@ use Drupal\Core\Entity\EntityInterface;
 /**
  * Clears the entity render cache for all entity types.
  *
- * @deprecated in Drupal 8.7.x and will be removed before Drupal 9.0.0. Instead,
+ * @deprecated in drupal:8.7.0 and is removed from drupal:9.0.0. Instead,
  *   use \Drupal\Core\Entity\EntityViewBuilderInterface::resetCache() on the
  *   required entity types or invalidate specific cache tags.
  *
@@ -38,7 +38,7 @@ function entity_render_cache_clear() {
  * @return array
  *   The bundle info for a specific entity type, or all entity types.
  *
- * @deprecated in Drupal 8.x-dev and will be removed before Drupal 9.0.0. Use
+ * @deprecated in drupal:8.0.0 and is removed from drupal:9.0.0. Use
  *   \Drupal\Core\Entity\EntityTypeBundleInfoInterface::getBundleInfo() for a
  *   single bundle, or
  *   \Drupal\Core\Entity\EntityTypeBundleInfoInterface::getAllBundleInfo() for
@@ -71,7 +71,7 @@ function entity_get_bundles($entity_type = NULL) {
  * @return \Drupal\Core\Entity\EntityInterface|null
  *   The entity object, or NULL if there is no entity with the given ID.
  *
- * @deprecated in Drupal 8.0.x, will be removed before Drupal 9.0.0. Use the
+ * @deprecated in drupal:8.0.0 and is removed from drupal:9.0.0. Use the
  *   entity type storage's load() method.
  *
  * @see https://www.drupal.org/node/2266845
@@ -97,7 +97,7 @@ function entity_load($entity_type, $id, $reset = FALSE) {
  *   The entity object, or NULL if there is no entity with the given revision
  *   id.
  *
- * @deprecated in Drupal 8.0.0 and will be removed before Drupal 9.0.0. Use the
+ * @deprecated in drupal:8.0.0 and is removed from drupal:9.0.0. Use the
  *   entity type storage's loadRevision() method.
  *
  * @see https://www.drupal.org/node/1818376
@@ -117,7 +117,7 @@ function entity_revision_load($entity_type, $revision_id) {
  * @param $revision_id
  *   The revision ID to delete.
  *
- * @deprecated in Drupal 8.0.0 and will be removed before Drupal 9.0.0. Use the
+ * @deprecated in drupal:8.0.0 and is removed from drupal:9.0.0. Use the
  *   entity type storage's deleteRevision() method.
  *
  * @see https://www.drupal.org/node/1818376
@@ -157,7 +157,7 @@ function entity_revision_delete($entity_type, $revision_id) {
  * @return array
  *   An array of entity objects indexed by their IDs.
  *
- * @deprecated in Drupal 8.0.0 and will be removed before Drupal 9.0.0. Use the
+ * @deprecated in drupal:8.0.0 and is removed from drupal:9.0.0. Use the
  *   entity type storage's loadMultiple() method.
  *
  * @see https://www.drupal.org/node/2266845
@@ -184,7 +184,7 @@ function entity_load_multiple($entity_type, array $ids = NULL, $reset = FALSE) {
  *   An array of entity objects indexed by their IDs. Returns an empty array if
  *   no matching entities are found.
  *
- * @deprecated in Drupal 8.0.0 and will be removed before Drupal 9.0.0. Use the
+ * @deprecated in drupal:8.0.0 and is removed from drupal:9.0.0. Use the
  *   entity type storage's loadByProperties() method.
  *
  * @see https://www.drupal.org/node/3050910
@@ -212,7 +212,7 @@ function entity_load_multiple_by_properties($entity_type, array $values) {
  * @return \Drupal\Core\Entity\EntityInterface|null
  *   The unchanged entity, or FALSE if the entity cannot be loaded.
  *
- * @deprecated in Drupal 8.0.0 and will be removed before Drupal 9.0.0. Use the
+ * @deprecated in drupal:8.0.0 and is removed from drupal:9.0.0. Use the
  *   entity type storage's loadUnchanged() method.
  *
  * @see https://www.drupal.org/node/1935744
@@ -232,7 +232,7 @@ function entity_load_unchanged($entity_type, $id) {
  * @param array $ids
  *   An array of entity IDs of the entities to delete.
  *
- * @deprecated as of Drupal 8.0.x, will be removed before Drupal 9.0.0. Use
+ * @deprecated in drupal:8.0.0 and is removed from drupal:9.0.0. Use
  *   the entity storage's delete() method to delete multiple entities:
  *   @code
  *     $storage_handler = \Drupal::entityTypeManager()->getStorage($entity_type);
@@ -264,7 +264,7 @@ function entity_delete_multiple($entity_type, array $ids) {
  * @return \Drupal\Core\Entity\EntityInterface
  *   A new entity object.
  *
- * @deprecated in Drupal 8.0.x, will be removed before Drupal 9.0.0. Use
+ * @deprecated in drupal:8.0.0 and is removed from drupal:9.0.0. Use
  *   The method overriding Entity::create() for the entity type, e.g.
  *   \Drupal\node\Entity\Node::create() if the entity type is known. If the
  *   entity type is variable, use the entity storage's create() method to
@@ -297,7 +297,7 @@ function entity_create($entity_type, array $values = []) {
  * @return string|null
  *   The label of the entity, or NULL if there is no label defined.
  *
- * @deprecated in Drupal 8.0.0 and will be removed before Drupal 9.0.0. Use the
+ * @deprecated in drupal:8.0.0 and is removed from drupal:9.0.0. Use the
  *   entity's label() method.
  *
  * @see https://www.drupal.org/node/2549923
@@ -325,7 +325,7 @@ function entity_page_label(EntityInterface $entity, $langcode = NULL) {
  * @return array
  *   A render array for the entity.
  *
- * @deprecated as of Drupal 8.0.x, will be removed before Drupal 9.0.0.
+ * @deprecated in drupal:8.0.0 and is removed from drupal:9.0.0.
  *   Use the entity view builder's view() method for creating a render array:
  *   @code
  *     $view_builder = \Drupal::entityTypeManager()
@@ -364,7 +364,7 @@ function entity_view(EntityInterface $entity, $view_mode, $langcode = NULL, $res
  *   A render array for the entities, indexed by the same keys as the
  *   entities array passed in $entities.
  *
- * @deprecated as of Drupal 8.0.x, will be removed before Drupal 9.0.0.
+ * @deprecated in drupal:8.0.0 and is removed from drupal:9.0.0.
  *   Use the entity view builder's viewMultiple() method for creating a render
  *   array for the provided entities:
  *   @code
@@ -425,7 +425,7 @@ function entity_view_multiple(array $entities, $view_mode, $langcode = NULL, $re
  * @return \Drupal\Core\Entity\Display\EntityViewDisplayInterface
  *   The entity view display associated with the view mode.
  *
- * @deprecated in drupal:8.8.0 and will be removed from drupal:9.0.0. Use
+ * @deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. Use
  *   EntityDisplayRepositoryInterface::getViewDisplay() instead.
  *
  * @see https://www.drupal.org/node/2835616
@@ -471,7 +471,7 @@ function entity_get_display($entity_type, $bundle, $view_mode) {
  * @return \Drupal\Core\Entity\Display\EntityFormDisplayInterface
  *   The entity form display associated with the given form mode.
  *
- * @deprecated in drupal:8.8.0 and will be removed from drupal:9.0.0. Use
+ * @deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. Use
  *   EntityDisplayRepositoryInterface::getFormDisplay() instead.
  *
  * @see https://www.drupal.org/node/2835616

@@ -322,7 +322,7 @@ class Migration extends PluginBase implements MigrationInterface, RequirementsIn
    * @return mixed
    *   The value for that property, or NULL if the property does not exist.
    *
-   * @deprecated in Drupal 8.1.x, will be removed before Drupal 9.0.x. Use
+   * @deprecated in drupal:8.1.0 and is removed from drupal:9.0.0. Use
    *   more specific getters instead.
    *
    * @see https://www.drupal.org/node/2873795

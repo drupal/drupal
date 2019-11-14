@@ -9,7 +9,7 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 /**
  * Alternate action plugin that can opt-out of modifying moderated entities.
  *
- * @deprecated in Drupal 8.5.x, to be removed before Drupal 9.0.0.
+ * @deprecated in drupal:8.5.0 and is removed from drupal:9.0.0.
  *   Use \Drupal\content_moderation\Plugin\Action\ModerationOptOutUnpublish
  *   instead.
  *

@@ -29,7 +29,7 @@ use Drupal\user\UserInterface;
  *
  * Keep this under 191 characters so we can use a unique constraint in MySQL.
  *
- * @deprecated in Drupal 8.3.x and will be removed before Drupal 9.0.0.
+ * @deprecated in drupal:8.3.0 and is removed from drupal:9.0.0.
  *   Use \Drupal\user\UserInterface::USERNAME_MAX_LENGTH instead.
  *
  * @see https://www.drupal.org/node/2831620
@@ -39,7 +39,7 @@ const USERNAME_MAX_LENGTH = 60;
 /**
  * Only administrators can create user accounts.
  *
- * @deprecated in Drupal 8.3.x and will be removed before Drupal 9.0.0.
+ * @deprecated in drupal:8.3.0 and is removed from drupal:9.0.0.
  *   Use \Drupal\user\UserInterface::REGISTER_ADMINISTRATORS_ONLY instead.
  *
  * @see https://www.drupal.org/node/2831620
@@ -49,7 +49,7 @@ const USER_REGISTER_ADMINISTRATORS_ONLY = 'admin_only';
 /**
  * Visitors can create their own accounts.
  *
- * @deprecated in Drupal 8.3.x and will be removed before Drupal 9.0.0.
+ * @deprecated in drupal:8.3.0 and is removed from drupal:9.0.0.
  *   Use \Drupal\user\UserInterface::REGISTER_VISITORS instead.
  *
  * @see https://www.drupal.org/node/2831620
@@ -60,7 +60,7 @@ const USER_REGISTER_VISITORS = 'visitors';
  * Visitors can create accounts, but they don't become active without
  * administrative approval.
  *
- * @deprecated in Drupal 8.3.x and will be removed before Drupal 9.0.0.
+ * @deprecated in drupal:8.3.0 and is removed from drupal:9.0.0.
  *   Use \Drupal\user\UserInterface::REGISTER_VISITORS_ADMINISTRATIVE_APPROVAL
  *   instead.
  *
@@ -200,7 +200,7 @@ function user_entity_extra_field_info() {
  * @return array
  *   An array of user objects, indexed by uid.
  *
- * @deprecated in Drupal 8.0.0 and will be removed before Drupal 9.0.0. Use
+ * @deprecated in drupal:8.0.0 and is removed from drupal:9.0.0. Use
  *   \Drupal\user\Entity\User::loadMultiple().
  *
  * @see https://www.drupal.org/node/2266845
@@ -226,7 +226,7 @@ function user_load_multiple(array $uids = NULL, $reset = FALSE) {
  *   A fully-loaded user object upon successful user load, or NULL if the user
  *   cannot be loaded.
  *
- * @deprecated iin Drupal 8.0.0 and will be removed before Drupal 9.0.0. Use
+ * @deprecated in drupal:8.0.0 and is removed from drupal:9.0.0. Use
  *   Drupal\user\Entity\User::load().
  *
  * @see https://www.drupal.org/node/2266845
@@ -866,7 +866,7 @@ function user_cancel_methods() {
  * @param int $uid
  *   A user ID.
  *
- * @deprecated in drupal:8.8.0 and will be removed from drupal:9.0.0. Use the user
+ * @deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. Use the user
  *   entity's delete method to delete the user.
  * @code
  *   Drupal::entityTypeManager->getStorage('user')->load($uid)->delete();
@@ -885,7 +885,7 @@ function user_delete($uid) {
  * @param int[] $uids
  *   An array of user IDs.
  *
- * @deprecated in drupal:8.8.0 and will be removed from drupal:9.0.0. Use the
+ * @deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. Use the
  *   entity storage system to delete the users.
  * @code
  *   $storage_handler = \Drupal::entityTypeManager()->getStorage('user');
@@ -924,7 +924,7 @@ function user_delete_multiple(array $uids) {
  * @return array
  *   An array as expected by \Drupal\Core\Render\RendererInterface::render().
  *
- * @deprecated in Drupal 8.7.0 and will be removed before Drupal 9.0.0. Use
+ * @deprecated in drupal:8.7.0 and is removed from drupal:9.0.0. Use
  *   \Drupal::entityTypeManager()->getViewBuilder('user')->view() instead.
  *
  * @see https://www.drupal.org/node/3033656
@@ -951,7 +951,7 @@ function user_view($account, $view_mode = 'full', $langcode = NULL) {
  *   An array in the format expected by
  *   \Drupal\Core\Render\RendererInterface::render().
  *
- * @deprecated in Drupal 8.7.0 and will be removed before Drupal 9.0.0. Use
+ * @deprecated in drupal:8.7.0 and is removed from drupal:9.0.0. Use
  *   \Drupal::entityTypeManager()->getViewBuilder('user')->viewMultiple()
  *   instead.
  *
@@ -1133,7 +1133,7 @@ function user_roles($membersonly = FALSE, $permission = NULL) {
  *   A fully-loaded role object if a role with the given ID exists, or NULL
  *   otherwise.
  *
- * @deprecated in Drupal 8.x, will be removed before Drupal 9.0.
+ * @deprecated in drupal:8.0.0 and is removed from drupal:9.0.0.
  *   Use \Drupal\user\Entity\Role::load().
  */
 function user_role_load($rid) {

@@ -3,7 +3,7 @@
 namespace Drupal\Tests\migrate\Kernel;
 
 /**
- * @deprecated in Drupal 8.7.x, will be removed before Drupal 9.0.0. Use
+ * @deprecated in drupal:8.7.0 and is removed from drupal:9.0.0. Use
  *   \Drupal\Tests\migrate_drupal\Kernel\d7\MigrateDrupal7TestBase::migrateFields()
  *   instead.
  */

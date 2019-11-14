@@ -11,7 +11,7 @@ namespace Drupal\system\Tests\Database;
  * rather than just a stdClass or array. This class is for testing that
  * functionality. (See testQueryFetchClass() below)
  *
- * @deprecated in Drupal 8.4.0 and will be removed before Drupal 9.0.0. Instead
+ * @deprecated in drupal:8.4.0 and is removed from drupal:9.0.0. Instead
  *   use \Drupal\Tests\system\Functional\Database\FakeRecord.
  */
 class FakeRecord {}

@@ -7,7 +7,7 @@ namespace Drupal\migrate_drupal\Annotation;
 /**
  * Deprecated: Defines a cckfield plugin annotation object.
  *
- * @deprecated in Drupal 8.3.x, to be removed before Drupal 9.0.x. Use
+ * @deprecated in drupal:8.3.0 and is removed from drupal:9.0.0. Use
  * \Drupal\migrate_drupal\Annotation\MigrateField instead.
  *
  * Plugin Namespace: Plugin\migrate\cckfield

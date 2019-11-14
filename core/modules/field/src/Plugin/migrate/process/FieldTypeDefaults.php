@@ -13,7 +13,7 @@ use Drupal\field\Plugin\migrate\process\d6\FieldTypeDefaults as D6FieldTypeDefau
  *   id = "field_type_defaults"
  * )
  *
- * @deprecated in Drupal 8.6.x and will be removed before Drupal 9.0.x.
+ * @deprecated in drupal:8.6.0 and is removed from drupal:9.0.0.
  * Use d6_field_type_defaults or d7_field_type_defaults instead.
  *
  * @see https://www.drupal.org/node/2944589

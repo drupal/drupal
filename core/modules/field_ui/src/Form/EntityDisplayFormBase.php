@@ -737,7 +737,7 @@ abstract class EntityDisplayFormBase extends EntityForm {
    * @see \Drupal\Core\Render\RendererInterface::render()
    * @see \Drupal\Core\Render\Element\Table::preRenderTable()
    *
-   * @deprecated in Drupal 8.0.0, will be removed before Drupal 9.0.0.
+   * @deprecated in drupal:8.0.0 and is removed from drupal:9.0.0.
    */
   public function tablePreRender($elements) {
     return FieldUiTable::tablePreRender($elements);
@@ -749,7 +749,7 @@ abstract class EntityDisplayFormBase extends EntityForm {
    * Callback for array_reduce() within
    * \Drupal\field_ui\Form\EntityDisplayFormBase::tablePreRender().
    *
-   * @deprecated in Drupal 8.0.0, will be removed before Drupal 9.0.0.
+   * @deprecated in drupal:8.0.0 and is removed from drupal:9.0.0.
    */
   public function reduceOrder($array, $a) {
     return FieldUiTable::reduceOrder($array, $a);

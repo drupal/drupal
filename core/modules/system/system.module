@@ -35,7 +35,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 /**
  * New users will be set to the default time zone at registration.
  *
- * @deprecated in Drupal 8.3.x and will be removed before Drupal 9.0.0.
+ * @deprecated in drupal:8.3.0 and is removed from drupal:9.0.0.
  *   Use \Drupal\user\UserInterface::TIMEZONE_DEFAULT instead.
  *
  * @see https://www.drupal.org/node/2831620
@@ -45,7 +45,7 @@ const DRUPAL_USER_TIMEZONE_DEFAULT = 0;
 /**
  * New users will get an empty time zone at registration.
  *
- * @deprecated in Drupal 8.3.x and will be removed before Drupal 9.0.0.
+ * @deprecated in drupal:8.3.0 and is removed from drupal:9.0.0.
  *   Use \Drupal\user\UserInterface::TIMEZONE_EMPTY instead.
  *
  * @see https://www.drupal.org/node/2831620
@@ -55,7 +55,7 @@ const DRUPAL_USER_TIMEZONE_EMPTY = 1;
 /**
  * New users will select their own timezone at registration.
  *
- * @deprecated in Drupal 8.3.x and will be removed before Drupal 9.0.0.
+ * @deprecated in drupal:8.3.0 and is removed from drupal:9.0.0.
  *   Use \Drupal\user\UserInterface::TIMEZONE_SELECT instead.
  *
  * @see https://www.drupal.org/node/2831620
@@ -80,7 +80,7 @@ const DRUPAL_REQUIRED = 2;
 /**
  * Return only visible regions.
  *
- * @deprecated in Drupal 8.3.x and will be removed before Drupal 9.0.0.
+ * @deprecated in drupal:8.3.0 and is removed from drupal:9.0.0.
  *   Use \Drupal\block\BlockRepositoryInterface::REGIONS_VISIBLE instead.
  *
  * @see system_region_list()
@@ -91,7 +91,7 @@ const REGIONS_VISIBLE = 'visible';
 /**
  * Return all regions.
  *
- * @deprecated in Drupal 8.3.x and will be removed before Drupal 9.0.0.
+ * @deprecated in drupal:8.3.0 and is removed from drupal:9.0.0.
  *   Use \Drupal\block\BlockRepositoryInterface::REGIONS_ALL instead.
  *
  * @see system_region_list()
@@ -1012,7 +1012,7 @@ function system_get_info($type, $name = NULL) {
  * @param \Drupal\Core\Extension\Extension[] $modules
  *   The array of all module info.
  *
- * @deprecated in Drupal 8.5.0 and will be removed before Drupal 9.0.0. This
+ * @deprecated in drupal:8.5.0 and is removed from drupal:9.0.0. This
  *   function is no longer used in Drupal core.
  *
  * @see https://www.drupal.org/node/2709919
@@ -1038,7 +1038,7 @@ function _system_rebuild_module_data_ensure_required($module, &$modules) {
  * @return \Drupal\Core\Extension\Extension[]
  *   An associative array of module information.
  *
- * @deprecated in Drupal 8.5.0 and will be removed before Drupal 9.0.0.
+ * @deprecated in drupal:8.5.0 and is removed from drupal:9.0.0.
  *   Use \Drupal::service('extension.list.module')->reset()->getList()
  *   instead. Note: You probably don't need the reset() method.
  *
@@ -1055,7 +1055,7 @@ function _system_rebuild_module_data() {
  * @return \Drupal\Core\Extension\Extension[]
  *   Array of all available modules and their data.
  *
- * @deprecated in Drupal 8.8.0 and will be removed before Drupal 9.0.0.
+ * @deprecated in drupal:8.8.0 and is removed from drupal:9.0.0.
  *   Use \Drupal::service('extension.list.module')->getList() instead.
  *   Note: use reset() only when you really need to rescan and rebuild the list.
  *

@@ -10,7 +10,7 @@ use Drupal\Core\Url;
  *
  * Can be used by test classes that extend \Drupal\simpletest\WebTestBase.
  *
- * @deprecated Scheduled for removal in Drupal 9.0.0. Use
+ * @deprecated in drupal:8.?.? and is removed from drupal:9.0.0. Use
  *  \Drupal\Tests\system\Functional\Cache\AssertPageCacheContextsAndTagsTrait
  *  instead.
  *

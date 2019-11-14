@@ -30,7 +30,7 @@ interface VocabularyInterface extends ConfigEntityInterface {
    * @return int
    *   The vocabulary hierarchy.
    *
-   * @deprecated in Drupal 8.7.x and will be removed before Drupal 9.0.x. Use
+   * @deprecated in drupal:8.7.0 and is removed from drupal:9.0.0. Use
    *   \Drupal\taxonomy\TermStorage::getVocabularyHierarchyType() instead.
    */
   public function getHierarchy();
@@ -47,7 +47,7 @@ interface VocabularyInterface extends ConfigEntityInterface {
    *
    * @return $this
    *
-   * @deprecated in Drupal 8.7.x and will be removed before Drupal 9.0.x. Reset
+   * @deprecated in drupal:8.7.0 and is removed from drupal:9.0.0. Reset
    *   the cache of the taxonomy_term storage handler instead.
    */
   public function setHierarchy($hierarchy);

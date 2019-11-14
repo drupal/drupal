@@ -7,7 +7,7 @@ namespace Drupal\migrate\Plugin\migrate\process;
 /**
  * Iterates and processes an associative array.
  *
- * @deprecated in Drupal 8.4.x and will be removed in Drupal 9.0.x. Use
+ * @deprecated in drupal:8.4.0 and is removed from drupal:9.0.0. Use
  *   \Drupal\migrate\Plugin\migrate\process\SubProcess instead.
  *
  * @see https://www.drupal.org/node/2880427

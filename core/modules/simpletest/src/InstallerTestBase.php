@@ -17,7 +17,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
 /**
  * Base class for testing the interactive installer.
  *
- * @deprecated in Drupal 8.6.0 and will be removed before Drupal 9.0.0.
+ * @deprecated in drupal:8.6.0 and is removed from drupal:9.0.0.
  * Use \Drupal\FunctionalTests\Installer\InstallerTestBase. See
  * https://www.drupal.org/node/2988752
  */

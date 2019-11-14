@@ -13,7 +13,7 @@ use Drupal\migrate\Plugin\migrate\source\DummyQueryTrait;
  *   source_module = "comment"
  * )
  *
- * @deprecated in Drupal 8.4.x, to be removed before Drupal 9.0.x. Use
+ * @deprecated in drupal:8.4.0 and is removed from drupal:9.0.0. Use
  * \Drupal\node\Plugin\migrate\source\d6\NodeType instead.
  */
 class CommentVariable extends DrupalSqlBase {

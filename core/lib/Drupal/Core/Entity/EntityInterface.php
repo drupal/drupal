@@ -107,7 +107,7 @@ interface EntityInterface extends AccessibleInterface, CacheableDependencyInterf
    * @return \Drupal\Core\Url
    *   The URL object.
    *
-   * @deprecated in Drupal 8.0.0, intended to be removed in Drupal 9.0.0
+   * @deprecated in drupal:8.0.0 and is removed from drupal:9.0.0.
    *   Use \Drupal\Core\Entity\EntityInterface::toUrl() instead.
    *
    * @see https://www.drupal.org/node/2614344
@@ -165,7 +165,7 @@ interface EntityInterface extends AccessibleInterface, CacheableDependencyInterf
    * @return string
    *   The URL for this entity.
    *
-   * @deprecated in Drupal 8.0.0, intended to be removed in Drupal 9.0.0
+   * @deprecated in drupal:8.0.0 and is removed from drupal:9.0.0.
    *   Please use toUrl() instead.
    *
    * @see https://www.drupal.org/node/2614344
@@ -188,7 +188,7 @@ interface EntityInterface extends AccessibleInterface, CacheableDependencyInterf
    * @return string
    *   An HTML string containing a link to the entity.
    *
-   * @deprecated in Drupal 8.0.0, intended to be removed in Drupal 9.0.0
+   * @deprecated in drupal:8.0.0 and is removed from drupal:9.0.0.
    *   Use \Drupal\Core\EntityInterface::toLink()->toString() instead.
    *
    * @see https://www.drupal.org/node/2614344

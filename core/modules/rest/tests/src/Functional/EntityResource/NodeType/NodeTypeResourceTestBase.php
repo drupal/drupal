@@ -7,7 +7,7 @@ namespace Drupal\Tests\rest\Functional\EntityResource\NodeType;
 use Drupal\Tests\node\Functional\Rest\NodeTypeResourceTestBase as NodeTypeResourceTestBaseReal;
 
 /**
- * @deprecated in Drupal 8.6.x. Will be removed before Drupal 9.0.0. Use
+ * @deprecated in drupal:8.6.0 and is removed from drupal:9.0.0. Use
  *   Drupal\Tests\node\Functional\Rest\NodeTypeResourceTestBase instead.
  *
  * @see https://www.drupal.org/node/2971931

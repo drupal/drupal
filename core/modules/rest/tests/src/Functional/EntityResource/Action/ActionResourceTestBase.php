@@ -7,7 +7,7 @@ namespace Drupal\Tests\rest\Functional\EntityResource\Action;
 use Drupal\Tests\system\Functional\Rest\ActionResourceTestBase as ActionResourceTestBaseReal;
 
 /**
- * @deprecated in Drupal 8.6.x. Will be removed before Drupal 9.0.0. Use
+ * @deprecated in drupal:8.6.0 and is removed from drupal:9.0.0. Use
  *   Drupal\Tests\system\Functional\Rest\ActionResourceTestBase instead.
  *
  * @see https://www.drupal.org/node/2971931

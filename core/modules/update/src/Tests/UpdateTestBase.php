@@ -26,7 +26,7 @@ use Drupal\simpletest\WebTestBase;
  * assertions that the report matches our expectations given the specific
  * initial state and availability scenario.
  *
- * @deprecated Scheduled for removal in Drupal 9.0.0.
+ * @deprecated in drupal:8.?.? and is removed from drupal:9.0.0.
  *   Use \Drupal\Tests\update\Functional\UpdateTestBase instead.
  */
 abstract class UpdateTestBase extends WebTestBase {

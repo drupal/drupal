@@ -126,7 +126,7 @@ const JS_THEME = 100;
 /**
  * The delimiter used to split plural strings.
  *
- * @deprecated in Drupal 8.0.x-dev, will be removed before Drupal 9.0.0.
+ * @deprecated in drupal:8.0.0 and is removed from drupal:9.0.0.
  *   Use Drupal\Component\Gettext\PoItem::DELIMITER instead.
  */
 const LOCALE_PLURAL_DELIMITER = PoItem::DELIMITER;
@@ -149,7 +149,7 @@ const LOCALE_PLURAL_DELIMITER = PoItem::DELIMITER;
  *
  * @ingroup form_api
  *
- * @deprecated in Drupal 8.0.x-dev, will be removed before Drupal 9.0.0.
+ * @deprecated in drupal:8.0.0 and is removed from drupal:9.0.0.
  *   Use the redirect.destination service.
  *
  * @see \Drupal\Core\EventSubscriber\RedirectResponseSubscriber::checkRedirectUrl()
@@ -174,7 +174,7 @@ function drupal_get_destination() {
  * @return bool
  *   TRUE if the address is in a valid format.
  *
- * @deprecated in Drupal 8.0.x-dev, will be removed before Drupal 9.0.0.
+ * @deprecated in drupal:8.0.0 and is removed from drupal:9.0.0.
  *   Use \Drupal::service('email.validator')->isValid().
  *
  * @see https://www.drupal.org/node/2912661
@@ -211,7 +211,7 @@ function valid_email_address($mail) {
  *   Drupal\Core\Template\Attribute, call
  *   \Drupal\Component\Utility\UrlHelper::stripDangerousProtocols() instead.
  *
- * @deprecated in Drupal 8.0.0 and will be removed before Drupal 9.0.0.
+ * @deprecated in drupal:8.0.0 and is removed from drupal:9.0.0.
  *   Use UrlHelper::stripDangerousProtocols() or UrlHelper::filterBadProtocol()
  *   instead. UrlHelper::stripDangerousProtocols() can be used in conjunction
  *   with \Drupal\Component\Render\FormattableMarkup and an @variable
@@ -323,7 +323,7 @@ function format_size($size, $langcode = NULL) {
  * @return
  *   A translated date string in the requested format.
  *
- * @deprecated in Drupal 8.0.0, will be removed before Drupal 9.0.0.
+ * @deprecated in drupal:8.0.0 and is removed from drupal:9.0.0.
  *   Use \Drupal::service('date.formatter')->format().
  *
  * @see \Drupal\Core\Datetime\DateFormatter::format()
@@ -343,7 +343,7 @@ function format_date($timestamp, $type = 'medium', $format = '', $timezone = NUL
  * @return string
  *   An ISO8601 formatted date.
  *
- * @deprecated in Drupal 8.7.0 and will be removed before Drupal 9.0.0. Use
+ * @deprecated in drupal:8.7.0 and is removed from drupal:9.0.0. Use
  *   date('c', $date) instead.
  *
  * @see https://www.drupal.org/node/2999991
@@ -369,7 +369,7 @@ function date_iso8601($date) {
  *   A ; separated string ready for insertion in a HTTP header. No escaping is
  *   performed for HTML entities, so this string is not safe to be printed.
  *
- * @deprecated in Drupal 8.7.0 and will be removed before Drupal 9.0.0. Use
+ * @deprecated in drupal:8.7.0 and is removed from drupal:9.0.0. Use
  *   \Drupal\Core\Render\HtmlResponseAttachmentsProcessor::formatHttpHeaderAttributes()
  *   instead.
  *
@@ -408,7 +408,7 @@ function drupal_http_header_attributes(array $attributes = []) {
  *
  * @ingroup php_wrappers
  *
- * @deprecated in Drupal 8.7.0 and will be removed before Drupal 9.0.0. Use
+ * @deprecated in drupal:8.7.0 and is removed from drupal:9.0.0. Use
  *   \Drupal\Component\Utility\Environment::setTimeLimit() instead.
  *
  * @see https://www.drupal.org/node/3000058
@@ -435,7 +435,7 @@ function base_path() {
 /**
  * Deletes old cached CSS files.
  *
- * @deprecated in Drupal 8.x, will be removed before Drupal 9.0.
+ * @deprecated in drupal:8.0.0 and is removed from drupal:9.0.0.
  *   Use \Drupal\Core\Asset\AssetCollectionOptimizerInterface::deleteAll().
  *
  * @see https://www.drupal.org/node/2317841
@@ -753,7 +753,7 @@ function drupal_attach_tabledrag(&$element, array $options) {
 /**
  * Deletes old cached JavaScript files and variables.
  *
- * @deprecated in Drupal 8.x, will be removed before Drupal 9.0.
+ * @deprecated in drupal:8.0.0 and is removed from drupal:9.0.0.
  *   Use \Drupal\Core\Asset\AssetCollectionOptimizerInterface::deleteAll().
  *
  * @see https://www.drupal.org/node/2317841
@@ -765,7 +765,7 @@ function drupal_clear_js_cache() {
 /**
  * Pre-render callback: Renders a link into #markup.
  *
- * @deprecated in Drupal 8.x, will be removed before Drupal 9.0.
+ * @deprecated in drupal:8.0.0 and is removed from drupal:9.0.0.
  *   Use \Drupal\Core\Render\Element\Link::preRenderLink().
  */
 function drupal_pre_render_link($element) {
@@ -775,7 +775,7 @@ function drupal_pre_render_link($element) {
 /**
  * Pre-render callback: Collects child links into a single array.
  *
- * @deprecated in drupal:8.0.0 and will be removed before drupal:9.0.0. Use
+ * @deprecated in drupal:8.0.0 and is removed from drupal:9.0.0. Use
  *   \Drupal\Core\Render\Element\Link::preRenderLinks() instead.
  *
  * @see https://www.drupal.org/node/2966725
@@ -788,7 +788,7 @@ function drupal_pre_render_links($element) {
 /**
  * Renders final HTML given a structured array tree.
  *
- * @deprecated as of drupal:8.0.0 and is removed from drupal:9.0.0. Use
+ * @deprecated in drupal:8.0.0 and is removed from drupal:9.0.0. Use
  *   \Drupal\Core\Render\RendererInterface::renderRoot() instead.
  *
  * @see \Drupal\Core\Render\RendererInterface::renderRoot()
@@ -802,7 +802,7 @@ function drupal_render_root(&$elements) {
 /**
  * Renders HTML given a structured array tree.
  *
- * @deprecated as of Drupal 8.0.x, will be removed before Drupal 9.0.0. Use the
+ * @deprecated in drupal:8.0.0 and is removed from drupal:9.0.0. Use the
  *   'renderer' service instead.
  *
  * @see \Drupal\Core\Render\RendererInterface::render()
@@ -825,7 +825,7 @@ function drupal_render(&$elements, $is_recursive_call = FALSE) {
  * @return string|\Drupal\Component\Render\MarkupInterface
  *   The rendered HTML of all children of the element.
  *
- * @deprecated in Drupal 8.0.x and will be removed before 9.0.0. Avoid early
+ * @deprecated in drupal:8.0.0 and is removed from drupal:9.0.0. Avoid early
  *   rendering when possible or loop through the elements and render them as
  *   they are available.
  *
@@ -942,7 +942,7 @@ function show(&$element) {
  * @param $type
  *   An element type as defined by an element plugin.
  *
- * @deprecated in Drupal 8.0.0, will be removed before Drupal 9.0.0.
+ * @deprecated in drupal:8.0.0 and is removed from drupal:9.0.0.
  *   Use \Drupal::service('element_info')->getInfo() instead.
  *
  * @see https://www.drupal.org/node/2235461
@@ -962,7 +962,7 @@ function element_info($type) {
  *   (Optional) The value to return if the element type does not specify a
  *   value for the property. Defaults to NULL.
  *
- * @deprecated in Drupal 8.0.0, will be removed before Drupal 9.0.0.
+ * @deprecated in drupal:8.0.0 and is removed from drupal:9.0.0.
  *   Use \Drupal::service('element_info')->getInfoProperty() instead.
  *
  * @see https://www.drupal.org/node/2235461
@@ -1143,7 +1143,7 @@ function debug($data, $label = NULL, $print_r = TRUE) {
  *   NULL if compatible, otherwise the original dependency version string that
  *   caused the incompatibility.
  *
- * @deprecated in Drupal 8.7.0 and will be removed before Drupal 9.0.0. Use
+ * @deprecated in drupal:8.7.0 and is removed from drupal:9.0.0. Use
  *   \Drupal\Core\Extension\Dependency::isCompatible() instead.
  *
  * @see https://www.drupal.org/node/2756875
@@ -1166,7 +1166,7 @@ function drupal_check_incompatibility($v, $current_version) {
  *   A space-separated string of extensions suitable for use by the file
  *   validation system.
  *
- * @deprecated in Drupal 8.8.0 and will be removed before Drupal 9.0.0. Use
+ * @deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. Use
  *   \Drupal\Core\Archiver\ArchiverManager::getExtensions() instead.
  *
  * @see https://www.drupal.org/node/2999951
@@ -1191,7 +1191,7 @@ function archiver_get_extensions() {
  * @throws \Exception
  *   If a remote stream wrapper path was passed.
  *
- * @deprecated in Drupal 8.8.0 and will be removed before Drupal 9.0.0. Instead,
+ * @deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. Instead,
  *   get plugin.manager.archiver service from container and call getInstance()
  *   method on it. For example $archiver->getInstance(['filepath' => $file]);
  *

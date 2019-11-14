@@ -9,7 +9,7 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 /**
  * Provides an action that can save any entity.
  *
- * @deprecated in Drupal 8.5.x, to be removed before Drupal 9.0.0.
+ * @deprecated in drupal:8.5.0 and is removed from drupal:9.0.0.
  *   Use \Drupal\Core\Action\Plugin\Action\SaveAction instead.
  *
  * @see \Drupal\Core\Action\Plugin\Action\SaveAction

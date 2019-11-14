@@ -71,7 +71,7 @@ trait FieldAPIHandlerTrait {
    * @return \Drupal\Core\Entity\EntityManagerInterface
    *   The entity manager service.
    *
-   * @deprecated in drupal:8.8.0 and is removed in drupal:9.0.0. Use
+   * @deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. Use
    *   \Drupal\views\FieldAPIHandlerTrait::getEntityFieldManager() instead.
    *
    * @see https://www.drupal.org/node/2549139

@@ -7,7 +7,7 @@ namespace Drupal\Core\Entity;
 /**
  * Defines a base entity class.
  *
- * @deprecated in Drupal 8.7.0 and will be removed in Drupal 9.0.0. Use
+ * @deprecated in drupal:8.7.0 and is removed from drupal:9.0.0. Use
  *   \Drupal\Core\Entity\EntityBase instead.
  *
  * @see https://www.drupal.org/node/3021808

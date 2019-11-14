@@ -14,7 +14,7 @@ use Drupal\Core\Utility\TableSort;
 /**
  * Initializes the table sort context.
  *
- * @deprecated as of Drupal 8.7.x and will be removed before Drupal 9.0.0. Use
+ * @deprecated in drupal:8.7.0 and is removed from drupal:9.0.0. Use
  *   \Drupal\Core\Utility\TableSort::getContextFromRequest() instead.
  *
  * @see \Drupal\Core\Utility\TableSortInterface::getContextFromRequest()
@@ -40,7 +40,7 @@ function tablesort_init($header) {
  * @param array $ts
  *   The current table sort context as returned from tablesort_init().
  *
- * @deprecated as of Drupal 8.7.x and will be removed before Drupal 9.0.0. Use
+ * @deprecated in drupal:8.7.0 and is removed from drupal:9.0.0. Use
  *   \Drupal\Core\Utility\TableSort::header() instead.
  *
  * @see \Drupal\Core\Utility\TableSortInterface::header()
@@ -58,7 +58,7 @@ function tablesort_header(&$cell_content, array &$cell_attributes, array $header
  *   A URL query parameter array that consists of all components of the current
  *   page request except for those pertaining to table sorting.
  *
- * @deprecated as of Drupal 8.7.x and will be removed before Drupal 9.0.0. Use
+ * @deprecated in drupal:8.7.0 and is removed from drupal:9.0.0. Use
  *   \Drupal\Core\Utility\TableSort::getQueryParameters() instead.
  *
  * @see \Drupal\Core\Utility\TableSort::getQueryParameters()
@@ -80,7 +80,7 @@ function tablesort_get_query_parameters() {
  *   - "name": The localized title of the table column.
  *   - "sql": The name of the database field to sort on.
  *
- * @deprecated as of Drupal 8.7.x and will be removed before Drupal 9.0.0. Use
+ * @deprecated in drupal:8.7.0 and is removed from drupal:9.0.0. Use
  *   \Drupal\Core\Utility\TableSort::getOrder() instead.
  *
  * @see \Drupal\Core\Utility\TableSortInterface::getOrder()
@@ -100,7 +100,7 @@ function tablesort_get_order($headers) {
  * @return
  *   The current sort direction ("asc" or "desc").
  *
- * @deprecated as of Drupal 8.7.x and will be removed before Drupal 9.0.0. Use
+ * @deprecated in drupal:8.7.0 and is removed from drupal:9.0.0. Use
  *   \Drupal\Core\Utility\TableSort::getSort() instead.
  *
  * @see \Drupal\Core\Utility\TableSortInterface::getSort()

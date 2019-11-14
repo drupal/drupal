@@ -112,7 +112,7 @@ interface AccountInterface {
    *   any other display purposes, use
    *   \Drupal\Core\Session\AccountInterface::getDisplayName() instead.
    *
-   * @deprecated in Drupal 8.0.0, will be removed before Drupal 9.0.0.
+   * @deprecated in drupal:8.0.0 and is removed from drupal:9.0.0.
    *   Use \Drupal\Core\Session\AccountInterface::getAccountName() or
    *   \Drupal\user\UserInterface::getDisplayName() instead.
    *

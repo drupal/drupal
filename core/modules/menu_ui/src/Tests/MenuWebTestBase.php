@@ -9,7 +9,7 @@ use Drupal\simpletest\WebTestBase;
 /**
  * Base class for menu web tests.
  *
- * @deprecated in Drupal 8.5.x, will be removed before Drupal 9.0.x. Use
+ * @deprecated in drupal:8.5.0 and is removed from drupal:9.0.0. Use
  *   \Drupal\Tests\menu_ui\Traits\MenuUiTrait methods, instead.
  *
  * @see https://www.drupal.org/node/2917910

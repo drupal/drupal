@@ -179,7 +179,7 @@ function quickedit_entity_view_alter(&$build, EntityInterface $entity, EntityVie
  * @return bool
  *   TRUE if the loaded entity is the latest revision, FALSE otherwise.
  *
- * @deprecated in Drupal 8.5.0 and will be removed before Drupal 9.0.0. Use
+ * @deprecated in drupal:8.5.0 and is removed from drupal:9.0.0. Use
  *   \Drupal\Core\Entity\RevisionableInterface::isLatestRevision() instead.
  *   As internal API, _quickedit_entity_is_latest_revision() may also be removed
  *   in a minor release.

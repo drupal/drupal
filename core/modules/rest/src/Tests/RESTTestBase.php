@@ -15,7 +15,7 @@ use GuzzleHttp\Cookie\SetCookie;
 /**
  * Test helper class that provides a REST client method to send HTTP requests.
  *
- * @deprecated in Drupal 8.3.x-dev and will be removed before Drupal 9.0.0. Use
+ * @deprecated in drupal:8.3.0 and is removed from drupal:9.0.0. Use
  *   \Drupal\Tests\rest\Functional\ResourceTestBase and
  *   \Drupal\Tests\rest\Functional\EntityResource\EntityResourceTestBase
  *   instead. Only retained for contributed module tests that may be using this

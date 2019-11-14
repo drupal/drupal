@@ -114,7 +114,7 @@ interface FieldStorageDefinitionInterface extends CacheableDependencyInterface {
    * @return bool
    *   TRUE if the field is queryable.
    *
-   * @deprecated in Drupal 8.4.0 and will be removed before Drupal 9.0.0. Use
+   * @deprecated in drupal:8.4.0 and is removed from drupal:9.0.0. Use
    *   \Drupal\Core\Field\FieldStorageDefinitionInterface::hasCustomStorage()
    *   instead.
    *

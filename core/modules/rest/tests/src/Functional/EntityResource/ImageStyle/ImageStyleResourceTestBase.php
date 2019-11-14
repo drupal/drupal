@@ -7,7 +7,7 @@ namespace Drupal\Tests\rest\Functional\EntityResource\ImageStyle;
 use Drupal\Tests\image\Functional\Rest\ImageStyleResourceTestBase as ImageStyleResourceTestBaseReal;
 
 /**
- * @deprecated in Drupal 8.6.x. Will be removed before Drupal 9.0.0. Use
+ * @deprecated in drupal:8.6.0 and is removed from drupal:9.0.0. Use
  *   Drupal\Tests\image\Functional\Rest\ImageStyleResourceTestBase instead.
  *
  * @see https://www.drupal.org/node/2971931

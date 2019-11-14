@@ -10,7 +10,7 @@ use Drupal\Core\Url;
 /**
  * Provides test assertions for verifying the active menu trail.
  *
- * @deprecated Scheduled for removal in Drupal 9.0.0.
+ * @deprecated in drupal:8.?.? and is removed from drupal:9.0.0.
  *   Use \Drupal\Tests\system\Functional\Menu\AssertMenuActiveTrailTrait instead.
  */
 trait AssertMenuActiveTrailTrait {

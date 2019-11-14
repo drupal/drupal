@@ -139,7 +139,7 @@ function search_preprocess_block(&$variables) {
  *   (optional) Language code of the item to remove from the search index. If
  *   omitted, all items matching $sid and $type are cleared.
  *
- * @deprecated in drupal:8.8.0 and is removed in drupal:9.0.0. Use
+ * @deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. Use
  *   \Drupal\search\SearchIndex::clear() instead.
  *
  * @see https://www.drupal.org/node/3075696
@@ -155,7 +155,7 @@ function search_index_clear($type = NULL, $sid = NULL, $langcode = NULL) {
  * This is used during indexing (cron). Words that are dirty have outdated
  * total counts in the search_total table, and need to be recounted.
  *
- * @deprecated in drupal:8.8.0 and is removed in drupal:9.0.0. Use custom
+ * @deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. Use custom
  *   implementation of \Drupal\search\SearchIndexInterface instead.
  *
  * @see https://www.drupal.org/node/3075696
@@ -188,7 +188,7 @@ function search_cron() {
  * This function is called on shutdown to ensure that {search_total} is always
  * up to date (even if cron times out or otherwise fails).
  *
- * @deprecated in drupal:8.8.0 and is removed in drupal:9.0.0. Use custom
+ * @deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. Use custom
  *   implementation of \Drupal\search\SearchIndexInterface instead.
  *
  * @see https://www.drupal.org/node/3075696
@@ -395,7 +395,7 @@ function search_invoke_preprocess(&$text, $langcode = NULL) {
  *
  * @ingroup search
  *
- * @deprecated in drupal:8.8.0 and is removed in drupal:9.0.0. Use
+ * @deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. Use
  *   \Drupal\search\SearchIndex::index() instead.
  *
  * @see https://www.drupal.org/node/3075696
@@ -423,7 +423,7 @@ function search_index($type, $sid, $langcode, $text) {
  *   (optional) The language code to clear. If omitted, everything matching
  *   $type and $sid is marked.
  *
- * @deprecated in drupal:8.8.0 and is removed in drupal:9.0.0. Use
+ * @deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. Use
  *   \Drupal\search\SearchIndex::markForReindex() instead.
  *
  * @see https://www.drupal.org/node/3075696

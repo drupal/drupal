@@ -81,7 +81,7 @@ function file_field_widget_info_alter(array &$info) {
  * @return array
  *   An array of file entities, indexed by fid.
  *
- * @deprecated in Drupal 8.0.0 and will be removed before Drupal 9.0.0. Use
+ * @deprecated in drupal:8.0.0 and is removed from drupal:9.0.0. Use
  *   \Drupal\file\Entity\File::loadMultiple().
  *
  * @see https://www.drupal.org/node/2266845
@@ -106,7 +106,7 @@ function file_load_multiple(array $fids = NULL, $reset = FALSE) {
  * @return \Drupal\file\FileInterface|null
  *   A file entity or NULL if the file was not found.
  *
- * @deprecated in Drupal 8.0.0 and will be removed before Drupal 9.0.0. Use
+ * @deprecated in drupal:8.0.0 and is removed from drupal:9.0.0. Use
  *   \Drupal\file\Entity\File::load().
  *
  * @see https://www.drupal.org/node/2266845

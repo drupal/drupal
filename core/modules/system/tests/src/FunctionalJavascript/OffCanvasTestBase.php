@@ -103,7 +103,7 @@ abstract class OffCanvasTestBase extends WebDriverTestBase {
    * @param int $timeout
    *   (optional) Timeout in milliseconds, defaults to 10000.
    *
-   * @deprecated in Drupal 8.8.x, will be removed before Drupal 9.0.0. Use
+   * @deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. Use
    *   Drupal\FunctionalJavascriptTests\JSWebAssert::assertNoElementAfterWait()
    */
   protected function waitForNoElement($selector, $timeout = 10000) {

@@ -13,7 +13,7 @@ use Drupal\simpletest\InstallerTestBase;
 /**
  * Provides a class for install profiles to check their installed config.
  *
- * @deprecated in Drupal 8.6.0 and will be removed before Drupal 9.0.0.
+ * @deprecated in drupal:8.6.0 and is removed from drupal:9.0.0.
  *   Use \Drupal\FunctionalTests\Installer\ConfigAfterInstallerTestBase.
  */
 abstract class ConfigAfterInstallerTestBase extends InstallerTestBase {

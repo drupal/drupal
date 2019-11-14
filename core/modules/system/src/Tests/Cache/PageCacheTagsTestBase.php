@@ -11,7 +11,7 @@ use Drupal\Component\Render\FormattableMarkup;
 /**
  * Provides helper methods for page cache tags tests.
  *
- * @deprecated Scheduled for removal in Drupal 9.0.0.
+ * @deprecated in drupal:8.?.? and is removed from drupal:9.0.0.
  *   Use \Drupal\Tests\system\Functional\Cache\PageCacheTagsTestBase instead.
  *
  * @see https://www.drupal.org/node/2999939
