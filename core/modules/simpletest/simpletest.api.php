@@ -20,7 +20,7 @@
  *   name of the test class, and the value is in associative array containing
  *   'name', 'description', 'group', and 'requires' keys.
  *
- * @deprecated in Drupal 8.6.x and will be removed before Drupal 9.0.0. Convert
+ * @deprecated in drupal:8.6.0 and is removed from drupal:9.0.0. Convert
  *   your test to a PHPUnit-based one and implement test listeners.
  *
  * @see https://www.drupal.org/node/2939892

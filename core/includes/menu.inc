@@ -106,7 +106,7 @@ function menu_list_system_menus() {
  * @see hook_menu_local_tasks_alter()
  * @see https://www.drupal.org/node/2544940
  *
- * @deprecated in Drupal 8.0.0, will be removed before Drupal 9.0.0.
+ * @deprecated in drupal:8.0.0 and is removed from drupal:9.0.0.
  */
 function menu_local_tasks($level = 0) {
   /** @var \Drupal\Core\Menu\LocalTaskManagerInterface $manager */
@@ -172,7 +172,7 @@ function menu_local_tabs() {
  * This should be called any time broad changes
  * might have been made to the router items or menu links.
  *
- * @deprecated in Drupal 8.6.0, will be removed before Drupal 9.0.0. Use
+ * @deprecated in drupal:8.6.0 and is removed from drupal:9.0.0. Use
  *   \Drupal::cache('menu')->invalidateAll() instead.
  *
  * @see https://www.drupal.org/node/2989138

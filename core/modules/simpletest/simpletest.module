@@ -266,7 +266,7 @@ function simpletest_phpunit_xml_filepath($test_id) {
  * @return string
  *   The path to core's phpunit.xml.dist configuration file.
  *
- * @deprecated in Drupal 8.4.x for removal before Drupal 9.0.0. PHPUnit test
+ * @deprecated in drupal:8.4.0 and is removed from drupal:9.0.0. PHPUnit test
  *   runners should change directory into core/ and then run the phpunit tool.
  *   See simpletest_phpunit_run_command() for an example.
  *
@@ -525,7 +525,7 @@ function simpletest_insert_assert($test_id, $test_class, $status, $message = '',
  *     );
  *   @endcode
  *
- * @deprecated in Drupal 8.3.x, for removal before 9.0.0 release. Use
+ * @deprecated in drupal:8.3.0 and is removed from drupal:9.0.0. Use
  *   \Drupal::service('test_discovery')->getTestClasses($extension, $types)
  *   instead.
  */
@@ -537,7 +537,7 @@ function simpletest_test_get_all($extension = NULL, array $types = []) {
 /**
  * Registers test namespaces of all extensions and core test classes.
  *
- * @deprecated in Drupal 8.3.x for removal before 9.0.0 release. Use
+ * @deprecated in drupal:8.3.0 and is removed from drupal:9.0.0. Use
  *   \Drupal::service('test_discovery')->registerTestNamespaces() instead.
  */
 function simpletest_classloader_register() {

@@ -16,7 +16,7 @@ use Drupal\migrate_drupal\Plugin\migrate\cckfield\CckFieldPluginBase;
  *   destination_module = "file"
  * )
  *
- *  @deprecated in Drupal 8.3.x, to be removed before Drupal 9.0.x. Use
+ *  @deprecated in drupal:8.3.0 and is removed from drupal:9.0.0. Use
  * \Drupal\file\Plugin\migrate\field\d6\FileField instead.
  *
  * @see https://www.drupal.org/node/2751897

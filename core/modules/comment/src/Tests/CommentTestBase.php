@@ -16,7 +16,7 @@ use Drupal\simpletest\WebTestBase;
 /**
  * Provides setup and helper methods for comment tests.
  *
- * @deprecated in Drupal 8.4.0 and will be removed before Drupal 9.0.0.
+ * @deprecated in drupal:8.4.0 and is removed from drupal:9.0.0.
  *   Use \Drupal\Tests\comment\Functional\CommentTestBase instead.
  *
  * @see https://www.drupal.org/node/2908490

@@ -7,7 +7,7 @@ use Drupal\field\Plugin\migrate\field\Email as EmailNew;
 /**
  * MigrateField Plugin for Drupal 6 and 7 email fields.
  *
- * @deprecated in Drupal 8.7.0 and will be removed before Drupal 9.0.0. Use
+ * @deprecated in drupal:8.7.0 and is removed from drupal:9.0.0. Use
  *   \Drupal\field\Plugin\migrate\field\Email instead.
  *
  * @see https://www.drupal.org/node/3009286

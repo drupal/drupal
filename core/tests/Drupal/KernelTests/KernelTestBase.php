@@ -1012,7 +1012,7 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
    * @see \Drupal\KernelTests\KernelTestBase::$runTestInSeparateProcess
    * @see https://github.com/sebastianbergmann/phpunit/pull/1350
    *
-   * @deprecated in Drupal 8.4.x, for removal before the Drupal 9.0.0 release.
+   * @deprecated in drupal:8.4.0 and is removed from drupal:9.0.0.
    *   KernelTestBase tests are always run in isolated processes.
    */
   protected function isTestInIsolation() {
@@ -1026,7 +1026,7 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
    * Test authors should follow the provided instructions and adjust their tests
    * accordingly.
    *
-   * @deprecated in Drupal 8.0.0, will be removed before Drupal 9.0.0.
+   * @deprecated in drupal:8.0.0 and is removed from drupal:9.0.0.
    */
   public function __get($name) {
     if (in_array($name, [

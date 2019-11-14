@@ -366,7 +366,7 @@ function entity_test_form_node_form_alter(&$form, FormStateInterface $form_state
  * @return \Drupal\entity_test\Entity\EntityTest
  *   The loaded entity object, or NULL if the entity cannot be loaded.
  *
- * @deprecated in Drupal 8.0.0 and will be removed before Drupal 9.0.0. Use
+ * @deprecated in drupal:8.0.0 and is removed from drupal:9.0.0. Use
  *   \Drupal::entityTypeManager()->getStorage('entity_test')->load().
  *
  * @see https://www.drupal.org/node/2266845
@@ -391,7 +391,7 @@ function entity_test_load($id, $reset = FALSE) {
  * @return \Drupal\entity_test\Entity\EntityTestRev
  *   The loaded entity object, or NULL if the entity cannot be loaded.
  *
- * @deprecated in Drupal 8.0.0 and will be removed before Drupal 9.0.0. Use
+ * @deprecated in drupal:8.0.0 and is removed from drupal:9.0.0. Use
  *   \Drupal::entityTypeManager()->getStorage('entity_test_rev')->load().
  *
  * @see https://www.drupal.org/node/2266845
@@ -416,7 +416,7 @@ function entity_test_rev_load($id, $reset = FALSE) {
  * @return \Drupal\entity_test\Entity\EntityTestMul
  *   The loaded entity object, or FALSE if the entity cannot be loaded.
  *
- * @deprecated in Drupal 8.0.0 and will be removed before Drupal 9.0.0. Use
+ * @deprecated in drupal:8.0.0 and is removed from drupal:9.0.0. Use
  *   \Drupal::entityTypeManager()->getStorage('entity_test_mul')->load().
  *
  * @see https://www.drupal.org/node/2266845
@@ -441,7 +441,7 @@ function entity_test_mul_load($id, $reset = FALSE) {
  * @return \Drupal\entity_test\Entity\EntityTestMulRev
  *   The loaded entity object, or NULL if the entity cannot be loaded.
  *
- * @deprecated in Drupal 8.0.0 and will be removed before Drupal 9.0.0. Use
+ * @deprecated in drupal:8.0.0 and is removed from drupal:9.0.0. Use
  *   \Drupal::entityTypeManager()->getStorage('entity_test_mulrev_load')->load().
  *
  * @see https://www.drupal.org/node/2266845

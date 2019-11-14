@@ -12,7 +12,7 @@ use Drupal\Tests\field\Traits\EntityReferenceTestTrait;
 /**
  * Provides common testing base for translated taxonomy terms.
  *
- * @deprecated in Drupal 8.4.0 and will be removed before Drupal 9.0.0.
+ * @deprecated in drupal:8.4.0 and is removed from drupal:9.0.0.
  *   Use \Drupal\Tests\taxonomy\Functional\TaxonomyTranslationTestTrait
  */
 trait TaxonomyTranslationTestTrait {

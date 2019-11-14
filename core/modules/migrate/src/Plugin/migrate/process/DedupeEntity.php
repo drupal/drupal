@@ -17,7 +17,7 @@ Drupal 8.4.x and will be removed before Drupal 9.0.0. Instead, use ' . __NAMESPA
  *   id = "dedupe_entity"
  * )
  *
- * @deprecated in Drupal 8.4.x and will be removed in Drupal 9.0.x. Use
+ * @deprecated in drupal:8.4.0 and is removed from drupal:9.0.0. Use
  *   \Drupal\migrate\Plugin\migrate\process\MakeUniqueEntityField instead.
  *
  * @see https://www.drupal.org/node/2873762

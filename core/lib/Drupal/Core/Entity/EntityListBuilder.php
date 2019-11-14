@@ -113,7 +113,7 @@ class EntityListBuilder extends EntityHandlerBase implements EntityListBuilderIn
    * @return string
    *   The entity label.
    *
-   * @deprecated in Drupal 8.0.x, will be removed before Drupal 9.0.0
+   * @deprecated in drupal:8.0.0 and is removed from drupal:9.0.0.
    *   Use $entity->label() instead. This method used to escape the entity
    *   label. The render system's autoescape is now relied upon.
    */

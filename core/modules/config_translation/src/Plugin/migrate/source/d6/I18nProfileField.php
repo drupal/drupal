@@ -12,7 +12,7 @@ namespace Drupal\config_translation\Plugin\migrate\source\d6;
  *   source_module = "i18nprofile"
  * )
  *
- * @deprecated in Drupal 8.4.x and will be removed in Drupal 9.0.x. Use
+ * @deprecated in drupal:8.4.0 and is removed from drupal:9.0.0. Use
  * \Drupal\config_translation\Plugin\migrate\source\d6\ProfileFieldTranslation
  * instead.
  *

@@ -11,7 +11,7 @@ use Drupal\simpletest\WebTestBase;
 /**
  * Sets up block content types.
  *
- * @deprecated Scheduled for removal in Drupal 9.0.0.
+ * @deprecated in drupal:8.?.? and is removed from drupal:9.0.0.
  *   Use \Drupal\Tests\block_content\Functional\BlockContentTestBase instead.
  *
  * @see https://www.drupal.org/node/2999939

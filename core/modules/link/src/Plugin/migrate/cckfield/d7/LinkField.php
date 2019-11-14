@@ -22,7 +22,7 @@ use Drupal\migrate\Plugin\MigrationInterface;
  * plugin with the exception that the plugin ID "link_field" is used in the
  * field type map.
  *
- * @deprecated in Drupal 8.3.x, to be removed before Drupal 9.0.x. Use
+ * @deprecated in drupal:8.3.0 and is removed from drupal:9.0.0. Use
  * \Drupal\link\Plugin\migrate\field\d7\LinkField instead.
  *
  * @see https://www.drupal.org/node/2751897

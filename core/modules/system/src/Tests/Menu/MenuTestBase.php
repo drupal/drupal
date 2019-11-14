@@ -9,7 +9,7 @@ use Drupal\simpletest\WebTestBase;
 /**
  * Base class for Menu tests.
  *
- * @deprecated Scheduled for removal in Drupal 9.0.0.
+ * @deprecated in drupal:8.?.? and is removed from drupal:9.0.0.
  *   Use \Drupal\Tests\BrowserTestBase instead.
  */
 abstract class MenuTestBase extends WebTestBase {

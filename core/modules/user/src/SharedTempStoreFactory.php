@@ -9,7 +9,7 @@ use Drupal\Core\TempStore\SharedTempStoreFactory as CoreSharedTempStoreFactory;
 /**
  * Creates a shared temporary storage for a collection.
  *
- * @deprecated in Drupal 8.5.x, to be removed before Drupal 9.0.0.
+ * @deprecated in drupal:8.5.0 and is removed from drupal:9.0.0.
  *   Use \Drupal\Core\TempStore\SharedTempStoreFactory instead.
  *
  * @see \Drupal\Core\TempStore\SharedTempStoreFactory

@@ -61,7 +61,7 @@ class Constraint {
    * @return array[]
    *   The constraint represented as an array.
    *
-   * @deprecated in Drupal 8.7.0, will be removed before Drupal 9.0.0.
+   * @deprecated in drupal:8.7.0 and is removed from drupal:9.0.0.
    *   Only exists to provide a backwards compatibility layer.
    *
    * @see https://www.drupal.org/node/2756875

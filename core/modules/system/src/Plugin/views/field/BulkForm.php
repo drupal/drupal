@@ -12,7 +12,7 @@ use Drupal\views\Plugin\views\field\BulkForm as ViewsBulkForm;
  *
  * @ViewsField("legacy_bulk_form")
  *
- * @deprecated in drupal:8.5.0, will be removed before drupal:9.0.0. Use
+ * @deprecated in drupal:8.5.0 and is removed from drupal:9.0.0. Use
  *   \Drupal\views\Plugin\views\field\BulkForm instead.
  *
  * @see https://www.drupal.org/node/2916716

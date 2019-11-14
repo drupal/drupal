@@ -12,7 +12,7 @@ namespace Drupal\migrate_drupal\Plugin\migrate\source\d6;
  *   source_module = "system",
  * )
  *
- * @deprecated in Drupal 8.4.x and will be removed in Drupal 9.0.x. Use
+ * @deprecated in drupal:8.4.0 and is removed from drupal:9.0.0. Use
  * \Drupal\migrate_drupal\Plugin\migrate\source\d6\VariableTranslation instead.
  *
  * @see https://www.drupal.org/node/2898649

@@ -19,7 +19,7 @@ interface BlockContentInterface extends ContentEntityInterface, EntityChangedInt
    * @return string
    *   The revision log message.
    *
-   * @deprecated in Drupal 8.2.0, will be removed before Drupal 9.0.0. Use
+   * @deprecated in drupal:8.2.0 and is removed from drupal:9.0.0. Use
    *   \Drupal\Core\Entity\RevisionLogInterface::getRevisionLogMessage() instead.
    */
   public function getRevisionLog();
@@ -44,7 +44,7 @@ interface BlockContentInterface extends ContentEntityInterface, EntityChangedInt
    * @return $this
    *   The class instance that this method is called on.
    *
-   * @deprecated in Drupal 8.2.0, will be removed before Drupal 9.0.0. Use
+   * @deprecated in drupal:8.2.0 and is removed from drupal:9.0.0. Use
    *   \Drupal\Core\Entity\RevisionLogInterface::setRevisionLogMessage() instead.
    */
   public function setRevisionLog($revision_log);

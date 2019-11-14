@@ -37,7 +37,7 @@ interface LanguageConfigFactoryOverrideInterface extends ConfigFactoryOverrideIn
    *
    * @return $this
    *
-   * @deprecated in Drupal 8.3.x and will be removed before Drupal 9.0.0. This
+   * @deprecated in drupal:8.3.0 and is removed from drupal:9.0.0. This
    *   method has been replaced by injecting the default language into the
    *   constructor.
    */

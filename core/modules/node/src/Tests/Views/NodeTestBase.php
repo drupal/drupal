@@ -10,7 +10,7 @@ use Drupal\views\Tests\ViewTestData;
 /**
  * Base class for all node tests.
  *
- * @deprecated Scheduled for removal before Drupal 9.0.0.
+ * @deprecated in drupal:8.?.? and is removed from drupal:9.0.0.
  *   Use \Drupal\Tests\node\Functional\Views\NodeTestBase instead.
  */
 abstract class NodeTestBase extends ViewTestBase {

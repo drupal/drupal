@@ -210,7 +210,7 @@ class Image implements ImageInterface {
    * @return bool
    *   TRUE for success, FALSE in the event of an error.
    *
-   * @deprecated in Drupal 8.0.0, will be removed before Drupal 9.0.0.
+   * @deprecated in drupal:8.0.0 and is removed from drupal:9.0.0.
    *   Use \Drupal\Core\File\FileSystem::chmod().
    *
    * @see \Drupal\Core\File\FileSystemInterface::chmod()

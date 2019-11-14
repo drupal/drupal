@@ -9,7 +9,7 @@ use Drupal\migrate\Plugin\MigrationInterface;
 /**
  * Gets Drupal i18n_variable source from database.
  *
- * @deprecated in Drupal 8.7.x and will be removed in Drupal 9.0.x.
+ * @deprecated in drupal:8.7.0 and is removed from drupal:9.0.0.
  * Use \Drupal\migrate_drupal\Plugin\migrate\source\d6\VariableTranslation.
  *
  * @see https://www.drupal.org/node/3006487

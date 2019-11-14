@@ -31,7 +31,7 @@ use Drupal\user\UserInterface;
 /**
  * Anonymous posters cannot enter their contact information.
  *
- * @deprecated in Drupal 8.3.x and will be removed before Drupal 9.0.0.
+ * @deprecated in drupal:8.3.0 and is removed from drupal:9.0.0.
  *   Use \Drupal\comment\CommentInterface::ANONYMOUS_MAYNOT_CONTACT instead.
  *
  * @see https://www.drupal.org/node/2831620
@@ -41,7 +41,7 @@ const COMMENT_ANONYMOUS_MAYNOT_CONTACT = 0;
 /**
  * Anonymous posters may leave their contact information.
  *
- * @deprecated in Drupal 8.3.x and will be removed before Drupal 9.0.0.
+ * @deprecated in drupal:8.3.0 and is removed from drupal:9.0.0.
  *   Use \Drupal\comment\CommentInterface::ANONYMOUS_MAY_CONTACT instead.
  *
  * @see https://www.drupal.org/node/2831620
@@ -51,7 +51,7 @@ const COMMENT_ANONYMOUS_MAY_CONTACT = 1;
 /**
  * Anonymous posters are required to leave their contact information.
  *
- * @deprecated in Drupal 8.3.x and will be removed before Drupal 9.0.0.
+ * @deprecated in drupal:8.3.0 and is removed from drupal:9.0.0.
  *   Use \Drupal\comment\CommentInterface::ANONYMOUS_MUST_CONTACT instead.
  *
  * @see https://www.drupal.org/node/2831620
@@ -274,7 +274,7 @@ function comment_node_view_alter(array &$build, EntityInterface $node, EntityVie
  * @return array
  *   An array as expected by \Drupal\Core\Render\RendererInterface::render().
  *
- * @deprecated in Drupal 8.x and will be removed before Drupal 9.0.
+ * @deprecated in drupal:8.0.0 and is removed from drupal:9.0.0.
  *   Use \Drupal::entityTypeManager()->getViewBuilder('comment')->view().
  *
  * @see https://www.drupal.org/node/3033656
@@ -303,7 +303,7 @@ function comment_view(CommentInterface $comment, $view_mode = 'full', $langcode 
  *   An array in the format expected by
  *   \Drupal\Core\Render\RendererInterface::render().
  *
- * @deprecated in Drupal 8.x and will be removed before Drupal 9.0.
+ * @deprecated in drupal:8.0.0 and is removed from drupal:9.0.0.
  *   Use \Drupal::entityTypeManager()->getViewBuilder('comment')->viewMultiple().
  *
  * @see https://www.drupal.org/node/3033656

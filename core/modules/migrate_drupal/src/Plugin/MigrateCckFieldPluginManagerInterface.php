@@ -7,7 +7,7 @@ namespace Drupal\migrate_drupal\Plugin;
 /**
  * Provides an interface for cck field plugin manager.
  *
- * @deprecated in Drupal 8.3.x, to be removed before Drupal 9.0.x. Use
+ * @deprecated in drupal:8.3.0 and is removed from drupal:9.0.0. Use
  *   \Drupal\migrate_drupal\Plugin\MigrateFieldPluginManagerInterface instead.
  *
  * @see https://www.drupal.org/node/2751897

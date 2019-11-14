@@ -26,7 +26,7 @@ abstract class ContextAwarePluginBase extends PluginBase implements ContextAware
    * @var \Drupal\Component\Plugin\Context\ContextInterface[]
    *
    * @deprecated
-   *   Deprecated in Drupal 8.8.0 and will be removed before Drupal 9.0.0. Use
+   *   in drupal:8.8.0 and is removed from drupal:9.0.0. Use
    *   \Drupal\Component\Plugin\ContextAwarePluginInterface instead.
    *
    * @see https://www.drupal.org/project/drupal/issues/3080631

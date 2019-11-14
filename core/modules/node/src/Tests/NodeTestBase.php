@@ -12,7 +12,7 @@ use Drupal\simpletest\WebTestBase;
 /**
  * Sets up page and article content types.
  *
- * @deprecated Scheduled for removal in Drupal 9.0.0.
+ * @deprecated in drupal:8.?.? and is removed from drupal:9.0.0.
  *   Use \Drupal\Tests\node\Functional\NodeTestBase instead.
  *
  * @see https://www.drupal.org/node/2999939

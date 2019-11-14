@@ -14,7 +14,7 @@ use Drupal\simpletest\WebTestBase;
 /**
  * Helper class for module test cases.
  *
- * @deprecated Scheduled for removal in Drupal 9.0.0.
+ * @deprecated in drupal:8.?.? and is removed from drupal:9.0.0.
  *   Use \Drupal\Tests\system\Functional\Module\ModuleTestBase instead.
  *
  * @see https://www.drupal.org/node/2999939

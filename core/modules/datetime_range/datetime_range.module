@@ -39,7 +39,7 @@ function datetime_range_help($route_name, RouteMatchInterface $route_match) {
  * deprecated and must be converted before 9.0.0, when this updating layer will
  * be removed.
  *
- * @deprecated in Drupal 8.5.x and will be removed before 9.0.0.
+ * @deprecated in drupal:8.5.0 and is removed from drupal:9.0.0.
  *
  * @see https://www.drupal.org/node/2857691
  */

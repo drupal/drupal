@@ -164,7 +164,7 @@ class EntityConverter implements ParamConverterInterface {
    *   just the latest revision, if the specified entity is not translatable or
    *   does not have a matching translation yet.
    *
-   * @deprecated in Drupal 8.7.0 and will be removed before Drupal 9.0.0.
+   * @deprecated in drupal:8.7.0 and is removed from drupal:9.0.0.
    *   Use \Drupal\Core\Entity\EntityRepositoryInterface::getActive() instead.
    */
   protected function getLatestTranslationAffectedRevision(RevisionableInterface $entity, $langcode) {
@@ -196,7 +196,7 @@ class EntityConverter implements ParamConverterInterface {
    * @return \Drupal\Core\Entity\RevisionableInterface
    *   An entity revision object.
    *
-   * @deprecated in Drupal 8.7.0 and will be removed before Drupal 9.0.0.
+   * @deprecated in drupal:8.7.0 and is removed from drupal:9.0.0.
    */
   protected function loadRevision(RevisionableInterface $entity, $revision_id) {
     @trigger_error('\Drupal\Core\ParamConverter\EntityConverter::loadRevision() is deprecated in Drupal 8.7.0 and will be removed before Drupal 9.0.0.', E_USER_DEPRECATED);

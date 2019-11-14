@@ -97,7 +97,7 @@ const ERROR_REPORTING_DISPLAY_VERBOSE = 'verbose';
 /**
  * Role ID for anonymous users; should match what's in the "role" table.
  *
- * @deprecated in Drupal 8.0.0, will be removed before Drupal 9.0.0.
+ * @deprecated in drupal:8.0.0 and is removed from drupal:9.0.0.
  *   Use Drupal\Core\Session\AccountInterface::ANONYMOUS_ROLE or
  *   \Drupal\user\RoleInterface::ANONYMOUS_ID instead.
  *
@@ -108,7 +108,7 @@ const DRUPAL_ANONYMOUS_RID = AccountInterface::ANONYMOUS_ROLE;
 /**
  * Role ID for authenticated users; should match what's in the "role" table.
  *
- * @deprecated in Drupal 8.0.0, will be removed before Drupal 9.0.0.
+ * @deprecated in drupal:8.0.0 and is removed from drupal:9.0.0.
  *   Use Drupal\Core\Session\AccountInterface::AUTHENTICATED_ROLE or
  *   \Drupal\user\RoleInterface::AUTHENTICATED_ID instead.
  *
@@ -131,7 +131,7 @@ const DRUPAL_EXTENSION_NAME_MAX_LENGTH = 50;
  * @see http://php.net/manual/reserved.variables.server.php
  * @see http://php.net/manual/function.time.php
  *
- * @deprecated in Drupal 8.3.0, will be removed before Drupal 9.0.0.
+ * @deprecated in drupal:8.3.0 and is removed from drupal:9.0.0.
  *   Use \Drupal::time()->getRequestTime();
  *
  * @see https://www.drupal.org/node/2785211
@@ -150,7 +150,7 @@ const DRUPAL_PHP_FUNCTION_PATTERN = '[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*';
  *
  * @see config_get_config_directory()
  *
- * @deprecated in Drupal 8.0.x and will be removed before 9.0.0. Drupal core no
+ * @deprecated in drupal:8.0.0 and is removed from drupal:9.0.0. Drupal core no
  *   longer creates an active directory.
  *
  * @see https://www.drupal.org/node/2501187
@@ -173,7 +173,7 @@ const CONFIG_SYNC_DIRECTORY = 'sync';
  * @see config_get_config_directory()
  * @see CONFIG_SYNC_DIRECTORY
  *
- * @deprecated in Drupal 8.0.x and will be removed before 9.0.0. The staging
+ * @deprecated in drupal:8.0.0 and is removed from drupal:9.0.0. The staging
  *   directory was renamed to sync.
  *
  * @see https://www.drupal.org/node/2574957
@@ -395,7 +395,7 @@ function format_string($string, array $args) {
  *
  * @see \Drupal\Component\Utility\Unicode::validateUtf8()
  *
- * @deprecated in Drupal 8.0.0, will be removed before Drupal 9.0.0.
+ * @deprecated in drupal:8.0.0 and is removed from drupal:9.0.0.
  *   Use \Drupal\Component\Utility\Unicode::validateUtf8().
  *
  * @see https://www.drupal.org/node/1992584
@@ -496,7 +496,7 @@ function watchdog_exception($type, Exception $exception, $message = NULL, $varia
  * @see status-messages.html.twig
  * @see https://www.drupal.org/node/2774931
  *
- * @deprecated in Drupal 8.5.0 and will be removed before Drupal 9.0.0.
+ * @deprecated in drupal:8.5.0 and is removed from drupal:9.0.0.
  *   Use \Drupal\Core\Messenger\MessengerInterface::addMessage() instead.
  */
 function drupal_set_message($message = NULL, $type = 'status', $repeat = FALSE) {
@@ -534,7 +534,7 @@ function drupal_set_message($message = NULL, $type = 'status', $repeat = FALSE) 
  * @see status-messages.html.twig
  * @see https://www.drupal.org/node/2774931
  *
- * @deprecated in Drupal 8.5.0 and will be removed before Drupal 9.0.0.
+ * @deprecated in drupal:8.5.0 and is removed from drupal:9.0.0.
  *   Use \Drupal\Core\Messenger\MessengerInterface::all() or
  *   \Drupal\Core\Messenger\MessengerInterface::messagesByType() instead.
  */
@@ -566,7 +566,7 @@ function drupal_get_messages($type = NULL, $clear_queue = TRUE) {
  * @return string
  *   The name of the current user's timezone or the name of the default timezone.
  *
- * @deprecated in drupal:8.8.0 and will be removed from drupal:9.0.0. Use
+ * @deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. Use
  *   date_default_timezone_get() instead.
  *
  * @see https://www.drupal.org/node/3009387
@@ -820,7 +820,7 @@ function drupal_get_profile() {
  * @param string $path
  *   The relative path to the Drupal component in the filesystem.
  *
- * @deprecated in Drupal 8.8.0, will be removed before Drupal 9.0.0. Use the
+ * @deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. Use the
  *   class loader as injected service instance to register the namespace:
  *   @code
  *   $this->classLoader->addPsr4('Drupal\\' . $name . '\\', \Drupal::root() . '/' . $path . '/src');
@@ -998,7 +998,7 @@ function drupal_static_reset($name = NULL) {
 /**
  * Formats text for emphasized display in a placeholder inside a sentence.
  *
- * @deprecated in Drupal 8.0.0, will be removed before Drupal 9.0.0. Use
+ * @deprecated in drupal:8.0.0 and is removed from drupal:9.0.0. Use
  *   \Drupal\Component\Render\FormattableMarkup or Twig's "placeholder" filter
  *   instead. Note this method should not be used to simply emphasize a string
  *   and therefore has few valid use-cases. Note also, that this method does not

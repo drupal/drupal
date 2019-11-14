@@ -69,7 +69,7 @@ abstract class EntityBase implements EntityInterface {
    *
    * @return \Drupal\Core\Entity\EntityManagerInterface
    *
-   * @deprecated in Drupal 8.0.0 and will be removed before Drupal 9.0.0.
+   * @deprecated in drupal:8.0.0 and is removed from drupal:9.0.0.
    *   Use \Drupal::entityTypeManager() instead in most cases. If the needed
    *   method is not on \Drupal\Core\Entity\EntityTypeManagerInterface, see the
    *   deprecated \Drupal\Core\Entity\EntityManager to find the

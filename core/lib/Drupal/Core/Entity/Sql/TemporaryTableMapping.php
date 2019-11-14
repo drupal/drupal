@@ -9,7 +9,7 @@ use Drupal\Core\Field\FieldStorageDefinitionInterface;
 /**
  * Defines a temporary table mapping class.
  *
- * @deprecated in Drupal 8.7.x and will be removed before Drupal 9.0.0. Use the
+ * @deprecated in drupal:8.7.0 and is removed from drupal:9.0.0. Use the
  *   default table mapping with a prefix instead.
  */
 class TemporaryTableMapping extends DefaultTableMapping {

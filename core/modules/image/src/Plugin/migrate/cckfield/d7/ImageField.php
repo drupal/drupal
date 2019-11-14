@@ -15,7 +15,7 @@ use Drupal\migrate_drupal\Plugin\migrate\cckfield\CckFieldPluginBase;
  *   destination_module = "file"
  * )
  *
- * @deprecated in Drupal 8.5.x, to be removed before Drupal 9.0.x. Use
+ * @deprecated in drupal:8.5.0 and is removed from drupal:9.0.0. Use
  * \Drupal\image\Plugin\migrate\field\d7\ImageField instead.
  *
  * @see https://www.drupal.org/node/2751897

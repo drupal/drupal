@@ -19,7 +19,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *   admin_label = @Translation("Page with blocks and place block buttons")
  * )
  *
- * @deprecated in drupal:8.8.0 and will be removed from drupal:9.0.0. See the
+ * @deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. See the
  * change record for a list of alternatives.
  *
  * @see https://www.drupal.org/node/3081957

@@ -9,7 +9,7 @@ use Drupal\Core\Test\AssertMailTrait;
 /**
  * Helper function for logging in from reset password email.
  *
- * @deprecated Scheduled for removal before Drupal 9.0.0.
+ * @deprecated in drupal:8.?.? and is removed from drupal:9.0.0.
  *   Add the method to the test class instead.
  *
  * @see https://www.drupal.org/node/2999766

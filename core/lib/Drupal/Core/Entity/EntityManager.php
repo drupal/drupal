@@ -21,7 +21,7 @@ class EntityManager implements EntityManagerInterface, ContainerAwareInterface {
   /**
    * {@inheritdoc}
    *
-   * @deprecated in Drupal 8.0.0, will be removed before Drupal 9.0.0.
+   * @deprecated in drupal:8.0.0 and is removed from drupal:9.0.0.
    *   Use \Drupal\Core\Entity\EntityTypeManagerInterface::clearCachedDefinitions()
    *   instead.
    *
@@ -42,7 +42,7 @@ class EntityManager implements EntityManagerInterface, ContainerAwareInterface {
   /**
    * {@inheritdoc}
    *
-   * @deprecated in Drupal 8.0.0, will be removed before Drupal 9.0.0.
+   * @deprecated in drupal:8.0.0 and is removed from drupal:9.0.0.
    *   Use \Drupal\Core\Entity\EntityTypeManagerInterface::getDefinition()
    *   instead.
    *
@@ -56,7 +56,7 @@ class EntityManager implements EntityManagerInterface, ContainerAwareInterface {
   /**
    * {@inheritdoc}
    *
-   * @deprecated in Drupal 8.0.0, will be removed before Drupal 9.0.0.
+   * @deprecated in drupal:8.0.0 and is removed from drupal:9.0.0.
    *   Use \Drupal\Core\Entity\EntityTypeManagerInterface::hasHandler()
    *   instead.
    *
@@ -70,7 +70,7 @@ class EntityManager implements EntityManagerInterface, ContainerAwareInterface {
   /**
    * {@inheritdoc}
    *
-   * @deprecated in Drupal 8.0.0, will be removed before Drupal 9.0.0.
+   * @deprecated in drupal:8.0.0 and is removed from drupal:9.0.0.
    *   Use \Drupal\Core\Entity\EntityTypeManagerInterface::getStorage() instead.
    *
    * @see https://www.drupal.org/node/2549139
@@ -83,7 +83,7 @@ class EntityManager implements EntityManagerInterface, ContainerAwareInterface {
   /**
    * {@inheritdoc}
    *
-   * @deprecated in Drupal 8.0.0, will be removed before Drupal 9.0.0.
+   * @deprecated in drupal:8.0.0 and is removed from drupal:9.0.0.
    *   Use \Drupal\Core\Entity\EntityTypeManagerInterface::getListBuilder()
    *   instead.
    *
@@ -97,7 +97,7 @@ class EntityManager implements EntityManagerInterface, ContainerAwareInterface {
   /**
    * {@inheritdoc}
    *
-   * @deprecated in Drupal 8.0.0, will be removed before Drupal 9.0.0.
+   * @deprecated in drupal:8.0.0 and is removed from drupal:9.0.0.
    *   Use \Drupal\Core\Entity\EntityTypeManagerInterface::getFormObject()
    *   instead.
    *
@@ -111,7 +111,7 @@ class EntityManager implements EntityManagerInterface, ContainerAwareInterface {
   /**
    * {@inheritdoc}
    *
-   * @deprecated in Drupal 8.0.0, will be removed before Drupal 9.0.0.
+   * @deprecated in drupal:8.0.0 and is removed from drupal:9.0.0.
    *   Use \Drupal\Core\Entity\EntityTypeManagerInterface::getRouteProviders()
    *   instead.
    *
@@ -125,7 +125,7 @@ class EntityManager implements EntityManagerInterface, ContainerAwareInterface {
   /**
    * {@inheritdoc}
    *
-   * @deprecated in Drupal 8.0.0, will be removed before Drupal 9.0.0.
+   * @deprecated in drupal:8.0.0 and is removed from drupal:9.0.0.
    *   Use \Drupal\Core\Entity\EntityTypeManagerInterface::getViewBuilder()
    *   instead.
    *
@@ -139,7 +139,7 @@ class EntityManager implements EntityManagerInterface, ContainerAwareInterface {
   /**
    * {@inheritdoc}
    *
-   * @deprecated in Drupal 8.0.0, will be removed before Drupal 9.0.0.
+   * @deprecated in drupal:8.0.0 and is removed from drupal:9.0.0.
    *   Use \Drupal\Core\Entity\EntityTypeManagerInterface::getAccessControlHandler()
    *   instead.
    *
@@ -153,7 +153,7 @@ class EntityManager implements EntityManagerInterface, ContainerAwareInterface {
   /**
    * {@inheritdoc}
    *
-   * @deprecated in Drupal 8.0.0, will be removed before Drupal 9.0.0.
+   * @deprecated in drupal:8.0.0 and is removed from drupal:9.0.0.
    *   Use \Drupal\Core\Entity\EntityTypeManagerInterface::getHandler() instead.
    *
    * @see https://www.drupal.org/node/2549139
@@ -166,7 +166,7 @@ class EntityManager implements EntityManagerInterface, ContainerAwareInterface {
   /**
    * {@inheritdoc}
    *
-   * @deprecated in Drupal 8.0.0, will be removed before Drupal 9.0.0.
+   * @deprecated in drupal:8.0.0 and is removed from drupal:9.0.0.
    *   Use \Drupal\Core\Entity\EntityTypeManagerInterface::createHandlerInstance()
    *   instead.
    *
@@ -180,7 +180,7 @@ class EntityManager implements EntityManagerInterface, ContainerAwareInterface {
   /**
    * {@inheritdoc}
    *
-   * @deprecated in Drupal 8.0.0, will be removed before Drupal 9.0.0.
+   * @deprecated in drupal:8.0.0 and is removed from drupal:9.0.0.
    *   Use \Drupal\Core\Entity\EntityFieldManagerInterface::getBaseFieldDefinitions()
    *   instead.
    *
@@ -194,7 +194,7 @@ class EntityManager implements EntityManagerInterface, ContainerAwareInterface {
   /**
    * {@inheritdoc}
    *
-   * @deprecated in Drupal 8.0.0, will be removed before Drupal 9.0.0.
+   * @deprecated in drupal:8.0.0 and is removed from drupal:9.0.0.
    *   Use \Drupal\Core\Entity\EntityFieldManagerInterface::getFieldDefinitions()
    *   instead.
    *
@@ -208,7 +208,7 @@ class EntityManager implements EntityManagerInterface, ContainerAwareInterface {
   /**
    * {@inheritdoc}
    *
-   * @deprecated in drupal:8.0.0, will be removed before drupal:9.0.0.
+   * @deprecated in drupal:8.0.0 and is removed from drupal:9.0.0.
    *   Use \Drupal\Core\Entity\EntityFieldManagerInterface::getFieldStorageDefinitions()
    *   instead.
    *
@@ -222,7 +222,7 @@ class EntityManager implements EntityManagerInterface, ContainerAwareInterface {
   /**
    * {@inheritdoc}
    *
-   * @deprecated in Drupal 8.0.0, will be removed before Drupal 9.0.0.
+   * @deprecated in drupal:8.0.0 and is removed from drupal:9.0.0.
    *   Use \Drupal\Core\Entity\EntityFieldManagerInterface::getActiveFieldStorageDefinitions()
    *   instead.
    *
@@ -236,7 +236,7 @@ class EntityManager implements EntityManagerInterface, ContainerAwareInterface {
   /**
    * {@inheritdoc}
    *
-   * @deprecated in drupal:8.0.0, will be removed before drupal:9.0.0.
+   * @deprecated in drupal:8.0.0 and is removed from drupal:9.0.0.
    *   Use \Drupal\Core\Entity\EntityFieldManagerInterface::setFieldMap()
    *   instead.
    *
@@ -250,7 +250,7 @@ class EntityManager implements EntityManagerInterface, ContainerAwareInterface {
   /**
    * {@inheritdoc}
    *
-   * @deprecated in drupal:8.0.0, will be removed before drupal:9.0.0.
+   * @deprecated in drupal:8.0.0 and is removed from drupal:9.0.0.
    *   Use \Drupal\Core\Entity\EntityFieldManagerInterface::getFieldMap()
    *   instead.
    *
@@ -264,7 +264,7 @@ class EntityManager implements EntityManagerInterface, ContainerAwareInterface {
   /**
    * {@inheritdoc}
    *
-   * @deprecated in drupal:8.0.0, will be removed before drupal:9.0.0.
+   * @deprecated in drupal:8.0.0 and is removed from drupal:9.0.0.
    *   Use \Drupal\Core\Entity\EntityFieldManagerInterface::getFieldMapByFieldType()
    *   instead.
    *
@@ -278,7 +278,7 @@ class EntityManager implements EntityManagerInterface, ContainerAwareInterface {
   /**
    * {@inheritdoc}
    *
-   * @deprecated in drupal:8.0.0, will be removed before drupal:9.0.0.
+   * @deprecated in drupal:8.0.0 and is removed from drupal:9.0.0.
    *   Use \Drupal\Core\Field\FieldDefinitionListenerInterface::onFieldDefinitionCreate()
    *   instead.
    *
@@ -292,7 +292,7 @@ class EntityManager implements EntityManagerInterface, ContainerAwareInterface {
   /**
    * {@inheritdoc}
    *
-   * @deprecated in Drupal 8.0.0, will be removed before Drupal 9.0.0.
+   * @deprecated in drupal:8.0.0 and is removed from drupal:9.0.0.
    *   Use \Drupal\Core\Field\FieldDefinitionListenerInterface::onFieldDefinitionUpdate()
    *   instead.
    *
@@ -306,7 +306,7 @@ class EntityManager implements EntityManagerInterface, ContainerAwareInterface {
   /**
    * {@inheritdoc}
    *
-   * @deprecated in Drupal 8.0.0, will be removed before Drupal 9.0.0.
+   * @deprecated in drupal:8.0.0 and is removed from drupal:9.0.0.
    *   Use \Drupal\Core\Field\FieldDefinitionListenerInterface::onFieldDefinitionDelete()
    *   instead.
    *
@@ -320,7 +320,7 @@ class EntityManager implements EntityManagerInterface, ContainerAwareInterface {
   /**
    * {@inheritdoc}
    *
-   * @deprecated in Drupal 8.0.0, will be removed before Drupal 9.0.0.
+   * @deprecated in drupal:8.0.0 and is removed from drupal:9.0.0.
    *   Use \Drupal\Core\Entity\EntityFieldManagerInterface::clearCachedFieldDefinitions()
    *   instead.
    *
@@ -334,7 +334,7 @@ class EntityManager implements EntityManagerInterface, ContainerAwareInterface {
   /**
    * {@inheritdoc}
    *
-   * @deprecated in drupal:8.0.0, will be removed before drupal:9.0.0.
+   * @deprecated in drupal:8.0.0 and is removed from drupal:9.0.0.
    *   Use \Drupal\Core\Entity\EntityTypeBundleInfoInterface::clearCachedBundles()
    *   instead.
    *
@@ -348,7 +348,7 @@ class EntityManager implements EntityManagerInterface, ContainerAwareInterface {
   /**
    * {@inheritdoc}
    *
-   * @deprecated in drupal:8.0.0, will be removed before drupal:9.0.0.
+   * @deprecated in drupal:8.0.0 and is removed from drupal:9.0.0.
    *   Use \Drupal\Core\Entity\EntityTypeBundleInfoInterface::getBundleInfo()
    *   instead.
    *
@@ -362,7 +362,7 @@ class EntityManager implements EntityManagerInterface, ContainerAwareInterface {
   /**
    * {@inheritdoc}
    *
-   * @deprecated in drupal:8.0.0, will be removed before drupal:9.0.0.
+   * @deprecated in drupal:8.0.0 and is removed from drupal:9.0.0.
    *   Use \Drupal\Core\Entity\EntityTypeBundleInfoInterface::getAllBundleInfo()
    *   instead.
    *
@@ -376,7 +376,7 @@ class EntityManager implements EntityManagerInterface, ContainerAwareInterface {
   /**
    * {@inheritdoc}
    *
-   * @deprecated in drupal:8.0.0, will be removed before drupal:9.0.0.
+   * @deprecated in drupal:8.0.0 and is removed from drupal:9.0.0.
    *   Use \Drupal\Core\Entity\EntityFieldManagerInterface::getExtraFields()
    *   instead.
    *
@@ -390,7 +390,7 @@ class EntityManager implements EntityManagerInterface, ContainerAwareInterface {
   /**
    * {@inheritdoc}
    *
-   * @deprecated in Drupal 8.0.0, will be removed before Drupal 9.0.0.
+   * @deprecated in drupal:8.0.0 and is removed from drupal:9.0.0.
    *   Use \Drupal\Core\Entity\EntityTypeRepositoryInterface::getEntityTypeLabels()
    *   instead.
    *
@@ -404,7 +404,7 @@ class EntityManager implements EntityManagerInterface, ContainerAwareInterface {
   /**
    * {@inheritdoc}
    *
-   * @deprecated in Drupal 8.0.0, will be removed before Drupal 9.0.0.
+   * @deprecated in drupal:8.0.0 and is removed from drupal:9.0.0.
    *   Use \Drupal\Core\Entity\EntityRepositoryInterface::getTranslationFromContext()
    *   instead.
    *
@@ -418,7 +418,7 @@ class EntityManager implements EntityManagerInterface, ContainerAwareInterface {
   /**
    * {@inheritdoc}
    *
-   * @deprecated in Drupal 8.7.0, will be removed before Drupal 9.0.0.
+   * @deprecated in drupal:8.7.0 and is removed from drupal:9.0.0.
    *   Use \Drupal\Core\Entity\EntityRepositoryInterface::getActive() instead.
    *
    * @see https://www.drupal.org/node/2549139
@@ -431,7 +431,7 @@ class EntityManager implements EntityManagerInterface, ContainerAwareInterface {
   /**
    * {@inheritdoc}
    *
-   * @deprecated in Drupal 8.7.0, will be removed before Drupal 9.0.0.
+   * @deprecated in drupal:8.7.0 and is removed from drupal:9.0.0.
    *   Use \Drupal\Core\Entity\EntityRepositoryInterface::getActiveMultiple()
    *   instead.
    *
@@ -445,7 +445,7 @@ class EntityManager implements EntityManagerInterface, ContainerAwareInterface {
   /**
    * {@inheritdoc}
    *
-   * @deprecated in Drupal 8.7.0, will be removed before Drupal 9.0.0.
+   * @deprecated in drupal:8.7.0 and is removed from drupal:9.0.0.
    *   Use \Drupal\Core\Entity\EntityRepositoryInterface::getCanonical()
    *   instead.
    *
@@ -459,7 +459,7 @@ class EntityManager implements EntityManagerInterface, ContainerAwareInterface {
   /**
    * {@inheritdoc}
    *
-   * @deprecated in Drupal 8.7.0, will be removed before Drupal 9.0.0.
+   * @deprecated in drupal:8.7.0 and is removed from drupal:9.0.0.
    *   Use \Drupal\Core\Entity\EntityRepositoryInterface::getCanonicalMultiple()
    *   instead.
    *
@@ -473,7 +473,7 @@ class EntityManager implements EntityManagerInterface, ContainerAwareInterface {
   /**
    * {@inheritdoc}
    *
-   * @deprecated in Drupal 8.0.0, will be removed before Drupal 9.0.0.
+   * @deprecated in drupal:8.0.0 and is removed from drupal:9.0.0.
    *   Use \Drupal\Core\Entity\EntityDisplayRepositoryInterface::getAllViewModes()
    *   instead.
    *
@@ -487,7 +487,7 @@ class EntityManager implements EntityManagerInterface, ContainerAwareInterface {
   /**
    * {@inheritdoc}
    *
-   * @deprecated in Drupal 8.0.0, will be removed before Drupal 9.0.0.
+   * @deprecated in drupal:8.0.0 and is removed from drupal:9.0.0.
    *   Use \Drupal\Core\Entity\EntityDisplayRepositoryInterface::getViewModes()
    *   instead.
    *
@@ -501,7 +501,7 @@ class EntityManager implements EntityManagerInterface, ContainerAwareInterface {
   /**
    * {@inheritdoc}
    *
-   * @deprecated in Drupal 8.0.0, will be removed before Drupal 9.0.0.
+   * @deprecated in drupal:8.0.0 and is removed from drupal:9.0.0.
    *   Use \Drupal\Core\Entity\EntityDisplayRepositoryInterface::getAllFormModes()
    *   instead.
    *
@@ -515,7 +515,7 @@ class EntityManager implements EntityManagerInterface, ContainerAwareInterface {
   /**
    * {@inheritdoc}
    *
-   * @deprecated in Drupal 8.0.0, will be removed before Drupal 9.0.0.
+   * @deprecated in drupal:8.0.0 and is removed from drupal:9.0.0.
    *   Use \Drupal\Core\Entity\EntityDisplayRepositoryInterface::getFormModes()
    *   instead.
    *
@@ -529,7 +529,7 @@ class EntityManager implements EntityManagerInterface, ContainerAwareInterface {
   /**
    * {@inheritdoc}
    *
-   * @deprecated in Drupal 8.0.0, will be removed before Drupal 9.0.0.
+   * @deprecated in drupal:8.0.0 and is removed from drupal:9.0.0.
    *   Use \Drupal\Core\Entity\EntityDisplayRepositoryInterface::getViewModeOptions()
    *   instead.
    *
@@ -543,7 +543,7 @@ class EntityManager implements EntityManagerInterface, ContainerAwareInterface {
   /**
    * {@inheritdoc}
    *
-   * @deprecated in Drupal 8.0.0, will be removed before Drupal 9.0.0.
+   * @deprecated in drupal:8.0.0 and is removed from drupal:9.0.0.
    *   Use \Drupal\Core\Entity\EntityDisplayRepositoryInterface::getFormModeOptions()
    *   instead.
    *
@@ -557,7 +557,7 @@ class EntityManager implements EntityManagerInterface, ContainerAwareInterface {
   /**
    * {@inheritdoc}
    *
-   * @deprecated in Drupal 8.0.0, will be removed before Drupal 9.0.0.
+   * @deprecated in drupal:8.0.0 and is removed from drupal:9.0.0.
    *   Use \Drupal\Core\Entity\EntityDisplayRepositoryInterface::getViewModeOptionsByBundle()
    *   instead.
    *
@@ -571,7 +571,7 @@ class EntityManager implements EntityManagerInterface, ContainerAwareInterface {
   /**
    * {@inheritdoc}
    *
-   * @deprecated in Drupal 8.0.0, will be removed before Drupal 9.0.0.
+   * @deprecated in drupal:8.0.0 and is removed from drupal:9.0.0.
    *   Use \Drupal\Core\Entity\EntityDisplayRepositoryInterface::getFormModeOptionsByBundle()
    *   instead.
    *
@@ -585,7 +585,7 @@ class EntityManager implements EntityManagerInterface, ContainerAwareInterface {
   /**
    * {@inheritdoc}
    *
-   * @deprecated in Drupal 8.0.0, will be removed before Drupal 9.0.0.
+   * @deprecated in drupal:8.0.0 and is removed from drupal:9.0.0.
    *   Use \Drupal\Core\Entity\EntityDisplayRepositoryInterface::clearDisplayModeInfo()
    *   instead.
    *
@@ -599,7 +599,7 @@ class EntityManager implements EntityManagerInterface, ContainerAwareInterface {
   /**
    * {@inheritdoc}
    *
-   * @deprecated in Drupal 8.0.0, will be removed before Drupal 9.0.0.
+   * @deprecated in drupal:8.0.0 and is removed from drupal:9.0.0.
    *   Use \Drupal\Core\Entity\EntityRepositoryInterface::loadEntityByUuid()
    *   instead.
    *
@@ -613,7 +613,7 @@ class EntityManager implements EntityManagerInterface, ContainerAwareInterface {
   /**
    * {@inheritdoc}
    *
-   * @deprecated in Drupal 8.0.0, will be removed before Drupal 9.0.0.
+   * @deprecated in drupal:8.0.0 and is removed from drupal:9.0.0.
    *   Use \Drupal\Core\Entity\EntityRepositoryInterface::loadEntityByConfigTarget()
    *   instead.
    *
@@ -627,7 +627,7 @@ class EntityManager implements EntityManagerInterface, ContainerAwareInterface {
   /**
    * {@inheritdoc}
    *
-   * @deprecated in Drupal 8.0.0, will be removed before Drupal 9.0.0.
+   * @deprecated in drupal:8.0.0 and is removed from drupal:9.0.0.
    *   Use \Drupal\Core\Entity\EntityTypeRepositoryInterface::getEntityTypeFromClass()
    *   instead.
    *
@@ -649,7 +649,7 @@ class EntityManager implements EntityManagerInterface, ContainerAwareInterface {
   /**
    * {@inheritdoc}
    *
-   * @deprecated in Drupal 8.8.0, will be removed before Drupal 9.0.0.
+   * @deprecated in drupal:8.8.0 and is removed from drupal:9.0.0.
    *   Use \Drupal\Core\Entity\EntityTypeListenerInterface::onFieldableEntityTypeCreate()
    *   instead.
    *
@@ -662,7 +662,7 @@ class EntityManager implements EntityManagerInterface, ContainerAwareInterface {
   /**
    * {@inheritdoc}
    *
-   * @deprecated in Drupal 8.0.0, will be removed before Drupal 9.0.0.
+   * @deprecated in drupal:8.0.0 and is removed from drupal:9.0.0.
    *   Use \Drupal\Core\Entity\EntityTypeListenerInterface::onEntityTypeUpdate()
    *   instead.
    *
@@ -676,7 +676,7 @@ class EntityManager implements EntityManagerInterface, ContainerAwareInterface {
   /**
    * {@inheritdoc}
    *
-   * @deprecated in Drupal 8.7.0, will be removed before Drupal 9.0.0.
+   * @deprecated in drupal:8.7.0 and is removed from drupal:9.0.0.
    *   Use \Drupal\Core\Entity\EntityTypeListenerInterface::onFieldableEntityTypeUpdate()
    *   instead.
    *
@@ -689,7 +689,7 @@ class EntityManager implements EntityManagerInterface, ContainerAwareInterface {
   /**
    * {@inheritdoc}
    *
-   * @deprecated in Drupal 8.0.0, will be removed before Drupal 9.0.0.
+   * @deprecated in drupal:8.0.0 and is removed from drupal:9.0.0.
    *   Use \Drupal\Core\Entity\EntityTypeListenerInterface::onEntityTypeDelete()
    *   instead.
    *
@@ -703,7 +703,7 @@ class EntityManager implements EntityManagerInterface, ContainerAwareInterface {
   /**
    * {@inheritdoc}
    *
-   * @deprecated in Drupal 8.0.0, will be removed before Drupal 9.0.0.
+   * @deprecated in drupal:8.0.0 and is removed from drupal:9.0.0.
    *   Use \Drupal\Core\Field\FieldStorageDefinitionListenerInterface::onFieldStorageDefinitionCreate()
    *   instead.
    *
@@ -717,7 +717,7 @@ class EntityManager implements EntityManagerInterface, ContainerAwareInterface {
   /**
    * {@inheritdoc}
    *
-   * @deprecated in Drupal 8.0.0, will be removed before Drupal 9.0.0.
+   * @deprecated in drupal:8.0.0 and is removed from drupal:9.0.0.
    *   Use \Drupal\Core\Field\FieldStorageDefinitionListenerInterface::onFieldStorageDefinitionUpdate()
    *   instead.
    *
@@ -731,7 +731,7 @@ class EntityManager implements EntityManagerInterface, ContainerAwareInterface {
   /**
    * {@inheritdoc}
    *
-   * @deprecated in Drupal 8.0.0, will be removed before Drupal 9.0.0.
+   * @deprecated in drupal:8.0.0 and is removed from drupal:9.0.0.
    *   Use \Drupal\Core\Field\FieldStorageDefinitionListenerInterface::onFieldStorageDefinitionDelete()
    *   instead.
    *
@@ -745,7 +745,7 @@ class EntityManager implements EntityManagerInterface, ContainerAwareInterface {
   /**
    * {@inheritdoc}
    *
-   * @deprecated in Drupal 8.0.0, will be removed before Drupal 9.0.0.
+   * @deprecated in drupal:8.0.0 and is removed from drupal:9.0.0.
    *   Use \Drupal\Core\Entity\EntityBundleListenerInterface::onBundleCreate()
    *   instead.
    *
@@ -759,7 +759,7 @@ class EntityManager implements EntityManagerInterface, ContainerAwareInterface {
   /**
    * {@inheritdoc}
    *
-   * @deprecated in Drupal 8.0.0, will be removed before Drupal 9.0.0.
+   * @deprecated in drupal:8.0.0 and is removed from drupal:9.0.0.
    *   Use \Drupal\Core\Entity\EntityBundleListenerInterface::onBundleDelete()
    *   instead.
    *
@@ -773,7 +773,7 @@ class EntityManager implements EntityManagerInterface, ContainerAwareInterface {
   /**
    * {@inheritdoc}
    *
-   * @deprecated in Drupal 8.0.0, will be removed before Drupal 9.0.0.
+   * @deprecated in drupal:8.0.0 and is removed from drupal:9.0.0.
    *   Use \Drupal\Core\Entity\EntityLastInstalledSchemaRepositoryInterface::getLastInstalledDefinition()
    *   instead.
    *
@@ -806,7 +806,7 @@ class EntityManager implements EntityManagerInterface, ContainerAwareInterface {
   /**
    * {@inheritdoc}
    *
-   * @deprecated in Drupal 8.0.0, will be removed before Drupal 9.0.0.
+   * @deprecated in drupal:8.0.0 and is removed from drupal:9.0.0.
    *   Use \Drupal\Core\Entity\EntityLastInstalledSchemaRepositoryInterface::getLastInstalledFieldStorageDefinitions()
    *   instead.
    *
@@ -820,7 +820,7 @@ class EntityManager implements EntityManagerInterface, ContainerAwareInterface {
   /**
    * {@inheritdoc}
    *
-   * @deprecated in Drupal 8.0.0, will be removed before Drupal 9.0.0.
+   * @deprecated in drupal:8.0.0 and is removed from drupal:9.0.0.
    *   Use \Drupal\Core\Entity\EntityTypeManagerInterface::getDefinitions()
    *   instead.
    *
@@ -834,7 +834,7 @@ class EntityManager implements EntityManagerInterface, ContainerAwareInterface {
   /**
    * {@inheritdoc}
    *
-   * @deprecated in Drupal 8.0.0, will be removed before Drupal 9.0.0.
+   * @deprecated in drupal:8.0.0 and is removed from drupal:9.0.0.
    *   Use \Drupal\Core\Entity\EntityTypeManagerInterface::hasDefinition()
    *   instead.
    *
@@ -848,7 +848,7 @@ class EntityManager implements EntityManagerInterface, ContainerAwareInterface {
   /**
    * {@inheritdoc}
    *
-   * @deprecated in Drupal 8.0.0, will be removed before Drupal 9.0.0.
+   * @deprecated in drupal:8.0.0 and is removed from drupal:9.0.0.
    *   Use \Drupal\Core\Entity\EntityTypeManagerInterface::getActiveDefinition()
    *   instead.
    *
@@ -862,7 +862,7 @@ class EntityManager implements EntityManagerInterface, ContainerAwareInterface {
   /**
    * {@inheritdoc}
    *
-   * @deprecated in Drupal 8.0.0, will be removed before Drupal 9.0.0.
+   * @deprecated in drupal:8.0.0 and is removed from drupal:9.0.0.
    *   Use \Drupal\Core\Entity\EntityTypeManagerInterface::createInstance()
    *   instead.
    *
@@ -876,7 +876,7 @@ class EntityManager implements EntityManagerInterface, ContainerAwareInterface {
   /**
    * {@inheritdoc}
    *
-   * @deprecated in Drupal 8.0.0, will be removed before Drupal 9.0.0.
+   * @deprecated in drupal:8.0.0 and is removed from drupal:9.0.0.
    *   Use \Drupal\Core\Entity\EntityTypeManagerInterface::getInstance()
    *   instead.
    *
@@ -890,7 +890,7 @@ class EntityManager implements EntityManagerInterface, ContainerAwareInterface {
   /**
    * {@inheritdoc}
    *
-   * @deprecated in drupal:8.8.0, will be removed before drupal:9.0.0.
+   * @deprecated in drupal:8.8.0 and is removed from drupal:9.0.0.
    *   Use \Drupal\Core\Entity\EntityTypeManagerInterface::getViewDisplay()
    *   instead.
    */
@@ -902,7 +902,7 @@ class EntityManager implements EntityManagerInterface, ContainerAwareInterface {
   /**
    * {@inheritdoc}
    *
-   * @deprecated in drupal:8.8.0, will be removed before drupal:9.0.0.
+   * @deprecated in drupal:8.8.0 and is removed from drupal:9.0.0.
    *   Use \Drupal\Core\Entity\EntityTypeManagerInterface::getFormwDisplay()
    *   instead.
    */

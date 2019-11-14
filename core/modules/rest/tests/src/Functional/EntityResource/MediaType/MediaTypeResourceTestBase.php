@@ -7,7 +7,7 @@ namespace Drupal\Tests\rest\Functional\EntityResource\MediaType;
 use Drupal\Tests\media\Functional\Rest\MediaTypeResourceTestBase as MediaTypeResourceTestBaseReal;
 
 /**
- * @deprecated in Drupal 8.6.x. Will be removed before Drupal 9.0.0. Use
+ * @deprecated in drupal:8.6.0 and is removed from drupal:9.0.0. Use
  *   Drupal\Tests\media\Functional\Rest\MediaTypeResourceTestBase instead.
  *
  * @see https://www.drupal.org/node/2971931

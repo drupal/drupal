@@ -14,7 +14,7 @@ use Drupal\Component\Utility\Unicode;
 /**
  * Moves unicode_requirements() logic to system_requirements().
  *
- * @deprecated in Drupal 8.4.0 and will be removed before Drupal 9.0.0.
+ * @deprecated in drupal:8.4.0 and is removed from drupal:9.0.0.
  *
  * @see https://www.drupal.org/node/2884698
  */
@@ -85,7 +85,7 @@ function unicode_requirements() {
  *
  * @ingroup php_wrappers
  *
- * @deprecated in Drupal 8.3.0 and will bre removed in Drupal 9.0.0. Use
+ * @deprecated in drupal:8.3.0 and is removed from drupal:9.0.0. Use
  *   xml_parser_create() and
  *   xml_parser_set_option($xml_parser, XML_OPTION_TARGET_ENCODING, 'utf-8')
  *   instead.

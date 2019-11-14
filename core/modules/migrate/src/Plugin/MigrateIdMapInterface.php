@@ -238,7 +238,7 @@ interface MigrateIdMapInterface extends \Iterator, PluginInspectionInterface {
    * @return array
    *   The destination identifier values of the record, or empty on failure.
    *
-   * @deprecated in Drupal 8.1.x, will be removed before Drupal 9.0.x. Use
+   * @deprecated in drupal:8.1.0 and is removed from drupal:9.0.0. Use
    *   lookupDestinationIds() instead.
    *
    * @see https://www.drupal.org/node/2725809

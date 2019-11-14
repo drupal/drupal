@@ -11,7 +11,7 @@ use Zumba\Mink\Driver\PhantomJSDriver;
  *
  * Base class for testing browser interaction implemented in JavaScript.
  *
- * @deprecated in Drupal 8.6.x, will be removed before Drupal 9.0.0.
+ * @deprecated in drupal:8.6.0 and is removed from drupal:9.0.0.
  * Use \Drupal\FunctionalJavascriptTests\WebDriverTestBase instead
  *
  * @see https://www.drupal.org/node/2945059

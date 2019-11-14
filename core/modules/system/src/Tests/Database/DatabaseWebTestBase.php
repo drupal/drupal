@@ -10,7 +10,7 @@ use Drupal\simpletest\WebTestBase;
 /**
  * Base class for databases database tests.
  *
- * @deprecated in Drupal 8.4.0 and will be removed before Drupal 9.0.0. Instead
+ * @deprecated in drupal:8.4.0 and is removed from drupal:9.0.0. Instead
  *   use \Drupal\Tests\system\Functional\Database\DatabaseTestBase.
  */
 abstract class DatabaseWebTestBase extends WebTestBase {

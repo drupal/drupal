@@ -24,7 +24,7 @@ use Drupal\node\NodeInterface;
 /**
  * Maximum length of menu name as entered by the user.
  *
- * @deprecated in Drupal 8.3.x and will be removed before Drupal 9.0.0. Use
+ * @deprecated in drupal:8.3.0 and is removed from drupal:9.0.0. Use
  *   \Drupal\Core\Config\Entity\ConfigEntityStorage::MAX_ID_LENGTH because the
  *   menu name is a configuration entity ID.
  *

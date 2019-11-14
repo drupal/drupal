@@ -33,7 +33,7 @@ class SafeMarkup {
    * @return bool
    *   TRUE if the string has been marked secure, FALSE otherwise.
    *
-   * @deprecated in Drupal 8.0.x-dev, will be removed before Drupal 9.0.0.
+   * @deprecated in drupal:8.0.0 and is removed from drupal:9.0.0.
    *   Instead, you should just check if a variable is an instance of
    *   \Drupal\Component\Render\MarkupInterface.
    *
@@ -89,7 +89,7 @@ class SafeMarkup {
    * @see \Drupal\Component\Render\FormattableMarkup::placeholderFormat()
    * @see \Drupal\Component\Render\FormattableMarkup
    *
-   * @deprecated in Drupal 8.0.0, will be removed before Drupal 9.0.0.
+   * @deprecated in drupal:8.0.0 and is removed from drupal:9.0.0.
    *   Use \Drupal\Component\Render\FormattableMarkup.
    *
    * @see https://www.drupal.org/node/2549395
