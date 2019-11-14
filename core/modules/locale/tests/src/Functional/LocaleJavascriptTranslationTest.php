@@ -152,7 +152,7 @@ class LocaleJavascriptTranslationTest extends BrowserTestBase {
     $string = $strings[0];
 
     $this->drupalPostForm(NULL, ['string' => 'Show description'], t('Filter'));
-    $edit = ['strings[' . $string->lid . '][translations][0]' => $this->randomString(16)];
+    $edit = ['strings[' . $string->lid . '][translations][0]' => 'Mostrar descripcion'];
     $this->drupalPostForm(NULL, $edit, t('Save translations'));
 
     // Calculate the filename of the JS including the translations.
