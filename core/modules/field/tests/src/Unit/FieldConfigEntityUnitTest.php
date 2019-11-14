@@ -29,7 +29,7 @@ class FieldConfigEntityUnitTest extends UnitTestCase {
   protected $entityType;
 
   /**
-   * The entity manager used for testing.
+   * The entity type manager used for testing.
    *
    * @var \Drupal\Core\Entity\EntityTypeManagerInterface|\PHPUnit\Framework\MockObject\MockObject
    */
@@ -102,7 +102,7 @@ class FieldConfigEntityUnitTest extends UnitTestCase {
     $this->fieldStorage->expects($this->any())
       ->method('getSettings')
       ->willReturn([]);
-    // Place the field in the mocked entity manager's field registry.
+    // Place the field in the mocked entity field manager's field registry.
     $this->entityFieldManager->expects($this->any())
       ->method('getFieldStorageDefinitions')
       ->with('test_entity_type')

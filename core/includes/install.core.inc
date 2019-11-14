@@ -350,7 +350,6 @@ function install_begin_request($class_loader, &$install_state) {
 
   // Load module basics (needed for hook invokes).
   include_once __DIR__ . '/module.inc';
-  require_once __DIR__ . '/entity.inc';
 
   // Create a minimal mocked container to support calls to t() in the pre-kernel
   // base system verification code paths below. The strings are not actually

@@ -30,18 +30,6 @@ interface ConfigManagerInterface {
   public function loadConfigEntityByName($name);
 
   /**
-   * Gets the entity manager.
-   *
-   * @return \Drupal\Core\Entity\EntityManagerInterface
-   *   The entity manager.
-   *
-   * @deprecated in drupal:8.7.0 and is removed from drupal:9.0.0. Use
-   *   \Drupal\Core\Config\ConfigManagerInterface::getEntityTypeManager()
-   *   instead.
-   */
-  public function getEntityManager();
-
-  /**
    * Gets the entity type manager.
    *
    * @return \Drupal\Core\Entity\EntityTypeManagerInterface

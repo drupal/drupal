@@ -6,20 +6,12 @@ use Drupal\Core\Config\ConfigImporterEvent;
 use Drupal\Core\Config\ConfigImportValidateEventSubscriberBase;
 use Drupal\Core\Config\ConfigManagerInterface;
 use Drupal\Core\Config\Entity\ConfigEntityStorage;
-use Drupal\Core\DependencyInjection\DeprecatedServicePropertyTrait;
-use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 
 /**
  * Entity config importer validation event subscriber.
  */
 class BundleConfigImportValidate extends ConfigImportValidateEventSubscriberBase {
-  use DeprecatedServicePropertyTrait;
-
-  /**
-   * {@inheritdoc}
-   */
-  protected $deprecatedProperties = ['entityManager' => 'entity.manager'];
 
   /**
    * The config manager.
@@ -45,13 +37,7 @@ class BundleConfigImportValidate extends ConfigImportValidateEventSubscriberBase
    */
   public function __construct(ConfigManagerInterface $config_manager, EntityTypeManagerInterface $entity_type_manager) {
     $this->configManager = $config_manager;
-    if ($entity_type_manager instanceof EntityManagerInterface) {
-      @trigger_error('Passing the entity.manager service to BundleConfigImportValidate::__construct() is deprecated in Drupal 8.7.0 and will be removed before Drupal 9.0.0. Pass the new dependencies instead. See https://www.drupal.org/node/2549139.', E_USER_DEPRECATED);
-      $this->entityTypeManager = \Drupal::entityTypeManager();
-    }
-    else {
-      $this->entityTypeManager = $entity_type_manager;
-    }
+    $this->entityTypeManager = $entity_type_manager;
   }
 
   /**

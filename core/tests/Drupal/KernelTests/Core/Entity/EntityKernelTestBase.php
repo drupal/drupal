@@ -2,7 +2,6 @@
 
 namespace Drupal\KernelTests\Core\Entity;
 
-use Drupal\Core\DependencyInjection\DeprecatedServicePropertyTrait;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\Tests\user\Traits\UserCreationTrait;
@@ -20,7 +19,6 @@ abstract class EntityKernelTestBase extends KernelTestBase {
     setCurrentUser as drupalSetCurrentUser;
     setUpCurrentUser as drupalSetUpCurrentUser;
   }
-  use DeprecatedServicePropertyTrait;
 
   /**
    * Modules to enable.
@@ -28,13 +26,6 @@ abstract class EntityKernelTestBase extends KernelTestBase {
    * @var array
    */
   public static $modules = ['user', 'system', 'field', 'text', 'filter', 'entity_test'];
-
-  /**
-   * The list of deprecated services.
-   *
-   * @var array
-   */
-  protected $deprecatedProperties = ['entityManager' => 'entity.manager'];
 
   /**
    * The entity type manager service.

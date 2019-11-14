@@ -4,7 +4,6 @@ namespace Drupal\Core\Entity;
 
 use Drupal\Component\Utility\Crypt;
 use Drupal\Core\Cache\Cache;
-use Drupal\Core\DependencyInjection\DeprecatedServicePropertyTrait;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Entity\Entity\EntityViewDisplay;
 use Drupal\Core\Field\FieldItemInterface;
@@ -22,12 +21,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * @ingroup entity_api
  */
 class EntityViewBuilder extends EntityHandlerBase implements EntityHandlerInterface, EntityViewBuilderInterface, TrustedCallbackInterface {
-  use DeprecatedServicePropertyTrait;
-
-  /**
-   * {@inheritdoc}
-   */
-  protected $deprecatedProperties = ['entityManager' => 'entity.manager'];
 
   /**
    * The type of entities for which this view builder is instantiated.
@@ -101,16 +94,12 @@ class EntityViewBuilder extends EntityHandlerBase implements EntityHandlerInterf
    * @param \Drupal\Core\Entity\EntityDisplayRepositoryInterface $entity_display_repository
    *   The entity display repository.
    */
-  public function __construct(EntityTypeInterface $entity_type, EntityRepositoryInterface $entity_repository, LanguageManagerInterface $language_manager, Registry $theme_registry = NULL, EntityDisplayRepositoryInterface $entity_display_repository = NULL) {
+  public function __construct(EntityTypeInterface $entity_type, EntityRepositoryInterface $entity_repository, LanguageManagerInterface $language_manager, Registry $theme_registry, EntityDisplayRepositoryInterface $entity_display_repository) {
     $this->entityTypeId = $entity_type->id();
     $this->entityType = $entity_type;
     $this->entityRepository = $entity_repository;
     $this->languageManager = $language_manager;
-    $this->themeRegistry = $theme_registry ?: \Drupal::service('theme.registry');
-    if (!$entity_display_repository) {
-      @trigger_error('Calling EntityViewBuilder::__construct() with the $entity_repository argument is supported in drupal:8.7.0 and will be required before drupal:9.0.0. See https://www.drupal.org/node/2549139.', E_USER_DEPRECATED);
-      $entity_display_repository = \Drupal::service('entity_display.repository');
-    }
+    $this->themeRegistry = $theme_registry;
     $this->entityDisplayRepository = $entity_display_repository;
   }
 

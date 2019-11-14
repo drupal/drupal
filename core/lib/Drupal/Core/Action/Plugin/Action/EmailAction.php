@@ -81,7 +81,7 @@ class EmailAction extends ConfigurableActionBase implements ContainerFactoryPlug
    * @param \Drupal\Core\Utility\Token $token
    *   The token service.
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
-   *   The entity manager.
+   *   The entity type manager.
    * @param \Psr\Log\LoggerInterface $logger
    *   A logger instance.
    * @param \Drupal\Core\Mail\MailManagerInterface $mail_manager

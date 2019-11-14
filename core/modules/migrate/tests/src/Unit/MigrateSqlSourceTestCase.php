@@ -5,6 +5,7 @@ namespace Drupal\Tests\migrate\Unit;
 use Drupal\Core\Database\Query\SelectInterface;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\DependencyInjection\ContainerNotInitializedException;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\KeyValueStore\KeyValueFactoryInterface;
 use Drupal\Core\KeyValueStore\KeyValueStoreInterface;
 
@@ -82,7 +83,7 @@ abstract class MigrateSqlSourceTestCase extends MigrateTestCase {
   protected function setUp() {
     $module_handler = $this->createMock('Drupal\Core\Extension\ModuleHandlerInterface');
     $state = $this->createMock('Drupal\Core\State\StateInterface');
-    $entity_manager = $this->createMock('Drupal\Core\Entity\EntityManagerInterface');
+    $entity_type_manager = $this->createMock(EntityTypeManagerInterface::class);
 
     // Mock a key-value store to return high-water values.
     $key_value = $this->createMock(KeyValueStoreInterface::class);
@@ -115,7 +116,7 @@ abstract class MigrateSqlSourceTestCase extends MigrateTestCase {
 
     // Setup the plugin.
     $plugin_class = static::PLUGIN_CLASS;
-    $plugin = new $plugin_class($this->migrationConfiguration['source'], $this->migrationConfiguration['source']['plugin'], [], $migration, $state, $entity_manager);
+    $plugin = new $plugin_class($this->migrationConfiguration['source'], $this->migrationConfiguration['source']['plugin'], [], $migration, $state, $entity_type_manager);
 
     // Do some reflection to set the database and moduleHandler.
     $plugin_reflection = new \ReflectionClass($plugin);

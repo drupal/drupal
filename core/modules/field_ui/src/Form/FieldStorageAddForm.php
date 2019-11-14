@@ -3,7 +3,6 @@
 namespace Drupal\field_ui\Form;
 
 use Drupal\Core\Config\ConfigFactoryInterface;
-use Drupal\Core\DependencyInjection\DeprecatedServicePropertyTrait;
 use Drupal\Core\Entity\EntityDisplayRepositoryInterface;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
@@ -21,14 +20,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * @internal
  */
 class FieldStorageAddForm extends FormBase {
-  use DeprecatedServicePropertyTrait;
-
-  /**
-   * {@inheritdoc}
-   */
-  protected $deprecatedProperties = [
-    'entityManager' => 'entity.manager',
-  ];
 
   /**
    * The name of the entity type.
@@ -97,16 +88,7 @@ class FieldStorageAddForm extends FormBase {
     $this->entityTypeManager = $entity_type_manager;
     $this->fieldTypePluginManager = $field_type_plugin_manager;
     $this->configFactory = $config_factory;
-    if (!$entity_field_manager) {
-      @trigger_error('Calling FieldStorageAddForm::__construct() with the $entity_field_manager argument is supported in Drupal 8.7.0 and will be required before Drupal 9.0.0. See https://www.drupal.org/node/2549139.', E_USER_DEPRECATED);
-      $entity_field_manager = \Drupal::service('entity_field.manager');
-    }
     $this->entityFieldManager = $entity_field_manager;
-
-    if (!$entity_display_repository) {
-      @trigger_error('Calling FieldStorageAddForm::__construct() with the $entity_display_repository argument is supported in Drupal 8.8.0 and will be required before Drupal 9.0.0. See https://www.drupal.org/node/2835616.', E_USER_DEPRECATED);
-      $entity_display_repository = \Drupal::service('entity_display.repository');
-    }
     $this->entityDisplayRepository = $entity_display_repository;
   }
 

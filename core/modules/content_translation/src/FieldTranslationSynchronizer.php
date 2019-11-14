@@ -3,7 +3,6 @@
 namespace Drupal\content_translation;
 
 use Drupal\Core\Config\Entity\ThirdPartySettingsInterface;
-use Drupal\Core\DependencyInjection\DeprecatedServicePropertyTrait;
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldTypePluginManagerInterface;
@@ -13,12 +12,6 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
  * Provides field translation synchronization capabilities.
  */
 class FieldTranslationSynchronizer implements FieldTranslationSynchronizerInterface {
-  use DeprecatedServicePropertyTrait;
-
-  /**
-   * {@inheritdoc}
-   */
-  protected $deprecatedProperties = ['entityManager' => 'entity.manager'];
 
   /**
    * The entity type manager.

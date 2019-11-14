@@ -3,7 +3,6 @@
 namespace Drupal\comment;
 
 use Drupal\Core\Database\Connection;
-use Drupal\Core\DependencyInjection\DeprecatedServicePropertyTrait;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Entity\EntityChangedInterface;
@@ -13,12 +12,6 @@ use Drupal\Core\Session\AccountInterface;
 use Drupal\user\EntityOwnerInterface;
 
 class CommentStatistics implements CommentStatisticsInterface {
-  use DeprecatedServicePropertyTrait;
-
-  /**
-   * {@inheritdoc}
-   */
-  protected $deprecatedProperties = ['entityManager' => 'entity.manager'];
 
   /**
    * The current database connection.

@@ -44,8 +44,8 @@ class FieldEntityOperationsTest extends ViewTestBase {
    * Tests entity operations field.
    */
   public function testEntityOperations() {
-    // Add languages and refresh the container so the entity manager will have
-    // fresh data.
+    // Add languages and refresh the container so the entity type manager will
+    // have fresh data.
     ConfigurableLanguage::createFromLangcode('hu')->save();
     ConfigurableLanguage::createFromLangcode('es')->save();
     $this->rebuildContainer();

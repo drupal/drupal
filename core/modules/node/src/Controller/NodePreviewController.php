@@ -31,12 +31,8 @@ class NodePreviewController extends EntityViewController {
    * @param \Drupal\Core\Entity\EntityRepositoryInterface $entity_repository
    *   The entity repository.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, RendererInterface $renderer, EntityRepositoryInterface $entity_repository = NULL) {
+  public function __construct(EntityTypeManagerInterface $entity_type_manager, RendererInterface $renderer, EntityRepositoryInterface $entity_repository) {
     parent::__construct($entity_type_manager, $renderer);
-    if (!$entity_repository) {
-      @trigger_error('The entity.repository service must be passed to NodePreviewController::__construct(), it is required before Drupal 9.0.0. See https://www.drupal.org/node/2549139.', E_USER_DEPRECATED);
-      $entity_repository = \Drupal::service('entity.repository');
-    }
     $this->entityRepository = $entity_repository;
   }
 

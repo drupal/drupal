@@ -123,7 +123,7 @@ class EntityTest extends UnitTestCase {
   }
 
   /**
-   * Ensures that the entity manager returns an entity storage.
+   * Ensures that the entity type manager returns an entity storage.
    */
   protected function setupEntityTypeManager() {
     $this->entityTypeManager->expects($this->any())

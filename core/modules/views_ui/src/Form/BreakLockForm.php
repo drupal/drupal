@@ -2,7 +2,6 @@
 
 namespace Drupal\views_ui\Form;
 
-use Drupal\Core\DependencyInjection\DeprecatedServicePropertyTrait;
 use Drupal\Core\Entity\EntityConfirmFormBase;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\FormStateInterface;
@@ -15,14 +14,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * @internal
  */
 class BreakLockForm extends EntityConfirmFormBase {
-  use DeprecatedServicePropertyTrait;
-
-  /**
-   * {@inheritdoc}
-   */
-  protected $deprecatedProperties = [
-    'entityManager' => 'entity.manager',
-  ];
 
   /**
    * Stores the entity type manager.
@@ -42,7 +33,7 @@ class BreakLockForm extends EntityConfirmFormBase {
    * Constructs a \Drupal\views_ui\Form\BreakLockForm object.
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
-   *   The Entity manager.
+   *   The entity type manager.
    * @param \Drupal\Core\TempStore\SharedTempStoreFactory $temp_store_factory
    *   The factory for the temp store object.
    */

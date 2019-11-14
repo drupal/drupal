@@ -2,7 +2,6 @@
 
 namespace Drupal\migrate\Plugin\migrate\destination;
 
-use Drupal\Core\DependencyInjection\DeprecatedServicePropertyTrait;
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityInterface;
@@ -88,12 +87,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * @see \Drupal\migrate\Plugin\migrate\destination\EntityRevision
  */
 class EntityContentBase extends Entity implements HighestIdInterface, MigrateValidatableEntityInterface {
-  use DeprecatedServicePropertyTrait;
-
-  /**
-   * {@inheritdoc}
-   */
-  protected $deprecatedProperties = ['entityManager' => 'entity.manager'];
 
   /**
    * Entity field manager.

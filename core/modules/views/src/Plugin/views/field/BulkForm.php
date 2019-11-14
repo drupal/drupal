@@ -3,7 +3,6 @@
 namespace Drupal\views\Plugin\views\field;
 
 use Drupal\Core\Cache\CacheableDependencyInterface;
-use Drupal\Core\DependencyInjection\DeprecatedServicePropertyTrait;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Entity\EntityRepositoryInterface;
@@ -30,15 +29,9 @@ class BulkForm extends FieldPluginBase implements CacheableDependencyInterface {
   use RedirectDestinationTrait;
   use UncacheableFieldHandlerTrait;
   use EntityTranslationRenderTrait;
-  use DeprecatedServicePropertyTrait;
 
   /**
-   * {@inheritdoc}
-   */
-  protected $deprecatedProperties = ['entityManager' => 'entity.manager'];
-
-  /**
-   * The entity manager.
+   * The entity type manager.
    *
    * @var \Drupal\Core\Entity\EntityTypeManagerInterface
    */
@@ -99,17 +92,13 @@ class BulkForm extends FieldPluginBase implements CacheableDependencyInterface {
    *
    * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityTypeManagerInterface $entity_type_manager, LanguageManagerInterface $language_manager, MessengerInterface $messenger, EntityRepositoryInterface $entity_repository = NULL) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityTypeManagerInterface $entity_type_manager, LanguageManagerInterface $language_manager, MessengerInterface $messenger, EntityRepositoryInterface $entity_repository) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
 
     $this->entityTypeManager = $entity_type_manager;
     $this->actionStorage = $entity_type_manager->getStorage('action');
     $this->languageManager = $language_manager;
     $this->messenger = $messenger;
-    if (!$entity_repository) {
-      @trigger_error('Calling BulkForm::__construct() with the $entity_repository argument is supported in drupal:8.7.0 and will be required before drupal:9.0.0. See https://www.drupal.org/node/2549139.', E_USER_DEPRECATED);
-      $entity_repository = \Drupal::service('entity.repository');
-    }
     $this->entityRepository = $entity_repository;
   }
 
@@ -169,15 +158,6 @@ class BulkForm extends FieldPluginBase implements CacheableDependencyInterface {
    */
   public function getEntityTypeId() {
     return $this->getEntityType();
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function getEntityManager() {
-    // This relies on DeprecatedServicePropertyTrait to trigger a deprecation
-    // message in case it is accessed.
-    return $this->entityManager;
   }
 
   /**

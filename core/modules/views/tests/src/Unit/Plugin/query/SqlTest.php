@@ -136,7 +136,6 @@ class SqlTest extends UnitTestCase {
   protected function setupEntityTypeManager(EntityTypeManagerInterface $entity_type_manager) {
     $container = \Drupal::hasContainer() ? \Drupal::getContainer() : new ContainerBuilder();
     $container->set('entity_type.manager', $entity_type_manager);
-    $container->set('entity.manager', $entity_type_manager);
     \Drupal::setContainer($container);
   }
 

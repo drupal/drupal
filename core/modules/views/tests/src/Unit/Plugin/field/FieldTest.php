@@ -141,7 +141,7 @@ class FieldTest extends UnitTestCase {
     ];
     $handler = new EntityField([], 'field', $definition, $this->entityTypeManager, $this->formatterPluginManager, $this->fieldTypePluginManager, $this->languageManager, $this->renderer, $this->entityRepository, $this->entityFieldManager);
 
-    // Setup the entity manager to allow fetching the storage definitions.
+    // Setup the entity field manager to allow fetching the storage definitions.
     $title_storage = $this->getBaseFieldStorage();
 
     $this->entityFieldManager->expects($this->atLeastOnce())
@@ -170,7 +170,7 @@ class FieldTest extends UnitTestCase {
     ];
     $handler = new EntityField([], 'field', $definition, $this->entityTypeManager, $this->formatterPluginManager, $this->fieldTypePluginManager, $this->languageManager, $this->renderer, $this->entityRepository, $this->entityFieldManager);
 
-    // Setup the entity manager to allow fetching the storage definitions.
+    // Setup the entity field manager to allow fetching the storage definitions.
     $title_storage = $this->getBaseFieldStorage();
 
     $this->entityFieldManager->expects($this->atLeastOnce())
@@ -197,7 +197,7 @@ class FieldTest extends UnitTestCase {
     ];
     $handler = new EntityField([], 'field', $definition, $this->entityTypeManager, $this->formatterPluginManager, $this->fieldTypePluginManager, $this->languageManager, $this->renderer, $this->entityRepository, $this->entityFieldManager);
 
-    // Setup the entity manager to allow fetching the storage definitions.
+    // Setup the entity field manager to allow fetching the storage definitions.
     $title_storage = $this->getBaseFieldStorage();
 
     $this->entityFieldManager->expects($this->atLeastOnce())

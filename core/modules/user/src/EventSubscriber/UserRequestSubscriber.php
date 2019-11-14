@@ -2,7 +2,6 @@
 
 namespace Drupal\user\EventSubscriber;
 
-use Drupal\Core\DependencyInjection\DeprecatedServicePropertyTrait;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Site\Settings;
@@ -14,12 +13,6 @@ use Symfony\Component\HttpKernel\KernelEvents;
  * Updates the current user's last access time.
  */
 class UserRequestSubscriber implements EventSubscriberInterface {
-  use DeprecatedServicePropertyTrait;
-
-  /**
-   * {@inheritdoc}
-   */
-  protected $deprecatedProperties = ['entityManager' => 'entity.manager'];
 
   /**
    * The current account.

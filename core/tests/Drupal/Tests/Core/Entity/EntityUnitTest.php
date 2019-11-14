@@ -118,8 +118,6 @@ class EntityUnitTest extends UnitTestCase {
     $this->cacheTagsInvalidator = $this->createMock('Drupal\Core\Cache\CacheTagsInvalidator');
 
     $container = new ContainerBuilder();
-    // Ensure that Entity doesn't use the deprecated entity.manager service.
-    $container->set('entity.manager', NULL);
     $container->set('entity_type.manager', $this->entityTypeManager);
     $container->set('uuid', $this->uuid);
     $container->set('language_manager', $this->languageManager);

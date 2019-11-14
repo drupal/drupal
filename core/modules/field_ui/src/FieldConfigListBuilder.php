@@ -4,7 +4,6 @@ namespace Drupal\field_ui;
 
 use Drupal\Component\Utility\Html;
 use Drupal\Core\Config\Entity\ConfigEntityListBuilder;
-use Drupal\Core\DependencyInjection\DeprecatedServicePropertyTrait;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
@@ -18,14 +17,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * Provides lists of field config entities.
  */
 class FieldConfigListBuilder extends ConfigEntityListBuilder {
-  use DeprecatedServicePropertyTrait;
-
-  /**
-   * {@inheritdoc}
-   */
-  protected $deprecatedProperties = [
-    'entityManager' => 'entity.manager',
-  ];
 
   /**
    * The name of the entity type the listed fields are attached to.
@@ -74,15 +65,11 @@ class FieldConfigListBuilder extends ConfigEntityListBuilder {
    * @param \Drupal\Core\Entity\EntityFieldManagerInterface|null $entity_field_manager
    *   The entity field manager.
    */
-  public function __construct(EntityTypeInterface $entity_type, EntityTypeManagerInterface $entity_type_manager, FieldTypePluginManagerInterface $field_type_manager, EntityFieldManagerInterface $entity_field_manager = NULL) {
+  public function __construct(EntityTypeInterface $entity_type, EntityTypeManagerInterface $entity_type_manager, FieldTypePluginManagerInterface $field_type_manager, EntityFieldManagerInterface $entity_field_manager) {
     parent::__construct($entity_type, $entity_type_manager->getStorage($entity_type->id()));
 
     $this->entityTypeManager = $entity_type_manager;
     $this->fieldTypeManager = $field_type_manager;
-    if (!$entity_field_manager) {
-      @trigger_error('Calling FieldConfigListBuilder::__construct() with the $entity_field_manager argument is supported in Drupal 8.7.0 and will be required before Drupal 9.0.0. See https://www.drupal.org/node/2549139.', E_USER_DEPRECATED);
-      $entity_field_manager = \Drupal::service('entity_field.manager');
-    }
     $this->entityFieldManager = $entity_field_manager;
   }
 

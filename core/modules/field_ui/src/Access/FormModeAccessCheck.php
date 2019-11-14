@@ -3,7 +3,6 @@
 namespace Drupal\field_ui\Access;
 
 use Drupal\Core\Access\AccessResult;
-use Drupal\Core\DependencyInjection\DeprecatedServicePropertyTrait;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Routing\Access\AccessInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
@@ -16,12 +15,6 @@ use Symfony\Component\Routing\Route;
  * @see \Drupal\Core\Entity\Entity\EntityFormMode
  */
 class FormModeAccessCheck implements AccessInterface {
-  use DeprecatedServicePropertyTrait;
-
-  /**
-   * {@inheritdoc}
-   */
-  protected $deprecatedProperties = ['entityManager' => 'entity.manager'];
 
   /**
    * The entity type manager.

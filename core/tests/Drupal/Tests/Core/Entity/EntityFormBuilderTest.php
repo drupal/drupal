@@ -12,7 +12,7 @@ use Drupal\Tests\UnitTestCase;
 class EntityFormBuilderTest extends UnitTestCase {
 
   /**
-   * The entity manager.
+   * The entity type manager.
    *
    * @var \Drupal\Core\Entity\EntityTypeManagerInterface|\PHPUnit\Framework\MockObject\MockObject
    */

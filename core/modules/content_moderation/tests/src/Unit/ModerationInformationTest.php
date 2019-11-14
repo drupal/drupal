@@ -42,7 +42,7 @@ class ModerationInformationTest extends UnitTestCase {
   }
 
   /**
-   * Sets up content moderation and entity manager mocking.
+   * Sets up content moderation and entity type bundle info mocking.
    *
    * @param string $bundle
    *   The bundle ID.

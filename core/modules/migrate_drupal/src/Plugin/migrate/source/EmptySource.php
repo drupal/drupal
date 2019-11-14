@@ -3,7 +3,6 @@
 namespace Drupal\migrate_drupal\Plugin\migrate\source;
 
 use Drupal\Component\Plugin\DependentPluginInterface;
-use Drupal\Core\DependencyInjection\DeprecatedServicePropertyTrait;
 use Drupal\Core\Entity\DependencyTrait;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\migrate\Plugin\MigrationInterface;
@@ -22,12 +21,6 @@ use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 class EmptySource extends BaseEmptySource implements ContainerFactoryPluginInterface, DependentPluginInterface {
 
   use DependencyTrait;
-  use DeprecatedServicePropertyTrait;
-
-  /**
-   * {@inheritdoc}
-   */
-  protected $deprecatedProperties = ['entityManager' => 'entity.manager'];
 
   /**
    * The entity type manager.
@@ -39,9 +32,9 @@ class EmptySource extends BaseEmptySource implements ContainerFactoryPluginInter
   /**
    * {@inheritdoc}
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, MigrationInterface $migration, EntityTypeManagerInterface $entity_manager) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, MigrationInterface $migration, EntityTypeManagerInterface $entity_type_manager) {
     parent::__construct($configuration, $plugin_id, $plugin_definition, $migration);
-    $this->entityTypeManager = $entity_manager;
+    $this->entityTypeManager = $entity_type_manager;
   }
 
   /**

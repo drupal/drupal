@@ -2,10 +2,8 @@
 
 namespace Drupal\Tests\Core\Entity;
 
-use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\Core\Entity\EntityManager;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityType;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
@@ -226,48 +224,6 @@ class EntityFormTest extends UnitTestCase {
     );
     $actual = $this->entityForm->getEntityFromRouteMatch($route_match, $this->entityType->id());
     $this->assertEquals($entity, $actual);
-  }
-
-  /**
-   * Tests that setEntityManager triggers proper deprecation errors.
-   *
-   * @covers ::setEntityManager
-   *
-   * @group legacy
-   *
-   * @expectedDeprecation EntityForm::setEntityTypeManager() is deprecated in drupal:8.0.0 and is removed from drupal:9.0.0. Use EntityFormInterface::setEntityTypeManager() instead. See https://www.drupal.org/node/2549139
-   */
-  public function testSetEntityManager() {
-    $this->entityForm->setEntityManager($this->prophesize(EntityManager::class)->reveal());
-  }
-
-  /**
-   * Tests that __set triggers proper deprecation errors.
-   *
-   * @covers ::__set
-   *
-   * @group legacy
-   *
-   * @expectedDeprecation EntityForm::entityManager is deprecated in drupal:8.0.0 and is removed from drupal:9.0.0. Use EntityForm::entityTypeManager instead. See https://www.drupal.org/node/2549139
-   */
-  public function testSet() {
-    $this->entityForm->entityManager = $this->prophesize(EntityManager::class)->reveal();
-  }
-
-  /**
-   * Tests that __get triggers proper deprecation errors.
-   *
-   * @covers ::__get
-   * @group legacy
-   *
-   * @expectedDeprecation EntityForm::entityManager is deprecated in drupal:8.0.0 and is removed from drupal:9.0.0. Use EntityForm::entityTypeManager instead. See https://www.drupal.org/node/2549139
-   */
-  public function testGet() {
-    $container = new ContainerBuilder();
-    $entity_manager = $this->prophesize(EntityManager::class)->reveal();
-    $container->set('entity.manager', $entity_manager);
-    \Drupal::setContainer($container);
-    $this->assertSame($entity_manager, $this->entityForm->entityManager);
   }
 
   /**

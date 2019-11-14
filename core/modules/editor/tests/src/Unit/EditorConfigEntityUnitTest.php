@@ -21,7 +21,7 @@ class EditorConfigEntityUnitTest extends UnitTestCase {
   protected $entityType;
 
   /**
-   * The entity manager used for testing.
+   * The entity type manager used for testing.
    *
    * @var \Drupal\Core\Entity\EntityTypeManagerInterface|\PHPUnit\Framework\MockObject\MockObject
    */

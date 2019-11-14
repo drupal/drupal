@@ -88,28 +88,6 @@ trait EntityTranslationRenderTrait {
   abstract public function getEntityTypeId();
 
   /**
-   * Returns the entity type manager.
-   *
-   * @return \Drupal\Core\Entity\EntityTypeManagerInterface
-   *   The entity type manager.
-   */
-  protected function getEntityTypeManager() {
-    @trigger_error('Classes that use EntityTranslationRenderTrait must provide a getEntityTypeManager() method since drupal:8.7.0. This implementation will become abstract before Drupal 9.0.0. See https://www.drupal.org/node/2549139.', E_USER_DEPRECATED);
-    return \Drupal::entityTypeManager();
-  }
-
-  /**
-   * Returns the entity repository.
-   *
-   * @return \Drupal\Core\Entity\EntityRepositoryInterface
-   *   The entity repository.
-   */
-  protected function getEntityRepository() {
-    @trigger_error('Classes that use EntityTranslationRenderTrait must provide a getEntityRepository() method since drupal:8.7.0. This implementation will become abstract before drupal:9.0.0. See https://www.drupal.org/node/2549139.', E_USER_DEPRECATED);
-    return \Drupal::service('entity.repository');
-  }
-
-  /**
    * Returns the language manager.
    *
    * @return \Drupal\Core\Language\LanguageManagerInterface

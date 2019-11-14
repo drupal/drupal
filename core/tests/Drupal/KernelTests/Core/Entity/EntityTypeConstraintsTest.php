@@ -37,8 +37,8 @@ class EntityTypeConstraintsTest extends EntityKernelTestBase {
 
     $extra_constraints = ['Test' => []];
     $this->state->set('entity_test_constraints.build', $extra_constraints);
-    // Re-fetch the entity manager from the new container built after the new
-    // modules were enabled.
+    // Re-fetch the entity type manager from the new container built after the
+    // new modules were enabled.
     $this->entityTypeManager = $this->container->get('entity_type.manager');
     $this->entityTypeManager->clearCachedDefinitions();
     $entity_type = $this->entityTypeManager->getDefinition('entity_test_constraints');

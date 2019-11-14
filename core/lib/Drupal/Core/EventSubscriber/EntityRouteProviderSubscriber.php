@@ -2,8 +2,6 @@
 
 namespace Drupal\Core\EventSubscriber;
 
-use Drupal\Core\DependencyInjection\DeprecatedServicePropertyTrait;
-use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Routing\RouteBuildEvent;
 use Drupal\Core\Routing\RoutingEvents;
@@ -14,12 +12,6 @@ use Symfony\Component\Routing\RouteCollection;
  * Ensures that routes can be provided by entity types.
  */
 class EntityRouteProviderSubscriber implements EventSubscriberInterface {
-  use DeprecatedServicePropertyTrait;
-
-  /**
-   * {@inheritdoc}
-   */
-  protected $deprecatedProperties = ['entityManager' => 'entity.manager'];
 
   /**
    * The entity type manager service.
@@ -35,13 +27,7 @@ class EntityRouteProviderSubscriber implements EventSubscriberInterface {
    *   The entity type manager service.
    */
   public function __construct(EntityTypeManagerInterface $entity_type_manager) {
-    if ($entity_type_manager instanceof EntityManagerInterface) {
-      @trigger_error('Passing the entity.manager service to EntityRouteProviderSubscriber::__construct() is deprecated in Drupal 8.7.0 and will be removed before Drupal 9.0.0. Pass the new dependencies instead. See https://www.drupal.org/node/2549139.', E_USER_DEPRECATED);
-      $this->entityTypeManager = \Drupal::entityTypeManager();
-    }
-    else {
-      $this->entityTypeManager = $entity_type_manager;
-    }
+    $this->entityTypeManager = $entity_type_manager;
   }
 
   /**

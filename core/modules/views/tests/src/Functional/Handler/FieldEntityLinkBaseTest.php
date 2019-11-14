@@ -38,8 +38,8 @@ class FieldEntityLinkBaseTest extends ViewTestBase {
 
     $this->drupalCreateContentType(['type' => 'article', 'name' => 'Article']);
 
-    // Add languages and refresh the container so the entity manager will have
-    // fresh data.
+    // Add languages and refresh the container so the entity type manager will
+    // have fresh data.
     ConfigurableLanguage::createFromLangcode('hu')->save();
     ConfigurableLanguage::createFromLangcode('es')->save();
     $this->rebuildContainer();

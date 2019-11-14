@@ -3,7 +3,6 @@
 namespace Drupal\views\Plugin\EntityReferenceSelection;
 
 use Drupal\Component\Utility\Xss;
-use Drupal\Core\DependencyInjection\DeprecatedServicePropertyTrait;
 use Drupal\Core\Entity\EntityReferenceSelection\SelectionPluginBase;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
@@ -28,12 +27,7 @@ use Drupal\Core\StringTranslation\StringTranslationTrait;
  * )
  */
 class ViewsSelection extends SelectionPluginBase implements ContainerFactoryPluginInterface {
-  use DeprecatedServicePropertyTrait;
   use StringTranslationTrait;
-  /**
-   * {@inheritdoc}
-   */
-  protected $deprecatedProperties = ['entityManager' => 'entity.manager'];
 
   /**
    * The loaded View object.

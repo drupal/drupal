@@ -2,7 +2,6 @@
 
 namespace Drupal\config_translation\Controller;
 
-use Drupal\Core\DependencyInjection\DeprecatedServicePropertyTrait;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
@@ -14,12 +13,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * Defines the config translation list builder for field entities.
  */
 class ConfigTranslationFieldListBuilder extends ConfigTranslationEntityListBuilder {
-  use DeprecatedServicePropertyTrait;
-
-  /**
-   * {@inheritdoc}
-   */
-  protected $deprecatedProperties = ['entityManager' => 'entity.manager'];
 
   /**
    * The name of the entity type the fields are attached to.
@@ -80,13 +73,9 @@ class ConfigTranslationFieldListBuilder extends ConfigTranslationEntityListBuild
    * @param \Drupal\Core\Entity\EntityTypeBundleInfoInterface $entity_type_bundle_info
    *   The entity type bundle info.
    */
-  public function __construct(EntityTypeInterface $entity_type, EntityStorageInterface $storage, EntityTypeManagerInterface $entity_type_manager, EntityTypeBundleInfoInterface $entity_type_bundle_info = NULL) {
+  public function __construct(EntityTypeInterface $entity_type, EntityStorageInterface $storage, EntityTypeManagerInterface $entity_type_manager, EntityTypeBundleInfoInterface $entity_type_bundle_info) {
     parent::__construct($entity_type, $storage);
     $this->entityTypeManager = $entity_type_manager;
-    if (!$entity_type_bundle_info) {
-      @trigger_error('Calling ConfigTranslationFieldListBuilder::__construct() with the $entity_type_bundle_info argument is supported in drupal:8.7.0 and will be required before drupal:9.0.0. See https://www.drupal.org/node/2549139.', E_USER_DEPRECATED);
-      $entity_type_bundle_info = \Drupal::service('entity_type.bundle.info');
-    }
     $this->entityTypeBundleInfo = $entity_type_bundle_info;
   }
 

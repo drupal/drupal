@@ -199,10 +199,6 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
     parent::__construct($entity_type, $entity_field_manager, $cache, $memory_cache, $entity_type_bundle_info);
     $this->database = $database;
     $this->languageManager = $language_manager;
-    if (!$entity_type_manager) {
-      @trigger_error('Calling SqlContentEntityStorage::__construct() with the $entity_type_manager argument is supported in drupal:8.7.0 and will be required before drupal:9.0.0. See https://www.drupal.org/node/2549139.', E_USER_DEPRECATED);
-      $entity_type_manager = \Drupal::entityTypeManager();
-    }
     $this->entityTypeManager = $entity_type_manager;
     $this->entityType = $this->entityTypeManager->getActiveDefinition($entity_type->id());
     $this->fieldStorageDefinitions = $this->entityFieldManager->getActiveFieldStorageDefinitions($entity_type->id());

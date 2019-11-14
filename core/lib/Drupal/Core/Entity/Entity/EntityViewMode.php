@@ -20,8 +20,8 @@ use Drupal\Core\Entity\EntityViewModeInterface;
  * replicate the settings of the 'default' view mode, thus reducing the amount
  * of display configurations to keep track of.
  *
- * @see \Drupal\Core\Entity\EntityManagerInterface::getAllViewModes()
- * @see \Drupal\Core\Entity\EntityManagerInterface::getViewModes()
+ * @see \Drupal\Core\Entity\EntityDisplayRepositoryInterface::getAllViewModes()
+ * @see \Drupal\Core\Entity\EntityDisplayRepositoryInterface::getViewModes()
  * @see hook_entity_view_mode_info_alter()
  *
  * @ConfigEntityType(

@@ -2,7 +2,6 @@
 
 namespace Drupal\views\EventSubscriber;
 
-use Drupal\Core\DependencyInjection\DeprecatedServicePropertyTrait;
 use Drupal\Core\Entity\EntityTypeEventSubscriberTrait;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\EntityTypeListenerInterface;
@@ -19,12 +18,6 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 class ViewsEntitySchemaSubscriber implements EntityTypeListenerInterface, EventSubscriberInterface {
 
   use EntityTypeEventSubscriberTrait;
-  use DeprecatedServicePropertyTrait;
-
-  /**
-   * {@inheritdoc}
-   */
-  protected $deprecatedProperties = ['entityManager' => 'entity.manager'];
 
   /**
    * Indicates that a base table got renamed.

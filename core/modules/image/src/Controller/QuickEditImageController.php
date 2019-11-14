@@ -71,19 +71,11 @@ class QuickEditImageController extends ControllerBase {
    * @param \Drupal\Core\File\FileSystemInterface $file_system
    *   The file system.
    */
-  public function __construct(RendererInterface $renderer, ImageFactory $image_factory, PrivateTempStoreFactory $temp_store_factory, EntityDisplayRepositoryInterface $entity_display_repository = NULL, FileSystemInterface $file_system = NULL) {
+  public function __construct(RendererInterface $renderer, ImageFactory $image_factory, PrivateTempStoreFactory $temp_store_factory, EntityDisplayRepositoryInterface $entity_display_repository, FileSystemInterface $file_system) {
     $this->renderer = $renderer;
     $this->imageFactory = $image_factory;
     $this->tempStore = $temp_store_factory->get('quickedit');
-    if (!$entity_display_repository) {
-      @trigger_error('The entity_display.repository service must be passed to QuickEditImageController::__construct(), it is required before Drupal 9.0.0. See https://www.drupal.org/node/2549139.', E_USER_DEPRECATED);
-      $entity_display_repository = \Drupal::service('entity_display.repository');
-    }
     $this->entityDisplayRepository = $entity_display_repository;
-    if (!$file_system) {
-      @trigger_error('The file_system service must be passed to QuickEditImageController::__construct(), it is required before Drupal 9.0.0. See https://www.drupal.org/node/3006851.', E_USER_DEPRECATED);
-      $file_system = \Drupal::service('file_system');
-    }
     $this->fileSystem = $file_system;
   }
 

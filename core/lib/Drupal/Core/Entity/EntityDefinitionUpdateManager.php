@@ -2,7 +2,6 @@
 
 namespace Drupal\Core\Entity;
 
-use Drupal\Core\DependencyInjection\DeprecatedServicePropertyTrait;
 use Drupal\Core\Entity\Schema\DynamicallyFieldableEntityStorageSchemaInterface;
 use Drupal\Core\Entity\Schema\EntityStorageSchemaInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
@@ -15,12 +14,6 @@ use Drupal\Core\StringTranslation\StringTranslationTrait;
  */
 class EntityDefinitionUpdateManager implements EntityDefinitionUpdateManagerInterface {
   use StringTranslationTrait;
-  use DeprecatedServicePropertyTrait;
-
-  /**
-   * {@inheritdoc}
-   */
-  protected $deprecatedProperties = ['entityManager' => 'entity.manager'];
 
   /**
    * The entity field manager service.
@@ -71,46 +64,12 @@ class EntityDefinitionUpdateManager implements EntityDefinitionUpdateManagerInte
    * @param \Drupal\Core\Field\FieldStorageDefinitionListenerInterface $field_storage_definition_listener
    *   The field storage definition listener service.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, EntityLastInstalledSchemaRepositoryInterface $entity_last_installed_schema_repository = NULL, EntityFieldManagerInterface $entity_field_manager = NULL, EntityTypeListenerInterface $entity_type_listener = NULL, FieldStorageDefinitionListenerInterface $field_storage_definition_listener = NULL) {
-    if ($entity_type_manager instanceof EntityManagerInterface) {
-      @trigger_error('Passing the entity.manager service to EntityDefinitionUpdateManager::__construct() is deprecated in Drupal 8.7.0 and will be removed before Drupal 9.0.0. Pass the new dependencies instead. See https://www.drupal.org/node/2549139.', E_USER_DEPRECATED);
-      $this->entityTypeManager = \Drupal::entityTypeManager();
-    }
-    else {
-      $this->entityTypeManager = $entity_type_manager;
-    }
-
-    if ($entity_last_installed_schema_repository) {
-      $this->entityLastInstalledSchemaRepository = $entity_last_installed_schema_repository;
-    }
-    else {
-      @trigger_error('The entity.last_installed_schema.repository service must be passed to EntityDefinitionUpdateManager::__construct(), it is required before Drupal 9.0.0. See https://www.drupal.org/node/2549139.', E_USER_DEPRECATED);
-      $this->entityLastInstalledSchemaRepository = \Drupal::service('entity.last_installed_schema.repository');
-    }
-
-    if ($entity_field_manager) {
-      $this->entityFieldManager = $entity_field_manager;
-    }
-    else {
-      @trigger_error('The entity_field.manager service must be passed to EntityDefinitionUpdateManager::__construct(), it is required before Drupal 9.0.0. See https://www.drupal.org/node/2549139.', E_USER_DEPRECATED);
-      $this->entityFieldManager = \Drupal::service('entity_field.manager');
-    }
-
-    if ($entity_type_listener) {
-      $this->entityTypeListener = $entity_type_listener;
-    }
-    else {
-      @trigger_error('The entity_type.listener service must be passed to EntityDefinitionUpdateManager::__construct(), it is required before Drupal 9.0.0. See https://www.drupal.org/node/2549139.', E_USER_DEPRECATED);
-      $this->entityTypeListener = \Drupal::service('entity_type.listener');
-    }
-
-    if ($field_storage_definition_listener) {
-      $this->fieldStorageDefinitionListener = $field_storage_definition_listener;
-    }
-    else {
-      @trigger_error('The field_storage_definition.listener service must be passed to EntityDefinitionUpdateManager::__construct(), it is required before Drupal 9.0.0. See https://www.drupal.org/node/2549139.', E_USER_DEPRECATED);
-      $this->fieldStorageDefinitionListener = \Drupal::service('field_storage_definition.listener');
-    }
+  public function __construct(EntityTypeManagerInterface $entity_type_manager, EntityLastInstalledSchemaRepositoryInterface $entity_last_installed_schema_repository, EntityFieldManagerInterface $entity_field_manager, EntityTypeListenerInterface $entity_type_listener, FieldStorageDefinitionListenerInterface $field_storage_definition_listener) {
+    $this->entityTypeManager = $entity_type_manager;
+    $this->entityLastInstalledSchemaRepository = $entity_last_installed_schema_repository;
+    $this->entityFieldManager = $entity_field_manager;
+    $this->entityTypeListener = $entity_type_listener;
+    $this->fieldStorageDefinitionListener = $field_storage_definition_listener;
   }
 
   /**

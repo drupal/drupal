@@ -4,7 +4,6 @@ namespace Drupal\hal\Normalizer;
 
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Entity\ContentEntityInterface;
-use Drupal\Core\DependencyInjection\DeprecatedServicePropertyTrait;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
@@ -20,12 +19,6 @@ use Symfony\Component\Serializer\Exception\UnexpectedValueException;
  */
 class ContentEntityNormalizer extends NormalizerBase {
   use FieldableEntityNormalizerTrait;
-  use DeprecatedServicePropertyTrait;
-
-  /**
-   * {@inheritdoc}
-   */
-  protected $deprecatedProperties = ['entityManager' => 'entity.manager'];
 
   /**
    * {@inheritdoc}
@@ -60,20 +53,12 @@ class ContentEntityNormalizer extends NormalizerBase {
    * @param \Drupal\Core\Entity\EntityFieldManagerInterface $entity_field_manager
    *   The entity field manager.
    */
-  public function __construct(LinkManagerInterface $link_manager, EntityTypeManagerInterface $entity_type_manager, ModuleHandlerInterface $module_handler, EntityTypeRepositoryInterface $entity_type_repository = NULL, EntityFieldManagerInterface $entity_field_manager = NULL) {
+  public function __construct(LinkManagerInterface $link_manager, EntityTypeManagerInterface $entity_type_manager, ModuleHandlerInterface $module_handler, EntityTypeRepositoryInterface $entity_type_repository, EntityFieldManagerInterface $entity_field_manager) {
     $this->linkManager = $link_manager;
     $this->entityTypeManager = $entity_type_manager;
     $this->moduleHandler = $module_handler;
     $this->entityTypeRepository = $entity_type_repository;
-    if (!$entity_type_repository) {
-      @trigger_error('The entity_type.repository service must be passed to ContentEntityNormalizer::__construct(), it is required before Drupal 9.0.0. See https://www.drupal.org/node/2549139.', E_USER_DEPRECATED);
-      $entity_type_repository = \Drupal::service('entity_type.repository');
-    }
     $this->entityTypeRepository = $entity_type_repository;
-    if (!$entity_field_manager) {
-      @trigger_error('The entity_field.manager service must be passed to ContentEntityNormalizer::__construct(), it is required before Drupal 9.0.0. See https://www.drupal.org/node/2549139.', E_USER_DEPRECATED);
-      $entity_field_manager = \Drupal::service('entity_field.manager');
-    }
     $this->entityFieldManager = $entity_field_manager;
   }
 

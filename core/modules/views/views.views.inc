@@ -213,12 +213,12 @@ function views_views_data() {
  * in views_views_data().
  */
 function views_views_data_alter(&$data) {
-  $entity_manager = \Drupal::entityTypeManager();
-  if (!$entity_manager->hasDefinition('field_storage_config')) {
+  $entity_type_manager = \Drupal::entityTypeManager();
+  if (!$entity_type_manager->hasDefinition('field_storage_config')) {
     return;
   }
   /** @var \Drupal\field\FieldStorageConfigInterface $field_storage */
-  foreach ($entity_manager->getStorage('field_storage_config')->loadMultiple() as $field_storage) {
+  foreach ($entity_type_manager->getStorage('field_storage_config')->loadMultiple() as $field_storage) {
     if (_views_field_get_entity_type_storage($field_storage)) {
       $function = $field_storage->getTypeProvider() . '_field_views_data_views_data_alter';
       if (function_exists($function)) {
@@ -239,9 +239,9 @@ function views_views_data_alter(&$data) {
  */
 function _views_field_get_entity_type_storage(FieldStorageConfigInterface $field_storage) {
   $result = FALSE;
-  $entity_manager = \Drupal::entityTypeManager();
-  if ($entity_manager->hasDefinition($field_storage->getTargetEntityTypeId())) {
-    $storage = $entity_manager->getStorage($field_storage->getTargetEntityTypeId());
+  $entity_type_manager = \Drupal::entityTypeManager();
+  if ($entity_type_manager->hasDefinition($field_storage->getTargetEntityTypeId())) {
+    $storage = $entity_type_manager->getStorage($field_storage->getTargetEntityTypeId());
     $result = $storage instanceof SqlContentEntityStorage ? $storage : FALSE;
   }
   return $result;

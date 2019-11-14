@@ -5,7 +5,6 @@ namespace Drupal\Core\Entity;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Cache\MemoryCache\MemoryCacheInterface;
-use Drupal\Core\DependencyInjection\DeprecatedServicePropertyTrait;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Language\LanguageInterface;
@@ -16,12 +15,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * Base class for content entity storage handlers.
  */
 abstract class ContentEntityStorageBase extends EntityStorageBase implements ContentEntityStorageInterface, DynamicallyFieldableEntityStorageInterface {
-  use DeprecatedServicePropertyTrait;
-
-  /**
-   * {@inheritdoc}
-   */
-  protected $deprecatedProperties = ['entityManager' => 'entity.manager'];
 
   /**
    * The entity bundle key.
@@ -72,15 +65,11 @@ abstract class ContentEntityStorageBase extends EntityStorageBase implements Con
    * @param \Drupal\Core\Entity\EntityTypeBundleInfoInterface $entity_type_bundle_info
    *   The entity type bundle info.
    */
-  public function __construct(EntityTypeInterface $entity_type, EntityFieldManagerInterface $entity_field_manager, CacheBackendInterface $cache, MemoryCacheInterface $memory_cache = NULL, EntityTypeBundleInfoInterface $entity_type_bundle_info = NULL) {
+  public function __construct(EntityTypeInterface $entity_type, EntityFieldManagerInterface $entity_field_manager, CacheBackendInterface $cache, MemoryCacheInterface $memory_cache, EntityTypeBundleInfoInterface $entity_type_bundle_info) {
     parent::__construct($entity_type, $memory_cache);
     $this->bundleKey = $this->entityType->getKey('bundle');
     $this->entityFieldManager = $entity_field_manager;
     $this->cacheBackend = $cache;
-    if (!$entity_type_bundle_info) {
-      @trigger_error('Calling ContentEntityStorageBase::__construct() with the $entity_type_bundle_info argument is supported in drupal:8.7.0 and will be required before drupal:9.0.0. See https://www.drupal.org/node/2549139.', E_USER_DEPRECATED);
-      $entity_type_bundle_info = \Drupal::service('entity_type.bundle.info');
-    }
     $this->entityTypeBundleInfo = $entity_type_bundle_info;
   }
 

@@ -3,7 +3,6 @@
 namespace Drupal\Core\Entity\Plugin\DataType\Deriver;
 
 use Drupal\Core\Config\Entity\ConfigEntityInterface;
-use Drupal\Core\DependencyInjection\DeprecatedServicePropertyTrait;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
 use Drupal\Core\Entity\Plugin\DataType\ConfigEntityAdapter;
@@ -15,12 +14,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * Provides data type plugins for each existing entity type and bundle.
  */
 class EntityDeriver implements ContainerDeriverInterface {
-  use DeprecatedServicePropertyTrait;
-
-  /**
-   * {@inheritdoc}
-   */
-  protected $deprecatedProperties = ['entityManager' => 'entity.manager'];
 
   /**
    * List of derivative definitions.

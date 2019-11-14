@@ -3,7 +3,6 @@
 namespace Drupal\Core\Entity\Controller;
 
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
-use Drupal\Core\DependencyInjection\DeprecatedServicePropertyTrait;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Entity\FieldableEntityInterface;
@@ -15,12 +14,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * Defines a generic controller to render a single entity.
  */
 class EntityViewController implements ContainerInjectionInterface, TrustedCallbackInterface {
-  use DeprecatedServicePropertyTrait;
-
-  /**
-   * {@inheritdoc}
-   */
-  protected $deprecatedProperties = ['entityManager' => 'entity.manager'];
 
   /**
    * The entity type manager.

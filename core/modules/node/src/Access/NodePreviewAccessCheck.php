@@ -2,7 +2,6 @@
 
 namespace Drupal\node\Access;
 
-use Drupal\Core\DependencyInjection\DeprecatedServicePropertyTrait;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Routing\Access\AccessInterface;
 use Drupal\Core\Session\AccountInterface;
@@ -14,12 +13,6 @@ use Drupal\node\NodeInterface;
  * @ingroup node_access
  */
 class NodePreviewAccessCheck implements AccessInterface {
-  use DeprecatedServicePropertyTrait;
-
-  /**
-   * {@inheritdoc}
-   */
-  protected $deprecatedProperties = ['entityManager' => 'entity.manager'];
 
   /**
    * The entity type manager service.

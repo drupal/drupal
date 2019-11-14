@@ -77,18 +77,10 @@ abstract class EntityDisplayFormBase extends EntityForm {
    * @param \Drupal\Core\Entity\EntityFieldManagerInterface|null $entity_field_manager
    *   (optional) The entity field manager.
    */
-  public function __construct(FieldTypePluginManagerInterface $field_type_manager, PluginManagerBase $plugin_manager, EntityDisplayRepositoryInterface $entity_display_repository = NULL, EntityFieldManagerInterface $entity_field_manager = NULL) {
+  public function __construct(FieldTypePluginManagerInterface $field_type_manager, PluginManagerBase $plugin_manager, EntityDisplayRepositoryInterface $entity_display_repository, EntityFieldManagerInterface $entity_field_manager) {
     $this->fieldTypes = $field_type_manager->getDefinitions();
     $this->pluginManager = $plugin_manager;
-    if (!$entity_display_repository) {
-      @trigger_error('Calling EntityDisplayFormBase::__construct() with the $entity_display_repository argument is supported in Drupal 8.7.0 and will be required before Drupal 9.0.0. See https://www.drupal.org/node/2549139.', E_USER_DEPRECATED);
-      $entity_display_repository = \Drupal::service('entity_display.repository');
-    }
     $this->entityDisplayRepository = $entity_display_repository;
-    if (!$entity_field_manager) {
-      @trigger_error('Calling EntityDisplayFormBase::__construct() with the $entity_field_manager argument is supported in Drupal 8.7.0 and will be required before Drupal 9.0.0. See https://www.drupal.org/node/2549139.', E_USER_DEPRECATED);
-      $entity_field_manager = \Drupal::service('entity_field.manager');
-    }
     $this->entityFieldManager = $entity_field_manager;
   }
 

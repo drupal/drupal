@@ -3,7 +3,6 @@
 namespace Drupal\block;
 
 use Drupal\Component\Utility\Html;
-use Drupal\Core\DependencyInjection\DeprecatedServicePropertyTrait;
 use Drupal\Core\Plugin\PluginFormFactoryInterface;
 use Drupal\Core\Block\BlockPluginInterface;
 use Drupal\Core\Entity\EntityForm;
@@ -24,12 +23,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * @internal
  */
 class BlockForm extends EntityForm {
-  use DeprecatedServicePropertyTrait;
-
-  /**
-   * {@inheritdoc}
-   */
-  protected $deprecatedProperties = ['entityManager' => 'entity.manager'];
 
   /**
    * The block entity.
@@ -84,7 +77,7 @@ class BlockForm extends EntityForm {
    * Constructs a BlockForm object.
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
-   *   The entity manager.
+   *   The entity type manager.
    * @param \Drupal\Core\Executable\ExecutableManagerInterface $manager
    *   The ConditionManager for building the visibility UI.
    * @param \Drupal\Core\Plugin\Context\ContextRepositoryInterface $context_repository

@@ -2,7 +2,6 @@
 
 namespace Drupal\views\Plugin\Derivative;
 
-use Drupal\Core\DependencyInjection\DeprecatedServicePropertyTrait;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Plugin\Discovery\ContainerDeriverInterface;
 use Drupal\views\ViewsData;
@@ -16,12 +15,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * @see \Drupal\views\Plugin\views\row\EntityRow
  */
 class ViewsEntityRow implements ContainerDeriverInterface {
-  use DeprecatedServicePropertyTrait;
-
-  /**
-   * {@inheritdoc}
-   */
-  protected $deprecatedProperties = ['entityManager' => 'entity.manager'];
 
   /**
    * Stores all entity row plugin information.

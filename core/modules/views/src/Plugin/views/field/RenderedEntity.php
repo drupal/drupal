@@ -3,7 +3,6 @@
 namespace Drupal\views\Plugin\views\field;
 
 use Drupal\Core\Cache\CacheableDependencyInterface;
-use Drupal\Core\DependencyInjection\DeprecatedServicePropertyTrait;
 use Drupal\Core\Entity\EntityDisplayRepositoryInterface;
 use Drupal\Core\Entity\EntityRepositoryInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
@@ -24,12 +23,6 @@ use Drupal\Core\Cache\Cache;
 class RenderedEntity extends FieldPluginBase implements CacheableDependencyInterface {
 
   use EntityTranslationRenderTrait;
-  use DeprecatedServicePropertyTrait;
-
-  /**
-   * {@inheritdoc}
-   */
-  protected $deprecatedProperties = ['entityManager' => 'entity.manager'];
 
   /**
    * The entity type manager.
@@ -69,7 +62,7 @@ class RenderedEntity extends FieldPluginBase implements CacheableDependencyInter
    * @param array $plugin_definition
    *   The plugin implementation definition.
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
-   *   The entity manager.
+   *   The entity type manager.
    * @param \Drupal\Core\Language\LanguageManagerInterface $language_manager
    *   The language manager.
    * @param \Drupal\Core\Entity\EntityRepositoryInterface $entity_repository
@@ -77,22 +70,12 @@ class RenderedEntity extends FieldPluginBase implements CacheableDependencyInter
    * @param \Drupal\Core\Entity\EntityDisplayRepositoryInterface $entity_display_repository
    *   The entity display repository.
    */
-  public function __construct(array $configuration, $plugin_id, array $plugin_definition, EntityTypeManagerInterface $entity_type_manager, LanguageManagerInterface $language_manager, EntityRepositoryInterface $entity_repository = NULL, EntityDisplayRepositoryInterface $entity_display_repository = NULL) {
+  public function __construct(array $configuration, $plugin_id, array $plugin_definition, EntityTypeManagerInterface $entity_type_manager, LanguageManagerInterface $language_manager, EntityRepositoryInterface $entity_repository, EntityDisplayRepositoryInterface $entity_display_repository) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
 
     $this->entityTypeManager = $entity_type_manager;
     $this->languageManager = $language_manager;
-
-    if (!$entity_repository) {
-      @trigger_error('Calling RenderedEntity::__construct() with the $entity_repository argument is supported in drupal:8.7.0 and will be required before drupal:9.0.0. See https://www.drupal.org/node/2549139.', E_USER_DEPRECATED);
-      $entity_repository = \Drupal::service('entity.repository');
-    }
     $this->entityRepository = $entity_repository;
-
-    if (!$entity_display_repository) {
-      @trigger_error('Calling RenderedEntity::__construct() with the $entity_display_repository argument is supported in drupal:8.7.0 and will be required before drupal:9.0.0. See https://www.drupal.org/node/2549139.', E_USER_DEPRECATED);
-      $entity_display_repository = \Drupal::service('entity_display.repository');
-    }
     $this->entityDisplayRepository = $entity_display_repository;
   }
 
@@ -207,15 +190,6 @@ class RenderedEntity extends FieldPluginBase implements CacheableDependencyInter
    */
   public function getEntityTypeId() {
     return $this->getEntityType();
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function getEntityManager() {
-    // This relies on DeprecatedServicePropertyTrait to trigger a deprecation
-    // message in case it is accessed.
-    return $this->entityManager;
   }
 
   /**

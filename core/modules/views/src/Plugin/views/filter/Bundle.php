@@ -2,7 +2,6 @@
 
 namespace Drupal\views\Plugin\views\filter;
 
-use Drupal\Core\DependencyInjection\DeprecatedServicePropertyTrait;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
 use Drupal\views\ViewExecutable;
@@ -17,12 +16,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * @ViewsFilter("bundle")
  */
 class Bundle extends InOperator {
-  use DeprecatedServicePropertyTrait;
-
-  /**
-   * {@inheritdoc}
-   */
-  protected $deprecatedProperties = ['entityManager' => 'entity.manager'];
 
   /**
    * The entity type for the filter.

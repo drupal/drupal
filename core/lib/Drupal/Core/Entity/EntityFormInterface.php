@@ -126,21 +126,6 @@ interface EntityFormInterface extends BaseFormIdInterface {
   public function setModuleHandler(ModuleHandlerInterface $module_handler);
 
   /**
-   * Sets the entity manager for this form.
-   *
-   * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
-   *   The entity manager.
-   *
-   * @return $this
-   *
-   * @deprecated in drupal:8.0.0 and is removed from drupal:9.0.0. Use
-   * EntityFormInterface::setEntityTypeManager() instead.
-   *
-   * @see https://www.drupal.org/node/2549139
-   */
-  public function setEntityManager(EntityManagerInterface $entity_manager);
-
-  /**
    * Sets the entity type manager for this form.
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager

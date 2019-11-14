@@ -69,8 +69,6 @@ class SystemManager {
    *
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   The module handler.
-   * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
-   *   The entity manager.
    * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
    *   The request stack.
    * @param \Drupal\Core\Menu\MenuLinkTreeInterface $menu_tree
@@ -78,7 +76,7 @@ class SystemManager {
    * @param \Drupal\Core\Menu\MenuActiveTrailInterface $menu_active_trail
    *   The active menu trail service.
    */
-  public function __construct(ModuleHandlerInterface $module_handler, $entity_manager, RequestStack $request_stack, MenuLinkTreeInterface $menu_tree, MenuActiveTrailInterface $menu_active_trail) {
+  public function __construct(ModuleHandlerInterface $module_handler, RequestStack $request_stack, MenuLinkTreeInterface $menu_tree, MenuActiveTrailInterface $menu_active_trail) {
     $this->moduleHandler = $module_handler;
     $this->requestStack = $request_stack;
     $this->menuTree = $menu_tree;

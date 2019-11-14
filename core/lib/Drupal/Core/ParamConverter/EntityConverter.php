@@ -2,8 +2,6 @@
 
 namespace Drupal\Core\ParamConverter;
 
-use Drupal\Core\DependencyInjection\DeprecatedServicePropertyTrait;
-use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Entity\EntityRepositoryInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Entity\RevisionableInterface;
@@ -67,16 +65,7 @@ use Symfony\Component\Routing\Route;
  */
 class EntityConverter implements ParamConverterInterface {
 
-  use DeprecatedServicePropertyTrait;
   use DynamicEntityTypeParamConverterTrait;
-
-  /**
-   * {@inheritdoc}
-   */
-  protected $deprecatedProperties = [
-    'entityManager' => 'entity.manager',
-    'languageManager' => 'language_manager',
-  ];
 
   /**
    * Entity type manager which performs the upcasting in the end.
@@ -100,19 +89,10 @@ class EntityConverter implements ParamConverterInterface {
    * @param \Drupal\Core\Entity\EntityRepositoryInterface $entity_repository
    *   The entity repository.
    *
-   * @see https://www.drupal.org/node/2549139
    * @see https://www.drupal.org/node/2938929
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, $entity_repository = NULL) {
-    if ($entity_type_manager instanceof EntityManagerInterface) {
-      @trigger_error('Passing the entity.manager service to EntityConverter::__construct() is deprecated in Drupal 8.7.0 and will be removed before Drupal 9.0.0. Pass the entity_type.manager service instead. See https://www.drupal.org/node/2549139.', E_USER_DEPRECATED);
-    }
+  public function __construct(EntityTypeManagerInterface $entity_type_manager, EntityRepositoryInterface $entity_repository) {
     $this->entityTypeManager = $entity_type_manager;
-
-    if (!($entity_repository instanceof EntityRepositoryInterface)) {
-      @trigger_error('Calling EntityConverter::__construct() with the $entity_repository argument is supported in drupal:8.7.0 and will be required before drupal:9.0.0. See https://www.drupal.org/node/2549139.', E_USER_DEPRECATED);
-      $entity_repository = \Drupal::service('entity.repository');
-    }
     $this->entityRepository = $entity_repository;
   }
 
@@ -225,18 +205,6 @@ class EntityConverter implements ParamConverterInterface {
       return $this->entityTypeManager->hasDefinition($entity_type_id);
     }
     return FALSE;
-  }
-
-  /**
-   * Returns a language manager instance.
-   *
-   * @return \Drupal\Core\Language\LanguageManagerInterface
-   *   The language manager.
-   *
-   * @internal
-   */
-  protected function languageManager() {
-    return $this->__get('languageManager');
   }
 
 }

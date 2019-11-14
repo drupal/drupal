@@ -15,7 +15,6 @@ use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Entity\EntityHandlerBase;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityLastInstalledSchemaRepositoryInterface;
-use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\EntityTypeManager;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
@@ -103,7 +102,7 @@ class EntityTypeManagerTest extends UnitTestCase {
     $class = $this->getMockClass(EntityInterface::class);
     foreach ($definitions as $key => $entity_type) {
       // \Drupal\Core\Entity\EntityTypeInterface::getLinkTemplates() is called
-      // by \Drupal\Core\Entity\EntityManager::processDefinition() so it must
+      // by \Drupal\Core\Entity\EntityTypeManager::processDefinition() so it must
       // always be mocked.
       $entity_type->getLinkTemplates()->willReturn([]);
 
@@ -417,13 +416,6 @@ class TestEntityTypeManager extends EntityTypeManager {
 class TestEntityForm extends EntityHandlerBase {
 
   /**
-   * The entity manager.
-   *
-   * @var \Drupal\Core\Entity\EntityManagerInterface
-   */
-  protected $entityManager;
-
-  /**
    * The entity type manager.
    *
    * @var \Drupal\Core\Entity\EntityTypeManagerInterface
@@ -455,14 +447,6 @@ class TestEntityForm extends EntityHandlerBase {
    * {@inheritdoc}
    */
   public function setOperation($operation) {
-    return $this;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function setEntityManager(EntityManagerInterface $entity_manager) {
-    $this->entityManager = $entity_manager;
     return $this;
   }
 

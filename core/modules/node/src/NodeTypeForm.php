@@ -2,7 +2,6 @@
 
 namespace Drupal\node;
 
-use Drupal\Core\DependencyInjection\DeprecatedServicePropertyTrait;
 use Drupal\Core\Entity\BundleEntityFormBase;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
@@ -16,14 +15,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * @internal
  */
 class NodeTypeForm extends BundleEntityFormBase {
-  use DeprecatedServicePropertyTrait;
-
-  /**
-   * {@inheritdoc}
-   */
-  protected $deprecatedProperties = [
-    'entityManager' => 'entity.manager',
-  ];
 
   /**
    * The entity field manager.

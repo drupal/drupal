@@ -5,7 +5,6 @@ namespace Drupal\config_translation;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Config\Entity\ConfigEntityInterface;
 use Drupal\Core\Config\TypedConfigManagerInterface;
-use Drupal\Core\DependencyInjection\DeprecatedServicePropertyTrait;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
@@ -22,17 +21,8 @@ use Symfony\Component\Routing\Route;
  */
 class ConfigEntityMapper extends ConfigNamesMapper {
 
-  use DeprecatedServicePropertyTrait;
-
   /**
-   * {@inheritdoc}
-   */
-  protected $deprecatedProperties = [
-    'entityManager' => 'entity.manager',
-  ];
-
-  /**
-   * The entity manager.
+   * The entity type manager.
    *
    * @var \Drupal\Core\Entity\EntityTypeManagerInterface
    */
@@ -81,7 +71,7 @@ class ConfigEntityMapper extends ConfigNamesMapper {
    * @param \Drupal\Core\StringTranslation\TranslationInterface $translation_manager
    *   The string translation manager.
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
-   *   The entity manager.
+   *   The entity type manager.
    * @param \Drupal\Core\Language\LanguageManagerInterface $language_manager
    *   The language manager.
    * @param \Symfony\Component\EventDispatcher\EventDispatcherInterface $event_dispatcher

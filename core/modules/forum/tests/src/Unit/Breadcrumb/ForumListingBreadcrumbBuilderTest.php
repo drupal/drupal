@@ -3,6 +3,7 @@
 namespace Drupal\Tests\forum\Unit\Breadcrumb;
 
 use Drupal\Core\Cache\Cache;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Link;
 use Drupal\forum\Breadcrumb\ForumListingBreadcrumbBuilder;
 use Drupal\taxonomy\TermStorageInterface;
@@ -45,7 +46,7 @@ class ForumListingBreadcrumbBuilderTest extends UnitTestCase {
    */
   public function testApplies($expected, $route_name = NULL, $parameter_map = []) {
     // Make some test doubles.
-    $entity_manager = $this->createMock('Drupal\Core\Entity\EntityManagerInterface');
+    $entity_type_manager = $this->createMock(EntityTypeManagerInterface::class);
     $config_factory = $this->getConfigFactoryStub([]);
     $forum_manager = $this->createMock('Drupal\forum\ForumManagerInterface');
     $translation_manager = $this->createMock('Drupal\Core\StringTranslation\TranslationInterface');
@@ -53,7 +54,7 @@ class ForumListingBreadcrumbBuilderTest extends UnitTestCase {
     // Make an object to test.
     $builder = $this->getMockBuilder('Drupal\forum\Breadcrumb\ForumListingBreadcrumbBuilder')
       ->setConstructorArgs([
-        $entity_manager,
+        $entity_type_manager,
         $config_factory,
         $forum_manager,
         $translation_manager,
@@ -162,10 +163,10 @@ class ForumListingBreadcrumbBuilderTest extends UnitTestCase {
         ['forums', $prophecy->reveal()],
       ]));
 
-    $entity_manager = $this->getMockBuilder('Drupal\Core\Entity\EntityManagerInterface')
+    $entity_type_manager = $this->getMockBuilder(EntityTypeManagerInterface::class)
       ->disableOriginalConstructor()
       ->getMock();
-    $entity_manager->expects($this->any())
+    $entity_type_manager->expects($this->any())
       ->method('getStorage')
       ->will($this->returnValueMap([
         ['taxonomy_vocabulary', $vocab_storage],
@@ -183,7 +184,7 @@ class ForumListingBreadcrumbBuilderTest extends UnitTestCase {
     $forum_manager = $this->createMock('Drupal\forum\ForumManagerInterface');
 
     // Build a breadcrumb builder to test.
-    $breadcrumb_builder = new ForumListingBreadcrumbBuilder($entity_manager, $config_factory, $forum_manager, $translation_manager);
+    $breadcrumb_builder = new ForumListingBreadcrumbBuilder($entity_type_manager, $config_factory, $forum_manager, $translation_manager);
 
     // Add a translation manager for t().
     $translation_manager = $this->getStringTranslationStub();

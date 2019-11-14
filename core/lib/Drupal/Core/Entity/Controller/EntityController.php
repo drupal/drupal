@@ -37,7 +37,7 @@ class EntityController implements ContainerInjectionInterface {
   use UrlGeneratorTrait;
 
   /**
-   * The entity manager.
+   * The entity type manager.
    *
    * @var \Drupal\Core\Entity\EntityTypeManagerInterface
    */

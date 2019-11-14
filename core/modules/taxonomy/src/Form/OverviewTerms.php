@@ -4,7 +4,6 @@ namespace Drupal\taxonomy\Form;
 
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Access\AccessResult;
-use Drupal\Core\DependencyInjection\DeprecatedServicePropertyTrait;
 use Drupal\Core\Entity\EntityRepositoryInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\FormBase;
@@ -22,12 +21,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * @internal
  */
 class OverviewTerms extends FormBase {
-  use DeprecatedServicePropertyTrait;
-
-  /**
-   * {@inheritdoc}
-   */
-  protected $deprecatedProperties = ['entityManager' => 'entity.manager'];
 
   /**
    * The module handler service.
@@ -89,24 +82,16 @@ class OverviewTerms extends FormBase {
    *   The renderer service.
    * @param \Drupal\Core\Entity\EntityRepositoryInterface $entity_repository
    *   The entity repository.
-   * @param \Drupal\Core\Pager\PagerManagerInterface|null $pager_manager
+   * @param \Drupal\Core\Pager\PagerManagerInterface $pager_manager
    *   The pager manager.
    */
-  public function __construct(ModuleHandlerInterface $module_handler, EntityTypeManagerInterface $entity_type_manager, RendererInterface $renderer = NULL, EntityRepositoryInterface $entity_repository = NULL, PagerManagerInterface $pager_manager = NULL) {
+  public function __construct(ModuleHandlerInterface $module_handler, EntityTypeManagerInterface $entity_type_manager, RendererInterface $renderer, EntityRepositoryInterface $entity_repository, PagerManagerInterface $pager_manager) {
     $this->moduleHandler = $module_handler;
     $this->entityTypeManager = $entity_type_manager;
     $this->storageController = $entity_type_manager->getStorage('taxonomy_term');
     $this->termListBuilder = $entity_type_manager->getListBuilder('taxonomy_term');
-    $this->renderer = $renderer ?: \Drupal::service('renderer');
-    if (!$entity_repository) {
-      @trigger_error('Calling OverviewTerms::__construct() with the $entity_repository argument is supported in drupal:8.7.0 and will be required before drupal:9.0.0. See https://www.drupal.org/node/2549139.', E_USER_DEPRECATED);
-      $entity_repository = \Drupal::service('entity.repository');
-    }
+    $this->renderer = $renderer;
     $this->entityRepository = $entity_repository;
-    if (!$pager_manager) {
-      @trigger_error('Calling OverviewTerms::__construct() without the $pager_manager argument is deprecated in drupal:8.8.0 and the $pager_manager argument will be required in drupal:9.0.0. See https://www.drupal.org/node/2779457', E_USER_DEPRECATED);
-      $pager_manager = \Drupal::service('pager.manager');
-    }
     $this->pagerManager = $pager_manager;
   }
 

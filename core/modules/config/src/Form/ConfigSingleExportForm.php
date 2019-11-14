@@ -4,7 +4,6 @@ namespace Drupal\config\Form;
 
 use Drupal\Core\Config\Entity\ConfigEntityInterface;
 use Drupal\Core\Config\StorageInterface;
-use Drupal\Core\DependencyInjection\DeprecatedServicePropertyTrait;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Form\FormBase;
@@ -20,14 +19,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * @internal
  */
 class ConfigSingleExportForm extends FormBase {
-  use DeprecatedServicePropertyTrait;
-
-  /**
-   * {@inheritdoc}
-   */
-  protected $deprecatedProperties = [
-    'entityManager' => 'entity.manager',
-  ];
 
   /**
    * The entity type manager.

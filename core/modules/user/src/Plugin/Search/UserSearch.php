@@ -4,7 +4,6 @@ namespace Drupal\user\Plugin\Search;
 
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Database\Connection;
-use Drupal\Core\DependencyInjection\DeprecatedServicePropertyTrait;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Session\AccountInterface;
@@ -21,12 +20,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * )
  */
 class UserSearch extends SearchPluginBase implements AccessibleInterface {
-  use DeprecatedServicePropertyTrait;
-
-  /**
-   * {@inheritdoc}
-   */
-  protected $deprecatedProperties = ['entityManager' => 'entity.manager'];
 
   /**
    * The database connection.

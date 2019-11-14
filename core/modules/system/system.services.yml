@@ -9,7 +9,7 @@ services:
       - { name: access_check, applies_to: _access_system_update }
   system.manager:
     class: Drupal\system\SystemManager
-    arguments: ['@module_handler', null, '@request_stack', '@menu.link_tree', '@menu.active_trail']
+    arguments: ['@module_handler', '@request_stack', '@menu.link_tree', '@menu.active_trail']
   system.breadcrumb.default:
     class: Drupal\system\PathBasedBreadcrumbBuilder
     arguments: ['@router.request_context', '@access_manager', '@router', '@path_processor_manager', '@config.factory',  '@title_resolver', '@current_user', '@path.current', '@path.matcher']

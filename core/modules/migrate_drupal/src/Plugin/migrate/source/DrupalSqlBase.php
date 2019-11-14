@@ -3,7 +3,6 @@
 namespace Drupal\migrate_drupal\Plugin\migrate\source;
 
 use Drupal\Component\Plugin\DependentPluginInterface;
-use Drupal\Core\DependencyInjection\DeprecatedServicePropertyTrait;
 use Drupal\Core\Entity\DependencyTrait;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
@@ -31,12 +30,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 abstract class DrupalSqlBase extends SqlBase implements ContainerFactoryPluginInterface, DependentPluginInterface {
 
   use DependencyTrait;
-  use DeprecatedServicePropertyTrait;
-
-  /**
-   * {@inheritdoc}
-   */
-  protected $deprecatedProperties = ['entityManager' => 'entity.manager'];
 
   /**
    * The contents of the system table.

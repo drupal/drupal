@@ -204,13 +204,13 @@ class AccountProxy implements AccountProxyInterface {
   /**
    * Load a user entity.
    *
-   * The entity manager requires additional initialization code and cache
+   * The entity type manager requires additional initialization code and cache
    * clearing after the list of modules is changed. Therefore it is necessary to
    * retrieve it as late as possible.
    *
    * Because of serialization issues it is currently not possible to inject the
    * container into the AccountProxy. Thus it is necessary to retrieve the
-   * entity manager statically.
+   * entity type manager statically.
    *
    * @see https://www.drupal.org/node/2430447
    *

@@ -4,7 +4,6 @@ namespace Drupal\taxonomy;
 
 use Drupal\Core\Breadcrumb\BreadcrumbBuilderInterface;
 use Drupal\Core\Breadcrumb\Breadcrumb;
-use Drupal\Core\DependencyInjection\DeprecatedServicePropertyTrait;
 use Drupal\Core\Entity\EntityRepositoryInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Link;
@@ -16,12 +15,6 @@ use Drupal\Core\StringTranslation\StringTranslationTrait;
  */
 class TermBreadcrumbBuilder implements BreadcrumbBuilderInterface {
   use StringTranslationTrait;
-  use DeprecatedServicePropertyTrait;
-
-  /**
-   * {@inheritdoc}
-   */
-  protected $deprecatedProperties = ['entityManager' => 'entity.manager'];
 
   /**
    * The entity repository manager.
@@ -52,13 +45,9 @@ class TermBreadcrumbBuilder implements BreadcrumbBuilderInterface {
    * @param \Drupal\Core\Entity\EntityRepositoryInterface $entity_repository
    *   The entity repository.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, EntityRepositoryInterface $entity_repository = NULL) {
+  public function __construct(EntityTypeManagerInterface $entity_type_manager, EntityRepositoryInterface $entity_repository) {
     $this->entityTypeManager = $entity_type_manager;
     $this->termStorage = $entity_type_manager->getStorage('taxonomy_term');
-    if (!$entity_repository) {
-      @trigger_error('The entity.repository service must be passed to TermBreadcrumbBuilder::__construct(), it is required before Drupal 9.0.0. See https://www.drupal.org/node/2549139.', E_USER_DEPRECATED);
-      $entity_repository = \Drupal::service('entity.repository');
-    }
     $this->entityRepository = $entity_repository;
   }
 

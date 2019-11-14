@@ -5,7 +5,6 @@
  * Helper module for the Field API tests.
  *
  * The module defines
- * - an entity type (field_test.entity.inc)
  * - a field type and its formatters and widgets (field_test.field.inc)
  * - a field storage backend (field_test.storage.inc)
  *

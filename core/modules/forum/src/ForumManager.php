@@ -5,7 +5,6 @@ namespace Drupal\forum;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\DependencyInjection\DependencySerializationTrait;
-use Drupal\Core\DependencyInjection\DeprecatedServicePropertyTrait;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Session\AccountInterface;
@@ -23,12 +22,6 @@ class ForumManager implements ForumManagerInterface {
     __wakeup as defaultWakeup;
     __sleep as defaultSleep;
   }
-  use DeprecatedServicePropertyTrait;
-
-  /**
-   * {@inheritdoc}
-   */
-  protected $deprecatedProperties = ['entityManager' => 'entity.manager'];
 
   /**
    * Forum sort order, newest first.
@@ -136,16 +129,12 @@ class ForumManager implements ForumManagerInterface {
    * @param \Drupal\Core\Entity\EntityFieldManagerInterface $entity_field_manager
    *   The entity field manager.
    */
-  public function __construct(ConfigFactoryInterface $config_factory, EntityTypeManagerInterface $entity_type_manager, Connection $connection, TranslationInterface $string_translation, CommentManagerInterface $comment_manager, EntityFieldManagerInterface $entity_field_manager = NULL) {
+  public function __construct(ConfigFactoryInterface $config_factory, EntityTypeManagerInterface $entity_type_manager, Connection $connection, TranslationInterface $string_translation, CommentManagerInterface $comment_manager, EntityFieldManagerInterface $entity_field_manager) {
     $this->configFactory = $config_factory;
     $this->entityTypeManager = $entity_type_manager;
     $this->connection = $connection;
     $this->stringTranslation = $string_translation;
     $this->commentManager = $comment_manager;
-    if (!$entity_field_manager) {
-      @trigger_error('The entity_field.manager service must be passed to ForumManager::__construct(), it is required before Drupal 9.0.0. See https://www.drupal.org/node/2549139.', E_USER_DEPRECATED);
-      $entity_field_manager = \Drupal::service('entity_field.manager');
-    }
     $this->entityFieldManager = $entity_field_manager;
   }
 

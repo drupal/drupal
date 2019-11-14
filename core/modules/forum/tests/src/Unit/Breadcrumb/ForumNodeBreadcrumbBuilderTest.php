@@ -3,6 +3,7 @@
 namespace Drupal\Tests\forum\Unit\Breadcrumb;
 
 use Drupal\Core\Cache\Cache;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Link;
 use Drupal\forum\Breadcrumb\ForumNodeBreadcrumbBuilder;
 use Drupal\taxonomy\TermStorageInterface;
@@ -45,7 +46,7 @@ class ForumNodeBreadcrumbBuilderTest extends UnitTestCase {
    */
   public function testApplies($expected, $route_name = NULL, $parameter_map = []) {
     // Make some test doubles.
-    $entity_manager = $this->createMock('Drupal\Core\Entity\EntityManagerInterface');
+    $entity_type_manager = $this->createMock(EntityTypeManagerInterface::class);
     $config_factory = $this->getConfigFactoryStub([]);
 
     $forum_manager = $this->createMock('Drupal\forum\ForumManagerInterface');
@@ -59,7 +60,7 @@ class ForumNodeBreadcrumbBuilderTest extends UnitTestCase {
     $builder = $this->getMockBuilder('Drupal\forum\Breadcrumb\ForumNodeBreadcrumbBuilder')
       ->setConstructorArgs(
         [
-          $entity_manager,
+          $entity_type_manager,
           $config_factory,
           $forum_manager,
           $translation_manager,
@@ -172,10 +173,10 @@ class ForumNodeBreadcrumbBuilderTest extends UnitTestCase {
         ['forums', $prophecy->reveal()],
       ]));
 
-    $entity_manager = $this->getMockBuilder('Drupal\Core\Entity\EntityManagerInterface')
+    $entity_type_manager = $this->getMockBuilder(EntityTypeManagerInterface::class)
       ->disableOriginalConstructor()
       ->getMock();
-    $entity_manager->expects($this->any())
+    $entity_type_manager->expects($this->any())
       ->method('getStorage')
       ->will($this->returnValueMap([
         ['taxonomy_vocabulary', $vocab_storage],
@@ -191,7 +192,7 @@ class ForumNodeBreadcrumbBuilderTest extends UnitTestCase {
     );
 
     // Build a breadcrumb builder to test.
-    $breadcrumb_builder = new ForumNodeBreadcrumbBuilder($entity_manager,
+    $breadcrumb_builder = new ForumNodeBreadcrumbBuilder($entity_type_manager,
       $config_factory,
       $forum_manager,
       $translation_manager);

@@ -818,8 +818,8 @@
  *   special methods for accessing commonly-used services, or you can call a
  *   generic method to access any service. Examples:
  *   @code
- *   // Retrieve the entity.manager service object (special method exists).
- *   $manager = \Drupal::entityManager();
+ *   // Retrieve the entity_type.manager service object (special method exists).
+ *   $entity_type_manager = \Drupal::entityTypeManager();
  *   // Retrieve the service object for machine name 'foo.bar'.
  *   $foobar = \Drupal::service('foo.bar');
  *   @endcode

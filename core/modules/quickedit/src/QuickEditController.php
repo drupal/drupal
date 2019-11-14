@@ -87,15 +87,7 @@ class QuickEditController extends ControllerBase {
     $this->metadataGenerator = $metadata_generator;
     $this->editorSelector = $editor_selector;
     $this->renderer = $renderer;
-    if (!$entity_display_repository) {
-      @trigger_error('The entity_display.repository service must be passed to QuickEditController::__construct(), it is required before Drupal 9.0.0. See https://www.drupal.org/node/2549139.', E_USER_DEPRECATED);
-      $entity_display_repository = \Drupal::service('entity_display.repository');
-    }
     $this->entityDisplayRepository = $entity_display_repository;
-    if (!$entity_repository) {
-      @trigger_error('The entity.repository service must be passed to QuickEditController::__construct(), it is required before Drupal 9.0.0. See https://www.drupal.org/node/2549139.', E_USER_DEPRECATED);
-      $entity_repository = \Drupal::service('entity.repository');
-    }
     $this->entityRepository = $entity_repository;
   }
 

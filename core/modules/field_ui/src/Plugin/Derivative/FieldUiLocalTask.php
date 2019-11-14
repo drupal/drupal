@@ -2,7 +2,6 @@
 
 namespace Drupal\field_ui\Plugin\Derivative;
 
-use Drupal\Core\DependencyInjection\DeprecatedServicePropertyTrait;
 use Drupal\Core\Entity\EntityDisplayRepositoryInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Component\Plugin\Derivative\DeriverBase;
@@ -17,12 +16,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  */
 class FieldUiLocalTask extends DeriverBase implements ContainerDeriverInterface {
   use StringTranslationTrait;
-  use DeprecatedServicePropertyTrait;
-
-  /**
-   * {@inheritdoc}
-   */
-  protected $deprecatedProperties = ['entityManager' => 'entity.manager'];
 
   /**
    * The route provider.
@@ -57,14 +50,10 @@ class FieldUiLocalTask extends DeriverBase implements ContainerDeriverInterface 
    * @param \Drupal\Core\Entity\EntityDisplayRepositoryInterface $entity_display_repository
    *   The entity display repository.
    */
-  public function __construct(RouteProviderInterface $route_provider, EntityTypeManagerInterface $entity_type_manager, TranslationInterface $string_translation, EntityDisplayRepositoryInterface $entity_display_repository = NULL) {
+  public function __construct(RouteProviderInterface $route_provider, EntityTypeManagerInterface $entity_type_manager, TranslationInterface $string_translation, EntityDisplayRepositoryInterface $entity_display_repository) {
     $this->routeProvider = $route_provider;
     $this->entityTypeManager = $entity_type_manager;
     $this->stringTranslation = $string_translation;
-    if (!$entity_display_repository) {
-      @trigger_error('Calling FieldUiLocalTask::__construct() with the $entity_repository argument is supported in drupal:8.7.0 and will be required before drupal:9.0.0. See https://www.drupal.org/node/2549139.', E_USER_DEPRECATED);
-      $entity_display_repository = \Drupal::service('entity_display.repository');
-    }
     $this->entityDisplayRepository = $entity_display_repository;
   }
 

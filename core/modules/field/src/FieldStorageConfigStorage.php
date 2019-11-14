@@ -5,7 +5,6 @@ namespace Drupal\field;
 use Drupal\Component\Uuid\UuidInterface;
 use Drupal\Core\Cache\MemoryCache\MemoryCacheInterface;
 use Drupal\Core\Config\Entity\ConfigEntityStorage;
-use Drupal\Core\DependencyInjection\DeprecatedServicePropertyTrait;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
@@ -20,12 +19,6 @@ use Drupal\Core\Extension\ModuleHandlerInterface;
  * Storage handler for "field storage" configuration entities.
  */
 class FieldStorageConfigStorage extends ConfigEntityStorage {
-  use DeprecatedServicePropertyTrait;
-
-  /**
-   * {@inheritdoc}
-   */
-  protected $deprecatedProperties = ['entityManager' => 'entity.manager'];
 
   /**
    * The module handler.

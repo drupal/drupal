@@ -566,7 +566,6 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
     require_once $this->root . '/core/includes/form.inc';
     require_once $this->root . '/core/includes/errors.inc';
     require_once $this->root . '/core/includes/schema.inc';
-    require_once $this->root . '/core/includes/entity.inc';
   }
 
   /**

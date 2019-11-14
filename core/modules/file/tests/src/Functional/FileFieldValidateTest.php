@@ -215,7 +215,7 @@ class FileFieldValidateTest extends FileFieldTestBase {
       $this->markTestSkipped('This test does not work in PHPUnit 7+ since assertFileExists only accepts string arguments for $file');
     }
 
-    $node_storage = $this->container->get('entity.manager')->getStorage('node');
+    $node_storage = $this->container->get('entity_type.manager')->getStorage('node');
     $type_name = 'article';
     $field_name = 'file_test';
     $this->createFileField($field_name, 'node', $type_name);

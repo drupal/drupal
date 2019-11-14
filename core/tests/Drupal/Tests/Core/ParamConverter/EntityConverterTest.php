@@ -9,7 +9,6 @@ use Drupal\Core\Entity\ContentEntityTypeInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Entity\EntityRepositoryInterface;
 use Drupal\Core\Language\LanguageInterface;
-use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\ParamConverter\EntityConverter;
 use Drupal\Core\ParamConverter\ParamNotConvertedException;
 use Drupal\Core\Plugin\Context\Context;
@@ -148,55 +147,6 @@ class EntityConverterTest extends UnitTestCase {
       ->willReturnMap($return_map);
 
     \Drupal::setContainer($container);
-  }
-
-  /**
-   * Tests that passing the language manager triggers a deprecation error.
-   *
-   * @group legacy
-   *
-   * @expectedDeprecation Calling EntityConverter::__construct() with the $entity_repository argument is supported in drupal:8.7.0 and will be required before drupal:9.0.0. See https://www.drupal.org/node/2549139.
-   */
-  public function testDeprecatedLanguageManager() {
-    $container_entity_repository = clone $this->entityRepository;
-    $this->setUpMocks([
-      'entity.repository' => $container_entity_repository,
-    ]);
-    $language_manager = $this->createMock(LanguageManagerInterface::class);
-
-    $this->entityConverter = new EntityConverter($this->entityTypeManager, $language_manager);
-  }
-
-  /**
-   * Tests that retrieving the language manager triggers a deprecation error.
-   *
-   * @group legacy
-   *
-   * @expectedDeprecation The property languageManager (language_manager service) is deprecated in Drupal\Core\ParamConverter\EntityConverter and will be removed before Drupal 9.0.0.
-   */
-  public function testDeprecatedLanguageManagerMethod() {
-    $this->setUpMocks([
-      'language_manager' => $this->createMock(LanguageManagerInterface::class),
-    ]);
-    $this->entityConverter = new EntityConverter($this->entityTypeManager, $this->entityRepository);
-    $reflector = new \ReflectionMethod(EntityConverter::class, 'languageManager');
-    $reflector->setAccessible(TRUE);
-    $this->assertSame(\Drupal::service('language_manager'), $reflector->invoke($this->entityConverter));
-  }
-
-  /**
-   * Tests that retrieving the language manager triggers a deprecation error.
-   *
-   * @group legacy
-   *
-   * @expectedDeprecation The property languageManager (language_manager service) is deprecated in Drupal\Core\ParamConverter\EntityConverter and will be removed before Drupal 9.0.0.
-   */
-  public function testDeprecatedLanguageManagerProperty() {
-    $this->setUpMocks([
-      'language_manager' => $this->createMock(LanguageManagerInterface::class),
-    ]);
-    $this->entityConverter = new EntityConverter($this->entityTypeManager, $this->entityRepository);
-    $this->assertSame(\Drupal::service('language_manager'), $this->entityConverter->__get('languageManager'));
   }
 
   /**

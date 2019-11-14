@@ -592,8 +592,6 @@ abstract class EntityStorageBase extends EntityHandlerBase implements EntityStor
    * {@inheritdoc}
    */
   public function getQuery($conjunction = 'AND') {
-    // Access the service directly rather than entity.query factory so the
-    // storage's current entity type is used.
     return \Drupal::service($this->getQueryServiceName())->get($this->entityType, $conjunction);
   }
 
@@ -601,8 +599,6 @@ abstract class EntityStorageBase extends EntityHandlerBase implements EntityStor
    * {@inheritdoc}
    */
   public function getAggregateQuery($conjunction = 'AND') {
-    // Access the service directly rather than entity.query factory so the
-    // storage's current entity type is used.
     return \Drupal::service($this->getQueryServiceName())->getAggregate($this->entityType, $conjunction);
   }
 

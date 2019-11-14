@@ -120,7 +120,7 @@ interface EntityTypeManagerInterface extends PluginManagerInterface, CachedDisco
   /**
    * Creates new handler instance.
    *
-   * Usually \Drupal\Core\Entity\EntityManagerInterface::getHandler() is
+   * Usually \Drupal\Core\Entity\EntityTypeManagerInterface::getHandler() is
    * preferred since that method has additional checking that the class exists
    * and has static caches.
    *

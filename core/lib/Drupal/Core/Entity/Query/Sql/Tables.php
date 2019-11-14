@@ -3,7 +3,6 @@
 namespace Drupal\Core\Entity\Query\Sql;
 
 use Drupal\Core\Database\Query\SelectInterface;
-use Drupal\Core\DependencyInjection\DeprecatedServicePropertyTrait;
 use Drupal\Core\Entity\EntityType;
 use Drupal\Core\Entity\Query\QueryException;
 use Drupal\Core\Entity\Sql\SqlEntityStorageInterface;
@@ -16,13 +15,6 @@ use Drupal\Core\TypedData\DataReferenceDefinitionInterface;
  * Adds tables and fields to the SQL entity query.
  */
 class Tables implements TablesInterface {
-
-  use DeprecatedServicePropertyTrait;
-
-  /**
-   * {@inheritdoc}
-   */
-  protected $deprecatedProperties = ['entityManager' => 'entity.manager'];
 
   /**
    * @var \Drupal\Core\Database\Query\SelectInterface
