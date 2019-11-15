@@ -28,15 +28,21 @@ class ClaroTest extends BrowserTestBase {
   protected $defaultTheme = 'claro';
 
   /**
-   * Tests that the Claro theme always adds its elements.css.
+   * Testing that Claro theme's global library is always attached.
    *
    * @see claro.info.yml
    */
   public function testRegressionMissingElementsCss() {
     $this->drupalGet('');
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertSession()->responseContains('claro/css/src/base/elements.css');
+    // This can be any CSS file from the global library.
+    $this->assertSession()->responseContains('claro/css/base/elements.css');
+  }
 
+  /**
+   * Test Claro's configuration schema.
+   */
+  public function testConfigSchema() {
     $this->drupalLogin($this->rootUser);
     $this->drupalGet('admin/modules');
     $this->assertSession()->elementNotExists('css', '#block-claro-help');

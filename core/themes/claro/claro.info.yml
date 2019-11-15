@@ -25,12 +25,12 @@ libraries-override:
   system/base:
     css:
       component:
-        /core/themes/stable/css/system/components/ajax-progress.module.css: css/src/components/ajax-progress.module.css
-        /core/themes/stable/css/system/components/autocomplete-loading.module.css: css/src/components/autocomplete-loading.module.css
-        /core/themes/stable/css/system/components/system-status-counter.css: css/src/components/system-status-counter.css
-        /core/themes/stable/css/system/components/system-status-report-counters.css: css/src/components/system-status-report-counters.css
-        /core/themes/stable/css/system/components/system-status-report-general-info.css: css/src/components/system-status-report-general-info.css
-        /core/themes/stable/css/system/components/tabledrag.module.css: css/src/components/tabledrag.css
+        /core/themes/stable/css/system/components/ajax-progress.module.css: css/components/ajax-progress.module.css
+        /core/themes/stable/css/system/components/autocomplete-loading.module.css: css/components/autocomplete-loading.module.css
+        /core/themes/stable/css/system/components/system-status-counter.css: css/components/system-status-counter.css
+        /core/themes/stable/css/system/components/system-status-report-counters.css: css/components/system-status-report-counters.css
+        /core/themes/stable/css/system/components/system-status-report-general-info.css: css/components/system-status-report-general-info.css
+        /core/themes/stable/css/system/components/tabledrag.module.css: css/components/tabledrag.css
 
   system/admin:
     css:
@@ -40,7 +40,7 @@ libraries-override:
   core/drupal.dropbutton:
     css:
       component:
-        /core/themes/stable/css/core/dropbutton/dropbutton.css: css/src/components/dropbutton.css
+        /core/themes/stable/css/core/dropbutton/dropbutton.css: css/components/dropbutton.css
 
   core/drupal.tabledrag:
     js:
@@ -76,7 +76,7 @@ libraries-override:
         css/components/form.css: false
         css/components/tabs.css: false
         css/components/pager.css: false
-        css/components/tableselect.css: css/src/components/tableselect.css
+        css/components/tableselect.css: css/components/tableselect.css
         css/components/tabledrag.css: false
         css/components/collapse-processed.css: false
 
@@ -93,7 +93,7 @@ libraries-override:
   classy/progress:
     css:
       component:
-        css/components/progress.css: css/src/components/progress.css
+        css/components/progress.css: css/components/progress.css
   # @todo Refactor when https://www.drupal.org/node/2642122 is fixed.
 
   classy/user: false
@@ -103,22 +103,22 @@ libraries-override:
   field_ui/drupal.field_ui:
     css:
       theme:
-        /core/themes/stable/css/field_ui/field_ui.admin.css: css/src/theme/field-ui.admin.css
+        /core/themes/stable/css/field_ui/field_ui.admin.css: css/theme/field-ui.admin.css
 
   filter/drupal.filter.admin:
     css:
       theme:
-        /core/themes/stable/css/filter/filter.admin.css: css/src/theme/filter.theme.css
+        /core/themes/stable/css/filter/filter.admin.css: css/theme/filter.theme.css
 
   filter/drupal.filter:
     css:
       theme:
-        /core/themes/stable/css/filter/filter.admin.css: css/src/theme/filter.theme.css
+        /core/themes/stable/css/filter/filter.admin.css: css/theme/filter.theme.css
 
   views_ui/admin.styling:
     css:
       theme:
-        /core/themes/stable/css/views_ui/views_ui.admin.theme.css: css/src/theme/views_ui.admin.theme.css
+        /core/themes/stable/css/views_ui/views_ui.admin.theme.css: css/theme/views_ui.admin.theme.css
 
 libraries-extend:
   ckeditor/drupal.ckeditor:
@@ -155,11 +155,11 @@ libraries-extend:
     - claro/views
 
 quickedit_stylesheets:
-  - css/src/components/quickedit.css
+  - css/components/quickedit.css
 ckeditor_stylesheets:
-  - css/src/base/elements.css
-  - css/src/base/typography.css
-  - css/src/theme/ckeditor-frame.css
+  - css/base/elements.css
+  - css/base/typography.css
+  - css/theme/ckeditor-frame.css
 
 regions:
   header: 'Header'
