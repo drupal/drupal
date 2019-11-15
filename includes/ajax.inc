@@ -294,6 +294,7 @@ function ajax_render($commands = array()) {
 
   // Now add a command to merge changes and additions to Drupal.settings.
   $scripts = drupal_add_js();
+  drupal_alter('js', $scripts);
   if (!empty($scripts['settings'])) {
     $settings = $scripts['settings'];
     array_unshift($commands, ajax_command_settings(drupal_array_merge_deep_array($settings['data']), TRUE));
