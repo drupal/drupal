@@ -150,15 +150,15 @@ class EntityDefinitionUpdateManager implements EntityDefinitionUpdateManagerInte
         foreach ($change_list['field_storage_definitions'] as $field_name => $change) {
           switch ($change) {
             case static::DEFINITION_CREATED:
-              $summary[$entity_type_id][] = $this->t('The %field_name field needs to be installed.', ['%field_name' => $storage_definitions[$field_name]->getLabel()]);
+              $summary[$entity_type_id][] = $this->t('The %field_name field needs to be installed.', ['%field_name' => $storage_definitions[$field_name]->getLabel() ?: $field_name]);
               break;
 
             case static::DEFINITION_UPDATED:
-              $summary[$entity_type_id][] = $this->t('The %field_name field needs to be updated.', ['%field_name' => $storage_definitions[$field_name]->getLabel()]);
+              $summary[$entity_type_id][] = $this->t('The %field_name field needs to be updated.', ['%field_name' => $storage_definitions[$field_name]->getLabel() ?: $field_name]);
               break;
 
             case static::DEFINITION_DELETED:
-              $summary[$entity_type_id][] = $this->t('The %field_name field needs to be uninstalled.', ['%field_name' => $original_storage_definitions[$field_name]->getLabel()]);
+              $summary[$entity_type_id][] = $this->t('The %field_name field needs to be uninstalled.', ['%field_name' => $original_storage_definitions[$field_name]->getLabel() ?: $field_name]);
               break;
           }
         }
