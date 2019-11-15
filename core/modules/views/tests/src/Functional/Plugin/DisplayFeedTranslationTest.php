@@ -2,8 +2,10 @@
 
 namespace Drupal\Tests\views\Functional\Plugin;
 
+use Drupal\Tests\Traits\Core\PathAliasTestTrait;
 use Drupal\Tests\views\Functional\ViewTestBase;
 use Drupal\language\Entity\ConfigurableLanguage;
+use Drupal\node\Entity\Node;
 
 /**
  * Tests the feed display plugin with translated content.
@@ -12,6 +14,8 @@ use Drupal\language\Entity\ConfigurableLanguage;
  * @see \Drupal\views\Plugin\views\display\Feed
  */
 class DisplayFeedTranslationTest extends ViewTestBase {
+
+  use PathAliasTestTrait;
 
   /**
    * Views used by this test.
@@ -89,6 +93,7 @@ class DisplayFeedTranslationTest extends ViewTestBase {
       ],
       'langcode' => 'en',
     ]);
+
     $es_translation = $node->addTranslation('es');
     $es_translation->set('title', 'es');
     $es_translation->set('body', [['value' => 'Algo en Español']]);
@@ -99,6 +104,30 @@ class DisplayFeedTranslationTest extends ViewTestBase {
     $pt_br_translation->set('body', [['value' => 'Algo em Português']]);
     $pt_br_translation->save();
 
+    // First, check everything with raw node paths (e.g. node/1).
+    $this->checkFeedResults('raw-node-path', $node);
+
+    // Now, create path aliases for each translation.
+    $node_path = '/node/' . $node->id();
+    $this->createPathAlias($node_path, "$node_path/en-alias");
+    $this->createPathAlias($node_path, "$node_path/es-alias", 'es');
+    $this->createPathAlias($node_path, "$node_path/pt-br-alias", 'pt-br');
+    // Save the node again, to clear the cache on the feed.
+    $node->save();
+    // Assert that all the results are correct using path aliases.
+    $this->checkFeedResults('path-alias', $node);
+  }
+
+  /**
+   * Checks the feed results for the given style of node links.
+   *
+   * @param string $link_style
+   *   What style of links do we expect? Either 'raw-node-path' or 'path-alias'.
+   *   Only used for human-readable assert failure messages.
+   * @param \Drupal\node\Entity\Node $node
+   *   The node entity that's been created.
+   */
+  protected function checkFeedResults($link_style, Node $node) {
     /** @var \Drupal\Core\Language\LanguageManagerInterface $languageManager */
     $language_manager = \Drupal::languageManager()->reset();
 
@@ -131,7 +160,7 @@ class DisplayFeedTranslationTest extends ViewTestBase {
 
     $items = $this->getSession()->getDriver()->find('//channel/item');
     // There should only be 3 items in the feed.
-    $this->assertCount(3, $items);
+    $this->assertCount(3, $items, "$link_style: 3 items in feed");
 
     // Don't rely on the sort order of the items in the feed. Instead, each
     // item's title is the langcode for that item. Iterate over all the items,
@@ -140,13 +169,13 @@ class DisplayFeedTranslationTest extends ViewTestBase {
     // what we expect for the given langcode.
     foreach ($items as $item) {
       $title_element = $item->findAll('xpath', 'title');
-      $this->assertCount(1, $title_element);
+      $this->assertCount(1, $title_element, "$link_style: Missing title element");
       $langcode = $title_element[0]->getText();
-      $this->assertArrayHasKey($langcode, $expected);
+      $this->assertArrayHasKey($langcode, $expected, "$link_style: Missing expected output for $langcode");
       foreach ($expected[$langcode] as $key => $expected_value) {
         $elements = $item->findAll('xpath', $key);
-        $this->assertCount(1, $elements);
-        $this->assertEquals($expected_value, $elements[0]->getText());
+        $this->assertCount(1, $elements, "$link_style: Xpath $key missing");
+        $this->assertEquals($expected_value, $elements[0]->getText(), "$link_style: Unexpected value for $key");
       }
     }
   }
