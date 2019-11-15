@@ -120,7 +120,7 @@ class PathAliasTest extends PathTestBase {
     $this->assertText($node1->label(), 'Changed alias works.');
     $this->assertResponse(200);
 
-    $this->container->get('path.alias_manager')->cacheClear();
+    $this->container->get('path_alias.manager')->cacheClear();
     // Confirm that previous alias no longer works.
     $this->drupalGet($previous);
     $this->assertNoText($node1->label(), 'Previous alias no longer works.');
