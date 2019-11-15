@@ -2,7 +2,7 @@
 
 namespace Drupal\workspaces\EventSubscriber;
 
-use Drupal\Core\Path\AliasManagerInterface;
+use Drupal\path_alias\AliasManagerInterface;
 use Drupal\Core\Path\CurrentPathStack;
 use Drupal\Core\Routing\CacheableRouteProviderInterface;
 use Drupal\Core\Routing\RouteProviderInterface;
@@ -20,7 +20,7 @@ class WorkspaceRequestSubscriber implements EventSubscriberInterface {
   /**
    * The alias manager that caches alias lookups based on the request.
    *
-   * @var \Drupal\Core\Path\AliasManagerInterface
+   * @var \Drupal\path_alias\AliasManagerInterface
    */
   protected $aliasManager;
 
@@ -48,7 +48,7 @@ class WorkspaceRequestSubscriber implements EventSubscriberInterface {
   /**
    * Constructs a new WorkspaceRequestSubscriber instance.
    *
-   * @param \Drupal\Core\Path\AliasManagerInterface $alias_manager
+   * @param \Drupal\path_alias\AliasManagerInterface $alias_manager
    *   The alias manager.
    * @param \Drupal\Core\Path\CurrentPathStack $current_path
    *   The current path.

@@ -265,7 +265,7 @@ class WorkspaceManager implements WorkspaceManagerInterface {
 
     // Clear the static cache for path aliases. We can't inject the path alias
     // manager service because it would create a circular dependency.
-    \Drupal::service('path.alias_manager')->cacheClear();
+    \Drupal::service('path_alias.manager')->cacheClear();
   }
 
   /**

@@ -40,7 +40,7 @@ services:
       - { name: 'event_subscriber' }
   workspaces.workspace_subscriber:
     class: Drupal\workspaces\EventSubscriber\WorkspaceRequestSubscriber
-    arguments: ['@path.alias_manager', '@path.current', '@router.route_provider', '@workspaces.manager']
+    arguments: ['@path_alias.manager', '@path.current', '@router.route_provider', '@workspaces.manager']
     tags:
       - { name: event_subscriber }
 

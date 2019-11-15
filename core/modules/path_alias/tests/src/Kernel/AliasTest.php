@@ -12,7 +12,7 @@ use Drupal\Tests\Traits\Core\PathAliasTestTrait;
 /**
  * Tests path alias CRUD and lookup functionality.
  *
- * @coversDefaultClass \Drupal\Core\Path\AliasRepository
+ * @coversDefaultClass \Drupal\path_alias\AliasRepository
  *
  * @group path_alias
  */
@@ -61,12 +61,12 @@ class AliasTest extends KernelTestBase {
   }
 
   /**
-   * @covers \Drupal\Core\Path\AliasManager::getPathByAlias
-   * @covers \Drupal\Core\Path\AliasManager::getAliasByPath
+   * @covers \Drupal\path_alias\AliasManager::getPathByAlias
+   * @covers \Drupal\path_alias\AliasManager::getAliasByPath
    */
   public function testLookupPath() {
     // Create AliasManager and Path object.
-    $aliasManager = $this->container->get('path.alias_manager');
+    $aliasManager = $this->container->get('path_alias.manager');
 
     // Test the situation where the source is the same for multiple aliases.
     // Start with a language-neutral alias, which we will override.
