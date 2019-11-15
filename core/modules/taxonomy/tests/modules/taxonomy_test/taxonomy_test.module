@@ -6,6 +6,7 @@
  */
 
 use Drupal\Core\Database\Query\AlterableInterface;
+use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Implements hook_query_alter().
@@ -34,5 +35,14 @@ function taxonomy_test_query_taxonomy_term_access_alter(AlterableInterface $quer
   $value = \Drupal::state()->get(__FUNCTION__);
   if (isset($value)) {
     \Drupal::state()->set(__FUNCTION__, ++$value);
+  }
+}
+
+/**
+ * Implements hook_form_BASE_FORM_ID_alter() for the taxonomy term form.
+ */
+function taxonomy_test_form_taxonomy_term_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  if (\Drupal::state()->get('taxonomy_test.disable_parent_form_element', FALSE)) {
+    $form['relations']['parent']['#disabled'] = TRUE;
   }
 }
