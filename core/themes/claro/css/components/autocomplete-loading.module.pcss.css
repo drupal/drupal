@@ -1,0 +1,86 @@
+/**
+ * @file
+ * Visual styles for animated throbber.
+ *
+ * @see autocomplete.js
+ */
+
+@import "../base/variables.pcss.css";
+
+/**
+ * Since the autocomplete library is attached conditionally and not globally,
+ * we can be 99% sure that the default icon will be used.
+ * With inline SVGs we can prevent a HTTP request and repaint addressing the
+ * autocomplete input's background — until are sure that it will be pushed by
+ * the server with HTTP/2.
+ *
+ * The autocompleting (active) state's background-image is inlined because
+ * non-used CSS selectors are usually ignored; popular browsers don't download
+ * their 'url' references.
+ * If these selectors become active, the browser needs some time for painting
+ * previously ignored remote asset: it should get it from server, parse it and
+ * repaint the background of autocomplete field. With the inlined background we
+ * can prevent an additional timeout caused by a new request/response pair.
+ * Besides this, the autocompleting event itself may easily finish before the
+ * missing asset gets downloaded/parsed/painted, and the missing instant visual
+ * feedback would be a usability/accessibility issue as well.
+ */
+
+.js .form-autocomplete {
+  background-image: url("data:image/svg+xml,%3Csvg width='40' height='20' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='m8,0.999781c-4.5394538,-0.1723607 -8.18800628,4.7870352 -6.6873554,9.068641 1.1767997,4.383903 6.9938335,6.416563 10.6372244,3.700244 0.325764,-0.391006 0.56541,0.275384 0.84585,0.440896 1.246479,1.246479 2.492958,2.492959 3.739437,3.739438 0.471354,-0.471354 0.942709,-0.942709 1.414063,-1.414063 -1.44987,-1.44987 -2.89974,-2.899739 -4.34961,-4.349609C16.410345,8.7174615 14.748115,2.9379071 10.536504,1.4755074 9.7302231,1.1615612 8.8650587,0.99941873 8,0.999781Z m0,2c3.242467,-0.1231148 5.848576,3.4193109 4.776682,6.477601 -0.841211,3.131959 -4.9939918,4.58038 -7.5998944,2.649077C2.4322236,10.397214 2.2765833,6.0022025 4.8919502,4.0831465 5.7667487,3.38528 6.8811016,2.996997 8,2.999781Z' fill='%23868686' /%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: 100% 50%;
+}
+.js .form-autocomplete::-ms-clear {
+  display: none;
+}
+.js[dir="rtl"] .form-autocomplete {
+  background-image: url("data:image/svg+xml,%3Csvg width='40' height='20' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='m12,0.999781c4.539454,-0.1723607 8.188006,4.7870352 6.687355,9.068641 -1.176799,4.383903 -6.993833,6.416563 -10.637224,3.700244C7.724367,13.37766 7.484721,14.04405 7.204281,14.209562 5.957802,15.456041 4.711323,16.702521 3.464844,17.949 2.99349,17.477646 2.522135,17.006291 2.050781,16.534937 3.500651,15.085067 4.950521,13.635198 6.400391,12.185328 3.589655,8.7174615 5.251885,2.9379071 9.463496,1.4755074 10.269777,1.1615612 11.134941,0.99941873 12,0.999781Z m0,2C8.757533,2.8766662 6.151424,6.4190919 7.223318,9.477382c0.841211,3.131959 4.993992,4.58038 7.599894,2.649077C17.567776,10.397214 17.723417,6.0022025 15.10805,4.0831465 14.233251,3.38528 13.118898,2.996997 12,2.999781Z' fill='%23868686' /%3E%3C/svg%3E");
+  background-position: 0 50%;
+}
+.js .form-autocomplete.is-autocompleting {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 10' height='20' width='40'%3E%3Cstyle type='text/css'%3E @keyframes s%7B0%25%7Btransform:rotate(0deg) translate(-50%25,-50%25)%7D50%25%7Btransform:rotate(430deg) translate(-50%25,-50%25);stroke-dashoffset:20%7D100%25%7Btransform:rotate(720deg) translate(-50%25,-50%25)%7D%7Dellipse%7Banimation:s 1s linear infinite%7D%3C/style%3E%3Cg transform='translate(5 5)'%3E%3Cellipse fill='none' ry='4' rx='4' cy='5' cx='5' stroke='%23004adc' stroke-width='1' stroke-dashoffset='6.125' stroke-dasharray='25' transform='translate(-5 -5)' /%3E%3C/g%3E%3C/svg%3E");
+}
+.js[dir="rtl"] .form-autocomplete.is-autocompleting {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 10' height='20' width='40'%3E%3Cstyle type='text/css'%3E @keyframes s%7B0%25%7Btransform:rotate(0deg) translate(-50%25,-50%25)%7D50%25%7Btransform:rotate(-430deg) translate(-50%25,-50%25);stroke-dashoffset:20%7D100%25%7Btransform:rotate(-720deg) translate(-50%25,-50%25)%7D%7Dellipse%7Banimation:s 1s linear infinite%7D%3C/style%3E%3Cg transform='translate(5 5)'%3E%3Cellipse fill='none' ry='4' rx='4' cy='5' cx='5' stroke='%23004adc' stroke-width='1' stroke-dashoffset='6.125' stroke-dasharray='25' transform='translate(-5 -5)' /%3E%3C/g%3E%3C/svg%3E");
+}
+/* IE11 does not animate inline SVG. */
+/* stylelint-disable-next-line selector-type-no-unknown */
+_:-ms-fullscreen,
+.js .form-autocomplete.is-autocompleting {
+  background-image: url("../../images/spinner-ltr.gif");
+  background-size: 2.5rem 1.25rem;
+}
+/* stylelint-disable-next-line selector-type-no-unknown */
+_:-ms-fullscreen,
+.js[dir="rtl"] .form-autocomplete.is-autocompleting {
+  background-image: url("../../images/spinner-rtl.gif");
+}
+
+/**
+ * Autocomplete wrapper for autocompleting message.
+ */
+.claro-autocomplete {
+  position: relative;
+  display: inline-block;
+  max-width: 100%;
+  margin: 0.25rem 0;
+}
+.claro-autocomplete__message {
+  position: absolute;
+  right: 0;
+  bottom: 100%;
+  max-width: 100%;
+  margin-bottom: 0.15rem;
+  color: var(--color-link);
+  font-size: var(--font-size-xxs); /* ~11px */
+  font-weight: bold;
+  line-height: calc(18rem / 16); /* 18px */
+}
+[dir="rtl"] .claro-autocomplete__message {
+  right: auto;
+  left: 0;
+}
+.js .is-autocompleting + .claro-autocomplete__message {
+  display: block;
+}
