@@ -197,6 +197,9 @@ function toolbar_view() {
       ),
       'css' => array(
         $module_path . '/toolbar.css',
+        $module_path . '/toolbar-print.css' => array(
+          'media' => 'print',
+        ),
       ),
       'library' => array(array('system', 'jquery.cookie')),
     ),
