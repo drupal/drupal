@@ -2,53 +2,53 @@ global-styling:
   version: VERSION
   css:
     base:
-      css/src/base/elements.css: {}
-      css/src/base/typography.css: {}
-      css/src/base/print.css: {}
+      css/base/elements.css: {}
+      css/base/typography.css: {}
+      css/base/print.css: {}
     component:
-      css/src/components/accordion.css: {}
-      css/src/components/action-link.css: {}
-      css/src/components/content-header.css: {}
-      css/src/components/container-inline.css: {}
-      css/src/components/container-inline.module.css: {}
-      css/src/components/breadcrumb.css: {}
-      css/src/components/button.css: {}
-      css/src/components/details.css: {}
-      css/src/components/divider.css: {}
-      css/src/components/messages.css: {}
-      css/src/components/entity-meta.css: {}
-      css/src/components/fieldset.css: {}
-      css/src/components/form.css: {}
-      css/src/components/form--checkbox-radio.css: {}
-      css/src/components/form--checkbox-radio--ie.css: {}
-      css/src/components/form--field-multiple.css: {}
-      css/src/components/form--managed-file.css: {}
-      css/src/components/form--text.css: {}
-      css/src/components/form--select.css: {}
-      css/src/components/help.css: {}
-      css/src/components/image-preview.css: {}
-      css/src/components/menus-and-lists.css: {}
-      css/src/components/modules-page.css: {}
-      css/src/components/node.css: {}
-      css/src/components/page-title.css: {}
-      css/src/components/pager.css: {}
-      css/src/components/skip-link.css: {}
-      css/src/components/tables.css: {}
-      css/src/components/table--file-multiple-widget.css: {}
-      css/src/components/search-admin-settings.css: {}
-      css/src/components/tablesort-indicator.css: {}
-      css/src/components/system-status-report-general-info.css: {}
-      css/src/components/system-status-report.css: {}
-      css/src/components/system-status-report-counters.css: {}
-      css/src/components/system-status-counter.css: {}
-      css/src/components/tabs.css: {}
-      css/src/components/views-ui.css: {}
+      css/components/accordion.css: {}
+      css/components/action-link.css: {}
+      css/components/content-header.css: {}
+      css/components/container-inline.css: {}
+      css/components/container-inline.module.css: {}
+      css/components/breadcrumb.css: {}
+      css/components/button.css: {}
+      css/components/details.css: {}
+      css/components/divider.css: {}
+      css/components/messages.css: {}
+      css/components/entity-meta.css: {}
+      css/components/fieldset.css: {}
+      css/components/form.css: {}
+      css/components/form--checkbox-radio.css: {}
+      css/components/form--checkbox-radio--ie.css: {}
+      css/components/form--field-multiple.css: {}
+      css/components/form--managed-file.css: {}
+      css/components/form--text.css: {}
+      css/components/form--select.css: {}
+      css/components/help.css: {}
+      css/components/image-preview.css: {}
+      css/components/menus-and-lists.css: {}
+      css/components/modules-page.css: {}
+      css/components/node.css: {}
+      css/components/page-title.css: {}
+      css/components/pager.css: {}
+      css/components/skip-link.css: {}
+      css/components/tables.css: {}
+      css/components/table--file-multiple-widget.css: {}
+      css/components/search-admin-settings.css: {}
+      css/components/tablesort-indicator.css: {}
+      css/components/system-status-report-general-info.css: {}
+      css/components/system-status-report.css: {}
+      css/components/system-status-report-counters.css: {}
+      css/components/system-status-counter.css: {}
+      css/components/tabs.css: {}
+      css/components/views-ui.css: {}
     theme:
-      css/src/theme/colors.css: {}
+      css/theme/colors.css: {}
     layout:
-      css/src/layout/breadcrumb.css: {}
-      css/src/layout/local-actions.css: {}
-      css/src/layout/layout.css: {}
+      css/layout/breadcrumb.css: {}
+      css/layout/local-actions.css: {}
+      css/layout/layout.css: {}
   dependencies:
     - system/admin
     - core/jquery
@@ -68,7 +68,7 @@ node-form:
   version: VERSION
   css:
     layout:
-      css/src/layout/node-add.css: {}
+      css/layout/node-add.css: {}
   dependencies:
     - node/form
 
@@ -78,7 +78,7 @@ maintenance-page:
     js/mobile.install.js: {}
   css:
     theme:
-      css/src/theme/maintenance-page.css: {}
+      css/theme/maintenance-page.css: {}
   dependencies:
     - system/maintenance
     - claro/global-styling
@@ -89,7 +89,7 @@ install-page:
     js/mobile.install.js: {}
   css:
     theme:
-      css/src/theme/install-page.css: {}
+      css/theme/install-page.css: {}
   dependencies:
     - claro/maintenance-page
 
@@ -120,37 +120,37 @@ claro.jquery.ui:
   version: VERSION
   css:
     component:
-      css/src/components/jquery.ui/theme.css: { weight: -1 }
+      css/components/jquery.ui/theme.css: { weight: -1 }
 
 claro.drupal.dialog:
   version: VERSION
   css:
     theme:
-      css/src/components/dialog.css: {}
+      css/components/dialog.css: {}
 
 ckeditor-dialog:
   version: VERSION
   css:
     theme:
-      css/src/theme/ckeditor-dialog.css: {}
+      css/theme/ckeditor-dialog.css: {}
 
 ckeditor-editor:
   version: VERSION
   css:
     theme:
-      css/src/theme/ckeditor-editor.css: {}
+      css/theme/ckeditor-editor.css: {}
 
 tour-styling:
   version: VERSION
   css:
     theme:
-      css/src/components/tour.theme.css: {}
+      css/components/tour.theme.css: {}
 
 media-form:
   version: VERSION
   css:
     layout:
-      css/src/components/media.css: {}
+      css/components/media.css: {}
   dependencies:
     - media/form
 
@@ -158,19 +158,19 @@ image-widget:
   version: VERSION
   css:
     component:
-      css/src/layout/image-widget.css: {}
+      css/layout/image-widget.css: {}
 
 system.admin:
   version: VERSION
   css:
     component:
-      css/src/components/system-admin--admin-list.css: { weight: -10 }
-      css/src/components/system-admin--links.css: { weight: -10 }
-      css/src/components/system-admin--modules.css: { weight: -10 }
-      css/src/components/system-admin--panel.css: { weight: -10 }
-      css/src/components/system-admin--status-report.css: { weight: -10 }
+      css/components/system-admin--admin-list.css: { weight: -10 }
+      css/components/system-admin--links.css: { weight: -10 }
+      css/components/system-admin--modules.css: { weight: -10 }
+      css/components/system-admin--panel.css: { weight: -10 }
+      css/components/system-admin--status-report.css: { weight: -10 }
     layout:
-      css/src/layout/system-admin--layout.css: { weight: -10 }
+      css/layout/system-admin--layout.css: { weight: -10 }
   dependencies:
     - claro/card
 
@@ -199,7 +199,7 @@ drupal.shortcut:
     # @todo move this to components after
     #   https://www.drupal.org/project/drupal/issues/3045467 is in.
     theme:
-      css/src/components/shortcut.css: {}
+      css/components/shortcut.css: {}
 
 details-focus:
   js:
@@ -212,7 +212,7 @@ ajax:
 form.password-confirm:
   css:
     component:
-      css/src/components/form--password-confirm.css: {}
+      css/components/form--password-confirm.css: {}
   js:
     js/user.js: {}
   dependencies:
@@ -224,7 +224,7 @@ form.password-confirm:
 views:
   css:
     component:
-      css/src/components/views-exposed-form.css: {}
+      css/components/views-exposed-form.css: {}
 
 messages:
   js:
@@ -233,17 +233,17 @@ messages:
 card:
   css:
     component:
-      css/src/layout/card-list.css: {}
-      css/src/components/card.css: {}
+      css/layout/card-list.css: {}
+      css/components/card.css: {}
 
 vertical-tabs:
   css:
     component:
-      css/src/components/vertical-tabs.css: {}
+      css/components/vertical-tabs.css: {}
   dependencies:
     - claro/global-styling
 
 file:
   css:
     component:
-      css/src/components/file.css: {}
+      css/components/file.css: {}

@@ -1,0 +1,164 @@
+/**
+ * @file
+ * Claro styles for the System Status general info.
+ */
+
+.system-status-general-info {
+  border: 1px solid #ccc;
+  border-radius: 3px;
+}
+
+.system-status-general-info__header {
+  overflow: hidden;
+  margin: 0;
+  padding: 10px;
+  text-transform: uppercase;
+  border-top-left-radius: 3px;
+  border-top-right-radius: 3px;
+  background-color: #f5f5f2;
+  font-size: 14px;
+}
+
+.system-status-general-info__item {
+  overflow-x: auto;
+  box-sizing: border-box;
+  padding: 10px 10px 20px;
+  border-top: 1px solid #ccc;
+  background: #fcfcfa;
+}
+
+.system-status-general-info__item-icon {
+  display: inline-block;
+  width: 45px;
+  height: 45px;
+  vertical-align: top;
+}
+.system-status-general-info__item-icon:before {
+  display: block;
+  width: 100%;
+  height: 100%;
+  content: "";
+  background-repeat: no-repeat;
+  background-position: 50% center;
+  background-size: 35px;
+}
+.system-status-general-info__item-icon--d8:before {
+  background-image: url(../../images/core/cccccc/d8-logo.svg);
+}
+.system-status-general-info__item-icon--clock:before {
+  background-image: url(../../images/core/cccccc/clock.svg);
+}
+.system-status-general-info__item-icon--server:before {
+  background-image: url(../../images/core/cccccc/server.svg);
+}
+.system-status-general-info__item-icon--php:before {
+  background-image: url(../../images/core/cccccc/php-logo.svg);
+  background-size: 45px;
+}
+.system-status-general-info__item-icon--database:before {
+  background-image: url(../../images/core/cccccc/database.svg);
+  background-size: 30px;
+}
+
+.system-status-general-info__item-details {
+  position: relative;
+  display: inline-block;
+  box-sizing: border-box;
+  width: calc(100% - 60px);
+  padding-left: 10px; /* LTR */
+}
+[dir="rtl"] .system-status-general-info__item-details {
+  padding-right: 10px;
+  padding-left: 0;
+}
+
+.system-status-general-info__item-title {
+  margin-top: 10px;
+  margin-bottom: 0;
+  font-size: 1.231em;
+}
+
+.system-status-general-info__sub-item-title {
+  margin: 0;
+  font-size: 1.154em;
+}
+
+.system-status-general-info__sub-item__title {
+  font-weight: bold;
+}
+.system-status-general-info__sub-item__value {
+  display: block;
+}
+
+.system-status-general-info__run-cron {
+  margin: 1em 0 0;
+}
+
+@media screen and (min-width: 48em) {
+  .system-status-general-info__items {
+    display: flex;
+    overflow-x: hidden;
+    flex-wrap: wrap;
+  }
+
+  .system-status-general-info__item {
+    flex: 1;
+    flex-basis: 33%;
+    width: 33%;
+  }
+  .system-status-general-info__item:nth-child(2) {
+    flex: 2;
+    flex-basis: 66%;
+  }
+  .system-status-general-info__item:nth-child(2),
+  .system-status-general-info__item:nth-child(4),
+  .system-status-general-info__item:nth-child(5) {
+    border-left: 1px solid #ccc; /* LTR */
+  }
+  [dir="rtl"] .system-status-general-info__item:nth-child(1),
+  [dir="rtl"] .system-status-general-info__item:nth-child(3) {
+    border-left: 1px solid #ccc;
+  }
+  [dir="rtl"] .system-status-general-info__item:nth-child(2),
+  [dir="rtl"] .system-status-general-info__item:nth-child(5) {
+    border-left: 0;
+  }
+
+  .system-status-general-info__run-cron {
+    margin: 15px 0 5px;
+  }
+}
+
+@media screen and (min-width: 60em) {
+  .system-status-general-info__item-icon {
+    width: 55px;
+    height: 55px;
+  }
+  .system-status-general-info__item-icon:before {
+    background-size: 35px;
+  }
+  .system-status-general-info__item-icon--php:before {
+    background-size: 55px;
+  }
+
+  .system-status-general-info__run-cron {
+    position: absolute;
+    top: 1em;
+    right: 1em; /* LTR */
+    margin-top: 0;
+  }
+  [dir="rtl"] .system-status-general-info__run-cron {
+    right: auto;
+    left: 1em;
+  }
+}
+
+@media screen and (max-width: 48em) {
+  .system-status-general-info__header {
+    display: none;
+  }
+  .system-status-general-info {
+    margin-top: 25px;
+    border-top: 0;
+  }
+}

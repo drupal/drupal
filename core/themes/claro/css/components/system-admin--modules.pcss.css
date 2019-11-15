@@ -1,0 +1,125 @@
+/**
+ * @file
+ * System admin module: modules page.
+ */
+
+.system-modules thead > tr {
+  border: 0;
+}
+.system-modules div.incompatible {
+  font-weight: bold;
+}
+.system-modules td.checkbox {
+  width: 4%;
+  min-width: 25px;
+  padding-left: 1rem; /* LTR */
+}
+[dir="rtl"] .system-modules td.checkbox {
+  padding-right: 1rem;
+}
+.system-modules td.module {
+  width: 25%;
+}
+.system-modules td {
+  vertical-align: top;
+}
+.system-modules label,
+.system-modules-uninstall label {
+  color: #1d1d1d;
+  font-size: 1.15em;
+}
+.system-modules details {
+  color: #5c5c5b;
+}
+.system-modules details[open] {
+  overflow: visible;
+  height: auto;
+  white-space: normal;
+}
+.system-modules details[open] summary .text {
+  text-transform: none;
+  hyphens: auto;
+}
+.system-modules td details a {
+  color: #5c5c5b;
+  border: 0;
+}
+.system-modules td details {
+  margin: 0;
+  border: 0;
+}
+.system-modules td details summary {
+  padding: 0;
+  cursor: default;
+  text-transform: none;
+  font-weight: normal;
+}
+.system-modules td {
+  padding-left: 0; /* LTR */
+}
+[dir="rtl"] .system-modules td {
+  padding-right: 0;
+  padding-left: 12px;
+}
+
+@media screen and (max-width: 40em) {
+  .system-modules td.name {
+    width: 20%;
+  }
+  .system-modules td.description {
+    width: 40%;
+  }
+}
+.system-modules .requirements {
+  max-width: 490px;
+  padding: 5px 0;
+}
+.system-modules .links {
+  overflow: hidden; /* prevents collapse */
+}
+.system-modules .checkbox {
+  margin: 0 5px;
+}
+.system-modules .checkbox .form-item {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+.admin-requirements,
+.admin-required {
+  color: #666;
+  font-size: 0.9em;
+}
+.admin-enabled {
+  color: #080;
+}
+.admin-missing {
+  color: #f00;
+}
+.module-link {
+  display: block;
+  float: left; /* LTR */
+  margin-top: 2px;
+  padding: 2px 20px;
+  white-space: nowrap;
+}
+[dir="rtl"] .module-link {
+  float: right;
+}
+.module-link-help {
+  background: url(../../images/core/787878/questionmark-disc.svg) 0 50% no-repeat; /* LTR */
+}
+[dir="rtl"] .module-link-help {
+  background-position: top 50% right 0;
+}
+.module-link-permissions {
+  background: url(../../images/core/787878/key.svg) 0 50% no-repeat; /* LTR */
+}
+[dir="rtl"] .module-link-permissions {
+  background-position: top 50% right 0;
+}
+.module-link-configure {
+  background: url(../../images/core/787878/cog.svg) 0 50% no-repeat; /* LTR */
+}
+[dir="rtl"] .module-link-configure {
+  background-position: top 50% right 0;
+}
