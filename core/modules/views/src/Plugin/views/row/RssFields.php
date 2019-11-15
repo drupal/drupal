@@ -3,6 +3,7 @@
 namespace Drupal\views\Plugin\views\row;
 
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Url;
 
 /**
  * Renders an RSS item based on fields.
@@ -54,7 +55,7 @@ class RssFields extends RowPluginBase {
     $form['link_field'] = [
       '#type' => 'select',
       '#title' => $this->t('Link field'),
-      '#description' => $this->t('The field that is going to be used as the RSS item link for each row. This must be a drupal relative path.'),
+      '#description' => $this->t('The field that is going to be used as the RSS item link for each row. This must either be an internal unprocessed path like "node/123" or a processed, root-relative URL as produced by fields like "Link to content".'),
       '#options' => $view_fields_labels,
       '#default_value' => $this->options['link_field'],
       '#required' => TRUE,
@@ -212,11 +213,20 @@ class RssFields extends RowPluginBase {
    *   A string with an absolute URL.
    */
   protected function getAbsoluteUrl($url_string) {
-    $host = \Drupal::request()->getSchemeAndHttpHost();
-
-    // @todo Views should expect and store a leading /.
-    // @see https://www.drupal.org/node/2423913
-    return $host . '/' . ltrim($url_string, '/');
+    // If the given URL already starts with a leading slash, it's been processed
+    // and we need to simply make it an absolute path by prepending the host.
+    if (strpos($url_string, '/') === 0) {
+      $host = \Drupal::request()->getSchemeAndHttpHost();
+      // @todo Views should expect and store a leading /.
+      // @see https://www.drupal.org/node/2423913
+      return $host . $url_string;
+    }
+    // Otherwise, this is an unprocessed path (e.g. node/123) and we need to run
+    // it through a Url object to allow outbound path processors to run (path
+    // aliases, language prefixes, etc).
+    else {
+      return Url::fromUserInput('/' . $url_string)->setAbsolute()->toString();
+    }
   }
 
 }
