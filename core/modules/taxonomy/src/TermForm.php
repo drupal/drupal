@@ -117,7 +117,7 @@ class TermForm extends ContentEntityForm {
     $term->setName(trim($term->getName()));
 
     // Assign parents with proper delta values starting from 0.
-    $term->parent = array_keys($form_state->getValue('parent'));
+    $term->parent = array_values($form_state->getValue('parent'));
 
     return $term;
   }
