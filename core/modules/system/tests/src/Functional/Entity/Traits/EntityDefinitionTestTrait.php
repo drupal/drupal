@@ -227,12 +227,19 @@ trait EntityDefinitionTestTrait {
    * @param bool $is_revisionable
    *   (optional) If the base field should be revisionable or not. Defaults to
    *   FALSE.
+   *  @param bool $set_label
+   *   (optional) If the base field should have a label or not. Defaults to
+   *   TRUE.
    */
-  protected function addBaseField($type = 'string', $entity_type_id = 'entity_test_update', $is_revisionable = FALSE) {
+  protected function addBaseField($type = 'string', $entity_type_id = 'entity_test_update', $is_revisionable = FALSE, $set_label = TRUE) {
     $definitions['new_base_field'] = BaseFieldDefinition::create($type)
       ->setName('new_base_field')
-      ->setRevisionable($is_revisionable)
-      ->setLabel(t('A new base field'));
+      ->setRevisionable($is_revisionable);
+
+    if ($set_label) {
+      $definitions['new_base_field']->setLabel(t('A new base field'));
+    }
+
     $this->state->set($entity_type_id . '.additional_base_field_definitions', $definitions);
   }
 
