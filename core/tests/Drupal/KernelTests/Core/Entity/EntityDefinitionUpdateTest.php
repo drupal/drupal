@@ -255,12 +255,9 @@ class EntityDefinitionUpdateTest extends EntityKernelTestBase {
     // creates its schema.
     $this->addBaseField();
     $this->assertTrue($this->entityDefinitionUpdateManager->needsUpdates(), 'EntityDefinitionUpdateManager reports that updates are needed.');
-    $expected = [
-      'entity_test_update' => [
-        t('The %field_name field needs to be installed.', ['%field_name' => t('A new base field')]),
-      ],
-    ];
-    $this->assertEqual($this->entityDefinitionUpdateManager->getChangeSummary(), $expected, 'EntityDefinitionUpdateManager reports the expected change summary.');
+    $changes = $this->entityDefinitionUpdateManager->getChangeSummary();
+    $this->assertCount(1, $changes['entity_test_update']);
+    $this->assertEquals('The A new base field field needs to be installed.', strip_tags($changes['entity_test_update'][0]));
     $this->applyEntityUpdates();
     $this->assertTrue($this->database->schema()->fieldExists('entity_test_update', 'new_base_field'), 'Column created in shared table for new_base_field.');
 
@@ -268,12 +265,9 @@ class EntityDefinitionUpdateTest extends EntityKernelTestBase {
     // and the update creates it.
     $this->addBaseFieldIndex();
     $this->assertTrue($this->entityDefinitionUpdateManager->needsUpdates(), 'EntityDefinitionUpdateManager reports that updates are needed.');
-    $expected = [
-      'entity_test_update' => [
-        t('The %field_name field needs to be updated.', ['%field_name' => t('A new base field')]),
-      ],
-    ];
-    $this->assertEqual($this->entityDefinitionUpdateManager->getChangeSummary(), $expected, 'EntityDefinitionUpdateManager reports the expected change summary.');
+    $changes = $this->entityDefinitionUpdateManager->getChangeSummary();
+    $this->assertCount(1, $changes['entity_test_update']);
+    $this->assertEquals('The A new base field field needs to be updated.', strip_tags($changes['entity_test_update'][0]));
     $this->applyEntityUpdates();
     $this->assertTrue($this->database->schema()->indexExists('entity_test_update', 'entity_test_update_field__new_base_field'), 'Index created.');
 
@@ -281,12 +275,9 @@ class EntityDefinitionUpdateTest extends EntityKernelTestBase {
     // update deletes it.
     $this->removeBaseFieldIndex();
     $this->assertTrue($this->entityDefinitionUpdateManager->needsUpdates(), 'EntityDefinitionUpdateManager reports that updates are needed.');
-    $expected = [
-      'entity_test_update' => [
-        t('The %field_name field needs to be updated.', ['%field_name' => t('A new base field')]),
-      ],
-    ];
-    $this->assertEqual($this->entityDefinitionUpdateManager->getChangeSummary(), $expected, 'EntityDefinitionUpdateManager reports the expected change summary.');
+    $changes = $this->entityDefinitionUpdateManager->getChangeSummary();
+    $this->assertCount(1, $changes['entity_test_update']);
+    $this->assertEquals('The A new base field field needs to be updated.', strip_tags($changes['entity_test_update'][0]));
     $this->applyEntityUpdates();
     $this->assertFalse($this->database->schema()->indexExists('entity_test_update', 'entity_test_update_field__new_base_field'), 'Index deleted.');
 
@@ -295,12 +286,9 @@ class EntityDefinitionUpdateTest extends EntityKernelTestBase {
     // accordingly.
     $this->modifyBaseField();
     $this->assertTrue($this->entityDefinitionUpdateManager->needsUpdates(), 'EntityDefinitionUpdateManager reports that updates are needed.');
-    $expected = [
-      'entity_test_update' => [
-        t('The %field_name field needs to be updated.', ['%field_name' => t('A new base field')]),
-      ],
-    ];
-    $this->assertEqual($this->entityDefinitionUpdateManager->getChangeSummary(), $expected, 'EntityDefinitionUpdateManager reports the expected change summary.');
+    $changes = $this->entityDefinitionUpdateManager->getChangeSummary();
+    $this->assertCount(1, $changes['entity_test_update']);
+    $this->assertEquals('The A new base field field needs to be updated.', strip_tags($changes['entity_test_update'][0]));
     $this->applyEntityUpdates();
     $this->assertFalse($this->database->schema()->fieldExists('entity_test_update', 'new_base_field'), 'Original column deleted in shared table for new_base_field.');
     $this->assertTrue($this->database->schema()->fieldExists('entity_test_update', 'new_base_field__value'), 'Value column created in shared table for new_base_field.');
@@ -310,15 +298,42 @@ class EntityDefinitionUpdateTest extends EntityKernelTestBase {
     // update deletes the schema.
     $this->removeBaseField();
     $this->assertTrue($this->entityDefinitionUpdateManager->needsUpdates(), 'EntityDefinitionUpdateManager reports that updates are needed.');
-    $expected = [
-      'entity_test_update' => [
-        t('The %field_name field needs to be uninstalled.', ['%field_name' => t('A new base field')]),
-      ],
-    ];
-    $this->assertEqual($this->entityDefinitionUpdateManager->getChangeSummary(), $expected, 'EntityDefinitionUpdateManager reports the expected change summary.');
+    $changes = $this->entityDefinitionUpdateManager->getChangeSummary();
+    $this->assertCount(1, $changes['entity_test_update']);
+    $this->assertEquals('The A new base field field needs to be uninstalled.', strip_tags($changes['entity_test_update'][0]));
     $this->applyEntityUpdates();
     $this->assertFalse($this->database->schema()->fieldExists('entity_test_update', 'new_base_field_value'), 'Value column deleted from shared table for new_base_field.');
     $this->assertFalse($this->database->schema()->fieldExists('entity_test_update', 'new_base_field_format'), 'Format column deleted from shared table for new_base_field.');
+  }
+
+  /**
+   * Tests creating, updating, and deleting a base field with no label set
+   *
+   * See testBaseFieldCreateUpdateDeleteWithoutData() for more details
+   */
+  public function testBaseFieldWithoutLabelCreateUpdateDelete() {
+    // Add a base field, ensure the update manager reports it with the
+    // field id.
+    $this->addBaseField('string', 'entity_test_update', FALSE, FALSE);
+    $changes = $this->entityDefinitionUpdateManager->getChangeSummary();
+    $this->assertCount(1, $changes['entity_test_update']);
+    $this->assertEquals('The new_base_field field needs to be installed.', strip_tags($changes['entity_test_update'][0]));
+    $this->applyEntityUpdates();
+
+    // Add an index on the base field, ensure the update manager reports it with
+    // the field id.
+    $this->addBaseFieldIndex();
+    $changes = $this->entityDefinitionUpdateManager->getChangeSummary();
+    $this->assertCount(1, $changes['entity_test_update']);
+    $this->assertEquals('The new_base_field field needs to be updated.', strip_tags($changes['entity_test_update'][0]));
+    $this->applyEntityUpdates();
+
+    // Remove the base field, ensure the update manager reports it with the
+    // field id.
+    $this->removeBaseField();
+    $changes = $this->entityDefinitionUpdateManager->getChangeSummary();
+    $this->assertCount(1, $changes['entity_test_update']);
+    $this->assertEquals('The new_base_field field needs to be uninstalled.', strip_tags($changes['entity_test_update'][0]));
   }
 
   /**
@@ -329,12 +344,9 @@ class EntityDefinitionUpdateTest extends EntityKernelTestBase {
     // creates its schema.
     $this->addBundleField();
     $this->assertTrue($this->entityDefinitionUpdateManager->needsUpdates(), 'EntityDefinitionUpdateManager reports that updates are needed.');
-    $expected = [
-      'entity_test_update' => [
-        t('The %field_name field needs to be installed.', ['%field_name' => t('A new bundle field')]),
-      ],
-    ];
-    $this->assertEqual($this->entityDefinitionUpdateManager->getChangeSummary(), $expected, 'EntityDefinitionUpdateManager reports the expected change summary.');
+    $changes = $this->entityDefinitionUpdateManager->getChangeSummary();
+    $this->assertCount(1, $changes['entity_test_update']);
+    $this->assertEquals('The A new bundle field field needs to be installed.', strip_tags($changes['entity_test_update'][0]));
     $this->applyEntityUpdates();
     $this->assertTrue($this->database->schema()->tableExists('entity_test_update__new_bundle_field'), 'Dedicated table created for new_bundle_field.');
 
@@ -343,12 +355,9 @@ class EntityDefinitionUpdateTest extends EntityKernelTestBase {
     // accordingly.
     $this->modifyBundleField();
     $this->assertTrue($this->entityDefinitionUpdateManager->needsUpdates(), 'EntityDefinitionUpdateManager reports that updates are needed.');
-    $expected = [
-      'entity_test_update' => [
-        t('The %field_name field needs to be updated.', ['%field_name' => t('A new bundle field')]),
-      ],
-    ];
-    $this->assertEqual($this->entityDefinitionUpdateManager->getChangeSummary(), $expected, 'EntityDefinitionUpdateManager reports the expected change summary.');
+    $changes = $this->entityDefinitionUpdateManager->getChangeSummary();
+    $this->assertCount(1, $changes['entity_test_update']);
+    $this->assertEquals('The A new bundle field field needs to be updated.', strip_tags($changes['entity_test_update'][0]));
     $this->applyEntityUpdates();
     $this->assertTrue($this->database->schema()->fieldExists('entity_test_update__new_bundle_field', 'new_bundle_field_format'), 'Format column created in dedicated table for new_base_field.');
 
@@ -356,12 +365,9 @@ class EntityDefinitionUpdateTest extends EntityKernelTestBase {
     // update deletes the schema.
     $this->removeBundleField();
     $this->assertTrue($this->entityDefinitionUpdateManager->needsUpdates(), 'EntityDefinitionUpdateManager reports that updates are needed.');
-    $expected = [
-      'entity_test_update' => [
-        t('The %field_name field needs to be uninstalled.', ['%field_name' => t('A new bundle field')]),
-      ],
-    ];
-    $this->assertEqual($this->entityDefinitionUpdateManager->getChangeSummary(), $expected, 'EntityDefinitionUpdateManager reports the expected change summary.');
+    $changes = $this->entityDefinitionUpdateManager->getChangeSummary();
+    $this->assertCount(1, $changes['entity_test_update']);
+    $this->assertEquals('The A new bundle field field needs to be uninstalled.', strip_tags($changes['entity_test_update'][0]));
     $this->applyEntityUpdates();
     $this->assertFalse($this->database->schema()->tableExists('entity_test_update__new_bundle_field'), 'Dedicated table deleted for new_bundle_field.');
   }
