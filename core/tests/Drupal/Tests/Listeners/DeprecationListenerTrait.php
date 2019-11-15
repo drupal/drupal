@@ -147,15 +147,6 @@ trait DeprecationListenerTrait {
       'The "core/classList" asset library is deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. Use the the native browser implementation instead. See https://www.drupal.org/node/3089511',
       'The "core/jquery.ui.datepicker" asset library is deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. See https://www.drupal.org/node/3081864',
       'The "locale/drupal.locale.datepicker" asset library is deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. See https://www.drupal.org/node/3081864',
-      // These deprecations are triggered when instantiating path alias
-      // services. The new versions live in the "path_alias" module.
-      // @todo Remove in https://www.drupal.org/node/3092090.
-      'The "path.alias_manager" service is deprecated. Use "path_alias.manager" instead. See https://drupal.org/node/3092086',
-      'The \Drupal\Core\EventSubscriber\PathSubscriber class is deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. Instead, use \Drupal\path_alias\EventSubscriber\PathAliasSubscriber. See https://drupal.org/node/3092086',
-      'The \Drupal\Core\PathProcessor\PathProcessorAlias class is deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. Instead, use \Drupal\path_alias\PathProcessor\AliasPathProcessor. See https://drupal.org/node/3092086',
-      'The \Drupal\Core\Path\AliasManager class is deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. Instead, use \Drupal\path_alias\AliasManager. See https://drupal.org/node/3092086',
-      'The \Drupal\Core\Path\AliasRepository class is deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. Instead, use \Drupal\path_alias\AliasRepository. See https://drupal.org/node/3092086',
-      'The \Drupal\Core\Path\AliasWhitelist class is deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. Instead, use \Drupal\path_alias\AliasWhitelist. See https://drupal.org/node/3092086',
     ];
   }
 

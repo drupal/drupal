@@ -8,6 +8,7 @@ use Drupal\Core\EventSubscriber\PathSubscriber;
 use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\Lock\LockBackendInterface;
 use Drupal\Core\Path\AliasManager as CoreAliasManager;
+use Drupal\Core\Path\AliasManagerInterface as CoreAliasManagerInterface;
 use Drupal\Core\Path\AliasWhitelist as CoreAliasWhitelist;
 use Drupal\Core\Path\CurrentPathStack;
 use Drupal\Core\PathProcessor\PathProcessorAlias;
@@ -19,7 +20,10 @@ use Drupal\path_alias\AliasWhitelist;
 use Drupal\path_alias\AliasWhitelistInterface;
 use Drupal\path_alias\EventSubscriber\PathAliasSubscriber;
 use Drupal\path_alias\PathProcessor\AliasPathProcessor;
+use Drupal\system\Form\SiteInformationForm;
+use Drupal\system\Plugin\Condition\RequestPath;
 use Drupal\Tests\UnitTestCase;
+use Drupal\views\Plugin\views\argument_default\Raw;
 
 /**
  * Tests deprecation of path alias core service classes.
@@ -165,6 +169,67 @@ class DeprecatedClassesTest extends UnitTestCase {
   public function testAliasWhitelist() {
     $object = new AliasWhitelist('path_alias_whitelist', $this->cache, $this->lock, $this->state, $this->aliasRepository);
     $this->assertInstanceOf(CoreAliasWhitelist::class, $object);
+  }
+
+  /**
+   * @covers \Drupal\system\Form\SiteInformationForm::__construct
+   *
+   * @expectedDeprecation Calling \Drupal\system\Form\SiteInformationForm::__construct with \Drupal\Core\Path\AliasManagerInterface instead of \Drupal\path_alias\AliasManagerInterface is deprecated in drupal:8.8.0. The new service will be required in drupal:9.0.0. See https://www.drupal.org/node/3092086
+   */
+  public function testDeprecatedSystemInformationFormConstructorParameters() {
+    $this->assertDeprecatedConstructorParameter(SiteInformationForm::class);
+  }
+
+  /**
+   * @covers \Drupal\system\Plugin\Condition\RequestPath::__construct
+   *
+   * @expectedDeprecation Calling \Drupal\system\Plugin\Condition\RequestPath::__construct with \Drupal\Core\Path\AliasManagerInterface instead of \Drupal\path_alias\AliasManagerInterface is deprecated in drupal:8.8.0. The new service will be required in drupal:9.0.0. See https://www.drupal.org/node/3092086
+   */
+  public function testDeprecatedRequestPathConstructorParameters() {
+    $this->assertDeprecatedConstructorParameter(RequestPath::class);
+  }
+
+  /**
+   * @covers \Drupal\views\Plugin\views\argument_default\Raw::__construct
+   *
+   * @expectedDeprecation Calling \Drupal\views\Plugin\views\argument_default\Raw::__construct with \Drupal\Core\Path\AliasManagerInterface instead of \Drupal\path_alias\AliasManagerInterface is deprecated in drupal:8.8.0. The new service will be required in drupal:9.0.0. See https://www.drupal.org/node/3092086
+   */
+  public function testDeprecatedRawConstructorParameters() {
+    $this->assertDeprecatedConstructorParameter(Raw::class);
+  }
+
+  /**
+   * Test that deprecation for the \Drupal\Core\Path\AliasManagerInterface.
+   *
+   * @param string $tested_class_name
+   *   The name of the tested class.
+   *
+   * @dataProvider deprecatedConstructorParametersProvider
+   *
+   * @expectedDeprecation The \Drupal\Core\Path\AliasManagerInterface interface is deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. Instead, use \Drupal\path_alias\AliasManagerInterface. See https://drupal.org/node/3092086
+   */
+  public function assertDeprecatedConstructorParameter($tested_class_name) {
+    $tested_class = new \ReflectionClass($tested_class_name);
+    $parameters = $tested_class->getConstructor()
+      ->getParameters();
+
+    $args = [];
+    foreach ($parameters as $parameter) {
+      $name = $parameter->getName();
+      if ($name === 'alias_manager') {
+        $class_name = CoreAliasManagerInterface::class;
+      }
+      else {
+        $type = $parameter->getType();
+        $class_name = $type ? $type->getName() : NULL;
+      }
+      $args[$name] = isset($class_name) && $class_name !== 'array' ? $this->prophesize($class_name)->reveal() : [];
+    }
+
+    $instance = $tested_class->newInstanceArgs($args);
+    $property = $tested_class->getProperty('aliasManager');
+    $property->setAccessible(TRUE);
+    $this->assertInstanceOf(AliasManagerInterface::class, $property->getValue($instance));
   }
 
 }
