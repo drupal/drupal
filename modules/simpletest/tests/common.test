@@ -1125,8 +1125,8 @@ class DrupalHTTPRequestTestCase extends DrupalWebTestCase {
     $this->assertEqual($unable_to_parse->error, 'unable to parse URL', 'Returned with "unable to parse URL" error message.');
 
     // Fetch page and check that the data parameter works with both array and string.
-    $data_array = array($this->randomName() => $this->randomName());
-    $data_string = http_build_query($data_array);
+    $data_array = array($this->randomName() => $this->randomString() . ' "\'');
+    $data_string = drupal_http_build_query($data_array);
     $result = drupal_http_request(url('node', array('absolute' => TRUE)), array('data' => $data_array));
     $this->assertEqual($result->code, 200, 'Fetched page successfully.');
     $this->assertTrue(substr($result->request, -strlen($data_string)) === $data_string, 'Request ends with URL-encoded data when drupal_http_request() called using array.');
