@@ -117,9 +117,6 @@ class BlockComponentRenderArrayTest extends UnitTestCase {
       '#base_plugin_id' => 'block_plugin_id',
       '#derivative_plugin_id' => NULL,
       'content' => $block_content,
-      '#attributes' => [
-        'data-layout-content-preview-placeholder-label' => $placeholder_label,
-      ],
     ];
 
     $expected_cache = $expected_build + [
@@ -192,9 +189,6 @@ class BlockComponentRenderArrayTest extends UnitTestCase {
       '#base_plugin_id' => 'block_plugin_id',
       '#derivative_plugin_id' => NULL,
       'content' => $block_content,
-      '#attributes' => [
-        'data-layout-content-preview-placeholder-label' => $placeholder_label,
-      ],
     ];
 
     $expected_cache = $expected_build + [

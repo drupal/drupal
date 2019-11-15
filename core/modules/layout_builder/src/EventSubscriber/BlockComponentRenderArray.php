@@ -120,20 +120,23 @@ class BlockComponentRenderArray implements EventSubscriberInterface {
         'content' => $content,
       ];
 
-      if ($block instanceof PreviewFallbackInterface) {
-        $preview_fallback_string = $block->getPreviewFallbackString();
-      }
-      else {
-        $preview_fallback_string = $this->t('"@block" block', ['@block' => $block->label()]);
-      }
-      // @todo Use new label methods so
-      //   data-layout-content-preview-placeholder-label doesn't have to use
-      //   preview fallback in https://www.drupal.org/node/2025649.
-      $build['#attributes']['data-layout-content-preview-placeholder-label'] = $preview_fallback_string;
+      if ($event->inPreview()) {
+        if ($block instanceof PreviewFallbackInterface) {
+          $preview_fallback_string = $block->getPreviewFallbackString();
+        }
+        else {
+          $preview_fallback_string = $this->t('"@block" block', ['@block' => $block->label()]);
+        }
+        // @todo Use new label methods so
+        //   data-layout-content-preview-placeholder-label doesn't have to use
+        //   preview fallback in https://www.drupal.org/node/2025649.
+        $build['#attributes']['data-layout-content-preview-placeholder-label'] = $preview_fallback_string;
 
-      if ($is_content_empty && $is_placeholder_ready) {
-        $build['content']['#markup'] = $this->t('Placeholder for the @preview_fallback', ['@preview_fallback' => $block->getPreviewFallbackString()]);
+        if ($is_content_empty && $is_placeholder_ready) {
+          $build['content']['#markup'] = $this->t('Placeholder for the @preview_fallback', ['@preview_fallback' => $block->getPreviewFallbackString()]);
+        }
       }
+
       $event->setBuild($build);
     }
   }
