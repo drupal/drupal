@@ -8,6 +8,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Render\RendererInterface;
+use Drupal\Core\State\StateInterface;
 use Drupal\editor\Plugin\EditorBase;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\editor\Entity\Editor;
@@ -58,6 +59,13 @@ class CKEditor extends EditorBase implements ContainerFactoryPluginInterface {
   protected $renderer;
 
   /**
+   * The state key/value store.
+   *
+   * @var \Drupal\Core\State\StateInterface
+   */
+  protected $state;
+
+  /**
    * Constructs a \Drupal\ckeditor\Plugin\Editor\CKEditor object.
    *
    * @param array $configuration
@@ -74,13 +82,20 @@ class CKEditor extends EditorBase implements ContainerFactoryPluginInterface {
    *   The language manager.
    * @param \Drupal\Core\Render\RendererInterface $renderer
    *   The renderer.
+   * @param \Drupal\Core\State\StateInterface $state
+   *   The state key/value store.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, CKEditorPluginManager $ckeditor_plugin_manager, ModuleHandlerInterface $module_handler, LanguageManagerInterface $language_manager, RendererInterface $renderer) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, CKEditorPluginManager $ckeditor_plugin_manager, ModuleHandlerInterface $module_handler, LanguageManagerInterface $language_manager, RendererInterface $renderer, StateInterface $state = NULL) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->ckeditorPluginManager = $ckeditor_plugin_manager;
     $this->moduleHandler = $module_handler;
     $this->languageManager = $language_manager;
     $this->renderer = $renderer;
+    if ($state === NULL) {
+      @trigger_error('Calling CKEditor::__construct() without the $state argument is deprecated in drupal:8.8.0. The $state argument is required in drupal:9.0.0. See https://www.drupal.org/node/3075102.', E_USER_DEPRECATED);
+      $state = \Drupal::service('state');
+    }
+    $this->state = $state;
   }
 
   /**
@@ -94,7 +109,8 @@ class CKEditor extends EditorBase implements ContainerFactoryPluginInterface {
       $container->get('plugin.manager.ckeditor.plugin'),
       $container->get('module_handler'),
       $container->get('language_manager'),
-      $container->get('renderer')
+      $container->get('renderer'),
+      $container->get('state')
     );
   }
 
@@ -206,14 +222,14 @@ class CKEditor extends EditorBase implements ContainerFactoryPluginInterface {
       'settings' => [
         // Single toolbar row, single button group, all existing buttons.
         'toolbar' => [
-         'rows' => [
-           0 => [
-             0 => [
-               'name' => 'All existing buttons',
-               'items' => $all_buttons,
-             ],
-           ],
-         ],
+          'rows' => [
+            0 => [
+              0 => [
+                'name' => 'All existing buttons',
+                'items' => $all_buttons,
+              ],
+            ],
+          ],
         ],
         'plugins' => $settings['plugins'],
       ],
@@ -425,6 +441,11 @@ class CKEditor extends EditorBase implements ContainerFactoryPluginInterface {
     }, []);
     $css = array_merge($css, $plugins_css);
     $css = array_merge($css, _ckeditor_theme_css());
+    $query_string = $this->state->get('system.css_js_query_string', '0');
+    $css = array_map(function ($item) use ($query_string) {
+      $query_string_separator = (strpos($item, '?') !== FALSE) ? '&' : '?';
+      return $item . $query_string_separator . $query_string;
+    }, $css);
     $css = array_map('file_create_url', $css);
     $css = array_map('file_url_transform_relative', $css);
 
