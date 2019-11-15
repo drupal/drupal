@@ -185,7 +185,7 @@ function pager_get_query_parameters() {
 function template_preprocess_pager(&$variables) {
   $element = $variables['pager']['#element'];
   $parameters = $variables['pager']['#parameters'];
-  $quantity = $variables['pager']['#quantity'];
+  $quantity = empty($variables['pager']['#quantity']) ? 0 : $variables['pager']['#quantity'];
   $route_name = $variables['pager']['#route_name'];
   $route_parameters = isset($variables['pager']['#route_parameters']) ? $variables['pager']['#route_parameters'] : [];
 
