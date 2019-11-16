@@ -154,7 +154,7 @@ class UrlHelper {
       }
 
       // Split off everything before the query string into 'path'.
-      $parts = explode('?', $url);
+      $parts = explode('?', $url, 2);
 
       // Don't support URLs without a path, like 'http://'.
       list(, $path) = explode('://', $parts[0], 2);
