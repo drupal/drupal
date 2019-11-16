@@ -11,10 +11,10 @@ use Drupal\Core\Lock\LockBackendInterface;
 /**
  * Extends CacheCollector to build the path alias whitelist over time.
  *
- *   @deprecated in drupal:8.8.0 and is removed from drupal:9.0.0.
- *   Use \Drupal\path_alias\AliasWhitelist.
+ * @deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. Use
+ *   \Drupal\path_alias\AliasWhitelist instead.
  *
- *   @see https://www.drupal.org/node/3092086
+ * @see https://www.drupal.org/node/3092086
  */
 class AliasWhitelist extends CacheCollector implements AliasWhitelistInterface {
 

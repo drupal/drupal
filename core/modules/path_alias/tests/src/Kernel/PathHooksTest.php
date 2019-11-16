@@ -45,7 +45,7 @@ class PathHooksTest extends KernelTestBase {
     $alias_manager = $this->prophesize(AliasManagerInterface::class);
     $alias_manager->cacheClear(Argument::any())->shouldBeCalledTimes(1);
     $alias_manager->cacheClear($path_alias->getPath())->shouldBeCalledTimes(1);
-    \Drupal::getContainer()->set('path.alias_manager', $alias_manager->reveal());
+    \Drupal::getContainer()->set('path_alias.manager', $alias_manager->reveal());
     $path_alias->save();
 
     $new_source = '/' . $this->randomMachineName();
@@ -56,7 +56,7 @@ class PathHooksTest extends KernelTestBase {
     $alias_manager->cacheClear(Argument::any())->shouldBeCalledTimes(2);
     $alias_manager->cacheClear($path_alias->getPath())->shouldBeCalledTimes(1);
     $alias_manager->cacheClear($new_source)->shouldBeCalledTimes(1);
-    \Drupal::getContainer()->set('path.alias_manager', $alias_manager->reveal());
+    \Drupal::getContainer()->set('path_alias.manager', $alias_manager->reveal());
     $path_alias->setPath($new_source);
     $path_alias->save();
 
@@ -64,7 +64,7 @@ class PathHooksTest extends KernelTestBase {
     $alias_manager = $this->prophesize(AliasManagerInterface::class);
     $alias_manager->cacheClear(Argument::any())->shouldBeCalledTimes(1);
     $alias_manager->cacheClear($new_source)->shouldBeCalledTimes(1);
-    \Drupal::getContainer()->set('path.alias_manager', $alias_manager->reveal());
+    \Drupal::getContainer()->set('path_alias.manager', $alias_manager->reveal());
     $path_alias->delete();
   }
 

@@ -106,7 +106,7 @@ class PathAlias extends ContentEntityBase implements PathAliasInterface {
   public function postSave(EntityStorageInterface $storage, $update = TRUE) {
     parent::postSave($storage, $update);
 
-    $alias_manager = \Drupal::service('path.alias_manager');
+    $alias_manager = \Drupal::service('path_alias.manager');
     $alias_manager->cacheClear($this->getPath());
     if ($update) {
       $alias_manager->cacheClear($this->original->getPath());
@@ -119,7 +119,7 @@ class PathAlias extends ContentEntityBase implements PathAliasInterface {
   public static function postDelete(EntityStorageInterface $storage, array $entities) {
     parent::postDelete($storage, $entities);
 
-    $alias_manager = \Drupal::service('path.alias_manager');
+    $alias_manager = \Drupal::service('path_alias.manager');
     foreach ($entities as $entity) {
       $alias_manager->cacheClear($entity->getPath());
     }

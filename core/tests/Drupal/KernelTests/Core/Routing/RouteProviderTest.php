@@ -576,8 +576,8 @@ class RouteProviderTest extends KernelTestBase {
 
     // A path with a path alias.
     $this->createPathAlias('/path/add/one', '/path/add-one');
-    /** @var \Drupal\Core\Path\AliasManagerInterface $alias_manager */
-    $alias_manager = \Drupal::service('path.alias_manager');
+    /** @var \Drupal\path_alias\AliasManagerInterface $alias_manager */
+    $alias_manager = \Drupal::service('path_alias.manager');
     $alias_manager->cacheClear();
 
     $path = '/path/add-one';

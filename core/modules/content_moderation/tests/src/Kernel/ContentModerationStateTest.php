@@ -47,6 +47,7 @@ class ContentModerationStateTest extends KernelTestBase {
     'content_translation',
     'text',
     'workflows',
+    'path_alias',
   ];
 
   /**

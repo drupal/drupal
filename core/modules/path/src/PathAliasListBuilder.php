@@ -9,7 +9,7 @@ use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Form\FormBuilderInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
-use Drupal\Core\Path\AliasManagerInterface;
+use Drupal\path_alias\AliasManagerInterface;
 use Drupal\Core\Url;
 use Drupal\path\Form\PathFilterForm;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -18,7 +18,7 @@ use Symfony\Component\HttpFoundation\Request;
 /**
  * Defines a class to build a listing of path_alias entities.
  *
- * @see \Drupal\Core\Path\Entity\PathAlias
+ * @see \Drupal\path_alias\Entity\PathAlias
  */
 class PathAliasListBuilder extends EntityListBuilder {
 
@@ -46,7 +46,7 @@ class PathAliasListBuilder extends EntityListBuilder {
   /**
    * The path alias manager.
    *
-   * @var \Drupal\Core\Path\AliasManagerInterface
+   * @var \Drupal\path_alias\AliasManagerInterface
    */
   protected $aliasManager;
 
@@ -63,7 +63,7 @@ class PathAliasListBuilder extends EntityListBuilder {
    *   The form builder.
    * @param \Drupal\Core\Language\LanguageManagerInterface $language_manager
    *   The language manager.
-   * @param \Drupal\Core\Path\AliasManagerInterface $alias_manager
+   * @param \Drupal\path_alias\AliasManagerInterface $alias_manager
    *   The path alias manager.
    */
   public function __construct(EntityTypeInterface $entity_type, EntityStorageInterface $storage, Request $current_request, FormBuilderInterface $form_builder, LanguageManagerInterface $language_manager, AliasManagerInterface $alias_manager) {
@@ -85,7 +85,7 @@ class PathAliasListBuilder extends EntityListBuilder {
       $container->get('request_stack')->getCurrentRequest(),
       $container->get('form_builder'),
       $container->get('language_manager'),
-      $container->get('path.alias_manager')
+      $container->get('path_alias.manager')
     );
   }
 
