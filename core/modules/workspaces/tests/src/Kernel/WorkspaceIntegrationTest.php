@@ -67,6 +67,7 @@ class WorkspaceIntegrationTest extends KernelTestBase {
     'views',
     'language',
     'content_translation',
+    'path_alias',
   ];
 
   /**

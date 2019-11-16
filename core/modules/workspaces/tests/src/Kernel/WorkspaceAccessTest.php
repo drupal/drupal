@@ -25,6 +25,7 @@ class WorkspaceAccessTest extends KernelTestBase {
     'system',
     'workspaces',
     'workspace_access_test',
+    'path_alias',
   ];
 
   /**
