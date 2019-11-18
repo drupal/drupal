@@ -119,7 +119,7 @@ class UrlAlterFunctionalTest extends BrowserTestBase {
    */
   protected function assertUrlInboundAlter($original, $final) {
     // Test inbound altering.
-    $result = $this->container->get('path.alias_manager')->getPathByAlias($original);
+    $result = $this->container->get('path_alias.manager')->getPathByAlias($original);
     return $this->assertIdentical($result, $final, new FormattableMarkup('Altered inbound URL %original, expected %final, and got %result.', ['%original' => $original, '%final' => $final, '%result' => $result]));
   }
 

@@ -190,15 +190,6 @@ trait DeprecationListenerTrait {
       // The following deprecation is listed for Twig 2 compatibility when unit
       // testing using \Symfony\Component\ErrorHandler\DebugClassLoader.
       'The "Twig\Environment::getTemplateClass()" method is considered internal. It may change without further notice. You should not extend it from "Drupal\Core\Template\TwigEnvironment".',
-      // These deprecations are triggered when instantiating path alias
-      // services. The new versions live in the "path_alias" module.
-      // @todo Remove in https://www.drupal.org/node/3092090.
-      'The "path.alias_manager" service is deprecated. Use "path_alias.manager" instead. See https://drupal.org/node/3092086',
-      'The \Drupal\Core\EventSubscriber\PathSubscriber class is deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. Instead, use \Drupal\path_alias\EventSubscriber\PathAliasSubscriber. See https://drupal.org/node/3092086',
-      'The \Drupal\Core\PathProcessor\PathProcessorAlias class is deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. Instead, use \Drupal\path_alias\PathProcessor\AliasPathProcessor. See https://drupal.org/node/3092086',
-      'The \Drupal\Core\Path\AliasManager class is deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. Instead, use \Drupal\path_alias\AliasManager. See https://drupal.org/node/3092086',
-      'The \Drupal\Core\Path\AliasRepository class is deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. Instead, use \Drupal\path_alias\AliasRepository. See https://drupal.org/node/3092086',
-      'The \Drupal\Core\Path\AliasWhitelist class is deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. Instead, use \Drupal\path_alias\AliasWhitelist. See https://drupal.org/node/3092086',
       '"Symfony\Component\DomCrawler\Crawler::text()" will normalize whitespaces by default in Symfony 5.0, set the second "$normalizeWhitespace" argument to false to retrieve the non-normalized version of the text.',
     ];
   }

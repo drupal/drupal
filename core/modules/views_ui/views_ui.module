@@ -323,7 +323,7 @@ function views_ui_views_analyze(ViewExecutable $view) {
       continue;
     }
     if ($display->hasPath() && $path = $display->getOption('path')) {
-      $normal_path = \Drupal::service('path.alias_manager')->getPathByAlias($path);
+      $normal_path = \Drupal::service('path_alias.manager')->getPathByAlias($path);
       if ($path != $normal_path) {
         $ret[] = Analyzer::formatMessage(t('You have configured display %display with a path which is an path alias as well. This might lead to unwanted effects so better use an internal path.', ['%display' => $display->display['display_title']]), 'warning');
       }
