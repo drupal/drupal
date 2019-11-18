@@ -44,7 +44,7 @@ class PathItemTest extends KernelTestBase {
    * Test creating, loading, updating and deleting aliases through PathItem.
    */
   public function testPathItem() {
-    /** @var \Drupal\Core\Path\AliasRepositoryInterface $alias_repository */
+    /** @var \Drupal\path_alias\AliasRepositoryInterface $alias_repository */
     $alias_repository = \Drupal::service('path_alias.repository');
 
     $node_storage = \Drupal::entityTypeManager()->getStorage('node');
