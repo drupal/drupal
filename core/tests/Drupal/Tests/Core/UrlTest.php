@@ -42,7 +42,7 @@ class UrlTest extends UnitTestCase {
   /**
    * The path alias manager.
    *
-   * @var \Drupal\Core\Path\AliasManagerInterface|\PHPUnit\Framework\MockObject\MockObject
+   * @var \Drupal\path_alias\AliasManagerInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $pathAliasManager;
 
@@ -101,7 +101,7 @@ class UrlTest extends UnitTestCase {
       ->method('generateFromRoute')
       ->will($this->returnValueMap($generate_from_route_map));
 
-    $this->pathAliasManager = $this->createMock('Drupal\Core\Path\AliasManagerInterface');
+    $this->pathAliasManager = $this->createMock('Drupal\path_alias\AliasManagerInterface');
     $this->pathAliasManager->expects($this->any())
       ->method('getPathByAlias')
       ->will($this->returnValueMap($alias_map));
@@ -112,7 +112,7 @@ class UrlTest extends UnitTestCase {
     $this->container = new ContainerBuilder();
     $this->container->set('router.no_access_checks', $this->router);
     $this->container->set('url_generator', $this->urlGenerator);
-    $this->container->set('path.alias_manager', $this->pathAliasManager);
+    $this->container->set('path_alias.manager', $this->pathAliasManager);
     $this->container->set('path.validator', $this->pathValidator);
     \Drupal::setContainer($this->container);
   }
