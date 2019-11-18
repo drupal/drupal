@@ -25,7 +25,6 @@ class EntityReferenceSupportedNewEntitiesConstraintValidatorTest extends KernelT
     'user',
     'workspaces',
     'entity_test',
-    'path_alias',
   ];
 
   /**
