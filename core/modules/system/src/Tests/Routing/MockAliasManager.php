@@ -2,7 +2,7 @@
 
 namespace Drupal\system\Tests\Routing;
 
-use Drupal\path_alias\AliasManagerInterface;
+use Drupal\Core\Path\AliasManagerInterface;
 
 /**
  * An easily configurable mock alias manager.

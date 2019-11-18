@@ -28,7 +28,7 @@ class DefaultConfigTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['system', 'user', 'path_alias'];
+  public static $modules = ['system', 'user'];
 
   /**
    * The following config entries are changed on module install.
