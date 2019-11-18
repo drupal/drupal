@@ -4,15 +4,15 @@ namespace Drupal\Tests\Core\PathProcessor;
 
 use Drupal\Core\Language\Language;
 use Drupal\Core\Language\LanguageInterface;
+use Drupal\Core\PathProcessor\PathProcessorAlias;
 use Drupal\Core\PathProcessor\PathProcessorDecode;
 use Drupal\Core\PathProcessor\PathProcessorFront;
 use Drupal\Core\PathProcessor\PathProcessorManager;
 use Drupal\language\HttpKernel\PathProcessorLanguage;
 use Drupal\language\Plugin\LanguageNegotiation\LanguageNegotiationUrl;
-use Drupal\path_alias\AliasManager;
-use Drupal\path_alias\PathProcessor\AliasPathProcessor;
-use Drupal\Tests\UnitTestCase;
 use Symfony\Component\HttpFoundation\Request;
+
+use Drupal\Tests\UnitTestCase;
 
 /**
  * Tests processing of the inbound path.
@@ -87,7 +87,7 @@ class PathProcessorTest extends UnitTestCase {
   public function testProcessInbound() {
 
     // Create an alias manager stub.
-    $alias_manager = $this->getMockBuilder(AliasManager::class)
+    $alias_manager = $this->getMockBuilder('Drupal\Core\Path\AliasManager')
       ->disableOriginalConstructor()
       ->getMock();
 
@@ -148,7 +148,7 @@ class PathProcessorTest extends UnitTestCase {
       ->getMock();
 
     // Create the processors.
-    $alias_processor = new AliasPathProcessor($alias_manager);
+    $alias_processor = new PathProcessorAlias($alias_manager);
     $decode_processor = new PathProcessorDecode();
     $front_processor = new PathProcessorFront($config_factory_stub);
     $language_processor = new PathProcessorLanguage($config_factory_stub, $this->languageManager, $negotiator, $current_user, $config_subscriber);
