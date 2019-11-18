@@ -3,6 +3,7 @@
 namespace Drupal\Tests\views\Unit\Plugin\argument_default;
 
 use Drupal\Core\Path\CurrentPathStack;
+use Drupal\path_alias\AliasManagerInterface;
 use Drupal\Tests\UnitTestCase;
 use Drupal\views\Plugin\views\argument_default\Raw;
 use Symfony\Component\HttpFoundation\Request;
@@ -33,7 +34,7 @@ class RawTest extends UnitTestCase {
     $view->expects($this->any())
       ->method('getRequest')
       ->will($this->returnValue($request));
-    $alias_manager = $this->createMock('Drupal\Core\Path\AliasManagerInterface');
+    $alias_manager = $this->createMock(AliasManagerInterface::class);
     $alias_manager->expects($this->never())
       ->method('getAliasByPath');
 
@@ -71,7 +72,7 @@ class RawTest extends UnitTestCase {
     $this->assertEquals(NULL, $raw->getArgument());
 
     // Setup an alias manager with a path alias.
-    $alias_manager = $this->createMock('Drupal\Core\Path\AliasManagerInterface');
+    $alias_manager = $this->createMock(AliasManagerInterface::class);
     $alias_manager->expects($this->any())
       ->method('getAliasByPath')
       ->with($this->equalTo('/test/example'))

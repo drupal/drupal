@@ -26,7 +26,7 @@ class PathFieldItemList extends FieldItemList {
 
     $entity = $this->getEntity();
     if (!$entity->isNew()) {
-      /** @var \Drupal\Core\Path\AliasRepositoryInterface $path_alias_repository */
+      /** @var \Drupal\path_alias\AliasRepositoryInterface $path_alias_repository */
       $path_alias_repository = \Drupal::service('path_alias.repository');
 
       if ($path_alias = $path_alias_repository->lookupBySystemPath('/' . $entity->toUrl()->getInternalPath(), $this->getLangcode())) {

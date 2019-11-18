@@ -53,6 +53,7 @@ class WorkspaceCRUDTest extends KernelTestBase {
     'filter',
     'node',
     'text',
+    'path_alias',
   ];
 
   /**
