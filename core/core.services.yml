@@ -739,15 +739,12 @@ services:
     arguments: ['@event_dispatcher', '@controller_resolver', '@request_stack', '@http_kernel.controller.argument_resolver']
   http_kernel.controller.argument_resolver:
     class: Symfony\Component\HttpKernel\Controller\ArgumentResolver
-    arguments: ['@http_kernel.controller.argument_metadata_factory', ['@argument_resolver.request_attribute', '@argument_resolver.raw_parameter', '@argument_resolver.request', '@argument_resolver.psr7_request', '@argument_resolver.route_match', '@argument_resolver.default']]
+    arguments: ['@http_kernel.controller.argument_metadata_factory', ['@argument_resolver.request_attribute', '@argument_resolver.request', '@argument_resolver.psr7_request', '@argument_resolver.route_match', '@argument_resolver.default']]
   http_kernel.controller.argument_metadata_factory:
     class: Symfony\Component\HttpKernel\ControllerMetadata\ArgumentMetadataFactory
     public: false
   argument_resolver.request_attribute:
     class: Symfony\Component\HttpKernel\Controller\ArgumentResolver\RequestAttributeValueResolver
-    public: false
-  argument_resolver.raw_parameter:
-    class: Drupal\Core\Controller\ArgumentResolver\RawParameterValueResolver
     public: false
   argument_resolver.request:
     class: Symfony\Component\HttpKernel\Controller\ArgumentResolver\RequestValueResolver
