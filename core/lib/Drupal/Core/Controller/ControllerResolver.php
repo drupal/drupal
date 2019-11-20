@@ -131,13 +131,9 @@ class ControllerResolver extends BaseControllerResolver implements ControllerRes
     // to ensure it is removed in Drupal 9.
     @trigger_error(sprintf('%s is deprecated as of 8.6.0 and will be removed in 9.0. Inject the "http_kernel.controller.argument_resolver" service instead.', __METHOD__, ArgumentResolverInterface::class), E_USER_DEPRECATED);
     $attributes = $request->attributes->all();
-    $raw_parameters = $request->attributes->has('_raw_variables') ? $request->attributes->get('_raw_variables') : [];
     $arguments = [];
     foreach ($parameters as $param) {
       if (array_key_exists($param->name, $attributes)) {
-        $arguments[] = $attributes[$param->name];
-      }
-      elseif (array_key_exists($param->name, $raw_parameters)) {
         $arguments[] = $attributes[$param->name];
       }
       elseif ($param->getClass() && $param->getClass()->isInstance($request)) {
