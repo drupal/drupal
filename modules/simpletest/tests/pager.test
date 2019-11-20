@@ -56,6 +56,22 @@ class PagerFunctionalWebTestCase extends DrupalWebTestCase {
   }
 
   /**
+   * Tests theme_pager() when an empty quantity is passed.
+   */
+  public function testThemePagerQuantityNotSet() {
+    $variables = array(
+      'element' => 0,
+      'parameters' => array(),
+      'quantity' => '',
+      'tags' => '',
+    );
+    pager_default_initialize(100, 10);
+    $rendered_output = theme_pager($variables);
+    $this->assertNotIdentical(stripos($rendered_output, 'next'), FALSE);
+    $this->assertNotIdentical(stripos($rendered_output, 'last'), FALSE);
+  }
+
+  /**
    * Asserts pager items and links.
    *
    * @param int $current_page
@@ -156,4 +172,3 @@ class PagerFunctionalWebTestCase extends DrupalWebTestCase {
     $this->assertTrue(strpos($element['class'], $class) === FALSE, $message);
   }
 }
-

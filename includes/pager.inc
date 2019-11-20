@@ -321,7 +321,7 @@ function theme_pager($variables) {
   $tags = $variables['tags'];
   $element = $variables['element'];
   $parameters = $variables['parameters'];
-  $quantity = $variables['quantity'];
+  $quantity = empty($variables['quantity']) ? 0 : $variables['quantity'];
   global $pager_page_array, $pager_total;
 
   // Calculate various markers within this pager piece:
