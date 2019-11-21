@@ -78,22 +78,9 @@
   margin-left: 0.75rem; /* LTR */
   padding: 0.25rem
 1rem;
-  -webkit-transition: all
-0.2s
-ease-out;
-  -o-transition: all
-0.2s
-ease-out;
-  -moz-transition: all
-0.2s
-ease-out;
   transition: all
 0.2s
 ease-out;
-  -webkit-transform: translateY(-0.5rem);
-  -moz-transform: translateY(-0.5rem);
-  -ms-transform: translateY(-0.5rem);
-  -o-transform: translateY(-0.5rem);
   transform: translateY(-0.5rem);
   vertical-align: top;
   opacity: 0;
@@ -102,7 +89,6 @@ ease-out;
   background: #545560;
   font-size: 0.889rem;
   -webkit-backface-visibility: hidden;
-  -moz-backface-visibility: hidden;
   backface-visibility: hidden;
 }
 
@@ -113,10 +99,6 @@ ease-out;
 
 .shortcut-action:hover .shortcut-action__message,
 .shortcut-action:focus .shortcut-action__message {
-  -webkit-transform: translateY(0);
-  -moz-transform: translateY(0);
-  -ms-transform: translateY(0);
-  -o-transform: translateY(0);
   transform: translateY(0);
   opacity: 1;
 }

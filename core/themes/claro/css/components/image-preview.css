@@ -66,21 +66,10 @@
   display: inline-block;
   max-width: 100%;
   background-color: #fff;
-  -webkit-box-shadow: inset 0 0 0.4375rem #d4d4d8;
   box-shadow: inset 0 0 0.4375rem #d4d4d8;
 }
 
 .image-preview img {
-  background-image:
-    -moz-linear-gradient(135deg, #d4d4d8 25%, transparent 26%),
-    -moz-linear-gradient(135deg, #d4d4d8 25%, transparent 26%),
-    -moz-linear-gradient(315deg, #d4d4d8 25%, transparent 26%),
-    -moz-linear-gradient(315deg, #d4d4d8 25%, transparent 26%);
-  background-image:
-    -o-linear-gradient(135deg, #d4d4d8 25%, transparent 26%),
-    -o-linear-gradient(135deg, #d4d4d8 25%, transparent 26%),
-    -o-linear-gradient(315deg, #d4d4d8 25%, transparent 26%),
-    -o-linear-gradient(315deg, #d4d4d8 25%, transparent 26%);
   background-image:
     linear-gradient(-45deg, #d4d4d8 25%, transparent 26%),
     linear-gradient(-45deg, #d4d4d8 25%, transparent 26%),

@@ -55,7 +55,6 @@
 .system-modules details[open] summary .text {
   text-transform: none;
   -webkit-hyphens: auto;
-  -moz-hyphens: auto;
   -ms-hyphens: auto;
   hyphens: auto;
 }

@@ -82,8 +82,6 @@
 .button {
   display: inline-block;
   margin: 1rem 0.75rem 1rem 0; /* LTR */
-  padding: -webkit-calc(1rem - 1px) -webkit-calc(1.5rem - 1px);
-  padding: -moz-calc(1rem - 1px) -moz-calc(1.5rem - 1px);
   padding: calc(1rem - 1px) calc(1.5rem - 1px); /* 1 */
   cursor: pointer;
   text-align: center;
@@ -106,7 +104,6 @@
 }
 
 .button:not(:focus) {
-  -webkit-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
 }
 
@@ -127,8 +124,6 @@
 
 .no-touchevents .button--small {
   margin: 0.75rem 0.5rem 0.75rem 0; /* LTR */
-  padding: -webkit-calc(0.5rem - 1px) -webkit-calc(1rem - 1px);
-  padding: -moz-calc(0.5rem - 1px) -moz-calc(1rem - 1px);
   padding: calc(0.5rem - 1px) calc(1rem - 1px); /* 1 */
   font-size: 0.79rem;
 }
@@ -137,8 +132,6 @@
 
 .no-touchevents .button--extrasmall {
   margin: 0.5rem 0.5rem 0.5rem 0; /* LTR */
-  padding: -webkit-calc(0.25rem - 1px) -webkit-calc(0.75rem - 1px);
-  padding: -moz-calc(0.25rem - 1px) -moz-calc(0.75rem - 1px);
   padding: calc(0.25rem - 1px) calc(0.75rem - 1px); /* 1 */
   font-size: 0.79rem;
 }

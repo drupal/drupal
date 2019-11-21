@@ -74,8 +74,6 @@ caption {
 
 th {
   position: relative;
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
   box-sizing: border-box;
   height: 3rem;
   padding: 0.5rem 1rem;
@@ -235,8 +233,6 @@ tr.color-error:focus {
 }
 
 td {
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
   box-sizing: border-box;
   height: 4rem;
   padding: 0.5rem 1rem;

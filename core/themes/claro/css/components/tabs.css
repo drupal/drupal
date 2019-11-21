@@ -60,10 +60,6 @@
 }
 
 .tabs-wrapper {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -moz-box;
-  display: -ms-flexbox;
   display: flex;
 }
 
@@ -72,17 +68,7 @@
 }
 
 .tabs {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -moz-box;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-box-orient: vertical;
-  -webkit-box-direction: normal;
-  -webkit-flex-direction: column;
-  -moz-box-orient: vertical;
-  -moz-box-direction: normal;
-  -ms-flex-direction: column;
   flex-direction: column;
   width: 100%;
   margin: 0 0 1.5rem 0;
@@ -90,10 +76,6 @@
 solid
 #d4d4d8;
   border-radius: 2px;
-  -webkit-box-shadow: 0
-2px
-4px
-rgba(0, 0, 0, 0.1);
   box-shadow: 0
 2px
 4px
@@ -119,21 +101,9 @@ solid
 }
 
 .tabs__tab.is-active {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -moz-box;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-box-pack: justify;
-  -webkit-justify-content: space-between;
-  -moz-box-pack: justify;
-  -ms-flex-pack: justify;
   justify-content: space-between;
   background-color: #fff;
-  -webkit-box-shadow: 0
-2px
-4px
-rgba(0, 0, 0, 0.1);
   box-shadow: 0
 2px
 4px
@@ -142,24 +112,10 @@ rgba(0, 0, 0, 0.1);
 
 .tabs__link {
   position: relative;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -moz-box;
-  display: -ms-flexbox;
   display: flex;
   overflow: hidden;
-  -webkit-box-flex: 1;
-  -webkit-flex-grow: 1;
-  -moz-box-flex: 1;
-  -ms-flex-positive: 1;
   flex-grow: 1;
-  -webkit-box-align: center;
-  -webkit-align-items: center;
-  -moz-box-align: center;
-  -ms-flex-align: center;
   align-items: center;
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
   box-sizing: border-box;
   min-height: 3rem;
   padding: 0.75rem 1.5rem;
@@ -169,25 +125,18 @@ rgba(0, 0, 0, 0.1);
 }
 
 .tabs__link:focus {
-  min-height: -webkit-calc(3rem + 2px);
-  min-height: -moz-calc(3rem + 2px);
   min-height: calc(3rem + 2px);
   margin: -1px;
-  padding-left: -webkit-calc(1.5rem - 2px);
-  padding-left: -moz-calc(1.5rem - 2px);
   padding-left: calc(1.5rem - 2px); /* LTR */
   text-decoration: none;
   color: #545560;
   border: 3px solid #26a769;
   border-radius: 2px;
   outline: none;
-  -webkit-box-shadow: none;
   box-shadow: none;
 }
 
 [dir="rtl"] .tabs__link:focus {
-  padding-right: -webkit-calc(1.5rem - 2px);
-  padding-right: -moz-calc(1.5rem - 2px);
   padding-right: calc(1.5rem - 2px);
   padding-left: 1.5rem;
 }
@@ -199,10 +148,6 @@ rgba(0, 0, 0, 0.1);
 
 .tabs__link.is-active {
   z-index: 1;
-  -webkit-box-flex: 1;
-  -webkit-flex-grow: 1;
-  -moz-box-flex: 1;
-  -ms-flex-positive: 1;
   flex-grow: 1;
   color: #003cc5;
 }
@@ -242,8 +187,6 @@ rgba(0, 0, 0, 0.1);
   top: -1px;
   left: -1px; /* LTR */
   width: 3px;
-  height: -webkit-calc(100% + 2px);
-  height: -moz-calc(100% + 2px);
   height: calc(100% + 2px);
   border-left: 3px solid #003cc5; /* LTR */
   border-top-left-radius: 2px; /* LTR */
@@ -267,8 +210,6 @@ rgba(0, 0, 0, 0.1);
 
 .tabs__tab.is-active:focus::before {
   top: -3px;
-  height: -webkit-calc(3rem + 2px);
-  height: -moz-calc(3rem + 2px);
   height: calc(3rem + 2px);
 }
 
@@ -281,31 +222,13 @@ rgba(0, 0, 0, 0.1);
 }
 
 .tabs.is-open > .tabs__tab {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -moz-box;
-  display: -ms-flexbox;
   display: flex;
 }
 
 .tabs__trigger {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -moz-box;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-flex-shrink: 0;
-  -ms-flex-negative: 0;
   flex-shrink: 0;
-  -webkit-box-align: center;
-  -webkit-align-items: center;
-  -moz-box-align: center;
-  -ms-flex-align: center;
   align-items: center;
-  -webkit-box-pack: center;
-  -webkit-justify-content: center;
-  -moz-box-pack: center;
-  -ms-flex-pack: center;
   justify-content: center;
   width: 3rem;
   padding-right: 1px;
@@ -326,23 +249,15 @@ rgba(216, 217, 224, 0.8);
   padding-right: 0;
   border: 3px solid #26a769;
   border-radius: 2px;
-  -webkit-box-shadow: none;
   box-shadow: none;
 }
 
 @media screen and (min-width: 48em) {
   .is-horizontal .tabs {
-    -webkit-box-orient: horizontal;
-    -webkit-box-direction: normal;
-    -webkit-flex-direction: row;
-    -moz-box-orient: horizontal;
-    -moz-box-direction: normal;
-    -ms-flex-direction: row;
     flex-direction: row;
     width: auto;
     margin: 0;
     border: 0;
-    -webkit-box-shadow: none;
     box-shadow: none;
   }
 
@@ -372,13 +287,8 @@ rgba(216, 217, 224, 0.8);
     font-size: 1rem;
   }
   .is-horizontal .tabs__tab.is-active {
-    -webkit-box-ordinal-group: 1;
-    -webkit-order: 0;
-    -moz-box-ordinal-group: 1;
-    -ms-flex-order: 0;
     order: 0;
     background: none;
-    -webkit-box-shadow: none;
     box-shadow: none;
   }
   .is-horizontal .tabs__tab.is-active::before {
@@ -409,14 +319,12 @@ rgba(216, 217, 224, 0.8);
     border: none;
     border-radius: 2px 2px 0 0;
     outline: 2px dotted transparent;
-    -webkit-box-shadow: 0 0 0 2px #fff, 0 0 0 5px #26a769;
     box-shadow: 0 0 0 2px #fff, 0 0 0 5px #26a769;
   }
   [dir="rtl"] .is-horizontal .tabs__link:focus {
     border: none;
   }
   .is-horizontal .tabs--primary .tabs__link:focus {
-    -webkit-box-shadow: 0 0 0 2px #f3f4f9, 0 0 0 5px #26a769;
     box-shadow: 0 0 0 2px #f3f4f9, 0 0 0 5px #26a769;
   }
 

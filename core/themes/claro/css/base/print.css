@@ -8,7 +8,6 @@
   * {
     color: #000 !important; /* Black prints faster: h5bp.com/s */
     background-color: transparent !important;
-    -webkit-box-shadow: none !important;
     box-shadow: none !important;
     text-shadow: none !important;
   }

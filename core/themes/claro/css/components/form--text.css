@@ -55,13 +55,9 @@
 }
 
 .form-element {
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
   box-sizing: border-box;
   max-width: 100%;
   min-height: 3rem; /* iOS. */
-  padding: -webkit-calc(0.75rem - 1px) -webkit-calc(1rem - 1px);
-  padding: -moz-calc(0.75rem - 1px) -moz-calc(1rem - 1px);
   padding: calc(0.75rem - 1px) calc(1rem - 1px);
   color: #222330;
   border: 1px solid #8e929c;
@@ -77,8 +73,6 @@
 .no-touchevents .form-element--extrasmall,
 .no-touchevents .form-element[name$="][_weight]"] {
   min-height: 1.5rem; /* iOS. */
-  padding: -webkit-calc(0.15rem - 1px) -webkit-calc(0.5rem - 1px);
-  padding: -moz-calc(0.15rem - 1px) -moz-calc(0.5rem - 1px);
   padding: calc(0.15rem - 1px) calc(0.5rem - 1px);
   font-size: 0.889rem;
   line-height: 1.2rem;
@@ -92,8 +86,6 @@
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none;
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
   box-sizing: border-box;
 }
 
@@ -117,8 +109,6 @@
 .form-element--type-color {
   min-width: 3rem; /* Bigger input for webkit */
   padding: 0; /* Bigger pickable area */
-  text-indent: -webkit-calc(0.75rem - 1px);
-  text-indent: -moz-calc(0.75rem - 1px);
   text-indent: calc(0.75rem - 1px); /* Text-input fallback for non-supporting browsers like Safari */
 }
 
@@ -164,17 +154,14 @@ _:-ms-fullscreen,
 
 .form-element:hover {
   border-color: #222330;
-  -webkit-box-shadow: inset 0 0 0 1px #222330;
   box-shadow: inset 0 0 0 1px #222330;
 }
 
 .form-element:focus {
-  -webkit-box-shadow: 0 0 0 2px #fff, 0 0 0 5px #26a769;
   box-shadow: 0 0 0 2px #fff, 0 0 0 5px #26a769;
 }
 
 .form-element:hover:focus {
-  -webkit-box-shadow: 0 0 0 2px #fff, 0 0 0 5px #26a769, inset 0 0 0 1px #222330;
   box-shadow: 0 0 0 2px #fff, 0 0 0 5px #26a769, inset 0 0 0 1px #222330;
 }
 
@@ -184,12 +171,10 @@ _:-ms-fullscreen,
 }
 
 .form-element.error:hover {
-  -webkit-box-shadow: none;
   box-shadow: none;
 }
 
 .form-element.error:hover:focus {
-  -webkit-box-shadow: 0 0 0 2px #fff, 0 0 0 5px #26a769;
   box-shadow: 0 0 0 2px #fff, 0 0 0 5px #26a769;
 }
 
@@ -202,7 +187,6 @@ _:-ms-fullscreen,
   color: #82828c;
   border-color: #bababf;
   background-color: #f2f2f3;
-  -webkit-box-shadow: none;
   box-shadow: none;
   /* https://stackoverflow.com/q/262158#answer-23511280 */
   -webkit-text-fill-color: #82828c;

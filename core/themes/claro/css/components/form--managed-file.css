@@ -61,17 +61,7 @@
  */
 
 .form-managed-file.no-upload {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -moz-inline-box;
-  display: -ms-inline-flexbox;
   display: inline-flex;
-  -webkit-box-orient: vertical;
-  -webkit-box-direction: normal;
-  -webkit-flex-direction: column;
-  -moz-box-orient: vertical;
-  -moz-box-direction: normal;
-  -ms-flex-direction: column;
   flex-direction: column;
   max-width: 100%;
 }
@@ -92,15 +82,7 @@
  */
 
 .form-managed-file__main {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -moz-inline-box;
-  display: -ms-inline-flexbox;
   display: inline-flex;
-  -webkit-box-align: center;
-  -webkit-align-items: center;
-  -moz-box-align: center;
-  -ms-flex-align: center;
   align-items: center;
   max-width: 100%;
 }
@@ -111,10 +93,6 @@
  */
 
 .draggable .form-managed-file.has-value .form-managed-file__main {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -moz-box;
-  display: -ms-flexbox;
   display: flex;
 }
 
@@ -140,18 +118,8 @@
  */
 
 .form-managed-file__meta {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -moz-box;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-flex-wrap: wrap;
-  -ms-flex-wrap: wrap;
   flex-wrap: wrap;
-  -webkit-box-align: start;
-  -webkit-align-items: flex-start;
-  -moz-box-align: start;
-  -ms-flex-align: start;
   align-items: flex-start;
   margin-top: 1rem; /* Bottom margin will be added by the child elements: because of we use flex display here, our margins won't collapse. */
 }
@@ -162,10 +130,6 @@
  */
 
 .draggable .form-managed-file.has-value .form-managed-file__meta {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -moz-inline-box;
-  display: -ms-inline-flexbox;
   display: inline-flex;
 }
 
@@ -180,7 +144,6 @@
 @media all and (-ms-high-contrast: active), (-ms-high-contrast: none) {
   *::-ms-backdrop,
   td .form-managed-file__meta {
-    -ms-flex-preferred-size: 100%;
     flex-basis: 100%;
   }
 }
@@ -192,10 +155,6 @@
  */
 
 .form-managed-file__image-preview {
-  -webkit-box-flex: 0;
-  -webkit-flex: 0 0 auto;
-  -moz-box-flex: 0;
-  -ms-flex: 0 0 auto;
   flex: 0 0 auto;
   max-width: 100%;
   margin-bottom: 1rem;
@@ -233,10 +192,6 @@ td .form-managed-file.no-meta .form-managed-file__image-preview {
  */
 
 .form-managed-file__meta-items {
-  -webkit-box-flex: 1;
-  -webkit-flex: 1 1 16rem;
-  -moz-box-flex: 1;
-  -ms-flex: 1 1 16rem;
   flex: 1 1 16rem;
   max-width: 100%;
 }
@@ -249,7 +204,6 @@ td .form-managed-file.no-meta .form-managed-file__image-preview {
 @media all and (-ms-high-contrast: active), (-ms-high-contrast: none) {
   *::-ms-backdrop,
   .form-managed-file__meta-items {
-    -ms-flex-preferred-size: 32rem;
     flex-basis: 32rem;
   }
 }
@@ -265,7 +219,6 @@ td .form-managed-file.no-meta .form-managed-file__image-preview {
 @media all and (-ms-high-contrast: active), (-ms-high-contrast: none) {
   *::-ms-backdrop,
   td .form-managed-file__meta-wrapper {
-    display: -ms-flexbox;
     display: flex;
   }
 }
@@ -281,7 +234,6 @@ td .form-managed-file.no-meta .form-managed-file__image-preview {
 .form-managed-file .file {
   word-break: break-all;
   -webkit-hyphens: auto;
-  -moz-hyphens: auto;
   -ms-hyphens: auto;
   hyphens: auto;
 }
@@ -291,10 +243,6 @@ td .form-managed-file.no-meta .form-managed-file__image-preview {
 }
 
 .form-managed-file__main .file {
-  -webkit-box-flex: 1;
-  -webkit-flex: 1 1 auto;
-  -moz-box-flex: 1;
-  -ms-flex: 1 1 auto;
   flex: 1 1 auto;
   margin: 0.5rem 1rem 0.5rem 0; /* LTR */
 }
@@ -314,7 +262,6 @@ td .form-managed-file.no-meta .form-managed-file__image-preview {
 @media all and (-ms-high-contrast: active), (-ms-high-contrast: none) {
   *::-ms-backdrop,
   td .form-managed-file__main .file {
-    -ms-flex: 0 1 100%;
     flex: 0 1 100%;
   }
 }
@@ -333,10 +280,6 @@ td .form-managed-file.no-meta .form-managed-file__image-preview {
  */
 
 .form-managed-file__main .form-element--api-file {
-  -webkit-box-flex: 1;
-  -webkit-flex: 1 1 auto;
-  -moz-box-flex: 1;
-  -ms-flex: 1 1 auto;
   flex: 1 1 auto;
   min-width: 1px; /* This makes the element to be shrinked on IE11 */
 }
@@ -347,10 +290,6 @@ td .form-managed-file.no-meta .form-managed-file__image-preview {
  */
 
 .form-managed-file__main .button {
-  -webkit-box-flex: 0;
-  -webkit-flex: 0 0 auto;
-  -moz-box-flex: 0;
-  -ms-flex: 0 0 auto;
   flex: 0 0 auto;
 }
 

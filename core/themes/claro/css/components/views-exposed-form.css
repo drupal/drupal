@@ -58,18 +58,8 @@
  */
 
 .views-exposed-form {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -moz-box;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-flex-wrap: wrap;
-  -ms-flex-wrap: wrap;
   flex-wrap: wrap;
-  -webkit-box-align: end;
-  -webkit-align-items: flex-end;
-  -moz-box-align: end;
-  -ms-flex-align: end;
   align-items: flex-end;
   margin-top: 1.5rem;
   margin-bottom: 1.5rem;
@@ -77,10 +67,6 @@
   border: 1px solid rgba(216, 217, 224, 0.8);
   border-radius: 2px;
   background-color: #fff;
-  -webkit-box-shadow: 0
-2px
-4px
-rgba(0, 0, 0, 0.1);
   box-shadow: 0
 2px
 4px

@@ -59,55 +59,25 @@
 }
 
 .card-list {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -moz-box;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-box-orient: vertical;
-  -webkit-box-direction: normal;
-  -webkit-flex-direction: column;
-  -moz-box-orient: vertical;
-  -moz-box-direction: normal;
-  -ms-flex-direction: column;
   flex-direction: column;
 }
 
 .card-list--two-cols,
 .card-list--four-cols {
-  -webkit-box-orient: horizontal;
-  -webkit-box-direction: normal;
-  -webkit-flex-direction: row;
-  -moz-box-orient: horizontal;
-  -moz-box-direction: normal;
-  -ms-flex-direction: row;
   flex-direction: row;
-  -webkit-flex-wrap: wrap;
-  -ms-flex-wrap: wrap;
   flex-wrap: wrap;
-  -webkit-box-align: stretch;
-  -webkit-align-items: stretch;
-  -moz-box-align: stretch;
-  -ms-flex-align: stretch;
   align-items: stretch;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -moz-box-pack: start;
-  -ms-flex-pack: start;
   justify-content: flex-start;
 }
 
 .card-list__item {
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
   box-sizing: border-box;
   margin-bottom: 1rem;
 }
 
 .card-list--two-cols .card-list__item,
 .card-list--four-cols .card-list__item {
-  -webkit-flex-basis: 100%;
-  -ms-flex-preferred-size: 100%;
   flex-basis: 100%;
 }
 
@@ -115,12 +85,7 @@
 
 @media screen and (min-width: 36.75rem) {
   .card-list--four-cols .card-list__item {
-    -webkit-flex-basis: -webkit-calc((99.9% + 1rem)/2 - 1rem);
-    -ms-flex-preferred-size: calc((99.9% + 1rem)/2 - 1rem);
-    flex-basis: -moz-calc((99.9% + 1rem)/2 - 1rem);
     flex-basis: calc((99.9% + 1rem)/2 - 1rem);
-    max-width: -webkit-calc((99.9% + 1rem)/2 - 1rem);
-    max-width: -moz-calc((99.9% + 1rem)/2 - 1rem);
     max-width: calc((99.9% + 1rem)/2 - 1rem);
   }
 
@@ -145,8 +110,6 @@
 
 @media screen and (max-width: 53.75rem) {
   .toolbar-tray-open.toolbar-vertical.toolbar-fixed .card-list--four-cols .card-list__item {
-    -webkit-flex-basis: 100%;
-    -ms-flex-preferred-size: 100%;
     flex-basis: 100%;
     max-width: 100%;
     margin-right: 0;
@@ -156,12 +119,7 @@
 
 @media screen and (min-width: 70rem) {
   .card-list--four-cols .card-list__item {
-    -webkit-flex-basis: -webkit-calc((99.9% + 1rem)/3 - 1rem);
-    -ms-flex-preferred-size: calc((99.9% + 1rem)/3 - 1rem);
-    flex-basis: -moz-calc((99.9% + 1rem)/3 - 1rem);
     flex-basis: calc((99.9% + 1rem)/3 - 1rem);
-    max-width: -webkit-calc((99.9% + 1rem)/3 - 1rem);
-    max-width: -moz-calc((99.9% + 1rem)/3 - 1rem);
     max-width: calc((99.9% + 1rem)/3 - 1rem);
   }
 
@@ -184,12 +142,7 @@
 
 @media screen and (min-width: 85.375rem) {
   .card-list--two-cols .card-list__item {
-    -webkit-flex-basis: -webkit-calc((99.9% + 1rem)/2 - 1rem);
-    -ms-flex-preferred-size: calc((99.9% + 1rem)/2 - 1rem);
-    flex-basis: -moz-calc((99.9% + 1rem)/2 - 1rem);
     flex-basis: calc((99.9% + 1rem)/2 - 1rem);
-    max-width: -webkit-calc((99.9% + 1rem)/2 - 1rem);
-    max-width: -moz-calc((99.9% + 1rem)/2 - 1rem);
     max-width: calc((99.9% + 1rem)/2 - 1rem);
     margin-right: 1rem;
   }
@@ -207,12 +160,7 @@
   }
 
   .card-list--four-cols .card-list__item {
-    -webkit-flex-basis: -webkit-calc((99.9% + 1rem)/4 - 1rem);
-    -ms-flex-preferred-size: calc((99.9% + 1rem)/4 - 1rem);
-    flex-basis: -moz-calc((99.9% + 1rem)/4 - 1rem);
     flex-basis: calc((99.9% + 1rem)/4 - 1rem);
-    max-width: -webkit-calc((99.9% + 1rem)/4 - 1rem);
-    max-width: -moz-calc((99.9% + 1rem)/4 - 1rem);
     max-width: calc((99.9% + 1rem)/4 - 1rem);
   }
 

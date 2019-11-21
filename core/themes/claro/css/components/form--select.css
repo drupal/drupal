@@ -55,8 +55,6 @@
 }
 
 .form-element--type-select {
-  padding-right: -webkit-calc(2rem - 1px);
-  padding-right: -moz-calc(2rem - 1px);
   padding-right: calc(2rem - 1px);
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 14 9'%3E%3Cpath fill='none' stroke-width='1.5' d='M1 1L7 7L13 1' stroke='%23545560'/%3E%3C/svg%3E%0A");
   background-repeat: no-repeat;
@@ -65,30 +63,20 @@
 }
 
 [dir="rtl"] .form-element--type-select {
-  padding-right: -webkit-calc(1rem - 1px);
-  padding-right: -moz-calc(1rem - 1px);
   padding-right: calc(1rem - 1px);
-  padding-left: -webkit-calc(2rem - 1px);
-  padding-left: -moz-calc(2rem - 1px);
   padding-left: calc(2rem - 1px);
   background-position: 0 50%;
 }
 
 .no-touchevents .form-element--type-select.form-element--extrasmall,
 .no-touchevents .form-element--type-select[name$="][_weight]"] {
-  padding-right: -webkit-calc(1.5rem - 1px);
-  padding-right: -moz-calc(1.5rem - 1px);
   padding-right: calc(1.5rem - 1px);
   background-size: 1.75rem 0.4375rem; /* w: 14px + (2 * 7px), h: 7px */
 }
 
 [dir="rtl"].no-touchevents .form-element--type-select.form-element--extrasmall,
 [dir="rtl"].no-touchevents .form-element--type-select[name$="][_weight]"] {
-  padding-right: -webkit-calc(0.5rem - 1px);
-  padding-right: -moz-calc(0.5rem - 1px);
   padding-right: calc(0.5rem - 1px);
-  padding-left: -webkit-calc(1.5rem - 1px);
-  padding-left: -moz-calc(1.5rem - 1px);
   padding-left: calc(1.5rem - 1px);
 }
 
