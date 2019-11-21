@@ -94,7 +94,6 @@
   border-top-left-radius: 5px;
   border-top-right-radius: 5px;
   background: #6b6b6b;
-  -webkit-box-shadow: none;
   box-shadow: none;
   text-shadow: none;
   font-size: 1.3344em;
@@ -165,25 +164,16 @@
 .cke_reset_all .cke_dialog_body textarea,
 .cke_reset_all .cke_dialog_body input[type="text"],
 .cke_reset_all select.cke_dialog_ui_input_select {
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
   box-sizing: border-box;
   max-width: 100%;
   margin: 0 0 3px;
   padding: 0.3em 0.4em 0.3em 0.5em;
-  -webkit-transition: border linear 0.2s, box-shadow linear 0.2s;
-  -webkit-transition: border linear 0.2s, -webkit-box-shadow linear 0.2s;
-  transition: border linear 0.2s, -webkit-box-shadow linear 0.2s;
-  -o-transition: border linear 0.2s, box-shadow linear 0.2s;
-  -moz-transition: border linear 0.2s, box-shadow linear 0.2s;
   transition: border linear 0.2s, box-shadow linear 0.2s;
-  transition: border linear 0.2s, box-shadow linear 0.2s, -webkit-box-shadow linear 0.2s;
   color: #595959;
   border: 1px solid #b8b8b8;
   border-top-color: #999;
   border-radius: 2px;
   background: #fcfcfa;
-  -webkit-box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.125);
   box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.125);
   font-size: 1em;
   line-height: normal;
@@ -200,7 +190,6 @@
   border-color: #40b6ff;
   outline: 0;
   background-color: #fff;
-  -webkit-box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05), 0 0 8px #40b6ff;
   box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05), 0 0 8px #40b6ff;
 }
 
@@ -240,15 +229,10 @@
 .cke_reset_all a.cke_dialog_ui_button {
   position: relative;
   display: inline-block;
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
   box-sizing: border-box;
   margin-right: 1em;
   padding: 4px 1.5em;
   cursor: pointer;
-  -webkit-transition: all 0.1s;
-  -o-transition: all 0.1s;
-  -moz-transition: all 0.1s;
   transition: all 0.1s;
   text-align: center;
   text-decoration: none;
@@ -256,9 +240,6 @@
   border: 1px solid #a6a6a6;
   border-radius: 20em;
   background-color: #f2f1eb;
-  background-image: -webkit-gradient(linear, left top, left bottom, from(#f6f6f3), to(#e7e7df));
-  background-image: -moz-linear-gradient(top, #f6f6f3, #e7e7df);
-  background-image: -o-linear-gradient(top, #f6f6f3, #e7e7df);
   background-image: linear-gradient(to bottom, #f6f6f3, #e7e7df);
   text-shadow: 0 1px hsla(0, 0%, 100%, 0.6);
   font-size: 14px;
@@ -284,34 +265,22 @@
   color: #1a1a1a;
   border: 1px solid #a6a6a6;
   background-color: #f9f8f6;
-  background-image: -webkit-gradient(linear, left top, left bottom, from(#fcfcfa), to(#e9e9dd));
-  background-image: -moz-linear-gradient(top, #fcfcfa, #e9e9dd);
-  background-image: -o-linear-gradient(top, #fcfcfa, #e9e9dd);
   background-image: linear-gradient(to bottom, #fcfcfa, #e9e9dd);
-  -webkit-box-shadow: 0 1px 2px hsla(0, 0%, 0%, 0.125);
   box-shadow: 0 1px 2px hsla(0, 0%, 0%, 0.125);
 }
 
 .cke_reset_all .cke_dialog_footer_buttons a.cke_dialog_ui_button:focus {
   z-index: 10;
   border: 1px solid #3ab2ff;
-  -webkit-box-shadow: 0 0 0.5em 0.1em hsla(203, 100%, 60%, 0.7);
   box-shadow: 0 0 0.5em 0.1em hsla(203, 100%, 60%, 0.7);
 }
 
 .cke_reset_all .cke_dialog_footer_buttons a.cke_dialog_ui_button:active {
   padding: 4px 1.5em;
-  -webkit-transition: none;
-  -o-transition: none;
-  -moz-transition: none;
   transition: none;
   border: 1px solid #a6a6a6;
   background-color: #dfdfd9;
-  background-image: -webkit-gradient(linear, left top, left bottom, from(#f6f6f3), to(#e7e7df));
-  background-image: -moz-linear-gradient(top, #f6f6f3, #e7e7df);
-  background-image: -o-linear-gradient(top, #f6f6f3, #e7e7df);
   background-image: linear-gradient(to bottom, #f6f6f3, #e7e7df);
-  -webkit-box-shadow: inset 0 1px 3px hsla(0, 0%, 0%, 0.2);
   box-shadow: inset 0 1px 3px hsla(0, 0%, 0%, 0.2);
 }
 
@@ -332,9 +301,6 @@
   color: #fff;
   border-color: #1e5c90;
   background-color: #0071b8;
-  background-image: -webkit-gradient(linear, left top, left bottom, from(#007bc6), to(#0071b8));
-  background-image: -moz-linear-gradient(top, #007bc6, #0071b8);
-  background-image: -o-linear-gradient(top, #007bc6, #0071b8);
   background-image: linear-gradient(to bottom, #007bc6, #0071b8);
   text-shadow: 0 1px hsla(0, 0%, 0%, 0.5);
   font-weight: 700;
@@ -346,27 +312,18 @@
   color: #fff;
   border-color: #1e5c90;
   background-color: #2369a6;
-  background-image: -webkit-gradient(linear, left top, left bottom, from(#0c97ed), to(#1f86c7));
-  background-image: -moz-linear-gradient(top, #0c97ed, #1f86c7);
-  background-image: -o-linear-gradient(top, #0c97ed, #1f86c7);
   background-image: linear-gradient(to bottom, #0c97ed, #1f86c7);
-  -webkit-box-shadow: 0 1px 2px hsla(203, 10%, 10%, 0.25);
   box-shadow: 0 1px 2px hsla(203, 10%, 10%, 0.25);
 }
 
 .cke_reset_all .cke_dialog_footer_buttons a.cke_dialog_ui_button_ok:focus {
   border: 1px solid #1280df;
-  -webkit-box-shadow: 0 0 0.5em 0.1em hsla(203, 100%, 60%, 0.7);
   box-shadow: 0 0 0.5em 0.1em hsla(203, 100%, 60%, 0.7);
 }
 
 .cke_reset_all .cke_dialog_footer_buttons a.cke_dialog_ui_button_ok:active {
   border-color: #144b78;
-  background-image: -webkit-gradient(linear, left top, left bottom, from(#08639b), to(#0071b8));
-  background-image: -moz-linear-gradient(top, #08639b, #0071b8);
-  background-image: -o-linear-gradient(top, #08639b, #0071b8);
   background-image: linear-gradient(to bottom, #08639b, #0071b8);
-  -webkit-box-shadow: inset 0 1px 3px hsla(0, 0%, 0%, 0.2);
   box-shadow: inset 0 1px 3px hsla(0, 0%, 0%, 0.2);
 }
 

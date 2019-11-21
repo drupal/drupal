@@ -63,20 +63,12 @@
 }
 
 .progress--small .progress__track {
-  height: -webkit-calc(0.5rem - 2px);
-  height: -moz-calc(0.5rem - 2px);
   height: calc(0.5rem - 2px);
 }
 
 .progress--small .progress__bar {
-  width: -webkit-calc(0.5rem - 2px);
-  width: -moz-calc(0.5rem - 2px);
   width: calc(0.5rem - 2px);
-  min-width: -webkit-calc(0.5rem - 2px);
-  min-width: -moz-calc(0.5rem - 2px);
   min-width: calc(0.5rem - 2px);
-  height: -webkit-calc(0.5rem - 2px);
-  height: -moz-calc(0.5rem - 2px);
   height: calc(0.5rem - 2px);
 }
 
@@ -85,8 +77,6 @@
 }
 
 .progress__track {
-  height: -webkit-calc(1rem - 2px);
-  height: -moz-calc(1rem - 2px);
   height: calc(1rem - 2px);
   margin-top: 0;
   border: 1px #8e929c solid;
@@ -95,26 +85,11 @@
 }
 
 .progress__bar {
-  width: -webkit-calc(1rem - 2px);
-  width: -moz-calc(1rem - 2px);
   width: calc(1rem - 2px);
-  min-width: -webkit-calc(1rem - 2px);
-  min-width: -moz-calc(1rem - 2px);
   min-width: calc(1rem - 2px);
-  height: -webkit-calc(1rem - 2px);
-  height: -moz-calc(1rem - 2px);
   height: calc(1rem - 2px);
   margin-top: -1px;
   margin-left: -1px; /* LTR */
-  -webkit-transition: width
-0.5s
-ease-out;
-  -o-transition: width
-0.5s
-ease-out;
-  -moz-transition: width
-0.5s
-ease-out;
   transition: width
 0.5s
 ease-out;
@@ -150,9 +125,6 @@ ease-out;
 
 @media screen and (prefers-reduced-motion: reduce) {
   .progress__bar {
-    -webkit-transition: none;
-    -o-transition: none;
-    -moz-transition: none;
     transition: none;
   }
 }

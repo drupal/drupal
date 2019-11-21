@@ -13,8 +13,6 @@
 .system-status-counter {
   display: inline-block;
   overflow-y: hidden;
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
   box-sizing: border-box;
   width: 100%;
   white-space: nowrap;
@@ -31,14 +29,12 @@
   border-right: 1px solid #e6e4df; /* LTR */
   border-left: 0; /* LTR */
   background-color: #faf9f5;
-  -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1) inset;
   box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1) inset;
 }
 
 [dir="rtl"] .system-status-counter__status-icon {
   border-right: 0;
   border-left: 1px solid #e6e4df;
-  -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1) inset;
   box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1) inset;
 }
 

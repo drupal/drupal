@@ -34,9 +34,6 @@
   margin-top: 2px;
   color: #fff;
   border-color: #1e5c90;
-  background-image: -webkit-gradient(linear, left top, left bottom, from(#007bc6), to(#0071b8));
-  background-image: -moz-linear-gradient(top, #007bc6, #0071b8);
-  background-image: -o-linear-gradient(top, #007bc6, #0071b8);
   background-image: linear-gradient(to bottom, #007bc6, #0071b8);
   text-shadow: 0 1px hsla(0, 0%, 0%, 0.5);
   font-weight: 700;
@@ -50,9 +47,6 @@
   color: #fff;
   border-color: #1e5c90;
   background-color: #2369a6;
-  background-image: -webkit-gradient(linear, left top, left bottom, from(#0c97ed), to(#1f86c7));
-  background-image: -moz-linear-gradient(top, #0c97ed, #1f86c7);
-  background-image: -o-linear-gradient(top, #0c97ed, #1f86c7);
   background-image: linear-gradient(to bottom, #0c97ed, #1f86c7);
 }
 
@@ -60,18 +54,13 @@
 .quickedit-button.action-save:focus,
 .quickedit-button.action-saving:hover,
 .quickedit-button.action-saving:focus {
-  -webkit-box-shadow: 0 1px 2px hsla(203, 10%, 10%, 0.25);
   box-shadow: 0 1px 2px hsla(203, 10%, 10%, 0.25);
 }
 
 .quickedit-button.action-save:active,
 .quickedit-button.action-saving:active {
   border-color: #144b78;
-  background-image: -webkit-gradient(linear, left top, left bottom, from(#08639b), to(#0071b8));
-  background-image: -moz-linear-gradient(top, #08639b, #0071b8);
-  background-image: -o-linear-gradient(top, #08639b, #0071b8);
   background-image: linear-gradient(to bottom, #08639b, #0071b8);
-  -webkit-box-shadow: inset 0 1px 3px hsla(0, 0%, 0%, 0.2);
   box-shadow: inset 0 1px 3px hsla(0, 0%, 0%, 0.2);
 }
 

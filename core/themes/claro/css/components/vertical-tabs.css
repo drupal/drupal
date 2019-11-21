@@ -159,7 +159,6 @@
 
 .vertical-tabs__menu-item:focus {
   outline: 0;
-  -webkit-box-shadow: none;
   box-shadow: none;
 }
 
@@ -182,13 +181,10 @@
   position: relative;
   display: block;
   margin-top: -1px;
-  padding: 0.75rem 0.75rem 0.75rem -webkit-calc(1.5rem - 4px);
-  padding: 0.75rem 0.75rem 0.75rem -moz-calc(1.5rem - 4px);
   padding: 0.75rem 0.75rem 0.75rem calc(1.5rem - 4px); /* LTR */
   text-decoration: none;
   word-wrap: break-word;
   -webkit-hyphens: auto;
-  -moz-hyphens: auto;
   -ms-hyphens: auto;
   hyphens: auto;
   color: #222330;
@@ -198,8 +194,6 @@
 }
 
 [dir="rtl"] .vertical-tabs__menu-link {
-  padding-right: -webkit-calc(1.5rem - 4px);
-  padding-right: -moz-calc(1.5rem - 4px);
   padding-right: calc(1.5rem - 4px);
   padding-left: 0.75rem;
   border-width: 1px 4px 1px 0;
@@ -217,7 +211,6 @@
 .vertical-tabs__menu-link:focus {
   z-index: 4; /* Focus state should be on the highest level to make the focus effect be fully visible. This also means that it should have bigger z-index than the selected link. */
   text-decoration: none;
-  -webkit-box-shadow: none;
   box-shadow: none;
 }
 
@@ -267,10 +260,6 @@
   color: #003cc5;
   border-color: rgba(216, 217, 224, 0.8) transparent;
   background-color: #fff;
-  -webkit-box-shadow: 0
-2px
-4px
-rgba(0, 0, 0, 0.1);
   box-shadow: 0
 2px
 4px
@@ -334,8 +323,6 @@ rgba(0, 0, 0, 0.1);
  */
 
 .vertical-tabs__items {
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
   box-sizing: border-box;
   margin-top: 0.75rem;
   margin-bottom: 0.75rem;
@@ -345,10 +332,6 @@ solid
 rgba(216, 217, 224, 0.8);
   border-radius: 2px;
   background-color: #fff;
-  -webkit-box-shadow: 0
-2px
-4px
-rgba(0, 0, 0, 0.1);
   box-shadow: 0
 2px
 4px

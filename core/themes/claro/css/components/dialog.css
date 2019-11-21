@@ -52,9 +52,6 @@
   height: 30px;
   margin: 0;
   padding: 0;
-  -webkit-transition: all 0.1s;
-  -o-transition: all 0.1s;
-  -moz-transition: all 0.1s;
   transition: all 0.1s;
   border: 3px solid #6b6b6b;
   border-radius: 5px;

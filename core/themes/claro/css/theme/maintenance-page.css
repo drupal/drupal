@@ -13,8 +13,6 @@
 .maintenance-page {
   min-height: 100%;
   background-color: #e0e0d8;
-  background-image: -moz-radial-gradient(hsl(203, 2%, 90%), hsl(203, 2%, 95%));
-  background-image: -o-radial-gradient(hsl(203, 2%, 90%), hsl(203, 2%, 95%));
   background-image: radial-gradient(hsl(203, 2%, 90%), hsl(203, 2%, 95%));
   background-repeat: repeat;
   background-position: left top, 50% 50%; /* LTR */
@@ -161,7 +159,6 @@
     margin: 0 auto;
     padding: 20px 0 40px 0;
     border-radius: 5px;
-    -webkit-box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
   }
 
@@ -169,8 +166,6 @@
   main {
     float: left; /* LTR */
     clear: none;
-    -webkit-box-sizing: border-box;
-    -moz-box-sizing: border-box;
     box-sizing: border-box;
     width: 65%;
     padding-right: 3.85em;
