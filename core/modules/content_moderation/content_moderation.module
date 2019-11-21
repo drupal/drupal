@@ -234,12 +234,11 @@ function content_moderation_entity_access(EntityInterface $entity, $operation, A
     $access_result = $valid_transition_targets ? AccessResult::neutral() : AccessResult::forbidden('No valid transitions exist for given account.');
 
     $access_result->addCacheableDependency($entity);
-    $access_result->addCacheableDependency($account);
     $workflow = $moderation_info->getWorkflowForEntity($entity);
     $access_result->addCacheableDependency($workflow);
-    foreach ($valid_transition_targets as $valid_transition_target) {
-      $access_result->addCacheableDependency($valid_transition_target);
-    }
+    // The state transition validation service returns a list of transitions
+    // based on the user's permission to use them.
+    $access_result->cachePerPermissions();
   }
 
   // Do not allow users to delete the state that is configured as the default
