@@ -55,32 +55,14 @@
 }
 
 .card {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -moz-box;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-box-orient: vertical;
-  -webkit-box-direction: normal;
-  -webkit-flex-direction: column;
-  -moz-box-orient: vertical;
-  -moz-box-direction: normal;
-  -ms-flex-direction: column;
   flex-direction: column;
-  -webkit-box-align: stretch;
-  -webkit-align-items: stretch;
-  -moz-box-align: stretch;
-  -ms-flex-align: stretch;
   align-items: stretch;
   justify-items: flex-start;
   padding: 0;
   border: 1px solid rgba(212, 212, 218, 0.8);
   border-radius: 2px;
   background-color: #fff;
-  -webkit-box-shadow: 0
-4px
-10px
-rgba(0, 0, 0, 0.1);
   box-shadow: 0
 4px
 10px
@@ -91,22 +73,10 @@ rgba(0, 0, 0, 0.1);
 
 @media screen and (min-width: 36.75rem) {
   .card--horizontal {
-    -webkit-box-orient: horizontal;
-    -webkit-box-direction: normal;
-    -webkit-flex-direction: row;
-    -moz-box-orient: horizontal;
-    -moz-box-direction: normal;
-    -ms-flex-direction: row;
     flex-direction: row;
   }
 
   .toolbar-tray-open.toolbar-vertical.toolbar-fixed .card--horizontal {
-    -webkit-box-orient: vertical;
-    -webkit-box-direction: normal;
-    -webkit-flex-direction: column;
-    -moz-box-orient: vertical;
-    -moz-box-direction: normal;
-    -ms-flex-direction: column;
     flex-direction: column;
   }
 }
@@ -115,12 +85,6 @@ rgba(0, 0, 0, 0.1);
 
 @media screen and (min-width: 53.75rem) {
   .toolbar-tray-open.toolbar-vertical.toolbar-fixed .card--horizontal {
-    -webkit-box-orient: horizontal;
-    -webkit-box-direction: normal;
-    -webkit-flex-direction: row;
-    -moz-box-orient: horizontal;
-    -moz-box-direction: normal;
-    -ms-flex-direction: row;
     flex-direction: row;
   }
 }
@@ -137,8 +101,6 @@ rgba(0, 0, 0, 0.1);
 
 @media screen and (min-width: 36.75rem) {
   .card--horizontal .card__image {
-    -webkit-flex-basis: 35%;
-    -ms-flex-preferred-size: 35%;
     flex-basis: 35%;
     border-radius: 1px 0 0 1px; /* LTR */
   }
@@ -151,16 +113,12 @@ rgba(0, 0, 0, 0.1);
 
 @media screen and (max-width: 53.75rem) {
   .toolbar-tray-open.toolbar-vertical.toolbar-fixed .card--horizontal .card__image {
-    -webkit-flex-basis: auto;
-    -ms-flex-preferred-size: auto;
     flex-basis: auto;
   }
 }
 
 @media screen and (min-width: 85.375rem) {
   .card--horizontal .card__image {
-    -webkit-flex-basis: 45%;
-    -ms-flex-preferred-size: 45%;
     flex-basis: 45%;
   }
 
@@ -174,36 +132,16 @@ rgba(0, 0, 0, 0.1);
  */
 
 .card__content-wrapper {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -moz-box;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-box-orient: vertical;
-  -webkit-box-direction: normal;
-  -webkit-flex-direction: column;
-  -moz-box-orient: vertical;
-  -moz-box-direction: normal;
-  -ms-flex-direction: column;
   flex-direction: column;
-  -webkit-box-flex: 1;
-  -webkit-flex-grow: 1;
-  -moz-box-flex: 1;
-  -ms-flex-positive: 1;
   flex-grow: 1;
-  -webkit-flex-shrink: 0;
-  -ms-flex-negative: 0;
   flex-shrink: 0;
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
   box-sizing: border-box;
   padding: 1.5rem;
 }
 
 @media screen and (min-width: 36.75rem) {
   .card--horizontal .card__content-wrapper {
-    -webkit-flex-basis: 65%;
-    -ms-flex-preferred-size: 65%;
     flex-basis: 65%;
   }
 
@@ -219,16 +157,12 @@ rgba(0, 0, 0, 0.1);
 
 @media screen and (max-width: 53.75rem) {
   .toolbar-tray-open.toolbar-vertical.toolbar-fixed .card--horizontal .card__content-wrapper {
-    -webkit-flex-basis: auto;
-    -ms-flex-preferred-size: auto;
     flex-basis: auto;
   }
 }
 
 @media screen and (min-width: 85.375rem) {
   .card--horizontal .card__content-wrapper {
-    -webkit-flex-basis: 55%;
-    -ms-flex-preferred-size: 55%;
     flex-basis: 55%;
   }
 }
@@ -238,10 +172,6 @@ rgba(0, 0, 0, 0.1);
  */
 
 .card__content {
-  -webkit-box-flex: 1;
-  -webkit-flex-grow: 1;
-  -moz-box-flex: 1;
-  -ms-flex-positive: 1;
   flex-grow: 1;
 }
 
@@ -267,13 +197,7 @@ rgba(0, 0, 0, 0.1);
    * Without specifying flex-shrink, IE11 will increase footer height if an
    * interactive element inside is hovered or focused.
    */
-  -webkit-flex-shrink: 0;
-  -ms-flex-negative: 0;
   flex-shrink: 0;
-  -webkit-box-ordinal-group: 101;
-  -webkit-order: 100;
-  -moz-box-ordinal-group: 101;
-  -ms-flex-order: 100;
   order: 100;
   margin-top: 1.5rem;
 }

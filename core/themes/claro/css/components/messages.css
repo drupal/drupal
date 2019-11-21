@@ -69,13 +69,9 @@
 }
 
 .messages {
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
   box-sizing: border-box;
   margin-top: 1rem;
   margin-bottom: 1rem;
-  padding: 1.5rem 1.5rem 2rem -webkit-calc(1.5rem - 5px);
-  padding: 1.5rem 1.5rem 2rem -moz-calc(1.5rem - 5px);
   padding: 1.5rem 1.5rem 2rem calc(1.5rem - 5px); /* LTR */
   color: #fff;
   border-width: 0 0 0 5px; /* LTR */
@@ -86,8 +82,6 @@
 }
 
 [dir="rtl"] .messages {
-  padding-right: -webkit-calc(1.5rem - 5px);
-  padding-right: -moz-calc(1.5rem - 5px);
   padding-right: calc(1.5rem - 5px);
   padding-left: 1.5rem;
   border-right-width: 5px;
@@ -141,15 +135,7 @@
 }
 
 .messages__header {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -moz-box;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-box-align: center;
-  -webkit-align-items: center;
-  -moz-box-align: center;
-  -ms-flex-align: center;
   align-items: center;
   margin-bottom: 1rem;
 }
@@ -197,7 +183,6 @@
     border-left-width: 1px;
   }
   .messages__header {
-    -webkit-filter: grayscale(1) brightness(1.5) contrast(10);
     filter: grayscale(1) brightness(1.5) contrast(10);
   }
 }

@@ -35,8 +35,6 @@
   .toolbar-tray-open:not(.toolbar-vertical) .layout-column,
   body:not(.toolbar-tray-open) .layout-column {
     float: left;  /* LTR */
-    -webkit-box-sizing: border-box;
-    -moz-box-sizing: border-box;
     box-sizing: border-box;
     padding-right: 1.5em;
     padding-left: 1.5em;
@@ -70,8 +68,6 @@
   }
   .layout-column {
     float: left;  /* LTR */
-    -webkit-box-sizing: border-box;
-    -moz-box-sizing: border-box;
     box-sizing: border-box;
     padding-right: 1.5em;
     padding-left: 1.5em;

@@ -54,18 +54,6 @@
    */
 }
 
-::-webkit-input-placeholder {
-  color: #8e929c;
-}
-
-:-moz-placeholder {
-  color: #8e929c;
-}
-
-::-moz-placeholder {
-  color: #8e929c;
-}
-
 :-ms-input-placeholder {
   color: #8e929c;
 }
@@ -206,18 +194,8 @@ tr .form-item,
  */
 
 .form-actions {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -moz-box;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-flex-wrap: wrap;
-  -ms-flex-wrap: wrap;
   flex-wrap: wrap;
-  -webkit-box-align: start;
-  -webkit-align-items: flex-start;
-  -moz-box-align: start;
-  -ms-flex-align: start;
   align-items: flex-start;
   margin-top: 1rem;
   margin-bottom: 1rem;
@@ -230,8 +208,6 @@ tr .form-item,
 }
 
 .form-actions .ajax-progress--throbber {
-  -webkit-align-self: center;
-  -ms-flex-item-align: center;
   align-self: center;
 }
 
@@ -258,18 +234,8 @@ tr .form-item,
  */
 
 .form-item--editor-format {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -moz-box;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-flex-wrap: wrap;
-  -ms-flex-wrap: wrap;
   flex-wrap: wrap;
-  -webkit-box-align: center;
-  -webkit-align-items: center;
-  -moz-box-align: center;
-  -ms-flex-align: center;
   align-items: center;
   max-width: 100%;
 }
@@ -296,10 +262,6 @@ tr .form-item,
 
 .form-item--editor-format .form-item__description,
 .form-item--editor-format .form-item__error-message {
-  -webkit-box-flex: 0;
-  -webkit-flex: 0 1 100%;
-  -moz-box-flex: 0;
-  -ms-flex: 0 1 100%;
   flex: 0 1 100%;
   min-width: 1px;
 }

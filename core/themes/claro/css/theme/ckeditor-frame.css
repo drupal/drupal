@@ -55,7 +55,5 @@
 }
 
 .cke_editable:not(.cke_editable_inline) {
-  margin: 1em -webkit-calc(1em - 2px);
-  margin: 1em -moz-calc(1em - 2px);
   margin: 1em calc(1em - 2px);
 }
