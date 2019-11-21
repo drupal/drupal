@@ -478,7 +478,7 @@ class MediaLibraryWidget extends WidgetBase implements ContainerFactoryPluginInt
 
     // Add a button that will load the Media library in a modal using AJAX.
     $element['open_button'] = [
-      '#type' => 'submit',
+      '#type' => 'button',
       '#value' => $this->t('Add media'),
       '#name' => $field_name . '-media-library-open-button' . $id_suffix,
       '#attributes' => [
@@ -497,7 +497,6 @@ class MediaLibraryWidget extends WidgetBase implements ContainerFactoryPluginInt
           'message' => $this->t('Opening media library.'),
         ],
       ],
-      '#submit' => [],
       // Allow the media library to be opened even if there are form errors.
       '#limit_validation_errors' => [],
     ];

@@ -480,6 +480,12 @@ class MediaLibraryTest extends WebDriverTestBase {
     // setting for the entity reference field is null. All types should be
     // allowed in this case.
     $menu = $this->openMediaLibraryForField('field_null_types_media');
+
+    // Assert that the button to open the media library does not submit the
+    // parent form. We can do this by checking if the validation of the parent
+    // form is not triggered.
+    $assert_session->pageTextNotContains('Title field is required.');
+
     $this->assertTrue($menu->hasLink('Type One'));
     $this->assertTrue($menu->hasLink('Type Two'));
     $this->assertTrue($menu->hasLink('Type Three'));
