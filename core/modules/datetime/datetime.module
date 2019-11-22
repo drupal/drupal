@@ -9,39 +9,6 @@ use Drupal\Core\Url;
 use Drupal\Core\Routing\RouteMatchInterface;
 
 /**
- * Defines the timezone that dates should be stored in.
- *
- * @deprecated in drupal:8.5.0 and is removed from drupal:9.0.0. Use
- * \Drupal\datetime\Plugin\Field\FieldType\DateTimeItemInterface::STORAGE_TIMEZONE
- * instead.
- *
- * @see https://www.drupal.org/node/2912980
- */
-const DATETIME_STORAGE_TIMEZONE = 'UTC';
-
-/**
- * Defines the format that date and time should be stored in.
- *
- * @deprecated in drupal:8.5.0 and is removed from drupal:9.0.0. Use
- * \Drupal\datetime\Plugin\Field\FieldType\DateTimeItemInterface::DATETIME_STORAGE_FORMAT
- * instead.
- *
- * @see https://www.drupal.org/node/2912980
- */
-const DATETIME_DATETIME_STORAGE_FORMAT = 'Y-m-d\TH:i:s';
-
-/**
- * Defines the format that dates should be stored in.
- *
- * @deprecated in drupal:8.5.0 and is removed from drupal:9.0.0. Use
- * \Drupal\datetime\Plugin\Field\FieldType\DateTimeItemInterface::DATE_STORAGE_FORMAT
- * instead.
- *
- * @see https://www.drupal.org/node/2912980
- */
-const DATETIME_DATE_STORAGE_FORMAT = 'Y-m-d';
-
-/**
  * Implements hook_help().
  */
 function datetime_help($route_name, RouteMatchInterface $route_match) {
@@ -59,30 +26,4 @@ function datetime_help($route_name, RouteMatchInterface $route_match) {
       $output .= '</dl>';
       return $output;
   }
-}
-
-/**
- * Sets a consistent time on a date without time.
- *
- * The default time for a date without time can be anything, so long as it is
- * consistently applied. If we use noon, dates in most timezones will have the
- * same value for in both the local timezone and UTC.
- *
- * @param $date
- *
- * @deprecated in drupal:8.5.0 and is removed from drupal:9.0.0. Use
- *   \Drupal\Component\Datetime\DateTimePlus::setDefaultDateTime() or
- *   \Drupal\Core\Datetime\DrupalDateTime::setDefaultDateTime() instead.
- *
- * @see https://www.drupal.org/node/2880931
- */
-function datetime_date_default_time($date) {
-  @trigger_error('datetime_date_default_time() is deprecated in Drupal 8.5.0 and will be removed before Drupal 9.0.0. Use \Drupal\Component\Datetime\DateTimePlus::setDefaultDateTime() or \Drupal\Core\Datetime\DrupalDateTime::setDefaultDateTime() instead. See https://www.drupal.org/node/2880931.', E_USER_DEPRECATED);
-
-  // For maximum BC before this method is removed, we do not use the
-  // recommendation from the deprecation method. Instead, we call the setTime()
-  // method directly. This allows the method to continue to work with
-  // \DateTime, DateTimePlus, and DrupalDateTime objects (and classes that
-  // may derive from them).
-  $date->setTime(12, 0, 0);
 }
