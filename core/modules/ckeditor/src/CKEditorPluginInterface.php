@@ -68,8 +68,8 @@ interface CKEditorPluginInterface extends PluginInspectionInterface {
   /**
    * Returns the Drupal root-relative file path to the plugin JavaScript file.
    *
-   * Note: this does not use a Drupal library because this uses CKEditor's API,
-   * see http://docs.cksource.com/ckeditor_api/symbols/CKEDITOR.resourceManager.html#addExternal.
+   * Note: this does not use a Drupal library because this uses CKEditor's API.
+   * @see https://ckeditor.com/docs/ckeditor4/latest/api/CKEDITOR_resourceManager.html#method-addExternal
    *
    * @return string|false
    *   The Drupal root-relative path to the file, FALSE if an internal plugin.

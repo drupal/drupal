@@ -150,7 +150,7 @@ class StylesCombo extends CKEditorPluginBase implements CKEditorPluginConfigurab
       $element = array_shift($classes);
 
       // Build the data structure CKEditor's stylescombo plugin expects.
-      // @see http://docs.cksource.com/CKEditor_3.x/Developers_Guide/Styles
+      // @see https://ckeditor.com/docs/ckeditor4/latest/guide/dev_howtos_styles.html
       $configured_style = [
         'name' => trim($label),
         'element' => trim($element),
