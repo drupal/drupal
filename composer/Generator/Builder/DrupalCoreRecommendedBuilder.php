@@ -2,6 +2,8 @@
 
 namespace Drupal\Composer\Generator\Builder;
 
+use Drupal\Composer\Composer;
+
 /**
  * Builder to produce metapackage for drupal/core-recommended.
  */
@@ -60,7 +62,7 @@ class DrupalCoreRecommendedBuilder extends DrupalPackageBuilder {
         "webflo/drupal-core-strict" => "*",
       ],
       "require" => [
-        "drupal/core" => "self.version",
+        "drupal/core" => Composer::drupalVersionBranch(),
       ],
     ];
   }
