@@ -81,7 +81,7 @@ class TableSort {
         $image = '';
       }
       $cell_content = Link::createFromRoute(new FormattableMarkup('@cell_content@image', ['@cell_content' => $cell_content, '@image' => $image]), '<current>', [], [
-        'attributes' => ['title' => $title],
+        'attributes' => ['title' => $title, 'rel' => 'nofollow'],
         'query' => array_merge($context['query'], [
           'sort' => $context['sort'],
           'order' => $cell_content,

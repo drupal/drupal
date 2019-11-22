@@ -73,14 +73,14 @@
             {%- if column.wrapper_element -%}
               <{{ column.wrapper_element }}>
                 {%- if column.url -%}
-                  <a href="{{ column.url }}" title="{{ column.title }}">{{ column.content }}{{ column.sort_indicator }}</a>
+                  <a href="{{ column.url }}" title="{{ column.title }}" rel="nofollow">{{ column.content }}{{ column.sort_indicator }}</a>
                 {%- else -%}
                   {{ column.content }}{{ column.sort_indicator }}
                 {%- endif -%}
               </{{ column.wrapper_element }}>
             {%- else -%}
               {%- if column.url -%}
-                <a href="{{ column.url }}" title="{{ column.title }}">{{ column.content }}{{ column.sort_indicator }}</a>
+                <a href="{{ column.url }}" title="{{ column.title }}" rel="nofollow">{{ column.content }}{{ column.sort_indicator }}</a>
               {%- else -%}
                 {{- column.content }}{{ column.sort_indicator }}
               {%- endif -%}
