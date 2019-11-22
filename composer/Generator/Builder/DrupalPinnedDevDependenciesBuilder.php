@@ -2,6 +2,8 @@
 
 namespace Drupal\Composer\Generator\Builder;
 
+use Drupal\Composer\Composer;
+
 /**
  * Builder to produce metapackage for drupal/core-dev-pinned.
  */
@@ -61,7 +63,7 @@ class DrupalPinnedDevDependenciesBuilder extends DrupalPackageBuilder {
         "webflo/drupal-core-require-dev" => "*",
       ],
       "require" => [
-        "drupal/core" => "self.version",
+        "drupal/core" => Composer::drupalVersionBranch(),
       ],
     ];
   }

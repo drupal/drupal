@@ -7,7 +7,7 @@
         "webflo/drupal-core-require-dev": "*"
     },
     "require": {
-        "drupal/core": "self.version",
+        "drupal/core": "8.9.x-dev",
         "behat/mink": "1.8.0 | 1.7.1.1 | 1.7.x-dev",
         "behat/mink-browserkit-driver": "1.3.3",
         "behat/mink-goutte-driver": "v1.2.1",
