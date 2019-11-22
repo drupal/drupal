@@ -342,30 +342,6 @@ class LayoutBuilderEntityViewDisplay extends BaseEntityViewDisplay implements La
   }
 
   /**
-   * Gets the runtime sections for a given entity.
-   *
-   * @param \Drupal\Core\Entity\FieldableEntityInterface $entity
-   *   The entity.
-   *
-   * @return \Drupal\layout_builder\Section[]
-   *   The sections.
-   *
-   * @deprecated in drupal:8.7.0 and is removed from drupal:9.0.0.
-   *   \Drupal\layout_builder\SectionStorage\SectionStorageManagerInterface::findByContext()
-   *   should be used instead. See https://www.drupal.org/node/3022574.
-   */
-  protected function getRuntimeSections(FieldableEntityInterface $entity) {
-    @trigger_error('\Drupal\layout_builder\Entity\LayoutBuilderEntityViewDisplay::getRuntimeSections() is deprecated in Drupal 8.7.0 and will be removed before Drupal 9.0.0. \Drupal\layout_builder\SectionStorage\SectionStorageManagerInterface::findByContext() should be used instead. See https://www.drupal.org/node/3022574.', E_USER_DEPRECATED);
-    // For backwards compatibility, mimic the functionality of ::buildSections()
-    // by constructing a cacheable metadata object and retrieving the
-    // entity-based contexts.
-    $cacheability = new CacheableMetadata();
-    $contexts = $this->getContextsForEntity($entity);
-    $storage = $this->sectionStorageManager()->findByContext($contexts, $cacheability);
-    return $storage ? $storage->getSections() : [];
-  }
-
-  /**
    * {@inheritdoc}
    *
    * @todo Move this upstream in https://www.drupal.org/node/2939931.

@@ -201,22 +201,6 @@ class SimpleConfigSectionStorage extends ContextAwarePluginBase implements Secti
   /**
    * {@inheritdoc}
    */
-  public function getSectionListFromId($id) {
-    @trigger_error('\Drupal\layout_builder\SectionStorageInterface::getSectionListFromId() is deprecated in Drupal 8.7.0 and will be removed before Drupal 9.0.0. The section list should be derived from context. See https://www.drupal.org/node/3016262.', E_USER_DEPRECATED);
-    return $this;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function extractIdFromRoute($value, $definition, $name, array $defaults) {
-    @trigger_error('\Drupal\layout_builder\SectionStorageInterface::extractIdFromRoute() is deprecated in Drupal 8.7.0 and will be removed before Drupal 9.0.0. \Drupal\layout_builder\SectionStorageInterface::deriveContextsFromRoute() should be used instead. See https://www.drupal.org/node/3016262.', E_USER_DEPRECATED);
-    return $value ?: $defaults['id'];
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function isApplicable(RefinableCacheableDependencyInterface $cacheability) {
     return TRUE;
   }

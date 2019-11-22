@@ -216,49 +216,6 @@ class DefaultsSectionStorage extends SectionStorageBase implements ContainerFact
   /**
    * {@inheritdoc}
    */
-  public function extractIdFromRoute($value, $definition, $name, array $defaults) {
-    @trigger_error('\Drupal\layout_builder\SectionStorageInterface::extractIdFromRoute() is deprecated in Drupal 8.7.0 and will be removed before Drupal 9.0.0. \Drupal\layout_builder\SectionStorageInterface::deriveContextsFromRoute() should be used instead. See https://www.drupal.org/node/3016262.', E_USER_DEPRECATED);
-    if (is_string($value) && strpos($value, '.') !== FALSE) {
-      return $value;
-    }
-
-    // If a bundle is not provided but a value corresponding to the bundle key
-    // is, use that for the bundle value.
-    if (empty($defaults['bundle']) && isset($defaults['bundle_key']) && !empty($defaults[$defaults['bundle_key']])) {
-      $defaults['bundle'] = $defaults[$defaults['bundle_key']];
-    }
-
-    if (!empty($defaults['entity_type_id']) && !empty($defaults['bundle']) && !empty($defaults['view_mode_name'])) {
-      return $defaults['entity_type_id'] . '.' . $defaults['bundle'] . '.' . $defaults['view_mode_name'];
-    }
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getSectionListFromId($id) {
-    @trigger_error('\Drupal\layout_builder\SectionStorageInterface::getSectionListFromId() is deprecated in Drupal 8.7.0 and will be removed before Drupal 9.0.0. The section list should be derived from context. See https://www.drupal.org/node/3016262.', E_USER_DEPRECATED);
-    if (strpos($id, '.') === FALSE) {
-      throw new \InvalidArgumentException(sprintf('The "%s" ID for the "%s" section storage type is invalid', $id, $this->getStorageType()));
-    }
-
-    $storage = $this->entityTypeManager->getStorage('entity_view_display');
-    // If the display does not exist, create a new one.
-    if (!$display = $storage->load($id)) {
-      list($entity_type_id, $bundle, $view_mode) = explode('.', $id, 3);
-      $display = $storage->create([
-        'targetEntityType' => $entity_type_id,
-        'bundle' => $bundle,
-        'mode' => $view_mode,
-        'status' => TRUE,
-      ]);
-    }
-    return $display;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function getContextsDuringPreview() {
     $contexts = parent::getContextsDuringPreview();
 

@@ -33,27 +33,6 @@ interface SectionStorageInterface extends SectionListInterface, PluginInspection
   public function getStorageType();
 
   /**
-   * Derives the section list from the storage ID.
-   *
-   * @param string $id
-   *   The storage ID, see ::getStorageId().
-   *
-   * @return \Drupal\layout_builder\SectionListInterface
-   *   The section list.
-   *
-   * @throws \InvalidArgumentException
-   *   Thrown if the ID is invalid.
-   *
-   * @internal
-   *   This should only be called during section storage instantiation.
-   *
-   * @deprecated in drupal:8.7.0 and is removed from drupal:9.0.0. The
-   *   section list should be derived from context. See
-   *   https://www.drupal.org/node/3016262.
-   */
-  public function getSectionListFromId($id);
-
-  /**
    * Provides the routes needed for Layout Builder UI.
    *
    * Allows the plugin to add or alter routes during the route building process.
@@ -86,30 +65,6 @@ interface SectionStorageInterface extends SectionListInterface, PluginInspection
    *   The URL object.
    */
   public function getLayoutBuilderUrl($rel = 'view');
-
-  /**
-   * Configures the plugin based on route values.
-   *
-   * @param mixed $value
-   *   The raw value.
-   * @param mixed $definition
-   *   The parameter definition provided in the route options.
-   * @param string $name
-   *   The name of the parameter.
-   * @param array $defaults
-   *   The route defaults array.
-   *
-   * @return string|null
-   *   The section storage ID if it could be extracted, NULL otherwise.
-   *
-   * @internal
-   *   This should only be called during section storage instantiation.
-   *
-   * @deprecated in drupal:8.7.0 and is removed from drupal:9.0.0.
-   *   \Drupal\layout_builder\SectionStorageInterface::deriveContextsFromRoute()
-   *   should be used instead. See https://www.drupal.org/node/3016262.
-   */
-  public function extractIdFromRoute($value, $definition, $name, array $defaults);
 
   /**
    * Derives the available plugin contexts from route values.

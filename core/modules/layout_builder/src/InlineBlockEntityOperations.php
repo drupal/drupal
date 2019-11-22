@@ -2,7 +2,6 @@
 
 namespace Drupal\layout_builder;
 
-use Drupal\Core\Database\Connection;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
@@ -55,25 +54,13 @@ class InlineBlockEntityOperations implements ContainerInjectionInterface {
    *   The entity type manager service.
    * @param \Drupal\layout_builder\InlineBlockUsageInterface $usage
    *   Inline block usage tracking service.
-   * @param \Drupal\Core\Database\Connection $database
-   *   The database connection.
    * @param \Drupal\layout_builder\SectionStorage\SectionStorageManagerInterface $section_storage_manager
    *   (optional) The section storage manager.
-   *
-   * @todo The current constructor signature is deprecated:
-   *   - The $section_storage_manager parameter is optional, but should become
-   *   required.
-   *   - The $database parameter is unused and should be removed.
-   *   Deprecate in https://www.drupal.org/node/3031492.
    */
-  public function __construct(EntityTypeManagerInterface $entityTypeManager, InlineBlockUsageInterface $usage, Connection $database, SectionStorageManagerInterface $section_storage_manager = NULL) {
+  public function __construct(EntityTypeManagerInterface $entityTypeManager, InlineBlockUsageInterface $usage, SectionStorageManagerInterface $section_storage_manager) {
     $this->entityTypeManager = $entityTypeManager;
     $this->blockContentStorage = $entityTypeManager->getStorage('block_content');
     $this->usage = $usage;
-    if ($section_storage_manager === NULL) {
-      @trigger_error('The plugin.manager.layout_builder.section_storage service must be passed to \Drupal\layout_builder\InlineBlockEntityOperations::__construct(). It was added in Drupal 8.7.0 and will be required before Drupal 9.0.0.', E_USER_DEPRECATED);
-      $section_storage_manager = \Drupal::service('plugin.manager.layout_builder.section_storage');
-    }
     $this->sectionStorageManager = $section_storage_manager;
   }
 
@@ -84,7 +71,6 @@ class InlineBlockEntityOperations implements ContainerInjectionInterface {
     return new static(
       $container->get('entity_type.manager'),
       $container->get('inline_block.usage'),
-      $container->get('database'),
       $container->get('plugin.manager.layout_builder.section_storage')
     );
   }

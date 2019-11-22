@@ -4,7 +4,6 @@ namespace Drupal\Tests\layout_builder\FunctionalJavascript;
 
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 use Drupal\Tests\contextual\FunctionalJavascript\ContextualLinkClickTrait;
-use Zend\Stdlib\ArrayUtils;
 
 /**
  * Tests toggling of content preview.
@@ -149,10 +148,10 @@ class ContentPreviewToggleTest extends WebDriverTestBase {
     $blocks = $page->findAll('css', '[data-layout-content-preview-placeholder-label]');
 
     // Filter will only return value if block contains expected text.
-    $blocks_with_expected_text = ArrayUtils::filter($blocks, function ($block, $key) use ($items) {
+    $blocks_with_expected_text = array_filter($blocks, function ($block, $key) use ($items) {
       $block_text = $block->getText();
       return strpos($block_text, $items[$key]) !== FALSE;
-    }, ArrayUtils::ARRAY_FILTER_USE_BOTH);
+    }, ARRAY_FILTER_USE_BOTH);
 
     $this->assertCount(count($items), $blocks_with_expected_text);
   }

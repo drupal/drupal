@@ -42,13 +42,9 @@ class SectionStorageManager extends DefaultPluginManager implements SectionStora
    * @param \Drupal\Core\Plugin\Context\ContextHandlerInterface $context_handler
    *   The context handler.
    */
-  public function __construct(\Traversable $namespaces, CacheBackendInterface $cache_backend, ModuleHandlerInterface $module_handler, ContextHandlerInterface $context_handler = NULL) {
+  public function __construct(\Traversable $namespaces, CacheBackendInterface $cache_backend, ModuleHandlerInterface $module_handler, ContextHandlerInterface $context_handler) {
     parent::__construct('Plugin/SectionStorage', $namespaces, $module_handler, SectionStorageInterface::class, SectionStorage::class);
 
-    if (!$context_handler) {
-      @trigger_error('The context.handler service must be passed to \Drupal\layout_builder\SectionStorage\SectionStorageManager::__construct(); it was added in Drupal 8.7.0 and will be required before Drupal 9.0.0.', E_USER_DEPRECATED);
-      $context_handler = \Drupal::service('context.handler');
-    }
     $this->contextHandler = $context_handler;
 
     $this->alterInfo('layout_builder_section_storage');
@@ -109,24 +105,6 @@ class SectionStorageManager extends DefaultPluginManager implements SectionStora
    */
   public function loadEmpty($type) {
     return $this->createInstance($type);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function loadFromStorageId($type, $id) {
-    @trigger_error('\Drupal\layout_builder\SectionStorage\SectionStorageManagerInterface::loadFromStorageId() is deprecated in Drupal 8.7.0 and will be removed before Drupal 9.0.0. \Drupal\layout_builder\SectionStorage\SectionStorageManagerInterface::load() should be used instead. See https://www.drupal.org/node/3012353.', E_USER_DEPRECATED);
-    $contexts = $this->loadEmpty($type)->deriveContextsFromRoute($id, [], '', []);
-    return $this->load($type, $contexts);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function loadFromRoute($type, $value, $definition, $name, array $defaults) {
-    @trigger_error('\Drupal\layout_builder\SectionStorage\SectionStorageManagerInterface::loadFromRoute() is deprecated in Drupal 8.7.0 and will be removed before Drupal 9.0.0. \Drupal\layout_builder\SectionStorageInterface::deriveContextsFromRoute() and \Drupal\layout_builder\SectionStorage\SectionStorageManagerInterface::load() should be used instead. See https://www.drupal.org/node/3012353.', E_USER_DEPRECATED);
-    $contexts = $this->loadEmpty($type)->deriveContextsFromRoute($value, $definition, $name, $defaults);
-    return $this->load($type, $contexts);
   }
 
 }

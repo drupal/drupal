@@ -6,13 +6,6 @@ services:
     class: Drupal\layout_builder\Access\LayoutBuilderAccessCheck
     tags:
       - { name: access_check, applies_to: _layout_builder_access }
-  access_check.entity.layout:
-    # Deprecated in Drupal 8.7.0 and will be removed before Drupal 9.0.0. Use
-    # access_check.entity.layout_builder_access instead. See
-    # https://www.drupal.org/node/3039551.
-    class: Drupal\layout_builder\Access\LayoutSectionAccessCheck
-    tags:
-      - { name: access_check, applies_to: _has_layout_section }
   plugin.manager.layout_builder.section_storage:
     class: Drupal\layout_builder\SectionStorage\SectionStorageManager
     parent: default_plugin_manager

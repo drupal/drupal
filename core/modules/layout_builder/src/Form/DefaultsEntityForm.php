@@ -50,12 +50,8 @@ class DefaultsEntityForm extends EntityForm {
    * @param \Drupal\Core\Entity\EntityTypeBundleInfoInterface $entity_type_bundle_info
    *   The entity type bundle info service.
    */
-  public function __construct(LayoutTempstoreRepositoryInterface $layout_tempstore_repository, EntityTypeBundleInfoInterface $entity_type_bundle_info = NULL) {
+  public function __construct(LayoutTempstoreRepositoryInterface $layout_tempstore_repository, EntityTypeBundleInfoInterface $entity_type_bundle_info) {
     $this->layoutTempstoreRepository = $layout_tempstore_repository;
-    if (!$entity_type_bundle_info) {
-      @trigger_error('The entity_type.bundle.info service must be passed to DefaultsEntityForm::__construct(), it is required before Drupal 9.0.0.', E_USER_DEPRECATED);
-      $entity_type_bundle_info = \Drupal::service('entity_type.bundle.info');
-    }
     $this->entityTypeBundleInfo = $entity_type_bundle_info;
   }
 
