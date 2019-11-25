@@ -5,11 +5,11 @@ namespace Drupal\Tests\layout_builder\Functional;
 use Drupal\Tests\BrowserTestBase;
 
 /**
- * Tests field block template suggestions.
+ * Tests template suggestions.
  *
  * @group layout_builder
  */
-class LayoutBuilderFieldBlockThemeSuggestionsTest extends BrowserTestBase {
+class LayoutBuilderThemeSuggestionsTest extends BrowserTestBase {
 
   /**
    * {@inheritdoc}
@@ -17,7 +17,7 @@ class LayoutBuilderFieldBlockThemeSuggestionsTest extends BrowserTestBase {
   public static $modules = [
     'layout_builder',
     'node',
-    'layout_builder_field_block_theme_suggestions_test',
+    'layout_builder_theme_suggestions_test',
   ];
 
   /**
@@ -52,6 +52,18 @@ class LayoutBuilderFieldBlockThemeSuggestionsTest extends BrowserTestBase {
 
     $this->drupalGet('admin/structure/types/manage/bundle_with_section_field/display/default');
     $this->drupalPostForm(NULL, ['layout[enabled]' => TRUE], 'Save');
+  }
+
+  /**
+   * Tests alterations of the layout list via preprocess functions.
+   */
+  public function testLayoutListSuggestion() {
+    $page = $this->getSession()->getPage();
+    $assert_session = $this->assertSession();
+
+    $this->drupalGet('admin/structure/types/manage/bundle_with_section_field/display/default/layout');
+    $page->clickLink('Add section');
+    $assert_session->pageTextContains('layout_builder_theme_suggestions_test_preprocess_item_list__layouts');
   }
 
   /**
