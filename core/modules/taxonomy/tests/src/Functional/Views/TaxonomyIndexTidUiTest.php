@@ -71,7 +71,7 @@ class TaxonomyIndexTidUiTest extends UITestBase {
         $this->terms[$i][$j] = $term = Term::create([
           'vid' => 'tags',
           'name' => "Term $i.$j",
-          'parent' => isset($terms[$i][0]) ? $terms[$i][0]->id() : 0,
+          'parent' => isset($this->terms[$i][0]) ? $this->terms[$i][0]->id() : 0,
         ]);
         $term->save();
       }
