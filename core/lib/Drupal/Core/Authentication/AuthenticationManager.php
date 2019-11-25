@@ -13,7 +13,7 @@ use Symfony\Component\HttpFoundation\Request;
  * provider detecting credentials for its method wins. No further provider will
  * get triggered.
  *
- * If no provider set an active user then the user is set to anonymous.
+ * If no provider sets an active user then the user remains anonymous.
  */
 class AuthenticationManager implements AuthenticationProviderInterface, AuthenticationProviderFilterInterface, AuthenticationProviderChallengeInterface {
 
