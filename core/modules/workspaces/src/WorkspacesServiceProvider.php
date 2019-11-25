@@ -4,6 +4,7 @@ namespace Drupal\workspaces;
 
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\DependencyInjection\ServiceProviderBase;
+use Drupal\Core\Update\UpdateKernel;
 use Symfony\Component\DependencyInjection\Reference;
 
 /**
@@ -24,6 +25,16 @@ class WorkspacesServiceProvider extends ServiceProviderBase {
     $container->getDefinition('path_alias.repository')
       ->setClass(WorkspacesAliasRepository::class)
       ->addMethodCall('setWorkspacesManager', [new Reference('workspaces.manager')]);
+
+    // Ensure that there's no active workspace while running database updates by
+    // removing the relevant tag from all workspace negotiator services.
+    if ($container->get('kernel') instanceof UpdateKernel) {
+      foreach ($container->getDefinitions() as $id => $definition) {
+        if ($definition->hasTag('workspace_negotiator')) {
+          $definition->clearTag('workspace_negotiator');
+        }
+      }
+    }
   }
 
 }

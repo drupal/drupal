@@ -1,0 +1,5 @@
+services:
+  workspace_update_test.negotiator.test:
+    class: Drupal\workspace_update_test\Negotiator\TestWorkspaceNegotiator
+    tags:
+      - { name: workspace_negotiator, priority: 0 }
