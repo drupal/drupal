@@ -86,9 +86,10 @@ class SafeMarkupTest extends TestCase {
   }
 
   /**
-   * Data provider for testCheckPlain() and testEscapeString().
+   * Data provider for testCheckPlain() and testHtmlEscapedText().
    *
    * @see testCheckPlain()
+   * @see testHtmlEscapedText()
    */
   public function providerCheckPlain() {
     // Checks that invalid multi-byte sequences are escaped.
