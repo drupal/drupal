@@ -2,6 +2,7 @@
 
 namespace Drupal\KernelTests\Core\Field;
 
+use Drupal\Component\Plugin\Exception\PluginNotFoundException;
 use Drupal\entity_test\Entity\EntityTestMulRev;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
@@ -60,7 +61,7 @@ class FieldMissingTypeTest extends EntityKernelTestBase {
    * @see \Drupal\field\FieldStorageConfigStorage::mapFromStorageRecords()
    */
   public function testFieldStorageMissingType() {
-    $this->expectException(\RuntimeException::class);
+    $this->expectException(PluginNotFoundException::class);
     $this->expectExceptionMessage("Unable to determine class for field type 'foo_field_storage' found in the 'field.storage.entity_test_mulrev.{$this->fieldName}' configuration");
     $entity = EntityTestMulRev::create([
       'name' => $this->randomString(),
@@ -80,7 +81,7 @@ class FieldMissingTypeTest extends EntityKernelTestBase {
    * @see \Drupal\field\FieldConfigStorageBase::mapFromStorageRecords()
    */
   public function testFieldMissingType() {
-    $this->expectException(\RuntimeException::class);
+    $this->expectException(PluginNotFoundException::class);
     $this->expectExceptionMessage("Unable to determine class for field type 'foo_field' found in the 'field.field.entity_test_mulrev.entity_test_mulrev.{$this->fieldName}' configuration");
     $entity = EntityTestMulRev::create([
       'name' => $this->randomString(),
