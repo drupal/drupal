@@ -15812,7 +15812,7 @@ $connection->insert('filter_format')
   'format' => 'php_code',
   'name' => 'PHP code',
   'cache' => '0',
-  'status' => '1',
+  'status' => '0',
   'weight' => '11',
 ))
 ->values(array(
