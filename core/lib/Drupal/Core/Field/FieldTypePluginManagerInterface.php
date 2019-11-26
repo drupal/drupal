@@ -112,6 +112,9 @@ interface FieldTypePluginManagerInterface extends PluginManagerInterface, Catego
    *
    * @return string
    *   Field type plugin class name.
+   *
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
+   *   Thrown if the field type plugin name is invalid.
    */
   public function getPluginClass($type);
 
