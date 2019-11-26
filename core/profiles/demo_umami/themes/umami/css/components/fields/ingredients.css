@@ -4,7 +4,6 @@
  */
 
 .field--name-field-ingredients {
-  margin-top: 1.184rem;
   margin-bottom: 1.184rem;
   padding: 1.266rem;
   background-color: #fbf5ee;
@@ -13,7 +12,6 @@
 @media screen and (min-width: 60rem) {
   /* 960px */
   .field--name-field-ingredients {
-    margin-top: 2.369rem;
     margin-bottom: 2.369rem;
     padding: 2.369rem;
   }
@@ -34,15 +32,6 @@
   .field--name-field-ingredients .field__label {
     margin: 0 0 1.5em 0;
     font-size: 1.77rem;
-  }
-}
-
-/* Small */
-@media screen and (min-width: 30rem) {
-  /* 480px */
-  .field--name-field-ingredients .field__items {
-    column-count: 2;
-    column-gap: 2rem;
   }
 }
 
