@@ -1,0 +1,21 @@
+layout_oneplusfourgrid_section:
+  label: 'One plus four grid'
+  path: layouts/oneplusfourgrid_section
+  template: layout--oneplusfourgrid-section
+  library: umami/oneplusfourgrid_section
+  category: 'Custom grid'
+  default_region: first
+  icon_map:
+    - [first, second, third]
+    - [first, fourth, fifth]
+  regions:
+    first:
+      label: First
+    second:
+      label: Second
+    third:
+      label: Third
+    fourth:
+      label: Fourth
+    fifth:
+      label: Fifth

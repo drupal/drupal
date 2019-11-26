@@ -1,0 +1,39 @@
+/*
+ * @file
+ * Provides the layout styles for two-column layout section.
+ */
+
+.layout--oneplusfourgrid-section {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.layout--oneplusfourgrid-section > .layout__region {
+  flex: 0 1 100%;
+}
+
+/* Large */
+@media screen and (min-width: 60rem) { /* 960px */
+  .layout--oneplusfourgrid-section {
+    margin-right: -1.5%;
+    margin-left: -1.5%;
+  }
+  .layout--oneplusfourgrid-section > .layout__region--first {
+    flex: 0 1 47%;
+    margin-right: 1.5%;
+    margin-left: 1.5%;
+  }
+  .layout--oneplusfourgrid-section > .layout__four-grid-group {
+    display: flex;
+    flex: 0 1 50%;
+    flex-wrap: wrap;
+  }
+  .layout__four-grid-group > .layout__region--second,
+  .layout__four-grid-group > .layout__region--third,
+  .layout__four-grid-group > .layout__region--fourth,
+  .layout__four-grid-group > .layout__region--fifth {
+    flex: 0 1 44%;
+    margin-right: 3%;
+    margin-left: 3%;
+  }
+}

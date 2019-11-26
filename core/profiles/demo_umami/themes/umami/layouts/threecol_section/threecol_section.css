@@ -1,0 +1,44 @@
+/*
+ * @file
+ * Provides the layout styles for three-column layout section.
+ */
+
+.layout--threecol-section {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.layout--threecol-section > .layout__region {
+  flex: 0 1 100%;
+}
+/* Medium */
+@media screen and (min-width: 48em) { /* 768px */
+  .layout--threecol-section {
+    margin-right: -1.5%;
+    margin-left: -1.5%;
+  }
+  .layout--threecol-section > .layout__region {
+    margin-right: 1.5%;
+    margin-left: 1.5%;
+  }
+  .layout--threecol-section--25-50-25 > .layout__region--first,
+  .layout--threecol-section--25-50-25 > .layout__region--third,
+  .layout--threecol-section--25-25-50 > .layout__region--first,
+  .layout--threecol-section--25-25-50 > .layout__region--second,
+  .layout--threecol-section--50-25-25 > .layout__region--second,
+  .layout--threecol-section--50-25-25 > .layout__region--third {
+    flex: 0 1 22%;
+  }
+  .layout--threecol-section--25-50-25 > .layout__region--second,
+  .layout--threecol-section--25-25-50 > .layout__region--third,
+  .layout--threecol-section--50-25-25 > .layout__region--first {
+    flex: 0 1 47%;
+  }
+  .layout--threecol-section--33-34-33 > .layout__region--first,
+  .layout--threecol-section--33-34-33 > .layout__region--third {
+    flex: 0 1 30%;
+  }
+  .layout--threecol-section--33-34-33 > .layout__region--second {
+    flex: 0 1 31%;
+  }
+}
