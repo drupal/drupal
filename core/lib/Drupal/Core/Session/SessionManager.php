@@ -226,7 +226,9 @@ class SessionManager extends NativeSessionStorage implements SessionManagerInter
     }
     session_id(Crypt::randomBytesBase64());
 
-    $this->getMetadataBag()->clearCsrfTokenSeed();
+    // We set token seed immediately to avoid race condition between two
+    // simultaneous requests without a seed.
+    $this->getMetadataBag()->setCsrfTokenSeed(Crypt::randomBytesBase64());
 
     if (isset($old_session_id)) {
       $params = session_get_cookie_params();
