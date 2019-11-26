@@ -527,7 +527,7 @@ trait UiHelperTrait {
     if (!empty($refresh) && (!isset($this->maximumMetaRefreshCount) || $this->metaRefreshCount < $this->maximumMetaRefreshCount)) {
       // Parse the content attribute of the meta tag for the format:
       // "[delay]: URL=[page_to_redirect_to]".
-      if (preg_match('/\d+;\s*URL=(?<url>.*)/i', $refresh[0]->getAttribute('content'), $match)) {
+      if (preg_match('/\d+;\s*URL=\'?(?<url>[^\']*)/i', $refresh[0]->getAttribute('content'), $match)) {
         $this->metaRefreshCount++;
         return $this->drupalGet($this->getAbsoluteUrl(Html::decodeEntities($match['url'])));
       }
