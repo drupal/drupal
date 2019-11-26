@@ -15,12 +15,6 @@ namespace Drupal\Core\Pager;
  * of the pager element within the 'page' query. The value of the element is an
  * integer telling us the current page number for that pager.
  *
- * This class generally replaces the functions in core/includes/pager.inc. Those
- * functions use globals to store data which they all use. Since we require
- * backwards compatibility with this behavior, this class presents a public API
- * for using pager information, which is implemented using the same globals as a
- * 'backend.'
- *
  * @see \Drupal\Core\Pager\PagerParametersInterface
  */
 interface PagerManagerInterface {

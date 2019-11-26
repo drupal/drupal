@@ -2,7 +2,6 @@
 
 namespace Drupal\Core\Pager;
 
-use Drupal\Component\Utility\DeprecatedArray;
 use Drupal\Core\DependencyInjection\DependencySerializationTrait;
 
 /**
@@ -103,30 +102,6 @@ class PagerManager implements PagerManagerInterface {
    */
   protected function setPager(Pager $pager, $element = 0) {
     $this->pagers[$element] = $pager;
-    $this->updateGlobals();
-  }
-
-  /**
-   * Updates global variables with a pager data for backwards compatibility.
-   */
-  protected function updateGlobals() {
-    $pager_total_items = [];
-    $pager_total = [];
-    $pager_page_array = [];
-    $pager_limits = [];
-
-    /** @var $pager \Drupal\Core\Pager\Pager */
-    foreach ($this->pagers as $pager_id => $pager) {
-      $pager_total_items[$pager_id] = $pager->getTotalItems();
-      $pager_total[$pager_id] = $pager->getTotalPages();
-      $pager_page_array[$pager_id] = $pager->getCurrentPage();
-      $pager_limits[$pager_id] = $pager->getLimit();
-    }
-
-    $GLOBALS['pager_total_items'] = new DeprecatedArray($pager_total_items, 'Global variable $pager_total_items is deprecated in drupal:8.8.0 and is removed in drupal:9.0.0. Use \Drupal\Core\Pager\PagerManagerInterface instead. See https://www.drupal.org/node/2779457');
-    $GLOBALS['pager_total'] = new DeprecatedArray($pager_total, 'Global variable $pager_total is deprecated in drupal:8.8.0 and is removed in drupal:9.0.0. Use \Drupal\Core\Pager\PagerManagerInterface instead. See https://www.drupal.org/node/2779457');
-    $GLOBALS['pager_page_array'] = new DeprecatedArray($pager_page_array, 'Global variable $pager_page_array is deprecated in drupal:8.8.0 and is removed in drupal:9.0.0. Use \Drupal\Core\Pager\PagerManagerInterface instead. See https://www.drupal.org/node/2779457');
-    $GLOBALS['pager_limits'] = new DeprecatedArray($pager_limits, 'Global variable $pager_limits is deprecated in drupal:8.8.0 and is removed in drupal:9.0.0. Use \Drupal\Core\Pager\PagerManagerInterface instead. See https://www.drupal.org/node/2779457');
   }
 
 }

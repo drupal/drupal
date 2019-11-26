@@ -48,7 +48,7 @@ class PreprocessPagerTest extends UnitTestCase {
    * @covers ::template_preprocess_pager
    */
   public function testQuantityNotSet() {
-    require_once $this->root . '/core/includes/pager.inc';
+    require_once $this->root . '/core/includes/theme.inc';
     $variables = [
       'pager' => [
         '#element' => '',

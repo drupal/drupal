@@ -558,7 +558,6 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
     require_once $this->root . '/core/includes/database.inc';
     require_once $this->root . '/core/includes/module.inc';
     require_once $this->root . '/core/includes/theme.inc';
-    require_once $this->root . '/core/includes/pager.inc';
     require_once $this->root . '/core/includes/menu.inc';
     require_once $this->root . '/core/includes/tablesort.inc';
     require_once $this->root . '/core/includes/file.inc';

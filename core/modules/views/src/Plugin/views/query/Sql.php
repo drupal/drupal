@@ -1485,8 +1485,7 @@ class Sql extends QueryPluginBase {
       // If not, then hook_query_node_access_alter() may munge the count by
       // adding a distinct against an empty query string
       // (e.g. COUNT DISTINCT(1) ...) and no pager will return.
-      // See pager.inc > PagerDefault::execute()
-      // http://api.drupal.org/api/drupal/includes--pager.inc/function/PagerDefault::execute/7
+      // See \Drupal\Core\Database\Query\PagerSelectExtender::execute()
       // See https://www.drupal.org/node/1046170.
       $count_query->preExecute();
 
