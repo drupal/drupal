@@ -85,27 +85,6 @@ class ModerationInformation implements ModerationInformationInterface {
   /**
    * {@inheritdoc}
    */
-  public function getLatestRevision($entity_type_id, $entity_id) {
-    @trigger_error(__METHOD__ . ' is deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. Use RevisionableStorageInterface::getLatestRevisionId() and RevisionableStorageInterface::loadRevision() instead. See https://www.drupal.org/node/3087295', E_USER_DEPRECATED);
-    /** @var \Drupal\Core\Entity\ContentEntityStorageInterface $storage */
-    $storage = $this->entityTypeManager->getStorage($entity_type_id);
-    return $storage->loadRevision($storage->getLatestRevisionId($entity_id));
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getLatestRevisionId($entity_type_id, $entity_id) {
-    @trigger_error(__METHOD__ . ' is deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. Use RevisionableStorageInterface::getLatestRevisionId() instead. See https://www.drupal.org/node/3087295', E_USER_DEPRECATED);
-    /** @var \Drupal\Core\Entity\ContentEntityStorageInterface $storage */
-    if ($storage = $this->entityTypeManager->getStorage($entity_type_id)) {
-      return $storage->getLatestRevisionId($entity_id);
-    }
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function getDefaultRevisionId($entity_type_id, $entity_id) {
     if ($storage = $this->entityTypeManager->getStorage($entity_type_id)) {
       $result = $storage->getQuery()
@@ -131,14 +110,6 @@ class ModerationInformation implements ModerationInformationInterface {
         return $translation;
       }
     }
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function isLatestRevision(ContentEntityInterface $entity) {
-    @trigger_error(__METHOD__ . ' is deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. Use RevisionableInterface::isLatestRevision() instead. See https://www.drupal.org/node/3087295', E_USER_DEPRECATED);
-    return $entity->isLatestRevision();
   }
 
   /**
