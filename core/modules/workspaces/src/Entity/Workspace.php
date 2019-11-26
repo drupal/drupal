@@ -133,14 +133,6 @@ class Workspace extends ContentEntityBase implements WorkspaceInterface {
   /**
    * {@inheritdoc}
    */
-  public function isDefaultWorkspace() {
-    @trigger_error('WorkspaceInterface::isDefaultWorkspace() is deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. Use \Drupal\workspaces\WorkspaceManager::hasActiveWorkspace() instead. See https://www.drupal.org/node/3071527', E_USER_DEPRECATED);
-    return FALSE;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function getCreatedTime() {
     return $this->get('created')->value;
   }
@@ -191,20 +183,6 @@ class Workspace extends ContentEntityBase implements WorkspaceInterface {
     // Trigger a batch purge to allow empty workspaces to be deleted
     // immediately.
     \Drupal::service('workspaces.manager')->purgeDeletedWorkspacesBatch();
-  }
-
-  /**
-   * Default value callback for 'uid' base field definition.
-   *
-   * @deprecated The ::getCurrentUserId method is deprecated in 8.6.x and will
-   *   be removed before 9.0.0.
-   *
-   * @return int[]
-   *   An array containing the ID of the current user.
-   */
-  public static function getCurrentUserId() {
-    @trigger_error('The ::getCurrentUserId method is deprecated in 8.6.x and will be removed before 9.0.0.', E_USER_DEPRECATED);
-    return [\Drupal::currentUser()->id()];
   }
 
 }
