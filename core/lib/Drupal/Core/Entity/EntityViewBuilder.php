@@ -456,7 +456,15 @@ class EntityViewBuilder extends EntityHandlerBase implements EntityHandlerInterf
    * {@inheritdoc}
    */
   public function viewField(FieldItemListInterface $items, $display_options = []) {
+    /** @var \Drupal\Core\Entity\FieldableEntityInterface $entity */
     $entity = $items->getEntity();
+    // If the field is not translatable and the entity is, then the field item
+    // list always points to the default translation of the entity. Attempt to
+    // fetch it in the current content language.
+    if (!$items->getFieldDefinition()->isTranslatable() && $entity->isTranslatable()) {
+      $entity = $this->entityRepository->getTranslationFromContext($entity);
+    }
+
     $field_name = $items->getFieldDefinition()->getName();
     $display = $this->getSingleFieldDisplay($entity, $field_name, $display_options);
 
