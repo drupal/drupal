@@ -6,6 +6,7 @@
  */
 
 use Drupal\Component\FileSystem\FileSystem;
+use Drupal\Component\Utility\Environment;
 use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\Timer;
 use Drupal\Core\Composer\Composer;
@@ -159,7 +160,7 @@ if (!Composer::upgradePHPUnitCheck(Version::id())) {
 $test_list = simpletest_script_get_test_list();
 
 // Try to allocate unlimited time to run the tests.
-drupal_set_time_limit(0);
+Environment::setTimeLimit(0);
 simpletest_script_reporter_init();
 
 $tests_to_run = [];
