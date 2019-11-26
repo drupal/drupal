@@ -508,22 +508,6 @@ class Media extends EditorialContentEntityBase implements MediaInterface {
   }
 
   /**
-   * Default value callback for 'uid' base field definition.
-   *
-   * @see ::baseFieldDefinitions()
-   *
-   * @deprecated The ::getCurrentUserId method is deprecated in 8.6.x and will
-   *   be removed before 9.0.0.
-   *
-   * @return int[]
-   *   An array of default values.
-   */
-  public static function getCurrentUserId() {
-    @trigger_error('The ::getCurrentUserId method is deprecated in 8.6.x and will be removed before 9.0.0.', E_USER_DEPRECATED);
-    return [\Drupal::currentUser()->id()];
-  }
-
-  /**
    * {@inheritdoc}
    */
   public static function getRequestTime() {
