@@ -3,31 +3,6 @@
 * This file is used to style the recipe using the 'full' view mode.
 */
 
-.node--type-recipe.node--view-mode-full .field--name-field-summary,
-.node--type-recipe.node--view-mode-full .field--name-field-recipe-instruction ol {
-  /* Limit text width for legibility */
-  max-width: 796px;
-}
-
-.node--type-recipe.node--view-mode-full .field--name-field-summary {
-  max-width: 796px;
-}
-
-.node--type-recipe.node--view-mode-full .field--name-field-media-image {
-  background-color: #fcece7;
-  background-image: url(../../../../images/png/umami-background-pattern-1.png);
-}
-
-.node--type-recipe.node--view-mode-full .field--name-field-media-image img {
-  display: block;
-}
-
-@media screen and (min-width: 786px) {
-  .node--type-recipe.node--view-mode-full .field--name-field-media-image img {
-    max-width: 796px;
-  }
-}
-
 /* Icons for the recipe meta fields */
 .node--type-recipe.node--view-mode-full .field--name-field-preparation-time,
 .node--type-recipe.node--view-mode-full .field--name-field-cooking-time,
@@ -49,6 +24,42 @@
   padding-left: 0;
   background-position: right center;
 }
+/* Large */
+@media screen and (min-width: 60rem) {  /* 960px */
+  .node--type-recipe.node--view-mode-full .layout--oneplusfourgrid-section .field--name-field-preparation-time,
+  .node--type-recipe.node--view-mode-full .layout--oneplusfourgrid-section .field--name-field-cooking-time,
+  .node--type-recipe.node--view-mode-full .layout--oneplusfourgrid-section .field--name-field-number-of-servings,
+  .node--type-recipe.node--view-mode-full .layout--oneplusfourgrid-section .field--name-field-difficulty {
+    padding-top: 64px;
+    padding-left: 0; /* LTR */
+    text-align: center;
+    background-position: center top; /* LTR */
+    background-size: 56px 56px;
+  }
+  [dir=rtl] .node--type-recipe.node--view-mode-full .layout--oneplusfourgrid-section .field--name-field-preparation-time,
+  [dir=rtl] .node--type-recipe.node--view-mode-full .layout--oneplusfourgrid-section .field--name-field-cooking-time,
+  [dir=rtl] .node--type-recipe.node--view-mode-full .layout--oneplusfourgrid-section .field--name-field-number-of-servings,
+  [dir=rtl] .node--type-recipe.node--view-mode-full .layout--oneplusfourgrid-section .field--name-field-difficulty {
+    padding-right: 0;
+  }
+  .node--type-recipe.node--view-mode-full .layout--oneplusfourgrid-section .field--name-field-preparation-time,
+  .node--type-recipe.node--view-mode-full .layout--oneplusfourgrid-section .field--name-field-cooking-time {
+    margin-top: 0.96em;
+  }
+
+  .node--type-recipe.node--view-mode-full .layout--oneplusfourgrid-section .field--name-field-preparation-time .field__label,
+  .node--type-recipe.node--view-mode-full .layout--oneplusfourgrid-section .field--name-field-cooking-time .field__label,
+  .node--type-recipe.node--view-mode-full .layout--oneplusfourgrid-section .field--name-field-number-of-servings .field__label,
+  .node--type-recipe.node--view-mode-full .layout--oneplusfourgrid-section .field--name-field-difficulty .field__label,
+  .node--type-recipe.node--view-mode-full .layout--oneplusfourgrid-section .field--name-field-preparation-time .field__item,
+  .node--type-recipe.node--view-mode-full .layout--oneplusfourgrid-section .field--name-field-cooking-time .field__item,
+  .node--type-recipe.node--view-mode-full .layout--oneplusfourgrid-section .field--name-field-number-of-servings .field__item,
+  .node--type-recipe.node--view-mode-full .layout--oneplusfourgrid-section .field--name-field-difficulty .field__item {
+    width: 100%;
+    padding-right: 0;
+  }
+}
+
 .node--type-recipe.node--view-mode-full .field--name-field-preparation-time {
   background-image: url(../../../../images/svg/knife.svg);
 }

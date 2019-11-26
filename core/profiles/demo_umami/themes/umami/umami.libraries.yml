@@ -23,6 +23,7 @@ global:
       css/components/fields/ingredients.css: {}
       css/components/fields/label-items.css: {}
       css/components/fields/recipe-instruction.css: {}
+      css/components/fields/summary.css: {}
       css/components/forms/buttons.css: {}
       css/components/views/promoted-items.css: {}
       css/components/views/frontpage.css: {}
@@ -124,3 +125,8 @@ demo-umami-tour:
       css/components/tour/tour.theme.css: {}
   dependencies:
     - seven/tour-styling
+
+oneplusfourgrid_section:
+  css:
+    theme:
+      layouts/oneplusfourgrid_section/oneplusfourgrid_section.css: {}

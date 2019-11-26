@@ -1,0 +1,48 @@
+/*
+ * @file
+ * Provides the layout styles for two-column layout section.
+ */
+
+.layout--twocol-section {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.layout--twocol-section > .layout__region {
+  flex: 0 1 100%;
+}
+/* Medium */
+@media screen and (min-width: 48em) { /* 768px */
+  .layout--twocol-section {
+    margin-right: -1.5%;
+    margin-left: -1.5%;
+  }
+  .layout--twocol-section > .layout__region {
+    margin-right: 1.5%;
+    margin-left: 1.5%;
+  }
+
+  .layout--twocol-section.layout--twocol-section--50-50 > .layout__region {
+    flex: 0 1 47%;
+  }
+
+  .layout--twocol-section.layout--twocol-section--33-67 > .layout__region--first,
+  .layout--twocol-section.layout--twocol-section--67-33 > .layout__region--second {
+    flex: 0 1 30%;
+  }
+
+  .layout--twocol-section.layout--twocol-section--33-67 > .layout__region--second,
+  .layout--twocol-section.layout--twocol-section--67-33 > .layout__region--first {
+    flex: 0 1 64%;
+  }
+
+  .layout--twocol-section.layout--twocol-section--25-75 > .layout__region--first,
+  .layout--twocol-section.layout--twocol-section--75-25 > .layout__region--second {
+    flex: 0 1 22%;
+  }
+
+  .layout--twocol-section.layout--twocol-section--25-75 > .layout__region--second,
+  .layout--twocol-section.layout--twocol-section--75-25 > .layout__region--first {
+    flex: 0 1 72%;
+  }
+}
