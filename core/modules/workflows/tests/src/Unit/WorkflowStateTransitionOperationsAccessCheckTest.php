@@ -6,7 +6,6 @@ use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Routing\RouteMatch;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Tests\UnitTestCase;
-use Drupal\workflows\WorkflowDeleteAccessCheck;
 use Drupal\workflows\WorkflowStateTransitionOperationsAccessCheck;
 use Drupal\workflows\WorkflowInterface;
 use Prophecy\Argument;
@@ -145,35 +144,6 @@ class WorkflowStateTransitionOperationsAccessCheckTest extends UnitTestCase {
       ['foo-add-transition'],
       ['add-transition-bar'],
     ];
-  }
-
-  /**
-   * @covers \Drupal\workflows\WorkflowDeleteAccessCheck::access
-   * @expectedDeprecation Using the _workflow_state_delete_access check is deprecated in Drupal 8.6.0 and will be removed before Drupal 9.0.0, use _workflow_access instead. As an internal API _workflow_state_delete_access may also be removed in a minor release.
-   * @group legacy
-   */
-  public function testLegacyWorkflowStateDeleteAccessCheck() {
-    $workflow_entity_access_result = AccessResult::allowed();
-
-    // When using the legacy access check, passing a route with a state called
-    // 'foo-state' will result in an entity access check of
-    // 'delete-state:foo-state'.
-    $workflow = $this->prophesize(WorkflowInterface::class);
-    $workflow->access('delete-state:foo-state', Argument::type(AccountInterface::class), TRUE)
-      ->shouldBeCalled()
-      ->willReturn($workflow_entity_access_result);
-
-    $route = new Route('', [
-      'workflow' => NULL,
-      'workflow_state' => NULL,
-    ], ['_workflow_state_delete_access' => 'true']);
-    $route_match = new RouteMatch(NULL, $route, [
-      'workflow' => $workflow->reveal(),
-      'workflow_state' => 'foo-state',
-    ]);
-
-    $access_check = new WorkflowDeleteAccessCheck();
-    $this->assertEquals($workflow_entity_access_result, $access_check->access($route_match, $this->prophesize(AccountInterface::class)->reveal()));
   }
 
 }
