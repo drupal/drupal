@@ -326,13 +326,6 @@ class Comment extends ContentEntityBase implements CommentInterface {
   /**
    * {@inheritdoc}
    */
-  public static function getDefaultEntityOwner() {
-    return 0;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public static function bundleFieldDefinitions(EntityTypeInterface $entity_type, $bundle, array $base_field_definitions) {
     if ($comment_type = CommentType::load($bundle)) {
       $fields['entity_id'] = clone $base_field_definitions['entity_id'];
