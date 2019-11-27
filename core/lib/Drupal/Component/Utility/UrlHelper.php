@@ -26,9 +26,6 @@ class UrlHelper {
    * RFC3986 and as a consequence non compliant to RFC3987 and as a consequence
    * not valid as a "URL" in HTML5.
    *
-   * @todo Remove this function once PHP 5.4 is required as we can use just
-   *   http_build_query() directly. https://www.drupal.org/node/2322059
-   *
    * @param array $query
    *   The query parameter array to be processed; for instance,
    *   \Drupal::request()->query->all().
