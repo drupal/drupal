@@ -5,3 +5,8 @@ services:
   element.editor:
     class: Drupal\editor\Element
     arguments: ['@plugin.manager.editor']
+  editor.config_translation_mapper_subscriber:
+    class: Drupal\editor\EventSubscriber\EditorConfigTranslationSubscriber
+    arguments: ['@config.factory']
+    tags:
+      - {name: event_subscriber}
