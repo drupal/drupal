@@ -1347,7 +1347,7 @@ abstract class FilterPluginBase extends HandlerBase implements CacheableDependen
 
         // Value can be optional, For example for 'empty' and 'not empty' filters.
         if (isset($this->options['group_info']['group_items'][$selected_group]['value']) && $this->options['group_info']['group_items'][$selected_group]['value'] !== '') {
-          $input[$this->options['expose']['identifier']] = $this->options['group_info']['group_items'][$selected_group]['value'];
+          $input[$this->options['group_info']['identifier']] = $this->options['group_info']['group_items'][$selected_group]['value'];
         }
         $this->options['expose']['use_operator'] = TRUE;
 
@@ -1439,7 +1439,12 @@ abstract class FilterPluginBase extends HandlerBase implements CacheableDependen
     }
 
     if (!empty($this->options['expose']['identifier'])) {
-      $value = $input[$this->options['expose']['identifier']];
+      if ($this->options['is_grouped']) {
+        $value = $input[$this->options['group_info']['identifier']];
+      }
+      else {
+        $value = $input[$this->options['expose']['identifier']];
+      }
 
       // Various ways to check for the absence of non-required input.
       if (empty($this->options['expose']['required'])) {
