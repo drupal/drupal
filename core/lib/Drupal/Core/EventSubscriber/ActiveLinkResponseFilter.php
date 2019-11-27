@@ -76,8 +76,10 @@ class ActiveLinkResponseFilter implements EventSubscriberInterface {
    *   The response event.
    */
   public function onResponse(FilterResponseEvent $event) {
+    $response = $event->getResponse();
+
     // Only care about HTML responses.
-    if (stripos($event->getResponse()->headers->get('Content-Type'), 'text/html') === FALSE) {
+    if (stripos($response->headers->get('Content-Type'), 'text/html') === FALSE) {
       return;
     }
 
@@ -87,14 +89,20 @@ class ActiveLinkResponseFilter implements EventSubscriberInterface {
       return;
     }
 
-    $response = $event->getResponse();
-    $response->setContent(static::setLinkActiveClass(
-      $response->getContent(),
-      ltrim($this->currentPath->getPath(), '/'),
-      $this->pathMatcher->isFrontPage(),
-      $this->languageManager->getCurrentLanguage(LanguageInterface::TYPE_URL)->getId(),
-      $event->getRequest()->query->all()
-    ));
+    // If content is FALSE, assume the response does not support the
+    // setContent() method and skip it, for example,
+    // \Symfony\Component\HttpFoundation\BinaryFileResponse.
+    $content = $response->getContent();
+    if ($content !== FALSE) {
+      $response->setContent(static::setLinkActiveClass(
+        $content,
+        ltrim($this->currentPath->getPath(), '/'),
+        $this->pathMatcher->isFrontPage(),
+        $this->languageManager->getCurrentLanguage(LanguageInterface::TYPE_URL)
+          ->getId(),
+        $event->getRequest()->query->all()
+      ));
+    }
   }
 
   /**
