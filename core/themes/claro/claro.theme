@@ -1043,6 +1043,15 @@ function claro_preprocess_system_themes_page(&$variables) {
     foreach ($variables['theme_groups'] as &$theme_group) {
       if (!empty($theme_group['themes'])) {
         foreach ($theme_group['themes'] as &$theme_card) {
+          /**
+           * @todo Remove dependency on attributes after
+           *   https://www.drupal.org/project/drupal/issues/2511548 has been
+           *   resolved.
+           */
+          if (isset($theme_card['screenshot']['#attributes']) && $theme_card['screenshot']['#attributes'] instanceof Attribute && $theme_card['screenshot']['#attributes']->hasClass('no-screenshot')) {
+            unset($theme_card['screenshot']);
+          }
+
           $theme_card['title_id'] = Html::getUniqueId($theme_card['name'] . '-label');
           $description_is_empty = empty((string) $theme_card['description']);
 
