@@ -243,8 +243,12 @@ class NodeViewsData extends EntityViewsData {
 
     $data['node_field_revision']['langcode']['help'] = $this->t('The language the original content is in.');
 
-    $data['node_revision']['revision_uid']['help'] = $this->t('Relate a content revision to the user who created the revision.');
+    $data['node_revision']['revision_uid']['help'] = $this->t('The user who created the revision.');
     $data['node_revision']['revision_uid']['relationship']['label'] = $this->t('revision user');
+    $data['node_revision']['revision_uid']['filter']['id'] = 'user_name';
+
+    $data['node_revision']['table']['join']['node_field_data']['left_field'] = 'vid';
+    $data['node_revision']['table']['join']['node_field_data']['field'] = 'vid';
 
     $data['node_field_revision']['table']['wizard_id'] = 'node_field_revision';
 
