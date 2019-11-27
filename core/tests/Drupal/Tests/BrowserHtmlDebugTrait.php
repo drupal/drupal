@@ -66,6 +66,13 @@ trait BrowserHtmlDebugTrait {
   protected $htmlOutputTestId;
 
   /**
+   * The Base URI to use for links to the output files.
+   *
+   * @var string
+   */
+  protected $htmlOutputBaseUrl;
+
+  /**
    * Formats HTTP headers as string for HTML output logging.
    *
    * @param array[] $headers
@@ -118,7 +125,7 @@ trait BrowserHtmlDebugTrait {
     file_put_contents($this->htmlOutputCounterStorage, $this->htmlOutputCounter++);
     // Do not use file_create_url() as the module_handler service might not be
     // available.
-    $uri = $GLOBALS['base_url'] . '/sites/simpletest/browser_output/' . $html_output_filename;
+    $uri = $this->htmlOutputBaseUrl . '/sites/simpletest/browser_output/' . $html_output_filename;
     file_put_contents($this->htmlOutputFile, $uri . "\n", FILE_APPEND);
   }
 
@@ -131,6 +138,7 @@ trait BrowserHtmlDebugTrait {
   protected function initBrowserOutputFile() {
     $browser_output_file = getenv('BROWSERTEST_OUTPUT_FILE');
     $this->htmlOutputEnabled = is_file($browser_output_file);
+    $this->htmlOutputBaseUrl = getenv('BROWSERTEST_OUTPUT_BASE_URL') ?: $GLOBALS['base_url'];
     if ($this->htmlOutputEnabled) {
       $this->htmlOutputFile = $browser_output_file;
       $this->htmlOutputClassName = str_replace("\\", "_", get_called_class());
