@@ -308,7 +308,7 @@ class QuickStartTest extends TestCase {
    *   TRUE for success or if path does not exist, FALSE in the event of an
    *   error.
    *
-   * @see file_unmanaged_delete_recursive()
+   * @see \Drupal\Core\File\FileSystemInterface::deleteRecursive()
    */
   protected function fileUnmanagedDeleteRecursive($path, $callback = NULL) {
     if (isset($callback)) {

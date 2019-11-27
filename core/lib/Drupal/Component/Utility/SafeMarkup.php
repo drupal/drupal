@@ -2,7 +2,6 @@
 
 namespace Drupal\Component\Utility;
 
-use Drupal\Component\Render\HtmlEscapedText;
 use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Component\Render\MarkupInterface;
 
@@ -42,33 +41,6 @@ class SafeMarkup {
   public static function isSafe($string, $strategy = 'html') {
     @trigger_error('SafeMarkup::isSafe() is scheduled for removal in Drupal 9.0.0. Instead, you should just check if a variable is an instance of \Drupal\Component\Render\MarkupInterface. See https://www.drupal.org/node/2549395.', E_USER_DEPRECATED);
     return $string instanceof MarkupInterface;
-  }
-
-  /**
-   * Encodes special characters in a plain-text string for display as HTML.
-   *
-   * Also validates strings as UTF-8. All processed strings are also
-   * automatically flagged as safe markup strings for rendering.
-   *
-   * @param string $text
-   *   The text to be checked or processed.
-   *
-   * @return \Drupal\Component\Render\HtmlEscapedText
-   *   An HtmlEscapedText object that escapes when rendered to string.
-   *
-   * @deprecated Will be removed before Drupal 9.0.0. Rely on Twig's
-   *   auto-escaping feature, or use the @link theme_render #plain_text @endlink
-   *   key when constructing a render array that contains plain text in order to
-   *   use the renderer's auto-escaping feature. If neither of these are
-   *   possible, \Drupal\Component\Utility\Html::escape() can be used in places
-   *   where explicit escaping is needed.
-   *
-   * @see https://www.drupal.org/node/2549395
-   * @see drupal_validate_utf8()
-   */
-  public static function checkPlain($text) {
-    @trigger_error('SafeMarkup::checkPlain() is scheduled for removal in Drupal 9.0.0. Rely on Twig\'s auto-escaping feature, or use the @link theme_render #plain_text @endlink key when constructing a render array that contains plain text in order to use the renderer\'s auto-escaping feature. If neither of these are possible, \Drupal\Component\Utility\Html::escape() can be used in places where explicit escaping is needed. See https://www.drupal.org/node/2549395.', E_USER_DEPRECATED);
-    return new HtmlEscapedText($text);
   }
 
   /**

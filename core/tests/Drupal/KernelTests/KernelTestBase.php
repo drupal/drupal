@@ -1047,13 +1047,6 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
       }
     }
 
-    if ($name === 'configDirectories') {
-      trigger_error(sprintf("KernelTestBase::\$%s no longer exists. Use Settings::get('config_sync_directory') directly instead.", $name), E_USER_DEPRECATED);
-      return [
-        CONFIG_SYNC_DIRECTORY => Settings::get('config_sync_directory'),
-      ];
-    }
-
     $denied = [
       // @see \Drupal\simpletest\TestBase
       'testId',

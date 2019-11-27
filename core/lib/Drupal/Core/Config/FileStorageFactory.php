@@ -10,18 +10,6 @@ use Drupal\Core\Site\Settings;
 class FileStorageFactory {
 
   /**
-   * Returns a FileStorage object working with the active config directory.
-   *
-   * @return \Drupal\Core\Config\FileStorage FileStorage
-   *
-   * @deprecated in drupal:8.0.0 and is removed from drupal:9.0.0. Drupal core
-   * no longer creates an active directory.
-   */
-  public static function getActive() {
-    return new FileStorage(config_get_config_directory(CONFIG_ACTIVE_DIRECTORY));
-  }
-
-  /**
    * Returns a FileStorage object working with the sync config directory.
    *
    * @return \Drupal\Core\Config\FileStorage FileStorage

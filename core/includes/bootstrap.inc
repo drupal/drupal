@@ -6,15 +6,8 @@
  */
 
 use Drupal\Component\Utility\Crypt;
-use Drupal\Component\Utility\Html;
-use Drupal\Component\Render\FormattableMarkup;
-use Drupal\Component\Utility\Unicode;
-use Drupal\Core\Config\BootstrapConfigStorageFactory;
-use Drupal\Core\Installer\InstallerKernel;
 use Drupal\Core\Logger\RfcLogLevel;
 use Drupal\Core\Test\TestDatabase;
-use Drupal\Core\Session\AccountInterface;
-use Drupal\Core\Site\Settings;
 use Drupal\Core\Utility\Error;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
@@ -95,28 +88,6 @@ const ERROR_REPORTING_DISPLAY_ALL = 'all';
 const ERROR_REPORTING_DISPLAY_VERBOSE = 'verbose';
 
 /**
- * Role ID for anonymous users; should match what's in the "role" table.
- *
- * @deprecated in drupal:8.0.0 and is removed from drupal:9.0.0.
- *   Use Drupal\Core\Session\AccountInterface::ANONYMOUS_ROLE or
- *   \Drupal\user\RoleInterface::ANONYMOUS_ID instead.
- *
- * @see https://www.drupal.org/node/1619504
- */
-const DRUPAL_ANONYMOUS_RID = AccountInterface::ANONYMOUS_ROLE;
-
-/**
- * Role ID for authenticated users; should match what's in the "role" table.
- *
- * @deprecated in drupal:8.0.0 and is removed from drupal:9.0.0.
- *   Use Drupal\Core\Session\AccountInterface::AUTHENTICATED_ROLE or
- *   \Drupal\user\RoleInterface::AUTHENTICATED_ID instead.
- *
- * @see https://www.drupal.org/node/1619504
- */
-const DRUPAL_AUTHENTICATED_RID = AccountInterface::AUTHENTICATED_ROLE;
-
-/**
  * The maximum number of characters in a module or theme name.
  */
 const DRUPAL_EXTENSION_NAME_MAX_LENGTH = 50;
@@ -146,85 +117,11 @@ define('REQUEST_TIME', (int) $_SERVER['REQUEST_TIME']);
 const DRUPAL_PHP_FUNCTION_PATTERN = '[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*';
 
 /**
- * $config_directories key for active directory.
- *
- * @see config_get_config_directory()
- *
- * @deprecated in drupal:8.0.0 and is removed from drupal:9.0.0. Drupal core no
- *   longer creates an active directory.
- *
- * @see https://www.drupal.org/node/2501187
- */
-const CONFIG_ACTIVE_DIRECTORY = 'active';
-
-/**
- * $config_directories key for sync directory.
- *
- * @deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. Use
- *   \Drupal\Core\Site\Settings::get('config_sync_directory') instead.
- *
- * @see https://www.drupal.org/node/3018145
- */
-const CONFIG_SYNC_DIRECTORY = 'sync';
-
-/**
- * $config_directories key for staging directory.
- *
- * @see config_get_config_directory()
- * @see CONFIG_SYNC_DIRECTORY
- *
- * @deprecated in drupal:8.0.0 and is removed from drupal:9.0.0. The staging
- *   directory was renamed to sync.
- *
- * @see https://www.drupal.org/node/2574957
- */
-const CONFIG_STAGING_DIRECTORY = 'staging';
-
-/**
  * Defines the root directory of the Drupal installation.
  *
  * This strips two levels of directories off the current directory.
  */
 define('DRUPAL_ROOT', dirname(dirname(__DIR__)));
-
-/**
- * Returns the path of a configuration directory.
- *
- * Configuration directories are configured using $config_directories in
- * settings.php.
- *
- * @param string $type
- *   The type of config directory to return. Drupal core provides the
- *   CONFIG_SYNC_DIRECTORY constant to access the sync directory.
- *
- * @return string
- *   The configuration directory path.
- *
- * @throws \Exception
- *
- * @deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. Use
- *   \Drupal\Core\Site\Settings::get('config_sync_directory') instead.
- *
- * @see https://www.drupal.org/node/3018145
- */
-function config_get_config_directory($type) {
-  global $config_directories;
-  @trigger_error('config_get_config_directory() is deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. Use \Drupal\Core\Site\Settings::get(\'config_sync_directory\') instead. See https://www.drupal.org/node/3018145', E_USER_DEPRECATED);
-  $config_sync_directory = Settings::get('config_sync_directory', FALSE);
-  if ($config_sync_directory) {
-    $config_directories[CONFIG_SYNC_DIRECTORY] = $config_sync_directory;
-  }
-  // @todo Remove fallback in Drupal 9. https://www.drupal.org/node/2574943
-  if ($type == CONFIG_SYNC_DIRECTORY && !isset($config_directories[CONFIG_SYNC_DIRECTORY]) && isset($config_directories[CONFIG_STAGING_DIRECTORY])) {
-    $type = CONFIG_STAGING_DIRECTORY;
-  }
-
-  if (!empty($config_directories[$type])) {
-    return $config_directories[$type];
-  }
-  // @todo https://www.drupal.org/node/2696103 Throw a more specific exception.
-  throw new \Exception("The configuration directory type '$type' does not exist");
-}
 
 /**
  * Returns and optionally sets the filename for a system resource.
@@ -353,58 +250,6 @@ function t($string, array $args = [], array $options = []) {
 }
 
 /**
- * Formats a string for HTML display by replacing variable placeholders.
- *
- * @deprecated in drupal:8.0.0 and is removed from drupal:9.0.0.
- *   Use \Drupal\Component\Render\FormattableMarkup instead.
- *
- * @see https://www.drupal.org/node/2302363
- * @see \Drupal\Component\Render\FormattableMarkup::placeholderFormat()
- * @see \Drupal\Component\Render\FormattableMarkup
- * @see t()
- * @ingroup sanitization
- */
-function format_string($string, array $args) {
-  @trigger_error("format_string() is deprecated in drupal:8.0.0 and is removed from drupal:9.0.0. Use \Drupal\Component\Render\FormattableMarkup instead. See https://www.drupal.org/node/2302363", E_USER_DEPRECATED);
-  return new FormattableMarkup($string, $args);
-}
-
-/**
- * Checks whether a string is valid UTF-8.
- *
- * All functions designed to filter input should use drupal_validate_utf8
- * to ensure they operate on valid UTF-8 strings to prevent bypass of the
- * filter.
- *
- * When text containing an invalid UTF-8 lead byte (0xC0 - 0xFF) is presented
- * as UTF-8 to Internet Explorer 6, the program may misinterpret subsequent
- * bytes. When these subsequent bytes are HTML control characters such as
- * quotes or angle brackets, parts of the text that were deemed safe by filters
- * end up in locations that are potentially unsafe; An onerror attribute that
- * is outside of a tag, and thus deemed safe by a filter, can be interpreted
- * by the browser as if it were inside the tag.
- *
- * The function does not return FALSE for strings containing character codes
- * above U+10FFFF, even though these are prohibited by RFC 3629.
- *
- * @param $text
- *   The text to check.
- *
- * @return bool
- *   TRUE if the text is valid UTF-8, FALSE if not.
- *
- * @see \Drupal\Component\Utility\Unicode::validateUtf8()
- *
- * @deprecated in drupal:8.0.0 and is removed from drupal:9.0.0.
- *   Use \Drupal\Component\Utility\Unicode::validateUtf8().
- *
- * @see https://www.drupal.org/node/1992584
- */
-function drupal_validate_utf8($text) {
-  return Unicode::validateUtf8($text);
-}
-
-/**
  * Logs an exception.
  *
  * This is a wrapper logging function which automatically decodes an exception.
@@ -441,22 +286,6 @@ function watchdog_exception($type, Exception $exception, $message = NULL, $varia
   $variables += Error::decodeException($exception);
 
   \Drupal::logger($type)->log($severity, $message, $variables);
-}
-
-/**
- * Returns the time zone of the current user.
- *
- * @return string
- *   The name of the current user's timezone or the name of the default timezone.
- *
- * @deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. Use
- *   date_default_timezone_get() instead.
- *
- * @see https://www.drupal.org/node/3009387
- */
-function drupal_get_user_timezone() {
-  @trigger_error('drupal_get_user_timezone() is deprecated in drupal:8.8.0. It will be removed from drupal:9.0.0. Use date_default_timezone_get() instead. See https://www.drupal.org/node/3009387', E_USER_DEPRECATED);
-  return date_default_timezone_get();
 }
 
 /**
@@ -633,95 +462,6 @@ function drupal_maintenance_theme() {
 }
 
 /**
- * Returns TRUE if a Drupal installation is currently being attempted.
- *
- * @deprecated in drupal:8.8.0 and is removed from drupal:9.0.0.
- *   Use \Drupal\Core\Installer\InstallerKernel::installationAttempted()
- *   instead.
- *
- * @see https://www.drupal.org/node/3035275
- */
-function drupal_installation_attempted() {
-  @trigger_error('drupal_installation_attempted() is deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. Use \Drupal\Core\Installer\InstallerKernel::installationAttempted() instead. See https://www.drupal.org/node/3035275', E_USER_DEPRECATED);
-  return InstallerKernel::installationAttempted();
-}
-
-/**
- * Gets the name of the currently active installation profile.
- *
- * When this function is called during Drupal's initial installation process,
- * the name of the profile that's about to be installed is stored in the global
- * installation state. At all other times, the "install_profile" setting will be
- * available in container as a parameter.
- *
- * @return string|null
- *   The name of the installation profile or NULL if no installation profile is
- *   currently active. This is the case for example during the first steps of
- *   the installer or during unit tests.
- *
- * @deprecated in drupal:8.3.0 and is removed from drupal:9.0.0.
- *   Use the install_profile container parameter or \Drupal::installProfile()
- *   instead. If you are accessing the value before it is written to
- *   configuration during the installer use the $install_state global. If you
- *   need to access the value before container is available you can use
- *   BootstrapConfigStorageFactory to load the value directly from
- *   configuration.
- *
- * @see https://www.drupal.org/node/2538996
- */
-function drupal_get_profile() {
-  global $install_state;
-
-  @trigger_error('drupal_get_profile() is deprecated in drupal:8.3.0 and is removed from drupal:9.0.0. Use the install_profile container parameter or \Drupal::installProfile() instead. If you are accessing the value before it is written to configuration during the installer use the $install_state global. If you need to access the value before container is available you can use BootstrapConfigStorageFactory to load the value directly from configuration. See https://www.drupal.org/node/2538996', E_USER_DEPRECATED);
-
-  if (InstallerKernel::installationAttempted()) {
-    // If the profile has been selected return it.
-    if (isset($install_state['parameters']['profile'])) {
-      $profile = $install_state['parameters']['profile'];
-    }
-    else {
-      $profile = NULL;
-    }
-  }
-  else {
-    if (\Drupal::hasContainer()) {
-      $profile = \Drupal::installProfile();
-    }
-    else {
-      $profile = BootstrapConfigStorageFactory::getDatabaseStorage()->read('core.extension')['profile'];
-    }
-  }
-
-  return $profile;
-}
-
-/**
- * Registers an additional namespace.
- *
- * @param string $name
- *   The namespace component to register; e.g., 'node'.
- * @param string $path
- *   The relative path to the Drupal component in the filesystem.
- *
- * @deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. Use the
- *   class loader as injected service instance to register the namespace:
- *   @code
- *   $this->classLoader->addPsr4('Drupal\\' . $name . '\\', \Drupal::root() . '/' . $path . '/src');
- *   @endcode
- *   or the following code if the service cannot be injected:
- *   @code
- *   \Drupal::service('class_loader')->addPsr4('Drupal\\' . $name . '\\', \Drupal::root() . '/' . $path . '/src');
- *   @endcode
- *
- * @see https://www.drupal.org/node/3035275
- */
-function drupal_classloader_register($name, $path) {
-  @trigger_error('drupal_classloader_register() is deprecated in Drupal 8.8.0 and will be removed before Drupal 9.0.0. Use the method ::addPsr4() of the class_loader service to register the namespace. See https://www.drupal.org/node/3035275.', E_USER_DEPRECATED);
-  $loader = \Drupal::service('class_loader');
-  $loader->addPsr4('Drupal\\' . $name . '\\', \Drupal::root() . '/' . $path . '/src');
-}
-
-/**
  * Provides central static variable storage.
  *
  * All functions requiring a static variable to persist or cache data within
@@ -876,21 +616,6 @@ function &drupal_static($name, $default_value = NULL, $reset = FALSE) {
  */
 function drupal_static_reset($name = NULL) {
   drupal_static($name, NULL, TRUE);
-}
-
-/**
- * Formats text for emphasized display in a placeholder inside a sentence.
- *
- * @deprecated in drupal:8.0.0 and is removed from drupal:9.0.0. Use
- *   \Drupal\Component\Render\FormattableMarkup or Twig's "placeholder" filter
- *   instead. Note this method should not be used to simply emphasize a string
- *   and therefore has few valid use-cases. Note also, that this method does not
- *   mark the string as safe.
- *
- * @see https://www.drupal.org/node/2302363
- */
-function drupal_placeholder($text) {
-  return '<em class="placeholder">' . Html::escape($text) . '</em>';
 }
 
 /**

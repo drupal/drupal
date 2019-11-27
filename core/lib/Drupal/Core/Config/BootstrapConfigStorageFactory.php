@@ -40,21 +40,4 @@ class BootstrapConfigStorageFactory {
     return new DatabaseStorage(Database::getConnection(), 'config');
   }
 
-  /**
-   * Returns a File-based configuration storage implementation.
-   *
-   * If there is no active configuration directory calling this method will
-   * result in an error.
-   *
-   * @return \Drupal\Core\Config\FileStorage
-   *
-   * @deprecated in drupal:8.0.0 and is removed from drupal:9.0.0. Drupal core
-   * no longer creates an active directory.
-   *
-   * @throws \Exception
-   */
-  public static function getFileStorage() {
-    return new FileStorage(config_get_config_directory(CONFIG_ACTIVE_DIRECTORY));
-  }
-
 }

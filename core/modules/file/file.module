@@ -155,7 +155,7 @@ function file_load($fid, $reset = FALSE) {
  * @return \Drupal\file\FileInterface|false
  *   File entity if the copy is successful, or FALSE in the event of an error.
  *
- * @see file_unmanaged_copy()
+ * @see \Drupal\Core\File\FileSystemInterface::copy()
  * @see hook_file_copy()
  */
 function file_copy(FileInterface $source, $destination = NULL, $replace = FileSystemInterface::EXISTS_RENAME) {
@@ -565,7 +565,7 @@ function file_validate_image_resolution(FileInterface $file, $maximum_dimensions
  * @return \Drupal\file\FileInterface|false
  *   A file entity, or FALSE on error.
  *
- * @see file_unmanaged_save_data()
+ * @see \Drupal\Core\File\FileSystemInterface::saveData()
  */
 function file_save_data($data, $destination = NULL, $replace = FileSystemInterface::EXISTS_RENAME) {
   $user = \Drupal::currentUser();

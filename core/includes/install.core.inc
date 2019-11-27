@@ -344,7 +344,6 @@ function install_begin_request($class_loader, &$install_state) {
   require_once __DIR__ . '/file.inc';
   require_once __DIR__ . '/install.inc';
   require_once __DIR__ . '/schema.inc';
-  require_once __DIR__ . '/database.inc';
   require_once __DIR__ . '/form.inc';
   require_once __DIR__ . '/batch.inc';
 
@@ -795,7 +794,6 @@ function install_tasks($install_state) {
       'run' => $install_state['settings_verified'] ? INSTALL_TASK_SKIP : INSTALL_TASK_RUN_IF_NOT_COMPLETED,
       'function' => 'Drupal\Core\Installer\Form\SiteSettingsForm',
     ],
-    'install_write_profile' => [],
     'install_verify_database_ready' => [
       'run' => $install_state['database_ready'] ? INSTALL_TASK_SKIP : INSTALL_TASK_RUN_IF_NOT_COMPLETED,
     ],
@@ -2276,33 +2274,6 @@ function install_display_requirements($install_state, $requirements) {
         throw new InstallerException(implode("\n\n", $failures));
       }
     }
-  }
-}
-
-/**
- * Installation task; writes profile to settings.php if possible.
- *
- * @param array $install_state
- *   An array of information about the current installation state.
- *
- * @see _install_select_profile()
- *
- * @deprecated in drupal:8.3.0 and is removed from drupal:9.0.0. The
- *    install profile is written to core.extension.
- */
-function install_write_profile($install_state) {
-  // Only write the install profile to settings.php if it already exists. The
-  // value from settings.php is never used but drupal_rewrite_settings() does
-  // not support removing a setting. If the value is present in settings.php
-  // there will be an informational notice on the status report.
-  $settings_path = \Drupal::service('site.path') . '/settings.php';
-  if (is_writable($settings_path) && array_key_exists('install_profile', Settings::getAll())) {
-    // Remember the profile which was used.
-    $settings['settings']['install_profile'] = (object) [
-      'value' => $install_state['parameters']['profile'],
-      'required' => TRUE,
-    ];
-    drupal_rewrite_settings($settings);
   }
 }
 

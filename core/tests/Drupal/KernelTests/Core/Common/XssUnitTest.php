@@ -53,16 +53,4 @@ class XssUnitTest extends KernelTestBase {
 
   }
 
-  /**
-   * Tests deprecation of the check_url() function.
-   *
-   * @group legacy
-   * @expectedDeprecation check_url() is deprecated in Drupal 8.0.0 and will be removed before Drupal 9.0.0. Use UrlHelper::stripDangerousProtocols() or UrlHelper::filterBadProtocol() instead. See https://www.drupal.org/node/2560027
-   */
-  public function testCheckUrl() {
-    $url = 'javascript:http://www.example.com/?x=1&y=2';
-    $expected_html = 'http://www.example.com/?x=1&amp;y=2';
-    $this->assertSame($expected_html, check_url($url));
-  }
-
 }

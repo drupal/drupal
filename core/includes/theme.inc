@@ -1370,8 +1370,6 @@ function template_preprocess_html(&$variables) {
   }
 
   $variables['head_title'] = $head_title;
-  // @deprecated in Drupal 8.0.0, will be removed before Drupal 9.0.0.
-  $variables['head_title_array'] = $head_title;
 
   // Create placeholder strings for these keys.
   // @see \Drupal\Core\Render\HtmlResponseSubscriber

@@ -5,8 +5,6 @@
  * Schema API handling functions.
  */
 
-use Drupal\Core\Entity\Sql\SqlContentEntityStorageSchema;
-
 /**
  * @addtogroup schemaapi
  * @{
@@ -201,31 +199,6 @@ function _drupal_schema_initialize(&$schema, $module, $remove_descriptions = TRU
       }
     }
   }
-}
-
-/**
- * Typecasts values to proper data types.
- *
- * MySQL PDO silently casts, e.g. FALSE and '' to 0, when inserting the value
- * into an integer column, but PostgreSQL PDO does not. Look up the schema
- * information and use that to correctly typecast the value.
- *
- * @param array $info
- *   An array describing the schema field info.
- * @param mixed $value
- *   The value to be converted.
- *
- * @return mixed
- *   The converted value.
- *
- * @deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. Use
- *   \Drupal\Core\Entity\Sql\SqlContentEntityStorageSchema::castValue() instead.
- *
- * @see https://www.drupal.org/node/3051983
- */
-function drupal_schema_get_field_value(array $info, $value) {
-  @trigger_error('drupal_schema_get_field_value() is deprecated in drupal:8.8.0. It will be removed from drupal:9.0.0. Use \Drupal\Core\Entity\Sql\SqlContentEntityStorageSchema::castValue($info, $value) instead. See https://www.drupal.org/node/3051983', E_USER_DEPRECATED);
-  return SqlContentEntityStorageSchema::castValue($info, $value);
 }
 
 /**

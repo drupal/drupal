@@ -5,13 +5,11 @@
  * API functions for installing modules and themes.
  */
 
-use Drupal\Component\Utility\Crypt;
 use Drupal\Component\Utility\OpCodeCache;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Extension\Dependency;
 use Drupal\Core\Extension\ExtensionDiscovery;
-use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Installer\InstallerKernel;
 use Drupal\Core\Site\Settings;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -475,91 +473,6 @@ function _drupal_rewrite_settings_dump_one(\stdClass $variable, $prefix = '', $s
   }
   $return .= $suffix;
   return $return;
-}
-
-/**
- * Creates the config directory and ensures it is operational.
- *
- * @deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. There is no
- *   replacement.
- *
- * @see https://www.drupal.org/node/3018145
- */
-function drupal_install_config_directories() {
-  @trigger_error('drupal_install_config_directories() is deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. There is no replacement. See https://www.drupal.org/node/3018145.', E_USER_DEPRECATED);
-  global $config_directories, $install_state;
-
-  // If settings.php does not contain a config sync directory name we need to
-  // configure one.
-  if (empty($config_directories[CONFIG_SYNC_DIRECTORY])) {
-    if (empty($install_state['config_install_path'])) {
-      // Add a randomized config directory name to settings.php
-      $config_directories[CONFIG_SYNC_DIRECTORY] = \Drupal::service('site.path') . '/files/config_' . Crypt::randomBytesBase64(55) . '/sync';
-    }
-    else {
-      // Install profiles can contain a config sync directory. If they do,
-      // 'config_install_path' is a path to the directory.
-      $config_directories[CONFIG_SYNC_DIRECTORY] = $install_state['config_install_path'];
-    }
-    $settings['config_directories'][CONFIG_SYNC_DIRECTORY] = (object) [
-      'value' => $config_directories[CONFIG_SYNC_DIRECTORY],
-      'required' => TRUE,
-    ];
-    // Rewrite settings.php, which also sets the value as global variable.
-    drupal_rewrite_settings($settings);
-  }
-
-  // This should never fail, since if the config directory was specified in
-  // settings.php it will have already been created and verified earlier, and
-  // if it wasn't specified in settings.php, it is created here inside the
-  // public files directory, which has already been verified to be writable
-  // itself. But if it somehow fails anyway, the installation cannot proceed.
-  // Bail out using a similar error message as in system_requirements().
-  if (!\Drupal::service('file_system')->prepareDirectory($config_directories[CONFIG_SYNC_DIRECTORY], FileSystemInterface::CREATE_DIRECTORY)
-    && !file_exists($config_directories[CONFIG_SYNC_DIRECTORY])) {
-    throw new Exception(t('The directory %directory could not be created. To proceed with the installation, either create the directory or ensure that the installer has the permissions to create it automatically. For more information, see the <a href=":handbook_url">online handbook</a>.', [
-      '%directory' => config_get_config_directory(CONFIG_SYNC_DIRECTORY),
-      ':handbook_url' => 'https://www.drupal.org/server-permissions',
-    ]));
-  }
-  elseif (is_writable($config_directories[CONFIG_SYNC_DIRECTORY])) {
-    // Put a README.txt into the sync config directory. This is required so that
-    // they can later be added to git. Since this directory is auto-created, we
-    // have to write out the README rather than just adding it to the drupal core
-    // repo.
-    $text = 'This directory contains configuration to be imported into your Drupal site. To make this configuration active, visit admin/config/development/configuration/sync.' . ' For information about deploying configuration between servers, see https://www.drupal.org/documentation/administer/config';
-    file_put_contents(config_get_config_directory(CONFIG_SYNC_DIRECTORY) . '/README.txt', "$text\n");
-  }
-}
-
-/**
- * Ensures that the config directory exists and is writable, or can be made so.
- *
- * @param string $type
- *   Type of config directory to return. Drupal core provides 'sync'.
- *
- * @return bool
- *   TRUE if the config directory exists and is writable.
- *
- * @deprecated in drupal:8.1.0 and is removed from drupal:9.0.0. Use
- *   config_get_config_directory() and
- *  \Drupal\Core\File\FileSystemInterface::prepareDirectory() instead.
- *
- * @see https://www.drupal.org/node/2501187
- */
-function install_ensure_config_directory($type) {
-  @trigger_error('install_ensure_config_directory() is deprecated in Drupal 8.1.0 and will be removed before Drupal 9.0.0. Use config_get_config_directory() and \Drupal\Core\File\FileSystemInterface::prepareDirectory() instead. See https://www.drupal.org/node/2501187.', E_USER_DEPRECATED);
-  // The config directory must be defined in settings.php.
-  global $config_directories;
-  if (!isset($config_directories[$type])) {
-    return FALSE;
-  }
-  // The logic here is similar to that used by system_requirements() for other
-  // directories that the installer creates.
-  else {
-    $config_directory = config_get_config_directory($type);
-    return \Drupal::service('file_system')->prepareDirectory($config_directory, FileSystemInterface::CREATE_DIRECTORY | FileSystemInterface::MODIFY_PERMISSIONS);
-  }
 }
 
 /**

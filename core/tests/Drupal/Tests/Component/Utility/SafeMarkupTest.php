@@ -46,26 +46,6 @@ class SafeMarkupTest extends TestCase {
   }
 
   /**
-   * Tests SafeMarkup::checkPlain().
-   *
-   * @dataProvider providerCheckPlain
-   * @covers ::checkPlain
-   * @expectedDeprecation SafeMarkup::checkPlain() is scheduled for removal in Drupal 9.0.0. Rely on Twig's auto-escaping feature, or use the @link theme_render #plain_text @endlink key when constructing a render array that contains plain text in order to use the renderer's auto-escaping feature. If neither of these are possible, \Drupal\Component\Utility\Html::escape() can be used in places where explicit escaping is needed. See https://www.drupal.org/node/2549395.
-   *
-   * @param string $text
-   *   The text to provide to SafeMarkup::checkPlain().
-   * @param string $expected
-   *   The expected output from the function.
-   * @param string $message
-   *   The message to provide as output for the test.
-   */
-  public function testCheckPlain($text, $expected, $message) {
-    $result = SafeMarkup::checkPlain($text);
-    $this->assertTrue($result instanceof HtmlEscapedText);
-    $this->assertEquals($expected, $result, $message);
-  }
-
-  /**
    * Tests Drupal\Component\Render\HtmlEscapedText.
    *
    * Verifies that the result of SafeMarkup::checkPlain() is the same as using
@@ -86,7 +66,7 @@ class SafeMarkupTest extends TestCase {
   }
 
   /**
-   * Data provider for testCheckPlain() and testEscapeString().
+   * Data provider for testEscapeString().
    *
    * @see testCheckPlain()
    */
