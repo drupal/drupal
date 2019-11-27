@@ -63,7 +63,7 @@ class ToolbarController extends ControllerBase implements TrustedCallbackInterfa
    * @return array
    *   The updated renderable array.
    *
-   * @see drupal_render()
+   * @see \Drupal\Core\Render\RendererInterface::render()
    */
   public static function preRenderAdministrationTray(array $element) {
     $menu_tree = \Drupal::service('toolbar.menu_tree');
