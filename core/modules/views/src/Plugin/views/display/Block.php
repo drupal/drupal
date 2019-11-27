@@ -302,10 +302,18 @@ class Block extends DisplayPluginBase {
             '#title' => $this->t('Items per block'),
             '#options' => [
               'none' => $this->t('@count (default setting)', ['@count' => $this->getPlugin('pager')->getItemsPerPage()]),
+              1 => 1,
+              2 => 2,
+              3 => 3,
+              4 => 4,
               5 => 5,
+              6 => 6,
               10 => 10,
+              12 => 12,
               20 => 20,
+              24 => 24,
               40 => 40,
+              48 => 48,
             ],
             '#default_value' => $block_configuration['items_per_page'],
           ];
