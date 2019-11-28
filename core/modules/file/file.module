@@ -69,57 +69,6 @@ function file_field_widget_info_alter(array &$info) {
 }
 
 /**
- * Loads file entities from the database.
- *
- * @param array|null $fids
- *   (optional) An array of entity IDs. If omitted or NULL, all entities are
- *   loaded.
- * @param bool $reset
- *   (optional) Whether to reset the internal file_load_multiple() cache.
- *   Defaults to FALSE.
- *
- * @return array
- *   An array of file entities, indexed by fid.
- *
- * @deprecated in drupal:8.0.0 and is removed from drupal:9.0.0. Use
- *   \Drupal\file\Entity\File::loadMultiple().
- *
- * @see https://www.drupal.org/node/2266845
- */
-function file_load_multiple(array $fids = NULL, $reset = FALSE) {
-  @trigger_error('file_load_multiple() is deprecated in Drupal 8.0.0 and will be removed before Drupal 9.0.0. Use \Drupal\file\Entity\File::loadMultiple(). See https://www.drupal.org/node/2266845', E_USER_DEPRECATED);
-  if ($reset) {
-    \Drupal::entityTypeManager()->getStorage('file')->resetCache($fids);
-  }
-  return File::loadMultiple($fids);
-}
-
-/**
- * Loads a single file entity from the database.
- *
- * @param int $fid
- *   A file ID.
- * @param bool $reset
- *   (optional) Whether to reset the internal file_load_multiple() cache.
- *   Defaults to FALSE.
- *
- * @return \Drupal\file\FileInterface|null
- *   A file entity or NULL if the file was not found.
- *
- * @deprecated in drupal:8.0.0 and is removed from drupal:9.0.0. Use
- *   \Drupal\file\Entity\File::load().
- *
- * @see https://www.drupal.org/node/2266845
- */
-function file_load($fid, $reset = FALSE) {
-  @trigger_error('file_load() is deprecated in Drupal 8.0.0 and will be removed before Drupal 9.0.0. Use \Drupal\file\Entity\File::load(). See https://www.drupal.org/node/2266845', E_USER_DEPRECATED);
-  if ($reset) {
-    \Drupal::entityTypeManager()->getStorage('file')->resetCache([$fid]);
-  }
-  return File::load($fid);
-}
-
-/**
  * Copies a file to a new location and adds a file record to the database.
  *
  * This function should be used when manipulating files that have records

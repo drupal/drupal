@@ -4,10 +4,8 @@ namespace Drupal\Tests\file\Functional;
 
 use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
-use Drupal\TestTools\PhpUnitCompatibility\RunnerVersion;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\file\Entity\File;
-use Drupal\Tests\Traits\ExpectDeprecationTrait;
 
 /**
  * Tests validation functions such as file type, max file size, max size per
@@ -16,8 +14,6 @@ use Drupal\Tests\Traits\ExpectDeprecationTrait;
  * @group file
  */
 class FileFieldValidateTest extends FileFieldTestBase {
-
-  use ExpectDeprecationTrait;
 
   /**
    * {@inheritdoc}
@@ -195,44 +191,6 @@ class FileFieldValidateTest extends FileFieldTestBase {
     $this->removeNodeFile($nid);
     $this->assertNoText('Only files with the following extensions are allowed: txt.');
     $this->assertText('Article ' . $node->getTitle() . ' has been updated.');
-  }
-
-  /**
-   * Tests deprecation of the assertFileExists and assertFileNotExists methods.
-   *
-   * @group legacy
-   *
-   * @todo the expectedDeprecation annotation does not work if tests are marked
-   *   skipped.
-   * @see https://github.com/symfony/symfony/pull/25757
-   */
-  public function testAssertFileExistsDeprecation() {
-    if (RunnerVersion::getMajor() == 6) {
-      $this->expectDeprecation('Passing a File entity as $file argument to FileFieldTestBase::assertFileExists is deprecated in drupal:8.8.0. It will be removed from drupal:9.0.0. Instead, pass the File entity URI via File::getFileUri(). See https://www.drupal.org/node/3057326');
-      $this->expectDeprecation('Passing a File entity as $file argument to FileFieldTestBase::assertFileNotExists is deprecated in drupal:8.8.0. It will be removed from drupal:9.0.0. Instead, pass the File entity URI via File::getFileUri(). See https://www.drupal.org/node/3057326');
-    }
-    else {
-      $this->markTestSkipped('This test does not work in PHPUnit 7+ since assertFileExists only accepts string arguments for $file');
-    }
-
-    $node_storage = $this->container->get('entity_type.manager')->getStorage('node');
-    $type_name = 'article';
-    $field_name = 'file_test';
-    $this->createFileField($field_name, 'node', $type_name);
-
-    $test_file = $this->getTestFile('image');
-
-    // Disable extension checking.
-    $this->updateFileField($field_name, $type_name, ['file_extensions' => '']);
-
-    // Check that the file can be uploaded with no extension checking.
-    $nid = $this->uploadNodeFile($test_file, $field_name, $type_name);
-    $node_storage->resetCache([$nid]);
-    $node = $node_storage->load($nid);
-    $node_file = File::load($node->{$field_name}->target_id);
-    $this->assertFileExists($node_file, 'File exists after uploading a file with no extension checking.');
-    unlink($node_file->getFileUri());
-    $this->assertFileNotExists($node_file, 'File does not exists after having been deleted.');
   }
 
 }
