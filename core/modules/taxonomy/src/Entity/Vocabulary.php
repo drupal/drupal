@@ -90,23 +90,6 @@ class Vocabulary extends ConfigEntityBundleBase implements VocabularyInterface {
   /**
    * {@inheritdoc}
    */
-  public function getHierarchy() {
-    @trigger_error('\Drupal\taxonomy\VocabularyInterface::getHierarchy() is deprecated in Drupal 8.7.x and will be removed before Drupal 9.0.x. Use \Drupal\taxonomy\TermStorage::getVocabularyHierarchyType() instead.', E_USER_DEPRECATED);
-    return $this->entityTypeManager()->getStorage('taxonomy_term')->getVocabularyHierarchyType($this->id());
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function setHierarchy($hierarchy) {
-    @trigger_error('\Drupal\taxonomy\VocabularyInterface::setHierarchy() is deprecated in Drupal 8.7.x and will be removed before Drupal 9.0.x. Reset the cache of the taxonomy_term storage controller instead.', E_USER_DEPRECATED);
-    $this->entityTypeManager()->getStorage('taxonomy_term')->resetCache();
-    return $this;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function id() {
     return $this->vid;
   }

@@ -84,15 +84,4 @@ interface TermInterface extends ContentEntityInterface, EntityChangedInterface, 
    */
   public function setWeight($weight);
 
-  /**
-   * Gets the ID of the vocabulary that owns the term.
-   *
-   * @return string
-   *   The vocabulary ID.
-   *
-   * @deprecated in drupal:8.?.? and is removed from drupal:9.0.0. Use
-   *   TermInterface::bundle() instead.
-   */
-  public function getVocabularyId();
-
 }

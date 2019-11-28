@@ -279,12 +279,4 @@ class Term extends EditorialContentEntityBase implements TermInterface {
     return $this;
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function getVocabularyId() {
-    @trigger_error('The ' . __METHOD__ . ' method is deprecated since version 8.4.0 and will be removed before 9.0.0. Use ' . __CLASS__ . '::bundle() instead to get the vocabulary ID.', E_USER_DEPRECATED);
-    return $this->bundle();
-  }
-
 }
