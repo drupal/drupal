@@ -34,8 +34,6 @@ class Composer {
     'guzzlehttp/promises' => ['tests'],
     'guzzlehttp/psr7' => ['tests'],
     'instaclick/php-webdriver' => ['doc', 'test'],
-    'jcalderonzumba/gastonjs' => ['docs', 'examples', 'tests'],
-    'jcalderonzumba/mink-phantomjs-driver' => ['tests'],
     'justinrainbow/json-schema' => ['demo'],
     'masterminds/html5' => ['bin', 'test'],
     'mikey179/vfsStream' => ['src/test'],

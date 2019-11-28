@@ -151,7 +151,7 @@ JS;
       $this->metaRefreshCount = 0;
     }
 
-    // Log only for JavascriptTestBase tests because for Goutte we log with
+    // Log only for WebDriverTestBase tests because for Goutte we log with
     // ::getResponseLogHandler.
     if ($this->htmlOutputEnabled && !($this->getSession()->getDriver() instanceof GoutteDriver)) {
       $html_output = 'GET request to: ' . $url .

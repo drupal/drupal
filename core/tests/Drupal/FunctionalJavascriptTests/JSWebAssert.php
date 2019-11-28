@@ -221,9 +221,9 @@ JS;
   /**
    * Test that a node, or its specific corner, is visible in the viewport.
    *
-   * Note: Always set the viewport size. This can be done with a PhantomJS
-   * startup parameter or in your test with \Behat\Mink\Session->resizeWindow().
-   * Drupal CI Javascript tests by default use a viewport of 1024x768px.
+   * Note: Always set the viewport size. This can be done in your test with
+   * \Behat\Mink\Session->resizeWindow(). Drupal CI Javascript tests by default
+   * use a viewport of 1024x768px.
    *
    * @param string $selector_type
    *   The element selector type (CSS, XPath).
@@ -441,7 +441,7 @@ JS;
    * Escapes HTML for testing.
    *
    * Drupal's Html::escape() uses the ENT_QUOTES flag with htmlspecialchars() to
-   * escape both single and double quotes. With JavascriptTestBase testing the
+   * escape both single and double quotes. With WebDriverTestBase testing the
    * browser is automatically converting &quot; and &#039; to double and single
    * quotes respectively therefore we can not escape them when testing for
    * escaped HTML.

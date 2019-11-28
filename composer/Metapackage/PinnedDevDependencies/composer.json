@@ -20,8 +20,6 @@
         "drupal/coder": "8.3.6",
         "fabpot/goutte": "v3.2.3",
         "instaclick/php-webdriver": "1.4.6",
-        "jcalderonzumba/gastonjs": "v1.0.2",
-        "jcalderonzumba/mink-phantomjs-driver": "v0.3.2",
         "justinrainbow/json-schema": "5.2.8",
         "mikey179/vfsstream": "v1.6.8",
         "myclabs/deep-copy": "1.7.0",

@@ -7,7 +7,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
 
 /**
- * Test form for JSWebAssert JavaScriptTestBase.
+ * Test form for JSWebAssert WebDriverTestBase.
  *
  * @internal
  */
