@@ -291,22 +291,6 @@ class FileSystem implements FileSystemInterface {
   /**
    * {@inheritdoc}
    */
-  public function uriScheme($uri) {
-    @trigger_error('FileSystem::uriScheme() is deprecated in drupal:8.8.0. It will be removed from drupal:9.0.0. Use \Drupal\Core\StreamWrapper\StreamWrapperManagerInterface::getScheme() instead. See https://www.drupal.org/node/3035273', E_USER_DEPRECATED);
-    return StreamWrapperManager::getScheme($uri);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function validScheme($scheme) {
-    @trigger_error('FileSystem::validScheme() is deprecated in drupal:8.8.0 and will be removed before drupal:9.0.0. Use \Drupal\Core\StreamWrapper\StreamWrapperManagerInterface::isValidScheme() instead. See https://www.drupal.org/node/3035273', E_USER_DEPRECATED);
-    return $this->streamWrapperManager->isValidScheme($scheme);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function copy($source, $destination, $replace = self::EXISTS_RENAME) {
     $this->prepareDestination($source, $destination, $replace);
 
@@ -633,18 +617,6 @@ class FileSystem implements FileSystemInterface {
     $temporary_directory = $this->settings->get('file_temp_path');
     if (!empty($temporary_directory)) {
       return $temporary_directory;
-    }
-
-    // Fallback to config for Backwards compatibility.
-    // This service is lazy-loaded and not injected, as the file_system service
-    // is used in the install phase before config_factory service exists. It
-    // will be removed before Drupal 9.0.0.
-    if (\Drupal::hasContainer()) {
-      $temporary_directory = \Drupal::config('system.file')->get('path.temporary');
-      if (!empty($temporary_directory)) {
-        @trigger_error("The 'system.file' config 'path.temporary' is deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. Set 'file_temp_path' in settings.php instead. See https://www.drupal.org/node/3039255", E_USER_DEPRECATED);
-        return $temporary_directory;
-      }
     }
 
     // Fallback to OS default.

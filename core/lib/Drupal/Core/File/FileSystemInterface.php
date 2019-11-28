@@ -233,46 +233,6 @@ interface FileSystemInterface {
   public function tempnam($directory, $prefix);
 
   /**
-   * Returns the scheme of a URI (e.g. a stream).
-   *
-   * @param string $uri
-   *   A stream, referenced as "scheme://target" or "data:target".
-   *
-   * @return string|bool
-   *   A string containing the name of the scheme, or FALSE if none. For
-   *   example, the URI "public://example.txt" would return "public".
-   *
-   * @deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. Use
-   *   Drupal\Core\StreamWrapper\StreamWrapperManagerInterface::getScheme()
-   *   instead.
-   *
-   * @see https://www.drupal.org/node/3035273
-   */
-  public function uriScheme($uri);
-
-  /**
-   * Checks that the scheme of a stream URI is valid.
-   *
-   * Confirms that there is a registered stream handler for the provided scheme
-   * and that it is callable. This is useful if you want to confirm a valid
-   * scheme without creating a new instance of the registered handler.
-   *
-   * @param string $scheme
-   *   A URI scheme, a stream is referenced as "scheme://target".
-   *
-   * @return bool
-   *   Returns TRUE if the string is the name of a validated stream, or FALSE if
-   *   the scheme does not have a registered handler.
-   *
-   * @deprecated in drupal:8.0.0 and is removed from drupal:9.0.0. Use
-   *   Drupal\Core\StreamWrapper\StreamWrapperManagerInterface::isValidScheme()
-   *   instead.
-   *
-   * @see https://www.drupal.org/node/3035273
-   */
-  public function validScheme($scheme);
-
-  /**
    * Copies a file to a new location without invoking the file API.
    *
    * This is a powerful function that in many ways performs like an advanced
