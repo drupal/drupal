@@ -35,6 +35,8 @@ build:
          suppress-deprecations: false
          halt-on-fail: false
       run_tests.build:
+        # Limit concurrency due to disk space concerns.
+        concurrency: 15
         types: 'PHPUnit-Build'
         testgroups: '--all'
         suppress-deprecations: false
