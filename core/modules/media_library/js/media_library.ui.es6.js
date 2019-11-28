@@ -1,5 +1,5 @@
 /**
- * @file media_library.widget.js
+ * @file media_library.ui.es6.js
  */
 (($, Drupal, window) => {
   /**
