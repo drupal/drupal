@@ -5,41 +5,6 @@
  * Install, update and uninstall functions for the Content Moderation module.
  */
 
-use Drupal\Component\Render\FormattableMarkup;
-use Drupal\Core\Link;
-
-/**
- * Implements hook_requirements().
- */
-function content_moderation_requirements($phase) {
-  $requirements = [];
-
-  if ($phase === 'runtime') {
-    $config = \Drupal::configFactory();
-    $legacy_views = [];
-    foreach ($config->listAll('views.view.') as $view_id) {
-      $view = $config->get($view_id);
-      foreach ($view->get('display') as $display) {
-        if (!empty($display['display_options']['relationships']['moderation_state'])) {
-          $legacy_views[] = Link::createFromRoute($view->get('label'), 'entity.view.edit_form', ['view' => $view->get('id')])->toString();
-        }
-      }
-    }
-    if (!empty($legacy_views)) {
-      $requirements['deprecated_views_relationship'] = [
-        'title' => t('Content Moderation State views relationship'),
-        'description' => t('This installation contains one or more views which is using a relationship to the Content Moderation State entity. This relationship is deprecated and will be removed before 9.0.0. See <a target="_blank" href=":change_record">this change record</a> for information on removing this relationship or alternative solutions. Views that contain this relationship are: @views', [
-          ':change_record' => 'https://www.drupal.org/node/3061099',
-          '@views' => new FormattableMarkup(implode(', ', $legacy_views), []),
-        ]),
-        'severity' => REQUIREMENT_ERROR,
-      ];
-    }
-  }
-
-  return $requirements;
-}
-
 /**
  * Remove the 'content_revision_tracker' table.
  */

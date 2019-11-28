@@ -37,12 +37,11 @@ interface StateTransitionValidationInterface {
    * @param \Drupal\Core\Session\AccountInterface $user
    *   The user to validate.
    * @param \Drupal\Core\Entity\ContentEntityInterface $entity
-   *   (optional) The entity to be transitioned. Omitting this parameter is
-   *   deprecated and will be required in Drupal 9.0.0.
+   *   The entity to be transitioned.
    *
    * @return bool
    *   Returns TRUE if transition is valid, otherwise FALSE.
    */
-  public function isTransitionValid(WorkflowInterface $workflow, StateInterface $original_state, StateInterface $new_state, AccountInterface $user, ContentEntityInterface $entity = NULL);
+  public function isTransitionValid(WorkflowInterface $workflow, StateInterface $original_state, StateInterface $new_state, AccountInterface $user, ContentEntityInterface $entity);
 
 }

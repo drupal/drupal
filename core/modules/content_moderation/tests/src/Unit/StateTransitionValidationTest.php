@@ -10,7 +10,6 @@ use Drupal\content_moderation\StateTransitionValidation;
 use Drupal\Tests\UnitTestCase;
 use Drupal\workflow_type_test\Plugin\WorkflowType\TestType;
 use Drupal\workflows\Entity\Workflow;
-use Drupal\workflows\State;
 use Drupal\workflows\WorkflowTypeManager;
 use Prophecy\Argument;
 
@@ -92,19 +91,6 @@ class StateTransitionValidationTest extends UnitTestCase {
       }
     }
     $this->assertSame($result, $has_transition);
-  }
-
-  /**
-   * @expectedDeprecation Omitting the $entity parameter from Drupal\content_moderation\StateTransitionValidation::isTransitionValid is deprecated and will be required in Drupal 9.0.0.
-   * @group legacy
-   */
-  public function testDeprecatedEntityParameter() {
-    $moderation_info = $this->prophesize(ModerationInformationInterface::class);
-    $state = new State($this->workflow->getTypePlugin(), 'draft', 'draft');
-    $user = $this->prophesize(AccountInterface::class);
-
-    $validator = new StateTransitionValidation($moderation_info->reveal());
-    $validator->isTransitionValid($this->workflow, $state, $state, $user->reveal());
   }
 
   /**

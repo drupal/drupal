@@ -152,22 +152,6 @@ class ContentModerationState extends ContentEntityBase implements ContentModerat
   }
 
   /**
-   * Default value callback for the 'uid' base field definition.
-   *
-   * @see \Drupal\content_moderation\Entity\ContentModerationState::baseFieldDefinitions()
-   *
-   * @deprecated The ::getCurrentUserId method is deprecated in 8.6.x and will
-   *   be removed before 9.0.0.
-   *
-   * @return array
-   *   An array of default values.
-   */
-  public static function getCurrentUserId() {
-    @trigger_error('The ::getCurrentUserId method is deprecated in 8.6.x and will be removed before 9.0.0.', E_USER_DEPRECATED);
-    return [\Drupal::currentUser()->id()];
-  }
-
-  /**
    * {@inheritdoc}
    */
   public function save() {
