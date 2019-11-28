@@ -37,7 +37,6 @@
         "doctrine/annotations": "^1.4",
         "guzzlehttp/guzzle": "^6.3",
         "symfony-cmf/routing": "^2.1",
-        "easyrdf/easyrdf": "^0.9",
         "zendframework/zend-feed": "^2.12",
         "stack/builder": "^1.0",
         "egulias/email-validator": "^2.0",

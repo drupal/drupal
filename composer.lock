@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "11e97079b577249b708678d9fdb70cff",
+    "content-hash": "119e460e27fcb0c3479da1f05fbc90d9",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -653,14 +653,13 @@
             "dist": {
                 "type": "path",
                 "url": "core",
-                "reference": "97ddf51eb80dace3a9990a7b8509a3d16269167a"
+                "reference": "4c4b6062f6020c6b46b45018cfd084d3f20a77eb"
             },
             "require": {
                 "asm89/stack-cors": "^1.1",
                 "composer/semver": "^1.0",
                 "doctrine/annotations": "^1.4",
                 "doctrine/common": "^2.7",
-                "easyrdf/easyrdf": "^0.9",
                 "egulias/email-validator": "^2.0",
                 "ext-date": "*",
                 "ext-dom": "*",
@@ -914,11 +913,11 @@
             "dist": {
                 "type": "path",
                 "url": "composer/Plugin/VendorHardening",
-                "reference": "2db54f089065dedbe4a040b01f7b527f2bad68f6"
+                "reference": "d6a4c49651f381791d9667354205c8ecd331ca2d"
             },
             "require": {
                 "composer-plugin-api": "^1.1",
-                "php": ">=7.0.8"
+                "php": ">=7.2.3"
             },
             "type": "composer-plugin",
             "extra": {
@@ -937,68 +936,6 @@
             "keywords": [
                 "drupal"
             ]
-        },
-        {
-            "name": "easyrdf/easyrdf",
-            "version": "0.9.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/njh/easyrdf.git",
-                "reference": "acd09dfe0555fbcfa254291e433c45fdd4652566"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/njh/easyrdf/zipball/acd09dfe0555fbcfa254291e433c45fdd4652566",
-                "reference": "acd09dfe0555fbcfa254291e433c45fdd4652566",
-                "shasum": ""
-            },
-            "require": {
-                "ext-mbstring": "*",
-                "ext-pcre": "*",
-                "php": ">=5.2.8"
-            },
-            "require-dev": {
-                "phpunit/phpunit": "~3.5",
-                "sami/sami": "~1.4",
-                "squizlabs/php_codesniffer": "~1.4.3"
-            },
-            "suggest": {
-                "ml/json-ld": "~1.0"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-0": {
-                    "EasyRdf_": "lib/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "BSD-3-Clause"
-            ],
-            "authors": [
-                {
-                    "name": "Nicholas Humfrey",
-                    "email": "njh@aelius.com",
-                    "homepage": "http://www.aelius.com/njh/",
-                    "role": "Developer"
-                },
-                {
-                    "name": "Alexey Zakhlestin",
-                    "email": "indeyets@gmail.com",
-                    "role": "Developer"
-                }
-            ],
-            "description": "EasyRdf is a PHP library designed to make it easy to consume and produce RDF.",
-            "homepage": "http://www.easyrdf.org/",
-            "keywords": [
-                "Linked Data",
-                "RDF",
-                "Semantic Web",
-                "Turtle",
-                "rdfa",
-                "sparql"
-            ],
-            "time": "2015-02-27T09:45:49+00:00"
         },
         {
             "name": "egulias/email-validator",
@@ -4451,6 +4388,68 @@
                 "standards"
             ],
             "time": "2019-08-09T09:27:26+00:00"
+        },
+        {
+            "name": "easyrdf/easyrdf",
+            "version": "0.9.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/njh/easyrdf.git",
+                "reference": "acd09dfe0555fbcfa254291e433c45fdd4652566"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/njh/easyrdf/zipball/acd09dfe0555fbcfa254291e433c45fdd4652566",
+                "reference": "acd09dfe0555fbcfa254291e433c45fdd4652566",
+                "shasum": ""
+            },
+            "require": {
+                "ext-mbstring": "*",
+                "ext-pcre": "*",
+                "php": ">=5.2.8"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "~3.5",
+                "sami/sami": "~1.4",
+                "squizlabs/php_codesniffer": "~1.4.3"
+            },
+            "suggest": {
+                "ml/json-ld": "~1.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "EasyRdf_": "lib/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Nicholas Humfrey",
+                    "email": "njh@aelius.com",
+                    "homepage": "http://www.aelius.com/njh/",
+                    "role": "Developer"
+                },
+                {
+                    "name": "Alexey Zakhlestin",
+                    "email": "indeyets@gmail.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "EasyRdf is a PHP library designed to make it easy to consume and produce RDF.",
+            "homepage": "http://www.easyrdf.org/",
+            "keywords": [
+                "Linked Data",
+                "RDF",
+                "Semantic Web",
+                "Turtle",
+                "rdfa",
+                "sparql"
+            ],
+            "time": "2015-02-27T09:45:49+00:00"
         },
         {
             "name": "fabpot/goutte",
