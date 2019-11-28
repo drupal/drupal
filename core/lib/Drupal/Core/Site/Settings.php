@@ -116,7 +116,7 @@ final class Settings {
    */
   public static function initialize($app_root, $site_path, &$class_loader) {
     // Export these settings.php variables to the global namespace.
-    global $config_directories, $config;
+    global $config;
     $settings = [];
     $config = [];
     $databases = [];
@@ -127,16 +127,6 @@ final class Settings {
 
     // Initialize Database.
     Database::setMultipleConnectionInfo($databases);
-
-    // For BC ensure the $config_directories global is set both in the global
-    // and settings.
-    if (!isset($settings['config_sync_directory']) && !empty($config_directories['sync'])) {
-      @trigger_error('$config_directories[\'sync\'] has moved to $settings[\'config_sync_directory\']. See https://www.drupal.org/node/3018145.', E_USER_DEPRECATED);
-      $settings['config_sync_directory'] = $config_directories['sync'];
-    }
-    elseif (isset($settings['config_sync_directory'])) {
-      $config_directories['sync'] = $settings['config_sync_directory'];
-    }
 
     // Initialize Settings.
     new Settings($settings);

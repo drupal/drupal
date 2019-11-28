@@ -17,11 +17,9 @@ class DrupalKernelTest extends KernelTestBase {
    * {@inheritdoc}
    */
   protected function setUp() {
-    // DrupalKernel relies on global $config_directories and requires those
-    // directories to exist. Therefore, create the directories, but do not
-    // invoke KernelTestBase::setUp(), since that would set up further
-    // environment aspects, which would distort this test, because it tests
-    // the DrupalKernel (re-)building itself.
+    // Do not invoke KernelTestBase::setUp(), since that would set up further
+    // environment aspects, which would distort this test, because it tests the
+    // DrupalKernel (re-)building itself.
     $this->root = static::getDrupalRoot();
     $this->bootEnvironment();
   }

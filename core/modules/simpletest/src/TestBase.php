@@ -1163,7 +1163,6 @@ abstract class TestBase {
     \Drupal::unsetContainer();
 
     // Unset globals.
-    unset($GLOBALS['config_directories']);
     unset($GLOBALS['config']);
     unset($GLOBALS['conf']);
 
@@ -1276,8 +1275,8 @@ abstract class TestBase {
 
     // Re-initialize original stream wrappers of the parent site.
     // This must happen after static variables have been reset and the original
-    // container and $config_directories are restored, as simpletest_log_read()
-    // uses the public stream wrapper to locate the error.log.
+    // container and settings are restored, as simpletest_log_read() uses the
+    // public stream wrapper to locate the error.log.
     $this->originalContainer->get('stream_wrapper_manager')->register();
 
     if (isset($this->originalPrefix)) {

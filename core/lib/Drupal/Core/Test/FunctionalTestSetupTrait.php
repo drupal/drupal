@@ -653,7 +653,6 @@ trait FunctionalTestSetupTrait {
     $this->container = NULL;
 
     // Unset globals.
-    unset($GLOBALS['config_directories']);
     unset($GLOBALS['config']);
     unset($GLOBALS['conf']);
 

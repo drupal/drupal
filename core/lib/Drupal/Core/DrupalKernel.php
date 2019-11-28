@@ -1390,7 +1390,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
   protected function getConfigStorage() {
     if (!isset($this->configStorage)) {
       // The active configuration storage may not exist yet; e.g., in the early
-      // installer. Catch the exception thrown by config_get_config_directory().
+      // installer so if an exception is thrown use a NullStorage.
       try {
         $this->configStorage = BootstrapConfigStorageFactory::get($this->classLoader);
       }

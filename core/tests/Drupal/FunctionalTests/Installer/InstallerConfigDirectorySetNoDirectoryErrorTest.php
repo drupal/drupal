@@ -5,7 +5,7 @@ namespace Drupal\FunctionalTests\Installer;
 use Drupal\Component\Utility\Crypt;
 
 /**
- * Tests the installer when a config_directory set up but does not exist.
+ * Tests installation when a config_sync_directory is set up but does not exist.
  *
  * @group Installer
  */

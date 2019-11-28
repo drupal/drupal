@@ -696,32 +696,6 @@ function system_requirements($phase) {
     ];
   }
 
-  // Handle other configuration directories. This will be removed in Drupal 9.
-  // See https://www.drupal.org/node/3018145.
-  $bc_config_directories = isset($GLOBALS['config_directories']) ? $GLOBALS['config_directories'] : [];
-  unset($bc_config_directories['sync']);
-  foreach (array_keys(array_filter($bc_config_directories)) as $type) {
-    @trigger_error("Automatic creation of '$type' configuration directory will be removed from drupal:9.0.0. See https://www.drupal.org/node/3018145.", E_USER_DEPRECATED);
-    $directory = config_get_config_directory($type);
-    // If we're installing Drupal try and create the config sync directory.
-    if (!is_dir($directory) && $phase == 'install') {
-      \Drupal::service('file_system')->prepareDirectory($directory, FileSystemInterface::CREATE_DIRECTORY | FileSystemInterface::MODIFY_PERMISSIONS);
-    }
-    if (!is_dir($directory)) {
-      if ($phase == 'install') {
-        $description = t('An automated attempt to create the directory %directory failed, possibly due to a permissions problem. To proceed with the installation, either create the directory and modify its permissions manually or ensure that the installer has the permissions to create it automatically. For more information, see INSTALL.txt or the <a href=":handbook_url">online handbook</a>.', ['%directory' => $directory, ':handbook_url' => 'https://www.drupal.org/server-permissions']);
-      }
-      else {
-        $description = t('The directory %directory does not exist.', ['%directory' => $directory]);
-      }
-      $requirements['config directory ' . $type] = [
-        'title' => t('Configuration directory: %type', ['%type' => $type]),
-        'description' => $description,
-        'severity' => REQUIREMENT_ERROR,
-      ];
-    }
-  }
-
   $requirements['file system'] = [
     'title' => t('File system'),
   ];
