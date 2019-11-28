@@ -75,16 +75,7 @@ final class Link implements CacheableDependencyInterface {
    *
    * @see https://tools.ietf.org/html/rfc8288#section-2.1
    */
-  public function __construct(CacheableMetadata $cacheability, Url $url, $link_relation_type, array $target_attributes = []) {
-    // @todo Remove this conditional block in drupal:9.0.0 and add a type hint to the $link_relation_type argument of this method in https://www.drupal.org/project/drupal/issues/3080467.
-    if (is_array($link_relation_type)) {
-      @trigger_error('Constructing a ' . self::class . ' with an array of link relation types is deprecated in drupal:8.8.0 and will throw a fatal error in drupal:9.0.0. Pass a single string instead. See https://www.drupal.org/node/3087821.', E_USER_DEPRECATED);
-      assert(Inspector::assertAllStrings($link_relation_type));
-    }
-    else {
-      assert(is_string($link_relation_type));
-      $link_relation_type = [$link_relation_type];
-    }
+  public function __construct(CacheableMetadata $cacheability, Url $url, string $link_relation_type, array $target_attributes = []) {
     assert(Inspector::assertAllStrings(array_keys($target_attributes)));
     assert(Inspector::assertAll(function ($target_attribute_value) {
       return is_string($target_attribute_value) || is_array($target_attribute_value);
@@ -124,19 +115,6 @@ final class Link implements CacheableDependencyInterface {
    *   The link's relation type.
    */
   public function getLinkRelationType() {
-    return reset($this->rel);
-  }
-
-  /**
-   * Gets the link's relation types.
-   *
-   * @return string[]
-   *   The link's relation types.
-   *
-   * @todo: remove this method in https://www.drupal.org/project/drupal/issues/3080467.
-   */
-  public function getLinkRelationTypes() {
-    @trigger_error(__METHOD__ . '() is deprecated in drupal:8.8.0 and will be removed in drupal:9.0.0. Use getLinkRelationType() instead. See https://www.drupal.org/node/3087821.', E_USER_DEPRECATED);
     return $this->rel;
   }
 
@@ -163,18 +141,10 @@ final class Link implements CacheableDependencyInterface {
    *   less than 0 otherwise.
    */
   public static function compare(Link $a, Link $b) {
-    // @todo: Remove $rel_to_string function once rel property is a single
-    //   string in https://www.drupal.org/project/drupal/issues/3080467.
-    $rel_to_string = function (array $rel) {
-      // Sort the link relation type array so that the order of link relation
-      // types does not matter during link comparison.
-      sort($rel);
-      return implode(' ', $rel);
-    };
     // Any string concatenation would work, but a Link header-like format makes
     // it clear what is being compared.
-    $a_string = sprintf('<%s>;rel="%s"', $a->getHref(), $rel_to_string($a->rel));
-    $b_string = sprintf('<%s>;rel="%s"', $b->getHref(), $rel_to_string($b->rel));
+    $a_string = sprintf('<%s>;rel="%s"', $a->getHref(), $a->rel);
+    $b_string = sprintf('<%s>;rel="%s"', $b->getHref(), $b->rel);
     $cmp = strcmp($a_string, $b_string);
     // If the `href` or `rel` of the links are not equivalent, it's not
     // necessary to compare target attributes.

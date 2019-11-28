@@ -117,8 +117,8 @@ class ResourceTypeRepositoryTest extends JsonapiKernelTestBase {
    * Ensures that a naming conflict in the mapping causes an exception to be
    * thrown.
    *
-   * @covers ::getFieldMapping
-   * @dataProvider getFieldMappingProvider
+   * @covers ::getFields
+   * @dataProvider getFieldsProvider
    */
   public function testMappingNameConflictCheck($field_name_list) {
     $entity_type = \Drupal::entityTypeManager()->getDefinition('node');
@@ -133,7 +133,7 @@ class ResourceTypeRepositoryTest extends JsonapiKernelTestBase {
   }
 
   /**
-   * Data provider for testGetFieldMapping.
+   * Data provider for testMappingNameConflictCheck.
    *
    * These field name lists are designed to trigger a naming conflict in the
    * mapping: the special-cased names "type" or "id", and the name
@@ -142,7 +142,7 @@ class ResourceTypeRepositoryTest extends JsonapiKernelTestBase {
    * @returns array
    *   The data for the test method.
    */
-  public function getFieldMappingProvider() {
+  public function getFieldsProvider() {
     return [
       [['type', 'node_type']],
       [['id', 'node_id']],
