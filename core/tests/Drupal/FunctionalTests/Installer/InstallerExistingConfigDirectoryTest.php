@@ -3,7 +3,7 @@
 namespace Drupal\FunctionalTests\Installer;
 
 /**
- * Tests installation when a config_sync_directory is exists and is set up.
+ * Tests installation when a config_sync_directory exists and is set up.
  *
  * @group Installer
  */
