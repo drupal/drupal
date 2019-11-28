@@ -7,15 +7,6 @@ services:
       - '@cache.discovery'
       - '@module_handler'
       - '\Drupal\migrate_drupal\Annotation\MigrateField'
-  plugin.manager.migrate.cckfield:
-    class: Drupal\migrate_drupal\Plugin\MigrateCckFieldPluginManager
-    arguments:
-      - cckfield
-      - '@container.namespaces'
-      - '@cache.discovery'
-      - '@module_handler'
-      - '\Drupal\migrate_drupal\Annotation\MigrateCckField'
-    deprecated: The "%service_id%" service is deprecated. You should use the 'plugin.manager.migrate.field' service instead. See https://www.drupal.org/node/2751897
   logger.channel.migrate_drupal:
     parent: logger.channel_base
     arguments: ['migrate_drupal']

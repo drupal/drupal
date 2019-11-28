@@ -8,10 +8,10 @@ use Drupal\Component\Annotation\Plugin;
  * Defines a field plugin annotation object.
  *
  * Field plugins are responsible for handling the migration of custom fields
- * (provided by CCK in Drupal 6 and Field API in Drupal 7) to Drupal 8. They are
- * allowed to alter fieldable entity migrations when these migrations are being
- * generated, and can compute destination field types for individual fields
- * during the actual migration process.
+ * (provided by Field API in Drupal 7) to Drupal 8. They are allowed to alter
+ * fieldable entity migrations when these migrations are being generated, and
+ * can compute destination field types for individual fields during the actual
+ * migration process.
  *
  * Plugin Namespace: Plugin\migrate\field
  *

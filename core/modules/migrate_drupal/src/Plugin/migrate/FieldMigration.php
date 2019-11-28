@@ -18,9 +18,7 @@ class FieldMigration extends Migration implements ContainerFactoryPluginInterfac
   /**
    * Defines which configuration option has the migration processing function.
    *
-   * Default method is 'field_plugin_method'. For backwards compatibility,
-   * this constant is overridden in the CckMigration class, in order to
-   * fallback to the old 'cck_plugin_method'.
+   * Default method is 'field_plugin_method'.
    *
    * @const string
    * @deprecated in drupal:8.7.0 and is removed from drupal:9.0.0. Use the migrate_drupal.field_discovery service instead. See https://www.drupal.org/node/3006076.
