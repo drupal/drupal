@@ -558,7 +558,7 @@ function system_requirements($phase) {
         }
         else {
           $requirements['temp_directory']['description'][] = [
-            '#markup' => t('Remove the configuration and add the following to <code>settings.php</code>. <code>$settings["file_temp_path"] = "%temp_path"', ['%temp_path' => $temp_path]),
+            '#markup' => t('Remove the configuration and add the following to <code>settings.php</code>. <code>$settings["file_temp_path"] = "%temp_path"</code>', ['%temp_path' => $temp_path]),
             '#suffix' => ' ',
           ];
         }
