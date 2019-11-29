@@ -30,8 +30,3 @@ services:
   content_translation.manager:
     class: Drupal\content_translation\ContentTranslationManager
     arguments: ['@entity_type.manager', '@entity_type.bundle.info']
-
-  content_translation.updates_manager:
-    class: Drupal\content_translation\ContentTranslationUpdatesManager
-    arguments: ['@entity_type.manager', '@entity.definition_update_manager', '@entity_field.manager', '@entity.last_installed_schema.repository']
-    deprecated: The "%service_id%" service is deprecated. Definitions are updated automatically now so no replacement is needed. See https://www.drupal.org/node/2973222.
