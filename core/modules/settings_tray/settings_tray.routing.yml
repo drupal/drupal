@@ -7,10 +7,3 @@ entity.block.settings_tray_form:
     _permission: 'administer blocks'
     _access_block_plugin_has_settings_tray_form: 'TRUE'
     _access_block_has_overrides_settings_tray_form: 'TRUE'
-
-# Deprecated.
-# @see entity.block.settings_tray_form
-# @see \Drupal\settings_tray\RouteProcessor\BlockEntityOffCanvasFormRouteProcessorBC
-# @todo Remove in Drupal 9.0.0.
-entity.block.off_canvas_form:
-  path: ''

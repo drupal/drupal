@@ -7,12 +7,3 @@ services:
     class: Drupal\settings_tray\Access\BlockPluginHasSettingsTrayFormAccessCheck
     tags:
       - { name: access_check, applies_to: _access_block_plugin_has_settings_tray_form }
-
-  # BC layers.
-  # @todo Remove in Drupal 9.0.0.
-  settings_tray.route_processor_off_canvas_form_bc:
-    class: \Drupal\settings_tray\RouteProcessor\BlockEntityOffCanvasFormRouteProcessorBC
-    arguments: ['@router.route_provider']
-    public: false
-    tags:
-      - { name: route_processor_outbound }
