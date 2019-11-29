@@ -115,45 +115,6 @@ function shortcut_set_switch_access($account = NULL) {
 }
 
 /**
- * Assigns a user to a particular shortcut set.
- *
- * @param $shortcut_set Drupal\shortcut\Entity\Shortcut
- *   An object representing the shortcut set.
- * @param $account
- *   A user account that will be assigned to use the set.
- *
- * @deprecated in drupal:8.0.0 and is removed from drupal:9.0.0.
- *   Use \Drupal::entityTypeManager()->getStorage('shortcut_set')->assignUser().
- */
-function shortcut_set_assign_user($shortcut_set, $account) {
-  \Drupal::entityTypeManager()
-    ->getStorage('shortcut_set')
-    ->assignUser($shortcut_set, $account);
-}
-
-/**
- * Unassigns a user from any shortcut set they may have been assigned to.
- *
- * The user will go back to using whatever default set applies.
- *
- * @param $account
- *   A user account that will be removed from the shortcut set assignment.
- *
- * @return
- *   TRUE if the user was previously assigned to a shortcut set and has been
- *   successfully removed from it. FALSE if the user was already not assigned
- *   to any set.
- *
- * @deprecated in drupal:8.0.0 and is removed from drupal:9.0.0.
- *   Use \Drupal::entityTypeManager()->getStorage('shortcut_set')->unassignUser().
- */
-function shortcut_set_unassign_user($account) {
-  return (bool) \Drupal::entityTypeManager()
-    ->getStorage('shortcut_set')
-    ->unassignUser($account);
-}
-
-/**
  * Returns the current displayed shortcut set for the provided user account.
  *
  * @param $account
@@ -222,27 +183,6 @@ function shortcut_default_set($account = NULL) {
   }
 
   return $shortcut_set;
-}
-
-/**
- * Check to see if a shortcut set with the given title already exists.
- *
- * @param $title
- *   Human-readable name of the shortcut set to check.
- *
- * @return
- *   TRUE if a shortcut set with that title exists; FALSE otherwise.
- *
- * @deprecated in drupal:8.0.0 and is removed from drupal:9.0.0.
- */
-function shortcut_set_title_exists($title) {
-  $sets = ShortcutSet::loadMultiple();
-  foreach ($sets as $set) {
-    if ($set->label() == $title) {
-      return TRUE;
-    }
-  }
-  return FALSE;
 }
 
 /**
