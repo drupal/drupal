@@ -122,53 +122,6 @@ function search_preprocess_block(&$variables) {
 }
 
 /**
- * Clears either a part of, or the entire search index.
- *
- * This function is meant for use by search page plugins, or for building a
- * user interface that lets users clear all or parts of the search index.
- *
- * @param string|null $type
- *   (optional) The plugin ID or other machine-readable type for the items to
- *   remove from the search index. If omitted, $sid and $langcode are ignored
- *   and the entire search index is cleared.
- * @param int|array|null $sid
- *   (optional) The ID or array of IDs of the items to remove from the search
- *   index. If omitted, all items matching $type are cleared, and $langcode
- *   is ignored.
- * @param string|null $langcode
- *   (optional) Language code of the item to remove from the search index. If
- *   omitted, all items matching $sid and $type are cleared.
- *
- * @deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. Use
- *   \Drupal\search\SearchIndex::clear() instead.
- *
- * @see https://www.drupal.org/node/3075696
- */
-function search_index_clear($type = NULL, $sid = NULL, $langcode = NULL) {
-  @trigger_error("search_index_clear() is deprecated in drupal:8.8.0 and is removed in drupal:9.0.0. Use \Drupal\search\SearchIndex::clear() instead. See https://www.drupal.org/node/3075696", E_USER_DEPRECATED);
-  \Drupal::service('search.index')->clear($type, $sid, $langcode);
-}
-
-/**
- * Marks a word as "dirty" (changed), or retrieves the list of dirty words.
- *
- * This is used during indexing (cron). Words that are dirty have outdated
- * total counts in the search_total table, and need to be recounted.
- *
- * @deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. Use custom
- *   implementation of \Drupal\search\SearchIndexInterface instead.
- *
- * @see https://www.drupal.org/node/3075696
- */
-function search_dirty($word = NULL) {
-  @trigger_error("search_dirty() is deprecated in drupal:8.8.0 and is removed in drupal:9.0.0. Use custom implementation of \Drupal\search\SearchIndexInterface instead. See https://www.drupal.org/node/3075696", E_USER_DEPRECATED);
-  // Keep return result type for backward compatibility.
-  if ($word === NULL) {
-    return [];
-  }
-}
-
-/**
  * Implements hook_cron().
  *
  * Fires updateIndex() in the plugins for all indexable active search pages,
@@ -180,21 +133,6 @@ function search_cron() {
   foreach ($search_page_repository->getIndexableSearchPages() as $entity) {
     $entity->getPlugin()->updateIndex();
   }
-}
-
-/**
- * Updates the {search_total} database table.
- *
- * This function is called on shutdown to ensure that {search_total} is always
- * up to date (even if cron times out or otherwise fails).
- *
- * @deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. Use custom
- *   implementation of \Drupal\search\SearchIndexInterface instead.
- *
- * @see https://www.drupal.org/node/3075696
- */
-function search_update_totals() {
-  @trigger_error("search_update_totals() is deprecated in drupal:8.8.0 and is removed in drupal:9.0.0. Use custom implementation of \Drupal\search\SearchIndexInterface instead. See https://www.drupal.org/node/3075696", E_USER_DEPRECATED);
 }
 
 /**
@@ -378,59 +316,6 @@ function search_invoke_preprocess(&$text, $langcode = NULL) {
   foreach (\Drupal::moduleHandler()->getImplementations('search_preprocess') as $module) {
     $text = \Drupal::moduleHandler()->invoke($module, 'search_preprocess', [$text, $langcode]);
   }
-}
-
-/**
- * Updates the full-text search index for a particular item.
- *
- * @param string $type
- *   The plugin ID or other machine-readable type of this item,
- *   which should be less than 64 bytes.
- * @param int $sid
- *   An ID number identifying this particular item (e.g., node ID).
- * @param string $langcode
- *   Language code for the language of the text being indexed.
- * @param string $text
- *   The content of this item. Must be a piece of HTML or plain text.
- *
- * @ingroup search
- *
- * @deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. Use
- *   \Drupal\search\SearchIndex::index() instead.
- *
- * @see https://www.drupal.org/node/3075696
- */
-function search_index($type, $sid, $langcode, $text) {
-  @trigger_error("search_index() is deprecated in drupal:8.8.0 and is removed in drupal:9.0.0. Use \Drupal\search\SearchIndex::index() instead. See https://www.drupal.org/node/3075696", E_USER_DEPRECATED);
-  \Drupal::service('search.index')->index($type, $sid, $langcode, $text);
-}
-
-/**
- * Changes the timestamp on indexed items to 'now' to force reindexing.
- *
- * This function is meant for use by search page plugins, or for building a
- * user interface that lets users mark all or parts of the search index for
- * reindexing.
- *
- * @param string $type
- *   (optional) The plugin ID or other machine-readable type of this item. If
- *   omitted, the entire search index is marked for reindexing, and $sid and
- *   $langcode are ignored.
- * @param int $sid
- *   (optional) An ID number identifying this particular item (e.g., node ID).
- *   If omitted, everything matching $type is marked, and $langcode is ignored.
- * @param string $langcode
- *   (optional) The language code to clear. If omitted, everything matching
- *   $type and $sid is marked.
- *
- * @deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. Use
- *   \Drupal\search\SearchIndex::markForReindex() instead.
- *
- * @see https://www.drupal.org/node/3075696
- */
-function search_mark_for_reindex($type = NULL, $sid = NULL, $langcode = NULL) {
-  @trigger_error("search_mark_for_reindex() is deprecated in drupal:8.8.0 and is removed in drupal:9.0.0. Use \Drupal\search\SearchIndex::markForReindex() instead. See https://www.drupal.org/node/3075696", E_USER_DEPRECATED);
-  \Drupal::service('search.index')->markForReindex($type, $sid, $langcode);
 }
 
 /**
