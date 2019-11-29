@@ -52,7 +52,7 @@ class CreateNew extends GDImageToolkitOperationBase {
   protected function validateArguments(array $arguments) {
     // Assure extension is supported.
     if (!in_array($arguments['extension'], $this->getToolkit()->getSupportedExtensions())) {
-      throw new \InvalidArgumentException("Invalid extension ('{$arguments['extension']}') specified for the image 'convert' operation");
+      throw new \InvalidArgumentException("Invalid extension ('{$arguments['extension']}') specified for the image 'create_new' operation");
     }
 
     // Assure integers for width and height.
