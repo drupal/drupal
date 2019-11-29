@@ -52,22 +52,6 @@ interface ForumManagerInterface {
   public function resetCache();
 
   /**
-   * Fetches the parent forums for a given forum.
-   *
-   * @param int $tid
-   *   Term ID.
-   *
-   * @return array
-   *   Array of parent terms.
-   *
-   * @deprecated in drupal:8.1.0 and is removed from drupal:9.0.0. Call
-   * loadAllParents() on taxonomy term storage directly.
-   *
-   * @see https://www.drupal.org/node/3069599
-   */
-  public function getParents($tid);
-
-  /**
    * Checks whether a node can be used in a forum, based on its content type.
    *
    * @param \Drupal\node\NodeInterface $node
