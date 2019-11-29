@@ -207,27 +207,6 @@ function toolbar_toolbar() {
 }
 
 /**
- * Renders the toolbar's administration tray.
- *
- * @param array $element
- *   A renderable array.
- *
- * @return array
- *   The updated renderable array.
- *
- * @deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. Use
- *   \Drupal\toolbar\Controller\ToolbarController::preRenderAdministrationTray()
- *   instead.
- *
- * @see https://www.drupal.org/node/2966725
- * @see \Drupal\Core\Render\RendererInterface::render()
- */
-function toolbar_prerender_toolbar_administration_tray(array $element) {
-  @trigger_error('toolbar_prerender_toolbar_administration_tray() is deprecated in Drupal 8.8.0 and will be removed before Drupal 9.0.0. Use \Drupal\toolbar\Controller\ToolbarController::preRenderAdministrationTray() instead. See https://www.drupal.org/node/2966725', E_USER_DEPRECATED);
-  return ToolbarController::preRenderAdministrationTray($element);
-}
-
-/**
  * Adds toolbar-specific attributes to the menu link tree.
  *
  * @param \Drupal\Core\Menu\MenuLinkTreeElement[] $tree
@@ -298,20 +277,6 @@ function toolbar_get_rendered_subtrees() {
   ];
   \Drupal::service('renderer')->renderPlain($data);
   return [$data['#subtrees'], CacheableMetadata::createFromRenderArray($data)];
-}
-
-/**
- * #pre_render callback for toolbar_get_rendered_subtrees().
- *
- * @deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. Use
- *   \Drupal\toolbar\Controller\ToolbarController::preRenderGetRenderedSubtrees()
- *   instead.
- *
- * @see https://www.drupal.org/node/2966725
- */
-function _toolbar_do_get_rendered_subtrees(array $data) {
-  @trigger_error('_toolbar_do_get_rendered_subtrees() is deprecated in Drupal 8.8.0 and will be removed before Drupal 9.0.0. Use Drupal\toolbar\Controller\ToolbarController::preRenderGetRenderedSubtrees() instead. See https://www.drupal.org/node/2966725', E_USER_DEPRECATED);
-  return ToolbarController::preRenderGetRenderedSubtrees($data);
 }
 
 /**
