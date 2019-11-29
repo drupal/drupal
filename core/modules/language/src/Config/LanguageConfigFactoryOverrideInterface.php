@@ -4,7 +4,6 @@ namespace Drupal\language\Config;
 
 use Drupal\Core\Config\ConfigFactoryOverrideInterface;
 use Drupal\Core\Language\LanguageInterface;
-use Drupal\Core\Language\LanguageDefault;
 
 /**
  * Defines the interface for a configuration factory language override object.
@@ -28,20 +27,6 @@ interface LanguageConfigFactoryOverrideInterface extends ConfigFactoryOverrideIn
    * @return $this
    */
   public function setLanguage(LanguageInterface $language = NULL);
-
-  /**
-   * Sets the language to be used in configuration overrides from the default.
-   *
-   * @param \Drupal\Core\Language\LanguageDefault $language_default
-   *   The default language.
-   *
-   * @return $this
-   *
-   * @deprecated in drupal:8.3.0 and is removed from drupal:9.0.0. This
-   *   method has been replaced by injecting the default language into the
-   *   constructor.
-   */
-  public function setLanguageFromDefault(LanguageDefault $language_default = NULL);
 
   /**
    * Get language override for given language and configuration name.

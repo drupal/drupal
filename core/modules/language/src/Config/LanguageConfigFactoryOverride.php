@@ -146,14 +146,6 @@ class LanguageConfigFactoryOverride extends ConfigFactoryOverrideBase implements
   /**
    * {@inheritdoc}
    */
-  public function setLanguageFromDefault(LanguageDefault $language_default = NULL) {
-    $this->language = $language_default ? $language_default->get() : NULL;
-    return $this;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function installLanguageOverrides($langcode) {
     /** @var \Drupal\Core\Config\ConfigInstallerInterface $config_installer */
     $config_installer = \Drupal::service('config.installer');
