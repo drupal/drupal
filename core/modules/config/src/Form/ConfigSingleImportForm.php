@@ -8,6 +8,7 @@ use Drupal\Core\Config\ConfigImporter;
 use Drupal\Core\Config\ConfigImporterException;
 use Drupal\Core\Config\ConfigManagerInterface;
 use Drupal\Core\Config\Entity\ConfigEntityInterface;
+use Drupal\Core\Config\Importer\ConfigImporterBatch;
 use Drupal\Core\Config\StorageComparer;
 use Drupal\Core\Config\StorageInterface;
 use Drupal\Core\Config\TypedConfigManagerInterface;
@@ -421,14 +422,14 @@ class ConfigSingleImportForm extends ConfirmFormBase {
         $sync_steps = $config_importer->initialize();
         $batch = [
           'operations' => [],
-          'finished' => [ConfigSync::class, 'finishBatch'],
+          'finished' => [ConfigImporterBatch::class, 'finish'],
           'title' => $this->t('Importing configuration'),
           'init_message' => $this->t('Starting configuration import.'),
           'progress_message' => $this->t('Completed @current step of @total.'),
           'error_message' => $this->t('Configuration import has encountered an error.'),
         ];
         foreach ($sync_steps as $sync_step) {
-          $batch['operations'][] = [[ConfigSync::class, 'processBatch'], [$config_importer, $sync_step]];
+          $batch['operations'][] = [[ConfigImporterBatch::class, 'process'], [$config_importer, $sync_step]];
         }
 
         batch_set($batch);
