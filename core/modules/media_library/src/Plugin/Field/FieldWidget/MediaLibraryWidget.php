@@ -667,7 +667,9 @@ class MediaLibraryWidget extends WidgetBase implements ContainerFactoryPluginInt
 
     // Announce the updated content to screen readers.
     if ($is_remove_button) {
-      $announcement = t('Removed @label.', ['@label' => Media::load($field_state['removed_item_id'])->label()]);
+      $announcement = t('@label has been removed.', [
+        '@label' => Media::load($field_state['removed_item_id'])->label(),
+      ]);
     }
     else {
       $new_items = count(static::getNewMediaItems($element, $form_state));

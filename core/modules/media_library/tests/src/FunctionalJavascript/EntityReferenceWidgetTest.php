@@ -201,7 +201,7 @@ class EntityReferenceWidgetTest extends MediaLibraryTestBase {
     $button = $assert_session->buttonExists('Remove', $wrapper);
     $this->assertSame('Remove Dog', $button->getAttribute('aria-label'));
     $button->press();
-    $this->waitForText('Removed Dog.');
+    $this->waitForText('Dog has been removed.');
     // Assert the focus is set back on the open button of the media field.
     $this->assertJsCondition('jQuery("#field_twin_media-media-library-wrapper .js-media-library-open-button").is(":focus")');
 
@@ -218,9 +218,9 @@ class EntityReferenceWidgetTest extends MediaLibraryTestBase {
     $assert_session->hiddenFieldValueEquals('field_twin_media[selection][0][target_id]', 4);
     $assert_session->hiddenFieldValueEquals('field_twin_media[selection][1][target_id]', 4);
     $wrapper->pressButton('Remove');
-    $this->waitForText('Removed Dog.');
+    $this->waitForText('Dog has been removed.');
     $wrapper->pressButton('Remove');
-    $this->waitForText('Removed Dog.');
+    $this->waitForText('Dog has been removed.');
     $result = $wrapper->waitFor(10, function ($wrapper) {
       /** @var \Behat\Mink\Element\NodeElement $wrapper */
       return $wrapper->findButton('Remove') == NULL;
@@ -302,7 +302,7 @@ class EntityReferenceWidgetTest extends MediaLibraryTestBase {
     $button = $assert_session->buttonExists('Remove', $wrapper);
     $this->assertSame('Remove Cat', $button->getAttribute('aria-label'));
     $button->press();
-    $this->waitForText('Removed Cat.');
+    $this->waitForText('Cat has been removed.');
     // Assert the focus is set to the wrapper of the other selected item.
     $this->assertJsCondition('jQuery("#field_twin_media-media-library-wrapper [data-media-library-item-delta]").is(":focus")');
     $assert_session->elementTextNotContains('css', '#field_twin_media-media-library-wrapper', 'Cat');
