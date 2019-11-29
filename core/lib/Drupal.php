@@ -251,6 +251,13 @@ class Drupal {
   /**
    * Gets the current active user.
    *
+   * This method will return the \Drupal\Core\Session\AccountProxy object of the
+   * current user. You can use the \Drupal\user\Entity\User::load() method to
+   * load the full user entity object. For example:
+   * @code
+   *   $user = \Drupal\user\Entity\User::load(\Drupal::currentUser()->id());
+   * @endcode
+   *
    * @return \Drupal\Core\Session\AccountProxyInterface
    */
   public static function currentUser() {
