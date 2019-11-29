@@ -12,30 +12,7 @@ use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\image\Entity\ImageStyle;
 use Drupal\responsive_image\Entity\ResponsiveImageStyle;
 use Drupal\responsive_image\ResponsiveImageStyleInterface;
-use Drupal\Core\Image\ImageInterface;
 use Drupal\breakpoint\BreakpointInterface;
-
-/**
- * The machine name for the empty image breakpoint image style option.
- *
- * @deprecated in drupal:8.3.0 and is removed from drupal:9.0.0. Use
- *   Drupal\responsive_image\ResponsiveImageStyleInterface::EMPTY_IMAGE
- *   instead.
- *
- * @see https://www.drupal.org/node/2831620
- */
-const RESPONSIVE_IMAGE_EMPTY_IMAGE = '_empty image_';
-
-/**
- * The machine name for the original image breakpoint image style option.
- *
- * @deprecated in drupal:8.3.0 and is removed from drupal:9.0.0. Use
- *   \Drupal\responsive_image\ResponsiveImageStyleInterface::ORIGINAL_IMAGE
- *   instead.
- *
- * @see https://www.drupal.org/node/2831620
- */
-const RESPONSIVE_IMAGE_ORIGINAL_IMAGE = '_original image_';
 
 /**
  * Implements hook_help().
@@ -234,32 +211,6 @@ function template_preprocess_responsive_image(&$variables) {
     }
     $variables['img_element']['#attributes'] = $variables['attributes'];
   }
-}
-
-/**
- * Helper function for template_preprocess_responsive_image().
- *
- * @param \Drupal\Core\Image\ImageInterface $image
- *   The image to build the <source> tags for.
- * @param array $variables
- *   An array with the following keys:
- *     - responsive_image_style_id: The \Drupal\responsive_image\Entity\ResponsiveImageStyle
- *       ID.
- *     - width: The width of the image (if known).
- *     - height: The height of the image (if known).
- *     - uri: The URI of the image file.
- * @param \Drupal\breakpoint\BreakpointInterface $breakpoint
- *   The breakpoint for this source tag.
- * @param array $multipliers
- *   An array with multipliers as keys and image style mappings as values.
- *
- * @return \Drupal\Core\Template\Attribute[]
- *   An array of attributes for the source tag.
- *
- * @deprecated in drupal:8.3.0 and is removed from drupal:9.0.0.
- */
-function responsive_image_build_source_attributes(ImageInterface $image, array $variables, BreakpointInterface $breakpoint, array $multipliers) {
-  return _responsive_image_build_source_attributes($variables, $breakpoint, $multipliers);
 }
 
 /**
