@@ -9,7 +9,6 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Entity\Query\QueryAggregateInterface;
 use Drupal\Core\Entity\Query\QueryInterface;
 use Drupal\Tests\UnitTestCase;
-use Drupal\Core\Url;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
@@ -345,28 +344,6 @@ class DrupalTest extends UnitTestCase {
   }
 
   /**
-   * Tests the url() method.
-   *
-   * @covers ::url
-   * @see \Drupal\Core\Routing\UrlGeneratorInterface::generateFromRoute()
-   *
-   * @group legacy
-   * @expectedDeprecation Drupal::url() is deprecated as of Drupal 8.0.x, will be removed before Drupal 9.0.0. Instead create a \Drupal\Core\Url object directly, for example using Url::fromRoute()
-   */
-  public function testUrl() {
-    $route_parameters = ['test_parameter' => 'test'];
-    $options = ['test_option' => 'test'];
-    $generator = $this->createMock('Drupal\Core\Routing\UrlGeneratorInterface');
-    $generator->expects($this->once())
-      ->method('generateFromRoute')
-      ->with('test_route', $route_parameters, $options)
-      ->will($this->returnValue('path_string'));
-    $this->setMockContainerService('url_generator', $generator);
-
-    $this->assertInternalType('string', \Drupal::url('test_route', $route_parameters, $options));
-  }
-
-  /**
    * Tests the linkGenerator() method.
    *
    * @covers ::linkGenerator
@@ -374,31 +351,6 @@ class DrupalTest extends UnitTestCase {
   public function testLinkGenerator() {
     $this->setMockContainerService('link_generator');
     $this->assertNotNull(\Drupal::linkGenerator());
-  }
-
-  /**
-   * Tests the l() method.
-   *
-   * @covers ::l
-   *
-   * @group legacy
-   *
-   * @expectedDeprecation \Drupal::l() is deprecated in drupal:8.0.0 and is removed from drupal:9.0.0. Use \Drupal\Core\Link::fromTextAndUrl() instead. See https://www.drupal.org/node/2614344
-   *
-   * @see \Drupal\Core\Utility\LinkGeneratorInterface::generate()
-   */
-  public function testL() {
-    $route_parameters = ['test_parameter' => 'test'];
-    $options = ['test_option' => 'test'];
-    $generator = $this->createMock('Drupal\Core\Utility\LinkGeneratorInterface');
-    $url = new Url('test_route', $route_parameters, $options);
-    $generator->expects($this->once())
-      ->method('generate')
-      ->with('Test title', $url)
-      ->will($this->returnValue('link_html_string'));
-    $this->setMockContainerService('link_generator', $generator);
-
-    $this->assertInternalType('string', \Drupal::l('Test title', $url));
   }
 
   /**
