@@ -52,9 +52,6 @@ class ViewUI implements ViewEntityInterface {
    * If this view is locked it will contain the result of
    * \Drupal\Core\TempStore\SharedTempStore::getMetadata().
    *
-   * For backwards compatibility, public access to this property is provided by
-   * ::__set() and ::__get().
-   *
    * @var \Drupal\Core\TempStore\Lock|null
    */
   private $lock;
@@ -1387,32 +1384,6 @@ class ViewUI implements ViewEntityInterface {
   public function unsetLock() {
     $this->lock = NULL;
     return $this;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function __set($name, $value) {
-    if ($name === 'lock') {
-      @trigger_error('Using the "lock" public property of a View is deprecated in Drupal 8.7.0 and will not be allowed in Drupal 9.0.0. Use \Drupal\views_ui\ViewUI::setLock() instead. See https://www.drupal.org/node/3025869.', E_USER_DEPRECATED);
-      if ($value instanceof \stdClass && property_exists($value, 'owner') && property_exists($value, 'updated')) {
-        $value = new Lock($value->owner, $value->updated);
-      }
-      $this->setLock($value);
-    }
-    else {
-      $this->{$name} = $value;
-    }
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function __get($name) {
-    if ($name === 'lock') {
-      @trigger_error('Using the "lock" public property of a View is deprecated in Drupal 8.7.0 and will not be allowed in Drupal 9.0.0. Use \Drupal\views_ui\ViewUI::getLock() instead. See https://www.drupal.org/node/3025869.', E_USER_DEPRECATED);
-      return $this->getLock();
-    }
   }
 
 }
