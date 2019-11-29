@@ -10,16 +10,6 @@ use Drupal\aggregator\Entity\Feed;
 use Drupal\Core\Routing\RouteMatchInterface;
 
 /**
- * Denotes that a feed's items should never expire.
- *
- * @deprecated in drupal:8.3.0 and is removed from drupal:9.0.0.
- *   Use \Drupal\aggregator\FeedStorageInterface::CLEAR_NEVER instead.
- *
- * @see https://www.drupal.org/node/2831620
- */
-const AGGREGATOR_CLEAR_NEVER = 0;
-
-/**
  * Implements hook_help().
  */
 function aggregator_help($route_name, RouteMatchInterface $route_match) {
