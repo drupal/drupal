@@ -547,22 +547,38 @@ abstract class BuildTestBase extends TestCase {
     $working_path = $this->getWorkingPath($working_dir);
 
     if ($iterator === NULL) {
-      $finder = new Finder();
-      $finder->files()
-        ->ignoreUnreadableDirs()
-        ->in($this->getDrupalRoot())
-        ->notPath('#^sites/default/files#')
-        ->notPath('#^sites/simpletest#')
-        ->notPath('#^vendor#')
-        ->notPath('#^sites/default/settings\..*php#')
-        ->ignoreDotFiles(FALSE)
-        ->ignoreVCS(FALSE);
-      $iterator = $finder->getIterator();
+      $iterator = $this->getCodebaseFinder()->getIterator();
     }
 
     $fs = new SymfonyFilesystem();
     $options = ['override' => TRUE, 'delete' => FALSE];
     $fs->mirror($this->getDrupalRoot(), $working_path, $iterator, $options);
+  }
+
+  /**
+   * Get a default Finder object for a Drupal codebase.
+   *
+   * This method can be used two ways:
+   * - Override this method and provide your own default Finder object for
+   *   copyCodebase().
+   * - Call the method to get a default Finder object which can then be
+   *   modified for other purposes.
+   *
+   * @return \Symfony\Component\Finder\Finder
+   *   A Finder object ready to iterate over core codebase.
+   */
+  public function getCodebaseFinder() {
+    $finder = new Finder();
+    $finder->files()
+      ->ignoreUnreadableDirs()
+      ->in($this->getDrupalRoot())
+      ->notPath('#^sites/default/files#')
+      ->notPath('#^sites/simpletest#')
+      ->notPath('#^vendor#')
+      ->notPath('#^sites/default/settings\..*php#')
+      ->ignoreDotFiles(FALSE)
+      ->ignoreVCS(FALSE);
+    return $finder;
   }
 
   /**
