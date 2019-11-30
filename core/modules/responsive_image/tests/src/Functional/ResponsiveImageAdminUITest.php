@@ -112,7 +112,8 @@ class ResponsiveImageAdminUITest extends BrowserTestBase {
       'keyed_styles[responsive_image_test_module.mobile][1x][image_mapping_type]' => 'image_style',
       'keyed_styles[responsive_image_test_module.mobile][1x][image_style]' => 'thumbnail',
       'keyed_styles[responsive_image_test_module.narrow][1x][image_mapping_type]' => 'sizes',
-      'keyed_styles[responsive_image_test_module.narrow][1x][sizes]' => '(min-width: 700px) 700px, 100vw',
+      // Ensure the Sizes field allows long values.
+      'keyed_styles[responsive_image_test_module.narrow][1x][sizes]' => '(min-resolution: 192dpi) and (min-width: 170px) 386px, (min-width: 170px) 193px, (min-width: 768px) 18vw, (min-width: 480px) 30vw, 48vw',
       'keyed_styles[responsive_image_test_module.narrow][1x][sizes_image_styles][large]' => 'large',
       'keyed_styles[responsive_image_test_module.narrow][1x][sizes_image_styles][medium]' => 'medium',
       'keyed_styles[responsive_image_test_module.wide][1x][image_mapping_type]' => 'image_style',
@@ -128,7 +129,7 @@ class ResponsiveImageAdminUITest extends BrowserTestBase {
 
     // Check the mapping for multipliers 1x and 2x for the narrow breakpoint.
     $this->assertFieldByName('keyed_styles[responsive_image_test_module.narrow][1x][image_mapping_type]', 'sizes');
-    $this->assertFieldByName('keyed_styles[responsive_image_test_module.narrow][1x][sizes]', '(min-width: 700px) 700px, 100vw');
+    $this->assertFieldByName('keyed_styles[responsive_image_test_module.narrow][1x][sizes]', '(min-resolution: 192dpi) and (min-width: 170px) 386px, (min-width: 170px) 193px, (min-width: 768px) 18vw, (min-width: 480px) 30vw, 48vw');
     $this->assertFieldChecked('edit-keyed-styles-responsive-image-test-modulenarrow-1x-sizes-image-styles-large');
     $this->assertFieldChecked('edit-keyed-styles-responsive-image-test-modulenarrow-1x-sizes-image-styles-medium');
     $this->assertNoFieldChecked('edit-keyed-styles-responsive-image-test-modulenarrow-1x-sizes-image-styles-thumbnail');
