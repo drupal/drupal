@@ -15,7 +15,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
  * Performs a simple batch operation.
  */
 function _batch_test_callback_1($id, $sleep, &$context) {
-  // No-op, but ensure the batch take a couple iterations.
+  // No-op, but ensure the batch takes a couple iterations.
   // Batch needs time to run for the test, so sleep a bit.
   usleep($sleep);
   // Track execution, and store some result for post-processing in the
@@ -39,7 +39,7 @@ function _batch_test_callback_2($start, $total, $sleep, &$context) {
   // Process by groups of 5 (arbitrary value).
   $limit = 5;
   for ($i = 0; $i < $limit && $context['sandbox']['count'] < $total; $i++) {
-    // No-op, but ensure the batch take a couple iterations.
+    // No-op, but ensure the batch takes a couple iterations.
     // Batch needs time to run for the test, so sleep a bit.
     usleep($sleep);
     // Track execution, and store some result for post-processing in the
@@ -63,7 +63,7 @@ function _batch_test_callback_2($start, $total, $sleep, &$context) {
  * Implements callback_batch_operation().
  */
 function _batch_test_callback_5($id, $sleep, &$context) {
-  // No-op, but ensure the batch take a couple iterations.
+  // No-op, but ensure the batch takes a couple iterations.
   // Batch needs time to run for the test, so sleep a bit.
   usleep($sleep);
   // Track execution, and store some result for post-processing in the
@@ -77,15 +77,50 @@ function _batch_test_callback_5($id, $sleep, &$context) {
 /**
  * Implements callback_batch_operation().
  *
- * Performs a batch operation setting up its own batch.
+ * Performs a simple batch operation.
  */
-function _batch_test_nested_batch_callback() {
-  batch_test_stack('setting up batch 2');
-  batch_set(_batch_test_batch_2());
+function _batch_test_callback_6($id, $sleep, &$context) {
+  // No-op, but ensure the batch takes a couple iterations.
+  // Batch needs time to run for the test, so sleep a bit.
+  usleep($sleep);
+  // Track execution, and store some result for post-processing in the
+  // 'finished' callback.
+  batch_test_stack("op 6 id $id");
+  $context['results'][6][] = $id;
 }
 
 /**
- * Provides a common 'finished' callback for batches 1 to 4.
+ * Implements callback_batch_operation().
+ *
+ * Performs a simple batch operation.
+ */
+function _batch_test_callback_7($id, $sleep, &$context) {
+  // No-op, but ensure the batch takes a couple iterations.
+  // Batch needs time to run for the test, so sleep a bit.
+  usleep($sleep);
+  // Track execution, and store some result for post-processing in the
+  // 'finished' callback.
+  batch_test_stack("op 7 id $id");
+  $context['results'][7][] = $id;
+}
+
+/**
+ * Implements callback_batch_operation().
+ *
+ * Performs a batch operation setting up its own batch(es).
+ */
+function _batch_test_nested_batch_callback(array $batches = []) {
+  foreach ($batches as $batch) {
+    batch_test_stack("setting up batch $batch");
+    $function = '_batch_test_batch_' . $batch;
+    batch_set($function());
+  }
+  \Drupal::state()
+    ->set('batch_test_nested_order_multiple_batches', batch_get());
+}
+
+/**
+ * Provides a common 'finished' callback for batches 1 to 7.
  */
 function _batch_test_finished_helper($batch_id, $success, $results, $operations) {
   if ($results) {
@@ -181,4 +216,22 @@ function _batch_test_finished_4($success, $results, $operations) {
  */
 function _batch_test_finished_5($success, $results, $operations) {
   _batch_test_finished_helper(5, $success, $results, $operations);
+}
+
+/**
+ * Implements callback_batch_finished().
+ *
+ * Triggers 'finished' callback for batch 6.
+ */
+function _batch_test_finished_6($success, $results, $operations) {
+  _batch_test_finished_helper(6, $success, $results, $operations);
+}
+
+/**
+ * Implements callback_batch_finished().
+ *
+ * Triggers 'finished' callback for batch 7.
+ */
+function _batch_test_finished_7($success, $results, $operations) {
+  _batch_test_finished_helper(7, $success, $results, $operations);
 }
