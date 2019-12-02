@@ -1201,4 +1201,36 @@ class EntityQueryTest extends EntityKernelTestBase {
     $this->assertEquals($entity->id(), reset($result));
   }
 
+  /**
+   * Tests __toString().
+   */
+  public function testToString() {
+    $query = $this->storage->getQuery();
+    $group_blue = $query->andConditionGroup()->condition("{$this->figures}.color", ['blue'], 'IN');
+    $group_red = $query->andConditionGroup()->condition("{$this->figures}.color", ['red'], 'IN');
+    $null_group = $query->andConditionGroup()->notExists("{$this->figures}.color");
+    $this->queryResults = $query
+      ->condition($group_blue)
+      ->condition($group_red)
+      ->condition($null_group)
+      ->sort('id');
+
+    $figures = $this->figures;
+
+    $expected = <<<EOF
+SELECT base_table.revision_id AS revision_id, base_table.id AS id
+FROM
+{entity_test_mulrev} base_table
+INNER JOIN {entity_test_mulrev__{$figures}} entity_test_mulrev__$figures ON entity_test_mulrev__$figures.entity_id = base_table.id
+INNER JOIN {entity_test_mulrev__{$figures}} entity_test_mulrev__{$figures}_2 ON entity_test_mulrev__{$figures}_2.entity_id = base_table.id
+LEFT JOIN {entity_test_mulrev__{$figures}} entity_test_mulrev__{$figures}_3 ON entity_test_mulrev__{$figures}_3.entity_id = base_table.id
+WHERE (entity_test_mulrev__{$figures}.{$figures}_color IN ('blue')) AND (entity_test_mulrev__{$figures}_2.{$figures}_color IN ('red')) AND (entity_test_mulrev__{$figures}_3.{$figures}_color IS NULL)
+ORDER BY base_table.id ASC
+EOF;
+
+    // Apply table prefixes to the expected sql.
+    $expected = \Drupal::database()->prefixTables($expected);
+    $this->assertEquals($expected, (string) $query);
+  }
+
 }

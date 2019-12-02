@@ -326,4 +326,28 @@ class Query extends QueryBase implements QueryInterface {
     return new $class($sql_query);
   }
 
+  /**
+   * Implements the magic __toString method.
+   */
+  public function __toString() {
+    // Clone the query so the prepare and compile doesn't get repeated.
+    $clone = clone($this);
+
+    $clone->prepare()
+      ->compile()
+      ->addSort()
+      ->finish();
+
+    // Quote arguments so query is able to be run.
+    $quoted = [];
+    foreach ($clone->sqlQuery->getArguments() as $key => $value) {
+      $quoted[$key] = is_null($value) ? 'NULL' : $this->connection->quote($value);
+    }
+
+    // Replace table name brackets.
+    $sql = $clone->connection->prefixTables((string) $clone->sqlQuery);
+
+    return strtr($sql, $quoted);
+  }
+
 }
