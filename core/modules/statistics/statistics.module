@@ -10,7 +10,6 @@ use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Url;
 use Drupal\node\NodeInterface;
-use Drupal\statistics\StatisticsViewsResult;
 
 /**
  * Implements hook_help().
@@ -75,76 +74,6 @@ function statistics_cron() {
   $storage->resetDayCount();
   $max_total_count = $storage->maxTotalCount();
   \Drupal::state()->set('statistics.node_counter_scale', 1.0 / max(1.0, $max_total_count));
-}
-
-/**
- * Returns the most viewed content of all time, today, or the last-viewed node.
- *
- * @param string $dbfield
- *   The database field to use, one of:
- *   - 'totalcount': Integer that shows the top viewed content of all time.
- *   - 'daycount': Integer that shows the top viewed content for today.
- *   - 'timestamp': Integer that shows only the last viewed node.
- * @param int $dbrows
- *   The number of rows to be returned.
- *
- * @return SelectQuery|false
- *   A query result containing the node ID, title, user ID that owns the node,
- *   and the username for the selected node(s), or FALSE if the query could not
- *   be executed correctly.
- *
- * @deprecated in drupal:8.6.0 and is removed from drupal:9.0.0.
- *   Use \Drupal\statistics\NodeStatisticsDatabaseStorage::fetchAll() instead.
- */
-function statistics_title_list($dbfield, $dbrows) {
-  @trigger_error('statistics_title_list() is deprecated in Drupal 8.6.0 and will be removed before Drupal 9.0.0. Use \Drupal\statistics\NodeStatisticsDatabaseStorage::fetchAll() instead.', E_USER_DEPRECATED);
-  if (in_array($dbfield, ['totalcount', 'daycount', 'timestamp'])) {
-    $query = \Drupal::database()->select('node_field_data', 'n');
-    $query->addTag('node_access');
-    $query->join('node_counter', 's', 'n.nid = s.nid');
-    $query->join('users_field_data', 'u', 'n.uid = u.uid');
-
-    return $query
-      ->fields('n', ['nid', 'title'])
-      ->fields('u', ['uid', 'name'])
-      ->condition($dbfield, 0, '<>')
-      ->condition('n.status', 1)
-      // @todo This should be actually filtering on the desired node status
-      //   field language and just fall back to the default language.
-      ->condition('n.default_langcode', 1)
-      ->condition('u.default_langcode', 1)
-      ->orderBy($dbfield, 'DESC')
-      ->range(0, $dbrows)
-      ->execute();
-  }
-  return FALSE;
-}
-
-/**
- * Retrieves a node's "view statistics".
- *
- * @deprecated in drupal:8.2.0 and is removed from drupal:9.0.0. Use
- *   \Drupal::service('statistics.storage.node')->fetchView($id) instead.
- *
- * @see https://www.drupal.org/node/2778245
- */
-function statistics_get($id) {
-  @trigger_error("statistics_get() is deprecated in drupal:8.2.0 and is removed from drupal:9.0.0. Use Drupal::service('statistics.storage.node')->fetchView() instead. See https://www.drupal.org/node/2778245", E_USER_DEPRECATED);
-  if ($id > 0) {
-    /** @var \Drupal\statistics\StatisticsViewsResult $statistics */
-    $statistics = \Drupal::service('statistics.storage.node')->fetchView($id);
-
-    // For backwards compatibility, return FALSE if an invalid node ID was
-    // passed in.
-    if (!($statistics instanceof StatisticsViewsResult)) {
-      return FALSE;
-    }
-    return [
-      'totalcount' => $statistics->getTotalCount(),
-      'daycount' => $statistics->getDayCount(),
-      'timestamp' => $statistics->getTimestamp(),
-    ];
-  }
 }
 
 /**
