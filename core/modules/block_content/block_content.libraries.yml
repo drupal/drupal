@@ -1,7 +1,0 @@
-# Deprecated in Drupal 8.3.x and will be removed before Drupal 9.0.0.
-# This is just for BC and not used anymore. See https://www.drupal.org/node/2669802
-drupal.block_content:
-  version: VERSION
-  js: {}
-  dependencies:
-    - core/drupal.entity-form
