@@ -506,51 +506,6 @@ class ImageStyle extends ConfigEntityBase implements ImageStyleInterface, Entity
   }
 
   /**
-   * Provides a wrapper for file_uri_scheme() to allow unit testing.
-   *
-   * Returns the scheme of a URI (e.g. a stream).
-   *
-   * @param string $uri
-   *   A stream, referenced as "scheme://target"  or "data:target".
-   *
-   * @return string
-   *   A string containing the name of the scheme, or FALSE if none. For
-   *   example, the URI "public://example.txt" would return "public".
-   *
-   * @deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. Use
-   *   \Drupal\Core\StreamWrapper\StreamWrapperManager::getTarget() instead.
-   *
-   * @see https://www.drupal.org/node/3035273
-   */
-  protected function fileUriScheme($uri) {
-    @trigger_error('fileUriTarget() is deprecated in drupal:8.8.0. It will be removed from drupal:9.0.0. See https://www.drupal.org/node/3035273', E_USER_DEPRECATED);
-    return StreamWrapperManager::getScheme($uri);
-  }
-
-  /**
-   * Provides a wrapper for file_uri_target() to allow unit testing.
-   *
-   * Returns the part of a URI after the schema.
-   *
-   * @param string $uri
-   *   A stream, referenced as "scheme://target" or "data:target".
-   *
-   * @return string|bool
-   *   A string containing the target (path), or FALSE if none.
-   *   For example, the URI "public://sample/test.txt" would return
-   *   "sample/test.txt".
-   *
-   * @deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. Use
-   *   \Drupal\Core\StreamWrapper\StreamWrapperManager::getUriTarget() instead.
-   *
-   * @see https://www.drupal.org/node/3035273
-   */
-  protected function fileUriTarget($uri) {
-    @trigger_error('fileUriTarget() is deprecated in drupal:8.8.0. It will be removed from drupal:9.0.0. See https://www.drupal.org/node/3035273', E_USER_DEPRECATED);
-    return StreamWrapperManager::getTarget($uri);
-  }
-
-  /**
    * Provides a wrapper to allow unit testing.
    *
    * Gets the default file stream implementation.
