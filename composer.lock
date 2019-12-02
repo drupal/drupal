@@ -653,7 +653,7 @@
             "dist": {
                 "type": "path",
                 "url": "core",
-                "reference": "8a116e21db8b18192ac8b1227498a885ab72fb16"
+                "reference": "b7da7886127a21759320836244dee604710f1c91"
             },
             "require": {
                 "asm89/stack-cors": "^1.1",
@@ -679,6 +679,7 @@
                 "masterminds/html5": "^2.1",
                 "pear/archive_tar": "^1.4.8",
                 "php": ">=7.0.8",
+                "psr/log": "^1.0",
                 "stack/builder": "^1.0",
                 "symfony-cmf/routing": "^1.4",
                 "symfony/class-loader": "~3.4.0",
