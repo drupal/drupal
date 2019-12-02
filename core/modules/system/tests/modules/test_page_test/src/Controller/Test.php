@@ -155,4 +155,17 @@ class Test {
     return new RedirectResponse(Url::fromRoute('test_page_test.test_page', [], ['absolute' => TRUE])->toString(), 302);
   }
 
+  /**
+   * Returns a page while triggering deprecation notices.
+   */
+  public function deprecations() {
+    // Create 2 identical deprecation messages. This should only trigger a
+    // single response header.
+    @trigger_error('Test deprecation message', E_USER_DEPRECATED);
+    @trigger_error('Test deprecation message', E_USER_DEPRECATED);
+    return [
+      '#markup' => 'Content that triggers deprecation messages',
+    ];
+  }
+
 }

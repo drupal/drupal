@@ -743,4 +743,37 @@ class BrowserTestBaseTest extends BrowserTestBase {
     $assert->assertNoEscaped("<script>alert('Marked safe');alert(\"Marked safe\");</script>");
   }
 
+  /**
+   * Tests that deprecation headers do not get duplicated.
+   *
+   * @group legacy
+   *
+   * @see \Drupal\Core\Test\HttpClientMiddleware\TestHttpClientMiddleware::__invoke()
+   */
+  public function testDeprecationHeaders() {
+    $this->drupalGet('/test-deprecations');
+
+    $deprecation_messages = [];
+    foreach ($this->getSession()->getResponseHeaders() as $name => $values) {
+      if (preg_match('/^X-Drupal-Assertion-[0-9]+$/', $name, $matches)) {
+        foreach ($values as $value) {
+          // Call \Drupal\simpletest\WebTestBase::error() with the parameters from
+          // the header.
+          $parameters = unserialize(urldecode($value));
+          if (count($parameters) === 3) {
+            if ($parameters[1] === 'User deprecated function') {
+              $deprecation_messages[] = (string) $parameters[0];
+            }
+          }
+        }
+      }
+    }
+
+    $this->assertContains('Test deprecation message', $deprecation_messages);
+    $test_deprecation_messages = array_filter($deprecation_messages, function ($message) {
+      return $message === 'Test deprecation message';
+    });
+    $this->assertCount(1, $test_deprecation_messages);
+  }
+
 }
