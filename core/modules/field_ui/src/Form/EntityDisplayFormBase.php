@@ -14,7 +14,6 @@ use Drupal\Core\Field\FieldTypePluginManagerInterface;
 use Drupal\Core\Field\PluginSettingsInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
-use Drupal\field_ui\Element\FieldUiTable;
 use Drupal\field_ui\FieldUI;
 
 /**
@@ -712,39 +711,6 @@ abstract class EntityDisplayFormBase extends EntityForm {
 
     // Return the whole table.
     return $form['fields'];
-  }
-
-  /**
-   * Performs pre-render tasks on field_ui_table elements.
-   *
-   * @param array $elements
-   *   A structured array containing two sub-levels of elements. Properties
-   *   used:
-   *   - #tabledrag: The value is a list of $options arrays that are passed to
-   *     drupal_attach_tabledrag(). The HTML ID of the table is added to each
-   *     $options array.
-   *
-   * @return array
-   *
-   * @see \Drupal\Core\Render\RendererInterface::render()
-   * @see \Drupal\Core\Render\Element\Table::preRenderTable()
-   *
-   * @deprecated in drupal:8.0.0 and is removed from drupal:9.0.0.
-   */
-  public function tablePreRender($elements) {
-    return FieldUiTable::tablePreRender($elements);
-  }
-
-  /**
-   * Determines the rendering order of an array representing a tree.
-   *
-   * Callback for array_reduce() within
-   * \Drupal\field_ui\Form\EntityDisplayFormBase::tablePreRender().
-   *
-   * @deprecated in drupal:8.0.0 and is removed from drupal:9.0.0.
-   */
-  public function reduceOrder($array, $a) {
-    return FieldUiTable::reduceOrder($array, $a);
   }
 
   /**
