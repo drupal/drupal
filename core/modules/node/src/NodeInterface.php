@@ -146,33 +146,4 @@ interface NodeInterface extends ContentEntityInterface, EntityChangedInterface, 
    */
   public function setRevisionCreationTime($timestamp);
 
-  /**
-   * Gets the node revision author.
-   *
-   * @return \Drupal\user\UserInterface
-   *   The user entity for the revision author.
-   *
-   * @deprecated in drupal:8.2.0 and is removed from drupal:9.0.0. Use
-   *   \Drupal\Core\Entity\RevisionLogInterface::getRevisionUser() instead.
-   *
-   * @see https://www.drupal.org/node/3069750
-   */
-  public function getRevisionAuthor();
-
-  /**
-   * Sets the node revision author.
-   *
-   * @param int $uid
-   *   The user ID of the revision author.
-   *
-   * @return $this
-   *   The called node entity.
-   *
-   * @deprecated in drupal:8.2.0 and is removed from drupal:9.0.0. Use
-   *   \Drupal\Core\Entity\RevisionLogInterface::setRevisionUserId() instead.
-   *
-   * @see https://www.drupal.org/node/3069750
-   */
-  public function setRevisionAuthorId($uid);
-
 }

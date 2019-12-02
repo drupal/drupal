@@ -62,18 +62,10 @@ class Node extends WizardPluginBase {
    * @param \Drupal\Core\Entity\EntityFieldManagerInterface $entity_field_manager
    *   The entity field manager.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityTypeBundleInfoInterface $bundle_info_service, EntityDisplayRepositoryInterface $entity_display_repository = NULL, EntityFieldManagerInterface $entity_field_manager = NULL) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityTypeBundleInfoInterface $bundle_info_service, EntityDisplayRepositoryInterface $entity_display_repository, EntityFieldManagerInterface $entity_field_manager) {
     parent::__construct($configuration, $plugin_id, $plugin_definition, $bundle_info_service);
 
-    if (!$entity_display_repository) {
-      @trigger_error('The entity_display.repository service must be passed to ' . __METHOD__ . ', it is required before Drupal 9.0.0. See https://www.drupal.org/node/2835616.', E_USER_DEPRECATED);
-      $entity_display_repository = \Drupal::service('entity_display.repository');
-    }
     $this->entityDisplayRepository = $entity_display_repository;
-    if (!$entity_field_manager) {
-      @trigger_error('The entity_field.manager service must be passed to ' . __METHOD__ . ', it is required before Drupal 9.0.0. See https://www.drupal.org/node/2835616.', E_USER_DEPRECATED);
-      $entity_field_manager = \Drupal::service('entity_field.manager');
-    }
     $this->entityFieldManager = $entity_field_manager;
   }
 

@@ -98,14 +98,4 @@ class NodeOwnerTest extends EntityKernelTestBase {
     $this->assertEquals($user->id(), $node->getOwnerId());
   }
 
-  /**
-   * Tests the legacy method used as the default entity owner.
-   *
-   * @group legacy
-   * @expectedDeprecation The ::getCurrentUserId method is deprecated in 8.6.x and will be removed before 9.0.0.
-   */
-  public function testGetCurrentUserId() {
-    $this->assertEquals(['0'], Node::getCurrentUserId());
-  }
-
 }

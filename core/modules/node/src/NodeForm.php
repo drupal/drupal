@@ -210,30 +210,6 @@ class NodeForm extends ContentEntityForm {
   }
 
   /**
-   * Entity builder updating the node status with the submitted value.
-   *
-   * @param string $entity_type_id
-   *   The entity type identifier.
-   * @param \Drupal\node\NodeInterface $node
-   *   The node updated with the submitted values.
-   * @param array $form
-   *   The complete form array.
-   * @param \Drupal\Core\Form\FormStateInterface $form_state
-   *   The current state of the form.
-   *
-   * @see \Drupal\node\NodeForm::form()
-   *
-   * @deprecated in drupal:8.4.0 and is removed from drupal:9.0.0.
-   *   The "Publish" button was removed.
-   */
-  public function updateStatus($entity_type_id, NodeInterface $node, array $form, FormStateInterface $form_state) {
-    $element = $form_state->getTriggeringElement();
-    if (isset($element['#published_status'])) {
-      $element['#published_status'] ? $node->setPublished() : $node->setUnpublished();
-    }
-  }
-
-  /**
    * {@inheritdoc}
    */
   protected function actions(array $form, FormStateInterface $form_state) {
