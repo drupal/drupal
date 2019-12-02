@@ -118,30 +118,3 @@ function twig_render_template($template_file, array $variables) {
   // This output has already been rendered and is therefore considered safe.
   return Markup::create(implode('', $output));
 }
-
-/**
- * Removes child elements from a copy of the original array.
- *
- * Creates a copy of the renderable array and removes child elements by key
- * specified through filter's arguments. The copy can be printed without these
- * elements. The original renderable array is still available and can be used
- * to print child elements in their entirety in the twig template.
- *
- * @param array|object $element
- *   The parent renderable array to exclude the child items.
- * @param string[] ...
- *   The string keys of $element to prevent printing.
- *
- * @return array
- *   The filtered renderable array.
- *
- * @deprecated in Drupal 8.7.x and will be removed before 9.0.0. Use
- *   \Drupal\Core\Template\TwigExtension::withoutFilter() instead.
- */
-function twig_without($element) {
-  @trigger_error('twig_without() is deprecated in Drupal 8.7.x and will be removed before Drupal 9.0.0. Use \Drupal\Core\Template\TwigExtension::withoutFilter(). See https://www.drupal.org/node/3011154.', E_USER_DEPRECATED);
-  /** @var \Drupal\Core\Template\TwigExtension $extension */
-  $extension = \Drupal::service('twig.extension');
-
-  return call_user_func_array([$extension, 'withoutFilter'], func_get_args());
-}
