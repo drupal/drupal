@@ -30,15 +30,16 @@ class FilterEntityBundleTest extends ViewsKernelTestBase {
   public function testFilterEntity() {
     $this->installEntitySchema('user');
     $this->installEntitySchema('node');
-    NodeType::create(['type' => 'test_bundle'])->save();
-    NodeType::create(['type' => 'test_bundle_2'])->save();
+    NodeType::create(['type' => 'test_bundle', 'name' => 'Test 1'])->save();
+    NodeType::create(['type' => 'test_bundle_2', 'name' => 'Test 2'])->save();
+    NodeType::create(['type' => '180575', 'name' => '180575'])->save();
 
     $bundle_info = $this->container->get('entity_type.bundle.info')->getBundleInfo('node');
 
     $entities['count'] = 0;
 
     foreach ($bundle_info as $key => $info) {
-      for ($i = 0; $i < 5; $i++) {
+      for ($i = 0; $i < 3; $i++) {
         $entity = Node::create([
           'title' => $this->randomString(),
           'uid' => 1,
@@ -54,6 +55,7 @@ class FilterEntityBundleTest extends ViewsKernelTestBase {
     // Tests \Drupal\views\Plugin\views\filter\Bundle::calculateDependencies().
     $expected = [
       'config' => [
+        'node.type.180575',
         'node.type.test_bundle',
         'node.type.test_bundle_2',
       ],
