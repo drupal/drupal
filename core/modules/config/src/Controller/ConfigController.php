@@ -113,22 +113,14 @@ class ConfigController implements ContainerInjectionInterface {
    * @param \Drupal\Core\Config\ImportStorageTransformer $import_transformer
    *   The import transformer service.
    */
-  public function __construct(StorageInterface $target_storage, StorageInterface $sync_storage, ConfigManagerInterface $config_manager, FileDownloadController $file_download_controller, DiffFormatter $diff_formatter, FileSystemInterface $file_system, StorageInterface $export_storage = NULL, ImportStorageTransformer $import_transformer = NULL) {
+  public function __construct(StorageInterface $target_storage, StorageInterface $sync_storage, ConfigManagerInterface $config_manager, FileDownloadController $file_download_controller, DiffFormatter $diff_formatter, FileSystemInterface $file_system, StorageInterface $export_storage, ImportStorageTransformer $import_transformer) {
     $this->targetStorage = $target_storage;
     $this->syncStorage = $sync_storage;
     $this->configManager = $config_manager;
     $this->fileDownloadController = $file_download_controller;
     $this->diffFormatter = $diff_formatter;
     $this->fileSystem = $file_system;
-    if (is_null($export_storage)) {
-      @trigger_error('The config.storage.export service must be passed to ConfigController::__construct(), it is required before Drupal 9.0.0. See https://www.drupal.org/node/3037022.', E_USER_DEPRECATED);
-      $export_storage = \Drupal::service('config.storage.export');
-    }
     $this->exportStorage = $export_storage;
-    if (is_null($import_transformer)) {
-      @trigger_error('The config.import_transformer service must be passed to ConfigController::__construct(), it is required before Drupal 9.0.0. See https://www.drupal.org/node/3066005.', E_USER_DEPRECATED);
-      $import_transformer = \Drupal::service('config.import_transformer');
-    }
     $this->importTransformer = $import_transformer;
   }
 

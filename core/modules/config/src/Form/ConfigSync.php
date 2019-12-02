@@ -150,7 +150,7 @@ class ConfigSync extends FormBase {
    * @param \Drupal\Core\Config\ImportStorageTransformer $import_transformer
    *   The import transformer service.
    */
-  public function __construct(StorageInterface $sync_storage, StorageInterface $active_storage, StorageInterface $snapshot_storage, LockBackendInterface $lock, EventDispatcherInterface $event_dispatcher, ConfigManagerInterface $config_manager, TypedConfigManagerInterface $typed_config, ModuleHandlerInterface $module_handler, ModuleInstallerInterface $module_installer, ThemeHandlerInterface $theme_handler, RendererInterface $renderer, ModuleExtensionList $extension_list_module, ImportStorageTransformer $import_transformer = NULL) {
+  public function __construct(StorageInterface $sync_storage, StorageInterface $active_storage, StorageInterface $snapshot_storage, LockBackendInterface $lock, EventDispatcherInterface $event_dispatcher, ConfigManagerInterface $config_manager, TypedConfigManagerInterface $typed_config, ModuleHandlerInterface $module_handler, ModuleInstallerInterface $module_installer, ThemeHandlerInterface $theme_handler, RendererInterface $renderer, ModuleExtensionList $extension_list_module, ImportStorageTransformer $import_transformer) {
     $this->syncStorage = $sync_storage;
     $this->activeStorage = $active_storage;
     $this->snapshotStorage = $snapshot_storage;
@@ -163,10 +163,6 @@ class ConfigSync extends FormBase {
     $this->themeHandler = $theme_handler;
     $this->renderer = $renderer;
     $this->moduleExtensionList = $extension_list_module;
-    if (is_null($import_transformer)) {
-      @trigger_error('The config.import_transformer service must be passed to ConfigSync::__construct(), it is required before Drupal 9.0.0. See https://www.drupal.org/node/3066005.', E_USER_DEPRECATED);
-      $import_transformer = \Drupal::service('config.import_transformer');
-    }
     $this->importTransformer = $import_transformer;
   }
 
@@ -388,42 +384,6 @@ class ConfigSync extends FormBase {
         }
       }
     }
-  }
-
-  /**
-   * Processes the config import batch and persists the importer.
-   *
-   * @param \Drupal\Core\Config\ConfigImporter $config_importer
-   *   The batch config importer object to persist.
-   * @param string $sync_step
-   *   The synchronization step to do.
-   * @param array $context
-   *   The batch context.
-   *
-   * @deprecated in drupal:8.6.0 and is removed from drupal:9.0.0. Use
-   *   \Drupal\Core\Config\Importer\ConfigImporterBatch::process() instead.
-   *
-   * @see https://www.drupal.org/node/2897299
-   */
-  public static function processBatch(ConfigImporter $config_importer, $sync_step, &$context) {
-    @trigger_error('\Drupal\config\Form\ConfigSync::processBatch() deprecated in Drupal 8.6.0 and will be removed before 9.0.0. Use \Drupal\Core\Config\Importer\ConfigImporterBatch::process() instead. See https://www.drupal.org/node/2897299');
-    ConfigImporterBatch::process($config_importer, $sync_step, $context);
-  }
-
-  /**
-   * Finish batch.
-   *
-   * This function is a static function to avoid serializing the ConfigSync
-   * object unnecessarily.
-   *
-   * @deprecated in drupal:8.6.0 and is removed from drupal:9.0.0. Use
-   *   \Drupal\Core\Config\Importer\ConfigImporterBatch::finish() instead.
-   *
-   * @see https://www.drupal.org/node/2897299
-   */
-  public static function finishBatch($success, $results, $operations) {
-    @trigger_error('\Drupal\config\Form\ConfigSync::finishBatch() deprecated in Drupal 8.6.0 and will be removed before 9.0.0. Use \Drupal\Core\Config\Importer\ConfigImporterBatch::finish() instead. See https://www.drupal.org/node/2897299');
-    ConfigImporterBatch::finish($success, $results, $operations);
   }
 
 }
