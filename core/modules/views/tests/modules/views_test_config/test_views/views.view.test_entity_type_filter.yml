@@ -101,6 +101,7 @@ display:
           field: type
           relationship: none
           value:
+            180575: '180575'
             test_bundle: test_bundle
             test_bundle_2: test_bundle_2
           plugin_id: bundle
