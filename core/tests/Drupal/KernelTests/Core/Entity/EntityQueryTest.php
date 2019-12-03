@@ -1230,7 +1230,9 @@ EOF;
 
     // Apply table prefixes to the expected sql.
     $expected = \Drupal::database()->prefixTables($expected);
-    $this->assertEquals($expected, (string) $query);
+    // PostgreSQL adds " NULLS FIRST" to the end of the query so
+    // assertContains() is used for maximum compatibility.
+    $this->assertContains($expected, (string) $query);
   }
 
 }
