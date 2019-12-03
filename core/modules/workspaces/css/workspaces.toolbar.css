@@ -239,6 +239,7 @@
     position: fixed;
     top: 0;
     right: 0;
+    box-sizing: content-box;
     width: calc(30% - 80px);
     height: 140px;
     padding: 20px 40px 0;
