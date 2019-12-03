@@ -12,7 +12,6 @@ use Drupal\Core\Link;
 use Drupal\Core\Render\RendererInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Routing\UrlGeneratorInterface;
-use Drupal\Core\Routing\UrlGeneratorTrait;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\StringTranslation\TranslationInterface;
@@ -34,7 +33,6 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 class EntityController implements ContainerInjectionInterface {
 
   use StringTranslationTrait;
-  use UrlGeneratorTrait;
 
   /**
    * The entity type manager.

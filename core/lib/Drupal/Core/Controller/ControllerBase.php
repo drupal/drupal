@@ -4,9 +4,7 @@ namespace Drupal\Core\Controller;
 
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Logger\LoggerChannelTrait;
-use Drupal\Core\Routing\LinkGeneratorTrait;
 use Drupal\Core\Routing\RedirectDestinationTrait;
-use Drupal\Core\Routing\UrlGeneratorTrait;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Url;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -36,12 +34,10 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
  */
 abstract class ControllerBase implements ContainerInjectionInterface {
 
-  use LinkGeneratorTrait;
   use LoggerChannelTrait;
   use MessengerTrait;
   use RedirectDestinationTrait;
   use StringTranslationTrait;
-  use UrlGeneratorTrait;
 
   /**
    * The entity type manager.

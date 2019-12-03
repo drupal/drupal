@@ -6,7 +6,6 @@ use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Entity\EntityPublishedInterface;
 use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Routing\UrlGeneratorTrait;
 use Drupal\Core\Url;
 use Drupal\views\Entity\View;
 use Drupal\views\Views;
@@ -36,8 +35,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * base table.
  */
 abstract class WizardPluginBase extends PluginBase implements WizardInterface {
-
-  use UrlGeneratorTrait;
 
   /**
    * The base table connected with the wizard.

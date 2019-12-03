@@ -323,7 +323,7 @@ class UrlHelper {
    * - If the value is a well-formed (per RFC 3986) relative URL or
    *   absolute URL that does not use a dangerous protocol (like
    *   "javascript:"), then the URL remains unchanged. This includes all
-   *   URLs generated via Url::toString() and UrlGeneratorTrait::url().
+   *   URLs generated via Url::toString().
    * - If the value is a well-formed absolute URL with a dangerous protocol,
    *   the protocol is stripped. This process is repeated on the remaining URL
    *   until it is stripped down to a safe protocol.
@@ -347,7 +347,6 @@ class UrlHelper {
    *
    * @see \Drupal\Component\Utility\Html::escape()
    * @see \Drupal\Core\Url::toString()
-   * @see \Drupal\Core\Routing\UrlGeneratorTrait::url()
    * @see \Drupal\Core\Url::fromUri()
    */
   public static function stripDangerousProtocols($uri) {

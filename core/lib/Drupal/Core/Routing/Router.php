@@ -3,9 +3,7 @@
 namespace Drupal\Core\Routing;
 
 use Drupal\Core\Path\CurrentPathStack;
-use Drupal\Core\Routing\Enhancer\RouteEnhancerInterface;
 use Symfony\Cmf\Component\Routing\LazyRouteCollection;
-use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 use Symfony\Cmf\Component\Routing\RouteProviderInterface as BaseRouteProviderInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Exception\MethodNotAllowedException;
@@ -254,9 +252,6 @@ class Router extends UrlMatcher implements RequestMatcherInterface, RouterInterf
    */
   protected function applyRouteEnhancers($defaults, Request $request) {
     foreach ($this->enhancers as $enhancer) {
-      if ($enhancer instanceof RouteEnhancerInterface && !$enhancer->applies($defaults[RouteObjectInterface::ROUTE_OBJECT])) {
-        continue;
-      }
       $defaults = $enhancer->enhance($defaults, $request);
     }
 

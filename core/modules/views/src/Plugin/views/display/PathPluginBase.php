@@ -5,7 +5,6 @@ namespace Drupal\views\Plugin\views\display;
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Language\LanguageInterface;
-use Drupal\Core\Routing\UrlGeneratorTrait;
 use Drupal\Core\State\StateInterface;
 use Drupal\Core\Routing\RouteCompiler;
 use Drupal\Core\Routing\RouteProviderInterface;
@@ -23,8 +22,6 @@ use Symfony\Component\Routing\RouteCollection;
  * @see \Drupal\views\EventSubscriber\RouteSubscriber
  */
 abstract class PathPluginBase extends DisplayPluginBase implements DisplayRouterInterface, DisplayMenuInterface {
-
-  use UrlGeneratorTrait;
 
   /**
    * The route provider.
