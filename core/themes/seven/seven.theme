@@ -89,10 +89,10 @@ function seven_preprocess_block_content_add_list(&$variables) {
 /**
  * Implements hook_preprocess_block() for block content.
  *
- * Disables contextual links for all blocks.
+ * Disables contextual links for all blocks except for layout builder blocks.
  */
 function seven_preprocess_block(&$variables) {
-  if (isset($variables['title_suffix']['contextual_links'])) {
+  if (isset($variables['title_suffix']['contextual_links']) && !isset($variables['elements']['#contextual_links']['layout_builder_block'])) {
     unset($variables['title_suffix']['contextual_links']);
     unset($variables['elements']['#contextual_links']);
 
