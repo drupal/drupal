@@ -5,6 +5,9 @@
  * Code required only when comparing available updates to existing data.
  */
 
+use Drupal\update\UpdateFetcherInterface;
+use Drupal\update\UpdateManagerInterface;
+
 /**
  * Determines version and type information for currently installed projects.
  *
@@ -95,7 +98,7 @@ function update_calculate_project_data($available) {
       update_calculate_project_update_status($projects[$project], $available[$project]);
     }
     else {
-      $projects[$project]['status'] = UPDATE_UNKNOWN;
+      $projects[$project]['status'] = UpdateFetcherInterface::UNKNOWN;
       $projects[$project]['reason'] = t('No available releases found');
     }
   }
@@ -182,7 +185,7 @@ function update_calculate_project_update_status(&$project_data, $available) {
   if (isset($available['project_status'])) {
     switch ($available['project_status']) {
       case 'insecure':
-        $project_data['status'] = UPDATE_NOT_SECURE;
+        $project_data['status'] = UpdateManagerInterfac::NOT_SECURE;
         if (empty($project_data['extra'])) {
           $project_data['extra'] = [];
         }
@@ -193,7 +196,7 @@ function update_calculate_project_update_status(&$project_data, $available) {
         break;
       case 'unpublished':
       case 'revoked':
-        $project_data['status'] = UPDATE_REVOKED;
+        $project_data['status'] = UpdateManagerInterface::REVOKED;
         if (empty($project_data['extra'])) {
           $project_data['extra'] = [];
         }
@@ -203,7 +206,7 @@ function update_calculate_project_update_status(&$project_data, $available) {
         ];
         break;
       case 'unsupported':
-        $project_data['status'] = UPDATE_NOT_SUPPORTED;
+        $project_data['status'] = UpdateManagerInterface::NOT_SUPPORTED;
         if (empty($project_data['extra'])) {
           $project_data['extra'] = [];
         }
@@ -213,7 +216,7 @@ function update_calculate_project_update_status(&$project_data, $available) {
         ];
         break;
       case 'not-fetched':
-        $project_data['status'] = UPDATE_NOT_FETCHED;
+        $project_data['status'] = UpdateFetcherInterface::NOT_FETCHED;
         $project_data['reason'] = t('Failed to get available update data.');
         break;
 
@@ -252,7 +255,7 @@ function update_calculate_project_update_status(&$project_data, $available) {
     // its major version was not in the 'supported_majors' list. We should
     // find the best release from the recommended major version.
     $target_major = $available['recommended_major'];
-    $project_data['status'] = UPDATE_NOT_SUPPORTED;
+    $project_data['status'] = UpdateManagerInterface::NOT_SUPPORTED;
   }
   elseif (isset($available['default_major'])) {
     // Older release history XML file without recommended, so recommend
@@ -276,12 +279,12 @@ function update_calculate_project_update_status(&$project_data, $available) {
   $release_patch_changed = '';
   $patch = '';
 
-  // If the project is marked as UPDATE_FETCH_PENDING, it means that the
-  // data we currently have (if any) is stale, and we've got a task queued
-  // up to (re)fetch the data. In that case, we mark it as such, merge in
-  // whatever data we have (e.g. project title and link), and move on.
-  if (!empty($available['fetch_status']) && $available['fetch_status'] == UPDATE_FETCH_PENDING) {
-    $project_data['status'] = UPDATE_FETCH_PENDING;
+  // If the project is marked as UpdateFetcherInterface::FETCH_PENDING, it
+  // means that the data we currently have (if any) is stale, and we've got a
+  // task queued up to (re)fetch the data. In that case, we mark it as such,
+  // merge in whatever data we have (e.g. project title and link), and move on.
+  if (!empty($available['fetch_status']) && $available['fetch_status'] == UpdateFetcherInterface::FETCH_PENDING) {
+    $project_data['status'] = UpdateFetcherInterface::FETCH_PENDING;
     $project_data['reason'] = t('No available update data');
     $project_data['fetch_status'] = $available['fetch_status'];
     return;
@@ -289,7 +292,7 @@ function update_calculate_project_update_status(&$project_data, $available) {
 
   // Defend ourselves from XML history files that contain no releases.
   if (empty($available['releases'])) {
-    $project_data['status'] = UPDATE_UNKNOWN;
+    $project_data['status'] = UpdateFetcherInterface::UNKNOWN;
     $project_data['reason'] = t('No available releases found');
     return;
   }
@@ -298,10 +301,10 @@ function update_calculate_project_update_status(&$project_data, $available) {
     if ($project_data['existing_version'] === $version) {
       if (isset($release['terms']['Release type']) &&
           in_array('Insecure', $release['terms']['Release type'])) {
-        $project_data['status'] = UPDATE_NOT_SECURE;
+        $project_data['status'] = UpdateManagerInterface::NOT_SECURE;
       }
       elseif ($release['status'] == 'unpublished') {
-        $project_data['status'] = UPDATE_REVOKED;
+        $project_data['status'] = UpdateManagerInterface::REVOKED;
         if (empty($project_data['extra'])) {
           $project_data['extra'] = [];
         }
@@ -313,7 +316,7 @@ function update_calculate_project_update_status(&$project_data, $available) {
       }
       elseif (isset($release['terms']['Release type']) &&
               in_array('Unsupported', $release['terms']['Release type'])) {
-        $project_data['status'] = UPDATE_NOT_SUPPORTED;
+        $project_data['status'] = UpdateManagerInterface::NOT_SUPPORTED;
         if (empty($project_data['extra'])) {
           $project_data['extra'] = [];
         }
@@ -433,7 +436,7 @@ function update_calculate_project_update_status(&$project_data, $available) {
   // If we don't know what to recommend, there's nothing we can report.
   // Bail out early.
   if (!isset($project_data['recommended'])) {
-    $project_data['status'] = UPDATE_UNKNOWN;
+    $project_data['status'] = UpdateFetcherInterface::UNKNOWN;
     $project_data['reason'] = t('No available releases found');
     return;
   }
@@ -455,29 +458,29 @@ function update_calculate_project_update_status(&$project_data, $available) {
   switch ($project_data['install_type']) {
     case 'official':
       if ($project_data['existing_version'] === $project_data['recommended'] || $project_data['existing_version'] === $project_data['latest_version']) {
-        $project_data['status'] = UPDATE_CURRENT;
+        $project_data['status'] = UpdateManagerInterface::CURRENT;
       }
       else {
-        $project_data['status'] = UPDATE_NOT_CURRENT;
+        $project_data['status'] = UpdateManagerInterface::NOT_CURRENT;
       }
       break;
 
     case 'dev':
       $latest = $available['releases'][$project_data['latest_dev']];
       if (empty($project_data['datestamp'])) {
-        $project_data['status'] = UPDATE_NOT_CHECKED;
+        $project_data['status'] = UpdateFetcherInterface::NOT_CHECKED;
         $project_data['reason'] = t('Unknown release date');
       }
       elseif (($project_data['datestamp'] + 100 > $latest['date'])) {
-        $project_data['status'] = UPDATE_CURRENT;
+        $project_data['status'] = UpdateManagerInterface::CURRENT;
       }
       else {
-        $project_data['status'] = UPDATE_NOT_CURRENT;
+        $project_data['status'] = UpdateManagerInterface::NOT_CURRENT;
       }
       break;
 
     default:
-      $project_data['status'] = UPDATE_UNKNOWN;
+      $project_data['status'] = UpdateFetcherInterface::UNKNOWN;
       $project_data['reason'] = t('Invalid info');
   }
 }
