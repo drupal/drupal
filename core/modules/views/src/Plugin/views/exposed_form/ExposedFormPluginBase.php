@@ -2,7 +2,6 @@
 
 namespace Drupal\views\Plugin\views\exposed_form;
 
-use Drupal\Component\Utility\Html;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheableDependencyInterface;
 use Drupal\Core\Form\FormState;
@@ -208,7 +207,7 @@ abstract class ExposedFormPluginBase extends PluginBase implements CacheableDepe
     $exposed_sorts = [];
     foreach ($this->view->sort as $id => $handler) {
       if ($handler->canExpose() && $handler->isExposed()) {
-        $exposed_sorts[$id] = Html::escape($handler->options['expose']['label']);
+        $exposed_sorts[$id] = $handler->options['expose']['label'];
       }
     }
 
