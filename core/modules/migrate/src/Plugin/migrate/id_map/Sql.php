@@ -971,7 +971,7 @@ class Sql extends PluginBase implements MigrateIdMapInterface, ContainerFactoryP
    * {@inheritdoc}
    */
   public function getHighestId() {
-    // Ensure that at the ID an integer.
+    // Ensure that the first ID is an integer.
     $keys = $this->migration->getDestinationPlugin()->getIds();
     if (reset($keys)['type'] !== 'integer') {
       throw new \LogicException('To determine the highest migrated ID the first ID must be an integer');
