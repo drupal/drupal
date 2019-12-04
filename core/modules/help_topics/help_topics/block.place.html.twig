@@ -5,6 +5,7 @@ related:
   - block.configure
 ---
 {% set layout_url = render_var(url('block.admin_display')) %}
+{% set configure = render_var(url('help.help_topic', {'id': 'block.configure'})) %}
 <h2>{% trans %}Goal{% endtrans %}</h2>
 <p>{% trans %}Place a block into a theme's region. {% endtrans %}</p>
 <h2>{% trans %}Steps{% endtrans %}</h2>
@@ -14,5 +15,5 @@ related:
   <li>{% trans %}Optionally, click <em>Demonstrate block regions</em> to see the regions of the theme.{% endtrans %}</li>
   <li>{% trans %}Find the region where you want the block, and click <em>Place block</em> in that region. A modal dialog will pop up.{% endtrans %}</li>
   <li>{% trans %}Find the block you want to place and click <em>Place block</em>. A <em>Configure block</em> modal dialog will pop up.{% endtrans %}</li>
-  <li>{% trans %}Configure the block and click <em>Save block</em> (see related topic for configuration details).{% endtrans %}</li>
+  <li>{% trans %}Configure the block and click <em>Save block</em>; see <a href="{{ configure }}">Configuring a previously-placed block</a> for configuration details.{% endtrans %}</li>
 </ol>
