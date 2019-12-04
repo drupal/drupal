@@ -1,6 +1,25 @@
 Drupal 7.xx, xxxx-xx-xx (development version)
 -----------------------
 
+Drupal 7.68, 2019-12-04
+-----------------------
+- Fixed: Hide toolbar when printing
+- Fixed: Settings returned via ajax are not run through hook_js_alter()
+- Fixed: Use drupal_http_build_query() in drupal_http_request()
+- Fixed: DrupalRequestSanitizer not found fatal error when bootstrap phase order is changed
+- Fixed: Block web.config in .htaccess (and vice-versa)
+- Fixed: Create "scripts" element to align rendering workflow to how "styles" are handled
+- PHP 7.3: Fixed 'Cannot change session id when session is active'
+- PHP 7.1: Fixed 'A non-numeric value encountered in theme_pager()'
+- PHP 7.x: Fixed file.inc generated .htaccess does not cover PHP 7
+- PHP 5.3: Fixed check_plain() 'Invalid multibyte sequence in argument' test failures
+- Fixed: Allow passing data as array to drupal_http_request()
+- Fixed: Skip module_invoke/module_hook in calling hook_watchdog (excessive function_exist)
+- Fixed: HTTP status 200 returned for 'Additional uncaught exception thrown while handling exception'
+- Fixed: theme_table() should take an optional footer variable and produce <tfoot>
+- Fixed: 'uasort() expects parameter 1 to be array, null given in node_view_multiple()'
+- [regression] Fix default.settings.php permission
+
 Drupal 7.67, 2019-05-08
 -----------------------
 - Fixed security issues:
