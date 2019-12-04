@@ -17,6 +17,8 @@ use Drupal\Core\Url;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Site\Settings;
+use Drupal\update\UpdateFetcherInterface;
+use Drupal\update\UpdateManagerInterface;
 
 // These are internally used constants for this code, do not modify.
 
@@ -207,7 +209,7 @@ function update_page_top() {
       else {
         if (isset($status[$type])
             && isset($status[$type]['reason'])
-            && $status[$type]['reason'] === UPDATE_NOT_SECURE) {
+            && $status[$type]['reason'] === UpdateManagerInterface::NOT_SECURE) {
           \Drupal::messenger()->addError($status[$type]['description']);
         }
       }
@@ -382,18 +384,18 @@ function update_get_available($refresh = FALSE) {
     // will be changed, so this is the only way we can be sure we're not showing
     // bogus information right after they upgrade.
     if ($project['info']['_info_file_ctime'] > $available[$key]['last_fetch']) {
-      $available[$key]['fetch_status'] = UPDATE_FETCH_PENDING;
+      $available[$key]['fetch_status'] = UpdateFetcherInterface::FETCH_PENDING;
     }
 
     // If we have project data but no release data, we need to fetch. This
     // can be triggered when we fail to contact a release history server.
     if (empty($available[$key]['releases']) && !$available[$key]['last_fetch']) {
-      $available[$key]['fetch_status'] = UPDATE_FETCH_PENDING;
+      $available[$key]['fetch_status'] = UpdateFetcherInterface::FETCH_PENDING;
     }
 
     // If we think this project needs to fetch, actually create the task now
     // and remember that we think we're missing some data.
-    if (!empty($available[$key]['fetch_status']) && $available[$key]['fetch_status'] == UPDATE_FETCH_PENDING) {
+    if (!empty($available[$key]['fetch_status']) && $available[$key]['fetch_status'] == UpdateFetcherInterface::FETCH_PENDING) {
       \Drupal::service('update.processor')->createFetchTask($project);
       $needs_refresh = TRUE;
     }
@@ -521,12 +523,13 @@ function update_fetch_data_finished($success, $results) {
  * @param $params
  *   Array of parameters to indicate what kind of text to include in the message
  *   body. This is a keyed array of message type ('core' or 'contrib') as the
- *   keys, and the status reason constant (UPDATE_NOT_SECURE, etc) for the
- *   values.
+ *   keys, and the status reason constant (UpdateManagerInterface::NOT_SECURE,
+ *   etc) for the values.
  *
  * @see \Drupal\Core\Mail\MailManagerInterface::mail()
  * @see _update_cron_notify()
  * @see _update_message_text()
+ * @see \Drupal\update\UpdateManagerInterface
  */
 function update_mail($key, &$message, $params) {
   $langcode = $message['langcode'];
@@ -569,7 +572,7 @@ function update_mail($key, &$message, $params) {
 function _update_message_text($msg_type, $msg_reason, $langcode = NULL) {
   $text = '';
   switch ($msg_reason) {
-    case UPDATE_NOT_SECURE:
+    case UpdateManagerInterface::NOT_SECURE:
       if ($msg_type == 'core') {
         $text = t('There is a security update available for your version of Drupal. To ensure the security of your server, you should update immediately!', [], ['langcode' => $langcode]);
       }
@@ -578,7 +581,7 @@ function _update_message_text($msg_type, $msg_reason, $langcode = NULL) {
       }
       break;
 
-    case UPDATE_REVOKED:
+    case UpdateManagerInterface::REVOKED:
       if ($msg_type == 'core') {
         $text = t('Your version of Drupal has been revoked and is no longer available for download. Upgrading is strongly recommended!', [], ['langcode' => $langcode]);
       }
@@ -587,7 +590,7 @@ function _update_message_text($msg_type, $msg_reason, $langcode = NULL) {
       }
       break;
 
-    case UPDATE_NOT_SUPPORTED:
+    case UpdateManagerInterface::NOT_SUPPORTED:
       if ($msg_type == 'core') {
         $text = t('Your version of Drupal is no longer supported. Upgrading is strongly recommended!', [], ['langcode' => $langcode]);
       }
@@ -596,7 +599,7 @@ function _update_message_text($msg_type, $msg_reason, $langcode = NULL) {
       }
       break;
 
-    case UPDATE_NOT_CURRENT:
+    case UpdateManagerInterface::NOT_CURRENT:
       if ($msg_type == 'core') {
         $text = t('There are updates available for your version of Drupal. To ensure the proper functioning of your site, you should update as soon as possible.', [], ['langcode' => $langcode]);
       }
@@ -605,10 +608,10 @@ function _update_message_text($msg_type, $msg_reason, $langcode = NULL) {
       }
       break;
 
-    case UPDATE_UNKNOWN:
-    case UPDATE_NOT_CHECKED:
-    case UPDATE_NOT_FETCHED:
-    case UPDATE_FETCH_PENDING:
+    case UpdateFetcherInterface::UNKNOWN:
+    case UpdateFetcherInterface::NOT_CHECKED:
+    case UpdateFetcherInterface::NOT_FETCHED:
+    case UpdateFetcherInterface::FETCH_PENDING:
       if ($msg_type == 'core') {
         $text = t('There was a problem checking <a href=":update-report">available updates</a> for Drupal.', [':update-report' => Url::fromRoute('update.status')->toString()], ['langcode' => $langcode]);
       }
