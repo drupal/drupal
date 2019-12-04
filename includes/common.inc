@@ -760,8 +760,8 @@ function drupal_access_denied() {
  *   (optional) An array that can have one or more of the following elements:
  *   - headers: An array containing request headers to send as name/value pairs.
  *   - method: A string containing the request method. Defaults to 'GET'.
- *   - data: An array or object containing the values for the request body or a
- *     string containing the request body, formatted as
+ *   - data: An array containing the values for the request body or a string
+ *     containing the request body, formatted as
  *     'param=value&param=value&...'; to generate this, use
  *     drupal_http_build_query(). Defaults to NULL.
  *   - max_redirects: An integer representing how many times a redirect
@@ -931,8 +931,8 @@ function drupal_http_request($url, array $options = array()) {
     $path .= '?' . $uri['query'];
   }
 
-  // Convert array or object $options['data'] to query string.
-  if (is_array($options['data']) || is_object($options['data'])) {
+  // Convert array $options['data'] to query string.
+  if (is_array($options['data'])) {
     $options['data'] = drupal_http_build_query($options['data']);
   }
 
