@@ -7,8 +7,8 @@
 
 use Drupal\Core\Link;
 use Drupal\Core\Url;
-use Drupal\Update\UpdateFetcherInterface;
-use Drupal\Update\UpdateManagerInterface;
+use Drupal\update\UpdateFetcherInterface;
+use Drupal\update\UpdateManagerInterface;
 
 /**
  * Implements hook_requirements().
