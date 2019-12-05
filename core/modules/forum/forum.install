@@ -11,7 +11,7 @@ use Drupal\taxonomy\Entity\Term;
 /**
  * Implements hook_install().
  */
-function forum_install() {
+function forum_install($is_syncing) {
   // Set the weight of the forum.module to 1 so it is loaded after the taxonomy.module.
   module_set_weight('forum', 1);
   // Do not allow to delete the forum's node type machine name.
@@ -19,7 +19,7 @@ function forum_install() {
   $locked['forum'] = 'forum';
   \Drupal::state()->set('node.type.locked', $locked);
 
-  if (!\Drupal::service('config.installer')->isSyncing()) {
+  if (!$is_syncing) {
     // Create a default forum so forum posts can be created.
     $term = Term::create([
       'name' => t('General discussion'),

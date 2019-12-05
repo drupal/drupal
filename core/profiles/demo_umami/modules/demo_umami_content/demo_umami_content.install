@@ -10,8 +10,8 @@ use Drupal\demo_umami_content\InstallHelper;
 /**
  * Implements hook_install().
  */
-function demo_umami_content_install() {
-  if (!\Drupal::service('config.installer')->isSyncing()) {
+function demo_umami_content_install($is_syncing) {
+  if (!$is_syncing) {
     \Drupal::classResolver(InstallHelper::class)->importContent();
   }
 }
@@ -19,8 +19,8 @@ function demo_umami_content_install() {
 /**
  * Implements hook_uninstall().
  */
-function demo_umami_content_uninstall() {
-  if (!\Drupal::service('config.installer')->isSyncing()) {
+function demo_umami_content_uninstall($is_syncing) {
+  if (!$is_syncing) {
     \Drupal::classResolver(InstallHelper::class)->deleteImportedContent();
   }
 }
