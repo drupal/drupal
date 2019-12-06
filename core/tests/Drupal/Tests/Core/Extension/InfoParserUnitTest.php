@@ -111,7 +111,6 @@ MISSINGKEYS;
   public function testMissingCoreCoreVersionRequirement() {
     $missing_core_and_core_version_requirement = <<<MISSING_CORE_AND_CORE_VERSION_REQUIREMENT
 # info.yml for testing core and core_version_requirement.
-package: Core
 version: VERSION
 type: module
 name: Skynet
@@ -139,6 +138,30 @@ MISSING_CORE_AND_CORE_VERSION_REQUIREMENT;
 
       $this->infoParser->parse(vfsStream::url('modules/fixtures/missing_core_and_core_version_requirement-duplicate.info.txt'));
     }
+  }
+
+  /**
+   * Tests that Testing package modules use a default core_version_requirement.
+   *
+   * @covers ::parse
+   */
+  public function testTestingPackageMissingCoreCoreVersionRequirement() {
+    $missing_core_and_core_version_requirement = <<<MISSING_CORE_AND_CORE_VERSION_REQUIREMENT
+# info.yml for testing core and core_version_requirement.
+package: Testing
+version: VERSION
+type: module
+name: Skynet
+MISSING_CORE_AND_CORE_VERSION_REQUIREMENT;
+
+    vfsStream::setup('modules');
+    vfsStream::create([
+      'fixtures' => [
+        'missing_core_and_core_version_requirement.info.txt' => $missing_core_and_core_version_requirement,
+      ],
+    ]);
+    $info_values = $this->infoParser->parse(vfsStream::url('modules/fixtures/missing_core_and_core_version_requirement.info.txt'));
+    $this->assertSame($info_values['core_version_requirement'], \Drupal::VERSION);
   }
 
   /**
