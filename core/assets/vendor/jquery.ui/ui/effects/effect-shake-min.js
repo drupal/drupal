@@ -1,4 +1,0 @@
-/*! jQuery UI - v1.12.1 - 2017-03-31
-* http://jqueryui.com
-* Copyright jQuery Foundation and other contributors; Licensed  */
-!function(a){"function"==typeof define&&define.amd?define(["jquery","../version","../effect"],a):a(jQuery)}(function(a){return a.effects.define("shake",function(b,c){var d=1,e=a(this),f=b.direction||"left",g=b.distance||20,h=b.times||3,i=2*h+1,j=Math.round(b.duration/i),k="up"===f||"down"===f?"top":"left",l="up"===f||"left"===f,m={},n={},o={},p=e.queue().length;for(a.effects.createPlaceholder(e),m[k]=(l?"-=":"+=")+g,n[k]=(l?"+=":"-=")+2*g,o[k]=(l?"-=":"+=")+2*g,e.animate(m,j,b.easing);d<h;d++)e.animate(n,j,b.easing).animate(o,j,b.easing);e.animate(n,j,b.easing).animate(m,j/2,b.easing).queue(c),a.effects.unshift(e,p,i+1)})});

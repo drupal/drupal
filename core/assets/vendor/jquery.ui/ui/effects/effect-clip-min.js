@@ -1,4 +1,0 @@
-/*! jQuery UI - v1.12.1 - 2017-03-31
-* http://jqueryui.com
-* Copyright jQuery Foundation and other contributors; Licensed  */
-!function(a){"function"==typeof define&&define.amd?define(["jquery","../version","../effect"],a):a(jQuery)}(function(a){return a.effects.define("clip","hide",function(b,c){var d,e={},f=a(this),g=b.direction||"vertical",h="both"===g,i=h||"horizontal"===g,j=h||"vertical"===g;d=f.cssClip(),e.clip={top:j?(d.bottom-d.top)/2:d.top,right:i?(d.right-d.left)/2:d.right,bottom:j?(d.bottom-d.top)/2:d.bottom,left:i?(d.right-d.left)/2:d.left},a.effects.createPlaceholder(f),"show"===b.mode&&(f.cssClip(e.clip),e.clip=d),f.animate(e,{queue:!1,duration:b.duration,easing:b.easing,complete:c})})});

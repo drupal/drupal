@@ -8,12 +8,13 @@
     "node": ">= 8.11"
   },
   "scripts": {
-    "build": "yarn build:css & yarn build:js",
+    "build": "yarn build:css & yarn build:js & yarn build:jqueryui",
     "watch": "yarn watch:css & yarn watch:js",
     "build:css": "cross-env BABEL_ENV=legacy node ./scripts/css/postcss-build.js",
     "watch:css": "cross-env BABEL_ENV=legacy node ./scripts/css/postcss-watch.js",
     "build:js": "cross-env BABEL_ENV=legacy node ./scripts/js/babel-es6-build.js",
     "build:js-dev": "cross-env NODE_ENV=development BABEL_ENV=legacy node ./scripts/js/babel-es6-build.js",
+    "build:jqueryui": "cross-env NODE_ENV=development BABEL_ENV=legacy node ./scripts/js/jqueryui-build.js",
     "watch:js": "cross-env BABEL_ENV=legacy node ./scripts/js/babel-es6-watch.js",
     "watch:js-dev": "cross-env NODE_ENV=development BABEL_ENV=legacy node ./scripts/js/babel-es6-watch.js",
     "lint:core-js": "node ./node_modules/eslint/bin/eslint.js .",
@@ -55,7 +56,8 @@
     "stylelint-checkstyle-formatter": "^0.1.1",
     "stylelint-config-standard": "^18.2.0",
     "stylelint-no-browser-hacks": "^1.2.1",
-    "stylelint-order": "^2.1.0"
+    "stylelint-order": "^2.1.0",
+    "terser": "^4.3.9"
   },
   "//": "'development is the default environment, and legacy is for transpiling the old jQuery codebase",
   "babel": {
