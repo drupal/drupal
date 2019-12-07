@@ -14,7 +14,6 @@ services:
       - { name: normalizer, priority: 10 }
   serializer.normalizer.file_entity.hal:
     class: Drupal\hal\Normalizer\FileEntityNormalizer
-    deprecated: 'The "%service_id%" normalizer service is deprecated: it is obsolete, it only remains available for backwards compatibility.'
     arguments: ['@entity_type.manager', '@hal.link_manager', '@module_handler', '@config.factory', '@entity_type.repository', '@entity_field.manager']
     tags:
       - { name: normalizer, priority: 20 }
