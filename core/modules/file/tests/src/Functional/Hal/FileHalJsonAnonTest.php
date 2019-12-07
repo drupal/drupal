@@ -119,6 +119,9 @@ class FileHalJsonAnonTest extends FileResourceTestBase {
 
   /**
    * @see hal_update_8501()
+   *
+   * @group legacy
+   * @expectedDeprecation Replacing the file uri with the URL is deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. Use the provided url property instead and disable hal.settings:bc_file_uri_as_url_normalizer. See https://www.drupal.org/node/2925783
    */
   public function testGetBcUriField() {
     $this->config('hal.settings')->set('bc_file_uri_as_url_normalizer', TRUE)->save(TRUE);
