@@ -3,6 +3,7 @@
 namespace Drupal\FunctionalJavascriptTests\TableDrag;
 
 use Behat\Mink\Element\NodeElement;
+use Behat\Mink\Exception\ExpectationException;
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 
 /**
@@ -41,6 +42,88 @@ class TableDragTest extends WebDriverTestBase {
     parent::setUp();
 
     $this->state = $this->container->get('state');
+  }
+
+  /**
+   * Tests row weight switch.
+   */
+  public function testRowWeightSwitch() {
+    $this->state->set('tabledrag_test_table', array_flip(range(1, 3)));
+
+    $this->drupalGet('tabledrag_test');
+
+    $session = $this->getSession();
+    $page = $session->getPage();
+
+    $weight_select1 = $page->findField("table[1][weight]");
+    $weight_select2 = $page->findField("table[2][weight]");
+    $weight_select3 = $page->findField("table[3][weight]");
+
+    // Check that rows weight selects are hidden.
+    $this->assertFalse($weight_select1->isVisible());
+    $this->assertFalse($weight_select2->isVisible());
+    $this->assertFalse($weight_select3->isVisible());
+
+    // Toggle row weight selects as visible.
+    $this->findWeightsToggle('Show row weights')->click();
+
+    // Check that rows weight selects are visible.
+    $this->assertTrue($weight_select1->isVisible());
+    $this->assertTrue($weight_select2->isVisible());
+    $this->assertTrue($weight_select3->isVisible());
+
+    // Toggle row weight selects back to hidden.
+    $this->findWeightsToggle('Hide row weights')->click();
+
+    // Check that rows weight selects are hidden again.
+    $this->assertFalse($weight_select1->isVisible());
+    $this->assertFalse($weight_select2->isVisible());
+    $this->assertFalse($weight_select3->isVisible());
+  }
+
+  /**
+   * Tests draggable table drag'n'drop.
+   */
+  public function testDragAndDrop() {
+    $this->state->set('tabledrag_test_table', array_flip(range(1, 3)));
+    $this->drupalGet('tabledrag_test');
+
+    $session = $this->getSession();
+    $page = $session->getPage();
+
+    $weight_select1 = $page->findField("table[1][weight]");
+    $weight_select2 = $page->findField("table[2][weight]");
+    $weight_select3 = $page->findField("table[3][weight]");
+
+    // Check that initially the rows are in the correct order.
+    $this->assertOrder(['Row with id 1', 'Row with id 2', 'Row with id 3']);
+
+    // Check that the 'unsaved changes' text is not present in the message area.
+    $this->assertSession()->pageTextNotContains('You have unsaved changes.');
+
+    $row1 = $this->findRowById(1)->find('css', 'a.tabledrag-handle');
+    $row2 = $this->findRowById(2)->find('css', 'a.tabledrag-handle');
+    $row3 = $this->findRowById(3)->find('css', 'a.tabledrag-handle');
+
+    // Drag row1 over row2.
+    $row1->dragTo($row2);
+
+    // Check that the 'unsaved changes' text was added in the message area.
+    $this->assertSession()->waitForText('You have unsaved changes.');
+
+    // Check that row1 and row2 were swapped.
+    $this->assertOrder(['Row with id 2', 'Row with id 1', 'Row with id 3']);
+
+    // Check that weights were changed.
+    $this->assertGreaterThan($weight_select2->getValue(), $weight_select1->getValue());
+    $this->assertGreaterThan($weight_select2->getValue(), $weight_select3->getValue());
+    $this->assertGreaterThan($weight_select1->getValue(), $weight_select3->getValue());
+
+    // Now move the last row (row3) in the second position. row1 should go last.
+    $row3->dragTo($row1);
+
+    // Check that the order is: row2, row3 and row1.
+    $this->assertOrder(['Row with id 2', 'Row with id 3', 'Row with id 1']);
   }
 
   /**
@@ -200,6 +283,31 @@ class TableDragTest extends WebDriverTestBase {
   }
 
   /**
+   * Asserts that several pieces of markup are in a given order in the page.
+   *
+   * @param string[] $items
+   *   An ordered list of strings.
+   *
+   * @throws \Behat\Mink\Exception\ExpectationException
+   *   When any of the given string is not found.
+   *
+   * @todo Remove this and use the WebAssert method when #2817657 is done.
+   */
+  protected function assertOrder(array $items) {
+    $session = $this->getSession();
+    $text = $session->getPage()->getHtml();
+    $strings = [];
+    foreach ($items as $item) {
+      if (($pos = strpos($text, $item)) === FALSE) {
+        throw new ExpectationException("Cannot find '$item' in the page", $session->getDriver());
+      }
+      $strings[$pos] = $item;
+    }
+    ksort($strings);
+    $this->assertSame($items, array_values($strings), "Strings found on the page but incorrectly ordered.");
+  }
+
+  /**
    * Asserts the whole structure of the draggable test table.
    *
    * @param array $structure
@@ -260,6 +368,21 @@ class TableDragTest extends WebDriverTestBase {
     $row = $this->getSession()->getPage()->find('xpath', $xpath);
     $this->assertNotEmpty($row);
     return $row;
+  }
+
+  /**
+   * Finds the show/hide weight toggle element.
+   *
+   * @param string $expected_text
+   *   The expected text on the element.
+   *
+   * @return \Behat\Mink\Element\NodeElement
+   *   The toggle element.
+   */
+  protected function findWeightsToggle($expected_text) {
+    $toggle = $this->getSession()->getPage()->findButton($expected_text);
+    $this->assertNotEmpty($toggle);
+    return $toggle;
   }
 
   /**
