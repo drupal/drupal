@@ -17,7 +17,7 @@ use Drupal\update\UpdateManagerInterface;
  *
  * @param $projects
  *   Array of project information from
- *   \Drupal\Update\UpdateManager::getProjects().
+ *   \Drupal\update\UpdateManager::getProjects().
  */
 function update_process_project_info(&$projects) {
   foreach ($projects as $key => $project) {
@@ -79,7 +79,7 @@ function update_process_project_info(&$projects) {
  *   An array of installed projects with current update status information.
  *
  * @see update_get_available()
- * @see \Drupal\Update\UpdateManager::getProjects()
+ * @see \Drupal\update\UpdateManager::getProjects()
  * @see update_process_project_info()
  * @see \Drupal\update\UpdateManagerInterface::projectStorage()
  */
