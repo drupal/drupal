@@ -32,7 +32,7 @@ interface UpdateProcessorInterface {
    *
    * @param array $project
    *   Associative array of information about a project as created by
-   *   \Drupal\Update\UpdateManager::getProjects(), including keys such as
+   *   \Drupal\update\UpdateManager::getProjects(), including keys such as
    *   'name' (short name), and the 'info' array with data from a .info.yml
    *   file for the project.
    *

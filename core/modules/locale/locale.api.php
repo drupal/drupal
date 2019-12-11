@@ -91,8 +91,8 @@
  * Alter the list of projects to be updated by locale's interface translation.
  *
  * Locale module attempts to update the translation of those modules returned
- * by \Drupal\Update\UpdateManager::getProjects(). Using this hook, the data
- * returned by \Drupal\Update\UpdateManager::getProjects() can be altered or
+ * by \Drupal\update\UpdateManager::getProjects(). Using this hook, the data
+ * returned by \Drupal\update\UpdateManager::getProjects() can be altered or
  * extended.
  *
  * Modules or distributions that use a dedicated translation server should use
@@ -109,7 +109,7 @@
  * - "%language": Language code. Value examples: "fr", "pt-pt".
  *
  * @param array $projects
- *   Project data as returned by \Drupal\Update\UpdateManager::getProjects().
+ *   Project data as returned by \Drupal\update\UpdateManager::getProjects().
  *
  * @see locale_translation_project_list()
  * @ingroup interface_translation_properties
