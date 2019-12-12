@@ -247,10 +247,10 @@ class DefaultSelection extends SelectionPluginBase implements ContainerFactoryPl
       $form['sort']['field'] = [
         '#type' => 'select',
         '#title' => $this->t('Sort by'),
-        '#options' => [
-          '_none' => $this->t('- None -'),
-        ] + $fields,
+        '#options' => $fields,
         '#ajax' => TRUE,
+        '#empty_value' => '_none',
+        '#sort_options' => TRUE,
         '#limit_validation_errors' => [],
         '#default_value' => $configuration['sort']['field'],
       ];
