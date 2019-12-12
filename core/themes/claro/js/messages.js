@@ -6,18 +6,6 @@
 **/
 
 (function (Drupal) {
-  Drupal.Message.defaultWrapper = function () {
-    var wrapper = document.querySelector('[data-drupal-messages]');
-    if (!wrapper) {
-      wrapper = document.querySelector('[data-drupal-messages-fallback]');
-      wrapper.removeAttribute('data-drupal-messages-fallback');
-      wrapper.setAttribute('data-drupal-messages', '');
-      wrapper.classList.remove('hidden');
-      wrapper.classList.add('messages-list');
-    }
-    return wrapper.innerHTML === '' ? Drupal.Message.messageInternalWrapper(wrapper) : wrapper.firstElementChild;
-  };
-
   Drupal.theme.message = function (_ref, _ref2) {
     var text = _ref.text;
     var type = _ref2.type,
