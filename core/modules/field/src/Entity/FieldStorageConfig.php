@@ -367,10 +367,10 @@ class FieldStorageConfig extends ConfigEntityBase implements FieldStorageConfigI
 
     // Some updates are always disallowed.
     if ($this->getType() != $this->original->getType()) {
-      throw new FieldException("Cannot change the field type for an existing field storage.");
+      throw new FieldException(sprintf('Cannot change the field type for an existing field storage. The field storage %s has the type %s.', $this->id(), $this->original->getType()));
     }
     if ($this->getTargetEntityTypeId() != $this->original->getTargetEntityTypeId()) {
-      throw new FieldException("Cannot change the entity type for an existing field storage.");
+      throw new FieldException(sprintf('Cannot change the entity type for an existing field storage. The field storage %s has the type %s.', $this->id(), $this->original->getTargetEntityTypeId()));
     }
 
     // See if any module forbids the update by throwing an exception. This
