@@ -384,6 +384,42 @@ class FieldStorageCrudTest extends FieldKernelTestBase {
   }
 
   /**
+   * Test changing a field storage type.
+   */
+  public function testUpdateEntityType() {
+    $field_storage = FieldStorageConfig::create([
+      'field_name' => 'field_type',
+      'entity_type' => 'entity_test',
+      'type' => 'decimal',
+    ]);
+    $field_storage->save();
+
+    $this->expectException(FieldException::class);
+    $this->expectExceptionMessage('Cannot change the field type for an existing field storage. The field storage entity_test.field_type has the type decimal.');
+
+    $field_storage->set('type', 'foobar');
+    $field_storage->save();
+  }
+
+  /**
+   * Test changing a field storage entity type.
+   */
+  public function testUpdateEntityTargetType() {
+    $field_storage = FieldStorageConfig::create([
+      'field_name' => 'field_type',
+      'entity_type' => 'entity_test',
+      'type' => 'decimal',
+    ]);
+    $field_storage->save();
+
+    $this->expectException(FieldException::class);
+    $this->expectExceptionMessage('Cannot change the entity type for an existing field storage. The field storage foobar.field_type has the type entity_test.');
+
+    $field_storage->set('entity_type', 'foobar');
+    $field_storage->save();
+  }
+
+  /**
    * Test updating a field storage.
    */
   public function testUpdate() {
