@@ -49,6 +49,7 @@ process:
 destination:
   plugin: entity:taxonomy_term
   destination_module: content_translation
+  translations: true
 migration_dependencies:
   required:
     - d7_taxonomy_term

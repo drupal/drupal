@@ -72,14 +72,18 @@ class Term extends FieldableEntity {
     // migration.
     $translatable_vocabularies = array_keys(array_filter($this->variableGet('entity_translation_taxonomy', [])));
     $entity_translatable = $this->isEntityTranslatable('taxonomy_term') && in_array($vocabulary, $translatable_vocabularies, TRUE);
-    $source_language = $this->getEntityTranslationSourceLanguage('taxonomy_term', $tid);
-    $language = $entity_translatable && $source_language ? $source_language : $default_language['language'];
 
+    if ($entity_translatable) {
+      $source_language = $this->getEntityTranslationSourceLanguage('taxonomy_term', $tid);
+      $language = $entity_translatable && $source_language ? $source_language : $default_language['language'];
+    }
     // If this is an i18n translation use the default language when i18n_mode
     // is localized.
     if ($row->get('i18n_mode')) {
       $language = ($row->get('i18n_mode') === '1') ? $default_language['language'] : $row->get('language');
     }
+
+    $language = $language ?? $default_language['language'];
     $row->setSourceProperty('language', $language);
 
     // Get Field API field values.
