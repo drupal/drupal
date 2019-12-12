@@ -19,6 +19,9 @@
     <div class="project-update__version-details layout-column layout-column--quarter">
       <a href="{{ version.release_link }}">{{ version.version }}</a>
       <span class="project-update__version-date">({{ version.date|date('Y-M-d') }})</span>
+      {% if version.core_compatibility_message %}
+        <span class="project-update__core-compatibility-message">{{ version.core_compatibility_message }}</span>
+      {% endif %}
     </div>
     <div class="layout-column layout-column--half">
       <ul class="project-update__version-links">
