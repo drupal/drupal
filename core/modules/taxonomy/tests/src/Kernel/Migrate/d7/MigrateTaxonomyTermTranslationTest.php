@@ -155,14 +155,24 @@ class MigrateTaxonomyTermTranslationTest extends MigrateDrupal7TestBase {
     // Localized.
     $this->assertEntity(19, 'en', 'Jupiter Station', 'vocablocalized', 'Holographic research.', 'filtered_html', '0', []);
     $this->assertEntity(20, 'en', 'DS9', 'vocablocalized', 'Terok Nor', 'filtered_html', '0', []);
+    /** @var \Drupal\taxonomy\TermInterface $entity */
+    $entity = Term::load(20);
+    $this->assertSame('Bajor', $entity->field_sector->value);
 
     // Translate.
     $this->assertEntity(21, 'en', 'High council', 'vocabtranslate', NULL, NULL, '0', []);
+    $entity = Term::load(21);
+    $this->assertSame("K'mpec", $entity->field_chancellor->value);
+
     $this->assertEntity(22, 'fr', 'fr - High council', 'vocabtranslate', NULL, NULL, '0', []);
+    $entity = Term::load(22);
+    $this->assertSame("fr - K'mpec", $entity->field_chancellor->value);
     $this->assertEntity(23, 'is', 'is - High council', 'vocabtranslate', NULL, NULL, '0', []);
 
     // Fixed.
     $this->assertEntity(24, 'fr', 'FR - Crewman', 'vocabfixed', NULL, NULL, '0', []);
+    $entity = Term::load(24);
+    $this->assertSame('fr - specialist', $entity->field_training->value);
   }
 
 }

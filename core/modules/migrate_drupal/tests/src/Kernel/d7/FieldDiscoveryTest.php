@@ -95,7 +95,11 @@ class FieldDiscoveryTest extends MigrateDrupal7TestBase {
     }
 
     Vocabulary::create(['vid' => 'test_vocabulary'])->save();
-    $this->executeMigrations(['d7_field', 'd7_field_instance']);
+    $this->executeMigrations([
+      'd7_field',
+      'd7_taxonomy_vocabulary',
+      'd7_field_instance',
+    ]);
 
     $this->fieldDiscovery = $this->container->get('migrate_drupal.field_discovery');
     $this->migrationPluginManager = $this->container->get('plugin.manager.migration');
@@ -148,6 +152,9 @@ class FieldDiscoveryTest extends MigrateDrupal7TestBase {
       'field_datetime_without_time',
       'field_date_without_time',
       'field_float_list',
+      'field_training',
+      'field_sector',
+      'field_chancellor',
     ];
     $this->assertFieldProcessKeys($this->fieldDiscovery, $this->migrationPluginManager, '7', $expected_process_keys);
   }
