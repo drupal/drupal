@@ -15,6 +15,16 @@ use Drupal\Core\Utility\ProjectInfo;
 class UpdateContribTest extends UpdateTestBase {
 
   /**
+   * {@inheritdoc}
+   */
+  protected $updateTableLocator = 'table.update:nth-of-type(2)';
+
+  /**
+   * {@inheritdoc}
+   */
+  protected $updateProject = 'aaa_update_test';
+
+  /**
    * Modules to enable.
    *
    * @var array
@@ -224,6 +234,98 @@ class UpdateContribTest extends UpdateTestBase {
     $this->refreshUpdateStatus($xml_mapping);
     $this->assertText(t('Security update required!'));
     $this->assertRaw(Link::fromTextAndUrl(t('Update test base theme'), Url::fromUri('http://example.com/project/update_test_basetheme'))->toString(), 'Link to the Update test base theme project appears.');
+  }
+
+  /**
+   * Tests the Update Manager module when one normal update is available.
+   */
+  public function testNormalUpdateAvailable() {
+    $assert_session = $this->assertSession();
+    // Ensure that the update check requires a token.
+    $this->drupalGet('admin/reports/updates/check');
+    $assert_session->statusCodeEquals(403);
+
+    $system_info = [
+      'aaa_update_test' => [
+        'project' => 'aaa_update_test',
+        'version' => '8.x-1.0',
+        'hidden' => FALSE,
+      ],
+    ];
+    $this->config('update_test.settings')->set('system_info', $system_info)->save();
+
+    foreach (['1.1', '1.2', '2.0'] as $version) {
+      foreach (['-beta1', '-alpha1', ''] as $extra_version) {
+        $full_version = "8.x-$version$extra_version";
+        $this->refreshUpdateStatus([
+          'drupal' => '0.0',
+          'aaa_update_test' => str_replace('.', '_', $version) . $extra_version,
+        ]);
+        $this->standardTests();
+        $this->drupalGet('admin/reports/updates');
+        $this->clickLink('Check manually');
+        $this->checkForMetaRefresh();
+        $assert_session->pageTextNotContains('Security update required!');
+        // Set a CSS selector in order for assertions to target the 'Modules'
+        // table and not Drupal core updates.
+        $this->updateTableLocator = 'table.update:nth-of-type(2)';
+        switch ($version) {
+          case '1.1':
+            // Both stable and unstable releases are available.
+            // A stable release is the latest.
+            if ($extra_version == '') {
+              $assert_session->elementTextNotContains('css', $this->updateTableLocator, 'Up to date');
+              $assert_session->elementTextContains('css', $this->updateTableLocator, 'Update available');
+              $this->assertVersionUpdateLinks('Recommended version', $full_version);
+              $assert_session->elementTextNotContains('css', $this->updateTableLocator, 'Latest version:');
+              $assert_session->elementContains('css', $this->updateTableLocator, 'warning.svg');
+            }
+            // Only unstable releases are available.
+            // An unstable release is the latest.
+            else {
+              $assert_session->elementTextContains('css', $this->updateTableLocator, 'Up to date');
+              $assert_session->elementTextNotContains('css', $this->updateTableLocator, 'Update available');
+              $assert_session->elementTextNotContains('css', $this->updateTableLocator, 'Recommended version:');
+              $this->assertVersionUpdateLinks('Latest version', $full_version);
+              $assert_session->elementContains('css', $this->updateTableLocator, 'check.svg');
+            }
+            break;
+
+          case '1.2':
+            // Both stable and unstable releases are available.
+            // A stable release is the latest.
+            if ($extra_version == '') {
+              $assert_session->elementTextNotContains('css', $this->updateTableLocator, 'Up to date');
+              $assert_session->elementTextContains('css', $this->updateTableLocator, 'Update available');
+              $this->assertVersionUpdateLinks('Recommended version:', $full_version);
+              $assert_session->elementTextNotContains('css', $this->updateTableLocator, 'Latest version:');
+              $assert_session->elementContains('css', $this->updateTableLocator, 'warning.svg');
+            }
+            // Both stable and unstable releases are available.
+            // An unstable release is the latest.
+            else {
+              $assert_session->elementTextNotContains('css', $this->updateTableLocator, 'Up to date');
+              $assert_session->elementTextContains('css', $this->updateTableLocator, 'Update available');
+              $this->assertVersionUpdateLinks('Recommended version:', '8.x-1.1');
+              $this->assertVersionUpdateLinks('Latest version:', $full_version);
+              $assert_session->elementTextContains('css', $this->updateTableLocator, 'Latest version:');
+              $assert_session->elementContains('css', $this->updateTableLocator, 'warning.svg');
+            }
+            break;
+
+          case '2.0':
+            // When next major release (either stable or unstable) is available
+            // and the current major is still supported, the next major will be
+            // listed as "Also available".
+            $assert_session->elementTextNotContains('css', $this->updateTableLocator, 'Up to date');
+            $assert_session->elementTextContains('css', $this->updateTableLocator, 'Update available');
+            $this->assertVersionUpdateLinks('Recommended version', '8.x-1.2');
+            $this->assertVersionUpdateLinks('Also available', $full_version);
+            $assert_session->elementTextNotContains('css', $this->updateTableLocator, 'Latest version:');
+            $assert_session->elementContains('css', $this->updateTableLocator, 'warning.svg');
+        }
+      }
+    }
   }
 
   /**

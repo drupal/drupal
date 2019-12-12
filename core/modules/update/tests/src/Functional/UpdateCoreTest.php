@@ -28,6 +28,16 @@ class UpdateCoreTest extends UpdateTestBase {
    */
   protected $defaultTheme = 'stark';
 
+  /**
+   * {@inheritdoc}
+   */
+  protected $updateTableLocator = 'table.update';
+
+  /**
+   * {@inheritdoc}
+   */
+  protected $updateProject = 'drupal';
+
   protected function setUp() {
     parent::setUp();
     $admin_user = $this->drupalCreateUser(['administer site configuration', 'administer modules', 'administer themes']);
@@ -81,16 +91,13 @@ class UpdateCoreTest extends UpdateTestBase {
 
     foreach ([0, 1] as $minor_version) {
       foreach (['-alpha1', '-beta1', ''] as $extra_version) {
+        $full_version = "8.$minor_version.1$extra_version";
         $this->refreshUpdateStatus(['drupal' => "$minor_version.1" . $extra_version]);
         $this->standardTests();
         $this->drupalGet('admin/reports/updates');
         $this->clickLink(t('Check manually'));
         $this->checkForMetaRefresh();
         $this->assertNoText(t('Security update required!'));
-        $this->assertRaw(Link::fromTextAndUrl("8.$minor_version.1" . $extra_version, Url::fromUri("http://example.com/drupal-8-$minor_version-1$extra_version-release"))->toString(), 'Link to release appears.');
-        $this->assertRaw(Link::fromTextAndUrl(t('Download'), Url::fromUri("http://example.com/drupal-8-$minor_version-1$extra_version.tar.gz"))->toString(), 'Link to download appears.');
-        $this->assertRaw(Link::fromTextAndUrl(t('Release notes'), Url::fromUri("http://example.com/drupal-8-$minor_version-1$extra_version-release"))->toString(), 'Link to release notes appears.');
-
         switch ($minor_version) {
           case 0:
             // Both stable and unstable releases are available.
@@ -98,7 +105,7 @@ class UpdateCoreTest extends UpdateTestBase {
             if ($extra_version == '') {
               $this->assertNoText(t('Up to date'));
               $this->assertText(t('Update available'));
-              $this->assertText(t('Recommended version:'));
+              $this->assertVersionUpdateLinks('Recommended version:', $full_version);
               $this->assertNoText(t('Latest version:'));
               $this->assertRaw('warning.svg', 'Warning icon was found.');
             }
@@ -108,7 +115,7 @@ class UpdateCoreTest extends UpdateTestBase {
               $this->assertText(t('Up to date'));
               $this->assertNoText(t('Update available'));
               $this->assertNoText(t('Recommended version:'));
-              $this->assertText(t('Latest version:'));
+              $this->assertVersionUpdateLinks('Latest version:', $full_version);
               $this->assertRaw('check.svg', 'Check icon was found.');
             }
             break;
@@ -118,7 +125,7 @@ class UpdateCoreTest extends UpdateTestBase {
             if ($extra_version == '') {
               $this->assertNoText(t('Up to date'));
               $this->assertText(t('Update available'));
-              $this->assertText(t('Recommended version:'));
+              $this->assertVersionUpdateLinks('Recommended version:', $full_version);
               $this->assertNoText(t('Latest version:'));
               $this->assertRaw('warning.svg', 'Warning icon was found.');
             }
@@ -127,8 +134,8 @@ class UpdateCoreTest extends UpdateTestBase {
             else {
               $this->assertNoText(t('Up to date'));
               $this->assertText(t('Update available'));
-              $this->assertText(t('Recommended version:'));
-              $this->assertText(t('Latest version:'));
+              $this->assertVersionUpdateLinks('Recommended version:', '8.1.0');
+              $this->assertVersionUpdateLinks('Latest version:', $full_version);
               $this->assertRaw('warning.svg', 'Warning icon was found.');
             }
             break;
@@ -563,6 +570,17 @@ class UpdateCoreTest extends UpdateTestBase {
     $this->drupalGet('admin/reports/updates');
     $this->clickLink(t('Install new module or theme'));
     $this->assertUrl('admin/reports/updates/install');
+  }
+
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function assertVersionUpdateLinks($label, $version, $download_version = NULL) {
+    // Test XML files for Drupal core use '-' in the version number for the
+    // download link.
+    $download_version = str_replace('.', '-', $version);
+    parent::assertVersionUpdateLinks($label, $version, $download_version);
   }
 
 }
