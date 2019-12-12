@@ -122,9 +122,9 @@ function block_content_add_body_field($block_type_id, $label = 'Body') {
  * These queries should only return reusable blocks unless a condition on
  * 'reusable' is explicitly set.
  *
- * Block_content entities that are reusable should by default not be selectable
- * as entity reference values. A module can still create an instance of
- * \Drupal\Core\Entity\EntityReferenceSelection\SelectionInterface
+ * Block_content entities that are not reusable should by default not be
+ * selectable as entity reference values. A module can still create an instance
+ * of \Drupal\Core\Entity\EntityReferenceSelection\SelectionInterface
  * that will allow selection of non-reusable blocks by explicitly setting
  * a condition on the 'reusable' field.
  *
