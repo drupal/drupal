@@ -5,30 +5,6 @@
 
 (Drupal => {
   /**
-   * Override Drupal.Message.defaultWrapper() because it prevents adding classes
-   * to the wrapper.
-   *
-   *  @return {HTMLElement}
-   *   The default destination for JavaScript messages.
-   *
-   * @todo Revisit this after https://www.drupal.org/node/3086723 has been
-   *   resolved.
-   */
-  Drupal.Message.defaultWrapper = () => {
-    let wrapper = document.querySelector('[data-drupal-messages]');
-    if (!wrapper) {
-      wrapper = document.querySelector('[data-drupal-messages-fallback]');
-      wrapper.removeAttribute('data-drupal-messages-fallback');
-      wrapper.setAttribute('data-drupal-messages', '');
-      wrapper.classList.remove('hidden');
-      wrapper.classList.add('messages-list');
-    }
-    return wrapper.innerHTML === ''
-      ? Drupal.Message.messageInternalWrapper(wrapper)
-      : wrapper.firstElementChild;
-  };
-
-  /**
    * Overrides message theme function.
    *
    * @param {object} message

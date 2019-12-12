@@ -255,6 +255,11 @@ function claro_element_info_alter(&$type) {
   if (isset($type['managed_file'])) {
     $type['managed_file']['#pre_render'][] = [ClaroPreRender::class, 'managedFile'];
   }
+
+  // Add a pre-render to status_messages to alter the placeholder markup.
+  if (isset($type['status_messages'])) {
+    $type['status_messages']['#pre_render'][] = [ClaroPreRender::class, 'messagePlaceholder'];
+  }
 }
 
 /**
