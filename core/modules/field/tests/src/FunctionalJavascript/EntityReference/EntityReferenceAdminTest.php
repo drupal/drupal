@@ -111,11 +111,24 @@ class EntityReferenceAdminTest extends WebDriverTestBase {
     // Test the sort settings.
     // Option 0: no sort.
     $this->assertFieldByName('settings[handler_settings][sort][field]', '_none');
+    $sort_by = $page->findField('settings[handler_settings][sort][field]');
     $this->assertNoFieldByName('settings[handler_settings][sort][direction]');
     // Option 1: sort by field.
-    $page->findField('settings[handler_settings][sort][field]')->setValue('nid');
+    $sort_by->setValue('nid');
     $assert_session->waitForField('settings[handler_settings][sort][direction]');
     $this->assertFieldByName('settings[handler_settings][sort][direction]', 'ASC');
+
+    // Test that the sort-by options are sorted.
+    $labels = array_map(function (NodeElement $element) {
+      return $element->getText();
+    }, $sort_by->findAll('xpath', 'option'));
+    for ($i = count($labels) - 1, $sorted = TRUE; $i > 0; --$i) {
+      if ($labels[$i - 1] > $labels[$i]) {
+        $sorted = FALSE;
+        break;
+      }
+    }
+    $this->assertTrue($sorted, 'The "sort by" options are sorted.');
 
     // Test that a non-translatable base field is a sort option.
     $this->assertFieldByXPath("//select[@name='settings[handler_settings][sort][field]']/option[@value='nid']");
@@ -125,7 +138,7 @@ class EntityReferenceAdminTest extends WebDriverTestBase {
     $this->assertFieldByXPath("//select[@name='settings[handler_settings][sort][field]']/option[@value='body.value']");
 
     // Set back to no sort.
-    $page->findField('settings[handler_settings][sort][field]')->setValue('_none');
+    $sort_by->setValue('_none');
     $assert_session->assertWaitOnAjaxRequest();
     $this->assertNoFieldByName('settings[handler_settings][sort][direction]');
 
