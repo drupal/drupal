@@ -185,7 +185,7 @@ function update_calculate_project_update_status(&$project_data, $available) {
   if (isset($available['project_status'])) {
     switch ($available['project_status']) {
       case 'insecure':
-        $project_data['status'] = UpdateManagerInterfac::NOT_SECURE;
+        $project_data['status'] = UpdateManagerInterface::NOT_SECURE;
         if (empty($project_data['extra'])) {
           $project_data['extra'] = [];
         }
