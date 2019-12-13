@@ -48,18 +48,6 @@ services:
   user.auth:
     class: Drupal\user\UserAuth
     arguments: ['@entity_type.manager', '@password']
-  user.private_tempstore:
-    class: Drupal\user\PrivateTempStoreFactory
-    arguments: ['@keyvalue.expirable', '@lock', '@current_user', '@request_stack', '%tempstore.expire%']
-    deprecated: The "%service_id%" service is deprecated. You should use the 'tempstore.private' service instead. See https://www.drupal.org/node/2935639.
-    tags:
-      - { name: backend_overridable }
-  user.shared_tempstore:
-    class: Drupal\user\SharedTempStoreFactory
-    arguments: ['@keyvalue.expirable', '@lock', '@request_stack', '%tempstore.expire%']
-    deprecated: The "%service_id%" service is deprecated. You should use the 'tempstore.shared' service instead. See https://www.drupal.org/node/2935639.
-    tags:
-      - { name: backend_overridable }
   user.permissions:
     class: Drupal\user\PermissionHandler
     arguments: ['@module_handler', '@string_translation', '@controller_resolver']

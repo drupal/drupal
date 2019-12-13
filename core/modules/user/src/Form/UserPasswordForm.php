@@ -54,18 +54,10 @@ class UserPasswordForm extends FormBase {
    * @param \Drupal\Core\Flood\FloodInterface $flood
    *   The flood service.
    */
-  public function __construct(UserStorageInterface $user_storage, LanguageManagerInterface $language_manager, ConfigFactory $config_factory = NULL, FloodInterface $flood = NULL) {
+  public function __construct(UserStorageInterface $user_storage, LanguageManagerInterface $language_manager, ConfigFactory $config_factory, FloodInterface $flood) {
     $this->userStorage = $user_storage;
     $this->languageManager = $language_manager;
-    if (!$config_factory) {
-      @trigger_error('Calling ' . __METHOD__ . ' without the $config_factory is deprecated in drupal:8.8.0 and is required before drupal:9.0.0. See https://www.drupal.org/node/1681832', E_USER_DEPRECATED);
-      $config_factory = \Drupal::configFactory();
-    }
     $this->configFactory = $config_factory;
-    if (!$flood) {
-      @trigger_error('Calling ' . __METHOD__ . ' without the $flood parameter is deprecated in drupal:8.8.0 and is required before drupal:9.0.0. See https://www.drupal.org/node/1681832', E_USER_DEPRECATED);
-      $flood = \Drupal::service('flood');
-    }
     $this->flood = $flood;
   }
 

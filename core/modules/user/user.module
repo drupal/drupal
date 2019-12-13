@@ -25,50 +25,6 @@ use Drupal\user\RoleInterface;
 use Drupal\user\UserInterface;
 
 /**
- * Maximum length of username text field.
- *
- * Keep this under 191 characters so we can use a unique constraint in MySQL.
- *
- * @deprecated in drupal:8.3.0 and is removed from drupal:9.0.0.
- *   Use \Drupal\user\UserInterface::USERNAME_MAX_LENGTH instead.
- *
- * @see https://www.drupal.org/node/2831620
- */
-const USERNAME_MAX_LENGTH = 60;
-
-/**
- * Only administrators can create user accounts.
- *
- * @deprecated in drupal:8.3.0 and is removed from drupal:9.0.0.
- *   Use \Drupal\user\UserInterface::REGISTER_ADMINISTRATORS_ONLY instead.
- *
- * @see https://www.drupal.org/node/2831620
- */
-const USER_REGISTER_ADMINISTRATORS_ONLY = 'admin_only';
-
-/**
- * Visitors can create their own accounts.
- *
- * @deprecated in drupal:8.3.0 and is removed from drupal:9.0.0.
- *   Use \Drupal\user\UserInterface::REGISTER_VISITORS instead.
- *
- * @see https://www.drupal.org/node/2831620
- */
-const USER_REGISTER_VISITORS = 'visitors';
-
-/**
- * Visitors can create accounts, but they don't become active without
- * administrative approval.
- *
- * @deprecated in drupal:8.3.0 and is removed from drupal:9.0.0.
- *   Use \Drupal\user\UserInterface::REGISTER_VISITORS_ADMINISTRATIVE_APPROVAL
- *   instead.
- *
- * @see https://www.drupal.org/node/2831620
- */
-const USER_REGISTER_VISITORS_ADMINISTRATIVE_APPROVAL = 'visitors_admin_approval';
-
-/**
  * Implements hook_help().
  */
 function user_help($route_name, RouteMatchInterface $route_match) {
@@ -182,61 +138,6 @@ function user_entity_extra_field_info() {
   ];
 
   return $fields;
-}
-
-/**
- * Loads multiple users based on certain conditions.
- *
- * This function should be used whenever you need to load more than one user
- * from the database. Users are loaded into memory and will not require
- * database access if loaded again during the same page request.
- *
- * @param array $uids
- *   (optional) An array of entity IDs. If omitted, all entities are loaded.
- * @param bool $reset
- *   A boolean indicating that the internal cache should be reset. Use this if
- *   loading a user object which has been altered during the page request.
- *
- * @return array
- *   An array of user objects, indexed by uid.
- *
- * @deprecated in drupal:8.0.0 and is removed from drupal:9.0.0. Use
- *   \Drupal\user\Entity\User::loadMultiple().
- *
- * @see https://www.drupal.org/node/2266845
- */
-function user_load_multiple(array $uids = NULL, $reset = FALSE) {
-  @trigger_error('user_load_multiple() is deprecated in Drupal 8.0.0 and will be removed before Drupal 9.0.0. Use \Drupal\user\Entity\User::loadMultiple(). See https://www.drupal.org/node/2266845', E_USER_DEPRECATED);
-  if ($reset) {
-    \Drupal::entityTypeManager()->getStorage('user')->resetCache($uids);
-  }
-  return User::loadMultiple($uids);
-}
-
-/**
- * Loads a user object.
- *
- * @param int $uid
- *   Integer specifying the user ID to load.
- * @param bool $reset
- *   TRUE to reset the internal cache and load from the database; FALSE
- *   (default) to load from the internal cache, if set.
- *
- * @return \Drupal\user\UserInterface
- *   A fully-loaded user object upon successful user load, or NULL if the user
- *   cannot be loaded.
- *
- * @deprecated in drupal:8.0.0 and is removed from drupal:9.0.0. Use
- *   Drupal\user\Entity\User::load().
- *
- * @see https://www.drupal.org/node/2266845
- */
-function user_load($uid, $reset = FALSE) {
-  @trigger_error('user_load() is deprecated in Drupal 8.0.0 and will be removed before Drupal 9.0.0. Use \Drupal\user\Entity\User::load(). See https://www.drupal.org/node/2266845', E_USER_DEPRECATED);
-  if ($reset) {
-    \Drupal::entityTypeManager()->getStorage('user')->resetCache([$uid]);
-  }
-  return User::load($uid);
 }
 
 /**
@@ -425,25 +326,6 @@ function user_preprocess_block(&$variables) {
         break;
     }
   }
-}
-
-/**
- * Format a username.
- *
- * @param \Drupal\Core\Session\AccountInterface $account
- *   The account object for the user whose name is to be formatted.
- *
- * @return string
- *   An unsanitized string with the username to display.
- *
- * @deprecated in drupal:8.0.0 and is removed from drupal:9.0.0.
- *   Use $account->label() or $account->getDisplayName() instead
- *
- * @see https://www.drupal.org/node/3050794
- */
-function user_format_name(AccountInterface $account) {
-  @trigger_error('user_format_name() is deprecated in drupal:8.0.0 and is removed from drupal:9.0.0. Use $account->label() or $account->getDisplayName() instead. See https://www.drupal.org/node/3050794', E_USER_DEPRECATED);
-  return $account->getDisplayName();
 }
 
 /**
@@ -861,70 +743,6 @@ function user_cancel_methods() {
 }
 
 /**
- * Generate an array for rendering the given user.
- *
- * When viewing a user profile, the $page array contains:
- *
- * - $page['content']['member_for']:
- *   Contains the default "Member for" profile data for a user.
- * - $page['content']['#user']:
- *   The user account of the profile being viewed.
- *
- * To theme user profiles, copy core/modules/user/templates/user.html.twig
- * to your theme directory, and edit it as instructed in that file's comments.
- *
- * @param \Drupal\user\UserInterface $account
- *   A user object.
- * @param string $view_mode
- *   View mode, e.g. 'full'.
- * @param string|null $langcode
- *   (optional) A language code to use for rendering. Defaults to the global
- *   content language of the current request.
- *
- * @return array
- *   An array as expected by \Drupal\Core\Render\RendererInterface::render().
- *
- * @deprecated in drupal:8.7.0 and is removed from drupal:9.0.0. Use
- *   \Drupal::entityTypeManager()->getViewBuilder('user')->view() instead.
- *
- * @see https://www.drupal.org/node/3033656
- */
-function user_view($account, $view_mode = 'full', $langcode = NULL) {
-  @trigger_error("user_view() is deprecated in Drupal 8.7.0 and will be removed before Drupal 9.0.0. Use \Drupal::entityTypeManager()->getViewBuilder('user')->view() instead. See https://www.drupal.org/node/3033656", E_USER_DEPRECATED);
-  return \Drupal::entityTypeManager()
-    ->getViewBuilder('user')
-    ->view($account, $view_mode, $langcode);
-}
-
-/**
- * Constructs a drupal_render() style array from an array of loaded users.
- *
- * @param \Drupal\user\UserInterface[] $accounts
- *   An array of user accounts as returned by User::loadMultiple().
- * @param string $view_mode
- *   (optional) View mode, e.g., 'full', 'teaser', etc. Defaults to 'teaser.'
- * @param string|null $langcode
- *   (optional) A language code to use for rendering. Defaults to the global
- *   content language of the current request.
- *
- * @return array
- *   An array in the format expected by
- *   \Drupal\Core\Render\RendererInterface::render().
- *
- * @deprecated in drupal:8.7.0 and is removed from drupal:9.0.0. Use
- *   \Drupal::entityTypeManager()->getViewBuilder('user')->viewMultiple()
- *   instead.
- *
- * @see https://www.drupal.org/node/3033656
- */
-function user_view_multiple($accounts, $view_mode = 'full', $langcode = NULL) {
-  @trigger_error("user_view_multiple() is deprecated in Drupal 8.7.0 and will be removed before Drupal 9.0.0. Use \Drupal::entityTypeManager()->getViewBuilder('user')->viewMultiple() instead. See https://www.drupal.org/node/3033656", E_USER_DEPRECATED);
-  return \Drupal::entityTypeManager()
-    ->getViewBuilder('user')
-    ->viewMultiple($accounts, $view_mode, $langcode);
-}
-
-/**
  * Implements hook_mail().
  */
 function user_mail($key, &$message, $params) {
@@ -1081,23 +899,6 @@ function user_roles($membersonly = FALSE, $permission = NULL) {
   }
 
   return $roles;
-}
-
-/**
- * Fetches a user role by role ID.
- *
- * @param string $rid
- *   A string representing the role ID.
- *
- * @return \Drupal\user\RoleInterface|null
- *   A fully-loaded role object if a role with the given ID exists, or NULL
- *   otherwise.
- *
- * @deprecated in drupal:8.0.0 and is removed from drupal:9.0.0.
- *   Use \Drupal\user\Entity\Role::load().
- */
-function user_role_load($rid) {
-  return Role::load($rid);
 }
 
 /**
