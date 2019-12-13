@@ -101,9 +101,16 @@ class EntityReferenceAdminTest extends WebDriverTestBase {
     $entity_type_id = 'node';
     // Check that the type label is correctly displayed.
     $assert_session->pageTextContains('Content type');
+    // Check that sort options are not yet visible.
+    $sort_by = $page->findField('settings[handler_settings][sort][field]');
+    $this->assertNotEmpty($sort_by);
+    $this->assertFalse($sort_by->isVisible(), 'The "sort by" options are hidden.');
+    // Select all bundles so that sort options are available.
     $bundles = $this->container->get('entity_type.bundle.info')->getBundleInfo($entity_type_id);
     foreach ($bundles as $bundle_name => $bundle_info) {
       $this->assertFieldByName('settings[handler_settings][target_bundles][' . $bundle_name . ']');
+      $page->findField('settings[handler_settings][target_bundles][' . $bundle_name . ']')->setValue($bundle_name);
+      $assert_session->assertWaitOnAjaxRequest();
     }
 
     reset($bundles);
@@ -143,8 +150,6 @@ class EntityReferenceAdminTest extends WebDriverTestBase {
     $this->assertNoFieldByName('settings[handler_settings][sort][direction]');
 
     // Third step: confirm.
-    $page->findField('settings[handler_settings][target_bundles][' . key($bundles) . ']')->setValue(key($bundles));
-    $assert_session->assertWaitOnAjaxRequest();
     $this->drupalPostForm(NULL, [
       'required' => '1',
     ], t('Save settings'));
@@ -177,6 +182,7 @@ class EntityReferenceAdminTest extends WebDriverTestBase {
     $this->drupalPostForm($bundle_path . '/fields/' . $field_name . '/storage', $edit, t('Save field settings'));
     $this->drupalGet($bundle_path . '/fields/' . $field_name);
     $this->assertFieldByName('settings[handler_settings][filter][type]', '_none');
+    $this->assertFieldByName('settings[handler_settings][sort][field]', '_none');
 
     // Switch the target type to 'node'.
     $field_name = 'node.' . $this->type . '.field_test';
