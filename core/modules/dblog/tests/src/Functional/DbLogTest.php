@@ -10,6 +10,7 @@ use Drupal\Core\Logger\RfcLogLevel;
 use Drupal\Core\Link;
 use Drupal\Core\Url;
 use Drupal\dblog\Controller\DbLogController;
+use Drupal\error_test\Controller\ErrorTestController;
 use Drupal\Tests\BrowserTestBase;
 
 /**
@@ -26,7 +27,14 @@ class DbLogTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = ['dblog', 'node', 'forum', 'help', 'block'];
+  public static $modules = [
+    'dblog',
+    'error_test',
+    'node',
+    'forum',
+    'help',
+    'block',
+  ];
 
   /**
    * {@inheritdoc}
@@ -791,6 +799,30 @@ class DbLogTest extends BrowserTestBase {
     $this->assertEquals($entries[0]['message'], 'Third Entry #0');
     $this->assertEquals($entries[1]['message'], 'Second Entry #0');
     $this->assertEquals($entries[2]['message'], 'First Entry #0');
+  }
+
+  /**
+   * Tests that the details page displays correctly backtrace.
+   */
+  public function testBacktrace() {
+    $this->drupalLogin($this->adminUser);
+    $this->drupalGet('/error-test/generate-warnings');
+
+    $wid = Database::getConnection()->query('SELECT MAX(wid) FROM {watchdog}')->fetchField();
+    $this->drupalGet('admin/reports/dblog/event/' . $wid);
+
+    $error_user_notice = [
+      '%type' => 'User warning',
+      '@message' => 'Drupal & awesome',
+      '%function' => ErrorTestController::class . '->generateWarnings()',
+      '%file' => drupal_get_path('module', 'error_test') . '/error_test.module',
+    ];
+
+    // Check if the full message displays on the details page and backtrace is a
+    // pre-formatted text.
+    $message = new FormattableMarkup('%type: @message in %function (line', $error_user_notice);
+    $this->assertRaw($message);
+    $this->assertRaw('<pre class="backtrace">');
   }
 
 }
