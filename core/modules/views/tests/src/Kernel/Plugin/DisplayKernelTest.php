@@ -56,7 +56,7 @@ class DisplayKernelTest extends ViewsKernelTestBase {
    *
    * @var array
    */
-  public static $testViews = ['test_display_defaults'];
+  public static $testViews = ['test_display_defaults', 'test_view'];
 
   /**
    * Tests the default display options.
@@ -113,6 +113,53 @@ class DisplayKernelTest extends ViewsKernelTestBase {
     $first = spl_object_hash($display_handler->getPlugin('style'));
     $second = spl_object_hash($display_handler->getPlugin('style'));
     $this->assertIdentical($first, $second, 'The same plugin instance was returned.');
+  }
+
+  /**
+   * Tests the ::isIdentifierUnique method.
+   */
+  public function testisIdentifierUnique() {
+    $view = Views::getView('test_view');
+    $view->initDisplay();
+
+    // Add a handler that doesn't have an Identifier when exposed.
+    $sorts = [
+      'name' => [
+        'id' => 'name',
+        'field' => 'name',
+        'table' => 'views_test_data',
+        'plugin_id' => 'standard',
+        'order' => 'asc',
+        'expose' => ['label' => 'id'],
+        'exposed' => TRUE,
+      ],
+    ];
+    // Add a handler that does have an Identifier when exposed.
+    $filters = [
+      'id' => [
+        'field' => 'id',
+        'id' => 'id',
+        'table' => 'views_test_data',
+        'value' => [],
+        'plugin_id' => 'numeric',
+        'exposed' => TRUE,
+        'expose' => [
+          'operator_id' => '',
+          'label' => 'Id',
+          'description' => '',
+          'identifier' => 'id',
+          'required' => FALSE,
+          'remember' => FALSE,
+          'multiple' => FALSE,
+        ],
+      ],
+    ];
+    $view->display_handler->setOption('sorts', $sorts);
+    $view->display_handler->setOption('filters', $filters);
+    $view->save();
+
+    $this->assertTrue($view->display_handler->isIdentifierUnique('some_id', 'some_id'));
+    $this->assertFalse($view->display_handler->isIdentifierUnique('some_id', 'id'));
   }
 
 }
