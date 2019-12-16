@@ -17,6 +17,7 @@ use Drupal\Tests\block\Traits\BlockCreationTrait;
 use Drupal\Tests\node\Traits\ContentTypeCreationTrait;
 use Drupal\Tests\node\Traits\NodeCreationTrait;
 use Drupal\Tests\user\Traits\UserCreationTrait;
+use Drupal\TestTools\Comparator\MarkupInterfaceComparator;
 use GuzzleHttp\Cookie\CookieJar;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\RequestInterface;
@@ -390,6 +391,9 @@ abstract class BrowserTestBase extends TestCase {
    */
   protected function setUp() {
     parent::setUp();
+
+    // Allow tests to compare MarkupInterface objects via assertEquals().
+    $this->registerComparator(new MarkupInterfaceComparator());
 
     $this->setupBaseUrl();
 
