@@ -26,6 +26,11 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class ConfigEntityUpdater implements ContainerInjectionInterface {
 
   /**
+   * The key used to store information in the update sandbox.
+   */
+  const SANDBOX_KEY = 'config_entity_updater';
+
+  /**
    * The entity type manager.
    *
    * @var \Drupal\Core\Entity\EntityTypeManagerInterface
@@ -88,17 +93,24 @@ class ConfigEntityUpdater implements ContainerInjectionInterface {
    * @throws \InvalidArgumentException
    *   Thrown when the provided entity type ID is not a configuration entity
    *   type.
+   * @throws \RuntimeException
+   *   Thrown when used twice in the same update function for different entity
+   *   types. This method should only be called once per update function.
    */
   public function update(array &$sandbox, $entity_type_id, callable $callback = NULL) {
     $storage = $this->entityTypeManager->getStorage($entity_type_id);
-    $sandbox_key = 'config_entity_updater:' . $entity_type_id;
-    if (!isset($sandbox[$sandbox_key])) {
+
+    if (isset($sandbox[self::SANDBOX_KEY]) && $sandbox[self::SANDBOX_KEY]['entity_type'] !== $entity_type_id) {
+      throw new \RuntimeException('Updating multiple entity types in the same update function is not supported');
+    }
+    if (!isset($sandbox[self::SANDBOX_KEY])) {
       $entity_type = $this->entityTypeManager->getDefinition($entity_type_id);
       if (!($entity_type instanceof ConfigEntityTypeInterface)) {
         throw new \InvalidArgumentException("The provided entity type ID '$entity_type_id' is not a configuration entity type");
       }
-      $sandbox[$sandbox_key]['entities'] = $storage->getQuery()->accessCheck(FALSE)->execute();
-      $sandbox[$sandbox_key]['count'] = count($sandbox[$sandbox_key]['entities']);
+      $sandbox[self::SANDBOX_KEY]['entity_type'] = $entity_type_id;
+      $sandbox[self::SANDBOX_KEY]['entities'] = $storage->getQuery()->accessCheck(FALSE)->execute();
+      $sandbox[self::SANDBOX_KEY]['count'] = count($sandbox[self::SANDBOX_KEY]['entities']);
     }
 
     // The default behaviour is to fix dependencies.
@@ -111,7 +123,7 @@ class ConfigEntityUpdater implements ContainerInjectionInterface {
     }
 
     /** @var \Drupal\Core\Config\Entity\ConfigEntityInterface $entity */
-    $entities = $storage->loadMultiple(array_splice($sandbox[$sandbox_key]['entities'], 0, $this->batchSize));
+    $entities = $storage->loadMultiple(array_splice($sandbox[self::SANDBOX_KEY]['entities'], 0, $this->batchSize));
     foreach ($entities as $entity) {
       if (call_user_func($callback, $entity)) {
         $entity->trustData();
@@ -119,7 +131,7 @@ class ConfigEntityUpdater implements ContainerInjectionInterface {
       }
     }
 
-    $sandbox['#finished'] = empty($sandbox[$sandbox_key]['entities']) ? 1 : ($sandbox[$sandbox_key]['count'] - count($sandbox[$sandbox_key]['entities'])) / $sandbox[$sandbox_key]['count'];
+    $sandbox['#finished'] = empty($sandbox[self::SANDBOX_KEY]['entities']) ? 1 : ($sandbox[self::SANDBOX_KEY]['count'] - count($sandbox[self::SANDBOX_KEY]['entities'])) / $sandbox[self::SANDBOX_KEY]['count'];
   }
 
 }
