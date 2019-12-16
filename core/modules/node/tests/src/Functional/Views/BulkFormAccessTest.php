@@ -128,6 +128,22 @@ class BulkFormAccessTest extends NodeTestBase {
     // Re-load the node and check the status.
     $node = Node::load($node->id());
     $this->assertTrue($node->isPublished(), 'The node is still published.');
+
+    // Try to delete the node and check that we are not redirected to the
+    // conformation form but stay on the content view.
+    $this->assertNotEmpty($this->cssSelect('#views-form-test-node-bulk-form-page-1'));
+    $edit = [
+      'node_bulk_form[0]' => TRUE,
+      'action' => 'node_delete_action',
+    ];
+    $this->drupalPostForm('test-node-bulk-form', $edit, t('Apply to selected items'));
+    // Test that the action message isn't shown.
+    $this->assertRaw(new FormattableMarkup('No access to execute %action on the @entity_type_label %entity_label.', [
+      '%action' => 'Delete content',
+      '@entity_type_label' => 'Content',
+      '%entity_label' => $node->label(),
+    ]));
+    $this->assertNotEmpty($this->cssSelect('#views-form-test-node-bulk-form-page-1'));
   }
 
   /**
