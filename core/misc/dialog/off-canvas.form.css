@@ -13,7 +13,7 @@
 #drupal-off-canvas input[type="radio"] {
   -webkit-appearance: radio;
 }
-#drupal-off-canvas select {
+#drupal-off-canvas select:not([multiple]) {
   -webkit-appearance: menulist;
   -moz-appearance: menulist;
 }
