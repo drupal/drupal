@@ -58,8 +58,9 @@ class ConfigEntityUpdaterTest extends KernelTestBase {
     $this->assertEquals('config_test_9', $entities['config_test_9']->label());
     $this->assertEquals('config_test_10', $entities['config_test_10']->label());
     $this->assertEquals('config_test_14', $entities['config_test_14']->label());
-    $this->assertEquals(15, $sandbox['config_entity_updater:config_test']['count']);
-    $this->assertCount(5, $sandbox['config_entity_updater:config_test']['entities']);
+    $this->assertEquals(15, $sandbox['config_entity_updater']['count']);
+    $this->assertEquals('config_test', $sandbox['config_entity_updater']['entity_type']);
+    $this->assertCount(5, $sandbox['config_entity_updater']['entities']);
     $this->assertEquals(10 / 15, $sandbox['#finished']);
 
     // Update the rest.
@@ -70,7 +71,7 @@ class ConfigEntityUpdaterTest extends KernelTestBase {
     $this->assertEquals('config_test_10 (updated)', $entities['config_test_10']->label());
     $this->assertEquals('config_test_14 (updated)', $entities['config_test_14']->label());
     $this->assertEquals(1, $sandbox['#finished']);
-    $this->assertCount(0, $sandbox['config_entity_updater:config_test']['entities']);
+    $this->assertCount(0, $sandbox['config_entity_updater']['entities']);
   }
 
   /**
@@ -100,8 +101,8 @@ class ConfigEntityUpdaterTest extends KernelTestBase {
     $this->assertEquals(['added_dependency'], $entities['config_test_8']->getDependencies()['module']);
     $this->assertEquals([], $entities['config_test_9']->getDependencies());
     $this->assertEquals([], $entities['config_test_14']->getDependencies());
-    $this->assertEquals(15, $sandbox['config_entity_updater:config_test']['count']);
-    $this->assertCount(6, $sandbox['config_entity_updater:config_test']['entities']);
+    $this->assertEquals(15, $sandbox['config_entity_updater']['count']);
+    $this->assertCount(6, $sandbox['config_entity_updater']['entities']);
     $this->assertEquals(9 / 15, $sandbox['#finished']);
 
     // Update the rest.
@@ -110,7 +111,7 @@ class ConfigEntityUpdaterTest extends KernelTestBase {
     $this->assertEquals(['added_dependency'], $entities['config_test_9']->getDependencies()['module']);
     $this->assertEquals(['added_dependency'], $entities['config_test_14']->getDependencies()['module']);
     $this->assertEquals(1, $sandbox['#finished']);
-    $this->assertCount(0, $sandbox['config_entity_updater:config_test']['entities']);
+    $this->assertCount(0, $sandbox['config_entity_updater']['entities']);
   }
 
   /**
@@ -123,6 +124,18 @@ class ConfigEntityUpdaterTest extends KernelTestBase {
     $updater = $this->container->get('class_resolver')->getInstanceFromDefinition(ConfigEntityUpdater::class);
     $sandbox = [];
     $updater->update($sandbox, 'entity_test_mul_changed');
+  }
+
+  /**
+   * @covers ::update
+   */
+  public function testUpdateOncePerUpdateException() {
+    $this->expectException(\RuntimeException::class);
+    $this->expectExceptionMessage('Updating multiple entity types in the same update function is not supported');
+    $updater = $this->container->get('class_resolver')->getInstanceFromDefinition(ConfigEntityUpdater::class);
+    $sandbox = [];
+    $updater->update($sandbox, 'config_test');
+    $updater->update($sandbox, 'config_query_test');
   }
 
 }
