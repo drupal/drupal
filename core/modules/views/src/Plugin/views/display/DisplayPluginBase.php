@@ -2547,7 +2547,7 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
             }
           }
           else {
-            if ($id != $key && $identifier == $handler->options['expose']['identifier']) {
+            if ($id != $key && isset($handler->options['expose']['identifier']) && $identifier == $handler->options['expose']['identifier']) {
               return FALSE;
             }
           }
