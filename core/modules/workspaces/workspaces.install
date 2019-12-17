@@ -6,6 +6,7 @@
  */
 
 use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\Core\Entity\ContentEntityNullStorage;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\workspaces\Entity\Workspace;
 
@@ -173,4 +174,24 @@ function workspaces_update_8802() {
     ->setReadOnly(TRUE);
 
   $entity_definition_update_manager->installFieldStorageDefinition('parent', 'workspace', 'workspaces', $storage_definition);
+}
+
+/**
+ * Remove the Workspace Association entity storage if necessary.
+ */
+function workspaces_update_8803() {
+  $entity_definition_update_manager = \Drupal::entityDefinitionUpdateManager();
+  $entity_type = $entity_definition_update_manager->getEntityType('workspace_association');
+
+  // We can't migrate the workspace association data if the entity type is not
+  // using its default storage.
+  // @see workspaces_post_update_move_association_data()
+  if ($entity_type && $entity_type->getHandlerClasses()['storage'] === 'Drupal\workspaces\WorkspaceAssociationStorage') {
+    \Drupal::state()->set('workspaces_update_8803.tables', [
+      'base_table' => $entity_type->getBaseTable(),
+      'revision_table' => $entity_type->getRevisionTable(),
+    ]);
+    $entity_type->setStorageClass(ContentEntityNullStorage::class);
+    $entity_definition_update_manager->uninstallEntityType($entity_type);
+  }
 }
