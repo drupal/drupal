@@ -39,7 +39,7 @@
     "prefer-stable": true,
     "config": {
         "preferred-install": "dist",
-        "autoloader-suffix": "Drupal8"
+        "autoloader-suffix": "Drupal9"
     },
     "extra": {
         "_readme": [
