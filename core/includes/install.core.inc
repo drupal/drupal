@@ -425,10 +425,9 @@ function install_begin_request($class_loader, &$install_state) {
   }
   $GLOBALS['conf']['container_service_providers']['InstallerConfigOverride'] = 'Drupal\Core\Installer\ConfigOverride';
 
-  // Only allow dumping the container once the hash salt has been created. Note,
-  // InstallerKernel::createFromRequest() is not used because Settings is
+  // Note, InstallerKernel::createFromRequest() is not used because Settings is
   // already initialized.
-  $kernel = new InstallerKernel($environment, $class_loader, (bool) Settings::get('hash_salt', FALSE));
+  $kernel = new InstallerKernel($environment, $class_loader, FALSE);
   $kernel::bootEnvironment();
   $kernel->setSitePath($site_path);
   $kernel->boot();
