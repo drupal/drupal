@@ -1,6 +1,11 @@
 Drupal 7.xx, xxxx-xx-xx (development version)
 -----------------------
 
+Drupal 7.69, 2019-12-18
+-----------------------
+- Fixed security issues:
+   - SA-CORE-2019-012
+
 Drupal 7.68, 2019-12-04
 -----------------------
 - Fixed: Hide toolbar when printing
