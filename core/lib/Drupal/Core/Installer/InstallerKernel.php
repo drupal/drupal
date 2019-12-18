@@ -15,6 +15,8 @@ class InstallerKernel extends DrupalKernel {
   protected function initializeContainer() {
     // Always force a container rebuild.
     $this->containerNeedsRebuild = TRUE;
+    // Ensure the InstallerKernel's container is not dumped.
+    $this->allowDumping = FALSE;
     $container = parent::initializeContainer();
     return $container;
   }

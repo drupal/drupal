@@ -406,4 +406,12 @@ class SystemTestController extends ControllerBase implements TrustedCallbackInte
     return ['preRenderCacheTags'];
   }
 
+  /**
+   * Use a plain Symfony response object to output the current install_profile.
+   */
+  public function getInstallProfile() {
+    $install_profile = \Drupal::installProfile() ?: 'NONE';
+    return new Response('install_profile: ' . $install_profile);
+  }
+
 }
