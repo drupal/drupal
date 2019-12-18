@@ -324,6 +324,28 @@ class MediaLibraryTest extends WebDriverTestBase {
   public function testWidgetAccess() {
     $assert_session = $this->assertSession();
 
+    // Assert users can not select media items they do not have access to.
+    $unpublished_media = Media::create([
+      'name' => 'Mosquito',
+      'bundle' => 'type_one',
+      'field_media_test' => 'Mosquito',
+      'status' => FALSE,
+    ]);
+    $unpublished_media->save();
+    $unpublished_media_id = $unpublished_media->id();
+    // Visit a node create page.
+    $this->drupalGet('node/add/basic_page');
+    // Set the hidden value and trigger the mousedown event on the button via
+    // JavaScript since the field and button are hidden.
+    $this->getSession()->executeScript("jQuery('[data-media-library-widget-value=\"field_unlimited_media\"]').val('1,2,$unpublished_media_id')");
+    $this->getSession()->executeScript("jQuery('[data-media-library-widget-update=\"field_unlimited_media\"]').trigger('mousedown')");
+    $this->assertNotEmpty($assert_session->waitForElementVisible('css', '.media-library-item'));
+    // Assert the published items are selected and the unpublished item is not
+    // selected.
+    $assert_session->pageTextContains('Horse');
+    $assert_session->pageTextContains('Bear');
+    $assert_session->pageTextNotContains('Mosquito');
+
     $this->drupalLogout();
 
     $role = Role::load(RoleInterface::ANONYMOUS_ID);
@@ -1208,6 +1230,34 @@ class MediaLibraryTest extends WebDriverTestBase {
     $assert_session->assertWaitOnAjaxRequest();
     $assert_session->pageTextNotContains('Add or select media');
     $assert_session->pageTextContains($file_system->basename($jpg_uri_2));
+
+    // Assert users can not select media items they do not have access to.
+    $unpublished_media = Media::create([
+      'name' => 'Mosquito',
+      'bundle' => 'type_one',
+      'field_media_test' => 'Mosquito',
+      'status' => FALSE,
+    ]);
+    $unpublished_media->save();
+    $unpublished_media_id = $unpublished_media->id();
+    $assert_session->elementExists('css', '.media-library-open-button[name^="field_unlimited_media"]')->click();
+    $assert_session->assertWaitOnAjaxRequest();
+    $page->clickLink('Type Three');
+    $assert_session->assertWaitOnAjaxRequest();
+    // Set the hidden field with the current selection via JavaScript and upload
+    // a file.
+    $this->getSession()->executeScript("jQuery('.js-media-library-add-form-current-selection').val('1,2,$unpublished_media_id')");
+    $page->attachFileToField('Add files', $this->container->get('file_system')->realpath($png_uri_3));
+    $assert_session->assertWaitOnAjaxRequest();
+    // Assert the pre-selected items are shown.
+    $selection_area = $assert_session->elementExists('css', '.media-library-add-form__selected-media');
+    $assert_session->elementExists('css', 'summary', $selection_area)->click();
+    // Assert the published items are selected and the unpublished item is not
+    // selected.
+    $assert_session->pageTextContains('Horse');
+    $assert_session->pageTextContains('Bear');
+    $assert_session->pageTextNotContains('Mosquito');
+    $page->find('css', '.ui-dialog-titlebar-close')->click();
 
     // Assert we can also remove selected items from the selection area in the
     // upload form.
