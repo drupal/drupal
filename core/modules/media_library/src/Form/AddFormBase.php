@@ -510,7 +510,12 @@ abstract class AddFormBase extends FormBase implements BaseFormIdInterface, Trus
     $form_state->set('media', array_values($media));
     // Save the selected items in the form state so they are remembered when an
     // item is removed.
-    $form_state->set('current_selection', array_filter(explode(',', $form_state->getValue('current_selection'))));
+    $media = $this->entityTypeManager->getStorage('media')
+      ->loadMultiple(explode(',', $form_state->getValue('current_selection')));
+    // Any ID can be passed to the form, so we have to check access.
+    $form_state->set('current_selection', array_filter($media, function ($media_item) {
+      return $media_item->access('view');
+    }));
     $form_state->setRebuild();
   }
 
@@ -806,13 +811,9 @@ abstract class AddFormBase extends FormBase implements BaseFormIdInterface, Trus
    *   An array containing the pre-selected media items keyed by ID.
    */
   protected function getPreSelectedMediaItems(FormStateInterface $form_state) {
-    // Get the current selection from the form state.
+    // Get the pre-selected media items from the form state.
     // @see ::processInputValues()
-    $media_ids = $form_state->get('current_selection');
-    if (!$media_ids) {
-      return [];
-    }
-    return $this->entityTypeManager->getStorage('media')->loadMultiple($media_ids);
+    return $form_state->get('current_selection') ?: [];
   }
 
   /**
@@ -823,7 +824,7 @@ abstract class AddFormBase extends FormBase implements BaseFormIdInterface, Trus
    *
    * @return \Drupal\media\MediaInterface[]
    *   An array containing the added media items keyed by delta. The media items
-   *   won't have an ID untill they are saved in ::submitForm().
+   *   won't have an ID until they are saved in ::submitForm().
    */
   protected function getAddedMediaItems(FormStateInterface $form_state) {
     return $form_state->get('media') ?: [];

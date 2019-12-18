@@ -568,6 +568,29 @@ class WidgetUploadTest extends MediaLibraryTestBase {
     $this->pressInsertSelected('Added one media item.');
     $assert_session->pageTextContains($file_system->basename($jpg_uri_2));
 
+    // Assert users can not select media items they do not have access to.
+    $unpublished_media = Media::create([
+      'name' => 'Mosquito',
+      'bundle' => 'type_one',
+      'field_media_test' => 'Mosquito',
+      'status' => FALSE,
+    ]);
+    $unpublished_media->save();
+    $this->openMediaLibraryForField('field_unlimited_media');
+    $this->switchToMediaType('Three');
+    // Set the hidden field with the current selection via JavaScript and upload
+    // a file.
+    $this->getSession()->executeScript("jQuery('.js-media-library-add-form-current-selection').val('1,2,{$unpublished_media->id()}')");
+    $this->addMediaFileToField('Add files', $this->container->get('file_system')->realpath($png_uri_3));
+    // Assert the pre-selected items are shown.
+    $this->getSelectionArea();
+    // Assert the published items are selected and the unpublished item is not
+    // selected.
+    $this->waitForText(Media::load(1)->label());
+    $this->waitForText(Media::load(2)->label());
+    $assert_session->pageTextNotContains('Mosquito');
+    $page->find('css', '.ui-dialog-titlebar-close')->click();
+
     // Assert we can also remove selected items from the selection area in the
     // upload form.
     $this->openMediaLibraryForField('field_unlimited_media');
