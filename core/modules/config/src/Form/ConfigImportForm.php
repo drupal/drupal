@@ -131,7 +131,7 @@ class ConfigImportForm extends FormBase {
         foreach ($archiver->listContent() as $file) {
           $files[] = $file['filename'];
         }
-        $archiver->extractList($files, $this->settings->get('config_sync_directory'));
+        $archiver->extractList($files, $this->settings->get('config_sync_directory'), '', FALSE, FALSE);
         $this->messenger()->addStatus($this->t('Your configuration files were successfully uploaded and are ready for import.'));
         $form_state->setRedirect('config.sync');
       }
