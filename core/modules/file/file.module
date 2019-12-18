@@ -992,7 +992,7 @@ function _file_save_upload_single(\SplFileInfo $file_info, $form_field_name, $va
   $values = [
     'uid' => $user->id(),
     'status' => 0,
-    'filename' => $file_info->getClientOriginalName(),
+    'filename' => trim($file_info->getClientOriginalName(), '.'),
     'uri' => $file_info->getRealPath(),
     'filesize' => $file_info->getSize(),
   ];

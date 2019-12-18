@@ -2,6 +2,8 @@
 
 namespace Drupal\Tests\file\Functional;
 
+use Drupal\file\Entity\File;
+
 /**
  * Tests the 'managed_file' element type.
  *
@@ -154,6 +156,21 @@ class FileManagedFileElementTest extends FileFieldTestBase {
     // We expect the title 'Managed <em>file & butter</em>' which got escaped
     // via a t() call before.
     $this->assertRaw('The file referenced by the Managed <em>file &amp; butter</em> field does not exist.');
+  }
+
+  /**
+   * Tests file names have leading . removed.
+   */
+  public function testFileNameTrim() {
+    file_put_contents('public://.leading-period.txt', $this->randomString(32));
+    $last_fid_prior = $this->getLastFileId();
+    $this->drupalPostForm('file/test/0/0/0', [
+      'files[file]' => \Drupal::service('file_system')->realpath('public://.leading-period.txt'),
+    ], t('Save'));
+    $next_fid = $this->getLastFileId();
+    $this->assertGreaterThan($last_fid_prior, $next_fid);
+    $file = File::load($next_fid);
+    $this->assertEquals('leading-period.txt', $file->getFilename());
   }
 
   /**
