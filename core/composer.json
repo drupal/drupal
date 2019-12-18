@@ -47,7 +47,7 @@
         "composer/semver": "^1.0",
         "paragonie/random_compat": "^1.0|^2.0|^9.99.99",
         "asm89/stack-cors": "^1.1",
-        "pear/archive_tar": "^1.4"
+        "pear/archive_tar": "^1.4.9"
     },
     "conflict": {
         "drush/drush": "<8.1.10",

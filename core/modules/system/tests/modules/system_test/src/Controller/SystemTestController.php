@@ -398,4 +398,12 @@ class SystemTestController extends ControllerBase {
     return new CacheableResponse('Foo', 200, ['Cache-Control' => 'bar']);
   }
 
+  /**
+   * Use a plain Symfony response object to output the current install_profile.
+   */
+  public function getInstallProfile() {
+    $install_profile = \Drupal::installProfile() ?: 'NONE';
+    return new Response('install_profile: ' . $install_profile);
+  }
+
 }
