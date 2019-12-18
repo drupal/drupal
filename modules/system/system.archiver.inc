@@ -38,10 +38,10 @@ class ArchiverTar implements ArchiverInterface {
 
   public function extract($path, Array $files = array()) {
     if ($files) {
-      $this->tar->extractList($files, $path);
+      $this->tar->extractList($files, $path, '', FALSE, FALSE);
     }
     else {
-      $this->tar->extract($path);
+      $this->tar->extract($path, FALSE, FALSE);
     }
 
     return $this;
