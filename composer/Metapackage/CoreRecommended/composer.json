@@ -24,7 +24,7 @@
         "guzzlehttp/psr7": "1.6.1",
         "masterminds/html5": "2.3.0",
         "paragonie/random_compat": "v9.99.99",
-        "pear/archive_tar": "1.4.8",
+        "pear/archive_tar": "1.4.9",
         "pear/console_getopt": "v1.4.2",
         "pear/pear-core-minimal": "v1.10.9",
         "pear/pear_exception": "v1.0.0",
