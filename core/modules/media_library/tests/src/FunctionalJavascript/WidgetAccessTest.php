@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\media_library\FunctionalJavascript;
 
+use Drupal\media\Entity\Media;
 use Drupal\media_library\MediaLibraryState;
 use Drupal\user\Entity\Role;
 use Drupal\user\RoleInterface;
@@ -18,6 +19,35 @@ class WidgetAccessTest extends MediaLibraryTestBase {
    */
   public function testWidgetAccess() {
     $assert_session = $this->assertSession();
+    $session = $this->getSession();
+
+    $this->createMediaItems([
+      'type_one' => ['Horse', 'Bear'],
+    ]);
+    $account = $this->drupalCreateUser(['create basic_page content']);
+    $this->drupalLogin($account);
+
+    // Assert users can not select media items they do not have access to.
+    $unpublished_media = Media::create([
+      'name' => 'Mosquito',
+      'bundle' => 'type_one',
+      'field_media_test' => 'Mosquito',
+      'status' => FALSE,
+    ]);
+    $unpublished_media->save();
+    // Visit a node create page.
+    $this->drupalGet('node/add/basic_page');
+    // Set the hidden value and trigger the mousedown event on the button via
+    // JavaScript since the field and button are hidden.
+    $session->executeScript("jQuery('[data-media-library-widget-value=\"field_unlimited_media\"]').val('1,2,{$unpublished_media->id()}')");
+    $session->executeScript("jQuery('[data-media-library-widget-update=\"field_unlimited_media\"]').trigger('mousedown')");
+    $this->assertElementExistsAfterWait('css', '.js-media-library-item');
+    // Assert the published items are selected and the unpublished item is not
+    // selected.
+    $assert_session->pageTextContains('Horse');
+    $assert_session->pageTextContains('Bear');
+    $assert_session->pageTextNotContains('Mosquito');
+    $this->drupalLogout();
 
     $role = Role::load(RoleInterface::ANONYMOUS_ID);
     $role->revokePermission('view media');
