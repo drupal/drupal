@@ -1,5 +1,5 @@
 /*!
- * jQuery Once v2.2.0 - http://github.com/robloach/jquery-once
+ * jQuery Once v2.2.3 - http://github.com/robloach/jquery-once
  * @license MIT, GPL-2.0
  *   http://opensource.org/licenses/MIT
  *   http://opensource.org/licenses/GPL-2.0
@@ -17,7 +17,7 @@
 (function (factory) {
   'use strict';
 
-  if (typeof exports === 'object') {
+  if (typeof exports === 'object' && typeof exports.nodeName !== 'string') {
     // CommonJS
     factory(require('jquery'));
   } else if (typeof define === 'function' && define.amd) {
@@ -38,7 +38,7 @@
    * @param {string} [id=once]
    *   A string representing the ID to check. Defaults to `'once'`.
    *
-   * @returns The valid ID name.
+   * @returns {number} The valid ID name.
    *
    * @throws TypeError when an ID is provided, but not a string.
    * @private
@@ -48,6 +48,7 @@
     if (typeof id !== 'string') {
       throw new TypeError('The jQuery Once id parameter must be a string');
     }
+
     return id;
   };
 
@@ -58,7 +59,7 @@
    *   The data ID used to determine whether the given elements have already
    *   been processed or not. Defaults to `'once'`.
    *
-   * @returns jQuery collection of elements that have now run once by
+   * @returns {jQuery} jQuery collection of elements that have now run once by
    *   the given ID.
    *
    * @example
@@ -108,7 +109,7 @@
    *   processed by the once function. The ID should be the same ID that was
    *   originally passed to the once() function. Defaults to `'once'`.
    *
-   * @returns jQuery collection of elements that were acted upon to remove their
+   * @returns {jQuery} jQuery collection of elements that were acted upon to remove their
    *    once data.
    *
    * @example
@@ -143,7 +144,7 @@
    *   been processed by the once function. The id should be the same id that
    *   was originally passed to the once() function. Defaults to 'once'.
    *
-   * @returns jQuery collection of elements that have been run once.
+   * @returns {jQuery} jQuery collection of elements that have been run once.
    *
    * @example
    * ``` javascript
