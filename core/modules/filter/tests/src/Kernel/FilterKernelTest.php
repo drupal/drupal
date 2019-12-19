@@ -376,6 +376,10 @@ class FilterKernelTest extends KernelTestBase {
       "<iframe>aaa</iframe>\n\n" => [
         "<p><iframe>aaa</iframe></p>" => FALSE,
       ],
+      // Bug 3097338, paragraphs were appearing around drupalmedia tags.
+      '<drupal-media data-caption=" " data-entity-type="media" data-entity-uuid="dbb16f97-cd11-4357-acde-cd09e19e312b"></drupal-media>' => [
+        '<p><drupal-media data-caption=" " data-entity-type="media" data-entity-uuid="dbb16f97-cd11-4357-acde-cd09e19e312b"></drupal-media></p>' => FALSE,
+      ],
     ];
     $this->assertFilteredString($filter, $tests);
 
