@@ -7,6 +7,7 @@ use Drupal\Core\Form\FormStateDecoratorBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
 use Drupal\Tests\UnitTestCase;
+use Prophecy\Argument;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -1440,7 +1441,7 @@ class FormStateDecoratorBaseTest extends UnitTestCase {
    * @param callable $prepared_callback
    */
   public function testPrepareCallback($unprepared_callback, callable $prepared_callback) {
-    $this->decoratedFormState->prepareCallback($unprepared_callback)
+    $this->decoratedFormState->prepareCallback(Argument::is($unprepared_callback))
       ->willReturn($prepared_callback)
       ->shouldBeCalled();
 
