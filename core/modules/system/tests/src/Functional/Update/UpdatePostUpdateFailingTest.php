@@ -2,15 +2,17 @@
 
 namespace Drupal\Tests\system\Functional\Update;
 
-use Drupal\FunctionalTests\Update\UpdatePathTestBase;
+use Drupal\Core\Database\Database;
+use Drupal\Tests\BrowserTestBase;
+use Drupal\Tests\UpdatePathTestTrait;
 
 /**
  * Tests hook_post_update() when there are failing update hooks.
  *
  * @group Update
- * @group legacy
  */
-class UpdatePostUpdateFailingTest extends UpdatePathTestBase {
+class UpdatePostUpdateFailingTest extends BrowserTestBase {
+  use UpdatePathTestTrait;
 
   /**
    * {@inheritdoc}
@@ -20,11 +22,37 @@ class UpdatePostUpdateFailingTest extends UpdatePathTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setDatabaseDumpFiles() {
-    $this->databaseDumpFiles = [
-      __DIR__ . '/../../../../tests/fixtures/update/drupal-8.bare.standard.php.gz',
-      __DIR__ . '/../../../../tests/fixtures/update/drupal-8.update-test-postupdate-failing-enabled.php',
-    ];
+  protected function setUp() {
+    parent::setUp();
+    $connection = Database::getConnection();
+
+    // Set the schema version.
+    $connection->merge('key_value')
+      ->condition('collection', 'system.schema')
+      ->condition('name', 'update_test_failing')
+      ->fields([
+        'collection' => 'system.schema',
+        'name' => 'update_test_failing',
+        'value' => 'i:8000;',
+      ])
+      ->execute();
+
+    // Update core.extension.
+    $extensions = $connection->select('config')
+      ->fields('config', ['data'])
+      ->condition('collection', '')
+      ->condition('name', 'core.extension')
+      ->execute()
+      ->fetchField();
+    $extensions = unserialize($extensions);
+    $extensions['module']['update_test_failing'] = 8000;
+    $connection->update('config')
+      ->fields([
+        'data' => serialize($extensions),
+      ])
+      ->condition('collection', '')
+      ->condition('name', 'core.extension')
+      ->execute();
   }
 
   /**

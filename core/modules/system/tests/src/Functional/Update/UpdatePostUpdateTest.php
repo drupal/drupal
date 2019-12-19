@@ -3,15 +3,17 @@
 namespace Drupal\Tests\system\Functional\Update;
 
 use Drupal\Component\Render\FormattableMarkup;
-use Drupal\FunctionalTests\Update\UpdatePathTestBase;
+use Drupal\Core\Database\Database;
+use Drupal\Tests\BrowserTestBase;
+use Drupal\Tests\UpdatePathTestTrait;
 
 /**
  * Tests hook_post_update().
  *
  * @group Update
- * @group legacy
  */
-class UpdatePostUpdateTest extends UpdatePathTestBase {
+class UpdatePostUpdateTest extends BrowserTestBase {
+  use UpdatePathTestTrait;
 
   /**
    * {@inheritdoc}
@@ -21,19 +23,43 @@ class UpdatePostUpdateTest extends UpdatePathTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setDatabaseDumpFiles() {
-    $this->databaseDumpFiles = [
-      __DIR__ . '/../../../../tests/fixtures/update/drupal-8.bare.standard.php.gz',
-      __DIR__ . '/../../../../tests/fixtures/update/drupal-8.update-test-postupdate-enabled.php',
-    ];
+  protected function setUp() {
+    parent::setUp();
+    $connection = Database::getConnection();
+
+    // Set the schema version.
+    $connection->merge('key_value')
+      ->condition('collection', 'system.schema')
+      ->condition('name', 'update_test_postupdate')
+      ->fields([
+        'collection' => 'system.schema',
+        'name' => 'update_test_postupdate',
+        'value' => 'i:8000;',
+      ])
+      ->execute();
+
+    // Update core.extension.
+    $extensions = $connection->select('config')
+      ->fields('config', ['data'])
+      ->condition('collection', '')
+      ->condition('name', 'core.extension')
+      ->execute()
+      ->fetchField();
+    $extensions = unserialize($extensions);
+    $extensions['module']['update_test_postupdate'] = 8000;
+    $connection->update('config')
+      ->fields([
+        'data' => serialize($extensions),
+      ])
+      ->condition('collection', '')
+      ->condition('name', 'core.extension')
+      ->execute();
   }
 
   /**
    * {@inheritdoc}
    */
   protected function doSelectionTest() {
-    parent::doSelectionTest();
-
     // Ensure that normal and post_update updates are merged together on the
     // selection page.
     $this->assertRaw('<ul><li>8001 -   Normal update_N() function. </li><li>First update.</li><li>Second update.</li><li>Test0 update.</li><li>Test1 update.</li><li>Testing batch processing in post updates update.</li></ul>');
