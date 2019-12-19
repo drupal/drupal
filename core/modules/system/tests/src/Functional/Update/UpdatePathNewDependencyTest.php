@@ -2,30 +2,22 @@
 
 namespace Drupal\Tests\system\Functional\Update;
 
-use Drupal\FunctionalTests\Update\UpdatePathTestBase;
+use Drupal\Tests\BrowserTestBase;
+use Drupal\Tests\UpdatePathTestTrait;
 use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
 
 /**
  * Modules can introduce new dependencies and enable them in update hooks.
  *
  * @group system
- * @group legacy
  */
-class UpdatePathNewDependencyTest extends UpdatePathTestBase {
+class UpdatePathNewDependencyTest extends BrowserTestBase {
+  use UpdatePathTestTrait;
 
   /**
    * {@inheritdoc}
    */
   protected $defaultTheme = 'stark';
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function setDatabaseDumpFiles() {
-    $this->databaseDumpFiles = [
-      __DIR__ . '/../../../../tests/fixtures/update/drupal-8.6.0.bare.testing.php.gz',
-    ];
-  }
 
   /**
    * Test that a module can add services that depend on new modules.
