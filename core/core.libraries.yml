@@ -621,10 +621,10 @@ sortable:
 
 underscore:
   remote: https://github.com/jashkenas/underscore
-  version: "1.8.3"
+  version: "1.9.1"
   license:
     name: MIT
-    url: https://github.com/jashkenas/underscore/blob/1.8.3/LICENSE
+    url: https://github.com/jashkenas/underscore/blob/1.9.1/LICENSE
     gpl-compatible: true
   js:
     assets/vendor/underscore/underscore-min.js: { weight: -20, minified: true }
