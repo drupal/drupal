@@ -136,6 +136,9 @@ class CoreServiceProvider implements ServiceProviderInterface, ServiceModifierIn
     foreach ($services as $id => $class) {
       if (!$container->hasDefinition($id)) {
         $definition = $container->register($id, $class);
+        // Mark the fallback services as deprecated in order to allow other
+        // modules to provide additional checks before relying or altering them.
+        $definition->setDeprecated(TRUE, 'The "%service_id%" service is in fallback mode. See https://drupal.org/node/3092086');
         switch ($id) {
           case 'path_alias.subscriber':
             $definition->addArgument(new Reference('path.alias_manager'));
