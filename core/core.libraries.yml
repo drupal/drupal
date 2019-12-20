@@ -601,10 +601,10 @@ picturefill:
     assets/vendor/picturefill/picturefill.min.js: { weight: -10, minified: true }
 
 popperjs:
-  version: "1.15.0"
+  version: "1.16.0"
   license:
     name: MIT
-    url: https://github.com/FezVrasta/popper.js/blob/v1.15.0/LICENSE.md
+    url: https://github.com/popperjs/popper.js/blob/v1.16.0/LICENSE.md
     gpl-compatible: true
   js:
     assets/vendor/popperjs/popper.min.js: { minified: true }
