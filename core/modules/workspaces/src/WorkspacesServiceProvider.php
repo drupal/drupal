@@ -22,9 +22,14 @@ class WorkspacesServiceProvider extends ServiceProviderBase {
     $container->setParameter('renderer.config', $renderer_config);
 
     // Replace the class of the 'path_alias.repository' service.
-    $container->getDefinition('path_alias.repository')
-      ->setClass(WorkspacesAliasRepository::class)
-      ->addMethodCall('setWorkspacesManager', [new Reference('workspaces.manager')]);
+    if ($container->hasDefinition('path_alias.repository')) {
+      $definition = $container->getDefinition('path_alias.repository');
+      if (!$definition->isDeprecated()) {
+        $definition
+          ->setClass(WorkspacesAliasRepository::class)
+          ->addMethodCall('setWorkspacesManager', [new Reference('workspaces.manager')]);
+      }
+    }
 
     // Ensure that there's no active workspace while running database updates by
     // removing the relevant tag from all workspace negotiator services.
