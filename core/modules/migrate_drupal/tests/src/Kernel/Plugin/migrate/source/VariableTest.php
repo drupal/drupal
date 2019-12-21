@@ -48,6 +48,42 @@ class VariableTest extends MigrateSqlSourceTestBase {
       'bar',
     ];
 
+    // Tests getting one of two variables.
+    $tests[1]['source_data']['variable'] = [
+      ['name' => 'foo', 'value' => 'i:1;'],
+      ['name' => 'bar', 'value' => 'b:0;'],
+    ];
+
+    $tests[1]['expected_data'] = [
+      [
+        'id' => 'foo',
+        'foo' => 1,
+      ],
+    ];
+
+    $tests[1]['expected_count'] = NULL;
+
+    $tests[1]['configuration']['variables'] = [
+      'foo',
+      'bar0',
+    ];
+
+    // Tests requesting mis-spelled variable names.
+    $tests[2]['source_data']['variable'] = [
+      ['name' => 'foo', 'value' => 'i:1;'],
+      ['name' => 'bar', 'value' => 'b:0;'],
+    ];
+    $tests[2]['expected_data'] = [
+      [
+        'id' => 'foo0',
+      ],
+    ];
+    $tests[2]['expected_count'] = NULL;
+    $tests[2]['configuration']['variables'] = [
+      'foo0',
+      'bar0',
+    ];
+
     return $tests;
   }
 
