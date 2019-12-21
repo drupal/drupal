@@ -46,6 +46,16 @@ class FilterSettings extends ProcessPluginBase {
         $value['allowed_html'] = str_replace(array_keys($this->allowedHtmlDefaultAttributes), array_values($this->allowedHtmlDefaultAttributes), $value['allowed_html']);
       }
     }
+    // Filters that don't exist in Drupal 8 will have been mapped to filter_null
+    // but will have their settings (if any) retained. Those filter settings
+    // need to be dropped, otherwise saving the resulting FilterFormat config
+    // entity will be unable to save due to config schema validation errors.
+    // The migration warning message in the "filter_id" migration process plugin
+    // warns the user about this.
+    // @see \Drupal\filter\Plugin\migrate\process\FilterID::transform()
+    elseif ($row->getDestinationProperty('id') === 'filter_null') {
+      $value = [];
+    }
     return $value;
   }
 
