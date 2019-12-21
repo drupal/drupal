@@ -229,6 +229,22 @@ class FormatDateTest extends MigrateProcessTestCase {
         'value' => '0000-00-00 00:00:00',
         'expected' => '-0001-11-30 00:00:00',
       ],
+      'collected_date_attributes_day' => [
+        'configuration' => [
+          'from_format' => 'Y-m-d\TH:i:s',
+          'to_format' => 'Y-m-d\TH:i:s',
+        ],
+        'value' => '2012-01-00T00:00:00',
+        'expected' => '2012-01-01T00:00:00',
+      ],
+      'collected_date_attributes_month' => [
+        'configuration' => [
+          'from_format' => 'Y-m-d\TH:i:s',
+          'to_format' => 'Y-m-d\TH:i:s',
+        ],
+        'value' => '2012-00-00T00:00:00',
+        'expected' => '2012-01-01T00:00:00',
+      ],
     ];
   }
 
