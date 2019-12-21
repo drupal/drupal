@@ -127,6 +127,13 @@ class FormatDate extends ProcessPluginBase {
     }
     $settings = isset($this->configuration['settings']) ? $this->configuration['settings'] : [];
 
+    // Older versions of Drupal where omitting certain granularities (also known
+    // as "collected date attributes") resulted in invalid timestamps getting
+    // stored.
+    if ($fromFormat === 'Y-m-d\TH:i:s') {
+      $value = str_replace(['-00-00T', '-00T'], ['-01-01T', '-01T'], $value);
+    }
+
     // Attempts to transform the supplied date using the defined input format.
     // DateTimePlus::createFromFormat can throw exceptions, so we need to
     // explicitly check for problems.
