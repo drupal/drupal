@@ -42,12 +42,20 @@ class MigrateNodeTitleLabelTest extends MigrateDrupal7TestBase {
    * Tests migration of node title field overrides.
    */
   public function testMigration() {
-    $this->assertEntity('node.article.title', 'Title');
-    $this->assertEntity('node.blog.title', 'Title');
-    $this->assertEntity('node.book.title', 'Title');
+    // Forum title labels are overridden to 'Subject'.
     $this->assertEntity('node.forum.title', 'Subject');
-    $this->assertEntity('node.page.title', 'Title');
-    $this->assertEntity('node.test_content_type.title', 'Title');
+    // Other content types use the default of 'Title' and are not overridden.
+    $no_override_node_type = [
+      'article',
+      'blog',
+      'book',
+      'page',
+      'test_content_type',
+    ];
+    foreach ($no_override_node_type as $type) {
+      $override = BaseFieldOverride::load("node.$type.title");
+      $this->assertFalse($override instanceof BaseFieldOverride);
+    }
   }
 
 }
