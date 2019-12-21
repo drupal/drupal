@@ -53,11 +53,10 @@ class DateField extends FieldPluginBase {
       $field_data = unserialize($data['field_definition']['data']);
       if (isset($field_data['settings']['granularity'])) {
         $granularity = $field_data['settings']['granularity'];
-        if ($granularity = $field_data['settings']['granularity'] &&
-          $granularity['hour'] === 0 &&
-          $granularity['minute'] === 0 &&
-          $granularity['second'] === 0) {
-
+        $collected_date_attributes = is_numeric(array_keys($granularity)[0])
+          ? $granularity
+          : array_keys(array_filter($granularity));
+        if (empty(array_intersect($collected_date_attributes, ['hour', 'minute', 'second']))) {
           $to_format = DateTimeItemInterface::DATE_STORAGE_FORMAT;
         }
       }
