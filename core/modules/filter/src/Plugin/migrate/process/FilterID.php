@@ -77,11 +77,9 @@ class FilterID extends StaticMap implements ContainerFactoryPluginInterface {
     else {
       $fallback = $this->filterManager->getFallbackPluginId($plugin_id);
 
-      $message = $this->t('Filter @plugin_id could not be mapped to an existing filter plugin; defaulting to @fallback.', [
-        '@plugin_id' => $plugin_id,
-        '@fallback' => $fallback,
-      ]);
-      $migrate_executable->saveMessage((string) $message, MigrationInterface::MESSAGE_WARNING);
+      // @see \Drupal\filter\Plugin\migrate\process\FilterSettings::transform()
+      $message = sprintf('Filter %s could not be mapped to an existing filter plugin; defaulting to %s and dropping all settings. Either redo the migration with the module installed that provides an equivalent filter, or modify the text format after the migration to remove this filter if it is no longer necessary.', $plugin_id, $fallback);
+      $migrate_executable->saveMessage($message, MigrationInterface::MESSAGE_WARNING);
 
       return $fallback;
     }
