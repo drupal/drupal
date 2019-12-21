@@ -9,10 +9,19 @@ source:
     entity_type: node
     field_name: title
 process:
+  label:
+    -
+      plugin: static_map
+      source: title_label
+      bypass: true
+      map:
+        Title: 0
+    -
+      plugin: skip_on_empty
+      method: row
   entity_type: 'constants/entity_type'
   bundle: type
   field_name: 'constants/field_name'
-  label: title_label
 destination:
   plugin: entity:base_field_override
 migration_dependencies:
