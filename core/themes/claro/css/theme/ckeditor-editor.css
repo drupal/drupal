@@ -54,13 +54,6 @@
    */
 }
 
-.cke .cke_top,
-.cke .cke_bottom,
-.cke .cke_contents,
-.cke.cke_chrome {
-  transition: border-color 0.2s ease-in-out 0s;
-}
-
 .cke.cke_chrome {
   border-radius: 0.125em; /* (2 / 16) */
 }
