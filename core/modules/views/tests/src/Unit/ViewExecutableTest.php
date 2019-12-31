@@ -362,9 +362,7 @@ class ViewExecutableTest extends UnitTestCase {
     foreach (['field', 'filter', 'argument', 'sort'] as $handler_type) {
       $display->expects($this->atLeastOnce())
         ->method('setOption')
-        ->with($this->callback(function ($argument) {
-          return $argument;
-        }), [
+        ->with($this->anything(), [
           'test_field' => [
             'id' => 'test_field',
             'table' => 'test_entity',
@@ -405,9 +403,7 @@ class ViewExecutableTest extends UnitTestCase {
     foreach (['field', 'filter', 'argument', 'sort'] as $handler_type) {
       $display->expects($this->atLeastOnce())
         ->method('setOption')
-        ->with($this->callback(function ($argument) {
-          return $argument;
-        }), [
+        ->with($this->anything(), [
           'test_field' => [
             'id' => 'test_field',
             'table' => 'test_entity',
