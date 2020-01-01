@@ -166,7 +166,7 @@ function drupal_get_database_types() {
   $drivers = [];
 
   // The internal database driver name is any valid PHP identifier.
-  $mask = '/^' . DRUPAL_PHP_FUNCTION_PATTERN . '$/';
+  $mask = ExtensionDiscovery::PHP_FUNCTION_PATTERN;
   /** @var \Drupal\Core\File\FileSystemInterface $file_system */
   $file_system = \Drupal::service('file_system');
   $files = $file_system->scanDirectory(DRUPAL_ROOT . '/core/lib/Drupal/Core/Database/Driver', $mask, ['recurse' => FALSE]);
