@@ -141,6 +141,10 @@ define('REQUEST_TIME', (int) $_SERVER['REQUEST_TIME']);
 /**
  * Regular expression to match PHP function names.
  *
+ * @deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. Use
+ *   \Drupal\Core\Extension\ExtensionDiscovery::PHP_FUNCTION_PATTERN instead.
+ *
+ * @see https://www.drupal.org/node/2936107
  * @see http://php.net/manual/language.functions.php
  */
 const DRUPAL_PHP_FUNCTION_PATTERN = '[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*';
