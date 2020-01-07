@@ -141,7 +141,6 @@
   <rule ref="Drupal.WhiteSpace.ObjectOperatorSpacing"/>
   <rule ref="Drupal.WhiteSpace.OpenBracketSpacing"/>
   <rule ref="Drupal.WhiteSpace.OpenTagNewline"/>
-  <rule ref="Drupal.WhiteSpace.OperatorSpacing"/>
   <rule ref="Drupal.WhiteSpace.ScopeClosingBrace"/>
   <rule ref="Drupal.WhiteSpace.ScopeIndent"/>
 
@@ -329,6 +328,11 @@
     </properties>
   </rule>
   <rule ref="Squiz.WhiteSpace.LanguageConstructSpacing" />
+  <rule ref="Squiz.WhiteSpace.OperatorSpacing">
+    <properties>
+      <property name="ignoreNewlines" value="true"/>
+    </properties>
+  </rule>
   <rule ref="Squiz.WhiteSpace.SemicolonSpacing"/>
   <rule ref="Squiz.WhiteSpace.SuperfluousWhitespace"/>
 

@@ -181,7 +181,7 @@ class ModerationInformation implements ModerationInformationInterface {
     // If no default revision could be loaded, the entity has not yet been
     // saved. In this case the moderation_state of the unsaved entity can be
     // used, since once saved it will become the default.
-    $default_revision = $default_revision  ?: $entity;
+    $default_revision = $default_revision ?: $entity;
 
     // Ensure we are checking all translations of the default revision.
     if ($default_revision instanceof TranslatableInterface && $default_revision->isTranslatable()) {

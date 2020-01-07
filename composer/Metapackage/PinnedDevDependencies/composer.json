@@ -17,7 +17,7 @@
         "composer/spdx-licenses": "1.5.2",
         "composer/xdebug-handler": "1.3.3",
         "doctrine/instantiator": "1.0.5",
-        "drupal/coder": "8.3.6",
+        "drupal/coder": "8.3.7",
         "fabpot/goutte": "v3.2.3",
         "instaclick/php-webdriver": "1.4.6",
         "jcalderonzumba/gastonjs": "v1.0.2",

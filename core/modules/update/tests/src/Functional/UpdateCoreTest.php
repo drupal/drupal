@@ -572,7 +572,6 @@ class UpdateCoreTest extends UpdateTestBase {
     $this->assertUrl('admin/reports/updates/install');
   }
 
-
   /**
    * {@inheritdoc}
    */
