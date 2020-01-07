@@ -7,7 +7,6 @@
 
 use Drupal\Core\DependencyInjection\ContainerNotInitializedException;
 use Drupal\Core\Messenger\LegacyMessenger;
-use Drupal\Core\Url;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**

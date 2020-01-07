@@ -136,7 +136,7 @@ class QueryFactory implements QueryFactoryInterface, EventSubscriberInterface {
    *
    * @param \Drupal\Core\Config\Config $config
    *   The configuration object.
-   *  @param string $key
+   * @param string $key
    *   The configuration key to look for.
    * @param string $get_method
    *   Which method on the config object to call to get the value. Either 'get'
