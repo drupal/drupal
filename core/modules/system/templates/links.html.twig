@@ -7,12 +7,12 @@
  * - attributes: Attributes for the UL containing the list of links.
  * - links: Links to be output.
  *   Each link will have the following elements:
- *   - title: The link text.
- *   - url: The link URL. If omitted, the 'title' is shown as a plain text
- *     item in the links list. If 'url' is supplied, the entire link is passed
- *     to l() as its $options parameter.
- *   - attributes: (optional) HTML attributes for the anchor, or for the <span>
- *     tag if no 'url' is supplied.
+ *   - link: (optional) A render array that returns a link. See
+ *     template_preprocess_links() for details how it is generated.
+ *   - text: The link text.
+ *   - attributes: HTML attributes for the list item element.
+ *   - text_attributes: (optional) HTML attributes for the span element if no
+ *     'url' was supplied.
  * - heading: (optional) A heading to precede the links.
  *   - text: The heading text.
  *   - level: The heading level (e.g. 'h2', 'h3').

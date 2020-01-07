@@ -622,20 +622,22 @@ function template_preprocess_datetime_wrapper(&$variables) {
  *
  * @param array $variables
  *   An associative array containing:
- *   - links: An array of links to be themed. Each link should be itself an
- *     array, with the following elements:
+ *   - links: An array of links to be themed. Each link itself is an array, with
+ *     the following elements:
  *     - title: The link text.
- *     - url: (optional) The \Drupal\Core\Url object to link to. If omitted, no
- *       anchor tag is printed out.
+ *     - url: (optional) The \Drupal\Core\Url object to link to. If the 'url'
+ *       element is supplied, the 'title' and 'url' are used to generate a link
+ *       through \Drupal::linkGenerator()->generate(). All data from the link
+ *       array other than 'title' and 'url' are added as #options on
+ *       the URL object. See \Drupal\Core\Url::fromUri() for details on the
+ *       options. If no 'url' is supplied, the 'title' is printed as plain text.
  *     - attributes: (optional) Attributes for the anchor, or for the <span>
- *       tag used in its place if no 'href' is supplied. If element 'class' is
+ *       tag used in its place if no 'url' is supplied. If element 'class' is
  *       included, it must be an array of one or more class names.
- *     If the 'href' element is supplied, the entire link array is passed to
- *     l() as its $options parameter.
  *   - attributes: A keyed array of attributes for the <ul> containing the list
  *     of links.
  *   - set_active_class: (optional) Whether each link should compare the
- *     route_name + route_parameters or href (path), language and query options
+ *     route_name + route_parameters or url (path), language, and query options
  *     to the current URL, to determine whether the link is "active". If so,
  *     attributes will be added to the HTML elements for both the link and the
  *     list item that contains it, which will result in an "is-active" class
