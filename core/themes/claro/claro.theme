@@ -17,6 +17,7 @@ use Drupal\Core\Render\Element;
 use Drupal\Core\Template\Attribute;
 use Drupal\Core\Url;
 use Drupal\media\MediaForm;
+use Drupal\file\FileInterface;
 
 /**
  * Implements hook_theme_suggestions_HOOK_alter() for form_element.
@@ -1083,23 +1084,13 @@ function claro_preprocess_links__action_links(&$variables) {
  * Implements hook_preprocess_HOOK() for file_managed_file.
  */
 function claro_preprocess_file_managed_file(&$variables) {
-  $element = $variables['element'];
+  // Produce the same renderable element structure as image widget has.
+  $child_keys = Element::children($variables['element']);
+  foreach ($child_keys as $child_key) {
+    $variables['data'][$child_key] = $variables['element'][$child_key];
+  }
 
-  // Calculate helper values for the template.
-  $upload_is_accessible = !isset($element['upload']['#access']) || $element['upload']['#access'] !== FALSE;
-  $is_multiple = !empty($element['#cardinality']) && $element['#cardinality'] !== 1;
-  $has_value = isset($element['#value']['fids']) && !empty($element['#value']['fids']);
-  $display_can_be_displayed = !empty($element['#display_field']);
-  // Display is rendered in a separate table cell for multiple value widgets.
-  $display_is_visible = $display_can_be_displayed && !$is_multiple && isset($element['display']['#type']) && $element['display']['#type'] !== 'hidden';
-  $description_can_be_displayed = !empty($element['#description_field']);
-  $description_is_visible = $description_can_be_displayed && isset($element['description']);
-
-  $variables['multiple'] = $is_multiple;
-  $variables['upload'] = $upload_is_accessible;
-  $variables['has_value'] = $has_value;
-  $variables['has_meta'] = $display_is_visible || $description_is_visible;
-  $variables['display'] = $display_is_visible;
+  _claro_preprocess_file_and_image_widget($variables);
 }
 
 /**
@@ -1178,8 +1169,6 @@ function claro_preprocess_file_widget_multiple(&$variables) {
  * Implements hook_preprocess_HOOK() for image_widget.
  */
 function claro_preprocess_image_widget(&$variables) {
-  $element = $variables['element'];
-
   // Stable adds the file size as #suffix for image file_link renderable array.
   // We have to remove that because we will render it in our file_link template
   // for every kind of files, and not just for images.
@@ -1188,10 +1177,37 @@ function claro_preprocess_image_widget(&$variables) {
     unset($variables['data']['file_' . $file->id()]['filename']['#suffix']);
   }
 
+  _claro_preprocess_file_and_image_widget($variables);
+}
+
+/**
+ * Helper pre-process callback for file_managed_file and image_widget.
+ *
+ * @param array $variables
+ *   The renderable array of image and file widgets, with 'element' and 'data'
+ *   keys.
+ */
+function _claro_preprocess_file_and_image_widget(array &$variables) {
+  $element = $variables['element'];
+  $main_item_keys = [
+    'upload',
+    'upload_button',
+    'remove_button',
+  ];
+
   // Calculate helper values for the template.
   $upload_is_accessible = !isset($element['upload']['#access']) || $element['upload']['#access'] !== FALSE;
   $is_multiple = !empty($element['#cardinality']) && $element['#cardinality'] !== 1;
   $has_value = isset($element['#value']['fids']) && !empty($element['#value']['fids']);
+
+  // File widget properties.
+  $display_can_be_displayed = !empty($element['#display_field']);
+  // Display is rendered in a separate table cell for multiple value widgets.
+  $display_is_visible = $display_can_be_displayed && !$is_multiple && isset($element['display']['#type']) && $element['display']['#type'] !== 'hidden';
+  $description_can_be_displayed = !empty($element['#description_field']);
+  $description_is_visible = $description_can_be_displayed && isset($element['description']);
+
+  // Image widget properties.
   $alt_can_be_displayed = !empty($element['#alt_field']);
   $alt_is_visible = $alt_can_be_displayed && (!isset($element['alt']['#access']) || $element['alt']['#access'] !== FALSE);
   $title_can_be_displayed = !empty($element['#title_field']);
@@ -1200,5 +1216,25 @@ function claro_preprocess_image_widget(&$variables) {
   $variables['multiple'] = $is_multiple;
   $variables['upload'] = $upload_is_accessible;
   $variables['has_value'] = $has_value;
-  $variables['has_meta'] = $alt_is_visible || $title_is_visible;
+  $variables['has_meta'] = $alt_is_visible || $title_is_visible || $display_is_visible || $description_is_visible;
+  $variables['display'] = $display_is_visible;
+
+  // Render file upload input and upload button (or file name and remove button,
+  // if the field is not empty) in an emphasized div.
+  foreach ($variables['data'] as $key => $item) {
+    $item_is_filename = isset($item['filename']['#file']) && $item['filename']['#file'] instanceof FileInterface;
+
+    // Move filename to main items.
+    if ($item_is_filename) {
+      $variables['main_items']['filename'] = $item;
+      unset($variables['data'][$key]);
+      continue;
+    }
+
+    // Move buttons, upload input and hidden items to main items.
+    if (in_array($key, $main_item_keys)) {
+      $variables['main_items'][$key] = $item;
+      unset($variables['data'][$key]);
+    }
+  }
 }
