@@ -267,15 +267,6 @@ td .form-managed-file.no-meta .form-managed-file__image-preview {
 }
 
 /**
- * Remove the default margins of buttons.
- * The '.button' selector is doubled for RTL layouts.
- */
-
-.form-managed-file .button.button {
-  margin: 0;
-}
-
-/**
  * The file upload input.
  */
 
@@ -285,12 +276,14 @@ td .form-managed-file.no-meta .form-managed-file__image-preview {
 }
 
 /**
- * This applies both on the 'no-js' upload button and the remove button.
- * We don't want to let these to be shrinked.
+ * Remove the default button margins and prevent shrinking or growing buttons.
+ * This applies both on the 'no-js' upload button and the remove button. The
+ * weight of this ruleset has been increase for this to take effect on RTL.
  */
 
-.form-managed-file__main .button {
+.form-managed-file__main .button.button {
   flex: 0 0 auto;
+  margin: 0;
 }
 
 /**
