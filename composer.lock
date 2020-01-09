@@ -653,7 +653,7 @@
             "dist": {
                 "type": "path",
                 "url": "core",
-                "reference": "5e617499e0c484e70f24bdf4334359cf37c95f9a"
+                "reference": "ed5e4d912f09f71ab245e49be98b409bc3c9ad1d"
             },
             "require": {
                 "asm89/stack-cors": "^1.1",
@@ -674,7 +674,7 @@
                 "ext-spl": "*",
                 "ext-tokenizer": "*",
                 "ext-xml": "*",
-                "guzzlehttp/guzzle": "^6.3",
+                "guzzlehttp/guzzle": "^6.5.2",
                 "masterminds/html5": "^2.1",
                 "pear/archive_tar": "^1.4.9",
                 "php": ">=7.2.3",
