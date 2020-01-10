@@ -7,6 +7,7 @@ use Drupal\Core\Config\Entity\ConfigEntityListBuilder;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\Core\Url;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -93,7 +94,7 @@ class WorkflowListBuilder extends ConfigEntityListBuilder {
     $build = parent::render();
     $workflow_types_count = count($this->workflowTypeManager->getDefinitions());
     if ($workflow_types_count === 0) {
-      $build['table']['#empty'] = $this->t('There are no workflow types available. In order to create workflows you need to install a module that provides a workflow type. For example, the <a href=":content-moderation">Content Moderation</a> module provides a workflow type that enables workflows for content entities.', [':content-moderation' => '/admin/modules#module-content-moderation']);
+      $build['table']['#empty'] = $this->t('There are no workflow types available. In order to create workflows you need to install a module that provides a workflow type. For example, the <a href=":content-moderation">Content Moderation</a> module provides a workflow type that enables workflows for content entities.', [':content-moderation' => Url::fromRoute('system.modules_list', [], ['fragment' => 'module-content-moderation'])->toString()]);
     }
     return $build;
   }
