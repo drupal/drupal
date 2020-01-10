@@ -393,7 +393,7 @@ class ViewExecutableTest extends UnitTestCase {
   public function testAddHandlerWithEntityField($option, $handler_type) {
     /** @var \Drupal\views\ViewExecutable|\PHPUnit\Framework\MockObject\MockObject $view */
     /** @var \Drupal\views\Plugin\views\display\DisplayPluginBase|\PHPUnit\Framework\MockObject\MockObject $display */
-    [$view, $display] = $this->setupBaseViewAndDisplay();
+    list($view, $display) = $this->setupBaseViewAndDisplay();
 
     $views_data = [];
     $views_data['table']['entity type'] = 'test_entity_type';
