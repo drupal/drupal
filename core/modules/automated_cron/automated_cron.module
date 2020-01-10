@@ -39,7 +39,7 @@ function automated_cron_form_system_cron_settings_alter(&$form, &$form_state) {
   $form['cron']['interval'] = [
     '#type' => 'select',
     '#title' => t('Run cron every'),
-    '#description' => t('More information about setting up scheduled tasks can be found by <a href=":url">reading the cron tutorial on drupal.org</a>.', [':url' => 'https://www.drupal.org/cron']),
+    '#description' => t('More information about setting up scheduled tasks can be found by <a href=":url">reading the cron tutorial on drupal.org</a>.', [':url' => 'https://www.drupal.org/docs/8/administering-a-drupal-8-site/cron-automated-tasks']),
     '#default_value' => $automated_cron_settings->get('interval'),
     '#options' => [0 => t('Never')] + array_map([\Drupal::service('date.formatter'), 'formatInterval'], array_combine($options, $options)),
   ];
