@@ -138,7 +138,7 @@ class FormErrorHandlerTest extends UnitTestCase {
         foreach ($render_array[1]['#items'] as $item) {
           $links[] = htmlspecialchars($item['#title']);
         }
-        return $render_array[0]['#markup'] . '<ul-comma-list-mock><li-mock>' . implode($links, '</li-mock><li-mock>') . '</li-mock></ul-comma-list-mock>';
+        return $render_array[0]['#markup'] . '<ul-comma-list-mock><li-mock>' . implode('</li-mock><li-mock>', $links) . '</li-mock></ul-comma-list-mock>';
       }));
 
     $form_state = new FormState();
