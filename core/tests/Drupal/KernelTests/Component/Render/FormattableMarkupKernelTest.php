@@ -1,17 +1,17 @@
 <?php
 
-namespace Drupal\KernelTests\Component\Utility;
+namespace Drupal\KernelTests\Component\Render;
 
 use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Url;
 use Drupal\KernelTests\KernelTestBase;
 
 /**
- * Provides a test covering integration of SafeMarkup with other systems.
+ * Provides a test covering integration of FormattableMarkup with other systems.
  *
- * @group Utility
-*/
-class SafeMarkupKernelTest extends KernelTestBase {
+ * @group Render
+ */
+class FormattableMarkupKernelTest extends KernelTestBase {
 
   /**
    * {@inheritdoc}
@@ -41,7 +41,7 @@ class SafeMarkupKernelTest extends KernelTestBase {
    *
    * @see \Drupal\Component\Render\FormattableMarkup
    */
-  protected static function getSafeMarkupUriArgs($uri, $options = []) {
+  protected static function getFormattableMarkupUriArgs($uri, $options = []) {
     $args[':url'] = Url::fromUri($uri, $options)->toString();
     return $args;
   }
@@ -49,17 +49,17 @@ class SafeMarkupKernelTest extends KernelTestBase {
   /**
    * Tests URL ":placeholders" in \Drupal\Component\Render\FormattableMarkup.
    *
-   * @dataProvider providerTestSafeMarkupUri
+   * @dataProvider providerTestFormattableMarkupUri
    */
-  public function testSafeMarkupUri($string, $uri, $options, $expected) {
-    $args = self::getSafeMarkupUriArgs($uri, $options);
+  public function testFormattableMarkupUri($string, $uri, $options, $expected) {
+    $args = self::getFormattableMarkupUriArgs($uri, $options);
     $this->assertEquals($expected, new FormattableMarkup($string, $args));
   }
 
   /**
    * @return array
    */
-  public function providerTestSafeMarkupUri() {
+  public function providerTestFormattableMarkupUri() {
     $data = [];
     $data['routed-url'] = [
       'Hey giraffe <a href=":url">MUUUH</a>',
@@ -108,12 +108,12 @@ class SafeMarkupKernelTest extends KernelTestBase {
   }
 
   /**
-   * @dataProvider providerTestSafeMarkupUriWithException
+   * @dataProvider providerTestFormattableMarkupUriWithException
    */
-  public function testSafeMarkupUriWithExceptionUri($string, $uri) {
+  public function testFormattableMarkupUriWithExceptionUri($string, $uri) {
     // Should throw an \InvalidArgumentException, due to Uri::toString().
     $this->expectException(\InvalidArgumentException::class);
-    $args = self::getSafeMarkupUriArgs($uri);
+    $args = self::getFormattableMarkupUriArgs($uri);
 
     new FormattableMarkup($string, $args);
   }
@@ -121,7 +121,7 @@ class SafeMarkupKernelTest extends KernelTestBase {
   /**
    * @return array
    */
-  public function providerTestSafeMarkupUriWithException() {
+  public function providerTestFormattableMarkupUriWithException() {
     $data = [];
     $data['js-protocol'] = [
       'Hey giraffe <a href=":url">MUUUH</a>',
