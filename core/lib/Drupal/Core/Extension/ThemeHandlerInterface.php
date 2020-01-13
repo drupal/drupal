@@ -8,51 +8,6 @@ namespace Drupal\Core\Extension;
 interface ThemeHandlerInterface {
 
   /**
-   * Installs a given list of themes.
-   *
-   * @param array $theme_list
-   *   An array of theme names.
-   * @param bool $install_dependencies
-   *   (optional) If TRUE, dependencies will automatically be installed in the
-   *   correct order. This incurs a significant performance cost, so use FALSE
-   *   if you know $theme_list is already complete and in the correct order.
-   *
-   * @return bool
-   *   Whether any of the given themes have been installed.
-   *
-   * @throws \Drupal\Core\Extension\ExtensionNameLengthException
-   *   Thrown when the theme name is to long.
-   *
-   * @deprecated in drupal:8.0.0 and is removed from drupal:9.0.0.
-   *   Use the theme_installer service instead.
-   *
-   * @see https://www.drupal.org/node/3017233
-   * @see \Drupal\Core\Extension\ThemeInstallerInterface::install()
-   */
-  public function install(array $theme_list, $install_dependencies = TRUE);
-
-  /**
-   * Uninstalls a given list of themes.
-   *
-   * Uninstalling a theme removes all related configuration (like blocks) and
-   * invokes the 'themes_uninstalled' hook.
-   *
-   * @param array $theme_list
-   *   The themes to uninstall.
-   *
-   * @throws \Drupal\Core\Extension\Exception\UninstalledExtensionException
-   *   Thrown when you try to uninstall a theme that wasn't installed.
-   *
-   * @deprecated in drupal:8.0.0 and is removed from drupal:9.0.0.
-   *   Use the theme_installer service instead.
-   *
-   * @see https://www.drupal.org/node/3017233
-   * @see hook_themes_uninstalled()
-   * @see \Drupal\Core\Extension\ThemeInstallerInterface::uninstall()
-   */
-  public function uninstall(array $theme_list);
-
-  /**
    * Returns a list of currently installed themes.
    *
    * @return \Drupal\Core\Extension\Extension[]
@@ -160,21 +115,6 @@ interface ThemeHandlerInterface {
    *   The default theme.
    */
   public function getDefault();
-
-  /**
-   * Sets a new default theme.
-   *
-   * @param string $theme
-   *   The new default theme.
-   *
-   * @return $this
-   *
-   * @deprecated in drupal:8.2.0 and is removed from drupal:9.0.0. Use the
-   *   configuration system to edit the system.theme config directly.
-   *
-   * @see https://www.drupal.org/node/3082630
-   */
-  public function setDefault($theme);
 
   /**
    * Returns an array of directories for all installed themes.

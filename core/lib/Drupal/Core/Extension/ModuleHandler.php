@@ -695,44 +695,6 @@ class ModuleHandler implements ModuleHandlerInterface {
   }
 
   /**
-   * Parses a dependency for comparison by drupal_check_incompatibility().
-   *
-   * @param string $dependency
-   *   A dependency string, which specifies a module dependency, and optionally
-   *   the project it comes from and versions that are supported. Supported
-   *   formats include:
-   *   - 'module'
-   *   - 'project:module'
-   *   - 'project:module (>=version, version)'.
-   *
-   * @return array
-   *   An associative array with three keys:
-   *   - 'name' includes the name of the thing to depend on (e.g. 'foo').
-   *   - 'original_version' contains the original version string (which can be
-   *     used in the UI for reporting incompatibilities).
-   *   - 'versions' is a list of associative arrays, each containing the keys
-   *     'op' and 'version'. 'op' can be one of: '=', '==', '!=', '<>', '<',
-   *     '<=', '>', or '>='. 'version' is one piece like '4.5-beta3'.
-   *   Callers should pass this structure to drupal_check_incompatibility().
-   *
-   * @deprecated in drupal:8.7.0 and is removed from drupal:9.0.0.
-   *   Use \Drupal\Core\Extension\Dependency::createFromString() instead.
-   *
-   * @see https://www.drupal.org/node/2756875
-   */
-  public static function parseDependency($dependency) {
-    @trigger_error(__METHOD__ . ' is deprecated. Use \Drupal\Core\Extension\Dependency::createFromString() instead. See https://www.drupal.org/node/2756875', E_USER_DEPRECATED);
-    $dependency = Dependency::createFromString($dependency);
-    $result = [
-      'name' => $dependency->getName(),
-      'project' => $dependency->getProject(),
-      'original_version' => $dependency['original_version'],
-      'versions' => $dependency['versions'],
-    ];
-    return array_filter($result);
-  }
-
-  /**
    * {@inheritdoc}
    */
   public function getModuleDirectories() {
