@@ -15,17 +15,6 @@ use PHPUnit\Framework\TestCase;
 class CryptTest extends TestCase {
 
   /**
-   * Tests random byte generation.
-   *
-   * @covers ::randomBytes
-   * @expectedDeprecation Drupal\Component\Utility\Crypt::randomBytes() is deprecated in Drupal 8.8.0 and will be removed before Drupal 9.0.0. Use PHP's built-in random_bytes() function instead. See https://www.drupal.org/node/3054488
-   * @group legacy
-   */
-  public function testRandomBytes() {
-    $this->assertSame(16, strlen(Crypt::randomBytes(16)));
-  }
-
-  /**
    * Tests hash generation.
    *
    * @dataProvider providerTestHashBase64
@@ -141,19 +130,6 @@ class CryptTest extends TestCase {
       [0, NULL],
       ['string', NULL],
     ];
-  }
-
-  /**
-   * Legacy test of Drupal\Component\Utility\Crypt::hashEquals() method.
-   *
-   * @expectedDeprecation Drupal\Component\Utility\Crypt::hashEquals() is deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. Use PHP's built-in hash_equals() function instead. See https://www.drupal.org/node/3054488
-   * @group legacy
-   */
-  public function testHashEquals() {
-    $a_hash = Crypt::hashBase64('a');
-    $b_hash = Crypt::hashBase64('b');
-    $this->assertTrue(Crypt::hashEquals($a_hash, $a_hash));
-    $this->assertFalse(Crypt::hashEquals($a_hash, $b_hash));
   }
 
 }

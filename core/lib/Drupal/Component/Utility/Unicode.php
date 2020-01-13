@@ -110,31 +110,6 @@ EOD;
   }
 
   /**
-   * Sets the value for multibyte support status for the current environment.
-   *
-   * The following status keys are supported:
-   *   - \Drupal\Component\Utility\Unicode::STATUS_MULTIBYTE
-   *     Full unicode support using an extension.
-   *   - \Drupal\Component\Utility\Unicode::STATUS_SINGLEBYTE
-   *     Standard PHP (emulated) unicode support.
-   *   - \Drupal\Component\Utility\Unicode::STATUS_ERROR
-   *     An error occurred. No unicode support.
-   *
-   * @param int $status
-   *   The new status of multibyte support.
-   *
-   * @deprecated in drupal:8.6.0 and is removed from drupal:9.0.0. In
-   *   Drupal 9 there will be no way to set the status and in Drupal 8 this
-   *   ability has been removed because mb_*() functions are supplied using
-   *   Symfony's polyfill.
-   *
-   * @see https://www.drupal.org/node/2850048
-   */
-  public static function setStatus($status) {
-    @trigger_error('\Drupal\Component\Utility\Unicode::setStatus() is deprecated in Drupal 8.6.0 and will be removed before Drupal 9.0.0. In Drupal 9 there will be no way to set the status and in Drupal 8 this ability has been removed because mb_*() functions are supplied using Symfony\'s polyfill. See https://www.drupal.org/node/2850048.', E_USER_DEPRECATED);
-  }
-
-  /**
    * Checks for Unicode support in PHP and sets the proper settings if possible.
    *
    * Because of the need to be able to handle text in various encodings, we do
@@ -250,65 +225,6 @@ EOD;
   }
 
   /**
-   * Counts the number of characters in a UTF-8 string.
-   *
-   * This is less than or equal to the byte count.
-   *
-   * @param string $text
-   *   The string to run the operation on.
-   *
-   * @return int
-   *   The length of the string.
-   *
-   * @deprecated in drupal:8.6.0 and is removed from drupal:9.0.0. Use
-   *   mb_strlen() instead.
-   *
-   * @see https://www.drupal.org/node/2850048
-   */
-  public static function strlen($text) {
-    @trigger_error('\Drupal\Component\Utility\Unicode::strlen() is deprecated in Drupal 8.6.0 and will be removed before Drupal 9.0.0. Use mb_strlen() instead. See https://www.drupal.org/node/2850048.', E_USER_DEPRECATED);
-    return mb_strlen($text);
-  }
-
-  /**
-   * Converts a UTF-8 string to uppercase.
-   *
-   * @param string $text
-   *   The string to run the operation on.
-   *
-   * @return string
-   *   The string in uppercase.
-   *
-   * @deprecated in drupal:8.6.0 and is removed from drupal:9.0.0. Use
-   *   mb_strtoupper() instead.
-   *
-   * @see https://www.drupal.org/node/2850048
-   */
-  public static function strtoupper($text) {
-    @trigger_error('\Drupal\Component\Utility\Unicode::strtoupper() is deprecated in Drupal 8.6.0 and will be removed before Drupal 9.0.0. Use mb_strtoupper() instead. See https://www.drupal.org/node/2850048.', E_USER_DEPRECATED);
-    return mb_strtoupper($text);
-  }
-
-  /**
-   * Converts a UTF-8 string to lowercase.
-   *
-   * @param string $text
-   *   The string to run the operation on.
-   *
-   * @return string
-   *   The string in lowercase.
-   *
-   * @deprecated in drupal:8.6.0 and is removed from drupal:9.0.0. Use
-   *   mb_strtolower() instead.
-   *
-   * @see https://www.drupal.org/node/2850048
-   */
-  public static function strtolower($text) {
-    @trigger_error('\Drupal\Component\Utility\Unicode::strtolower() is deprecated in Drupal 8.6.0 and will be removed before Drupal 9.0.0. Use mb_strtolower() instead. See https://www.drupal.org/node/2850048.', E_USER_DEPRECATED);
-    return mb_strtolower($text);
-  }
-
-  /**
    * Capitalizes the first character of a UTF-8 string.
    *
    * @param string $text
@@ -353,33 +269,6 @@ EOD;
     return preg_replace_callback($regex, function (array $matches) {
       return $matches[1] . mb_strtoupper($matches[2]);
     }, $text);
-  }
-
-  /**
-   * Cuts off a piece of a string based on character indices and counts.
-   *
-   * Follows the same behavior as PHP's own substr() function. Note that for
-   * cutting off a string at a known character/substring location, the usage of
-   * PHP's normal strpos/substr is safe and much faster.
-   *
-   * @param string $text
-   *   The input string.
-   * @param int $start
-   *   The position at which to start reading.
-   * @param int $length
-   *   The number of characters to read.
-   *
-   * @return string
-   *   The shortened string.
-   *
-   * @deprecated in drupal:8.6.0 and is removed from drupal:9.0.0. Use
-   *   mb_substr() instead.
-   *
-   * @see https://www.drupal.org/node/2850048
-   */
-  public static function substr($text, $start, $length = NULL) {
-    @trigger_error('\Drupal\Component\Utility\Unicode::substr() is deprecated in Drupal 8.6.0 and will be removed before Drupal 9.0.0. Use mb_substr() instead. See https://www.drupal.org/node/2850048.', E_USER_DEPRECATED);
-    return mb_substr($text, $start, $length);
   }
 
   /**
@@ -549,25 +438,6 @@ EOD;
   }
 
   /**
-   * Flip U+C0-U+DE to U+E0-U+FD and back. Can be used as preg_replace callback.
-   *
-   * @param array $matches
-   *   An array of matches by preg_replace_callback().
-   *
-   * @return string
-   *   The flipped text.
-   *
-   * @deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. There is
-   *   no direct replacement.
-   *
-   * @see https://www.drupal.org/node/3057322
-   */
-  public static function caseFlip($matches) {
-    @trigger_error('\Drupal\Component\Utility\Unicode::caseFlip() is deprecated in Drupal 8.8.0 and will be removed before Drupal 9.0.0. There is no direct replacement. See https://www.drupal.org/node/3057322', E_USER_DEPRECATED);
-    return $matches[0][0] . chr(ord($matches[0][1]) ^ 32);
-  }
-
-  /**
    * Checks whether a string is valid UTF-8.
    *
    * All functions designed to filter input should use drupal_validate_utf8
@@ -599,32 +469,6 @@ EOD;
     // containing invalid UTF-8 byte sequences. It does not reject character
     // codes above U+10FFFF (represented by 4 or more octets), though.
     return (preg_match('/^./us', $text) == 1);
-  }
-
-  /**
-   * Finds the position of the first occurrence of a string in another string.
-   *
-   * @param string $haystack
-   *   The string to search in.
-   * @param string $needle
-   *   The string to find in $haystack.
-   * @param int $offset
-   *   If specified, start the search at this number of characters from the
-   *   beginning (default 0).
-   *
-   * @return int|false
-   *   The position where $needle occurs in $haystack, always relative to the
-   *   beginning (independent of $offset), or FALSE if not found. Note that
-   *   a return value of 0 is not the same as FALSE.
-   *
-   * @deprecated in drupal:8.6.0 and is removed from drupal:9.0.0. Use
-   *   mb_strpos() instead.
-   *
-   * @see https://www.drupal.org/node/2850048
-   */
-  public static function strpos($haystack, $needle, $offset = 0) {
-    @trigger_error('\Drupal\Component\Utility\Unicode::strpos() is deprecated in Drupal 8.6.0 and will be removed before Drupal 9.0.0. Use mb_strpos() instead. See https://www.drupal.org/node/2850048.', E_USER_DEPRECATED);
-    return mb_strpos($haystack, $needle, $offset);
   }
 
 }
