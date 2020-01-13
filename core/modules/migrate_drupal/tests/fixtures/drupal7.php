@@ -4311,6 +4311,21 @@ $connection->insert('field_config')
   'translatable' => '0',
   'deleted' => '0',
 ))
+->values(array(
+  'id' => '53',
+  'field_name' => 'field_checkbox',
+  'type' => 'list_boolean',
+  'module' => 'list',
+  'active' => '1',
+  'storage_type' => 'field_sql_storage',
+  'storage_module' => 'field_sql_storage',
+  'storage_active' => '1',
+  'locked' => '0',
+  'data' => 'a:7:{s:12:"translatable";i:0;s:12:"entity_types";a:0:{}s:8:"settings";a:3:{s:14:"allowed_values";a:2:{i:0;s:4:"Stop";i:1;s:2:"Go";}s:23:"allowed_values_function";s:0:"";s:23:"entity_translation_sync";b:0;}s:7:"storage";a:5:{s:4:"type";s:17:"field_sql_storage";s:8:"settings";a:0:{}s:6:"module";s:17:"field_sql_storage";s:6:"active";s:1:"1";s:7:"details";a:1:{s:3:"sql";a:2:{s:18:"FIELD_LOAD_CURRENT";a:1:{s:25:"field_data_field_checkbox";a:1:{s:5:"value";s:20:"field_checkbox_value";}}s:19:"FIELD_LOAD_REVISION";a:1:{s:29:"field_revision_field_checkbox";a:1:{s:5:"value";s:20:"field_checkbox_value";}}}}}s:12:"foreign keys";a:0:{}s:7:"indexes";a:1:{s:5:"value";a:1:{i:0;s:5:"value";}}s:2:"id";s:2:"53";}',
+  'cardinality' => '1',
+  'translatable' => '0',
+  'deleted' => '0',
+))
 ->execute();
 $connection->schema()->createTable('field_config_instance', array(
   'fields' => array(
@@ -5072,6 +5087,15 @@ $connection->insert('field_config_instance')
   'data' => 'a:7:{s:5:"label";s:10:"Chancellor";s:6:"widget";a:5:{s:6:"weight";s:1:"1";s:4:"type";s:14:"text_textfield";s:6:"module";s:4:"text";s:6:"active";i:1;s:8:"settings";a:1:{s:4:"size";s:2:"60";}}s:8:"settings";a:2:{s:15:"text_processing";s:1:"0";s:18:"user_register_form";b:0;}s:7:"display";a:1:{s:7:"default";a:5:{s:5:"label";s:5:"above";s:4:"type";s:12:"text_default";s:8:"settings";a:0:{}s:6:"module";s:4:"text";s:6:"weight";i:0;}}s:8:"required";i:0;s:11:"description";s:0:"";s:13:"default_value";N;}',
   'deleted' => '0',
 ))
+->values(array(
+  'id' => '82',
+  'field_id' => '53',
+  'field_name' => 'field_checkbox',
+  'entity_type' => 'node',
+  'bundle' => 'article',
+  'data' => 'a:7:{s:5:"label";s:8:"checkbox";s:6:"widget";a:5:{s:6:"weight";s:2:"25";s:4:"type";s:15:"options_buttons";s:6:"module";s:7:"options";s:6:"active";i:1;s:8:"settings";a:0:{}}s:8:"settings";a:2:{s:18:"user_register_form";b:0;s:23:"entity_translation_sync";b:0;}s:7:"display";a:1:{s:7:"default";a:5:{s:5:"label";s:5:"above";s:4:"type";s:12:"list_default";s:8:"settings";a:0:{}s:6:"module";s:4:"list";s:6:"weight";i:25;}}s:8:"required";i:0;s:11:"description";s:0:"";s:13:"default_value";N;}',
+  'deleted' => '0',
+))
 ->execute();
 $connection->schema()->createTable('field_data_body', array(
   'fields' => array(
@@ -5217,6 +5241,88 @@ $connection->insert('field_data_body')
   'body_format' => 'filtered_html',
 ))
 ->execute();
+$connection->schema()->createTable('field_data_field_checkbox', array(
+  'fields' => array(
+    'entity_type' => array(
+      'type' => 'varchar',
+      'not null' => TRUE,
+      'length' => '128',
+      'default' => '',
+    ),
+    'bundle' => array(
+      'type' => 'varchar',
+      'not null' => TRUE,
+      'length' => '128',
+      'default' => '',
+    ),
+    'deleted' => array(
+      'type' => 'int',
+      'not null' => TRUE,
+      'size' => 'tiny',
+      'default' => '0',
+    ),
+    'entity_id' => array(
+      'type' => 'int',
+      'not null' => TRUE,
+      'size' => 'normal',
+      'unsigned' => TRUE,
+    ),
+    'revision_id' => array(
+      'type' => 'int',
+      'not null' => FALSE,
+      'size' => 'normal',
+      'unsigned' => TRUE,
+    ),
+    'language' => array(
+      'type' => 'varchar',
+      'not null' => TRUE,
+      'length' => '32',
+      'default' => '',
+    ),
+    'delta' => array(
+      'type' => 'int',
+      'not null' => TRUE,
+      'size' => 'normal',
+      'unsigned' => TRUE,
+    ),
+    'field_checkbox_value' => array(
+      'type' => 'int',
+      'not null' => FALSE,
+      'size' => 'normal',
+    ),
+  ),
+  'primary key' => array(
+    'entity_type',
+    'entity_id',
+    'deleted',
+    'delta',
+    'language',
+  ),
+  'indexes' => array(
+    'entity_type' => array(
+      'entity_type',
+    ),
+    'bundle' => array(
+      'bundle',
+    ),
+    'deleted' => array(
+      'deleted',
+    ),
+    'entity_id' => array(
+      'entity_id',
+    ),
+    'revision_id' => array(
+      'revision_id',
+    ),
+    'language' => array(
+      'language',
+    ),
+    'field_checkbox_value' => array(
+      'field_checkbox_value',
+    ),
+  ),
+  'mysql_character_set' => 'utf8',
+));
 $connection->schema()->createTable('field_data_comment_body', array(
   'fields' => array(
     'entity_type' => array(
@@ -11217,6 +11323,89 @@ $connection->insert('field_revision_field_chancellor')
   'field_chancellor_format' => NULL,
 ))
 ->execute();
+$connection->schema()->createTable('field_revision_field_checkbox', array(
+  'fields' => array(
+    'entity_type' => array(
+      'type' => 'varchar',
+      'not null' => TRUE,
+      'length' => '128',
+      'default' => '',
+    ),
+    'bundle' => array(
+      'type' => 'varchar',
+      'not null' => TRUE,
+      'length' => '128',
+      'default' => '',
+    ),
+    'deleted' => array(
+      'type' => 'int',
+      'not null' => TRUE,
+      'size' => 'tiny',
+      'default' => '0',
+    ),
+    'entity_id' => array(
+      'type' => 'int',
+      'not null' => TRUE,
+      'size' => 'normal',
+      'unsigned' => TRUE,
+    ),
+    'revision_id' => array(
+      'type' => 'int',
+      'not null' => TRUE,
+      'size' => 'normal',
+      'unsigned' => TRUE,
+    ),
+    'language' => array(
+      'type' => 'varchar',
+      'not null' => TRUE,
+      'length' => '32',
+      'default' => '',
+    ),
+    'delta' => array(
+      'type' => 'int',
+      'not null' => TRUE,
+      'size' => 'normal',
+      'unsigned' => TRUE,
+    ),
+    'field_checkbox_value' => array(
+      'type' => 'int',
+      'not null' => FALSE,
+      'size' => 'normal',
+    ),
+  ),
+  'primary key' => array(
+    'entity_type',
+    'entity_id',
+    'revision_id',
+    'deleted',
+    'delta',
+    'language',
+  ),
+  'indexes' => array(
+    'entity_type' => array(
+      'entity_type',
+    ),
+    'bundle' => array(
+      'bundle',
+    ),
+    'deleted' => array(
+      'deleted',
+    ),
+    'entity_id' => array(
+      'entity_id',
+    ),
+    'revision_id' => array(
+      'revision_id',
+    ),
+    'language' => array(
+      'language',
+    ),
+    'field_checkbox_value' => array(
+      'field_checkbox_value',
+    ),
+  ),
+  'mysql_character_set' => 'utf8',
+));
 $connection->schema()->createTable('field_revision_field_color', array(
   'fields' => array(
     'entity_type' => array(
@@ -18307,6 +18496,26 @@ $connection->insert('i18n_string')
   'format' => '',
 ))
 ->values(array(
+  'lid' => '797',
+  'textgroup' => 'field',
+  'context' => 'field_checkbox:#allowed_values:0',
+  'objectid' => '#allowed_values',
+  'type' => 'field_checkbox',
+  'property' => '0',
+  'objectindex' => '0',
+  'format' => '',
+))
+->values(array(
+  'lid' => '798',
+  'textgroup' => 'field',
+  'context' => 'field_checkbox:#allowed_values:1',
+  'objectid' => '#allowed_values',
+  'type' => 'field_checkbox',
+  'property' => '1',
+  'objectindex' => '0',
+  'format' => '',
+))
+->values(array(
   'lid' => '194',
   'textgroup' => 'field',
   'context' => 'field_training:vocabfixed:label',
@@ -19900,6 +20109,38 @@ $connection->insert('locales_target')
   'lid' => '768',
   'translation' => 'Rating',
   'language' => 'is',
+  'plid' => '0',
+  'plural' => '0',
+  'i18n_status' => '0',
+))
+->values(array(
+  'lid' => '797',
+  'translation' => 'is - Stop',
+  'language' => 'is',
+  'plid' => '0',
+  'plural' => '0',
+  'i18n_status' => '0',
+))
+->values(array(
+  'lid' => '798',
+  'translation' => 'is - Go',
+  'language' => 'is',
+  'plid' => '0',
+  'plural' => '0',
+  'i18n_status' => '0',
+))
+->values(array(
+  'lid' => '797',
+  'translation' => 'fr - Stop',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+  'i18n_status' => '0',
+))
+->values(array(
+  'lid' => '798',
+  'translation' => 'Go',
+  'language' => 'fr',
   'plid' => '0',
   'plural' => '0',
   'i18n_status' => '0',
