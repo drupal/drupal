@@ -128,28 +128,6 @@ class WorkspacesUpdateTest extends UpdatePathTestBase {
   }
 
   /**
-   * Tests that there is no active workspace during database updates.
-   */
-  public function testActiveWorkspaceDuringUpdate() {
-    /** @var \Drupal\workspaces\WorkspaceManagerInterface $workspace_manager */
-    $workspace_manager = \Drupal::service('workspaces.manager');
-
-    // Check that we have an active workspace before running the updates.
-    $this->assertTrue($workspace_manager->hasActiveWorkspace());
-    $this->assertEquals('test', $workspace_manager->getActiveWorkspace()->id());
-
-    $this->runUpdates();
-
-    // Check that we didn't have an active workspace while running the updates.
-    // @see workspace_update_test_post_update_check_active_workspace()
-    $this->assertFalse(\Drupal::state()->get('workspace_update_test.has_active_workspace'));
-
-    // Check that we have an active workspace after running the updates.
-    $this->assertTrue($workspace_manager->hasActiveWorkspace());
-    $this->assertEquals('test', $workspace_manager->getActiveWorkspace()->id());
-  }
-
-  /**
    * {@inheritdoc}
    */
   protected function replaceUser1() {

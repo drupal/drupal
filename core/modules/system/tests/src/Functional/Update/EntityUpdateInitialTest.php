@@ -2,7 +2,9 @@
 
 namespace Drupal\Tests\system\Functional\Update;
 
-use Drupal\FunctionalTests\Update\UpdatePathTestBase;
+use Drupal\Core\Database\Database;
+use Drupal\Tests\BrowserTestBase;
+use Drupal\Tests\UpdatePathTestTrait;
 
 /**
  * Tests handling of existing initial keys during updates.
@@ -10,9 +12,9 @@ use Drupal\FunctionalTests\Update\UpdatePathTestBase;
  * @see https://www.drupal.org/project/drupal/issues/2925550
  *
  * @group Update
- * @group legacy
  */
-class EntityUpdateInitialTest extends UpdatePathTestBase {
+class EntityUpdateInitialTest extends BrowserTestBase {
+  use UpdatePathTestTrait;
 
   /**
    * {@inheritdoc}
@@ -22,11 +24,33 @@ class EntityUpdateInitialTest extends UpdatePathTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setDatabaseDumpFiles() {
-    $this->databaseDumpFiles = [
-      __DIR__ . '/../../../fixtures/update/drupal-8.0.0-rc1-filled.standard.entity_test_update.php.gz',
-      __DIR__ . '/../../../fixtures/update/drupal-8.entity-test-initial.php',
-    ];
+  protected static $modules = ['entity_test_update'];
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function setUp() {
+    parent::setUp();
+    $this->ensureUpdatesToRun();
+    $connection = Database::getConnection();
+
+    // Simulate an entity type that had previously set an initial key schema for
+    // a field.
+    $schema = $connection->select('key_value')
+      ->fields('key_value', ['value'])
+      ->condition('collection', 'entity.storage_schema.sql')
+      ->condition('name', 'entity_test_update.field_schema_data.name')
+      ->execute()
+      ->fetchField();
+
+    $schema = unserialize($schema);
+    $schema['entity_test_update']['fields']['name']['initial'] = 'test';
+
+    $connection->update('key_value')
+      ->fields(['value' => serialize($schema)])
+      ->condition('collection', 'entity.storage_schema.sql')
+      ->condition('name', 'entity_test_update.field_schema_data.name')
+      ->execute();
   }
 
   /**
