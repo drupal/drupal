@@ -49,8 +49,7 @@ interface PagerManagerInterface {
    * that invokes an external datastore with an SQL-like syntax:
    * @code
    *   // First find the total number of items and initialize the pager.
-   *   $where = "status = 1";
-   *   $total = mymodule_select("SELECT COUNT(*) FROM data " . $where)->result();
+   *   $total = mymodule_select("SELECT COUNT(*) FROM data WHERE status = 1")->result();
    *   $num_per_page = \Drupal::config('mymodule.settings')->get('num_per_page');
    *   $pager = \Drupal::service('pager.manager')->createPager($total, $num_per_page);
    *   $page = $pager->getCurrentPage();
