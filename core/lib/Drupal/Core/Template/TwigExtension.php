@@ -659,8 +659,9 @@ class TwigExtension extends AbstractExtension {
    *
    * @param array|object $element
    *   The parent renderable array to exclude the child items.
-   * @param string[] ...
-   *   The string keys of $element to prevent printing.
+   * @param string[]|string ...
+   *   The string keys of $element to prevent printing. Arguments can include
+   *   string keys directly, or arrays of string keys to hide.
    *
    * @return array
    *   The filtered renderable array.
@@ -674,10 +675,12 @@ class TwigExtension extends AbstractExtension {
     }
     $args = func_get_args();
     unset($args[0]);
-    foreach ($args as $arg) {
-      if (isset($filtered_element[$arg])) {
-        unset($filtered_element[$arg]);
-      }
+    // Since the remaining arguments can be a mix of arrays and strings, we use
+    // some native PHP iterator classes to allow us to recursively iterate over
+    // everything in a single pass.
+    $iterator = new \RecursiveIteratorIterator(new \RecursiveArrayIterator($args));
+    foreach ($iterator as $key) {
+      unset($filtered_element[$key]);
     }
     return $filtered_element;
   }
