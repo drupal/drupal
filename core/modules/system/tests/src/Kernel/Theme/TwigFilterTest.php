@@ -103,6 +103,22 @@ class TwigFilterTest extends KernelTestBase {
         'message' => 'Attributes printed without id and class attributes.',
       ],
       [
+        'expected' => '<div><span checked>Without id and class attributes via an array.</span></div>',
+        'message' => 'Attributes printed without an array of things (id and class).',
+      ],
+      [
+        'expected' => '<div><span>Without any attributes via mixed array and string.</span></div>',
+        'message' => 'Attributes printed without an array of keys then a string key.',
+      ],
+      [
+        'expected' => '<div><span>Without any attributes via mixed string then array.</span></div>',
+        'message' => 'Attributes printed without a string key then an array of keys.',
+      ],
+      [
+        'expected' => '<div><span>Without any attributes with duplicate "id" key.</span></div>',
+        'message' => 'Attributes printed without two arrays of keys with a duplicate key present in both arrays.',
+      ],
+      [
         'expected' => '<div><span id="quotes" checked class="red green blue">All attributes again.</span></div>',
         'message' => 'All attributes printed again.',
       ],
