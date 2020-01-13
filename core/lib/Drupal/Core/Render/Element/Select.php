@@ -59,7 +59,7 @@ use Drupal\Core\Render\Element;
  *   is #required or not.
  * - #required: (optional) Whether the user needs to select an option (TRUE)
  *   or not (FALSE). Defaults to FALSE.
- * - #size: The size of the input element in characters.
+ * - #size: The number of rows in the list that should be visible at one time.
  *
  * Usage example:
  * @code
