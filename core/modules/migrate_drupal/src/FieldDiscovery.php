@@ -3,13 +3,13 @@
 namespace Drupal\migrate_drupal;
 
 use Drupal\Component\Plugin\Exception\PluginNotFoundException;
-use Drupal\Core\Logger\LoggerChannelInterface;
 use Drupal\migrate\Exception\RequirementsException;
 use Drupal\migrate\Plugin\MigrationInterface;
 use Drupal\migrate\Plugin\MigrationPluginManagerInterface;
 use Drupal\migrate\Plugin\RequirementsInterface;
 use Drupal\migrate_drupal\Plugin\MigrateCckFieldInterface;
 use Drupal\migrate_drupal\Plugin\MigrateFieldPluginManagerInterface;
+use Psr\Log\LoggerInterface;
 
 /**
  * Provides field discovery for Drupal 6 & 7 migrations.
@@ -47,7 +47,7 @@ class FieldDiscovery implements FieldDiscoveryInterface {
   /**
    * The logger channel service.
    *
-   * @var \Drupal\Core\Logger\LoggerChannelInterface
+   * @var \Psr\Log\LoggerInterface
    */
   protected $logger;
 
@@ -104,10 +104,10 @@ class FieldDiscovery implements FieldDiscoveryInterface {
    *   The field plugin manager.
    * @param \Drupal\migrate\Plugin\MigrationPluginManagerInterface $migration_plugin_manager
    *   The migration plugin manager.
-   * @param \Drupal\Core\Logger\LoggerChannelInterface $logger
+   * @param \Psr\Log\LoggerInterface $logger
    *   The logger channel service.
    */
-  public function __construct(MigrateFieldPluginManagerInterface $field_plugin_manager, MigrationPluginManagerInterface $migration_plugin_manager, LoggerChannelInterface $logger) {
+  public function __construct(MigrateFieldPluginManagerInterface $field_plugin_manager, MigrationPluginManagerInterface $migration_plugin_manager, LoggerInterface $logger) {
     $this->fieldPluginManager = $field_plugin_manager;
     $this->migrationPluginManager = $migration_plugin_manager;
     $this->logger = $logger;

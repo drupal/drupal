@@ -2,11 +2,11 @@
 
 namespace Drupal\field_discovery_test;
 
-use Drupal\Core\Logger\LoggerChannelInterface;
 use Drupal\migrate\Plugin\MigrationPluginManagerInterface;
 use Drupal\migrate_drupal\FieldDiscovery;
 use Drupal\migrate\Plugin\MigrationInterface;
 use Drupal\migrate_drupal\Plugin\MigrateFieldPluginManagerInterface;
+use Psr\Log\LoggerInterface;
 
 /**
  * A test class to expose protected methods.
@@ -27,13 +27,13 @@ class FieldDiscoveryTestClass extends FieldDiscovery {
    *   The field plugin manager.
    * @param \Drupal\migrate\Plugin\MigrationPluginManagerInterface $migration_plugin_manager
    *   The migration plugin manager.
-   * @param \Drupal\Core\Logger\LoggerChannelInterface $logger
+   * @param \Psr\Log\LoggerInterface $logger
    *   The logger.
    * @param array $test_data
    *   An array of test data, keyed by method name, for overridden methods to
    *   return for the purposes of testing other methods.
    */
-  public function __construct(MigrateFieldPluginManagerInterface $field_plugin_manager, MigrationPluginManagerInterface $migration_plugin_manager, LoggerChannelInterface $logger, array $test_data = []) {
+  public function __construct(MigrateFieldPluginManagerInterface $field_plugin_manager, MigrationPluginManagerInterface $migration_plugin_manager, LoggerInterface $logger, array $test_data = []) {
     parent::__construct($field_plugin_manager, $migration_plugin_manager, $logger);
     $this->testData = $test_data;
   }
