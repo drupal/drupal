@@ -363,9 +363,7 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
    * {@inheritdoc}
    */
   public function acceptAttachments() {
-    // To be able to accept attachments this display have to be able to use
-    // attachments but at the same time, you cannot attach a display to itself.
-    if (!$this->usesAttachments() || ($this->definition['id'] == $this->view->current_display)) {
+    if (!$this->usesAttachments()) {
       return FALSE;
     }
 
