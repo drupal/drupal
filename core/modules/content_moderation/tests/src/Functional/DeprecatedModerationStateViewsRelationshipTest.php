@@ -59,12 +59,19 @@ class DeprecatedModerationStateViewsRelationshipTest extends BrowserTestBase {
     $this->assertSession()->pageTextNotContains('Content Moderation State views relationship');
 
     // Install the views intended for testing the relationship and assert the
-    // warning does appear.
+    // warning appears with the view name as a link.
     $this->container->get('module_installer')->install(['content_moderation_test_views']);
     $this->drupalGet('admin/reports/status');
     $this->assertSession()->pageTextContains('Content Moderation State views relationship');
     $this->assertSession()->linkExists('test_content_moderation_base_table_test');
     $this->assertSession()->linkByHrefExists('admin/structure/views/view/test_content_moderation_base_table_test');
+
+    // Uninstall views_ui and assert the warning appears with a plain text view
+    // name.
+    $this->container->get('module_installer')->uninstall(['views_ui']);
+    $this->drupalGet('admin/reports/status');
+    $this->assertSession()->pageTextContains('Content Moderation State views relationship');
+    $this->assertSession()->pageTextContains('test_content_moderation_base_table_test');
   }
 
   /**

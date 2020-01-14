@@ -15,13 +15,20 @@ function content_moderation_requirements($phase) {
   $requirements = [];
 
   if ($phase === 'runtime') {
+    $moduleHandler = \Drupal::moduleHandler();
     $config = \Drupal::configFactory();
     $legacy_views = [];
     foreach ($config->listAll('views.view.') as $view_id) {
       $view = $config->get($view_id);
       foreach ($view->get('display') as $display) {
         if (!empty($display['display_options']['relationships']['moderation_state'])) {
-          $legacy_views[] = Link::createFromRoute($view->get('label'), 'entity.view.edit_form', ['view' => $view->get('id')])->toString();
+          if ($moduleHandler->moduleExists('views_ui')) {
+            $view_name = Link::createFromRoute($view->get('label'), 'entity.view.edit_form', ['view' => $view->get('id')])->toString();
+          }
+          else {
+            $view_name = $view->get('label');
+          }
+          $legacy_views[] = $view_name;
         }
       }
     }
