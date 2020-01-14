@@ -330,7 +330,7 @@ class RequestHandler implements ContainerInjectionInterface {
     $parameters = [];
     // Filter out all internal parameters starting with "_".
     foreach ($route_parameters as $key => $parameter) {
-      if ($key{0} !== '_') {
+      if (substr((string) $key, 0, 1) !== '_') {
         $parameters[] = $parameter;
       }
     }
