@@ -100,4 +100,9 @@ interface WorkspaceManagerInterface {
    */
   public function shouldAlterOperations(EntityTypeInterface $entity_type);
 
+  /**
+   * Deletes the revisions associated with deleted workspaces.
+   */
+  public function purgeDeletedWorkspacesBatch();
+
 }
