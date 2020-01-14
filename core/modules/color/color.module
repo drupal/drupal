@@ -347,7 +347,7 @@ function color_palette_color_value($element, $input, FormStateInterface $form_st
  *   isn't.
  */
 function color_valid_hexadecimal_string($color) {
-  return preg_match('/^#([a-f0-9]{3}){1,2}$/iD', $color);
+  return (bool) preg_match('/^#([a-f0-9]{3}){1,2}$/iD', $color);
 }
 
 /**
