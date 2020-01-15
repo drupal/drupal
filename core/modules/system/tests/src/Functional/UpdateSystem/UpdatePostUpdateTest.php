@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\Tests\system\Functional\Update;
+namespace Drupal\Tests\system\Functional\UpdateSystem;
 
 use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Database\Database;

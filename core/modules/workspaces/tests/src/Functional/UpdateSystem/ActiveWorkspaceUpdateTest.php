@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\Tests\workspaces\Functional\Update;
+namespace Drupal\Tests\workspaces\Functional\UpdateSystem;
 
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\UpdatePathTestTrait;
