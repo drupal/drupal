@@ -11,6 +11,7 @@ libraries:
 
 libraries-override:
   classy/messages: false
+  classy/dropbutton: umami/classy.dropbutton
   layout_builder/twocol_section:
     css:
       theme:
@@ -27,6 +28,8 @@ libraries-override:
 libraries-extend:
   tour/tour-styling:
     - umami/demo-umami-tour
+  core/drupal.dropbutton:
+    - umami/classy.dropbutton
 
 regions:
   pre_header: Pre-header
