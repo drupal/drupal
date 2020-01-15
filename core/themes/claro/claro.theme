@@ -862,13 +862,6 @@ function claro_preprocess_form_element__password(&$variables) {
 }
 
 /**
- * Implements template_preprocess_HOOK() for checkboxes.
- */
-function claro_preprocess_checkboxes(&$variables) {
-  $variables['attributes']['class'][] = 'form-boolean-group';
-}
-
-/**
  * Implements template_preprocess_HOOK() for radios.
  */
 function claro_preprocess_radios(&$variables) {
