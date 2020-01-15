@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\Tests\system\Functional\Update;
+namespace Drupal\Tests\system\Functional\UpdateSystem;
 
 use Drupal\FunctionalTests\Update\UpdatePathTestBaseTest;
 use Drupal\node\Entity\Node;
@@ -12,7 +12,6 @@ use Drupal\user\Entity\User;
  *
  * @group #slow
  * @group Update
- * @group legacy
  */
 class UpdatePathTestBaseFilledTest extends UpdatePathTestBaseTest {
 

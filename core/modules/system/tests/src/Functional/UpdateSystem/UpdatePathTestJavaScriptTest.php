@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\Tests\system\Functional\Update;
+namespace Drupal\Tests\system\Functional\UpdateSystem;
 
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\UpdatePathTestTrait;
@@ -9,7 +9,6 @@ use Drupal\Tests\UpdatePathTestTrait;
  * Tests the presence of JavaScript at update.php.
  *
  * @group Update
- * @group legacy
  */
 class UpdatePathTestJavaScriptTest extends BrowserTestBase {
   use UpdatePathTestTrait;
