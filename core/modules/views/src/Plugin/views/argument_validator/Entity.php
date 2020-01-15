@@ -171,7 +171,15 @@ class Entity extends ArgumentValidatorPluginBase {
    */
   public function submitOptionsForm(&$form, FormStateInterface $form_state, &$options = []) {
     // Filter out unused options so we don't store giant unnecessary arrays.
-    $options['bundles'] = array_filter($options['bundles']);
+    // Note that the bundles form option doesn't appear on the form if the
+    // entity type doesn't support bundles, so the option may not be set.
+    if (!empty($options['bundles'])) {
+      $options['bundles'] = array_filter($options['bundles']);
+    }
+    else {
+      // Set bundles back to its default empty value.
+      $options['bundles'] = [];
+    }
   }
 
   /**
@@ -223,7 +231,7 @@ class Entity extends ArgumentValidatorPluginBase {
     }
     // If restricted by bundle.
     $bundles = $this->options['bundles'];
-    if (count($bundles) && empty($bundles[$entity->bundle()])) {
+    if (!empty($bundles) && empty($bundles[$entity->bundle()])) {
       return FALSE;
     }
 
