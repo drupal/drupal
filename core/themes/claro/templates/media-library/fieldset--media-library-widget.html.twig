@@ -1,0 +1,24 @@
+{% extends 'fieldset.html.twig' %}
+{#
+/**
+ * @file
+ * Theme override for the media library widget.
+ *
+ * @see claro_preprocess_fieldset__media_library_widget()
+ * @see claro_preprocess_fieldset()
+ * @see template_preprocess_fieldset()
+ */
+#}
+{% macro media_library_prefix(prefix) %}
+  {% if prefix.empty_selection %}
+    <p class="media-library-widget-empty-text">{{ prefix }}</p>
+  {% else %}
+    {{ prefix }}
+  {% endif %}
+{% endmacro %}
+{%
+  set attributes = attributes.addClass('media-library-widget')
+%}
+{%
+  set prefix = _self.media_library_prefix(prefix)
+%}
