@@ -8,6 +8,7 @@
 use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Cache\Cache;
+use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Url;
 use Drupal\shortcut\Entity\ShortcutSet;
@@ -306,10 +307,10 @@ function shortcut_preprocess_block(&$variables) {
  */
 function shortcut_preprocess_page_title(&$variables) {
   // Only display the shortcut link if the user has the ability to edit
-  // shortcuts and if the page's actual content is being shown (for example,
-  // we do not want to display it on "access denied" or "page not found"
-  // pages).
-  if (shortcut_set_edit_access()->isAllowed() && !\Drupal::request()->attributes->has('exception')) {
+  // shortcuts, the feature is enabled for the current theme and if the page's
+  // actual content is being shown (for example, we do not want to display it on
+  // "access denied" or "page not found" pages).
+  if (shortcut_set_edit_access()->isAllowed() && theme_get_setting('third_party_settings.shortcut.module_link') && !\Drupal::request()->attributes->has('exception')) {
     $link = Url::fromRouteMatch(\Drupal::routeMatch())->getInternalPath();
     $route_match = \Drupal::routeMatch();
 
@@ -323,6 +324,12 @@ function shortcut_preprocess_page_title(&$variables) {
     ];
 
     $shortcut_set = shortcut_current_displayed_set();
+
+    // Pages with the add or remove shortcut button need cache invalidation when
+    // a shortcut is added, edited, or removed.
+    $cacheability_metadata = CacheableMetadata::createFromRenderArray($variables);
+    $cacheability_metadata->addCacheTags(\Drupal::entityTypeManager()->getDefinition('shortcut')->getListCacheTags());
+    $cacheability_metadata->applyTo($variables);
 
     // Check if $link is already a shortcut and set $link_mode accordingly.
     $shortcuts = \Drupal::entityTypeManager()->getStorage('shortcut')->loadByProperties(['shortcut_set' => $shortcut_set->id()]);
@@ -347,26 +354,24 @@ function shortcut_preprocess_page_title(&$variables) {
       $route_parameters = ['shortcut' => $shortcut_id];
     }
 
-    if (theme_get_setting('third_party_settings.shortcut.module_link')) {
-      $query += \Drupal::destination()->getAsArray();
-      $variables['title_suffix']['add_or_remove_shortcut'] = [
-        '#attached' => [
-          'library' => [
-            'shortcut/drupal.shortcut',
-          ],
+    $query += \Drupal::destination()->getAsArray();
+    $variables['title_suffix']['add_or_remove_shortcut'] = [
+      '#attached' => [
+        'library' => [
+          'shortcut/drupal.shortcut',
         ],
-        '#type' => 'link',
-        '#title' => new FormattableMarkup('<span class="shortcut-action__icon"></span><span class="shortcut-action__message">@text</span>', ['@text' => $link_text]),
-        '#url' => Url::fromRoute($route_name, $route_parameters),
-        '#options' => ['query' => $query],
-        '#attributes' => [
-          'class' => [
-            'shortcut-action',
-            'shortcut-action--' . $link_mode,
-          ],
+      ],
+      '#type' => 'link',
+      '#title' => new FormattableMarkup('<span class="shortcut-action__icon"></span><span class="shortcut-action__message">@text</span>', ['@text' => $link_text]),
+      '#url' => Url::fromRoute($route_name, $route_parameters),
+      '#options' => ['query' => $query],
+      '#attributes' => [
+        'class' => [
+          'shortcut-action',
+          'shortcut-action--' . $link_mode,
         ],
-      ];
-    }
+      ],
+    ];
   }
 }
 
@@ -380,52 +385,43 @@ function shortcut_toolbar() {
   $items['shortcuts'] = [
     '#cache' => [
       'contexts' => [
-        // Cacheable per user, because each user can have their own shortcut
-        // set, even if they cannot create or select a shortcut set, because
-        // an administrator may have assigned a non-default shortcut set.
-        'user',
+        'user.permissions',
       ],
     ],
   ];
 
   if ($user->hasPermission('access shortcuts')) {
-    $links = shortcut_renderable_links();
     $shortcut_set = shortcut_current_displayed_set();
-    \Drupal::service('renderer')->addCacheableDependency($items['shortcuts'], $shortcut_set);
-    $configure_link = NULL;
-    if (shortcut_set_edit_access($shortcut_set)->isAllowed()) {
-      $configure_link = [
+
+    $items['shortcuts'] += [
+      '#type' => 'toolbar_item',
+      'tab' => [
         '#type' => 'link',
-        '#title' => t('Edit shortcuts'),
-        '#url' => Url::fromRoute('entity.shortcut_set.customize_form', ['shortcut_set' => $shortcut_set->id()]),
-        '#options' => ['attributes' => ['class' => ['edit-shortcuts']]],
-      ];
-    }
-    if (!empty($links) || !empty($configure_link)) {
-      $items['shortcuts'] += [
-        '#type' => 'toolbar_item',
-        'tab' => [
-          '#type' => 'link',
-          '#title' => t('Shortcuts'),
-          '#url' => $shortcut_set->toUrl('collection'),
-          '#attributes' => [
-            'title' => t('Shortcuts'),
-            'class' => ['toolbar-icon', 'toolbar-icon-shortcut'],
+        '#title' => t('Shortcuts'),
+        '#url' => $shortcut_set->toUrl('collection'),
+        '#attributes' => [
+          'title' => t('Shortcuts'),
+          'class' => ['toolbar-icon', 'toolbar-icon-shortcut'],
+        ],
+      ],
+      'tray' => [
+        '#heading' => t('User-defined shortcuts'),
+        'children' => [
+          '#lazy_builder' => ['shortcut.lazy_builders:lazyLinks', []],
+          '#create_placeholder' => TRUE,
+          '#cache' => [
+            'keys' => ['shortcut_set_toolbar_links'],
+            'contexts' => ['user'],
           ],
         ],
-        'tray' => [
-          '#heading' => t('User-defined shortcuts'),
-          'shortcuts' => $links,
-          'configure' => $configure_link,
+      ],
+      '#weight' => -10,
+      '#attached' => [
+        'library' => [
+          'shortcut/drupal.shortcut',
         ],
-        '#weight' => -10,
-        '#attached' => [
-          'library' => [
-            'shortcut/drupal.shortcut',
-          ],
-        ],
-      ];
-    }
+      ],
+    ];
   }
 
   return $items;
