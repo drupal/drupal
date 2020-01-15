@@ -37,7 +37,6 @@ abstract class PageCacheTagsTestBase extends BrowserTestBase {
    *   The page for this URL will be loaded.
    * @param string $hit_or_miss
    *   'HIT' if a page cache hit is expected, 'MISS' otherwise.
-   *
    * @param array|false $tags
    *   When expecting a page cache hit, you may optionally specify an array of
    *   expected cache tags. While FALSE, the cache tags will not be verified.
@@ -57,6 +56,20 @@ abstract class PageCacheTagsTestBase extends BrowserTestBase {
       sort($tags);
       $this->assertIdentical($cache_entry->tags, $tags);
     }
+  }
+
+  /**
+   * Verify that when loading a given page, it's a page cache hit or miss.
+   *
+   * @param \Drupal\Core\Url $url
+   *   The page for this URL will be loaded.
+   * @param string $hit_or_miss
+   *   'HIT' if a page cache hit is expected, 'MISS' otherwise.
+   */
+  protected function verifyDynamicPageCache(Url $url, $hit_or_miss) {
+    $this->drupalGet($url);
+    $message = new FormattableMarkup('Dynamic page cache @hit_or_miss for %path.', ['@hit_or_miss' => $hit_or_miss, '%path' => $url->toString()]);
+    $this->assertSame($hit_or_miss, $this->getSession()->getResponseHeader('X-Drupal-Dynamic-Cache'), $message);
   }
 
 }

@@ -355,9 +355,9 @@ class ShortcutLinksTest extends ShortcutTestBase {
     $this->assertNoLink('Shortcuts', 'Shortcut link not found on page.');
 
     // Verify that users without the 'administer site configuration' permission
-    // can't see the cron shortcuts.
+    // can't see the cron shortcuts but can see shortcuts.
     $this->drupalLogin($this->drupalCreateUser(['access toolbar', 'access shortcuts']));
-    $this->assertNoLink('Shortcuts', 'Shortcut link not found on page.');
+    $this->assertLink('Shortcuts');
     $this->assertNoLink('Cron', 'Cron shortcut link not found on page.');
 
     // Verify that users with the 'access shortcuts' permission can see the
