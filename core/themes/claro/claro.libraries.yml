@@ -64,6 +64,14 @@ global-styling:
     # it has to be always attached.
     - core/modernizr
 
+# Drupal throws an IncompleteLibraryDefinitionException if a base theme defined
+# library is set to false in a subtheme's libraries-override. This empty
+# library is used as a workaround.
+# @see https://www.drupal.org/node/3098375
+empty:
+  version: VERSION
+  css: {}
+
 node-form:
   version: VERSION
   css:
@@ -247,3 +255,9 @@ file:
   css:
     component:
       css/components/file.css: {}
+
+media_library.theme:
+  version: VERSION
+  css:
+    theme:
+      css/theme/media-library.css: {}
