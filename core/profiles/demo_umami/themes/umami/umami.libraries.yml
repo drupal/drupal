@@ -130,3 +130,9 @@ oneplusfourgrid_section:
   css:
     theme:
       layouts/oneplusfourgrid_section/oneplusfourgrid_section.css: {}
+
+classy.dropbutton:
+  version: VERSION
+  css:
+    component:
+      css/classy/components/dropbutton.css: { weight: -10 }
