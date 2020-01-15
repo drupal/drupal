@@ -120,6 +120,12 @@ libraries-override:
       theme:
         /core/themes/stable/css/views_ui/views_ui.admin.theme.css: css/theme/views_ui.admin.theme.css
 
+  # Drupal throws an IncompleteLibraryDefinitionException if a base theme
+  # defined library is set to false in a subtheme's libraries-override. We use
+  # 'claro/empty' for working around this behavior.
+  # @see https://www.drupal.org/node/3098375
+  classy/media_library: claro/empty
+
 libraries-extend:
   ckeditor/drupal.ckeditor:
     - claro/ckeditor-editor
@@ -153,6 +159,10 @@ libraries-extend:
     - claro/ajax
   views/views.module:
     - claro/views
+  media_library/view:
+    - claro/media_library.theme
+  media_library/widget:
+    - claro/media_library.theme
 
 quickedit_stylesheets:
   - css/components/quickedit.css

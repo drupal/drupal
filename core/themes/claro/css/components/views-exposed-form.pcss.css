@@ -1,14 +1,25 @@
 /**
+ * @file
  * Visual styles for views exposed form.
  */
 
 @import "../base/variables.pcss.css";
 
 /**
- * Use flexbox and some margin resets to make the fields + actions go inline
+ * Use flexbox and some margin resets to make the fields + actions go inline.
+ *
+ * For (at least) Media Library, this file is typically inserted by AJAX add_css
+ * command when the dialog is opened. The AJAX add_css command always adds the
+ * missing-but-required CSS assets to the beginning of the HTML <head>. Because
+ * of this, we cannot rely on the expected loading order of the CSS assets.
+ * This is why we have to double these selectors: we have to get the expected
+ * output even for the Media Library modal.
+ *
+ * @todo Remove double selectors after https://www.drupal.org/node/1461322
+ * has been resolved.
  */
 
-.views-exposed-form {
+.views-exposed-form.views-exposed-form {
   display: flex;
   flex-wrap: wrap;
   align-items: flex-end;
@@ -21,29 +32,29 @@
   box-shadow: var(--details-box-shadow);
 }
 
-.views-exposed-form__item {
+.views-exposed-form__item.views-exposed-form__item {
   margin: var(--space-s) var(--space-xs) 0 0; /* LTR */
 }
-[dir="rtl"] .views-exposed-form__item {
+[dir="rtl"] .views-exposed-form__item.views-exposed-form__item {
   margin-right: 0;
   margin-left: var(--space-xs);
 }
 
-.views-exposed-form__item--preceding-actions {
+.views-exposed-form__item--preceding-actions.views-exposed-form__item--preceding-actions {
   margin-right: var(--space-m); /* LTR */
 }
-[dir="rtl"] .views-exposed-form__item--preceding-actions {
+[dir="rtl"] .views-exposed-form__item--preceding-actions.views-exposed-form__item--preceding-actions {
   margin-right: 0;
   margin-left: var(--space-m);
 }
 
-.views-exposed-form__item--actions .button {
+.views-exposed-form__item--actions.views-exposed-form__item--actions .button {
   margin-bottom: 0;
 }
 
-.views-exposed-form__item--actions .button:last-child {
+.views-exposed-form__item--actions.views-exposed-form__item--actions .button:last-child {
   margin-right: 0;
 }
-[dir="rtl"] .views-exposed-form__item--actions:last-child {
+[dir="rtl"] .views-exposed-form__item--actions.views-exposed-form__item--actions:last-child {
   margin-left: 0;
 }
