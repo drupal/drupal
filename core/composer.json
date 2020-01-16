@@ -33,7 +33,7 @@
         "symfony/yaml": "^4.4",
         "typo3/phar-stream-wrapper": "^3.1.3",
         "twig/twig": "^2.12.0",
-        "doctrine/common": "^2.7",
+        "doctrine/reflection": "^1.1",
         "doctrine/annotations": "^1.4",
         "guzzlehttp/guzzle": "^6.5.2",
         "symfony-cmf/routing": "^2.1",
