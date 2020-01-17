@@ -490,7 +490,7 @@ abstract class ConfigEntityBase extends EntityBase implements ConfigEntityInterf
    * already invalidates it.
    */
   protected function invalidateTagsOnSave($update) {
-    Cache::invalidateTags($this->getEntityType()->getListCacheTags());
+    Cache::invalidateTags($this->getListCacheTagsToInvalidate());
   }
 
   /**
@@ -500,7 +500,11 @@ abstract class ConfigEntityBase extends EntityBase implements ConfigEntityInterf
    * config system already invalidates them.
    */
   protected static function invalidateTagsOnDelete(EntityTypeInterface $entity_type, array $entities) {
-    Cache::invalidateTags($entity_type->getListCacheTags());
+    $tags = $entity_type->getListCacheTags();
+    foreach ($entities as $entity) {
+      $tags = Cache::mergeTags($tags, $entity->getListCacheTagsToInvalidate());
+    }
+    Cache::invalidateTags($tags);
   }
 
   /**

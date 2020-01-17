@@ -19,4 +19,30 @@ class CacheTestController {
     ];
   }
 
+  /**
+   * Bundle listing tags invalidation.
+   *
+   * @param string $entity_type_id
+   *   The entity type ID.
+   * @param string $bundle
+   *   The bundle.
+   *
+   * @return array
+   *   Renderable array.
+   */
+  public function bundleTags($entity_type_id, $bundle) {
+    $storage = \Drupal::entityTypeManager()->getStorage($entity_type_id);
+    $entity_ids = $storage->getQuery()->condition('type', $bundle)->execute();
+    $page = [];
+
+    $entities = $storage->loadMultiple($entity_ids);
+    foreach ($entities as $entity) {
+      $page[$entity->id()] = [
+        '#markup' => $entity->label(),
+      ];
+    }
+    $page['#cache']['tags'] = [$entity_type_id . '_list:' . $bundle];
+    return $page;
+  }
+
 }
