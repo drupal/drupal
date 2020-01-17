@@ -271,6 +271,14 @@ class EntityFormTest extends UnitTestCase {
   }
 
   /**
+   * Tests undeclared properties are not broken by the BC layer.
+   */
+  public function testGetAndSet() {
+    $this->entityForm->foo = 'bar';
+    $this->assertSame('bar', $this->entityForm->foo);
+  }
+
+  /**
    * Sets up the storage accessed via the entity type manager in the form.
    *
    * @return \Prophecy\Prophecy\ObjectProphecy
