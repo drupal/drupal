@@ -444,6 +444,43 @@ class EntityUnitTest extends UnitTestCase {
   }
 
   /**
+   * @covers ::postSave
+   */
+  public function testPostSaveBundle() {
+    $this->cacheTagsInvalidator->expects($this->at(0))
+      ->method('invalidateTags')
+      ->with([
+        // List cache tag.
+        $this->entityTypeId . '_list',
+        $this->entityTypeId . '_list:' . $this->entity->bundle(),
+      ]);
+    $this->cacheTagsInvalidator->expects($this->at(1))
+      ->method('invalidateTags')
+      ->with([
+        // Own cache tag.
+        $this->entityTypeId . ':' . $this->values['id'],
+        // List cache tag.
+        $this->entityTypeId . '_list',
+        $this->entityTypeId . '_list:' . $this->entity->bundle(),
+      ]);
+
+    $this->entityType->expects($this->atLeastOnce())
+      ->method('hasKey')
+      ->with('bundle')
+      ->willReturn(TRUE);
+
+    // This method is internal, so check for errors on calling it only.
+    $storage = $this->createMock('\Drupal\Core\Entity\EntityStorageInterface');
+
+    // A creation should trigger the invalidation of the global list cache tag
+    // and the one for the bundle.
+    $this->entity->postSave($storage, FALSE);
+    // An update should trigger the invalidation of the "list", bundle list and
+    // the "own" cache tags.
+    $this->entity->postSave($storage, TRUE);
+  }
+
+  /**
    * @covers ::preCreate
    */
   public function testPreCreate() {
@@ -484,6 +521,30 @@ class EntityUnitTest extends UnitTestCase {
         $this->entityTypeId . ':' . $this->values['id'],
         $this->entityTypeId . '_list',
       ]);
+    $storage = $this->createMock('\Drupal\Core\Entity\EntityStorageInterface');
+    $storage->expects($this->once())
+      ->method('getEntityType')
+      ->willReturn($this->entityType);
+
+    $entities = [$this->values['id'] => $this->entity];
+    $this->entity->postDelete($storage, $entities);
+  }
+
+  /**
+   * @covers ::postDelete
+   */
+  public function testPostDeleteBundle() {
+    $this->cacheTagsInvalidator->expects($this->once())
+      ->method('invalidateTags')
+      ->with([
+        $this->entityTypeId . ':' . $this->values['id'],
+        $this->entityTypeId . '_list',
+        $this->entityTypeId . '_list:' . $this->entity->bundle(),
+      ]);
+    $this->entityType->expects($this->atLeastOnce())
+      ->method('hasKey')
+      ->with('bundle')
+      ->willReturn(TRUE);
     $storage = $this->createMock('\Drupal\Core\Entity\EntityStorageInterface');
     $storage->expects($this->once())
       ->method('getEntityType')

@@ -494,11 +494,23 @@ abstract class EntityBase implements EntityInterface {
   }
 
   /**
+   * The list cache tags to invalidate for this entity.
+   *
+   * @return string[]
+   *   Set of list cache tags.
+   */
+  protected function getListCacheTagsToInvalidate() {
+    $tags = $this->getEntityType()->getListCacheTags();
+    if ($this->getEntityType()->hasKey('bundle')) {
+      $tags[] = $this->getEntityTypeId() . '_list:' . $this->bundle();
+    }
+    return $tags;
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function getCacheTagsToInvalidate() {
-    // @todo Add bundle-specific listing cache tag?
-    //   https://www.drupal.org/node/2145751
     if ($this->isNew()) {
       return [];
     }
@@ -563,7 +575,7 @@ abstract class EntityBase implements EntityInterface {
     // updated entity may start to appear in a listing because it now meets that
     // listing's filtering requirements. A newly created entity may start to
     // appear in listings because it did not exist before.)
-    $tags = $this->getEntityType()->getListCacheTags();
+    $tags = $this->getListCacheTagsToInvalidate();
     if ($this->hasLinkTemplate('canonical')) {
       // Creating or updating an entity may change a cached 403 or 404 response.
       $tags = Cache::mergeTags($tags, ['4xx-response']);
@@ -592,6 +604,7 @@ abstract class EntityBase implements EntityInterface {
       // cache tag, but subsequent list pages would not be invalidated, hence we
       // must invalidate its list cache tags as well.)
       $tags = Cache::mergeTags($tags, $entity->getCacheTagsToInvalidate());
+      $tags = Cache::mergeTags($tags, $entity->getListCacheTagsToInvalidate());
     }
     Cache::invalidateTags($tags);
   }
