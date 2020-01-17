@@ -82,6 +82,11 @@ class EntityForm extends FormBase implements EntityFormInterface {
       @trigger_error('EntityForm::entityManager is deprecated in drupal:8.0.0 and is removed from drupal:9.0.0. Use EntityForm::entityTypeManager instead. See https://www.drupal.org/node/2549139', E_USER_DEPRECATED);
       $this->privateEntityManager = $value;
     }
+    else {
+      // Ensure usual PHP behaviour of dynamically declaring properties works as
+      // expected.
+      $this->$name = $value;
+    }
   }
 
   /**
