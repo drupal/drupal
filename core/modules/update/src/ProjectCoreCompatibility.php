@@ -14,21 +14,27 @@ class ProjectCoreCompatibility {
   use StringTranslationTrait;
 
   /**
-   * Core versions that are available for updates.
+   * Cache of core versions that are available for updates.
    *
    * @var string[]
    */
   protected $possibleCoreUpdateVersions;
 
   /**
-   * Core compatibility messages.
+   * Cache of core compatibility messages per core version constraint.
+   *
+   * Keys are core version constraint strings, values are human-readable
+   * messages about the versions of core that version constraint maps to.
+   *
+   * This list is cached since many project releases will use the same core
+   * compatibility constraint.
    *
    * @var string[]
    */
   protected $compatibilityMessages = [];
 
   /**
-   * Constructs an UpdateProjectCoreCompatibility object.
+   * Constructs a ProjectCoreCompatibility object.
    *
    * @param array $core_data
    *   The project data for Drupal core as returned by
@@ -36,7 +42,11 @@ class ProjectCoreCompatibility {
    *   by update_process_project_info() and
    *   update_calculate_project_update_status().
    * @param array $core_releases
-   *   The drupal core available releases.
+   *   The Drupal core available releases.
+   *
+   * @see \Drupal\update\UpdateManagerInterface::getProjects()
+   * @see update_process_project_info()
+   * @see update_calculate_project_update_status()
    */
   public function __construct(array $core_data, array $core_releases) {
     if (isset($core_data['existing_version'])) {
@@ -48,18 +58,18 @@ class ProjectCoreCompatibility {
    * Gets the core versions that should be considered for compatibility ranges.
    *
    * @param string $existing_version
-   *   The core existing version.
+   *   The existing (currently installed) version of Drupal core.
    * @param array $core_releases
-   *   The drupal core available releases.
+   *   The Drupal core available releases.
    *
    * @return string[]
-   *   The core version numbers.
+   *   The core version numbers that are possible to update the site to.
    */
   protected function getPossibleCoreUpdateVersions($existing_version, array $core_releases) {
     if (!isset($core_releases[$existing_version])) {
-      // If we can't determine the existing version then we can't calculate the
-      // core compatibility of based on core versions after the existing
-      // version.
+      // If we can't determine the existing version of core then we can't
+      // calculate the core compatibility of a given release based on core
+      // versions after the existing version.
       return [];
     }
     $core_release_versions = array_keys($core_releases);
@@ -86,14 +96,18 @@ class ProjectCoreCompatibility {
    *   - releases (array[]): An array where the keys are project version numbers
    *     and the values are arrays of project release information.
    *   - security updates (array[]): An array of project release information.
+   *
+   * @see \Drupal\update\UpdateManagerInterface::getProjects()
+   * @see update_process_project_info()
+   * @see update_calculate_project_update_status()
    */
   public function setReleaseMessage(array &$project_data) {
     if (empty($this->possibleCoreUpdateVersions)) {
       return;
     }
 
-    // Get the various releases that will need to have core compatibility data
-    // added to them.
+    // Get the various releases that will need to have core compatibility
+    // messages added to them.
     $releases_to_set = [];
     $versions = [];
     if (!empty($project_data['recommended'])) {
@@ -126,7 +140,7 @@ class ProjectCoreCompatibility {
    * Creates core a compatibility message from a semantic version constraint.
    *
    * @param string $core_compatibility_constraint
-   *   A Composer semantic version constraint.
+   *   A semantic version constraint.
    *
    * @return string
    *   The core compatibility message.
@@ -152,7 +166,7 @@ class ProjectCoreCompatibility {
    * Gets the compatibility ranges for a semantic version constraint.
    *
    * @param string $core_compatibility_constraint
-   *   A Composer semantic version constraint.
+   *   A semantic version constraint.
    *
    * @return array[]
    *   An array compatibility ranges. If a range array has 2 elements then this
