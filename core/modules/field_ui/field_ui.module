@@ -119,7 +119,7 @@ function field_ui_entity_bundle_create($entity_type, $bundle) {
  *
  * Adds a button 'Save and manage fields' to the 'Create content type' form.
  *
- * @see node_type_form()
+ * @see \Drupal\node\NodeTypeForm
  * @see field_ui_form_node_type_form_submit()
  */
 function field_ui_form_node_type_form_alter(&$form, FormStateInterface $form_state) {
