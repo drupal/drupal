@@ -15,8 +15,8 @@ use Drupal\Core\Link;
 /**
  * Defines a class to build a listing of fields.
  *
- * @see \Drupal\field\Entity\Field
- * @see field_ui_entity_info()
+ * @see \Drupal\field\Entity\FieldStorageConfig
+ * @see field_ui_entity_type_build()
  */
 class FieldStorageConfigListBuilder extends ConfigEntityListBuilder {
   use DeprecatedServicePropertyTrait;
