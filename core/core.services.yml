@@ -1418,78 +1418,78 @@ services:
     class: Drupal\Component\Bridge\ZfExtensionManagerSfContainer
     calls:
       - [setContainer, ['@service_container']]
-      - [setStandalone, ['\Zend\Feed\Reader\StandaloneExtensionManager']]
+      - [setStandalone, ['\Laminas\Feed\Reader\StandaloneExtensionManager']]
     arguments: ['feed.reader.']
   feed.bridge.writer:
     class: Drupal\Component\Bridge\ZfExtensionManagerSfContainer
     calls:
       - [setContainer, ['@service_container']]
-      - [setStandalone, ['\Zend\Feed\Writer\StandaloneExtensionManager']]
+      - [setStandalone, ['\Laminas\Feed\Writer\StandaloneExtensionManager']]
     arguments: ['feed.writer.']
-# Zend Feed reader plugins. Plugin instances should not be shared.
+# Laminas Feed reader plugins. Plugin instances should not be shared.
   feed.reader.dublincoreentry:
-    class: Zend\Feed\Reader\Extension\DublinCore\Entry
+    class: Laminas\Feed\Reader\Extension\DublinCore\Entry
     shared: false
   feed.reader.dublincorefeed:
-    class: Zend\Feed\Reader\Extension\DublinCore\Feed
+    class: Laminas\Feed\Reader\Extension\DublinCore\Feed
     shared: false
   feed.reader.contententry:
-    class: Zend\Feed\Reader\Extension\Content\Entry
+    class: Laminas\Feed\Reader\Extension\Content\Entry
     shared: false
   feed.reader.atomentry:
-    class: Zend\Feed\Reader\Extension\Atom\Entry
+    class: Laminas\Feed\Reader\Extension\Atom\Entry
     shared: false
   feed.reader.atomfeed:
-    class: Zend\Feed\Reader\Extension\Atom\Feed
+    class: Laminas\Feed\Reader\Extension\Atom\Feed
     shared: false
   feed.reader.slashentry:
-    class: Zend\Feed\Reader\Extension\Slash\Entry
+    class: Laminas\Feed\Reader\Extension\Slash\Entry
     shared: false
   feed.reader.wellformedwebentry:
-    class: Zend\Feed\Reader\Extension\WellFormedWeb\Entry
+    class: Laminas\Feed\Reader\Extension\WellFormedWeb\Entry
     shared: false
   feed.reader.threadentry:
-    class: Zend\Feed\Reader\Extension\Thread\Entry
+    class: Laminas\Feed\Reader\Extension\Thread\Entry
     shared: false
   feed.reader.podcastentry:
-    class: Zend\Feed\Reader\Extension\Podcast\Entry
+    class: Laminas\Feed\Reader\Extension\Podcast\Entry
     shared: false
   feed.reader.podcastfeed:
-    class: Zend\Feed\Reader\Extension\Podcast\Feed
+    class: Laminas\Feed\Reader\Extension\Podcast\Feed
     shared: false
-# Zend Feed writer plugins. Plugins should be set as prototype scope.
+# Laminas Feed writer plugins. Plugins should be set as prototype scope.
   feed.writer.atomrendererfeed:
-    class: Zend\Feed\Writer\Extension\Atom\Renderer\Feed
+    class: Laminas\Feed\Writer\Extension\Atom\Renderer\Feed
     shared: false
   feed.writer.contentrendererentry:
-    class: Zend\Feed\Writer\Extension\Content\Renderer\Entry
+    class: Laminas\Feed\Writer\Extension\Content\Renderer\Entry
     shared: false
   feed.writer.dublincorerendererentry:
-    class: Zend\Feed\Writer\Extension\DublinCore\Renderer\Entry
+    class: Laminas\Feed\Writer\Extension\DublinCore\Renderer\Entry
     shared: false
   feed.writer.dublincorerendererfeed:
-    class: Zend\Feed\Writer\Extension\DublinCore\Renderer\Feed
+    class: Laminas\Feed\Writer\Extension\DublinCore\Renderer\Feed
     shared: false
   feed.writer.itunesentry:
-    class: Zend\Feed\Writer\Extension\ITunes\Entry
+    class: Laminas\Feed\Writer\Extension\ITunes\Entry
     shared: false
   feed.writer.itunesfeed:
-    class: Zend\Feed\Writer\Extension\ITunes\Feed
+    class: Laminas\Feed\Writer\Extension\ITunes\Feed
     shared: false
   feed.writer.itunesrendererentry:
-    class: Zend\Feed\Writer\Extension\ITunes\Renderer\Entry
+    class: Laminas\Feed\Writer\Extension\ITunes\Renderer\Entry
     shared: false
   feed.writer.itunesrendererfeed:
-    class: Zend\Feed\Writer\Extension\ITunes\Renderer\Feed
+    class: Laminas\Feed\Writer\Extension\ITunes\Renderer\Feed
     shared: false
   feed.writer.slashrendererentry:
-    class: Zend\Feed\Writer\Extension\Slash\Renderer\Entry
+    class: Laminas\Feed\Writer\Extension\Slash\Renderer\Entry
     shared: false
   feed.writer.threadingrendererentry:
-    class: Zend\Feed\Writer\Extension\Threading\Renderer\Entry
+    class: Laminas\Feed\Writer\Extension\Threading\Renderer\Entry
     shared: false
   feed.writer.wellformedwebrendererentry:
-    class: Zend\Feed\Writer\Extension\WellFormedWeb\Renderer\Entry
+    class: Laminas\Feed\Writer\Extension\WellFormedWeb\Renderer\Entry
     shared: false
   theme.manager:
     class: Drupal\Core\Theme\ThemeManager
