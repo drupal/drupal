@@ -8,17 +8,6 @@
  */
 
 use Drupal\Component\Assertion\Handle;
-use PHPUnit\Framework\AssertionFailedError;
-use PHPUnit\Framework\Constraint\Count;
-use PHPUnit\Framework\Error\Error;
-use PHPUnit\Framework\Error\Warning;
-use PHPUnit\Framework\ExpectationFailedException;
-use PHPUnit\Framework\Exception;
-use PHPUnit\Framework\MockObject\Matcher\InvokedRecorder;
-use PHPUnit\Framework\SkippedTestError;
-use PHPUnit\Framework\TestCase;
-use PHPUnit\Util\Test;
-use PHPUnit\Util\Xml;
 
 /**
  * Finds all valid extension directories recursively within a given directory.
@@ -184,18 +173,3 @@ date_default_timezone_set('Australia/Sydney');
 // thrown if an assert fails, but this call does not turn runtime assertions on
 // if they weren't on already.
 Handle::register();
-
-// PHPUnit 4 to PHPUnit 6 bridge. Tests written for PHPUnit 4 need to work on
-// PHPUnit 6 with a minimum of fuss.
-// @todo provided for BC; remove in Drupal 9.
-class_alias(AssertionFailedError::class, '\PHPUnit_Framework_AssertionFailedError');
-class_alias(Count::class, '\PHPUnit_Framework_Constraint_Count');
-class_alias(Error::class, '\PHPUnit_Framework_Error');
-class_alias(Warning::class, '\PHPUnit_Framework_Error_Warning');
-class_alias(ExpectationFailedException::class, '\PHPUnit_Framework_ExpectationFailedException');
-class_alias(Exception::class, '\PHPUnit_Framework_Exception');
-class_alias(InvokedRecorder::class, '\PHPUnit_Framework_MockObject_Matcher_InvokedRecorder');
-class_alias(SkippedTestError::class, '\PHPUnit_Framework_SkippedTestError');
-class_alias(TestCase::class, '\PHPUnit_Framework_TestCase');
-class_alias(Test::class, '\PHPUnit_Util_Test');
-class_alias(Xml::class, '\PHPUnit_Util_XML');
