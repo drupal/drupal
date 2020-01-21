@@ -5,38 +5,8 @@
  * Install, update and uninstall functions for the Comment module.
  */
 
-use Drupal\comment\Entity\Comment;
 use Drupal\Core\Entity\EntityTypeInterface;
-use Drupal\Core\StringTranslation\PluralTranslatableMarkup;
-use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\field\Entity\FieldStorageConfig;
-
-/**
- * Implements hook_requirements().
- */
-function comment_requirements($phase) {
-  $requirements = [];
-  if ($phase === 'update' && drupal_get_installed_schema_version('comment') < 8701) {
-    $has_empty_columns = \Drupal::entityQuery('comment', 'OR')
-      ->condition('entity_type', NULL, 'IS NULL')
-      ->condition('field_name', NULL, 'IS NULL')
-      ->range(0, 1)
-      ->accessCheck(FALSE)
-      ->execute();
-    if ($has_empty_columns) {
-      $requirements['comment_update_8701'] = [
-        'title' => t('Comment required fields update'),
-        'description' => t('The comment_update_8701() function requires that the %field_1 and %field_2 fields have values for all comment entities. See the <a href=":change_record">change record</a> for more information.', [
-          '%field_1' => 'entity_type',
-          '%field_2' => 'field_name',
-          ':change_record' => 'https://www.drupal.org/node/3053046',
-        ]),
-        'severity' => REQUIREMENT_ERROR,
-      ];
-    }
-  }
-  return $requirements;
-}
 
 /**
  * Implements hook_uninstall().
@@ -141,122 +111,8 @@ function comment_schema() {
 }
 
 /**
- * Clear caches to fix Comment entity list builder and operations Views field.
+ * Implements hook_update_last_removed().
  */
-function comment_update_8001() {
-  // Empty update to cause a cache flush to rebuild comment entity handler
-  // information, so that comment operation links work.
-}
-
-/**
- * Clear caches to fix Comment Views context filter.
- */
-function comment_update_8002() {
-  // Empty update to cause a cache flush.
-}
-
-/**
- * Add the 'view_mode' setting to displays having 'comment_default' formatter.
- */
-function comment_update_8200() {
-  $config_factory = \Drupal::configFactory();
-  $displays = [];
-  // Iterate on all entity view displays.
-  foreach ($config_factory->listAll('core.entity_view_display.') as $name) {
-    $changed = FALSE;
-    $display = $config_factory->getEditable($name);
-    $components = $display->get('content') ?: [];
-    foreach ($components as $field_name => $component) {
-      if (isset($component['type']) && ($component['type'] === 'comment_default')) {
-        if (empty($display->get("content.{$field_name}.settings.view_mode"))) {
-          $display->set("content.{$field_name}.settings.view_mode", 'default');
-          $displays[] = $display->get('id');
-          $changed = TRUE;
-        }
-      }
-    }
-
-    if ($changed) {
-      $display->save(TRUE);
-    }
-  }
-
-  if ($displays) {
-    return new PluralTranslatableMarkup(count($displays), '1 entity display updated: @displays.', '@count entity displays updated: @displays.', ['@displays' => implode(', ', $displays)]);
-  }
-  else {
-    return new TranslatableMarkup('No entity view display updated.');
-  }
-}
-
-/**
- * Update status field.
- */
-function comment_update_8300() {
-  $entity_definition_update_manager = \Drupal::service('entity.definition_update_manager');
-  $field_definition = $entity_definition_update_manager->getFieldStorageDefinition('status', 'comment');
-  $field_definition->setDescription(new TranslatableMarkup('A boolean indicating the published state.'))
-    ->setRevisionable(TRUE);
-  $entity_definition_update_manager->updateFieldStorageDefinition($field_definition);
-}
-
-/**
- * Set the 'published' entity key.
- */
-function comment_update_8301() {
-  $definition_update_manager = \Drupal::entityDefinitionUpdateManager();
-  $entity_type = $definition_update_manager->getEntityType('comment');
-  $keys = $entity_type->getKeys();
-  $keys['published'] = 'status';
-  $entity_type->set('entity_keys', $keys);
-  $definition_update_manager->updateEntityType($entity_type);
-}
-
-/**
- * Update the status field.
- */
-function comment_update_8400() {
-  // The status field was promoted to an entity key in comment_update_8301(),
-  // which makes it NOT NULL in the default SQL storage, which means its storage
-  // definition needs to be updated as well.
-  $entity_definition_update_manager = \Drupal::service('entity.definition_update_manager');
-  $entity_definition_update_manager->updateFieldStorageDefinition($entity_definition_update_manager->getFieldStorageDefinition('status', 'comment'));
-}
-
-/**
- * Configure the comment hostname base field to use a default value callback.
- */
-function comment_update_8600() {
-  $entity_definition_update_manager = \Drupal::entityDefinitionUpdateManager();
-  /** @var \Drupal\Core\Field\BaseFieldDefinition $field_storage_definition */
-  $field_storage_definition = $entity_definition_update_manager->getFieldStorageDefinition('hostname', 'comment');
-  $field_storage_definition->setDefaultValueCallback(Comment::class . '::getDefaultHostname');
-  $entity_definition_update_manager->updateFieldStorageDefinition($field_storage_definition);
-}
-
-/**
- * Set the 'owner' entity key and update the field.
- */
-function comment_update_8700() {
-  $definition_update_manager = \Drupal::entityDefinitionUpdateManager();
-  $entity_type = $definition_update_manager->getEntityType('comment');
-  $keys = $entity_type->getKeys();
-  $keys['owner'] = 'uid';
-  $entity_type->set('entity_keys', $keys);
-  $definition_update_manager->updateEntityType($entity_type);
-  $definition_update_manager->updateFieldStorageDefinition($definition_update_manager->getFieldStorageDefinition('uid', 'comment'));
-}
-
-/**
- * Make the 'entity_type' and 'field_name' comment fields required.
- */
-function comment_update_8701() {
-  $definition_update_manager = \Drupal::entityDefinitionUpdateManager();
-  $field_definition = $definition_update_manager->getFieldStorageDefinition('entity_type', 'comment');
-  $field_definition->setRequired(TRUE);
-  $definition_update_manager->updateFieldStorageDefinition($field_definition);
-
-  $field_definition = $definition_update_manager->getFieldStorageDefinition('field_name', 'comment');
-  $field_definition->setRequired(TRUE);
-  $definition_update_manager->updateFieldStorageDefinition($field_definition);
+function comment_update_last_removed() {
+  return 8701;
 }

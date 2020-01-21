@@ -23,30 +23,8 @@ function aggregator_requirements($phase) {
 }
 
 /**
- * The simple presence of this update function clears cached field definitions.
+ * Implements hook_update_last_removed().
  */
-function aggregator_update_8001() {
-  // Feed ID base field is now required.
-}
-
-/**
- * Make the 'Source feed' field for aggregator items required.
- */
-function aggregator_update_8200() {
-  // aggregator_update_8001() did not update the last installed field storage
-  // definition for the aggregator item's 'Source feed' field.
-  $definition_update_manager = \Drupal::entityDefinitionUpdateManager();
-  $field_definition = $definition_update_manager->getFieldStorageDefinition('fid', 'aggregator_item');
-  $field_definition->setRequired(TRUE);
-  $definition_update_manager->updateFieldStorageDefinition($field_definition);
-}
-
-/**
- * Add a default value for the 'Refresh' field for aggregator feed entities.
- */
-function aggregator_update_8501() {
-  $definition_update_manager = \Drupal::entityDefinitionUpdateManager();
-  $field_definition = $definition_update_manager->getFieldStorageDefinition('refresh', 'aggregator_feed');
-  $field_definition->setDefaultValue(3600);
-  $definition_update_manager->updateFieldStorageDefinition($field_definition);
+function aggregator_update_last_removed() {
+  return 8501;
 }

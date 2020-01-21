@@ -37,8 +37,8 @@ class DbImportCommandTest extends KernelTestBase {
     'key_value_expire',
     'menu_link_content',
     'menu_link_content_data',
+    'path_alias',
     'sessions',
-    'url_alias',
     'user__roles',
     'users',
     'users_field_data',
@@ -60,7 +60,7 @@ class DbImportCommandTest extends KernelTestBase {
     $command = new DbImportCommand();
     $command_tester = new CommandTester($command);
     $command_tester->execute([
-      'script' => __DIR__ . '/../../../fixtures/update/drupal-8.bare.standard.php.gz',
+      'script' => __DIR__ . '/../../../fixtures/update/drupal-8.8.0.bare.standard.php.gz',
       '--database' => $this->databasePrefix,
     ]);
 

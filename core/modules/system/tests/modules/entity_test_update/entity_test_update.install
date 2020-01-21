@@ -1,9 +1,0 @@
-<?php
-
-/**
- * @file
- * Install, update and uninstall functions for the Entity Test Update module.
- */
-
-$index = \Drupal::state()->get('entity_test_update.db_updates.entity_rev_pub_updates');
-module_load_include('inc', 'entity_test_update', 'update/entity_rev_pub_updates_' . $index);

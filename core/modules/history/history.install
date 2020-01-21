@@ -5,8 +5,6 @@
  * Installation functions for History module.
  */
 
-use Drupal\Core\Database\Database;
-
 /**
  * Implements hook_schema().
  */
@@ -44,47 +42,8 @@ function history_schema() {
 }
 
 /**
- * Change {history}.nid to an unsigned int in order to match {node}.nid.
+ * Implements hook_update_last_removed().
  */
-function history_update_8101() {
-  $schema = Database::getConnection()->schema();
-  $schema->dropPrimaryKey('history');
-  $schema->dropIndex('history', 'nid');
-  $schema->changeField('history', 'nid', 'nid', [
-    'description' => 'The {node}.nid that was read.',
-    'type' => 'int',
-    'unsigned' => TRUE,
-    'not null' => TRUE,
-    'default' => 0,
-  ]);
-  $schema->addPrimaryKey('history', ['uid', 'nid']);
-  $spec = [
-    'description' => 'A record of which {users} have read which {node}s.',
-    'fields' => [
-      'uid' => [
-        'description' => 'The {users}.uid that read the {node} nid.',
-        'type' => 'int',
-        'not null' => TRUE,
-        'default' => 0,
-      ],
-      'nid' => [
-        'description' => 'The {node}.nid that was read.',
-        'type' => 'int',
-        'unsigned' => TRUE,
-        'not null' => TRUE,
-        'default' => 0,
-      ],
-      'timestamp' => [
-        'description' => 'The Unix timestamp at which the read occurred.',
-        'type' => 'int',
-        'not null' => TRUE,
-        'default' => 0,
-      ],
-    ],
-    'primary key' => ['uid', 'nid'],
-    'indexes' => [
-      'nid' => ['nid'],
-    ],
-  ];
-  $schema->addIndex('history', 'nid', ['nid'], $spec);
+function history_update_last_removed() {
+  return 8101;
 }

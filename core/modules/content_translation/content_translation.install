@@ -5,9 +5,7 @@
  * Installation functions for Content Translation module.
  */
 
-use Drupal\Core\Entity\Sql\SqlEntityStorageInterface;
 use Drupal\Core\Installer\InstallerKernel;
-use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Url;
 
 /**
@@ -41,70 +39,8 @@ function content_translation_install() {
 }
 
 /**
- * Rebuild the routes as the content translation routes have now new names.
+ * Implements hook_update_last_removed().
  */
-function content_translation_update_8001() {
-  \Drupal::service('router.builder')->rebuild();
-}
-
-/**
- * Clear field type plugin caches to fix image field translatability.
- */
-function content_translation_update_8002() {
-  \Drupal::service('plugin.manager.field.field_type')->clearCachedDefinitions();
-}
-
-/**
- * Fix the initial values for content translation metadata fields.
- */
-function content_translation_update_8400() {
-  $database = \Drupal::database();
-  /** @var \Drupal\content_translation\ContentTranslationManagerInterface $content_translation_manager */
-  $content_translation_manager = \Drupal::service('content_translation.manager');
-  /** @var \Drupal\Core\Entity\EntityLastInstalledSchemaRepositoryInterface $last_installed_schema_repository */
-  $last_installed_schema_repository = \Drupal::service('entity.last_installed_schema.repository');
-  $entity_type_manager = \Drupal::entityTypeManager();
-  $entity_definition_update_manager = \Drupal::entityDefinitionUpdateManager();
-
-  $entity_type_manager->clearCachedDefinitions();
-  foreach ($content_translation_manager->getSupportedEntityTypes() as $entity_type_id => $entity_type_definition) {
-    $storage = $entity_type_manager->getStorage($entity_type_id);
-    if ($storage instanceof SqlEntityStorageInterface) {
-      $entity_type = $entity_definition_update_manager->getEntityType($entity_type_id);
-      $storage_definitions = $last_installed_schema_repository->getLastInstalledFieldStorageDefinitions($entity_type_id);
-
-      // Since the entity type is managed by Content Translation, we can assume
-      // that it is translatable, so we use the data and revision data tables.
-      $tables_to_update = [$entity_type->getDataTable()];
-      if ($entity_type->isRevisionable()) {
-        $tables_to_update += [$entity_type->getRevisionDataTable()];
-      }
-
-      foreach ($tables_to_update as $table_name) {
-        // Fix the values of the 'content_translation_source' field.
-        if (isset($storage_definitions['content_translation_source'])) {
-          $database->update($table_name)
-            ->fields(['content_translation_source' => LanguageInterface::LANGCODE_NOT_SPECIFIED])
-            ->isNull('content_translation_source')
-            ->execute();
-        }
-
-        // Fix the values of the 'content_translation_outdated' field.
-        if (isset($storage_definitions['content_translation_outdated'])) {
-          $database->update($table_name)
-            ->fields(['content_translation_outdated' => 0])
-            ->isNull('content_translation_outdated')
-            ->execute();
-        }
-
-        // Fix the values of the 'content_translation_status' field.
-        if (isset($storage_definitions['content_translation_status'])) {
-          $database->update($table_name)
-            ->fields(['content_translation_status' => 1])
-            ->isNull('content_translation_status')
-            ->execute();
-        }
-      }
-    }
-  }
+function content_translation_update_last_removed() {
+  return 8400;
 }

@@ -59,30 +59,8 @@ function statistics_schema() {
 }
 
 /**
- * Disable the Statistics module if the node module is not enabled.
+ * Implements hook_update_last_removed().
  */
-function statistics_update_8001() {
-  if (!\Drupal::moduleHandler()->moduleExists('node')) {
-    if (\Drupal::service('module_installer')->uninstall(['statistics'], TRUE)) {
-      return 'The statistics module depends on the node module and has therefore been uninstalled.';
-    }
-    else {
-      return 'There was an error uninstalling the statistcs module.';
-    }
-  }
-}
-
-/**
- * Disable the Statistics module if the node module is not enabled.
- */
-function statistics_update_8002() {
-  // Set the new configuration setting for max age to the initial value.
-  \Drupal::configFactory()->getEditable('statistics.settings')->set('display_max_age', 3600)->save();
-}
-
-/**
- * Remove access_log settings.
- */
-function statistics_update_8300() {
-  \Drupal::configFactory()->getEditable('statistics.settings')->clear('access_log')->save();
+function statistics_update_last_removed() {
+  return 8300;
 }

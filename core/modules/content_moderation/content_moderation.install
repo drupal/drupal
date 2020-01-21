@@ -6,24 +6,8 @@
  */
 
 /**
- * Remove the 'content_revision_tracker' table.
+ * Implements hook_update_last_removed().
  */
-function content_moderation_update_8401() {
-  $database_schema = \Drupal::database()->schema();
-  if ($database_schema->tableExists('content_revision_tracker')) {
-    $database_schema->dropTable('content_revision_tracker');
-  }
-}
-
-/**
- * Set the 'owner' entity key and update the field.
- */
-function content_moderation_update_8700() {
-  $definition_update_manager = \Drupal::entityDefinitionUpdateManager();
-  $entity_type = $definition_update_manager->getEntityType('content_moderation_state');
-  $keys = $entity_type->getKeys();
-  $keys['owner'] = 'uid';
-  $entity_type->set('entity_keys', $keys);
-  $definition_update_manager->updateEntityType($entity_type);
-  $definition_update_manager->updateFieldStorageDefinition($definition_update_manager->getFieldStorageDefinition('uid', 'content_moderation_state'));
+function content_moderation_update_last_removed() {
+  return 8700;
 }

@@ -5,14 +5,12 @@
  * Install, uninstall and update hooks for Media module.
  */
 
-use Drupal\Core\Entity\Sql\SqlEntityStorageInterface;
 use Drupal\Core\File\Exception\FileException;
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Url;
 use Drupal\media\Entity\MediaType;
 use Drupal\media\MediaTypeInterface;
 use Drupal\media\Plugin\media\Source\OEmbedInterface;
-use Drupal\user\Entity\Role;
 use Drupal\user\RoleInterface;
 use Drupal\image\Plugin\Field\FieldType\ImageItem;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
@@ -176,84 +174,8 @@ function media_requirements($phase) {
 }
 
 /**
- * Introduce per-bundle permissions.
+ * Implements hook_update_last_removed().
  */
-function media_update_8500() {
-  $media_types = \Drupal::entityQuery('media_type')->execute();
-
-  /** @var \Drupal\user\RoleInterface $role */
-  foreach (Role::loadMultiple() as $role) {
-    if ($role->hasPermission('update media')) {
-      foreach ($media_types as $media_type) {
-        $role->grantPermission("edit own $media_type media");
-      }
-    }
-
-    if ($role->hasPermission('update any media')) {
-      foreach ($media_types as $media_type) {
-        $role->grantPermission("edit any $media_type media");
-      }
-    }
-
-    if ($role->hasPermission('delete media')) {
-      foreach ($media_types as $media_type) {
-        $role->grantPermission("delete own $media_type media");
-      }
-    }
-
-    if ($role->hasPermission('delete any media')) {
-      foreach ($media_types as $media_type) {
-        $role->grantPermission("delete any $media_type media");
-      }
-    }
-
-    if ($role->hasPermission('create media')) {
-      foreach ($media_types as $media_type) {
-        $role->grantPermission("create $media_type media");
-      }
-    }
-
-    $role->save();
-  }
-}
-
-/**
- * Updates media.settings to support OEmbed.
- */
-function media_update_8600() {
-  \Drupal::configFactory()->getEditable('media.settings')
-    ->set('iframe_domain', '')
-    ->set('oembed_providers_url', 'https://oembed.com/providers.json')
-    ->save(TRUE);
-}
-
-/**
- * Set the 'owner' entity key and update the field.
- */
-function media_update_8700() {
-  $definition_update_manager = \Drupal::entityDefinitionUpdateManager();
-  $entity_type = $definition_update_manager->getEntityType('media');
-  $database = \Drupal::database();
-
-  if (\Drupal::entityTypeManager()->getStorage('media') instanceof SqlEntityStorageInterface) {
-    if ($database->schema()->tableExists($entity_type->getDataTable())) {
-      $database->update($entity_type->getDataTable())
-        ->fields(['uid' => 0])
-        ->isNull('uid')
-        ->execute();
-    }
-
-    if ($database->schema()->tableExists($entity_type->getRevisionDataTable())) {
-      $database->update($entity_type->getRevisionDataTable())
-        ->fields(['uid' => 0])
-        ->isNull('uid')
-        ->execute();
-    }
-  }
-
-  $keys = $entity_type->getKeys();
-  $keys['owner'] = 'uid';
-  $entity_type->set('entity_keys', $keys);
-  $definition_update_manager->updateEntityType($entity_type);
-  $definition_update_manager->updateFieldStorageDefinition($definition_update_manager->getFieldStorageDefinition('uid', 'media'));
+function media_update_last_removed() {
+  return 8700;
 }
