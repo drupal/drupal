@@ -1,0 +1,21 @@
+/**
+ * @file
+ * Visual styles for icons.
+ */
+
+.icon-help {
+  padding: 1px 0 1px 20px; /* LTR */
+  background: url(../../../../../../../misc/help.png) 0 50% no-repeat; /* LTR */
+}
+[dir="rtl"] .icon-help {
+  padding: 1px 20px 1px 0;
+  background-position: 100% 50%;
+}
+.feed-icon {
+  display: block;
+  overflow: hidden;
+  width: 16px;
+  height: 16px;
+  text-indent: -9999px;
+  background: url(../../../../../../../misc/feed.svg) no-repeat;
+}

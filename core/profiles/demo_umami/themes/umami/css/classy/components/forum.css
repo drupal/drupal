@@ -1,0 +1,46 @@
+/**
+ * @file
+ * Styling for the Forum module.
+ */
+
+.forum__description {
+  margin: 0.5em;
+  font-size: 0.9em;
+}
+.forum__icon {
+  float: left; /* LTR */
+  width: 24px;
+  height: 24px;
+  margin: 0 9px 0 0; /* LTR */
+  background-image: url(../../../images/classy/icons/forum-icons.png);
+  background-repeat: no-repeat;
+}
+[dir="rtl"] .forum__icon {
+  float: right;
+  margin: 0 0 0 9px;
+}
+.forum__title {
+  overflow: hidden;
+}
+.forum .indented {
+  margin-left: 20px; /* LTR */
+}
+[dir="rtl"] .forum .indented {
+  margin-right: 20px;
+  margin-left: 0;
+}
+.forum__topic-status--new {
+  background-position: -24px 0;
+}
+.forum__topic-status--hot {
+  background-position: -48px 0;
+}
+.forum__topic-status--hot-new {
+  background-position: -72px 0;
+}
+.forum__topic-status--sticky {
+  background-position: -96px 0;
+}
+.forum__topic-status--closed {
+  background-position: -120px 0;
+}
