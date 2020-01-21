@@ -5,7 +5,7 @@
   "homepage": "https://www.drupal.org/project/drupal",
   "license": "GPL-2.0-or-later",
   "require": {
-    "php": ">=7.2.3",
+    "php": ">=7.3.0",
     "drupal/core-render": "^8.8"
   },
   "autoload": {

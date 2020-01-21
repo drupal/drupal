@@ -456,7 +456,7 @@
             "dist": {
                 "type": "path",
                 "url": "core",
-                "reference": "fb43f60ee811f200a5db702bcfcab309b2e684f4"
+                "reference": "b092a4793dbb192acafca8b27ce6ab418214fb01"
             },
             "require": {
                 "asm89/stack-cors": "^1.1",
@@ -482,7 +482,7 @@
                 "laminas/laminas-feed": "^2.12",
                 "masterminds/html5": "^2.1",
                 "pear/archive_tar": "^1.4.9",
-                "php": ">=7.2.3",
+                "php": ">=7.3",
                 "psr/log": "^1.0",
                 "stack/builder": "^1.0",
                 "symfony-cmf/routing": "^2.1",
@@ -717,11 +717,11 @@
             "dist": {
                 "type": "path",
                 "url": "composer/Plugin/VendorHardening",
-                "reference": "d6a4c49651f381791d9667354205c8ecd331ca2d"
+                "reference": "0b015340af38f90df46923a934d0b22026134f18"
             },
             "require": {
                 "composer-plugin-api": "^1.1",
-                "php": ">=7.2.3"
+                "php": ">=7.3.0"
             },
             "type": "composer-plugin",
             "extra": {
@@ -4041,6 +4041,9 @@
                 "ext-zip": "Enabling the zip extension allows you to unzip archives",
                 "ext-zlib": "Allow gzip compression of HTTP requests"
             },
+            "bin": [
+                "bin/composer"
+            ],
             "type": "library",
             "extra": {
                 "branch-alias": {
