@@ -140,7 +140,7 @@ WHERE pg_attribute.attnum > 0
 AND NOT pg_attribute.attisdropped
 AND pg_attribute.attrelid = :key::regclass
 AND (format_type(pg_attribute.atttypid, pg_attribute.atttypmod) = 'bytea'
-OR pg_attrdef.adsrc LIKE 'nextval%')
+OR pg_get_expr(pg_attrdef.adbin, pg_attribute.attrelid) LIKE 'nextval%')
 EOD;
         $result = $this->connection->query($sql, [
           ':key' => $key,
