@@ -413,22 +413,7 @@ class ThemeNotUsingClassyLibraryTest extends KernelTestBase {
       ],
       'umami' => [
         'theme-name' => 'umami',
-        'to-skip' => [
-          'base',
-          'book-navigation',
-          'dialog',
-          'file',
-          'forum',
-          'image-widget',
-          'indented',
-          'media_library',
-          'node',
-          'progress',
-          'search-results',
-          'user',
-          'media_embed_error',
-          'media_embed_ckeditor_theme',
-        ],
+        'to-skip' => [],
       ],
       'bartik' => [
         'theme-name' => 'bartik',
@@ -496,15 +481,7 @@ class ThemeNotUsingClassyLibraryTest extends KernelTestBase {
       ],
       [
         'theme-name' => 'umami',
-        'to-skip' => [
-          'user/drupal.user',
-          'core/drupal.dialog',
-          'file/drupal.file',
-          'core/drupal.progress',
-          'media/media_embed_ckeditor_theme',
-          'media_library/view',
-          'media_library/widget',
-        ],
+        'to-skip' => [],
       ],
       [
         'theme-name' => 'bartik',
