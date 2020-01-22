@@ -217,31 +217,37 @@ class WorkspaceListBuilder extends EntityListBuilder {
       ];
     }
 
-    $collection_url = Url::fromRoute('entity.workspace.collection');
-    $row_count = count($build['table']['#rows']);
     $build['active_workspace'] = [
       '#type' => 'container',
       '#weight' => -20,
       '#attributes' => [
         'class' => array_merge(['active-workspace'], $active_workspace_classes),
       ],
-      'label' => [
-        '#type' => 'label',
-        '#prefix' => '<div class="active-workspace__title">' . $this->t('Current workspace:') . '</div>',
-        '#title' => $active_workspace ? $active_workspace->label() : $this->t('Live'),
-        '#title_display' => '',
-        '#attributes' => ['class' => 'active-workspace__label'],
+      'title' => [
+        '#type' => 'html_tag',
+        '#tag' => 'div',
+        '#value' => $this->t('Current workspace:'),
+        '#attributes' => ['class' => 'active-workspace__title'],
       ],
-      'manage' => [
-        '#type' => 'link',
-        '#title' => $this->t('Manage workspaces'),
-        '#url' => $collection_url,
-        '#attributes' => [
-          'class' => ['active-workspace__manage'],
+      'label' => [
+        '#type' => 'container',
+        '#attributes' => ['class' => 'active-workspace__label'],
+        'value' => [
+          '#type' => 'html_tag',
+          '#tag' => 'span',
+          '#value' => $active_workspace ? $active_workspace->label() : $this->t('Live'),
         ],
       ],
     ];
     if ($active_workspace) {
+      $build['active_workspace']['label']['manage'] = [
+        '#type' => 'link',
+        '#title' => $this->t('Manage workspace'),
+        '#url' => $active_workspace->toUrl('edit-form'),
+        '#attributes' => [
+          'class' => ['active-workspace__manage'],
+        ],
+      ];
       $build['active_workspace']['actions'] = [
         '#type' => 'container',
         '#weight' => 20,
@@ -278,16 +284,7 @@ class WorkspaceListBuilder extends EntityListBuilder {
         ];
       }
     }
-    if ($row_count > 2) {
-      $build['all_workspaces'] = [
-        '#type' => 'link',
-        '#title' => $this->t('View all @count workspaces', ['@count' => $row_count]),
-        '#url' => $collection_url,
-        '#attributes' => [
-          'class' => ['all-workspaces'],
-        ],
-      ];
-    }
+
     $items = [];
     $rows = array_slice($build['table']['#rows'], 0, 5, TRUE);
     foreach ($rows as $id => $row) {
@@ -295,7 +292,7 @@ class WorkspaceListBuilder extends EntityListBuilder {
         $url = Url::fromRoute('entity.workspace.activate_form', ['workspace' => $id], ['query' => $this->getDestinationArray()]);
         $items[] = [
           '#type' => 'link',
-          '#title' => $row['data']['label'],
+          '#title' => ltrim($row['data']['label']['data']['#markup']),
           '#url' => $url,
           '#attributes' => [
             'class' => ['use-ajax', 'workspaces__item', 'workspaces__item--not-default'],
@@ -324,13 +321,28 @@ class WorkspaceListBuilder extends EntityListBuilder {
       ];
     }
 
-    $build['workspaces'] = [
+    $build['workspaces_list'] = [
+      '#type' => 'container',
+      '#attributes' => [
+        'class' => 'workspaces',
+      ],
+    ];
+    $build['workspaces_list']['workspaces'] = [
       '#theme' => 'item_list',
+      '#title' => $this->t('Other workspaces:'),
       '#items' => $items,
-      '#wrapper_attributes' => ['class' => ['workspaces']],
+      '#wrapper_attributes' => ['class' => ['workspaces__list']],
       '#cache' => [
         'contexts' => $this->entityType->getListCacheContexts(),
         'tags' => $this->entityType->getListCacheTags(),
+      ],
+    ];
+    $build['workspaces_list']['all_workspaces'] = [
+      '#type' => 'link',
+      '#title' => $this->t('View all workspaces'),
+      '#url' => Url::fromRoute('entity.workspace.collection'),
+      '#attributes' => [
+        'class' => ['all-workspaces'],
       ],
     ];
     unset($build['table']);
