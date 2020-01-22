@@ -18,8 +18,6 @@ use PHPUnit\Framework\TestCase;
  */
 abstract class UnitTestCase extends TestCase {
 
-  use PhpunitCompatibilityTrait;
-
   /**
    * The random generator.
    *
@@ -183,39 +181,6 @@ abstract class UnitTestCase extends TestCase {
         ->will($this->returnValue($config));
     }
     return $config_storage;
-  }
-
-  /**
-   * Mocks a block with a block plugin.
-   *
-   * @param string $machine_name
-   *   The machine name of the block plugin.
-   *
-   * @return \Drupal\block\BlockInterface|\PHPUnit\Framework\MockObject\MockObject
-   *   The mocked block.
-   *
-   * @deprecated in drupal:8.5.0 and is removed from drupal:9.0.0. Unit test
-   *   base classes should not have dependencies on extensions. Set up mocks in
-   *   individual tests.
-   *
-   * @see https://www.drupal.org/node/2896072
-   */
-  protected function getBlockMockWithMachineName($machine_name) {
-    $plugin = $this->getMockBuilder('Drupal\Core\Block\BlockBase')
-      ->disableOriginalConstructor()
-      ->getMock();
-    $plugin->expects($this->any())
-      ->method('getMachineNameSuggestion')
-      ->will($this->returnValue($machine_name));
-
-    $block = $this->getMockBuilder('Drupal\block\Entity\Block')
-      ->disableOriginalConstructor()
-      ->getMock();
-    $block->expects($this->any())
-      ->method('getPlugin')
-      ->will($this->returnValue($plugin));
-    @trigger_error(__METHOD__ . ' is deprecated in Drupal 8.5.x, will be removed before Drupal 9.0.0. Unit test base classes should not have dependencies on extensions. Set up mocks in individual tests.', E_USER_DEPRECATED);
-    return $block;
   }
 
   /**

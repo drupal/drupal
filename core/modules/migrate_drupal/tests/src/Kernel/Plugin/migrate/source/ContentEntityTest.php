@@ -107,7 +107,7 @@ class ContentEntityTest extends KernelTestBase {
     $this->installSchema('user', 'users_data');
     $this->installSchema('file', 'file_usage');
     $this->installSchema('node', ['node_access']);
-    $this->installConfig($this->modules);
+    $this->installConfig(static::$modules);
 
     ConfigurableLanguage::createFromLangcode('fr')->save();
 

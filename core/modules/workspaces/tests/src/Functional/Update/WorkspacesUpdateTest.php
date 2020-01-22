@@ -55,15 +55,15 @@ class WorkspacesUpdateTest extends UpdatePathTestBase {
 
     // Check that the 'workspace' field has been installed for an entity type
     // that was workspace-supported before Drupal 8.7.0.
-    $this->assertTrue($entity_definition_update_manager->getFieldStorageDefinition('workspace', 'node'));
+    $this->assertNotEmpty($entity_definition_update_manager->getFieldStorageDefinition('workspace', 'node'));
 
     // Check that the 'workspace' field has been installed for an entity type
     // which became workspace-supported as part of an entity schema update.
-    $this->assertTrue($entity_definition_update_manager->getFieldStorageDefinition('workspace', 'taxonomy_term'));
+    $this->assertNotEmpty($entity_definition_update_manager->getFieldStorageDefinition('workspace', 'taxonomy_term'));
 
     // Check that the 'workspace' field has been installed for an entity type
     // that has been added in an update function.
-    $this->assertTrue($entity_definition_update_manager->getFieldStorageDefinition('workspace', 'path_alias'));
+    $this->assertNotEmpty($entity_definition_update_manager->getFieldStorageDefinition('workspace', 'path_alias'));
 
     // Check that the 'workspace' revision metadata field has been created only
     // in the revision table.

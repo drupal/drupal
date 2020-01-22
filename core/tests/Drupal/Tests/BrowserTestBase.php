@@ -63,7 +63,6 @@ abstract class BrowserTestBase extends TestCase {
     createUser as drupalCreateUser;
   }
   use XdebugRequestTrait;
-  use PhpunitCompatibilityTrait;
 
   /**
    * The database prefix of this test run.
@@ -643,22 +642,6 @@ abstract class BrowserTestBase extends TestCase {
    */
   protected function config($name) {
     return $this->container->get('config.factory')->getEditable($name);
-  }
-
-  /**
-   * Returns all response headers.
-   *
-   * @return array
-   *   The HTTP headers values.
-   *
-   * @deprecated in drupal:8.8.0 and is removed from drupal:9.0.0.
-   *   Use $this->getSession()->getResponseHeaders() instead.
-   *
-   * @see https://www.drupal.org/node/3067207
-   */
-  protected function drupalGetHeaders() {
-    @trigger_error('Drupal\Tests\BrowserTestBase::drupalGetHeaders() is deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. Use $this->getSession()->getResponseHeaders() instead. See https://www.drupal.org/node/3067207', E_USER_DEPRECATED);
-    return $this->getSession()->getResponseHeaders();
   }
 
   /**

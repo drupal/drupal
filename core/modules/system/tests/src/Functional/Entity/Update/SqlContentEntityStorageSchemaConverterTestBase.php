@@ -124,7 +124,7 @@ abstract class SqlContentEntityStorageSchemaConverterTestBase extends UpdatePath
 
       // Check that the correct initial value was provided for the
       // 'revision_translation_affected' field.
-      $this->assertTrue($revision->revision_translation_affected->value);
+      $this->assertTrue((bool) $revision->revision_translation_affected->value);
 
       $translation = $revision->getTranslation('ro');
 

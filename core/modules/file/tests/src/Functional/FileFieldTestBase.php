@@ -3,20 +3,12 @@
 namespace Drupal\Tests\file\Functional;
 
 use Drupal\Component\Render\FormattableMarkup;
-use Drupal\TestTools\PhpUnitCompatibility\RunnerVersion;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\file\FileInterface;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\file\Entity\File;
 use Drupal\Tests\TestFileCreationTrait;
-
-// In order to manage different method signatures between PHPUnit versions, we
-// dynamically load a compatibility trait dependent on the PHPUnit runner
-// version.
-if (!trait_exists(PhpunitVersionDependentFileFieldTestBaseTrait::class, FALSE)) {
-  class_alias("Drupal\TestTools\PhpUnitCompatibility\PhpUnit" . RunnerVersion::getMajor() . "\FileFieldTestBaseTrait", PhpunitVersionDependentFileFieldTestBaseTrait::class);
-}
 
 /**
  * Provides methods specifically for testing File module's field handling.
@@ -27,7 +19,6 @@ abstract class FileFieldTestBase extends BrowserTestBase {
   use TestFileCreationTrait {
     getTestFiles as drupalGetTestFiles;
   }
-  use PhpunitVersionDependentFileFieldTestBaseTrait;
 
   /**
    * {@inheritdoc}
