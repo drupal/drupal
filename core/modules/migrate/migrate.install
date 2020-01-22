@@ -6,8 +6,13 @@
  */
 
 /**
- * Implements hook_update_last_removed().
+ * Remove load plugin references from existing migrations.
  */
-function migrate_update_last_removed() {
-  return 8001;
+function migrate_update_8001() {
+  $config_factory = \Drupal::configFactory();
+  foreach ($config_factory->listAll('migrate.migration.') as $migration_config_name) {
+    $migration = $config_factory->getEditable($migration_config_name);
+    $migration->clear('load');
+    $migration->save(TRUE);
+  }
 }

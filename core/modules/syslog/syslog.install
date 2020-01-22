@@ -15,8 +15,10 @@ function syslog_install() {
 }
 
 /**
- * Implements hook_update_last_removed().
+ * Convert syslog.settings.facility to an integer.
  */
-function syslog_update_last_removed() {
-  return 8400;
+function syslog_update_8400() {
+  $config = \Drupal::configFactory()->getEditable('syslog.settings');
+  $facility = (int) $config->get('facility');
+  $config->set('facility', $facility)->save(TRUE);
 }

@@ -1,0 +1,20 @@
+uuid: 7f5e9177-56b3-4b84-a936-54bfd4d4c078
+langcode: en
+status: true
+dependencies:
+  module:
+    - entity_reference
+    - node
+id: node.field_ref_views_select_2429191
+field_name: field_ref_views_select_2429191
+entity_type: node
+type: entity_reference
+settings:
+  target_type: node
+module: entity_reference
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: true

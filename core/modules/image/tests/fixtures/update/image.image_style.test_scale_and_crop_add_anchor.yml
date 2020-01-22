@@ -1,0 +1,28 @@
+langcode: en
+status: true
+name: test_scale_and_crop_add_anchor
+label: test_scale_and_crop_add_anchor
+effects:
+  8c7170c9-5bcc-40f9-8698-f88a8be6d434:
+    uuid: 8c7170c9-5bcc-40f9-8698-f88a8be6d434
+    id: image_scale_and_crop
+    weight: 1
+    data:
+      width: 100
+      height: 100
+  a8d83b12-abc6-40c8-9c2f-78a4e421cf97:
+    uuid: a8d83b12-abc6-40c8-9c2f-78a4e421cf97
+    id: image_scale_and_crop
+    weight: 2
+    data:
+      width: 100
+      height: 100
+      anchor: left-top
+  1bffd475-19d0-439a-b6a1-7e5850ce40f9:
+    uuid: 1bffd475-19d0-439a-b6a1-7e5850ce40f9
+    id: image_rotate
+    weight: 3
+    data:
+      degrees: 180
+      bgcolor: ''
+      random: false

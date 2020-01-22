@@ -1,0 +1,43 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_image
+  module:
+    - image
+    - node
+id: foo
+label: Foo
+module: views
+description: ''
+tag: ''
+base_table: node_field_data
+base_field: nid
+core: 8.x
+display:
+  default:
+    display_plugin: default
+    id: default
+    display_title: Master
+    position: 0
+    display_options:
+      fields:
+        field_image:
+          id: field_image
+          table: node__field_image
+          field: field_image
+          type: image
+          settings:
+            image_style: thumbnail
+            image_link: ''
+          plugin_id: field
+        field_image_1:
+          id: field_image_1
+          table: node__field_image
+          field: field_image
+          type: image
+          settings:
+            # This field's formatter is using a non-existent image style.
+            image_style: nonexistent
+            image_link: ''
+          plugin_id: field

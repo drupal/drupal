@@ -77,8 +77,11 @@ function jsonapi_requirements($phase) {
 }
 
 /**
- * Implements hook_update_last_removed().
+ * Enable BC: default the new read-only mode to "off" on existing sites.
  */
-function jsonapi_update_last_removed() {
-  return 8701;
+function jsonapi_update_8701() {
+  $config_factory = \Drupal::configFactory();
+  $jsonapi_settings = $config_factory->getEditable('jsonapi.settings');
+  $jsonapi_settings->set('read_only', FALSE)
+    ->save(TRUE);
 }

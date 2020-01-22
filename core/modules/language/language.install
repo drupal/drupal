@@ -6,8 +6,8 @@
  */
 
 /**
- * Implements hook_update_last_removed().
+ * Rebuild the container as services changed.
  */
-function language_update_last_removed() {
-  return 8001;
+function language_update_8001() {
+  \Drupal::service('kernel')->invalidateContainer();
 }

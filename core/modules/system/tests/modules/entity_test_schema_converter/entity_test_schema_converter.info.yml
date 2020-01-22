@@ -1,0 +1,7 @@
+name: 'Entity Schema Converter Test'
+type: module
+description: 'Provides testing for the entity schema converter.'
+package: Testing
+version: VERSION
+dependencies:
+  - drupal:entity_test_update

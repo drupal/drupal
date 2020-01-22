@@ -10,9 +10,17 @@ use Drupal\Component\Utility\Crypt;
 use Drupal\Component\Utility\Environment;
 use Drupal\Component\Utility\OpCodeCache;
 use Drupal\Component\Utility\Unicode;
+use Drupal\Core\Cache\Cache;
 use Drupal\Core\Database\Database;
 use Drupal\Core\DrupalKernel;
+use Drupal\Core\Entity\ContentEntityTypeInterface;
+use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\Core\Entity\FieldableEntityInterface;
+use Drupal\Core\Extension\Extension;
+use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\File\FileSystemInterface;
+use Drupal\path_alias\Entity\PathAlias;
+use Drupal\path_alias\PathAliasStorage;
 use Drupal\Core\Site\Settings;
 use Drupal\Core\StreamWrapper\PrivateStream;
 use Drupal\Core\StreamWrapper\PublicStream;
@@ -1232,16 +1240,1258 @@ function system_schema() {
 }
 
 /**
- * Implements hook_update_last_removed().
+ * Change two fields on the default menu link storage to be serialized data.
  */
-function system_update_last_removed() {
-  return 8805;
+function system_update_8001(&$sandbox = NULL) {
+  $database = \Drupal::database();
+  $schema = $database->schema();
+  if ($schema->tableExists('menu_tree')) {
+
+    if (!isset($sandbox['current'])) {
+      // Converting directly to blob can cause problems with reading out and
+      // serializing the string data later on postgres, so rename the existing
+      // columns and create replacement ones to hold the serialized objects.
+      $old_fields = [
+        'title' => [
+          'description' => 'The text displayed for the link.',
+          'type' => 'varchar',
+          'length' => 255,
+          'not null' => TRUE,
+          'default' => '',
+        ],
+        'description' => [
+          'description' => 'The description of this link - used for admin pages and title attribute.',
+          'type' => 'text',
+          'not null' => FALSE,
+        ],
+      ];
+      foreach ($old_fields as $name => $spec) {
+        $schema->changeField('menu_tree', $name, 'system_update_8001_' . $name, $spec);
+      }
+      $spec = [
+        'description' => 'The title for the link. May be a serialized TranslatableMarkup.',
+        'type' => 'blob',
+        'size' => 'big',
+        'not null' => FALSE,
+        'serialize' => TRUE,
+      ];
+      $schema->addField('menu_tree', 'title', $spec);
+      $spec = [
+        'description' => 'The description of this link - used for admin pages and title attribute.',
+        'type' => 'blob',
+        'size' => 'big',
+        'not null' => FALSE,
+        'serialize' => TRUE,
+      ];
+      $schema->addField('menu_tree', 'description', $spec);
+
+      $sandbox['current'] = 0;
+      $sandbox['max'] = $database->query('SELECT COUNT(mlid) FROM {menu_tree}')
+        ->fetchField();
+    }
+
+    $menu_links = $database->queryRange('SELECT mlid, system_update_8001_title AS title, system_update_8001_description AS description FROM {menu_tree} ORDER BY mlid ASC', $sandbox['current'], $sandbox['current'] + 50)
+      ->fetchAllAssoc('mlid');
+
+    foreach ($menu_links as $menu_link) {
+      $menu_link = (array) $menu_link;
+      // Convert title and description to serialized strings.
+      $menu_link['title'] = serialize($menu_link['title']);
+      $menu_link['description'] = serialize($menu_link['description']);
+
+      $database->update('menu_tree')
+        ->fields($menu_link)
+        ->condition('mlid', $menu_link['mlid'])
+        ->execute();
+
+      $sandbox['current']++;
+    }
+
+    $sandbox['#finished'] = empty($sandbox['max']) ? 1 : ($sandbox['current'] / $sandbox['max']);
+
+    if ($sandbox['#finished'] >= 1) {
+      // Drop unnecessary fields from {menu_tree}.
+      $schema->dropField('menu_tree', 'system_update_8001_title');
+      $schema->dropField('menu_tree', 'title_arguments');
+      $schema->dropField('menu_tree', 'title_context');
+      $schema->dropField('menu_tree', 'system_update_8001_description');
+    }
+    return t('Menu links converted');
+  }
+  else {
+    return t('Menu link conversion skipped, because the {menu_tree} table did not exist yet.');
+  }
 }
 
 /**
- * Ensures that Drupal is updated from a supported version.
+ * Removes the system.filter configuration.
  */
-function system_update_9000() {
-  // See update_get_update_list(), there needs to be at least one update
-  // function to check for the last removed schema version.
+function system_update_8002() {
+  \Drupal::configFactory()->getEditable('system.filter')->delete();
+  return t('The system.filter configuration has been moved to a container parameter, see default.services.yml for more information.');
+}
+
+/**
+ * Change the index on the {router} table.
+ */
+function system_update_8003() {
+  $database = \Drupal::database();
+  $database->schema()->dropIndex('router', 'pattern_outline_fit');
+  $database->schema()->addIndex(
+    'router',
+    'pattern_outline_parts',
+    ['pattern_outline', 'number_parts'],
+    [
+      'fields' => [
+        'pattern_outline' => [
+          'description' => 'The pattern',
+          'type' => 'varchar',
+          'length' => 255,
+          'not null' => TRUE,
+          'default' => '',
+        ],
+        'number_parts' => [
+          'description' => 'Number of parts in this router path.',
+          'type' => 'int',
+          'not null' => TRUE,
+          'default' => 0,
+          'size' => 'small',
+        ],
+      ],
+    ]
+  );
+}
+
+/**
+ * Add a (id, default_langcode, langcode) composite index to entities.
+ */
+function system_update_8004() {
+  // \Drupal\Core\Entity\Sql\SqlContentEntityStorageSchema was changed in
+  // https://www.drupal.org/node/2261669 to include a (id, default_langcode,
+  // langcode) compound index, but this update function wasn't added until
+  // https://www.drupal.org/node/2542748. Regenerate the related schemas to
+  // ensure they match the currently expected status.
+  $manager = \Drupal::entityDefinitionUpdateManager();
+  foreach (array_keys(\Drupal::entityTypeManager()
+    ->getDefinitions()) as $entity_type_id) {
+    // Only update the entity type if it already exists. This condition is
+    // needed in case new entity types are introduced after this update.
+    if ($entity_type = $manager->getEntityType($entity_type_id)) {
+      $manager->updateEntityType($entity_type);
+    }
+  }
+}
+
+/**
+ * Place local actions and tasks blocks in every theme.
+ */
+function system_update_8005() {
+  // When block module is not installed, there is nothing that could be done
+  // except showing a warning.
+  if (!\Drupal::moduleHandler()->moduleExists('block')) {
+    return t('Block module is not enabled so local actions and tasks which have been converted to blocks, are not visible anymore.');
+  }
+  $config_factory = \Drupal::configFactory();
+  /** @var \Drupal\Core\Extension\ThemeHandlerInterface $theme_handler */
+  $theme_handler = \Drupal::service('theme_handler');
+  $custom_themes_installed = FALSE;
+  $message = NULL;
+  $langcode = \Drupal::service('language_manager')->getCurrentLanguage()->getId();
+
+  $local_actions_default_settings = [
+    'plugin' => 'local_actions_block',
+    'region' => 'content',
+    'settings.label' => 'Primary admin actions',
+    'settings.label_display' => 0,
+    'settings.cache.max_age' => 0,
+    'visibility' => [],
+    'weight' => 0,
+    'langcode' => $langcode,
+  ];
+  $tabs_default_settings = [
+    'plugin' => 'local_tasks_block',
+    'region' => 'content',
+    'settings.label' => 'Tabs',
+    'settings.label_display' => 0,
+    'settings.cache.max_age' => 0,
+    'visibility' => [],
+    'weight' => 0,
+    'langcode' => $langcode,
+  ];
+  foreach ($theme_handler->listInfo() as $theme) {
+    $theme_name = $theme->getName();
+    switch ($theme_name) {
+      case 'bartik':
+        $name = 'block.block.bartik_local_actions';
+        $values = [
+          'id' => 'bartik_local_actions',
+          'weight' => -1,
+        ] + $local_actions_default_settings;
+        _system_update_create_block($name, $theme_name, $values);
+
+        $name = 'block.block.bartik_local_tasks';
+        $values = [
+          'id' => 'bartik_local_tasks',
+          'weight' => -7,
+        ] + $tabs_default_settings;
+        _system_update_create_block($name, $theme_name, $values);
+
+        // Help region has been removed so all the blocks inside has to be moved
+        // to content region.
+        $weight = -6;
+        $blocks = [];
+        foreach ($config_factory->listAll('block.block.') as $block_config) {
+          $block = $config_factory->getEditable($block_config);
+          if ($block->get('theme') == 'bartik' && $block->get('region') == 'help') {
+            $blocks[] = $block;
+          }
+        }
+        // Sort blocks by block weight.
+        uasort($blocks, function ($a, $b) {
+          return $a->get('weight') - $b->get('weight');
+        });
+        // Move blocks to content region and set them in right order by their
+        // weight.
+        foreach ($blocks as $block) {
+          $block->set('region', 'content');
+          $block->set('weight', $weight++);
+          $block->save();
+        }
+        break;
+
+      case 'seven':
+        $name = 'block.block.seven_local_actions';
+        $values = [
+          'id' => 'seven_local_actions',
+          'weight' => -10,
+        ] + $local_actions_default_settings;
+        _system_update_create_block($name, $theme_name, $values);
+
+        $name = 'block.block.seven_primary_local_tasks';
+        $values = [
+          'region' => 'header',
+          'id' => 'seven_primary_local_tasks',
+          'settings.label' => 'Primary tabs',
+          'settings.primary' => TRUE,
+          'settings.secondary' => FALSE,
+        ] + $tabs_default_settings;
+        _system_update_create_block($name, $theme_name, $values);
+
+        $name = 'block.block.seven_secondary_local_tasks';
+        $values = [
+          'region' => 'pre_content',
+          'id' => 'seven_secondary_local_tasks',
+          'settings.label' => 'Secondary tabs',
+          'settings.primary' => FALSE,
+          'settings.secondary' => TRUE,
+        ] + $tabs_default_settings;
+        _system_update_create_block($name, $theme_name, $values);
+        break;
+
+      case 'stark':
+        $name = 'block.block.stark_local_actions';
+        $values = [
+          'id' => 'stark_local_actions',
+        ] + $local_actions_default_settings;
+        _system_update_create_block($name, $theme_name, $values);
+
+        $name = 'block.block.stark_local_tasks';
+        $values = [
+          'id' => 'stark_local_tasks',
+        ] + $tabs_default_settings;
+        _system_update_create_block($name, $theme_name, $values);
+        break;
+
+      case 'classy':
+      case 'stable':
+        // Don't place any blocks or trigger custom themes installed warning.
+        break;
+
+      default:
+        $custom_themes_installed = TRUE;
+        $name = 'block.block.' . $theme_name . '_local_actions';
+        $values = [
+          'id' => $theme_name . '_local_actions',
+          'weight' => -10,
+        ] + $local_actions_default_settings;
+        _system_update_create_block($name, $theme_name, $values);
+
+        $name = sprintf('block.block.%s_local_tasks', $theme_name);
+        $values = [
+          'id' => $theme_name . '_local_tasks',
+          'weight' => -20,
+        ] + $tabs_default_settings;
+        _system_update_create_block($name, $theme_name, $values);
+        break;
+    }
+  }
+
+  if ($custom_themes_installed) {
+    $message = t('Because your site has custom theme(s) installed, we had to set local actions and tasks blocks into the content region. Please manually review the block configurations and remove the removed variables from your templates.');
+  }
+
+  return $message;
+}
+
+/**
+ * Place branding blocks in every theme.
+ */
+function system_update_8006() {
+  // When block module is not installed, there is nothing that could be done
+  // except showing a warning.
+  if (!\Drupal::moduleHandler()->moduleExists('block')) {
+    return t('Block module is not enabled so site branding elements, which have been converted to a block, are not visible anymore.');
+  }
+
+  /** @var \Drupal\Core\Extension\ThemeHandlerInterface $theme_handler */
+  $theme_handler = \Drupal::service('theme_handler');
+  $custom_themes_installed = FALSE;
+  $message = NULL;
+  $langcode = \Drupal::service('language_manager')->getCurrentLanguage()->getId();
+
+  $site_branding_default_settings = [
+    'plugin' => 'system_branding_block',
+    'region' => 'content',
+    'settings.label' => 'Site branding',
+    'settings.label_display' => 0,
+    'visibility' => [],
+    'weight' => 0,
+    'langcode' => $langcode,
+  ];
+  foreach ($theme_handler->listInfo() as $theme) {
+    $theme_name = $theme->getName();
+    switch ($theme_name) {
+      case 'bartik':
+        $name = 'block.block.bartik_branding';
+        $values = [
+            'id' => 'bartik_branding',
+            'region' => 'header',
+          ] + $site_branding_default_settings;
+        _system_update_create_block($name, $theme_name, $values);
+        break;
+
+      case 'stark':
+        $name = 'block.block.stark_branding';
+        $values = [
+            'id' => 'stark_branding',
+            'region' => 'header',
+          ] + $site_branding_default_settings;
+        _system_update_create_block($name, $theme_name, $values);
+        break;
+
+      case 'seven':
+      case 'classy':
+      case 'stable':
+        // Don't place any blocks or trigger custom themes installed warning.
+        break;
+      default:
+        $custom_themes_installed = TRUE;
+        $name = sprintf('block.block.%s_branding', $theme_name);
+        $values = [
+            'id' => sprintf('%s_branding', $theme_name),
+            'region' => 'content',
+            'weight' => '-50',
+          ] + $site_branding_default_settings;
+        _system_update_create_block($name, $theme_name, $values);
+        break;
+    }
+  }
+
+  if ($custom_themes_installed) {
+    $message = t('Because your site has custom theme(s) installed, we had to set the branding block into the content region. Please manually review the block configuration and remove the site name, slogan, and logo variables from your templates.');
+  }
+
+  return $message;
+}
+
+/**
+ * Helper function to create block configuration objects for an update.
+ *
+ * @param string $name
+ *   The name of the config object.
+ * @param string $theme_name
+ *   The name of the theme the block is associated with.
+ * @param array $values
+ *   The block config values.
+ */
+function _system_update_create_block($name, $theme_name, array $values) {
+  if (!\Drupal::service('config.storage')->exists($name)) {
+    $block = \Drupal::configFactory()->getEditable($name);
+    $values['uuid'] = \Drupal::service('uuid')->generate();
+    $values['theme'] = $theme_name;
+    $values['dependencies.theme'] = [$theme_name];
+    foreach ($values as $key => $value) {
+      $block->set($key, $value);
+    }
+    $block->save();
+  }
+}
+
+/**
+ * Set langcode fields to be ASCII-only.
+ */
+function system_update_8007() {
+  $database = \Drupal::database();
+  $database_schema = $database->schema();
+  $entity_types = \Drupal::entityTypeManager()->getDefinitions();
+
+  $schema = \Drupal::keyValue('entity.storage_schema.sql')->getAll();
+  $schema_copy = $schema;
+  foreach ($schema as $item_name => $item) {
+    list($entity_type_id, ,) = explode('.', $item_name);
+    if (!isset($entity_types[$entity_type_id])) {
+      continue;
+    }
+    foreach ($item as $table_name => $table_schema) {
+      foreach ($table_schema as $schema_key => $schema_data) {
+        if ($schema_key == 'fields') {
+          foreach ($schema_data as $field_name => $field_data) {
+            foreach ($field_data as $field_data_property => $field_data_value) {
+              // Langcode fields have the property 'is_ascii' set, instead
+              // they should have set the type to 'varchar_ascii'.
+              if ($field_data_property == 'is_ascii') {
+                unset($schema_copy[$item_name][$table_name]['fields'][$field_name]['is_ascii']);
+                $schema_copy[$item_name][$table_name]['fields'][$field_name]['type'] = 'varchar_ascii';
+                if ($database->driver() == 'mysql') {
+                  $database_schema->changeField($table_name, $field_name, $field_name, $schema_copy[$item_name][$table_name]['fields'][$field_name]);
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  \Drupal::keyValue('entity.storage_schema.sql')->setMultiple($schema_copy);
+
+  $definitions = \Drupal::keyValue('entity.definitions.installed')->getAll();
+  $definitions_copy = $definitions;
+  foreach ($definitions as $item_name => $item_value) {
+    $suffix = '.field_storage_definitions';
+    if (substr($item_name, -strlen($suffix)) == $suffix) {
+      foreach ($item_value as $field_name => $field_definition) {
+        $reflection = new \ReflectionObject($field_definition);
+        $schema_property = $reflection->getProperty('schema');
+        $schema_property->setAccessible(TRUE);
+        $schema = $schema_property->getValue($field_definition);
+        if (isset($schema['columns']['value']['is_ascii'])) {
+          $schema['columns']['value']['type'] = 'varchar_ascii';
+          unset($schema['columns']['value']['is_ascii']);
+        }
+        $schema_property->setValue($field_definition, $schema);
+        $schema_property->setAccessible(FALSE);
+        $definitions_copy[$item_name][$field_name] = $field_definition;
+      }
+    }
+  }
+  \Drupal::keyValue('entity.definitions.installed')->setMultiple($definitions_copy);
+}
+
+/**
+ * Purge field schema data for uninstalled entity types.
+ */
+function system_update_8008() {
+  $entity_types = \Drupal::entityTypeManager()->getDefinitions();
+  /** @var \Drupal\Core\KeyValueStore\KeyValueStoreInterface $schema */
+  $schema = \Drupal::keyValue('entity.storage_schema.sql');
+  foreach ($schema->getAll() as $key => $item) {
+    list($entity_type_id, ,) = explode('.', $key);
+    if (!isset($entity_types[$entity_type_id])) {
+      $schema->delete($key);
+    }
+  }
+}
+
+/**
+ * Add allowed attributes to existing html filters.
+ */
+function system_update_8009() {
+  $default_mapping = [
+    '<a>' => '<a href hreflang>',
+    '<blockquote>' => '<blockquote cite>',
+    '<ol>' => '<ol start type>',
+    '<ul>' => '<ul type>',
+    '<img>' => '<img src alt height width>',
+    '<h2>' => '<h2 id>',
+    '<h3>' => '<h3 id>',
+    '<h4>' => '<h4 id>',
+    '<h5>' => '<h5 id>',
+    '<h6>' => '<h6 id>',
+  ];
+  $config_factory = \Drupal::configFactory();
+  foreach ($config_factory->listAll('filter.format') as $name) {
+    $allowed_html_mapping = $default_mapping;
+    $config = $config_factory->getEditable($name);
+    // The image alignment filter needs the data-align attribute.
+    $align_enabled = $config->get('filters.filter_align.status');
+    if ($align_enabled) {
+      $allowed_html_mapping['<img>'] = str_replace('>', ' data-align>', $allowed_html_mapping['<img>']);
+    }
+    // The image caption filter needs the data-caption attribute.
+    $caption_enabled = $config->get('filters.filter_caption.status');
+    if ($caption_enabled) {
+      $allowed_html_mapping['<img>'] = str_replace('>', ' data-caption>', $allowed_html_mapping['<img>']);
+    }
+    $allowed_html = $config->get('filters.filter_html.settings.allowed_html');
+    if (!empty($allowed_html)) {
+      $allowed_html = strtr($allowed_html, $allowed_html_mapping);
+      $config->set('filters.filter_html.settings.allowed_html', $allowed_html);
+      $config->save();
+    }
+  }
+}
+
+/**
+ * Place page title blocks in every theme.
+ */
+function system_update_8010() {
+  // When block module is not installed, there is nothing that could be done
+  // except showing a warning.
+  if (!\Drupal::moduleHandler()->moduleExists('block')) {
+    return t('Block module is not enabled. The page title has been converted to a block, but default page title markup will still display at the top of the main content area.');
+  }
+
+  /** @var \Drupal\Core\Extension\ThemeHandlerInterface $theme_handler */
+  $theme_handler = \Drupal::service('theme_handler');
+  $custom_themes_installed = FALSE;
+  $message = NULL;
+  $langcode = \Drupal::service('language_manager')->getCurrentLanguage()->getId();
+
+  $page_title_default_settings = [
+    'plugin' => 'page_title_block',
+    'region' => 'content',
+    'settings.label' => 'Page title',
+    'settings.label_display' => 0,
+    'visibility' => [],
+    'weight' => -50,
+    'langcode' => $langcode,
+  ];
+  foreach ($theme_handler->listInfo() as $theme) {
+    $theme_name = $theme->getName();
+    switch ($theme_name) {
+      case 'bartik':
+        $name = 'block.block.bartik_page_title';
+        $values = [
+          'id' => 'bartik_page_title',
+        ] + $page_title_default_settings;
+        _system_update_create_block($name, $theme_name, $values);
+        break;
+
+      case 'stark':
+        $name = 'block.block.stark_page_title';
+        $values = [
+          'id' => 'stark_page_title',
+          'region' => 'content',
+        ] + $page_title_default_settings;
+        _system_update_create_block($name, $theme_name, $values);
+        break;
+
+      case 'seven':
+        $name = 'block.block.seven_page_title';
+        $values = [
+          'id' => 'seven_page_title',
+          'region' => 'header',
+        ] + $page_title_default_settings;
+        _system_update_create_block($name, $theme_name, $values);
+        break;
+
+      case 'classy':
+        $name = 'block.block.classy_page_title';
+        $values = [
+          'id' => 'classy_page_title',
+          'region' => 'content',
+        ] + $page_title_default_settings;
+        _system_update_create_block($name, $theme_name, $values);
+        break;
+
+      default:
+        $custom_themes_installed = TRUE;
+        $name = sprintf('block.block.%s_page_title', $theme_name);
+        $values = [
+          'id' => sprintf('%s_page_title', $theme_name),
+          'region' => 'content',
+          'weight' => '-50',
+        ] + $page_title_default_settings;
+        _system_update_create_block($name, $theme_name, $values);
+        break;
+    }
+  }
+
+  if ($custom_themes_installed) {
+    $message = t('Because your site has custom theme(s) installed, we have placed the page title block in the content region. Please manually review the block configuration and remove the page title variables from your page templates.');
+  }
+
+  return $message;
+}
+
+/**
+ * Add secondary local tasks block to Seven (fixes system_update_8005).
+ */
+function system_update_8011() {
+  $langcode = \Drupal::service('language_manager')->getCurrentLanguage()->getId();
+  $theme_name = 'seven';
+  $name = 'block.block.seven_secondary_local_tasks';
+  $values = [
+      'plugin' => 'local_tasks_block',
+      'region' => 'pre_content',
+      'id' => 'seven_secondary_local_tasks',
+      'settings.label' => 'Secondary tabs',
+      'settings.label_display' => 0,
+      'settings.primary' => FALSE,
+      'settings.secondary' => TRUE,
+      'visibility' => [],
+      'weight' => 0,
+      'langcode' => $langcode,
+    ];
+  _system_update_create_block($name, $theme_name, $values);
+}
+
+/**
+ * Enable automated cron module and move the config into it.
+ */
+function system_update_8013() {
+  $autorun = \Drupal::configFactory()->getEditable('system.cron')->get('threshold.autorun');
+  if ($autorun) {
+    // Install 'automated_cron' module.
+    \Drupal::service('module_installer')->install(['automated_cron'], FALSE);
+
+    // Copy 'autorun' value into the new module's 'interval' setting.
+    \Drupal::configFactory()->getEditable('automated_cron.settings')
+      ->set('interval', $autorun)
+      ->save(TRUE);
+  }
+
+  // Remove the 'autorun' key in system module config.
+  \Drupal::configFactory()
+    ->getEditable('system.cron')
+    ->clear('threshold.autorun')
+    ->save(TRUE);
+}
+
+/**
+ * Install the Stable base theme if needed.
+ */
+function system_update_8014() {
+  $theme_handler = \Drupal::service('theme_handler');
+  if ($theme_handler->themeExists('stable')) {
+    return;
+  }
+  $theme_handler->refreshInfo();
+  $theme_installer = \Drupal::service('theme_installer');
+  foreach ($theme_handler->listInfo() as $theme) {
+    // We first check that a base theme is set because if it's set to false then
+    // it's unset in
+    // \Drupal\Core\Extension\ThemeExtensionList::createExtensionInfo().
+    if (isset($theme->info['base theme']) && $theme->info['base theme'] == 'stable') {
+      $theme_installer->install(['stable']);
+      return;
+    }
+  }
+}
+
+/**
+ * Fix configuration overrides to not override non existing keys.
+ */
+function system_update_8200(&$sandbox) {
+  $config_factory = \Drupal::configFactory();
+  if (!array_key_exists('config_names', $sandbox)) {
+    $sandbox['config_names'] = $config_factory->listAll();
+    $sandbox['max'] = count($sandbox['config_names']);
+  }
+
+  // Get a list of 50 to work on at a time.
+  $config_names_to_process = array_slice($sandbox['config_names'], 0, 50);
+  // Preload in a single query.
+  $config_factory->loadMultiple($config_names_to_process);
+  foreach ($config_names_to_process as $config_name) {
+    $config_factory->getEditable($config_name)->save();
+  }
+
+  // Update the list of names to process.
+  $sandbox['config_names'] = array_diff($sandbox['config_names'], $config_names_to_process);
+  $sandbox['#finished'] = empty($sandbox['config_names']) ? 1 : ($sandbox['max'] - count($sandbox['config_names'])) / $sandbox['max'];
+}
+
+/**
+ * Clear caches due to behavior change in DefaultPluginManager.
+ */
+function system_update_8201() {
+  // Empty update to cause a cache rebuild.
+
+  // Use hook_post_update_NAME() instead to clear the cache.
+  // The use of hook_update_N() to clear the cache has been deprecated
+  // see https://www.drupal.org/node/2960601 for more details.
+}
+
+/**
+ * Clear caches due to behavior change in MachineName element.
+ */
+function system_update_8202() {
+  // Empty update to cause a cache rebuild.
+
+  // Use hook_post_update_NAME() instead to clear the cache.The use
+  // of hook_update_N to clear the cache has been deprecated see
+  // https://www.drupal.org/node/2960601 for more details.
+}
+
+/**
+ * Add detailed cron logging configuration.
+ */
+function system_update_8300() {
+  \Drupal::configFactory()->getEditable('system.cron')
+    ->set('logging', 1)
+    ->save(TRUE);
+}
+
+/**
+ * Add install profile to core.extension configuration.
+ */
+function system_update_8301() {
+  \Drupal::configFactory()->getEditable('core.extension')
+    ->set('profile', \Drupal::installProfile())
+    ->save();
+}
+
+/**
+ * Move revision metadata fields to the revision table.
+ */
+function system_update_8400(&$sandbox) {
+  // Due to the fields from RevisionLogEntityTrait not being explicitly
+  // mentioned in the storage they might have been installed wrongly in the base
+  // table for revisionable untranslatable entities and in the data and revision
+  // data tables for revisionable and translatable entities.
+  $entity_definition_update_manager = \Drupal::entityDefinitionUpdateManager();
+  $database = \Drupal::database();
+  $database_schema = $database->schema();
+
+  if (!isset($sandbox['current'])) {
+    // This must be the first run. Initialize the sandbox.
+    $sandbox['current'] = 0;
+
+    $definitions = array_filter(\Drupal::entityTypeManager()->getDefinitions(), function (EntityTypeInterface $entity_type) use ($entity_definition_update_manager) {
+      if ($entity_type = $entity_definition_update_manager->getEntityType($entity_type->id())) {
+        return is_subclass_of($entity_type->getClass(), FieldableEntityInterface::class) && ($entity_type instanceof ContentEntityTypeInterface) && $entity_type->isRevisionable();
+      }
+      return FALSE;
+    });
+    $sandbox['entity_type_ids'] = array_keys($definitions);
+    $sandbox['max'] = count($sandbox['entity_type_ids']);
+  }
+
+  $current_entity_type_key = $sandbox['current'];
+  for ($i = $current_entity_type_key; ($i < $current_entity_type_key + 1) && ($i < $sandbox['max']); $i++) {
+    $entity_type_id = $sandbox['entity_type_ids'][$i];
+    /** @var \Drupal\Core\Entity\ContentEntityTypeInterface $entity_type */
+    $entity_type = $entity_definition_update_manager->getEntityType($entity_type_id);
+
+    $base_fields = \Drupal::service('entity_field.manager')->getBaseFieldDefinitions($entity_type_id);
+    $revision_metadata_fields = $entity_type->getRevisionMetadataKeys();
+    $fields_to_update = array_intersect_key($base_fields, array_flip($revision_metadata_fields));
+
+    if (!empty($fields_to_update)) {
+      // Initialize the entity table names.
+      // @see \Drupal\Core\Entity\Sql\SqlContentEntityStorage::initTableLayout()
+      $base_table = $entity_type->getBaseTable() ?: $entity_type_id;
+      $data_table = $entity_type->getDataTable() ?: $entity_type_id . '_field_data';
+      $revision_table = $entity_type->getRevisionTable() ?: $entity_type_id . '_revision';
+      $revision_data_table = $entity_type->getRevisionDataTable() ?: $entity_type_id . '_field_revision';
+      $revision_field = $entity_type->getKey('revision');
+
+      // No data needs to be migrated if the entity type is not translatable.
+      if ($entity_type->isTranslatable()) {
+        if (!isset($sandbox[$entity_type_id])) {
+          // This must be the first run for this entity type. Initialize the
+          // sub-sandbox for it.
+
+          // Calculate the number of revisions to process.
+          $count = \Drupal::entityQuery($entity_type_id)
+            ->allRevisions()
+            ->count()
+            ->accessCheck(FALSE)
+            ->execute();
+
+          $sandbox[$entity_type_id]['current'] = 0;
+          $sandbox[$entity_type_id]['max'] = $count;
+        }
+        // Define the step size.
+        $steps = Settings::get('entity_update_batch_size', 50);
+
+        // Collect the revision IDs to process.
+        $revisions = \Drupal::entityQuery($entity_type_id)
+          ->allRevisions()
+          ->range($sandbox[$entity_type_id]['current'], $sandbox[$entity_type_id]['current'] + $steps)
+          ->sort($revision_field, 'ASC')
+          ->accessCheck(FALSE)
+          ->execute();
+        $revisions = array_keys($revisions);
+
+        foreach ($fields_to_update as $revision_metadata_field_name => $definition) {
+          // If the revision metadata field is present in the data and the
+          // revision data table, install its definition again with the updated
+          // storage code in order for the field to be installed in the
+          // revision table. Afterwards, copy over the field values and remove
+          // the field from the data and the revision data tables.
+          if ($database_schema->fieldExists($data_table, $revision_metadata_field_name) && $database_schema->fieldExists($revision_data_table, $revision_metadata_field_name)) {
+            // Install the field in the revision table.
+            if (!isset($sandbox[$entity_type_id]['storage_definition_installed'][$revision_metadata_field_name])) {
+              $entity_definition_update_manager->installFieldStorageDefinition($revision_metadata_field_name, $entity_type_id, $entity_type->getProvider(), $definition);
+              $sandbox[$entity_type_id]['storage_definition_installed'][$revision_metadata_field_name] = TRUE;
+            }
+
+            // Apply the field value from the revision data table to the
+            // revision table.
+            foreach ($revisions as $rev_id) {
+              $field_value = $database->select($revision_data_table, 't')
+                ->fields('t', [$revision_metadata_field_name])
+                ->condition($revision_field, $rev_id)
+                ->execute()
+                ->fetchField();
+              $database->update($revision_table)
+                ->condition($revision_field, $rev_id)
+                ->fields([$revision_metadata_field_name => $field_value])
+                ->execute();
+            }
+          }
+        }
+
+        $sandbox[$entity_type_id]['current'] += count($revisions);
+        $sandbox[$entity_type_id]['finished'] = ($sandbox[$entity_type_id]['current'] == $sandbox[$entity_type_id]['max']) || empty($revisions);
+
+        if ($sandbox[$entity_type_id]['finished']) {
+          foreach ($fields_to_update as $revision_metadata_field_name => $definition) {
+            // Drop the field from the data and revision data tables.
+            $database_schema->dropField($data_table, $revision_metadata_field_name);
+            $database_schema->dropField($revision_data_table, $revision_metadata_field_name);
+          }
+          $sandbox['current']++;
+        }
+      }
+      else {
+        foreach ($fields_to_update as $revision_metadata_field_name => $definition) {
+          if ($database_schema->fieldExists($base_table, $revision_metadata_field_name)) {
+            // Install the field in the revision table.
+            $entity_definition_update_manager->installFieldStorageDefinition($revision_metadata_field_name, $entity_type_id, $entity_type->getProvider(), $definition);
+            // Drop the field from the base table.
+            $database_schema->dropField($base_table, $revision_metadata_field_name);
+          }
+        }
+        $sandbox['current']++;
+      }
+    }
+    else {
+      $sandbox['current']++;
+    }
+
+  }
+
+  $sandbox['#finished'] = $sandbox['current'] == $sandbox['max'];
+}
+
+/**
+ * Remove response.gzip (and response) from system module configuration.
+ */
+function system_update_8401() {
+  \Drupal::configFactory()->getEditable('system.performance')
+    ->clear('response.gzip')
+    ->clear('response')
+    ->save();
+}
+
+/**
+ * Add the 'revision_translation_affected' field to all entity types.
+ */
+function system_update_8402() {
+  $definition_update_manager = \Drupal::entityDefinitionUpdateManager();
+
+  // Clear the cached entity type definitions so we get the new
+  // 'revision_translation_affected' entity key.
+  \Drupal::entityTypeManager()->clearCachedDefinitions();
+
+  // Get a list of revisionable and translatable entity types.
+  /** @var \Drupal\Core\Entity\ContentEntityTypeInterface[] $definitions */
+  $definitions = array_filter(\Drupal::entityTypeManager()->getDefinitions(), function (EntityTypeInterface $entity_type) use ($definition_update_manager) {
+    if ($entity_type = $definition_update_manager->getEntityType($entity_type->id())) {
+      return $entity_type->isRevisionable() && $entity_type->isTranslatable();
+    }
+    return FALSE;
+  });
+
+  foreach ($definitions as $entity_type_id => $entity_type) {
+    $field_name = $entity_type->getKey('revision_translation_affected');
+    // Install the 'revision_translation_affected' field if needed.
+    if (!$definition_update_manager->getFieldStorageDefinition($field_name, $entity_type_id)) {
+      $storage_definition = BaseFieldDefinition::create('boolean')
+        ->setLabel(t('Revision translation affected'))
+        ->setDescription(t('Indicates if the last edit of a translation belongs to current revision.'))
+        ->setReadOnly(TRUE)
+        ->setRevisionable(TRUE)
+        ->setTranslatable(TRUE)
+        // Mark all pre-existing revisions as affected in order to be consistent
+        // with the previous API return value: if the field was not defined the
+        // value returned was always TRUE.
+        ->setInitialValue(TRUE);
+
+      $definition_update_manager
+        ->installFieldStorageDefinition($field_name, $entity_type_id, $entity_type_id, $storage_definition);
+    }
+  }
+}
+
+/**
+ * Delete all cache_* tables. They are recreated on demand with the new schema.
+ */
+function system_update_8403() {
+  foreach (Cache::getBins() as $bin => $cache_backend) {
+    // Try to delete the table regardless of which cache backend is handling it.
+    // This is to ensure the new schema is used if the configuration for the
+    // backend class is changed after the update hook runs.
+    $table_name = "cache_$bin";
+    $schema = Database::getConnection()->schema();
+    if ($schema->tableExists($table_name)) {
+      $schema->dropTable($table_name);
+    }
+  }
+}
+
+/**
+ * Add the 'revision_default' field to all relevant entity types.
+ */
+function system_update_8501() {
+  $definition_update_manager = \Drupal::entityDefinitionUpdateManager();
+
+  // Clear the cached entity type definitions so we get the new
+  // 'revision_default' revision metadata key.
+  \Drupal::entityTypeManager()->clearCachedDefinitions();
+
+  // Get a list of revisionable entity types.
+  /** @var \Drupal\Core\Entity\ContentEntityTypeInterface[] $definitions */
+  $definitions = array_filter(\Drupal::entityTypeManager()->getDefinitions(), function (EntityTypeInterface $entity_type) use ($definition_update_manager) {
+    if ($entity_type = $definition_update_manager->getEntityType($entity_type->id())) {
+      return $entity_type->isRevisionable();
+    }
+    return FALSE;
+  });
+
+  // Install the 'revision_default' field.
+  foreach ($definitions as $entity_type_id => $entity_type) {
+    $field_name = $entity_type->getRevisionMetadataKey('revision_default');
+    // Install the 'revision_default' field if needed.
+    if (!$definition_update_manager->getFieldStorageDefinition($field_name, $entity_type_id)) {
+      // Make sure the new "revision_default" revision metadata key is available
+      // also to code using the latest installed definition.
+      $installed_entity_type = $definition_update_manager->getEntityType($entity_type_id);
+      $revision_metadata_keys = $installed_entity_type->get('revision_metadata_keys');
+
+      if (!isset($revision_metadata_keys['revision_default'])) {
+        // Update the property holding the required revision metadata keys,
+        // which is used by the BC layer for retrieving the revision metadata
+        // keys.
+        // @see \Drupal\Core\Entity\ContentEntityType::getRevisionMetadataKeys().
+        $required_revision_metadata_keys = $installed_entity_type->get('requiredRevisionMetadataKeys');
+        $required_revision_metadata_keys['revision_default'] = $field_name;
+        $installed_entity_type->set('requiredRevisionMetadataKeys', $required_revision_metadata_keys);
+
+        // Update the revision metadata keys to add the new required revision
+        // metadata key "revision_default".
+        $revision_metadata_keys['revision_default'] = $required_revision_metadata_keys['revision_default'];
+        $installed_entity_type->set('revision_metadata_keys', $revision_metadata_keys);
+
+        $definition_update_manager->updateEntityType($installed_entity_type);
+      }
+
+      $storage_definition = BaseFieldDefinition::create('boolean')
+        ->setLabel(t('Default revision'))
+        ->setDescription(t('A flag indicating whether this was a default revision when it was saved.'))
+        ->setStorageRequired(TRUE)
+        ->setTranslatable(FALSE)
+        ->setRevisionable(TRUE)
+        // We cannot tell whether existing revisions were default or not when
+        // they were created, but since we did not support creating non-default
+        // revisions in any core stable UI so far, we default to TRUE.
+        ->setInitialValue(TRUE);
+
+      $definition_update_manager
+        ->installFieldStorageDefinition($field_name, $entity_type_id, $entity_type_id, $storage_definition);
+    }
+    else {
+      $variables = ['@entity_type_label' => $entity_type->getLabel()];
+      if ($field_name === 'revision_default') {
+        \Drupal::logger('system')->error('An existing "Default revision" field was found for the @entity_type_label entity type, but no "revision_default" revision metadata key was found in its definition.', $variables);
+      }
+      else {
+        \Drupal::logger('system')->error('An existing "Default revision" field was found for the @entity_type_label entity type.', $variables);
+      }
+    }
+  }
+}
+
+/**
+* Fix missing install profile after updating to Drupal 8.6.9 with Drush 8.
+*/
+function system_update_8601() {
+  $extension_config = \Drupal::configFactory()->getEditable('core.extension');
+  $install_profile = $extension_config->get('profile');
+  if (!$install_profile) {
+    // There's no install profile configured.
+    return;
+  }
+  $modules = $extension_config->get('module');
+  if (isset($modules[$install_profile])) {
+    // The install profile is already in the installed module list.
+    return;
+  }
+
+  // Ensure the install profile is available.
+  if (!\Drupal::service('extension.list.module')->exists($install_profile)) {
+    return t('The %install_profile install profile configured in core.extension is not available.', ['%install_profile' => $install_profile]);
+  }
+
+  // Add the install profile to the list of enabled modules.
+  $modules[$install_profile] = 1000;
+  $modules = module_config_sort($modules);
+  $extension_config
+    ->set('module', $modules)
+    ->save(TRUE);
+
+  // Build a module list from the updated extension configuration.
+  $current_module_filenames = \Drupal::moduleHandler()->getModuleList();
+  $current_modules = array_fill_keys(array_keys($current_module_filenames), 0);
+  $current_modules = module_config_sort(array_merge($current_modules, $extension_config->get('module')));
+  $module_filenames = [];
+  foreach ($current_modules as $name => $weight) {
+    if (isset($current_module_filenames[$name])) {
+      $module_filenames[$name] = $current_module_filenames[$name];
+    }
+    else {
+      $module_path = \Drupal::service('extension.list.module')->getPath($name);
+      $pathname = "$module_path/$name.info.yml";
+      $filename = file_exists($module_path . "/$name.module") ? "$name.module" : NULL;
+      $module_filenames[$name] = new Extension(\Drupal::root(), 'module', $pathname, $filename);
+    }
+  }
+
+  // Update the module handler list to contain the missing install profile.
+  \Drupal::moduleHandler()->setModuleList($module_filenames);
+  \Drupal::moduleHandler()->load($install_profile);
+
+  // Clear the static cache of the "extension.list.module" service to pick
+  // up the new install profile correctly.
+  \Drupal::service('extension.list.profile')->reset();
+
+  // Clear the static cache of the "extension.list.module" service to pick
+  // up the new module, since it merges the installation status of modules
+  // into its statically cached list.
+  \Drupal::service('extension.list.module')->reset();
+
+  // Update the kernel to include the missing profile.
+  \Drupal::service('kernel')->updateModules($module_filenames, $module_filenames);
+
+  return t('The %install_profile install profile has been added to the installed module list.', ['%install_profile' => $install_profile]);
+}
+
+/**
+ * Remove the unused 'system.theme.data' from state.
+ */
+function system_update_8701() {
+  // The system.theme.data key is no longer used in Drupal 8.7.x.
+  \Drupal::state()->delete('system.theme.data');
+}
+
+/**
+ * Add the 'revision_translation_affected' entity key.
+ */
+function system_update_8702() {
+  $entity_definition_update_manager = \Drupal::entityDefinitionUpdateManager();
+
+  // Get a list of revisionable and translatable entity types.
+  /** @var \Drupal\Core\Entity\EntityTypeInterface[] $last_installed_definitions */
+  $last_installed_definitions = array_filter($entity_definition_update_manager->getEntityTypes(), function (EntityTypeInterface $entity_type) {
+    return $entity_type->isRevisionable() && $entity_type->isTranslatable();
+  });
+
+  // Ensure that we don't use the cached in-code definitions to support sites
+  // that might be updating from 8.3.x straight to 8.7.x.
+  \Drupal::entityTypeManager()->useCaches(FALSE);
+  $live_definitions = \Drupal::entityTypeManager()->getDefinitions();
+
+  // Update the 'revision_translation_affected' entity key of the last installed
+  // definitions to use the value of the live (in-code) entity type definitions
+  // in cases when the key has not been populated yet.
+  foreach ($last_installed_definitions as $entity_type_id => $entity_type) {
+    // The live (in-code) entity type definition might not exist anymore, while
+    // an update function that would remove its last installed definition didn't
+    // run yet. We don't need to update it in that case.
+    if (!isset($live_definitions[$entity_type_id])) {
+      continue;
+    }
+
+    $revision_translation_affected_key = $live_definitions[$entity_type_id]->getKey('revision_translation_affected');
+    if (!$entity_type->hasKey('revision_translation_affected') && !empty($revision_translation_affected_key) && $entity_definition_update_manager->getFieldStorageDefinition($revision_translation_affected_key, $entity_type_id)) {
+      $entity_keys = $entity_type->getKeys();
+      $entity_keys['revision_translation_affected'] = $revision_translation_affected_key;
+      $entity_type->set('entity_keys', $entity_keys);
+      $entity_definition_update_manager->updateEntityType($entity_type);
+    }
+  }
+  \Drupal::entityTypeManager()->useCaches(TRUE);
+}
+
+/**
+ * Remove 'path.temporary' config if redundant.
+ */
+function system_update_8801() {
+  // If settings is already being used, or the config is set to the OS default,
+  // clear the config value.
+  $config = Drupal::configFactory()->getEditable('system.file');
+  if (Settings::get('file_temp_path') || $config->get('path.temporary') === FileSystemComponent::getOsTemporaryDirectory()) {
+    $config->clear('path.temporary')
+      ->save(TRUE);
+  }
+}
+
+/**
+ * Fix system.theme:admin when the default theme is used as the admin theme.
+ */
+function system_update_8802() {
+  $config = Drupal::configFactory()->getEditable('system.theme');
+  // Replace '0' with an empty string as '0' is not a valid value.
+  if ($config->get('admin') == '0') {
+    $config
+      ->set('admin', '')
+      ->save(TRUE);
+  }
+}
+
+/**
+ * Install the 'path_alias' entity type.
+ */
+function system_update_8803() {
+  // Enable the Path Alias module if needed.
+  if (!\Drupal::moduleHandler()->moduleExists('path_alias')) {
+    \Drupal::service('module_installer')->install(['path_alias'], FALSE);
+    return t('The "path_alias" entity type has been installed.');
+  }
+}
+
+/**
+ * Convert path aliases to entities.
+ */
+function system_update_8804(&$sandbox = NULL) {
+  // Bail out early if the entity type is not using the default storage class.
+  $storage = \Drupal::entityTypeManager()->getStorage('path_alias');
+  if (!$storage instanceof PathAliasStorage) {
+    return;
+  }
+
+  if (!isset($sandbox['current_id'])) {
+    // This must be the first run. Initialize the sandbox.
+    $sandbox['progress'] = 0;
+    $sandbox['current_id'] = 0;
+  }
+
+  $database = \Drupal::database();
+  $step_size = 200;
+  $url_aliases = $database->select('url_alias', 't')
+    ->condition('t.pid', $sandbox['current_id'], '>')
+    ->fields('t')
+    ->orderBy('pid', 'ASC')
+    ->range(0, $step_size)
+    ->execute()
+    ->fetchAll();
+
+  if ($url_aliases) {
+    /** @var \Drupal\Component\Uuid\UuidInterface $uuid */
+    $uuid = \Drupal::service('uuid');
+
+    $base_table_insert = $database->insert('path_alias');
+    $base_table_insert->fields(['id', 'revision_id', 'uuid', 'path', 'alias', 'langcode', 'status']);
+    $revision_table_insert = $database->insert('path_alias_revision');
+    $revision_table_insert->fields(['id', 'revision_id', 'path', 'alias', 'langcode', 'status', 'revision_default']);
+    foreach ($url_aliases as $url_alias) {
+      $values = [
+        'id' => $url_alias->pid,
+        'revision_id' => $url_alias->pid,
+        'uuid' => $uuid->generate(),
+        'path' => $url_alias->source,
+        'alias' => $url_alias->alias,
+        'langcode' => $url_alias->langcode,
+        'status' => 1,
+      ];
+      $base_table_insert->values($values);
+
+      unset($values['uuid']);
+      $values['revision_default'] = 1;
+      $revision_table_insert->values($values);
+    }
+    $base_table_insert->execute();
+    $revision_table_insert->execute();
+
+    $sandbox['progress'] += count($url_aliases);
+    $last_url_alias = end($url_aliases);
+    $sandbox['current_id'] = $last_url_alias->pid;
+
+    // If we're not in maintenance mode, the number of path aliases could change
+    // at any time so make sure that we always use the latest record count.
+    $missing = $database->select('url_alias', 't')
+      ->condition('t.pid', $sandbox['current_id'], '>')
+      ->orderBy('pid', 'ASC')
+      ->countQuery()
+      ->execute()
+      ->fetchField();
+    $sandbox['#finished'] = $missing ? $sandbox['progress'] / ($sandbox['progress'] + (int) $missing) : 1;
+  }
+  else {
+    $sandbox['#finished'] = 1;
+  }
+
+  if ($sandbox['#finished'] >= 1) {
+    // Keep a backup of the old 'url_alias' table if requested.
+    if (Settings::get('entity_update_backup', TRUE)) {
+      $old_table_name = 'old_' . substr(uniqid(), 0, 6) . '_url_alias';
+      if (!$database->schema()->tableExists($old_table_name)) {
+        $database->schema()->renameTable('url_alias', $old_table_name);
+      }
+    }
+    else {
+      $database->schema()->dropTable('url_alias');
+    }
+
+    return t('Path aliases have been converted to entities.');
+  }
+}
+
+/**
+ * Change the provider of the 'path_alias' entity type and its base fields.
+ */
+function system_update_8805() {
+  // If the path alias module is not installed, it means that
+  // system_update_8803() ran as part of Drupal 8.8.0-alpha1, in which case we
+  // need to enable the module and change the provider of the 'path_alias'
+  // entity type.
+  if (!\Drupal::moduleHandler()->moduleExists('path_alias')) {
+    \Drupal::service('module_installer')->install(['path_alias'], FALSE);
+
+    /** @var \Drupal\Core\Entity\EntityLastInstalledSchemaRepositoryInterface $last_installed_schema_repository */
+    $last_installed_schema_repository = \Drupal::service('entity.last_installed_schema.repository');
+    $entity_type = $last_installed_schema_repository->getLastInstalledDefinition('path_alias');
+
+    // Set the new class for the entity type.
+    $entity_type->setClass(PathAlias::class);
+
+    // Set the new provider for the entity type.
+    $reflection = new ReflectionClass($entity_type);
+    $property = $reflection->getProperty('provider');
+    $property->setAccessible(TRUE);
+    $property->setValue($entity_type, 'path_alias');
+
+    $last_installed_schema_repository->setLastInstalledDefinition($entity_type);
+
+    $field_storage_definitions = $last_installed_schema_repository->getLastInstalledFieldStorageDefinitions('path_alias');
+    foreach ($field_storage_definitions as $field_storage_definition) {
+      if ($field_storage_definition->isBaseField()) {
+        $field_storage_definition->setProvider('path_alias');
+        $last_installed_schema_repository->setLastInstalledFieldStorageDefinition($field_storage_definition);
+      }
+    }
+  }
 }

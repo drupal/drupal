@@ -1,0 +1,15 @@
+label: 'Spanish Content'
+description: 'Spanish Find and manage content.'
+display:
+  default:
+    display_options:
+      fields:
+        title:
+          label: 'Spanish Title'
+        name:
+          label: 'Spanish Author'
+        nid:
+          label: 'Spanish ID'
+    display_title: 'Spanish Master'
+  page_1:
+    display_title: 'Spanish Page'
