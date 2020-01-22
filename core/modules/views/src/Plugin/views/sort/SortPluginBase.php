@@ -169,7 +169,7 @@ abstract class SortPluginBase extends HandlerBase implements CacheableDependency
     $options = $this->sortOptions();
     if (!empty($options)) {
       $form['order'] = [
-        '#title' => $this->t('Order'),
+        '#title' => $this->t('Order', [], ['context' => 'Sort order']),
         '#type' => 'radios',
         '#options' => $options,
         '#default_value' => $this->options['order'],
