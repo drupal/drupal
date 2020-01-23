@@ -629,16 +629,6 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
     },
     add_css: function add_css(ajax, response, status) {
       $('head').prepend(response.data);
-
-      var match = void 0;
-      var importMatch = /^@import url\("(.*)"\);$/gim;
-      if (document.styleSheets[0].addImport && importMatch.test(response.data)) {
-        importMatch.lastIndex = 0;
-        do {
-          match = importMatch.exec(response.data);
-          document.styleSheets[0].addImport(match[1]);
-        } while (match);
-      }
     },
     message: function message(ajax, response) {
       var messages = new Drupal.Message(document.querySelector(response.messageWrapperQuerySelector));
