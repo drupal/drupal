@@ -140,3 +140,80 @@ layout_builder_content_translation_admin:
   css:
     component:
       css/components/layout-builder-content-translation.css: {}
+
+classy.book-navigation:
+  version: VERSION
+  css:
+    component:
+      css/classy/components/book-navigation.css: {}
+
+classy.dropbutton:
+  version: VERSION
+  css:
+    component:
+      css/classy/components/dropbutton.css: { weight: -10 }
+
+classy.file:
+  version: VERSION
+  css:
+    component:
+      css/classy/components/file.css: { weight: -10 }
+
+classy.forum:
+  version: VERSION
+  css:
+    component:
+      css/classy/components/forum.css: { weight: -10 }
+
+classy.image-widget:
+  version: VERSION
+  css:
+    component:
+      css/classy/components/image-widget.css: {}
+
+classy.indented:
+  version: VERSION
+  css:
+    component:
+      css/classy/components/indented.css: {}
+
+classy.media_embed_ckeditor_theme:
+  version: VERSION
+  js:
+    js/classy/media_embed_ckeditor.theme.js: {}
+
+classy.media_embed_error:
+  version: VERSION
+  css:
+    component:
+      css/classy/components/media-embed-error.css: {}
+
+classy.messages:
+  version: VERSION
+  css:
+    component:
+      css/classy/components/messages.css: { weight: -10 }
+
+classy.node:
+  version: VERSION
+  css:
+    component:
+      css/classy/components/node.css: { weight: -10 }
+
+classy.progress:
+  version: VERSION
+  css:
+    component:
+      css/classy/components/progress.css: { weight: -10 }
+
+classy.search-results:
+  version: VERSION
+  css:
+    component:
+      css/classy/components/search-results.css: {}
+
+classy.user:
+  version: VERSION
+  css:
+    component:
+      css/classy/components/user.css: { weight: -10 }
