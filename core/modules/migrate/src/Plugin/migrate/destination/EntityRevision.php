@@ -122,14 +122,6 @@ class EntityRevision extends EntityContentBase {
   }
 
   /**
-   * {@inheritdoc}
-   */
-  protected static function getEntityTypeId($plugin_id) {
-    // Remove entity_revision:
-    return substr($plugin_id, 16);
-  }
-
-  /**
    * Gets the entity.
    *
    * @param \Drupal\migrate\Row $row

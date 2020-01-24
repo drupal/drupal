@@ -6,6 +6,7 @@ use Drupal\Component\Plugin\DependentPluginInterface;
 use Drupal\Core\Entity\DependencyTrait;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Drupal\migrate\EntityFieldDefinitionTrait;
 use Drupal\migrate\Plugin\MigrationInterface;
 use Drupal\migrate\Row;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -53,6 +54,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 abstract class Entity extends DestinationBase implements ContainerFactoryPluginInterface, DependentPluginInterface {
 
   use DependencyTrait;
+  use EntityFieldDefinitionTrait;
 
   /**
    * The entity storage.
@@ -108,20 +110,6 @@ abstract class Entity extends DestinationBase implements ContainerFactoryPluginI
       $container->get('entity_type.manager')->getStorage($entity_type_id),
       array_keys($container->get('entity_type.bundle.info')->getBundleInfo($entity_type_id))
     );
-  }
-
-  /**
-   * Finds the entity type from configuration or plugin ID.
-   *
-   * @param string $plugin_id
-   *   The plugin ID.
-   *
-   * @return string
-   *   The entity type.
-   */
-  protected static function getEntityTypeId($plugin_id) {
-    // Remove "entity:".
-    return substr($plugin_id, 7);
   }
 
   /**
