@@ -9,6 +9,7 @@ use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Drupal\migrate\EntityFieldDefinitionTrait;
 use Drupal\migrate\Plugin\migrate\source\SourcePluginBase;
 use Drupal\migrate\Plugin\MigrationInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -54,6 +55,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * )
  */
 class ContentEntity extends SourcePluginBase implements ContainerFactoryPluginInterface {
+  use EntityFieldDefinitionTrait;
 
   /**
    * The entity type manager.
@@ -268,27 +270,6 @@ class ContentEntity extends SourcePluginBase implements ContainerFactoryPluginIn
       $ids[$langcode_key] = $this->getDefinitionFromEntity($langcode_key);
     }
     return $ids;
-  }
-
-  /**
-   * Gets the field definition from a specific entity base field.
-   *
-   * @param string $key
-   *   The field ID key.
-   *
-   * @return array
-   *   An associative array with a structure that contains the field type, keyed
-   *   as 'type', together with field storage settings as they are returned by
-   *   FieldStorageDefinitionInterface::getSettings().
-   *
-   * @see \Drupal\migrate\Plugin\migrate\destination\EntityContentBase::getDefinitionFromEntity()
-   */
-  protected function getDefinitionFromEntity($key) {
-    /** @var \Drupal\Core\Field\FieldDefinitionInterface $field_definition */
-    $field_definition = $this->entityFieldManager->getBaseFieldDefinitions($this->entityType->id())[$key];
-    return [
-      'type' => $field_definition->getType(),
-    ] + $field_definition->getSettings();
   }
 
 }
