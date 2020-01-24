@@ -438,22 +438,7 @@ class ThemeNotUsingClassyLibraryTest extends KernelTestBase {
       ],
       'seven' => [
         'theme-name' => 'seven',
-        'to-skip' => [
-          'base',
-          'book-navigation',
-          'dropbutton',
-          'file',
-          'forum',
-          'image-widget',
-          'indented',
-          'messages',
-          'node',
-          'progress',
-          'search-results',
-          'user',
-          'media_embed_error',
-          'media_embed_ckeditor_theme',
-        ],
+        'to-skip' => [],
       ],
     ];
   }
@@ -498,16 +483,7 @@ class ThemeNotUsingClassyLibraryTest extends KernelTestBase {
       ],
       [
         'theme-name' => 'seven',
-        'to-skip' => [
-          'user/drupal.user',
-          'core/drupal.dialog',
-          'core/drupal.dropbutton',
-          'file/drupal.file',
-          'core/drupal.progress',
-          'media/media_embed_ckeditor_theme',
-          'media_library/view',
-          'media_library/widget',
-        ],
+        'to-skip' => [],
       ],
     ];
   }

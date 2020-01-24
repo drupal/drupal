@@ -1,0 +1,25 @@
+/**
+ * @file
+ * Visual styles for fields.
+ */
+
+.field__label {
+  font-weight: bold;
+}
+.field--label-inline .field__label,
+.field--label-inline .field__items {
+  float: left; /* LTR */
+}
+.field--label-inline .field__label,
+.field--label-inline > .field__item,
+.field--label-inline .field__items {
+  padding-right: 0.5em;
+}
+[dir="rtl"] .field--label-inline .field__label,
+[dir="rtl"] .field--label-inline .field__items {
+  padding-right: 0;
+  padding-left: 0.5em;
+}
+.field--label-inline .field__label::after {
+  content: ":";
+}

@@ -1,0 +1,33 @@
+/**
+ * @file
+ * Image upload widget.
+ *
+ * This CSS file is not used in this theme (Classy). It was intended to be used,
+ * but due to a bug, Drupal 8 shipped with it not being used. To not break
+ * backwards compatibility, we continue to not load it in Classy. Every
+ * subtheme of Classy is encouraged to use it, by attaching the
+ * classy/image-widget asset library in their image-widget.html.twig file.
+ *
+ * @see core/themes/seven/templates/content-edit/image-widget.html.twig.
+ *
+ * @todo In Drupal 9, let core/themes/classy/templates/content-edit/image-widget.html.twig
+ * attach the classy/image-widget asset library.
+ */
+
+.image-preview {
+  float: left; /* LTR */
+  padding: 0 10px 10px 0; /* LTR */
+}
+[dir="rtl"] .image-preview {
+  float: right;
+  padding: 0 0 10px 10px;
+}
+.image-widget-data {
+  float: left; /* LTR */
+}
+[dir="rtl"] .image-widget-data {
+  float: right;
+}
+.image-widget-data .text-field {
+  width: auto;
+}

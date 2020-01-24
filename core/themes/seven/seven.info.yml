@@ -28,6 +28,7 @@ libraries-override:
         /core/themes/stable/css/system/components/system-status-counter.css: css/components/system-status-counter.css
         /core/themes/stable/css/system/components/system-status-report-counters.css: css/components/system-status-report-counters.css
         /core/themes/stable/css/system/components/system-status-report-general-info.css: css/components/system-status-report-general-info.css
+
   core/drupal.vertical-tabs:
     css:
       component:
@@ -45,25 +46,74 @@ libraries-override:
   classy/base:
     css:
       component:
+        css/components/action-links.css: css/classy/components/action-links.css
+        css/components/breadcrumb.css: css/classy/components/breadcrumb.css
+        css/components/button.css: css/classy/components/button.css
+        css/components/collapse-processed.css: css/classy/components/collapse-processed.css
+        css/components/container-inline.css: css/classy/components/container-inline.css
         css/components/details.css: false
+        css/components/exposed-filters.css: css/classy/components/exposed-filters.css
+        css/components/field.css: css/classy/components/field.css
+        css/components/form.css: css/classy/components/form.css
+        css/components/icons.css: css/classy/components/icons.css
+        css/components/inline-form.css: css/classy/components/inline-form.css
+        css/components/item-list.css: css/classy/components/item-list.css
+        css/components/link.css: css/classy/components/link.css
+        css/components/links.css: css/classy/components/links.css
+        css/components/menu.css: css/classy/components/menu.css
+        css/components/more-link.css: css/classy/components/more-link.css
+        css/components/pager.css: css/classy/components/pager.css
+        css/components/tabledrag.css: css/classy/components/tabledrag.css
+        css/components/tableselect.css: css/classy/components/tableselect.css
+        css/components/tablesort.css: css/classy/components/tablesort.css
+        css/components/tabs.css: css/classy/components/tabs.css
+        css/components/textarea.css: css/classy/components/textarea.css
+        css/components/ui-dialog.css: css/classy/components/ui-dialog.css
+
   classy/media_library:
     css:
       layout:
         css/layout/media-library.css: false
 
+  classy/book-navigation: seven/classy.book-navigation
+  classy/dropbutton: seven/classy.dropbutton
+  classy/file: seven/classy.file
+  classy/forum: seven/classy.forum
+  classy/image-widget: seven/classy.image-widget
+  classy/indented: seven/classy.indented
+  classy/media_embed_ckeditor_theme: seven/classy.media_embed_ckeditor_theme
+  classy/media_embed_error: seven/classy.media_embed_error
+  classy/messages: seven/classy.messages
+  classy/node: seven/classy.node
+  classy/progress: seven/classy.progress
+  classy/search-results: seven/classy.search-results
+  classy/user: seven/classy.user
+
 libraries-extend:
   core/ckeditor:
     - seven/ckeditor-dialog
+  core/drupal.dialog:
+    - seven/seven.drupal.dialog
+  core/drupal.dropbutton:
+    - seven/classy.dropbutton
+  core/drupal.progress:
+    - seven/classy.progress
   core/drupal.vertical-tabs:
     - seven/vertical-tabs
   core/jquery.ui:
     - seven/seven.jquery.ui
+  file/drupal.file:
+    - seven/classy.file
+  media/media_embed_ckeditor_theme:
+    - seven/classy.media_embed_ckeditor_theme
   media_library/view:
     - seven/media_library
   media_library/widget:
     - seven/media_library
   tour/tour-styling:
     - seven/tour-styling
+  user/drupal.user:
+    - seven/classy.user
 quickedit_stylesheets:
   - css/components/quickedit.css
 regions:
@@ -78,3 +128,6 @@ regions:
   sidebar_first: 'First sidebar'
 regions_hidden:
   - sidebar_first
+
+ckeditor_stylesheets:
+  - css/classy/components/media-embed-error.css
