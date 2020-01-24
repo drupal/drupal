@@ -6,40 +6,8 @@
  */
 
 /**
- * Move 'link_domain' from 'rest.settings' to 'hal.settings'.
+ * Implements hook_update_last_removed().
  */
-function hal_update_8301() {
-  $config_factory = \Drupal::configFactory();
-
-  // The default value for the 'link_domain' key is `~`, which is the YAML
-  // equivalent of PHP's `NULL`. If the REST module is not installed, this is
-  // the value we will store in 'hal.settings'.
-  $link_domain = NULL;
-
-  // But if the REST module was installed, we migrate its 'link_domain' setting,
-  // because we are actually moving that setting from 'rest.settings' to
-  // 'hal.settings'.
-  $rest_settings = $config_factory->getEditable('rest.settings');
-  if ($rest_settings->getRawData() !== []) {
-    $link_domain = $rest_settings->get('link_domain');
-    // Remove the 'link_domain' setting from 'rest.settings'.
-    $rest_settings->clear('link_domain')
-      ->save();
-  }
-
-  $hal_settings = $config_factory->getEditable('hal.settings');
-  $hal_settings->set('link_domain', $link_domain);
-  $hal_settings->save(TRUE);
-}
-
-/**
- * Add hal.settings::bc_file_uri_as_url_normalizer configuration.
- */
-function hal_update_8501() {
-  $config_factory = \Drupal::configFactory();
-  $config_factory->getEditable('hal.settings')
-    ->set('bc_file_uri_as_url_normalizer', TRUE)
-    ->save(TRUE);
-
-  return t('Backwards compatibility mode has been enabled for File entities\' HAL normalization of the "uri" field. Like before, it will continue to return only the absolute file URL. If you want the new behavior, which returns both the stored URI and a root-relative file URL, <a href="https://www.drupal.org/node/2925783">read the change record to learn how to opt in.</a>');
+function hal_update_last_removed() {
+  return 8501;
 }

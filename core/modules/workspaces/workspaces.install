@@ -5,9 +5,8 @@
  * Contains install, update and uninstall functions for the Workspaces module.
  */
 
-use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\ContentEntityNullStorage;
-use Drupal\Core\Field\BaseFieldDefinition;
+use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\workspaces\Entity\Workspace;
 
 /**
@@ -124,56 +123,10 @@ function workspaces_schema() {
 }
 
 /**
- * Add the 'workspace' revision metadata field on all supported entity types.
+ * Implements hook_update_last_removed().
  */
-function workspaces_update_8801() {
-  /** @var \Drupal\workspaces\WorkspaceManagerInterface $workspace_manager */
-  $workspace_manager = \Drupal::service('workspaces.manager');
-  $entity_definition_update_manager = \Drupal::entityDefinitionUpdateManager();
-  foreach ($entity_definition_update_manager->getEntityTypes() as $entity_type_id => $entity_type) {
-    if ($workspace_manager->isEntityTypeSupported($entity_type)) {
-      $revision_metadata_keys = $entity_type->get('revision_metadata_keys');
-
-      if (!isset($revision_metadata_keys['workspace'])) {
-        // Bail out if there's an existing field called 'workspace'.
-        if ($entity_definition_update_manager->getFieldStorageDefinition('workspace', $entity_type_id)) {
-          throw new \RuntimeException("An existing 'workspace' field was found for the '$entity_type_id' entity type. Set the 'workspace' revision metadata key to use a different field name and run this update function again.");
-        }
-
-        $revision_metadata_keys['workspace'] = 'workspace';
-        $entity_type->set('revision_metadata_keys', $revision_metadata_keys);
-        $entity_definition_update_manager->updateEntityType($entity_type);
-      }
-
-      $field_storage = BaseFieldDefinition::create('entity_reference')
-        ->setLabel(t('Workspace'))
-        ->setDescription(t('Indicates the workspace that this revision belongs to.'))
-        ->setSetting('target_type', 'workspace')
-        ->setInternal(TRUE)
-        ->setTranslatable(FALSE)
-        ->setRevisionable(TRUE);
-
-      $entity_definition_update_manager->installFieldStorageDefinition($revision_metadata_keys['workspace'], $entity_type_id, 'workspaces', $field_storage);
-    }
-  }
-
-  return t("The 'workspace' revision metadata field has been installed.");
-}
-
-/**
- * Add the 'parent' field to the 'workspace' entity type.
- */
-function workspaces_update_8802() {
-  $entity_definition_update_manager = \Drupal::entityDefinitionUpdateManager();
-
-  // Install the new 'parent' field.
-  $storage_definition = BaseFieldDefinition::create('entity_reference')
-    ->setLabel(t('Parent'))
-    ->setDescription(t('The parent workspace.'))
-    ->setSetting('target_type', 'workspace')
-    ->setReadOnly(TRUE);
-
-  $entity_definition_update_manager->installFieldStorageDefinition('parent', 'workspace', 'workspaces', $storage_definition);
+function workspaces_update_last_removed() {
+  return 8802;
 }
 
 /**

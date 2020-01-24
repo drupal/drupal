@@ -73,12 +73,8 @@ function image_requirements($phase) {
 }
 
 /**
- * Flush caches as we changed field formatter metadata.
+ * Implements hook_update_last_removed().
  */
-function image_update_8201() {
-  // Empty update to trigger a cache flush.
-
-  // Use hook_post_update_NAME() instead to clear the cache. The use of
-  // hook_update_N() to clear the cache has been deprecated see
-  // https://www.drupal.org/node/2960601 for more details.
+function image_update_last_removed() {
+  return 8201;
 }

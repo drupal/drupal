@@ -309,29 +309,8 @@ function locale_requirements($phase) {
 }
 
 /**
- * Delete translation status data in state.
+ * Implements hook_update_last_removed().
  */
-function locale_update_8300() {
-  // Delete the old translation status data, it will be rebuilt and stored in
-  // the new key value collection.
-  \Drupal::state()->delete('locale.translation_status');
-}
-
-/**
- * Update default server pattern value to use https.
- */
-function locale_update_8500() {
-  $update_url = \Drupal::config('locale.settings')->get('translation.default_server_pattern');
-  if ($update_url == 'http://ftp.drupal.org/files/translations/%core/%project/%project-%version.%language.po') {
-    \Drupal::configFactory()->getEditable('locale.settings')
-      ->set('translation.default_server_pattern', 'https://ftp.drupal.org/files/translations/%core/%project/%project-%version.%language.po')
-      ->save();
-  }
-}
-
-/**
- * Clear Locale project storage to use new 'all' instead of 8.x in URLs.
- */
-function locale_update_8800() {
-  \Drupal::service('locale.project')->deleteAll();
+function locale_update_last_removed() {
+  return 8800;
 }

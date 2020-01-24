@@ -7,7 +7,6 @@
 
 use Drupal\Core\Url;
 use Drupal\Core\Database\Database;
-use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\user\RoleInterface;
 
 /**
@@ -156,128 +155,8 @@ function node_uninstall() {
 }
 
 /**
- * Add 'revision_translation_affected' field to 'node' entities.
+ * Implements hook_update_last_removed().
  */
-function node_update_8001() {
-  // Install the definition that this field had in
-  // \Drupal\node\Entity\Node::baseFieldDefinitions()
-  // at the time that this update function was written. If/when code is
-  // deployed that changes that definition, the corresponding module must
-  // implement an update function that invokes
-  // \Drupal::entityDefinitionUpdateManager()->updateFieldStorageDefinition()
-  // with the new definition.
-  $storage_definition = BaseFieldDefinition::create('boolean')
-    ->setLabel(t('Revision translation affected'))
-    ->setDescription(t('Indicates if the last edit of a translation belongs to current revision.'))
-    ->setReadOnly(TRUE)
-    ->setRevisionable(TRUE)
-    ->setTranslatable(TRUE);
-
-  \Drupal::entityDefinitionUpdateManager()
-    ->installFieldStorageDefinition('revision_translation_affected', 'node', 'node', $storage_definition);
-}
-
-/**
- * Remove obsolete indexes from the node schema.
- */
-function node_update_8002() {
-  // The "node__default_langcode" and "node_field__langcode" indexes were
-  // removed from \Drupal\node\NodeStorageSchema in
-  // https://www.drupal.org/node/2261669, but this update function wasn't
-  // added until https://www.drupal.org/node/2542748. Regenerate the related
-  // schemas to ensure they match the currently expected status.
-  $manager = \Drupal::entityDefinitionUpdateManager();
-  // Regenerate entity type indexes, this should drop "node__default_langcode".
-  $manager->updateEntityType($manager->getEntityType('node'));
-  // Regenerate "langcode" indexes, this should drop "node_field__langcode".
-  $manager->updateFieldStorageDefinition($manager->getFieldStorageDefinition('langcode', 'node'));
-}
-
-/**
- * Promote 'status' and 'uid' fields to entity keys.
- */
-function node_update_8003() {
-  // The 'status' and 'uid' fields were added to the 'entity_keys' annotation
-  // of \Drupal\node\Entity\Node in https://www.drupal.org/node/2498919, but
-  // this update function wasn't added until
-  // https://www.drupal.org/node/2542748.
-  $manager = \Drupal::entityDefinitionUpdateManager();
-  $entity_type = $manager->getEntityType('node');
-  $entity_keys = $entity_type->getKeys();
-  $entity_keys['status'] = 'status';
-  $entity_keys['uid'] = 'uid';
-  $entity_type->set('entity_keys', $entity_keys);
-  $manager->updateEntityType($entity_type);
-
-  // @todo The above should be enough, since that is the only definition that
-  //   changed. But \Drupal\Core\Entity\Sql\SqlContentEntityStorageSchema varies
-  //   field schema by whether a field is an entity key, so invoke
-  //   EntityDefinitionUpdateManagerInterface::updateFieldStorageDefinition()
-  //   with an unmodified field storage definition to trigger the necessary
-  //   changes. SqlContentEntityStorageSchema::onEntityTypeUpdate() should be
-  //   fixed to automatically handle this.
-  //   See https://www.drupal.org/node/2554245.
-  foreach (['status', 'uid'] as $field_name) {
-    $manager->updateFieldStorageDefinition($manager->getFieldStorageDefinition($field_name, 'node'));
-  }
-}
-
-/**
- * Change {node_access}.fallback from an int to a tinyint as it is a boolean.
- */
-function node_update_8300() {
-  Database::getConnection()->schema()->changeField('node_access', 'fallback', 'fallback', [
-    'description' => 'Boolean indicating whether this record should be used as a fallback if a language condition is not provided.',
-    'type' => 'int',
-    'unsigned' => TRUE,
-    'not null' => TRUE,
-    'default' => 1,
-    'size' => 'tiny',
-  ]);
-}
-
-/**
- * Set the 'published' entity key.
- */
-function node_update_8301() {
-  $definition_update_manager = \Drupal::entityDefinitionUpdateManager();
-  $entity_type = $definition_update_manager->getEntityType('node');
-  $keys = $entity_type->getKeys();
-  $keys['published'] = 'status';
-  $entity_type->set('entity_keys', $keys);
-  $definition_update_manager->updateEntityType($entity_type);
-}
-
-/**
- * Fix realm column description on the node_access table.
- */
-function node_update_8400() {
-  $schema = drupal_get_module_schema('node', 'node_access');
-  $schema['fields']['realm']['description'] = 'The realm in which the user must possess the grant ID. Modules can define one or more realms by implementing hook_node_grants().';
-  Database::getConnection()->schema()->changeField('node_access', 'realm', 'realm', $schema['fields']['realm']);
-}
-
-/**
- * Run a node access rebuild, if required.
- */
-function node_update_8401() {
-  // Get the list of node access modules.
-  $modules = \Drupal::moduleHandler()->getImplementations('node_grants');
-  // If multilingual usage, then rebuild node access.
-  if (count($modules) > 0 && \Drupal::languageManager()->isMultilingual()) {
-    node_access_needs_rebuild(TRUE);
-  }
-}
-
-/**
- * Set the 'owner' entity key and update the field.
- */
-function node_update_8700() {
-  $definition_update_manager = \Drupal::entityDefinitionUpdateManager();
-  $entity_type = $definition_update_manager->getEntityType('node');
-  $keys = $entity_type->getKeys();
-  $keys['owner'] = 'uid';
-  $entity_type->set('entity_keys', $keys);
-  $definition_update_manager->updateEntityType($entity_type);
-  $definition_update_manager->updateFieldStorageDefinition($definition_update_manager->getFieldStorageDefinition('uid', 'node'));
+function node_update_last_removed() {
+  return 8700;
 }
