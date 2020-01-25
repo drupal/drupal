@@ -606,9 +606,7 @@ abstract class Connection {
   public function query($query, array $args = [], $options = []) {
     // Use default values if not already set.
     $options += $this->defaultOptions();
-    if (isset($options['target'])) {
-      @trigger_error('Passing a \'target\' key to \\Drupal\\Core\\Database\\Connection::query $options argument is deprecated in Drupal 8.0.x and will be removed before Drupal 9.0.0. Instead, use \\Drupal\\Core\\Database\\Database::getConnection($target)->query(). See https://www.drupal.org/node/2993033.', E_USER_DEPRECATED);
-    }
+    assert(!isset($options['target']), 'Passing "target" option to query() has no effect. See https://www.drupal.org/node/2993033');
 
     try {
       // We allow either a pre-bound statement object or a literal string.

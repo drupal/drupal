@@ -343,44 +343,6 @@ abstract class Schema implements PlaceholderInterface {
   abstract public function dropField($table, $field);
 
   /**
-   * Set the default value for a field.
-   *
-   * @param $table
-   *   The table to be altered.
-   * @param $field
-   *   The field to be altered.
-   * @param $default
-   *   Default value to be set. NULL for 'default NULL'.
-   *
-   * @throws \Drupal\Core\Database\SchemaObjectDoesNotExistException
-   *   If the specified table or field doesn't exist.
-   *
-   * @deprecated in drupal:8.7.0 and is removed from drupal:9.0.0. Instead,
-   *   call ::changeField() passing a full field specification.
-   *
-   * @see ::changeField()
-   */
-  abstract public function fieldSetDefault($table, $field, $default);
-
-  /**
-   * Set a field to have no default value.
-   *
-   * @param $table
-   *   The table to be altered.
-   * @param $field
-   *   The field to be altered.
-   *
-   * @throws \Drupal\Core\Database\SchemaObjectDoesNotExistException
-   *   If the specified table or field doesn't exist.
-   *
-   * @deprecated in drupal:8.7.0 and is removed from drupal:9.0.0. Instead,
-   *   call ::changeField() passing a full field specification.
-   *
-   * @see ::changeField()
-   */
-  abstract public function fieldSetNoDefault($table, $field);
-
-  /**
    * Checks if an index exists in the given table.
    *
    * @param $table

@@ -615,13 +615,6 @@ class Select extends Query implements SelectInterface {
   /**
    * {@inheritdoc}
    */
-  public function rightJoin($table, $alias = NULL, $condition = NULL, $arguments = []) {
-    return $this->addJoin('RIGHT OUTER', $table, $alias, $condition, $arguments);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function addJoin($type, $table, $alias = NULL, $condition = NULL, $arguments = []) {
     if (empty($alias)) {
       if ($table instanceof SelectInterface) {
