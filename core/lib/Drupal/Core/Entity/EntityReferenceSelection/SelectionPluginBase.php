@@ -3,7 +3,6 @@
 namespace Drupal\Core\Entity\EntityReferenceSelection;
 
 use Drupal\Component\Plugin\ConfigurableInterface;
-use Drupal\Component\Plugin\ConfigurablePluginInterface;
 use Drupal\Component\Plugin\DependentPluginInterface;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Database\Query\SelectInterface;
@@ -13,7 +12,7 @@ use Drupal\Core\Plugin\PluginBase;
 /**
  * Provides a base class for configurable selection handlers.
  */
-abstract class SelectionPluginBase extends PluginBase implements SelectionInterface, ConfigurableInterface, DependentPluginInterface, ConfigurablePluginInterface {
+abstract class SelectionPluginBase extends PluginBase implements SelectionInterface, ConfigurableInterface, DependentPluginInterface {
 
   /**
    * Constructs a new selection object.

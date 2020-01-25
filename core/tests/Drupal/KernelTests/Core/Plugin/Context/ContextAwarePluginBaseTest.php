@@ -66,22 +66,15 @@ class ContextAwarePluginBaseTest extends KernelTestBase {
 
   /**
    * @covers ::getContextValue
-   * @group legacy
    */
   public function testGetContextValue() {
     // Assert that the context value passed in the plugin configuration is
     // available.
     $this->assertSame('Alpha', $this->plugin->getContextValue('nato_letter'));
-
-    // It should be possible to access the context via the $contexts property,
-    // but it should trigger a deprecation notice.
-    $this->expectDeprecation('The $contexts property is deprecated in Drupal 8.8.0 and will be removed before Drupal 9.0.0. Use methods of \Drupal\Component\Plugin\ContextAwarePluginInterface instead. See https://www.drupal.org/project/drupal/issues/3080631 for more information.');
-    $this->assertSame('Alpha', $this->plugin->contexts['nato_letter']->getContextValue());
   }
 
   /**
    * @covers ::setContextValue
-   * @group legacy
    */
   public function testSetContextValue() {
     $typed_data_manager = $this->prophesize(TypedDataManagerInterface::class);
@@ -94,11 +87,6 @@ class ContextAwarePluginBaseTest extends KernelTestBase {
     $this->assertFalse($this->plugin->setContextCalled);
     $this->plugin->setContextValue('foo', new StringData(new DataDefinition(), 'bar'));
     $this->assertTrue($this->plugin->setContextCalled);
-
-    // Assert that setContextValue() did NOT update the deprecated $contexts
-    // property.
-    $this->expectDeprecation('The $contexts property is deprecated in Drupal 8.8.0 and will be removed before Drupal 9.0.0. Use methods of \Drupal\Component\Plugin\ContextAwarePluginInterface instead. See https://www.drupal.org/project/drupal/issues/3080631 for more information.');
-    $this->assertArrayNotHasKey('foo', $this->plugin->contexts);
   }
 
 }

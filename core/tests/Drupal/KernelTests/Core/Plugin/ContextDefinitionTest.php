@@ -34,4 +34,13 @@ class ContextDefinitionTest extends KernelTestBase {
     $this->assertTrue($requirement->isSatisfiedBy($context));
   }
 
+  /**
+   * @covers ::__construct
+   */
+  public function testEntityContextDefinitionAssert() {
+    $this->expectException(\AssertionError::class);
+    $this->expectExceptionMessage('assert(strpos($data_type, \'entity:\') !== 0 || $this instanceof EntityContextDefinition)');
+    new ContextDefinition('entity:entity_test');
+  }
+
 }

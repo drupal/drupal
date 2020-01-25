@@ -286,7 +286,6 @@ class DefaultPluginManager extends PluginManagerBase implements PluginManagerInt
       $this->processDefinition($definition, $plugin_id);
     }
     $this->alterDefinitions($definitions);
-    $this->fixContextAwareDefinitions($definitions);
     // If this plugin was provided by a module that does not exist, remove the
     // plugin definition.
     foreach ($definitions as $plugin_id => $plugin_definition) {
@@ -296,38 +295,6 @@ class DefaultPluginManager extends PluginManagerBase implements PluginManagerInt
       }
     }
     return $definitions;
-  }
-
-  /**
-   * Fix the definitions of context-aware plugins.
-   *
-   * @param array $definitions
-   *   The array of plugin definitions.
-   *
-   * @todo Remove before Drupal 9.0.0.
-   */
-  private function fixContextAwareDefinitions(array &$definitions) {
-    foreach ($definitions as $name => &$definition) {
-      if (is_array($definition) && (!empty($definition['context']) || !empty($definition['context_definitions']))) {
-        // Ensure the new definition key is available.
-        if (!isset($definition['context_definitions'])) {
-          $definition['context_definitions'] = [];
-        }
-
-        // If a context definition is defined with the old key, add it to the
-        // new key and trigger a deprecation error.
-        if (!empty($definition['context'])) {
-          $definition['context_definitions'] += $definition['context'];
-          @trigger_error('Providing context definitions via the "context" key is deprecated in Drupal 8.7.x and will be removed before Drupal 9.0.0. Use the "context_definitions" key instead.', E_USER_DEPRECATED);
-        }
-
-        // Copy the context definitions from the new key to the old key for
-        // backwards compatibility.
-        if (isset($definition['context'])) {
-          $definition['context'] = $definition['context_definitions'];
-        }
-      }
-    }
   }
 
   /**

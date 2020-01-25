@@ -21,19 +21,6 @@ abstract class ContextAwarePluginBase extends PluginBase implements ContextAware
   protected $context = [];
 
   /**
-   * Data objects representing the contexts passed in the plugin configuration.
-   *
-   * @var \Drupal\Component\Plugin\Context\ContextInterface[]
-   *
-   * @deprecated
-   *   in drupal:8.8.0 and is removed from drupal:9.0.0. Use
-   *   \Drupal\Component\Plugin\ContextAwarePluginInterface instead.
-   *
-   * @see https://www.drupal.org/project/drupal/issues/3080631
-   */
-  private $contexts = [];
-
-  /**
    * Overrides \Drupal\Component\Plugin\PluginBase::__construct().
    *
    * Overrides the construction of context aware plugins to allow for
@@ -56,19 +43,6 @@ abstract class ContextAwarePluginBase extends PluginBase implements ContextAware
     parent::__construct($configuration, $plugin_id, $plugin_definition);
 
     $this->context = $this->createContextFromConfiguration($context_configuration);
-    // @todo Remove $this->contexts in Drupal 9; see
-    // https://www.drupal.org/project/drupal/issues/3081145
-    $this->contexts = $this->context;
-  }
-
-  /**
-   * Implements magic __get() method.
-   */
-  public function __get($name) {
-    if ($name === 'contexts') {
-      @trigger_error('The $contexts property is deprecated in Drupal 8.8.0 and will be removed before Drupal 9.0.0. Use methods of \Drupal\Component\Plugin\ContextAwarePluginInterface instead. See https://www.drupal.org/project/drupal/issues/3080631 for more information.', E_USER_DEPRECATED);
-      return $this->contexts;
-    }
   }
 
   /**
