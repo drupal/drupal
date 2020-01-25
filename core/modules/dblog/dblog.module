@@ -13,7 +13,6 @@ use Drupal\Core\Url;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
-use Drupal\views\ViewEntityInterface;
 use Drupal\views\ViewExecutable;
 
 /**
@@ -118,77 +117,6 @@ function dblog_form_system_logging_settings_alter(&$form, FormStateInterface $fo
  */
 function dblog_logging_settings_submit($form, FormStateInterface $form_state) {
   \Drupal::configFactory()->getEditable('dblog.settings')->set('row_limit', $form_state->getValue('dblog_row_limit'))->save();
-}
-
-/**
- * Implements hook_ENTITY_TYPE_presave() for views entities.
- *
- * This hook ensures there are no views based that are using a wrong plugin for
- * wid and uid fields on views that use watchdog as base table.
- *
- * @deprecated in drupal:8.4.0 and is removed from drupal:9.0.0.
- *
- * @see https://www.drupal.org/node/2876378
- */
-function dblog_view_presave(ViewEntityInterface $view) {
-  // Only interested in watchdog based views.
-  if ($view->get('base_table') != 'watchdog') {
-    return;
-  }
-
-  $displays = $view->get('display');
-  $update = FALSE;
-  foreach ($displays as $display_name => $display) {
-
-    // Iterate through all the fields of watchdog views based tables.
-    if (isset($display['display_options']['fields'])) {
-      foreach ($display['display_options']['fields'] as $field_name => $field) {
-        // We are only interested in wid and uid fields from the watchdog table
-        // that still use the numeric id.
-        if (isset($field['table']) &&
-            $field['table'] === 'watchdog' &&
-            $field['plugin_id'] == 'numeric' &&
-            in_array($field['field'], ['wid', 'uid'], TRUE)) {
-
-          $displays[$display_name]['display_options']['fields'][$field_name]['plugin_id'] = 'standard';
-
-          // Delete all the attributes related to numeric fields.
-          unset(
-            $displays[$display_name]['display_options']['fields'][$field_name]['set_precision'],
-            $displays[$display_name]['display_options']['fields'][$field_name]['precision'],
-            $displays[$display_name]['display_options']['fields'][$field_name]['decimal'],
-            $displays[$display_name]['display_options']['fields'][$field_name]['separator'],
-            $displays[$display_name]['display_options']['fields'][$field_name]['format_plural'],
-            $displays[$display_name]['display_options']['fields'][$field_name]['format_plural_string'],
-            $displays[$display_name]['display_options']['fields'][$field_name]['prefix'],
-            $displays[$display_name]['display_options']['fields'][$field_name]['suffix']
-          );
-
-          $update = TRUE;
-          @trigger_error("The numeric plugin for watchdog.$field_name field is deprecated in Drupal 8.4.0 and will be removed before Drupal 9.0.0. Must use standard plugin instead. See https://www.drupal.org/node/2876378.", E_USER_DEPRECATED);
-        }
-      }
-    }
-
-    // Iterate all filters looking for type filters to update.
-    if (isset($display['display_options']['filters'])) {
-      foreach ($display['display_options']['filters'] as $filter_name => $filter) {
-        if (isset($filter['table']) &&
-            $filter['table'] === 'watchdog' &&
-            $filter['plugin_id'] == 'in_operator' &&
-            $filter['field'] == 'type') {
-
-          $displays[$display_name]['display_options']['filters'][$filter_name]['plugin_id'] = 'dblog_types';
-          $update = TRUE;
-          @trigger_error("The in_operator plugin for watchdog.type filter is deprecated in Drupal 8.4.0 and will be removed before Drupal 9.0.0. Must use dblog_types plugin instead. See https://www.drupal.org/node/2876378.", E_USER_DEPRECATED);
-        }
-      }
-    }
-  }
-
-  if ($update) {
-    $view->set('display', $displays);
-  }
 }
 
 /**
