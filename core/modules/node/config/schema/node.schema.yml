@@ -63,30 +63,6 @@ action.configuration.node_promote_action:
   type: action_configuration_default
   label: 'Promote selected content from front page configuration'
 
-# @deprecated in Drupal 8.5.x, to be removed before Drupal 9.0.0.
-# @see https://www.drupal.org/node/2919303
-action.configuration.node_publish_action:
-  type: action_configuration_default
-  label: 'Publish selected content configuration'
-
-# @deprecated in Drupal 8.5.x, to be removed before Drupal 9.0.0.
-# @see https://www.drupal.org/node/2919303
-action.configuration.node_unpublish_action:
-  type: action_configuration_default
-  label: 'Unpublish selected content configuration'
-
-# @deprecated in Drupal 8.5.x, to be removed before Drupal 9.0.0.
-# @see https://www.drupal.org/node/2919303
-action.configuration.node_save_action:
-  type: action_configuration_default
-  label: 'Save content configuration'
-
-# @deprecated in Drupal 8.6.x, to be removed before Drupal 9.0.0.
-# @see https://www.drupal.org/node/2934349
-action.configuration.node_delete_action:
-  type: action_configuration_default
-  label: 'Delete content configuration'
-
 action.configuration.node_make_sticky_action:
   type: action_configuration_default
   label: 'Make selected content sticky configuration'

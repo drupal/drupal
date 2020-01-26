@@ -29,27 +29,6 @@ interface NodeAccessControlHandlerInterface {
   public function acquireGrants(NodeInterface $node);
 
   /**
-   * Writes a list of grants to the database, deleting any previously saved ones.
-   *
-   * Modules that use node access can use this function when doing mass updates
-   * due to widespread permission changes.
-   *
-   * Note: Don't call this function directly from a contributed module. Call
-   * \Drupal\node\NodeAccessControlHandlerInterface::acquireGrants() instead.
-   *
-   * @param \Drupal\node\NodeInterface $node
-   *   The node whose grants are being written.
-   * @param $delete
-   *   (optional) If false, does not delete records. This is only for optimization
-   *   purposes, and assumes the caller has already performed a mass delete of
-   *   some form. Defaults to TRUE.
-   *
-   * @deprecated in drupal:8.0.0 and is removed from drupal:9.0.0.
-   *   Use \Drupal\node\NodeAccessControlHandlerInterface::acquireGrants().
-   */
-  public function writeGrants(NodeInterface $node, $delete = TRUE);
-
-  /**
    * Creates the default node access grant entry on the grant storage.
    */
   public function writeDefaultGrant();
