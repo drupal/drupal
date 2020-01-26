@@ -67,17 +67,9 @@ class NodeNewComments extends NumericField {
    * @param \Drupal\Core\Entity\EntityFieldManagerInterface $entity_field_manager
    *   The entity field manager service.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, Connection $database, EntityTypeManagerInterface $entity_type_manager = NULL, EntityFieldManagerInterface $entity_field_manager = NULL) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, Connection $database, EntityTypeManagerInterface $entity_type_manager, EntityFieldManagerInterface $entity_field_manager) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->database = $database;
-    if (!$entity_type_manager) {
-      @trigger_error("Not passing the entity type manager to the NodeNewComments constructor is deprecated in drupal:8.8.0 and will be required in drupal 9.0.0. @see https://www.drupal.org/node/3047897");
-      $entity_type_manager = \Drupal::entityTypeManager();
-    }
-    if (!$entity_field_manager) {
-      @trigger_error("Not passing the entity type manager to the NodeNewComments constructor is deprecated in drupal:8.8.0 and will be required in drupal 9.0.0. @see https://www.drupal.org/node/3047897");
-      $entity_field_manager = \Drupal::service('entity_field.manager');
-    }
     $this->entityTypeManager = $entity_type_manager;
     $this->entityFieldManager = $entity_field_manager;
   }

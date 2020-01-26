@@ -43,9 +43,6 @@ class Comment extends DrupalSqlBase {
   /**
    * Provides a BC layer for deprecated sources.
    *
-   * This is a backward compatibility layer for the deprecated migrate source
-   * plugins d6_comment_variable and d6_comment_variable_per_comment_type.
-   *
    * @param \Drupal\migrate\Row $row
    *   The row from the source to process.
    *

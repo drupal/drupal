@@ -22,18 +22,6 @@ field.widget.settings.comment_default:
   type: mapping
   label: 'Comment display format settings'
 
-# @deprecated in Drupal 8.5.x, to be removed before Drupal 9.0.0.
-# @see https://www.drupal.org/node/2919303
-action.configuration.comment_publish_action:
-  type: action_configuration_default
-  label: 'Publish comment configuration'
-
-# @deprecated in Drupal 8.5.x, to be removed before Drupal 9.0.0.
-# @see https://www.drupal.org/node/2919303
-action.configuration.comment_save_action:
-  type: action_configuration_default
-  label: 'Save comment configuration'
-
 action.configuration.comment_unpublish_by_keyword_action:
   type: mapping
   label: 'Unpublish comment containing keyword(s) configuration'
@@ -44,18 +32,6 @@ action.configuration.comment_unpublish_by_keyword_action:
       sequence:
         type: string
         label: 'Keyword'
-
-# @deprecated in Drupal 8.5.x, to be removed before Drupal 9.0.0.
-# @see https://www.drupal.org/node/2919303
-action.configuration.comment_unpublish_action:
-  type: action_configuration_default
-  label: 'Unpublish comment configuration'
-
-# @deprecated in Drupal 8.6.x, to be removed before Drupal 9.0.0.
-# @see https://www.drupal.org/node/2934349
-action.configuration.comment_delete_action:
-  type: action_configuration_default
-  label: 'Delete comment configuration'
 
 comment.type.*:
   type: config_entity
