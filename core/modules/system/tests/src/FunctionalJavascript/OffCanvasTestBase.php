@@ -96,22 +96,6 @@ abstract class OffCanvasTestBase extends WebDriverTestBase {
   }
 
   /**
-   * Waits for an element to be removed from the page.
-   *
-   * @param string $selector
-   *   CSS selector.
-   * @param int $timeout
-   *   (optional) Timeout in milliseconds, defaults to 10000.
-   *
-   * @deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. Use
-   *   Drupal\FunctionalJavascriptTests\JSWebAssert::assertNoElementAfterWait()
-   */
-  protected function waitForNoElement($selector, $timeout = 10000) {
-    @trigger_error('::waitForNoElement is deprecated in Drupal 8.8.0 and will be removed before Drupal 9.0.0. Use \Drupal\FunctionalJavascriptTests\JSWebAssert::assertNoElementAfterWait() instead.', E_USER_DEPRECATED);
-    $this->assertSession()->assertNoElementAfterWait('css', $selector, $timeout);
-  }
-
-  /**
    * Get themes to test.
    *
    * @return string[]

@@ -13,10 +13,7 @@ use Drupal\Core\Asset\AttachedAssetsInterface;
 use Drupal\Core\Block\BlockPluginInterface;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Database\Query\AlterableInterface;
-use Drupal\Core\Extension\Dependency;
 use Drupal\Core\Extension\Extension;
-use Drupal\Core\Entity\Display\EntityFormDisplayInterface;
-use Drupal\Core\Field\Plugin\Field\FieldWidget\EntityReferenceAutocompleteWidget;
 use Drupal\Core\File\Exception\FileException;
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Form\FormStateInterface;
@@ -963,110 +960,6 @@ function system_check_directory($form_element, FormStateInterface $form_state) {
 }
 
 /**
- * Returns an array of information about enabled modules or themes.
- *
- * This function returns the contents of the .info.yml file for each installed
- * module or theme.
- *
- * @param $type
- *   Either 'module' or 'theme'.
- * @param $name
- *   (optional) The name of a module or theme whose information shall be
- *   returned. If omitted, all records for the provided $type will be returned.
- *   If $name does not exist in the provided $type or is not enabled, an empty
- *   array will be returned.
- *
- * @return
- *   An associative array of module or theme information keyed by name, or only
- *   information for $name, if given. If no records are available, an empty
- *   array is returned.
- *
- * @deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. Use
- *   \Drupal::service('extension.list.$type')->getExtensionInfo() or
- *   \Drupal::service('extension.list.$type')->getAllInstalledInfo() instead.
- *
- * @see https://www.drupal.org/node/2709919
- * @see \Drupal\Core\Extension\ModuleExtensionList::getList()
- * @see \Drupal\Core\Extension\ThemeExtensionList
- */
-function system_get_info($type, $name = NULL) {
-  @trigger_error("system_get_info() is deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. Use \Drupal::service('extension.list.$type')->getExtensionInfo() or \Drupal::service('extension.list.$type')->getAllInstalledInfo() instead. See https://www.drupal.org/node/2709919", E_USER_DEPRECATED);
-  /** @var \Drupal\Core\Extension\ExtensionList $extension_list */
-  $extension_list = \Drupal::service('extension.list.' . $type);
-  if (isset($name)) {
-    try {
-      return $extension_list->getExtensionInfo($name);
-    }
-    catch (\InvalidArgumentException $e) {
-      return [];
-    }
-  }
-  return $extension_list->getAllInstalledInfo();
-}
-
-/**
- * Ensures that dependencies of required modules are also required.
- *
- * @param \Drupal\Core\Extension\Extension $module
- *   The module info.
- * @param \Drupal\Core\Extension\Extension[] $modules
- *   The array of all module info.
- *
- * @deprecated in drupal:8.5.0 and is removed from drupal:9.0.0. This
- *   function is no longer used in Drupal core.
- *
- * @see https://www.drupal.org/node/2709919
- */
-function _system_rebuild_module_data_ensure_required($module, &$modules) {
-  @trigger_error("_system_rebuild_module_data_ensure_required() is deprecated in Drupal 8.5.0 and will be removed before Drupal 9.0.0. This function is no longer used in Drupal core. See https://www.drupal.org/node/2709919", E_USER_DEPRECATED);
-  if (!empty($module->info['required'])) {
-    foreach ($module->info['dependencies'] as $dependency) {
-      $dependency_name = Dependency::createFromString($dependency)->getName();
-      if (!isset($modules[$dependency_name]->info['required'])) {
-        $modules[$dependency_name]->info['required'] = TRUE;
-        $modules[$dependency_name]->info['explanation'] = t('Dependency of required module @module', ['@module' => $module->info['name']]);
-        // Ensure any dependencies it has are required.
-        _system_rebuild_module_data_ensure_required($modules[$dependency_name], $modules);
-      }
-    }
-  }
-}
-
-/**
- * Helper function to scan and collect module .info.yml data.
- *
- * @return \Drupal\Core\Extension\Extension[]
- *   An associative array of module information.
- *
- * @deprecated in drupal:8.5.0 and is removed from drupal:9.0.0.
- *   Use \Drupal::service('extension.list.module')->reset()->getList()
- *   instead. Note: You probably don't need the reset() method.
- *
- * @see https://www.drupal.org/node/2709919
- */
-function _system_rebuild_module_data() {
-  @trigger_error("_system_rebuild_module_data() is deprecated in Drupal 8.5.0 and will be removed before Drupal 9.0.0. Instead, you should use \\Drupal::service('extension.list.module')->reset()->getList(). See https://www.drupal.org/node/2709919", E_USER_DEPRECATED);
-  return \Drupal::service('extension.list.module')->reset()->getList();
-}
-
-/**
- * Rebuild, save, and return data about all currently available modules.
- *
- * @return \Drupal\Core\Extension\Extension[]
- *   Array of all available modules and their data.
- *
- * @deprecated in drupal:8.8.0 and is removed from drupal:9.0.0.
- *   Use \Drupal::service('extension.list.module')->getList() instead.
- *   Note: use reset() only when you really need to rescan and rebuild the list.
- *
- * @see https://www.drupal.org/node/2709919
- */
-function system_rebuild_module_data() {
-  @trigger_error('system_rebuild_module_data() is deprecated in Drupal 8.8.0 and will be removed before Drupal 9.0.0. Instead, you should use \Drupal::service("extension.list.module")->getList(). See https://www.drupal.org/node/2709919', E_USER_DEPRECATED);
-  return \Drupal::service('extension.list.module')->reset()->getList();
-}
-
-/**
  * Get a list of available regions from a specified theme.
  *
  * @param \Drupal\Core\Extension\Extension|string $theme
@@ -1465,35 +1358,6 @@ function system_modules_uninstalled($modules) {
       unset($revision_metadata_keys['workspace']);
       $entity_type->set('revision_metadata_keys', $revision_metadata_keys);
       $entity_definition_update_manager->updateEntityType($entity_type);
-    }
-  }
-}
-
-/**
- * Implements hook_ENTITY_TYPE_presave() for entity_form_display entities.
- *
- * Provides a BC layer for modules providing old configurations.
- *
- * @todo Remove this hook in Drupal 9.0.x https://www.drupal.org/project/drupal/issues/3086388
- */
-function system_entity_form_display_presave(EntityFormDisplayInterface $display) {
-  /** @var \Drupal\Core\Field\WidgetPluginManager $field_widget_manager */
-  $field_widget_manager = \Drupal::service('plugin.manager.field.widget');
-
-  foreach ($display->getComponents() as $field_name => $component) {
-    if (empty($component['type'])) {
-      continue;
-    }
-
-    $plugin_definition = $field_widget_manager->getDefinition($component['type'], FALSE);
-    if (!is_a($plugin_definition['class'], EntityReferenceAutocompleteWidget::class, TRUE)) {
-      continue;
-    }
-
-    if (!isset($component['settings']['match_limit'])) {
-      @trigger_error(sprintf('Any entity_reference_autocomplete component of an entity_form_display must have a match_limit setting. The %s field on the %s form display is missing it. This BC layer will be removed before 9.0.0. See https://www.drupal.org/node/2863188', $field_name, $display->id()), E_USER_DEPRECATED);
-      $component['settings']['match_limit'] = 10;
-      $display->setComponent($field_name, $component);
     }
   }
 }

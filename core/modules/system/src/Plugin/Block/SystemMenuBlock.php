@@ -54,13 +54,9 @@ class SystemMenuBlock extends BlockBase implements ContainerFactoryPluginInterfa
    * @param \Drupal\Core\Menu\MenuActiveTrailInterface $menu_active_trail
    *   The active menu trail service.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, MenuLinkTreeInterface $menu_tree, MenuActiveTrailInterface $menu_active_trail = NULL) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, MenuLinkTreeInterface $menu_tree, MenuActiveTrailInterface $menu_active_trail) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->menuTree = $menu_tree;
-    if ($menu_active_trail === NULL) {
-      @trigger_error('The menu.active_trail service must be passed to SystemMenuBlock::__construct(), it is required before Drupal 9.0.0. See https://www.drupal.org/node/2669550.', E_USER_DEPRECATED);
-      $menu_active_trail = \Drupal::service('menu.active_trail');
-    }
     $this->menuActiveTrail = $menu_active_trail;
   }
 

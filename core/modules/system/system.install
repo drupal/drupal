@@ -526,38 +526,6 @@ function system_requirements($phase) {
     }
   }
 
-  // Test that path.temporary config is not set.
-  if ($phase == 'runtime') {
-    if (!Settings::get('file_temp_path')) {
-      $filesystem_config = \Drupal::config('system.file');
-      if ($temp_path = $filesystem_config->get('path.temporary')) {
-        $requirements['temp_directory'] = [
-          'title' => t('Temporary Directory'),
-          'severity' => REQUIREMENT_WARNING,
-          'value' => 'Deprecated configuration',
-          'description' => [
-            [
-              '#markup' => t('You are using deprecated configuration for the temporary files path.'),
-              '#suffix' => ' ',
-            ],
-          ],
-        ];
-        if ($temp_path === FileSystemComponent::getOsTemporaryDirectory()) {
-          $requirements['temp_directory']['description'][] = [
-            '#markup' => t('Your temporary directory configuration matches the OS default and can be safely removed.'),
-            '#suffix' => ' ',
-          ];
-        }
-        else {
-          $requirements['temp_directory']['description'][] = [
-            '#markup' => t('Remove the configuration and add the following to <code>settings.php</code>. <code>$settings["file_temp_path"] = "%temp_path"</code>', ['%temp_path' => $temp_path]),
-            '#suffix' => ' ',
-          ];
-        }
-      }
-    }
-  }
-
   // Report cron status.
   if ($phase == 'runtime') {
     $cron_config = \Drupal::config('system.cron');

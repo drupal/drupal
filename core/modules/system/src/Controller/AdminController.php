@@ -21,15 +21,10 @@ class AdminController extends ControllerBase {
   /**
    * AdminController constructor.
    *
-   * @param \Drupal\Core\Extension\ModuleExtensionList|null $extension_list_module
-   *   The module extension list. This is left optional for BC reasons, but the
-   *   optional usage is deprecated and will become required in Drupal 9.0.0.
+   * @param \Drupal\Core\Extension\ModuleExtensionList $extension_list_module
+   *   The module extension list.
    */
-  public function __construct(ModuleExtensionList $extension_list_module = NULL) {
-    if ($extension_list_module === NULL) {
-      @trigger_error('Calling AdminController::__construct() with the $module_extension_list argument is supported in drupal:8.8.0 and will be required before drupal:9.0.0. See https://www.drupal.org/node/2709919.', E_USER_DEPRECATED);
-      $extension_list_module = \Drupal::service('extension.list.module');
-    }
+  public function __construct(ModuleExtensionList $extension_list_module) {
     $this->moduleExtensionList = $extension_list_module;
   }
 

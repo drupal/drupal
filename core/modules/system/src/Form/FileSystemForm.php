@@ -53,14 +53,10 @@ class FileSystemForm extends ConfigFormBase {
    * @param \Drupal\Core\File\FileSystemInterface $file_system
    *   The file system.
    */
-  public function __construct(ConfigFactoryInterface $config_factory, DateFormatterInterface $date_formatter, StreamWrapperManagerInterface $stream_wrapper_manager, FileSystemInterface $file_system = NULL) {
+  public function __construct(ConfigFactoryInterface $config_factory, DateFormatterInterface $date_formatter, StreamWrapperManagerInterface $stream_wrapper_manager, FileSystemInterface $file_system) {
     parent::__construct($config_factory);
     $this->dateFormatter = $date_formatter;
     $this->streamWrapperManager = $stream_wrapper_manager;
-    if (!$file_system) {
-      @trigger_error('Calling FileSystemForm::__construct() without the $file_system argument is deprecated in drupal:8.8.0. The $file_system argument will be required in drupal:9.0.0. See https://www.drupal.org/node/3039255', E_USER_DEPRECATED);
-      $file_system = \Drupal::service('file_system');
-    }
     $this->fileSystem = $file_system;
   }
 
