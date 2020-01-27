@@ -151,44 +151,6 @@ class ModuleHandlerTest extends KernelTestBase {
   }
 
   /**
-   * Tests uninstalling a module that is a "dependency" of a profile.
-   *
-   * Note this test does not trigger the deprecation error because of static
-   * caching in \Drupal\Core\Extension\InfoParser::parse().
-   *
-   * @group legacy
-   */
-  public function testUninstallProfileDependencyBC() {
-    $profile = 'testing_install_profile_dependencies_bc';
-    $dependency = 'dblog';
-    $this->setInstallProfile($profile);
-    // Prime the drupal_get_filename() static cache with the location of the
-    // testing profile as it is not the currently active profile and we don't
-    // yet have any cached way to retrieve its location.
-    // @todo Remove as part of https://www.drupal.org/node/2186491
-    drupal_get_filename('profile', $profile, 'core/profiles/' . $profile . '/' . $profile . '.info.yml');
-    $this->enableModules(['module_test', $profile]);
-
-    $data = \Drupal::service('extension.list.module')->getList();
-    $this->assertFalse(isset($data[$profile]->requires[$dependency]));
-    $this->assertContains($dependency, $data[$profile]->info['install']);
-
-    $this->moduleInstaller()->install([$dependency]);
-    $this->assertTrue($this->moduleHandler()->moduleExists($dependency));
-
-    // Uninstall the profile module "dependency".
-    $result = $this->moduleInstaller()->uninstall([$dependency]);
-    $this->assertTrue($result, 'ModuleInstaller::uninstall() returns TRUE.');
-    $this->assertFalse($this->moduleHandler()->moduleExists($dependency));
-    $this->assertEqual(drupal_get_installed_schema_version($dependency), SCHEMA_UNINSTALLED, "$dependency module was uninstalled.");
-
-    // Verify that the installation profile itself was not uninstalled.
-    $uninstalled_modules = \Drupal::state()->get('module_test.uninstall_order') ?: [];
-    $this->assertTrue(in_array($dependency, $uninstalled_modules), "$dependency module is in the list of uninstalled modules.");
-    $this->assertFalse(in_array($profile, $uninstalled_modules), 'The installation profile is not in the list of uninstalled modules.');
-  }
-
-  /**
    * Tests uninstalling a module installed by a profile.
    */
   public function testUninstallProfileDependency() {

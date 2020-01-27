@@ -5,17 +5,18 @@ namespace Drupal\KernelTests\Core\Theme;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\Extension\ExtensionDiscovery;
 use Drupal\Core\Extension\InfoParser;
+use Drupal\Core\Extension\InfoParserException;
 use Drupal\Core\Extension\InfoParserInterface;
 use Drupal\Core\Extension\ThemeExtensionList;
 use Drupal\KernelTests\KernelTestBase;
 use org\bovigo\vfs\vfsStream;
 
 /**
- * Tests the behavior of the Stable theme.
+ * Tests the behavior of a theme when base_theme info key is missing.
  *
  * @group Theme
  */
-class BaseThemeDefaultDeprecationTest extends KernelTestBase {
+class BaseThemeMissingTest extends KernelTestBase {
 
   /**
    * {@inheritdoc}
@@ -30,20 +31,12 @@ class BaseThemeDefaultDeprecationTest extends KernelTestBase {
   protected $themeInstaller;
 
   /**
-   * The theme manager.
-   *
-   * @var \Drupal\Core\Theme\ThemeManagerInterface
-   */
-  protected $themeManager;
-
-  /**
    * {@inheritdoc}
    */
   protected function setUp() {
     parent::setUp();
 
     $this->themeInstaller = $this->container->get('theme_installer');
-    $this->themeManager = $this->container->get('theme.manager');
   }
 
   /**
@@ -65,35 +58,25 @@ class BaseThemeDefaultDeprecationTest extends KernelTestBase {
     $vfs_root = vfsStream::setup('core');
     vfsStream::create([
       'themes' => [
-        'test_stable' => [
-          'test_stable.info.yml' => file_get_contents(DRUPAL_ROOT . '/core/tests/fixtures/test_stable/test_stable.info.yml'),
-          'test_stable.theme' => file_get_contents(DRUPAL_ROOT . '/core/tests/fixtures/test_stable/test_stable.theme'),
-        ],
-        'stable' => [
-          'stable.info.yml' => file_get_contents(DRUPAL_ROOT . '/core/themes/stable/stable.info.yml'),
-          'stable.theme' => file_get_contents(DRUPAL_ROOT . '/core/themes/stable/stable.theme'),
+        'test_missing_base_theme' => [
+          'test_missing_base_theme.info.yml' => file_get_contents(DRUPAL_ROOT . '/core/tests/fixtures/test_missing_base_theme/test_missing_base_theme.info.yml'),
+          'test_missing_base_theme.theme' => file_get_contents(DRUPAL_ROOT . '/core/tests/fixtures/test_missing_base_theme/test_missing_base_theme.theme'),
         ],
       ],
     ], $vfs_root);
   }
 
   /**
-   * Ensures Stable is used by default when no base theme has been defined.
-   *
-   * @group legacy
-   * @expectedDeprecation There is no `base theme` property specified in the test_stable.info.yml file. The optionality of the `base theme` property is deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. All Drupal 8 themes must add `base theme: stable` to their *.info.yml file for them to continue to work as-is in future versions of Drupal. Drupal 9 requires the `base theme` property to be specified. See https://www.drupal.org/node/3066038
+   * Tests exception is thrown.
    */
-  public function testStableIsDefault() {
+  public function testMissingBaseThemeException() {
     $this->container->get('extension.list.theme')
       ->setExtensionDiscovery(new ExtensionDiscovery('vfs://core'))
       ->setInfoParser(new VfsInfoParser('vfs:/'));
 
-    $this->themeInstaller->install(['test_stable']);
-    $this->config('system.theme')->set('default', 'test_stable')->save();
-    $theme = $this->themeManager->getActiveTheme();
-    $base_themes = $theme->getBaseThemeExtensions();
-    $base_theme = reset($base_themes);
-    $this->assertTrue($base_theme->getName() == 'stable', "Stable theme is the base theme if a theme hasn't decided to opt out.");
+    $this->expectException(InfoParserException::class);
+    $this->expectExceptionMessage('Missing required key (base_theme) in themes/test_missing_base_theme/test_missing_base_theme.theme/test_missing_base_theme.theme');
+    $this->themeInstaller->install(['test_missing_base_theme']);
   }
 
 }
