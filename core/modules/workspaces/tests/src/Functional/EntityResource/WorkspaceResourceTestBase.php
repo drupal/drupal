@@ -2,7 +2,6 @@
 
 namespace Drupal\Tests\workspaces\Functional\EntityResource;
 
-use Drupal\Tests\rest\Functional\BcTimestampNormalizerUnixTestTrait;
 use Drupal\Tests\rest\Functional\EntityResource\EntityResourceTestBase;
 use Drupal\user\Entity\User;
 use Drupal\workspaces\Entity\Workspace;
@@ -11,8 +10,6 @@ use Drupal\workspaces\Entity\Workspace;
  * Base class for workspace EntityResource tests.
  */
 abstract class WorkspaceResourceTestBase extends EntityResourceTestBase {
-
-  use BcTimestampNormalizerUnixTestTrait;
 
   /**
    * {@inheritdoc}
@@ -29,6 +26,13 @@ abstract class WorkspaceResourceTestBase extends EntityResourceTestBase {
    */
   protected static $patchProtectedFieldNames = [
     'changed' => NULL,
+  ];
+
+  /**
+   * {@inheritdoc}
+   */
+  protected static $uniqueFieldNames = [
+    'id',
   ];
 
   /**
@@ -91,10 +95,16 @@ abstract class WorkspaceResourceTestBase extends EntityResourceTestBase {
     $author = User::load($this->entity->getOwnerId());
     return [
       'created' => [
-        $this->formatExpectedTimestampItemValues((int) $this->entity->getCreatedTime()),
+        [
+          'value' => (new \DateTime())->setTimestamp((int) $this->entity->getCreatedTime())->setTimezone(new \DateTimeZone('UTC'))->format(\DateTime::RFC3339),
+          'format' => \DateTime::RFC3339,
+        ],
       ],
       'changed' => [
-        $this->formatExpectedTimestampItemValues($this->entity->getChangedTime()),
+        [
+          'value' => (new \DateTime())->setTimestamp($this->entity->getChangedTime())->setTimezone(new \DateTimeZone('UTC'))->format(\DateTime::RFC3339),
+          'format' => \DateTime::RFC3339,
+        ],
       ],
       'id' => [
         [
@@ -173,10 +183,6 @@ abstract class WorkspaceResourceTestBase extends EntityResourceTestBase {
    * {@inheritdoc}
    */
   protected function getExpectedUnauthorizedAccessMessage($method) {
-    if ($this->config('rest.settings')->get('bc_entity_resource_permissions')) {
-      return parent::getExpectedUnauthorizedAccessMessage($method);
-    }
-
     switch ($method) {
       case 'GET':
         return "The 'view any workspace' permission is required.";

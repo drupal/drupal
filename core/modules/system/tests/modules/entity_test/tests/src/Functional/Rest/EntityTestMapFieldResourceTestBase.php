@@ -3,14 +3,12 @@
 namespace Drupal\Tests\entity_test\Functional\Rest;
 
 use Drupal\entity_test\Entity\EntityTestMapField;
-use Drupal\Tests\rest\Functional\BcTimestampNormalizerUnixTestTrait;
 use Drupal\Tests\rest\Functional\EntityResource\EntityResourceTestBase;
 use Drupal\Tests\Traits\ExpectDeprecationTrait;
 use Drupal\user\Entity\User;
 
 abstract class EntityTestMapFieldResourceTestBase extends EntityResourceTestBase {
 
-  use BcTimestampNormalizerUnixTestTrait;
   use ExpectDeprecationTrait;
 
   /**
@@ -99,7 +97,10 @@ abstract class EntityTestMapFieldResourceTestBase extends EntityResourceTestBase
         ],
       ],
       'created' => [
-        $this->formatExpectedTimestampItemValues((int) $this->entity->get('created')->value),
+        [
+          'value' => (new \DateTime())->setTimestamp((int) $this->entity->get('created')->value)->setTimezone(new \DateTimeZone('UTC'))->format(\DateTime::RFC3339),
+          'format' => \DateTime::RFC3339,
+        ],
       ],
       'user_id' => [
         [

@@ -1,7 +1,0 @@
-# Before Drupal 8.2, EntityResource used permissions as well as the entity
-# access system for access checking. This was confusing, and it only did this
-# for historical reasons. New Drupal installations opt out from this by default
-# (hence this is set to false), existing installations opt in to it.
-# @see rest_update_8203()
-# @see https://www.drupal.org/node/2664780
-bc_entity_resource_permissions: false

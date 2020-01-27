@@ -8,9 +8,6 @@ services:
       - { name: cache.bin }
     factory: cache_factory:get
     arguments: [rest]
-  # @todo Remove this service in Drupal 9.0.0.
-  access_check.rest.csrf:
-    alias: access_check.header.csrf
   rest.resource_routes:
     class: Drupal\rest\Routing\ResourceRoutes
     arguments: ['@plugin.manager.rest', '@entity_type.manager', '@logger.channel.rest']
@@ -26,25 +23,8 @@ services:
     tags:
       - { name: event_subscriber }
     arguments: ['@serializer', '@renderer', '@current_route_match']
-  rest.config_subscriber:
-    class: Drupal\rest\EventSubscriber\RestConfigSubscriber
-    arguments: ['@router.builder']
-    tags:
-      - { name: event_subscriber }
   rest.resource.entity.post_route.subscriber:
     class: \Drupal\rest\EventSubscriber\EntityResourcePostRouteSubscriber
     arguments: ['@entity_type.manager']
     tags:
       - { name: event_subscriber }
-
-  # @todo Remove in Drupal 9.0.0.
-  rest.path_processor_entity_resource_bc:
-    class: \Drupal\rest\PathProcessor\PathProcessorEntityResourceBC
-    arguments: ['@entity_type.manager']
-    tags:
-      - { name: path_processor_inbound }
-  rest.route_processor_get_bc:
-    class: \Drupal\rest\RouteProcessor\RestResourceGetRouteProcessorBC
-    arguments: ['%serializer.formats%', '@router.route_provider']
-    tags:
-      - { name: route_processor_outbound }

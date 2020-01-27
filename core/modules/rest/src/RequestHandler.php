@@ -4,7 +4,6 @@ namespace Drupal\rest;
 
 use Drupal\Component\Utility\ArgumentsResolver;
 use Drupal\Core\Cache\CacheableResponseInterface;
-use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
@@ -25,13 +24,6 @@ use Symfony\Component\Serializer\SerializerInterface;
 class RequestHandler implements ContainerInjectionInterface {
 
   /**
-   * The config factory.
-   *
-   * @var \Drupal\Core\Config\ConfigFactoryInterface
-   */
-  protected $configFactory;
-
-  /**
    * The serializer.
    *
    * @var \Symfony\Component\Serializer\SerializerInterface|\Symfony\Component\Serializer\Encoder\DecoderInterface
@@ -41,13 +33,10 @@ class RequestHandler implements ContainerInjectionInterface {
   /**
    * Creates a new RequestHandler instance.
    *
-   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
-   *   The config factory.
    * @param \Symfony\Component\Serializer\SerializerInterface|\Symfony\Component\Serializer\Encoder\DecoderInterface $serializer
    *   The serializer.
    */
-  public function __construct(ConfigFactoryInterface $config_factory, SerializerInterface $serializer) {
-    $this->configFactory = $config_factory;
+  public function __construct(SerializerInterface $serializer) {
     $this->serializer = $serializer;
   }
 
@@ -56,7 +45,6 @@ class RequestHandler implements ContainerInjectionInterface {
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('config.factory'),
       $container->get('serializer')
     );
   }
@@ -114,11 +102,6 @@ class RequestHandler implements ContainerInjectionInterface {
   protected function prepareResponse($response, RestResourceConfigInterface $resource_config) {
     if ($response instanceof CacheableResponseInterface) {
       $response->addCacheableDependency($resource_config);
-      // Add global rest settings config's cache tag, for BC flags.
-      // @see \Drupal\rest\Plugin\rest\resource\EntityResource::permissions()
-      // @see \Drupal\rest\EventSubscriber\RestConfigSubscriber
-      // @todo Remove in https://www.drupal.org/node/2893804
-      $response->addCacheableDependency($this->configFactory->get('rest.settings'));
     }
 
     return $response;
@@ -230,13 +213,7 @@ class RequestHandler implements ContainerInjectionInterface {
     // Determine the request parameters that should be passed to the resource
     // plugin.
     $argument_resolver = $this->createArgumentResolver($route_match, $unserialized, $request);
-    try {
-      $arguments = $argument_resolver->getArguments([$resource, $method]);
-    }
-    catch (\RuntimeException $exception) {
-      @trigger_error('Passing in arguments the legacy way is deprecated in Drupal 8.4.0 and will be removed before Drupal 9.0.0. Provide the right parameter names in the method, similar to controllers. See https://www.drupal.org/node/2894819', E_USER_DEPRECATED);
-      $arguments = $this->getLegacyParameters($route_match, $unserialized, $request);
-    }
+    $arguments = $argument_resolver->getArguments([$resource, $method]);
 
     // Invoke the operation on the resource plugin.
     return call_user_func_array([$resource, $method], $arguments);
@@ -309,39 +286,6 @@ class RequestHandler implements ContainerInjectionInterface {
     }
 
     return new ArgumentsResolver($raw_route_arguments, $upcasted_route_arguments, $wildcard_arguments);
-  }
-
-  /**
-   * Provides the parameter usable without an argument resolver.
-   *
-   * This creates an list of parameters in a statically defined order.
-   *
-   * @param \Drupal\Core\Routing\RouteMatchInterface $route_match
-   *   The route match
-   * @param mixed $unserialized
-   *   The unserialized data.
-   * @param \Symfony\Component\HttpFoundation\Request $request
-   *   The request.
-   *
-   * @deprecated in drupal:8.4.0 and is removed from drupal:9.0.0. Use the
-   *   argument resolver method instead, see ::createArgumentResolver().
-   *
-   * @see https://www.drupal.org/node/2894819
-   *
-   * @return array
-   *   An array of parameters.
-   */
-  protected function getLegacyParameters(RouteMatchInterface $route_match, $unserialized, Request $request) {
-    $route_parameters = $route_match->getParameters();
-    $parameters = [];
-    // Filter out all internal parameters starting with "_".
-    foreach ($route_parameters as $key => $parameter) {
-      if (substr((string) $key, 0, 1) !== '_') {
-        $parameters[] = $parameter;
-      }
-    }
-
-    return array_merge($parameters, [$unserialized, $request]);
   }
 
 }

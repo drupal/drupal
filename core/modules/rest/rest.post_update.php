@@ -68,3 +68,10 @@ function rest_post_update_resource_granularity() {
 function rest_post_update_161923() {
   // Empty post-update hook.
 }
+
+/**
+ * Remove obsolete rest.settings configuration.
+ */
+function rest_post_update_delete_settings() {
+  \Drupal::configFactory()->getEditable('rest.settings')->delete();
+}

@@ -48,7 +48,7 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
  *   label = @Translation("File Upload"),
  *   serialization_class = "Drupal\file\Entity\File",
  *   uri_paths = {
- *     "https://www.drupal.org/link-relations/create" = "/file/upload/{entity_type_id}/{bundle}/{field_name}"
+ *     "create" = "/file/upload/{entity_type_id}/{bundle}/{field_name}"
  *   }
  * )
  */

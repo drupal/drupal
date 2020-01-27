@@ -4,15 +4,12 @@ namespace Drupal\Tests\path_alias\Functional\Rest;
 
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\path_alias\Entity\PathAlias;
-use Drupal\Tests\rest\Functional\BcTimestampNormalizerUnixTestTrait;
 use Drupal\Tests\rest\Functional\EntityResource\EntityResourceTestBase;
 
 /**
  * Base class for path_alias EntityResource tests.
  */
 abstract class PathAliasResourceTestBase extends EntityResourceTestBase {
-
-  use BcTimestampNormalizerUnixTestTrait;
 
   /**
    * {@inheritdoc}

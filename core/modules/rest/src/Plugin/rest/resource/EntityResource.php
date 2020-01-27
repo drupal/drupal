@@ -358,15 +358,7 @@ class EntityResource extends ResourceBase implements DependentPluginInterface {
    * {@inheritdoc}
    */
   public function permissions() {
-    // @see https://www.drupal.org/node/2664780
-    if ($this->configFactory->get('rest.settings')->get('bc_entity_resource_permissions')) {
-      // The default Drupal 8.0.x and 8.1.x behavior.
-      return parent::permissions();
-    }
-    else {
-      // The default Drupal 8.2.x behavior.
-      return [];
-    }
+    return [];
   }
 
   /**

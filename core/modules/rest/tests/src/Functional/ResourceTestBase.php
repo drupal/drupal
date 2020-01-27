@@ -163,7 +163,6 @@ abstract class ResourceTestBase extends BrowserTestBase {
    *
    * Should be called after every change made to:
    * - RestResourceConfig entities
-   * - the 'rest.settings' simple configuration
    */
   protected function refreshTestStateAfterRestConfigChange() {
     // Ensure that the cache tags invalidator has its internal values reset.
@@ -171,8 +170,8 @@ abstract class ResourceTestBase extends BrowserTestBase {
     $this->refreshVariables();
 
     // Tests using this base class may trigger route rebuilds due to changes to
-    // RestResourceConfig entities or 'rest.settings'. Ensure the test generates
-    // routes using an up-to-date router.
+    // RestResourceConfig entities. Ensure the test generates routes using an
+    // up-to-date router.
     \Drupal::service('router.builder')->rebuildIfNeeded();
   }
 

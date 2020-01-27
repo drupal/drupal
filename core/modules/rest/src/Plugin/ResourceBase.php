@@ -4,7 +4,6 @@ namespace Drupal\rest\Plugin;
 
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Plugin\PluginBase;
-use Drupal\Core\Routing\BcRoute;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Routing\Route;
@@ -102,14 +101,6 @@ abstract class ResourceBase extends PluginBase implements ContainerFactoryPlugin
     $definition = $this->getPluginDefinition();
     $canonical_path = isset($definition['uri_paths']['canonical']) ? $definition['uri_paths']['canonical'] : '/' . strtr($this->pluginId, ':', '/') . '/{id}';
     $create_path = isset($definition['uri_paths']['create']) ? $definition['uri_paths']['create'] : '/' . strtr($this->pluginId, ':', '/');
-    // BC: the REST module originally created the POST URL for a resource by
-    // reading the 'https://www.drupal.org/link-relations/create' URI path from
-    // the plugin annotation. For consistency with entity type definitions, that
-    // then changed to reading the 'create' URI path. For any REST Resource
-    // plugins that were using the old mechanism, we continue to support that.
-    if (!isset($definition['uri_paths']['create']) && isset($definition['uri_paths']['https://www.drupal.org/link-relations/create'])) {
-      $create_path = $definition['uri_paths']['https://www.drupal.org/link-relations/create'];
-    }
 
     $route_name = strtr($this->pluginId, ':', '.');
 
@@ -123,17 +114,6 @@ abstract class ResourceBase extends PluginBase implements ContainerFactoryPlugin
       // Note that '_format' and '_content_type_format' route requirements are
       // added in ResourceRoutes::getRoutesForResourceConfig().
       $collection->add("$route_name.$method", $route);
-
-      // BC: the REST module originally created per-format GET routes, instead
-      // of a single route. To minimize the surface of this BC layer, this uses
-      // route definitions that are as empty as possible, plus an outbound route
-      // processor.
-      // @see \Drupal\rest\RouteProcessor\RestResourceGetRouteProcessorBC
-      if ($method === 'GET' || $method === 'HEAD') {
-        foreach ($this->serializerFormats as $format_name) {
-          $collection->add("$route_name.$method.$format_name", (new BcRoute())->setRequirement('_format', $format_name));
-        }
-      }
     }
 
     return $collection;

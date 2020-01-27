@@ -3,13 +3,10 @@
 namespace Drupal\Tests\file\Functional\Rest;
 
 use Drupal\file\Entity\File;
-use Drupal\Tests\rest\Functional\BcTimestampNormalizerUnixTestTrait;
 use Drupal\Tests\rest\Functional\EntityResource\EntityResourceTestBase;
 use Drupal\user\Entity\User;
 
 abstract class FileResourceTestBase extends EntityResourceTestBase {
-
-  use BcTimestampNormalizerUnixTestTrait;
 
   /**
    * {@inheritdoc}
@@ -109,10 +106,16 @@ abstract class FileResourceTestBase extends EntityResourceTestBase {
   protected function getExpectedNormalizedEntity() {
     return [
       'changed' => [
-        $this->formatExpectedTimestampItemValues($this->entity->getChangedTime()),
+        [
+          'value' => (new \DateTime())->setTimestamp($this->entity->getChangedTime())->setTimezone(new \DateTimeZone('UTC'))->format(\DateTime::RFC3339),
+          'format' => \DateTime::RFC3339,
+        ],
       ],
       'created' => [
-        $this->formatExpectedTimestampItemValues((int) $this->entity->getCreatedTime()),
+        [
+          'value' => (new \DateTime())->setTimestamp((int) $this->entity->getCreatedTime())->setTimezone(new \DateTimeZone('UTC'))->format(\DateTime::RFC3339),
+          'format' => \DateTime::RFC3339,
+        ],
       ],
       'fid' => [
         [
@@ -217,13 +220,6 @@ abstract class FileResourceTestBase extends EntityResourceTestBase {
    * {@inheritdoc}
    */
   protected function getExpectedUnauthorizedAccessMessage($method) {
-    if ($this->config('rest.settings')->get('bc_entity_resource_permissions')) {
-      if ($method === 'DELETE') {
-        return 'Only the file owner can update or delete the file entity.';
-      }
-      return parent::getExpectedUnauthorizedAccessMessage($method);
-    }
-
     if ($method === 'GET') {
       return "The 'access content' permission is required.";
     }

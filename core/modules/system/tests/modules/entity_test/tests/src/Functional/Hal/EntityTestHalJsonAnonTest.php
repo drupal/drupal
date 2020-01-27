@@ -5,7 +5,6 @@ namespace Drupal\Tests\entity_test\Functional\Hal;
 use Drupal\Tests\entity_test\Functional\Rest\EntityTestResourceTestBase;
 use Drupal\Tests\hal\Functional\EntityResource\HalEntityNormalizationTrait;
 use Drupal\Tests\rest\Functional\AnonResourceTestTrait;
-use Drupal\Tests\rest\Functional\EntityResource\FormatSpecificGetBcRouteTestTrait;
 use Drupal\user\Entity\User;
 
 /**
@@ -15,7 +14,6 @@ class EntityTestHalJsonAnonTest extends EntityTestResourceTestBase {
 
   use HalEntityNormalizationTrait;
   use AnonResourceTestTrait;
-  use FormatSpecificGetBcRouteTestTrait;
 
   /**
    * {@inheritdoc}

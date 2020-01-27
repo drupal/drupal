@@ -53,7 +53,6 @@ class OverrideSectionsTest extends LayoutRestTestBase {
       [
         'config:filter.format.plain_text',
         'config:rest.resource.entity.node',
-        'config:rest.settings',
         'http_response',
         'node:1',
       ],

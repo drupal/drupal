@@ -20,8 +20,6 @@ use Psr\Http\Message\ResponseInterface;
  */
 abstract class FileUploadResourceTestBase extends ResourceTestBase {
 
-  use BcTimestampNormalizerUnixTestTrait;
-
   /**
    * {@inheritdoc}
    */
@@ -670,10 +668,16 @@ abstract class FileUploadResourceTestBase extends ResourceTestBase {
         ],
       ],
       'created' => [
-        $this->formatExpectedTimestampItemValues($file->getCreatedTime()),
+        [
+          'value' => (new \DateTime())->setTimestamp($file->getCreatedTime())->setTimezone(new \DateTimeZone('UTC'))->format(\DateTime::RFC3339),
+          'format' => \DateTime::RFC3339,
+        ],
       ],
       'changed' => [
-        $this->formatExpectedTimestampItemValues($file->getChangedTime()),
+        [
+          'value' => (new \DateTime())->setTimestamp($file->getChangedTime())->setTimezone(new \DateTimeZone('UTC'))->format(\DateTime::RFC3339),
+          'format' => \DateTime::RFC3339,
+        ],
       ],
     ];
 

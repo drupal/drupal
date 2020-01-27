@@ -7,7 +7,6 @@
 
 use Drupal\Core\Url;
 use Drupal\Core\Routing\RouteMatchInterface;
-use Drupal\views\ViewEntityInterface;
 
 /**
  * Implements hook_help().
@@ -33,32 +32,5 @@ function rest_help($route_name, RouteMatchInterface $route_match) {
       ]) . '</dd>';
       $output .= '</dl>';
       return $output;
-  }
-}
-
-/**
- * Implements hook_ENTITY_TYPE_presave().
- *
- * @see rest_update_8401()
- */
-function rest_view_presave(ViewEntityInterface $view) {
-  // Fix the auth options on import, much like what rest_update_8401() does.
-  $auth_providers = \Drupal::service('authentication_collector')->getSortedProviders();
-  $process_auth = function ($auth_option) use ($auth_providers) {
-    foreach ($auth_providers as $provider_id => $provider_data) {
-      // The provider belongs to the module that declares it as a service.
-      if (strtok($provider_data->_serviceId, '.') === $auth_option) {
-        return $provider_id;
-      }
-    }
-
-    return $auth_option;
-  };
-
-  foreach (array_keys($view->get('display')) as $display_id) {
-    $display = &$view->getDisplay($display_id);
-    if ($display['display_plugin'] === 'rest_export' && !empty($display['display_options']['auth'])) {
-      $display['display_options']['auth'] = array_map($process_auth, $display['display_options']['auth']);
-    }
   }
 }

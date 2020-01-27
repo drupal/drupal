@@ -4,10 +4,10 @@ namespace Drupal\Tests\serialization\Kernel;
 
 use Drupal\Component\Serialization\Json;
 use Drupal\Component\Render\FormattableMarkup;
+use Drupal\Component\Datetime\DateTimePlus;
 use Drupal\entity_test\Entity\EntitySerializedField;
 use Drupal\entity_test\Entity\EntityTestMulRev;
 use Drupal\filter\Entity\FilterFormat;
-use Drupal\Tests\rest\Functional\BcTimestampNormalizerUnixTestTrait;
 
 /**
  * Tests that entities can be serialized to supported core formats.
@@ -15,8 +15,6 @@ use Drupal\Tests\rest\Functional\BcTimestampNormalizerUnixTestTrait;
  * @group serialization
  */
 class EntitySerializationTest extends NormalizerTestBase {
-
-  use BcTimestampNormalizerUnixTestTrait;
 
   /**
    * Modules to install.
@@ -134,7 +132,10 @@ class EntitySerializationTest extends NormalizerTestBase {
         ['value' => 'entity_test_mulrev'],
       ],
       'created' => [
-        $this->formatExpectedTimestampItemValues($this->entity->created->value),
+        [
+          'value' => (new \DateTime())->setTimestamp((int) $this->entity->get('created')->value)->setTimezone(new \DateTimeZone('UTC'))->format(\DateTime::RFC3339),
+          'format' => \DateTime::RFC3339,
+        ],
       ],
       'user_id' => [
         [
@@ -215,7 +216,10 @@ class EntitySerializationTest extends NormalizerTestBase {
 
     // Generate the expected xml in a way that allows changes to entity property
     // order.
-    $expected_created = $this->formatExpectedTimestampItemValues($this->entity->created->value);
+    $expected_created = [
+      'value' => DateTimePlus::createFromTimestamp($this->entity->created->value, 'UTC')->format(\DateTime::RFC3339),
+      'format' => \DateTime::RFC3339,
+    ];
 
     $expected = [
       'id' => '<id><value>' . $this->entity->id() . '</value></id>',

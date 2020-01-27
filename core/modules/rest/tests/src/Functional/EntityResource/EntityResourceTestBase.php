@@ -342,11 +342,6 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
    * {@inheritdoc}
    */
   protected function getExpectedUnauthorizedAccessMessage($method) {
-
-    if ($this->config('rest.settings')->get('bc_entity_resource_permissions')) {
-      return parent::getExpectedUnauthorizedAccessMessage($method);
-    }
-
     $permission = $this->entity->getEntityType()->getAdminPermission();
     if ($permission !== FALSE) {
       return "The '{$permission}' permission is required.";
@@ -403,9 +398,6 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
   protected function getExpectedCacheTags() {
     $expected_cache_tags = [
       'config:rest.resource.entity.' . static::$entityTypeId,
-      // Necessary for 'bc_entity_resource_permissions'.
-      // @see \Drupal\rest\Plugin\rest\resource\EntityResource::permissions()
-      'config:rest.settings',
     ];
     if (!static::$auth) {
       $expected_cache_tags[] = 'config:user.role.anonymous';
@@ -639,109 +631,6 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
     $head_headers = $header_cleaner($head_headers);
     $this->assertSame($get_headers, $head_headers);
 
-    // BC: serialization_update_8302().
-    // Only run this for fieldable entities. It doesn't make sense for config
-    // entities as config values are already casted. They also run through the
-    // ConfigEntityNormalizer, which doesn't deal with fields individually.
-    // Also exclude entity_test_map_field — that has a "map" base field, which
-    // only became normalizable since Drupal 8.6, so its normalization
-    // containing non-stringified numbers or booleans does not break BC.
-    if ($this->entity instanceof FieldableEntityInterface && static::$entityTypeId !== 'entity_test_map_field') {
-      // Test primitive data casting BC (strings).
-      $this->config('serialization.settings')->set('bc_primitives_as_strings', TRUE)->save(TRUE);
-      // Rebuild the container so new config is reflected in the addition of the
-      // PrimitiveDataNormalizer.
-      $this->rebuildAll();
-
-      $response = $this->request('GET', $url, $request_options);
-      $this->assertResourceResponse(200, FALSE, $response, $this->getExpectedCacheTags(), $this->getExpectedCacheContexts(), static::$auth ? FALSE : 'MISS', $is_cacheable_by_dynamic_page_cache ? 'MISS' : 'UNCACHEABLE');
-
-      // Again do an identical comparison, but this time transform the expected
-      // normalized entity's values to strings. This ensures the BC layer for
-      // bc_primitives_as_strings works as expected.
-      $expected = $this->getExpectedNormalizedEntity();
-      // Config entities are not affected.
-      // @see \Drupal\serialization\Normalizer\ConfigEntityNormalizer::normalize()
-      $expected = static::castToString($expected);
-      static::recursiveKSort($expected);
-      $actual = $this->serializer->decode((string) $response->getBody(), static::$format);
-      static::recursiveKSort($actual);
-      $this->assertSame($expected, $actual);
-
-      // Reset the config value and rebuild.
-      $this->config('serialization.settings')->set('bc_primitives_as_strings', FALSE)->save(TRUE);
-      $this->rebuildAll();
-    }
-
-    // BC: serialization_update_8401().
-    // Only run this for fieldable entities. It doesn't make sense for config
-    // entities as config values always use the raw values (as per the config
-    // schema), returned directly from the ConfigEntityNormalizer, which
-    // doesn't deal with fields individually.
-    if ($this->entity instanceof FieldableEntityInterface) {
-      // Test the BC settings for timestamp values.
-      $this->config('serialization.settings')->set('bc_timestamp_normalizer_unix', TRUE)->save(TRUE);
-      // Rebuild the container so new config is reflected in the addition of the
-      // TimestampItemNormalizer.
-      $this->rebuildAll();
-
-      $response = $this->request('GET', $url, $request_options);
-      $this->assertResourceResponse(200, FALSE, $response, $this->getExpectedCacheTags(), $this->getExpectedCacheContexts(), static::$auth ? FALSE : 'MISS', $is_cacheable_by_dynamic_page_cache ? 'MISS' : 'UNCACHEABLE');
-
-      // This ensures the BC layer for bc_timestamp_normalizer_unix works as
-      // expected. This method should be using
-      // ::formatExpectedTimestampValue() to generate the timestamp value. This
-      // will take into account the above config setting.
-      $expected = $this->getExpectedNormalizedEntity();
-
-      // Config entities are not affected.
-      // @see \Drupal\serialization\Normalizer\ConfigEntityNormalizer::normalize()
-      static::recursiveKSort($expected);
-      $actual = $this->serializer->decode((string) $response->getBody(), static::$format);
-      static::recursiveKSort($actual);
-      $this->assertSame($expected, $actual);
-
-      // Reset the config value and rebuild.
-      $this->config('serialization.settings')->set('bc_timestamp_normalizer_unix', FALSE)->save(TRUE);
-      $this->rebuildAll();
-    }
-
-    // BC: rest_update_8203().
-    $this->config('rest.settings')->set('bc_entity_resource_permissions', TRUE)->save(TRUE);
-    $this->refreshTestStateAfterRestConfigChange();
-
-    // DX: 403 when unauthorized.
-    $response = $this->request('GET', $url, $request_options);
-    $expected_403_cacheability = $this->getExpectedUnauthorizedAccessCacheability();
-    // Permission checking now happens first, so it's the only cache context we
-    // could possibly vary by.
-    $expected_403_cacheability->setCacheContexts(['user.permissions']);
-    // @see \Drupal\Core\EventSubscriber\AnonymousUserResponseSubscriber::onRespond()
-    if (static::$auth === FALSE) {
-      $expected_403_cacheability->addCacheTags(['config:user.role.anonymous']);
-    }
-    $this->assertResourceErrorResponse(403, $this->getExpectedUnauthorizedAccessMessage('GET'), $response, $expected_403_cacheability->getCacheTags(), $expected_403_cacheability->getCacheContexts(), static::$auth ? FALSE : 'MISS', FALSE);
-
-    $this->grantPermissionsToTestedRole(['restful get entity:' . static::$entityTypeId]);
-
-    // 200 for well-formed request.
-    $response = $this->request('GET', $url, $request_options);
-    $expected_cache_tags = $this->getExpectedCacheTags();
-    $expected_cache_contexts = $this->getExpectedCacheContexts();
-    // @todo Fix BlockAccessControlHandler::mergeCacheabilityFromConditions() in
-    //   https://www.drupal.org/node/2867881
-    if (static::$entityTypeId === 'block') {
-      $expected_cache_contexts = Cache::mergeContexts($expected_cache_contexts, ['user.permissions']);
-    }
-    // \Drupal\Core\EventSubscriber\AnonymousUserResponseSubscriber applies to
-    // cacheable anonymous responses: it updates their cacheability. Therefore
-    // we must update our cacheability expectations for anonymous responses
-    // accordingly.
-    if (!static::$auth && in_array('user.permissions', $expected_cache_contexts, TRUE)) {
-      $expected_cache_tags = Cache::mergeTags($expected_cache_tags, ['config:user.role.anonymous']);
-    }
-    $this->assertResourceResponse(200, FALSE, $response, $expected_cache_tags, $expected_cache_contexts, static::$auth ? FALSE : 'MISS', $is_cacheable_by_dynamic_page_cache ? 'MISS' : 'UNCACHEABLE');
-
     $this->resourceConfigStorage->load(static::$resourceConfigId)->disable()->save();
     $this->refreshTestStateAfterRestConfigChange();
 
@@ -753,7 +642,7 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
 
     // DX: upon re-enabling a resource, immediate 200.
     $response = $this->request('GET', $url, $request_options);
-    $this->assertResourceResponse(200, FALSE, $response, $expected_cache_tags, $expected_cache_contexts, static::$auth ? FALSE : 'MISS', $is_cacheable_by_dynamic_page_cache ? 'MISS' : 'UNCACHEABLE');
+    $this->assertResourceResponse(200, FALSE, $response, $this->getExpectedCacheTags(), $this->getExpectedCacheContexts(), static::$auth ? FALSE : 'MISS', $is_cacheable_by_dynamic_page_cache ? 'MISS' : 'UNCACHEABLE');
 
     $this->resourceConfigStorage->load(static::$resourceConfigId)->delete();
     $this->refreshTestStateAfterRestConfigChange();
@@ -957,34 +846,6 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
       $this->assertStoredEntityMatchesSentNormalization($this->getNormalizedPostEntity(), $created_entity);
     }
 
-    $this->config('rest.settings')->set('bc_entity_resource_permissions', TRUE)->save(TRUE);
-    $this->refreshTestStateAfterRestConfigChange();
-    $request_options[RequestOptions::BODY] = $parseable_valid_request_body_2;
-
-    // DX: 403 when unauthorized.
-    $response = $this->request('POST', $url, $request_options);
-    $this->assertResourceErrorResponse(403, $this->getExpectedUnauthorizedAccessMessage('POST'), $response);
-
-    $this->grantPermissionsToTestedRole(['restful post entity:' . static::$entityTypeId]);
-
-    // 201 for well-formed request.
-    // If the entity is stored, delete the first created entity (in case there
-    // is a uniqueness constraint).
-    if (get_class($this->entityStorage) !== ContentEntityNullStorage::class) {
-      $this->entityStorage->load(static::$firstCreatedEntityId)->delete();
-    }
-    $response = $this->request('POST', $url, $request_options);
-    $this->assertResourceResponse(201, FALSE, $response);
-    $created_entity = $this->entityStorage->load(static::$secondCreatedEntityId);
-    if ($has_canonical_url) {
-      $location = $created_entity->toUrl('canonical')->setAbsolute(TRUE)->toString();
-      $this->assertSame([$location], $response->getHeader('Location'));
-    }
-    else {
-      $this->assertSame([], $response->getHeader('Location'));
-    }
-    $this->assertFalse($response->hasHeader('X-Drupal-Cache'));
-
     if ($this->entity->getEntityType()->getStorageClass() !== ContentEntityNullStorage::class && $this->entity->getEntityType()->hasKey('uuid')) {
       // 500 when creating an entity with a duplicate UUID.
       $normalized_entity = $this->getModifiedEntityForPostTesting();
@@ -1013,18 +874,6 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
       $new_entity = reset($entities);
       $this->assertNotNull($new_entity);
       $new_entity->delete();
-    }
-
-    // BC: old default POST URLs have their path updated by the inbound path
-    // processor \Drupal\rest\PathProcessor\PathProcessorEntityResourceBC to the
-    // new URL, which is derived from the 'create' link template if an entity
-    // type specifies it.
-    if ($this->entity->getEntityType()->hasLinkTemplate('create')) {
-      $this->entityStorage->load(static::$secondCreatedEntityId)->delete();
-      $old_url = Url::fromUri('base:entity/' . static::$entityTypeId);
-      $old_url->setOption('query', ['_format' => static::$format]);
-      $response = $this->request('POST', $old_url, $request_options);
-      $this->assertResourceResponse(201, FALSE, $response);
     }
   }
 
@@ -1266,22 +1115,6 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
     $response = $this->request('PATCH', $url, $request_options);
     $this->assertResourceResponse(200, FALSE, $response);
     $this->assertSame([0 => ['value' => 'One'], 1 => ['value' => 'Two'], 2 => ['value' => 'Three']], $this->entityStorage->loadUnchanged($this->entity->id())->get('field_rest_test_multivalue')->getValue());
-
-    // BC: rest_update_8203().
-    $this->config('rest.settings')->set('bc_entity_resource_permissions', TRUE)->save(TRUE);
-    $this->refreshTestStateAfterRestConfigChange();
-    $request_options[RequestOptions::BODY] = $parseable_valid_request_body_2;
-
-    // DX: 403 when unauthorized.
-    $response = $this->request('PATCH', $url, $request_options);
-    $this->assertResourceErrorResponse(403, $this->getExpectedUnauthorizedAccessMessage('PATCH'), $response);
-
-    $this->grantPermissionsToTestedRole(['restful patch entity:' . static::$entityTypeId]);
-
-    // 200 for well-formed request.
-    $response = $this->request('PATCH', $url, $request_options);
-    $this->assertResourceResponse(200, FALSE, $response);
-    $this->assertFalse($response->hasHeader('X-Drupal-Cache'));
   }
 
   /**
@@ -1351,21 +1184,6 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
     // Before sending a well-formed request, allow the authentication provider's
     // edge cases to also be tested.
     $this->assertAuthenticationEdgeCases('DELETE', $url, $request_options);
-
-    // 204 for well-formed request.
-    $response = $this->request('DELETE', $url, $request_options);
-    $this->assertResourceResponse(204, '', $response);
-
-    $this->config('rest.settings')->set('bc_entity_resource_permissions', TRUE)->save(TRUE);
-    $this->refreshTestStateAfterRestConfigChange();
-    $this->entity = $this->createEntity();
-    $url = $this->getEntityResourceUrl()->setOption('query', $url->getOption('query'));
-
-    // DX: 403 when unauthorized.
-    $response = $this->request('DELETE', $url, $request_options);
-    $this->assertResourceErrorResponse(403, $this->getExpectedUnauthorizedAccessMessage('DELETE'), $response);
-
-    $this->grantPermissionsToTestedRole(['restful delete entity:' . static::$entityTypeId]);
 
     // 204 for well-formed request.
     $response = $this->request('DELETE', $url, $request_options);
