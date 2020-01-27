@@ -20,7 +20,8 @@ use Drupal\system\MenuInterface;
  *     plural = "@count menus",
  *   ),
  *   handlers = {
- *     "access" = "Drupal\system\MenuAccessControlHandler"
+ *     "access" = "Drupal\system\MenuAccessControlHandler",
+ *     "storage" = "Drupal\system\MenuStorage",
  *   },
  *   admin_permission = "administer menu",
  *   entity_keys = {
