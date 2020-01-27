@@ -734,11 +734,11 @@ class ConfigInstaller implements ConfigInstallerInterface {
    *   Use \Drupal\Core\Installer\InstallerKernel::installationAttempted()
    *   instead.
    *
-   * @see https://www.drupal.org/node/3035275
+   * @see https://www.drupal.org/node/3052704
    * @see \Drupal\Core\Installer\InstallerKernel::installationAttempted()
    */
   protected function drupalInstallationAttempted() {
-    @trigger_error(__METHOD__ . '() is deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. Use \Drupal\Core\Installer\InstallerKernel::installationAttempted() instead. See https://www.drupal.org/node/3035275', E_USER_DEPRECATED);
+    @trigger_error(__METHOD__ . '() is deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. Use \Drupal\Core\Installer\InstallerKernel::installationAttempted() instead. See https://www.drupal.org/node/3052704', E_USER_DEPRECATED);
     return InstallerKernel::installationAttempted();
   }
 
