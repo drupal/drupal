@@ -205,7 +205,7 @@ class NodeAccessLanguageAwareTest extends NodeAccessTestBase {
     // - Node with both translations public.
     // - Node with only the Catalan translation marked as private.
     // - No language node marked as public.
-    $this->assertEqual(count($nids), 3, 'db_select() returns 3 nodes when no langcode is specified.');
+    $this->assertEqual(count($nids), 3, '$connection->select() returns 3 nodes when no langcode is specified.');
     $this->assertTrue(array_key_exists($this->nodes['both_public']->id(), $nids), 'The node with both translations public is returned.');
     $this->assertTrue(array_key_exists($this->nodes['ca_private']->id(), $nids), 'The node with only the Catalan translation private is returned.');
     $this->assertTrue(array_key_exists($this->nodes['no_language_public']->id(), $nids), 'The node with no language is returned.');

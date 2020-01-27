@@ -32,7 +32,7 @@ interface PagerManagerInterface {
    * you can extend the query object with the 'PagerSelectExtender' extender
    * before executing it. For example:
    * @code
-   *   $query = db_select('some_table')
+   *   $query = $connection->select('some_table')
    *     ->extend('Drupal\Core\Database\Query\PagerSelectExtender');
    * @endcode
    *

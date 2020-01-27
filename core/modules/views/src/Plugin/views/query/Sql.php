@@ -1296,7 +1296,6 @@ class Sql extends QueryPluginBase {
     }
 
     // Go ahead and build the query.
-    // db_select doesn't support to specify the key, so use getConnection directly.
     $query = Database::getConnection($target, $key)
       ->select($this->view->storage->get('base_table'), $this->view->storage->get('base_table'), $options)
       ->addTag('views')

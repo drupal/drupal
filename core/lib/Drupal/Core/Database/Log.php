@@ -125,11 +125,10 @@ class Log {
    * Determine the routine that called this query.
    *
    * We define "the routine that called this query" as the first entry in
-   * the call stack that is not inside the includes/Drupal/Database directory,
-   * does not begin with db_ and does have a file (which excludes
-   * call_user_func_array(), anonymous functions and similar). That makes the
-   * climbing logic very simple, and handles the variable stack depth caused by
-   * the query builders.
+   * the call stack that is not inside the includes/Drupal/Database directory
+   * and does have a file (which excludes call_user_func_array(), anonymous
+   * functions and similar). That makes the climbing logic very simple, and
+   * handles the variable stack depth caused by the query builders.
    *
    * See the @link http://php.net/debug_backtrace debug_backtrace() @endlink
    * function.
@@ -150,7 +149,7 @@ class Log {
       if (empty($stack[$i + 1]['class'])) {
         $stack[$i + 1]['class'] = '';
       }
-      if (strpos($stack[$i + 1]['class'], __NAMESPACE__) === FALSE && strpos($stack[$i + 1]['function'], 'db_') === FALSE && !empty($stack[$i]['file'])) {
+      if (strpos($stack[$i + 1]['class'], __NAMESPACE__) === FALSE && !empty($stack[$i]['file'])) {
         $stack[$i] += ['file' => '?', 'line' => '?', 'args' => []];
         return [
           'file' => $stack[$i]['file'],
