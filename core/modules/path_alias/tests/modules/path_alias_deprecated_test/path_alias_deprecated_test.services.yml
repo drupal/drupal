@@ -1,5 +1,0 @@
-services:
-  path_alias_deprecated_test.path.alias_manager:
-    class: Drupal\path_alias_deprecated_test\AliasManagerDecorator
-    decorates: path.alias_manager
-    arguments: ['@path_alias_deprecated_test.path.alias_manager.inner']

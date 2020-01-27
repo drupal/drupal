@@ -18,7 +18,7 @@ class ModuleConfigureRouteTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['system', 'user'];
+  public static $modules = ['system', 'user', 'path_alias'];
 
   /**
    * @var \Drupal\Core\Routing\RouteProviderInterface

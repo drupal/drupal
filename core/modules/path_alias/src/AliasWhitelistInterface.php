@@ -2,7 +2,7 @@
 
 namespace Drupal\path_alias;
 
-use Drupal\Core\Path\AliasWhitelistInterface as CoreAliasWhitelistInterface;
+use Drupal\Core\Cache\CacheCollectorInterface;
 
 /**
  * Cache the alias whitelist.
@@ -12,4 +12,4 @@ use Drupal\Core\Path\AliasWhitelistInterface as CoreAliasWhitelistInterface;
  * the whitelist. This optimization allows skipping the lookup for every
  * /user/{user} path if "user" is not in the whitelist.
  */
-interface AliasWhitelistInterface extends CoreAliasWhitelistInterface {}
+interface AliasWhitelistInterface extends CacheCollectorInterface {}
