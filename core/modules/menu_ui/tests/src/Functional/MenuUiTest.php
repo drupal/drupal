@@ -10,6 +10,7 @@ use Drupal\menu_link_content\Entity\MenuLinkContent;
 use Drupal\system\Entity\Menu;
 use Drupal\node\Entity\Node;
 use Drupal\node\NodeInterface;
+use Drupal\system\MenuStorage;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\menu_ui\Traits\MenuUiTrait;
 
@@ -167,7 +168,7 @@ class MenuUiTest extends BrowserTestBase {
    */
   public function addCustomMenuCRUD() {
     // Add a new custom menu.
-    $menu_name = substr(hash('sha256', $this->randomMachineName(16)), 0, MENU_MAX_MENU_NAME_LENGTH_UI);
+    $menu_name = strtolower($this->randomMachineName(MenuStorage::MAX_ID_LENGTH));
     $label = $this->randomMachineName(16);
 
     $menu = Menu::create([
@@ -198,7 +199,7 @@ class MenuUiTest extends BrowserTestBase {
   public function addCustomMenu() {
     // Try adding a menu using a menu_name that is too long.
     $this->drupalGet('admin/structure/menu/add');
-    $menu_name = substr(hash('sha256', $this->randomMachineName(16)), 0, MENU_MAX_MENU_NAME_LENGTH_UI + 1);
+    $menu_name = strtolower($this->randomMachineName(MenuStorage::MAX_ID_LENGTH + 1));
     $label = $this->randomMachineName(16);
     $edit = [
       'id' => $menu_name,
@@ -211,19 +212,19 @@ class MenuUiTest extends BrowserTestBase {
     // message.
     $this->assertRaw(t('@name cannot be longer than %max characters but is currently %length characters long.', [
       '@name' => t('Menu name'),
-      '%max' => MENU_MAX_MENU_NAME_LENGTH_UI,
+      '%max' => MenuStorage::MAX_ID_LENGTH,
       '%length' => mb_strlen($menu_name),
     ]));
 
     // Change the menu_name so it no longer exceeds the maximum length.
-    $menu_name = substr(hash('sha256', $this->randomMachineName(16)), 0, MENU_MAX_MENU_NAME_LENGTH_UI);
+    $menu_name = strtolower($this->randomMachineName(MenuStorage::MAX_ID_LENGTH));
     $edit['id'] = $menu_name;
     $this->drupalPostForm('admin/structure/menu/add', $edit, t('Save'));
 
     // Verify that no validation error is given for menu_name length.
     $this->assertNoRaw(t('@name cannot be longer than %max characters but is currently %length characters long.', [
       '@name' => t('Menu name'),
-      '%max' => MENU_MAX_MENU_NAME_LENGTH_UI,
+      '%max' => MenuStorage::MAX_ID_LENGTH,
       '%length' => mb_strlen($menu_name),
     ]));
     // Verify that the confirmation message is displayed.
