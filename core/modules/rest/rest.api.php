@@ -32,7 +32,7 @@ function hook_rest_resource_alter(&$definitions) {
  * Alter the REST type URI.
  *
  * @deprecated in drupal:8.3.0 and is removed from drupal:9.0.0. Use
- *   hook_serialization_type_uri_alter() instead. This exists solely for BC.
+ *   hook_hal_type_uri_alter() instead. This exists solely for BC.
  *
  * @see https://www.drupal.org/node/2830467
  *
@@ -51,7 +51,7 @@ function hook_rest_resource_alter(&$definitions) {
  */
 function hook_rest_type_uri_alter(&$uri, $context = []) {
   if ($context['mymodule'] == TRUE) {
-    $base = \Drupal::config('serialization.settings')->get('link_domain');
+    $base = \Drupal::config('hal.settings')->get('link_domain');
     $uri = str_replace($base, 'http://mymodule.domain', $uri);
   }
 }
@@ -60,7 +60,7 @@ function hook_rest_type_uri_alter(&$uri, $context = []) {
  * Alter the REST relation URI.
  *
  * @deprecated in drupal:8.3.0 and is removed from drupal:9.0.0. Use
- *   hook_serialization_relation_uri_alter() instead. This exists solely for BC.
+ *   hook_hal_relation_uri_alter() instead. This exists solely for BC.
  *
  * @see https://www.drupal.org/node/2830467
  *
@@ -79,7 +79,7 @@ function hook_rest_type_uri_alter(&$uri, $context = []) {
  */
 function hook_rest_relation_uri_alter(&$uri, $context = []) {
   if ($context['mymodule'] == TRUE) {
-    $base = \Drupal::config('serialization.settings')->get('link_domain');
+    $base = \Drupal::config('hal.settings')->get('link_domain');
     $uri = str_replace($base, 'http://mymodule.domain', $uri);
   }
 }

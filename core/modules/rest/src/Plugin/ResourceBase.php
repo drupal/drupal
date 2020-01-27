@@ -108,6 +108,7 @@ abstract class ResourceBase extends PluginBase implements ContainerFactoryPlugin
     // then changed to reading the 'create' URI path. For any REST Resource
     // plugins that were using the old mechanism, we continue to support that.
     if (!isset($definition['uri_paths']['create']) && isset($definition['uri_paths']['https://www.drupal.org/link-relations/create'])) {
+      @trigger_error('The "https://www.drupal.org/link-relations/create" string as a RestResource plugin annotation URI path key is deprecated in Drupal 8.4.0, now a valid link relation type name must be specified, so "create" must be specified instead before Drupal 9.0.0. See https://www.drupal.org/node/2737401.', E_USER_DEPRECATED);
       $create_path = $definition['uri_paths']['https://www.drupal.org/link-relations/create'];
     }
 
