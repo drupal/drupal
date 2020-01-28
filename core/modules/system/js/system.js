@@ -7,6 +7,7 @@
 
 (function ($, Drupal, drupalSettings) {
   var ids = [];
+
   Drupal.behaviors.copyFieldValue = {
     attach: function attach(context) {
       Object.keys(drupalSettings.copyFieldValue || {}).forEach(function (element) {
@@ -15,18 +16,18 @@
 
       if (ids.length) {
         $('body').once('copy-field-values').on('value:copy', this.valueTargetCopyHandler);
-        $("#".concat(ids.join(', #'))).once('copy-field-values').on('blur', this.valueSourceBlurHandler);
+
+        $('#' + ids.join(', #')).once('copy-field-values').on('blur', this.valueSourceBlurHandler);
       }
     },
     detach: function detach(context, settings, trigger) {
       if (trigger === 'unload' && ids.length) {
         $('body').removeOnce('copy-field-values').off('value:copy');
-        $("#".concat(ids.join(', #'))).removeOnce('copy-field-values').off('blur');
+        $('#' + ids.join(', #')).removeOnce('copy-field-values').off('blur');
       }
     },
     valueTargetCopyHandler: function valueTargetCopyHandler(e, value) {
       var $target = $(e.target);
-
       if ($target.val() === '') {
         $target.val(value);
       }
@@ -34,7 +35,7 @@
     valueSourceBlurHandler: function valueSourceBlurHandler(e) {
       var value = $(e.target).val();
       var targetIds = drupalSettings.copyFieldValue[e.target.id];
-      $("#".concat(targetIds.join(', #'))).trigger('value:copy', value);
+      $('#' + targetIds.join(', #')).trigger('value:copy', value);
     }
   };
 })(jQuery, Drupal, drupalSettings);

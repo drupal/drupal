@@ -7,6 +7,7 @@
 
 (function ($, Drupal, drupalSettings) {
   var dateFormats = drupalSettings.dateFormats;
+
   Drupal.behaviors.dateFormat = {
     attach: function attach(context) {
       var $context = $(context);
@@ -23,6 +24,7 @@
         var dateString = baseValue.replace(/\\?(.?)/gi, function (key, value) {
           return dateFormats[key] ? dateFormats[key] : value;
         });
+
         $preview.text(dateString);
         $target.toggleClass('js-hide', !dateString.length);
       }

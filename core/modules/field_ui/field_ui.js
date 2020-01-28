@@ -9,20 +9,21 @@
   Drupal.behaviors.fieldUIFieldStorageAddForm = {
     attach: function attach(context) {
       var $form = $(context).find('[data-drupal-selector="field-ui-field-storage-add-form"]').once('field_ui_add');
-
       if ($form.length) {
         $form.find('.js-form-item-label label,' + '.js-form-item-field-name label,' + '.js-form-item-existing-storage-label label').addClass('js-form-required form-required');
+
         var $newFieldType = $form.find('select[name="new_storage_type"]');
         var $existingStorageName = $form.find('select[name="existing_storage_name"]');
         var $existingStorageLabel = $form.find('input[name="existing_storage_label"]');
+
         $newFieldType.on('change', function () {
           if ($(this).val() !== '') {
             $existingStorageName.val('').trigger('change');
           }
         });
+
         $existingStorageName.on('change', function () {
           var value = $(this).val();
-
           if (value !== '') {
             $newFieldType.val('').trigger('change');
 
@@ -34,6 +35,7 @@
       }
     }
   };
+
   Drupal.behaviors.fieldUIDisplayOverview = {
     attach: function attach(context, settings) {
       $(context).find('table#field-display-overview').once('field-display-overview').each(function () {
@@ -41,17 +43,20 @@
       });
     }
   };
+
   Drupal.fieldUIOverview = {
     attach: function attach(table, rowsData, rowHandlers) {
       var tableDrag = Drupal.tableDrag[table.id];
+
       tableDrag.onDrop = this.onDrop;
       tableDrag.row.prototype.onSwap = this.onSwap;
+
       $(table).find('tr.draggable').each(function () {
         var row = this;
-
         if (row.id in rowsData) {
           var data = rowsData[row.id];
           data.tableDrag = tableDrag;
+
           var rowHandler = new rowHandlers[data.rowHandler](row, data);
           $(row).data('fieldUIRowHandler', rowHandler);
         }
@@ -61,13 +66,16 @@
       var $trigger = $(this);
       var $row = $trigger.closest('tr');
       var rowHandler = $row.data('fieldUIRowHandler');
+
       var refreshRows = {};
       refreshRows[rowHandler.name] = $trigger.get(0);
-      var region = rowHandler.getRegion();
 
+      var region = rowHandler.getRegion();
       if (region !== rowHandler.region) {
         $row.find('select.js-field-parent').val('');
+
         $.extend(refreshRows, rowHandler.regionChange(region));
+
         rowHandler.region = region;
       }
 
@@ -78,14 +86,15 @@
       var row = dragObject.rowObject.element;
       var $row = $(row);
       var rowHandler = $row.data('fieldUIRowHandler');
-
       if (typeof rowHandler !== 'undefined') {
         var regionRow = $row.prevAll('tr.region-message').get(0);
         var region = regionRow.className.replace(/([^ ]+[ ]+)*region-([^ ]+)-message([ ]+[^ ]+)*/, '$2');
 
         if (region !== rowHandler.region) {
           var refreshRows = rowHandler.regionChange(region);
+
           rowHandler.region = region;
+
           Drupal.fieldUIOverview.AJAXRefreshRows(refreshRows);
         }
       }
@@ -118,12 +127,15 @@
 
       if (rowNames.length) {
         $(ajaxElements).after(Drupal.theme.ajaxProgressThrobber());
+
         $('input[name=refresh_rows]').val(rowNames.join(' '));
         $('input[data-drupal-selector="edit-refresh"]').trigger('mousedown');
+
         $(ajaxElements).prop('disabled', true);
       }
     }
   };
+
   Drupal.fieldUIDisplayOverview = {};
 
   Drupal.fieldUIDisplayOverview.field = function (row, data) {
@@ -132,10 +144,13 @@
     this.region = data.region;
     this.tableDrag = data.tableDrag;
     this.defaultPlugin = data.defaultPlugin;
+
     this.$pluginSelect = $(row).find('.field-plugin-type');
     this.$pluginSelect.on('change', Drupal.fieldUIOverview.onChange);
+
     this.$regionSelect = $(row).find('select.field-region');
     this.$regionSelect.on('change', Drupal.fieldUIOverview.onChange);
+
     return this;
   };
 
@@ -145,6 +160,7 @@
     },
     regionChange: function regionChange(region) {
       region = region.replace(/-/g, '_');
+
       this.$regionSelect.val(region);
 
       if (this.region === 'hidden') {
@@ -157,6 +173,7 @@
 
       var refreshRows = {};
       refreshRows[this.name] = this.$pluginSelect.get(0);
+
       return refreshRows;
     }
   };

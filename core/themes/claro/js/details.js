@@ -15,6 +15,7 @@
       });
     }
   };
+
   Drupal.behaviors.claroDetailsToggleShim = {
     attach: function attach(context) {
       if (Modernizr.details || !Drupal.CollapsibleDetails.instances.length) {
@@ -23,7 +24,6 @@
 
       $(context).find('details .details-title').once('claroDetailsToggleShim').on('keypress', function (event) {
         var keyCode = event.keyCode || event.charCode;
-
         if (keyCode === 32) {
           $(event.target).closest('summary').trigger('click');
           event.preventDefault();

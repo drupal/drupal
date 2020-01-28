@@ -26,12 +26,13 @@
         var $button = $target.parent();
         var $container = $button.parent();
         var $group = $button.closest('.ckeditor-toolbar-group');
-        var $row;
+        var $row = void 0;
         var containerType = $container.data('drupal-ckeditor-button-sorting');
         var $availableButtons = this.$el.find('[data-drupal-ckeditor-button-sorting="source"]');
         var $activeButtons = this.$el.find('.ckeditor-toolbar-active');
+
         var $originalGroup = $group;
-        var dir;
+        var dir = void 0;
 
         if (containerType === 'source') {
           if (_.indexOf([40, 63233], event.keyCode) > -1) {
@@ -41,13 +42,11 @@
           if (_.indexOf(leftRightKeys, event.keyCode) > -1) {
             var $siblings = $container.children();
             var index = $siblings.index($button);
-
             if (_.indexOf([37, 63234], event.keyCode) > -1) {
               if (index > 0) {
                 $button.insertBefore($container.children().eq(index - 1));
               } else {
                   $group = $container.parent().prev();
-
                   if ($group.length > 0) {
                     $group.find('.ckeditor-toolbar-group-buttons').append($button);
                   } else {
@@ -68,6 +67,7 @@
               if (dir === 'prev' && $row.length === 0) {
                 if ($button.data('drupal-ckeditor-type') === 'separator') {
                   $button.off().remove();
+
                   $activeButtons.find('.ckeditor-toolbar-group-buttons').eq(0).children().eq(0).children().trigger('focus');
                 } else {
                     $availableButtons.prepend($button);
@@ -85,6 +85,7 @@
           }
 
         view = this;
+
         Drupal.ckeditor.registerButtonMove(this, $button, function (result) {
           if (!result && $originalGroup) {
             $originalGroup.find('.ckeditor-buttons').append($button);
@@ -92,6 +93,7 @@
 
           $target.trigger('focus');
         });
+
         event.preventDefault();
         event.stopPropagation();
       }
@@ -102,6 +104,7 @@
 
       if (event.keyCode === 13) {
         var view = this;
+
         window.setTimeout(function () {
           Drupal.ckeditor.openGroupNameDialog(view, $(event.currentTarget));
         }, 0);
@@ -113,8 +116,8 @@
         var $group = $(event.currentTarget);
         var $container = $group.parent();
         var $siblings = $container.children();
-        var index;
-        var dir;
+        var index = void 0;
+        var dir = void 0;
 
         if (_.indexOf(leftRightKeys, event.keyCode) > -1) {
           index = $siblings.index($group);

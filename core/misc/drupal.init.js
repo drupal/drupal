@@ -20,7 +20,6 @@ document.documentElement.className += ' js';
         callback();
         document.removeEventListener('DOMContentLoaded', listener);
       };
-
       document.addEventListener('DOMContentLoaded', listener);
     }
   };

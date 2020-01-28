@@ -21,14 +21,16 @@
       });
     }
   };
+
   Drupal.behaviors.simpleTestSelectAll = {
     attach: function attach(context) {
       $(context).find('.simpletest-group').once('simpletest-group-select-all').each(function () {
         var $group = $(this);
         var $cell = $group.find('.simpletest-group-select-all');
-        var $groupCheckbox = $(Drupal.theme('checkbox')).attr('id', "".concat($cell.attr('id'), "-group-select-all"));
+        var $groupCheckbox = $(Drupal.theme('checkbox')).attr('id', $cell.attr('id') + '-group-select-all');
         var $testCheckboxes = $group.nextUntil('.simpletest-group').find('input[type=checkbox]');
         $cell.append($groupCheckbox);
+
         $groupCheckbox.on('change', function () {
           var checked = $(this).prop('checked');
           $testCheckboxes.prop('checked', checked);
@@ -49,11 +51,12 @@
       });
     }
   };
+
   Drupal.behaviors.simpletestTableFilterByText = {
     attach: function attach(context) {
       var $input = $('input.table-filter-text').once('table-filter-text');
       var $table = $($input.attr('data-table'));
-      var $rows;
+      var $rows = void 0;
       var searched = false;
 
       function filterTestList(e) {
@@ -69,10 +72,12 @@
         if (query.length >= 3) {
           searched = true;
           $('#simpletest-form-table thead th.select-all input').hide();
+
           $rows.each(showTestRow);
         } else if (searched) {
             searched = false;
             $('#simpletest-form-table thead th.select-all input').show();
+
             $rows.css('display', '');
           }
       }

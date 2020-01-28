@@ -21,6 +21,7 @@
         var myAjaxObject = Drupal.ajax(ajaxSettings);
         myAjaxObject.execute();
       });
+
       $('.ajax-insert-inline').once('ajax-insert').on('click', function (event) {
         event.preventDefault();
         var ajaxSettings = {
@@ -34,6 +35,7 @@
         var myAjaxObject = Drupal.ajax(ajaxSettings);
         myAjaxObject.execute();
       });
+
       $(context).addClass('processed');
     }
   };

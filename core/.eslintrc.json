@@ -21,11 +21,6 @@
     "Sortable": true,
     "CKEDITOR": true
   },
-  "settings": {
-    "react": {
-      "version": "latest"
-    }
-  },
   "rules": {
     "prettier/prettier": "error",
     "consistent-return": ["off"],

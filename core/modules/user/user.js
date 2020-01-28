@@ -12,17 +12,21 @@
 
       if ($passwordInput.length) {
         var translate = settings.password;
+
         var $passwordInputParent = $passwordInput.parent();
         var $passwordInputParentWrapper = $passwordInputParent.parent();
-        var $passwordSuggestions;
+        var $passwordSuggestions = void 0;
+
         $passwordInputParent.addClass('password-parent');
+
         $passwordInputParentWrapper.find('input.js-password-confirm').parent().append(Drupal.theme('passwordConfirmMessage', translate)).addClass('confirm-parent');
+
         var $confirmInput = $passwordInputParentWrapper.find('input.js-password-confirm');
         var $confirmResult = $passwordInputParentWrapper.find('div.js-password-confirm-message');
         var $confirmChild = $confirmResult.find('span');
 
         if (settings.password.showStrengthIndicator) {
-          var passwordMeter = "<div class=\"password-strength\"><div class=\"password-strength__meter\"><div class=\"password-strength__indicator js-password-strength__indicator\"></div></div><div aria-live=\"polite\" aria-atomic=\"true\" class=\"password-strength__title\">".concat(translate.strengthTitle, " <span class=\"password-strength__text js-password-strength__text\"></span></div></div>");
+          var passwordMeter = '<div class="password-strength"><div class="password-strength__meter"><div class="password-strength__indicator js-password-strength__indicator"></div></div><div aria-live="polite" aria-atomic="true" class="password-strength__title">' + translate.strengthTitle + ' <span class="password-strength__text js-password-strength__text"></span></div></div>';
           $confirmInput.parent().after('<div class="password-suggestions description"></div>');
           $passwordInputParent.append(passwordMeter);
           $passwordSuggestions = $passwordInputParentWrapper.find('div.password-suggestions').hide();
@@ -31,7 +35,8 @@
         var passwordCheckMatch = function passwordCheckMatch(confirmInputVal) {
           var success = $passwordInput.val() === confirmInputVal;
           var confirmClass = success ? 'ok' : 'error';
-          $confirmChild.html(translate["confirm".concat(success ? 'Success' : 'Failure')]).removeClass('ok error').addClass(confirmClass);
+
+          $confirmChild.html(translate['confirm' + (success ? 'Success' : 'Failure')]).removeClass('ok error').addClass(confirmClass);
         };
 
         var passwordCheck = function passwordCheck() {
@@ -43,19 +48,17 @@
             }
 
             $passwordSuggestions.toggle(result.strength !== 100);
-            $passwordInputParent.find('.js-password-strength__indicator').css('width', "".concat(result.strength, "%")).removeClass('is-weak is-fair is-good is-strong').addClass(result.indicatorClass);
+
+            $passwordInputParent.find('.js-password-strength__indicator').css('width', result.strength + '%').removeClass('is-weak is-fair is-good is-strong').addClass(result.indicatorClass);
+
             $passwordInputParent.find('.js-password-strength__text').html(result.indicatorText);
           }
 
           if ($confirmInput.val()) {
             passwordCheckMatch($confirmInput.val());
-            $confirmResult.css({
-              visibility: 'visible'
-            });
+            $confirmResult.css({ visibility: 'visible' });
           } else {
-            $confirmResult.css({
-              visibility: 'hidden'
-            });
+            $confirmResult.css({ visibility: 'hidden' });
           }
         };
 
@@ -67,15 +70,17 @@
 
   Drupal.evaluatePasswordStrength = function (password, translate) {
     password = password.trim();
-    var indicatorText;
-    var indicatorClass;
+    var indicatorText = void 0;
+    var indicatorClass = void 0;
     var weaknesses = 0;
     var strength = 100;
     var msg = [];
+
     var hasLowercase = /[a-z]/.test(password);
     var hasUppercase = /[A-Z]/.test(password);
     var hasNumbers = /[0-9]/.test(password);
     var hasPunctuation = /[^a-zA-Z0-9]/.test(password);
+
     var $usernameBox = $('input.username');
     var username = $usernameBox.length > 0 ? $usernameBox.val() : translate.username;
 
@@ -88,17 +93,14 @@
       msg.push(translate.addLowerCase);
       weaknesses++;
     }
-
     if (!hasUppercase) {
       msg.push(translate.addUpperCase);
       weaknesses++;
     }
-
     if (!hasNumbers) {
       msg.push(translate.addNumbers);
       weaknesses++;
     }
-
     if (!hasPunctuation) {
       msg.push(translate.addPunctuation);
       weaknesses++;
@@ -124,6 +126,7 @@
 
     if (password !== '' && password.toLowerCase() === username.toLowerCase()) {
       msg.push(translate.sameAsUsername);
+
       strength = 5;
     }
 
@@ -141,7 +144,8 @@
       indicatorClass = 'is-strong';
     }
 
-    msg = "".concat(translate.hasWeaknesses, "<ul><li>").concat(msg.join('</li><li>'), "</li></ul>");
+    msg = translate.hasWeaknesses + '<ul><li>' + msg.join('</li><li>') + '</li></ul>';
+
     return {
       strength: strength,
       message: msg,

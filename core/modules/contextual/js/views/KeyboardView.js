@@ -20,6 +20,7 @@
         }, 150);
       }
     },
+
     initialize: function initialize() {
       this.timer = NaN;
     },

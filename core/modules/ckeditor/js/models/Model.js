@@ -9,13 +9,20 @@
   Drupal.ckeditor.Model = Backbone.Model.extend({
     defaults: {
       activeEditorConfig: null,
+
       $textarea: null,
+
       isDirty: false,
+
       hiddenEditorConfig: null,
+
       buttonsToFeatures: null,
+
       featuresMetadata: null,
+
       groupNamesVisible: false
     },
+
     sync: function sync() {
       this.get('$textarea').val(JSON.stringify(this.get('activeEditorConfig')));
     }

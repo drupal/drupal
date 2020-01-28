@@ -20,7 +20,6 @@
       if (Modernizr.touchevents) {
         mapping = {};
       }
-
       return mapping;
     },
     initialize: function initialize() {
@@ -28,6 +27,7 @@
     },
     render: function render() {
       this.$el.toggleClass('focus', this.model.get('hasFocus'));
+
       return this;
     }
   });

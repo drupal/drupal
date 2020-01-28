@@ -9,7 +9,9 @@
   Drupal.quickedit.EditorModel = Backbone.Model.extend({
     defaults: {
       originalValue: null,
+
       currentValue: null,
+
       validationErrors: null
     }
   });

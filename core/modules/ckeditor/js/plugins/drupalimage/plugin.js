@@ -22,6 +22,7 @@
     }
 
     CKEDITOR.plugins.drupallink.registerLinkableWidget('image');
+
     editor.getCommand('drupalunlink').on('exec', function (evt) {
       var widget = getFocusedWidget(editor);
 
@@ -30,9 +31,12 @@
       }
 
       widget.setData('link', null);
+
       this.refresh(editor, editor.elementPath());
+
       evt.cancel();
     });
+
     editor.getCommand('drupalunlink').on('refresh', function (evt) {
       var widget = getFocusedWidget(editor);
 
@@ -41,6 +45,7 @@
       }
 
       this.setState(widget.data.link || widget.wrapper.getAscendant('a') ? CKEDITOR.TRISTATE_OFF : CKEDITOR.TRISTATE_DISABLED);
+
       evt.cancel();
     });
   }
@@ -49,10 +54,10 @@
     requires: 'image2',
     icons: 'drupalimage',
     hidpi: true,
+
     beforeInit: function beforeInit(editor) {
       editor.on('widgetDefinition', function (event) {
         var widgetDefinition = event.data;
-
         if (widgetDefinition.name !== 'image') {
           return;
         }
@@ -68,6 +73,7 @@
             classes: {}
           }
         };
+
         widgetDefinition.requiredContent = new CKEDITOR.style({
           element: 'img',
           attributes: {
@@ -75,6 +81,7 @@
             alt: ''
           }
         });
+
         var requiredContent = widgetDefinition.requiredContent.getDefinition();
         requiredContent.attributes['data-entity-type'] = '';
         requiredContent.attributes['data-entity-uuid'] = '';
@@ -97,12 +104,13 @@
           }
 
           data['data-entity-type'] = element.attributes['data-entity-type'];
+
           data['data-entity-uuid'] = element.attributes['data-entity-uuid'];
+
           return element;
         };
 
         var originalGetClasses = widgetDefinition.getClasses;
-
         widgetDefinition.getClasses = function () {
           var classes = originalGetClasses.call(this);
           var captionedClasses = (this.editor.config.image2_captionedClass || '').split(/\s+/);
@@ -156,12 +164,13 @@
             }
 
             editor.fire('saveSnapshot');
+
             var container = widget.wrapper.getParent(true);
             var image = widget.parts.image;
 
             var data = widgetDefinition._dialogValuesToData(dialogReturnValues.attributes);
-
             widget.setData(data);
+
             widget = editor.widgets.getByElement(image);
 
             if (firstEdit) {
@@ -170,14 +179,15 @@
 
             setTimeout(function () {
               widget.focus();
+
               editor.fire('saveSnapshot');
             });
+
             return widget;
           };
         };
 
         var originalInit = widgetDefinition.init;
-
         widgetDefinition.init = function () {
           originalInit.call(this);
 
@@ -186,6 +196,7 @@
           }
         };
       });
+
       editor.widgets.on('instanceCreated', function (event) {
         var widget = event.data;
 
@@ -195,32 +206,34 @@
 
         widget.on('edit', function (event) {
           event.cancel();
+
           editor.execCommand('editdrupalimage', {
             existingValues: widget.definition._dataToDialogValues(widget.data),
             saveCallback: widget.definition._createDialogSaveCallback(editor, widget),
+
             dialogTitle: widget.data.src ? editor.config.drupalImage_dialogTitleEdit : editor.config.drupalImage_dialogTitleAdd
           });
         });
       });
+
       editor.addCommand('editdrupalimage', {
         allowedContent: 'img[alt,!src,width,height,!data-entity-type,!data-entity-uuid]',
         requiredContent: 'img[alt,src,data-entity-type,data-entity-uuid]',
-        modes: {
-          wysiwyg: 1
-        },
+        modes: { wysiwyg: 1 },
         canUndo: true,
         exec: function exec(editor, data) {
           var dialogSettings = {
             title: data.dialogTitle,
             dialogClass: 'editor-image-dialog'
           };
-          Drupal.ckeditor.openDialog(editor, Drupal.url("editor/dialog/image/".concat(editor.config.drupal.format)), data.existingValues, data.saveCallback, dialogSettings);
+          Drupal.ckeditor.openDialog(editor, Drupal.url('editor/dialog/image/' + editor.config.drupal.format), data.existingValues, data.saveCallback, dialogSettings);
         }
       });
 
       if (editor.ui.addButton) {
         editor.ui.addButton('DrupalImage', {
           label: Drupal.t('Image'),
+
           command: 'image'
         });
       }
@@ -233,7 +246,6 @@
   CKEDITOR.plugins.image2.getLinkAttributesParser = function () {
     return CKEDITOR.plugins.drupallink.parseLinkAttributes;
   };
-
   CKEDITOR.plugins.image2.getLinkAttributesGetter = function () {
     return CKEDITOR.plugins.drupallink.getLinkAttributes;
   };

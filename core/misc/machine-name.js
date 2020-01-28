@@ -25,6 +25,7 @@
         var data = e.data;
         var options = data.options;
         var baseValue = $(e.target).val();
+
         var rx = new RegExp(options.replace_pattern, 'g');
         var expected = baseValue.toLowerCase().replace(rx, options.replace).substr(0, options.maxlength);
 
@@ -37,7 +38,6 @@
           clearTimeout(timeout);
           timeout = null;
         }
-
         if (baseValue.toLowerCase() !== expected) {
           timeout = setTimeout(function () {
             xhr = self.transliterate(baseValue, options).done(function (machine) {
@@ -52,6 +52,7 @@
       Object.keys(settings.machineName).forEach(function (sourceId) {
         var machine = '';
         var options = settings.machineName[sourceId];
+
         var $source = $context.find(sourceId).addClass('machine-name-source').once('machine-name');
         var $target = $context.find(options.target).addClass('machine-name-target');
         var $suffix = $context.find(options.suffix);
@@ -66,6 +67,7 @@
         }
 
         options.maxlength = $target.attr('maxlength');
+
         $wrapper.addClass('visually-hidden');
 
         if ($target.is(':disabled') || $target.val() !== '') {
@@ -74,13 +76,11 @@
           machine = self.transliterate($source.val(), options);
         }
 
-        var $preview = $("<span class=\"machine-name-value\">".concat(options.field_prefix).concat(Drupal.checkPlain(machine)).concat(options.field_suffix, "</span>"));
+        var $preview = $('<span class="machine-name-value">' + options.field_prefix + Drupal.checkPlain(machine) + options.field_suffix + '</span>');
         $suffix.empty();
-
         if (options.label) {
-          $suffix.append("<span class=\"machine-name-label\">".concat(options.label, ": </span>"));
+          $suffix.append('<span class="machine-name-label">' + options.label + ': </span>');
         }
-
         $suffix.append($preview);
 
         if ($target.is(':disabled')) {
@@ -95,7 +95,8 @@
           $preview: $preview,
           options: options
         };
-        var $link = $("<span class=\"admin-link\"><button type=\"button\" class=\"link\">".concat(Drupal.t('Edit'), "</button></span>")).on('click', eventData, clickEditHandler);
+
+        var $link = $('<span class="admin-link"><button type="button" class="link">' + Drupal.t('Edit') + '</button></span>').on('click', eventData, clickEditHandler);
         $suffix.append($link);
 
         if ($target.val() === '') {
@@ -113,7 +114,6 @@
           data.$target.val(machine);
           data.$preview.html(settings.field_prefix + Drupal.checkPlain(machine) + settings.field_suffix);
         }
-
         data.$suffix.show();
       } else {
         data.$suffix.hide();

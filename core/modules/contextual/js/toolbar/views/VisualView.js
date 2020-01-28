@@ -17,6 +17,7 @@
         click: function click() {
           this.model.set('isViewing', !this.model.get('isViewing'));
         },
+
         touchend: touchEndToClick
       };
     },
@@ -26,7 +27,9 @@
     },
     render: function render() {
       this.$el.toggleClass('hidden', !this.model.get('isVisible'));
+
       this.$el.find('button').toggleClass('is-active', !this.model.get('isViewing'));
+
       return this;
     },
     persist: function persist(model, isViewing) {

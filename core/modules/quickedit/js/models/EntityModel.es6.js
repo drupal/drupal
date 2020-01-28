@@ -243,8 +243,7 @@
             //   proceed to set the fields to candidate state.
             if (
               (changedFields.length || this.get('fieldsInTempStore').length) &&
-              !options.saved &&
-              !options.confirmed
+              (!options.saved && !options.confirmed)
             ) {
               // Cancel deactivation until the user confirms save or discard.
               this.set('state', 'opened', { confirming: true });

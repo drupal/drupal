@@ -5,10 +5,7 @@
 * @preserve
 **/
 
-window.Drupal = {
-  behaviors: {},
-  locale: {}
-};
+window.Drupal = { behaviors: {}, locale: {} };
 
 (function (Drupal, drupalSettings, drupalTranslations, console, Proxy, Reflect) {
   Drupal.throwError = function (error) {
@@ -21,6 +18,7 @@ window.Drupal = {
     context = context || document;
     settings = settings || drupalSettings;
     var behaviors = Drupal.behaviors;
+
     Object.keys(behaviors || {}).forEach(function (i) {
       if (typeof behaviors[i].attach === 'function') {
         try {
@@ -37,6 +35,7 @@ window.Drupal = {
     settings = settings || drupalSettings;
     trigger = trigger || 'unload';
     var behaviors = Drupal.behaviors;
+
     Object.keys(behaviors || {}).forEach(function (i) {
       if (typeof behaviors[i].detach === 'function') {
         try {
@@ -55,6 +54,7 @@ window.Drupal = {
 
   Drupal.formatString = function (str, args) {
     var processedArgs = {};
+
     Object.keys(args || {}).forEach(function (key) {
       switch (key.charAt(0)) {
         case '@':
@@ -70,6 +70,7 @@ window.Drupal = {
           break;
       }
     });
+
     return Drupal.stringReplace(str, processedArgs, null);
   };
 
@@ -80,6 +81,7 @@ window.Drupal = {
 
     if (!Array.isArray(keys)) {
       keys = Object.keys(args || {});
+
       keys.sort(function (a, b) {
         return a.length - b.length;
       });
@@ -112,7 +114,6 @@ window.Drupal = {
     if (args) {
       str = Drupal.formatString(str, args);
     }
-
     return str;
   };
 
@@ -128,6 +129,7 @@ window.Drupal = {
     } catch (e) {}
 
     urlParsingNode.setAttribute('href', url);
+
     return urlParsingNode.cloneNode(false).href;
   };
 
@@ -138,29 +140,28 @@ window.Drupal = {
     if (protocol === 'http:' && absoluteUrl.indexOf('https:') === 0) {
       protocol = 'https:';
     }
-
-    var baseUrl = "".concat(protocol, "//").concat(window.location.host).concat(drupalSettings.path.baseUrl.slice(0, -1));
+    var baseUrl = protocol + '//' + window.location.host + drupalSettings.path.baseUrl.slice(0, -1);
 
     try {
       absoluteUrl = decodeURIComponent(absoluteUrl);
     } catch (e) {}
-
     try {
       baseUrl = decodeURIComponent(baseUrl);
     } catch (e) {}
 
-    return absoluteUrl === baseUrl || absoluteUrl.indexOf("".concat(baseUrl, "/")) === 0;
+    return absoluteUrl === baseUrl || absoluteUrl.indexOf(baseUrl + '/') === 0;
   };
 
   Drupal.formatPlural = function (count, singular, plural, args, options) {
     args = args || {};
     args['@count'] = count;
+
     var pluralDelimiter = drupalSettings.pluralDelimiter;
     var translations = Drupal.t(singular + pluralDelimiter + plural, args, options).split(pluralDelimiter);
     var index = 0;
 
     if (typeof drupalTranslations !== 'undefined' && drupalTranslations.pluralFormula) {
-      index = count in drupalTranslations.pluralFormula ? drupalTranslations.pluralFormula[count] : drupalTranslations.pluralFormula["default"];
+      index = count in drupalTranslations.pluralFormula ? drupalTranslations.pluralFormula[count] : drupalTranslations.pluralFormula.default;
     } else if (args['@count'] !== 1) {
       index = 1;
     }
@@ -176,7 +177,7 @@ window.Drupal = {
     var message = _ref.message;
 
     if (drupalSettings.suppressDeprecationErrors === false && typeof console !== 'undefined' && console.warn) {
-      console.warn("[Deprecation] ".concat(message));
+      console.warn('[Deprecation] ' + message);
     }
   };
 
@@ -191,16 +192,13 @@ window.Drupal = {
 
     return new Proxy(target, {
       get: function get(target, key) {
-        if (key === deprecatedProperty) {
-          Drupal.deprecationError({
-            message: message
-          });
-        }
-
-        for (var _len = arguments.length, rest = new Array(_len > 2 ? _len - 2 : 0), _key = 2; _key < _len; _key++) {
+        for (var _len = arguments.length, rest = Array(_len > 2 ? _len - 2 : 0), _key = 2; _key < _len; _key++) {
           rest[_key - 2] = arguments[_key];
         }
 
+        if (key === deprecatedProperty) {
+          Drupal.deprecationError({ message: message });
+        }
         return Reflect.get.apply(Reflect, [target, key].concat(rest));
       }
     });
@@ -210,7 +208,7 @@ window.Drupal = {
     if (func in Drupal.theme) {
       var _Drupal$theme;
 
-      for (var _len2 = arguments.length, args = new Array(_len2 > 1 ? _len2 - 1 : 0), _key2 = 1; _key2 < _len2; _key2++) {
+      for (var _len2 = arguments.length, args = Array(_len2 > 1 ? _len2 - 1 : 0), _key2 = 1; _key2 < _len2; _key2++) {
         args[_key2 - 1] = arguments[_key2];
       }
 
@@ -219,6 +217,6 @@ window.Drupal = {
   };
 
   Drupal.theme.placeholder = function (str) {
-    return "<em class=\"placeholder\">".concat(Drupal.checkPlain(str), "</em>");
+    return '<em class="placeholder">' + Drupal.checkPlain(str) + '</em>';
   };
 })(Drupal, window.drupalSettings, window.drupalTranslations, window.console, window.Proxy, window.Reflect);

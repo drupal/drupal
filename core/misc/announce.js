@@ -6,8 +6,9 @@
 **/
 
 (function (Drupal, debounce) {
-  var liveElement;
+  var liveElement = void 0;
   var announcements = [];
+
   Drupal.behaviors.drupalAnnounce = {
     attach: function attach(context) {
       if (!liveElement) {
@@ -24,9 +25,9 @@
   function announce() {
     var text = [];
     var priority = 'polite';
-    var announcement;
-    var il = announcements.length;
+    var announcement = void 0;
 
+    var il = announcements.length;
     for (var i = 0; i < il; i++) {
       announcement = announcements.pop();
       text.unshift(announcement.text);
@@ -38,9 +39,13 @@
 
     if (text.length) {
       liveElement.innerHTML = '';
+
       liveElement.setAttribute('aria-busy', 'true');
+
       liveElement.setAttribute('aria-live', priority);
+
       liveElement.innerHTML = text.join('\n');
+
       liveElement.setAttribute('aria-busy', 'false');
     }
   }
@@ -50,6 +55,7 @@
       text: text,
       priority: priority
     });
+
     return debounce(announce, 200)();
   };
 })(Drupal, Drupal.debounce);

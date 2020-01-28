@@ -9,7 +9,8 @@
   function processCommentNewIndicators($placeholders) {
     var isFirstNewComment = true;
     var newCommentString = Drupal.t('new');
-    var $placeholder;
+    var $placeholder = void 0;
+
     $placeholders.each(function (index, placeholder) {
       $placeholder = $(placeholder);
       var timestamp = parseInt($placeholder.attr('data-comment-timestamp'), 10);
@@ -39,7 +40,6 @@
         var $placeholder = $(this);
         var commentTimestamp = parseInt($placeholder.attr('data-comment-timestamp'), 10);
         var nodeID = $placeholder.closest('[data-history-node-id]').attr('data-history-node-id');
-
         if (Drupal.history.needsServerCheck(nodeID, commentTimestamp)) {
           nodeIDs.push(nodeID);
           return true;
