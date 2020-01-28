@@ -63,6 +63,7 @@ class UpdatePathTestBaseTest extends UpdatePathTestBase {
     // Before accessing the site we need to run updates first or the site might
     // be broken.
     $this->runUpdates();
+    $this->assertEquals('standard', \Drupal::config('core.extension')->get('profile'));
     $this->assertEqual(\Drupal::config('system.site')->get('name'), 'Site-Install');
     $this->drupalGet('<front>');
     $this->assertText('Site-Install');
