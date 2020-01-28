@@ -22,26 +22,28 @@
     "lint:core-js-stats": "node ./node_modules/eslint/bin/eslint.js --format=./scripts/js/eslint-stats-by-type.js .",
     "lint:css": "stylelint \"**/*.css\"",
     "lint:css-checkstyle": "stylelint \"**/*.css\" --custom-formatter ./node_modules/stylelint-checkstyle-formatter/index.js",
-    "test:nightwatch": "cross-env BABEL_ENV=development node -r dotenv-safe/config -r babel-register ./node_modules/.bin/nightwatch --config ./tests/Drupal/Nightwatch/nightwatch.conf.js",
+    "test:nightwatch": "cross-env BABEL_ENV=development node -r dotenv-safe/config -r @babel/register ./node_modules/.bin/nightwatch --config ./tests/Drupal/Nightwatch/nightwatch.conf.js",
     "prettier": "prettier --write \"./**/*.es6.js\" \"./tests/Drupal/Nightwatch/**/*.js\""
   },
   "devDependencies": {
+    "@babel/core": "^7.0.0",
+    "@babel/preset-env": "^7.0.0",
+    "@babel/register": "^7.7.7",
     "autoprefixer": "^9.6.1",
-    "babel-core": "^6.26.0",
     "babel-plugin-add-header-comment": "^1.0.3",
-    "babel-preset-env": "^1.4.0",
-    "chalk": "^2.3.0",
-    "chokidar": "^2.0.0",
-    "chromedriver": "^75.1.0",
-    "cross-env": "^5.1.3",
-    "dotenv-safe": "^5.0.1",
-    "eslint": "^4.19.1",
-    "eslint-config-airbnb": "^17.0.0",
-    "eslint-config-prettier": "^2.9.0",
+    "chalk": "^3.0.0",
+    "chokidar": "^3.3.1",
+    "chromedriver": "^79.0.0",
+    "cross-env": "^6.0.3",
+    "dotenv-safe": "^8.2.0",
+    "eslint": "^6.7.2",
+    "eslint-config-airbnb": "^18.0.1",
+    "eslint-config-prettier": "^6.7.0",
     "eslint-plugin-import": "^2.13.0",
     "eslint-plugin-jsx-a11y": "^6.0.3",
-    "eslint-plugin-prettier": "^2.6.2",
+    "eslint-plugin-prettier": "^3.1.2",
     "eslint-plugin-react": "^7.10.0",
+    "eslint-plugin-react-hooks": "^1.7.0",
     "glob": "^7.1.2",
     "minimist": "^1.2.0",
     "mkdirp": "^0.5.1",
@@ -52,12 +54,12 @@
     "postcss-header": "^1.0.0",
     "postcss-import": "^12.0.1",
     "prettier": "^1.14.0",
-    "stylelint": "^9.10.1",
+    "stylelint": "^12.0.0",
     "stylelint-checkstyle-formatter": "^0.1.1",
-    "stylelint-config-standard": "^18.2.0",
+    "stylelint-config-standard": "^19.0.0",
     "stylelint-no-browser-hacks": "^1.2.1",
-    "stylelint-order": "^2.1.0",
-    "terser": "^4.3.9"
+    "stylelint-order": "^4.0.0",
+    "terser": "^4.4.3"
   },
   "//": "'development is the default environment, and legacy is for transpiling the old jQuery codebase",
   "babel": {
@@ -65,7 +67,7 @@
       "development": {
         "presets": [
           [
-            "env",
+            "@babel/preset-env",
             {
               "modules": "commonjs",
               "targets": {
@@ -78,7 +80,7 @@
       "legacy": {
         "presets": [
           [
-            "env",
+            "@babel/preset-env",
             {
               "modules": false
             }

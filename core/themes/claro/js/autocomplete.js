@@ -11,7 +11,8 @@
       $(context).find('input.form-autocomplete').once('claroAutoComplete').each(function (index, value) {
         var $input = $(value);
         var timeout = 400;
-        var classRemoveTimeout = void 0;
+        var classRemoveTimeout;
+
         var classRemove = function classRemove($autoCompleteElem) {
           $autoCompleteElem.removeClass('is-autocompleting');
         };
@@ -20,6 +21,7 @@
           if (event && event.type && event.type === 'autocompletesearch') {
             $(event.target).addClass('is-autocompleting');
           }
+
           clearTimeout(classRemoveTimeout);
           classRemoveTimeout = setTimeout(classRemove, timeout, $(event.target));
         });

@@ -74,7 +74,7 @@
 
         // Open/close the description details by toggling a tr class.
         $tbodies.on('click keydown', '.description', function(e) {
-          if (e.keyCode && (e.keyCode !== 13 && e.keyCode !== 32)) {
+          if (e.keyCode && e.keyCode !== 13 && e.keyCode !== 32) {
             return;
           }
           e.preventDefault();

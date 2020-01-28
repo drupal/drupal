@@ -9,25 +9,15 @@
   Drupal.toolbar.ToolbarModel = Backbone.Model.extend({
     defaults: {
       activeTab: null,
-
       activeTray: null,
-
       isOriented: false,
-
       isFixed: false,
-
       areSubtreesLoaded: false,
-
       isViewportOverflowConstrained: false,
-
       orientation: 'horizontal',
-
       locked: false,
-
       isTrayToggleVisible: true,
-
       height: null,
-
       offsets: {
         top: 0,
         right: 0,
@@ -35,7 +25,6 @@
         left: 0
       }
     },
-
     validate: function validate(attributes, options) {
       if (attributes.orientation === 'horizontal' && this.get('locked') && !options.override) {
         return Drupal.t('The toolbar cannot be set to a horizontal orientation when it is locked.');

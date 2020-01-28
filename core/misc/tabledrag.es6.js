@@ -405,7 +405,7 @@
     $tables.find('.tabledrag-handle').css('display', '');
     // Reduce the colspan of any effected multi-span columns.
     $tables.find('.tabledrag-has-colspan').each(function() {
-      this.colSpan = this.colSpan - 1;
+      this.colSpan -= 1;
     });
     // Change link text.
     $('.tabledrag-toggle-weight').text(Drupal.t('Show row weights'));
@@ -424,7 +424,7 @@
     $tables.find('.tabledrag-handle').css('display', 'none');
     // Increase the colspan for any columns where it was previously reduced.
     $tables.find('.tabledrag-has-colspan').each(function() {
-      this.colSpan = this.colSpan + 1;
+      this.colSpan += 1;
     });
     // Change link text.
     $('.tabledrag-toggle-weight').text(Drupal.t('Hide row weights'));

@@ -8,13 +8,13 @@
 (function ($, Drupal) {
   Drupal.theme.quickeditBackstage = function (settings) {
     var html = '';
-    html += '<div id="' + settings.id + '" />';
+    html += "<div id=\"".concat(settings.id, "\" />");
     return html;
   };
 
   Drupal.theme.quickeditEntityToolbar = function (settings) {
     var html = '';
-    html += '<div id="' + settings.id + '" class="quickedit quickedit-toolbar-container clearfix">';
+    html += "<div id=\"".concat(settings.id, "\" class=\"quickedit quickedit-toolbar-container clearfix\">");
     html += '<i class="quickedit-toolbar-pointer"></i>';
     html += '<div class="quickedit-toolbar-content">';
     html += '<div class="quickedit-toolbar quickedit-toolbar-entity clearfix icon icon-pencil">';
@@ -26,7 +26,7 @@
   };
 
   Drupal.theme.quickeditEntityToolbarLabel = function (settings) {
-    return '<span class="field">' + Drupal.checkPlain(settings.fieldLabel) + '</span>' + Drupal.checkPlain(settings.entityLabel);
+    return "<span class=\"field\">".concat(Drupal.checkPlain(settings.fieldLabel), "</span>").concat(Drupal.checkPlain(settings.entityLabel));
   };
 
   Drupal.theme.quickeditEntityToolbarFence = function () {
@@ -34,19 +34,23 @@
   };
 
   Drupal.theme.quickeditFieldToolbar = function (settings) {
-    return '<div id="' + settings.id + '" />';
+    return "<div id=\"".concat(settings.id, "\" />");
   };
 
   Drupal.theme.quickeditToolgroup = function (settings) {
     var classes = settings.classes || [];
     classes.unshift('quickedit-toolgroup');
     var html = '';
-    html += '<div class="' + classes.join(' ') + '"';
+    html += "<div class=\"".concat(classes.join(' '), "\"");
+
     if (settings.id) {
-      html += ' id="' + settings.id + '"';
+      html += " id=\"".concat(settings.id, "\"");
     }
+
     html += '>';
-    html += Drupal.theme('quickeditButtons', { buttons: settings.buttons });
+    html += Drupal.theme('quickeditButtons', {
+      buttons: settings.buttons
+    });
     html += '</div>';
     return html;
   };
@@ -56,6 +60,7 @@
 
     var _loop = function _loop(i) {
       var button = settings.buttons[i];
+
       if (!button.hasOwnProperty('type')) {
         button.type = 'button';
       }
@@ -63,20 +68,21 @@
       var attributes = [];
       var attrMap = settings.buttons[i].attributes || {};
       Object.keys(attrMap).forEach(function (attr) {
-        attributes.push(attr + (attrMap[attr] ? '="' + attrMap[attr] + '"' : ''));
+        attributes.push(attr + (attrMap[attr] ? "=\"".concat(attrMap[attr], "\"") : ''));
       });
-      html += '<button type="' + button.type + '" class="' + button.classes + '" ' + attributes.join(' ') + '>' + button.label + '</button>';
+      html += "<button type=\"".concat(button.type, "\" class=\"").concat(button.classes, "\" ").concat(attributes.join(' '), ">").concat(button.label, "</button>");
     };
 
     for (var i = 0; i < settings.buttons.length; i++) {
       _loop(i);
     }
+
     return html;
   };
 
   Drupal.theme.quickeditFormContainer = function (settings) {
     var html = '';
-    html += '<div id="' + settings.id + '" class="quickedit-form-container">';
+    html += "<div id=\"".concat(settings.id, "\" class=\"quickedit-form-container\">");
     html += '  <div class="quickedit-form">';
     html += '    <div class="placeholder">';
     html += settings.loadingMsg;

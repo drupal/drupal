@@ -1,6 +1,6 @@
 const chalk = require('chalk');
 const log = require('./log');
-const babel = require('babel-core');
+const babel = require('@babel/core');
 
 module.exports = (filePath, callback) => {
   // Transform the file.

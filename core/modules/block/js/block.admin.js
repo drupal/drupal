@@ -10,7 +10,7 @@
     attach: function attach(context, settings) {
       var $input = $('input.block-filter-text').once('block-filter-text');
       var $table = $($input.attr('data-element'));
-      var $filterRows = void 0;
+      var $filterRows;
 
       function filterBlockList(e) {
         var query = $(e.target).val().toLowerCase();
@@ -38,13 +38,11 @@
       }
     }
   };
-
   Drupal.behaviors.blockHighlightPlacement = {
     attach: function attach(context, settings) {
       if (settings.blockPlacement && $('.js-block-placed').length) {
         $(context).find('[data-drupal-selector="edit-blocks"]').once('block-highlight').each(function () {
           var $container = $(this);
-
           $('html, body').animate({
             scrollTop: $('.js-block-placed').offset().top - $container.offset().top + $container.scrollTop()
           }, 500);

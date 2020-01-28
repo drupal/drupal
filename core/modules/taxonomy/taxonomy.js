@@ -10,7 +10,6 @@
     attach: function attach(context, settings) {
       var backStep = settings.taxonomy.backStep;
       var forwardStep = settings.taxonomy.forwardStep;
-
       var tableDrag = Drupal.tableDrag.taxonomy;
       var $table = $('#taxonomy');
       var rows = $table.find('tr').length;
@@ -19,12 +18,13 @@
         $table.find('tr.taxonomy-term-preview').removeClass('taxonomy-term-preview');
         $table.find('tr.taxonomy-term-divider-top').removeClass('taxonomy-term-divider-top');
         $table.find('tr.taxonomy-term-divider-bottom').removeClass('taxonomy-term-divider-bottom');
-
         var tableBody = $table[0].tBodies[0];
+
         if (backStep) {
           for (var n = 0; n < backStep; n++) {
             $(tableBody.rows[n]).addClass('taxonomy-term-preview');
           }
+
           $(tableBody.rows[backStep - 1]).addClass('taxonomy-term-divider-top');
           $(tableBody.rows[backStep]).addClass('taxonomy-term-divider-bottom');
         }
@@ -33,6 +33,7 @@
           for (var k = rows - forwardStep - 1; k < rows - 1; k++) {
             $(tableBody.rows[k]).addClass('taxonomy-term-preview');
           }
+
           $(tableBody.rows[rows - forwardStep - 2]).addClass('taxonomy-term-divider-top');
           $(tableBody.rows[rows - forwardStep - 1]).addClass('taxonomy-term-divider-bottom');
         }

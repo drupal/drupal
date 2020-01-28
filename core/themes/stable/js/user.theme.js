@@ -7,6 +7,6 @@
 
 (function (Drupal) {
   Drupal.theme.passwordConfirmMessage = function (translate) {
-    return "<div aria-live=\"polite\" aria-atomic=\"true\" class=\"password-confirm js-password-confirm js-password-confirm-message\">" + translate.confirmTitle + " <span></span></div>";
+    return "<div aria-live=\"polite\" aria-atomic=\"true\" class=\"password-confirm js-password-confirm js-password-confirm-message\">".concat(translate.confirmTitle, " <span></span></div>");
   };
 })(Drupal);

@@ -7,7 +7,6 @@
 
 (function ($, Backbone, Drupal, document) {
   var queryString = decodeURI(window.location.search);
-
   Drupal.behaviors.tour = {
     attach: function attach(context) {
       $('body').once('tour').each(function () {
@@ -16,7 +15,6 @@
           el: $(context).find('#toolbar-tab-tour'),
           model: model
         });
-
         model.on('change:isActive', function (model, isActive) {
           $(document).trigger(isActive ? 'drupalTourStarted' : 'drupalTourStopped');
         }).set('tour', $(context).find('ol#tour'));
@@ -27,33 +25,27 @@
       });
     }
   };
-
   Drupal.tour = Drupal.tour || {
     models: {},
-
     views: {}
   };
-
   Drupal.tour.models.StateModel = Backbone.Model.extend({
     defaults: {
       tour: [],
-
       isActive: false,
-
       activeTour: []
     }
   });
-
   Drupal.tour.views.ToggleTourView = Backbone.View.extend({
-    events: { click: 'onClick' },
-
+    events: {
+      click: 'onClick'
+    },
     initialize: function initialize() {
       this.listenTo(this.model, 'change:tour change:isActive', this.render);
       this.listenTo(this.model, 'change:isActive', this.toggleTour);
     },
     render: function render() {
       this.$el.toggleClass('hidden', this._getTour().length === 0);
-
       var isActive = this.model.get('isActive');
       this.$el.find('button').toggleClass('is-active', isActive).prop('aria-pressed', isActive);
       return this;
@@ -61,26 +53,34 @@
     toggleTour: function toggleTour() {
       if (this.model.get('isActive')) {
         var $tour = this._getTour();
+
         this._removeIrrelevantTourItems($tour, this._getDocument());
+
         var that = this;
         var close = Drupal.t('Close');
+
         if ($tour.find('li').length) {
           $tour.joyride({
             autoStart: true,
             postRideCallback: function postRideCallback() {
               that.model.set('isActive', false);
             },
-
             template: {
-              link: '<a href="#close" class="joyride-close-tip" aria-label="' + close + '">&times;</a>',
+              link: "<a href=\"#close\" class=\"joyride-close-tip\" aria-label=\"".concat(close, "\">&times;</a>"),
               button: '<a href="#" class="button button--primary joyride-next-tip"></a>'
             }
           });
-          this.model.set({ isActive: true, activeTour: $tour });
+          this.model.set({
+            isActive: true,
+            activeTour: $tour
+          });
         }
       } else {
         this.model.get('activeTour').joyride('destroy');
-        this.model.set({ isActive: false, activeTour: [] });
+        this.model.set({
+          isActive: false,
+          activeTour: []
+        });
       }
     },
     onClick: function onClick(event) {
@@ -108,17 +108,21 @@
           return;
         }
 
-        if (!itemId && !itemClass || itemId && $document.find('#' + itemId).length || itemClass && $document.find('.' + itemClass).length) {
+        if (!itemId && !itemClass || itemId && $document.find("#".concat(itemId)).length || itemClass && $document.find(".".concat(itemClass)).length) {
           return;
         }
+
         removals = true;
         $this.remove();
       });
 
       if (removals) {
         var total = $tour.find('li').length;
+
         if (!total) {
-          this.model.set({ tour: [] });
+          this.model.set({
+            tour: []
+          });
         }
 
         $tour.find('li').each(function (index) {

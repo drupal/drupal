@@ -14,7 +14,6 @@
           $('#edit-test-assert-no-element-after-wait-pass').remove();
         }, 500);
       });
-
       $('#edit-test-assert-no-element-after-wait-fail').on('click', function (e) {
         e.preventDefault();
         setTimeout(function () {

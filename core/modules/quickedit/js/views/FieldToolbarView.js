@@ -8,33 +8,26 @@
 (function ($, _, Backbone, Drupal) {
   Drupal.quickedit.FieldToolbarView = Backbone.View.extend({
     $editedElement: null,
-
     editorView: null,
-
     _id: null,
-
     initialize: function initialize(options) {
       this.$editedElement = options.$editedElement;
       this.editorView = options.editorView;
-
       this.$root = this.$el;
-
-      this._id = 'quickedit-toolbar-for-' + this.model.id.replace(/[/[\]]/g, '_');
-
+      this._id = "quickedit-toolbar-for-".concat(this.model.id.replace(/[/[\]]/g, '_'));
       this.listenTo(this.model, 'change:state', this.stateChange);
     },
     render: function render() {
       this.setElement($(Drupal.theme('quickeditFieldToolbar', {
         id: this._id
       })));
-
       this.$el.prependTo(this.$root);
-
       return this;
     },
     stateChange: function stateChange(model, state) {
       var from = model.previous('state');
       var to = state;
+
       switch (to) {
         case 'inactive':
           break;
@@ -44,6 +37,7 @@
             this.$el.remove();
             this.setElement();
           }
+
           break;
 
         case 'highlighted':
@@ -59,6 +53,7 @@
           if (this.editorView.getQuickEditUISettings().unifiedToolbar) {
             this.insertWYSIWYGToolGroups();
           }
+
           break;
 
         case 'active':
@@ -87,21 +82,20 @@
         classes: ['wysiwyg-main', 'quickedit-animate-slow', 'quickedit-animate-invisible', 'quickedit-animate-delay-veryfast'],
         buttons: []
       }));
-
       this.show('wysiwyg-floated');
       this.show('wysiwyg-main');
     },
     getId: function getId() {
-      return 'quickedit-toolbar-for-' + this._id;
+      return "quickedit-toolbar-for-".concat(this._id);
     },
     getFloatedWysiwygToolgroupId: function getFloatedWysiwygToolgroupId() {
-      return 'quickedit-wysiwyg-floated-toolgroup-for-' + this._id;
+      return "quickedit-wysiwyg-floated-toolgroup-for-".concat(this._id);
     },
     getMainWysiwygToolgroupId: function getMainWysiwygToolgroupId() {
-      return 'quickedit-wysiwyg-main-toolgroup-for-' + this._id;
+      return "quickedit-wysiwyg-main-toolgroup-for-".concat(this._id);
     },
     _find: function _find(toolgroup) {
-      return this.$el.find('.quickedit-toolgroup.' + toolgroup);
+      return this.$el.find(".quickedit-toolgroup.".concat(toolgroup));
     },
     show: function show(toolgroup) {
       var $group = this._find(toolgroup);
@@ -109,7 +103,6 @@
       $group.on(Drupal.quickedit.util.constants.transitionEnd, function (event) {
         $group.off(Drupal.quickedit.util.constants.transitionEnd);
       });
-
       window.setTimeout(function () {
         $group.removeClass('quickedit-animate-invisible');
       }, 0);

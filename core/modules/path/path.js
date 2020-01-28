@@ -10,8 +10,9 @@
     attach: function attach(context) {
       $(context).find('.path-form').drupalSetSummary(function (context) {
         var path = $('.js-form-item-path-0-alias input').val();
-
-        return path ? Drupal.t('Alias: @alias', { '@alias': path }) : Drupal.t('No alias');
+        return path ? Drupal.t('Alias: @alias', {
+          '@alias': path
+        }) : Drupal.t('No alias');
       });
     }
   };

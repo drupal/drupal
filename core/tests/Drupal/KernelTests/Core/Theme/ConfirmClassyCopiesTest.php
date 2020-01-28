@@ -140,7 +140,7 @@ class ConfirmClassyCopiesTest extends KernelTestBase {
           ],
           'js' => [
             'media_embed_ckeditor.theme.es6.js' => 'decf95c314bf22c642fb630179502e43',
-            'media_embed_ckeditor.theme.js' => '1b17d61e258c4fdaa129acecf773f04e',
+            'media_embed_ckeditor.theme.js' => 'f8e192b79f25d2b61a6ff43b9733ec72',
           ],
           'images' => [
             'x-office-spreadsheet.png' => 'fc5d4b32f259ea6d0f960b17a0886f63',

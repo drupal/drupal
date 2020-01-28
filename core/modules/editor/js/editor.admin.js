@@ -27,14 +27,12 @@
 
         for (var r = 0; r < feature.rules.length; r++) {
           var featureRule = feature.rules[r];
-
           var requiredTags = featureRule.required.tags;
+
           for (var t = 0; t < requiredTags.length; t++) {
             universe[requiredTags[t]] = {
               tag: false,
-
               touchedByAllowedPropertyRule: false,
-
               touchedBytouchedByForbiddenPropertyRule: false
             };
           }
@@ -45,9 +43,10 @@
 
           for (var p = 0; p < properties.length; p++) {
             var property = properties[p];
+
             for (var pv = 0; pv < featureRule.required[property].length; pv++) {
               var propertyValue = featureRule.required[property];
-              universe[requiredTags][property + ':' + propertyValue] = false;
+              universe[requiredTags]["".concat(property, ":").concat(propertyValue)] = false;
             }
           }
         }
@@ -60,7 +59,7 @@
           return false;
         }
 
-        var key = property + ':' + propertyValue;
+        var key = "".concat(property, ":").concat(propertyValue);
 
         if (allowing) {
           universe[tag].touchedByAllowedPropertyRule = true;
@@ -71,32 +70,38 @@
             if (allowing) {
               universe[tag][key] = true;
             }
+
             return true;
           }
+
           return false;
         }
 
-
         var atLeastOneFound = false;
         var regex = key.replace(/\*/g, '[^ ]*');
+
         _.each(_.keys(universe[tag]), function (key) {
           if (key.match(regex)) {
             atLeastOneFound = true;
+
             if (allowing) {
               universe[tag][key] = true;
             }
           }
         });
+
         return atLeastOneFound;
       }
 
       function findPropertyValuesOnAllTags(universe, property, propertyValues, allowing) {
         var atLeastOneFound = false;
+
         _.each(_.keys(universe), function (tag) {
           if (findPropertyValuesOnTag(universe, tag, property, propertyValues, allowing)) {
             atLeastOneFound = true;
           }
         });
+
         return atLeastOneFound;
       }
 
@@ -106,21 +111,25 @@
         }
 
         var atLeastOneFound = false;
+
         _.each(propertyValues, function (propertyValue) {
           if (findPropertyValueOnTag(universe, tag, property, propertyValue, allowing)) {
             atLeastOneFound = true;
           }
         });
+
         return atLeastOneFound;
       }
 
       function deleteAllTagsFromUniverseIfAllowed(universe) {
         var atLeastOneDeleted = false;
+
         _.each(_.keys(universe), function (tag) {
           if (deleteFromUniverseIfAllowed(universe, tag)) {
             atLeastOneDeleted = true;
           }
         });
+
         return atLeastOneDeleted;
       }
 
@@ -128,10 +137,12 @@
         if (tag === '*') {
           return deleteAllTagsFromUniverseIfAllowed(universe);
         }
+
         if (_.has(universe, tag) && _.every(_.omit(universe[tag], 'touchedByAllowedPropertyRule'))) {
           delete universe[tag];
           return true;
         }
+
         return false;
       }
 
@@ -139,9 +150,12 @@
         var properties = ['attributes', 'styles', 'classes'];
 
         var allRequiredTags = _.keys(universe);
-        var filterRule = void 0;
+
+        var filterRule;
+
         for (var i = 0; i < filterStatus.rules.length; i++) {
           filterRule = filterStatus.rules[i];
+
           if (filterRule.allow === false) {
             if (_.intersection(allRequiredTags, filterRule.tags).length > 0) {
               return true;
@@ -172,14 +186,16 @@
 
       function markAllowedTagsAndPropertyValues(universe, filterStatus) {
         var properties = ['attributes', 'styles', 'classes'];
+        var filterRule;
+        var tag;
 
-        var filterRule = void 0;
-        var tag = void 0;
         for (var l = 0; !_.isEmpty(universe) && l < filterStatus.rules.length; l++) {
           filterRule = filterStatus.rules[l];
+
           if (filterRule.allow === true) {
             for (var m = 0; !_.isEmpty(universe) && m < filterRule.tags.length; m++) {
               tag = filterRule.tags[m];
+
               if (_.has(universe, tag)) {
                 universe[tag].tag = true;
                 deleteFromUniverseIfAllowed(universe, tag);
@@ -237,20 +253,20 @@
             return false;
           }
 
-
           var tags = _.keys(universe);
 
           for (var i = 0; i < tags.length; i++) {
             var tag = tags[i];
+
             if (_.has(universe, tag)) {
               if (universe[tag].touchedByAllowedPropertyRule === false) {
                 delete universe[tag];
               }
             }
           }
+
           return _.isEmpty(universe);
         }
-
 
         return true;
       }
@@ -269,14 +285,12 @@
       styles: [],
       classes: []
     };
-
     this.allowed = {
       tags: [],
       attributes: [],
       styles: [],
       classes: []
     };
-
     this.raw = null;
   };
 
@@ -291,9 +305,7 @@
 
   Drupal.FilterStatus = function (name) {
     this.name = name;
-
     this.active = false;
-
     this.rules = [];
   };
 
@@ -304,13 +316,19 @@
   Drupal.FilterHTMLRule = function () {
     this.tags = [];
     this.allow = null;
-
     this.restrictedTags = {
       tags: [],
-      allowed: { attributes: [], styles: [], classes: [] },
-      forbidden: { attributes: [], styles: [], classes: [] }
+      allowed: {
+        attributes: [],
+        styles: [],
+        classes: []
+      },
+      forbidden: {
+        attributes: [],
+        styles: [],
+        classes: []
+      }
     };
-
     return this;
   };
 
@@ -330,12 +348,10 @@
 
   Drupal.filterConfiguration = {
     statuses: {},
-
     liveSettingParsers: {},
-
     update: function update() {
       Object.keys(Drupal.filterConfiguration.statuses || {}).forEach(function (filterID) {
-        Drupal.filterConfiguration.statuses[filterID].active = $('[name="filters[' + filterID + '][status]"]').is(':checked');
+        Drupal.filterConfiguration.statuses[filterID].active = $("[name=\"filters[".concat(filterID, "][status]\"]")).is(':checked');
 
         if (Drupal.filterConfiguration.liveSettingParsers[filterID]) {
           Drupal.filterConfiguration.statuses[filterID].rules = Drupal.filterConfiguration.liveSettingParsers[filterID].getRules();
@@ -343,17 +359,13 @@
       });
     }
   };
-
   Drupal.behaviors.initializeFilterConfiguration = {
     attach: function attach(context, settings) {
       var $context = $(context);
-
       $context.find('#filters-status-wrapper input.form-checkbox').once('filter-editor-status').each(function () {
         var $checkbox = $(this);
         var nameAttribute = $checkbox.attr('name');
-
         var filterID = nameAttribute.substring(8, nameAttribute.indexOf(']'));
-
         Drupal.filterConfiguration.statuses[filterID] = new Drupal.FilterStatus(filterID);
       });
     }
