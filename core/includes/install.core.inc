@@ -2099,7 +2099,7 @@ function install_check_requirements($install_state) {
         'title' => $default_file_info['title_default'],
         'value' => $default_file_info['description_default'],
         'severity' => REQUIREMENT_ERROR,
-        'description' => t('The @drupal installer requires that the %default-file file not be modified in any way from the original download.', [
+        'description' => t('The @drupal installer requires that the %default-file file must not be deleted or modified from the original download.', [
             '@drupal' => drupal_install_profile_distribution_name(),
             '%default-file' => $default_file,
           ]),
