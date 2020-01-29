@@ -397,19 +397,7 @@ class ThemeNotUsingClassyLibraryTest extends KernelTestBase {
     return [
       'claro' => [
         'theme-name' => 'claro',
-        'to-skip' => [
-          'base',
-          'book-navigation',
-          'file',
-          'forum',
-          'image-widget',
-          'indented',
-          'media_library',
-          'node',
-          'search-results',
-          'media_embed_error',
-          'media_embed_ckeditor_theme',
-        ],
+        'to-skip' => [],
       ],
       'umami' => [
         'theme-name' => 'umami',
@@ -456,13 +444,7 @@ class ThemeNotUsingClassyLibraryTest extends KernelTestBase {
     return [
       [
         'theme-name' => 'claro',
-        'to-skip' => [
-          'core/drupal.dialog',
-          'core/drupal.progress',
-          'media/media_embed_ckeditor_theme',
-          'media_library/view',
-          'media_library/widget',
-        ],
+        'to-skip' => [],
       ],
       [
         'theme-name' => 'umami',
