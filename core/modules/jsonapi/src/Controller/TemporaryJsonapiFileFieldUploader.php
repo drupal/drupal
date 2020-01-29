@@ -287,6 +287,10 @@ class TemporaryJsonapiFileFieldUploader {
     $file_data = fopen('php://input', 'rb');
 
     $temp_file_path = $this->fileSystem->tempnam('temporary://', 'file');
+    if ($temp_file_path === FALSE) {
+      $this->logger->error('Temporary file could not be created for file upload.');
+      throw new HttpException(500, 'Temporary file could not be created');
+    }
     $temp_file = fopen($temp_file_path, 'wb');
 
     if ($temp_file) {
