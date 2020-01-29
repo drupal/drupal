@@ -1250,7 +1250,7 @@ function user_role_revoke_permissions($rid, array $permissions = []) {
  *
  * @see user_mail_tokens()
  */
-function _user_mail_notify($op, $account, $langcode = NULL) {
+function _user_mail_notify($op, AccountInterface $account, $langcode = NULL) {
   if (\Drupal::config('user.settings')->get('notify.' . $op)) {
     $params['account'] = $account;
     $langcode = $langcode ? $langcode : $account->getPreferredLangcode();
