@@ -2,7 +2,6 @@
 
 namespace Drupal\update;
 
-use Drupal\Component\Utility\EmailValidatorInterface;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Url;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -24,22 +23,12 @@ class UpdateSettingsForm extends ConfigFormBase implements ContainerInjectionInt
   protected $emailValidator;
 
   /**
-   * Constructs a new UpdateSettingsForm.
-   *
-   * @param \Drupal\Component\Utility\EmailValidatorInterface $email_validator
-   *   The email validator.
-   */
-  public function __construct(EmailValidatorInterface $email_validator) {
-    $this->emailValidator = $email_validator;
-  }
-
-  /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container) {
-    return new static(
-      $container->get('email.validator')
-    );
+    $instance = parent::create($container);
+    $instance->emailValidator = $container->get('email.validator');
+    return $instance;
   }
 
   /**
