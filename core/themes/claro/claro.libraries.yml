@@ -258,3 +258,56 @@ media_library.theme:
   css:
     theme:
       css/theme/media-library.css: {}
+
+progress:
+  version: VERSION
+  css:
+    component:
+      css/components/progress.css: {}
+
+classy.book-navigation:
+  version: VERSION
+  css:
+    component:
+      css/classy/components/book-navigation.css: {}
+
+classy.file:
+  version: VERSION
+  css:
+    component:
+      css/classy/components/file.css: { weight: -10 }
+
+classy.forum:
+  version: VERSION
+  css:
+    component:
+      css/classy/components/forum.css: { weight: -10 }
+
+classy.indented:
+  version: VERSION
+  css:
+    component:
+      css/classy/components/indented.css: {}
+
+classy.media_embed_error:
+  version: VERSION
+  css:
+    component:
+      css/classy/components/media-embed-error.css: {}
+
+classy.media_embed_ckeditor_theme:
+  version: VERSION
+  js:
+    js/classy/media_embed_ckeditor.theme.js: {}
+
+classy.node:
+  version: VERSION
+  css:
+    component:
+      css/classy/components/node.css: { weight: -10 }
+
+classy.search-results:
+  version: VERSION
+  css:
+    component:
+      css/classy/components/search-results.css: {}
