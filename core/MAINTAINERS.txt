@@ -505,7 +505,6 @@ API-first Initiative
 - Gabe Sullice 'gabesullice' https://www.drupal.org/u/gabesullice
 
 Admin UI & JavaScript Modernisation Initiative
-- Angela Byron 'webchick' https://www.drupal.org/u/webchick
 - Cristina Chumillas 'ckrina' https://www.drupal.org/u/ckrina
 - Sally Young 'justafish' https://www.drupal.org/u/justafish
 
