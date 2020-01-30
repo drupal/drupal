@@ -128,20 +128,6 @@ class UpdateTest extends DatabaseTestBase {
   }
 
   /**
-   * Confirm that we can update the primary key of a record successfully.
-   */
-  public function testPrimaryKeyUpdate() {
-    $num_updated = $this->connection->update('test')
-      ->fields(['id' => 42, 'name' => 'John'])
-      ->condition('id', 1)
-      ->execute();
-    $this->assertIdentical($num_updated, 1, 'Updated 1 record.');
-
-    $saved_name = $this->connection->query('SELECT name FROM {test} WHERE id = :id', [':id' => 42])->fetchField();
-    $this->assertIdentical($saved_name, 'John', 'Updated primary key successfully.');
-  }
-
-  /**
    * Confirm that we can update values in a column with special name.
    */
   public function testSpecialColumnUpdate() {
