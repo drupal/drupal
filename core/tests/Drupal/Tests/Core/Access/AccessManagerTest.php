@@ -108,9 +108,9 @@ class AccessManagerTest extends UnitTestCase {
     $this->routeProvider = $this->createMock('Drupal\Core\Routing\RouteProviderInterface');
     $map = [];
     foreach ($this->routeCollection->all() as $name => $route) {
-      $map[] = [$name, [], $route];
+      $map[] = [$name, $route];
     }
-    $map[] = ['test_route_4', ['value' => 'example'], $this->routeCollection->get('test_route_4')];
+    $map[] = ['test_route_4', $this->routeCollection->get('test_route_4')];
     $this->routeProvider->expects($this->any())
       ->method('getRouteByName')
       ->will($this->returnValueMap($map));
@@ -371,7 +371,7 @@ class AccessManagerTest extends UnitTestCase {
     $this->routeProvider = $this->createMock('Drupal\Core\Routing\RouteProviderInterface');
     $this->routeProvider->expects($this->any())
       ->method('getRouteByName')
-      ->with('test_route_1', ['value' => 'example'])
+      ->with('test_route_1')
       ->will($this->returnValue($route));
 
     $map = [];
@@ -420,7 +420,7 @@ class AccessManagerTest extends UnitTestCase {
     $this->routeProvider = $this->createMock('Drupal\Core\Routing\RouteProviderInterface');
     $this->routeProvider->expects($this->any())
       ->method('getRouteByName')
-      ->with('test_route_1', [])
+      ->with('test_route_1')
       ->will($this->returnValue($route));
 
     $map = [];

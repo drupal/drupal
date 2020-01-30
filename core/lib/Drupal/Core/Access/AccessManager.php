@@ -80,7 +80,7 @@ class AccessManager implements AccessManagerInterface {
    */
   public function checkNamedRoute($route_name, array $parameters = [], AccountInterface $account = NULL, $return_as_object = FALSE) {
     try {
-      $route = $this->routeProvider->getRouteByName($route_name, $parameters);
+      $route = $this->routeProvider->getRouteByName($route_name);
 
       // ParamConverterManager relies on the route name and object being
       // available from the parameters array.
