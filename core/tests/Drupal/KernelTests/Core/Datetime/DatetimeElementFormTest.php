@@ -58,8 +58,8 @@ class DatetimeElementFormTest extends KernelTestBase implements FormInterface {
       '#title' => 'datelist test',
       '#type' => 'datetime',
       '#default_value' => new DrupalDateTime('2000-01-01 00:00:00'),
-      '#date_date_format' => ['Y-m-d'],
-      '#date_time_format' => ['H:i:s'],
+      '#date_date_format' => 'Y-m-d',
+      '#date_time_format' => 'H:i:s',
       '#date_date_element' => 'HTML Date',
       '#date_time_element' => 'HTML Time',
       '#date_increment' => 1,
@@ -69,8 +69,8 @@ class DatetimeElementFormTest extends KernelTestBase implements FormInterface {
     // Element without specifying the default value.
     $form['simple_datetime_element'] = [
       '#type' => 'datetime',
-      '#date_date_format' => ['Y-m-d'],
-      '#date_time_format' => ['H:i:s'],
+      '#date_date_format' => 'Y-m-d',
+      '#date_time_format' => 'H:i:s',
       '#date_date_element' => 'HTML Date',
       '#date_time_element' => 'HTML Time',
     ];
@@ -106,6 +106,23 @@ class DatetimeElementFormTest extends KernelTestBase implements FormInterface {
     $this->render($form);
 
     $this->assertEqual(t('Date time callback called.'), $this->flag);
+  }
+
+  /**
+   * Tests proper timezone handling of the Datetime element.
+   */
+  public function testTimezoneHandling() {
+    // Render the form once with the site's timezone.
+    $form = \Drupal::formBuilder()->getForm($this);
+    $this->render($form);
+    $this->assertEquals('Australia/Sydney', $form['datetime_element']['#date_timezone']);
+
+    // Mimic a user with a different timezone than Australia/Sydney.
+    date_default_timezone_set('UTC');
+
+    $form = \Drupal::formBuilder()->getForm($this);
+    $this->render($form);
+    $this->assertEquals('UTC', $form['datetime_element']['#date_timezone']);
   }
 
 }
