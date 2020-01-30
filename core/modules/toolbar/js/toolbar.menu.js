@@ -17,20 +17,15 @@
     function toggleList($item, switcher) {
       var $toggle = $item.children('.toolbar-box').children('.toolbar-handle');
       switcher = typeof switcher !== 'undefined' ? switcher : !$item.hasClass('open');
-
       $item.toggleClass('open', switcher);
-
       $toggle.toggleClass('open', switcher);
-
       $toggle.find('.action').text(switcher ? ui.handleClose : ui.handleOpen);
     }
 
     function toggleClickHandler(event) {
       var $toggle = $(event.target);
       var $item = $toggle.closest('li');
-
       toggleList($item);
-
       var $openItems = $item.siblings().filter('.open');
       toggleList($openItems, false);
     }
@@ -49,11 +44,10 @@
         action: ui.handleOpen,
         text: ''
       };
-
       $menu.find('li > a').wrap('<div class="toolbar-box">');
-
       $menu.find('li').each(function (index, element) {
         var $item = $(element);
+
         if ($item.children('ul.toolbar-menu').length) {
           var $box = $item.children('.toolbar-box');
           options.text = Drupal.t('@label', {
@@ -66,20 +60,23 @@
 
     function markListLevels($lists, level) {
       level = !level ? 1 : level;
-      var $lis = $lists.children('li').addClass('level-' + level);
+      var $lis = $lists.children('li').addClass("level-".concat(level));
       $lists = $lis.children('ul');
+
       if ($lists.length) {
         markListLevels($lists, level + 1);
       }
     }
 
     function openActiveItem($menu) {
-      var pathItem = $menu.find('a[href="' + window.location.pathname + '"]');
+      var pathItem = $menu.find("a[href=\"".concat(window.location.pathname, "\"]"));
+
       if (pathItem.length && !activeItem) {
         activeItem = window.location.pathname;
       }
+
       if (activeItem) {
-        var $activeItem = $menu.find('a[href="' + activeItem + '"]').addClass('menu-item--active');
+        var $activeItem = $menu.find("a[href=\"".concat(activeItem, "\"]")).addClass('menu-item--active');
         var $activeTrail = $activeItem.parentsUntil('.root', 'li').addClass('menu-item--active-trail');
         toggleList($activeTrail, true);
       }
@@ -87,19 +84,18 @@
 
     return this.each(function (selector) {
       var $menu = $(this).once('toolbar-menu');
+
       if ($menu.length) {
         $menu.on('click.toolbar', '.toolbar-box', toggleClickHandler).on('click.toolbar', '.toolbar-box a', linkClickHandler);
-
         $menu.addClass('root');
         initItems($menu);
         markListLevels($menu);
-
         openActiveItem($menu);
       }
     });
   };
 
   Drupal.theme.toolbarMenuItemToggle = function (options) {
-    return '<button class="' + options.class + '"><span class="action">' + options.action + '</span> <span class="label">' + options.text + '</span></button>';
+    return "<button class=\"".concat(options.class, "\"><span class=\"action\">").concat(options.action, "</span> <span class=\"label\">").concat(options.text, "</span></button>");
   };
 })(jQuery, Drupal, drupalSettings);

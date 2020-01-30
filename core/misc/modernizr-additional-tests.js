@@ -7,7 +7,7 @@
 
 (function (Modernizr) {
   Modernizr.addTest('touchevents', function () {
-    var bool = void 0;
+    var bool;
 
     if ('ontouchstart' in window || window.DocumentTouch && document instanceof window.DocumentTouch) {
       bool = true;
@@ -17,6 +17,7 @@
         bool = node.offsetTop === 9;
       });
     }
+
     return bool;
   });
 })(Modernizr);

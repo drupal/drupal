@@ -19,10 +19,9 @@
 
         return Drupal.t('No revision');
       });
-
       $context.find('details.entity-translation-options').drupalSetSummary(function (context) {
         var $translationContext = $(context);
-        var translate = void 0;
+        var translate;
         var $checkbox = $translationContext.find('.js-form-item-translation-translate input');
 
         if ($checkbox.length) {

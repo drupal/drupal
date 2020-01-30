@@ -7,11 +7,10 @@
 
 (function ($, Drupal, drupalSettings, storage) {
   var currentUserID = parseInt(drupalSettings.user.uid, 10);
-
   var secondsIn30Days = 2592000;
   var thirtyDaysAgo = Math.round(new Date().getTime() / 1000) - secondsIn30Days;
-
   var embeddedLastReadTimestamps = false;
+
   if (drupalSettings.history && drupalSettings.history.lastReadTimestamps) {
     embeddedLastReadTimestamps = drupalSettings.history.lastReadTimestamps;
   }
@@ -26,11 +25,13 @@
       $.ajax({
         url: Drupal.url('history/get_node_read_timestamps'),
         type: 'POST',
-        data: { 'node_ids[]': nodeIDs },
+        data: {
+          'node_ids[]': nodeIDs
+        },
         dataType: 'json',
         success: function success(results) {
           Object.keys(results || {}).forEach(function (nodeID) {
-            storage.setItem('Drupal.history.' + currentUserID + '.' + nodeID, results[nodeID]);
+            storage.setItem("Drupal.history.".concat(currentUserID, ".").concat(nodeID), results[nodeID]);
           });
           callback();
         }
@@ -40,11 +41,12 @@
       if (embeddedLastReadTimestamps && embeddedLastReadTimestamps[nodeID]) {
         return parseInt(embeddedLastReadTimestamps[nodeID], 10);
       }
-      return parseInt(storage.getItem('Drupal.history.' + currentUserID + '.' + nodeID) || 0, 10);
+
+      return parseInt(storage.getItem("Drupal.history.".concat(currentUserID, ".").concat(nodeID)) || 0, 10);
     },
     markAsRead: function markAsRead(nodeID) {
       $.ajax({
-        url: Drupal.url('history/' + nodeID + '/read'),
+        url: Drupal.url("history/".concat(nodeID, "/read")),
         type: 'POST',
         dataType: 'json',
         success: function success(timestamp) {
@@ -52,7 +54,7 @@
             return;
           }
 
-          storage.setItem('Drupal.history.' + currentUserID + '.' + nodeID, timestamp);
+          storage.setItem("Drupal.history.".concat(currentUserID, ".").concat(nodeID), timestamp);
         }
       });
     },
@@ -65,7 +67,7 @@
         return contentTimestamp > parseInt(embeddedLastReadTimestamps[nodeID], 10);
       }
 
-      var minLastReadTimestamp = parseInt(storage.getItem('Drupal.history.' + currentUserID + '.' + nodeID) || 0, 10);
+      var minLastReadTimestamp = parseInt(storage.getItem("Drupal.history.".concat(currentUserID, ".").concat(nodeID)) || 0, 10);
       return contentTimestamp > minLastReadTimestamp;
     }
   };

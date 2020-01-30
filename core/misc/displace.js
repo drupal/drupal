@@ -18,10 +18,8 @@
     var documentElement = document.documentElement;
     var displacement = 0;
     var horizontal = edge === 'left' || edge === 'right';
-
     var placement = $el.offset()[horizontal ? 'left' : 'top'];
-
-    placement -= window['scroll' + (horizontal ? 'X' : 'Y')] || document.documentElement['scroll' + (horizontal ? 'Left' : 'Top')] || 0;
+    placement -= window["scroll".concat(horizontal ? 'X' : 'Y')] || document.documentElement["scroll".concat(horizontal ? 'Left' : 'Top')] || 0;
 
     switch (edge) {
       case 'top':
@@ -43,13 +41,15 @@
       default:
         displacement = 0;
     }
+
     return displacement;
   }
 
   function calculateOffset(edge) {
     var edgeOffset = 0;
-    var displacingElements = document.querySelectorAll('[data-offset-' + edge + ']');
+    var displacingElements = document.querySelectorAll("[data-offset-".concat(edge, "]"));
     var n = displacingElements.length;
+
     for (var i = 0; i < n; i++) {
       var el = displacingElements[i];
 
@@ -57,7 +57,7 @@
         continue;
       }
 
-      var displacement = parseInt(el.getAttribute('data-offset-' + edge), 10);
+      var displacement = parseInt(el.getAttribute("data-offset-".concat(edge)), 10);
 
       if (isNaN(displacement)) {
         displacement = getRawOffset(el, edge);
@@ -81,9 +81,11 @@
   function displace(broadcast) {
     offsets = calculateOffsets();
     Drupal.displace.offsets = offsets;
+
     if (typeof broadcast === 'undefined' || broadcast) {
       $(document).trigger('drupalViewportOffsetChange', offsets);
     }
+
     return offsets;
   }
 
@@ -92,16 +94,14 @@
       if (this.displaceProcessed) {
         return;
       }
-      this.displaceProcessed = true;
 
+      this.displaceProcessed = true;
       $(window).on('resize.drupalDisplace', debounce(displace, 200));
     }
   };
-
   Drupal.displace = displace;
   $.extend(Drupal.displace, {
     offsets: offsets,
-
     calculateOffset: calculateOffset
   });
 })(jQuery, Drupal, Drupal.debounce);

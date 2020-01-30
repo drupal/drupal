@@ -29,6 +29,7 @@
     stateChange: function stateChange(fieldModel, state) {
       var from = fieldModel.previous('state');
       var to = state;
+
       switch (to) {
         case 'inactive':
           break;
@@ -37,6 +38,7 @@
           if (from === 'invalid') {
             this.removeValidationErrors();
           }
+
           break;
 
         case 'highlighted':
@@ -47,6 +49,7 @@
             var loadDependencies = function loadDependencies(callback) {
               callback();
             };
+
             loadDependencies(function () {
               fieldModel.set('state', 'active');
             });
@@ -63,6 +66,7 @@
           if (from === 'invalid') {
             this.removeValidationErrors();
           }
+
           this.save();
           break;
 
@@ -78,13 +82,11 @@
     save: function save() {
       var fieldModel = this.fieldModel;
       var editorModel = this.model;
-      var backstageId = 'quickedit_backstage-' + this.fieldModel.id.replace(/[/[\]_\s]/g, '-');
+      var backstageId = "quickedit_backstage-".concat(this.fieldModel.id.replace(/[/[\]_\s]/g, '-'));
 
       function fillAndSubmitForm(value) {
-        var $form = $('#' + backstageId).find('form');
-
+        var $form = $("#".concat(backstageId)).find('form');
         $form.find(':input[type!="hidden"][type!="submit"]:not(select)').not('[name$="\\[summary\\]"]').val(value);
-
         $form.find('.quickedit-form-submit').trigger('click.quickedit');
       }
 
@@ -93,16 +95,14 @@
         $el: this.$el,
         nocssjs: true,
         other_view_modes: fieldModel.findOtherViewModes(),
-
         reset: !this.fieldModel.get('entity').get('inTempStore')
       };
-
       var self = this;
       Drupal.quickedit.util.form.load(formOptions, function (form, ajax) {
-        var $backstage = $(Drupal.theme('quickeditBackstage', { id: backstageId })).appendTo('body');
-
+        var $backstage = $(Drupal.theme('quickeditBackstage', {
+          id: backstageId
+        })).appendTo('body');
         var $form = $(form).appendTo($backstage);
-
         $form.prop('novalidate', true);
         var $submit = $form.find('.quickedit-form-submit');
         self.formSaveAjax = Drupal.quickedit.util.form.ajaxifySaving(formOptions, $submit);
@@ -115,11 +115,8 @@
 
         self.formSaveAjax.commands.quickeditFieldFormSaved = function (ajax, response, status) {
           removeHiddenForm();
-
           fieldModel.set('state', 'saved');
-
           fieldModel.set('htmlForOtherViewModes', response.other_view_modes);
-
           fieldModel.set('html', response.data);
         };
 

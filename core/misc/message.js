@@ -4,9 +4,12 @@
 * https://www.drupal.org/node/2815083
 * @preserve
 **/
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
 (function (Drupal) {
   Drupal.Message = function () {
@@ -23,7 +26,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     }
 
     _createClass(_class, [{
-      key: 'add',
+      key: "add",
       value: function add(message) {
         var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
 
@@ -36,31 +39,30 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         }
 
         Drupal.Message.announce(message, options);
-
-        options.id = options.id ? String(options.id) : options.type + '-' + Math.random().toFixed(15).replace('0.', '');
+        options.id = options.id ? String(options.id) : "".concat(options.type, "-").concat(Math.random().toFixed(15).replace('0.', ''));
 
         if (!Drupal.Message.getMessageTypeLabels().hasOwnProperty(options.type)) {
           var type = options.type;
-
-          throw new Error('The message type, ' + type + ', is not present in Drupal.Message.getMessageTypeLabels().');
+          throw new Error("The message type, ".concat(type, ", is not present in Drupal.Message.getMessageTypeLabels()."));
         }
 
-        this.messageWrapper.appendChild(Drupal.theme('message', { text: message }, options));
-
+        this.messageWrapper.appendChild(Drupal.theme('message', {
+          text: message
+        }, options));
         return options.id;
       }
     }, {
-      key: 'select',
+      key: "select",
       value: function select(id) {
-        return this.messageWrapper.querySelector('[data-drupal-message-id^="' + id + '"]');
+        return this.messageWrapper.querySelector("[data-drupal-message-id^=\"".concat(id, "\"]"));
       }
     }, {
-      key: 'remove',
+      key: "remove",
       value: function remove(id) {
         return this.messageWrapper.removeChild(this.select(id));
       }
     }, {
-      key: 'clear',
+      key: "clear",
       value: function clear() {
         var _this = this;
 
@@ -69,19 +71,21 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         });
       }
     }], [{
-      key: 'defaultWrapper',
+      key: "defaultWrapper",
       value: function defaultWrapper() {
         var wrapper = document.querySelector('[data-drupal-messages]');
+
         if (!wrapper) {
           wrapper = document.querySelector('[data-drupal-messages-fallback]');
           wrapper.removeAttribute('data-drupal-messages-fallback');
           wrapper.setAttribute('data-drupal-messages', '');
           wrapper.classList.remove('hidden');
         }
+
         return wrapper.innerHTML === '' ? Drupal.Message.messageInternalWrapper(wrapper) : wrapper.firstElementChild;
       }
     }, {
-      key: 'getMessageTypeLabels',
+      key: "getMessageTypeLabels",
       value: function getMessageTypeLabels() {
         return {
           status: Drupal.t('Status message'),
@@ -90,7 +94,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         };
       }
     }, {
-      key: 'announce',
+      key: "announce",
       value: function announce(message, options) {
         if (!options.priority && (options.type === 'warning' || options.type === 'error')) {
           options.priority = 'assertive';
@@ -101,7 +105,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         }
       }
     }, {
-      key: 'messageInternalWrapper',
+      key: "messageInternalWrapper",
       value: function messageInternalWrapper(messageWrapper) {
         var innerWrapper = document.createElement('div');
         innerWrapper.setAttribute('class', 'messages__wrapper');
@@ -117,19 +121,14 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     var text = _ref.text;
     var type = _ref2.type,
         id = _ref2.id;
-
     var messagesTypes = Drupal.Message.getMessageTypeLabels();
     var messageWrapper = document.createElement('div');
-
-    messageWrapper.setAttribute('class', 'messages messages--' + type);
+    messageWrapper.setAttribute('class', "messages messages--".concat(type));
     messageWrapper.setAttribute('role', type === 'error' || type === 'warning' ? 'alert' : 'status');
     messageWrapper.setAttribute('data-drupal-message-id', id);
     messageWrapper.setAttribute('data-drupal-message-type', type);
-
     messageWrapper.setAttribute('aria-label', messagesTypes[type]);
-
-    messageWrapper.innerHTML = '' + text;
-
+    messageWrapper.innerHTML = "".concat(text);
     return messageWrapper;
   };
 })(Drupal);

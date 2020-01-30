@@ -10,9 +10,9 @@
     attach: function attach(context, settings) {
       var $input = $('input.table-filter-text').once('table-filter-text');
       var $table = $($input.attr('data-table'));
-      var $rowsAndDetails = void 0;
-      var $rows = void 0;
-      var $details = void 0;
+      var $rowsAndDetails;
+      var $rows;
+      var $details;
       var searching = false;
 
       function hidePackageDetails(index, element) {
@@ -23,8 +23,7 @@
 
       function filterModuleList(e) {
         var query = $(e.target).val();
-
-        var re = new RegExp('\\b' + query, 'i');
+        var re = new RegExp("\\b".concat(query), 'i');
 
         function showModuleRow(index, row) {
           var $row = $(row);
@@ -38,18 +37,14 @@
         if (query.length >= 2) {
           searching = true;
           $rows.each(showModuleRow);
-
           $details.not('[open]').attr('data-drupal-system-state', 'forced-open');
-
           $details.attr('open', true).each(hidePackageDetails);
-
           Drupal.announce(Drupal.t('!modules modules are available in the modified list.', {
             '!modules': $rowsAndDetails.find('tbody tr:visible').length
           }));
         } else if (searching) {
           searching = false;
           $rowsAndDetails.show();
-
           $details.filter('[data-drupal-system-state="forced-open"]').removeAttr('data-drupal-system-state').attr('open', false);
         }
       }
@@ -65,7 +60,6 @@
         $rowsAndDetails = $table.find('tr, details');
         $rows = $table.find('tbody tr');
         $details = $rowsAndDetails.filter('.package-listing');
-
         $input.on({
           keyup: debounce(filterModuleList, 200),
           keydown: preventEnterKey

@@ -23,16 +23,12 @@
     },
     initialize: function initialize(options) {
       this.$el.find('a').text(options.strings.quickEdit);
-
       this.render();
-
       this.listenTo(this.model, 'change:isActive', this.render);
     },
     render: function render(entityModel, isActive) {
       this.$el.find('a').attr('aria-pressed', isActive);
-
       this.$el.closest('.contextual').toggle(!isActive);
-
       return this;
     }
   });

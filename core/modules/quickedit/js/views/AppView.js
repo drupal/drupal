@@ -7,39 +7,32 @@
 
 (function ($, _, Backbone, Drupal) {
   var reload = false;
-
   Drupal.quickedit.AppView = Backbone.View.extend({
     initialize: function initialize(options) {
       this.activeFieldStates = ['activating', 'active'];
       this.singleFieldStates = ['highlighted', 'activating', 'active'];
       this.changedFieldStates = ['changed', 'saving', 'saved', 'invalid'];
       this.readyFieldStates = ['candidate', 'highlighted'];
-
       this.listenTo(options.entitiesCollection, 'change:state', this.appStateChange);
       this.listenTo(options.entitiesCollection, 'change:isActive', this.enforceSingleActiveEntity);
-
       this.listenTo(options.fieldsCollection, 'change:state', this.editorStateChange);
-
       this.listenTo(options.fieldsCollection, 'change:html', this.renderUpdatedField);
       this.listenTo(options.fieldsCollection, 'change:html', this.propagateUpdatedField);
-
       this.listenTo(options.fieldsCollection, 'add', this.rerenderedFieldToCandidate);
-
       this.listenTo(options.fieldsCollection, 'destroy', this.teardownEditor);
     },
     appStateChange: function appStateChange(entityModel, state) {
       var app = this;
-      var entityToolbarView = void 0;
+      var entityToolbarView;
+
       switch (state) {
         case 'launching':
           reload = false;
-
           entityToolbarView = new Drupal.quickedit.EntityToolbarView({
             model: entityModel,
             appModel: this.model
           });
           entityModel.toolbarView = entityToolbarView;
-
           entityModel.get('fields').each(function (fieldModel) {
             app.setupEditor(fieldModel);
           });
@@ -47,11 +40,11 @@
           _.defer(function () {
             entityModel.set('state', 'opening');
           });
+
           break;
 
         case 'closed':
           entityToolbarView = entityModel.toolbarView;
-
           entityModel.get('fields').each(function (fieldModel) {
             app.teardownEditor(fieldModel);
           });
@@ -65,6 +58,7 @@
             reload = false;
             window.location.reload();
           }
+
           break;
       }
     },
@@ -95,11 +89,12 @@
           }
 
           if (accept) {
-            var activeField = void 0;
-            var activeFieldState = void 0;
+            var activeField;
+            var activeFieldState;
 
             if ((this.readyFieldStates.indexOf(from) !== -1 || from === 'invalid') && this.activeFieldStates.indexOf(to) !== -1) {
               activeField = this.model.get('activeField');
+
               if (activeField && activeField !== fieldModel) {
                 activeFieldState = activeField.get('state');
 
@@ -133,9 +128,7 @@
     setupEditor: function setupEditor(fieldModel) {
       var entityModel = fieldModel.get('entity');
       var entityToolbarView = entityModel.toolbarView;
-
       var fieldToolbarRoot = entityToolbarView.getToolbarRoot();
-
       var editorName = fieldModel.get('metadata').editor;
       var editorModel = new Drupal.quickedit.EditorModel();
       var editorView = new Drupal.quickedit.editors[editorName]({
@@ -143,7 +136,6 @@
         model: editorModel,
         fieldModel: fieldModel
       });
-
       var toolbarView = new Drupal.quickedit.FieldToolbarView({
         el: fieldToolbarRoot,
         model: fieldModel,
@@ -151,13 +143,11 @@
         editorView: editorView,
         entityModel: entityModel
       });
-
       var decorationView = new Drupal.quickedit.FieldDecorationView({
         el: $(editorView.getEditedElement()),
         model: fieldModel,
         editorView: editorView
       });
-
       fieldModel.editorView = editorView;
       fieldModel.toolbarView = toolbarView;
       fieldModel.decorationView = decorationView;
@@ -169,26 +159,27 @@
 
       fieldModel.toolbarView.remove();
       delete fieldModel.toolbarView;
-
       fieldModel.decorationView.remove();
       delete fieldModel.decorationView;
-
       fieldModel.editorView.remove();
       delete fieldModel.editorView;
     },
     confirmEntityDeactivation: function confirmEntityDeactivation(entityModel) {
       var that = this;
-      var discardDialog = void 0;
+      var discardDialog;
 
       function closeDiscardDialog(action) {
         discardDialog.close(action);
-
         that.model.set('activeModal', null);
 
         if (action === 'save') {
-          entityModel.set('state', 'committing', { confirmed: true });
+          entityModel.set('state', 'committing', {
+            confirmed: true
+          });
         } else {
-          entityModel.set('state', 'deactivating', { confirmed: true });
+          entityModel.set('state', 'deactivating', {
+            confirmed: true
+          });
 
           if (entityModel.get('reload')) {
             reload = true;
@@ -198,7 +189,7 @@
       }
 
       if (!this.model.get('activeModal')) {
-        var $unsavedChanges = $('<div>' + Drupal.t('You have unsaved changes') + '</div>');
+        var $unsavedChanges = $("<div>".concat(Drupal.t('You have unsaved changes'), "</div>"));
         discardDialog = Drupal.dialog($unsavedChanges.get(0), {
           title: Drupal.t('Discard changes?'),
           dialogClass: 'quickedit-discard-modal',
@@ -208,7 +199,6 @@
             click: function click() {
               closeDiscardDialog('save');
             },
-
             primary: true
           }, {
             text: Drupal.t('Discard changes'),
@@ -216,19 +206,16 @@
               closeDiscardDialog('discard');
             }
           }],
-
           closeOnEscape: false,
           create: function create() {
             $(this).parent().find('.ui-dialog-titlebar-close').remove();
           },
-
           beforeClose: false,
           close: function close(event) {
             $(event.target).remove();
           }
         });
         this.model.set('activeModal', discardDialog);
-
         discardDialog.showModal();
       }
     },
@@ -248,6 +235,7 @@
         if (from === 'changed' || from === 'invalid') {
           fieldModel.editorView.revert();
         }
+
         this.model.set('activeField', null);
       }
     },
@@ -257,9 +245,7 @@
 
       var renderField = function renderField() {
         fieldModel.destroy();
-
         $fieldWrapper.replaceWith(html);
-
         Drupal.attachBehaviors($context.get(0));
       };
 
@@ -268,8 +254,9 @@
           fieldModel.set('state', 'candidate');
 
           _.defer(function () {
-            fieldModel.set('state', 'inactive', { reason: 'rerender' });
-
+            fieldModel.set('state', 'inactive', {
+              reason: 'rerender'
+            });
             renderField();
           });
         });
@@ -283,7 +270,9 @@
       }
 
       var htmlForOtherViewModes = updatedField.get('htmlForOtherViewModes');
-      Drupal.quickedit.collections.fields.where({ logicalFieldID: updatedField.get('logicalFieldID') }).forEach(function (field) {
+      Drupal.quickedit.collections.fields.where({
+        logicalFieldID: updatedField.get('logicalFieldID')
+      }).forEach(function (field) {
         if (field === updatedField) {} else if (field.getViewMode() === updatedField.getViewMode()) {
             field.set('html', updatedField.get('html'));
           } else if (field.getViewMode() in htmlForOtherViewModes) {

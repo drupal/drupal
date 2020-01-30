@@ -9,7 +9,6 @@
   drupalSettings.dialog = {
     autoOpen: true,
     dialogClass: '',
-
     buttonClass: 'button',
     buttonPrimaryClass: 'button--primary',
     close: function close(event) {
@@ -19,7 +18,7 @@
   };
 
   Drupal.dialog = function (element, options) {
-    var undef = void 0;
+    var undef;
     var $element = $(element);
     var dialog = {
       open: false,
@@ -28,7 +27,6 @@
 
     function openDialog(settings) {
       settings = $.extend({}, drupalSettings.dialog, options, settings);
-
       $(window).trigger('dialog:beforecreate', [dialog, $element, settings]);
       $element.dialog(settings);
       dialog.open = true;
@@ -44,13 +42,18 @@
     }
 
     dialog.show = function () {
-      openDialog({ modal: false });
+      openDialog({
+        modal: false
+      });
     };
-    dialog.showModal = function () {
-      openDialog({ modal: true });
-    };
-    dialog.close = closeDialog;
 
+    dialog.showModal = function () {
+      openDialog({
+        modal: true
+      });
+    };
+
+    dialog.close = closeDialog;
     return dialog;
   };
 })(jQuery, Drupal, drupalSettings);

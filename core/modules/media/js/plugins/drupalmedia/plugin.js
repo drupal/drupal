@@ -12,6 +12,7 @@
     if (widget && widget.name === 'drupalmedia') {
       return widget;
     }
+
     return null;
   }
 
@@ -21,7 +22,6 @@
     }
 
     CKEDITOR.plugins.drupallink.registerLinkableWidget('drupalmedia');
-
     editor.getCommand('drupalunlink').on('exec', function (evt) {
       var widget = getFocusedWidget(editor);
 
@@ -30,12 +30,9 @@
       }
 
       widget.setData('link', null);
-
       this.refresh(editor, editor.elementPath());
-
       evt.cancel();
     });
-
     editor.getCommand('drupalunlink').on('refresh', function (evt) {
       var widget = getFocusedWidget(editor);
 
@@ -44,7 +41,6 @@
       }
 
       this.setState(widget.data.link ? CKEDITOR.TRISTATE_OFF : CKEDITOR.TRISTATE_DISABLED);
-
       evt.cancel();
     });
 
@@ -62,6 +58,7 @@
             unlink: CKEDITOR.TRISTATE_OFF
           };
         }
+
         return {};
       });
     }
@@ -69,19 +66,17 @@
 
   CKEDITOR.plugins.add('drupalmedia', {
     requires: 'widget',
-
     beforeInit: function beforeInit(editor) {
       var dtd = CKEDITOR.dtd;
-
-      dtd['drupal-media'] = { '#': 1 };
-
+      dtd['drupal-media'] = {
+        '#': 1
+      };
       Object.keys(dtd).forEach(function (tagName) {
         if (dtd[tagName].div) {
           dtd[tagName]['drupal-media'] = 1;
         }
       });
       dtd.a['drupal-media'] = 1;
-
       editor.widgets.add('drupalmedia', {
         allowedContent: {
           'drupal-media': {
@@ -96,7 +91,6 @@
             classes: {}
           }
         },
-
         requiredContent: new CKEDITOR.style({
           element: 'drupal-media',
           attributes: {
@@ -104,9 +98,7 @@
             'data-entity-uuid': ''
           }
         }),
-
         pathName: Drupal.t('Embedded media'),
-
         editables: {
           caption: {
             selector: 'figcaption',
@@ -114,11 +106,11 @@
             pathName: Drupal.t('Caption')
           }
         },
-
         getLabel: function getLabel() {
           if (this.data.label) {
             return this.data.label;
           }
+
           return Drupal.t('Embedded media');
         },
         upcast: function upcast(element, data) {
@@ -127,17 +119,19 @@
           if (element.name !== 'drupal-media' || attributes['data-entity-type'] !== 'media' || attributes['data-entity-uuid'] === undefined) {
             return;
           }
+
           data.attributes = CKEDITOR.tools.copy(attributes);
           data.hasCaption = data.attributes.hasOwnProperty('data-caption');
 
           if (data.hasCaption && data.attributes['data-caption'] === '') {
             data.attributes['data-caption'] = ' ';
           }
+
           data.label = null;
           data.link = null;
+
           if (element.parent.name === 'a') {
             data.link = CKEDITOR.tools.copy(element.parent.attributes);
-
             Object.keys(element.parent.attributes).forEach(function (attrName) {
               if (attrName.indexOf('data-cke-') !== -1) {
                 delete data.link[attrName];
@@ -146,9 +140,11 @@
           }
 
           var hostEntityLangcode = document.getElementById(editor.name).getAttribute('data-media-embed-host-entity-langcode');
+
           if (hostEntityLangcode) {
             data.hostEntityLangcode = hostEntityLangcode;
           }
+
           return element;
         },
         destroy: function destroy() {
@@ -167,11 +163,14 @@
 
           if (this._previewNeedsServerSideUpdate()) {
             editor.fire('lockSnapshot');
+
             this._tearDownDynamicEditables();
 
             this._loadPreview(function (widget) {
               widget._setUpDynamicEditables();
+
               widget._setUpEditButton();
+
               editor.fire('unlockSnapshot');
             });
           }
@@ -183,16 +182,17 @@
           }
 
           this.element.setAttributes(this.data.attributes);
-
           this.oldData = CKEDITOR.tools.clone(this.data);
         },
         downcast: function downcast() {
           var downcastElement = new CKEDITOR.htmlParser.element('drupal-media', this.data.attributes);
+
           if (this.data.link) {
             var link = new CKEDITOR.htmlParser.element('a', this.data.link);
             link.add(downcastElement);
             return link;
           }
+
           return downcastElement;
         },
         _setUpDynamicEditables: function _setUpDynamicEditables() {
@@ -200,12 +200,11 @@
 
           if (this.initEditable('caption', this.definition.editables.caption)) {
             var captionEditable = this.editables.caption;
-
             captionEditable.setAttribute('data-placeholder', Drupal.t('Enter caption here'));
-
             this.captionObserver = new MutationObserver(function () {
               var mediaAttributes = CKEDITOR.tools.clone(_this2.data.attributes);
               mediaAttributes['data-caption'] = captionEditable.getData();
+
               _this2.setData('attributes', mediaAttributes);
             });
             this.captionObserver.observe(captionEditable.$, {
@@ -237,24 +236,23 @@
           }
 
           embeddedMedia.setStyle('position', 'relative');
-
           var editButton = CKEDITOR.dom.element.createFromHtml(Drupal.theme('mediaEmbedEditButton'));
           embeddedMedia.getFirst().insertBeforeMe(editButton);
-
           var widget = this;
           this.element.findOne('.media-library-item__edit').on('click', function (event) {
             var saveCallback = function saveCallback(values) {
               event.cancel();
               editor.fire('saveSnapshot');
+
               if (values.hasOwnProperty('attributes')) {
                 CKEDITOR.tools.extend(values.attributes, widget.data.attributes);
-
                 Object.keys(values.attributes).forEach(function (prop) {
                   if (values.attributes[prop] === false || prop === 'data-align' && values.attributes[prop] === 'none') {
                     delete values.attributes[prop];
                   }
                 });
               }
+
               widget.setData({
                 attributes: values.attributes,
                 hasCaption: !!values.hasCaption
@@ -262,15 +260,15 @@
               editor.fire('saveSnapshot');
             };
 
-            Drupal.ckeditor.openDialog(editor, Drupal.url('editor/dialog/media/' + editor.config.drupal.format), widget.data, saveCallback, {});
+            Drupal.ckeditor.openDialog(editor, Drupal.url("editor/dialog/media/".concat(editor.config.drupal.format)), widget.data, saveCallback, {});
           });
-
           this.element.findOne('.media-library-item__edit').on('keydown', function (event) {
             var returnKey = 13;
-
             var spaceBar = 32;
+
             if (typeof event.data !== 'undefined') {
               var keypress = event.data.getKey();
+
               if (keypress === returnKey || keypress === spaceBar) {
                 event.sender.$.click();
               }
@@ -294,21 +292,20 @@
         },
         _hashData: function _hashData(data) {
           var dataToHash = CKEDITOR.tools.clone(data);
-
           delete dataToHash.attributes['data-caption'];
-
           delete dataToHash.label;
 
           if (dataToHash.link) {
             delete dataToHash.link.href;
           }
+
           return JSON.stringify(dataToHash);
         },
         _loadPreview: function _loadPreview(callback) {
           var _this3 = this;
 
           jQuery.get({
-            url: Drupal.url('media/' + editor.config.drupal.format + '/preview'),
+            url: Drupal.url("media/".concat(editor.config.drupal.format, "/preview")),
             data: {
               text: this.downcast().getOuterHtml(),
               uuid: this.data.attributes['data-entity-uuid']
@@ -316,7 +313,9 @@
             dataType: 'html',
             success: function success(previewHtml, textStatus, jqXhr) {
               _this3.element.setHtml(previewHtml);
+
               _this3.setData('label', jqXhr.getResponseHeader('Drupal-Media-Label'));
+
               callback(_this3);
             },
             error: function error() {

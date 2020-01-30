@@ -6,7 +6,9 @@ const postcssCustomProperties = require('postcss-custom-properties');
 const postcssCalc = require("postcss-calc");
 const postcssImport = require('postcss-import');
 const autoprefixer = require('autoprefixer');
-const postcssHeader = require('postcss-header');
+// @todo Load this from the package index after
+//   https://github.com/fengyuanchen/postcss-header/pull/1 has been resolved.
+const postcssHeader = require('postcss-header/lib/index');
 
 module.exports = (filePath, callback) => {
   // Transform the file.

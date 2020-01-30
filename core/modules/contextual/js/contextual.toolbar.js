@@ -23,7 +23,6 @@
     }, {
       contextualCollection: Drupal.contextual.collection
     });
-
     var viewOptions = {
       el: $('.toolbar .toolbar-bar .contextual-toolbar-tab'),
       model: contextualToolbar.model,
@@ -40,7 +39,6 @@
       }
     }
   };
-
   Drupal.contextualToolbar = {
     model: null
   };

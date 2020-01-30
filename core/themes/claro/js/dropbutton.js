@@ -7,6 +7,6 @@
 
 (function (Drupal) {
   Drupal.theme.dropbuttonToggle = function (options) {
-    return "<li class=\"dropbutton-toggle\"><button type=\"button\" class=\"dropbutton__toggle\"><span class=\"visually-hidden\">" + options.title + "</span></button></li>";
+    return "<li class=\"dropbutton-toggle\"><button type=\"button\" class=\"dropbutton__toggle\"><span class=\"visually-hidden\">".concat(options.title, "</span></button></li>");
   };
 })(Drupal);

@@ -15,12 +15,14 @@
       message: 'This function is deprecated for testing purposes.'
     });
   };
+
   var objectWithDeprecatedProperty = deprecatedProperty({
-    target: { deprecatedProperty: 'Kitten' },
+    target: {
+      deprecatedProperty: 'Kitten'
+    },
     deprecatedProperty: 'deprecatedProperty',
     message: 'This property is deprecated for testing purposes.'
   });
-
   behaviors.testDeprecations = {
     attach: function attach() {
       deprecatedFunction();
