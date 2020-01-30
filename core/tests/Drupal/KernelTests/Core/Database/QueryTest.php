@@ -142,13 +142,12 @@ class QueryTest extends DatabaseTestBase {
    * @see http://bugs.php.net/bug.php?id=45259
    */
   public function testNumericExpressionSubstitution() {
-    $count = $this->connection->query('SELECT COUNT(*) >= 3 FROM {test}')->fetchField();
-    $this->assertEqual((bool) $count, TRUE);
+    $count_expected = $this->connection->query('SELECT COUNT(*) + 3 FROM {test}')->fetchField();
 
-    $count = $this->connection->query('SELECT COUNT(*) >= :count FROM {test}', [
+    $count = $this->connection->query('SELECT COUNT(*) + :count FROM {test}', [
       ':count' => 3,
     ])->fetchField();
-    $this->assertEqual((bool) $count, TRUE);
+    $this->assertEqual($count, $count_expected);
   }
 
 }
