@@ -38,6 +38,9 @@ class Datetime extends DateElementBase {
     }
 
     $class = get_class($this);
+
+    // Note that since this information is cached, the #date_timezone property
+    // is not set here, as this needs to vary potentially by-user.
     return [
       '#input' => TRUE,
       '#element_validate' => [
@@ -61,7 +64,6 @@ class Datetime extends DateElementBase {
       '#date_time_callbacks' => [],
       '#date_year_range' => '1900:2050',
       '#date_increment' => 1,
-      '#date_timezone' => date_default_timezone_get(),
     ];
   }
 
@@ -69,6 +71,8 @@ class Datetime extends DateElementBase {
    * {@inheritdoc}
    */
   public static function valueCallback(&$element, $input, FormStateInterface $form_state) {
+    $element += ['#date_timezone' => date_default_timezone_get()];
+
     if ($input !== FALSE) {
       $date_input = $element['#date_date_element'] != 'none' && !empty($input['date']) ? $input['date'] : '';
       $time_input = $element['#date_time_element'] != 'none' && !empty($input['time']) ? $input['time'] : '';
