@@ -228,8 +228,9 @@ interface EntityTypeInterface extends PluginDefinitionInterface {
    * @param string $operation
    *   The name of the operation to use, e.g., 'default'.
    *
-   * @return string
-   *   The class for this operation's form for this entity type.
+   * @return string|null
+   *   The class for this operation's form for this entity type or NULL if the
+   *   entity type does not have a form class for this operation.
    *
    * @see \Drupal\Core\Entity\EntityFormBuilderInterface
    */
