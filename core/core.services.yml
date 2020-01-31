@@ -1575,7 +1575,10 @@ services:
       - { name: needs_destruction }
   library.discovery.parser:
     class: Drupal\Core\Asset\LibraryDiscoveryParser
-    arguments: ['@app.root', '@module_handler', '@theme.manager', '@stream_wrapper_manager']
+    arguments: ['@app.root', '@module_handler', '@theme.manager', '@stream_wrapper_manager', '@library.libraries_directory_file_finder']
+  library.libraries_directory_file_finder:
+    class: Drupal\Core\Asset\LibrariesDirectoryFileFinder
+    arguments: ['@app.root', '@site.path', '@extension.list.profile', '%install_profile%']
   library.dependency_resolver:
     class: Drupal\Core\Asset\LibraryDependencyResolver
     arguments: ['@library.discovery']
