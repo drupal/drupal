@@ -47,6 +47,13 @@ class LibraryDiscoveryParser {
   protected $streamWrapperManager;
 
   /**
+   * The libraries directory file finder.
+   *
+   * @var \Drupal\Core\Asset\LibrariesDirectoryFileFinder
+   */
+  protected $librariesDirectoryFileFinder;
+
+  /**
    * Constructs a new LibraryDiscoveryParser instance.
    *
    * @param string $root
@@ -57,8 +64,10 @@ class LibraryDiscoveryParser {
    *   The theme manager.
    * @param \Drupal\Core\StreamWrapper\StreamWrapperManagerInterface $stream_wrapper_manager
    *   The stream wrapper manager.
+   * @param \Drupal\Core\Asset\LibrariesDirectoryFileFinder $libraries_directory_file_finder
+   *   The libraries directory file finder.
    */
-  public function __construct($root, ModuleHandlerInterface $module_handler, ThemeManagerInterface $theme_manager, StreamWrapperManagerInterface $stream_wrapper_manager = NULL) {
+  public function __construct($root, ModuleHandlerInterface $module_handler, ThemeManagerInterface $theme_manager, StreamWrapperManagerInterface $stream_wrapper_manager = NULL, LibrariesDirectoryFileFinder $libraries_directory_file_finder = NULL) {
     $this->root = $root;
     $this->moduleHandler = $module_handler;
     $this->themeManager = $theme_manager;
@@ -67,6 +76,11 @@ class LibraryDiscoveryParser {
       $stream_wrapper_manager = \Drupal::service('stream_wrapper_manager');
     }
     $this->streamWrapperManager = $stream_wrapper_manager;
+    if (!$libraries_directory_file_finder) {
+      @trigger_error('Calling LibraryDiscoveryParser::__construct() without the $libraries_directory_file_finder argument is deprecated in drupal:8.9.0. The $libraries_directory_file_finder argument will be required in drupal:10.0.0. See https://www.drupal.org/node/3099614', E_USER_DEPRECATED);
+      $libraries_directory_file_finder = \Drupal::service('library.libraries_directory_file_finder');
+    }
+    $this->librariesDirectoryFileFinder = $libraries_directory_file_finder;
   }
 
   /**
@@ -189,7 +203,15 @@ class LibraryDiscoveryParser {
             if ($source[0] === '/') {
               // An absolute path maps to DRUPAL_ROOT / base_path().
               if ($source[1] !== '/') {
-                $options['data'] = substr($source, 1);
+                $source = substr($source, 1);
+                // Non core provided libraries can be in multiple locations.
+                if (strpos($source, 'libraries/') === 0) {
+                  $path_to_source = $this->librariesDirectoryFileFinder->find(substr($source, 10));
+                  if ($path_to_source) {
+                    $source = $path_to_source;
+                  }
+                }
+                $options['data'] = $source;
               }
               // A protocol-free URI (e.g., //cdn.com/example.js) is external.
               else {
@@ -278,6 +300,14 @@ class LibraryDiscoveryParser {
    *   Just like with JavaScript files, each CSS file is the key of an object
    *   that can define specific attributes. The format of the file path is the
    *   same as for the JavaScript files.
+   *   If the JavaScript or CSS file starts with /libraries/ the
+   *   library.libraries_directory_file_finder service is used to find the files
+   *   in the following locations:
+   *   - A libraries directory in the current site directory, for example:
+   *     sites/default/libraries.
+   *   - The root libraries directory.
+   *   - A libraries directory in the selected installation profile, for
+   *     example: profiles/my_install_profile/libraries.
    * - dependencies: A list of libraries this library depends on.
    * - version: The library version. The string "VERSION" can be used to mean
    *   the current Drupal core version.
