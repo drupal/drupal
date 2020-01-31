@@ -17,25 +17,24 @@ use Drupal\KernelTests\KernelTestBase;
 class ConfirmClassyCopiesTest extends KernelTestBase {
 
   /**
-   * The theme handler.
-   *
-   * @var \Drupal\Core\Extension\ThemeHandlerInterface
+   * Tests Classy's assets have not been altered.
    */
-  protected $themeHandler;
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function setUp() {
-    parent::setUp();
-
-    $this->themeHandler = $this->container->get('theme_handler');
-    $this->container->get('theme_installer')->install([
-      'umami',
-      'bartik',
-      'seven',
-      'claro',
-    ]);
+  public function testClassyHashes() {
+    $theme_path = $this->container->get('extension.list.theme')->getPath('classy');
+    foreach (['images', 'css', 'js'] as $type => $sub_folder) {
+      $asset_path = "$theme_path/$sub_folder";
+      $directory = new \RecursiveDirectoryIterator($asset_path, \FilesystemIterator::CURRENT_AS_FILEINFO | \FilesystemIterator::SKIP_DOTS);
+      $iterator = new \RecursiveIteratorIterator($directory);
+      $this->assertGreaterThan(0, iterator_count($iterator));
+      foreach ($iterator as $fileinfo) {
+        $filename = $fileinfo->getFilename();
+        $this->assertSame(
+          $this->getClassyHash($sub_folder, $filename),
+          md5_file($fileinfo->getPathname()),
+          "$filename has expected hash"
+        );
+      }
+    }
   }
 
   /**
@@ -49,13 +48,16 @@ class ConfirmClassyCopiesTest extends KernelTestBase {
    *
    * @param string $theme
    *   The theme being tested.
-   * @param string[] $file_hashes
-   *   Provides an md5 hash for every asset copied from Classy.
+   * @param string $path_replace
+   *   A string to replace paths found in CSS so relative URLs don't cuase the
+   *   hash to differ.
+   * @param string[] $filenames
+   *   Provides list of every asset copied from Classy.
    *
    * @dataProvider providerTestClassyCopies
    */
-  public function testClassyCopies($theme, array $file_hashes) {
-    $theme_path = $this->root . '/' . $this->themeHandler->getTheme($theme)->getPath();
+  public function testClassyCopies($theme, $path_replace, array $filenames) {
+    $theme_path = $this->container->get('extension.list.theme')->getPath($theme);
 
     foreach (['images', 'css', 'js'] as $sub_folder) {
       $asset_path = "$theme_path/$sub_folder/classy";
@@ -63,225 +65,313 @@ class ConfirmClassyCopiesTest extends KernelTestBase {
       // potentially no Classy subdirectory for that type. Tests can be skipped
       // for that type.
       if (!file_exists($asset_path)) {
-        $this->assertEmpty($file_hashes[$sub_folder]);
+        $this->assertEmpty($filenames[$sub_folder]);
         continue;
       }
 
       // Create iterators to collect all files in a asset directory.
-      $directory = new \RecursiveDirectoryIterator($asset_path);
+      $directory = new \RecursiveDirectoryIterator($asset_path, \FilesystemIterator::CURRENT_AS_FILEINFO | \FilesystemIterator::SKIP_DOTS);
       $iterator = new \RecursiveIteratorIterator($directory);
       $filecount = 0;
       foreach ($iterator as $fileinfo) {
-        $extension = $fileinfo->getExtension();
-        if ($extension === $sub_folder || ($sub_folder === 'images' && $extension === 'png')) {
-          $filecount++;
-          $filename = $fileinfo->getFilename();
-          $hash = md5_file($fileinfo->getPathname());
-          $this->assertNotEmpty($file_hashes[$sub_folder][$filename], "$sub_folder file: $filename not present.");
-          $this->assertEquals(
-            $file_hashes[$sub_folder][$filename],
-            $hash,
-            "$filename is in the theme's /classy subdirectory, but the file contents no longer match the original file from Classy. This should be moved to a new directory and libraries should be updated. The file can be removed from the data provider."
-          );
+        $filename = $fileinfo->getFilename();
+        if ($filename === 'README.txt') {
+          continue;
         }
 
+        $filecount++;
+
+        // Replace paths in the contents so the hash will match Classy's hashes.
+        $contents = file_get_contents($fileinfo->getPathname());
+        $contents = str_replace('(' . $path_replace, '(../../../../', $contents);
+        $contents = str_replace('(../../../images/classy/icons', '(../../images/icons', $contents);
+
+        $this->assertContains($filename, $filenames[$sub_folder], "$sub_folder file: $filename not present.");
+        $this->assertSame(
+          $this->getClassyHash($sub_folder, $filename),
+          md5($contents),
+          "$filename is in the theme's /classy subdirectory, but the file contents no longer match the original file from Classy. This should be moved to a new directory and libraries should be updated. The file can be removed from the data provider."
+        );
       }
-      $this->assertCount($filecount, $file_hashes[$sub_folder], "Different count for $sub_folder files in the /classy subdirectory. If a file was added to /classy, it shouldn't have been. If it was intentionally removed, it should also be removed from this test's data provider.");
+      $this->assertCount($filecount, $filenames[$sub_folder], "Different count for $sub_folder files in the /classy subdirectory. If a file was added to /classy, it shouldn't have been. If it was intentionally removed, it should also be removed from this test's data provider.");
     }
   }
 
   /**
-   * Provides md5 hashes for a theme's asset files copied from Classy.
+   * Provides lists of filenames for a theme's asset files copied from Classy.
    *
    * @return array
-   *   Theme name and asset file hashes.
+   *   Theme name, how to replace a path to core assets and asset file names.
    */
   public function providerTestClassyCopies() {
     return [
       'umami' => [
         'theme-name' => 'umami',
-        'file-hashes' => [
+        'path-replace' => '../../../../../../../',
+        'filenames' => [
           'css' => [
-            'media-library.css' => 'bb405519d30970c721405452dfb7b38e',
-            'action-links.css' => '6abb88c2b3b6884c1a64fa5ca4853d45',
-            'file.css' => 'b644547e5e8eb6aa23505b307dc69c32',
-            'dropbutton.css' => 'f8e4b0b81ff60206b27f622e85a6a0ee',
-            'book-navigation.css' => 'e8219368d360bd4a10763610ada85a1c',
-            'tableselect.css' => '8e966ac85a0cc60f470717410640c8fe',
-            'ui-dialog.css' => '4a3d036007ba8c8c80f4a21a369c72cc',
-            'user.css' => '0ec6acc22567a7c9c228f04b5a97c711',
-            'item-list.css' => '1d519afe6007f4b01e00f22b0ba8bf33',
-            'image-widget.css' => '2da54829199f64a2c390930c3b0913a3',
-            'field.css' => '8f4718bc926eea7e007ecfd6f410ee8d',
-            'tablesort.css' => 'f6ed3b44832bebffa09fc3b4b6ce27ab',
-            'tabs.css' => 'e58827db5c767c41b67488244c14056c',
-            'forum.css' => '297a40db815570c2195515767c4b3144',
-            'progress.css' => '5147a9b07ede9f456c6a3f3efeb520e1',
-            'collapse-processed.css' => '95039b6f71bbdd3c986179f075f74d2f',
-            'details.css' => 'fdd0606ea856072f5e6a19ab1a2e850e',
-            'inline-form.css' => 'cc5cbfd34511d9021a53ec693c110740',
-            'link.css' => '22f42d430fe458080a7739c70a2d2ea5',
-            'textarea.css' => '2bc390c137c5205bbcd7645d6c1c86de',
-            'links.css' => '21fe64349f5702cd5b89104a1d3b9cd3',
-            'form.css' => 'f9bd159b5ed0e1bfb2ca8d759e8c031c',
-            'exposed-filters.css' => '396a5f76dafec5f78f4e736f69a0874f',
-            'tabledrag.css' => '98d24ff864c7699dfa6da9190c5e70df',
-            'pager.css' => 'd10589366720f9c15b66df434baab4da',
-            'search-results.css' => 'ce3ca8fcd54e72f142ba29da5a3a5c9a',
-            'button.css' => '3abebf58e144fd4150d80facdbe5d10f',
-            'node.css' => '81ea0a3fef211dbc32549ac7f39ec646',
-            'dialog.css' => '1c1f05dde2dff1b6befacaa811c019f8',
-            'menu.css' => 'b9587d2e8f71fe2bbc625fc40b989112',
-            'icons.css' => 'c067e837e6e6d576734d443b7d40447b',
-            'breadcrumb.css' => '14268f8071dffd40ce7a39862b8fbc56',
-            'media-embed-error.css' => 'c66322e308b78af92a30401326d19d52',
-            'container-inline.css' => 'ae9caee6071b319ac97bf0bb3e14b542',
-            'more-link.css' => 'b2ebfb826e035334340193b42246b180',
+            'action-links.css',
+            'book-navigation.css',
+            'breadcrumb.css',
+            'button.css',
+            'collapse-processed.css',
+            'container-inline.css',
+            'details.css',
+            'dialog.css',
+            'dropbutton.css',
+            'exposed-filters.css',
+            'field.css',
+            'file.css',
+            'form.css',
+            'forum.css',
+            'icons.css',
+            'image-widget.css',
+            'inline-form.css',
+            'item-list.css',
+            'link.css',
+            'links.css',
+            'media-embed-error.css',
+            'media-library.css',
+            'menu.css',
+            'more-link.css',
+            'node.css',
+            'pager.css',
+            'progress.css',
+            'search-results.css',
+            'tabledrag.css',
+            'tableselect.css',
+            'tablesort.css',
+            'tabs.css',
+            'textarea.css',
+            'ui-dialog.css',
+            'user.css',
           ],
           'js' => [
-            'media_embed_ckeditor.theme.es6.js' => 'decf95c314bf22c642fb630179502e43',
-            'media_embed_ckeditor.theme.js' => '1b17d61e258c4fdaa129acecf773f04e',
+            'media_embed_ckeditor.theme.es6.js',
+            'media_embed_ckeditor.theme.js',
           ],
           'images' => [
-            'x-office-spreadsheet.png' => 'fc5d4b32f259ea6d0f960b17a0886f63',
-            'application-octet-stream.png' => 'fef73511632890590b5ae0a13c99e4bf',
-            'x-office-presentation.png' => '8ba9f51c97a2b47de2c8c117aafd7dcd',
-            'x-office-document.png' => '48e0c92b5dec1a027f43a5c6fe190f39',
-            'image-x-generic.png' => '9aca2e02c3cdbb391ca721d40fa4c0c6',
-            'text-x-script.png' => 'f9dc156d35298536011ea48226b21682',
-            'text-html.png' => '9d2d3003a786ab392d42744b2d064eec',
-            'video-x-generic.png' => 'a5dc89b884a8a1b666c15bb41fd88ee9',
-            'forum-icons.png' => 'dfa091b192819cc14523ccd653e7b5ff',
-            'text-x-generic.png' => '1b769df473f54d6f78f7aba79ec25e12',
-            'application-pdf.png' => 'bb41f8b679b9d93323b30c87fde14de9',
-            'application-x-executable.png' => 'fef73511632890590b5ae0a13c99e4bf',
-            'package-x-generic.png' => 'bb8581301a2030b48ff3c67374eed88a',
-            'text-plain.png' => '1b769df473f54d6f78f7aba79ec25e12',
-            'audio-x-generic.png' => 'f7d0e6fbcde58594bd1102db95e3ea7b',
+            'application-octet-stream.png',
+            'application-pdf.png',
+            'application-x-executable.png',
+            'audio-x-generic.png',
+            'forum-icons.png',
+            'image-x-generic.png',
+            'package-x-generic.png',
+            'text-html.png',
+            'text-plain.png',
+            'text-x-generic.png',
+            'text-x-script.png',
+            'video-x-generic.png',
+            'x-office-document.png',
+            'x-office-presentation.png',
+            'x-office-spreadsheet.png',
           ],
         ],
       ],
       'claro' => [
         'theme-name' => 'claro',
-        'file-hashes' => [
+        'path-replace' => '../../../../../',
+        'filenames' => [
           'css' => [
-            'file.css' => 'b644547e5e8eb6aa23505b307dc69c32',
-            'book-navigation.css' => 'e8219368d360bd4a10763610ada85a1c',
-            'ui-dialog.css' => '4a3d036007ba8c8c80f4a21a369c72cc',
-            'item-list.css' => '1d519afe6007f4b01e00f22b0ba8bf33',
-            'field.css' => '8f4718bc926eea7e007ecfd6f410ee8d',
-            'tablesort.css' => 'f6ed3b44832bebffa09fc3b4b6ce27ab',
-            'forum.css' => '297a40db815570c2195515767c4b3144',
-            'inline-form.css' => 'cc5cbfd34511d9021a53ec693c110740',
-            'link.css' => '22f42d430fe458080a7739c70a2d2ea5',
-            'textarea.css' => '2bc390c137c5205bbcd7645d6c1c86de',
-            'links.css' => '21fe64349f5702cd5b89104a1d3b9cd3',
-            'exposed-filters.css' => '396a5f76dafec5f78f4e736f69a0874f',
-            'indented.css' => '48e214a106d9fede1e05aa10b4796361',
-            'search-results.css' => 'ce3ca8fcd54e72f142ba29da5a3a5c9a',
-            'node.css' => '81ea0a3fef211dbc32549ac7f39ec646',
-            'menu.css' => 'ddb533716fc3be2ad76f283c5532ee85',
-            'icons.css' => '85b21f21c0017e6a9fc83d00462904d0',
-            'media-embed-error.css' => '015171a1f01fff8e2bec4e06d9b451e7',
-            'container-inline.css' => 'ae9caee6071b319ac97bf0bb3e14b542',
-            'more-link.css' => 'b2ebfb826e035334340193b42246b180',
+            'book-navigation.css',
+            'container-inline.css',
+            'exposed-filters.css',
+            'field.css',
+            'file.css',
+            'forum.css',
+            'icons.css',
+            'indented.css',
+            'inline-form.css',
+            'item-list.css',
+            'link.css',
+            'links.css',
+            'media-embed-error.css',
+            'menu.css',
+            'more-link.css',
+            'node.css',
+            'search-results.css',
+            'tablesort.css',
+            'textarea.css',
+            'ui-dialog.css',
           ],
           'js' => [
-            'media_embed_ckeditor.theme.es6.js' => 'decf95c314bf22c642fb630179502e43',
-            'media_embed_ckeditor.theme.js' => '1b17d61e258c4fdaa129acecf773f04e',
+            'media_embed_ckeditor.theme.es6.js',
+            'media_embed_ckeditor.theme.js',
           ],
           'images' => [
-            'x-office-spreadsheet.png' => 'fc5d4b32f259ea6d0f960b17a0886f63',
-            'application-octet-stream.png' => 'fef73511632890590b5ae0a13c99e4bf',
-            'x-office-presentation.png' => '8ba9f51c97a2b47de2c8c117aafd7dcd',
-            'x-office-document.png' => '48e0c92b5dec1a027f43a5c6fe190f39',
-            'image-x-generic.png' => '9aca2e02c3cdbb391ca721d40fa4c0c6',
-            'text-x-script.png' => 'f9dc156d35298536011ea48226b21682',
-            'text-html.png' => '9d2d3003a786ab392d42744b2d064eec',
-            'video-x-generic.png' => 'a5dc89b884a8a1b666c15bb41fd88ee9',
-            'forum-icons.png' => 'dfa091b192819cc14523ccd653e7b5ff',
-            'text-x-generic.png' => '1b769df473f54d6f78f7aba79ec25e12',
-            'application-pdf.png' => 'bb41f8b679b9d93323b30c87fde14de9',
-            'application-x-executable.png' => 'fef73511632890590b5ae0a13c99e4bf',
-            'package-x-generic.png' => 'bb8581301a2030b48ff3c67374eed88a',
-            'text-plain.png' => '1b769df473f54d6f78f7aba79ec25e12',
-            'audio-x-generic.png' => 'f7d0e6fbcde58594bd1102db95e3ea7b',
+            'application-octet-stream.png',
+            'application-pdf.png',
+            'application-x-executable.png',
+            'audio-x-generic.png',
+            'forum-icons.png',
+            'image-x-generic.png',
+            'package-x-generic.png',
+            'text-html.png',
+            'text-plain.png',
+            'text-x-generic.png',
+            'text-x-script.png',
+            'video-x-generic.png',
+            'x-office-document.png',
+            'x-office-presentation.png',
+            'x-office-spreadsheet.png',
           ],
         ],
       ],
       'seven' => [
         'theme-name' => 'seven',
-        'file-hashes' => [
+        'path-replace' => '../../../../../',
+        'filenames' => [
           'css' => [
-            'media-library.css' => 'bb405519d30970c721405452dfb7b38e',
-            'action-links.css' => '6abb88c2b3b6884c1a64fa5ca4853d45',
-            'file.css' => 'b644547e5e8eb6aa23505b307dc69c32',
-            'dropbutton.css' => 'f8e4b0b81ff60206b27f622e85a6a0ee',
-            'book-navigation.css' => 'e8219368d360bd4a10763610ada85a1c',
-            'tableselect.css' => '8e966ac85a0cc60f470717410640c8fe',
-            'ui-dialog.css' => '4a3d036007ba8c8c80f4a21a369c72cc',
-            'user.css' => '0ec6acc22567a7c9c228f04b5a97c711',
-            'item-list.css' => '1d519afe6007f4b01e00f22b0ba8bf33',
-            'image-widget.css' => '2da54829199f64a2c390930c3b0913a3',
-            'field.css' => '8f4718bc926eea7e007ecfd6f410ee8d',
-            'tablesort.css' => 'f6ed3b44832bebffa09fc3b4b6ce27ab',
-            'tabs.css' => 'e58827db5c767c41b67488244c14056c',
-            'forum.css' => '297a40db815570c2195515767c4b3144',
-            'progress.css' => '5147a9b07ede9f456c6a3f3efeb520e1',
-            'collapse-processed.css' => 'a287a092b5af52ee41c9962776df073e',
-            'inline-form.css' => 'cc5cbfd34511d9021a53ec693c110740',
-            'link.css' => '22f42d430fe458080a7739c70a2d2ea5',
-            'textarea.css' => '2bc390c137c5205bbcd7645d6c1c86de',
-            'links.css' => '21fe64349f5702cd5b89104a1d3b9cd3',
-            'form.css' => '27ecf2f2e4627e292f0c48b5e05c4ef5',
-            'exposed-filters.css' => '396a5f76dafec5f78f4e736f69a0874f',
-            'tabledrag.css' => '98d24ff864c7699dfa6da9190c5e70df',
-            'indented.css' => '48e214a106d9fede1e05aa10b4796361',
-            'messages.css' => '21659ecd2f7ee6884805434329e6bea4',
-            'pager.css' => 'd10589366720f9c15b66df434baab4da',
-            'search-results.css' => 'ce3ca8fcd54e72f142ba29da5a3a5c9a',
-            'button.css' => '3abebf58e144fd4150d80facdbe5d10f',
-            'node.css' => '81ea0a3fef211dbc32549ac7f39ec646',
-            'menu.css' => 'ddb533716fc3be2ad76f283c5532ee85',
-            'icons.css' => '85b21f21c0017e6a9fc83d00462904d0',
-            'breadcrumb.css' => '14268f8071dffd40ce7a39862b8fbc56',
-            'media-embed-error.css' => '015171a1f01fff8e2bec4e06d9b451e7',
-            'container-inline.css' => 'ae9caee6071b319ac97bf0bb3e14b542',
-            'more-link.css' => 'b2ebfb826e035334340193b42246b180',
+            'action-links.css',
+            'book-navigation.css',
+            'breadcrumb.css',
+            'button.css',
+            'collapse-processed.css',
+            'container-inline.css',
+            'dropbutton.css',
+            'exposed-filters.css',
+            'field.css',
+            'file.css',
+            'form.css',
+            'forum.css',
+            'icons.css',
+            'image-widget.css',
+            'indented.css',
+            'inline-form.css',
+            'item-list.css',
+            'link.css',
+            'links.css',
+            'media-embed-error.css',
+            'media-library.css',
+            'menu.css',
+            'messages.css',
+            'more-link.css',
+            'node.css',
+            'pager.css',
+            'progress.css',
+            'search-results.css',
+            'tabledrag.css',
+            'tableselect.css',
+            'tablesort.css',
+            'tabs.css',
+            'textarea.css',
+            'ui-dialog.css',
+            'user.css',
           ],
           'js' => [
-            'media_embed_ckeditor.theme.es6.js' => 'decf95c314bf22c642fb630179502e43',
-            'media_embed_ckeditor.theme.js' => '1b17d61e258c4fdaa129acecf773f04e',
+            'media_embed_ckeditor.theme.es6.js',
+            'media_embed_ckeditor.theme.js',
           ],
           'images' => [
-            'x-office-spreadsheet.png' => 'fc5d4b32f259ea6d0f960b17a0886f63',
-            'application-octet-stream.png' => 'fef73511632890590b5ae0a13c99e4bf',
-            'x-office-presentation.png' => '8ba9f51c97a2b47de2c8c117aafd7dcd',
-            'x-office-document.png' => '48e0c92b5dec1a027f43a5c6fe190f39',
-            'image-x-generic.png' => '9aca2e02c3cdbb391ca721d40fa4c0c6',
-            'text-x-script.png' => 'f9dc156d35298536011ea48226b21682',
-            'text-html.png' => '9d2d3003a786ab392d42744b2d064eec',
-            'video-x-generic.png' => 'a5dc89b884a8a1b666c15bb41fd88ee9',
-            'forum-icons.png' => 'dfa091b192819cc14523ccd653e7b5ff',
-            'text-x-generic.png' => '1b769df473f54d6f78f7aba79ec25e12',
-            'application-pdf.png' => 'bb41f8b679b9d93323b30c87fde14de9',
-            'application-x-executable.png' => 'fef73511632890590b5ae0a13c99e4bf',
-            'package-x-generic.png' => 'bb8581301a2030b48ff3c67374eed88a',
-            'text-plain.png' => '1b769df473f54d6f78f7aba79ec25e12',
-            'audio-x-generic.png' => 'f7d0e6fbcde58594bd1102db95e3ea7b',
+            'application-octet-stream.png',
+            'application-pdf.png',
+            'application-x-executable.png',
+            'audio-x-generic.png',
+            'forum-icons.png',
+            'image-x-generic.png',
+            'package-x-generic.png',
+            'text-html.png',
+            'text-plain.png',
+            'text-x-generic.png',
+            'text-x-script.png',
+            'video-x-generic.png',
+            'x-office-document.png',
+            'x-office-presentation.png',
+            'x-office-spreadsheet.png',
           ],
         ],
       ],
       // Will be populated when Classy libraries are copied to Bartik.
       'bartik' => [
         'theme-name' => 'bartik',
-        'file-hashes' => [
+        'path-replace' => '../../../../../',
+        'filenames' => [
           'css' => [],
           'js' => [],
           'images' => [],
         ],
       ],
     ];
+  }
+
+  /**
+   * Gets the hash of a Classy asset.
+   *
+   * @param string $type
+   *   The asset type.
+   * @param string $file
+   *   The asset filename.
+   *
+   * @return string
+   *   A hash for the file.
+   */
+  protected function getClassyHash($type, $file) {
+    static $hashes = [
+      'css' => [
+        'action-links.css' => '6abb88c2b3b6884c1a64fa5ca4853d45',
+        'book-navigation.css' => 'e8219368d360bd4a10763610ada85a1c',
+        'breadcrumb.css' => '14268f8071dffd40ce7a39862b8fbc56',
+        'button.css' => '3abebf58e144fd4150d80facdbe5d10f',
+        'collapse-processed.css' => 'e928df55485662a4499c9ba12def22e6',
+        'container-inline.css' => 'ae9caee6071b319ac97bf0bb3e14b542',
+        'details.css' => 'fdd0606ea856072f5e6a19ab1a2e850e',
+        'dialog.css' => 'f30e4423380f5f01d02ef0a93e010c53',
+        'dropbutton.css' => 'f8e4b0b81ff60206b27f622e85a6a0ee',
+        'exposed-filters.css' => '396a5f76dafec5f78f4e736f69a0874f',
+        'field.css' => '8f4718bc926eea7e007ecfd6f410ee8d',
+        'file.css' => '7f36f62ca67c57a82f9d9e882918a01b',
+        'form.css' => 'a8733b00eebffbc3293779cb779c808e',
+        'forum.css' => '8aad2d86dfd29818e991757581cd7ab8',
+        'icons.css' => '56f623bd343b9bc7e7ac3e3e95d7f3ce',
+        'image-widget.css' => '2da54829199f64a2c390930c3b0913a3',
+        'indented.css' => '48e214a106d9fede1e05aa10b4796361',
+        'inline-form.css' => 'cc5cbfd34511d9021a53ec693c110740',
+        'item-list.css' => '1d519afe6007f4b01e00f22b0ba8bf33',
+        'link.css' => '22f42d430fe458080a7739c70a2d2ea5',
+        'links.css' => '21fe64349f5702cd5b89104a1d3b9cd3',
+        'media-embed-error.css' => 'ab7f4c91f7b312122d30d7e09bb1bcc4',
+        'media-library.css' => 'bb405519d30970c721405452dfb7b38e',
+        'menu.css' => 'c4608b4ac9aafce1f6e0d21c6e6e6ee8',
+        'messages.css' => '2930ea9bebf4d1658e9bdc3b1f83bd43',
+        'more-link.css' => 'b2ebfb826e035334340193b42246b180',
+        'node.css' => '81ea0a3fef211dbc32549ac7f39ec646',
+        'pager.css' => 'd10589366720f9c15b66df434baab4da',
+        'progress.css' => '5147a9b07ede9f456c6a3f3efeb520e1',
+        'search-results.css' => 'ce3ca8fcd54e72f142ba29da5a3a5c9a',
+        'tabledrag.css' => '98d24ff864c7699dfa6da9190c5e70df',
+        'tableselect.css' => '8e966ac85a0cc60f470717410640c8fe',
+        'tablesort.css' => 'f6ed3b44832bebffa09fc3b4b6ce27ab',
+        'tabs.css' => 'e58827db5c767c41b67488244c14056c',
+        'textarea.css' => '2bc390c137c5205bbcd7645d6c1c86de',
+        'ui-dialog.css' => '4a3d036007ba8c8c80f4a21a369c72cc',
+        'user.css' => '0ec6acc22567a7c9c228f04b5a97c711',
+      ],
+      'js' => [
+        'media_embed_ckeditor.theme.es6.js' => 'decf95c314bf22c642fb630179502e43',
+        'media_embed_ckeditor.theme.js' => '1b17d61e258c4fdaa129acecf773f04e',
+      ],
+      'images' => [
+        'application-octet-stream.png' => 'fef73511632890590b5ae0a13c99e4bf',
+        'application-pdf.png' => 'bb41f8b679b9d93323b30c87fde14de9',
+        'application-x-executable.png' => 'fef73511632890590b5ae0a13c99e4bf',
+        'audio-x-generic.png' => 'f7d0e6fbcde58594bd1102db95e3ea7b',
+        'forum-icons.png' => 'dfa091b192819cc14523ccd653e7b5ff',
+        'image-x-generic.png' => '9aca2e02c3cdbb391ca721d40fa4c0c6',
+        'package-x-generic.png' => 'bb8581301a2030b48ff3c67374eed88a',
+        'text-html.png' => '9d2d3003a786ab392d42744b2d064eec',
+        'text-plain.png' => '1b769df473f54d6f78f7aba79ec25e12',
+        'text-x-generic.png' => '1b769df473f54d6f78f7aba79ec25e12',
+        'text-x-script.png' => 'f9dc156d35298536011ea48226b21682',
+        'video-x-generic.png' => 'a5dc89b884a8a1b666c15bb41fd88ee9',
+        'x-office-document.png' => '48e0c92b5dec1a027f43a5c6fe190f39',
+        'x-office-presentation.png' => '8ba9f51c97a2b47de2c8c117aafd7dcd',
+        'x-office-spreadsheet.png' => 'fc5d4b32f259ea6d0f960b17a0886f63',
+      ],
+    ];
+    $this->assertArrayHasKey($type, $hashes);
+    $this->assertArrayHasKey($file, $hashes[$type]);
+    return $hashes[$type][$file];
   }
 
 }
