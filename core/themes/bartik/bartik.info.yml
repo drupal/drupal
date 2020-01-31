@@ -20,11 +20,49 @@ version: VERSION
 core: 8.x
 libraries:
   - bartik/global-styling
+
+libraries-override:
+  classy/base: bartik/classy.base
+  classy/book-navigation: bartik/classy.book-navigation
+  classy/dialog: bartik/classy.dialog
+  classy/dropbutton: bartik/classy.dropbutton
+  classy/file: bartik/classy.file
+  classy/forum: bartik/classy.forum
+  classy/image-widget: bartik/classy.image-widget
+  classy/indented: bartik/classy.indented
+  classy/media_embed_ckeditor_theme: bartik/classy.media_embed_ckeditor_theme
+  classy/media_embed_error: bartik/classy.media_embed_error
+  classy/media_library: bartik/classy.media_library
+  classy/messages: bartik/classy.messages
+  classy/node: bartik/classy.node
+  classy/progress: bartik/classy.progress
+  classy/search-results: bartik/classy.search-results
+  classy/user: bartik/classy.user
+
+libraries-extend:
+  core/drupal.dialog:
+    - bartik/classy.dialog
+  core/drupal.dropbutton:
+    - bartik/classy.dropbutton
+  core/drupal.progress:
+    - bartik/classy.progress
+  file/drupal.file:
+    - bartik/classy.file
+  media/media_embed_ckeditor_theme:
+    - bartik/classy.media_embed_ckeditor_theme
+  media_library/view:
+    - bartik/classy.media_library
+  media_library/widget:
+    - bartik/classy.media_library
+  user/drupal.user:
+    - bartik/classy.user
+
 ckeditor_stylesheets:
   - css/base/elements.css
   - css/components/captions.css
   - css/components/table.css
   - css/components/text-formatted.css
+  - css/classy/components/media-embed-error.css
 regions:
   header: Header
   primary_menu: 'Primary menu'
