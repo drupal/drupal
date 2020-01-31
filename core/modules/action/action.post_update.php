@@ -22,3 +22,10 @@ function action_post_update_move_plugins(&$sandbox = NULL) {
     return $action->isConfigurable() && in_array($action->getPlugin()->getPluginId(), $resave_ids, TRUE);
   });
 }
+
+/**
+ * Removes action settings.
+ */
+function action_post_update_remove_settings() {
+  \Drupal::configFactory()->getEditable('action.settings')->delete();
+}
