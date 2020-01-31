@@ -405,24 +405,7 @@ class ThemeNotUsingClassyLibraryTest extends KernelTestBase {
       ],
       'bartik' => [
         'theme-name' => 'bartik',
-        'to-skip' => [
-          'base',
-          'book-navigation',
-          'dialog',
-          'dropbutton',
-          'file',
-          'forum',
-          'image-widget',
-          'indented',
-          'media_library',
-          'messages',
-          'node',
-          'progress',
-          'search-results',
-          'user',
-          'media_embed_error',
-          'media_embed_ckeditor_theme',
-        ],
+        'to-skip' => [],
       ],
       'seven' => [
         'theme-name' => 'seven',
@@ -452,16 +435,7 @@ class ThemeNotUsingClassyLibraryTest extends KernelTestBase {
       ],
       [
         'theme-name' => 'bartik',
-        'to-skip' => [
-          'user/drupal.user',
-          'core/drupal.dialog',
-          'core/drupal.dropbutton',
-          'file/drupal.file',
-          'core/drupal.progress',
-          'media/media_embed_ckeditor_theme',
-          'media_library/view',
-          'media_library/widget',
-        ],
+        'to-skip' => [],
       ],
       [
         'theme-name' => 'seven',
