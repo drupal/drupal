@@ -87,10 +87,10 @@ class EventSubscriber implements EventSubscriberInterface {
    */
   public function onConfigSave(ConfigCrudEvent $event) {
     $config = $event->getConfig();
-    if ($config->getName() == 'action.settings') {
-      $values = $this->state->get('ConfigImportUITest.action.settings.recursion_limit', []);
-      $values[] = $config->get('recursion_limit');
-      $this->state->set('ConfigImportUITest.action.settings.recursion_limit', $values);
+    if ($config->getName() == 'automated_cron.settings') {
+      $values = $this->state->get('ConfigImportUITest.automated_cron.settings.interval', []);
+      $values[] = $config->get('interval');
+      $this->state->set('ConfigImportUITest.automated_cron.settings.interval', $values);
     }
 
     if ($config->getName() == 'core.extension') {
@@ -119,9 +119,9 @@ class EventSubscriber implements EventSubscriberInterface {
    */
   public function onConfigDelete(ConfigCrudEvent $event) {
     $config = $event->getConfig();
-    if ($config->getName() == 'action.settings') {
-      $value = $this->state->get('ConfigImportUITest.action.settings.delete', 0);
-      $this->state->set('ConfigImportUITest.action.settings.delete', $value + 1);
+    if ($config->getName() == 'automated_cron.settings') {
+      $value = $this->state->get('ConfigImportUITest.automated_cron.settings.delete', 0);
+      $this->state->set('ConfigImportUITest.automated_cron.settings.delete', $value + 1);
     }
   }
 
