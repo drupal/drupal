@@ -649,7 +649,7 @@
         },
         {
             "name": "drupal/core",
-            "version": "8.8.x-dev",
+            "version": "8.8.2",
             "dist": {
                 "type": "path",
                 "url": "core",
@@ -879,7 +879,7 @@
         },
         {
             "name": "drupal/core-project-message",
-            "version": "8.8.x-dev",
+            "version": "8.8.2",
             "dist": {
                 "type": "path",
                 "url": "composer/Plugin/ProjectMessage",
@@ -909,7 +909,7 @@
         },
         {
             "name": "drupal/core-vendor-hardening",
-            "version": "8.8.x-dev",
+            "version": "8.8.2",
             "dist": {
                 "type": "path",
                 "url": "composer/Plugin/VendorHardening",
@@ -3372,6 +3372,7 @@
                 "psr",
                 "psr-7"
             ],
+            "abandoned": "laminas/laminas-diactoros",
             "time": "2019-08-06T17:53:53+00:00"
         },
         {
@@ -3417,6 +3418,7 @@
                 "escaper",
                 "zf"
             ],
+            "abandoned": "laminas/laminas-escaper",
             "time": "2019-09-05T20:03:20+00:00"
         },
         {
@@ -3480,6 +3482,7 @@
                 "feed",
                 "zf"
             ],
+            "abandoned": "laminas/laminas-feed",
             "time": "2019-03-05T20:08:49+00:00"
         },
         {
@@ -3526,6 +3529,7 @@
                 "stdlib",
                 "zf"
             ],
+            "abandoned": "laminas/laminas-stdlib",
             "time": "2018-08-28T21:34:05+00:00"
         }
     ],
@@ -6373,9 +6377,6 @@
     "aliases": [],
     "minimum-stability": "dev",
     "stability-flags": {
-        "drupal/core": 20,
-        "drupal/core-project-message": 20,
-        "drupal/core-vendor-hardening": 20,
         "behat/mink": 20,
         "behat/mink-selenium2-driver": 20
     },
