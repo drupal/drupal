@@ -49,7 +49,7 @@ class ConfirmClassyCopiesTest extends KernelTestBase {
    * @param string $theme
    *   The theme being tested.
    * @param string $path_replace
-   *   A string to replace paths found in CSS so relative URLs don't cuase the
+   *   A string to replace paths found in CSS so relative URLs don't cause the
    *   hash to differ.
    * @param string[] $filenames
    *   Provides list of every asset copied from Classy.
