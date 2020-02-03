@@ -154,8 +154,7 @@ class ModulesUninstallForm extends FormBase {
       // we can allow this module to be uninstalled.
       foreach (array_keys($module->required_by) as $dependent) {
         if (drupal_get_installed_schema_version($dependent) != SCHEMA_UNINSTALLED) {
-          $name = isset($modules[$dependent]->info['name']) ? $modules[$dependent]->info['name'] : $dependent;
-          $form['modules'][$module->getName()]['#required_by'][] = $name;
+          $form['modules'][$module->getName()]['#required_by'][] = $dependent;
           $form['uninstall'][$module->getName()]['#disabled'] = TRUE;
         }
       }
