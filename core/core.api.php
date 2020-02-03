@@ -1119,6 +1119,17 @@
  *     subdirectory)
  *   - Directory location: yourmodule/tests/src/FunctionalJavascript (or a
  *     subdirectory)
+ * - Build tests:
+ *   - Purpose: Test building processes and their outcomes, such as whether a
+ *     live update process actually works, or whether a Composer project
+ *     template actually builds a working site. Provides a temporary build
+ *     workspace and a PHP-native HTTP server to send requests to the site
+ *     you've built.
+ *   - Base class: \Drupal\BuildTests\Framework\BuildTestBase
+ *   - Namespace: \Drupal\Tests\yourmodule\Build (or a
+ *     subdirectory)
+ *   - Directory location: yourmodule/tests/src/Build (or a
+ *     subdirectory)
  *
  * Some notes about writing PHP test classes:
  * - The class needs a phpDoc comment block with a description and
