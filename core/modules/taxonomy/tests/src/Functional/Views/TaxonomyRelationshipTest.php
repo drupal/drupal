@@ -105,6 +105,13 @@ class TaxonomyRelationshipTest extends TaxonomyTestBase {
       $this->assertTrue($row->_relationship_entities['nid'] instanceof NodeInterface);
       $this->assertEqual($row->_relationship_entities['nid']->id(), $this->nodes[$index]->id());
     }
+
+    // Test node fields are available through relationship.
+    \Drupal::service('module_installer')->install(['views_ui']);
+    $this->drupalLogin($this->createUser(['administer views']));
+    $this->drupalGet('admin/structure/views/view/test_taxonomy_term_relationship');
+    $this->click('#views-add-field');
+    $this->assertSession()->pageTextContains('Body');
   }
 
 }
