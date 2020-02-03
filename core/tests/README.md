@@ -44,7 +44,7 @@ to install the following additional software:
   https://sites.google.com/a/chromium.org/chromedriver/
 * PHP 7.1 or higher
 
-## Running unit, functional, and kernel tests
+## Running tests
 
 The PHPUnit executable is vendor/bin/phpunit -- you will need to locate your
 vendor directory (which may be outside the Drupal root).
@@ -57,10 +57,30 @@ a particular group:
 ./vendor/bin/phpunit -c /path/to/your/phpunit.xml --group Groupname
 ```
 
+Drupal core currently has a number of different types of tests that can be run
+using PHPUnit:
+- unit
+- kernel
+- functional
+- functional-javascript
+- build
+
+These are organized into PHPUnit test suites. You can run one test suite or many
+in combination by using `--testsuite` on the command line:
+```
+./vendor/bin/phpunit -c /path/to/your/phpunit.xml --testsuite unit
+./vendor/bin/phpunit -c /path/to/your/phpunit.xml --testsuite functional,functional-javascript
+```
+These can be combined with groups and filters:
+```
+./vendor/bin/phpunit -c /path/to/your/phpunit.xml --testsuite build --group Composer
+./vendor/bin/phpunit -c /path/to/your/phpunit.xml --testsuite build --exclude-group Build
+./vendor/bin/phpunit -c /path/to/your/phpunit.xml --testsuite unit --filter ClassTest::testMethod
+```
 More information on running tests can be found at
 https://www.drupal.org/docs/8/phpunit/running-phpunit-tests
 
-## Running Functional JavaScript tests
+## Setup for running Functional JavaScript tests
 
 You can run JavaScript tests that are based on the
 \Drupal\FunctionalJavascriptTests\WebDriverTestBase base class in the same way
