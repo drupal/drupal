@@ -7,6 +7,7 @@ use Drupal\image\Entity\ImageStyle;
 use Drupal\Tests\image\Functional\ImageFieldTestBase;
 use Drupal\node\Entity\Node;
 use Drupal\file\Entity\File;
+use Drupal\Tests\rdf\Traits\RdfParsingTrait;
 use Drupal\Tests\TestFileCreationTrait;
 
 /**
@@ -15,6 +16,8 @@ use Drupal\Tests\TestFileCreationTrait;
  * @group rdf
  */
 class ImageFieldAttributesTest extends ImageFieldTestBase {
+
+  use RdfParsingTrait;
 
   use TestFileCreationTrait {
     getTestFiles as drupalGetTestFiles;
@@ -31,6 +34,13 @@ class ImageFieldAttributesTest extends ImageFieldTestBase {
    * {@inheritdoc}
    */
   protected $defaultTheme = 'stark';
+
+  /**
+   * URI of the front page of the Drupal site.
+   *
+   * @var string
+   */
+  protected $baseUri;
 
   /**
    * The name of the image field used in the test.
@@ -77,6 +87,9 @@ class ImageFieldAttributesTest extends ImageFieldTestBase {
     $nid = $this->uploadNodeImage($image, $this->fieldName, 'article', $this->randomMachineName());
     $this->node = Node::load($nid);
     $this->file = File::load($this->node->{$this->fieldName}->target_id);
+
+    // Prepares commonly used URIs.
+    $this->baseUri = Url::fromRoute('<front>', [], ['absolute' => TRUE])->toString();
   }
 
   /**
@@ -99,12 +112,6 @@ class ImageFieldAttributesTest extends ImageFieldTestBase {
       ->view($this->node, 'teaser');
     $html = \Drupal::service('renderer')->renderRoot($node_render_array);
 
-    // Parse the teaser.
-    $parser = new \EasyRdf_Parser_Rdfa();
-    $graph = new \EasyRdf_Graph();
-    $base_uri = Url::fromRoute('<front>', [], ['absolute' => TRUE])->toString();
-    $parser->parse($graph, $html, 'rdfa', $base_uri);
-
     // Construct the node and image URIs for testing.
     $node_uri = $this->node->toUrl('canonical', ['absolute' => TRUE])->toString();
     $image_uri = ImageStyle::load('medium')->buildUrl($this->file->getFileUri());
@@ -114,14 +121,14 @@ class ImageFieldAttributesTest extends ImageFieldTestBase {
       'type' => 'uri',
       'value' => $image_uri,
     ];
-    $this->assertTrue($graph->hasProperty($node_uri, 'http://ogp.me/ns#image', $expected_value), 'Node to file relation found in RDF output (og:image).');
+    $this->assertTrue($this->hasRdfProperty($html, $this->baseUri, $node_uri, 'http://ogp.me/ns#image', $expected_value), 'Node to file relation found in RDF output (og:image).');
 
     // Test image type.
     $expected_value = [
       'type' => 'uri',
       'value' => 'http://xmlns.com/foaf/0.1/Image',
     ];
-    $this->assertTrue($graph->hasProperty($image_uri, 'http://www.w3.org/1999/02/22-rdf-syntax-ns#type', $expected_value), 'Image type found in RDF output (foaf:Image).');
+    $this->assertTrue($this->hasRdfProperty($html, $this->baseUri, $image_uri, 'http://www.w3.org/1999/02/22-rdf-syntax-ns#type', $expected_value), 'Term type found in RDF output (skos:Concept).');
   }
 
 }

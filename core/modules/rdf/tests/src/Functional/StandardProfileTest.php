@@ -10,6 +10,7 @@ use Drupal\node\NodeInterface;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\comment\Entity\Comment;
 use Drupal\taxonomy\Entity\Term;
+use Drupal\Tests\rdf\Traits\RdfParsingTrait;
 
 /**
  * Tests the RDF mappings and RDFa markup of the standard profile.
@@ -17,6 +18,8 @@ use Drupal\taxonomy\Entity\Term;
  * @group rdf
  */
 class StandardProfileTest extends BrowserTestBase {
+
+  use RdfParsingTrait;
 
   /**
    * {@inheritdoc}
@@ -206,10 +209,11 @@ class StandardProfileTest extends BrowserTestBase {
    */
   protected function doFrontPageRdfaTests() {
     // Feed the HTML into the parser.
-    $graph = $this->getRdfGraph(Url::fromRoute('<front>'));
+    $this->drupalGet(Url::fromRoute('<front>'));
 
     // Ensure that both articles are listed.
-    $this->assertEqual(2, count($graph->allOfType('http://schema.org/Article')), 'Two articles found on front page.');
+    // $this->assertEqual(2, count($this->getRdfGraph(Url::fromRoute('<front>'), $this->baseUri)->allOfType('http://schema.org/Article')), 'Two articles found on front page.');
+    $this->assertEqual(2, $this->getElementByRdfTypeCount(Url::fromRoute('<front>'), $this->baseUri, 'http://schema.org/Article'), 'Two articles found on front page.');
 
     // Test interaction count.
     $expected_value = [
@@ -217,23 +221,21 @@ class StandardProfileTest extends BrowserTestBase {
       'value' => 'UserComments:1',
       'lang' => 'en',
     ];
-    $this->assertTrue($graph->hasProperty($this->articleUri, 'http://schema.org/interactionCount', $expected_value), "Teaser comment count was found (schema:interactionCount).");
+    $this->assertTrue($this->hasRdfProperty($this->getSession()->getPage()->getContent(), $this->baseUri, $this->articleUri, 'http://schema.org/interactionCount', $expected_value), 'Teaser comment count was found (schema:interactionCount).');
 
     // Test the properties that are common between pages and articles and are
     // displayed in full and teaser mode.
-    $this->assertRdfaCommonNodeProperties($graph, $this->article, "Teaser");
+    $this->assertRdfaCommonNodeProperties($this->article, "Teaser");
     // Test properties that are displayed in both teaser and full mode.
-    $this->assertRdfaArticleProperties($graph, "Teaser");
+    $this->assertRdfaArticleProperties("Teaser");
 
     // @todo Once the image points to the original instead of the processed
     //   image, move this to testArticleProperties().
-    $image_file = $this->article->get('field_image')->entity;
-    $image_uri = ImageStyle::load('medium')->buildUrl($image_file->getFileUri());
     $expected_value = [
       'type' => 'uri',
-      'value' => $image_uri,
+      'value' => $this->imageUri,
     ];
-    $this->assertTrue($graph->hasProperty($this->articleUri, 'http://schema.org/image', $expected_value), "Teaser image was found (schema:image).");
+    $this->assertTrue($this->hasRdfProperty($this->getSession()->getPage()->getContent(), $this->baseUri, $this->articleUri, 'http://schema.org/image', $expected_value), 'Teaser image was found (schema:image).');
   }
 
   /**
@@ -245,25 +247,26 @@ class StandardProfileTest extends BrowserTestBase {
    */
   protected function doArticleRdfaTests() {
     // Feed the HTML into the parser.
-    $graph = $this->getRdfGraph($this->article->toUrl());
+    $this->drupalGet($this->article->toUrl());
 
     // Type.
-    $this->assertEqual($graph->type($this->articleUri), 'schema:Article', 'Article type was found (schema:Article).');
+    $this->assertEqual($this->getElementRdfType($this->article->toUrl(), $this->baseUri, $this->articleUri), 'schema:Article', 'Article type was found (schema:Article).');
 
     // Test the properties that are common between pages and articles.
-    $this->assertRdfaCommonNodeProperties($graph, $this->article, "Article");
+    $this->assertRdfaCommonNodeProperties($this->article, "Article");
     // Test properties that are displayed in both teaser and full mode.
-    $this->assertRdfaArticleProperties($graph, "Article");
+    $this->assertRdfaArticleProperties("Article");
     // Test the comment properties displayed on articles.
-    $this->assertRdfaNodeCommentProperties($graph);
+    $this->assertRdfaNodeCommentProperties();
 
     // @todo Once the image points to the original instead of the processed
     //   image, move this to testArticleProperties().
+
     $expected_value = [
       'type' => 'uri',
       'value' => $this->imageUri,
     ];
-    $this->assertTrue($graph->hasProperty($this->articleUri, 'http://schema.org/image', $expected_value), "Article image was found (schema:image).");
+    $this->assertTrue($this->hasRdfProperty($this->getSession()->getPage()->getContent(), $this->baseUri, $this->articleUri, 'http://schema.org/image', $expected_value), 'Teaser image was found (schema:image).');
   }
 
   /**
@@ -281,14 +284,11 @@ class StandardProfileTest extends BrowserTestBase {
     $node_type->setDisplaySubmitted(TRUE);
     $node_type->save();
 
-    // Feed the HTML into the parser.
-    $graph = $this->getRdfGraph($this->page->toUrl());
-
     // Type.
-    $this->assertEqual($graph->type($this->pageUri), 'schema:WebPage', 'Page type was found (schema:WebPage).');
+    $this->assertEqual($this->getElementRdfType($this->page->toUrl(), $this->baseUri, $this->pageUri), 'schema:WebPage', 'Page type was found (schema:WebPage).');
 
     // Test the properties that are common between pages and articles.
-    $this->assertRdfaCommonNodeProperties($graph, $this->page, "Page");
+    $this->assertRdfaCommonNodeProperties($this->page, "Page");
   }
 
   /**
@@ -297,18 +297,15 @@ class StandardProfileTest extends BrowserTestBase {
   protected function doUserRdfaTests() {
     $this->drupalLogin($this->rootUser);
 
-    // Feed the HTML into the parser.
-    $graph = $this->getRdfGraph($this->adminUser->toUrl());
-
     // User type.
-    $this->assertEqual($graph->type($this->authorUri), 'schema:Person', "User type was found (schema:Person) on user page.");
+    $this->assertEqual($this->getElementRdfType($this->adminUser->toUrl(), $this->baseUri, $this->authorUri), 'schema:Person', 'User type was found (schema:Person) on user page.');
 
     // User name.
     $expected_value = [
       'type' => 'literal',
       'value' => $this->adminUser->label(),
     ];
-    $this->assertTrue($graph->hasProperty($this->authorUri, 'http://schema.org/name', $expected_value), "User name was found (schema:name) on user page.");
+    $this->assertTrue($this->hasRdfProperty($this->getSession()->getPage()->getContent(), $this->baseUri, $this->authorUri, 'http://schema.org/name', $expected_value), 'User name was found (schema:name) on user page.');
 
     $this->drupalLogout();
   }
@@ -317,11 +314,9 @@ class StandardProfileTest extends BrowserTestBase {
    * Tests that term data is exposed on term page.
    */
   protected function doTermRdfaTests() {
-    // Feed the HTML into the parser.
-    $graph = $this->getRdfGraph($this->term->toUrl());
 
     // Term type.
-    $this->assertEqual($graph->type($this->termUri), 'schema:Thing', "Term type was found (schema:Thing) on term page.");
+    $this->assertEqual($this->getElementRdfType($this->term->toUrl(), $this->baseUri, $this->termUri), 'schema:Thing', 'Term type was found (schema:Thing) on term page.');
 
     // Term name.
     $expected_value = [
@@ -329,8 +324,7 @@ class StandardProfileTest extends BrowserTestBase {
       'value' => $this->term->getName(),
       'lang' => 'en',
     ];
-    $this->assertTrue($graph->hasProperty($this->termUri, 'http://schema.org/name', $expected_value), "Term name was found (schema:name) on term page.");
-
+    $this->assertTrue($this->hasRdfProperty($this->getSession()->getPage()->getContent(), $this->baseUri, $this->termUri, 'http://schema.org/name', $expected_value), 'Term name was found (schema:name) on term page.');
     // @todo Add test for term description once it is a field:
     //   https://www.drupal.org/node/569434.
   }
@@ -338,14 +332,15 @@ class StandardProfileTest extends BrowserTestBase {
   /**
    * Tests output for properties held in common between articles and pages.
    *
-   * @param \EasyRdf_Graph $graph
-   *   The EasyRDF graph object.
    * @param \Drupal\node\NodeInterface $node
    *   The node being displayed.
    * @param string $message_prefix
    *   The word to use in the test assertion message.
+   *
+   * @throws \Drupal\Core\Entity\EntityMalformedException
    */
-  protected function assertRdfaCommonNodeProperties($graph, NodeInterface $node, $message_prefix) {
+  protected function assertRdfaCommonNodeProperties(NodeInterface $node, $message_prefix) {
+    $this->drupalGet($node->toUrl());
     $uri = $node->toUrl('canonical', ['absolute' => TRUE])->toString();
 
     // Title.
@@ -354,7 +349,7 @@ class StandardProfileTest extends BrowserTestBase {
       'value' => $node->get('title')->value,
       'lang' => 'en',
     ];
-    $this->assertTrue($graph->hasProperty($uri, 'http://schema.org/name', $expected_value), "$message_prefix title was found (schema:name).");
+    $this->assertTrue($this->hasRdfProperty($this->getSession()->getPage()->getContent(), $this->baseUri, $uri, 'http://schema.org/name', $expected_value), "$message_prefix title was found (schema:name).");
 
     // Created date.
     $expected_value = [
@@ -362,7 +357,7 @@ class StandardProfileTest extends BrowserTestBase {
       'value' => $this->container->get('date.formatter')->format($node->get('created')->value, 'custom', 'c', 'UTC'),
       'lang' => 'en',
     ];
-    $this->assertTrue($graph->hasProperty($uri, 'http://schema.org/dateCreated', $expected_value), "$message_prefix created date was found (schema:dateCreated) in teaser.");
+    $this->assertTrue($this->hasRdfProperty($this->getSession()->getPage()->getContent(), $this->baseUri, $uri, 'http://schema.org/dateCreated', $expected_value), "$message_prefix created date was found (schema:dateCreated) in teaser.");
 
     // Body.
     $expected_value = [
@@ -370,41 +365,39 @@ class StandardProfileTest extends BrowserTestBase {
       'value' => $node->get('body')->value,
       'lang' => 'en',
     ];
-    $this->assertTrue($graph->hasProperty($uri, 'http://schema.org/text', $expected_value), "$message_prefix body was found (schema:text) in teaser.");
+    $this->assertTrue($this->hasRdfProperty($this->getSession()->getPage()->getContent(), $this->baseUri, $uri, 'http://schema.org/text', $expected_value), "$message_prefix body was found (schema:text) in teaser.");
 
     // Author.
     $expected_value = [
       'type' => 'uri',
       'value' => $this->authorUri,
     ];
-    $this->assertTrue($graph->hasProperty($uri, 'http://schema.org/author', $expected_value), "$message_prefix author was found (schema:author) in teaser.");
+    $this->assertTrue($this->hasRdfProperty($this->getSession()->getPage()->getContent(), $this->baseUri, $uri, 'http://schema.org/author', $expected_value), "$message_prefix author was found (schema:author) in teaser.");
 
     // Author type.
-    $this->assertEqual($graph->type($this->authorUri), 'schema:Person', "$message_prefix author type was found (schema:Person).");
+    $this->assertEqual($this->getElementRdfType($node->toUrl(), $this->baseUri, $this->authorUri), 'schema:Person', '$message_prefix author type was found (schema:Person).');
 
     // Author name.
     $expected_value = [
       'type' => 'literal',
       'value' => $this->adminUser->label(),
     ];
-    $this->assertTrue($graph->hasProperty($this->authorUri, 'http://schema.org/name', $expected_value), "$message_prefix author name was found (schema:name).");
+    $this->assertTrue($this->hasRdfProperty($this->getSession()->getPage()->getContent(), $this->baseUri, $this->authorUri, 'http://schema.org/name', $expected_value), "$message_prefix author name was found (schema:name).");
   }
 
   /**
    * Tests output for article properties displayed in both view modes.
    *
-   * @param \EasyRdf_Graph $graph
-   *   The EasyRDF graph object.
    * @param string $message_prefix
    *   The word to use in the test assertion message.
    */
-  protected function assertRdfaArticleProperties($graph, $message_prefix) {
+  protected function assertRdfaArticleProperties($message_prefix) {
     // Tags.
     $expected_value = [
       'type' => 'uri',
       'value' => $this->termUri,
     ];
-    $this->assertTrue($graph->hasProperty($this->articleUri, 'http://schema.org/about', $expected_value), "$message_prefix tag was found (schema:about).");
+    $this->assertTrue($this->hasRdfProperty($this->getSession()->getPage()->getContent(), $this->baseUri, $this->articleUri, 'http://schema.org/about', $expected_value), "$message_prefix tag was found (schema:about).");
 
     // Tag type.
     // @todo Enable with https://www.drupal.org/node/2072791.
@@ -422,20 +415,19 @@ class StandardProfileTest extends BrowserTestBase {
 
   /**
    * Tests output for comment properties on nodes in full page view mode.
-   *
-   * @param \EasyRdf_Graph $graph
-   *   The EasyRDF graph object.
    */
-  protected function assertRdfaNodeCommentProperties($graph) {
+  protected function assertRdfaNodeCommentProperties() {
+
+    $this->drupalGet($this->article->toUrl());
     // Relationship between node and comment.
     $expected_value = [
       'type' => 'uri',
       'value' => $this->articleCommentUri,
     ];
-    $this->assertTrue($graph->hasProperty($this->articleUri, 'http://schema.org/comment', $expected_value), 'Relationship between node and comment found (schema:comment).');
+    $this->assertTrue($this->hasRdfProperty($this->getSession()->getPage()->getContent(), $this->baseUri, $this->articleUri, 'http://schema.org/comment', $expected_value), "Relationship between node and comment found (schema:comment).");
 
     // Comment type.
-    $this->assertEqual($graph->type($this->articleCommentUri), 'schema:Comment', 'Comment type was found (schema:Comment).');
+    $this->assertEqual($this->getElementRdfType($this->article->toUrl(), $this->baseUri, $this->articleCommentUri), 'schema:Comment', 'Comment type was found (schema:Comment).');
 
     // Comment title.
     $expected_value = [
@@ -443,7 +435,7 @@ class StandardProfileTest extends BrowserTestBase {
       'value' => $this->articleComment->get('subject')->value,
       'lang' => 'en',
     ];
-    $this->assertTrue($graph->hasProperty($this->articleCommentUri, 'http://schema.org/name', $expected_value), 'Article comment title was found (schema:name).');
+    $this->assertTrue($this->hasRdfProperty($this->getSession()->getPage()->getContent(), $this->baseUri, $this->articleCommentUri, 'http://schema.org/name', $expected_value), "Article comment title was found (schema:name).");
 
     // Comment created date.
     $expected_value = [
@@ -451,7 +443,7 @@ class StandardProfileTest extends BrowserTestBase {
       'value' => $this->container->get('date.formatter')->format($this->articleComment->get('created')->value, 'custom', 'c', 'UTC'),
       'lang' => 'en',
     ];
-    $this->assertTrue($graph->hasProperty($this->articleCommentUri, 'http://schema.org/dateCreated', $expected_value), 'Article comment created date was found (schema:dateCreated).');
+    $this->assertTrue($this->hasRdfProperty($this->getSession()->getPage()->getContent(), $this->baseUri, $this->articleCommentUri, 'http://schema.org/dateCreated', $expected_value), "Article comment created date was found (schema:dateCreated).");
 
     // Comment body.
     $text = $this->articleComment->get('comment_body')->value;
@@ -463,24 +455,24 @@ class StandardProfileTest extends BrowserTestBase {
 ",
       'lang' => 'en',
     ];
-    $this->assertTrue($graph->hasProperty($this->articleCommentUri, 'http://schema.org/text', $expected_value), 'Article comment body was found (schema:text).');
+    $this->assertTrue($this->hasRdfProperty($this->getSession()->getPage()->getContent(), $this->baseUri, $this->articleCommentUri, 'http://schema.org/text', $expected_value), "Article comment body was found (schema:text).");
 
     // Comment uid.
     $expected_value = [
       'type' => 'uri',
       'value' => $this->commenterUri,
     ];
-    $this->assertTrue($graph->hasProperty($this->articleCommentUri, 'http://schema.org/author', $expected_value), 'Article comment author was found (schema:author).');
+    $this->assertTrue($this->hasRdfProperty($this->getSession()->getPage()->getContent(), $this->baseUri, $this->articleCommentUri, 'http://schema.org/author', $expected_value), "Article comment author was found (schema:author).");
 
     // Comment author type.
-    $this->assertEqual($graph->type($this->commenterUri), 'schema:Person', 'Comment author type was found (schema:Person).');
+    $this->assertEqual($this->getElementRdfType($this->article->toUrl(), $this->baseUri, $this->commenterUri), 'schema:Person', 'Comment author type was found (schema:Person).');
 
     // Comment author name.
     $expected_value = [
       'type' => 'literal',
       'value' => $this->webUser->getAccountName(),
     ];
-    $this->assertTrue($graph->hasProperty($this->commenterUri, 'http://schema.org/name', $expected_value), 'Comment author name was found (schema:name).');
+    $this->assertTrue($this->hasRdfProperty($this->getSession()->getPage()->getContent(), $this->baseUri, $this->commenterUri, 'http://schema.org/name', $expected_value), "Comment author name was found (schema:name).");
   }
 
   /**
@@ -517,22 +509,6 @@ class StandardProfileTest extends BrowserTestBase {
     $comment = Comment::create($values);
     $comment->save();
     return $comment;
-  }
-
-  /**
-   * Get the EasyRdf_Graph object for a page.
-   *
-   * @param \Drupal\Core\Url $url
-   *   The URL object for the page.
-   *
-   * @return \EasyRdf_Graph
-   *   The RDF graph object.
-   */
-  protected function getRdfGraph(Url $url) {
-    $parser = new \EasyRdf_Parser_Rdfa();
-    $graph = new \EasyRdf_Graph();
-    $parser->parse($graph, $this->drupalGet($url), 'rdfa', $this->baseUri);
-    return $graph;
   }
 
 }
