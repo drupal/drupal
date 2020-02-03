@@ -88,7 +88,6 @@
       }
 
       Object.keys(settings.machineName).forEach(sourceId => {
-        let machine = '';
         const options = settings.machineName[sourceId];
 
         const $source = $context
@@ -117,14 +116,8 @@
         options.maxlength = $target.attr('maxlength');
         // Hide the form item container of the machine name form element.
         $wrapper.addClass('visually-hidden');
-        // Determine the initial machine name value. Unless the machine name
-        // form element is disabled or not empty, the initial default value is
-        // based on the human-readable form element value.
-        if ($target.is(':disabled') || $target.val() !== '') {
-          machine = $target.val();
-        } else if ($source.val() !== '') {
-          machine = self.transliterate($source.val(), options);
-        }
+        // Initial machine name from the target field default value.
+        const machine = $target.val();
         // Append the machine name preview to the source field.
         const $preview = $(
           `<span class="machine-name-value">${
@@ -152,6 +145,18 @@
           $preview,
           options,
         };
+
+        // If no initial value, determine machine name based on the
+        // human-readable form element value.
+        if (machine === '' && $source.val() !== '') {
+          self.transliterate($source.val(), options).done(machineName => {
+            self.showMachineName(
+              machineName.substr(0, options.maxlength),
+              eventData,
+            );
+          });
+        }
+
         // If it is editable, append an edit link.
         const $link = $(
           `<span class="admin-link"><button type="button" class="link">${Drupal.t(

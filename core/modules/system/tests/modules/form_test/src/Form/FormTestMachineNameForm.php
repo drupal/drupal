@@ -48,6 +48,19 @@ class FormTestMachineNameForm extends FormBase {
         'source' => ['machine_name_2_label'],
       ],
     ];
+    $form['machine_name_3_label'] = [
+      '#type' => 'textfield',
+      '#title' => 'Machine name 3 label',
+      '#default_value' => 'Yet another machine name',
+    ];
+    $form['machine_name_3'] = [
+      '#type' => 'machine_name',
+      '#title' => 'Machine name 3',
+      '#description' => 'Another machine name.',
+      '#machine_name' => [
+        'source' => ['machine_name_3_label'],
+      ],
+    ];
     $form['submit'] = [
       '#type' => 'submit',
       '#value' => 'Submit',
