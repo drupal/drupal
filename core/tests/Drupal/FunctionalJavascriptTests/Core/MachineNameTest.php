@@ -73,11 +73,16 @@ class MachineNameTest extends WebDriverTestBase {
     $machine_name_2_wrapper = $machine_name_2_field->getParent();
     $machine_name_1_value = $page->find('css', '#edit-machine-name-1-label-machine-name-suffix .machine-name-value');
     $machine_name_2_value = $page->find('css', '#edit-machine-name-2-label-machine-name-suffix .machine-name-value');
+    $machine_name_3_value = $page->find('css', '#edit-machine-name-3-label-machine-name-suffix .machine-name-value');
     $button_1 = $page->find('css', '#edit-machine-name-1-label-machine-name-suffix button.link');
 
-    // Assert both fields are initialized correctly.
+    // Assert all fields are initialized correctly.
     $this->assertNotEmpty($machine_name_1_value, 'Machine name field 1 must be initialized');
     $this->assertNotEmpty($machine_name_2_value, 'Machine name field 2 must be initialized');
+    $this->assertNotEmpty($machine_name_3_value, 'Machine name field 3 must be initialized');
+
+    // Assert that a machine name based on a default value is initialized.
+    $this->assertJsCondition('jQuery("#edit-machine-name-3-label-machine-name-suffix .machine-name-value").html() == "yet_another_machine_name"');
 
     // Field must be present for the rest of the test to work.
     if (empty($machine_name_1_value)) {

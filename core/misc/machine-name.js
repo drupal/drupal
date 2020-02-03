@@ -50,7 +50,6 @@
       }
 
       Object.keys(settings.machineName).forEach(function (sourceId) {
-        var machine = '';
         var options = settings.machineName[sourceId];
         var $source = $context.find(sourceId).addClass('machine-name-source').once('machine-name');
         var $target = $context.find(options.target).addClass('machine-name-target');
@@ -67,13 +66,7 @@
 
         options.maxlength = $target.attr('maxlength');
         $wrapper.addClass('visually-hidden');
-
-        if ($target.is(':disabled') || $target.val() !== '') {
-          machine = $target.val();
-        } else if ($source.val() !== '') {
-          machine = self.transliterate($source.val(), options);
-        }
-
+        var machine = $target.val();
         var $preview = $("<span class=\"machine-name-value\">".concat(options.field_prefix).concat(Drupal.checkPlain(machine)).concat(options.field_suffix, "</span>"));
         $suffix.empty();
 
@@ -95,6 +88,13 @@
           $preview: $preview,
           options: options
         };
+
+        if (machine === '' && $source.val() !== '') {
+          self.transliterate($source.val(), options).done(function (machineName) {
+            self.showMachineName(machineName.substr(0, options.maxlength), eventData);
+          });
+        }
+
         var $link = $("<span class=\"admin-link\"><button type=\"button\" class=\"link\">".concat(Drupal.t('Edit'), "</button></span>")).on('click', eventData, clickEditHandler);
         $suffix.append($link);
 
