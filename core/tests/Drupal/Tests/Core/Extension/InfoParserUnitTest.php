@@ -529,8 +529,8 @@ UNPARSABLE_CORE_VERSION_REQUIREMENT;
         'unparsable_core_version_requirement.info.txt' => $unparsable_core_version_requirement,
       ],
     ]);
-    $this->expectException(\UnexpectedValueException::class);
-    $this->expectExceptionMessage('Could not parse version constraint not-this-version: Invalid version string "not-this-version"');
+    $this->expectException(InfoParserException::class);
+    $this->expectExceptionMessage("The 'core_version_requirement' constraint (not-this-version) is not a valid value in vfs://modules/fixtures/unparsable_core_version_requirement.info.txt");
     $this->infoParser->parse(vfsStream::url('modules/fixtures/unparsable_core_version_requirement.info.txt'));
   }
 
