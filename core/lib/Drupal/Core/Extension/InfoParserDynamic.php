@@ -77,7 +77,12 @@ class InfoParserDynamic implements InfoParserInterface {
         throw new InfoParserException("Invalid 'core' value \"{$parsed_info['core']}\" in " . $filename);
       }
       if (isset($parsed_info['core_version_requirement'])) {
-        $supports_pre_core_version_requirement_version = static::isConstraintSatisfiedByPreviousVersion($parsed_info['core_version_requirement'], static::FIRST_CORE_VERSION_REQUIREMENT_SUPPORTED_VERSION);
+        try {
+          $supports_pre_core_version_requirement_version = static::isConstraintSatisfiedByPreviousVersion($parsed_info['core_version_requirement'], static::FIRST_CORE_VERSION_REQUIREMENT_SUPPORTED_VERSION);
+        }
+        catch (\UnexpectedValueException $e) {
+          throw new InfoParserException("The 'core_version_requirement' constraint ({$parsed_info['core_version_requirement']}) is not a valid value in $filename");
+        }
         // If the 'core_version_requirement' constraint does not satisfy any
         // Drupal 8 versions before 8.7.7 then 'core' cannot be set or it will
         // effectively support all versions of Drupal 8 because
