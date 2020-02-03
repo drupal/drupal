@@ -3,6 +3,7 @@
 namespace Drupal\views_ui\ParamConverter;
 
 use Drupal\Core\Config\ConfigFactoryInterface;
+use Drupal\Core\Entity\EntityRepositoryInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\ParamConverter\AdminPathConfigEntityConverter;
 use Drupal\Core\ParamConverter\ParamConverterInterface;
@@ -50,17 +51,7 @@ class ViewUIConverter extends AdminPathConfigEntityConverter implements ParamCon
    * @param \Drupal\Core\Entity\EntityRepositoryInterface $entity_repository
    *   The entity repository.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, SharedTempStoreFactory $temp_store_factory, ConfigFactoryInterface $config_factory = NULL, AdminContext $admin_context = NULL, $entity_repository = NULL) {
-    // The config factory and admin context are new arguments due to changing
-    // the parent. Avoid an error on updated sites by falling back to getting
-    // them from the container.
-    // @todo Remove in 8.2.x in https://www.drupal.org/node/2674328.
-    if (!$config_factory) {
-      $config_factory = \Drupal::configFactory();
-    }
-    if (!$admin_context) {
-      $admin_context = \Drupal::service('router.admin_context');
-    }
+  public function __construct(EntityTypeManagerInterface $entity_type_manager, SharedTempStoreFactory $temp_store_factory, ConfigFactoryInterface $config_factory, AdminContext $admin_context, EntityRepositoryInterface $entity_repository) {
     parent::__construct($entity_type_manager, $config_factory, $admin_context, $entity_repository);
 
     $this->tempStoreFactory = $temp_store_factory;
