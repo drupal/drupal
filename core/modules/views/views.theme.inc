@@ -139,7 +139,9 @@ function template_preprocess_views_view_fields(&$variables) {
       }
 
       if (!empty($variables['options']['separator']) && $previous_inline && $object->inline && $object->content) {
-        $object->separator = Xss::filterAdmin($variables['options']['separator']);
+        $object->separator = [
+          '#markup' => $variables['options']['separator'],
+        ];
       }
 
       $object->class = Html::cleanCssIdentifier($id);
