@@ -136,6 +136,19 @@ class DbLogTest extends BrowserTestBase {
   }
 
   /**
+   * Test not-existing log event page.
+   */
+  public function testLogEventNotFoundPage() {
+    // Login the admin user.
+    $this->drupalLogin($this->adminUser);
+
+    // Try to read details of not existing event.
+    $this->drupalGet('admin/reports/dblog/event/999999');
+    // Verify 404 response.
+    $this->assertResponse(404);
+  }
+
+  /**
    * Test individual log event page with missing log attributes.
    *
    * In some cases few log attributes are missing. For example:
