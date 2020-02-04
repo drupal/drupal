@@ -4,6 +4,7 @@ namespace Drupal\Tests\views\Kernel\Plugin;
 
 use Drupal\views\Plugin\views\join\FieldOrLanguageJoin;
 use Drupal\views\Views;
+use Drupal\views\ViewExecutable;
 
 /**
  * Tests the "field OR language" join plugin.
@@ -191,7 +192,7 @@ class FieldOrLanguageJoinTest extends RelationshipJoinTestBase {
    *   \Drupal\Core\Database\Query\Select::$tables for more information on the
    *   structure of the array.
    */
-  protected function buildJoin($view, $configuration, $table_alias) {
+  protected function buildJoin(ViewExecutable $view, $configuration, $table_alias) {
     // Build the actual join values and read them back from the query object.
     $query = \Drupal::database()->select('node');
 

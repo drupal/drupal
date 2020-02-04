@@ -4,6 +4,7 @@ namespace Drupal\Tests\views\Kernel\Plugin;
 
 use Drupal\Component\Render\FormattableMarkup;
 use Drupal\views\Views;
+use Drupal\views\ViewExecutable;
 
 /**
  * Tests mapping style functionality.
@@ -45,7 +46,7 @@ class StyleMappingTest extends StyleTestBase {
    * @return string
    *   The view rendered as HTML.
    */
-  protected function mappedOutputHelper($view) {
+  protected function mappedOutputHelper(ViewExecutable $view) {
     $output = $view->preview();
     $rendered_output = \Drupal::service('renderer')->renderRoot($output);
     $this->storeViewPreview($rendered_output);
