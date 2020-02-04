@@ -125,11 +125,6 @@ EOF
 EOF
     );
     $modules = ['module_a', 'module_b', 'module_c'];
-    $extensions = [
-      'module_a' => $this->mockModuleExtension('module_a', 'Module a'),
-      'module_b' => $this->mockModuleExtension('module_b', 'Module b'),
-      'module_c' => $this->mockModuleExtension('module_c', 'Module c'),
-    ];
     $this->moduleHandler->expects($this->any())
       ->method('getImplementations')
       ->with('permission')
@@ -252,11 +247,6 @@ EOF
     );
 
     $modules = ['module_a', 'module_b', 'module_c'];
-    $extensions = [
-      'module_a' => $this->mockModuleExtension('module_a', 'Module a'),
-      'module_b' => $this->mockModuleExtension('module_b', 'Module b'),
-      'module_c' => $this->mockModuleExtension('module_c', 'Module c'),
-    ];
 
     $this->moduleHandler->expects($this->any())
       ->method('getImplementations')
@@ -317,9 +307,6 @@ EOF
     );
 
     $modules = ['module_a'];
-    $extensions = [
-      'module_a' => $this->mockModuleExtension('module_a', 'Module a'),
-    ];
 
     $this->moduleHandler->expects($this->any())
       ->method('getImplementations')
