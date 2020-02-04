@@ -22,29 +22,3 @@ function hal_test_hal_relation_uri_alter(&$uri, $context = []) {
     $uri = 'hal_test_relation';
   }
 }
-
-/**
- * Implements hook_rest_type_uri_alter().
- *
- * @deprecated Kept only for BC test coverage, see \Drupal\Tests\hal\Kernel\HalLinkManagerTest::testGetTypeUri().
- *
- * @see https://www.drupal.org/node/2830467
- */
-function hal_test_rest_type_uri_alter(&$uri, $context = []) {
-  if (!empty($context['rest_test'])) {
-    $uri = 'rest_test_type';
-  }
-}
-
-/**
- * Implements hook_rest_relation_uri_alter().
- *
- * @deprecated Kept only for BC test coverage, see \Drupal\Tests\hal\Kernel\HalLinkManagerTest::testGetRelationUri().
- *
- * @see https://www.drupal.org/node/2830467
- */
-function hal_test_rest_relation_uri_alter(&$uri, $context = []) {
-  if (!empty($context['rest_test'])) {
-    $uri = 'rest_test_relation';
-  }
-}

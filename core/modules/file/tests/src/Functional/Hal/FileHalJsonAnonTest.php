@@ -2,7 +2,6 @@
 
 namespace Drupal\Tests\file\Functional\Hal;
 
-use Drupal\Core\Cache\Cache;
 use Drupal\Tests\file\Functional\Rest\FileResourceTestBase;
 use Drupal\Tests\hal\Functional\EntityResource\HalEntityNormalizationTrait;
 use Drupal\Tests\rest\Functional\AnonResourceTestTrait;
@@ -44,7 +43,6 @@ class FileHalJsonAnonTest extends FileResourceTestBase {
     $normalization = $this->applyHalFieldNormalization($default_normalization);
 
     $url = file_create_url($this->entity->getFileUri());
-    // @see \Drupal\Tests\hal\Functional\EntityResource\File\FileHalJsonAnonTest::testGetBcUriField()
     if ($this->config('hal.settings')->get('bc_file_uri_as_url_normalizer')) {
       $normalization['uri'][0]['value'] = $url;
     }
@@ -103,45 +101,11 @@ class FileHalJsonAnonTest extends FileResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function getExpectedCacheTags() {
-    return Cache::mergeTags(parent::getExpectedCacheTags(), ['config:hal.settings']);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   protected function getExpectedCacheContexts() {
     return [
       'url.site',
       'user.permissions',
     ];
-  }
-
-  /**
-   * @see hal_update_8501()
-   *
-   * @group legacy
-   * @expectedDeprecation Replacing the file uri with the URL is deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. Use the provided url property instead and disable hal.settings:bc_file_uri_as_url_normalizer. See https://www.drupal.org/node/2925783
-   */
-  public function testGetBcUriField() {
-    $this->config('hal.settings')->set('bc_file_uri_as_url_normalizer', TRUE)->save(TRUE);
-
-    $this->initAuthentication();
-    $url = $this->getEntityResourceUrl();
-    $url->setOption('query', ['_format' => static::$format]);
-    $request_options = $this->getAuthenticationRequestOptions('GET');
-    $this->provisionEntityResource();
-    $this->setUpAuthorization('GET');
-    $response = $this->request('GET', $url, $request_options);
-    $expected = $this->getExpectedNormalizedEntity();
-    static::recursiveKSort($expected);
-    $actual = $this->serializer->decode((string) $response->getBody(), static::$format);
-    static::recursiveKSort($actual);
-    $this->assertSame($expected, $actual);
-
-    // Explicitly assert that $file->uri->value is an absolute file URL, unlike
-    // the default normalization.
-    $this->assertSame($this->baseUrl . '/' . $this->siteDirectory . '/files/drupal.txt', $actual['uri'][0]['value']);
   }
 
 }

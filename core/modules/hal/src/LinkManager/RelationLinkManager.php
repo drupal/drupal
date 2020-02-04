@@ -92,7 +92,6 @@ class RelationLinkManager extends LinkManagerBase implements RelationLinkManager
     // override the RelationLinkManager class/service to return the desired URL.
     $uri = $this->getLinkDomain($context) . "/rest/relation/$entity_type/$bundle/$field_name";
     $this->moduleHandler->alter('hal_relation_uri', $uri, $context);
-    $this->moduleHandler->alterDeprecated('This hook is deprecated in Drupal 8.3.x and will be removed before Drupal 9.0.0. Implement hook_hal_relation_uri_alter() instead.', 'rest_relation_uri', $uri, $context);
     return $uri;
   }
 
@@ -125,11 +124,7 @@ class RelationLinkManager extends LinkManagerBase implements RelationLinkManager
    *   - 'entity_type_id'
    *   - 'bundle'
    *   - 'field_name'
-   *   - 'entity_type' (deprecated)
    *   The values for 'entity_type_id', 'bundle' and 'field_name' are strings.
-   *   The 'entity_type' key exists for backwards compatibility and its value is
-   *   the full entity type object. The 'entity_type' key will be removed before
-   *   Drupal 9.0.
    *
    * @see https://www.drupal.org/node/2877608
    */
@@ -143,10 +138,6 @@ class RelationLinkManager extends LinkManagerBase implements RelationLinkManager
       $data = $cache->data;
     }
 
-    // @todo https://www.drupal.org/node/2716163 Remove this in Drupal 9.0.
-    foreach ($data as $relation_uri => $ids) {
-      $data[$relation_uri]['entity_type'] = $this->entityTypeManager->getDefinition($ids['entity_type_id']);
-    }
     return $data;
   }
 

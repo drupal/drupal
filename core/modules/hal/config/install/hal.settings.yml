@@ -1,11 +1,3 @@
 # Set the domain for HAL type and relation links.
 # If left blank, the site's domain will be used.
 link_domain: ~
-# Before Drupal 8.5, the File entity 'uri' field value was overridden to return
-# the absolute file URL instead of the actual (stream wrapper) URI. The default
-# for new sites is now to return the actual URI as well as a root-relative file
-# URL. Enable this setting to use the previous behavior. For existing sites,
-# the previous behavior is kept by default.
-# @see hal_update_8501()
-# @see https://www.drupal.org/node/2925783
-bc_file_uri_as_url_normalizer: false

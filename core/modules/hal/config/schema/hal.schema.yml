@@ -6,6 +6,3 @@ hal.settings:
     link_domain:
       type: string
       label: 'Domain of the relation'
-    bc_file_uri_as_url_normalizer:
-      type: boolean
-      label: 'Whether to retain pre Drupal 8.5 behavior of normalizing the File entity "uri" field value to an absolute URL.'

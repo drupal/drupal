@@ -61,25 +61,6 @@ class FileEntityNormalizer extends ContentEntityNormalizer {
 
   /**
    * {@inheritdoc}
-   *
-   * @deprecated in drupal:8.5.0 and is removed from drupal:9.0.0.
-   */
-  public function normalize($entity, $format = NULL, array $context = []) {
-    $data = parent::normalize($entity, $format, $context);
-
-    $this->addCacheableDependency($context, $this->halSettings);
-
-    if ($this->halSettings->get('bc_file_uri_as_url_normalizer')) {
-      // Replace the file url with a full url for the file.
-      $data['uri'][0]['value'] = $this->getEntityUri($entity);
-      @trigger_error("Replacing the file uri with the URL is deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. Use the provided url property instead and disable hal.settings:bc_file_uri_as_url_normalizer. See https://www.drupal.org/node/2925783", E_USER_DEPRECATED);
-    }
-
-    return $data;
-  }
-
-  /**
-   * {@inheritdoc}
    */
   protected function getEntityUri(EntityInterface $entity, array $context = []) {
     assert($entity instanceof FileInterface);

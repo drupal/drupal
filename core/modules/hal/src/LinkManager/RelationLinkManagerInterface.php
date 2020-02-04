@@ -32,9 +32,7 @@ interface RelationLinkManagerInterface extends ConfigurableLinkManagerInterface 
    *   Relation URI (or IANA link relation type) to transform into internal IDs.
    *
    * @return array
-   *   Array with keys 'entity_type_id', 'bundle' and 'field_name'. For
-   *   backwards compatibility, the entity_type key returns the full entity type
-   *   object, this will be removed before Drupal 9.0.
+   *   Array with keys 'entity_type_id', 'bundle' and 'field_name'.
    */
   public function getRelationInternalIds($relation_uri);
 

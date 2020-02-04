@@ -15,17 +15,4 @@ abstract class NormalizerBase extends SerializationNormalizerBase implements Den
    */
   protected $format = ['hal_json'];
 
-  /**
-   * {@inheritdoc}
-   */
-  protected function checkFormat($format = NULL) {
-    if (isset($this->formats)) {
-      @trigger_error('::formats is deprecated in Drupal 8.4.0 and will be removed before Drupal 9.0.0. Use ::$format instead. See https://www.drupal.org/node/2868275', E_USER_DEPRECATED);
-
-      $this->format = $this->formats;
-    }
-
-    return parent::checkFormat($format);
-  }
-
 }
