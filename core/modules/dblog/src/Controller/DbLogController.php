@@ -17,6 +17,7 @@ use Drupal\Core\Url;
 use Drupal\user\Entity\User;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Core\Link;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Returns responses for dblog routes.
@@ -242,63 +243,70 @@ class DbLogController extends ControllerBase {
    * @return array
    *   If the ID is located in the Database Logging table, a build array in the
    *   format expected by \Drupal\Core\Render\RendererInterface::render().
+   *
+   * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
+   *   If no event found for the given ID.
    */
   public function eventDetails($event_id) {
-    $build = [];
-    if ($dblog = $this->database->query('SELECT w.*, u.uid FROM {watchdog} w LEFT JOIN {users} u ON u.uid = w.uid WHERE w.wid = :id', [':id' => $event_id])->fetchObject()) {
-      $severity = RfcLogLevel::getLevels();
-      $message = $this->formatMessage($dblog);
-      $username = [
-        '#theme' => 'username',
-        '#account' => $dblog->uid ? $this->userStorage->load($dblog->uid) : User::getAnonymousUser(),
-      ];
-      $rows = [
-        [
-          ['data' => $this->t('Type'), 'header' => TRUE],
-          $this->t($dblog->type),
-        ],
-        [
-          ['data' => $this->t('Date'), 'header' => TRUE],
-          $this->dateFormatter->format($dblog->timestamp, 'long'),
-        ],
-        [
-          ['data' => $this->t('User'), 'header' => TRUE],
-          ['data' => $username],
-        ],
-        [
-          ['data' => $this->t('Location'), 'header' => TRUE],
-          $this->createLink($dblog->location),
-        ],
-        [
-          ['data' => $this->t('Referrer'), 'header' => TRUE],
-          $this->createLink($dblog->referer),
-        ],
-        [
-          ['data' => $this->t('Message'), 'header' => TRUE],
-          $message,
-        ],
-        [
-          ['data' => $this->t('Severity'), 'header' => TRUE],
-          $severity[$dblog->severity],
-        ],
-        [
-          ['data' => $this->t('Hostname'), 'header' => TRUE],
-          $dblog->hostname,
-        ],
-        [
-          ['data' => $this->t('Operations'), 'header' => TRUE],
-          ['data' => ['#markup' => $dblog->link]],
-        ],
-      ];
-      $build['dblog_table'] = [
-        '#type' => 'table',
-        '#rows' => $rows,
-        '#attributes' => ['class' => ['dblog-event']],
-        '#attached' => [
-          'library' => ['dblog/drupal.dblog'],
-        ],
-      ];
+    $dblog = $this->database->query('SELECT w.*, u.uid FROM {watchdog} w LEFT JOIN {users} u ON u.uid = w.uid WHERE w.wid = :id', [':id' => $event_id])->fetchObject();
+
+    if (empty($dblog)) {
+      throw new NotFoundHttpException();
     }
+
+    $build = [];
+    $severity = RfcLogLevel::getLevels();
+    $message = $this->formatMessage($dblog);
+    $username = [
+      '#theme' => 'username',
+      '#account' => $dblog->uid ? $this->userStorage->load($dblog->uid) : User::getAnonymousUser(),
+    ];
+    $rows = [
+      [
+        ['data' => $this->t('Type'), 'header' => TRUE],
+        $this->t($dblog->type),
+      ],
+      [
+        ['data' => $this->t('Date'), 'header' => TRUE],
+        $this->dateFormatter->format($dblog->timestamp, 'long'),
+      ],
+      [
+        ['data' => $this->t('User'), 'header' => TRUE],
+        ['data' => $username],
+      ],
+      [
+        ['data' => $this->t('Location'), 'header' => TRUE],
+        $this->createLink($dblog->location),
+      ],
+      [
+        ['data' => $this->t('Referrer'), 'header' => TRUE],
+        $this->createLink($dblog->referer),
+      ],
+      [
+        ['data' => $this->t('Message'), 'header' => TRUE],
+        $message,
+      ],
+      [
+        ['data' => $this->t('Severity'), 'header' => TRUE],
+        $severity[$dblog->severity],
+      ],
+      [
+        ['data' => $this->t('Hostname'), 'header' => TRUE],
+        $dblog->hostname,
+      ],
+      [
+        ['data' => $this->t('Operations'), 'header' => TRUE],
+        ['data' => ['#markup' => $dblog->link]],
+      ],
+    ];
+    $build['dblog_table'] = [
+      '#type' => 'table',
+      '#rows' => $rows,
+      '#attributes' => ['class' => ['dblog-event']],
+      '#attached' => [
+        'library' => ['dblog/drupal.dblog'],
+      ],
+    ];
 
     return $build;
   }
