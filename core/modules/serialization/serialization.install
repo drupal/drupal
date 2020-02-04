@@ -6,31 +6,6 @@
  */
 
 /**
- * Implements hook_requirements().
- */
-function serialization_requirements($phase) {
-  $requirements = [];
-
-  if ($phase == 'runtime') {
-    $requirements['serialization_as_strings'] = [
-      'title' => t('Serialized data types'),
-      'severity' => REQUIREMENT_INFO,
-    ];
-
-    if (\Drupal::config('serialization.settings')->get('bc_primitives_as_strings')) {
-      $requirements['serialization_as_strings']['value'] = t('Enabled');
-      $requirements['serialization_as_strings']['description'] = t('The Serialization API is configured to output only string values for REST and other applications (instead of integers or Booleans when appropriate). <a href="https://www.drupal.org/node/2837696">Disabling this backwards compatibility mode</a> is recommended unless your sites or applications require string output.');
-    }
-    else {
-      $requirements['serialization_as_strings']['value'] = t('Not enabled');
-      $requirements['serialization_as_strings']['description'] = t('The Serialization API is configured with the recommended default and outputs typed values (integers, Booleans, or strings as appropriate) for REST and other applications. If your site or applications require string output, you can <a href="https://www.drupal.org/node/2837696">enable backwards compatibility mode</a>.');
-    }
-  }
-
-  return $requirements;
-}
-
-/**
  * Implements hook_update_last_removed().
  */
 function serialization_update_last_removed() {

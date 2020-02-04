@@ -76,22 +76,9 @@ class DateTimeIso8601Normalizer extends DateTimeNormalizer {
     }
 
     $context['datetime_allowed_formats'] = array_diff_key($this->allowedFormats, ['date-only' => TRUE]);
-    try {
-      $datetime = parent::denormalize($data, $class, $format, $context);
-    }
-    catch (\UnexpectedValueException $e) {
-      // If denormalization didn't work using any of the actively supported
-      // formats, try again with the BC format too. Explicitly label it as
-      // being deprecated and trigger a deprecation error.
-      $using_deprecated_format = TRUE;
-      $context['datetime_allowed_formats']['backward compatibility — deprecated'] = DateTimeItemInterface::DATETIME_STORAGE_FORMAT;
-      $datetime = parent::denormalize($data, $class, $format, $context);
-    }
+    $datetime = parent::denormalize($data, $class, $format, $context);
     if (!$datetime instanceof \DateTime) {
       return $datetime;
-    }
-    if (isset($using_deprecated_format)) {
-      @trigger_error('The provided datetime string format (Y-m-d\\TH:i:s) is deprecated and will be removed before Drupal 9.0.0. Use the RFC3339 format instead (Y-m-d\\TH:i:sP).', E_USER_DEPRECATED);
     }
     $datetime->setTimezone(new \DateTimeZone(DateTimeItemInterface::STORAGE_TIMEZONE));
     return $datetime->format(DateTimeItemInterface::DATETIME_STORAGE_FORMAT);

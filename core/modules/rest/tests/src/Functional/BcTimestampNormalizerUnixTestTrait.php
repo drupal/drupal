@@ -12,25 +12,15 @@ trait BcTimestampNormalizerUnixTestTrait {
   /**
    * Formats a UNIX timestamp.
    *
-   * Depending on the 'bc_timestamp_normalizer_unix' setting. The return will be
-   * an RFC3339 date string or the same timestamp that was passed in.
-   *
    * @param int $timestamp
    *   The timestamp value to format.
    *
-   * @return string|int
-   *   The formatted RFC3339 date string or UNIX timestamp.
+   * @return string
+   *   The formatted RFC3339 date string.
    *
    * @see \Drupal\serialization\Normalizer\TimestampItemNormalizer
    */
   protected function formatExpectedTimestampItemValues($timestamp) {
-    // If the setting is enabled, just return the timestamp as-is now.
-    if ($this->config('serialization.settings')->get('bc_timestamp_normalizer_unix')) {
-      return ['value' => $timestamp];
-    }
-
-    // Otherwise, format the date string to the same that
-    // \Drupal\serialization\Normalizer\TimestampItemNormalizer will produce.
     $date = new \DateTime();
     $date->setTimestamp($timestamp);
     // Per \Drupal\Core\TypedData\Plugin\DataType\Timestamp::getDateTime(), they

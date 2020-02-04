@@ -117,24 +117,6 @@ class EntityTestDatetimeTest extends EntityTestResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function getNormalizedPatchEntity() {
-    return parent::getNormalizedPostEntity() + [
-      static::$fieldName => [
-        [
-          // Omitting the timezone is allowed, this should result in the site's
-          // timezone being used automatically. This does not make sense, but
-          // it's how it functioned in the past, so we explicitly test this to
-          // guarantee backward compatibility. ::getNormalizedPostEntity() tests
-          // the recommended case, this tests backward compatibility.
-          'value' => static::$dateString,
-        ],
-      ],
-    ];
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   protected function assertNormalizationEdgeCases($method, Url $url, array $request_options) {
     parent::assertNormalizationEdgeCases($method, $url, $request_options);
 
@@ -159,7 +141,7 @@ class EntityTestDatetimeTest extends EntityTestResourceTestBase {
 
       $request_options[RequestOptions::BODY] = $this->serializer->encode($normalization, static::$format);
       $response = $this->request($method, $url, $request_options);
-      $message = "The specified date \"$value\" is not in an accepted format: \"Y-m-d\\TH:i:sP\" (RFC 3339), \"Y-m-d\\TH:i:sO\" (ISO 8601), \"Y-m-d\\TH:i:s\" (backward compatibility — deprecated).";
+      $message = "The specified date \"$value\" is not in an accepted format: \"Y-m-d\\TH:i:sP\" (RFC 3339), \"Y-m-d\\TH:i:sO\" (ISO 8601).";
       $this->assertResourceErrorResponse(422, $message, $response);
 
       // DX: 422 when date format is incorrect.
@@ -169,7 +151,7 @@ class EntityTestDatetimeTest extends EntityTestResourceTestBase {
 
       $request_options[RequestOptions::BODY] = $this->serializer->encode($normalization, static::$format);
       $response = $this->request($method, $url, $request_options);
-      $message = "The specified date \"$value\" is not in an accepted format: \"Y-m-d\\TH:i:sP\" (RFC 3339), \"Y-m-d\\TH:i:sO\" (ISO 8601), \"Y-m-d\\TH:i:s\" (backward compatibility — deprecated).";
+      $message = "The specified date \"$value\" is not in an accepted format: \"Y-m-d\\TH:i:sP\" (RFC 3339), \"Y-m-d\\TH:i:sO\" (ISO 8601).";
       $this->assertResourceErrorResponse(422, $message, $response);
 
       // DX: 422 when date value is invalid.
@@ -179,19 +161,9 @@ class EntityTestDatetimeTest extends EntityTestResourceTestBase {
 
       $request_options[RequestOptions::BODY] = $this->serializer->encode($normalization, static::$format);
       $response = $this->request($method, $url, $request_options);
-      $message = "The specified date \"$value\" is not in an accepted format: \"Y-m-d\\TH:i:sP\" (RFC 3339), \"Y-m-d\\TH:i:sO\" (ISO 8601), \"Y-m-d\\TH:i:s\" (backward compatibility — deprecated).";
+      $message = "The specified date \"$value\" is not in an accepted format: \"Y-m-d\\TH:i:sP\" (RFC 3339), \"Y-m-d\\TH:i:sO\" (ISO 8601).";
       $this->assertResourceErrorResponse(422, $message, $response);
     }
-  }
-
-  /**
-   * {@inheritdoc}
-   *
-   * @group legacy
-   * @expectedDeprecation The provided datetime string format (Y-m-d\TH:i:s) is deprecated and will be removed before Drupal 9.0.0. Use the RFC3339 format instead (Y-m-d\TH:i:sP).
-   */
-  public function testPatch() {
-    return parent::testPatch();
   }
 
 }

@@ -20,7 +20,7 @@ services:
   serializer.normalizer.primitive_data:
     class: Drupal\serialization\Normalizer\PrimitiveDataNormalizer
     tags:
-      - { name: normalizer, priority: 5, bc: bc_primitives_as_strings, bc_config_name: 'serialization.settings' }
+      - { name: normalizer, priority: 5 }
   serializer.normalizer.complex_data:
     class: Drupal\serialization\Normalizer\ComplexDataNormalizer
     tags:
@@ -57,13 +57,13 @@ services:
     tags:
       # Priority must be higher than serializer.normalizer.field_item and lower
       # than hal normalizers.
-      - { name: normalizer, priority: 8, bc: bc_timestamp_normalizer_unix, bc_config_name: 'serialization.settings' }
+      - { name: normalizer, priority: 8 }
   serializer.normalizer.timestamp:
     class: Drupal\serialization\Normalizer\TimestampNormalizer
     arguments: ['@config.factory']
     tags:
       # Priority must be higher than serializer.normalizer.primitive_data.
-      - { name: normalizer, priority: 20, bc: bc_timestamp_normalizer_unix, bc_config_name: 'serialization.settings' }
+      - { name: normalizer, priority: 20 }
   serializer.normalizer.datetimeiso8601:
     class: \Drupal\serialization\Normalizer\DateTimeIso8601Normalizer
     arguments: ['@config.factory']
@@ -112,8 +112,3 @@ services:
     tags:
       - { name: event_subscriber }
     arguments: ['%serializer.formats%']
-  serialization.bc_config_subscriber:
-    class: Drupal\serialization\EventSubscriber\BcConfigSubscriber
-    tags:
-      - { name: event_subscriber }
-    arguments: ['@kernel']
