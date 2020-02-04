@@ -6,7 +6,6 @@ use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\TestTools\Comparator\MarkupInterfaceComparator;
-use PHPUnit\Framework\Error\Error;
 use PHPUnit\Framework\Error\Notice;
 use SebastianBergmann\Comparator\Factory;
 use SebastianBergmann\Comparator\ComparisonFailure;
@@ -51,8 +50,9 @@ class MarkupInterfaceComparatorTest extends KernelTestBase {
    *   - test expected value,
    *   - test actual value,
    *   - a bool indicating the expected return value of ::accepts,
-   *   - a value indicating the expected result of ::assertEquals, either TRUE
-   *     or a class name of an object thrown.
+   *   - a value indicating the expected result of ::assertEquals, TRUE if
+   *     comparison should match, FALSE if error, or a class name of an object
+   *     thrown.
    */
   public function dataSetProvider() {
     return [
@@ -114,7 +114,7 @@ class MarkupInterfaceComparatorTest extends KernelTestBase {
         (object) ['goldfinger'],
         new TranslatableMarkup('goldfinger'),
         FALSE,
-        Error::class,
+        FALSE,
       ],
       'string vs string, equal' => [
         'goldfinger',
@@ -148,7 +148,12 @@ class MarkupInterfaceComparatorTest extends KernelTestBase {
       $this->assertTrue($equals_result);
     }
     catch (\Throwable $e) {
-      $this->assertInstanceOf($equals_result, $e);
+      if ($equals_result === FALSE) {
+        $this->assertNotNull($e->getMessage());
+      }
+      else {
+        $this->assertInstanceOf($equals_result, $e);
+      }
     }
   }
 

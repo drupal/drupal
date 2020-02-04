@@ -143,23 +143,22 @@ class CompiledRoute extends SymfonyCompiledRoute {
   /**
    * {@inheritdoc}
    */
-  public function serialize() {
+  public function __serialize(): array {
     // Calling the parent method is safer than trying to optimize out the extra
     // function calls.
-    $data = unserialize(parent::serialize());
+    $data = parent::__serialize();
     $data['fit'] = $this->fit;
     $data['patternOutline'] = $this->patternOutline;
     $data['numParts'] = $this->numParts;
 
-    return serialize($data);
+    return $data;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function unserialize($serialized) {
-    parent::unserialize($serialized);
-    $data = unserialize($serialized);
+  public function __unserialize(array $data): void {
+    parent::__unserialize($data);
 
     $this->fit = $data['fit'];
     $this->patternOutline = $data['patternOutline'];

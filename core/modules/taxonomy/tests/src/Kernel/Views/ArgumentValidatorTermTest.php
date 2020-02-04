@@ -61,7 +61,7 @@ class ArgumentValidatorTermTest extends TaxonomyTestBase {
     $view->initHandlers();
 
     // Test the single validator for term IDs.
-    $view->argument['tid']->validator->options['type'] = 'tid';
+    $view->argument['tid']->options['validate_options']['multiple'] = 0;
 
     // Pass in a single valid term.
     foreach ($this->terms as $term) {
@@ -78,7 +78,7 @@ class ArgumentValidatorTermTest extends TaxonomyTestBase {
     $view->argument['tid']->argument_validated = NULL;
 
     // Test the multiple validator for term IDs.
-    $view->argument['tid']->validator->options['type'] = 'tids';
+    $view->argument['tid']->options['validate_options']['multiple'] = 1;
     $view->argument['tid']->options['break_phrase'] = TRUE;
 
     // Pass in a single term.

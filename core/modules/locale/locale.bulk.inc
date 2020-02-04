@@ -385,6 +385,11 @@ function locale_translate_batch_finished($success, array $results) {
       // file), simply do nothing.
       if ($results && isset($results['stats'])) {
         foreach ($results['stats'] as $filepath => $report) {
+          if ($filepath === 'config') {
+            // Ignore the config entry. It is processed in
+            // locale_config_batch_finished() below.
+            continue;
+          }
           $additions += $report['additions'];
           $updates += $report['updates'];
           $deletes += $report['deletes'];

@@ -290,7 +290,7 @@ class CssCollectionRendererUnitTest extends UnitTestCase {
       'browsers' => [],
       'data' => 'http://example.com/popular.js',
     ];
-    $this->renderer->render($css_group);
+    $this->renderer->render([$css_group]);
   }
 
 }

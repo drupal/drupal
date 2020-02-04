@@ -34,7 +34,11 @@ services:
 YAML;
 
     vfsStream::setup('drupal', NULL, [
-      'modules/example/example.yml' => $yml,
+      'modules' => [
+        'example' => [
+          'example.yml' => $yml,
+        ],
+      ],
     ]);
 
     $builder = new ContainerBuilder();

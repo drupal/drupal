@@ -77,6 +77,9 @@ class RdfMappingConfigEntityUnitTest extends UnitTestCase {
     $target_entity_type->expects($this->any())
       ->method('getBundleEntityType')
       ->will($this->returnValue(NULL));
+    $target_entity_type->expects($this->any())
+      ->method('getBundleConfigDependency')
+      ->will($this->returnValue(['type' => 'module', 'name' => 'test_module']));
 
     $this->entityTypeManager->expects($this->at(0))
       ->method('getDefinition')
@@ -86,7 +89,10 @@ class RdfMappingConfigEntityUnitTest extends UnitTestCase {
       ->method('getDefinition')
       ->with($this->entityTypeId)
       ->will($this->returnValue($this->entityType));
-
+    $this->entityTypeManager->expects($this->at(2))
+      ->method('getDefinition')
+      ->with($this->entityTypeId)
+      ->will($this->returnValue($this->entityType));
     $entity = new RdfMapping($values, $this->entityTypeId);
     $dependencies = $entity->calculateDependencies()->getDependencies();
     $this->assertArrayNotHasKey('config', $dependencies);

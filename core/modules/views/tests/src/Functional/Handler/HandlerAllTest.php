@@ -5,6 +5,7 @@ namespace Drupal\Tests\views\Functional\Handler;
 use Drupal\Component\Render\FormattableMarkup;
 use Drupal\comment\Tests\CommentTestTrait;
 use Drupal\Tests\views\Functional\ViewTestBase;
+use Drupal\views\Plugin\views\filter\NumericFilter;
 use Drupal\views\ViewExecutable;
 use Drupal\views\Plugin\views\HandlerBase;
 use Drupal\views\Plugin\views\filter\InOperator;
@@ -85,6 +86,9 @@ class HandlerAllTest extends ViewTestBase {
                 // Set the value to use for the filter based on the filter type.
                 if ($handler instanceof InOperator) {
                   $options['value'] = [1];
+                }
+                elseif ($handler instanceof NumericFilter) {
+                  $options['value'] = ['value' => 1];
                 }
                 else {
                   $options['value'] = 1;

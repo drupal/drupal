@@ -1153,7 +1153,7 @@ function template_preprocess_item_list(&$variables) {
             // \Drupal\Core\Render\Element::children(), which cannot be used
             // here, since it triggers an error on string values.
             foreach ($child as $child_key => $child_value) {
-              if ($child_key[0] !== '#') {
+              if (is_int($child_key) || $child_key === '' || $child_key[0] !== '#') {
                 $child['#items'][$child_key] = $child_value;
                 unset($child[$child_key]);
               }

@@ -138,7 +138,7 @@ class FieldOrLanguageJoinTest extends RelationshipJoinTestBase {
     // condition.
     $configuration = [
       'table' => 'node__field_tags',
-      'left_table' => 'node',
+      'left_table' => 'views_test_data',
       'left_field' => 'nid',
       'field' => 'entity_id',
       'extra' => [
@@ -149,7 +149,7 @@ class FieldOrLanguageJoinTest extends RelationshipJoinTestBase {
       ],
     ];
     $join_info = $this->buildJoin($view, $configuration, 'node__field_tags');
-    $this->assertContains('AND (node__field_tags.langcode = .langcode)', $join_info['condition']);
+    $this->assertContains('AND (node__field_tags.langcode = views_test_data.langcode)', $join_info['condition']);
 
     array_unshift($configuration['extra'], [
       'field' => 'deleted',
@@ -157,7 +157,7 @@ class FieldOrLanguageJoinTest extends RelationshipJoinTestBase {
       'numeric' => TRUE,
     ]);
     $join_info = $this->buildJoin($view, $configuration, 'node__field_tags');
-    $this->assertContains('AND (node__field_tags.langcode = .langcode)', $join_info['condition']);
+    $this->assertContains('AND (node__field_tags.langcode = views_test_data.langcode)', $join_info['condition']);
 
     // Replace the language condition with a bundle condition.
     $configuration['extra'][1] = [
@@ -174,7 +174,7 @@ class FieldOrLanguageJoinTest extends RelationshipJoinTestBase {
       'field' => 'langcode',
     ];
     $join_info = $this->buildJoin($view, $configuration, 'node__field_tags');
-    $this->assertContains('AND (node__field_tags.bundle = :views_join_condition_1 OR node__field_tags.langcode = .langcode)', $join_info['condition']);
+    $this->assertContains('AND (node__field_tags.bundle = :views_join_condition_1 OR node__field_tags.langcode = views_test_data.langcode)', $join_info['condition']);
   }
 
   /**
