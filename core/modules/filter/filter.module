@@ -12,7 +12,6 @@ use Drupal\Core\Cache\Cache;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Template\Attribute;
-use Drupal\filter\Element\TextFormat;
 use Drupal\filter\FilterFormatInterface;
 
 /**
@@ -302,19 +301,6 @@ function check_markup($text, $format_id = NULL, $langcode = '', $filter_types_to
     '#langcode' => $langcode,
   ];
   return \Drupal::service('renderer')->renderPlain($build);
-}
-
-/**
- * Render API callback: Hides the field value of 'text_format' elements.
- *
- * @deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. Use
- *   \Drupal\filter\Element\TextFormat::accessDeniedCallback() instead.
- *
- * @see https://www.drupal.org/node/2966725
- */
-function filter_form_access_denied($element) {
-  @trigger_error('filter_form_access_denied() is deprecated in Drupal 8.8.0 and will be removed before Drupal 9.0.0. Use \Drupal\filter\Element\TextFormat::accessDeniedCallback() instead. See https://www.drupal.org/node/2966725', E_USER_DEPRECATED);
-  return TextFormat::accessDeniedCallback($element);
 }
 
 /**
