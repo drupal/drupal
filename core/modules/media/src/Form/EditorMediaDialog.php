@@ -77,7 +77,7 @@ class EditorMediaDialog extends FormBase {
   /**
    * {@inheritdoc}
    *
-   * @param \Drupal\editor\Entity\Editor $editor
+   * @param \Drupal\editor\EditorInterface $editor
    *   The text editor to which this dialog corresponds.
    */
   public function buildForm(array $form, FormStateInterface $form_state, EditorInterface $editor = NULL) {
