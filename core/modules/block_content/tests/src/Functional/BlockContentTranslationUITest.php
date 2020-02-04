@@ -173,7 +173,7 @@ class BlockContentTranslationUITest extends ContentTranslationUITestBase {
 
     // Create a block content for each bundle.
     $enabled_block_content = $this->createBlockContent();
-    $disabled_block_content = $this->createBlockContent(FALSE, $bundle->id());
+    $this->createBlockContent(FALSE, $bundle->id());
 
     // Make sure that only a single row was inserted into the block table.
     $rows = Database::getConnection()->query('SELECT * FROM {block_content_field_data} WHERE id = :id', [':id' => $enabled_block_content->id()])->fetchAll();

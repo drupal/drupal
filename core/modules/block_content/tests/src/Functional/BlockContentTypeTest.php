@@ -188,8 +188,8 @@ class BlockContentTypeTest extends BlockContentTestBase {
 
     $this->drupalLogin($this->adminUser);
     // Create two block types programmatically.
-    $type = $this->createBlockContentType('foo');
-    $type = $this->createBlockContentType('bar');
+    $this->createBlockContentType('foo');
+    $this->createBlockContentType('bar');
 
     // Get the custom block storage.
     $storage = $this->container
