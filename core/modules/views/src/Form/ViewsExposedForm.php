@@ -41,12 +41,8 @@ class ViewsExposedForm extends FormBase {
    * @param \Drupal\Core\Path\CurrentPathStack $current_path_stack
    *   The current path stack.
    */
-  public function __construct(ExposedFormCache $exposed_form_cache, CurrentPathStack $current_path_stack = NULL) {
+  public function __construct(ExposedFormCache $exposed_form_cache, CurrentPathStack $current_path_stack) {
     $this->exposedFormCache = $exposed_form_cache;
-    if ($current_path_stack === NULL) {
-      @trigger_error('The path.current service must be passed to ViewsExposedForm::__construct(), it is required before Drupal 9.0.0. See https://www.drupal.org/node/3066604', E_USER_DEPRECATED);
-      $current_path_stack = \Drupal::service('path.current');
-    }
     $this->currentPathStack = $current_path_stack;
   }
 

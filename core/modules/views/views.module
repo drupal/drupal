@@ -15,7 +15,6 @@ use Drupal\views\Plugin\Derivative\ViewsLocalTask;
 use Drupal\views\ViewEntityInterface;
 use Drupal\views\ViewExecutable;
 use Drupal\views\Entity\View;
-use Drupal\views\Form\ViewsFormMainForm;
 use Drupal\views\Views;
 
 /**
@@ -615,26 +614,6 @@ function views_enable_view(View $view) {
  */
 function views_disable_view(View $view) {
   $view->disable()->save();
-}
-
-/**
- * Replaces views substitution placeholders.
- *
- * @param array $element
- *   An associative array containing the properties of the element.
- *   Properties used: #substitutions, #children.
- * @return array
- *   The $element with prepared variables ready for #theme 'form'
- *   in views_form_views_form.
- *
- * @deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. Use
- *   \Drupal\views\Form\ViewsFormMainForm::preRenderViewsForm() instead.
- *
- * @see https://www.drupal.org/node/2966725
- */
-function views_pre_render_views_form_views_form($element) {
-  @trigger_error('views_pre_render_views_form_views_form() is deprecated in Drupal 8.8.0 and will be removed before Drupal 9.0.0. Use \Drupal\views\Form\ViewsFormMainForm::preRenderViewsForm() instead. See https://www.drupal.org/node/2966725', E_USER_DEPRECATED);
-  return ViewsFormMainForm::preRenderViewsForm($element);
 }
 
 /**

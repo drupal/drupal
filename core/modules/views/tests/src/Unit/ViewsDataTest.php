@@ -638,32 +638,24 @@ class ViewsDataTest extends UnitTestCase {
   }
 
   /**
-   * Tests that getting all data has same results as getting data with NULL
-   * logic.
+   * Tests that getting data with an empty key throws an exception.
    *
-   * @covers ::getAll
-   * @group legacy
-   *
-   * @expectedDeprecation Calling get() without the $key argument is deprecated in drupal:8.2.0 and is required in drupal:9.0.0. See https://www.drupal.org/node/3090442
+   * @covers ::get
+   * @dataProvider providerTestGetEmptyKey
    */
-  public function testGetAllEqualsToGetNull() {
-    $expected_views_data = $this->viewsDataWithProvider();
-    $this->setupMockedModuleHandler();
+  public function testGetEmptyKey($key) {
+    $this->expectException(\InvalidArgumentException::class);
+    $this->expectExceptionMessage('A valid cache entry key is required. Use getAll() to get all table data.');
 
-    // Setup a warm cache backend for a single table.
-    $this->cacheBackend->expects($this->once())
-      ->method('get')
-      ->with("views_data:en");
-    $this->cacheBackend->expects($this->once())
-      ->method('set')
-      ->with('views_data:en', $expected_views_data);
+    $this->viewsData->get($key);
+  }
 
-    // Initialize the views data cache and repeat with no specified table. This
-    // should only load the cache entry for all tables.
-    for ($i = 0; $i < 5; $i++) {
-      $this->assertSame($expected_views_data, $this->viewsData->getAll());
-      $this->assertSame($expected_views_data, $this->viewsData->get());
-    }
+  public function providerTestGetEmptyKey() {
+    return [
+      [NULL],
+      [''],
+      [0],
+    ];
   }
 
 }

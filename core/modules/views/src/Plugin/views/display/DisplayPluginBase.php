@@ -2181,22 +2181,6 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
   }
 
   /**
-   * Applies the cacheability of the current display to the given render array.
-   *
-   * @param array $element
-   *   The render array with updated cacheability metadata.
-   *
-   * @deprecated in drupal:8.4.0 and is removed from drupal:9.0.0. Use
-   *   DisplayPluginBase::applyDisplayCacheabilityMetadata instead.
-   *
-   * @see \Drupal\views\Plugin\views\display\DisplayPluginBase::applyDisplayCacheabilityMetadata()
-   */
-  protected function applyDisplayCachablityMetadata(array &$element) {
-    @trigger_error('The DisplayPluginBase::applyDisplayCachablityMetadata method is deprecated since version 8.4 and will be removed in 9.0. Use DisplayPluginBase::applyDisplayCacheabilityMetadata instead.', E_USER_DEPRECATED);
-    $this->applyDisplayCacheabilityMetadata($element);
-  }
-
-  /**
    * {@inheritdoc}
    */
   public function elementPreRender(array $element) {

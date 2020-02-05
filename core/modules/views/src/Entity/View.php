@@ -5,9 +5,7 @@ namespace Drupal\views\Entity;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Config\Entity\ConfigEntityBase;
-use Drupal\Core\Entity\ContentEntityTypeInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
-use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\views\Plugin\DependentWithRemovalPluginInterface;
 use Drupal\views\Views;
@@ -295,10 +293,6 @@ class View extends ConfigEntityBase implements ViewEntityInterface {
 
     $displays = $this->get('display');
 
-    // @todo Remove this line and support for pre-8.3 table names in Drupal 9.
-    // @see https://www.drupal.org/project/drupal/issues/3069405 .
-    $this->fixTableNames($displays);
-
     // Sort the displays.
     ksort($displays);
     $this->set('display', ['default' => $displays['default']] + $displays);
@@ -308,48 +302,6 @@ class View extends ConfigEntityBase implements ViewEntityInterface {
     // configuration or installing modules.
     if (!$this->isSyncing() && !$this->hasTrustedData()) {
       $this->addCacheMetadata();
-    }
-  }
-
-  /**
-   * Fixes table names for revision metadata fields of revisionable entities.
-   *
-   * Views for revisionable entity types using revision metadata fields might
-   * be using the wrong table to retrieve the fields after system_update_8300
-   * has moved them correctly to the revision table. This method updates the
-   * views to use the correct tables.
-   *
-   * @param array &$displays
-   *   An array containing display handlers of a view.
-   *
-   * @todo Remove this method and its usage in Drupal 9. See
-   *   https://www.drupal.org/project/drupal/issues/3069405.
-   * @see https://www.drupal.org/node/2831499
-   */
-  private function fixTableNames(array &$displays) {
-    // Fix wrong table names for entity revision metadata fields.
-    foreach ($displays as $display => $display_data) {
-      if (isset($display_data['display_options']['fields'])) {
-        foreach ($display_data['display_options']['fields'] as $property_name => $property_data) {
-          if (isset($property_data['entity_type']) && isset($property_data['field']) && isset($property_data['table'])) {
-            $entity_type = $this->entityTypeManager()->getDefinition($property_data['entity_type']);
-            // We need to update the table name only for revisionable entity
-            // types, otherwise the view is already using the correct table.
-            if (($entity_type instanceof ContentEntityTypeInterface) && is_subclass_of($entity_type->getClass(), FieldableEntityInterface::class) && $entity_type->isRevisionable()) {
-              $revision_metadata_fields = $entity_type->getRevisionMetadataKeys();
-              // @see \Drupal\Core\Entity\Sql\SqlContentEntityStorage::initTableLayout()
-              $revision_table = $entity_type->getRevisionTable() ?: $entity_type->id() . '_revision';
-
-              // Check if this is a revision metadata field and if it uses the
-              // wrong table.
-              if (in_array($property_data['field'], $revision_metadata_fields) && $property_data['table'] != $revision_table) {
-                @trigger_error('Support for pre-8.3.0 revision table names in imported views is deprecated in drupal:8.3.0 and is removed from drupal:9.0.0. Imported views must reference the correct tables. See https://www.drupal.org/node/2831499', E_USER_DEPRECATED);
-                $displays[$display]['display_options']['fields'][$property_name]['table'] = $revision_table;
-              }
-            }
-          }
-        }
-      }
     }
   }
 
