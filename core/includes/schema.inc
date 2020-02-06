@@ -83,9 +83,10 @@ function drupal_get_installed_schema_version($module, $reset = FALSE, $array = F
   }
 
   if (!$versions) {
-    if (!$versions = \Drupal::keyValue('system.schema')->getAll()) {
-      $versions = [];
-    }
+    $versions = \Drupal::keyValue('system.schema')->getAll();
+    $enabled_modules = \Drupal::moduleHandler()->getModuleList();
+    $enabled_modules = array_fill_keys(array_keys($enabled_modules), \Drupal::CORE_MINIMUM_SCHEMA_VERSION);
+    $versions = array_merge($enabled_modules, $versions);
   }
 
   if ($array) {
