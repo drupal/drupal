@@ -14,3 +14,7 @@ services:
       - { name: session_handler_proxy, priority: 20 }
   session_test.session_handler_proxy_trace:
     class: ArrayObject
+  session_test.session_bag:
+    class: Drupal\session_test\Session\TestSessionBag
+    tags:
+      - { name: session_bag }

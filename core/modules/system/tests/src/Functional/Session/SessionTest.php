@@ -296,6 +296,36 @@ class SessionTest extends BrowserTestBase {
   }
 
   /**
+   * Test session bag.
+   */
+  public function testSessionBag() {
+    $this->drupalGet('/session-test/has-bag-flag');
+    $this->assertSessionCookie(FALSE);
+    $this->assertSessionEmpty(TRUE);
+    $this->assertResponse(200, 'Flag is absent from session bag');
+
+    $this->drupalGet('/session-test/set-bag-flag');
+    $this->assertSessionCookie(TRUE);
+    $this->assertSessionEmpty(TRUE);
+    $this->assertResponse(200);
+
+    $this->drupalGet('/session-test/has-bag-flag');
+    $this->assertSessionCookie(TRUE);
+    $this->assertSessionEmpty(FALSE);
+    $this->assertResponse(200, 'Flag is present in session bag');
+
+    $this->drupalGet('/session-test/clear-bag-flag');
+    $this->assertSessionCookie(FALSE);
+    $this->assertSessionEmpty(FALSE);
+    $this->assertResponse(200);
+
+    $this->drupalGet('/session-test/has-bag-flag');
+    $this->assertSessionCookie(FALSE);
+    $this->assertSessionEmpty(TRUE);
+    $this->assertResponse(200, 'Flag is absent from session bag');
+  }
+
+  /**
    * Reset the cookie file so that it refers to the specified user.
    */
   public function sessionReset() {

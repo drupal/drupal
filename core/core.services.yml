@@ -1512,6 +1512,8 @@ services:
   session:
     class: Symfony\Component\HttpFoundation\Session\Session
     arguments: ['@session_manager', '@session.attribute_bag', '@session.flash_bag']
+    tags:
+      - { name: service_collector, tag: session_bag, call: registerBag }
   session.flash_bag:
     class: Symfony\Component\HttpFoundation\Session\Flash\FlashBag
     public: false
