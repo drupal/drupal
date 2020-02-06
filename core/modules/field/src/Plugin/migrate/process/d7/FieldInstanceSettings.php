@@ -21,7 +21,6 @@ class FieldInstanceSettings extends ProcessPluginBase {
     $widget_type = $widget_settings['type'];
 
     $field_data = unserialize($field_definition['data']);
-    $field_settings = $field_data['settings'];
 
     // Get taxonomy term reference handler settings from allowed values.
     if ($row->getSourceProperty('type') == 'taxonomy_term_reference') {
@@ -38,6 +37,7 @@ class FieldInstanceSettings extends ProcessPluginBase {
 
     // Get entityreference handler settings from source field configuration.
     if ($row->getSourceProperty('type') == "entityreference") {
+      $field_settings = $field_data['settings'];
       $instance_settings['handler'] = 'default:' . $field_settings['target_type'];
       // Transform the sort settings to D8 structure.
       $sort = [

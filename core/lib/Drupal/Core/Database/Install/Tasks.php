@@ -243,7 +243,9 @@ abstract class Tasks {
     ];
 
     global $install_state;
-    $profile = $install_state['parameters']['profile'];
+    // @todo https://www.drupal.org/project/drupal/issues/3110839 remove PHP 7.4
+    //   work around and add a better message for the migrate UI.
+    $profile = $install_state['parameters']['profile'] ?? NULL;
     $db_prefix = ($profile == 'standard') ? 'drupal_' : $profile . '_';
     $form['advanced_options']['prefix'] = [
       '#type' => 'textfield',

@@ -648,7 +648,7 @@ function template_preprocess_node(&$variables) {
     unset($variables['elements']['uid']);
   }
 
-  if (!$skip_custom_preprocessing || !$node->getFieldDefinition('title')->isDisplayConfigurable('view')) {
+  if (isset($variables['elements']['title']) && (!$skip_custom_preprocessing || !$node->getFieldDefinition('title')->isDisplayConfigurable('view'))) {
     $variables['label'] = $variables['elements']['title'];
     unset($variables['elements']['title']);
   }
