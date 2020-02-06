@@ -290,6 +290,7 @@ abstract class AccessResult implements AccessResultInterface, RefinableCacheable
    *   ::addCacheableDependency() instead.
    */
   public function cacheUntilEntityChanges(EntityInterface $entity) {
+    @trigger_error(__METHOD__ . ' is deprecated in drupal:8.0.0 and is removed in drupal:9.0.0. Use \Drupal\Core\Access\AccessResult::addCacheableDependency() instead.', E_USER_DEPRECATED);
     return $this->addCacheableDependency($entity);
   }
 
