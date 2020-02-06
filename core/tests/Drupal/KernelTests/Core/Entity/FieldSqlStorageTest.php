@@ -148,7 +148,7 @@ class FieldSqlStorageTest extends EntityKernelTestBase {
           $this->assertEqual($entity->{$this->fieldName}[$delta]->value, $value);
         }
         else {
-          $this->assertFalse(array_key_exists($delta, $entity->{$this->fieldName}));
+          $this->assertArrayNotHasKey($delta, $entity->{$this->fieldName});
         }
       }
     }
@@ -160,7 +160,7 @@ class FieldSqlStorageTest extends EntityKernelTestBase {
         $this->assertEqual($entity->{$this->fieldName}[$delta]->value, $value);
       }
       else {
-        $this->assertFalse(array_key_exists($delta, $entity->{$this->fieldName}));
+        $this->assertArrayNotHasKey($delta, $entity->{$this->fieldName});
       }
     }
 
@@ -171,7 +171,7 @@ class FieldSqlStorageTest extends EntityKernelTestBase {
     $connection->insert($this->table)->fields($columns)->values($values)->execute();
     $connection->insert($this->revisionTable)->fields($columns)->values($values)->execute();
     $entity = $storage->load($entity->id());
-    $this->assertFalse(array_key_exists($unavailable_langcode, $entity->{$this->fieldName}));
+    $this->assertArrayNotHasKey($unavailable_langcode, $entity->{$this->fieldName});
   }
 
   /**

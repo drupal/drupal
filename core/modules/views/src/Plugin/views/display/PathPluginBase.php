@@ -101,7 +101,7 @@ abstract class PathPluginBase extends DisplayPluginBase implements DisplayRouter
   protected function isDefaultTabPath() {
     $menu = $this->getOption('menu');
     $tab_options = $this->getOption('tab_options');
-    return $menu['type'] == 'default tab' && !empty($tab_options['type']) && $tab_options['type'] != 'none';
+    return $menu && $menu['type'] == 'default tab' && !empty($tab_options['type']) && $tab_options['type'] != 'none';
   }
 
   /**

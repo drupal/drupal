@@ -5,6 +5,14 @@ namespace Drupal\Tests\rdf\Traits;
 use Drupal\Core\Url;
 
 /**
+ * Override \EasyRdf_ParsedUri for PHP 7.4 compatibilty.
+ *
+ * @todo https://www.drupal.org/project/drupal/issues/3110972 Remove this work
+ *   around.
+ */
+class_alias('\Drupal\Tests\rdf\Traits\EasyRdf_ParsedUri', '\EasyRdf_ParsedUri');
+
+/**
  * Defines a trait for parsing RDF properties from HTML.
  */
 trait RdfParsingTrait {
