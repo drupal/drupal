@@ -16,16 +16,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class FieldMigration extends Migration implements ContainerFactoryPluginInterface {
 
   /**
-   * Defines which configuration option has the migration processing function.
-   *
-   * Default method is 'field_plugin_method'.
-   *
-   * @const string
-   * @deprecated in drupal:8.7.0 and is removed from drupal:9.0.0. Use the migrate_drupal.field_discovery service instead. See https://www.drupal.org/node/3006076.
-   */
-  const PLUGIN_METHOD = 'field_plugin_method';
-
-  /**
    * Flag indicating whether the field data has been filled already.
    *
    * @var bool
