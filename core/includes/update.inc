@@ -607,7 +607,7 @@ function update_retrieve_dependencies() {
   $return = [];
   // Get a list of installed modules, arranged so that we invoke their hooks in
   // the same order that \Drupal::moduleHandler()->invokeAll() does.
-  foreach (\Drupal::keyValue('system.schema')->getAll() as $module => $schema) {
+  foreach (drupal_get_installed_schema_version(NULL, FALSE, TRUE) as $module => $schema) {
     if ($schema == SCHEMA_UNINSTALLED) {
       // Nothing to upgrade.
       continue;
