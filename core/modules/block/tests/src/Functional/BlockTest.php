@@ -417,7 +417,7 @@ class BlockTest extends BlockTestBase {
     $this->assertEqual($this->drupalGetHeader('X-Drupal-Cache'), 'HIT');
 
     // Place the "Powered by Drupal" block another time; verify a cache miss.
-    $block_2 = $this->drupalPlaceBlock('system_powered_by_block', ['id' => 'powered-2']);
+    $this->drupalPlaceBlock('system_powered_by_block', ['id' => 'powered-2']);
     $this->drupalGet('<front>');
     $this->assertEqual($this->drupalGetHeader('X-Drupal-Cache'), 'MISS');
 
