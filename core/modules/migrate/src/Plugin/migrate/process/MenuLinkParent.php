@@ -11,7 +11,6 @@ use Drupal\migrate\MigrateLookupInterface;
 use Drupal\migrate\Plugin\MigrationInterface;
 use Drupal\migrate\MigrateExecutableInterface;
 use Drupal\migrate\MigrateSkipRowException;
-use Drupal\migrate\Plugin\MigrateProcessInterface;
 use Drupal\migrate\ProcessPluginBase;
 use Drupal\migrate\Row;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -29,18 +28,6 @@ class MenuLinkParent extends ProcessPluginBase implements ContainerFactoryPlugin
    * @var \Drupal\Core\Menu\MenuLinkManagerInterface
    */
   protected $menuLinkManager;
-
-  /**
-   * The Migration process plugin.
-   *
-   * @var \Drupal\migrate\Plugin\MigrateProcessInterface
-   *
-   * @deprecated in drupal:8.8.x and is removed from drupal:9.0.0. Use
-   *   the migrate.lookup service instead.
-   *
-   * @see https://www.drupal.org/node/3047268
-   */
-  protected $migrationPlugin;
 
   /**
    * The currently running migration.
@@ -80,19 +67,9 @@ class MenuLinkParent extends ProcessPluginBase implements ContainerFactoryPlugin
    *   The currently running migration.
    */
   // @codingStandardsIgnoreLine
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, $migrate_lookup, MenuLinkManagerInterface $menu_link_manager, EntityStorageInterface $menu_link_storage, MigrationInterface $migration = NULL) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, MigrateLookupInterface $migrate_lookup, MenuLinkManagerInterface $menu_link_manager, EntityStorageInterface $menu_link_storage, MigrationInterface $migration) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
-    if ($migrate_lookup instanceof MigrateProcessInterface) {
-      @trigger_error('Passing a migration process plugin as the fourth argument to ' . __METHOD__ . ' is deprecated in drupal:8.8.0 and will throw an error in drupal:9.0.0. Pass the migrate.lookup service instead. See https://www.drupal.org/node/3047268', E_USER_DEPRECATED);
-      $this->migrationPlugin = $migrate_lookup;
-      $migrate_lookup = \Drupal::service('migrate.lookup');
-    }
-    elseif (!$migrate_lookup instanceof MigrateLookupInterface) {
-      throw new \InvalidArgumentException("The fourth argument to " . __METHOD__ . " must be an instance of MigrateLookupInterface.");
-    }
-    elseif (!$migration instanceof MigrationInterface) {
-      throw new \InvalidArgumentException("The seventh argument to " . __METHOD__ . " must be an instance of MigrationInterface.");
-    }
+
     $this->migration = $migration;
     $this->migrateLookup = $migrate_lookup;
     $this->menuLinkManager = $menu_link_manager;
@@ -126,26 +103,9 @@ class MenuLinkParent extends ProcessPluginBase implements ContainerFactoryPlugin
       // Top level item.
       return '';
     }
-    // This BC layer is included because if the plugin constructor was called
-    // in the legacy way with a migration_lookup process plugin, it may have
-    // been preconfigured with a different migration to look up against. While
-    // this is unlikely, for maximum BC we will continue to use the plugin to do
-    // the lookup if it is provided, and support for this will be removed in
-    // Drupal 9.
-    if ($this->migrationPlugin) {
-      try {
-        $already_migrated_id = $this
-          ->migrationPlugin
-          ->transform($parent_id, $migrate_executable, $row, $destination_property);
-      }
-      catch (MigrateSkipRowException $e) {
-      }
-    }
-    else {
-      $lookup_result = $this->migrateLookup->lookup($this->migration->id(), [$parent_id]);
-      if ($lookup_result) {
-        $already_migrated_id = $lookup_result[0]['id'];
-      }
+    $lookup_result = $this->migrateLookup->lookup($this->migration->id(), [$parent_id]);
+    if ($lookup_result) {
+      $already_migrated_id = $lookup_result[0]['id'];
     }
 
     if (!empty($already_migrated_id) && ($link = $this->menuLinkStorage->load($already_migrated_id))) {

@@ -146,18 +146,9 @@ class MigrationLookup extends ProcessPluginBase implements ContainerFactoryPlugi
    *   The migrate stub service.
    */
   // @codingStandardsIgnoreLine
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, MigrationInterface $migration, $migrate_lookup, $migrate_stub = NULL) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, MigrationInterface $migration, MigrateLookupInterface $migrate_lookup, MigrateStubInterface $migrate_stub) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
-    if (!$migrate_lookup instanceof MigrateLookupInterface) {
-      @trigger_error('Not passing the migrate lookup service as the fifth parameter to ' . __METHOD__ . ' is deprecated in drupal:8.8.0 and will throw a type error in drupal:9.0.0. Pass an instance of \\Drupal\\migrate\\MigrateLookupInterface. See https://www.drupal.org/node/3047268', E_USER_DEPRECATED);
-      $migrate_lookup = \Drupal::service('migrate.lookup');
-    }
-    if (!$migrate_stub instanceof MigrateStubInterface) {
-      @trigger_error('Not passing the migrate stub service as the sixth parameter to ' . __METHOD__ . ' is deprecated in drupal:8.8.0 and will throw a type error in drupal:9.0.0. Pass an instance of \\Drupal\\migrate\\MigrateStubInterface. See https://www.drupal.org/node/3047268', E_USER_DEPRECATED);
-      $migrate_stub = \Drupal::service('migrate.stub');
-    }
     $this->migration = $migration;
-
     $this->migrateLookup = $migrate_lookup;
     $this->migrateStub = $migrate_stub;
   }

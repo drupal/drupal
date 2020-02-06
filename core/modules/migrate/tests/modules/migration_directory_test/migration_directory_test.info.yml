@@ -1,6 +1,0 @@
-name: 'Migration directory test'
-type: module
-package: Testing
-version: VERSION
-dependencies:
-  - drupal:migrate
