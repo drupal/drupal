@@ -15,6 +15,7 @@ use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheableDependencyInterface;
 use Drupal\Core\Config\Config;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\Tests\UnitTestCase;
 
 /**
@@ -967,6 +968,21 @@ class AccessResultTest extends UnitTestCase {
     $data[] = [['allowed', 'denied'], 'AND', $access_result];
 
     return $data;
+  }
+
+  /**
+   * @expectedDeprecation Drupal\Core\Access\AccessResult::cacheUntilEntityChanges is deprecated in drupal:8.0.0 and is removed in drupal:9.0.0. Use \Drupal\Core\Access\AccessResult::addCacheableDependency() instead.
+   * @group legacy
+   */
+  public function testCacheUntilEntityChanges() {
+    $entity = $this->prophesize(EntityInterface::class);
+    $entity->getCacheContexts()->willReturn(['context']);
+    $entity->getCacheTags()->willReturn(['tag']);
+    $entity->getCacheMaxAge()->willReturn(10);
+    $access_result = AccessResult::neutral()->cacheUntilEntityChanges($entity->reveal());
+    $this->assertSame(['context'], $access_result->getCacheContexts());
+    $this->assertSame(['tag'], $access_result->getCacheTags());
+    $this->assertSame(10, $access_result->getCacheMaxAge());
   }
 
   /**
