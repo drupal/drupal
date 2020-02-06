@@ -131,3 +131,33 @@ session_test.set_session:
       test_value: '\s+'
   requirements:
     _permission: 'administer site configuration'
+
+session_test.set_bag_flag:
+  path: '/session-test/set-bag-flag'
+  defaults:
+    _title: 'Sets the test flag in the session test bag'
+    _controller: '\Drupal\session_test\Controller\SessionTestController::setSessionBagFlag'
+  options:
+    no_cache: TRUE
+  requirements:
+    _access: 'TRUE'
+
+session_test.clear_bag_flag:
+  path: '/session-test/clear-bag-flag'
+  defaults:
+    _title: 'Clears the test flag in the session test bag'
+    _controller: '\Drupal\session_test\Controller\SessionTestController::clearSessionBagFlag'
+  options:
+    no_cache: TRUE
+  requirements:
+    _access: 'TRUE'
+
+session_test.has_bag_flag:
+  path: '/session-test/has-bag-flag'
+  defaults:
+    _title: 'Prints a message if the flag in the session bag is set'
+    _controller: '\Drupal\session_test\Controller\SessionTestController::hasSessionBagFlag'
+  options:
+    no_cache: TRUE
+  requirements:
+    _access: 'TRUE'
