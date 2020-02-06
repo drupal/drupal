@@ -547,7 +547,6 @@ class InlineBlockTest extends InlineBlockTestBase {
    * Tests 'create and edit custom blocks' permission to edit an existing block.
    */
   public function testEditInlineBlocksPermission() {
-    $assert_session = $this->assertSession();
 
     LayoutBuilderEntityViewDisplay::load('node.bundle_with_section_field.default')
       ->enableLayoutBuilder()
