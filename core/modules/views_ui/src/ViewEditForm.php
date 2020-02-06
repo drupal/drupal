@@ -315,8 +315,6 @@ class ViewEditForm extends ViewFormBase {
           $query->remove('destination');
         }
       }
-      // @todo Use Url::fromPath() once https://www.drupal.org/node/2351379 is
-      //   resolved.
       $form_state->setRedirectUrl(Url::fromUri("base:$destination"));
     }
 
