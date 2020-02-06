@@ -121,16 +121,16 @@ class Select extends Query implements SelectInterface {
   /**
    * Constructs a Select object.
    *
+   * @param \Drupal\Core\Database\Connection $connection
+   *   Database connection object.
    * @param string $table
    *   The name of the table that is being queried.
    * @param string $alias
    *   The alias for the table.
-   * @param \Drupal\Core\Database\Connection $connection
-   *   Database connection object.
    * @param array $options
    *   Array of query options.
    */
-  public function __construct($table, $alias, Connection $connection, $options = []) {
+  public function __construct(Connection $connection, $table, $alias = NULL, $options = []) {
     $options['return'] = Database::RETURN_STATEMENT;
     parent::__construct($connection, $options);
     $conjunction = isset($options['conjunction']) ? $options['conjunction'] : 'AND';

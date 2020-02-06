@@ -806,7 +806,7 @@ abstract class Connection {
    */
   public function select($table, $alias = NULL, array $options = []) {
     $class = $this->getDriverClass('Select');
-    return new $class($table, $alias, $this, $options);
+    return new $class($this, $table, $alias, $options);
   }
 
   /**
