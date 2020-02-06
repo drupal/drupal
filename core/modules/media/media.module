@@ -426,7 +426,7 @@ function media_filter_format_edit_form_validate($form, FormStateInterface $form_
     return (string) $form['filters']['order'][$filter_plugin_id]['filter']['#markup'];
   };
 
-  if ($filter_html_enabled && $allowed_html = $form_state->getValue($allowed_html_path)) {
+  if ($filter_html_enabled && $form_state->getValue($allowed_html_path)) {
     /** @var \Drupal\filter\Entity\FilterFormat $filter_format */
     $filter_format = $form_state->getFormObject()->getEntity();
 
