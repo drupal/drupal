@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\Tests\system\Functional\UpdateSystem;
+namespace Drupal\Tests\system\Functional\Update;
 
 use Drupal\Core\Database\Database;
 use Drupal\Tests\BrowserTestBase;
