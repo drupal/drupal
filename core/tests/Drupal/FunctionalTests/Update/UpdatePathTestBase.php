@@ -67,13 +67,6 @@ abstract class UpdatePathTestBase extends BrowserTestBase {
   protected $databaseDumpFiles = [];
 
   /**
-   * The install profile used in the database dump file.
-   *
-   * @var string
-   */
-  protected $installProfile = 'standard';
-
-  /**
    * Flag that indicates whether the child site has been updated.
    *
    * @var bool
@@ -250,11 +243,6 @@ abstract class UpdatePathTestBase extends BrowserTestBase {
   protected function prepareSettings() {
     parent::prepareSettings();
 
-    // Remember the profile which was used.
-    $settings['settings']['install_profile'] = (object) [
-      'value' => $this->installProfile,
-      'required' => TRUE,
-    ];
     // Generate a hash salt.
     $settings['settings']['hash_salt'] = (object) [
       'value'    => Crypt::randomBytesBase64(55),

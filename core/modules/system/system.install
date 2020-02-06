@@ -1021,8 +1021,8 @@ function system_requirements($phase) {
       // hosting provider.
       $requirements['install_profile_in_settings'] = [
         'title' => t('Install profile in settings'),
-        'value' => t("Drupal 8 no longer uses the \$settings['install_profile'] value in settings.php and it can be removed."),
-        'severity' => REQUIREMENT_INFO,
+        'value' => t("Drupal 9 no longer uses the \$settings['install_profile'] value in settings.php and it should be removed."),
+        'severity' => REQUIREMENT_WARNING,
       ];
     }
   }

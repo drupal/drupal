@@ -491,7 +491,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
         // Continue if the PharStreamWrapperManager is already initialized. For
         // example, this occurs during a module install.
         // @see \Drupal\Core\Extension\ModuleInstaller::install()
-      };
+      }
       stream_wrapper_unregister('phar');
       stream_wrapper_register('phar', PharStreamWrapper::class);
     }
@@ -1602,18 +1602,9 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
    */
   protected function getInstallProfile() {
     $config = $this->getConfigStorage()->read('core.extension');
-    if (isset($config['profile'])) {
-      $install_profile = $config['profile'];
-    }
-    // @todo https://www.drupal.org/node/2831065 remove the BC layer.
-    else {
-      // If system_update_8300() has not yet run fallback to using settings.
-      $settings = Settings::getAll();
-      $install_profile = isset($settings['install_profile']) ? $settings['install_profile'] : NULL;
-    }
 
     // Normalize an empty string to a NULL value.
-    return empty($install_profile) ? NULL : $install_profile;
+    return $config['profile'] ?? NULL;
   }
 
 }
