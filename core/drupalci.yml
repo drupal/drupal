@@ -53,7 +53,3 @@ build:
       # Run nightwatch testing.
       # @see https://www.drupal.org/project/drupal/issues/2869825
       nightwatchjs:
-#      container_command.drupal_project_templates:
-#        commands:
-#          - "sudo -u www-data ${SOURCE_DIR}/core/tests/scripts/test_composer_project_templates.sh"
-#        halt-on-fail: true
