@@ -81,65 +81,6 @@ class TwigExtension extends AbstractExtension {
   }
 
   /**
-   * Sets the URL generator.
-   *
-   * @param \Drupal\Core\Routing\UrlGeneratorInterface $url_generator
-   *   The URL generator.
-   *
-   * @return $this
-   *
-   * @deprecated in drupal:8.0.0 and is removed from drupal:9.0.0.
-   */
-  public function setGenerators(UrlGeneratorInterface $url_generator) {
-    return $this->setUrlGenerator($url_generator);
-  }
-
-  /**
-   * Sets the URL generator.
-   *
-   * @param \Drupal\Core\Routing\UrlGeneratorInterface $url_generator
-   *   The URL generator.
-   *
-   * @return $this
-   *
-   * @deprecated in drupal:8.3.0 and is removed from drupal:9.0.0.
-   */
-  public function setUrlGenerator(UrlGeneratorInterface $url_generator) {
-    $this->urlGenerator = $url_generator;
-    return $this;
-  }
-
-  /**
-   * Sets the theme manager.
-   *
-   * @param \Drupal\Core\Theme\ThemeManagerInterface $theme_manager
-   *   The theme manager.
-   *
-   * @return $this
-   *
-   * @deprecated in drupal:8.3.0 and is removed from drupal:9.0.0.
-   */
-  public function setThemeManager(ThemeManagerInterface $theme_manager) {
-    $this->themeManager = $theme_manager;
-    return $this;
-  }
-
-  /**
-   * Sets the date formatter.
-   *
-   * @param \Drupal\Core\Datetime\DateFormatter $date_formatter
-   *   The date formatter.
-   *
-   * @return $this
-   *
-   * @deprecated in drupal:8.3.0 and is removed from drupal:9.0.0.
-   */
-  public function setDateFormatter(DateFormatterInterface $date_formatter) {
-    $this->dateFormatter = $date_formatter;
-    return $this;
-  }
-
-  /**
    * {@inheritdoc}
    */
   public function getFunctions() {
