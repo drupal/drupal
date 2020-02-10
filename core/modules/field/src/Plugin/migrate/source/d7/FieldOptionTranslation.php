@@ -23,9 +23,16 @@ class FieldOptionTranslation extends Field {
       ->condition('objectid', '#allowed_values');
     // Add all i18n and locales_target fields.
     $query
-      ->fields('i18n')
+      ->fields('i18n', [
+        // All table fields except lid and type.
+        'textgroup',
+        'context',
+        'objectid',
+        'property',
+        'objectindex',
+        'format',
+      ])
       ->fields('lt');
-    $query->addField('fc', 'type');
     $query->addField('fci', 'bundle');
     $query->addField('i18n', 'lid', 'i18n_lid');
     $query->addField('i18n', 'type', 'i18n_type');
