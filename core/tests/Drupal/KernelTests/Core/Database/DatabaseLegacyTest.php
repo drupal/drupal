@@ -137,7 +137,7 @@ class DatabaseLegacyTest extends DatabaseTestBase {
    * Tests deprecation of the db_field_set_default() function.
    *
    * @expectedDeprecation db_field_set_default() is deprecated in drupal:8.0.0. It will be removed from drupal:9.0.0. Instead, get a database connection injected into your service from the container, get its schema driver, and call changeField() on it, passing a full field specification. For example, $injected_database->schema()->changeField($table, $field, $field_new, $spec, $keys_new). See https://www.drupal.org/node/2993033
-   * @expectedDeprecation fieldSetDefault() is deprecated in Drupal 8.7.0 and will be removed before Drupal 9.0.0. Instead, call ::changeField() passing a full field specification. See https://www.drupal.org/node/2999035
+   * @expectedDeprecation fieldSetDefault() is deprecated in drupal:8.7.0 and will be removed before drupal:9.0.0. Instead, call ::changeField() passing a full field specification. See https://www.drupal.org/node/2999035
    * @doesNotPerformAssertions
    */
   public function testDbFieldSetDefault() {
@@ -148,7 +148,7 @@ class DatabaseLegacyTest extends DatabaseTestBase {
    * Tests deprecation of the db_field_set_no_default() function.
    *
    * @expectedDeprecation db_field_set_no_default() is deprecated in drupal:8.0.0. It will be removed from drupal:9.0.0. Instead, get a database connection injected into your service from the container, get its schema driver, and call changeField() on it, passing a full field specification. For example, $injected_database->schema()->changeField($table, $field, $field_new, $spec, $keys_new). See https://www.drupal.org/node/2993033
-   * @expectedDeprecation fieldSetNoDefault() is deprecated in Drupal 8.7.0 and will be removed before Drupal 9.0.0. Instead, call ::changeField() passing a full field specification. See https://www.drupal.org/node/2999035
+   * @expectedDeprecation fieldSetNoDefault() is deprecated in drupal:8.7.0 and will be removed before drupal:9.0.0. Instead, call ::changeField() passing a full field specification. See https://www.drupal.org/node/2999035
    * @doesNotPerformAssertions
    */
   public function testDbFieldSetNoDefault() {
@@ -158,8 +158,8 @@ class DatabaseLegacyTest extends DatabaseTestBase {
   /**
    * Tests Schema::fieldSetDefault and Schema::fieldSetNoDefault.
    *
-   * @expectedDeprecation fieldSetDefault() is deprecated in Drupal 8.7.0 and will be removed before Drupal 9.0.0. Instead, call ::changeField() passing a full field specification. See https://www.drupal.org/node/2999035
-   * @expectedDeprecation fieldSetNoDefault() is deprecated in Drupal 8.7.0 and will be removed before Drupal 9.0.0. Instead, call ::changeField() passing a full field specification. See https://www.drupal.org/node/2999035
+   * @expectedDeprecation fieldSetDefault() is deprecated in drupal:8.7.0 and will be removed before drupal:9.0.0. Instead, call ::changeField() passing a full field specification. See https://www.drupal.org/node/2999035
+   * @expectedDeprecation fieldSetNoDefault() is deprecated in drupal:8.7.0 and will be removed before drupal:9.0.0. Instead, call ::changeField() passing a full field specification. See https://www.drupal.org/node/2999035
    */
   public function testSchemaFieldDefaultChange() {
     // Create a table.
@@ -446,7 +446,7 @@ class DatabaseLegacyTest extends DatabaseTestBase {
   /**
    * Tests deprecation of the $options 'target' key in Connection::query.
    *
-   * @expectedDeprecation Passing a 'target' key to \Drupal\Core\Database\Connection::query $options argument is deprecated in Drupal 8.0.x and will be removed before Drupal 9.0.0. Instead, use \Drupal\Core\Database\Database::getConnection($target)->query(). See https://www.drupal.org/node/2993033.
+   * @expectedDeprecation Passing a 'target' key to \Drupal\Core\Database\Connection::query $options argument is deprecated in drupal:8.0.x and will be removed before drupal:9.0.0. Instead, use \Drupal\Core\Database\Database::getConnection($target)->query(). See https://www.drupal.org/node/2993033
    */
   public function testDbOptionsTarget() {
     $this->assertNotNull($this->connection->query('SELECT * FROM {test}', [], ['target' => 'bar']));
@@ -455,7 +455,7 @@ class DatabaseLegacyTest extends DatabaseTestBase {
   /**
    * Tests deprecation of the $options 'target' key in Select.
    *
-   * @expectedDeprecation Passing a 'target' key to \Drupal\Core\Database\Connection::query $options argument is deprecated in Drupal 8.0.x and will be removed before Drupal 9.0.0. Instead, use \Drupal\Core\Database\Database::getConnection($target)->query(). See https://www.drupal.org/node/2993033.
+   * @expectedDeprecation Passing a 'target' key to \Drupal\Core\Database\Connection::query $options argument is deprecated in drupal:8.0.x and will be removed before drupal:9.0.0. Instead, use \Drupal\Core\Database\Database::getConnection($target)->query(). See https://www.drupal.org/node/2993033
    */
   public function testDbOptionsTargetInSelect() {
     $this->assertNotNull($this->connection->select('test', 't', ['target' => 'bar'])->fields('t')->execute());
@@ -486,7 +486,7 @@ class DatabaseLegacyTest extends DatabaseTestBase {
   /**
    * Tests deprecation of the db_add_index() function.
    *
-   * @expectedDeprecation db_add_index() is deprecated in Drupal 8.0.x and will be removed in Drupal 9.0.0. Instead, get a database connection injected into your service from the container, get its schema driver, and call addIndex() on it. For example, $injected_database->schema()->addIndex($table, $name, $fields, $spec). See https://www.drupal.org/node/2993033
+   * @expectedDeprecation db_add_index() is deprecated in drupal:8.0.x and will be removed in drupal:9.0.0. Instead, get a database connection injected into your service from the container, get its schema driver, and call addIndex() on it. For example, $injected_database->schema()->addIndex($table, $name, $fields, $spec). See https://www.drupal.org/node/2993033
    */
   public function testDbAddIndex() {
     $table_specification = [

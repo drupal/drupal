@@ -790,7 +790,7 @@ class Schema extends DatabaseSchema {
    * {@inheritdoc}
    */
   public function fieldSetDefault($table, $field, $default) {
-    @trigger_error('fieldSetDefault() is deprecated in Drupal 8.7.0 and will be removed before Drupal 9.0.0. Instead, call ::changeField() passing a full field specification. See https://www.drupal.org/node/2999035', E_USER_DEPRECATED);
+    @trigger_error('fieldSetDefault() is deprecated in drupal:8.7.0 and will be removed before drupal:9.0.0. Instead, call ::changeField() passing a full field specification. See https://www.drupal.org/node/2999035', E_USER_DEPRECATED);
     if (!$this->fieldExists($table, $field)) {
       throw new SchemaObjectDoesNotExistException(t("Cannot set default value of field @table.@field: field doesn't exist.", ['@table' => $table, '@field' => $field]));
     }
@@ -806,7 +806,7 @@ class Schema extends DatabaseSchema {
    * {@inheritdoc}
    */
   public function fieldSetNoDefault($table, $field) {
-    @trigger_error('fieldSetNoDefault() is deprecated in Drupal 8.7.0 and will be removed before Drupal 9.0.0. Instead, call ::changeField() passing a full field specification. See https://www.drupal.org/node/2999035', E_USER_DEPRECATED);
+    @trigger_error('fieldSetNoDefault() is deprecated in drupal:8.7.0 and will be removed before drupal:9.0.0. Instead, call ::changeField() passing a full field specification. See https://www.drupal.org/node/2999035', E_USER_DEPRECATED);
     if (!$this->fieldExists($table, $field)) {
       throw new SchemaObjectDoesNotExistException(t("Cannot remove default value of field @table.@field: field doesn't exist.", ['@table' => $table, '@field' => $field]));
     }
