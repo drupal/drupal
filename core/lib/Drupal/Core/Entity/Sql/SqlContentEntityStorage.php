@@ -1108,9 +1108,6 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
    *
    * @return bool
    *   TRUE if the column is serial, FALSE otherwise.
-   *
-   * @see \Drupal\Core\Entity\Sql\SqlContentEntityStorageSchema::processBaseTable()
-   * @see \Drupal\Core\Entity\Sql\SqlContentEntityStorageSchema::processRevisionTable()
    */
   protected function isColumnSerial($table_name, $schema_name) {
     $result = FALSE;

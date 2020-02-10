@@ -384,7 +384,6 @@ class SqlContentEntityStorageTest extends UnitTestCase {
       ->will($this->returnValueMap([
         // SqlContentEntityStorageSchema::initializeBaseTable()
         ['revision', FALSE],
-        // SqlContentEntityStorageSchema::processBaseTable()
         ['id', TRUE],
       ]));
     $this->entityType->expects($this->any())
@@ -397,7 +396,6 @@ class SqlContentEntityStorageTest extends UnitTestCase {
         ['bundle', NULL],
         // SqlContentEntityStorageSchema::initializeBaseTable()
         ['id' => 'id'],
-        // SqlContentEntityStorageSchema::processBaseTable()
         ['id' => 'id'],
       ]));
 

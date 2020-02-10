@@ -111,7 +111,6 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
    * @covers ::getFieldUniqueKeys
    * @covers ::getFieldForeignKeys
    * @covers ::getFieldSchemaData
-   * @covers ::processBaseTable
    * @covers ::processIdentifierSchema
    */
   public function testGetSchemaBase() {
@@ -405,7 +404,6 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
    * @covers ::initializeRevisionTable
    * @covers ::addTableDefaults
    * @covers ::getEntityIndexName
-   * @covers ::processRevisionTable
    * @covers ::processIdentifierSchema
    */
   public function testGetSchemaRevisionable() {
@@ -426,7 +424,7 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
       ->method('getRevisionMetadataKeys')
       ->will($this->returnValue([]));
 
-    $this->storage->expects($this->exactly(1))
+    $this->storage->expects($this->exactly(9))
       ->method('getRevisionTable')
       ->will($this->returnValue('entity_test_revision'));
 
@@ -647,7 +645,7 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
       ->method('isTranslatable')
       ->will($this->returnValue(TRUE));
 
-    $this->storage->expects($this->exactly(2))
+    $this->storage->expects($this->exactly(30))
       ->method('getRevisionTable')
       ->will($this->returnValue('entity_test_revision'));
 
