@@ -68,8 +68,6 @@ function editor_element_info_alter(&$types) {
 }
 
 /**
- * Implements hook_form_FORM_ID_alter() for \Drupal\filter\FilterFormatListBuilder.
- *
  * Implements hook_field_formatter_info_alter().
  *
  * @see quickedit_field_formatter_info_alter()
