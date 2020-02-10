@@ -56,28 +56,6 @@ class FileStorage implements PhpStorageInterface {
   }
 
   /**
-   * Returns the standard .htaccess lines that Drupal writes to file directories.
-   *
-   * @param bool $private
-   *   (optional) Set to FALSE to return the .htaccess lines for an open and
-   *   public directory. The default is TRUE, which returns the .htaccess lines
-   *   for a private and protected directory.
-   *
-   * @return string
-   *   The desired contents of the .htaccess file.
-   *
-   * @deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. Instead use
-   *   \Drupal\Component\FileSecurity\FileSecurity.
-   *
-   * @see https://www.drupal.org/node/3075098
-   * @see \Drupal\Component\FileSecurity\FileSecurity::writeHtaccess()
-   */
-  public static function htaccessLines($private = TRUE) {
-    @trigger_error("htaccessLines() is deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. Use \Drupal\Component\FileSecurity\FileSecurity::htaccessLines() instead. See https://www.drupal.org/node/3075098", E_USER_DEPRECATED);
-    return FileSecurity::htaccessLines($private);
-  }
-
-  /**
    * Ensures the directory exists, has the right permissions, and a .htaccess.
    *
    * For compatibility with open_basedir, the requested directory is created

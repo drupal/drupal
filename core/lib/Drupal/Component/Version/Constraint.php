@@ -52,26 +52,6 @@ class Constraint {
   }
 
   /**
-   * A list of associative arrays representing the constraint.
-   *
-   * Each containing the keys:
-   *  - 'op': can be one of: '=', '==', '!=', '<>', '<', '<=', '>', or '>='.
-   *  - 'version': A complete version, e.g. '4.5-beta3'.
-   *
-   * @return array[]
-   *   The constraint represented as an array.
-   *
-   * @deprecated in drupal:8.7.0 and is removed from drupal:9.0.0.
-   *   Only exists to provide a backwards compatibility layer.
-   *
-   * @see https://www.drupal.org/node/2756875
-   */
-  public function toArray() {
-    @trigger_error(sprintf('%s() only exists to provide a backwards compatibility layer. See https://www.drupal.org/node/2756875', __METHOD__), E_USER_DEPRECATED);
-    return $this->constraintArray;
-  }
-
-  /**
    * Determines if the provided version is satisfied by this constraint.
    *
    * @param string $version
