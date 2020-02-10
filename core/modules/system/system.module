@@ -80,22 +80,14 @@ const DRUPAL_REQUIRED = 2;
 /**
  * Return only visible regions.
  *
- * @deprecated in drupal:8.3.0 and is removed from drupal:9.0.0.
- *   Use \Drupal\block\BlockRepositoryInterface::REGIONS_VISIBLE instead.
- *
  * @see system_region_list()
- * @see https://www.drupal.org/node/2831620
  */
 const REGIONS_VISIBLE = 'visible';
 
 /**
  * Return all regions.
  *
- * @deprecated in drupal:8.3.0 and is removed from drupal:9.0.0.
- *   Use \Drupal\block\BlockRepositoryInterface::REGIONS_ALL instead.
- *
  * @see system_region_list()
- * @see https://www.drupal.org/node/2831620
  */
 const REGIONS_ALL = 'all';
 
