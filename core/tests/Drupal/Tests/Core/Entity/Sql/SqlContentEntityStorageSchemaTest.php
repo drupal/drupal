@@ -426,7 +426,7 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
       ->method('getRevisionMetadataKeys')
       ->will($this->returnValue([]));
 
-    $this->storage->expects($this->exactly(1))
+    $this->storage->expects($this->exactly(9))
       ->method('getRevisionTable')
       ->will($this->returnValue('entity_test_revision'));
 
@@ -647,7 +647,7 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
       ->method('isTranslatable')
       ->will($this->returnValue(TRUE));
 
-    $this->storage->expects($this->exactly(2))
+    $this->storage->expects($this->exactly(30))
       ->method('getRevisionTable')
       ->will($this->returnValue('entity_test_revision'));
 

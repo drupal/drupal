@@ -371,4 +371,63 @@ class EntitySchemaTest extends EntityKernelTestBase {
     $this->assertEqual($entity_type_id_count, 0, 'After uninstalling entity_test module the schema should not contains fields from entities provided by the module.');
   }
 
+  /**
+   * Tests the installed storage schema for identifier fields.
+   */
+  public function testIdentifierSchema() {
+    $this->installEntitySchema('entity_test_rev');
+
+    $key_value_store = \Drupal::keyValue('entity.storage_schema.sql');
+    $id_schema = $key_value_store->get('entity_test_rev.field_schema_data.id', []);
+    $revision_id_schema = $key_value_store->get('entity_test_rev.field_schema_data.revision_id', []);
+
+    $expected_id_schema = [
+      'entity_test_rev' => [
+        'fields' => [
+          'id' => [
+            'type' => 'serial',
+            'unsigned' => TRUE,
+            'size' => 'normal',
+            'not null' => TRUE,
+          ],
+        ],
+      ],
+      'entity_test_rev_revision' => [
+        'fields' => [
+          'id' => [
+            'type' => 'int',
+            'unsigned' => TRUE,
+            'size' => 'normal',
+            'not null' => TRUE,
+          ],
+        ],
+      ],
+    ];
+    $this->assertEquals($expected_id_schema, $id_schema);
+
+    $expected_revision_id_schema = [
+      'entity_test_rev' => [
+        'fields' => [
+          'revision_id' => [
+            'type' => 'int',
+            'unsigned' => TRUE,
+            'size' => 'normal',
+            'not null' => FALSE,
+          ],
+        ],
+      ],
+      'entity_test_rev_revision' => [
+        'fields' => [
+          'revision_id' => [
+            'type' => 'serial',
+            'unsigned' => TRUE,
+            'size' => 'normal',
+            'not null' => TRUE,
+          ],
+        ],
+      ],
+    ];
+    $this->assertEquals($expected_revision_id_schema, $revision_id_schema);
+  }
+
 }
