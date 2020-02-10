@@ -14,7 +14,7 @@
     "class": "Drupal\\Composer\\Plugin\\ProjectMessage\\MessagePlugin"
   },
   "require": {
-    "php": ">=7.0.8",
+    "php": ">=7.3.0",
     "composer-plugin-api": "^1.1"
   }
 }

@@ -690,7 +690,7 @@
             },
             "require": {
                 "composer-plugin-api": "^1.1",
-                "php": ">=7.0.8"
+                "php": ">=7.3.0"
             },
             "type": "composer-plugin",
             "extra": {
