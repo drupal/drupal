@@ -37,14 +37,13 @@ class NodeViewController extends EntityViewController {
    * @param \Drupal\Core\Render\RendererInterface $renderer
    *   The renderer service.
    * @param \Drupal\Core\Session\AccountInterface $current_user
-   *   The current user. For backwards compatibility this is optional, however
-   *   this will be removed before Drupal 9.0.0.
+   *   The current user.
    * @param \Drupal\Core\Entity\EntityRepositoryInterface $entity_repository
    *   The entity repository.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, RendererInterface $renderer, AccountInterface $current_user = NULL, EntityRepositoryInterface $entity_repository = NULL) {
+  public function __construct(EntityTypeManagerInterface $entity_type_manager, RendererInterface $renderer, AccountInterface $current_user, EntityRepositoryInterface $entity_repository) {
     parent::__construct($entity_type_manager, $renderer);
-    $this->currentUser = $current_user ?: \Drupal::currentUser();
+    $this->currentUser = $current_user;
     $this->entityRepository = $entity_repository;
   }
 
