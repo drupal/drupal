@@ -280,7 +280,7 @@ class EntityOperations implements ContainerInjectionInterface {
         $form['#access'] = FALSE;
         continue;
       }
-    };
+    }
   }
 
   /**

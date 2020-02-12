@@ -301,7 +301,7 @@ function field_config_import_steps_alter(&$sync_steps, ConfigImporter $config_im
     // to purge field data where the module that provides the field is being
     // uninstalled.
     array_unshift($sync_steps, ['\Drupal\field\ConfigImporterFieldPurger', 'process']);
-  };
+  }
 }
 
 /**
