@@ -191,7 +191,7 @@ class RouteProvider implements CacheableRouteProviderInterface, PreloadableRoute
   }
 
   /**
-   * Find the route using the provided route name (and parameters).
+   * Find the route using the provided route name.
    *
    * @param string $name
    *   The route name to fetch
