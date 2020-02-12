@@ -249,7 +249,7 @@ function taxonomy_post_update_configure_status_field_widget(&$sandbox = NULL) {
         ],
       ]);
       return TRUE;
-    };
+    }
     return FALSE;
   });
 }
