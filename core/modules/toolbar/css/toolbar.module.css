@@ -79,7 +79,7 @@
   right: 0;
   left: 0;
 }
-/* .toolbar-loading is required by toolbar JavaScript to pre-render markup
+/* .toolbar-loading is required by Toolbar JavaScript to pre-render markup
  * style to avoid extra reflow & flicker. */
 @media (min-width: 61em) {
   .toolbar-loading.toolbar-horizontal .toolbar .toolbar-bar .toolbar-tab:last-child .toolbar-tray {
