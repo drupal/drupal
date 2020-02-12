@@ -49,6 +49,11 @@ services:
     arguments: ['@request_stack']
     tags:
       - { name: cache.context }
+  cache_context.protocol_version:
+    class: Drupal\Core\Cache\Context\ProtocolVersionCacheContext
+    arguments: ['@request_stack']
+    tags:
+      - { name: cache.context }
   cache_context.headers:
     class: Drupal\Core\Cache\Context\HeadersCacheContext
     arguments: ['@request_stack']
