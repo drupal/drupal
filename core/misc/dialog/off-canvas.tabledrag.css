@@ -41,8 +41,8 @@
   height: auto;
   margin: 0;
   padding: 0;
-  /* Use lighter drag icon against dark background. */
   background-color: transparent;
+  /* Use lighter drag icon against dark background. */
   background-image: url(../icons/bebebe/move.svg);
   background-repeat: no-repeat;
   background-position: center;
