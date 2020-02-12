@@ -2,7 +2,6 @@
 
 namespace Drupal\Core\Field\Plugin\Field\FieldFormatter;
 
-use Drupal\Core\Field\AllowedTagsXssTrait;
 use Drupal\Core\Field\FormatterBase;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Form\FormStateInterface;
@@ -11,8 +10,6 @@ use Drupal\Core\Form\FormStateInterface;
  * Parent plugin for decimal and integer formatters.
  */
 abstract class NumericFormatterBase extends FormatterBase {
-
-  use AllowedTagsXssTrait;
 
   /**
    * {@inheritdoc}
