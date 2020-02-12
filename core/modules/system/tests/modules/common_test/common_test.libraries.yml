@@ -97,6 +97,14 @@ weight:
     lighter.js: { weight: -1 }
     before-jquery.js: { weight: -21 }
 
+# Library to test hook_js_alter().
+hook_js_alter:
+  version: VERSION
+  js:
+    alter.js: {}
+  dependencies:
+    - core/drupal.tableselect
+
 browsers:
   js:
     old-ie.js:

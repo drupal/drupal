@@ -148,7 +148,6 @@
         "drupal/settings_tray": "self.version",
         "drupal/seven": "self.version",
         "drupal/shortcut": "self.version",
-        "drupal/simpletest": "self.version",
         "drupal/standard": "self.version",
         "drupal/stark": "self.version",
         "drupal/statistics": "self.version",

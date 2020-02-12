@@ -72,7 +72,6 @@ class StateFileExists extends MigrateDrupalTestBase {
     'rdf',
     'search',
     'shortcut',
-    'simpletest',
     'statistics',
     'syslog',
     'system',

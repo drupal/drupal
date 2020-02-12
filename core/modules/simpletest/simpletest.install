@@ -2,85 +2,13 @@
 
 /**
  * @file
- * Install, update and uninstall functions for the simpletest module.
+ * Uninstall functions for the simpletest module.
  */
 
-use Drupal\Component\FileSecurity\FileSecurity;
-use Drupal\Component\Utility\Environment;
+use Drupal\Core\Database\Database;
 use Drupal\Core\File\Exception\FileException;
 use Drupal\Core\Test\TestDatabase;
-use PHPUnit\Framework\TestCase;
-
-/**
- * Minimum value of PHP memory_limit for SimpleTest.
- */
-const SIMPLETEST_MINIMUM_PHP_MEMORY_LIMIT = '128M';
-
-/**
- * Implements hook_requirements().
- */
-function simpletest_requirements($phase) {
-  $requirements = [];
-
-  $requirements['deprecation'] = [
-    'title' => t('Testing (SimpleTest)'),
-    'value' => t('The <em>Testing</em> (SimpleTest) module is deprecated for removal in Drupal 9. It should not be enabled on production sites. Read <a href="https://www.drupal.org/node/3091784">The Drupal core SimpleTest module is deprecated</a> for alternative ways to run tests during development.'),
-    'severity' => $phase === 'runtime' ? REQUIREMENT_WARNING : REQUIREMENT_INFO,
-  ];
-
-  $has_phpunit = class_exists(TestCase::class);
-  $has_curl = function_exists('curl_init');
-
-  $requirements['phpunit'] = [
-    'title' => t('PHPUnit dependency'),
-    'value' => $has_phpunit ? t('Found') : t('Not found'),
-  ];
-  if (!$has_phpunit) {
-    $requirements['phpunit']['severity'] = REQUIREMENT_ERROR;
-    $requirements['phpunit']['description'] = t("The testing framework requires the PHPUnit package. Please run 'composer install' to ensure it is present.");
-  }
-
-  $requirements['curl'] = [
-    'title' => t('cURL'),
-    'value' => $has_curl ? t('Enabled') : t('Not found'),
-  ];
-  if (!$has_curl) {
-    $requirements['curl']['severity'] = REQUIREMENT_ERROR;
-    $requirements['curl']['description'] = t('The testing framework requires the <a href="https://secure.php.net/manual/en/curl.setup.php">PHP cURL library</a>. For more information, see the <a href="https://www.drupal.org/requirements/php/curl">online information on installing the PHP cURL extension</a>.');
-  }
-
-  // Check the current memory limit. If it is set too low, SimpleTest will fail
-  // to load all tests and throw a fatal error.
-  $memory_limit = ini_get('memory_limit');
-  if (!Environment::checkMemoryLimit(SIMPLETEST_MINIMUM_PHP_MEMORY_LIMIT, $memory_limit)) {
-    $requirements['php_memory_limit']['severity'] = REQUIREMENT_WARNING;
-    $requirements['php_memory_limit']['description'] = t('The testing framework requires the PHP memory limit to be at least %memory_minimum_limit. The current value is %memory_limit. <a href=":url">Follow these steps to continue</a>.', ['%memory_limit' => $memory_limit, '%memory_minimum_limit' => SIMPLETEST_MINIMUM_PHP_MEMORY_LIMIT, ':url' => 'https://www.drupal.org/node/207036']);
-  }
-
-  $site_directory = 'sites/simpletest';
-  if (!drupal_verify_install_file(\Drupal::root() . '/' . $site_directory, FILE_EXIST | FILE_READABLE | FILE_WRITABLE | FILE_EXECUTABLE, 'dir')) {
-    $requirements['simpletest_site_directory'] = [
-      'title' => t('Simpletest site directory'),
-      'value' => is_dir(\Drupal::root() . '/' . $site_directory) ? t('Not writable') : t('Missing'),
-      'severity' => REQUIREMENT_ERROR,
-      'description' => t('The testing framework requires the %sites-simpletest directory to exist and be writable in order to run tests.', [
-        '%sites-simpletest' => $site_directory,
-      ]),
-    ];
-  }
-  elseif (!FileSecurity::writeHtaccess(\Drupal::root() . '/' . $site_directory, FALSE)) {
-    $requirements['simpletest_site_directory'] = [
-      'title' => t('Simpletest site directory'),
-      'value' => t('Not protected'),
-      'severity' => REQUIREMENT_ERROR,
-      'description' => t('The file %file does not exist and could not be created automatically, which poses a security risk. Ensure that the directory is writable.', [
-        '%file' => $site_directory . '/.htaccess',
-      ]),
-    ];
-  }
-
-  return $requirements;
-}
+use Symfony\Component\Console\Output\NullOutput;
 
 /**
  * Implements hook_schema().
@@ -94,11 +22,25 @@ function simpletest_schema() {
  */
 function simpletest_uninstall() {
   // Do not clean the environment in case the Simpletest module is uninstalled
-  // in a (recursive) test for itself, since simpletest_clean_environment()
-  // would also delete the test site of the parent test process.
+  // in a (recursive) test for itself, since EnvironmentCleaner would also
+  // delete the test site of the parent test process.
   if (!drupal_valid_test_ua()) {
-    \Drupal::service('environment_cleaner')->cleanEnvironment();
+    // Clean up left-over tables and directories.
+    $cleaner = new EnvironmentCleaner(
+      DRUPAL_ROOT,
+      Database::getConnection(),
+      TestDatabase::getConnection(),
+      new NullOutput(),
+      \Drupal::service('file_system')
+    );
+    try {
+      $cleaner->cleanEnvironment();
+    }
+    catch (Exception $e) {
+      // Ignore.
+    }
   }
+
   // Delete verbose test output and any other testing framework files.
   try {
     \Drupal::service('file_system')->deleteRecursive('public://simpletest');
@@ -106,5 +48,4 @@ function simpletest_uninstall() {
   catch (FileException $e) {
     // Ignore.
   }
-
 }

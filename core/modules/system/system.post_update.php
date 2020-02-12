@@ -267,3 +267,12 @@ function system_post_update_entity_reference_autocomplete_match_limit(&$sandbox 
 
   $config_entity_updater->update($sandbox, 'entity_form_display', $callback);
 }
+
+/**
+ * Uninstall SimpleTest.
+ *
+ * @see https://www.drupal.org/project/drupal/issues/3110862
+ */
+function system_post_update_uninstall_simpletest() {
+  \Drupal::service('module_installer')->uninstall(['simpletest']);
+}

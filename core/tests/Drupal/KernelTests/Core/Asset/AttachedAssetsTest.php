@@ -38,7 +38,7 @@ class AttachedAssetsTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['language', 'simpletest', 'common_test', 'system'];
+  public static $modules = ['language', 'common_test', 'system'];
 
   /**
    * {@inheritdoc}
@@ -383,21 +383,21 @@ class AttachedAssetsTest extends KernelTestBase {
   /**
    * Tests altering a JavaScript's weight via hook_js_alter().
    *
-   * @see simpletest_js_alter()
+   * @see common_test_js_alter()
    */
   public function testAlter() {
-    // Add both tableselect.js and simpletest.js.
+    // Add both tableselect.js and alter.js.
     $build['#attached']['library'][] = 'core/drupal.tableselect';
-    $build['#attached']['library'][] = 'simpletest/drupal.simpletest';
+    $build['#attached']['library'][] = 'common_test/hook_js_alter';
     $assets = AttachedAssets::createFromRenderArray($build);
 
-    // Render the JavaScript, testing if simpletest.js was altered to be before
-    // tableselect.js. See simpletest_js_alter() to see where this alteration
+    // Render the JavaScript, testing if alter.js was altered to be before
+    // tableselect.js. See common_test_js_alter() to see where this alteration
     // takes place.
     $js = $this->assetResolver->getJsAssets($assets, FALSE)[1];
     $js_render_array = \Drupal::service('asset.js.collection_renderer')->render($js);
     $rendered_js = $this->renderer->renderPlain($js_render_array);
-    $this->assertTrue(strpos($rendered_js, 'simpletest.js') < strpos($rendered_js, 'core/misc/tableselect.js'), 'Altering JavaScript weight through the alter hook.');
+    $this->assertTrue(strpos($rendered_js, 'alter.js') < strpos($rendered_js, 'core/misc/tableselect.js'), 'Altering JavaScript weight through the alter hook.');
   }
 
   /**

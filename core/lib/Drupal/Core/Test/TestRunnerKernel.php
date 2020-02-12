@@ -4,6 +4,7 @@ namespace Drupal\Core\Test;
 
 use Drupal\Core\DrupalKernel;
 use Drupal\Core\Extension\Extension;
+use Drupal\Core\Extension\ExtensionDiscovery;
 use Drupal\Core\Site\Settings;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -35,12 +36,17 @@ class TestRunnerKernel extends DrupalKernel {
     //   DateFormatter::formatInterval() cause a plugin not found exception.
     $this->moduleList = [
       'system' => 0,
-      'simpletest' => 0,
     ];
     $this->moduleData = [
       'system' => new Extension($this->root, 'module', 'core/modules/system/system.info.yml', 'system.module'),
-      'simpletest' => new Extension($this->root, 'module', 'core/modules/simpletest/simpletest.info.yml', 'simpletest.module'),
     ];
+    // In order to support Simpletest in Drupal 9 conditionally include the
+    // module.
+    $extensions = (new ExtensionDiscovery($this->root, FALSE, [], 'ignore_site_path_does_not_exist'))->scan('module', FALSE);
+    if (isset($extensions['simpletest'])) {
+      $this->moduleList['simpletest'] = 0;
+      $this->moduleData['simpletest'] = $extensions['simpletest'];
+    }
   }
 
   /**

@@ -65,10 +65,12 @@ if ($args['list']) {
   // Display all available tests organized by one @group annotation.
   echo "\nAvailable test groups & classes\n";
   echo "-------------------------------\n\n";
+  $test_discovery = new TestDiscovery(
+    \Drupal::service('app.root'),
+    \Drupal::service('class_loader')
+  );
   try {
-    // @todo Use \Drupal\Core\Test\TestDiscovery when we no longer need BC for
-    //   hook_simpletest_alter().
-    $groups = \Drupal::service('test_discovery')->getTestClasses($args['module']);
+    $groups = $test_discovery->getTestClasses($args['module']);
   }
   catch (Exception $e) {
     error_log((string) $e);
@@ -96,17 +98,10 @@ if ($args['list']) {
 // @see https://www.drupal.org/node/2569585
 if ($args['list-files'] || $args['list-files-json']) {
   // List all files which could be run as tests.
-  $test_discovery = NULL;
-  try {
-    // @todo Use \Drupal\Core\Test\TestDiscovery when we no longer need BC for
-    //   hook_simpletest_alter().
-    $test_discovery = \Drupal::service('test_discovery');
-  }
-  catch (Exception $e) {
-    error_log((string) $e);
-    echo (string) $e;
-    exit(SIMPLETEST_SCRIPT_EXIT_EXCEPTION);
-  }
+  $test_discovery = new TestDiscovery(
+    \Drupal::service('app.root'),
+    \Drupal::service('class_loader')
+  );
   // TestDiscovery::findAllClassFiles() gives us a classmap similar to a
   // Composer 'classmap' array.
   $test_classes = $test_discovery->findAllClassFiles();
@@ -1040,10 +1035,10 @@ function simpletest_script_cleanup($test_id, $test_class, $exitcode) {
 function simpletest_script_get_test_list() {
   global $args;
 
-  // @todo Use \Drupal\Core\Test\TestDiscovery when we no longer need BC for
-  //   hook_simpletest_alter().
-  /** $test_discovery \Drupal\simpletest\TestDiscovery */
-  $test_discovery = \Drupal::service('test_discovery');
+  $test_discovery = new TestDiscovery(
+    \Drupal::service('app.root'),
+    \Drupal::service('class_loader')
+  );
   $types_processed = empty($args['types']);
   $test_list = [];
   if ($args['all'] || $args['module']) {

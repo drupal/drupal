@@ -207,11 +207,6 @@ libraries-override:
         css/shortcut.theme.css: css/shortcut/shortcut.theme.css
         css/shortcut.icons.theme.css: css/shortcut/shortcut.icons.theme.css
 
-  simpletest/drupal.simpletest:
-    css:
-      component:
-        css/simpletest.module.css: css/simpletest/simpletest.module.css
-
   system/base:
     css:
       component:

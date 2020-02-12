@@ -264,6 +264,19 @@ function common_test_page_attachments_alter(array &$page) {
 }
 
 /**
+ * Implements hook_js_alter().
+ *
+ * @see \Drupal\KernelTests\Core\Asset\AttachedAssetsTest::testAlter()
+ */
+function common_test_js_alter(&$javascript, AttachedAssetsInterface $assets) {
+  // Attach alter.js above tableselect.js.
+  $alterjs = drupal_get_path('module', 'common_test') . '/alter.js';
+  if (array_key_exists($alterjs, $javascript) && array_key_exists('core/misc/tableselect.js', $javascript)) {
+    $javascript[$alterjs]['weight'] = $javascript['core/misc/tableselect.js']['weight'] - 1;
+  }
+}
+
+/**
  * Implements hook_js_settings_alter().
  *
  * @see \Drupal\system\Tests\Common\JavaScriptTest::testHeaderSetting()
