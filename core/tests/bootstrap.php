@@ -158,7 +158,7 @@ function drupal_phpunit_populate_class_loader() {
   }
 
   return $loader;
-};
+}
 
 // Do class loader population.
 drupal_phpunit_populate_class_loader();
