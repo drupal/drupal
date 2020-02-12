@@ -1,0 +1,26 @@
+<?php
+
+/**
+ * @file
+ * Entity Reference install functions.
+ */
+
+/**
+ * Implements hook_requirements().
+ */
+function entity_reference_requirements($phase) {
+
+  $requirements = [];
+
+  if ($phase === 'install') {
+    $requirements['entity_reference'] = [
+      'title' => t('Entity Reference: Deprecated'),
+      'description' => t('Entity Reference is deprecated, all functionality has been moved to Core.'),
+      'value' => \Drupal::VERSION,
+      'severity' => REQUIREMENT_ERROR,
+    ];
+  }
+
+  return $requirements;
+
+}

@@ -1,7 +1,0 @@
-<?php
-
-/**
- * @file
- * Deprecated. All its functionality has been moved to Core. This empty module
- * will be removed in Drupal 9.0.x.
- */
