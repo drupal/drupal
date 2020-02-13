@@ -99,7 +99,10 @@ class BlockComponentRenderArrayTest extends UnitTestCase {
     $placeholder_label = 'Placeholder Label';
     $block->getPreviewFallbackString()->willReturn($placeholder_label);
 
-    $block_content = ['#markup' => 'The block content.'];
+    $block_content = [
+      '#markup' => 'The block content.',
+      '#cache' => ['tags' => ['build-tag']],
+    ];
     $block->build()->willReturn($block_content);
     $this->blockManager->createInstance('some_block_id', ['id' => 'some_block_id'])->willReturn($block->reveal());
 
@@ -122,7 +125,10 @@ class BlockComponentRenderArrayTest extends UnitTestCase {
     $expected_cache = $expected_build + [
       '#cache' => [
         'contexts' => [],
-        'tags' => ['test'],
+        'tags' => [
+          'build-tag',
+          'test',
+        ],
         'max-age' => -1,
       ],
     ];
@@ -410,7 +416,9 @@ class BlockComponentRenderArrayTest extends UnitTestCase {
     $block->getBaseId()->willReturn('block_plugin_id');
     $block->getDerivativeId()->willReturn(NULL);
 
-    $block->build()->willReturn([]);
+    $block->build()->willReturn([
+      '#cache' => ['tags' => ['build-tag']],
+    ]);
     $this->blockManager->createInstance('some_block_id', ['id' => 'some_block_id'])->willReturn($block->reveal());
 
     $component = new SectionComponent('some-uuid', 'some-region', ['id' => 'some_block_id']);
@@ -423,7 +431,10 @@ class BlockComponentRenderArrayTest extends UnitTestCase {
     $expected_cache = $expected_build + [
       '#cache' => [
         'contexts' => [],
-        'tags' => ['test'],
+        'tags' => [
+          'build-tag',
+          'test',
+        ],
         'max-age' => -1,
       ],
     ];
