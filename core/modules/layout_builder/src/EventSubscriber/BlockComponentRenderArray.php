@@ -5,6 +5,7 @@ namespace Drupal\layout_builder\EventSubscriber;
 use Drupal\block_content\Access\RefinableDependentAccessInterface;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Block\BlockPluginInterface;
+use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Render\PreviewFallbackInterface;
 use Drupal\Core\Session\AccountInterface;
@@ -102,6 +103,12 @@ class BlockComponentRenderArray implements EventSubscriberInterface {
       }
 
       $content = $block->build();
+
+      // We don't output the block render data if there are no render elements
+      // found, but we want to capture the cache metadata from the block
+      // regardless.
+      $event->addCacheableDependency(CacheableMetadata::createFromRenderArray($content));
+
       $is_content_empty = Element::isEmpty($content);
       $is_placeholder_ready = $event->inPreview() && $block instanceof PreviewFallbackInterface;
       // If the content is empty and no placeholder is available, return.
