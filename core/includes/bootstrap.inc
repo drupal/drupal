@@ -131,7 +131,7 @@ const DRUPAL_EXTENSION_NAME_MAX_LENGTH = 50;
  * @see http://php.net/manual/reserved.variables.server.php
  * @see http://php.net/manual/function.time.php
  *
- * @deprecated in drupal:8.3.0 and is removed from drupal:9.0.0.
+ * @deprecated in drupal:8.3.0 and is removed from drupal:10.0.0.
  *   Use \Drupal::time()->getRequestTime();
  *
  * @see https://www.drupal.org/node/2785211
