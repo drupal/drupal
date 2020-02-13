@@ -55,18 +55,6 @@ class LinkUriTest extends KernelTestBase {
   }
 
   /**
-   * Tests legacy handling for LinkUri::transform().
-   *
-   * @dataProvider providerTestRouted
-   * @covers ::transform
-   * @expectedDeprecation Passing an array as source value into the link_uri migrate process plugin is deprecated in drupal:8.8.0. The possibility to pass an array as source value to the plugin will be removed in drupal:9.0.0. Pass a string value instead. See https://www.drupal.org/node/3043694
-   * @group legacy
-   */
-  public function testRoutedLegacy($value, $expected) {
-    $this->testRouted([$value], $expected);
-  }
-
-  /**
    * Provides test cases for LinkUriTest::testTransform().
    *
    * @return array
