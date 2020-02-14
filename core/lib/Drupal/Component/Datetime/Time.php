@@ -30,14 +30,26 @@ class Time implements TimeInterface {
    * {@inheritdoc}
    */
   public function getRequestTime() {
-    return $this->requestStack->getCurrentRequest()->server->get('REQUEST_TIME');
+    $request = $this->requestStack->getCurrentRequest();
+    if ($request) {
+      return $request->server->get('REQUEST_TIME');
+    }
+    // If this is called prior to the request being pushed to the stack fallback
+    // to built-in globals (if available) or the system time.
+    return $_SERVER['REQUEST_TIME'] ?? $this->getCurrentTime();
   }
 
   /**
    * {@inheritdoc}
    */
   public function getRequestMicroTime() {
-    return $this->requestStack->getCurrentRequest()->server->get('REQUEST_TIME_FLOAT');
+    $request = $this->requestStack->getCurrentRequest();
+    if ($request) {
+      return $request->server->get('REQUEST_TIME_FLOAT');
+    }
+    // If this is called prior to the request being pushed to the stack fallback
+    // to built-in globals (if available) or the system time.
+    return $_SERVER['REQUEST_TIME_FLOAT'] ?? $this->getCurrentMicroTime();
   }
 
   /**
