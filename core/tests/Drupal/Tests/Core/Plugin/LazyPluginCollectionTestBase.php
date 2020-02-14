@@ -4,7 +4,7 @@ namespace Drupal\Tests\Core\Plugin;
 
 use Drupal\Core\Plugin\DefaultLazyPluginCollection;
 use Drupal\Tests\UnitTestCase;
-use PHPUnit\Framework\MockObject\Matcher\InvokedRecorder;
+use PHPUnit\Framework\MockObject\Rule\InvocationOrder;
 
 /**
  * Provides a base class for plugin collection tests.
@@ -54,12 +54,12 @@ abstract class LazyPluginCollectionTestBase extends UnitTestCase {
   /**
    * Sets up the default plugin collection.
    *
-   * @param \PHPUnit\Framework\MockObject\Matcher\InvokedRecorder|null $create_count
+   * @param \PHPUnit\Framework\MockObject\Rule\InvocationOrder|null $create_count
    *   (optional) The number of times that createInstance() is expected to be
    *   called. For example, $this->any(), $this->once(), $this->exactly(6).
    *   Defaults to $this->never().
    */
-  protected function setupPluginCollection(InvokedRecorder $create_count = NULL) {
+  protected function setupPluginCollection(InvocationOrder $create_count = NULL) {
     $this->pluginInstances = [];
     $map = [];
     foreach ($this->getPluginDefinitions() as $plugin_id => $definition) {

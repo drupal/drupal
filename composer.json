@@ -22,7 +22,7 @@
         "composer/composer": "^1.9.1",
         "drupal/coder": "^8.3.7",
         "mikey179/vfsstream": "^1.6.8",
-        "phpunit/phpunit": "^7",
+        "phpunit/phpunit": "^8.4.1",
         "phpspec/prophecy": "^1.7",
         "symfony/css-selector": "^4.4",
         "symfony/phpunit-bridge": "^4.4",

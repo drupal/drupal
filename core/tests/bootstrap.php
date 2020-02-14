@@ -8,6 +8,7 @@
  */
 
 use Drupal\Component\Assertion\Handle;
+use Drupal\TestTools\PhpUnitCompatibility\PhpUnit8\ClassWriter;
 
 /**
  * Finds all valid extension directories recursively within a given directory.
@@ -150,7 +151,9 @@ function drupal_phpunit_populate_class_loader() {
 }
 
 // Do class loader population.
-drupal_phpunit_populate_class_loader();
+$loader = drupal_phpunit_populate_class_loader();
+
+ClassWriter::mutateTestBase($loader);
 
 // Set sane locale settings, to ensure consistent string, dates, times and
 // numbers handling.

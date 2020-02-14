@@ -25,7 +25,7 @@ trait ExpectDeprecationTrait {
    * @param string $message
    *   The expected deprecation message.
    */
-  protected function expectDeprecation($message) {
+  protected function addExpectedDeprecationMessage($message) {
     $this->expectedDeprecations([$message]);
   }
 

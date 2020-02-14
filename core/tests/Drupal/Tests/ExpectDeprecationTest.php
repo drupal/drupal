@@ -14,21 +14,21 @@ class ExpectDeprecationTest extends UnitTestCase {
   use ExpectDeprecationTrait;
 
   /**
-   * @covers ::expectDeprecation
+   * @covers ::addExpectedDeprecationMessage
    */
   public function testExpectDeprecation() {
-    $this->expectDeprecation('Test deprecation');
+    $this->addExpectedDeprecationMessage('Test deprecation');
     @trigger_error('Test deprecation', E_USER_DEPRECATED);
   }
 
   /**
-   * @covers ::expectDeprecation
+   * @covers ::addExpectedDeprecationMessage
    * @runInSeparateProcess
    * @preserveGlobalState disabled
    */
   public function testExpectDeprecationInIsolation() {
-    $this->expectDeprecation('Test isolated deprecation');
-    $this->expectDeprecation('Test isolated deprecation2');
+    $this->addExpectedDeprecationMessage('Test isolated deprecation');
+    $this->addExpectedDeprecationMessage('Test isolated deprecation2');
     @trigger_error('Test isolated deprecation', E_USER_DEPRECATED);
     @trigger_error('Test isolated deprecation2', E_USER_DEPRECATED);
   }

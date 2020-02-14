@@ -5,7 +5,7 @@ namespace Drupal\Tests\Core\Plugin;
 use Drupal\Component\Plugin\ConfigurableInterface;
 use Drupal\Component\Plugin\PluginBase;
 use Drupal\Core\Plugin\DefaultSingleLazyPluginCollection;
-use PHPUnit\Framework\MockObject\Matcher\InvokedRecorder;
+use PHPUnit\Framework\MockObject\Rule\InvocationOrder;
 
 /**
  * @coversDefaultClass \Drupal\Core\Plugin\DefaultSingleLazyPluginCollection
@@ -16,7 +16,7 @@ class DefaultSingleLazyPluginCollectionTest extends LazyPluginCollectionTestBase
   /**
    * {@inheritdoc}
    */
-  protected function setupPluginCollection(InvokedRecorder $create_count = NULL) {
+  protected function setupPluginCollection(InvocationOrder $create_count = NULL) {
     $definitions = $this->getPluginDefinitions();
     $this->pluginInstances['apple'] = new ConfigurablePlugin(['id' => 'apple', 'key' => 'value'], 'apple', $definitions['apple']);
     $this->pluginInstances['banana'] = new ConfigurablePlugin(['id' => 'banana', 'key' => 'other_value'], 'banana', $definitions['banana']);

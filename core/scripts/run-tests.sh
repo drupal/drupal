@@ -18,6 +18,7 @@ use Drupal\Core\Test\RunTests\TestFileParser;
 use Drupal\Core\Test\TestDatabase;
 use Drupal\Core\Test\TestRunnerKernel;
 use Drupal\Core\Test\TestDiscovery;
+use Drupal\TestTools\PhpUnitCompatibility\PhpUnit8\ClassWriter;
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Runner\Version;
 use Symfony\Component\Console\Output\ConsoleOutput;
@@ -504,6 +505,7 @@ function simpletest_script_init() {
   $autoloader = require_once __DIR__ . '/../../autoload.php';
   // The PHPUnit compatibility layer needs to be available to autoload tests.
   $autoloader->add('Drupal\\TestTools', __DIR__ . '/../tests');
+  ClassWriter::mutateTestBase($autoloader);
 
   // Get URL from arguments.
   if (!empty($args['url'])) {
