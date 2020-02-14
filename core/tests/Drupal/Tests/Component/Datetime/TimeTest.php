@@ -80,6 +80,28 @@ class TimeTest extends TestCase {
   }
 
   /**
+   * @covers ::getRequestTime
+   */
+  public function testGetRequestTimeNoRequest() {
+    $expected = 12345678;
+    unset($_SERVER['REQUEST_TIME']);
+    $this->assertEquals($expected, $this->time->getRequestTime());
+    $_SERVER['REQUEST_TIME'] = 23456789;
+    $this->assertEquals(23456789, $this->time->getRequestTime());
+  }
+
+  /**
+   * @covers ::getRequestMicroTime
+   */
+  public function testGetRequestMicroTimeNoRequest() {
+    $expected = 1234567.89;
+    unset($_SERVER['REQUEST_TIME_FLOAT']);
+    $this->assertEquals($expected, $this->time->getRequestMicroTime());
+    $_SERVER['REQUEST_TIME_FLOAT'] = 2345678.90;
+    $this->assertEquals(2345678.90, $this->time->getRequestMicroTime());
+  }
+
+  /**
    * Tests the getCurrentTime method.
    *
    * @covers ::getCurrentTime
