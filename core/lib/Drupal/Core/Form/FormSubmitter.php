@@ -2,7 +2,6 @@
 
 namespace Drupal\Core\Form;
 
-use Drupal\Core\Installer\InstallerKernel;
 use Drupal\Core\Url;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -144,23 +143,6 @@ class FormSubmitter implements FormSubmitterInterface {
       // @see http://tools.ietf.org/html/rfc7231#section-6.4.4
       return new RedirectResponse($url, Response::HTTP_SEE_OTHER);
     }
-  }
-
-  /**
-   * Wraps drupal_installation_attempted().
-   *
-   * @return bool
-   *
-   * @deprecated in drupal:8.8.0 and is removed from drupal:9.0.0.
-   *   Use \Drupal\Core\Installer\InstallerKernel::installationAttempted()
-   *   instead.
-   *
-   * @see https://www.drupal.org/node/3035275
-   * @see \Drupal\Core\Installer\InstallerKernel::installationAttempted()
-   */
-  protected function drupalInstallationAttempted() {
-    @trigger_error(__METHOD__ . '() is deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. Use \Drupal\Core\Installer\InstallerKernel::installationAttempted() instead. See https://www.drupal.org/node/3035275', E_USER_DEPRECATED);
-    return InstallerKernel::installationAttempted();
   }
 
   /**
