@@ -289,34 +289,6 @@ class BaseFieldDefinition extends ListDataDefinition implements FieldDefinitionI
   }
 
   /**
-   * {@inheritdoc}
-   */
-  public function isQueryable() {
-    @trigger_error('BaseFieldDefinition::isQueryable() is deprecated in Drupal 8.4.0 and will be removed before Drupal 9.0.0. Instead, you should use \Drupal\Core\Field\BaseFieldDefinition::hasCustomStorage(). See https://www.drupal.org/node/2856563.', E_USER_DEPRECATED);
-    return !$this->hasCustomStorage();
-  }
-
-  /**
-   * Sets whether the field is queryable.
-   *
-   * @param bool $queryable
-   *   Whether the field is queryable.
-   *
-   * @return static
-   *   The object itself for chaining.
-   *
-   * @deprecated in drupal:8.4.0 and is removed from drupal:9.0.0. Use
-   *   \Drupal\Core\Field\BaseFieldDefinition::setCustomStorage() instead.
-   *
-   * @see https://www.drupal.org/node/2856563
-   */
-  public function setQueryable($queryable) {
-    @trigger_error('BaseFieldDefinition::setQueryable() is deprecated in Drupal 8.4.0 and will be removed before Drupal 9.0.0. Instead, you should use \Drupal\Core\Field\BaseFieldDefinition::setCustomStorage(). See https://www.drupal.org/node/2856563.', E_USER_DEPRECATED);
-    $this->definition['queryable'] = $queryable;
-    return $this;
-  }
-
-  /**
    * Sets constraints for a given field item property.
    *
    * Note: this overwrites any existing property constraints. If you need to
@@ -632,24 +604,6 @@ class BaseFieldDefinition extends ListDataDefinition implements FieldDefinitionI
   public function getMainPropertyName() {
     $class = $this->getItemDefinition()->getClass();
     return $class::mainPropertyName();
-  }
-
-  /**
-   * Helper to retrieve the field item class.
-   *
-   * @deprecated in drupal:8.5.0 and is removed from drupal:9.0.0. Use
-   *   \Drupal\Core\TypedData\ListDataDefinition::getClass() instead.
-   */
-  protected function getFieldItemClass() {
-    @trigger_error('BaseFieldDefinition::getFieldItemClass() is deprecated in Drupal 8.5.0 and will be removed before Drupal 9.0.0. Instead, you should use \Drupal\Core\TypedData\ListDataDefinition::getClass(). See https://www.drupal.org/node/2933964.', E_USER_DEPRECATED);
-    if ($class = $this->getItemDefinition()->getClass()) {
-      return $class;
-    }
-    else {
-      $type_definition = \Drupal::typedDataManager()
-        ->getDefinition($this->getItemDefinition()->getDataType());
-      return $type_definition['class'];
-    }
   }
 
   /**
