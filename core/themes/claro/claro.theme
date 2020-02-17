@@ -879,13 +879,6 @@ function claro_preprocess_form_element__password(&$variables) {
 }
 
 /**
- * Implements template_preprocess_HOOK() for radios.
- */
-function claro_preprocess_radios(&$variables) {
-  $variables['attributes']['class'][] = 'form-boolean-group';
-}
-
-/**
  * Implements template_preprocess_HOOK() for filter_tips.
  */
 function claro_preprocess_filter_tips(&$variables) {
