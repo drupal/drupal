@@ -3,10 +3,23 @@
  * @file
  * Theme override for an image field widget.
  *
- * Included from Classy theme.
+ * Available variables:
+ * - attributes: HTML attributes for the containing element.
+ * - data: Render elements of the image widget.
  *
  * @see template_preprocess_image_widget()
  */
 #}
-{% include '@classy/content-edit/image-widget.html.twig' %}
-{{ attach_library('classy/image-widget') }}
+{{ attach_library('seven/classy.image-widget') }}
+
+<div{{ attributes }}>
+  {% if data.preview %}
+    <div class="image-preview">
+      {{ data.preview }}
+    </div>
+  {% endif %}
+  <div class="image-widget-data">
+    {# Render widget data without the image preview that was output already. #}
+    {{ data|without('preview') }}
+  </div>
+</div>
