@@ -77,7 +77,7 @@
   ]
 %}
 {% set created_date = node.getCreatedTime|format_date('umami_dates') %}
-{{ attach_library('classy/node') }}
+{{ attach_library('umami/classy.node') }}
 
 <article{{ attributes.addClass(classes) }}>
 

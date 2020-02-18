@@ -1,4 +1,3 @@
-{% extends "@classy/content/page-title.html.twig" %}
 {#
 /**
  * @file
@@ -13,4 +12,15 @@
  *   displayed after the main title tag that appears in the template.
  */
 #}
-{% set title_attributes = title_attributes.addClass('title') %}
+{%
+  set classes = [
+    'title',
+    'page-title',
+  ]
+%}
+
+{{ title_prefix }}
+{% if title %}
+  <h1{{ title_attributes.addClass(classes) }}>{{ title }}</h1>
+{% endif %}
+{{ title_suffix }}
