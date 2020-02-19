@@ -724,22 +724,4 @@ class ConfigInstaller implements ConfigInstallerInterface {
     return $this->installProfile;
   }
 
-  /**
-   * Wrapper for drupal_installation_attempted().
-   *
-   * @return bool
-   *   TRUE if a Drupal installation is currently being attempted.
-   *
-   * @deprecated in drupal:8.8.0 and is removed from drupal:9.0.0.
-   *   Use \Drupal\Core\Installer\InstallerKernel::installationAttempted()
-   *   instead.
-   *
-   * @see https://www.drupal.org/node/3052704
-   * @see \Drupal\Core\Installer\InstallerKernel::installationAttempted()
-   */
-  protected function drupalInstallationAttempted() {
-    @trigger_error(__METHOD__ . '() is deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. Use \Drupal\Core\Installer\InstallerKernel::installationAttempted() instead. See https://www.drupal.org/node/3052704', E_USER_DEPRECATED);
-    return InstallerKernel::installationAttempted();
-  }
-
 }

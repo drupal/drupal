@@ -188,17 +188,10 @@ class ConfigImporter {
    *   The theme handler
    * @param \Drupal\Core\StringTranslation\TranslationInterface $string_translation
    *   The string translation service.
-   * @param \Drupal\Core\Extension\ModuleExtensionList|null $extension_list_module
-   *   The module extension list. This is left optional for BC reasons, but the
-   *   optional usage is deprecated and will become required in Drupal 9.0.0.
-   *
-   * @todo Remove null default value https://www.drupal.org/node/2947083
+   * @param \Drupal\Core\Extension\ModuleExtensionList $extension_list_module
+   *   The module extension list.
    */
-  public function __construct(StorageComparerInterface $storage_comparer, EventDispatcherInterface $event_dispatcher, ConfigManagerInterface $config_manager, LockBackendInterface $lock, TypedConfigManagerInterface $typed_config, ModuleHandlerInterface $module_handler, ModuleInstallerInterface $module_installer, ThemeHandlerInterface $theme_handler, TranslationInterface $string_translation, ModuleExtensionList $extension_list_module = NULL) {
-    if ($extension_list_module === NULL) {
-      @trigger_error('Invoking the ConfigImporter constructor without the module extension list parameter is deprecated in Drupal 8.8.0 and will no longer be supported in Drupal 9.0.0. The extension list parameter is now required in the ConfigImporter constructor. See https://www.drupal.org/node/2943918', E_USER_DEPRECATED);
-      $extension_list_module = \Drupal::service('extension.list.module');
-    }
+  public function __construct(StorageComparerInterface $storage_comparer, EventDispatcherInterface $event_dispatcher, ConfigManagerInterface $config_manager, LockBackendInterface $lock, TypedConfigManagerInterface $typed_config, ModuleHandlerInterface $module_handler, ModuleInstallerInterface $module_installer, ThemeHandlerInterface $theme_handler, TranslationInterface $string_translation, ModuleExtensionList $extension_list_module) {
     $this->moduleExtensionList = $extension_list_module;
     $this->storageComparer = $storage_comparer;
     $this->eventDispatcher = $event_dispatcher;
