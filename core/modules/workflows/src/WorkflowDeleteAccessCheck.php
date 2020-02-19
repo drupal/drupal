@@ -11,10 +11,8 @@ use Drupal\Core\Session\AccountInterface;
  * @internal
  *   Marked as internal for use by the workflows module only.
  *
- * @deprecated
- *   Using the _workflow_state_delete_access check is deprecated in Drupal 8.6.0
- *   and will be removed before Drupal 9.0.0, you can use _workflow_access in
- *   route definitions instead.
+ *   This is deprecated in drupal:8.6.0 and is removed from drupal:9.0.0.
+ *   Use _workflow_access in route definitions instead.
  *   @code
  *   # The old approach:
  *   requirements:
