@@ -31,7 +31,6 @@ use Drupal\Core\Routing\StackedRouteMatchInterface;
 use Drupal\Core\Site\Settings;
 use Drupal\Core\Url;
 use Drupal\path_alias\PathAliasInterface;
-use Drupal\user\UserInterface;
 use GuzzleHttp\Exception\RequestException;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
@@ -812,53 +811,13 @@ function system_form_alter(&$form, FormStateInterface $form_state) {
 }
 
 /**
- * Implements hook_form_FORM_ID_alter() for \Drupal\user\AccountForm.
- */
-function system_form_user_form_alter(&$form, FormStateInterface $form_state) {
-  if (\Drupal::config('system.date')->get('timezone.user.configurable')) {
-    system_user_timezone($form, $form_state);
-  }
-}
-
-/**
- * Implements hook_form_FORM_ID_alter() for \Drupal\user\RegisterForm.
- */
-function system_form_user_register_form_alter(&$form, FormStateInterface $form_state) {
-  $config = \Drupal::config('system.date');
-  if ($config->get('timezone.user.configurable') && $config->get('timezone.user.default') == DRUPAL_USER_TIMEZONE_SELECT) {
-    system_user_timezone($form, $form_state);
-  }
-}
-
-/**
- * Implements hook_ENTITY_TYPE_presave() for user entities.
- */
-function system_user_presave(UserInterface $account) {
-  $config = \Drupal::config('system.date');
-  if ($config->get('timezone.user.configurable') && !$account->getTimeZone() && !$config->get('timezone.user.default')) {
-    $account->timezone = $config->get('timezone.default');
-  }
-}
-
-/**
- * Implements hook_user_login().
- */
-function system_user_login(UserInterface $account) {
-  $config = \Drupal::config('system.date');
-  // If the user has a NULL time zone, notify them to set a time zone.
-  if (!$account->getTimezone() && $config->get('timezone.user.configurable') && $config->get('timezone.user.warn')) {
-    \Drupal::messenger()
-      ->addStatus(t('Configure your <a href=":user-edit">account time zone setting</a>.', [
-        ':user-edit' => $account->toUrl('edit-form', [
-          'query' => \Drupal::destination()->getAsArray(),
-          'fragment' => 'edit-timezone',
-        ])->toString(),
-      ]));
-  }
-}
-
-/**
  * Add the time zone field to the user edit and register forms.
+ *
+ * @internal
+ *   This functions exists only to be used by System module's form alters which
+ *   have been removed.
+ *
+ * @see https://www.drupal.org/node/3113062
  */
 function system_user_timezone(&$form, FormStateInterface $form_state) {
   $user = \Drupal::currentUser();
