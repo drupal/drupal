@@ -12,6 +12,7 @@ use Drupal\Core\Access\AccessibleInterface;
 use Drupal\Core\Asset\AttachedAssetsInterface;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Session\AccountInterface;
@@ -138,6 +139,19 @@ function user_entity_extra_field_info() {
   ];
 
   return $fields;
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_presave() for user entities.
+ *
+ * @todo https://www.drupal.org/project/drupal/issues/3112704 Move to
+ *   \Drupal\user\Entity\User::preSave().
+ */
+function user_user_presave(UserInterface $account) {
+  $config = \Drupal::config('system.date');
+  if ($config->get('timezone.user.configurable') && !$account->getTimeZone() && !$config->get('timezone.user.default')) {
+    $account->timezone = $config->get('timezone.default');
+  }
 }
 
 /**
@@ -456,6 +470,18 @@ function user_user_login(UserInterface $account) {
   // Reset static cache of default variables in template_preprocess() to reflect
   // the new user.
   drupal_static_reset('template_preprocess');
+
+  // If the user has a NULL time zone, notify them to set a time zone.
+  $config = \Drupal::config('system.date');
+  if (!$account->getTimezone() && $config->get('timezone.user.configurable') && $config->get('timezone.user.warn')) {
+    \Drupal::messenger()
+      ->addStatus(t('Configure your <a href=":user-edit">account time zone setting</a>.', [
+        ':user-edit' => $account->toUrl('edit-form', [
+          'query' => \Drupal::destination()->getAsArray(),
+          'fragment' => 'edit-timezone',
+        ])->toString(),
+      ]));
+  }
 }
 
 /**
@@ -1215,4 +1241,59 @@ function template_preprocess_user(&$variables) {
   foreach (Element::children($variables['elements']) as $key) {
     $variables['content'][$key] = $variables['elements'][$key];
   }
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter() for \Drupal\system\Form\RegionalForm.
+ */
+function user_form_system_regional_settings_alter(&$form, FormStateInterface $form_state) {
+  $config = \Drupal::config('system.date');
+
+  $form['timezone']['configurable_timezones'] = [
+    '#type' => 'checkbox',
+    '#title' => t('Users may set their own time zone'),
+    '#default_value' => $config->get('timezone.user.configurable'),
+  ];
+
+  $form['timezone']['configurable_timezones_wrapper'] = [
+    '#type' => 'container',
+    '#states' => [
+      // Hide the user configured timezone settings when users are forced to use
+      // the default setting.
+      'invisible' => [
+        'input[name="configurable_timezones"]' => ['checked' => FALSE],
+      ],
+    ],
+  ];
+  $form['timezone']['configurable_timezones_wrapper']['empty_timezone_message'] = [
+    '#type' => 'checkbox',
+    '#title' => t('Remind users at login if their time zone is not set'),
+    '#default_value' => $config->get('timezone.user.warn'),
+    '#description' => t('Only applied if users may set their own time zone.'),
+  ];
+
+  $form['timezone']['configurable_timezones_wrapper']['user_default_timezone'] = [
+    '#type' => 'radios',
+    '#title' => t('Time zone for new users'),
+    '#default_value' => $config->get('timezone.user.default'),
+    '#options' => [
+      UserInterface::TIMEZONE_DEFAULT => t('Default time zone'),
+      UserInterface::TIMEZONE_EMPTY   => t('Empty time zone'),
+      UserInterface::TIMEZONE_SELECT  => t('Users may set their own time zone at registration'),
+    ],
+    '#description' => t('Only applied if users may set their own time zone.'),
+  ];
+
+  $form['#submit'][] = 'user_form_system_regional_settings_submit';
+}
+
+/**
+ * Additional submit handler for \Drupal\system\Form\RegionalForm.
+ */
+function user_form_system_regional_settings_submit($form, FormStateInterface $form_state) {
+  \Drupal::configFactory()->getEditable('system.date')
+    ->set('timezone.user.configurable', $form_state->getValue('configurable_timezones'))
+    ->set('timezone.user.warn', $form_state->getValue('empty_timezone_message'))
+    ->set('timezone.user.default', $form_state->getValue('user_default_timezone'))
+    ->save();
 }
