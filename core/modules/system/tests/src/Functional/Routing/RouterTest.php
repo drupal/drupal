@@ -46,6 +46,7 @@ class RouterTest extends BrowserTestBase {
     $this->assertEquals($headers['Content-language'], ['en']);
     $this->assertEquals($headers['X-Content-Type-Options'], ['nosniff']);
     $this->assertEquals($headers['X-Frame-Options'], ['SAMEORIGIN']);
+    $this->assertNull($this->drupalGetHeader('Vary'), 'Vary header is not set.');
 
     $this->drupalGet('router_test/test2');
     $this->assertRaw('test2', 'The correct string was returned because the route was successful.');

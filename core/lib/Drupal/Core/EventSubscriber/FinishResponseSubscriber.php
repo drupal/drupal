@@ -222,7 +222,7 @@ class FinishResponseSubscriber implements EventSubscriberInterface {
     // place. Therefore remove ETag, Last-Modified and Vary in that case.
     $response->setEtag(NULL);
     $response->setLastModified(NULL);
-    $response->setVary(NULL);
+    $response->headers->remove('Vary');
   }
 
   /**
