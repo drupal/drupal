@@ -31,10 +31,15 @@ class PathAliasToEntityUpdateTest extends UpdatePathTestBase {
   /**
    * Tests the conversion of path aliases to entities.
    *
+   * @param bool $perform_check
+   *   Whether a schema check should be performed on "path_alias" save.
+   *
    * @see system_update_8803()
    * @see system_update_8804()
+   *
+   * @dataProvider providerConversionToEntities
    */
-  public function testConversionToEntities() {
+  public function testConversionToEntities($perform_check) {
     $database = \Drupal::database();
     $schema = $database->schema();
     $this->assertTrue($schema->tableExists('url_alias'));
@@ -56,7 +61,49 @@ class PathAliasToEntityUpdateTest extends UpdatePathTestBase {
     $url_alias_count = 5;
     $this->assertCount($url_alias_count, $original_records);
 
+    // Enable or disable the "path_alias" save schema check.
+    drupal_rewrite_settings([
+      'settings' => [
+        'system.path_alias_schema_check' => (object) [
+          'value' => $perform_check,
+          'required' => TRUE,
+        ],
+      ],
+    ]);
+
+    // Enable our test module in a way that does not affect the subsequent
+    // updates run (::rebuildAll() would).
+    /** @var \Drupal\Core\Extension\ModuleInstallerInterface $module_installer */
+    $module_installer = $this->container->get('module_installer');
+    $module_installer->install(['system_test']);
+    $this->container = \Drupal::getContainer();
+
+    // Trigger a path alias save during the update.
+    /** @var \Drupal\Core\State\StateInterface $state */
+    $state = $this->container->get('state');
+    $state->set('system_test.path_alias_save', TRUE);
+
+    // If the schema check is not performed, the path alias will be saved and we
+    // will get an integrity exception, so no point in checking for failed
+    // updates. If the schema check is performed, a logic exception will be
+    // thrown, which will be caught in our test code, so the update is expected
+    // to complete successfully. In this case we do want to check for failed
+    // updates.
+    $this->checkFailedUpdates = $perform_check;
+
     $this->runUpdates();
+
+    if (!$perform_check) {
+      $failure = $this->cssSelect('.failure');
+      $this->assertContains("Failed: Drupal\Core\Database\IntegrityConstraintViolationException: SQLSTATE[23000]: Integrity constraint violation: 1062 Duplicate entry '1' for key 'PRIMARY': INSERT INTO {path_alias}", reset($failure)->getText());
+      // Nothing else to assert.
+      return;
+    }
+
+    // Check that an exception was thrown on "path_alias" save.
+    $exception_info = $state->get('system_test.path_alias_save_exception_thrown');
+    $this->assertIdentical($exception_info['class'], \LogicException::class);
+    $this->assertIdentical($exception_info['message'], 'Path alias "/test" ("/user") could not be saved because the "system_update_8804" database update was not applied yet.');
 
     /** @var \Drupal\Core\Extension\ModuleHandlerInterface $module_handler */
     $module_handler = $this->container->get('module_handler');
@@ -126,6 +173,16 @@ class PathAliasToEntityUpdateTest extends UpdatePathTestBase {
       ->fields('path_alias_revision', ['id', 'path', 'alias', 'langcode', 'status'])
       ->execute()->fetchAllAssoc('id');
     $this->assertEquals($original_records, $revision_table_records);
+  }
+
+  /**
+   * Data provider for ::testConversionToEntities.
+   */
+  public function providerConversionToEntities() {
+    return [
+      'Perform check on "path_alias" save' => [TRUE],
+      'Do not perform check on "path_alias" save' => [FALSE],
+    ];
   }
 
 }

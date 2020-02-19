@@ -5,8 +5,10 @@
  * Test module.
  */
 
+use Drupal\Core\Entity\EntityStorageException;
 use Drupal\Core\Extension\Extension;
 use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\path_alias\Entity\PathAlias;
 
 /**
  * Implements hook_help().
@@ -28,6 +30,22 @@ function system_test_modules_installed($modules) {
   if (\Drupal::state()->get('system_test.verbose_module_hooks')) {
     foreach ($modules as $module) {
       \Drupal::messenger()->addStatus(t('hook_modules_installed fired for @module', ['@module' => $module]));
+    }
+  }
+  if (\Drupal::state()->get('system_test.path_alias_save') && in_array('path_alias', $modules)) {
+    try {
+      $path_alias = PathAlias::create([
+        'path' => '/user',
+        'alias' => '/test',
+      ]);
+      $path_alias->save();
+    }
+    catch (EntityStorageException $e) {
+      $root_exception = $e->getPrevious() ?: $e;
+      \Drupal::state()->set('system_test.path_alias_save_exception_thrown', [
+        'class' => get_class($root_exception),
+        'message' => $root_exception->getMessage(),
+      ]);
     }
   }
 }
