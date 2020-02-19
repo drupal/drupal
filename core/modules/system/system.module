@@ -7,6 +7,7 @@
 
 use Drupal\Component\FileSecurity\FileSecurity;
 use Drupal\Component\Gettext\PoItem;
+use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Component\Render\PlainTextOutput;
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Asset\AttachedAssetsInterface;
@@ -27,7 +28,9 @@ use Drupal\Core\PageCache\RequestPolicyInterface;
 use Drupal\Core\Queue\QueueGarbageCollectionInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Routing\StackedRouteMatchInterface;
+use Drupal\Core\Site\Settings;
 use Drupal\Core\Url;
+use Drupal\path_alias\PathAliasInterface;
 use Drupal\user\UserInterface;
 use GuzzleHttp\Exception\RequestException;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -1487,5 +1490,28 @@ function system_entity_form_display_presave(EntityFormDisplayInterface $display)
       $component['settings']['match_limit'] = 10;
       $display->setComponent($field_name, $component);
     }
+  }
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_presave().
+ */
+function system_path_alias_presave(PathAliasInterface $path_alias) {
+  // Prevent path aliases from being saved if the "url_alias" migration was not
+  // performed yet. This avoids the risk of introducing duplicate aliases or get
+  // the new path alias schema in an inconsistent state.
+  if (Settings::get('system.path_alias_schema_check', TRUE) && drupal_get_installed_schema_version('system') < 8804) {
+    /** @var \Drupal\system\Access\DbUpdateAccessCheck $db_update_access */
+    $db_update_access = \Drupal::service('access_check.db_update');
+    if ($db_update_access->access(\Drupal::currentUser())->isAllowed()) {
+      $args = [':url' => Url::fromUri('base://update.php')->toString()];
+      \Drupal::messenger()->addError(t('Path aliases cannot be saved until <a href=":url">database updates</a> are performed.', $args));
+    }
+    else {
+      \Drupal::messenger()->addError(t('Path aliases cannot be saved until <em>database updates</em> are performed.'));
+    }
+    $message = 'Path alias "@alias" ("@path") could not be saved because the "system_update_8804" database update was not applied yet.';
+    $args = ['@path' => $path_alias->getPath(), '@alias' => $path_alias->getAlias()];
+    throw new \LogicException(new FormattableMarkup($message, $args));
   }
 }

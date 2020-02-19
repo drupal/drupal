@@ -274,6 +274,9 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
     $settings = [
       'hash_salt' => get_class($this),
       'file_public_path' => $this->siteDirectory . '/files',
+      // Skip the "path_alias" schema check for kernel tests, since they do not
+      // rely on the full schema being installed.
+      'system.path_alias_schema_check' => FALSE,
       // Disable Twig template caching/dumping.
       'twig_cache' => FALSE,
       // @see \Drupal\KernelTests\KernelTestBase::register()
