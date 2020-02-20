@@ -4,20 +4,19 @@
  */
 
 .view-frontpage .view-header {
+  margin-top: 2rem;
   margin-bottom: 2rem;
   padding: 0 1.266rem;
+  font-family: "Scope One", Georgia, serif;
+  font-size: 1.5rem;
+  line-height: 1.2;
 }
-
-@media screen and (min-width: 30em) {
+/* Large */
+@media screen and (min-width: 60em) { /* 960px */
   .view-frontpage .view-header {
     margin-bottom: 3rem;
-  }
-}
-
-@media screen and (min-width: 60em) {
-  .view-frontpage .view-header {
-    margin-bottom: 4rem;
     padding-right: 2.37rem;
     padding-left: 2.37rem;
+    font-size: 1.77rem;
   }
 }
