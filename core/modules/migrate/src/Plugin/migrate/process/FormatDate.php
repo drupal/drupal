@@ -15,10 +15,6 @@ use Drupal\migrate\Row;
  * - from_format: The source format string as accepted by
  *   @link http://php.net/manual/datetime.createfromformat.php \DateTime::createFromFormat. @endlink
  * - to_format: The destination format.
- * - timezone: (deprecated) String identifying the required time zone, see
- *   DateTimePlus::__construct(). The timezone configuration key is deprecated
- *   in Drupal 8.4.x and will be removed before Drupal 9.0.0, use from_timezone
- *   and to_timezone instead.
  * - from_timezone: String identifying the required source time zone, see
  *   DateTimePlus::__construct().
  * - to_timezone: String identifying the required destination time zone, see
@@ -114,17 +110,10 @@ class FormatDate extends ProcessPluginBase {
 
     $fromFormat = $this->configuration['from_format'];
     $toFormat = $this->configuration['to_format'];
-    if (isset($this->configuration['timezone'])) {
-      @trigger_error('Configuration key "timezone" is deprecated in 8.4.x and will be removed before Drupal 9.0.0, use "from_timezone" and "to_timezone" instead. See https://www.drupal.org/node/2885746', E_USER_DEPRECATED);
-      $from_timezone = $this->configuration['timezone'];
-      $to_timezone = isset($this->configuration['to_timezone']) ? $this->configuration['to_timezone'] : NULL;
-    }
-    else {
-      $system_timezone = date_default_timezone_get();
-      $default_timezone = !empty($system_timezone) ? $system_timezone : 'UTC';
-      $from_timezone = isset($this->configuration['from_timezone']) ? $this->configuration['from_timezone'] : $default_timezone;
-      $to_timezone = isset($this->configuration['to_timezone']) ? $this->configuration['to_timezone'] : $default_timezone;
-    }
+    $system_timezone = date_default_timezone_get();
+    $default_timezone = !empty($system_timezone) ? $system_timezone : 'UTC';
+    $from_timezone = isset($this->configuration['from_timezone']) ? $this->configuration['from_timezone'] : $default_timezone;
+    $to_timezone = isset($this->configuration['to_timezone']) ? $this->configuration['to_timezone'] : $default_timezone;
     $settings = isset($this->configuration['settings']) ? $this->configuration['settings'] : [];
 
     // Older versions of Drupal where omitting certain granularities (also known

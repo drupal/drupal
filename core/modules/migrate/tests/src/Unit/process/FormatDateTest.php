@@ -75,40 +75,6 @@ class FormatDateTest extends MigrateProcessTestCase {
   }
 
   /**
-   * Tests that "timezone" configuration key triggers deprecation error.
-   *
-   * @covers ::transform
-   *
-   * @dataProvider providerTestDeprecatedTimezoneConfigurationKey
-   *
-   * @group legacy
-   * @expectedDeprecation Configuration key "timezone" is deprecated in 8.4.x and will be removed before Drupal 9.0.0, use "from_timezone" and "to_timezone" instead. See https://www.drupal.org/node/2885746
-   */
-  public function testDeprecatedTimezoneConfigurationKey($configuration, $value, $expected) {
-    $this->plugin = new FormatDate($configuration, 'test_format_date', []);
-    $actual = $this->plugin->transform($value, $this->migrateExecutable, $this->row, 'field_date');
-
-    $this->assertEquals($expected, $actual);
-  }
-
-  /**
-   * Data provider for testDeprecatedTimezoneConfigurationKey.
-   */
-  public function providerTestDeprecatedTimezoneConfigurationKey() {
-    return [
-      [
-        'configuration' => [
-          'from_format' => 'Y-m-d\TH:i:sO',
-          'to_format' => 'c e',
-          'timezone' => 'America/Managua',
-        ],
-        'value' => '2004-12-19T10:19:42-0600',
-        'expected' => '2004-12-19T10:19:42-06:00 -06:00',
-      ],
-    ];
-  }
-
-  /**
    * Tests transformation.
    *
    * @covers ::transform

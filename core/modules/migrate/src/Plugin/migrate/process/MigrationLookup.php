@@ -289,29 +289,4 @@ class MigrationLookup extends ProcessPluginBase implements ContainerFactoryPlugi
     return !in_array($value, [NULL, FALSE, [], ""], TRUE);
   }
 
-  /**
-   * Create a stub row source for later import as stub data.
-   *
-   * This simple wrapper of the Row constructor allows sub-classing plugins to
-   * have more control over the row.
-   *
-   * @param array $values
-   *   An array of values to add as properties on the object.
-   * @param array $source_ids
-   *   An array containing the IDs of the source using the keys as the field
-   *   names.
-   *
-   * @return \Drupal\migrate\Row
-   *   The stub row.
-   *
-   * @deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. Use the
-   *   migrate.stub service to create stubs.
-   *
-   * @see https://www.drupal.org/node/3047268
-   */
-  protected function createStubRow(array $values, array $source_ids) {
-    @trigger_error(__METHOD__ . ' is deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. Use the migrate.stub service to create stubs. See https://www.drupal.org/node/3047268', E_USER_DEPRECATED);
-    return new Row($values, $source_ids, TRUE);
-  }
-
 }

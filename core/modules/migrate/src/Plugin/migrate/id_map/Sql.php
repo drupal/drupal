@@ -544,15 +544,6 @@ class Sql extends PluginBase implements MigrateIdMapInterface, ContainerFactoryP
   /**
    * {@inheritdoc}
    */
-  public function lookupDestinationId(array $source_id_values) {
-    @trigger_error(__NAMESPACE__ . '\Sql::lookupDestinationId() is deprecated in drupal:8.1.0 and is removed from drupal:9.0.0. Use Sql::lookupDestinationIds() instead. See https://www.drupal.org/node/2725809', E_USER_DEPRECATED);
-    $results = $this->lookupDestinationIds($source_id_values);
-    return $results ? reset($results) : [];
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function lookupDestinationIds(array $source_id_values) {
     if (empty($source_id_values)) {
       return [];
@@ -696,14 +687,6 @@ class Sql extends PluginBase implements MigrateIdMapInterface, ContainerFactoryP
       $query->condition('msg.level', $level);
     }
     return $query->execute();
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getMessageIterator(array $source_id_values = [], $level = NULL) {
-    @trigger_error('getMessageIterator() is deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. Use getMessages() instead. See https://www.drupal.org/node/3060969', E_USER_DEPRECATED);
-    return $this->getMessages($source_id_values, $level);
   }
 
   /**
