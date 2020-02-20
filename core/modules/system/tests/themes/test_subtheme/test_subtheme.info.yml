@@ -6,10 +6,15 @@ core: 8.x
 base theme: test_basetheme
 libraries:
   - test_subtheme/global-styling
-stylesheets-remove:
-  - '@theme_test/css/sub-remove.css'
-  - '@test_basetheme/base-add.sub-remove.css'
-
+libraries-override:
+  theme_test/theme_stylesheets_override_and_remove_test:
+    css:
+      base:
+        css/sub-remove.css: false
+  test_basetheme/global-styling:
+    css:
+      base:
+        base-add.sub-remove.css: false
 libraries-extend:
   classy/base:
     - test_subtheme/global-styling

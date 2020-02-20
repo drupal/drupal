@@ -8,8 +8,6 @@ hidden: true
 
 libraries:
   - test_basetheme/global-styling
-stylesheets-remove:
-  - '@theme_test/css/base-remove.css'
 libraries-override:
   core/drupal.dialog:
     js:
@@ -18,6 +16,10 @@ libraries-override:
     css:
       component:
         assets/vendor/farbtastic/farbtastic.css: css/farbtastic.css
+  theme_test/theme_stylesheets_override_and_remove_test:
+    css:
+      base:
+        css/base-remove.css: false
 
 libraries-extend:
   classy/base:
