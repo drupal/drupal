@@ -51,11 +51,11 @@ class FileTransferAuthorizeForm extends FormBase {
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
     // Get all the available ways to transfer files.
-    if (empty($_SESSION['authorize_filetransfer_info'])) {
+    $available_backends = $this->getRequest()->getSession()->get('authorize_filetransfer_info', []);
+    if (empty($available_backends)) {
       $this->messenger()->addError($this->t('Unable to continue, no available methods of file transfer'));
       return [];
     }
-    $available_backends = $_SESSION['authorize_filetransfer_info'];
 
     if (!$this->getRequest()->isSecure()) {
       $form['information']['https_warning'] = [
@@ -239,10 +239,10 @@ class FileTransferAuthorizeForm extends FormBase {
    */
   protected function getFiletransfer($backend, $settings = []) {
     $filetransfer = FALSE;
-    if (!empty($_SESSION['authorize_filetransfer_info'][$backend])) {
-      $backend_info = $_SESSION['authorize_filetransfer_info'][$backend];
-      if (class_exists($backend_info['class'])) {
-        $filetransfer = $backend_info['class']::factory($this->root, $settings);
+    $info = $this->getRequest()->getSession()->get('authorize_filetransfer_info', []);
+    if (!empty($info[$backend])) {
+      if (class_exists($info[$backend]['class'])) {
+        $filetransfer = $info[$backend]['class']::factory($this->root, $settings);
       }
     }
     return $filetransfer;
@@ -307,7 +307,7 @@ class FileTransferAuthorizeForm extends FormBase {
   }
 
   /**
-   * Runs the operation specified in $_SESSION['authorize_operation'].
+   * Runs the operation specified in 'authorize_operation' session property.
    *
    * @param $filetransfer
    *   The FileTransfer object to use for running the operation.
@@ -318,8 +318,7 @@ class FileTransferAuthorizeForm extends FormBase {
    *   that response for the current page request.
    */
   protected function runOperation($filetransfer) {
-    $operation = $_SESSION['authorize_operation'];
-    unset($_SESSION['authorize_operation']);
+    $operation = $this->getRequest()->getSession()->remove('authorize_operation');
 
     require_once $operation['file'];
     return call_user_func_array($operation['callback'], array_merge([$filetransfer], $operation['arguments']));

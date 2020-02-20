@@ -60,7 +60,7 @@ function update_authorize_run_update($filetransfer, $projects) {
   // Since authorize.php has its own method for setting the page title, set it
   // manually here rather than passing it in to batch_set() as would normally
   // be done.
-  $_SESSION['authorize_page_title'] = t('Installing updates');
+  \Drupal::request()->getSession()->set('authorize_page_title', t('Installing updates'));
 
   // Invoke the batch via authorize.php.
   return system_authorized_batch_process();
@@ -114,7 +114,7 @@ function update_authorize_run_install($filetransfer, $project, $updater_name, $l
   // Since authorize.php has its own method for setting the page title, set it
   // manually here rather than passing it in to batch_set() as would normally
   // be done.
-  $_SESSION['authorize_page_title'] = t('Installing %project', ['%project' => $project]);
+  \Drupal::request()->getSession()->set('authorize_page_title', t('Installing %project', ['%project' => $project]));
 
   // Invoke the batch via authorize.php.
   return system_authorized_batch_process();
@@ -213,13 +213,16 @@ function update_authorize_update_batch_finished($success, $results) {
     }
   }
   $offline = \Drupal::state()->get('system.maintenance_mode');
+  $session = \Drupal::request()->getSession();
+  // Unset the variable since it is no longer needed.
+  $maintenance_mode = $session->remove('maintenance_mode');
   if ($success) {
     // Now that the update completed, we need to clear the available update data
     // and recompute our status, so prevent show bogus results.
     _update_authorize_clear_update_status();
 
     // Take the site out of maintenance mode if it was previously that way.
-    if ($offline && isset($_SESSION['maintenance_mode']) && $_SESSION['maintenance_mode'] == FALSE) {
+    if ($offline && $maintenance_mode === FALSE) {
       \Drupal::state()->set('system.maintenance_mode', FALSE);
       $page_message = [
         'message' => t('Update was completed successfully. Your site has been taken out of maintenance mode.'),
@@ -264,15 +267,14 @@ function update_authorize_update_batch_finished($success, $results) {
     '#access' => $url->access(\Drupal::currentUser()),
   ];
 
-  // Unset the variable since it is no longer needed.
-  unset($_SESSION['maintenance_mode']);
-
   // Set all these values into the SESSION so authorize.php can display them.
-  $_SESSION['authorize_results']['success'] = $success;
-  $_SESSION['authorize_results']['page_message'] = $page_message;
-  $_SESSION['authorize_results']['messages'] = $results['log'];
-  $_SESSION['authorize_results']['tasks'] = $results['tasks'];
-  $_SESSION['authorize_page_title'] = t('Update manager');
+  $session->set('authorize_results', [
+    'success' => $success,
+    'page_message' => $page_message,
+    'messages' => $results['log'],
+    'tasks' => $results['tasks'],
+  ]);
+  $session->set('authorize_page_title', t('Update manager'));
 }
 
 /**
@@ -296,9 +298,12 @@ function update_authorize_install_batch_finished($success, $results) {
     }
   }
   $offline = \Drupal::state()->get('system.maintenance_mode');
+  $session = \Drupal::request()->getSession();
+  // Unset the variable since it is no longer needed.
+  $maintenance_mode = $session->remove('maintenance_mode');
   if ($success) {
     // Take the site out of maintenance mode if it was previously that way.
-    if ($offline && isset($_SESSION['maintenance_mode']) && $_SESSION['maintenance_mode'] == FALSE) {
+    if ($offline && $maintenance_mode === FALSE) {
       \Drupal::state()->set('system.maintenance_mode', FALSE);
       $page_message = [
         'message' => t('Installation was completed successfully. Your site has been taken out of maintenance mode.'),
@@ -325,15 +330,14 @@ function update_authorize_install_batch_finished($success, $results) {
     ];
   }
 
-  // Unset the variable since it is no longer needed.
-  unset($_SESSION['maintenance_mode']);
-
   // Set all these values into the SESSION so authorize.php can display them.
-  $_SESSION['authorize_results']['success'] = $success;
-  $_SESSION['authorize_results']['page_message'] = $page_message;
-  $_SESSION['authorize_results']['messages'] = $results['log'];
-  $_SESSION['authorize_results']['tasks'] = $results['tasks'];
-  $_SESSION['authorize_page_title'] = t('Update manager');
+  $session->set('authorize_results', [
+    'success' => $success,
+    'page_message' => $page_message,
+    'messages' => $results['log'],
+    'tasks' => $results['tasks'],
+  ]);
+  $session->set('authorize_page_title', t('Update manager'));
 }
 
 /**

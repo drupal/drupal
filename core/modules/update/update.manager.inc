@@ -60,7 +60,7 @@ function update_manager_download_batch_finished($success, $results) {
   }
   elseif ($success) {
     \Drupal::messenger()->addStatus(t('Updates downloaded successfully.'));
-    $_SESSION['update_manager_update_projects'] = $results['projects'];
+    \Drupal::request()->getSession()->set('update_manager_update_projects', $results['projects']);
     return new RedirectResponse(Url::fromRoute('update.confirmation_page', [], ['absolute' => TRUE])->toString());
   }
   else {

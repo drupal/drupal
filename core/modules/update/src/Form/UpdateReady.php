@@ -118,21 +118,20 @@ class UpdateReady extends FormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
+    $session = $this->getRequest()->getSession();
     // Store maintenance_mode setting so we can restore it when done.
-    $_SESSION['maintenance_mode'] = $this->state->get('system.maintenance_mode');
+    $session->set('maintenance_mode', $this->state->get('system.maintenance_mode'));
     if ($form_state->getValue('maintenance_mode') == TRUE) {
       $this->state->set('system.maintenance_mode', TRUE);
     }
 
-    if (!empty($_SESSION['update_manager_update_projects'])) {
+    $projects = $session->remove('update_manager_update_projects');
+    if ($projects) {
       // Make sure the Updater registry is loaded.
       drupal_get_updaters();
 
       $updates = [];
       $directory = _update_manager_extract_directory();
-
-      $projects = $_SESSION['update_manager_update_projects'];
-      unset($_SESSION['update_manager_update_projects']);
 
       $project_real_location = NULL;
       foreach ($projects as $project => $url) {
