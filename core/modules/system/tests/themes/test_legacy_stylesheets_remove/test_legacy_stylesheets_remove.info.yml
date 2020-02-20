@@ -1,0 +1,9 @@
+name: 'Theme Legacy Test Stylesheets Remove'
+type: theme
+description: 'Test theme using legacy stylesheets-remove.'
+version: VERSION
+core: 8.x
+base theme: classy
+libraries: { }
+stylesheets-remove:
+  - '@classy/css/components/action-links.css'
