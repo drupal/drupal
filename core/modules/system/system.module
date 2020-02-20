@@ -29,36 +29,6 @@ use GuzzleHttp\Exception\RequestException;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
- * New users will be set to the default time zone at registration.
- *
- * @deprecated in drupal:8.3.0 and is removed from drupal:9.0.0.
- *   Use \Drupal\user\UserInterface::TIMEZONE_DEFAULT instead.
- *
- * @see https://www.drupal.org/node/2831620
- */
-const DRUPAL_USER_TIMEZONE_DEFAULT = 0;
-
-/**
- * New users will get an empty time zone at registration.
- *
- * @deprecated in drupal:8.3.0 and is removed from drupal:9.0.0.
- *   Use \Drupal\user\UserInterface::TIMEZONE_EMPTY instead.
- *
- * @see https://www.drupal.org/node/2831620
- */
-const DRUPAL_USER_TIMEZONE_EMPTY = 1;
-
-/**
- * New users will select their own timezone at registration.
- *
- * @deprecated in drupal:8.3.0 and is removed from drupal:9.0.0.
- *   Use \Drupal\user\UserInterface::TIMEZONE_SELECT instead.
- *
- * @see https://www.drupal.org/node/2831620
- */
-const DRUPAL_USER_TIMEZONE_SELECT = 2;
-
-/**
  * Disabled option on forms and settings
  */
 const DRUPAL_DISABLED = 0;
