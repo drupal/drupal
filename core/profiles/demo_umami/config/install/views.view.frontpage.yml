@@ -287,7 +287,7 @@ display:
           empty: false
           tokenize: false
           content:
-            value: '<h2 class="text-align-center">Explore recipes across every type of occasion, ingredient, and skill level.</h2>'
+            value: '<p class="text-align-center">Explore recipes across every type of occasion, ingredient, and skill level.</p>'
             format: full_html
           plugin_id: text
       footer: {  }
@@ -354,6 +354,21 @@ display:
       css_class: grid--2
       defaults:
         css_class: false
+        header: false
+      header:
+        area:
+          id: area
+          table: views
+          field: area
+          relationship: none
+          group_type: group
+          admin_label: ''
+          empty: false
+          tokenize: false
+          content:
+            value: '<p class="text-align-center">Explore recipes across every type of occasion, ingredient, and skill level</p>'
+            format: full_html
+          plugin_id: text
       rendering_language: '***LANGUAGE_language_interface***'
     display_plugin: page
     display_title: Page
