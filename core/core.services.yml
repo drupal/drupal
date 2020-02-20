@@ -212,55 +212,55 @@ services:
     class: Drupal\Core\Cache\CacheBackendInterface
     tags:
       - { name: cache.bin, default_backend: cache.backend.memory }
-    factory: cache_factory:get
+    factory: ['@cache_factory', 'get']
     arguments: [static]
   cache.bootstrap:
     class: Drupal\Core\Cache\CacheBackendInterface
     tags:
       - { name: cache.bin, default_backend: cache.backend.chainedfast }
-    factory: cache_factory:get
+    factory: ['@cache_factory', 'get']
     arguments: [bootstrap]
   cache.config:
     class: Drupal\Core\Cache\CacheBackendInterface
     tags:
       - { name: cache.bin, default_backend: cache.backend.chainedfast }
-    factory: cache_factory:get
+    factory: ['@cache_factory', 'get']
     arguments: [config]
   cache.default:
     class: Drupal\Core\Cache\CacheBackendInterface
     tags:
       - { name: cache.bin }
-    factory: cache_factory:get
+    factory: ['@cache_factory', 'get']
     arguments: [default]
   cache.entity:
     class: Drupal\Core\Cache\CacheBackendInterface
     tags:
       - { name: cache.bin }
-    factory: cache_factory:get
+    factory: ['@cache_factory', 'get']
     arguments: [entity]
   cache.menu:
     class: Drupal\Core\Cache\CacheBackendInterface
     tags:
       - { name: cache.bin }
-    factory: cache_factory:get
+    factory: ['@cache_factory', 'get']
     arguments: [menu]
   cache.render:
     class: Drupal\Core\Cache\CacheBackendInterface
     tags:
       - { name: cache.bin }
-    factory: cache_factory:get
+    factory: ['@cache_factory', 'get']
     arguments: [render]
   cache.data:
     class: Drupal\Core\Cache\CacheBackendInterface
     tags:
       - { name: cache.bin }
-    factory: cache_factory:get
+    factory: ['@cache_factory', 'get']
     arguments: [data]
   cache.discovery:
     class: Drupal\Core\Cache\CacheBackendInterface
     tags:
       - { name: cache.bin, default_backend: cache.backend.chainedfast }
-    factory: cache_factory:get
+    factory: ['@cache_factory', 'get']
     arguments: [discovery]
   cache_router_rebuild_subscriber:
     class: Drupal\Core\EventSubscriber\CacheRouterRebuildSubscriber
@@ -419,7 +419,7 @@ services:
   logger.channel_base:
     abstract: true
     class: Drupal\Core\Logger\LoggerChannel
-    factory: logger.factory:get
+    factory: ['@logger.factory', 'get']
   logger.channel.default:
     parent: logger.channel_base
     arguments: ['system']
@@ -434,7 +434,7 @@ services:
     arguments: ['cron']
   logger.channel.file:
     class: Drupal\Core\Logger\LoggerChannel
-    factory: logger.factory:get
+    factory: ['@logger.factory', 'get']
     arguments: ['file']
   logger.channel.form:
     parent: logger.channel_base
@@ -480,7 +480,7 @@ services:
     arguments: ['@service_container']
   http_client:
     class: GuzzleHttp\Client
-    factory: http_client_factory:fromOptions
+    factory: ['@http_client_factory', 'fromOptions']
   http_client_factory:
     class: Drupal\Core\Http\ClientFactory
     arguments: ['@http_handler_stack']
@@ -698,7 +698,7 @@ services:
     arguments: ['@service_container']
   app.root:
     class: SplString
-    factory: app.root.factory:get
+    factory: ['@app.root.factory', 'get']
     tags:
       - { name: parameter_service }
   app.root.factory:
@@ -707,7 +707,7 @@ services:
     public: false
   site.path:
     class: SplString
-    factory: site.path.factory:get
+    factory: ['@site.path.factory', 'get']
     tags:
       - { name: parameter_service }
   site.path.factory:

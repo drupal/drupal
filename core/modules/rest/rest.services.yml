@@ -6,7 +6,7 @@ services:
     class: Drupal\Core\Cache\CacheBackendInterface
     tags:
       - { name: cache.bin }
-    factory: cache_factory:get
+    factory: ['@cache_factory', 'get']
     arguments: [rest]
   rest.resource_routes:
     class: Drupal\rest\Routing\ResourceRoutes
