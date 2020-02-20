@@ -1,0 +1,30 @@
+{#
+/**
+ * @file
+ * Theme override to display a status icon for a forum post.
+ *
+ * Available variables:
+ * - attributes: HTML attributes to be applied to the wrapper element.
+ *   - class: HTML classes that determine which icon to display. May be one of
+ *     'hot', 'hot-new', 'new', 'default', 'closed', or 'sticky'.
+ *   - title: Text alternative for the forum icon.
+ * - icon_title: Text alternative for the forum icon, same as above.
+ * - new_posts: '1' when this topic contains new posts, otherwise '0'.
+ * - first_new: '1' when this is the first topic with new posts, otherwise '0'.
+ * - icon_status: Indicates which status icon should be used.
+ *
+ * @see template_preprocess_forum_icon()
+ */
+#}
+{%
+  set classes = [
+    'forum__icon',
+    'forum__topic-status--' ~ icon_status,
+  ]
+%}
+<div{{ attributes.addClass(classes) }}>
+  {% if first_new -%}
+    <a id="new"></a>
+  {%- endif %}
+  <span class="visually-hidden">{{ icon_title }}</span>
+</div>
