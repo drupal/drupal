@@ -7,6 +7,7 @@
 
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Template\Attribute;
+use Drupal\views\Form\ViewsForm;
 
 /**
  * Implements hook_preprocess_HOOK() for HTML document templates.
@@ -112,14 +113,55 @@ function bartik_theme_suggestions_form_alter(array &$suggestions, array $variabl
 }
 
 /**
- * Implements hook_form_alter() to add classes to the search form.
+ * Implements hook_form_alter().
  */
 function bartik_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  // Add classes to the search form.
   if (in_array($form_id, ['search_block_form', 'search_form'])) {
     $key = ($form_id == 'search_block_form') ? 'actions' : 'basic';
     if (!isset($form[$key]['submit']['#attributes'])) {
       $form[$key]['submit']['#attributes'] = new Attribute();
     }
     $form[$key]['submit']['#attributes']->addClass('search-form__submit');
+  }
+
+  $form_object = $form_state->getFormObject();
+
+  // Add class to the Media Library views form.
+  if ($form_object instanceof ViewsForm && strpos($form_object->getBaseFormId(), 'views_form_media_library') === 0) {
+    // The conditional below exists because the media-library-views-form class
+    // is currently added by Classy, but Umami will eventually not use Classy as
+    // a base theme.
+    // @todo remove conditional, keep class addition in
+    //   https://drupal.org/node/3110137
+    // @see https://www.drupal.org/node/3109287
+    // @see classy_form_alter()
+    if (!isset($form['#attributes']['class']) || !in_array('media-library-views-form', $form['#attributes']['class'])) {
+      $form['#attributes']['class'][] = 'media-library-views-form';
+    }
+  }
+}
+
+/**
+ * Implements hook_preprocess_links__media_library_menu().
+ *
+ * This targets the menu of available media types in the media library's modal
+ * dialog.
+ *
+ * @todo Do this in the relevant template once
+ *   https://www.drupal.org/project/drupal/issues/3088856 is resolved.
+ */
+function bartik_preprocess_links__media_library_menu(array &$variables) {
+  foreach ($variables['links'] as &$link) {
+    // This conditional exists because the media-library-menu__link class is
+    // currently added by Classy, but Bartik will eventually not use Classy as a
+    // base theme.
+    // @todo remove conditional, keep class addition in
+    //   https://drupal.org/node/3110137
+    // @see https://www.drupal.org/node/3109287
+    // @see classy_preprocess_links__media_library_menu()
+    if (!isset($link['link']['#options']['attributes']['class']) || !in_array('media-library-menu__link', $link['link']['#options']['attributes']['class'])) {
+      $link['link']['#options']['attributes']['class'][] = 'media-library-menu__link';
+    }
   }
 }

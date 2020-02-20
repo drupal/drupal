@@ -18,6 +18,7 @@ use Drupal\Core\Template\Attribute;
 use Drupal\Core\Url;
 use Drupal\media\MediaForm;
 use Drupal\file\FileInterface;
+use Drupal\views\Form\ViewsForm;
 use Drupal\views\ViewExecutable;
 
 /**
@@ -374,6 +375,17 @@ function claro_form_alter(array &$form, FormStateInterface $form_state, $form_id
       $form['header']['media_bulk_form']['#attributes']['class'][] = 'media-library-views-form__bulk_form';
     }
     $form['actions']['submit']['#attributes']['class'] = ['media-library-select'];
+
+    // The conditional below exists because the media-library-views-form class is
+    // is currently added by Classy, but Claro will eventually not use Classy as
+    // a base theme.
+    // @todo remove conditional, keep class addition in
+    //   https://drupal.org/node/3110137
+    // @see https://www.drupal.org/node/3109287
+    // @see classy_form_alter()
+    if (!isset($form['#attributes']['class']) || !in_array('media-library-views-form', $form['#attributes']['class'])) {
+      $form['#attributes']['class'][] = 'media-library-views-form';
+    }
   }
 }
 
@@ -1177,6 +1189,14 @@ function claro_preprocess_file_widget_multiple(&$variables) {
  * Implements hook_preprocess_HOOK() for image_widget.
  */
 function claro_preprocess_image_widget(&$variables) {
+  // This prevents image widget templates from rendering preview container HTML
+  // to users that do not have permission to access these previews.
+  // @todo revisit in https://drupal.org/node/953034
+  // @todo revisit in https://drupal.org/node/3114318
+  if (isset($variables['data']['preview']['#access']) && $variables['data']['preview']['#access'] === FALSE) {
+    unset($variables['data']['preview']);
+  }
+
   // Stable adds the file size as #suffix for image file_link renderable array.
   // We have to remove that because we will render it in our file_link template
   // for every kind of files, and not just for images.
@@ -1411,6 +1431,29 @@ function claro_views_pre_render(ViewExecutable $view) {
       else {
         $add_classes($view->display_handler->options['css_class'], ['media-library-view--widget']);
       }
+    }
+  }
+}
+
+/**
+ * Implements hook_preprocess_links__media_library_menu().
+ *
+ * This targets the menu of available media types in the media library's modal
+ * dialog.
+ *
+ * @todo Do this in the relevant template once
+ *   https://www.drupal.org/project/drupal/issues/3088856 is resolved.
+ */
+function claro_preprocess_links__media_library_menu(array &$variables) {
+  foreach ($variables['links'] as &$link) {
+    // This conditional exists because the media-library-menu__link class is
+    // currently added by Classy, but Claro will eventually not use Classy as a
+    // base theme.
+    // @todo remove conditional, keep class addition in
+    //   https://drupal.org/node/3110137
+    // @see classy_preprocess_links__media_library_menu()
+    if (!isset($link['link']['#options']['attributes']['class']) || !in_array('media-library-menu__link', $link['link']['#options']['attributes']['class'])) {
+      $link['link']['#options']['attributes']['class'][] = 'media-library-menu__link';
     }
   }
 }
