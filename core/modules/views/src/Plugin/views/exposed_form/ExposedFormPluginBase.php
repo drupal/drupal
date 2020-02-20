@@ -365,9 +365,9 @@ abstract class ExposedFormPluginBase extends PluginBase implements CacheableDepe
 
     // Merge in cache contexts for all exposed filters to prevent display of
     // cached forms.
-    foreach ($this->displayHandler->getHandlers('filter') as $filter_hander) {
-      if ($filter_hander->isExposed()) {
-        $contexts = Cache::mergeContexts($contexts, $filter_hander->getCacheContexts());
+    foreach ($this->displayHandler->getHandlers('filter') as $filter_handler) {
+      if ($filter_handler->isExposed()) {
+        $contexts = Cache::mergeContexts($contexts, $filter_handler->getCacheContexts());
       }
     }
 
