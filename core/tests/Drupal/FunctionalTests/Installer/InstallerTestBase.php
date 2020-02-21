@@ -171,7 +171,6 @@ abstract class InstallerTestBase extends BrowserTestBase {
       $request = Request::createFromGlobals();
       $class_loader = require $this->container->get('app.root') . '/autoload.php';
       Settings::initialize($this->container->get('app.root'), DrupalKernel::findSitePath($request), $class_loader);
-      $this->configDirectories['sync'] = Settings::get('config_sync_directory');
 
       // After writing settings.php, the installer removes write permissions
       // from the site directory. To allow drupal_generate_test_ua() to write
