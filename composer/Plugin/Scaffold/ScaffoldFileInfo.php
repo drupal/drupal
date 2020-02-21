@@ -12,6 +12,8 @@ use Drupal\Composer\Plugin\Scaffold\Operations\OperationInterface;
  * scaffold file also has an 'operation' object that controls how the scaffold
  * file will be placed (e.g. via copy or symlink, or maybe by appending multiple
  * files together). The operation may have one or more source files.
+ *
+ * @internal
  */
 class ScaffoldFileInfo {
 

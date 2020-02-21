@@ -8,6 +8,8 @@ use Drupal\Composer\Plugin\Scaffold\ScaffoldFilePath;
 
 /**
  * Create Scaffold operation objects based on provided metadata.
+ *
+ * @internal
  */
 class OperationFactory {
 

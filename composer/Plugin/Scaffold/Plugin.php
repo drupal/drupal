@@ -18,6 +18,8 @@ use Drupal\Composer\Plugin\Scaffold\CommandProvider as ScaffoldCommandProvider;
 
 /**
  * Composer plugin for handling drupal scaffold.
+ *
+ * @internal
  */
 class Plugin implements PluginInterface, EventSubscriberInterface, Capable {
 

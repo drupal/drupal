@@ -21,6 +21,8 @@ use Composer\Util\Filesystem;
  * directory within an HTTP server's docroot.
  *
  * @see https://www.drupal.org/docs/develop/using-composer/using-drupals-vendor-cleanup-composer-plugin
+ *
+ * @internal
  */
 class VendorHardeningPlugin implements PluginInterface, EventSubscriberInterface {
 
