@@ -36,7 +36,7 @@ class DatabaseStorageExpirable extends DatabaseStorage implements KeyValueStoreE
     return (bool) $this->connection->query('SELECT 1 FROM {' . $this->connection->escapeTable($this->table) . '} WHERE collection = :collection AND name = :key AND expire > :now', [
       ':collection' => $this->collection,
       ':key' => $key,
-      ':now' => REQUEST_TIME,
+      ':now' => \Drupal::time()->getRequestTime(),
     ])->fetchField();
   }
 
@@ -47,7 +47,7 @@ class DatabaseStorageExpirable extends DatabaseStorage implements KeyValueStoreE
     $values = $this->connection->query(
       'SELECT name, value FROM {' . $this->connection->escapeTable($this->table) . '} WHERE expire > :now AND name IN ( :keys[] ) AND collection = :collection',
       [
-        ':now' => REQUEST_TIME,
+        ':now' => \Drupal::time()->getRequestTime(),
         ':keys[]' => $keys,
         ':collection' => $this->collection,
       ])->fetchAllKeyed();
@@ -62,7 +62,7 @@ class DatabaseStorageExpirable extends DatabaseStorage implements KeyValueStoreE
       'SELECT name, value FROM {' . $this->connection->escapeTable($this->table) . '} WHERE collection = :collection AND expire > :now',
       [
         ':collection' => $this->collection,
-        ':now' => REQUEST_TIME,
+        ':now' => \Drupal::time()->getRequestTime(),
       ])->fetchAllKeyed();
     return array_map([$this->serializer, 'decode'], $values);
   }
@@ -78,7 +78,7 @@ class DatabaseStorageExpirable extends DatabaseStorage implements KeyValueStoreE
       ])
       ->fields([
         'value' => $this->serializer->encode($value),
-        'expire' => REQUEST_TIME + $expire,
+        'expire' => \Drupal::time()->getRequestTime() + $expire,
       ])
       ->execute();
   }

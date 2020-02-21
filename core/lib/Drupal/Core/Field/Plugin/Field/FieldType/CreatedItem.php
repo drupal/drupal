@@ -22,7 +22,7 @@ class CreatedItem extends TimestampItem {
   public function applyDefaultValue($notify = TRUE) {
     parent::applyDefaultValue($notify);
     // Created fields default to the current timestamp.
-    $this->setValue(['value' => REQUEST_TIME], $notify);
+    $this->setValue(['value' => \Drupal::time()->getRequestTime()], $notify);
     return $this;
   }
 

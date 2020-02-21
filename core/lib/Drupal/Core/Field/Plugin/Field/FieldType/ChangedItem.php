@@ -30,7 +30,7 @@ class ChangedItem extends CreatedItem {
 
     // Set the timestamp to request time if it is not set.
     if (!$this->value) {
-      $this->value = REQUEST_TIME;
+      $this->value = \Drupal::time()->getRequestTime();
     }
     else {
       // On an existing entity translation, the changed timestamp will only be
@@ -47,7 +47,7 @@ class ChangedItem extends CreatedItem {
       if (!$entity->isNew() && $original && $original->hasTranslation($langcode)) {
         $original_value = $original->getTranslation($langcode)->get($this->getFieldDefinition()->getName())->value;
         if ($this->value == $original_value && $entity->hasTranslationChanges()) {
-          $this->value = REQUEST_TIME;
+          $this->value = \Drupal::time()->getRequestTime();
         }
       }
     }
