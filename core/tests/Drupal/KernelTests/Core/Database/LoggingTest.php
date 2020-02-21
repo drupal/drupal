@@ -2,10 +2,13 @@
 
 namespace Drupal\KernelTests\Core\Database;
 
+use Drupal\Core\Database\Log;
 use Drupal\Core\Database\Database;
 
 /**
  * Tests the query logging facility.
+ *
+ * @coversDefaultClass \Drupal\Core\Database\Log
  *
  * @group Database
  */
@@ -133,6 +136,195 @@ class LoggingTest extends DatabaseTestBase {
     $result = Database::getLog('wrong');
 
     $this->assertEqual($result, [], 'The function getLog with a wrong key returns an empty array.');
+  }
+
+  /**
+   * Tests that a log called by a custom database driver returns proper caller.
+   *
+   * @param string $driver_namespace
+   *   The driver namespace to be tested.
+   * @param string $stack
+   *   A test debug_backtrace stack.
+   * @param array $expected_entry
+   *   The expected stack entry.
+   *
+   * @covers ::findCaller
+   *
+   * @dataProvider providerContribDriverLog
+   */
+  public function testContribDriverLog($driver_namespace, $stack, array $expected_entry) {
+    $mock_builder = $this->getMockBuilder(Log::class);
+    $log = $mock_builder
+      ->setMethods(['getDriverNamespace', 'getDebugBacktrace'])
+      ->getMock();
+    $log->expects($this->any())
+      ->method('getDriverNamespace')
+      ->will($this->returnValue($driver_namespace));
+    $log->expects($this->once())
+      ->method('getDebugBacktrace')
+      ->will($this->returnValue($stack));
+
+    $result = $log->findCaller($stack);
+    $this->assertEquals($expected_entry, $result);
+  }
+
+  /**
+   * Provides data for the testContribDriverLog test.
+   *
+   * @return array[]
+   *   A associative array of simple arrays, each having the following elements:
+   *   - the contrib driver PHP namespace
+   *   - a test debug_backtrace stack
+   *   - the stack entry expected to be returned.
+   *
+   * @see ::testContribDriverLog()
+   */
+  public function providerContribDriverLog() {
+    $stack = [
+      [
+        'file' => '/var/www/core/lib/Drupal/Core/Database/Log.php',
+        'line' => 125,
+        'function' => 'findCaller',
+        'class' => 'Drupal\\Core\\Database\\Log',
+        'object' => 'test',
+        'type' => '->',
+        'args' => [
+          0 => 'test',
+        ],
+      ],
+      [
+        'file' => '/var/www/libraries/drudbal/lib/Statement.php',
+        'line' => 264,
+        'function' => 'log',
+        'class' => 'Drupal\\Core\\Database\\Log',
+        'object' => 'test',
+        'type' => '->',
+        'args' => [
+          0 => 'test',
+        ],
+      ],
+      [
+        'file' => '/var/www/libraries/drudbal/lib/Connection.php',
+        'line' => 213,
+        'function' => 'execute',
+        'class' => 'Drupal\\Driver\\Database\\dbal\\Statement',
+        'object' => 'test',
+        'type' => '->',
+        'args' => [
+          0 => 'test',
+        ],
+      ],
+      [
+        'file' => '/var/www/core/tests/Drupal/KernelTests/Core/Database/LoggingTest.php',
+        'line' => 23,
+        'function' => 'query',
+        'class' => 'Drupal\\Driver\\Database\\dbal\\Connection',
+        'object' => 'test',
+        'type' => '->',
+        'args' => [
+          0 => 'test',
+        ],
+      ],
+      [
+        'file' => '/var/www/vendor/phpunit/phpunit/src/Framework/TestCase.php',
+        'line' => 1154,
+        'function' => 'testEnableLogging',
+        'class' => 'Drupal\\KernelTests\\Core\\Database\\LoggingTest',
+        'object' => 'test',
+        'type' => '->',
+        'args' => [
+          0 => 'test',
+        ],
+      ],
+      [
+        'file' => '/var/www/vendor/phpunit/phpunit/src/Framework/TestCase.php',
+        'line' => 842,
+        'function' => 'runTest',
+        'class' => 'PHPUnit\\Framework\\TestCase',
+        'object' => 'test',
+        'type' => '->',
+        'args' => [
+          0 => 'test',
+        ],
+      ],
+      [
+        'file' => '/var/www/vendor/phpunit/phpunit/src/Framework/TestResult.php',
+        'line' => 693,
+        'function' => 'runBare',
+        'class' => 'PHPUnit\\Framework\\TestCase',
+        'object' => 'test',
+        'type' => '->',
+        'args' => [
+          0 => 'test',
+        ],
+      ],
+      [
+        'file' => '/var/www/vendor/phpunit/phpunit/src/Framework/TestCase.php',
+        'line' => 796,
+        'function' => 'run',
+        'class' => 'PHPUnit\\Framework\\TestResult',
+        'object' => 'test',
+        'type' => '->',
+        'args' => [
+          0 => 'test',
+        ],
+      ],
+      [
+        'file' => 'Standard input code',
+        'line' => 57,
+        'function' => 'run',
+        'class' => 'PHPUnit\\Framework\\TestCase',
+        'object' => 'test',
+        'type' => '->',
+        'args' => [
+          0 => 'test',
+        ],
+      ],
+      [
+        'file' => 'Standard input code',
+        'line' => 111,
+        'function' => '__phpunit_run_isolated_test',
+        'args' => [
+          0 => 'test',
+        ],
+      ],
+    ];
+
+    return [
+      // Test that if the driver namespace is in the stack trace, the first
+      // non-database entry is returned.
+      'contrib driver namespace' => [
+        'Drupal\\Driver\\Database\\dbal',
+        $stack,
+        [
+          'class' => 'Drupal\\KernelTests\\Core\\Database\\LoggingTest',
+          'function' => 'testEnableLogging',
+          'file' => '/var/www/core/tests/Drupal/KernelTests/Core/Database/LoggingTest.php',
+          'line' => 23,
+          'type' => '->',
+          'args' => [
+            0 => 'test',
+          ],
+        ],
+      ],
+      // Extreme case, should not happen at normal runtime - if the driver
+      // namespace is not in the stack trace, the first entry to a method
+      // in core database namespace is returned.
+      'missing driver namespace' => [
+        'Drupal\\Driver\\Database\\fake',
+        $stack,
+        [
+          'class' => 'Drupal\\Driver\\Database\\dbal\\Statement',
+          'function' => 'execute',
+          'file' => '/var/www/libraries/drudbal/lib/Statement.php',
+          'line' => 264,
+          'type' => '->',
+          'args' => [
+            0 => 'test',
+          ],
+        ],
+      ],
+    ];
   }
 
 }

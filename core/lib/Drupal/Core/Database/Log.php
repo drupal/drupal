@@ -39,6 +39,13 @@ class Log {
   protected $connectionKey = 'default';
 
   /**
+   * The PHP namespace of the database driver that this object is logging.
+   *
+   * @var string
+   */
+  protected $driverNamespace;
+
+  /**
    * Constructor.
    *
    * @param $key
@@ -124,11 +131,13 @@ class Log {
   /**
    * Determine the routine that called this query.
    *
-   * We define "the routine that called this query" as the first entry in
-   * the call stack that is not inside the includes/Drupal/Database directory
-   * and does have a file (which excludes call_user_func_array(), anonymous
-   * functions and similar). That makes the climbing logic very simple, and
-   * handles the variable stack depth caused by the query builders.
+   * Traversing the call stack from the very first call made during the
+   * request, we define "the routine that called this query" as the last entry
+   * in the call stack that is not any method called from the namespace of the
+   * database driver, is not inside the Drupal\Core\Database namespace and does
+   * have a file (which excludes call_user_func_array(), anonymous functions
+   * and similar). That makes the climbing logic very simple, and handles the
+   * variable stack depth caused by the query builders.
    *
    * See the @link http://php.net/debug_backtrace debug_backtrace() @endlink
    * function.
@@ -141,26 +150,62 @@ class Log {
    *   database call itself.
    */
   public function findCaller() {
-    $stack = debug_backtrace();
-    for ($i = 0, $stack_count = count($stack); $i < $stack_count; ++$i) {
-      // If the call was made from a function, 'class' will be empty. It's
-      // just easier to give it a default value than to try and integrate
-      // that into the if statement below.
-      if (empty($stack[$i + 1]['class'])) {
-        $stack[$i + 1]['class'] = '';
+    $stack = $this->getDebugBacktrace();
+
+    // Starting from the very first entry processed during the request, find
+    // the first function call that can be identified as a call to a
+    // method/function in the database layer.
+    for ($n = count($stack) - 1; $n >= 0; $n--) {
+      // If the call was made from a function, 'class' will be empty. We give
+      // it a default empty string value in that case.
+      $class = $stack[$n]['class'] ?? '';
+
+      if (strpos($class, __NAMESPACE__, 0) === 0 || strpos($class, $this->getDriverNamespace(), 0) === 0) {
+        break;
       }
-      if (strpos($stack[$i + 1]['class'], __NAMESPACE__) === FALSE && !empty($stack[$i]['file'])) {
-        $stack[$i] += ['file' => '?', 'line' => '?', 'args' => []];
+    }
+
+    // Return the previous function call whose stack entry has a 'file' key,
+    // that is, it is not a callback or a closure.
+    for ($i = $n; $i < count($stack); $i++) {
+      if (!empty($stack[$i]['file'])) {
         return [
           'file' => $stack[$i]['file'],
           'line' => $stack[$i]['line'],
           'function' => $stack[$i + 1]['function'],
-          'class' => $stack[$i + 1]['class'],
-          'type' => isset($stack[$i + 1]['type']) ? $stack[$i + 1]['type'] : NULL,
-          'args' => $stack[$i + 1]['args'],
+          'class' => $stack[$i + 1]['class'] ?? NULL,
+          'type' => $stack[$i + 1]['type'] ?? NULL,
+          'args' => $stack[$i + 1]['args'] ?? [],
         ];
       }
     }
+  }
+
+  /**
+   * Gets the namespace of the database driver.
+   *
+   * @return string|null
+   *   Namespace of the database driver, or NULL if the connection is
+   *   missing.
+   */
+  protected function getDriverNamespace() {
+    if (!isset($this->driverNamespace)) {
+      $this->driverNamespace = (new \ReflectionObject(Database::getConnection('default', $this->connectionKey)))->getNamespaceName();
+    }
+    return $this->driverNamespace;
+  }
+
+  /**
+   * Gets the debug backtrace.
+   *
+   * Wraps the debug_backtrace function to allow mocking results in PHPUnit
+   * tests.
+   *
+   * @return array[]
+   *   The debug backtrace.
+   */
+  protected function getDebugBacktrace() {
+    return debug_backtrace();
   }
 
 }
