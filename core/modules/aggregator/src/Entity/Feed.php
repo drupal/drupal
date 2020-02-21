@@ -85,7 +85,7 @@ class Feed extends ContentEntityBase implements FeedInterface {
     $success = \Drupal::service('aggregator.items.importer')->refresh($this);
 
     // Regardless of successful or not, indicate that it has been checked.
-    $this->setLastCheckedTime(\Drupal::time()->getRequestTime());
+    $this->setLastCheckedTime(REQUEST_TIME);
     $this->setQueuedTime(0);
     $this->save();
 

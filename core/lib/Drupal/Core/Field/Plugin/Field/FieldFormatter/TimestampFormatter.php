@@ -106,7 +106,7 @@ class TimestampFormatter extends FormatterBase implements ContainerFactoryPlugin
     $date_formats = [];
 
     foreach ($this->dateFormatStorage->loadMultiple() as $machine_name => $value) {
-      $date_formats[$machine_name] = $this->t('@name format: @date', ['@name' => $value->label(), '@date' => $this->dateFormatter->format(\Drupal::time()->getRequestTime(), $machine_name)]);
+      $date_formats[$machine_name] = $this->t('@name format: @date', ['@name' => $value->label(), '@date' => $this->dateFormatter->format(REQUEST_TIME, $machine_name)]);
     }
 
     $date_formats['custom'] = $this->t('Custom');
