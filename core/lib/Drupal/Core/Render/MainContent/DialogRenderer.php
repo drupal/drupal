@@ -37,12 +37,8 @@ class DialogRenderer implements MainContentRendererInterface {
    * @param \Drupal\Core\Render\RendererInterface $renderer
    *   The renderer.
    */
-  public function __construct(TitleResolverInterface $title_resolver, RendererInterface $renderer = NULL) {
+  public function __construct(TitleResolverInterface $title_resolver, RendererInterface $renderer) {
     $this->titleResolver = $title_resolver;
-    if ($renderer === NULL) {
-      @trigger_error('The renderer service must be passed to ' . __METHOD__ . ' and will be required before Drupal 9.0.0. See https://www.drupal.org/node/3009400', E_USER_DEPRECATED);
-      $renderer = \Drupal::service('renderer');
-    }
     $this->renderer = $renderer;
   }
 

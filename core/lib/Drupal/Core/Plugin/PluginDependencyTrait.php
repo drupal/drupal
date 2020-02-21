@@ -60,10 +60,6 @@ trait PluginDependencyTrait {
       elseif ($this->themeHandler()->themeExists($provider)) {
         $dependencies['theme'][] = $provider;
       }
-      else {
-        @trigger_error('Declaring a dependency on an uninstalled module is deprecated in Drupal 8.7.0 and will not be supported in Drupal 9.0.0.', E_USER_DEPRECATED);
-        $dependencies['module'][] = $provider;
-      }
     }
 
     // Add the config dependencies.

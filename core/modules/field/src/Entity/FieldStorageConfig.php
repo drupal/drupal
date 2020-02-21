@@ -694,13 +694,6 @@ class FieldStorageConfig extends ConfigEntityBase implements FieldStorageConfigI
   }
 
   /**
-   * {@inheritdoc}
-   */
-  public function isQueryable() {
-    return TRUE;
-  }
-
-  /**
    * Determines whether a field has any data.
    *
    * @return bool

@@ -22,12 +22,8 @@ class Local extends FileTransfer implements ChmodInterface {
   /**
    * {@inheritdoc}
    */
-  public function __construct($jail, FileSystemInterface $file_system = NULL) {
+  public function __construct($jail, FileSystemInterface $file_system) {
     parent::__construct($jail);
-    if (!isset($file_system)) {
-      @trigger_error('The $file_system parameter was added in Drupal 8.8.0 and will be required in 9.0.0. See https://www.drupal.org/node/3021434.', E_USER_DEPRECATED);
-      $file_system = \Drupal::service('file_system');
-    }
     $this->fileSystem = $file_system;
   }
 

@@ -89,32 +89,6 @@ class Cache {
   }
 
   /**
-   * Validates an array of cache tags.
-   *
-   * Can be called before using cache tags in operations, to ensure validity.
-   *
-   * @param string[] $tags
-   *   An array of cache tags.
-   *
-   * @deprecated in drupal:8.0.0 and is removed from drupal:9.0.0. Use
-   *   assert(\Drupal\Component\Assertion\Inspector::assertAllStrings($tags))
-   *   instead.
-   *
-   * @throws \LogicException
-   */
-  public static function validateTags(array $tags) {
-    @trigger_error(__NAMESPACE__ . '\Cache::validateTags() is deprecated in drupal:8.0.0 and is removed from drupal:9.0.0. Use assert(\Drupal\Component\Assertion\Inspector::assertAllStrings($tags)) instead.', E_USER_DEPRECATED);
-    if (empty($tags)) {
-      return;
-    }
-    foreach ($tags as $value) {
-      if (!is_string($value)) {
-        throw new \LogicException('Cache tags must be strings, ' . gettype($value) . ' given.');
-      }
-    }
-  }
-
-  /**
    * Build an array of cache tags from a given prefix and an array of suffixes.
    *
    * Each suffix will be converted to a cache tag by appending it to the prefix,

@@ -97,13 +97,6 @@ class ItemList extends TypedData implements \IteratorAggregate, ListInterface {
     if (!is_numeric($index)) {
       throw new \InvalidArgumentException('Unable to get a value with a non-numeric delta in a list.');
     }
-    // Automatically create the first item for computed fields.
-    // @deprecated in Drupal 8.5.x, will be removed before Drupal 9.0.0.
-    // Use \Drupal\Core\TypedData\ComputedItemListTrait instead.
-    if ($index == 0 && !isset($this->list[0]) && $this->definition->isComputed()) {
-      @trigger_error('Automatically creating the first item for computed fields is deprecated in Drupal 8.5.x and will be removed before Drupal 9.0.0. Use \Drupal\Core\TypedData\ComputedItemListTrait instead.', E_USER_DEPRECATED);
-      $this->list[0] = $this->createItem(0);
-    }
     return isset($this->list[$index]) ? $this->list[$index] : NULL;
   }
 

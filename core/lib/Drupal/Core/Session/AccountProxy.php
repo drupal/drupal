@@ -35,16 +35,6 @@ class AccountProxy implements AccountProxyInterface {
   protected $id = 0;
 
   /**
-   * Initial account id.
-   *
-   * @var int
-   *
-   * @deprecated in drupal:8.3.0 and is removed from drupal:9.0.0. Use
-   *   $this->id instead.
-   */
-  protected $initialAccountId;
-
-  /**
    * Event dispatcher.
    *
    * @var \Symfony\Component\EventDispatcher\EventDispatcherInterface
@@ -57,11 +47,7 @@ class AccountProxy implements AccountProxyInterface {
    * @param \Symfony\Component\EventDispatcher\EventDispatcherInterface $eventDispatcher
    *   Event dispatcher.
    */
-  public function __construct(EventDispatcherInterface $eventDispatcher = NULL) {
-    if (!$eventDispatcher) {
-      @trigger_error('Calling AccountProxy::__construct() without the $eventDispatcher argument is deprecated in drupal:8.8.0. The $eventDispatcher argument will be required in drupal:9.0.0. See https://www.drupal.org/node/3009387', E_USER_DEPRECATED);
-      $eventDispatcher = \Drupal::service('event_dispatcher');
-    }
+  public function __construct(EventDispatcherInterface $eventDispatcher) {
     $this->eventDispatcher = $eventDispatcher;
   }
 
@@ -190,7 +176,7 @@ class AccountProxy implements AccountProxyInterface {
       throw new \LogicException('AccountProxyInterface::setInitialAccountId() cannot be called after an account was set on the AccountProxy');
     }
 
-    $this->id = $this->initialAccountId = $account_id;
+    $this->id = $account_id;
   }
 
   /**

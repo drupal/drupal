@@ -23,20 +23,6 @@ abstract class FormController {
   protected $argumentResolver;
 
   /**
-   * The controller resolver.
-   *
-   * @var \Drupal\Core\Controller\ControllerResolverInterface
-   *
-   * @deprecated
-   *   Deprecated property that is only assigned when the 'controller_resolver'
-   *   service is used as the first parameter to FormController::__construct().
-   *
-   * @see https://www.drupal.org/node/2959408
-   * @see \Drupal\Core\Controller\FormController::__construct()
-   */
-  protected $controllerResolver;
-
-  /**
    * The form builder.
    *
    * @var \Drupal\Core\Form\FormBuilderInterface
@@ -53,10 +39,6 @@ abstract class FormController {
    */
   public function __construct(ArgumentResolverInterface $argument_resolver, FormBuilderInterface $form_builder) {
     $this->argumentResolver = $argument_resolver;
-    if ($argument_resolver instanceof ControllerResolverInterface) {
-      @trigger_error("Using the 'controller_resolver' service as the first argument is deprecated, use the 'http_kernel.controller.argument_resolver' instead. If your subclass requires the 'controller_resolver' service add it as an additional argument. See https://www.drupal.org/node/2959408.", E_USER_DEPRECATED);
-      $this->controllerResolver = $argument_resolver;
-    }
     $this->formBuilder = $form_builder;
   }
 

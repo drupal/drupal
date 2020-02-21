@@ -8,7 +8,6 @@ use Drupal\Core\Entity\ContentEntityStorageInterface;
 use Drupal\Core\Entity\ContentEntityTypeInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Entity\EntityRepositoryInterface;
-use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\ParamConverter\EntityConverter;
 use Drupal\Core\ParamConverter\ParamNotConvertedException;
 use Drupal\Core\Plugin\Context\Context;
@@ -147,59 +146,6 @@ class EntityConverterTest extends UnitTestCase {
       ->willReturnMap($return_map);
 
     \Drupal::setContainer($container);
-  }
-
-  /**
-   * Tests that ::getLatestTranslationAffectedRevision() is deprecated.
-   *
-   * @group legacy
-   *
-   * @expectedDeprecation \Drupal\Core\ParamConverter\EntityConverter::getLatestTranslationAffectedRevision() is deprecated in Drupal 8.7.0 and will be removed before Drupal 9.0.0. Use \Drupal\Core\Entity\EntityRepositoryInterface::getActive() instead.
-   */
-  public function testDeprecatedGetLatestTranslationAffectedRevision() {
-    $this->setUpMocks();
-
-    /** @var \Drupal\Core\Entity\ContentEntityInterface|\PHPUnit\Framework\MockObject\MockObject $revision */
-    $revision = $this->createMock(ContentEntityInterface::class);
-    $revision->expects($this->any())
-      ->method('getEntityTypeId')
-      ->willReturn('entity_test');
-    $revision->expects($this->any())
-      ->method('id')
-      ->willReturn('1');
-
-    /** @var static $test */
-    $test = $this;
-    $this->entityRepository->expects($this->any())
-      ->method('getActive')
-      ->willReturnCallback(function ($entity_type_id, $entity_id, $contexts) use ($test) {
-        $test->assertSame('entity_test', $entity_type_id);
-        $test->assertSame('1', $entity_id);
-        $context_id_prefix = '@language.current_language_context:';
-        $test->assertTrue(isset($contexts[$context_id_prefix . LanguageInterface::TYPE_CONTENT]));
-        $test->assertTrue(isset($contexts[$context_id_prefix . LanguageInterface::TYPE_INTERFACE]));
-      });
-
-    $this->entityConverter = new EntityConverter($this->entityTypeManager, $this->entityRepository);
-    $reflector = new \ReflectionMethod(EntityConverter::class, 'getLatestTranslationAffectedRevision');
-    $reflector->setAccessible(TRUE);
-    $reflector->invoke($this->entityConverter, $revision, NULL);
-  }
-
-  /**
-   * Tests that ::loadRevision() is deprecated.
-   *
-   * @group legacy
-   *
-   * @expectedDeprecation \Drupal\Core\ParamConverter\EntityConverter::loadRevision() is deprecated in Drupal 8.7.0 and will be removed before Drupal 9.0.0.
-   */
-  public function testDeprecatedLoadRevision() {
-    $this->setUpMocks();
-    $this->entityConverter = new EntityConverter($this->entityTypeManager, $this->entityRepository);
-    $reflector = new \ReflectionMethod(EntityConverter::class, 'loadRevision');
-    $reflector->setAccessible(TRUE);
-    $revision = $this->createMock(ContentEntityInterface::class);
-    $reflector->invoke($this->entityConverter, $revision, NULL);
   }
 
   /**

@@ -193,36 +193,6 @@ class PrivateTempStoreTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::getMetadata
-   * @expectedDeprecation Using the "owner" public property of a TempStore lock is deprecated in Drupal 8.7.0 and will not be allowed in Drupal 9.0.0. Use \Drupal\Core\TempStore\Lock::getOwnerId() instead. See https://www.drupal.org/node/3025869.
-   * @group legacy
-   */
-  public function testGetMetadataOwner() {
-    $this->keyValue->expects($this->once())
-      ->method('get')
-      ->with('1:test')
-      ->will($this->returnValue($this->ownObject));
-
-    $metadata = $this->tempStore->getMetadata('test');
-    $this->assertSame(1, $metadata->owner);
-  }
-
-  /**
-   * @covers ::getMetadata
-   * @expectedDeprecation Using the "updated" public property of a TempStore lock is deprecated in Drupal 8.7.0 and will not be allowed in Drupal 9.0.0. Use \Drupal\Core\TempStore\Lock::getUpdated() instead. See https://www.drupal.org/node/3025869.
-   * @group legacy
-   */
-  public function testGetMetadataUpdated() {
-    $this->keyValue->expects($this->once())
-      ->method('get')
-      ->with('1:test')
-      ->will($this->returnValue($this->ownObject));
-
-    $metadata = $this->tempStore->getMetadata('test');
-    $this->assertSame($metadata->getUpdated(), $metadata->updated);
-  }
-
-  /**
    * Tests the locking in the delete() method.
    *
    * @covers ::delete

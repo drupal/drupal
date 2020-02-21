@@ -164,38 +164,6 @@ class PluginDependencyTraitTest extends UnitTestCase {
     return $data;
   }
 
-  /**
-   * @covers ::getPluginDependencies
-   *
-   * @group legacy
-   * @expectedDeprecated Declaring a dependency on an uninstalled module is deprecated in Drupal 8.7.0 and will not be supported in Drupal 9.0.0.
-   */
-  public function testNeitherThemeNorModule() {
-    $test_class = new TestPluginDependency();
-
-    $plugin = $this->prophesize(PluginInspectionInterface::class);
-    $definition = $this->prophesize(PluginDefinitionInterface::class);
-    $definition->getProvider()->willReturn('neither_theme_nor_module');
-
-    $module_handler = $this->prophesize(ModuleHandlerInterface::class);
-    $module_handler->moduleExists('neither_theme_nor_module')->willReturn(FALSE);
-    $test_class->setModuleHandler($module_handler->reveal());
-
-    $theme_handler = $this->prophesize(ThemeHandlerInterface::class);
-    $theme_handler->themeExists('neither_theme_nor_module')->willReturn(FALSE);
-    $test_class->setThemeHandler($theme_handler->reveal());
-
-    $plugin->getPluginDefinition()->willReturn($definition);
-
-    $actual = $test_class->getPluginDependencies($plugin->reveal());
-    $expected = [
-      'module' => [
-        'neither_theme_nor_module',
-      ],
-    ];
-    $this->assertEquals($expected, $actual);
-  }
-
 }
 
 class TestPluginDependency {

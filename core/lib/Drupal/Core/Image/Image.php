@@ -198,27 +198,4 @@ class Image implements ImageInterface {
     return $this->apply('scale', ['width' => $width, 'height' => $height, 'upscale' => $upscale]);
   }
 
-  /**
-   * Provides a wrapper for drupal_chmod() to allow unit testing.
-   *
-   * @param string $uri
-   *   A string containing a URI file, or directory path.
-   * @param int $mode
-   *   Integer value for the permissions. Consult PHP chmod() documentation for
-   *   more information.
-   *
-   * @return bool
-   *   TRUE for success, FALSE in the event of an error.
-   *
-   * @deprecated in drupal:8.0.0 and is removed from drupal:9.0.0.
-   *   Use \Drupal\Core\File\FileSystem::chmod().
-   *
-   * @see \Drupal\Core\File\FileSystemInterface::chmod()
-   * @see https://www.drupal.org/node/2418133
-   */
-  protected function chmod($uri, $mode = NULL) {
-    @trigger_error('chmod() is deprecated in Drupal 8.0.0 and will be removed before Drupal 9.0.0. Use \Drupal\Core\File\FileSystemInterface::chmod(). See https://www.drupal.org/node/2418133.', E_USER_DEPRECATED);
-    return \Drupal::service('file_system')->chmod($uri, $mode);
-  }
-
 }

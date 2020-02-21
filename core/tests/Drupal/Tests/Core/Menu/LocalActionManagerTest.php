@@ -14,12 +14,9 @@ use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Access\AccessResultForbidden;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Cache\Context\CacheContextsManager;
-use Drupal\Core\Controller\ControllerResolver;
 use Drupal\Core\DependencyInjection\Container;
 use Drupal\Core\Extension\ModuleHandlerInterface;
-use Drupal\Core\Language\Language;
 use Drupal\Core\Menu\LocalActionManager;
-use Drupal\Core\Menu\LocalTaskManager;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Routing\RouteProviderInterface;
 use Drupal\Core\Session\AccountInterface;
@@ -379,30 +376,6 @@ class LocalActionManagerTest extends UnitTestCase {
     ];
 
     return $data;
-  }
-
-  /**
-   * @expectedDeprecation Using the 'controller_resolver' service as the first argument is deprecated, use the 'http_kernel.controller.argument_resolver' instead. If your subclass requires the 'controller_resolver' service add it as an additional argument. See https://www.drupal.org/node/2959408.
-   * @group legacy
-   */
-  public function testControllerResolverDeprecation() {
-    if (!in_array('Symfony\Component\HttpKernel\Controller\ArgumentResolverInterface', class_implements('Symfony\Component\HttpKernel\Controller\ControllerResolver'))) {
-      $this->markTestSkipped("Do not test ::getArguments() method when it is not implemented by Symfony's ControllerResolver.");
-    }
-
-    $controller_resolver = $this->getMockBuilder(ControllerResolver::class)->disableOriginalConstructor()->getMock();
-    $route_match = $this->createMock('Drupal\Core\Routing\RouteMatchInterface');
-    $request_stack = new RequestStack();
-    $request_stack->push($this->request);
-    $module_handler = $this->createMock('Drupal\Core\Extension\ModuleHandlerInterface');
-    $module_handler->expects($this->any())
-      ->method('getModuleDirectories')
-      ->willReturn([]);
-    $language_manager = $this->createMock('Drupal\Core\Language\LanguageManagerInterface');
-    $language_manager->expects($this->any())
-      ->method('getCurrentLanguage')
-      ->will($this->returnValue(new Language(['id' => 'en'])));
-    new LocalTaskManager($controller_resolver, $request_stack, $route_match, $this->routeProvider, $this->moduleHandler, $this->cacheBackend, $language_manager, $this->accessManager, $this->account);
   }
 
 }

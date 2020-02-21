@@ -125,21 +125,6 @@ interface DrupalKernelInterface extends HttpKernelInterface, ContainerAwareInter
   public function invalidateContainer();
 
   /**
-   * Prepare the kernel for handling a request without handling the request.
-   *
-   * @param \Symfony\Component\HttpFoundation\Request $request
-   *   The current request.
-   *
-   * @return $this
-   *
-   * @deprecated in drupal:8.0.0 and is removed from drupal:9.0.0. Use
-   *   DrupalKernel::boot() and DrupalKernel::preHandle() instead.
-   *
-   * @see https://www.drupal.org/node/3070678
-   */
-  public function prepareLegacyRequest(Request $request);
-
-  /**
    * Helper method that does request related initialization.
    *
    * @param \Symfony\Component\HttpFoundation\Request $request

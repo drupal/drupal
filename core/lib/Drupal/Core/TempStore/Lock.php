@@ -54,19 +54,4 @@ final class Lock {
     return $this->updated;
   }
 
-  /**
-   * Provides backwards compatibility for using the lock as a \stdClass object.
-   */
-  public function __get($name) {
-    if ($name === 'owner') {
-      @trigger_error('Using the "owner" public property of a TempStore lock is deprecated in Drupal 8.7.0 and will not be allowed in Drupal 9.0.0. Use \Drupal\Core\TempStore\Lock::getOwnerId() instead. See https://www.drupal.org/node/3025869.', E_USER_DEPRECATED);
-      return $this->getOwnerId();
-    }
-    if ($name === 'updated') {
-      @trigger_error('Using the "updated" public property of a TempStore lock is deprecated in Drupal 8.7.0 and will not be allowed in Drupal 9.0.0. Use \Drupal\Core\TempStore\Lock::getUpdated() instead. See https://www.drupal.org/node/3025869.', E_USER_DEPRECATED);
-      return $this->getUpdated();
-    }
-    throw new \InvalidArgumentException($name);
-  }
-
 }

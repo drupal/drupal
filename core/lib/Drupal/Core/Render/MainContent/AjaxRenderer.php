@@ -38,12 +38,8 @@ class AjaxRenderer implements MainContentRendererInterface {
    * @param \Drupal\Core\Render\RendererInterface $renderer
    *   The renderer.
    */
-  public function __construct(ElementInfoManagerInterface $element_info_manager, RendererInterface $renderer = NULL) {
+  public function __construct(ElementInfoManagerInterface $element_info_manager, RendererInterface $renderer) {
     $this->elementInfoManager = $element_info_manager;
-    if ($renderer === NULL) {
-      @trigger_error('The renderer service must be passed to ' . __METHOD__ . ' and will be required before Drupal 9.0.0. See https://www.drupal.org/node/3009400', E_USER_DEPRECATED);
-      $renderer = \Drupal::service('renderer');
-    }
     $this->renderer = $renderer;
   }
 
@@ -80,19 +76,6 @@ class AjaxRenderer implements MainContentRendererInterface {
       $response->addCommand(new PrependCommand(NULL, $output));
     }
     return $response;
-  }
-
-  /**
-   * Wraps \Drupal\Core\Render\RendererInterface::renderRoot().
-   *
-   * @deprecated in drupal:8.7.0 and is removed from drupal:9.0.0. Use
-   *   $this->renderer->renderRoot() instead.
-   *
-   * @see https://www.drupal.org/node/2912696
-   */
-  protected function drupalRenderRoot(&$elements) {
-    @trigger_error('\Drupal\Core\Render\MainContent\AjaxRenderer::drupalRenderRoot() is deprecated in Drupal 8.7.x and will be removed before Drupal 9.0.0. Use $this->renderer->renderRoot() instead. See https://www.drupal.org/node/2912696', E_USER_DEPRECATED);
-    return $this->renderer->renderRoot($elements);
   }
 
 }

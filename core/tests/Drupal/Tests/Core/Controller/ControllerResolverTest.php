@@ -10,15 +10,12 @@ namespace Drupal\Tests\Core\Controller;
 use Drupal\Core\Controller\ControllerResolver;
 use Drupal\Core\DependencyInjection\ClassResolver;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
-use Drupal\Core\Entity\EntityInterface;
-use Drupal\Core\Routing\RouteMatch;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Tests\UnitTestCase;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bridge\PsrHttpMessage\Factory\DiactorosFactory;
 use Psr\Http\Message\ServerRequestInterface;
@@ -61,40 +58,6 @@ class ControllerResolverTest extends UnitTestCase {
     $class_resolver->setContainer($this->container);
     $this->httpMessageFactory = new DiactorosFactory();
     $this->controllerResolver = new ControllerResolver($this->httpMessageFactory, $class_resolver);
-  }
-
-  /**
-   * Tests getArguments().
-   *
-   * Ensure that doGetArguments uses converted arguments if available.
-   *
-   * @see \Drupal\Core\Controller\ControllerResolver::getArguments()
-   * @see \Drupal\Core\Controller\ControllerResolver::doGetArguments()
-   *
-   * @group legacy
-   * @expectedDeprecation Drupal\Core\Controller\ControllerResolver::doGetArguments is deprecated as of 8.6.0 and will be removed in 9.0. Inject the "http_kernel.controller.argument_resolver" service instead.
-   */
-  public function testGetArguments() {
-    if (!in_array('Symfony\Component\HttpKernel\Controller\ArgumentResolverInterface', class_implements('Symfony\Component\HttpKernel\Controller\ControllerResolver'))) {
-      $this->markTestSkipped("Do not test ::getArguments() method when it is not implemented by Symfony's ControllerResolver.");
-    }
-    $controller = function (EntityInterface $entity, $user, RouteMatchInterface $route_match, ServerRequestInterface $psr_7) {
-    };
-    $mock_entity = $this->getMockBuilder('Drupal\Core\Entity\EntityBase')
-      ->disableOriginalConstructor()
-      ->getMock();
-    $mock_account = $this->createMock('Drupal\Core\Session\AccountInterface');
-    $request = new Request([], [], [
-      'entity' => $mock_entity,
-      'user' => $mock_account,
-      '_raw_variables' => new ParameterBag(['entity' => 1, 'user' => 1]),
-    ], [], [], ['HTTP_HOST' => 'drupal.org']);
-    $arguments = $this->controllerResolver->getArguments($request, $controller);
-
-    $this->assertEquals($mock_entity, $arguments[0]);
-    $this->assertEquals($mock_account, $arguments[1]);
-    $this->assertEquals(RouteMatch::createFromRequest($request), $arguments[2], 'Ensure that the route match object is passed along as well');
-    $this->assertInstanceOf(ServerRequestInterface::class, $arguments[3], 'Ensure that the PSR-7 object is passed along as well');
   }
 
   /**
@@ -223,41 +186,6 @@ class ControllerResolverTest extends UnitTestCase {
     }
     $this->assertTrue(is_callable($controller));
     $this->assertSame($output, call_user_func($controller));
-  }
-
-  /**
-   * Tests getArguments with a route match and a request.
-   *
-   * @covers ::doGetArguments
-   *
-   * @group legacy
-   */
-  public function testGetArgumentsWithRouteMatchAndRequest() {
-    if (!in_array('Symfony\Component\HttpKernel\Controller\ArgumentResolverInterface', class_implements('Symfony\Component\HttpKernel\Controller\ControllerResolver'))) {
-      $this->markTestSkipped("Do not test ::getArguments() method when it is not implemented by Symfony's ControllerResolver.");
-    }
-    $request = Request::create('/test');
-    $mock_controller = new MockController();
-    $arguments = $this->controllerResolver->getArguments($request, [$mock_controller, 'getControllerWithRequestAndRouteMatch']);
-    $this->assertEquals([RouteMatch::createFromRequest($request), $request], $arguments);
-  }
-
-  /**
-   * Tests getArguments with a route match and a PSR-7 request.
-   *
-   * @covers ::doGetArguments
-   *
-   * @group legacy
-   */
-  public function testGetArgumentsWithRouteMatchAndPsr7Request() {
-    if (!in_array('Symfony\Component\HttpKernel\Controller\ArgumentResolverInterface', class_implements('Symfony\Component\HttpKernel\Controller\ControllerResolver'))) {
-      $this->markTestSkipped("Do not test ::getArguments() method when it is not implemented by Symfony's ControllerResolver.");
-    }
-    $request = Request::create('/test');
-    $mock_controller = new MockControllerPsr7();
-    $arguments = $this->controllerResolver->getArguments($request, [$mock_controller, 'getControllerWithRequestAndRouteMatch']);
-    $this->assertEquals(RouteMatch::createFromRequest($request), $arguments[0], 'Ensure that the route match object is passed along as well');
-    $this->assertInstanceOf('Psr\Http\Message\ServerRequestInterface', $arguments[1], 'Ensure that the PSR-7 object is passed along as well');
   }
 
 }
