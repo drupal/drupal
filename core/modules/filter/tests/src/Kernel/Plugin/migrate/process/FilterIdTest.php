@@ -5,6 +5,7 @@ namespace Drupal\Tests\filter\Kernel\Plugin\migrate\process;
 use Drupal\filter\Plugin\migrate\process\FilterID;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\migrate\MigrateExecutableInterface;
+use Drupal\migrate\MigrateSkipProcessException;
 use Drupal\migrate\Plugin\MigrationInterface;
 use Drupal\migrate\Row;
 
@@ -61,6 +62,18 @@ class FilterIdTest extends KernelTestBase {
     ];
     $plugin = FilterID::create($this->container, $configuration, 'filter_id', []);
 
+    if ($expected_value instanceof MigrateSkipProcessException) {
+      $this->executable
+        ->expects($this->exactly(1))
+        ->method('saveMessage')
+        ->with(
+          sprintf('Filter %s could not be mapped to an existing filter plugin; omitted since it is a transformation-only filter. Install and configure a successor after the migration.', $value),
+          MigrationInterface::MESSAGE_INFORMATIONAL
+        );
+      $this->expectException(MigrateSkipProcessException::class);
+      $this->expectExceptionMessage(sprintf("The transformation-only filter %s was skipped.", $value));
+    }
+
     if (isset($invalid_id)) {
       $this->executable
         ->expects($this->exactly(1))
@@ -109,6 +122,14 @@ class FilterIdTest extends KernelTestBase {
         ['filter', 1],
         'filter_null',
         'filter:1',
+      ],
+      'transformation-only D7 contrib filter' => [
+        'editor_align',
+        new MigrateSkipProcessException('The transformation-only filter editor_align was skipped.'),
+      ],
+      'non-transformation-only D7 contrib filter' => [
+        'bbcode',
+        'filter_null',
       ],
     ];
   }
