@@ -17,6 +17,8 @@ use Drupal\Composer\Plugin\Scaffold\Operations\ScaffoldFileCollection;
  *
  * Contains the primary logic which determines the files to be fetched and
  * processed.
+ *
+ * @internal
  */
 class Handler {
 

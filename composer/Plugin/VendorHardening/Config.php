@@ -9,6 +9,8 @@ use Composer\Package\RootPackageInterface;
  *
  * Default configuration is merged with the root package's
  * extra:drupal-core-vendor-hardening configuration.
+ *
+ * @internal
  */
 class Config {
 

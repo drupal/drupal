@@ -8,6 +8,8 @@ namespace Drupal\Composer\Plugin\VendorHardening;
  * IMPORTANT: This file is duplicated at /lib/Drupal/Component/FileSecurity.
  * If any change is made here, the same change should be made in the duplicate.
  * See https://www.drupal.org/project/drupal/issues/3079481.
+ *
+ * @internal
  */
 class FileSecurity {
 

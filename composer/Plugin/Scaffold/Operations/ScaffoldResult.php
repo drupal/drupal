@@ -6,6 +6,8 @@ use Drupal\Composer\Plugin\Scaffold\ScaffoldFilePath;
 
 /**
  * Record the result of a scaffold operation.
+ *
+ * @internal
  */
 class ScaffoldResult {
 

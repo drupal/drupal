@@ -11,6 +11,8 @@ use Composer\Script\ScriptEvents;
 
 /**
  * A Composer plugin to display a message after creating a project.
+ *
+ * @internal
  */
 class MessagePlugin implements PluginInterface, EventSubscriberInterface {
 
