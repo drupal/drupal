@@ -8,6 +8,8 @@ use Composer\Installer\PackageEvent;
  * Interface for post package event listeners.
  *
  * @see \Drupal\Composer\Plugin\Scaffold\Handler::onPostPackageEvent
+ *
+ * @internal
  */
 interface PostPackageEventListenerInterface {
 

@@ -6,6 +6,8 @@ use Drupal\Composer\Plugin\Scaffold\ScaffoldFilePath;
 
 /**
  * Provides default behaviors for operations.
+ *
+ * @internal
  */
 abstract class AbstractOperation implements OperationInterface {
 

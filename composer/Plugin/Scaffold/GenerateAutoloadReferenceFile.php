@@ -8,6 +8,8 @@ use Drupal\Composer\Plugin\Scaffold\Operations\ScaffoldResult;
 
 /**
  * Generates an 'autoload.php' that includes the autoloader created by Composer.
+ *
+ * @internal
  */
 final class GenerateAutoloadReferenceFile {
 

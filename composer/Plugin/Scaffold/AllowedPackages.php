@@ -12,6 +12,8 @@ use Composer\Package\PackageInterface;
  *
  * If the root-level composer.json allows drupal/core, and drupal/core allows
  * drupal/assets, then the later package will also implicitly be allowed.
+ *
+ * @internal
  */
 class AllowedPackages implements PostPackageEventListenerInterface {
 

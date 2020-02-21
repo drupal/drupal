@@ -8,6 +8,8 @@ namespace Drupal\Composer\Plugin\Scaffold;
  * Projects that describe scaffold files do so via their scaffold options. This
  * data is pulled from the 'drupal-scaffold' portion of the extras section of
  * the project data.
+ *
+ * @internal
  */
 class ScaffoldOptions {
 

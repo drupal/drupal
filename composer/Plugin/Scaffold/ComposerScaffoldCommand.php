@@ -11,6 +11,8 @@ use Symfony\Component\Console\Output\OutputInterface;
  *
  * Manually run the scaffold operation that normally happens after
  * 'composer install'.
+ *
+ * @internal
  */
 class ComposerScaffoldCommand extends BaseCommand {
 

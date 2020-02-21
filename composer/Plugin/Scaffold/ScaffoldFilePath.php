@@ -15,6 +15,8 @@ use Composer\Util\Filesystem;
  * source files used to create them. Static factory methods named
  * destinationPath and sourcePath, respectively, are provided to create
  * ScaffoldFilePath objects.
+ *
+ * @internal
  */
 class ScaffoldFilePath {
 

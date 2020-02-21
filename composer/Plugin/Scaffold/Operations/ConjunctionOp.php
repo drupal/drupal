@@ -8,6 +8,8 @@ use Drupal\Composer\Plugin\Scaffold\ScaffoldOptions;
 
 /**
  * Joins two operations on the same file into a single operation.
+ *
+ * @internal
  */
 class ConjunctionOp extends AbstractOperation {
 

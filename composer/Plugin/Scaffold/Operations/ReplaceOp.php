@@ -9,6 +9,8 @@ use Drupal\Composer\Plugin\Scaffold\ScaffoldOptions;
 
 /**
  * Scaffold operation to copy or symlink from source to destination.
+ *
+ * @internal
  */
 class ReplaceOp extends AbstractOperation {
 
