@@ -5,7 +5,7 @@ namespace Drupal\system\Controller;
 use Drupal\Component\Utility\Crypt;
 use Drupal\Component\Utility\Tags;
 use Drupal\Core\Controller\ControllerBase;
-use Drupal\Core\Entity\EntityAutocompleteMatcher;
+use Drupal\Core\Entity\EntityAutocompleteMatcherInterface;
 use Drupal\Core\KeyValueStore\KeyValueStoreInterface;
 use Drupal\Core\Site\Settings;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -21,7 +21,7 @@ class EntityAutocompleteController extends ControllerBase {
   /**
    * The autocomplete matcher for entity references.
    *
-   * @var \Drupal\Core\Entity\EntityAutocompleteMatcher
+   * @var \Drupal\Core\Entity\EntityAutocompleteMatcherInterface
    */
   protected $matcher;
 
@@ -35,12 +35,12 @@ class EntityAutocompleteController extends ControllerBase {
   /**
    * Constructs a EntityAutocompleteController object.
    *
-   * @param \Drupal\Core\Entity\EntityAutocompleteMatcher $matcher
+   * @param \Drupal\Core\Entity\EntityAutocompleteMatcherInterface $matcher
    *   The autocomplete matcher for entity references.
    * @param \Drupal\Core\KeyValueStore\KeyValueStoreInterface $key_value
    *   The key value factory.
    */
-  public function __construct(EntityAutocompleteMatcher $matcher, KeyValueStoreInterface $key_value) {
+  public function __construct(EntityAutocompleteMatcherInterface $matcher, KeyValueStoreInterface $key_value) {
     $this->matcher = $matcher;
     $this->keyValue = $key_value;
   }
