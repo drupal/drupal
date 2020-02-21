@@ -94,8 +94,12 @@ class PathAliasToEntityUpdateTest extends UpdatePathTestBase {
     $this->runUpdates();
 
     if (!$perform_check) {
-      $failure = $this->cssSelect('.failure');
-      $this->assertContains("Failed: Drupal\Core\Database\IntegrityConstraintViolationException: SQLSTATE[23000]: Integrity constraint violation: 1062 Duplicate entry '1' for key 'PRIMARY': INSERT INTO {path_alias}", reset($failure)->getText());
+      $error_message = $this->cssSelect('.failure')[0]->getText();
+      // In order to test against multiple database drivers assert that the
+      // expected exception occurs and the error contains the expected table
+      // name. The specifics of the error depend on the database driver.
+      $this->assertContains("Failed: Drupal\Core\Database\IntegrityConstraintViolationException", $error_message);
+      $this->assertContains("path_alias", $error_message);
       // Nothing else to assert.
       return;
     }
