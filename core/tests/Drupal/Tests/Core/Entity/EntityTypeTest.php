@@ -167,6 +167,8 @@ class EntityTypeTest extends UnitTestCase {
     ]);
     $this->assertSame($controller, $entity_type->getHandlerClass('storage'));
     $this->assertSame($controller, $entity_type->getHandlerClass('form', 'default'));
+    $this->assertNull($entity_type->getHandlerClass('foo'));
+    $this->assertNull($entity_type->getHandlerClass('foo', 'bar'));
   }
 
   /**
