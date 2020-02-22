@@ -465,6 +465,7 @@ class EntityType extends PluginDefinition implements EntityTypeInterface {
       $handlers = $this->getHandlerClasses();
       return $nested ? $handlers[$handler_type][$nested] : $handlers[$handler_type];
     }
+    return NULL;
   }
 
   /**
