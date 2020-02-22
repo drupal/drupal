@@ -47,12 +47,15 @@ class FilterIdTest extends KernelTestBase {
    * @param string $invalid_id
    *   (optional) The invalid plugin ID which is expected to be logged by the
    *   MigrateExecutable object.
+   * @param bool $skip_exception
+   *   (optional) Set to TRUE if we expect the filter to be skipped because it
+   *   is a transformation-only filter.
    *
    * @dataProvider provideFilters
    *
    * @covers ::transform
    */
-  public function testTransform($value, $expected_value, $invalid_id = NULL) {
+  public function testTransform($value, $expected_value, $invalid_id = NULL, $skip_exception = FALSE) {
     $configuration = [
       'bypass' => TRUE,
       'map' => [
@@ -62,7 +65,7 @@ class FilterIdTest extends KernelTestBase {
     ];
     $plugin = FilterID::create($this->container, $configuration, 'filter_id', []);
 
-    if ($expected_value instanceof MigrateSkipProcessException) {
+    if ($skip_exception) {
       $this->executable
         ->expects($this->exactly(1))
         ->method('saveMessage')
@@ -125,7 +128,9 @@ class FilterIdTest extends KernelTestBase {
       ],
       'transformation-only D7 contrib filter' => [
         'editor_align',
-        new MigrateSkipProcessException('The transformation-only filter editor_align was skipped.'),
+        '',
+        NULL,
+        TRUE,
       ],
       'non-transformation-only D7 contrib filter' => [
         'bbcode',
