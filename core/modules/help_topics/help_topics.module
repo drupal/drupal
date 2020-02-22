@@ -20,7 +20,7 @@ function help_topics_help($route_name, RouteMatchInterface $route_match) {
       $search_help = ($module_handler->moduleExists('search')) ? Url::fromRoute('help.page', ['name' => 'search'])->toString() : '#';
       $output = '';
       $output .= '<h3>' . t('About') . '</h3>';
-      $output .= '<p>' . t('The Help Topics module adds module- and theme-provided help topics to the module overviews from the core Help module. If the core Search module is enabled, these topics are also searchable. For more information, see the <a href=":online">online documentation for the Help Topics module</a>.', [':online' => 'https://www.drupal.org/modules/help_topics']) . '</p>';
+      $output .= '<p>' . t('The Help Topics module adds module- and theme-provided help topics to the module overviews from the core Help module. If the core Search module is enabled, these topics are also searchable. For more information, see the <a href=":online">online documentation for the Help Topics module</a>.', [':online' => 'https://www.drupal.org/documentation/modules/help_topics']) . '</p>';
       $output .= '<h3>' . t('Uses') . '</h3>';
       $output .= '<dl>';
       $output .= '<dt>' . t('Viewing help topics') . '</dt>';
