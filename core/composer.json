@@ -185,8 +185,7 @@
         ]
     },
     "config": {
-        "preferred-install": "dist",
-        "autoloader-suffix": "Drupal8"
+        "preferred-install": "dist"
     },
     "extra": {
         "drupal-scaffold": {
