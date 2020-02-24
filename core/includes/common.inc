@@ -175,7 +175,7 @@ function drupal_get_destination() {
  *   TRUE if the address is in a valid format.
  *
  * @deprecated in drupal:8.0.0 and is removed from drupal:9.0.0.
- *   Use \Drupal::service('email.validator')->isValid().
+ *   Use \Drupal::service('email.validator')->isValid($mail).
  *
  * @see https://www.drupal.org/node/2912661
  */
