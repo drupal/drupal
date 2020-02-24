@@ -1,6 +1,6 @@
 name: Image
 type: module
-description: 'Defines an image field type and provides image manipulation tools.'
+description: 'Defines a field type for image media and provides display configuration tools.'
 package: Field types
 version: VERSION
 core: 8.x

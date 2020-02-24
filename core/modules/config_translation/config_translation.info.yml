@@ -1,6 +1,6 @@
 name: 'Configuration Translation'
 type: module
-description: 'Provides a translation interface for configuration.'
+description: 'Allows users to translate configuration text.'
 package: Multilingual
 version: VERSION
 core: 8.x

@@ -1,6 +1,6 @@
 name: Language
 type: module
-description: 'Allows users to configure languages and apply them to content.'
+description: 'Allows users to configure available languages.'
 package: Multilingual
 version: VERSION
 core: 8.x

@@ -1,6 +1,6 @@
 name: 'Contextual Links'
 type: module
-description: 'Provides contextual links to perform actions related to elements on a page.'
+description: 'Provides contextual links to directly access tasks related to page elements.'
 package: Core
 version: VERSION
 core: 8.x

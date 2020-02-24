@@ -1,6 +1,6 @@
 name: 'Database Logging'
 type: module
-description: 'Logs and records system events to the database.'
+description: 'Logs system events in the database.'
 package: Core
 version: VERSION
 core: 8.x

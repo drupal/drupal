@@ -1,6 +1,6 @@
 name: 'Views UI'
 type: module
-description: 'Administrative interface for Views.'
+description: 'Provides a user interface for creating and managing views.'
 package: Core
 version: VERSION
 core: 8.x

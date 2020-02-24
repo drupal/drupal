@@ -1,6 +1,6 @@
 name: 'Custom Block'
 type: module
-description: 'Allows the creation of custom blocks through the user interface.'
+description: 'Allows the creation of custom blocks and block types.'
 package: Core
 version: VERSION
 core: 8.x

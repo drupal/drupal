@@ -1,6 +1,6 @@
 name: 'Custom Menu Links'
 type: module
-description: 'Allows administrators to create custom menu links.'
+description: 'Allows users to create menu links.'
 package: Core
 version: VERSION
 core: 8.x

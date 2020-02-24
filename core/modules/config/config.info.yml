@@ -1,6 +1,6 @@
 name: 'Configuration Manager'
 type: module
-description: 'Allows administrators to manage configuration changes.'
+description: 'Allows administrators to import and export configuration changes.'
 package: Core
 version: VERSION
 core: 8.x
