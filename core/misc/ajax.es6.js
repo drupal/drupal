@@ -419,8 +419,10 @@
     this.element = element;
 
     /**
-     * @deprecated in Drupal 8.5.0 and will be removed before Drupal 9.0.0.
-     * Use elementSettings.
+     * @deprecated in drupal:8.5.0 and is removed from drupal:10.0.0.
+     *   Use elementSettings.
+     *
+     * @see https://www.drupal.org/node/2928117
      *
      * @type {Drupal.Ajax~elementSettings}
      */
@@ -1117,13 +1119,13 @@
    * @param {object} response
    *   The response from the Ajax request.
    *
-   * @deprecated in Drupal 8.6.x and will be removed before Drupal 9.0.0.
-   *   Use data with desired wrapper. See https://www.drupal.org/node/2974880.
+   * @deprecated in drupal:8.6.0 and is removed from drupal:10.0.0.
+   *   Use data with desired wrapper.
+   *
+   * @see https://www.drupal.org/node/2940704
    *
    * @todo Add deprecation warning after it is possible. For more information
    *   see: https://www.drupal.org/project/drupal/issues/2973400
-   *
-   * @see https://www.drupal.org/node/2940704
    */
   Drupal.theme.ajaxWrapperNewContent = ($newContent, ajax, response) =>
     (response.effect || ajax.effect) !== 'none' &&
@@ -1146,13 +1148,13 @@
    * @param {jQuery} $elements
    *   Response elements after parsing.
    *
-   * @deprecated in Drupal 8.6.x and will be removed before Drupal 9.0.0.
-   *   Use data with desired wrapper. See https://www.drupal.org/node/2974880.
+   * @deprecated in drupal:8.6.0 and is removed from drupal:10.0.0.
+   *   Use data with desired wrapper.
+   *
+   * @see https://www.drupal.org/node/2940704
    *
    * @todo Add deprecation warning after it is possible. For more information
    *   see: https://www.drupal.org/project/drupal/issues/2973400
-   *
-   * @see https://www.drupal.org/node/2940704
    */
   Drupal.theme.ajaxWrapperMultipleRootElements = $elements =>
     $('<div></div>').append($elements);
