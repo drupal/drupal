@@ -1175,6 +1175,10 @@ services:
     class: Drupal\Core\Entity\EntityAccessCheck
     tags:
       - { name: access_check, applies_to: _entity_access }
+  access_check.entity_bundles:
+    class: Drupal\Core\Entity\EntityBundleAccessCheck
+    tags:
+      - { name: access_check, applies_to: _entity_bundles }
   access_check.entity_create:
     class: Drupal\Core\Entity\EntityCreateAccessCheck
     arguments: ['@entity_type.manager']
