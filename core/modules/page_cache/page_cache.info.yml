@@ -1,5 +1,5 @@
-name: Internal Page Cache
+name: 'Internal Page Cache'
 type: module
-description: 'Caches pages for anonymous users. Use when an external page cache is not available.'
+description: 'Caches pages for anonymous users and can be used when external page cache is not available.'
 package: Core
 version: VERSION
