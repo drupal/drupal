@@ -707,6 +707,83 @@ class UpdateContribTest extends UpdateTestBase {
   }
 
   /**
+   * Tests messages when a project release is unpublished.
+   *
+   * This test confirms that revoked messages are displayed regardless of
+   * whether the installed version is in a supported branch or not. This test
+   * relies on 2 test XML fixtures that are identical except for the
+   * 'supported_branches' value:
+   * - aaa_update_test.1_0-supported.xml
+   *    'supported_branches' is '8.x-1.,8.x-2.'.
+   * - aaa_update_test.1_0-unsupported.xml
+   *    'supported_branches' is '8.x-2.'.
+   * They both have an '8.x-1.0' release that is unpublished and an '8.x-2.0'
+   * release that is published and is the expected update.
+   */
+  public function testRevokedRelease() {
+    $system_info = [
+      'aaa_update_test' => [
+        'project' => 'aaa_update_test',
+        'version' => '8.x-1.0',
+        'hidden' => FALSE,
+      ],
+    ];
+    $this->config('update_test.settings')->set('system_info', $system_info)->save();
+    $this->refreshUpdateStatus([
+      'drupal' => '0.0',
+      $this->updateProject => '1_0-supported',
+    ]);
+    // @todo Change the version label to 'Recommended version:' in
+    // https://www.drupal.org/node/3114408.
+    $this->confirmRevokedStatus('8.x-1.0', '8.x-2.0', 'Also available:');
+
+    $this->refreshUpdateStatus([
+      'drupal' => '0.0',
+      $this->updateProject => '1_0-unsupported',
+    ]);
+    $this->confirmRevokedStatus('8.x-1.0', '8.x-2.0', 'Recommended version:');
+  }
+
+  /**
+   * Tests messages when a project release is marked unsupported.
+   *
+   * This test confirms unsupported messages are displayed regardless of whether
+   * the installed version is in a supported branch or not. This test relies on
+   * 2 test XML fixtures that are identical except for the 'supported_branches'
+   * value:
+   * - aaa_update_test.1_0-supported.xml
+   *    'supported_branches' is '8.x-1.,8.x-2.'.
+   * - aaa_update_test.1_0-unsupported.xml
+   *    'supported_branches' is '8.x-2.'.
+   * They both have an '8.x-1.1' release that has the 'Release type' value of
+   * 'unsupported' and an '8.x-2.0' release that has the 'Release type' value of
+   * 'supported' and is the expected update.
+   */
+  public function testUnsupportedRelease() {
+    $system_info = [
+      'aaa_update_test' => [
+        'project' => 'aaa_update_test',
+        'version' => '8.x-1.1',
+        'hidden' => FALSE,
+      ],
+    ];
+    $this->config('update_test.settings')->set('system_info', $system_info)->save();
+    $this->refreshUpdateStatus([
+      'drupal' => '0.0',
+      $this->updateProject => '1_0-supported',
+    ]);
+    // @todo Change the version label to 'Recommended version:' in
+    // https://www.drupal.org/node/3114408.
+    $this->confirmUnsupportedStatus('8.x-1.1', '8.x-2.0', 'Also available:');
+
+    $this->refreshUpdateStatus([
+      'drupal' => '0.0',
+      $this->updateProject => '1_0-unsupported',
+    ]);
+    $this->confirmUnsupportedStatus('8.x-1.1', '8.x-2.0', 'Recommended version:');
+  }
+
+  /**
    * Asserts that a core compatibility message is correct for an update.
    *
    * @param string $version
