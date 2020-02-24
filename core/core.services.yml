@@ -330,7 +330,7 @@ services:
     class: Drupal\Core\Config\ExportStorageManager
     arguments: ['@config.storage', '@database', '@event_dispatcher', '@lock']
     public: false
-  # @deprecated in Drupal 8.0.x and will be removed before 9.0.0. Use
+  # @deprecated in Drupal 8.0.x and will be removed before 10.0.0. Use
   #   config.storage.sync instead.
   # @see https://www.drupal.org/node/2574957
   config.storage.staging:
@@ -850,18 +850,6 @@ services:
     arguments: ['@router.route_provider', '@state', '@cache.bootstrap']
     tags:
       - { name: 'event_subscriber' }
-  router.matcher.final_matcher:
-    class: Drupal\Core\Routing\UrlMatcher
-    arguments: ['@path.current']
-    deprecated: The "%service_id%" service is deprecated. You should use the 'router.no_access_checks' service instead.
-  router.matcher:
-    class: Symfony\Cmf\Component\Routing\NestedMatcher\NestedMatcher
-    arguments: ['@router.route_provider']
-    calls:
-      - [setFinalMatcher, ['@router.matcher.final_matcher']]
-    tags:
-      - { name: service_collector, tag: non_lazy_route_filter, call: addRouteFilter }
-    deprecated: The "%service_id%" service is deprecated. You should use the 'router.no_access_checks' service instead.
   url_generator.non_bubbling:
     class: Drupal\Core\Routing\UrlGenerator
     arguments: ['@router.route_provider', '@path_processor_manager', '@route_processor_manager', '@request_stack', '%filter_protocols%']
@@ -885,12 +873,6 @@ services:
   router:
     class: Drupal\Core\Routing\AccessAwareRouter
     arguments: ['@router.no_access_checks', '@access_manager', '@current_user']
-  router.dynamic:
-    class: Symfony\Cmf\Component\Routing\DynamicRouter
-    arguments: ['@router.request_context', '@router.matcher', '@url_generator']
-    tags:
-      - { name: service_collector, tag: non_lazy_route_enhancer, call: addRouteEnhancer }
-    deprecated: The "%service_id%" service is deprecated. You should use the 'router.no_access_checks' service instead.
   router.no_access_checks:
     class: \Drupal\Core\Routing\Router
     arguments: ['@router.route_provider', '@path.current', '@url_generator']
