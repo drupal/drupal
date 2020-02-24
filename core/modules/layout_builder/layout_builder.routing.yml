@@ -81,7 +81,7 @@ layout_builder.choose_inline_block:
   path: '/layout_builder/choose/inline-block/{section_storage_type}/{section_storage}/{delta}/{region}'
   defaults:
     _controller: '\Drupal\layout_builder\Controller\ChooseBlockController::inlineBlockList'
-    _title: 'Add a new Inline Block'
+    _title: 'Add a new custom block'
   requirements:
     _layout_builder_access: 'view'
   options:
