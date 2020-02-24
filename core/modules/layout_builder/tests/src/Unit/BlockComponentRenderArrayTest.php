@@ -449,6 +449,51 @@ class BlockComponentRenderArrayTest extends UnitTestCase {
   /**
    * @covers ::onBuildRender
    */
+  public function testOnBuildRenderEmptyBuildWithCacheTags() {
+    $block = $this->prophesize(BlockPluginInterface::class);
+    $access_result = AccessResult::allowed();
+    $block->access($this->account->reveal(), TRUE)->willReturn($access_result)->shouldBeCalled();
+    $block->getCacheContexts()->willReturn([]);
+    $block->getCacheTags()->willReturn(['test']);
+    $block->getCacheMaxAge()->willReturn(Cache::PERMANENT);
+    $block->getConfiguration()->willReturn([]);
+    $block->getPluginId()->willReturn('block_plugin_id');
+    $block->getBaseId()->willReturn('block_plugin_id');
+    $block->getDerivativeId()->willReturn(NULL);
+
+    $block_content = [
+      '#cache' => [
+        'tags' => ['empty_build_cache_test'],
+      ],
+    ];
+    $block->build()->willReturn($block_content);
+    $this->blockManager->createInstance('some_block_id', ['id' => 'some_block_id'])->willReturn($block->reveal());
+
+    $component = new SectionComponent('some-uuid', 'some-region', ['id' => 'some_block_id']);
+    $event = new SectionComponentBuildRenderArrayEvent($component, [], FALSE);
+
+    $subscriber = new BlockComponentRenderArray($this->account->reveal());
+
+    $expected_build = [];
+
+    $expected_cache = $expected_build + [
+        '#cache' => [
+          'contexts' => [],
+          'tags' => ['empty_build_cache_test', 'test'],
+          'max-age' => -1,
+        ],
+      ];
+
+    $subscriber->onBuildRender($event);
+    $result = $event->getBuild();
+    $this->assertEquals($expected_build, $result);
+    $event->getCacheableMetadata()->applyTo($result);
+    $this->assertEquals($expected_cache, $result);
+  }
+
+  /**
+   * @covers ::onBuildRender
+   */
   public function testOnBuildRenderNoBlock() {
     $this->blockManager->createInstance('some_block_id', ['id' => 'some_block_id'])->willReturn(NULL);
 
