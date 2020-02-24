@@ -25,7 +25,7 @@ class WorkspacesUpdateTest extends UpdatePathTestBase {
    */
   public function setDatabaseDumpFiles() {
     $this->databaseDumpFiles = [
-      __DIR__ . '/../../../../../system/tests/fixtures/update/drupal-8.filled.standard.php.gz',
+      __DIR__ . '/../../../../../system/tests/fixtures/update/drupal-8.4.0.bare.standard.php.gz',
       __DIR__ . '/../../../fixtures/update/drupal-8.6.0-workspaces_installed.php',
     ];
   }

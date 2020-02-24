@@ -1,0 +1,14 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for the entity_test_revlog module.
+ */
+
+/**
+ * Install the 'entity_test_mul_revlog_pub' entity type.
+ */
+function entity_test_revlog_update_8801() {
+  $entity_type = \Drupal::entityTypeManager()->getDefinition('entity_test_mul_revlog_pub');
+  \Drupal::entityDefinitionUpdateManager()->installEntityType($entity_type);
+}
