@@ -202,6 +202,46 @@ class MoveRevisionMetadataFieldsUpdateTest extends UpdatePathTestBase {
       'revision_log_message' => 'revision_log_message',
     ];
     $this->assertEquals($revision_metadata_keys, $entity_type->getRevisionMetadataKeys(TRUE));
+
+    // Ensure that the BC layer will break if a new revision metadata key is
+    // only added to the revision_metadata_keys property.
+    $definition = [
+      'id' => 'entity_test_mul_revlog',
+    ];
+    $entity_type = new ContentEntityType($definition);
+    $revision_metadata_keys = $entity_type->get('revision_metadata_keys');
+    $revision_metadata_keys['new_revision_metadata_key'] = 'new_revision_metadata_key';
+    $entity_type->set('revision_metadata_keys', $revision_metadata_keys);
+    $expected_revision_metadata_keys = [
+      'new_revision_metadata_key' => 'new_revision_metadata_key',
+      'revision_default' => 'revision_default',
+    ];
+    $this->assertEquals($expected_revision_metadata_keys, $entity_type->getRevisionMetadataKeys(TRUE));
+
+    // Ensure that the BC layer will be triggered if a new revision metadata key
+    // is added to both properties revision_metadata_keys and
+    // requiredRevisionMetadataKeys.
+    $definition = [
+      'id' => 'entity_test_mul_revlog',
+    ];
+    $entity_type = new ContentEntityType($definition);
+
+    $revision_metadata_keys = $entity_type->get('revision_metadata_keys');
+    $revision_metadata_keys['new_revision_metadata_key'] = 'new_revision_metadata_key';
+    $entity_type->set('revision_metadata_keys', $revision_metadata_keys);
+
+    $required_revision_metadata_keys = $entity_type->get('requiredRevisionMetadataKeys');
+    $required_revision_metadata_keys['new_revision_metadata_key'] = 'new_revision_metadata_key';
+    $entity_type->set('requiredRevisionMetadataKeys', $required_revision_metadata_keys);
+
+    $expected_revision_metadata_keys = [
+      'new_revision_metadata_key' => 'new_revision_metadata_key',
+      'revision_default' => 'revision_default',
+      'revision_user' => 'revision_user',
+      'revision_created' => 'revision_created',
+      'revision_log_message' => 'revision_log_message',
+    ];
+    $this->assertEquals($expected_revision_metadata_keys, $entity_type->getRevisionMetadataKeys(TRUE));
   }
 
   /**

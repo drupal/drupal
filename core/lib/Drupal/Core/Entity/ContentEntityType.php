@@ -17,11 +17,6 @@ class ContentEntityType extends EntityType implements ContentEntityTypeInterface
   /**
    * The required revision metadata keys.
    *
-   * This property should only be filled in the constructor. This ensures that
-   * only new instances get newly added required revision metadata keys.
-   * Unserialized objects will only retrieve the keys that they already have
-   * been cached with.
-   *
    * @var array
    */
   protected $requiredRevisionMetadataKeys = [];
@@ -117,6 +112,27 @@ class ContentEntityType extends EntityType implements ContentEntityTypeInterface
   public function hasRevisionMetadataKey($key) {
     $keys = $this->getRevisionMetadataKeys();
     return isset($keys[$key]);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setRevisionMetadataKey($key, $field_name) {
+    if ($field_name !== NULL) {
+      // Update the property holding the required revision metadata keys,
+      // which is used by the BC layer for retrieving the revision metadata
+      // keys.
+      // @see \Drupal\Core\Entity\ContentEntityType::getRevisionMetadataKeys()
+      $this->requiredRevisionMetadataKeys[$key] = $field_name;
+
+      // Add the new revision metadata key.
+      $this->revision_metadata_keys[$key] = $field_name;
+    }
+    else {
+      unset($this->requiredRevisionMetadataKeys[$key], $this->revision_metadata_keys[$key]);
+    }
+
+    return $this;
   }
 
 }

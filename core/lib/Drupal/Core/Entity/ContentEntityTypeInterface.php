@@ -52,4 +52,17 @@ interface ContentEntityTypeInterface extends EntityTypeInterface {
    */
   public function hasRevisionMetadataKey($key);
 
+  /**
+   * Sets a revision metadata key.
+   *
+   * @param string $key
+   *   The name of the entity revision metadata key to set.
+   * @param string|null $field_name
+   *   The name of the entity field key to use for the revision metadata key. If
+   *   NULL is passed, the value of the revision metadata key is unset.
+   *
+   * @return $this
+   */
+  public function setRevisionMetadataKey($key, $field_name);
+
 }

@@ -99,12 +99,9 @@ class EntitySchemaSubscriber implements EntityTypeListenerInterface, EventSubscr
       $field_storage_definition = $this->entityLastInstalledSchemaRepository->getLastInstalledFieldStorageDefinitions($entity_type->id())[$revision_metadata_keys['workspace']];
       $this->entityDefinitionUpdateManager->uninstallFieldStorageDefinition($field_storage_definition);
 
-      $revision_metadata_keys = $entity_type->get('revision_metadata_keys');
-      unset($revision_metadata_keys['workspace']);
-      $entity_type->set('revision_metadata_keys', $revision_metadata_keys);
-
       // We are only removing a revision metadata key so we don't need to go
       // through the entity update process.
+      $entity_type->setRevisionMetadataKey('workspace', NULL);
       $this->entityLastInstalledSchemaRepository->setLastInstalledDefinition($entity_type);
     }
   }
@@ -130,23 +127,19 @@ class EntitySchemaSubscriber implements EntityTypeListenerInterface, EventSubscr
    *   The entity type that has been installed or updated.
    */
   protected function addRevisionMetadataField(EntityTypeInterface $entity_type) {
-    $revision_metadata_keys = $entity_type->get('revision_metadata_keys');
-
-    if (!isset($revision_metadata_keys['workspace'])) {
+    if (!$entity_type->hasRevisionMetadataKey('workspace')) {
       // Bail out if there's an existing field called 'workspace'.
       if ($this->entityDefinitionUpdateManager->getFieldStorageDefinition('workspace', $entity_type->id())) {
         throw new \RuntimeException("An existing 'workspace' field was found for the '{$entity_type->id()}' entity type. Set the 'workspace' revision metadata key to use a different field name and run this update function again.");
       }
 
-      $revision_metadata_keys['workspace'] = 'workspace';
-      $entity_type->set('revision_metadata_keys', $revision_metadata_keys);
-
       // We are only adding a revision metadata key so we don't need to go
       // through the entity update process.
+      $entity_type->setRevisionMetadataKey('workspace', 'workspace');
       $this->entityLastInstalledSchemaRepository->setLastInstalledDefinition($entity_type);
     }
 
-    $this->entityDefinitionUpdateManager->installFieldStorageDefinition($revision_metadata_keys['workspace'], $entity_type->id(), 'workspaces', $this->getWorkspaceFieldDefinition());
+    $this->entityDefinitionUpdateManager->installFieldStorageDefinition($entity_type->getRevisionMetadataKey('workspace'), $entity_type->id(), 'workspaces', $this->getWorkspaceFieldDefinition());
   }
 
   /**
