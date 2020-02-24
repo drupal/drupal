@@ -204,4 +204,74 @@ abstract class UpdateTestBase extends BrowserTestBase {
     $this->assertEquals($update_element->findLink('Release notes')->getAttribute('href'), "http://example.com/{$this->updateProject}-$url_version-release");
   }
 
+  /**
+   * Confirms messages are correct when a release has been unpublished/revoked.
+   *
+   * @param string $revoked_version
+   *   The revoked version that is currently installed.
+   * @param string $newer_version
+   *   The expected newer version to recommend.
+   * @param string $new_version_label
+   *   The expected label for the newer version (for example 'Recommended
+   *   version:' or 'Also available:').
+   */
+  protected function confirmRevokedStatus($revoked_version, $newer_version, $new_version_label) {
+    $this->drupalGet('admin/reports/updates');
+    $this->clickLink(t('Check manually'));
+    $this->checkForMetaRefresh();
+    $this->assertUpdateTableTextContains('Revoked!');
+    $this->assertUpdateTableTextContains($revoked_version);
+    $this->assertUpdateTableElementContains('error.svg');
+    $this->assertUpdateTableTextContains('Release revoked: Your currently installed release has been revoked, and is no longer available for download. Disabling everything included in this release or upgrading is strongly recommended!');
+    $this->assertVersionUpdateLinks($new_version_label, $newer_version);
+  }
+
+  /**
+   * Confirms messages are correct when a release has been marked unsupported.
+   *
+   * @param string $unsupported_version
+   *   The unsupported version that is currently installed.
+   * @param string $newer_version
+   *   The expected newer version to recommend.
+   * @param string $new_version_label
+   *   The expected label for the newer version (for example 'Recommended
+   *   version:' or 'Also available:').
+   */
+  protected function confirmUnsupportedStatus($unsupported_version, $newer_version, $new_version_label) {
+    $this->drupalGet('admin/reports/updates');
+    $this->clickLink(t('Check manually'));
+    $this->checkForMetaRefresh();
+    $this->assertUpdateTableTextContains('Not supported!');
+    $this->assertUpdateTableTextContains($unsupported_version);
+    $this->assertUpdateTableElementContains('error.svg');
+    $this->assertUpdateTableTextContains('Release not supported: Your currently installed release is now unsupported, and is no longer available for download. Disabling everything included in this release or upgrading is strongly recommended!');
+    $this->assertVersionUpdateLinks($new_version_label, $newer_version);
+  }
+
+  /**
+   * Asserts that the update table text contains the specified text.
+   *
+   * @param string $text
+   *   The expected text.
+   *
+   * @see \Behat\Mink\WebAssert::elementTextContains()
+   */
+  protected function assertUpdateTableTextContains($text) {
+    $this->assertSession()
+      ->elementTextContains('css', $this->updateTableLocator, $text);
+  }
+
+  /**
+   * Asserts that the update table element HTML contains the specified text.
+   *
+   * @param string $text
+   *   The expected text.
+   *
+   * @see \Behat\Mink\WebAssert::elementContains()
+   */
+  protected function assertUpdateTableElementContains($text) {
+    $this->assertSession()
+      ->elementContains('css', $this->updateTableLocator, $text);
+  }
+
 }

@@ -62,6 +62,13 @@ class UpdateCoreTest extends UpdateTestBase {
 
   /**
    * Tests the Update Manager module when no updates are available.
+   *
+   * The XML fixture file 'drupal.1.0.xml' which is one of the XML files this
+   * test uses also contains 2 extra releases that are newer than '8.0.1'. These
+   * releases will not show as available updates because of the following
+   * reasons:
+   * - '8.0.2' is an unpublished release.
+   * - '8.0.3' is marked as 'Release type' 'Unsupported'.
    */
   public function testNoUpdatesAvailable() {
     foreach ([0, 1] as $minor_version) {
@@ -231,6 +238,11 @@ class UpdateCoreTest extends UpdateTestBase {
    *   - 8.0.2 Insecure
    *   - 8.0.1 Insecure
    *   - 8.0.0 Insecure
+   * - drupal.sec.1.2_insecure-unsupported
+   *   This file has the exact releases as drupal.sec.1.2_insecure.xml. It has a
+   *   different value for 'supported_branches' that does not contain '8.0.'.
+   *   It is used to ensure that the "Security update required!" is displayed
+   *   even if the currently installed version is in an unsupported branch.
    * - drupal.sec.0.2-rc2-b.xml
    *   - 8.2.0-rc2
    *   - 8.2.0-rc1
@@ -304,6 +316,15 @@ class UpdateCoreTest extends UpdateTestBase {
         'expected_security_releases' => ['1.2'],
         'expected_update_message_type' => static::SECURITY_UPDATE_REQUIRED,
         'fixture' => 'sec.1.2_insecure',
+      ],
+      // No security release available for site minor release 0.
+      // Site minor is not a supported branch.
+      // Security release available for next minor.
+      '0.0, 1.2, insecure-unsupported' => [
+        'site_patch_version' => '0.0',
+        'expected_security_releases' => ['1.2'],
+        'expected_update_message_type' => static::SECURITY_UPDATE_REQUIRED,
+        'fixture' => 'sec.1.2_insecure-unsupported',
       ],
       // All releases for minor 0 are secure.
       // Security release available for next minor.
@@ -789,6 +810,53 @@ class UpdateCoreTest extends UpdateTestBase {
     $this->drupalGet('admin/reports/updates');
     $this->clickLink(t('Install new module or theme'));
     $this->assertUrl('admin/reports/updates/install');
+  }
+
+  /**
+   * Tests messages when a project release is unpublished.
+   *
+   * This test confirms that revoked messages are displayed regardless of
+   * whether the installed version is in a supported branch or not. This test
+   * relies on 2 test XML fixtures that are identical except for the
+   * 'supported_branches' value:
+   * - drupal.1.0.xml
+   *    'supported_branches' is '8.0.,8.1.'.
+   * - drupal.1.0-unsupported.xml
+   *    'supported_branches' is '8.1.'.
+   * They both have an '8.0.2' release that is unpublished and an '8.1.0'
+   * release that is published and is the expected update.
+   */
+  public function testRevokedRelease() {
+    foreach (['1.0', '1.0-unsupported'] as $fixture) {
+      $this->setSystemInfo('8.0.2');
+      $this->refreshUpdateStatus([$this->updateProject => $fixture]);
+      $this->standardTests();
+      $this->confirmRevokedStatus('8.0.2', '8.1.0', 'Recommended version:');
+    }
+  }
+
+  /**
+   * Tests messages when a project release is marked unsupported.
+   *
+   * This test confirms unsupported messages are displayed regardless of whether
+   * the installed version is in a supported branch or not. This test relies on
+   * 2 test XML fixtures that are identical except for the 'supported_branches'
+   * value:
+   * - drupal.1.0.xml
+   *    'supported_branches' is '8.0.,8.1.'.
+   * - drupal.1.0-unsupported.xml
+   *    'supported_branches' is '8.1.'.
+   * They both have an '8.0.3' release that that has the 'Release type' value of
+   * 'unsupported' and an '8.1.0' release that has the 'Release type' value of
+   * 'supported' and is the expected update.
+   */
+  public function testUnsupportedRelease() {
+    foreach (['1.0', '1.0-unsupported'] as $fixture) {
+      $this->setSystemInfo('8.0.3');
+      $this->refreshUpdateStatus([$this->updateProject => $fixture]);
+      $this->standardTests();
+      $this->confirmUnsupportedStatus('8.0.3', '8.1.0', 'Recommended version:');
+    }
   }
 
   /**
