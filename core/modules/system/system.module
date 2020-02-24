@@ -14,6 +14,7 @@ use Drupal\Core\Block\BlockPluginInterface;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Database\Query\AlterableInterface;
 use Drupal\Core\Extension\Extension;
+use Drupal\Core\Entity\ContentEntityTypeInterface;
 use Drupal\Core\File\Exception\FileException;
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Form\FormStateInterface;
@@ -1243,10 +1244,8 @@ function system_modules_uninstalled($modules) {
 
   $entity_definition_update_manager = \Drupal::entityDefinitionUpdateManager();
   foreach ($entity_definition_update_manager->getEntityTypes() as $entity_type) {
-    $revision_metadata_keys = $entity_type->get('revision_metadata_keys');
-    if ($revision_metadata_keys && array_key_exists('workspace', $revision_metadata_keys)) {
-      unset($revision_metadata_keys['workspace']);
-      $entity_type->set('revision_metadata_keys', $revision_metadata_keys);
+    if ($entity_type instanceof ContentEntityTypeInterface && $entity_type->hasRevisionMetadataKey('workspace')) {
+      $entity_type->setRevisionMetadataKey('workspace', NULL);
       $entity_definition_update_manager->updateEntityType($entity_type);
     }
   }

@@ -26,12 +26,8 @@ function entity_schema_test_entity_type_alter(array &$entity_types) {
       $keys = $entity_type->getKeys();
       $keys['revision'] = 'revision_id';
       $entity_type->set('entity_keys', $keys);
-      // We can't use getRevisionMetadataKeys() because it causes recursion.
-      $revision_metadata_keys = $entity_type->get('revision_metadata_keys');
-      $revision_metadata_keys = array_merge($revision_metadata_keys, [
-        'revision_log_message' => 'revision_log',
-      ]);
-      $entity_type->set('revision_metadata_keys', $revision_metadata_keys);
+
+      $entity_type->setRevisionMetadataKey('revision_log_message', 'revision_log');
     }
   }
 }

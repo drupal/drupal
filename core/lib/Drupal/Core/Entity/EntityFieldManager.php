@@ -232,9 +232,7 @@ class EntityFieldManager implements EntityFieldManagerInterface {
 
     // Make sure that revisionable entity types are correctly defined.
     if ($entity_type->isRevisionable()) {
-      // Disable the BC layer to prevent a recursion, this only needs the
-      // revision_default key that is always set.
-      $field_name = $entity_type->getRevisionMetadataKeys(FALSE)['revision_default'];
+      $field_name = $entity_type->getRevisionMetadataKey('revision_default');
       $base_field_definitions[$field_name] = BaseFieldDefinition::create('boolean')
         ->setLabel($this->t('Default revision'))
         ->setDescription($this->t('A flag indicating whether this was a default revision when it was saved.'))

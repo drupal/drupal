@@ -42,8 +42,7 @@ function workspaces_module_preinstall($module) {
   foreach ($entity_definition_update_manager->getEntityTypes() as $entity_type) {
     $revision_metadata_keys = $entity_type->get('revision_metadata_keys');
     if ($workspace_manager->isEntityTypeSupported($entity_type)) {
-      $revision_metadata_keys['workspace'] = 'workspace';
-      $entity_type->set('revision_metadata_keys', $revision_metadata_keys);
+      $entity_type->setRevisionMetadataKey('workspace', 'workspace');
       $entity_definition_update_manager->updateEntityType($entity_type);
     }
   }

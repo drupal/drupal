@@ -6,10 +6,13 @@
  */
 
 use Drupal\Core\Config\Entity\ConfigEntityUpdater;
+use Drupal\Core\Entity\ContentEntityType;
+use Drupal\Core\Entity\ContentEntityTypeInterface;
 use Drupal\Core\Entity\Display\EntityDisplayInterface;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Entity\Entity\EntityFormDisplay;
 use Drupal\Core\Entity\Entity\EntityViewDisplay;
+use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\Plugin\Field\FieldWidget\EntityReferenceAutocompleteWidget;
 
 /**
@@ -284,4 +287,32 @@ function system_post_update_uninstall_simpletest() {
  */
 function system_post_update_uninstall_entity_reference_module() {
   \Drupal::service('module_installer')->uninstall(['entity_reference']);
+}
+
+/**
+ * Remove backwards-compatibility leftovers from entity type definitions.
+ */
+function system_post_update_entity_revision_metadata_bc_cleanup() {
+  /** @var \Drupal\Core\Entity\EntityLastInstalledSchemaRepositoryInterface $last_installed_schema_repository */
+  $last_installed_schema_repository = \Drupal::service('entity.last_installed_schema.repository');
+
+  // Get a list of content entity types.
+  /** @var \Drupal\Core\Entity\EntityTypeInterface[] $last_installed_definitions */
+  $last_installed_definitions = array_filter($last_installed_schema_repository->getLastInstalledDefinitions(), function (EntityTypeInterface $entity_type) {
+    return $entity_type instanceof ContentEntityTypeInterface;
+  });
+
+  // Remove the '$requiredRevisionMetadataKeys' property for these entity types.
+  foreach ($last_installed_definitions as $entity_type_id => $entity_type) {
+    $closure = function (ContentEntityTypeInterface $entity_type) {
+      return get_object_vars($entity_type);
+    };
+    $closure = \Closure::bind($closure, NULL, $entity_type);
+
+    $entity_type_definition = $closure($entity_type);
+    unset($entity_type_definition["\x00*\x00requiredRevisionMetadataKeys"]);
+    $entity_type = new ContentEntityType($entity_type_definition);
+
+    $last_installed_schema_repository->setLastInstalledDefinition($entity_type);
+  }
 }
