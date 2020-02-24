@@ -2701,6 +2701,22 @@ $connection->insert('comment')
   'homepage' => '',
   'language' => 'is',
 ))
+->values(array(
+  'cid' => '4',
+  'pid' => '0',
+  'nid' => '1',
+  'uid' => '3',
+  'subject' => 'Comment without language',
+  'hostname' => 'drupal7.local',
+  'created' => '1426781880',
+  'changed' => '1426781880',
+  'status' => '1',
+  'thread' => '02/',
+  'name' => 'Bob',
+  'mail' => '',
+  'homepage' => '',
+  'language' => '',
+))
 ->execute();
 $connection->schema()->createTable('contact', array(
   'fields' => array(
@@ -3349,6 +3365,18 @@ $connection->insert('entity_translation')
   'translate' => '1',
   'created' => '1531663925',
   'changed' => '1531663925',
+))
+->values(array(
+  'entity_type' => 'comment',
+  'entity_id' => '4',
+  'revision_id' => '4',
+  'language' => 'en',
+  'source' => '',
+  'uid' => '1',
+  'status' => '1',
+  'translate' => '0',
+  'created' => '1426781880',
+  'changed' => '1426781880',
 ))
 ->values(array(
   'entity_type' => 'taxonomy_term',
@@ -5255,6 +5283,17 @@ $connection->insert('field_data_comment_body')
   'comment_body_value' => 'This is a comment to an Icelandic translation.',
   'comment_body_format' => 'filtered_html',
 ))
+->values(array(
+  'entity_type' => 'comment',
+  'bundle' => 'comment_node_test_content_type',
+  'deleted' => '0',
+  'entity_id' => '4',
+  'revision_id' => '4',
+  'language' => 'und',
+  'delta' => '0',
+  'comment_body_value' => 'A comment without language (migrated from Drupal 6)',
+  'comment_body_format' => 'filtered_html',
+))
 ->execute();
 $connection->schema()->createTable('field_data_description_field', array(
   'fields' => array(
@@ -6731,6 +6770,16 @@ $connection->insert('field_data_field_integer')
   'language' => 'is',
   'delta' => '0',
   'field_integer_value' => '1',
+))
+->values(array(
+  'entity_type' => 'comment',
+  'bundle' => 'comment_node_test_content_type',
+  'deleted' => '0',
+  'entity_id' => '4',
+  'revision_id' => '4',
+  'language' => 'en',
+  'delta' => '0',
+  'field_integer_value' => '10',
 ))
 ->values(array(
   'entity_type' => 'taxonomy_term',
@@ -9888,6 +9937,17 @@ $connection->insert('field_data_subject_field')
   'subject_field_value' => 'Comment to IS translation',
   'subject_field_format' => NULL,
 ))
+->values(array(
+  'entity_type' => 'comment',
+  'bundle' => 'comment_node_test_content_type',
+  'deleted' => '0',
+  'entity_id' => '4',
+  'revision_id' => '4',
+  'language' => 'en',
+  'delta' => '0',
+  'subject_field_value' => 'Comment without language',
+  'subject_field_format' => NULL,
+))
 ->execute();
 $connection->schema()->createTable('field_data_taxonomy_forums', array(
   'fields' => array(
@@ -10397,6 +10457,17 @@ $connection->insert('field_revision_comment_body')
   'language' => 'und',
   'delta' => '0',
   'comment_body_value' => 'This is a comment to an Icelandic translation.',
+  'comment_body_format' => 'filtered_html',
+))
+->values(array(
+  'entity_type' => 'comment',
+  'bundle' => 'comment_node_test_content_type',
+  'deleted' => '0',
+  'entity_id' => '4',
+  'revision_id' => '4',
+  'language' => 'und',
+  'delta' => '0',
+  'comment_body_value' => 'A comment without language (migrated from Drupal 6)',
   'comment_body_format' => 'filtered_html',
 ))
 ->execute();
@@ -11879,6 +11950,16 @@ $connection->insert('field_revision_field_integer')
   'language' => 'en',
   'delta' => '0',
   'field_integer_value' => '99',
+))
+->values(array(
+  'entity_type' => 'comment',
+  'bundle' => 'comment_node_test_content_type',
+  'deleted' => '0',
+  'entity_id' => '4',
+  'revision_id' => '4',
+  'language' => 'en',
+  'delta' => '0',
+  'field_integer_value' => '10',
 ))
 ->values(array(
   'entity_type' => 'taxonomy_term',
@@ -15050,6 +15131,17 @@ $connection->insert('field_revision_subject_field')
   'language' => 'is',
   'delta' => '0',
   'subject_field_value' => 'Comment to IS translation',
+  'subject_field_format' => NULL,
+))
+->values(array(
+  'entity_type' => 'comment',
+  'bundle' => 'comment_node_test_content_type',
+  'deleted' => '0',
+  'entity_id' => '4',
+  'revision_id' => '4',
+  'language' => 'en',
+  'delta' => '0',
+  'subject_field_value' => 'Comment without language',
   'subject_field_format' => NULL,
 ))
 ->execute();
@@ -40898,11 +40990,11 @@ $connection->insert('node_comment_statistics')
 ))
 ->values(array(
   'nid' => '1',
-  'cid' => '1',
-  'last_comment_timestamp' => '1421727536',
+  'cid' => '4',
+  'last_comment_timestamp' => '1426781880',
   'last_comment_name' => '',
-  'last_comment_uid' => '1',
-  'comment_count' => '1',
+  'last_comment_uid' => '3',
+  'comment_count' => '2',
 ))
 ->values(array(
   'nid' => '3',

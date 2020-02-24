@@ -105,6 +105,26 @@ class MigrateCommentTest extends MigrateDrupal7TestBase {
     $node = $comment->getCommentedEntity();
     $this->assertInstanceOf(NodeInterface::class, $node);
     $this->assertSame('2', $node->id());
+
+    // Tests a comment migrated from Drupal 6 to Drupal 7 that did not have a
+    // language.
+    $comment = Comment::load(4);
+    $this->assertInstanceOf(Comment::class, $comment);
+    $this->assertSame('Comment without language', $comment->getSubject());
+    $this->assertSame('1426781880', $comment->getCreatedTime());
+    $this->assertSame('1426781880', $comment->getChangedTime());
+    $this->assertTrue($comment->isPublished());
+    $this->assertSame('Bob', $comment->getAuthorName());
+    $this->assertSame('bob@local.host', $comment->getAuthorEmail());
+    $this->assertSame('A comment without language (migrated from Drupal 6)', $comment->comment_body->value);
+    $this->assertSame('filtered_html', $comment->comment_body->format);
+    $this->assertSame('drupal7.local', $comment->getHostname());
+    $this->assertSame('und', $comment->language()->getId());
+    $this->assertSame('10', $comment->field_integer->value);
+
+    $node = $comment->getCommentedEntity();
+    $this->assertInstanceOf(NodeInterface::class, $node);
+    $this->assertSame('1', $node->id());
   }
 
   /**
