@@ -186,7 +186,7 @@ interface MediaSourceInterface extends PluginInspectionInterface, ConfigurableIn
    *   A media item.
    *
    * @return mixed
-   *   The source value.
+   *   The source value, or NULL if the media item's source field is empty.
    *
    * @throws \RuntimeException
    *   If the source field for the media source is not defined.
