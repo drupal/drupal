@@ -51,3 +51,10 @@ services:
   inline_block.usage:
     class: Drupal\layout_builder\InlineBlockUsage
     arguments: ['@database']
+  layout_builder.controller.entity_form:
+    # Override the entity form controller to handle the entity layout_builder
+    # operation.
+    decorates: controller.entity_form
+    class: Drupal\layout_builder\Controller\LayoutBuilderHtmlEntityFormController
+    public: false
+    arguments: ['@layout_builder.controller.entity_form.inner']
