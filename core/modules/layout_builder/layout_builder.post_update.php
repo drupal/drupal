@@ -191,6 +191,13 @@ function layout_builder_post_update_update_permissions() {
 }
 
 /**
+ * Clear caches due to addition of service decorator for entity form controller.
+ */
+function layout_builder_post_update_override_entity_form_controller() {
+  // Empty post-update hook.
+}
+
+/**
  * Set the layout builder field as non-translatable where possible.
  */
 function layout_builder_post_update_make_layout_untranslatable() {
