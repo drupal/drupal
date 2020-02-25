@@ -126,6 +126,9 @@ class InstallCommand extends Command {
    *
    * @throws \Exception
    *   Thrown when failing to create the $site_path directory or settings.php.
+   *
+   * @return int
+   *   The command exit status.
    */
   protected function install($class_loader, SymfonyStyle $io, $profile, $langcode, $site_path, $site_name) {
     $password = Crypt::randomBytesBase64(12);
@@ -211,6 +214,8 @@ class InstallCommand extends Command {
     $progress_bar->finish();
     $io->writeln('<info>Username:</info> admin');
     $io->writeln("<info>Password:</info> $password");
+
+    return 0;
   }
 
   /**
