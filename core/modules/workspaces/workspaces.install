@@ -196,19 +196,5 @@ function workspaces_update_8803() {
     ]);
     $entity_type->setStorageClass(ContentEntityNullStorage::class);
     $entity_definition_update_manager->uninstallEntityType($entity_type);
-
-    // Delete the entity and field schema data.
-    $keys = [
-      'workspace_association.entity_schema_data',
-      'workspace_association.field_schema_data.id',
-      'workspace_association.field_schema_data.revision_id',
-      'workspace_association.field_schema_data.uuid',
-      'workspace_association.field_schema_data.revision_default',
-      'workspace_association.field_schema_data.target_entity_id',
-      'workspace_association.field_schema_data.target_entity_revision_id',
-      'workspace_association.field_schema_data.target_entity_type_id',
-      'workspace_association.field_schema_data.workspace',
-    ];
-    \Drupal::keyValue('entity.storage_schema.sql')->deleteMultiple($keys);
   }
 }
