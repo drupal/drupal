@@ -330,14 +330,12 @@ services:
     class: Drupal\Core\Config\ExportStorageManager
     arguments: ['@config.storage', '@database', '@event_dispatcher', '@lock']
     public: false
-  # @deprecated in Drupal 8.0.x and will be removed before 10.0.0. Use
-  #   config.storage.sync instead.
-  # @see https://www.drupal.org/node/2574957
-  config.storage.staging:
+  config.storage.sync:
     class: Drupal\Core\Config\FileStorage
     factory: Drupal\Core\Config\FileStorageFactory::getSync
-  config.storage.sync:
-    alias: config.storage.staging
+  config.storage.staging:
+    alias: config.storage.sync
+    deprecated: The "%alias_id%" service is deprecated in drupal:8.0.0 and is removed from drupal:10.0.0. Use the "config.storage.sync" service instead. See https://www.drupal.org/node/2574957
   config.storage.snapshot:
     class: Drupal\Core\Config\DatabaseStorage
     arguments: ['@database', config_snapshot]
