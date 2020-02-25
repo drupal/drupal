@@ -151,28 +151,11 @@
         check++;
       } while (!of);
 
-      function refinePopper(data) {
-        var isBelow = data.offsets.popper.top > data.offsets.reference.top;
+      function refinePopper(_ref) {
+        var state = _ref.state;
+        var isBelow = state.placement.split('-')[0] === 'bottom';
         var classListMethod = isBelow ? 'add' : 'remove';
-        data.instance.popper.classList[classListMethod]('quickedit-toolbar-pointer-top');
-
-        if (that.$entity[0] === data.instance.reference) {
-          var $field = that.$entity.find('.quickedit-editable').eq(isBelow ? -1 : 0);
-
-          if ($field.length > 0) {
-            data.offsets.popper.top = isBelow ? $field.offset().top + $field.outerHeight(true) : $field.offset().top - $(data.instance.reference).outerHeight(true);
-          }
-        }
-
-        var fenceTop = that.$fence.offset().top;
-        var fenceHeight = that.$fence.height();
-        var toolbarHeight = $(data.instance.popper).outerHeight(true);
-
-        if (data.offsets.popper.top < fenceTop) {
-          data.offsets.popper.top = fenceTop;
-        } else if (data.offsets.popper.top + toolbarHeight > fenceTop + fenceHeight) {
-          data.offsets.popper.top = fenceTop + fenceHeight - toolbarHeight;
-        }
+        state.elements.popper.classList[classListMethod]('quickedit-toolbar-pointer-top');
       }
 
       function positionToolbar() {
@@ -183,27 +166,40 @@
 
         if (referenceElement !== undefined) {
           if (!popperElement.classList.contains('js-popper-processed')) {
-            that.popper = new Popper(referenceElement, popperElement, {
+            that.popper = Popper.createPopper(referenceElement, popperElement, {
               placement: "top-".concat(popperedge),
-              modifiers: {
-                flip: {
-                  behavior: ['top', 'bottom']
-                },
-                computeStyle: {
-                  gpuAcceleration: false
-                },
-                preventOverflow: {
-                  boundariesElement: boundariesElement
+              modifiers: [{
+                name: 'flip',
+                options: {
+                  boundary: boundariesElement
                 }
-              },
-              onCreate: refinePopper,
-              onUpdate: refinePopper
+              }, {
+                name: 'preventOverflow',
+                options: {
+                  boundary: boundariesElement,
+                  tether: false,
+                  altAxis: true,
+                  padding: {
+                    top: 5,
+                    bottom: 5
+                  }
+                }
+              }, {
+                name: 'computeStyles',
+                options: {
+                  adaptive: false
+                }
+              }, {
+                name: 'refinePopper',
+                phase: 'write',
+                enabled: true,
+                fn: refinePopper
+              }]
             });
             popperElement.classList.add('js-popper-processed');
           } else {
-            that.popper.options.placement = "top-".concat(popperedge);
-            that.popper.reference = referenceElement[0] ? referenceElement[0] : referenceElement;
-            that.popper.update();
+            that.popper.state.elements.reference = referenceElement[0] ? referenceElement[0] : referenceElement;
+            that.popper.forceUpdate();
           }
         }
 

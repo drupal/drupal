@@ -44,6 +44,15 @@ class QuickEditIntegrationTest extends QuickEditJavascriptTestBase {
   protected $contentAuthorUser;
 
   /**
+   * CSS animations must be enabled for PopperJS positioning to work properly.
+   *
+   * @var bool
+   *
+   * @todo revisit in http://drupal.org/node/3082602
+   */
+  protected $disableCssAnimations = FALSE;
+
+  /**
    * {@inheritdoc}
    */
   protected function setUp() {

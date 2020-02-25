@@ -95,6 +95,11 @@ drupal.autocomplete:
     - core/drupal.ajax
     - core/jquery.ui.autocomplete
 
+drupal.array.find:
+  version: VERSION
+  js:
+    misc/polyfills/array.find.js: { weight: -20 }
+
 drupal.batch:
   version: VERSION
   js:
@@ -227,6 +232,11 @@ drupal.message:
     - core/drupal
     - core/drupal.announce
 
+drupal.object.assign:
+  version: VERSION
+  js:
+    misc/polyfills/object.assign.js: { weight: -20 }
+
 drupal.progress:
   version: VERSION
   js:
@@ -320,6 +330,15 @@ drupal.vertical-tabs:
     - core/drupal
     - core/drupalSettings
     - core/drupal.form
+
+es6-promise:
+  version: "4.2.8"
+  license:
+    name: MIT
+    url: https://github.com/stefanpenner/es6-promise/blob/v4.2.8/LICENSE
+    gpl-compatible: true
+  js:
+    assets/vendor/es6-promise/es6-promise.auto.min.js: { weight: -20, minified: true }
 
 jquery:
   remote: https://github.com/jquery/jquery
@@ -602,13 +621,17 @@ picturefill:
     assets/vendor/picturefill/picturefill.min.js: { weight: -10, minified: true }
 
 popperjs:
-  version: "1.16.0"
+  version: "2.0.6"
   license:
     name: MIT
-    url: https://github.com/popperjs/popper.js/blob/v1.16.0/LICENSE.md
+    url: https://github.com/popperjs/popper-core/blob/v2.0.6/LICENSE.md
     gpl-compatible: true
   js:
     assets/vendor/popperjs/popper.min.js: { minified: true }
+  dependencies:
+    - core/drupal.array.find
+    - core/es6-promise
+    - core/drupal.object.assign
 
 sortable:
   remote: https://github.com/SortableJS/Sortable
