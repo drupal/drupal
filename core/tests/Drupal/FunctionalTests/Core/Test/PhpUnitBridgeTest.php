@@ -16,6 +16,11 @@ class PhpUnitBridgeTest extends BrowserTestBase {
   protected static $modules = ['deprecation_test'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * @expectedDeprecation This is the deprecation message for deprecation_test_function().
    */
   public function testSilencedError() {

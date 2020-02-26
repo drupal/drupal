@@ -400,6 +400,9 @@ trait FunctionalTestSetupTrait {
    *
    * @param \Symfony\Component\DependencyInjection\ContainerInterface $container
    *   The container.
+   *
+   * @throws \Exception
+   *   If the test case does not initialize default theme.
    */
   protected function installDefaultThemeFromClassProperty(ContainerInterface $container) {
     // Use the install profile to determine the default theme if configured and
@@ -420,11 +423,7 @@ trait FunctionalTestSetupTrait {
 
     // Require a default theme to be specified at this point.
     if (!isset($this->defaultTheme)) {
-      // For backwards compatibility, tests using the 'testing' install profile
-      // on Drupal 8 automatically get 'classy' set, and other profiles use
-      // 'stark'.
-      @trigger_error('Drupal\Tests\BrowserTestBase::$defaultTheme is required in drupal:9.0.0 when using an install profile that does not set a default theme. See https://www.drupal.org/node/3083055, which includes recommendations on which theme to use.', E_USER_DEPRECATED);
-      $this->defaultTheme = $profile === 'testing' ? 'classy' : 'stark';
+      throw new \Exception('Drupal\Tests\BrowserTestBase::$defaultTheme is required. See https://www.drupal.org/node/3083055, which includes recommendations on which theme to use.');
     }
 
     // Ensure the default theme is installed.

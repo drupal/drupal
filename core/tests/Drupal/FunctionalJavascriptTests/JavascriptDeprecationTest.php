@@ -13,6 +13,11 @@ class JavascriptDeprecationTest extends WebDriverTestBase {
   public static $modules = ['js_deprecation_test'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * @expectedDeprecation Javascript Deprecation: This function is deprecated for testing purposes.
    * @expectedDeprecation Javascript Deprecation: This property is deprecated for testing purposes.
    */

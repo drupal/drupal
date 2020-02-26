@@ -15,6 +15,11 @@ use Drupal\Tests\UpdatePathTestTrait;
 class NoPreExistingSchemaUpdateTest extends BrowserTestBase {
   use UpdatePathTestTrait;
 
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
   protected function setUp() {
     parent::setUp();
     $connection = Database::getConnection();
