@@ -695,10 +695,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
     $query->addTag($this->entityTypeId . '_load_multiple');
 
     if ($revision_ids) {
-      if (!is_array($revision_ids)) {
-        @trigger_error('Passing a single revision ID to "\Drupal\Core\Entity\Sql\SqlContentEntityStorage::buildQuery()" is deprecated in Drupal 8.5.x and will be removed before Drupal 9.0.0. An array of revision IDs should be given instead. See https://www.drupal.org/node/2924915.', E_USER_DEPRECATED);
-      }
-      $query->join($this->revisionTable, 'revision', "revision.{$this->idKey} = base.{$this->idKey} AND revision.{$this->revisionKey} IN (:revisionIds[])", [':revisionIds[]' => (array) $revision_ids]);
+      $query->join($this->revisionTable, 'revision', "revision.{$this->idKey} = base.{$this->idKey} AND revision.{$this->revisionKey} IN (:revisionIds[])", [':revisionIds[]' => $revision_ids]);
     }
     elseif ($this->revisionTable) {
       $query->join($this->revisionTable, 'revision', "revision.{$this->revisionKey} = base.{$this->revisionKey}");

@@ -130,13 +130,6 @@ class EntityDefinitionUpdateManager implements EntityDefinitionUpdateManagerInte
   /**
    * {@inheritdoc}
    */
-  public function applyUpdates() {
-    trigger_error('EntityDefinitionUpdateManagerInterface::applyUpdates() is deprecated in 8.7.0 and will be removed before Drupal 9.0.0. Use \Drupal\Core\Entity\EntityDefinitionUpdateManagerInterface::getChangeList() and execute each entity type and field storage update manually instead. See https://www.drupal.org/node/3034742.', E_USER_DEPRECATED);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function getEntityType($entity_type_id) {
     $entity_type = $this->entityLastInstalledSchemaRepository->getLastInstalledDefinition($entity_type_id);
     return $entity_type ? clone $entity_type : NULL;

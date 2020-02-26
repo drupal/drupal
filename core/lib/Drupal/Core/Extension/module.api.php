@@ -583,9 +583,6 @@ function hook_install_tasks_alter(&$tasks, $install_state) {
  *   \Drupal::entityDefinitionUpdateManager()::getFieldStorageDefinition(). When
  *   adding a new definition always replicate it in the update function body as
  *   you would do with a schema definition.
- * - Never call \Drupal::entityDefinitionUpdateManager()::applyUpdates() in an
- *   update function, as it will apply updates for any module not only yours,
- *   which will lead to unpredictable results.
  * - Be careful about API functions and especially CRUD operations that you use
  *   in your update function. If they invoke hooks or use services, they may
  *   not behave as expected, and it may actually not be appropriate to use the
