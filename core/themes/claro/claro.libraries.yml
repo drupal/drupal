@@ -6,6 +6,19 @@ global-styling:
       css/base/typography.css: {}
       css/base/print.css: {}
     component:
+      css/classy/components/container-inline.css: {}
+      css/classy/components/exposed-filters.css: {}
+      css/classy/components/field.css: {}
+      css/classy/components/icons.css: {}
+      css/classy/components/inline-form.css: {}
+      css/classy/components/item-list.css: {}
+      css/classy/components/link.css: {}
+      css/classy/components/links.css: {}
+      css/classy/components/menu.css: {}
+      css/classy/components/more-link.css: {}
+      css/classy/components/tablesort.css: {}
+      css/classy/components/textarea.css: {}
+      css/classy/components/ui-dialog.css: {}
       css/components/accordion.css: {}
       css/components/action-link.css: {}
       css/components/content-header.css: {}
@@ -41,6 +54,7 @@ global-styling:
       css/components/system-status-report.css: {}
       css/components/system-status-report-counters.css: {}
       css/components/system-status-counter.css: {}
+      css/components/tableselect.css: {}
       css/components/tabs.css: {}
       css/components/views-ui.css: {}
     theme:
@@ -63,14 +77,6 @@ global-styling:
     # links, it is hard recognize when Modernizr should be attached, therefore
     # it has to be always attached.
     - core/modernizr
-
-# Drupal throws an IncompleteLibraryDefinitionException if a base theme defined
-# library is set to false in a subtheme's libraries-override. This empty
-# library is used as a workaround.
-# @see https://www.drupal.org/node/3098375
-empty:
-  version: VERSION
-  css: {}
 
 node-form:
   version: VERSION

@@ -12,13 +12,15 @@
 # and understand that Claro could break your modifications as it changes.
 name: Claro
 type: theme
-base theme: classy
+base theme: stable
 description: 'A clean, accessible, and powerful Drupal administration theme.'
 alt text: 'Screenshot of Claro, Drupal administration theme.'
 package: Core
 version: VERSION
 experimental: true
 libraries:
+ - core/drupal.message
+ - core/normalize
  - claro/global-styling
 libraries-override:
   system/base:
@@ -62,68 +64,6 @@ libraries-override:
       component:
         assets/vendor/jquery.ui/themes/base/dialog.css: false
 
-  classy/dialog: claro/claro.drupal.dialog
-
-  classy/base:
-    css:
-      component:
-        css/components/action-links.css: false
-        css/components/breadcrumb.css: false
-        css/components/button.css: false
-        css/components/collapse-processed.css: false
-        css/components/container-inline.css: css/classy/components/container-inline.css
-        css/components/details.css: false
-        css/components/dropbutton.css: false
-        css/components/exposed-filters.css: css/classy/components/exposed-filters.css
-        css/components/field.css: css/classy/components/field.css
-        css/components/form.css: false
-        css/components/icons.css: css/classy/components/icons.css
-        css/components/inline-form.css: css/classy/components/inline-form.css
-        css/components/item-list.css: css/classy/components/item-list.css
-        css/components/link.css: css/classy/components/link.css
-        css/components/links.css: css/classy/components/links.css
-        css/components/menu.css: css/classy/components/menu.css
-        css/components/more-link.css: css/classy/components/more-link.css
-        css/components/pager.css: false
-        css/components/tabledrag.css: false
-        css/components/tableselect.css: css/components/tableselect.css
-        css/components/tablesort.css: css/classy/components/tablesort.css
-        css/components/tabs.css: false
-        css/components/textarea.css: css/classy/components/textarea.css
-        css/components/ui-dialog.css: css/classy/components/ui-dialog.css
-
-  classy/book-navigation: claro/classy.book-navigation
-
-  classy/dropbutton:
-    css:
-      component:
-        css/components/dropbutton.css: false
-
-  classy/file: claro/classy.file
-
-  classy/forum: claro/classy.forum
-
-  classy/image-widget: claro/image-widget
-
-  classy/indented: claro/classy.indented
-
-  classy/media_embed_ckeditor_theme: claro/classy.media_embed_ckeditor_theme
-
-  classy/media_embed_error: claro/classy.media_embed_error
-
-  classy/messages:
-    css:
-      component:
-        css/components/messages.css: false
-
-  classy/node: claro/classy.node
-
-  classy/progress: claro/progress
-
-  classy/search-results: claro/classy.search-results
-
-  classy/user: false
-
   user/drupal.user: claro/form.password-confirm
 
   field_ui/drupal.field_ui:
@@ -145,12 +85,6 @@ libraries-override:
     css:
       theme:
         /core/themes/stable/css/views_ui/views_ui.admin.theme.css: css/theme/views_ui.admin.theme.css
-
-  # Drupal throws an IncompleteLibraryDefinitionException if a base theme
-  # defined library is set to false in a subtheme's libraries-override. We use
-  # 'claro/empty' for working around this behavior.
-  # @see https://www.drupal.org/node/3098375
-  classy/media_library: claro/empty
 
 libraries-extend:
   ckeditor/drupal.ckeditor:

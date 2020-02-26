@@ -13,6 +13,7 @@ use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Entity\Entity\EntityFormDisplay;
 use Drupal\Core\Entity\Entity\EntityViewDisplay;
 use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\Core\Extension\Exception\UnknownExtensionException;
 use Drupal\Core\Field\Plugin\Field\FieldWidget\EntityReferenceAutocompleteWidget;
 
 /**
@@ -314,5 +315,20 @@ function system_post_update_entity_revision_metadata_bc_cleanup() {
     $entity_type = new ContentEntityType($entity_type_definition);
 
     $last_installed_schema_repository->setLastInstalledDefinition($entity_type);
+  }
+}
+
+/**
+ * Uninstall Classy if it is no longer needed.
+ */
+function system_post_update_uninstall_classy() {
+  /** @var \Drupal\Core\Extension\ThemeInstallerInterface $theme_installer */
+  $theme_installer = \Drupal::getContainer()->get('theme_installer');
+  try {
+    $theme_installer->uninstall(['classy']);
+  }
+  catch (\InvalidArgumentException | UnknownExtensionException $exception) {
+    // Exception is thrown if Classy wasn't installed or if there are themes
+    // depending on it.
   }
 }

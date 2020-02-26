@@ -1,31 +1,17 @@
 name: Umami
 type: theme
-base theme: classy
+base theme: stable
 description: 'The theme used for the Umami food magazine demonstration site.'
 version: VERSION
 libraries:
+  - umami/classy.base
+  - core/normalize
   - umami/global
   - umami/messages
   - umami/webfonts-open-sans
   - umami/webfonts-scope-one
 
 libraries-override:
-  classy/base: umami/classy.base
-  classy/book-navigation: umami/classy.book-navigation
-  classy/dialog: umami/classy.dialog
-  classy/dropbutton: umami/classy.dropbutton
-  classy/file: umami/classy.file
-  classy/forum: umami/classy.forum
-  classy/image-widget: umami/classy.image-widget
-  classy/indented: umami/classy.indented
-  classy/media_embed_ckeditor_theme: umami/classy.media_embed_ckeditor_theme
-  classy/media_embed_error: umami/classy.media_embed_error
-  classy/media_library: umami/classy.media_library
-  classy/messages: false
-  classy/node: umami/classy.node
-  classy/progress: umami/classy.progress
-  classy/search-results: umami/classy.search-results
-  classy/user: umami/classy.user
   layout_builder/twocol_section:
     css:
       theme:

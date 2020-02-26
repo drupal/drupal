@@ -6,6 +6,28 @@ global-styling:
       css/base/typography.css: {}
       css/base/print.css: {}
     component:
+      css/classy/components/action-links.css: {}
+      css/classy/components/breadcrumb.css: {}
+      css/classy/components/button.css: {}
+      css/classy/components/collapse-processed.css: {}
+      css/classy/components/container-inline.css: {}
+      css/classy/components/exposed-filters.css: {}
+      css/classy/components/field.css: {}
+      css/classy/components/form.css: {}
+      css/classy/components/icons.css: {}
+      css/classy/components/inline-form.css: {}
+      css/classy/components/item-list.css: {}
+      css/classy/components/link.css: {}
+      css/classy/components/links.css: {}
+      css/classy/components/menu.css: {}
+      css/classy/components/more-link.css: {}
+      css/classy/components/pager.css: {}
+      css/classy/components/tabledrag.css: {}
+      css/classy/components/tableselect.css: {}
+      css/classy/components/tablesort.css: {}
+      css/classy/components/tabs.css: {}
+      css/classy/components/textarea.css: {}
+      css/classy/components/ui-dialog.css: {}
       css/components/admin-list.css: {}
       css/components/content-header.css: {}
       css/components/container-inline.css: {}

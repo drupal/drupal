@@ -13,5 +13,5 @@ dependencies:
   module:
     - block_test
   theme:
-    - classy
+    - stark
 visibility: {  }

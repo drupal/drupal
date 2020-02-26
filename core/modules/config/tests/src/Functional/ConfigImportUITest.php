@@ -84,8 +84,8 @@ class ConfigImportUITest extends BrowserTestBase {
     $core_extension['module']['automated_cron'] = 0;
     $core_extension['module']['ban'] = 0;
     $core_extension['module'] = module_config_sort($core_extension['module']);
-    // Bartik is a subtheme of classy so classy must be enabled.
-    $core_extension['theme']['classy'] = 0;
+    // Bartik is a subtheme of Stable so Stable must be enabled.
+    $core_extension['theme']['stable'] = 0;
     $core_extension['theme']['bartik'] = 0;
     $sync->write('core.extension', $core_extension);
 
@@ -503,10 +503,10 @@ class ConfigImportUITest extends BrowserTestBase {
     unset($core['module']['text']);
     $module_data = $this->container->get('extension.list.module')->getList();
     $this->assertTrue(isset($module_data['node']->requires['text']), 'The Node module depends on the Text module.');
-    // Bartik depends on classy.
-    unset($core['theme']['classy']);
+    // Bartik depends on Stable.
+    unset($core['theme']['stable']);
     $theme_data = \Drupal::service('theme_handler')->rebuildThemeData();
-    $this->assertTrue(isset($theme_data['bartik']->requires['classy']), 'The Bartik theme depends on the Classy theme.');
+    $this->assertTrue(isset($theme_data['bartik']->requires['stable']), 'The Bartik theme depends on the Stable theme.');
     // This module does not exist.
     $core['module']['does_not_exist'] = 0;
     // This theme does not exist.
@@ -516,7 +516,7 @@ class ConfigImportUITest extends BrowserTestBase {
     $this->drupalPostForm('admin/config/development/configuration', [], t('Import all'));
     $this->assertText('The configuration cannot be imported because it failed validation for the following reasons:');
     $this->assertText('Unable to uninstall the Text module since the Node module is installed.');
-    $this->assertText('Unable to uninstall the Classy theme since the Bartik theme is installed.');
+    $this->assertText('Unable to uninstall the Stable theme since the Bartik theme is installed.');
     $this->assertText('Unable to install the does_not_exist module since it does not exist.');
     $this->assertText('Unable to install the does_not_exist theme since it does not exist.');
   }

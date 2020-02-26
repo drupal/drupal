@@ -27,7 +27,7 @@ class MaintenanceThemeTest extends KernelTestBase {
 
     $base_themes = $active_theme->getBaseThemeExtensions();
     $base_theme_names = array_keys($base_themes);
-    $this->assertSame(['classy', 'stable'], $base_theme_names);
+    $this->assertSame(['stable'], $base_theme_names);
   }
 
 }

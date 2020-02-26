@@ -189,12 +189,6 @@ classy.forum:
     component:
       css/classy/components/forum.css: { weight: -10 }
 
-classy.image-widget:
-  version: VERSION
-  css:
-    component:
-      css/classy/components/image-widget.css: {}
-
 classy.indented:
   version: VERSION
   css:
