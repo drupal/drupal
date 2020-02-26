@@ -23,9 +23,34 @@ class DrupalDateTime extends DateTimePlus {
   use StringTranslationTrait;
 
   /**
-   * Format string translation cache.
+   * Formatted strings translation cache.
    *
-   * @var string
+   * Translation cache represents an instance storage for formatted date
+   * strings. It contains a multidimensional array where:
+   * - first level keys - are drupal language codes;
+   * - second level keys - are each symbols of given format string (like 'F');
+   * - third level keys - are original matched strings related to the symbol;
+   * - values - are translated or not-translated original strings (depends on
+   *   if a particular symbol represents translatable value according to PHP's
+   *   date() format character).
+   *
+   * For example:
+   * @code
+   *   [
+   *     'en' => [
+   *       'F' => [
+   *         'November' => t('November'),
+   *         'December' => t('December'),
+   *       ],
+   *       'd' => [
+   *         '10' => '10',
+   *         '31' => '31',
+   *       ],
+   *     ],
+   *   ]
+   * @endcode
+   *
+   * @var array
    */
   protected $formatTranslationCache;
 
