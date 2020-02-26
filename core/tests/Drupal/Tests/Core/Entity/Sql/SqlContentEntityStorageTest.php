@@ -1451,18 +1451,6 @@ class SqlContentEntityStorageTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::getFieldStorageDefinitions
-   *
-   * @expectedDeprecation SqlContentEntityStorage::getFieldStorageDefinitions() is deprecated in Drupal 8.7.0 and will be removed before Drupal 9.0.0. Use \Drupal\Core\Entity\EntityFieldManagerInterface::getActiveFieldStorageDefinitions() instead. See https://www.drupal.org/node/3040966.
-   *
-   * @group legacy
-   */
-  public function testGetFieldStorageDefinitions() {
-    $this->setUpEntityStorage();
-    $this->entityStorage->getFieldStorageDefinitions();
-  }
-
-  /**
    * Sets up the module handler with no implementations.
    */
   protected function setUpModuleHandlerNoImplementations() {

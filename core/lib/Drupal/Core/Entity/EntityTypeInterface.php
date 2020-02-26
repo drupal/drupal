@@ -476,62 +476,6 @@ interface EntityTypeInterface extends PluginDefinitionInterface {
   public function setLinkTemplate($key, $path);
 
   /**
-   * Gets the callback for the label of the entity.
-   *
-   * The function takes an entity and returns the label of the entity. Use
-   * language() on the entity to get information on the requested language. The
-   * entity label is the main string associated with an entity; for example, the
-   * title of a node or the subject of a comment. If there is an entity object
-   * property that defines the label, use the 'label' element of the
-   * 'entity_keys' return value component to provide this information. If more
-   * complex logic is needed to determine the label of an entity, you can
-   * instead specify a callback function here, which will be called to determine
-   * the entity label.
-   *
-   * @return callable|null
-   *   The callback, or NULL if none exists.
-   *
-   * @deprecated in drupal:8.0.0 and is removed from drupal:9.0.0. Override the
-   *   EntityInterface::label() method instead for dynamic labels.
-   *
-   * @see \Drupal\Core\Entity\EntityInterface::label()
-   * @see \Drupal\Core\Entity\EntityTypeInterface::setLabelCallback()
-   * @see \Drupal\Core\Entity\EntityTypeInterface::hasLabelCallback()
-   */
-  public function getLabelCallback();
-
-  /**
-   * Sets the label callback.
-   *
-   * @param callable $callback
-   *   A callable that returns the label of the entity.
-   *
-   * @return $this
-   *
-   * @deprecated in drupal:8.0.0 and is removed from drupal:9.0.0. Override the
-   *   EntityInterface::label() method instead for dynamic labels.
-   *
-   * @see \Drupal\Core\Entity\EntityInterface::label()
-   * @see \Drupal\Core\Entity\EntityTypeInterface::getLabelCallback()
-   * @see \Drupal\Core\Entity\EntityTypeInterface::hasLabelCallback()
-   */
-  public function setLabelCallback($callback);
-
-  /**
-   * Indicates if a label callback exists.
-   *
-   * @return bool
-   *
-   * @deprecated in drupal:8.0.0 and is removed from drupal:9.0.0. Override the
-   *   EntityInterface::label() method instead for dynamic labels.
-   *
-   * @see \Drupal\Core\Entity\EntityInterface::label()
-   * @see \Drupal\Core\Entity\EntityTypeInterface::getLabelCallback()
-   * @see \Drupal\Core\Entity\EntityTypeInterface::setLabelCallback()
-   */
-  public function hasLabelCallback();
-
-  /**
    * Gets the name of the entity type which provides bundles.
    *
    * @return string|null
@@ -655,20 +599,6 @@ interface EntityTypeInterface extends PluginDefinitionInterface {
    *   The human-readable name of the entity type.
    */
   public function getLabel();
-
-  /**
-   * Gets the lowercase form of the human-readable entity type name.
-   *
-   * @return string
-   *   The lowercase form of the human-readable entity type name.
-   *
-   * @deprecated in drupal:8.8.0 and is removed from drupal:9.0.0.
-   *   Instead, you should call getSingularLabel().
-   *   See https://www.drupal.org/node/3075567
-   *
-   * @see \Drupal\Core\Entity\EntityTypeInterface::getLabel()
-   */
-  public function getLowercaseLabel();
 
   /**
    * Gets the uppercase plural form of the name of the entity type.

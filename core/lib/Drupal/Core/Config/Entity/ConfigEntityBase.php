@@ -377,31 +377,6 @@ abstract class ConfigEntityBase extends EntityBase implements ConfigEntityInterf
   /**
    * {@inheritdoc}
    */
-  public function urlInfo($rel = 'edit-form', array $options = []) {
-    // Unless language was already provided, avoid setting an explicit language.
-    $options += ['language' => NULL];
-    return parent::urlInfo($rel, $options);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function url($rel = 'edit-form', $options = []) {
-    // Do not remove this override: the default value of $rel is different.
-    return parent::url($rel, $options);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function link($text = NULL, $rel = 'edit-form', array $options = []) {
-    // Do not remove this override: the default value of $rel is different.
-    return parent::link($text, $rel, $options);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function toUrl($rel = 'edit-form', array $options = []) {
     // Unless language was already provided, avoid setting an explicit language.
     $options += ['language' => NULL];

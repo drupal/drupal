@@ -98,12 +98,4 @@ class EntityTypeRepository implements EntityTypeRepositoryInterface {
     throw new NoCorrespondingEntityClassException($class_name);
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function clearCachedDefinitions() {
-    @trigger_error(__METHOD__ . ' is deprecated in drupal:8.0.0 and is removed in drupal:9.0.0', E_USER_DEPRECATED);
-    $this->classNameEntityTypeMap = [];
-  }
-
 }

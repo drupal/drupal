@@ -98,26 +98,6 @@ interface EntityInterface extends AccessibleInterface, CacheableDependencyInterf
   /**
    * Gets the URL object for the entity.
    *
-   * @param string $rel
-   *   The link relationship type, for example: canonical or edit-form.
-   * @param array $options
-   *   See \Drupal\Core\Routing\UrlGeneratorInterface::generateFromRoute() for
-   *   the available options.
-   *
-   * @return \Drupal\Core\Url
-   *   The URL object.
-   *
-   * @deprecated in drupal:8.0.0 and is removed from drupal:9.0.0.
-   *   Use \Drupal\Core\Entity\EntityInterface::toUrl() instead.
-   *
-   * @see https://www.drupal.org/node/2614344
-   * @see \Drupal\Core\Entity\EntityInterface::toUrl
-   */
-  public function urlInfo($rel = 'canonical', array $options = []);
-
-  /**
-   * Gets the URL object for the entity.
-   *
    * The entity must have an id already. Content entities usually get their IDs
    * by saving them.
    *
@@ -152,49 +132,6 @@ interface EntityInterface extends AccessibleInterface, CacheableDependencyInterf
    * @throws \Drupal\Core\Entity\Exception\UndefinedLinkTemplateException
    */
   public function toUrl($rel = 'canonical', array $options = []);
-
-  /**
-   * Gets the public URL for this entity.
-   *
-   * @param string $rel
-   *   The link relationship type, for example: canonical or edit-form.
-   * @param array $options
-   *   See \Drupal\Core\Routing\UrlGeneratorInterface::generateFromRoute() for
-   *   the available options.
-   *
-   * @return string
-   *   The URL for this entity.
-   *
-   * @deprecated in drupal:8.0.0 and is removed from drupal:9.0.0.
-   *   Please use toUrl() instead.
-   *
-   * @see https://www.drupal.org/node/2614344
-   * @see \Drupal\Core\Entity\EntityInterface::toUrl
-   */
-  public function url($rel = 'canonical', $options = []);
-
-  /**
-   * Deprecated way of generating a link to the entity. See toLink().
-   *
-   * @param string|null $text
-   *   (optional) The link text for the anchor tag as a translated string.
-   *   If NULL, it will use the entity's label. Defaults to NULL.
-   * @param string $rel
-   *   (optional) The link relationship type. Defaults to 'canonical'.
-   * @param array $options
-   *   See \Drupal\Core\Routing\UrlGeneratorInterface::generateFromRoute() for
-   *   the available options.
-   *
-   * @return string
-   *   An HTML string containing a link to the entity.
-   *
-   * @deprecated in drupal:8.0.0 and is removed from drupal:9.0.0.
-   *   Use \Drupal\Core\EntityInterface::toLink()->toString() instead.
-   *
-   * @see https://www.drupal.org/node/2614344
-   * @see \Drupal\Core\Entity\EntityInterface::toLink()
-   */
-  public function link($text = NULL, $rel = 'canonical', array $options = []);
 
   /**
    * Generates the HTML for a link to this entity.

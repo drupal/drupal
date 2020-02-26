@@ -98,26 +98,6 @@ interface EntityDefinitionUpdateManagerInterface {
   public function getChangeList();
 
   /**
-   * Applies all the detected valid changes.
-   *
-   * Use this with care, as it will apply updates for any module, which will
-   * lead to unpredictable results.
-   *
-   * @throws \Drupal\Core\Entity\EntityStorageException
-   *   This exception is thrown if a change cannot be applied without
-   *   unacceptable data loss. In such a case, the site administrator needs to
-   *   apply some other process, such as a custom update function or a
-   *   migration via the Migrate module.
-   *
-   * @deprecated in drupal:8.7.0 and is removed from drupal:9.0.0. Use
-   *    \Drupal\Core\Entity\EntityDefinitionUpdateManagerInterface::getChangeList()
-   *    and execute each entity type and field storage update manually instead.
-   *
-   * @see https://www.drupal.org/node/3034742
-   */
-  public function applyUpdates();
-
-  /**
    * Returns an entity type definition ready to be manipulated.
    *
    * When needing to apply updates to existing entity type definitions, this

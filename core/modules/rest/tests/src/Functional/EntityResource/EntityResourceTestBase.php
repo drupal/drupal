@@ -98,8 +98,8 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
   protected static $uniqueFieldNames = [];
 
   /**
-   * Optionally specify which field is the 'label' field. Some entities specify
-   * a 'label_callback', but not a 'label' entity key. For example: User.
+   * Optionally specify which field is the 'label' field. Some entities do not
+   * specify a 'label' entity key. For example: User.
    *
    * @see ::getInvalidNormalizedEntityToCreate
    *

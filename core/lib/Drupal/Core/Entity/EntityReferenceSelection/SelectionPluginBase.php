@@ -35,8 +35,6 @@ abstract class SelectionPluginBase extends PluginBase implements SelectionInterf
   public function defaultConfiguration() {
     return [
       'target_type' => NULL,
-      // @todo Remove this key in Drupal 9.0.x.
-      'handler' => $this->getPluginId(),
       'entity' => NULL,
     ];
   }
@@ -52,17 +50,11 @@ abstract class SelectionPluginBase extends PluginBase implements SelectionInterf
    * {@inheritdoc}
    */
   public function setConfiguration(array $configuration) {
-    // Resolve backward compatibility level configurations, if any.
-    $this->resolveBackwardCompatibilityConfiguration($configuration);
-
     // Merge in defaults.
     $this->configuration = NestedArray::mergeDeep(
       $this->defaultConfiguration(),
       $configuration
     );
-
-    // Ensure a backward compatibility level configuration.
-    $this->ensureBackwardCompatibilityConfiguration();
   }
 
   /**
@@ -93,76 +85,5 @@ abstract class SelectionPluginBase extends PluginBase implements SelectionInterf
    * {@inheritdoc}
    */
   public function entityQueryAlter(SelectInterface $query) {}
-
-  /**
-   * Moves the backward compatibility level configurations in the right place.
-   *
-   * In order to keep backward compatibility, we copy all settings, except
-   * 'target_type', 'handler' and 'entity' under 'handler_settings', following
-   * the structure from the field config. If the plugin was instantiated using
-   * the 'handler_settings' level, those values will be used. In case of
-   * conflict, the root level settings will take precedence. The backward
-   * compatibility aware configuration will have the next structure:
-   * - target_type
-   * - handler (will be removed in Drupal 9.0.x, it's the plugin id)
-   * - entity
-   * - setting_1
-   * - setting_2
-   *   ...
-   * - setting_N
-   * - handler_settings: (will be removed in Drupal 9.0.x)
-   *   - setting_1
-   *   - setting_2
-   *     ...
-   *   - setting_N
-   *
-   * @param array $configuration
-   *   The configuration array to be altered.
-   *
-   * @internal
-   *
-   * @todo Remove this method call and its method in Drupal 9.
-   *
-   * @see https://www.drupal.org/project/drupal/issues/3069757
-   * @see https://www.drupal.org/node/2870971
-   */
-  protected function resolveBackwardCompatibilityConfiguration(array &$configuration) {
-    if (isset($this->defaultConfiguration()['handler_settings'])) {
-      throw new \InvalidArgumentException("{$this->getPluginDefinition()['class']}::defaultConfiguration() should not contain a 'handler_settings' key. All settings should be placed in the root level.");
-    }
-
-    // Extract the BC level from the passed configuration, if any.
-    if (array_key_exists('handler_settings', $configuration)) {
-      if (!is_array($configuration['handler_settings'])) {
-        throw new \InvalidArgumentException("The setting 'handler_settings' is reserved and cannot be used.");
-      }
-      @trigger_error("Providing settings under 'handler_settings' is deprecated in drupal:8.4.0 support for 'handler_settings' is removed from drupal:9.0.0. Move the settings in the root of the configuration array. See https://www.drupal.org/node/2870971", E_USER_DEPRECATED);
-
-      // Settings passed in the root level take precedence over BC settings.
-      $configuration += $configuration['handler_settings'];
-      unset($configuration['handler_settings']);
-    }
-  }
-
-  /**
-   * Ensures a backward compatibility level configuration.
-   *
-   * @internal
-   *
-   * @todo Remove this method call and its method in Drupal 9.
-   *
-   * @see https://www.drupal.org/project/drupal/issues/3069757
-   * @see https://www.drupal.org/node/2870971
-   */
-  protected function ensureBackwardCompatibilityConfiguration() {
-    $keys = ['handler', 'target_type', 'entity', 'handler_settings'];
-    // Synchronize back 'handler_settings'.
-    foreach ($this->configuration as $key => $value) {
-      // Filter out keys that belong strictly to the root level.
-      if (!in_array($key, $keys, TRUE)) {
-        $this->configuration['handler_settings'][$key] = $value;
-      }
-    }
-  }
 
 }

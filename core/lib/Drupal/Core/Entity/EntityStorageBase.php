@@ -88,18 +88,13 @@ abstract class EntityStorageBase extends EntityHandlerBase implements EntityStor
    * @param \Drupal\Core\Cache\MemoryCache\MemoryCacheInterface|null $memory_cache
    *   The memory cache.
    */
-  public function __construct(EntityTypeInterface $entity_type, MemoryCacheInterface $memory_cache = NULL) {
+  public function __construct(EntityTypeInterface $entity_type, MemoryCacheInterface $memory_cache) {
     $this->entityTypeId = $entity_type->id();
     $this->entityType = $entity_type;
     $this->idKey = $this->entityType->getKey('id');
     $this->uuidKey = $this->entityType->getKey('uuid');
     $this->langcodeKey = $this->entityType->getKey('langcode');
     $this->entityClass = $this->entityType->getClass();
-
-    if (!isset($memory_cache)) {
-      @trigger_error('The $memory_cache parameter was added in Drupal 8.6.x and will be required in 9.0.0. See https://www.drupal.org/node/2973262', E_USER_DEPRECATED);
-      $memory_cache = \Drupal::service('entity.memory_cache');
-    }
     $this->memoryCache = $memory_cache;
     $this->memoryCacheTag = 'entity.memory_cache:' . $this->entityTypeId;
   }

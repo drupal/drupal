@@ -4,7 +4,6 @@ namespace Drupal\Tests\Core\Entity\Sql;
 
 use Drupal\Core\Entity\Sql\DefaultTableMapping;
 use Drupal\Core\Entity\Sql\SqlContentEntityStorageException;
-use Drupal\Core\Entity\Sql\TemporaryTableMapping;
 use Drupal\Tests\UnitTestCase;
 
 /**
@@ -570,17 +569,6 @@ class DefaultTableMappingTest extends UnitTestCase {
     ];
 
     return $data;
-  }
-
-  /**
-   * @coversDefaultClass \Drupal\Core\Entity\Sql\TemporaryTableMapping
-   *
-   * @expectedDeprecation Drupal\Core\Entity\Sql\TemporaryTableMapping is deprecated in Drupal 8.7.x and will be removed before Drupal 9.0.0. Use the default table mapping with a prefix instead.
-   * @group legacy
-   */
-  public function testTemporaryTableMapping() {
-    $table_mapping = new TemporaryTableMapping($this->entityType, [], '');
-    $this->assertTrue($table_mapping instanceof DefaultTableMapping);
   }
 
   /**

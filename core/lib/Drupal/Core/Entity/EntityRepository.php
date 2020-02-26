@@ -44,16 +44,10 @@ class EntityRepository implements EntityRepositoryInterface {
    * @param \Drupal\Core\Plugin\Context\ContextRepositoryInterface $context_repository
    *   The context repository service.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, LanguageManagerInterface $language_manager, ContextRepositoryInterface $context_repository = NULL) {
+  public function __construct(EntityTypeManagerInterface $entity_type_manager, LanguageManagerInterface $language_manager, ContextRepositoryInterface $context_repository) {
     $this->entityTypeManager = $entity_type_manager;
     $this->languageManager = $language_manager;
-    if (isset($context_repository)) {
-      $this->contextRepository = $context_repository;
-    }
-    else {
-      @trigger_error('The context.repository service must be passed to EntityRepository::__construct(), it is required before Drupal 9.0.0. See https://www.drupal.org/node/2938929.', E_USER_DEPRECATED);
-      $this->contextRepository = \Drupal::service('context.repository');
-    }
+    $this->contextRepository = $context_repository;
   }
 
   /**

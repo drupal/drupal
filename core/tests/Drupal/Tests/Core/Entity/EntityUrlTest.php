@@ -10,16 +10,15 @@ use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\Exception\UndefinedLinkTemplateException;
 use Drupal\Core\Entity\RevisionableInterface;
 use Drupal\Core\GeneratedUrl;
-use Drupal\Core\Link;
 use Drupal\Core\Routing\UrlGeneratorInterface;
 use Drupal\Core\Url;
 use Drupal\Tests\UnitTestCase;
 use Symfony\Component\Routing\Exception\MissingMandatoryParametersException;
 
 /**
- * Tests URL handling of the \Drupal\Core\Entity\Entity class.
+ * Tests URL handling of the \Drupal\Core\Entity\EntityBase class.
  *
- * @coversDefaultClass \Drupal\Core\Entity\Entity
+ * @coversDefaultClass \Drupal\Core\Entity\EntityBase
  *
  * @group Entity
  */
@@ -374,164 +373,6 @@ class EntityUrlTest extends UnitTestCase {
     };
     $test_cases['uri_callback'] = [[], $uri_callback];
     $test_cases['bundle_uri_callback'] = [['uri_callback' => $uri_callback], NULL];
-
-    return $test_cases;
-  }
-
-  /**
-   * Tests the urlInfo() method.
-   *
-   * @param string $rel
-   *   The link relation to test.
-   * @param array $options
-   *   An array of URL options to test with.
-   *
-   * @covers ::urlInfo
-   *
-   * @dataProvider providerTestUrlInfo
-   *
-   * @group legacy
-   * @expectedDeprecation EntityInterface::urlInfo() is deprecated in Drupal 8.0.0 and will be removed in Drupal 9.0.0. EntityInterface::toUrl() instead. See https://www.drupal.org/node/2614344
-   */
-  public function testUrlInfo($rel, $options) {
-    $entity = $this->getEntity(EntityBase::class, [], ['toUrl']);
-    $entity->expects($this->once())
-      ->method('toUrl')
-      ->with($rel, $options);
-
-    $entity->urlInfo($rel, $options);
-  }
-
-  /**
-   * Tests the link() method.
-   *
-   * @covers ::urlInfo
-   *
-   * @group legacy
-   * @expectedDeprecation EntityInterface::link() is deprecated in Drupal 8.0.0 and will be removed in Drupal 9.0.0. Use EntityInterface::toLink()->toString() instead. Note, the default relationship for configuration entities changes from 'edit-form' to 'canonical'. See https://www.drupal.org/node/2614344
-   */
-  public function testLink() {
-
-    $link = $this->createMock(Link::class);
-    $link->expects($this->once())
-      ->method('toString')
-      ->willReturn('<a href="/foo">The link</a>');
-
-    $entity = $this->getEntity(EntityBase::class, [], ['toLink']);
-    $entity->expects($this->once())
-      ->method('toLink')
-      ->with(NULL, 'canonical')
-      ->willReturn($link);
-
-    $this->assertEquals('<a href="/foo">The link</a>', $entity->link());
-  }
-
-  /**
-   * Provides data for testUrlInfo().
-   *
-   * @return array
-   *   An array of test cases for testUrlInfo().
-   */
-  public function providerTestUrlInfo() {
-    $test_cases = [];
-
-    $test_cases['default'] = ['canonical', []];
-    $test_cases['with_option'] = ['canonical', ['absolute' => TRUE]];
-    $test_cases['revision'] = ['revision', []];
-
-    return $test_cases;
-  }
-
-  /**
-   * Tests the url() method without an entity ID.
-   *
-   * @param string $rel
-   *   The link relation to test.
-   *
-   * @covers ::url
-   * @covers ::hasLinkTemplate
-   * @covers ::linkTemplates
-   *
-   * @dataProvider providerTestUrl
-   *
-   * @group legacy
-   * @expectedDeprecation EntityInterface::url() is deprecated in Drupal 8.0.0 and will be removed in Drupal 9.0.0. EntityInterface::toUrl() instead. Note, a \Drupal\Core\Url object is returned. See https://www.drupal.org/node/2614344
-   */
-  public function testUrlEmpty($rel) {
-    $entity = $this->getEntity(EntityBase::class, []);
-    $this->assertEquals('', $entity->url($rel));
-  }
-
-  /**
-   * Provides data for testUrlEmpty().
-   *
-   * @return array
-   *   An array of test cases for testUrlEmpty().
-   */
-  public function providerTestUrlEmpty() {
-    $test_cases = [];
-
-    $test_cases['default'] = ['canonical', []];
-    $test_cases['revision'] = ['revision', []];
-
-    return $test_cases;
-  }
-
-  /**
-   * Tests the url() method.
-   *
-   * @param string $rel
-   *   The link relation to test.
-   * @param array $options
-   *   An array of URL options to call url() with.
-   * @param array $default_options
-   *   An array of URL options that toUrl() should generate.
-   * @param array $expected_options
-   *   An array of combined URL options that should be set on the final URL.
-   *
-   * @covers ::url
-   * @covers ::hasLinkTemplate
-   * @covers ::linkTemplates
-   *
-   * @dataProvider providerTestUrl
-   *
-   * @group legacy
-   * @expectedDeprecation EntityInterface::url() is deprecated in Drupal 8.0.0 and will be removed in Drupal 9.0.0. EntityInterface::toUrl() instead. Note, a \Drupal\Core\Url object is returned. See https://www.drupal.org/node/2614344
-   */
-  public function testUrl($rel, $options, $default_options, $expected_options) {
-    $entity = $this->getEntity(EntityBase::class, ['id' => $this->entityId], ['toUrl']);
-    $this->registerLinkTemplate($rel);
-
-    $uri = $this->prophesize(Url::class);
-    $uri->getOptions()->willReturn($default_options);
-    $uri->setOptions($expected_options)->shouldBeCalled();
-
-    $url_string = "/test-entity/{$this->entityId}/$rel";
-    $uri->toString()->willReturn($url_string);
-
-    $entity->expects($this->once())
-      ->method('toUrl')
-      ->with($rel)
-      ->willReturn($uri->reveal());
-
-    $this->assertEquals($url_string, $entity->url($rel, $options));
-  }
-
-  /**
-   * Provides data for testUrl().
-   *
-   * @return array
-   *   An array of test cases for testUrl().
-   */
-  public function providerTestUrl() {
-    $test_cases = [];
-
-    $test_cases['default'] = ['canonical', [], [], []];
-    $test_cases['revision'] = ['revision', [], [], []];
-    $test_cases['option'] = ['canonical', ['absolute' => TRUE], [], ['absolute' => TRUE]];
-    $test_cases['default_option'] = ['canonical', [], ['absolute' => TRUE], ['absolute' => TRUE]];
-    $test_cases['option_merge'] = ['canonical', ['absolute' => TRUE], ['entity_type' => $this->entityTypeId], ['absolute' => TRUE, 'entity_type' => $this->entityTypeId]];
-    $test_cases['option_override'] = ['canonical', ['absolute' => TRUE], ['absolute' => FALSE], ['absolute' => TRUE]];
 
     return $test_cases;
   }

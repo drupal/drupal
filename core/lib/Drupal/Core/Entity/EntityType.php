@@ -92,18 +92,6 @@ class EntityType extends PluginDefinition implements EntityTypeInterface {
   protected $links = [];
 
   /**
-   * The name of a callback that returns the label of the entity.
-   *
-   * @var callable|null
-   *
-   * @deprecated in drupal:8.0.0 and is removed from drupal:9.0.0. Override the
-   *   EntityInterface::label() method instead for dynamic labels.
-   *
-   * @see \Drupal\Core\Entity\EntityInterface::label()
-   */
-  protected $label_callback = NULL;
-
-  /**
    * The name of the entity type which provides bundles.
    *
    * @var string
@@ -665,31 +653,6 @@ class EntityType extends PluginDefinition implements EntityTypeInterface {
   /**
    * {@inheritdoc}
    */
-  public function getLabelCallback() {
-    @trigger_error('EntityType::getLabelCallback() is deprecated in drupal:8.0.0 and is removed from drupal:9.0.0. Override the EntityInterface::label() method instead for dynamic labels. See https://www.drupal.org/node/3050794', E_USER_DEPRECATED);
-    return $this->label_callback;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function setLabelCallback($callback) {
-    @trigger_error('EntityType::setLabelCallback() is deprecated in drupal:8.0.0 and is removed from drupal:9.0.0. Override the EntityInterface::label() method instead for dynamic labels. See https://www.drupal.org/node/3050794', E_USER_DEPRECATED);
-    $this->label_callback = $callback;
-    return $this;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function hasLabelCallback() {
-    @trigger_error('EntityType::hasabelCallback() is deprecated in drupal:8.0.0 and is removed from drupal:9.0.0. Override the EntityInterface::label() method instead for dynamic labels. See https://www.drupal.org/node/3050794', E_USER_DEPRECATED);
-    return isset($this->label_callback);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function getBundleEntityType() {
     return $this->bundle_entity_type;
   }
@@ -771,14 +734,6 @@ class EntityType extends PluginDefinition implements EntityTypeInterface {
    */
   public function getLabel() {
     return $this->label;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getLowercaseLabel() {
-    @trigger_error('EntityType::getLowercaseLabel() is deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. Instead, you should call getSingularLabel(). See https://www.drupal.org/node/3075567', E_USER_DEPRECATED);
-    return mb_strtolower($this->getLabel());
   }
 
   /**

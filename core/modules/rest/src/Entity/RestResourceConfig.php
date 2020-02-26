@@ -22,7 +22,6 @@ use Drupal\rest\RestResourceConfigInterface;
  *   ),
  *   config_prefix = "resource",
  *   admin_permission = "administer rest resources",
- *   label_callback = "getLabelFromPlugin",
  *   entity_keys = {
  *     "id" = "id"
  *   },
@@ -86,17 +85,6 @@ class RestResourceConfig extends ConfigEntityBase implements RestResourceConfigI
       // Generate plugin_id on first entity creation.
       $this->plugin_id = str_replace('.', ':', $this->id);
     }
-  }
-
-  /**
-   * The label callback for this configuration entity.
-   *
-   * @return string The label.
-   */
-  protected function getLabelFromPlugin() {
-    $plugin_definition = $this->getResourcePluginManager()
-      ->getDefinition(['id' => $this->plugin_id]);
-    return $plugin_definition['label'];
   }
 
   /**

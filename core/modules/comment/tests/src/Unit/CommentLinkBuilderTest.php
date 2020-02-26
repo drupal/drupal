@@ -313,9 +313,6 @@ class CommentLinkBuilderTest extends UnitTestCase {
     $node->expects($this->any())
       ->method('toUrl')
       ->willReturn($url);
-    $node->expects($this->any())
-      ->method('url')
-      ->willReturn(['route_name' => 'node.view']);
 
     return $node;
   }
