@@ -46,7 +46,7 @@ class TranslationStringTest extends KernelTestBase {
     $this->assertEquals($a, $b);
     // The two objects are not the same object.
     $this->assertNotSame($a, $b);
-    // TranslationWrappers which have different settings are not equal.
+    // TranslatableMarkup which have different settings are not equal.
     $this->assertNotEquals($a, $c);
     $this->assertNotEquals($a, $d);
   }
