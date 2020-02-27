@@ -59,6 +59,7 @@ trait UpdatePathTestTrait {
       }
 
       // Ensure that there are no pending updates.
+      drupal_get_installed_schema_version(NULL, TRUE);
       foreach (['update', 'post_update'] as $update_type) {
         switch ($update_type) {
           case 'update':

@@ -17,6 +17,13 @@ $connection->insert('key_value')
     'value' => 'i:8401;',
   ])
   ->execute();
+$connection->insert('key_value')
+  ->fields([
+    'collection' => 'system.schema',
+    'name' => 'serialization',
+    'value' => 'i:8401;',
+  ])
+  ->execute();
 
 // Update core.extension.
 $extensions = $connection->select('config')
