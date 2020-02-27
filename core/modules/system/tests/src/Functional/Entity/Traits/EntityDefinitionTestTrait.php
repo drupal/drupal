@@ -318,12 +318,18 @@ trait EntityDefinitionTestTrait {
    *
    * @param string $type
    *   (optional) The field type for the new field. Defaults to 'string'.
+   * @param bool $revisionable
+   *   (optional) Whether the field should be revisionable. Defaults to FALSE.
+   * @param bool $translatable
+   *   (optional) Whether the field should be translatable. Defaults to FALSE.
    */
-  protected function addBundleField($type = 'string') {
+  protected function addBundleField($type = 'string', $revisionable = FALSE, $translatable = FALSE) {
     $definitions['new_bundle_field'] = FieldStorageDefinition::create($type)
       ->setName('new_bundle_field')
       ->setLabel(t('A new bundle field'))
-      ->setTargetEntityTypeId('entity_test_update');
+      ->setTargetEntityTypeId('entity_test_update')
+      ->setRevisionable($revisionable)
+      ->setTranslatable($translatable);
     $this->state->set('entity_test_update.additional_field_storage_definitions', $definitions);
     $this->state->set('entity_test_update.additional_bundle_field_definitions.test_bundle', $definitions);
   }
