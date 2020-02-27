@@ -469,56 +469,36 @@ jquery.ui.button:
   version: *jquery_ui_version
   license: *jquery_ui_license
   js:
+    assets/vendor/jquery.ui/ui/widgets/checkboxradio-min.js: { minified: true }
+    assets/vendor/jquery.ui/ui/widgets/controlgroup-min.js: { minified: true }
     assets/vendor/jquery.ui/ui/widgets/button-min.js: { minified: true }
   css:
     component:
-      assets/vendor/jquery.ui/themes/base/button.css: {}
-  dependencies:
-    - core/jquery.ui
-    - core/jquery.ui.widget
-    - core/jquery.ui.checkboxradio
-    - core/jquery.ui.controlgroup
-
-jquery.ui.checkboxradio:
-  version: *jquery_ui_version
-  license: *jquery_ui_license
-  js:
-    assets/vendor/jquery.ui/ui/form-reset-mixin-min.js: { minified: true }
-    assets/vendor/jquery.ui/ui/widgets/checkboxradio-min.js: { minified: true }
-  css:
-    component:
       assets/vendor/jquery.ui/themes/base/checkboxradio.css: {}
+      assets/vendor/jquery.ui/themes/base/controlgroup.css: {}
       assets/vendor/jquery.ui/themes/base/button.css: {}
   dependencies:
     - core/jquery.ui
     - core/jquery.ui.widget
-  deprecated: &jquery_ui_unused_deprecated The "%library_id%" asset library is deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. See https://www.drupal.org/node/3067969
-
-jquery.ui.controlgroup:
-  version: *jquery_ui_version
-  license: *jquery_ui_license
-  js:
-    assets/vendor/jquery.ui/ui/widgets/controlgroup-min.js: { minified: true }
-  css:
-    component:
-      assets/vendor/jquery.ui/themes/base/controlgroup.css: {}
-  dependencies:
-    - core/jquery.ui
-    - core/jquery.ui.widget
-  deprecated: *jquery_ui_unused_deprecated
 
 jquery.ui.dialog:
   version: *jquery_ui_version
   license: *jquery_ui_license
   js:
+    assets/vendor/jquery.ui/ui/form-reset-mixin-min.js: { minified: true }
+    assets/vendor/jquery.ui/ui/widgets/checkboxradio-min.js: { minified: true }
+    assets/vendor/jquery.ui/ui/widgets/controlgroup-min.js: { minified: true }
+    assets/vendor/jquery.ui/ui/widgets/button-min.js: { minified: true }
     assets/vendor/jquery.ui/ui/widgets/dialog-min.js: { minified: true }
   css:
     component:
+      assets/vendor/jquery.ui/themes/base/checkboxradio.css: {}
+      assets/vendor/jquery.ui/themes/base/controlgroup.css: {}
+      assets/vendor/jquery.ui/themes/base/button.css: {}
       assets/vendor/jquery.ui/themes/base/dialog.css: {}
   dependencies:
     - core/jquery.ui
     - core/jquery.ui.widget
-    - core/jquery.ui.button
     - core/jquery.ui.draggable
     - core/jquery.ui.mouse
     - core/jquery.ui.position
