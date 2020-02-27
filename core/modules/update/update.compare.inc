@@ -81,6 +81,7 @@ function update_process_project_info(&$projects) {
  * @see \Drupal\update\UpdateManager::getProjects()
  * @see update_process_project_info()
  * @see \Drupal\update\UpdateManagerInterface::projectStorage()
+ * @see \Drupal\update\ProjectCoreCompatibility::setReleaseMessage()
  */
 function update_calculate_project_data($available) {
   // Retrieve the projects from storage, if present.
@@ -108,6 +109,13 @@ function update_calculate_project_data($available) {
         continue;
       }
       update_calculate_project_update_status($projects[$project], $available[$project]);
+      // Inject the list of compatible core versions to show administrator(s)
+      // which versions of core a given available update can be installed with.
+      // Since individual releases of a project can be compatible with different
+      // versions of core, and even multiple major versions of core (for
+      // example, 8.9.x and 9.0.x), this list will hopefully help
+      // administrator(s) know which available updates they can upgrade a given
+      // project to.
       if (isset($project_core_compatibility)) {
         $project_core_compatibility->setReleaseMessage($projects[$project]);
       }
