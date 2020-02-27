@@ -30,7 +30,6 @@
    <name>aaa_update_test 8.x-3.0-beta1</name>
    <version>8.x-3.0-beta1</version>
    <tag>8.x-3.0-beta1</tag>
-   <core_compatibility>^8.1.1</core_compatibility>
    <status>published</status>
    <release_link>http://example.com/aaa_update_test-8-x-3-0-beta1</release_link>
    <download_link>http://example.com/aaa_update_test--8-x-3-0-beta1.tar.gz</download_link>
@@ -48,7 +47,6 @@
    <name>aaa_update_test 8.x-2.2</name>
    <version>8.x-2.2</version>
    <tag>DRUPAL-8--2-2</tag>
-   <core_compatibility>^8.1.1</core_compatibility>
    <status>published</status>
    <release_link>http://example.com/aaa_update_test-8-x-2-2-release</release_link>
    <download_link>http://example.com/aaa_update_test-8-x-2-2.tar.gz</download_link>
@@ -92,7 +90,6 @@
    <name>aaa_update_test 8.x-1.2</name>
    <version>8.x-1.2</version>
    <tag>DRUPAL-8--1-2</tag>
-   <core_compatibility>^8.1.0</core_compatibility>
    <status>published</status>
    <release_link>http://example.com/aaa_update_test-8-x-1-2-release</release_link>
    <download_link>http://example.com/aaa_update_test-8-x-1-2.tar.gz</download_link>

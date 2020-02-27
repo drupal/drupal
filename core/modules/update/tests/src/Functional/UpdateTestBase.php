@@ -195,7 +195,7 @@ abstract class UpdateTestBase extends BrowserTestBase {
    */
   protected function assertVersionUpdateLinks($label, $version, $download_version = NULL) {
     $download_version = $download_version ?? $version;
-    $update_element = $this->getSession()->getPage()->find('css', $this->updateTableLocator . " .project-update__version:contains(\"$label\")");
+    $update_element = $this->findUpdateElementByLabel($label);
     // In the release notes URL the periods are replaced with dashes.
     $url_version = str_replace('.', '-', $version);
 
@@ -272,6 +272,23 @@ abstract class UpdateTestBase extends BrowserTestBase {
   protected function assertUpdateTableElementContains($text) {
     $this->assertSession()
       ->elementContains('css', $this->updateTableLocator, $text);
+  }
+
+  /**
+   * Finds an update page element by label.
+   *
+   * @param string $label
+   *   The label for the update, for example "Recommended version:" or
+   *   "Latest version:".
+   *
+   * @return \Behat\Mink\Element\NodeElement
+   *   The update element.
+   */
+  protected function findUpdateElementByLabel($label) {
+    $update_elements = $this->getSession()->getPage()
+      ->findAll('css', $this->updateTableLocator . " .project-update__version:contains(\"$label\")");
+    $this->assertCount(1, $update_elements);
+    return $update_elements[0];
   }
 
 }

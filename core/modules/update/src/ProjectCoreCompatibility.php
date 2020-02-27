@@ -7,11 +7,18 @@ use Composer\Semver\VersionParser;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 
 /**
- * Utility class to set core compatibility messages for module updates.
+ * Utility class to set core compatibility messages for project releases.
  */
 class ProjectCoreCompatibility {
 
   use StringTranslationTrait;
+
+  /**
+   * The currently installed version of Drupal core.
+   *
+   * @var string
+   */
+  protected $existingCoreVersion;
 
   /**
    * Cache of core versions that are available for updates.
@@ -50,30 +57,29 @@ class ProjectCoreCompatibility {
    */
   public function __construct(array $core_data, array $core_releases) {
     if (isset($core_data['existing_version'])) {
-      $this->possibleCoreUpdateVersions = $this->getPossibleCoreUpdateVersions($core_data['existing_version'], $core_releases);
+      $this->existingCoreVersion = $core_data['existing_version'];
+      $this->possibleCoreUpdateVersions = $this->getPossibleCoreUpdateVersions($core_releases);
     }
   }
 
   /**
    * Gets the core versions that should be considered for compatibility ranges.
    *
-   * @param string $existing_version
-   *   The existing (currently installed) version of Drupal core.
    * @param array $core_releases
    *   The Drupal core available releases.
    *
    * @return string[]
    *   The core version numbers that are possible to update the site to.
    */
-  protected function getPossibleCoreUpdateVersions($existing_version, array $core_releases) {
-    if (!isset($core_releases[$existing_version])) {
+  protected function getPossibleCoreUpdateVersions(array $core_releases) {
+    if (!isset($core_releases[$this->existingCoreVersion])) {
       // If we can't determine the existing version of core then we can't
       // calculate the core compatibility of a given release based on core
       // versions after the existing version.
       return [];
     }
     $core_release_versions = array_keys($core_releases);
-    $possible_core_update_versions = Semver::satisfiedBy($core_release_versions, '>= ' . $existing_version);
+    $possible_core_update_versions = Semver::satisfiedBy($core_release_versions, '>= ' . $this->existingCoreVersion);
     $possible_core_update_versions = Semver::sort($possible_core_update_versions);
     $possible_core_update_versions = array_filter($possible_core_update_versions, function ($version) {
       return VersionParser::parseStability($version) === 'stable';
@@ -131,9 +137,24 @@ class ProjectCoreCompatibility {
     }
     foreach ($releases_to_set as &$release) {
       if (!empty($release['core_compatibility'])) {
+        $release['core_compatible'] = $this->isCoreCompatible($release['core_compatibility']);
         $release['core_compatibility_message'] = $this->createMessageFromCoreCompatibility($release['core_compatibility']);
       }
     }
+  }
+
+  /**
+   * Determines if a release is compatible with the currently installed core.
+   *
+   * @param string $core_compatibility_constraint
+   *   A semantic version constraint.
+   *
+   * @return bool
+   *   TRUE if the given constraint is satisfied by the currently installed
+   *   version of Drupal core, otherwise FALSE.
+   */
+  protected function isCoreCompatible($core_compatibility_constraint) {
+    return Semver::satisfies($this->existingCoreVersion, $core_compatibility_constraint);
   }
 
   /**
@@ -157,7 +178,7 @@ class ProjectCoreCompatibility {
           $range_messages[] = $core_compatibility_range[0];
         }
       }
-      $this->compatibilityMessages[$core_compatibility_constraint] = $this->t('This module is compatible with Drupal core:') . ' ' . implode(', ', $range_messages);
+      $this->compatibilityMessages[$core_compatibility_constraint] = $this->t('Requires Drupal core:') . ' ' . implode(', ', $range_messages);
     }
     return $this->compatibilityMessages[$core_compatibility_constraint];
   }

@@ -575,9 +575,9 @@ class UpdateContribTest extends UpdateTestBase {
 
     // Confirm that messages are displayed for security and 'Also available'
     // updates.
-    $this->refreshUpdateStatus(['drupal' => '1.1', 'aaa_update_test' => 'sec.8.x-1.2_8.x-2.2']);
-    $this->assertCoreCompatibilityMessage('8.x-1.2', '8.1.0 to 8.1.1', 'Security update:');
-    $this->assertCoreCompatibilityMessage('8.x-2.2', '8.1.1', 'Also available:');
+    $this->refreshUpdateStatus(['drupal' => '1.1', 'aaa_update_test' => 'core_compatibility.8.x-1.2_8.x-2.2']);
+    $this->assertCoreCompatibilityMessage('8.x-1.2', '8.1.0 to 8.1.1', 'Security update:', FALSE);
+    $this->assertCoreCompatibilityMessage('8.x-2.2', '8.1.1', 'Also available:', FALSE);
   }
 
   /**
@@ -788,17 +788,39 @@ class UpdateContribTest extends UpdateTestBase {
    *
    * @param string $version
    *   The version of the update.
-   * @param string $expected_compatibility_range
+   * @param string $expected_range
    *   The expected core compatibility range.
    * @param string $expected_release_title
    *   The expected release title.
+   * @param bool $is_compatible
+   *   If the update is compatible with the installed version of Drupal.
    */
-  protected function assertCoreCompatibilityMessage($version, $expected_compatibility_range, $expected_release_title) {
-    $link = $this->getSession()->getPage()->findLink($version);
-    $update_info_element = $link->getParent();
-    $this->assertContains("This module is compatible with Drupal core: $expected_compatibility_range", $update_info_element->getText());
-    $update_title_element = $update_info_element->getParent()->find('css', '.project-update__version-title');
-    $this->assertSame($expected_release_title, $update_title_element->getText());
+  protected function assertCoreCompatibilityMessage($version, $expected_range, $expected_release_title, $is_compatible = TRUE) {
+    $update_element = $this->findUpdateElementByLabel($expected_release_title);
+    $this->assertTrue($update_element->hasLink($version));
+    $compatibility_details = $update_element->find('css', '.project-update__compatibility-details details');
+    $this->assertContains("Requires Drupal core: $expected_range", $compatibility_details->getText());
+    $details_summary_element = $compatibility_details->find('css', 'summary');
+    if ($is_compatible) {
+      $download_version = str_replace('.', '-', $version);
+      // If an update is compatible with the installed version of Drupal core,
+      // it should have a download link and the details element should be closed
+      // by default.
+      $this->assertFalse($compatibility_details->hasAttribute('open'));
+      $this->assertSame('Compatible', $details_summary_element->getText());
+      $this->assertEquals(
+        $update_element->findLink('Download')->getAttribute('href'),
+        "http://example.com/{$this->updateProject}-$download_version.tar.gz"
+      );
+    }
+    else {
+      // If an update is not compatible with the installed version of Drupal
+      // core, it should not have a download link and the details element should
+      // be open by default.
+      $this->assertTrue($compatibility_details->hasAttribute('open'));
+      $this->assertSame('Not compatible', $details_summary_element->getText());
+      $this->assertFalse($update_element->hasLink('Download'));
+    }
   }
 
 }
