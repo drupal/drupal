@@ -374,3 +374,16 @@ function seven_views_pre_render(ViewExecutable $view) {
     }
   }
 }
+
+/**
+ * Prepares variables for update version templates.
+ *
+ * Default template: update-version.html.twig.
+ *
+ * @param array $variables
+ *   An associative array containing:
+ *   - version: An array of information about the release version.
+ */
+function seven_preprocess_update_version(array &$variables) {
+  $variables['#attached']['library'][] = 'seven/update-report';
+}
