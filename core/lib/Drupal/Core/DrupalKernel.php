@@ -844,6 +844,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
   protected function initializeContainer() {
     $this->containerNeedsDumping = FALSE;
     $session_started = FALSE;
+    $all_messages = [];
     if (isset($this->container)) {
       // Save the id of the currently logged in user.
       if ($this->container->initialized('current_user')) {
@@ -859,6 +860,8 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
         }
         unset($session);
       }
+
+      $all_messages = $this->container->get('messenger')->all();
     }
 
     // If we haven't booted yet but there is a container, then we're asked to
@@ -917,6 +920,13 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
 
     if (!empty($current_user_id)) {
       $this->container->get('current_user')->setInitialAccountId($current_user_id);
+    }
+
+    // Re-add messages.
+    foreach ($all_messages as $type => $messages) {
+      foreach ($messages as $message) {
+        $this->container->get('messenger')->addMessage($message, $type);
+      }
     }
 
     \Drupal::setContainer($this->container);

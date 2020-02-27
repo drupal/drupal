@@ -193,6 +193,9 @@ class ModulesListConfirmForm extends ConfirmFormBase {
         return;
       }
 
+      // Unset the messenger to make sure that we'll get the service from the
+      // new container.
+      $this->messenger = NULL;
       $module_names = array_values($this->modules['install']);
       $this->messenger()->addStatus($this->formatPlural(count($module_names), 'Module %name has been enabled.', '@count modules have been enabled: %names.', [
         '%name' => $module_names[0],

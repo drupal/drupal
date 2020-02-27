@@ -135,6 +135,7 @@ function system_test_filetransfer_info() {
  * Implements hook_module_preinstall().
  */
 function system_test_module_preinstall($module) {
+  \Drupal::messenger()->addStatus('system_test_preinstall_module called');
   \Drupal::state()->set('system_test_preinstall_module', $module);
 }
 

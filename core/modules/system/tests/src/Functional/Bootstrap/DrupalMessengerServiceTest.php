@@ -49,6 +49,15 @@ class DrupalMessengerServiceTest extends BrowserTestBase {
 
     // Ensure that strings that are not marked as safe are escaped.
     $this->assertEscaped('<em>This<span>markup will be</span> escaped</em>.');
+
+    // Ensure messages survive a container rebuild.
+    $assert = $this->assertSession();
+    $this->drupalLogin($this->rootUser);
+    $edit = [];
+    $edit["modules[help][enable]"] = TRUE;
+    $this->drupalPostForm('admin/modules', $edit, t('Install'));
+    $assert->pageTextContains('Help has been enabled');
+    $assert->pageTextContains('system_test_preinstall_module called');
   }
 
 }
