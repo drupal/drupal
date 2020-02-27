@@ -13,12 +13,12 @@ use Drupal\Core\Session\AccountInterface;
 interface RoleInterface extends ConfigEntityInterface {
 
   /**
-   * Role ID for anonymous users; should match what's in the "role" table.
+   * Role ID for anonymous users; should match the 'role' entity ID.
    */
   const ANONYMOUS_ID = AccountInterface::ANONYMOUS_ROLE;
 
   /**
-   * Role ID for authenticated users; should match what's in the "role" table.
+   * Role ID for authenticated users; should match the 'role' entity ID.
    */
   const AUTHENTICATED_ID = AccountInterface::AUTHENTICATED_ROLE;
 
