@@ -94,6 +94,10 @@ class FieldableEntityDefinitionUpdateTest extends EntityKernelTestBase {
     $this->entityFieldManager = $this->container->get('entity_field.manager');
     $this->database = $this->container->get('database');
 
+    // Add a non-revisionable bundle field to test revision field table
+    // handling.
+    $this->addBundleField('string', FALSE, TRUE);
+
     // The 'changed' field type has a special behavior because it updates itself
     // automatically if any of the other field values of an entity have been
     // updated, so add it to the entity type that is being tested in order to
@@ -294,7 +298,9 @@ class FieldableEntityDefinitionUpdateTest extends EntityKernelTestBase {
     for ($i = $next_id; $i <= $next_id + 2; $i++) {
       $entity = $storage->create([
         'id' => $i,
+        'type' => 'test_bundle',
         'name' => 'test entity - ' . $i . ' - en',
+        'new_bundle_field' => 'bundle field - ' . $i . ' - en',
         'test_multiple_properties' => [
           'value1' => 'shared table - ' . $i . ' - value 1 - en',
           'value2' => 'shared table - ' . $i . ' - value 2 - en',
@@ -315,6 +321,7 @@ class FieldableEntityDefinitionUpdateTest extends EntityKernelTestBase {
       if ($translatable) {
         $translation = $entity->addTranslation('ro', [
           'name' => 'test entity - ' . $i . ' - ro',
+          'new_bundle_field' => 'bundle field - ' . $i . ' - ro',
           'test_multiple_properties' => [
             'value1' => 'shared table - ' . $i . ' - value 1 - ro',
             'value2' => 'shared table - ' . $i . ' - value 2 - ro',
@@ -338,6 +345,7 @@ class FieldableEntityDefinitionUpdateTest extends EntityKernelTestBase {
         // Create a new pending revision.
         $revision_2 = $storage->createRevision($entity, FALSE);
         $revision_2->name = 'test entity - ' . $i . ' - en - rev2';
+        $revision_2->new_bundle_field = 'bundle field - ' . $i . ' - en - rev2';
         $revision_2->test_multiple_properties->value1 = 'shared table - ' . $i . ' - value 1 - en - rev2';
         $revision_2->test_multiple_properties->value2 = 'shared table - ' . $i . ' - value 2 - en - rev2';
         $revision_2->test_multiple_properties_multiple_values[0]->value1 = 'dedicated table - ' . $i . ' - delta 0 - value 1 - en - rev2';
@@ -349,6 +357,7 @@ class FieldableEntityDefinitionUpdateTest extends EntityKernelTestBase {
         if ($translatable) {
           $revision_2_translation = $storage->createRevision($entity->getTranslation('ro'), FALSE);
           $revision_2_translation->name = 'test entity - ' . $i . ' - ro - rev2';
+          $revision_2->new_bundle_field = 'bundle field - ' . $i . ' - ro - rev2';
           $revision_2->test_multiple_properties->value1 = 'shared table - ' . $i . ' - value 1 - ro - rev2';
           $revision_2->test_multiple_properties->value2 = 'shared table - ' . $i . ' - value 2 - ro - rev2';
           $revision_2_translation->test_multiple_properties_multiple_values[0]->value1 = 'dedicated table - ' . $i . ' - delta 0 - value 1 - ro - rev2';
@@ -375,6 +384,7 @@ class FieldableEntityDefinitionUpdateTest extends EntityKernelTestBase {
     foreach ($entities as $entity_id => $entity) {
       /** @var \Drupal\Core\Entity\ContentEntityInterface $entity */
       $this->assertEquals("test entity - {$entity->id()} - en", $entity->label());
+      $this->assertEquals("bundle field - {$entity->id()} - en", $entity->new_bundle_field->value);
       $this->assertEquals("shared table - {$entity->id()} - value 1 - en", $entity->test_multiple_properties->value1);
       $this->assertEquals("shared table - {$entity->id()} - value 2 - en", $entity->test_multiple_properties->value2);
       $this->assertEquals("dedicated table - {$entity->id()} - delta 0 - value 1 - en", $entity->test_multiple_properties_multiple_values[0]->value1);
@@ -385,6 +395,7 @@ class FieldableEntityDefinitionUpdateTest extends EntityKernelTestBase {
       if ($translatable) {
         $translation = $entity->getTranslation('ro');
         $this->assertEquals("test entity - {$translation->id()} - ro", $translation->label());
+        $this->assertEquals("bundle field - {$entity->id()} - ro", $translation->new_bundle_field->value);
         $this->assertEquals("shared table - {$translation->id()} - value 1 - ro", $translation->test_multiple_properties->value1);
         $this->assertEquals("shared table - {$translation->id()} - value 2 - ro", $translation->test_multiple_properties->value2);
         $this->assertEquals("dedicated table - {$translation->id()} - delta 0 - value 1 - ro", $translation->test_multiple_properties_multiple_values[0]->value1);
@@ -403,6 +414,7 @@ class FieldableEntityDefinitionUpdateTest extends EntityKernelTestBase {
         /** @var \Drupal\Core\Entity\ContentEntityInterface $revision */
         $revision_label = $revision->isDefaultRevision() ? NULL : ' - rev2';
         $this->assertEquals("test entity - {$revision->id()} - en{$revision_label}", $revision->label());
+        $this->assertEquals("bundle field - {$revision->id()} - en{$revision_label}", $revision->new_bundle_field->value);
         $this->assertEquals("shared table - {$revision->id()} - value 1 - en{$revision_label}", $revision->test_multiple_properties->value1);
         $this->assertEquals("shared table - {$revision->id()} - value 2 - en{$revision_label}", $revision->test_multiple_properties->value2);
         $this->assertEquals("dedicated table - {$revision->id()} - delta 0 - value 1 - en{$revision_label}", $revision->test_multiple_properties_multiple_values[0]->value1);
@@ -413,6 +425,7 @@ class FieldableEntityDefinitionUpdateTest extends EntityKernelTestBase {
         if ($translatable) {
           $translation = $revision->getTranslation('ro');
           $this->assertEquals("test entity - {$translation->id()} - ro{$revision_label}", $translation->label());
+          $this->assertEquals("bundle field - {$entity->id()} - ro{$revision_label}", $translation->new_bundle_field->value);
           $this->assertEquals("shared table - {$revision->id()} - value 1 - ro{$revision_label}", $translation->test_multiple_properties->value1);
           $this->assertEquals("shared table - {$revision->id()} - value 2 - ro{$revision_label}", $translation->test_multiple_properties->value2);
           $this->assertEquals("dedicated table - {$translation->id()} - delta 0 - value 1 - ro{$revision_label}", $translation->test_multiple_properties_multiple_values[0]->value1);
@@ -457,6 +470,8 @@ class FieldableEntityDefinitionUpdateTest extends EntityKernelTestBase {
     else {
       $this->assertNonRevisionableAndNonTranslatable();
     }
+
+    $this->assertBundleFieldSchema($revisionable);
   }
 
   /**
@@ -590,6 +605,26 @@ class FieldableEntityDefinitionUpdateTest extends EntityKernelTestBase {
   }
 
   /**
+   * Asserts that the bundle field schema is correct.
+   *
+   * @param bool $revisionable
+   *   Whether the entity type is revisionable or not.
+   */
+  protected function assertBundleFieldSchema($revisionable) {
+    $entity_type_id = 'entity_test_update';
+    $field_storage_definition = $this->entityFieldManager->getFieldStorageDefinitions($entity_type_id)['new_bundle_field'];
+    $database_schema = $this->database->schema();
+    /** @var \Drupal\Core\Entity\Sql\DefaultTableMapping $table_mapping */
+    $table_mapping = $this->entityTypeManager
+      ->getStorage($entity_type_id)
+      ->getTableMapping();
+    $this->assertTrue($database_schema->tableExists($table_mapping->getDedicatedDataTableName($field_storage_definition)));
+    if ($revisionable) {
+      $this->assertTrue($database_schema->tableExists($table_mapping->getDedicatedRevisionTableName($field_storage_definition)));
+    }
+  }
+
+  /**
    * Asserts that the backup tables have been kept after a successful update.
    */
   protected function assertBackupTables() {
@@ -617,7 +652,7 @@ class FieldableEntityDefinitionUpdateTest extends EntityKernelTestBase {
     $this->insertData(FALSE, TRUE);
 
     $tables = $schema->findTables('old_%');
-    $this->assertCount(3, $tables);
+    $this->assertCount(4, $tables);
     foreach ($tables as $table) {
       $schema->dropTable($table);
     }
@@ -783,7 +818,7 @@ class FieldableEntityDefinitionUpdateTest extends EntityKernelTestBase {
 
     // Check that backup tables are kept by default.
     $tables = $schema->findTables('old_%');
-    $this->assertCount(3, $tables);
+    $this->assertCount(4, $tables);
     foreach ($tables as $table) {
       $schema->dropTable($table);
     }
