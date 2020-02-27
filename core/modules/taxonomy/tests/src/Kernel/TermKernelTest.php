@@ -145,4 +145,27 @@ class TermKernelTest extends KernelTestBase {
     $this->assertEqual(5, count($ancestors), 'The term has five ancestors including the term itself.');
   }
 
+  /**
+   * Tests that a Term is renderable when unsaved (preview).
+   */
+  public function testTermPreview() {
+    $entity_manager = \Drupal::entityTypeManager();
+    $vocabulary = $this->createVocabulary();
+
+    // Create a unsaved term.
+    $term = $entity_manager->getStorage('taxonomy_term')->create([
+      'vid' => $vocabulary->id(),
+      'name' => 'Inator',
+    ]);
+
+    // Confirm we can get the view of unsaved term.
+    $render_array = $entity_manager->getViewBuilder('taxonomy_term')
+      ->view($term);
+    $this->assertTrue(!empty($render_array), 'Term view builder is built.');
+
+    // Confirm we can render said view.
+    $rendered = \Drupal::service('renderer')->renderPlain($render_array);
+    $this->assertTrue(!empty(trim($rendered)), 'Term is able to be rendered.');
+  }
+
 }
