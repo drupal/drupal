@@ -473,7 +473,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
     if (Settings::get('class_loader_auto_detect', TRUE) && method_exists($this->classLoader, 'setApcuPrefix')) {
       // Vary the APCu key by which modules are installed to allow
       // class_exists() checks to determine functionality.
-      $id = 'class_loader:' . crc32(implode(array_keys($this->container->getParameter('container.modules')), ':'));
+      $id = 'class_loader:' . crc32(implode(':', array_keys($this->container->getParameter('container.modules'))));
       $prefix = Settings::getApcuPrefix($id, $this->root);
       $this->classLoader->setApcuPrefix($prefix);
     }
