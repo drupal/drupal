@@ -457,7 +457,7 @@
             "dist": {
                 "type": "path",
                 "url": "core",
-                "reference": "66032fab56e4ed2421480c8343f8c86f7db8a18f"
+                "reference": "f8e50d64acdddb816b10f83ca307712bd2cd65e5"
             },
             "require": {
                 "asm89/stack-cors": "^1.1",
@@ -487,7 +487,6 @@
                 "psr/log": "^1.0",
                 "stack/builder": "^1.0",
                 "symfony-cmf/routing": "^2.1",
-                "symfony/class-loader": "~3.4.0",
                 "symfony/console": "^4.4",
                 "symfony/dependency-injection": "^4.4",
                 "symfony/event-dispatcher": "^4.4",
@@ -660,11 +659,29 @@
                 },
                 "classmap": [
                     "lib/Drupal.php",
+                    "lib/Drupal/Component/DependencyInjection/Container.php",
+                    "lib/Drupal/Component/DependencyInjection/PhpArrayContainer.php",
+                    "lib/Drupal/Component/FileCache/FileCacheFactory.php",
                     "lib/Drupal/Component/Utility/Timer.php",
                     "lib/Drupal/Component/Utility/Unicode.php",
+                    "lib/Drupal/Core/Cache/Cache.php",
+                    "lib/Drupal/Core/Cache/CacheBackendInterface.php",
+                    "lib/Drupal/Core/Cache/CacheTagsChecksumInterface.php",
+                    "lib/Drupal/Core/Cache/CacheTagsChecksumTrait.php",
+                    "lib/Drupal/Core/Cache/CacheTagsInvalidatorInterface.php",
+                    "lib/Drupal/Core/Cache/DatabaseBackend.php",
+                    "lib/Drupal/Core/Cache/DatabaseCacheTagsChecksum.php",
+                    "lib/Drupal/Core/Database/Connection.php",
                     "lib/Drupal/Core/Database/Database.php",
+                    "lib/Drupal/Core/Database/Driver/mysql/Connection.php",
+                    "lib/Drupal/Core/Database/Driver/pgsql/Connection.php",
+                    "lib/Drupal/Core/Database/Driver/sqlite/Connection.php",
+                    "lib/Drupal/Core/Database/Statement.php",
+                    "lib/Drupal/Core/Database/StatementInterface.php",
+                    "lib/Drupal/Core/DependencyInjection/Container.php",
                     "lib/Drupal/Core/DrupalKernel.php",
                     "lib/Drupal/Core/DrupalKernelInterface.php",
+                    "lib/Drupal/Core/Installer/InstallerRedirectTrait.php",
                     "lib/Drupal/Core/Site/Settings.php"
                 ]
             },
@@ -1915,62 +1932,6 @@
                 "routing"
             ],
             "time": "2019-12-10T10:41:58+00:00"
-        },
-        {
-            "name": "symfony/class-loader",
-            "version": "v3.4.37",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/symfony/class-loader.git",
-                "reference": "bcdf6ff46e115b29be3186391f29e0da82cd6f72"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/symfony/class-loader/zipball/bcdf6ff46e115b29be3186391f29e0da82cd6f72",
-                "reference": "bcdf6ff46e115b29be3186391f29e0da82cd6f72",
-                "shasum": ""
-            },
-            "require": {
-                "php": "^5.5.9|>=7.0.8"
-            },
-            "require-dev": {
-                "symfony/finder": "~2.8|~3.0|~4.0",
-                "symfony/polyfill-apcu": "~1.1"
-            },
-            "suggest": {
-                "symfony/polyfill-apcu": "For using ApcClassLoader on HHVM"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "3.4-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Symfony\\Component\\ClassLoader\\": ""
-                },
-                "exclude-from-classmap": [
-                    "/Tests/"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Fabien Potencier",
-                    "email": "fabien@symfony.com"
-                },
-                {
-                    "name": "Symfony Community",
-                    "homepage": "https://symfony.com/contributors"
-                }
-            ],
-            "description": "Symfony ClassLoader Component",
-            "homepage": "https://symfony.com",
-            "time": "2020-01-04T12:05:51+00:00"
         },
         {
             "name": "symfony/console",
@@ -4101,9 +4062,6 @@
                 "ext-zip": "Enabling the zip extension allows you to unzip archives",
                 "ext-zlib": "Allow gzip compression of HTTP requests"
             },
-            "bin": [
-                "bin/composer"
-            ],
             "type": "library",
             "extra": {
                 "branch-alias": {

@@ -70,7 +70,6 @@ class Config {
     'squizlabs/php_codesniffer' => ['tests'],
     'stack/builder' => ['tests'],
     'symfony/browser-kit' => ['Tests'],
-    'symfony/class-loader' => ['Tests'],
     'symfony/console' => ['Tests'],
     'symfony/css-selector' => ['Tests'],
     'symfony/debug' => ['Tests'],

@@ -24,9 +24,6 @@ use Drupal\Core\Security\PharExtensionInterceptor;
 use Drupal\Core\Security\RequestSanitizer;
 use Drupal\Core\Site\Settings;
 use Drupal\Core\Test\TestDatabase;
-use Symfony\Component\ClassLoader\ApcClassLoader;
-use Symfony\Component\ClassLoader\WinCacheClassLoader;
-use Symfony\Component\ClassLoader\XcacheClassLoader;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -251,8 +248,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
    *   The request.
    * @param $class_loader
    *   The class loader. Normally Composer's ClassLoader, as included by the
-   *   front controller, but may also be decorated; e.g.,
-   *   \Symfony\Component\ClassLoader\ApcClassLoader.
+   *   front controller, but may also be decorated.
    * @param string $environment
    *   String indicating the environment, e.g. 'prod' or 'dev'.
    * @param bool $allow_dumping
@@ -281,8 +277,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
    *   String indicating the environment, e.g. 'prod' or 'dev'.
    * @param $class_loader
    *   The class loader. Normally \Composer\Autoload\ClassLoader, as included by
-   *   the front controller, but may also be decorated; e.g.,
-   *   \Symfony\Component\ClassLoader\ApcClassLoader.
+   *   the front controller, but may also be decorated.
    * @param bool $allow_dumping
    *   (optional) FALSE to stop the container from being written to or read
    *   from disk. Defaults to TRUE.
@@ -473,6 +468,15 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
 
     // Initialize the container.
     $this->initializeContainer();
+
+    // Add the APCu prefix to use to cache found/not-found classes.
+    if (Settings::get('class_loader_auto_detect', TRUE) && method_exists($this->classLoader, 'setApcuPrefix')) {
+      // Vary the APCu key by which modules are installed to allow
+      // class_exists() checks to determine functionality.
+      $id = 'class_loader:' . crc32(implode(array_keys($this->container->getParameter('container.modules')), ':'));
+      $prefix = Settings::getApcuPrefix($id, $this->root);
+      $this->classLoader->setApcuPrefix($prefix);
+    }
 
     if (in_array('phar', stream_get_wrappers(), TRUE)) {
       // Set up a stream wrapper to handle insecurities due to PHP's builtin
@@ -1029,7 +1033,6 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
   protected function initializeSettings(Request $request) {
     $site_path = static::findSitePath($request);
     $this->setSitePath($site_path);
-    $class_loader_class = get_class($this->classLoader);
     Settings::initialize($this->root, $site_path, $this->classLoader);
 
     // Initialize our list of trusted HTTP Host headers to protect against
@@ -1038,40 +1041,6 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
     if (PHP_SAPI !== 'cli' && !empty($host_patterns)) {
       if (static::setupTrustedHosts($request, $host_patterns) === FALSE) {
         throw new BadRequestHttpException('The provided host name is not valid for this server.');
-      }
-    }
-
-    // If the class loader is still the same, possibly
-    // upgrade to an optimized class loader.
-    if ($class_loader_class == get_class($this->classLoader)
-        && Settings::get('class_loader_auto_detect', TRUE)) {
-      $prefix = Settings::getApcuPrefix('class_loader', $this->root);
-      $loader = NULL;
-
-      // We autodetect one of the following three optimized classloaders, if
-      // their underlying extension exists.
-      if (function_exists('apcu_fetch')) {
-        $loader = new ApcClassLoader($prefix, $this->classLoader);
-      }
-      elseif (extension_loaded('wincache')) {
-        $loader = new WinCacheClassLoader($prefix, $this->classLoader);
-      }
-      elseif (extension_loaded('xcache')) {
-        $loader = new XcacheClassLoader($prefix, $this->classLoader);
-      }
-      if (!empty($loader)) {
-        $this->classLoader->unregister();
-        // The optimized classloader might be persistent and store cache misses.
-        // For example, once a cache miss is stored in APCu clearing it on a
-        // specific web-head will not clear any other web-heads. Therefore
-        // fallback to the composer class loader that only statically caches
-        // misses.
-        $old_loader = $this->classLoader;
-        $this->classLoader = $loader;
-        // Our class loaders are prepended to ensure they come first like the
-        // class loader they are replacing.
-        $old_loader->register(TRUE);
-        $loader->register(TRUE);
       }
     }
   }

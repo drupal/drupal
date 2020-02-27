@@ -4,3 +4,5 @@ name: 'ABC Help Test'
 type: module
 description: 'Support module for help testing.'
 package: Testing
+dependencies:
+  - help_topics

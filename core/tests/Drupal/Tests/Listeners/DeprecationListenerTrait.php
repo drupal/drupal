@@ -140,11 +140,6 @@ trait DeprecationListenerTrait {
    */
   public static function getSkippedDeprecations() {
     return [
-      'The Symfony\Component\ClassLoader\ApcClassLoader class is deprecated since Symfony 3.3 and will be removed in 4.0. Use `composer install --apcu-autoloader` instead.',
-      // The following deprecation is not triggered by DrupalCI testing since it
-      // is a Windows only deprecation. Remove when core no longer uses
-      // WinCacheClassLoader in \Drupal\Core\DrupalKernel::initializeSettings().
-      'The Symfony\Component\ClassLoader\WinCacheClassLoader class is deprecated since Symfony 3.3 and will be removed in 4.0. Use `composer install --apcu-autoloader` instead.',
       // The following deprecation message is skipped for testing purposes.
       '\Drupal\Tests\SkippedDeprecationTest deprecation',
       // These deprecations are triggered by symfony/psr-http-message-factory

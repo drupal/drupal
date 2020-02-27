@@ -68,7 +68,6 @@ class Composer {
     'squizlabs/php_codesniffer' => ['tests'],
     'stack/builder' => ['tests'],
     'symfony/browser-kit' => ['Tests'],
-    'symfony/class-loader' => ['Tests'],
     'symfony/console' => ['Tests'],
     'symfony/css-selector' => ['Tests'],
     'symfony/debug' => ['Tests'],
@@ -116,14 +115,18 @@ class Composer {
     if (!isset($autoload['classmap'])) {
       $autoload['classmap'] = [];
     }
-    // Check for our packages, and then optimize them if they're present.
+    // Check for packages used prior to the default classloader being able to
+    // use APCu and optimize them if they're present.
+    // @see \Drupal\Core\DrupalKernel::boot()
     if ($repository->findPackage('symfony/http-foundation', $constraint)) {
       $autoload['classmap'] = array_merge($autoload['classmap'], [
         $vendor_dir . '/symfony/http-foundation/Request.php',
+        $vendor_dir . '/symfony/http-foundation/RequestStack.php',
         $vendor_dir . '/symfony/http-foundation/ParameterBag.php',
         $vendor_dir . '/symfony/http-foundation/FileBag.php',
         $vendor_dir . '/symfony/http-foundation/ServerBag.php',
         $vendor_dir . '/symfony/http-foundation/HeaderBag.php',
+        $vendor_dir . '/symfony/http-foundation/HeaderUtils.php',
       ]);
     }
     if ($repository->findPackage('symfony/http-kernel', $constraint)) {
@@ -131,6 +134,30 @@ class Composer {
         $vendor_dir . '/symfony/http-kernel/HttpKernel.php',
         $vendor_dir . '/symfony/http-kernel/HttpKernelInterface.php',
         $vendor_dir . '/symfony/http-kernel/TerminableInterface.php',
+      ]);
+    }
+    if ($repository->findPackage('symfony/http-kernel', $constraint)) {
+      $autoload['classmap'] = array_merge($autoload['classmap'], [
+        $vendor_dir . '/symfony/http-kernel/HttpKernel.php',
+        $vendor_dir . '/symfony/http-kernel/HttpKernelInterface.php',
+        $vendor_dir . '/symfony/http-kernel/TerminableInterface.php',
+      ]);
+    }
+    if ($repository->findPackage('symfony/dependency-injection', $constraint)) {
+      $autoload['classmap'] = array_merge($autoload['classmap'], [
+        $vendor_dir . '/symfony/dependency-injection/ContainerAwareInterface.php',
+        $vendor_dir . '/symfony/dependency-injection/ContainerInterface.php',
+      ]);
+    }
+    if ($repository->findPackage('psr/container', $constraint)) {
+      $autoload['classmap'] = array_merge($autoload['classmap'], [
+        $vendor_dir . '/psr/container/src/ContainerInterface.php',
+      ]);
+    }
+    if ($repository->findPackage('laminas/laminas-zendframework-bridge', $constraint)) {
+      $autoload['classmap'] = array_merge($autoload['classmap'], [
+        $vendor_dir . '/laminas/laminas-zendframework-bridge/src/Autoloader.php',
+        $vendor_dir . '/laminas/laminas-zendframework-bridge/src/RewriteRules.php',
       ]);
     }
     $package->setAutoload($autoload);

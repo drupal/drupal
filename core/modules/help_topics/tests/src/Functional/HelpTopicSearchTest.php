@@ -241,6 +241,7 @@ class HelpTopicSearchTest extends HelpTopicTranslatedTestBase {
    * Tests uninstalling the help_topics module.
    */
   public function testUninstall() {
+    \Drupal::service('module_installer')->uninstall(['help_topics_test']);
     // Ensure we can uninstall help_topics and use the help system without
     // breaking.
     $this->drupalLogin($this->rootUser);

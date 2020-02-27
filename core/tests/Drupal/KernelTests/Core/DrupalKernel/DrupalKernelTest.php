@@ -2,14 +2,18 @@
 
 namespace Drupal\KernelTests\Core\DrupalKernel;
 
+use Composer\Autoload\ClassLoader;
 use Drupal\Core\DrupalKernel;
 use Drupal\KernelTests\KernelTestBase;
+use org\bovigo\vfs\vfsStream;
+use Prophecy\Argument;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Tests DIC compilation to disk.
  *
  * @group DrupalKernel
+ * @coversDefaultClass \Drupal\Core\DrupalKernel
  */
 class DrupalKernelTest extends KernelTestBase {
 
@@ -187,6 +191,66 @@ class DrupalKernelTest extends KernelTestBase {
     // identical path after boot.
     $path = $kernel->getSitePath();
     $kernel->setSitePath($path);
+  }
+
+  /**
+   * Data provider for self::testClassLoaderAutoDetect
+   * @return array
+   */
+  public function providerClassLoaderAutoDetect() {
+    return [
+      'TRUE' => [TRUE],
+      'FALSE' => [FALSE],
+    ];
+  }
+
+  /**
+   * Tests class_loader_auto_detect setting.
+   *
+   * This test runs in a separate process since it registers class loaders and
+   * results in statics being set.
+   *
+   * @runInSeparateProcess
+   * @preserveGlobalState disabled
+   * @covers ::boot
+   * @dataProvider providerClassLoaderAutoDetect
+   *
+   * @param bool $value
+   *   The value to set class_loader_auto_detect to.
+   */
+  public function testClassLoaderAutoDetect($value) {
+    // Create a virtual file system containing items that should be
+    // excluded. Exception being modules directory.
+    vfsStream::setup('root', NULL, [
+      'sites' => [
+        'default' => [],
+      ],
+      'core' => [
+        'lib' => [
+          'Drupal' => [
+            'Core' => [],
+            'Component' => [],
+          ],
+        ],
+      ],
+    ]);
+
+    $this->setSetting('class_loader_auto_detect', $value);
+    $classloader = $this->prophesize(ClassLoader::class);
+
+    // Assert that we call the setApcuPrefix on the classloader if
+    // class_loader_auto_detect is set to TRUE;
+    if ($value) {
+      $classloader->setApcuPrefix(Argument::type('string'))->shouldBeCalled();
+    }
+    else {
+      $classloader->setApcuPrefix(Argument::type('string'))->shouldNotBeCalled();
+    }
+
+    // Create a kernel suitable for testing.
+    $kernel = new DrupalKernel('test', $classloader->reveal(), FALSE, vfsStream::url('root'));
+    $kernel->setSitePath(vfsStream::url('root/sites/default'));
+    $kernel->boot();
   }
 
 }

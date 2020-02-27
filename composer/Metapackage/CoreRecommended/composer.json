@@ -35,7 +35,6 @@
         "ralouphie/getallheaders": "3.0.3",
         "stack/builder": "v1.0.6",
         "symfony-cmf/routing": "2.1.1",
-        "symfony/class-loader": "v3.4.37",
         "symfony/console": "v4.4.4",
         "symfony/debug": "v4.4.4",
         "symfony/dependency-injection": "v4.4.4",

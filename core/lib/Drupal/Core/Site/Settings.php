@@ -107,7 +107,7 @@ final class Settings {
    * @param \Composer\Autoload\ClassLoader $class_loader
    *   The class loader that is used for this request. Passed by reference and
    *   exposed to the local scope of settings.php, so as to allow it to be
-   *   decorated with Symfony's ApcClassLoader, for example.
+   *   decorated.
    *
    * @see default.settings.php
    */
