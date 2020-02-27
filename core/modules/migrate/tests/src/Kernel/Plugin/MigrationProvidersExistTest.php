@@ -5,7 +5,6 @@ namespace Drupal\Tests\migrate\Kernel\Plugin;
 use Drupal\KernelTests\FileSystemModuleDiscoveryDataProviderTrait;
 use Drupal\migrate\Plugin\Exception\BadPluginDefinitionException;
 use Drupal\migrate_drupal\Plugin\MigrateFieldPluginManager;
-use Drupal\Tests\DeprecatedModulesTestTrait;
 use Drupal\Tests\migrate_drupal\Kernel\MigrateDrupalTestBase;
 
 /**
@@ -15,7 +14,6 @@ use Drupal\Tests\migrate_drupal\Kernel\MigrateDrupalTestBase;
  */
 class MigrationProvidersExistTest extends MigrateDrupalTestBase {
 
-  use DeprecatedModulesTestTrait;
   use FileSystemModuleDiscoveryDataProviderTrait;
 
   /**

@@ -148,7 +148,7 @@ function settings_tray_toolbar_alter(&$items) {
     // Set a class on items to mark whether they should be active in edit mode.
     // @todo Create a dynamic method for modules to set their own items.
     //   https://www.drupal.org/node/2784589.
-    $edit_mode_items = ['contextual', 'block_place'];
+    $edit_mode_items = ['contextual'];
     foreach ($items as $key => $item) {
       if (!in_array($key, $edit_mode_items) && (!isset($items[$key]['#wrapper_attributes']['class']) || !in_array('hidden', $items[$key]['#wrapper_attributes']['class']))) {
         $items[$key]['#wrapper_attributes']['class'][] = 'edit-mode-inactive';

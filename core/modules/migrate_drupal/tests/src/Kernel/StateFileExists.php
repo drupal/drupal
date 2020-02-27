@@ -5,7 +5,6 @@ namespace Drupal\Tests\migrate_drupal\Kernel;
 use Drupal\Component\Discovery\YamlDiscovery;
 use Drupal\KernelTests\FileSystemModuleDiscoveryDataProviderTrait;
 use Drupal\migrate_drupal\MigrationConfigurationTrait;
-use Drupal\Tests\DeprecatedModulesTestTrait;
 
 /**
  * Tests that core modules have a migrate_drupal.yml file as needed.
@@ -19,7 +18,6 @@ use Drupal\Tests\DeprecatedModulesTestTrait;
  */
 class StateFileExists extends MigrateDrupalTestBase {
 
-  use DeprecatedModulesTestTrait;
   use FileSystemModuleDiscoveryDataProviderTrait;
   use MigrationConfigurationTrait;
 
