@@ -42,10 +42,17 @@ libraries-override:
     css:
       component:
         assets/vendor/jquery.ui/themes/base/dialog.css: false
+  # @todo remove this library override in https://drupal.org/node/3111468
+  stable/drupal.ajax: seven/empty
+  # @todo remove this library override in https://drupal.org/node/3111468
+  stable/drupal.user: seven/empty
 
 libraries-extend:
   core/ckeditor:
     - seven/ckeditor-dialog
+  # @todo remove this library extend in https://drupal.org/node/3111468
+  core/drupal.ajax:
+    - seven/temporary.ajax
   core/drupal.dialog:
     - seven/seven.drupal.dialog
   core/drupal.dropbutton:
@@ -67,7 +74,8 @@ libraries-extend:
   tour/tour-styling:
     - seven/tour-styling
   user/drupal.user:
-    - seven/classy.user
+    - seven/user
+
 quickedit_stylesheets:
   - css/components/quickedit.css
 regions:

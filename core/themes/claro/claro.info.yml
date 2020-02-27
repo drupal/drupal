@@ -119,6 +119,8 @@ libraries-extend:
     - claro/drupal.shortcut
   core/drupal.ajax:
     - claro/ajax
+    # @todo remove claro/temporary.ajax in https://drupal.org/node/3111468
+    - claro/temporary.ajax
   views/views.module:
     - claro/views
   media/media_embed_ckeditor_theme:

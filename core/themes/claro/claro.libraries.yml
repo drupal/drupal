@@ -317,3 +317,11 @@ classy.search-results:
   css:
     component:
       css/classy/components/search-results.css: {}
+
+# @todo remove library in https://drupal.org/node/3111468
+temporary.ajax:
+  version: VERSION
+  js:
+    js/ajax.temporary.js: {}
+  dependencies:
+    - core/jquery

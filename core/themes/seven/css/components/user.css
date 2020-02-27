@@ -56,11 +56,11 @@
 }
 
 /* Styling for the status indicator of the passwords match test.  */
-.password-confirm .ok {
+.password-confirm-message .ok {
   color: #325e1c;
   font-weight: bold;
 }
-.password-confirm .error {
+.password-confirm-message .error {
   color: #a51b00;
   font-weight: bold;
 }

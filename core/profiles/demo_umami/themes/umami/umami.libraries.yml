@@ -1,3 +1,12 @@
+# Drupal throws an IncompleteLibraryDefinitionException if a base theme defined
+# library is set to false in a subtheme's libraries-override. This empty library
+# is used as a workaround.
+# @see https://www.drupal.org/node/3098375
+#  @todo remove this in https://drupal.org/node/3111468
+empty:
+  version: VERSION
+  css: {}
+
 global:
   version: VERSION
   css:
@@ -75,6 +84,15 @@ two-columns:
   css:
     layout:
       css/layout/layout-2-col.css: {}
+
+user:
+  version: VERSION
+  css:
+    component:
+      css/components/user/user.css: { weight: -10 }
+  js:
+    # @todo remove this file from library in https://drupal.org/node/3111468
+    js/user.theme.temporary.js: {}
 
 webfonts-open-sans:
   remote: https://fonts.google.com
@@ -230,8 +248,10 @@ classy.search-results:
     component:
       css/classy/components/search-results.css: {}
 
-classy.user:
+# @todo remove library in https://drupal.org/node/3111468
+temporary.ajax:
   version: VERSION
-  css:
-    component:
-      css/classy/components/user.css: { weight: -10 }
+  js:
+    js/ajax.temporary.js: {}
+  dependencies:
+    - core/jquery

@@ -148,7 +148,6 @@ class ConfirmClassyCopiesTest extends KernelTestBase {
             'tabs.css',
             'textarea.css',
             'ui-dialog.css',
-            'user.css',
           ],
           'js' => [
             'media_embed_ckeditor.theme.es6.js',
@@ -411,7 +410,6 @@ class ConfirmClassyCopiesTest extends KernelTestBase {
             'tabs.css',
             'textarea.css',
             'ui-dialog.css',
-            'user.css',
           ],
           'js' => [
             'media_embed_ckeditor.theme.es6.js',
@@ -532,7 +530,6 @@ class ConfirmClassyCopiesTest extends KernelTestBase {
             'book-navigation.css',
             'tableselect.css',
             'ui-dialog.css',
-            'user.css',
             'item-list.css',
             'field.css',
             'tablesort.css',

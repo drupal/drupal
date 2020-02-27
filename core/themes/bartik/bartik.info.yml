@@ -23,7 +23,16 @@ libraries:
   - core/normalize
   - bartik/global-styling
 
+libraries-override:
+  # @todo remove this library override in https://drupal.org/node/3111468
+  stable/drupal.ajax: bartik/empty
+  # @todo remove this library override in https://drupal.org/node/3111468
+  stable/drupal.user: bartik/empty
+
 libraries-extend:
+  # @todo remove this library extend in https://drupal.org/node/3111468
+#  core/drupal.ajax:
+#    - bartik/temporary.ajax
   core/drupal.dialog:
     - bartik/classy.dialog
   core/drupal.dropbutton:
@@ -39,7 +48,7 @@ libraries-extend:
   media_library/widget:
     - bartik/classy.media_library
   user/drupal.user:
-    - bartik/classy.user
+    - bartik/user
 
 ckeditor_stylesheets:
   - css/base/elements.css
