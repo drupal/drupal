@@ -8,8 +8,8 @@ use Drupal\Core\Config\Entity\ThirdPartySettingsInterface;
 /**
  * Interface definition for plugin with settings.
  *
- * @deprecated in drupal:8.1.0 and is removed from drupal:9.0.0. Use
- *   \Drupal\Component\Plugin\ConfigurableInterface instead.
+ * @todo Merge into \Drupal\Component\Plugin\ConfigurableInterface. See
+ *   https://www.drupal.org/project/drupal/issues/1764380
  */
 interface PluginSettingsInterface extends PluginInspectionInterface, ThirdPartySettingsInterface {
 
