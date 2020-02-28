@@ -100,6 +100,36 @@ function template_preprocess_update_report(&$variables) {
 }
 
 /**
+ * Prepares variables for update version templates.
+ *
+ * Default template: update-version.html.twig.
+ *
+ * @param array $variables
+ *   An associative array containing:
+ *   - version: An array of information about the release version.
+ */
+function template_preprocess_update_version(array &$variables) {
+  $version = $variables['version'];
+  if (empty($version['core_compatibility_message'])) {
+    return;
+  }
+  $core_compatible = !empty($version['core_compatible']);
+  $variables['core_compatibility_details'] = [
+    '#type' => 'details',
+    '#title' => $core_compatible ? t('Compatible') : t('Not compatible'),
+    '#open' => !$core_compatible,
+    'message' => [
+      '#markup' => $version['core_compatibility_message'],
+    ],
+    '#attributes' => [
+      'class' => [
+        $core_compatible ? 'compatible' : 'not-compatible',
+      ],
+    ],
+  ];
+}
+
+/**
  * Prepares variables for update project status templates.
  *
  * Default template: update-project-status.html.twig.
