@@ -8,8 +8,12 @@ use Drupal\Core\StringTranslation\StringTranslationTrait;
 
 /**
  * Utility class to set core compatibility messages for project releases.
+ *
+ * @internal
+ *   This class implements logic used by update_calculate_project_status(). It
+ *   should not be called directly.
  */
-class ProjectCoreCompatibility {
+final class ProjectCoreCompatibility {
 
   use StringTranslationTrait;
 
