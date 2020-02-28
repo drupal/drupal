@@ -382,6 +382,7 @@ function update_calculate_project_update_status(&$project_data, $available) {
 
     // Otherwise, ignore unpublished, insecure, or unsupported releases.
     if ($release['status'] == 'unpublished' ||
+        !$is_in_supported_branch($release['version']) ||
         (isset($release['terms']['Release type']) &&
          (in_array('Insecure', $release['terms']['Release type']) ||
           in_array('Unsupported', $release['terms']['Release type'])))) {
@@ -392,14 +393,12 @@ function update_calculate_project_update_status(&$project_data, $available) {
     // See if this is a higher major version than our target and yet still
     // supported. If so, record it as an "Also available" release.
     if ($release_major_version > $target_major) {
-      if ($is_in_supported_branch($release['version'])) {
-        if (!isset($project_data['also'])) {
-          $project_data['also'] = [];
-        }
-        if (!isset($project_data['also'][$release_major_version])) {
-          $project_data['also'][$release_major_version] = $version;
-          $project_data['releases'][$version] = $release;
-        }
+      if (!isset($project_data['also'])) {
+        $project_data['also'] = [];
+      }
+      if (!isset($project_data['also'][$release_major_version])) {
+        $project_data['also'][$release_major_version] = $version;
+        $project_data['releases'][$version] = $release;
       }
       // Otherwise, this release can't matter to us, since it's neither
       // from the release series we're currently using nor the recommended
