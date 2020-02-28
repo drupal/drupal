@@ -156,21 +156,6 @@ class MigrationState {
   protected $fieldPluginManager;
 
   /**
-   * Source modules that will not be migrated determined using legacy method.
-   *
-   * @var array
-   */
-  protected $unmigratedSourceModules = [];
-
-  /**
-   * Source modules that will be migrated determined using legacy method, keyed
-   * by version.
-   *
-   * @var array
-   */
-  protected $migratedSourceModules = [];
-
-  /**
    * An array of migration states declared for each source migration.
    *
    * States are keyed by version. Each value is an array keyed by name of the
@@ -323,25 +308,6 @@ class MigrationState {
       // source_modules are enabled so do the same here.
       if ($module['status']) {
         $source_module = $module['name'];
-        // If there is not a declared state for this source module then use the
-        // legacy method for determining the migration state.
-        if (!isset($this->stateBySource[$version][$source_module])) {
-          // No migrations found for this source module.
-          if (!empty($this->unmigratedSourceModules[$version]) && array_key_exists($source_module, $this->unmigratedSourceModules[$version])) {
-            $upgrade_state[static::NOT_FINISHED][$source_module] = '';
-            continue;
-          }
-          if (!empty($this->migratedSourceModules[$version]) && array_key_exists($source_module, $this->migratedSourceModules[$version])) {
-            @trigger_error(sprintf("Using migration plugin definitions to determine the migration state of the module '%s' is deprecated in Drupal 8.7. Add the module to a migrate_drupal.yml file. See https://www.drupal.org/node/2929443", $source_module), E_USER_DEPRECATED);
-            if (array_diff(array_keys($this->migratedSourceModules[$version][$source_module]), $this->enabledModules)) {
-              $upgrade_state[static::NOT_FINISHED][$source_module] = implode(', ', array_keys($this->migratedSourceModules[$version][$source_module]));
-              continue;
-            }
-            $upgrade_state[static::FINISHED][$source_module] = implode(', ', array_keys($this->migratedSourceModules[$version][$source_module]));
-          }
-          continue;
-        }
-
         $upgrade_state[$this->getSourceState($version, $source_module)][$source_module] = implode(', ', $this->getDestinationsForSource($version, $source_module));
       }
 
@@ -401,13 +367,6 @@ class MigrationState {
     foreach ($table_data as $source_module => $destination_module_info) {
       ksort($table_data[$source_module]);
     }
-    $tmp = array_diff_key($source_system_data['module'], $table_data);
-    foreach ($tmp as $source_module => $module_data) {
-      if ($module_data['status']) {
-        $this->unmigratedSourceModules[$version][$source_module] = $module_data;
-      }
-    }
-    $this->migratedSourceModules[$version] = $table_data;
     $this->discoveredBySource[$version] = array_map('array_unique', $discovered_upgrade_paths);
   }
 
@@ -456,6 +415,10 @@ class MigrationState {
     // were found and each destination module is enabled.
     if (!$destinations = $this->getDestinationsForSource($version, $source_module)) {
       // No discovered or declared state.
+      return MigrationState::NOT_FINISHED;
+    }
+    if (!isset($this->stateBySource[$version][$source_module])) {
+      // No declared state.
       return MigrationState::NOT_FINISHED;
     }
     if (in_array(MigrationState::NOT_FINISHED, $this->stateBySource[$version][$source_module], TRUE) || !in_array(MigrationState::FINISHED, $this->stateBySource[$version][$source_module], TRUE)) {

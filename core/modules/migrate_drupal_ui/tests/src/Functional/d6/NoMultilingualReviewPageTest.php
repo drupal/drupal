@@ -33,8 +33,6 @@ class NoMultilingualReviewPageTest extends NoMultilingualReviewPageTestBase {
     // Test migrations states.
     'migrate_state_finished_test',
     'migrate_state_not_finished_test',
-    // Test missing migrate_drupal.yml.
-    'migrate_state_no_file_test',
   ];
 
   /**
