@@ -266,6 +266,10 @@ class UpdateContribTest extends UpdateTestBase {
         $this->clickLink('Check manually');
         $this->checkForMetaRefresh();
         $assert_session->pageTextNotContains('Security update required!');
+        // The XML test fixtures for this method all contain the '8.x-3.0'
+        // release but because '8.x-3.0' is not in a supported branch it will
+        // not be in the available updates.
+        $this->assertNoRaw('8.x-3.0');
         // Set a CSS selector in order for assertions to target the 'Modules'
         // table and not Drupal core updates.
         $this->updateTableLocator = 'table.update:nth-of-type(2)';
@@ -563,18 +567,25 @@ class UpdateContribTest extends UpdateTestBase {
     $this->config('update_test.settings')->set('system_info', $system_info)->save();
 
     // Confirm that messages are displayed for recommended and latest updates.
-    $this->refreshUpdateStatus(['drupal' => '1.1', 'aaa_update_test' => '8.x-1.2']);
+    // @todo In https://www.drupal.org/project/drupal/issues/3112962:
+    //   Change the calls to 'refreshUpdateStatus()' to use:
+    //   - '1.1' instead of '1.1-core_compatibility'.
+    //   - '1.1-alpha1' instead of '1.1-alpha1-core_compatibility'.
+    //   Delete the files:
+    //   - core/modules/update/tests/modules/update_test/drupal.1.1-alpha1-core_compatibility.xml
+    //   - core/modules/update/tests/modules/update_test/drupal.1.1-core_compatibility.xml
+    $this->refreshUpdateStatus(['drupal' => '1.1-core_compatibility', 'aaa_update_test' => '8.x-1.2']);
     $this->assertCoreCompatibilityMessage('8.x-1.2', '8.0.0 to 8.1.1', 'Recommended version:');
     $this->assertCoreCompatibilityMessage('8.x-1.3-beta1', '8.0.0, 8.1.1', 'Latest version:');
 
     // Change the available core releases and confirm that the messages change.
-    $this->refreshUpdateStatus(['drupal' => '1.1-alpha1', 'aaa_update_test' => '8.x-1.2']);
+    $this->refreshUpdateStatus(['drupal' => '1.1-alpha1-core_compatibility', 'aaa_update_test' => '8.x-1.2']);
     $this->assertCoreCompatibilityMessage('8.x-1.2', '8.0.0 to 8.1.0', 'Recommended version:');
     $this->assertCoreCompatibilityMessage('8.x-1.3-beta1', '8.0.0', 'Latest version:');
 
     // Confirm that messages are displayed for security and 'Also available'
     // updates.
-    $this->refreshUpdateStatus(['drupal' => '1.1', 'aaa_update_test' => 'core_compatibility.8.x-1.2_8.x-2.2']);
+    $this->refreshUpdateStatus(['drupal' => '1.1-core_compatibility', 'aaa_update_test' => 'core_compatibility.8.x-1.2_8.x-2.2']);
     $this->assertCoreCompatibilityMessage('8.x-1.2', '8.1.0 to 8.1.1', 'Security update:', FALSE);
     $this->assertCoreCompatibilityMessage('8.x-2.2', '8.1.1', 'Also available:', FALSE);
   }

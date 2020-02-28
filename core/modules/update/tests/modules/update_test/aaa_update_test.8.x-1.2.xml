@@ -4,9 +4,7 @@
  <short_name>aaa_update_test</short_name>
  <dc:creator>Drupal</dc:creator>
  <api_version>8.x</api_version>
- <recommended_major>1</recommended_major>
- <supported_majors>1</supported_majors>
- <default_major>1</default_major>
+ <supported_branches>8.x-1.</supported_branches>
  <project_status>published</project_status>
  <link>http://example.com/project/aaa_update_test</link>
  <terms>
