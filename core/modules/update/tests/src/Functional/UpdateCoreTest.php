@@ -77,6 +77,10 @@ class UpdateCoreTest extends UpdateTestBase {
           $this->setSystemInfo("8.$minor_version.$patch_version" . $extra_version);
           $this->refreshUpdateStatus(['drupal' => "$minor_version.$patch_version" . $extra_version]);
           $this->standardTests();
+          // The XML test fixtures for this method all contain the '8.2.0'
+          // release but because '8.2.0' is not in a supported branch it will
+          // not be in the available updates.
+          $this->assertNoRaw('8.2.0');
           $this->assertText(t('Up to date'));
           $this->assertNoText(t('Update available'));
           $this->assertNoText(t('Security update required!'));
@@ -105,6 +109,10 @@ class UpdateCoreTest extends UpdateTestBase {
         $this->clickLink(t('Check manually'));
         $this->checkForMetaRefresh();
         $this->assertNoText(t('Security update required!'));
+        // The XML test fixtures for this method all contain the '8.2.0' release
+        // but because '8.2.0' is not in a supported branch it will not be in
+        // the available updates.
+        $this->assertNoRaw('8.2.0');
         switch ($minor_version) {
           case 0:
             // Both stable and unstable releases are available.
