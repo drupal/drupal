@@ -164,6 +164,13 @@ class ViewAddForm extends ViewFormBase {
     $wizard_instance = $this->wizardManager->createInstance($wizard_type);
     $form_state->set('wizard', $wizard_instance->getPluginDefinition());
     $form_state->set('wizard_instance', $wizard_instance);
+
+    $path = &$form_state->getValue(['page', 'path']);
+    if (!empty($path)) {
+      // @todo https://www.drupal.org/node/2423913 Views should expect and store
+      //   a leading /.
+      $path = ltrim($path, '/ ');
+    }
     $errors = $wizard_instance->validateView($form, $form_state);
 
     foreach ($errors as $display_errors) {

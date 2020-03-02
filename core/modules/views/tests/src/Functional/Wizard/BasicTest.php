@@ -176,6 +176,20 @@ class BasicTest extends WizardTestBase {
     $this->assertEqual(count($data), 1, 'Only the node of type page is exported.');
     $node = reset($data);
     $this->assertEqual($node['nid'][0]['value'], $node1->id(), 'The node of type page is exported.');
+
+    // Create a view with a leading slash in the path and test that is properly
+    // set.
+    $leading_slash_view = [];
+    $leading_slash_view['label'] = $this->randomMachineName(16);
+    $leading_slash_view['id'] = strtolower($this->randomMachineName(16));
+    $leading_slash_view['description'] = $this->randomMachineName(16);
+    $leading_slash_view['show[wizard_key]'] = 'node';
+    $leading_slash_view['show[type]'] = 'page';
+    $leading_slash_view['page[create]'] = 1;
+    $leading_slash_view['page[title]'] = $this->randomMachineName(16);
+    $leading_slash_view['page[path]'] = '/' . $this->randomMachineName(16);
+    $this->drupalPostForm('admin/structure/views/add', $leading_slash_view, t('Save and edit'));
+    $this->assertEquals($leading_slash_view['page[path]'], $this->cssSelect('#views-page-1-path')[0]->getText());
   }
 
   /**
