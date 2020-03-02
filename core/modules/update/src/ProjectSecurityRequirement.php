@@ -2,7 +2,6 @@
 
 namespace Drupal\update;
 
-use Drupal\Core\Render\Markup;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Url;
 
@@ -138,11 +137,14 @@ final class ProjectSecurityRequirement {
     if ($security_coverage_message = $this->getVersionEndCoverageMessage()) {
       $requirement['description'] = $security_coverage_message;
       if ($this->securityCoverageInfo['additional_minors_coverage'] > 0) {
-        $requirement['value'] = $this->t('Supported minor version');
+        $requirement['value'] = $this->t(
+          'Covered until @end_version',
+          ['@end_version' => $this->securityCoverageInfo['security_coverage_end_version']]
+        );
         $requirement['severity'] = $this->securityCoverageInfo['additional_minors_coverage'] > 1 ? REQUIREMENT_INFO : REQUIREMENT_WARNING;
       }
       else {
-        $requirement['value'] = $this->t('Unsupported minor version');
+        $requirement['value'] = $this->t('Coverage has ended');
         $requirement['severity'] = REQUIREMENT_ERROR;
       }
     }
@@ -152,8 +154,8 @@ final class ProjectSecurityRequirement {
   /**
    * Gets the message for additional minor version security coverage.
    *
-   * @return string|\Drupal\Component\Render\MarkupInterface
-   *   The security coverage message, or an empty string if there is none.
+   * @return array[]
+   *   A render array containing security coverage message.
    *
    * @see \Drupal\update\ProjectSecurityData::getCoverageInfo()
    */
@@ -161,29 +163,34 @@ final class ProjectSecurityRequirement {
     if ($this->securityCoverageInfo['additional_minors_coverage'] > 0) {
       // If the installed minor version will receive security coverage until
       // newer minor versions are released, inform the user.
-      $translation_arguments = [
-        '@project' => $this->projectTitle,
-        '@version' => $this->existingMajorMinorVersion,
-        '@coverage_version' => $this->securityCoverageInfo['security_coverage_end_version'],
-      ];
-      $message = '<p>' . $this->t('The installed minor version of @project (@version), will stop receiving official security support after the release of @coverage_version.', $translation_arguments) . '</p>';
-
       if ($this->securityCoverageInfo['additional_minors_coverage'] === 1) {
         // If the installed minor version will only receive security coverage
         // for 1 newer minor core version, encourage the site owner to update
         // soon.
-        $message .= '<p>' . $this->t('Update to @next_minor or higher soon to continue receiving security updates.', ['@next_minor' => $this->nextMajorMinorVersion])
-          . ' ' . static::getAvailableUpdatesMessage() . '</p>';
+        $message['coverage_message'] = [
+          '#markup' => $this->t(
+            '<a href=":update_status_report">Update to @next_minor or higher</a> soon to continue receiving security updates.',
+            [
+              ':update_status_report' => Url::fromRoute('update.status')->toString(),
+              '@next_minor' => $this->nextMajorMinorVersion,
+            ]
+          ),
+          '#suffix' => ' ',
+        ];
       }
     }
     else {
       // Because the current minor version no longer has security coverage,
       // advise the site owner to update.
-      $message = $this->getVersionNoSecurityCoverageMessage();
+      $message['coverage_message'] = [
+        '#markup' => $this->getVersionNoSecurityCoverageMessage(),
+        '#suffix' => ' ',
+      ];
     }
-    $message .= $this->getReleaseCycleLink();
-
-    return Markup::create($message);
+    $message['release_cycle_link'] = [
+      '#markup' => $this->getReleaseCycleLink(),
+    ];
+    return $message;
   }
 
   /**
@@ -212,35 +219,37 @@ final class ProjectSecurityRequirement {
       // 'Y-m' format.
       $full_security_coverage_end_date = $this->securityCoverageInfo['security_coverage_end_date'] . '-15';
     }
-    $security_coverage_end_timestamp = \DateTime::createFromFormat('Y-m-d', $full_security_coverage_end_date)->getTimestamp();
-    $formatted_end_date = $date_format === 'Y-m-d'
-      ? $this->securityCoverageInfo['security_coverage_end_date']
-      : $date_formatter->format($security_coverage_end_timestamp, 'custom', 'F Y');
+
     $comparable_request_date = $date_formatter->format($time->getRequestTime(), 'custom', $date_format);
     if ($this->securityCoverageInfo['security_coverage_end_date'] <= $comparable_request_date) {
       // Security coverage is over.
-      $requirement['value'] = $this->t('Unsupported minor version');
+      $requirement['value'] = $this->t('Coverage has ended');
       $requirement['severity'] = REQUIREMENT_ERROR;
-      $requirement['description'] = $this->getVersionNoSecurityCoverageMessage();
+      $requirement['description']['coverage_message'] = [
+        '#markup' => $this->getVersionNoSecurityCoverageMessage(),
+        '#suffix' => ' ',
+      ];
     }
     else {
-      $requirement['value'] = $this->t('Supported minor version');
+      $security_coverage_end_timestamp = \DateTime::createFromFormat('Y-m-d', $full_security_coverage_end_date)->getTimestamp();
+      $output_date_format = $date_format === 'Y-m-d' ? 'Y-M-d' : 'Y-M';
+      $formatted_end_date = $date_formatter
+        ->format($security_coverage_end_timestamp, 'custom', $output_date_format);
+      $translation_arguments = ['@date' => $formatted_end_date];
+      $requirement['value'] = $this->t('Covered until @date', $translation_arguments);
       $requirement['severity'] = REQUIREMENT_INFO;
-      $translation_arguments = [
-        '@project' => $this->projectTitle,
-        '@version' => $this->existingMajorMinorVersion,
-        '@date' => $formatted_end_date,
-      ];
-      $requirement['description'] = '<p>' . $this->t('The installed minor version of @project (@version), will stop receiving official security support after @date.', $translation_arguments) . '</p>';
       // 'security_coverage_ending_warn_date' will always be in the format
       // 'Y-m-d'.
       $request_date = $date_formatter->format($time->getRequestTime(), 'custom', 'Y-m-d');
       if (!empty($this->securityCoverageInfo['security_coverage_ending_warn_date']) && $this->securityCoverageInfo['security_coverage_ending_warn_date'] <= $request_date) {
-        $requirement['description'] .= '<p>' . $this->t('Update to a supported minor version soon to continue receiving security updates.') . '</p>';
+        $requirement['description']['coverage_message'] = [
+          '#markup' => $this->t('Update to a supported minor version soon to continue receiving security updates.'),
+          '#suffix' => ' ',
+        ];
         $requirement['severity'] = REQUIREMENT_WARNING;
       }
     }
-    $requirement['description'] = Markup::create($requirement['description'] . $this->getReleaseCycleLink());
+    $requirement['description']['release_cycle_link'] = ['#markup' => $this->getReleaseCycleLink()];
     return $requirement;
   }
 
@@ -251,26 +260,8 @@ final class ProjectSecurityRequirement {
    *   The message for a version with no security coverage.
    */
   private function getVersionNoSecurityCoverageMessage() {
-    return '<p>' . $this->t(
-        'The installed minor version of @project (@version), is no longer supported and will not receive security updates.',
-        [
-          '@project' => $this->projectTitle,
-          '@version' => $this->existingMajorMinorVersion,
-        ])
-      . '</p><p>'
-      . $this->t('Update to a supported minor as soon as possible to continue receiving security updates.')
-      . ' ' . static::getAvailableUpdatesMessage() . '</p>';
-  }
-
-  /**
-   * Gets the message with a link to the available updates page.
-   *
-   * @return \Drupal\Core\StringTranslation\TranslatableMarkup
-   *   The message.
-   */
-  private function getAvailableUpdatesMessage() {
     return $this->t(
-      'See the <a href=":update_status_report">available updates</a> page for more information.',
+      '<a href=":update_status_report">Update to a supported minor</a> as soon as possible to continue receiving security updates.',
       [':update_status_report' => Url::fromRoute('update.status')->toString()]
     );
   }
@@ -282,10 +273,10 @@ final class ProjectSecurityRequirement {
    *   A link to the release cycle page on drupal.org.
    */
   private function getReleaseCycleLink() {
-    return '<p>' . $this->t(
+    return $this->t(
         'Visit the <a href=":url">release cycle overview</a> for more information on supported releases.',
         [':url' => 'https://www.drupal.org/core/release-cycle-overview']
-      ) . '</p>';
+      );
   }
 
 }
