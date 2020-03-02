@@ -116,7 +116,6 @@ trait DeprecationListenerTrait {
       '%Non-object services are deprecated since Symfony 4\.4, please fix the ".*" service which is of type ".*" right now\.%',
       '%Non-object services are deprecated since Symfony 4\.4, setting the ".*" service to a value of type ".*" should be avoided\.%',
       '%The ".*" service relies on the deprecated "Symfony\\\\Component\\\\Debug\\\\BufferingLogger" class\. It should either be deprecated or its implementation upgraded\.%',
-      '%Method ".*::.*\(\)" will return ".*" as of its next major version\. Doing the same in child class ".*" will be required when upgrading\.%',
     ];
     return (bool) preg_filter($dynamic_skipped_deprecations, '$0', $message);
   }
