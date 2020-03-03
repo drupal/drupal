@@ -121,25 +121,7 @@ function common_test_theme() {
     'common_test_render_element' => [
       'render element' => 'foo',
     ],
-    'common_test_empty' => [
-      'variables' => ['foo' => 'foo'],
-      'function' => 'theme_common_test_empty',
-    ],
   ];
-}
-
-/**
- * Provides a theme function for drupal_render().
- */
-function theme_common_test_foo($variables) {
-  return $variables['foo'] . $variables['bar'];
-}
-
-/**
- * Always returns an empty string.
- */
-function theme_common_test_empty($variables) {
-  return '';
 }
 
 /**

@@ -97,12 +97,6 @@ class RegistryTest extends KernelTestBase {
       'template_preprocess',
       'test_basetheme_preprocess_theme_test_template_test',
     ], $preprocess_functions);
-
-    $preprocess_functions = $registry_base_theme->get()['theme_test_function_suggestions']['preprocess functions'];
-    $this->assertSame([
-       'template_preprocess_theme_test_function_suggestions',
-       'test_basetheme_preprocess_theme_test_function_suggestions',
-    ], $preprocess_functions, "Theme functions don't have template_preprocess but do have template_preprocess_HOOK");
   }
 
   /**
@@ -135,9 +129,6 @@ class RegistryTest extends KernelTestBase {
       'test_theme_preprocess_theme_test_preprocess_suggestions',
       'test_theme_preprocess_theme_test_preprocess_suggestions__kitten',
     ];
-
-    $preprocess_functions = $registry_theme->get()['theme_test_preprocess_suggestions__kitten__meerkat']['preprocess functions'];
-    $this->assertSame($expected_preprocess_functions, $preprocess_functions, 'Suggestion implemented as a function correctly inherits preprocess functions.');
 
     $preprocess_functions = $registry_theme->get()['theme_test_preprocess_suggestions__kitten__bearcat']['preprocess functions'];
     $this->assertSame($expected_preprocess_functions, $preprocess_functions, 'Suggestion implemented as a template correctly inherits preprocess functions.');

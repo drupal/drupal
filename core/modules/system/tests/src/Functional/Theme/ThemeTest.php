@@ -45,7 +45,7 @@ class ThemeTest extends BrowserTestBase {
     drupal_theme_rebuild();
     for ($i = 0; $i < 2; $i++) {
       $this->drupalGet('theme-test/suggestion');
-      $this->assertText('Theme hook implementor=test_theme_theme_test__suggestion(). Foo=template_preprocess_theme_test', 'Theme hook suggestion ran with data available from a preprocess function for the base hook.');
+      $this->assertText('Theme hook implementor=theme-test--suggestion.html.twig. Foo=template_preprocess_theme_test', 'Theme hook suggestion ran with data available from a preprocess function for the base hook.');
     }
   }
 
@@ -56,7 +56,7 @@ class ThemeTest extends BrowserTestBase {
     $this->drupalGet('theme-test/priority');
 
     // Ensure that the custom theme negotiator was not able to set the theme.
-    $this->assertNoText('Theme hook implementor=test_theme_theme_test__suggestion(). Foo=template_preprocess_theme_test', 'Theme hook suggestion ran with data available from a preprocess function for the base hook.');
+    $this->assertNoText('Theme hook implementor=theme-test--suggestion.html.twig. Foo=template_preprocess_theme_test', 'Theme hook suggestion ran with data available from a preprocess function for the base hook.');
   }
 
   /**
@@ -139,14 +139,6 @@ class ThemeTest extends BrowserTestBase {
       ->save();
     $this->drupalGet('theme-test/template-test');
     $this->assertText('Success: Template overridden.', 'Template overridden by defined \'template\' filename.');
-  }
-
-  /**
-   * Ensures a theme template can override a theme function.
-   */
-  public function testFunctionOverride() {
-    $this->drupalGet('theme-test/function-template-overridden');
-    $this->assertText('Success: Template overrides theme function.', 'Theme function overridden by test_theme template.');
   }
 
   /**

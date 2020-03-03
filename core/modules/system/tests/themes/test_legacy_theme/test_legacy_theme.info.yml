@@ -1,0 +1,6 @@
+name: 'Test legacy theme'
+type: theme
+description: 'Test theme to test deprecated functionality.'
+version: VERSION
+core: 8.x
+base theme: test_theme
