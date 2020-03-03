@@ -12,7 +12,7 @@ use Symfony\Component\HttpFoundation\Response;
  *
  * This controller tests using the deprecated CSRF token key 'rest'.
  *
- * @todo This class can be removed in 8.3.
+ * @todo Remove this before drupal:10.0.0 https://www.drupal.org/node/3115308
  *
  * @see \Drupal\Core\Access\CsrfRequestHeaderAccessCheck::access()
  */
