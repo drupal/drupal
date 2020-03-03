@@ -641,6 +641,7 @@ services:
   plugin.manager.archiver:
     class: Drupal\Core\Archiver\ArchiverManager
     parent: default_plugin_manager
+    arguments: ['@file_system']
   plugin.manager.action:
     class: Drupal\Core\Action\ActionManager
     arguments: ['@container.namespaces', '@cache.discovery', '@module_handler']
