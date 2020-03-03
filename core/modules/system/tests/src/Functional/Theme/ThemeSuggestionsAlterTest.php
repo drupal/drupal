@@ -117,47 +117,6 @@ class ThemeSuggestionsAlterTest extends BrowserTestBase {
   }
 
   /**
-   * Tests that theme suggestion alter hooks work for theme functions.
-   */
-  public function testThemeFunctionSuggestionsAlter() {
-    $this->drupalGet('theme-test/function-suggestion-alter');
-    $this->assertText('Original theme function.');
-
-    // Install test_theme and test that themes can alter theme suggestions.
-    $this->config('system.theme')
-      ->set('default', 'test_theme')
-      ->save();
-    $this->drupalGet('theme-test/function-suggestion-alter');
-    $this->assertText('Theme function overridden based on new theme suggestion provided by the test_theme theme.');
-
-    // Enable the theme_suggestions_test module to test modules implementing
-    // suggestions alter hooks.
-    \Drupal::service('module_installer')->install(['theme_suggestions_test']);
-    $this->resetAll();
-    $this->drupalGet('theme-test/function-suggestion-alter');
-    $this->assertText('Theme function overridden based on new theme suggestion provided by a module.');
-  }
-
-  /**
-   * Tests that theme suggestion alter hooks work with theme hook includes.
-   */
-  public function testSuggestionsAlterInclude() {
-    // Check the original theme output.
-    $this->drupalGet('theme-test/suggestion-alter-include');
-    $this->assertText('Original function before altering theme suggestions.');
-
-    // Enable theme_suggestions_test module and make two requests to make sure
-    // the include file is always loaded. The file will always be included for
-    // the first request because the theme registry is being rebuilt.
-    \Drupal::service('module_installer')->install(['theme_suggestions_test']);
-    $this->resetAll();
-    $this->drupalGet('theme-test/suggestion-alter-include');
-    $this->assertText('Function suggested via suggestion alter hook found in include file.', 'Include file loaded for initial request.');
-    $this->drupalGet('theme-test/suggestion-alter-include');
-    $this->assertText('Function suggested via suggestion alter hook found in include file.', 'Include file loaded for second request.');
-  }
-
-  /**
    * Tests execution order of theme suggestion alter hooks.
    *
    * Hook hook_theme_suggestions_alter() should fire before

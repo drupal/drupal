@@ -11,18 +11,6 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 class ThemeTestController extends ControllerBase {
 
   /**
-   * A theme template that overrides a theme function.
-   *
-   * @return array
-   *   Render array containing a theme.
-   */
-  public function functionTemplateOverridden() {
-    return [
-      '#theme' => 'theme_test_function_template_override',
-    ];
-  }
-
-  /**
    * Adds stylesheets to test theme .info.yml property processing.
    *
    * @return array
@@ -110,20 +98,6 @@ class ThemeTestController extends ControllerBase {
    */
   public function specificSuggestionAlter() {
     return ['#theme' => 'theme_test_specific_suggestions__variant'];
-  }
-
-  /**
-   * Menu callback for testing suggestion alter hooks with theme functions.
-   */
-  public function functionSuggestionAlter() {
-    return ['#theme' => 'theme_test_function_suggestions'];
-  }
-
-  /**
-   * Menu callback for testing includes with suggestion alter hooks.
-   */
-  public function suggestionAlterInclude() {
-    return ['#theme' => 'theme_test_suggestions_include'];
   }
 
   /**

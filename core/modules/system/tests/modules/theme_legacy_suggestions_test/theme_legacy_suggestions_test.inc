@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Include file for testing theme suggestion hooks.
+ * Include file for testing theme suggestion hooks for legacy theme functions.
  */
 
 /**
