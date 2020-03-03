@@ -29,6 +29,9 @@ class CsrfRequestHeaderTest extends BrowserTestBase {
    *
    * This checks one route that uses _csrf_request_header_token and one that
    * uses the deprecated _access_rest_csrf.
+   *
+   * @group legacy
+   * @expectedDeprecation Route requirement _access_rest_csrf is deprecated in drupal:8.2.0 and is removed in drupal:10.0.0. Use _csrf_request_header_token instead. See https://www.drupal.org/node/2772399
    */
   public function testRouteAccess() {
     $client = $this->getHttpClient();

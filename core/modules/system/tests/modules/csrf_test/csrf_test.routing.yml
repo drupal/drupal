@@ -9,7 +9,7 @@ csrf_test.protected:
 # Tests deprecated _access_rest_csrf protection.
 # This originally was in the REST module but now is supported in core/lib.
 # @see https://www.drupal.org/node/2753681
-# @todo Remove this test route in Drupal 9.0.0.
+# @todo Remove the route in drupal:10.0.0 https://www.drupal.org/node/3115308
 csrf_test.deprecated.protected:
   path: csrf/deprecated/protected
   defaults:
@@ -17,7 +17,7 @@ csrf_test.deprecated.protected:
   requirements:
     _access_rest_csrf: 'TRUE'
     _method: 'POST'
-# @todo This route can be removed in 8.3.
+# @todo Remove this route in drupal:10.0.0 https://www.drupal.org/node/3115308
 # @see \Drupal\Core\Access\CsrfRequestHeaderAccessCheck::access()
 csrf_test.deprecated.csrftoken:
   path: '/deprecated/session/token'

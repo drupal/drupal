@@ -53,9 +53,12 @@ class CsrfRequestHeaderAccessCheck implements AccessCheckInterface {
     // REST requirement.
     $applicable_requirements = [
       '_csrf_request_header_token',
-      // @todo Remove _access_rest_csrf in Drupal 9.0.0.
+      // @todo Remove _access_rest_csrf in Drupal 10.0.0 https://www.drupal.org/node/3115308
       '_access_rest_csrf',
     ];
+    if ($route->hasRequirement('_access_rest_csrf')) {
+      @trigger_error('Route requirement _access_rest_csrf is deprecated in drupal:8.2.0 and is removed in drupal:10.0.0. Use _csrf_request_header_token instead. See https://www.drupal.org/node/2772399', E_USER_DEPRECATED);
+    }
     $requirement_keys = array_keys($requirements);
 
     if (array_intersect($applicable_requirements, $requirement_keys)) {
