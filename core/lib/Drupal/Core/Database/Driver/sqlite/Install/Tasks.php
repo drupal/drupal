@@ -28,7 +28,7 @@ class Tasks extends InstallTasks {
    * {@inheritdoc}
    */
   public function minimumVersion() {
-    return '3.7.11';
+    return '3.26';
   }
 
   /**
