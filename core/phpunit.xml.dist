@@ -9,6 +9,7 @@
          beStrictAboutTestsThatDoNotTestAnything="true"
          beStrictAboutOutputDuringTests="true"
          beStrictAboutChangesToGlobalState="true"
+         failOnWarning="true"
          printerClass="\Drupal\Tests\Listeners\HtmlOutputPrinter"
          cacheResult="false">
   <php>

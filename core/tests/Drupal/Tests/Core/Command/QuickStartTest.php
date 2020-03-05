@@ -114,12 +114,12 @@ class QuickStartTest extends TestCase {
       sleep(1);
     }
     // The progress bar uses STDERR to write messages.
-    $this->assertContains('Congratulations, you installed Drupal!', $process->getErrorOutput());
+    $this->assertStringContainsString('Congratulations, you installed Drupal!', $process->getErrorOutput());
     $this->assertNotFalse($port, "Web server running on port $port");
 
     // Give the server a couple of seconds to be ready.
     sleep(2);
-    $this->assertContains("127.0.0.1:$port/user/reset/1/", $process->getOutput());
+    $this->assertStringContainsString("127.0.0.1:$port/user/reset/1/", $process->getOutput());
 
     // Generate a cookie so we can make a request against the installed site.
     define('DRUPAL_TEST_IN_CHILD_SITE', FALSE);
@@ -130,7 +130,7 @@ class QuickStartTest extends TestCase {
 
     $response = $guzzle->get('http://127.0.0.1:' . $port, ['cookies' => $cookieJar]);
     $content = (string) $response->getBody();
-    $this->assertContains('Test site ' . $this->testDb->getDatabasePrefix(), $content);
+    $this->assertStringContainsString('Test site ' . $this->testDb->getDatabasePrefix(), $content);
 
     // Stop the web server.
     $process->stop();
@@ -162,9 +162,9 @@ class QuickStartTest extends TestCase {
     }
 
     $error_output = $process->getErrorOutput();
-    $this->assertContains('Your PHP installation is too old.', $error_output);
-    $this->assertContains('Drupal requires at least PHP', $error_output);
-    $this->assertContains(DRUPAL_MINIMUM_SUPPORTED_PHP, $error_output);
+    $this->assertStringContainsString('Your PHP installation is too old.', $error_output);
+    $this->assertStringContainsString('Drupal requires at least PHP', $error_output);
+    $this->assertStringContainsString(DRUPAL_MINIMUM_SUPPORTED_PHP, $error_output);
 
     // Stop the web server.
     $process->stop();
@@ -191,7 +191,7 @@ class QuickStartTest extends TestCase {
     $install_process->setTimeout(500);
     $result = $install_process->run();
     // The progress bar uses STDERR to write messages.
-    $this->assertContains('Congratulations, you installed Drupal!', $install_process->getErrorOutput());
+    $this->assertStringContainsString('Congratulations, you installed Drupal!', $install_process->getErrorOutput());
     $this->assertSame(0, $result);
 
     // Run the PHP built-in webserver.
@@ -215,7 +215,7 @@ class QuickStartTest extends TestCase {
       sleep(1);
     }
     $this->assertEquals('', $server_process->getErrorOutput());
-    $this->assertContains("127.0.0.1:$port/user/reset/1/", $server_process->getOutput());
+    $this->assertStringContainsString("127.0.0.1:$port/user/reset/1/", $server_process->getOutput());
     $this->assertNotFalse($port, "Web server running on port $port");
 
     // Give the server a couple of seconds to be ready.
@@ -230,7 +230,7 @@ class QuickStartTest extends TestCase {
 
     $response = $guzzle->get('http://127.0.0.1:' . $port, ['cookies' => $cookieJar]);
     $content = (string) $response->getBody();
-    $this->assertContains('Test site ' . $this->testDb->getDatabasePrefix(), $content);
+    $this->assertStringContainsString('Test site ' . $this->testDb->getDatabasePrefix(), $content);
 
     // Try to re-install over the top of an existing site.
     $install_command = [
@@ -244,13 +244,13 @@ class QuickStartTest extends TestCase {
     $install_process->inheritEnvironmentVariables();
     $install_process->setTimeout(500);
     $result = $install_process->run();
-    $this->assertContains('Drupal is already installed.', $install_process->getOutput());
+    $this->assertStringContainsString('Drupal is already installed.', $install_process->getOutput());
     $this->assertSame(0, $result);
 
     // Ensure the site name has not changed.
     $response = $guzzle->get('http://127.0.0.1:' . $port, ['cookies' => $cookieJar]);
     $content = (string) $response->getBody();
-    $this->assertContains('Test site ' . $this->testDb->getDatabasePrefix(), $content);
+    $this->assertStringContainsString('Test site ' . $this->testDb->getDatabasePrefix(), $content);
 
     // Stop the web server.
     $server_process->stop();
@@ -272,7 +272,7 @@ class QuickStartTest extends TestCase {
     $process = new Process($install_command, NULL, ['DRUPAL_DEV_SITE_PATH' => $this->testDb->getTestSitePath()]);
     $process->inheritEnvironmentVariables();
     $process->run();
-    $this->assertContains('\'umami\' is not a valid install profile. Did you mean \'demo_umami\'?', $process->getErrorOutput());
+    $this->assertStringContainsString('\'umami\' is not a valid install profile. Did you mean \'demo_umami\'?', $process->getErrorOutput());
   }
 
   /**
@@ -288,7 +288,7 @@ class QuickStartTest extends TestCase {
     $server_process = new Process($server_command, NULL, ['DRUPAL_DEV_SITE_PATH' => $this->testDb->getTestSitePath()]);
     $server_process->inheritEnvironmentVariables();
     $server_process->run();
-    $this->assertContains('No installation found. Use the \'install\' command.', $server_process->getErrorOutput());
+    $this->assertStringContainsString('No installation found. Use the \'install\' command.', $server_process->getErrorOutput());
   }
 
   /**

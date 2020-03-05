@@ -5,6 +5,7 @@ namespace Drupal\Tests\Composer\Plugin\Scaffold\Integration;
 use Drupal\Composer\Plugin\Scaffold\Operations\AppendOp;
 use Drupal\Composer\Plugin\Scaffold\ScaffoldOptions;
 use Drupal\Tests\Composer\Plugin\Scaffold\Fixtures;
+use Drupal\Tests\Traits\PHPUnit8Warnings;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -13,6 +14,7 @@ use PHPUnit\Framework\TestCase;
  * @group Scaffold
  */
 class AppendOpTest extends TestCase {
+  use PHPUnit8Warnings;
 
   /**
    * @covers ::process

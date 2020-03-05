@@ -77,10 +77,8 @@ class ConfigTest extends TestCase {
 
     $plugin_config = $ref_plugin_config->invoke($config);
 
-    $this->assertArraySubset([
-      'isa/string' => ['test_dir'],
-      'an/array' => ['test_dir', 'doc_dir'],
-    ], $plugin_config);
+    $this->assertSame(['test_dir'], $plugin_config['isa/string']);
+    $this->assertSame(['test_dir', 'doc_dir'], $plugin_config['an/array']);
   }
 
   /**

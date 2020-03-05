@@ -7,6 +7,7 @@ use Behat\Mink\Driver\GoutteDriver;
 use Behat\Mink\Mink;
 use Behat\Mink\Session;
 use Drupal\Component\FileSystem\FileSystem as DrupalFilesystem;
+use Drupal\Tests\Traits\PHPUnit8Warnings;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\BrowserKit\Client as SymfonyClient;
 use Symfony\Component\Filesystem\Filesystem as SymfonyFilesystem;
@@ -52,6 +53,7 @@ use Symfony\Component\Process\Process;
 abstract class BuildTestBase extends TestCase {
 
   use ExternalCommandRequirementsTrait;
+  use PHPUnit8Warnings;
 
   /**
    * The working directory where this test will manipulate files.

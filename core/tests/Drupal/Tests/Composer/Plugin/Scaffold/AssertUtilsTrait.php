@@ -2,10 +2,13 @@
 
 namespace Drupal\Tests\Composer\Plugin\Scaffold;
 
+use Drupal\Tests\Traits\PHPUnit8Warnings;
+
 /**
  * Convenience class for creating fixtures.
  */
 trait AssertUtilsTrait {
+  use PHPUnit8Warnings;
 
   /**
    * Asserts that a given file exists and is/is not a symlink.
