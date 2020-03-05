@@ -112,18 +112,18 @@ class ManageGitIgnoreTest extends TestCase {
     $this->assertFileExists($sut . '/docroot/autoload.php');
     $this->assertFileExists($sut . '/docroot/index.php');
     $expected = <<<EOT
-build
-.csslintrc
-.editorconfig
-.eslintignore
-.eslintrc.json
-.gitattributes
-.ht.router.php
-autoload.php
-index.php
-robots.txt
-update.php
-web.config
+/build
+/.csslintrc
+/.editorconfig
+/.eslintignore
+/.eslintrc.json
+/.gitattributes
+/.ht.router.php
+/autoload.php
+/index.php
+/robots.txt
+/update.php
+/web.config
 EOT;
     // At this point we should have a .gitignore file, because although we did
     // not explicitly ask for .gitignore tracking, the vendor directory is not
