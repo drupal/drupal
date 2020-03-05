@@ -3,6 +3,7 @@
 namespace Drupal\Core\Database\Install;
 
 use Drupal\Core\Database\Database;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 
 /**
  * Database installer structure.
@@ -298,6 +299,25 @@ abstract class Tasks {
     }
 
     return $errors;
+  }
+
+  /**
+   * Translates a string to the current language or to a given language.
+   *
+   * @see \Drupal\Core\StringTranslation\TranslatableMarkup::__construct()
+   */
+  protected function t($string, array $args = [], array $options = []) {
+    return new TranslatableMarkup($string, $args, $options);
+  }
+
+  /**
+   * Returns the database connection.
+   *
+   * @return \Drupal\Core\Database\Connection
+   *   The database connection.
+   */
+  protected function getConnection() {
+    return Database::getConnection();
   }
 
 }
