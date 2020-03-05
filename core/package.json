@@ -51,7 +51,7 @@
     "postcss": "^7.0.18",
     "postcss-calc": "^7.0.1",
     "postcss-custom-properties": "^9.0.2",
-    "postcss-header": "^1.0.0",
+    "postcss-header": "^2.0.0",
     "postcss-import": "^12.0.1",
     "prettier": "^1.14.0",
     "stylelint": "^12.0.0",
