@@ -144,7 +144,7 @@ final class ProjectSecurityData {
   /**
    * Gets the release the current minor will receive security coverage until.
    *
-   * @todo In https://www.drupal.org/node/2608062 determine how we will know
+   * @todo In https://www.drupal.org/node/2998285 determine how we will know
    *    what the final minor release of a particular major version will be. This
    *    method should not return a version beyond that minor.
    *
