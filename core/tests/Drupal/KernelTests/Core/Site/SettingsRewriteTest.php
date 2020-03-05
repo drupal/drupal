@@ -17,7 +17,7 @@ class SettingsRewriteTest extends KernelTestBase {
    */
   public function testDrupalRewriteSettings() {
     include_once $this->root . '/core/includes/install.inc';
-    $site_path = $this->container->get('site.path');
+    $site_path = $this->container->getParameter('site.path');
     $tests = [
       [
         'original' => '$no_index_value_scalar = TRUE;',

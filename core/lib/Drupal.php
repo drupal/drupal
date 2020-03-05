@@ -176,7 +176,7 @@ class Drupal {
    * @return string
    */
   public static function root() {
-    return static::getContainer()->get('app.root');
+    return static::getContainer()->getParameter('app.root');
   }
 
   /**

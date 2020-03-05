@@ -46,7 +46,7 @@ abstract class LocalTaskIntegrationTestBase extends UnitTestCase {
     $container = new ContainerBuilder();
     $config_factory = $this->getConfigFactoryStub([]);
     $container->set('config.factory', $config_factory);
-    $container->set('app.root', $this->root);
+    $container->setParameter('app.root', $this->root);
     \Drupal::setContainer($container);
     $this->container = $container;
   }

@@ -447,7 +447,7 @@ function install_begin_request($class_loader, &$install_state) {
     ->addTranslator($container->get('string_translator.file_translation'));
 
   // Add list of all available profiles to the installation state.
-  $listing = new ExtensionDiscovery($container->get('app.root'));
+  $listing = new ExtensionDiscovery($container->getParameter('app.root'));
   $listing->setProfileDirectories([]);
   $install_state['profiles'] += $listing->scan('profile');
 
@@ -1896,7 +1896,7 @@ function install_check_translations($langcode, $server_pattern) {
   $readable = FALSE;
   $writable = FALSE;
   // @todo: Make this configurable.
-  $site_path = \Drupal::service('site.path');
+  $site_path = \Drupal::getContainer()->getParameter('site.path');
   $files_directory = $site_path . '/files';
   $translations_directory = $site_path . '/files/translations';
   $translations_directory_exists = FALSE;
@@ -2075,7 +2075,7 @@ function install_check_requirements($install_state) {
   foreach ($default_files as $default_file_info) {
     $readable = FALSE;
     $writable = FALSE;
-    $site_path = './' . \Drupal::service('site.path');
+    $site_path = './' . \Drupal::getContainer()->getParameter('site.path');
     $file = $site_path . "/{$default_file_info['file']}";
     $default_file = "./sites/default/{$default_file_info['file_default']}";
     $exists = FALSE;

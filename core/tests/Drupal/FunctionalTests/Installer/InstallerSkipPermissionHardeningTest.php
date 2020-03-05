@@ -26,7 +26,7 @@ class InstallerSkipPermissionHardeningTest extends InstallerTestBase {
    * {@inheritdoc}
    */
   protected function setUpSite() {
-    $site_directory = $this->container->get('app.root') . '/' . $this->siteDirectory;
+    $site_directory = $this->container->getParameter('app.root') . '/' . $this->siteDirectory;
     $this->assertTrue(is_writable($site_directory));
     $this->assertTrue(is_writable($site_directory . '/settings.php'));
 

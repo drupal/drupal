@@ -16,7 +16,7 @@ use Drupal\Core\Url;
 function locale_install() {
   // Create the interface translations directory and ensure it's writable.
   if (!$directory = \Drupal::config('locale.settings')->get('translation.path')) {
-    $site_path = \Drupal::service('site.path');
+    $site_path = \Drupal::getContainer()->getParameter('site.path');
     $directory = $site_path . '/files/translations';
     \Drupal::configFactory()->getEditable('locale.settings')->set('translation.path', $directory)->save();
   }

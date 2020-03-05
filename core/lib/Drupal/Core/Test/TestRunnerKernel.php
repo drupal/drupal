@@ -77,7 +77,7 @@ class TestRunnerKernel extends DrupalKernel {
     $this->getContainer()->get('module_handler')->loadAll();
 
     $test_discovery = new TestDiscovery(
-      $this->getContainer()->get('app.root'),
+      $this->getContainer()->getParameter('app.root'),
       $this->getContainer()->get('class_loader')
     );
     $test_discovery->registerTestNamespaces();

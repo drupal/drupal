@@ -91,8 +91,8 @@ class SiteConfigureForm extends ConfigFormBase {
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('app.root'),
-      $container->get('site.path'),
+      $container->getParameter('app.root'),
+      $container->getParameter('site.path'),
       $container->get('entity_type.manager')->getStorage('user'),
       $container->get('state'),
       $container->get('module_installer'),

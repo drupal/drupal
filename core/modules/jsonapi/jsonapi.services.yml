@@ -207,7 +207,7 @@ services:
       - { name: event_subscriber }
   jsonapi.resource_response_validator.subscriber:
     class: Drupal\jsonapi\EventSubscriber\ResourceResponseValidator
-    arguments: ['@logger.channel.jsonapi', '@module_handler', '@app.root']
+    arguments: ['@logger.channel.jsonapi', '@module_handler', '%app.root%']
     calls:
       - [setValidator, []]
     tags:

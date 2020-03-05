@@ -33,7 +33,7 @@ class InfoParserDynamic implements InfoParserInterface {
     if ($app_root === NULL) {
       // @todo https://www.drupal.org/project/drupal/issues/3087975 Require
       //   $app_root argument.
-      $app_root = \Drupal::hasService('app.root') ? (string) \Drupal::service('app.root') : DRUPAL_ROOT;
+      $app_root = \Drupal::hasService('kernel') ? \Drupal::root() : DRUPAL_ROOT;
     }
     $this->root = $app_root;
   }

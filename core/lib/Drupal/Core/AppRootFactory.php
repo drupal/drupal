@@ -28,9 +28,10 @@ class AppRootFactory {
    * Gets the app root.
    *
    * @return string
+   *   The app root.
    */
   public function get() {
-    return $this->drupalKernel->getAppRoot();
+    return $this->drupalKernel->getContainer()->getParameter('app.root');
   }
 
 }

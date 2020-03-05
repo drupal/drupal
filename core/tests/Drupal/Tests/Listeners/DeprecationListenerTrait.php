@@ -113,8 +113,6 @@ trait DeprecationListenerTrait {
     $dynamic_skipped_deprecations = [
       '%The "[^"]+" class extends "Symfony\\\\Component\\\\EventDispatcher\\\\Event" that is deprecated since Symfony 4\.3, use "Symfony\\\\Contracts\\\\EventDispatcher\\\\Event" instead\.$%',
       '%The "Symfony\\\\Component\\\\Validator\\\\Context\\\\ExecutionContextInterface::.*\(\)" method is considered internal Used by the validator engine. Should not be called by user\s\*\s*code\. It may change without further notice\. You should not extend it from "[^"]+".%',
-      '%Non-object services are deprecated since Symfony 4\.4, please fix the ".*" service which is of type ".*" right now\.%',
-      '%Non-object services are deprecated since Symfony 4\.4, setting the ".*" service to a value of type ".*" should be avoided\.%',
       '%The ".*" service relies on the deprecated "Symfony\\\\Component\\\\Debug\\\\BufferingLogger" class\. It should either be deprecated or its implementation upgraded\.%',
     ];
     return (bool) preg_filter($dynamic_skipped_deprecations, '$0', $message);

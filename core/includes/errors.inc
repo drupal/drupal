@@ -220,7 +220,7 @@ function _drupal_log_error($error, $fatal = FALSE) {
 
       // Attempt to reduce verbosity by removing DRUPAL_ROOT from the file path
       // in the message. This does not happen for (false) security.
-      if (\Drupal::hasService('app.root')) {
+      if (\Drupal::hasService('kernel')) {
         $root_length = strlen(\Drupal::root());
         if (substr($error['%file'], 0, $root_length) == \Drupal::root()) {
           $error['%file'] = substr($error['%file'], $root_length + 1);

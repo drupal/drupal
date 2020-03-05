@@ -80,7 +80,7 @@ class UpdateManagerInstall extends FormBase {
     return new static(
       $container->get('update.root'),
       $container->get('module_handler'),
-      $container->get('site.path'),
+      $container->getParameter('site.path'),
       $container->get('plugin.manager.archiver')
     );
   }

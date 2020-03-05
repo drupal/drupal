@@ -33,7 +33,7 @@ class DirectoryTest extends FileTestBase {
    * Test local directory handling functions.
    */
   public function testFileCheckLocalDirectoryHandling() {
-    $site_path = $this->container->get('site.path');
+    $site_path = $this->container->getParameter('site.path');
     $directory = $site_path . '/files';
 
     // Check a new recursively created local directory for correct file system

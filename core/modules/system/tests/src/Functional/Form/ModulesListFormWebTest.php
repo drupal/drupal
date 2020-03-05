@@ -61,7 +61,7 @@ class ModulesListFormWebTest extends BrowserTestBase {
 name: Module With Broken Info file
 type: module
 BROKEN;
-    $path = \Drupal::service('site.path') . "/modules/broken";
+    $path = \Drupal::getContainer()->getParameter('site.path') . "/modules/broken";
     mkdir($path, 0777, TRUE);
     file_put_contents("$path/broken.info.yml", $broken_info_yml);
 

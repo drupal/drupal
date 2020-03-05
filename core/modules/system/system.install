@@ -487,7 +487,7 @@ function system_requirements($phase) {
     // Find the site path. Kernel service is not always available at this point,
     // but is preferred, when available.
     if (\Drupal::hasService('kernel')) {
-      $site_path = \Drupal::service('site.path');
+      $site_path = \Drupal::getContainer()->getParameter('site.path');
     }
     else {
       $site_path = DrupalKernel::findSitePath(Request::createFromGlobals());

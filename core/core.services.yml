@@ -1,4 +1,9 @@
 parameters:
+  # The app.root and site.path parameters are dynamically set by
+  # \Drupal\Core\DrupalKernel::initializeContainer(). They are listed here to
+  # allow IDEs to autocomplete them when writing new service YAML files.
+  app.root: ''
+  site.path: ''
   session.storage.options:
     gc_probability: 1
     gc_divisor: 100
@@ -201,7 +206,7 @@ services:
     arguments: ['@database', '@cache_tags.invalidator.checksum', '@settings']
   cache.backend.apcu:
     class: Drupal\Core\Cache\ApcuBackendFactory
-    arguments: ['@app.root', '@site.path', '@cache_tags.invalidator.checksum']
+    arguments: ['%app.root%', '%site.path%', '@cache_tags.invalidator.checksum']
   cache.backend.php:
     class: Drupal\Core\Cache\PhpBackendFactory
     arguments: ['@cache_tags.invalidator.checksum']
@@ -395,7 +400,7 @@ services:
     class: Drupal\Core\Form\FormErrorHandler
   form_cache:
     class: Drupal\Core\Form\FormCache
-    arguments: ['@app.root', '@keyvalue.expirable', '@module_handler', '@current_user', '@csrf_token', '@logger.channel.form', '@request_stack', '@page_cache_request_policy']
+    arguments: ['%app.root%', '@keyvalue.expirable', '@module_handler', '@current_user', '@csrf_token', '@logger.channel.form', '@request_stack', '@page_cache_request_policy']
     public: false  # Private to form_builder
   keyvalue:
     class: Drupal\Core\KeyValueStore\KeyValueFactory
@@ -484,7 +489,7 @@ services:
     arguments: ['@http_handler_stack']
   plugin.manager.link_relation_type:
     class: \Drupal\Core\Http\LinkRelationTypeManager
-    arguments: ['@app.root', '@module_handler', '@cache.discovery']
+    arguments: ['%app.root%', '@module_handler', '@cache.discovery']
   theme.negotiator:
     class: Drupal\Core\Theme\ThemeNegotiator
     arguments: ['@access_check.theme', '@class_resolver']
@@ -512,25 +517,25 @@ services:
     arguments: ['@container.namespaces', '@cache.discovery', '@module_handler']
   module_handler:
     class: Drupal\Core\Extension\ModuleHandler
-    arguments: ['@app.root', '%container.modules%', '@cache.bootstrap']
+    arguments: ['%app.root%', '%container.modules%', '@cache.bootstrap']
   module_installer:
     class: Drupal\Core\Extension\ModuleInstaller
     tags:
       - { name: service_collector, tag: 'module_install.uninstall_validator', call: addUninstallValidator }
-    arguments: ['@app.root', '@module_handler', '@kernel']
+    arguments: ['%app.root%', '@module_handler', '@kernel']
     lazy: true
   extension.list.module:
     class: Drupal\Core\Extension\ModuleExtensionList
-    arguments: ['@app.root', 'module', '@cache.default', '@info_parser', '@module_handler', '@state', '@config.factory', '@extension.list.profile', '%install_profile%', '%container.modules%']
+    arguments: ['%app.root%', 'module', '@cache.default', '@info_parser', '@module_handler', '@state', '@config.factory', '@extension.list.profile', '%install_profile%', '%container.modules%']
   extension.list.profile:
     class: Drupal\Core\Extension\ProfileExtensionList
-    arguments: ['@app.root', 'profile', '@cache.default', '@info_parser', '@module_handler', '@state', '%install_profile%']
+    arguments: ['%app.root%', 'profile', '@cache.default', '@info_parser', '@module_handler', '@state', '%install_profile%']
   extension.list.theme:
     class: Drupal\Core\Extension\ThemeExtensionList
-    arguments: ['@app.root', 'theme', '@cache.default', '@info_parser', '@module_handler', '@state', '@config.factory', '@extension.list.theme_engine', '%install_profile%']
+    arguments: ['%app.root%', 'theme', '@cache.default', '@info_parser', '@module_handler', '@state', '@config.factory', '@extension.list.theme_engine', '%install_profile%']
   extension.list.theme_engine:
     class: Drupal\Core\Extension\ThemeEngineExtensionList
-    arguments: ['@app.root', 'theme_engine', '@cache.default', '@info_parser', '@module_handler', '@state', '%install_profile%']
+    arguments: ['%app.root%', 'theme_engine', '@cache.default', '@info_parser', '@module_handler', '@state', '%install_profile%']
   content_uninstall_validator:
     class: Drupal\Core\Entity\ContentUninstallValidator
     tags:
@@ -545,7 +550,7 @@ services:
     lazy: true
   theme_handler:
     class: Drupal\Core\Extension\ThemeHandler
-    arguments: ['@app.root', '@config.factory', '@extension.list.theme']
+    arguments: ['%app.root%', '@config.factory', '@extension.list.theme']
   theme_installer:
     class: Drupal\Core\Extension\ThemeInstaller
     arguments: ['@theme_handler', '@config.factory', '@config.installer', '@module_handler', '@config.manager', '@asset.css.collection_optimizer', '@router.builder', '@logger.channel.default', '@state']
@@ -696,23 +701,27 @@ services:
     class: Drupal\Component\EventDispatcher\ContainerAwareEventDispatcher
     arguments: ['@service_container']
   app.root:
-    class: SplString
+    class: \SplString
     factory: ['@app.root.factory', 'get']
+    deprecated: The "%service_id%" service is deprecated in drupal:9.0.0 and is removed from drupal:10.0.0. Use the app.root parameter instead. See https://www.drupal.org/node/3080612
     tags:
       - { name: parameter_service }
   app.root.factory:
     class: Drupal\Core\AppRootFactory
     arguments: ['@kernel']
     public: false
+    deprecated: The "%service_id%" service is deprecated in drupal:9.0.0 and is removed from drupal:10.0.0. Use the app.root parameter instead. See https://www.drupal.org/node/3080612
   site.path:
-    class: SplString
+    class: \SplString
     factory: ['@site.path.factory', 'get']
+    deprecated: The "%service_id%" service is deprecated in drupal:9.0.0 and is removed from drupal:10.0.0. Use the site.path parameter instead. See https://www.drupal.org/node/3080612
     tags:
       - { name: parameter_service }
   site.path.factory:
     class: Drupal\Core\SitePathFactory
     arguments: ['@kernel']
     public: false
+    deprecated: The "%service_id%" service is deprecated in drupal:9.0.0 and is removed from drupal:10.0.0. Use the site.path parameter instead. See https://www.drupal.org/node/3080612
   controller_resolver:
     class: Drupal\Core\Controller\ControllerResolver
     arguments: ['@psr7.http_message_factory', '@class_resolver']
@@ -1462,15 +1471,15 @@ services:
     shared: false
   theme.manager:
     class: Drupal\Core\Theme\ThemeManager
-    arguments: ['@app.root', '@theme.negotiator', '@theme.initialization', '@module_handler']
+    arguments: ['%app.root%', '@theme.negotiator', '@theme.initialization', '@module_handler']
     calls:
       - [setThemeRegistry, ['@theme.registry']]
   theme.initialization:
     class: Drupal\Core\Theme\ThemeInitialization
-    arguments: ['@app.root', '@theme_handler', '@cache.bootstrap', '@module_handler']
+    arguments: ['%app.root%', '@theme_handler', '@cache.bootstrap', '@module_handler']
   theme.registry:
     class: Drupal\Core\Theme\Registry
-    arguments: ['@app.root', '@cache.default', '@lock', '@module_handler', '@theme_handler', '@theme.initialization', null, '@cache.bootstrap']
+    arguments: ['%app.root%', '@cache.default', '@lock', '@module_handler', '@theme_handler', '@theme.initialization', null, '@cache.bootstrap']
     tags:
       - { name: needs_destruction }
     calls:
@@ -1567,10 +1576,10 @@ services:
       - { name: needs_destruction }
   library.discovery.parser:
     class: Drupal\Core\Asset\LibraryDiscoveryParser
-    arguments: ['@app.root', '@module_handler', '@theme.manager', '@stream_wrapper_manager', '@library.libraries_directory_file_finder']
+    arguments: ['%app.root%', '@module_handler', '@theme.manager', '@stream_wrapper_manager', '@library.libraries_directory_file_finder']
   library.libraries_directory_file_finder:
     class: Drupal\Core\Asset\LibrariesDirectoryFileFinder
-    arguments: ['@app.root', '@site.path', '@extension.list.profile', '%install_profile%']
+    arguments: ['%app.root%', '%site.path%', '@extension.list.profile', '%install_profile%']
   library.dependency_resolver:
     class: Drupal\Core\Asset\LibraryDependencyResolver
     arguments: ['@library.discovery']
@@ -1579,10 +1588,10 @@ services:
     arguments: ['@library.discovery', '@library.dependency_resolver', '@module_handler', '@theme.manager', '@language_manager', '@cache.data']
   info_parser:
     class: Drupal\Core\Extension\InfoParser
-    arguments: ['@app.root']
+    arguments: ['%app.root%']
   twig:
     class: Drupal\Core\Template\TwigEnvironment
-    arguments: ['@app.root', '@cache.default', '%twig_extension_hash%', '@state', '@twig.loader', '%twig.config%']
+    arguments: ['%app.root%', '@cache.default', '%twig_extension_hash%', '@state', '@twig.loader', '%twig.config%']
     tags:
       - { name: service_collector, tag: 'twig.extension', call: addExtension }
   twig.extension:
@@ -1603,7 +1612,7 @@ services:
       - { name: service_collector, tag: twig.loader, call: addLoader, required: TRUE }
   twig.loader.filesystem:
     class: Drupal\Core\Template\Loader\FilesystemLoader
-    # We use '.' instead of '@app.root' as the path for non-namespaced template
+    # We use '.' instead of '%app.root%' as the path for non-namespaced template
     # files so that they match the relative paths of templates loaded via the
     # theme registry or via Twig namespaces.
     arguments: ['.', '@module_handler', '@theme_handler']

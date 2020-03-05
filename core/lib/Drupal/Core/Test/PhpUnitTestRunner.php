@@ -44,7 +44,7 @@ class PhpUnitTestRunner implements ContainerInjectionInterface {
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      (string) $container->get('app.root'),
+      (string) $container->getParameter('app.root'),
       (string) $container->get('file_system')->realpath('public://simpletest')
     );
   }

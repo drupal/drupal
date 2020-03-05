@@ -113,7 +113,7 @@ class DbUpdateController extends ControllerBase {
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('app.root'),
+      $container->getParameter('app.root'),
       $container->get('keyvalue.expirable'),
       $container->get('cache.default'),
       $container->get('state'),

@@ -31,7 +31,7 @@ class SitePathFactory {
    *   The site path.
    */
   public function get() {
-    return $this->drupalKernel->getSitePath();
+    return $this->drupalKernel->getContainer()->getParameter('site.path');
   }
 
 }

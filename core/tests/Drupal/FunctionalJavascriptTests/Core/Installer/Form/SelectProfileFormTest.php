@@ -87,7 +87,7 @@ class SelectProfileFormTest extends WebDriverTestBase {
       ->set('http_handler_stack', $handler_stack);
 
     $this->container
-      ->set('app.root', DRUPAL_ROOT);
+      ->setParameter('app.root', DRUPAL_ROOT);
     \Drupal::setContainer($this->container);
 
     // Setup Mink.

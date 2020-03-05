@@ -38,7 +38,7 @@ class ReadOnlyStreamWrapperTest extends FileTestBase {
 
     // Generate a test file
     $filename = $this->randomMachineName();
-    $site_path = $this->container->get('site.path');
+    $site_path = $this->container->getParameter('site.path');
     $filepath = $site_path . '/files/' . $filename;
     file_put_contents($filepath, $filename);
 

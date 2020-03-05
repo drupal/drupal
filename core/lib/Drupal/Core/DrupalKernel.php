@@ -896,6 +896,10 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
 
     // Only create a new class if we have a container definition.
     if (isset($container_definition)) {
+      // Drupal provides two dynamic parameters to access specific paths that
+      // are determined from the request.
+      $container_definition['parameters']['app.root'] = $this->getAppRoot();
+      $container_definition['parameters']['site.path'] = $this->getSitePath();
       $class = Settings::get('container_base_class', '\Drupal\Core\DependencyInjection\Container');
       $container = new $class($container_definition);
     }
@@ -1270,6 +1274,9 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
       }
     }
     $container->setParameter('persist_ids', $persist_ids);
+
+    $container->setParameter('app.root', $this->getAppRoot());
+    $container->setParameter('site.path', $this->getSitePath());
 
     $container->compile();
     return $container;

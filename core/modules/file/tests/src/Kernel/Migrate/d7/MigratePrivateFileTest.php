@@ -24,7 +24,7 @@ class MigratePrivateFileTest extends MigrateDrupal7TestBase {
    */
   protected function setUp() {
     parent::setUp();
-    $this->setSetting('file_private_path', $this->container->get('site.path') . '/private');
+    $this->setSetting('file_private_path', $this->container->getParameter('site.path') . '/private');
     $this->fileMigrationSetup();
   }
 
