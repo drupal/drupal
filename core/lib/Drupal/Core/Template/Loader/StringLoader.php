@@ -3,7 +3,6 @@
 namespace Drupal\Core\Template\Loader;
 
 use Twig\Loader\LoaderInterface;
-use Twig\Loader\SourceContextLoaderInterface;
 use Twig\Source;
 
 /**
@@ -24,7 +23,7 @@ use Twig\Source;
  * @see \Drupal\Core\Render\Element\InlineTemplate
  * @see twig_render_template()
  */
-class StringLoader implements LoaderInterface, SourceContextLoaderInterface {
+class StringLoader implements LoaderInterface {
 
   /**
    * {@inheritdoc}
@@ -36,13 +35,6 @@ class StringLoader implements LoaderInterface, SourceContextLoaderInterface {
     else {
       return FALSE;
     }
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getSource($name) {
-    return $name;
   }
 
   /**

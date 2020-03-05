@@ -2,15 +2,13 @@
 
 namespace Drupal\twig_loader_test\Loader;
 
-use Twig\Loader\ExistsLoaderInterface;
 use Twig\Loader\LoaderInterface;
-use Twig\Loader\SourceContextLoaderInterface;
 use Twig\Source;
 
 /**
  * A test Twig loader.
  */
-class TestLoader implements LoaderInterface, ExistsLoaderInterface, SourceContextLoaderInterface {
+class TestLoader implements LoaderInterface {
 
   /**
    * {@inheritdoc}
@@ -19,13 +17,6 @@ class TestLoader implements LoaderInterface, ExistsLoaderInterface, SourceContex
     $name = (string) $name;
     $value = $name === 'kittens' ? 'kittens' : 'cats';
     return new Source($value, $name);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getSource($name) {
-    return $this->getSourceContext($name)->getCode();
   }
 
   /**

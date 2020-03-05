@@ -147,13 +147,6 @@ trait DeprecationListenerTrait {
       // This deprecation comes from behat/mink-browserkit-driver when updating
       // symfony/browser-kit to 4.3+.
       'The "Symfony\Component\BrowserKit\Response::getStatus()" method is deprecated since Symfony 4.3, use getStatusCode() instead.',
-      // The following deprecations are introduced in by the new
-      // DebugClassLoader in Symfony 4 we cannot immediately fix them without
-      // breaking backwards compatibility.
-      // @see https://www.drupal.org/project/drupal/issues/3030494
-      // @see https://www.drupal.org/project/drupal/issues/3030474
-      'The "Drupal\Core\Template\Loader\StringLoader" class implements "Twig\Loader\ExistsLoaderInterface" that is deprecated since 1.12 (to be removed in 3.0).',
-      'The "Drupal\Core\Template\Loader\StringLoader" class implements "Twig\Loader\SourceContextLoaderInterface" that is deprecated since 1.27 (to be removed in 3.0).',
       // The following Symfony deprecations are introduced in the Symfony 4
       // development cycle. They will need to be resolved prior to Symfony 5
       // compatibility.
