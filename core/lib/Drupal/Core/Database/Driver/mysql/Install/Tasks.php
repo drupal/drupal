@@ -2,8 +2,9 @@
 
 namespace Drupal\Core\Database\Driver\mysql\Install;
 
-use Drupal\Core\Database\Install\Tasks as InstallTasks;
+use Drupal\Core\Database\ConnectionNotDefinedException;
 use Drupal\Core\Database\Database;
+use Drupal\Core\Database\Install\Tasks as InstallTasks;
 use Drupal\Core\Database\Driver\mysql\Connection;
 use Drupal\Core\Database\DatabaseNotFoundException;
 
@@ -11,6 +12,22 @@ use Drupal\Core\Database\DatabaseNotFoundException;
  * Specifies installation tasks for MySQL and equivalent databases.
  */
 class Tasks extends InstallTasks {
+
+  /**
+   * Minimum required MySQL version.
+   *
+   * 5.7.8 is the minimum version that supports the JSON datatype.
+   * @see https://dev.mysql.com/doc/refman/5.7/en/json.html
+   */
+  const MYSQL_MINIMUM_VERSION = '5.7.8';
+
+  /**
+   * Minimum required MariaDB version.
+   *
+   * 10.2.7 is the minimum version that supports the JSON datatype (alias).
+   * @see https://mariadb.com/kb/en/json-data-type/
+   */
+  const MARIADB_MINIMUM_VERSION = '10.2.7';
 
   /**
    * Minimum required MySQLnd version.
@@ -43,18 +60,28 @@ class Tasks extends InstallTasks {
    * {@inheritdoc}
    */
   public function name() {
-    return t('MySQL, MariaDB, Percona Server, or equivalent');
+    try {
+      if (!$this->isConnectionActive() || !$this->getConnection() instanceof Connection) {
+        throw new ConnectionNotDefinedException('The database connection is not active or not a MySql connection');
+      }
+      if ($this->getConnection()->isMariaDb()) {
+        return $this->t('MariaDB');
+      }
+      return $this->t('MySQL, Percona Server, or equivalent');
+    }
+    catch (ConnectionNotDefinedException $e) {
+      return $this->t('MySQL, MariaDB, Percona Server, or equivalent');
+    }
   }
 
   /**
    * {@inheritdoc}
    */
   public function minimumVersion() {
-    // This can not be increased above '5.5.5' without dropping support for all
-    // MariaDB versions. MariaDB prefixes its version string with '5.5.5-'. For
-    // more information, see
-    // https://github.com/MariaDB/server/blob/f6633bf058802ad7da8196d01fd19d75c53f7274/include/mysql_com.h#L42.
-    return '5.5.3';
+    if ($this->getConnection()->isMariaDb()) {
+      return static::MARIADB_MINIMUM_VERSION;
+    }
+    return static::MYSQL_MINIMUM_VERSION;
   }
 
   /**
