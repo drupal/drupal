@@ -18,7 +18,7 @@ class CryptTest extends TestCase {
    * Tests random byte generation.
    *
    * @covers ::randomBytes
-   * @expectedDeprecation Drupal\Component\Utility\Crypt::randomBytes() is deprecated in Drupal 8.8.0 and will be removed before Drupal 9.0.0. Use PHP's built-in random_bytes() function instead. See https://www.drupal.org/node/3054488
+   * @expectedDeprecation Drupal\Component\Utility\Crypt::randomBytes() is deprecated in Drupal 8.8.0 and will be removed before Drupal 9.0.0. Use PHP's built-in random_bytes() function instead. See https://www.drupal.org/node/3057191
    * @group legacy
    */
   public function testRandomBytes() {

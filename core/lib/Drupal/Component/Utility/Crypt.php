@@ -31,10 +31,10 @@ class Crypt {
    * @deprecated in drupal:8.8.0 and is removed from drupal:9.0.0.
    *   Use PHP's built-in random_bytes() function instead.
    *
-   * @see https://www.drupal.org/node/3054488
+   * @see https://www.drupal.org/node/3057191
    */
   public static function randomBytes($count) {
-    @trigger_error(__CLASS__ . '::randomBytes() is deprecated in Drupal 8.8.0 and will be removed before Drupal 9.0.0. Use PHP\'s built-in random_bytes() function instead. See https://www.drupal.org/node/3054488', E_USER_DEPRECATED);
+    @trigger_error(__CLASS__ . '::randomBytes() is deprecated in Drupal 8.8.0 and will be removed before Drupal 9.0.0. Use PHP\'s built-in random_bytes() function instead. See https://www.drupal.org/node/3057191', E_USER_DEPRECATED);
     return random_bytes($count);
   }
 
