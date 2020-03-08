@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\menu_link_content\Functional\Update;
 
+use Drupal\Core\Database\Database;
 use Drupal\FunctionalTests\Update\UpdatePathTestBase;
 use Drupal\user\Entity\User;
 
@@ -100,6 +101,36 @@ class MenuLinkContentUpdateTest extends UpdatePathTestBase {
     $this->assertEquals('Pineapple', $menu_link->label());
     $this->assertEquals('route:user.page', $menu_link->link->uri);
     $this->assertTrue($menu_link->isPublished());
+  }
+
+  /**
+   * Test the update hook requirements check for revisionable menu links.
+   *
+   * @see menu_link_content_post_update_make_menu_link_content_revisionable()
+   * @see menu_link_content_requirements()
+   */
+  public function testMissingDataUpdateRequirementsCheck() {
+    // Insert invalid data for a non-existent menu link.
+    Database::getConnection()->insert('menu_link_content')
+      ->fields([
+        'id' => '3',
+        'bundle' => 'menu_link_content',
+        'uuid' => '15396f85-3c11-4f52-81af-44d2cb5e829f',
+        'langcode' => 'en',
+      ])
+      ->execute();
+    $this->writeSettings([
+      'settings' => [
+        'update_free_access' => (object) [
+          'value' => TRUE,
+          'required' => TRUE,
+        ],
+      ],
+    ]);
+    $this->drupalGet($this->updateUrl);
+
+    $this->assertSession()->pageTextContains('Errors found');
+    $this->assertSession()->elementTextContains('css', '.system-status-report__entry--error', 'The make_menu_link_content_revisionable database update cannot be run until the data has been fixed.');
   }
 
   /**
