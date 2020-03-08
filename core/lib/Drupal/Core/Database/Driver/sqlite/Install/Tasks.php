@@ -13,6 +13,14 @@ use Drupal\Core\Database\Install\Tasks as InstallTasks;
 class Tasks extends InstallTasks {
 
   /**
+   * Minimum required SQLite version.
+   *
+   * Use to build sqlite library with json1 option for JSON datatype support.
+   * @see https://www.sqlite.org/json1.html
+   */
+  const SQLITE_MINIMUM_VERSION = '3.26';
+
+  /**
    * {@inheritdoc}
    */
   protected $pdoDriver = 'sqlite';
@@ -28,7 +36,7 @@ class Tasks extends InstallTasks {
    * {@inheritdoc}
    */
   public function minimumVersion() {
-    return '3.7.11';
+    return static::SQLITE_MINIMUM_VERSION;
   }
 
   /**
