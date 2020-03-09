@@ -319,8 +319,7 @@ class SelectTest extends DatabaseTestBase {
     // Ensure we only get 2 records.
     $this->assertEqual(count($names), 2, 'UNION correctly discarded duplicates.');
 
-    $this->assertEqual($names[0], 'George', 'First query returned correct name.');
-    $this->assertEqual($names[1], 'Ringo', 'Second query returned correct name.');
+    $this->assertEqualsCanonicalizing(['George', 'Ringo'], $names);
   }
 
   /**
