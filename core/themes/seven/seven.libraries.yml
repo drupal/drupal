@@ -187,6 +187,12 @@ user:
     # @todo remove this file from library in https://drupal.org/node/3111468
     js/user.theme.temporary.js: {}
 
+filter:
+  version: VERSION
+  css:
+    component:
+      css/theme/filter.admin.css: {}
+
 classy.book-navigation:
   version: VERSION
   css:

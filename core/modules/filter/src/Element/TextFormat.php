@@ -124,6 +124,9 @@ class TextFormat extends RenderElement {
     // Setup child container for the text format widget.
     $element['format'] = [
       '#type' => 'container',
+      '#theme_wrappers' => [
+        'container__text_format_filter_wrapper',
+      ],
       '#attributes' => ['class' => ['js-filter-wrapper']],
     ];
 
@@ -166,6 +169,9 @@ class TextFormat extends RenderElement {
     $element['format']['guidelines'] = [
       '#type' => 'container',
       '#attributes' => ['class' => ['js-filter-guidelines']],
+      '#theme_wrappers' => [
+        'container__text_format_filter_guidelines',
+      ],
       '#weight' => 20,
     ];
     $options = [];
@@ -190,6 +196,9 @@ class TextFormat extends RenderElement {
 
     $element['format']['help'] = [
       '#type' => 'container',
+      '#theme_wrappers' => [
+        'container__text_format_filter_help',
+      ],
       'about' => [
         '#type' => 'link',
         '#title' => t('About text formats'),

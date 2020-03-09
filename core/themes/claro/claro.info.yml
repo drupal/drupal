@@ -71,15 +71,17 @@ libraries-override:
       theme:
         /core/themes/stable/css/field_ui/field_ui.admin.css: css/theme/field-ui.admin.css
 
+  # @todo remove this library override in https://drupal.org/node/3115223
   filter/drupal.filter.admin:
     css:
       theme:
-        /core/themes/stable/css/filter/filter.admin.css: css/theme/filter.theme.css
+        /core/themes/stable/css/filter/filter.admin.css: false
 
+  # @todo remove this library override in https://drupal.org/node/3115223
   filter/drupal.filter:
     css:
       theme:
-        /core/themes/stable/css/filter/filter.admin.css: css/theme/filter.theme.css
+        /core/themes/stable/css/filter/filter.admin.css: false
 
   views_ui/admin.styling:
     css:
@@ -109,6 +111,10 @@ libraries-extend:
     - claro/claro.jquery.ui
   file/drupal.file:
     - claro/file
+  filter/drupal.filter.admin:
+    - claro/filter
+  filter/drupal.filter:
+    - claro/filter
   system/admin:
     - claro/system.admin
   core/drupal.autocomplete:

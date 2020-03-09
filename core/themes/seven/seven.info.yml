@@ -42,6 +42,18 @@ libraries-override:
     css:
       component:
         assets/vendor/jquery.ui/themes/base/dialog.css: false
+
+  # @todo remove this library override in https://drupal.org/node/3115223
+  filter/drupal.filter.admin:
+    css:
+      theme:
+        /core/themes/stable/css/filter/filter.admin.css: false
+
+  # @todo remove this library override in https://drupal.org/node/3115223
+  filter/drupal.filter:
+    css:
+      theme:
+        /core/themes/stable/css/filter/filter.admin.css: false
   # @todo remove this library override in https://drupal.org/node/3111468
   stable/drupal.ajax: seven/empty
   # @todo remove this library override in https://drupal.org/node/3111468
@@ -65,6 +77,10 @@ libraries-extend:
     - seven/seven.jquery.ui
   file/drupal.file:
     - seven/classy.file
+  filter/drupal.filter.admin:
+    - seven/filter
+  filter/drupal.filter:
+    - seven/filter
   media/media_embed_ckeditor_theme:
     - seven/classy.media_embed_ckeditor_theme
   media_library/view:

@@ -24,6 +24,17 @@ libraries:
   - bartik/global-styling
 
 libraries-override:
+  # @todo remove this library override in https://drupal.org/node/3115223
+  filter/drupal.filter.admin:
+    css:
+      theme:
+        /core/themes/stable/css/filter/filter.admin.css: false
+
+  # @todo remove this library override in https://drupal.org/node/3115223
+  filter/drupal.filter:
+    css:
+      theme:
+        /core/themes/stable/css/filter/filter.admin.css: false
   # @todo remove this library override in https://drupal.org/node/3111468
   stable/drupal.ajax: bartik/empty
   # @todo remove this library override in https://drupal.org/node/3111468
@@ -41,6 +52,10 @@ libraries-extend:
     - bartik/classy.progress
   file/drupal.file:
     - bartik/classy.file
+  filter/drupal.filter.admin:
+    - bartik/filter
+  filter/drupal.filter:
+    - bartik/filter
   media/media_embed_ckeditor_theme:
     - bartik/classy.media_embed_ckeditor_theme
   media_library/view:

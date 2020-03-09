@@ -149,6 +149,12 @@ oneplusfourgrid_section:
     theme:
       layouts/oneplusfourgrid_section/oneplusfourgrid_section.css: {}
 
+filter:
+  version: VERSION
+  css:
+    component:
+      css/theme/filter.admin.css: {}
+
 classy.base:
   version: VERSION
   css:

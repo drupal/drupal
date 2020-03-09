@@ -424,6 +424,13 @@ function seven_preprocess_image_widget(array &$variables) {
   if (isset($data['preview']['#access']) && $data['preview']['#access'] === FALSE) {
     unset($data['preview']);
   }
+
+  // @todo Revisit everything in this conditional in
+  //   https://drupal.org/node/3117430
+  if (!empty($variables['element']['fids']['#value'])) {
+    $file = reset($variables['element']['#files']);
+    $data["file_{$file->id()}"]['filename']['#suffix'] = ' <span class="file-size">(' . format_size($file->getSize()) . ')</span> ';
+  }
 }
 
 /**

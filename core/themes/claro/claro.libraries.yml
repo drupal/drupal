@@ -271,6 +271,12 @@ progress:
     component:
       css/components/progress.css: {}
 
+filter:
+  version: VERSION
+  css:
+    component:
+      css/theme/filter.theme.css: {}
+
 classy.book-navigation:
   version: VERSION
   css:
