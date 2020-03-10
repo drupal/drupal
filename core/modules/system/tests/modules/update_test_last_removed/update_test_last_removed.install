@@ -2,11 +2,11 @@
 
 /**
  * @file
- * Install, update and uninstall functions for the update_test_invalid_hook module.
+ * Update functions for the update_test_invalid_hook module.
  */
 
 /**
- * Implements hook_update_last_removed()
+ * Implements hook_update_last_removed().
  */
 function update_test_last_removed_update_last_removed() {
   return 8002;
