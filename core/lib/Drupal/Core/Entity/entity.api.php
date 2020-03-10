@@ -1817,6 +1817,11 @@ function hook_entity_form_display_alter(\Drupal\Core\Entity\Display\EntityFormDi
 /**
  * Provides custom base field definitions for a content entity type.
  *
+ * Field (storage) definitions returned by this hook must run through the
+ * regular field storage life-cycle operations: they need to be properly
+ * installed, updated, and uninstalled. This would typically be done through the
+ * Entity Update API provided by the entity definition update manager.
+ *
  * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
  *   The entity type definition.
  *
@@ -1828,6 +1833,8 @@ function hook_entity_form_display_alter(\Drupal\Core\Entity\Display\EntityFormDi
  * @see hook_entity_bundle_field_info_alter()
  * @see \Drupal\Core\Field\FieldDefinitionInterface
  * @see \Drupal\Core\Entity\EntityFieldManagerInterface::getFieldDefinitions()
+ * @see \Drupal\Core\Entity\EntityDefinitionUpdateManagerInterface
+ * @see https://www.drupal.org/node/3034742
  */
 function hook_entity_base_field_info(\Drupal\Core\Entity\EntityTypeInterface $entity_type) {
   if ($entity_type->id() == 'node') {
@@ -1932,6 +1939,11 @@ function hook_entity_bundle_field_info_alter(&$fields, \Drupal\Core\Entity\Entit
 /**
  * Provides field storage definitions for a content entity type.
  *
+ * Field storage definitions returned by this hook must run through the regular
+ * field storage life-cycle operations: they need to be properly installed,
+ * updated, and uninstalled. This would typically be done through the Entity
+ * Update API provided by the entity definition update manager.
+ *
  * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
  *   The entity type definition.
  *
@@ -1969,6 +1981,8 @@ function hook_entity_field_storage_info(\Drupal\Core\Entity\EntityTypeInterface 
  *   The entity type definition.
  *
  * @see hook_entity_field_storage_info()
+ * @see \Drupal\Core\Entity\EntityDefinitionUpdateManagerInterface
+ * @see https://www.drupal.org/node/3034742
  */
 function hook_entity_field_storage_info_alter(&$fields, \Drupal\Core\Entity\EntityTypeInterface $entity_type) {
   // Alter the max_length setting.
