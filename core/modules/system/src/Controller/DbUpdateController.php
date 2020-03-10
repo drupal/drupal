@@ -144,7 +144,6 @@ class DbUpdateController extends ControllerBase {
     require_once $this->root . '/core/includes/update.inc';
 
     drupal_load_updates();
-    update_fix_compatibility();
 
     if ($request->query->get('continue')) {
       $_SESSION['update_ignore_warnings'] = TRUE;
