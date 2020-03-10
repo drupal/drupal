@@ -91,6 +91,10 @@ class ConfigInstallProfileOverrideTest extends BrowserTestBase {
     $tour = Tour::load('language-add');
     $this->assertCount(3, $tour->getTips(), 'Optional configuration that is not overridden is not affected.');
 
+    // Ensure the optional configuration is installed. Note that the overridden
+    // language tour has a dependency on this tour so it has to exist.
+    $this->assertInstanceOf(Tour::class, Tour::load('testing_config_overrides_module'));
+
     // Ensure that optional configuration from a profile is created if
     // dependencies are met.
     $this->assertEquals('Config override test', Tour::load('testing_config_overrides')->label());

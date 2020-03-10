@@ -1,4 +1,12 @@
 id: language
+# The enforced dependency ensures that profile configuration in config/install
+# can depend on optional configuration of modules and themes it installs.
+dependencies:
+  enforced:
+    config:
+      - tour.tour.testing_config_overrides_module
+  module:
+    - language
 module: language
 label: Language
 langcode: en

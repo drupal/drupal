@@ -140,9 +140,11 @@ class ConfigInstaller implements ConfigInstallerInterface {
     }
 
     // During a drupal installation optional configuration is installed at the
-    // end of the installation process.
+    // end of the installation process. Once the install profile is installed
+    // optional configuration should be installed as usual.
     // @see install_install_profile()
-    if (!$this->isSyncing() && !InstallerKernel::installationAttempted()) {
+    $profile_installed = in_array($this->drupalGetProfile(), $this->getEnabledExtensions(), TRUE);
+    if (!$this->isSyncing() && (!InstallerKernel::installationAttempted() || $profile_installed)) {
       $optional_install_path = $extension_path . '/' . InstallStorage::CONFIG_OPTIONAL_DIRECTORY;
       if (is_dir($optional_install_path)) {
         // Install any optional config the module provides.

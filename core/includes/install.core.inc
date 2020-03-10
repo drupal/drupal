@@ -1638,7 +1638,6 @@ function install_profile_themes(&$install_state) {
  *   An array of information about the current installation state.
  */
 function install_install_profile(&$install_state) {
-  \Drupal::service('module_installer')->install([$install_state['parameters']['profile']], FALSE);
   // Install all available optional config. During installation the module order
   // is determined by dependencies. If there are no dependencies between modules
   // then the order in which they are installed is dependent on random factors
@@ -1647,6 +1646,8 @@ function install_install_profile(&$install_state) {
   // optional configuration whose dependencies can be met at this point removes
   // any disparities that this creates.
   \Drupal::service('config.installer')->installOptionalConfig();
+
+  \Drupal::service('module_installer')->install([$install_state['parameters']['profile']], FALSE);
 
   // Ensure that the install profile's theme is used.
   // @see _drupal_maintenance_theme()
