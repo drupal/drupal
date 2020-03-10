@@ -300,7 +300,16 @@ class InstallUninstallTest extends ModuleTestBase {
     $existing_updates = \Drupal::keyValue('post_update')->get('existing_updates', []);
     switch ($module) {
       case 'update_test_postupdate':
-        $this->assertEmpty(array_diff(['update_test_postupdate_post_update_first', 'update_test_postupdate_post_update_second', 'update_test_postupdate_post_update_test1', 'update_test_postupdate_post_update_test0'], $existing_updates));
+        $expected = [
+          'update_test_postupdate_post_update_first',
+          'update_test_postupdate_post_update_second',
+          'update_test_postupdate_post_update_test1',
+          'update_test_postupdate_post_update_test0',
+          'update_test_postupdate_post_update_foo',
+          'update_test_postupdate_post_update_bar',
+          'update_test_postupdate_post_update_baz',
+        ];
+        $this->assertSame($expected, $existing_updates);
         break;
     }
   }

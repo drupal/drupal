@@ -87,6 +87,21 @@ class UpdateRegistry {
   }
 
   /**
+   * Gets removed hook_post_update_NAME() implementations for a module.
+   *
+   * @return string[]
+   *   A list of post-update functions that have been removed.
+   */
+  public function getRemovedPostUpdates($module) {
+    $this->scanExtensionsAndLoadUpdateFiles();
+    $function = "{$module}_removed_post_updates";
+    if (function_exists($function)) {
+      return $function();
+    }
+    return [];
+  }
+
+  /**
    * Gets all available update functions.
    *
    * @return callable[]
@@ -102,11 +117,17 @@ class UpdateRegistry {
       // module updates.
       if (preg_match($regexp, $function, $matches)) {
         if (in_array($matches['module'], $this->enabledModules)) {
-          $updates[] = $matches['module'] . '_' . $this->updateType . '_' . $matches['name'];
+          $function_name = $matches['module'] . '_' . $this->updateType . '_' . $matches['name'];
+          if ($this->updateType === 'post_update') {
+            $removed = array_keys($this->getRemovedPostUpdates($matches['module']));
+            if (array_search($function_name, $removed) !== FALSE) {
+              throw new RemovedPostUpdateNameException(sprintf('The following update is specified as removed in hook_removed_post_updates() but still exists in the code base: %s', $function_name));
+            }
+          }
+          $updates[] = $function_name;
         }
       }
     }
-
     // Ensure that the update order is deterministic.
     sort($updates);
     return $updates;

@@ -19,6 +19,7 @@ use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Site\Settings;
 use Drupal\Core\StreamWrapper\PrivateStream;
 use Drupal\Core\StreamWrapper\PublicStream;
+use Drupal\Core\StringTranslation\PluralTranslatableMarkup;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Url;
 use Symfony\Component\HttpFoundation\Request;
@@ -1133,6 +1134,35 @@ function system_requirements($phase) {
           ]),
           'severity' => REQUIREMENT_ERROR,
         ];
+      }
+    }
+    // Also check post-updates. Only do this if we're not already showing an
+    // error for hook_update_N().
+    if (empty($module_list)) {
+      $existing_updates = \Drupal::service('keyvalue')->get('post_update')->get('existing_updates', []);
+      $post_update_registry = \Drupal::service('update.post_update_registry');
+      $modules = \Drupal::moduleHandler()->getModuleList();
+      $module_extension_list = \Drupal::service('extension.list.module');
+      foreach ($modules as $module => $extension) {
+        $module_info = $module_extension_list->get($module);
+        $removed_post_updates = $post_update_registry->getRemovedPostUpdates($module);
+        if ($missing_updates = array_diff(array_keys($removed_post_updates), $existing_updates)) {
+          $versions = array_unique(array_intersect_key($removed_post_updates, array_flip($missing_updates)));
+          $description = new PluralTranslatableMarkup(count($versions),
+            'The installed version of the %module module is too old to update. Update to a version prior to @versions first (missing updates: @missing_updates).',
+            'The installed version of the %module module is too old to update. Update first to a version prior to all of the following: @versions (missing updates: @missing_updates).',
+            [
+              '%module' => $module_info->info['name'],
+              '@missing_updates' => implode(', ', $missing_updates),
+              '@versions' => implode(', ', $versions),
+            ]
+          );
+          $requirements[$module . '_post_update_removed'] = [
+            'title' => t('Missing updates for: @module', ['@module' => $module_info->info['name']]),
+            'description' => $description,
+            'severity' => REQUIREMENT_ERROR,
+          ];
+        }
       }
     }
   }
