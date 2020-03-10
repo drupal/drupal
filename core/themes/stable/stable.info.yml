@@ -89,6 +89,9 @@ libraries-override:
       component:
         misc/vertical-tabs.css: css/core/vertical-tabs.css
 
+  # Load version 3.0.3 of normalize.css for backwards compatibility.
+  core/normalize: stable/normalize
+
   dblog/drupal.dblog:
     css:
       component:

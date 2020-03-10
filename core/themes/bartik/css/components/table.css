@@ -8,6 +8,7 @@ table {
   margin: 10px 0;
   border-spacing: 0;
   border: 0;
+  border-collapse: collapse;
   font-family: "Lucida Grande", "Lucida Sans Unicode", Verdana, sans-serif;
   font-size: 0.857em;
 }

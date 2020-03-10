@@ -198,3 +198,23 @@ tr .form-item,
     float: none;
   }
 }
+
+/**
+ * Prevent regression due to explicit line-heights applied to these elements in
+ * normalize.css 7.0.0.
+ */
+button {
+  line-height: 1.125rem;
+}
+input,
+optgroup {
+  line-height: 1.5rem;
+}
+
+/**
+ * Prevent regression due to -webkit-appearance being set to button in
+ * normalize.css 4.1.0.
+ */
+::-webkit-file-upload-button {
+  -webkit-appearance: push-button;
+}

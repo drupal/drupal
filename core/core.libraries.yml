@@ -580,10 +580,10 @@ modernizr:
 
 normalize:
   remote: https://github.com/necolas/normalize.css
-  version: "3.0.3"
+  version: "8.0.1"
   license:
     name: MIT
-    url: https://github.com/necolas/normalize.css/blob/master/LICENSE.md
+    url: https://github.com/necolas/normalize.css/blob/8.0.1/LICENSE.md
     gpl-compatible: true
   css:
     base:
