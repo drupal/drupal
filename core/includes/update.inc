@@ -14,8 +14,13 @@ use Drupal\Core\Utility\Error;
 
 /**
  * Disables any extensions that are incompatible with the current core version.
+ *
+ * @deprecated in Drupal 8.8.4 and is removed from Drupal 9.0.0.
+ *
+ * @see https://www.drupal.org/node/3026100
  */
 function update_fix_compatibility() {
+  @trigger_error(__FUNCTION__ . '() is deprecated in Drupal 8.8.4 and will be removed before Drupal 9.0.0. There is no replacement. See https://www.drupal.org/node/3026100', E_USER_DEPRECATED);
   // Fix extension objects if the update is being done via Drush 8. In non-Drush
   // environments this will already be fixed by the UpdateKernel this point.
   UpdateKernel::fixSerializedExtensionObjects(\Drupal::getContainer());
@@ -306,9 +311,11 @@ function update_get_update_list() {
   $ret = ['system' => []];
 
   $modules = drupal_get_installed_schema_version(NULL, FALSE, TRUE);
+  /** @var \Drupal\Core\Extension\ExtensionList $extension_list */
+  $extension_list = \Drupal::service('extension.list.module');
   foreach ($modules as $module => $schema_version) {
     // Skip uninstalled and incompatible modules.
-    if ($schema_version == SCHEMA_UNINSTALLED || update_check_incompatibility($module)) {
+    if ($schema_version == SCHEMA_UNINSTALLED || $extension_list->checkIncompatibility($module)) {
       continue;
     }
     // Display a requirements error if the user somehow has a schema version

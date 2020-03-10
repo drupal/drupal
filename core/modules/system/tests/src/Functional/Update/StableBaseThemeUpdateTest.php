@@ -2,19 +2,7 @@
 
 namespace Drupal\Tests\system\Functional\Update;
 
-use Drupal\Core\Cache\CacheBackendInterface;
-use Drupal\Core\Config\ConfigFactoryInterface;
-use Drupal\Core\DependencyInjection\ContainerBuilder;
-use Drupal\Core\DependencyInjection\ServiceProviderInterface;
-use Drupal\Core\Extension\ExtensionDiscovery;
-use Drupal\Core\Extension\InfoParser;
-use Drupal\Core\Extension\InfoParserInterface;
-use Drupal\Core\Extension\ModuleHandlerInterface;
-use Drupal\Core\Extension\ThemeEngineExtensionList;
-use Drupal\Core\Extension\ThemeExtensionList;
-use Drupal\Core\State\StateInterface;
 use Drupal\FunctionalTests\Update\UpdatePathTestBase;
-use org\bovigo\vfs\vfsStream;
 
 /**
  * Tests the upgrade path for introducing the Stable base theme.
@@ -24,7 +12,8 @@ use org\bovigo\vfs\vfsStream;
  * @group system
  * @group legacy
  */
-class StableBaseThemeUpdateTest extends UpdatePathTestBase implements ServiceProviderInterface {
+class StableBaseThemeUpdateTest extends UpdatePathTestBase {
+
 
   /**
    * The theme handler.
@@ -51,17 +40,19 @@ class StableBaseThemeUpdateTest extends UpdatePathTestBase implements ServicePro
   /**
    * {@inheritdoc}
    */
-  public function register(ContainerBuilder $container) {
-    $container->getDefinition('extension.list.theme')
-      ->setClass(VfsThemeExtensionList::class);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   protected function prepareEnvironment() {
     parent::prepareEnvironment();
-    $GLOBALS['conf']['container_service_providers']['test'] = $this;
+    // Make a test theme without a base_theme. The update fixture
+    // 'drupal-8.stable-base-theme-2575421.php' will enable this theme.
+    // Any theme without a 'base theme' property will have its
+    // 'base theme' property set to stable. Because this behavior is deprecated
+    // we copy this theme in to '/themes' for only this test to avoid most tests
+    // having the deprecation notice.
+    // @see \Drupal\Core\Extension\ThemeExtensionList::createExtensionInfo()
+    mkdir($this->siteDirectory . '/themes');
+    mkdir($this->siteDirectory . '/themes/test_stable');
+    copy(DRUPAL_ROOT . '/core/tests/fixtures/test_stable/test_stable.info.yml', $this->siteDirectory . '/themes/test_stable/test_stable.info.yml');
+    copy(DRUPAL_ROOT . '/core/tests/fixtures/test_stable/test_stable.theme', $this->siteDirectory . '/themes/test_stable/test_stable.theme');
   }
 
   /**
@@ -70,21 +61,7 @@ class StableBaseThemeUpdateTest extends UpdatePathTestBase implements ServicePro
   protected function setUp() {
     parent::setUp();
     $this->themeHandler = $this->container->get('theme_handler');
-    $this->themeHandler->refreshInfo();
 
-    $vfs_root = vfsStream::setup('core');
-    vfsStream::create([
-      'themes' => [
-        'test_stable' => [
-          'test_stable.info.yml' => file_get_contents(DRUPAL_ROOT . '/core/tests/fixtures/test_stable/test_stable.info.yml'),
-          'test_stable.theme' => file_get_contents(DRUPAL_ROOT . '/core/tests/fixtures/test_stable/test_stable.theme'),
-        ],
-        'stable' => [
-          'stable.info.yml' => file_get_contents(DRUPAL_ROOT . '/core/themes/stable/stable.info.yml'),
-          'stable.theme' => file_get_contents(DRUPAL_ROOT . '/core/themes/stable/stable.theme'),
-        ],
-      ],
-    ], $vfs_root);
   }
 
   /**
@@ -101,44 +78,6 @@ class StableBaseThemeUpdateTest extends UpdatePathTestBase implements ServicePro
     // Refresh the theme handler now that Stable has been installed.
     $this->themeHandler->refreshInfo();
     $this->assertTrue($this->themeHandler->themeExists('stable'));
-  }
-
-}
-
-class VfsThemeExtensionList extends ThemeExtensionList {
-
-  /**
-   * The extension discovery for this extension list.
-   *
-   * @var \Drupal\Core\Extension\ExtensionDiscovery
-   */
-  protected $extensionDiscovery;
-
-  /**
-   * {@inheritdoc}
-   */
-  public function __construct(string $root, string $type, CacheBackendInterface $cache, InfoParserInterface $info_parser, ModuleHandlerInterface $module_handler, StateInterface $state, ConfigFactoryInterface $config_factory, ThemeEngineExtensionList $engine_list, $install_profile) {
-    parent::__construct($root, $type, $cache, $info_parser, $module_handler, $state, $config_factory, $engine_list, $install_profile);
-    $this->extensionDiscovery = new ExtensionDiscovery('vfs://core');
-    $this->infoParser = new VfsInfoParser('vfs:/');
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getExtensionDiscovery() {
-    return $this->extensionDiscovery;
-  }
-
-}
-
-class VfsInfoParser extends InfoParser {
-
-  /**
-   * {@inheritdoc}
-   */
-  public function parse($filename) {
-    return parent::parse("vfs://core/$filename");
   }
 
 }

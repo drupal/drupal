@@ -563,4 +563,21 @@ abstract class ExtensionList {
     return $info;
   }
 
+  /**
+   * Tests the compatibility of an extension.
+   *
+   * @param string $name
+   *   The extension name to check.
+   *
+   * @return bool
+   *   TRUE if the extension is incompatible and FALSE if not.
+   *
+   * @throws \Drupal\Core\Extension\Exception\UnknownExtensionException
+   *   If there is no extension with the supplied name.
+   */
+  public function checkIncompatibility($name) {
+    $extension = $this->get($name);
+    return $extension->info['core_incompatible'] || (isset($extension->info['php']) && version_compare(phpversion(), $extension->info['php']) < 0);
+  }
+
 }
