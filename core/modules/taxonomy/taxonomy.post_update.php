@@ -8,7 +8,12 @@
 use Drupal\Core\Config\Entity\ConfigEntityUpdater;
 use Drupal\Core\Entity\Display\EntityDisplayInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
+use Drupal\Core\Logger\RfcLogLevel;
+use Drupal\Core\Site\Settings;
+use Drupal\Core\StringTranslation\PluralTranslatableMarkup;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\Core\Url;
+use Drupal\taxonomy\TermStorage;
 use Drupal\views\ViewExecutable;
 
 /**
@@ -147,6 +152,12 @@ function taxonomy_post_update_remove_hierarchy_from_vocabularies(&$sandbox = NUL
  * Update taxonomy terms to be revisionable.
  */
 function taxonomy_post_update_make_taxonomy_term_revisionable(&$sandbox) {
+  $finished = _taxonomy_post_update_make_taxonomy_term_revisionable__fix_default_langcode($sandbox);
+  if (!$finished) {
+    $sandbox['#finished'] = 0;
+    return NULL;
+  }
+
   $definition_update_manager = \Drupal::entityDefinitionUpdateManager();
   /** @var \Drupal\Core\Entity\EntityLastInstalledSchemaRepositoryInterface $last_installed_schema_repository */
   $last_installed_schema_repository = \Drupal::service('entity.last_installed_schema.repository');
@@ -231,7 +242,107 @@ function taxonomy_post_update_make_taxonomy_term_revisionable(&$sandbox) {
 
   $definition_update_manager->updateFieldableEntityType($entity_type, $field_storage_definitions, $sandbox);
 
-  return t('Taxonomy terms have been converted to be revisionable.');
+  if (!empty($sandbox['data_fix']['default_langcode']['processed'])) {
+    $count = $sandbox['data_fix']['default_langcode']['processed'];
+    if (\Drupal::moduleHandler()->moduleExists('dblog')) {
+      // @todo Simplify with https://www.drupal.org/node/2548095
+      $base_url = str_replace('/update.php', '', \Drupal::request()->getBaseUrl());
+      $args = [
+        ':url' => Url::fromRoute('dblog.overview', [], ['query' => ['type' => ['update'], 'severity' => [RfcLogLevel::WARNING]]])
+          ->setOption('base_url', $base_url)
+          ->toString(TRUE)
+          ->getGeneratedUrl(),
+      ];
+      return new PluralTranslatableMarkup($count, 'Taxonomy terms have been converted to be revisionable. One term with data integrity issues was restored. More details have been <a href=":url">logged</a>.', 'Taxonomy terms have been converted to be revisionable. @count terms with data integrity issues were restored. More details have been <a href=":url">logged</a>.', $args);
+    }
+    else {
+      return new PluralTranslatableMarkup($count, 'Taxonomy terms have been converted to be revisionable. One term with data integrity issues was restored. More details have been logged.', 'Taxonomy terms have been converted to be revisionable. @count terms with data integrity issues were restored. More details have been logged.');
+    }
+  }
+  else {
+    return t('Taxonomy terms have been converted to be revisionable.');
+  }
+}
+
+/**
+ * Fixes recoverable data integrity issues in the "default_langcode" field.
+ *
+ * @param array $sandbox
+ *   The update sandbox array.
+ *
+ * @return bool
+ *   TRUE if the operation was finished, FALSE otherwise.
+ *
+ * @internal
+ */
+function _taxonomy_post_update_make_taxonomy_term_revisionable__fix_default_langcode(array &$sandbox) {
+  if (!empty($sandbox['data_fix']['default_langcode']['finished'])) {
+    return TRUE;
+  }
+
+  $storage = \Drupal::entityTypeManager()->getStorage('taxonomy_term');
+  if (!$storage instanceof TermStorage) {
+    $sandbox['data_fix']['default_langcode']['finished'] = TRUE;
+    return TRUE;
+  }
+  elseif (!isset($sandbox['data_fix']['default_langcode'])) {
+    $sandbox['data_fix']['default_langcode'] = [
+      'last_id' => 0,
+      'processed' => 0,
+    ];
+  }
+
+  $database = \Drupal::database();
+  $data_table_name = 'taxonomy_term_field_data';
+  $last_id = $sandbox['data_fix']['default_langcode']['last_id'];
+  $limit = Settings::get('update_sql_batch_size', 200);
+
+  // Detect records in the data table matching the base table language, but
+  // having the "default_langcode" flag set to with 0, which is not supported.
+  $query = $database->select($data_table_name, 'd');
+  $query->leftJoin('taxonomy_term_data', 'b', 'd.tid = b.tid AND d.langcode = b.langcode AND d.default_langcode = 0');
+  $result = $query->fields('d', ['tid', 'langcode'])
+    ->condition('d.tid', $last_id, '>')
+    ->isNotNull('b.tid')
+    ->orderBy('d.tid')
+    ->range(0, $limit)
+    ->execute();
+
+  foreach ($result as $record) {
+    $sandbox['data_fix']['default_langcode']['last_id'] = $record->tid;
+
+    // We need to exclude any term already having also a data table record with
+    // the "default_langcode" flag set to 1, because this is a data integrity
+    // issue that cannot be fixed automatically. However the latter will not
+    // make the update fail.
+    $has_default_langcode = (bool) $database->select($data_table_name, 'd')
+      ->fields('d', ['tid'])
+      ->condition('d.tid', $record->tid)
+      ->condition('d.default_langcode', 1)
+      ->range(0, 1)
+      ->execute()
+      ->fetchField();
+
+    if ($has_default_langcode) {
+      continue;
+    }
+
+    $database->update($data_table_name)
+      ->fields(['default_langcode' => 1])
+      ->condition('tid', $record->tid)
+      ->condition('langcode', $record->langcode)
+      ->execute();
+
+    $sandbox['data_fix']['default_langcode']['processed']++;
+
+    \Drupal::logger('update')
+      ->warning('The term with ID @id had data integrity issues and was restored.', ['@id' => $record->tid]);
+  }
+
+  $finished = $sandbox['data_fix']['default_langcode']['last_id'] === $last_id;
+  $sandbox['data_fix']['default_langcode']['finished'] = $finished;
+
+  return $finished;
 }
 
 /**

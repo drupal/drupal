@@ -25,6 +25,7 @@ class TaxonomyTermUpdatePathTest extends UpdatePathTestBase {
       __DIR__ . '/../../../../../system/tests/fixtures/update/drupal-8.filled.standard.php.gz',
       __DIR__ . '/../../../fixtures/update/drupal-8.views-taxonomy-term-publishing-status-2981887.php',
       __DIR__ . '/../../../fixtures/update/drupal-8.taxonomy-term-publishing-status-ui-2899923.php',
+      __DIR__ . '/../../../fixtures/update/drupal-8.taxonomy-term-null-data-3056543.php',
     ];
   }
 
@@ -154,7 +155,25 @@ class TaxonomyTermUpdatePathTest extends UpdatePathTestBase {
    * @see taxonomy_post_update_make_taxonomy_term_revisionable()
    */
   public function testConversionToRevisionable() {
+    // Set the batch size to 1 to test multiple steps.
+    drupal_rewrite_settings([
+      'settings' => [
+        'update_sql_batch_size' => (object) [
+          'value' => 1,
+          'required' => TRUE,
+        ],
+      ],
+    ]);
+
+    // Check that there are broken terms in the taxonomy tables, initially.
+    $this->assertTermName(997, '');
+    $this->assertTermName(998, '');
+    $this->assertTermName(999, 'tag999-es');
+
     $this->runUpdates();
+
+    // Check that the update function returned the expected message.
+    $this->assertSession()->pageTextContains('Taxonomy terms have been converted to be revisionable. 2 terms with data integrity issues were restored. More details have been logged.');
 
     // Check the database tables and the field storage definitions.
     $schema = \Drupal::database()->schema();
@@ -207,6 +226,34 @@ class TaxonomyTermUpdatePathTest extends UpdatePathTestBase {
     $this->assertEquals('article', $term->bundle());
     $this->assertEquals('Initial revision.', $term->getRevisionLogMessage());
     $this->assertTrue($term->isPublished());
+
+    // Check that two terms were restored and one was ignored. The latter cannot
+    // be manually restored, since we would end up with two data table records
+    // having "default_langcode" equalling 1, which would not make sense.
+    $this->assertTermName(997, 'tag997');
+    $this->assertTermName(998, 'tag998');
+    $this->assertTermName(999, 'tag999-es');
+  }
+
+  /**
+   * Assert that a term name matches the expectation.
+   *
+   * @param string $id
+   *   The term ID.
+   * @param string $expected_name
+   *   The expected term name.
+   */
+  protected function assertTermName($id, $expected_name) {
+    $database = \Drupal::database();
+    $query = $database->select('taxonomy_term_field_data', 'd');
+    $query->join('taxonomy_term_data', 't', 't.tid = d.tid AND d.default_langcode = 1');
+    $name = $query
+      ->fields('d', ['name'])
+      ->condition('d.tid', $id)
+      ->execute()
+      ->fetchField();
+
+    $this->assertSame($expected_name, $name ?: '');
   }
 
   /**

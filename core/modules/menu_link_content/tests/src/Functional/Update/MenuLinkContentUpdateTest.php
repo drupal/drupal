@@ -21,6 +21,7 @@ class MenuLinkContentUpdateTest extends UpdatePathTestBase {
   protected function setDatabaseDumpFiles() {
     $this->databaseDumpFiles = [
       __DIR__ . '/../../../../../system/tests/fixtures/update/drupal-8.filled.standard.php.gz',
+      __DIR__ . '/../../../fixtures/update/drupal-8.menu-link-content-null-data-3056543.php',
     ];
   }
 
@@ -69,7 +70,25 @@ class MenuLinkContentUpdateTest extends UpdatePathTestBase {
     $entity_type = \Drupal::entityDefinitionUpdateManager()->getEntityType('menu_link_content');
     $this->assertFalse($entity_type->isRevisionable());
 
+    // Set the batch size to 1 to test multiple steps.
+    drupal_rewrite_settings([
+      'settings' => [
+        'update_sql_batch_size' => (object) [
+          'value' => 1,
+          'required' => TRUE,
+        ],
+      ],
+    ]);
+
+    // Check that there are broken menu links in the database tables, initially.
+    $this->assertMenuLinkTitle(997, '');
+    $this->assertMenuLinkTitle(998, '');
+    $this->assertMenuLinkTitle(999, 'menu_link_999-es');
+
     $this->runUpdates();
+
+    // Check that the update function returned the expected message.
+    $this->assertSession()->pageTextContains('Custom menu links have been converted to be revisionable. 2 menu links with data integrity issues were restored. More details have been logged.');
 
     $entity_type = \Drupal::entityDefinitionUpdateManager()->getEntityType('menu_link_content');
     $this->assertTrue($entity_type->isRevisionable());
@@ -101,6 +120,35 @@ class MenuLinkContentUpdateTest extends UpdatePathTestBase {
     $this->assertEquals('Pineapple', $menu_link->label());
     $this->assertEquals('route:user.page', $menu_link->link->uri);
     $this->assertTrue($menu_link->isPublished());
+
+    // Check that two menu links were restored and one was ignored. The latter
+    // cannot be manually restored, since we would end up with two data table
+    // records having "default_langcode" equalling 1, which would not make
+    // sense.
+    $this->assertMenuLinkTitle(997, 'menu_link_997');
+    $this->assertMenuLinkTitle(998, 'menu_link_998');
+    $this->assertMenuLinkTitle(999, 'menu_link_999-es');
+  }
+
+  /**
+   * Assert that a menu link label matches the expectation.
+   *
+   * @param string $id
+   *   The menu link ID.
+   * @param string $expected_title
+   *   The expected menu link title.
+   */
+  protected function assertMenuLinkTitle($id, $expected_title) {
+    $database = \Drupal::database();
+    $query = $database->select('menu_link_content_data', 'd');
+    $query->join('menu_link_content', 'b', 'b.id = d.id AND d.default_langcode = 1');
+    $title = $query
+      ->fields('d', ['title'])
+      ->condition('d.id', $id)
+      ->execute()
+      ->fetchField();
+
+    $this->assertSame($expected_title, $title ?: '');
   }
 
   /**
