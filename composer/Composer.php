@@ -6,7 +6,6 @@ use Composer\Composer as ComposerApp;
 use Composer\Script\Event;
 use Composer\Semver\Comparator;
 use Drupal\Composer\Generator\PackageGenerator;
-use Drupal\Composer\Generator\Util\DrupalCoreComposer;
 
 /**
  * Provides static functions for composer script events. See also
@@ -37,34 +36,6 @@ class Composer {
       ComposerApp::getVersion() : ComposerApp::VERSION;
     if (Comparator::lessThan($composerVersion, '1.9.0')) {
       throw new \RuntimeException("Drupal core development requires Composer 1.9.0, but Composer $composerVersion is installed. Please run 'composer self-update'.");
-    }
-  }
-
-  /**
-   * Ensure that the right version of behat/mink-selenium2-driver is locked.
-   * Throw an exception if we do not have 1.3.x-dev.
-   *
-   * @todo: Remove this once https://www.drupal.org/node/3078671 is fixed.
-   */
-  public static function ensureBehatDriverVersions() {
-    $drupalCoreComposer = DrupalCoreComposer::createFromPath(getcwd());
-
-    $expectedVersion = '1.3.x-dev';
-    $behatMinkSelenium2DriverInfo = $drupalCoreComposer->packageLockInfo('behat/mink-selenium2-driver', TRUE);
-    if ($behatMinkSelenium2DriverInfo['version'] != $expectedVersion) {
-      $drupalVersion = static::drupalVersionBranch();
-      $message = <<< __EOT__
-Drupal requires behat/mink-selenium2-driver:$expectedVersion in its composer.json
-file, but it is pinned to {$behatMinkSelenium2DriverInfo['version']} in the composer.lock file.
-This sometimes happens when Composer becomes confused. To fix:
-
-1. `git checkout -- composer.lock`, or otherwise reset to a known-good lock file.
-2. `rm -rf vendor`
-3. `composer install`
-4. `COMPOSER_ROOT_VERSION={$drupalVersion} composer update ...` (where ... is
-   the update arguments you wish to run, e.g. --lock).
-__EOT__;
-      throw new \RuntimeException($message);
     }
   }
 
