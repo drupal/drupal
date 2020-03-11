@@ -7,24 +7,15 @@
 
 use Drupal\Core\Config\Entity\ConfigEntityUpdater;
 use Drupal\Core\Entity\Display\EntityDisplayInterface;
-use Drupal\Core\Field\FieldConfigInterface;
 use Drupal\text\Plugin\Field\FieldWidget\TextareaWithSummaryWidget;
 
 /**
- * Update text_with_summary fields to add summary required flags.
+ * Implements hook_removed_post_updates().
  */
-function text_post_update_add_required_summary_flag(&$sandbox = NULL) {
-  $config_entity_updater = \Drupal::classResolver(ConfigEntityUpdater::class);
-
-  $field_callback = function (FieldConfigInterface $field) {
-    if ($field->getType() !== 'text_with_summary') {
-      return FALSE;
-    }
-    $field->setSetting('required_summary', FALSE);
-    return TRUE;
-  };
-
-  $config_entity_updater->update($sandbox, 'field_config', $field_callback);
+function text_removed_post_updates() {
+  return [
+    'text_post_update_add_required_summary_flag' => '9.0.0',
+  ];
 }
 
 /**

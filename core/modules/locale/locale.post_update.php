@@ -6,8 +6,10 @@
  */
 
 /**
- * Clear cache to ensure plural translations are removed from it.
+ * Implements hook_removed_post_updates().
  */
-function locale_post_update_clear_cache_for_old_translations() {
-  // Remove cache of translations, like '@count[2] words'.
+function locale_removed_post_updates() {
+  return [
+    'locale_post_update_clear_cache_for_old_translations' => '9.0.0',
+  ];
 }
