@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\Core\Theme\RegistryLegacyTest.
- */
-
 namespace Drupal\Tests\Core\Theme;
 
 use Drupal\Core\Theme\ActiveTheme;
@@ -21,9 +16,9 @@ use Drupal\Tests\UnitTestCase;
 class RegistryLegacyTest extends UnitTestCase {
 
   /**
-   * The tested theme registry.
+   * The mocked theme registry.
    *
-   * @var \Drupal\Tests\Core\Theme\TestRegistry
+   * @var \Drupal\Core\Theme\Registry|PHPUnit\Framework\MockObject\MockObject
    */
   protected $registry;
 
@@ -70,13 +65,6 @@ class RegistryLegacyTest extends UnitTestCase {
   protected $themeManager;
 
   /**
-   * The list of functions that get_defined_functions() should provide.
-   *
-   * @var array
-   */
-  public static $functions = [];
-
-  /**
    * {@inheritdoc}
    */
   protected function setUp() {
@@ -90,14 +78,6 @@ class RegistryLegacyTest extends UnitTestCase {
     $this->themeManager = $this->createMock('Drupal\Core\Theme\ThemeManagerInterface');
 
     $this->setupTheme();
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function tearDown() {
-    parent::tearDown();
-    static::$functions = [];
   }
 
   /**
@@ -152,29 +132,18 @@ class RegistryLegacyTest extends UnitTestCase {
   }
 
   protected function setupTheme() {
-    $this->registry = new TestRegistry($this->root, $this->cache, $this->lock, $this->moduleHandler, $this->themeHandler, $this->themeInitialization);
+    $this->registry = $this->getMockBuilder(Registry::class)
+      ->setMethods(['getPath'])
+      ->setConstructorArgs([$this->root, $this->cache, $this->lock, $this->moduleHandler, $this->themeHandler, $this->themeInitialization])
+      ->getMock();
+    $this->registry->expects($this->any())
+      ->method('getPath')
+      ->willReturnCallback(function ($module) {
+        if ($module == 'theme_legacy_test') {
+          return 'core/modules/system/tests/modules/theme_legacy_test';
+        }
+      });
     $this->registry->setThemeManager($this->themeManager);
   }
 
-}
-
-class TestRegistry extends Registry {
-
-  protected function getPath($module) {
-    if ($module == 'theme_legacy_test') {
-      return 'core/modules/system/tests/modules/theme_legacy_test';
-    }
-  }
-
-}
-
-namespace Drupal\Core\Theme;
-
-use Drupal\Tests\Core\Theme\RegistryLegacyTest;
-
-/**
- * Overrides get_defined_functions() with a configurable mock.
- */
-function get_defined_functions() {
-  return RegistryLegacyTest::$functions ?: \get_defined_functions();
 }

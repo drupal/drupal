@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\Core\Theme\RegistryTest.
- */
-
 namespace Drupal\Tests\Core\Theme;
 
 use Drupal\Core\Theme\ActiveTheme;
@@ -18,9 +13,9 @@ use Drupal\Tests\UnitTestCase;
 class RegistryTest extends UnitTestCase {
 
   /**
-   * The tested theme registry.
+   * The mocked theme registry.
    *
-   * @var \Drupal\Tests\Core\Theme\TestRegistry
+   * @var \Drupal\Core\Theme\Registry|PHPUnit\Framework\MockObject\MockObject
    */
   protected $registry;
 
@@ -190,7 +185,7 @@ class RegistryTest extends UnitTestCase {
       ->method('getModuleList')
       ->willReturn([]);
 
-    $class = new \ReflectionClass(TestRegistry::class);
+    $class = new \ReflectionClass(Registry::class);
     $reflection_method = $class->getMethod('postProcessExtension');
     $reflection_method->setAccessible(TRUE);
     $reflection_method->invokeArgs($this->registry, [&$hooks, $theme->reveal()]);
@@ -476,18 +471,18 @@ class RegistryTest extends UnitTestCase {
   }
 
   protected function setupTheme() {
-    $this->registry = new TestRegistry($this->root, $this->cache, $this->lock, $this->moduleHandler, $this->themeHandler, $this->themeInitialization);
+    $this->registry = $this->getMockBuilder(Registry::class)
+      ->setMethods(['getPath'])
+      ->setConstructorArgs([$this->root, $this->cache, $this->lock, $this->moduleHandler, $this->themeHandler, $this->themeInitialization])
+      ->getMock();
+    $this->registry->expects($this->any())
+      ->method('getPath')
+      ->willReturnCallback(function ($module) {
+        if ($module == 'theme_test') {
+          return 'core/modules/system/tests/modules/theme_test';
+        }
+      });
     $this->registry->setThemeManager($this->themeManager);
-  }
-
-}
-
-class TestRegistry extends Registry {
-
-  protected function getPath($module) {
-    if ($module == 'theme_test') {
-      return 'core/modules/system/tests/modules/theme_test';
-    }
   }
 
 }
