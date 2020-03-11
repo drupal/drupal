@@ -139,11 +139,6 @@ trait DeprecationListenerTrait {
     return [
       // The following deprecation message is skipped for testing purposes.
       '\Drupal\Tests\SkippedDeprecationTest deprecation',
-      // These deprecations are triggered by symfony/psr-http-message-factory
-      // 1.2, which can be installed if you update dependencies on php 7 or
-      // higher.
-      'The "Symfony\Bridge\PsrHttpMessage\Factory\DiactorosFactory" class is deprecated since symfony/psr-http-message-bridge 1.2, use PsrHttpFactory instead.',
-      'The "psr7.http_message_factory" service relies on the deprecated "Symfony\Bridge\PsrHttpMessage\Factory\DiactorosFactory" class. It should either be deprecated or its implementation upgraded.',
       // This deprecation comes from behat/mink-browserkit-driver when updating
       // symfony/browser-kit to 4.3+.
       'The "Symfony\Component\BrowserKit\Response::getStatus()" method is deprecated since Symfony 4.3, use getStatusCode() instead.',
