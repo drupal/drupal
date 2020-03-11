@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\taxonomy\Functional\Update;
 
+use Drupal\Core\Database\Database;
 use Drupal\FunctionalTests\Update\UpdatePathTestBase;
 use Drupal\user\Entity\User;
 use Drupal\views\Entity\View;
@@ -204,6 +205,36 @@ class TaxonomyTermUpdatePathTest extends UpdatePathTestBase {
     $this->assertEquals('article', $term->bundle());
     $this->assertEquals('Initial revision.', $term->getRevisionLogMessage());
     $this->assertTrue($term->isPublished());
+  }
+
+  /**
+   * Test the update hook requirements check for revisionable terms.
+   *
+   * @see taxonomy_post_update_make_taxonomy_term_revisionable()
+   * @see taxonomy_requirements()
+   */
+  public function testMissingDataUpdateRequirementsCheck() {
+    // Insert invalid data for a non-existent taxonomy term.
+    Database::getConnection()->insert('taxonomy_term_data')
+      ->fields([
+        'tid' => '6',
+        'vid' => 'tags',
+        'uuid' => 'd5fd282b-df66-4d50-b0d1-76bf9eede9c5',
+        'langcode' => 'en',
+      ])
+      ->execute();
+    $this->writeSettings([
+      'settings' => [
+        'update_free_access' => (object) [
+          'value' => TRUE,
+          'required' => TRUE,
+        ],
+      ],
+    ]);
+    $this->drupalGet($this->updateUrl);
+
+    $this->assertSession()->pageTextContains('Errors found');
+    $this->assertSession()->elementTextContains('css', '.system-status-report__entry--error', 'The make_taxonomy_term_revisionable database update cannot be run until the data has been fixed.');
   }
 
   /**

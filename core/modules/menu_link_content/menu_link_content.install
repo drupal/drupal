@@ -6,6 +6,40 @@
  */
 
 /**
+ * Implements hook_requirements().
+ */
+function menu_link_content_requirements($phase) {
+  $requirements = [];
+
+  if ($phase === 'update') {
+    // Check for invalid data before making links revisionable.
+    /** @var \Drupal\Core\Update\UpdateRegistry $registry */
+    $registry = \Drupal::service('update.post_update_registry');
+    $update_name = 'menu_link_content_post_update_make_menu_link_content_revisionable';
+    if (in_array($update_name, $registry->getPendingUpdateFunctions(), TRUE)) {
+      // The 'enabled' field is non-NULL - if we get a NULL value that indicates
+      // a failure to join on menu_link_content_data.
+      $is_broken = \Drupal::entityQuery('menu_link_content')
+        ->condition('enabled', NULL, 'IS NULL')
+        ->range(0, 1)
+        ->accessCheck(FALSE)
+        ->execute();
+      if ($is_broken) {
+        $requirements[$update_name] = [
+          'title' => t('Menu link content data'),
+          'value' => t('Integrity issues detected'),
+          'description' => t('The make_menu_link_content_revisionable database update cannot be run until the data has been fixed. See the <a href=":change_record">change record</a> for more information.', [
+            ':change_record' => 'https://www.drupal.org/node/3117753',
+          ]),
+          'severity' => REQUIREMENT_ERROR,
+        ];
+      }
+    }
+  }
+  return $requirements;
+}
+
+/**
  * Implements hook_install().
  */
 function menu_link_content_install() {

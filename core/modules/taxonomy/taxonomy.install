@@ -10,6 +10,40 @@ use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Site\Settings;
 
 /**
+ * Implements hook_requirements().
+ */
+function taxonomy_requirements($phase) {
+  $requirements = [];
+
+  if ($phase === 'update') {
+    // Check for invalid data before making terms revisionable.
+    /** @var \Drupal\Core\Update\UpdateRegistry $registry */
+    $registry = \Drupal::service('update.post_update_registry');
+    $update_name = 'taxonomy_post_update_make_taxonomy_term_revisionable';
+    if (in_array($update_name, $registry->getPendingUpdateFunctions(), TRUE)) {
+      // The 'name' field is non-NULL - if we get a NULL value that indicates a
+      // failure to join on taxonomy_term_field_data.
+      $is_broken = \Drupal::entityQuery('taxonomy_term')
+        ->condition('name', NULL, 'IS NULL')
+        ->range(0, 1)
+        ->accessCheck(FALSE)
+        ->execute();
+      if ($is_broken) {
+        $requirements[$update_name] = [
+          'title' => t('Taxonomy term data'),
+          'value' => t('Integrity issues detected'),
+          'description' => t('The make_taxonomy_term_revisionable database update cannot be run until the data has been fixed. See the <a href=":change_record">change record</a> for more information.', [
+            ':change_record' => 'https://www.drupal.org/node/3117753',
+          ]),
+          'severity' => REQUIREMENT_ERROR,
+        ];
+      }
+    }
+  }
+  return $requirements;
+}
+
+/**
  * Convert the custom taxonomy term hierarchy storage to a default storage.
  */
 function taxonomy_update_8501() {
