@@ -21,6 +21,17 @@ class ComposerIntegrationTest extends UnitTestCase {
     $content_hash = self::getContentHash(file_get_contents($this->root . '/composer.json'));
     $lock = json_decode(file_get_contents($this->root . '/composer.lock'), TRUE);
     $this->assertSame($content_hash, $lock['content-hash']);
+
+    // @see \Composer\Repository\PathRepository::initialize()
+    $core_content_hash = sha1(file_get_contents($this->root . '/core/composer.json') . serialize([]));
+    $core_lock_file_hash = '';
+    foreach ($lock['packages'] as $package) {
+      if ($package['name'] === 'drupal/core') {
+        $core_lock_file_hash = $package['dist']['reference'];
+        break;
+      }
+    }
+    $this->assertSame($core_content_hash, $core_lock_file_hash);
   }
 
   /**
