@@ -528,7 +528,7 @@ class SelectExtender implements SelectInterface {
    * {@inheritdoc}
    */
   public function conditionGroupFactory($conjunction = 'AND') {
-    return $this->connection->condition($conjunction);
+    return new Condition($conjunction);
   }
 
   /**

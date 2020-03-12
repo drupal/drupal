@@ -399,7 +399,7 @@ class Condition implements ConditionInterface, \Countable {
    * {@inheritdoc}
    */
   public function conditionGroupFactory($conjunction = 'AND') {
-    return new static($conjunction);
+    return new Condition($conjunction);
   }
 
   /**

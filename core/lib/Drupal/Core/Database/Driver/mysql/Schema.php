@@ -2,6 +2,7 @@
 
 namespace Drupal\Core\Database\Driver\mysql;
 
+use Drupal\Core\Database\Query\Condition;
 use Drupal\Core\Database\SchemaException;
 use Drupal\Core\Database\SchemaObjectExistsException;
 use Drupal\Core\Database\SchemaObjectDoesNotExistException;
@@ -74,7 +75,7 @@ class Schema extends DatabaseSchema {
   protected function buildTableNameCondition($table_name, $operator = '=', $add_prefix = TRUE) {
     $table_info = $this->getPrefixInfo($table_name, $add_prefix);
 
-    $condition = $this->connection->condition('AND');
+    $condition = new Condition('AND');
     $condition->condition('table_schema', $table_info['database']);
     $condition->condition('table_name', $table_info['table'], $operator);
     return $condition;
