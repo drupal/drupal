@@ -945,6 +945,22 @@ abstract class Connection {
   }
 
   /**
+   * Prepares and returns a CONDITION query object.
+   *
+   * @param string $conjunction
+   *   The operator to use to combine conditions: 'AND' or 'OR'.
+   *
+   * @return \Drupal\Core\Database\Query\Condition
+   *   A new Condition query object.
+   *
+   * @see \Drupal\Core\Database\Query\Condition
+   */
+  public function condition($conjunction) {
+    $class = $this->getDriverClass('Condition');
+    return new $class($conjunction);
+  }
+
+  /**
    * Escapes a database name string.
    *
    * Force all database names to be strictly alphanumeric-plus-underscore.

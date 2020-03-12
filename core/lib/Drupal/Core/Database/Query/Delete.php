@@ -36,7 +36,7 @@ class Delete extends Query implements ConditionInterface {
     parent::__construct($connection, $options);
     $this->table = $table;
 
-    $this->condition = new Condition('AND');
+    $this->condition = $this->connection->condition('AND');
   }
 
   /**

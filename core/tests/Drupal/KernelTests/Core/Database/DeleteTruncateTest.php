@@ -159,4 +159,22 @@ class DeleteTruncateTest extends DatabaseTestBase {
     $this->assertEqual($num_records_before, $num_records_after + $num_deleted, 'Deletion adds up.');
   }
 
+  /**
+   * Tests namespace of the condition object.
+   */
+  public function testNamespaceConditionObject() {
+    $namespace = (new \ReflectionObject($this->connection))->getNamespaceName() . "\\Condition";
+    $delete = $this->connection->delete('test');
+
+    $reflection = new \ReflectionObject($delete);
+    $condition_property = $reflection->getProperty('condition');
+    $condition_property->setAccessible(TRUE);
+    $this->assertIdentical($namespace, get_class($condition_property->getValue($delete)));
+
+    $nested_and_condition = $delete->andConditionGroup();
+    $this->assertIdentical($namespace, get_class($nested_and_condition));
+    $nested_or_condition = $delete->orConditionGroup();
+    $this->assertIdentical($namespace, get_class($nested_or_condition));
+  }
+
 }
