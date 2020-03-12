@@ -1,0 +1,11 @@
+normalize:
+  remote: https://github.com/necolas/normalize.css
+  version: "8.0.1"
+  license:
+    name: MIT
+    url: https://github.com/necolas/normalize.css/blob/8.0.1/LICENSE.md
+    gpl-compatible: true
+  css:
+    base:
+      css/core/assets/vendor/normalize-css/normalize.css: { weight: -20 }
+      css/core/normalize-fixes.css: { weight: -19 }

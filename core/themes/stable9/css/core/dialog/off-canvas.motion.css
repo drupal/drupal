@@ -1,0 +1,11 @@
+/**
+ * @file
+ * Motion effects for off-canvas dialog.
+ *
+ * Motion effects are in a separate file so that they can be easily turned off
+ * to improve performance if desired.
+ */
+
+.dialog-off-canvas-main-canvas {
+  transition: padding-right 0.7s ease, padding-left 0.7s ease, padding-top 0.3s ease;
+}

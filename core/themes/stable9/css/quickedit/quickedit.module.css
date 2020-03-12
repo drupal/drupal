@@ -1,0 +1,122 @@
+/**
+ * @file
+ * Generic base styles for Quick Edit module.
+ *
+ * Note: every class is prefixed with "quickedit-" to prevent collisions with
+ * modules or themes. In Edit module-specific DOM subtrees, this is not
+ * necessary.
+ */
+
+/**
+ * Editable.
+ */
+.quickedit-editable {
+  position: relative;
+  z-index: 98;
+  cursor: pointer;
+}
+.quickedit-editable:focus {
+  outline: none;
+}
+
+/**
+ * Highlighted (hovered) editable.
+ */
+.quickedit-editable.quickedit-highlighted {
+  z-index: 99;
+}
+.quickedit-validation-errors > .messages {
+  margin-right: 0;
+  margin-left: 0;
+}
+.quickedit-validation-errors > .messages > ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/**
+ * In-place editors that don't use a popup.
+ */
+.quickedit-validation-errors {
+  position: relative;
+  z-index: 300;
+}
+.quickedit-validation-errors .messages.error {
+  position: absolute;
+  top: 6px;
+  left: -5px; /* LTR */
+  margin: 0;
+  border: none;
+}
+[dir="rtl"] .quickedit-validation-errors .messages.error {
+  right: -5px;
+  left: auto;
+}
+
+/**
+ * Styling specific to the 'form' in-place editor.
+ */
+#quickedit_backstage {
+  display: none;
+}
+.quickedit-form {
+  position: absolute;
+  z-index: 300;
+  max-width: 35em;
+}
+.quickedit-form .placeholder {
+  min-height: 22px;
+}
+
+/**
+ * Default form styling overrides.
+ */
+.quickedit-form .form-wrapper .form-wrapper {
+  margin: inherit;
+}
+.quickedit-form .form-actions {
+  display: none;
+}
+.quickedit-form input {
+  max-width: 100%;
+}
+
+/**
+ * Entity toolbar.
+ */
+.quickedit-toolbar-container {
+  position: absolute;
+  z-index: 100;
+  width: 320px;
+  max-width: 320px;
+}
+.quickedit-toolbar-container > .quickedit-toolbar-pointer,
+.quickedit-toolbar-container > .quickedit-toolbar-lining {
+  display: none;
+}
+.quickedit-form-container {
+  position: relative;
+  z-index: 100;
+  margin: 0;
+  padding: 0;
+  vertical-align: baseline;
+  border: 0;
+}
+.quickedit-toolgroup.ops {
+  float: right; /* LTR */
+}
+[dir="rtl"] .quickedit-toolgroup.ops {
+  float: left;
+}
+.quickedit-toolbar-label {
+  overflow: hidden;
+}
+#quickedit-toolbar-fence {
+  position: fixed;
+  z-index: -1;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+}

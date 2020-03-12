@@ -1,0 +1,23 @@
+{#
+/**
+ * @file
+ * Theme override for the last time we checked for update data.
+ *
+ * Available variables:
+ * - last_checked: Whether or not locale updates have been checked before.
+ * - time: The formatted time ago when the site last checked for available
+ *   updates.
+ * - link: A link to manually check available updates.
+ *
+ * @see template_preprocess_locale_translation_last_check()
+ */
+#}
+<div class="locale checked">
+  <p>
+  {% if last_checked %}
+    {% trans %} Last checked: {{ time }} ago {% endtrans %}
+  {% else %}
+    {{ 'Last checked: never'|t }}
+  {% endif %}
+  <span class="check-manually">({{ link }})</span></p>
+</div>

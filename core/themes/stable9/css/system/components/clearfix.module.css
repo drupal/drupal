@@ -1,0 +1,15 @@
+/**
+ * @file
+ * Float clearing.
+ *
+ * Based on the micro clearfix hack by Nicolas Gallagher, with the :before
+ * pseudo selector removed to allow normal top margin collapse.
+ *
+ * @see http://nicolasgallagher.com/micro-clearfix-hack
+ */
+
+.clearfix:after {
+  display: table;
+  clear: both;
+  content: "";
+}

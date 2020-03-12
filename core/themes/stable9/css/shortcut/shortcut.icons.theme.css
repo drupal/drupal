@@ -1,0 +1,40 @@
+/**
+ * @file
+ * Styling for the shortcut module icons.
+ */
+
+/**
+ * Toolbar tab icon.
+ */
+.toolbar-bar .toolbar-icon-shortcut:before {
+  background-image: url(../../../../misc/icons/bebebe/star.svg);
+}
+.toolbar-bar .toolbar-icon-shortcut:active:before,
+.toolbar-bar .toolbar-icon-shortcut.is-active:before {
+  background-image: url(../../../../misc/icons/ffffff/star.svg);
+}
+
+/**
+ * Add/remove links.
+ */
+.shortcut-action__icon {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  vertical-align: -2px;
+  background: transparent url(../../../../modules/shortcut/images/favstar.svg) no-repeat left top;
+}
+[dir="rtl"] .shortcut-action__icon {
+  background-image: url(../../../../modules/shortcut/images/favstar-rtl.svg);
+}
+.shortcut-action--add:hover .shortcut-action__icon,
+.shortcut-action--add:focus .shortcut-action__icon {
+  background-position: -20px top;
+}
+.shortcut-action--remove .shortcut-action__icon {
+  background-position: -40px top;
+}
+.shortcut-action--remove:focus .shortcut-action__icon,
+.shortcut-action--remove:hover .shortcut-action__icon {
+  background-position: -60px top;
+}

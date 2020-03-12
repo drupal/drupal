@@ -1,0 +1,33 @@
+/**
+ * @file
+ * Styles for the content language administration page.
+ */
+
+.language-content-settings-form .bundle {
+  width: 24%;
+}
+.language-content-settings-form .field {
+  width: 24%;
+  padding-left: 3em; /* LTR */
+}
+[dir="rtl"] .language-content-settings-form .field {
+  padding-right: 3em;
+  padding-left: 1em;
+}
+.language-content-settings-form .column {
+  padding-left: 5em; /* LTR */
+}
+[dir="rtl"] .language-content-settings-form .column {
+  padding-right: 5em;
+  padding-left: 1em;
+}
+.language-content-settings-form .field label,
+.language-content-settings-form .column label {
+  font-weight: normal;
+}
+.language-content-settings-form .translatable {
+  width: 1%;
+}
+.language-content-settings-form .operations {
+  width: 75%;
+}

@@ -1,0 +1,25 @@
+{#
+/**
+ * @file
+ * Theme override for the admin index page.
+ *
+ * Available variables:
+ * - system_compact_link: Themed link to toggle compact view.
+ * - containers: A list of administrative containers keyed by position: left or
+ *   right. Each container in the list contains:
+ *   - blocks: A list of administrative blocks, rendered
+ *     through admin-block.html.twig.
+ *
+ * @see template_preprocess_system_admin_index()
+ */
+#}
+<div class="admin clearfix">
+  {{ system_compact_link }}
+  {% for position, blocks in containers %}
+    <div class="{{ position }} clearfix">
+      {% for block in blocks %}
+        {{ block }}
+      {% endfor %}
+    </div>
+  {% endfor %}
+</div>

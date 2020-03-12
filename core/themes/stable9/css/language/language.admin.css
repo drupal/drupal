@@ -1,0 +1,11 @@
+/**
+ * @file
+ * Styles for the content language administration page.
+ */
+
+#language-content-settings-form table .bundle {
+  width: 25%;
+}
+#language-content-settings-form table .operations {
+  width: 75%;
+}

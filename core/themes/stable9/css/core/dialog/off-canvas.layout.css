@@ -1,0 +1,11 @@
+/**
+ * @file
+ * Visual styling for layouts in the off-canvas dialog.
+ *
+ * See seven/css/layout/layout.css
+ */
+
+.layout-icon__region {
+  fill: #f5f5f2;
+  stroke: #666;
+}

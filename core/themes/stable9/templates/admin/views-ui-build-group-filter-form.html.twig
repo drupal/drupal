@@ -1,0 +1,55 @@
+{#
+/**
+ * @file
+ * Theme override for Views UI build group filter form.
+ *
+ * Available variables:
+ * - form: A render element representing the form. Contains the following:
+ *   - form_description: The exposed filter's description.
+ *   - expose_button: The button to toggle the expose filter form.
+ *   - group_button: Toggle options between single and grouped filters.
+ *   - label: A filter label input field.
+ *   - description: A filter description field.
+ *   - value: The filters available values.
+ *   - optional: A checkbox to require this filter or not.
+ *   - remember: A checkbox to remember selected filter value(s) (per user).
+ *   - widget: Radio Buttons to select the filter widget.
+ *   - add_group: A button to add another row to the table.
+ *   - more: A details element for additional field exposed filter fields.
+ * - table: A rendered table element of the group filter form.
+ *
+ * @see template_preprocess_views_ui_build_group_filter_form()
+ */
+#}
+{{ form.form_description }}
+{{ form.expose_button }}
+{{ form.group_button }}
+<div class="views-left-40">
+  {{ form.optional }}
+  {{ form.remember }}
+</div>
+<div class="views-right-60">
+  {{ form.widget }}
+  {{ form.label }}
+  {{ form.description }}
+</div>
+{#
+  Render the rest of the form elements excluding elements that are rendered
+  elsewhere.
+#}
+{{ form|without(
+    'form_description',
+    'expose_button',
+    'group_button',
+    'optional',
+    'remember',
+    'widget',
+    'label',
+    'description',
+    'add_group',
+    'more'
+  )
+}}
+{{ table }}
+{{ form.add_group }}
+{{ form.more }}

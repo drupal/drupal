@@ -1,0 +1,44 @@
+{#
+/**
+ * @file
+ * Theme override for a set of filter tips.
+ *
+ * Available variables:
+ * - tips: Descriptions and a CSS ID in the form of 'module-name/filter-id'
+ *   (only used when 'long' is TRUE) for each filter in one or more text
+ *   formats.
+ * - long: A flag indicating whether the passed-in filter tips contain extended
+ *   explanations, i.e. intended to be output on the path 'filter/tips'
+ *   (TRUE), or are in a short format, i.e. suitable to be displayed below a
+ *   form element. Defaults to FALSE.
+ * - multiple: A flag indicating there is more than one filter tip.
+ *
+ * @see template_preprocess_filter_tips()
+ */
+#}
+{% if multiple %}
+  <h2>{{ 'Text Formats'|t }}</h2>
+{% endif %}
+
+{% if tips|length %}
+  {% for name, tip in tips %}
+
+    {% if multiple %}
+      <div{{ attributes }}>
+      <h3>{{ tip.name }}</h3>
+    {% endif %}
+
+    {% if tip.list|length %}
+      <ul>
+      {% for item in tip.list %}
+        <li{{ tip.attributes }}>{{ item.tip }}</li>
+      {% endfor %}
+      </ul>
+    {% endif %}
+
+    {% if multiple %}
+      </div>
+    {% endif %}
+
+  {% endfor %}
+{% endif %}

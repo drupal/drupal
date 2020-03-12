@@ -1,0 +1,32 @@
+/**
+ * @file
+ * Alignment classes for text and block level elements.
+ */
+
+.text-align-left {
+  text-align: left;
+}
+.text-align-right {
+  text-align: right;
+}
+.text-align-center {
+  text-align: center;
+}
+.text-align-justify {
+  text-align: justify;
+}
+
+/**
+ * Alignment classes for block level elements (images, videos, blockquotes, etc.)
+ */
+.align-left {
+  float: left;
+}
+.align-right {
+  float: right;
+}
+.align-center {
+  display: block;
+  margin-right: auto;
+  margin-left: auto;
+}

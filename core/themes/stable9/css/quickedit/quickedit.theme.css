@@ -1,0 +1,254 @@
+/**
+ * @file
+ * Styling for Quick Edit module.
+ */
+
+/**
+ * Editable.
+ */
+.quickedit-field.quickedit-editable,
+.quickedit-field .quickedit-editable {
+  box-shadow: 0 0 0 2px #74b7ff;
+}
+
+/**
+ * Highlighted (hovered) editable.
+ */
+.quickedit-field.quickedit-highlighted,
+.quickedit-form.quickedit-highlighted,
+.quickedit-field .quickedit-highlighted {
+  box-shadow: 0 0 0 1px #74b7ff, 0 0 0 2px #007fff;
+}
+.quickedit-field.quickedit-changed,
+.quickedit-form.quickedit-changed,
+.quickedit-field .quickedit-changed {
+  box-shadow: 0 0 0 1px #fec17e, 0 0 0 2px #f7870a;
+}
+.quickedit-editing.quickedit-validation-error,
+.quickedit-form.quickedit-validation-error {
+  box-shadow: 0 0 0 1px #ee8b74, 0 0 0 2px #fa2209;
+}
+.quickedit-editing.quickedit-editor-is-popup {
+  box-shadow: none;
+}
+.quickedit-form .form-item .error {
+  border: 1px solid #eea0a0;
+}
+
+/**
+ * Default form styling overrides.
+ */
+.quickedit-form form {
+  padding: 0.5em;
+}
+.quickedit-form .form-item {
+  margin: 0;
+}
+.quickedit-form .form-wrapper {
+  margin: 0.5em;
+}
+
+/**
+ * Animations.
+ */
+.quickedit-animate-invisible {
+  opacity: 0;
+}
+.quickedit-animate-default {
+  -webkit-transition: all 0.4s ease;
+  transition: all 0.4s ease;
+}
+.quickedit-animate-slow {
+  -webkit-transition: all 0.6s ease;
+  transition: all 0.6s ease;
+}
+.quickedit-animate-delay-veryfast {
+  -webkit-transition-delay: 0.05s;
+  transition-delay: 0.05s;
+}
+.quickedit-animate-delay-fast {
+  -webkit-transition-delay: 0.2s;
+  transition-delay: 0.2s;
+}
+.quickedit-animate-disable-width {
+  -webkit-transition: width 0s;
+  transition: width 0s;
+}
+.quickedit-animate-only-visibility {
+  -webkit-transition: opacity 0.2s ease;
+  transition: opacity 0.2s ease;
+}
+
+/**
+ * In-place editors that don't use a popup.
+ */
+.quickedit-validation-errors .messages.error {
+  background-color: white;
+  box-shadow: 0 0 1px 1px red, 0 0 3px 3px rgba(153, 153, 153, 0.5);
+}
+
+/**
+ * Styling specific to the 'form' in-place editor.
+ */
+.quickedit-form {
+  background-color: white;
+  box-shadow: 0 0 30px 4px #4f4f4f;
+}
+
+/**
+ * Toolbars.
+ */
+.quickedit-toolbar-container {
+  padding-top: 7px;
+  padding-bottom: 7px;
+  -webkit-transition: all 1s;
+  transition: all 1s;
+  font-family: "Source Sans Pro", "Lucida Grande", sans-serif;
+}
+.quickedit-toolbar-container > .quickedit-toolbar-content {
+  position: relative;
+  z-index: 2;
+  box-sizing: border-box;
+  padding: 0.1667em;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  color: black;
+  background-image: -webkit-linear-gradient(top, #fff, #e4e4e4);
+  background-image: linear-gradient(to bottom, #fff, #e4e4e4);
+}
+.quickedit-toolbar-container > .quickedit-toolbar-pointer {
+  position: absolute;
+  z-index: 1;
+  bottom: 2px;
+  left: 18px; /* LTR */
+  display: block;
+  width: 16px;
+  height: 16px;
+  -webkit-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  transform: rotate(45deg);
+  background-color: #e4e4e4;
+  box-shadow: 0 0 0 1px #818181, 0 0 0 4px rgba(150, 150, 150, 0.5);
+}
+[dir="rtl"] .quickedit-toolbar-container > .quickedit-toolbar-pointer {
+  right: 18px;
+  left: auto;
+}
+.quickedit-toolbar-container.quickedit-toolbar-pointer-top > .quickedit-toolbar-pointer {
+  top: 2px;
+  bottom: auto;
+}
+.quickedit-toolbar-container > .quickedit-toolbar-lining {
+  position: absolute;
+  z-index: 0;
+  top: 7px;
+  right: 0;
+  bottom: 7px;
+  left: 0;
+  display: block;
+  box-shadow: 0 0 0 1px #818181, 0 3px 0 1px rgba(150, 150, 150, 0.5);
+}
+
+.quickedit-toolbar-label {
+  overflow: hidden;
+  padding: 0.333em 0.4em;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  font-style: italic;
+}
+.quickedit-toolbar-label .field:after {
+  content: " → "; /* LTR */
+}
+
+[dir="rtl"] .quickedit-toolbar-label .field:after {
+  content: " ← ";
+}
+
+/* The toolbar; these are not necessarily visible. */
+.quickedit-toolbar {
+  font-family: "Droid sans", "Lucida Grande", sans-serif;
+}
+.quickedit-toolbar-entity {
+  padding: 0.1667em 0.2em;
+}
+
+/**
+ * Info toolgroup.
+ */
+.quickedit-toolbar-fullwidth {
+  width: 100%;
+}
+.quickedit-toolgroup.wysiwyg-floated {
+  float: right; /* LTR */
+}
+[dir="rtl"] .quickedit-toolgroup.wysiwyg-floated {
+  float: left;
+}
+.quickedit-toolgroup.wysiwyg-main {
+  clear: both;
+  width: 100%;
+  padding-left: 0; /* LTR */
+}
+[dir="rtl"] .quickedit-toolgroup.wysiwyg-main {
+  padding-right: 0;
+  padding-left: 0;
+}
+
+/**
+ * Buttons.
+ */
+.quickedit-button {
+  display: inline-block;
+  margin: 0;
+  padding: 0.345em;
+  cursor: pointer;
+  -webkit-transition: opacity 0.1s ease;
+  transition: opacity 0.1s ease;
+  opacity: 1;
+  color: #5a5a5a;
+  border: 1px solid #d2d2d2;
+  background-color: #e4e4e4;
+}
+.quickedit-button[aria-hidden="true"] {
+  visibility: hidden;
+  opacity: 0;
+}
+.quickedit-button + .quickedit-button {
+  margin-left: 0.2em; /* LTR */
+}
+[dir="rtl"] .quickedit-button + .quickedit-button {
+  margin-right: 0.25em;
+  margin-left: auto;
+}
+/* Button with icons. */
+.quickedit-button:hover,
+.quickedit-button:active {
+  color: #2e2e2e;
+  border: 1px solid #a0a0a0;
+  background-color: #c8c8c8;
+}
+.quickedit-toolbar-container .quickedit-button.action-cancel {
+  border: 1px solid transparent;
+  background-color: transparent;
+}
+.quickedit-button.action-save {
+  color: white;
+  border: 1px solid transparent;
+  background-color: #50a0e9;
+  background-image: -webkit-linear-gradient(top, #50a0e9, #4481dc);
+  background-image: linear-gradient(to bottom, #50a0e9, #4481dc);
+}
+.quickedit-button.action-save:hover,
+.quickedit-button.action-save:active {
+  border: 1px solid #a0a0a0;
+}
+.quickedit-button.action-saving,
+.quickedit-button.action-saving:hover,
+.quickedit-button.action-saving:active {
+  color: #5a5a5a;
+  border-color: #d2d2d2;
+  background-color: #e4e4e4;
+  background-image: none;
+}
