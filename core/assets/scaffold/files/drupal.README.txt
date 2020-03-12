@@ -68,7 +68,7 @@ the required extensions separately; place the downloaded profile in the
 
 More about installation profiles and distributions:
  * Read about the difference between installation profiles and distributions:
-   https://www.drupal.org/node/1089736
+   https://www.drupal.org/docs/8/distributions/creating-distributions
  * Download contributed installation profiles and distributions:
    https://www.drupal.org/project/distributions
  * Develop your own installation profile or distribution:
