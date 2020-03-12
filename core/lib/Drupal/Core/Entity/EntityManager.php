@@ -594,6 +594,7 @@ class EntityManager implements EntityManagerInterface, ContainerAwareInterface {
   public function clearDisplayModeInfo() {
     @trigger_error('EntityManagerInterface::clearDisplayModeInfo() is deprecated in Drupal 8.0.0 and will be removed before Drupal 9.0.0. Use \Drupal\Core\Entity\EntityDisplayRepositoryInterface::clearDisplayModeInfo() instead. See https://www.drupal.org/node/2549139.', E_USER_DEPRECATED);
     $this->container->get('entity_display.repository')->clearDisplayModeInfo();
+    return $this;
   }
 
   /**

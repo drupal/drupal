@@ -453,8 +453,8 @@ class EntityManagerTest extends UnitTestCase {
    * @expectedDeprecation EntityManagerInterface::clearDisplayModeInfo() is deprecated in Drupal 8.0.0 and will be removed before Drupal 9.0.0. Use \Drupal\Core\Entity\EntityDisplayRepositoryInterface::clearDisplayModeInfo() instead. See https://www.drupal.org/node/2549139.
    */
   public function testClearDisplayModeInfo() {
-    $this->entityDisplayRepository->clearDisplayModeInfo()->shouldBeCalled()->willReturn([]);
-    $this->entityManager->clearDisplayModeInfo();
+    $this->entityDisplayRepository->clearDisplayModeInfo()->shouldBeCalled()->willReturn($this->entityDisplayRepository);
+    $this->assertEquals($this->entityManager, $this->entityManager->clearDisplayModeInfo());
   }
 
   /**
