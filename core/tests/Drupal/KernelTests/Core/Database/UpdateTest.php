@@ -141,22 +141,4 @@ class UpdateTest extends DatabaseTestBase {
     $this->assertIdentical($saved_value, 'New offset value', 'Updated special column name value successfully.');
   }
 
-  /**
-   * Tests namespace of the condition object.
-   */
-  public function testNamespaceConditionObject() {
-    $namespace = (new \ReflectionObject($this->connection))->getNamespaceName() . "\\Condition";
-    $update = $this->connection->update('test');
-
-    $reflection = new \ReflectionObject($update);
-    $condition_property = $reflection->getProperty('condition');
-    $condition_property->setAccessible(TRUE);
-    $this->assertIdentical($namespace, get_class($condition_property->getValue($update)));
-
-    $nested_and_condition = $update->andConditionGroup();
-    $this->assertIdentical($namespace, get_class($nested_and_condition));
-    $nested_or_condition = $update->orConditionGroup();
-    $this->assertIdentical($namespace, get_class($nested_or_condition));
-  }
-
 }

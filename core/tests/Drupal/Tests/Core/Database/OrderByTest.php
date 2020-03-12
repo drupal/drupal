@@ -2,7 +2,6 @@
 
 namespace Drupal\Tests\Core\Database;
 
-use Drupal\Core\Database\Query\Condition;
 use Drupal\Core\Database\Query\Select;
 use Drupal\Tests\UnitTestCase;
 
@@ -26,11 +25,7 @@ class OrderByTest extends UnitTestCase {
   protected function setUp() {
     $connection = $this->getMockBuilder('Drupal\Core\Database\Connection')
       ->disableOriginalConstructor()
-      ->setMethods(['condition'])
       ->getMockForAbstractClass();
-    $connection->expects($this->any())
-      ->method('condition')
-      ->willReturn(new Condition('AND'));
     $this->query = new Select($connection, 'test', NULL);
   }
 
