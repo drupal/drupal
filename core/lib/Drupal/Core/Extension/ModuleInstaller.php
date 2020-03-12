@@ -295,10 +295,13 @@ class ModuleInstaller implements ModuleInstallerInterface {
         }
         drupal_set_installed_schema_version($module, $version);
 
-        // Ensure that all post_update functions are registered already.
+        // Ensure that all post_update functions are registered already. This
+        // should include existing post-updates, as well as any specified as
+        // having been previously removed, to ensure that newly installed and
+        // updated sites have the same entries in the registry.
         /** @var \Drupal\Core\Update\UpdateRegistry $post_update_registry */
         $post_update_registry = \Drupal::service('update.post_update_registry');
-        $post_update_registry->registerInvokedUpdates($post_update_registry->getModuleUpdateFunctions($module));
+        $post_update_registry->registerInvokedUpdates(array_merge($post_update_registry->getModuleUpdateFunctions($module), array_keys($post_update_registry->getRemovedPostUpdates($module))));
 
         // Record the fact that it was installed.
         $modules_installed[] = $module;
