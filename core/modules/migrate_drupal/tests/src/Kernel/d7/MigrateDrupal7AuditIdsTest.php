@@ -138,6 +138,7 @@ class MigrateDrupal7AuditIdsTest extends MigrateDrupal7TestBase {
       'd7_file_private',
       'd7_menu_links',
       'd7_node',
+      'd7_node_complete',
       'd7_node_revision',
       'd7_taxonomy_term',
       'd7_user',

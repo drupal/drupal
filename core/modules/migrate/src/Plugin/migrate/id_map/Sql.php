@@ -3,6 +3,7 @@
 namespace Drupal\migrate\Plugin\migrate\id_map;
 
 use Drupal\Core\Database\DatabaseException;
+use Drupal\Core\Database\DatabaseExceptionWrapper;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Plugin\PluginBase;
@@ -600,7 +601,16 @@ class Sql extends PluginBase implements MigrateIdMapInterface, ContainerFactoryP
       }
     }
 
-    return $query->execute()->fetchAll(\PDO::FETCH_NUM);
+    try {
+      return $query->execute()->fetchAll(\PDO::FETCH_NUM);
+    }
+    catch (DatabaseExceptionWrapper $e) {
+      // It's possible that the query will cause an exception to be thrown. For
+      // example, the URL alias migration uses a dummy node ID of 'INVALID_NID'
+      // to cause the lookup to return no results. On PostgreSQL this causes an
+      // exception because 'INVALID_NID' is not the expected type.
+      return [];
+    }
   }
 
   /**

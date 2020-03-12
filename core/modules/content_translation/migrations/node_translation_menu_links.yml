@@ -61,6 +61,8 @@ process:
       # d7_node_translation mapping tables to find the new node ID.
       plugin: migration_lookup
       migration:
+        - d6_node_complete
+        - d7_node_complete
         - d6_node_translation
         - d7_node_translation
       no_stub: true

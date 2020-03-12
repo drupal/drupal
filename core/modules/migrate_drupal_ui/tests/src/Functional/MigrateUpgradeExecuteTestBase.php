@@ -112,8 +112,6 @@ abstract class MigrateUpgradeExecuteTestBase extends MigrateUpgradeTestBase {
       'file',
       'taxonomy_term',
       'user',
-      'comment',
-      'node',
     ];
     $this->assertIdConflict($session, $entity_types);
 
@@ -148,9 +146,8 @@ abstract class MigrateUpgradeExecuteTestBase extends MigrateUpgradeTestBase {
     $session->pageTextContains('WARNING: Content may be overwritten on your new site.');
     $session->pageTextContains('There is conflicting content of these types:');
     $session->pageTextContains('files');
-    $session->pageTextContains('content item revisions');
     $session->pageTextContains('There is translated content of these types:');
-    $session->pageTextContains('content items');
+    $session->pageTextContainsOnce('content items');
 
     $this->drupalPostForm(NULL, [], t('I acknowledge I may lose data. Continue anyway.'));
     $session->statusCodeEquals(200);

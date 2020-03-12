@@ -1,0 +1,168 @@
+<?php
+
+namespace Drupal\Tests\node\Kernel\Migrate;
+
+use Drupal\migrate_drupal\NodeMigrateType;
+use Drupal\Tests\migrate\Kernel\MigrateTestBase;
+use Drupal\Tests\migrate_drupal\Traits\NodeMigrateTypeTestTrait;
+
+/**
+ * Tests node_migrations_plugin_alter.
+ *
+ * @group node
+ */
+class MigrationPluginAlterTest extends MigrateTestBase {
+
+  use NodeMigrateTypeTestTrait;
+
+  /**
+   * {@inheritdoc}
+   */
+  public static $modules = ['migrate_drupal', 'node'];
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function setUp() {
+    parent::setUp();
+    $this->setupDb();
+  }
+
+  /**
+   * Tests migrate_drupal_migrations_plugin_alter.
+   *
+   * @param string $type
+   *   The type of node migration, 'classic' or 'complete'.
+   * @param array $migration_definitions
+   *   An array of migration definitions.
+   * @param array $expected
+   *   The expected results.
+   *
+   * @dataProvider providerMigrationPluginAlter
+   */
+  public function testMigrationPluginAlter($type, array $migration_definitions, array $expected) {
+    // Version 6 is used so that term node migrations are tested.
+    $this->makeNodeMigrateMapTable($type, '7');
+    node_migration_plugins_alter($migration_definitions);
+    $this->assertSame($expected, $migration_definitions);
+  }
+
+  /**
+   * Data provider for testMigrationPluginAlter().
+   */
+  public function providerMigrationPluginAlter() {
+    $tests = [];
+
+    $migrations = [
+      // The 'system_site' migration is needed to get the legacy Drupal version.
+      'system_site' => [
+        'id' => 'system_site',
+        'source' => [
+          'plugin' => 'variable',
+          'variables' => [
+            'site_name',
+            'site_mail',
+          ],
+          'source_module' => 'system',
+        ],
+        'process' => [],
+      ],
+      'no_dependencies_not_altered' => [
+        'id' => 'no_dependencies_not_altered',
+        'no_dependencies' => 'test',
+        'process' => [
+          'nid' => 'nid',
+        ],
+      ],
+      'dependencies_altered_if_complete' => [
+        'id' => 'test',
+        'migration_dependencies' => [
+          'required' => [
+            'd7_node',
+          ],
+          'optional' => [
+            'd7_node_translation',
+          ],
+        ],
+      ],
+      'dependencies_not_altered' => [
+        'id' => 'd7_node',
+        'migration_dependencies' => [
+          'required' => [
+            'd7_node',
+          ],
+          'optional' => [
+            'd7_node_translation',
+          ],
+        ],
+      ],
+    ];
+
+    // Test migrations are not altered when classic node migrations is in use.
+    $tests[0]['type'] = NodeMigrateType::NODE_MIGRATE_TYPE_CLASSIC;
+    $tests[0]['migrations'] = $migrations;
+    $tests[0]['expected_data'] = $tests[0]['migrations'];
+
+    // Test migrations are altered when complete node migrations is in use.
+    $tests[1] = $tests[0];
+    $tests[1]['type'] = NodeMigrateType::NODE_MIGRATE_TYPE_COMPLETE;
+    $tests[1]['expected_data']['dependencies_altered_if_complete']['migration_dependencies'] = [
+      'required' => [
+        'd7_node_complete',
+      ],
+      'optional' => [
+        'd7_node_complete',
+      ],
+    ];
+    return $tests;
+  }
+
+  /**
+   * Creates data in the source database.
+   */
+  protected function setupDb() {
+    $this->sourceDatabase->schema()->createTable('system', [
+      'fields' => [
+        'name' => [
+          'type' => 'varchar',
+          'not null' => TRUE,
+          'length' => '255',
+          'default' => '',
+        ],
+        'type' => [
+          'type' => 'varchar',
+          'not null' => TRUE,
+          'length' => '255',
+          'default' => '',
+        ],
+        'status' => [
+          'type' => 'int',
+          'not null' => TRUE,
+          'size' => 'normal',
+          'default' => '0',
+        ],
+        'schema_version' => [
+          'type' => 'int',
+          'not null' => TRUE,
+          'size' => 'normal',
+          'default' => '-1',
+        ],
+      ],
+    ]);
+    $this->sourceDatabase->insert('system')
+      ->fields([
+        'name',
+        'type',
+        'status',
+        'schema_version',
+      ])
+      ->values([
+        'name' => 'system',
+        'type' => 'module',
+        'status' => '1',
+        'schema_version' => '7001',
+      ])
+      ->execute();
+  }
+
+}

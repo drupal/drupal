@@ -23,8 +23,8 @@ abstract class NoMultilingualReviewPageTestBase extends MultilingualReviewPageTe
     $session->pageTextContains('WARNING: Content may be overwritten on your new site.');
     $session->pageTextContains('There is conflicting content of these types:');
     $session->pageTextContains('taxonomy terms');
-    $session->pageTextNotContains('There is translated content of these types:');
-    $session->pageTextNotContains('custom menu links');
+    $session->pageTextContains('There is translated content of these types:');
+    $session->pageTextContainsOnce('content items');
 
     $this->drupalPostForm(NULL, [], t('I acknowledge I may lose data. Continue anyway.'));
     $session->statusCodeEquals(200);

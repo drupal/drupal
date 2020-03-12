@@ -14,6 +14,7 @@ provider:
 target_types:
   node:
     - d7_node_translation
+    - d7_node_complete
 # The source plugin will be set by the deriver.
 source:
   plugin: empty

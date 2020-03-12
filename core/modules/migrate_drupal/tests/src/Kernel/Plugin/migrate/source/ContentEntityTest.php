@@ -321,6 +321,7 @@ class ContentEntityTest extends KernelTestBase {
     $values = $node_source->current()->getSource();
     $this->assertEquals($this->bundle, $values['type'][0]['target_id']);
     $this->assertEquals(1, $values['nid']);
+    $this->assertEquals(1, $values['vid']);
     $this->assertEquals('en', $values['langcode']);
     $this->assertEquals(1, $values['status'][0]['value']);
     $this->assertEquals('Apples', $values['title'][0]['value']);
@@ -330,6 +331,7 @@ class ContentEntityTest extends KernelTestBase {
     $values = $node_source->current()->getSource();
     $this->assertEquals($this->bundle, $values['type'][0]['target_id']);
     $this->assertEquals(1, $values['nid']);
+    $this->assertEquals(1, $values['vid']);
     $this->assertEquals('fr', $values['langcode']);
     $this->assertEquals(1, $values['status'][0]['value']);
     $this->assertEquals('Pommes', $values['title'][0]['value']);
@@ -369,11 +371,13 @@ class ContentEntityTest extends KernelTestBase {
     $fields = $media_source->fields();
     $this->assertArrayHasKey('bundle', $fields);
     $this->assertArrayHasKey('mid', $fields);
+    $this->assertArrayHasKey('vid', $fields);
     $this->assertArrayHasKey('name', $fields);
     $this->assertArrayHasKey('status', $fields);
     $media_source->rewind();
     $values = $media_source->current()->getSource();
     $this->assertEquals(1, $values['mid']);
+    $this->assertEquals(1, $values['vid']);
     $this->assertEquals('Foo media', $values['name'][0]['value']);
     $this->assertNull($values['thumbnail'][0]['title']);
     $this->assertEquals(1, $values['uid'][0]['target_id']);
@@ -402,9 +406,11 @@ class ContentEntityTest extends KernelTestBase {
     $this->assertEquals(2, $term_source->count());
     $ids = $term_source->getIds();
     $this->assertArrayHasKey('langcode', $ids);
+    $this->assertArrayHasKey('revision_id', $ids);
     $this->assertArrayHasKey('tid', $ids);
     $fields = $term_source->fields();
     $this->assertArrayHasKey('vid', $fields);
+    $this->assertArrayHasKey('revision_id', $fields);
     $this->assertArrayHasKey('tid', $fields);
     $this->assertArrayHasKey('name', $fields);
     $term_source->rewind();

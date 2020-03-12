@@ -66,17 +66,17 @@ class MigrateNodeRevisionTest extends MigrateNodeTestBase {
     $this->assertIdentical('1', $node->id());
     $this->assertIdentical('2001', $node->getRevisionId());
     $this->assertIdentical('und', $node->langcode->value);
-    $this->assertIdentical('Test title rev 2', $node->getTitle());
-    $this->assertIdentical('body test rev 2', $node->body->value);
-    $this->assertIdentical('teaser test rev 2', $node->body->summary);
+    $this->assertIdentical('Test title rev 3', $node->getTitle());
+    $this->assertIdentical('body test rev 3', $node->body->value);
+    $this->assertIdentical('teaser test rev 3', $node->body->summary);
     $this->assertIdentical('2', $node->getRevisionUser()->id());
-    $this->assertIdentical('modified rev 2', $node->revision_log->value);
-    $this->assertIdentical('1390095702', $node->getRevisionCreationTime());
+    $this->assertIdentical('modified rev 3', $node->revision_log->value);
+    $this->assertIdentical('1420861423', $node->getRevisionCreationTime());
 
-    $this->assertRevision(1, 'und', 'Test title', NULL, '1420861423');
+    $this->assertRevision(1, 'und', 'Test title', NULL, '1390095702');
     $this->assertRevision(3, 'und', 'Test title rev 3', NULL, '1420718386');
     $this->assertRevision(4, 'und', 'Test page title rev 4', NULL, '1390095701');
-    $this->assertRevision(5, 'und', 'Test title rev 3', 'modified rev 3', '1390095703');
+    $this->assertRevision(5, 'und', 'Test title rev 2', 'modified rev 2', '1390095703');
     $this->assertRevision(6, 'und', 'Node 4', NULL, '1390095701');
     $this->assertRevision(7, 'und', 'Node 5', NULL, '1390095701');
     $this->assertRevision(8, 'und', 'Node 6', NULL, '1390095701');
@@ -92,7 +92,7 @@ class MigrateNodeRevisionTest extends MigrateNodeTestBase {
     $this->assertRevision(20, 'und', 'Ferengi Commerce Authority', NULL, '1493066693');
     $this->assertRevision(21, 'und', 'Ambassador Sarek', NULL, '1494966544');
     $this->assertRevision(22, 'und', 'New Forum Topic', NULL, '1501955771');
-    $this->assertRevision(2001, 'und', 'Test title rev 2', 'modified rev 2', '1390095702');
+    $this->assertRevision(2001, 'und', 'Test title rev 3', 'modified rev 3', '1420861423');
     $this->assertRevision(2002, 'en', 'John Smith - EN', NULL, '1534014650');
 
     // Test that the revision translations are not migrated and there should not
@@ -101,6 +101,7 @@ class MigrateNodeRevisionTest extends MigrateNodeTestBase {
     foreach ($ids as $id) {
       $this->assertNull($this->nodeStorage->loadRevision($id));
     }
+
   }
 
 }

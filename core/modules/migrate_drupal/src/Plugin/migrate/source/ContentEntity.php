@@ -265,6 +265,10 @@ class ContentEntity extends SourcePluginBase implements ContainerFactoryPluginIn
   public function getIds() {
     $id_key = $this->entityType->getKey('id');
     $ids[$id_key] = $this->getDefinitionFromEntity($id_key);
+    if ($this->entityType->isRevisionable()) {
+      $revision_key = $this->entityType->getKey('revision');
+      $ids[$revision_key] = $this->getDefinitionFromEntity($revision_key);
+    }
     if ($this->entityType->isTranslatable()) {
       $langcode_key = $this->entityType->getKey('langcode');
       $ids[$langcode_key] = $this->getDefinitionFromEntity($langcode_key);

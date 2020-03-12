@@ -121,8 +121,29 @@ trait MigrationConfigurationTrait {
    */
   protected function getMigrations($database_state_key, $drupal_version) {
     $version_tag = 'Drupal ' . $drupal_version;
-    /** @var \Drupal\migrate\Plugin\Migration[] $all_migrations */
+    /** @var \Drupal\migrate\Plugin\MigrationInterface[] $all_migrations */
     $all_migrations = $this->getMigrationPluginManager()->createInstancesByTag($version_tag);
+
+    // Unset the node migrations that should not run based on the type of node
+    // migration. That is, if this is a complete node migration then unset the
+    // classic node migrations and if this is a classic node migration then
+    // unset the complete node migrations.
+    $type = NodeMigrateType::getNodeMigrateType(\Drupal::database(), $drupal_version);
+    switch ($type) {
+      case NodeMigrateType::NODE_MIGRATE_TYPE_COMPLETE:
+        $patterns = '/(d' . $drupal_version . '_node:)|(d' . $drupal_version . '_node_translation:)|(d' . $drupal_version . '_node_revision:)|(d7_node_entity_translation:)/';
+        break;
+
+      case NodeMigrateType::NODE_MIGRATE_TYPE_CLASSIC:
+        $patterns = '/(d' . $drupal_version . '_node_complete:)/';
+        break;
+    }
+    foreach ($all_migrations as $key => $migrations) {
+      if (preg_match($patterns, $key)) {
+        unset($all_migrations[$key]);
+      }
+    }
+
     $migrations = [];
     foreach ($all_migrations as $migration) {
       // Skip migrations tagged with any of the follow-up migration tags. They
@@ -185,7 +206,7 @@ trait MigrationConfigurationTrait {
    *   A string representing the major branch of Drupal core (e.g. '6' for
    *   Drupal 6.x), or FALSE if no valid version is matched.
    */
-  protected function getLegacyDrupalVersion(Connection $connection) {
+  public static function getLegacyDrupalVersion(Connection $connection) {
     // Don't assume because a table of that name exists, that it has the columns
     // we're querying. Catch exceptions and report that the source database is
     // not Drupal.

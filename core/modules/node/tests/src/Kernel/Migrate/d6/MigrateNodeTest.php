@@ -46,6 +46,11 @@ class MigrateNodeTest extends MigrateNodeTestBase {
    * Test node migration from Drupal 6 to 8.
    */
   public function testNode() {
+    // Confirm there are only classic node migration map tables. This shows
+    // that only the classic migration ran.
+    $results = $this->nodeMigrateMapTableCount('6');
+    $this->assertSame(13, $results['node']);
+    $this->assertSame(0, $results['node_complete']);
     $node = Node::load(1);
     $this->assertIdentical('1', $node->id(), 'Node 1 loaded.');
     $this->assertIdentical('und', $node->langcode->value);
@@ -54,10 +59,10 @@ class MigrateNodeTest extends MigrateNodeTestBase {
     $this->assertIdentical('filtered_html', $node->body->format);
     $this->assertIdentical('story', $node->getType(), 'Node has the correct bundle.');
     $this->assertIdentical('Test title', $node->getTitle(), 'Node has the correct title.');
-    $this->assertIdentical('1388271197', $node->getCreatedTime(), 'Node has the correct created time.');
+    $this->assertIdentical('1390095702', $node->getCreatedTime(), 'Node has the correct created time.');
     $this->assertIdentical(FALSE, $node->isSticky());
     $this->assertIdentical('1', $node->getOwnerId());
-    $this->assertIdentical('1420861423', $node->getRevisionCreationTime());
+    $this->assertIdentical('1390095702', $node->getRevisionCreationTime());
 
     /** @var \Drupal\node\NodeInterface $node_revision */
     $node_revision = \Drupal::entityTypeManager()->getStorage('node')->loadRevision(1);

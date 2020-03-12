@@ -196,17 +196,18 @@ abstract class MigrateUpgradeTestBase extends BrowserTestBase {
    * @param array $entity_types
    *   An array of entity types
    */
-  protected function assertIdConflict(WebAssert $session, $entity_types) {
+  protected function assertIdConflict(WebAssert $session, array $entity_types) {
     /** @var \Drupal\ $entity_type_manager */
     $entity_type_manager = \Drupal::service('entity_type.manager');
 
     $session->pageTextContains('WARNING: Content may be overwritten on your new site.');
     $session->pageTextContains('There is conflicting content of these types:');
+    $this->assertNotEmpty($entity_types, 'No entity types provided to \Drupal\Tests\migrate_drupal_ui\Functional\MigrateUpgradeTestBase::assertIdConflict()');
     foreach ($entity_types as $entity_type) {
       $label = $entity_type_manager->getDefinition($entity_type)->getPluralLabel();
       $session->pageTextContains($label);
     }
-    $session->pageTextContains('content item revisions');
+    $session->pageTextContainsOnce('content items');
     $session->pageTextContains('There is translated content of these types:');
   }
 
