@@ -107,6 +107,7 @@ class MultilingualReviewPageTest extends MultilingualReviewPageTestBase {
       'jquery_ui',
       'link',
       'menu',
+      'node',
       'nodeaccess',
       'nodereference',
       'number',
@@ -156,7 +157,6 @@ class MultilingualReviewPageTest extends MultilingualReviewPageTestBase {
       'i18nviews',
       'locale',
       'migrate_status_active_test',
-      'node',
       'views',
     ];
   }

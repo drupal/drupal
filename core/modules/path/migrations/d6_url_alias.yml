@@ -35,7 +35,11 @@ process:
         - 1
     -
       plugin: migration_lookup
-      migration: d6_node_translation
+      migration:
+        - d6_node_complete
+        - d6_node_translation
+    -
+      plugin: node_complete_node_translation_lookup
   langcode:
     -
       plugin: null_coalesce

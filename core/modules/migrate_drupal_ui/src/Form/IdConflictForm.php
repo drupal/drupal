@@ -123,7 +123,7 @@ class IdConflictForm extends MigrateUpgradeFormBase {
     }
     sort($items, SORT_STRING);
 
-    return $items;
+    return array_unique($items);
   }
 
   /**

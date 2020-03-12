@@ -2,18 +2,25 @@
 
 namespace Drupal\Tests\migrate_drupal\Kernel\d7;
 
+use Drupal\migrate_drupal\NodeMigrateType;
 use Drupal\Tests\migrate_drupal\Kernel\MigrateDrupalTestBase;
+use Drupal\Tests\migrate_drupal\Traits\NodeMigrateTypeTestTrait;
 
 /**
  * Base class for Drupal 7 migration tests.
  */
 abstract class MigrateDrupal7TestBase extends MigrateDrupalTestBase {
 
+  use NodeMigrateTypeTestTrait;
+
   /**
    * {@inheritdoc}
    */
   protected function setUp() {
     parent::setUp();
+    // Add a node classic migrate table to the destination site so that tests
+    // run by default with the classic node migrations.
+    $this->makeNodeMigrateMapTable(NodeMigrateType::NODE_MIGRATE_TYPE_CLASSIC, '7');
     $this->loadFixture($this->getFixtureFilePath());
   }
 

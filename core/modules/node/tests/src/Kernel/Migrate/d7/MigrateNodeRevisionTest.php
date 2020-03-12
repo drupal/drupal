@@ -112,8 +112,8 @@ class MigrateNodeRevisionTest extends MigrateDrupal7TestBase {
    */
   public function testNodeRevisions() {
     $this->assertRevision(1, 'en', 'An English Node', NULL, '1441032132');
-    $this->assertRevision(2, 'en', 'The thing about Deep Space 9', NULL, '1471428152');
-    $this->assertRevision(4, 'is', 'is - The thing about Firefly', NULL, '1478755314');
+    $this->assertRevision(2, 'en', 'The thing about Deep Space 9 (1st rev)', 'DS9 1st rev', '1564543588');
+    $this->assertRevision(4, 'is', 'is - The thing about Firefly (1st rev)', 'is - Firefly 1st rev', '1478755274');
     $this->assertRevision(6, 'en', 'Comments are closed :-(', NULL, '1504715414');
     $this->assertRevision(7, 'en', 'Comments are open :-)', NULL, '1504715432');
     $this->assertRevision(8, 'en', 'The number 47', NULL, '1552126363');
