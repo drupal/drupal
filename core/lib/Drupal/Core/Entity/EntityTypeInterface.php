@@ -157,8 +157,9 @@ interface EntityTypeInterface extends PluginDefinitionInterface {
    *
    * @param string $handler_type
    *   The type of handler to check.
-   * @param bool $nested
-   *   (optional) If this handler has a nested definition. Defaults to FALSE.
+   * @param string|false $nested
+   *   (optional) The nested handler definition key, or FALSE if the handler
+   *   does not have a nested definition. Defaults to FALSE.
    *
    * @return bool
    *   TRUE if a handler of this type exists, FALSE otherwise.
@@ -168,11 +169,14 @@ interface EntityTypeInterface extends PluginDefinitionInterface {
   /**
    * @param string $handler_type
    *   The handler type to get.
+   * @param string|false $nested
+   *   (optional) The nested handler definition key, or FALSE if the handler
+   *   does not have a nested definition. Defaults to FALSE.
    *
    * @return array|string|null
    *   The handlers for a given type, or NULL if none exist.
    */
-  public function getHandlerClass($handler_type);
+  public function getHandlerClass($handler_type, $nested = FALSE);
 
   /**
    * Gets an array of handlers.
