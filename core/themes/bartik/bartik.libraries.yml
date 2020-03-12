@@ -18,6 +18,7 @@ global-styling:
       css/components/breadcrumb.css: {}
       css/components/captions.css: {}
       css/components/comments.css: {}
+      css/components/container-inline.module.css: {}
       css/components/contextual.css: {}
       css/components/demo-block.css: {}
       # @see https://www.drupal.org/node/2389735

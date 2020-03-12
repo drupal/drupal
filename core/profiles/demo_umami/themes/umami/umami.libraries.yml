@@ -34,6 +34,7 @@ global:
       css/components/fields/recipe-instruction.css: {}
       css/components/fields/summary.css: {}
       css/components/forms/buttons.css: {}
+      css/components/forms/container-inline.module.css: {}
       css/components/views/promoted-items.css: {}
       css/components/views/frontpage.css: {}
       css/components/navigation/menu-footer/menu-footer.css: {}
