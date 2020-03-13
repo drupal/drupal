@@ -29,8 +29,6 @@ class MigrateFieldInstanceLabelDescriptionTest extends MigrateDrupal7TestBase im
     'link',
     'locale',
     'menu_ui',
-    // Required for translation migrations.
-    'migrate_drupal_multilingual',
     'node',
     'system',
     'taxonomy',

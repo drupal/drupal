@@ -20,8 +20,6 @@ class MigrateEntityTranslationSettingsTest extends MigrateDrupal7TestBase {
     'content_translation',
     'language',
     'menu_ui',
-    // Required for translation migrations.
-    'migrate_drupal_multilingual',
     'node',
     'taxonomy',
     'text',

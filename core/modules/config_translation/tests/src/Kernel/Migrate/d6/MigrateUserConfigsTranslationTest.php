@@ -19,8 +19,6 @@ class MigrateUserConfigsTranslationTest extends MigrateDrupal6TestBase {
     'language',
     'locale',
     'config_translation',
-    // Required for translation migrations.
-    'migrate_drupal_multilingual',
   ];
 
   /**

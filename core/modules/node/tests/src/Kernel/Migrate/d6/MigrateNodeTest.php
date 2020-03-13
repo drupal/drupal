@@ -23,8 +23,6 @@ class MigrateNodeTest extends MigrateNodeTestBase {
     'language',
     'content_translation',
     'menu_ui',
-    // Required for translation migrations.
-    'migrate_drupal_multilingual',
   ];
 
   /**

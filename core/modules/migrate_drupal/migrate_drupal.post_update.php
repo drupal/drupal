@@ -13,3 +13,10 @@
 function drupal_migrate_post_update_clear_migrate_field_plugin_cache() {
   // Empty post-update hook.
 }
+
+/**
+ * Uninstall migrate_drupal_multilingual since migrate_drupal is installed.
+ */
+function migrate_drupal_post_update_uninstall_multilingual() {
+  \Drupal::service('module_installer')->uninstall(['migrate_drupal_multilingual']);
+}

@@ -1,0 +1,23 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for the migrate drupal multilingual module.
+ */
+
+/**
+ * Implements hook_requirements().
+ *
+ * @see migrate_drupal_post_update_uninstall_multilingual()
+ */
+function migrate_drupal_multilingual_requirements($phase) {
+  $requirements = [];
+  if ($phase === 'runtime') {
+    $requirements['migrate_drupal_multilingual'] = [
+      'title' => t('Migrate Drupal Multilingual'),
+      'severity' => REQUIREMENT_ERROR,
+      'description' => t('The Migrate Drupal Multilingual module is deprecated and should not be installed.'),
+    ];
+  }
+  return $requirements;
+}

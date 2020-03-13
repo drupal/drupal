@@ -17,8 +17,6 @@ class MigrateSystemSiteTranslationTest extends MigrateDrupal7TestBase {
   public static $modules = [
     'language',
     'config_translation',
-    // Required for translation migrations.
-    'migrate_drupal_multilingual',
   ];
 
   /**
