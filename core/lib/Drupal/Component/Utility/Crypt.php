@@ -58,7 +58,8 @@ class Crypt {
    *   The number of random bytes to fetch and base64 encode.
    *
    * @return string
-   *   The base64 encoded result will have a length of up to 4 * $count.
+   *   A base-64 encoded string, with + replaced with -, / with _ and any =
+   *   padding characters removed.
    */
   public static function randomBytesBase64($count = 32) {
     return str_replace(['+', '/', '='], ['-', '_', ''], base64_encode(random_bytes($count)));
