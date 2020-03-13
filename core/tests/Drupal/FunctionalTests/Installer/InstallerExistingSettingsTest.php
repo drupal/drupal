@@ -55,6 +55,15 @@ class InstallerExistingSettingsTest extends InstallerTestBase {
   }
 
   /**
+   * Visits the interactive installer.
+   */
+  protected function visitInstaller() {
+    // Should redirect to the installer.
+    $this->drupalGet($GLOBALS['base_url']);
+    $this->assertSession()->addressEquals($GLOBALS['base_url'] . '/core/install.php');
+  }
+
+  /**
    * {@inheritdoc}
    */
   protected function setUpSettings() {
