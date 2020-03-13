@@ -240,17 +240,6 @@ class UpdateScriptTest extends BrowserTestBase {
     $incompatible_module_message = "The following module is installed, but it is incompatible with Drupal " . \Drupal::VERSION . ":";
     $incompatible_theme_message = "The following theme is installed, but it is incompatible with Drupal " . \Drupal::VERSION . ":";
     return [
-      'module: core key incompatible' => [
-        [
-          'core_version_requirement' => '^8 || ^9',
-          'type' => 'module',
-        ],
-        [
-          'core' => '7.x',
-          'type' => 'module',
-        ],
-        $incompatible_module_message,
-      ],
       'module: core_version_requirement key incompatible' => [
         [
           'core_version_requirement' => '^8 || ^9',
@@ -261,17 +250,6 @@ class UpdateScriptTest extends BrowserTestBase {
           'type' => 'module',
         ],
         $incompatible_module_message,
-      ],
-      'theme: core key incompatible' => [
-        [
-          'core_version_requirement' => '^8 || ^9',
-          'type' => 'theme',
-        ],
-        [
-          'core' => '7.x',
-          'type' => 'theme',
-        ],
-        $incompatible_theme_message,
       ],
       'theme: core_version_requirement key incompatible' => [
         [

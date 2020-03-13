@@ -1,5 +1,4 @@
 name: 'Delay Cache Tags Invalidation Test'
 type: module
-core: 8.x
 package: Testing
 version: VERSION

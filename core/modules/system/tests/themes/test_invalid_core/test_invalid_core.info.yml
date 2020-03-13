@@ -1,6 +1,0 @@
-name: 'Theme test with invalid core version'
-type: theme
-base theme: stable
-description: 'Test theme which has an invalid core version.'
-version: VERSION
-core: 7.x

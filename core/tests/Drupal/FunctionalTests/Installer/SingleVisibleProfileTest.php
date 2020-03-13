@@ -34,7 +34,7 @@ class SingleVisibleProfileTest extends InstallerTestBase {
     foreach ($profiles as $profile) {
       $info = [
         'type' => 'profile',
-        'core' => \Drupal::CORE_COMPATIBILITY,
+        'core_version_requirement' => '^8 || ^9 || ^10',
         'name' => 'Override ' . $profile,
         'hidden' => TRUE,
       ];

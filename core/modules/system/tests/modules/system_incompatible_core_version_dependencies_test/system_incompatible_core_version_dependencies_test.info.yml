@@ -4,4 +4,4 @@ description: 'Support module for testing system dependencies.'
 package: Testing
 version: VERSION
 dependencies:
-  - drupal:system_incompatible_core_version_test
+  - drupal:system_core_incompatible_semver_test

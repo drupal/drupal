@@ -56,29 +56,68 @@ class ModulesListFormWebTest extends BrowserTestBase {
     $this->assertText('dblog');
   }
 
+  /**
+   * Tests the module form with modules with invalid info.yml files.
+   */
   public function testModulesListFormWithInvalidInfoFile() {
-    $broken_info_yml = <<<BROKEN
-name: Module With Broken Info file
-type: module
-BROKEN;
     $path = \Drupal::getContainer()->getParameter('site.path') . "/modules/broken";
     mkdir($path, 0777, TRUE);
-    file_put_contents("$path/broken.info.yml", $broken_info_yml);
+    $file_path = "$path/broken.info.yml";
 
+    $broken_infos = [
+      [
+        'yml' => <<<BROKEN
+name: Module with no core_version_requirement or core
+type: module
+BROKEN,
+        'expected_error' => "The 'core_version_requirement' key must be present in $file_path",
+      ],
+      [
+        'yml' => <<<BROKEN
+name: Module no core_version_requirement and invalid core
+type: module
+core: 9.x
+BROKEN,
+        // Checking for 'core_version_requirement' is done before checking
+        // for a valid 'core' value.
+        'expected_error' => "The 'core_version_requirement' key must be present in $file_path",
+      ],
+      [
+        'yml' => <<<BROKEN
+name: Module with core_version_requirement and invalid core
+type: module
+core: 9.x
+core_version_requirement: ^8 || ^9
+BROKEN,
+        'expected_error' => "'core: 9.x' is not supported. Use 'core_version_requirement' to specify core compatibility. Only 'core: 8.x' is supported to provide backwards compatibility for Drupal 8 when needed in $file_path",
+      ],
+    ];
     $this->drupalLogin(
       $this->drupalCreateUser(
         ['administer modules', 'administer permissions']
       )
     );
-    $this->drupalGet('admin/modules');
-    $this->assertSession()->statusCodeEquals(200);
 
-    // Confirm that the error message is shown.
-    $this->assertSession()
-      ->pageTextContains("The 'core' or the 'core_version_requirement' key must be present in " . $path . '/broken.info.yml');
+    foreach ($broken_infos as $broken_info) {
+      file_put_contents($file_path, $broken_info['yml']);
 
-    // Check that the module filter text box is available.
-    $this->assertSession()->elementExists('xpath', '//input[@name="text"]');
+      $this->drupalGet('admin/modules');
+      $this->assertSession()->statusCodeEquals(200);
+
+      $this->assertSession()
+        ->pageTextContains('Modules could not be listed due to an error: ' . $broken_info['expected_error']);
+
+      // Check that the module filter text box is available.
+      $this->assertSession()->elementExists('xpath', '//input[@name="text"]');
+
+      unlink($file_path);
+      $this->drupalGet('admin/modules');
+      $this->assertSession()->statusCodeEquals(200);
+
+      // Check that the module filter text box is available.
+      $this->assertSession()->elementExists('xpath', '//input[@name="text"]');
+      $this->assertSession()->pageTextNotContains('Modules could not be listed due to an error');
+    }
   }
 
 }

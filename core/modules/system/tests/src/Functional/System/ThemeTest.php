@@ -376,7 +376,6 @@ class ThemeTest extends BrowserTestBase {
     // Check for the error text of a theme with the wrong core version
     // using 7.x and ^7.
     $incompatible_core_message = 'This theme is not compatible with Drupal ' . \Drupal::VERSION . ". Check that the .info.yml file contains a compatible 'core' or 'core_version_requirement' value.";
-    $this->assertThemeIncompatibleText('Theme test with invalid core version', $incompatible_core_message);
     $this->assertThemeIncompatibleText('Theme test with invalid semver core version', $incompatible_core_message);
     // Check for the error text of a theme without a content region.
     $this->assertText("This theme is missing a 'content' region.");

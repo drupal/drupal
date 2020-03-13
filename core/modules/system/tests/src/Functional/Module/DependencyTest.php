@@ -91,7 +91,7 @@ class DependencyTest extends ModuleTestBase {
     // marked as having an incompatible dependency.
     $this->drupalGet('admin/modules');
     $this->assertRaw(t('@module (<span class="admin-missing">incompatible with</span> this version of Drupal core)', [
-      '@module' => 'System incompatible core version test',
+      '@module' => 'System core incompatible semver test',
     ]), 'A module that depends on a module with an incompatible core version is marked as such.');
     $checkbox = $this->xpath('//input[@type="checkbox" and @disabled="disabled" and @name="modules[system_incompatible_core_version_dependencies_test][enable]"]');
     $this->assert(count($checkbox) == 1, 'Checkbox for the module is disabled.');
@@ -115,7 +115,6 @@ class DependencyTest extends ModuleTestBase {
 
     // Test incompatible 'core_version_requirement'.
     $this->drupalGet('admin/modules');
-    $assert_session->fieldDisabled('modules[system_incompatible_core_version_test_1x][enable]');
     $assert_session->fieldDisabled('modules[system_core_incompatible_semver_test][enable]');
 
     // Test compatible 'core_version_requirement' and compatible 'core'.

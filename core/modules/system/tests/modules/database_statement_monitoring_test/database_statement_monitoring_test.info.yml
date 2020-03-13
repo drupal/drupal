@@ -1,6 +1,5 @@
 name: 'Database Statement Monitoring Test'
 type: module
 description: 'Support module for Database layer tests that need to monitor executed database statements.'
-core: 8.x
 package: Testing
 version: VERSION
