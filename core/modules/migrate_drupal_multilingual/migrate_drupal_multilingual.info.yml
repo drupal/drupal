@@ -4,3 +4,4 @@ description: 'Provides a requirement for multilingual migrations.'
 package: 'Core (Experimental)'
 dependencies:
   - migrate_drupal
+hidden: true

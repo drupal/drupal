@@ -23,8 +23,6 @@ class MigrateMenuLinkTranslationTest extends MigrateDrupal6TestBase {
     'menu_link_content',
     'language',
     'content_translation',
-    // Required for translation migrations.
-    'migrate_drupal_multilingual',
   ];
 
   /**

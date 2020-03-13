@@ -34,8 +34,6 @@ class MigrateNodeRevisionTest extends MigrateDrupal7TestBase {
     'image',
     'language',
     'link',
-    // Required for translation migrations.
-    'migrate_drupal_multilingual',
     'menu_ui',
     'node',
     'taxonomy',

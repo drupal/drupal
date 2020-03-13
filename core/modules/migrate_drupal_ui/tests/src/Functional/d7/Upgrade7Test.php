@@ -35,8 +35,6 @@ class Upgrade7Test extends MigrateUpgradeExecuteTestBase {
     'rdf',
     'statistics',
     'migration_provider_test',
-    // Required for translation migrations.
-    'migrate_drupal_multilingual',
   ];
 
   /**

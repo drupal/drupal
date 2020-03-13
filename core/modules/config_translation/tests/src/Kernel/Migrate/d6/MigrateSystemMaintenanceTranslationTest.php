@@ -15,8 +15,6 @@ class MigrateSystemMaintenanceTranslationTest extends MigrateDrupal6TestBase {
   public static $modules = [
     'language',
     'config_translation',
-    // Required for translation migrations.
-    'migrate_drupal_multilingual',
   ];
 
   /**

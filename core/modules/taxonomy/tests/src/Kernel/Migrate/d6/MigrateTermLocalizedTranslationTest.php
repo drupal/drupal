@@ -22,8 +22,6 @@ class MigrateTermLocalizedTranslationTest extends MigrateDrupal6TestBase {
     'menu_ui',
     'node',
     'taxonomy',
-    // Required for translation migrations.
-    'migrate_drupal_multilingual',
   ];
 
   /**

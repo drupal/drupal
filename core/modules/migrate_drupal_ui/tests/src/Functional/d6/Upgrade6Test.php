@@ -33,8 +33,6 @@ class Upgrade6Test extends MigrateUpgradeExecuteTestBase {
     'forum',
     'statistics',
     'migration_provider_test',
-    // Required for translation migrations.
-    'migrate_drupal_multilingual',
   ];
 
   /**
