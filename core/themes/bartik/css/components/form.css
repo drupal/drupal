@@ -36,17 +36,6 @@ fieldset {
   padding: 0.35em 0.625em 0.75em; /* 1 */
   border: 1px solid #c0c0c0; /* 1 */
 }
-/**
- * We've temporarily added this Firefox specific rule here to fix fieldset
- * widths.
- * @todo remove once this Mozilla bug is fixed.
- * See https://bugzilla.mozilla.org/show_bug.cgi?id=504622
- */
-@media (min--moz-device-pixel-ratio: 0) {
-  fieldset {
-    display: table-cell;
-  }
-}
 details,
 fieldset,
 .filter-wrapper {
