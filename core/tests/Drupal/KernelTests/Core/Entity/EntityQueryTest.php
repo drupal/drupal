@@ -1228,9 +1228,9 @@ class EntityQueryTest extends EntityKernelTestBase {
     $expected = $connection->select("entity_test_mulrev", "base_table");
     $expected->addField("base_table", "revision_id", "revision_id");
     $expected->addField("base_table", "id", "id");
-    $expected->join("entity_test_mulrev__$figures", "entity_test_mulrev__$figures", "entity_test_mulrev__$figures.entity_id = base_table.id");
-    $expected->join("entity_test_mulrev__$figures", "entity_test_mulrev__{$figures}_2", "entity_test_mulrev__{$figures}_2.entity_id = base_table.id");
-    $expected->addJoin("LEFT", "entity_test_mulrev__$figures", "entity_test_mulrev__{$figures}_3", "entity_test_mulrev__{$figures}_3.entity_id = base_table.id");
+    $expected->join("entity_test_mulrev__$figures", "entity_test_mulrev__$figures", '"entity_test_mulrev__' . $figures . '"."entity_id" = "base_table"."id"');
+    $expected->join("entity_test_mulrev__$figures", "entity_test_mulrev__{$figures}_2", '"entity_test_mulrev__' . $figures . '_2"."entity_id" = "base_table"."id"');
+    $expected->addJoin("LEFT", "entity_test_mulrev__$figures", "entity_test_mulrev__{$figures}_3", '"entity_test_mulrev__' . $figures . '_3"."entity_id" = "base_table"."id"');
     $expected->condition("entity_test_mulrev__$figures.{$figures}_color", ["blue"], "IN");
     $expected->condition("entity_test_mulrev__{$figures}_2.{$figures}_color", ["red"], "IN");
     $expected->isNull("entity_test_mulrev__{$figures}_3.{$figures}_color");

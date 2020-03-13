@@ -131,14 +131,16 @@ class UpdateTest extends DatabaseTestBase {
    * Confirm that we can update values in a column with special name.
    */
   public function testSpecialColumnUpdate() {
-    $num_updated = $this->connection->update('test_special_columns')
-      ->fields(['offset' => 'New offset value'])
+    $num_updated = $this->connection->update('select')
+      ->fields([
+        'update' => 'New update value',
+      ])
       ->condition('id', 1)
       ->execute();
     $this->assertIdentical($num_updated, 1, 'Updated 1 special column record.');
 
-    $saved_value = $this->connection->query('SELECT "offset" FROM {test_special_columns} WHERE id = :id', [':id' => 1])->fetchField();
-    $this->assertIdentical($saved_value, 'New offset value', 'Updated special column name value successfully.');
+    $saved_value = $this->connection->query('SELECT [update] FROM {select} WHERE id = :id', [':id' => 1])->fetchField();
+    $this->assertEquals('New update value', $saved_value);
   }
 
 }

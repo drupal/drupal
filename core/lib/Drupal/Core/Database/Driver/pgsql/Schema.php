@@ -550,7 +550,7 @@ EOD;
     }
 
     // Get the schema and tablename for the old table.
-    $old_full_name = $this->connection->prefixTables('{' . $table . '}');
+    $old_full_name = str_replace('"', '', $this->connection->prefixTables('{' . $table . '}'));
     list($old_schema, $old_table_name) = strpos($old_full_name, '.') ? explode('.', $old_full_name) : ['public', $old_full_name];
 
     // Index names and constraint names are global in PostgreSQL, so we need to
@@ -866,8 +866,10 @@ EOD;
       'indexes' => [],
     ];
 
+    // Get the schema and tablename for the table without identifier quotes.
+    $full_name = str_replace('"', '', $this->connection->prefixTables('{' . $table . '}'));
     $result = $this->connection->query("SELECT i.relname AS index_name, a.attname AS column_name FROM pg_class t, pg_class i, pg_index ix, pg_attribute a WHERE t.oid = ix.indrelid AND i.oid = ix.indexrelid AND a.attrelid = t.oid AND a.attnum = ANY(ix.indkey) AND t.relkind = 'r' AND t.relname = :table_name ORDER BY index_name ASC, column_name ASC", [
-      ':table_name' => $this->connection->prefixTables('{' . $table . '}'),
+      ':table_name' => $full_name,
     ])->fetchAll();
     foreach ($result as $row) {
       if (preg_match('/_pkey$/', $row->index_name)) {

@@ -150,4 +150,14 @@ class QueryTest extends DatabaseTestBase {
     $this->assertEqual($count, $count_expected);
   }
 
+  /**
+   * Tests quoting identifiers in queries.
+   */
+  public function testQuotingIdentifiers() {
+    // Use the table named an ANSI SQL reserved word with a column that is as
+    // well.
+    $result = $this->connection->query('SELECT [update] FROM {select}')->fetchObject();
+    $this->assertEquals('Update value 1', $result->update);
+  }
+
 }

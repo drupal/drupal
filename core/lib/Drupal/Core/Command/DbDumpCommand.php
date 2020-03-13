@@ -264,7 +264,10 @@ class DbDumpCommand extends DbCommandBase {
    *   The schema definition to modify.
    */
   protected function getTableCollation(Connection $connection, $table, &$definition) {
-    $query = $connection->query("SHOW TABLE STATUS LIKE '{" . $table . "}'");
+    // Remove identifier quotes from the table name. See
+    // \Drupal\Core\Database\Driver\mysql\Connection::identifierQuote().
+    $table = trim($connection->prefixTables('{' . $table . '}'), '"');
+    $query = $connection->query("SHOW TABLE STATUS WHERE NAME = :table_name", [':table_name' => $table]);
     $data = $query->fetchAssoc();
 
     // Map the collation to a character set. For example, 'utf8mb4_general_ci'

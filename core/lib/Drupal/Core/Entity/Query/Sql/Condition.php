@@ -50,6 +50,16 @@ class Condition extends ConditionBase {
       else {
         $type = $this->nestedInsideOrCondition || strtoupper($this->conjunction) === 'OR' || $condition['operator'] === 'IS NULL' ? 'LEFT' : 'INNER';
         $field = $tables->addField($condition['field'], $type, $condition['langcode']);
+        // If the field is trying to query on %delta for a single value field
+        // then the only supported delta is 0. No other value than 0 makes
+        // sense. \Drupal\Core\Entity\Query\Sql\Tables::addField() returns 0 as
+        // the field name for single value fields when querying on their %delta.
+        if ($field === 0) {
+          if ($condition['value'] != 0) {
+            $conditionContainer->alwaysFalse();
+          }
+          continue;
+        }
         $condition['real_field'] = $field;
         static::translateCondition($condition, $sql_query, $tables->isFieldCaseSensitive($condition['field']));
 

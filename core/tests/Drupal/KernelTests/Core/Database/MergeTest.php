@@ -230,4 +230,22 @@ class MergeTest extends DatabaseTestBase {
     $this->fail('No InvalidMergeQueryException thrown');
   }
 
+  /**
+   * Tests that we can merge-insert with reserved keywords.
+   */
+  public function testMergeWithReservedWords() {
+    $num_records_before = $this->connection->query('SELECT COUNT(*) FROM {select}')->fetchField();
+
+    $this->connection->merge('select')
+      ->key('id', 2)
+      ->execute();
+
+    $num_records_after = $this->connection->query('SELECT COUNT(*) FROM {select}')->fetchField();
+    $this->assertEquals($num_records_before + 1, $num_records_after, 'Merge inserted properly.');
+
+    $person = $this->connection->query('SELECT * FROM {select} WHERE id = :id', [':id' => 2])->fetch();
+    $this->assertEquals('', $person->update);
+    $this->assertEquals('2', $person->id);
+  }
+
 }

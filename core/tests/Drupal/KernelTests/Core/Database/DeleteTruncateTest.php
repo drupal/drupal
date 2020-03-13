@@ -148,15 +148,15 @@ class DeleteTruncateTest extends DatabaseTestBase {
    * Confirms that we can delete a single special column name record successfully.
    */
   public function testSpecialColumnDelete() {
-    $num_records_before = $this->connection->query('SELECT COUNT(*) FROM {test_special_columns}')->fetchField();
+    $num_records_before = $this->connection->query('SELECT COUNT(*) FROM {select}')->fetchField();
 
-    $num_deleted = $this->connection->delete('test_special_columns')
-      ->condition('id', 1)
+    $num_deleted = $this->connection->delete('select')
+      ->condition('update', 'Update value 1')
       ->execute();
-    $this->assertIdentical($num_deleted, 1, 'Deleted 1 special column record.');
+    $this->assertEquals(1, $num_deleted, 'Deleted 1 special column record.');
 
-    $num_records_after = $this->connection->query('SELECT COUNT(*) FROM {test_special_columns}')->fetchField();
-    $this->assertEqual($num_records_before, $num_records_after + $num_deleted, 'Deletion adds up.');
+    $num_records_after = $this->connection->query('SELECT COUNT(*) FROM {select}')->fetchField();
+    $this->assertEquals($num_records_before, $num_records_after + $num_deleted, 'Deletion adds up.');
   }
 
 }

@@ -18,6 +18,9 @@ class Upsert extends QueryUpsert {
 
     // Default fields are always placed first for consistency.
     $insert_fields = array_merge($this->defaultFields, $this->insertFields);
+    $insert_fields = array_map(function ($field) {
+      return $this->connection->escapeField($field);
+    }, $insert_fields);
 
     $query = $comments . 'INSERT OR REPLACE INTO {' . $this->table . '} (' . implode(', ', $insert_fields) . ') VALUES ';
 

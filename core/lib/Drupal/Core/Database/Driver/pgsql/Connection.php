@@ -50,28 +50,6 @@ class Connection extends DatabaseConnection {
   ];
 
   /**
-   * The list of PostgreSQL reserved key words.
-   *
-   * @see http://www.postgresql.org/docs/9.4/static/sql-keywords-appendix.html
-   */
-  protected $postgresqlReservedKeyWords = ['all', 'analyse', 'analyze', 'and',
-    'any', 'array', 'as', 'asc', 'asymmetric', 'authorization', 'binary', 'both',
-    'case', 'cast', 'check', 'collate', 'collation', 'column', 'concurrently',
-    'constraint', 'create', 'cross', 'current_catalog', 'current_date',
-    'current_role', 'current_schema', 'current_time', 'current_timestamp',
-    'current_user', 'default', 'deferrable', 'desc', 'distinct', 'do', 'else',
-    'end', 'except', 'false', 'fetch', 'for', 'foreign', 'freeze', 'from', 'full',
-    'grant', 'group', 'having', 'ilike', 'in', 'initially', 'inner', 'intersect',
-    'into', 'is', 'isnull', 'join', 'lateral', 'leading', 'left', 'like', 'limit',
-    'localtime', 'localtimestamp', 'natural', 'not', 'notnull', 'null', 'offset',
-    'on', 'only', 'or', 'order', 'outer', 'over', 'overlaps', 'placing',
-    'primary', 'references', 'returning', 'right', 'select', 'session_user',
-    'similar', 'some', 'symmetric', 'table', 'tablesample', 'then', 'to',
-    'trailing', 'true', 'union', 'unique', 'user', 'using', 'variadic', 'verbose',
-    'when', 'where', 'window', 'with',
-  ];
-
-  /**
    * Constructs a connection object.
    */
   public function __construct(\PDO $connection, array $connection_options) {
@@ -205,12 +183,12 @@ class Connection extends DatabaseConnection {
     return $return;
   }
 
-  public function prepareQuery($query) {
+  public function prepareQuery($query, $quote_identifiers = TRUE) {
     // mapConditionOperator converts some operations (LIKE, REGEXP, etc.) to
     // PostgreSQL equivalents (ILIKE, ~*, etc.). However PostgreSQL doesn't
     // automatically cast the fields to the right type for these operators,
     // so we need to alter the query and add the type-cast.
-    return parent::prepareQuery(preg_replace('/ ([^ ]+) +(I*LIKE|NOT +I*LIKE|~\*|!~\*) /i', ' ${1}::text ${2} ', $query));
+    return parent::prepareQuery(preg_replace('/ ([^ ]+) +(I*LIKE|NOT +I*LIKE|~\*|!~\*) /i', ' ${1}::text ${2} ', $query), $quote_identifiers);
   }
 
   public function queryRange($query, $from, $count, array $args = [], array $options = []) {
@@ -226,74 +204,8 @@ class Connection extends DatabaseConnection {
   /**
    * {@inheritdoc}
    */
-  public function escapeField($field) {
-    $escaped = parent::escapeField($field);
-
-    // Remove any invalid start character.
-    $escaped = preg_replace('/^[^A-Za-z0-9_]/', '', $escaped);
-
-    // The pgsql database driver does not support field names that contain
-    // periods (supported by PostgreSQL server) because this method may be
-    // called by a field with a table alias as part of SQL conditions or
-    // order by statements. This will consider a period as a table alias
-    // identifier, and split the string at the first period.
-    if (preg_match('/^([A-Za-z0-9_]+)"?[.]"?([A-Za-z0-9_.]+)/', $escaped, $parts)) {
-      $table = $parts[1];
-      $column = $parts[2];
-
-      // Use escape alias because escapeField may contain multiple periods that
-      // need to be escaped.
-      $escaped = $this->escapeTable($table) . '.' . $this->escapeAlias($column);
-    }
-    else {
-      $escaped = $this->doEscape($escaped);
-    }
-
-    return $escaped;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function escapeAlias($field) {
-    $escaped = preg_replace('/[^A-Za-z0-9_]+/', '', $field);
-    $escaped = $this->doEscape($escaped);
-    return $escaped;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function escapeTable($table) {
-    $escaped = parent::escapeTable($table);
-
-    // Ensure that each part (database, schema and table) of the table name is
-    // properly and independently escaped.
-    $parts = explode('.', $escaped);
-    $parts = array_map([$this, 'doEscape'], $parts);
-    $escaped = implode('.', $parts);
-
-    return $escaped;
-  }
-
-  /**
-   * Escape a string if needed.
-   *
-   * @param $string
-   *   The string to escape.
-   * @return string
-   *   The escaped string.
-   */
-  protected function doEscape($string) {
-    // Quote identifier to make it case-sensitive.
-    if (preg_match('/[A-Z]/', $string)) {
-      $string = '"' . $string . '"';
-    }
-    elseif (in_array(strtolower($string), $this->postgresqlReservedKeyWords)) {
-      // Quote the string for PostgreSQL reserved key words.
-      $string = '"' . $string . '"';
-    }
-    return $string;
+  protected function identifierQuote() {
+    return '"';
   }
 
   public function driver() {

@@ -108,9 +108,9 @@ class PreviewTest extends UITestBase {
     $this->assertText(t('View render time'));
     $this->assertRaw('<strong>Query</strong>');
     $query_string = <<<SQL
-SELECT views_test_data.name AS views_test_data_name
+SELECT "views_test_data"."name" AS "views_test_data_name"
 FROM
-{views_test_data} views_test_data
+{views_test_data} "views_test_data"
 WHERE (views_test_data.id = '100')
 SQL;
     $this->assertEscaped($query_string);

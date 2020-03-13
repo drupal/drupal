@@ -268,7 +268,7 @@ class Tasks extends InstallTasks {
           \'SELECT array_to_string((string_to_array($1, $2)) [1:$3], $2);\'
           LANGUAGE \'sql\'',
           [],
-          ['allow_delimiter_in_query' => TRUE]
+          ['allow_delimiter_in_query' => TRUE, 'allow_square_brackets' => TRUE]
         );
       }
       $connection->query('SELECT pg_advisory_unlock(1)');

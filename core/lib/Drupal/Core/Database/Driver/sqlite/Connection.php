@@ -376,6 +376,13 @@ class Connection extends DatabaseConnection {
   }
 
   /**
+   * {@inheritdoc}
+   */
+  protected function identifierQuote() {
+    return '"';
+  }
+
+  /**
    * Overrides \Drupal\Core\Database\Connection::createDatabase().
    *
    * @param string $database
@@ -398,8 +405,12 @@ class Connection extends DatabaseConnection {
   /**
    * {@inheritdoc}
    */
-  public function prepareQuery($query) {
-    return $this->prepare($this->prefixTables($query));
+  public function prepareQuery($query, $quote_identifiers = TRUE) {
+    $query = $this->prefixTables($query);
+    if ($quote_identifiers) {
+      $query = $this->quoteIdentifiers($query);
+    }
+    return $this->prepare($query);
   }
 
   public function nextId($existing_id = 0) {

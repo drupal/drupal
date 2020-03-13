@@ -141,4 +141,33 @@ class BasicSyntaxTest extends DatabaseTestBase {
     $this->assertIdentical($num_matches, '4', 'Found 4 records.');
   }
 
+  /**
+   * Tests allowing square brackets in queries.
+   *
+   * @see \Drupal\Core\Database\Connection::prepareQuery()
+   */
+  public function testAllowSquareBrackets() {
+    $this->connection->insert('test')
+      ->fields(['name'])
+      ->values([
+        'name' => '[square]',
+      ])
+      ->execute();
+
+    // Note that this is a very bad example query because arguments should be
+    // passed in via the $args parameter.
+    $result = $this->connection->query("select name from {test} where name = '[square]'", [], ['allow_square_brackets' => TRUE]);
+    $this->assertIdentical('[square]', $result->fetchField());
+
+    // Test that allow_square_brackets has no effect on arguments.
+    $result = $this->connection->query("select name from {test} where name = :value", [':value' => '[square]']);
+    $this->assertIdentical('[square]', $result->fetchField());
+    $result = $this->connection->query("select name from {test} where name = :value", [':value' => '[square]'], ['allow_square_brackets' => TRUE]);
+    $this->assertIdentical('[square]', $result->fetchField());
+
+    // Test square brackets using the query builder.
+    $result = $this->connection->select('test')->fields('test', ['name'])->condition('name', '[square]')->execute();
+    $this->assertIdentical('[square]', $result->fetchField());
+  }
+
 }

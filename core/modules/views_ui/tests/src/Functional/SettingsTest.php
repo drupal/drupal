@@ -2,6 +2,8 @@
 
 namespace Drupal\Tests\views_ui\Functional;
 
+use Drupal\Core\Database\Database;
+
 /**
  * Tests all ui related settings under admin/structure/views/settings.
  *
@@ -122,7 +124,7 @@ class SettingsTest extends UITestBase {
     $xpath = $this->xpath('//div[@class="views-query-info"]//pre');
     $this->assertEqual(count($xpath), 1, 'The views sql is shown.');
     $this->assertFalse(strpos($xpath[0]->getText(), 'db_condition_placeholder') !== FALSE, 'No placeholders are shown in the views sql.');
-    $this->assertTrue(strpos($xpath[0]->getText(), "node_field_data.status = '1'") !== FALSE, 'The placeholders in the views sql is replace by the actual value.');
+    $this->assertTrue(strpos($xpath[0]->getText(), Database::getConnection()->escapeField("node_field_data.status") . " = '1'") !== FALSE, 'The placeholders in the views sql is replace by the actual value.');
 
     // Test the advanced settings form.
 

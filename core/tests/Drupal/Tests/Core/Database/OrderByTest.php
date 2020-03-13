@@ -25,6 +25,9 @@ class OrderByTest extends UnitTestCase {
   protected function setUp() {
     $connection = $this->getMockBuilder('Drupal\Core\Database\Connection')
       ->disableOriginalConstructor()
+      // Prevent deprecation message being triggered by
+      // Connection::identifierQuote().
+      ->setMethods(['identifierQuote'])
       ->getMockForAbstractClass();
     $this->query = new Select($connection, 'test', NULL);
   }

@@ -313,20 +313,18 @@ function database_test_schema() {
     'primary key' => ['name', 'age'],
   ];
 
-  $schema['test_special_columns'] = [
-    'description' => 'A simple test table with special column names.',
+  // Hopefully no-one will ever name a table 'select' but this example is a
+  // reserved keyword in all supported SQL databases so it is a good test.
+  $schema['select'] = [
+    'description' => 'A test table with an ANSI reserved keyword as its name and one of its column names.',
     'fields' => [
       'id' => [
         'description' => 'Simple unique ID.',
         'type' => 'int',
         'not null' => TRUE,
       ],
-      'offset' => [
-        'description' => 'A column with preserved name.',
-        'type' => 'text',
-      ],
-      'function' => [
-        'description' => 'A column with reserved name in MySQL 8.',
+      'update' => [
+        'description' => 'A column with reserved name.',
         'type' => 'text',
       ],
     ],

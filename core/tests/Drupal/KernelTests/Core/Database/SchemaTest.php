@@ -1252,4 +1252,27 @@ class SchemaTest extends KernelTestBase {
     Database::setActiveConnection('default');
   }
 
+  /**
+   * Tests handling of uppercase table names.
+   */
+  public function testUpperCaseTableName() {
+    $table_name = 'A_UPPER_CASE_TABLE_NAME';
+
+    // Create the tables.
+    $table_specification = [
+      'description' => 'Test table.',
+      'fields' => [
+        'id'  => [
+          'type' => 'int',
+          'default' => NULL,
+        ],
+      ],
+    ];
+    $this->schema->createTable($table_name, $table_specification);
+
+    $this->assertTrue($this->schema->tableExists($table_name), 'Table with uppercase table name exists');
+    $this->assertContains($table_name, $this->schema->findTables('%'));
+    $this->assertTrue($this->schema->dropTable($table_name), 'Table with uppercase table name dropped');
+  }
+
 }
