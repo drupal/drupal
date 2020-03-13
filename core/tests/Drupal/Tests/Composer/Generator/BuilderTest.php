@@ -49,7 +49,7 @@ class BuilderTest extends TestCase {
           'license' => 'GPL-2.0-or-later',
           'require' =>
           [
-            'behat/mink' => '1.8.0 | 1.7.1.1 | 1.7.x-dev',
+            'behat/mink' => '^1.8',
           ],
           'conflict' =>
           [
@@ -68,7 +68,7 @@ class BuilderTest extends TestCase {
           'require' =>
           [
             'drupal/core' => Composer::drupalVersionBranch(),
-            'behat/mink' => '1.8.0 | 1.7.1.1 | 1.7.x-dev',
+            'behat/mink' => 'v1.8.0',
             'symfony/css-selector' => 'v4.3.5',
           ],
           'conflict' =>
