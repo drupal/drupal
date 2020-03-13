@@ -7,6 +7,7 @@ use Drupal\Component\Utility\Html;
 use Drupal\Component\Render\MarkupInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\GeneratedLink;
+use Drupal\Core\GeneratedButton;
 use Drupal\Core\GeneratedNoLink;
 use Drupal\Core\Link;
 use Drupal\Core\Render\RendererInterface;
@@ -165,19 +166,41 @@ class LinkGenerator implements LinkGeneratorInterface {
     if ($url->isExternal()) {
       $generated_link = new GeneratedLink();
       $attributes['href'] = $url->toString(FALSE);
+      return $this->doGenerate($generated_link, $attributes, $variables);
     }
-    elseif ($url->isRouted() && $url->getRouteName() === '<nolink>') {
+    if ($url->isRouted() && $url->getRouteName() === '<nolink>') {
       $generated_link = new GeneratedNoLink();
       unset($attributes['href']);
+      return $this->doGenerate($generated_link, $attributes, $variables);
     }
-    else {
-      $generated_url = $url->toString(TRUE);
-      $generated_link = GeneratedLink::createFromObject($generated_url);
-      // The result of the URL generator is a plain-text URL to use as the href
-      // attribute, and it is escaped by \Drupal\Core\Template\Attribute.
-      $attributes['href'] = $generated_url->getGeneratedUrl();
+    if ($url->isRouted() && $url->getRouteName() === '<button>') {
+      $generated_link = new GeneratedButton();
+      $attributes['type'] = 'button';
+      unset($attributes['href']);
+      return $this->doGenerate($generated_link, $attributes, $variables);
     }
+    $generated_url = $url->toString(TRUE);
+    $generated_link = GeneratedLink::createFromObject($generated_url);
+    // The result of the URL generator is a plain-text URL to use as the href
+    // attribute, and it is escaped by \Drupal\Core\Template\Attribute.
+    $attributes['href'] = $generated_url->getGeneratedUrl();
+    return $this->doGenerate($generated_link, $attributes, $variables);
+  }
 
+  /**
+   * Generates the link.
+   *
+   * @param Drupal\Core\GeneratedLink $generated_link
+   *   The generated link, along with its associated cacheability metadata.
+   * @param array $attributes
+   *   The attributes of the generated link.
+   * @param array $variables
+   *   The link text, url, and other options.
+   *
+   * @return Drupal\Core\GeneratedLink
+   *   The generated link, along with its associated cacheability metadata.
+   */
+  protected function doGenerate($generated_link, $attributes, $variables) {
     if (!($variables['text'] instanceof MarkupInterface)) {
       $variables['text'] = Html::escape($variables['text']);
     }
