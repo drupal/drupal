@@ -13,17 +13,6 @@ fieldset:not(.fieldgroup) {
   border-radius: 2px;
   background-color: #fcfcfa;
 }
-/**
- * We've temporarily added this Firefox specific rule here to fix fieldset
- * widths.
- * @todo remove once this Mozilla bug is fixed.
- * See https://bugzilla.mozilla.org/show_bug.cgi?id=504622
- */
-@media (min--moz-device-pixel-ratio: 0) {
-  fieldset:not(.fieldgroup) {
-    display: table-cell;
-  }
-}
 fieldset:not(.fieldgroup) > legend {
   position: absolute;
   top: 10px;
@@ -34,17 +23,6 @@ fieldset:not(.fieldgroup) > legend {
 }
 .fieldgroup {
   min-width: 0;
-}
-/**
- * We've temporarily added this Firefox specific rule here to fix fieldset
- * widths.
- * @todo remove once this Mozilla bug is fixed.
- * See https://bugzilla.mozilla.org/show_bug.cgi?id=504622
- */
-@media (min--moz-device-pixel-ratio: 0) {
-  .fieldgroup {
-    display: table-cell;
-  }
 }
 .form-item {
   margin: 0.75em 0;

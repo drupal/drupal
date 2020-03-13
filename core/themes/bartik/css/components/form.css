@@ -17,17 +17,6 @@ fieldset {
   min-width: 0;
   margin: 1em 0;
 }
-/**
- * We've temporarily added this Firefox specific rule here to fix fieldset
- * widths.
- * @todo remove once this Mozilla bug is fixed.
- * See https://bugzilla.mozilla.org/show_bug.cgi?id=504622
- */
-@media (min--moz-device-pixel-ratio: 0) {
-  fieldset {
-    display: table-cell;
-  }
-}
 details,
 fieldset,
 .filter-wrapper {
