@@ -210,7 +210,6 @@ drupal.form:
     - core/jquery
     - core/drupal
     - core/drupal.debounce
-    - core/jquery.cookie
     - core/jquery.once
 
 drupal.machine-name:
@@ -275,7 +274,6 @@ drupal.tabledrag:
     - core/drupal
     - core/drupalSettings
     - core/jquery.once
-    - core/jquery.cookie
 
 drupal.tableheader:
   version: VERSION
@@ -351,16 +349,14 @@ jquery:
     assets/vendor/jquery/jquery.min.js: { minified: true, weight: -20 }
 
 jquery.cookie:
-  remote: https://github.com/carhartl/jquery-cookie
-  version: "v1.4.1"
-  license:
-    name: MIT
-    url: https://github.com/carhartl/jquery-cookie/blob/v1.4.1/MIT-LICENSE.txt
-    gpl-compatible: true
+  version: VERSION
   js:
-    assets/vendor/jquery.cookie/jquery.cookie.min.js: { minified: true }
+    misc/jquery.cookie.shim.js: {}
   dependencies:
     - core/jquery
+    - core/drupal
+    - core/js-cookie
+  deprecated: The %library_id% asset library is deprecated in Drupal 9.0.0 and will be removed in Drupal 10.0.0. Use the core/js-cookie library instead. See https://www.drupal.org/node/3104677
 
 jquery.farbtastic:
   remote: https://github.com/mattfarina/farbtastic
@@ -406,7 +402,6 @@ jquery.joyride:
     assets/vendor/jquery-joyride/jquery.joyride-2.1.js: { }
   dependencies:
     - core/jquery
-    - core/jquery.cookie
 
 jquery.once:
   remote: https://github.com/RobLoach/jquery-once
@@ -661,3 +656,15 @@ drupal.dialog.off_canvas:
     - core/drupal.announce
     - core/drupal.dialog
     - core/drupal.dialog.ajax
+
+js-cookie:
+  remote: https://github.com/js-cookie/js-cookie
+  version: "v2.2.1"
+  license:
+    name: MIT
+    url: https://github.com/js-cookie/js-cookie/blob/v2.2.1/MIT-LICENSE.txt
+    gpl-compatible: true
+  js:
+    assets/vendor/js-cookie/js.cookie.min.js: {}
+  dependencies:
+    - core/drupal.object.assign

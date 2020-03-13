@@ -15,6 +15,7 @@
     "drupalTranslations": true,
     "jQuery": true,
     "_": true,
+    "Cookies": true,
     "Backbone": true,
     "Modernizr": true,
     "Popper": true,
