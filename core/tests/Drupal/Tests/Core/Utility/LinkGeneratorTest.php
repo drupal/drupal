@@ -3,6 +3,7 @@
 namespace Drupal\Tests\Core\Utility;
 
 use Drupal\Component\Render\MarkupInterface;
+use Drupal\Core\GeneratedButton;
 use Drupal\Core\GeneratedNoLink;
 use Drupal\Core\GeneratedUrl;
 use Drupal\Core\Language\Language;
@@ -197,6 +198,26 @@ class LinkGeneratorTest extends UnitTestCase {
 
     $result = $this->linkGenerator->generate('Test', $url);
     $this->assertSame('<a href="">Test</a>', (string) $result);
+  }
+
+  /**
+   * Tests the generate() method with the <button> route.
+   *
+   * @covers ::generate
+   */
+  public function testGenerateButton() {
+    $this->urlGenerator->expects($this->never())
+      ->method('generateFromRoute');
+    $this->moduleHandler->expects($this->once())
+      ->method('alter')
+      ->with('link', $this->isType('array'));
+
+    $url = Url::fromRoute('<button>');
+    $url->setUrlGenerator($this->urlGenerator);
+
+    $result = $this->linkGenerator->generate('Test', $url);
+    $this->assertTrue($result instanceof GeneratedButton);
+    $this->assertSame('<button type="button">Test</button>', (string) $result);
   }
 
   /**
