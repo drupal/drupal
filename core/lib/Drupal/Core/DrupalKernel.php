@@ -621,12 +621,6 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
     // Retrieve enabled modules and register their namespaces.
     if (!isset($this->moduleList)) {
       $extensions = $this->getConfigStorage()->read('core.extension');
-      // If core.extension configuration does not exist then the container
-      // cannot be dumped because Drupal is yet to be installed.
-      if ($extensions === FALSE) {
-        $this->allowDumping = FALSE;
-        $this->containerNeedsDumping = FALSE;
-      }
       $this->moduleList = isset($extensions['module']) ? $extensions['module'] : [];
     }
     $module_filenames = $this->getModuleFileNames();
