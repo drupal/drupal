@@ -301,7 +301,7 @@ abstract class FileTransfer {
     $parts = explode('/', $path);
     $chroot = '';
     while (count($parts)) {
-      $check = implode($parts, '/');
+      $check = implode('/', $parts);
       if ($this->isFile($check . '/' . drupal_basename(__FILE__))) {
         // Remove the trailing slash.
         return substr($chroot, 0, -1);
