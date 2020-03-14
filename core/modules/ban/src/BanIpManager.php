@@ -17,7 +17,7 @@ class BanIpManager implements BanIpManagerInterface {
   protected $connection;
 
   /**
-   * Construct the BanSubscriber.
+   * Constructs a BanIpManager object.
    *
    * @param \Drupal\Core\Database\Connection $connection
    *   The database connection which will be used to check the IP against.
