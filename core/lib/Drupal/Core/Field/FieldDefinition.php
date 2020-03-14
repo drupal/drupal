@@ -143,7 +143,7 @@ class FieldDefinition extends ListDataDefinition implements FieldDefinitionInter
    *   An array of display options. Refer to
    *   \Drupal\Core\Field\FieldDefinitionInterface::getDisplayOptions() for
    *   a list of supported keys. The options should include at least a 'weight',
-   *   or specify 'type' = 'hidden'. The 'default_widget' / 'default_formatter'
+   *   or specify 'region' = 'hidden'. The 'default_widget'/'default_formatter'
    *   for the field type will be used if no 'type' is specified.
    *
    * @return $this
