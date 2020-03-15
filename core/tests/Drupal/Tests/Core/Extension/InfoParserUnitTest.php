@@ -11,7 +11,7 @@ use org\bovigo\vfs\vfsStream;
  * Tests InfoParser class and exception.
  *
  * Files for this test are stored in core/modules/system/tests/fixtures and end
- * with .info.txt instead of info.yml in order not not be considered as real
+ * with .info.txt instead of info.yml in order not to be considered as real
  * extensions.
  *
  * @coversDefaultClass \Drupal\Core\Extension\InfoParser
