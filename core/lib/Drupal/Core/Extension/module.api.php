@@ -714,6 +714,7 @@ function hook_update_N(&$sandbox) {
  * @ingroup update_api
  *
  * @see hook_update_N()
+ * @see hook_removed_post_updates()
  */
 function hook_post_update_NAME(&$sandbox) {
   // Example of updating some content.
@@ -745,6 +746,30 @@ function hook_post_update_NAME(&$sandbox) {
   }
 
   return $result;
+}
+
+/**
+ * Return an array of removed hook_post_update_NAME() function names.
+ *
+ * This should be used to indicate post-update functions that have existed in
+ * some previous version of the module, but are no longer available.
+ *
+ * This implementation has to be placed in a MODULE.post_update.php file.
+ *
+ * @return string[]
+ *   An array where the keys are removed post-update function names, and the
+ *   values are the first stable version in which the update was removed.
+ *
+ * @ingroup update_api
+ *
+ * @see hook_post_update_NAME()
+ */
+function hook_removed_post_updates() {
+  return [
+    'mymodule_post_update_foo' => '8.x-2.0',
+    'mymodule_post_update_bar' => '8.x-3.0',
+    'mymodule_post_update_baz' => '8.x-3.0',
+  ];
 }
 
 /**

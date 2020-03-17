@@ -4,6 +4,7 @@ namespace Drupal\Tests\Core\Update;
 
 use Drupal\Core\KeyValueStore\KeyValueStoreInterface;
 use Drupal\Core\Site\Settings;
+use Drupal\Core\Update\RemovedPostUpdateNameException;
 use Drupal\Core\Update\UpdateRegistry;
 use Drupal\Tests\UnitTestCase;
 use org\bovigo\vfs\vfsStream;
@@ -46,6 +47,12 @@ name: Module B
 core_version_requirement: '*'
 EOS;
 
+    $info_c = <<<'EOS'
+type: module
+name: Module C
+core_version_requirement: '*'
+EOS;
+
     $module_a = <<<'EOS'
 <?php
 
@@ -71,6 +78,43 @@ EOS;
 function module_b_post_update_a() {
 }
 
+/**
+ * Implements hook_removed_post_updates().
+ */
+function module_b_removed_post_updates() {
+  return [
+    'module_b_post_update_b' => '8.9.0',
+    'module_b_post_update_c' => '8.9.0',
+  ];
+}
+
+EOS;
+
+    $module_c = <<<'EOS'
+<?php
+
+/**
+ * Module C update A.
+ */
+function module_c_post_update_a() {
+}
+
+/**
+ * Module C update B.
+ */
+function module_c_post_update_b() {
+}
+
+/**
+ * Implements hook_removed_post_updates().
+ */
+function module_c_removed_post_updates() {
+  return [
+    'module_c_post_update_b' => '8.9.0',
+    'module_c_post_update_c' => '8.9.0',
+  ];
+}
+
 EOS;
     vfsStream::setup('drupal');
     vfsStream::create([
@@ -84,6 +128,10 @@ EOS;
             'module_b' => [
               'module_b.post_update.php' => $module_b,
               'module_b.info.yml' => $info_b,
+            ],
+            'module_c' => [
+              'module_c.post_update.php' => $module_c,
+              'module_c.info.yml' => $info_c,
             ],
           ],
         ],
@@ -207,6 +255,24 @@ EOS;
     $expected['module_b']['start'] = 'a';
 
     $this->assertEquals($expected, $update_registry->getPendingUpdateInformation());
+  }
+
+  /**
+   * @covers ::getPendingUpdateInformation
+   */
+  public function testGetPendingUpdateInformationWithRemovedUpdates() {
+    $this->setupBasicModules();
+
+    $key_value = $this->prophesize(KeyValueStoreInterface::class);
+    $key_value->get('existing_updates', [])->willReturn(['module_a_post_update_a']);
+    $key_value = $key_value->reveal();
+
+    $update_registry = new UpdateRegistry('vfs://drupal', 'sites/default', [
+      'module_c',
+    ], $key_value, FALSE);
+
+    $this->expectException(RemovedPostUpdateNameException::class);
+    $update_registry->getPendingUpdateInformation();
   }
 
   /**

@@ -54,6 +54,19 @@ class UpdatePostUpdateTest extends BrowserTestBase {
       ->condition('collection', '')
       ->condition('name', 'core.extension')
       ->execute();
+
+    // Mimic the behaviour of ModuleInstaller::install() for removed post
+    // updates. Don't include the actual post updates because we want them to
+    // run.
+    $key_value = \Drupal::service('keyvalue');
+    $existing_updates = $key_value->get('post_update')->get('existing_updates', []);
+    $post_updates = [
+      'update_test_postupdate_post_update_foo',
+      'update_test_postupdate_post_update_bar',
+      'update_test_postupdate_post_update_pub',
+      'update_test_postupdate_post_update_baz',
+    ];
+    $key_value->get('post_update')->set('existing_updates', array_merge($existing_updates, $post_updates));
   }
 
   /**
