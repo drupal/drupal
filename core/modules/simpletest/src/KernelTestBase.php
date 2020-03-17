@@ -216,6 +216,9 @@ EOD;
     if (file_exists($directory . '/settings.testing.php')) {
       Settings::initialize(DRUPAL_ROOT, $site_path, $class_loader);
     }
+    // Set the module list upfront to avoid setting the kernel into the
+    // pre-installer mode.
+    $this->kernel->updateModules([], []);
     $this->kernel->boot();
 
     // Ensure database install tasks have been run.
@@ -231,6 +234,9 @@ EOD;
     // prevents any services created during the first boot from having stale
     // database connections, for example, \Drupal\Core\Config\DatabaseStorage.
     $this->kernel->shutdown();
+    // Set the module list upfront to avoid setting the kernel into the
+    // pre-installer mode.
+    $this->kernel->updateModules([], []);
     $this->kernel->boot();
 
     // Save the original site directory path, so that extensions in the
