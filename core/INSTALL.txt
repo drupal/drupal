@@ -52,7 +52,7 @@ Drupal requires:
   recommended to update to at least 7.3.13.
 - One of the following databases:
   - MySQL 5.7.8 (or greater) (http://www.mysql.com/).
-  - MariaDB 10.2.7 (or greater) (https://mariadb.org/). MariaDB is a fully
+  - MariaDB 10.3.7 (or greater) (https://mariadb.org/). MariaDB is a fully
     compatible drop-in replacement for MySQL.
   - Percona Server 5.7.8 (or greater) (http://www.percona.com/). Percona
     Server is a backwards-compatible replacement for MySQL.

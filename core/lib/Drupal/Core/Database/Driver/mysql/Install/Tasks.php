@@ -24,10 +24,10 @@ class Tasks extends InstallTasks {
   /**
    * Minimum required MariaDB version.
    *
-   * 10.2.7 is the minimum version that supports the JSON datatype (alias).
-   * @see https://mariadb.com/kb/en/json-data-type/
+   * 10.3.7 is the first stable (GA) release in the 10.3 series.
+   * @see https://mariadb.com/kb/en/changes-improvements-in-mariadb-103/#list-of-all-mariadb-103-releases
    */
-  const MARIADB_MINIMUM_VERSION = '10.2.7';
+  const MARIADB_MINIMUM_VERSION = '10.3.7';
 
   /**
    * Minimum required MySQLnd version.
