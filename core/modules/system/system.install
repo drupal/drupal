@@ -19,7 +19,6 @@ use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Extension\Extension;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\File\FileSystemInterface;
-use Drupal\Core\StringTranslation\PluralTranslatableMarkup;
 use Drupal\path_alias\Entity\PathAlias;
 use Drupal\path_alias\PathAliasStorage;
 use Drupal\Core\Site\Settings;
