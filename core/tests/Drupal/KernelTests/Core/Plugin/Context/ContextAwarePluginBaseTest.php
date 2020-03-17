@@ -75,7 +75,7 @@ class ContextAwarePluginBaseTest extends KernelTestBase {
 
     // It should be possible to access the context via the $contexts property,
     // but it should trigger a deprecation notice.
-    $this->expectDeprecation('The $contexts property is deprecated in Drupal 8.8.0 and will be removed before Drupal 9.0.0. Use methods of \Drupal\Component\Plugin\ContextAwarePluginInterface instead. See https://www.drupal.org/project/drupal/issues/3080631 for more information.');
+    $this->addExpectedDeprecationMessage('The $contexts property is deprecated in Drupal 8.8.0 and will be removed before Drupal 9.0.0. Use methods of \Drupal\Component\Plugin\ContextAwarePluginInterface instead. See https://www.drupal.org/project/drupal/issues/3080631 for more information.');
     $this->assertSame('Alpha', $this->plugin->contexts['nato_letter']->getContextValue());
   }
 
@@ -97,7 +97,7 @@ class ContextAwarePluginBaseTest extends KernelTestBase {
 
     // Assert that setContextValue() did NOT update the deprecated $contexts
     // property.
-    $this->expectDeprecation('The $contexts property is deprecated in Drupal 8.8.0 and will be removed before Drupal 9.0.0. Use methods of \Drupal\Component\Plugin\ContextAwarePluginInterface instead. See https://www.drupal.org/project/drupal/issues/3080631 for more information.');
+    $this->addExpectedDeprecationMessage('The $contexts property is deprecated in Drupal 8.8.0 and will be removed before Drupal 9.0.0. Use methods of \Drupal\Component\Plugin\ContextAwarePluginInterface instead. See https://www.drupal.org/project/drupal/issues/3080631 for more information.');
     $this->assertArrayNotHasKey('foo', $this->plugin->contexts);
   }
 

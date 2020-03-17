@@ -104,7 +104,7 @@ class LegacyMigrateUrlAliasTest extends MigrateUrlAliasTest {
       'd7_node_translation',
     ]);
     $this->executeMigration(\Drupal::service('plugin.manager.migration')->createStubMigration($this->stubMigration));
-    $this->expectDeprecation('UrlAlias is deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. Use the entity:path_alias destination instead. See https://www.drupal.org/node/3013865');
+    $this->addExpectedDeprecationMessage('UrlAlias is deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. Use the entity:path_alias destination instead. See https://www.drupal.org/node/3013865');
   }
 
 }

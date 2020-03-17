@@ -74,7 +74,7 @@ abstract class SqlContentEntityStorageSchemaConverterTestBase extends UpdatePath
       $this->updateEntityTypeToRevisionable();
     }
 
-    $this->expectDeprecation('\Drupal\Core\Entity\Sql\SqlContentEntityStorageSchemaConverter is deprecated in Drupal 8.7.0, will be removed before Drupal 9.0.0. Use \Drupal\Core\Entity\EntityDefinitionUpdateManagerInterface::updateFieldableEntityType() instead. See https://www.drupal.org/node/3029997.');
+    $this->addExpectedDeprecationMessage('\Drupal\Core\Entity\Sql\SqlContentEntityStorageSchemaConverter is deprecated in Drupal 8.7.0, will be removed before Drupal 9.0.0. Use \Drupal\Core\Entity\EntityDefinitionUpdateManagerInterface::updateFieldableEntityType() instead. See https://www.drupal.org/node/3029997.');
     $this->runUpdates();
 
     /** @var \Drupal\Core\Entity\EntityTypeInterface $entity_test_update */

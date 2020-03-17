@@ -168,7 +168,7 @@ class SettingsTest extends UnitTestCase {
       ->setContent($settings_file_content);
 
     if ($expect_deprecation) {
-      $this->expectDeprecation('$config_directories[\'sync\'] has moved to $settings[\'config_sync_directory\']. See https://www.drupal.org/node/3018145.');
+      $this->addExpectedDeprecationMessage('$config_directories[\'sync\'] has moved to $settings[\'config_sync_directory\']. See https://www.drupal.org/node/3018145.');
     }
 
     Settings::initialize(vfsStream::url('root'), 'sites', $class_loader);

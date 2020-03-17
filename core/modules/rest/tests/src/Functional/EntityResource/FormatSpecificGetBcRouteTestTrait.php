@@ -25,7 +25,7 @@ trait FormatSpecificGetBcRouteTestTrait {
     // new and old sites, but trigger deprecation notices.
     $bc_route = Url::fromRoute('rest.entity.' . static::$entityTypeId . '.GET.' . static::$format, $url->getRouteParameters(), $url->getOptions());
     $bc_route->setUrlGenerator($this->container->get('url_generator'));
-    $this->expectDeprecation(sprintf("The 'rest.entity.entity_test.GET.%s' route is deprecated since version 8.5.x and will be removed in 9.0.0. Use the 'rest.entity.entity_test.GET' route instead.", static::$format));
+    $this->addExpectedDeprecationMessage(sprintf("The 'rest.entity.entity_test.GET.%s' route is deprecated since version 8.5.x and will be removed in 9.0.0. Use the 'rest.entity.entity_test.GET' route instead.", static::$format));
     $this->assertSame($url->toString(TRUE)->getGeneratedUrl(), $bc_route->toString(TRUE)->getGeneratedUrl());
   }
 
