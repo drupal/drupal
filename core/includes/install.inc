@@ -1178,12 +1178,12 @@ function install_profile_info($profile, $langcode = 'en') {
 function db_installer_object($driver) {
   // We cannot use Database::getConnection->getDriverClass() here, because
   // the connection object is not yet functional.
-  $task_class = "Drupal\\Core\\Database\\Driver\\{$driver}\\Install\\Tasks";
+  $task_class = "Drupal\\Driver\\Database\\{$driver}\\Install\\Tasks";
   if (class_exists($task_class)) {
     return new $task_class();
   }
   else {
-    $task_class = "Drupal\\Driver\\Database\\{$driver}\\Install\\Tasks";
+    $task_class = "Drupal\\Core\\Database\\Driver\\{$driver}\\Install\\Tasks";
     return new $task_class();
   }
 }

@@ -457,14 +457,14 @@ abstract class Database {
     }
     $driver = $matches[1];
 
-    // Discover if the URL has a valid driver scheme. Try with core drivers
-    // first.
-    $connection_class = "Drupal\\Core\\Database\\Driver\\{$driver}\\Connection";
+    // Discover if the URL has a valid driver scheme. Try with custom drivers
+    // first, since those can override/extend the core ones.
+    $connection_class = $custom_connection_class = "Drupal\\Driver\\Database\\{$driver}\\Connection";
     if (!class_exists($connection_class)) {
-      // If the URL is not relative to a core driver, try with custom ones.
-      $connection_class = "Drupal\\Driver\\Database\\{$driver}\\Connection";
+      // If the URL is not relative to a custom driver, try with core ones.
+      $connection_class = "Drupal\\Core\\Database\\Driver\\{$driver}\\Connection";
       if (!class_exists($connection_class)) {
-        throw new \InvalidArgumentException("Can not convert '$url' to a database connection, class '$connection_class' does not exist");
+        throw new \InvalidArgumentException("Can not convert '$url' to a database connection, class '$custom_connection_class' does not exist");
       }
     }
 

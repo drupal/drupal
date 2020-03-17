@@ -27,7 +27,9 @@ class UrlConversionTest extends UnitTestCase {
   protected function setUp() {
     parent::setUp();
     $additional_class_loader = new ClassLoader();
-    $additional_class_loader->addPsr4("Drupal\\Driver\\Database\\fake\\", __DIR__ . "/fixtures/driver/fake");
+    $additional_class_loader->addPsr4("Drupal\\Driver\\Database\\fake\\", __DIR__ . "/../../../../../tests/fixtures/database_drivers/custom/fake");
+    $additional_class_loader->addPsr4("Drupal\\Core\\Database\\Driver\\corefake\\", __DIR__ . "/../../../../../tests/fixtures/database_drivers/core/corefake");
+    $additional_class_loader->addPsr4("Drupal\\Driver\\Database\\corefake\\", __DIR__ . "/../../../../../tests/fixtures/database_drivers/custom/corefake");
     $additional_class_loader->register(TRUE);
   }
 
@@ -125,6 +127,19 @@ class UrlConversionTest extends UnitTestCase {
           'database' => 'fake_database',
           'port' => 3456,
           'namespace' => 'Drupal\Driver\Database\fake',
+        ],
+      ],
+      'Fake core driver with custom override, without prefix' => [
+        '',
+        'corefake://fake_user:fake_pass@fake_host:3456/fake_database',
+        [
+          'driver' => 'corefake',
+          'username' => 'fake_user',
+          'password' => 'fake_pass',
+          'host' => 'fake_host',
+          'database' => 'fake_database',
+          'port' => 3456,
+          'namespace' => 'Drupal\Driver\Database\corefake',
         ],
       ],
     ];
