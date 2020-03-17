@@ -1,0 +1,354 @@
+<?php
+
+/**
+ * @file
+ * Tests for the RequestSanitizer class.
+ */
+
+/**
+ * Tests DrupalRequestSanitizer class.
+ */
+class RequestSanitizerTest extends DrupalUnitTestCase {
+
+  /**
+   * Log of errors triggered during sanitization.
+   *
+   * @var array
+   */
+  protected $errors;
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function getInfo() {
+    return array(
+      'name' => 'DrupalRequestSanitizer',
+      'description' => 'Test the DrupalRequestSanitizer class',
+      'group' => 'System',
+    );
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function setUp() {
+    require_once DRUPAL_ROOT . '/includes/request-sanitizer.inc';
+    parent::setUp();
+    set_error_handler(array($this, "sanitizerTestErrorHandler"));
+  }
+
+  /**
+   * Iterate through all the RequestSanitizerTests.
+   */
+  public function testRequestSanitization() {
+    foreach ($this->requestSanitizerTests() as $label => $data) {
+      $this->errors = array();
+      // Normalize the test parameters.
+      $test = array(
+        'request' => $data[0],
+        'expected' => isset($data[1]) ? $data[1] : array(),
+        'expected_errors' => isset($data[2]) ? $data[2] : NULL,
+        'whitelist' => isset($data[3]) ? $data[3] : array(),
+      );
+      $this->requestSanitizationTest($test['request'], $test['expected'], $test['expected_errors'], $test['whitelist'], $label);
+    }
+  }
+
+  /**
+   * Tests RequestSanitizer class.
+   *
+   * @param \SanitizerTestRequest $request
+   *   The request to sanitize.
+   * @param array $expected
+   *   An array of expected request parameters after sanitization.
+   * @param array|null $expected_errors
+   *   An array of expected errors. If set to NULL then error logging is
+   *   disabled.
+   * @param array $whitelist
+   *   An array of keys to whitelist and not sanitize.
+   * @param string $label
+   *   A descriptive name for each test / group of assertions.
+   *
+   * @throws \ReflectionException
+   */
+  public function requestSanitizationTest(SanitizerTestRequest $request, array $expected = array(), array $expected_errors = NULL, array $whitelist = array(), $label = NULL) {
+    // Set up globals.
+    $_GET = $request->getQuery();
+    $_POST = $request->getRequest();
+    $_COOKIE = $request->getCookies();
+    $_REQUEST = array_merge($request->getQuery(), $request->getRequest());
+
+    $GLOBALS['conf']['sanitize_input_whitelist'] = $whitelist;
+    $GLOBALS['conf']['sanitize_input_logging'] = is_null($expected_errors) ? FALSE : TRUE;
+    if ($label !== 'already sanitized request') {
+      $reflection = new \ReflectionProperty('DrupalRequestSanitizer', 'sanitized');
+      $reflection->setAccessible(TRUE);
+      $reflection->setValue(NULL, FALSE);
+    }
+    DrupalRequestSanitizer::sanitize();
+    if (isset($_GET['destination'])) {
+      DrupalRequestSanitizer::cleanDestination();
+    }
+
+    // Normalise the expected data.
+    $expected += array(
+      'cookies' => array(),
+      'query' => array(),
+      'request' => array(),
+    );
+
+    // Test PHP globals.
+    $this->assertEqualLabelled($expected['cookies'], $_COOKIE, NULL, 'Other', $label . ' (COOKIE)');
+    $this->assertEqualLabelled($expected['query'], $_GET, NULL, 'Other', $label . ' (GET)');
+    $this->assertEqualLabelled($expected['request'], $_POST, NULL, 'Other', $label . ' (POST)');
+    $expected_request = array_merge($expected['query'], $expected['request']);
+    $this->assertEqualLabelled($expected_request, $_REQUEST, NULL, 'Other', $label . ' (REQUEST)');
+
+    // Ensure any expected errors have been triggered.
+    if (!empty($expected_errors)) {
+      foreach ($expected_errors as $expected_error) {
+        $this->assertError($expected_error, E_USER_NOTICE, $label . ' (errors)');
+      }
+    }
+    else {
+      $this->assertEqualLabelled(array(), $this->errors, NULL, 'Other', $label . ' (errors)');
+    }
+  }
+
+  /**
+   * Data provider for testRequestSanitization.
+   *
+   * @return array
+   *   A list of tests to carry out.
+   */
+  public function requestSanitizerTests() {
+    $tests = array();
+
+    $request = new SanitizerTestRequest(array('q' => 'index.php'));
+    $tests['no sanitization GET'] = array($request, array('query' => array('q' => 'index.php')));
+
+    $request = new SanitizerTestRequest(array(), array('field' => 'value'));
+    $tests['no sanitization POST'] = array($request, array('request' => array('field' => 'value')));
+
+    $request = new SanitizerTestRequest(array(), array(), array(), array('key' => 'value'));
+    $tests['no sanitization COOKIE'] = array($request, array('cookies' => array('key' => 'value')));
+
+    $request = new SanitizerTestRequest(array('q' => 'index.php'), array('field' => 'value'), array(), array('key' => 'value'));
+    $tests['no sanitization GET, POST, COOKIE'] = array($request, array('query' => array('q' => 'index.php'), 'request' => array('field' => 'value'), 'cookies' => array('key' => 'value')));
+
+    $request = new SanitizerTestRequest(array('q' => 'index.php'));
+    $tests['no sanitization GET log'] = array($request, array('query' => array('q' => 'index.php')), array());
+
+    $request = new SanitizerTestRequest(array(), array('field' => 'value'));
+    $tests['no sanitization POST log'] = array($request, array('request' => array('field' => 'value')), array());
+
+    $request = new SanitizerTestRequest(array(), array(), array(), array('key' => 'value'));
+    $tests['no sanitization COOKIE log'] = array($request, array('cookies' => array('key' => 'value')), array());
+
+    $request = new SanitizerTestRequest(array('#q' => 'index.php'));
+    $tests['sanitization GET'] = array($request);
+
+    $request = new SanitizerTestRequest(array(), array('#field' => 'value'));
+    $tests['sanitization POST'] = array($request);
+
+    $request = new SanitizerTestRequest(array(), array(), array(), array('#key' => 'value'));
+    $tests['sanitization COOKIE'] = array($request);
+
+    $request = new SanitizerTestRequest(array('#q' => 'index.php'), array('#field' => 'value'), array(), array('#key' => 'value'));
+    $tests['sanitization GET, POST, COOKIE'] = array($request);
+
+    $request = new SanitizerTestRequest(array('#q' => 'index.php'));
+    $tests['sanitization GET log'] = array($request, array(), array('Potentially unsafe keys removed from query string parameters (GET): #q'));
+
+    $request = new SanitizerTestRequest(array(), array('#field' => 'value'));
+    $tests['sanitization POST log'] = array($request, array(), array('Potentially unsafe keys removed from request body parameters (POST): #field'));
+
+    $request = new SanitizerTestRequest(array(), array(), array(), array('#key' => 'value'));
+    $tests['sanitization COOKIE log'] = array($request, array(), array('Potentially unsafe keys removed from cookie parameters (COOKIE): #key'));
+
+    $request = new SanitizerTestRequest(array('#q' => 'index.php'), array('#field' => 'value'), array(), array('#key' => 'value'));
+    $tests['sanitization GET, POST, COOKIE log'] = array($request, array(), array('Potentially unsafe keys removed from query string parameters (GET): #q', 'Potentially unsafe keys removed from request body parameters (POST): #field', 'Potentially unsafe keys removed from cookie parameters (COOKIE): #key'));
+
+    $request = new SanitizerTestRequest(array('q' => 'index.php', 'foo' => array('#bar' => 'foo')));
+    $tests['recursive sanitization log'] = array($request, array('query' => array('q' => 'index.php', 'foo' => array())), array('Potentially unsafe keys removed from query string parameters (GET): #bar'));
+
+    $request = new SanitizerTestRequest(array('q' => 'index.php', 'foo' => array('#bar' => 'foo')));
+    $tests['recursive no sanitization whitelist'] = array($request, array('query' => array('q' => 'index.php', 'foo' => array('#bar' => 'foo'))), array(), array('#bar'));
+
+    $request = new SanitizerTestRequest(array(), array('#field' => 'value'));
+    $tests['no sanitization POST whitelist'] = array($request, array('request' => array('#field' => 'value')), array(), array('#field'));
+
+    $request = new SanitizerTestRequest(array('q' => 'index.php', 'foo' => array('#bar' => 'foo', '#foo' => 'bar')));
+    $tests['recursive multiple sanitization log'] = array($request, array('query' => array('q' => 'index.php', 'foo' => array())), array('Potentially unsafe keys removed from query string parameters (GET): #bar, #foo'));
+
+    $request = new SanitizerTestRequest(array('#q' => 'index.php'));
+    $tests['already sanitized request'] = array($request, array('query' => array('#q' => 'index.php')));
+
+    $request = new SanitizerTestRequest(array('destination' => 'whatever?%23test=value'));
+    $tests['destination removal GET'] = array($request);
+
+    $request = new SanitizerTestRequest(array('destination' => 'whatever?%23test=value'));
+    $tests['destination removal GET log'] = array($request, array(), array('Potentially unsafe destination removed from query string parameters (GET) because it contained the following keys: #test'));
+
+    $request = new SanitizerTestRequest(array('destination' => 'whatever?q[%23test]=value'));
+    $tests['destination removal subkey'] = array($request);
+
+    $request = new SanitizerTestRequest(array('destination' => 'whatever?q[%23test]=value'));
+    $tests['destination whitelist'] = array($request, array('query' => array('destination' => 'whatever?q[%23test]=value')), array(), array('#test'));
+
+    $request = new SanitizerTestRequest(array('destination' => "whatever?\x00bar=base&%23test=value"));
+    $tests['destination removal zero byte'] = array($request);
+
+    $request = new SanitizerTestRequest(array('destination' => 'whatever?q=value'));
+    $tests['destination kept'] = array($request, array('query' => array('destination' => 'whatever?q=value')));
+
+    $request = new SanitizerTestRequest(array('destination' => 'whatever'));
+    $tests['destination no query'] = array($request, array('query' => array('destination' => 'whatever')));
+
+    return $tests;
+  }
+
+  /**
+   * Catches and logs errors to $this->errors.
+   *
+   * @param int $errno
+   *   The severity level of the error.
+   * @param string $errstr
+   *   The error message.
+   */
+  public function sanitizerTestErrorHandler($errno, $errstr) {
+    $this->errors[] = compact('errno', 'errstr');
+  }
+
+  /**
+   * Asserts that the expected error has been logged.
+   *
+   * @param string $errstr
+   *   The error message.
+   * @param int $errno
+   *   The severity level of the error.
+   * @param string $label
+   *   The label to include with the message.
+   *
+   * @return bool
+   *   TRUE if the assertion succeeded, FALSE otherwise.
+   */
+  protected function assertError($errstr, $errno, $label) {
+    $label = (empty($label)) ? '' : $label . ': ';
+    foreach ($this->errors as $error) {
+      if ($error['errstr'] === $errstr && $error['errno'] === $errno) {
+        return $this->pass($label . "Error with level $errno and message '$errstr' found");
+      }
+    }
+    return $this->fail($label . "Error with level $errno and message '$errstr' not found in " . var_export($this->errors, TRUE));
+  }
+
+  /**
+   * Asserts two values are equal, includes a label.
+   *
+   * @param mixed $first
+   *   The first value to check.
+   * @param mixed $second
+   *   The second value to check.
+   * @param string $message
+   *   The message to display along with the assertion.
+   * @param string $group
+   *   The type of assertion - examples are "Browser", "PHP".
+   * @param string $label
+   *   The label to include with the message.
+   *
+   * @return bool
+   *   TRUE if the assertion succeeded, FALSE otherwise.
+   */
+  protected function assertEqualLabelled($first, $second, $message = '', $group = 'Other', $label = '') {
+    $label = (empty($label)) ? '' : $label . ': ';
+    $message = $message ? $message : t('Value @first is equal to value @second.', array(
+      '@first' => var_export($first, TRUE),
+      '@second' => var_export($second, TRUE),
+    ));
+    return $this->assert($first == $second, $label . $message, $group);
+  }
+
+}
+
+/**
+ * Basic HTTP Request class.
+ */
+class SanitizerTestRequest {
+
+  /**
+   * The query (GET).
+   *
+   * @var array
+   */
+  protected $query;
+
+  /**
+   * The request (POST).
+   *
+   * @var array
+   */
+  protected $request;
+
+  /**
+   * The request attributes.
+   *
+   * @var array
+   */
+  protected $attributes;
+
+  /**
+   * The request cookies.
+   *
+   * @var array
+   */
+  protected $cookies;
+
+  /**
+   * Constructor.
+   *
+   * @param array $query
+   *   The GET parameters.
+   * @param array $request
+   *   The POST parameters.
+   * @param array $attributes
+   *   The request attributes.
+   * @param array $cookies
+   *   The COOKIE parameters.
+   */
+  public function __construct(array $query = array(), array $request = array(), array $attributes = array(), array $cookies = array()) {
+    $this->query = $query;
+    $this->request = $request;
+    $this->attributes = $attributes;
+    $this->cookies = $cookies;
+  }
+
+  /**
+   * Getter for $query.
+   */
+  public function getQuery() {
+    return $this->query;
+  }
+
+  /**
+   * Getter for $request.
+   */
+  public function getRequest() {
+    return $this->request;
+  }
+
+  /**
+   * Getter for $attributes.
+   */
+  public function getAttributes() {
+    return $this->attributes;
+  }
+
+  /**
+   * Getter for $cookies.
+   */
+  public function getCookies() {
+    return $this->cookies;
+  }
+
+}

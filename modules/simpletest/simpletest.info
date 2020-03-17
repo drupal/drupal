@@ -33,6 +33,7 @@ files[] = tests/pager.test
 files[] = tests/password.test
 files[] = tests/path.test
 files[] = tests/registry.test
+files[] = tests/request_sanitizer.test
 files[] = tests/schema.test
 files[] = tests/session.test
 files[] = tests/tablesort.test
