@@ -208,8 +208,8 @@ class FileFieldValidateTest extends FileFieldTestBase {
    */
   public function testAssertFileExistsDeprecation() {
     if (RunnerVersion::getMajor() == 6) {
-      $this->expectDeprecation('Passing a File entity as $file argument to FileFieldTestBase::assertFileExists is deprecated in drupal:8.8.0. It will be removed from drupal:9.0.0. Instead, pass the File entity URI via File::getFileUri(). See https://www.drupal.org/node/3057326');
-      $this->expectDeprecation('Passing a File entity as $file argument to FileFieldTestBase::assertFileNotExists is deprecated in drupal:8.8.0. It will be removed from drupal:9.0.0. Instead, pass the File entity URI via File::getFileUri(). See https://www.drupal.org/node/3057326');
+      $this->addExpectedDeprecationMessage('Passing a File entity as $file argument to FileFieldTestBase::assertFileExists is deprecated in drupal:8.8.0. It will be removed from drupal:9.0.0. Instead, pass the File entity URI via File::getFileUri(). See https://www.drupal.org/node/3057326');
+      $this->addExpectedDeprecationMessage('Passing a File entity as $file argument to FileFieldTestBase::assertFileNotExists is deprecated in drupal:8.8.0. It will be removed from drupal:9.0.0. Instead, pass the File entity URI via File::getFileUri(). See https://www.drupal.org/node/3057326');
     }
     else {
       $this->markTestSkipped('This test does not work in PHPUnit 7+ since assertFileExists only accepts string arguments for $file');
