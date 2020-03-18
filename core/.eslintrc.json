@@ -17,6 +17,7 @@
     "jQuery": true,
     "_": true,
     "matchMedia": true,
+    "Cookies": true,
     "Backbone": true,
     "Modernizr": true,
     "Popper": true,

@@ -1,0 +1,7 @@
+js_cookie_test.with_shim:
+  path: '/js_cookie_with_shim_test'
+  defaults:
+    _controller: '\Drupal\js_cookie_test\Controller\JsCookieTestController::jqueryCookieShimTest'
+    _title: 'JQueryCookieShimTest'
+  requirements:
+    _access: 'TRUE'
