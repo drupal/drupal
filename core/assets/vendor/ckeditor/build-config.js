@@ -80,6 +80,7 @@ var CKBUILDER_CONFIG = {
 		magicline: 1,
 		maximize: 1,
     pastefromgdocs: 1,
+    pastefromlibreoffice: 1,
 		pastefromword: 1,
 		pastetext: 1,
 		removeformat: 1,
