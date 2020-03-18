@@ -99,7 +99,7 @@ class DrupalRequestSanitizer {
   protected static function stripDangerousValues($input, array $whitelist, array &$sanitized_keys) {
     if (is_array($input)) {
       foreach ($input as $key => $value) {
-        if ($key !== '' && $key[0] === '#' && !in_array($key, $whitelist, TRUE)) {
+        if ($key !== '' && is_string($key) && $key[0] === '#' && !in_array($key, $whitelist, TRUE)) {
           unset($input[$key]);
           $sanitized_keys[] = $key;
         }
