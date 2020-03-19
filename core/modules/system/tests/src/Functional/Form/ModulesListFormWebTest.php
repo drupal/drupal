@@ -27,19 +27,14 @@ class ModulesListFormWebTest extends BrowserTestBase {
   protected function setUp() {
     parent::setUp();
     \Drupal::state()->set('system_test.module_hidden', FALSE);
+    $this->drupalLogin($this->drupalCreateUser(['administer modules', 'administer permissions']));
   }
 
   /**
    * Tests the module list form.
    */
   public function testModuleListForm() {
-    $this->drupalLogin(
-      $this->drupalCreateUser(
-        ['administer modules', 'administer permissions']
-      )
-    );
     $this->drupalGet('admin/modules');
-    $this->assertResponse('200');
 
     // Check that system_test's configure link was rendered correctly.
     $this->assertFieldByXPath("//a[contains(@href, '/system-test/configure/bar') and text()='Configure ']/span[contains(@class, 'visually-hidden') and text()='the System test module']");
@@ -92,11 +87,6 @@ BROKEN,
         'expected_error' => "'core: 9.x' is not supported. Use 'core_version_requirement' to specify core compatibility. Only 'core: 8.x' is supported to provide backwards compatibility for Drupal 8 when needed in $file_path",
       ],
     ];
-    $this->drupalLogin(
-      $this->drupalCreateUser(
-        ['administer modules', 'administer permissions']
-      )
-    );
 
     foreach ($broken_infos as $broken_info) {
       file_put_contents($file_path, $broken_info['yml']);
@@ -118,6 +108,19 @@ BROKEN,
       $this->assertSession()->elementExists('xpath', '//input[@name="text"]');
       $this->assertSession()->pageTextNotContains('Modules could not be listed due to an error');
     }
+  }
+
+  /**
+   * Confirm that module 'Required By' descriptions include dependent themes.
+   */
+  public function testRequiredByThemeMessage() {
+    $this->drupalGet('admin/modules');
+    $module_theme_depends_on_description = $this->getSession()->getPage()->findAll('css', '#edit-modules-test-module-required-by-theme-enable-description .admin-requirements li:contains("Test Theme Depending on Modules (theme) (disabled)")');
+    // Confirm that that 'Test Theme Depending on Modules' is listed as being
+    // required by the module 'Test Module Required by Theme'.
+    $this->assertCount(1, $module_theme_depends_on_description);
+    // Confirm that the required by message does not appear anywhere else.
+    $this->assertSession()->pageTextContains('Test Theme Depending on Modules (Theme) (Disabled)');
   }
 
 }

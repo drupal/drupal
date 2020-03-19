@@ -889,12 +889,6 @@ function system_requirements($phase) {
         $php_incompatible_extensions[$file->info['type']][] = $name;
       }
 
-      // @todo Remove this 'if' block to allow checking requirements of themes
-      //   https://www.drupal.org/project/drupal/issues/474684.
-      if ($file->info['type'] !== 'module') {
-        continue;
-      }
-
       // Check the module's required modules.
       /** @var \Drupal\Core\Extension\Dependency $requirement */
       foreach ($file->requires as $requirement) {

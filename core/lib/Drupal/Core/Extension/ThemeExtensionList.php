@@ -51,6 +51,7 @@ class ThemeExtensionList extends ExtensionList {
     'libraries' => [],
     'libraries_extend' => [],
     'libraries_override' => [],
+    'dependencies' => [],
   ];
 
   /**
@@ -140,6 +141,22 @@ class ThemeExtensionList extends ExtensionList {
     // sub-themes.
     $this->fillInSubThemeData($themes, $sub_themes);
 
+    foreach ($themes as $key => $theme) {
+      // After $theme is processed by buildModuleDependencies(), there can be a
+      // `$theme->requires` array containing both module and base theme
+      // dependencies. The module dependencies are copied to their own property
+      // so they are available to operations specific to module dependencies.
+      if (isset($theme->requires)) {
+        $theme->module_dependencies = array_diff_key($theme->requires, $themes);
+      }
+      else {
+        // Even if no requirements are specified, the theme installation process
+        // expects the presence of the `requires` and `module_dependencies`
+        // properties, so they should be initialized here as empty arrays.
+        $theme->requires = [];
+        $theme->module_dependencies = [];
+      }
+    }
     return $themes;
   }
 

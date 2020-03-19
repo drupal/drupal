@@ -4,6 +4,8 @@ namespace Drupal\KernelTests\Core\Theme;
 
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\Extension\ExtensionNameLengthException;
+use Drupal\Core\Extension\MissingDependencyException;
+use Drupal\Core\Extension\ModuleUninstallValidatorException;
 use Drupal\Core\Extension\Exception\UnknownExtensionException;
 use Drupal\KernelTests\KernelTestBase;
 
@@ -135,6 +137,79 @@ class ThemeInstallerTest extends KernelTestBase {
     catch (ExtensionNameLengthException $e) {
       $this->pass(get_class($e) . ': ' . $e->getMessage());
     }
+  }
+
+  /**
+   * Tests installing a theme with unmet module dependencies.
+   *
+   * @dataProvider providerTestInstallThemeWithUnmetModuleDependencies
+   */
+  public function testInstallThemeWithUnmetModuleDependencies($theme_name, $installed_modules, $message) {
+    $this->container->get('module_installer')->install($installed_modules);
+    $themes = $this->themeHandler()->listInfo();
+    $this->assertEmpty($themes);
+    $this->expectException(MissingDependencyException::class);
+    $this->expectExceptionMessage($message);
+    $this->themeInstaller()->install([$theme_name]);
+  }
+
+  /**
+   * Data provider for testInstallThemeWithUnmetModuleDependencies().
+   */
+  public function providerTestInstallThemeWithUnmetModuleDependencies() {
+    return [
+      'theme with uninstalled module dependencies' => [
+        'test_theme_depending_on_modules',
+        [],
+        "Unable to install theme: 'test_theme_depending_on_modules' due to unmet module dependencies: 'test_module_required_by_theme, test_another_module_required_by_theme'.",
+      ],
+      'theme with a base theme with uninstalled module dependencies' => [
+        'test_theme_with_a_base_theme_depending_on_modules',
+        [],
+        "Unable to install theme: 'test_theme_with_a_base_theme_depending_on_modules' due to unmet module dependencies: 'test_module_required_by_theme, test_another_module_required_by_theme'.",
+      ],
+      'theme and base theme have uninstalled module dependencies' => [
+        'test_theme_mixed_module_dependencies',
+        [],
+        "Unable to install theme: 'test_theme_mixed_module_dependencies' due to unmet module dependencies: 'help, test_module_required_by_theme, test_another_module_required_by_theme'.",
+      ],
+      'theme with already installed module dependencies, base theme module dependencies are not installed' => [
+        'test_theme_mixed_module_dependencies',
+        ['help'],
+        "Unable to install theme: 'test_theme_mixed_module_dependencies' due to unmet module dependencies: 'test_module_required_by_theme, test_another_module_required_by_theme'.",
+      ],
+      'theme with module dependencies not installed, base theme module dependencies are already installed, ' => [
+        'test_theme_mixed_module_dependencies',
+        ['test_module_required_by_theme', 'test_another_module_required_by_theme'],
+        "Unable to install theme: 'test_theme_mixed_module_dependencies' due to unmet module dependencies: 'help'.",
+      ],
+      'theme depending on a module that does not exist' => [
+        'test_theme_depending_on_nonexisting_module',
+        [],
+        "Unable to install theme: 'test_theme_depending_on_nonexisting_module' due to unmet module dependencies: 'test_module_non_existing",
+      ],
+      'theme depending on an installed but incompatible module' => [
+        'test_theme_depending_on_constrained_modules',
+        ['test_module_compatible_constraint', 'test_module_incompatible_constraint'],
+        "Unable to install theme: Test Module Theme Depends on with Incompatible Constraint (>=8.x-2.x) (incompatible with version 8.x-1.8)",
+      ],
+    ];
+  }
+
+  /**
+   * Tests installing a theme with module dependencies that are met.
+   */
+  public function testInstallThemeWithMetModuleDependencies() {
+    $name = 'test_theme_depending_on_modules';
+    $themes = $this->themeHandler()->listInfo();
+    $this->assertArrayNotHasKey($name, $themes);
+    $this->container->get('module_installer')->install(['test_module_required_by_theme', 'test_another_module_required_by_theme']);
+    $this->themeInstaller()->install([$name]);
+    $themes = $this->themeHandler()->listInfo();
+    $this->assertArrayHasKey($name, $themes);
+    $this->expectException(ModuleUninstallValidatorException::class);
+    $this->expectExceptionMessage('The following reasons prevent the modules from being uninstalled: Required by the theme: Test Theme Depending on Modules');
+    $this->container->get('module_installer')->uninstall(['test_module_required_by_theme']);
   }
 
   /**

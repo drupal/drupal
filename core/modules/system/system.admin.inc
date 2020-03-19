@@ -9,6 +9,7 @@ use Drupal\Component\Utility\Html;
 use Drupal\Core\Link;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Template\Attribute;
+use Drupal\Core\Url;
 
 /**
  * Prepares variables for administrative content block templates.
@@ -123,13 +124,25 @@ function template_preprocess_system_admin_index(&$variables) {
  *     - version: The version of the module.
  *     - links: Administration links provided by the module.
  *     - #requires: A list of modules that the project requires.
- *     - #required_by: A list of modules that require the project.
+ *     - #required_by: A list of modules and themes that require the project.
  *     - #attributes: A list of attributes for the module wrapper.
  *
  * @see \Drupal\system\Form\ModulesListForm
  */
 function template_preprocess_system_modules_details(&$variables) {
   $form = $variables['form'];
+
+  // Identify modules that are depended on by themes.
+  // Added here instead of ModuleHandler to avoid recursion.
+  $themes = \Drupal::service('extension.list.theme')->getList();
+  foreach ($themes as $theme) {
+    foreach ($theme->info['dependencies'] as $dependency) {
+      if (isset($form[$dependency])) {
+        // Add themes to the module's required by list.
+        $form[$dependency]['#required_by'][] = $theme->status ? t('@theme', ['@theme (theme)' => $theme->info['name']]) : t('@theme (theme) (<span class="admin-disabled">disabled</span>)', ['@theme' => $theme->info['name']]);
+      }
+    }
+  }
 
   $variables['modules'] = [];
   // Iterate through all the modules, which are children of this element.
@@ -291,6 +304,12 @@ function template_preprocess_system_themes_page(&$variables) {
       $current_theme['is_default'] = $theme->is_default;
       $current_theme['is_admin'] = $theme->is_admin;
 
+      $current_theme['module_dependencies'] = !empty($theme->module_dependencies_list) ? [
+        '#theme' => 'item_list',
+        '#items' => $theme->module_dependencies_list,
+        '#context' => ['list_style' => 'comma-list'],
+      ] : [];
+
       // Make sure to provide feedback on compatibility.
       $current_theme['incompatible'] = '';
       if (!empty($theme->info['core_incompatible'])) {
@@ -310,6 +329,20 @@ function template_preprocess_system_themes_page(&$variables) {
       }
       elseif (!empty($theme->incompatible_engine)) {
         $current_theme['incompatible'] = t('This theme requires the theme engine @theme_engine to operate correctly.', ['@theme_engine' => $theme->info['engine']]);
+      }
+      elseif (!empty($theme->incompatible_module)) {
+        $current_theme['incompatible'] = t('This theme requires the listed modules to operate correctly.');
+      }
+      elseif (!empty($theme->module_dependencies_disabled)) {
+        if (!empty($theme->insufficient_module_permissions)) {
+          $current_theme['incompatible'] = t('This theme requires the listed modules to operate correctly. They must first be enabled by a user with permissions to do so.');
+        }
+        else {
+          $modules_url = (string) Url::fromRoute('system.modules_list')->toString();
+          $current_theme['incompatible'] = t('This theme requires the listed modules to operate correctly. They must first be enabled via the <a href=":modules_url">Extend page</a>.', [
+            ':modules_url' => $modules_url,
+          ]);
+        }
       }
 
       // Build operation links.

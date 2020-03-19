@@ -522,7 +522,7 @@ services:
     class: Drupal\Core\Extension\ModuleInstaller
     tags:
       - { name: service_collector, tag: 'module_install.uninstall_validator', call: addUninstallValidator }
-    arguments: ['%app.root%', '@module_handler', '@kernel']
+    arguments: ['%app.root%', '@module_handler', '@kernel', '@extension.list.theme']
     lazy: true
   extension.list.module:
     class: Drupal\Core\Extension\ModuleExtensionList
@@ -548,12 +548,18 @@ services:
       - { name: module_install.uninstall_validator }
     arguments: ['@string_translation', '@extension.list.module']
     lazy: true
+  module_required_by_themes_uninstall_validator:
+    class: Drupal\Core\Extension\ModuleRequiredByThemesUninstallValidator
+    tags:
+      - { name: module_install.uninstall_validator }
+    arguments: ['@string_translation', '@extension.list.module', '@extension.list.theme']
+    lazy: true
   theme_handler:
     class: Drupal\Core\Extension\ThemeHandler
     arguments: ['%app.root%', '@config.factory', '@extension.list.theme']
   theme_installer:
     class: Drupal\Core\Extension\ThemeInstaller
-    arguments: ['@theme_handler', '@config.factory', '@config.installer', '@module_handler', '@config.manager', '@asset.css.collection_optimizer', '@router.builder', '@logger.channel.default', '@state']
+    arguments: ['@theme_handler', '@config.factory', '@config.installer', '@module_handler', '@config.manager', '@asset.css.collection_optimizer', '@router.builder', '@logger.channel.default', '@state', '@extension.list.module']
   entity.memory_cache:
     class: Drupal\Core\Cache\MemoryCache\MemoryCache
   entity_type.manager:

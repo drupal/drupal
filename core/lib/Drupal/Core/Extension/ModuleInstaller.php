@@ -51,6 +51,13 @@ class ModuleInstaller implements ModuleInstallerInterface {
   protected $uninstallValidators;
 
   /**
+   * The theme extension list.
+   *
+   * @var \Drupal\Core\Extension\ThemeExtensionList
+   */
+  protected $themeExtensionList;
+
+  /**
    * Constructs a new ModuleInstaller instance.
    *
    * @param string $root
@@ -59,14 +66,21 @@ class ModuleInstaller implements ModuleInstallerInterface {
    *   The module handler.
    * @param \Drupal\Core\DrupalKernelInterface $kernel
    *   The drupal kernel.
+   * @param \Drupal\Core\Extension\ThemeExtensionList $extension_list_theme
+   *   The theme extension list.
    *
    * @see \Drupal\Core\DrupalKernel
    * @see \Drupal\Core\CoreServiceProvider
    */
-  public function __construct($root, ModuleHandlerInterface $module_handler, DrupalKernelInterface $kernel) {
+  public function __construct($root, ModuleHandlerInterface $module_handler, DrupalKernelInterface $kernel, ThemeExtensionList $extension_list_theme = NULL) {
     $this->root = $root;
     $this->moduleHandler = $module_handler;
     $this->kernel = $kernel;
+    if (is_null($extension_list_theme)) {
+      @trigger_error('The extension.list.theme service must be passed to ' . __NAMESPACE__ . '\ModuleInstaller::__construct(). It was added in drupal:8.9.0 and will be required before drupal:10.0.0.', E_USER_DEPRECATED);
+      $extension_list_theme = \Drupal::service('extension.list.theme');
+    }
+    $this->themeExtensionList = $extension_list_theme;
   }
 
   /**
@@ -372,12 +386,14 @@ class ModuleInstaller implements ModuleInstallerInterface {
     }
 
     if ($uninstall_dependents) {
+      $theme_list = $this->themeExtensionList->getList();
+
       // Add dependent modules to the list. The new modules will be processed as
       // the foreach loop continues.
       foreach ($module_list as $module => $value) {
         foreach (array_keys($module_data[$module]->required_by) as $dependent) {
-          if (!isset($module_data[$dependent])) {
-            // The dependent module does not exist.
+          if (!isset($module_data[$dependent]) && !isset($theme_list[$dependent])) {
+            // The dependent module or theme does not exist.
             return FALSE;
           }
 
@@ -578,6 +594,7 @@ class ModuleInstaller implements ModuleInstallerInterface {
     // After rebuilding the container we need to update the injected
     // dependencies.
     $container = $this->kernel->getContainer();
+    $this->themeExtensionList = $container->get('extension.list.theme');
     $this->moduleHandler = $container->get('module_handler');
   }
 

@@ -2,6 +2,7 @@
 
 namespace Drupal\Core\Extension;
 
+use Drupal\Component\Utility\Html;
 use Drupal\Core\Asset\AssetCollectionOptimizerInterface;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Config\ConfigFactoryInterface;
@@ -10,12 +11,17 @@ use Drupal\Core\Config\ConfigManagerInterface;
 use Drupal\Core\Extension\Exception\UnknownExtensionException;
 use Drupal\Core\Routing\RouteBuilderInterface;
 use Drupal\Core\State\StateInterface;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\system\ModuleDependencyMessageTrait;
 use Psr\Log\LoggerInterface;
 
 /**
  * Manages theme installation/uninstallation.
  */
 class ThemeInstaller implements ThemeInstallerInterface {
+
+  use ModuleDependencyMessageTrait;
+  use StringTranslationTrait;
 
   /**
    * @var \Drupal\Core\Extension\ThemeHandlerInterface
@@ -63,6 +69,13 @@ class ThemeInstaller implements ThemeInstallerInterface {
   protected $logger;
 
   /**
+   * The module extension list.
+   *
+   * @var \Drupal\Core\Extension\ModuleExtensionList
+   */
+  protected $moduleExtensionList;
+
+  /**
    * Constructs a new ThemeInstaller.
    *
    * @param \Drupal\Core\Extension\ThemeHandlerInterface $theme_handler
@@ -86,8 +99,10 @@ class ThemeInstaller implements ThemeInstallerInterface {
    *   A logger instance.
    * @param \Drupal\Core\State\StateInterface $state
    *   The state store.
+   * @param \Drupal\Core\Extension\ModuleExtensionList $module_extension_list
+   *   The module extension list.
    */
-  public function __construct(ThemeHandlerInterface $theme_handler, ConfigFactoryInterface $config_factory, ConfigInstallerInterface $config_installer, ModuleHandlerInterface $module_handler, ConfigManagerInterface $config_manager, AssetCollectionOptimizerInterface $css_collection_optimizer, RouteBuilderInterface $route_builder, LoggerInterface $logger, StateInterface $state) {
+  public function __construct(ThemeHandlerInterface $theme_handler, ConfigFactoryInterface $config_factory, ConfigInstallerInterface $config_installer, ModuleHandlerInterface $module_handler, ConfigManagerInterface $config_manager, AssetCollectionOptimizerInterface $css_collection_optimizer, RouteBuilderInterface $route_builder, LoggerInterface $logger, StateInterface $state, ModuleExtensionList $module_extension_list = NULL) {
     $this->themeHandler = $theme_handler;
     $this->configFactory = $config_factory;
     $this->configInstaller = $config_installer;
@@ -97,6 +112,11 @@ class ThemeInstaller implements ThemeInstallerInterface {
     $this->routeBuilder = $route_builder;
     $this->logger = $logger;
     $this->state = $state;
+    if ($module_extension_list === NULL) {
+      @trigger_error('The extension.list.module service must be passed to ' . __NAMESPACE__ . '\ThemeInstaller::__construct(). It was added in drupal:8.9.0 and will be required before drupal:10.0.0.', E_USER_DEPRECATED);
+      $module_extension_list = \Drupal::service('extension.list.module');
+    }
+    $this->moduleExtensionList = $module_extension_list;
   }
 
   /**
@@ -106,6 +126,8 @@ class ThemeInstaller implements ThemeInstallerInterface {
     $extension_config = $this->configFactory->getEditable('core.extension');
 
     $theme_data = $this->themeHandler->rebuildThemeData();
+    $installed_themes = $extension_config->get('theme') ?: [];
+    $installed_modules = $extension_config->get('module') ?: [];
 
     if ($install_dependencies) {
       $theme_list = array_combine($theme_list, $theme_list);
@@ -116,16 +138,41 @@ class ThemeInstaller implements ThemeInstallerInterface {
       }
 
       // Only process themes that are not installed currently.
-      $installed_themes = $extension_config->get('theme') ?: [];
       if (!$theme_list = array_diff_key($theme_list, $installed_themes)) {
         // Nothing to do. All themes already installed.
         return TRUE;
       }
 
+      $module_list = $this->moduleExtensionList->getList();
       foreach ($theme_list as $theme => $value) {
-        // Add dependencies to the list. The new themes will be processed as
-        // the parent foreach loop continues.
-        foreach (array_keys($theme_data[$theme]->requires) as $dependency) {
+        $module_dependencies = $theme_data[$theme]->module_dependencies;
+        // $theme_data[$theme]->requires contains both theme and module
+        // dependencies keyed by the extension machine names and
+        // $theme_data[$theme]->module_dependencies contains only modules keyed
+        // by the module extension machine name. Therefore we can find the theme
+        // dependencies by finding array keys for 'requires' that are not in
+        // $module_dependencies.
+        $theme_dependencies = array_diff_key($theme_data[$theme]->requires, $module_dependencies);
+        // We can find the unmet module dependencies by finding the module
+        // machine names keys that are not in $installed_modules keys.
+        $unmet_module_dependencies = array_diff_key($module_dependencies, $installed_modules);
+
+        // Prevent themes with unmet module dependencies from being installed.
+        if (!empty($unmet_module_dependencies)) {
+          $unmet_module_dependencies_list = implode(', ', array_keys($unmet_module_dependencies));
+          throw new MissingDependencyException("Unable to install theme: '$theme' due to unmet module dependencies: '$unmet_module_dependencies_list'.");
+        }
+
+        foreach ($module_dependencies as $dependency => $dependency_object) {
+          if ($incompatible = $this->checkDependencyMessage($module_list, $dependency, $dependency_object)) {
+            $sanitized_message = Html::decodeEntities(strip_tags($incompatible));
+            throw new MissingDependencyException("Unable to install theme: $sanitized_message");
+          }
+        }
+
+        // Add dependencies to the list of themes to install. The new themes
+        // will be processed as the parent foreach loop continues.
+        foreach (array_keys($theme_dependencies) as $dependency) {
           if (!isset($theme_data[$dependency])) {
             // The dependency does not exist.
             return FALSE;
@@ -146,9 +193,6 @@ class ThemeInstaller implements ThemeInstallerInterface {
       // Sort the theme list by their weights (reverse).
       arsort($theme_list);
       $theme_list = array_keys($theme_list);
-    }
-    else {
-      $installed_themes = $extension_config->get('theme') ?: [];
     }
 
     $themes_installed = [];

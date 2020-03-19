@@ -1,0 +1,20 @@
+<?php
+
+/**
+ * @file
+ * This file provides testing functionality for update.php.
+ */
+
+use Drupal\Core\Extension\Extension;
+
+/**
+ * Implements hook_system_info_alter().
+ */
+function test_module_required_by_theme_system_info_alter(array &$info, Extension $file, $type) {
+  if ($file->getName() == 'test_theme_depending_on_modules') {
+    $new_info = \Drupal::state()->get('test_theme_depending_on_modules.system_info_alter');
+    if ($new_info) {
+      $info = $new_info + $info;
+    }
+  }
+}
