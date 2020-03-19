@@ -2,4 +2,3 @@ name: 'AAA Update test'
 type: module
 description: 'Support module for update module testing.'
 package: Testing
-version: VERSION
