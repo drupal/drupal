@@ -20,7 +20,7 @@
         "symfony/browser-kit": "^4.4",
         "symfony/css-selector": "^4.4",
         "symfony/debug": "^4.4",
-        "symfony/dom-crawler": "^4.4",
+        "symfony/dom-crawler": "^4.4 !=4.4.5",
         "symfony/filesystem": "^4.4",
         "symfony/finder": "^4.4",
         "symfony/lock": "^4.4",
