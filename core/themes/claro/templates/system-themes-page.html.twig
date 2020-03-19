@@ -22,6 +22,7 @@
  *     - notes: Identifies what context this theme is being used in, e.g.,
  *       default theme, admin theme.
  *     - incompatible: Text describing any compatibility issues.
+ *     - module_dependencies: A list of modules that this theme requires.
  *     - operations: A list of operation links, e.g., Settings, Enable, Disable,
  *       etc. these links should only be displayed if the theme is compatible.
  *     - title_id: The unique id of the theme label.
@@ -97,6 +98,11 @@
               </div>
 
               <div class="card__footer">
+                {% if theme.module_dependencies %}
+                  <div class="theme-info__requires">
+                    {{ 'Requires: @module_dependencies'|t({ '@module_dependencies': theme.module_dependencies|render }) }}
+                  </div>
+                {% endif %}
                 {# Display operation links only if the theme is compatible. #}
                 {% if theme.incompatible %}
                   <small class="incompatible">{{ theme.incompatible }}</small>

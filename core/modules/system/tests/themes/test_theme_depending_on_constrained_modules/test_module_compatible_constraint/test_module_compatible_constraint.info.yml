@@ -1,0 +1,4 @@
+name: Test Module Theme Depends on with Compatible Constraint
+type: module
+package: Testing
+version: '8.x-1.2'

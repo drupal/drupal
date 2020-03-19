@@ -24,7 +24,13 @@ class UpdateScriptTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = ['update_script_test', 'dblog', 'language'];
+  protected static $modules = [
+    'update_script_test',
+    'dblog',
+    'language',
+    'test_module_required_by_theme',
+    'test_another_module_required_by_theme',
+  ];
 
   /**
    * {@inheritdoc}
@@ -61,7 +67,11 @@ class UpdateScriptTest extends BrowserTestBase {
     parent::setUp();
     $this->updateUrl = Url::fromRoute('system.db_update');
     $this->statusReportUrl = Url::fromRoute('system.status');
-    $this->updateUser = $this->drupalCreateUser(['administer software updates', 'access site in maintenance mode']);
+    $this->updateUser = $this->drupalCreateUser([
+      'administer software updates',
+      'access site in maintenance mode',
+      'administer themes',
+    ]);
   }
 
   /**
@@ -175,6 +185,31 @@ class UpdateScriptTest extends BrowserTestBase {
     $this->drupalGet($this->updateUrl, ['external' => TRUE]);
     $this->assertSession()->assertEscaped('Node (Version <7.x-0.0-dev required)');
     $this->assertSession()->responseContains('Update script test requires this module and version. Currently using Node version ' . \Drupal::VERSION);
+
+    // Test that issues with modules that themes depend on are properly
+    // displayed.
+    $this->assertSession()->responseNotContains('Test Module Required by Theme');
+    $this->drupalGet('admin/appearance');
+    $this->getSession()->getPage()->clickLink('Install Test Theme Depending on Modules theme');
+    $this->assertSession()->addressEquals('admin/appearance');
+    $this->assertSession()->pageTextContains('The Test Theme Depending on Modules theme has been installed');
+
+    // Ensure that when a theme depends on a module and that module's
+    // requirements change, errors are displayed in the same manner as modules
+    // depending on other modules.
+    \Drupal::state()->set('test_theme_depending_on_modules.system_info_alter', ['dependencies' => ['test_module_required_by_theme (<7.x-0.0-dev)']]);
+    $this->drupalGet($this->updateUrl, ['external' => TRUE]);
+    $this->assertSession()->assertEscaped('Test Module Required by Theme (Version <7.x-0.0-dev required)');
+    $this->assertSession()->responseContains('Test Theme Depending on Modules requires this module and version. Currently using Test Module Required by Theme version ' . \Drupal::VERSION);
+
+    // Ensure that when a theme is updated to depend on an unavailable module,
+    // errors are displayed in the same manner as modules depending on other
+    // modules.
+    \Drupal::state()->set('test_theme_depending_on_modules.system_info_alter', ['dependencies' => ['a_module_theme_needs_that_does_not_exist']]);
+    $this->drupalGet($this->updateUrl, ['external' => TRUE]);
+    $this->assertSession()->responseContains('a_module_theme_needs_that_does_not_exist (Missing)');
+    $this->assertSession()->responseContains('Test Theme Depending on Modules requires this module.');
+
   }
 
   /**

@@ -6,6 +6,7 @@ use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Config\PreExistingConfigException;
 use Drupal\Core\Config\UnmetDependenciesException;
 use Drupal\Core\Controller\ControllerBase;
+use Drupal\Core\Extension\MissingDependencyException;
 use Drupal\Core\Extension\ThemeExtensionList;
 use Drupal\Core\Extension\ThemeHandlerInterface;
 use Drupal\Core\Extension\ThemeInstallerInterface;
@@ -160,6 +161,9 @@ class ThemeController extends ControllerBase {
       }
       catch (UnmetDependenciesException $e) {
         $this->messenger()->addError($e->getTranslatedMessage($this->getStringTranslation(), $theme));
+      }
+      catch (MissingDependencyException $e) {
+        $this->messenger()->addError($this->t('Unable to install @theme due to missing module dependencies.', ['@theme' => $theme]));
       }
 
       return $this->redirect('system.themes_page');

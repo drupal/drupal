@@ -1,0 +1,6 @@
+name: Test Theme Depending on Version Constrained Modules
+type: theme
+base theme: stark
+dependencies:
+  - test_module_compatible_constraint (>=8.x-1.x)
+  - test_module_incompatible_constraint (>=8.x-2.x)

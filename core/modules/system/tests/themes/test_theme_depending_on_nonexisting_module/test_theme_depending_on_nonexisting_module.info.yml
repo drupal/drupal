@@ -1,0 +1,6 @@
+name: Test Theme Depending on Nonexisting Module
+type: theme
+base theme: stark
+version: VERSION
+dependencies:
+  - test_module_non_existing
