@@ -120,7 +120,7 @@
     if (value !== undefined && !isFunction(value)) {
       // The caller is setting a cookie value and not trying to retrieve the
       // cookie value using a converter callback.
-      const attributes = { ...$.cookie.defaults, ...options };
+      const attributes = Object.assign($.cookie.defaults, options);
 
       if (!$.cookie.json) {
         // An object that is passed in must be typecast to a string when the
@@ -201,7 +201,7 @@
     Drupal.deprecationError({
       message: `jQuery.removeCookie() ${deprecatedMessageSuffix}`,
     });
-    cookies.remove(key, { ...$.cookie.defaults, ...options });
+    cookies.remove(key, Object.assign($.cookie.defaults, options));
     return !cookies.get(key);
   };
 })(jQuery, Drupal, window.Cookies);

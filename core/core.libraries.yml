@@ -666,3 +666,5 @@ js-cookie:
     gpl-compatible: true
   js:
     assets/vendor/js-cookie/js.cookie.min.js: {}
+  dependencies:
+    - core/drupal.object.assign

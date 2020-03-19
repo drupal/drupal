@@ -44,7 +44,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     });
 
     if (value !== undefined && !isFunction(value)) {
-      var attributes = _objectSpread({}, $.cookie.defaults, {}, options);
+      var attributes = Object.assign($.cookie.defaults, options);
 
       if (!$.cookie.json) {
         value = String(value);
@@ -79,7 +79,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     Drupal.deprecationError({
       message: "jQuery.removeCookie() ".concat(deprecatedMessageSuffix)
     });
-    cookies.remove(key, _objectSpread({}, $.cookie.defaults, {}, options));
+    cookies.remove(key, Object.assign($.cookie.defaults, options));
     return !cookies.get(key);
   };
 })(jQuery, Drupal, window.Cookies);
