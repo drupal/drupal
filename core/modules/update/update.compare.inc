@@ -194,6 +194,9 @@ function update_calculate_project_data($available) {
  * version (e.g., 5.x-1.5-beta1, 5.x-1.5-beta2, and 5.x-1.5). Development
  * snapshots for a given major version are always listed last.
  *
+ * NOTE: This function *must* set a value for $project_data['status'] before
+ * returning, or the rest of the Update Manager will break in unexpected ways.
+ *
  * @param $project_data
  *   An array containing information about a specific project.
  * @param $available
@@ -261,11 +264,19 @@ function update_calculate_project_update_status(&$project_data, $available) {
   }
 
   // Figure out the target major version.
+  // Off Drupal.org, '0' could be a valid version string, so don't use empty().
+  if (!isset($project_data['existing_version']) || $project_data['existing_version'] === '') {
+    $project_data['status'] = UPDATE_UNKNOWN;
+    $project_data['reason'] = t('Empty version');
+    return;
+  }
   try {
     $existing_major = ModuleVersion::createFromVersionString($project_data['existing_version'])->getMajorVersion();
   }
   catch (UnexpectedValueException $exception) {
     // If the version has an unexpected value we can't determine updates.
+    $project_data['status'] = UPDATE_UNKNOWN;
+    $project_data['reason'] = t('Invalid version: @existing_version', ['@existing_version' => $project_data['existing_version']]);
     return;
   }
   $supported_branches = [];

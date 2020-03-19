@@ -794,6 +794,43 @@ class UpdateContribTest extends UpdateTestBase {
   }
 
   /**
+   * Tests messages for invalid, empty and missing version strings.
+   */
+  public function testNonStandardVersionStrings() {
+    $version_infos = [
+      'invalid' => [
+        'version' => 'llama',
+        'expected' => 'Invalid version: llama',
+      ],
+      'empty' => [
+        'version' => '',
+        'expected' => 'Empty version',
+      ],
+      'null' => [
+        'expected' => 'Invalid version: Unknown',
+      ],
+    ];
+    foreach ($version_infos as $version_info) {
+      $system_info = [
+        'aaa_update_test' => [
+          'project' => 'aaa_update_test',
+          'hidden' => FALSE,
+        ],
+      ];
+      if (isset($version_info['version'])) {
+        $system_info['aaa_update_test']['version'] = $version_info['version'];
+      }
+      $this->config('update_test.settings')->set('system_info', $system_info)->save();
+      $this->refreshUpdateStatus([
+        'drupal' => '0.0',
+        $this->updateProject => '1_0-supported',
+      ]);
+      $this->standardTests();
+      $this->assertSession()->elementTextContains('css', $this->updateTableLocator, $version_info['expected']);
+    }
+  }
+
+  /**
    * Asserts that a core compatibility message is correct for an update.
    *
    * @param string $version
