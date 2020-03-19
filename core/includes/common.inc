@@ -550,12 +550,15 @@ function drupal_flush_all_caches() {
   // sufficient, since the list of enabled modules might have been adjusted
   // above due to changed code.
   $files = [];
+  $modules = [];
   foreach ($module_data as $name => $extension) {
     if ($extension->status) {
       $files[$name] = $extension;
+      $modules[$name] = $extension->weight;
     }
   }
-  \Drupal::service('kernel')->updateModules($module_handler->getModuleList(), $files);
+  $modules = module_config_sort($modules);
+  \Drupal::service('kernel')->updateModules($modules, $files);
   // New container, new module handler.
   $module_handler = \Drupal::moduleHandler();
 
