@@ -31,7 +31,7 @@
     var options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : undefined;
 
     if (value !== undefined && !isFunction(value)) {
-      var attributes = Object.assign($.cookie.defaults, options);
+      var attributes = Object.assign({}, $.cookie.defaults, options);
 
       if (!$.cookie.json) {
         value = String(value);
@@ -65,7 +65,7 @@
   $.cookie.raw = false;
 
   $.removeCookie = function (key, options) {
-    cookies.remove(key, Object.assign($.cookie.defaults, options));
+    cookies.remove(key, Object.assign({}, $.cookie.defaults, options));
     return !cookies.get(key);
   };
 })(jQuery, Drupal, window.Cookies);

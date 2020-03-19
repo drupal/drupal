@@ -380,6 +380,7 @@ jquery.cookie:
     - core/jquery
     - core/drupal
     - core/js-cookie
+    - core/drupal.object.assign
 
 jquery.farbtastic:
   remote: https://github.com/mattfarina/farbtastic
@@ -1033,5 +1034,3 @@ js-cookie:
     gpl-compatible: true
   js:
     assets/vendor/js-cookie/js.cookie.min.js: {}
-  dependencies:
-    - core/drupal.object.assign
