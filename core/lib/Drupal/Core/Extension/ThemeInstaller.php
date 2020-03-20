@@ -266,9 +266,6 @@ class ThemeInstaller implements ThemeInstallerInterface {
       }
       // Base themes cannot be uninstalled if sub themes are installed, and if
       // they are not uninstalled at the same time.
-      // @todo https://www.drupal.org/node/474684 and
-      //   https://www.drupal.org/node/1297856 themes should leverage the module
-      //   dependency system.
       if (!empty($list[$key]->sub_themes)) {
         foreach ($list[$key]->sub_themes as $sub_key => $sub_label) {
           if (isset($list[$sub_key]) && !in_array($sub_key, $theme_list, TRUE)) {
