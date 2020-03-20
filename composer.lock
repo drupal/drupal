@@ -653,7 +653,7 @@
             "dist": {
                 "type": "path",
                 "url": "core",
-                "reference": "6b068ff1895ef63ecf5d6c8b266ef52945a7c887"
+                "reference": "2e1c97e89b1d4821e538957eb7e77d0a8796f1fb"
             },
             "require": {
                 "asm89/stack-cors": "^1.1",
@@ -724,7 +724,6 @@
                 "drupal/color": "self.version",
                 "drupal/comment": "self.version",
                 "drupal/config": "self.version",
-                "drupal/config_environment": "self.version",
                 "drupal/config_translation": "self.version",
                 "drupal/contact": "self.version",
                 "drupal/content_moderation": "self.version",
