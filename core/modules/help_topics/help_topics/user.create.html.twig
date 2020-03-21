@@ -1,0 +1,20 @@
+---
+label: 'Creating a user account'
+related:
+  - user.security_account_settings
+  - user.overview
+---
+{% set people_url = render_var(url('entity.user.collection')) %}
+<h2>{% trans %}Goal{% endtrans %}</h2>
+<p>{% trans %}Create a new user account.{% endtrans %}</p>
+<h2>{% trans %}Steps{% endtrans %}</h2>
+<ol>
+  <li>{% trans %}In the <em>Manage</em> administrative menu, navigate to <a href="{{ people_url}}"><em>People</em></a>.{% endtrans %}</li>
+  <li>{% trans %}Click <em>Add user</em>.{% endtrans %}</li>
+  <li>{% trans %}Enter the <em>Email address</em>, <em>Username</em>, and <em>Password</em> (twice) for the new user.{% endtrans %}</li>
+  <li>{% trans %}Verify that the <em>Roles</em> checked for the new user are correct.{% endtrans %}</li>
+  <li>{% trans %}If you want the new user to receive an email message notifying them of the new account, check <em>Notify user of new account</em>.{% endtrans %}</li>
+  <li>{% trans %}Optionally, change other settings on the form.{% endtrans %}</li>
+  <li>{% trans %}Click <em>Create new account</em>.{% endtrans %}</li>
+  <li>{% trans %}You will be left on the <em>Add user</em> page; repeat these steps if you have more user accounts to create.{% endtrans %}</li>
+</ol>

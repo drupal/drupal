@@ -1,0 +1,14 @@
+---
+label: 'Banning IP addresses'
+related:
+  - user.overview
+---
+{% set ban = render_var(url('ban.admin_page')) %}
+<h2>{% trans %}Goal{% endtrans %}</h2>
+<p>{% trans %}Ban visitors from one or more IP addresses from accessing and viewing your site.{% endtrans %}</p>
+<h2>{% trans %}Steps{% endtrans %}</h2>
+<ol>
+  <li>{% trans %}In the <em>Manage</em> administrative menu, navigate to <em>Configuration</em> &gt; <em>People</em> &gt; <a href="{{ ban }}"><em>IP address bans</em></a>{% endtrans %}</li>
+  <li>{% trans %}Enter an <em>IP address</em> and click <em>Add</em>.{% endtrans %}</li>
+  <li>{% trans %}You should see the IP address you entered listed under <em>Banned IP addresses</em>. Repeat the above steps to ban additional IP addresses.{% endtrans %}</li>
+</ol>

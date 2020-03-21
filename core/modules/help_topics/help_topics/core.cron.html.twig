@@ -1,0 +1,28 @@
+---
+label: 'Running and configuring cron'
+related:
+  - core.maintenance
+---
+{% set cron = render_var(url('system.cron_settings')) %}
+<h2>{% trans %}Goal{% endtrans %}</h2>
+<p>{% trans %}Configure your system so that cron will run automatically.{% endtrans %}</p>
+<h2>{% trans %}What are cron tasks?{% endtrans %}</h2>
+<p>{% trans %}To ensure that your site and its modules continue to function well, a group of administrative operations should be run periodically. These operations are called <em>cron</em> tasks, and running the tasks is known as <em>running cron</em>. Depending on how often content is updated on your site, you might need to run cron on a schedule ranging from hourly to weekly to keep your site running well.{% endtrans %}</p>
+<h2>{% trans %}What options are available for running cron?{% endtrans %}</h2>
+<ul>
+  <li>{% trans %}If the core Automated Cron module is installed, your site will run cron periodically, on a schedule you can configure.{% endtrans %}</li>
+  <li>{% trans %}You can set up a task on your web server to visit the <em> cron URL</em>, which is unique to your site, on a schedule.{% endtrans %}</li>
+  <li>{% trans %}You can also run cron manually, but this is not the recommended way to make sure it is run periodically.{% endtrans %}</li>
+</ul>
+<h2>{% trans %}Steps{% endtrans %}</h2>
+<ol>
+  <li>{% trans %}In the <em>Manage</em> administration menu, navigate to <em>Configuration</em> &gt; <em>System</em> &gt; <a href="{{ cron }}"><em>Cron</em></a>. Note the <em>Last run</em> time on the page.{% endtrans %}</li>
+  <li>{% trans %}If you want to run cron right now, click <em>Run cron</em> and wait for cron to finish.{% endtrans %}</li>
+  <li>{% trans %}If you have a way to configure tasks on your web server, copy the link where it says <em>To run cron from outside the site, go to</em>. Set up a task to visit that URL on your desired cron schedule, such as once an hour or once a week. (On Linux-like servers, you can use the <em>wget</em> command to visit a URL.) If you configure an outside task, you should uninstall the Automated Cron module.{% endtrans %}</li>
+  <li>{% trans %}If you are not configuring an outside task, and you have the core Automated Cron module installed, select a schedule for automated cron runs in <em>Cron settings</em> &gt; <em>Run cron every</em>. Click <em>Save configuration</em>.{% endtrans %}</li>
+</ol>
+<h2>{% trans %}Additional resources{% endtrans %}</h2>
+<ul>
+    <li>{% trans %}<a href="https://www.drupal.org/docs/user_guide/en/security-cron-concept.html">Concept: Cron in the User Guide</a>{% endtrans %}</li>
+    <li>{% trans %}<a href="https://www.drupal.org/docs/user_guide/en/security-cron.html">Configuring Cron Maintenance Tasks in the User Guide</a>{% endtrans %}</li>
+</ul>
