@@ -2,6 +2,7 @@
 label: 'Configuring error responses, including 403/404 pages'
 related:
   - system.config_basic
+  - core.maintenance
 ---
 {% set log_settings_url = render_var(url('system.logging_settings')) %}
 {% set information_url = render_var(url('system.site_information_settings')) %}
@@ -20,5 +21,4 @@ related:
   <li>{% trans %}In the <em>Manage</em> administrative menu, navigate to <em>Configuration</em> &gt; <em>Development</em> &gt; <em><a href="{{ log_settings_url }}">Logging and errors</a></em>.{% endtrans %}</li>
   <li>{% trans %}For a production site, select <em>None</em> under <em>Error messages to display</em>. For a site that is in development, select one of the other options, so that you are more aware of the errors the site is generating.{% endtrans %}</li>
   <li>{% trans %}Click <em>Save configuration</em>. You should see a message indicating that the settings were saved.{% endtrans %}</li>
-  <li>{% trans %}If you have the Database Logging module installed, in the <em>Manage</em> administrative menu, navigate to <em>Reports</em> &gt; <em>Recent log messages</em> to see a report of the error and informational messages your site has generated.{% endtrans %}</li>
 </ol>
