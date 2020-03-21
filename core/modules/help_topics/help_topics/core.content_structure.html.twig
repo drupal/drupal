@@ -1,0 +1,45 @@
+---
+label: 'Managing content structure'
+top_level: true
+---
+{% set help_url = render_var(url('help.main')) %}
+<h2>{% trans %}What types of data does a site have?{% endtrans %}</h2>
+<p>{% trans %}There are four main types of data. <em>Content</em> is the information (text, images, etc.) meant to be displayed to web site visitors. <em>Configuration</em> is data that defines how the content is displayed; some configuration (such as field labels) may also be visible to site visitors. <em>State</em> is temporary data about the state of your site, such as the last time the system <em>cron</em> jobs ran. <em>Session</em> is a subset of State information, related to users' interactions with the site, such as site cookies and whether or not they are logged in.{% endtrans %}</p>
+<h2>{% trans %}What is a content entity?{% endtrans %}</h2>
+<p>{% trans %}A <em>content entity</em> (or more commonly, <em>entity</em>) is an item of content data, which can consist of text, HTML markup, images, attached files, and other data. Content entities are grouped into <em>entity types</em>, which have different purposes and are displayed in very different ways on the site. Most entity types are also divided into <em>entity sub-types</em>, which are divisions within an entity type to allow for smaller variations in how the entities are used and displayed. For example, the <em>Content item</em> entity type that stores page-level content is divided into <em>content type</em> sub-types; the <em>Custom block</em> entity type has <em>custom block types</em>; but the <em>User</em> entity type (for user profile information) does not have sub-types.{% endtrans %}</p>
+<h2>{% trans %}What is a field?{% endtrans %}</h2>
+<p>{% trans %}Within entity items, the data is stored in individual <em>fields</em>, each of which holds one type of data, such as formatted or plain text, images or other files, or dates. Fields can be added by an administrator on entity sub-types, so that all entity items of a given entity sub-type have the same collection of fields available, and they can be single-valued or multiple-valued. When you create or edit entity items, you are specifying the values for the fields on the entity item.{% endtrans %}</p>
+<h2>{% trans %}What is a reference field?{% endtrans %}</h2>
+<p>{% trans %}A <em>reference field</em> is a field that stores a relationship between an entity and one or more other entities, which may belong to the same or different entity type. For example, a <em>Content reference</em> field on a content type stores a relationship between one content item and one or more other content items.{% endtrans %}</p>
+<h2>{% trans %}What field types are available?{% endtrans %}</h2>
+<p>{% trans %}The following field types are provided by the core system and core modules (many more are provided by contributed modules):{% endtrans %}</p>
+<ul>
+  <li>{% trans %}Boolean, Number (provided by the core system): Stores true/false values and numbers{% endtrans %}</li>
+  <li>{% trans %}Comment (provided by the core Comment module): Allows users to add comments to an entity{% endtrans %}</li>
+  <li>{% trans %}Date, Timestamp (Datetime module): Stores dates and times{% endtrans %}</li>
+  <li>{% trans %}Date range (Datetime range module): Stores time/date periods with a start and and an end{% endtrans %}</li>
+  <li>{% trans %}Email (core system): Stores email addresses{% endtrans %}</li>
+  <li>{% trans %}Link (Link module): Stores URLs and link text{% endtrans %}</li>
+  <li>{% trans %}List (Options module): Stores values chosen from pre-defined lists; the values can be numbers or text{% endtrans %}</li>
+  <li>{% trans %}Reference (core system): Stores entity references{% endtrans %}</li>
+  <li>{% trans %}Telephone (Telephone module): Stores telephone numbers{% endtrans %}</li>
+  <li>{% trans %}Text (Text module): Stores formatted and unformatted text{% endtrans %}</li>
+</ul>
+<h2>{% trans %}What is a formatter?{% endtrans %}</h2>
+<p>{% trans %}A <em>formatter</em> is a way to display a field; most field types offer several types of formatters, and most formatters have settings that further define how the field is displayed. It is also possible to completely hide a field from display, and you have the option of showing or hiding the field's label when it is displayed.{% endtrans %}</p>
+<h2>{% trans %}What is a widget?{% endtrans %}</h2>
+<p>{% trans %}A <em>widget</em> is a way to edit a field. Some field types, such as plain text single-line fields, have only one widget available (in this case, a single-line text input field). Other field types offer choices for the widget; for example, single-valued <em>List</em> fields can use a <em>Select</em> or <em>Radio button</em> widget for editing. Many widget types have settings that further define how the field can be edited.{% endtrans %}</p>
+<h2>{% trans %}Managing content structure overview{% endtrans %}</h2>
+<p>{% trans %}Besides the field modules listed in the previous section, there are additional core modules that you can use to manage your content structure:{% endtrans %}</p>
+<ul>
+  <li>{% trans %}The core Node, Comment, Custom Block, Custom Menu Links, User, File, Image, Media, Taxonomy, Contact, and Aggregator modules all provide content entity types.{% endtrans %}</li>
+  <li>{% trans %}The core Field UI module provides a user interface for managing fields on entities.{% endtrans %}</li>
+  <li>{% trans %}The core Filter, Layout Builder, RDF, Responsive Image, and Path modules provide settings and display options for entities and fields.{% endtrans %}</li>
+</ul>
+<p>{% trans %}Depending on the core and contributed modules that you currently have installed on your site, the related topics below, and other topics listed on the main <a href="{{ help_url }}">Help page</a>, will help you with tasks related to content structure.{% endtrans %}</p>
+<h2>{% trans %}Additional resources{% endtrans %}</h2>
+<ul>
+  <li>{% trans %}<a href="https://www.drupal.org/docs/user_guide/en/understanding-data.html">Concept: Types of Data topic in the User Guide</a>{% endtrans %}</li>
+  <li>{% trans %}<a href="https://www.drupal.org/docs/user_guide/en/planning-chapter.html">Planning your Site chapter in the User Guide</a>{% endtrans %}</li>
+  <li>{% trans %}<a href="https://www.drupal.org/docs/user_guide/en/structure-reference-fields.html">Concept: Reference Fields topic in the User Guide</a>{% endtrans %}</li>
+</ul>

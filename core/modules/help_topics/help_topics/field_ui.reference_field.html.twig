@@ -1,0 +1,25 @@
+---
+label: 'Adding a reference field to an entity sub-type'
+related:
+  - core.content_structure
+  - field_ui.add_field
+  - field_ui.manage_display
+  - field_ui.manage_form
+---
+{% set content_structure = render_var(url('help.help_topic', {'id': 'core.content_structure'})) %}
+{% set content_types = render_var(url('entity.node_type.collection')) %}
+<h2>{% trans %}Goal{% endtrans %}</h2>
+<p>{% trans %}Add an entity reference field to an entity sub-type; see <a href="{{ content_structure}}">Managing content structure</a> for more information on entities and reference fields.{% endtrans %}</p>
+<h2>{% trans %}Steps{% endtrans %}</h2>
+<ol>
+  <li>{% trans %}Navigate to the page for managing the entity sub-type you want to add the field to. For example, to add a field to a content type, in the <em>Manage</em> administrative menu, navigate to <em>Structure</em> &gt; <a href="{{ content_types }}"><em>Content types</em></a>.{% endtrans %}</li>
+  <li>{% trans %}Find the particular sub-type that you want to add the field to, and click <em>Manage fields</em>.{% endtrans %}</li>
+  <li>{% trans %}Click <em>Add field</em>.{% endtrans %}</li>
+  <li>{% trans %}In <em>Add a new field</em>, select the type of reference field you want to add. The <em>Reference</em> section of the select list shows the most common types of reference field; choose <em>Other...</em> if the entity type you want to reference is not listed.{% endtrans %}</li>
+  <li>{% trans %}The <em>Label</em> field should now be visible; enter a label for the field, which is used as the field label for both content editing and content display.{% endtrans %}</li>
+  <li>{% trans %}Click <em>Save and continue</em>.{% endtrans %}</li>
+  <li>{% trans %}On the next screen, verify that the type of entity you want to reference is shown in <em>Type of item to reference</em>, or select it if not. Enter a value for <em>Allowed number of values</em>. You can limit the field to one value per entity item, a set number of values, or set it to have unlimited values. Click <em>Save field settings</em>.{% endtrans %}</li>
+  <li>{% trans %}On the next screen, optionally edit the settings for <em>Label</em>, <em>Help text</em> (text to be displayed below the field on the content editing page), and <em>Required field</em> (to make it so a value must be entered in order to save the content when editing).{% endtrans %}</li>
+  <li>{% trans %}In the <em>Reference type</em> section, you will usually want to limit the entity sub-types that can be referenced; for example, if you are creating a <em>Content</em> reference, you can check one or two <em>Content type</em> choices. The choices will be easier for content editors to scan if you also choose a sort value (normally the entity title or label field).{% endtrans %}</li>
+  <li>{% trans %}Click <em>Save settings</em>. You should be returned to the <me>Manage fields</em> page, with your new field in the list.{% endtrans %}</li>
+</ol>
