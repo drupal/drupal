@@ -2,6 +2,8 @@
 
 namespace Drupal\database_statement_monitoring_test;
 
+use Drupal\Core\Database\Query\Condition;
+
 /**
  * Trait for Connection classes that can store logged statements.
  */
@@ -48,7 +50,13 @@ trait LoggedStatementsTrait {
     // based on object, which would break.
     $namespace = (new \ReflectionClass(get_parent_class($this)))->getNamespaceName();
     $driver_class = $namespace . '\\' . $class;
-    return class_exists($driver_class) ? $driver_class : $class;
+    if (class_exists($driver_class)) {
+      return $driver_class;
+    }
+    elseif ($class == 'Condition') {
+      return Condition::class;
+    }
+    return $class;
   }
 
   /**

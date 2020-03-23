@@ -4,6 +4,7 @@ namespace Drupal\KernelTests\Core\Database;
 
 use Drupal\Core\Database\Database;
 use Drupal\Core\Database\DatabaseExceptionWrapper;
+use Drupal\Core\Database\Query\Condition;
 
 /**
  * Tests of the core database system.
@@ -153,6 +154,19 @@ class ConnectionTest extends DatabaseTestBase {
     catch (\InvalidArgumentException $e) {
       $this->pass('Exception thrown for multiple statements.');
     }
+  }
+
+  /**
+   * Test that the method ::condition() returns a Condition object.
+   */
+  public function testCondition() {
+    $connection = Database::getConnection('default', 'default');
+    $namespace = (new \ReflectionObject($connection))->getNamespaceName() . "\\Condition";
+    if (!class_exists($namespace)) {
+      $namespace = Condition::class;
+    }
+    $condition = $connection->condition('AND');
+    $this->assertSame($namespace, get_class($condition));
   }
 
 }
