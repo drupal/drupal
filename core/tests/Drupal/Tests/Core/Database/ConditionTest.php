@@ -5,6 +5,7 @@ namespace Drupal\Tests\Core\Database;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Database\Query\Condition;
 use Drupal\Core\Database\Query\PlaceholderInterface;
+use Drupal\Tests\Core\Database\Stub\StubPDO;
 use Drupal\Tests\UnitTestCase;
 use Prophecy\Argument;
 use PHPUnit\Framework\Error\Error;
@@ -174,6 +175,36 @@ class ConditionTest extends UnitTestCase {
     $data[] = ["= 1 UNION ALL SELECT password FROM user WHERE uid ="];
 
     return $data;
+  }
+
+  /**
+   * Test that the core Condition can be overridden.
+   */
+  public function testContribCondition() {
+    $mockCondition = $this->getMockBuilder(Condition::class)
+      ->setMockClassName('MockCondition')
+      ->setConstructorArgs([NULL])
+      ->disableOriginalConstructor()
+      ->getMock();
+    $contrib_namespace = 'Drupal\Driver\Database\mock';
+    $mocked_namespace = $contrib_namespace . '\\Condition';
+    class_alias('MockCondition', $mocked_namespace);
+
+    $options['namespace'] = $contrib_namespace;
+    $options['prefix']['default'] = '';
+
+    $mockPdo = $this->createMock(StubPDO::class);
+
+    $connection = $this->getMockBuilder(Connection::class)
+      ->setConstructorArgs([$mockPdo, $options])
+      ->setMethods(['identifierQuote'])
+      ->getMockForAbstractClass();
+    // @todo In drupal:10.0.0 this function will be abstract and the mock
+    // builder will automatically create it. This can be
+    // can be removed at that time.
+    $connection->method('identifierQuote')->willReturn(NULL);
+    $condition = $connection->condition('AND');
+    $this->assertSame('MockCondition', get_class($condition));
   }
 
 }
