@@ -206,9 +206,77 @@ class ExtensionListTest extends UnitTestCase {
   }
 
   /**
-   * @return \Drupal\Tests\Core\Extension\TestExtension
+   * @covers ::checkIncompatibility
+   *
+   * @dataProvider providerCheckIncompatibility
    */
-  protected function setupTestExtensionList($extension_names = ['test_name']) {
+  public function testCheckIncompatibility($additional_settings, $expected) {
+    $test_extension_list = $this->setupTestExtensionList(['test_name'], $additional_settings);
+    $this->assertSame($expected, $test_extension_list->checkIncompatibility('test_name'));
+  }
+
+  /**
+   * DataProvider for testCheckIncompatibility().
+   */
+  public function providerCheckIncompatibility() {
+    return [
+      'core_incompatible true' => [
+        [
+          'core_incompatible' => TRUE,
+        ],
+        TRUE,
+      ],
+      'core_incompatible false' => [
+        [
+          'core_incompatible' => FALSE,
+        ],
+        FALSE,
+      ],
+      'PHP 1, core_incompatible FALSE' => [
+        [
+          'core_incompatible' => FALSE,
+          'php' => 1,
+        ],
+        FALSE,
+      ],
+      'PHP 1000000000000, core_incompatible FALSE' => [
+        [
+          'core_incompatible' => FALSE,
+          'php' => 1000000000000,
+        ],
+        TRUE,
+      ],
+      'PHP 1, core_incompatible TRUE' => [
+        [
+          'core_incompatible' => TRUE,
+          'php' => 1,
+        ],
+        TRUE,
+      ],
+      'PHP 1000000000000, core_incompatible TRUE' => [
+        [
+          'core_incompatible' => TRUE,
+          'php' => 1000000000000,
+        ],
+        TRUE,
+      ],
+    ];
+  }
+
+  /**
+   * Sets up an a test extension list.
+   *
+   * @param string[] $extension_names
+   *   The names of the extensions to create.
+   * @param mixed[] $additional_info_values
+   *   The additional values to add to extensions info.yml files. These values
+   *   will be encoded using '\Drupal\Component\Serialization\Yaml::encode()'.
+   *   The array keys should be valid top level yaml file keys.
+   *
+   * @return \Drupal\Tests\Core\Extension\TestExtension
+   *   The test extension list.
+   */
+  protected function setupTestExtensionList(array $extension_names = ['test_name'], array $additional_info_values = []) {
     vfsStream::setup('drupal_root');
 
     $folders = ['example' => []];
@@ -217,7 +285,7 @@ class ExtensionListTest extends UnitTestCase {
         'name' => 'test name',
         'type' => 'test_extension',
         'core' => '8.x',
-      ]);
+      ] + $additional_info_values);
     }
     vfsStream::create($folders);
     foreach ($extension_names as $extension_name) {
