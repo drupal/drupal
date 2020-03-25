@@ -20,7 +20,7 @@ form {
 button {
   line-height: 1.21875rem;
 }
-input:not([type="file"]) {
+input {
   line-height: normal;
 }
 select {
@@ -96,11 +96,12 @@ textarea {
 }
 
 /**
- * Prevent regression due to -webkit-appearance being set to button in
- * normalize.css 4.1.0.
+ * Prevent regression due to -webkit-appearance being set to button and
+ * font-family being set to inherit normalize.css 4.1.0.
  */
 ::-webkit-file-upload-button {
   -webkit-appearance: push-button;
+  font-family: "Lucida Grande", "Lucida Sans Unicode", Verdana, sans-serif;
 }
 
 /**

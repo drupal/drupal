@@ -2,7 +2,7 @@
  * @file
  * View UI admin theme.
  *
- * Replaces the inherited styles provided by Stable.
+ * Replaces the styles provided by the views_ui module.
  */
 
 .views-admin .links {
@@ -25,7 +25,7 @@
 }
 .views-admin .icon,
 .views-admin .icon-text {
-  background-image: url(../../images/core/stable/views_ui/sprites.png);
+  background-image: url(../../../../modules/views_ui/images/sprites.png);
   background-repeat: no-repeat;
   background-attachment: scroll;
   background-position: left top; /* LTR */

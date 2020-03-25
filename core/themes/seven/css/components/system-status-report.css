@@ -92,11 +92,11 @@
 }
 .system-status-report__status-icon--error .details-title:before,
 .details .system-status-report__status-icon--error:before {
-  background-image: url(../../../stable/images/core/icons/e32700/error.svg);
+  background-image: url(../../../../misc/icons/e32700/error.svg);
 }
 .system-status-report__status-icon--warning .details-title:before,
 .details .system-status-report__status-icon--warning:before {
-  background-image: url(../../../stable/images/core/icons/e29700/warning.svg);
+  background-image: url(../../../../misc/icons/e29700/warning.svg);
 }
 
 .system-status-report__entry__value {

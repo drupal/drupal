@@ -11,6 +11,7 @@ use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Entity\ContentEntityType;
 use Drupal\Core\Entity\ContentEntityTypeInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\Core\Extension\Exception\UnknownExtensionException;
 
 /**
  * Implements hook_removed_post_updates().
@@ -122,6 +123,27 @@ function system_post_update_uninstall_classy() {
   }
   catch (\InvalidArgumentException | UnknownExtensionException $exception) {
     // Exception is thrown if Classy wasn't installed or if there are themes
+    // depending on it.
+  }
+}
+
+/**
+ * Uninstall Stable if it is no longer needed.
+ *
+ * This needs to run after system_post_update_uninstall_classy(). This will be
+ * the case since getAvailableUpdateFunctions() returns an alphabetically sorted
+ * list of post_update hooks to be run.
+ *
+ * @see Drupal\Core\Update\UpdateRegistry::getAvailableUpdateFunctions()
+ */
+function system_post_update_uninstall_stable() {
+  /** @var \Drupal\Core\Extension\ThemeInstallerInterface $theme_installer */
+  $theme_installer = \Drupal::getContainer()->get('theme_installer');
+  try {
+    $theme_installer->uninstall(['stable']);
+  }
+  catch (\InvalidArgumentException | UnknownExtensionException $exception) {
+    // Exception is thrown if Stable wasn't installed or if there are themes
     // depending on it.
   }
 }

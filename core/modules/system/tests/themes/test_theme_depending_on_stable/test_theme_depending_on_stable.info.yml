@@ -1,0 +1,4 @@
+type: theme
+base theme: stable
+name: 'Test theme depending on Stable'
+version: VERSION

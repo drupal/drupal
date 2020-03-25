@@ -12,7 +12,7 @@
 # and understand that Claro could break your modifications as it changes.
 name: Claro
 type: theme
-base theme: stable
+base theme: false
 description: 'A clean, accessible, and powerful Drupal administration theme.'
 alt text: 'Screenshot of Claro, Drupal administration theme.'
 package: Core
@@ -26,22 +26,22 @@ libraries-override:
   system/base:
     css:
       component:
-        /core/themes/stable/css/system/components/ajax-progress.module.css: css/components/ajax-progress.module.css
-        /core/themes/stable/css/system/components/autocomplete-loading.module.css: css/components/autocomplete-loading.module.css
-        /core/themes/stable/css/system/components/system-status-counter.css: css/components/system-status-counter.css
-        /core/themes/stable/css/system/components/system-status-report-counters.css: css/components/system-status-report-counters.css
-        /core/themes/stable/css/system/components/system-status-report-general-info.css: css/components/system-status-report-general-info.css
-        /core/themes/stable/css/system/components/tabledrag.module.css: css/components/tabledrag.css
+        css/components/ajax-progress.module.css: css/components/ajax-progress.module.css
+        css/components/autocomplete-loading.module.css: css/components/autocomplete-loading.module.css
+        css/components/system-status-counter.css: css/components/system-status-counter.css
+        css/components/system-status-report-counters.css: css/components/system-status-report-counters.css
+        css/components/system-status-report-general-info.css: css/components/system-status-report-general-info.css
+        css/components/tabledrag.module.css: css/components/tabledrag.css
 
   system/admin:
     css:
       theme:
-        /core/themes/stable/css/system/system.admin.css: false
+        css/system.admin.css: false
 
   core/drupal.dropbutton:
     css:
       component:
-        /core/themes/stable/css/core/dropbutton/dropbutton.css: css/components/dropbutton.css
+        misc/dropbutton/dropbutton.css: css/components/dropbutton.css
 
   core/drupal.tabledrag:
     js:
@@ -50,7 +50,7 @@ libraries-override:
   core/drupal.vertical-tabs:
     css:
       component:
-        /core/themes/stable/css/core/vertical-tabs.css: false
+        misc/vertical-tabs.css: false
     js:
       misc/vertical-tabs.js: js/vertical-tabs.js
 
@@ -69,24 +69,12 @@ libraries-override:
   field_ui/drupal.field_ui:
     css:
       theme:
-        /core/themes/stable/css/field_ui/field_ui.admin.css: css/theme/field-ui.admin.css
-
-  # @todo remove this library override in https://drupal.org/node/3115223
-  filter/drupal.filter.admin:
-    css:
-      theme:
-        /core/themes/stable/css/filter/filter.admin.css: false
-
-  # @todo remove this library override in https://drupal.org/node/3115223
-  filter/drupal.filter:
-    css:
-      theme:
-        /core/themes/stable/css/filter/filter.admin.css: false
+        css/field_ui.admin.css: css/theme/field-ui.admin.css
 
   views_ui/admin.styling:
     css:
       theme:
-        /core/themes/stable/css/views_ui/views_ui.admin.theme.css: css/theme/views_ui.admin.theme.css
+        css/views_ui.admin.theme.css: css/theme/views_ui.admin.theme.css
 
 libraries-extend:
   ckeditor/drupal.ckeditor:
@@ -125,8 +113,6 @@ libraries-extend:
     - claro/drupal.shortcut
   core/drupal.ajax:
     - claro/ajax
-    # @todo remove claro/temporary.ajax in https://drupal.org/node/3111468
-    - claro/temporary.ajax
   views/views.module:
     - claro/views
   media/media_embed_ckeditor_theme:
