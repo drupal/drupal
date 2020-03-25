@@ -13,7 +13,7 @@
 # changes.
 name: Bartik
 type: theme
-base theme: stable
+base theme: false
 description: 'A flexible, recolorable theme with many regions and a responsive, mobile-first layout.'
 package: Core
 version: VERSION
@@ -23,27 +23,7 @@ libraries:
   - core/normalize
   - bartik/global-styling
 
-libraries-override:
-  # @todo remove this library override in https://drupal.org/node/3115223
-  filter/drupal.filter.admin:
-    css:
-      theme:
-        /core/themes/stable/css/filter/filter.admin.css: false
-
-  # @todo remove this library override in https://drupal.org/node/3115223
-  filter/drupal.filter:
-    css:
-      theme:
-        /core/themes/stable/css/filter/filter.admin.css: false
-  # @todo remove this library override in https://drupal.org/node/3111468
-  stable/drupal.ajax: bartik/empty
-  # @todo remove this library override in https://drupal.org/node/3111468
-  stable/drupal.user: bartik/empty
-
 libraries-extend:
-  # @todo remove this library extend in https://drupal.org/node/3111468
-#  core/drupal.ajax:
-#    - bartik/temporary.ajax
   core/drupal.dialog:
     - bartik/classy.dialog
   core/drupal.dropbutton:

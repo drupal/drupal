@@ -2,8 +2,7 @@
  * @file
  * Replacement styles for table drag.
  *
- * Replaces both of tabledrag.module.css (from core/stable) and tabledrag.css
- * (from Classy theme).
+ * Replaces core's tabledrag.module.css.
  *
  * @see tabledrag.js
  */

@@ -5,6 +5,7 @@
  * Functions to support theming in the Bartik theme.
  */
 
+use Drupal\Component\Utility\Html;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Template\Attribute;
 use Drupal\views\Form\ViewsForm;
@@ -175,5 +176,25 @@ function bartik_preprocess_image_widget(&$variables) {
   if (!empty($variables['element']['fids']['#value'])) {
     $file = reset($variables['element']['#files']);
     $variables['data']["file_{$file->id()}"]['filename']['#suffix'] = ' <span class="file-size">(' . format_size($file->getSize()) . ')</span> ';
+  }
+}
+
+/**
+ * Implements template_preprocess_links().
+ *
+ * This makes it so array keys of #links items are added as a class. This
+ * functionality was removed in Drupal 8.1, but still neccessary in some
+ * instances.
+ *
+ * @todo remove in https://drupal.org/node/3120962
+ */
+function bartik_preprocess_links(&$variables) {
+  if (!empty($variables['links'])) {
+    foreach ($variables['links'] as $key => $value) {
+      if (!is_numeric($key)) {
+        $class = Html::getClass($key);
+        $variables['links'][$key]['attributes']->addClass($class);
+      }
+    }
   }
 }

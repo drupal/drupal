@@ -493,7 +493,7 @@ class ConfigImportUITest extends BrowserTestBase {
    */
   public function testExtensionValidation() {
     \Drupal::service('module_installer')->install(['node']);
-    \Drupal::service('theme_installer')->install(['bartik']);
+    \Drupal::service('theme_installer')->install(['test_subtheme']);
     $this->rebuildContainer();
 
     $sync = $this->container->get('config.storage.sync');
@@ -504,9 +504,9 @@ class ConfigImportUITest extends BrowserTestBase {
     $module_data = $this->container->get('extension.list.module')->getList();
     $this->assertTrue(isset($module_data['node']->requires['text']), 'The Node module depends on the Text module.');
     // Bartik depends on Stable.
-    unset($core['theme']['stable']);
+    unset($core['theme']['test_basetheme']);
     $theme_data = \Drupal::service('theme_handler')->rebuildThemeData();
-    $this->assertTrue(isset($theme_data['bartik']->requires['stable']), 'The Bartik theme depends on the Stable theme.');
+    $this->assertTrue(isset($theme_data['test_subtheme']->requires['test_basetheme']), 'The Test Subtheme theme depends on the Test Basetheme theme.');
     // This module does not exist.
     $core['module']['does_not_exist'] = 0;
     // This theme does not exist.
@@ -516,7 +516,7 @@ class ConfigImportUITest extends BrowserTestBase {
     $this->drupalPostForm('admin/config/development/configuration', [], t('Import all'));
     $this->assertText('The configuration cannot be imported because it failed validation for the following reasons:');
     $this->assertText('Unable to uninstall the Text module since the Node module is installed.');
-    $this->assertText('Unable to uninstall the Stable theme since the Bartik theme is installed.');
+    $this->assertText('Unable to uninstall the Theme test base theme theme since the Theme test subtheme theme is installed.');
     $this->assertText('Unable to install the does_not_exist module since it does not exist.');
     $this->assertText('Unable to install the does_not_exist theme since it does not exist.');
   }

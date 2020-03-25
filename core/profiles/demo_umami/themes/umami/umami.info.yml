@@ -1,6 +1,6 @@
 name: Umami
 type: theme
-base theme: stable
+base theme: false
 description: 'The theme used for the Umami food magazine demonstration site.'
 version: VERSION
 libraries:
@@ -25,27 +25,9 @@ libraries-override:
       theme:
         layouts/fourcol_section/fourcol_section.css: layouts/fourcol_section/fourcol_section.css
 
-  # @todo remove this library override in https://drupal.org/node/3115223
-  filter/drupal.filter.admin:
-    css:
-      theme:
-        /core/themes/stable/css/filter/filter.admin.css: false
-  # @todo remove this library override in https://drupal.org/node/3115223
-  filter/drupal.filter:
-    css:
-      theme:
-        /core/themes/stable/css/filter/filter.admin.css: false
-  # @todo remove this library override in https://drupal.org/node/3111468
-  stable/drupal.ajax: umami/empty
-  # @todo remove this library override in https://drupal.org/node/3111468
-  stable/drupal.user: umami/empty
-
 libraries-extend:
   tour/tour-styling:
     - umami/demo-umami-tour
-  # @todo remove this library extend in https://drupal.org/node/3111468
-  core/drupal.ajax:
-    - umami/temporary.ajax
   core/drupal.dialog:
     - umami/classy.dialog
   core/drupal.dropbutton:

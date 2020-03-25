@@ -413,6 +413,19 @@ function claro_preprocess_links(&$variables) {
       }
     }
   }
+
+  // This makes it so array keys of #links items are added as a class. This
+  // functionality was removed in Drupal 8.1, but still neccessary in some
+  // instances.
+  // @todo remove in https://drupal.org/node/3120962
+  if (!empty($variables['links'])) {
+    foreach ($variables['links'] as $key => $value) {
+      if (!is_numeric($key)) {
+        $class = Html::getClass($key);
+        $variables['links'][$key]['attributes']->addClass($class);
+      }
+    }
+  }
 }
 
 /**
@@ -1195,14 +1208,6 @@ function claro_preprocess_image_widget(&$variables) {
   // @todo revisit in https://drupal.org/node/3114318
   if (isset($variables['data']['preview']['#access']) && $variables['data']['preview']['#access'] === FALSE) {
     unset($variables['data']['preview']);
-  }
-
-  // Stable adds the file size as #suffix for image file_link renderable array.
-  // We have to remove that because we will render it in our file_link template
-  // for every kind of files, and not just for images.
-  if (!empty($variables['element']['fids']['#value'])) {
-    $file = reset($variables['element']['#files']);
-    unset($variables['data']['file_' . $file->id()]['filename']['#suffix']);
   }
 
   _claro_preprocess_file_and_image_widget($variables);

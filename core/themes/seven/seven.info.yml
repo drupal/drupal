@@ -13,7 +13,7 @@
 # changes.
 name: Seven
 type: theme
-base theme: stable
+base theme: false
 description: 'The default administration theme for Drupal 8 was designed with clean lines, simple blocks, and sans-serif font to emphasize the tools and tasks at hand.'
 alt text: 'Default administration theme for Drupal 8 with simple blocks and clean lines.'
 package: Core
@@ -26,14 +26,14 @@ libraries-override:
   system/base:
     css:
       component:
-        /core/themes/stable/css/system/components/system-status-counter.css: css/components/system-status-counter.css
-        /core/themes/stable/css/system/components/system-status-report-counters.css: css/components/system-status-report-counters.css
-        /core/themes/stable/css/system/components/system-status-report-general-info.css: css/components/system-status-report-general-info.css
+        css/components/system-status-counter.css: css/components/system-status-counter.css
+        css/components/system-status-report-counters.css: css/components/system-status-report-counters.css
+        css/components/system-status-report-general-info.css: css/components/system-status-report-general-info.css
 
   core/drupal.vertical-tabs:
     css:
       component:
-        /core/themes/stable/css/core/vertical-tabs.css: false
+        misc/vertical-tabs.css: false
   core/jquery.ui:
     css:
       theme:
@@ -43,28 +43,9 @@ libraries-override:
       component:
         assets/vendor/jquery.ui/themes/base/dialog.css: false
 
-  # @todo remove this library override in https://drupal.org/node/3115223
-  filter/drupal.filter.admin:
-    css:
-      theme:
-        /core/themes/stable/css/filter/filter.admin.css: false
-
-  # @todo remove this library override in https://drupal.org/node/3115223
-  filter/drupal.filter:
-    css:
-      theme:
-        /core/themes/stable/css/filter/filter.admin.css: false
-  # @todo remove this library override in https://drupal.org/node/3111468
-  stable/drupal.ajax: seven/empty
-  # @todo remove this library override in https://drupal.org/node/3111468
-  stable/drupal.user: seven/empty
-
 libraries-extend:
   core/ckeditor:
     - seven/ckeditor-dialog
-  # @todo remove this library extend in https://drupal.org/node/3111468
-  core/drupal.ajax:
-    - seven/temporary.ajax
   core/drupal.dialog:
     - seven/seven.drupal.dialog
   core/drupal.dropbutton:

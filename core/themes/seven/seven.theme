@@ -5,6 +5,7 @@
  * Functions to support theming in the Seven theme.
  */
 
+use Drupal\Component\Utility\Html;
 use Drupal\Core\Url;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\media\MediaForm;
@@ -444,4 +445,24 @@ function seven_preprocess_image_widget(array &$variables) {
  */
 function seven_preprocess_update_version(array &$variables) {
   $variables['#attached']['library'][] = 'seven/update-report';
+}
+
+/**
+ * Implements template_preprocess_links().
+ *
+ * This makes it so array keys of #links items are added as a class. This
+ * functionality was removed in Drupal 8.1, but still neccessary in some
+ * instances.
+ *
+ * @todo remove in https://drupal.org/node/3120962
+ */
+function seven_preprocess_links(&$variables) {
+  if (!empty($variables['links'])) {
+    foreach ($variables['links'] as $key => $value) {
+      if (!is_numeric($key)) {
+        $class = Html::getClass($key);
+        $variables['links'][$key]['attributes']->addClass($class);
+      }
+    }
+  }
 }

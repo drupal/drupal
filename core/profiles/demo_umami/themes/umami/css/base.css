@@ -275,20 +275,21 @@ fieldset {
  * normalize.css 7.0.0.
  */
 button,
-input:not([type="file"]),
 textarea {
   line-height: 1.5rem;
 }
-optgroup {
+optgroup,
+input:not([type="file"]) {
   line-height: normal;
 }
 
 /**
- * Prevent regression due to -webkit-appearance being set to button in
- * normalize.css 4.1.0.
+ * Prevent regression due to changes in normalize.css 4.1.0.
  */
 ::-webkit-file-upload-button {
   -webkit-appearance: push-button;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 1em;
 }
 
 ul,
@@ -305,4 +306,15 @@ ul ol {
 
 p {
   margin-bottom: 1.28rem;
+}
+
+/**
+ * Prevent regression table/td/th rules removed in normalize.css 7.0.0.
+ */
+table {
+  border-collapse: collapse;
+}
+td,
+th {
+  padding: 0;
 }
