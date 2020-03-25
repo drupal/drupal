@@ -27,7 +27,7 @@ use Drupal\Tests\Traits\Core\CronRunTrait;
 use Drupal\Tests\TestFileCreationTrait;
 use Drupal\Tests\user\Traits\UserCreationTrait as BaseUserCreationTrait;
 use Drupal\Tests\XdebugRequestTrait;
-use Zend\Diactoros\Uri;
+use Laminas\Diactoros\Uri;
 
 /**
  * Test case for typical Drupal tests.

@@ -5,8 +5,8 @@ namespace Drupal\aggregator\Plugin\aggregator\parser;
 use Drupal\aggregator\Plugin\ParserInterface;
 use Drupal\aggregator\FeedInterface;
 use Drupal\Core\Messenger\MessengerTrait;
-use Zend\Feed\Reader\Reader;
-use Zend\Feed\Reader\Exception\ExceptionInterface;
+use Laminas\Feed\Reader\Reader;
+use Laminas\Feed\Reader\Exception\ExceptionInterface;
 
 /**
  * Defines a default parser implementation.
@@ -27,7 +27,7 @@ class DefaultParser implements ParserInterface {
    * {@inheritdoc}
    */
   public function parse(FeedInterface $feed) {
-    // Set our bridge extension manager to Zend Feed.
+    // Set our bridge extension manager to Laminas Feed.
     Reader::setExtensionManager(\Drupal::service('feed.bridge.reader'));
     try {
       $channel = Reader::importString($feed->source_string);

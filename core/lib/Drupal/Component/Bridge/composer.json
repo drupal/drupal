@@ -6,7 +6,7 @@
   "license": "GPL-2.0-or-later",
   "require": {
     "php": ">=7.0.8",
-    "zendframework/zend-feed": "^2.12"
+    "laminas/laminas-feed": "^2.12"
   },
   "autoload": {
     "psr-4": {
