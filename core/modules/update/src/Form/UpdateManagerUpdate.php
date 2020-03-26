@@ -197,42 +197,49 @@ class UpdateManagerUpdate extends FormBase {
       // Drupal core needs to be upgraded manually.
       $needs_manual = $project['project_type'] == 'core';
 
+      // If the recommended release for a contributed project is not compatible
+      // with the currently installed version of core, list that project in a
+      // separate table. To determine if the release is compatible, we inspect
+      // the 'core_compatible' key from the release info array. If it's not
+      // defined, it means we can't determine compatibility requirements (or
+      // we're looking at core), so we assume it is compatible.
+      $compatible = $recommended_release['core_compatible'] ?? TRUE;
+
       if ($needs_manual) {
-        // There are no checkboxes in the 'Manual updates' table so it will be
-        // rendered by '#theme' => 'table', not '#theme' => 'tableselect'. Since
-        // the data formats are incompatible, we convert now to the format
-        // expected by '#theme' => 'table'.
-        unset($entry['#weight']);
-        $attributes = $entry['#attributes'];
-        unset($entry['#attributes']);
-        $entry = [
-          'data' => $entry,
-        ] + $attributes;
+        $this->removeCheckboxFromRow($entry);
+        $projects['manual'][$name] = $entry;
+      }
+      elseif (!$compatible) {
+        $this->removeCheckboxFromRow($entry);
+        // If the release has a core_compatibility_message, inject it.
+        if (!empty($recommended_release['core_compatibility_message'])) {
+          // @todo In https://www.drupal.org/project/drupal/issues/3121769
+          //   refactor this into something theme-friendly so we don't have a
+          //   classless <div> here.
+          $entry['data']['recommended_version']['data']['#template'] .= ' <div>{{ core_compatibility_message }}</div>';
+          $entry['data']['recommended_version']['data']['#context']['core_compatibility_message'] = $recommended_release['core_compatibility_message'];
+        }
+        $projects['not-compatible'][$name] = $entry;
       }
       else {
         $form['project_downloads'][$name] = [
           '#type' => 'value',
           '#value' => $recommended_release['download_link'],
         ];
-      }
 
-      // Based on what kind of project this is, save the entry into the
-      // appropriate subarray.
-      switch ($project['project_type']) {
-        case 'core':
-          // Core needs manual updates at this time.
-          $projects['manual'][$name] = $entry;
-          break;
+        // Based on what kind of project this is, save the entry into the
+        // appropriate subarray.
+        switch ($project['project_type']) {
+          case 'module':
+          case 'theme':
+            $projects['enabled'][$name] = $entry;
+            break;
 
-        case 'module':
-        case 'theme':
-          $projects['enabled'][$name] = $entry;
-          break;
-
-        case 'module-disabled':
-        case 'theme-disabled':
-          $projects['disabled'][$name] = $entry;
-          break;
+          case 'module-disabled':
+          case 'theme-disabled':
+            $projects['disabled'][$name] = $entry;
+            break;
+        }
       }
     }
 
@@ -295,7 +302,43 @@ class UpdateManagerUpdate extends FormBase {
       ];
     }
 
+    if (!empty($projects['not-compatible'])) {
+      $form['not_compatible'] = [
+        '#type' => 'table',
+        '#header' => $headers,
+        '#rows' => $projects['not-compatible'],
+        '#prefix' => '<h2>' . $this->t('Not compatible') . '</h2>',
+        '#weight' => 150,
+      ];
+    }
+
     return $form;
+  }
+
+  /**
+   * Prepares a row entry for use in a regular table, not a 'tableselect'.
+   *
+   * There are no checkboxes in the 'Manual updates' or 'Not compatible' tables,
+   * so they will be rendered by '#theme' => 'table', not 'tableselect'. Since
+   * the data formats are incompatible, this method converts to the format
+   * expected by '#theme' => 'table'. Generally, rows end up in the main tables
+   * that have a checkbox to allow the site admin to select which missing
+   * updates to install. This method is only used for the special case tables
+   * that have no such checkbox.
+   *
+   * @todo In https://www.drupal.org/project/drupal/issues/3121775 refactor
+   *   self::buildForm() so that we don't need this method at all.
+   *
+   * @param array[] $row
+   *   The render array for a table row.
+   */
+  protected function removeCheckboxFromRow(array &$row) {
+    unset($row['#weight']);
+    $attributes = $row['#attributes'];
+    unset($row['#attributes']);
+    $row = [
+      'data' => $row,
+    ] + $attributes;
   }
 
   /**
