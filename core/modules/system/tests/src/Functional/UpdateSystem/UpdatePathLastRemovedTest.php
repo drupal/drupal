@@ -7,7 +7,7 @@ use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\UpdatePathTestTrait;
 
 /**
- * Modules can define their last removed update function.
+ * Tests that modules can define their last removed update function.
  *
  * @group system
  */
@@ -38,6 +38,9 @@ class UpdatePathLastRemovedTest extends BrowserTestBase {
    */
   protected $updateUser;
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp() {
     parent::setUp();
     require_once $this->root . '/core/includes/update.inc';
