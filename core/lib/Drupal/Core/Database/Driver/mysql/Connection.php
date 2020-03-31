@@ -64,21 +64,6 @@ class Connection extends DatabaseConnection {
   const MIN_MAX_ALLOWED_PACKET = 1024;
 
   /**
-   * Constructs a Connection object.
-   */
-  public function __construct(\PDO $connection, array $connection_options = []) {
-    parent::__construct($connection, $connection_options);
-
-    // This driver defaults to transaction support, except if explicitly passed FALSE.
-    $this->transactionSupport = !isset($connection_options['transactions']) || ($connection_options['transactions'] !== FALSE);
-
-    // MySQL never supports transactional DDL.
-    $this->transactionalDDLSupport = FALSE;
-
-    $this->connectionOptions = $connection_options;
-  }
-
-  /**
    * {@inheritdoc}
    */
   public function query($query, array $args = [], $options = []) {

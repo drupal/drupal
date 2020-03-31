@@ -144,11 +144,6 @@ class TransactionTest extends DatabaseTestBase {
    * nothing.
    */
   public function testTransactionRollBackSupported() {
-    // This test won't work right if transactions are not supported.
-    if (!$this->connection->supportsTransactions()) {
-      $this->markTestSkipped("The '{$this->connection->driver()}' database driver does not support transactions.");
-    }
-
     try {
       // Create two nested transactions. Roll back from the inner one.
       $this->transactionOuterLayer('B', TRUE);
@@ -159,33 +154,6 @@ class TransactionTest extends DatabaseTestBase {
       $this->assertNotIdentical($saved_age, '24', 'Cannot retrieve DavidB row after commit.');
       $saved_age = $this->connection->query('SELECT age FROM {test} WHERE name = :name', [':name' => 'DanielB'])->fetchField();
       $this->assertNotIdentical($saved_age, '19', 'Cannot retrieve DanielB row after commit.');
-    }
-    catch (\Exception $e) {
-      $this->fail($e->getMessage());
-    }
-  }
-
-  /**
-   * Tests transaction rollback on a database that doesn't support transactions.
-   *
-   * If the active driver supports transactions, this test does nothing.
-   */
-  public function testTransactionRollBackNotSupported() {
-    // This test won't work right if transactions are supported.
-    if ($this->connection->supportsTransactions()) {
-      $this->markTestSkipped("The '{$this->connection->driver()}' database driver supports transactions.");
-    }
-
-    try {
-      // Create two nested transactions. Attempt to roll back from the inner one.
-      $this->transactionOuterLayer('B', TRUE);
-
-      // Because our current database claims to not support transactions,
-      // the inserted rows should be present despite the attempt to roll back.
-      $saved_age = $this->connection->query('SELECT age FROM {test} WHERE name = :name', [':name' => 'DavidB'])->fetchField();
-      $this->assertIdentical($saved_age, '24', 'DavidB not rolled back, since transactions are not supported.');
-      $saved_age = $this->connection->query('SELECT age FROM {test} WHERE name = :name', [':name' => 'DanielB'])->fetchField();
-      $this->assertIdentical($saved_age, '19', 'DanielB not rolled back, since transactions are not supported.');
     }
     catch (\Exception $e) {
       $this->fail($e->getMessage());
@@ -379,11 +347,6 @@ class TransactionTest extends DatabaseTestBase {
    * Tests transaction stacking, commit, and rollback.
    */
   public function testTransactionStacking() {
-    // This test won't work right if transactions are not supported.
-    if (!$this->connection->supportsTransactions()) {
-      $this->markTestSkipped("The '{$this->connection->driver()}' database driver does not support transactions.");
-    }
-
     // Standard case: pop the inner transaction before the outer transaction.
     $transaction = $this->connection->startTransaction();
     $this->insertRow('outer');

@@ -69,13 +69,6 @@ abstract class Connection {
   protected $statementClass = 'Drupal\Core\Database\Statement';
 
   /**
-   * Whether this database connection supports transactions.
-   *
-   * @var bool
-   */
-  protected $transactionSupport = TRUE;
-
-  /**
    * Whether this database connection supports transactional DDL.
    *
    * Set to FALSE by default because few databases support this feature.
@@ -198,6 +191,12 @@ abstract class Connection {
    *   - Other driver-specific options.
    */
   public function __construct(\PDO $connection, array $connection_options) {
+    // The 'transactions' option is deprecated.
+    if (isset($connection_options['transactions'])) {
+      @trigger_error('Passing a \'transactions\' connection option to ' . __METHOD__ . ' is deprecated in drupal:9.1.0 and is removed in drupal:10.0.0. All database drivers must support transactions. See https://www.drupal.org/node/2278745', E_USER_DEPRECATED);
+      unset($connection_options['transactions']);
+    }
+
     // Initialize and prepare the connection prefix.
     $this->setPrefix(isset($connection_options['prefix']) ? $connection_options['prefix'] : '');
 
@@ -1216,9 +1215,6 @@ abstract class Connection {
    * @see \Drupal\Core\Database\Transaction::rollBack()
    */
   public function rollBack($savepoint_name = 'drupal_transaction') {
-    if (!$this->supportsTransactions()) {
-      return;
-    }
     if (!$this->inTransaction()) {
       throw new TransactionNoActiveException();
     }
@@ -1278,9 +1274,6 @@ abstract class Connection {
    * @see \Drupal\Core\Database\Transaction
    */
   public function pushTransaction($name) {
-    if (!$this->supportsTransactions()) {
-      return;
-    }
     if (isset($this->transactionLayers[$name])) {
       throw new TransactionNameNonUniqueException($name . " is already in use.");
     }
@@ -1311,9 +1304,6 @@ abstract class Connection {
    * @see \Drupal\Core\Database\Transaction
    */
   public function popTransaction($name) {
-    if (!$this->supportsTransactions()) {
-      return;
-    }
     // The transaction has already been committed earlier. There is nothing we
     // need to do. If this transaction was part of an earlier out-of-order
     // rollback, an exception would already have been thrown by
@@ -1494,9 +1484,15 @@ abstract class Connection {
    *
    * @return bool
    *   TRUE if this connection supports transactions, FALSE otherwise.
+   *
+   * @deprecated in drupal:9.1.0 and is removed in drupal:10.0.0. All database
+   * drivers must support transactions.
+   *
+   * @see https://www.drupal.org/node/2278745
    */
   public function supportsTransactions() {
-    return $this->transactionSupport;
+    @trigger_error(__METHOD__ . ' is deprecated in drupal:9.1.0 and is removed in drupal:10.0.0. All database drivers must support transactions. See https://www.drupal.org/node/2278745', E_USER_DEPRECATED);
+    return TRUE;
   }
 
   /**
