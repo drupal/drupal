@@ -42,7 +42,7 @@
     "eslint-plugin-prettier": "^2.6.2",
     "eslint-plugin-react": "^7.10.0",
     "glob": "^7.1.2",
-    "minimist": "^1.2.0",
+    "minimist": "^1.2.2",
     "mkdirp": "^0.5.1",
     "nightwatch": "^1.2.1",
     "postcss": "^7.0.18",
