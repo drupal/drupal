@@ -548,9 +548,10 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
     // contain a flattened response. Otherwise performance suffers.
     // @see \Drupal\rest\EventSubscriber\ResourceResponseSubscriber::flattenResponse()
     $cache_items = $this->container->get('database')
-      ->query("SELECT cid, data FROM {cache_dynamic_page_cache} WHERE cid LIKE :pattern", [
-        ':pattern' => '%[route]=rest.%',
-      ])
+      ->select('cache_dynamic_page_cache', 'c')
+      ->fields('c', ['cid', 'data'])
+      ->condition('c.cid', '%[route]=rest.%', 'LIKE')
+      ->execute()
       ->fetchAllAssoc('cid');
     if (!$is_cacheable_by_dynamic_page_cache) {
       $this->assertCount(0, $cache_items);
