@@ -12,7 +12,7 @@ use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\Tests\UnitTestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
+use Symfony\Component\HttpKernel\Event\ExceptionEvent;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 
@@ -191,7 +191,7 @@ class FormAjaxSubscriberTest extends UnitTestCase {
     $exception = new BrokenPostRequestException(32 * 1e6);
     $request = new Request([FormBuilderInterface::AJAX_FORM_REQUEST => TRUE]);
 
-    $event = new GetResponseForExceptionEvent($this->httpKernel, $request, HttpKernelInterface::MASTER_REQUEST, $exception);
+    $event = new ExceptionEvent($this->httpKernel, $request, HttpKernelInterface::MASTER_REQUEST, $exception);
     $this->subscriber->onException($event);
     $this->assertTrue($event->isAllowingCustomResponseCode());
     $actual_response = $event->getResponse();
@@ -256,11 +256,11 @@ class FormAjaxSubscriberTest extends UnitTestCase {
    * @param \Symfony\Component\HttpFoundation\Response|null $expected_response
    *   The response expected to be set on the event.
    *
-   * @return \Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent
+   * @return \Symfony\Component\HttpKernel\Event\ExceptionEvent
    *   The event used to derive the response.
    */
   protected function assertResponseFromException(Request $request, \Exception $exception, $expected_response) {
-    $event = new GetResponseForExceptionEvent($this->httpKernel, $request, HttpKernelInterface::MASTER_REQUEST, $exception);
+    $event = new ExceptionEvent($this->httpKernel, $request, HttpKernelInterface::MASTER_REQUEST, $exception);
     $this->subscriber->onException($event);
 
     $this->assertSame($expected_response, $event->getResponse());

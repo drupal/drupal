@@ -12,7 +12,7 @@ use Drupal\Core\Url;
 use Drupal\Tests\UnitTestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
+use Symfony\Component\HttpKernel\Event\ExceptionEvent;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\Routing\RequestContext;
@@ -139,7 +139,7 @@ class CustomPageExceptionHtmlSubscriberTest extends UnitTestCase {
       return new HtmlResponse($request->getMethod());
     }));
 
-    $event = new GetResponseForExceptionEvent($this->kernel, $request, HttpKernelInterface::MASTER_REQUEST, new NotFoundHttpException('foo'));
+    $event = new ExceptionEvent($this->kernel, $request, HttpKernelInterface::MASTER_REQUEST, new NotFoundHttpException('foo'));
 
     $this->customPageSubscriber->onException($event);
 
@@ -166,7 +166,7 @@ class CustomPageExceptionHtmlSubscriberTest extends UnitTestCase {
       return new Response($request->getMethod() . ' ' . UrlHelper::buildQuery($request->query->all()));
     }));
 
-    $event = new GetResponseForExceptionEvent($this->kernel, $request, HttpKernelInterface::MASTER_REQUEST, new NotFoundHttpException('foo'));
+    $event = new ExceptionEvent($this->kernel, $request, HttpKernelInterface::MASTER_REQUEST, new NotFoundHttpException('foo'));
     $this->customPageSubscriber->onException($event);
 
     $response = $event->getResponse();

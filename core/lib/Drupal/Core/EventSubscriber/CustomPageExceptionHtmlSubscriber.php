@@ -10,7 +10,7 @@ use Drupal\Core\Routing\RedirectDestinationInterface;
 use Drupal\Core\Url;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
+use Symfony\Component\HttpKernel\Event\ExceptionEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\Routing\Matcher\UrlMatcherInterface;
 
@@ -65,7 +65,7 @@ class CustomPageExceptionHtmlSubscriber extends DefaultExceptionHtmlSubscriber {
   /**
    * {@inheritdoc}
    */
-  public function on403(GetResponseForExceptionEvent $event) {
+  public function on403(ExceptionEvent $event) {
     $custom_403_path = $this->configFactory->get('system.site')->get('page.403');
     if (!empty($custom_403_path)) {
       $this->makeSubrequestToCustomPath($event, $custom_403_path, Response::HTTP_FORBIDDEN);
@@ -75,7 +75,7 @@ class CustomPageExceptionHtmlSubscriber extends DefaultExceptionHtmlSubscriber {
   /**
    * {@inheritdoc}
    */
-  public function on404(GetResponseForExceptionEvent $event) {
+  public function on404(ExceptionEvent $event) {
     $custom_404_path = $this->configFactory->get('system.site')->get('page.404');
     if (!empty($custom_404_path)) {
       $this->makeSubrequestToCustomPath($event, $custom_404_path, Response::HTTP_NOT_FOUND);
@@ -85,14 +85,14 @@ class CustomPageExceptionHtmlSubscriber extends DefaultExceptionHtmlSubscriber {
   /**
    * Makes a subrequest to retrieve the custom error page.
    *
-   * @param \Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent $event
+   * @param \Symfony\Component\HttpKernel\Event\ExceptionEvent $event
    *   The event to process.
    * @param string $custom_path
    *   The custom path to which to make a subrequest for this error message.
    * @param int $status_code
    *   The status code for the error being handled.
    */
-  protected function makeSubrequestToCustomPath(GetResponseForExceptionEvent $event, $custom_path, $status_code) {
+  protected function makeSubrequestToCustomPath(ExceptionEvent $event, $custom_path, $status_code) {
     $url = Url::fromUserInput($custom_path);
     if ($url->isRouted()) {
       $access_result = $this->accessManager->checkNamedRoute($url->getRouteName(), $url->getRouteParameters(), NULL, TRUE);

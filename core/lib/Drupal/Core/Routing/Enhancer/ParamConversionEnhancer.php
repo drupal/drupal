@@ -9,7 +9,7 @@ use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
+use Symfony\Component\HttpKernel\Event\ExceptionEvent;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\KernelEvents;
 
@@ -72,9 +72,9 @@ class ParamConversionEnhancer implements EnhancerInterface, EventSubscriberInter
   /**
    * Catches failed parameter conversions and throw a 404 instead.
    *
-   * @param \Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent $event
+   * @param \Symfony\Component\HttpKernel\Event\ExceptionEvent $event
    */
-  public function onException(GetResponseForExceptionEvent $event) {
+  public function onException(ExceptionEvent $event) {
     $exception = $event->getThrowable();
     if ($exception instanceof ParamNotConvertedException) {
       $event->setThrowable(new NotFoundHttpException($exception->getMessage(), $exception));
