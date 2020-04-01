@@ -48,7 +48,6 @@
         "psr/log": "^1.0"
     },
     "conflict": {
-        "drupal/pathauto": "<1.6",
         "drush/drush": "<8.1.10"
     },
     "replace": {
