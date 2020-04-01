@@ -457,7 +457,7 @@
             "dist": {
                 "type": "path",
                 "url": "core",
-                "reference": "736241b40e0f56782640219f462bea6ec65cf1be"
+                "reference": "0c1a56a591d5a55e9beca019038289a445114d6b"
             },
             "require": {
                 "asm89/stack-cors": "^1.1",
@@ -504,7 +504,6 @@
                 "typo3/phar-stream-wrapper": "^3.1.3"
             },
             "conflict": {
-                "drupal/pathauto": "<1.6",
                 "drush/drush": "<8.1.10"
             },
             "replace": {

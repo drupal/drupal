@@ -1220,23 +1220,6 @@ function system_requirements($phase) {
     }
   }
 
-  // Prevent installation or update if the Pathauto module is installed and its
-  // version is less than 1.6.
-  if ($phase === 'install' || $phase === 'update') {
-    if (\Drupal::moduleHandler()->moduleExists('pathauto')) {
-      $info = \Drupal::service('extension.list.module')->getExtensionInfo('pathauto');
-      if (version_compare($info['version'], '8.x-1.5') <= 0) {
-        $requirements['pathauto_module_incompatibility'] = [
-          'title' => t('Pathauto'),
-          'description' => t('The Pathauto module is not compatible with the current version of Drupal core. Update the <a href=":url">Pathauto</a> module to 8.x-1.6 or later.', [
-            ':url' => 'https://drupal.org/project/pathauto',
-          ]),
-          'severity' => REQUIREMENT_ERROR,
-        ];
-      }
-    }
-  }
-
   // Ensure that no module has a current schema version that is lower than the
   // one that was last removed.
   if ($phase == 'update') {
