@@ -7,7 +7,7 @@ use Drupal\Core\Routing\RedirectDestinationInterface;
 use Drupal\Core\Utility\Error;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
+use Symfony\Component\HttpKernel\Event\ExceptionEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 use Symfony\Component\Routing\Matcher\UrlMatcherInterface;
@@ -83,10 +83,10 @@ class DefaultExceptionHtmlSubscriber extends HttpExceptionSubscriberBase {
   /**
    * Handles a 4xx error for HTML.
    *
-   * @param \Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent $event
+   * @param \Symfony\Component\HttpKernel\Event\ExceptionEvent $event
    *   The event to process.
    */
-  public function on4xx(GetResponseForExceptionEvent $event) {
+  public function on4xx(ExceptionEvent $event) {
     if (($exception = $event->getThrowable()) && $exception instanceof HttpExceptionInterface) {
       $this->makeSubrequest($event, '/system/4xx', $exception->getStatusCode());
     }
@@ -95,44 +95,44 @@ class DefaultExceptionHtmlSubscriber extends HttpExceptionSubscriberBase {
   /**
    * Handles a 401 error for HTML.
    *
-   * @param \Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent $event
+   * @param \Symfony\Component\HttpKernel\Event\ExceptionEvent $event
    *   The event to process.
    */
-  public function on401(GetResponseForExceptionEvent $event) {
+  public function on401(ExceptionEvent $event) {
     $this->makeSubrequest($event, '/system/401', Response::HTTP_UNAUTHORIZED);
   }
 
   /**
    * Handles a 403 error for HTML.
    *
-   * @param \Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent $event
+   * @param \Symfony\Component\HttpKernel\Event\ExceptionEvent $event
    *   The event to process.
    */
-  public function on403(GetResponseForExceptionEvent $event) {
+  public function on403(ExceptionEvent $event) {
     $this->makeSubrequest($event, '/system/403', Response::HTTP_FORBIDDEN);
   }
 
   /**
    * Handles a 404 error for HTML.
    *
-   * @param \Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent $event
+   * @param \Symfony\Component\HttpKernel\Event\ExceptionEvent $event
    *   The event to process.
    */
-  public function on404(GetResponseForExceptionEvent $event) {
+  public function on404(ExceptionEvent $event) {
     $this->makeSubrequest($event, '/system/404', Response::HTTP_NOT_FOUND);
   }
 
   /**
    * Makes a subrequest to retrieve the default error page.
    *
-   * @param \Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent $event
+   * @param \Symfony\Component\HttpKernel\Event\ExceptionEvent $event
    *   The event to process.
    * @param string $url
    *   The path/url to which to make a subrequest for this error message.
    * @param int $status_code
    *   The status code for the error being handled.
    */
-  protected function makeSubrequest(GetResponseForExceptionEvent $event, $url, $status_code) {
+  protected function makeSubrequest(ExceptionEvent $event, $url, $status_code) {
     $request = $event->getRequest();
     $exception = $event->getThrowable();
 

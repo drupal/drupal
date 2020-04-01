@@ -7,7 +7,7 @@ use Drupal\serialization\EventSubscriber\DefaultExceptionSubscriber;
 use Drupal\Tests\UnitTestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
+use Symfony\Component\HttpKernel\Event\ExceptionEvent;
 use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\Serializer\Serializer;
@@ -27,7 +27,7 @@ class DefaultExceptionSubscriberTest extends UnitTestCase {
     $request->setRequestFormat('json');
 
     $e = new MethodNotAllowedHttpException(['POST', 'PUT'], 'test message');
-    $event = new GetResponseForExceptionEvent($kernel->reveal(), $request, HttpKernelInterface::MASTER_REQUEST, $e);
+    $event = new ExceptionEvent($kernel->reveal(), $request, HttpKernelInterface::MASTER_REQUEST, $e);
     $subscriber = new DefaultExceptionSubscriber(new Serializer([], [new JsonEncoder()]), []);
     $subscriber->on4xx($event);
     $response = $event->getResponse();

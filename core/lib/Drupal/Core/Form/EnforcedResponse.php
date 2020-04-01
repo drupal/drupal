@@ -34,14 +34,14 @@ class EnforcedResponse extends Response {
    * for an enforced response. Otherwise it would be impossible to find an
    * exception thrown from within a twig template.
    *
-   * @param \Exception $e
+   * @param \Throwable $e
    *   The exception where the enforced response is to be extracted from.
    *
    * @return static|null
    *   The enforced response or NULL if the exception chain does not contain a
    *   \Drupal\Core\Form\EnforcedResponseException exception.
    */
-  public static function createFromException(\Exception $e) {
+  public static function createFromException(\Throwable $e) {
     while ($e) {
       if ($e instanceof EnforcedResponseException) {
         return new static($e->getResponse());
