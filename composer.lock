@@ -649,7 +649,7 @@
         },
         {
             "name": "drupal/core",
-            "version": "8.8.x-dev",
+            "version": "8.8.5",
             "dist": {
                 "type": "path",
                 "url": "core",
@@ -879,7 +879,7 @@
         },
         {
             "name": "drupal/core-project-message",
-            "version": "8.8.x-dev",
+            "version": "8.8.5",
             "dist": {
                 "type": "path",
                 "url": "composer/Plugin/ProjectMessage",
@@ -909,7 +909,7 @@
         },
         {
             "name": "drupal/core-vendor-hardening",
-            "version": "8.8.x-dev",
+            "version": "8.8.5",
             "dist": {
                 "type": "path",
                 "url": "composer/Plugin/VendorHardening",
@@ -6377,9 +6377,6 @@
     "aliases": [],
     "minimum-stability": "dev",
     "stability-flags": {
-        "drupal/core": 20,
-        "drupal/core-project-message": 20,
-        "drupal/core-vendor-hardening": 20,
         "behat/mink": 20,
         "behat/mink-selenium2-driver": 20
     },
