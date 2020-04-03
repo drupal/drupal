@@ -206,7 +206,8 @@ class ConfigSync extends FormBase {
     $syncStorage = $this->importTransformer->transform($this->syncStorage);
     $source_list = $syncStorage->listAll();
     $storage_comparer = new StorageComparer($syncStorage, $this->activeStorage);
-    if (empty($source_list) || !$storage_comparer->createChangelist()->hasChanges()) {
+    $storage_comparer->createChangelist();
+    if (empty($source_list) || !$storage_comparer->hasChanges()) {
       $form['no_changes'] = [
         '#type' => 'table',
         '#header' => [$this->t('Name'), $this->t('Operations')],
@@ -225,7 +226,8 @@ class ConfigSync extends FormBase {
     // warned of potential losses to configuration.
     if ($this->snapshotStorage->exists('core.extension')) {
       $snapshot_comparer = new StorageComparer($this->activeStorage, $this->snapshotStorage);
-      if (!$form_state->getUserInput() && $snapshot_comparer->createChangelist()->hasChanges()) {
+      $snapshot_comparer->createChangelist();
+      if (!$form_state->getUserInput() && $snapshot_comparer->hasChanges()) {
         $change_list = [];
         foreach ($snapshot_comparer->getAllCollectionNames() as $collection) {
           foreach ($snapshot_comparer->getChangelist(NULL, $collection) as $config_names) {
