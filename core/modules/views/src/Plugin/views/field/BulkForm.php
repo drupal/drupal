@@ -488,7 +488,7 @@ class BulkForm extends FieldPluginBase implements CacheableDependencyInterface {
    *
    * This generates a key that is used as the checkbox return value when
    * submitting a bulk form. This key allows the entity for the row to be loaded
-   * totally independently of the executed view row.
+   * totally independent of the executed view row.
    *
    * @param \Drupal\Core\Entity\EntityInterface $entity
    *   The entity to calculate a bulk form key for.
