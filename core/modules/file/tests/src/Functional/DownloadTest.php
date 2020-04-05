@@ -72,11 +72,14 @@ class DownloadTest extends FileManagedTestBase {
     $url = file_create_url($file->getFileUri());
 
     // Set file_test access header to allow the download.
+    file_test_reset();
     file_test_set_return('download', ['x-foo' => 'Bar']);
     $this->drupalGet($url);
     $this->assertEqual($this->drupalGetHeader('x-foo'), 'Bar', 'Found header set by file_test module on private download.');
     $this->assertNull($this->drupalGetHeader('x-drupal-cache'), 'Page cache is disabled on private file download.');
     $this->assertResponse(200, 'Correctly allowed access to a file when file_test provides headers.');
+    // Ensure hook_file_download is fired correctly.
+    $this->assertEquals($file->getFileUri(), \Drupal::state()->get('file_test.results')['download'][0][0]);
 
     // Test that the file transferred correctly.
     $this->assertSame($contents, $this->getSession()->getPage()->getContent(), 'Contents of the file are correct.');
@@ -88,9 +91,19 @@ class DownloadTest extends FileManagedTestBase {
     $this->assertSame(403, $response->getStatusCode(), 'Correctly denied access to a file when file_test sets the header to -1.');
 
     // Try non-existent file.
+    file_test_reset();
     $url = file_create_url('private://' . $this->randomMachineName());
     $response = $http_client->head($url, ['http_errors' => FALSE]);
     $this->assertSame(404, $response->getStatusCode(), 'Correctly returned 404 response for a non-existent file.');
+    // Assert that hook_file_download is not called.
+    $this->assertEquals([], \Drupal::state()->get('file_test.results')['download']);
+
+    // Try requesting the private file url without a file specified.
+    file_test_reset();
+    $this->drupalGet('/system/files');
+    $this->assertSession()->statusCodeEquals(404);
+    // Assert that hook_file_download is not called.
+    $this->assertEquals([], \Drupal::state()->get('file_test.results')['download']);
   }
 
   /**

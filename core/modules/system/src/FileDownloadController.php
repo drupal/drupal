@@ -75,7 +75,7 @@ class FileDownloadController extends ControllerBase {
     // Merge remaining path arguments into relative file path.
     $uri = $scheme . '://' . $target;
 
-    if ($this->streamWrapperManager->isValidScheme($scheme) && file_exists($uri)) {
+    if ($this->streamWrapperManager->isValidScheme($scheme) && is_file($uri)) {
       // Let other modules provide headers and controls access to the file.
       $headers = $this->moduleHandler()->invokeAll('file_download', [$uri]);
 
