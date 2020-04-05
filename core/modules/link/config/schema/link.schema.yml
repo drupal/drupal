@@ -74,10 +74,10 @@ field.value.link:
           label: 'URL fragment'
         absolute:
           type: boolean
-          label: 'Is this URL absolute'
+          label: 'Whether to force the output to be an absolute link (beginning with http: or https:)'
         https:
           type: boolean
-          label: 'If the URL should use a secure protocol'
+          label: 'Whether to force this URL to point to a secure location (beginning with https:)'
         attributes:
           type: sequence
           label: 'Link attributes'
