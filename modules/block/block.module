@@ -263,7 +263,7 @@ function block_page_build(&$page) {
   $all_regions = system_region_list($theme);
 
   $item = menu_get_item();
-  if ($item['path'] != 'admin/structure/block/demo/' . $theme) {
+  if ($item === FALSE || $item['path'] != 'admin/structure/block/demo/' . $theme) {
     // Load all region content assigned via blocks.
     foreach (array_keys($all_regions) as $region) {
       // Assign blocks to region.
@@ -283,7 +283,6 @@ function block_page_build(&$page) {
   }
   else {
     // Append region description if we are rendering the regions demo page.
-    $item = menu_get_item();
     if ($item['path'] == 'admin/structure/block/demo/' . $theme) {
       foreach (system_region_list($theme, REGIONS_VISIBLE, FALSE) as $region) {
         $description = '<div class="block-region">' . $all_regions[$region] . '</div>';

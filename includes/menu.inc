@@ -2483,6 +2483,9 @@ function menu_link_get_preferred($path = NULL, $selected_menu = NULL) {
     // untranslated paths). Afterwards, the most relevant path is picked from
     // the menus, ordered by menu preference.
     $item = menu_get_item($path);
+    if ($item === FALSE) {
+      return FALSE;
+    }
     $path_candidates = array();
     // 1. The current item href.
     $path_candidates[$item['href']] = $item['href'];
