@@ -43,6 +43,7 @@ class BulkFormTest extends BrowserTestBase {
       // array.
       $timestamp = REQUEST_TIME - $i;
       $nodes[] = $this->drupalCreateNode([
+        'title' => 'Node ' . $i,
         'sticky' => FALSE,
         'created' => $timestamp,
         'changed' => $timestamp,
@@ -157,6 +158,57 @@ class BulkFormTest extends BrowserTestBase {
     $this->assertText(t('Deleted 5 content items.'));
     // Check if we got redirected to the original page.
     $this->assertUrl('test_bulk_form');
+
+    // Test that the bulk form works when a node gets deleted by another user
+    // before the loaded bulk form can be used.
+    $this->drupalGet('test_bulk_form');
+    // Now delete the node we want to delete with the bulk form.
+    $link = $this->getSession()->getPage()->findLink($nodes[6]->label());
+    $checkbox = $link->getParent()->getParent()->find('css', 'input');
+    $nodes[6]->delete();
+    $edit = [
+      $checkbox->getAttribute('name') => TRUE,
+      'action' => 'node_delete_action',
+    ];
+    $this->drupalPostForm(NULL, $edit, t('Apply to selected items'));
+    // Make sure we just return to the bulk view with no warnings.
+    $this->assertUrl('test_bulk_form');
+    $errors = $this->xpath('//div[contains(@class, "messages--status")]');
+    $this->assertEmpty($errors, 'No action message shown.');
+
+    // Test that the bulk form works when multiple nodes are selected
+    // but one of the selected nodes are already deleted by another user before
+    // the loaded bulk form was submitted.
+    $this->drupalGet('test_bulk_form');
+    // Call the node delete action.
+    $nodes[7]->delete();
+    $edit = [
+      'node_bulk_form[0]' => TRUE,
+      'node_bulk_form[1]' => TRUE,
+      'action' => 'node_delete_action',
+    ];
+    $this->drupalPostForm(NULL, $edit, t('Apply to selected items'));
+    // Make sure we don't show an action message while we are still on the
+    // confirmation page.
+    $errors = $this->xpath('//div[contains(@class, "messages--status")]');
+    $this->assertEmpty($errors, 'No action message shown.');
+    $this->drupalPostForm(NULL, [], t('Delete'));
+    $this->assertText(t('Deleted 1 content item.'));
+
+    // Test that the bulk form works when multiple nodes are selected
+    // but all of the selected nodes are already deleted
+    //  by another user before the loaded bulk form was submitted.
+    $this->drupalGet('test_bulk_form');
+    // Call the node delete action.
+    foreach ($nodes as $key => $node) {
+      $node->delete();
+    }
+    $edit = [
+      'node_bulk_form[0]' => TRUE,
+      'action' => 'node_delete_action',
+    ];
+    $this->drupalPostForm(NULL, $edit, t('Apply to selected items'));
+    $this->assertText('No content selected.');
   }
 
 }
