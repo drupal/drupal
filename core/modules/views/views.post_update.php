@@ -11,6 +11,7 @@ use Drupal\views\Entity\View;
 use Drupal\views\Plugin\views\filter\NumericFilter;
 use Drupal\views\Plugin\views\filter\StringFilter;
 use Drupal\views\Views;
+use Drupal\views\ViewsConfigUpdater;
 
 /**
  * Update the cacheability metadata for all views.
@@ -223,43 +224,12 @@ function views_post_update_revision_metadata_fields() {
  * Add additional settings to the entity link field and convert node_path usage
  * to entity_link.
  */
-function views_post_update_entity_link_url() {
-  // Load all views.
-  $views = \Drupal::entityTypeManager()->getStorage('view')->loadMultiple();
-
-  /* @var \Drupal\views\Entity\View[] $views */
-  foreach ($views as $view) {
-    $displays = $view->get('display');
-    $changed = FALSE;
-    foreach ($displays as $display_name => &$display) {
-      if (isset($display['display_options']['fields'])) {
-        foreach ($display['display_options']['fields'] as $field_name => &$field) {
-          if (isset($field['plugin_id']) && $field['plugin_id'] === 'entity_link') {
-            // Add any missing settings for entity_link.
-            if (!isset($field['output_url_as_text'])) {
-              $field['output_url_as_text'] = FALSE;
-              $changed = TRUE;
-            }
-            if (!isset($field['absolute'])) {
-              $field['absolute'] = FALSE;
-              $changed = TRUE;
-            }
-          }
-          elseif (isset($field['plugin_id']) && $field['plugin_id'] === 'node_path') {
-            // Convert the use of node_path to entity_link.
-            $field['plugin_id'] = 'entity_link';
-            $field['field'] = 'view_node';
-            $field['output_url_as_text'] = TRUE;
-            $changed = TRUE;
-          }
-        }
-      }
-    }
-    if ($changed) {
-      $view->set('display', $displays);
-      $view->save();
-    }
-  }
+function views_post_update_entity_link_url(&$sandbox = NULL) {
+  /** @var \Drupal\views\ViewsConfigUpdater $view_config_updater */
+  $view_config_updater = \Drupal::classResolver(ViewsConfigUpdater::class);
+  \Drupal::classResolver(ConfigEntityUpdater::class)->update($sandbox, 'view', function ($view) use ($view_config_updater) {
+    return $view_config_updater->needsEntityLinkUrlUpdate($view);
+  });
 }
 
 /**
@@ -399,31 +369,10 @@ function views_post_update_make_placeholders_translatable() {
  * Define default values for limit operators settings in all filters.
  */
 function views_post_update_limit_operator_defaults(&$sandbox = NULL) {
-  \Drupal::classResolver(ConfigEntityUpdater::class)->update($sandbox, 'view', function ($view) {
-    /** @var \Drupal\views\ViewEntityInterface $view */
-    $displays = $view->get('display');
-
-    $update = FALSE;
-    foreach ($displays as $display_name => &$display) {
-      if (!isset($display['display_options']['filters'])) {
-        continue;
-      }
-
-      foreach ($display['display_options']['filters'] as $filter_name => $filter) {
-        if (!isset($filter['expose']['operator_limit_selection'])) {
-          $filter['expose']['operator_limit_selection'] = FALSE;
-          $update = TRUE;
-        }
-        if (!isset($filter['expose']['operator_list'])) {
-          $filter['expose']['operator_list'] = [];
-          $update = TRUE;
-        }
-        if ($update) {
-          $view->set("display.$display_name.display_options.filters.$filter_name", $filter);
-        }
-      }
-    }
-    return $update;
+  /** @var \Drupal\views\ViewsConfigUpdater $view_config_updater */
+  $view_config_updater = \Drupal::classResolver(ViewsConfigUpdater::class);
+  \Drupal::classResolver(ConfigEntityUpdater::class)->update($sandbox, 'view', function ($view) use ($view_config_updater) {
+    return $view_config_updater->needsOperatorDefaultsUpdate($view);
   });
 }
 
@@ -434,5 +383,16 @@ function views_post_update_remove_core_key(&$sandbox = NULL) {
   \Drupal::classResolver(ConfigEntityUpdater::class)->update($sandbox, 'view', function () {
     // Re-save all views.
     return TRUE;
+  });
+}
+
+/**
+ * Update field names for multi-value base fields.
+ */
+function views_post_update_field_names_for_multivalue_fields(&$sandbox = NULL) {
+  /** @var \Drupal\views\ViewsConfigUpdater $view_config_updater */
+  $view_config_updater = \Drupal::classResolver(ViewsConfigUpdater::class);
+  \Drupal::classResolver(ConfigEntityUpdater::class)->update($sandbox, 'view', function ($view) use ($view_config_updater) {
+    return $view_config_updater->needsMultivalueBaseFieldUpdate($view);
   });
 }

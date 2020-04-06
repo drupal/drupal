@@ -8,7 +8,9 @@ use Drupal\views\Views;
 /**
  * Tests the upgrade path for views multi-value base field data.
  *
- * @see views_update_8500()
+ * @coversDefaultClass \Drupal\views\ViewsConfigUpdater
+ *
+ * @see views_post_update_field_names_for_multivalue_fields()
  *
  * @group legacy
  */
@@ -26,6 +28,8 @@ class EntityViewsMultiValueBaseFieldDataUpdateTest extends UpdatePathTestBase {
 
   /**
    * Tests multi-value base field views data is updated correctly.
+   *
+   * @covers ::needsMultivalueBaseFieldUpdate
    */
   public function testUpdateMultiValueBaseFields() {
     $this->runUpdates();
@@ -48,6 +52,14 @@ class EntityViewsMultiValueBaseFieldDataUpdateTest extends UpdatePathTestBase {
 
       // The plugin ID should be updated as well.
       $this->assertEqual($type === 'arguments' ? 'user__roles_rid' : 'user_roles', $handler_config['plugin_id']);
+
+      if ($type === 'filters') {
+        // The filter value should have been converted to an array.
+        $this->assertTrue(is_array($handler_config['value']));
+
+        // The filter operator should have been mapped from single to multiple.
+        $this->assertEquals('or', $handler_config['operator']);
+      }
     }
   }
 
