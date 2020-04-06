@@ -5,6 +5,9 @@
  * Post update functions for Views.
  */
 
+use Drupal\Core\Config\Entity\ConfigEntityUpdater;
+use Drupal\views\ViewsConfigUpdater;
+
 /**
  * Implements hook_removed_post_updates().
  */
@@ -28,4 +31,16 @@ function views_removed_post_updates() {
     'views_post_update_limit_operator_defaults' => '9.0.0',
     'views_post_update_remove_core_key' => '9.0.0',
   ];
+}
+
+/**
+ * Update field names for multi-value base fields.
+ */
+function views_post_update_field_names_for_multivalue_fields(&$sandbox = NULL) {
+  /** @var \Drupal\views\ViewsConfigUpdater $view_config_updater */
+  $view_config_updater = \Drupal::classResolver(ViewsConfigUpdater::class);
+  $view_config_updater->setDeprecationsEnabled(FALSE);
+  \Drupal::classResolver(ConfigEntityUpdater::class)->update($sandbox, 'view', function ($view) use ($view_config_updater) {
+    return $view_config_updater->needsMultivalueBaseFieldUpdate($view);
+  });
 }
