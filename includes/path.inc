@@ -466,13 +466,15 @@ function path_delete($criteria) {
     $criteria = array('pid' => $criteria);
   }
   $path = path_load($criteria);
-  $query = db_delete('url_alias');
-  foreach ($criteria as $field => $value) {
-    $query->condition($field, $value);
+  if (isset($path['source'])) {
+    $query = db_delete('url_alias');
+    foreach ($criteria as $field => $value) {
+      $query->condition($field, $value);
+    }
+    $query->execute();
+    module_invoke_all('path_delete', $path);
+    drupal_clear_path_cache($path['source']);
   }
-  $query->execute();
-  module_invoke_all('path_delete', $path);
-  drupal_clear_path_cache($path['source']);
 }
 
 /**
