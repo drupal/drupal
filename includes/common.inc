@@ -3740,7 +3740,7 @@ function _drupal_build_css_path($matches, $base = NULL) {
   }
 
   // Prefix with base and remove '../' segments where possible.
-  $path = $_base . $matches[1];
+  $path = $_base . (isset($matches[1]) ? $matches[1] : '');
   $last = '';
   while ($path != $last) {
     $last = $path;
