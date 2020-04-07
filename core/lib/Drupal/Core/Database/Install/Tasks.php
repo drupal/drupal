@@ -202,13 +202,6 @@ abstract class Tasks {
    *   The options form array.
    */
   public function getFormOptions(array $database) {
-    // Use reflection to determine the driver name.
-    // @todo https:///www.drupal.org/node/3123240 Provide a better way to get
-    //   the driver name.
-    $reflection = new \ReflectionClass($this);
-    $dir_parts = explode(DIRECTORY_SEPARATOR, dirname(dirname($reflection->getFileName())));
-    $driver = array_pop($dir_parts);
-
     $form['database'] = [
       '#type' => 'textfield',
       '#title' => t('Database name'),
@@ -217,7 +210,7 @@ abstract class Tasks {
       '#required' => TRUE,
       '#states' => [
         'required' => [
-          ':input[name=driver]' => ['value' => $driver],
+          ':input[name=driver]' => ['value' => $this->pdoDriver],
         ],
       ],
     ];
@@ -230,7 +223,7 @@ abstract class Tasks {
       '#required' => TRUE,
       '#states' => [
         'required' => [
-          ':input[name=driver]' => ['value' => $driver],
+          ':input[name=driver]' => ['value' => $this->pdoDriver],
         ],
       ],
     ];

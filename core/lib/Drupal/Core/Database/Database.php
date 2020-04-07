@@ -2,9 +2,6 @@
 
 namespace Drupal\Core\Database;
 
-use Composer\Autoload\ClassLoader;
-use Drupal\Core\Extension\ExtensionDiscovery;
-
 /**
  * Primary front-controller for the database system.
  *
@@ -451,8 +448,6 @@ abstract class Database {
    * @throws \InvalidArgumentException
    *   Exception thrown when the provided URL does not meet the minimum
    *   requirements.
-   * @throws \RuntimeException
-   *   Exception thrown when a module provided database driver does not exist.
    */
   public static function convertDbUrlToConnectionInfo($url, $root) {
     // Check that the URL is well formed, starting with 'scheme://', where
@@ -462,130 +457,18 @@ abstract class Database {
     }
     $driver = $matches[1];
 
-    // Determine if the database driver is provided by a module.
-    $module = NULL;
-    $connection_class = NULL;
-    $url_components = parse_url($url);
-    if (isset($url_components['query'])) {
-      parse_str($url_components['query'], $query);
-      if ($query['module']) {
-        $module = $query['module'];
-        // Set up an additional autoloader. We don't use the main autoloader as
-        // this method can be called before Drupal is installed and is never
-        // called during regular runtime.
-        $namespace = "Drupal\\$module\\Driver\\Database\\$driver";
-        $psr4_base_directory = Database::findDriverAutoloadDirectory($namespace, $root, TRUE);
-        $additional_class_loader = new ClassLoader();
-        $additional_class_loader->addPsr4($namespace . '\\', $psr4_base_directory);
-        $additional_class_loader->register(TRUE);
-        $connection_class = $custom_connection_class = $namespace . '\\Connection';
-      }
-    }
-
-    if (!$module) {
-      // Determine the connection class to use. Discover if the URL has a valid
-      // driver scheme. Try with Drupal 8 style custom drivers first, since
-      // those can override/extend the core ones.
-      $connection_class = $custom_connection_class = "Drupal\\Driver\\Database\\{$driver}\\Connection";
-      if (!class_exists($connection_class)) {
-        // If the URL is not relative to a custom driver, try with core ones.
-        $connection_class = "Drupal\\Core\\Database\\Driver\\{$driver}\\Connection";
-      }
-    }
-
+    // Discover if the URL has a valid driver scheme. Try with custom drivers
+    // first, since those can override/extend the core ones.
+    $connection_class = $custom_connection_class = "Drupal\\Driver\\Database\\{$driver}\\Connection";
     if (!class_exists($connection_class)) {
-      throw new \InvalidArgumentException("Can not convert '$url' to a database connection, class '$custom_connection_class' does not exist");
+      // If the URL is not relative to a custom driver, try with core ones.
+      $connection_class = "Drupal\\Core\\Database\\Driver\\{$driver}\\Connection";
+      if (!class_exists($connection_class)) {
+        throw new \InvalidArgumentException("Can not convert '$url' to a database connection, class '$custom_connection_class' does not exist");
+      }
     }
 
-    $options = $connection_class::createConnectionOptionsFromUrl($url, $root);
-
-    // If the driver is provided by a module add the necessary information to
-    // autoload the code.
-    // @see \Drupal\Core\Site\Settings::initialize()
-    if (isset($psr4_base_directory)) {
-      $options['autoload'] = $psr4_base_directory;
-    }
-
-    return $options;
-  }
-
-  /**
-   * Finds the directory to add to the autoloader for the driver's namespace.
-   *
-   * For Drupal sites that manage their codebase with Composer, the package
-   * that provides the database driver should add the driver's namespace to
-   * Composer's autoloader. However, to support sites that add Drupal modules
-   * without Composer, and because the database connection must be established
-   * before Drupal adds the module's entire namespace to the autoloader, the
-   * database connection info array can include an "autoload" key containing
-   * the autoload directory for the driver's namespace. For requests that
-   * connect to the database via a connection info array, the value of the
-   * "autoload" key is automatically added to the autoloader.
-   *
-   * This method can be called to find the default value of that key when the
-   * database connection info array isn't available. This includes:
-   * - Console commands and test runners that connect to a database specified
-   *   by a database URL rather than a connection info array.
-   * - During installation, prior to the connection info array being written to
-   *   settings.php.
-   *
-   * This method returns the directory that must be added to the autoloader for
-   * the given namespace.
-   * - If the namespace is a sub-namespace of a Drupal module, then this method
-   *   returns the autoload directory for that namespace, allowing Drupal
-   *   modules containing database drivers to be added to a Drupal website
-   *   without Composer.
-   * - If the namespace is a sub-namespace of Drupal\Core or Drupal\Driver,
-   *   then this method returns FALSE, because Drupal core's autoloader already
-   *   includes these namespaces, so no additional autoload directory is
-   *   required for any code within them.
-   * - If the namespace is anything else, then this method returns FALSE,
-   *   because neither drupal_get_database_types() nor
-   *   static::convertDbUrlToConnectionInfo() support that anyway. One can
-   *   manually edit the connection info array in settings.php to reference
-   *   any arbitrary namespace, but requests using that would use the
-   *   corresponding 'autoload' key in that connection info rather than calling
-   *   this method.
-   *
-   * @param string $namespace
-   *   The database driver's namespace.
-   * @param string $root
-   *   The root directory of the Drupal installation.
-   *
-   * @return string|false
-   *   The PSR-4 directory to add to the autoloader for the namespace if the
-   *   namespace is a sub-namespace of a Drupal module. FALSE otherwise, as
-   *   explained above.
-   *
-   * @throws \RuntimeException
-   *   Exception thrown when a module provided database driver does not exist.
-   */
-  public static function findDriverAutoloadDirectory($namespace, $root) {
-    // As explained by this method's documentation, return FALSE if the
-    // namespace is not a sub-namespace of a Drupal module.
-    if (!static::isWithinModuleNamespace($namespace)) {
-      return FALSE;
-    }
-
-    // Extract the module information from the namespace.
-    [, $module, $module_relative_namespace] = explode('\\', $namespace, 3);
-
-    // The namespace is within a Drupal module. Find the directory where the
-    // module is located.
-    $extension_discovery = new ExtensionDiscovery($root, FALSE, []);
-    $modules = $extension_discovery->scan('module');
-    if (!isset($modules[$module])) {
-      throw new \RuntimeException(sprintf("Cannot find the module '%s' for the database driver namespace '%s'", $module, $namespace));
-    }
-    $module_directory = $modules[$module]->getPath();
-
-    // All code within the Drupal\MODULE namespace is expected to follow a
-    // PSR-4 layout within the module's "src" directory.
-    $driver_directory = $module_directory . '/src/' . str_replace('\\', '/', $module_relative_namespace) . '/';
-    if (!is_dir($root . '/' . $driver_directory)) {
-      throw new \RuntimeException(sprintf("Cannot find the database driver namespace '%s' in module '%s'", $namespace, $module));
-    }
-    return $driver_directory;
+    return $connection_class::createConnectionOptionsFromUrl($url, $root);
   }
 
   /**
@@ -605,16 +488,7 @@ abstract class Database {
     if (empty($db_info) || empty($db_info['default'])) {
       throw new \RuntimeException("Database connection $key not defined or missing the 'default' settings");
     }
-    $namespace = static::getDatabaseDriverNamespace($db_info['default']);
-
-    // If the driver namespace is within a Drupal module, add the module name
-    // to the connection options to make it easy for the connection class's
-    // createUrlFromConnectionOptions() method to add it to the URL.
-    if (static::isWithinModuleNamespace($namespace)) {
-      $db_info['default']['module'] = explode('\\', $namespace)[1];
-    }
-
-    $connection_class = $namespace . '\\Connection';
+    $connection_class = static::getDatabaseDriverNamespace($db_info['default']) . '\\Connection';
     return $connection_class::createUrlFromConnectionOptions($db_info['default']);
   }
 
@@ -635,34 +509,6 @@ abstract class Database {
     }
     // Fallback for Drupal 7 settings.php.
     return 'Drupal\\Core\\Database\\Driver\\' . $connection_info['driver'];
-  }
-
-  /**
-   * Checks whether a namespace is within the namespace of a Drupal module.
-   *
-   * This can be used to determine if a database driver's namespace is provided
-   * by a Drupal module.
-   *
-   * @param string $namespace
-   *   The namespace (for example, of a database driver) to check.
-   *
-   * @return bool
-   *   TRUE if the passed in namespace is a sub-namespace of a Drupal module's
-   *   namespace.
-   *
-   * @todo https://www.drupal.org/project/drupal/issues/3125476 Remove if we
-   *   add this to the extension API or if
-   *   \Drupal\Core\Database\Database::getConnectionInfoAsUrl() is removed.
-   */
-  private static function isWithinModuleNamespace(string $namespace) {
-    [$first, $second] = explode('\\', $namespace, 3);
-
-    // The namespace for Drupal modules is Drupal\MODULE_NAME, and the module
-    // name must be all lowercase. Second-level namespaces containing uppercase
-    // letters (e.g., "Core", "Component", "Driver") are not modules.
-    // @see \Drupal\Core\DrupalKernel::getModuleNamespacesPsr4()
-    // @see https://www.drupal.org/docs/8/creating-custom-modules/naming-and-placing-your-drupal-8-module#s-name-your-module
-    return ($first === 'Drupal' && strtolower($second) === $second);
   }
 
 }
