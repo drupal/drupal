@@ -171,6 +171,8 @@ function drupal_get_database_types() {
 
   // The internal database driver name is any valid PHP identifier.
   $mask = ExtensionDiscovery::PHP_FUNCTION_PATTERN;
+
+  // Find drivers in the Drupal\Core and Drupal\Driver namespaces.
   /** @var \Drupal\Core\File\FileSystemInterface $file_system */
   $file_system = \Drupal::service('file_system');
   $files = $file_system->scanDirectory(DRUPAL_ROOT . '/core/lib/Drupal/Core/Database/Driver', $mask, ['recurse' => FALSE]);
@@ -179,11 +181,43 @@ function drupal_get_database_types() {
   }
   foreach ($files as $file) {
     if (file_exists($file->uri . '/Install/Tasks.php')) {
-      $drivers[$file->filename] = $file->uri;
+      // The namespace doesn't need to be added here, because
+      // db_installer_object() will find it.
+      $drivers[$file->filename] = NULL;
     }
   }
-  foreach ($drivers as $driver => $file) {
-    $installer = db_installer_object($driver);
+
+  // Find drivers in Drupal module namespaces.
+  /** @var \Composer\Autoload\ClassLoader $class_loader */
+  $class_loader = \Drupal::service('class_loader');
+  // We cannot use the file cache because it does not always exist.
+  $extension_discovery = new ExtensionDiscovery(DRUPAL_ROOT, FALSE, []);
+  $modules = $extension_discovery->scan('module');
+  foreach ($modules as $module) {
+    $module_driver_path = DRUPAL_ROOT . '/' . $module->getPath() . '/src/Driver/Database';
+    if (is_dir($module_driver_path)) {
+      $driver_files = $file_system->scanDirectory($module_driver_path, $mask, ['recurse' => FALSE]);
+      foreach ($driver_files as $driver_file) {
+        $tasks_file = $module_driver_path . '/' . $driver_file->filename . '/Install/Tasks.php';
+        if (file_exists($tasks_file)) {
+          $namespace = 'Drupal\\' . $module->getName() . '\\Driver\\Database\\' . $driver_file->filename;
+
+          // The namespace needs to be added for db_installer_object() to find
+          // it.
+          $drivers[$driver_file->filename] = $namespace;
+
+          // The directory needs to be added to the autoloader, because this is
+          // early in the installation process: the module hasn't been enabled
+          // yet and the database connection info array (including its 'autoload'
+          // key) hasn't been created yet.
+          $class_loader->addPsr4($namespace . '\\', $module->getPath() . '/src/Driver/Database/' . $driver_file->filename);
+        }
+      }
+    }
+  }
+
+  foreach ($drivers as $driver => $namespace) {
+    $installer = db_installer_object($driver, $namespace);
     if ($installer->installable()) {
       $databases[$driver] = $installer;
     }
@@ -1169,20 +1203,35 @@ function install_profile_info($profile, $langcode = 'en') {
 /**
  * Returns a database installer object.
  *
+ * Before calling this function it is important the database installer object
+ * is autoloadable. Database drivers provided by contributed modules are added
+ * to the autoloader in drupal_get_database_types() and Settings::initialize().
+ *
  * @param $driver
  *   The name of the driver.
+ * @param string $namespace
+ *   (optional) The database driver namespace.
  *
  * @return \Drupal\Core\Database\Install\Tasks
  *   A class defining the requirements and tasks for installing the database.
+ *
+ * @see drupal_get_database_types()
+ * @see \Drupal\Core\Site\Settings::initialize()
  */
-function db_installer_object($driver) {
+function db_installer_object($driver, $namespace = NULL) {
   // We cannot use Database::getConnection->getDriverClass() here, because
   // the connection object is not yet functional.
+  if ($namespace) {
+    $task_class = $namespace . "\\Install\\Tasks";
+    return new $task_class();
+  }
+  // Old Drupal 8 style contrib namespace.
   $task_class = "Drupal\\Driver\\Database\\{$driver}\\Install\\Tasks";
   if (class_exists($task_class)) {
     return new $task_class();
   }
   else {
+    // Core provided driver.
     $task_class = "Drupal\\Core\\Database\\Driver\\{$driver}\\Install\\Tasks";
     return new $task_class();
   }
