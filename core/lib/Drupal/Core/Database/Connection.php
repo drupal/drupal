@@ -1466,7 +1466,7 @@ abstract class Connection {
    * Returns the type of database driver.
    *
    * This is not necessarily the same as the type of the database itself. For
-   * instance, there could be two MySQL drivers, mysql and mysql_mock. This
+   * instance, there could be two MySQL drivers, mysql and mysqlMock. This
    * function would return different values for each, but both would return
    * "mysql" for databaseType().
    *
@@ -1660,10 +1660,6 @@ abstract class Connection {
   /**
    * Creates an array of database connection options from a URL.
    *
-   * @internal
-   *   This method should not be called. Use
-   *   \Drupal\Core\Database\Database::convertDbUrlToConnectionInfo() instead.
-   *
    * @param string $url
    *   The URL.
    * @param string $root
@@ -1676,6 +1672,10 @@ abstract class Connection {
    * @throws \InvalidArgumentException
    *   Exception thrown when the provided URL does not meet the minimum
    *   requirements.
+   *
+   * @internal
+   *   This method should only be called from
+   *   \Drupal\Core\Database\Database::convertDbUrlToConnectionInfo().
    *
    * @see \Drupal\Core\Database\Database::convertDbUrlToConnectionInfo()
    */
@@ -1722,12 +1722,10 @@ abstract class Connection {
   /**
    * Creates a URL from an array of database connection options.
    *
-   * @internal
-   *   This method should not be called. Use
-   *   \Drupal\Core\Database\Database::getConnectionInfoAsUrl() instead.
-   *
    * @param array $connection_options
-   *   The array of connection options for a database connection.
+   *   The array of connection options for a database connection. An additional
+   *   key of 'module' is added by Database::getConnectionInfoAsUrl() for
+   *   drivers provided my contributed or custom modules for convenience.
    *
    * @return string
    *   The connection info as a URL.
@@ -1735,6 +1733,10 @@ abstract class Connection {
    * @throws \InvalidArgumentException
    *   Exception thrown when the provided array of connection options does not
    *   meet the minimum requirements.
+   *
+   * @internal
+   *   This method should only be called from
+   *   \Drupal\Core\Database\Database::getConnectionInfoAsUrl().
    *
    * @see \Drupal\Core\Database\Database::getConnectionInfoAsUrl()
    */
@@ -1761,6 +1763,11 @@ abstract class Connection {
     }
 
     $db_url .= '/' . $connection_options['database'];
+
+    // Add the module when the driver is provided by a module.
+    if (isset($connection_options['module'])) {
+      $db_url .= '?module=' . $connection_options['module'];
+    }
 
     if (isset($connection_options['prefix']['default']) && $connection_options['prefix']['default'] !== '') {
       $db_url .= '#' . $connection_options['prefix']['default'];
