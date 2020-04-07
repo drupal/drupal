@@ -375,6 +375,11 @@ function install_begin_request($class_loader, &$install_state) {
     ->addArgument(Settings::getInstance())
     ->addArgument((new LoggerChannelFactory())->get('file'));
 
+  // Register the class loader so contrib and custom database drivers can be
+  // autoloaded.
+  // @see drupal_get_database_types()
+  $container->set('class_loader', $class_loader);
+
   \Drupal::setContainer($container);
 
   // Determine whether base system services are ready to operate.
@@ -1207,7 +1212,7 @@ function install_database_errors($database, $settings_file) {
     // calling function.
     Database::addConnectionInfo('default', 'default', $database);
 
-    $errors = db_installer_object($driver)->runTasks();
+    $errors = db_installer_object($driver, $database['namespace'] ?? NULL)->runTasks();
   }
   return $errors;
 }

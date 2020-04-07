@@ -160,6 +160,10 @@ class SiteSettingsForm extends FormBase {
     // Cut the trailing \Install from namespace.
     $database['namespace'] = substr($install_namespace, 0, strrpos($install_namespace, '\\'));
     $database['driver'] = $driver;
+    // See default.settings.php for an explanation of the 'autoload' key.
+    if ($autoload = Database::findDriverAutoloadDirectory($database['namespace'], DRUPAL_ROOT)) {
+      $database['autoload'] = $autoload;
+    }
 
     $form_state->set('database', $database);
     foreach ($this->getDatabaseErrors($database, $form_state->getValue('settings_file')) as $name => $message) {

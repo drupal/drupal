@@ -312,8 +312,10 @@ abstract class UpdatePathTestBase extends BrowserTestBase {
     \Drupal::setContainer($container);
 
     require_once __DIR__ . '/../../../../includes/install.inc';
-    $connection = Database::getConnection();
-    $errors = db_installer_object($connection->driver())->runTasks();
+    $connection_info = Database::getConnectionInfo();
+    $driver = $connection_info['default']['driver'];
+    $namespace = $connection_info['default']['namespace'] ?? NULL;
+    $errors = db_installer_object($driver, $namespace)->runTasks();
     if (!empty($errors)) {
       $this->fail('Failed to run installer database tasks: ' . implode(', ', $errors));
     }
