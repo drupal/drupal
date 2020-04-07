@@ -174,8 +174,6 @@ trait DeprecationListenerTrait {
       "The \"Drupal\Tests\Listeners\DrupalListener\" class implements \"PHPUnit\Framework\TestListener\" that is deprecated Use the `TestHook` interfaces instead.",
       "The \"Drupal\Tests\Listeners\DrupalListener\" class uses \"PHPUnit\Framework\TestListenerDefaultImplementation\" that is deprecated The `TestListener` interface is deprecated.",
       "The \"PHPUnit\Framework\TestSuite\" class is considered internal This class is not covered by the backward compatibility promise for PHPUnit. It may change without further notice. You should not use it from \"Drupal\Tests\TestSuites\TestSuiteBase\".",
-      "The \"PHPUnit\Framework\TestCase::__construct()\" method is considered internal This method is not covered by the backward compatibility promise for PHPUnit. It may change without further notice. You should not extend it from \"Drupal\Tests\BrowserTestBase\".",
-      "The \"PHPUnit\Framework\TestCase::__construct()\" method is considered internal This method is not covered by the backward compatibility promise for PHPUnit. It may change without further notice. You should not extend it from \"Drupal\FunctionalTests\Update\UpdatePathTestBase\".",
     ];
   }
 
