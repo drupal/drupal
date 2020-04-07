@@ -2,8 +2,8 @@
 
 namespace Drupal\Tests\Core\Database;
 
-use Composer\Autoload\ClassLoader;
 use Drupal\Core\Database\Database;
+use Drupal\Core\Site\Settings;
 use Drupal\Tests\UnitTestCase;
 
 /**
@@ -26,11 +26,21 @@ class UrlConversionTest extends UnitTestCase {
    */
   protected function setUp() {
     parent::setUp();
-    $additional_class_loader = new ClassLoader();
-    $additional_class_loader->addPsr4("Drupal\\Driver\\Database\\fake\\", __DIR__ . "/../../../../../tests/fixtures/database_drivers/custom/fake");
-    $additional_class_loader->addPsr4("Drupal\\Core\\Database\\Driver\\corefake\\", __DIR__ . "/../../../../../tests/fixtures/database_drivers/core/corefake");
-    $additional_class_loader->addPsr4("Drupal\\Driver\\Database\\corefake\\", __DIR__ . "/../../../../../tests/fixtures/database_drivers/custom/corefake");
-    $additional_class_loader->register(TRUE);
+    $this->root = dirname(dirname(dirname(dirname(dirname(dirname(dirname(__FILE__)))))));
+    // Mock the container so we don't need to mock drupal_valid_test_ua().
+    // @see \Drupal\Core\Extension\ExtensionDiscovery::scan()
+    $container = $this->createMock('Symfony\Component\DependencyInjection\ContainerInterface');
+    $container->expects($this->any())
+      ->method('has')
+      ->with('kernel')
+      ->willReturn(TRUE);
+    $container->expects($this->any())
+      ->method('getParameter')
+      ->with('site.path')
+      ->willReturn('');
+    \Drupal::setContainer($container);
+
+    new Settings(['extension_discovery_scan_tests' => TRUE]);
   }
 
   /**
@@ -39,7 +49,7 @@ class UrlConversionTest extends UnitTestCase {
    * @dataProvider providerConvertDbUrlToConnectionInfo
    */
   public function testDbUrltoConnectionConversion($root, $url, $database_array) {
-    $result = Database::convertDbUrlToConnectionInfo($url, $root);
+    $result = Database::convertDbUrlToConnectionInfo($url, $root ?: $this->root);
     $this->assertEquals($database_array, $result);
   }
 
@@ -116,30 +126,66 @@ class UrlConversionTest extends UnitTestCase {
           'namespace' => 'Drupal\Core\Database\Driver\sqlite',
         ],
       ],
-      'Fake custom database driver, without prefix' => [
+      'MySQL contrib test driver without prefix' => [
         '',
-        'fake://fake_user:fake_pass@fake_host:3456/fake_database',
+        'DrivertestMysql://test_user:test_pass@test_host:3306/test_database?module=driver_test',
         [
-          'driver' => 'fake',
-          'username' => 'fake_user',
-          'password' => 'fake_pass',
-          'host' => 'fake_host',
-          'database' => 'fake_database',
-          'port' => 3456,
-          'namespace' => 'Drupal\Driver\Database\fake',
+          'driver' => 'DrivertestMysql',
+          'username' => 'test_user',
+          'password' => 'test_pass',
+          'host' => 'test_host',
+          'database' => 'test_database',
+          'port' => 3306,
+          'namespace' => 'Drupal\driver_test\Driver\Database\DrivertestMysql',
+          'autoload' => 'core/modules/system/tests/modules/driver_test/src/Driver/Database/DrivertestMysql/',
         ],
       ],
-      'Fake core driver with custom override, without prefix' => [
+      'MySQL contrib test driver with prefix' => [
         '',
-        'corefake://fake_user:fake_pass@fake_host:3456/fake_database',
+        'DrivertestMysql://test_user:test_pass@test_host:3306/test_database?module=driver_test#bar',
         [
-          'driver' => 'corefake',
-          'username' => 'fake_user',
-          'password' => 'fake_pass',
-          'host' => 'fake_host',
-          'database' => 'fake_database',
-          'port' => 3456,
-          'namespace' => 'Drupal\Driver\Database\corefake',
+          'driver' => 'DrivertestMysql',
+          'username' => 'test_user',
+          'password' => 'test_pass',
+          'host' => 'test_host',
+          'database' => 'test_database',
+          'prefix' => [
+            'default' => 'bar',
+          ],
+          'port' => 3306,
+          'namespace' => 'Drupal\driver_test\Driver\Database\DrivertestMysql',
+          'autoload' => 'core/modules/system/tests/modules/driver_test/src/Driver/Database/DrivertestMysql/',
+        ],
+      ],
+      'PostgreSQL contrib test driver without prefix' => [
+        '',
+        'DrivertestPgsql://test_user:test_pass@test_host:5432/test_database?module=driver_test',
+        [
+          'driver' => 'DrivertestPgsql',
+          'username' => 'test_user',
+          'password' => 'test_pass',
+          'host' => 'test_host',
+          'database' => 'test_database',
+          'port' => 5432,
+          'namespace' => 'Drupal\driver_test\Driver\Database\DrivertestPgsql',
+          'autoload' => 'core/modules/system/tests/modules/driver_test/src/Driver/Database/DrivertestPgsql/',
+        ],
+      ],
+      'PostgreSQL contrib test driver with prefix' => [
+        '',
+        'DrivertestPgsql://test_user:test_pass@test_host:5432/test_database?module=driver_test#bar',
+        [
+          'driver' => 'DrivertestPgsql',
+          'username' => 'test_user',
+          'password' => 'test_pass',
+          'host' => 'test_host',
+          'database' => 'test_database',
+          'prefix' => [
+            'default' => 'bar',
+          ],
+          'port' => 5432,
+          'namespace' => 'Drupal\driver_test\Driver\Database\DrivertestPgsql',
+          'autoload' => 'core/modules/system/tests/modules/driver_test/src/Driver/Database/DrivertestPgsql/',
         ],
       ],
     ];
@@ -233,11 +279,67 @@ class UrlConversionTest extends UnitTestCase {
     ];
     $expected_url4 = 'sqlite://localhost/test_database#pre';
 
+    $info5 = [
+      'database' => 'test_database',
+      'username' => 'test_user',
+      'password' => 'test_pass',
+      'prefix' => '',
+      'host' => 'test_host',
+      'port' => '3306',
+      'driver' => 'DrivertestMysql',
+      'namespace' => 'Drupal\\driver_test\\Driver\\Database\\DrivertestMysql',
+      'autoload' => 'core/modules/system/tests/modules/driver_test/src/Driver/Database/DrivertestMysql/',
+    ];
+    $expected_url5 = 'DrivertestMysql://test_user:test_pass@test_host:3306/test_database?module=driver_test';
+
+    $info6 = [
+      'database' => 'test_database',
+      'username' => 'test_user',
+      'password' => 'test_pass',
+      'prefix' => 'pre',
+      'host' => 'test_host',
+      'port' => '3306',
+      'driver' => 'DrivertestMysql',
+      'namespace' => 'Drupal\\driver_test\\Driver\\Database\\DrivertestMysql',
+      'autoload' => 'core/modules/system/tests/modules/driver_test/src/Driver/Database/DrivertestMysql/',
+    ];
+    $expected_url6 = 'DrivertestMysql://test_user:test_pass@test_host:3306/test_database?module=driver_test#pre';
+
+    $info7 = [
+      'database' => 'test_database',
+      'username' => 'test_user',
+      'password' => 'test_pass',
+      'prefix' => '',
+      'host' => 'test_host',
+      'port' => '5432',
+      'driver' => 'DrivertestPgsql',
+      'namespace' => 'Drupal\\driver_test\\Driver\\Database\\DrivertestPgsql',
+      'autoload' => 'core/modules/system/tests/modules/driver_test/src/Driver/Database/drivertestpqsql/',
+    ];
+    $expected_url7 = 'DrivertestPgsql://test_user:test_pass@test_host:5432/test_database?module=driver_test';
+
+    $info8 = [
+      'database' => 'test_database',
+      'username' => 'test_user',
+      'password' => 'test_pass',
+      'prefix' => 'pre',
+      'host' => 'test_host',
+      'port' => '5432',
+      'driver' => 'DrivertestPgsql',
+      'namespace' => 'Drupal\\driver_test\\Driver\\Database\\DrivertestPgsql',
+      'autoload' => 'core/modules/system/tests/modules/driver_test/src/Driver/Database/drivertestpqsql/',
+    ];
+    $expected_url8 = 'DrivertestPgsql://test_user:test_pass@test_host:5432/test_database?module=driver_test#pre';
+
     return [
       [$info1, $expected_url1],
       [$info2, $expected_url2],
       [$info3, $expected_url3],
       [$info4, $expected_url4],
+      [$info5, $expected_url5],
+      [$info6, $expected_url6],
+      [$info7, $expected_url7],
+      [$info8, $expected_url8],
     ];
   }
 
@@ -280,6 +382,26 @@ class UrlConversionTest extends UnitTestCase {
         "As a minimum, the connection options array must contain at least the 'driver' and 'database' keys",
       ],
     ];
+  }
+
+  /**
+   * @covers ::convertDbUrlToConnectionInfo
+   */
+  public function testDriverModuleDoesNotExist() {
+    $url = 'mysql://test_user:test_pass@test_host:3306/test_database?module=does_not_exist';
+    $this->expectException(\RuntimeException::class);
+    $this->expectExceptionMessage("Cannot find the module 'does_not_exist' for the database driver namespace 'Drupal\does_not_exist\Driver\Database\mysql'");
+    Database::convertDbUrlToConnectionInfo($url, $this->root);
+  }
+
+  /**
+   * @covers ::convertDbUrlToConnectionInfo
+   */
+  public function testModuleDriverDoesNotExist() {
+    $url = 'mysql://test_user:test_pass@test_host:3306/test_database?module=driver_test';
+    $this->expectException(\RuntimeException::class);
+    $this->expectExceptionMessage("Cannot find the database driver namespace 'Drupal\driver_test\Driver\Database\mysql' in module 'driver_test'");
+    Database::convertDbUrlToConnectionInfo($url, $this->root);
   }
 
 }

@@ -75,6 +75,13 @@ class InstallerTest extends InstallerTestBase {
     // Assert that the expected title is present.
     $this->assertEqual('Database configuration', $this->cssSelect('main h2')[0]->getText());
 
+    // Assert that we use the by core supported database drivers by default and
+    // not the ones from the driver_test module.
+    $elements = $this->xpath('//label[@for="edit-driver-mysql"]');
+    $this->assertEqual(current($elements)->getText(), 'MySQL, MariaDB, Percona Server, or equivalent');
+    $elements = $this->xpath('//label[@for="edit-driver-pgsql"]');
+    $this->assertEqual(current($elements)->getText(), 'PostgreSQL');
+
     parent::setUpSettings();
   }
 
