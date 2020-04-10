@@ -110,7 +110,7 @@ class SelectSubqueryTest extends DatabaseTestBase {
     // FROM test t
     // WHERE t.age < (SELECT AVG(t2.age) FROM test t2)
     $people = $select->execute()->fetchCol();
-    $this->assertEquals(['John', 'Paul'], $people, 'Returned Paul and John.', 0.0, 10, TRUE);
+    $this->assertEqualsCanonicalizing(['John', 'Paul'], $people, 'Returned Paul and John.');
   }
 
   /**
@@ -136,7 +136,7 @@ class SelectSubqueryTest extends DatabaseTestBase {
     // FROM test t
     // WHERE (SELECT AVG(tt.priority) FROM test_task tt WHERE tt.pid = t.id) > (SELECT AVG(tt2.priority) FROM test_task tt2)
     $people = $select->execute()->fetchCol();
-    $this->assertEquals(['John'], $people, 'Returned John.', 0.0, 10, TRUE);
+    $this->assertEqualsCanonicalizing(['John'], $people, 'Returned John.');
   }
 
   /**
@@ -174,7 +174,7 @@ class SelectSubqueryTest extends DatabaseTestBase {
     //   BETWEEN (SELECT MIN(tt2.priority) AS expression FROM {test_task} tt2 WHERE (tt2.pid <> t.id))
     //       AND (SELECT AVG(tt3.priority) AS expression FROM {test_task} tt3 WHERE (tt3.pid <> t.id));
     $people = $select->execute()->fetchCol();
-    $this->assertEquals(['George', 'Paul'], $people, 'Returned George and Paul.', 0.0, 10, TRUE);
+    $this->assertEqualsCanonicalizing(['George', 'Paul'], $people, 'Returned George and Paul.');
   }
 
   /**
