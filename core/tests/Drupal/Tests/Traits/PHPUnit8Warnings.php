@@ -29,7 +29,6 @@ trait PHPUnit8Warnings {
     'assertInternalType() is deprecated and will be removed in PHPUnit 9. Refactor your test to use assertIsArray(), assertIsBool(), assertIsFloat(), assertIsInt(), assertIsNumeric(), assertIsObject(), assertIsResource(), assertIsString(), assertIsScalar(), assertIsCallable(), or assertIsIterable() instead.',
     'readAttribute() is deprecated and will be removed in PHPUnit 9.',
     'getObjectAttribute() is deprecated and will be removed in PHPUnit 9.',
-    'The optional $canonicalize parameter of assertEquals() is deprecated and will be removed in PHPUnit 9. Refactor your test to use assertEqualsCanonicalizing() instead.',
     'assertAttributeEquals() is deprecated and will be removed in PHPUnit 9.',
     'assertAttributeSame() is deprecated and will be removed in PHPUnit 9.',
     'assertAttributeInstanceOf() is deprecated and will be removed in PHPUnit 9.',
