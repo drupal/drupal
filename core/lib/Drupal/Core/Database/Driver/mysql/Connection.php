@@ -66,6 +66,11 @@ class Connection extends DatabaseConnection {
   /**
    * {@inheritdoc}
    */
+  protected $identifierQuotes = ['"', '"'];
+
+  /**
+   * {@inheritdoc}
+   */
   public function query($query, array $args = [], $options = []) {
     try {
       return parent::query($query, $args, $options);
@@ -211,15 +216,6 @@ class Connection extends DatabaseConnection {
     $tablename = $this->generateTemporaryTableName();
     $this->query('CREATE TEMPORARY TABLE {' . $tablename . '} Engine=MEMORY ' . $query, $args, $options);
     return $tablename;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function identifierQuote() {
-    // The database is using the ANSI option on set up so use ANSI quotes and
-    // not MySQL's custom backtick quote.
-    return '"';
   }
 
   public function driver() {

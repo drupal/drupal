@@ -5,6 +5,7 @@ namespace Drupal\Tests\Core\Database;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Database\Query\Condition;
 use Drupal\Core\Database\Query\PlaceholderInterface;
+use Drupal\Tests\Core\Database\Stub\StubConnection;
 use Drupal\Tests\Core\Database\Stub\StubPDO;
 use Drupal\Tests\UnitTestCase;
 use Prophecy\Argument;
@@ -195,14 +196,7 @@ class ConditionTest extends UnitTestCase {
 
     $mockPdo = $this->createMock(StubPDO::class);
 
-    $connection = $this->getMockBuilder(Connection::class)
-      ->setConstructorArgs([$mockPdo, $options])
-      ->setMethods(['identifierQuote'])
-      ->getMockForAbstractClass();
-    // @todo In drupal:10.0.0 this function will be abstract and the mock
-    // builder will automatically create it. This can be
-    // can be removed at that time.
-    $connection->method('identifierQuote')->willReturn(NULL);
+    $connection = new StubConnection($mockPdo, $options);
     $condition = $connection->condition('AND');
     $this->assertSame('MockCondition', get_class($condition));
   }

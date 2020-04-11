@@ -2,6 +2,7 @@
 
 namespace Drupal\Core\Database;
 
+use Drupal\Component\Assertion\Inspector;
 use Drupal\Core\Database\Query\Condition;
 
 /**
@@ -180,6 +181,17 @@ abstract class Connection {
   protected $rootTransactionEndCallbacks = [];
 
   /**
+   * The identifier quote characters for the database type.
+   *
+   * An array containing the start and end identifier quote characters for the
+   * database type. The ANSI SQL standard identifier quote character is a double
+   * quotation mark.
+   *
+   * @var string[]
+   */
+  protected $identifierQuotes;
+
+  /**
    * Constructs a Connection object.
    *
    * @param \PDO $connection
@@ -191,6 +203,11 @@ abstract class Connection {
    *   - Other driver-specific options.
    */
   public function __construct(\PDO $connection, array $connection_options) {
+    if ($this->identifierQuotes === NULL) {
+      @trigger_error('In drupal:10.0.0 not setting the $identifierQuotes property in the concrete Connection class will result in an RuntimeException. See https://www.drupal.org/node/2986894', E_USER_DEPRECATED);
+      $this->identifierQuotes = ['', ''];
+    }
+    assert(count($this->identifierQuotes) === 2 && Inspector::assertAllStrings($this->identifierQuotes), '\Drupal\Core\Database\Connection::$identifierQuotes must contain 2 string values');
     // The 'transactions' option is deprecated.
     if (isset($connection_options['transactions'])) {
       @trigger_error('Passing a \'transactions\' connection option to ' . __METHOD__ . ' is deprecated in drupal:9.1.0 and is removed in drupal:10.0.0. All database drivers must support transactions. See https://www.drupal.org/node/2278745', E_USER_DEPRECATED);
@@ -329,7 +346,7 @@ abstract class Connection {
       $this->prefixes = ['default' => $prefix];
     }
 
-    $identifier_quote = $this->identifierQuote();
+    [$start_quote, $end_quote] = $this->identifierQuotes;
     // Set up variables for use in prefixTables(). Replace table-specific
     // prefixes first.
     $this->prefixSearch = [];
@@ -339,8 +356,8 @@ abstract class Connection {
         $this->prefixSearch[] = '{' . $key . '}';
         // $val can point to another database like 'database.users'. In this
         // instance we need to quote the identifiers correctly.
-        $val = str_replace('.', $identifier_quote . '.' . $identifier_quote, $val);
-        $this->prefixReplace[] = $identifier_quote . $val . $key . $identifier_quote;
+        $val = str_replace('.', $end_quote . '.' . $start_quote, $val);
+        $this->prefixReplace[] = $start_quote . $val . $key . $end_quote;
       }
     }
     // Then replace remaining tables with the default prefix.
@@ -348,9 +365,9 @@ abstract class Connection {
     // $this->prefixes['default'] can point to another database like
     // 'other_db.'. In this instance we need to quote the identifiers correctly.
     // For example, "other_db"."PREFIX_table_name".
-    $this->prefixReplace[] = $identifier_quote . str_replace('.', $identifier_quote . '.' . $identifier_quote, $this->prefixes['default']);
+    $this->prefixReplace[] = $start_quote . str_replace('.', $end_quote . '.' . $start_quote, $this->prefixes['default']);
     $this->prefixSearch[] = '}';
-    $this->prefixReplace[] = $identifier_quote;
+    $this->prefixReplace[] = $end_quote;
 
     // Set up a map of prefixed => un-prefixed tables.
     foreach ($this->prefixes as $table_name => $prefix) {
@@ -358,20 +375,6 @@ abstract class Connection {
         $this->unprefixedTablesMap[$prefix . $table_name] = $table_name;
       }
     }
-  }
-
-  /**
-   * Returns the identifier quote character for the database type.
-   *
-   * The ANSI SQL standard identifier quote character is a double quotation
-   * mark.
-   *
-   * @return string
-   *   The identifier quote character for the database type.
-   */
-  protected function identifierQuote() {
-    @trigger_error('In drupal:10.0.0 this method will be abstract and contrib and custom drivers will have to implement it. See https://www.drupal.org/node/2986894', E_USER_DEPRECATED);
-    return '';
   }
 
   /**
@@ -413,7 +416,7 @@ abstract class Connection {
    *   This method should only be called by database API code.
    */
   public function quoteIdentifiers($sql) {
-    return str_replace(['[', ']'], $this->identifierQuote(), $sql);
+    return str_replace(['[', ']'], $this->identifierQuotes, $sql);
   }
 
   /**
@@ -579,7 +582,7 @@ abstract class Connection {
     $sequence_name = $this->prefixTables('{' . $table . '}_' . $field . '_seq');
     // Remove identifier quotes as we are constructing a new name from a
     // prefixed and quoted table name.
-    return str_replace($this->identifierQuote(), '', $sequence_name);
+    return str_replace($this->identifierQuotes, '', $sequence_name);
   }
 
   /**
@@ -1063,7 +1066,8 @@ abstract class Connection {
    */
   public function escapeDatabase($database) {
     $database = preg_replace('/[^A-Za-z0-9_]+/', '', $database);
-    return $this->identifierQuote() . $database . $this->identifierQuote();
+    [$start_quote, $end_quote] = $this->identifierQuotes;
+    return $start_quote . $database . $end_quote;
   }
 
   /**
@@ -1106,10 +1110,10 @@ abstract class Connection {
   public function escapeField($field) {
     if (!isset($this->escapedFields[$field])) {
       $escaped = preg_replace('/[^A-Za-z0-9_.]+/', '', $field);
-      $identifier_quote = $this->identifierQuote();
+      [$start_quote, $end_quote] = $this->identifierQuotes;
       // Sometimes fields have the format table_alias.field. In such cases
       // both identifiers should be quoted, for example, "table_alias"."field".
-      $this->escapedFields[$field] = $identifier_quote . str_replace('.', $identifier_quote . '.' . $identifier_quote, $escaped) . $identifier_quote;
+      $this->escapedFields[$field] = $start_quote . str_replace('.', $end_quote . '.' . $start_quote, $escaped) . $end_quote;
     }
     return $this->escapedFields[$field];
   }
@@ -1130,7 +1134,8 @@ abstract class Connection {
    */
   public function escapeAlias($field) {
     if (!isset($this->escapedAliases[$field])) {
-      $this->escapedAliases[$field] = $this->identifierQuote() . preg_replace('/[^A-Za-z0-9_]+/', '', $field) . $this->identifierQuote();
+      [$start_quote, $end_quote] = $this->identifierQuotes;
+      $this->escapedAliases[$field] = $start_quote . preg_replace('/[^A-Za-z0-9_]+/', '', $field) . $end_quote;
     }
     return $this->escapedAliases[$field];
   }
