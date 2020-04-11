@@ -50,6 +50,11 @@ class Connection extends DatabaseConnection {
   ];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $identifierQuotes = ['"', '"'];
+
+  /**
    * Constructs a connection object.
    */
   public function __construct(\PDO $connection, array $connection_options) {
@@ -199,13 +204,6 @@ class Connection extends DatabaseConnection {
     $tablename = $this->generateTemporaryTableName();
     $this->query('CREATE TEMPORARY TABLE {' . $tablename . '} AS ' . $query, $args, $options);
     return $tablename;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function identifierQuote() {
-    return '"';
   }
 
   public function driver() {
