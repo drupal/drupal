@@ -19,7 +19,7 @@ class TimezoneTest extends KernelTestBase {
   public function testSystemTimeZones() {
     // Test the default parameters for system_time_zones().
     $result = system_time_zones();
-    $this->assertInternalType('array', $result);
+    $this->assertIsArray($result);
     $this->assertArrayHasKey('Africa/Dar_es_Salaam', $result);
     $this->assertEquals('Africa/Dar es Salaam', $result['Africa/Dar_es_Salaam']);
 
@@ -27,7 +27,7 @@ class TimezoneTest extends KernelTestBase {
     $result = system_time_zones(NULL, TRUE);
 
     // Check a two-level time zone.
-    $this->assertInternalType('array', $result);
+    $this->assertIsArray($result);
     $this->assertArrayHasKey('Africa', $result);
     $this->assertArrayHasKey('Africa/Dar_es_Salaam', $result['Africa']);
     $this->assertEquals('Dar es Salaam', $result['Africa']['Africa/Dar_es_Salaam']);

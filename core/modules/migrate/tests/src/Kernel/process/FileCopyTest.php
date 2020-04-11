@@ -90,7 +90,7 @@ class FileCopyTest extends FileTestBase {
     clearstatcache(TRUE, $destination_path);
 
     $timestamp = (new \SplFileInfo($file_reuse))->getMTime();
-    $this->assertInternalType('int', $timestamp);
+    $this->assertIsInt($timestamp);
 
     // We need to make sure the modified timestamp on the file is sooner than
     // the attempted migration.

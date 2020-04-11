@@ -83,7 +83,7 @@ class CsrfTokenGeneratorTest extends UnitTestCase {
   public function testGet() {
     $this->setupDefaultExpectations();
 
-    $this->assertInternalType('string', $this->generator->get());
+    $this->assertIsString($this->generator->get());
     $this->assertNotSame($this->generator->get(), $this->generator->get($this->randomMachineName()));
     $this->assertNotSame($this->generator->get($this->randomMachineName()), $this->generator->get($this->randomMachineName()));
   }
@@ -107,7 +107,7 @@ class CsrfTokenGeneratorTest extends UnitTestCase {
       ->method('setCsrfTokenSeed')
       ->with($this->isType('string'));
 
-    $this->assertInternalType('string', $this->generator->get());
+    $this->assertIsString($this->generator->get());
   }
 
   /**

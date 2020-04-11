@@ -44,7 +44,7 @@ class MigrateCommentEntityDisplayTest extends MigrateDrupal6TestBase {
    */
   protected function assertDisplay($id, $component_id) {
     $component = EntityViewDisplay::load($id)->getComponent($component_id);
-    $this->assertInternalType('array', $component);
+    $this->assertIsArray($component);
     $this->assertSame('hidden', $component['label']);
     $this->assertSame('comment_default', $component['type']);
     $this->assertSame(20, $component['weight']);

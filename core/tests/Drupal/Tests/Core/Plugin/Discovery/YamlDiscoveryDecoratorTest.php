@@ -70,7 +70,7 @@ class YamlDiscoveryDecoratorTest extends UnitTestCase {
   public function testGetDefinitions() {
     $definitions = $this->discoveryDecorator->getDefinitions();
 
-    $this->assertInternalType('array', $definitions);
+    $this->assertIsArray($definitions);
     $this->assertCount(6, $definitions);
 
     foreach ($this->expectedKeys as $expected_key) {

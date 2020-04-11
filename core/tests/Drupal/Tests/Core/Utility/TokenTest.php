@@ -271,7 +271,7 @@ class TokenTest extends UnitTestCase {
       });
 
     $result = $this->token->replace($string, ['tokens' => $tokens]);
-    $this->assertInternalType('string', $result);
+    $this->assertIsString($result);
     $this->assertEquals($expected, $result);
   }
 

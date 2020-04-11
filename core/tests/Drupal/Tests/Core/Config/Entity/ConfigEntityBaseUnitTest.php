@@ -564,7 +564,7 @@ class ConfigEntityBaseUnitTest extends UnitTestCase {
       ->method('getPropertiesToExport')
       ->willReturn(['id' => 'configId', 'dependencies' => 'dependencies']);
     $properties = $this->entity->toArray();
-    $this->assertInternalType('array', $properties);
+    $this->assertIsArray($properties);
     $this->assertEquals(['configId' => $this->entity->id(), 'dependencies' => []], $properties);
   }
 
@@ -590,7 +590,7 @@ class ConfigEntityBaseUnitTest extends UnitTestCase {
       ->with('id')
       ->willReturn('id');
     $properties = $entity->toArray();
-    $this->assertInternalType('array', $properties);
+    $this->assertIsArray($properties);
     $this->assertEquals(['configId' => $entity->id(), 'dependencies' => []], $properties);
   }
 

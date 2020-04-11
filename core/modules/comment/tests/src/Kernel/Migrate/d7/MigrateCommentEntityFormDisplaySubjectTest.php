@@ -35,7 +35,7 @@ class MigrateCommentEntityFormDisplaySubjectTest extends MigrateDrupal7TestBase 
    */
   protected function assertSubjectVisible($id) {
     $component = EntityFormDisplay::load($id)->getComponent('subject');
-    $this->assertInternalType('array', $component);
+    $this->assertIsArray($component);
     $this->assertSame('string_textfield', $component['type']);
     $this->assertSame(10, $component['weight']);
   }

@@ -220,7 +220,7 @@ class EntityAdapterUnitTest extends UnitTestCase {
    * @covers ::getConstraints
    */
   public function testGetConstraints() {
-    $this->assertInternalType('array', $this->entityAdapter->getConstraints());
+    $this->assertIsArray($this->entityAdapter->getConstraints());
   }
 
   /**
