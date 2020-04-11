@@ -206,7 +206,7 @@ class MigrateFieldFormatterSettingsTest extends MigrateDrupal6TestBase {
     // reference field.
     $display = EntityViewDisplay::load('node.employee.default');
     $component = $display->getComponent('field_company');
-    $this->assertInternalType('array', $component);
+    $this->assertIsArray($component);
     $this->assertSame('entity_reference_label', $component['type']);
     // The default node reference formatter shows the referenced node's title
     // as a link.
@@ -214,14 +214,14 @@ class MigrateFieldFormatterSettingsTest extends MigrateDrupal6TestBase {
 
     $display = EntityViewDisplay::load('node.employee.teaser');
     $component = $display->getComponent('field_company');
-    $this->assertInternalType('array', $component);
+    $this->assertIsArray($component);
     $this->assertSame('entity_reference_label', $component['type']);
     // The plain node reference formatter shows the referenced node's title,
     // unlinked.
     $this->assertFalse($component['settings']['link']);
 
     $component = $display->getComponent('field_commander');
-    $this->assertInternalType('array', $component);
+    $this->assertIsArray($component);
     $this->assertSame('entity_reference_label', $component['type']);
     // The default user reference formatter links to the referenced user.
     $this->assertTrue($component['settings']['link']);

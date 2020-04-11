@@ -52,7 +52,7 @@ class LanguageTest extends UnitTestCase {
 
     $config = $this->plugin->getConfig($editor);
 
-    $this->assertInternalType('array', $config);
+    $this->assertIsArray($config);
     $this->assertTrue(in_array('ar:Arabic:rtl', $config['language_list']));
     $this->assertTrue(in_array('zh-hans:Chinese, Simplified', $config['language_list']));
     $this->assertTrue(in_array('en:English', $config['language_list']));

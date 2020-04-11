@@ -101,7 +101,7 @@ class MediaSourceOEmbedVideoTest extends MediaSourceTestBase {
     $display = \Drupal::service('entity_display.repository')->getViewDisplay('media', $media_type_id);
     $this->assertFalse($display->isNew());
     $component = $display->getComponent('field_media_oembed_video');
-    $this->assertInternalType('array', $component);
+    $this->assertIsArray($component);
     $component['settings']['max_width'] = 240;
     $display->setComponent('field_media_oembed_video', $component);
     $this->assertSame(SAVED_UPDATED, $display->save());

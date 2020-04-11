@@ -41,7 +41,7 @@ class MigrateBlockContentEntityFormDisplayTest extends MigrateDrupal7TestBase {
    */
   protected function assertDisplay($id, $component_id) {
     $component = EntityFormDisplay::load($id)->getComponent($component_id);
-    $this->assertInternalType('array', $component);
+    $this->assertIsArray($component);
     $this->assertSame('text_textarea_with_summary', $component['type']);
   }
 

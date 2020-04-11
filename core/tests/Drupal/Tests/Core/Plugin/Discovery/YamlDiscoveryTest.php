@@ -51,7 +51,7 @@ class YamlDiscoveryTest extends UnitTestCase {
   public function testGetDefinitions() {
     $definitions = $this->discovery->getDefinitions();
 
-    $this->assertInternalType('array', $definitions);
+    $this->assertIsArray($definitions);
     $this->assertCount(4, $definitions);
 
     foreach ($this->expectedKeys as $expected_key) {
