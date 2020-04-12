@@ -568,7 +568,7 @@ abstract class Database {
     }
 
     // Extract the module information from the namespace.
-    [, $module, $module_relative_namespace] = explode('\\', $namespace, 3);
+    list(, $module, $module_relative_namespace) = explode('\\', $namespace, 3);
 
     // The namespace is within a Drupal module. Find the directory where the
     // module is located.
@@ -655,7 +655,7 @@ abstract class Database {
    *   \Drupal\Core\Database\Database::getConnectionInfoAsUrl() is removed.
    */
   private static function isWithinModuleNamespace(string $namespace) {
-    [$first, $second] = explode('\\', $namespace, 3);
+    list($first, $second) = explode('\\', $namespace, 3);
 
     // The namespace for Drupal modules is Drupal\MODULE_NAME, and the module
     // name must be all lowercase. Second-level namespaces containing uppercase
