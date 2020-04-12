@@ -10,7 +10,7 @@ use Drupal\Tests\migrate_drupal\Kernel\d7\MigrateDrupal7TestBase;
  *
  * @group ban
  */
-class MigrateBlockedIPsTest extends MigrateDrupal7TestBase {
+class MigrateBlockedIpsTest extends MigrateDrupal7TestBase {
 
   use SchemaCheckTestTrait;
 
@@ -33,7 +33,7 @@ class MigrateBlockedIPsTest extends MigrateDrupal7TestBase {
   /**
    * Tests migration of blocked IPs.
    */
-  public function testBlockedIPs() {
+  public function testBlockedIps() {
     $this->assertTrue(\Drupal::service('ban.ip_manager')->isBanned('111.111.111.111'));
   }
 
