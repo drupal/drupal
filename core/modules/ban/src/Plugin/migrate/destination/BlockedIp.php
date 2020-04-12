@@ -16,7 +16,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *   id = "blocked_ip"
  * )
  */
-class BlockedIP extends DestinationBase implements ContainerFactoryPluginInterface {
+class BlockedIp extends DestinationBase implements ContainerFactoryPluginInterface {
 
   /**
    * The IP ban manager.
@@ -26,7 +26,7 @@ class BlockedIP extends DestinationBase implements ContainerFactoryPluginInterfa
   protected $banManager;
 
   /**
-   * Constructs a BlockedIP object.
+   * Constructs a BlockedIp object.
    *
    * @param array $configuration
    *   Plugin configuration.
