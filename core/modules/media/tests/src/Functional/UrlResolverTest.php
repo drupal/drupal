@@ -85,7 +85,7 @@ class UrlResolverTest extends MediaFunctionalTestBase {
     $resource_url = $this->container->get('media.oembed.url_resolver')
       ->getResourceUrl('https://vimeo.com/14782834');
 
-    $this->assertContains('altered=1', parse_url($resource_url, PHP_URL_QUERY));
+    $this->assertStringContainsString('altered=1', parse_url($resource_url, PHP_URL_QUERY));
   }
 
   /**

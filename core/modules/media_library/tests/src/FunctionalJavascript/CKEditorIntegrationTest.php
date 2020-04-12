@@ -187,7 +187,7 @@ class CKEditorIntegrationTest extends WebDriverTestBase {
     $page->checkField('filters[filter_html][status]');
     $expected = 'drupal-media data-entity-type data-entity-uuid data-view-mode data-align data-caption alt title';
     $allowed_html = $assert_session->fieldExists('filters[filter_html][settings][allowed_html]')->getValue();
-    $this->assertContains($expected, $allowed_html);
+    $this->assertStringContainsString($expected, $allowed_html);
     $page->pressButton('Save configuration');
     $assert_session->pageTextContains('The text format Sulaco has been updated.');
 

@@ -178,12 +178,12 @@ abstract class MediaEmbedFilterTestBase extends KernelTestBase {
    * @see \Drupal\KernelTests\AssertContentTrait::setRawContent()
    */
   protected function applyFilter($text, $langcode = 'en') {
-    $this->assertContains('<drupal-media', $text);
-    $this->assertContains('This placeholder should not be rendered.', $text);
+    $this->assertStringContainsString('<drupal-media', $text);
+    $this->assertStringContainsString('This placeholder should not be rendered.', $text);
     $filter_result = $this->processText($text, $langcode);
     $output = $filter_result->getProcessedText();
-    $this->assertNotContains('<drupal-media', $output);
-    $this->assertNotContains('This placeholder should not be rendered.', $output);
+    $this->assertStringNotContainsString('<drupal-media', $output);
+    $this->assertStringNotContainsString('This placeholder should not be rendered.', $output);
     $this->setRawContent($output);
     return $filter_result;
   }

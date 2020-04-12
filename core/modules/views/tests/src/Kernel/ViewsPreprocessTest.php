@@ -46,15 +46,15 @@ class ViewsPreprocessTest extends ViewsKernelTestBase {
     $view = Views::getview('test_preprocess');
     $build = $view->buildRenderable();
     $renderer->renderRoot($build);
-    $this->assertContains('class="entity-test--default entity-test__default', (string) $build['#markup']);
+    $this->assertStringContainsString('class="entity-test--default entity-test__default', (string) $build['#markup']);
     $view->destroy();
 
     $view->setDisplay('display_2');
     $build = $view->buildRenderable();
     $renderer->renderRoot($build);
     $markup = (string) $build['#markup'];
-    $this->assertContains('css_class: entity-test--default and-another-class entity-test__default', $markup);
-    $this->assertContains('attributes: class="entity-test--default and-another-class entity-test__default', $markup);
+    $this->assertStringContainsString('css_class: entity-test--default and-another-class entity-test__default', $markup);
+    $this->assertStringContainsString('attributes: class="entity-test--default and-another-class entity-test__default', $markup);
   }
 
 }

@@ -32,7 +32,7 @@ class SkipOpTest extends TestCase {
     $this->assertFileNotExists($destination->fullPath());
     // Confirm that expected output was written to our io fixture.
     $output = $fixtures->getOutput();
-    $this->assertContains('Skip [web-root]/robots.txt: disabled', $output);
+    $this->assertStringContainsString('Skip [web-root]/robots.txt: disabled', $output);
   }
 
 }

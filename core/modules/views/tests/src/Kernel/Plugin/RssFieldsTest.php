@@ -71,7 +71,7 @@ class RssFieldsTest extends ViewsKernelTestBase {
     $view = Views::getView('test_display_feed');
     $output = $view->preview('feed_2');
     $output = (string) $renderer->renderRoot($output);
-    $this->assertContains('<link>' . $node_url . '</link>', $output);
+    $this->assertStringContainsString('<link>' . $node_url . '</link>', $output);
   }
 
 }

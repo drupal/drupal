@@ -166,9 +166,9 @@ class ArgumentDefaultTest extends ViewTestBase {
     $this->drupalPlaceBlock("views_block:test_argument_default_node-block_1", ['id' => $id]);
     $xpath = '//*[@id="block-' . $id . '"]';
     $this->drupalGet('node/' . $node1->id());
-    $this->assertContains($node1->getTitle(), $this->xpath($xpath)[0]->getText());
+    $this->assertStringContainsString($node1->getTitle(), $this->xpath($xpath)[0]->getText());
     $this->drupalGet('node/' . $node2->id());
-    $this->assertContains($node2->getTitle(), $this->xpath($xpath)[0]->getText());
+    $this->assertStringContainsString($node2->getTitle(), $this->xpath($xpath)[0]->getText());
   }
 
   /**

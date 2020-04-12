@@ -151,7 +151,7 @@ JS;
     $page->waitFor(10, function () use ($page, $text) {
       return stripos($page->getContent(), $text) !== FALSE;
     });
-    $this->assertContains($text, $page->getContent());
+    $this->assertStringContainsString($text, $page->getContent());
   }
 
 }

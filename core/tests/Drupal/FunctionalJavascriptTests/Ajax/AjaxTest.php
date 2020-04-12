@@ -63,7 +63,7 @@ class AjaxTest extends WebDriverTestBase {
 
     $libraries = $session->evaluateScript('drupalSettings.ajaxPageState.libraries');
     // Test that the fake library is set.
-    $this->assertContains($fake_library, $libraries);
+    $this->assertStringContainsString($fake_library, $libraries);
 
     // Click on the AJAX link.
     $this->clickLink('Link 8 (ajax)');
@@ -71,20 +71,20 @@ class AjaxTest extends WebDriverTestBase {
 
     // Test that the fake library is still set after the AJAX call.
     $libraries = $session->evaluateScript('drupalSettings.ajaxPageState.libraries');
-    $this->assertContains($fake_library, $libraries);
+    $this->assertStringContainsString($fake_library, $libraries);
 
     // Reload the page, this should reset the loaded libraries and remove the
     // fake library.
     $this->drupalGet('ajax-test/dialog');
     $libraries = $session->evaluateScript('drupalSettings.ajaxPageState.libraries');
-    $this->assertNotContains($fake_library, $libraries);
+    $this->assertStringNotContainsString($fake_library, $libraries);
 
     // Click on the AJAX link again, and the libraries should still not contain
     // the fake library.
     $this->clickLink('Link 8 (ajax)');
     $assert->assertWaitOnAjaxRequest();
     $libraries = $session->evaluateScript('drupalSettings.ajaxPageState.libraries');
-    $this->assertNotContains($fake_library, $libraries);
+    $this->assertStringNotContainsString($fake_library, $libraries);
   }
 
   /**

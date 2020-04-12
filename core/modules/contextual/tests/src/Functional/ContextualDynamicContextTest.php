@@ -97,7 +97,7 @@ class ContextualDynamicContextTest extends BrowserTestBase {
     }
     $response = $this->renderContextualLinks([], 'node');
     $this->assertSame(400, $response->getStatusCode());
-    $this->assertContains('No contextual ids specified.', (string) $response->getBody());
+    $this->assertStringContainsString('No contextual ids specified.', (string) $response->getBody());
     $response = $this->renderContextualLinks($ids, 'node');
     $this->assertSame(200, $response->getStatusCode());
     $json = Json::decode((string) $response->getBody());
@@ -120,7 +120,7 @@ class ContextualDynamicContextTest extends BrowserTestBase {
     }
     $response = $this->renderContextualLinks([], 'node');
     $this->assertSame(400, $response->getStatusCode());
-    $this->assertContains('No contextual ids specified.', (string) $response->getBody());
+    $this->assertStringContainsString('No contextual ids specified.', (string) $response->getBody());
     $response = $this->renderContextualLinks($ids, 'node');
     $this->assertSame(200, $response->getStatusCode());
     $json = Json::decode((string) $response->getBody());
@@ -177,7 +177,7 @@ class ContextualDynamicContextTest extends BrowserTestBase {
       'http_errors' => FALSE,
     ]);
     $this->assertEquals('400', $response->getStatusCode());
-    $this->assertContains('No contextual ID tokens specified.', (string) $response->getBody());
+    $this->assertStringContainsString('No contextual ID tokens specified.', (string) $response->getBody());
 
     $response = $http_client->request('POST', $url, [
       'cookies' => $this->getSessionCookies(),
@@ -185,7 +185,7 @@ class ContextualDynamicContextTest extends BrowserTestBase {
       'http_errors' => FALSE,
     ]);
     $this->assertEquals('400', $response->getStatusCode());
-    $this->assertContains('Invalid contextual ID specified.', (string) $response->getBody());
+    $this->assertStringContainsString('Invalid contextual ID specified.', (string) $response->getBody());
 
     $response = $http_client->request('POST', $url, [
       'cookies' => $this->getSessionCookies(),
@@ -193,7 +193,7 @@ class ContextualDynamicContextTest extends BrowserTestBase {
       'http_errors' => FALSE,
     ]);
     $this->assertEquals('400', $response->getStatusCode());
-    $this->assertContains('Invalid contextual ID specified.', (string) $response->getBody());
+    $this->assertStringContainsString('Invalid contextual ID specified.', (string) $response->getBody());
 
     $response = $http_client->request('POST', $url, [
       'cookies' => $this->getSessionCookies(),

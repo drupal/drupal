@@ -274,7 +274,7 @@ class PageCacheTest extends BrowserTestBase {
     $this->drupalLogin($user);
     $this->drupalGet('system-test/set-header', ['query' => ['name' => 'Foo', 'value' => 'bar']]);
     $this->assertNull($this->drupalGetHeader('X-Drupal-Cache'), 'Caching was bypassed.');
-    $this->assertNotContains('cookie', $this->drupalGetHeader('Vary'), 'Vary: Cookie header was not sent.', TRUE);
+    $this->assertStringNotContainsString('cookie', $this->drupalGetHeader('Vary'), 'Vary: Cookie header was not sent.', TRUE);
     $this->assertEqual($this->drupalGetHeader('Cache-Control'), 'must-revalidate, no-cache, private', 'Cache-Control header was sent.');
     $this->assertEqual($this->drupalGetHeader('Expires'), 'Sun, 19 Nov 1978 05:00:00 GMT', 'Expires header was sent.');
     $this->assertEqual($this->drupalGetHeader('Foo'), 'bar', 'Custom header was sent.');
@@ -441,13 +441,13 @@ class PageCacheTest extends BrowserTestBase {
     // Fill the cache.
     $this->drupalGet('');
     $this->assertEqual($this->drupalGetHeader('X-Drupal-Cache'), 'MISS', 'Page was not cached.');
-    $this->assertNotContains('cookie', $this->drupalGetHeader('Vary'), 'Vary: Cookie header was not sent.', TRUE);
+    $this->assertStringNotContainsString('cookie', $this->drupalGetHeader('Vary'), 'Vary: Cookie header was not sent.', TRUE);
     $this->assertEqual($this->drupalGetHeader('Cache-Control'), 'max-age=300, public', 'Cache-Control header was sent.');
 
     // Check cache.
     $this->drupalGet('');
     $this->assertEqual($this->drupalGetHeader('X-Drupal-Cache'), 'HIT', 'Page was cached.');
-    $this->assertNotContains('cookie', $this->drupalGetHeader('Vary'), 'Vary: Cookie header was not sent.', TRUE);
+    $this->assertStringNotContainsString('cookie', $this->drupalGetHeader('Vary'), 'Vary: Cookie header was not sent.', TRUE);
     $this->assertEqual($this->drupalGetHeader('Cache-Control'), 'max-age=300, public', 'Cache-Control header was sent.');
   }
 

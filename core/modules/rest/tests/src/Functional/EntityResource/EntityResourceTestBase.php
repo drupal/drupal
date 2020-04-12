@@ -752,7 +752,7 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
     $response = $this->request('POST', $url, $request_options);
     $this->assertSame(415, $response->getStatusCode());
     $this->assertSame(['text/html; charset=UTF-8'], $response->getHeader('Content-Type'));
-    $this->assertContains('A client error happened', (string) $response->getBody());
+    $this->assertStringContainsString('A client error happened', (string) $response->getBody());
 
     $url->setOption('query', ['_format' => static::$format]);
 
@@ -858,7 +858,7 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
 
       $response = $this->request('POST', $url, $request_options);
       $this->assertSame(500, $response->getStatusCode());
-      $this->assertContains('Internal Server Error', (string) $response->getBody());
+      $this->assertStringContainsString('Internal Server Error', (string) $response->getBody());
 
       // 201 when successfully creating an entity with a new UUID.
       $normalized_entity = $this->getModifiedEntityForPostTesting();
@@ -920,7 +920,7 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
       $this->assertSame(405, $response->getStatusCode());
       $this->assertSame(['GET, POST, HEAD'], $response->getHeader('Allow'));
       $this->assertSame(['text/html; charset=UTF-8'], $response->getHeader('Content-Type'));
-      $this->assertContains('A client error happened', (string) $response->getBody());
+      $this->assertStringContainsString('A client error happened', (string) $response->getBody());
     }
     else {
       $this->assertSame(404, $response->getStatusCode());
@@ -946,7 +946,7 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
     $response = $this->request('PATCH', $url, $request_options);
     $this->assertSame(415, $response->getStatusCode());
     $this->assertSame(['text/html; charset=UTF-8'], $response->getHeader('Content-Type'));
-    $this->assertContains('A client error happened', (string) $response->getBody());
+    $this->assertStringContainsString('A client error happened', (string) $response->getBody());
 
     $url->setOption('query', ['_format' => static::$format]);
 
@@ -1146,7 +1146,7 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
       $this->assertSame(405, $response->getStatusCode());
       $this->assertSame(['GET, POST, HEAD'], $response->getHeader('Allow'));
       $this->assertSame(['text/html; charset=UTF-8'], $response->getHeader('Content-Type'));
-      $this->assertContains('A client error happened', (string) $response->getBody());
+      $this->assertStringContainsString('A client error happened', (string) $response->getBody());
     }
     else {
       $this->assertSame(404, $response->getStatusCode());
@@ -1368,8 +1368,8 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
       if ($actual_link_header) {
         $this->assertTrue(is_array($actual_link_header));
         $expected_type = explode(';', static::$mimeType)[0];
-        $this->assertContains('?_format=' . static::$format . '>; rel="alternate"; type="' . $expected_type . '"', $actual_link_header[0]);
-        $this->assertContains('?_format=foobar>; rel="alternate"', $actual_link_header[0]);
+        $this->assertStringContainsString('?_format=' . static::$format . '>; rel="alternate"; type="' . $expected_type . '"', $actual_link_header[0]);
+        $this->assertStringContainsString('?_format=foobar>; rel="alternate"', $actual_link_header[0]);
       }
     }
   }

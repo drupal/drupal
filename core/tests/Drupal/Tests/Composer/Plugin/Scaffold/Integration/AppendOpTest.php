@@ -53,8 +53,8 @@ EOT;
     $this->assertEquals(trim($expected), $contents);
     // Confirm that expected output was written to our io fixture.
     $output = $fixtures->getOutput();
-    $this->assertContains('Prepend to [web-root]/robots.txt from assets/prepend-to-robots.txt', $output);
-    $this->assertContains('Append to [web-root]/robots.txt from assets/append-to-robots.txt', $output);
+    $this->assertStringContainsString('Prepend to [web-root]/robots.txt from assets/prepend-to-robots.txt', $output);
+    $this->assertStringContainsString('Append to [web-root]/robots.txt from assets/append-to-robots.txt', $output);
   }
 
 }

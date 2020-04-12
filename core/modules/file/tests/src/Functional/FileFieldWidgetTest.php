@@ -422,7 +422,7 @@ class FileFieldWidgetTest extends FileFieldTestBase {
     ]);
     $this->assertNotEquals(500, $post_request->getStatusCode());
     $body = Json::decode($post_request->getBody());
-    $this->assertContains('Starting upload...', $body['message']);
+    $this->assertStringContainsString('Starting upload...', $body['message']);
   }
 
   /**

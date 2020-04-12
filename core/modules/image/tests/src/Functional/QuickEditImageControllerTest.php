@@ -135,7 +135,7 @@ class QuickEditImageControllerTest extends BrowserTestBase {
 
     $this->drupalLogin($this->contentAuthorUser);
     $this->uploadImage($valid_image, $node->id(), $this->fieldName, $node->language()->getId());
-    $this->assertContains('"fid":"1"', $this->getSession()->getPage()->getContent(), 'Valid upload completed successfully.');
+    $this->assertStringContainsString('"fid":"1"', $this->getSession()->getPage()->getContent(), 'Valid upload completed successfully.');
   }
 
   /**
@@ -164,7 +164,7 @@ class QuickEditImageControllerTest extends BrowserTestBase {
 
     $this->drupalLogin($this->contentAuthorUser);
     $this->uploadImage($invalid_image, $node->id(), $this->fieldName, $node->language()->getId());
-    $this->assertContains('"main_error":"The image failed validation."', $this->getSession()->getPage()->getContent(), 'Invalid upload returned errors.');
+    $this->assertStringContainsString('"main_error":"The image failed validation."', $this->getSession()->getPage()->getContent(), 'Invalid upload returned errors.');
   }
 
   /**

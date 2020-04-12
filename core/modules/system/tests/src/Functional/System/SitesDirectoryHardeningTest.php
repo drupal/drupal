@@ -62,8 +62,8 @@ class SitesDirectoryHardeningTest extends BrowserTestBase {
     $this->assertEqual(REQUIREMENT_WARNING, $requirements['configuration_files']['severity'], 'Warning severity is properly set.');
     $this->assertEquals('Protection disabled', (string) $requirements['configuration_files']['value']);
     $description = strip_tags(\Drupal::service('renderer')->renderPlain($requirements['configuration_files']['description']));
-    $this->assertContains('settings.php is not protected from modifications and poses a security risk.', $description);
-    $this->assertContains('services.yml is not protected from modifications and poses a security risk.', $description);
+    $this->assertStringContainsString('settings.php is not protected from modifications and poses a security risk.', $description);
+    $this->assertStringContainsString('services.yml is not protected from modifications and poses a security risk.', $description);
 
     $this->assertTrue(is_writable($site_path), 'Site directory remains writable when automatically fixing permissions is disabled.');
     $this->assertTrue(is_writable($settings_file), 'settings.php remains writable when automatically fixing permissions is disabled.');

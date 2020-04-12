@@ -157,7 +157,7 @@ trait AssertPageCacheContextsAndTagsTrait {
    */
   protected function assertCacheMaxAge($max_age) {
     $cache_control_header = $this->drupalGetHeader('Cache-Control');
-    $this->assertContains('max-age:' . $max_age, $cache_control_header);
+    $this->assertStringContainsString('max-age:' . $max_age, $cache_control_header);
   }
 
 }

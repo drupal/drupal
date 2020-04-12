@@ -90,13 +90,13 @@ class PaginationAJAXTest extends WebDriverTestBase {
     /** @var \Behat\Mink\Element\NodeElement[] $rows */
     $rows = $page->findAll('css', 'tbody tr');
     $this->assertCount(5, $rows);
-    $this->assertContains('Node 1 content', $rows[0]->getHtml());
+    $this->assertStringContainsString('Node 1 content', $rows[0]->getHtml());
 
     $this->clickLink('Go to page 2');
     $session_assert->assertWaitOnAjaxRequest();
     $rows = $page->findAll('css', 'tbody tr');
     $this->assertCount(5, $rows);
-    $this->assertContains('Node 6 content', $rows[0]->getHtml());
+    $this->assertStringContainsString('Node 6 content', $rows[0]->getHtml());
     $link = $page->findLink('Go to page 3');
     // Test that no unwanted parameters are added to the URL.
     $this->assertEquals('?status=All&type=All&langcode=All&items_per_page=5&order=changed&sort=asc&title=&page=2', $link->getAttribute('href'));
@@ -106,28 +106,28 @@ class PaginationAJAXTest extends WebDriverTestBase {
     $session_assert->assertWaitOnAjaxRequest();
     $rows = $page->findAll('css', 'tbody tr');
     $this->assertCount(1, $rows);
-    $this->assertContains('Node 11 content', $rows[0]->getHtml());
+    $this->assertStringContainsString('Node 11 content', $rows[0]->getHtml());
 
     // Navigate back to the first page.
     $this->clickLink('Go to first page');
     $session_assert->assertWaitOnAjaxRequest();
     $rows = $page->findAll('css', 'tbody tr');
     $this->assertCount(5, $rows);
-    $this->assertContains('Node 1 content', $rows[0]->getHtml());
+    $this->assertStringContainsString('Node 1 content', $rows[0]->getHtml());
 
     // Navigate using the 'next' link.
     $this->clickLink('Go to next page');
     $session_assert->assertWaitOnAjaxRequest();
     $rows = $page->findAll('css', 'tbody tr');
     $this->assertCount(5, $rows);
-    $this->assertContains('Node 6 content', $rows[0]->getHtml());
+    $this->assertStringContainsString('Node 6 content', $rows[0]->getHtml());
 
     // Navigate using the 'last' link.
     $this->clickLink('Go to last page');
     $session_assert->assertWaitOnAjaxRequest();
     $rows = $page->findAll('css', 'tbody tr');
     $this->assertCount(1, $rows);
-    $this->assertContains('Node 11 content', $rows[0]->getHtml());
+    $this->assertStringContainsString('Node 11 content', $rows[0]->getHtml());
 
     // Make sure the AJAX calls don't change the view_path.
     $settings = $this->getDrupalSettings();

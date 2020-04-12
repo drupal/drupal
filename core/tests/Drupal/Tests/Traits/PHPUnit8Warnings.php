@@ -23,8 +23,6 @@ trait PHPUnit8Warnings {
    * @var string[]
    */
   private static $ignoredWarnings = [
-    'Using assertContains() with string haystacks is deprecated and will not be supported in PHPUnit 9. Refactor your test to use assertStringContainsString() or assertStringContainsStringIgnoringCase() instead.',
-    'Using assertNotContains() with string haystacks is deprecated and will not be supported in PHPUnit 9. Refactor your test to use assertStringNotContainsString() or assertStringNotContainsStringIgnoringCase() instead.',
     'assertArraySubset() is deprecated and will be removed in PHPUnit 9.',
     'readAttribute() is deprecated and will be removed in PHPUnit 9.',
     'getObjectAttribute() is deprecated and will be removed in PHPUnit 9.',

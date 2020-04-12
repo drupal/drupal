@@ -32,11 +32,11 @@ class InstallerDependenciesResolutionTest extends KernelTestBase {
     ]);
 
     $message = $info['required_modules']['description']->render();
-    $this->assertContains('Fictional', $message);
-    $this->assertContains('Missing_module1', $message);
-    $this->assertContains('Missing_module2', $message);
-    $this->assertNotContains('Block', $message);
-    $this->assertNotContains('Node', $message);
+    $this->assertStringContainsString('Fictional', $message);
+    $this->assertStringContainsString('Missing_module1', $message);
+    $this->assertStringContainsString('Missing_module2', $message);
+    $this->assertStringNotContainsString('Block', $message);
+    $this->assertStringNotContainsString('Node', $message);
   }
 
 }
