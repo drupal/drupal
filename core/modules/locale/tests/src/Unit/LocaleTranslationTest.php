@@ -50,8 +50,7 @@ class LocaleTranslationTest extends UnitTestCase {
   public function testDestruct() {
     $translation = new LocaleTranslation($this->storage, $this->cache, $this->lock, $this->getConfigFactoryStub(), $this->languageManager, $this->requestStack);
     // Prove that destruction works without errors when translations are empty.
-    $this->assertAttributeEmpty('translations', $translation);
-    $translation->destruct();
+    $this->assertNull($translation->destruct());
   }
 
 }
