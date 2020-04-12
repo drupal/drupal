@@ -27,7 +27,6 @@ trait PHPUnit8Warnings {
     'readAttribute() is deprecated and will be removed in PHPUnit 9.',
     'getObjectAttribute() is deprecated and will be removed in PHPUnit 9.',
     'assertAttributeEquals() is deprecated and will be removed in PHPUnit 9.',
-    'assertAttributeSame() is deprecated and will be removed in PHPUnit 9.',
     'assertAttributeInstanceOf() is deprecated and will be removed in PHPUnit 9.',
     'assertAttributeEmpty() is deprecated and will be removed in PHPUnit 9.',
     'The optional $ignoreCase parameter of assertContains() is deprecated and will be removed in PHPUnit 9.',
