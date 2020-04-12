@@ -172,7 +172,7 @@ class NodeRevisionsUiTest extends NodeTestBase {
     $elements = $this->xpath('//tr[contains(@class, "revision-current")]/td/a[1]');
     // The site may be installed in a subdirectory, so check if the URL is
     // contained in the retrieved one.
-    $this->assertContains('/node/1', current($elements)->getAttribute('href'));
+    $this->assertStringContainsString('/node/1', current($elements)->getAttribute('href'));
 
     // Verify that the default revision can be an older revision than the latest
     // one.

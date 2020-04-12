@@ -462,8 +462,8 @@ class SaveUploadTest extends FileManagedTestBase {
     $content = (string) $response->getBody();
     $this->htmlOutput($content);
     $error_text = new FormattableMarkup('The file %filename could not be uploaded because the name is invalid.', ['%filename' => $filename]);
-    $this->assertContains((string) $error_text, $content);
-    $this->assertContains('Epic upload FAIL!', $content);
+    $this->assertStringContainsString((string) $error_text, $content);
+    $this->assertStringContainsString('Epic upload FAIL!', $content);
     $this->assertFileNotExists('temporary://' . $filename);
   }
 

@@ -107,7 +107,7 @@ class MigrateImageCacheTest extends MigrateDrupal6TestBase {
     $this->executeMigration('d6_imagecache_presets');
     $messages = iterator_to_array($this->migration->getIdMap()->getMessages());
     $this->assertCount(1, $messages);
-    $this->assertContains('The "image_deprecated_scale" plugin does not exist.', $messages[0]->message);
+    $this->assertStringContainsString('The "image_deprecated_scale" plugin does not exist.', $messages[0]->message);
     $this->assertEqual($messages[0]->level, MigrationInterface::MESSAGE_ERROR);
   }
 

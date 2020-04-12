@@ -73,7 +73,7 @@ class MediaSourceImageTest extends MediaSourceTestBase {
     // and there is no link to the image file.
     $image_element = $assert_session->elementExists('css', '.field--name-field-media-image img');
     $expected_image_src = file_url_transform_relative(file_create_url(\Drupal::token()->replace('public://styles/large/public/[date:custom:Y]-[date:custom:m]/example_1.jpeg')));
-    $this->assertContains($expected_image_src, $image_element->getAttribute('src'));
+    $this->assertStringContainsString($expected_image_src, $image_element->getAttribute('src'));
     $field = $assert_session->elementExists('css', '.field--name-field-media-image');
     $assert_session->elementExists('css', '.field__label.visually-hidden', $field);
     $assert_session->elementNotExists('css', 'a', $field);

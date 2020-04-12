@@ -453,8 +453,8 @@ class CKEditorIntegrationTest extends WebDriverTestBase {
     $this->pressEditorButton('source');
     $source = $assert_session->elementExists('css', "textarea.cke_source");
     $value = $source->getValue();
-    $this->assertContains('https://www.drupal.org/project/drupal', $value);
-    $this->assertNotContains('data-cke-saved-href', $value);
+    $this->assertStringContainsString('https://www.drupal.org/project/drupal', $value);
+    $this->assertStringNotContainsString('data-cke-saved-href', $value);
 
     // Save the entity.
     $assert_session->buttonExists('Save')->press();

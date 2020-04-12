@@ -105,7 +105,7 @@ class StringFieldTest extends BrowserTestBase {
     $display = $display_repository->getViewDisplay($entity->getEntityTypeId(), $entity->bundle(), 'full');
     $content = $display->build($entity);
     $rendered_entity = \Drupal::service('renderer')->renderRoot($content);
-    $this->assertContains($value, (string) $rendered_entity);
+    $this->assertStringContainsString($value, (string) $rendered_entity);
   }
 
 }

@@ -72,7 +72,7 @@ class DialogTest extends WebDriverTestBase {
     $dialog = $this->assertSession()->waitForElementVisible('css', 'div.ui-dialog');
     $this->assertNotNull($dialog, 'Link was used to open a dialog ( non-modal, with options )');
     $style = $dialog->getAttribute('style');
-    $this->assertContains('width: 400px;', $style, new FormattableMarkup('Modal respected the dialog-options width parameter.  Style = style', ['%style' => $style]));
+    $this->assertStringContainsString('width: 400px;', $style, new FormattableMarkup('Modal respected the dialog-options width parameter.  Style = style', ['%style' => $style]));
 
     // Reset: Return to the dialog links page.
     $this->drupalGet('ajax-test/dialog');

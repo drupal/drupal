@@ -373,14 +373,14 @@ class UncaughtExceptionTest extends BrowserTestBase {
    * {@inheritdoc}
    */
   protected function assertText($text) {
-    $this->assertContains($text, $this->response);
+    $this->assertStringContainsString($text, $this->response);
   }
 
   /**
    * {@inheritdoc}
    */
   protected function assertNoText($text) {
-    $this->assertNotContains($text, $this->response);
+    $this->assertStringNotContainsString($text, $this->response);
   }
 
   /**

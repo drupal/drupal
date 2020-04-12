@@ -147,21 +147,21 @@ class FieldDropbuttonTest extends ViewsKernelTestBase {
 
     // The first row should contain edit links to node 3, as the user has
     // access.
-    $this->assertContains($this->node3->toUrl('edit-form')->toString(), (string) $dropbutton_output[0]);
-    $this->assertContains($this->node3->toUrl('delete-form')->toString(), (string) $dropbutton_output[0]);
+    $this->assertStringContainsString($this->node3->toUrl('edit-form')->toString(), (string) $dropbutton_output[0]);
+    $this->assertStringContainsString($this->node3->toUrl('delete-form')->toString(), (string) $dropbutton_output[0]);
 
     // Second row should be not contain links to edit/delete any content as user
     // has no edit/delete permissions.
     // It most certainly should not contain links to node 3, as node 2 is the
     // entity that forms this row.
-    $this->assertNotContains($this->node3->toUrl('edit-form')->toString(), (string) $dropbutton_output[1]);
-    $this->assertNotContains($this->node3->toUrl('delete-form')->toString(), (string) $dropbutton_output[1]);
-    $this->assertNotContains($this->node2->toUrl('edit-form')->toString(), (string) $dropbutton_output[1]);
-    $this->assertNotContains($this->node2->toUrl('delete-form')->toString(), (string) $dropbutton_output[1]);
+    $this->assertStringNotContainsString($this->node3->toUrl('edit-form')->toString(), (string) $dropbutton_output[1]);
+    $this->assertStringNotContainsString($this->node3->toUrl('delete-form')->toString(), (string) $dropbutton_output[1]);
+    $this->assertStringNotContainsString($this->node2->toUrl('edit-form')->toString(), (string) $dropbutton_output[1]);
+    $this->assertStringNotContainsString($this->node2->toUrl('delete-form')->toString(), (string) $dropbutton_output[1]);
 
     // Third row should contain links for node 1.
-    $this->assertContains($this->node1->toUrl('edit-form')->toString(), (string) $dropbutton_output[2]);
-    $this->assertContains($this->node1->toUrl('delete-form')->toString(), (string) $dropbutton_output[2]);
+    $this->assertStringContainsString($this->node1->toUrl('edit-form')->toString(), (string) $dropbutton_output[2]);
+    $this->assertStringContainsString($this->node1->toUrl('delete-form')->toString(), (string) $dropbutton_output[2]);
   }
 
 }

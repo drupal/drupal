@@ -67,16 +67,16 @@ class ClickSortingAJAXTest extends WebDriverTestBase {
     /** @var \Behat\Mink\Element\NodeElement[] $rows */
     $rows = $page->findAll('css', 'tbody tr');
     $this->assertCount(2, $rows);
-    $this->assertContains('Page B', $rows[0]->getHtml());
-    $this->assertContains('Page A', $rows[1]->getHtml());
+    $this->assertStringContainsString('Page B', $rows[0]->getHtml());
+    $this->assertStringContainsString('Page A', $rows[1]->getHtml());
 
     // Now sort by title and check if the order changed.
     $page->clickLink('Title');
     $session_assert->assertWaitOnAjaxRequest();
     $rows = $page->findAll('css', 'tbody tr');
     $this->assertCount(2, $rows);
-    $this->assertContains('Page A', $rows[0]->getHtml());
-    $this->assertContains('Page B', $rows[1]->getHtml());
+    $this->assertStringContainsString('Page A', $rows[0]->getHtml());
+    $this->assertStringContainsString('Page B', $rows[1]->getHtml());
   }
 
 }

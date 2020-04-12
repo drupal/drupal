@@ -30,8 +30,8 @@ class ModalRendererTest extends WebDriverTestBase {
     $this->clickLink('Normal Modal!');
     // Neither of the wide modals should have been used.
     $style = $session_assert->waitForElementVisible('css', '.ui-dialog')->getAttribute('style');
-    $this->assertNotContains('700px', $style);
-    $this->assertNotContains('1000px', $style);
+    $this->assertStringNotContainsString('700px', $style);
+    $this->assertStringNotContainsString('1000px', $style);
     $this->drupalGet('/dialog_renderer-test-links');
     $this->clickLink('Wide Modal!');
     $this->assertNotEmpty($session_assert->waitForElementVisible('css', '.ui-dialog[style*="width: 700px;"]'));

@@ -18,6 +18,7 @@ use PHPUnit\Framework\TestCase;
  * @ingroup testing
  */
 abstract class UnitTestCase extends TestCase {
+
   use PHPUnit8Warnings;
 
   /**

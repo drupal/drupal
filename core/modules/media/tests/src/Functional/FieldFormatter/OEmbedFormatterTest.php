@@ -194,7 +194,7 @@ class OEmbedFormatterTest extends MediaFunctionalTestBase {
       $element = $assert->elementExists('css', $selector);
       foreach ($attributes as $attribute => $value) {
         if (isset($value)) {
-          $this->assertContains($value, $element->getAttribute($attribute));
+          $this->assertStringContainsString($value, $element->getAttribute($attribute));
         }
         else {
           $this->assertFalse($element->hasAttribute($attribute));

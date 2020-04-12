@@ -108,7 +108,7 @@ class EmailFieldTest extends BrowserTestBase {
     $display = $display_repository->getViewDisplay($entity->getEntityTypeId(), $entity->bundle(), 'full');
     $content = $display->build($entity);
     $rendered_content = (string) \Drupal::service('renderer')->renderRoot($content);
-    $this->assertContains('href="mailto:test@example.com"', $rendered_content);
+    $this->assertStringContainsString('href="mailto:test@example.com"', $rendered_content);
   }
 
 }

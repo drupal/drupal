@@ -182,7 +182,7 @@ class ScaffoldTest extends TestCase {
     $fixture_name = 'empty-fixture';
 
     $result = $this->scaffoldSut($fixture_name, FALSE, FALSE);
-    $this->assertContains('Nothing scaffolded because no packages are allowed in the top-level composer.json file', $result->scaffoldOutput());
+    $this->assertStringContainsString('Nothing scaffolded because no packages are allowed in the top-level composer.json file', $result->scaffoldOutput());
   }
 
   /**
@@ -192,7 +192,7 @@ class ScaffoldTest extends TestCase {
     $fixture_name = 'project-allowing-empty-fixture';
     $is_link = FALSE;
     $result = $this->scaffoldSut($fixture_name, FALSE, FALSE);
-    $this->assertContains('The allowed package fixtures/empty-fixture does not provide a file mapping for Composer Scaffold', $result->scaffoldOutput());
+    $this->assertStringContainsString('The allowed package fixtures/empty-fixture does not provide a file mapping for Composer Scaffold', $result->scaffoldOutput());
     $this->assertCommonDrupalAssetsWereScaffolded($result->docroot(), FALSE);
     $this->assertAutoloadFileCorrect($result->docroot());
   }
@@ -343,7 +343,7 @@ include __DIR__ . "/settings-custom-additions.php";',
    */
   public function testDrupalDrupalFileWasAppended($fixture_name, $is_link, $scaffold_file_path, $scaffold_file_contents, $scaffoldOutputContains) {
     $result = $this->scaffoldSut($fixture_name, $is_link, FALSE);
-    $this->assertContains($scaffoldOutputContains, $result->scaffoldOutput());
+    $this->assertStringContainsString($scaffoldOutputContains, $result->scaffoldOutput());
 
     $this->assertScaffoldedFile($result->docroot() . '/' . $scaffold_file_path, FALSE, $scaffold_file_contents);
     $this->assertCommonDrupalAssetsWereScaffolded($result->docroot(), $is_link);
@@ -422,7 +422,7 @@ include __DIR__ . "/settings-custom-additions.php";',
       $expected = "return require __DIR__ . '/../vendor/autoload.php';";
     }
 
-    $this->assertContains($expected, $contents);
+    $this->assertStringContainsString($expected, $contents);
   }
 
 }

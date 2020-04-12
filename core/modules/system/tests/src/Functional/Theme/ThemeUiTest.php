@@ -303,8 +303,8 @@ class ThemeUiTest extends BrowserTestBase {
   public function testInstallModuleWithMissingDependencies() {
     $this->drupalGet('admin/appearance');
     $theme_container = $this->getSession()->getPage()->find('css', 'h3:contains("Test Theme Depending on Nonexisting Module")')->getParent();
-    $this->assertContains('Requires: test_module_non_existing (missing)', $theme_container->getText());
-    $this->assertContains('This theme requires the listed modules to operate correctly.', $theme_container->getText());
+    $this->assertStringContainsString('Requires: test_module_non_existing (missing)', $theme_container->getText());
+    $this->assertStringContainsString('This theme requires the listed modules to operate correctly.', $theme_container->getText());
   }
 
   /**
@@ -314,8 +314,8 @@ class ThemeUiTest extends BrowserTestBase {
     $this->container->get('module_installer')->install(['test_module_compatible_constraint', 'test_module_incompatible_constraint']);
     $this->drupalGet('admin/appearance');
     $theme_container = $this->getSession()->getPage()->find('css', 'h3:contains("Test Theme Depending on Version Constrained Modules")')->getParent();
-    $this->assertContains('Requires: Test Module Theme Depends on with Compatible ConstraintTest Module Theme Depends on with Incompatible Constraint (>=8.x-2.x) (incompatible with version 8.x-1.8)', $theme_container->getText());
-    $this->assertContains('This theme requires the listed modules to operate correctly.', $theme_container->getText());
+    $this->assertStringContainsString('Requires: Test Module Theme Depends on with Compatible ConstraintTest Module Theme Depends on with Incompatible Constraint (>=8.x-2.x) (incompatible with version 8.x-1.8)', $theme_container->getText());
+    $this->assertStringContainsString('This theme requires the listed modules to operate correctly.', $theme_container->getText());
   }
 
 }

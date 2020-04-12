@@ -192,31 +192,31 @@ class HelpTopicsSyntaxTest extends BrowserTestBase {
       $message = $e->getMessage();
       switch ($bad_topic_type) {
         case 'related':
-          $this->assertContains('only related to topics that exist', $message);
+          $this->assertStringContainsString('only related to topics that exist', $message);
           break;
 
         case 'bad_html':
-          $this->assertContains('Unexpected end tag', $message);
+          $this->assertStringContainsString('Unexpected end tag', $message);
           break;
 
         case 'top_level':
-          $this->assertContains('is either top-level or related to at least one other top-level topic', $message);
+          $this->assertStringContainsString('is either top-level or related to at least one other top-level topic', $message);
           break;
 
         case 'empty':
-          $this->assertContains('contains some text outside of front matter', $message);
+          $this->assertStringContainsString('contains some text outside of front matter', $message);
           break;
 
         case 'translated':
-          $this->assertContains('Twig file has all of its text translated', $message);
+          $this->assertStringContainsString('Twig file has all of its text translated', $message);
           break;
 
         case 'h1':
-          $this->assertContains('has no H1 tag', $message);
+          $this->assertStringContainsString('has no H1 tag', $message);
           break;
 
         case 'hierarchy':
-          $this->assertContains('has the correct H2-H6 heading hierarchy', $message);
+          $this->assertStringContainsString('has the correct H2-H6 heading hierarchy', $message);
           break;
 
         default:

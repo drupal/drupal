@@ -44,7 +44,7 @@ class InstallProfileDependenciesTest extends BrowserTestBase {
       $this->fail('Uninstalled dblog module.');
     }
     catch (ModuleUninstallValidatorException $e) {
-      $this->assertContains('The Testing install profile dependencies module is required', $e->getMessage());
+      $this->assertStringContainsString('The Testing install profile dependencies module is required', $e->getMessage());
     }
   }
 

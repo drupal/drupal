@@ -36,7 +36,7 @@ class ReplaceOpTest extends TestCase {
     $this->assertEquals('# Test version of robots.txt from drupal/core.', $contents);
     // Confirm that expected output was written to our io fixture.
     $output = $fixtures->getOutput();
-    $this->assertContains('Copy [web-root]/robots.txt from assets/robots.txt', $output);
+    $this->assertStringContainsString('Copy [web-root]/robots.txt from assets/robots.txt', $output);
   }
 
 }
