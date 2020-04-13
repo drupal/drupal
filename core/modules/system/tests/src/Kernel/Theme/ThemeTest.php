@@ -16,7 +16,7 @@ class ThemeTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['theme_test', 'node', 'system'];
+  protected static $modules = ['theme_test', 'node', 'system'];
 
   /**
    * {@inheritdoc}

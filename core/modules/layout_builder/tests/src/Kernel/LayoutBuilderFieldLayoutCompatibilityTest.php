@@ -15,7 +15,7 @@ class LayoutBuilderFieldLayoutCompatibilityTest extends LayoutBuilderCompatibili
   /**
    * {@inheritdoc}
    */
-  public static $modules = [
+  protected static $modules = [
     'field_layout',
   ];
 

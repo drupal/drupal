@@ -27,7 +27,7 @@ class DbLogTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = [
+  protected static $modules = [
     'dblog',
     'error_test',
     'node',

@@ -15,7 +15,7 @@ class BlockHalJsonAnonTest extends BlockResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['hal'];
+  protected static $modules = ['hal'];
 
   /**
    * {@inheritdoc}

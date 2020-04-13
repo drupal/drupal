@@ -16,7 +16,7 @@ class QuickEditIntegrationTest extends SettingsTrayTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = [
+  protected static $modules = [
     'node',
     'block_content',
     'quickedit',

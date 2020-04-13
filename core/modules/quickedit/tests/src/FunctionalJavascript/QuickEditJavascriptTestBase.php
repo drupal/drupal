@@ -13,7 +13,7 @@ class QuickEditJavascriptTestBase extends WebDriverTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['contextual', 'quickedit', 'toolbar'];
+  protected static $modules = ['contextual', 'quickedit', 'toolbar'];
 
   /**
    * A user with permissions to edit Articles and use Quick Edit.

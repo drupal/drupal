@@ -11,7 +11,7 @@ use Drupal\node\NodeInterface;
  */
 class MigrateNodeTaxonomyTest extends MigrateDrupal7TestBase {
 
-  public static $modules = [
+  protected static $modules = [
     'comment',
     'datetime',
     'image',

@@ -23,7 +23,7 @@ class RouteTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['user', 'system'];
+  protected static $modules = ['user', 'system'];
 
   /**
    * Tests Route plugin based on providerTestRoute() values.

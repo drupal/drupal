@@ -10,7 +10,7 @@ abstract class ViewResourceTestBase extends EntityResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['views', 'views_ui'];
+  protected static $modules = ['views', 'views_ui'];
 
   /**
    * {@inheritdoc}

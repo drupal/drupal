@@ -37,7 +37,7 @@ class EntityTestDateRangeTest extends EntityTestResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['datetime_range', 'entity_test'];
+  protected static $modules = ['datetime_range', 'entity_test'];
 
   /**
    * {@inheritdoc}

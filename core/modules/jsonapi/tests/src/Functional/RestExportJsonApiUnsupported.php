@@ -22,7 +22,7 @@ class RestExportJsonApiUnsupported extends ViewTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['jsonapi', 'rest_test_views', 'views_ui'];
+  protected static $modules = ['jsonapi', 'rest_test_views', 'views_ui'];
 
   /**
    * {@inheritdoc}

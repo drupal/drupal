@@ -14,7 +14,7 @@ class MigrateColorTest extends MigrateDrupal7TestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['color'];
+  protected static $modules = ['color'];
 
   /**
    * {@inheritdoc}

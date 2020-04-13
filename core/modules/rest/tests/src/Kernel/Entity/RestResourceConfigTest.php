@@ -16,7 +16,7 @@ class RestResourceConfigTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['rest', 'entity_test', 'serialization', 'basic_auth', 'user', 'hal'];
+  protected static $modules = ['rest', 'entity_test', 'serialization', 'basic_auth', 'user', 'hal'];
 
   /**
    * @covers ::calculateDependencies

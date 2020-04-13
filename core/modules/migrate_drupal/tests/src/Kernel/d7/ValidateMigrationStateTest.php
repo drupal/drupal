@@ -16,7 +16,7 @@ class ValidateMigrationStateTest extends MigrateDrupal7TestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = [
+  protected static $modules = [
     // Test migrations states.
     'migrate_state_finished_test',
     'migrate_state_not_finished_test',

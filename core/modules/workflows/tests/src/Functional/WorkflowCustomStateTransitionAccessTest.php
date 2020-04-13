@@ -15,7 +15,7 @@ class WorkflowCustomStateTransitionAccessTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = [
+  protected static $modules = [
     'workflows',
     'workflow_type_test',
   ];

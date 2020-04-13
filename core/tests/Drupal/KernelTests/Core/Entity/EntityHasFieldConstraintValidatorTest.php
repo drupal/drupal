@@ -15,7 +15,7 @@ class EntityHasFieldConstraintValidatorTest extends EntityKernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['entity_test_constraints'];
+  protected static $modules = ['entity_test_constraints'];
 
   /**
    * {@inheritdoc}

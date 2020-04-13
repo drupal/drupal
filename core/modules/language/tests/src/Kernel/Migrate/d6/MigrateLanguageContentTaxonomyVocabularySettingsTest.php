@@ -16,7 +16,7 @@ class MigrateLanguageContentTaxonomyVocabularySettingsTest extends MigrateDrupal
   /**
    * {@inheritdoc}
    */
-  public static $modules = [
+  protected static $modules = [
     'language',
     'content_translation',
     'taxonomy',

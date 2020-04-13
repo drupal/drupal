@@ -13,7 +13,7 @@ class FieldInstanceOptionTranslationTest extends FieldOptionTranslationTest {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['field', 'migrate_drupal'];
+  protected static $modules = ['field', 'migrate_drupal'];
 
   /**
    * {@inheritdoc}

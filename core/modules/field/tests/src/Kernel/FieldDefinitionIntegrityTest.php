@@ -20,7 +20,7 @@ class FieldDefinitionIntegrityTest extends KernelTestBase {
   /**
    * @var array
    */
-  public static $modules = ['system', 'path_alias'];
+  protected static $modules = ['system', 'path_alias'];
 
   /**
    * Tests the integrity of field plugin definitions.

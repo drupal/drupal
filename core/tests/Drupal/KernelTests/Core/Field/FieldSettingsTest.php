@@ -19,7 +19,7 @@ class FieldSettingsTest extends EntityKernelTestBase {
    *
    * @var array
    */
-  public static $modules = ['field', 'field_test'];
+  protected static $modules = ['field', 'field_test'];
 
   /**
    * @covers \Drupal\Core\Field\BaseFieldDefinition::getSettings

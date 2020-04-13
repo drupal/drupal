@@ -23,7 +23,7 @@ class QuickEditAutocompleteTermTest extends WebDriverTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = [
+  protected static $modules = [
     'node',
     'taxonomy',
     'quickedit',

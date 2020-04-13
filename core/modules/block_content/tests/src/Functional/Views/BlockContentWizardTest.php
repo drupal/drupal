@@ -14,7 +14,7 @@ class BlockContentWizardTest extends BlockContentTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['block_content', 'views_ui'];
+  protected static $modules = ['block_content', 'views_ui'];
 
   /**
    * {@inheritdoc}

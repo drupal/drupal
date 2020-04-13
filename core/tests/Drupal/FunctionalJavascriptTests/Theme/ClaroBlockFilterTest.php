@@ -22,7 +22,7 @@ class ClaroBlockFilterTest extends BlockFilterTest {
    *
    * @var string[]
    */
-  public static $modules = ['shortcut'];
+  protected static $modules = ['shortcut'];
 
   /**
    * {@inheritdoc}

@@ -20,7 +20,7 @@ class ClaroTest extends BrowserTestBase {
    *
    * @var string[]
    */
-  public static $modules = ['shortcut'];
+  protected static $modules = ['shortcut'];
 
   /**
    * {@inheritdoc}

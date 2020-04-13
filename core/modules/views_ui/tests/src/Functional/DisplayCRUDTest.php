@@ -23,7 +23,7 @@ class DisplayCRUDTest extends UITestBase {
    *
    * @var array
    */
-  public static $modules = ['contextual'];
+  protected static $modules = ['contextual'];
 
   /**
    * {@inheritdoc}

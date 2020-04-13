@@ -15,7 +15,7 @@ class ScanDirectoryTest extends FileTestBase {
    *
    * @var array
    */
-  public static $modules = ['file_test'];
+  protected static $modules = ['file_test'];
 
   /**
    * @var string

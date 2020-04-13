@@ -22,7 +22,7 @@ class ViewsIntegrationTest extends ViewTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = [
+  protected static $modules = [
     'views',
     'views_ui',
     'responsive_image',

@@ -18,7 +18,7 @@ class EntityQueryAggregateTest extends EntityKernelTestBase {
    *
    * @var array
    */
-  public static $modules = [];
+  protected static $modules = [];
 
   /**
    * The entity_test storage to create the test entities.

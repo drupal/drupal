@@ -26,7 +26,7 @@ class EntityDeriverTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = [
+  protected static $modules = [
     'system',
     'field',
     'user',

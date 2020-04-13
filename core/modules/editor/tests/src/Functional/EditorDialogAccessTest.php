@@ -18,7 +18,7 @@ class EditorDialogAccessTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = ['editor', 'filter', 'ckeditor'];
+  protected static $modules = ['editor', 'filter', 'ckeditor'];
 
   /**
    * {@inheritdoc}

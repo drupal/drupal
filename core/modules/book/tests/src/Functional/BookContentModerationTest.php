@@ -20,7 +20,7 @@ class BookContentModerationTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = ['book', 'block', 'book_test', 'content_moderation'];
+  protected static $modules = ['book', 'block', 'book_test', 'content_moderation'];
 
   /**
    * {@inheritdoc}

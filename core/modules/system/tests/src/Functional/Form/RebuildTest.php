@@ -16,7 +16,7 @@ class RebuildTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = ['node', 'form_test'];
+  protected static $modules = ['node', 'form_test'];
 
   /**
    * {@inheritdoc}

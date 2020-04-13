@@ -19,7 +19,7 @@ class JsonApiFunctionalTest extends JsonApiFunctionalTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = [
+  protected static $modules = [
     'basic_auth',
   ];
 

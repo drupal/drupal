@@ -17,7 +17,7 @@ class MigrateMenuLinkContentStubTest extends MigrateDrupalTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['menu_link_content', 'link'];
+  protected static $modules = ['menu_link_content', 'link'];
 
   /**
    * {@inheritdoc}

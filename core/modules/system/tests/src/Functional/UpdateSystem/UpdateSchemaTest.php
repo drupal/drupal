@@ -19,7 +19,7 @@ class UpdateSchemaTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['update_test_schema'];
+  protected static $modules = ['update_test_schema'];
 
   /**
    * {@inheritdoc}

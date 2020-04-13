@@ -21,7 +21,7 @@ class FieldApiDataTest extends ViewsKernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = [
+  protected static $modules = [
     'field',
     'filter',
     'language',

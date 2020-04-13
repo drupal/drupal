@@ -16,7 +16,7 @@ class UnpublishByKeywordActionTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['action', 'node', 'system', 'user', 'field'];
+  protected static $modules = ['action', 'node', 'system', 'user', 'field'];
 
   protected function setUp(): void {
     parent::setUp();

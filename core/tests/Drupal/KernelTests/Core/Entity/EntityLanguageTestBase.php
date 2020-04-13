@@ -39,7 +39,7 @@ abstract class EntityLanguageTestBase extends EntityKernelTestBase {
    */
   protected $untranslatableFieldName;
 
-  public static $modules = ['language', 'entity_test'];
+  protected static $modules = ['language', 'entity_test'];
 
   protected function setUp() {
     parent::setUp();

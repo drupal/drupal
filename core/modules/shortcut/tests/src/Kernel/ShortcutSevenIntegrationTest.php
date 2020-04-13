@@ -11,7 +11,7 @@ use Drupal\KernelTests\KernelTestBase;
  */
 class ShortcutSevenIntegrationTest extends KernelTestBase {
 
-  public static $modules = ['system'];
+  protected static $modules = ['system'];
 
   /**
    * Tests shortcut_install() and shortcut_uninstall().

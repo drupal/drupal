@@ -26,7 +26,7 @@ class NodeTest extends ResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['node', 'path'];
+  protected static $modules = ['node', 'path'];
 
   /**
    * {@inheritdoc}

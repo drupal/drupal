@@ -30,7 +30,7 @@ class HandlerTest extends ViewTestBase {
    *
    * @var array
    */
-  public static $modules = ['views_ui', 'comment', 'node'];
+  protected static $modules = ['views_ui', 'comment', 'node'];
 
   /**
    * {@inheritdoc}

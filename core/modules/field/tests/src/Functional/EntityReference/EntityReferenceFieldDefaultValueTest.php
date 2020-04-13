@@ -22,7 +22,7 @@ class EntityReferenceFieldDefaultValueTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = ['field_ui', 'node'];
+  protected static $modules = ['field_ui', 'node'];
 
   /**
    * {@inheritdoc}

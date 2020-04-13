@@ -14,7 +14,7 @@ class MigrateFieldOptionTranslationTest extends MigrateDrupal7TestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = [
+  protected static $modules = [
     'comment',
     'config_translation',
     'datetime',

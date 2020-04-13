@@ -20,7 +20,7 @@ class TextSummaryTest extends KernelTestBase {
 
   use UserCreationTrait;
 
-  public static $modules = [
+  protected static $modules = [
     'system',
     'user',
     'filter',

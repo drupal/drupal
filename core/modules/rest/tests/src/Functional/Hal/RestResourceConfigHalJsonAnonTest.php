@@ -15,7 +15,7 @@ class RestResourceConfigHalJsonAnonTest extends RestResourceConfigResourceTestBa
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['hal'];
+  protected static $modules = ['hal'];
 
   /**
    * {@inheritdoc}

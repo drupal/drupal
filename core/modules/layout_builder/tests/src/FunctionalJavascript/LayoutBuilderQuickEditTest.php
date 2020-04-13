@@ -23,7 +23,7 @@ class LayoutBuilderQuickEditTest extends QuickEditJavascriptTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = [
+  protected static $modules = [
     'node',
     'layout_builder',
   ];

@@ -12,7 +12,7 @@ use Drupal\views\Views;
  */
 class FilterStringTest extends ViewsKernelTestBase {
 
-  public static $modules = ['system'];
+  protected static $modules = ['system'];
 
   /**
    * Views used by this test.

@@ -20,7 +20,7 @@ class EntityQueryAccessTest extends ViewTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = [
+  protected static $modules = [
     'media_test_source',
     'views_test_query_access',
   ];

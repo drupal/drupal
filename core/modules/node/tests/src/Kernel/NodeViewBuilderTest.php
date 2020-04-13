@@ -19,7 +19,7 @@ class NodeViewBuilderTest extends EntityKernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['node'];
+  protected static $modules = ['node'];
 
   /**
    * The node storage.

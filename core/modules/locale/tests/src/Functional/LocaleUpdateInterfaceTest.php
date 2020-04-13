@@ -17,7 +17,7 @@ class LocaleUpdateInterfaceTest extends LocaleUpdateBase {
    *
    * @var array
    */
-  public static $modules = ['locale_test_translate'];
+  protected static $modules = ['locale_test_translate'];
 
   /**
    * {@inheritdoc}

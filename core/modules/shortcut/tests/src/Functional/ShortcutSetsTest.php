@@ -16,7 +16,7 @@ class ShortcutSetsTest extends ShortcutTestBase {
    *
    * @var string[]
    */
-  public static $modules = ['block'];
+  protected static $modules = ['block'];
 
   /**
    * {@inheritdoc}

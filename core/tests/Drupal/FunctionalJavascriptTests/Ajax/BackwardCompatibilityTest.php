@@ -14,7 +14,7 @@ class BackwardCompatibilityTest extends WebDriverTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = [
+  protected static $modules = [
     'js_ajax_test',
   ];
 

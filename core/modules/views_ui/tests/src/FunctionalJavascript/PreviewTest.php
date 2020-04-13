@@ -24,7 +24,7 @@ class PreviewTest extends WebDriverTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = [
+  protected static $modules = [
     'node',
     'views',
     'views_ui',

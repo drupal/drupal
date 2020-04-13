@@ -21,7 +21,7 @@ class EntityReferenceFieldAttributesTest extends TaxonomyTestBase {
    *
    * @var array
    */
-  public static $modules = ['rdf', 'field_test', 'file', 'image'];
+  protected static $modules = ['rdf', 'field_test', 'file', 'image'];
 
   /**
    * {@inheritdoc}

@@ -15,7 +15,7 @@ class DateFormatTest extends ResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = [];
+  protected static $modules = [];
 
   /**
    * {@inheritdoc}

@@ -20,7 +20,7 @@ class FieldImportChangeTest extends FieldKernelTestBase {
    *
    * @var array
    */
-  public static $modules = ['field_test_config'];
+  protected static $modules = ['field_test_config'];
 
   /**
    * Tests importing an updated field.

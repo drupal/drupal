@@ -17,7 +17,7 @@ class FrontPageTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = ['node', 'system_test', 'views'];
+  protected static $modules = ['node', 'system_test', 'views'];
 
   /**
    * {@inheritdoc}

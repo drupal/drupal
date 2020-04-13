@@ -17,7 +17,7 @@ class MigrateDependenciesTest extends MigrateDrupal6TestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['aggregator', 'comment'];
+  protected static $modules = ['aggregator', 'comment'];
 
   /**
    * Tests that the order is correct when loading several migrations.

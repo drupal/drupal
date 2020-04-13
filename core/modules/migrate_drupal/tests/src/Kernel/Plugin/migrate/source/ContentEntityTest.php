@@ -32,7 +32,7 @@ class ContentEntityTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = [
+  protected static $modules = [
     'user',
     'migrate',
     'migrate_drupal',

@@ -22,7 +22,7 @@ class EntityBundleListCacheTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = ['cache_test', 'entity_test'];
+  protected static $modules = ['cache_test', 'entity_test'];
 
   /**
    * {@inheritdoc}

@@ -16,7 +16,7 @@ class SettingsTrayTestBase extends OffCanvasTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = [
+  protected static $modules = [
     'settings_tray',
     // Add test module to override CSS pointer-events properties because they
     // cause test failures.

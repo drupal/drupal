@@ -16,7 +16,7 @@ class RenderTest extends KernelTestBase {
    *
    * @var array
    */
-  public static $modules = ['system', 'common_test', 'theme_test'];
+  protected static $modules = ['system', 'common_test', 'theme_test'];
 
   /**
    * Tests theme preprocess functions being able to attach assets.

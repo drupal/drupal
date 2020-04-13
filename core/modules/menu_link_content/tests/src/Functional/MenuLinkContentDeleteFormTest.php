@@ -18,7 +18,7 @@ class MenuLinkContentDeleteFormTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = ['menu_link_content'];
+  protected static $modules = ['menu_link_content'];
 
   /**
    * {@inheritdoc}

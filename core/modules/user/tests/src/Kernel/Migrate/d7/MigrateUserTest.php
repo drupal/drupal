@@ -18,7 +18,7 @@ class MigrateUserTest extends MigrateDrupal7TestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = [
+  protected static $modules = [
     'comment',
     'content_translation',
     'datetime',

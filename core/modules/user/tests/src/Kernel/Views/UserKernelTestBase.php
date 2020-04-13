@@ -15,7 +15,7 @@ abstract class UserKernelTestBase extends ViewsKernelTestBase {
    *
    * @var array
    */
-  public static $modules = ['user_test_views', 'user', 'system', 'field'];
+  protected static $modules = ['user_test_views', 'user', 'system', 'field'];
 
   /**
    * Users to use during this test.

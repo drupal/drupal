@@ -21,7 +21,7 @@ class StatisticsLoggingTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = ['node', 'statistics', 'block', 'locale'];
+  protected static $modules = ['node', 'statistics', 'block', 'locale'];
 
   /**
    * {@inheritdoc}

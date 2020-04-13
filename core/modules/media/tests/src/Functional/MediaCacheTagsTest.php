@@ -19,7 +19,7 @@ class MediaCacheTagsTest extends EntityWithUriCacheTagsTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = [
+  protected static $modules = [
     'media',
     'media_test_source',
   ];

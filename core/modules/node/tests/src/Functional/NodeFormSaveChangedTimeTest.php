@@ -16,7 +16,7 @@ class NodeFormSaveChangedTimeTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = [
+  protected static $modules = [
     'node',
   ];
 

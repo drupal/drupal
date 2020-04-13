@@ -24,7 +24,7 @@ class MigrateUserAdminPassTest extends MigrateTestBase {
    *
    * @var string[]
    */
-  public static $modules = ['user'];
+  protected static $modules = ['user'];
 
   /**
    * {@inheritdoc}

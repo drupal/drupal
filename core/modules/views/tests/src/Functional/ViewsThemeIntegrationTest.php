@@ -33,7 +33,7 @@ class ViewsThemeIntegrationTest extends ViewTestBase {
    *
    * @see \Drupal\simpletest\WebTestBase::setup()
    */
-  public static $modules = ['views', 'theme_test'];
+  protected static $modules = ['views', 'theme_test'];
 
   /**
    * {@inheritdoc}

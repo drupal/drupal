@@ -19,7 +19,7 @@ abstract class MediaJavascriptTestBase extends WebDriverTestBase {
    *
    * @var array
    */
-  public static $modules = [
+  protected static $modules = [
     'system',
     'node',
     'field_ui',

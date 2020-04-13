@@ -20,7 +20,7 @@ class StatisticsAdminTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = ['node', 'statistics'];
+  protected static $modules = ['node', 'statistics'];
 
   /**
    * {@inheritdoc}

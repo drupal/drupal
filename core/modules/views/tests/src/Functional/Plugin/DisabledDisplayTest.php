@@ -24,7 +24,7 @@ class DisabledDisplayTest extends ViewTestBase {
    *
    * @var array
    */
-  public static $modules = ['block', 'node', 'views'];
+  protected static $modules = ['block', 'node', 'views'];
 
   /**
    * {@inheritdoc}

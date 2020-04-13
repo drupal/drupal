@@ -17,7 +17,7 @@ class MessageEntityTest extends EntityKernelTestBase {
    *
    * @var array
    */
-  public static $modules = [
+  protected static $modules = [
     'system',
     'contact',
     'field',

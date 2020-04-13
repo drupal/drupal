@@ -14,7 +14,7 @@ class UserSubAdminTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['user_access_test'];
+  protected static $modules = ['user_access_test'];
 
   /**
    * {@inheritdoc}

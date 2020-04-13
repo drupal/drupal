@@ -19,7 +19,7 @@ class IntegrationTest extends ViewTestBase {
    *
    * @var array
    */
-  public static $modules = ['statistics', 'statistics_test_views', 'node'];
+  protected static $modules = ['statistics', 'statistics_test_views', 'node'];
 
   /**
    * {@inheritdoc}

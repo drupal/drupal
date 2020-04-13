@@ -15,7 +15,7 @@ class SearchPageTest extends MigrateSqlSourceTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['search', 'migrate_drupal'];
+  protected static $modules = ['search', 'migrate_drupal'];
 
   /**
    * {@inheritdoc}

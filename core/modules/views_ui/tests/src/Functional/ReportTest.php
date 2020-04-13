@@ -14,7 +14,7 @@ class ReportTest extends UITestBase {
    *
    * @var array
    */
-  public static $modules = ['views', 'views_ui'];
+  protected static $modules = ['views', 'views_ui'];
 
   /**
    * {@inheritdoc}

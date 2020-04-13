@@ -17,7 +17,7 @@ class NodeEntityViewModeAlterTest extends NodeTestBase {
   /**
    * Enable dummy module that implements hook_ENTITY_TYPE_view() for nodes.
    */
-  public static $modules = ['node_test'];
+  protected static $modules = ['node_test'];
 
   /**
    * {@inheritdoc}

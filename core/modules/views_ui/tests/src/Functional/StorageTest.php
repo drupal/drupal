@@ -30,7 +30,7 @@ class StorageTest extends UITestBase {
    *
    * @var array
    */
-  public static $modules = ['views_ui', 'language'];
+  protected static $modules = ['views_ui', 'language'];
 
   /**
    * Tests changing label, description and tag.

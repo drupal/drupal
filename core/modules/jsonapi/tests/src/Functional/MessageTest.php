@@ -19,7 +19,7 @@ class MessageTest extends ResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['contact'];
+  protected static $modules = ['contact'];
 
   /**
    * {@inheritdoc}

@@ -13,7 +13,7 @@ abstract class LayoutBuilderEntityViewDisplayResourceTestBase extends EntityView
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['layout_builder'];
+  protected static $modules = ['layout_builder'];
 
   /**
    * {@inheritdoc}

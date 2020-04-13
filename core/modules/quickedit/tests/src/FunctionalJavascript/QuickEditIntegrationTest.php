@@ -21,7 +21,7 @@ class QuickEditIntegrationTest extends QuickEditJavascriptTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = [
+  protected static $modules = [
     'node',
     'editor',
     'ckeditor',

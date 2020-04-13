@@ -21,7 +21,7 @@ class LanguageSelectElementTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = ['form_test', 'language'];
+  protected static $modules = ['form_test', 'language'];
 
   /**
    * {@inheritdoc}

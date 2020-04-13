@@ -49,7 +49,7 @@ class Stable9LibraryOverrideTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['system', 'user', 'path_alias'];
+  protected static $modules = ['system', 'user', 'path_alias'];
 
   /**
    * {@inheritdoc}

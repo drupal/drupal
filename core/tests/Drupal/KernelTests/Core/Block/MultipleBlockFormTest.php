@@ -15,7 +15,7 @@ class MultipleBlockFormTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['system', 'block', 'block_test'];
+  protected static $modules = ['system', 'block', 'block_test'];
 
   /**
    * Tests that blocks can have multiple forms.

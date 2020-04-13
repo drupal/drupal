@@ -19,7 +19,7 @@ class KeyValueContentEntityStorageTest extends KernelTestBase {
    *
    * @var array
    */
-  public static $modules = ['user', 'entity_test', 'keyvalue_test'];
+  protected static $modules = ['user', 'entity_test', 'keyvalue_test'];
 
   /**
    * {@inheritdoc}

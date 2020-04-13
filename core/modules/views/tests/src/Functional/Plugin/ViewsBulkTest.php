@@ -23,7 +23,7 @@ class ViewsBulkTest extends ViewTestBase {
    *
    * @var array
    */
-  public static $modules = ['node', 'views'];
+  protected static $modules = ['node', 'views'];
 
   /**
    * {@inheritdoc}

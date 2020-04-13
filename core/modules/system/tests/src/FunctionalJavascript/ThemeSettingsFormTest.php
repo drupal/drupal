@@ -18,7 +18,7 @@ class ThemeSettingsFormTest extends WebDriverTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['file'];
+  protected static $modules = ['file'];
 
   /**
    * {@inheritdoc}

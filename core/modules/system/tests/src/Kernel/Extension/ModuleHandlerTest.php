@@ -18,7 +18,7 @@ class ModuleHandlerTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['system'];
+  protected static $modules = ['system'];
 
   /**
    * The basic functionality of retrieving enabled modules.

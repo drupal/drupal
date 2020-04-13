@@ -21,7 +21,7 @@ class OEmbedFormatterTest extends MediaFunctionalTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = [
+  protected static $modules = [
     'field_ui',
     'link',
     'media_test_oembed',

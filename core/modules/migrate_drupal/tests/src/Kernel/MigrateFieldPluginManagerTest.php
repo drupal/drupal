@@ -22,7 +22,7 @@ class MigrateFieldPluginManagerTest extends MigrateDrupalTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = [
+  protected static $modules = [
     'datetime',
     'system',
     'user',

@@ -16,7 +16,7 @@ class UninstallKernelTest extends KernelTestBase {
    *
    * @var array
    */
-  public static $modules = ['system', 'user', 'field', 'file', 'image', 'media'];
+  protected static $modules = ['system', 'user', 'field', 'file', 'image', 'media'];
 
   /**
    * {@inheritdoc}

@@ -15,7 +15,7 @@ class CurrentThemeConditionTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['system', 'theme_test'];
+  protected static $modules = ['system', 'theme_test'];
 
   /**
    * Tests the current theme condition.

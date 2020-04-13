@@ -17,7 +17,7 @@ class AlterTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = ['block', 'form_test'];
+  protected static $modules = ['block', 'form_test'];
 
   /**
    * {@inheritdoc}

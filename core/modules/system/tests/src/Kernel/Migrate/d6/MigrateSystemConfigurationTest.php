@@ -14,7 +14,7 @@ class MigrateSystemConfigurationTest extends MigrateDrupal6TestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['action', 'file', 'system'];
+  protected static $modules = ['action', 'file', 'system'];
 
   protected $expectedConfig = [
     'system.cron' => [

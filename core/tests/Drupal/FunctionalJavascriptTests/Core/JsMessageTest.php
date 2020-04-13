@@ -15,7 +15,7 @@ class JsMessageTest extends WebDriverTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['js_message_test'];
+  protected static $modules = ['js_message_test'];
 
   /**
    * {@inheritdoc}

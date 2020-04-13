@@ -17,7 +17,7 @@ class HelpEmptyPageTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['system', 'help_test', 'user', 'path_alias'];
+  protected static $modules = ['system', 'help_test', 'user', 'path_alias'];
 
   /**
    * {@inheritdoc}

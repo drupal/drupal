@@ -93,7 +93,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = ['rest'];
+  protected static $modules = ['rest'];
 
   /**
    * {@inheritdoc}

@@ -16,7 +16,7 @@ class WorkspaceTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['workspaces', 'toolbar', 'field_ui'];
+  protected static $modules = ['workspaces', 'toolbar', 'field_ui'];
 
   /**
    * {@inheritdoc}

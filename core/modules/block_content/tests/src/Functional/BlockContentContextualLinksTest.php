@@ -12,7 +12,7 @@ class BlockContentContextualLinksTest extends BlockContentTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = [
+  protected static $modules = [
     'contextual',
   ];
 

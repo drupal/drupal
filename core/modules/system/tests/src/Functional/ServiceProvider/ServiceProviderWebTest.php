@@ -16,7 +16,7 @@ class ServiceProviderWebTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = ['file', 'service_provider_test'];
+  protected static $modules = ['file', 'service_provider_test'];
 
   /**
    * {@inheritdoc}

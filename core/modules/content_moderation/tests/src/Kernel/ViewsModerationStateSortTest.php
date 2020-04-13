@@ -22,7 +22,7 @@ class ViewsModerationStateSortTest extends ViewsKernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = [
+  protected static $modules = [
     'node',
     'content_moderation',
     'workflows',

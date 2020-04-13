@@ -14,7 +14,7 @@ class FormValuesTest extends WebDriverTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['node', 'ajax_test', 'ajax_forms_test'];
+  protected static $modules = ['node', 'ajax_test', 'ajax_forms_test'];
 
   /**
    * {@inheritdoc}

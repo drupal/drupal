@@ -23,7 +23,7 @@ class ConfigEntityAdapterTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['config_test'];
+  protected static $modules = ['config_test'];
 
   /**
    * The config entity.

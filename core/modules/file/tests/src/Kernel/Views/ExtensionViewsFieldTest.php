@@ -18,7 +18,7 @@ class ExtensionViewsFieldTest extends ViewsKernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['file', 'file_test_views', 'user'];
+  protected static $modules = ['file', 'file_test_views', 'user'];
 
   /**
    * Views used by this test.

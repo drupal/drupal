@@ -30,7 +30,7 @@ class PathElementFormTest extends KernelTestBase implements FormInterface {
    *
    * @var array
    */
-  public static $modules = ['system', 'user'];
+  protected static $modules = ['system', 'user'];
 
   /**
    * Sets up the test.

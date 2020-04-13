@@ -17,7 +17,7 @@ class NodeActionsConfigurationTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = ['action', 'node'];
+  protected static $modules = ['action', 'node'];
 
   /**
    * {@inheritdoc}

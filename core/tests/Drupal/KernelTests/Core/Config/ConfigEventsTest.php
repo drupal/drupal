@@ -18,7 +18,7 @@ class ConfigEventsTest extends KernelTestBase {
    *
    * @var array
    */
-  public static $modules = ['config_events_test'];
+  protected static $modules = ['config_events_test'];
 
   /**
    * Tests configuration events.

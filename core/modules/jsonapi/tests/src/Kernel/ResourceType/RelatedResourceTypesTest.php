@@ -17,7 +17,7 @@ class RelatedResourceTypesTest extends JsonapiKernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = [
+  protected static $modules = [
     'node',
     'jsonapi',
     'serialization',

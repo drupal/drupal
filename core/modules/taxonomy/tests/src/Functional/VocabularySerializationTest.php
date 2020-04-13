@@ -21,7 +21,7 @@ class VocabularySerializationTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['taxonomy', 'vocabulary_serialization_test'];
+  protected static $modules = ['taxonomy', 'vocabulary_serialization_test'];
 
   /**
    * {@inheritdoc}

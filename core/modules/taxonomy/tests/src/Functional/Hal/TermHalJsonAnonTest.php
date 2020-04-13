@@ -18,7 +18,7 @@ class TermHalJsonAnonTest extends TermResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['hal'];
+  protected static $modules = ['hal'];
 
   /**
    * {@inheritdoc}

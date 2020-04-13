@@ -17,7 +17,7 @@ class MigrateUserConfigsTranslationTest extends MigrateDrupal7TestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = [
+  protected static $modules = [
     'language',
     'locale',
     'config_translation',

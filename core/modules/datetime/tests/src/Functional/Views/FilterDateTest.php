@@ -41,7 +41,7 @@ class FilterDateTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = [
+  protected static $modules = [
     'datetime',
     'datetime_test',
     'node',

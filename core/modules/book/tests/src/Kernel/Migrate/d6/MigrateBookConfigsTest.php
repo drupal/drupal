@@ -17,7 +17,7 @@ class MigrateBookConfigsTest extends MigrateDrupal6TestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['book'];
+  protected static $modules = ['book'];
 
   /**
    * Data provider for testBookSettings().

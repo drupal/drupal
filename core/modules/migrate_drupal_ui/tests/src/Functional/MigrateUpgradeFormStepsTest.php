@@ -20,7 +20,7 @@ class MigrateUpgradeFormStepsTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['migrate_drupal_ui'];
+  protected static $modules = ['migrate_drupal_ui'];
 
   /**
    * {@inheritdoc}

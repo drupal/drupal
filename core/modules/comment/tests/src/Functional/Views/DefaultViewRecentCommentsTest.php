@@ -23,7 +23,7 @@ class DefaultViewRecentCommentsTest extends ViewTestBase {
    *
    * @var array
    */
-  public static $modules = ['node', 'comment', 'block'];
+  protected static $modules = ['node', 'comment', 'block'];
 
   /**
    * {@inheritdoc}

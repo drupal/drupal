@@ -15,7 +15,7 @@ class BlockContentTypeHalJsonCookieTest extends BlockContentTypeResourceTestBase
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['hal'];
+  protected static $modules = ['hal'];
 
   /**
    * {@inheritdoc}

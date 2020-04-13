@@ -19,7 +19,7 @@ class FilterFormatAccessTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = ['block', 'filter', 'node'];
+  protected static $modules = ['block', 'filter', 'node'];
 
   /**
    * {@inheritdoc}

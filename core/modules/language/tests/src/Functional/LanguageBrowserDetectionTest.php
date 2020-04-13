@@ -12,7 +12,7 @@ use Drupal\Tests\BrowserTestBase;
  */
 class LanguageBrowserDetectionTest extends BrowserTestBase {
 
-  public static $modules = ['language'];
+  protected static $modules = ['language'];
 
   /**
    * {@inheritdoc}

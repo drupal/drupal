@@ -17,7 +17,7 @@ use Drupal\views\Views;
 class FilterInOperatorTest extends ViewsKernelTestBase {
   use StringTranslationTrait;
 
-  public static $modules = ['system'];
+  protected static $modules = ['system'];
 
   /**
    * Views used by this test.

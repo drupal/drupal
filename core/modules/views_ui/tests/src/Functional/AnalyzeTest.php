@@ -14,7 +14,7 @@ class AnalyzeTest extends UITestBase {
    *
    * @var array
    */
-  public static $modules = ['views_ui'];
+  protected static $modules = ['views_ui'];
 
   /**
    * {@inheritdoc}

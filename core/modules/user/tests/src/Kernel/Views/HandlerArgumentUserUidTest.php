@@ -20,7 +20,7 @@ class HandlerArgumentUserUidTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = [
+  protected static $modules = [
     'system',
     'user',
     'user_test_views',

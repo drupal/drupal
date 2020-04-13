@@ -15,7 +15,7 @@ abstract class MigrateDrupal6TestBase extends MigrateDrupalTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = [
+  protected static $modules = [
     'datetime',
     'filter',
     'image',

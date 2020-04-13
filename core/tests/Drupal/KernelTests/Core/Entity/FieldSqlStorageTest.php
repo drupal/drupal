@@ -22,7 +22,7 @@ class FieldSqlStorageTest extends EntityKernelTestBase {
    *
    * @var array
    */
-  public static $modules = ['field', 'field_test', 'text', 'entity_test'];
+  protected static $modules = ['field', 'field_test', 'text', 'entity_test'];
 
   /**
    * The name of the created field.

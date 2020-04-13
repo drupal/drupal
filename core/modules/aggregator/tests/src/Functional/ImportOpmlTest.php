@@ -16,7 +16,7 @@ class ImportOpmlTest extends AggregatorTestBase {
    *
    * @var array
    */
-  public static $modules = ['block', 'help'];
+  protected static $modules = ['block', 'help'];
 
   /**
    * {@inheritdoc}

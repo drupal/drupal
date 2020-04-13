@@ -20,7 +20,7 @@ class TaxonomyAttributesTest extends TaxonomyTestBase {
    *
    * @var array
    */
-  public static $modules = ['rdf', 'views'];
+  protected static $modules = ['rdf', 'views'];
 
   /**
    * {@inheritdoc}

@@ -19,7 +19,7 @@ class LinkItemSerializationTest extends FieldKernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['link', 'serialization'];
+  protected static $modules = ['link', 'serialization'];
 
   /**
    * The serializer service.

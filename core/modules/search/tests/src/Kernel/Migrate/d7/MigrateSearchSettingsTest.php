@@ -11,7 +11,7 @@ use Drupal\Tests\migrate_drupal\Kernel\d7\MigrateDrupal7TestBase;
  */
 class MigrateSearchSettingsTest extends MigrateDrupal7TestBase {
 
-  public static $modules = ['search'];
+  protected static $modules = ['search'];
 
   /**
    * {@inheritdoc}

@@ -21,7 +21,7 @@ class FormCacheTest extends KernelTestBase {
    *
    * @var array
    */
-  public static $modules = ['system', 'user'];
+  protected static $modules = ['system', 'user'];
 
   /**
    * @var string

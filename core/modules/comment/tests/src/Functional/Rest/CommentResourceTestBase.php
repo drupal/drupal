@@ -18,7 +18,7 @@ abstract class CommentResourceTestBase extends EntityResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['comment', 'entity_test'];
+  protected static $modules = ['comment', 'entity_test'];
 
   /**
    * {@inheritdoc}

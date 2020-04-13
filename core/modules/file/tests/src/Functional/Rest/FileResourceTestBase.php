@@ -11,7 +11,7 @@ abstract class FileResourceTestBase extends EntityResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['file', 'user'];
+  protected static $modules = ['file', 'user'];
 
   /**
    * {@inheritdoc}

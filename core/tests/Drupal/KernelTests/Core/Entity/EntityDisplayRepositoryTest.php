@@ -17,7 +17,7 @@ class EntityDisplayRepositoryTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['user'];
+  protected static $modules = ['user'];
 
   /**
    * The entity display repository under test.

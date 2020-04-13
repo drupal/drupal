@@ -13,7 +13,7 @@ abstract class MenuLinkContentResourceTestBase extends EntityResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['menu_link_content'];
+  protected static $modules = ['menu_link_content'];
 
   /**
    * {@inheritdoc}

@@ -18,7 +18,7 @@ class TestMultiWidthLayoutsTest extends WebDriverTestBase {
    */
   const FIELD_UI_PREFIX = 'admin/structure/types/manage/bundle_with_section_field';
 
-  public static $modules = [
+  protected static $modules = [
     'layout_builder',
     'block',
     'node',

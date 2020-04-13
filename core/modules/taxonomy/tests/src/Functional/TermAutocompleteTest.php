@@ -21,7 +21,7 @@ class TermAutocompleteTest extends TaxonomyTestBase {
    *
    * @var array
    */
-  public static $modules = ['node'];
+  protected static $modules = ['node'];
 
   /**
    * {@inheritdoc}

@@ -15,7 +15,7 @@ class StableTemplateOverrideTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['system', 'user'];
+  protected static $modules = ['system', 'user'];
 
   /**
    * An array of template names to skip, without the extension.

@@ -14,7 +14,7 @@ class MultipleFileUploadTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['file'];
+  protected static $modules = ['file'];
 
   /**
    * {@inheritdoc}

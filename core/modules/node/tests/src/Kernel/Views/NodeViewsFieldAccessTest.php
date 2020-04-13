@@ -17,7 +17,7 @@ class NodeViewsFieldAccessTest extends FieldFieldAccessTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['node', 'entity_test'];
+  protected static $modules = ['node', 'entity_test'];
 
   /**
    * {@inheritdoc}

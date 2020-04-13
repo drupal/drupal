@@ -20,7 +20,7 @@ class BlockContentListTest extends BlockContentTestBase {
    *
    * @var array
    */
-  public static $modules = ['block', 'block_content', 'config_translation'];
+  protected static $modules = ['block', 'block_content', 'config_translation'];
 
   /**
    * {@inheritdoc}

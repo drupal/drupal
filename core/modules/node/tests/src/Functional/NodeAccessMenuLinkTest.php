@@ -16,7 +16,7 @@ class NodeAccessMenuLinkTest extends NodeTestBase {
    *
    * @var array
    */
-  public static $modules = ['menu_ui', 'block'];
+  protected static $modules = ['menu_ui', 'block'];
 
   /**
    * {@inheritdoc}

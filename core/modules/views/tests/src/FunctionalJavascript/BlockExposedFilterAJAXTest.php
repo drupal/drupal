@@ -20,7 +20,7 @@ class BlockExposedFilterAJAXTest extends WebDriverTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['node', 'views', 'block', 'views_test_config'];
+  protected static $modules = ['node', 'views', 'block', 'views_test_config'];
 
   public static $testViews = ['test_block_exposed_ajax', 'test_block_exposed_ajax_with_page'];
 

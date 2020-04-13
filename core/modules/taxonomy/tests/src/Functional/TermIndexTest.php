@@ -18,7 +18,7 @@ class TermIndexTest extends TaxonomyTestBase {
    *
    * @var array
    */
-  public static $modules = ['views'];
+  protected static $modules = ['views'];
 
   /**
    * {@inheritdoc}

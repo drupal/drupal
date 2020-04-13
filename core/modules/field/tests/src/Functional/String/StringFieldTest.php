@@ -20,7 +20,7 @@ class StringFieldTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = ['entity_test', 'file'];
+  protected static $modules = ['entity_test', 'file'];
 
   /**
    * {@inheritdoc}

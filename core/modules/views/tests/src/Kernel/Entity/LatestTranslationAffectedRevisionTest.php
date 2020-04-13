@@ -23,7 +23,7 @@ class LatestTranslationAffectedRevisionTest extends ViewsKernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = [
+  protected static $modules = [
     'node',
     'system',
     'language',

@@ -19,7 +19,7 @@ class BlockFormMessagesTest extends WebDriverTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = [
+  protected static $modules = [
     'layout_builder',
     'block',
     'node',

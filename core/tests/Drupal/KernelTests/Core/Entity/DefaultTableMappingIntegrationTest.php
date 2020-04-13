@@ -29,7 +29,7 @@ class DefaultTableMappingIntegrationTest extends EntityKernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['entity_test_extra'];
+  protected static $modules = ['entity_test_extra'];
 
   /**
    * {@inheritdoc}

@@ -23,7 +23,7 @@ class FieldGroupRowsTest extends ViewsKernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = [
+  protected static $modules = [
     'field',
     'filter',
     'node',

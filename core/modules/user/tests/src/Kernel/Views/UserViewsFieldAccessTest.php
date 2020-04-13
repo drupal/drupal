@@ -16,7 +16,7 @@ class UserViewsFieldAccessTest extends FieldFieldAccessTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['user', 'entity_test', 'language'];
+  protected static $modules = ['user', 'entity_test', 'language'];
 
   /**
    * {@inheritdoc}

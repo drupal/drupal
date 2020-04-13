@@ -22,7 +22,7 @@ class NodeTokenReplaceTest extends TokenReplaceKernelTestBase {
    *
    * @var array
    */
-  public static $modules = ['node', 'filter'];
+  protected static $modules = ['node', 'filter'];
 
   /**
    * {@inheritdoc}

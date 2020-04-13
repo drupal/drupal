@@ -33,7 +33,7 @@ abstract class JsonApiFunctionalTestBase extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = [
+  protected static $modules = [
     'jsonapi',
     'serialization',
     'node',

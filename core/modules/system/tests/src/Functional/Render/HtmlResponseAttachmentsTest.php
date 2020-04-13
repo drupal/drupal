@@ -16,7 +16,7 @@ class HtmlResponseAttachmentsTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = ['render_attached_test'];
+  protected static $modules = ['render_attached_test'];
 
   /**
    * {@inheritdoc}

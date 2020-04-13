@@ -20,7 +20,7 @@ class ImageStyleIntegrationTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['image', 'file', 'field', 'system', 'user', 'node'];
+  protected static $modules = ['image', 'file', 'field', 'system', 'user', 'node'];
 
   /**
    * {@inheritdoc}

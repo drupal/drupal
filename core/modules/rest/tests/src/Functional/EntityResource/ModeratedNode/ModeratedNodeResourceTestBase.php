@@ -15,7 +15,7 @@ abstract class ModeratedNodeResourceTestBase extends NodeResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['content_moderation'];
+  protected static $modules = ['content_moderation'];
 
   /**
    * The test editorial workflow.

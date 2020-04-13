@@ -17,7 +17,7 @@ class BlockContentDeletionTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['block', 'block_content', 'system', 'user'];
+  protected static $modules = ['block', 'block_content', 'system', 'user'];
 
   /**
    * {@inheritdoc}

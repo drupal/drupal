@@ -13,7 +13,7 @@ class FileFieldFormatterAccessTest extends FileFieldTestBase {
    *
    * @var array
    */
-  public static $modules = ['node', 'file', 'field_ui', 'file_test'];
+  protected static $modules = ['node', 'file', 'field_ui', 'file_test'];
 
   /**
    * {@inheritdoc}

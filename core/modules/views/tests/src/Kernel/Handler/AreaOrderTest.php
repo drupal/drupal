@@ -21,7 +21,7 @@ class AreaOrderTest extends ViewsKernelTestBase {
    *
    * @var array
    */
-  public static $modules = ['user', 'block'];
+  protected static $modules = ['user', 'block'];
 
   /**
    * Views used by this test.

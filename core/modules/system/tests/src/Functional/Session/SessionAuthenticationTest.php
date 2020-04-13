@@ -25,7 +25,7 @@ class SessionAuthenticationTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['basic_auth', 'session_test'];
+  protected static $modules = ['basic_auth', 'session_test'];
 
   /**
    * {@inheritdoc}

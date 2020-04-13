@@ -27,7 +27,7 @@ class EntityQueryTest extends EntityKernelTestBase {
    *
    * @var array
    */
-  public static $modules = ['field_test', 'language'];
+  protected static $modules = ['field_test', 'language'];
 
   /**
    * @var array

@@ -21,7 +21,7 @@ class EntityReferenceAutocompleteWidgetTest extends WebDriverTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['node', 'field_ui'];
+  protected static $modules = ['node', 'field_ui'];
 
   /**
    * {@inheritdoc}

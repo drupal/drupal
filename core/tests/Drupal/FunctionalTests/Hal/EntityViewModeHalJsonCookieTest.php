@@ -15,7 +15,7 @@ class EntityViewModeHalJsonCookieTest extends EntityViewModeResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['hal'];
+  protected static $modules = ['hal'];
 
   /**
    * {@inheritdoc}

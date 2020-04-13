@@ -17,7 +17,7 @@ class PathTaxonomyTermTest extends PathTestBase {
    *
    * @var array
    */
-  public static $modules = ['taxonomy'];
+  protected static $modules = ['taxonomy'];
 
   /**
    * {@inheritdoc}

@@ -41,7 +41,7 @@ class TimestampTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['node', 'entity_test', 'field_ui'];
+  protected static $modules = ['node', 'entity_test', 'field_ui'];
 
   /**
    * {@inheritdoc}

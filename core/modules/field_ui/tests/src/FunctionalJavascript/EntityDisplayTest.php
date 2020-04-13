@@ -15,7 +15,7 @@ class EntityDisplayTest extends WebDriverTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['field_ui', 'entity_test'];
+  protected static $modules = ['field_ui', 'entity_test'];
 
   /**
    * {@inheritdoc}

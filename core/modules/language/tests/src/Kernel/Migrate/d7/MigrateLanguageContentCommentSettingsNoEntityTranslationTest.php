@@ -18,7 +18,7 @@ class MigrateLanguageContentCommentSettingsNoEntityTranslationTest extends Migra
   /**
    * {@inheritdoc}
    */
-  public static $modules = [
+  protected static $modules = [
     'comment',
     'content_translation',
     'language',

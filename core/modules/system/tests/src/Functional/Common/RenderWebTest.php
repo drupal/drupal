@@ -21,7 +21,7 @@ class RenderWebTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = ['common_test'];
+  protected static $modules = ['common_test'];
 
   /**
    * {@inheritdoc}

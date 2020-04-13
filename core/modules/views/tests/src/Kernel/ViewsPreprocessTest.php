@@ -20,7 +20,7 @@ class ViewsPreprocessTest extends ViewsKernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['entity_test', 'user', 'node'];
+  protected static $modules = ['entity_test', 'user', 'node'];
 
   /**
    * {@inheritdoc}

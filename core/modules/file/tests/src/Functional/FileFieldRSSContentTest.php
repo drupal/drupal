@@ -16,7 +16,7 @@ class FileFieldRSSContentTest extends FileFieldTestBase {
    *
    * @var array
    */
-  public static $modules = ['node', 'views'];
+  protected static $modules = ['node', 'views'];
 
   /**
    * {@inheritdoc}

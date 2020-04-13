@@ -14,7 +14,7 @@ class MapDataNormalizerTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['system', 'serialization'];
+  protected static $modules = ['system', 'serialization'];
 
   /**
    * The serializer service.

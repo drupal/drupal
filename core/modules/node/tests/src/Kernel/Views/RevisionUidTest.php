@@ -23,7 +23,7 @@ class RevisionUidTest extends ViewsKernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = [
+  protected static $modules = [
     'node',
     'node_test_views',
     'system',

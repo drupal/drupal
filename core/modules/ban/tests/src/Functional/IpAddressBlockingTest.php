@@ -18,7 +18,7 @@ class IpAddressBlockingTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = ['ban'];
+  protected static $modules = ['ban'];
 
   /**
    * {@inheritdoc}

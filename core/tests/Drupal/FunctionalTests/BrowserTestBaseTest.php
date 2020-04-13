@@ -24,7 +24,7 @@ class BrowserTestBaseTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = ['test_page_test', 'form_test', 'system_test', 'node'];
+  protected static $modules = ['test_page_test', 'form_test', 'system_test', 'node'];
 
   /**
    * {@inheritdoc}

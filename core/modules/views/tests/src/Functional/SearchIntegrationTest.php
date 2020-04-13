@@ -19,7 +19,7 @@ class SearchIntegrationTest extends ViewTestBase {
    *
    * @var array
    */
-  public static $modules = ['node', 'search'];
+  protected static $modules = ['node', 'search'];
 
   /**
    * {@inheritdoc}

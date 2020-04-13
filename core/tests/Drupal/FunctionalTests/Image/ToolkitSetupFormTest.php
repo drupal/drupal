@@ -23,7 +23,7 @@ class ToolkitSetupFormTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = ['system', 'image_test'];
+  protected static $modules = ['system', 'image_test'];
 
   /**
    * {@inheritdoc}

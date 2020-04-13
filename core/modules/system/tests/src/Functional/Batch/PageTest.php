@@ -16,7 +16,7 @@ class PageTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = ['batch_test'];
+  protected static $modules = ['batch_test'];
 
   /**
    * {@inheritdoc}

@@ -21,7 +21,7 @@ class RevisionRelationshipsTest extends ViewsKernelTestBase {
    *
    * @var array
    */
-  public static $modules = [
+  protected static $modules = [
     'node',
     'node_test_views',
     'language',

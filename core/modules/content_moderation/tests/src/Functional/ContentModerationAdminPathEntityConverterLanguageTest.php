@@ -14,7 +14,7 @@ class ContentModerationAdminPathEntityConverterLanguageTest extends AdminPathEnt
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['language', 'language_test', 'content_moderation'];
+  protected static $modules = ['language', 'language_test', 'content_moderation'];
 
   /**
    * {@inheritdoc}

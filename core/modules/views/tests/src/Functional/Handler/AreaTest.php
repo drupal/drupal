@@ -27,7 +27,7 @@ class AreaTest extends ViewTestBase {
    *
    * @var array
    */
-  public static $modules = ['node', 'views_ui'];
+  protected static $modules = ['node', 'views_ui'];
 
   /**
    * {@inheritdoc}

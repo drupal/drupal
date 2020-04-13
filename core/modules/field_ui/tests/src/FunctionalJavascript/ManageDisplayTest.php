@@ -15,7 +15,7 @@ class ManageDisplayTest extends WebDriverTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = [
+  protected static $modules = [
     'node',
     'field_ui',
     'field_test',

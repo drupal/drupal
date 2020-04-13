@@ -27,7 +27,7 @@ class AreaDisplayLinkTest extends ViewsKernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['system', 'user', 'filter'];
+  protected static $modules = ['system', 'user', 'filter'];
 
   /**
    * {@inheritdoc}

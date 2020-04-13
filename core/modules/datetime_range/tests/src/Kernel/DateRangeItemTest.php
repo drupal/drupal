@@ -33,7 +33,7 @@ class DateRangeItemTest extends FieldKernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = [
+  protected static $modules = [
     'datetime',
     'datetime_range',
   ];

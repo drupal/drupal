@@ -18,7 +18,7 @@ class BlockConfigSchemaTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = [
+  protected static $modules = [
     'block',
     'aggregator',
     'book',

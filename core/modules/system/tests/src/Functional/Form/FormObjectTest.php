@@ -16,7 +16,7 @@ class FormObjectTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = ['form_test'];
+  protected static $modules = ['form_test'];
 
   /**
    * {@inheritdoc}

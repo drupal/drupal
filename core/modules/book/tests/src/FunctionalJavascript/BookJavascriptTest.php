@@ -17,7 +17,7 @@ class BookJavascriptTest extends WebDriverTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['book'];
+  protected static $modules = ['book'];
 
   /**
    * {@inheritdoc}

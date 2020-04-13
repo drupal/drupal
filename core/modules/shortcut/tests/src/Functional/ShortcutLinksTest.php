@@ -26,7 +26,7 @@ class ShortcutLinksTest extends ShortcutTestBase {
    *
    * @var array
    */
-  public static $modules = ['router_test', 'views', 'block'];
+  protected static $modules = ['router_test', 'views', 'block'];
 
   /**
    * {@inheritdoc}

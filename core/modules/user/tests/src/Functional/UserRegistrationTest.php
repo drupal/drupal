@@ -22,7 +22,7 @@ class UserRegistrationTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = ['field_test'];
+  protected static $modules = ['field_test'];
 
   /**
    * {@inheritdoc}
