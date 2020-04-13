@@ -1295,6 +1295,40 @@ function system_requirements($phase) {
     }
   }
 
+  // Ensure that no module has a current schema version that is lower than the
+  // one that was last removed.
+  if ($phase == 'update') {
+    $module_handler = \Drupal::moduleHandler();
+    $module_list = [];
+    foreach ($module_handler->getImplementations('update_last_removed') as $module) {
+      $last_removed = $module_handler->invoke($module, 'update_last_removed');
+      if ($last_removed && $last_removed > drupal_get_installed_schema_version($module)) {
+
+        /** @var \Drupal\Core\Extension\Extension $module_info */
+        $module_info = \Drupal::service('extension.list.module')->get($module);
+        $module_list[$module_info->info['package']][$module] = [
+          'info' => $module_info,
+          'last_removed' => $last_removed,
+          'installed_version' => drupal_get_installed_schema_version($module),
+        ];
+      }
+    }
+
+    foreach ($module_list as $package => $package_modules) {
+      foreach ($package_modules as $module => $data) {
+        $requirements[$module . '_update_last_removed'] = [
+          'title' => t('Unsupported schema version: @module', ['@module' => $data['info']->info['name']]),
+          'description' => t('The installed version of the %module module is too old to update. Update to an intermediate version first (last removed version: @last_removed_version, installed version: @installed_version).', [
+            '%module' => $data['info']->info['name'],
+            '@last_removed_version' => $data['last_removed'],
+            '@installed_version' => $data['installed_version'],
+          ]),
+          'severity' => REQUIREMENT_ERROR,
+        ];
+      }
+    }
+  }
+
   return $requirements;
 }
 
