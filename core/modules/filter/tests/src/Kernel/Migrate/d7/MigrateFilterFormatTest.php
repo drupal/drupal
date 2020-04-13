@@ -16,7 +16,7 @@ class MigrateFilterFormatTest extends MigrateDrupal7TestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['filter'];
+  protected static $modules = ['filter'];
 
   /**
    * {@inheritdoc}

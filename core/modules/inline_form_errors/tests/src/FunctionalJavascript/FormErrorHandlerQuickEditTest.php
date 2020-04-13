@@ -17,7 +17,7 @@ class FormErrorHandlerQuickEditTest extends WebDriverTestBase {
    *
    * @var array
    */
-  public static $modules = [
+  protected static $modules = [
     'quickedit',
     'node',
     'inline_form_errors',

@@ -17,7 +17,7 @@ class FieldAccessTest extends FieldTestBase {
    *
    * @var array
    */
-  public static $modules = ['node', 'field_test'];
+  protected static $modules = ['node', 'field_test'];
 
   /**
    * {@inheritdoc}

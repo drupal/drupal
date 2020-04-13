@@ -14,7 +14,7 @@ class NodeCommentsTest extends CommentTestBase {
    *
    * @var array
    */
-  public static $modules = ['history'];
+  protected static $modules = ['history'];
 
   /**
    * {@inheritdoc}

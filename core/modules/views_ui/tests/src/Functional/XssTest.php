@@ -14,7 +14,7 @@ class XssTest extends UITestBase {
    *
    * @var array
    */
-  public static $modules = ['node', 'user', 'views_ui', 'views_ui_test'];
+  protected static $modules = ['node', 'user', 'views_ui', 'views_ui_test'];
 
   /**
    * {@inheritdoc}

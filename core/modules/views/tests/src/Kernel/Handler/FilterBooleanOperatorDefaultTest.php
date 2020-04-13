@@ -16,7 +16,7 @@ class FilterBooleanOperatorDefaultTest extends ViewsKernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['system', 'views_test_data'];
+  protected static $modules = ['system', 'views_test_data'];
 
   /**
    * {@inheritdoc}

@@ -26,7 +26,7 @@ class MediaStandardProfileTest extends MediaJavascriptTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['media_test_oembed'];
+  protected static $modules = ['media_test_oembed'];
 
   /**
    * {@inheritdoc}

@@ -15,7 +15,7 @@ class ConfigTestHalJsonCookieTest extends ConfigTestResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['hal'];
+  protected static $modules = ['hal'];
 
   /**
    * {@inheritdoc}

@@ -11,7 +11,7 @@ use Drupal\migrate\Plugin\MigrationInterface;
  */
 class MigrateExecutableTest extends MigrateTestBase {
 
-  public static $modules = [
+  protected static $modules = [
     'entity_test',
     'user',
   ];

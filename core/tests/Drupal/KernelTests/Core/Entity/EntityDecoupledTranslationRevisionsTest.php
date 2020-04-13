@@ -22,7 +22,7 @@ class EntityDecoupledTranslationRevisionsTest extends EntityKernelTestBase {
    *
    * @var array
    */
-  public static $modules = [
+  protected static $modules = [
     'system',
     'entity_test',
     'language',

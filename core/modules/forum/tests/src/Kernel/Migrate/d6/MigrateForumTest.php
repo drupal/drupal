@@ -19,7 +19,7 @@ class MigrateForumTest extends MigrateNodeTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = [
+  protected static $modules = [
     'comment',
     'forum',
     'menu_ui',

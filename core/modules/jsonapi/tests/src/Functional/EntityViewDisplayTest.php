@@ -16,7 +16,7 @@ class EntityViewDisplayTest extends ResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['node'];
+  protected static $modules = ['node'];
 
   /**
    * {@inheritdoc}

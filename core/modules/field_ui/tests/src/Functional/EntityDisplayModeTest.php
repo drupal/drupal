@@ -19,7 +19,7 @@ class EntityDisplayModeTest extends BrowserTestBase {
    *
    * @var string[]
    */
-  public static $modules = ['block', 'entity_test', 'field_ui', 'node'];
+  protected static $modules = ['block', 'entity_test', 'field_ui', 'node'];
 
   /**
    * {@inheritdoc}

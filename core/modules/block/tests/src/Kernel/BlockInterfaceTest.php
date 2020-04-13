@@ -13,7 +13,7 @@ use Drupal\KernelTests\KernelTestBase;
  */
 class BlockInterfaceTest extends KernelTestBase {
 
-  public static $modules = ['system', 'block', 'block_test', 'user'];
+  protected static $modules = ['system', 'block', 'block_test', 'user'];
 
   /**
    * Test configuration and subsequent form() and build() method calls.

@@ -21,7 +21,7 @@ class TaxonomyFieldTidTest extends ViewsKernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['taxonomy', 'taxonomy_test_views', 'text', 'filter'];
+  protected static $modules = ['taxonomy', 'taxonomy_test_views', 'text', 'filter'];
 
   /**
    * {@inheritdoc}

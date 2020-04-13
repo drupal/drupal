@@ -16,7 +16,7 @@ class LocaleFileSystemFormTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = ['system'];
+  protected static $modules = ['system'];
 
   /**
    * {@inheritdoc}

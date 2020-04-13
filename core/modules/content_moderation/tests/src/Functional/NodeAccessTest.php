@@ -16,7 +16,7 @@ class NodeAccessTest extends ModerationStateTestBase {
    *
    * @var array
    */
-  public static $modules = [
+  protected static $modules = [
     'content_moderation',
     'block',
     'block_content',

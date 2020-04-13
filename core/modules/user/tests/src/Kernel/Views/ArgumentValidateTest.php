@@ -21,7 +21,7 @@ class ArgumentValidateTest extends ViewsKernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = [
+  protected static $modules = [
     'node',
     'path_alias',
     'user_test_views',

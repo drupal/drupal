@@ -23,7 +23,7 @@ class NodeTypeTest extends NodeTestBase {
    *
    * @var array
    */
-  public static $modules = ['field_ui', 'block'];
+  protected static $modules = ['field_ui', 'block'];
 
   /**
    * {@inheritdoc}

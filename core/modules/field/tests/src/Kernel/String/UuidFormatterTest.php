@@ -18,7 +18,7 @@ class UuidFormatterTest extends KernelTestBase {
    *
    * @var array
    */
-  public static $modules = ['field', 'entity_test', 'system', 'user'];
+  protected static $modules = ['field', 'entity_test', 'system', 'user'];
 
   /**
    * {@inheritdoc}

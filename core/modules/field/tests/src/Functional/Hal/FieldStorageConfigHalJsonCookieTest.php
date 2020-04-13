@@ -15,7 +15,7 @@ class FieldStorageConfigHalJsonCookieTest extends FieldStorageConfigResourceTest
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['hal'];
+  protected static $modules = ['hal'];
 
   /**
    * {@inheritdoc}

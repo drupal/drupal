@@ -16,7 +16,7 @@ class MigrateTaxonomyVocabularyTest extends MigrateDrupal7TestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['taxonomy', 'text'];
+  protected static $modules = ['taxonomy', 'text'];
 
   /**
    * {@inheritdoc}

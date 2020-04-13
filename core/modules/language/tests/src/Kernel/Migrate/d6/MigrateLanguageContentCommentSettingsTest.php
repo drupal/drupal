@@ -15,7 +15,7 @@ class MigrateLanguageContentCommentSettingsTest extends MigrateDrupal6TestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = [
+  protected static $modules = [
     'comment',
     'language',
     'content_translation',

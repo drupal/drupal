@@ -39,7 +39,7 @@ class TimestampAgoFormatterTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['entity_test', 'field_ui'];
+  protected static $modules = ['entity_test', 'field_ui'];
 
   /**
    * {@inheritdoc}

@@ -14,7 +14,7 @@ class MigrateNodeDeriverTest extends MigrateDrupal7TestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['node'];
+  protected static $modules = ['node'];
 
   /**
    * Test node translation migrations with translation disabled.

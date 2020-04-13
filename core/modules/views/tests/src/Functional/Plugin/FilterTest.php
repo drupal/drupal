@@ -27,7 +27,7 @@ class FilterTest extends ViewTestBase {
    *
    * @var array
    */
-  public static $modules = ['views_ui', 'node'];
+  protected static $modules = ['views_ui', 'node'];
 
   /**
    * {@inheritdoc}

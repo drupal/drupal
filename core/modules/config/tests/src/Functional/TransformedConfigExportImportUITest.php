@@ -15,7 +15,7 @@ class TransformedConfigExportImportUITest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = [
+  protected static $modules = [
     'config',
     'config_transformer_test',
   ];

@@ -23,7 +23,7 @@ class ContentTranslationViewsUITest extends UITestBase {
    *
    * @var array
    */
-  public static $modules = ['content_translation'];
+  protected static $modules = ['content_translation'];
 
   /**
    * {@inheritdoc}

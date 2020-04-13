@@ -19,7 +19,7 @@ class LocaleContentTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = ['node', 'locale'];
+  protected static $modules = ['node', 'locale'];
 
   /**
    * {@inheritdoc}

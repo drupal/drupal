@@ -23,7 +23,7 @@ class StateValuesCleanAdvancedTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = ['file', 'form_test'];
+  protected static $modules = ['file', 'form_test'];
 
   /**
    * {@inheritdoc}

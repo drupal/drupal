@@ -16,7 +16,7 @@ class CrudTest extends KernelTestBase {
    *
    * @var array
    */
-  public static $modules = ['entity_test', 'rdf', 'system'];
+  protected static $modules = ['entity_test', 'rdf', 'system'];
 
   /**
    * @var string

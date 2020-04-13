@@ -21,7 +21,7 @@ class ForumUninstallTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = ['forum'];
+  protected static $modules = ['forum'];
 
   /**
    * {@inheritdoc}

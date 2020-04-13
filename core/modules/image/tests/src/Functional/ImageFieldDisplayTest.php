@@ -32,7 +32,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
    *
    * @var array
    */
-  public static $modules = ['field_ui'];
+  protected static $modules = ['field_ui'];
 
   /**
    * {@inheritdoc}

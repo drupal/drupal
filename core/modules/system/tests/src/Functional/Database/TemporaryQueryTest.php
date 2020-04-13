@@ -14,7 +14,7 @@ class TemporaryQueryTest extends DatabaseTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['database_test'];
+  protected static $modules = ['database_test'];
 
   /**
    * {@inheritdoc}

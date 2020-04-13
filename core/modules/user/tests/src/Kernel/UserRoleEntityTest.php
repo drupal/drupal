@@ -10,7 +10,7 @@ use Drupal\user\Entity\Role;
  */
 class UserRoleEntityTest extends KernelTestBase {
 
-  public static $modules = ['system', 'user'];
+  protected static $modules = ['system', 'user'];
 
   public function testOrderOfPermissions() {
     $role = Role::create(['id' => 'test_role']);

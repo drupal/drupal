@@ -14,7 +14,7 @@ class BaseThemeRequiredTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['system'];
+  protected static $modules = ['system'];
 
   /**
    * The theme installer.

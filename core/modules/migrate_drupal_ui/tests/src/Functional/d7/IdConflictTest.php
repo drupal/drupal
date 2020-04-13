@@ -14,7 +14,7 @@ class IdConflictTest extends MigrateUpgradeExecuteTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = [
+  protected static $modules = [
     'file',
     'language',
     'config_translation',

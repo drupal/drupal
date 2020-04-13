@@ -20,7 +20,7 @@ class MigrateInterruptionTest extends KernelTestBase {
    *
    * @var array
    */
-  public static $modules = ['migrate', 'migrate_events_test'];
+  protected static $modules = ['migrate', 'migrate_events_test'];
 
   /**
    * {@inheritdoc}

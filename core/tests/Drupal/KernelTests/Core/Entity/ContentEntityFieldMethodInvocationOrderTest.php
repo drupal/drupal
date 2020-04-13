@@ -16,7 +16,7 @@ class ContentEntityFieldMethodInvocationOrderTest extends EntityKernelTestBase {
    *
    * @var array
    */
-  public static $modules = ['language', 'system', 'entity_test'];
+  protected static $modules = ['language', 'system', 'entity_test'];
 
   /**
    * The EntityTest entity type storage.

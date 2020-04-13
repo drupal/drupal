@@ -15,7 +15,7 @@ class RestResourceConfigTest extends ResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['rest', 'dblog'];
+  protected static $modules = ['rest', 'dblog'];
 
   /**
    * {@inheritdoc}

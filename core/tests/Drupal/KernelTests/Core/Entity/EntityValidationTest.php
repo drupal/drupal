@@ -17,7 +17,7 @@ class EntityValidationTest extends EntityKernelTestBase {
    *
    * @var array
    */
-  public static $modules = ['filter', 'text', 'language'];
+  protected static $modules = ['filter', 'text', 'language'];
 
   /**
    * @var string

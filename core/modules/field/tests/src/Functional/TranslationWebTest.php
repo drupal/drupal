@@ -19,7 +19,7 @@ class TranslationWebTest extends FieldTestBase {
    *
    * @var array
    */
-  public static $modules = ['language', 'field_test', 'entity_test'];
+  protected static $modules = ['language', 'field_test', 'entity_test'];
 
   /**
    * {@inheritdoc}

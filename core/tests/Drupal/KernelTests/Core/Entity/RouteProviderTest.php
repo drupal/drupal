@@ -23,7 +23,7 @@ class RouteProviderTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['entity_test', 'user', 'system'];
+  protected static $modules = ['entity_test', 'user', 'system'];
 
   /**
    * {@inheritdoc}

@@ -20,7 +20,7 @@ class EntityTestHalJsonInternalPropertyNormalizerTest extends EntityTestHalJsonA
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['hal'];
+  protected static $modules = ['hal'];
 
   /**
    * {@inheritdoc}

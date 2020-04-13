@@ -19,7 +19,7 @@ class EntityReferenceAutoCreateTest extends BrowserTestBase {
 
   use EntityReferenceTestTrait;
 
-  public static $modules = ['node', 'taxonomy'];
+  protected static $modules = ['node', 'taxonomy'];
 
   /**
    * {@inheritdoc}

@@ -16,7 +16,7 @@ class ShortcutSetUsersTest extends MigrateSqlSourceTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['shortcut', 'migrate_drupal'];
+  protected static $modules = ['shortcut', 'migrate_drupal'];
 
   /**
    * {@inheritdoc}

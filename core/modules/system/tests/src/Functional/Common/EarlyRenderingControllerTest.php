@@ -20,7 +20,7 @@ class EarlyRenderingControllerTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['system', 'early_rendering_controller_test'];
+  protected static $modules = ['system', 'early_rendering_controller_test'];
 
   /**
    * {@inheritdoc}

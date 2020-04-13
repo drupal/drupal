@@ -19,7 +19,7 @@ class NodeImportCreateTest extends KernelTestBase {
    *
    * @var array
    */
-  public static $modules = ['node', 'field', 'text', 'system', 'user'];
+  protected static $modules = ['node', 'field', 'text', 'system', 'user'];
 
   /**
    * Set the default field storage backend for fields created during tests.

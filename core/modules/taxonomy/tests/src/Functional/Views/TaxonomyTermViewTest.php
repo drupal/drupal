@@ -21,7 +21,7 @@ class TaxonomyTermViewTest extends TaxonomyTestBase {
    *
    * @var array
    */
-  public static $modules = ['taxonomy', 'views'];
+  protected static $modules = ['taxonomy', 'views'];
 
   /**
    * {@inheritdoc}

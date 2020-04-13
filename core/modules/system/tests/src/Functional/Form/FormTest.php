@@ -26,7 +26,7 @@ class FormTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = ['filter', 'form_test', 'file', 'datetime'];
+  protected static $modules = ['filter', 'form_test', 'file', 'datetime'];
 
   /**
    * {@inheritdoc}

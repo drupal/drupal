@@ -22,7 +22,7 @@ class MigrationPluginListTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = [
+  protected static $modules = [
     'migrate',
     // Test with all modules containing Drupal migrations.
     'action',

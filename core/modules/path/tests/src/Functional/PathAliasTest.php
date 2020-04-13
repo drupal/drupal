@@ -19,7 +19,7 @@ class PathAliasTest extends PathTestBase {
    *
    * @var array
    */
-  public static $modules = ['path'];
+  protected static $modules = ['path'];
 
   /**
    * {@inheritdoc}

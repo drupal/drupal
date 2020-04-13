@@ -18,7 +18,7 @@ class InternalTest extends KernelTestBase {
    *
    * @var array
    */
-  public static $modules = [
+  protected static $modules = [
     'ckeditor',
     'ckeditor_test',
     'filter',

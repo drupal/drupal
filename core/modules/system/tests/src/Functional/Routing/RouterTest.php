@@ -21,7 +21,7 @@ class RouterTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = ['router_test'];
+  protected static $modules = ['router_test'];
 
   /**
    * {@inheritdoc}

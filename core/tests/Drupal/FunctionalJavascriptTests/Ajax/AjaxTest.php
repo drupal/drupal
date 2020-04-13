@@ -14,7 +14,7 @@ class AjaxTest extends WebDriverTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['ajax_test'];
+  protected static $modules = ['ajax_test'];
 
   /**
    * {@inheritdoc}

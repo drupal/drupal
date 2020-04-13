@@ -13,7 +13,7 @@ abstract class WorkflowResourceTestBase extends EntityResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = [
+  protected static $modules = [
     'workflows',
     'workflow_type_test',
   ];

@@ -14,7 +14,7 @@ abstract class WorkspaceResourceTestBase extends EntityResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['workspaces'];
+  protected static $modules = ['workspaces'];
 
   /**
    * {@inheritdoc}

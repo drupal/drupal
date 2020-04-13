@@ -18,7 +18,7 @@ class UserBlocksTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = ['block', 'views'];
+  protected static $modules = ['block', 'views'];
 
   /**
    * {@inheritdoc}

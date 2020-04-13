@@ -17,7 +17,7 @@ abstract class NodeTestBase extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = ['node', 'datetime'];
+  protected static $modules = ['node', 'datetime'];
 
   /**
    * The node access control handler.

@@ -25,7 +25,7 @@ class SearchMatchTest extends KernelTestBase {
    *
    * @var array
    */
-  public static $modules = ['search'];
+  protected static $modules = ['search'];
 
   /**
    * {@inheritdoc}

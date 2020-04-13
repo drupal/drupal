@@ -18,7 +18,7 @@ class FilterCrudTest extends KernelTestBase {
    *
    * @var array
    */
-  public static $modules = ['filter', 'filter_test', 'system', 'user'];
+  protected static $modules = ['filter', 'filter_test', 'system', 'user'];
 
   /**
    * Tests CRUD operations for text formats and filters.

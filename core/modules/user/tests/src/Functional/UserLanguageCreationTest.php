@@ -18,7 +18,7 @@ class UserLanguageCreationTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = ['user', 'language'];
+  protected static $modules = ['user', 'language'];
 
   /**
    * {@inheritdoc}

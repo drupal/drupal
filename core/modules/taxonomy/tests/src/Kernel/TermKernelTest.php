@@ -18,7 +18,7 @@ class TermKernelTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['filter', 'taxonomy', 'text', 'user'];
+  protected static $modules = ['filter', 'taxonomy', 'text', 'user'];
 
   /**
    * {@inheritdoc}

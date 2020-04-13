@@ -16,7 +16,7 @@ class DependencyMissingTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = ['update_test_0', 'update_test_2'];
+  protected static $modules = ['update_test_0', 'update_test_2'];
 
   /**
    * {@inheritdoc}

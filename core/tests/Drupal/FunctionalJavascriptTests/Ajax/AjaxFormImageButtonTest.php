@@ -14,7 +14,7 @@ class AjaxFormImageButtonTest extends WebDriverTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['ajax_forms_test'];
+  protected static $modules = ['ajax_forms_test'];
 
   /**
    * {@inheritdoc}

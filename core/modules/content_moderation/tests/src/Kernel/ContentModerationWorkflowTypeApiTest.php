@@ -26,7 +26,7 @@ class ContentModerationWorkflowTypeApiTest extends KernelTestBase {
    *
    * @var array
    */
-  public static $modules = [
+  protected static $modules = [
     'workflows',
     'content_moderation',
   ];

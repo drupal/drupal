@@ -15,7 +15,7 @@ class BaseFieldOverrideHalJsonCookieTest extends BaseFieldOverrideResourceTestBa
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['hal'];
+  protected static $modules = ['hal'];
 
   /**
    * {@inheritdoc}

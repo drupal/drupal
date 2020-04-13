@@ -24,7 +24,7 @@ class LocaleConfigTranslationTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = ['locale', 'contact', 'contact_test'];
+  protected static $modules = ['locale', 'contact', 'contact_test'];
 
   /**
    * {@inheritdoc}

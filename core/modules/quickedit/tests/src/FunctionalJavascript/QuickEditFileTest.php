@@ -18,7 +18,7 @@ class QuickEditFileTest extends QuickEditJavascriptTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = [
+  protected static $modules = [
     'node',
     'file',
   ];

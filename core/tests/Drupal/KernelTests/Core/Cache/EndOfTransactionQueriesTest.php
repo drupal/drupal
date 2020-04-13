@@ -20,7 +20,7 @@ class EndOfTransactionQueriesTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = [
+  protected static $modules = [
     'delay_cache_tags_invalidation',
     'entity_test',
     'system',

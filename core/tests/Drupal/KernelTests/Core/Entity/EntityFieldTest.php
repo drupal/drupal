@@ -36,7 +36,7 @@ class EntityFieldTest extends EntityKernelTestBase {
    *
    * @var array
    */
-  public static $modules = ['filter', 'text', 'node', 'user', 'field_test'];
+  protected static $modules = ['filter', 'text', 'node', 'user', 'field_test'];
 
   /**
    * @var string

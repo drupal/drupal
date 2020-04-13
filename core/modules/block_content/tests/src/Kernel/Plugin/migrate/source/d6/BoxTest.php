@@ -15,7 +15,7 @@ class BoxTest extends MigrateSqlSourceTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['block_content', 'migrate_drupal'];
+  protected static $modules = ['block_content', 'migrate_drupal'];
 
   /**
    * {@inheritdoc}

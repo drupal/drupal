@@ -24,7 +24,7 @@ class StyleOpmlTest extends ViewTestBase {
    *
    * @var array
    */
-  public static $modules = ['aggregator'];
+  protected static $modules = ['aggregator'];
 
   /**
    * {@inheritdoc}

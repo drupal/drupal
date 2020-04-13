@@ -21,7 +21,7 @@ class MenuLinksTest extends KernelTestBase {
    *
    * @var array
    */
-  public static $modules = ['link', 'menu_link_content', 'router_test', 'system', 'user'];
+  protected static $modules = ['link', 'menu_link_content', 'router_test', 'system', 'user'];
 
   /**
    * The menu link plugin manager.

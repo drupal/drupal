@@ -21,7 +21,7 @@ class RssFieldsTest extends ViewsKernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['node', 'field', 'text', 'filter'];
+  protected static $modules = ['node', 'field', 'text', 'filter'];
 
   /**
    * {@inheritdoc}

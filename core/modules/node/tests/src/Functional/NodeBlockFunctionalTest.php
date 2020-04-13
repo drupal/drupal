@@ -41,7 +41,7 @@ class NodeBlockFunctionalTest extends NodeTestBase {
    *
    * @var array
    */
-  public static $modules = ['block', 'views'];
+  protected static $modules = ['block', 'views'];
 
   protected function setUp(): void {
     parent::setUp();

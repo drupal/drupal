@@ -28,7 +28,7 @@ class EditorImageDialogTest extends EntityKernelTestBase {
    *
    * @var array
    */
-  public static $modules = ['node', 'file', 'editor', 'editor_test', 'user', 'system'];
+  protected static $modules = ['node', 'file', 'editor', 'editor_test', 'user', 'system'];
 
   /**
    * Sets up the test.

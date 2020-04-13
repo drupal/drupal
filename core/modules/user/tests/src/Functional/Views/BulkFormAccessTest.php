@@ -19,7 +19,7 @@ class BulkFormAccessTest extends UserTestBase {
    *
    * @var array
    */
-  public static $modules = ['user_access_test'];
+  protected static $modules = ['user_access_test'];
 
   /**
    * {@inheritdoc}

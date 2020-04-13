@@ -29,7 +29,7 @@ class FilterDateTest extends ViewTestBase {
    *
    * @var array
    */
-  public static $modules = ['node', 'views_ui', 'datetime'];
+  protected static $modules = ['node', 'views_ui', 'datetime'];
 
   /**
    * {@inheritdoc}

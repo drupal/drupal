@@ -19,7 +19,7 @@ class ThemeLegacyTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = ['theme_test', 'theme_legacy_test'];
+  protected static $modules = ['theme_test', 'theme_legacy_test'];
 
   /**
    * {@inheritdoc}

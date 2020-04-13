@@ -19,7 +19,7 @@ class MigrateBlockedIpsTest extends MigrateDrupal7TestBase {
    *
    * @var array
    */
-  public static $modules = ['ban'];
+  protected static $modules = ['ban'];
 
   /**
    * {@inheritdoc}

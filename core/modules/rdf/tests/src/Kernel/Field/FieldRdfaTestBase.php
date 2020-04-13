@@ -51,7 +51,7 @@ abstract class FieldRdfaTestBase extends FieldKernelTestBase {
    *
    * @var array
    */
-  public static $modules = ['rdf'];
+  protected static $modules = ['rdf'];
 
   /**
    * @var string

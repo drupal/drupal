@@ -22,7 +22,7 @@ class EntityUrlLanguageTest extends LanguageTestBase {
    *
    * @var array
    */
-  public static $modules = ['entity_test', 'user'];
+  protected static $modules = ['entity_test', 'user'];
 
   /**
    * The entity being used for testing.

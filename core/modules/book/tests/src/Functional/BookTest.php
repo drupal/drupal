@@ -21,7 +21,7 @@ class BookTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = ['book', 'block', 'node_access_test', 'book_test'];
+  protected static $modules = ['book', 'block', 'node_access_test', 'book_test'];
 
   /**
    * {@inheritdoc}

@@ -38,7 +38,7 @@ class EntityResourceTest extends JsonapiKernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = [
+  protected static $modules = [
     'node',
     'field',
     'jsonapi',

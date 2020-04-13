@@ -17,7 +17,7 @@ class RedirectTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = ['form_test', 'block'];
+  protected static $modules = ['form_test', 'block'];
 
   /**
    * {@inheritdoc}

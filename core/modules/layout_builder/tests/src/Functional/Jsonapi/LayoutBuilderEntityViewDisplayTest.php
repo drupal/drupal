@@ -16,7 +16,7 @@ class LayoutBuilderEntityViewDisplayTest extends EntityViewDisplayTest {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['layout_builder'];
+  protected static $modules = ['layout_builder'];
 
   /**
    * {@inheritdoc}

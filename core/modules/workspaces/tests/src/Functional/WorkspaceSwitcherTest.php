@@ -18,7 +18,7 @@ class WorkspaceSwitcherTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['block', 'workspaces'];
+  protected static $modules = ['block', 'workspaces'];
 
   /**
    * {@inheritdoc}

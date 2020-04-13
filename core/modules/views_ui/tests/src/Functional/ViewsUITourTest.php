@@ -36,7 +36,7 @@ class ViewsUITourTest extends TourTestBase {
    *
    * @var array
    */
-  public static $modules = ['views_ui', 'tour', 'language', 'locale'];
+  protected static $modules = ['views_ui', 'tour', 'language', 'locale'];
 
   protected function setUp(): void {
     parent::setUp();

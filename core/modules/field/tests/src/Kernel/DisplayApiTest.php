@@ -60,7 +60,7 @@ class DisplayApiTest extends FieldKernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['system'];
+  protected static $modules = ['system'];
 
   protected function setUp(): void {
     parent::setUp();

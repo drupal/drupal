@@ -18,7 +18,7 @@ class HelpTopicTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = [
+  protected static $modules = [
     'help_topics_test',
     'help',
     'help_topics',

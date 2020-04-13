@@ -21,7 +21,7 @@ class BlockXssTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = ['block', 'block_content', 'menu_ui', 'views'];
+  protected static $modules = ['block', 'block_content', 'menu_ui', 'views'];
 
   /**
    * {@inheritdoc}

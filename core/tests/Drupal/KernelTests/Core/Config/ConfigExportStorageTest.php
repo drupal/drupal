@@ -16,7 +16,7 @@ class ConfigExportStorageTest extends KernelTestBase {
    *
    * @var array
    */
-  public static $modules = ['system', 'config_test'];
+  protected static $modules = ['system', 'config_test'];
 
   protected function setUp(): void {
     parent::setUp();

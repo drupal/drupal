@@ -21,7 +21,7 @@ class FieldStorageCrudTest extends FieldKernelTestBase {
    *
    * @var array
    */
-  public static $modules = [];
+  protected static $modules = [];
 
   // TODO : test creation with
   // - a full fledged $field structure, check that all the values are there

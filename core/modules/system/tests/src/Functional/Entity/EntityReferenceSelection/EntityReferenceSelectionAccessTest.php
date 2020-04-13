@@ -36,7 +36,7 @@ class EntityReferenceSelectionAccessTest extends KernelTestBase {
    *
    * @var array
    */
-  public static $modules = ['comment', 'field', 'file', 'image', 'node', 'media', 'system', 'taxonomy', 'text', 'user'];
+  protected static $modules = ['comment', 'field', 'file', 'image', 'node', 'media', 'system', 'taxonomy', 'text', 'user'];
 
   /**
    * {@inheritdoc}

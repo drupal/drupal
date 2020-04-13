@@ -20,7 +20,7 @@ class WorkflowAccessControlHandlerTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = [
+  protected static $modules = [
     'workflows',
     'workflow_type_test',
     'system',

@@ -17,7 +17,7 @@ class WorkflowUiNoTypeTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = ['workflows', 'block'];
+  protected static $modules = ['workflows', 'block'];
 
   /**
    * {@inheritdoc}

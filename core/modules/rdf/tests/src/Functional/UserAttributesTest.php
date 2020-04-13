@@ -20,7 +20,7 @@ class UserAttributesTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = ['rdf', 'node'];
+  protected static $modules = ['rdf', 'node'];
 
   /**
    * {@inheritdoc}

@@ -20,7 +20,7 @@ class FieldDisplayTest extends KernelTestBase {
    *
    * @var array
    */
-  public static $modules = [
+  protected static $modules = [
     'entity_test',
     'field',
     'system',

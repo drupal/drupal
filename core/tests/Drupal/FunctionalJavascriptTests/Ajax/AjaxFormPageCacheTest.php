@@ -14,7 +14,7 @@ class AjaxFormPageCacheTest extends WebDriverTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['ajax_test', 'ajax_forms_test'];
+  protected static $modules = ['ajax_test', 'ajax_forms_test'];
 
   /**
    * {@inheritdoc}

@@ -19,7 +19,7 @@ class ConfigExportUITest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = ['config', 'config_test'];
+  protected static $modules = ['config', 'config_test'];
 
   /**
    * {@inheritdoc}

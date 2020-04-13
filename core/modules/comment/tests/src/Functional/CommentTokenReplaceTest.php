@@ -24,7 +24,7 @@ class CommentTokenReplaceTest extends CommentTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['taxonomy'];
+  protected static $modules = ['taxonomy'];
 
   /**
    * {@inheritdoc}

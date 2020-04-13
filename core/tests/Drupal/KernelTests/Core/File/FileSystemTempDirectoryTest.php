@@ -19,7 +19,7 @@ class FileSystemTempDirectoryTest extends KernelTestBase {
    *
    * @var array
    */
-  public static $modules = ['system'];
+  protected static $modules = ['system'];
 
   /**
    * The file system under test.

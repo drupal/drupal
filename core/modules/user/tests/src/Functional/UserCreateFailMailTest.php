@@ -16,7 +16,7 @@ class UserCreateFailMailTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = ['system_mail_failure_test'];
+  protected static $modules = ['system_mail_failure_test'];
 
   /**
    * {@inheritdoc}

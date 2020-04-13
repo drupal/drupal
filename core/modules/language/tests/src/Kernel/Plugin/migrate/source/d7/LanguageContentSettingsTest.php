@@ -16,7 +16,7 @@ class LanguageContentSettingsTest extends MigrateSqlSourceTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['language', 'migrate_drupal'];
+  protected static $modules = ['language', 'migrate_drupal'];
 
   /**
    * {@inheritdoc}

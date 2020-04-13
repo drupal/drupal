@@ -17,7 +17,7 @@ class ResponsiveImageFieldUiTest extends WebDriverTestBase {
    *
    * @var array
    */
-  public static $modules = [
+  protected static $modules = [
     'node',
     'field_ui',
     'image',

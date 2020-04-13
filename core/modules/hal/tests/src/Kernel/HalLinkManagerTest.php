@@ -19,7 +19,7 @@ class HalLinkManagerTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['hal', 'hal_test', 'serialization', 'system', 'node', 'user', 'field'];
+  protected static $modules = ['hal', 'hal_test', 'serialization', 'system', 'node', 'user', 'field'];
 
   /**
    * {@inheritdoc}

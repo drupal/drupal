@@ -17,7 +17,7 @@ class MenuUninstallTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = ['menu_ui'];
+  protected static $modules = ['menu_ui'];
 
   /**
    * {@inheritdoc}

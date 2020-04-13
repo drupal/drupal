@@ -17,7 +17,7 @@ class NodeLoadMultipleTest extends NodeTestBase {
    *
    * @var array
    */
-  public static $modules = ['views'];
+  protected static $modules = ['views'];
 
   /**
    * {@inheritdoc}

@@ -15,7 +15,7 @@ class MediaTypeTest extends ResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['media'];
+  protected static $modules = ['media'];
 
   /**
    * {@inheritdoc}

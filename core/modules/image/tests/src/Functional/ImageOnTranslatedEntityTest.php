@@ -20,7 +20,7 @@ class ImageOnTranslatedEntityTest extends ImageFieldTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['language', 'content_translation', 'field_ui'];
+  protected static $modules = ['language', 'content_translation', 'field_ui'];
 
   /**
    * {@inheritdoc}

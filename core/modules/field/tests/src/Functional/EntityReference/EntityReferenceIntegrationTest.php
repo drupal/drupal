@@ -45,7 +45,7 @@ class EntityReferenceIntegrationTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = ['config_test', 'entity_test', 'field_ui'];
+  protected static $modules = ['config_test', 'entity_test', 'field_ui'];
 
   /**
    * {@inheritdoc}

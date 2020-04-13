@@ -17,7 +17,7 @@ class ProcessingTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = ['batch_test', 'test_page_test'];
+  protected static $modules = ['batch_test', 'test_page_test'];
 
   /**
    * {@inheritdoc}

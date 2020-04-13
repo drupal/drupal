@@ -33,7 +33,7 @@ class QuickEditLoadingTest extends WebDriverTestBase {
    *
    * @var array
    */
-  public static $modules = [
+  protected static $modules = [
     'contextual',
     'quickedit',
     'filter',

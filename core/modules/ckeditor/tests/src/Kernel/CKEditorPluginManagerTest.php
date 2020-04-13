@@ -18,7 +18,7 @@ class CKEditorPluginManagerTest extends KernelTestBase {
    *
    * @var array
    */
-  public static $modules = ['system', 'user', 'filter', 'editor', 'ckeditor'];
+  protected static $modules = ['system', 'user', 'filter', 'editor', 'ckeditor'];
 
   /**
    * The manager for "CKEditor plugin" plugins.

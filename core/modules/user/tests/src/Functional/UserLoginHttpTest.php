@@ -30,7 +30,7 @@ class UserLoginHttpTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = ['hal'];
+  protected static $modules = ['hal'];
 
   /**
    * {@inheritdoc}

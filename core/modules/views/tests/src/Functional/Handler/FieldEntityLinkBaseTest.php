@@ -23,7 +23,7 @@ class FieldEntityLinkBaseTest extends ViewTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['node', 'language'];
+  protected static $modules = ['node', 'language'];
 
   /**
    * {@inheritdoc}

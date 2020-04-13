@@ -19,7 +19,7 @@ class EntityTypeWithoutLanguageFormTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = [
+  protected static $modules = [
     'language',
     'language_test',
   ];

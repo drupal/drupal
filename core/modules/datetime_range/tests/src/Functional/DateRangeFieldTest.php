@@ -25,7 +25,7 @@ class DateRangeFieldTest extends DateTestBase {
    *
    * @var array
    */
-  public static $modules = ['datetime_range'];
+  protected static $modules = ['datetime_range'];
 
   /**
    * {@inheritdoc}

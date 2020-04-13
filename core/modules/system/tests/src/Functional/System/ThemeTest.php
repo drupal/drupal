@@ -31,7 +31,7 @@ class ThemeTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = ['node', 'block', 'file'];
+  protected static $modules = ['node', 'block', 'file'];
 
   /**
    * {@inheritdoc}

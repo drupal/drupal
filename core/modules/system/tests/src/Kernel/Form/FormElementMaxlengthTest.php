@@ -18,7 +18,7 @@ class FormElementMaxlengthTest extends KernelTestBase implements FormInterface {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['system'];
+  protected static $modules = ['system'];
 
   /**
    * {@inheritdoc}

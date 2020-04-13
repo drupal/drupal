@@ -15,7 +15,7 @@ class CommentTypeTest extends ResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['node', 'comment'];
+  protected static $modules = ['node', 'comment'];
 
   /**
    * {@inheritdoc}

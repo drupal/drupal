@@ -46,7 +46,7 @@ class EditorSecurityTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = ['filter', 'editor', 'editor_test', 'node'];
+  protected static $modules = ['filter', 'editor', 'editor_test', 'node'];
 
   /**
    * User with access to Restricted HTML text format without text editor.

@@ -18,7 +18,7 @@ class ProgrammaticTest extends KernelTestBase {
    *
    * @var array
    */
-  public static $modules = ['form_test'];
+  protected static $modules = ['form_test'];
 
   /**
    * Test the programmatic form submission workflow.

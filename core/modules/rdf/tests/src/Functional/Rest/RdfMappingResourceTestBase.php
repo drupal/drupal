@@ -11,7 +11,7 @@ abstract class RdfMappingResourceTestBase extends EntityResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['node', 'rdf'];
+  protected static $modules = ['node', 'rdf'];
 
   /**
    * {@inheritdoc}

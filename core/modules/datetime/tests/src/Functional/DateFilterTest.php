@@ -34,7 +34,7 @@ class DateFilterTest extends ViewTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = [
+  protected static $modules = [
     'datetime_test',
     'node',
     'datetime',

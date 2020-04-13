@@ -16,7 +16,7 @@ class AddFeedTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['system'];
+  protected static $modules = ['system'];
 
   /**
    * Tests attaching feeds with paths, URLs, and titles.

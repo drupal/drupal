@@ -16,7 +16,7 @@ class SyslogTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = ['syslog'];
+  protected static $modules = ['syslog'];
 
   /**
    * {@inheritdoc}

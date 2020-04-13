@@ -22,7 +22,7 @@ class RestJsonApiUnsupported extends ResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['jsonapi', 'node'];
+  protected static $modules = ['jsonapi', 'node'];
 
   /**
    * {@inheritdoc}

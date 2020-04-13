@@ -16,7 +16,7 @@ class SearchExcerptTest extends KernelTestBase {
    *
    * @var array
    */
-  public static $modules = ['search', 'search_langcode_test'];
+  protected static $modules = ['search', 'search_langcode_test'];
 
   /**
    * Tests search_excerpt() with several simulated search keywords.

@@ -27,7 +27,7 @@ class ManageFieldsFunctionalTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = ['node', 'field_ui', 'field_test', 'taxonomy', 'image', 'block'];
+  protected static $modules = ['node', 'field_ui', 'field_test', 'taxonomy', 'image', 'block'];
 
   /**
    * {@inheritdoc}

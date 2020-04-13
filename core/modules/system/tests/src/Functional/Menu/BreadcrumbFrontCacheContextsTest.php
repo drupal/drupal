@@ -18,7 +18,7 @@ class BreadcrumbFrontCacheContextsTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = [
+  protected static $modules = [
     'block',
     'node',
     'path',

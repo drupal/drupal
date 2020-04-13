@@ -21,7 +21,7 @@ abstract class DateTestBase extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = ['node', 'entity_test', 'datetime', 'field_ui'];
+  protected static $modules = ['node', 'entity_test', 'datetime', 'field_ui'];
 
   /**
    * An array of display options.

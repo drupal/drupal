@@ -19,7 +19,7 @@ class ForumBlockTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = ['forum', 'block'];
+  protected static $modules = ['forum', 'block'];
 
   /**
    * {@inheritdoc}

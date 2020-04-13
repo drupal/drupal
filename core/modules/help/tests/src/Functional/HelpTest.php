@@ -21,7 +21,7 @@ class HelpTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = ['help_test', 'help_page_test'];
+  protected static $modules = ['help_test', 'help_page_test'];
 
   /**
    * {@inheritdoc}

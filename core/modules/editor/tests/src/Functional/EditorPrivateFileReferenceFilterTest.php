@@ -20,7 +20,7 @@ class EditorPrivateFileReferenceFilterTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = [
+  protected static $modules = [
     // Needed for the config: this is the only module in core that utilizes the
     // functionality in editor.module to be tested, and depends on that.
     'ckeditor',

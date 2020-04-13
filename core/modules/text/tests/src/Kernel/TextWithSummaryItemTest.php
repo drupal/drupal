@@ -21,7 +21,7 @@ class TextWithSummaryItemTest extends FieldKernelTestBase {
    *
    * @var array
    */
-  public static $modules = ['filter'];
+  protected static $modules = ['filter'];
 
   /**
    * Field storage entity.

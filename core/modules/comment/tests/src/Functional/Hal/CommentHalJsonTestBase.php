@@ -14,7 +14,7 @@ abstract class CommentHalJsonTestBase extends CommentResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['hal'];
+  protected static $modules = ['hal'];
 
   /**
    * {@inheritdoc}

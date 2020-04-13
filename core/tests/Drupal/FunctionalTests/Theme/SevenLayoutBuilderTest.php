@@ -19,7 +19,7 @@ class SevenLayoutBuilderTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = [
+  protected static $modules = [
     'views',
     'layout_builder',
     'layout_builder_views_test',

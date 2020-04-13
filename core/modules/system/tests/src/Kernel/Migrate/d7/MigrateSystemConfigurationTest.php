@@ -11,7 +11,7 @@ use Drupal\Tests\migrate_drupal\Kernel\d7\MigrateDrupal7TestBase;
  */
 class MigrateSystemConfigurationTest extends MigrateDrupal7TestBase {
 
-  public static $modules = ['action', 'file', 'system'];
+  protected static $modules = ['action', 'file', 'system'];
 
   protected $expectedConfig = [
     'system.authorize' => [

@@ -21,7 +21,7 @@ abstract class ImageFieldTestBase extends WebDriverTestBase {
    *
    * @var array
    */
-  public static $modules = [
+  protected static $modules = [
     'node',
     'image',
     'field_ui',

@@ -19,7 +19,7 @@ class ConfigEntityUpdaterTest extends KernelTestBase {
    *
    * @var array
    */
-  public static $modules = ['config_test'];
+  protected static $modules = ['config_test'];
 
   /**
    * @covers ::update

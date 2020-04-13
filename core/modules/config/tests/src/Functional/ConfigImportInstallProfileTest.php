@@ -23,7 +23,7 @@ class ConfigImportInstallProfileTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = ['config'];
+  protected static $modules = ['config'];
 
   /**
    * {@inheritdoc}

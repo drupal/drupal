@@ -25,7 +25,7 @@ class ContentModerationAccessTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = [
+  protected static $modules = [
     'content_moderation',
     'filter',
     'node',

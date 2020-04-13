@@ -16,7 +16,7 @@ class MigrateCommentEntityFormDisplaySubjectTest extends MigrateDrupal7TestBase 
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['node', 'comment', 'text', 'menu_ui'];
+  protected static $modules = ['node', 'comment', 'text', 'menu_ui'];
 
   /**
    * {@inheritdoc}

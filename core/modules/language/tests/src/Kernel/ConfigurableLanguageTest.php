@@ -18,7 +18,7 @@ class ConfigurableLanguageTest extends KernelTestBase {
    *
    * @var array
    */
-  public static $modules = ['language'];
+  protected static $modules = ['language'];
 
   /**
    * Tests configurable language name methods.

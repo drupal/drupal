@@ -16,7 +16,7 @@ class TwigLoaderTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = ['twig_loader_test'];
+  protected static $modules = ['twig_loader_test'];
 
   /**
    * {@inheritdoc}

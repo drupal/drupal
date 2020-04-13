@@ -17,7 +17,7 @@ class BrowserWithJavascriptTest extends WebDriverTestBase {
    *
    * @var array
    */
-  public static $modules = ['test_page_test'];
+  protected static $modules = ['test_page_test'];
 
   /**
    * {@inheritdoc}

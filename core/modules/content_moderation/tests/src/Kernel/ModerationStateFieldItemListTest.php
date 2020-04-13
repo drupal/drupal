@@ -21,7 +21,7 @@ class ModerationStateFieldItemListTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = [
+  protected static $modules = [
     'node',
     'content_moderation',
     'user',

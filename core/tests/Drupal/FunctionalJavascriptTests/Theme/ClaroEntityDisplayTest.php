@@ -22,7 +22,7 @@ class ClaroEntityDisplayTest extends EntityDisplayTest {
    *
    * @var string[]
    */
-  public static $modules = ['shortcut'];
+  protected static $modules = ['shortcut'];
 
   /**
    * {@inheritdoc}

@@ -17,7 +17,7 @@ abstract class MigrateUrlAliasTestBase extends MigrateDrupal7TestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = [
+  protected static $modules = [
     'language',
     'menu_ui',
     'node',

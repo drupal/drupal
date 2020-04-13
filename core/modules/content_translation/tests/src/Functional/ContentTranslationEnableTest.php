@@ -14,7 +14,7 @@ class ContentTranslationEnableTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['entity_test', 'menu_link_content', 'node'];
+  protected static $modules = ['entity_test', 'menu_link_content', 'node'];
 
   /**
    * {@inheritdoc}

@@ -20,7 +20,7 @@ class PagerTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = ['dblog', 'image', 'pager_test'];
+  protected static $modules = ['dblog', 'image', 'pager_test'];
 
   /**
    * {@inheritdoc}

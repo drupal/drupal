@@ -25,7 +25,7 @@ class FileUploadTest extends ResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['entity_test', 'file'];
+  protected static $modules = ['entity_test', 'file'];
 
   /**
    * {@inheritdoc}

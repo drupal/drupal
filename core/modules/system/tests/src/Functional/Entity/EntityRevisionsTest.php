@@ -22,7 +22,7 @@ class EntityRevisionsTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = ['entity_test', 'language'];
+  protected static $modules = ['entity_test', 'language'];
 
   /**
    * {@inheritdoc}

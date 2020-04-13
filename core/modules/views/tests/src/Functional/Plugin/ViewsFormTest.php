@@ -16,7 +16,7 @@ class ViewsFormTest extends ViewTestBase {
    *
    * @var array
    */
-  public static $modules = ['action_bulk_test'];
+  protected static $modules = ['action_bulk_test'];
 
   /**
    * {@inheritdoc}

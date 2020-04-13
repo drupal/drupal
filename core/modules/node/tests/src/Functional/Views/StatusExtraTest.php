@@ -15,7 +15,7 @@ class StatusExtraTest extends NodeTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['node_test_views', 'content_moderation'];
+  protected static $modules = ['node_test_views', 'content_moderation'];
 
   /**
    * {@inheritdoc}

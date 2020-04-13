@@ -16,7 +16,7 @@ class RdfMappingTest extends MigrateSqlSourceTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = [
+  protected static $modules = [
     'comment',
     'migrate_drupal',
     'node',

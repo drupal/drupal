@@ -25,7 +25,7 @@ class ConfigEntityUnitTest extends KernelTestBase {
    *
    * @var array
    */
-  public static $modules = ['config_test'];
+  protected static $modules = ['config_test'];
 
   /**
    * The config_test entity storage.

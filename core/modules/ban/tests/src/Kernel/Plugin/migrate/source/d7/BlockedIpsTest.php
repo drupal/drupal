@@ -15,7 +15,7 @@ class BlockedIpsTest extends MigrateSqlSourceTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['ban', 'migrate_drupal'];
+  protected static $modules = ['ban', 'migrate_drupal'];
 
   /**
    * {@inheritdoc}

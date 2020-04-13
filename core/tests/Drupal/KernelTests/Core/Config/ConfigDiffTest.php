@@ -16,7 +16,7 @@ class ConfigDiffTest extends KernelTestBase {
    *
    * @var array
    */
-  public static $modules = ['config_test', 'system'];
+  protected static $modules = ['config_test', 'system'];
 
   /**
    * Tests calculating the difference between two sets of configuration.

@@ -24,7 +24,7 @@ class ConfigurableLanguageManagerTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = [
+  protected static $modules = [
     'language',
     'content_translation',
     'node',

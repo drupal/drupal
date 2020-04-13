@@ -17,7 +17,7 @@ class FilterDefaultFormatTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = ['filter'];
+  protected static $modules = ['filter'];
 
   /**
    * {@inheritdoc}

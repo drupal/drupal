@@ -20,7 +20,7 @@ class DefaultRevisionStateTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = [
+  protected static $modules = [
     'entity_test',
     'node',
     'block_content',

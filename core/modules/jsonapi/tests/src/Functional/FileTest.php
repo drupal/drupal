@@ -22,7 +22,7 @@ class FileTest extends ResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['file', 'user'];
+  protected static $modules = ['file', 'user'];
 
   /**
    * {@inheritdoc}

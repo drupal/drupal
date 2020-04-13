@@ -26,7 +26,7 @@ class ModerationContentTranslationTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = [
+  protected static $modules = [
     'node',
     'locale',
     'content_translation',

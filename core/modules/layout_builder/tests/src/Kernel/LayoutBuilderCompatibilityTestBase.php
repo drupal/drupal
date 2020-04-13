@@ -16,7 +16,7 @@ abstract class LayoutBuilderCompatibilityTestBase extends EntityKernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = [
+  protected static $modules = [
     'layout_discovery',
   ];
 
