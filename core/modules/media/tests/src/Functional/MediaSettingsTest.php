@@ -17,7 +17,7 @@ class MediaSettingsTest extends MediaFunctionalTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
     $this->drupalLogin($this->createUser(['administer site configuration']));
   }

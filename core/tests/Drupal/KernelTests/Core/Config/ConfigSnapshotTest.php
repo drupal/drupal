@@ -22,7 +22,7 @@ class ConfigSnapshotTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
     $this->installConfig(['system']);
     // Update the config snapshot. This allows the parent::setUp() to write

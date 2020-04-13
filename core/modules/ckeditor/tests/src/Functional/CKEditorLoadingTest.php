@@ -39,7 +39,7 @@ class CKEditorLoadingTest extends BrowserTestBase {
    */
   protected $normalUser;
 
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     // Create text format, associate CKEditor.

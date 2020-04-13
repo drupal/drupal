@@ -110,7 +110,7 @@ class StandardProfileTest extends BrowserTestBase {
    */
   protected $commenterUri;
 
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $this->baseUri = Url::fromRoute('<front>', [], ['absolute' => TRUE])->toString();

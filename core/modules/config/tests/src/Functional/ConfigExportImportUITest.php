@@ -76,7 +76,7 @@ class ConfigExportImportUITest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
     // The initial import must be done with uid 1 because if separately named
     // roles are created then the role is lost after import. If the roles

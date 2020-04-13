@@ -40,7 +40,7 @@ class ResourceTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
     // Create an entity programmatic.
     $this->entity = EntityTest::create([

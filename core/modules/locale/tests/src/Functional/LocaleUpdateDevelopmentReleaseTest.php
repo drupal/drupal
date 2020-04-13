@@ -18,7 +18,7 @@ class LocaleUpdateDevelopmentReleaseTest extends BrowserTestBase {
    */
   protected $defaultTheme = 'stark';
 
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
     module_load_include('compare.inc', 'locale');
     $admin_user = $this->drupalCreateUser(['administer modules', 'administer languages', 'access administration pages', 'translate interface']);

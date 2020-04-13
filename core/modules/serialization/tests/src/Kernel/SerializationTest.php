@@ -26,7 +26,7 @@ class SerializationTest extends KernelTestBase {
    */
   protected $serializer;
 
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
     $this->serializer = $this->container->get('serializer');
   }

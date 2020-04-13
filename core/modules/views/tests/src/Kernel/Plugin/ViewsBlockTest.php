@@ -31,7 +31,7 @@ class ViewsBlockTest extends ViewsKernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp($import_test_views = TRUE) {
+  protected function setUp($import_test_views = TRUE): void {
     parent::setUp();
 
     ViewTestData::createTestViews(get_class($this), ['block_test_views']);

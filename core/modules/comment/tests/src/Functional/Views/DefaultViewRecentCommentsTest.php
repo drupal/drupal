@@ -65,7 +65,7 @@ class DefaultViewRecentCommentsTest extends ViewTestBase {
    */
   public $node;
 
-  protected function setUp($import_test_views = TRUE) {
+  protected function setUp($import_test_views = TRUE): void {
     parent::setUp($import_test_views);
 
     // Create a new content type

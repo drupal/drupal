@@ -58,7 +58,7 @@ class EntitySerializationTest extends NormalizerTestBase {
    */
   protected $entityClass = 'Drupal\entity_test\Entity\EntityTest';
 
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     // User create needs sequence table.

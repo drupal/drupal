@@ -28,7 +28,7 @@ class LayoutBuilderOptInTest extends WebDriverTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     // Create one content type before installing Layout Builder and one after.

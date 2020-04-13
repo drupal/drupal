@@ -28,7 +28,7 @@ class CommentAdminTest extends CommentBrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
     \Drupal::service('module_installer')->install(['views']);
     $view = Views::getView('comment');

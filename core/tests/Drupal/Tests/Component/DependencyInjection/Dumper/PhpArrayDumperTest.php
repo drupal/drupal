@@ -13,7 +13,7 @@ class PhpArrayDumperTest extends OptimizedPhpArrayDumperTest {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     $this->machineFormat = FALSE;
     $this->dumperClass = '\Drupal\Component\DependencyInjection\Dumper\PhpArrayDumper';
     parent::setUp();

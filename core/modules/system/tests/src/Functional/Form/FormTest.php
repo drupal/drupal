@@ -33,7 +33,7 @@ class FormTest extends BrowserTestBase {
    */
   protected $defaultTheme = 'classy';
 
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $filtered_html_format = FilterFormat::create([

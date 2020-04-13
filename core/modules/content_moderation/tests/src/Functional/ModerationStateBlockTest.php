@@ -20,7 +20,7 @@ class ModerationStateBlockTest extends ModerationStateTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     // Create the "basic" block type.

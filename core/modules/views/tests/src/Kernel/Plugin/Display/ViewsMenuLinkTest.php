@@ -42,7 +42,7 @@ class ViewsMenuLinkTest extends ViewsKernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp($import_test_views = TRUE) {
+  protected function setUp($import_test_views = TRUE): void {
     parent::setUp($import_test_views);
 
     $this->menuLinkManager = $this->container->get('plugin.manager.menu.link');

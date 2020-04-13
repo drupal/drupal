@@ -41,7 +41,7 @@ class GroupedExposedFilterTest extends WebDriverTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     ViewTestData::createTestViews(get_class($this), ['views_test_config']);

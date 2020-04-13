@@ -27,7 +27,7 @@ class NodeTokenReplaceTest extends TokenReplaceKernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
     $this->installConfig(['filter', 'node']);
 

@@ -31,7 +31,7 @@ class SettingsTest extends UnitTestCase {
   /**
    * @covers ::__construct
    */
-  protected function setUp() {
+  protected function setUp(): void {
     $this->config = [
       'one' => '1',
       'two' => '2',

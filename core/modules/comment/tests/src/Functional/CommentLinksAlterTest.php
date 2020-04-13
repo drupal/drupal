@@ -16,7 +16,7 @@ class CommentLinksAlterTest extends CommentTestBase {
    */
   protected $defaultTheme = 'stark';
 
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     // Enable comment_test.module's hook_comment_links_alter() implementation.

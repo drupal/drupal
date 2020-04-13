@@ -26,7 +26,7 @@ class ThemeTokenTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
     $account = $this->drupalCreateUser(['administer blocks', 'view the administration theme']);
     $this->drupalLogin($account);

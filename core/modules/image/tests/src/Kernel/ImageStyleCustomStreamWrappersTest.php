@@ -43,7 +43,7 @@ class ImageStyleCustomStreamWrappersTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
     $this->fileSystem = $this->container->get('file_system');
     $this->config('system.file')->set('default_scheme', 'public')->save();

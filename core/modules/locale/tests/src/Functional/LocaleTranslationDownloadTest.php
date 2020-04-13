@@ -28,7 +28,7 @@ class LocaleTranslationDownloadTest extends LocaleUpdateBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
     $moduleHandler = $this->container->get('module_handler');
     $moduleHandler->loadInclude('locale', 'inc', 'locale.batch');

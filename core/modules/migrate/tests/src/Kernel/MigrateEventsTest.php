@@ -35,7 +35,7 @@ class MigrateEventsTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
     $this->state = \Drupal::state();
     \Drupal::service('event_dispatcher')->addListener(MigrateEvents::MAP_SAVE,

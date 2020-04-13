@@ -27,7 +27,7 @@ class ActiveWorkspaceUpdateTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
     // Ensure the workspace_update_test_post_update_check_active_workspace()
     // update runs.

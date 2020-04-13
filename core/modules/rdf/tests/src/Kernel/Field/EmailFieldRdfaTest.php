@@ -21,7 +21,7 @@ class EmailFieldRdfaTest extends FieldRdfaTestBase {
    */
   public static $modules = ['text'];
 
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $this->createTestField();

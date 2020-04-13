@@ -20,7 +20,7 @@ class MigrateNodeDeriverTest extends MigrateDrupal6TestBase {
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  public function setUp(): void {
     parent::setUp();
     $this->pluginManager = $this->container->get('plugin.manager.migration');
   }

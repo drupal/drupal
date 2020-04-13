@@ -16,7 +16,7 @@ class MigrateMenuSettingsTest extends MigrateDrupal7TestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
     $this->installConfig(['menu_ui']);
     $this->executeMigration('menu_settings');

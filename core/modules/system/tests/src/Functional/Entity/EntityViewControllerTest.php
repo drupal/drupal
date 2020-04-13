@@ -31,7 +31,7 @@ class EntityViewControllerTest extends BrowserTestBase {
    */
   protected $entities = [];
 
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
     // Create some dummy entity_test entities.
     for ($i = 0; $i < 2; $i++) {

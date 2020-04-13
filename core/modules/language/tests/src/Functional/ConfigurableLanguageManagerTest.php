@@ -42,7 +42,7 @@ class ConfigurableLanguageManagerTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     /** @var \Drupal\user\UserInterface $user */

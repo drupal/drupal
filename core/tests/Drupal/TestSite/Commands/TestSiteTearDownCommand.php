@@ -77,7 +77,7 @@ class TestSiteTearDownCommand extends Command {
    *
    * @see \Drupal\Tests\BrowserTestBase::cleanupEnvironment()
    */
-  protected function tearDown(TestDatabase $test_database, $db_url) {
+  protected function tearDown(TestDatabase $test_database, $db_url): void {
     // Connect to the test database.
     $root = dirname(dirname(dirname(dirname(dirname(__DIR__)))));
     $database = Database::convertDbUrlToConnectionInfo($db_url, $root);

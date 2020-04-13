@@ -38,7 +38,7 @@ class UserAdminLanguageTest extends BrowserTestBase {
    */
   protected $defaultTheme = 'stark';
 
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
     // User to add and remove language.
     $this->adminUser = $this->drupalCreateUser(['administer languages', 'access administration pages']);

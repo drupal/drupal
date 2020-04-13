@@ -17,7 +17,7 @@ class MigrateUserRoleTest extends MigrateDrupal6TestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
     $this->executeMigrations(['d6_filter_format', 'd6_user_role']);
   }

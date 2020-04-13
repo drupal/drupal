@@ -24,7 +24,7 @@ class CommentValidationTest extends EntityKernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
     $this->installSchema('comment', ['comment_entity_statistics']);
   }

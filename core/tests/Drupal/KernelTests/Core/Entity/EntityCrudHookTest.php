@@ -45,7 +45,7 @@ class EntityCrudHookTest extends EntityKernelTestBase {
 
   protected $ids = [];
 
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $this->installSchema('user', ['users_data']);

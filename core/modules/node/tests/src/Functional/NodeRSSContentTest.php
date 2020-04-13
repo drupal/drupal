@@ -27,7 +27,7 @@ class NodeRSSContentTest extends NodeTestBase {
    */
   protected $defaultTheme = 'stark';
 
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     // Use bypass node access permission here, because the test class uses

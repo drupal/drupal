@@ -31,7 +31,7 @@ class BlockLanguageCacheTest extends BrowserTestBase {
    */
   protected $langcodes = [];
 
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     // Create test languages.

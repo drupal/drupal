@@ -33,7 +33,7 @@ class CrudTest extends KernelTestBase {
    */
   protected $bundle;
 
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
     $this->prefix = 'rdf.mapping';
     $this->entityType = $this->bundle = 'entity_test';

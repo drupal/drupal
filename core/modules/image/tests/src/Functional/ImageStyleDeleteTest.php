@@ -20,7 +20,7 @@ class ImageStyleDeleteTest extends ImageFieldTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
     // Create an image field 'foo' having the image style 'medium' as widget
     // preview and as formatter.

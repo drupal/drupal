@@ -28,7 +28,7 @@ class PathLanguageTest extends PathTestBase {
    */
   protected $webUser;
 
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $permissions = [

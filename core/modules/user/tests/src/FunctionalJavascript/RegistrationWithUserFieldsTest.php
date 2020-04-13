@@ -41,7 +41,7 @@ class RegistrationWithUserFieldsTest extends WebDriverTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
     $this->page = $this->getSession()->getPage();
     $this->webAssert = $this->assertSession();

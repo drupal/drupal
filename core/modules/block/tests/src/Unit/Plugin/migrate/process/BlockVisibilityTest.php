@@ -26,7 +26,7 @@ class BlockVisibilityTest extends MigrateProcessTestCase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
     $this->moduleHandler = $this->prophesize(ModuleHandlerInterface::class);
     $migrate_lookup = $this->prophesize(MigrateLookupInterface::class);

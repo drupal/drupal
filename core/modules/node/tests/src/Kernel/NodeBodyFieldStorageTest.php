@@ -21,7 +21,7 @@ class NodeBodyFieldStorageTest extends KernelTestBase {
    */
   public static $modules = ['user', 'system', 'field', 'node', 'text', 'filter'];
 
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
     $this->installSchema('system', 'sequences');
     // Necessary for module uninstall.

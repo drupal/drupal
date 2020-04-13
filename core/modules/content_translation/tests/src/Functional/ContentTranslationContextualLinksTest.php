@@ -61,7 +61,7 @@ class ContentTranslationContextualLinksTest extends BrowserTestBase {
    */
   protected $profile = 'testing';
 
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
     // Set up an additional language.
     $this->langcodes = [\Drupal::languageManager()->getDefaultLanguage()->getId(), 'es'];

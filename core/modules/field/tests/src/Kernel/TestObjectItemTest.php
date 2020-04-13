@@ -23,7 +23,7 @@ class TestObjectItemTest extends FieldKernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     // Create a 'test_field' field and storage for validation.

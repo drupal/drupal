@@ -68,7 +68,7 @@ class FilterFormatAccessTest extends BrowserTestBase {
    */
   protected $disallowedFormat;
 
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $this->drupalPlaceBlock('page_title_block');

@@ -31,7 +31,7 @@ class VocabularySerializationTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  public function setUp(): void {
     parent::setUp();
 
     Vocabulary::create(['vid' => 'test'])->save();

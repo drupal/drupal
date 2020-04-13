@@ -34,7 +34,7 @@ class TwigSandboxTest extends UnitTestCase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $loader = new StringLoader();

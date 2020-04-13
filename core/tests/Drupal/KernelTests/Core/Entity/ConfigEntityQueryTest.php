@@ -49,7 +49,7 @@ class ConfigEntityQueryTest extends KernelTestBase {
    */
   protected $entities;
 
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $this->entities = [];

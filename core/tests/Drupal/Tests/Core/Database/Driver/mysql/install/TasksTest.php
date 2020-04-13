@@ -24,7 +24,7 @@ class TasksTest extends UnitTestCase {
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  public function setUp(): void {
     $this->connection = $this->prophesize(Connection::class);
   }
 

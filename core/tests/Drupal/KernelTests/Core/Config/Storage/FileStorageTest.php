@@ -24,7 +24,7 @@ class FileStorageTest extends ConfigStorageTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
     // Create a directory.
     $this->directory = PublicStream::basePath() . '/config';

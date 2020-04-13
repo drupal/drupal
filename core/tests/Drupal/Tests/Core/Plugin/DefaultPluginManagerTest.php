@@ -36,7 +36,7 @@ class DefaultPluginManagerTest extends UnitTestCase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     $this->expectedDefinitions = [
       'apple' => [
         'id' => 'apple',

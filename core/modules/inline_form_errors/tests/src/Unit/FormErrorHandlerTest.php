@@ -52,7 +52,7 @@ class FormErrorHandlerTest extends UnitTestCase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
     $this->renderer = $this->createMock(RendererInterface::class);
     $this->messenger = $this->createMock(MessengerInterface::class);

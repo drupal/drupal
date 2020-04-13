@@ -20,7 +20,7 @@ class XssUnitTest extends KernelTestBase {
    */
   public static $modules = ['filter', 'system'];
 
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
     $this->installConfig(['system']);
   }

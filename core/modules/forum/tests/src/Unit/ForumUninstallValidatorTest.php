@@ -22,7 +22,7 @@ class ForumUninstallValidatorTest extends UnitTestCase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
     $this->forumUninstallValidator = $this->getMockBuilder('Drupal\forum\ForumUninstallValidator')
       ->disableOriginalConstructor()

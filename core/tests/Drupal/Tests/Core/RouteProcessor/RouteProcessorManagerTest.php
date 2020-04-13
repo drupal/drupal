@@ -21,7 +21,7 @@ class RouteProcessorManagerTest extends UnitTestCase {
    */
   protected $processorManager;
 
-  protected function setUp() {
+  protected function setUp(): void {
     $this->processorManager = new RouteProcessorManager();
   }
 

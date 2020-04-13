@@ -35,7 +35,7 @@ class SortTranslationTest extends ViewsKernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp($import_test_views = TRUE) {
+  protected function setUp($import_test_views = TRUE): void {
     parent::setUp($import_test_views);
     ConfigurableLanguage::createFromLangcode('de')->save();
     $this->installSchema('node', 'node_access');

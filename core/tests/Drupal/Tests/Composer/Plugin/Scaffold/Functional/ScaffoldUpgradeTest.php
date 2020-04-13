@@ -35,7 +35,7 @@ class ScaffoldUpgradeTest extends TestCase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     $this->fixtures = new Fixtures();
     $this->fixtures->createIsolatedComposerCacheDir();
   }

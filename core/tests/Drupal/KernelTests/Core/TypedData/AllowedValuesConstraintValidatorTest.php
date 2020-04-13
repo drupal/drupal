@@ -20,7 +20,7 @@ class AllowedValuesConstraintValidatorTest extends KernelTestBase {
    */
   protected $typedData;
 
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
     $this->typedData = $this->container->get('typed_data_manager');
   }

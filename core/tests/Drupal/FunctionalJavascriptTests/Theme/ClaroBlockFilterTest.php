@@ -27,7 +27,7 @@ class ClaroBlockFilterTest extends BlockFilterTest {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
     $this->container->get('theme_installer')->install(['claro']);
     $this->config('system.theme')->set('default', 'claro')->save();

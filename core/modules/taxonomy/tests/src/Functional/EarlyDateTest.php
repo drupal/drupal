@@ -25,7 +25,7 @@ class EarlyDateTest extends TaxonomyTestBase {
    */
   protected $defaultTheme = 'stark';
 
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     // Create a tags vocabulary for the 'article' content type.

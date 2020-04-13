@@ -34,7 +34,7 @@ class NodeAttributesTest extends NodeTestBase {
    */
   protected $baseUri;
 
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     rdf_get_mapping('node', 'article')

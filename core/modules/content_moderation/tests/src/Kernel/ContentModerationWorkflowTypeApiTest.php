@@ -34,7 +34,7 @@ class ContentModerationWorkflowTypeApiTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
     $this->workflow = Workflow::create(['id' => 'test', 'type' => 'content_moderation']);
   }

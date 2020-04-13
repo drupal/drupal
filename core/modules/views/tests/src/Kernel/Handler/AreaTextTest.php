@@ -22,7 +22,7 @@ class AreaTextTest extends ViewsKernelTestBase {
    */
   public static $testViews = ['test_view'];
 
-  protected function setUp($import_test_views = TRUE) {
+  protected function setUp($import_test_views = TRUE): void {
     parent::setUp();
 
     $this->installConfig(['system', 'filter']);

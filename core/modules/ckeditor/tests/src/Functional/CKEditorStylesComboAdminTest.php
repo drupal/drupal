@@ -42,7 +42,7 @@ class CKEditorStylesComboAdminTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $this->format = strtolower($this->randomMachineName());

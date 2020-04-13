@@ -45,7 +45,7 @@ class FilterDateTest extends DateTimeHandlerTestBase {
    * Create nodes with relative date range of:
    * yesterday - today, today - today, and today - tomorrow.
    */
-  protected function setUp($import_test_views = TRUE) {
+  protected function setUp($import_test_views = TRUE): void {
     parent::setUp($import_test_views);
 
     // Set to 'today'.

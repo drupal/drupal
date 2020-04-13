@@ -30,7 +30,7 @@ class NodeSaveTest extends NodeTestBase {
    */
   protected $defaultTheme = 'stark';
 
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     // Create a user that is allowed to post; we'll use this to test the submission.

@@ -24,7 +24,7 @@ class CssOptimizerUnitTest extends UnitTestCase {
    */
   protected $optimizer;
 
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $this->optimizer = new CssOptimizer();

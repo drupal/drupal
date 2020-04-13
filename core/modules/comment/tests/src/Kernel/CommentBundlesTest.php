@@ -32,7 +32,7 @@ class CommentBundlesTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $this->entityFieldManager = $this->container->get('entity_field.manager');

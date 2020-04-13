@@ -22,7 +22,7 @@ class AjaxResponseTest extends UnitTestCase {
    */
   protected $ajaxResponse;
 
-  protected function setUp() {
+  protected function setUp(): void {
     $this->ajaxResponse = new AjaxResponse();
   }
 

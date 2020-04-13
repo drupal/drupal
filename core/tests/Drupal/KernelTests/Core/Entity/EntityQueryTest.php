@@ -62,7 +62,7 @@ class EntityQueryTest extends EntityKernelTestBase {
    */
   protected $storage;
 
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $this->installEntitySchema('entity_test_mulrev');

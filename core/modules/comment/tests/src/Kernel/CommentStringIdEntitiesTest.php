@@ -27,7 +27,7 @@ class CommentStringIdEntitiesTest extends KernelTestBase {
     'text',
   ];
 
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
     $this->installEntitySchema('comment');
     $this->installEntitySchema('entity_test_string_id');

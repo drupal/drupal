@@ -24,7 +24,7 @@ class TwigNamespaceTest extends KernelTestBase {
    */
   protected $twig;
 
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
     \Drupal::service('theme_installer')->install(['test_theme', 'bartik']);
     $this->twig = \Drupal::service('twig');

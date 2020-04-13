@@ -36,7 +36,7 @@ class CronQueueTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     // These additional tables are necessary because $this->cron->run() calls

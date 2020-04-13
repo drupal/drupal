@@ -29,7 +29,7 @@ class MigrateMenuLinkTest extends MigrateNodeTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
     $this->setUpCurrentUser();
     $this->installEntitySchema('menu_link_content');

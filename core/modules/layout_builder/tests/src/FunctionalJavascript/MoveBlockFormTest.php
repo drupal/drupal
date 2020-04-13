@@ -39,7 +39,7 @@ class MoveBlockFormTest extends WebDriverTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
     $page = $this->getSession()->getPage();
     $assert_session = $this->assertSession();

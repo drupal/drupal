@@ -42,7 +42,7 @@ class WhosOnlineBlockTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
     $this->installConfig(['system', 'block', 'views', 'user']);
     $this->installSchema('system', ['sequences']);

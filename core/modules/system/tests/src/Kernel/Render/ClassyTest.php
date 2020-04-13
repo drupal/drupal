@@ -19,7 +19,7 @@ class ClassyTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  public function setUp(): void {
     parent::setUp();
 
     // Use the classy theme.

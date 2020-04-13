@@ -31,7 +31,7 @@ class FrontPageTest extends BrowserTestBase {
    */
   protected $nodePath;
 
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     // Create admin user, log in admin user, and create one node.

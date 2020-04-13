@@ -27,7 +27,7 @@ class InstallerObjectTest extends UnitTestCase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
     require_once __DIR__ . '/../../../../../includes/install.inc';
     $additional_class_loader = new ClassLoader();

@@ -15,7 +15,7 @@ class ConvertTokensTest extends MigrateProcessTestCase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
     $this->plugin = new ConvertTokens([], 'convert_tokens', []);
   }

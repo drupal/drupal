@@ -24,7 +24,7 @@ class MigrateBlockedIpsTest extends MigrateDrupal7TestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
     $this->installSchema('ban', ['ban_ip']);
     $this->executeMigration('d7_blocked_ips');

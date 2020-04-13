@@ -27,7 +27,7 @@ class CKEditorPluginManagerTest extends KernelTestBase {
    */
   protected $manager;
 
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     // Install the Filter module.

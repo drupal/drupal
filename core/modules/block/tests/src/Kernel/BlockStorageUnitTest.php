@@ -30,7 +30,7 @@ class BlockStorageUnitTest extends KernelTestBase {
    */
   protected $controller;
 
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $this->controller = $this->container->get('entity_type.manager')->getStorage('block');

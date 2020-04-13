@@ -29,7 +29,7 @@ class CommentRestExportTest extends CommentTestBase {
    */
   public static $modules = ['node', 'comment', 'comment_test_views', 'rest', 'hal'];
 
-  protected function setUp($import_test_views = TRUE) {
+  protected function setUp($import_test_views = TRUE): void {
     parent::setUp($import_test_views);
     // Add another anonymous comment.
     $comment = [

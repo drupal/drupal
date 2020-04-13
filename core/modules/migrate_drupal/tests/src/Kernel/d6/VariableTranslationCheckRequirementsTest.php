@@ -19,7 +19,7 @@ class VariableTranslationCheckRequirementsTest extends MigrateDrupal6TestBase {
   /**
    * {@inheritdoc}
    */
-  public function setup() {
+  public function setUp(): void {
     parent::setUp();
     $this->sourceDatabase->schema()->dropTable('i18n_variable');
   }

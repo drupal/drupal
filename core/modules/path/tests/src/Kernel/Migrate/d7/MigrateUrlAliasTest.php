@@ -21,7 +21,7 @@ class MigrateUrlAliasTest extends MigrateUrlAliasTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
     $this->executeMigrations([
       'd7_node_translation',

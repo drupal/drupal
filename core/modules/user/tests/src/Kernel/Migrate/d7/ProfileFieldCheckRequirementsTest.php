@@ -15,7 +15,7 @@ class ProfileFieldCheckRequirementsTest extends MigrateDrupal7TestBase {
   /**
    * {@inheritdoc}
    */
-  public function setup() {
+  public function setUp(): void {
     parent::setUp();
     $this->sourceDatabase->schema()->dropTable('profile_field');
   }

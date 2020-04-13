@@ -26,7 +26,7 @@ class EditorSelectionTest extends QuickEditTestBase {
    */
   protected $editorSelector;
 
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $this->editorManager = $this->container->get('plugin.manager.quickedit.editor');

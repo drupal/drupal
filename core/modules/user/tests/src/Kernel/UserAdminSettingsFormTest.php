@@ -20,7 +20,7 @@ class UserAdminSettingsFormTest extends ConfigFormTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $this->form = AccountSettingsForm::create($this->container);

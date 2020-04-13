@@ -12,7 +12,7 @@ use Drupal\Core\Plugin\Discovery\AnnotatedClassDiscovery;
  */
 class CustomDirectoryAnnotatedClassDiscoveryTest extends DiscoveryTestBase {
 
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $this->expectedDefinitions = [

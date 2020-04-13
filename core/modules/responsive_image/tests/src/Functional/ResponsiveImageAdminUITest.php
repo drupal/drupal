@@ -27,7 +27,7 @@ class ResponsiveImageAdminUITest extends BrowserTestBase {
   /**
    * Drupal\simpletest\WebTestBase\setUp().
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $this->drupalLogin($this->drupalCreateUser([

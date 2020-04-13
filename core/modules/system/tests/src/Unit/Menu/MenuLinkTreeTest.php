@@ -28,7 +28,7 @@ class MenuLinkTreeTest extends UnitTestCase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $this->menuLinkTree = new MenuLinkTree(

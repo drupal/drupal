@@ -38,7 +38,7 @@ class RedirectResponseSubscriberTest extends UnitTestCase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $this->requestContext = $this->getMockBuilder('Drupal\Core\Routing\RequestContext')

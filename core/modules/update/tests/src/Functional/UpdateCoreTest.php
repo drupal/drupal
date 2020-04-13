@@ -38,7 +38,7 @@ class UpdateCoreTest extends UpdateTestBase {
    */
   protected $updateProject = 'drupal';
 
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
     $admin_user = $this->drupalCreateUser(['administer site configuration', 'administer modules', 'administer themes']);
     $this->drupalLogin($admin_user);

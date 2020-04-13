@@ -44,7 +44,7 @@ class TempStoreDatabaseTest extends KernelTestBase {
    */
   protected $objects = [];
 
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     // Install system tables to test the key/value storage without installing a

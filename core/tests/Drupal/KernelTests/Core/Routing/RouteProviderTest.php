@@ -82,7 +82,7 @@ class RouteProviderTest extends KernelTestBase {
    */
   protected $cacheTagsInvalidator;
 
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
     $this->fixtures = new RoutingFixtures();
     $this->state = new State(new KeyValueMemoryFactory());
@@ -106,7 +106,7 @@ class RouteProviderTest extends KernelTestBase {
     }
   }
 
-  protected function tearDown() {
+  protected function tearDown(): void {
     $this->fixtures->dropTables(Database::getConnection());
 
     parent::tearDown();

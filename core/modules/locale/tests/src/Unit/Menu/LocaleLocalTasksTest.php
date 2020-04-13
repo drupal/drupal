@@ -14,7 +14,7 @@ class LocaleLocalTasksTest extends LocalTaskIntegrationTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     $this->directoryList = [
       'locale' => 'core/modules/locale',
     ];

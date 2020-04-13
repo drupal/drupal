@@ -51,7 +51,7 @@ class MenuLinkParentTest extends MigrateProcessTestCase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
     $this->migration = $this->prophesize(MigrationInterface::class);
     $this->migrateLookup = $this->prophesize(MigrateLookupInterface::class);

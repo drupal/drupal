@@ -26,7 +26,7 @@ class ImportOpmlTest extends AggregatorTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $admin_user = $this->drupalCreateUser(['administer news feeds', 'access news feeds', 'create article content', 'administer blocks']);

@@ -15,7 +15,7 @@ class NodeConditionTest extends EntityKernelTestBase {
 
   public static $modules = ['node'];
 
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     // Create the node bundles required for testing.

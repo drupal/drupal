@@ -33,7 +33,7 @@ class ResourceResponseValidatorTest extends UnitTestCase {
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  public function setUp(): void {
     parent::setUp();
     // Check that the validation class is available.
     if (!class_exists("\\JsonSchema\\Validator")) {
