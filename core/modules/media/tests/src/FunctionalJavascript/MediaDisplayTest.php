@@ -25,7 +25,7 @@ class MediaDisplayTest extends MediaJavascriptTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     // Install the optional configs from the standard profile.

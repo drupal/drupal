@@ -49,7 +49,7 @@ class PathPluginBaseTest extends UnitTestCase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $this->routeProvider = $this->createMock('Drupal\Core\Routing\RouteProviderInterface');

@@ -50,7 +50,7 @@ class FieldDefinitionTest extends UnitTestCase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     $this->fieldType = $this->randomMachineName();
     $this->fieldTypeDefinition = [
       'id' => $this->fieldType,

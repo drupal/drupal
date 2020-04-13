@@ -31,7 +31,7 @@ class AcceptHeaderMatcherTest extends UnitTestCase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $this->fixtures = new RoutingFixtures();

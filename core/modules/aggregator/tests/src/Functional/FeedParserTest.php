@@ -23,7 +23,7 @@ class FeedParserTest extends AggregatorTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
     // Do not delete old aggregator items during these tests, since our sample
     // feeds have hardcoded dates in them (which may be expired when this test

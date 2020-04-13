@@ -36,7 +36,7 @@ class ExperimentalHelpTest extends BrowserTestBase {
   /**
    * {@inheritoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
     $this->adminUser = $this->drupalCreateUser(['access administration pages']);
   }

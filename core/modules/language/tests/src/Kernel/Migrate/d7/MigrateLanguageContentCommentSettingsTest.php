@@ -26,7 +26,7 @@ class MigrateLanguageContentCommentSettingsTest extends MigrateDrupal7TestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
     $this->migrateCommentTypes();
     $this->executeMigration('d7_language_content_comment_settings');

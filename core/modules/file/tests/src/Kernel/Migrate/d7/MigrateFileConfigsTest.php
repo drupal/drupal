@@ -17,7 +17,7 @@ class MigrateFileConfigsTest extends MigrateDrupal7TestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
     $this->executeMigration('file_settings');
   }

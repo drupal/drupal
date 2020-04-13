@@ -46,7 +46,7 @@ class BreadcrumbManagerTest extends UnitTestCase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     $this->moduleHandler = $this->createMock('Drupal\Core\Extension\ModuleHandlerInterface');
     $this->breadcrumbManager = new BreadcrumbManager($this->moduleHandler);
     $this->breadcrumb = new Breadcrumb();

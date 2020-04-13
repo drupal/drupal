@@ -34,7 +34,7 @@ class UserAttributesTest extends BrowserTestBase {
    */
   protected $baseUri;
 
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
     rdf_get_mapping('user', 'user')
       ->setBundleMapping([

@@ -32,7 +32,7 @@ class MigrateStubTest extends TestCase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
     $this->migrationPluginManager = $this->prophesize(MigrationPluginManagerInterface::class);
   }

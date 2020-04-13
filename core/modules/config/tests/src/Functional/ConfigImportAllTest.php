@@ -32,7 +32,7 @@ class ConfigImportAllTest extends ModuleTestBase {
    */
   protected $profile = 'standard';
 
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $this->webUser = $this->drupalCreateUser(['synchronize configuration']);

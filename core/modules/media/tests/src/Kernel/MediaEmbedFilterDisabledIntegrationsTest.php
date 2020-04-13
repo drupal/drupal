@@ -23,7 +23,7 @@ class MediaEmbedFilterDisabledIntegrationsTest extends MediaEmbedFilterTestBase 
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $this->container->get('current_user')

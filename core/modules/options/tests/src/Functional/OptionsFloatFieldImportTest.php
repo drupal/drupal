@@ -25,7 +25,7 @@ class OptionsFloatFieldImportTest extends FieldTestBase {
    */
   protected $defaultTheme = 'stark';
 
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     // Create test user.

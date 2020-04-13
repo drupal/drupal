@@ -59,7 +59,7 @@ class FilterDateTest extends BrowserTestBase {
    *
    * Create nodes with relative dates of yesterday, today, and tomorrow.
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $now = \Drupal::time()->getRequestTime();

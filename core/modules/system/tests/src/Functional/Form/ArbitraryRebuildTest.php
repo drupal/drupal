@@ -25,7 +25,7 @@ class ArbitraryRebuildTest extends BrowserTestBase {
    */
   protected $defaultTheme = 'stark';
 
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     // Auto-create a field for testing.

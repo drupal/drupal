@@ -54,7 +54,7 @@ class UserLoginHttpTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
     $this->cookies = new CookieJar();
     $encoders = [new JsonEncoder(), new XmlEncoder(), new HALJsonEncoder()];

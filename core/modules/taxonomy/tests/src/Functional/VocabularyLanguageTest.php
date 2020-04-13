@@ -19,7 +19,7 @@ class VocabularyLanguageTest extends TaxonomyTestBase {
    */
   protected $defaultTheme = 'stark';
 
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     // Create an administrative user.

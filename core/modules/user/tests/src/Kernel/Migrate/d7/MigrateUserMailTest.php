@@ -14,7 +14,7 @@ class MigrateUserMailTest extends MigrateDrupal7TestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
     $this->installConfig(['user']);
     $this->executeMigration('d7_user_mail');

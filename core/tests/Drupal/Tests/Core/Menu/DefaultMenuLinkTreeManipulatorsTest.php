@@ -66,7 +66,7 @@ class DefaultMenuLinkTreeManipulatorsTest extends UnitTestCase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $this->accessManager = $this->createMock('\Drupal\Core\Access\AccessManagerInterface');

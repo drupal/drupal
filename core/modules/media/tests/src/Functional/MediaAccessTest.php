@@ -34,7 +34,7 @@ class MediaAccessTest extends MediaFunctionalTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
     // This is needed to provide the user cache context for a below assertion.
     $this->drupalPlaceBlock('local_tasks_block');

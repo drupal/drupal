@@ -28,7 +28,7 @@ class MigrateFileTest extends MigrateDrupal6TestBase implements MigrateDumpAlter
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $this->setUpMigratedFiles();

@@ -76,7 +76,7 @@ class TokenTest extends UnitTestCase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     $this->cache = $this->createMock('\Drupal\Core\Cache\CacheBackendInterface');
 
     $this->languageManager = $this->createMock('Drupal\Core\Language\LanguageManagerInterface');

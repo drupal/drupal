@@ -40,7 +40,7 @@ class TypedDataTest extends KernelTestBase {
    */
   public static $modules = ['system', 'field', 'file', 'user'];
 
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setup();
 
     $this->installEntitySchema('file');

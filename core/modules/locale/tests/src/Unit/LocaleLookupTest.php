@@ -67,7 +67,7 @@ class LocaleLookupTest extends UnitTestCase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     $this->storage = $this->createMock('Drupal\locale\StringStorageInterface');
     $this->cache = $this->createMock('Drupal\Core\Cache\CacheBackendInterface');
     $this->lock = $this->createMock('Drupal\Core\Lock\LockBackendInterface');

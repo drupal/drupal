@@ -46,7 +46,7 @@ class QuickEditImageControllerTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     // Create the Article node type.

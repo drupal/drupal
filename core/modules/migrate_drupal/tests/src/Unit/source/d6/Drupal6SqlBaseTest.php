@@ -66,7 +66,7 @@ class Drupal6SqlBaseTest extends MigrateTestCase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     $plugin = 'placeholder_id';
     /** @var \Drupal\Core\State\StateInterface $state */
     $state = $this->createMock('Drupal\Core\State\StateInterface');

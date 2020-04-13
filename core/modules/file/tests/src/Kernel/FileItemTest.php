@@ -40,7 +40,7 @@ class FileItemTest extends FieldKernelTestBase {
    */
   protected $directory;
 
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $this->installEntitySchema('user');

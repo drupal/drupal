@@ -88,7 +88,7 @@ class EntityUnitTest extends UnitTestCase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     $this->values = [
       'id' => 1,
       'langcode' => 'en',

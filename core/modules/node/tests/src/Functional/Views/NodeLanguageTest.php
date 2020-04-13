@@ -43,7 +43,7 @@ class NodeLanguageTest extends NodeTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp($import_test_views = TRUE) {
+  protected function setUp($import_test_views = TRUE): void {
     parent::setUp(FALSE);
 
     // Create Page content type.

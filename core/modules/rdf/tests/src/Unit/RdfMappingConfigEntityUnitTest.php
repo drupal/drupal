@@ -44,7 +44,7 @@ class RdfMappingConfigEntityUnitTest extends UnitTestCase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     $this->entityTypeId = $this->randomMachineName();
 
     $this->entityType = $this->createMock('\Drupal\Core\Entity\EntityTypeInterface');

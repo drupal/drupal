@@ -26,7 +26,7 @@ class ImageTest extends KernelTestBase {
    */
   protected $testImages;
 
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     // The code under test uses file_url_transform_relative(), which relies on

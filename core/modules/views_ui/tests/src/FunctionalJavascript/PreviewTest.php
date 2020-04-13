@@ -39,7 +39,7 @@ class PreviewTest extends WebDriverTestBase {
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  public function setUp(): void {
     parent::setUp();
 
     ViewTestData::createTestViews(self::class, ['views_test_config']);

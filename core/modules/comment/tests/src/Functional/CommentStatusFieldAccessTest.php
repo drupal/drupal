@@ -53,7 +53,7 @@ class CommentStatusFieldAccessTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
     $node_type = NodeType::create([
       'type' => 'article',

@@ -79,7 +79,7 @@ class ConfigTranslationUiTest extends BrowserTestBase {
    */
   protected $localeStorage;
 
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
     $translator_permissions = [
       'translate configuration',

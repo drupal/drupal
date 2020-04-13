@@ -28,7 +28,7 @@ class NodePreviewAnonymousTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
     // Create Basic page node type.
     $this->drupalCreateContentType([

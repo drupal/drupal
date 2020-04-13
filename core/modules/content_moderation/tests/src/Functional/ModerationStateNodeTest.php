@@ -20,7 +20,7 @@ class ModerationStateNodeTest extends ModerationStateTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
     $this->drupalLogin($this->adminUser);
     $this->createContentTypeFromUi('Moderated content', 'moderated_content', TRUE);

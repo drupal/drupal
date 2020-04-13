@@ -24,7 +24,7 @@ class ViewsNoResultsBehaviorTest extends ViewTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp($import_test_views = TRUE) {
+  protected function setUp($import_test_views = TRUE): void {
     parent::setUp();
     $this->enableViewsTestModule();
     $user = $this->createUser([], NULL, TRUE);

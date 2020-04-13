@@ -23,7 +23,7 @@ class VocabularyPermissionsTest extends TaxonomyTestBase {
    */
   protected $defaultTheme = 'stark';
 
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $this->drupalPlaceBlock('page_title_block');

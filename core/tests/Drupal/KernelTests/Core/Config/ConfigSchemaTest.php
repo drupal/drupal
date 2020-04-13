@@ -30,7 +30,7 @@ class ConfigSchemaTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
     $this->installConfig(['system', 'image', 'config_schema_test']);
   }

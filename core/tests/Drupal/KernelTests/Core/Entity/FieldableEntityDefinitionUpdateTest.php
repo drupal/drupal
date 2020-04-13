@@ -85,7 +85,7 @@ class FieldableEntityDefinitionUpdateTest extends EntityKernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
     $this->entityDefinitionUpdateManager = $this->container->get('entity.definition_update_manager');
     $this->lastInstalledSchemaRepository = $this->container->get('entity.last_installed_schema.repository');

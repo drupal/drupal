@@ -25,7 +25,7 @@ class BlockInvalidRegionTest extends BrowserTestBase {
    */
   protected $defaultTheme = 'classy';
 
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
     // Create an admin user.
     $admin_user = $this->drupalCreateUser([

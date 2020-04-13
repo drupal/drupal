@@ -47,7 +47,7 @@ class OptionsWidgetsTest extends FieldTestBase {
    */
   protected $float;
 
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     // Field storage with cardinality 1.

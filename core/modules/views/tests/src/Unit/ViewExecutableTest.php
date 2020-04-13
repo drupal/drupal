@@ -104,7 +104,7 @@ class ViewExecutableTest extends UnitTestCase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $this->view = $this->createMock('Drupal\views\ViewEntityInterface');

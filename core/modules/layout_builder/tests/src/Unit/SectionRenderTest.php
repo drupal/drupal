@@ -67,7 +67,7 @@ class SectionRenderTest extends UnitTestCase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $layout_plugin_manager = $this->prophesize(LayoutPluginManagerInterface::class);

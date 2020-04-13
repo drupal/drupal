@@ -35,7 +35,7 @@ class DatabaseTest extends UnitTestCase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     $this->additionalClassloader = new ClassLoader();
     $this->additionalClassloader->register();
     // Mock the container so we don't need to mock drupal_valid_test_ua().

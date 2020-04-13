@@ -57,7 +57,7 @@ class LocalActionDefaultTest extends UnitTestCase {
    */
   protected $routeProvider;
 
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $this->stringTranslation = $this->createMock('Drupal\Core\StringTranslation\TranslationInterface');

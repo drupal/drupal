@@ -33,7 +33,7 @@ class BaseThemeRequiredTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $this->themeInstaller = $this->container->get('theme_installer');

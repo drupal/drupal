@@ -28,7 +28,7 @@ class NodeAccessPagerTest extends BrowserTestBase {
    */
   protected $defaultTheme = 'stark';
 
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     node_access_rebuild();

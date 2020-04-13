@@ -49,7 +49,7 @@ class StatisticsLoggingTest extends BrowserTestBase {
    */
   protected $client;
 
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     // Create Basic page node type.

@@ -21,7 +21,7 @@ class MediaOverviewPageTest extends MediaFunctionalTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
     $this->drupalLogin($this->nonAdminUser);
   }

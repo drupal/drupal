@@ -62,7 +62,7 @@ class LayoutBuilderQuickEditTest extends QuickEditJavascriptTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $this->drupalPlaceBlock('page_title_block');

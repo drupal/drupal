@@ -28,7 +28,7 @@ class MigrateTermNodeComplete extends MigrateDrupal6TestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     // Remove the classic node table made in setup.

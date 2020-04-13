@@ -43,7 +43,7 @@ class BlockRepositoryTest extends UnitTestCase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
     $active_theme = $this->getMockBuilder('Drupal\Core\Theme\ActiveTheme')
       ->disableOriginalConstructor()

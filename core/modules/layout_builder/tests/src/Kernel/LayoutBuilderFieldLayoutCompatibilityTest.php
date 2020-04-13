@@ -22,7 +22,7 @@ class LayoutBuilderFieldLayoutCompatibilityTest extends LayoutBuilderCompatibili
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $this->display

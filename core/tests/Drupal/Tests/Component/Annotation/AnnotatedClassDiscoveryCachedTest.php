@@ -16,7 +16,7 @@ class AnnotatedClassDiscoveryCachedTest extends TestCase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
     // Ensure FileCacheFactory::DISABLE_CACHE is *not* set, since we're testing
     // integration with the file cache.

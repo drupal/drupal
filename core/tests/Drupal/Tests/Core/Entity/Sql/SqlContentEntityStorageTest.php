@@ -114,7 +114,7 @@ class SqlContentEntityStorageTest extends UnitTestCase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     $this->entityType = $this->createMock('Drupal\Core\Entity\ContentEntityTypeInterface');
     $this->entityType->expects($this->any())
       ->method('id')

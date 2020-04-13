@@ -45,7 +45,7 @@ class MediaTranslationUITest extends ContentTranslationUITestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     $this->entityTypeId = 'media';
     $this->bundle = 'test';
     parent::setUp();

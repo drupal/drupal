@@ -26,7 +26,7 @@ class LinkFieldTest extends UnitTestCase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     $this->plugin = new LinkField([], 'link', []);
 
     $migration = $this->prophesize(MigrationInterface::class);

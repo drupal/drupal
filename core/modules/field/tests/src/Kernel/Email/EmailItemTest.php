@@ -16,7 +16,7 @@ use Drupal\field\Entity\FieldStorageConfig;
  */
 class EmailItemTest extends FieldKernelTestBase {
 
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     // Create an email field storage and field for validation.

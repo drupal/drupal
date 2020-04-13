@@ -19,7 +19,7 @@ class MigrateGlobalThemeSettingsTest extends MigrateDrupal7TestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
     $this->executeMigration('d7_global_theme_settings');
   }

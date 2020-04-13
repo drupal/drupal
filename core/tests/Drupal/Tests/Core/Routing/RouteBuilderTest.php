@@ -77,7 +77,7 @@ class RouteBuilderTest extends UnitTestCase {
    */
   protected $checkProvider;
 
-  protected function setUp() {
+  protected function setUp(): void {
     $this->dumper = $this->createMock('Drupal\Core\Routing\MatcherDumperInterface');
     $this->lock = $this->createMock('Drupal\Core\Lock\LockBackendInterface');
     $this->dispatcher = $this->createMock('\Symfony\Component\EventDispatcher\EventDispatcherInterface');

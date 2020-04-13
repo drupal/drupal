@@ -28,7 +28,7 @@ class OverrideSectionsTest extends LayoutRestTestBase {
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  public function setUp(): void {
     parent::setUp();
     // @todo Figure why field definitions have to cleared in
     //   https://www.drupal.org/project/drupal/issues/2985882.

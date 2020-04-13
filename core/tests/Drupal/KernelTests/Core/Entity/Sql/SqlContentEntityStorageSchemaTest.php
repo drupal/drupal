@@ -27,7 +27,7 @@ class SqlContentEntityStorageSchemaTest extends EntityKernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     /* @var \Drupal\Core\KeyValueStore\KeyValueFactoryInterface $key_value_factory */

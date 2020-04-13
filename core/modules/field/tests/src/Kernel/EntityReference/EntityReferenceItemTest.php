@@ -65,7 +65,7 @@ class EntityReferenceItemTest extends FieldKernelTestBase {
   /**
    * Sets up the test.
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $this->installEntitySchema('entity_test_string_id');

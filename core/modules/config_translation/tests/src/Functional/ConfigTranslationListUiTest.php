@@ -53,7 +53,7 @@ class ConfigTranslationListUiTest extends BrowserTestBase {
    */
   protected $adminUser;
 
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $permissions = [

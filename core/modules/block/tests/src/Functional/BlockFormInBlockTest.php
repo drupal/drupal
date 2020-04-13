@@ -27,7 +27,7 @@ class BlockFormInBlockTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     // Enable our test block.

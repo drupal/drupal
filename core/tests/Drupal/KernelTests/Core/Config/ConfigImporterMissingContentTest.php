@@ -28,7 +28,7 @@ class ConfigImporterMissingContentTest extends KernelTestBase {
    */
   public static $modules = ['system', 'user', 'entity_test', 'config_test', 'config_import_test'];
 
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
     $this->installSchema('system', 'sequences');
     $this->installEntitySchema('entity_test');

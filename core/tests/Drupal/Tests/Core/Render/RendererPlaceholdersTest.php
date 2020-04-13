@@ -25,7 +25,7 @@ class RendererPlaceholdersTest extends RendererTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     // Disable the required cache contexts, so that this test can test just the
     // placeholder replacement behavior.
     $this->rendererConfig['required_cache_contexts'] = [];

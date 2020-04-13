@@ -46,7 +46,7 @@ class BreadcrumbTest extends BrowserTestBase {
    */
   protected $profile = 'standard';
 
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $perms = array_keys(\Drupal::service('user.permissions')->getPermissions());

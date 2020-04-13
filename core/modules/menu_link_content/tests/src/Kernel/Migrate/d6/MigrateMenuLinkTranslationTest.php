@@ -28,7 +28,7 @@ class MigrateMenuLinkTranslationTest extends MigrateDrupal6TestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
     $this->migrateContent();
     $this->setUpCurrentUser();

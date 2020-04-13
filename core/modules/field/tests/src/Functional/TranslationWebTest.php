@@ -54,7 +54,7 @@ class TranslationWebTest extends FieldTestBase {
    */
   protected $field;
 
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $this->fieldName = mb_strtolower($this->randomMachineName() . '_field_name');

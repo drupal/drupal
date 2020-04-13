@@ -19,7 +19,7 @@ class MigrateColorTest extends MigrateDrupal7TestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
     // Install the themes used for this test.
     $this->container->get('theme_installer')->install(['bartik']);

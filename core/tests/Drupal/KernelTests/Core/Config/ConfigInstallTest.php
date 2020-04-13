@@ -24,7 +24,7 @@ class ConfigInstallTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     // Ensure the global variable being asserted by this test does not exist;

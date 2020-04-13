@@ -38,7 +38,7 @@ class FieldCrudTest extends FieldKernelTestBase {
    */
   protected $fieldDefinition;
 
-  public function setUp() {
+  public function setUp(): void {
     parent::setUp();
 
     $this->fieldStorageDefinition = [

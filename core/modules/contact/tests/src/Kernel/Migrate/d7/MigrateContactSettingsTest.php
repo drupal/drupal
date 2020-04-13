@@ -19,7 +19,7 @@ class MigrateContactSettingsTest extends MigrateDrupal7TestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
     $this->executeMigration('contact_category');
     $this->executeMigration('d7_contact_settings');

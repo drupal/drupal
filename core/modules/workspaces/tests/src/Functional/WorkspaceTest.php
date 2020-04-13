@@ -40,7 +40,7 @@ class WorkspaceTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  public function setUp(): void {
     parent::setUp();
     $permissions = [
       'access administration pages',

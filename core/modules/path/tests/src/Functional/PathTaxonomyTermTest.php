@@ -24,7 +24,7 @@ class PathTaxonomyTermTest extends PathTestBase {
    */
   protected $defaultTheme = 'stark';
 
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     // Create a Tags vocabulary for the Article node type.

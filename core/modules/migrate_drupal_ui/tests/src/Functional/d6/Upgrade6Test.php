@@ -45,7 +45,7 @@ class Upgrade6Test extends MigrateUpgradeExecuteTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     // Delete the existing content made to test the ID Conflict form. Migrations

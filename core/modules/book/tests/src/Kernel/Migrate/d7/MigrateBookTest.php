@@ -25,7 +25,7 @@ class MigrateBookTest extends MigrateDrupal7TestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
     $this->installSchema('book', ['book']);
     $this->installSchema('node', ['node_access']);

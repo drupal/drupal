@@ -48,7 +48,7 @@ class BlockContentTranslationUITest extends ContentTranslationUITestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     $this->entityTypeId = 'block_content';
     $this->bundle = 'basic';
     $this->testLanguageSelector = FALSE;

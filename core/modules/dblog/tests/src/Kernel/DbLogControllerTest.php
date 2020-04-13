@@ -17,7 +17,7 @@ class DbLogControllerTest extends KernelTestBase {
    */
   public static $modules = ['dblog', 'user'];
 
-  public function setUp() {
+  public function setUp(): void {
     parent::setUp();
     $this->installEntitySchema('user');
     $this->installSchema('dblog', ['watchdog']);

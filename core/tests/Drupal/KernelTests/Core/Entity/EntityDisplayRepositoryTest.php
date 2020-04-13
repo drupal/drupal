@@ -29,7 +29,7 @@ class EntityDisplayRepositoryTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
     $this->displayRepository = \Drupal::service('entity_display.repository');
 

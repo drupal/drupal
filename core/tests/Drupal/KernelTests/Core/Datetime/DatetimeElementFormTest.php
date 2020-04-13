@@ -31,7 +31,7 @@ class DatetimeElementFormTest extends KernelTestBase implements FormInterface {
   /**
    * Sets up the test.
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
   }
 

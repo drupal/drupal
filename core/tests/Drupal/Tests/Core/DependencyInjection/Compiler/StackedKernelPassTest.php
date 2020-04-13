@@ -28,7 +28,7 @@ class StackedKernelPassTest extends UnitTestCase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     $this->stackedKernelPass = new StackedKernelPass();
     $this->containerBuilder = new ContainerBuilder();
   }

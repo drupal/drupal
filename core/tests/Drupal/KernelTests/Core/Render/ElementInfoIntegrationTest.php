@@ -14,7 +14,7 @@ class ElementInfoIntegrationTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $this->container->get('theme_installer')->install(['test_theme', 'classy']);

@@ -24,7 +24,7 @@ class ImageViewsDataTest extends ViewsKernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp($import_test_views = TRUE) {
+  protected function setUp($import_test_views = TRUE): void {
     parent::setUp($import_test_views);
     $this->installEntitySchema('entity_test');
     $this->installEntitySchema('entity_test_mul');

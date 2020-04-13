@@ -44,7 +44,7 @@ class AssertLegacyTraitTest extends UnitTestCase {
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  public function setUp(): void {
     parent::setUp();
 
     $this->page = $this->prophesize(DocumentElement::class);

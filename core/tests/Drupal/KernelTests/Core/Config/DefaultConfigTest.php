@@ -36,7 +36,7 @@ class DefaultConfigTest extends KernelTestBase {
    */
   protected $themes = ['seven'];
 
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
     \Drupal::service('theme_installer')->install($this->themes);
   }

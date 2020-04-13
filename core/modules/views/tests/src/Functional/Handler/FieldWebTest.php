@@ -47,7 +47,7 @@ class FieldWebTest extends ViewTestBase {
     'views_test_data_name' => 'name',
   ];
 
-  protected function setUp($import_test_views = TRUE) {
+  protected function setUp($import_test_views = TRUE): void {
     parent::setUp($import_test_views);
 
     $this->enableViewsTestModule();

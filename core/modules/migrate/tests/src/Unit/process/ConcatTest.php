@@ -20,7 +20,7 @@ class ConcatTest extends MigrateProcessTestCase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     $this->plugin = new TestConcat();
     parent::setUp();
   }

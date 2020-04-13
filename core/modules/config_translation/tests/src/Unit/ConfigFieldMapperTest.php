@@ -45,7 +45,7 @@ class ConfigFieldMapperTest extends UnitTestCase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     $this->entityTypeManager = $this->createMock('Drupal\Core\Entity\EntityTypeManagerInterface');
     $this->entity = $this->createMock('Drupal\field\FieldConfigInterface');
 

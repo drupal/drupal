@@ -50,7 +50,7 @@ class FieldItemSerializationTest extends NormalizerTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     // Auto-create a field for testing default field values.

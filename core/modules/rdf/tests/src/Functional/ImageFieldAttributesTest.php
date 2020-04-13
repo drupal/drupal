@@ -63,7 +63,7 @@ class ImageFieldAttributesTest extends ImageFieldTestBase {
    */
   protected $node;
 
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $this->fieldName = 'field_image';

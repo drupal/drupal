@@ -45,7 +45,7 @@ class CommentAttributesTest extends CommentTestBase {
    */
   protected $nodeUri;
 
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     // Enables anonymous user comments.

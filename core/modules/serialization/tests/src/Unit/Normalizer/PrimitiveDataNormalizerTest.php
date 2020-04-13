@@ -25,7 +25,7 @@ class PrimitiveDataNormalizerTest extends UnitTestCase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     $this->normalizer = new PrimitiveDataNormalizer();
   }
 

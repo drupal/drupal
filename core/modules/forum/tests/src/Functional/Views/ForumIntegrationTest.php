@@ -33,7 +33,7 @@ class ForumIntegrationTest extends ViewTestBase {
    */
   public static $testViews = ['test_forum_index'];
 
-  protected function setUp($import_test_views = TRUE) {
+  protected function setUp($import_test_views = TRUE): void {
     parent::setUp($import_test_views);
 
     ViewTestData::createTestViews(get_class($this), ['forum_test_views']);

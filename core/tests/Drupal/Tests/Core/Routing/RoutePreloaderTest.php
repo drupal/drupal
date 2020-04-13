@@ -46,7 +46,7 @@ class RoutePreloaderTest extends UnitTestCase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     $this->routeProvider = $this->createMock('Drupal\Core\Routing\PreloadableRouteProviderInterface');
     $this->state = $this->createMock('\Drupal\Core\State\StateInterface');
     $this->cache = $this->createMock('Drupal\Core\Cache\CacheBackendInterface');

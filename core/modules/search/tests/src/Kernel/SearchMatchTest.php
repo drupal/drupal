@@ -30,7 +30,7 @@ class SearchMatchTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
     $this->installSchema('search', ['search_index', 'search_dataset', 'search_total']);
     $this->installConfig(['search']);

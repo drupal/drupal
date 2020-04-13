@@ -62,7 +62,7 @@ class FieldFieldTest extends ViewsKernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp($import_test_views = TRUE) {
+  protected function setUp($import_test_views = TRUE): void {
     // First setup the needed entity types before installing the views.
     parent::setUp(FALSE);
 

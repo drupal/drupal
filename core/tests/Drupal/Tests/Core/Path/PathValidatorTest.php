@@ -54,7 +54,7 @@ class PathValidatorTest extends UnitTestCase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $this->accessAwareRouter = $this->createMock('Drupal\Core\Routing\AccessAwareRouterInterface');

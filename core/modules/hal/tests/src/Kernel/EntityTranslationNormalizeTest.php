@@ -24,7 +24,7 @@ class EntityTranslationNormalizeTest extends NormalizerTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
     $this->installSchema('system', ['sequences']);
     $this->installConfig(['node', 'content_translation']);

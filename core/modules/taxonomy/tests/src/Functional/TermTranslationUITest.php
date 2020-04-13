@@ -33,7 +33,7 @@ class TermTranslationUITest extends ContentTranslationUITestBase {
    */
   protected $defaultTheme = 'classy';
 
-  protected function setUp() {
+  protected function setUp(): void {
     $this->entityTypeId = 'taxonomy_term';
     $this->bundle = 'tags';
     parent::setUp();

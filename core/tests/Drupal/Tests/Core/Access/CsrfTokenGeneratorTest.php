@@ -39,7 +39,7 @@ class CsrfTokenGeneratorTest extends UnitTestCase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $this->privateKey = $this->getMockBuilder('Drupal\Core\PrivateKey')

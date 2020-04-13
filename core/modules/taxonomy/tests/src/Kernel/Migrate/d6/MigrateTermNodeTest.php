@@ -20,7 +20,7 @@ class MigrateTermNodeTest extends MigrateDrupal6TestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
     $this->installSchema('node', ['node_access']);
     $this->migrateContent();

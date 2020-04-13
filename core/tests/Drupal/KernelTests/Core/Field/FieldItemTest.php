@@ -23,7 +23,7 @@ class FieldItemTest extends EntityKernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $this->container->get('state')->set('entity_test.field_test_item', TRUE);

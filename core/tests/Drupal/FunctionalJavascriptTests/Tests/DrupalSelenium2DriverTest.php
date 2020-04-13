@@ -31,7 +31,7 @@ class DrupalSelenium2DriverTest extends WebDriverTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
     $storage_settings = ['cardinality' => 3];
     $this->createFileField('field_file', 'entity_test', 'entity_test', $storage_settings);

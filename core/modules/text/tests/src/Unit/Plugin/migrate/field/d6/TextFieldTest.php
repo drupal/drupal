@@ -27,7 +27,7 @@ class TextFieldTest extends UnitTestCase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     $this->plugin = new TextField([], 'text', []);
 
     $migration = $this->prophesize(MigrationInterface::class);

@@ -19,7 +19,7 @@ class CssCollectionGrouperUnitTest extends UnitTestCase {
    */
   protected $grouper;
 
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $this->grouper = new CssCollectionGrouper();

@@ -23,7 +23,7 @@ class EntityReferenceSelectionSortTest extends EntityKernelTestBase {
    */
   public static $modules = ['node'];
 
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     // Create an Article node type.

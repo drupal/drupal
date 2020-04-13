@@ -22,7 +22,7 @@ class FilterAPITest extends EntityKernelTestBase {
 
   public static $modules = ['system', 'filter', 'filter_test', 'user'];
 
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $this->installConfig(['system', 'filter', 'filter_test']);

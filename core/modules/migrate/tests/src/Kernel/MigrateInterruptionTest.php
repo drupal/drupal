@@ -25,7 +25,7 @@ class MigrateInterruptionTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
     \Drupal::service('event_dispatcher')->addListener(MigrateEvents::POST_ROW_SAVE,
       [$this, 'postRowSaveEventRecorder']);

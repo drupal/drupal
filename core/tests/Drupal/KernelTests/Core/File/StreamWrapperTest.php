@@ -36,7 +36,7 @@ class StreamWrapperTest extends FileTestBase {
    */
   protected $classname = 'Drupal\file_test\StreamWrapper\DummyStreamWrapper';
 
-  public function setUp() {
+  public function setUp(): void {
     parent::setUp();
 
     // Add file_private_path setting.

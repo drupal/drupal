@@ -25,7 +25,7 @@ class CommentItemTest extends FieldKernelTestBase {
    */
   public static $modules = ['comment', 'entity_test', 'user'];
 
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
     $this->installEntitySchema('comment');
     $this->installSchema('comment', ['comment_entity_statistics']);

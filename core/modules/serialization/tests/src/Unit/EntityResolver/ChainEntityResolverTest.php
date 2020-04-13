@@ -35,7 +35,7 @@ class ChainEntityResolverTest extends UnitTestCase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     $this->testNormalizer = $this->createMock('Symfony\Component\Serializer\Normalizer\NormalizerInterface');
     $this->testData = new \stdClass();
   }

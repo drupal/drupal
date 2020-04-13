@@ -49,7 +49,7 @@ class MigrateExecutableMemoryExceededTest extends MigrateTestCase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
     $this->migration = $this->getMigration();
     $this->message = $this->createMock('Drupal\migrate\MigrateMessageInterface');

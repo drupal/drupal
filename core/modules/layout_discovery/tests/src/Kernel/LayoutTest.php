@@ -27,7 +27,7 @@ class LayoutTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $this->layoutPluginManager = $this->container->get('plugin.manager.core.layout');

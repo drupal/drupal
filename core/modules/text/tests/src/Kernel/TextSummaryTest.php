@@ -29,7 +29,7 @@ class TextSummaryTest extends KernelTestBase {
     'entity_test',
   ];
 
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $this->installConfig(['text']);

@@ -31,7 +31,7 @@ class SiteMaintenanceTest extends BrowserTestBase {
 
   protected $adminUser;
 
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     // Configure 'node' as front page.

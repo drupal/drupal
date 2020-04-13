@@ -17,7 +17,7 @@ class EntityReferenceWidgetTest extends MediaLibraryTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     // Create a few example media items for use in selection.

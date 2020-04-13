@@ -33,7 +33,7 @@ class FieldEntityOperationsTest extends ViewTestBase {
    */
   protected $defaultTheme = 'stark';
 
-  protected function setUp($import_test_views = TRUE) {
+  protected function setUp($import_test_views = TRUE): void {
     parent::setUp($import_test_views);
 
     // Create Article content type.

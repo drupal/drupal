@@ -9,7 +9,7 @@ namespace Drupal\KernelTests\Core\Entity;
  */
 class EntityUUIDTest extends EntityKernelTestBase {
 
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     foreach (entity_test_entity_types() as $entity_type_id) {

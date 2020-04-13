@@ -21,7 +21,7 @@ class PostgresqlSchemaTest extends UnitTestCase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $this->connection = $this->getMockBuilder('\Drupal\Core\Database\Driver\pgsql\Connection')

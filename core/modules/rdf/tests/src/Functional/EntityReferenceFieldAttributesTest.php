@@ -49,7 +49,7 @@ class EntityReferenceFieldAttributesTest extends TaxonomyTestBase {
    */
   protected $vocabulary;
 
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $web_user = $this->drupalCreateUser(['bypass node access', 'administer taxonomy']);

@@ -37,7 +37,7 @@ class WorkspaceRequestSubscriberTest extends UnitTestCase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $this->aliasManager = $this->prophesize(AliasManagerInterface::class)->reveal();

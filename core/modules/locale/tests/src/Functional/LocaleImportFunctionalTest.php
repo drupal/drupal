@@ -46,7 +46,7 @@ class LocaleImportFunctionalTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     // Copy test po files to the translations directory.

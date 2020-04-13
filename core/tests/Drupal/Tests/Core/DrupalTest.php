@@ -29,7 +29,7 @@ class DrupalTest extends UnitTestCase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
     $this->container = $this->getMockBuilder('Symfony\Component\DependencyInjection\ContainerBuilder')
       ->setMethods(['get'])

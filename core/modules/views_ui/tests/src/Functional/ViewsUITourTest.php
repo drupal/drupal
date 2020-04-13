@@ -38,7 +38,7 @@ class ViewsUITourTest extends TourTestBase {
    */
   public static $modules = ['views_ui', 'tour', 'language', 'locale'];
 
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
     $this->adminUser = $this->drupalCreateUser(['administer views', 'access tour']);
     $this->drupalLogin($this->adminUser);

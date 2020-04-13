@@ -46,7 +46,7 @@ class BigPipeTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     // Ignore the <meta> refresh that big_pipe.module sets. It causes a redirect

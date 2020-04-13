@@ -11,7 +11,7 @@ use Drupal\Tests\Core\Menu\LocalTaskIntegrationTestBase;
  */
 class UpdateLocalTasksTest extends LocalTaskIntegrationTestBase {
 
-  protected function setUp() {
+  protected function setUp(): void {
     $this->directoryList = ['update' => 'core/modules/update'];
     parent::setUp();
   }

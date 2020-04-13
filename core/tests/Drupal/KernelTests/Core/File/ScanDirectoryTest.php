@@ -32,7 +32,7 @@ class ScanDirectoryTest extends FileTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
     // Hardcode the location of the fixtures files as it is already known
     // and shouldn't change, and we don't yet have a way to retrieve their

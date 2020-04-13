@@ -27,7 +27,7 @@ class LanguageConfigurationElementTest extends BrowserTestBase {
    */
   protected $defaultTheme = 'stark';
 
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
     $user = $this->drupalCreateUser(['access administration pages', 'administer languages', 'administer content types']);
     $this->drupalLogin($user);

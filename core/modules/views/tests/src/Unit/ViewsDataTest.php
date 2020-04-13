@@ -58,7 +58,7 @@ class ViewsDataTest extends UnitTestCase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     $this->cacheTagsInvalidator = $this->createMock('Drupal\Core\Cache\CacheTagsInvalidatorInterface');
     $this->cacheBackend = $this->createMock('Drupal\Core\Cache\CacheBackendInterface');
     $this->getContainerWithCacheTagsInvalidator($this->cacheTagsInvalidator);

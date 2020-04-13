@@ -62,7 +62,7 @@ namespace Drupal\Tests\Component\DependencyInjection\Dumper {
     /**
      * {@inheritdoc}
      */
-    protected function setUp() {
+    protected function setUp(): void {
       // Setup a mock container builder.
       $this->containerBuilder = $this->prophesize('\Symfony\Component\DependencyInjection\ContainerBuilder');
       $this->containerBuilder->getAliases()->willReturn([]);

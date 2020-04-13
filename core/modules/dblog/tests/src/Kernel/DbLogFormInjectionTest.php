@@ -75,7 +75,7 @@ class DbLogFormInjectionTest extends KernelTestBase implements FormInterface {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
     $this->installSchema('dblog', ['watchdog']);
     $this->installSchema('system', ['key_value_expire', 'sequences']);

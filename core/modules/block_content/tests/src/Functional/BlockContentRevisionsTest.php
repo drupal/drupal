@@ -33,7 +33,7 @@ class BlockContentRevisionsTest extends BlockContentTestBase {
   /**
    * Sets the test up.
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     // Create initial block.

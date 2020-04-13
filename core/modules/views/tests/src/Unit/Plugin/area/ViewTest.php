@@ -28,7 +28,7 @@ class ViewTest extends UnitTestCase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
     $this->entityStorage = $this->createMock('Drupal\Core\Entity\EntityStorageInterface');
     $this->viewHandler = new ViewAreaPlugin([], 'view', [], $this->entityStorage);

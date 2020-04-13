@@ -34,7 +34,7 @@ class LayoutBuilderContentModerationIntegrationTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     // @todo The Layout Builder UI relies on local tasks; fix in

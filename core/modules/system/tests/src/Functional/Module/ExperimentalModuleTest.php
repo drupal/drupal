@@ -27,7 +27,7 @@ class ExperimentalModuleTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
     $this->adminUser = $this->drupalCreateUser(['access administration pages', 'administer modules']);
     $this->drupalLogin($this->adminUser);

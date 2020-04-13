@@ -15,7 +15,7 @@ class StorageReplaceDataWrapperTest extends ConfigStorageTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
     $this->storage = new StorageReplaceDataWrapper($this->container->get('config.storage'));
     // ::listAll() verifications require other configuration data to exist.

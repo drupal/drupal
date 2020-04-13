@@ -15,7 +15,7 @@ class LanguageFallbackTest extends LanguageTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $i = 0;

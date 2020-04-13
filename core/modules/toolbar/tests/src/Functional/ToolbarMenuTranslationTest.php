@@ -30,7 +30,7 @@ class ToolbarMenuTranslationTest extends BrowserTestBase {
    */
   protected $defaultTheme = 'stark';
 
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     // Create an administrative user and log it in.

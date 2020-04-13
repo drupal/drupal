@@ -28,7 +28,7 @@ class NodeCreationTest extends NodeTestBase {
    */
   protected $defaultTheme = 'stark';
 
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $web_user = $this->drupalCreateUser(['create page content', 'edit own page content']);

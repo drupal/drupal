@@ -15,7 +15,7 @@ class PreprocessPagerTest extends UnitTestCase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $pager_manager = $this->getMockBuilder('Drupal\Core\Pager\PagerManager')

@@ -37,7 +37,7 @@ abstract class MTimeProtectedFileStorageBase extends PhpStorageTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     // Random generator.

@@ -33,7 +33,7 @@ class EditorImageDialogTest extends EntityKernelTestBase {
   /**
    * Sets up the test.
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
     $this->installEntitySchema('file');
     $this->installSchema('system', ['key_value_expire']);

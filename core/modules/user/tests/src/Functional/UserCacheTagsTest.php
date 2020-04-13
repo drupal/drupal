@@ -27,7 +27,7 @@ class UserCacheTagsTest extends EntityWithUriCacheTagsTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     // Give anonymous users permission to view user profiles, so that we can

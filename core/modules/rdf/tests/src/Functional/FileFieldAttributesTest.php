@@ -56,7 +56,7 @@ class FileFieldAttributesTest extends FileFieldTestBase {
    */
   protected $node;
 
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
     $node_storage = $this->container->get('entity_type.manager')->getStorage('node');
     $this->fieldName = strtolower($this->randomMachineName());

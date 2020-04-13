@@ -31,7 +31,7 @@ class ShortcutCacheTagsTest extends EntityCacheTagsTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     // Give anonymous users permission to customize shortcut links, so that we

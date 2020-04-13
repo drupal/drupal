@@ -57,7 +57,7 @@ class PasswordHashingTest extends UnitTestCase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
     $this->password = $this->randomMachineName();
     $this->passwordHasher = new PhpassHashedPassword(1);

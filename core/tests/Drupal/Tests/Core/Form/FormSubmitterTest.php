@@ -35,7 +35,7 @@ class FormSubmitterTest extends UnitTestCase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
     $this->urlGenerator = $this->createMock(UrlGeneratorInterface::class);
     $this->unroutedUrlAssembler = $this->createMock(UnroutedUrlAssemblerInterface::class);

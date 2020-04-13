@@ -45,7 +45,7 @@ class DateTimeIso8601NormalizerTest extends UnitTestCase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $system_date_config = $this->prophesize(ImmutableConfig::class);

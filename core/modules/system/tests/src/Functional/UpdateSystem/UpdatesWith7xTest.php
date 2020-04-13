@@ -39,7 +39,7 @@ class UpdatesWith7xTest extends BrowserTestBase {
    */
   private $updateUser;
 
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
     require_once $this->root . '/core/includes/update.inc';
     $this->updateUrl = $GLOBALS['base_url'] . '/update.php';

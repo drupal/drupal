@@ -17,7 +17,7 @@ class MigrateUserPictureEntityFormDisplayTest extends MigrateDrupal7TestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
     $this->executeMigrations([
       'user_picture_field',

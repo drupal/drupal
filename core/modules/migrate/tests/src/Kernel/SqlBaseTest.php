@@ -32,7 +32,7 @@ class SqlBaseTest extends MigrateTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $this->migration = $this->createMock(MigrationInterface::class);

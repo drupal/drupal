@@ -25,7 +25,7 @@ class ManagedStorageTest extends ConfigStorageTestBase implements StorageManager
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
     $this->storage = new ManagedStorage($this);
     // ::listAll() verifications require other configuration data to exist.

@@ -50,7 +50,7 @@ class ContextualDynamicContextTest extends BrowserTestBase {
    */
   public static $modules = ['contextual', 'node', 'views', 'views_ui', 'language', 'menu_test'];
 
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $this->drupalCreateContentType(['type' => 'page', 'name' => 'Basic page']);

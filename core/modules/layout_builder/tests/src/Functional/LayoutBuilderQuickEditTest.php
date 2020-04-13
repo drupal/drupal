@@ -28,7 +28,7 @@ class LayoutBuilderQuickEditTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     // Create two nodes.

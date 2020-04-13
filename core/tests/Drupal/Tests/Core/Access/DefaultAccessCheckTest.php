@@ -31,7 +31,7 @@ class DefaultAccessCheckTest extends UnitTestCase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $this->account = $this->createMock('Drupal\Core\Session\AccountInterface');

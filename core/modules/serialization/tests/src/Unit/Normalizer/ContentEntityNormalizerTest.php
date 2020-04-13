@@ -34,7 +34,7 @@ class ContentEntityNormalizerTest extends UnitTestCase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     $entity_field_manager = $this->createMock(EntityFieldManagerInterface::class);
     $entity_type_manager = $this->createMock(EntityTypeManagerInterface::class);
     $entity_type_repository = $this->createMock(EntityTypeRepositoryInterface::class);

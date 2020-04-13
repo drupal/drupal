@@ -18,7 +18,7 @@ class ControllerBaseTest extends UnitTestCase {
    */
   protected $controllerBase;
 
-  protected function setUp() {
+  protected function setUp(): void {
     $this->controllerBase = $this->getMockForAbstractClass('Drupal\Core\Controller\ControllerBase');
   }
 

@@ -14,7 +14,7 @@ abstract class MediaSourceTestBase extends MediaJavascriptTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     // Let's set the canonical flag in the base class of the source tests,

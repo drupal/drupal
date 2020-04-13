@@ -22,7 +22,7 @@ class FeedProcessorPluginTest extends AggregatorTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
     // Enable test plugins.
     $this->enableTestPlugins();

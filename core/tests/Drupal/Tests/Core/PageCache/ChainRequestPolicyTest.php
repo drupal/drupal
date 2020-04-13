@@ -27,7 +27,7 @@ class ChainRequestPolicyTest extends UnitTestCase {
    */
   protected $request;
 
-  protected function setUp() {
+  protected function setUp(): void {
     $this->policy = new ChainRequestPolicy();
     $this->request = new Request();
   }

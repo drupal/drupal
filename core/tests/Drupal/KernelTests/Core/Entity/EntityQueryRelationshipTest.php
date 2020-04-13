@@ -59,7 +59,7 @@ class EntityQueryRelationshipTest extends EntityKernelTestBase {
    */
   protected $queryResults;
 
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $this->installEntitySchema('taxonomy_term');

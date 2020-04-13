@@ -22,7 +22,7 @@ class SelectProfileFormTest extends WebDriverTestBase {
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  public function setUp(): void {
     $this->setupBaseUrl();
 
     $this->prepareDatabasePrefix();

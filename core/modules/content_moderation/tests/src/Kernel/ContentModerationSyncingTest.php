@@ -28,7 +28,7 @@ class ContentModerationSyncingTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
     $this->installEntitySchema('workflow');
     $this->installEntitySchema('content_moderation_state');

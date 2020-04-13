@@ -71,7 +71,7 @@ class FieldSqlStorageTest extends EntityKernelTestBase {
    */
   protected $tableMapping;
 
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $this->installEntitySchema('entity_test_rev');

@@ -30,7 +30,7 @@ class StringFieldRdfaTest extends FieldRdfaTestBase {
    */
   protected $testSummary = 'test_summary_value';
 
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $this->createTestField();

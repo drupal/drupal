@@ -23,7 +23,7 @@ class NodeTypeInitialLanguageTest extends NodeTestBase {
    */
   protected $defaultTheme = 'stark';
 
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $web_user = $this->drupalCreateUser(['bypass node access', 'administer content types', 'administer node fields', 'administer node form display', 'administer node display', 'administer languages']);

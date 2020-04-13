@@ -20,7 +20,7 @@ class PathNoCanonicalLinkTest extends KernelTestBase {
    */
   public static $modules = ['path', 'content_translation_test', 'language', 'entity_test', 'user', 'system'];
 
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $this->installEntitySchema('entity_test');

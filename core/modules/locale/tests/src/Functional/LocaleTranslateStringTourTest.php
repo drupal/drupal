@@ -33,7 +33,7 @@ class LocaleTranslateStringTourTest extends TourTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
     $this->adminUser = $this->drupalCreateUser(['translate interface', 'access tour', 'administer languages']);
     $this->drupalLogin($this->adminUser);

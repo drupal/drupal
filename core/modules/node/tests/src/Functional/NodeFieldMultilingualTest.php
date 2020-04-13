@@ -27,7 +27,7 @@ class NodeFieldMultilingualTest extends BrowserTestBase {
    */
   protected $defaultTheme = 'classy';
 
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     // Create Basic page node type.

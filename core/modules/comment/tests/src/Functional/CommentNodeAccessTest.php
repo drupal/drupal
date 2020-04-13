@@ -26,7 +26,7 @@ class CommentNodeAccessTest extends CommentTestBase {
    */
   protected $defaultTheme = 'classy';
 
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     node_access_rebuild();

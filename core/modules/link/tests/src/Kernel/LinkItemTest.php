@@ -26,7 +26,7 @@ class LinkItemTest extends FieldKernelTestBase {
    */
   public static $modules = ['link'];
 
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     // Create a generic, external, and internal link fields for validation.

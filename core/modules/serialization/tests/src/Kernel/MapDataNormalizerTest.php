@@ -33,7 +33,7 @@ class MapDataNormalizerTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
     $this->serializer = \Drupal::service('serializer');
     $this->typedDataManager = \Drupal::typedDataManager();

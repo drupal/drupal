@@ -31,7 +31,7 @@ class ConfigEntityListTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
     // Delete the override config_test entity since it is not required by this
     // test.

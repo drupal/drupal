@@ -77,7 +77,7 @@ class EditorSecurityTest extends BrowserTestBase {
    */
   protected $privilegedUser;
 
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     // Create 5 text formats, to cover all potential use cases:

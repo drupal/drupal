@@ -29,7 +29,7 @@ class FieldImportDeleteUninstallUiTest extends FieldTestBase {
    */
   protected $defaultTheme = 'stark';
 
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $this->drupalLogin($this->drupalCreateUser(['synchronize configuration']));

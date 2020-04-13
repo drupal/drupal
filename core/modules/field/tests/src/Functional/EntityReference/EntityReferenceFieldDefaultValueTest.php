@@ -36,7 +36,7 @@ class EntityReferenceFieldDefaultValueTest extends BrowserTestBase {
    */
   protected $adminUser;
 
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     // Create default content type.

@@ -29,7 +29,7 @@ class ShapeItemTest extends FieldKernelTestBase {
    */
   protected $fieldName = 'field_shape';
 
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     // Create a 'shape' field and storage for validation.

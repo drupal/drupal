@@ -27,7 +27,7 @@ class LanguageBrowserDetectionAcceptLanguageTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
     // User to manage languages.
     $admin = $this->drupalCreateUser([], NULL, TRUE);

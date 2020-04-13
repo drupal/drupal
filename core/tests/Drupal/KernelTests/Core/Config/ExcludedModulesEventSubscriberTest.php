@@ -23,7 +23,7 @@ class ExcludedModulesEventSubscriberTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
     $this->installConfig(['system', 'config_test', 'config_exclude_test']);
     $this->setSetting('config_exclude_modules', ['config_test']);

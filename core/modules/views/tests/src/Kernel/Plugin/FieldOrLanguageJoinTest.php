@@ -34,7 +34,7 @@ class FieldOrLanguageJoinTest extends RelationshipJoinTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp($import_test_views = TRUE) {
+  protected function setUp($import_test_views = TRUE): void {
     parent::setUp();
 
     // Add a join plugin manager which can be used in all of the tests.

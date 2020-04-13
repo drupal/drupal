@@ -32,7 +32,7 @@ class HelpTopicTwigLoaderTest extends UnitTestCase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     $this->setUpVfs();
     $this->helpLoader = new HelpTopicTwigLoader('\fake\root\path',
       $this->getHandlerMock('module'),

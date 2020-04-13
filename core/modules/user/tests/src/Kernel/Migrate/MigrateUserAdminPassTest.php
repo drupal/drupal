@@ -29,7 +29,7 @@ class MigrateUserAdminPassTest extends MigrateTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     // Make sure the admin user and a regular user are created.

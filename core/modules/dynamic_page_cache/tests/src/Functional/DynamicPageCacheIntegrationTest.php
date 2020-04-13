@@ -40,7 +40,7 @@ class DynamicPageCacheIntegrationTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     // Uninstall the page_cache module; we want to test the Dynamic Page Cache

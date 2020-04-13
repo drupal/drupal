@@ -26,7 +26,7 @@ class NodeAccessLanguageFallbackTest extends NodeTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     // After enabling a node access module, the {node_access} table has to be

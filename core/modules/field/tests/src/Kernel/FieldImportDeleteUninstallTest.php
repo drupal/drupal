@@ -23,7 +23,7 @@ class FieldImportDeleteUninstallTest extends FieldKernelTestBase {
    */
   public static $modules = ['telephone'];
 
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
     // Module uninstall requires users_data tables.
     // @see drupal_flush_all_caches()

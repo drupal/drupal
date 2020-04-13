@@ -26,7 +26,7 @@ class MigrateNodeRevisionTest extends MigrateNodeTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
     $this->executeMigrations(['d6_node', 'd6_node_revision']);
     $this->nodeStorage = $this->container->get('entity_type.manager')

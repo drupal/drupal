@@ -27,7 +27,7 @@ class LatestRevisionCheckTest extends UnitTestCase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     // Initialize Drupal container since the cache context manager is needed.

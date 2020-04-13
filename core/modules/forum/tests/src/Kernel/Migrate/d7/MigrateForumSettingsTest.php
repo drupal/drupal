@@ -25,7 +25,7 @@ class MigrateForumSettingsTest extends MigrateDrupal7TestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
     $this->executeMigration('d7_taxonomy_vocabulary');
     $this->executeMigration('d7_forum_settings');

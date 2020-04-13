@@ -32,7 +32,7 @@ class MediaCacheTagsTest extends EntityWithUriCacheTagsTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
     \Drupal::configFactory()
       ->getEditable('media.settings')

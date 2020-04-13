@@ -29,7 +29,7 @@ class CachedStorageTest extends ConfigStorageTestBase {
    */
   protected $fileStorage;
 
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
     // Create a directory.
     $dir = PublicStream::basePath() . '/config';

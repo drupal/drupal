@@ -48,7 +48,7 @@ class StatisticsAdminTest extends BrowserTestBase {
    */
   protected $client;
 
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     // Set the max age to 0 to simplify testing.

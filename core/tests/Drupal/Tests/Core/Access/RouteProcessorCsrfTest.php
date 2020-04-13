@@ -28,7 +28,7 @@ class RouteProcessorCsrfTest extends UnitTestCase {
    */
   protected $processor;
 
-  protected function setUp() {
+  protected function setUp(): void {
     $this->csrfToken = $this->getMockBuilder('Drupal\Core\Access\CsrfTokenGenerator')
       ->disableOriginalConstructor()
       ->getMock();

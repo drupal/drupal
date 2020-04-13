@@ -26,7 +26,7 @@ class MainContentFallbackTest extends BrowserTestBase {
   protected $adminUser;
   protected $webUser;
 
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     // Create and log in admin user.

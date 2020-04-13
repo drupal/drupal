@@ -42,7 +42,7 @@ class FilterFormTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     /** @var \Drupal\filter\FilterFormatInterface $filter_test_format */

@@ -31,7 +31,7 @@ class MenuRouterTest extends BrowserTestBase {
    */
   protected $adminTheme;
 
-  protected function setUp() {
+  protected function setUp(): void {
     // Enable dummy module that implements hook_menu.
     parent::setUp();
 

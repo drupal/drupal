@@ -27,7 +27,7 @@ class WorkflowUiNoTypeTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
     // We're testing local actions.
     $this->drupalPlaceBlock('local_actions_block');

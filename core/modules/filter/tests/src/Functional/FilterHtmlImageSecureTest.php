@@ -38,7 +38,7 @@ class FilterHtmlImageSecureTest extends BrowserTestBase {
    */
   protected $webUser;
 
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     // Setup Filtered HTML text format.

@@ -39,7 +39,7 @@ class MakeUniqueEntityFieldTest extends MigrateProcessTestCase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     $this->entityQuery = $this->getMockBuilder('Drupal\Core\Entity\Query\QueryInterface')
       ->disableOriginalConstructor()
       ->getMock();

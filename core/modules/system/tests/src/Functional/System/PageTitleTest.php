@@ -32,7 +32,7 @@ class PageTitleTest extends BrowserTestBase {
   /**
    * Implement setUp().
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $this->drupalCreateContentType(['type' => 'page', 'name' => 'Basic page']);
