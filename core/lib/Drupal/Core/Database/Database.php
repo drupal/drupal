@@ -468,7 +468,7 @@ abstract class Database {
     $url_components = parse_url($url);
     if (isset($url_components['query'])) {
       parse_str($url_components['query'], $query);
-      if ($query['module']) {
+      if (isset($query['module']) && $query['module']) {
         $module = $query['module'];
         // Set up an additional autoloader. We don't use the main autoloader as
         // this method can be called before Drupal is installed and is never

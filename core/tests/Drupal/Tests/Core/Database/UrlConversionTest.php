@@ -188,6 +188,19 @@ class UrlConversionTest extends UnitTestCase {
           'autoload' => 'core/modules/system/tests/modules/driver_test/src/Driver/Database/DrivertestPgsql/',
         ],
       ],
+      'MySql with a custom query parameter' => [
+        '',
+        'mysql://test_user:test_pass@test_host:3306/test_database?extra=value',
+        [
+          'driver' => 'mysql',
+          'username' => 'test_user',
+          'password' => 'test_pass',
+          'host' => 'test_host',
+          'database' => 'test_database',
+          'port' => 3306,
+          'namespace' => 'Drupal\Core\Database\Driver\mysql',
+        ],
+      ],
     ];
   }
 
