@@ -214,6 +214,13 @@ abstract class Connection {
       unset($connection_options['transactions']);
     }
 
+    // Work out the database driver namespace if none is provided. This normally
+    // written to setting.php by installer or set by
+    // \Drupal\Core\Database\Database::parseConnectionInfo().
+    if (empty($connection_options['namespace'])) {
+      $connection_options['namespace'] = (new \ReflectionObject($this))->getNamespaceName();
+    }
+
     // Initialize and prepare the connection prefix.
     $this->setPrefix(isset($connection_options['prefix']) ? $connection_options['prefix'] : '');
 
@@ -863,10 +870,6 @@ abstract class Connection {
    */
   public function getDriverClass($class) {
     if (empty($this->driverClasses[$class])) {
-      if (empty($this->connectionOptions['namespace'])) {
-        // Fallback for Drupal 7 settings.php and the test runner script.
-        $this->connectionOptions['namespace'] = (new \ReflectionObject($this))->getNamespaceName();
-      }
       $driver_class = $this->connectionOptions['namespace'] . '\\' . $class;
       $this->driverClasses[$class] = class_exists($driver_class) ? $driver_class : $class;
       if ($this->driverClasses[$class] === 'Condition') {

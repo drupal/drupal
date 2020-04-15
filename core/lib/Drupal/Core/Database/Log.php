@@ -39,13 +39,6 @@ class Log {
   protected $connectionKey = 'default';
 
   /**
-   * The PHP namespace of the database driver that this object is logging.
-   *
-   * @var string
-   */
-  protected $driverNamespace;
-
-  /**
    * Constructor.
    *
    * @param $key
@@ -152,6 +145,8 @@ class Log {
   public function findCaller() {
     $stack = $this->getDebugBacktrace();
 
+    $driver_namespace = Database::getConnectionInfo($this->connectionKey)['default']['namespace'];
+
     // Starting from the very first entry processed during the request, find
     // the first function call that can be identified as a call to a
     // method/function in the database layer.
@@ -160,7 +155,7 @@ class Log {
       // it a default empty string value in that case.
       $class = $stack[$n]['class'] ?? '';
 
-      if (strpos($class, __NAMESPACE__, 0) === 0 || strpos($class, $this->getDriverNamespace(), 0) === 0) {
+      if (strpos($class, __NAMESPACE__, 0) === 0 || strpos($class, $driver_namespace, 0) === 0) {
         break;
       }
     }
@@ -179,20 +174,6 @@ class Log {
         ];
       }
     }
-  }
-
-  /**
-   * Gets the namespace of the database driver.
-   *
-   * @return string|null
-   *   Namespace of the database driver, or NULL if the connection is
-   *   missing.
-   */
-  protected function getDriverNamespace() {
-    if (!isset($this->driverNamespace)) {
-      $this->driverNamespace = (new \ReflectionObject(Database::getConnection('default', $this->connectionKey)))->getNamespaceName();
-    }
-    return $this->driverNamespace;
   }
 
   /**

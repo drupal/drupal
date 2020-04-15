@@ -214,6 +214,7 @@ abstract class Database {
     if (empty($info['driver'])) {
       $info = $info[mt_rand(0, count($info) - 1)];
     }
+
     // Parse the prefix information.
     if (!isset($info['prefix'])) {
       // Default to an empty prefix.
@@ -227,6 +228,12 @@ abstract class Database {
         'default' => $info['prefix'],
       ];
     }
+
+    // Fallback for Drupal 7 settings.php if namespace is not provided.
+    if (empty($info['namespace'])) {
+      $info['namespace'] = 'Drupal\\Core\\Database\\Driver\\' . $info['driver'];
+    }
+
     return $info;
   }
 
@@ -368,8 +375,7 @@ abstract class Database {
       throw new DriverNotSpecifiedException('Driver not specified for this database connection: ' . $key);
     }
 
-    $namespace = static::getDatabaseDriverNamespace(self::$databaseInfo[$key][$target]);
-    $driver_class = $namespace . '\\Connection';
+    $driver_class = self::$databaseInfo[$key][$target]['namespace'] . '\\Connection';
 
     $pdo_connection = $driver_class::open(self::$databaseInfo[$key][$target]);
     $new_connection = new $driver_class($pdo_connection, self::$databaseInfo[$key][$target]);
@@ -605,7 +611,7 @@ abstract class Database {
     if (empty($db_info) || empty($db_info['default'])) {
       throw new \RuntimeException("Database connection $key not defined or missing the 'default' settings");
     }
-    $namespace = static::getDatabaseDriverNamespace($db_info['default']);
+    $namespace = $db_info['default']['namespace'];
 
     // If the driver namespace is within a Drupal module, add the module name
     // to the connection options to make it easy for the connection class's
@@ -628,8 +634,14 @@ abstract class Database {
    *
    * @return string
    *   The PHP namespace of the driver's database.
+   *
+   * @deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. There is no
+   *   replacement as $connection_info['namespace'] is always set.
+   *
+   * @see https://www.drupal.org/node/3127769
    */
   protected static function getDatabaseDriverNamespace(array $connection_info) {
+    @trigger_error(__METHOD__ . " is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. There is no replacement as \$connection_info['namespace'] is always set. See https://www.drupal.org/node/3127769.", E_USER_DEPRECATED);
     if (isset($connection_info['namespace'])) {
       return $connection_info['namespace'];
     }
