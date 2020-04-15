@@ -27,7 +27,7 @@ trait BlockCreationTrait {
    *   @endcode
    *   The following defaults are provided:
    *   - label: Random string.
-   *   - ID: Random string.
+   *   - id: Random string.
    *   - region: 'sidebar_first'.
    *   - theme: The default theme.
    *   - visibility: Empty array.
