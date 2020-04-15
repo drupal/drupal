@@ -92,7 +92,7 @@ class ResourceIdentifierNormalizer extends NormalizerBase implements Denormalize
       // resource.
       if (!in_array($value['type'], $target_resource_type_names)) {
         throw new BadRequestHttpException(sprintf(
-          'The provided type (%s) does not mach the destination resource types (%s).',
+          'The provided type (%s) does not match the destination resource types (%s).',
           $value['type'],
           implode(', ', $target_resource_type_names)
         ));
