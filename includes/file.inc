@@ -2626,10 +2626,12 @@ function file_directory_temp() {
  */
 function file_get_content_headers($file) {
   $type = mime_header_encode($file->filemime);
+  $name = mime_header_encode($file->filename);
 
   return array(
     'Content-Type' => $type,
     'Content-Length' => $file->filesize,
+    'Content-Disposition' => $disposition . '; filename="' . $name . '"',
     'Cache-Control' => 'private',
   );
 }
