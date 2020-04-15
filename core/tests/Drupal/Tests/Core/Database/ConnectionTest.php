@@ -432,4 +432,13 @@ class ConnectionTest extends UnitTestCase {
     new StubConnection($mock_pdo, [], [0, '1']);
   }
 
+  /**
+   * @covers ::__construct
+   */
+  public function testNamespaceDefault() {
+    $mock_pdo = $this->createMock(StubPDO::class);
+    $connection = new StubConnection($mock_pdo, []);
+    $this->assertSame('Drupal\Tests\Core\Database\Stub', $connection->getConnectionOptions()['namespace']);
+  }
+
 }

@@ -46,8 +46,9 @@ trait LoggedStatementsTrait {
    * {@inheritdoc}
    */
   public function getDriverClass($class) {
-    // Override because the base class uses reflection to determine namespace
-    // based on object, which would break.
+    // Override because the database driver copies in the
+    // database_statement_monitoring_test module don't contain all the necessary
+    // classes.
     $namespace = (new \ReflectionClass(get_parent_class($this)))->getNamespaceName();
     $driver_class = $namespace . '\\' . $class;
     if (class_exists($driver_class)) {

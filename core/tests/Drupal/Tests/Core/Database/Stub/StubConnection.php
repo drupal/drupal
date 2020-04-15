@@ -3,6 +3,7 @@
 namespace Drupal\Tests\Core\Database\Stub;
 
 use Drupal\Core\Database\Connection;
+use Drupal\Core\Database\Log;
 use Drupal\Core\Database\StatementEmpty;
 
 /**
@@ -82,6 +83,16 @@ class StubConnection extends Connection {
    */
   public function nextId($existing_id = 0) {
     return 0;
+  }
+
+  /**
+   * Helper method to test database classes are not included in backtraces.
+   *
+   * @return array
+   *   The caller stack entry.
+   */
+  public function testLogCaller() {
+    return (new Log())->findCaller();
   }
 
 }

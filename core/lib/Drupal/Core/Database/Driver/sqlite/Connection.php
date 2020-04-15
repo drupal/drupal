@@ -73,8 +73,6 @@ class Connection extends DatabaseConnection {
     // This driver defaults to transaction support, except if explicitly passed FALSE.
     $this->transactionSupport = $this->transactionalDDLSupport = !isset($connection_options['transactions']) || $connection_options['transactions'] !== FALSE;
 
-    $this->connectionOptions = $connection_options;
-
     // Attach one database for each registered prefix.
     $prefixes = $this->prefixes;
     foreach ($prefixes as &$prefix) {
