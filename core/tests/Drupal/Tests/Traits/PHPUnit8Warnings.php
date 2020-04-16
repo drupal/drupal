@@ -23,7 +23,6 @@ trait PHPUnit8Warnings {
    * @var string[]
    */
   private static $ignoredWarnings = [
-    'assertArraySubset() is deprecated and will be removed in PHPUnit 9.',
     'readAttribute() is deprecated and will be removed in PHPUnit 9.',
     'getObjectAttribute() is deprecated and will be removed in PHPUnit 9.',
     'assertAttributeEquals() is deprecated and will be removed in PHPUnit 9.',

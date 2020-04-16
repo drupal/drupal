@@ -30,15 +30,14 @@ class PublishActionTest extends KernelTestBase {
    */
   public function testGetDerivativeDefinitions() {
     $deriver = new EntityPublishedActionDeriver(\Drupal::entityTypeManager(), \Drupal::translation());
-    $this->assertArraySubset([
-      'entity_test_mulrevpub' => [
-        'type' => 'entity_test_mulrevpub',
-        'label' => 'Save test entity - revisions, data table, and published interface',
-        'action_label' => 'Save',
-      ],
-    ], $deriver->getDerivativeDefinitions([
+    $definitions = $deriver->getDerivativeDefinitions([
       'action_label' => 'Save',
-    ]));
+    ]);
+    $this->assertEquals([
+      'type' => 'entity_test_mulrevpub',
+      'label' => 'Save test entity - revisions, data table, and published interface',
+      'action_label' => 'Save',
+    ], $definitions['entity_test_mulrevpub']);
   }
 
   /**
@@ -56,7 +55,7 @@ class PublishActionTest extends KernelTestBase {
     $this->assertFalse($entity->isPublished());
     $action->execute([$entity]);
     $this->assertTrue($entity->isPublished());
-    $this->assertArraySubset(['module' => ['entity_test']], $action->getDependencies());
+    $this->assertSame(['module' => ['entity_test']], $action->getDependencies());
   }
 
   /**
@@ -74,7 +73,7 @@ class PublishActionTest extends KernelTestBase {
     $this->assertTrue($entity->isPublished());
     $action->execute([$entity]);
     $this->assertFalse($entity->isPublished());
-    $this->assertArraySubset(['module' => ['entity_test']], $action->getDependencies());
+    $this->assertSame(['module' => ['entity_test']], $action->getDependencies());
   }
 
 }

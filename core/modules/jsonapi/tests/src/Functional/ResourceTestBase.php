@@ -2005,7 +2005,9 @@ abstract class ResourceTestBase extends BrowserTestBase {
         // properties are present, the server could be computing additional
         // properties.
         if (is_array($field_normalization)) {
-          $this->assertArraySubset($field_normalization, $created_entity_document['data']['attributes'][$field_name]);
+          foreach ($field_normalization as $value) {
+            $this->assertContains($value, $created_entity_document['data']['attributes'][$field_name]);
+          }
         }
         else {
           $this->assertSame($field_normalization, $created_entity_document['data']['attributes'][$field_name]);
@@ -2259,7 +2261,9 @@ abstract class ResourceTestBase extends BrowserTestBase {
       // properties are present, the server could be computing additional
       // properties.
       if (is_array($field_normalization)) {
-        $this->assertArraySubset($field_normalization, $updated_entity_document['data']['attributes'][$field_name]);
+        foreach ($field_normalization as $value) {
+          $this->assertContains($value, $updated_entity_document['data']['attributes'][$field_name]);
+        }
       }
       else {
         $this->assertSame($field_normalization, $updated_entity_document['data']['attributes'][$field_name]);

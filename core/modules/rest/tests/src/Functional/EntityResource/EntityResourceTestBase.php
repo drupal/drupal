@@ -1439,10 +1439,29 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
           // as strings in PHP memory.
           $expected_stored_data = static::castToString($expected_stored_data);
         }
-        // Subset, not same, because we can e.g. send just the target_id for the
-        // bundle in a PATCH or POST request; the response will include more
-        // properties.
-        $this->assertArraySubset($expected_stored_data, $modified_entity->get($field_name)->getValue(), TRUE);
+        $this->assertEntityArraySubset($expected_stored_data, $modified_entity->get($field_name)->getValue());
+      }
+    }
+  }
+
+  /**
+   * Recursively asserts that the expected items are set in the tested entity.
+   *
+   * A response may include more properties, we only need to ensure that all
+   * items in the request exist in the response.
+   *
+   * @param $expected
+   *   An array of expected values, may contain further nested arrays.
+   * @param $actual
+   *   The object to test.
+   */
+  protected function assertEntityArraySubset($expected, $actual) {
+    foreach ($expected as $key => $value) {
+      if (is_array($value)) {
+        $this->assertEntityArraySubset($value, $actual[$key]);
+      }
+      else {
+        $this->assertSame($value, $actual[$key]);
       }
     }
   }
