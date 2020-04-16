@@ -4,12 +4,10 @@
  * https://www.drupal.org/node/2815083
  * @preserve
  */
-
 /**
  * @file
  * CKEditor appearance overrides.
  */
-
 :root {
   /*
    * Color Palette.
@@ -53,15 +51,17 @@
    * Breadcrumb.
    */
 }
-
+:root { /* 1px */
+  /* Inner border size must be based on chrome border size. */ /* 1px */
+  /* Inner border radius must be based on chrome border radius and size. */
+}
 .cke.cke_chrome {
-  border-radius: 0.125em; /* (2 / 16) */
+  border-width: 1px;
+  border-radius: 2px;
 }
-
 .cke .cke_inner {
-  border-radius: 0.0625em; /* (1 / 16) */
+  border-radius: 1px;
 }
-
 .cke_path_empty:only-child::after {
   position: absolute;
   top: 0;
@@ -71,97 +71,80 @@
   content: "";
   background: #fff;
 }
-
 .cke .cke_top {
-  border: 0.0833em solid transparent; /* Moono lisa skin uses font-size 12px */
+  border: 1px solid transparent;
   border-bottom: 0;
-  border-radius: 0.0833em 0.0833em 0 0;
+  border-radius: 1px 1px 0 0;
 }
-
 .cke .cke_contents {
-  border: 0.0625em solid transparent;
+  border: 1px solid transparent;
   border-top: 0;
   border-bottom: 0;
 }
-
 .cke .cke_bottom {
-  border: 0.0833em solid transparent; /* Moono lisa skin uses font-size 12px */
+  border: 1px solid transparent;
   border-top: 0;
-  border-radius: 0 0 0.0833em 0.0833em;
+  border-radius: 0 0 1px 1px;
 }
-
 /* Default */
-
 .cke.cke_chrome {
   border-color: #8e929c;
 }
-
+/* Hover. */
+.cke.cke_chrome:hover,
+.cke:hover .cke_contents,
+.cke:hover .cke_top,
+.cke:hover .cke_bottom {
+  border-color: #222330;
+}
+/* Focus. */
+.cke.cke_chrome.cke_focus {
+  outline: 2px
+dotted
+transparent;
+  box-shadow: 0
+0
+0
+2px
+#fff
+,
+0
+0
+0
+5px
+#26a769;
+}
 /* Error. */
-
 .error + .cke.cke_chrome,
 .error + .cke .cke_contents,
 .error + .cke .cke_top,
 .error + .cke .cke_bottom {
   border-color: #d72222;
 }
-
-/* Hover. */
-
-.cke.cke_chrome:hover,
-.cke:hover .cke_contents,
-.cke:hover .cke_top,
-.cke:hover .cke_bottom,
-.error + .cke.cke_chrome:hover,
-.error + .cke:hover .cke_contents,
-.error + .cke:hover .cke_top,
-.error + .cke:hover .cke_bottom {
-  border-color: #222330;
-}
-
-/* Focus. */
-
-.cke.cke_chrome.cke_focus,
-.cke.cke_focus .cke_contents,
-.cke.cke_focus .cke_top,
-.cke.cke_focus .cke_bottom,
-.error + .cke.cke_chrome.cke_focus,
-.error + .cke.cke_focus .cke_contents,
-.error + .cke.cke_focus .cke_top,
-.error + .cke.cke_focus .cke_bottom {
-  border-color: #003cc5;
-}
-
 /* Disabled. */
-
 [disabled] + .cke.cke_chrome {
   border-color: #bababf;
 }
-
 [disabled] + .cke .cke_contents,
 [disabled] + .cke .cke_top,
 [disabled] + .cke .cke_bottom {
   border-color: transparent;
 }
-
 [disabled] + .cke .cke_contents {
   border-color: #f2f2f3;
   background: hsl(240, 4%, 90%); /* Calculated from disabled input bg and iframe opacity. */
 }
-
 [disabled] + .cke iframe,
 [disabled] + .cke .cke_source {
   opacity: 0.505;
 }
-
 [disabled] + .cke .cke_bottom {
   background: #f2f2f3;
 }
-
 [disabled] + .cke .cke_bottom > * {
   /* Don't show element path dor disabled editor. */
   opacity: 0;
 }
-
 [disabled] + .cke .cke_path_empty::after {
   content: none;
 }

@@ -114,7 +114,6 @@ _:-ms-fullscreen,
 }
 
 .form-element[disabled] {
-  -webkit-opacity: 1;
   color: var(--input--disabled-fg-color);
   border-color: var(--input--disabled-border-color);
   background-color: var(--input--disabled-bg-color);

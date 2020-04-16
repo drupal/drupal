@@ -2,15 +2,24 @@
  * @file
  * CKEditor appearance overrides.
  */
-
 @import "../base/variables.pcss.css";
 
+:root {
+  --ckeditor-chrome-border-size: var(--input-border-size); /* 1px */
+  --ckeditor-chrome-border-radius: var(--base-border-radius);
+  /* Inner border size must be based on chrome border size. */
+  --ckeditor-inner-border-size: calc(var(--input--error-border-size) - var(--ckeditor-chrome-border-size)); /* 1px */
+  /* Inner border radius must be based on chrome border radius and size. */
+  --ckeditor-inner-border-radius: calc(var(--ckeditor-chrome-border-radius) - var(--ckeditor-chrome-border-size));
+}
+
 .cke.cke_chrome {
-  border-radius: 0.125em; /* (2 / 16) */
+  border-width: var(--ckeditor-chrome-border-size);
+  border-radius: var(--ckeditor-chrome-border-radius);
 }
 
 .cke .cke_inner {
-  border-radius: 0.0625em; /* (1 / 16) */
+  border-radius: var(--ckeditor-inner-border-radius);
 }
 
 .cke_path_empty:only-child::after {
@@ -24,26 +33,40 @@
 }
 
 .cke .cke_top {
-  border: 0.0833em solid transparent; /* Moono lisa skin uses font-size 12px */
+  border: var(--ckeditor-inner-border-size) solid transparent;
   border-bottom: 0;
-  border-radius: 0.0833em 0.0833em 0 0;
+  border-radius: var(--ckeditor-inner-border-size) var(--ckeditor-inner-border-size) 0 0;
 }
 
 .cke .cke_contents {
-  border: 0.0625em solid transparent;
+  border: var(--ckeditor-inner-border-size) solid transparent;
   border-top: 0;
   border-bottom: 0;
 }
 
 .cke .cke_bottom {
-  border: 0.0833em solid transparent; /* Moono lisa skin uses font-size 12px */
+  border: var(--ckeditor-inner-border-size) solid transparent;
   border-top: 0;
-  border-radius: 0 0 0.0833em 0.0833em;
+  border-radius: 0 0 var(--ckeditor-inner-border-size) var(--ckeditor-inner-border-size);
 }
 
 /* Default */
 .cke.cke_chrome {
   border-color: var(--input-border-color);
+}
+
+/* Hover. */
+.cke.cke_chrome:hover,
+.cke:hover .cke_contents,
+.cke:hover .cke_top,
+.cke:hover .cke_bottom {
+  border-color: var(--input--hover-border-color);
+}
+
+/* Focus. */
+.cke.cke_chrome.cke_focus {
+  outline: var(--focus-outline);
+  box-shadow: var(--focus-box-shadow);
 }
 
 /* Error. */
@@ -52,30 +75,6 @@
 .error + .cke .cke_top,
 .error + .cke .cke_bottom {
   border-color: var(--input--error-border-color);
-}
-
-/* Hover. */
-.cke.cke_chrome:hover,
-.cke:hover .cke_contents,
-.cke:hover .cke_top,
-.cke:hover .cke_bottom,
-.error + .cke.cke_chrome:hover,
-.error + .cke:hover .cke_contents,
-.error + .cke:hover .cke_top,
-.error + .cke:hover .cke_bottom {
-  border-color: var(--input--hover-border-color);
-}
-
-/* Focus. */
-.cke.cke_chrome.cke_focus,
-.cke.cke_focus .cke_contents,
-.cke.cke_focus .cke_top,
-.cke.cke_focus .cke_bottom,
-.error + .cke.cke_chrome.cke_focus,
-.error + .cke.cke_focus .cke_contents,
-.error + .cke.cke_focus .cke_top,
-.error + .cke.cke_focus .cke_bottom {
-  border-color: var(--input--focus-border-color);
 }
 
 /* Disabled. */

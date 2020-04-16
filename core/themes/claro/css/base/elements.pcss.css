@@ -208,6 +208,6 @@ img {
  */
 .page-wrapper *:focus,
 .ui-dialog *:focus {
-  outline: 2px dotted transparent;
-  box-shadow: 0 0 0 2px var(--color-white), 0 0 0 5px var(--color-focus);
+  outline: var(--focus-outline);
+  box-shadow: var(--focus-box-shadow);
 }
