@@ -42,7 +42,7 @@ class FormElementInlineErrorTest extends KernelTestBase {
 
     // Just test if the #error_no_message property is TRUE. FormErrorHandlerTest
     // tests if the property actually hides the error message.
-    $this->assertArraySubset(['#error_no_message' => TRUE], $form['test']);
+    $this->assertTrue($form['test']['#error_no_message']);
   }
 
 }

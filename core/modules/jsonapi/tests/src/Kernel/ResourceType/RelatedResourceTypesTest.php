@@ -134,7 +134,7 @@ class RelatedResourceTypesTest extends JsonapiKernelTestBase {
       }
     }
 
-    $this->assertArraySubset($relatable_type_names, $subjects);
+    $this->assertEquals($relatable_type_names, $subjects);
   }
 
   /**

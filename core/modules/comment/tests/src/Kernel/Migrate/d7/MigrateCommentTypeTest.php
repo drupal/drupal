@@ -54,7 +54,9 @@ class MigrateCommentTypeTest extends MigrateDrupal7TestBase {
       'comment_preview' => 'Preview comment',
       'comment_form_location' => 'Location of comment submission form',
     ];
-    $this->assertArraySubset($comment_fields, $this->migration->getSourcePlugin()->fields());
+    foreach ($comment_fields as $field => $description) {
+      $this->assertEquals($description, $this->migration->getSourcePlugin()->fields()[$field]);
+    }
 
     $this->assertEntity('comment_node_article', 'Article comment');
     $this->assertEntity('comment_node_blog', 'Blog entry comment');
