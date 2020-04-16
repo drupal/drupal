@@ -73,7 +73,10 @@
   --transition: all var(--speed-transition) ease-out;
   --base-border-radius: 2px;
   --focus-border-size: 3px;
+  --focus-border-offset-size: 2px;
   --outline-size: 2px;
+  --focus-outline: var(--outline-size) dotted transparent;
+  --focus-box-shadow: 0 0 0 var(--focus-border-offset-size) var(--color-white), 0 0 0 calc(var(--focus-border-size) + var(--focus-border-offset-size)) var(--color-focus);
   /*
    * Inputs.
    */

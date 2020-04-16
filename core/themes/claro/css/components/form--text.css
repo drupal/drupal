@@ -183,7 +183,6 @@ _:-ms-fullscreen,
 }
 
 .form-element[disabled] {
-  -webkit-opacity: 1;
   color: #82828c;
   border-color: #bababf;
   background-color: #f2f2f3;
