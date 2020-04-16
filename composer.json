@@ -12,8 +12,7 @@
         "composer/installers": "^1.0.24",
         "drupal/core": "self.version",
         "drupal/core-project-message": "self.version",
-        "drupal/core-vendor-hardening": "self.version",
-        "wikimedia/composer-merge-plugin": "^1.4"
+        "drupal/core-vendor-hardening": "self.version"
     },
     "require-dev": {
         "behat/mink": "^1.8",
