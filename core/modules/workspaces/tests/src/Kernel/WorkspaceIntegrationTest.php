@@ -101,8 +101,8 @@ class WorkspaceIntegrationTest extends KernelTestBase {
     // Create two nodes, a published and an unpublished one, so we can test the
     // behavior of the module with default/existing content.
     $this->createdTimestamp = \Drupal::time()->getRequestTime();
-    $this->nodes[] = $this->createNode(['title' => 'live - 1 - r1 - published', 'created' => $this->createdTimestamp++, 'status' => TRUE]);
-    $this->nodes[] = $this->createNode(['title' => 'live - 2 - r2 - unpublished', 'created' => $this->createdTimestamp++, 'status' => FALSE]);
+    $this->nodes[] = $this->createNode(['title' => 'live - 1 - r1 - published', 'body' => 'node 1', 'created' => $this->createdTimestamp++, 'status' => TRUE]);
+    $this->nodes[] = $this->createNode(['title' => 'live - 2 - r2 - unpublished', 'body' => 'node 2', 'created' => $this->createdTimestamp++, 'status' => FALSE]);
 
     $translation = $this->nodes[0]->addTranslation('de');
     $translation->setTitle('live - 1 - r1 - published - de');
@@ -794,6 +794,23 @@ class WorkspaceIntegrationTest extends KernelTestBase {
           $this->assertNoRaw($expected_entity_values[$entity_keys['label']]);
         }
       }
+
+      // Add a filter on a field that is stored in a dedicated table in order to
+      // test field joins with extra conditions (e.g. 'deleted' and 'langcode').
+      $view->destroy();
+      $view->setDisplay('page_1');
+      $filters = $view->displayHandlers->get('page_1')->getOption('filters');
+      $view->displayHandlers->get('page_1')->overrideOption('filters', $filters + [
+        'body_value' => [
+          'id' => 'body_value',
+          'table' => 'node__body',
+          'field' => 'body_value',
+          'operator' => 'not empty',
+          'plugin_id' => 'string',
+        ],
+      ]);
+      $view->execute();
+      $this->assertIdenticalResultset($view, $expected_frontpage, ['nid' => 'nid']);
     }
   }
 
