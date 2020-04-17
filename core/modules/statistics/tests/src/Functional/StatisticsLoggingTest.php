@@ -142,7 +142,7 @@ class StatisticsLoggingTest extends BrowserTestBase {
     // This is a test specifically for the deprecated statistics_get() function
     // and so should remain unconverted until that function is removed.
     $result = \Drupal::service('statistics.storage.node')->fetchView($node_id);
-    $this->assertIdentical($result, FALSE);
+    $this->assertFalse($result);
   }
 
 }

@@ -142,7 +142,7 @@ class ConfigImporterTest extends KernelTestBase {
     $this->configImporter->reset()->import();
 
     // Verify the file has been removed.
-    $this->assertIdentical($storage->read($dynamic_name), FALSE);
+    $this->assertFalse($storage->read($dynamic_name));
 
     $config = $this->config($dynamic_name);
     $this->assertIdentical($config->get('id'), NULL);
@@ -169,7 +169,7 @@ class ConfigImporterTest extends KernelTestBase {
     $sync = $this->container->get('config.storage.sync');
 
     // Verify the configuration to create does not exist yet.
-    $this->assertIdentical($storage->exists($dynamic_name), FALSE, $dynamic_name . ' not found.');
+    $this->assertFalse($storage->exists($dynamic_name), $dynamic_name . ' not found.');
 
     // Create new config entity.
     $original_dynamic_data = [
@@ -187,7 +187,7 @@ class ConfigImporterTest extends KernelTestBase {
     ];
     $sync->write($dynamic_name, $original_dynamic_data);
 
-    $this->assertIdentical($sync->exists($dynamic_name), TRUE, $dynamic_name . ' found.');
+    $this->assertTrue($sync->exists($dynamic_name), $dynamic_name . ' found.');
 
     // Import.
     $this->configImporter->reset()->import();
@@ -490,8 +490,8 @@ class ConfigImporterTest extends KernelTestBase {
     $sync = $this->container->get('config.storage.sync');
 
     // Verify that the configuration objects to import exist.
-    $this->assertIdentical($storage->exists($name), TRUE, $name . ' found.');
-    $this->assertIdentical($storage->exists($dynamic_name), TRUE, $dynamic_name . ' found.');
+    $this->assertTrue($storage->exists($name), $name . ' found.');
+    $this->assertTrue($storage->exists($dynamic_name), $dynamic_name . ' found.');
 
     // Replace the file content of the existing configuration objects in the
     // sync directory.

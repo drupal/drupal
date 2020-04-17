@@ -67,7 +67,7 @@ class ContentTranslationConfigImportTest extends KernelTestBase {
     $sync = $this->container->get('config.storage.sync');
 
     // Verify the configuration to create does not exist yet.
-    $this->assertIdentical($storage->exists($config_name), FALSE, $config_name . ' not found.');
+    $this->assertFalse($storage->exists($config_name), $config_name . ' not found.');
 
     // Create new config entity.
     $data = [
@@ -87,7 +87,7 @@ class ContentTranslationConfigImportTest extends KernelTestBase {
       ],
     ];
     $sync->write($config_name, $data);
-    $this->assertIdentical($sync->exists($config_name), TRUE, $config_name . ' found.');
+    $this->assertTrue($sync->exists($config_name), $config_name . ' found.');
 
     // Import.
     $this->configImporter->reset()->import();

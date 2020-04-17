@@ -133,7 +133,7 @@ class ViewUIObjectTest extends UnitTestCase {
     $serialized = serialize($view_ui);
 
     // Make sure the ViewExecutable class is not found in the serialized string.
-    $this->assertSame(strpos($serialized, '"Drupal\views\ViewExecutable"'), FALSE);
+    $this->assertFalse(strpos($serialized, '"Drupal\views\ViewExecutable"'));
 
     $unserialized = unserialize($serialized);
     $this->assertInstanceOf('Drupal\views_ui\ViewUI', $unserialized);

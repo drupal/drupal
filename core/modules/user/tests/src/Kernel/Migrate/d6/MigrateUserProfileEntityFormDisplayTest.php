@@ -51,7 +51,7 @@ class MigrateUserProfileEntityFormDisplayTest extends MigrateDrupal6TestBase {
     // Test that a checkbox field has the proper display label setting.
     $component = $display->getComponent('profile_really_really_love_mig');
     $this->assertIdentical('boolean_checkbox', $component['type']);
-    $this->assertIdentical(TRUE, $component['settings']['display_label']);
+    $this->assertTrue($component['settings']['display_label']);
   }
 
 }

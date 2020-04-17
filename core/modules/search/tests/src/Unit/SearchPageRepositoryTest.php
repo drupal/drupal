@@ -107,7 +107,7 @@ class SearchPageRepositoryTest extends UnitTestCase {
       ->method('execute')
       ->will($this->returnValue(['test' => 'test']));
 
-    $this->assertSame(TRUE, $this->searchPageRepository->isSearchActive());
+    $this->assertTrue($this->searchPageRepository->isSearchActive());
   }
 
   /**

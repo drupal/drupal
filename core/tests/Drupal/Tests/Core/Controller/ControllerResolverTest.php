@@ -119,7 +119,7 @@ class ControllerResolverTest extends UnitTestCase {
       $this->assertCallableController($result, $class, $output);
     }
     else {
-      $this->assertSame(FALSE, $result);
+      $this->assertFalse($result);
     }
   }
 

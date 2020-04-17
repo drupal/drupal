@@ -76,7 +76,7 @@ class EntityTypeTest extends UnitTestCase {
   public function testGetKey($entity_keys, $expected) {
     $entity_type = $this->setUpEntityType(['entity_keys' => $entity_keys]);
     $this->assertSame($expected['bundle'], $entity_type->getKey('bundle'));
-    $this->assertSame(FALSE, $entity_type->getKey('bananas'));
+    $this->assertFalse($entity_type->getKey('bananas'));
   }
 
   /**
@@ -88,7 +88,7 @@ class EntityTypeTest extends UnitTestCase {
     $entity_type = $this->setUpEntityType(['entity_keys' => $entity_keys]);
     $this->assertSame(!empty($expected['bundle']), $entity_type->hasKey('bundle'));
     $this->assertSame(!empty($expected['id']), $entity_type->hasKey('id'));
-    $this->assertSame(FALSE, $entity_type->hasKey('bananas'));
+    $this->assertFalse($entity_type->hasKey('bananas'));
   }
 
   /**
@@ -487,8 +487,8 @@ class EntityTypeTest extends UnitTestCase {
    */
   public function testEntityClassImplements() {
     $entity_type = $this->setUpEntityType(['class' => EntityFormMode::class]);
-    $this->assertSame(TRUE, $entity_type->entityClassImplements(ConfigEntityInterface::class));
-    $this->assertSame(FALSE, $entity_type->entityClassImplements(\DateTimeInterface::class));
+    $this->assertTrue($entity_type->entityClassImplements(ConfigEntityInterface::class));
+    $this->assertFalse($entity_type->entityClassImplements(\DateTimeInterface::class));
   }
 
   /**
@@ -498,8 +498,8 @@ class EntityTypeTest extends UnitTestCase {
    */
   public function testIsSubClassOf() {
     $entity_type = $this->setUpEntityType(['class' => EntityFormMode::class]);
-    $this->assertSame(TRUE, $entity_type->isSubclassOf(ConfigEntityInterface::class));
-    $this->assertSame(FALSE, $entity_type->isSubclassOf(\DateTimeInterface::class));
+    $this->assertTrue($entity_type->isSubclassOf(ConfigEntityInterface::class));
+    $this->assertFalse($entity_type->isSubclassOf(\DateTimeInterface::class));
   }
 
   /**

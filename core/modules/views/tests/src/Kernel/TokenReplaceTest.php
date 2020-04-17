@@ -83,7 +83,7 @@ class TokenReplaceTest extends ViewsKernelTestBase {
     $view->setDisplay('page_3');
     $this->executeView($view);
 
-    $this->assertSame(TRUE, $view->get_total_rows, 'The query was set to calculate the total number of rows.');
+    $this->assertTrue($view->get_total_rows, 'The query was set to calculate the total number of rows.');
 
     $expected = [
       '[view:label]' => 'Test tokens',

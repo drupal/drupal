@@ -64,7 +64,7 @@ class FieldDataCountTest extends FieldKernelTestBase {
       'bundle' => 'entity_test',
     ])->save();
 
-    $this->assertIdentical($field_storage->hasdata(), FALSE, 'There are no entities with field data.');
+    $this->assertFalse($field_storage->hasdata(), 'There are no entities with field data.');
     $this->assertIdentical($this->storage->countFieldData($field_storage), 0, 'There are 0 entities with field data.');
 
     // Create 1 entity without the field.
@@ -72,7 +72,7 @@ class FieldDataCountTest extends FieldKernelTestBase {
     $entity->name->value = $this->randomMachineName();
     $entity->save();
 
-    $this->assertIdentical($field_storage->hasdata(), FALSE, 'There are no entities with field data.');
+    $this->assertFalse($field_storage->hasdata(), 'There are no entities with field data.');
     $this->assertIdentical($this->storage->countFieldData($field_storage), 0, 'There are 0 entities with field data.');
 
     // Create 12 entities to ensure that the purging works as expected.
@@ -97,16 +97,16 @@ class FieldDataCountTest extends FieldKernelTestBase {
       $this->assertEqual($result, 24, 'The field table has 24 rows.');
     }
 
-    $this->assertIdentical($field_storage->hasdata(), TRUE, 'There are entities with field data.');
+    $this->assertTrue($field_storage->hasdata(), 'There are entities with field data.');
     $this->assertEqual($this->storage->countFieldData($field_storage), 12, 'There are 12 entities with field data.');
 
     // Ensure the methods work on deleted fields.
     $field_storage->delete();
-    $this->assertIdentical($field_storage->hasdata(), TRUE, 'There are entities with deleted field data.');
+    $this->assertTrue($field_storage->hasdata(), 'There are entities with deleted field data.');
     $this->assertEqual($this->storage->countFieldData($field_storage), 12, 'There are 12 entities with deleted field data.');
 
     field_purge_batch(6);
-    $this->assertIdentical($field_storage->hasdata(), TRUE, 'There are entities with deleted field data.');
+    $this->assertTrue($field_storage->hasdata(), 'There are entities with deleted field data.');
     $this->assertEqual($this->storage->countFieldData($field_storage), 6, 'There are 6 entities with deleted field data.');
 
     $entity_type = 'entity_test_rev';
@@ -117,7 +117,7 @@ class FieldDataCountTest extends FieldKernelTestBase {
       ->create(['type' => $entity_type]);
     $cardinality = $this->fieldTestData->field_storage_2->getCardinality();
 
-    $this->assertIdentical($this->fieldTestData->field_storage_2->hasData(), FALSE, 'There are no entities with field data.');
+    $this->assertFalse($this->fieldTestData->field_storage_2->hasData(), 'There are no entities with field data.');
     $this->assertIdentical($this->storageRev->countFieldData($this->fieldTestData->field_storage_2), 0, 'There are 0 entities with field data.');
 
     // Create 1 entity with the field.
@@ -128,14 +128,14 @@ class FieldDataCountTest extends FieldKernelTestBase {
     $entity->save();
     $first_revision = $entity->getRevisionId();
 
-    $this->assertIdentical($this->fieldTestData->field_storage_2->hasData(), TRUE, 'There are entities with field data.');
+    $this->assertTrue($this->fieldTestData->field_storage_2->hasData(), 'There are entities with field data.');
     $this->assertIdentical($this->storageRev->countFieldData($this->fieldTestData->field_storage_2), 1, 'There is 1 entity with field data.');
 
     $entity->{$this->fieldTestData->field_name_2} = [];
     $entity->setNewRevision();
     $entity->save();
 
-    $this->assertIdentical($this->fieldTestData->field_storage_2->hasData(), TRUE, 'There are entities with field data.');
+    $this->assertTrue($this->fieldTestData->field_storage_2->hasData(), 'There are entities with field data.');
 
     $storage = $this->container->get('entity_type.manager')->getStorage($entity_type);
     $entity = $storage->loadRevision($first_revision);
@@ -173,11 +173,11 @@ class FieldDataCountTest extends FieldKernelTestBase {
 
     // Test shared table storage.
     $storage = $user->getFieldDefinition('name')->getFieldStorageDefinition();
-    $this->assertIdentical(TRUE, $this->storageUser->countFieldData($storage, TRUE));
+    $this->assertTrue($this->storageUser->countFieldData($storage, TRUE));
 
     // Test dedicated table storage.
     $storage = $user->getFieldDefinition('field_int')->getFieldStorageDefinition();
-    $this->assertIdentical(TRUE, $this->storageUser->countFieldData($storage, TRUE));
+    $this->assertTrue($this->storageUser->countFieldData($storage, TRUE));
   }
 
 }

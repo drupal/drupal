@@ -82,7 +82,7 @@ class ContentTranslationModuleInstallTest extends KernelTestBase {
     $translation = $entity->getTranslation($this->translationLangcode);
     $translation_metadata = $this->contentTranslationManager->getTranslationMetadata($translation);
     $this->assertSame($this->sourceLangcode, $translation_metadata->getSource());
-    $this->assertSame(TRUE, $translation_metadata->isOutdated());
+    $this->assertTrue($translation_metadata->isOutdated());
   }
 
 }
