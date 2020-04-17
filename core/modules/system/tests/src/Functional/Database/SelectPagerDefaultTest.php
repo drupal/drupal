@@ -102,6 +102,7 @@ class SelectPagerDefaultTest extends DatabaseTestBase {
 
     $outer_query = $connection->select($query);
     $outer_query->addField('subquery', 'age');
+    $outer_query->orderBy('age');
 
     $ages = $outer_query
       ->execute()
