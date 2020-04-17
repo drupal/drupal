@@ -36,6 +36,21 @@ class PhpunitCompatibilityTraitTest extends UnitTestCase {
   }
 
   /**
+   * Tests that assert*StringContainsString* methods are available.
+   *
+   * @covers ::assertStringContainsString
+   * @covers ::assertStringContainsStringIgnoringCase
+   * @covers ::assertStringNotContainsString
+   * @covers ::assertStringNotContainsStringIgnoringCase
+   */
+  public function testAssertStringContainsString() {
+    $this->assertStringContainsString("bingo", "foobarbingobongo");
+    $this->assertStringContainsStringIgnoringCase("bingo", "foobarBiNgObongo");
+    $this->assertStringNotContainsString("buzzer", "BUZZERbingobongo");
+    $this->assertStringNotContainsStringIgnoringCase("buzzer", "foobarBiNgObongo");
+  }
+
+  /**
    * Tests that assert(Not)EqualsCanonicalizing methods are available.
    *
    * @covers ::assertEqualsCanonicalizing
