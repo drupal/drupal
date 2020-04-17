@@ -202,6 +202,20 @@ class JoinTest extends RelationshipJoinTestBase {
     $this->assertTrue(strpos($join_info['condition'], "views_test_data.status = :views_join_condition_5") !== FALSE, 'Make sure the second extra join condition appears in the query.');
     $this->assertTrue(strpos($join_info['condition'], "users5.name = views_test_data.name") !== FALSE, 'Make sure the third extra join condition appears in the query.');
     $this->assertEqual(array_values($join_info['arguments']), ['en', 0], 'Make sure the arguments are in the right order');
+
+    // Test that joins using 'left_formula' are properly built.
+    $configuration['left_formula'] = 'MAX(views_test_data.uid)';
+    $join = $this->manager->createInstance('standard', $configuration);
+    $table = ['alias' => 'users6'];
+    $join->buildJoin($query, $table, $view->query);
+
+    $tables = $query->getTables();
+    $join_info = $tables['users6'];
+    $this->assertTrue(strpos($join_info['condition'], "MAX(views_test_data.uid) = users6.uid") !== FALSE, 'Make sure the join condition appears in the query.');
+    $this->assertTrue(strpos($join_info['condition'], "users6.langcode = :views_join_condition_7") !== FALSE, 'Make sure the first extra join condition appears in the query.');
+    $this->assertTrue(strpos($join_info['condition'], "views_test_data.status = :views_join_condition_8") !== FALSE, 'Make sure the second extra join condition appears in the query.');
+    $this->assertTrue(strpos($join_info['condition'], "users6.name = views_test_data.name") !== FALSE, 'Make sure the third extra join condition appears in the query.');
+    $this->assertEqual(array_values($join_info['arguments']), ['en', 0], 'Make sure the arguments are in the right order');
   }
 
 }

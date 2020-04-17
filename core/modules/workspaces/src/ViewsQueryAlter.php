@@ -187,8 +187,7 @@ class ViewsQueryAlter implements ContainerInjectionInterface {
 
         // Update the join to use our COALESCE.
         $revision_field = $entity_type->getKey('revision');
-        $table_info['join']->leftTable = NULL;
-        $table_info['join']->leftField = "COALESCE($workspace_association_table.target_entity_revision_id, $relationship.$revision_field)";
+        $table_info['join']->leftFormula = "COALESCE($workspace_association_table.target_entity_revision_id, $relationship.$revision_field)";
 
         // Update the join and the table info to our new table name, and to join
         // on the revision key.
