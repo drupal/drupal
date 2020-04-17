@@ -162,7 +162,6 @@ trait DeprecationListenerTrait {
       'Passing arguments to "Symfony\Component\HttpFoundation\Request::isMethodSafe()" has been deprecated since Symfony 4.4; use "Symfony\Component\HttpFoundation\Request::isMethodCacheable()" to check if the method is cacheable instead.',
       'The "Symfony\Component\Process\Process::inheritEnvironmentVariables()" method is deprecated since Symfony 4.4, env variables are always inherited.',
       'The "Symfony\Component\Debug\BufferingLogger" class is deprecated since Symfony 4.4, use "Symfony\Component\ErrorHandler\BufferingLogger" instead.',
-      'Using the "Symfony\Component\Validator\Constraints\Length" constraint with the "min" option without setting the "allowEmptyString" one is deprecated and defaults to true. In 5.0, it will become optional and default to false.',
       // The following deprecation is listed for Twig 2 compatibility when unit
       // testing using \Symfony\Component\ErrorHandler\DebugClassLoader.
       'The "Twig\Environment::getTemplateClass()" method is considered internal. It may change without further notice. You should not extend it from "Drupal\Core\Template\TwigEnvironment".',
