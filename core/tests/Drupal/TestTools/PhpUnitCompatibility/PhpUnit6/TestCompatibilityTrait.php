@@ -67,4 +67,32 @@ trait TestCompatibilityTrait {
     static::assertNotEquals($expected, $actual, $message, 0.0, 10, TRUE);
   }
 
+  /**
+   * Forward compatibility for assertStringContainsString.
+   */
+  public static function assertStringContainsString($needle, $haystack, $message = '') {
+    static::assertContains($needle, $haystack, $message);
+  }
+
+  /**
+   * Forward compatibility for assertStringContainsStringIgnoringCase.
+   */
+  public static function assertStringContainsStringIgnoringCase($needle, $haystack, $message = '') {
+    static::assertContains($needle, $haystack, $message, TRUE);
+  }
+
+  /**
+   * Forward compatibility for assertStringNotContainsString.
+   */
+  public static function assertStringNotContainsString($needle, $haystack, $message = '') {
+    static::assertNotContains($needle, $haystack, $message);
+  }
+
+  /**
+   * Forward compatibility for assertStringNotContainsStringIgnoringCase.
+   */
+  public static function assertStringNotContainsStringIgnoringCase($needle, $haystack, $message = '') {
+    static::assertNotContains($needle, $haystack, $message, TRUE);
+  }
+
 }
