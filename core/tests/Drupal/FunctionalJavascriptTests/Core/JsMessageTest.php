@@ -50,8 +50,8 @@ class JsMessageTest extends WebDriverTestBase {
         $selector = "$messagesSelector .messages.messages--$type";
         $msg_element = $web_assert->waitForElementVisible('css', $selector);
         $this->assertNotEmpty($msg_element, "Message element visible: $selector");
-        $web_assert->elementContains('css', $selector, "This is a message of the type, $type. You be the the judge of its importance.");
-        $current_messages[$selector] = "This is a message of the type, $type. You be the the judge of its importance.";
+        $web_assert->elementContains('css', $selector, "This is a message of the type, $type. You be the judge of its importance.");
+        $current_messages[$selector] = "This is a message of the type, $type. You be the judge of its importance.";
         $this->assertCurrentMessages($current_messages, $messagesSelector);
       }
       // Remove messages 1 by 1 and confirm the messages are expected.
@@ -69,7 +69,7 @@ class JsMessageTest extends WebDriverTestBase {
     $types = JSMessageTestController::getTypes();
     $nb_messages = count($types) * 2;
     for ($i = 0; $i < $nb_messages; $i++) {
-      $current_messages[] = "This is message number $i of the type, {$types[$i % count($types)]}. You be the the judge of its importance.";
+      $current_messages[] = "This is message number $i of the type, {$types[$i % count($types)]}. You be the judge of its importance.";
     }
     // Test adding multiple messages at once.
     // @see processMessages()
