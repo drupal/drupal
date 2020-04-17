@@ -85,7 +85,7 @@ abstract class MediaKernelTestBase extends KernelTestBase {
    * @param string $filename
    *   String filename with extension.
    * @param \Drupal\media\MediaTypeInterface $media_type
-   *   The the media type.
+   *   The media type.
    *
    * @return \Drupal\media\Entity\Media
    *   A media item.

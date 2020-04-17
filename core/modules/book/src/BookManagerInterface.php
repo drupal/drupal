@@ -15,7 +15,7 @@ interface BookManagerInterface {
    * Gets the data structure representing a named menu tree.
    *
    * Since this can be the full tree including hidden items, the data returned
-   * may be used for generating an an admin interface or a select.
+   * may be used for generating an admin interface or a select.
    *
    * Note: based on menu_tree_all_data().
    *

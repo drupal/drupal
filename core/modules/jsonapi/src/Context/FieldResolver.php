@@ -242,9 +242,9 @@ class FieldResolver {
    * elide the "entity" keyword from them (this word is used by the entity query
    * system to traverse entity references).
    *
-   * This method takes this external field expression and and attempts to
-   * resolve any aliases and/or abbreviations into a field expression that will
-   * be compatible with the entity query system.
+   * This method takes this external field expression and attempts to resolve
+   * any aliases and/or abbreviations into a field expression that will be
+   * compatible with the entity query system.
    *
    * @link http://jsonapi.org/recommendations/#urls-reference-document
    *

@@ -202,7 +202,7 @@ class AliasTest extends KernelTestBase {
     $this->assertEquals(['user' => FALSE, 'admin' => TRUE], $memoryCounterBackend->get('path_alias_whitelist')->data);
     $memoryCounterBackend->resetCounter();
 
-    // Re-initialize the the whitelist and lookup an alias for the 'user' path.
+    // Re-initialize the whitelist and lookup an alias for the 'user' path.
     // Whitelist should load data from its cache, see that it hasn't done a
     // check for 'user' yet, perform the check, then mark the result to be
     // persisted to cache.
