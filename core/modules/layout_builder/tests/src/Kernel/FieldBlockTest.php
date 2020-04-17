@@ -101,7 +101,7 @@ class FieldBlockTest extends EntityKernelTestBase {
     $entity->access('view', $account->reveal(), TRUE)->willReturn(AccessResult::allowed());
 
     $access = $block->access($account->reveal(), TRUE);
-    $this->assertSame(FALSE, $access->isAllowed());
+    $this->assertFalse($access->isAllowed());
   }
 
   /**
@@ -119,7 +119,7 @@ class FieldBlockTest extends EntityKernelTestBase {
     $entity->get('the_field_name')->shouldNotBeCalled();
 
     $access = $block->access($account->reveal(), TRUE);
-    $this->assertSame(FALSE, $access->isAllowed());
+    $this->assertFalse($access->isAllowed());
   }
 
   /**

@@ -41,8 +41,8 @@ class MigrateFilterFormatTest extends MigrateDrupal6TestBase {
 
     // Check variables migrated into filter.
     $this->assertSame('<a href hreflang> <em> <strong> <cite> <code> <ul type> <ol start type> <li> <dl> <dt> <dd>', $filters['filter_html']['settings']['allowed_html']);
-    $this->assertSame(TRUE, $filters['filter_html']['settings']['filter_html_help']);
-    $this->assertSame(FALSE, $filters['filter_html']['settings']['filter_html_nofollow']);
+    $this->assertTrue($filters['filter_html']['settings']['filter_html_help']);
+    $this->assertFalse($filters['filter_html']['settings']['filter_html_nofollow']);
     $this->assertSame(72, $filters['filter_url']['settings']['filter_url_length']);
 
     // Assert that the php_code format was migrated with filter_null in the

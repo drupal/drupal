@@ -77,16 +77,16 @@ class MigrateUploadTest extends MigrateDrupal6TestBase {
     $this->assertIdentical(1, count($node->upload));
     $this->assertIdentical('1', $node->upload[0]->target_id);
     $this->assertIdentical('file 1-1-1', $node->upload[0]->description);
-    $this->assertIdentical(FALSE, $node->upload[0]->isDisplayed());
+    $this->assertFalse($node->upload[0]->isDisplayed());
 
     $node = $nodes[2];
     $this->assertEquals('en', $node->langcode->value);
     $this->assertIdentical(2, count($node->upload));
     $this->assertIdentical('3', $node->upload[0]->target_id);
     $this->assertIdentical('file 2-3-3', $node->upload[0]->description);
-    $this->assertIdentical(FALSE, $node->upload[0]->isDisplayed());
+    $this->assertFalse($node->upload[0]->isDisplayed());
     $this->assertIdentical('2', $node->upload[1]->target_id);
-    $this->assertIdentical(TRUE, $node->upload[1]->isDisplayed());
+    $this->assertTrue($node->upload[1]->isDisplayed());
     $this->assertIdentical('file 2-3-2', $node->upload[1]->description);
 
     $node = $nodes[12];

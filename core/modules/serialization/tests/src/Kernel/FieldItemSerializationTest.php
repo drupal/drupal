@@ -161,17 +161,17 @@ class FieldItemSerializationTest extends NormalizerTestBase {
    */
   public function testCustomBooleanNormalization(array $test_modules, $format) {
     // Asserts the entity contains the value we set.
-    $this->assertSame(FALSE, $this->entity->field_test_boolean->value);
+    $this->assertFalse($this->entity->field_test_boolean->value);
 
     // Asserts normalizing the entity using core's 'serializer' service DOES
     // yield the value we set.
     $core_normalization = $this->container->get('serializer')->normalize($this->entity, $format);
-    $this->assertSame(FALSE, $core_normalization['field_test_boolean'][0]['value']);
+    $this->assertFalse($core_normalization['field_test_boolean'][0]['value']);
 
     $assert_denormalization = function (array $normalization) use ($format) {
       $denormalized_entity = $this->container->get('serializer')->denormalize($normalization, EntityTestMulRev::class, $format, []);
       $this->assertInstanceOf(EntityTestMulRev::class, $denormalized_entity);
-      $this->assertSame(TRUE, $denormalized_entity->field_test_boolean->value);
+      $this->assertTrue($denormalized_entity->field_test_boolean->value);
     };
 
     // Asserts denormalizing the entity DOES yield the value we set:

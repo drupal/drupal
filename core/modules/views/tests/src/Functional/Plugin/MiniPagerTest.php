@@ -80,7 +80,7 @@ class MiniPagerTest extends ViewTestBase {
     $view = Views::getView('test_mini_pager');
     $view->setDisplay('page_4');
     $this->executeView($view);
-    $this->assertIdentical($view->get_total_rows, TRUE, 'The query was set to calculate the total number of rows.');
+    $this->assertTrue($view->get_total_rows, 'The query was set to calculate the total number of rows.');
     $this->assertEqual(count($this->nodes), $view->total_rows, 'The total row count is equal to the number of nodes.');
 
     $this->drupalGet('test_mini_pager_total', ['query' => ['page' => 1]]);

@@ -254,7 +254,7 @@ EOF;
     $definition = $discovery->getDefinitions()['foo.topic'];
     $this->assertEquals('Test', $definition['label']);
     $this->assertInstanceOf(TranslatableMarkup::class, $definition['label']);
-    $this->assertSame(TRUE, $definition['top_level']);
+    $this->assertTrue($definition['top_level']);
     // Each related plugin ID should be trimmed.
     $this->assertSame(['one', 'two', 'three'], $definition['related']);
     $this->assertSame('foo', $definition['provider']);

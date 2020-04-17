@@ -142,7 +142,7 @@ class ImageStylesPathAndUrlTest extends BrowserTestBase {
     // Create the directories for the styles.
     $directory = $scheme . '://styles/' . $this->style->id();
     $status = \Drupal::service('file_system')->prepareDirectory($directory, FileSystemInterface::CREATE_DIRECTORY);
-    $this->assertNotIdentical(FALSE, $status, 'Created the directory for the generated images for the test style.');
+    $this->assertNotFalse($status, 'Created the directory for the generated images for the test style.');
 
     // Override the language to build the URL for the correct language.
     if ($langcode) {
@@ -160,7 +160,7 @@ class ImageStylesPathAndUrlTest extends BrowserTestBase {
     // Let the image_module_test module know about this file, so it can claim
     // ownership in hook_file_download().
     \Drupal::state()->set('image.test_file_download', $original_uri);
-    $this->assertNotIdentical(FALSE, $original_uri, 'Created the generated image file.');
+    $this->assertNotFalse($original_uri, 'Created the generated image file.');
 
     // Get the URL of a file that has not been generated and try to create it.
     $generated_uri = $this->style->buildUri($original_uri);

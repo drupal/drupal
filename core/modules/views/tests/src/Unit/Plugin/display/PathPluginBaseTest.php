@@ -107,7 +107,7 @@ class PathPluginBaseTest extends UnitTestCase {
     $this->assertTrue($route instanceof Route);
     $this->assertEquals('test_id', $route->getDefault('view_id'));
     $this->assertEquals('page_1', $route->getDefault('display_id'));
-    $this->assertSame(FALSE, $route->getOption('returns_response'));
+    $this->assertFalse($route->getOption('returns_response'));
     $this->assertEquals('my views title', $route->getDefault('_title'));
   }
 
@@ -134,7 +134,7 @@ class PathPluginBaseTest extends UnitTestCase {
     $collection = new RouteCollection();
     $this->pathPlugin->collectRoutes($collection);
     $route = $collection->get('view.test_id.page_1');
-    $this->assertSame(TRUE, $route->getOption('returns_response'));
+    $this->assertTrue($route->getOption('returns_response'));
     $this->assertEquals('my views title', $route->getDefault('_title'));
   }
 

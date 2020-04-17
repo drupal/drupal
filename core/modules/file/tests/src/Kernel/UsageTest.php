@@ -133,7 +133,7 @@ class UsageTest extends FileManagedUnitTestBase {
       ->condition('f.fid', $file->id())
       ->execute()
       ->fetchField();
-    $this->assertIdentical(FALSE, $count, 'The count was removed entirely when empty.');
+    $this->assertFalse($count, 'The count was removed entirely when empty.');
 
     // Non-existent decrement.
     $file_usage->delete($file, 'testing', 'bar', 2);
@@ -142,7 +142,7 @@ class UsageTest extends FileManagedUnitTestBase {
       ->condition('f.fid', $file->id())
       ->execute()
       ->fetchField();
-    $this->assertIdentical(FALSE, $count, 'Decrementing non-exist record complete.');
+    $this->assertFalse($count, 'Decrementing non-exist record complete.');
     return $file;
   }
 

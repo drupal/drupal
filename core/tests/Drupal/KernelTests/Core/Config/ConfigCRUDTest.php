@@ -50,11 +50,11 @@ class ConfigCRUDTest extends KernelTestBase {
 
     // Create a new configuration object in the default collection.
     $config = $this->config($name);
-    $this->assertIdentical($config->isNew(), TRUE);
+    $this->assertTrue($config->isNew());
 
     $config->set('value', 'initial');
     $config->save();
-    $this->assertIdentical($config->isNew(), FALSE);
+    $this->assertFalse($config->isNew());
 
     // Verify the active configuration contains the saved value.
     $actual_data = $storage->read($name);
@@ -82,7 +82,7 @@ class ConfigCRUDTest extends KernelTestBase {
     // Update the configuration object instance.
     $config->set('value', 'instance-update');
     $config->save();
-    $this->assertIdentical($config->isNew(), FALSE);
+    $this->assertFalse($config->isNew());
 
     // Verify the active configuration contains the updated value.
     $actual_data = $storage->read($name);
@@ -91,7 +91,7 @@ class ConfigCRUDTest extends KernelTestBase {
     // Verify a call to $this->config() immediately returns the updated value.
     $new_config = $this->config($name);
     $this->assertIdentical($new_config->get(), $config->get());
-    $this->assertIdentical($config->isNew(), FALSE);
+    $this->assertFalse($config->isNew());
 
     // Pollute the config factory static cache.
     $config_factory->getEditable($name);
@@ -101,7 +101,7 @@ class ConfigCRUDTest extends KernelTestBase {
     // default collection storage.
     $collection_config->delete();
     $actual_config = $config_factory->get($name);
-    $this->assertIdentical($actual_config->isNew(), FALSE);
+    $this->assertFalse($actual_config->isNew());
     $this->assertIdentical($actual_config->getRawData(), ['value' => 'instance-update']);
 
     // Delete the configuration object.
@@ -109,25 +109,25 @@ class ConfigCRUDTest extends KernelTestBase {
 
     // Verify the configuration object is empty.
     $this->assertIdentical($config->get(), []);
-    $this->assertIdentical($config->isNew(), TRUE);
+    $this->assertTrue($config->isNew());
 
     // Verify that all copies of the configuration has been removed from the
     // static cache.
-    $this->assertIdentical($config_factory->getEditable($name)->isNew(), TRUE);
+    $this->assertTrue($config_factory->getEditable($name)->isNew());
 
     // Verify the active configuration contains no value.
     $actual_data = $storage->read($name);
-    $this->assertIdentical($actual_data, FALSE);
+    $this->assertFalse($actual_data);
 
     // Verify $this->config() returns no data.
     $new_config = $this->config($name);
     $this->assertIdentical($new_config->get(), $config->get());
-    $this->assertIdentical($config->isNew(), TRUE);
+    $this->assertTrue($config->isNew());
 
     // Re-create the configuration object.
     $config->set('value', 're-created');
     $config->save();
-    $this->assertIdentical($config->isNew(), FALSE);
+    $this->assertFalse($config->isNew());
 
     // Verify the active configuration contains the updated value.
     $actual_data = $storage->read($name);
@@ -136,20 +136,20 @@ class ConfigCRUDTest extends KernelTestBase {
     // Verify a call to $this->config() immediately returns the updated value.
     $new_config = $this->config($name);
     $this->assertIdentical($new_config->get(), $config->get());
-    $this->assertIdentical($config->isNew(), FALSE);
+    $this->assertFalse($config->isNew());
 
     // Rename the configuration object.
     $new_name = 'config_test.crud_rename';
     $this->container->get('config.factory')->rename($name, $new_name);
     $renamed_config = $this->config($new_name);
     $this->assertIdentical($renamed_config->get(), $config->get());
-    $this->assertIdentical($renamed_config->isNew(), FALSE);
+    $this->assertFalse($renamed_config->isNew());
 
     // Ensure that the old configuration object is removed from both the cache
     // and the configuration storage.
     $config = $this->config($name);
     $this->assertIdentical($config->get(), []);
-    $this->assertIdentical($config->isNew(), TRUE);
+    $this->assertTrue($config->isNew());
 
     // Test renaming when config.factory does not have the object in its static
     // cache.
@@ -163,11 +163,11 @@ class ConfigCRUDTest extends KernelTestBase {
     $config_factory->rename($name, $new_name);
     $renamed_config = $config_factory->get($new_name);
     $this->assertIdentical($renamed_config->get(), $config->get());
-    $this->assertIdentical($renamed_config->isNew(), FALSE);
+    $this->assertFalse($renamed_config->isNew());
     // Ensure the overrides static cache has been cleared.
-    $this->assertIdentical($config_factory->get($name)->isNew(), TRUE);
+    $this->assertTrue($config_factory->get($name)->isNew());
     // Ensure the non-overrides static cache has been cleared.
-    $this->assertIdentical($config_factory->getEditable($name)->isNew(), TRUE);
+    $this->assertTrue($config_factory->getEditable($name)->isNew());
 
     // Merge data into the configuration object.
     $new_config = $this->config($new_name);

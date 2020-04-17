@@ -52,7 +52,7 @@ class ThemeInstallerTest extends KernelTestBase {
     $this->assertNotEmpty($this->themeHandler()->rebuildThemeData()['stark'], 'ThemeHandler::rebuildThemeData() yields all available themes.');
 
     // theme_get_setting() should return global default theme settings.
-    $this->assertIdentical(theme_get_setting('features.favicon'), TRUE);
+    $this->assertTrue(theme_get_setting('features.favicon'));
   }
 
   /**
@@ -73,7 +73,7 @@ class ThemeInstallerTest extends KernelTestBase {
     $this->assertEqual($themes[$name]->getName(), $name);
 
     // Verify that test_basetheme.settings is active.
-    $this->assertIdentical(theme_get_setting('features.favicon', $name), FALSE);
+    $this->assertFalse(theme_get_setting('features.favicon', $name));
     $this->assertEqual(theme_get_setting('base', $name), 'only');
     $this->assertEqual(theme_get_setting('override', $name), 'base');
   }

@@ -123,7 +123,7 @@ class Drupal6SqlBaseTest extends MigrateTestCase {
     $this->assertEquals('my_default', $this->base->variableGetWrapper('non_existent_variable', 'my_default'));
 
     // Test non-default.
-    $this->assertSame(TRUE, $this->base->variableGetWrapper('my_variable', FALSE));
+    $this->assertTrue($this->base->variableGetWrapper('my_variable', FALSE));
   }
 
 }

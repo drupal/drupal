@@ -53,9 +53,9 @@ class ConfigInstallWebTest extends BrowserTestBase {
 
     // Verify the configuration does not exist prior to installation.
     $config_static = $this->config($default_config);
-    $this->assertIdentical($config_static->isNew(), TRUE);
+    $this->assertTrue($config_static->isNew());
     $config_entity = $this->config($default_configuration_entity);
-    $this->assertIdentical($config_entity->isNew(), TRUE);
+    $this->assertTrue($config_entity->isNew());
 
     // Install the integration module.
     \Drupal::service('module_installer')->install(['config_integration_test']);
@@ -65,10 +65,10 @@ class ConfigInstallWebTest extends BrowserTestBase {
     \Drupal::configFactory()->reset($default_config);
     \Drupal::configFactory()->reset($default_configuration_entity);
     $config_static = $this->config($default_config);
-    $this->assertIdentical($config_static->isNew(), FALSE);
+    $this->assertFalse($config_static->isNew());
     $this->assertIdentical($config_static->get('foo'), 'default setting');
     $config_entity = $this->config($default_configuration_entity);
-    $this->assertIdentical($config_entity->isNew(), FALSE);
+    $this->assertFalse($config_entity->isNew());
     $this->assertIdentical($config_entity->get('label'), 'Default integration config label');
 
     // Customize both configuration objects.
@@ -86,11 +86,11 @@ class ConfigInstallWebTest extends BrowserTestBase {
 
     // Verify the integration module's config was uninstalled.
     $config_static = $this->config($default_config);
-    $this->assertIdentical($config_static->isNew(), TRUE);
+    $this->assertTrue($config_static->isNew());
 
     // Verify the integration config still exists.
     $config_entity = $this->config($default_configuration_entity);
-    $this->assertIdentical($config_entity->isNew(), FALSE);
+    $this->assertFalse($config_entity->isNew());
     $this->assertIdentical($config_entity->get('label'), 'Customized integration config label');
 
     // Reinstall the integration module.
@@ -112,12 +112,12 @@ class ConfigInstallWebTest extends BrowserTestBase {
     \Drupal::configFactory()->reset($default_config);
     \Drupal::configFactory()->reset($default_configuration_entity);
     $config_static = $this->config($default_config);
-    $this->assertIdentical($config_static->isNew(), FALSE);
+    $this->assertFalse($config_static->isNew());
     $this->assertIdentical($config_static->get('foo'), 'default setting');
 
     // Verify the integration config is using the default.
     $config_entity = \Drupal::config($default_configuration_entity);
-    $this->assertIdentical($config_entity->isNew(), FALSE);
+    $this->assertFalse($config_entity->isNew());
     $this->assertIdentical($config_entity->get('label'), 'Default integration config label');
   }
 
