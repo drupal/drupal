@@ -93,7 +93,7 @@ class FormattableMarkupTest extends TestCase {
     return [
       ['Non alpha starting character: ~placeholder', ['~placeholder' => 'replaced'], E_USER_ERROR, 'Invalid placeholder (~placeholder) in string: Non alpha starting character: ~placeholder'],
       ['Alpha starting character: placeholder', ['placeholder' => 'replaced'], E_USER_DEPRECATED, 'Invalid placeholder (placeholder) in string: Alpha starting character: placeholder'],
-      // Ensure that where the placeholder is located in the the string is
+      // Ensure that where the placeholder is located in the string is
       // irrelevant.
       ['placeholder', ['placeholder' => 'replaced'], E_USER_DEPRECATED, 'Invalid placeholder (placeholder) in string: placeholder'],
     ];

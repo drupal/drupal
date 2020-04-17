@@ -227,7 +227,7 @@ class PrepareModulesEntityUninstallForm extends ConfirmFormBase {
       $storage->delete($entities);
     }
     // Sometimes deletes cause secondary deletes. For example, deleting a
-    // taxonomy term can cause its children to be be deleted too.
+    // taxonomy term can cause its children to be deleted too.
     $context['sandbox']['progress'] = $context['sandbox']['max'] - $storage->getQuery()->count()->execute();
 
     // Inform the batch engine that we are not finished and provide an

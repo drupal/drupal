@@ -71,7 +71,7 @@ class PaginationAJAXTest extends WebDriverTestBase {
 
     $settings = $this->getDrupalSettings();
 
-    // Make sure the the view_path is set correctly.
+    // Make sure that the view_path is set correctly.
     $expected_view_path = '/test-content-ajax';
     $this->assertEquals($expected_view_path, current($settings['views']['ajaxViews'])['view_path']);
 

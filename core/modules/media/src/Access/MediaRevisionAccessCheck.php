@@ -132,7 +132,7 @@ class MediaRevisionAccessCheck implements AccessInterface {
    * Counts the number of revisions in the default language.
    *
    * @param \Drupal\media\MediaInterface $media
-   *   The media item for which to to count the revisions.
+   *   The media item for which to count the revisions.
    *
    * @return int
    *   The number of revisions in the default language.

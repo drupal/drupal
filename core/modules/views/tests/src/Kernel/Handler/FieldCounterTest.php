@@ -116,7 +116,7 @@ class FieldCounterTest extends ViewsKernelTestBase {
     $this->assertEquals('1', $counter);
     $view->destroy();
 
-    // Go the the second page.
+    // Go to the second page.
     $view->setCurrentPage(1);
     $view->preview();
 
@@ -124,7 +124,7 @@ class FieldCounterTest extends ViewsKernelTestBase {
     $this->assertEquals('2', $counter);
     $view->destroy();
 
-    // Go the the third page.
+    // Go to the third page.
     $view->setCurrentPage(2);
     $view->preview();
 
@@ -158,7 +158,7 @@ class FieldCounterTest extends ViewsKernelTestBase {
     $this->assertEquals($counter_start, $counter);
     $view->destroy();
 
-    // Go the the second page.
+    // Go to the second page.
     $view->setCurrentPage(1);
     $view->preview();
 
@@ -166,7 +166,7 @@ class FieldCounterTest extends ViewsKernelTestBase {
     $this->assertEquals($counter_start + 1, $counter);
     $view->destroy();
 
-    // Go the the third page.
+    // Go to the third page.
     $view->setCurrentPage(2);
     $view->preview();
 

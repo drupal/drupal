@@ -68,7 +68,7 @@ class Sort {
    *   ]
    *
    * @param array $fields
-   *   The the entity query sort fields.
+   *   The entity query sort fields.
    */
   public function __construct(array $fields) {
     $this->fields = $fields;
