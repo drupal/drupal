@@ -23,7 +23,7 @@ trait ResourceIdentifierTrait {
   protected $resourceIdentifier;
 
   /**
-   * The JSON:API resource type of of the identified resource object.
+   * The JSON:API resource type of the identified resource object.
    *
    * @var \Drupal\jsonapi\ResourceType\ResourceType
    */

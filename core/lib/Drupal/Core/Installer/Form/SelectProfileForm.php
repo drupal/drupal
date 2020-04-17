@@ -94,7 +94,7 @@ class SelectProfileForm extends FormBase {
       $extensions = $sync->read('core.extension');
       $site = $sync->read('system.site');
       if (isset($site['name']) && isset($extensions['profile']) && in_array($extensions['profile'], array_keys($names), TRUE)) {
-        // Ensure the the profile can be installed from configuration. Install
+        // Ensure the profile can be installed from configuration. Install
         // profile's which implement hook_INSTALL() are not supported.
         // @todo https://www.drupal.org/project/drupal/issues/2982052 Remove
         //   this restriction.

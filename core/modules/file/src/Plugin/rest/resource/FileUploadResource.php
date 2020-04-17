@@ -511,7 +511,7 @@ class FileUploadResource extends ResourceBase {
    * Retrieves the upload validators for a field definition.
    *
    * This is copied from \Drupal\file\Plugin\Field\FieldType\FileItem as there
-   * is no entity instance available here that that a FileItem would exist for.
+   * is no entity instance available here that a FileItem would exist for.
    *
    * @param \Drupal\Core\Field\FieldDefinitionInterface $field_definition
    *   The field definition for which to get validators.

@@ -61,7 +61,7 @@ class EntityConditionGroup {
   }
 
   /**
-   * The members which belong to the the condition group.
+   * The members which belong to the condition group.
    *
    * @return \Drupal\jsonapi\Query\EntityCondition[]
    *   The member conditions of this condition group.

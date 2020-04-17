@@ -3,7 +3,7 @@
 /**
  * @file
  * Contains database additions to drupal-8.4.0-media_installed.php for testing
- * the the addition of BEM classes to the media library views config.
+ * the addition of BEM classes to the media library views config.
  */
 
 use Drupal\Core\Database\Database;

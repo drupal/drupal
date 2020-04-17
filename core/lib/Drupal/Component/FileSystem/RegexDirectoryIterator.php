@@ -24,7 +24,7 @@ class RegexDirectoryIterator extends \FilterIterator {
    *   /\.yml$/ would list only files ending in .yml.
    */
   public function __construct($path, $regex) {
-    // Use FilesystemIterator to not iterate over the the . and .. directories.
+    // Use FilesystemIterator to not iterate over the . and .. directories.
     $iterator = new \FilesystemIterator($path);
     parent::__construct($iterator);
     $this->regex = $regex;

@@ -75,7 +75,7 @@ class DefaultMenuLinkTreeManipulators {
    * This is why inaccessible subtrees are deleted, except at the top-level
    * inaccessible link: if we didn't keep the first (depth-wise) inaccessible
    * link, we wouldn't be able to know which cache contexts would cause those
-   * subtrees to become accessible again, thus forcing us to conclude that that
+   * subtrees to become accessible again, thus forcing us to conclude that the
    * subtree is unconditionally inaccessible.
    *
    * @param \Drupal\Core\Menu\MenuLinkTreeElement[] $tree

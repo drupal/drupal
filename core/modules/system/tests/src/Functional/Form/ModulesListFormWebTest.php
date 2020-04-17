@@ -76,7 +76,7 @@ BROKEN;
   public function testRequiredByThemeMessage() {
     $this->drupalGet('admin/modules');
     $module_theme_depends_on_description = $this->getSession()->getPage()->findAll('css', '#edit-modules-test-module-required-by-theme-enable-description .admin-requirements li:contains("Test Theme Depending on Modules (theme) (disabled)")');
-    // Confirm that that 'Test Theme Depending on Modules' is listed as being
+    // Confirm that 'Test Theme Depending on Modules' is listed as being
     // required by the module 'Test Module Required by Theme'.
     $this->assertCount(1, $module_theme_depends_on_description);
 

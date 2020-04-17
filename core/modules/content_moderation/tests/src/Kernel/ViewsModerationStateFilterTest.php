@@ -150,7 +150,7 @@ class ViewsModerationStateFilterTest extends ViewsKernelTestBase {
       'moderation_state' => 'editorial-draft',
     ], 'test_content_moderation_state_filter_revision_table');
     // Creating a new forward revision of node three, creates a second published
-    // revision of of the original language, hence there are two published
+    // revision of the original language, hence there are two published
     // revisions of node three.
     $this->assertNodesWithFilters([$node, $third_node, $third_node], [
       'moderation_state' => 'editorial-published',
