@@ -42,6 +42,11 @@
       insertCss(cssToInsert);
 
       if (CKEDITOR.timestamp && editorCssPath.indexOf(CKEDITOR.timestamp) !== -1 && dialogCssPath.indexOf(CKEDITOR.timestamp) !== -1) {
+        Object.keys(window.localStorage).forEach(function (key) {
+          if (key.indexOf('Drupal.off-canvas.css.') === 0) {
+            window.localStorage.removeItem(key);
+          }
+        });
         window.localStorage.setItem("Drupal.off-canvas.css.".concat(editorCssPath).concat(dialogCssPath), cssToInsert);
       }
     });
