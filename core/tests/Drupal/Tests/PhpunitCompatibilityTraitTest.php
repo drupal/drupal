@@ -35,6 +35,17 @@ class PhpunitCompatibilityTraitTest extends UnitTestCase {
     throw new \Exception($expectedMessage, $expectedCode);
   }
 
+  /**
+   * Tests that assert(Not)EqualsCanonicalizing methods are available.
+   *
+   * @covers ::assertEqualsCanonicalizing
+   * @covers ::assertNotEqualsCanonicalizing
+   */
+  public function testAssertEqualsCanonicalizing() {
+    $this->assertEqualsCanonicalizing([3, 2, 1], [2, 3, 1]);
+    $this->assertNotEqualsCanonicalizing([3, 2, 1], [2, 3, 0, 1]);
+  }
+
 }
 
 interface MockTestClassInterface {

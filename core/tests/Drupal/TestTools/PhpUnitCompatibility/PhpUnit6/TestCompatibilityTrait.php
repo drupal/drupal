@@ -53,4 +53,18 @@ trait TestCompatibilityTrait {
     parent::assertEquals($expected, $actual, $message, $delta, $maxDepth, $canonicalize, $ignoreCase);
   }
 
+  /**
+   * Forward compatibility for assertEqualsCanonicalizing.
+   */
+  public static function assertEqualsCanonicalizing($expected, $actual, $message = '') {
+    static::assertEquals($expected, $actual, $message, 0.0, 10, TRUE);
+  }
+
+  /**
+   * Forward compatibility for assertNotEqualsCanonicalizing.
+   */
+  public static function assertNotEqualsCanonicalizing($expected, $actual, $message = '') {
+    static::assertNotEquals($expected, $actual, $message, 0.0, 10, TRUE);
+  }
+
 }
