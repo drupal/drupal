@@ -20,7 +20,7 @@ class Query extends BaseQuery {
     $this->traitPrepare();
 
     // If the prepare() method from the trait decided that we need to alter this
-    // query, we need to re-define the the key fields for fetchAllKeyed() as SQL
+    // query, we need to re-define the key fields for fetchAllKeyed() as SQL
     // expressions.
     if ($this->sqlQuery->getMetaData('active_workspace_id')) {
       $id_field = $this->entityType->getKey('id');

@@ -37,7 +37,7 @@ class ThemeTest extends BrowserTestBase {
    * Ensures preprocess functions run even for suggestion implementations.
    *
    * The theme hook used by this test has its base preprocess function in a
-   * separate file, so this test also ensures that that file is correctly loaded
+   * separate file, so this test also ensures that the file is correctly loaded
    * when needed.
    */
   public function testPreprocessForSuggestions() {
@@ -179,7 +179,7 @@ class ThemeTest extends BrowserTestBase {
    * Ensures suggestion preprocess functions run for default implementations.
    *
    * The theme hook used by this test has its base preprocess function in a
-   * separate file, so this test also ensures that that file is correctly loaded
+   * separate file, so this test also ensures that the file is correctly loaded
    * when needed.
    */
   public function testSuggestionPreprocessForDefaults() {

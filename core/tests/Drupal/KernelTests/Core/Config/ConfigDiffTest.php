@@ -146,10 +146,10 @@ class ConfigDiffTest extends KernelTestBase {
    * @param string $type
    *   The type of edit that is being asserted.
    * @param mixed $orig
-   *   (optional) The original value of of the edit. If not supplied, assertion
+   *   (optional) The original value of the edit. If not supplied, assertion
    *   is skipped.
    * @param mixed $closing
-   *   (optional) The closing value of of the edit. If not supplied, assertion
+   *   (optional) The closing value of the edit. If not supplied, assertion
    *   is skipped.
    */
   protected function assertYamlEdit(array $edits, $field, $type, $orig = NULL, $closing = NULL) {

@@ -61,7 +61,7 @@ class TestDiscovery extends CoreTestDiscovery {
    *   An array of included test types.
    *
    * @return array
-   *   An array of tests keyed by the the group name. If a test is annotated to
+   *   An array of tests keyed by the group name. If a test is annotated to
    *   belong to multiple groups, it will appear under all group keys it belongs
    *   to.
    * @code

@@ -32,7 +32,7 @@ class ImageStyleDependencyUpdateTest extends UpdatePathTestBase {
     // Checks that 'thumbnail' image style is not a dependency of view 'foo'.
     $this->assertFalse(in_array('image.style.thumbnail', $config_dependencies));
 
-    // We test the case the the field formatter image style doesn't exist.
+    // We test the case that the field formatter image style doesn't exist.
     // Checks that 'nonexistent' image style is not a dependency of view 'foo'.
     $this->assertFalse(in_array('image.style.nonexistent', $config_dependencies));
 

@@ -3017,9 +3017,9 @@ abstract class ResourceTestBase extends BrowserTestBase {
     $forward_revision_id_url = $forward_revision_id_url->setOption('query', ['resourceVersion' => "id:$forward_revision_id"]);
     $expected_document['data']['links']['self']['href'] = $forward_revision_id_url->setAbsolute()->toString();
     $amend_relationship_urls($expected_document, $forward_revision_id);
-    // Since the the working copy is not the default revision. A
-    // `latest-version` link is required to indicate that the requested version
-    // is not the default revision.
+    // Since the working copy is not the default revision. A `latest-version`
+    // link is required to indicate that the requested version is not the
+    // default revision.
     unset($expected_document['data']['links']['working-copy']);
     $expected_document['data']['links']['latest-version']['href'] = $rel_latest_version_url->setAbsolute()->toString();
     $expected_cache_tags = $this->getExpectedCacheTags();
@@ -3330,7 +3330,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
   }
 
   /**
-   * Gets an array of of all nested include paths to be tested.
+   * Gets an array of all nested include paths to be tested.
    *
    * @param int $depth
    *   (optional) The maximum depth to which included paths should be nested.

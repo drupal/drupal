@@ -854,7 +854,7 @@ class UpdateCoreTest extends UpdateTestBase {
    *    'supported_branches' is '8.0.,8.1.'.
    * - drupal.1.0-unsupported.xml
    *    'supported_branches' is '8.1.'.
-   * They both have an '8.0.3' release that that has the 'Release type' value of
+   * They both have an '8.0.3' release that has the 'Release type' value of
    * 'unsupported' and an '8.1.0' release that has the 'Release type' value of
    * 'supported' and is the expected update.
    */

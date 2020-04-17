@@ -353,7 +353,7 @@
 }
 
 /**
- * Set the the inherited button border color to transparent for high contrast
+ * Set the inherited button border color to transparent for high contrast
  * mode.
  */
 @media screen and (-ms-high-contrast: active) {

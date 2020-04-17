@@ -721,7 +721,7 @@
    * @param {Drupal.tableDrag} self
    *   The drag handle.
    * @param {HTMLElement} item
-   *   The item that that is being dragged.
+   *   The item that is being dragged.
    */
   Drupal.tableDrag.prototype.dragStart = function(event, self, item) {
     // Create a new dragObject recording the pointer information.
