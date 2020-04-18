@@ -328,7 +328,7 @@ class EntitySchemaTest extends EntityKernelTestBase {
       if ($definition->getProvider() == 'entity_test') {
         $this->installEntitySchema($entity_type_id);
         $entity_type_ids[] = $entity_type_id;
-      };
+      }
     }
 
     // Get a list of all the entities in the schema.

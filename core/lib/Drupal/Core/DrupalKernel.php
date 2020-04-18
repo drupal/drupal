@@ -491,7 +491,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
         // Continue if the PharStreamWrapperManager is already initialized. For
         // example, this occurs during a module install.
         // @see \Drupal\Core\Extension\ModuleInstaller::install()
-      };
+      }
       stream_wrapper_unregister('phar');
       stream_wrapper_register('phar', PharStreamWrapper::class);
     }
