@@ -25,7 +25,9 @@ class MimeTypeGuesserTest extends UnitTestCase {
     // Test that the Drupal mime type guess is not being used before the
     // override method is called. It is possible that the test environment does
     // not support the default guessers.
-    $guessers = $this->readAttribute($symfony_guesser, 'guessers');
+    $reflected_guessers = new \ReflectionProperty($symfony_guesser, 'guessers');
+    $reflected_guessers->setAccessible(TRUE);
+    $guessers = $reflected_guessers->getValue($symfony_guesser);
     if (count($guessers)) {
       $this->assertNotInstanceOf('Drupal\Core\File\MimeType\MimeTypeGuesser', $guessers[0]);
     }
@@ -33,7 +35,7 @@ class MimeTypeGuesserTest extends UnitTestCase {
     $container->set('file.mime_type.guesser', new MimeTypeGuesser(new StreamWrapperManager()));
     MimeTypeGuesser::registerWithSymfonyGuesser($container);
     $symfony_guesser = SymfonyMimeTypeGuesser::getInstance();
-    $guessers = $this->readAttribute($symfony_guesser, 'guessers');
+    $guessers = $reflected_guessers->getValue($symfony_guesser);
     $this->assertSame($container->get('file.mime_type.guesser'), $guessers[0]);
     $this->assertInstanceOf('Drupal\Core\File\MimeType\MimeTypeGuesser', $guessers[0]);
     $count = count($guessers);
@@ -42,7 +44,7 @@ class MimeTypeGuesserTest extends UnitTestCase {
     $container->set('file.mime_type.guesser', new MimeTypeGuesser(new StreamWrapperManager()));
     MimeTypeGuesser::registerWithSymfonyGuesser($container);
     $symfony_guesser = SymfonyMimeTypeGuesser::getInstance();
-    $guessers = $this->readAttribute($symfony_guesser, 'guessers');
+    $guessers = $reflected_guessers->getValue($symfony_guesser);
     $this->assertSame($container->get('file.mime_type.guesser'), $guessers[0]);
     $this->assertInstanceOf('Drupal\Core\File\MimeType\MimeTypeGuesser', $guessers[0]);
     $new_count = count($guessers);

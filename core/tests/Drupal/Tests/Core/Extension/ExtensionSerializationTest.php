@@ -53,7 +53,9 @@ class ExtensionSerializationTest extends UnitTestCase {
     // Instantiate an Extension object for testing unserialization.
     $extension = new Extension($container->getParameter('app.root'), 'module', 'core/modules/system/system.info.yml', 'system.module');
     $extension = unserialize(serialize($extension));
-    $this->assertEquals('vfs://dummy_app_root', $this->readAttribute($extension, 'root'));
+    $reflected_root = new \ReflectionProperty($extension, 'root');
+    $reflected_root->setAccessible(TRUE);
+    $this->assertEquals('vfs://dummy_app_root', $reflected_root->getValue($extension));
   }
 
   /**
