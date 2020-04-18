@@ -198,7 +198,10 @@ class ConnectionTest extends UnitTestCase {
       $connection->schema()
     );
     $connection->destroy();
-    $this->assertAttributeEquals(NULL, 'schema', $connection);
+
+    $reflected_schema = (new \ReflectionObject($connection))->getProperty('schema');
+    $reflected_schema->setAccessible(TRUE);
+    $this->assertNull($reflected_schema->getValue($connection));
   }
 
   /**
