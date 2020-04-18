@@ -23,7 +23,6 @@ trait PHPUnit8Warnings {
    * @var string[]
    */
   private static $ignoredWarnings = [
-    'readAttribute() is deprecated and will be removed in PHPUnit 9.',
     'getObjectAttribute() is deprecated and will be removed in PHPUnit 9.',
   ];
 
