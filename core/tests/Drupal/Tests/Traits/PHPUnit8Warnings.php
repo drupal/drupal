@@ -23,7 +23,7 @@ trait PHPUnit8Warnings {
    * @var string[]
    */
   private static $ignoredWarnings = [
-    'getObjectAttribute() is deprecated and will be removed in PHPUnit 9.',
+    // Temporarily empty.
   ];
 
   /**
