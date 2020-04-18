@@ -194,7 +194,7 @@ class MigrateSqlIdMapTest extends MigrateTestCase {
     $message = $this->createMock('Drupal\migrate\MigrateMessageInterface');
     $id_map = $this->getIdMap();
     $id_map->setMessage($message);
-    $this->assertAttributeEquals($message, 'message', $id_map);
+    $this->assertEquals($message, $id_map->message);
   }
 
   /**

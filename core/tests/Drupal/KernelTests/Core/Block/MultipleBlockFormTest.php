@@ -32,7 +32,7 @@ class MultipleBlockFormTest extends KernelTestBase {
 
     // Ensure that EmptyBlockForm is used and the plugin is set.
     $this->assertInstanceOf(EmptyBlockForm::class, $form_object2);
-    $this->assertAttributeEquals($block, 'plugin', $form_object2);
+    $this->assertEquals($block, $form_object2->plugin);
   }
 
 }

@@ -248,8 +248,7 @@ class EntityTypeManagerTest extends UnitTestCase {
 
     $banana_form = $this->entityTypeManager->getFormObject('banana', 'default');
     $this->assertInstanceOf(TestEntityFormInjected::class, $banana_form);
-    $this->assertAttributeEquals('yellow', 'color', $banana_form);
-
+    $this->assertEquals('yellow', $banana_form->color);
   }
 
   /**
@@ -500,7 +499,7 @@ class TestEntityFormInjected extends TestEntityForm implements ContainerInjectio
    *
    * @var string
    */
-  protected $color;
+  public $color;
 
   /**
    * Constructs a new TestEntityFormInjected.

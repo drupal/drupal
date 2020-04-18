@@ -57,18 +57,6 @@ class ForumBreadcrumbBuilderBaseTest extends UnitTestCase {
       ]
     );
 
-    // Reflect upon our properties, except for config which is a special case.
-    $property_names = [
-      'entityTypeManager' => $entity_type_manager,
-      'forumManager' => $forum_manager,
-      'stringTranslation' => $translation_manager,
-    ];
-    foreach ($property_names as $property_name => $property_value) {
-      $this->assertAttributeEquals(
-        $property_value, $property_name, $builder
-      );
-    }
-
     // Test that the constructor made a config object with our info in it.
     $reflector = new \ReflectionClass($builder);
     $ref_property = $reflector->getProperty('config');

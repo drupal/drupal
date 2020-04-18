@@ -37,6 +37,11 @@ class TestSqlIdMap extends Sql implements \Iterator {
   /**
    * {@inheritdoc}
    */
+  public $message;
+
+  /**
+   * {@inheritdoc}
+   */
   public function getDatabase() {
     return parent::getDatabase();
   }
