@@ -23,7 +23,7 @@ class CompatibilityFixTest extends KernelTestBase {
   }
 
   /**
-   * @expectedDeprecation update_fix_compatibility() is deprecated in Drupal 8.8.4 and will be removed before Drupal 9.0.0. There is no replacement. See https://www.drupal.org/node/3026100
+   * @expectedDeprecation update_fix_compatibility() is deprecated in Drupal 8.8.5 and will be removed before Drupal 9.0.0. There is no replacement. See https://www.drupal.org/node/3026100
    */
   public function testFixCompatibility() {
     $extension_config = \Drupal::configFactory()->getEditable('core.extension');

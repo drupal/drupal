@@ -15,12 +15,12 @@ use Drupal\Core\Utility\Error;
 /**
  * Disables any extensions that are incompatible with the current core version.
  *
- * @deprecated in Drupal 8.8.4 and is removed from Drupal 9.0.0.
+ * @deprecated in Drupal 8.8.5 and is removed from Drupal 9.0.0.
  *
  * @see https://www.drupal.org/node/3026100
  */
 function update_fix_compatibility() {
-  @trigger_error(__FUNCTION__ . '() is deprecated in Drupal 8.8.4 and will be removed before Drupal 9.0.0. There is no replacement. See https://www.drupal.org/node/3026100', E_USER_DEPRECATED);
+  @trigger_error(__FUNCTION__ . '() is deprecated in Drupal 8.8.5 and will be removed before Drupal 9.0.0. There is no replacement. See https://www.drupal.org/node/3026100', E_USER_DEPRECATED);
   // Fix extension objects if the update is being done via Drush 8. In non-Drush
   // environments this will already be fixed by the UpdateKernel this point.
   UpdateKernel::fixSerializedExtensionObjects(\Drupal::getContainer());
