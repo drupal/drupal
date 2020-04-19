@@ -780,20 +780,7 @@ EOD;
     if (!$this->tableExists($table)) {
       return FALSE;
     }
-
-    // Fetch the 'indkey' column from 'pg_index' to figure out the order of the
-    // primary key.
-    // @todo Use 'array_position()' to be able to perform the ordering in SQL
-    //   directly when 9.5 is the minimum  PostgreSQL version.
-    $result = $this->connection->query("SELECT a.attname, i.indkey FROM pg_index i JOIN pg_attribute a ON a.attrelid = i.indrelid AND a.attnum = ANY(i.indkey) WHERE i.indrelid = '{" . $table . "}'::regclass AND i.indisprimary")->fetchAllKeyed();
-    if (!$result) {
-      return [];
-    }
-
-    $order = explode(' ', reset($result));
-    $columns = array_combine($order, array_keys($result));
-    ksort($columns);
-    return array_values($columns);
+    return $this->connection->query("SELECT array_position(i.indkey, a.attnum) AS position, a.attname FROM pg_index i JOIN pg_attribute a ON a.attrelid = i.indrelid AND a.attnum = ANY(i.indkey) WHERE i.indrelid = '{" . $table . "}'::regclass AND i.indisprimary ORDER BY position")->fetchAllKeyed();
   }
 
   /**
