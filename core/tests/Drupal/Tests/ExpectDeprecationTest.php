@@ -41,7 +41,7 @@ class ExpectDeprecationTest extends UnitTestCase {
    * @see https://github.com/symfony/symfony/pull/25757
    */
   public function testDeprecatedExpectDeprecation() {
-    $this->addExpectedDeprecationMessage('ExpectDeprecationTrait::expectDeprecation is deprecated in drupal:8.8.4 and is removed from drupal:9.0.0. Use ::addExpectedDeprecationMessage() instead. See https://www.drupal.org/node/3106024');
+    $this->addExpectedDeprecationMessage('ExpectDeprecationTrait::expectDeprecation is deprecated in drupal:8.8.5 and is removed from drupal:9.0.0. Use ::addExpectedDeprecationMessage() instead. See https://www.drupal.org/node/3106024');
     $this->expectDeprecation('Test deprecated expectDeprecation');
     @trigger_error('Test deprecated expectDeprecation', E_USER_DEPRECATED);
   }
