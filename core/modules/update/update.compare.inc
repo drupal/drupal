@@ -387,13 +387,14 @@ function update_calculate_project_update_status(&$project_data, $available) {
         ];
       }
     }
-
-    // Otherwise, ignore unpublished, insecure, or unsupported releases.
-    if ($release['status'] == 'unpublished' ||
-        !$is_in_supported_branch($release['version']) ||
-        (isset($release['terms']['Release type']) &&
-         (in_array('Insecure', $release['terms']['Release type']) ||
-          in_array('Unsupported', $release['terms']['Release type'])))) {
+    // Other than the currently installed release, ignore unpublished, insecure,
+    // or unsupported updates.
+    elseif ($release['status'] == 'unpublished' ||
+            !$is_in_supported_branch($release['version']) ||
+            (isset($release['terms']['Release type']) &&
+             (in_array('Insecure', $release['terms']['Release type']) ||
+              in_array('Unsupported', $release['terms']['Release type'])))
+    ) {
       continue;
     }
 

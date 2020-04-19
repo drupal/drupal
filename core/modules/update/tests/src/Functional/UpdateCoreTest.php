@@ -355,6 +355,14 @@ class UpdateCoreTest extends UpdateTestBase {
         'expected_update_message_type' => static::UPDATE_NONE,
         'fixture' => 'sec.0.2-rc2',
       ],
+      // Ensure that 8.0.2 security release is not shown because it is earlier
+      // version than 1.0.
+      '1.0, 0.2 1.2' => [
+        'site_patch_version' => '1.0',
+        'expected_security_releases' => ['1.2', '2.0-rc2'],
+        'expected_update_message_type' => static::SECURITY_UPDATE_REQUIRED,
+        'fixture' => 'sec.0.2-rc2',
+      ],
     ];
     $pre_releases = [
       '2.0-alpha1',
@@ -365,24 +373,25 @@ class UpdateCoreTest extends UpdateTestBase {
       '2.0-rc2',
     ];
 
-    // If the site is on an alpha/beta/RC of an upcoming minor and none of the
-    // alpha/beta/RC versions are marked insecure, no security update should be
-    // required.
     foreach ($pre_releases as $pre_release) {
+      // If the site is on an alpha/beta/RC of an upcoming minor and none of the
+      // alpha/beta/RC versions are marked insecure, no security update should
+      // be required.
       $test_cases["Pre-release:$pre_release, no security update"] = [
         'site_patch_version' => $pre_release,
         'expected_security_releases' => [],
         'expected_update_message_type' => $pre_release === '2.0-rc2' ? static::UPDATE_NONE : static::UPDATE_AVAILABLE,
         'fixture' => 'sec.0.2-rc2-b',
       ];
+      // If the site is on an alpha/beta/RC of an upcoming minor and there is
+      // an RC version with a security update, it should be recommended.
+      $test_cases["Pre-release:$pre_release, security update"] = [
+        'site_patch_version' => $pre_release,
+        'expected_security_releases' => $pre_release === '2.0-rc2' ? [] : ['2.0-rc2'],
+        'expected_update_message_type' => $pre_release === '2.0-rc2' ? static::UPDATE_NONE : static::SECURITY_UPDATE_REQUIRED,
+        'fixture' => 'sec.0.2-rc2',
+      ];
     }
-
-    // @todo In https://www.drupal.org/node/2865920 add test cases:
-    //   - For all pre-releases for 8.2.0 except 8.2.0-rc2 using the
-    //     'sec.0.2-rc2' fixture to ensure that 8.2.0-rc2 is the only security
-    //     update.
-    //   - For 8.1.0 using fixture 'sec.0.2-rc2' to ensure that only security
-    //     updates are 8.1.2 and 8.2.0-rc2.
     return $test_cases;
   }
 
