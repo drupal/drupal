@@ -417,7 +417,10 @@ class StatementPrefetch implements \Iterator, StatementInterface {
       }
       else {
         $this->fetchStyle = \PDO::FETCH_CLASS;
-        $this->fetchOptions = ['constructor_args' => $constructor_args];
+        $this->fetchOptions = [
+          'class' => $class_name,
+          'constructor_args' => $constructor_args,
+        ];
         // Grab the row in the format specified above.
         $result = $this->current();
         // Reset the fetch parameters to the value stored using setFetchMode().

@@ -81,6 +81,23 @@ class FetchTest extends DatabaseTestBase {
   }
 
   /**
+   * Confirms that we can fetch a record into a class using fetchObject.
+   *
+   * @see \Drupal\system\Tests\Database\FakeRecord
+   * @see \Drupal\Core\Database\StatementPrefech::fetchObject
+   */
+  public function testQueryFetchObjectClass() {
+    $records = 0;
+    $query = $this->connection->query('SELECT name FROM {test} WHERE age = :age', [':age' => 25]);
+    while ($result = $query->fetchObject(FakeRecord::class)) {
+      $records += 1;
+      $this->assertInstanceOf(FakeRecord::class, $result);
+      $this->assertSame('John', $result->name, '25 year old is John.');
+    }
+    $this->assertSame(1, $records, 'There is only one record.');
+  }
+
+  /**
    * Confirms that we can fetch a record into a new instance of a custom class.
    * The name of the class is determined from a value of the first column.
    *
