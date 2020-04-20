@@ -93,7 +93,7 @@ class DefaultSingleLazyPluginCollection extends LazyPluginCollection {
   public function addInstanceId($id, $configuration = NULL) {
     $this->instanceId = $id;
     // Reset the list of instance IDs since there can be only one.
-    $this->instanceIDs = [];
+    $this->instanceIds = [];
     parent::addInstanceId($id, $configuration);
     if ($configuration !== NULL) {
       $this->setConfiguration($configuration);
