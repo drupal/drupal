@@ -476,13 +476,11 @@ abstract class AddFormBase extends FormBase implements BaseFormIdInterface, Trus
     if ($this->isAdvancedUi()) {
       $actions['save_select']['#value'] = $this->t('Save and select');
       $actions['save_insert'] = [
-        'save_insert' => [
-          '#type' => 'submit',
-          '#value' => $this->t('Save and insert'),
-          '#ajax' => [
-            'callback' => '::updateWidget',
-            'wrapper' => 'media-library-add-form-wrapper',
-          ],
+        '#type' => 'submit',
+        '#value' => $this->t('Save and insert'),
+        '#ajax' => [
+          'callback' => '::updateWidget',
+          'wrapper' => 'media-library-add-form-wrapper',
         ],
       ];
     }
