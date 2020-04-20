@@ -317,20 +317,22 @@ class ConfigSchemaTest extends KernelTestBase {
 
     // Check nested array of properties.
     $list = $meta->get('page')->getElements();
-    $this->assertEqual(count($list), 3, 'Got a list with the right number of properties for site page data');
+    $this->assertCount(3, $list, 'Got a list with the right number of properties for site page data');
     $this->assertTrue(isset($list['front']) && isset($list['403']) && isset($list['404']), 'Got a list with the right properties for site page data.');
     $this->assertEqual($list['front']->getValue(), '/user/login', 'Got the right value for page.front data from the list.');
 
     // And test some TypedConfigInterface methods.
     $properties = $list;
-    $this->assertTrue(count($properties) == 3 && $properties['front'] == $list['front'], 'Got the right properties for site page.');
+    $this->assertCount(3, $properties, 'Got the right number of properties for site page.');
+    $this->assertSame($list['front'], $properties['front']);
     $values = $meta->get('page')->toArray();
-    $this->assertTrue(count($values) == 3 && $values['front'] == '/user/login', 'Got the right property values for site page.');
+    $this->assertCount(3, $values, 'Got the right number of property values for site page.');
+    $this->assertSame($values['front'], '/user/login');
 
     // Now let's try something more complex, with nested objects.
     $wrapper = \Drupal::service('config.typed')->get('image.style.large');
     $effects = $wrapper->get('effects');
-    $this->assertTrue(count($effects->toArray()) == 1, 'Got an array with effects for image.style.large data');
+    $this->assertCount(1, $effects->toArray(), 'Got an array with effects for image.style.large data');
     $uuid = key($effects->getValue());
     $effect = $effects->get($uuid)->getElements();
     $this->assertTrue(!$effect['data']->isEmpty() && $effect['id']->getValue() == 'image_scale', 'Got data for the image scale effect from metadata.');
