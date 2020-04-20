@@ -84,7 +84,7 @@ function locale_translation_batch_status_check($project, $langcode, array $optio
   if ($failure && !$checked) {
     $context['results']['failed_files'][] = $source->name;
   }
-  $context['message'] = t('Checked translation for %project.', ['%project' => $source->project]);
+  $context['message'] = t('Checked %langcode translation for %project.', ['%langcode' => $langcode, '%project' => $source->project]);
 }
 
 /**
@@ -146,7 +146,7 @@ function locale_translation_batch_fetch_download($project, $langcode, &$context)
     $source = $sources[$project][$langcode];
     if (isset($source->type) && $source->type == LOCALE_TRANSLATION_REMOTE) {
       if ($file = locale_translation_download_source($source->files[LOCALE_TRANSLATION_REMOTE], 'translations://')) {
-        $context['message'] = t('Downloaded translation for %project.', ['%project' => $source->project]);
+        $context['message'] = t('Downloaded %langcode translation for %project.', ['%langcode' => $langcode, '%project' => $source->project]);
         locale_translation_status_save($source->name, $source->langcode, LOCALE_TRANSLATION_LOCAL, $file);
       }
       else {
@@ -183,7 +183,7 @@ function locale_translation_batch_fetch_import($project, $langcode, $options, &$
         $file = $source->files[LOCALE_TRANSLATION_LOCAL];
         module_load_include('bulk.inc', 'locale');
         $options += [
-          'message' => t('Importing translation for %project.', ['%project' => $source->project]),
+          'message' => t('Importing %langcode translation for %project.', ['%langcode' => $langcode, '%project' => $source->project]),
         ];
         // Import the translation file. For large files the batch operations is
         // progressive and will be called repeatedly until finished.
@@ -193,7 +193,7 @@ function locale_translation_batch_fetch_import($project, $langcode, $options, &$
         if (isset($context['finished']) && $context['finished'] == 1) {
           // The import is successful.
           if (isset($context['results']['files'][$file->uri])) {
-            $context['message'] = t('Imported translation for %project.', ['%project' => $source->project]);
+            $context['message'] = t('Imported %langcode translation for %project.', ['%langcode' => $langcode, '%project' => $source->project]);
 
             // Save the data of imported source into the {locale_file} table and
             // update the current translation status.
