@@ -4,6 +4,9 @@ namespace Drupal\Tests\Core\Cache;
 
 use Drupal\Core\Cache\Cache;
 use Drupal\Tests\UnitTestCase;
+use Prophecy\Argument;
+use Drupal\Core\Cache\Context\CacheContextsManager;
+use Drupal\Core\DependencyInjection\Container;
 
 /**
  * @coversDefaultClass \Drupal\Core\Cache\Cache
@@ -48,12 +51,13 @@ class CacheTest extends UnitTestCase {
   public function mergeTagsProvider() {
     return [
       [[], [], []],
-      [['bar'], ['foo'], ['bar', 'foo']],
-      [['foo'], ['bar'], ['bar', 'foo']],
-      [['foo'], ['bar', 'foo'], ['bar', 'foo']],
-      [['foo'], ['foo', 'bar'], ['bar', 'foo']],
-      [['bar', 'foo'], ['foo', 'bar'], ['bar', 'foo']],
-      [['foo', 'bar'], ['foo', 'bar'], ['bar', 'foo']],
+      [['bar', 'foo'], ['bar'], ['foo']],
+      [['bar', 'foo'], ['foo'], ['bar']],
+      [['bar', 'foo'], ['foo'], ['bar', 'foo']],
+      [['bar', 'foo'], ['foo'], ['foo', 'bar']],
+      [['bar', 'foo'], ['bar', 'foo'], ['foo', 'bar']],
+      [['bar', 'foo'], ['foo', 'bar'], ['foo', 'bar']],
+      [['bar', 'foo', 'llama'], ['bar', 'foo'], ['foo', 'bar'], ['llama', 'foo']],
     ];
   }
 
@@ -62,8 +66,8 @@ class CacheTest extends UnitTestCase {
    *
    * @dataProvider mergeTagsProvider
    */
-  public function testMergeTags(array $a, array $b, array $expected) {
-    $this->assertEquals($expected, Cache::mergeTags($a, $b));
+  public function testMergeTags(array $expected, ...$cache_tags) {
+    $this->assertEquals($expected, Cache::mergeTags(...$cache_tags));
   }
 
   /**
@@ -77,14 +81,22 @@ class CacheTest extends UnitTestCase {
       [60, 60, 60],
       [0, 0, 0],
 
-      [60, 0, 0],
       [0, 60, 0],
+      [0, 0, 60],
 
-      [Cache::PERMANENT, 0, 0],
       [0, Cache::PERMANENT, 0],
+      [0, 0, Cache::PERMANENT],
 
-      [Cache::PERMANENT, 60, 60],
       [60, Cache::PERMANENT, 60],
+      [60, 60, Cache::PERMANENT],
+
+      [Cache::PERMANENT, Cache::PERMANENT, Cache::PERMANENT, Cache::PERMANENT],
+      [30, 60, 60, 30],
+      [0, 0, 0, 0],
+
+      [60, Cache::PERMANENT, 60, Cache::PERMANENT],
+      [60, 60, Cache::PERMANENT, Cache::PERMANENT],
+      [60, Cache::PERMANENT, Cache::PERMANENT, 60],
     ];
   }
 
@@ -93,8 +105,47 @@ class CacheTest extends UnitTestCase {
    *
    * @dataProvider mergeMaxAgesProvider
    */
-  public function testMergeMaxAges($a, $b, $expected) {
-    $this->assertSame($expected, Cache::mergeMaxAges($a, $b));
+  public function testMergeMaxAges($expected, ...$max_ages) {
+    $this->assertSame($expected, Cache::mergeMaxAges(...$max_ages));
+  }
+
+  /**
+   * Provides a list of pairs of cache contexts arrays to be merged.
+   *
+   * @return array
+   */
+  public function mergeCacheContextsProvide() {
+    return [
+      [[], [], []],
+      [['foo'], [], ['foo']],
+      [['foo'], ['foo'], []],
+
+      [['bar', 'foo'], ['foo'], ['bar']],
+      [['bar', 'foo'], ['bar'], ['foo']],
+
+      [['foo.bar', 'foo.foo'], ['foo.foo'], ['foo.bar']],
+      [['foo.bar', 'foo.foo'], ['foo.bar'], ['foo.foo']],
+
+      [['bar', 'foo', 'llama'], [], ['foo', 'bar', 'llama']],
+      [['bar', 'foo', 'llama'], ['foo', 'bar', 'llama'], []],
+
+      [['bar', 'foo', 'llama'], ['foo'], ['foo', 'bar', 'llama']],
+      [['bar', 'foo', 'llama'], ['foo', 'bar', 'llama'], ['foo']],
+    ];
+  }
+
+  /**
+   * @covers ::mergeContexts
+   *
+   * @dataProvider mergeCacheContextsProvide
+   */
+  public function testMergeCacheContexts(array $expected, ...$contexts) {
+    $cache_contexts_manager = $this->prophesize(CacheContextsManager::class);
+    $cache_contexts_manager->assertValidTokens(Argument::any())->willReturn(TRUE);
+    $container = $this->prophesize(Container::class);
+    $container->get('cache_contexts_manager')->willReturn($cache_contexts_manager->reveal());
+    \Drupal::setContainer($container->reveal());
+    $this->assertSame($expected, Cache::mergeContexts(...$contexts));
   }
 
   /**
