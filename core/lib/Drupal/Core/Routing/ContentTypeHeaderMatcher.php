@@ -18,7 +18,7 @@ class ContentTypeHeaderMatcher implements FilterInterface {
     // The Content-type header does not make sense on GET or DELETE requests,
     // because they do not carry any content. Nothing to filter in this case.
     // Same for all other safe methods.
-    if ($request->isMethodSafe(FALSE) || $request->isMethod('DELETE')) {
+    if ($request->isMethodSafe() || $request->isMethod('DELETE')) {
       return $collection;
     }
 
