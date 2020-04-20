@@ -244,9 +244,9 @@ function user_load($uid, $reset = FALSE) {
  *
  * @param string $mail
  *   String with the account's email address.
- * @return object|bool
- *   A fully-loaded $user object upon successful user load or FALSE if user
- *   cannot be loaded.
+ *
+ * @return \Drupal\user\UserInterface|false
+ *   A user entity upon successful user load, or FALSE if user cannot be loaded.
  *
  * @see \Drupal\user\Entity\User::loadMultiple()
  */
@@ -261,9 +261,9 @@ function user_load_by_mail($mail) {
  *
  * @param string $name
  *   String with the account's user name.
- * @return object|bool
- *   A fully-loaded $user object upon successful user load or FALSE if user
- *   cannot be loaded.
+ *
+ * @return \Drupal\user\UserInterface|false
+ *   A user entity upon successful user load, or FALSE if user cannot be loaded.
  *
  * @see \Drupal\user\Entity\User::loadMultiple()
  */
