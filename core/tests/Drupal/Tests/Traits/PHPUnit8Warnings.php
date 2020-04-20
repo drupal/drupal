@@ -23,7 +23,7 @@ trait PHPUnit8Warnings {
    * @var string[]
    */
   private static $ignoredWarnings = [
-    // Temporarily empty.
+    'expectExceptionMessageRegExp() is deprecated in PHPUnit 8 and will be removed in PHPUnit 9.',
   ];
 
   /**
