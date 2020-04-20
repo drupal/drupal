@@ -133,8 +133,8 @@ EOS;
 /**
  * {@inheritdoc}
  */
-public function complexMethod($parameter, callable $function, \Drupal\Tests\Component\ProxyBuilder\TestServiceNoMethod $test_service = NULL, array &$elements = array (
-))
+public function complexMethod(string $parameter, callable $function, \Drupal\Tests\Component\ProxyBuilder\TestServiceNoMethod $test_service = NULL, array &$elements = array (
+)): array
 {
     return $this->lazyLoadItself()->complexMethod($parameter, $function, $test_service, $elements);
 }
@@ -381,7 +381,7 @@ class TestServiceMethodWithParameter {
 
 class TestServiceComplexMethod {
 
-  public function complexMethod($parameter, callable $function, TestServiceNoMethod $test_service = NULL, array &$elements = []) {
+  public function complexMethod(string $parameter, callable $function, TestServiceNoMethod $test_service = NULL, array &$elements = []): array {
 
   }
 
