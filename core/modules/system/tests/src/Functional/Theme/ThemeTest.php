@@ -150,7 +150,7 @@ class ThemeTest extends BrowserTestBase {
   public function testPreprocessHtml() {
     $this->drupalGet('');
     $attributes = $this->xpath('/body[@theme_test_page_variable="Page variable is an array."]');
-    $this->assertTrue(count($attributes) == 1, 'In template_preprocess_html(), the page variable is still an array (not rendered yet).');
+    $this->assertCount(1, $attributes, 'In template_preprocess_html(), the page variable is still an array (not rendered yet).');
     $this->assertText('theme test page bottom markup', 'Modules are able to set the page bottom region.');
   }
 

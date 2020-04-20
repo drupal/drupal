@@ -74,7 +74,7 @@ class FieldUIRouteTest extends BrowserTestBase {
     $this->drupalGet('admin/config/people/accounts/form-display/register');
     $this->assertTitle('Manage form display | Drupal');
     $this->assertLocalTasks();
-    $this->assert(count($this->xpath('//ul/li[1]/a[contains(text(), :text)]', [':text' => 'Default'])) == 1, 'Default secondary tab is in first position.');
+    $this->assertCount(1, $this->xpath('//ul/li[1]/a[contains(text(), :text)]', [':text' => 'Default']), 'Default secondary tab is in first position.');
 
     // Create new view mode and verify it's available on the Manage Display
     // screen after enabling it.

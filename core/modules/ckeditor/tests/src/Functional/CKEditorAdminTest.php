@@ -141,7 +141,7 @@ class CKEditorAdminTest extends BrowserTestBase {
     // Ensure the styles textarea exists and is initialized empty.
     $styles_textarea = $this->xpath('//textarea[@name="editor[settings][plugins][stylescombo][styles]"]');
     $this->assertFieldByXPath('//textarea[@name="editor[settings][plugins][stylescombo][styles]"]', '', 'The styles textarea exists and is empty.');
-    $this->assertTrue(count($styles_textarea) === 1, 'The "styles" textarea exists.');
+    $this->assertCount(1, $styles_textarea, 'The "styles" textarea exists.');
 
     // Submit the form to save the selection of CKEditor as the chosen editor.
     $this->drupalPostForm(NULL, $edit, t('Save configuration'));
@@ -203,7 +203,7 @@ class CKEditorAdminTest extends BrowserTestBase {
     $this->container->get('plugin.manager.ckeditor.plugin')->clearCachedDefinitions();
     $this->drupalGet('admin/config/content/formats/manage/filtered_html');
     $ultra_llama_mode_checkbox = $this->xpath('//input[@type="checkbox" and @name="editor[settings][plugins][llama_contextual_and_button][ultra_llama_mode]" and not(@checked)]');
-    $this->assertTrue(count($ultra_llama_mode_checkbox) === 1, 'The "Ultra llama mode" checkbox exists and is not checked.');
+    $this->assertCount(1, $ultra_llama_mode_checkbox, 'The "Ultra llama mode" checkbox exists and is not checked.');
     $editor = Editor::load('filtered_html');
     $this->assertTrue($editor instanceof Editor, 'An Editor config entity exists.');
     $this->assertEqual($expected_settings, $editor->getSettings(), 'The Editor config entity has the correct settings.');
@@ -216,7 +216,7 @@ class CKEditorAdminTest extends BrowserTestBase {
     $this->drupalPostForm(NULL, $edit, t('Save configuration'));
     $this->drupalGet('admin/config/content/formats/manage/filtered_html');
     $ultra_llama_mode_checkbox = $this->xpath('//input[@type="checkbox" and @name="editor[settings][plugins][llama_contextual_and_button][ultra_llama_mode]" and @checked="checked"]');
-    $this->assertTrue(count($ultra_llama_mode_checkbox) === 1, 'The "Ultra llama mode" checkbox exists and is checked.');
+    $this->assertCount(1, $ultra_llama_mode_checkbox, 'The "Ultra llama mode" checkbox exists and is checked.');
     $expected_settings['plugins']['llama_contextual_and_button']['ultra_llama_mode'] = TRUE;
     $editor = Editor::load('filtered_html');
     $this->assertTrue($editor instanceof Editor, 'An Editor config entity exists.');
@@ -285,7 +285,7 @@ class CKEditorAdminTest extends BrowserTestBase {
     // Ensure the styles textarea exists and is initialized empty.
     $styles_textarea = $this->xpath('//textarea[@name="editor[settings][plugins][stylescombo][styles]"]');
     $this->assertFieldByXPath('//textarea[@name="editor[settings][plugins][stylescombo][styles]"]', '', 'The styles textarea exists and is empty.');
-    $this->assertTrue(count($styles_textarea) === 1, 'The "styles" textarea exists.');
+    $this->assertCount(1, $styles_textarea, 'The "styles" textarea exists.');
 
     // Submit the form to create both a new text format and an associated text
     // editor.

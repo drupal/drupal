@@ -136,8 +136,8 @@ class EditorLoadingTest extends BrowserTestBase {
     list(, $editor_settings_present, $editor_js_present, $body, $format_selector) = $this->getThingsToCheck('body');
     $this->assertFalse($editor_settings_present, 'No Text Editor module settings.');
     $this->assertFalse($editor_js_present, 'No Text Editor JavaScript.');
-    $this->assertTrue(count($body) === 1, 'A body field exists.');
-    $this->assertTrue(count($format_selector) === 0, 'No text format selector exists on the page because the user only has access to a single format.');
+    $this->assertCount(1, $body, 'A body field exists.');
+    $this->assertCount(0, $format_selector, 'No text format selector exists on the page because the user only has access to a single format.');
     $this->drupalLogout($this->normalUser);
 
     // The privileged user:
@@ -160,10 +160,10 @@ class EditorLoadingTest extends BrowserTestBase {
     $this->assertTrue($editor_settings_present, "Text Editor module's JavaScript settings are on the page.");
     $this->assertIdentical($expected, $settings['editor'], "Text Editor module's JavaScript settings on the page are correct.");
     $this->assertTrue($editor_js_present, 'Text Editor JavaScript is present.');
-    $this->assertTrue(count($body) === 1, 'A body field exists.');
-    $this->assertTrue(count($format_selector) === 1, 'A single text format selector exists on the page.');
+    $this->assertCount(1, $body, 'A body field exists.');
+    $this->assertCount(1, $format_selector, 'A single text format selector exists on the page.');
     $specific_format_selector = $this->xpath('//select[contains(@class, "filter-list") and @data-editor-for="edit-body-0-value"]');
-    $this->assertTrue(count($specific_format_selector) === 1, 'A single text format selector exists on the page and has a "data-editor-for" attribute with the correct value.');
+    $this->assertCount(1, $specific_format_selector, 'A single text format selector exists on the page and has a "data-editor-for" attribute with the correct value.');
 
     // Load the editor image dialog form and make sure it does not fatal.
     $this->drupalGet('editor/dialog/image/full_html');
@@ -198,10 +198,10 @@ class EditorLoadingTest extends BrowserTestBase {
     $this->assertTrue($editor_settings_present, "Text Editor module's JavaScript settings are on the page.");
     $this->assertIdentical($expected, $settings['editor'], "Text Editor module's JavaScript settings on the page are correct.");
     $this->assertTrue($editor_js_present, 'Text Editor JavaScript is present.');
-    $this->assertTrue(count($body) === 1, 'A body field exists.');
-    $this->assertTrue(count($format_selector) === 0, 'No text format selector exists on the page.');
+    $this->assertCount(1, $body, 'A body field exists.');
+    $this->assertCount(0, $format_selector, 'No text format selector exists on the page.');
     $hidden_input = $this->xpath('//input[@type="hidden" and @value="plain_text" and @data-editor-for="edit-body-0-value"]');
-    $this->assertTrue(count($hidden_input) === 1, 'A single text format hidden input exists on the page and has a "data-editor-for" attribute with the correct value.');
+    $this->assertCount(1, $hidden_input, 'A single text format hidden input exists on the page and has a "data-editor-for" attribute with the correct value.');
 
     // Create an "article" node that uses the full_html text format, then try
     // to let the untrusted user edit it.
@@ -219,11 +219,11 @@ class EditorLoadingTest extends BrowserTestBase {
     list(, $editor_settings_present, $editor_js_present, $body, $format_selector) = $this->getThingsToCheck('body');
     $this->assertTrue($editor_settings_present, 'Text Editor module settings.');
     $this->assertTrue($editor_js_present, 'Text Editor JavaScript.');
-    $this->assertTrue(count($body) === 1, 'A body field exists.');
+    $this->assertCount(1, $body, 'A body field exists.');
     $this->assertFieldByXPath('//textarea[@id="edit-body-0-value" and @disabled="disabled"]', t('This field has been disabled because you do not have sufficient permissions to edit it.'), 'Text format access denied message found.');
-    $this->assertTrue(count($format_selector) === 0, 'No text format selector exists on the page.');
+    $this->assertCount(0, $format_selector, 'No text format selector exists on the page.');
     $hidden_input = $this->xpath('//input[@type="hidden" and contains(@class, "editor")]');
-    $this->assertTrue(count($hidden_input) === 0, 'A single text format hidden input does not exist on the page.');
+    $this->assertCount(0, $hidden_input, 'A single text format hidden input does not exist on the page.');
   }
 
   /**
@@ -258,10 +258,10 @@ class EditorLoadingTest extends BrowserTestBase {
     list(, $editor_settings_present, $editor_js_present, $field, $format_selector) = $this->getThingsToCheck('field-text', 'input');
     $this->assertTrue($editor_settings_present, "Text Editor module's JavaScript settings are on the page.");
     $this->assertTrue($editor_js_present, 'Text Editor JavaScript is present.');
-    $this->assertTrue(count($field) === 1, 'A text field exists.');
-    $this->assertTrue(count($format_selector) === 1, 'A single text format selector exists on the page.');
+    $this->assertCount(1, $field, 'A text field exists.');
+    $this->assertCount(1, $format_selector, 'A single text format selector exists on the page.');
     $specific_format_selector = $this->xpath('//select[contains(@class, "filter-list") and contains(@class, "editor") and @data-editor-for="edit-field-text-0-value"]');
-    $this->assertTrue(count($specific_format_selector) === 1, 'A single text format selector exists on the page and has the "editor" class and a "data-editor-for" attribute with the correct value.');
+    $this->assertCount(1, $specific_format_selector, 'A single text format selector exists on the page and has the "editor" class and a "data-editor-for" attribute with the correct value.');
 
     // Associate the trex text editor with the "Full HTML" text format.
     $editor->delete();
@@ -274,10 +274,10 @@ class EditorLoadingTest extends BrowserTestBase {
     list(, $editor_settings_present, $editor_js_present, $field, $format_selector) = $this->getThingsToCheck('field-text', 'input');
     $this->assertFalse($editor_settings_present, "Text Editor module's JavaScript settings are not on the page.");
     $this->assertFalse($editor_js_present, 'Text Editor JavaScript is not present.');
-    $this->assertTrue(count($field) === 1, 'A text field exists.');
-    $this->assertTrue(count($format_selector) === 1, 'A single text format selector exists on the page.');
+    $this->assertCount(1, $field, 'A text field exists.');
+    $this->assertCount(1, $format_selector, 'A single text format selector exists on the page.');
     $specific_format_selector = $this->xpath('//select[contains(@class, "filter-list") and contains(@class, "editor") and @data-editor-for="edit-field-text-0-value"]');
-    $this->assertFalse(count($specific_format_selector) === 1, 'A single text format selector exists on the page and has the "editor" class and a "data-editor-for" attribute with the correct value.');
+    $this->assertCount(0, $specific_format_selector, 'No text format selector exists on the page with the "editor" class and a "data-editor-for" attribute with the expected value.');
   }
 
   protected function getThingsToCheck($field_name, $type = 'textarea') {
