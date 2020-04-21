@@ -75,6 +75,7 @@ class Composer {
     'symfony/dom-crawler' => ['Tests'],
     'symfony/filesystem' => ['Tests'],
     'symfony/finder' => ['Tests'],
+    'symfony/error-handler' => ['Tests'],
     'symfony/event-dispatcher' => ['Tests'],
     'symfony/http-foundation' => ['Tests'],
     'symfony/http-kernel' => ['Tests'],
