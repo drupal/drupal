@@ -165,12 +165,6 @@ media-form:
   dependencies:
     - media/form
 
-image-widget:
-  version: VERSION
-  css:
-    component:
-      css/layout/image-widget.css: {}
-
 system.admin:
   version: VERSION
   css:
