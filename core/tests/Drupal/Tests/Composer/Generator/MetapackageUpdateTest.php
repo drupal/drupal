@@ -55,7 +55,7 @@ class MetapackageUpdateTest extends TestCase {
    */
   public function testUpdated($builderClass, $path) {
     // Create a DrupalCoreComposer for the System Under Test (current repo)
-    $repositoryRoot = dirname(dirname(dirname(dirname(dirname(dirname(__DIR__))))));
+    $repositoryRoot = dirname(__DIR__, 6);
     $drupalCoreInfo = DrupalCoreComposer::createFromPath($repositoryRoot);
 
     // Rebuild the metapackage for the composer.json / composer.lock of

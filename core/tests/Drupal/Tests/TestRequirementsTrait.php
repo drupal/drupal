@@ -21,7 +21,7 @@ trait TestRequirementsTrait {
    * @return string
    */
   protected static function getDrupalRoot() {
-    return dirname(dirname(substr(__DIR__, 0, -strlen(__NAMESPACE__))));
+    return dirname(substr(__DIR__, 0, -strlen(__NAMESPACE__)), 2);
   }
 
   /**

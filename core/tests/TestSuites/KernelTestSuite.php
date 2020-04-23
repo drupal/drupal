@@ -16,7 +16,7 @@ class KernelTestSuite extends TestSuiteBase {
    *   The test suite.
    */
   public static function suite() {
-    $root = dirname(dirname(dirname(__DIR__)));
+    $root = dirname(__DIR__, 3);
 
     $suite = new static('kernel');
     $suite->addTestsBySuiteNamespace($root, 'Kernel');

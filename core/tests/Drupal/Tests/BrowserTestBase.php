@@ -416,7 +416,7 @@ abstract class BrowserTestBase extends TestCase {
    */
   protected function setUpAppRoot(): void {
     if ($this->root === NULL) {
-      $this->root = dirname(dirname(substr(__DIR__, 0, -strlen(__NAMESPACE__))));
+      $this->root = dirname(substr(__DIR__, 0, -strlen(__NAMESPACE__)), 2);
     }
   }
 
