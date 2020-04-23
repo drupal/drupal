@@ -6,7 +6,6 @@
  */
 
 use Drupal\Core\Database\Database;
-use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Link;
 use Drupal\Core\Url;
 use Drupal\Core\Utility\UpdateException;
@@ -241,13 +240,8 @@ function hook_modules_installed($modules, $is_syncing) {
  * @see hook_modules_installed()
  */
 function hook_install($is_syncing) {
-  // Create the styles directory and ensure it's writable.
-  $directory = \Drupal::config('system.file')->get('default_scheme') . '://styles';
-  \Drupal::service('file_system')->prepareDirectory($directory, FileSystemInterface::CREATE_DIRECTORY | FileSystemInterface::MODIFY_PERMISSIONS);
-  if (!$is_syncing) {
-    // Modify a configuration value because we're not syncing.
-    \Drupal::configFactory()->getEditable('system.file')->set('default_scheme', 'private')->save();
-  }
+  // Set general module variables.
+  \Drupal::state()->set('mymodule.foo', 'bar');
 }
 
 /**
@@ -316,11 +310,8 @@ function hook_modules_uninstalled($modules, $is_syncing) {
  * @see hook_modules_uninstalled()
  */
 function hook_uninstall($is_syncing) {
-  // Remove the styles directory and generated images.
-  \Drupal::service('file_system')->deleteRecursive(\Drupal::config('system.file')->get('default_scheme') . '://styles');
-  if (!$is_syncing) {
-    \Drupal::service('mymodule.service')->removeContent();
-  }
+  // Delete remaining general module variables.
+  \Drupal::state()->delete('mymodule.foo');
 }
 
 /**
