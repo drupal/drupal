@@ -26,7 +26,7 @@ class UrlConversionTest extends UnitTestCase {
    */
   protected function setUp(): void {
     parent::setUp();
-    $this->root = dirname(dirname(dirname(dirname(dirname(dirname(dirname(__FILE__)))))));
+    $this->root = dirname(__FILE__, 7);
     // Mock the container so we don't need to mock drupal_valid_test_ua().
     // @see \Drupal\Core\Extension\ExtensionDiscovery::scan()
     $container = $this->createMock('Symfony\Component\DependencyInjection\ContainerInterface');

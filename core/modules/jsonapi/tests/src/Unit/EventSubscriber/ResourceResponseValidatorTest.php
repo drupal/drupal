@@ -42,7 +42,7 @@ class ResourceResponseValidatorTest extends UnitTestCase {
 
     $module_handler = $this->prophesize(ModuleHandlerInterface::class);
     $module = $this->prophesize(Extension::class);
-    $module_path = dirname(dirname(dirname(dirname(__DIR__))));
+    $module_path = dirname(__DIR__, 4);
     $module->getPath()->willReturn($module_path);
     $module_handler->getModule('jsonapi')->willReturn($module->reveal());
     $subscriber = new ResourceResponseValidator(
