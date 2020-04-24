@@ -79,7 +79,7 @@ class AdminNegotiator implements ThemeNegotiatorInterface {
    * {@inheritdoc}
    */
   public function determineActiveTheme(RouteMatchInterface $route_match) {
-    return $this->configFactory->get('system.theme')->get('admin');
+    return $this->configFactory->get('system.theme')->get('admin') ?: NULL;
   }
 
 }
