@@ -53,11 +53,6 @@ class BlockListBuilder extends ConfigEntityListBuilder implements FormInterface 
   protected $formBuilder;
 
   /**
-   * {@inheritdoc}
-   */
-  protected $limit = FALSE;
-
-  /**
    * The messenger.
    *
    * @var \Drupal\Core\Messenger\MessengerInterface
@@ -82,6 +77,7 @@ class BlockListBuilder extends ConfigEntityListBuilder implements FormInterface 
     $this->themeManager = $theme_manager;
     $this->formBuilder = $form_builder;
     $this->messenger = $messenger;
+    $this->limit = FALSE;
   }
 
   /**
