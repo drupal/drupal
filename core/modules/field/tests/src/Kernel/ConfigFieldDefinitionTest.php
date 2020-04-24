@@ -45,7 +45,7 @@ class ConfigFieldDefinitionTest extends FieldKernelTestBase {
   public function testBundleFieldDefinition() {
     $definitions = \Drupal::service('entity_field.manager')->getFieldDefinitions($this->entityType, $this->bundle);
     $this->assertTrue(isset($definitions[$this->fieldTestData->field->getName()]));
-    $this->assertTrue($definitions[$this->fieldTestData->field->getName()] instanceof FieldDefinitionInterface);
+    $this->assertInstanceOf(FieldDefinitionInterface::class, $definitions[$this->fieldTestData->field->getName()]);
     // Make sure fields on other entity types are not exposed.
     $this->assertFalse(isset($definitions[$this->fieldTestData->field_rev->getName()]));
   }
@@ -56,7 +56,7 @@ class ConfigFieldDefinitionTest extends FieldKernelTestBase {
   public function testFieldStorageDefinition() {
     $field_storage_definitions = \Drupal::service('entity_field.manager')->getFieldStorageDefinitions($this->entityType);
     $this->assertTrue(isset($field_storage_definitions[$this->fieldTestData->field->getName()]));
-    $this->assertTrue($field_storage_definitions[$this->fieldTestData->field->getName()] instanceof FieldStorageDefinitionInterface);
+    $this->assertInstanceOf(FieldStorageDefinitionInterface::class, $field_storage_definitions[$this->fieldTestData->field->getName()]);
     // Make sure storages on other entity types are not exposed.
     $this->assertFalse(isset($field_storage_definitions[$this->fieldTestData->field_rev->getName()]));
   }

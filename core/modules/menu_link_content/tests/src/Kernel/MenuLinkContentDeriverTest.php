@@ -65,7 +65,7 @@ class MenuLinkContentDeriverTest extends KernelTestBase {
     $tree_element = reset($menu_tree);
     $this->assertEqual('route_name_2', $tree_element->link->getRouteName());
     $title = $tree_element->link->getTitle();
-    $this->assertFalse($title instanceof TranslatableMarkup);
+    $this->assertNotInstanceOf(TranslatableMarkup::class, $title);
     $this->assertIdentical('<script>alert("Welcome to the discovered jungle!")</script>', $title);
 
     // Create a hierarchy.

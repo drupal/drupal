@@ -51,7 +51,7 @@ class MigrateImageStylesTest extends MigrateDrupal7TestBase {
    */
   protected function assertEntity($id, $label, array $expected_effect_plugins, array $expected_effect_config) {
     $style = ImageStyle::load($id);
-    $this->assertTrue($style instanceof ImageStyleInterface);
+    $this->assertInstanceOf(ImageStyleInterface::class, $style);
     /** @var \Drupal\image\ImageStyleInterface $style */
     $this->assertIdentical($id, $style->id());
     $this->assertIdentical($label, $style->label());
@@ -62,7 +62,7 @@ class MigrateImageStylesTest extends MigrateDrupal7TestBase {
 
     $index = 0;
     foreach ($effects as $effect) {
-      $this->assertTrue($effect instanceof ImageEffectBase);
+      $this->assertInstanceOf(ImageEffectBase::class, $effect);
       $this->assertIdentical($expected_effect_plugins[$index], $effect->getPluginId());
       $config = $effect->getConfiguration();
       $this->assertIdentical($expected_effect_config[$index], $config['data']);

@@ -170,7 +170,7 @@ class LinkGeneratorTest extends UnitTestCase {
     $url->setOption('set_active_class', TRUE);
 
     $result = $this->linkGenerator->generate('Test', $url);
-    $this->assertTrue($result instanceof GeneratedNoLink);
+    $this->assertInstanceOf(GeneratedNoLink::class, $result);
     $this->assertSame('<span>Test</span>', (string) $result);
   }
 
@@ -216,7 +216,7 @@ class LinkGeneratorTest extends UnitTestCase {
     $url->setUrlGenerator($this->urlGenerator);
 
     $result = $this->linkGenerator->generate('Test', $url);
-    $this->assertTrue($result instanceof GeneratedButton);
+    $this->assertInstanceOf(GeneratedButton::class, $result);
     $this->assertSame('<button type="button">Test</button>', (string) $result);
   }
 

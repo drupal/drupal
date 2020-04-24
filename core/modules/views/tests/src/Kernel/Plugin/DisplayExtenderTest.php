@@ -35,7 +35,7 @@ class DisplayExtenderTest extends ViewsKernelTestBase {
     $this->assertEqual(count($view->display_handler->getExtenders()), 1, 'Make sure that only one extender is initialized.');
 
     $display_extender = $view->display_handler->getExtenders()['display_extender_test'];
-    $this->assertTrue($display_extender instanceof DisplayExtenderTestData, 'Make sure the right class got initialized.');
+    $this->assertInstanceOf(DisplayExtenderTestData::class, $display_extender, 'Make sure the right class got initialized.');
 
     $view->preExecute();
     $this->assertTrue($display_extender->testState['preExecute'], 'Make sure the display extender was able to react on preExecute.');

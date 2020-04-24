@@ -94,7 +94,7 @@ class DisplayTest extends ViewTestBase {
 
     $view->setDisplay('display_test_1');
 
-    $this->assertTrue($view->display_handler instanceof DisplayTestPlugin, 'The correct display handler instance is on the view object.');
+    $this->assertInstanceOf(DisplayTestPlugin::class, $view->display_handler, 'The correct display handler instance is on the view object.');
 
     // Check the test option.
     $this->assertIdentical($view->display_handler->getOption('test_option'), '');

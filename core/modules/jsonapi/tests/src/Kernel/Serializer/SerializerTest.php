@@ -102,7 +102,7 @@ class SerializerTest extends JsonapiKernelTestBase {
     ];
 
     $value = $this->sut->normalize($this->node->field_text, 'api_json', $context);
-    $this->assertTrue($value instanceof CacheableNormalization);
+    $this->assertInstanceOf(CacheableNormalization::class, $value);
 
     $nested_field = [
       $this->node->field_text,
@@ -117,7 +117,7 @@ class SerializerTest extends JsonapiKernelTestBase {
     // When wrapped in an array, we should still be using the JSON:API
     // serializer.
     $value = $this->sut->normalize($nested_field, 'api_json', $context);
-    $this->assertTrue($value[0] instanceof CacheableNormalization);
+    $this->assertInstanceOf(CacheableNormalization::class, $value[0]);
 
     // Continue to use the fallback normalizer when we need it.
     $data = Markup::create('<h2>Test Markup</h2>');

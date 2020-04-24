@@ -64,7 +64,7 @@ class FieldOrLanguageJoinTest extends RelationshipJoinTestBase {
       'adjusted' => TRUE,
     ];
     $join = $this->manager->createInstance($this->pluginId, $configuration);
-    $this->assertTrue($join instanceof FieldOrLanguageJoin);
+    $this->assertInstanceOf(FieldOrLanguageJoin::class, $join);
     $this->assertNull($join->extra);
     $this->assertTrue($join->adjusted);
 

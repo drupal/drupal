@@ -64,8 +64,8 @@ class TimestampItemTest extends FieldKernelTestBase {
     // Verify entity has been created properly.
     $id = $entity->id();
     $entity = EntityTest::load($id);
-    $this->assertTrue($entity->field_timestamp instanceof FieldItemListInterface, 'Field implements interface.');
-    $this->assertTrue($entity->field_timestamp[0] instanceof FieldItemInterface, 'Field item implements interface.');
+    $this->assertInstanceOf(FieldItemListInterface::class, $entity->field_timestamp, 'Field implements interface.');
+    $this->assertInstanceOf(FieldItemInterface::class, $entity->field_timestamp[0], 'Field item implements interface.');
     $this->assertEquals($entity->field_timestamp->value, $value);
     $this->assertEquals($entity->field_timestamp[0]->value, $value);
 
