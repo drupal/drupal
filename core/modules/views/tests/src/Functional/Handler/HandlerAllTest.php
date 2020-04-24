@@ -111,7 +111,7 @@ class HandlerAllTest extends ViewTestBase {
       foreach ($object_types as $type) {
         if (isset($view->{$type})) {
           foreach ($view->{$type} as $handler) {
-            $this->assertTrue($handler instanceof HandlerBase, new FormattableMarkup(
+            $this->assertInstanceOf(HandlerBase::class, $handler, new FormattableMarkup(
               '@type handler of class %class is an instance of HandlerBase',
               [
                 '@type' => $type,

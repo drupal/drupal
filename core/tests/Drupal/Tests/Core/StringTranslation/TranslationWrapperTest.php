@@ -21,7 +21,7 @@ class TranslationWrapperTest extends UnitTestCase {
    */
   public function testTranslationWrapper() {
     $object = new TranslationWrapper('Deprecated');
-    $this->assertTrue($object instanceof TranslatableMarkup);
+    $this->assertInstanceOf(TranslatableMarkup::class, $object);
   }
 
 }

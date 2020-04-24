@@ -76,7 +76,7 @@ class ModuleTest extends ViewsKernelTestBase {
       'field' => 'job',
     ];
     $handler = $this->container->get('plugin.manager.views.filter')->getHandler($item, 'standard');
-    $this->assertTrue($handler instanceof Standard);
+    $this->assertInstanceOf(Standard::class, $handler);
 
     // @todo Reinstate these tests when the debug() in views_get_handler() is
     //   restored.

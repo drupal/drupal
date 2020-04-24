@@ -60,8 +60,8 @@ class TestItemTest extends FieldKernelTestBase {
     // Verify entity has been created properly.
     $id = $entity->id();
     $entity = EntityTest::load($id);
-    $this->assertTrue($entity->{$this->fieldName} instanceof FieldItemListInterface, 'Field implements interface.');
-    $this->assertTrue($entity->{$this->fieldName}[0] instanceof FieldItemInterface, 'Field item implements interface.');
+    $this->assertInstanceOf(FieldItemListInterface::class, $entity->{$this->fieldName}, 'Field implements interface.');
+    $this->assertInstanceOf(FieldItemInterface::class, $entity->{$this->fieldName}[0], 'Field item implements interface.');
     $this->assertEqual($entity->{$this->fieldName}->value, $value);
     $this->assertEqual($entity->{$this->fieldName}[0]->value, $value);
 

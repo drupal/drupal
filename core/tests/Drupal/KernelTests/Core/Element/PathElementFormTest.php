@@ -162,7 +162,7 @@ class PathElementFormTest extends KernelTestBase implements FormInterface {
     ]);
     /** @var \Drupal\Core\Url $url */
     $url = $form_state->getValue('required_validate_url');
-    $this->assertTrue($url instanceof Url);
+    $this->assertInstanceOf(Url::class, $url);
     $this->assertEqual($url->getRouteName(), 'entity.user.canonical');
     $this->assertEqual($url->getRouteParameters(), [
       'user' => $this->testUser->id(),

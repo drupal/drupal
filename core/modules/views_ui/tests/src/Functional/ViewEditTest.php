@@ -32,7 +32,7 @@ class ViewEditTest extends UITestBase {
     $this->assertLink(t('Delete view'), 0, 'Ensure that the view delete link appears');
 
     $view = $this->container->get('entity_type.manager')->getStorage('view')->load('test_view');
-    $this->assertTrue($view instanceof View);
+    $this->assertInstanceOf(View::class, $view);
     $this->clickLink(t('Delete view'));
     $this->assertUrl('admin/structure/views/view/test_view/delete');
     $this->drupalPostForm(NULL, [], t('Delete'));
@@ -40,7 +40,7 @@ class ViewEditTest extends UITestBase {
 
     $this->assertUrl('admin/structure/views');
     $view = $this->container->get('entity_type.manager')->getStorage('view')->load('test_view');
-    $this->assertFalse($view instanceof View);
+    $this->assertNotInstanceOf(View::class, $view);
   }
 
   /**

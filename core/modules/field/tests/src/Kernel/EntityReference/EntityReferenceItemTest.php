@@ -128,15 +128,15 @@ class EntityReferenceItemTest extends FieldKernelTestBase {
     $entity->save();
 
     $entity = EntityTest::load($entity->id());
-    $this->assertTrue($entity->field_test_taxonomy_term instanceof FieldItemListInterface, 'Field implements interface.');
-    $this->assertTrue($entity->field_test_taxonomy_term[0] instanceof FieldItemInterface, 'Field item implements interface.');
+    $this->assertInstanceOf(FieldItemListInterface::class, $entity->field_test_taxonomy_term, 'Field implements interface.');
+    $this->assertInstanceOf(FieldItemInterface::class, $entity->field_test_taxonomy_term[0], 'Field item implements interface.');
     $this->assertEqual($entity->field_test_taxonomy_term->target_id, $tid);
     $this->assertEqual($entity->field_test_taxonomy_term->entity->getName(), $this->term->getName());
     $this->assertEqual($entity->field_test_taxonomy_term->entity->id(), $tid);
     $this->assertEqual($entity->field_test_taxonomy_term->entity->uuid(), $this->term->uuid());
     // Verify that the label for the target ID property definition is correct.
     $label = $entity->field_test_taxonomy_term->getFieldDefinition()->getFieldStorageDefinition()->getPropertyDefinition('target_id')->getLabel();
-    $this->assertTrue($label instanceof TranslatableMarkup);
+    $this->assertInstanceOf(TranslatableMarkup::class, $label);
     $this->assertEqual($label->render(), 'Taxonomy term ID');
 
     // Change the name of the term via the reference.
@@ -247,7 +247,7 @@ class EntityReferenceItemTest extends FieldKernelTestBase {
     $this->assertEqual($this->entityStringId->id(), $storage->load($entity->id())->field_test_entity_test_string_id->target_id);
     // Verify that the label for the target ID property definition is correct.
     $label = $entity->field_test_taxonomy_term->getFieldDefinition()->getFieldStorageDefinition()->getPropertyDefinition('target_id')->getLabel();
-    $this->assertTrue($label instanceof TranslatableMarkup);
+    $this->assertInstanceOf(TranslatableMarkup::class, $label);
     $this->assertEqual($label->render(), 'Taxonomy term ID');
   }
 
@@ -264,8 +264,8 @@ class EntityReferenceItemTest extends FieldKernelTestBase {
     $entity->save();
 
     $entity = EntityTest::load($entity->id());
-    $this->assertTrue($entity->field_test_taxonomy_vocabulary instanceof FieldItemListInterface, 'Field implements interface.');
-    $this->assertTrue($entity->field_test_taxonomy_vocabulary[0] instanceof FieldItemInterface, 'Field item implements interface.');
+    $this->assertInstanceOf(FieldItemListInterface::class, $entity->field_test_taxonomy_vocabulary, 'Field implements interface.');
+    $this->assertInstanceOf(FieldItemInterface::class, $entity->field_test_taxonomy_vocabulary[0], 'Field item implements interface.');
     $this->assertEqual($entity->field_test_taxonomy_vocabulary->target_id, $referenced_entity_id);
     $this->assertEqual($entity->field_test_taxonomy_vocabulary->entity->label(), $this->vocabulary->label());
     $this->assertEqual($entity->field_test_taxonomy_vocabulary->entity->id(), $referenced_entity_id);

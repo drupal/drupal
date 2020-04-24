@@ -205,7 +205,7 @@ class EntityValidationTest extends EntityKernelTestBase {
 
     // Make sure we can determine this is composite constraint.
     $constraint = $violations[0]->getConstraint();
-    $this->assertTrue($constraint instanceof CompositeConstraintBase, 'Constraint is composite constraint.');
+    $this->assertInstanceOf(CompositeConstraintBase::class, $constraint, 'Constraint is composite constraint.');
     $this->assertEqual('type', $violations[0]->getPropertyPath());
 
     /** @var \Drupal\Core\Entity\Plugin\Validation\Constraint\CompositeConstraintBase $constraint */

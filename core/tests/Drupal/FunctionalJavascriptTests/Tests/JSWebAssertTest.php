@@ -65,28 +65,28 @@ class JSWebAssertTest extends WebDriverTestBase {
     $test_button->click();
     $result = $assert_session->waitForButton('Added button');
     $this->assertNotEmpty($result);
-    $this->assertTrue($result instanceof NodeElement);
+    $this->assertInstanceOf(NodeElement::class, $result);
 
     $result = $page->findLink('Added link');
     $this->assertEmpty($result);
     $test_link->click();
     $result = $assert_session->waitForLink('Added link');
     $this->assertNotEmpty($result);
-    $this->assertTrue($result instanceof NodeElement);
+    $this->assertInstanceOf(NodeElement::class, $result);
 
     $result = $page->findField('added_field');
     $this->assertEmpty($result);
     $test_field->click();
     $result = $assert_session->waitForField('added_field');
     $this->assertNotEmpty($result);
-    $this->assertTrue($result instanceof NodeElement);
+    $this->assertInstanceOf(NodeElement::class, $result);
 
     $result = $page->findById('js_webassert_test_field_id');
     $this->assertEmpty($result);
     $test_id->click();
     $result = $assert_session->waitForId('js_webassert_test_field_id');
     $this->assertNotEmpty($result);
-    $this->assertTrue($result instanceof NodeElement);
+    $this->assertInstanceOf(NodeElement::class, $result);
 
     // Test waitOnAjaxRequest. Verify the element is available after the wait
     // and the behaviors have run on completing by checking the value.
@@ -96,7 +96,7 @@ class JSWebAssertTest extends WebDriverTestBase {
     $assert_session->assertWaitOnAjaxRequest();
     $result = $page->findField('test_assert_wait_on_ajax_input');
     $this->assertNotEmpty($result);
-    $this->assertTrue($result instanceof NodeElement);
+    $this->assertInstanceOf(NodeElement::class, $result);
     $this->assertEquals('js_webassert_test', $result->getValue());
 
     $result = $page->findButton('Added WaitForElementVisible');
@@ -104,7 +104,7 @@ class JSWebAssertTest extends WebDriverTestBase {
     $test_wait_on_element_visible->click();
     $result = $assert_session->waitForElementVisible('named', ['button', 'Added WaitForElementVisible']);
     $this->assertNotEmpty($result);
-    $this->assertTrue($result instanceof NodeElement);
+    $this->assertInstanceOf(NodeElement::class, $result);
     $this->assertEquals(TRUE, $result->isVisible());
   }
 

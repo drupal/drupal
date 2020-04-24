@@ -100,9 +100,9 @@ class ViewExecutableTest extends ViewsKernelTestBase {
    */
   public function testFactoryService() {
     $factory = $this->container->get('views.executable');
-    $this->assertTrue($factory instanceof ViewExecutableFactory, 'A ViewExecutableFactory instance was returned from the container.');
+    $this->assertInstanceOf(ViewExecutableFactory::class, $factory, 'A ViewExecutableFactory instance was returned from the container.');
     $view = View::load('test_executable_displays');
-    $this->assertTrue($factory->get($view) instanceof ViewExecutable, 'A ViewExecutable instance was returned from the factory.');
+    $this->assertInstanceOf(ViewExecutable::class, $factory->get($view), 'A ViewExecutable instance was returned from the factory.');
   }
 
   /**
@@ -112,8 +112,8 @@ class ViewExecutableTest extends ViewsKernelTestBase {
     $view = Views::getView('test_destroy');
     $view->initDisplay();
 
-    $this->assertTrue($view->display_handler instanceof DefaultDisplay, 'Make sure a reference to the current display handler is set.');
-    $this->assertTrue($view->displayHandlers->get('default') instanceof DefaultDisplay, 'Make sure a display handler is created for each display.');
+    $this->assertInstanceOf(DefaultDisplay::class, $view->display_handler, 'Make sure a reference to the current display handler is set.');
+    $this->assertInstanceOf(DefaultDisplay::class, $view->displayHandlers->get('default'), 'Make sure a display handler is created for each display.');
 
     $view->destroy();
     $view->initHandlers();
@@ -129,15 +129,15 @@ class ViewExecutableTest extends ViewsKernelTestBase {
     }
 
     // initHandlers() should create display handlers automatically as well.
-    $this->assertTrue($view->display_handler instanceof DefaultDisplay, 'Make sure a reference to the current display handler is set.');
-    $this->assertTrue($view->displayHandlers->get('default') instanceof DefaultDisplay, 'Make sure a display handler is created for each display.');
+    $this->assertInstanceOf(DefaultDisplay::class, $view->display_handler, 'Make sure a reference to the current display handler is set.');
+    $this->assertInstanceOf(DefaultDisplay::class, $view->displayHandlers->get('default'), 'Make sure a display handler is created for each display.');
 
     $view_hash = spl_object_hash($view);
     $display_hash = spl_object_hash($view->display_handler);
 
     // Test the initStyle() method.
     $view->initStyle();
-    $this->assertTrue($view->style_plugin instanceof DefaultStyle, 'Make sure a reference to the style plugin is set.');
+    $this->assertInstanceOf(DefaultStyle::class, $view->style_plugin, 'Make sure a reference to the style plugin is set.');
     // Test the plugin has been invited and view have references to the view and
     // display handler.
     $this->assertEqual(spl_object_hash($view->style_plugin->view), $view_hash);
@@ -145,7 +145,7 @@ class ViewExecutableTest extends ViewsKernelTestBase {
 
     // Test the initQuery method().
     $view->initQuery();
-    $this->assertTrue($view->query instanceof Sql, 'Make sure a reference to the query is set');
+    $this->assertInstanceOf(Sql::class, $view->query, 'Make sure a reference to the query is set');
     $this->assertEqual(spl_object_hash($view->query->view), $view_hash);
     $this->assertEqual(spl_object_hash($view->query->displayHandler), $display_hash);
 
@@ -153,23 +153,23 @@ class ViewExecutableTest extends ViewsKernelTestBase {
 
     // Test the plugin  get methods.
     $display_plugin = $view->getDisplay();
-    $this->assertTrue($display_plugin instanceof DefaultDisplay, 'An instance of DefaultDisplay was returned.');
-    $this->assertTrue($view->display_handler instanceof DefaultDisplay, 'The display_handler property has been set.');
+    $this->assertInstanceOf(DefaultDisplay::class, $display_plugin, 'An instance of DefaultDisplay was returned.');
+    $this->assertInstanceOf(DefaultDisplay::class, $view->display_handler, 'The display_handler property has been set.');
     $this->assertIdentical($display_plugin, $view->getDisplay(), 'The same display plugin instance was returned.');
 
     $style_plugin = $view->getStyle();
-    $this->assertTrue($style_plugin instanceof DefaultStyle, 'An instance of DefaultStyle was returned.');
-    $this->assertTrue($view->style_plugin instanceof DefaultStyle, 'The style_plugin property has been set.');
+    $this->assertInstanceOf(DefaultStyle::class, $style_plugin, 'An instance of DefaultStyle was returned.');
+    $this->assertInstanceOf(DefaultStyle::class, $view->style_plugin, 'The style_plugin property has been set.');
     $this->assertIdentical($style_plugin, $view->getStyle(), 'The same style plugin instance was returned.');
 
     $pager_plugin = $view->getPager();
-    $this->assertTrue($pager_plugin instanceof PagerPluginBase, 'An instance of PagerPluginBase was returned.');
-    $this->assertTrue($view->pager instanceof PagerPluginBase, 'The pager property has been set.');
+    $this->assertInstanceOf(PagerPluginBase::class, $pager_plugin, 'An instance of PagerPluginBase was returned.');
+    $this->assertInstanceOf(PagerPluginBase::class, $view->pager, 'The pager property has been set.');
     $this->assertIdentical($pager_plugin, $view->getPager(), 'The same pager plugin instance was returned.');
 
     $query_plugin = $view->getQuery();
-    $this->assertTrue($query_plugin instanceof QueryPluginBase, 'An instance of QueryPluginBase was returned.');
-    $this->assertTrue($view->query instanceof QueryPluginBase, 'The query property has been set.');
+    $this->assertInstanceOf(QueryPluginBase::class, $query_plugin, 'An instance of QueryPluginBase was returned.');
+    $this->assertInstanceOf(QueryPluginBase::class, $view->query, 'The query property has been set.');
     $this->assertIdentical($query_plugin, $view->getQuery(), 'The same query plugin instance was returned.');
   }
 
@@ -218,11 +218,11 @@ class ViewExecutableTest extends ViewsKernelTestBase {
 
     // Tests Drupal\views\ViewExecutable::initDisplay().
     $view->initDisplay();
-    $this->assertTrue($view->displayHandlers instanceof DisplayPluginCollection, 'The displayHandlers property has the right class.');
+    $this->assertInstanceOf(DisplayPluginCollection::class, $view->displayHandlers, 'The displayHandlers property has the right class.');
     // Tests the classes of the instances.
-    $this->assertTrue($view->displayHandlers->get('default') instanceof DefaultDisplay);
-    $this->assertTrue($view->displayHandlers->get('page_1') instanceof Page);
-    $this->assertTrue($view->displayHandlers->get('page_2') instanceof Page);
+    $this->assertInstanceOf(DefaultDisplay::class, $view->displayHandlers->get('default'));
+    $this->assertInstanceOf(Page::class, $view->displayHandlers->get('page_1'));
+    $this->assertInstanceOf(Page::class, $view->displayHandlers->get('page_2'));
 
     // After initializing the default display is the current used display.
     $this->assertEqual($view->current_display, 'default');
@@ -253,14 +253,14 @@ class ViewExecutableTest extends ViewsKernelTestBase {
     // display.
     $view->setDisplay('page_1');
     $view->initStyle();
-    $this->assertTrue($view->style_plugin instanceof DefaultStyle);
-    $this->assertTrue($view->rowPlugin instanceof Fields);
+    $this->assertInstanceOf(DefaultStyle::class, $view->style_plugin);
+    $this->assertInstanceOf(Fields::class, $view->rowPlugin);
 
     $view->setDisplay('page_2');
     $view->initStyle();
-    $this->assertTrue($view->style_plugin instanceof Grid);
+    $this->assertInstanceOf(Grid::class, $view->style_plugin);
     // @todo Change this rowPlugin type too.
-    $this->assertTrue($view->rowPlugin instanceof Fields);
+    $this->assertInstanceOf(Fields::class, $view->rowPlugin);
 
     // Test the newDisplay() method.
     $view = $this->container->get('entity_type.manager')->getStorage('view')->create(['id' => 'test_executable_displays']);
@@ -270,14 +270,14 @@ class ViewExecutableTest extends ViewsKernelTestBase {
     $executable->newDisplay('page');
     $executable->newDisplay('display_test');
 
-    $this->assertTrue($executable->displayHandlers->get('default') instanceof DefaultDisplay);
+    $this->assertInstanceOf(DefaultDisplay::class, $executable->displayHandlers->get('default'));
     $this->assertFalse(isset($executable->displayHandlers->get('default')->default_display));
-    $this->assertTrue($executable->displayHandlers->get('page_1') instanceof Page);
-    $this->assertTrue($executable->displayHandlers->get('page_1')->default_display instanceof DefaultDisplay);
-    $this->assertTrue($executable->displayHandlers->get('page_2') instanceof Page);
-    $this->assertTrue($executable->displayHandlers->get('page_2')->default_display instanceof DefaultDisplay);
-    $this->assertTrue($executable->displayHandlers->get('display_test_1') instanceof DisplayTest);
-    $this->assertTrue($executable->displayHandlers->get('display_test_1')->default_display instanceof DefaultDisplay);
+    $this->assertInstanceOf(Page::class, $executable->displayHandlers->get('page_1'));
+    $this->assertInstanceOf(DefaultDisplay::class, $executable->displayHandlers->get('page_1')->default_display);
+    $this->assertInstanceOf(Page::class, $executable->displayHandlers->get('page_2'));
+    $this->assertInstanceOf(DefaultDisplay::class, $executable->displayHandlers->get('page_2')->default_display);
+    $this->assertInstanceOf(DisplayTest::class, $executable->displayHandlers->get('display_test_1'));
+    $this->assertInstanceOf(DefaultDisplay::class, $executable->displayHandlers->get('display_test_1')->default_display);
   }
 
   /**
@@ -316,7 +316,7 @@ class ViewExecutableTest extends ViewsKernelTestBase {
     $this->assertIdentical($view->getBaseTables(), $expected);
 
     // Test response methods.
-    $this->assertTrue($view->getResponse() instanceof Response, 'New response object returned.');
+    $this->assertInstanceOf(Response::class, $view->getResponse(), 'New response object returned.');
     $new_response = new Response();
     $view->setResponse($new_response);
     $this->assertIdentical(spl_object_hash($view->getResponse()), spl_object_hash($new_response), 'New response object correctly set.');
@@ -489,7 +489,7 @@ class ViewExecutableTest extends ViewsKernelTestBase {
     /** @var \Drupal\views\ViewExecutable $unserialized */
     $unserialized = unserialize($serialized);
 
-    $this->assertTrue($unserialized instanceof ViewExecutable);
+    $this->assertInstanceOf(ViewExecutable::class, $unserialized);
     $this->assertIdentical($view->storage->id(), $unserialized->storage->id(), 'The expected storage entity was loaded on the unserialized view.');
     $this->assertIdentical($unserialized->current_display, 'page_1', 'The expected display was set on the unserialized view.');
     $this->assertIdentical($unserialized->args, ['test'], 'The expected argument was set on the unserialized view.');
