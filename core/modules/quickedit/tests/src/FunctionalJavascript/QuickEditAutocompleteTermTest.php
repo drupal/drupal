@@ -165,8 +165,8 @@ class QuickEditAutocompleteTermTest extends WebDriverTestBase {
     $tags = $tag_field->getValue();
 
     // Check existing terms.
-    $this->assertTrue(strpos($tags, $this->term1->label()) !== FALSE);
-    $this->assertTrue(strpos($tags, $this->term2->label()) !== FALSE);
+    $this->assertStringContainsString($this->term1->label(), $tags);
+    $this->assertStringContainsString($this->term2->label(), $tags);
 
     // Add new term.
     $new_tag = $this->randomMachineName();

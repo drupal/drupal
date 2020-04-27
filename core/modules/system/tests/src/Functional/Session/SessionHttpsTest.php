@@ -237,7 +237,7 @@ class SessionHttpsTest extends BrowserTestBase {
     $this->assertSame(303, $response->getStatusCode());
     $location = $response->getHeader('location')[0];
 
-    $this->assertIdentical(strpos($location, $base_url), 0, 'Location header contains expected base URL');
+    $this->assertStringStartsWith($base_url, $location, 'Location header contains expected base URL');
     return substr($location, strlen($base_url));
   }
 

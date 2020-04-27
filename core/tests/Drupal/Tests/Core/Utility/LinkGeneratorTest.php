@@ -437,7 +437,7 @@ class LinkGeneratorTest extends UnitTestCase {
         'tag' => 'em',
       ],
     ], $result);
-    $this->assertTrue(strpos($result, '<em>HTML output</em>') !== FALSE);
+    $this->assertStringContainsString('<em>HTML output</em>', $result);
   }
 
   /**

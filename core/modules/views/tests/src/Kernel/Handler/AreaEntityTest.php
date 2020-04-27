@@ -131,23 +131,23 @@ class AreaEntityTest extends ViewsKernelTestBase {
     $footer_xpath = '//div[@class = "' . $view_class . '"]/footer[1]';
 
     $result = $this->xpath($header_xpath);
-    $this->assertTrue(strpos(trim((string) $result[0]), $entities[0]->label()) !== FALSE, 'The rendered entity appears in the header of the view.');
-    $this->assertTrue(strpos(trim((string) $result[0]), 'full') !== FALSE, 'The rendered entity appeared in the right view mode.');
+    $this->assertStringContainsString($entities[0]->label(), (string) $result[0], 'The rendered entity appears in the header of the view.');
+    $this->assertStringContainsString('full', (string) $result[0], 'The rendered entity appeared in the right view mode.');
 
     $result = $this->xpath($footer_xpath);
-    $this->assertTrue(strpos(trim((string) $result[0]), $entities[1]->label()) !== FALSE, 'The rendered entity appears in the footer of the view.');
-    $this->assertTrue(strpos(trim((string) $result[0]), 'full') !== FALSE, 'The rendered entity appeared in the right view mode.');
+    $this->assertStringContainsString($entities[1]->label(), (string) $result[0], 'The rendered entity appears in the footer of the view.');
+    $this->assertStringContainsString('full', (string) $result[0], 'The rendered entity appeared in the right view mode.');
 
     $preview = $view->preview('default', [$entities[1]->id()]);
     $this->setRawContent($renderer->renderRoot($preview));
 
     $result = $this->xpath($header_xpath);
-    $this->assertTrue(strpos(trim((string) $result[0]), $entities[0]->label()) !== FALSE, 'The rendered entity appears in the header of the view.');
-    $this->assertTrue(strpos(trim((string) $result[0]), 'full') !== FALSE, 'The rendered entity appeared in the right view mode.');
+    $this->assertStringContainsString($entities[0]->label(), (string) $result[0], 'The rendered entity appears in the header of the view.');
+    $this->assertStringContainsString('full', (string) $result[0], 'The rendered entity appeared in the right view mode.');
 
     $result = $this->xpath($footer_xpath);
-    $this->assertTrue(strpos(trim((string) $result[0]), $entities[1]->label()) !== FALSE, 'The rendered entity appears in the footer of the view.');
-    $this->assertTrue(strpos(trim((string) $result[0]), 'full') !== FALSE, 'The rendered entity appeared in the right view mode.');
+    $this->assertStringContainsString($entities[1]->label(), (string) $result[0], 'The rendered entity appears in the footer of the view.');
+    $this->assertStringContainsString('full', (string) $result[0], 'The rendered entity appeared in the right view mode.');
 
     // Mark entity_test test view_mode as customizable.
     $entity_view_mode = \Drupal::entityTypeManager()->getStorage('entity_view_mode')->load('entity_test.test');
@@ -164,8 +164,8 @@ class AreaEntityTest extends ViewsKernelTestBase {
     $this->setRawContent($renderer->renderRoot($preview));
     $view_class = 'js-view-dom-id-' . $view->dom_id;
     $result = $this->xpath('//div[@class = "' . $view_class . '"]/header[1]');
-    $this->assertTrue(strpos(trim((string) $result[0]), $entities[0]->label()) !== FALSE, 'The rendered entity appears in the header of the view.');
-    $this->assertTrue(strpos(trim((string) $result[0]), 'test') !== FALSE, 'The rendered entity appeared in the right view mode.');
+    $this->assertStringContainsString($entities[0]->label(), (string) $result[0], 'The rendered entity appears in the header of the view.');
+    $this->assertStringContainsString('test', (string) $result[0], 'The rendered entity appeared in the right view mode.');
 
     // Test entity access.
     $view = Views::getView('test_entity_area');
@@ -173,7 +173,7 @@ class AreaEntityTest extends ViewsKernelTestBase {
     $this->setRawContent($renderer->renderRoot($preview));
     $view_class = 'js-view-dom-id-' . $view->dom_id;
     $result = $this->xpath('//div[@class = "' . $view_class . '"]/footer[1]');
-    $this->assertTrue(strpos($result[0], $entities[2]->label()) === FALSE, 'The rendered entity does not appear in the footer of the view.');
+    $this->assertStringNotContainsString($entities[2]->label(), $result[0], 'The rendered entity does not appear in the footer of the view.');
 
     // Test the available view mode options.
     $form = [];

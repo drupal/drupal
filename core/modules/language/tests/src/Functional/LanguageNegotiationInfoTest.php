@@ -141,7 +141,7 @@ class LanguageNegotiationInfoTest extends BrowserTestBase {
 
     // Check that only the core language types are available.
     foreach ($this->languageManager()->getDefinedLanguageTypes() as $type) {
-      $this->assertTrue(strpos($type, 'test') === FALSE, new FormattableMarkup('The %type language is still available', ['%type' => $type]));
+      $this->assertStringNotContainsString('test', $type, new FormattableMarkup('The %type language is still available', ['%type' => $type]));
     }
 
     // Check that fixed language types are properly configured, even those

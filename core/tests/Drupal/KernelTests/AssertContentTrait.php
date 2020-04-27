@@ -434,7 +434,7 @@ trait AssertContentTrait {
     if (!$message) {
       $message = 'Raw "' . Html::escape($raw) . '" found';
     }
-    return $this->assert(strpos($this->getRawContent(), (string) $raw) !== FALSE, $message, $group);
+    $this->assertStringContainsString((string) $raw, $this->getRawContent(), $message);
   }
 
   /**
@@ -462,7 +462,7 @@ trait AssertContentTrait {
     if (!$message) {
       $message = 'Raw "' . Html::escape($raw) . '" not found';
     }
-    return $this->assert(strpos($this->getRawContent(), (string) $raw) === FALSE, $message, $group);
+    $this->assertStringNotContainsString((string) $raw, $this->getRawContent(), $message);
   }
 
   /**
@@ -490,7 +490,7 @@ trait AssertContentTrait {
     if (!$message) {
       $message = 'Escaped "' . Html::escape($raw) . '" found';
     }
-    return $this->assert(strpos($this->getRawContent(), Html::escape($raw)) !== FALSE, $message, $group);
+    $this->assertStringContainsString(Html::escape($raw), $this->getRawContent(), $message);
   }
 
   /**
@@ -519,7 +519,7 @@ trait AssertContentTrait {
     if (!$message) {
       $message = 'Escaped "' . Html::escape($raw) . '" not found';
     }
-    return $this->assert(strpos($this->getRawContent(), Html::escape($raw)) === FALSE, $message, $group);
+    $this->assertStringNotContainsString(Html::escape($raw), $this->getRawContent(), $message);
   }
 
   /**
@@ -606,7 +606,12 @@ trait AssertContentTrait {
     if (!$message) {
       $message = !$not_exists ? new FormattableMarkup('"@text" found', ['@text' => $text]) : new FormattableMarkup('"@text" not found', ['@text' => $text]);
     }
-    return $this->assert($not_exists == (strpos($this->getTextContent(), (string) $text) === FALSE), $message, $group);
+    if ($not_exists) {
+      $this->assertStringNotContainsString((string) $text, $this->getTextContent(), $message);
+    }
+    else {
+      $this->assertStringContainsString((string) $text, $this->getTextContent(), $message);
+    }
   }
 
   /**

@@ -41,15 +41,15 @@ class AreaViewTest extends ViewsKernelTestBase {
     $this->executeView($view);
     $output = $view->render();
     $output = $renderer->renderRoot($output);
-    $this->assertTrue(strpos($output, 'js-view-dom-id-' . $view->dom_id) !== FALSE, 'The test view is correctly embedded.');
+    $this->assertStringContainsString('js-view-dom-id-' . $view->dom_id, $output, 'The test view is correctly embedded.');
     $view->destroy();
 
     $view->setArguments([27]);
     $this->executeView($view);
     $output = $view->render();
     $output = $renderer->renderRoot($output);
-    $this->assertTrue(strpos($output, 'John') === FALSE, 'The test view is correctly embedded with inherited arguments.');
-    $this->assertTrue(strpos($output, 'George') !== FALSE, 'The test view is correctly embedded with inherited arguments.');
+    $this->assertStringNotContainsString('John', $output, 'The test view is correctly embedded with inherited arguments.');
+    $this->assertStringContainsString('George', $output, 'The test view is correctly embedded with inherited arguments.');
     $view->destroy();
   }
 

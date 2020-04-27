@@ -91,9 +91,9 @@ class ContactPersonalTest extends BrowserTestBase {
     ];
     $subject = PlainTextOutput::renderFromHtml(t('[@site-name] @subject', $variables));
     $this->assertEqual($mail['subject'], $subject, 'Subject is in sent message.');
-    $this->assertTrue(strpos($mail['body'], 'Hello ' . $variables['@recipient-name']) !== FALSE, 'Recipient name is in sent message.');
-    $this->assertTrue(strpos($mail['body'], $this->webUser->getDisplayName()) !== FALSE, 'Sender name is in sent message.');
-    $this->assertTrue(strpos($mail['body'], $message['message[0][value]']) !== FALSE, 'Message body is in sent message.');
+    $this->assertStringContainsString('Hello ' . $variables['@recipient-name'], $mail['body'], 'Recipient name is in sent message.');
+    $this->assertStringContainsString($this->webUser->getDisplayName(), $mail['body'], 'Sender name is in sent message.');
+    $this->assertStringContainsString($message['message[0][value]'], $mail['body'], 'Message body is in sent message.');
 
     // Check there was no problems raised during sending.
     $this->drupalLogout();

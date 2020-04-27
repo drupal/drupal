@@ -39,7 +39,7 @@ class SelectTest extends DatabaseTestBase {
     $expected = "/* Testing query comments */";
 
     $this->assertEqual(count($records), 4, 'Returned the correct number of rows.');
-    $this->assertNotIdentical(FALSE, strpos($query, $expected), 'The flattened query contains the comment string.');
+    $this->assertStringContainsString($expected, $query, 'The flattened query contains the comment string.');
   }
 
   /**

@@ -129,7 +129,7 @@ class FieldWebTest extends ViewTestBase {
    *   TRUE if the assertion succeeded, FALSE otherwise.
    */
   protected function assertSubString($haystack, $needle, $message = '', $group = 'Other') {
-    return $this->assertTrue(strpos($haystack, $needle) !== FALSE, $message, $group);
+    return $this->assertStringContainsString($needle, $haystack, $message);
   }
 
   /**
@@ -147,7 +147,7 @@ class FieldWebTest extends ViewTestBase {
    *   TRUE if the assertion succeeded, FALSE otherwise.
    */
   protected function assertNotSubString($haystack, $needle, $message = '', $group = 'Other') {
-    return $this->assertTrue(strpos($haystack, $needle) === FALSE, $message, $group);
+    return $this->assertStringNotContainsString($needle, $haystack, $message);
   }
 
   /**

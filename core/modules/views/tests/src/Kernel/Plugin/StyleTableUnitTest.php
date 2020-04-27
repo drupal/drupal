@@ -119,7 +119,7 @@ class StyleTableUnitTest extends PluginKernelTestBase {
     $view->field['name']->options['exclude'] = TRUE;
     $output = $view->preview();
     $output = \Drupal::service('renderer')->renderRoot($output);
-    $this->assertFalse(strpos($output, 'views-field-name') !== FALSE, "Excluded field's wrapper was not rendered.");
+    $this->assertStringNotContainsString('views-field-name', $output, "Excluded field's wrapper was not rendered.");
     $view->destroy();
 
     // Render a non empty result, and ensure that the empty area handler is not
@@ -128,7 +128,7 @@ class StyleTableUnitTest extends PluginKernelTestBase {
     $output = $view->preview();
     $output = \Drupal::service('renderer')->renderRoot($output);
 
-    $this->assertFalse(strpos($output, 'custom text') !== FALSE, 'Empty handler was not rendered on a non empty table.');
+    $this->assertStringNotContainsString('custom text', $output, 'Empty handler was not rendered on a non empty table.');
 
     // Render an empty result, and ensure that the area handler is rendered.
     $view->setDisplay('default');
@@ -137,7 +137,7 @@ class StyleTableUnitTest extends PluginKernelTestBase {
     $output = $view->preview();
     $output = \Drupal::service('renderer')->renderRoot($output);
 
-    $this->assertTrue(strpos($output, 'custom text') !== FALSE, 'Empty handler got rendered on an empty table.');
+    $this->assertStringContainsString('custom text', $output, 'Empty handler got rendered on an empty table.');
   }
 
   /**

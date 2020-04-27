@@ -280,7 +280,7 @@ class CKEditorAdminTest extends BrowserTestBase {
     // Regression test for https://www.drupal.org/node/2606460.
     $settings = $this->getDrupalSettings();
     $expected = $settings['ckeditor']['toolbarAdmin'];
-    $this->assertTrue(strpos($expected, '<li data-drupal-ckeditor-button-name="Bold" class="ckeditor-button"><a href="#" class="cke-icon-only cke_ltr" role="button" title="bold" aria-label="bold"><span class="cke_button_icon cke_button__bold_icon">bold</span></a></li>') !== FALSE);
+    $this->assertStringContainsString('<li data-drupal-ckeditor-button-name="Bold" class="ckeditor-button"><a href="#" class="cke-icon-only cke_ltr" role="button" title="bold" aria-label="bold"><span class="cke_button_icon cke_button__bold_icon">bold</span></a></li>', $expected);
 
     // Ensure the styles textarea exists and is initialized empty.
     $styles_textarea = $this->xpath('//textarea[@name="editor[settings][plugins][stylescombo][styles]"]');

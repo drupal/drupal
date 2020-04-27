@@ -84,7 +84,7 @@ class PathPluginTest extends NodeTestBase {
     $output = $view->preview();
     $output = $renderer->renderRoot($output);
     foreach ($this->nodes as $node) {
-      $this->assertTrue(strpos($output, 'This is <strong>not escaped</strong> and this is ' . $node->toLink('the link')->toString()) !== FALSE, 'Make sure path field rewriting is not escaped.');
+      $this->assertStringContainsString('This is <strong>not escaped</strong> and this is ' . $node->toLink('the link')->toString(), $output, 'Make sure path field rewriting is not escaped.');
     }
   }
 
