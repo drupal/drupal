@@ -879,27 +879,19 @@ www.example.com with a newline in comments -->
     foreach ($tests as $source => $tasks) {
       $result = $filter->process($source, $filter)->getProcessedText();
       foreach ($tasks as $value => $is_expected) {
-        // Not using assertIdentical, since combination with strpos() is hard to grok.
         if ($is_expected) {
-          $success = $this->assertTrue(strpos($result, $value) !== FALSE, new FormattableMarkup('@source: @value found. Filtered result: @result.', [
+          $this->assertStringContainsString($value, $result, new FormattableMarkup('@source: @value found. Filtered result: @result.', [
             '@source' => var_export($source, TRUE),
             '@value' => var_export($value, TRUE),
             '@result' => var_export($result, TRUE),
           ]));
         }
         else {
-          $success = $this->assertTrue(strpos($result, $value) === FALSE, new FormattableMarkup('@source: @value not found. Filtered result: @result.', [
+          $this->assertStringNotContainsString($value, $result, new FormattableMarkup('@source: @value not found. Filtered result: @result.', [
             '@source' => var_export($source, TRUE),
             '@value' => var_export($value, TRUE),
             '@result' => var_export($result, TRUE),
           ]));
-        }
-        if (!$success) {
-          $this->verbose('Source:<pre>' . Html::escape(var_export($source, TRUE)) . '</pre>'
-            . '<hr />' . 'Result:<pre>' . Html::escape(var_export($result, TRUE)) . '</pre>'
-            . '<hr />' . ($is_expected ? 'Expected:' : 'Not expected:')
-            . '<pre>' . Html::escape(var_export($value, TRUE)) . '</pre>'
-          );
         }
       }
     }
@@ -1151,7 +1143,7 @@ body {color:red}
    *   TRUE on pass, FALSE on fail.
    */
   public function assertNormalized($haystack, $needle, $message = '', $group = 'Other') {
-    return $this->assertTrue(strpos(strtolower(Html::decodeEntities($haystack)), $needle) !== FALSE, $message, $group);
+    return $this->assertStringContainsString($needle, strtolower(Html::decodeEntities($haystack)), $message);
   }
 
   /**
@@ -1176,7 +1168,7 @@ body {color:red}
    *   TRUE on pass, FALSE on fail.
    */
   public function assertNoNormalized($haystack, $needle, $message = '', $group = 'Other') {
-    return $this->assertTrue(strpos(strtolower(Html::decodeEntities($haystack)), $needle) === FALSE, $message, $group);
+    return $this->assertStringNotContainsString($needle, strtolower(Html::decodeEntities($haystack)), $message);
   }
 
 }

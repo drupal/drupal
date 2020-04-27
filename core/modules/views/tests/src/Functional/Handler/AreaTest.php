@@ -109,10 +109,10 @@ class AreaTest extends ViewTestBase {
     // Check whether the strings exist in the output and are sanitized.
     $output = $view->preview();
     $output = $this->container->get('renderer')->renderRoot($output);
-    $this->assertTrue(strpos($output, Xss::filterAdmin($header_string)) !== FALSE, 'Views header exists in the output and is sanitized');
-    $this->assertTrue(strpos($output, Xss::filterAdmin($footer_string)) !== FALSE, 'Views footer exists in the output and is sanitized');
-    $this->assertTrue(strpos($output, Xss::filterAdmin($empty_string)) !== FALSE, 'Views empty exists in the output and is sanitized');
-    $this->assertTrue(strpos($output, '<script') === FALSE, 'Script tags were escaped');
+    $this->assertStringContainsString(Xss::filterAdmin($header_string), $output, 'Views header exists in the output and is sanitized');
+    $this->assertStringContainsString(Xss::filterAdmin($footer_string), $output, 'Views footer exists in the output and is sanitized');
+    $this->assertStringContainsString(Xss::filterAdmin($empty_string), $output, 'Views empty exists in the output and is sanitized');
+    $this->assertStringNotContainsString('<script', $output, 'Script tags were escaped');
   }
 
   /**
@@ -129,7 +129,7 @@ class AreaTest extends ViewTestBase {
     $output = $view->preview();
     $output = \Drupal::service('renderer')->renderRoot($output);
     // The area output should not be present since access was denied.
-    $this->assertFalse(strpos($output, 'a custom string') !== FALSE);
+    $this->assertStringNotContainsString('a custom string', $output);
     $view->destroy();
 
     // Test with access granted for the area handler.
@@ -150,7 +150,7 @@ class AreaTest extends ViewTestBase {
 
     $output = $view->preview();
     $output = \Drupal::service('renderer')->renderRoot($output);
-    $this->assertTrue(strpos($output, 'a custom string') !== FALSE);
+    $this->assertStringContainsString('a custom string', $output);
     $this->assertEqual(1, count($handlers));
   }
 
@@ -189,7 +189,7 @@ class AreaTest extends ViewTestBase {
     $output = $view->preview();
     $output = $this->container->get('renderer')->renderRoot($output);
     $expected = \Drupal::token()->replace('[site:name]');
-    $this->assertTrue(strpos($output, $expected) !== FALSE);
+    $this->assertStringContainsString($expected, $output);
   }
 
   /**

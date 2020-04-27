@@ -152,7 +152,7 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
 
     // Ensure that the image style URI matches our expected path.
     $style_uri_path = $style->toUrl()->toString();
-    $this->assertTrue(strpos($style_uri_path, $style_path) !== FALSE, 'The image style URI is correct.');
+    $this->assertStringContainsString($style_path, $style_uri_path, 'The image style URI is correct.');
 
     // Confirm that all effects on the image style have settings that match
     // what was saved.

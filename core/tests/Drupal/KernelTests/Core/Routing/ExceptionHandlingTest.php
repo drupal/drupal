@@ -113,15 +113,15 @@ class ExceptionHandlingTest extends KernelTestBase {
   public function testExceptionResponseGeneratedForOriginalRequest() {
     // Test with 404 path pointing to a route that uses '_controller'.
     $response = $this->doTest404Route('/router_test/test25');
-    $this->assertTrue(strpos($response->getContent(), '/not-found') !== FALSE);
+    $this->assertStringContainsString('/not-found', $response->getContent());
 
     // Test with 404 path pointing to a route that uses '_form'.
     $response = $this->doTest404Route('/router_test/test26');
-    $this->assertTrue(strpos($response->getContent(), '<form class="system-logging-settings"') !== FALSE);
+    $this->assertStringContainsString('<form class="system-logging-settings"', $response->getContent());
 
     // Test with 404 path pointing to a route that uses '_entity_form'.
     $response = $this->doTest404Route('/router_test/test27');
-    $this->assertTrue(strpos($response->getContent(), '<form class="date-format-add-form date-format-form"') !== FALSE);
+    $this->assertStringContainsString('<form class="date-format-add-form date-format-form"', $response->getContent());
   }
 
   /**
@@ -161,8 +161,8 @@ class ExceptionHandlingTest extends KernelTestBase {
 
     // Test both that the backtrace is properly escaped, and that the unescaped
     // string is not output at all.
-    $this->assertTrue(strpos($response->getContent(), Html::escape('<script>alert(\'xss\')</script>')) !== FALSE);
-    $this->assertTrue(strpos($response->getContent(), '<script>alert(\'xss\')</script>') === FALSE);
+    $this->assertStringContainsString(Html::escape('<script>alert(\'xss\')</script>'), $response->getContent());
+    $this->assertStringNotContainsString('<script>alert(\'xss\')</script>', $response->getContent());
   }
 
   /**

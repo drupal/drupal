@@ -484,7 +484,7 @@ class ViewExecutableTest extends ViewsKernelTestBase {
 
     // Test the view storage object is not present in the actual serialized
     // string.
-    $this->assertIdentical(strpos($serialized, '"Drupal\views\Entity\View"'), FALSE, 'The Drupal\views\Entity\View class was not found in the serialized string.');
+    $this->assertStringNotContainsString('"Drupal\views\Entity\View"', $serialized, 'The Drupal\views\Entity\View class was not found in the serialized string.');
 
     /** @var \Drupal\views\ViewExecutable $unserialized */
     $unserialized = unserialize($serialized);

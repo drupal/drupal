@@ -114,7 +114,7 @@ class FieldKernelTest extends ViewsKernelTestBase {
    *   TRUE if the assertion succeeded, FALSE otherwise.
    */
   protected function assertSubString($haystack, $needle, $message = '', $group = 'Other') {
-    return $this->assertTrue(strpos($haystack, $needle) !== FALSE, $message, $group);
+    return $this->assertStringContainsString($needle, $haystack, $message);
   }
 
   /**
@@ -139,7 +139,7 @@ class FieldKernelTest extends ViewsKernelTestBase {
    *   TRUE if the assertion succeeded, FALSE otherwise.
    */
   protected function assertNotSubString($haystack, $needle, $message = '', $group = 'Other') {
-    return $this->assertTrue(strpos($haystack, $needle) === FALSE, $message, $group);
+    return $this->assertStringNotContainsString($needle, $haystack, $message);
   }
 
   /**
@@ -251,7 +251,7 @@ class FieldKernelTest extends ViewsKernelTestBase {
       return $name_field_0->advancedRender($row);
     });
 
-    $this->assertFalse(strpos((string) $output, '\Drupal\views_test_data\Controller\ViewsTestDataController::preRender executed') !== FALSE, 'Ensure that the pre_render function was not executed');
+    $this->assertStringNotContainsString('\Drupal\views_test_data\Controller\ViewsTestDataController::preRender executed', (string) $output, 'Ensure that the pre_render function was not executed');
     $this->assertEqual('%1 !1', (string) $output, "Ensure that old style placeholders aren't replaced");
 
     // This time use new style tokens but ensure that we still don't allow
@@ -264,7 +264,7 @@ class FieldKernelTest extends ViewsKernelTestBase {
       return $name_field_0->advancedRender($row);
     });
 
-    $this->assertFalse(strpos((string) $output, '\Drupal\views_test_data\Controller\ViewsTestDataController::preRender executed') !== FALSE, 'Ensure that the pre_render function was not executed');
+    $this->assertStringNotContainsString('\Drupal\views_test_data\Controller\ViewsTestDataController::preRender executed', (string) $output, 'Ensure that the pre_render function was not executed');
     $this->assertEqual('{{ { &quot;#pre_render&quot;: [&quot;\Drupal\views_test_data\Controller\ViewsTestDataController::preRender&quot;]} }} {{ { &quot;#pre_render&quot;: [&quot;\Drupal\views_test_data\Controller\ViewsTestDataController::preRender&quot;]} }}', (string) $output, 'Ensure that new style placeholders are replaced');
   }
 

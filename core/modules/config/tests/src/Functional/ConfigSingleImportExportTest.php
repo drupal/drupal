@@ -188,7 +188,7 @@ EOD;
       $entity = $storage->load('second');
       $this->assertRaw(t('The configuration was imported successfully.'));
       $this->assertTrue(is_string($entity->label()), 'Entity label is a string');
-      $this->assertTrue(strpos($entity->label(), 'ObjectSerialization') > 0, 'Label contains serialized object');
+      $this->assertStringContainsString('ObjectSerialization', $entity->label(), 'Label contains serialized object');
     }
     else {
       // If the Symfony parser is used there will be an error.
