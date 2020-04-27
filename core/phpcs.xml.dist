@@ -42,6 +42,7 @@
     <exclude name="Drupal.Commenting.ClassComment.Missing"/>
   </rule>
   <rule ref="Drupal.Commenting.DataTypeNamespace"/>
+  <rule ref="Drupal.Commenting.Deprecated"/>
   <rule ref="Drupal.Commenting.DocComment">
     <!-- Sniff for these errors: SpacingAfterTagGroup, WrongEnd, SpacingBetween,
       ContentAfterOpen, SpacingBeforeShort, TagValueIndent, ShortStartSpace,
