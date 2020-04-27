@@ -13,6 +13,8 @@
  *
  * @deprecated in drupal:8.4.0 and is removed from drupal:9.0.0. This is
  *   the deprecation message for deprecated_test_function().
+ *
+ * @see https://www.drupal.org/project/drupal/issues/2870194
  */
 function deprecation_test_function() {
   @trigger_error('This is the deprecation message for deprecation_test_function().', E_USER_DEPRECATED);
