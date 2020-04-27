@@ -680,7 +680,7 @@ abstract class Connection {
    *   Typically, $options['return'] will be set by a default or by a query
    *   builder, and should not be set by a user.
    *
-   * @return \Drupal\Core\Database\StatementInterface|int|null
+   * @return \Drupal\Core\Database\StatementInterface|int|string|null
    *   This method will return one of the following:
    *   - If either $options['return'] === self::RETURN_STATEMENT, or
    *     $options['return'] is not set (due to self::defaultOptions()),
@@ -689,7 +689,7 @@ abstract class Connection {
    *     returns the number of rows affected by the query
    *     (not the number matched).
    *   - If $options['return'] === self::RETURN_INSERT_ID,
-   *     returns the generated insert ID of the last query.
+   *     returns the generated insert ID of the last query as a string.
    *   - If either $options['return'] === self::RETURN_NULL, or
    *     an exception occurs and $options['throw_exception'] evaluates to FALSE,
    *     returns NULL.
