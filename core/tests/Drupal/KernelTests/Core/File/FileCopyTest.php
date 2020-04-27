@@ -27,8 +27,8 @@ class FileCopyTest extends FileTestBase {
     $new_filepath = \Drupal::service('file_system')->copy($uri, $desired_filepath, FileSystemInterface::EXISTS_ERROR);
     $this->assertNotFalse($new_filepath, 'Copy was successful.');
     $this->assertEqual($new_filepath, $desired_filepath, 'Returned expected filepath.');
-    $this->assertTrue(file_exists($uri), 'Original file remains.');
-    $this->assertTrue(file_exists($new_filepath), 'New file exists.');
+    $this->assertFileExists($uri);
+    $this->assertFileExists($new_filepath);
     $this->assertFilePermissions($new_filepath, Settings::get('file_chmod_file', FileSystem::CHMOD_FILE));
 
     // Copying with rename.
@@ -37,8 +37,8 @@ class FileCopyTest extends FileTestBase {
     $newer_filepath = \Drupal::service('file_system')->copy($uri, $desired_filepath, FileSystemInterface::EXISTS_RENAME);
     $this->assertNotFalse($newer_filepath, 'Copy was successful.');
     $this->assertNotEqual($newer_filepath, $desired_filepath, 'Returned expected filepath.');
-    $this->assertTrue(file_exists($uri), 'Original file remains.');
-    $this->assertTrue(file_exists($newer_filepath), 'New file exists.');
+    $this->assertFileExists($uri);
+    $this->assertFileExists($newer_filepath);
     $this->assertFilePermissions($newer_filepath, Settings::get('file_chmod_file', FileSystem::CHMOD_FILE));
 
     // TODO: test copying to a directory (rather than full directory/file path)
@@ -51,7 +51,7 @@ class FileCopyTest extends FileTestBase {
   public function testNonExistent() {
     // Copy non-existent file
     $desired_filepath = $this->randomMachineName();
-    $this->assertFalse(file_exists($desired_filepath), "Randomly named file doesn't exist.");
+    $this->assertFileNotExists($desired_filepath);
     $this->expectException(FileNotExistsException::class);
     $new_filepath = \Drupal::service('file_system')->copy($desired_filepath, $this->randomMachineName());
     $this->assertFalse($new_filepath, 'Copying a missing file fails.');
@@ -70,27 +70,27 @@ class FileCopyTest extends FileTestBase {
     $new_filepath = $file_system->copy($uri, $uri, FileSystemInterface::EXISTS_RENAME);
     $this->assertNotFalse($new_filepath, 'Copying onto itself with renaming works.');
     $this->assertNotEqual($new_filepath, $uri, 'Copied file has a new name.');
-    $this->assertTrue(file_exists($uri), 'Original file exists after copying onto itself.');
-    $this->assertTrue(file_exists($new_filepath), 'Copied file exists after copying onto itself.');
+    $this->assertFileExists($uri);
+    $this->assertFileExists($new_filepath);
     $this->assertFilePermissions($new_filepath, Settings::get('file_chmod_file', FileSystem::CHMOD_FILE));
 
     // Copy the file onto itself without renaming fails.
     $this->expectException(FileExistsException::class);
     $new_filepath = $file_system->copy($uri, $uri, FileSystemInterface::EXISTS_ERROR);
     $this->assertFalse($new_filepath, 'Copying onto itself without renaming fails.');
-    $this->assertTrue(file_exists($uri), 'File exists after copying onto itself.');
+    $this->assertFileExists($uri);
 
     // Copy the file into same directory without renaming fails.
     $new_filepath = $file_system->copy($uri, $file_system->dirname($uri), FileSystemInterface::EXISTS_ERROR);
     $this->assertFalse($new_filepath, 'Copying onto itself fails.');
-    $this->assertTrue(file_exists($uri), 'File exists after copying onto itself.');
+    $this->assertFileExists($uri);
 
     // Copy the file into same directory with renaming works.
     $new_filepath = $file_system->copy($uri, $file_system->dirname($uri), FileSystemInterface::EXISTS_RENAME);
     $this->assertNotFalse($new_filepath, 'Copying into same directory works.');
     $this->assertNotEqual($new_filepath, $uri, 'Copied file has a new name.');
-    $this->assertTrue(file_exists($uri), 'Original file exists after copying onto itself.');
-    $this->assertTrue(file_exists($new_filepath), 'Copied file exists after copying onto itself.');
+    $this->assertFileExists($uri);
+    $this->assertFileExists($new_filepath);
     $this->assertFilePermissions($new_filepath, Settings::get('file_chmod_file', FileSystem::CHMOD_FILE));
   }
 

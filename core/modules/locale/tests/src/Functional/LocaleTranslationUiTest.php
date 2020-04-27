@@ -7,7 +7,6 @@ use Drupal\Core\Database\Database;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Core\Language\LanguageInterface;
-use Drupal\Component\Render\FormattableMarkup;
 
 /**
  * Adds a new locale and translates its name. Checks the validation of
@@ -266,13 +265,13 @@ class LocaleTranslationUiTest extends BrowserTestBase {
 
     $locale_javascripts = \Drupal::state()->get('locale.translation.javascript') ?: [];
     $js_file = 'public://' . $config->get('javascript.directory') . '/' . $langcode . '_' . $locale_javascripts[$langcode] . '.js';
-    $this->assertTrue($result = file_exists($js_file), new FormattableMarkup('JavaScript file created: %file', ['%file' => $result ? $js_file : 'not found']));
+    $this->assertFileExists($js_file);
 
     // Test JavaScript translation rebuilding.
     \Drupal::service('file_system')->delete($js_file);
-    $this->assertTrue($result = !file_exists($js_file), new FormattableMarkup('JavaScript file deleted: %file', ['%file' => $result ? $js_file : 'found']));
+    $this->assertFileNotExists($js_file);
     _locale_rebuild_js($langcode);
-    $this->assertTrue($result = file_exists($js_file), new FormattableMarkup('JavaScript file rebuilt: %file', ['%file' => $result ? $js_file : 'not found']));
+    $this->assertFileExists($js_file);
   }
 
   /**

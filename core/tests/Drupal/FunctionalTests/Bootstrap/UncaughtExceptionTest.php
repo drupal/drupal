@@ -303,9 +303,7 @@ class UncaughtExceptionTest extends BrowserTestBase {
    */
   protected function assertErrorLogged($error_message) {
     $error_log_filename = DRUPAL_ROOT . '/' . $this->siteDirectory . '/error.log';
-    if (!file_exists($error_log_filename)) {
-      $this->fail('No error logged yet.');
-    }
+    $this->assertFileExists($error_log_filename);
 
     $content = file_get_contents($error_log_filename);
     $rows = explode(PHP_EOL, $content);
@@ -334,7 +332,7 @@ class UncaughtExceptionTest extends BrowserTestBase {
   protected function assertNoErrorsLogged() {
     // Since PHP only creates the error.log file when an actual error is
     // triggered, it is sufficient to check whether the file exists.
-    $this->assertFalse(file_exists(DRUPAL_ROOT . '/' . $this->siteDirectory . '/error.log'), 'PHP error.log is empty.');
+    $this->assertFileNotExists(DRUPAL_ROOT . '/' . $this->siteDirectory . '/error.log');
   }
 
   /**
