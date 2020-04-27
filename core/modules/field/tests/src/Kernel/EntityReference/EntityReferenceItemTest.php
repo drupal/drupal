@@ -128,8 +128,8 @@ class EntityReferenceItemTest extends FieldKernelTestBase {
     $entity->save();
 
     $entity = EntityTest::load($entity->id());
-    $this->assertInstanceOf(FieldItemListInterface::class, $entity->field_test_taxonomy_term, 'Field implements interface.');
-    $this->assertInstanceOf(FieldItemInterface::class, $entity->field_test_taxonomy_term[0], 'Field item implements interface.');
+    $this->assertInstanceOf(FieldItemListInterface::class, $entity->field_test_taxonomy_term);
+    $this->assertInstanceOf(FieldItemInterface::class, $entity->field_test_taxonomy_term[0]);
     $this->assertEqual($entity->field_test_taxonomy_term->target_id, $tid);
     $this->assertEqual($entity->field_test_taxonomy_term->entity->getName(), $this->term->getName());
     $this->assertEqual($entity->field_test_taxonomy_term->entity->id(), $tid);
@@ -264,8 +264,8 @@ class EntityReferenceItemTest extends FieldKernelTestBase {
     $entity->save();
 
     $entity = EntityTest::load($entity->id());
-    $this->assertInstanceOf(FieldItemListInterface::class, $entity->field_test_taxonomy_vocabulary, 'Field implements interface.');
-    $this->assertInstanceOf(FieldItemInterface::class, $entity->field_test_taxonomy_vocabulary[0], 'Field item implements interface.');
+    $this->assertInstanceOf(FieldItemListInterface::class, $entity->field_test_taxonomy_vocabulary);
+    $this->assertInstanceOf(FieldItemInterface::class, $entity->field_test_taxonomy_vocabulary[0]);
     $this->assertEqual($entity->field_test_taxonomy_vocabulary->target_id, $referenced_entity_id);
     $this->assertEqual($entity->field_test_taxonomy_vocabulary->entity->label(), $this->vocabulary->label());
     $this->assertEqual($entity->field_test_taxonomy_vocabulary->entity->id(), $referenced_entity_id);

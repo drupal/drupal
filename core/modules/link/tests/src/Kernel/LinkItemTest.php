@@ -92,8 +92,8 @@ class LinkItemTest extends FieldKernelTestBase {
     // Verify that the field value is changed.
     $id = $entity->id();
     $entity = EntityTest::load($id);
-    $this->assertInstanceOf(FieldItemListInterface::class, $entity->field_test, 'Field implements interface.');
-    $this->assertInstanceOf(FieldItemInterface::class, $entity->field_test[0], 'Field item implements interface.');
+    $this->assertInstanceOf(FieldItemListInterface::class, $entity->field_test);
+    $this->assertInstanceOf(FieldItemInterface::class, $entity->field_test[0]);
     $this->assertEqual($entity->field_test->uri, $parsed_url['path']);
     $this->assertEqual($entity->field_test[0]->uri, $parsed_url['path']);
     $this->assertEqual($entity->field_test->title, $title);

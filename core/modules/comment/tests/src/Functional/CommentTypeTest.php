@@ -59,7 +59,7 @@ class CommentTypeTest extends CommentTestBase {
     $type = $this->createCommentType('other');
 
     $comment_type = CommentType::load('other');
-    $this->assertInstanceOf(CommentType::class, $comment_type, 'The new comment type has been created.');
+    $this->assertInstanceOf(CommentType::class, $comment_type);
 
     // Log in a test user.
     $this->drupalLogin($this->adminUser);
@@ -76,7 +76,7 @@ class CommentTypeTest extends CommentTestBase {
     ];
     $this->drupalPostForm('admin/structure/comment/types/add', $edit, t('Save'));
     $comment_type = CommentType::load('foo');
-    $this->assertInstanceOf(CommentType::class, $comment_type, 'The new comment type has been created.');
+    $this->assertInstanceOf(CommentType::class, $comment_type);
 
     // Check that the comment type was created in site default language.
     $default_langcode = \Drupal::languageManager()->getDefaultLanguage()->getId();

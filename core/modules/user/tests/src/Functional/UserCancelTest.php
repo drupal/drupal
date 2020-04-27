@@ -472,7 +472,7 @@ class UserCancelTest extends BrowserTestBase {
     $this->assertNull($node_storage->load($node->id()), 'Node of the user has been deleted.');
     $this->assertNull(node_revision_load($revision), 'Node revision of the user has been deleted.');
     $node_storage->resetCache([$revision_node->id()]);
-    $this->assertInstanceOf(Node::class, $node_storage->load($revision_node->id()), "Current revision of the user's node was not deleted.");
+    $this->assertInstanceOf(Node::class, $node_storage->load($revision_node->id()));
     \Drupal::entityTypeManager()->getStorage('comment')->resetCache([$comment->id()]);
     $this->assertNull(Comment::load($comment->id()), 'Comment of the user has been deleted.');
 

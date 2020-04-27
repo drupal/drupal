@@ -21,7 +21,7 @@ class FetchTest extends DatabaseTestBase {
   public function testQueryFetchDefault() {
     $records = [];
     $result = $this->connection->query('SELECT name FROM {test} WHERE age = :age', [':age' => 25]);
-    $this->assertInstanceOf(StatementInterface::class, $result, 'Result set is a Drupal statement object.');
+    $this->assertInstanceOf(StatementInterface::class, $result);
     foreach ($result as $record) {
       $records[] = $record;
       $this->assertTrue(is_object($record), 'Record is an object.');
@@ -72,7 +72,7 @@ class FetchTest extends DatabaseTestBase {
     $result = $this->connection->query('SELECT name FROM {test} WHERE age = :age', [':age' => 25], ['fetch' => FakeRecord::class]);
     foreach ($result as $record) {
       $records[] = $record;
-      if ($this->assertInstanceOf(FakeRecord::class, $record, 'Record is an object of class FakeRecord.')) {
+      if ($this->assertInstanceOf(FakeRecord::class, $record)) {
         $this->assertIdentical($record->name, 'John', '25 year old is John.');
       }
     }
@@ -108,7 +108,7 @@ class FetchTest extends DatabaseTestBase {
     $result = $this->connection->query('SELECT classname, name, job FROM {test_classtype} WHERE age = :age', [':age' => 26], ['fetch' => \PDO::FETCH_CLASS | \PDO::FETCH_CLASSTYPE]);
     foreach ($result as $record) {
       $records[] = $record;
-      if ($this->assertInstanceOf(FakeRecord::class, $record, 'Record is an object of class FakeRecord.')) {
+      if ($this->assertInstanceOf(FakeRecord::class, $record)) {
         $this->assertSame('Kay', $record->name, 'Kay is found.');
         $this->assertSame('Web Developer', $record->job, 'A 26 year old Web Developer.');
       }

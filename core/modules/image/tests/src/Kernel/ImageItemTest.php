@@ -89,8 +89,8 @@ class ImageItemTest extends FieldKernelTestBase {
     $entity->save();
 
     $entity = EntityTest::load($entity->id());
-    $this->assertInstanceOf(FieldItemListInterface::class, $entity->image_test, 'Field implements interface.');
-    $this->assertInstanceOf(FieldItemInterface::class, $entity->image_test[0], 'Field item implements interface.');
+    $this->assertInstanceOf(FieldItemListInterface::class, $entity->image_test);
+    $this->assertInstanceOf(FieldItemInterface::class, $entity->image_test[0]);
     $this->assertEqual($entity->image_test->target_id, $this->image->id());
     $this->assertEqual($entity->image_test->alt, $alt);
     $this->assertEqual($entity->image_test->title, $title);
