@@ -61,8 +61,8 @@ class ShapeItemTest extends FieldKernelTestBase {
     // Verify entity has been created properly.
     $id = $entity->id();
     $entity = EntityTest::load($id);
-    $this->assertTrue($entity->{$this->fieldName} instanceof FieldItemListInterface, 'Field implements interface.');
-    $this->assertTrue($entity->{$this->fieldName}[0] instanceof FieldItemInterface, 'Field item implements interface.');
+    $this->assertInstanceOf(FieldItemListInterface::class, $entity->{$this->fieldName});
+    $this->assertInstanceOf(FieldItemInterface::class, $entity->{$this->fieldName}[0]);
     $this->assertEqual($entity->{$this->fieldName}->shape, $shape);
     $this->assertEqual($entity->{$this->fieldName}->color, $color);
     $this->assertEqual($entity->{$this->fieldName}[0]->shape, $shape);

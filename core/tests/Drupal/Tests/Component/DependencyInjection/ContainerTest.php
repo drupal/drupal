@@ -154,7 +154,7 @@ class ContainerTest extends TestCase {
     // Retrieve services of the container.
     $other_service_class = $this->containerDefinition['services']['other.service']['class'];
     $other_service = $this->container->get('other.service');
-    $this->assertInstanceOf($other_service_class, $other_service, 'other.service has the right class.');
+    $this->assertInstanceOf($other_service_class, $other_service);
 
     $some_parameter = $this->containerDefinition['parameters']['some_config'];
     $some_other_parameter = $this->containerDefinition['parameters']['some_other_config'];
@@ -194,7 +194,7 @@ class ContainerTest extends TestCase {
 
     $other_service_class = $this->containerDefinition['parameters']['some_parameter_class'];
     $other_service = $container->get('other.service_class_from_parameter');
-    $this->assertInstanceOf($other_service_class, $other_service, 'other.service_class_from_parameter has the right class.');
+    $this->assertInstanceOf($other_service_class, $other_service);
   }
 
   /**
@@ -273,7 +273,7 @@ class ContainerTest extends TestCase {
     // Retrieve services of the container.
     $other_service_class = $this->containerDefinition['services']['other.service']['class'];
     $other_service = $container->get('other.service');
-    $this->assertInstanceOf($other_service_class, $other_service, 'other.service has the right class.');
+    $this->assertInstanceOf($other_service_class, $other_service);
 
     $service = $container->get('service.provider');
     $this->assertEquals($other_service, $service->getSomeOtherService(), '@other.service was injected via constructor.');

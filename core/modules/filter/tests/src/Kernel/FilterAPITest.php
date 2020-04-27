@@ -335,7 +335,7 @@ class FilterAPITest extends EntityKernelTestBase {
     $definition = DataDefinition::create('filter_format');
     $data = \Drupal::typedDataManager()->create($definition);
 
-    $this->assertTrue($data instanceof OptionsProviderInterface, 'Typed data object implements \Drupal\Core\TypedData\OptionsProviderInterface');
+    $this->assertInstanceOf(OptionsProviderInterface::class, $data);
 
     $filtered_html_user = $this->createUser(['uid' => 2], [
       FilterFormat::load('filtered_html')->getPermissionName(),

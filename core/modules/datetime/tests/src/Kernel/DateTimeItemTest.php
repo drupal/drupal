@@ -78,8 +78,8 @@ class DateTimeItemTest extends FieldKernelTestBase {
     // Verify entity has been created properly.
     $id = $entity->id();
     $entity = EntityTest::load($id);
-    $this->assertTrue($entity->field_datetime instanceof FieldItemListInterface, 'Field implements interface.');
-    $this->assertTrue($entity->field_datetime[0] instanceof FieldItemInterface, 'Field item implements interface.');
+    $this->assertInstanceOf(FieldItemListInterface::class, $entity->field_datetime);
+    $this->assertInstanceOf(FieldItemInterface::class, $entity->field_datetime[0]);
     $this->assertEqual($entity->field_datetime->value, $value);
     $this->assertEqual($entity->field_datetime[0]->value, $value);
     $this->assertEqual(DateTimeItemInterface::STORAGE_TIMEZONE, $entity->field_datetime[0]->getProperties()['value']->getDateTime()->getTimeZone()->getName());
@@ -122,8 +122,8 @@ class DateTimeItemTest extends FieldKernelTestBase {
     // Verify entity has been created properly.
     $id = $entity->id();
     $entity = EntityTest::load($id);
-    $this->assertTrue($entity->field_datetime instanceof FieldItemListInterface, 'Field implements interface.');
-    $this->assertTrue($entity->field_datetime[0] instanceof FieldItemInterface, 'Field item implements interface.');
+    $this->assertInstanceOf(FieldItemListInterface::class, $entity->field_datetime);
+    $this->assertInstanceOf(FieldItemInterface::class, $entity->field_datetime[0]);
     $this->assertEqual($entity->field_datetime->value, $value);
     $this->assertEqual($entity->field_datetime[0]->value, $value);
     $this->assertEquals(DateTimeItemInterface::STORAGE_TIMEZONE, $entity->field_datetime->date->getTimeZone()->getName());

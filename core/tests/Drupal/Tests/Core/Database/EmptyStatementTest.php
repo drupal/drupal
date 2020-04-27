@@ -19,7 +19,7 @@ class EmptyStatementTest extends UnitTestCase {
   public function testEmpty() {
     $result = new StatementEmpty();
 
-    $this->assertTrue($result instanceof StatementInterface, 'Class implements expected interface');
+    $this->assertInstanceOf(StatementInterface::class, $result);
     $this->assertNull($result->fetchObject(), 'Null result returned.');
   }
 

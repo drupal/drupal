@@ -94,13 +94,13 @@ class DisplayKernelTest extends ViewsKernelTestBase {
     $view->initDisplay();
     $display_handler = $view->display_handler;
 
-    $this->assertTrue($display_handler->getPlugin('access') instanceof AccessPluginBase, 'An access plugin instance was returned.');
-    $this->assertTrue($display_handler->getPlugin('cache') instanceof CachePluginBase, 'A cache plugin instance was returned.');
-    $this->assertTrue($display_handler->getPlugin('exposed_form') instanceof ExposedFormPluginInterface, 'An exposed_form plugin instance was returned.');
-    $this->assertTrue($display_handler->getPlugin('pager') instanceof PagerPluginBase, 'A pager plugin instance was returned.');
-    $this->assertTrue($display_handler->getPlugin('query') instanceof QueryPluginBase, 'A query plugin instance was returned.');
-    $this->assertTrue($display_handler->getPlugin('row') instanceof RowPluginBase, 'A row plugin instance was returned.');
-    $this->assertTrue($display_handler->getPlugin('style') instanceof StylePluginBase, 'A style plugin instance was returned.');
+    $this->assertInstanceOf(AccessPluginBase::class, $display_handler->getPlugin('access'));
+    $this->assertInstanceOf(CachePluginBase::class, $display_handler->getPlugin('cache'));
+    $this->assertInstanceOf(ExposedFormPluginInterface::class, $display_handler->getPlugin('exposed_form'));
+    $this->assertInstanceOf(PagerPluginBase::class, $display_handler->getPlugin('pager'));
+    $this->assertInstanceOf(QueryPluginBase::class, $display_handler->getPlugin('query'));
+    $this->assertInstanceOf(RowPluginBase::class, $display_handler->getPlugin('row'));
+    $this->assertInstanceOf(StylePluginBase::class, $display_handler->getPlugin('style'));
     // Test that nothing is returned when an invalid type is requested.
     $this->assertNull($display_handler->getPlugin('invalid'), 'NULL was returned for an invalid instance');
     // Test that nothing was returned for an instance with no 'type' in options.

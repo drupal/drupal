@@ -193,13 +193,13 @@ class FieldUpdateTest extends UpdatePathTestBase {
 
     $this->assertCount(1, $deleted_fields);
     $this->assertArrayHasKey($field_uuid, $deleted_fields);
-    $this->assertTrue($deleted_fields[$field_uuid] instanceof FieldDefinitionInterface);
+    $this->assertInstanceOf(FieldDefinitionInterface::class, $deleted_fields[$field_uuid]);
     $this->assertEquals($field_name, $deleted_fields[$field_uuid]->getName());
 
     $deleted_field_storages = $deleted_fields_repository->getFieldStorageDefinitions();
     $this->assertCount(1, $deleted_field_storages);
     $this->assertArrayHasKey($field_storage_uuid, $deleted_field_storages);
-    $this->assertTrue($deleted_field_storages[$field_storage_uuid] instanceof FieldStorageDefinitionInterface);
+    $this->assertInstanceOf(FieldStorageDefinitionInterface::class, $deleted_field_storages[$field_storage_uuid]);
     $this->assertEquals($field_name, $deleted_field_storages[$field_storage_uuid]->getName());
 
     // Check that the installed storage schema still exists.

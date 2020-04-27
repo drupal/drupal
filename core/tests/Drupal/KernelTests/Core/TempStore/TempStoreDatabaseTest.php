@@ -107,7 +107,7 @@ class TempStoreDatabaseTest extends KernelTestBase {
     $this->assertIdenticalObject($this->objects[2], $stores[1]->get($key));
 
     // This user should be allowed to get, update, delete.
-    $this->assertTrue($stores[0]->getIfOwner($key) instanceof \stdClass);
+    $this->assertInstanceOf(\stdClass::class, $stores[0]->getIfOwner($key));
     $this->assertTrue($stores[0]->setIfOwner($key, $this->objects[1]));
     $this->assertTrue($stores[0]->deleteIfOwner($key));
 

@@ -29,7 +29,7 @@ class MigrateUserPictureFieldTest extends MigrateDrupal7TestBase {
   public function testUserPictureField() {
     /** @var \Drupal\field\FieldStorageConfigInterface $field_storage */
     $field_storage = FieldStorageConfig::load('user.user_picture');
-    $this->assertTrue($field_storage instanceof FieldStorageConfigInterface);
+    $this->assertInstanceOf(FieldStorageConfigInterface::class, $field_storage);
     $this->assertIdentical('user.user_picture', $field_storage->id());
     $this->assertIdentical('image', $field_storage->getType());
     $this->assertIdentical('user', $field_storage->getTargetEntityTypeId());

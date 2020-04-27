@@ -580,7 +580,7 @@ class DefaultTableMappingTest extends UnitTestCase {
    */
   public function testTemporaryTableMapping() {
     $table_mapping = new TemporaryTableMapping($this->entityType, [], '');
-    $this->assertTrue($table_mapping instanceof DefaultTableMapping);
+    $this->assertInstanceOf(DefaultTableMapping::class, $table_mapping);
   }
 
   /**

@@ -48,7 +48,7 @@ class MatcherDumperTest extends KernelTestBase {
     $dumper = new MatcherDumper($connection, $this->state);
 
     $class_name = 'Drupal\Core\Routing\MatcherDumper';
-    $this->assertTrue($dumper instanceof $class_name, 'Dumper created successfully');
+    $this->assertInstanceOf($class_name, $dumper);
   }
 
   /**
@@ -134,7 +134,7 @@ class MatcherDumperTest extends KernelTestBase {
     $this->assertEqual($record->path, '/test/{my}/path', 'Dumped route has correct pattern.');
     $this->assertEqual($record->pattern_outline, '/test/%/path', 'Dumped route has correct pattern outline.');
     $this->assertEqual($record->fit, 5 /* 101 in binary */, 'Dumped route has correct fit.');
-    $this->assertTrue($loaded_route instanceof Route, 'Route object retrieved successfully.');
+    $this->assertInstanceOf(Route::class, $loaded_route);
   }
 
   /**

@@ -194,7 +194,7 @@ class ViewAjaxControllerTest extends UnitTestCase {
       ->with('/test-page?type=article');
 
     $response = $this->viewAjaxController->ajaxView($request);
-    $this->assertTrue($response instanceof ViewAjaxResponse);
+    $this->assertInstanceOf(ViewAjaxResponse::class, $response);
 
     $this->assertSame($response->getView(), $executable);
 
@@ -234,7 +234,7 @@ class ViewAjaxControllerTest extends UnitTestCase {
       ->with('page_1', ['arg1', 'arg2']);
 
     $response = $this->viewAjaxController->ajaxView($request);
-    $this->assertTrue($response instanceof ViewAjaxResponse);
+    $this->assertInstanceOf(ViewAjaxResponse::class, $response);
 
     $this->assertViewResultCommand($response);
   }
@@ -255,7 +255,7 @@ class ViewAjaxControllerTest extends UnitTestCase {
       ->with('page_1', $this->identicalTo(['arg1', NULL]));
 
     $response = $this->viewAjaxController->ajaxView($request);
-    $this->assertTrue($response instanceof ViewAjaxResponse);
+    $this->assertInstanceOf(ViewAjaxResponse::class, $response);
 
     $this->assertViewResultCommand($response);
   }
@@ -275,7 +275,7 @@ class ViewAjaxControllerTest extends UnitTestCase {
       ->with('page_1', ['arg1 & arg2', 'arg3']);
 
     $response = $this->viewAjaxController->ajaxView($request);
-    $this->assertTrue($response instanceof ViewAjaxResponse);
+    $this->assertInstanceOf(ViewAjaxResponse::class, $response);
 
     $this->assertViewResultCommand($response);
   }
@@ -310,7 +310,7 @@ class ViewAjaxControllerTest extends UnitTestCase {
     $executable->displayHandlers = $display_collection;
 
     $response = $this->viewAjaxController->ajaxView($request);
-    $this->assertTrue($response instanceof ViewAjaxResponse);
+    $this->assertInstanceOf(ViewAjaxResponse::class, $response);
 
     $commands = $this->getCommands($response);
     $this->assertEquals('viewsScrollTop', $commands[0]['command']);

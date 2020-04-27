@@ -61,7 +61,7 @@ class SafeMarkupTest extends TestCase {
    */
   public function testCheckPlain($text, $expected, $message) {
     $result = SafeMarkup::checkPlain($text);
-    $this->assertTrue($result instanceof HtmlEscapedText);
+    $this->assertInstanceOf(HtmlEscapedText::class, $result);
     $this->assertEquals($expected, $result, $message);
   }
 
@@ -129,7 +129,12 @@ class SafeMarkupTest extends TestCase {
 
     $result = SafeMarkup::format($string, $args);
     $this->assertEquals($expected, (string) $result, $message);
-    $this->assertEquals($expected_is_safe, $result instanceof MarkupInterface, 'SafeMarkup::format correctly sets the result as safe or not safe.');
+    if ($expected_is_safe) {
+      $this->assertInstanceOf(MarkupInterface::class, $result);
+    }
+    else {
+      $this->assertNotInstanceOf(MarkupInterface::class, $result);
+    }
   }
 
   /**

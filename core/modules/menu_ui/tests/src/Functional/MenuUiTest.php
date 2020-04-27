@@ -621,7 +621,7 @@ class MenuUiTest extends BrowserTestBase {
     $menu_links = \Drupal::entityTypeManager()->getStorage('menu_link_content')->loadByProperties(['title' => $title]);
 
     $menu_link = reset($menu_links);
-    $this->assertInstanceOf(MenuLinkContent::class, $menu_link, 'Menu link was found in database.');
+    $this->assertInstanceOf(MenuLinkContent::class, $menu_link);
     $this->assertMenuLink(['menu_name' => $menu_name, 'children' => [], 'parent' => $parent], $menu_link->getPluginId());
 
     return $menu_link;

@@ -54,7 +54,7 @@ class ActionTest extends KernelTestBase {
 
     // Create an instance of the 'save entity' action.
     $action = $this->actionManager->createInstance('action_test_save_entity');
-    $this->assertTrue($action instanceof ActionInterface, 'The action implements the correct interface.');
+    $this->assertInstanceOf(ActionInterface::class, $action);
 
     // Create a new unsaved user.
     $name = $this->randomMachineName();

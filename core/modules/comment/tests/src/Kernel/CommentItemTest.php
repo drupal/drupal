@@ -48,8 +48,8 @@ class CommentItemTest extends FieldKernelTestBase {
     $storage = $this->container->get('entity_type.manager')->getStorage('entity_test');
     $storage->resetCache([$id]);
     $entity = $storage->load($id);
-    $this->assertTrue($entity->comment instanceof FieldItemListInterface, 'Field implements interface.');
-    $this->assertTrue($entity->comment[0] instanceof CommentItemInterface, 'Field item implements interface.');
+    $this->assertInstanceOf(FieldItemListInterface::class, $entity->comment);
+    $this->assertInstanceOf(CommentItemInterface::class, $entity->comment[0]);
 
     // Test sample item generation.
     /** @var \Drupal\entity_test\Entity\EntityTest $entity */

@@ -54,7 +54,7 @@ class JoinTest extends RelationshipJoinTestBase {
       'field' => 'uid',
     ];
     $join = $this->manager->createInstance('join_test', $configuration);
-    $this->assertTrue($join instanceof JoinTestPlugin, 'The correct join class got loaded.');
+    $this->assertInstanceOf(JoinTestPlugin::class, $join);
 
     $rand_int = rand(0, 1000);
     $join->setJoinValue($rand_int);
@@ -88,7 +88,7 @@ class JoinTest extends RelationshipJoinTestBase {
       'adjusted' => TRUE,
     ];
     $join = $this->manager->createInstance('standard', $configuration);
-    $this->assertTrue($join instanceof JoinPluginBase, 'The correct join class got loaded.');
+    $this->assertInstanceOf(JoinPluginBase::class, $join);
     $this->assertNull($join->extra, 'The field extra was not overridden.');
     $this->assertTrue($join->adjusted, 'The field adjusted was set correctly.');
 

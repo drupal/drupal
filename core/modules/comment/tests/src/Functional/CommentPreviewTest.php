@@ -54,7 +54,7 @@ class CommentPreviewTest extends CommentTestBase {
 
     \Drupal::state()->set('user_hooks_test_user_format_name_alter_safe', TRUE);
     $this->drupalPostForm('node/' . $this->node->id(), $edit, t('Preview'));
-    $this->assertTrue($this->webUser->getDisplayName() instanceof MarkupInterface, 'Username is marked safe');
+    $this->assertInstanceOf(MarkupInterface::class, $this->webUser->getDisplayName());
     $this->assertNoEscaped('<em>' . $this->webUser->id() . '</em>');
     $this->assertRaw('<em>' . $this->webUser->id() . '</em>');
 

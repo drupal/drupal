@@ -32,7 +32,7 @@ class MigrateLanguageTest extends MigrateDrupal6TestBase {
   protected function assertLanguage($id, $label, $direction = ConfigurableLanguageInterface::DIRECTION_LTR, $weight = 0) {
     /** @var \Drupal\language\ConfigurableLanguageInterface $language */
     $language = ConfigurableLanguage::load($id);
-    $this->assertTrue($language instanceof ConfigurableLanguageInterface);
+    $this->assertInstanceOf(ConfigurableLanguageInterface::class, $language);
     $this->assertIdentical($label, $language->label());
     $this->assertIdentical($direction, $language->getDirection());
     $this->assertIdentical(0, $language->getWeight());

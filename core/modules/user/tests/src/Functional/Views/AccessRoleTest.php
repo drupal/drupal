@@ -52,7 +52,7 @@ class AccessRoleTest extends AccessTestBase {
     $executable->setDisplay('page_1');
 
     $access_plugin = $executable->display_handler->getPlugin('access');
-    $this->assertTrue($access_plugin instanceof Role, 'Make sure the right class got instantiated.');
+    $this->assertInstanceOf(Role::class, $access_plugin);
 
     // Test the access() method on the access plugin.
     $this->assertSame(FALSE, $executable->display_handler->access($this->webUser));

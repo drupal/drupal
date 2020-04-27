@@ -58,9 +58,9 @@ class MenuTreeSerializationTitleTest extends UpdatePathTestBase {
       // Verify that all the links from system module have a been updated with
       // a TranslatableMarkup as title and description due to the rebuild.
       if (strpos($link->id, 'system.') === 0) {
-        $this->assertTrue($title instanceof TranslatableMarkup, get_class($title));
+        $this->assertInstanceOf(TranslatableMarkup::class, $title);
         if ($description) {
-          $this->assertTrue($description instanceof TranslatableMarkup, get_class($description));
+          $this->assertInstanceOf(TranslatableMarkup::class, $description);
         }
       }
     }

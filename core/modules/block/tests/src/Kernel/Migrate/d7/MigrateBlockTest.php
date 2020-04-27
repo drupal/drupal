@@ -84,7 +84,7 @@ class MigrateBlockTest extends MigrateDrupal7TestBase {
    */
   public function assertEntity($id, $plugin_id, array $roles, $pages, $region, $theme, $weight, $label, $label_display, $status = TRUE) {
     $block = Block::load($id);
-    $this->assertTrue($block instanceof Block);
+    $this->assertInstanceOf(Block::class, $block);
     /** @var \Drupal\block\BlockInterface $block */
     $this->assertSame($plugin_id, $block->getPluginId());
 

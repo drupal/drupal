@@ -42,7 +42,7 @@ class BlockStorageUnitTest extends KernelTestBase {
    * Tests CRUD operations.
    */
   public function testBlockCRUD() {
-    $this->assertTrue($this->controller instanceof ConfigEntityStorage, 'The block storage is loaded.');
+    $this->assertInstanceOf(ConfigEntityStorage::class, $this->controller);
 
     // Run each test method in the same installation.
     $this->createTests();
@@ -73,7 +73,7 @@ class BlockStorageUnitTest extends KernelTestBase {
     ]);
     $entity->save();
 
-    $this->assertTrue($entity instanceof Block, 'The newly created entity is a Block.');
+    $this->assertInstanceOf(Block::class, $entity);
 
     // Verify all of the block properties.
     $actual_properties = $this->config('block.block.test_block')->get();
@@ -102,7 +102,7 @@ class BlockStorageUnitTest extends KernelTestBase {
 
     $this->assertIdentical($actual_properties, $expected_properties);
 
-    $this->assertTrue($entity->getPlugin() instanceof TestHtmlBlock, 'The entity has an instance of the correct block plugin.');
+    $this->assertInstanceOf(TestHtmlBlock::class, $entity->getPlugin());
   }
 
   /**
@@ -111,7 +111,7 @@ class BlockStorageUnitTest extends KernelTestBase {
   protected function loadTests() {
     $entity = $this->controller->load('test_block');
 
-    $this->assertTrue($entity instanceof Block, 'The loaded entity is a Block.');
+    $this->assertInstanceOf(Block::class, $entity);
 
     // Verify several properties of the block.
     $this->assertSame('content', $entity->getRegion());

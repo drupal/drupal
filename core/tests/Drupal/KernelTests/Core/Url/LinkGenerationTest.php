@@ -27,7 +27,7 @@ class LinkGenerationTest extends KernelTestBase {
       return \Drupal::service('link_generator')->generate(['#markup' => '<em>link with markup</em>'], $url);
     });
     $this->setRawContent($link);
-    $this->assertTrue($link instanceof MarkupInterface, 'The output of link generation is marked safe as it is a link.');
+    $this->assertInstanceOf(MarkupInterface::class, $link);
     // Ensure the content of the link is not escaped.
     $this->assertRaw('<em>link with markup</em>');
 
@@ -37,7 +37,7 @@ class LinkGenerationTest extends KernelTestBase {
       return \Drupal::service('link_generator')->generate(['#markup' => '<em>link with markup</em>'], $url);
     });
     $this->setRawContent($link);
-    $this->assertTrue($link instanceof MarkupInterface, 'The output of link generation is marked safe as it is a link.');
+    $this->assertInstanceOf(MarkupInterface::class, $link);
     // Ensure the content of the link is escaped.
     $this->assertEscaped('<em>link with markup</em> <strong>Test!</strong>');
 
@@ -47,7 +47,7 @@ class LinkGenerationTest extends KernelTestBase {
       return \Drupal::service('link_generator')->generate(['#markup' => '<em>link with markup</em>'], $url);
     });
     $this->setRawContent($link);
-    $this->assertTrue($link instanceof MarkupInterface, 'The output of link generation is marked safe as it is a link.');
+    $this->assertInstanceOf(MarkupInterface::class, $link);
     // Ensure the content of the link is escaped.
     $this->assertRaw('<em>link with markup</em> <strong>Test!</strong>');
 
@@ -56,7 +56,7 @@ class LinkGenerationTest extends KernelTestBase {
       return \Drupal::service('link_generator')->generate('<em>link with markup</em>', $url);
     });
     $this->setRawContent($link);
-    $this->assertTrue($link instanceof MarkupInterface, 'The output of link generation is marked safe as it is a link.');
+    $this->assertInstanceOf(MarkupInterface::class, $link);
     // Ensure the content of the link is escaped.
     $this->assertEscaped('<em>link with markup</em>');
     $this->assertRaw('<strong>Test!</strong>');

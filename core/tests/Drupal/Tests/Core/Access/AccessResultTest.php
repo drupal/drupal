@@ -538,7 +538,7 @@ class AccessResultTest extends UnitTestCase {
     // andIf(); 1st has defaults, 2nd has custom tags, contexts and max-age.
     $access = AccessResult::allowed();
     $other = AccessResult::allowed()->setCacheMaxAge(1500)->cachePerPermissions()->addCacheTags(['node:20011988']);
-    $this->assertTrue($access->inheritCacheability($other) instanceof AccessResult);
+    $this->assertInstanceOf(AccessResult::class, $access->inheritCacheability($other));
     $this->assertSame(['user.permissions'], $access->getCacheContexts());
     $this->assertSame(['node:20011988'], $access->getCacheTags());
     $this->assertSame(1500, $access->getCacheMaxAge());
@@ -546,7 +546,7 @@ class AccessResultTest extends UnitTestCase {
     // andIf(); 1st has custom tags, max-age, 2nd has custom contexts and max-age.
     $access = AccessResult::allowed()->cachePerUser()->setCacheMaxAge(43200);
     $other = AccessResult::forbidden()->addCacheTags(['node:14031991'])->setCacheMaxAge(86400);
-    $this->assertTrue($access->inheritCacheability($other) instanceof AccessResult);
+    $this->assertInstanceOf(AccessResult::class, $access->inheritCacheability($other));
     $this->assertSame(['user'], $access->getCacheContexts());
     $this->assertSame(['node:14031991'], $access->getCacheTags());
     $this->assertSame(43200, $access->getCacheMaxAge());
@@ -865,13 +865,13 @@ class AccessResultTest extends UnitTestCase {
       throw new \LogicException('Invalid operator specified');
     }
     if ($implements_cacheable_dependency_interface) {
-      $this->assertTrue($result instanceof CacheableDependencyInterface, 'Result is an instance of CacheableDependencyInterface.');
+      $this->assertInstanceOf(CacheableDependencyInterface::class, $result);
       if ($result instanceof CacheableDependencyInterface) {
         $this->assertSame($is_cacheable, $result->getCacheMaxAge() !== 0, 'getCacheMaxAge() matches expectations.');
       }
     }
     else {
-      $this->assertFalse($result instanceof CacheableDependencyInterface, 'Result is not an instance of CacheableDependencyInterface.');
+      $this->assertNotInstanceOf(CacheableDependencyInterface::class, $result);
     }
   }
 

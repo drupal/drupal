@@ -3,7 +3,6 @@
 namespace Drupal\Tests\serialization\Kernel;
 
 use Drupal\Component\Serialization\Json;
-use Drupal\Component\Render\FormattableMarkup;
 use Drupal\entity_test\Entity\EntitySerializedField;
 use Drupal\entity_test\Entity\EntityTestMulRev;
 use Drupal\filter\Entity\FilterFormat;
@@ -254,7 +253,7 @@ class EntitySerializationTest extends NormalizerTestBase {
 
     foreach (['json', 'xml'] as $type) {
       $denormalized = $this->serializer->denormalize($normalized, $this->entityClass, $type, ['entity_type' => 'entity_test_mulrev']);
-      $this->assertTrue($denormalized instanceof $this->entityClass, new FormattableMarkup('Denormalized entity is an instance of @class', ['@class' => $this->entityClass]));
+      $this->assertInstanceOf($this->entityClass, $denormalized);
       $this->assertIdentical($denormalized->getEntityTypeId(), $this->entity->getEntityTypeId(), 'Expected entity type found.');
       $this->assertIdentical($denormalized->bundle(), $this->entity->bundle(), 'Expected entity bundle found.');
       $this->assertIdentical($denormalized->uuid(), $this->entity->uuid(), 'Expected entity UUID found.');

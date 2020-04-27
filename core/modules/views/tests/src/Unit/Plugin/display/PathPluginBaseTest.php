@@ -104,7 +104,7 @@ class PathPluginBaseTest extends UnitTestCase {
     $this->assertEquals(['test_id.page_1' => 'view.test_id.page_1'], $result);
 
     $route = $collection->get('view.test_id.page_1');
-    $this->assertTrue($route instanceof Route);
+    $this->assertInstanceOf(Route::class, $route);
     $this->assertEquals('test_id', $route->getDefault('view_id'));
     $this->assertEquals('page_1', $route->getDefault('display_id'));
     $this->assertSame(FALSE, $route->getOption('returns_response'));
@@ -159,7 +159,7 @@ class PathPluginBaseTest extends UnitTestCase {
     $this->assertEquals(['test_id.page_1' => 'view.test_id.page_1'], $result);
 
     $route = $collection->get('view.test_id.page_1');
-    $this->assertTrue($route instanceof Route);
+    $this->assertInstanceOf(Route::class, $route);
     $this->assertEquals('test_id', $route->getDefault('view_id'));
     $this->assertEquals('page_1', $route->getDefault('display_id'));
     $this->assertEquals(['arg_0' => 'arg_0'], $route->getOption('_view_argument_map'));
@@ -190,7 +190,7 @@ class PathPluginBaseTest extends UnitTestCase {
     $this->assertEquals(['test_id.page_1' => 'view.test_id.page_1'], $result);
 
     $route = $collection->get('view.test_id.page_1');
-    $this->assertTrue($route instanceof Route);
+    $this->assertInstanceOf(Route::class, $route);
     $this->assertEquals('test_id', $route->getDefault('view_id'));
     $this->assertEquals('page_1', $route->getDefault('display_id'));
     $this->assertEquals(['arg_0' => 'arg_0'], $route->getOption('_view_argument_map'));
@@ -217,7 +217,7 @@ class PathPluginBaseTest extends UnitTestCase {
     $this->assertEquals(['test_id.page_1' => 'test_route'], $result);
 
     $route = $collection->get('test_route');
-    $this->assertTrue($route instanceof Route);
+    $this->assertInstanceOf(Route::class, $route);
     $this->assertEquals('test_id', $route->getDefault('view_id'));
     $this->assertEquals('page_1', $route->getDefault('display_id'));
     $this->assertEquals('my views title', $route->getDefault('_title'));
@@ -247,14 +247,14 @@ class PathPluginBaseTest extends UnitTestCase {
 
     // Ensure that the test_route is overridden.
     $route = $collection->get('test_route');
-    $this->assertTrue($route instanceof Route);
+    $this->assertInstanceOf(Route::class, $route);
     $this->assertEquals('test_id', $route->getDefault('view_id'));
     $this->assertEquals('page_1', $route->getDefault('display_id'));
     $this->assertEquals('my views title', $route->getDefault('_title'));
 
     // Ensure that the test_route_2 is not overridden.
     $route = $collection->get('test_route_2');
-    $this->assertTrue($route instanceof Route);
+    $this->assertInstanceOf(Route::class, $route);
     $this->assertFalse($route->hasDefault('view_id'));
     $this->assertFalse($route->hasDefault('display_id'));
     $this->assertSame($collection->get('test_route_2'), $route_2);
@@ -286,13 +286,13 @@ class PathPluginBaseTest extends UnitTestCase {
     // Ensure that the test_route is not overridden.
     $this->assertCount(2, $collection);
     $route = $collection->get('test_route');
-    $this->assertTrue($route instanceof Route);
+    $this->assertInstanceOf(Route::class, $route);
     $this->assertFalse($route->hasDefault('view_id'));
     $this->assertFalse($route->hasDefault('display_id'));
     $this->assertSame($collection->get('test_route'), $route);
 
     $route = $collection->get('view.test_id.page_1');
-    $this->assertTrue($route instanceof Route);
+    $this->assertInstanceOf(Route::class, $route);
     $this->assertEquals('test_id', $route->getDefault('view_id'));
     $this->assertEquals('page_1', $route->getDefault('display_id'));
     $this->assertEquals('my views title', $route->getDefault('_title'));
@@ -325,13 +325,13 @@ class PathPluginBaseTest extends UnitTestCase {
     // Ensure that the test_route is not overridden.
     $this->assertCount(2, $collection);
     $route = $collection->get('test_route');
-    $this->assertTrue($route instanceof Route);
+    $this->assertInstanceOf(Route::class, $route);
     $this->assertFalse($route->hasDefault('view_id'));
     $this->assertFalse($route->hasDefault('display_id'));
     $this->assertSame($collection->get('test_route'), $route);
 
     $route = $collection->get('view.test_id.page_1');
-    $this->assertTrue($route instanceof Route);
+    $this->assertInstanceOf(Route::class, $route);
     $this->assertEquals('test_id', $route->getDefault('view_id'));
     $this->assertEquals('page_1', $route->getDefault('display_id'));
     $this->assertEquals('my views title', $route->getDefault('_title'));
@@ -361,7 +361,7 @@ class PathPluginBaseTest extends UnitTestCase {
 
     // Ensure that the test_route is overridden.
     $route = $collection->get('test_route');
-    $this->assertTrue($route instanceof Route);
+    $this->assertInstanceOf(Route::class, $route);
     $this->assertEquals('test_id', $route->getDefault('view_id'));
     $this->assertEquals('\Drupal\Tests\views\Unit\Plugin\display\TestController::testTitle', $route->getDefault('_title_callback'));
     $this->assertEquals('page_1', $route->getDefault('display_id'));
@@ -369,7 +369,7 @@ class PathPluginBaseTest extends UnitTestCase {
 
     // Ensure that the test_route_2 is not overridden.
     $route = $collection->get('test_route_2');
-    $this->assertTrue($route instanceof Route);
+    $this->assertInstanceOf(Route::class, $route);
     $this->assertFalse($route->hasDefault('view_id'));
     $this->assertFalse($route->hasDefault('display_id'));
     $this->assertSame($collection->get('test_route_2'), $route_2);
@@ -402,7 +402,7 @@ class PathPluginBaseTest extends UnitTestCase {
     $this->assertEquals(['test_id.page_1' => 'view.test_id.page_1'], $result);
 
     $route = $collection->get('view.test_id.page_1');
-    $this->assertTrue($route instanceof Route);
+    $this->assertInstanceOf(Route::class, $route);
     $this->assertEquals('/test_route/{node}/example', $route->getPath());
     $this->assertEquals('test_id', $route->getDefault('view_id'));
     $this->assertEquals('page_1', $route->getDefault('display_id'));

@@ -45,7 +45,7 @@ class MigrateFieldFormatterSettingsTest extends MigrateDrupal7TestBase {
    */
   protected function assertEntity($id) {
     $display = EntityViewDisplay::load($id);
-    $this->assertTrue($display instanceof EntityViewDisplayInterface);
+    $this->assertInstanceOf(EntityViewDisplayInterface::class, $display);
   }
 
   /**

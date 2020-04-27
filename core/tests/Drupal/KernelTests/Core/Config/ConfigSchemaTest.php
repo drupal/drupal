@@ -310,7 +310,7 @@ class ConfigSchemaTest extends KernelTestBase {
     // Try a simple property.
     $meta = \Drupal::service('config.typed')->get('system.site');
     $property = $meta->get('page')->get('front');
-    $this->assertTrue($property instanceof StringInterface, 'Got the right wrapper fo the page.front property.');
+    $this->assertInstanceOf(StringInterface::class, $property);
     $this->assertEqual($property->getValue(), '/user/login', 'Got the right value for page.front data.');
     $definition = $property->getDataDefinition();
     $this->assertTrue(empty($definition['translatable']), 'Got the right translatability setting for page.front data.');
@@ -334,7 +334,7 @@ class ConfigSchemaTest extends KernelTestBase {
     $uuid = key($effects->getValue());
     $effect = $effects->get($uuid)->getElements();
     $this->assertTrue(!$effect['data']->isEmpty() && $effect['id']->getValue() == 'image_scale', 'Got data for the image scale effect from metadata.');
-    $this->assertTrue($effect['data']->get('width') instanceof IntegerInterface, 'Got the right type for the scale effect width.');
+    $this->assertInstanceOf(IntegerInterface::class, $effect['data']->get('width'));
     $this->assertEqual($effect['data']->get('width')->getValue(), 480, 'Got the right value for the scale effect width.');
   }
 

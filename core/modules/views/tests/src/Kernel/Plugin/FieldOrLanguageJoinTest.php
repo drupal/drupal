@@ -63,7 +63,7 @@ class FieldOrLanguageJoinTest extends RelationshipJoinTestBase {
       'adjusted' => TRUE,
     ];
     $join = $this->manager->createInstance($this->pluginId, $configuration);
-    $this->assertTrue($join instanceof FieldOrLanguageJoin);
+    $this->assertInstanceOf(FieldOrLanguageJoin::class, $join);
     $this->assertNull($join->extra);
     $this->assertTrue($join->adjusted);
 
@@ -196,7 +196,7 @@ class FieldOrLanguageJoinTest extends RelationshipJoinTestBase {
     $query = \Drupal::database()->select('node');
 
     $join = $this->manager->createInstance('field_or_language_join', $configuration);
-    $this->assertInstanceOf(FieldOrLanguageJoin::class, $join, 'The correct join class got loaded.');
+    $this->assertInstanceOf(FieldOrLanguageJoin::class, $join);
 
     $table = ['alias' => $table_alias];
     $join->buildJoin($query, $table, $view->query);

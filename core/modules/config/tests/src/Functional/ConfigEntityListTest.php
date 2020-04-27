@@ -46,7 +46,7 @@ class ConfigEntityListTest extends BrowserTestBase {
     $controller = \Drupal::entityTypeManager()->getListBuilder('config_test');
 
     // Test getStorage() method.
-    $this->assertInstanceOf(EntityStorageInterface::class, $controller->getStorage(), 'EntityStorage instance in storage.');
+    $this->assertInstanceOf(EntityStorageInterface::class, $controller->getStorage());
 
     // Get a list of ConfigTest entities and confirm that it contains the
     // ConfigTest entity provided by the config_test module.
@@ -54,7 +54,7 @@ class ConfigEntityListTest extends BrowserTestBase {
     $list = $controller->load();
     $this->assertCount(1, $list, '1 ConfigTest entity found.');
     $entity = $list['dotted.default'];
-    $this->assertInstanceOf(ConfigTest::class, $entity, '"Default" ConfigTest entity is an instance of ConfigTest.');
+    $this->assertInstanceOf(ConfigTest::class, $entity);
 
     // Test getOperations() method.
     $expected_operations = [

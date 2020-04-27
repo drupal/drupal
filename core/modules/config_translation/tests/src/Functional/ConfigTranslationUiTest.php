@@ -1156,9 +1156,7 @@ class ConfigTranslationUiTest extends BrowserTestBase {
       ':id' => $id,
     ]);
     $textarea = reset($textarea);
-    $this->assertTrue($textarea instanceof NodeElement, new FormattableMarkup('Disabled field @id exists.', [
-      '@id' => $id,
-    ]));
+    $this->assertInstanceOf(NodeElement::class, $textarea);
     $expected = 'This field has been disabled because you do not have sufficient permissions to edit it.';
     $this->assertEqual($textarea->getText(), $expected, new FormattableMarkup('Disabled textarea @id hides text in an inaccessible text format.', [
       '@id' => $id,

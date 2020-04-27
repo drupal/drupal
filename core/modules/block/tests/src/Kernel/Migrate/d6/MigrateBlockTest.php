@@ -78,7 +78,7 @@ class MigrateBlockTest extends MigrateDrupal6TestBase {
    */
   public function assertEntity($id, $visibility, $region, $theme, $weight, array $settings = NULL, $status = TRUE) {
     $block = Block::load($id);
-    $this->assertTrue($block instanceof Block);
+    $this->assertInstanceOf(Block::class, $block);
     $this->assertSame($visibility, $block->getVisibility());
     $this->assertSame($region, $block->getRegion());
     $this->assertSame($theme, $block->getTheme());
@@ -303,7 +303,7 @@ class MigrateBlockTest extends MigrateDrupal6TestBase {
 
     // Custom block with php code is not migrated.
     $block = Block::load('block_3');
-    $this->assertFalse($block instanceof Block);
+    $this->assertNotInstanceOf(Block::class, $block);
   }
 
 }

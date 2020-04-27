@@ -21,7 +21,7 @@ class ContainerBuilderTest extends UnitTestCase {
     $container->register('bar', 'Drupal\Tests\Core\DependencyInjection\Fixture\BarClass');
 
     $result = $container->get('bar');
-    $this->assertTrue($result instanceof BarClass);
+    $this->assertInstanceOf(BarClass::class, $result);
   }
 
   /**

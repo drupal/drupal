@@ -108,7 +108,7 @@ class CacheTest extends ViewsKernelTestBase {
   public function testTimeResultCachingWithFilter() {
     // Check that we can find the test filter plugin.
     $plugin = $this->container->get('plugin.manager.views.filter')->createInstance('test_filter');
-    $this->assertTrue($plugin instanceof FilterPlugin, 'Test filter plugin found.');
+    $this->assertInstanceOf(FilterPlugin::class, $plugin);
 
     $view = Views::getView('test_filter');
     $view->initDisplay();

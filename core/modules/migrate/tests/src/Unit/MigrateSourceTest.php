@@ -276,7 +276,7 @@ class MigrateSourceTest extends MigrateTestCase {
     $source = $this->getSource($configuration, [], MigrateIdMapInterface::STATUS_IMPORTED, $this->row['timestamp'] - 1);
 
     $source->rewind();
-    $this->assertInstanceOf(Row::class, $source->current(), 'Incoming row timestamp is greater than current highwater mark so we have a row.');
+    $this->assertInstanceOf(Row::class, $source->current());
   }
 
   /**
