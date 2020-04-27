@@ -117,8 +117,8 @@ class EntityFieldTest extends EntityKernelTestBase {
     $langcode = 'en';
 
     // Access the name field.
-    $this->assertInstanceOf(FieldItemListInterface::class, $entity->name, new FormattableMarkup('%entity_type: Field implements interface', ['%entity_type' => $entity_type]));
-    $this->assertInstanceOf(FieldItemInterface::class, $entity->name[0], new FormattableMarkup('%entity_type: Field item implements interface', ['%entity_type' => $entity_type]));
+    $this->assertInstanceOf(FieldItemListInterface::class, $entity->name);
+    $this->assertInstanceOf(FieldItemInterface::class, $entity->name[0]);
 
     $this->assertEqual($this->entityName, $entity->name->value, new FormattableMarkup('%entity_type: Name value can be read.', ['%entity_type' => $entity_type]));
     $this->assertEqual($this->entityName, $entity->name[0]->value, new FormattableMarkup('%entity_type: Name value can be read through list access.', ['%entity_type' => $entity_type]));
@@ -135,8 +135,8 @@ class EntityFieldTest extends EntityKernelTestBase {
     $this->assertEqual($new_name, $entity->name->value, new FormattableMarkup('%entity_type: Name can be updated and read through list access.', ['%entity_type' => $entity_type]));
 
     // Access the user field.
-    $this->assertInstanceOf(FieldItemListInterface::class, $entity->user_id, new FormattableMarkup('%entity_type: Field implements interface', ['%entity_type' => $entity_type]));
-    $this->assertInstanceOf(FieldItemInterface::class, $entity->user_id[0], new FormattableMarkup('%entity_type: Field item implements interface', ['%entity_type' => $entity_type]));
+    $this->assertInstanceOf(FieldItemListInterface::class, $entity->user_id);
+    $this->assertInstanceOf(FieldItemInterface::class, $entity->user_id[0]);
 
     $this->assertEqual($this->entityUser->id(), $entity->user_id->target_id, new FormattableMarkup('%entity_type: User id can be read.', ['%entity_type' => $entity_type]));
     $this->assertEqual($this->entityUser->getAccountName(), $entity->user_id->entity->name->value, new FormattableMarkup('%entity_type: User name can be read.', ['%entity_type' => $entity_type]));
@@ -443,7 +443,7 @@ class EntityFieldTest extends EntityKernelTestBase {
       ->getPropertyDefinition('entity')
       ->getTargetDefinition();
 
-    $this->assertInstanceOf(EntityDataDefinitionInterface::class, $reference_definition, 'Definition of the referenced user retrieved.');
+    $this->assertInstanceOf(EntityDataDefinitionInterface::class, $reference_definition);
     $this->assertEqual($reference_definition->getEntityTypeId(), 'user', 'Referenced entity is of type "user".');
 
     // Test propagating down.
@@ -522,13 +522,13 @@ class EntityFieldTest extends EntityKernelTestBase {
     $entity = $this->createTestEntity($entity_type);
 
     foreach ($entity as $name => $field) {
-      $this->assertInstanceOf(FieldItemListInterface::class, $field, $entity_type . ": Field $name implements interface.");
+      $this->assertInstanceOf(FieldItemListInterface::class, $field);
 
       foreach ($field as $delta => $item) {
-        $this->assertInstanceOf(FieldItemInterface::class, $field[0], $entity_type . ": Item $delta of field $name implements interface.");
+        $this->assertInstanceOf(FieldItemInterface::class, $field[0]);
 
         foreach ($item as $value_name => $value_property) {
-          $this->assertInstanceOf(TypedDataInterface::class, $value_property, $entity_type . ": Value $value_name of item $delta of field $name implements interface.");
+          $this->assertInstanceOf(TypedDataInterface::class, $value_property);
 
           $value = $value_property->getValue();
           $this->assertTrue(!isset($value) || is_scalar($value) || $value instanceof EntityInterface, $entity_type . ": Value $value_name of item $delta of field $name is a primitive or an entity.");

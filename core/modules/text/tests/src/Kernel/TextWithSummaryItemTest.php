@@ -68,8 +68,8 @@ class TextWithSummaryItemTest extends FieldKernelTestBase {
     $entity->save();
 
     $entity = $storage->load($entity->id());
-    $this->assertInstanceOf(FieldItemListInterface::class, $entity->summary_field, 'Field implements interface.');
-    $this->assertInstanceOf(FieldItemInterface::class, $entity->summary_field[0], 'Field item implements interface.');
+    $this->assertInstanceOf(FieldItemListInterface::class, $entity->summary_field);
+    $this->assertInstanceOf(FieldItemInterface::class, $entity->summary_field[0]);
     $this->assertEqual($entity->summary_field->value, $value);
     $this->assertEqual($entity->summary_field->summary, $summary);
     $this->assertNull($entity->summary_field->format);

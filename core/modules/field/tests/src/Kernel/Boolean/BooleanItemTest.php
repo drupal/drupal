@@ -57,8 +57,8 @@ class BooleanItemTest extends FieldKernelTestBase {
     // Verify entity has been created properly.
     $id = $entity->id();
     $entity = EntityTest::load($id);
-    $this->assertInstanceOf(FieldItemListInterface::class, $entity->field_boolean, 'Field implements interface.');
-    $this->assertInstanceOf(FieldItemInterface::class, $entity->field_boolean[0], 'Field item implements interface.');
+    $this->assertInstanceOf(FieldItemListInterface::class, $entity->field_boolean);
+    $this->assertInstanceOf(FieldItemInterface::class, $entity->field_boolean[0]);
     $this->assertEqual($entity->field_boolean->value, $value);
     $this->assertEqual($entity->field_boolean[0]->value, $value);
 

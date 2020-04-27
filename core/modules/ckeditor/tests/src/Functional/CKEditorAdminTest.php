@@ -150,7 +150,7 @@ class CKEditorAdminTest extends BrowserTestBase {
     $expected_settings = $expected_default_settings;
     $expected_settings['plugins']['stylescombo']['styles'] = '';
     $editor = Editor::load('filtered_html');
-    $this->assertInstanceOf(Editor::class, $editor, 'An Editor config entity exists now.');
+    $this->assertInstanceOf(Editor::class, $editor);
     $this->assertEqual($expected_settings, $editor->getSettings(), 'The Editor config entity has the correct settings.');
 
     // Configure the Styles plugin, and ensure the updated settings are saved.
@@ -161,7 +161,7 @@ class CKEditorAdminTest extends BrowserTestBase {
     $this->drupalPostForm(NULL, $edit, t('Save configuration'));
     $expected_settings['plugins']['stylescombo']['styles'] = "h1.title|Title\np.callout|Callout\n\n";
     $editor = Editor::load('filtered_html');
-    $this->assertInstanceOf(Editor::class, $editor, 'An Editor config entity exists.');
+    $this->assertInstanceOf(Editor::class, $editor);
     $this->assertEqual($expected_settings, $editor->getSettings(), 'The Editor config entity has the correct settings.');
 
     // Change the buttons that appear on the toolbar (in JavaScript, this is
@@ -177,7 +177,7 @@ class CKEditorAdminTest extends BrowserTestBase {
     ];
     $this->drupalPostForm(NULL, $edit, t('Save configuration'));
     $editor = Editor::load('filtered_html');
-    $this->assertInstanceOf(Editor::class, $editor, 'An Editor config entity exists.');
+    $this->assertInstanceOf(Editor::class, $editor);
     $this->assertEqual($expected_settings, $editor->getSettings(), 'The Editor config entity has the correct settings.');
 
     // Check that the markup we're setting for the toolbar buttons (actually in
@@ -205,7 +205,7 @@ class CKEditorAdminTest extends BrowserTestBase {
     $ultra_llama_mode_checkbox = $this->xpath('//input[@type="checkbox" and @name="editor[settings][plugins][llama_contextual_and_button][ultra_llama_mode]" and not(@checked)]');
     $this->assertCount(1, $ultra_llama_mode_checkbox, 'The "Ultra llama mode" checkbox exists and is not checked.');
     $editor = Editor::load('filtered_html');
-    $this->assertInstanceOf(Editor::class, $editor, 'An Editor config entity exists.');
+    $this->assertInstanceOf(Editor::class, $editor);
     $this->assertEqual($expected_settings, $editor->getSettings(), 'The Editor config entity has the correct settings.');
 
     // Finally, check the "Ultra llama mode" checkbox.
@@ -219,7 +219,7 @@ class CKEditorAdminTest extends BrowserTestBase {
     $this->assertCount(1, $ultra_llama_mode_checkbox, 'The "Ultra llama mode" checkbox exists and is checked.');
     $expected_settings['plugins']['llama_contextual_and_button']['ultra_llama_mode'] = TRUE;
     $editor = Editor::load('filtered_html');
-    $this->assertInstanceOf(Editor::class, $editor, 'An Editor config entity exists.');
+    $this->assertInstanceOf(Editor::class, $editor);
     $this->assertEqual($expected_settings, $editor->getSettings());
 
     $this->drupalGet('admin/config/content/formats/add');
@@ -293,13 +293,13 @@ class CKEditorAdminTest extends BrowserTestBase {
 
     // Ensure a FilterFormat object exists now.
     $filter_format = FilterFormat::load('amazing_format');
-    $this->assertInstanceOf(FilterFormatInterface::class, $filter_format, 'A FilterFormat config entity exists now.');
+    $this->assertInstanceOf(FilterFormatInterface::class, $filter_format);
 
     // Ensure an Editor object exists now, with the proper settings.
     $expected_settings = $default_settings;
     $expected_settings['plugins']['stylescombo']['styles'] = '';
     $editor = Editor::load('amazing_format');
-    $this->assertInstanceOf(Editor::class, $editor, 'An Editor config entity exists now.');
+    $this->assertInstanceOf(Editor::class, $editor);
     $this->assertEqual($this->castSafeStrings($expected_settings), $this->castSafeStrings($editor->getSettings()), 'The Editor config entity has the correct settings.');
   }
 

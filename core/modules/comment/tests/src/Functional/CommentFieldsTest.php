@@ -45,7 +45,7 @@ class CommentFieldsTest extends CommentTestBase {
     // Check that the 'comment_body' field is not deleted since it is persisted
     // even if it has no fields.
     $field_storage = FieldStorageConfig::loadByName('comment', 'comment_body');
-    $this->assertInstanceOf(FieldStorageConfig::class, $field_storage, 'The comment_body field storage was not deleted');
+    $this->assertInstanceOf(FieldStorageConfig::class, $field_storage);
 
     // Create a new content type.
     $type_name = 'test_node_type_2';
@@ -55,7 +55,7 @@ class CommentFieldsTest extends CommentTestBase {
     // Check that the 'comment_body' field exists and has an instance on the
     // new comment bundle.
     $field_storage = FieldStorageConfig::loadByName('comment', 'comment_body');
-    $this->assertInstanceOf(FieldStorageConfig::class, $field_storage, 'The comment_body field exists');
+    $this->assertInstanceOf(FieldStorageConfig::class, $field_storage);
     $field = FieldConfig::loadByName('comment', 'comment', 'comment_body');
     $this->assertTrue(isset($field), new FormattableMarkup('The comment_body field is present for comments on type @type', ['@type' => $type_name]));
 

@@ -63,7 +63,7 @@ class ViewStorageTest extends ViewsKernelTestBase {
     $this->controller = $this->container->get('entity_type.manager')->getStorage('view');
 
     // Confirm that an info array has been returned.
-    $this->assertInstanceOf(EntityTypeInterface::class, $this->entityType, 'The View info array is loaded.');
+    $this->assertInstanceOf(EntityTypeInterface::class, $this->entityType);
 
     // CRUD tests.
     $this->loadTests();
@@ -83,7 +83,7 @@ class ViewStorageTest extends ViewsKernelTestBase {
 
     // Confirm that an actual view object is loaded and that it returns all of
     // expected properties.
-    $this->assertInstanceOf(View::class, $view, 'Single View instance loaded.');
+    $this->assertInstanceOf(View::class, $view);
     foreach ($this->configProperties as $property) {
       $this->assertTrue($view->get($property) !== NULL, new FormattableMarkup('Property: @property loaded onto View.', ['@property' => $property]));
     }
@@ -117,7 +117,7 @@ class ViewStorageTest extends ViewsKernelTestBase {
     // Create a new View instance with empty values.
     $created = $this->controller->create([]);
 
-    $this->assertInstanceOf(View::class, $created, 'Created object is a View.');
+    $this->assertInstanceOf(View::class, $created);
     // Check that the View contains all of the properties.
     foreach ($this->configProperties as $property) {
       $this->assertTrue(property_exists($created, $property), new FormattableMarkup('Property: @property created on View.', ['@property' => $property]));
@@ -129,7 +129,7 @@ class ViewStorageTest extends ViewsKernelTestBase {
     unset($values['uuid']);
     $created = $this->controller->create($values);
 
-    $this->assertInstanceOf(View::class, $created, 'Created object is a View.');
+    $this->assertInstanceOf(View::class, $created);
     // Check that the View contains all of the properties.
     $properties = $this->configProperties;
     // Remove display from list.
@@ -162,7 +162,7 @@ class ViewStorageTest extends ViewsKernelTestBase {
 
     $executable = $view->getExecutable();
     $executable->initDisplay();
-    $this->assertInstanceOf(Page::class, $executable->displayHandlers->get($new_id), 'New page display "test" uses the right display plugin.');
+    $this->assertInstanceOf(Page::class, $executable->displayHandlers->get($new_id));
 
     // To save this with a new ID, we should use createDuplicate().
     $view = $view->createDuplicate();
@@ -316,7 +316,7 @@ class ViewStorageTest extends ViewsKernelTestBase {
     $view = Views::getView('test_view_storage');
     $copy = $view->storage->createDuplicate();
 
-    $this->assertInstanceOf(View::class, $copy, 'The copied object is a View.');
+    $this->assertInstanceOf(View::class, $copy);
 
     // Check that the original view and the copy have different UUIDs.
     $this->assertNotIdentical($view->storage->uuid(), $copy->uuid(), 'The copied view has a new UUID.');

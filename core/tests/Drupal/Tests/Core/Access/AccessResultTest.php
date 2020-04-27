@@ -863,13 +863,13 @@ class AccessResultTest extends UnitTestCase {
       throw new \LogicException('Invalid operator specified');
     }
     if ($implements_cacheable_dependency_interface) {
-      $this->assertInstanceOf(CacheableDependencyInterface::class, $result, 'Result is an instance of CacheableDependencyInterface.');
+      $this->assertInstanceOf(CacheableDependencyInterface::class, $result);
       if ($result instanceof CacheableDependencyInterface) {
         $this->assertSame($is_cacheable, $result->getCacheMaxAge() !== 0, 'getCacheMaxAge() matches expectations.');
       }
     }
     else {
-      $this->assertNotInstanceOf(CacheableDependencyInterface::class, $result, 'Result is not an instance of CacheableDependencyInterface.');
+      $this->assertNotInstanceOf(CacheableDependencyInterface::class, $result);
     }
   }
 

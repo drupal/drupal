@@ -85,7 +85,7 @@ class DeleteTest extends FileManagedUnitTestBase {
     // Delete the file, but leave it in the file_managed table.
     \Drupal::service('file_system')->delete($file->getFileUri());
     $this->assertFalse(file_exists($file->getFileUri()), 'File is deleted from the filesystem.');
-    $this->assertInstanceOf(File::class, File::load($file->id()), 'File exist in file_managed table');
+    $this->assertInstanceOf(File::class, File::load($file->id()));
 
     // Call file_cron() to clean up the file. Make sure the changed timestamp
     // of the file is older than the system.file.temporary_maximum_age

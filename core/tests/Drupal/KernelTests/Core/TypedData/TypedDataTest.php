@@ -57,7 +57,7 @@ class TypedDataTest extends KernelTestBase {
       $definition = DataDefinition::create($definition['type']);
     }
     $data = $this->typedDataManager->create($definition, $value, $name);
-    $this->assertInstanceOf(TypedDataInterface::class, $data, 'Typed data object is an instance of the typed data interface.');
+    $this->assertInstanceOf(TypedDataInterface::class, $data);
     return $data;
   }
 
@@ -67,7 +67,7 @@ class TypedDataTest extends KernelTestBase {
   public function testGetAndSet() {
     // Boolean type.
     $typed_data = $this->createTypedData(['type' => 'boolean'], TRUE);
-    $this->assertInstanceOf(BooleanInterface::class, $typed_data, 'Typed data object is an instance of BooleanInterface.');
+    $this->assertInstanceOf(BooleanInterface::class, $typed_data);
     $this->assertTrue($typed_data->getValue() === TRUE, 'Boolean value was fetched.');
     $this->assertEqual($typed_data->validate()->count(), 0);
     $typed_data->setValue(FALSE);
@@ -83,7 +83,7 @@ class TypedDataTest extends KernelTestBase {
     // String type.
     $value = $this->randomString();
     $typed_data = $this->createTypedData(['type' => 'string'], $value);
-    $this->assertInstanceOf(StringInterface::class, $typed_data, 'Typed data object is an instance of StringInterface.');
+    $this->assertInstanceOf(StringInterface::class, $typed_data);
     $this->assertTrue($typed_data->getValue() === $value, 'String value was fetched.');
     $this->assertEqual($typed_data->validate()->count(), 0);
     $new_value = $this->randomString();
@@ -101,7 +101,7 @@ class TypedDataTest extends KernelTestBase {
     // Integer type.
     $value = rand();
     $typed_data = $this->createTypedData(['type' => 'integer'], $value);
-    $this->assertInstanceOf(IntegerInterface::class, $typed_data, 'Typed data object is an instance of IntegerInterface.');
+    $this->assertInstanceOf(IntegerInterface::class, $typed_data);
     $this->assertTrue($typed_data->getValue() === $value, 'Integer value was fetched.');
     $this->assertEqual($typed_data->validate()->count(), 0);
     $new_value = rand();
@@ -118,7 +118,7 @@ class TypedDataTest extends KernelTestBase {
     // Float type.
     $value = 123.45;
     $typed_data = $this->createTypedData(['type' => 'float'], $value);
-    $this->assertInstanceOf(FloatInterface::class, $typed_data, 'Typed data object is an instance of FloatInterface.');
+    $this->assertInstanceOf(FloatInterface::class, $typed_data);
     $this->assertTrue($typed_data->getValue() === $value, 'Float value was fetched.');
     $this->assertEqual($typed_data->validate()->count(), 0);
     $new_value = 678.90;
@@ -135,7 +135,7 @@ class TypedDataTest extends KernelTestBase {
     // Date Time type; values with timezone offset.
     $value = '2014-01-01T20:00:00+00:00';
     $typed_data = $this->createTypedData(['type' => 'datetime_iso8601'], $value);
-    $this->assertInstanceOf(DateTimeInterface::class, $typed_data, 'Typed data object is an instance of DateTimeInterface.');
+    $this->assertInstanceOf(DateTimeInterface::class, $typed_data);
     $this->assertTrue($typed_data->getValue() == $value, 'Date value was fetched.');
     $this->assertEqual($typed_data->getValue(), $typed_data->getDateTime()->format('c'), 'Value representation of a date is ISO 8601');
     $this->assertSame('+00:00', $typed_data->getDateTime()->getTimezone()->getName());
@@ -165,7 +165,7 @@ class TypedDataTest extends KernelTestBase {
     // Date Time type; values without timezone offset.
     $value = '2014-01-01T20:00';
     $typed_data = $this->createTypedData(['type' => 'datetime_iso8601'], $value);
-    $this->assertInstanceOf(DateTimeInterface::class, $typed_data, 'Typed data object is an instance of DateTimeInterface.');
+    $this->assertInstanceOf(DateTimeInterface::class, $typed_data);
     $this->assertTrue($typed_data->getValue() == $value, 'Date value was fetched.');
     // @todo Uncomment this assertion in https://www.drupal.org/project/drupal/issues/2716891.
     // $this->assertEqual($typed_data->getValue(), $typed_data->getDateTime()->format('c'), 'Value representation of a date is ISO 8601');
@@ -201,7 +201,7 @@ class TypedDataTest extends KernelTestBase {
     // Timestamp type.
     $value = REQUEST_TIME;
     $typed_data = $this->createTypedData(['type' => 'timestamp'], $value);
-    $this->assertInstanceOf(DateTimeInterface::class, $typed_data, 'Typed data object is an instance of DateTimeInterface.');
+    $this->assertInstanceOf(DateTimeInterface::class, $typed_data);
     $this->assertTrue($typed_data->getValue() == $value, 'Timestamp value was fetched.');
     $this->assertEqual($typed_data->validate()->count(), 0);
     $new_value = REQUEST_TIME + 1;
@@ -224,7 +224,7 @@ class TypedDataTest extends KernelTestBase {
     // DurationIso8601 type.
     $value = 'PT20S';
     $typed_data = $this->createTypedData(['type' => 'duration_iso8601'], $value);
-    $this->assertInstanceOf(DurationInterface::class, $typed_data, 'Typed data object is an instance of DurationInterface.');
+    $this->assertInstanceOf(DurationInterface::class, $typed_data);
     $this->assertIdentical($typed_data->getValue(), $value, 'DurationIso8601 value was fetched.');
     $this->assertEqual($typed_data->validate()->count(), 0);
     $typed_data->setValue('P40D');
@@ -248,7 +248,7 @@ class TypedDataTest extends KernelTestBase {
     // Time span type.
     $value = 20;
     $typed_data = $this->createTypedData(['type' => 'timespan'], $value);
-    $this->assertInstanceOf(DurationInterface::class, $typed_data, 'Typed data object is an instance of DurationInterface.');
+    $this->assertInstanceOf(DurationInterface::class, $typed_data);
     $this->assertIdentical($typed_data->getValue(), $value, 'Time span value was fetched.');
     $this->assertEqual($typed_data->validate()->count(), 0);
     $typed_data->setValue(60 * 60 * 4);
@@ -271,7 +271,7 @@ class TypedDataTest extends KernelTestBase {
     // URI type.
     $uri = 'http://example.com/foo/';
     $typed_data = $this->createTypedData(['type' => 'uri'], $uri);
-    $this->assertInstanceOf(UriInterface::class, $typed_data, 'Typed data object is an instance of UriInterface.');
+    $this->assertInstanceOf(UriInterface::class, $typed_data);
     $this->assertTrue($typed_data->getValue() === $uri, 'URI value was fetched.');
     $this->assertEqual($typed_data->validate()->count(), 0);
     $typed_data->setValue($uri . 'bar.txt');
@@ -299,7 +299,7 @@ class TypedDataTest extends KernelTestBase {
     // Email type.
     $value = $this->randomString();
     $typed_data = $this->createTypedData(['type' => 'email'], $value);
-    $this->assertInstanceOf(StringInterface::class, $typed_data, 'Typed data object is an instance of StringInterface.');
+    $this->assertInstanceOf(StringInterface::class, $typed_data);
     $this->assertIdentical($typed_data->getValue(), $value, 'Email value was fetched.');
     $new_value = 'test@example.com';
     $typed_data->setValue($new_value);
@@ -314,7 +314,7 @@ class TypedDataTest extends KernelTestBase {
 
     // Binary type.
     $typed_data = $this->createTypedData(['type' => 'binary'], $files[0]->getFileUri());
-    $this->assertInstanceOf(BinaryInterface::class, $typed_data, 'Typed data object is an instance of BinaryInterface.');
+    $this->assertInstanceOf(BinaryInterface::class, $typed_data);
     $this->assertTrue(is_resource($typed_data->getValue()), 'Binary value was fetched.');
     $this->assertEqual($typed_data->validate()->count(), 0);
     // Try setting by URI.

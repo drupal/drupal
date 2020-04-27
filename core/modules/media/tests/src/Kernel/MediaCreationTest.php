@@ -22,12 +22,12 @@ class MediaCreationTest extends MediaKernelTestBase {
   public function testMediaTypeCreation() {
     $media_type_storage = $this->container->get('entity_type.manager')->getStorage('media_type');
 
-    $this->assertInstanceOf(MediaTypeInterface::class, MediaType::load($this->testMediaType->id()), 'The new media type has not been correctly created in the database.');
+    $this->assertInstanceOf(MediaTypeInterface::class, MediaType::load($this->testMediaType->id()));
 
     // Test a media type created from default configuration.
     $this->container->get('module_installer')->install(['media_test_type']);
     $test_media_type = $media_type_storage->load('test');
-    $this->assertInstanceOf(MediaTypeInterface::class, $test_media_type, 'The media type from default configuration has not been created in the database.');
+    $this->assertInstanceOf(MediaTypeInterface::class, $test_media_type);
     $this->assertSame('Test type', $test_media_type->get('label'), 'Could not assure the correct type name.');
     $this->assertSame('Test type.', $test_media_type->get('description'), 'Could not assure the correct type description.');
     $this->assertSame('test', $test_media_type->get('source'), 'Could not assure the correct media source.');
@@ -69,9 +69,9 @@ class MediaCreationTest extends MediaKernelTestBase {
     ]);
     $media->save();
 
-    $this->assertNotInstanceOf(MediaInterface::class, Media::load(rand(1000, 9999)), 'Failed asserting a non-existent media.');
+    $this->assertNotInstanceOf(MediaInterface::class, Media::load(rand(1000, 9999)));
 
-    $this->assertInstanceOf(MediaInterface::class, Media::load($media->id()), 'The new media item has not been created in the database.');
+    $this->assertInstanceOf(MediaInterface::class, Media::load($media->id()));
     $this->assertSame($this->testMediaType->id(), $media->bundle(), 'The media item was not created with the correct type.');
     $this->assertSame('Unnamed', $media->getName(), 'The media item was not created with the correct name.');
     $source_field_name = $media->bundle->entity->getSource()->getSourceFieldDefinition($media->bundle->entity)->getName();
