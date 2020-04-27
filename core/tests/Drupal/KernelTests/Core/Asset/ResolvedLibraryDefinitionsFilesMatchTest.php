@@ -173,7 +173,7 @@ class ResolvedLibraryDefinitionsFilesMatchTest extends KernelTestBase {
             $path = $this->root . '/' . $file;
             // Only check and assert each file path once.
             if (!isset($this->pathsChecked[$path])) {
-              $this->assertTrue(is_file($path), "$file file referenced from the $extension/$library_name library exists.");
+              $this->assertFileExists($path, "$file file referenced from the $extension/$library_name library does not exist.");
               $this->pathsChecked[$path] = TRUE;
             }
           }
