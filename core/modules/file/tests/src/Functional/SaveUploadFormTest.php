@@ -71,10 +71,10 @@ class SaveUploadFormTest extends FileManagedTestBase {
     $this->image = File::create((array) current($image_files));
 
     list(, $this->imageExtension) = explode('.', $this->image->getFilename());
-    $this->assertTrue(is_file($this->image->getFileUri()), "The image file we're going to upload exists.");
+    $this->assertFileExists($this->image->getFileUri());
 
     $this->phpfile = current($this->drupalGetTestFiles('php'));
-    $this->assertTrue(is_file($this->phpfile->uri), 'The PHP file we are going to upload exists.');
+    $this->assertFileExists($this->phpfile->uri);
 
     $this->maxFidBefore = (int) \Drupal::entityQueryAggregate('file')->aggregate('fid', 'max')->execute()[0]['fid_max'];
 
@@ -143,7 +143,7 @@ class SaveUploadFormTest extends FileManagedTestBase {
     $this->drupalPostForm('file-test/save_upload_from_form_test', $edit, t('Submit'));
     $this->assertResponse(200, 'Received a 200 response for posted test file.');
     $this->assertRaw(t('You WIN!'));
-    $this->assertTrue(is_file('temporary://' . $dir . '/' . trim(\Drupal::service('file_system')->basename($image3_realpath))));
+    $this->assertFileExists('temporary://' . $dir . '/' . trim(\Drupal::service('file_system')->basename($image3_realpath)));
   }
 
   /**
@@ -456,7 +456,7 @@ class SaveUploadFormTest extends FileManagedTestBase {
    */
   public function testCombinedErrorMessages() {
     $textfile = current($this->drupalGetTestFiles('text'));
-    $this->assertTrue(is_file($textfile->uri), 'The text file we are going to upload exists.');
+    $this->assertFileExists($textfile->uri);
 
     /** @var \Drupal\Core\File\FileSystemInterface $file_system */
     $file_system = \Drupal::service('file_system');
