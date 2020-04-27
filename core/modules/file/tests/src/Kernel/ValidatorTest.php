@@ -56,11 +56,11 @@ class ValidatorTest extends FileManagedUnitTestBase {
    * This ensures a specific file is actually an image.
    */
   public function testFileValidateIsImage() {
-    $this->assertTrue(file_exists($this->image->getFileUri()), 'The image being tested exists.', 'File');
+    $this->assertFileExists($this->image->getFileUri());
     $errors = file_validate_is_image($this->image);
     $this->assertEqual(count($errors), 0, 'No error reported for our image file.', 'File');
 
-    $this->assertTrue(file_exists($this->nonImage->getFileUri()), 'The non-image being tested exists.', 'File');
+    $this->assertFileExists($this->nonImage->getFileUri());
     $errors = file_validate_is_image($this->nonImage);
     $this->assertEqual(count($errors), 1, 'An error reported for our non-image file.', 'File');
   }

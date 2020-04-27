@@ -81,7 +81,7 @@ class ReadOnlyStreamWrapperTest extends FileTestBase {
     $this->assertFalse(@rename($uri, $this->scheme . '://newname.txt'), 'Unable to rename files using the read-only stream wrapper.');
     // Test the unlink() function
     $this->assertTrue(@$file_system->unlink($uri), 'Able to unlink file using read-only stream wrapper.');
-    $this->assertTrue(file_exists($filepath), 'Unlink File was not actually deleted.');
+    $this->assertFileExists($filepath);
 
     // Test the mkdir() function by attempting to create a directory.
     $dirname = $this->randomMachineName();

@@ -44,7 +44,7 @@ class ThemeSettingsTest extends KernelTestBase {
   public function testDefaultConfig() {
     $name = 'test_basetheme';
     $path = $this->availableThemes[$name]->getPath();
-    $this->assertTrue(file_exists("$path/" . InstallStorage::CONFIG_INSTALL_DIRECTORY . "/$name.settings.yml"));
+    $this->assertFileExists("$path/" . InstallStorage::CONFIG_INSTALL_DIRECTORY . "/$name.settings.yml");
     $this->container->get('theme_installer')->install([$name]);
     $this->assertIdentical(theme_get_setting('base', $name), 'only');
   }
@@ -55,7 +55,7 @@ class ThemeSettingsTest extends KernelTestBase {
   public function testNoDefaultConfig() {
     $name = 'stark';
     $path = $this->availableThemes[$name]->getPath();
-    $this->assertFalse(file_exists("$path/" . InstallStorage::CONFIG_INSTALL_DIRECTORY . "/$name.settings.yml"));
+    $this->assertFileNotExists("$path/" . InstallStorage::CONFIG_INSTALL_DIRECTORY . "/$name.settings.yml");
     $this->container->get('theme_installer')->install([$name]);
     $this->assertNotNull(theme_get_setting('features.favicon', $name));
   }

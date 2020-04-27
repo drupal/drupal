@@ -651,7 +651,7 @@ class BrowserTestBaseTest extends BrowserTestBase {
    */
   public function testInstall() {
     $htaccess_filename = $this->tempFilesDirectory . '/.htaccess';
-    $this->assertTrue(file_exists($htaccess_filename), "$htaccess_filename exists");
+    $this->assertFileExists($htaccess_filename);
   }
 
   /**

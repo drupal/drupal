@@ -27,7 +27,7 @@ class MoveTest extends FileManagedUnitTestBase {
 
     // Check the return status and that the contents changed.
     $this->assertNotFalse($result, 'File moved successfully.');
-    $this->assertFalse(file_exists($source->getFileUri()));
+    $this->assertFileNotExists($source->getFileUri());
     $this->assertEqual($contents, file_get_contents($result->getFileUri()), 'Contents of file correctly written.');
 
     // Check that the correct hooks were called.
@@ -59,7 +59,7 @@ class MoveTest extends FileManagedUnitTestBase {
 
     // Check the return status and that the contents changed.
     $this->assertNotFalse($result, 'File moved successfully.');
-    $this->assertFalse(file_exists($source->getFileUri()));
+    $this->assertFileNotExists($source->getFileUri());
     $this->assertEqual($contents, file_get_contents($result->getFileUri()), 'Contents of file correctly written.');
 
     // Check that the correct hooks were called.
@@ -94,7 +94,7 @@ class MoveTest extends FileManagedUnitTestBase {
 
     // Look at the results.
     $this->assertEqual($contents, file_get_contents($result->getFileUri()), 'Contents of file were overwritten.');
-    $this->assertFalse(file_exists($source->getFileUri()));
+    $this->assertFileNotExists($source->getFileUri());
     $this->assertNotEmpty($result, 'File moved successfully.');
 
     // Check that the correct hooks were called.
@@ -147,7 +147,7 @@ class MoveTest extends FileManagedUnitTestBase {
 
     // Check the return status and that the contents did not change.
     $this->assertFalse($result, 'File move failed.');
-    $this->assertTrue(file_exists($source->getFileUri()));
+    $this->assertFileExists($source->getFileUri());
     $this->assertEqual($contents, file_get_contents($target->getFileUri()), 'Contents of file were not altered.');
 
     // Check that no hooks were called while failing.

@@ -141,7 +141,7 @@ class HtaccessTest extends BrowserTestBase {
    *   The expected response code. For example: 200, 403 or 404.
    */
   protected function assertFileAccess($path, $response_code) {
-    $this->assertTrue(file_exists(\Drupal::root() . '/' . $path), "The file $path exists.");
+    $this->assertFileExists(\Drupal::root() . '/' . $path);
     $this->drupalGet($path);
     $this->assertResponse($response_code, "Response code to $path is $response_code.");
   }

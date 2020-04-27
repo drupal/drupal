@@ -108,7 +108,7 @@ class FileStorageReadOnlyTest extends PhpStorageTestBase {
     $this->assertFalse($php_read->deleteAll());
 
     // Make sure directory exists prior to removal.
-    $this->assertTrue(file_exists($this->directory . '/test'), 'File storage directory does not exist.');
+    $this->assertDirectoryExists($this->directory . '/test');
   }
 
 }

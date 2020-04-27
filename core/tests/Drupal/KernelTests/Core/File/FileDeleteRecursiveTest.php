@@ -19,7 +19,7 @@ class FileDeleteRecursiveTest extends FileTestBase {
 
     // Delete the file.
     $this->assertTrue(\Drupal::service('file_system')->deleteRecursive($filepath), 'Function reported success.');
-    $this->assertFalse(file_exists($filepath), 'Test file has been deleted.');
+    $this->assertFileNotExists($filepath);
   }
 
   /**
@@ -31,7 +31,7 @@ class FileDeleteRecursiveTest extends FileTestBase {
 
     // Delete the directory.
     $this->assertTrue(\Drupal::service('file_system')->deleteRecursive($directory), 'Function reported success.');
-    $this->assertFalse(file_exists($directory), 'Directory has been deleted.');
+    $this->assertDirectoryNotExists($directory);
   }
 
   /**
@@ -47,9 +47,9 @@ class FileDeleteRecursiveTest extends FileTestBase {
 
     // Delete the directory.
     $this->assertTrue(\Drupal::service('file_system')->deleteRecursive($directory), 'Function reported success.');
-    $this->assertFalse(file_exists($filepathA), 'Test file A has been deleted.');
-    $this->assertFalse(file_exists($filepathB), 'Test file B has been deleted.');
-    $this->assertFalse(file_exists($directory), 'Directory has been deleted.');
+    $this->assertFileNotExists($filepathA);
+    $this->assertFileNotExists($filepathB);
+    $this->assertDirectoryNotExists($directory);
   }
 
   /**
@@ -66,10 +66,10 @@ class FileDeleteRecursiveTest extends FileTestBase {
 
     // Delete the directory.
     $this->assertTrue(\Drupal::service('file_system')->deleteRecursive($directory), 'Function reported success.');
-    $this->assertFalse(file_exists($filepathA), 'Test file A has been deleted.');
-    $this->assertFalse(file_exists($filepathB), 'Test file B has been deleted.');
-    $this->assertFalse(file_exists($subdirectory), 'Subdirectory has been deleted.');
-    $this->assertFalse(file_exists($directory), 'Directory has been deleted.');
+    $this->assertFileNotExists($filepathA);
+    $this->assertFileNotExists($filepathB);
+    $this->assertDirectoryNotExists($subdirectory);
+    $this->assertDirectoryNotExists($directory);
   }
 
 }
