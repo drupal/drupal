@@ -39,7 +39,7 @@ class MigrateUserProfileValuesTest extends MigrateDrupal6TestBase {
    */
   public function testUserProfileValues() {
     $user = User::load(2);
-    $this->assertFalse(is_null($user));
+    $this->assertNotNull($user);
     $this->assertIdentical('red', $user->profile_color->value);
     $expected = <<<EOT
 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam nulla sapien, congue nec risus ut, adipiscing aliquet felis. Maecenas quis justo vel nulla varius euismod. Quisque metus metus, cursus sit amet sem non, bibendum vehicula elit. Cras dui nisl, eleifend at iaculis vitae, lacinia ut felis. Nullam aliquam ligula volutpat nulla consectetur accumsan. Maecenas tincidunt molestie diam, a accumsan enim fringilla sit amet. Morbi a tincidunt tellus. Donec imperdiet scelerisque porta. Sed quis sem bibendum eros congue sodales. Vivamus vel fermentum est, at rutrum orci. Nunc consectetur purus ut dolor pulvinar, ut volutpat felis congue. Cras tincidunt odio sed neque sollicitudin, vehicula tempor metus scelerisque.
