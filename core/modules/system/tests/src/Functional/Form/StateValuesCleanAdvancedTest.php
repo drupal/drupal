@@ -47,7 +47,7 @@ class StateValuesCleanAdvancedTest extends BrowserTestBase {
     $this->image = current($image_files);
 
     // Check if the physical file is there.
-    $this->assertTrue(is_file($this->image->uri), "The image file we're going to upload exists.");
+    $this->assertFileExists($this->image->uri);
 
     // "Browse" for the desired file.
     $edit = ['files[image]' => \Drupal::service('file_system')->realpath($this->image->uri)];

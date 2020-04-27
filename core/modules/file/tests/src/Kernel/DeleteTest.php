@@ -19,7 +19,7 @@ class DeleteTest extends FileManagedUnitTestBase {
     $file = $this->createFile();
 
     // Check that deletion removes the file and database record.
-    $this->assertTrue(is_file($file->getFileUri()), 'File exists.');
+    $this->assertFileExists($file->getFileUri());
     $file->delete();
     $this->assertFileHooksCalled(['delete']);
     $this->assertFalse(file_exists($file->getFileUri()), 'Test file has actually been deleted.');
