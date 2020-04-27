@@ -31,7 +31,7 @@ class MigrateFieldWidgetSettingsTest extends MigrateDrupal6TestBase {
   public function testWidgetSettings() {
     // Test the config can be loaded.
     $form_display = EntityFormDisplay::load('node.story.default');
-    $this->assertIdentical(FALSE, is_null($form_display), "Form display node.story.default loaded with config.");
+    $this->assertNotNull($form_display);
 
     // Text field.
     $component = $form_display->getComponent('field_test');

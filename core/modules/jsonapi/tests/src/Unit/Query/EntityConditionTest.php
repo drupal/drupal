@@ -79,7 +79,7 @@ class EntityConditionTest extends UnitTestCase {
       $this->expectExceptionMessage($exception->getMessage());
     }
     EntityCondition::createFromQueryParameter($input);
-    $this->assertTrue(is_null($exception), 'No exception was expected.');
+    $this->assertNull($exception, 'No exception was expected.');
   }
 
   /**
