@@ -389,7 +389,7 @@ class SaveUploadTest extends FileManagedTestBase {
     /** @var \Drupal\Core\File\FileSystemInterface $file_system */
     $file_system = \Drupal::service('file_system');
     $file_system->mkdir('temporary://' . $test_directory, 0000);
-    $this->assertTrue(is_dir('temporary://' . $test_directory));
+    $this->assertDirectoryExists('temporary://' . $test_directory);
 
     $edit = [
       'file_subdir' => $test_directory,

@@ -161,7 +161,8 @@ abstract class FileTestBase extends KernelTestBase {
     if (!isset($path)) {
       $path = 'public://' . $this->randomMachineName();
     }
-    $this->assertTrue(\Drupal::service('file_system')->mkdir($path) && is_dir($path), 'Directory was created successfully.');
+    $this->assertTrue(\Drupal::service('file_system')->mkdir($path));
+    $this->assertDirectoryExists($path);
     return $path;
   }
 

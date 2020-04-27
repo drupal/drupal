@@ -374,7 +374,7 @@ class SaveUploadFormTest extends FileManagedTestBase {
     // Create a directory and make it not writable.
     $test_directory = 'test_drupal_move_uploaded_file_fail';
     \Drupal::service('file_system')->mkdir('temporary://' . $test_directory, 0000);
-    $this->assertTrue(is_dir('temporary://' . $test_directory));
+    $this->assertDirectoryExists('temporary://' . $test_directory);
 
     /** @var \Drupal\Core\File\FileSystemInterface $file_system */
     $file_system = \Drupal::service('file_system');

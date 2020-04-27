@@ -58,7 +58,7 @@ class ConfigInstallProfileOverrideTest extends BrowserTestBase {
     // file directly, because the install profile default system.cron.yml
     // configuration file was used to create the active configuration.
     $config_dir = drupal_get_path('module', 'system') . '/' . InstallStorage::CONFIG_INSTALL_DIRECTORY;
-    $this->assertTrue(is_dir($config_dir));
+    $this->assertDirectoryExists($config_dir);
     $source_storage = new FileStorage($config_dir);
     $data = $source_storage->read($config_name);
     $this->assertIdentical($data, $expected_original_data);
