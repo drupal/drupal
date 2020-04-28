@@ -61,10 +61,12 @@ class ConfigTranslationFieldListBuilder extends ConfigTranslationEntityListBuild
    */
   public static function createInstance(ContainerInterface $container, EntityTypeInterface $entity_type) {
     $entity_type_manager = $container->get('entity_type.manager');
+    $entity_type_bundle_info = $container->get('entity_type.bundle.info');
     return new static(
       $entity_type,
       $entity_type_manager->getStorage($entity_type->id()),
-      $entity_type_manager
+      $entity_type_manager,
+      $entity_type_bundle_info
     );
   }
 
