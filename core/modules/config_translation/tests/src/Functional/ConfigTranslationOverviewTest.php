@@ -3,7 +3,10 @@
 namespace Drupal\Tests\config_translation\Functional;
 
 use Drupal\Component\Utility\Html;
+use Drupal\field\Entity\FieldConfig;
+use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\language\Entity\ConfigurableLanguage;
+use Drupal\node\Entity\NodeType;
 use Drupal\Tests\BrowserTestBase;
 
 /**
@@ -26,6 +29,8 @@ class ConfigTranslationOverviewTest extends BrowserTestBase {
     'contact',
     'contextual',
     'entity_test_operation',
+    'field_ui',
+    'node',
     'views',
     'views_ui',
   ];
@@ -169,6 +174,33 @@ class ConfigTranslationOverviewTest extends BrowserTestBase {
     $this->drupalGet('admin/config/regional/config-translation/config_test');
     $this->assertText($original_label);
     $this->assertNoText($overridden_label);
+  }
+
+  /**
+   * Tests the field listing for the translate operation.
+   */
+  public function testListingFieldsPage() {
+    // Create a content type.
+    $node_type = NodeType::create([
+      'type' => 'basic',
+      'name' => 'Basic',
+    ]);
+    $node_type->save();
+
+    $field = FieldConfig::create([
+      // The field storage is guaranteed to exist because it is supplied by the
+      // node module.
+      'field_storage' => FieldStorageConfig::loadByName('node', 'body'),
+      'bundle' => $node_type->id(),
+      'label' => 'Body',
+      'settings' => ['display_summary' => FALSE],
+    ]);
+    $field->save();
+
+    $this->drupalGet('admin/config/regional/config-translation/node_fields');
+    $this->assertText('Body');
+    $this->assertText('Basic');
+    $this->assertLinkByHref('admin/structure/types/manage/basic/fields/node.basic.body/translate');
   }
 
 }
