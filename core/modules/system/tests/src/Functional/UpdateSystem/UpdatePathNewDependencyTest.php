@@ -46,8 +46,8 @@ class UpdatePathNewDependencyTest extends BrowserTestBase {
     // Running the updates enables the dependency.
     $this->runUpdates();
 
-    $this->assertTrue(array_key_exists('new_dependency_test', $this->container->get('config.factory')->get('core.extension')->get('module')));
-    $this->assertTrue(array_key_exists('new_dependency_test_with_service', $this->container->get('config.factory')->get('core.extension')->get('module')));
+    $this->assertArrayHasKey('new_dependency_test', $this->container->get('config.factory')->get('core.extension')->get('module'));
+    $this->assertArrayHasKey('new_dependency_test_with_service', $this->container->get('config.factory')->get('core.extension')->get('module'));
 
     // Tests that the new services are available and working as expected.
     $this->assertEquals('Hello', $this->container->get('new_dependency_test_with_service.service')->greet());

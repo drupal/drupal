@@ -181,8 +181,8 @@ class EntitySerializationTest extends NormalizerTestBase {
     // Test password isn't available.
     $normalized = $this->serializer->normalize($this->user);
 
-    $this->assertFalse(array_key_exists('pass', $normalized), '"pass" key does not exist in normalized user');
-    $this->assertFalse(array_key_exists('mail', $normalized), '"mail" key does not exist in normalized user');
+    $this->assertArrayNotHasKey('pass', $normalized);
+    $this->assertArrayNotHasKey('mail', $normalized);
 
     // Test again using our test user, so that our access control override will
     // allow password viewing.
