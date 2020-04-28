@@ -107,7 +107,7 @@ class BackendChainImplementationUnitTest extends UnitTestCase {
     $this->assertSame($ret['t123']->data, 1231, 'Got key 123 and value is from the first backend');
     $this->assertSame($ret['t23']->data, 232, 'Got key 23 and value is from the second backend');
     $this->assertSame($ret['t3']->data, 33, 'Got key 3 and value is from the third backend');
-    $this->assertFalse(array_key_exists('t4', $ret), "Didn't get the nonexistent key");
+    $this->assertArrayNotHasKey('t4', $ret);
 
     $this->assertFalse(in_array('t123', $cids), "Existing key 123 has been removed from &\$cids");
     $this->assertFalse(in_array('t23', $cids), "Existing key 23 has been removed from &\$cids");

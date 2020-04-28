@@ -127,13 +127,13 @@ class RouteProviderTest extends KernelTestBase {
     $candidates = array_flip($candidates);
 
     $this->assertCount(7, $candidates, 'Correct number of candidates found');
-    $this->assertTrue(array_key_exists('/node/5/edit', $candidates), 'First candidate found.');
-    $this->assertTrue(array_key_exists('/node/5/%', $candidates), 'Second candidate found.');
-    $this->assertTrue(array_key_exists('/node/%/edit', $candidates), 'Third candidate found.');
-    $this->assertTrue(array_key_exists('/node/%/%', $candidates), 'Fourth candidate found.');
-    $this->assertTrue(array_key_exists('/node/5', $candidates), 'Fifth candidate found.');
-    $this->assertTrue(array_key_exists('/node/%', $candidates), 'Sixth candidate found.');
-    $this->assertTrue(array_key_exists('/node', $candidates), 'Seventh candidate found.');
+    $this->assertArrayHasKey('/node/5/edit', $candidates);
+    $this->assertArrayHasKey('/node/5/%', $candidates);
+    $this->assertArrayHasKey('/node/%/edit', $candidates);
+    $this->assertArrayHasKey('/node/%/%', $candidates);
+    $this->assertArrayHasKey('/node/5', $candidates);
+    $this->assertArrayHasKey('/node/%', $candidates);
+    $this->assertArrayHasKey('/node', $candidates);
   }
 
   /**

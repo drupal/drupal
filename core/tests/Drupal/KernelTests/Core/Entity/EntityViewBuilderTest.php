@@ -336,7 +336,7 @@ class EntityViewBuilderTest extends EntityKernelTestBase {
     $entity = $this->createTestEntity('entity_test');
     $build = $entity_type_manager->getViewBuilder('entity_test')->view($entity);
     $this->assertEquals($entity, $build['#entity_test']);
-    $this->assertFalse(array_key_exists('#theme', $build));
+    $this->assertArrayNotHasKey('#theme', $build);
   }
 
 }

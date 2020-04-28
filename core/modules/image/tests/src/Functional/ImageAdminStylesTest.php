@@ -70,7 +70,7 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
     $this->drupalPostForm('admin/config/media/image-styles/add', $edit, t('Create new style'));
     $this->assertRaw(t('Style %name was created.', ['%name' => $style_label]));
     $options = image_style_options();
-    $this->assertTrue(array_key_exists($style_name, $options), new FormattableMarkup('Array key %key exists.', ['%key' => $style_name]));
+    $this->assertArrayHasKey($style_name, $options);
   }
 
   /**
