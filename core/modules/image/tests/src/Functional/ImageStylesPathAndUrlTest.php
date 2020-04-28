@@ -164,7 +164,7 @@ class ImageStylesPathAndUrlTest extends BrowserTestBase {
 
     // Get the URL of a file that has not been generated and try to create it.
     $generated_uri = $this->style->buildUri($original_uri);
-    $this->assertFalse(file_exists($generated_uri), 'Generated file does not exist.');
+    $this->assertFileNotExists($generated_uri);
     $generate_url = $this->style->buildUrl($original_uri, $clean_url);
 
     // Make sure that language prefix is never added to the image style URL.
@@ -203,7 +203,7 @@ class ImageStylesPathAndUrlTest extends BrowserTestBase {
     // Fetch the URL that generates the file.
     $this->drupalGet($generate_url);
     $this->assertResponse(200, 'Image was generated at the URL.');
-    $this->assertTrue(file_exists($generated_uri), 'Generated file does exist after we accessed it.');
+    $this->assertFileExists($generated_uri);
     // assertRaw can't be used with string containing non UTF-8 chars.
     $this->assertNotEmpty(file_get_contents($generated_uri), 'URL returns expected file.');
     $image = $this->container->get('image.factory')->get($generated_uri);
@@ -242,7 +242,7 @@ class ImageStylesPathAndUrlTest extends BrowserTestBase {
       $file_noaccess = array_shift($files);
       $original_uri_noaccess = $file_system->copy($file_noaccess->uri, $scheme . '://', FileSystemInterface::EXISTS_RENAME);
       $generated_uri_noaccess = $scheme . '://styles/' . $this->style->id() . '/' . $scheme . '/' . $file_system->basename($original_uri_noaccess);
-      $this->assertFalse(file_exists($generated_uri_noaccess), 'Generated file does not exist.');
+      $this->assertFileNotExists($generated_uri_noaccess);
       $generate_url_noaccess = $this->style->buildUrl($original_uri_noaccess);
 
       $this->drupalGet($generate_url_noaccess);
@@ -290,7 +290,7 @@ class ImageStylesPathAndUrlTest extends BrowserTestBase {
     // is not present in the URL but that the image is still accessible.
     $this->config('image.settings')->set('suppress_itok_output', TRUE)->save();
     $generated_uri = $this->style->buildUri($original_uri);
-    $this->assertFalse(file_exists($generated_uri), 'Generated file does not exist.');
+    $this->assertFileNotExists($generated_uri);
     $generate_url = $this->style->buildUrl($original_uri, $clean_url);
     $this->assertIdentical(strpos($generate_url, IMAGE_DERIVATIVE_TOKEN . '='), FALSE, 'The security token does not appear in the image style URL.');
     $this->drupalGet($generate_url);
@@ -323,7 +323,7 @@ class ImageStylesPathAndUrlTest extends BrowserTestBase {
     // directories in the file system.
     $directory = $scheme . '://styles/' . $this->style->id() . '/' . $scheme . '/' . $this->randomMachineName();
     $this->drupalGet(file_create_url($directory . '/' . $this->randomString()));
-    $this->assertFalse(file_exists($directory), 'New directory was not created in the filesystem when requesting an unauthorized image.');
+    $this->assertDirectoryNotExists($directory);
   }
 
 }

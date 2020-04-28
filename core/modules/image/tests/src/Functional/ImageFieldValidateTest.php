@@ -38,7 +38,7 @@ class ImageFieldValidateTest extends ImageFieldTestBase {
 
     // Create a node with a valid image.
     $node = $this->uploadNodeImage($image_files[0], $field_name, 'article', $alt);
-    $this->assertTrue(file_exists($expected_path . '/' . $image_files[0]->filename));
+    $this->assertFileExists($expected_path . '/' . $image_files[0]->filename);
 
     // Remove the image.
     $this->drupalPostForm('node/' . $node . '/edit', [], t('Remove'));
@@ -61,7 +61,7 @@ class ImageFieldValidateTest extends ImageFieldTestBase {
       'files[' . $field_name . '_0]' => $file_system->realpath($zero_size_image->uri),
     ];
     $this->drupalPostForm('node/' . $node . '/edit', $edit, t('Upload'));
-    $this->assertFalse(file_exists($expected_path . '/' . $zero_size_image->filename));
+    $this->assertFileNotExists($expected_path . '/' . $zero_size_image->filename);
 
     // Try uploading an invalid image.
     $invalid_image = $invalid_image_files['invalid-img-test.png'];
@@ -69,7 +69,7 @@ class ImageFieldValidateTest extends ImageFieldTestBase {
       'files[' . $field_name . '_0]' => $file_system->realpath($invalid_image->uri),
     ];
     $this->drupalPostForm('node/' . $node . '/edit', $edit, t('Upload'));
-    $this->assertFalse(file_exists($expected_path . '/' . $invalid_image->filename));
+    $this->assertFileNotExists($expected_path . '/' . $invalid_image->filename);
 
     // Upload a valid image again.
     $valid_image = $image_files[0];
@@ -77,7 +77,7 @@ class ImageFieldValidateTest extends ImageFieldTestBase {
       'files[' . $field_name . '_0]' => $file_system->realpath($valid_image->uri),
     ];
     $this->drupalPostForm('node/' . $node . '/edit', $edit, t('Upload'));
-    $this->assertTrue(file_exists($expected_path . '/' . $valid_image->filename));
+    $this->assertFileExists($expected_path . '/' . $valid_image->filename);
   }
 
   /**

@@ -18,8 +18,8 @@ class PharWrapperTest extends KernelTestBase {
     $base = $this->getDrupalRoot() . '/core/tests/fixtures/files';
     // Ensure that file operations via the phar:// stream wrapper work for phar
     // files with the .phar extension.
-    $this->assertFalse(file_exists("phar://$base/phar-1.phar/no-such-file.php"));
-    $this->assertTrue(file_exists("phar://$base/phar-1.phar/index.php"));
+    $this->assertFileNotExists("phar://$base/phar-1.phar/no-such-file.php");
+    $this->assertFileExists("phar://$base/phar-1.phar/index.php");
     $file_contents = file_get_contents("phar://$base/phar-1.phar/index.php");
     $expected_hash = 'c7e7904ea573c5ebea3ef00bb08c1f86af1a45961fbfbeb1892ff4a98fd73ad5';
     $this->assertSame($expected_hash, hash('sha256', $file_contents));

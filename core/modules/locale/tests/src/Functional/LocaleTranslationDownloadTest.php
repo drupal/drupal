@@ -62,8 +62,8 @@ class LocaleTranslationDownloadTest extends LocaleUpdateBase {
     $result = locale_translation_download_source($source_file, 'translations://');
 
     $this->assertEquals('translations://contrib_module_one-8.x-1.1.de._po', $result->uri);
-    $this->assertFalse(file_exists('translations://contrib_module_one-8.x-1.1.de_0._po'));
-    $this->assertTrue(file_exists('translations://contrib_module_one-8.x-1.1.de._po'));
+    $this->assertFileNotExists('translations://contrib_module_one-8.x-1.1.de_0._po');
+    $this->assertFileExists('translations://contrib_module_one-8.x-1.1.de._po');
     $this->assertNotContains('__old_content__', file_get_contents('translations://contrib_module_one-8.x-1.1.de._po'));
   }
 
