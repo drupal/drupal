@@ -39,7 +39,7 @@ abstract class TourTestBasic extends TourTestBase {
    */
   protected $permissions = ['access tour'];
 
-  protected function setUp(): void {
+  protected function setUp() {
     parent::setUp();
 
     // Make sure we are using distinct default and administrative themes for

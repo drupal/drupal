@@ -52,7 +52,7 @@ abstract class LocaleUpdateBase extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp(): void {
+  protected function setUp() {
     parent::setUp();
 
     // Setup timestamps to identify old and new translation sources.
