@@ -126,7 +126,7 @@ class RouteProviderTest extends KernelTestBase {
 
     $candidates = array_flip($candidates);
 
-    $this->assertTrue(count($candidates) == 7, 'Correct number of candidates found');
+    $this->assertCount(7, $candidates, 'Correct number of candidates found');
     $this->assertTrue(array_key_exists('/node/5/edit', $candidates), 'First candidate found.');
     $this->assertTrue(array_key_exists('/node/5/%', $candidates), 'Second candidate found.');
     $this->assertTrue(array_key_exists('/node/%/edit', $candidates), 'Third candidate found.');

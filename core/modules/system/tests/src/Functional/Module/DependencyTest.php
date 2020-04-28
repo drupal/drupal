@@ -65,7 +65,7 @@ class DependencyTest extends ModuleTestBase {
     $this->drupalGet('admin/modules');
     $this->assertRaw(t('@module (<span class="admin-missing">missing</span>)', ['@module' => Unicode::ucfirst('_missing_dependency')]), 'A module with missing dependencies is marked as such.');
     $checkbox = $this->xpath('//input[@type="checkbox" and @disabled="disabled" and @name="modules[system_dependencies_test][enable]"]');
-    $this->assert(count($checkbox) == 1, 'Checkbox for the module is disabled.');
+    $this->assertCount(1, $checkbox, 'Checkbox for the module is disabled.');
   }
 
   /**
@@ -80,7 +80,7 @@ class DependencyTest extends ModuleTestBase {
       '@version' => '1.0',
     ]), 'A module that depends on an incompatible version of a module is marked as such.');
     $checkbox = $this->xpath('//input[@type="checkbox" and @disabled="disabled" and @name="modules[system_incompatible_module_version_dependencies_test][enable]"]');
-    $this->assert(count($checkbox) == 1, 'Checkbox for the module is disabled.');
+    $this->assertCount(1, $checkbox, 'Checkbox for the module is disabled.');
   }
 
   /**
@@ -94,7 +94,7 @@ class DependencyTest extends ModuleTestBase {
       '@module' => 'System incompatible core version test',
     ]), 'A module that depends on a module with an incompatible core version is marked as such.');
     $checkbox = $this->xpath('//input[@type="checkbox" and @disabled="disabled" and @name="modules[system_incompatible_core_version_dependencies_test][enable]"]');
-    $this->assert(count($checkbox) == 1, 'Checkbox for the module is disabled.');
+    $this->assertCount(1, $checkbox, 'Checkbox for the module is disabled.');
   }
 
   /**
@@ -104,7 +104,7 @@ class DependencyTest extends ModuleTestBase {
     $this->drupalGet('admin/modules');
     $this->assertRaw('This module requires PHP version 6502.* and is incompatible with PHP version ' . phpversion() . '.', 'User is informed when the PHP dependency requirement of a module is not met.');
     $checkbox = $this->xpath('//input[@type="checkbox" and @disabled="disabled" and @name="modules[system_incompatible_php_version_test][enable]"]');
-    $this->assert(count($checkbox) == 1, 'Checkbox for the module is disabled.');
+    $this->assertCount(1, $checkbox, 'Checkbox for the module is disabled.');
   }
 
   /**
@@ -203,7 +203,7 @@ class DependencyTest extends ModuleTestBase {
     // Check that the comment module cannot be uninstalled.
     $this->drupalGet('admin/modules/uninstall');
     $checkbox = $this->xpath('//input[@type="checkbox" and @name="uninstall[comment]" and @disabled="disabled"]');
-    $this->assert(count($checkbox) == 1, 'Checkbox for uninstalling the comment module is disabled.');
+    $this->assertCount(1, $checkbox, 'Checkbox for uninstalling the comment module is disabled.');
 
     // Delete any forum terms.
     $vid = $this->config('forum.settings')->get('vocabulary');

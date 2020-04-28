@@ -30,7 +30,7 @@ class HtmlAttributesTest extends BrowserTestBase {
     $this->drupalGet('');
     $this->assertSession()->responseContains('<html lang="en" dir="ltr" theme_test_html_attribute="theme test html attribute value">');
     $attributes = $this->xpath('/body[@theme_test_body_attribute="theme test body attribute value"]');
-    $this->assertTrue(count($attributes) == 1, "Attribute set in the 'body' element via hook_preprocess_HOOK() found.");
+    $this->assertCount(1, $attributes, "Attribute set in the 'body' element via hook_preprocess_HOOK() found.");
   }
 
 }

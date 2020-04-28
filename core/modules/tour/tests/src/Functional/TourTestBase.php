@@ -54,7 +54,7 @@ abstract class TourTestBase extends BrowserTestBase {
       foreach ($tips as $tip) {
         if (!empty($tip['data-id'])) {
           $elements = $this->getSession()->getPage()->findAll('css', '#' . $tip['data-id']);
-          $this->assertTrue(!empty($elements) && count($elements) === 1, new FormattableMarkup('Found corresponding page element for tour tip with id #%data-id', ['%data-id' => $tip['data-id']]));
+          $this->assertCount(1, $elements, new FormattableMarkup('Found corresponding page element for tour tip with id #%data-id', ['%data-id' => $tip['data-id']]));
         }
         elseif (!empty($tip['data-class'])) {
           $elements = $this->getSession()->getPage()->findAll('css', '.' . $tip['data-class']);

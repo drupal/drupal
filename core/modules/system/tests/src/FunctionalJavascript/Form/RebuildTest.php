@@ -98,7 +98,7 @@ class RebuildTest extends WebDriverTestBase {
     $this->drupalGet('node/add/page');
     $page->find('css', '[value="Add another item"]')->click();
     $this->assertSession()->assertWaitOnAjaxRequest();
-    $this->assertTrue(count($this->xpath('//div[contains(@class, "field--name-field-ajax-test")]//input[@type="text"]')) == 2, 'AJAX submission succeeded.');
+    $this->assertCount(2, $this->xpath('//div[contains(@class, "field--name-field-ajax-test")]//input[@type="text"]'), 'AJAX submission succeeded.');
 
     // Submit the form with the non-Ajax "Save" button, leaving the file field
     // blank to trigger a validation error, and ensure that a validation error
@@ -113,7 +113,7 @@ class RebuildTest extends WebDriverTestBase {
 
     // Ensure that the form contains two items in the multi-valued field, so we
     // know we're testing a form that was correctly retrieved from cache.
-    $this->assertTrue(count($this->xpath('//form[contains(@id, "node-page-form")]//div[contains(@class, "js-form-item-field-ajax-test")]//input[@type="text"]')) == 2, 'Form retained its state from cache.');
+    $this->assertCount(2, $this->xpath('//form[contains(@id, "node-page-form")]//div[contains(@class, "js-form-item-field-ajax-test")]//input[@type="text"]'), 'Form retained its state from cache.');
 
     // Ensure that the form's action is correct.
     $forms = $this->xpath('//form[contains(@class, "node-page-form")]');

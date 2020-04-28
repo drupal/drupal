@@ -88,10 +88,10 @@ class CKEditorLoadingTest extends BrowserTestBase {
     list($settings, $editor_settings_present, $editor_js_present, $body, $format_selector) = $this->getThingsToCheck();
     $this->assertFalse($editor_settings_present, 'No Text Editor module settings.');
     $this->assertFalse($editor_js_present, 'No Text Editor JavaScript.');
-    $this->assertTrue(count($body) === 1, 'A body field exists.');
-    $this->assertTrue(count($format_selector) === 0, 'No text format selector exists on the page.');
+    $this->assertCount(1, $body, 'A body field exists.');
+    $this->assertCount(0, $format_selector, 'No text format selector exists on the page.');
     $hidden_input = $this->xpath('//input[@type="hidden" and contains(@class, "editor")]');
-    $this->assertTrue(count($hidden_input) === 0, 'A single text format hidden input does not exist on the page.');
+    $this->assertCount(0, $hidden_input, 'A single text format hidden input does not exist on the page.');
     $this->assertNoRaw(drupal_get_path('module', 'ckeditor') . '/js/ckeditor.js', 'CKEditor glue JS is absent.');
 
     // On pages where there would never be a text editor, CKEditor JS is absent.
@@ -120,10 +120,10 @@ class CKEditorLoadingTest extends BrowserTestBase {
     $this->assertTrue($editor_settings_present, "Text Editor module's JavaScript settings are on the page.");
     $this->assertIdentical($expected, $this->castSafeStrings($settings['editor']), "Text Editor module's JavaScript settings on the page are correct.");
     $this->assertTrue($editor_js_present, 'Text Editor JavaScript is present.');
-    $this->assertTrue(count($body) === 1, 'A body field exists.');
-    $this->assertTrue(count($format_selector) === 1, 'A single text format selector exists on the page.');
+    $this->assertCount(1, $body, 'A body field exists.');
+    $this->assertCount(1, $format_selector, 'A single text format selector exists on the page.');
     $specific_format_selector = $this->xpath('//select[contains(@class, "filter-list") and @data-editor-for="edit-body-0-value"]');
-    $this->assertTrue(count($specific_format_selector) === 1, 'A single text format selector exists on the page and has a "data-editor-for" attribute with the correct value.');
+    $this->assertCount(1, $specific_format_selector, 'A single text format selector exists on the page and has a "data-editor-for" attribute with the correct value.');
     $this->assertTrue(in_array('ckeditor/drupal.ckeditor', explode(',', $settings['ajaxPageState']['libraries'])), 'CKEditor glue library is present.');
 
     // Enable the ckeditor_test module, customize configuration. In this case,

@@ -63,7 +63,7 @@ class ConfigImportUploadTest extends BrowserTestBase {
     // Ensure submit button for \Drupal\config\Form\ConfigImportForm is
     // disabled.
     $submit_is_disabled = $this->cssSelect('form.config-import-form input[type="submit"]:disabled');
-    $this->assertTrue(count($submit_is_disabled) === 1, 'The submit button is disabled.');
+    $this->assertCount(1, $submit_is_disabled, 'The submit button is disabled.');
   }
 
 }

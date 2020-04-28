@@ -371,7 +371,8 @@ abstract class ContentTranslationUITestBase extends ContentTranslationTestBase {
     $entity = $storage->load($this->entityId, TRUE);
     if ($this->assertTrue(is_object($entity), 'Entity found')) {
       $translations = $entity->getTranslationLanguages();
-      $this->assertTrue(count($translations) == 2 && empty($translations[$langcode]), 'Translation successfully deleted.');
+      $this->assertCount(2, $translations, 'Translation successfully deleted.');
+      $this->assertEmpty($translations[$langcode], 'Translation successfully deleted.');
     }
 
     // Check that the translator cannot delete the original translation.

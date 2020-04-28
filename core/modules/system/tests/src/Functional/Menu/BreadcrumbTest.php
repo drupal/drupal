@@ -296,7 +296,7 @@ class BreadcrumbTest extends BrowserTestBase {
         ':menu' => 'block-bartik-tools',
         ':href' => Url::fromUri('base:' . $link_path)->toString(),
       ]);
-      $this->assertTrue(count($elements) == 1, "Link to {$link_path} appears only once.");
+      $this->assertCount(1, $elements, "Link to {$link_path} appears only once.");
 
       // Next iteration should expect this tag as parent link.
       // Note: Term name, not link name, due to taxonomy_term_page().
