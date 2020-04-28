@@ -1,17 +1,17 @@
 <?php
 
-namespace Drupal\Tests\node\Kernel\Migrate;
+namespace Drupal\Tests\migrate_drupal\Kernel;
 
 use Drupal\migrate_drupal\NodeMigrateType;
 use Drupal\Tests\migrate\Kernel\MigrateTestBase;
 use Drupal\Tests\migrate_drupal\Traits\NodeMigrateTypeTestTrait;
 
 /**
- * Tests node_migrations_plugin_alter.
+ * Tests the assignment of the node migration type in migrations_plugin_alter.
  *
- * @group node
+ * @group migrate_drupal
  */
-class MigrationPluginAlterTest extends MigrateTestBase {
+class NodeMigrationTypePluginAlterTest extends MigrateTestBase {
 
   use NodeMigrateTypeTestTrait;
 
@@ -29,7 +29,7 @@ class MigrationPluginAlterTest extends MigrateTestBase {
   }
 
   /**
-   * Tests migrate_drupal_migrations_plugin_alter.
+   * Tests the assignment of the node migration type.
    *
    * @param string $type
    *   The type of node migration, 'classic' or 'complete'.
@@ -39,11 +39,12 @@ class MigrationPluginAlterTest extends MigrateTestBase {
    *   The expected results.
    *
    * @dataProvider providerMigrationPluginAlter
+   *
+   * @throws \Exception
    */
   public function testMigrationPluginAlter($type, array $migration_definitions, array $expected) {
-    // Version 6 is used so that term node migrations are tested.
     $this->makeNodeMigrateMapTable($type, '7');
-    node_migration_plugins_alter($migration_definitions);
+    migrate_drupal_migration_plugins_alter($migration_definitions);
     $this->assertSame($expected, $migration_definitions);
   }
 
