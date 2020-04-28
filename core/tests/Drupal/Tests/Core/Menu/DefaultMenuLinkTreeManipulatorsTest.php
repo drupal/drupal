@@ -200,7 +200,7 @@ class DefaultMenuLinkTreeManipulatorsTest extends UnitTestCase {
     $this->assertInstanceOf('\Drupal\Core\Menu\InaccessibleMenuLink', $element->link);
     // Menu link 4: child of menu link 3, which was AccessResult::neutral(),
     // hence menu link 3's subtree is removed, of which this menu link is one.
-    $this->assertFalse(array_key_exists(4, $tree[2]->subtree[3]->subtree));
+    $this->assertArrayNotHasKey(4, $tree[2]->subtree[3]->subtree);
     // Menu link 5: no route name, treated as external, hence access granted.
     $element = $tree[5];
     $this->assertEquals(AccessResult::allowed()->cachePerPermissions(), $element->access);

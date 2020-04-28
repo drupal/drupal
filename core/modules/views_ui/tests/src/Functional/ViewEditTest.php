@@ -67,7 +67,7 @@ class ViewEditTest extends UITestBase {
     $displays = $view->get('display');
     $this->assertTrue(!empty($displays['test_1']), 'Display data found for new display ID key.');
     $this->assertIdentical($displays['test_1']['id'], 'test_1', 'New display ID matches the display ID key.');
-    $this->assertFalse(array_key_exists('attachment_1', $displays), 'Old display ID not found.');
+    $this->assertArrayNotHasKey('attachment_1', $displays);
 
     // Set to the same machine name and save the View.
     $edit = ['display_id' => 'test_1'];

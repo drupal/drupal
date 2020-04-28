@@ -71,7 +71,7 @@ class PluginInstanceTest extends ViewsKernelTestBase {
 
     // Check all plugin types.
     foreach ($this->pluginTypes as $type) {
-      $this->assertTrue(array_key_exists($type, $this->definitions), new FormattableMarkup('Key for plugin type @type found.', ['@type' => $type]));
+      $this->assertArrayHasKey($type, $this->definitions);
       $this->assertTrue(is_array($this->definitions[$type]) && !empty($this->definitions[$type]), new FormattableMarkup('Plugin type @type has an array of plugins.', ['@type' => $type]));
     }
 

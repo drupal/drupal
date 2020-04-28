@@ -226,7 +226,7 @@ class ManageDisplayTest extends WebDriverTestBase {
     /** @var \Drupal\Core\Entity\Display\EntityViewDisplayInterface $display */
     $display = $display_storage->loadUnchanged($display_id);
     $component = $display->getComponent('field_test');
-    $this->assertFalse(array_key_exists('field_third_party_test', $component['third_party_settings']));
+    $this->assertArrayNotHasKey('field_third_party_test', $component['third_party_settings']);
   }
 
   /**

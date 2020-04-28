@@ -81,8 +81,8 @@ class AttachedAssetsTest extends KernelTestBase {
 
     $css = $this->assetResolver->getCssAssets($assets, FALSE);
     $js = $this->assetResolver->getJsAssets($assets, FALSE)[1];
-    $this->assertTrue(array_key_exists('core/modules/system/tests/modules/common_test/bar.css', $css), 'CSS files are correctly added.');
-    $this->assertTrue(array_key_exists('core/modules/system/tests/modules/common_test/foo.js', $js), 'JavaScript files are correctly added.');
+    $this->assertArrayHasKey('core/modules/system/tests/modules/common_test/bar.css', $css);
+    $this->assertArrayHasKey('core/modules/system/tests/modules/common_test/foo.js', $js);
 
     $css_render_array = \Drupal::service('asset.css.collection_renderer')->render($css);
     $js_render_array = \Drupal::service('asset.js.collection_renderer')->render($js);
@@ -103,8 +103,8 @@ class AttachedAssetsTest extends KernelTestBase {
 
     $this->assertEqual([], $assets->getSettings(), 'JavaScript settings on $assets are empty.');
     $javascript = $this->assetResolver->getJsAssets($assets, FALSE)[1];
-    $this->assertTrue(array_key_exists('currentPath', $javascript['drupalSettings']['data']['path']), 'The current path JavaScript setting is set correctly.');
-    $this->assertTrue(array_key_exists('currentPath', $assets->getSettings()['path']), 'JavaScript settings on $assets are resolved after retrieving JavaScript assets, and are equal to the returned JavaScript settings.');
+    $this->assertArrayHasKey('currentPath', $javascript['drupalSettings']['data']['path']);
+    $this->assertArrayHasKey('currentPath', $assets->getSettings()['path']);
 
     $assets->setSettings(['drupal' => 'rocks', 'dries' => 280342800]);
     $javascript = $this->assetResolver->getJsAssets($assets, FALSE)[1];
@@ -121,8 +121,8 @@ class AttachedAssetsTest extends KernelTestBase {
 
     $css = $this->assetResolver->getCssAssets($assets, FALSE);
     $js = $this->assetResolver->getJsAssets($assets, FALSE)[1];
-    $this->assertTrue(array_key_exists('http://example.com/stylesheet.css', $css), 'External CSS files are correctly added.');
-    $this->assertTrue(array_key_exists('http://example.com/script.js', $js), 'External JavaScript files are correctly added.');
+    $this->assertArrayHasKey('http://example.com/stylesheet.css', $css);
+    $this->assertArrayHasKey('http://example.com/script.js', $js);
 
     $css_render_array = \Drupal::service('asset.css.collection_renderer')->render($css);
     $js_render_array = \Drupal::service('asset.js.collection_renderer')->render($js);
@@ -464,8 +464,8 @@ class AttachedAssetsTest extends KernelTestBase {
 
     $css = $this->assetResolver->getCssAssets($assets, FALSE);
     $js = $this->assetResolver->getJsAssets($assets, FALSE)[1];
-    $this->assertTrue(array_key_exists('core/modules/system/tests/modules/common_test/querystring.css?arg1=value1&arg2=value2', $css), 'CSS file with query string is correctly added.');
-    $this->assertTrue(array_key_exists('core/modules/system/tests/modules/common_test/querystring.js?arg1=value1&arg2=value2', $js), 'JavaScript file with query string is correctly added.');
+    $this->assertArrayHasKey('core/modules/system/tests/modules/common_test/querystring.css?arg1=value1&arg2=value2', $css);
+    $this->assertArrayHasKey('core/modules/system/tests/modules/common_test/querystring.js?arg1=value1&arg2=value2', $js);
 
     $css_render_array = \Drupal::service('asset.css.collection_renderer')->render($css);
     $rendered_css = $this->renderer->renderPlain($css_render_array);
