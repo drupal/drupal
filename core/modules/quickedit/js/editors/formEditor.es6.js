@@ -26,7 +26,7 @@
       formSaveAjax: null,
 
       /**
-       * @inheritdoc
+       * {@inheritdoc}
        *
        * @param {object} fieldModel
        *   The field model that holds the state.
@@ -76,7 +76,7 @@
       },
 
       /**
-       * @inheritdoc
+       * {@inheritdoc}
        *
        * @return {object}
        *   A settings object for the quick edit UI.
@@ -192,7 +192,7 @@
       },
 
       /**
-       * @inheritdoc
+       * {@inheritdoc}
        */
       save() {
         const $formContainer = this.$formContainer;
@@ -265,7 +265,7 @@
       },
 
       /**
-       * @inheritdoc
+       * {@inheritdoc}
        */
       showValidationErrors() {
         this.$formContainer

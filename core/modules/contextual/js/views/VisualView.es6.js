@@ -49,7 +49,7 @@
       },
 
       /**
-       * @inheritdoc
+       * {@inheritdoc}
        *
        * @return {Drupal.contextual.VisualView}
        *   The current contextual visual view.

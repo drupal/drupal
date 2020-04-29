@@ -18,7 +18,7 @@
       },
 
       /**
-       * @inheritdoc
+       * {@inheritdoc}
        */
       render() {
         this.$el.toggleClass(
@@ -28,7 +28,7 @@
       },
 
       /**
-       * @inheritdoc
+       * {@inheritdoc}
        */
       remove() {
         this.setElement(null);

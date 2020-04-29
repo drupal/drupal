@@ -102,7 +102,7 @@
       },
 
       /**
-       * @inheritdoc
+       * {@inheritdoc}
        *
        * @return {Drupal.toolbar.ToolbarVisualView}
        *   The `ToolbarVisualView` instance.

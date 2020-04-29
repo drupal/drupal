@@ -26,7 +26,7 @@
       },
 
       /**
-       * @inheritdoc
+       * {@inheritdoc}
        */
       render() {
         const isOpen = this.model.get('isOpen');

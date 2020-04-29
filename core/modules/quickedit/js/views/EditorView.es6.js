@@ -41,7 +41,7 @@
       },
 
       /**
-       * @inheritdoc
+       * {@inheritdoc}
        */
       remove() {
         // The el property is the field, which should not be removed. Remove the

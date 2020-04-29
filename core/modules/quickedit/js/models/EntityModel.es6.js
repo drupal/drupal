@@ -699,7 +699,7 @@
       },
 
       /**
-       * @inheritdoc
+       * {@inheritdoc}
        */
       sync() {
         // We don't use REST updates to sync.
