@@ -40,7 +40,7 @@
       },
 
       /**
-       * @inheritdoc
+       * {@inheritdoc}
        *
        * @param {Drupal.quickedit.FieldModel} fieldModel
        *   The field model that holds the state.
@@ -329,14 +329,14 @@
       },
 
       /**
-       * @inheritdoc
+       * {@inheritdoc}
        */
       revert() {
         this.$el.html(this.model.get('originalValue'));
       },
 
       /**
-       * @inheritdoc
+       * {@inheritdoc}
        */
       getQuickEditUISettings() {
         return {
@@ -348,7 +348,7 @@
       },
 
       /**
-       * @inheritdoc
+       * {@inheritdoc}
        */
       showValidationErrors() {
         const errors = Drupal.theme('quickeditImageErrors', {
@@ -363,7 +363,7 @@
       },
 
       /**
-       * @inheritdoc
+       * {@inheritdoc}
        */
       removeValidationErrors() {
         $(`#${this.fieldModel.toolbarView.getMainWysiwygToolgroupId()}`)

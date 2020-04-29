@@ -67,9 +67,7 @@ class VersionNegotiatorTest extends JsonapiKernelTestBase {
   ];
 
   /**
-   * Initialization tasks for the test.
-   *
-   * @inheritdoc
+   * {@inheritdoc}
    */
   protected function setUp(): void {
     parent::setUp();

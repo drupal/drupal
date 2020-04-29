@@ -14,7 +14,7 @@ use Drupal\Tests\migrate\Unit\MigrateTestCase;
 class UrlEncodeTest extends MigrateTestCase {
 
   /**
-   * @inheritdoc
+   * {@inheritdoc}
    */
   protected $migrationConfiguration = [
     'id' => 'test',
