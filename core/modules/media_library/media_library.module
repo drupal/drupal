@@ -69,7 +69,6 @@ function media_library_help($route_name, RouteMatchInterface $route_match) {
         $output .= t('Both the table-style and grid-style interfaces are regular views and can be customized via the Views UI, including sorting and filtering. This is the case for both the administration page and the modal dialog.');
       }
       $output .= '</li>';
-      $output .= '<li>' . t('Both the table-style and grid-style interfaces are regular views and can be customized via the Views UI, including sorting and filtering. This is the case for both the administration page and the modal dialog.') . '</li>';
       $output .= '<li>' . t('In the grid-style interface, the fields that are displayed (including which image style is used for images) can be customized by configuring the "Media library" view mode for each of your <a href=":media-types">media types</a>. The thumbnail images in the grid-style interface can be customized by configuring the "Media Library thumbnail (220×220)" image style.', [
         ':media-types' => Url::fromRoute('entity.media_type.collection')->toString(),
       ]) . '</li>';
