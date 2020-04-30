@@ -103,10 +103,67 @@ function update_system_schema_requirements() {
  * Checks update requirements and reports errors and (optionally) warnings.
  */
 function update_check_requirements() {
+  // Because this is one of the earliest points in the update process,
+  // detect and fix missing schema versions for modules here to ensure
+  // it runs on all update code paths.
+  _update_fix_missing_schema();
+
   // Check requirements of all loaded modules.
   $requirements = \Drupal::moduleHandler()->invokeAll('requirements', ['update']);
   $requirements += update_system_schema_requirements();
   return $requirements;
+}
+
+/**
+ * Helper to detect and fix 'missing' schema information.
+ *
+ * Repairs the case where a module has no schema version recorded.
+ * This has to be done prior to updates being run, otherwise the update
+ * system would detect and attempt to run all historical updates for a
+ * module.
+ *
+ * @todo: remove in a major version after
+ * https://www.drupal.org/project/drupal/issues/3130037 has been fixed.
+ */
+function _update_fix_missing_schema() {
+  $versions = \Drupal::keyValue('system.schema')->getAll();
+  $module_handler = \Drupal::moduleHandler();
+  $enabled_modules = $module_handler->getModuleList();
+
+  foreach (array_keys($enabled_modules) as $module) {
+    // All modules should have a recorded schema version, but when they
+    // don't, detect and fix the problem.
+    if (!isset($versions[$module])) {
+      // Ensure the .install file is loaded.
+      module_load_install($module);
+      $all_updates = drupal_get_schema_versions($module);
+      // If the schema version of a module hasn't been recorded, we cannot
+      // know the actual schema version a module is at, because
+      // no updates will ever have been run on the site and it was not set
+      // correctly when the module was installed, so instead set it to
+      // the same as the last update. This means that updates will proceed
+      // again the next time the module is updated and a new update is
+      // added. Updates added in between the module being installed and the
+      // schema version being fixed here (if any have been added) will never
+      // be run, but we have no way to identify which updates these are.
+      if ($all_updates) {
+        $last_update = max($all_updates);
+      }
+      else {
+        $last_update = \Drupal::CORE_MINIMUM_SCHEMA_VERSION;
+      }
+      // If the module implements hook_update_last_removed() use the
+      // value of that if it's higher than the schema versions found so
+      // far.
+      if ($last_removed = $module_handler->invoke($module, 'update_last_removed')) {
+        $last_update = max($last_update, $last_removed);
+      }
+      drupal_set_installed_schema_version($module, $last_update);
+      $args = ['%module' => $module, '%last_update_hook' => $module . '_update_' . $last_update . '()'];
+      \Drupal::messenger()->addWarning(t('Schema information for module %module was missing from the database. You should manually review the module updates and your database to check if any updates have been skipped up to, and including, %last_update_hook.', $args));
+      \Drupal::logger('update')->warning('Schema information for module %module was missing from the database. You should manually review the module updates and your database to check if any updates have been skipped up to, and including, %last_update_hook.', $args);
+    }
+  }
 }
 
 /**
@@ -606,7 +663,7 @@ function update_retrieve_dependencies() {
   $return = [];
   // Get a list of installed modules, arranged so that we invoke their hooks in
   // the same order that \Drupal::moduleHandler()->invokeAll() does.
-  foreach (drupal_get_installed_schema_version(NULL, FALSE, TRUE) as $module => $schema) {
+  foreach (\Drupal::keyValue('system.schema')->getAll() as $module => $schema) {
     if ($schema == SCHEMA_UNINSTALLED) {
       // Nothing to upgrade.
       continue;
