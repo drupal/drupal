@@ -45,7 +45,7 @@
       },
 
       /**
-       * @inheritdoc
+       * {@inheritdoc}
        *
        * @return {jQuery}
        *   The text element for the plain text editor.
@@ -55,7 +55,7 @@
       },
 
       /**
-       * @inheritdoc
+       * {@inheritdoc}
        *
        * @param {object} fieldModel
        *   The field model that holds the state.
@@ -115,7 +115,7 @@
       },
 
       /**
-       * @inheritdoc
+       * {@inheritdoc}
        *
        * @return {object}
        *   A settings object for the quick edit UI.
@@ -130,7 +130,7 @@
       },
 
       /**
-       * @inheritdoc
+       * {@inheritdoc}
        */
       revert() {
         this.$textElement.html(this.model.get('originalValue'));

@@ -131,7 +131,7 @@
       },
 
       /**
-       * @inheritdoc
+       * {@inheritdoc}
        *
        * @param {object} attributes
        *   Attributes for the toolbar.

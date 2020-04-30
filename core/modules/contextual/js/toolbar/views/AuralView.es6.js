@@ -34,7 +34,7 @@
       },
 
       /**
-       * @inheritdoc
+       * {@inheritdoc}
        *
        * @return {Drupal.contextualToolbar.AuralView}
        *   The current contextual toolbar aural view.

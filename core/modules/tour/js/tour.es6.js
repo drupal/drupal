@@ -125,7 +125,7 @@
       },
 
       /**
-       * @inheritdoc
+       * {@inheritdoc}
        *
        * @return {Drupal.tour.views.ToggleTourView}
        *   The `ToggleTourView` view.

@@ -42,7 +42,7 @@
       },
 
       /**
-       * @inheritdoc
+       * {@inheritdoc}
        *
        * @return {Drupal.contextualToolbar.VisualView}
        *   The current contextual toolbar visual view.

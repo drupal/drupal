@@ -912,7 +912,7 @@ class Sql extends PluginBase implements MigrateIdMapInterface, ContainerFactoryP
   }
 
   /**
-   * @inheritdoc
+   * {@inheritdoc}
    */
   public function currentSource() {
     if ($this->valid()) {
