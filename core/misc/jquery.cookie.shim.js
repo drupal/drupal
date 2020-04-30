@@ -18,16 +18,19 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     return Object.prototype.toString.call(obj) === '[object Function]';
   };
 
-  var parseCookieValue = function parseCookieValue(value) {
+  var parseCookieValue = function parseCookieValue(value, parseJson) {
     if (value.indexOf('"') === 0) {
       value = value.slice(1, -1).replace(/\\"/g, '"').replace(/\\\\/g, '\\');
     }
 
-    return decodeURIComponent(value.replace(/\+/g, ' '));
+    try {
+      value = decodeURIComponent(value.replace(/\+/g, ' '));
+      return parseJson ? JSON.parse(value) : value;
+    } catch (e) {}
   };
 
-  var reader = function reader(cookieValue, cookieName, converter, readUnsanitized) {
-    var value = readUnsanitized ? cookieValue : parseCookieValue(cookieValue);
+  var reader = function reader(cookieValue, cookieName, converter, readUnsanitized, parseJson) {
+    var value = readUnsanitized ? cookieValue : parseCookieValue(cookieValue, parseJson);
 
     if (converter !== undefined && isFunction(converter)) {
       return converter(value, cookieName);
@@ -42,13 +45,10 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     Drupal.deprecationError({
       message: "jQuery.cookie() ".concat(deprecatedMessageSuffix)
     });
+    key = key && !$.cookie.raw ? encodeURIComponent(key) : key;
 
     if (value !== undefined && !isFunction(value)) {
       var attributes = _objectSpread({}, $.cookie.defaults, {}, options);
-
-      if (!$.cookie.json) {
-        value = String(value);
-      }
 
       if (typeof attributes.expires === 'string' && attributes.expires !== '') {
         attributes.expires = new Date(attributes.expires);
@@ -59,14 +59,28 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
           return encodeURIComponent(cookieValue);
         }
       });
+      value = $.cookie.json && !$.cookie.raw ? JSON.stringify(value) : String(value);
       return cookieSetter.set(key, value, attributes);
     }
 
     var userProvidedConverter = value;
-    var cookiesShim = cookies.withConverter(function (cookieValue, cookieName) {
-      return reader(cookieValue, cookieName, userProvidedConverter, $.cookie.raw);
+    var cookiesShim = cookies.withConverter({
+      read: function read(cookieValue, cookieName) {
+        return reader(cookieValue, cookieName, userProvidedConverter, $.cookie.raw, $.cookie.json);
+      }
     });
-    return $.cookie.json === true ? cookiesShim.getJSON(key) : cookiesShim.get(key);
+
+    if (key !== undefined) {
+      return cookiesShim.get(key);
+    }
+
+    var results = cookiesShim.get();
+    Object.keys(results).forEach(function (resultKey) {
+      if (results[resultKey] === undefined) {
+        delete results[resultKey];
+      }
+    });
+    return results;
   };
 
   $.cookie.defaults = _objectSpread({
