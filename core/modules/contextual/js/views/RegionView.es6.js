@@ -43,7 +43,7 @@
       },
 
       /**
-       * @inheritdoc
+       * {@inheritdoc}
        *
        * @return {Drupal.contextual.RegionView}
        *   The current contextual region view.

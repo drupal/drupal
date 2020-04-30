@@ -28,7 +28,7 @@
       },
 
       /**
-       * @inheritdoc
+       * {@inheritdoc}
        */
       render() {},
 

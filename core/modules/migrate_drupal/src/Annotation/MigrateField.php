@@ -20,7 +20,7 @@ use Drupal\Component\Annotation\Plugin;
 class MigrateField extends Plugin {
 
   /**
-   * @inheritdoc
+   * {@inheritdoc}
    */
   public function __construct($values) {
     parent::__construct($values);

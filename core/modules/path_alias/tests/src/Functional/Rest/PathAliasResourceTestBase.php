@@ -25,7 +25,7 @@ abstract class PathAliasResourceTestBase extends EntityResourceTestBase {
   protected static $entityTypeId = 'path_alias';
 
   /**
-   * @inheritdoc
+   * {@inheritdoc}
    */
   protected static $patchProtectedFieldNames = [];
 

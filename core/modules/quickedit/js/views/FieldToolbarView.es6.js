@@ -56,7 +56,7 @@
       },
 
       /**
-       * @inheritdoc
+       * {@inheritdoc}
        *
        * @return {Drupal.quickedit.FieldToolbarView}
        *   The current FieldToolbarView.

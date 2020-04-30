@@ -73,7 +73,7 @@
       },
 
       /**
-       * @inheritdoc
+       * {@inheritdoc}
        *
        * @return {jQuery}
        *   The text element edited.
@@ -83,7 +83,7 @@
       },
 
       /**
-       * @inheritdoc
+       * {@inheritdoc}
        *
        * @param {object} fieldModel
        *   The field model.
@@ -179,7 +179,7 @@
       },
 
       /**
-       * @inheritdoc
+       * {@inheritdoc}
        *
        * @return {object}
        *   The settings for the quick edit UI.
@@ -194,7 +194,7 @@
       },
 
       /**
-       * @inheritdoc
+       * {@inheritdoc}
        */
       revert() {
         this.$textElement.html(this.model.get('originalValue'));

@@ -88,7 +88,7 @@
       },
 
       /**
-       * @inheritdoc
+       * {@inheritdoc}
        *
        * @return {Drupal.quickedit.EntityToolbarView}
        *   The entity toolbar view.
@@ -151,7 +151,7 @@
       },
 
       /**
-       * @inheritdoc
+       * {@inheritdoc}
        */
       remove() {
         // Remove additional DOM elements controlled by this View.

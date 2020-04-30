@@ -18,7 +18,7 @@
       },
 
       /**
-       * @inheritdoc
+       * {@inheritdoc}
        */
       render() {
         const subtrees = this.model.get('subtrees');
