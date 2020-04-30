@@ -31,18 +31,26 @@
    *
    * @param {string} value
    *   The cookie value to parse.
+   * @param {boolean} parseJson
+   *   Whether cookie value should be parsed from JSON.
    *
    * @return {string}
    *   The cookie value for the reader to return.
    */
-  const parseCookieValue = value => {
+  const parseCookieValue = (value, parseJson) => {
     if (value.indexOf('"') === 0) {
       value = value
         .slice(1, -1)
         .replace(/\\"/g, '"')
         .replace(/\\\\/g, '\\');
     }
-    return decodeURIComponent(value.replace(/\+/g, ' '));
+
+    try {
+      value = decodeURIComponent(value.replace(/\+/g, ' '));
+      return parseJson ? JSON.parse(value) : value;
+    } catch (e) {
+      // Exceptions on JSON parsing should be ignored.
+    }
   };
 
   /**
@@ -60,16 +68,27 @@
    *   A function that takes the cookie value for further processing.
    * @param {boolean} readUnsanitized
    *   Uses the unsanitized value when set to true.
+   * @param {boolean} parseJson
+   *   Whether cookie value should be parsed from JSON.
    *
    * @return {string}
    *   The cookie value that js-cookie will return.
    */
-  const reader = (cookieValue, cookieName, converter, readUnsanitized) => {
-    const value = readUnsanitized ? cookieValue : parseCookieValue(cookieValue);
+  const reader = (
+    cookieValue,
+    cookieName,
+    converter,
+    readUnsanitized,
+    parseJson,
+  ) => {
+    const value = readUnsanitized
+      ? cookieValue
+      : parseCookieValue(cookieValue, parseJson);
 
     if (converter !== undefined && isFunction(converter)) {
       return converter(value, cookieName);
     }
+
     return value;
   };
 
@@ -111,26 +130,19 @@
    *   Use the core/js-cookie library instead.
    *
    * @see https://www.drupal.org/node/3104677
-   * @see https://github.com/js-cookie/js-cookie/blob/v2.2.1/README.md
+   * @see https://github.com/js-cookie/js-cookie/blob/v3.0.0-rc.0/README.md
    */
   $.cookie = (key, value = undefined, options = undefined) => {
     Drupal.deprecationError({
       message: `jQuery.cookie() ${deprecatedMessageSuffix}`,
     });
+    // Key should be only encoded if it exists and when not in a raw mode.
+    key = key && !$.cookie.raw ? encodeURIComponent(key) : key;
     if (value !== undefined && !isFunction(value)) {
       // The caller is setting a cookie value and not trying to retrieve the
       // cookie value using a converter callback.
       const attributes = { ...$.cookie.defaults, ...options };
 
-      if (!$.cookie.json) {
-        // An object that is passed in must be typecast to a string when the
-        // "json" option is not set because js-cookie will always stringify
-        // JSON cookie values.
-        value = String(value);
-      }
-
-      // If the expires value is a non-empty string, it needs to be converted
-      // to a Date() object before being sent to js-cookie.
       if (typeof attributes.expires === 'string' && attributes.expires !== '') {
         attributes.expires = new Date(attributes.expires);
       }
@@ -139,6 +151,9 @@
         write: cookieValue => encodeURIComponent(cookieValue),
       });
 
+      value =
+        $.cookie.json && !$.cookie.raw ? JSON.stringify(value) : String(value);
+
       return cookieSetter.set(key, value, attributes);
     }
 
@@ -146,13 +161,29 @@
     // which has security implications, but remains in place for
     // backwards-compatibility.
     const userProvidedConverter = value;
-    const cookiesShim = cookies.withConverter((cookieValue, cookieName) =>
-      reader(cookieValue, cookieName, userProvidedConverter, $.cookie.raw),
-    );
+    const cookiesShim = cookies.withConverter({
+      read: (cookieValue, cookieName) =>
+        reader(
+          cookieValue,
+          cookieName,
+          userProvidedConverter,
+          $.cookie.raw,
+          $.cookie.json,
+        ),
+    });
 
-    return $.cookie.json === true
-      ? cookiesShim.getJSON(key)
-      : cookiesShim.get(key);
+    if (key !== undefined) {
+      return cookiesShim.get(key);
+    }
+
+    const results = cookiesShim.get();
+    Object.keys(results).forEach(resultKey => {
+      if (results[resultKey] === undefined) {
+        delete results[resultKey];
+      }
+    });
+
+    return results;
   };
 
   /**
@@ -195,7 +226,7 @@
    *   Use the core/js-cookie library instead.
    *
    * @see https://www.drupal.org/node/3104677
-   * @see https://github.com/js-cookie/js-cookie/blob/v2.2.1/README.md
+   * @see https://github.com/js-cookie/js-cookie/blob/v3.0.0-rc.0/README.md
    */
   $.removeCookie = (key, options) => {
     Drupal.deprecationError({
