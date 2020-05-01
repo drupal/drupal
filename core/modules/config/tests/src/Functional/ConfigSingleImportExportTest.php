@@ -187,7 +187,7 @@ EOD;
       $this->drupalPostForm(NULL, [], t('Confirm'));
       $entity = $storage->load('second');
       $this->assertRaw(t('The configuration was imported successfully.'));
-      $this->assertTrue(is_string($entity->label()), 'Entity label is a string');
+      $this->assertIsString($entity->label());
       $this->assertStringContainsString('ObjectSerialization', $entity->label(), 'Label contains serialized object');
     }
     else {
