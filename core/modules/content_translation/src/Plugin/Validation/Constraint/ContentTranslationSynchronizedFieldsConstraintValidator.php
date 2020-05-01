@@ -72,7 +72,7 @@ class ContentTranslationSynchronizedFieldsConstraintValidator extends Constraint
   }
 
   /**
-   * [@inheritdoc}
+   * {@inheritdoc}
    */
   public static function create(ContainerInterface $container) {
     return new static(
