@@ -10,7 +10,7 @@ use Drupal\Component\ProxyBuilder\ProxyBuilder as BaseProxyBuilder;
 class ProxyBuilder extends BaseProxyBuilder {
 
   /**
-   * {@inheritdoc{
+   * {@inheritdoc}
    */
   protected function buildUseStatements() {
     $output = parent::buildUseStatements();

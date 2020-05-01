@@ -38,7 +38,7 @@ class LinkField extends D6LinkField {
   }
 
   /**
-   * @inheritdoc}
+   * {@inheritdoc}
    */
   public function alterFieldInstanceMigration(MigrationInterface $migration) {
     $process = [

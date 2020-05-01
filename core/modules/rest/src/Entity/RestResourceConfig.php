@@ -215,7 +215,7 @@ class RestResourceConfig extends ConfigEntityBase implements RestResourceConfigI
   }
 
   /**
-   * (@inheritdoc)
+   * {@inheritdoc}
    */
   public function calculateDependencies() {
     parent::calculateDependencies();
