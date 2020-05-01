@@ -433,12 +433,14 @@ class AttachedAssetsTest extends KernelTestBase {
     $library_discovery->clearCachedDefinitions();
     $dynamic_library = $library_discovery->getLibraryByName('common_test', 'dynamic_library');
     $this->assertTrue(is_array($dynamic_library));
-    $this->assertArrayHasKey('version', $dynamic_library);
-    $this->assertSame('1.0', $dynamic_library['version']);
+    if ($this->assertTrue(isset($dynamic_library['version']))) {
+      $this->assertSame('1.0', $dynamic_library['version']);
+    }
     // Make sure the dynamic library definition could be altered.
     // @see common_test_library_info_alter()
-    $this->assertArrayHasKey('dependencies', $dynamic_library);
-    $this->assertSame(['core/jquery'], $dynamic_library['dependencies']);
+    if ($this->assertTrue(isset($dynamic_library['dependencies']))) {
+      $this->assertSame(['core/jquery'], $dynamic_library['dependencies']);
+    }
   }
 
   /**

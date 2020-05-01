@@ -369,10 +369,11 @@ abstract class ContentTranslationUITestBase extends ContentTranslationTestBase {
     $this->drupalPostForm(NULL, [], t('Delete @language translation', ['@language' => $language->getName()]));
     $storage->resetCache([$this->entityId]);
     $entity = $storage->load($this->entityId, TRUE);
-    $this->assertIsObject($entity);
-    $translations = $entity->getTranslationLanguages();
-    $this->assertCount(2, $translations);
-    $this->assertArrayNotHasKey($langcode, $translations);
+    if ($this->assertTrue(is_object($entity), 'Entity found')) {
+      $translations = $entity->getTranslationLanguages();
+      $this->assertCount(2, $translations, 'Translation successfully deleted.');
+      $this->assertEmpty($translations[$langcode], 'Translation successfully deleted.');
+    }
 
     // Check that the translator cannot delete the original translation.
     $args = [$this->entityTypeId => $entity->id(), 'language' => 'en'];

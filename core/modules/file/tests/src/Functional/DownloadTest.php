@@ -174,8 +174,9 @@ class DownloadTest extends FileManagedTestBase {
     }
 
     $this->drupalGet($url);
-    $this->assertResponse(200);
-    $this->assertRaw(file_get_contents($file->getFileUri()));
+    if ($this->assertResponse(200) == 'pass') {
+      $this->assertRaw(file_get_contents($file->getFileUri()), 'Contents of the file are correct.');
+    }
 
     $file->delete();
   }
