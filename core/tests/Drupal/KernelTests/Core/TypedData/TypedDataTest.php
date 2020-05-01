@@ -73,7 +73,7 @@ class TypedDataTest extends KernelTestBase {
     $typed_data->setValue(FALSE);
     $this->assertTrue($typed_data->getValue() === FALSE, 'Boolean value was changed.');
     $this->assertEqual($typed_data->validate()->count(), 0);
-    $this->assertTrue(is_string($typed_data->getString()), 'Boolean value was converted to string');
+    $this->assertIsString($typed_data->getString());
     $typed_data->setValue(NULL);
     $this->assertNull($typed_data->getValue(), 'Boolean wrapper is null-able.');
     $this->assertEqual($typed_data->validate()->count(), 0);
@@ -91,7 +91,7 @@ class TypedDataTest extends KernelTestBase {
     $this->assertTrue($typed_data->getValue() === $new_value, 'String value was changed.');
     $this->assertEqual($typed_data->validate()->count(), 0);
     // Funky test.
-    $this->assertTrue(is_string($typed_data->getString()), 'String value was converted to string');
+    $this->assertIsString($typed_data->getString());
     $typed_data->setValue(NULL);
     $this->assertNull($typed_data->getValue(), 'String wrapper is null-able.');
     $this->assertEqual($typed_data->validate()->count(), 0);
@@ -107,7 +107,7 @@ class TypedDataTest extends KernelTestBase {
     $new_value = rand();
     $typed_data->setValue($new_value);
     $this->assertTrue($typed_data->getValue() === $new_value, 'Integer value was changed.');
-    $this->assertTrue(is_string($typed_data->getString()), 'Integer value was converted to string');
+    $this->assertIsString($typed_data->getString());
     $this->assertEqual($typed_data->validate()->count(), 0);
     $typed_data->setValue(NULL);
     $this->assertNull($typed_data->getValue(), 'Integer wrapper is null-able.');
@@ -124,7 +124,7 @@ class TypedDataTest extends KernelTestBase {
     $new_value = 678.90;
     $typed_data->setValue($new_value);
     $this->assertTrue($typed_data->getValue() === $new_value, 'Float value was changed.');
-    $this->assertTrue(is_string($typed_data->getString()), 'Float value was converted to string');
+    $this->assertIsString($typed_data->getString());
     $this->assertEqual($typed_data->validate()->count(), 0);
     $typed_data->setValue(NULL);
     $this->assertNull($typed_data->getValue(), 'Float wrapper is null-able.');
@@ -229,7 +229,7 @@ class TypedDataTest extends KernelTestBase {
     $this->assertEqual($typed_data->validate()->count(), 0);
     $typed_data->setValue('P40D');
     $this->assertEqual($typed_data->getDuration()->d, 40, 'DurationIso8601 value was changed and set by duration string.');
-    $this->assertTrue(is_string($typed_data->getString()), 'DurationIso8601 value was converted to string');
+    $this->assertIsString($typed_data->getString());
     $this->assertEqual($typed_data->validate()->count(), 0);
     $typed_data->setValue(NULL);
     $this->assertNull($typed_data->getValue(), 'DurationIso8601 wrapper is null-able.');
@@ -253,7 +253,7 @@ class TypedDataTest extends KernelTestBase {
     $this->assertEqual($typed_data->validate()->count(), 0);
     $typed_data->setValue(60 * 60 * 4);
     $this->assertEqual($typed_data->getDuration()->s, 14400, 'Time span was changed');
-    $this->assertTrue(is_string($typed_data->getString()), 'Time span value was converted to string');
+    $this->assertIsString($typed_data->getString());
     $this->assertEqual($typed_data->validate()->count(), 0);
     $typed_data->setValue(NULL);
     $this->assertNull($typed_data->getValue(), 'Time span wrapper is null-able.');
@@ -276,7 +276,7 @@ class TypedDataTest extends KernelTestBase {
     $this->assertEqual($typed_data->validate()->count(), 0);
     $typed_data->setValue($uri . 'bar.txt');
     $this->assertTrue($typed_data->getValue() === $uri . 'bar.txt', 'URI value was changed.');
-    $this->assertTrue(is_string($typed_data->getString()), 'URI value was converted to string');
+    $this->assertIsString($typed_data->getString());
     $this->assertEqual($typed_data->validate()->count(), 0);
     $typed_data->setValue(NULL);
     $this->assertNull($typed_data->getValue(), 'URI wrapper is null-able.');
@@ -304,7 +304,7 @@ class TypedDataTest extends KernelTestBase {
     $new_value = 'test@example.com';
     $typed_data->setValue($new_value);
     $this->assertIdentical($typed_data->getValue(), $new_value, 'Email value was changed.');
-    $this->assertTrue(is_string($typed_data->getString()), 'Email value was converted to string');
+    $this->assertIsString($typed_data->getString());
     $this->assertEqual($typed_data->validate()->count(), 0);
     $typed_data->setValue(NULL);
     $this->assertNull($typed_data->getValue(), 'Email wrapper is null-able.');
@@ -320,12 +320,12 @@ class TypedDataTest extends KernelTestBase {
     // Try setting by URI.
     $typed_data->setValue($files[1]->getFileUri());
     $this->assertEqual(fgets($typed_data->getValue()), fgets(fopen($files[1]->getFileUri(), 'r')), 'Binary value was changed.');
-    $this->assertTrue(is_string($typed_data->getString()), 'Binary value was converted to string');
+    $this->assertIsString($typed_data->getString());
     $this->assertEqual($typed_data->validate()->count(), 0);
     // Try setting by resource.
     $typed_data->setValue(fopen($files[2]->getFileUri(), 'r'));
     $this->assertEqual(fgets($typed_data->getValue()), fgets(fopen($files[2]->getFileUri(), 'r')), 'Binary value was changed.');
-    $this->assertTrue(is_string($typed_data->getString()), 'Binary value was converted to string');
+    $this->assertIsString($typed_data->getString());
     $this->assertEqual($typed_data->validate()->count(), 0);
     $typed_data->setValue(NULL);
     $this->assertNull($typed_data->getValue(), 'Binary wrapper is null-able.');
@@ -340,7 +340,7 @@ class TypedDataTest extends KernelTestBase {
     $new_value = 'test@example.com';
     $typed_data->setValue($new_value);
     $this->assertIdentical($typed_data->getValue(), $new_value, 'Any value was changed.');
-    $this->assertTrue(is_string($typed_data->getString()), 'Any value was converted to string');
+    $this->assertIsString($typed_data->getString());
     $this->assertEqual($typed_data->validate()->count(), 0);
     $typed_data->setValue(NULL);
     $this->assertNull($typed_data->getValue(), 'Any wrapper is null-able.');
