@@ -14,20 +14,6 @@ interface ModuleUninstallValidatorInterface {
   /**
    * Determines the reasons a module can not be uninstalled.
    *
-   * Example implementation:
-   * @code
-   * public function validate($module) {
-   *   $entity_types = $this->entityTypeManager->getDefinitions();
-   *   $reasons = array();
-   *   foreach ($entity_types as $entity_type) {
-   *     if ($module == $entity_type->getProvider() && $entity_type instanceof ContentEntityTypeInterface && $this->entityTypeManager->getStorage($entity_type->id())->hasData()) {
-   *       $reasons[] = $this->t('There is content for the entity type: @entity_type', array('@entity_type' => $entity_type->getLabel()));
-   *     }
-   *   }
-   *   return $reasons;
-   * }
-   * @endcode
-   *
    * @param string $module
    *   A module name.
    *
