@@ -24,8 +24,8 @@ class FetchTest extends DatabaseTestBase {
     $this->assertInstanceOf(StatementInterface::class, $result);
     foreach ($result as $record) {
       $records[] = $record;
-      $this->assertTrue(is_object($record), 'Record is an object.');
-      $this->assertIdentical($record->name, 'John', '25 year old is John.');
+      $this->assertIsObject($record);
+      $this->assertSame('John', $record->name);
     }
 
     $this->assertIdentical(count($records), 1, 'There is only one record.');
@@ -39,8 +39,8 @@ class FetchTest extends DatabaseTestBase {
     $result = $this->connection->query('SELECT name FROM {test} WHERE age = :age', [':age' => 25], ['fetch' => \PDO::FETCH_OBJ]);
     foreach ($result as $record) {
       $records[] = $record;
-      $this->assertTrue(is_object($record), 'Record is an object.');
-      $this->assertIdentical($record->name, 'John', '25 year old is John.');
+      $this->assertIsObject($record);
+      $this->assertSame('John', $record->name);
     }
 
     $this->assertIdentical(count($records), 1, 'There is only one record.');
@@ -54,9 +54,9 @@ class FetchTest extends DatabaseTestBase {
     $result = $this->connection->query('SELECT name FROM {test} WHERE age = :age', [':age' => 25], ['fetch' => \PDO::FETCH_ASSOC]);
     foreach ($result as $record) {
       $records[] = $record;
-      if ($this->assertTrue(is_array($record), 'Record is an array.')) {
-        $this->assertIdentical($record['name'], 'John', 'Record can be accessed associatively.');
-      }
+      $this->assertIsArray($record);
+      $this->assertArrayHasKey('name', $record);
+      $this->assertSame('John', $record['name']);
     }
 
     $this->assertIdentical(count($records), 1, 'There is only one record.');
@@ -72,9 +72,8 @@ class FetchTest extends DatabaseTestBase {
     $result = $this->connection->query('SELECT name FROM {test} WHERE age = :age', [':age' => 25], ['fetch' => FakeRecord::class]);
     foreach ($result as $record) {
       $records[] = $record;
-      if ($this->assertInstanceOf(FakeRecord::class, $record)) {
-        $this->assertIdentical($record->name, 'John', '25 year old is John.');
-      }
+      $this->assertInstanceOf(FakeRecord::class, $record);
+      $this->assertSame('John', $record->name);
     }
 
     $this->assertIdentical(count($records), 1, 'There is only one record.');
@@ -108,10 +107,9 @@ class FetchTest extends DatabaseTestBase {
     $result = $this->connection->query('SELECT classname, name, job FROM {test_classtype} WHERE age = :age', [':age' => 26], ['fetch' => \PDO::FETCH_CLASS | \PDO::FETCH_CLASSTYPE]);
     foreach ($result as $record) {
       $records[] = $record;
-      if ($this->assertInstanceOf(FakeRecord::class, $record)) {
-        $this->assertSame('Kay', $record->name, 'Kay is found.');
-        $this->assertSame('Web Developer', $record->job, 'A 26 year old Web Developer.');
-      }
+      $this->assertInstanceOf(FakeRecord::class, $record);
+      $this->assertSame('Kay', $record->name);
+      $this->assertSame('Web Developer', $record->job);
       $this->assertFalse(isset($record->classname), 'Classname field not found, as intended.');
     }
 
@@ -126,9 +124,9 @@ class FetchTest extends DatabaseTestBase {
     $result = $this->connection->query('SELECT name FROM {test} WHERE age = :age', [':age' => 25], ['fetch' => \PDO::FETCH_NUM]);
     foreach ($result as $record) {
       $records[] = $record;
-      if ($this->assertTrue(is_array($record), 'Record is an array.')) {
-        $this->assertIdentical($record[0], 'John', 'Record can be accessed numerically.');
-      }
+      $this->assertIsArray($record);
+      $this->assertArrayHasKey(0, $record);
+      $this->assertSame('John', $record[0]);
     }
 
     $this->assertIdentical(count($records), 1, 'There is only one record');
@@ -142,10 +140,11 @@ class FetchTest extends DatabaseTestBase {
     $result = $this->connection->query('SELECT name FROM {test} WHERE age = :age', [':age' => 25], ['fetch' => \PDO::FETCH_BOTH]);
     foreach ($result as $record) {
       $records[] = $record;
-      if ($this->assertTrue(is_array($record), 'Record is an array.')) {
-        $this->assertIdentical($record[0], 'John', 'Record can be accessed numerically.');
-        $this->assertIdentical($record['name'], 'John', 'Record can be accessed associatively.');
-      }
+      $this->assertIsArray($record);
+      $this->assertArrayHasKey(0, $record);
+      $this->assertSame('John', $record[0]);
+      $this->assertArrayHasKey('name', $record);
+      $this->assertSame('John', $record['name']);
     }
 
     $this->assertIdentical(count($records), 1, 'There is only one record.');
