@@ -381,7 +381,7 @@ abstract class FieldConfigBase extends ConfigEntityBase implements FieldConfigIn
   }
 
   /**
-   * [@inheritdoc}
+   * {@inheritdoc}
    */
   public function setRequired($required) {
     $this->required = $required;

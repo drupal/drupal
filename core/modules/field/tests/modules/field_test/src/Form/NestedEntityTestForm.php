@@ -16,14 +16,14 @@ use Drupal\Core\Entity\Entity\EntityFormDisplay;
 class NestedEntityTestForm extends FormBase {
 
   /**
-   * {@inheritdoc]
+   * {@inheritdoc}
    */
   public function getFormId() {
     return 'field_test_entity_nested_form';
   }
 
   /**
-   * {@inheritdoc]
+   * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state, EntityInterface $entity_1 = NULL, EntityInterface $entity_2 = NULL) {
     // First entity.
@@ -66,7 +66,7 @@ class NestedEntityTestForm extends FormBase {
   }
 
   /**
-   * {@inheritdoc]
+   * {@inheritdoc}
    */
   public function validateForm(array &$form, FormStateInterface $form_state) {
     $entity_1 = $form_state->get('entity_1');
