@@ -51,7 +51,7 @@
           if (action === 'add') {
             messageObjects[area].indexes[type].push(
               message.add(
-                `This is a message of the type, ${type}. You be the the judge of its importance.`,
+                `This is a message of the type, ${type}. You be the judge of its importance.`,
                 { type },
               ),
             );
@@ -71,7 +71,7 @@
               messageObjects.default.zone.add(
                 `This is message number ${i} of the type, ${
                   testMessages.types[i % testMessages.types.length]
-                }. You be the the judge of its importance.`,
+                }. You be the judge of its importance.`,
                 { type: testMessages.types[i % testMessages.types.length] },
               ),
             );

@@ -41,14 +41,14 @@
         var action = $target.attr('data-action');
 
         if (action === 'add') {
-          messageObjects[area].indexes[type].push(message.add('This is a message of the type, ' + type + '. You be the the judge of its importance.', { type: type }));
+          messageObjects[area].indexes[type].push(message.add('This is a message of the type, ' + type + '. You be the judge of its importance.', { type: type }));
         } else if (action === 'remove') {
           message.remove(messageObjects[area].indexes[type].pop());
         }
       });
       $('[data-action="add-multiple"]').once('add-multiple').on('click', function () {
         [0, 1, 2, 3, 4, 5].forEach(function (i) {
-          messageObjects.multiple.push(messageObjects.default.zone.add('This is message number ' + i + ' of the type, ' + testMessages.types[i % testMessages.types.length] + '. You be the the judge of its importance.', { type: testMessages.types[i % testMessages.types.length] }));
+          messageObjects.multiple.push(messageObjects.default.zone.add('This is message number ' + i + ' of the type, ' + testMessages.types[i % testMessages.types.length] + '. You be the judge of its importance.', { type: testMessages.types[i % testMessages.types.length] }));
         });
       });
       $('[data-action="remove-multiple"]').once('remove-multiple').on('click', function () {
