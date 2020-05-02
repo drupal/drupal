@@ -93,9 +93,9 @@ class NumberTest extends TestCase {
   }
 
   /**
-   * Data provider for \Drupal\Test\Component\Utility\NumberTest::testValidStepOffset().
+   * Data provider for \Drupal\Tests\Component\Utility\NumberTest::testValidStepOffset().
    *
-   * @see \Drupal\Test\Component\Utility\NumberTest::testValidStepOffset()
+   * @see \Drupal\Tests\Component\Utility\NumberTest::testValidStepOffset()
    */
   public static function providerTestValidStepOffset() {
     return [

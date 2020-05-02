@@ -40,7 +40,7 @@ class TermBreadcrumbBuilder implements BreadcrumbBuilderInterface {
   /**
    * The taxonomy storage.
    *
-   * @var \Drupal\Taxonomy\TermStorageInterface
+   * @var \Drupal\taxonomy\TermStorageInterface
    */
   protected $termStorage;
 
