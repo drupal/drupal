@@ -17,7 +17,10 @@ class ConfigEntityStaticCacheTest extends KernelTestBase {
    *
    * @var array
    */
-  protected static $modules = ['config_test', 'config_entity_static_cache_test'];
+  protected static $modules = [
+    'config_test',
+    'config_entity_static_cache_test',
+  ];
 
   /**
    * The type ID of the entity under test.

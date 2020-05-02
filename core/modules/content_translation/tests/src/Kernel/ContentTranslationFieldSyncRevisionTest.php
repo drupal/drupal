@@ -26,7 +26,13 @@ class ContentTranslationFieldSyncRevisionTest extends EntityKernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['file', 'image', 'language', 'content_translation', 'content_translation_test'];
+  protected static $modules = [
+    'file',
+    'image',
+    'language',
+    'content_translation',
+    'content_translation_test',
+  ];
 
   /**
    * The synchronized field name.

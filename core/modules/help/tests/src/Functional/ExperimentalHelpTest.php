@@ -19,7 +19,11 @@ class ExperimentalHelpTest extends BrowserTestBase {
    *
    * @var array
    */
-  protected static $modules = ['help', 'experimental_module_test', 'help_page_test'];
+  protected static $modules = [
+    'help',
+    'experimental_module_test',
+    'help_page_test',
+  ];
 
   /**
    * {@inheritdoc}

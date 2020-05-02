@@ -21,7 +21,14 @@ class ExposedFormUITest extends UITestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['node', 'views_ui', 'block', 'taxonomy', 'field_ui', 'datetime'];
+  protected static $modules = [
+    'node',
+    'views_ui',
+    'block',
+    'taxonomy',
+    'field_ui',
+    'datetime',
+  ];
 
   /**
    * {@inheritdoc}

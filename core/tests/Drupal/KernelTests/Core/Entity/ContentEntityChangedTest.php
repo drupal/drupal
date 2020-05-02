@@ -18,7 +18,15 @@ class ContentEntityChangedTest extends EntityKernelTestBase {
    *
    * @var array
    */
-  protected static $modules = ['language', 'user', 'system', 'field', 'text', 'filter', 'entity_test'];
+  protected static $modules = [
+    'language',
+    'user',
+    'system',
+    'field',
+    'text',
+    'filter',
+    'entity_test',
+  ];
 
   /**
    * The EntityTestMulChanged entity type storage.

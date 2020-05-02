@@ -23,7 +23,13 @@ class FieldUIDeleteTest extends BrowserTestBase {
    *
    * @var array
    */
-  protected static $modules = ['node', 'field_ui', 'field_test', 'block', 'field_test_views'];
+  protected static $modules = [
+    'node',
+    'field_ui',
+    'field_test',
+    'block',
+    'field_test_views',
+  ];
 
   /**
    * {@inheritdoc}

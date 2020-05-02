@@ -24,7 +24,14 @@ class MenuLinkTest extends ViewTestBase {
    *
    * @var array
    */
-  protected static $modules = ['views', 'views_ui', 'user', 'node', 'menu_ui', 'block'];
+  protected static $modules = [
+    'views',
+    'views_ui',
+    'user',
+    'node',
+    'menu_ui',
+    'block',
+  ];
 
   /**
    * {@inheritdoc}

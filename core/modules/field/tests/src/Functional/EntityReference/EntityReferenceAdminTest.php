@@ -28,7 +28,14 @@ class EntityReferenceAdminTest extends BrowserTestBase {
    *
    * @var array
    */
-  protected static $modules = ['node', 'field_ui', 'path', 'taxonomy', 'block', 'views_ui'];
+  protected static $modules = [
+    'node',
+    'field_ui',
+    'path',
+    'taxonomy',
+    'block',
+    'views_ui',
+  ];
 
   /**
    * {@inheritdoc}

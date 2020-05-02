@@ -14,7 +14,12 @@ class PathLanguageTest extends PathTestBase {
    *
    * @var array
    */
-  protected static $modules = ['path', 'locale', 'locale_test', 'content_translation'];
+  protected static $modules = [
+    'path',
+    'locale',
+    'locale_test',
+    'content_translation',
+  ];
 
   /**
    * {@inheritdoc}

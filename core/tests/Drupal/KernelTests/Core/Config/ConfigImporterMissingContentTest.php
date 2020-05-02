@@ -26,7 +26,13 @@ class ConfigImporterMissingContentTest extends KernelTestBase {
    *
    * @var array
    */
-  protected static $modules = ['system', 'user', 'entity_test', 'config_test', 'config_import_test'];
+  protected static $modules = [
+    'system',
+    'user',
+    'entity_test',
+    'config_test',
+    'config_import_test',
+  ];
 
   protected function setUp(): void {
     parent::setUp();

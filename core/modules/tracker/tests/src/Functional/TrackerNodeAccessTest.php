@@ -21,7 +21,12 @@ class TrackerNodeAccessTest extends BrowserTestBase {
    *
    * @var array
    */
-  protected static $modules = ['node', 'comment', 'tracker', 'node_access_test'];
+  protected static $modules = [
+    'node',
+    'comment',
+    'tracker',
+    'node_access_test',
+  ];
 
   /**
    * {@inheritdoc}

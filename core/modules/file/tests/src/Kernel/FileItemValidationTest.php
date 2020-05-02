@@ -20,7 +20,14 @@ class FileItemValidationTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['file', 'image', 'entity_test', 'field', 'user', 'system'];
+  protected static $modules = [
+    'file',
+    'image',
+    'entity_test',
+    'field',
+    'user',
+    'system',
+  ];
 
   /**
    * A user.

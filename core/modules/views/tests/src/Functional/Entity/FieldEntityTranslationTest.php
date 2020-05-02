@@ -19,7 +19,12 @@ class FieldEntityTranslationTest extends ViewTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['language', 'locale', 'content_translation', 'node'];
+  protected static $modules = [
+    'language',
+    'locale',
+    'content_translation',
+    'node',
+  ];
 
   /**
    * {@inheritdoc}

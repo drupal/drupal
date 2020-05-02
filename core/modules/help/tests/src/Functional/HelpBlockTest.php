@@ -14,7 +14,12 @@ class HelpBlockTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['help', 'help_page_test', 'block', 'more_help_page_test'];
+  protected static $modules = [
+    'help',
+    'help_page_test',
+    'block',
+    'more_help_page_test',
+  ];
 
   /**
    * {@inheritdoc}

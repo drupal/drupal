@@ -19,7 +19,14 @@ abstract class FieldKernelTestBase extends KernelTestBase {
    *
    * @var array
    */
-  protected static $modules = ['user', 'system', 'field', 'text', 'entity_test', 'field_test'];
+  protected static $modules = [
+    'user',
+    'system',
+    'field',
+    'text',
+    'entity_test',
+    'field_test',
+  ];
 
   /**
    * Bag of created field storages and fields.

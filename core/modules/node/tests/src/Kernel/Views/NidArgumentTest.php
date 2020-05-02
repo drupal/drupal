@@ -18,7 +18,14 @@ class NidArgumentTest extends ViewsKernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['node', 'field', 'text', 'node_test_config', 'user', 'node_test_views'];
+  protected static $modules = [
+    'node',
+    'field',
+    'text',
+    'node_test_config',
+    'user',
+    'node_test_views',
+  ];
 
   /**
    * Views used by this test.

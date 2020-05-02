@@ -20,7 +20,12 @@ class FormErrorHandlerCKEditorTest extends WebDriverTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['node', 'ckeditor', 'inline_form_errors', 'filter'];
+  protected static $modules = [
+    'node',
+    'ckeditor',
+    'inline_form_errors',
+    'filter',
+  ];
 
   /**
    * {@inheritdoc}

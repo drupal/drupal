@@ -17,7 +17,12 @@ class ContentTranslationLinkTagTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['entity_test', 'content_translation', 'content_translation_test', 'language'];
+  protected static $modules = [
+    'entity_test',
+    'content_translation',
+    'content_translation_test',
+    'language',
+  ];
 
   /**
    * {@inheritdoc}

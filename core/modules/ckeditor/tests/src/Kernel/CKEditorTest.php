@@ -19,7 +19,14 @@ class CKEditorTest extends KernelTestBase {
    *
    * @var array
    */
-  protected static $modules = ['system', 'user', 'filter', 'editor', 'ckeditor', 'filter_test'];
+  protected static $modules = [
+    'system',
+    'user',
+    'filter',
+    'editor',
+    'ckeditor',
+    'filter_test',
+  ];
 
   /**
    * An instance of the "CKEditor" text editor plugin.

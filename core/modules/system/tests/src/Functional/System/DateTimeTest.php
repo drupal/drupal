@@ -19,7 +19,15 @@ class DateTimeTest extends BrowserTestBase {
    *
    * @var array
    */
-  protected static $modules = ['block', 'node', 'language', 'field', 'field_ui', 'datetime', 'options'];
+  protected static $modules = [
+    'block',
+    'node',
+    'language',
+    'field',
+    'field_ui',
+    'datetime',
+    'options',
+  ];
 
   /**
    * {@inheritdoc}
