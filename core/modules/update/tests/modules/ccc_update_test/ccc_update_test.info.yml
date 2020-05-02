@@ -2,5 +2,4 @@ name: 'CCC Update test'
 type: module
 description: 'Support module for update module testing.'
 package: Testing
-version: VERSION
 core: 8.x
