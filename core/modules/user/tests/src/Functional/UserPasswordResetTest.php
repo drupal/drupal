@@ -6,7 +6,7 @@ use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Test\AssertMailTrait;
 use Drupal\Core\Url;
-use Drupal\Tests\system\Functional\Cache\PageCacheTagsTestBase;
+use Drupal\Tests\BrowserTestBase;
 use Drupal\user\Entity\User;
 
 /**
@@ -14,7 +14,7 @@ use Drupal\user\Entity\User;
  *
  * @group user
  */
-class UserPasswordResetTest extends PageCacheTagsTestBase {
+class UserPasswordResetTest extends BrowserTestBase {
 
   use AssertMailTrait {
     getMails as drupalGetMails;
@@ -45,6 +45,10 @@ class UserPasswordResetTest extends PageCacheTagsTestBase {
   protected function setUp() {
     parent::setUp();
 
+    // Enable page caching.
+    $config = $this->config('system.performance');
+    $config->set('cache.page.max_age', 3600);
+    $config->save();
     $this->drupalPlaceBlock('system_menu_block:account');
 
     // Create a user.
