@@ -20,7 +20,14 @@ class EntityFormDisplayTest extends KernelTestBase {
    *
    * @var string[]
    */
-  public static $modules = ['field_ui', 'field', 'entity_test', 'field_test', 'user', 'text'];
+  public static $modules = [
+    'field_ui',
+    'field',
+    'entity_test',
+    'field_test',
+    'user',
+    'text',
+  ];
 
   protected function setUp() {
     parent::setUp();

@@ -22,7 +22,15 @@ class ContentTranslationLanguageChangeTest extends NodeTestBase {
    *
    * @var array
    */
-  public static $modules = ['language', 'content_translation', 'content_translation_test', 'node', 'block', 'field_ui', 'image'];
+  public static $modules = [
+    'language',
+    'content_translation',
+    'content_translation_test',
+    'node',
+    'block',
+    'field_ui',
+    'image',
+  ];
 
   /**
    * {@inheritdoc}

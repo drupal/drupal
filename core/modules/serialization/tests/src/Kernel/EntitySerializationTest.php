@@ -22,7 +22,16 @@ class EntitySerializationTest extends NormalizerTestBase {
    *
    * @var array
    */
-  public static $modules = ['serialization', 'system', 'field', 'entity_test', 'text', 'filter', 'user', 'entity_serialization_test'];
+  public static $modules = [
+    'serialization',
+    'system',
+    'field',
+    'entity_test',
+    'text',
+    'filter',
+    'user',
+    'entity_serialization_test',
+  ];
 
   /**
    * The test values.

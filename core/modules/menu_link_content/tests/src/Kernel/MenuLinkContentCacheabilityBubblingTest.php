@@ -27,7 +27,14 @@ class MenuLinkContentCacheabilityBubblingTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['menu_link_content', 'system', 'link', 'outbound_processing_test', 'url_alter_test', 'user'];
+  public static $modules = [
+    'menu_link_content',
+    'system',
+    'link',
+    'outbound_processing_test',
+    'url_alter_test',
+    'user',
+  ];
 
   /**
    * {@inheritdoc}

@@ -32,7 +32,13 @@ class SearchMultilingualEntityTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['language', 'locale', 'comment', 'node', 'search'];
+  protected static $modules = [
+    'language',
+    'locale',
+    'comment',
+    'node',
+    'search',
+  ];
 
   /**
    * {@inheritdoc}

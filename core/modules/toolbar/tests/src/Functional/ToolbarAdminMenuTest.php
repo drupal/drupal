@@ -54,7 +54,17 @@ class ToolbarAdminMenuTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = ['node', 'block', 'menu_ui', 'user', 'taxonomy', 'toolbar', 'language', 'test_page_test', 'locale'];
+  public static $modules = [
+    'node',
+    'block',
+    'menu_ui',
+    'user',
+    'taxonomy',
+    'toolbar',
+    'language',
+    'test_page_test',
+    'locale',
+  ];
 
   /**
    * {@inheritdoc}

@@ -29,7 +29,12 @@ class DisplayFeedTranslationTest extends ViewTestBase {
    *
    * @var array
    */
-  public static $modules = ['node', 'views', 'language', 'content_translation'];
+  public static $modules = [
+    'node',
+    'views',
+    'language',
+    'content_translation',
+  ];
 
   /**
    * {@inheritdoc}

@@ -18,7 +18,16 @@ class ResponsiveImageIntegrationTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['responsive_image', 'field', 'image', 'file', 'entity_test', 'breakpoint', 'responsive_image_test_module', 'user'];
+  public static $modules = [
+    'responsive_image',
+    'field',
+    'image',
+    'file',
+    'entity_test',
+    'breakpoint',
+    'responsive_image_test_module',
+    'user',
+  ];
 
   /**
    * {@inheritdoc}

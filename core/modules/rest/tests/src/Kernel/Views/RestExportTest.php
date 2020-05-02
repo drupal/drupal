@@ -24,7 +24,12 @@ class RestExportTest extends ViewsKernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['rest_test_views', 'serialization', 'rest', 'entity_test'];
+  public static $modules = [
+    'rest_test_views',
+    'serialization',
+    'rest',
+    'entity_test',
+  ];
 
   /**
    * {@inheritdoc}

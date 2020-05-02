@@ -27,7 +27,14 @@ abstract class EntityKernelTestBase extends KernelTestBase {
    *
    * @var array
    */
-  public static $modules = ['user', 'system', 'field', 'text', 'filter', 'entity_test'];
+  public static $modules = [
+    'user',
+    'system',
+    'field',
+    'text',
+    'filter',
+    'entity_test',
+  ];
 
   /**
    * The list of deprecated services.

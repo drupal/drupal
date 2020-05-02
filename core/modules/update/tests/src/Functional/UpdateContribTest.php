@@ -30,7 +30,13 @@ class UpdateContribTest extends UpdateTestBase {
    *
    * @var array
    */
-  public static $modules = ['update_test', 'update', 'aaa_update_test', 'bbb_update_test', 'ccc_update_test'];
+  public static $modules = [
+    'update_test',
+    'update',
+    'aaa_update_test',
+    'bbb_update_test',
+    'ccc_update_test',
+  ];
 
   /**
    * {@inheritdoc}

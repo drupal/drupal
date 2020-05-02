@@ -25,7 +25,12 @@ class LanguageNegotiationContentEntityTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = ['language', 'language_test', 'entity_test', 'system'];
+  public static $modules = [
+    'language',
+    'language_test',
+    'entity_test',
+    'system',
+  ];
 
   /**
    * {@inheritdoc}
