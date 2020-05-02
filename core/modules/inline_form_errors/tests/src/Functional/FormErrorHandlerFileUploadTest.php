@@ -19,7 +19,12 @@ class FormErrorHandlerFileUploadTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['node', 'file', 'field_ui', 'inline_form_errors'];
+  protected static $modules = [
+    'node',
+    'file',
+    'field_ui',
+    'inline_form_errors',
+  ];
 
   /**
    * {@inheritdoc}

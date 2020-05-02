@@ -23,7 +23,12 @@ class ToolbarMenuTranslationTest extends BrowserTestBase {
    *
    * @var array
    */
-  protected static $modules = ['toolbar', 'toolbar_test', 'locale', 'locale_test'];
+  protected static $modules = [
+    'toolbar',
+    'toolbar_test',
+    'locale',
+    'locale_test',
+  ];
 
   /**
    * {@inheritdoc}

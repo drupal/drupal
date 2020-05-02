@@ -16,7 +16,11 @@ class NodeAccessLanguageFallbackTest extends NodeTestBase {
    *
    * @var array
    */
-  protected static $modules = ['language', 'node_access_test', 'content_translation'];
+  protected static $modules = [
+    'language',
+    'node_access_test',
+    'content_translation',
+  ];
 
   /**
    * {@inheritdoc}

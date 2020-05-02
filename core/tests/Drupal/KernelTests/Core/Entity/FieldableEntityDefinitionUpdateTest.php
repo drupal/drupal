@@ -80,7 +80,11 @@ class FieldableEntityDefinitionUpdateTest extends EntityKernelTestBase {
    *
    * @var array
    */
-  protected static $modules = ['content_translation', 'entity_test_update', 'language'];
+  protected static $modules = [
+    'content_translation',
+    'entity_test_update',
+    'language',
+  ];
 
   /**
    * {@inheritdoc}

@@ -18,7 +18,14 @@ class SearchConfigSettingsFormTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['block', 'dblog', 'node', 'search', 'search_extra_type', 'test_page_test'];
+  protected static $modules = [
+    'block',
+    'dblog',
+    'node',
+    'search',
+    'search_extra_type',
+    'test_page_test',
+  ];
 
   /**
    * {@inheritdoc}

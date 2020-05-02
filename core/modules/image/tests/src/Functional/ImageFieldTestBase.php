@@ -31,7 +31,12 @@ abstract class ImageFieldTestBase extends BrowserTestBase {
    *
    * @var array
    */
-  protected static $modules = ['node', 'image', 'field_ui', 'image_module_test'];
+  protected static $modules = [
+    'node',
+    'image',
+    'field_ui',
+    'image_module_test',
+  ];
 
   /**
    * An user with permissions to administer content types and image styles.

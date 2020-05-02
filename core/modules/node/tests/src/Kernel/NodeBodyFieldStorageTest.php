@@ -19,7 +19,14 @@ class NodeBodyFieldStorageTest extends KernelTestBase {
    *
    * @var array
    */
-  protected static $modules = ['user', 'system', 'field', 'node', 'text', 'filter'];
+  protected static $modules = [
+    'user',
+    'system',
+    'field',
+    'node',
+    'text',
+    'filter',
+  ];
 
   protected function setUp(): void {
     parent::setUp();

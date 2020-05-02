@@ -14,7 +14,13 @@ class FieldLayoutEntityDisplayTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['layout_discovery', 'field_layout', 'entity_test', 'field_layout_test', 'system'];
+  protected static $modules = [
+    'layout_discovery',
+    'field_layout',
+    'entity_test',
+    'field_layout_test',
+    'system',
+  ];
 
   /**
    * @covers ::preSave

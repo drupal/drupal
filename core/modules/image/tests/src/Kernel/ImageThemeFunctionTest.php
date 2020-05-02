@@ -30,7 +30,14 @@ class ImageThemeFunctionTest extends KernelTestBase {
    *
    * @var array
    */
-  protected static $modules = ['entity_test', 'field', 'file', 'image', 'system', 'user'];
+  protected static $modules = [
+    'entity_test',
+    'field',
+    'file',
+    'image',
+    'system',
+    'user',
+  ];
 
   /**
    * Created file entity.

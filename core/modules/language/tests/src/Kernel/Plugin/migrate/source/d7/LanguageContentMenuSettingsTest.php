@@ -16,7 +16,11 @@ class LanguageContentMenuSettingsTest extends MenuTest {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['menu_link_content', 'language', 'migrate_drupal'];
+  protected static $modules = [
+    'menu_link_content',
+    'language',
+    'migrate_drupal',
+  ];
 
   /**
    * {@inheritdoc}

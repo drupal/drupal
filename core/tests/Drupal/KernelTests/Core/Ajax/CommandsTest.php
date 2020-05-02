@@ -20,7 +20,12 @@ class CommandsTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['system', 'node', 'ajax_test', 'ajax_forms_test'];
+  protected static $modules = [
+    'system',
+    'node',
+    'ajax_test',
+    'ajax_forms_test',
+  ];
 
   /**
    * Regression test: Settings command exists regardless of JS aggregation.

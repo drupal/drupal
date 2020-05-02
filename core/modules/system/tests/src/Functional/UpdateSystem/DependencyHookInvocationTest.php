@@ -17,7 +17,11 @@ class DependencyHookInvocationTest extends BrowserTestBase {
    *
    * @var array
    */
-  protected static $modules = ['update_test_0', 'update_test_1', 'update_test_2'];
+  protected static $modules = [
+    'update_test_0',
+    'update_test_1',
+    'update_test_2',
+  ];
 
   /**
    * {@inheritdoc}

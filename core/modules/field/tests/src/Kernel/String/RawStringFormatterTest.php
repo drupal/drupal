@@ -22,7 +22,13 @@ class RawStringFormatterTest extends KernelTestBase {
    *
    * @var array
    */
-  protected static $modules = ['field', 'text', 'entity_test', 'system', 'filter', 'user'];
+  protected static $modules = [
+    'field', 'text',
+    'entity_test',
+    'system',
+    'filter',
+    'user',
+  ];
 
   /**
    * @var string

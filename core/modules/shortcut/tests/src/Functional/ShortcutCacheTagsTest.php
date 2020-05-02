@@ -21,7 +21,12 @@ class ShortcutCacheTagsTest extends EntityCacheTagsTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['toolbar', 'shortcut', 'test_page_test', 'block'];
+  protected static $modules = [
+    'toolbar',
+    'shortcut',
+    'test_page_test',
+    'block',
+  ];
 
   /**
    * {@inheritdoc}

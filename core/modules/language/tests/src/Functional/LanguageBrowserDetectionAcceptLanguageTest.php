@@ -17,7 +17,12 @@ class LanguageBrowserDetectionAcceptLanguageTest extends BrowserTestBase {
    *
    * @var array
    */
-  protected static $modules = ['language', 'locale', 'content_translation', 'system_test'];
+  protected static $modules = [
+    'language',
+    'locale',
+    'content_translation',
+    'system_test',
+  ];
 
   /**
    * {@inheritdoc}

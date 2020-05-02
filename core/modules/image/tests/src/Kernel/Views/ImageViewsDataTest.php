@@ -19,7 +19,14 @@ class ImageViewsDataTest extends ViewsKernelTestBase {
    *
    * @var array
    */
-  protected static $modules = ['image', 'file', 'views', 'entity_test', 'user', 'field'];
+  protected static $modules = [
+    'image',
+    'file',
+    'views',
+    'entity_test',
+    'user',
+    'field',
+  ];
 
   /**
    * {@inheritdoc}

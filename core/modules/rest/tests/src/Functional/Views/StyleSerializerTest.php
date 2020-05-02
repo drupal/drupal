@@ -36,7 +36,17 @@ class StyleSerializerTest extends ViewTestBase {
    *
    * @var array
    */
-  protected static $modules = ['views_ui', 'entity_test', 'hal', 'rest_test_views', 'node', 'text', 'field', 'language', 'basic_auth'];
+  protected static $modules = [
+    'views_ui',
+    'entity_test',
+    'hal',
+    'rest_test_views',
+    'node',
+    'text',
+    'field',
+    'language',
+    'basic_auth',
+  ];
 
   /**
    * {@inheritdoc}

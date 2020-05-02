@@ -18,7 +18,13 @@ class ForumValidationTest extends EntityKernelTestBase {
    *
    * @var array
    */
-  protected static $modules = ['node', 'options', 'comment', 'taxonomy', 'forum'];
+  protected static $modules = [
+    'node',
+    'options',
+    'comment',
+    'taxonomy',
+    'forum',
+  ];
 
   /**
    * Tests the forum validation constraints.

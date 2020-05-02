@@ -18,7 +18,14 @@ class EntityDefaultLanguageTest extends KernelTestBase {
    *
    * @var array
    */
-  protected static $modules = ['language', 'node', 'field', 'text', 'user', 'system'];
+  protected static $modules = [
+    'language',
+    'node',
+    'field',
+    'text',
+    'user',
+    'system',
+  ];
 
   /**
    * {@inheritdoc}

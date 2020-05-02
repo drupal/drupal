@@ -19,7 +19,12 @@ class SearchKeywordsConditionsTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['comment', 'search', 'search_extra_type', 'test_page_test'];
+  protected static $modules = [
+    'comment',
+    'search',
+    'search_extra_type',
+    'test_page_test',
+  ];
 
   /**
    * {@inheritdoc}

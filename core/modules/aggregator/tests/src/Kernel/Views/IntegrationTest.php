@@ -22,7 +22,14 @@ class IntegrationTest extends ViewsKernelTestBase {
    *
    * @var array
    */
-  protected static $modules = ['aggregator', 'aggregator_test_views', 'system', 'field', 'options', 'user'];
+  protected static $modules = [
+    'aggregator',
+    'aggregator_test_views',
+    'system',
+    'field',
+    'options',
+    'user',
+  ];
 
   /**
    * Views used by this test.

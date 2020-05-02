@@ -20,7 +20,13 @@ class RouteCachingLanguageTest extends BrowserTestBase {
    *
    * @var array
    */
-  protected static $modules = ['path', 'node', 'content_translation', 'link', 'block'];
+  protected static $modules = [
+    'path',
+    'node',
+    'content_translation',
+    'link',
+    'block',
+  ];
 
   /**
    * {@inheritdoc}

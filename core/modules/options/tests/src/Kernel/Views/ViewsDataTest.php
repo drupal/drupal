@@ -15,7 +15,12 @@ class ViewsDataTest extends OptionsTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['options', 'options_test', 'entity_test', 'views'];
+  protected static $modules = [
+    'options',
+    'options_test',
+    'entity_test',
+    'views',
+  ];
 
   /**
    * The field storage.

@@ -20,7 +20,13 @@ class FilterAdminTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['block', 'filter', 'node', 'filter_test_plugin', 'dblog'];
+  protected static $modules = [
+    'block',
+    'filter',
+    'node',
+    'filter_test_plugin',
+    'dblog',
+  ];
 
   /**
    * {@inheritdoc}

@@ -17,7 +17,10 @@ class ResponsiveImageAdminUITest extends BrowserTestBase {
    *
    * @var array
    */
-  protected static $modules = ['responsive_image', 'responsive_image_test_module'];
+  protected static $modules = [
+    'responsive_image',
+    'responsive_image_test_module',
+  ];
 
   /**
    * {@inheritdoc}

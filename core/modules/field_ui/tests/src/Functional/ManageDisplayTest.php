@@ -25,7 +25,15 @@ class ManageDisplayTest extends BrowserTestBase {
    *
    * @var array
    */
-  protected static $modules = ['node', 'field_ui', 'taxonomy', 'search', 'field_test', 'field_third_party_test', 'block'];
+  protected static $modules = [
+    'node',
+    'field_ui',
+    'taxonomy',
+    'search',
+    'field_test',
+    'field_third_party_test',
+    'block',
+  ];
 
   /**
    * {@inheritdoc}

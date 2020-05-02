@@ -20,7 +20,11 @@ class InvalidUpdateHookTest extends BrowserTestBase {
    *
    * @var array
    */
-  protected static $modules = ['update_test_invalid_hook', 'update_script_test', 'dblog'];
+  protected static $modules = [
+    'update_test_invalid_hook',
+    'update_script_test',
+    'dblog',
+  ];
 
   /**
    * {@inheritdoc}

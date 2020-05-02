@@ -18,7 +18,12 @@ class LayoutSectionTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['field_ui', 'layout_builder', 'node', 'block_test'];
+  protected static $modules = [
+    'field_ui',
+    'layout_builder',
+    'node',
+    'block_test',
+  ];
 
   /**
    * {@inheritdoc}
