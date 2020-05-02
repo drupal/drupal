@@ -21,7 +21,10 @@ class NodeAccessCacheabilityTest extends NodeTestBase {
    *
    * @var array
    */
-  public static $modules = ['node_access_test', 'node_access_test_auto_bubbling'];
+  public static $modules = [
+    'node_access_test',
+    'node_access_test_auto_bubbling',
+  ];
 
   /**
    * {@inheritdoc}

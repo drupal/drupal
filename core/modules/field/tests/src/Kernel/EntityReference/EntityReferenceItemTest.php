@@ -39,7 +39,16 @@ class EntityReferenceItemTest extends FieldKernelTestBase {
    *
    * @var array
    */
-  public static $modules = ['node', 'comment', 'file', 'taxonomy', 'text', 'filter', 'views', 'field'];
+  public static $modules = [
+    'node',
+    'comment',
+    'file',
+    'taxonomy',
+    'text',
+    'filter',
+    'views',
+    'field',
+  ];
 
   /**
    * The taxonomy vocabulary to test with.

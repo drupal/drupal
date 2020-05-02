@@ -17,7 +17,13 @@ class ConfigLanguageOverrideTest extends KernelTestBase {
    *
    * @var array
    */
-  public static $modules = ['user', 'language', 'config_test', 'system', 'field'];
+  public static $modules = [
+    'user',
+    'language',
+    'config_test',
+    'system',
+    'field',
+  ];
 
   /**
    * {@inheritdoc}

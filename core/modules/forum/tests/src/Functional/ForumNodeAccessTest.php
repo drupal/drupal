@@ -17,7 +17,15 @@ class ForumNodeAccessTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = ['node', 'comment', 'forum', 'taxonomy', 'tracker', 'node_access_test', 'block'];
+  public static $modules = [
+    'node',
+    'comment',
+    'forum',
+    'taxonomy',
+    'tracker',
+    'node_access_test',
+    'block',
+  ];
 
   /**
    * {@inheritdoc}

@@ -25,7 +25,13 @@ class FormTest extends FieldTestBase {
    *
    * @var array
    */
-  public static $modules = ['node', 'field_test', 'options', 'entity_test', 'locale'];
+  public static $modules = [
+    'node',
+    'field_test',
+    'options',
+    'entity_test',
+    'locale',
+  ];
 
   /**
    * {@inheritdoc}

@@ -17,7 +17,16 @@ class DbImportCommandTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['system', 'config', 'dblog', 'menu_link_content', 'link', 'block_content', 'file', 'user'];
+  public static $modules = [
+    'system',
+    'config',
+    'dblog',
+    'menu_link_content',
+    'link',
+    'block_content',
+    'file',
+    'user',
+  ];
 
   /**
    * Tables that should be part of the exported script.

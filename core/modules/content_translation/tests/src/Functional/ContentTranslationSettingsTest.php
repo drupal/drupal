@@ -25,7 +25,14 @@ class ContentTranslationSettingsTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = ['language', 'content_translation', 'node', 'comment', 'field_ui', 'entity_test'];
+  public static $modules = [
+    'language',
+    'content_translation',
+    'node',
+    'comment',
+    'field_ui',
+    'entity_test',
+  ];
 
   /**
    * {@inheritdoc}

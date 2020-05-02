@@ -36,7 +36,13 @@ class TaxonomyIndexTidUiTest extends UITestBase {
    *
    * @var array
    */
-  public static $modules = ['node', 'taxonomy', 'views', 'views_ui', 'taxonomy_test_views'];
+  public static $modules = [
+    'node',
+    'taxonomy',
+    'views',
+    'views_ui',
+    'taxonomy_test_views',
+  ];
 
   /**
    * A nested array of \Drupal\taxonomy\TermInterface objects.

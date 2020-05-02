@@ -22,7 +22,14 @@ class RelationshipUserImageDataTest extends ViewsKernelTestBase {
    *
    * @var array
    */
-  public static $modules = ['file', 'field', 'image', 'image_test_views', 'system', 'user'];
+  public static $modules = [
+    'file',
+    'field',
+    'image',
+    'image_test_views',
+    'system',
+    'user',
+  ];
 
   /**
    * Views used by this test.

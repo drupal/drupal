@@ -18,7 +18,14 @@ class ViewsConfigDependenciesIntegrationTest extends ViewsKernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['field', 'file', 'image', 'entity_test', 'user', 'text'];
+  public static $modules = [
+    'field',
+    'file',
+    'image',
+    'entity_test',
+    'user',
+    'text',
+  ];
 
   /**
    * {@inheritdoc}

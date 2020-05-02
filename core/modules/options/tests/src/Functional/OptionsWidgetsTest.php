@@ -19,7 +19,14 @@ class OptionsWidgetsTest extends FieldTestBase {
    *
    * @var array
    */
-  public static $modules = ['node', 'options', 'entity_test', 'options_test', 'taxonomy', 'field_ui'];
+  public static $modules = [
+    'node',
+    'options',
+    'entity_test',
+    'options_test',
+    'taxonomy',
+    'field_ui',
+  ];
 
   /**
    * {@inheritdoc}

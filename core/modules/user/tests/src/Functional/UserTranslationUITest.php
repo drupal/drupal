@@ -23,7 +23,12 @@ class UserTranslationUITest extends ContentTranslationUITestBase {
    *
    * @var array
    */
-  public static $modules = ['language', 'content_translation', 'user', 'views'];
+  public static $modules = [
+    'language',
+    'content_translation',
+    'user',
+    'views',
+  ];
 
   /**
    * {@inheritdoc}

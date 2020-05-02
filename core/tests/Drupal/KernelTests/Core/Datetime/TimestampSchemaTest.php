@@ -14,7 +14,12 @@ class TimestampSchemaTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['entity_test', 'field', 'field_timestamp_test', 'user'];
+  protected static $modules = [
+    'entity_test',
+    'field',
+    'field_timestamp_test',
+    'user',
+  ];
 
   /**
    * {@inheritdoc}

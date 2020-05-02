@@ -17,7 +17,12 @@ class WorkflowDependenciesTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['system', 'workflows', 'workflow_type_test', 'workflow_third_party_settings_test'];
+  public static $modules = [
+    'system',
+    'workflows',
+    'workflow_type_test',
+    'workflow_third_party_settings_test',
+  ];
 
   /**
    * Tests \Drupal\workflows\Entity\Workflow::onDependencyRemoval().

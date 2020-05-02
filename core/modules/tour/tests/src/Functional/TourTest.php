@@ -18,7 +18,13 @@ class TourTest extends TourTestBasic {
    *
    * @var array
    */
-  public static $modules = ['block', 'tour', 'locale', 'language', 'tour_test'];
+  public static $modules = [
+    'block',
+    'tour',
+    'locale',
+    'language',
+    'tour_test',
+  ];
 
   /**
    * {@inheritdoc}
