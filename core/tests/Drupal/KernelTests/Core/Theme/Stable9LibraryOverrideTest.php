@@ -125,8 +125,8 @@ class Stable9LibraryOverrideTest extends KernelTestBase {
           $assert_path = str_replace("core/modules/$extension/", '', $clean_path);
 
           $this->assertEqual($expected_path, $stable_path, "$assert_path from the $extension/$library_name library is overridden in Stable 9.");
-          $this->assertFileExists("{$this->root}/$clean_path", "$clean_path exists.");
-          $this->assertFileExists("{$this->root}/$stable_path", "$stable_path exists.");
+          $this->assertFileExists("{$this->root}/$clean_path");
+          $this->assertFileExists("{$this->root}/$stable_path");
         }
       }
     }
