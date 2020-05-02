@@ -537,7 +537,7 @@ function locale_js_translate(array $files = []) {
   $language_interface = \Drupal::languageManager()->getCurrentLanguage();
 
   $dir = 'public://' . \Drupal::config('locale.settings')->get('javascript.directory');
-  $parsed = \Drupal::state()->get('system.javascript_parsed') ?: [];
+  $parsed = \Drupal::state()->get('system.javascript_parsed', []);
   $new_files = FALSE;
 
   foreach ($files as $filepath) {
@@ -575,7 +575,7 @@ function locale_js_translate(array $files = []) {
   }
 
   // Add the translation JavaScript file to the page.
-  $locale_javascripts = \Drupal::state()->get('locale.translation.javascript') ?: [];
+  $locale_javascripts = \Drupal::state()->get('locale.translation.javascript', []);
   $translation_file = NULL;
   if (!empty($files) && !empty($locale_javascripts[$language_interface->getId()])) {
     // Add the translation JavaScript file to the page.
@@ -1195,7 +1195,7 @@ function _locale_parse_js_file($filepath) {
  *   New content of the 'system.javascript_parsed' variable.
  */
 function _locale_invalidate_js($langcode = NULL) {
-  $parsed = \Drupal::state()->get('system.javascript_parsed') ?: [];
+  $parsed = \Drupal::state()->get('system.javascript_parsed', []);
 
   if (empty($langcode)) {
     // Invalidate all languages.
@@ -1269,7 +1269,7 @@ function _locale_rebuild_js($langcode = NULL) {
 
   // Delete old file, if we have no translations anymore, or a different file to
   // be saved.
-  $locale_javascripts = \Drupal::state()->get('locale.translation.javascript') ?: [];
+  $locale_javascripts = \Drupal::state()->get('locale.translation.javascript', []);
   $changed_hash = !isset($locale_javascripts[$language->getId()]) || ($locale_javascripts[$language->getId()] != $data_hash);
 
   /** @var \Drupal\Core\File\FileSystemInterface $file_system */

@@ -22,7 +22,7 @@ use Drupal\update\UpdateManagerInterface;
 function template_preprocess_update_report(&$variables) {
   $data = $variables['data'];
 
-  $last = \Drupal::state()->get('update.last_check') ?: 0;
+  $last = \Drupal::state()->get('update.last_check', 0);
 
   $variables['last_checked'] = [
     '#theme' => 'update_last_check',

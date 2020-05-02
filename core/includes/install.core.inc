@@ -1565,7 +1565,7 @@ function install_profile_modules(&$install_state) {
   // as those will not be handled by the module installer.
   install_core_entity_type_definitions();
 
-  $modules = \Drupal::state()->get('install_profile_modules') ?: [];
+  $modules = \Drupal::state()->get('install_profile_modules', []);
   $files = \Drupal::service('extension.list.module')->getList();
   \Drupal::state()->delete('install_profile_modules');
 

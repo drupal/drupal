@@ -116,7 +116,7 @@ class NodeStatisticsDatabaseStorage implements StatisticsStorageInterface {
    * {@inheritdoc}
    */
   public function resetDayCount() {
-    $statistics_timestamp = $this->state->get('statistics.day_timestamp') ?: 0;
+    $statistics_timestamp = $this->state->get('statistics.day_timestamp', 0);
     if (($this->getRequestTime() - $statistics_timestamp) >= 86400) {
       $this->state->set('statistics.day_timestamp', $this->getRequestTime());
       $this->connection->update('node_counter')

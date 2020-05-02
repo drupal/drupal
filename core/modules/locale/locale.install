@@ -32,7 +32,7 @@ function locale_uninstall() {
   $locale_js_directory = 'public://' . $config->get('javascript.directory');
 
   if (is_dir($locale_js_directory)) {
-    $locale_javascripts = \Drupal::state()->get('locale.translation.javascript') ?: [];
+    $locale_javascripts = \Drupal::state()->get('locale.translation.javascript', []);
     /** @var \Drupal\Core\File\FileSystemInterface $file_system */
     $file_system = \Drupal::service('file_system');
     foreach ($locale_javascripts as $langcode => $file_suffix) {

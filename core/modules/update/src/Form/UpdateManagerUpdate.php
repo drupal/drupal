@@ -72,7 +72,7 @@ class UpdateManagerUpdate extends FormBase {
 
     $last_markup = [
       '#theme' => 'update_last_check',
-      '#last' => $this->state->get('update.last_check') ?: 0,
+      '#last' => $this->state->get('update.last_check', 0),
     ];
     $form['last_check'] = [
       '#markup' => \Drupal::service('renderer')->render($last_markup),

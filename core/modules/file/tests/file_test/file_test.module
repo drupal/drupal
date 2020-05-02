@@ -56,7 +56,7 @@ function file_test_reset() {
  * @see file_test_reset()
  */
 function file_test_get_calls($op) {
-  $results = \Drupal::state()->get('file_test.results') ?: [];
+  $results = \Drupal::state()->get('file_test.results', []);
   return $results[$op];
 }
 
@@ -69,7 +69,7 @@ function file_test_get_calls($op) {
  *   passed to each call.
  */
 function file_test_get_all_calls() {
-  return \Drupal::state()->get('file_test.results') ?: [];
+  return \Drupal::state()->get('file_test.results', []);
 }
 
 /**
@@ -86,7 +86,7 @@ function file_test_get_all_calls() {
  */
 function _file_test_log_call($op, $args) {
   if (\Drupal::state()->get('file_test.count_hook_invocations', TRUE)) {
-    $results = \Drupal::state()->get('file_test.results') ?: [];
+    $results = \Drupal::state()->get('file_test.results', []);
     $results[$op][] = $args;
     \Drupal::state()->set('file_test.results', $results);
   }
@@ -105,7 +105,7 @@ function _file_test_log_call($op, $args) {
  * @see file_test_reset()
  */
 function _file_test_get_return($op) {
-  $return = \Drupal::state()->get('file_test.return') ?: [$op => NULL];
+  $return = \Drupal::state()->get('file_test.return', [$op => NULL]);
   return $return[$op];
 }
 
@@ -121,7 +121,7 @@ function _file_test_get_return($op) {
  * @see file_test_reset()
  */
 function file_test_set_return($op, $value) {
-  $return = \Drupal::state()->get('file_test.return') ?: [];
+  $return = \Drupal::state()->get('file_test.return', []);
   $return[$op] = $value;
   \Drupal::state()->set('file_test.return', $return);
 }

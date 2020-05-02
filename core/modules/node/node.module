@@ -999,7 +999,7 @@ function node_query_node_access_alter(AlterableInterface $query) {
  */
 function node_access_needs_rebuild($rebuild = NULL) {
   if (!isset($rebuild)) {
-    return \Drupal::state()->get('node.node_access_needs_rebuild') ?: FALSE;
+    return \Drupal::state()->get('node.node_access_needs_rebuild', FALSE);
   }
   elseif ($rebuild) {
     \Drupal::state()->set('node.node_access_needs_rebuild', TRUE);

@@ -152,7 +152,7 @@ abstract class ToolkitTestBase extends BrowserTestBase {
    *   parameters passed to each call.
    */
   protected function imageTestGetAllCalls() {
-    return \Drupal::state()->get('image_test.results') ?: [];
+    return \Drupal::state()->get('image_test.results', []);
   }
 
 }

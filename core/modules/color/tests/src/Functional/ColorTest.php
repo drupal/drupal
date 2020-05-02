@@ -143,7 +143,7 @@ class ColorTest extends BrowserTestBase {
     $config->set('css.preprocess', 1);
     $config->save();
     $this->drupalGet('<front>');
-    $stylesheets = \Drupal::state()->get('drupal_css_cache_files') ?: [];
+    $stylesheets = \Drupal::state()->get('drupal_css_cache_files', []);
     $stylesheet_content = '';
     foreach ($stylesheets as $uri) {
       $stylesheet_content .= implode("\n", file(\Drupal::service('file_system')->realpath($uri)));

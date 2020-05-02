@@ -194,7 +194,7 @@ function entity_test_entity_base_field_info_alter(&$fields, EntityTypeInterface 
  *   'entity_test'.
  */
 function entity_test_create_bundle($bundle, $text = NULL, $entity_type = 'entity_test') {
-  $bundles = \Drupal::state()->get($entity_type . '.bundles') ?: [$entity_type => ['label' => 'Entity Test Bundle']];
+  $bundles = \Drupal::state()->get($entity_type . '.bundles', [$entity_type => ['label' => 'Entity Test Bundle']]);
   $bundles += [$bundle => ['label' => $text ? $text : $bundle]];
   \Drupal::state()->set($entity_type . '.bundles', $bundles);
 
@@ -211,7 +211,7 @@ function entity_test_create_bundle($bundle, $text = NULL, $entity_type = 'entity
  *   'entity_test'.
  */
 function entity_test_delete_bundle($bundle, $entity_type = 'entity_test') {
-  $bundles = \Drupal::state()->get($entity_type . '.bundles') ?: [$entity_type => ['label' => 'Entity Test Bundle']];
+  $bundles = \Drupal::state()->get($entity_type . '.bundles', [$entity_type => ['label' => 'Entity Test Bundle']]);
   unset($bundles[$bundle]);
   \Drupal::state()->set($entity_type . '.bundles', $bundles);
 
@@ -226,7 +226,7 @@ function entity_test_entity_bundle_info() {
   $entity_types = \Drupal::entityTypeManager()->getDefinitions();
   foreach ($entity_types as $entity_type_id => $entity_type) {
     if ($entity_type->getProvider() == 'entity_test' && $entity_type_id != 'entity_test_with_bundle') {
-      $bundles[$entity_type_id] = \Drupal::state()->get($entity_type_id . '.bundles') ?: [$entity_type_id => ['label' => 'Entity Test Bundle']];
+      $bundles[$entity_type_id] = \Drupal::state()->get($entity_type_id . '.bundles', [$entity_type_id => ['label' => 'Entity Test Bundle']]);
     }
   }
   return $bundles;

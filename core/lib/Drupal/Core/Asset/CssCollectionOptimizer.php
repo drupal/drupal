@@ -91,7 +91,7 @@ class CssCollectionOptimizer implements AssetCollectionOptimizerInterface {
     // Drupal contrib can override this default CSS aggregator to keep the same
     // grouping, optimizing and dumping, but change the strategy that is used to
     // determine when the aggregate should be rebuilt (e.g. mtime, HTTPS …).
-    $map = $this->state->get('drupal_css_cache_files') ?: [];
+    $map = $this->state->get('drupal_css_cache_files', []);
     $css_assets = [];
     foreach ($css_groups as $order => $css_group) {
       // We have to return a single asset, not a group of assets. It is now up

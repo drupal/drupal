@@ -56,7 +56,7 @@ function node_access_test_node_grants($account, $op) {
     $grants['node_access_test'] = [8888, 8889];
   }
 
-  $no_access_uid = \Drupal::state()->get('node_access_test.no_access_uid') ?: 0;
+  $no_access_uid = \Drupal::state()->get('node_access_test.no_access_uid', 0);
   if ($op == 'view' && $account->id() == $no_access_uid) {
     $grants['node_access_all'] = [0];
   }

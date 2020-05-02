@@ -263,7 +263,7 @@ class LocaleTranslationUiTest extends BrowserTestBase {
     // Trigger JavaScript translation parsing and building.
     _locale_rebuild_js($langcode);
 
-    $locale_javascripts = \Drupal::state()->get('locale.translation.javascript') ?: [];
+    $locale_javascripts = \Drupal::state()->get('locale.translation.javascript', []);
     $js_file = 'public://' . $config->get('javascript.directory') . '/' . $langcode . '_' . $locale_javascripts[$langcode] . '.js';
     $this->assertFileExists($js_file);
 

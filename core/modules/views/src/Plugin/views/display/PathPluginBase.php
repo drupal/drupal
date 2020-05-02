@@ -554,7 +554,7 @@ abstract class PathPluginBase extends DisplayPluginBase implements DisplayRouter
    * {@inheritdoc}
    */
   public function getAlteredRouteNames() {
-    return $this->state->get('views.view_route_names') ?: [];
+    return $this->state->get('views.view_route_names', []);
   }
 
   /**

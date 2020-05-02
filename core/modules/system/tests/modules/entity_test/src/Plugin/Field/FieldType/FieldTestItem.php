@@ -114,7 +114,7 @@ class FieldTestItem extends FieldItemBase {
    */
   public function delete() {
     parent::delete();
-    $deleted_languages = \Drupal::state()->get('entity_test.delete.' . $this->getFieldDefinition()->getName()) ?: [];
+    $deleted_languages = \Drupal::state()->get('entity_test.delete.' . $this->getFieldDefinition()->getName(), []);
     $deleted_languages[] = $this->getLangcode();
     \Drupal::state()->set('entity_test.delete.' . $this->getFieldDefinition()->getName(), $deleted_languages);
   }

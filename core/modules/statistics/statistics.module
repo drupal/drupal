@@ -106,7 +106,7 @@ function statistics_ranking() {
         // values in as strings instead of numbers in complex expressions like
         // this.
         'score' => '2.0 - 2.0 / (1.0 + node_counter.totalcount * (ROUND(:statistics_scale, 4)))',
-        'arguments' => [':statistics_scale' => \Drupal::state()->get('statistics.node_counter_scale') ?: 0],
+        'arguments' => [':statistics_scale' => \Drupal::state()->get('statistics.node_counter_scale', 0)],
       ],
     ];
   }

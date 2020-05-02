@@ -158,7 +158,7 @@ class PoDatabaseWriter implements PoWriterInterface {
    */
   public function setHeader(PoHeader $header) {
     $this->header = $header;
-    $locale_plurals = \Drupal::state()->get('locale.translation.plurals') ?: [];
+    $locale_plurals = \Drupal::state()->get('locale.translation.plurals', []);
 
     // Check for options.
     $options = $this->getOptions();

@@ -87,7 +87,7 @@ function system_test_system_info_alter(&$info, Extension $file, $type) {
 function system_test_page_attachments(array &$page) {
   // Used by FrontPageTestCase to get the results of
   // \Drupal::service('path.matcher')->isFrontPage().
-  $frontpage = \Drupal::state()->get('system_test.front_page_output') ?: 0;
+  $frontpage = \Drupal::state()->get('system_test.front_page_output', 0);
   if ($frontpage && \Drupal::service('path.matcher')->isFrontPage()) {
     \Drupal::messenger()->addStatus(t('On front page.'));
   }
