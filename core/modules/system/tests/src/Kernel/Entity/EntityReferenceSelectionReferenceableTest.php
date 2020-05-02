@@ -126,7 +126,7 @@ class EntityReferenceSelectionReferenceableTest extends KernelTestBase {
       // entity labels.
       // @see \Drupal\Core\Entity\EntityReferenceSelection\SelectionInterface::getReferenceableEntities()
       $item = is_string($item) ? Html::escape($item) : $item;
-      $this->assertTrue(array_search($item, $referenceables[$this->bundle]) !== FALSE);
+      $this->assertContains($item, $referenceables[$this->bundle]);
     }
 
     // Test ::countReferenceableEntities().
