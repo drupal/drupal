@@ -57,7 +57,7 @@ use Drupal\node\Entity\NodeType;
  *   hook are of the specific entity class, not the generic Entity class, so in
  *   your implementation, you can make the $entity argument something like $node
  *   and give it a specific type hint (which should normally be to the specific
- *   interface, such as \Drupal\Node\NodeInterface for nodes).
+ *   interface, such as \Drupal\node\NodeInterface for nodes).
  * - $storage in the code examples is assumed to be an entity storage
  *   class. See the @link entity_api Entity API topic @endlink for
  *   information on how to instantiate the correct storage class for an
@@ -67,7 +67,7 @@ use Drupal\node\Entity\NodeType;
  *   information on how to instantiate the correct view builder class for
  *   an entity type.
  * - During many operations, static methods are called on the entity class,
- *   which implements \Drupal\Entity\EntityInterface.
+ *   which implements \Drupal\Core\Entity\EntityInterface.
  *
  * @section entities_revisions_translations Entities, revisions and translations
  * A content entity can have multiple stored variants: based on its definition,
