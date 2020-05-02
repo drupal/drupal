@@ -29,7 +29,7 @@ class EntityRouteEnhancerTest extends UnitTestCase {
     $defaults['_entity_form'] = 'entity_test.default';
     $defaults['_route_object'] = (new Route('/test', $defaults));
     $new_defaults = $route_enhancer->enhance($defaults, $request);
-    $this->assertTrue(is_callable($new_defaults['_controller']));
+    $this->assertIsCallable($new_defaults['_controller']);
     $this->assertEquals($defaults['_controller'], $new_defaults['_controller'], '_controller did not get overridden.');
 
     // Set _entity_form and ensure that the form is set.
