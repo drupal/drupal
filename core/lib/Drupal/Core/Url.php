@@ -15,6 +15,14 @@ use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Defines an object that holds information about a URL.
+ *
+ * In most cases, these should be created with the following methods:
+ * - \Drupal\Core\Url::fromRoute()
+ * - \Drupal\Core\Url::fromRouteMatch()
+ * - \Drupal\Core\Url::fromUri()
+ * - \Drupal\Core\Url::fromUserInput()
+ *
+ * @see \Drupal\Core\Entity\EntityBase::toUrl()
  */
 class Url implements TrustedCallbackInterface {
   use DependencySerializationTrait;
