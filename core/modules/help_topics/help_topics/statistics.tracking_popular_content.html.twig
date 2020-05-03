@@ -1,0 +1,22 @@
+---
+label: 'Tracking and displaying popular content'
+related:
+  - core.tracking_content
+  - history.tracking_user_content
+  - tracker.tracking_changed_content
+  - block.place
+---
+{% set statistics_settings = render_var(url('statistics.settings')) %}
+{% set permissions = render_var(url('user.admin_permissions')) %}
+<h2>{% trans %}Goal{% endtrans %}</h2>
+<p>{% trans %}Configure and display tracking of how many times content has been viewed on your site, assuming that the core Statistics module is currently installed.{% endtrans %}</p>
+<h2>{% trans %}What are the options for displaying popularity tracking?{% endtrans %}</h2>
+<p>{% trans %}You can display a <em>content hits</em> counter of how many times a content item has been viewed, at the bottom of content item pages. You can also place a <em>Popular content</em> block in a region of your theme, which shows a list of the most popular and most recently-viewed content.{% endtrans %}</p>
+<h2>{% trans %}Steps{% endtrans %}</h2>
+<ol>
+  <li>{% trans %}In the <em>Manage</em> administrative menu, navigate to <em>Configuration</em> &gt; <em>System</em> &gt; <a href="{{ statistics_settings }}"><em>Statistics</em></a>.{% endtrans %}</li>
+  <li>{% trans %}Check <em>Count content views</em> and click <em>Save configuration</em>.{% endtrans %}</li>
+  <li>{% trans %}In the <em>Manage</em> administrative menu, navigate to <em>People</em> &gt; <a href="{{ permissions }}"><em>Permissions</em></a>.{% endtrans %}</li>
+  <li>{% trans %}In the <em>Statistics</em> section, check or uncheck the <em>View content hits</em> permission for each role. Click <em>Save permissions</em>.{% endtrans %}</li>
+  <li>{% trans %}Optionally, in the <em>Manage</em> administrative menu, navigate to <em>Structure</em> &gt; <em>Block layout</em>. Place the <em>Popular content</em> block in a region in your theme (you will need to have the core Block module installed; see related topic for more details on block placement).{% endtrans %}</li>
+</ol>
