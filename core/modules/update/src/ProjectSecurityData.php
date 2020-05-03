@@ -153,8 +153,8 @@ final class ProjectSecurityData {
    * For the sake of example, assume that the currently installed version of
    * Drupal is 8.7.11 and that static::CORE_MINORS_WITH_SECURITY_COVERAGE is 2.
    * When Drupal 8.9.0 is released, the supported minor versions will be 8.8
-   * and 8.9. At that point, Drupal 8.7 will no longer have security
-   * coverage. Therefore, this function would return "8.9.0".
+   * and 8.9. At that point, Drupal 8.7 will no longer have security coverage.
+   * Therefore, this function would return "8.9.0".
    *
    * @todo In https://www.drupal.org/node/2998285 determine how we will know
    *    what the final minor release of a particular major version will be. This
