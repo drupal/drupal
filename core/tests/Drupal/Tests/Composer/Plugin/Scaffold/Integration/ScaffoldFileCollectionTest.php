@@ -4,7 +4,7 @@ namespace Drupal\Tests\Composer\Plugin\Scaffold\Integration;
 
 use PHPUnit\Framework\TestCase;
 use Drupal\Tests\Composer\Plugin\Scaffold\Fixtures;
-use Drupal\Composer\Plugin\Scaffold\Operations\ConjunctionOp;
+use Drupal\Composer\Plugin\Scaffold\Operations\AppendOp;
 use Drupal\Composer\Plugin\Scaffold\Operations\SkipOp;
 use Drupal\Composer\Plugin\Scaffold\Operations\ScaffoldFileCollection;
 
@@ -41,8 +41,8 @@ class ScaffoldFileCollectionTest extends TestCase {
     // Confirm that the keys of the output are the same as the keys of the
     // input.
     $this->assertEquals(array_keys($scaffold_file_fixtures), array_keys($resolved_file_mappings));
-    // '[web-root]/robots.txt' is now a SkipOp, as it is now part of a
-    // conjunction operation.
+    // '[web-root]/robots.txt' is now a SkipOp, as it is now part of an
+    // append operation.
     $this->assertEquals([
       '[web-root]/index.php',
       '[web-root]/.htaccess',
@@ -62,8 +62,8 @@ class ScaffoldFileCollectionTest extends TestCase {
 
     // Test that .htaccess is skipped.
     $this->assertInstanceOf(SkipOp::class, $resolved_file_mappings['fixtures/drupal-assets-fixture']['[web-root]/.htaccess']->op());
-    // Test that the expected conjunction operation exists.
-    $this->assertInstanceOf(ConjunctionOp::class, $resolved_file_mappings['fixtures/drupal-drupal']['[web-root]/robots.txt']->op());
+    // Test that the expected append operation exists.
+    $this->assertInstanceOf(AppendOp::class, $resolved_file_mappings['fixtures/drupal-drupal']['[web-root]/robots.txt']->op());
   }
 
 }

@@ -29,15 +29,16 @@ class ScaffoldFileCollection implements \IteratorAggregate {
   /**
    * ScaffoldFileCollection constructor.
    *
-   * @param array $file_mappings
+   * @param \Drupal\Composer\Plugin\Scaffold\Operations\OperationInterface[][] $file_mappings
    *   A multidimensional array of file mappings.
    * @param \Drupal\Composer\Plugin\Scaffold\Interpolator $location_replacements
    *   An object with the location mappings (e.g. [web-root]).
    */
   public function __construct(array $file_mappings, Interpolator $location_replacements) {
     // Collection of all destination paths to be scaffolded. Used to determine
-    // when two project scaffold the same file and we have to skip or use a
-    // ConjunctionOp.
+    // when two projects scaffold the same file and we have to either replace or
+    // combine them together.
+    // @see OperationInterface::scaffoldOverExistingTarget().
     $scaffoldFiles = [];
 
     // Build the list of ScaffoldFileInfo objects by project.
@@ -46,24 +47,20 @@ class ScaffoldFileCollection implements \IteratorAggregate {
         $destination = ScaffoldFilePath::destinationPath($package_name, $destination_rel_path, $location_replacements);
 
         // If there was already a scaffolding operation happening at this path,
-        // and the new operation is Conjoinable, then use a ConjunctionOp to
-        // join together both operations. This will cause both operations to
-        // run, one after the other. At the moment, only AppendOp is
-        // conjoinable; all other operations simply replace anything at the same
-        // path.
+        // allow the new operation to decide how to handle the override.
+        // Usually, the new operation will replace whatever was there before.
         if (isset($scaffoldFiles[$destination_rel_path])) {
           $previous_scaffold_file = $scaffoldFiles[$destination_rel_path];
-          $op = $op->combineWithConjunctionTarget($previous_scaffold_file->op());
+          $op = $op->scaffoldOverExistingTarget($previous_scaffold_file->op());
 
           // Remove the previous op so we only touch the destination once.
           $message = "  - Skip <info>[dest-rel-path]</info>: overridden in <comment>{$package_name}</comment>";
           $this->scaffoldFilesByProject[$previous_scaffold_file->packageName()][$destination_rel_path] = new ScaffoldFileInfo($destination, new SkipOp($message));
         }
         // If there is NOT already a scaffolding operation happening at this
-        // path, but the operation is a ConjunctionOp, then we need to check
-        // to see if there is a strategy for non-conjunction use.
+        // path, notify the scaffold operation of this fact.
         else {
-          $op = $op->missingConjunctionTarget($destination);
+          $op = $op->scaffoldAtNewLocation($destination);
         }
 
         // Combine the scaffold operation with the destination and record it.
@@ -75,17 +72,56 @@ class ScaffoldFileCollection implements \IteratorAggregate {
   }
 
   /**
-   * {@inheritdoc}
+   * Removes any item that has a path matching any path in the provided list.
+   *
+   * Matching is done via destination path.
+   *
+   * @param string[] $files_to_filter
+   *   List of destination paths
    */
-  public function getIterator() {
-    return new \RecursiveArrayIterator($this->scaffoldFilesByProject, \RecursiveArrayIterator::CHILD_ARRAYS_ONLY);
+  public function filterFiles(array $files_to_filter) {
+    foreach ($this->scaffoldFilesByProject as $project_name => $scaffold_files) {
+      foreach ($scaffold_files as $destination_rel_path => $scaffold_file) {
+        if (in_array($destination_rel_path, $files_to_filter, TRUE)) {
+          unset($scaffold_files[$destination_rel_path]);
+        }
+      }
+      $this->scaffoldFilesByProject[$project_name] = $scaffold_files;
+      if (!$this->checkListHasItemWithContent($scaffold_files)) {
+        unset($this->scaffoldFilesByProject[$project_name]);
+      }
+    }
   }
 
   /**
-   * Processes the iterator created by ScaffoldFileCollection::create().
+   * Scans through a list of scaffold files and determines if any has contents.
    *
-   * @param \Drupal\Composer\Plugin\Scaffold\Operations\ScaffoldFileCollection $collection
-   *   The iterator to process.
+   * @param Drupal\Composer\Plugin\Scaffold\ScaffoldFileInfo[] $scaffold_files
+   *   List of scaffold files, path: ScaffoldFileInfo
+   *
+   * @return bool
+   *   TRUE if at least one item in the list has content
+   */
+  protected function checkListHasItemWithContent(array $scaffold_files) {
+    foreach ($scaffold_files as $destination_rel_path => $scaffold_file) {
+      $contents = $scaffold_file->op()->contents();
+      if (!empty($contents)) {
+        return TRUE;
+      }
+    }
+    return FALSE;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getIterator() {
+    return new \ArrayIterator($this->scaffoldFilesByProject);
+  }
+
+  /**
+   * Processes the files in our collection.
+   *
    * @param \Composer\IO\IOInterface $io
    *   The Composer IO object.
    * @param \Drupal\Composer\Plugin\Scaffold\ScaffoldOptions $scaffold_options
@@ -94,12 +130,38 @@ class ScaffoldFileCollection implements \IteratorAggregate {
    * @return \Drupal\Composer\Plugin\Scaffold\Operations\ScaffoldResult[]
    *   The results array.
    */
-  public static function process(ScaffoldFileCollection $collection, IOInterface $io, ScaffoldOptions $scaffold_options) {
+  public function process(IOInterface $io, ScaffoldOptions $scaffold_options) {
     $results = [];
-    foreach ($collection as $project_name => $scaffold_files) {
+    foreach ($this as $project_name => $scaffold_files) {
       $io->write("Scaffolding files for <comment>{$project_name}</comment>:");
       foreach ($scaffold_files as $scaffold_file) {
         $results[$scaffold_file->destination()->relativePath()] = $scaffold_file->process($io, $scaffold_options);
+      }
+    }
+    return $results;
+  }
+
+  /**
+   * Returns the list of files that have not changed since they were scaffolded.
+   *
+   * Note that there are two reasons a file may have changed:
+   *   - The user modified it after it was scaffolded.
+   *   - The package the file came to was updated, and the file is different in
+   *     the new version.
+   *
+   * With the current scaffold code, we cannot tell the difference between the
+   * two. @see https://www.drupal.org/project/drupal/issues/3092563
+   *
+   * @return string[]
+   *   List of relative paths to unchanged files on disk.
+   */
+  public function checkUnchanged() {
+    $results = [];
+    foreach ($this as $project_name => $scaffold_files) {
+      foreach ($scaffold_files as $scaffold_file) {
+        if (!$scaffold_file->hasChanged()) {
+          $results[] = $scaffold_file->destination()->relativePath();
+        }
       }
     }
     return $results;

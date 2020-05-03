@@ -50,6 +50,13 @@ class AppendOp extends AbstractOperation {
   protected $forceAppend;
 
   /**
+   * The contents from the file that we are prepending / appending to.
+   *
+   * @var string
+   */
+  protected $originalContents;
+
+  /**
    * Constructs an AppendOp.
    *
    * @param \Drupal\Composer\Plugin\Scaffold\ScaffoldFilePath $prepend_path
@@ -72,13 +79,33 @@ class AppendOp extends AbstractOperation {
   /**
    * {@inheritdoc}
    */
+  protected function generateContents() {
+    // Fetch the prepend contents, if provided.
+    $prepend_contents = '';
+    if (!empty($this->prepend)) {
+      $prepend_contents = file_get_contents($this->prepend->fullPath()) . "\n";
+    }
+    // Fetch the append contents, if provided.
+    $append_contents = '';
+    if (!empty($this->append)) {
+      $append_contents = "\n" . file_get_contents($this->append->fullPath());
+    }
+
+    // Get the original contents, or the default data if the original is empty.
+    $original_contents = $this->originalContents;
+    if (empty($original_contents) && !empty($this->default)) {
+      $original_contents = file_get_contents($this->default->fullPath());
+    }
+
+    // Attach it all together.
+    return $prepend_contents . $original_contents . $append_contents;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function process(ScaffoldFilePath $destination, IOInterface $io, ScaffoldOptions $options) {
     $destination_path = $destination->fullPath();
-    // This is just a sanity check; the OperationFactory has in theory already
-    // accounted for this, and will return a SkipOp with a warning message.
-    if (!file_exists($destination_path) && empty($this->default)) {
-      throw new \RuntimeException($destination->getInterpolator()->interpolate("Cannot append/prepend because no prior package provided a scaffold file at [dest-rel-path]."));
-    }
     $interpolator = $destination->getInterpolator();
 
     // Be extra-noisy of creating a new file or appending to a non-scaffold
@@ -93,33 +120,20 @@ class AppendOp extends AbstractOperation {
       $io->write($interpolator->interpolate($message));
     }
 
-    // Fetch the prepend contents, if provided.
-    $prepend_contents = '';
+    // Notify that we are prepending, if there is prepend data.
     if (!empty($this->prepend)) {
       $this->prepend->addInterpolationData($interpolator, 'prepend');
-      $prepend_contents = file_get_contents($this->prepend->fullPath()) . "\n";
       $io->write($interpolator->interpolate("  - Prepend to <info>[dest-rel-path]</info> from <info>[prepend-rel-path]</info>"));
     }
-    // Fetch the append contents, if provided.
+    // Notify that we are appending, if there is append data.
     $append_contents = '';
     if (!empty($this->append)) {
       $this->append->addInterpolationData($interpolator, 'append');
-      $append_contents = "\n" . file_get_contents($this->append->fullPath());
       $io->write($interpolator->interpolate("  - Append to <info>[dest-rel-path]</info> from <info>[append-rel-path]</info>"));
     }
-    // We typically should always have content if we get here; the
-    // OperationFactory should create a SkipOp instead of an AppendOp if there
-    // is no append / prepend content. The edge case is if there is content
-    // that is all 'trim'ed away. Then we get a message that we are appending,
-    // although nothing will in fact actually happen.
-    if (!empty(trim($prepend_contents)) || !empty(trim($append_contents))) {
-      // None of our asset files are very large, so we will load each one into
-      // memory for processing.
-      $original_contents = file_get_contents(file_exists($destination_path) ? $destination_path : $this->default->fullPath());
-      // Write the appended and prepended contents back to the file.
-      $altered_contents = $prepend_contents . $original_contents . $append_contents;
-      file_put_contents($destination_path, $altered_contents);
-    }
+
+    // Write the resulting data
+    file_put_contents($destination_path, $this->contents());
 
     // Return a ScaffoldResult with knowledge of whether this file is managed.
     return new ScaffoldResult($destination, $this->managed);
@@ -128,16 +142,17 @@ class AppendOp extends AbstractOperation {
   /**
    * {@inheritdoc}
    */
-  public function combineWithConjunctionTarget(OperationInterface $conjunction_target) {
-    return new ConjunctionOp($conjunction_target, $this);
+  public function scaffoldOverExistingTarget(OperationInterface $existing_target) {
+    $this->originalContents = $existing_target->contents();
+    return $this;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function missingConjunctionTarget(ScaffoldFilePath $destination) {
-    // If there is no conjunction target (the destination is not scaffolded),
-    // then any append we do will be to an unmanaged file.
+  public function scaffoldAtNewLocation(ScaffoldFilePath $destination) {
+    // If there is no existing scaffold file at the target location, then any
+    // append we do will be to an unmanaged file.
     $this->managed = FALSE;
 
     // Default: do not allow an append over a file that was not scaffolded.
@@ -163,6 +178,9 @@ class AppendOp extends AbstractOperation {
       $message = "  - Skip <info>[dest-rel-path]</info>: the file already has the append/prepend data.";
       return new SkipOp($message);
     }
+
+    // Cache the original data to use during append.
+    $this->originalContents = $existingData;
 
     return $this;
   }

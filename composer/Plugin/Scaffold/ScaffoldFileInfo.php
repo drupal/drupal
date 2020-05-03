@@ -123,4 +123,17 @@ class ScaffoldFileInfo {
     return $this->op()->process($this->destination, $io, $options);
   }
 
+  /**
+   * Returns TRUE if the target does not exist or has changed.
+   *
+   * @return bool
+   */
+  final public function hasChanged() {
+    $path = $this->destination()->fullPath();
+    if (!file_exists($path)) {
+      return TRUE;
+    }
+    return $this->op()->contents() !== file_get_contents($path);
+  }
+
 }
