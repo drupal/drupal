@@ -249,6 +249,10 @@ class UserViewsData extends EntityViewsData {
       ],
     ];
 
+    // Unset the "pass" field because the access control handler for the user
+    // entity type allows editing the password, but not viewing it.
+    unset($data['users_field_data']['pass']);
+
     return $data;
   }
 
