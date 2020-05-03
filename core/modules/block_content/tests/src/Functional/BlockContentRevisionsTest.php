@@ -85,8 +85,8 @@ class BlockContentRevisionsTest extends BlockContentTestBase {
       ]));
       if ($delta > 0) {
         $this->assertInstanceOf(UserInterface::class, $loaded->getRevisionUser());
-        $this->assertTrue(is_numeric($loaded->getRevisionUserId()), 'Revision User ID found.');
-        $this->assertTrue(is_numeric($loaded->getRevisionCreationTime()), 'Revision time found.');
+        $this->assertIsNumeric($loaded->getRevisionUserId());
+        $this->assertIsNumeric($loaded->getRevisionCreationTime());
       }
     }
 
