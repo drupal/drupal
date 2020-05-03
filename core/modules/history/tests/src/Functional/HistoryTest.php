@@ -119,7 +119,7 @@ class HistoryTest extends BrowserTestBase {
     $response = $this->markNodeAsRead($nid);
     $this->assertEquals(200, $response->getStatusCode());
     $timestamp = Json::decode($response->getBody());
-    $this->assertTrue(is_numeric($timestamp), 'Node has been marked as read. Timestamp received.');
+    $this->assertIsNumeric($timestamp);
 
     // Retrieve "last read" timestamp for test node, for the current user.
     $response = $this->getNodeReadTimestamps([$nid]);
