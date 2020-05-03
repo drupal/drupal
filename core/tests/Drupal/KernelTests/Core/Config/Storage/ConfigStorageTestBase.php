@@ -138,8 +138,7 @@ abstract class ConfigStorageTestBase extends KernelTestBase {
       $this->fail('Exception not thrown upon deleting from a non-existing storage bin.');
     }
     catch (\Exception $e) {
-      $class = get_class($e);
-      $this->pass($class . ' thrown upon deleting from a non-existing storage bin.');
+      // An exception occurred as expected; just continue.
     }
 
     // Listing on a non-existing storage bin returns an empty array.

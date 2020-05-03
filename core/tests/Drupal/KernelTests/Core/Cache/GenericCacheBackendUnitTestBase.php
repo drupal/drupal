@@ -216,10 +216,10 @@ abstract class GenericCacheBackendUnitTestBase extends KernelTestBase {
     // Calling ::set() with invalid cache tags. This should fail an assertion.
     try {
       $backend->set('assertion_test', 'value', Cache::PERMANENT, ['node' => [3, 5, 7]]);
-      $this->fail('::set() was called with invalid cache tags, runtime assertion did not fail.');
+      $this->fail('::set() was called with invalid cache tags, but runtime assertion did not fail.');
     }
     catch (\AssertionError $e) {
-      $this->pass('::set() was called with invalid cache tags, runtime assertion failed.');
+      // Do nothing; continue testing in extending classes.
     }
   }
 
@@ -418,10 +418,10 @@ abstract class GenericCacheBackendUnitTestBase extends KernelTestBase {
         'exception_test_3' => ['data' => 3, 'tags' => ['node' => [3, 5, 7]]],
       ];
       $backend->setMultiple($items);
-      $this->fail('::setMultiple() was called with invalid cache tags, runtime assertion did not fail.');
+      $this->fail('::setMultiple() was called with invalid cache tags, but runtime assertion did not fail.');
     }
     catch (\AssertionError $e) {
-      $this->pass('::setMultiple() was called with invalid cache tags, runtime assertion failed.');
+      // Do nothing; continue testing in extending classes.
     }
   }
 
