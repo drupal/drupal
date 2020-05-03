@@ -38,6 +38,13 @@ class SkipOp extends AbstractOperation {
   /**
    * {@inheritdoc}
    */
+  protected function generateContents() {
+    return '';
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function process(ScaffoldFilePath $destination, IOInterface $io, ScaffoldOptions $options) {
     $interpolator = $destination->getInterpolator();
     $io->write($interpolator->interpolate($this->message));
