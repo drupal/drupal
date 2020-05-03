@@ -390,7 +390,7 @@ class EntityFieldTest extends EntityKernelTestBase {
 
     // Access the name field.
     $this->assertEqual(1, $entity->id->value, new FormattableMarkup('%entity_type: ID value can be read.', ['%entity_type' => $entity_type]));
-    $this->assertTrue(is_string($entity->uuid->value), new FormattableMarkup('%entity_type: UUID value can be read.', ['%entity_type' => $entity_type]));
+    $this->assertIsString($entity->uuid->value);
     $this->assertEqual('en', $entity->{$langcode_key}->value, new FormattableMarkup('%entity_type: Language code can be read.', ['%entity_type' => $entity_type]));
     $this->assertEqual(\Drupal::languageManager()->getLanguage('en'), $entity->{$langcode_key}->language, new FormattableMarkup('%entity_type: Language object can be read.', ['%entity_type' => $entity_type]));
     $this->assertEqual($this->entityUser->id(), $entity->user_id->target_id, new FormattableMarkup('%entity_type: User id can be read.', ['%entity_type' => $entity_type]));
