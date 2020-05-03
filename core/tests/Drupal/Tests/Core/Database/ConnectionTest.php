@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\Core\Database;
 
+use Composer\Autoload\ClassLoader;
 use Drupal\Tests\Core\Database\Stub\StubConnection;
 use Drupal\Tests\Core\Database\Stub\StubPDO;
 use Drupal\Tests\UnitTestCase;
@@ -118,7 +119,6 @@ class ConnectionTest extends UnitTestCase {
    * @return array
    *   Array of arrays with the following elements:
    *   - Expected namespaced class name.
-   *   - Driver.
    *   - Namespace.
    *   - Class name without namespace.
    */
@@ -134,23 +134,155 @@ class ConnectionTest extends UnitTestCase {
         NULL,
         'Select',
       ],
+      // Tests with the corefake database driver. This driver has no custom
+      // driver classes.
       [
-        'Drupal\\Tests\\Core\\Database\\Stub\\Driver\\Schema',
-        'Drupal\\Tests\\Core\\Database\\Stub\\Driver',
+        'Drupal\Core\Database\Query\Condition',
+        'Drupal\corefake\Driver\Database\corefake',
+        'Condition',
+      ],
+      [
+        'Drupal\Core\Database\Query\Delete',
+        'Drupal\corefake\Driver\Database\corefake',
+        'Delete',
+      ],
+      [
+        'Drupal\Core\Database\Query\Insert',
+        'Drupal\corefake\Driver\Database\corefake',
+        'Insert',
+      ],
+      [
+        'Drupal\Core\Database\Query\Merge',
+        'Drupal\corefake\Driver\Database\corefake',
+        'Merge',
+      ],
+      [
+        'Drupal\Core\Database\Schema',
+        'Drupal\corefake\Driver\Database\corefake',
         'Schema',
+      ],
+      [
+        'Drupal\Core\Database\Query\Select',
+        'Drupal\corefake\Driver\Database\corefake',
+        'Select',
+      ],
+      [
+        'Drupal\Core\Database\Transaction',
+        'Drupal\corefake\Driver\Database\corefake',
+        'Transaction',
+      ],
+      [
+        'Drupal\Core\Database\Query\Truncate',
+        'Drupal\corefake\Driver\Database\corefake',
+        'Truncate',
+      ],
+      [
+        'Drupal\Core\Database\Query\Update',
+        'Drupal\corefake\Driver\Database\corefake',
+        'Update',
+      ],
+      [
+        'Drupal\Core\Database\Query\Upsert',
+        'Drupal\corefake\Driver\Database\corefake',
+        'Upsert',
+      ],
+      // Tests with the corefakeWithAllCustomClasses database driver. This
+      // driver has custom driver classes for all classes.
+      [
+        'Drupal\corefake\Driver\Database\corefakeWithAllCustomClasses\Condition',
+        'Drupal\corefake\Driver\Database\corefakeWithAllCustomClasses',
+        'Condition',
+      ],
+      [
+        'Drupal\corefake\Driver\Database\corefakeWithAllCustomClasses\Delete',
+        'Drupal\corefake\Driver\Database\corefakeWithAllCustomClasses',
+        'Delete',
+      ],
+      [
+        'Drupal\corefake\Driver\Database\corefakeWithAllCustomClasses\Insert',
+        'Drupal\corefake\Driver\Database\corefakeWithAllCustomClasses',
+        'Insert',
+      ],
+      [
+        'Drupal\corefake\Driver\Database\corefakeWithAllCustomClasses\Merge',
+        'Drupal\corefake\Driver\Database\corefakeWithAllCustomClasses',
+        'Merge',
+      ],
+      [
+        'Drupal\corefake\Driver\Database\corefakeWithAllCustomClasses\Schema',
+        'Drupal\corefake\Driver\Database\corefakeWithAllCustomClasses',
+        'Schema',
+      ],
+      [
+        'Drupal\corefake\Driver\Database\corefakeWithAllCustomClasses\Select',
+        'Drupal\corefake\Driver\Database\corefakeWithAllCustomClasses',
+        'Select',
+      ],
+      [
+        'Drupal\corefake\Driver\Database\corefakeWithAllCustomClasses\Transaction',
+        'Drupal\corefake\Driver\Database\corefakeWithAllCustomClasses',
+        'Transaction',
+      ],
+      [
+        'Drupal\corefake\Driver\Database\corefakeWithAllCustomClasses\Truncate',
+        'Drupal\corefake\Driver\Database\corefakeWithAllCustomClasses',
+        'Truncate',
+      ],
+      [
+        'Drupal\corefake\Driver\Database\corefakeWithAllCustomClasses\Update',
+        'Drupal\corefake\Driver\Database\corefakeWithAllCustomClasses',
+        'Update',
+      ],
+      [
+        'Drupal\corefake\Driver\Database\corefakeWithAllCustomClasses\Upsert',
+        'Drupal\corefake\Driver\Database\corefakeWithAllCustomClasses',
+        'Upsert',
+      ],
+      [
+        'Drupal\Core\Database\Query\PagerSelectExtender',
+        'Drupal\corefake\Driver\Database\corefakeWithAllCustomClasses',
+        'Drupal\Core\Database\Query\PagerSelectExtender',
+      ],
+      [
+        '\Drupal\Core\Database\Query\PagerSelectExtender',
+        'Drupal\corefake\Driver\Database\corefakeWithAllCustomClasses',
+        '\Drupal\Core\Database\Query\PagerSelectExtender',
+      ],
+      [
+        'Drupal\Core\Database\Query\TableSortExtender',
+        'Drupal\corefake\Driver\Database\corefakeWithAllCustomClasses',
+        'Drupal\Core\Database\Query\TableSortExtender',
+      ],
+      [
+        '\Drupal\Core\Database\Query\TableSortExtender',
+        'Drupal\corefake\Driver\Database\corefakeWithAllCustomClasses',
+        '\Drupal\Core\Database\Query\TableSortExtender',
+      ],
+      [
+        'Drupal\search\SearchQuery',
+        'Drupal\corefake\Driver\Database\corefakeWithAllCustomClasses',
+        'Drupal\search\SearchQuery',
+      ],
+      [
+        '\Drupal\search\SearchQuery',
+        'Drupal\corefake\Driver\Database\corefakeWithAllCustomClasses',
+        '\Drupal\search\SearchQuery',
       ],
     ];
   }
 
   /**
-   * Test getDriverClass().
-   *
+   * @covers ::getDriverClass
    * @dataProvider providerGetDriverClass
    */
   public function testGetDriverClass($expected, $namespace, $class) {
+    $additional_class_loader = new ClassLoader();
+    $additional_class_loader->addPsr4("Drupal\\corefake\\Driver\\Database\\corefake\\", __DIR__ . "/../../../../../tests/fixtures/database_drivers/module/corefake/src/Driver/Database/corefake");
+    $additional_class_loader->addPsr4("Drupal\\corefake\\Driver\\Database\\corefakeWithAllCustomClasses\\", __DIR__ . "/../../../../../tests/fixtures/database_drivers/module/corefake/src/Driver/Database/corefakeWithAllCustomClasses");
+    $additional_class_loader->register(TRUE);
+
     $mock_pdo = $this->createMock('Drupal\Tests\Core\Database\Stub\StubPDO');
     $connection = new StubConnection($mock_pdo, ['namespace' => $namespace]);
-    // Set the driver using our stub class' public property.
     $this->assertEquals($expected, $connection->getDriverClass($class));
   }
 
