@@ -154,11 +154,17 @@ class Handler {
     $scaffold_options = $this->manageOptions->getOptions();
 
     // Create a collection of scaffolded files to process. This determines which
-    // take priority and which are conjoined.
+    // take priority and which are combined.
     $scaffold_files = new ScaffoldFileCollection($file_mappings, $location_replacements);
 
+    // Get the scaffold files whose contents on disk match what we are about to
+    // write. We can remove these from consideration, as rewriting would be a
+    // no-op.
+    $unchanged = $scaffold_files->checkUnchanged();
+    $scaffold_files->filterFiles($unchanged);
+
     // Process the list of scaffolded files.
-    $scaffold_results = ScaffoldFileCollection::process($scaffold_files, $this->io, $scaffold_options);
+    $scaffold_results = $scaffold_files->process($this->io, $scaffold_options);
 
     // Generate an autoload file in the document root that includes the
     // autoload.php file in the vendor directory, wherever that is. Drupal
@@ -195,7 +201,7 @@ class Handler {
    *   A multidimensional array of file mappings, as returned by
    *   self::getAllowedPackages().
    *
-   * @return \Drupal\Composer\Plugin\Scaffold\Operations\OperationInterface[]
+   * @return \Drupal\Composer\Plugin\Scaffold\Operations\OperationInterface[][]
    *   An array of destination paths => scaffold operation objects.
    */
   protected function getFileMappingsFromPackages(array $allowed_packages) {

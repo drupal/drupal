@@ -50,6 +50,13 @@ class ReplaceOp extends AbstractOperation {
   /**
    * {@inheritdoc}
    */
+  protected function generateContents() {
+    return file_get_contents($this->source->fullPath());
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function process(ScaffoldFilePath $destination, IOInterface $io, ScaffoldOptions $options) {
     $fs = new Filesystem();
     $destination_path = $destination->fullPath();
@@ -85,8 +92,7 @@ class ReplaceOp extends AbstractOperation {
   protected function copyScaffold(ScaffoldFilePath $destination, IOInterface $io) {
     $interpolator = $destination->getInterpolator();
     $this->source->addInterpolationData($interpolator);
-    $fs = new Filesystem();
-    $success = $fs->copy($this->source->fullPath(), $destination->fullPath());
+    $success = file_put_contents($destination->fullPath(), $this->contents());
     if (!$success) {
       throw new \RuntimeException($interpolator->interpolate("Could not copy source file <info>[src-rel-path]</info> to <info>[dest-rel-path]</info>!"));
     }
