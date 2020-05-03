@@ -249,8 +249,6 @@ abstract class CommentTestBase extends BrowserTestBase {
       $form_display->removeComponent('subject');
     }
     $form_display->save();
-    // Display status message.
-    $this->pass('Comment subject ' . ($enabled ? 'enabled' : 'disabled') . '.');
   }
 
   /**
@@ -336,8 +334,6 @@ abstract class CommentTestBase extends BrowserTestBase {
     $field = FieldConfig::loadByName('node', 'article', $field_name);
     $field->setSetting($name, $value);
     $field->save();
-    // Display status message.
-    $this->pass($message);
   }
 
   /**

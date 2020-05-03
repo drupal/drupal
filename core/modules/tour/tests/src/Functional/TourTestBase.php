@@ -66,7 +66,6 @@ abstract class TourTestBase extends BrowserTestBase {
         }
         $total++;
       }
-      $this->pass(new FormattableMarkup('Total %total Tips tested of which %modals modal(s).', ['%total' => $total, '%modals' => $modals]));
     }
   }
 
