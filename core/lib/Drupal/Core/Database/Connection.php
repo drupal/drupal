@@ -4,6 +4,13 @@ namespace Drupal\Core\Database;
 
 use Drupal\Component\Assertion\Inspector;
 use Drupal\Core\Database\Query\Condition;
+use Drupal\Core\Database\Query\Delete;
+use Drupal\Core\Database\Query\Insert;
+use Drupal\Core\Database\Query\Merge;
+use Drupal\Core\Database\Query\Select;
+use Drupal\Core\Database\Query\Truncate;
+use Drupal\Core\Database\Query\Update;
+use Drupal\Core\Database\Query\Upsert;
 
 /**
  * Base Database API class.
@@ -873,11 +880,44 @@ abstract class Connection {
   public function getDriverClass($class) {
     if (empty($this->driverClasses[$class])) {
       $driver_class = $this->connectionOptions['namespace'] . '\\' . $class;
-      $this->driverClasses[$class] = class_exists($driver_class) ? $driver_class : $class;
-      if ($this->driverClasses[$class] === 'Condition') {
-        // @todo Deprecate the fallback for contrib and custom drivers in 9.1.x
-        //   in https://www.drupal.org/project/drupal/issues/3120036.
-        $this->driverClasses[$class] = Condition::class;
+      if (class_exists($driver_class)) {
+        $this->driverClasses[$class] = $driver_class;
+      }
+      else {
+        switch ($class) {
+          case 'Condition':
+            $this->driverClasses[$class] = Condition::class;
+            break;
+          case 'Delete':
+            $this->driverClasses[$class] = Delete::class;
+            break;
+          case 'Insert':
+            $this->driverClasses[$class] = Insert::class;
+            break;
+          case 'Merge':
+            $this->driverClasses[$class] = Merge::class;
+            break;
+          case 'Schema':
+            $this->driverClasses[$class] = Schema::class;
+            break;
+          case 'Select':
+            $this->driverClasses[$class] = Select::class;
+            break;
+          case 'Transaction':
+            $this->driverClasses[$class] = Transaction::class;
+            break;
+          case 'Truncate':
+            $this->driverClasses[$class] = Truncate::class;
+            break;
+          case 'Update':
+            $this->driverClasses[$class] = Update::class;
+            break;
+          case 'Upsert':
+            $this->driverClasses[$class] = Upsert::class;
+            break;
+          default:
+            $this->driverClasses[$class] = $class;
+        }
       }
     }
     return $this->driverClasses[$class];
