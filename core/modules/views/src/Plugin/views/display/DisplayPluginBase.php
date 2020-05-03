@@ -1868,7 +1868,7 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
       case 'display_id':
         if ($form_state->getValue('display_id')) {
           if (preg_match('/[^a-z0-9_]/', $form_state->getValue('display_id'))) {
-            $form_state->setError($form['display_id'], $this->t('Display name must be letters, numbers, or underscores only.'));
+            $form_state->setError($form['display_id'], $this->t('Display machine name must contain only lowercase letters, numbers, or underscores.'));
           }
 
           foreach ($this->view->displayHandlers as $id => $display) {

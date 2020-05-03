@@ -77,7 +77,7 @@ class ViewEditTest extends UITestBase {
 
     // Test the form validation with invalid IDs.
     $machine_name_edit_url = 'admin/structure/views/nojs/display/test_view/test_1/display_id';
-    $error_text = t('Display name must be letters, numbers, or underscores only.');
+    $error_text = t('Display machine name must contain only lowercase letters, numbers, or underscores.');
 
     // Test that potential invalid display ID requests are detected
     try {
