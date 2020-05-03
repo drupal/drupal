@@ -43,6 +43,7 @@ interface TypedDataInterface {
    * Gets the data value.
    *
    * @return mixed
+   *   The data value.
    */
   public function getValue();
 
@@ -68,6 +69,7 @@ interface TypedDataInterface {
    * Returns a string representation of the data.
    *
    * @return string
+   *   The string representation of the data.
    */
   public function getString();
 
@@ -105,7 +107,7 @@ interface TypedDataInterface {
   /**
    * Returns the name of a property or item.
    *
-   * @return string
+   * @return string|int|null
    *   If the data is a property of some complex data, the name of the property.
    *   If the data is an item of a list, the name is the numeric position of the
    *   item in the list, starting with 0. Otherwise, NULL is returned.
