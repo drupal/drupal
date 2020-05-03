@@ -29,11 +29,6 @@ build:
         testgroups: '--all'
         suppress-deprecations: false
         halt-on-fail: false
-      run_tests.simpletest:
-         types: 'Simpletest'
-         testgroups: '--all'
-         suppress-deprecations: false
-         halt-on-fail: false
       run_tests.build:
         # Limit concurrency due to disk space concerns.
         concurrency: 15
