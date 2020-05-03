@@ -136,10 +136,10 @@ class BasicAuth implements AuthenticationProviderInterface, AuthenticationProvid
 
     // A 403 is converted to a 401 here, but it doesn't matter what the
     // cacheability was of the 403 exception: what matters here is that
-    // authentication credentials are missing, i.e. that this request was made
-    // as the anonymous user.
-    // Therefore, all we must do, is make this response:
-    // 1. vary by whether the current user has the 'anonymous' role or not. This
+    // authentication credentials are missing, i.e. this request was made
+    // as an anonymous user.
+    // Therefore, the following actions will be taken:
+    // 1. Verify whether the current user has the 'anonymous' role or not. This
     //    works fine because:
     //    - Thanks to \Drupal\basic_auth\PageCache\DisallowBasicAuthRequests,
     //      Page Cache never caches a response whose request has Basic Auth
@@ -147,9 +147,9 @@ class BasicAuth implements AuthenticationProviderInterface, AuthenticationProvid
     //    - Dynamic Page Cache will cache a different result for when the
     //      request is unauthenticated (this 401) versus authenticated (some
     //      other response)
-    // 2. have the 'config:user.role.anonymous' cache tag, because the only
+    // 2. Have the 'config:user.role.anonymous' cache tag, because the only
     //    reason this 401 would no longer be a 401 is if permissions for the
-    //    'anonymous' role change, causing that cache tag to be invalidated.
+    //    'anonymous' role change, causing the cache tag to be invalidated.
     // @see \Drupal\Core\EventSubscriber\AuthenticationSubscriber::onExceptionSendChallenge()
     // @see \Drupal\Core\EventSubscriber\ClientErrorResponseSubscriber()
     // @see \Drupal\Core\EventSubscriber\FinishResponseSubscriber::onAllResponds()
