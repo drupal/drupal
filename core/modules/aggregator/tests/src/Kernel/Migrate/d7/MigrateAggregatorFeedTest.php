@@ -39,7 +39,7 @@ class MigrateAggregatorFeedTest extends MigrateDrupal7TestBase {
     // The feed's last checked time can change as the fixture is updated, so
     // assert that its format is correct.
     $checked_time = $feed->getLastCheckedTime();
-    $this->assertTrue(is_numeric($checked_time));
+    $this->assertIsNumeric($checked_time);
     $this->assertTrue($checked_time > 1000000000);
     $this->assertIdentical('0', $feed->getQueuedTime());
     $this->assertIdentical('http://knowyourmeme.com', $feed->link->value);
