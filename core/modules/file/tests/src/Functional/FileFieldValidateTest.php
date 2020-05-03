@@ -50,7 +50,7 @@ class FileFieldValidateTest extends FileFieldTestBase {
     $node = $node_storage->load($nid);
 
     $node_file = File::load($node->{$field_name}->target_id);
-    $this->assertFileExists($node_file->getFileUri(), 'File exists after uploading to the required field.');
+    $this->assertFileExists($node_file->getFileUri());
     $this->assertFileEntryExists($node_file, 'File entry exists after uploading to the required field.');
 
     // Try again with a multiple value field.
@@ -68,7 +68,7 @@ class FileFieldValidateTest extends FileFieldTestBase {
     $node_storage->resetCache([$nid]);
     $node = $node_storage->load($nid);
     $node_file = File::load($node->{$field_name}->target_id);
-    $this->assertFileExists($node_file->getFileUri(), 'File exists after uploading to the required multiple value field.');
+    $this->assertFileExists($node_file->getFileUri());
     $this->assertFileEntryExists($node_file, 'File entry exists after uploading to the required multiple value field.');
   }
 
@@ -102,7 +102,7 @@ class FileFieldValidateTest extends FileFieldTestBase {
       $node_storage->resetCache([$nid]);
       $node = $node_storage->load($nid);
       $node_file = File::load($node->{$field_name}->target_id);
-      $this->assertFileExists($node_file->getFileUri(), new FormattableMarkup('File exists after uploading a file (%filesize) under the max limit (%maxsize).', ['%filesize' => format_size($small_file->getSize()), '%maxsize' => $max_filesize]));
+      $this->assertFileExists($node_file->getFileUri());
       $this->assertFileEntryExists($node_file, new FormattableMarkup('File entry exists after uploading a file (%filesize) under the max limit (%maxsize).', ['%filesize' => format_size($small_file->getSize()), '%maxsize' => $max_filesize]));
 
       // Check that uploading the large file fails (1M limit).
@@ -119,7 +119,7 @@ class FileFieldValidateTest extends FileFieldTestBase {
     $node_storage->resetCache([$nid]);
     $node = $node_storage->load($nid);
     $node_file = File::load($node->{$field_name}->target_id);
-    $this->assertFileExists($node_file->getFileUri(), new FormattableMarkup('File exists after uploading a file (%filesize) with no max limit.', ['%filesize' => format_size($large_file->getSize())]));
+    $this->assertFileExists($node_file->getFileUri());
     $this->assertFileEntryExists($node_file, new FormattableMarkup('File entry exists after uploading a file (%filesize) with no max limit.', ['%filesize' => format_size($large_file->getSize())]));
   }
 
@@ -143,7 +143,7 @@ class FileFieldValidateTest extends FileFieldTestBase {
     $node_storage->resetCache([$nid]);
     $node = $node_storage->load($nid);
     $node_file = File::load($node->{$field_name}->target_id);
-    $this->assertFileExists($node_file->getFileUri(), 'File exists after uploading a file with no extension checking.');
+    $this->assertFileExists($node_file->getFileUri());
     $this->assertFileEntryExists($node_file, 'File entry exists after uploading a file with no extension checking.');
 
     // Enable extension checking for text files.
@@ -162,7 +162,7 @@ class FileFieldValidateTest extends FileFieldTestBase {
     $node_storage->resetCache([$nid]);
     $node = $node_storage->load($nid);
     $node_file = File::load($node->{$field_name}->target_id);
-    $this->assertFileExists($node_file->getFileUri(), 'File exists after uploading a file with extension checking.');
+    $this->assertFileExists($node_file->getFileUri());
     $this->assertFileEntryExists($node_file, 'File entry exists after uploading a file with extension checking.');
   }
 
@@ -185,7 +185,7 @@ class FileFieldValidateTest extends FileFieldTestBase {
     $node_storage->resetCache([$nid]);
     $node = $node_storage->load($nid);
     $node_file = File::load($node->{$field_name}->target_id);
-    $this->assertFileExists($node_file->getFileUri(), 'File exists after uploading a file with no extension checking.');
+    $this->assertFileExists($node_file->getFileUri());
     $this->assertFileEntryExists($node_file, 'File entry exists after uploading a file with no extension checking.');
 
     // Enable extension checking for text files.
@@ -230,9 +230,9 @@ class FileFieldValidateTest extends FileFieldTestBase {
     $node_storage->resetCache([$nid]);
     $node = $node_storage->load($nid);
     $node_file = File::load($node->{$field_name}->target_id);
-    $this->assertFileExists($node_file, 'File exists after uploading a file with no extension checking.');
+    $this->assertFileExists($node_file);
     unlink($node_file->getFileUri());
-    $this->assertFileNotExists($node_file, 'File does not exists after having been deleted.');
+    $this->assertFileNotExists($node_file);
   }
 
 }

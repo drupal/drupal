@@ -40,7 +40,7 @@ class DownloadTest extends FileTestBase {
     // Test destructive download.
     $actual_destination = $this->doTransform($destination_uri);
     $this->assertSame($destination_uri, $actual_destination, 'Import returned a destination that was not renamed');
-    $this->assertFileNotExists('public://existing_file_0.txt', 'Import did not rename the file');
+    $this->assertFileNotExists('public://existing_file_0.txt');
   }
 
   /**
@@ -53,7 +53,7 @@ class DownloadTest extends FileTestBase {
     // Test non-destructive download.
     $actual_destination = $this->doTransform($destination_uri, ['file_exists' => 'rename']);
     $this->assertSame('public://another_existing_file_0.txt', $actual_destination, 'Import returned a renamed destination');
-    $this->assertFileExists($actual_destination, 'Downloaded file was created');
+    $this->assertFileExists($actual_destination);
   }
 
   /**

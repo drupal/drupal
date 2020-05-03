@@ -89,7 +89,7 @@ class FileFieldWidgetTest extends FileFieldTestBase {
     $nid = $this->uploadNodeFile($test_file, $field_name, $type_name);
     $node = $node_storage->loadUnchanged($nid);
     $node_file = File::load($node->{$field_name}->target_id);
-    $this->assertFileExists($node_file->getFileUri(), 'New file saved to disk on node creation.');
+    $this->assertFileExists($node_file->getFileUri());
 
     // Ensure the file can be downloaded.
     $this->drupalGet($node_file->createFileUrl());
@@ -263,7 +263,7 @@ class FileFieldWidgetTest extends FileFieldTestBase {
     $nid = $this->uploadNodeFile($test_file, $field_name, $type_name);
     $node = $node_storage->loadUnchanged($nid);
     $node_file = File::load($node->{$field_name}->target_id);
-    $this->assertFileExists($node_file->getFileUri(), 'New file saved to disk on node creation.');
+    $this->assertFileExists($node_file->getFileUri());
 
     // Ensure the private file is available to the user who uploaded it.
     $this->drupalGet($node_file->createFileUrl());
@@ -330,7 +330,7 @@ class FileFieldWidgetTest extends FileFieldTestBase {
 
     $comment = Comment::load($cid);
     $comment_file = $comment->{'field_' . $name}->entity;
-    $this->assertFileExists($comment_file->getFileUri(), 'New file saved to disk on node creation.');
+    $this->assertFileExists($comment_file->getFileUri());
     // Test authenticated file download.
     $url = $comment_file->createFileUrl();
     $this->assertNotEqual($url, NULL, 'Confirmed that the URL is valid');
@@ -507,7 +507,7 @@ class FileFieldWidgetTest extends FileFieldTestBase {
 
     /** @var \Drupal\file\FileInterface $node_file */
     $node_file = File::load($node->{$field_name}->target_id);
-    $this->assertFileExists($node_file->getFileUri(), 'A file was saved to disk on node creation');
+    $this->assertFileExists($node_file->getFileUri());
     $this->assertEqual($attacker_user->id(), $node_file->getOwnerId(), 'New file belongs to the attacker.');
 
     // Ensure the file can be downloaded.
