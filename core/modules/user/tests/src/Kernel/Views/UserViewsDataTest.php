@@ -39,7 +39,7 @@ class UserViewsDataTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
     $this->viewsData = $this->container->get('views.views_data');
     $this->entityFieldManager = $this->container->get('entity_field.manager');
