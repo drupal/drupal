@@ -1533,7 +1533,7 @@ abstract class Connection {
    * @return bool
    *   TRUE if this connection supports transactions, FALSE otherwise.
    *
-   * @deprecated in drupal:9.1.0 and is removed in drupal:10.0.0. All database
+   * @deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. All database
    * drivers must support transactions.
    *
    * @see https://www.drupal.org/node/2278745
