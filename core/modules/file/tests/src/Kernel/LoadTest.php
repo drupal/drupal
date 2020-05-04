@@ -46,7 +46,7 @@ class LoadTest extends FileManagedUnitTestBase {
     $file = $this->createFile('druplicon.txt', NULL, 'public');
     $by_fid_file = File::load($file->id());
     $this->assertFileHookCalled('load');
-    $this->assertTrue(is_object($by_fid_file), '\Drupal\file\Entity\File::load() returned an object.');
+    $this->assertIsObject($by_fid_file);
     $this->assertEqual($by_fid_file->id(), $file->id(), 'Loading by fid got the same fid.', 'File');
     $this->assertEqual($by_fid_file->getFileUri(), $file->getFileUri(), 'Loading by fid got the correct filepath.', 'File');
     $this->assertEqual($by_fid_file->getFilename(), $file->getFilename(), 'Loading by fid got the correct filename.', 'File');

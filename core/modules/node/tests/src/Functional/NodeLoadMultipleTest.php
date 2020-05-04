@@ -58,7 +58,7 @@ class NodeLoadMultipleTest extends NodeTestBase {
     $this->assertTrue(isset($nodes[$node2->id()]), 'Node is correctly keyed in the array');
     $this->assertTrue(isset($nodes[$node4->id()]), 'Node is correctly keyed in the array');
     foreach ($nodes as $node) {
-      $this->assertTrue(is_object($node), 'Node is an object');
+      $this->assertIsObject($node);
     }
   }
 
