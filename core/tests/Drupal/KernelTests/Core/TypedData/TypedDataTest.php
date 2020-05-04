@@ -541,7 +541,7 @@ class TypedDataTest extends KernelTestBase {
     $this->assertNull($typed_data->getValue());
     $typed_data->setValue([]);
     $value = $typed_data->getValue();
-    $this->assertTrue(isset($value) && is_array($value));
+    $this->assertIsArray($value);
 
     // Test accessing invalid properties.
     $typed_data->setValue($value);

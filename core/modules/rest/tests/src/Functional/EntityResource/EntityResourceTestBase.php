@@ -1548,7 +1548,7 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
       $this->assertSame(406, $response->getStatusCode());
       $actual_link_header = $response->getHeader('Link');
       if ($actual_link_header) {
-        $this->assertTrue(is_array($actual_link_header));
+        $this->assertIsArray($actual_link_header);
         $expected_type = explode(';', static::$mimeType)[0];
         $this->assertContains('?_format=' . static::$format . '>; rel="alternate"; type="' . $expected_type . '"', $actual_link_header[0]);
         $this->assertContains('?_format=foobar>; rel="alternate"', $actual_link_header[0]);

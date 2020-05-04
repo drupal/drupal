@@ -50,7 +50,7 @@ class MigrateVocabularyEntityDisplayTest extends MigrateDrupal6TestBase {
     // Tests that a vocabulary named like a D8 base field will be migrated and
     // prefixed with 'field_' to avoid conflicts.
     $field_type = EntityViewDisplay::load('node.sponsor.default')->getComponent('field_type');
-    $this->assertTrue(is_array($field_type));
+    $this->assertIsArray($field_type);
   }
 
   /**
