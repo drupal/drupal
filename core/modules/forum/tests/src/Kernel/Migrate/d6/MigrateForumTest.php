@@ -63,11 +63,11 @@ class MigrateForumTest extends MigrateNodeTestBase {
 
     // Tests that the taxonomy_forums entity view display component exists.
     $entity_view_display = EntityViewDisplay::load('node.forum.default')->getComponent('taxonomy_forums');
-    $this->assertTrue(is_array($entity_view_display));
+    $this->assertIsArray($entity_view_display);
 
     // Tests that the taxonomy_forums entity form display component exists.
     $entity_form_display = EntityFormDisplay::load('node.forum.default')->getComponent('taxonomy_forums');
-    $this->assertTrue(is_array($entity_form_display));
+    $this->assertIsArray($entity_form_display);
 
     // Test that the taxonomy_forums field has the right value.
     $node = Node::load(19);

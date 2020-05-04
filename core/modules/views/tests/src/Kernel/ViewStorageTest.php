@@ -170,7 +170,9 @@ class ViewStorageTest extends ViewsKernelTestBase {
     $view->save();
     $values = $this->config('views.view.test_view_storage_new_new2')->get();
 
-    $this->assertTrue(isset($values['display']['test']) && is_array($values['display']['test']), 'New display was saved.');
+    // Verify that the display was saved by ensuring it contains an array of
+    // values in the view data.
+    $this->assertIsArray($values['display']['test']);
   }
 
   /**

@@ -71,7 +71,7 @@ class MigrateFieldInstanceWidgetSettingsTest extends MigrateDrupal7TestBase {
    */
   protected function assertComponent($display_id, $component_id, $widget_type, $weight) {
     $component = EntityFormDisplay::load($display_id)->getComponent($component_id);
-    $this->assertTrue(is_array($component));
+    $this->assertIsArray($component);
     $this->assertIdentical($widget_type, $component['type']);
     $this->assertIdentical($weight, $component['weight']);
   }
