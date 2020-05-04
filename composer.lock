@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "966c0ed90c2996cad45b441c58d01aa2",
+    "content-hash": "bf3f5b1c0d2f35255e03825589a1ee4f",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -705,10 +705,10 @@
             "dist": {
                 "type": "path",
                 "url": "composer/Plugin/ProjectMessage",
-                "reference": "0691ca6beba657e6da57a893b1c6da757d16afc8"
+                "reference": "b4efdbe26634b41a1b89e4f3770a8074769088a6"
             },
             "require": {
-                "composer-plugin-api": "^1.1",
+                "composer-plugin-api": "^1.1 || ^2",
                 "php": ">=7.3.0"
             },
             "type": "composer-plugin",
@@ -735,10 +735,10 @@
             "dist": {
                 "type": "path",
                 "url": "composer/Plugin/VendorHardening",
-                "reference": "0b015340af38f90df46923a934d0b22026134f18"
+                "reference": "d54f0b3cc8b4237f3a41a0860a808db242f9da9e"
             },
             "require": {
-                "composer-plugin-api": "^1.1",
+                "composer-plugin-api": "^1.1 || ^2",
                 "php": ">=7.3.0"
             },
             "type": "composer-plugin",
