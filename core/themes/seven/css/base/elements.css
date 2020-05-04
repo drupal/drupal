@@ -164,6 +164,16 @@ details summary:focus {
   text-decoration: underline;
   outline: none;
 }
+/**
+ * Unfortunately, text-decoration for details summary is not supported on all
+ * browsers. So we add a span (which can handle text-decoration) in Seven's
+ * templates/details.html.twig. In case there are other details templates that
+ * don't have the span, we leave the text-decoration in the parent selector.
+ * This provides maximum compatibility and coverage with minimal disruption.
+ */
+details summary:focus span {
+  text-decoration: underline;
+}
 img {
   max-width: 100%;
   height: auto;
