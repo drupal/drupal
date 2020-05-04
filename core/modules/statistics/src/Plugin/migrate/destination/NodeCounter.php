@@ -96,7 +96,10 @@ class NodeCounter extends DestinationBase implements ContainerFactoryPluginInter
       ])
       ->expression('daycount', 'daycount + :daycount', [':daycount' => $daycount])
       ->expression('totalcount', 'totalcount + :totalcount', [':totalcount' => $totalcount])
-      ->expression('timestamp', 'CASE WHEN timestamp > :timestamp THEN timestamp ELSE :timestamp END', [':timestamp' => $timestamp])
+      // Per Drupal policy: "A query may have any number of placeholders, but
+      // all must have unique names even if they have the same value."
+      // https://www.drupal.org/docs/8/api/database-api/static-queries#placeholders
+      ->expression('timestamp', 'CASE WHEN timestamp > :timestamp1 THEN timestamp ELSE :timestamp2 END', [':timestamp1' => $timestamp, ':timestamp2' => $timestamp])
       ->execute();
 
     return [$row->getDestinationProperty('nid')];
