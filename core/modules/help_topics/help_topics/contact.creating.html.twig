@@ -1,0 +1,19 @@
+---
+label: 'Creating a new contact form'
+related:
+  - contact.overview
+  - contact.adding_fields
+  - contact.setting_default
+---
+{% set contact_url = render_var(url('entity.contact_form.collection')) %}
+{% set add_fields = render_var(url('help.help_topic', {'id': 'contact.adding_fields'})) %}
+<h2>{% trans %}Goal{% endtrans %}</h2>
+<p>{% trans %}Create a new site-wide contact form.{% endtrans %}</p>
+<h2>{% trans %}Steps{% endtrans %}</h2>
+<ol>
+  <li>{% trans %}In the <em>Manage</em> administrative menu, navigate to <em>Structure</em> &gt; <a href="{{ contact_url }}"><em>Contact forms</em></a>.{% endtrans %}</li>
+  <li>{% trans %}Click <em>Add contact form</em>.{% endtrans %}</li>
+  <li>{% trans %}Fill in the <em>Label</em> (title) for the form, <em>Recipients</em>, and optionally the other settings.{% endtrans %}</li>
+  <li>{% trans %}Click <em>Save</em>. You should see your new contact form in the table, along with a link to view it.{% endtrans %}</li>
+  <li>{% trans %}The contact form will always have <em>Subject</em> and <em>Message</em> fields. If you want to add more fields, follow the steps in <a href="{{ add_fields }}">Managing the fields of contact forms</a>.{% endtrans %}</li>
+</ol>
