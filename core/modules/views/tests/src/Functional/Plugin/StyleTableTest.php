@@ -48,6 +48,10 @@ class StyleTableTest extends ViewTestBase {
     $result = $this->xpath('//summary/child::text()');
     $this->assertNotEmpty($result, 'The summary appears on the table.');
     $this->assertEqual(trim($result[0]->getText()), 'summary-text');
+    // Check that the summary has the right accessibility settings.
+    $summary = $this->xpath('//summary')[0];
+    $this->assertTrue($summary->hasAttribute('role'));
+    $this->assertTrue($summary->hasAttribute('aria-expanded'));
 
     $result = $this->xpath('//caption/details/child::text()[normalize-space()]');
     $this->assertNotEmpty($result, 'The table description appears on the table.');

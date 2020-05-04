@@ -26,6 +26,7 @@
  *     used.
  * - responsive: A flag indicating whether table is responsive.
  * - sticky: A flag indicating whether table header is sticky.
+ * - summary_element: A render array with table summary information (if any).
  *
  * @see template_preprocess_views_view_table()
  *
@@ -47,15 +48,8 @@
     {% else %}
       {{ title }}
     {% endif %}
-    {% if (summary is not empty) or (description is not empty) %}
-      <details>
-        {% if summary is not empty %}
-          <summary>{{ summary }}</summary>
-        {% endif %}
-        {% if description is not empty %}
-          {{ description }}
-        {% endif %}
-      </details>
+    {% if (summary_element is not empty) %}
+      {{ summary_element }}
     {% endif %}
     </caption>
   {% endif %}
