@@ -302,6 +302,8 @@ class ToolkitGdTest extends KernelTestBase {
         // been destroyed.
         $new_res = $toolkit->getResource();
         if ($new_res !== $old_res) {
+          // @todo In https://www.drupal.org/node/3133236 convert this to
+          //   $this->assertIsNotResource($old_res).
           $this->assertFalse(is_resource($old_res), new FormattableMarkup("'%operation' destroyed the original resource.", ['%operation' => $values['function']]));
         }
 
@@ -428,21 +430,25 @@ class ToolkitGdTest extends KernelTestBase {
     // Test that an Image object going out of scope releases its GD resource.
     $image = $this->imageFactory->get('core/tests/fixtures/files/image-test.png');
     $res = $image->getToolkit()->getResource();
-    $this->assertTrue(is_resource($res), 'Successfully loaded image resource.');
+    $this->assertIsResource($res);
     $image = NULL;
+    // @todo In https://www.drupal.org/node/3133236 convert this to
+    //   $this->assertIsNotResource($res).
     $this->assertFalse(is_resource($res), 'Image resource was destroyed after losing scope.');
 
     // Test that 'create_new' operation does not leave orphaned GD resources.
     $image = $this->imageFactory->get('core/tests/fixtures/files/image-test.png');
     $old_res = $image->getToolkit()->getResource();
     // Check if resource has been created successfully.
-    $this->assertTrue(is_resource($old_res));
+    $this->assertIsResource($old_res);
     $image->createNew(20, 20);
     $new_res = $image->getToolkit()->getResource();
     // Check if the original resource has been destroyed.
+    // @todo In https://www.drupal.org/node/3133236 convert this to
+    //   $this->assertIsNotResource($old_res).
     $this->assertFalse(is_resource($old_res));
     // Check if a new resource has been created successfully.
-    $this->assertTrue(is_resource($new_res));
+    $this->assertIsResource($new_res);
   }
 
   /**
