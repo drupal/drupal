@@ -3,7 +3,9 @@
 namespace Drupal\language\Plugin\LanguageNegotiation;
 
 use Drupal\Component\Utility\UserAgent;
+use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\language\LanguageNegotiationMethodBase;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -17,12 +19,28 @@ use Symfony\Component\HttpFoundation\Request;
  *   config_route_name = "language.negotiation_browser"
  * )
  */
-class LanguageNegotiationBrowser extends LanguageNegotiationMethodBase {
+class LanguageNegotiationBrowser extends LanguageNegotiationMethodBase implements ContainerFactoryPluginInterface {
 
   /**
    * The language negotiation method id.
    */
   const METHOD_ID = 'language-browser';
+
+  /**
+   * The page cache disabling policy.
+   *
+   * @var \Drupal\Core\PageCache\ResponsePolicy\KillSwitch
+   */
+  protected $pageCacheKillSwitch;
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
+    $instance = new static();
+    $instance->pageCacheKillSwitch = $container->get('page_cache_kill_switch');
+    return $instance;
+  }
 
   /**
    * {@inheritdoc}
@@ -41,7 +59,7 @@ class LanguageNegotiationBrowser extends LanguageNegotiationMethodBase {
     // could lead to wrong cached sites. Therefore disabling the internal page
     // cache.
     // @todo Solve more elegantly in https://www.drupal.org/node/2430335.
-    \Drupal::service('page_cache_kill_switch')->trigger();
+    $this->pageCacheKillSwitch->trigger();
 
     return $langcode;
   }
