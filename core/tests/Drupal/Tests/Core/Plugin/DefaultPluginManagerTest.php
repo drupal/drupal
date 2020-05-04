@@ -334,7 +334,7 @@ class DefaultPluginManagerTest extends UnitTestCase {
     $this->expectedDefinitions['banana']['provider'] = 'plugin_test';
 
     $plugin_manager = new TestPluginManager($this->namespaces, $this->expectedDefinitions, $module_handler, NULL);
-    $this->assertInternalType('array', $plugin_manager->getDefinitions());
+    $this->assertIsArray($plugin_manager->getDefinitions());
   }
 
   /**
@@ -344,9 +344,9 @@ class DefaultPluginManagerTest extends UnitTestCase {
     $module_handler = $this->prophesize(ModuleHandlerInterface::class);
     $plugin_manager = new TestPluginManager($this->namespaces, $this->expectedDefinitions, $module_handler->reveal(), NULL);
     $cache_contexts = $plugin_manager->getCacheContexts();
-    $this->assertInternalType('array', $cache_contexts);
+    $this->assertIsArray($cache_contexts);
     array_map(function ($cache_context) {
-      $this->assertInternalType('string', $cache_context);
+      $this->assertIsString($cache_context);
     }, $cache_contexts);
   }
 
@@ -357,9 +357,9 @@ class DefaultPluginManagerTest extends UnitTestCase {
     $module_handler = $this->prophesize(ModuleHandlerInterface::class);
     $plugin_manager = new TestPluginManager($this->namespaces, $this->expectedDefinitions, $module_handler->reveal(), NULL);
     $cache_tags = $plugin_manager->getCacheTags();
-    $this->assertInternalType('array', $cache_tags);
+    $this->assertIsArray($cache_tags);
     array_map(function ($cache_tag) {
-      $this->assertInternalType('string', $cache_tag);
+      $this->assertIsString($cache_tag);
     }, $cache_tags);
   }
 
@@ -370,7 +370,7 @@ class DefaultPluginManagerTest extends UnitTestCase {
     $module_handler = $this->prophesize(ModuleHandlerInterface::class);
     $plugin_manager = new TestPluginManager($this->namespaces, $this->expectedDefinitions, $module_handler->reveal(), NULL);
     $cache_max_age = $plugin_manager->getCacheMaxAge();
-    $this->assertInternalType('int', $cache_max_age);
+    $this->assertIsInt($cache_max_age);
   }
 
   /**

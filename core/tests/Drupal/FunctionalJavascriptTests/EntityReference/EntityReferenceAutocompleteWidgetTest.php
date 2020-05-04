@@ -66,9 +66,9 @@ class EntityReferenceAutocompleteWidgetTest extends WebDriverTestBase {
     ]);
     // To satisfy config schema, the size setting must be an integer, not just
     // a numeric value. See https://www.drupal.org/node/2885441.
-    $this->assertInternalType('integer', $form_display->getComponent($field_name)['settings']['size']);
+    $this->assertIsInt($form_display->getComponent($field_name)['settings']['size']);
     $form_display->save();
-    $this->assertInternalType('integer', $form_display->getComponent($field_name)['settings']['size']);
+    $this->assertIsInt($form_display->getComponent($field_name)['settings']['size']);
 
     // Visit the node add page.
     $this->drupalGet('node/add/page');

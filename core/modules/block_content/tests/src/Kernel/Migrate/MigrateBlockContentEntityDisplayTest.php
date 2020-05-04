@@ -41,7 +41,7 @@ class MigrateBlockContentEntityDisplayTest extends MigrateDrupal7TestBase {
    */
   protected function assertDisplay($id, $component_id) {
     $component = EntityViewDisplay::load($id)->getComponent($component_id);
-    $this->assertInternalType('array', $component);
+    $this->assertIsArray($component);
     $this->assertSame('hidden', $component['label']);
   }
 

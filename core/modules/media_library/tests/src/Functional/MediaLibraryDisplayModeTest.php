@@ -239,7 +239,7 @@ class MediaLibraryDisplayModeTest extends BrowserTestBase {
     $this->assertSame(['thumbnail'], array_keys($view_display->getComponents()));
     // Assert the thumbnail image style.
     $thumbnail = $view_display->getComponent('thumbnail');
-    $this->assertInternalType('array', $thumbnail);
+    $this->assertIsArray($thumbnail);
     $this->assertSame($image_style, $thumbnail['settings']['image_style']);
   }
 

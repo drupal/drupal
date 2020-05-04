@@ -236,7 +236,7 @@ class UnroutedUrlTest extends UnitTestCase {
    */
   public function testGetOptions($uri) {
     $url = Url::fromUri($uri);
-    $this->assertInternalType('array', $url->getOptions());
+    $this->assertIsArray($url->getOptions());
   }
 
 }

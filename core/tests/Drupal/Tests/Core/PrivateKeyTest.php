@@ -62,7 +62,7 @@ class PrivateKeyTest extends UnitTestCase {
    * Tests PrivateKey::get() with no private key from state.
    */
   public function testGetNoState() {
-    $this->assertInternalType('string', $this->privateKey->get());
+    $this->assertIsString($this->privateKey->get());
   }
 
   /**

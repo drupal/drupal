@@ -64,7 +64,7 @@ class ViewPageControllerTest extends UnitTestCase {
     $route_match = RouteMatch::createFromRequest($request);
 
     $output = $this->pageController->handle($route_match->getParameter('view_id'), $route_match->getParameter('display_id'), $route_match);
-    $this->assertInternalType('array', $output);
+    $this->assertIsArray($output);
     $this->assertEquals($build, $output);
   }
 

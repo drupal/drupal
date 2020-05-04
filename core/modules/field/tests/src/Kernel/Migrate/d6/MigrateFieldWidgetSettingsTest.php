@@ -107,22 +107,22 @@ class MigrateFieldWidgetSettingsTest extends MigrateDrupal6TestBase {
 
     $component = $display_repository->getFormDisplay('node', 'employee', 'default')
       ->getComponent('field_company');
-    $this->assertInternalType('array', $component);
+    $this->assertIsArray($component);
     $this->assertSame('options_select', $component['type']);
 
     $component = $display_repository->getFormDisplay('node', 'employee', 'default')
       ->getComponent('field_company_2');
-    $this->assertInternalType('array', $component);
+    $this->assertIsArray($component);
     $this->assertSame('options_buttons', $component['type']);
 
     $component = $display_repository->getFormDisplay('node', 'employee', 'default')
       ->getComponent('field_company_3');
-    $this->assertInternalType('array', $component);
+    $this->assertIsArray($component);
     $this->assertSame('entity_reference_autocomplete_tags', $component['type']);
 
     $component = $display_repository->getFormDisplay('node', 'employee', 'default')
       ->getComponent('field_commander');
-    $this->assertInternalType('array', $component);
+    $this->assertIsArray($component);
     $this->assertSame('options_select', $component['type']);
   }
 

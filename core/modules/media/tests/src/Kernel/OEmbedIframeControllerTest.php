@@ -43,7 +43,7 @@ class OEmbedIframeControllerTest extends MediaKernelTestBase {
       ->get('controller_resolver')
       ->getControllerFromDefinition('\Drupal\media\Controller\OEmbedIframeController::render');
 
-    $this->assertInternalType('callable', $controller);
+    $this->assertIsCallable($controller);
 
     $this->expectException('\Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException');
     $this->expectExceptionMessage('This resource is not available');

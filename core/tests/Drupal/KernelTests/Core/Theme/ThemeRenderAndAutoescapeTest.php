@@ -53,7 +53,7 @@ class ThemeRenderAndAutoescapeTest extends KernelTestBase {
     $renderer = \Drupal::service('renderer');
     $output = $renderer->executeInRenderContext($context, $theme_render_and_autoescape);
     $this->assertEquals($expected, $output);
-    $this->assertInternalType('string', $output);
+    $this->assertIsString($output);
   }
 
   /**

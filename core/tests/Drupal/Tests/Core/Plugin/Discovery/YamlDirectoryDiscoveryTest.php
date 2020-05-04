@@ -51,7 +51,7 @@ class YamlDirectoryDiscoveryTest extends UnitTestCase {
 
     $definitions = $discovery->getDefinitions();
 
-    $this->assertInternalType('array', $definitions);
+    $this->assertIsArray($definitions);
     $this->assertCount(4, $definitions);
 
     foreach ($definitions as $id => $definition) {
