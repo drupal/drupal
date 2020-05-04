@@ -315,7 +315,7 @@ class TypedDataTest extends KernelTestBase {
     // Binary type.
     $typed_data = $this->createTypedData(['type' => 'binary'], $files[0]->getFileUri());
     $this->assertInstanceOf(BinaryInterface::class, $typed_data);
-    $this->assertTrue(is_resource($typed_data->getValue()), 'Binary value was fetched.');
+    $this->assertIsResource($typed_data->getValue());
     $this->assertEqual($typed_data->validate()->count(), 0);
     // Try setting by URI.
     $typed_data->setValue($files[1]->getFileUri());
