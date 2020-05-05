@@ -13,7 +13,7 @@ class DbToolsApplication extends Application {
    * {@inheritdoc}
    */
   public function __construct() {
-    parent::__construct('Database Tools', '8.0.x');
+    parent::__construct('Database Tools', \Drupal::VERSION);
   }
 
   /**
