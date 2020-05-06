@@ -1026,6 +1026,10 @@ function field_ui_display_overview_form($form, &$form_state, $entity_type, $bund
 
     $instance['display'][$view_mode]['type'] = $formatter_type;
     $formatter = field_info_formatter_types($formatter_type);
+    // For hidden fields, $formatter will be NULL, but we expect an array later.
+    // To maintain BC, but avoid PHP 7.4 Notices, ensure $formatter is an array
+    // with a 'module' element.
+    $formatter['module'] = isset($formatter['module']) ? $formatter['module'] : '';
     $instance['display'][$view_mode]['module'] = $formatter['module'];
     $instance['display'][$view_mode]['settings'] = $settings;
 
