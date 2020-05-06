@@ -6,6 +6,7 @@
  */
 
 class CommentHelperCase extends DrupalWebTestCase {
+  protected $super_user;
   protected $admin_user;
   protected $web_user;
   protected $node;
@@ -19,6 +20,7 @@ class CommentHelperCase extends DrupalWebTestCase {
     parent::setUp($modules);
 
     // Create users and test node.
+    $this->super_user = $this->drupalCreateUser(array('access administration pages', 'administer modules'));
     $this->admin_user = $this->drupalCreateUser(array('administer content types', 'administer comments', 'administer blocks', 'administer actions', 'administer fields'));
     $this->web_user = $this->drupalCreateUser(array('access comments', 'post comments', 'create article content', 'edit own comments'));
     $this->node = $this->drupalCreateNode(array('type' => 'article', 'promote' => 1, 'uid' => $this->web_user->uid));
@@ -2262,5 +2264,58 @@ class CommentNodeChangesTestCase extends CommentHelperCase {
     $this->assertTrue(comment_load($comment->id), 'The comment could be loaded.');
     node_delete($this->node->nid);
     $this->assertFalse(comment_load($comment->id), 'The comment could not be loaded after the node was deleted.');
+  }
+}
+
+/**
+ * Tests uninstalling the comment module.
+ */
+class CommentUninstallTestCase extends CommentHelperCase {
+
+  public static function getInfo() {
+    return array(
+      'name' => 'Comment module uninstallation',
+      'description' => 'Tests that the comments module can be properly uninstalled.',
+      'group' => 'Comment',
+    );
+  }
+
+  function testCommentUninstall() {
+    $this->drupalLogin($this->super_user);
+
+    // Disable comment module.
+    $edit['modules[Core][comment][enable]'] = FALSE;
+    $this->drupalPost('admin/modules', $edit, t('Save configuration'));
+    $this->assertText(t('The configuration options have been saved.'), 'Comment module was disabled.');
+
+    // Uninstall comment module.
+    $edit = array('uninstall[comment]' => 'comment');
+    $this->drupalPost('admin/modules/uninstall', $edit, t('Uninstall'));
+    $this->drupalPost(NULL, NULL, t('Uninstall'));
+    $this->assertText(t('The selected modules have been uninstalled.'), 'Comment module was uninstalled.');
+
+    // Run cron and clear field cache so that comment fields and instances
+    // marked for deletion are actually removed.
+    $this->cronRun();
+    field_cache_clear();
+
+    // Verify that comment fields have been removed.
+    $all_fields = array_keys(field_info_field_map());
+    $this->assertFalse(in_array('comment_body', $all_fields), 'Comment fields were removed by uninstall.');
+
+    // Verify that comment field instances have been removed (or at least marked
+    // for deletion).
+    // N.B. field_read_instances does an INNER JOIN on field_config so if the
+    // comment_body row has been removed successfully from there no instances
+    // will be returned, but that does not guarantee that no rows are left over
+    // in the field_config_instance table.
+    $count = db_select('field_config_instance', 'fci')
+      ->condition('entity_type', 'comment')
+      ->condition('field_name', 'comment_body')
+      ->condition('deleted', 0)
+      ->countQuery()
+      ->execute()
+      ->fetchField();
+    $this->assertTrue($count == 0, 'Comment field instances were removed by uninstall.');
   }
 }

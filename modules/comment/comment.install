@@ -9,9 +9,6 @@
  * Implements hook_uninstall().
  */
 function comment_uninstall() {
-  // Delete comment_body field.
-  field_delete_field('comment_body');
-
   // Remove variables.
   variable_del('comment_block_count');
   $node_types = array_keys(node_type_get_types());
