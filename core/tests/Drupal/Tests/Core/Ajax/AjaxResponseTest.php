@@ -6,7 +6,7 @@ use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\EventSubscriber\AjaxResponseSubscriber;
 use Drupal\Tests\UnitTestCase;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
+use Symfony\Component\HttpKernel\Event\ResponseEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 
 /**
@@ -80,7 +80,7 @@ class AjaxResponseTest extends UnitTestCase {
 
     $ajax_response_attachments_processor = $this->createMock('\Drupal\Core\Render\AttachmentsResponseProcessorInterface');
     $subscriber = new AjaxResponseSubscriber($ajax_response_attachments_processor);
-    $event = new FilterResponseEvent(
+    $event = new ResponseEvent(
       $this->createMock('\Symfony\Component\HttpKernel\HttpKernelInterface'),
       $request,
       HttpKernelInterface::MASTER_REQUEST,

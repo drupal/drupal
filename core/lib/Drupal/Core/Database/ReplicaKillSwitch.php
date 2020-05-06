@@ -6,7 +6,7 @@ use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Core\Site\Settings;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
-use Symfony\Component\HttpKernel\Event\GetResponseEvent;
+use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 
 /**
@@ -73,10 +73,10 @@ class ReplicaKillSwitch implements EventSubscriberInterface {
   /**
    * Checks and disables the replica database server if appropriate.
    *
-   * @param \Symfony\Component\HttpKernel\Event\GetResponseEvent $event
+   * @param \Symfony\Component\HttpKernel\Event\RequestEvent $event
    *   The Event to process.
    */
-  public function checkReplicaServer(GetResponseEvent $event) {
+  public function checkReplicaServer(RequestEvent $event) {
     // Ignore replica database servers for this request.
     //
     // In Drupal's distributed database structure, new data is written to the

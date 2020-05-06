@@ -5,7 +5,7 @@ namespace Drupal\Tests\system\Kernel;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\Tests\user\Traits\UserCreationTrait;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\Event\GetResponseEvent;
+use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\KernelEvents;
 
@@ -45,7 +45,7 @@ class TimezoneResolverTest extends KernelTestBase {
     $eventDispatcher = $this->container->get('event_dispatcher');
     $kernel = $this->container->get('kernel');
 
-    $eventDispatcher->dispatch(KernelEvents::REQUEST, new GetResponseEvent($kernel, Request::create('http://www.example.com'), HttpKernelInterface::MASTER_REQUEST));
+    $eventDispatcher->dispatch(KernelEvents::REQUEST, new RequestEvent($kernel, Request::create('http://www.example.com'), HttpKernelInterface::MASTER_REQUEST));
 
     $this->assertEquals('Australia/Adelaide', date_default_timezone_get());
 

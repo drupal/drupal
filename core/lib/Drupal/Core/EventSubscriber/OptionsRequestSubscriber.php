@@ -5,7 +5,7 @@ namespace Drupal\Core\EventSubscriber;
 use Symfony\Cmf\Component\Routing\RouteProviderInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Event\GetResponseEvent;
+use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\Routing\Route;
 
@@ -37,10 +37,10 @@ class OptionsRequestSubscriber implements EventSubscriberInterface {
   /**
    * Tries to handle the options request.
    *
-   * @param \Symfony\Component\HttpKernel\Event\GetResponseEvent $event
+   * @param \Symfony\Component\HttpKernel\Event\RequestEvent $event
    *   The request event.
    */
-  public function onRequest(GetResponseEvent $event) {
+  public function onRequest(RequestEvent $event) {
     if ($event->getRequest()->isMethod('OPTIONS')) {
       $routes = $this->routeProvider->getRouteCollectionForRequest($event->getRequest());
       // In case we don't have any routes, a 403 should be thrown by the normal

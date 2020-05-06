@@ -5,9 +5,9 @@ namespace Drupal\path_alias\EventSubscriber;
 use Drupal\Core\Path\CurrentPathStack;
 use Drupal\path_alias\AliasManagerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
-use Symfony\Component\HttpKernel\Event\PostResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
+use Symfony\Component\HttpKernel\Event\ControllerEvent;
+use Symfony\Component\HttpKernel\Event\TerminateEvent;
 
 /**
  * Provides a path subscriber that converts path aliases.
@@ -46,10 +46,10 @@ class PathAliasSubscriber implements EventSubscriberInterface {
    *
    * KernelEvents::CONTROLLER is used in order to be executed after routing.
    *
-   * @param \Symfony\Component\HttpKernel\Event\FilterControllerEvent $event
+   * @param \Symfony\Component\HttpKernel\Event\ControllerEvent $event
    *   The Event to process.
    */
-  public function onKernelController(FilterControllerEvent $event) {
+  public function onKernelController(ControllerEvent $event) {
     // Set the cache key on the alias manager cache decorator.
     if ($event->isMasterRequest()) {
       $this->aliasManager->setCacheKey(rtrim($this->currentPath->getPath($event->getRequest()), '/'));
@@ -59,7 +59,7 @@ class PathAliasSubscriber implements EventSubscriberInterface {
   /**
    * Ensures system paths for the request get cached.
    */
-  public function onKernelTerminate(PostResponseEvent $event) {
+  public function onKernelTerminate(TerminateEvent $event) {
     $this->aliasManager->writeCache();
   }
 

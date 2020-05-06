@@ -13,7 +13,7 @@ use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\StringTranslation\TranslationInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent;
+use Symfony\Component\HttpKernel\Event\ViewEvent;
 use Symfony\Component\HttpKernel\Event\ExceptionEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 
@@ -57,10 +57,10 @@ class FormAjaxSubscriber implements EventSubscriberInterface {
   /**
    * Alters the wrapper format if this is an AJAX form request.
    *
-   * @param \Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent $event
+   * @param \Symfony\Component\HttpKernel\Event\ViewEvent $event
    *   The event to process.
    */
-  public function onView(GetResponseForControllerResultEvent $event) {
+  public function onView(ViewEvent $event) {
     // To support an AJAX form submission of a form within a block, make the
     // later VIEW subscribers process the controller result as though for
     // HTML display (i.e., add blocks). During that block building, when the

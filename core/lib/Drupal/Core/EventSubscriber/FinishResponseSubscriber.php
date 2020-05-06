@@ -12,7 +12,7 @@ use Drupal\Core\PageCache\ResponsePolicyInterface;
 use Drupal\Core\Site\Settings;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
+use Symfony\Component\HttpKernel\Event\ResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -91,10 +91,10 @@ class FinishResponseSubscriber implements EventSubscriberInterface {
   /**
    * Sets extra headers on any responses, also subrequest ones.
    *
-   * @param \Symfony\Component\HttpKernel\Event\FilterResponseEvent $event
+   * @param \Symfony\Component\HttpKernel\Event\ResponseEvent $event
    *   The event to process.
    */
-  public function onAllResponds(FilterResponseEvent $event) {
+  public function onAllResponds(ResponseEvent $event) {
     $response = $event->getResponse();
     // Always add the 'http_response' cache tag to be able to invalidate every
     // response, for example after rebuilding routes.
@@ -106,10 +106,10 @@ class FinishResponseSubscriber implements EventSubscriberInterface {
   /**
    * Sets extra headers on successful responses.
    *
-   * @param \Symfony\Component\HttpKernel\Event\FilterResponseEvent $event
+   * @param \Symfony\Component\HttpKernel\Event\ResponseEvent $event
    *   The event to process.
    */
-  public function onRespond(FilterResponseEvent $event) {
+  public function onRespond(ResponseEvent $event) {
     if (!$event->isMasterRequest()) {
       return;
     }

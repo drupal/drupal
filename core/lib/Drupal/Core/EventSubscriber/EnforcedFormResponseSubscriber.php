@@ -4,7 +4,7 @@ namespace Drupal\Core\EventSubscriber;
 
 use Drupal\Core\Form\EnforcedResponse;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
+use Symfony\Component\HttpKernel\Event\ResponseEvent;
 use Symfony\Component\HttpKernel\Event\ExceptionEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 
@@ -26,7 +26,7 @@ class EnforcedFormResponseSubscriber implements EventSubscriberInterface {
   /**
    * Unwraps an enforced response.
    */
-  public function onKernelResponse(FilterResponseEvent $event) {
+  public function onKernelResponse(ResponseEvent $event) {
     $response = $event->getResponse();
     if ($response instanceof EnforcedResponse && $event->isMasterRequest()) {
       $event->setResponse($response->getResponse());

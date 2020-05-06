@@ -4,7 +4,7 @@ namespace Drupal\big_pipe_test\EventSubscriber;
 
 use Drupal\Core\Render\AttachmentsInterface;
 use Drupal\Core\Render\HtmlResponse;
-use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
+use Symfony\Component\HttpKernel\Event\ResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -22,12 +22,12 @@ class BigPipeTestSubscriber implements EventSubscriberInterface {
    *
    * @see \Drupal\big_pipe_test\BigPipeTestController::responseException()
    *
-   * @param \Symfony\Component\HttpKernel\Event\FilterResponseEvent $event
+   * @param \Symfony\Component\HttpKernel\Event\ResponseEvent $event
    *   The event to process.
    *
    * @throws \Exception
    */
-  public function onRespondTriggerException(FilterResponseEvent $event) {
+  public function onRespondTriggerException(ResponseEvent $event) {
     $response = $event->getResponse();
 
     if (!$response instanceof AttachmentsInterface) {
@@ -45,10 +45,10 @@ class BigPipeTestSubscriber implements EventSubscriberInterface {
   /**
    * Exposes all BigPipe placeholders (JS and no-JS) via headers for testing.
    *
-   * @param \Symfony\Component\HttpKernel\Event\FilterResponseEvent $event
+   * @param \Symfony\Component\HttpKernel\Event\ResponseEvent $event
    *   The event to process.
    */
-  public function onRespondSetBigPipeDebugPlaceholderHeaders(FilterResponseEvent $event) {
+  public function onRespondSetBigPipeDebugPlaceholderHeaders(ResponseEvent $event) {
     $response = $event->getResponse();
     if (!$response instanceof HtmlResponse) {
       return;
