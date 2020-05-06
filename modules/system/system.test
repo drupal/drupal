@@ -2995,7 +2995,16 @@ class SystemValidTokenTest extends DrupalUnitTestCase {
     // The following checks will throw PHP notices, so we disable error
     // assertions.
     $this->assertErrors = FALSE;
-    $this->assertFalse(drupal_valid_token(NULL, new stdClass()), 'Token NULL, value object returns FALSE.');
+
+    try {
+      $this->assertFalse(drupal_valid_token(NULL, new stdClass()), 'Token NULL, value object returns FALSE.');
+    }
+    // PHP 7.4 compatibility: the stdClass string conversion throws an exception
+    // which is also an acceptable outcome of this test.
+    catch (Error $e) {
+      $this->pass('Token NULL, value object throws error exception which is ok.');
+    }
+
     $this->assertFalse(drupal_valid_token(0, array()), 'Token 0, value array returns FALSE.');
     $this->assertFalse(drupal_valid_token('', array()), "Token '', value array returns FALSE.");
     $this->assertFalse('' === drupal_get_token(array()), 'Token generation does not return an empty string on invalid parameters.');
