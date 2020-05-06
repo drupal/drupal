@@ -219,7 +219,7 @@ class SearchQuery extends SelectQueryExtender {
       }
       $phrase = FALSE;
       // Strip off phrase quotes.
-      if ($match[2]{0} == '"') {
+      if ($match[2][0] == '"') {
         $match[2] = substr($match[2], 1, -1);
         $phrase = TRUE;
         $this->simple = FALSE;
