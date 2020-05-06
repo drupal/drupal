@@ -729,7 +729,7 @@ function simpletest_script_print_error($message) {
  */
 function simpletest_script_print($message, $color_code) {
   global $args;
-  if ($args['color']) {
+  if (!empty($args['color'])) {
     echo "\033[" . $color_code . "m" . $message . "\033[0m";
   }
   else {
