@@ -174,7 +174,7 @@ class NumberFieldTestCase extends DrupalWebTestCase {
       ),
       'display' => array(
         'default' => array(
-          'type' => 'number_float',
+          'type' => 'number_decimal',
         ),
       ),
     );
