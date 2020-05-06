@@ -104,6 +104,11 @@ class ComposerProjectTemplatesTest extends BuildTestBase {
    * @dataProvider provideTemplateCreateProject
    */
   public function testTemplateCreateProject($project, $package_dir, $docroot_dir) {
+    $composerVersionLine = exec('composer --version');
+    if (strpos($composerVersionLine, 'Composer version 2') !== FALSE) {
+      $this->markTestSkipped('We cannot run the template create project test with Composer 2 until we have a stable version of composer/semver 2.x. The create project test installs drupal/core-recommended and the Drupal Composer plugins from Packagist, so these must also be compatible with Composer 2.x in order for this test to work.');
+    }
+
     $this->copyCodebase();
 
     // Get the Drupal core version branch. For instance, this should be

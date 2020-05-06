@@ -883,10 +883,10 @@
             "dist": {
                 "type": "path",
                 "url": "composer/Plugin/ProjectMessage",
-                "reference": "3b795f469441eb27854798f70cb38e717d80bbfc"
+                "reference": "ed6afc20bfed583e5325ca86f78d07a653d6045c"
             },
             "require": {
-                "composer-plugin-api": "^1.1",
+                "composer-plugin-api": "^1.1 || ^2",
                 "php": ">=7.0.8"
             },
             "type": "composer-plugin",
@@ -913,10 +913,10 @@
             "dist": {
                 "type": "path",
                 "url": "composer/Plugin/VendorHardening",
-                "reference": "2db54f089065dedbe4a040b01f7b527f2bad68f6"
+                "reference": "6773d713a655ec8a5ac8c29cd5df653cfec6d3cc"
             },
             "require": {
-                "composer-plugin-api": "^1.1",
+                "composer-plugin-api": "^1.1 || ^2",
                 "php": ">=7.0.8"
             },
             "type": "composer-plugin",
