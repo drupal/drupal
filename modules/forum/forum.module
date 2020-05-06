@@ -922,7 +922,8 @@ function forum_get_topics($tid, $sortby, $forum_per_page) {
   );
 
   $order = _forum_get_topic_order($sortby);
-  for ($i = 0; $i < count($forum_topic_list_header); $i++) {
+  // Skip element with index 0 which is NULL.
+  for ($i = 1; $i < count($forum_topic_list_header); $i++) {
     if ($forum_topic_list_header[$i]['field'] == $order['field']) {
       $forum_topic_list_header[$i]['sort'] = $order['sort'];
     }
