@@ -4,7 +4,7 @@ namespace Drupal\early_rendering_controller_test;
 
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent;
+use Symfony\Component\HttpKernel\Event\ViewEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 
 /**
@@ -15,10 +15,10 @@ class TestDomainObjectViewSubscriber implements EventSubscriberInterface {
   /**
    * Sets a response given a TestDomainObject instance.
    *
-   * @param \Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent $event
+   * @param \Symfony\Component\HttpKernel\Event\ViewEvent $event
    *   The event to process.
    */
-  public function onViewTestDomainObject(GetResponseForControllerResultEvent $event) {
+  public function onViewTestDomainObject(ViewEvent $event) {
     $result = $event->getControllerResult();
 
     if ($result instanceof TestDomainObject) {

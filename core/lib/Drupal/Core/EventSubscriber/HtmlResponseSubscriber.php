@@ -4,7 +4,7 @@ namespace Drupal\Core\EventSubscriber;
 
 use Drupal\Core\Render\HtmlResponse;
 use Drupal\Core\Render\AttachmentsResponseProcessorInterface;
-use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
+use Symfony\Component\HttpKernel\Event\ResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -33,10 +33,10 @@ class HtmlResponseSubscriber implements EventSubscriberInterface {
   /**
    * Processes attachments for HtmlResponse responses.
    *
-   * @param \Symfony\Component\HttpKernel\Event\FilterResponseEvent $event
+   * @param \Symfony\Component\HttpKernel\Event\ResponseEvent $event
    *   The event to process.
    */
-  public function onRespond(FilterResponseEvent $event) {
+  public function onRespond(ResponseEvent $event) {
     $response = $event->getResponse();
     if (!$response instanceof HtmlResponse) {
       return;

@@ -16,7 +16,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\StreamedResponse;
-use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
+use Symfony\Component\HttpKernel\Event\ResponseEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
 
@@ -440,7 +440,7 @@ class ActiveLinkResponseFilterTest extends UnitTestCase {
     $response = new Response();
     $response->setContent($content);
     $response->headers->get('Content-Type', 'application/json');
-    $subscriber->onResponse(new FilterResponseEvent(
+    $subscriber->onResponse(new ResponseEvent(
       $this->prophesize(KernelInterface::class)->reveal(),
       $request_stack->getCurrentRequest(),
       HttpKernelInterface::MASTER_REQUEST,
@@ -476,7 +476,7 @@ class ActiveLinkResponseFilterTest extends UnitTestCase {
     // Test BinaryFileResponse is ignored. Calling setContent() would throw a
     // logic exception.
     $response = new BinaryFileResponse(__FILE__, 200, ['Content-Type' => 'text/html']);
-    $subscriber->onResponse(new FilterResponseEvent(
+    $subscriber->onResponse(new ResponseEvent(
       $this->prophesize(KernelInterface::class)->reveal(),
       $request_stack->getCurrentRequest(),
       HttpKernelInterface::MASTER_REQUEST,
@@ -488,7 +488,7 @@ class ActiveLinkResponseFilterTest extends UnitTestCase {
     $response = new StreamedResponse(function () {
       echo 'Success!';
     }, 200, ['Content-Type' => 'text/html']);
-    $subscriber->onResponse(new FilterResponseEvent(
+    $subscriber->onResponse(new ResponseEvent(
       $this->prophesize(KernelInterface::class)->reveal(),
       $request_stack->getCurrentRequest(),
       HttpKernelInterface::MASTER_REQUEST,

@@ -6,8 +6,8 @@ use Drupal\Component\Utility\Html;
 use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Render\AttachmentsResponseProcessorInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
-use Symfony\Component\HttpKernel\Event\GetResponseEvent;
+use Symfony\Component\HttpKernel\Event\ResponseEvent;
+use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 
 /**
@@ -40,10 +40,10 @@ class AjaxResponseSubscriber implements EventSubscriberInterface {
   /**
    * Sets the AJAX parameter from the current request.
    *
-   * @param \Symfony\Component\HttpKernel\Event\GetResponseEvent $event
+   * @param \Symfony\Component\HttpKernel\Event\RequestEvent $event
    *   The response event, which contains the current request.
    */
-  public function onRequest(GetResponseEvent $event) {
+  public function onRequest(RequestEvent $event) {
     // Pass to the Html class that the current request is an Ajax request.
     if ($event->getRequest()->request->get(static::AJAX_REQUEST_PARAMETER)) {
       Html::setIsAjax(TRUE);
@@ -53,10 +53,10 @@ class AjaxResponseSubscriber implements EventSubscriberInterface {
   /**
    * Renders the ajax commands right before preparing the result.
    *
-   * @param \Symfony\Component\HttpKernel\Event\FilterResponseEvent $event
+   * @param \Symfony\Component\HttpKernel\Event\ResponseEvent $event
    *   The response event, which contains the possible AjaxResponse object.
    */
-  public function onResponse(FilterResponseEvent $event) {
+  public function onResponse(ResponseEvent $event) {
     $response = $event->getResponse();
     if ($response instanceof AjaxResponse) {
       $this->ajaxResponseAttachmentsProcessor->processAttachments($response);

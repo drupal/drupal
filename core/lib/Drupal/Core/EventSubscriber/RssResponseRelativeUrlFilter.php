@@ -5,7 +5,7 @@ namespace Drupal\Core\EventSubscriber;
 use Drupal\Component\Utility\Html;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
+use Symfony\Component\HttpKernel\Event\ResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 
 /**
@@ -16,10 +16,10 @@ class RssResponseRelativeUrlFilter implements EventSubscriberInterface {
   /**
    * Converts relative URLs to absolute URLs.
    *
-   * @param \Symfony\Component\HttpKernel\Event\FilterResponseEvent $event
+   * @param \Symfony\Component\HttpKernel\Event\ResponseEvent $event
    *   The response event.
    */
-  public function onResponse(FilterResponseEvent $event) {
+  public function onResponse(ResponseEvent $event) {
     // Only care about RSS responses.
     if (stripos($event->getResponse()->headers->get('Content-Type'), 'application/rss+xml') === FALSE) {
       return;

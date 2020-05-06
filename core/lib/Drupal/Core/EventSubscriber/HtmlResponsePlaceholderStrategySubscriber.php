@@ -4,7 +4,7 @@ namespace Drupal\Core\EventSubscriber;
 
 use Drupal\Core\Render\HtmlResponse;
 use Drupal\Core\Render\Placeholder\PlaceholderStrategyInterface;
-use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
+use Symfony\Component\HttpKernel\Event\ResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -39,10 +39,10 @@ class HtmlResponsePlaceholderStrategySubscriber implements EventSubscriberInterf
   /**
    * Processes placeholders for HTML responses.
    *
-   * @param \Symfony\Component\HttpKernel\Event\FilterResponseEvent $event
+   * @param \Symfony\Component\HttpKernel\Event\ResponseEvent $event
    *   The event to process.
    */
-  public function onRespond(FilterResponseEvent $event) {
+  public function onRespond(ResponseEvent $event) {
     $response = $event->getResponse();
     if (!$response instanceof HtmlResponse) {
       return;

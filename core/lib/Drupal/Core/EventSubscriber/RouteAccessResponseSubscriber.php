@@ -4,7 +4,7 @@ namespace Drupal\Core\EventSubscriber;
 
 use Drupal\Core\Cache\CacheableResponseInterface;
 use Drupal\Core\Routing\AccessAwareRouterInterface;
-use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
+use Symfony\Component\HttpKernel\Event\ResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -26,10 +26,10 @@ class RouteAccessResponseSubscriber implements EventSubscriberInterface {
   /**
    * Bubbles the route's access result' cacheability metadata.
    *
-   * @param \Symfony\Component\HttpKernel\Event\FilterResponseEvent $event
+   * @param \Symfony\Component\HttpKernel\Event\ResponseEvent $event
    *   The event to process.
    */
-  public function onRespond(FilterResponseEvent $event) {
+  public function onRespond(ResponseEvent $event) {
     if (!$event->isMasterRequest()) {
       return;
     }

@@ -6,7 +6,7 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Site\Settings;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Symfony\Component\HttpKernel\Event\PostResponseEvent;
+use Symfony\Component\HttpKernel\Event\TerminateEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 
 /**
@@ -44,10 +44,10 @@ class UserRequestSubscriber implements EventSubscriberInterface {
   /**
    * Updates the current user's last access time.
    *
-   * @param \Symfony\Component\HttpKernel\Event\PostResponseEvent $event
+   * @param \Symfony\Component\HttpKernel\Event\TerminateEvent $event
    *   The event to process.
    */
-  public function onKernelTerminate(PostResponseEvent $event) {
+  public function onKernelTerminate(TerminateEvent $event) {
     if ($this->account->isAuthenticated() && REQUEST_TIME - $this->account->getLastAccessedTime() > Settings::get('session_write_interval', 180)) {
       // Do that no more than once per 180 seconds.
       /** @var \Drupal\user\UserStorageInterface $storage */

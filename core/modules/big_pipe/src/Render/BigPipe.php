@@ -16,7 +16,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
-use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
+use Symfony\Component\HttpKernel\Event\ResponseEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\KernelEvents;
 
@@ -648,7 +648,7 @@ EOF;
   protected function filterResponse(Request $request, $request_type, Response $response) {
     assert($request_type === HttpKernelInterface::MASTER_REQUEST || $request_type === HttpKernelInterface::SUB_REQUEST);
     $this->requestStack->push($request);
-    $event = new FilterResponseEvent($this->httpKernel, $request, $request_type, $response);
+    $event = new ResponseEvent($this->httpKernel, $request, $request_type, $response);
     $this->eventDispatcher->dispatch(KernelEvents::RESPONSE, $event);
     $filtered_response = $event->getResponse();
     $this->requestStack->pop();

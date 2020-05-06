@@ -5,7 +5,7 @@ namespace Drupal\Core\EventSubscriber;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Symfony\Component\HttpKernel\Event\PostResponseEvent;
+use Symfony\Component\HttpKernel\Event\TerminateEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 
 /**
@@ -39,10 +39,10 @@ class KernelDestructionSubscriber implements EventSubscriberInterface, Container
   /**
    * Invoked by the terminate kernel event.
    *
-   * @param \Symfony\Component\HttpKernel\Event\PostResponseEvent $event
+   * @param \Symfony\Component\HttpKernel\Event\TerminateEvent $event
    *   The event object.
    */
-  public function onKernelTerminate(PostResponseEvent $event) {
+  public function onKernelTerminate(TerminateEvent $event) {
     foreach ($this->services as $id) {
       // Check if the service was initialized during this request, destruction
       // is not necessary if the service was not used.

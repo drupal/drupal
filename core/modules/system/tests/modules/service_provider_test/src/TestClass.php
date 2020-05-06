@@ -7,8 +7,8 @@ use Drupal\Core\DestructableInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
-use Symfony\Component\HttpKernel\Event\GetResponseEvent;
+use Symfony\Component\HttpKernel\Event\ResponseEvent;
+use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 
 class TestClass implements EventSubscriberInterface, DestructableInterface, ContainerAwareInterface {
@@ -35,14 +35,14 @@ class TestClass implements EventSubscriberInterface, DestructableInterface, Cont
   /**
    * A simple kernel listener method.
    */
-  public function onKernelRequestTest(GetResponseEvent $event) {
+  public function onKernelRequestTest(RequestEvent $event) {
     \Drupal::messenger()->addStatus(t('The service_provider_test event subscriber fired!'));
   }
 
   /**
    * Flags the response in case a rebuild indicator is used.
    */
-  public function onKernelResponseTest(FilterResponseEvent $event) {
+  public function onKernelResponseTest(ResponseEvent $event) {
     if ($this->container->hasParameter('container_rebuild_indicator')) {
       $event->getResponse()->headers->set('container_rebuild_indicator', $this->container->getParameter('container_rebuild_indicator'));
     }

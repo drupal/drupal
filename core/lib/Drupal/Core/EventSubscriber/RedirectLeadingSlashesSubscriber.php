@@ -3,7 +3,7 @@
 namespace Drupal\Core\EventSubscriber;
 
 use Drupal\Core\Cache\CacheableRedirectResponse;
-use Symfony\Component\HttpKernel\Event\GetResponseEvent;
+use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -15,10 +15,10 @@ class RedirectLeadingSlashesSubscriber implements EventSubscriberInterface {
   /**
    * Redirects paths starting with multiple slashes to a single slash.
    *
-   * @param \Symfony\Component\HttpKernel\Event\GetResponseEvent $event
-   *   The GetResponseEvent to process.
+   * @param \Symfony\Component\HttpKernel\Event\RequestEvent $event
+   *   The RequestEvent to process.
    */
-  public function redirect(GetResponseEvent $event) {
+  public function redirect(RequestEvent $event) {
     $request = $event->getRequest();
     // Get the requested path minus the base path.
     $path = $request->getPathInfo();

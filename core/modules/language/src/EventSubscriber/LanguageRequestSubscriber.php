@@ -8,7 +8,7 @@ use Drupal\Core\StringTranslation\Translator\TranslatorInterface;
 use Drupal\language\ConfigurableLanguageManagerInterface;
 use Drupal\language\LanguageNegotiatorInterface;
 use Symfony\Component\HttpKernel\KernelEvents;
-use Symfony\Component\HttpKernel\Event\GetResponseEvent;
+use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
@@ -66,10 +66,10 @@ class LanguageRequestSubscriber implements EventSubscriberInterface {
   /**
    * Initializes the language manager at the beginning of the request.
    *
-   * @param \Symfony\Component\HttpKernel\Event\GetResponseEvent $event
+   * @param \Symfony\Component\HttpKernel\Event\RequestEvent $event
    *   The Event to process.
    */
-  public function onKernelRequestLanguage(GetResponseEvent $event) {
+  public function onKernelRequestLanguage(RequestEvent $event) {
     if ($event->isMasterRequest()) {
       $this->setLanguageOverrides();
     }

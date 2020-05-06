@@ -6,7 +6,7 @@ use Drupal\Core\EventSubscriber\OptionsRequestSubscriber;
 use Drupal\Tests\UnitTestCase;
 use Symfony\Cmf\Component\Routing\RouteProviderInterface;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\Event\GetResponseEvent;
+use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
@@ -28,7 +28,7 @@ class OptionsRequestSubscriberTest extends UnitTestCase {
     $route_provider->getRouteCollectionForRequest($request)->shouldNotBeCalled();
 
     $subscriber = new OptionsRequestSubscriber($route_provider->reveal());
-    $event = new GetResponseEvent($kernel->reveal(), $request, HttpKernelInterface::MASTER_REQUEST);
+    $event = new RequestEvent($kernel->reveal(), $request, HttpKernelInterface::MASTER_REQUEST);
     $subscriber->onRequest($event);
 
     $this->assertFalse($event->hasResponse());
@@ -45,7 +45,7 @@ class OptionsRequestSubscriberTest extends UnitTestCase {
     $route_provider->getRouteCollectionForRequest($request)->willReturn(new RouteCollection())->shouldBeCalled();
 
     $subscriber = new OptionsRequestSubscriber($route_provider->reveal());
-    $event = new GetResponseEvent($kernel->reveal(), $request, HttpKernelInterface::MASTER_REQUEST);
+    $event = new RequestEvent($kernel->reveal(), $request, HttpKernelInterface::MASTER_REQUEST);
     $subscriber->onRequest($event);
 
     $this->assertFalse($event->hasResponse());
@@ -63,7 +63,7 @@ class OptionsRequestSubscriberTest extends UnitTestCase {
     $route_provider->getRouteCollectionForRequest($request)->willReturn($collection)->shouldBeCalled();
 
     $subscriber = new OptionsRequestSubscriber($route_provider->reveal());
-    $event = new GetResponseEvent($kernel->reveal(), $request, HttpKernelInterface::MASTER_REQUEST);
+    $event = new RequestEvent($kernel->reveal(), $request, HttpKernelInterface::MASTER_REQUEST);
     $subscriber->onRequest($event);
 
     $this->assertTrue($event->hasResponse());

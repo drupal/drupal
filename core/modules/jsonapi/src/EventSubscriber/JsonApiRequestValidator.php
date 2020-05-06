@@ -6,7 +6,7 @@ use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\jsonapi\JsonApiSpec;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\Event\GetResponseEvent;
+use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Drupal\Core\Http\Exception\CacheableBadRequestHttpException;
 use Symfony\Component\HttpKernel\KernelEvents;
 
@@ -24,10 +24,10 @@ class JsonApiRequestValidator implements EventSubscriberInterface {
   /**
    * Validates JSON:API requests.
    *
-   * @param \Symfony\Component\HttpKernel\Event\GetResponseEvent $event
+   * @param \Symfony\Component\HttpKernel\Event\RequestEvent $event
    *   The event to process.
    */
-  public function onRequest(GetResponseEvent $event) {
+  public function onRequest(RequestEvent $event) {
     $request = $event->getRequest();
     if ($request->getRequestFormat() !== 'api_json') {
       return;
