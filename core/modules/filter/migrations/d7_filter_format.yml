@@ -24,9 +24,14 @@ process:
         plugin: filter_id
         bypass: true
         source: name
-        # No need to map anything -- filter plugin IDs haven't changed since
-        # Drupal 7.
-        map: { }
+        # Although core filter plugin IDs haven't changed since Drupal 7, we map
+        # the contrib filters of the Editor module – those are the Drupal 7
+        # backport of some of the new filters in Drupal 8 core. Hence Drupal 8
+        # core is responsible for providing an upgrade path for those contrib
+        # filters.
+        map:
+          editor_caption: filter_caption
+          editor_align: filter_align
       settings:
         plugin: filter_settings
         source: settings
