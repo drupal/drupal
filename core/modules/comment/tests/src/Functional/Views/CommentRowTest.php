@@ -28,7 +28,7 @@ class CommentRowTest extends CommentTestBase {
     $this->drupalGet('test-comment-row');
 
     $result = $this->xpath('//article[contains(@class, "comment")]');
-    $this->assertEqual(1, count($result), 'One rendered comment found.');
+    $this->assertCount(1, $result, 'One rendered comment found.');
   }
 
 }

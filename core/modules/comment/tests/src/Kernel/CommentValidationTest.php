@@ -84,7 +84,7 @@ class CommentValidationTest extends EntityKernelTestBase {
     ]);
 
     $violations = $comment->validate();
-    $this->assertEqual(count($violations), 0, 'No violations when validating a default comment.');
+    $this->assertCount(0, $violations, 'No violations when validating a default comment.');
 
     $comment->set('subject', $this->randomString(65));
     $this->assertLengthViolation($comment, 'subject', 64);
@@ -99,7 +99,7 @@ class CommentValidationTest extends EntityKernelTestBase {
     $comment->set('name', 'test');
     $comment->set('uid', 0);
     $violations = $comment->validate();
-    $this->assertEqual(count($violations), 1, "Violation found on author name collision");
+    $this->assertCount(1, $violations, "Violation found on author name collision");
     $this->assertEqual($violations[0]->getPropertyPath(), "name");
     $this->assertEqual($violations[0]->getMessage(), t('The name you used (%name) belongs to a registered user.', ['%name' => 'test']));
 
@@ -107,7 +107,7 @@ class CommentValidationTest extends EntityKernelTestBase {
     $comment->set('name', 'valid unused name');
     $comment->set('mail', 'invalid');
     $violations = $comment->validate();
-    $this->assertEqual(count($violations), 1, 'Violation found when email is invalid');
+    $this->assertCount(1, $violations, 'Violation found when email is invalid');
     $this->assertEqual($violations[0]->getPropertyPath(), 'mail.0.value');
     $this->assertEqual($violations[0]->getMessage(), t('This value is not a valid email address.'));
 
@@ -117,7 +117,7 @@ class CommentValidationTest extends EntityKernelTestBase {
 
     $comment->set('homepage', 'invalid');
     $violations = $comment->validate();
-    $this->assertEqual(count($violations), 1, 'Violation found when homepage is invalid');
+    $this->assertCount(1, $violations, 'Violation found when homepage is invalid');
     $this->assertEqual($violations[0]->getPropertyPath(), 'homepage.0.value');
 
     // @todo This message should be improved in
@@ -150,7 +150,7 @@ class CommentValidationTest extends EntityKernelTestBase {
       'name' => '',
     ]);
     $violations = $comment->validate();
-    $this->assertEqual(count($violations), 1, 'Violation found when name is required, but empty and UID is anonymous.');
+    $this->assertCount(1, $violations, 'Violation found when name is required, but empty and UID is anonymous.');
     $this->assertEqual($violations[0]->getPropertyPath(), 'name');
     $this->assertEqual($violations[0]->getMessage(), t('You have to specify a valid author.'));
 
@@ -163,7 +163,7 @@ class CommentValidationTest extends EntityKernelTestBase {
       'uid' => $user->id(),
     ]);
     $violations = $comment->validate();
-    $this->assertEqual(count($violations), 0, 'No violations when validating a default comment with an author.');
+    $this->assertCount(0, $violations, 'No violations when validating a default comment with an author.');
 
     // Test specifying a wrong author name does not work.
     $comment = $this->entityTypeManager->getStorage('comment')->create([
@@ -175,7 +175,7 @@ class CommentValidationTest extends EntityKernelTestBase {
       'name' => 'not-test',
     ]);
     $violations = $comment->validate();
-    $this->assertEqual(count($violations), 1, 'Violation found when author name and comment author do not match.');
+    $this->assertCount(1, $violations, 'Violation found when author name and comment author do not match.');
     $this->assertEqual($violations[0]->getPropertyPath(), 'name');
     $this->assertEqual($violations[0]->getMessage(), t('The specified author name does not match the comment author.'));
   }
@@ -192,7 +192,7 @@ class CommentValidationTest extends EntityKernelTestBase {
    */
   protected function assertLengthViolation(CommentInterface $comment, $field_name, $length) {
     $violations = $comment->validate();
-    $this->assertEqual(count($violations), 1, "Violation found when $field_name is too long.");
+    $this->assertCount(1, $violations, "Violation found when $field_name is too long.");
     $this->assertEqual($violations[0]->getPropertyPath(), "$field_name.0.value");
     $field_label = $comment->get($field_name)->getFieldDefinition()->getLabel();
     $this->assertEqual($violations[0]->getMessage(), t('%name: may not be longer than @max characters.', ['%name' => $field_label, '@max' => $length]));

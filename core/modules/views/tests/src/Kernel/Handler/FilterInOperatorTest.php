@@ -70,7 +70,7 @@ class FilterInOperatorTest extends ViewsKernelTestBase {
       ],
     ];
 
-    $this->assertEqual(2, count($view->result));
+    $this->assertCount(2, $view->result);
     $this->assertIdenticalResultset($view, $expected_result, $this->columnMap);
 
     $view->destroy();
@@ -104,7 +104,7 @@ class FilterInOperatorTest extends ViewsKernelTestBase {
       ],
     ];
 
-    $this->assertEqual(3, count($view->result));
+    $this->assertCount(3, $view->result);
     $this->assertIdenticalResultset($view, $expected_result, $this->columnMap);
   }
 
@@ -130,7 +130,7 @@ class FilterInOperatorTest extends ViewsKernelTestBase {
       ],
     ];
 
-    $this->assertEqual(2, count($view->result));
+    $this->assertCount(2, $view->result);
     $this->assertIdenticalResultset($view, $expected_result, $this->columnMap);
   }
 
@@ -160,7 +160,7 @@ class FilterInOperatorTest extends ViewsKernelTestBase {
       ],
     ];
 
-    $this->assertEqual(3, count($view->result));
+    $this->assertCount(3, $view->result);
     $this->assertIdenticalResultset($view, $expected_result, $this->columnMap);
   }
 

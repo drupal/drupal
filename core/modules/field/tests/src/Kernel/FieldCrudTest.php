@@ -290,7 +290,7 @@ class FieldCrudTest extends FieldKernelTestBase {
     // Make sure the field was deleted without being marked for purging as there
     // was no data.
     $fields = \Drupal::entityTypeManager()->getStorage('field_config')->loadByProperties(['entity_type' => 'entity_test', 'field_name' => $this->fieldDefinition['field_name'], 'bundle' => $this->fieldDefinition['bundle'], 'include_deleted' => TRUE]);
-    $this->assertEquals(0, count($fields), 'A deleted field is marked for deletion.');
+    $this->assertCount(0, $fields, 'A deleted field is marked for deletion.');
 
     // Try to load the field normally and make sure it does not show up.
     $field = FieldConfig::load('entity_test.' . '.' . $this->fieldDefinition['bundle'] . '.' . $this->fieldDefinition['field_name']);

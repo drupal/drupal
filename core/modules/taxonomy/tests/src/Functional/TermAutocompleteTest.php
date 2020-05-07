@@ -179,14 +179,14 @@ class TermAutocompleteTest extends TaxonomyTestBase {
       $this->autocompleteUrl,
       ['query' => ['q' => 'aaa 10']]
     );
-    $this->assertEqual(1, count($data), 'Autocomplete returned 1 result');
+    $this->assertCount(1, $data, 'Autocomplete returned 1 result');
 
     // Test the correct number of matches when multiple are partial matches.
     $data = $this->drupalGetJson(
       $this->autocompleteUrl,
       ['query' => ['q' => 'aaa 1']]
     );
-    $this->assertEqual(3, count($data), 'Autocomplete returned 3 results');
+    $this->assertCount(3, $data, 'Autocomplete returned 3 results');
 
     // Tests that only 10 results are returned, even if there are more than 10
     // matches.
@@ -194,7 +194,7 @@ class TermAutocompleteTest extends TaxonomyTestBase {
       $this->autocompleteUrl,
       ['query' => ['q' => 'aaa']]
     );
-    $this->assertEqual(10, count($data), 'Autocomplete returned only 10 results (for over 10 matches)');
+    $this->assertCount(10, $data, 'Autocomplete returned only 10 results (for over 10 matches)');
   }
 
   /**

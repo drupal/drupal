@@ -158,10 +158,10 @@ class StyleTableTest extends ViewTestBase {
 
     // Test that only one of the job columns still shows.
     $result = $this->xpath('//thead/tr/th/a[text()="Job"]');
-    $this->assertEqual(count($result), 1, 'Ensure that empty column header is hidden.');
+    $this->assertCount(1, $result, 'Ensure that empty column header is hidden.');
 
     $result = $this->xpath('//tbody/tr/td[contains(concat(" ", @class, " "), " views-field-job-1 ")]');
-    $this->assertEqual(count($result), 0, 'Ensure the empty table cells are hidden.');
+    $this->assertCount(0, $result, 'Ensure the empty table cells are hidden.');
   }
 
   /**

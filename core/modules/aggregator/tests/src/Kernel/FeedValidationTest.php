@@ -39,7 +39,7 @@ class FeedValidationTest extends EntityKernelTestBase {
     ]);
 
     $violations = $feed->validate();
-    $this->assertEqual(count($violations), 0);
+    $this->assertCount(0, $violations);
 
     $feed->save();
 
@@ -53,7 +53,7 @@ class FeedValidationTest extends EntityKernelTestBase {
 
     $violations = $feed->validate();
 
-    $this->assertEqual(count($violations), 2);
+    $this->assertCount(2, $violations);
     $this->assertEqual($violations[0]->getPropertyPath(), 'title');
     $this->assertEqual($violations[0]->getMessage(), t('A feed named %value already exists. Enter a unique title.', [
       '%value' => $feed->label(),

@@ -69,17 +69,17 @@ class MenuLinkTreeTest extends KernelTestBase {
     \Drupal::entityTypeManager()->getStorage('menu_link_content')->create(['link' => ['uri' => 'internal:/menu_name_test'], 'menu_name' => 'menu2', 'bundle' => 'menu_link_content', 'title' => 'Link test'])->save();
 
     $output = $this->linkTree->load('menu1', new MenuTreeParameters());
-    $this->assertEqual(count($output), 2);
+    $this->assertCount(2, $output);
     $output = $this->linkTree->load('menu2', new MenuTreeParameters());
-    $this->assertEqual(count($output), 1);
+    $this->assertCount(1, $output);
 
     $this->menuLinkManager->deleteLinksInMenu('menu1');
 
     $output = $this->linkTree->load('menu1', new MenuTreeParameters());
-    $this->assertEqual(count($output), 0);
+    $this->assertCount(0, $output);
 
     $output = $this->linkTree->load('menu2', new MenuTreeParameters());
-    $this->assertEqual(count($output), 1);
+    $this->assertCount(1, $output);
   }
 
   /**
@@ -125,7 +125,7 @@ class MenuLinkTreeTest extends KernelTestBase {
     $parameters->setRoot('test.example2');
     $tree = $this->linkTree->load($instance->getMenuName(), $parameters);
     $top_link = reset($tree);
-    $this->assertEqual(count($top_link->subtree), 1);
+    $this->assertCount(1, $top_link->subtree);
     $child = reset($top_link->subtree);
     $this->assertEqual($child->link->getPluginId(), $links[3]->getPluginId());
     $height = $this->linkTree->getSubtreeHeight('test.example2');

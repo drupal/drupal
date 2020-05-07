@@ -29,7 +29,7 @@ class BasicTest extends ViewsKernelTestBase {
     $this->executeView($view);
 
     // Verify the result.
-    $this->assertEqual(5, count($view->result), 'The number of returned rows match.');
+    $this->assertCount(5, $view->result, 'The number of returned rows match.');
     $this->assertIdenticalResultset($view, $this->dataSet(), [
       'views_test_data_name' => 'name',
       'views_test_data_age' => 'age',
@@ -88,7 +88,7 @@ class BasicTest extends ViewsKernelTestBase {
     ];
 
     // Verify the result.
-    $this->assertEqual(3, count($view->result), 'The number of returned rows match.');
+    $this->assertCount(3, $view->result, 'The number of returned rows match.');
     $this->assertIdenticalResultSet($view, $dataset, [
       'views_test_data_name' => 'name',
       'views_test_data_age' => 'age',
@@ -114,7 +114,7 @@ class BasicTest extends ViewsKernelTestBase {
     ];
 
     // Verify the result.
-    $this->assertEqual(1, count($view->result), 'The number of returned rows match.');
+    $this->assertCount(1, $view->result, 'The number of returned rows match.');
     $this->assertIdenticalResultSet($view, $dataset, [
       'views_test_data_name' => 'name',
       'views_test_data_age' => 'age',
@@ -127,7 +127,7 @@ class BasicTest extends ViewsKernelTestBase {
     // Build the expected result.
     $dataset = $this->dataSet();
 
-    $this->assertEqual(5, count($view->result), 'The number of returned rows match.');
+    $this->assertCount(5, $view->result, 'The number of returned rows match.');
     $this->assertIdenticalResultSet($view, $dataset, [
       'views_test_data_name' => 'name',
       'views_test_data_age' => 'age',

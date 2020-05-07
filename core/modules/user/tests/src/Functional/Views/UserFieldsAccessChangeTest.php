@@ -72,14 +72,14 @@ class UserFieldsAccessChangeTest extends UserTestBase {
     $this->drupalGet('test_user_fields_access');
     $this->assertText($test_user->getAccountName(), 'Found user in view');
     $result = $this->xpath($xpath);
-    $this->assertEqual(0, count($result), 'User is not a link');
+    $this->assertCount(0, $result, 'User is not a link');
 
     // Assign sub-admin role to grant extra access.
     $user = $this->drupalCreateUser(['sub-admin']);
     $this->drupalLogin($user);
     $this->drupalGet('test_user_fields_access');
     $result = $this->xpath($xpath);
-    $this->assertEqual(1, count($result), 'User is a link');
+    $this->assertCount(1, $result, 'User is a link');
   }
 
 }

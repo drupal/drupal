@@ -81,7 +81,7 @@ class MigrateMessageTest extends KernelTestBase implements MigrateMessageInterfa
     // We don't ask for messages to be teed, so don't expect any.
     $executable = new MigrateExecutable($this->migration, $this);
     $executable->import();
-    $this->assertIdentical(count($this->messages), 0);
+    $this->assertCount(0, $this->messages);
   }
 
   /**
@@ -93,7 +93,7 @@ class MigrateMessageTest extends KernelTestBase implements MigrateMessageInterfa
       [$this, 'mapMessageRecorder']);
     $executable = new MigrateExecutable($this->migration, $this);
     $executable->import();
-    $this->assertIdentical(count($this->messages), 1);
+    $this->assertCount(1, $this->messages);
     $this->assertIdentical(reset($this->messages), "source_message: 'a message' is not an array");
   }
 

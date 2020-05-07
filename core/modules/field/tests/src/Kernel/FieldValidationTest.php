@@ -54,7 +54,7 @@ class FieldValidationTest extends FieldKernelTestBase {
     $violations = $entity->{$this->fieldTestData->field_name}->validate();
 
     // Check that the expected constraint violations are reported.
-    $this->assertEqual(count($violations), 1);
+    $this->assertCount(1, $violations);
     $this->assertEqual($violations[0]->getPropertyPath(), '');
     $this->assertEqual($violations[0]->getMessage(), t('%name: this field cannot hold more than @count values.', ['%name' => $this->fieldTestData->field->getLabel(), '@count' => $cardinality]));
   }

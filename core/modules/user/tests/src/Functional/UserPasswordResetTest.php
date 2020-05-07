@@ -387,7 +387,7 @@ class UserPasswordResetTest extends BrowserTestBase {
   public function assertNoValidPasswordReset($name) {
     // Make sure the error text is displayed and no email sent.
     $this->assertText(t('@name is not recognized as a username or an email address.', ['@name' => $name]), 'Validation error message shown when trying to request password for invalid account.');
-    $this->assertEqual(count($this->drupalGetMails(['id' => 'user_password_reset'])), 0, 'No e-mail was sent when requesting a password for an invalid account.');
+    $this->assertCount(0, $this->drupalGetMails(['id' => 'user_password_reset']), 'No e-mail was sent when requesting a password for an invalid account.');
   }
 
   /**

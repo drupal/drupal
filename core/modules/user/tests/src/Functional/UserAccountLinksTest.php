@@ -51,14 +51,14 @@ class UserAccountLinksTest extends BrowserTestBase {
       ':href' => 'user',
       ':text' => 'My account',
     ]);
-    $this->assertEqual(count($link), 1, 'My account link is in secondary menu.');
+    $this->assertCount(1, $link, 'My account link is in secondary menu.');
 
     $link = $this->xpath('//ul[@class=:menu_class]/li/a[contains(@href, :href) and text()=:text]', [
       ':menu_class' => 'menu',
       ':href' => 'user/logout',
       ':text' => 'Log out',
     ]);
-    $this->assertEqual(count($link), 1, 'Log out link is in secondary menu.');
+    $this->assertCount(1, $link, 'Log out link is in secondary menu.');
 
     // Log out and get the homepage.
     $this->drupalLogout();
@@ -70,7 +70,7 @@ class UserAccountLinksTest extends BrowserTestBase {
       ':href' => 'user/login',
       ':text' => 'Log in',
     ]);
-    $this->assertEqual(count($link), 1, 'Log in link is in secondary menu.');
+    $this->assertCount(1, $link, 'Log in link is in secondary menu.');
   }
 
   /**
@@ -87,7 +87,7 @@ class UserAccountLinksTest extends BrowserTestBase {
       ':href' => 'user',
       ':text' => 'My account',
     ]);
-    $this->assertEqual(count($link), 1, 'My account link is in the secondary menu.');
+    $this->assertCount(1, $link, 'My account link is in the secondary menu.');
 
     // Verify that the 'My account' link is enabled. Do not assume the value of
     // auto-increment is 1. Use XPath to obtain input element id and name using
@@ -109,7 +109,7 @@ class UserAccountLinksTest extends BrowserTestBase {
       ':href' => 'user',
       ':text' => 'My account',
     ]);
-    $this->assertEqual(count($link), 0, 'My account link is not in the secondary menu.');
+    $this->assertCount(0, $link, 'My account link is not in the secondary menu.');
   }
 
   /**

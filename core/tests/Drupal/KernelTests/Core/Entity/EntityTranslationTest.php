@@ -255,24 +255,24 @@ class EntityTranslationTest extends EntityLanguageTestBase {
       ->save();
 
     $entities = $storage->loadMultiple();
-    $this->assertEqual(count($entities), 3, new FormattableMarkup('%entity_type: Three entities were created.', ['%entity_type' => $entity_type]));
+    $this->assertCount(3, $entities, new FormattableMarkup('%entity_type: Three entities were created.', ['%entity_type' => $entity_type]));
     $entities = $storage->loadMultiple([$translated_id]);
-    $this->assertEqual(count($entities), 1, new FormattableMarkup('%entity_type: One entity correctly loaded by id.', ['%entity_type' => $entity_type]));
+    $this->assertCount(1, $entities, new FormattableMarkup('%entity_type: One entity correctly loaded by id.', ['%entity_type' => $entity_type]));
     $entities = $storage->loadByProperties(['name' => $name]);
-    $this->assertEqual(count($entities), 2, new FormattableMarkup('%entity_type: Two entities correctly loaded by name.', ['%entity_type' => $entity_type]));
+    $this->assertCount(2, $entities, new FormattableMarkup('%entity_type: Two entities correctly loaded by name.', ['%entity_type' => $entity_type]));
     // @todo The default language condition should go away in favor of an
     // explicit parameter.
     $entities = $storage->loadByProperties(['name' => $properties[$langcode]['name'][0], $default_langcode_key => 0]);
-    $this->assertEqual(count($entities), 1, new FormattableMarkup('%entity_type: One entity correctly loaded by name translation.', ['%entity_type' => $entity_type]));
+    $this->assertCount(1, $entities, new FormattableMarkup('%entity_type: One entity correctly loaded by name translation.', ['%entity_type' => $entity_type]));
     $entities = $storage->loadByProperties([$langcode_key => $default_langcode, 'name' => $name]);
-    $this->assertEqual(count($entities), 1, new FormattableMarkup('%entity_type: One entity correctly loaded by name and language.', ['%entity_type' => $entity_type]));
+    $this->assertCount(1, $entities, new FormattableMarkup('%entity_type: One entity correctly loaded by name and language.', ['%entity_type' => $entity_type]));
 
     $entities = $storage->loadByProperties([$langcode_key => $langcode, 'name' => $properties[$langcode]['name'][0]]);
-    $this->assertEqual(count($entities), 0, new FormattableMarkup('%entity_type: No entity loaded by name translation specifying the translation language.', ['%entity_type' => $entity_type]));
+    $this->assertCount(0, $entities, new FormattableMarkup('%entity_type: No entity loaded by name translation specifying the translation language.', ['%entity_type' => $entity_type]));
     $entities = $storage->loadByProperties([$langcode_key => $langcode, 'name' => $properties[$langcode]['name'][0], $default_langcode_key => 0]);
-    $this->assertEqual(count($entities), 1, new FormattableMarkup('%entity_type: One entity loaded by name translation and language specifying to look for translations.', ['%entity_type' => $entity_type]));
+    $this->assertCount(1, $entities, new FormattableMarkup('%entity_type: One entity loaded by name translation and language specifying to look for translations.', ['%entity_type' => $entity_type]));
     $entities = $storage->loadByProperties(['user_id' => $properties[$langcode]['user_id'][0], $default_langcode_key => NULL]);
-    $this->assertEqual(count($entities), 2, new FormattableMarkup('%entity_type: Two entities loaded by uid without caring about property translatability.', ['%entity_type' => $entity_type]));
+    $this->assertCount(2, $entities, new FormattableMarkup('%entity_type: Two entities loaded by uid without caring about property translatability.', ['%entity_type' => $entity_type]));
 
     // Test property conditions and orders with multiple languages in the same
     // query.
@@ -284,7 +284,7 @@ class EntityTranslationTest extends EntityLanguageTestBase {
       ->condition($group)
       ->condition('name', $properties[$langcode]['name'][0], '=', $langcode)
       ->execute();
-    $this->assertEqual(count($result), 1, new FormattableMarkup('%entity_type: One entity loaded by name and uid using different language meta conditions.', ['%entity_type' => $entity_type]));
+    $this->assertCount(1, $result, new FormattableMarkup('%entity_type: One entity loaded by name and uid using different language meta conditions.', ['%entity_type' => $entity_type]));
 
     // Test mixed property and field conditions.
     $storage->resetCache($result);
@@ -304,7 +304,7 @@ class EntityTranslationTest extends EntityLanguageTestBase {
       ->condition($default_langcode_group)
       ->condition($langcode_group)
       ->execute();
-    $this->assertEqual(count($result), 1, new FormattableMarkup('%entity_type: One entity loaded by name, uid and field value using different language meta conditions.', ['%entity_type' => $entity_type]));
+    $this->assertCount(1, $result, new FormattableMarkup('%entity_type: One entity loaded by name, uid and field value using different language meta conditions.', ['%entity_type' => $entity_type]));
   }
 
   /**

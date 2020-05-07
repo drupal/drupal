@@ -164,7 +164,7 @@ class ThemeTest extends BrowserTestBase {
     $this->drupalPlaceBlock('system_main_block');
     $this->drupalGet('');
     $elements = $this->cssSelect(".region-sidebar-first.new_class");
-    $this->assertEqual(count($elements), 1, 'New class found.');
+    $this->assertCount(1, $elements, 'New class found.');
   }
 
   /**

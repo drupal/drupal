@@ -185,7 +185,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
         ':alt' => $alt,
       ]
     );
-    $this->assertEqual(count($elements), 1, 'Image linked to content formatter displaying correctly on full node view.');
+    $this->assertCount(1, $elements, 'Image linked to content formatter displaying correctly on full node view.');
 
     // Test the image style 'thumbnail' formatter.
     $display_options['settings']['image_link'] = '';

@@ -487,7 +487,7 @@ class SaveUploadFormTest extends FileManagedTestBase {
    * Tests highlighting of file upload field when it has an error.
    */
   public function testUploadFieldIsHighlighted() {
-    $this->assertEqual(0, count($this->cssSelect('input[name="files[file_test_upload][]"].error')), 'Successful file upload has no error.');
+    $this->assertCount(0, $this->cssSelect('input[name="files[file_test_upload][]"].error'), 'Successful file upload has no error.');
 
     /** @var \Drupal\Core\File\FileSystemInterface $file_system */
     $file_system = \Drupal::service('file_system');
@@ -498,7 +498,7 @@ class SaveUploadFormTest extends FileManagedTestBase {
     $this->drupalPostForm('file-test/save_upload_from_form_test', $edit, t('Submit'));
     $this->assertResponse(200, 'Received a 200 response for posted test file.');
     $this->assertRaw(t('Epic upload FAIL!'), 'Found the failure message.');
-    $this->assertEqual(1, count($this->cssSelect('input[name="files[file_test_upload][]"].error')), 'File upload field has error.');
+    $this->assertCount(1, $this->cssSelect('input[name="files[file_test_upload][]"].error'), 'File upload field has error.');
   }
 
 }

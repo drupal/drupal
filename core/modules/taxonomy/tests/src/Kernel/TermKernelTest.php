@@ -108,11 +108,11 @@ class TermKernelTest extends KernelTestBase {
      */
     // Count $term[1] parents with $max_depth = 1.
     $tree = $taxonomy_storage->loadTree($vocabulary->id(), $term[1]->id(), 1);
-    $this->assertEqual(1, count($tree), 'We have one parent with depth 1.');
+    $this->assertCount(1, $tree, 'We have one parent with depth 1.');
 
     // Count all vocabulary tree elements.
     $tree = $taxonomy_storage->loadTree($vocabulary->id());
-    $this->assertEqual(8, count($tree), 'We have all vocabulary tree elements.');
+    $this->assertCount(8, $tree, 'We have all vocabulary tree elements.');
 
     // Count elements in every tree depth.
     foreach ($tree as $element) {
@@ -130,19 +130,19 @@ class TermKernelTest extends KernelTestBase {
     $storage = \Drupal::entityTypeManager()->getStorage('taxonomy_term');
     // Count parents of $term[2].
     $parents = $storage->loadParents($term[2]->id());
-    $this->assertEqual(2, count($parents), 'The term has two parents.');
+    $this->assertCount(2, $parents, 'The term has two parents.');
 
     // Count parents of $term[3].
     $parents = $storage->loadParents($term[3]->id());
-    $this->assertEqual(1, count($parents), 'The term has one parent.');
+    $this->assertCount(1, $parents, 'The term has one parent.');
 
     // Identify all ancestors of $term[2].
     $ancestors = $storage->loadAllParents($term[2]->id());
-    $this->assertEqual(4, count($ancestors), 'The term has four ancestors including the term itself.');
+    $this->assertCount(4, $ancestors, 'The term has four ancestors including the term itself.');
 
     // Identify all ancestors of $term[3].
     $ancestors = $storage->loadAllParents($term[3]->id());
-    $this->assertEqual(5, count($ancestors), 'The term has five ancestors including the term itself.');
+    $this->assertCount(5, $ancestors, 'The term has five ancestors including the term itself.');
   }
 
   /**

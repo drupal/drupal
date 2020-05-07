@@ -905,7 +905,7 @@ class DateTimeFieldTest extends DateTestBase {
     $this->drupalPostForm('node/add/date_content', $edit, t('Save'));
     $this->drupalGet('admin/structure/types/manage/date_content/fields/node.date_content.' . $field_name . '/storage');
     $result = $this->xpath("//*[@id='edit-settings-datetime-type' and contains(@disabled, 'disabled')]");
-    $this->assertEqual(count($result), 1, "Changing datetime setting is disabled.");
+    $this->assertCount(1, $result, "Changing datetime setting is disabled.");
     $this->assertText('There is data for this field in the database. The field settings can no longer be changed.');
   }
 

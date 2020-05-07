@@ -43,7 +43,7 @@ class BlockContentListTest extends BlockContentTestBase {
 
     // Test the table header.
     $elements = $this->xpath('//div[@class="layout-content"]//table/thead/tr/th');
-    $this->assertEqual(count($elements), 2, 'Correct number of table header cells found.');
+    $this->assertCount(2, $elements, 'Correct number of table header cells found.');
 
     // Test the contents of each th cell.
     $expected_items = [t('Block description'), t('Operations')];
@@ -69,7 +69,7 @@ class BlockContentListTest extends BlockContentTestBase {
 
     // Check the number of table row cells.
     $elements = $this->xpath('//div[@class="layout-content"]//table/tbody/tr[@class="odd"]/td');
-    $this->assertEqual(count($elements), 2, 'Correct number of table row cells found.');
+    $this->assertCount(2, $elements, 'Correct number of table row cells found.');
     // Check the contents of each row cell. The first cell contains the label,
     // the second contains the machine name, and the third contains the
     // operations list.

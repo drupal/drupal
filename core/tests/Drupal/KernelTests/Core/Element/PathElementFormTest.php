@@ -153,7 +153,7 @@ class PathElementFormTest extends KernelTestBase implements FormInterface {
     $form_builder->submitForm($this, $form_state);
 
     // Valid form state.
-    $this->assertEqual(count($form_state->getErrors()), 0);
+    $this->assertCount(0, $form_state->getErrors());
     $this->assertEqual($form_state->getValue('required_validate_route'), [
       'route_name' => 'entity.user.canonical',
       'route_parameters' => [
@@ -178,7 +178,7 @@ class PathElementFormTest extends KernelTestBase implements FormInterface {
     $form_builder->submitForm($this, $form_state);
     $errors = $form_state->getErrors();
     // Should be missing 'required_validate' field.
-    $this->assertEqual(count($errors), 1);
+    $this->assertCount(1, $errors);
     $this->assertEqual($errors, ['required_validate' => t('@name field is required.', ['@name' => 'required_validate'])]);
 
     // Test invalid parameters.
@@ -194,7 +194,7 @@ class PathElementFormTest extends KernelTestBase implements FormInterface {
 
     // Valid form state.
     $errors = $form_state->getErrors();
-    $this->assertEqual(count($errors), 3);
+    $this->assertCount(3, $errors);
     $this->assertEqual($errors, [
       'required_validate' => t('This path does not exist or you do not have permission to link to %path.', ['%path' => 'user/74']),
       'required_validate_route' => t('This path does not exist or you do not have permission to link to %path.', ['%path' => 'user/74']),

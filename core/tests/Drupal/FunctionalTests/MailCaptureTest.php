@@ -39,14 +39,14 @@ class MailCaptureTest extends BrowserTestBase {
 
     // Before we send the email, drupalGetMails should return an empty array.
     $captured_emails = $this->drupalGetMails();
-    $this->assertEqual(count($captured_emails), 0, 'The captured emails queue is empty.', 'Email');
+    $this->assertCount(0, $captured_emails, 'The captured emails queue is empty.');
 
     // Send the email.
     \Drupal::service('plugin.manager.mail')->getInstance(['module' => 'simpletest', 'key' => 'drupal_mail_test'])->mail($message);
 
     // Ensure that there is one email in the captured emails array.
     $captured_emails = $this->drupalGetMails();
-    $this->assertEqual(count($captured_emails), 1, 'One email was captured.', 'Email');
+    $this->assertCount(1, $captured_emails, 'One email was captured.');
 
     // Assert that the email was sent by iterating over the message properties
     // and ensuring that they are captured intact.
@@ -68,22 +68,22 @@ class MailCaptureTest extends BrowserTestBase {
 
     // There should now be 6 emails captured.
     $captured_emails = $this->drupalGetMails();
-    $this->assertEqual(count($captured_emails), 6, 'All emails were captured.', 'Email');
+    $this->assertCount(6, $captured_emails, 'All emails were captured.');
 
     // Test different ways of getting filtered emails via drupalGetMails().
     $captured_emails = $this->drupalGetMails(['id' => 'drupal_mail_test']);
-    $this->assertEqual(count($captured_emails), 1, 'Only one email is returned when filtering by id.', 'Email');
+    $this->assertCount(1, $captured_emails, 'Only one email is returned when filtering by id.');
     $captured_emails = $this->drupalGetMails(['id' => 'drupal_mail_test', 'subject' => $subject]);
-    $this->assertEqual(count($captured_emails), 1, 'Only one email is returned when filtering by id and subject.', 'Email');
+    $this->assertCount(1, $captured_emails, 'Only one email is returned when filtering by id and subject.');
     $captured_emails = $this->drupalGetMails(['id' => 'drupal_mail_test', 'subject' => $subject, 'from' => 'this_was_not_used@example.com']);
-    $this->assertEqual(count($captured_emails), 0, 'No emails are returned when querying with an unused from address.', 'Email');
+    $this->assertCount(0, $captured_emails, 'No emails are returned when querying with an unused from address.');
 
     // Send the last email again, so we can confirm that the
     // drupalGetMails-filter correctly returns all emails with a given
     // property/value.
     \Drupal::service('plugin.manager.mail')->getInstance(['module' => 'drupal_mail_test', 'key' => $index])->mail($message);
     $captured_emails = $this->drupalGetMails(['id' => 'drupal_mail_test_4']);
-    $this->assertEqual(count($captured_emails), 2, 'All emails with the same id are returned when filtering by id.', 'Email');
+    $this->assertCount(2, $captured_emails, 'All emails with the same id are returned when filtering by id.');
   }
 
 }

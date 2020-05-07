@@ -117,7 +117,7 @@ class RebuildTest extends WebDriverTestBase {
 
     // Ensure that the form's action is correct.
     $forms = $this->xpath('//form[contains(@class, "node-page-form")]');
-    $this->assertEquals(1, count($forms));
+    $this->assertCount(1, $forms);
     // Strip query params off the action before asserting.
     $url = parse_url($forms[0]->getAttribute('action'))['path'];
     $this->assertEquals(Url::fromRoute('node.add', ['node_type' => 'page'])->toString(), $url);

@@ -37,7 +37,7 @@ class DCOM58Test extends TestCase
 
         $annots     = $parser->parse($docblock);
 
-        $this->assertEquals(1, count($annots));
+        $this->assertCount(1, $annots);
         $this->assertInstanceOf("Drupal\Tests\Component\Annotation\Doctrine\Ticket\Doctrine\ORM\Mapping\Entity", $annots[0]);
     }
 
@@ -49,7 +49,7 @@ class DCOM58Test extends TestCase
 
         $annots     = $parser->parse($docblock);
 
-        $this->assertEquals(1, count($annots));
+        $this->assertCount(1, $annots);
         $this->assertInstanceOf("Drupal\Tests\Component\Annotation\Doctrine\Ticket\Doctrine\ORM\Entity", $annots[0]);
     }
 
@@ -62,7 +62,7 @@ class DCOM58Test extends TestCase
 
         $annots     = $parser->parse($docblock);
 
-        $this->assertEquals(1, count($annots));
+        $this->assertCount(1, $annots);
         $this->assertInstanceOf("Drupal\Tests\Component\Annotation\Doctrine\Ticket\Doctrine\ORM\Mapping\Entity", $annots[0]);
     }
 
@@ -72,9 +72,9 @@ class DCOM58Test extends TestCase
         $parser     = new DocParser();
         $annots     = $parser->parse($docblock);
 
-        $this->assertEquals(1, count($annots));
+        $this->assertCount(1, $annots);
         $this->assertInstanceOf("Entity", $annots[0]);
-        $this->assertEquals(1, count($annots));
+        $this->assertCount(1, $annots);
     }
 
 
@@ -84,7 +84,7 @@ class DCOM58Test extends TestCase
         $reader->addNamespace('Drupal\Tests\Component\Annotation\Doctrine\Ticket\Doctrine\ORM\Mapping');
         $annots     = $reader->getClassAnnotations(new \ReflectionClass(__NAMESPACE__."\MappedClass"));
 
-        $this->assertEquals(1, count($annots));
+        $this->assertCount(1, $annots);
         $this->assertInstanceOf("Drupal\Tests\Component\Annotation\Doctrine\Ticket\Doctrine\ORM\Mapping\Entity", $annots[0]);
     }
 

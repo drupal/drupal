@@ -133,7 +133,7 @@ class MigrateFileTest extends MigrateDrupal6TestBase implements MigrateDumpAlter
     // then it would have an fid of 9.
     $this->assertNull(File::load(9));
 
-    $this->assertEquals(8, count(File::loadMultiple()));
+    $this->assertCount(8, File::loadMultiple());
   }
 
   /**

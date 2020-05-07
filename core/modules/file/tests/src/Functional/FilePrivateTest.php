@@ -146,7 +146,7 @@ class FilePrivateTest extends FileFieldTestBase {
     /** @var \Drupal\file\FileStorageInterface $file_storage */
     $file_storage = $this->container->get('entity_type.manager')->getStorage('file');
     $files = $file_storage->loadByProperties(['uid' => 0]);
-    $this->assertEqual(1, count($files), 'Loaded one anonymous file.');
+    $this->assertCount(1, $files, 'Loaded one anonymous file.');
     $file = end($files);
     $this->assertTrue($file->isTemporary(), 'File is temporary.');
     $usage = $this->container->get('file.usage')->listUsage($file);

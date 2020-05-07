@@ -66,7 +66,7 @@ class NidArgumentTest extends ViewsKernelTestBase {
     $node2->save();
 
     $view->preview();
-    $this->assertEqual(count($view->result), 2, 'Found the expected number of results.');
+    $this->assertCount(2, $view->result, 'Found the expected number of results.');
 
     // Set an the second node id as an argument.
     $view->destroy();
@@ -74,14 +74,14 @@ class NidArgumentTest extends ViewsKernelTestBase {
     // Verify that the title is overridden.
     $this->assertEqual($view->getTitle(), $node2->getTitle());
     // Verify that the argument filtering works.
-    $this->assertEqual(count($view->result), 1, 'Found the expected number of results.');
+    $this->assertCount(1, $view->result, 'Found the expected number of results.');
     $this->assertEqual($node2->id(), (string) $view->style_plugin->getField(0, 'nid'), 'Found the correct nid.');
 
     // Verify that setting a non-existing id as argument results in no nodes
     // being shown.
     $view->destroy();
     $view->preview('default', [22]);
-    $this->assertEqual(count($view->result), 0, 'Found the expected number of results.');
+    $this->assertCount(0, $view->result, 'Found the expected number of results.');
   }
 
 }

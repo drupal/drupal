@@ -81,28 +81,28 @@ class TourTest extends TourTestBasic {
       ':href' => Url::fromRoute('<front>', [], ['absolute' => TRUE])->toString(),
       ':text' => 'Drupal',
     ]);
-    $this->assertEqual(count($elements), 1, 'Found Token replacement.');
+    $this->assertCount(1, $elements, 'Found Token replacement.');
 
     $elements = $this->cssSelect("li[data-id=tour-test-1] h2:contains('The first tip')");
-    $this->assertEqual(count($elements), 1, 'Found English variant of tip 1.');
+    $this->assertCount(1, $elements, 'Found English variant of tip 1.');
 
     $elements = $this->cssSelect("li[data-id=tour-test-2] h2:contains('The quick brown fox')");
-    $this->assertNotEqual(count($elements), 1, 'Did not find English variant of tip 2.');
+    $this->assertNotCount(1, $elements, 'Did not find English variant of tip 2.');
 
     $elements = $this->cssSelect("li[data-id=tour-test-1] h2:contains('La pioggia cade in spagna')");
-    $this->assertNotEqual(count($elements), 1, 'Did not find Italian variant of tip 1.');
+    $this->assertNotCount(1, $elements, 'Did not find Italian variant of tip 1.');
 
     // Ensure that plugins work.
     $elements = $this->xpath('//img[@src="http://local/image.png"]');
-    $this->assertEqual(count($elements), 1, 'Image plugin tip found.');
+    $this->assertCount(1, $elements, 'Image plugin tip found.');
 
     // Navigate to tour-test-2/subpath and verify the tour_test_2 tip is found.
     $this->drupalGet('tour-test-2/subpath');
     $elements = $this->cssSelect("li[data-id=tour-test-2] h2:contains('The quick brown fox')");
-    $this->assertEqual(count($elements), 1, 'Found English variant of tip 2.');
+    $this->assertCount(1, $elements, 'Found English variant of tip 2.');
 
     $elements = $this->cssSelect("li[data-id=tour-test-1] h2:contains('The first tip')");
-    $this->assertNotEqual(count($elements), 1, 'Did not find English variant of tip 1.');
+    $this->assertNotCount(1, $elements, 'Did not find English variant of tip 1.');
 
     // Enable Italian language and navigate to it/tour-test1 and verify italian
     // version of tip is found.
@@ -110,10 +110,10 @@ class TourTest extends TourTestBasic {
     $this->drupalGet('it/tour-test-1');
 
     $elements = $this->cssSelect("li[data-id=tour-test-1] h2:contains('La pioggia cade in spagna')");
-    $this->assertEqual(count($elements), 1, 'Found Italian variant of tip 1.');
+    $this->assertCount(1, $elements, 'Found Italian variant of tip 1.');
 
     $elements = $this->cssSelect("li[data-id=tour-test-2] h2:contains('The quick brown fox')");
-    $this->assertNotEqual(count($elements), 1, 'Did not find English variant of tip 1.');
+    $this->assertNotCount(1, $elements, 'Did not find English variant of tip 1.');
 
     // Programmatically create a tour for use through the remainder of the test.
     $tour = Tour::create([
@@ -166,12 +166,12 @@ class TourTest extends TourTestBasic {
     // Navigate to tour-test-1 and verify the new tip is found.
     $this->drupalGet('tour-test-1');
     $elements = $this->cssSelect("li[data-id=tour-code-test-1] h2:contains('The rain in spain')");
-    $this->assertEqual(count($elements), 1, 'Found the required tip markup for tip 4');
+    $this->assertCount(1, $elements, 'Found the required tip markup for tip 4');
 
     // Verify that the weight sorting works by ensuring the lower weight item
     // (tip 4) has the 'End tour' button.
     $elements = $this->cssSelect("li[data-id=tour-code-test-1][data-text='End tour']");
-    $this->assertEqual(count($elements), 1, 'Found code tip was weighted last and had "End tour".');
+    $this->assertCount(1, $elements, 'Found code tip was weighted last and had "End tour".');
 
     // Test hook_tour_alter().
     $this->assertText('Altered by hook_tour_tips_alter');
@@ -184,7 +184,7 @@ class TourTest extends TourTestBasic {
       ':data_id' => 'tour-test-1',
       ':text' => 'The first tip',
     ]);
-    $this->assertEqual(count($elements), 1, 'Found English variant of tip 1.');
+    $this->assertCount(1, $elements, 'Found English variant of tip 1.');
 
     // Navigate to tour-test-3 and verify the tour_test_1 tip is not found with
     // appropriate classes.
@@ -194,7 +194,7 @@ class TourTest extends TourTestBasic {
       ':data_id' => 'tour-test-1',
       ':text' => 'The first tip',
     ]);
-    $this->assertEqual(count($elements), 0, 'Did not find English variant of tip 1.');
+    $this->assertCount(0, $elements, 'Did not find English variant of tip 1.');
   }
 
 }

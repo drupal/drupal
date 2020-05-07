@@ -101,7 +101,7 @@ class ProcessingTest extends BrowserTestBase {
     $expected_stack = array_merge($this->_resultStack('batch_4'), $this->_resultStack('batch_7'));
     $this->assertEquals($expected_stack, batch_test_stack(), 'Execution order was correct.');
     $batch = \Drupal::state()->get('batch_test_nested_order_multiple_batches');
-    $this->assertEquals(5, count($batch['sets']));
+    $this->assertCount(5, $batch['sets']);
     // Ensure correct queue mapping.
     foreach ($batch['sets'] as $index => $batch_set) {
       $this->assertEquals('drupal_batch:' . $batch['id'] . ':' . $index, $batch_set['queue']['name']);

@@ -53,7 +53,7 @@ class NumberItemTest extends FieldKernelTestBase {
     $entity->field_float = $float;
     $entity->field_decimal = '20-40';
     $violations = $entity->validate();
-    $this->assertIdentical(1, count($violations), 'Wrong decimal value causes validation error');
+    $this->assertCount(1, $violations, 'Wrong decimal value causes validation error');
     $decimal = '31.3';
     $entity->field_decimal = $decimal;
     $entity->name->value = $this->randomMachineName();

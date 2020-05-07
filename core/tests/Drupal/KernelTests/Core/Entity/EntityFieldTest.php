@@ -228,7 +228,7 @@ class EntityFieldTest extends EntityKernelTestBase {
       }
       $this->assertTrue(isset($entity->name), new FormattableMarkup('%entity_type: Name field is set.', ['%entity_type' => $entity_type]));
       $this->assertTrue($entity->name->isEmpty(), new FormattableMarkup('%entity_type: Name field is set.', ['%entity_type' => $entity_type]));
-      $this->assertIdentical(count($entity->name), 0, new FormattableMarkup('%entity_type: Name field contains no items.', ['%entity_type' => $entity_type]));
+      $this->assertCount(0, $entity->name, new FormattableMarkup('%entity_type: Name field contains no items.', ['%entity_type' => $entity_type]));
       $this->assertIdentical($entity->name->getValue(), [], new FormattableMarkup('%entity_type: Name field value is an empty array.', ['%entity_type' => $entity_type]));
       $this->assertFalse(isset($entity->name[0]), new FormattableMarkup('%entity_type: Name field item is not set.', ['%entity_type' => $entity_type]));
       $this->assertFalse(isset($entity->name[0]->value), new FormattableMarkup('%entity_type: First name item value is not set.', ['%entity_type' => $entity_type]));
@@ -303,13 +303,13 @@ class EntityFieldTest extends EntityKernelTestBase {
     unset($entity->name[3]);
 
     // Test removing and empty-ing list items.
-    $this->assertEqual(count($entity->name), 3, new FormattableMarkup('%entity_type: List has 3 items.', ['%entity_type' => $entity_type]));
+    $this->assertCount(3, $entity->name, new FormattableMarkup('%entity_type: List has 3 items.', ['%entity_type' => $entity_type]));
     unset($entity->name[1]);
-    $this->assertEqual(count($entity->name), 2, new FormattableMarkup('%entity_type: Second list item has been removed.', ['%entity_type' => $entity_type]));
+    $this->assertCount(2, $entity->name, new FormattableMarkup('%entity_type: Second list item has been removed.', ['%entity_type' => $entity_type]));
     $this->assertEqual($entity->name[1]->value, 'Third name', new FormattableMarkup('%entity_type: The subsequent items have been shifted up.', ['%entity_type' => $entity_type]));
     $this->assertEqual($entity->name[1]->getName(), 1, new FormattableMarkup('%entity_type: The items names have been updated to their new delta.', ['%entity_type' => $entity_type]));
     $entity->name[1] = NULL;
-    $this->assertEqual(count($entity->name), 2, new FormattableMarkup('%entity_type: Assigning NULL does not reduce array count.', ['%entity_type' => $entity_type]));
+    $this->assertCount(2, $entity->name, new FormattableMarkup('%entity_type: Assigning NULL does not reduce array count.', ['%entity_type' => $entity_type]));
     $this->assertTrue($entity->name[1]->isEmpty(), new FormattableMarkup('%entity_type: Assigning NULL empties the item.', ['%entity_type' => $entity_type]));
 
     // Test using isEmpty().
@@ -318,15 +318,15 @@ class EntityFieldTest extends EntityKernelTestBase {
     $entity->name->value = NULL;
     $this->assertTrue($entity->name[0]->isEmpty(), new FormattableMarkup('%entity_type: Name item is empty.', ['%entity_type' => $entity_type]));
     $this->assertTrue($entity->name->isEmpty(), new FormattableMarkup('%entity_type: Name field is empty.', ['%entity_type' => $entity_type]));
-    $this->assertEqual(count($entity->name), 1, new FormattableMarkup('%entity_type: Empty item is considered when counting.', ['%entity_type' => $entity_type]));
+    $this->assertCount(1, $entity->name, new FormattableMarkup('%entity_type: Empty item is considered when counting.', ['%entity_type' => $entity_type]));
     $this->assertEqual(count(iterator_to_array($entity->name->getIterator())), count($entity->name), new FormattableMarkup('%entity_type: Count matches iterator count.', ['%entity_type' => $entity_type]));
     $this->assertTrue($entity->name->getValue() === [0 => ['value' => NULL]], new FormattableMarkup('%entity_type: Name field value contains a NULL value.', ['%entity_type' => $entity_type]));
 
     // Test using filterEmptyItems().
     $entity->name = [NULL, 'foo'];
-    $this->assertEqual(count($entity->name), 2, new FormattableMarkup('%entity_type: List has 2 items.', ['%entity_type' => $entity_type]));
+    $this->assertCount(2, $entity->name, new FormattableMarkup('%entity_type: List has 2 items.', ['%entity_type' => $entity_type]));
     $entity->name->filterEmptyItems();
-    $this->assertEqual(count($entity->name), 1, new FormattableMarkup('%entity_type: The empty item was removed.', ['%entity_type' => $entity_type]));
+    $this->assertCount(1, $entity->name, new FormattableMarkup('%entity_type: The empty item was removed.', ['%entity_type' => $entity_type]));
     $this->assertEqual($entity->name[0]->value, 'foo', new FormattableMarkup('%entity_type: The items were renumbered.', ['%entity_type' => $entity_type]));
     $this->assertEqual($entity->name[0]->getName(), 0, new FormattableMarkup('%entity_type: The deltas were updated in the items.', ['%entity_type' => $entity_type]));
 

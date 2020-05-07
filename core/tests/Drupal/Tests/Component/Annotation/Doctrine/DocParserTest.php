@@ -37,7 +37,7 @@ class DocParserTest extends TestCase
 
         $this->assertInstanceOf(Name::class, $annot);
         $this->assertNull($annot->value);
-        $this->assertEquals(3, count($annot->foo));
+        $this->assertCount(3, $annot->foo);
         $this->assertEquals(1, $annot->foo[0]);
         $this->assertEquals(2, $annot->foo[1]);
         $this->assertIsArray($annot->foo[2]);
@@ -106,7 +106,7 @@ class DocParserTest extends TestCase
 DOCBLOCK;
 
         $result = $parser->parse($docblock);
-        $this->assertEquals(1, count($result));
+        $this->assertCount(1, $result);
         $annot = $result[0];
         $this->assertInstanceOf(Name::class, $annot);
         $this->assertEquals("bar", $annot->foo);
@@ -153,7 +153,7 @@ DOCBLOCK;
 DOCBLOCK;
 
         $result = $parser->parse($docblock);
-        $this->assertEquals(1, count($result));
+        $this->assertCount(1, $result);
         $annot = $result[0];
         $this->assertInstanceOf(Name::class, $annot);
         $this->assertEquals("bar", $annot->foo);
@@ -181,7 +181,7 @@ DOCBLOCK;
 DOCBLOCK;
 
         $result = $parser->parse($docblock);
-        $this->assertEquals(2, count($result));
+        $this->assertCount(2, $result);
         $this->assertTrue(isset($result[0]));
         $this->assertTrue(isset($result[1]));
         $annot = $result[0];
@@ -204,7 +204,7 @@ DOCBLOCK;
 DOCBLOCK;
 
         $result     = $parser->parse($docblock);
-        $this->assertEquals(count($result), 1);
+        $this->assertCount(1, $result);
         $annot      = $result[0];
 
         $this->assertNotNull($annot);
@@ -225,7 +225,7 @@ DOCBLOCK;
 
 
         $result     = $parser->parse($docblock);
-        $this->assertEquals(count($result), 1);
+        $this->assertCount(1, $result);
         $annot      = $result[0];
 
         $this->assertNotNull($annot);
@@ -244,7 +244,7 @@ $docblock = <<<DOCBLOCK
 DOCBLOCK;
 
         $result     = $parser->parse($docblock);
-        $this->assertEquals(count($result), 1);
+        $this->assertCount(1, $result);
         $annot      = $result[0];
 
         $this->assertEquals($annot->data, "Some data");
@@ -258,7 +258,7 @@ DOCBLOCK;
 DOCBLOCK;
 
         $result     = $parser->parse($docblock);
-        $this->assertEquals(count($result), 1);
+        $this->assertCount(1, $result);
         $annot      = $result[0];
 
         $this->assertEquals($annot->name, "Some name");
@@ -271,7 +271,7 @@ DOCBLOCK;
 DOCBLOCK;
 
         $result     = $parser->parse($docblock);
-        $this->assertEquals(count($result), 1);
+        $this->assertCount(1, $result);
         $annot      = $result[0];
 
         $this->assertEquals($annot->data, "Some data");
@@ -286,7 +286,7 @@ DOCBLOCK;
 DOCBLOCK;
 
         $result     = $parser->parse($docblock);
-        $this->assertEquals(count($result), 1);
+        $this->assertCount(1, $result);
         $annot      = $result[0];
 
         $this->assertEquals($annot->name, "Some name");
@@ -300,7 +300,7 @@ DOCBLOCK;
 DOCBLOCK;
 
         $result     = $parser->parse($docblock);
-        $this->assertEquals(count($result), 1);
+        $this->assertCount(1, $result);
         $annot      = $result[0];
 
         $this->assertEquals($annot->name, "Some name");
@@ -313,7 +313,7 @@ DOCBLOCK;
 DOCBLOCK;
 
         $result     = $parser->parse($docblock);
-        $this->assertEquals(count($result), 1);
+        $this->assertCount(1, $result);
         $this->assertInstanceOf(SomeAnnotationClassNameWithoutConstructorAndProperties::class, $result[0]);
     }
 
@@ -997,7 +997,7 @@ DOCBLOCK;
         $parser->setIgnoreNotImportedAnnotations(true);
         $result = $parser->parse("@param");
 
-        $this->assertEquals(0, count($result));
+        $this->assertCount(0, $result);
     }
 
     /**
@@ -1010,7 +1010,7 @@ DOCBLOCK;
         $parser->setIgnoredAnnotationNames(array('PHPUnit_Framework_TestCase' => true));
         $result = $parser->parse('@PHPUnit_Framework_TestCase');
 
-        $this->assertEquals(0, count($result));
+        $this->assertCount(0, $result);
     }
 
     public function testAnnotationDontAcceptSingleQuotes()
@@ -1030,7 +1030,7 @@ DOCBLOCK;
         $parser = new DocParser();
         $result = $parser->parse("'@'");
 
-        $this->assertEquals(0, count($result));
+        $this->assertCount(0, $result);
     }
 
     /**
@@ -1060,7 +1060,7 @@ DOCBLOCK;
         ));
         $annotations = $parser->parse('@Autoload');
 
-        $this->assertEquals(1, count($annotations));
+        $this->assertCount(1, $annotations);
         $this->assertInstanceOf('Drupal\Tests\Component\Annotation\Doctrine\Fixtures\Annotation\Autoload', $annotations[0]);
     }
 
@@ -1245,7 +1245,7 @@ DOCBLOCK;
             "Foo",
             "Bar",
         })');
-        $this->assertEquals(1, count($annots));
+        $this->assertCount(1, $annots);
         $this->assertEquals(array('Foo', 'Bar'), $annots[0]->value);
     }
 
@@ -1254,7 +1254,7 @@ DOCBLOCK;
         $parser = $this->createTestParser();
 
         $annots = $parser->parse('@Drupal\Tests\Component\Annotation\Doctrine\Fixtures\Annotation\AnnotWithDefaultValue');
-        $this->assertEquals(1, count($annots));
+        $this->assertCount(1, $annots);
         $this->assertEquals('bar', $annots[0]->foo);
     }
 
@@ -1263,7 +1263,7 @@ DOCBLOCK;
         $parser = $this->createTestParser();
 
         $annots = $parser->parse('@Name({"foo": "bar"})');
-        $this->assertEquals(1, count($annots));
+        $this->assertCount(1, $annots);
         $this->assertEquals(array('foo' => 'bar'), $annots[0]->value);
     }
 
@@ -1284,7 +1284,7 @@ DOCBLOCK;
         $parser = $this->createTestParser();
 
         $annots = $parser->parse('@Name({"foo": {}})');
-        $this->assertEquals(1, count($annots));
+        $this->assertCount(1, $annots);
         $this->assertEquals(array('foo' => array()), $annots[0]->value);
     }
 
@@ -1293,7 +1293,7 @@ DOCBLOCK;
         $parser = $this->createTestParser();
         $annots = $parser->parse('@SettingsAnnotation(foo="test", bar2="test")');
 
-        $this->assertEquals(1, count($annots));
+        $this->assertCount(1, $annots);
         $this->assertEquals(array('foo' => 'test', 'bar2' => 'test'), $annots[0]->settings);
     }
 

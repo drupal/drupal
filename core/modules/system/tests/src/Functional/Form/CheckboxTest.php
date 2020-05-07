@@ -80,7 +80,7 @@ class CheckboxTest extends BrowserTestBase {
     $this->drupalPostForm('form-test/checkboxes-zero/0', [], 'Save');
     $checkboxes = $this->xpath('//input[@type="checkbox"]');
 
-    $this->assertIdentical(count($checkboxes), 9, 'Correct number of checkboxes found.');
+    $this->assertCount(9, $checkboxes, 'Correct number of checkboxes found.');
     foreach ($checkboxes as $checkbox) {
       $checked = $checkbox->isChecked();
       $name = $checkbox->getAttribute('name');
@@ -94,7 +94,7 @@ class CheckboxTest extends BrowserTestBase {
     $this->drupalPostForm(NULL, NULL, 'Save');
     $checkboxes = $this->xpath('//input[@type="checkbox"]');
 
-    $this->assertIdentical(count($checkboxes), 9, 'Correct number of checkboxes found.');
+    $this->assertCount(9, $checkboxes, 'Correct number of checkboxes found.');
     foreach ($checkboxes as $checkbox) {
       $checked = $checkbox->isChecked();
       $name = (string) $checkbox->getAttribute('name');

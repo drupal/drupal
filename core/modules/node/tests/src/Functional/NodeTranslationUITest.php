@@ -280,7 +280,7 @@ class NodeTranslationUITest extends ContentTranslationUITestBase {
 
     // Make sure that nothing was inserted into the {content_translation} table.
     $rows = Database::getConnection()->query('SELECT nid, count(nid) AS count FROM {node_field_data} WHERE type <> :type GROUP BY nid HAVING count(nid) >= 2', [':type' => $this->bundle])->fetchAll();
-    $this->assertEqual(0, count($rows));
+    $this->assertCount(0, $rows);
 
     // Ensure the translation tab is not accessible.
     $this->drupalGet('node/' . $node->id() . '/translations');

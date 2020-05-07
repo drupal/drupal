@@ -349,7 +349,7 @@ class EntityAdapterUnitTest extends UnitTestCase {
     // Mock field objects return NULL values, so test keys only.
     $this->assertArrayHasKey('id', $array);
     $this->assertArrayHasKey('revision_id', $array);
-    $this->assertEquals(count($array), 2);
+    $this->assertCount(2, $array);
   }
 
   /**
@@ -426,7 +426,7 @@ class EntityAdapterUnitTest extends UnitTestCase {
     $fields = iterator_to_array($iterator);
     $this->assertArrayHasKey('id', $fields);
     $this->assertArrayHasKey('revision_id', $fields);
-    $this->assertEquals(count($fields), 2);
+    $this->assertCount(2, $fields);
 
     $this->entityAdapter->setValue(NULL);
     $this->assertEquals(new \ArrayIterator([]), $this->entityAdapter->getIterator());

@@ -87,7 +87,7 @@ class ConfigDiffTest extends KernelTestBase {
     // Prove the fields match.
     $edits = $diff->getEdits();
     $this->assertEqual($edits[0]->type, 'copy', 'The first item in the diff is a copy.');
-    $this->assertEqual(count($edits), 1, 'There is one item in the diff');
+    $this->assertCount(1, $edits, 'There is one item in the diff');
 
     // Rename the entity.
     $new_test_entity_id = $this->randomMachineName();
@@ -102,7 +102,7 @@ class ConfigDiffTest extends KernelTestBase {
       ['id: ' . $test_entity_id]);
     $this->assertYamlEdit($edits, 'label', 'copy');
     $this->assertEqual($edits[2]->type, 'copy', 'The third item in the diff is a copy.');
-    $this->assertEqual(count($edits), 3, 'There are three items in the diff.');
+    $this->assertCount(3, $edits, 'There are three items in the diff.');
   }
 
   /**
@@ -128,7 +128,7 @@ class ConfigDiffTest extends KernelTestBase {
     $diff = \Drupal::service('config.manager')->diff($active, $sync, $config_name);
     $edits = $diff->getEdits();
     $this->assertEqual($edits[0]->type, 'copy', 'The first item in the diff is a copy.');
-    $this->assertEqual(count($edits), 1, 'There is one item in the diff');
+    $this->assertCount(1, $edits, 'There is one item in the diff');
 
     // Test that the differences are detected when diffing the collection.
     $diff = \Drupal::service('config.manager')->diff($active, $sync, $config_name, NULL, 'test');

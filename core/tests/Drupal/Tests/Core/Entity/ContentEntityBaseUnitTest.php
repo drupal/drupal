@@ -375,8 +375,8 @@ class ContentEntityBaseUnitTest extends UnitTestCase {
     $this->typedDataManager->expects($this->exactly(2))
       ->method('getValidator')
       ->will($this->returnValue($validator));
-    $this->assertSame(0, count($this->entity->validate()));
-    $this->assertSame(1, count($this->entity->validate()));
+    $this->assertCount(0, $this->entity->validate());
+    $this->assertCount(1, $this->entity->validate());
   }
 
   /**

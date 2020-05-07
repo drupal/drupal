@@ -50,7 +50,7 @@ class DerivativeDiscoveryDecoratorTest extends UnitTestCase {
     $definitions = $discovery->getDefinitions();
 
     // Ensure that both test derivatives got added.
-    $this->assertEquals(2, count($definitions));
+    $this->assertCount(2, $definitions);
     $this->assertEquals('non_container_aware_discovery', $definitions['non_container_aware_discovery:test_discovery_0']['id']);
     $this->assertEquals('\Drupal\Tests\Core\Plugin\Discovery\TestDerivativeDiscovery', $definitions['non_container_aware_discovery:test_discovery_0']['deriver']);
 
@@ -76,7 +76,7 @@ class DerivativeDiscoveryDecoratorTest extends UnitTestCase {
     $definitions = $discovery->getDefinitions();
 
     // Ensure that both test derivatives got added.
-    $this->assertEquals(2, count($definitions));
+    $this->assertCount(2, $definitions);
     $this->assertInstanceOf('\stdClass', $definitions['non_container_aware_discovery:test_discovery_0']);
     $this->assertEquals('non_container_aware_discovery', $definitions['non_container_aware_discovery:test_discovery_0']->id);
     $this->assertEquals('\Drupal\Tests\Core\Plugin\Discovery\TestDerivativeDiscoveryWithObject', $definitions['non_container_aware_discovery:test_discovery_0']->deriver);
