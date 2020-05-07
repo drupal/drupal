@@ -23,4 +23,11 @@ class TwoColumnLayout extends MultiWidthLayoutBase {
     ];
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  protected function getDefaultWidth() {
+    return '50-50';
+  }
+
 }
