@@ -95,4 +95,144 @@ trait TestCompatibilityTrait {
     static::assertNotContains($needle, $haystack, $message, TRUE);
   }
 
+  /**
+   * Provides forward-compatibility for assertIsArray().
+   */
+  public static function assertIsArray($actual, $message = '') {
+    static::assertInternalType('array', $actual, $message);
+  }
+
+  /**
+   * Provides forward-compatibility for assertIsBool().
+   */
+  public static function assertIsBool($actual, $message = '') {
+    static::assertInternalType('bool', $actual, $message);
+  }
+
+  /**
+   * Provides forward-compatibility for assertIsFloat().
+   */
+  public static function assertIsFloat($actual, $message = '') {
+    static::assertInternalType('float', $actual, $message);
+  }
+
+  /**
+   * Provides forward-compatibility for assertIsInt().
+   */
+  public static function assertIsInt($actual, $message = '') {
+    static::assertInternalType('int', $actual, $message);
+  }
+
+  /**
+   * Provides forward-compatibility for assertIsNumeric().
+   */
+  public static function assertIsNumeric($actual, $message = '') {
+    static::assertInternalType('numeric', $actual, $message);
+  }
+
+  /**
+   * Provides forward-compatibility for assertIsObject().
+   */
+  public static function assertIsObject($actual, $message = '') {
+    static::assertInternalType('object', $actual, $message);
+  }
+
+  /**
+   * Provides forward-compatibility for assertIsResource().
+   */
+  public static function assertIsResource($actual, $message = '') {
+    static::assertInternalType('resource', $actual, $message);
+  }
+
+  /**
+   * Provides forward-compatibility for assertIsString().
+   */
+  public static function assertIsString($actual, $message = '') {
+    static::assertInternalType('string', $actual, $message);
+  }
+
+  /**
+   * Provides forward-compatibility for assertIsScalar().
+   */
+  public static function assertIsScalar($actual, $message = '') {
+    static::assertInternalType('scalar', $actual, $message);
+  }
+
+  /**
+   * Provides forward-compatibility for assertIsCallable().
+   */
+  public static function assertIsCallable($actual, $message = '') {
+    static::assertInternalType('callable', $actual, $message);
+  }
+
+  /**
+   * Provides forward-compatibility for assertIsNotArray().
+   */
+  public static function assertIsNotArray($actual, $message = '') {
+    static::assertNotInternalType('array', $actual, $message);
+  }
+
+  /**
+   * Provides forward-compatibility for assertIsNotBool().
+   */
+  public static function assertIsNotBool($actual, $message = '') {
+    static::assertNotInternalType('bool', $actual, $message);
+  }
+
+  /**
+   * Provides forward-compatibility for assertIsNotFloat().
+   */
+  public static function assertIsNotFloat($actual, $message = '') {
+    static::assertNotInternalType('float', $actual, $message);
+  }
+
+  /**
+   * Provides forward-compatibility for assertIsNotInt().
+   */
+  public static function assertIsNotInt($actual, $message = '') {
+    static::assertNotInternalType('int', $actual, $message);
+  }
+
+  /**
+   * Provides forward-compatibility for assertIsNotNumeric().
+   */
+  public static function assertIsNotNumeric($actual, $message = '') {
+    static::assertNotInternalType('numeric', $actual, $message);
+  }
+
+  /**
+   * Provides forward-compatibility for assertIsNotObject().
+   */
+  public static function assertIsNotObject($actual, $message = '') {
+    static::assertNotInternalType('object', $actual, $message);
+  }
+
+  /**
+   * Provides forward-compatibility for assertIsNotResource().
+   */
+  public static function assertIsNotResource($actual, $message = '') {
+    static::assertNotInternalType('resource', $actual, $message);
+  }
+
+  /**
+   * Provides forward-compatibility for assertIsNotString().
+   */
+  public static function assertIsNotString($actual, $message = '') {
+    static::assertNotInternalType('string', $actual, $message);
+  }
+
+  /**
+   * Provides forward-compatibility for assertIsNotScalar().
+   */
+  public static function assertIsNotScalar($actual, $message = '') {
+    static::assertNotInternalType('scalar', $actual, $message);
+  }
+
+  /**
+   * Provides forward-compatibility for assertIsNotCallable().
+   */
+  public static function assertIsNotCallable($actual, $message = '') {
+    static::assertNotInternalType('callable', $actual, $message);
+  }
+
 }
