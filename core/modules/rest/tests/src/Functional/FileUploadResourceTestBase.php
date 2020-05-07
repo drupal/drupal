@@ -141,6 +141,19 @@ abstract class FileUploadResourceTestBase extends ResourceTestBase {
       'status' => TRUE,
     ])->save();
 
+    // Provisioning the file upload REST resource without the File REST resource
+    // does not make sense.
+    $this->resourceConfigStorage->create([
+      'id' => 'entity.file',
+      'granularity' => RestResourceConfigInterface::RESOURCE_GRANULARITY,
+      'configuration' => [
+        'methods' => ['GET'],
+        'formats' => [static::$format],
+        'authentication' => isset(static::$auth) ? [static::$auth] : [],
+      ],
+      'status' => TRUE,
+    ])->save();
+
     $this->refreshTestStateAfterRestConfigChange();
   }
 

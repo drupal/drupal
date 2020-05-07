@@ -47,7 +47,7 @@ class EntityTestLabelHalJsonAnonTest extends EntityTestLabelResourceTestBase {
     return $normalization + [
       '_links' => [
         'self' => [
-          'href' => '',
+          'href' => $this->baseUrl . '/entity/entity_test_label/1?_format=hal_json',
         ],
         'type' => [
           'href' => $this->baseUrl . '/rest/type/entity_test_label/entity_test_label',
