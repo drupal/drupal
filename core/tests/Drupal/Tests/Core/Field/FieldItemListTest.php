@@ -135,6 +135,25 @@ class FieldItemListTest extends UnitTestCase {
     // not exist ('3').
     $datasets[] = [TRUE, $field_item_h, $field_item_i];
 
+    /** @var \Drupal\Core\Field\FieldItemBase  $field_item_j */
+    $field_item_j = $this->getMockForAbstractClass('Drupal\Core\Field\FieldItemBase', [], '', FALSE);
+    $field_item_j->setValue(['0' => 1]);
+    /** @var \Drupal\Core\Field\FieldItemBase  $field_item_k */
+    $field_item_k = $this->getMockForAbstractClass('Drupal\Core\Field\FieldItemBase', [], '', FALSE);
+    $field_item_k->setValue(['0' => 1, '1' => NULL]);
+    /** @var \Drupal\Core\Field\FieldItemBase  $field_item_l */
+    $field_item_l = $this->getMockForAbstractClass('Drupal\Core\Field\FieldItemBase', [], '', FALSE);
+    $field_item_l->setValue(['0' => 1, '1' => FALSE]);
+    /** @var \Drupal\Core\Field\FieldItemBase  $field_item_m */
+    $field_item_m = $this->getMockForAbstractClass('Drupal\Core\Field\FieldItemBase', [], '', FALSE);
+    $field_item_m->setValue(['0' => 1, '1' => '']);
+
+    // Tests filter properties with a NULL value. Empty strings or other false-y
+    // values are not filtered.
+    $datasets[] = [TRUE, $field_item_j, $field_item_k];
+    $datasets[] = [FALSE, $field_item_j, $field_item_l];
+    $datasets[] = [FALSE, $field_item_j, $field_item_m];
+
     return $datasets;
   }
 

@@ -393,6 +393,15 @@ class FieldItemList extends ItemList implements FieldItemListInterface {
     $callback = function (&$value) use ($non_computed_properties) {
       if (is_array($value)) {
         $value = array_intersect_key($value, $non_computed_properties);
+
+        // Also filter out properties with a NULL value as they might exist in
+        // one field item and not in the other, depending on how the values are
+        // set. Do not filter out empty strings or other false-y values as e.g.
+        // a NULL or FALSE in a boolean field is not the same.
+        $value = array_filter($value, function ($property) {
+          return $property !== NULL;
+        });
+
         ksort($value);
       }
     };
