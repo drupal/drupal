@@ -38,8 +38,12 @@ class ExceptionLoggingSubscriber implements EventSubscriberInterface {
    *   The event to process.
    */
   public function on403(GetResponseForExceptionEvent $event) {
-    $request = $event->getRequest();
-    $this->logger->get('access denied')->warning('@uri', ['@uri' => $request->getRequestUri()]);
+    // Log the exception with the page where it happened so that admins know
+    // why access was denied.
+    $exception = $event->getException();
+    $error = Error::decodeException($exception);
+    $error['@uri'] = $event->getRequest()->getRequestUri();
+    $this->logger->get('access denied')->warning('Path: @uri. %type: @message in %function (line %line of %file).', $error);
   }
 
   /**

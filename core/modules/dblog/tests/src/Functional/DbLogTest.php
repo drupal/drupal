@@ -136,6 +136,44 @@ class DbLogTest extends BrowserTestBase {
   }
 
   /**
+   * Tests that a 403 event is logged with the exception triggering it.
+   */
+  public function test403LogEventPage() {
+    $assert_session = $this->assertSession();
+    $uri = 'admin/reports';
+
+    $this->drupalLogin($this->webUser);
+    $this->drupalGet($uri);
+    $assert_session->statusCodeEquals(403);
+
+    $this->drupalLogin($this->adminUser);
+
+    $wid = Database::getConnection()->query("SELECT MAX(wid) FROM {watchdog} WHERE type='access denied'")->fetchField();
+    $this->drupalGet('admin/reports/dblog/event/' . $wid);
+
+    $table = $this->xpath("//table[@class='dblog-event']");
+    $this->assertCount(1, $table);
+
+    // Verify type, severity and location.
+    $type = $table[0]->findAll('xpath', "//tr/th[contains(text(), 'Type')]/../td");
+    $this->assertCount(1, $type);
+    $this->assertEquals('access denied', $type[0]->getText());
+    $severity = $table[0]->findAll('xpath', "//tr/th[contains(text(), 'Severity')]/../td");
+    $this->assertCount(1, $severity);
+    $this->assertEquals('Warning', $severity[0]->getText());
+    $location = $table[0]->findAll('xpath', "//tr/th[contains(text(), 'Location')]/../td/a");
+    $this->assertCount(1, $location);
+    $href = $location[0]->getAttribute('href');
+    $this->assertEquals($this->baseUrl . '/' . $uri, $href);
+
+    // Verify message.
+    $message = $table[0]->findAll('xpath', "//tr/th[contains(text(), 'Message')]/../td");
+    $this->assertCount(1, $message);
+    $regex = "@Path: .+admin/reports\. Drupal\\\\Core\\\\Http\\\\Exception\\\\CacheableAccessDeniedHttpException: The 'access site reports' permission is required\. in Drupal\\\\Core\\\\Routing\\\\AccessAwareRouter->checkAccess\(\) \(line \d+ of .+/core/lib/Drupal/Core/Routing/AccessAwareRouter\.php\)\.@";
+    $this->assertRegExp($regex, $message[0]->getText());
+  }
+
+  /**
    * Test not-existing log event page.
    */
   public function testLogEventNotFoundPage() {
