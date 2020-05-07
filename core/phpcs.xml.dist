@@ -32,6 +32,7 @@
   </rule>
   <rule ref="Drupal.Classes.ClassCreateInstance"/>
   <rule ref="Drupal.Classes.ClassDeclaration"/>
+  <rule ref="Drupal.Classes.ClassFileName"/>
   <rule ref="Drupal.Classes.FullyQualifiedNamespace"/>
   <rule ref="Drupal.Classes.InterfaceName"/>
   <rule ref="Drupal.Classes.UnusedUseStatement"/>
