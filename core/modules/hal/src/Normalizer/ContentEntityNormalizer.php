@@ -10,6 +10,7 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Entity\EntityTypeRepositoryInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\TypedData\TypedDataInternalPropertiesHelper;
+use Drupal\Core\Url;
 use Drupal\hal\LinkManager\LinkManagerInterface;
 use Drupal\serialization\Normalizer\FieldableEntityNormalizerTrait;
 use Symfony\Component\Serializer\Exception\UnexpectedValueException;
@@ -198,10 +199,22 @@ class ContentEntityNormalizer extends NormalizerBase {
    */
   protected function getEntityUri(EntityInterface $entity, array $context = []) {
     // Some entity types don't provide a canonical link template.
-    if ($entity->isNew() || !$entity->hasLinkTemplate('canonical')) {
+    if ($entity->isNew()) {
       return '';
     }
-    $url = $entity->toUrl('canonical', ['absolute' => TRUE]);
+
+    $route_name = 'rest.entity.' . $entity->getEntityTypeId() . '.GET';
+    if ($entity->hasLinkTemplate('canonical')) {
+      $url = $entity->toUrl('canonical');
+    }
+    elseif (\Drupal::service('router.route_provider')->getRoutesByNames([$route_name])) {
+      $url = Url::fromRoute('rest.entity.' . $entity->getEntityTypeId() . '.GET', [$entity->getEntityTypeId() => $entity->id()]);
+    }
+    else {
+      return '';
+    }
+
+    $url->setAbsolute(TRUE);
     if (!$url->isExternal()) {
       $url->setRouteParameter('_format', 'hal_json');
     }

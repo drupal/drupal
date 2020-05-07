@@ -21,7 +21,7 @@ abstract class PathAliasHalJsonTestBase extends PathAliasResourceTestBase {
     return $normalization + [
       '_links' => [
         'self' => [
-          'href' => '',
+          'href' => $this->baseUrl . '/entity/path_alias/1?_format=hal_json',
         ],
         'type' => [
           'href' => $this->baseUrl . '/rest/type/path_alias/path_alias',
