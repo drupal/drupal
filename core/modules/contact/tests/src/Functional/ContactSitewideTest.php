@@ -377,7 +377,7 @@ class ContactSitewideTest extends BrowserTestBase {
     ];
     $this->drupalPostForm(NULL, $edit, t('Send message'));
     $result = $this->xpath('//div[@role=:role]', [':role' => 'contentinfo']);
-    $this->assertEqual(count($result), 0, 'Messages not found.');
+    $this->assertCount(0, $result, 'Messages not found.');
     $this->assertUrl('user/' . $admin_user->id());
 
     // Test preview and visibility of the message field and label. Submit the
@@ -442,7 +442,7 @@ class ContactSitewideTest extends BrowserTestBase {
 
     // We are testing the auto-reply, so there should be one email going to the sender.
     $captured_emails = $this->getMails(['id' => 'contact_page_autoreply', 'to' => $email]);
-    $this->assertEqual(count($captured_emails), 1);
+    $this->assertCount(1, $captured_emails);
     $this->assertEqual(trim($captured_emails[0]['body']), trim(MailFormatHelper::htmlToText($foo_autoreply)));
 
     // Test the auto-reply for form 'bar'.
@@ -451,14 +451,14 @@ class ContactSitewideTest extends BrowserTestBase {
 
     // Auto-reply for form 'bar' should result in one auto-reply email to the sender.
     $captured_emails = $this->getMails(['id' => 'contact_page_autoreply', 'to' => $email]);
-    $this->assertEqual(count($captured_emails), 1);
+    $this->assertCount(1, $captured_emails);
     $this->assertEqual(trim($captured_emails[0]['body']), trim(MailFormatHelper::htmlToText($bar_autoreply)));
 
     // Verify that no auto-reply is sent when the auto-reply field is left blank.
     $email = $this->randomMachineName(32) . '@example.com';
     $this->submitContact($this->randomMachineName(16), $email, $this->randomString(64), 'no_autoreply', $this->randomString(128));
     $captured_emails = $this->getMails(['id' => 'contact_page_autoreply', 'to' => $email]);
-    $this->assertEqual(count($captured_emails), 0);
+    $this->assertCount(0, $captured_emails);
 
     // Verify that the current error message doesn't show, that the auto-reply
     // doesn't get sent and the correct silent error gets logged.
@@ -470,7 +470,7 @@ class ContactSitewideTest extends BrowserTestBase {
     $this->submitContact($this->randomMachineName(16), $email, $this->randomString(64), 'foo', $this->randomString(128));
     $this->assertNoText('Unable to send email. Contact the site administrator if the problem persists.');
     $captured_emails = $this->getMails(['id' => 'contact_page_autoreply', 'to' => $email]);
-    $this->assertEqual(count($captured_emails), 0);
+    $this->assertCount(0, $captured_emails);
     $this->drupalLogin($admin_user);
     $this->drupalGet('admin/reports/dblog');
     $this->assertRaw('Error sending auto-reply, missing sender e-mail address in foo');

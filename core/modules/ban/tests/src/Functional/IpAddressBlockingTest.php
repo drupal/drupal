@@ -93,7 +93,7 @@ class IpAddressBlockingTest extends BrowserTestBase {
     $query->fields('bip', ['iid']);
     $query->condition('bip.ip', $ip);
     $ip_count = $query->execute()->fetchAll();
-    $this->assertEqual(1, count($ip_count));
+    $this->assertCount(1, $ip_count);
     $ip = '';
     $banIp->banIp($ip);
     $banIp->banIp($ip);
@@ -101,7 +101,7 @@ class IpAddressBlockingTest extends BrowserTestBase {
     $query->fields('bip', ['iid']);
     $query->condition('bip.ip', $ip);
     $ip_count = $query->execute()->fetchAll();
-    $this->assertEqual(1, count($ip_count));
+    $this->assertCount(1, $ip_count);
   }
 
 }

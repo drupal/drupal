@@ -66,7 +66,7 @@ class TypedConfigTest extends KernelTestBase {
     $this->assertInstanceOf(StringInterface::class, $sequence->get('hum1'));
     $this->assertEquals('hum1', $sequence->get('hum1')->getValue());
     $this->assertEquals('hum2', $sequence->get('hum2')->getValue());
-    $this->assertEquals(2, count($sequence->getIterator()));
+    $this->assertCount(2, $sequence->getIterator());
     // Verify the item metadata is available.
     $this->assertInstanceOf(SequenceDataDefinition::class, $sequence->getDataDefinition());
 

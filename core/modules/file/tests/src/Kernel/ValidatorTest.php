@@ -45,11 +45,11 @@ class ValidatorTest extends FileManagedUnitTestBase {
   public function testFileValidateExtensions() {
     $file = File::create(['filename' => 'asdf.txt']);
     $errors = file_validate_extensions($file, 'asdf txt pork');
-    $this->assertEqual(count($errors), 0, 'Valid extension accepted.', 'File');
+    $this->assertCount(0, $errors, 'Valid extension accepted.');
 
     $file->setFilename('asdf.txt');
     $errors = file_validate_extensions($file, 'exe png');
-    $this->assertEqual(count($errors), 1, 'Invalid extension blocked.', 'File');
+    $this->assertCount(1, $errors, 'Invalid extension blocked.');
   }
 
   /**
@@ -58,11 +58,11 @@ class ValidatorTest extends FileManagedUnitTestBase {
   public function testFileValidateIsImage() {
     $this->assertFileExists($this->image->getFileUri());
     $errors = file_validate_is_image($this->image);
-    $this->assertEqual(count($errors), 0, 'No error reported for our image file.', 'File');
+    $this->assertCount(0, $errors, 'No error reported for our image file.');
 
     $this->assertFileExists($this->nonImage->getFileUri());
     $errors = file_validate_is_image($this->nonImage);
-    $this->assertEqual(count($errors), 1, 'An error reported for our non-image file.', 'File');
+    $this->assertCount(1, $errors, 'An error reported for our non-image file.');
   }
 
   /**
@@ -73,19 +73,19 @@ class ValidatorTest extends FileManagedUnitTestBase {
   public function testFileValidateImageResolution() {
     // Non-images.
     $errors = file_validate_image_resolution($this->nonImage);
-    $this->assertEqual(count($errors), 0, 'Should not get any errors for a non-image file.', 'File');
+    $this->assertCount(0, $errors, 'Should not get any errors for a non-image file.');
     $errors = file_validate_image_resolution($this->nonImage, '50x50', '100x100');
-    $this->assertEqual(count($errors), 0, 'Do not check the resolution on non files.', 'File');
+    $this->assertCount(0, $errors, 'Do not check the resolution on non files.');
 
     // Minimum size.
     $errors = file_validate_image_resolution($this->image);
-    $this->assertEqual(count($errors), 0, 'No errors for an image when there is no minimum or maximum resolution.', 'File');
+    $this->assertCount(0, $errors, 'No errors for an image when there is no minimum or maximum resolution.');
     $errors = file_validate_image_resolution($this->image, 0, '200x1');
-    $this->assertEqual(count($errors), 1, 'Got an error for an image that was not wide enough.', 'File');
+    $this->assertCount(1, $errors, 'Got an error for an image that was not wide enough.');
     $errors = file_validate_image_resolution($this->image, 0, '1x200');
-    $this->assertEqual(count($errors), 1, 'Got an error for an image that was not tall enough.', 'File');
+    $this->assertCount(1, $errors, 'Got an error for an image that was not tall enough.');
     $errors = file_validate_image_resolution($this->image, 0, '200x200');
-    $this->assertEqual(count($errors), 1, 'Small images report an error.', 'File');
+    $this->assertCount(1, $errors, 'Small images report an error.');
 
     // Maximum size.
     if ($this->container->get('image.factory')->getToolkitId()) {
@@ -94,7 +94,7 @@ class ValidatorTest extends FileManagedUnitTestBase {
       $this->image->setFileUri('temporary://druplicon.png');
 
       $errors = file_validate_image_resolution($this->image, '10x5');
-      $this->assertEqual(count($errors), 0, 'No errors should be reported when an oversized image can be scaled down.', 'File');
+      $this->assertCount(0, $errors, 'No errors should be reported when an oversized image can be scaled down.');
 
       $image = $this->container->get('image.factory')->get($this->image->getFileUri());
       $this->assertTrue($image->getWidth() <= 10, 'Image scaled to correct width.', 'File');
@@ -104,14 +104,14 @@ class ValidatorTest extends FileManagedUnitTestBase {
       copy('core/misc/druplicon.png', 'temporary://druplicon.png');
       $this->image->setFileUri('temporary://druplicon.png');
       $errors = file_validate_image_resolution($this->image, '-10x-5');
-      $this->assertEqual(count($errors), 1, 'An error reported for an oversized image that can not be scaled down.', 'File');
+      $this->assertCount(1, $errors, 'An error reported for an oversized image that can not be scaled down.');
 
       \Drupal::service('file_system')->unlink('temporary://druplicon.png');
     }
     else {
       // TODO: should check that the error is returned if no toolkit is available.
       $errors = file_validate_image_resolution($this->image, '5x10');
-      $this->assertEqual(count($errors), 1, 'Oversize images that cannot be scaled get an error.', 'File');
+      $this->assertCount(1, $errors, 'Oversize images that cannot be scaled get an error.');
     }
   }
 
@@ -126,17 +126,17 @@ class ValidatorTest extends FileManagedUnitTestBase {
     $file->setFilename(str_repeat('x', 240));
     $this->assertEqual(strlen($file->getFilename()), 240);
     $errors = file_validate_name_length($file);
-    $this->assertEqual(count($errors), 0, 'No errors reported for 240 length filename.', 'File');
+    $this->assertCount(0, $errors, 'No errors reported for 240 length filename.');
 
     // Add a filename with a length too long and test it.
     $file->setFilename(str_repeat('x', 241));
     $errors = file_validate_name_length($file);
-    $this->assertEqual(count($errors), 1, 'An error reported for 241 length filename.', 'File');
+    $this->assertCount(1, $errors, 'An error reported for 241 length filename.');
 
     // Add a filename with an empty string and test it.
     $file->setFilename('');
     $errors = file_validate_name_length($file);
-    $this->assertEqual(count($errors), 1, 'An error reported for 0 length filename.', 'File');
+    $this->assertCount(1, $errors, 'An error reported for 0 length filename.');
   }
 
   /**
@@ -146,13 +146,13 @@ class ValidatorTest extends FileManagedUnitTestBase {
     // Create a file with a size of 1000 bytes, and quotas of only 1 byte.
     $file = File::create(['filesize' => 1000]);
     $errors = file_validate_size($file, 0, 0);
-    $this->assertEqual(count($errors), 0, 'No limits means no errors.', 'File');
+    $this->assertCount(0, $errors, 'No limits means no errors.');
     $errors = file_validate_size($file, 1, 0);
-    $this->assertEqual(count($errors), 1, 'Error for the file being over the limit.', 'File');
+    $this->assertCount(1, $errors, 'Error for the file being over the limit.');
     $errors = file_validate_size($file, 0, 1);
-    $this->assertEqual(count($errors), 1, 'Error for the user being over their limit.', 'File');
+    $this->assertCount(1, $errors, 'Error for the user being over their limit.');
     $errors = file_validate_size($file, 1, 1);
-    $this->assertEqual(count($errors), 2, 'Errors for both the file and their limit.', 'File');
+    $this->assertCount(2, $errors, 'Errors for both the file and their limit.');
   }
 
 }

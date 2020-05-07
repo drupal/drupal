@@ -34,7 +34,7 @@ class MenuLinkDefaultIntegrationTest extends KernelTestBase {
     $this->assertEqual($menu_link['menu_name'], 'test');
 
     $tree = \Drupal::menuTree()->load('test', new MenuTreeParameters());
-    $this->assertEqual(count($tree), 1);
+    $this->assertCount(1, $tree);
     $this->assertEqual($tree['menu_test.parent']->link->getPluginId(), 'menu_test.parent');
     $this->assertEqual($tree['menu_test.parent']->subtree['menu_test.child']->link->getPluginId(), 'menu_test.child');
 
@@ -46,7 +46,7 @@ class MenuLinkDefaultIntegrationTest extends KernelTestBase {
     $this->assertEqual($menu_link['menu_name'], 'test');
 
     $tree = \Drupal::menuTree()->load('test', new MenuTreeParameters());
-    $this->assertEqual(count($tree), 2);
+    $this->assertCount(2, $tree);
     $this->assertEqual($tree['menu_test.parent']->link->getPluginId(), 'menu_test.parent');
     $this->assertEqual($tree['menu_test.child']->link->getPluginId(), 'menu_test.child');
 

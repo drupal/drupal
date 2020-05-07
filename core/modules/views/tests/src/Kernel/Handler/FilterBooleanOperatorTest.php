@@ -59,7 +59,7 @@ class FilterBooleanOperatorTest extends ViewsKernelTestBase {
       ['id' => 4],
     ];
 
-    $this->assertEqual(2, count($view->result));
+    $this->assertCount(2, $view->result);
     $this->assertIdenticalResultset($view, $expected_result, $this->columnMap);
 
     $view->destroy();
@@ -82,7 +82,7 @@ class FilterBooleanOperatorTest extends ViewsKernelTestBase {
       ['id' => 5],
     ];
 
-    $this->assertEqual(3, count($view->result));
+    $this->assertCount(3, $view->result);
     $this->assertIdenticalResultset($view, $expected_result, $this->columnMap);
 
     $view->destroy();
@@ -106,7 +106,7 @@ class FilterBooleanOperatorTest extends ViewsKernelTestBase {
       ['id' => 5],
     ];
 
-    $this->assertEqual(3, count($view->result));
+    $this->assertCount(3, $view->result);
     $this->assertIdenticalResultset($view, $expected_result, $this->columnMap);
   }
 
@@ -129,7 +129,7 @@ class FilterBooleanOperatorTest extends ViewsKernelTestBase {
       ['id' => 5],
     ];
 
-    $this->assertEqual(3, count($view->result));
+    $this->assertCount(3, $view->result);
     $this->assertIdenticalResultset($view, $expected_result, $this->columnMap);
     $view->destroy();
 
@@ -144,7 +144,7 @@ class FilterBooleanOperatorTest extends ViewsKernelTestBase {
       ['id' => 4],
     ];
 
-    $this->assertEqual(2, count($view->result));
+    $this->assertCount(2, $view->result);
     $this->assertIdenticalResultset($view, $expected_result, $this->columnMap);
 
     $view->destroy();
@@ -162,7 +162,7 @@ class FilterBooleanOperatorTest extends ViewsKernelTestBase {
       ['id' => 5],
     ];
 
-    $this->assertEqual(3, count($view->result));
+    $this->assertCount(3, $view->result);
     $this->assertIdenticalResultset($view, $expected_result, $this->columnMap);
   }
 

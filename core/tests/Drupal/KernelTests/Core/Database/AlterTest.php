@@ -21,7 +21,7 @@ class AlterTest extends DatabaseTestBase {
 
     $result = $query->execute()->fetchAll();
 
-    $this->assertEqual(count($result), 2, 'Returned the correct number of rows.');
+    $this->assertCount(2, $result, 'Returned the correct number of rows.');
   }
 
   /**
@@ -38,7 +38,7 @@ class AlterTest extends DatabaseTestBase {
 
     $records = $result->fetchAll();
 
-    $this->assertEqual(count($records), 2, 'Returned the correct number of rows.');
+    $this->assertCount(2, $records, 'Returned the correct number of rows.');
 
     $this->assertEqual($records[0]->name, 'George', 'Correct data retrieved.');
     $this->assertEqual($records[0]->$tid_field, 4, 'Correct data retrieved.');
@@ -66,7 +66,7 @@ class AlterTest extends DatabaseTestBase {
 
     $records = $result->fetchAll();
 
-    $this->assertEqual(count($records), 1, 'Returned the correct number of rows.');
+    $this->assertCount(1, $records, 'Returned the correct number of rows.');
     $this->assertEqual($records[0]->$name_field, 'John', 'Correct data retrieved.');
     $this->assertEqual($records[0]->$tid_field, 2, 'Correct data retrieved.');
     $this->assertEqual($records[0]->$pid_field, 1, 'Correct data retrieved.');

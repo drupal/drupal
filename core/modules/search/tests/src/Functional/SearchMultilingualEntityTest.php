@@ -168,7 +168,7 @@ class SearchMultilingualEntityTest extends BrowserTestBase {
     // This should find two results for the second and third node.
     $this->plugin->setSearch('English OR Hungarian', [], []);
     $search_result = $this->plugin->execute();
-    $this->assertEqual(count($search_result), 2, 'Found two results.');
+    $this->assertCount(2, $search_result, 'Found two results.');
     // Nodes are saved directly after each other and have the same created time
     // so testing for the order is not possible.
     $results = [$search_result[0]['title'], $search_result[1]['title']];
@@ -179,20 +179,20 @@ class SearchMultilingualEntityTest extends BrowserTestBase {
     $this->plugin->setSearch('English OR Hungarian', ['f' => ['language:hu']], []);
     $search_result = $this->plugin->execute();
 
-    $this->assertEqual(count($search_result), 1, 'The search found only one result');
+    $this->assertCount(1, $search_result, 'The search found only one result');
     $this->assertEqual($search_result[0]['title'], 'Third node this is the Hungarian title', 'The search finds the correct Hungarian title.');
 
     // Test for search with common key word across multiple languages.
     $this->plugin->setSearch('node', [], []);
     $search_result = $this->plugin->execute();
 
-    $this->assertEqual(count($search_result), 6, 'The search found total six results');
+    $this->assertCount(6, $search_result, 'The search found total six results');
 
     // Test with language filters and common key word.
     $this->plugin->setSearch('node', ['f' => ['language:hu']], []);
     $search_result = $this->plugin->execute();
 
-    $this->assertEqual(count($search_result), 2, 'The search found 2 results');
+    $this->assertCount(2, $search_result, 'The search found 2 results');
 
     // Test to check for the language of result items.
     foreach ($search_result as $result) {
@@ -321,7 +321,7 @@ class SearchMultilingualEntityTest extends BrowserTestBase {
       ->groupBy('sid')
       ->execute()
       ->fetchCol();
-    $this->assertEqual($count_node, count($results), 'Node count was ' . $count_node . ' for ' . $message);
+    $this->assertCount($count_node, $results, 'Node count was ' . $count_node . ' for ' . $message);
 
     // Count number of "foo" records.
     $results = $connection->select('search_dataset', 'i')
@@ -329,7 +329,7 @@ class SearchMultilingualEntityTest extends BrowserTestBase {
       ->condition('type', 'foo')
       ->execute()
       ->fetchCol();
-    $this->assertEqual($count_foo, count($results), 'Foo count was ' . $count_foo . ' for ' . $message);
+    $this->assertCount($count_foo, $results, 'Foo count was ' . $count_foo . ' for ' . $message);
 
   }
 

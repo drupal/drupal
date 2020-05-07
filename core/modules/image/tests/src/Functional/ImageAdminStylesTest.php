@@ -278,7 +278,7 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
     $this->drupalPostForm(NULL, $edit, t('Add effect'));
     $entity_type_manager = $this->container->get('entity_type.manager');
     $style = $entity_type_manager->getStorage('image_style')->loadUnchanged($style_name);
-    $this->assertEqual(count($style->getEffects()), 6, 'Rotate effect with transparent background was added.');
+    $this->assertCount(6, $style->getEffects(), 'Rotate effect with transparent background was added.');
 
     // Style deletion form.
 

@@ -233,7 +233,7 @@ class ExposedFormTest extends ViewTestBase {
     // Test there is an exposed form in a block.
     $xpath = $this->buildXPathQuery('//div[@id=:id]/form/@id', [':id' => Html::getUniqueId('block-' . $block->id())]);
     $result = $this->xpath($xpath);
-    $this->assertEquals(1, count($result));
+    $this->assertCount(1, $result);
 
     // Test there is not an exposed form in the view page content area.
     $xpath = $this->buildXPathQuery('//div[@class="view-content"]/form/@id', [':id' => Html::getUniqueId('block-' . $block->id())]);
@@ -241,7 +241,7 @@ class ExposedFormTest extends ViewTestBase {
 
     // Test there is only one views exposed form on the page.
     $elements = $this->xpath('//form[@id=:id]', [':id' => $this->getExpectedExposedFormId($view)]);
-    $this->assertEqual(count($elements), 1, 'One exposed form block found.');
+    $this->assertCount(1, $elements, 'One exposed form block found.');
 
     // Test that the correct option is selected after form submission.
     $this->assertCacheContext('url');
@@ -268,13 +268,13 @@ class ExposedFormTest extends ViewTestBase {
 
     // Ensure that no results are displayed.
     $rows = $this->xpath("//div[contains(@class, 'views-row')]");
-    $this->assertEqual(count($rows), 0, 'No rows are displayed by default when no input is provided.');
+    $this->assertCount(0, $rows, 'No rows are displayed by default when no input is provided.');
 
     $this->drupalGet('test_exposed_form_buttons', ['query' => ['type' => 'article']]);
 
     // Ensure that results are displayed.
     $rows = $this->xpath("//div[contains(@class, 'views-row')]");
-    $this->assertEqual(count($rows), 5, 'All rows are displayed by default when input is provided.');
+    $this->assertCount(5, $rows, 'All rows are displayed by default when input is provided.');
   }
 
   /**

@@ -86,13 +86,13 @@ class CommentFieldsTest extends CommentTestBase {
 
     $this->drupalGet('node/' . $node->nid->value);
     $elements = $this->cssSelect('.field--type-comment');
-    $this->assertEqual(2, count($elements), 'There are two comment fields on the node.');
+    $this->assertCount(2, $elements, 'There are two comment fields on the node.');
 
     // Delete the first comment field.
     FieldStorageConfig::loadByName('node', 'comment')->delete();
     $this->drupalGet('node/' . $node->nid->value);
     $elements = $this->cssSelect('.field--type-comment');
-    $this->assertEqual(1, count($elements), 'There is one comment field on the node.');
+    $this->assertCount(1, $elements, 'There is one comment field on the node.');
   }
 
   /**

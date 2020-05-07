@@ -173,9 +173,9 @@ class RelationshipTest extends RelationshipJoinTestBase {
 
     // Check that the output contains correct values.
     $xpath = '//div[@class="views-row" and div[@class="views-field views-field-id"]=:id and div[@class="views-field views-field-author"]=:author]';
-    $this->assertEqual(1, count($this->xpath($xpath, [':id' => 1, ':author' => $author1->getAccountName()])));
-    $this->assertEqual(1, count($this->xpath($xpath, [':id' => 2, ':author' => $author2->getAccountName()])));
-    $this->assertEqual(1, count($this->xpath($xpath, [':id' => 3, ':author' => ''])));
+    $this->assertCount(1, $this->xpath($xpath, [':id' => 1, ':author' => $author1->getAccountName()]));
+    $this->assertCount(1, $this->xpath($xpath, [':id' => 2, ':author' => $author2->getAccountName()]));
+    $this->assertCount(1, $this->xpath($xpath, [':id' => 3, ':author' => '']));
   }
 
 }

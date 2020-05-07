@@ -53,7 +53,7 @@ class UserRoleAdminTest extends BrowserTestBase {
       ':classes' => 'tabs primary',
       ':text' => 'Roles',
     ]);
-    $this->assertEqual(count($tabs), 1, 'Found roles tab');
+    $this->assertCount(1, $tabs, 'Found roles tab');
 
     // Test adding a role. (In doing so, we use a role name that happens to
     // correspond to an integer, to test that the role administration pages

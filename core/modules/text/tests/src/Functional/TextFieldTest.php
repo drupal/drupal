@@ -68,10 +68,10 @@ class TextFieldTest extends StringFieldTest {
       $entity->{$field_name}->value = str_repeat('x', $i);
       $violations = $entity->{$field_name}->validate();
       if ($i <= $max_length) {
-        $this->assertEqual(count($violations), 0, "Length $i does not cause validation error when max_length is $max_length");
+        $this->assertCount(0, $violations, "Length $i does not cause validation error when max_length is $max_length");
       }
       else {
-        $this->assertEqual(count($violations), 1, "Length $i causes validation error when max_length is $max_length");
+        $this->assertCount(1, $violations, "Length $i causes validation error when max_length is $max_length");
       }
     }
   }

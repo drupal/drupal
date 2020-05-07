@@ -234,32 +234,32 @@ class MenuTreeStorageTest extends KernelTestBase {
 
     $data = $this->treeStorage->loadTreeData('tools', new MenuTreeParameters());
     $tree = $data['tree'];
-    $this->assertEqual(count($tree['test1']['subtree']), 1);
-    $this->assertEqual(count($tree['test1']['subtree']['test2']['subtree']), 1);
-    $this->assertEqual(count($tree['test1']['subtree']['test2']['subtree']['test3']['subtree']), 0);
-    $this->assertEqual(count($tree['test4']['subtree']), 1);
-    $this->assertEqual(count($tree['test4']['subtree']['test5']['subtree']), 0);
+    $this->assertCount(1, $tree['test1']['subtree']);
+    $this->assertCount(1, $tree['test1']['subtree']['test2']['subtree']);
+    $this->assertCount(0, $tree['test1']['subtree']['test2']['subtree']['test3']['subtree']);
+    $this->assertCount(1, $tree['test4']['subtree']);
+    $this->assertCount(0, $tree['test4']['subtree']['test5']['subtree']);
 
     $parameters = new MenuTreeParameters();
     $parameters->setActiveTrail(['test4', 'test5']);
     $data = $this->treeStorage->loadTreeData('tools', $parameters);
     $tree = $data['tree'];
-    $this->assertEqual(count($tree['test1']['subtree']), 1);
+    $this->assertCount(1, $tree['test1']['subtree']);
     $this->assertFalse($tree['test1']['in_active_trail']);
-    $this->assertEqual(count($tree['test1']['subtree']['test2']['subtree']), 1);
+    $this->assertCount(1, $tree['test1']['subtree']['test2']['subtree']);
     $this->assertFalse($tree['test1']['subtree']['test2']['in_active_trail']);
-    $this->assertEqual(count($tree['test1']['subtree']['test2']['subtree']['test3']['subtree']), 0);
+    $this->assertCount(0, $tree['test1']['subtree']['test2']['subtree']['test3']['subtree']);
     $this->assertFalse($tree['test1']['subtree']['test2']['subtree']['test3']['in_active_trail']);
-    $this->assertEqual(count($tree['test4']['subtree']), 1);
+    $this->assertCount(1, $tree['test4']['subtree']);
     $this->assertTrue($tree['test4']['in_active_trail']);
-    $this->assertEqual(count($tree['test4']['subtree']['test5']['subtree']), 0);
+    $this->assertCount(0, $tree['test4']['subtree']['test5']['subtree']);
     $this->assertTrue($tree['test4']['subtree']['test5']['in_active_trail']);
 
     // Add some conditions to ensure that conditions work as expected.
     $parameters = new MenuTreeParameters();
     $parameters->addCondition('parent', 'test1');
     $data = $this->treeStorage->loadTreeData('tools', $parameters);
-    $this->assertEqual(count($data['tree']), 1);
+    $this->assertCount(1, $data['tree']);
     $this->assertEqual($data['tree']['test2']['definition']['id'], 'test2');
     $this->assertEqual($data['tree']['test2']['subtree'], []);
 
@@ -277,9 +277,9 @@ class MenuTreeStorageTest extends KernelTestBase {
     $parameters = new MenuTreeParameters();
     $parameters->onlyEnabledLinks();
     $data = $this->treeStorage->loadTreeData('tools', $parameters);
-    $this->assertEqual(count($data['tree']), 1);
+    $this->assertCount(1, $data['tree']);
     $this->assertEqual($data['tree']['test1']['definition']['id'], 'test1');
-    $this->assertEqual(count($data['tree']['test1']['subtree']), 1);
+    $this->assertCount(1, $data['tree']['test1']['subtree']);
     $this->assertEqual($data['tree']['test1']['subtree']['test2']['definition']['id'], 'test2');
     $this->assertEqual($data['tree']['test1']['subtree']['test2']['subtree'], []);
 
@@ -415,7 +415,7 @@ class MenuTreeStorageTest extends KernelTestBase {
       $query->condition($field, $value);
     }
     $all = $query->execute()->fetchAll(\PDO::FETCH_ASSOC);
-    $this->assertEqual(count($all), 1, "Found link $id matching all the expected properties");
+    $this->assertCount(1, $all, "Found link $id matching all the expected properties");
     $raw = reset($all);
 
     // Put the current link onto the front.

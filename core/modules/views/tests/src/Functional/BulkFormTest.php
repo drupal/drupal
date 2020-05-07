@@ -113,7 +113,7 @@ class BulkFormTest extends BrowserTestBase {
 
     $this->drupalGet('test_bulk_form');
     $options = $this->xpath('//select[@id=:id]/option', [':id' => 'edit-action']);
-    $this->assertEqual(count($options), 2);
+    $this->assertCount(2, $options);
     $this->assertOption('edit-action', 'node_make_sticky_action');
     $this->assertOption('edit-action', 'node_make_unsticky_action');
 

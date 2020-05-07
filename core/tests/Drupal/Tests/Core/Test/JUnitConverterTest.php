@@ -29,7 +29,7 @@ class JUnitConverterTest extends UnitTestCase {
     $phpunit_error_xml = __DIR__ . '/fixtures/phpunit_error.xml';
 
     $res = JUnitConverter::xmlToRows(1, $phpunit_error_xml);
-    $this->assertEquals(count($res), 4, 'All testcases got extracted');
+    $this->assertCount(4, $res, 'All testcases got extracted');
     $this->assertNotEquals($res[0]['status'], 'pass');
     $this->assertEquals($res[0]['status'], 'fail');
 

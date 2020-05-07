@@ -148,7 +148,7 @@ class TaxonomyTermViewTest extends TaxonomyTestBase {
     $condition = $query->conditions();
     // We only want to check the no. of conditions in the query.
     unset($condition['#conjunction']);
-    $this->assertEqual(1, count($condition));
+    $this->assertCount(1, $condition);
 
     // Clear permissions for anonymous users to check access for default views.
     Role::load(RoleInterface::ANONYMOUS_ID)->revokePermission('access content')->save();

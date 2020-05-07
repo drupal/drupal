@@ -51,7 +51,7 @@ class DisplayPageWebTest extends ViewTestBase {
     $this->drupalGet('test_route_without_arguments');
     $this->assertResponse(200);
     $result = $this->xpath('//span[@class="field-content"]');
-    $this->assertEqual(count($result), 5, 'All entries was returned');
+    $this->assertCount(5, $result, 'All entries was returned');
 
     $this->drupalGet('test_route_without_arguments/1');
     $this->assertResponse(404);
@@ -60,30 +60,30 @@ class DisplayPageWebTest extends ViewTestBase {
     $this->assertResponse(200);
     $this->assertCacheContexts(['languages:language_interface', 'route', 'theme', 'url']);
     $result = $this->xpath('//span[@class="field-content"]');
-    $this->assertEqual(count($result), 1, 'Ensure that just the filtered entry was returned.');
+    $this->assertCount(1, $result, 'Ensure that just the filtered entry was returned.');
     $this->assertEqual($result[0]->getText(), 1, 'The passed ID was returned.');
 
     $this->drupalGet('test_route_with_suffix/1/suffix');
     $this->assertResponse(200);
     $result = $this->xpath('//span[@class="field-content"]');
-    $this->assertEqual(count($result), 1, 'Ensure that just the filtered entry was returned.');
+    $this->assertCount(1, $result, 'Ensure that just the filtered entry was returned.');
     $this->assertEqual($result[0]->getText(), 1, 'The passed ID was returned.');
 
     $this->drupalGet('test_route_with_suffix_and_argument/1/suffix/2');
     $this->assertResponse(200);
     $result = $this->xpath('//span[@class="field-content"]');
-    $this->assertEqual(count($result), 0, 'No result was returned.');
+    $this->assertCount(0, $result, 'No result was returned.');
 
     $this->drupalGet('test_route_with_suffix_and_argument/1/suffix/1');
     $this->assertResponse(200);
     $result = $this->xpath('//span[@class="field-content"]');
-    $this->assertEqual(count($result), 1, 'Ensure that just the filtered entry was returned.');
+    $this->assertCount(1, $result, 'Ensure that just the filtered entry was returned.');
     $this->assertEqual($result[0]->getText(), 1, 'The passed ID was returned.');
 
     $this->drupalGet('test_route_with_long_argument/1');
     $this->assertResponse(200);
     $result = $this->xpath('//span[@class="field-content"]');
-    $this->assertEqual(count($result), 1, 'Ensure that just the filtered entry was returned.');
+    $this->assertCount(1, $result, 'Ensure that just the filtered entry was returned.');
     $this->assertEqual($result[0]->getText(), 1, 'The passed ID was returned.');
   }
 

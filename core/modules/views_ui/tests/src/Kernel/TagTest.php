@@ -42,7 +42,7 @@ class TagTest extends ViewsKernelTestBase {
     $request->query->set('q', 'autocomplete_tag_test');
     $result = $controller->autocompleteTag($request);
     $matches = (array) json_decode($result->getContent(), TRUE);
-    $this->assertEqual(count($matches), 10, 'Make sure the maximum amount of tag results is 10.');
+    $this->assertCount(10, $matches, 'Make sure the maximum amount of tag results is 10.');
 
     // Make sure the returned array has the proper format.
     $suggestions = array_map(function ($tag) {
@@ -56,7 +56,7 @@ class TagTest extends ViewsKernelTestBase {
     $request->query->set('q', 'autocomplete_tag_test_even');
     $result = $controller->autocompleteTag($request);
     $matches = (array) json_decode($result->getContent(), TRUE);
-    $this->assertEqual(count($matches), 8, 'Make sure that only a subset is returned.');
+    $this->assertCount(8, $matches, 'Make sure that only a subset is returned.');
     foreach ($matches as $tag) {
       $this->assertContains($tag['value'], $tags);
     }
@@ -65,7 +65,7 @@ class TagTest extends ViewsKernelTestBase {
     $request->query->set('q', $this->randomMachineName());
     $result = $controller->autocompleteTag($request);
     $matches = (array) json_decode($result->getContent());
-    $this->assertEqual(count($matches), 0, "Make sure an invalid tag doesn't return anything.");
+    $this->assertCount(0, $matches, "Make sure an invalid tag doesn't return anything.");
   }
 
 }

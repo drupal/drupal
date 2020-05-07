@@ -110,7 +110,7 @@ class HtmlResponseAttachmentsTest extends BrowserTestBase {
   protected function assertFeed() {
     // Discover the DOM element for the feed link.
     $test_meta = $this->xpath('//head/link[@href="test://url"]');
-    $this->assertEqual(1, count($test_meta), 'Link has URL.');
+    $this->assertCount(1, $test_meta, 'Link has URL.');
     // Reconcile the other attributes.
     $test_meta_attributes = [
       'href' => 'test://url',
@@ -135,7 +135,7 @@ class HtmlResponseAttachmentsTest extends BrowserTestBase {
   protected function assertHead() {
     // Discover the DOM element for the meta link.
     $test_meta = $this->xpath('//head/meta[@test-attribute="testvalue"]');
-    $this->assertEqual(1, count($test_meta), 'There\'s only one test attribute.');
+    $this->assertCount(1, $test_meta, 'There\'s only one test attribute.');
     // Grab the only DOM element.
     $test_meta = reset($test_meta);
     if (empty($test_meta)) {

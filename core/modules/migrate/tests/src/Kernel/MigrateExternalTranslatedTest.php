@@ -56,12 +56,12 @@ class MigrateExternalTranslatedTest extends MigrateTestBase {
   public function testMigrations() {
     /** @var \Drupal\Core\Entity\ContentEntityStorageInterface $storage */
     $storage = $this->container->get('entity_type.manager')->getStorage('node');
-    $this->assertEquals(0, count($storage->loadMultiple()));
+    $this->assertCount(0, $storage->loadMultiple());
 
     // Run the migrations.
     $migration_ids = ['external_translated_test_node', 'external_translated_test_node_translation'];
     $this->executeMigrations($migration_ids);
-    $this->assertEquals(3, count($storage->loadMultiple()));
+    $this->assertCount(3, $storage->loadMultiple());
 
     $node = $storage->load(1);
     $this->assertEquals('en', $node->language()->getId());
@@ -90,7 +90,7 @@ class MigrateExternalTranslatedTest extends MigrateTestBase {
       $executable->rollback();
     }
 
-    $this->assertEquals(0, count($storage->loadMultiple()));
+    $this->assertCount(0, $storage->loadMultiple());
   }
 
 }

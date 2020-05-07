@@ -211,7 +211,7 @@ class HandlerTest extends UITestBase {
       $href = "admin/structure/views/nojs/handler/test_view_broken/default/$type/id_broken";
 
       $result = $this->xpath('//a[contains(@href, :href)]', [':href' => $href]);
-      $this->assertEqual(count($result), 1, new FormattableMarkup('Handler (%type) edit link found.', ['%type' => $type]));
+      $this->assertCount(1, $result, new FormattableMarkup('Handler (%type) edit link found.', ['%type' => $type]));
 
       $text = 'Broken/missing handler';
 
@@ -283,7 +283,7 @@ class HandlerTest extends UITestBase {
    */
   public function assertNoDuplicateField($field_name, $entity_type) {
     $elements = $this->xpath('//td[.=:entity_type]/preceding-sibling::td[@class="title" and .=:title]', [':title' => $field_name, ':entity_type' => $entity_type]);
-    $this->assertEqual(1, count($elements), $field_name . ' appears just once in ' . $entity_type . '.');
+    $this->assertCount(1, $elements, $field_name . ' appears just once in ' . $entity_type . '.');
   }
 
 }

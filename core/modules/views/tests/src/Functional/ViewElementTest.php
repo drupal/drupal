@@ -48,7 +48,7 @@ class ViewElementTest extends ViewTestBase {
     $this->assertNotEmpty($xpath, 'The view content has been found on the form.');
     // There should be 5 rows in the results.
     $xpath = $this->xpath('//div[@class="view-content"]/div');
-    $this->assertEqual(count($xpath), 5);
+    $this->assertCount(5, $xpath);
 
     // Add an argument and save the view.
     $view->displayHandlers->get('default')->overrideOption('arguments', [
@@ -73,7 +73,7 @@ class ViewElementTest extends ViewTestBase {
     // Test that the form has the expected result.
     $this->drupalGet('views_test_data_element_form');
     $xpath = $this->xpath('//div[@class="view-content"]/div');
-    $this->assertEqual(count($xpath), 1);
+    $this->assertCount(1, $xpath);
   }
 
   /**
@@ -93,7 +93,7 @@ class ViewElementTest extends ViewTestBase {
     $this->assertNotEmpty($xpath, 'The view content has been found on the form.');
     // There should be 5 rows in the results.
     $xpath = $this->xpath('//div[@class="view-content"]/div');
-    $this->assertEqual(count($xpath), 5);
+    $this->assertCount(5, $xpath);
 
     // Add an argument and save the view.
     $view->displayHandlers->get('default')->overrideOption('arguments', [
@@ -118,7 +118,7 @@ class ViewElementTest extends ViewTestBase {
     // Test that the form has the same expected result.
     $this->drupalGet('views_test_data_element_embed_form');
     $xpath = $this->xpath('//div[@class="view-content"]/div');
-    $this->assertEqual(count($xpath), 1);
+    $this->assertCount(1, $xpath);
   }
 
 }

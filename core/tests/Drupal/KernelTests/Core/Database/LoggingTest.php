@@ -28,7 +28,7 @@ class LoggingTest extends DatabaseTestBase {
 
     $queries = Database::getLog('testing', 'default');
 
-    $this->assertEqual(count($queries), 3, 'Correct number of queries recorded.');
+    $this->assertCount(3, $queries, 'Correct number of queries recorded.');
 
     foreach ($queries as $query) {
       $this->assertEqual($query['caller']['function'], __FUNCTION__, 'Correct function in query log.');
@@ -50,8 +50,8 @@ class LoggingTest extends DatabaseTestBase {
     $queries1 = Database::getLog('testing1');
     $queries2 = Database::getLog('testing2');
 
-    $this->assertEqual(count($queries1), 2, 'Correct number of queries recorded for log 1.');
-    $this->assertEqual(count($queries2), 1, 'Correct number of queries recorded for log 2.');
+    $this->assertCount(2, $queries1, 'Correct number of queries recorded for log 1.');
+    $this->assertCount(1, $queries2, 'Correct number of queries recorded for log 2.');
   }
 
   /**
@@ -71,7 +71,7 @@ class LoggingTest extends DatabaseTestBase {
 
     $queries1 = Database::getLog('testing1');
 
-    $this->assertEqual(count($queries1), 2, 'Recorded queries from all targets.');
+    $this->assertCount(2, $queries1, 'Recorded queries from all targets.');
     $this->assertEqual($queries1[0]['target'], 'default', 'First query used default target.');
     $this->assertEqual($queries1[1]['target'], 'replica', 'Second query used replica target.');
   }
@@ -97,7 +97,7 @@ class LoggingTest extends DatabaseTestBase {
 
     $queries1 = Database::getLog('testing1');
 
-    $this->assertEqual(count($queries1), 2, 'Recorded queries from all targets.');
+    $this->assertCount(2, $queries1, 'Recorded queries from all targets.');
     $this->assertEqual($queries1[0]['target'], 'default', 'First query used default target.');
     $this->assertEqual($queries1[1]['target'], 'default', 'Second query used default target as fallback.');
   }
@@ -125,8 +125,8 @@ class LoggingTest extends DatabaseTestBase {
     $queries1 = Database::getLog('testing1');
     $queries2 = Database::getLog('testing1', 'test2');
 
-    $this->assertEqual(count($queries1), 1, 'Correct number of queries recorded for first connection.');
-    $this->assertEqual(count($queries2), 1, 'Correct number of queries recorded for second connection.');
+    $this->assertCount(1, $queries1, 'Correct number of queries recorded for first connection.');
+    $this->assertCount(1, $queries2, 'Correct number of queries recorded for second connection.');
   }
 
   /**

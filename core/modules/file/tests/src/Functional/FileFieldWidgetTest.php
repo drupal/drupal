@@ -399,7 +399,7 @@ class FileFieldWidgetTest extends FileFieldTestBase {
     $elements = $this->xpath($xpath);
 
     // If the field has no item, the table should not be visible.
-    $this->assertIdentical(count($elements), 0);
+    $this->assertCount(0, $elements);
 
     // Upload a file.
     $edit['files[' . $field_name . '_0][]'] = $this->container->get('file_system')->realpath($file->getFileUri());
@@ -408,7 +408,7 @@ class FileFieldWidgetTest extends FileFieldTestBase {
     $elements = $this->xpath($xpath);
 
     // If the field has at least a item, the table should be visible.
-    $this->assertIdentical(count($elements), 1);
+    $this->assertCount(1, $elements);
 
     // Test for AJAX error when using progress bar on file field widget.
     $http_client = $this->getHttpClient();

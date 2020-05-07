@@ -163,11 +163,11 @@ class TaxonomyIndexTidUiTest extends UITestBase {
     // Only the nodes with the selected term should be shown.
     $this->drupalGet('test-filter-taxonomy-index-tid');
     $xpath = $this->xpath('//div[@class="view-content"]//a');
-    $this->assertIdentical(2, count($xpath));
+    $this->assertCount(2, $xpath);
     $xpath = $this->xpath('//div[@class="view-content"]//a[@href=:href]', [':href' => $node2->toUrl()->toString()]);
-    $this->assertIdentical(1, count($xpath));
+    $this->assertCount(1, $xpath);
     $xpath = $this->xpath('//div[@class="view-content"]//a[@href=:href]', [':href' => $node3->toUrl()->toString()]);
-    $this->assertIdentical(1, count($xpath));
+    $this->assertCount(1, $xpath);
 
     // Expose the filter.
     $this->drupalPostForm('admin/structure/views/nojs/handler/test_filter_taxonomy_index_tid/default/filter/tid', [], 'Expose filter');
@@ -183,9 +183,9 @@ class TaxonomyIndexTidUiTest extends UITestBase {
     // shown.
     $this->drupalGet('test-filter-taxonomy-index-tid');
     $xpath = $this->xpath('//div[@class="view-content"]//a');
-    $this->assertIdentical(1, count($xpath));
+    $this->assertCount(1, $xpath);
     $xpath = $this->xpath('//div[@class="view-content"]//a[@href=:href]', [':href' => $node1->toUrl()->toString()]);
-    $this->assertIdentical(1, count($xpath));
+    $this->assertCount(1, $xpath);
 
     // Set the operator to 'not empty'.
     $this->drupalPostForm('admin/structure/views/nojs/handler/test_filter_taxonomy_index_tid/default/filter/tid', ['options[operator]' => 'not empty'], 'Apply');
@@ -196,13 +196,13 @@ class TaxonomyIndexTidUiTest extends UITestBase {
     // shown.
     $this->drupalGet('test-filter-taxonomy-index-tid');
     $xpath = $this->xpath('//div[@class="view-content"]//a');
-    $this->assertIdentical(3, count($xpath));
+    $this->assertCount(3, $xpath);
     $xpath = $this->xpath('//div[@class="view-content"]//a[@href=:href]', [':href' => $node2->toUrl()->toString()]);
-    $this->assertIdentical(1, count($xpath));
+    $this->assertCount(1, $xpath);
     $xpath = $this->xpath('//div[@class="view-content"]//a[@href=:href]', [':href' => $node3->toUrl()->toString()]);
-    $this->assertIdentical(1, count($xpath));
+    $this->assertCount(1, $xpath);
     $xpath = $this->xpath('//div[@class="view-content"]//a[@href=:href]', [':href' => $node4->toUrl()->toString()]);
-    $this->assertIdentical(1, count($xpath));
+    $this->assertCount(1, $xpath);
 
     // Select 'Term ID' as the field to be displayed.
     $edit = ['name[taxonomy_term_field_data.tid]' => TRUE];
