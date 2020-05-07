@@ -154,9 +154,9 @@ class ImageFormatterTest extends FieldKernelTestBase {
     $this->assertEquals('medium', $build[$this->fieldName][0]['#image_style']);
     // We check that the image URL contains the expected style directory
     // structure.
-    $this->assertTrue(strpos($build[$this->fieldName][0]['#markup'], 'styles/medium/public/test-image.png') !== FALSE);
-    $this->assertTrue(strpos($build[$this->fieldName][0]['#markup'], 'width="220"') !== FALSE);
-    $this->assertTrue(strpos($build[$this->fieldName][0]['#markup'], 'height="220"') !== FALSE);
+    $this->assertStringContainsString('styles/medium/public/test-image.png', $build[$this->fieldName][0]['#markup']);
+    $this->assertStringContainsString('width="220"', $build[$this->fieldName][0]['#markup']);
+    $this->assertStringContainsString('height="220"', $build[$this->fieldName][0]['#markup']);
 
     // The second image is an SVG, which is not supported by the GD toolkit.
     // The image style should still be applied with its cache tags, but image
@@ -167,11 +167,11 @@ class ImageFormatterTest extends FieldKernelTestBase {
     $this->assertEquals('medium', $build[$this->fieldName][1]['#image_style']);
     // We check that the image URL does not contain the style directory
     // structure.
-    $this->assertFalse(strpos($build[$this->fieldName][1]['#markup'], 'styles/medium/public/test-image.svg'));
+    $this->assertStringNotContainsString('styles/medium/public/test-image.svg', $build[$this->fieldName][1]['#markup']);
     // Since we did not store original image dimensions, width and height
     // HTML attributes will not be present.
-    $this->assertFalse(strpos($build[$this->fieldName][1]['#markup'], 'width'));
-    $this->assertFalse(strpos($build[$this->fieldName][1]['#markup'], 'height'));
+    $this->assertStringNotContainsString('width', $build[$this->fieldName][1]['#markup']);
+    $this->assertStringNotContainsString('height', $build[$this->fieldName][1]['#markup']);
   }
 
   /**

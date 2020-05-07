@@ -194,9 +194,9 @@ class BigPipeTest extends BrowserTestBase {
     $this->assertEqual($log_count + 2, $connection->query('SELECT COUNT(*) FROM {watchdog}')->fetchField(), 'Two new watchdog entries.');
     $records = $connection->query('SELECT * FROM {watchdog} ORDER BY wid DESC LIMIT 2')->fetchAll();
     $this->assertEqual(RfcLogLevel::ERROR, $records[0]->severity);
-    $this->assertTrue(FALSE !== strpos((string) unserialize($records[0]->variables)['@message'], 'Oh noes!'));
+    $this->assertStringContainsString('Oh noes!', (string) unserialize($records[0]->variables)['@message']);
     $this->assertEqual(RfcLogLevel::ERROR, $records[1]->severity);
-    $this->assertTrue(FALSE !== strpos((string) unserialize($records[1]->variables)['@message'], 'You are not allowed to say llamas are not cool!'));
+    $this->assertStringContainsString('You are not allowed to say llamas are not cool!', (string) unserialize($records[1]->variables)['@message']);
 
     // Verify that 4xx responses work fine. (4xx responses are handled by
     // subrequests to a route pointing to a controller with the desired output.)
@@ -321,7 +321,8 @@ class BigPipeTest extends BrowserTestBase {
 
   protected function assertBigPipeResponseHeadersPresent() {
     $this->pass('Verifying BigPipe response headers…', 'Debug');
-    $this->assertTrue(FALSE !== strpos($this->drupalGetHeader('Cache-Control'), 'private'), 'Cache-Control header set to "private".');
+    // Check that Cache-Control header set to "private".
+    $this->assertSession()->responseHeaderContains('Cache-Control', 'private');
     $this->assertEqual('no-store, content="BigPipe/1.0"', $this->drupalGetHeader('Surrogate-Control'));
     $this->assertEqual('no', $this->drupalGetHeader('X-Accel-Buffering'));
   }
@@ -477,7 +478,7 @@ class BigPipeTest extends BrowserTestBase {
 
     // First response: redirect.
     $this->assertEqual(302, $statuses[0], 'The first response was a 302 (redirect).');
-    $this->assertIdentical(0, strpos($headers[0]['Set-Cookie'][0], 'big_pipe_nojs=1'), 'The first response sets the big_pipe_nojs cookie.');
+    $this->assertStringStartsWith('big_pipe_nojs=1', $headers[0]['Set-Cookie'][0], 'The first response sets the big_pipe_nojs cookie.');
     $this->assertEqual($original_url, $headers[0]['Location'][0], 'The first response redirected back to the original page.');
     $this->assertTrue(empty(array_diff(['cookies:big_pipe_nojs', 'session.exists'], explode(' ', $headers[0]['X-Drupal-Cache-Contexts'][0]))), 'The first response varies by the "cookies:big_pipe_nojs" and "session.exists" cache contexts.');
     $this->assertFalse(isset($headers[0]['Surrogate-Control']), 'The first response has no "Surrogate-Control" header.');

@@ -38,7 +38,7 @@ class FeedProcessorPluginTest extends AggregatorTestBase {
     $this->updateFeedItems($feed);
     foreach ($feed->items as $iid) {
       $item = Item::load($iid);
-      $this->assertTrue(strpos($item->label(), 'testProcessor') === 0);
+      $this->assertStringStartsWith('testProcessor', $item->label());
     }
   }
 

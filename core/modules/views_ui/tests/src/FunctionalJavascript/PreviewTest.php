@@ -303,7 +303,7 @@ class PreviewTest extends WebDriverTestBase {
     if (!isset($message)) {
       $message = "Class .$class found.";
     }
-    $this->assertTrue(strpos($element->getAttribute('class'), $class) !== FALSE, $message);
+    $this->assertStringContainsString($class, $element->getAttribute('class'), $message);
   }
 
 }

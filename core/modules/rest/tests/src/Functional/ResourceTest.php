@@ -157,7 +157,7 @@ class ResourceTest extends BrowserTestBase {
 
     foreach ($manager->getDefinitions() as $resource => $definition) {
       foreach ($definition['uri_paths'] as $key => $uri_path) {
-        $this->assertFalse(strpos($uri_path, '//'), 'The resource URI path does not have duplicate slashes.');
+        $this->assertStringNotContainsString('//', $uri_path, 'The resource URI path does not have duplicate slashes.');
       }
     }
   }

@@ -43,7 +43,7 @@ class ComposerIntegrationTest extends UnitTestCase {
         if (strpos($dependency, 'symfony/') === 0) {
           continue;
         }
-        $this->assertFalse(strpos($version, '~'), "Dependency $dependency in $path contains a tilde, use a caret.");
+        $this->assertStringNotContainsString('~', $version, "Dependency $dependency in $path contains a tilde, use a caret.");
       }
     }
   }

@@ -27,13 +27,13 @@ class StyleMappingTest extends StyleTestBase {
   public function testMappedOutput() {
     $view = Views::getView('test_style_mapping');
     $output = $this->mappedOutputHelper($view);
-    $this->assertTrue(strpos($output, 'job') === FALSE, 'The job field is added to the view but not in the mapping.');
+    $this->assertStringNotContainsString('job', $output, 'The job field is added to the view but not in the mapping.');
     $view->destroy();
 
     $view->setDisplay();
     $view->displayHandlers->get('default')->options['style']['options']['mapping']['name_field'] = 'job';
     $output = $this->mappedOutputHelper($view);
-    $this->assertTrue(strpos($output, 'job') !== FALSE, 'The job field is added to the view and is in the mapping.');
+    $this->assertStringContainsString('job', $output, 'The job field is added to the view and is in the mapping.');
   }
 
   /**
@@ -56,7 +56,7 @@ class StyleMappingTest extends StyleTestBase {
     foreach ($rows as $row) {
       $attributes = $row->attributes();
       $class = (string) $attributes['class'][0];
-      $this->assertTrue(strpos($class, 'views-row-mapping-test') !== FALSE, 'Make sure that each row has the correct CSS class.');
+      $this->assertStringContainsString('views-row-mapping-test', $class, 'Make sure that each row has the correct CSS class.');
 
       foreach ($row->div as $field) {
         // Split up the field-level class, the first part is the mapping name

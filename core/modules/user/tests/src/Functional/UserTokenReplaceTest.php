@@ -144,7 +144,7 @@ class UserTokenReplaceTest extends BrowserTestBase {
     $link = Url::fromRoute('user.page', [], ['absolute' => TRUE])->toString();
     foreach ($tests as $input => $expected) {
       $output = $token_service->replace($input, ['user' => $account], ['langcode' => $language_interface->getId(), 'callback' => 'user_mail_tokens', 'clear' => TRUE]);
-      $this->assertTrue(strpos($output, $link) === 0, 'Generated URL is in interface language.');
+      $this->assertStringStartsWith($link, $output, 'Generated URL is in interface language.');
     }
 
     // Generate tokens with the user's preferred language.
@@ -153,7 +153,7 @@ class UserTokenReplaceTest extends BrowserTestBase {
     $link = Url::fromRoute('user.page', [], ['language' => \Drupal::languageManager()->getLanguage($account->getPreferredLangcode()), 'absolute' => TRUE])->toString();
     foreach ($tests as $input => $expected) {
       $output = $token_service->replace($input, ['user' => $account], ['callback' => 'user_mail_tokens', 'clear' => TRUE]);
-      $this->assertTrue(strpos($output, $link) === 0, "Generated URL is in the user's preferred language.");
+      $this->assertStringStartsWith($link, $output, "Generated URL is in the user's preferred language.");
     }
 
     // Generate tokens with one specific language.
@@ -161,7 +161,7 @@ class UserTokenReplaceTest extends BrowserTestBase {
     foreach ($tests as $input => $expected) {
       foreach ([$user1, $user2] as $account) {
         $output = $token_service->replace($input, ['user' => $account], ['langcode' => 'de', 'callback' => 'user_mail_tokens', 'clear' => TRUE]);
-        $this->assertTrue(strpos($output, $link) === 0, "Generated URL in the requested language.");
+        $this->assertStringStartsWith($link, $output, "Generated URL in the requested language.");
       }
     }
 

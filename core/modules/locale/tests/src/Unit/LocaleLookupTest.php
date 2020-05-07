@@ -304,7 +304,12 @@ class LocaleLookupTest extends UnitTestCase {
       ->with('locale:' . $langcode . '::anonymous', FALSE);
 
     $locale_lookup = new LocaleLookup($langcode, '', $this->storage, $this->cache, $this->lock, $this->configFactory, $this->languageManager, $this->requestStack);
-    $this->assertSame($is_fix, strpos($locale_lookup->get($string), '@count[2]') === FALSE);
+    if ($is_fix) {
+      $this->assertStringNotContainsString('@count[2]', $locale_lookup->get($string));
+    }
+    else {
+      $this->assertStringContainsString('@count[2]', $locale_lookup->get($string));
+    }
   }
 
   /**

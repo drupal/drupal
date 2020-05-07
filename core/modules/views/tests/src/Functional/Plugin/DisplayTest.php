@@ -109,7 +109,7 @@ class DisplayTest extends ViewTestBase {
     $output = $view->preview();
     $output = $renderer->renderRoot($output);
 
-    $this->assertTrue(strpos($output, '<h1></h1>') !== FALSE, 'An empty value for test_option found in output.');
+    $this->assertStringContainsString('<h1></h1>', $output, 'An empty value for test_option found in output.');
 
     // Change this option and check the title of out output.
     $view->display_handler->overrideOption('test_option', 'Test option title');
@@ -119,7 +119,7 @@ class DisplayTest extends ViewTestBase {
     $output = $renderer->renderRoot($output);
 
     // Test we have our custom <h1> tag in the output of the view.
-    $this->assertTrue(strpos($output, '<h1>Test option title</h1>') !== FALSE, 'The test_option value found in display output title.');
+    $this->assertStringContainsString('<h1>Test option title</h1>', $output, 'The test_option value found in display output title.');
 
     // Test that the display category/summary is in the UI.
     $this->drupalGet('admin/structure/views/view/test_view/edit/display_test_1');
@@ -216,7 +216,7 @@ class DisplayTest extends ViewTestBase {
     $this->executeView($view);
     $output = $view->preview();
     $output = $renderer->renderRoot($output);
-    $this->assertTrue(strpos($output, '/node') !== FALSE, 'The read more link with href "/node" was found.');
+    $this->assertStringContainsString('/node', $output, 'The read more link with href "/node" was found.');
 
     // Test more link with leading slash.
     $view->display_handler->setOption('link_display', 'custom_url');
@@ -224,7 +224,7 @@ class DisplayTest extends ViewTestBase {
     $this->executeView($view);
     $output = $view->preview();
     $output = $renderer->renderRoot($output);
-    $this->assertTrue(strpos($output, '/node') !== FALSE, 'The read more link with href "/node" was found.');
+    $this->assertStringContainsString('/node', $output, 'The read more link with href "/node" was found.');
 
     // Test more link with absolute url.
     $view->display_handler->setOption('link_display', 'custom_url');
@@ -232,7 +232,7 @@ class DisplayTest extends ViewTestBase {
     $this->executeView($view);
     $output = $view->preview();
     $output = $renderer->renderRoot($output);
-    $this->assertTrue(strpos($output, 'http://drupal.org') !== FALSE, 'The read more link with href "http://drupal.org" was found.');
+    $this->assertStringContainsString('http://drupal.org', $output, 'The read more link with href "http://drupal.org" was found.');
 
     // Test more link with query parameters in the url.
     $view->display_handler->setOption('link_display', 'custom_url');
@@ -240,7 +240,7 @@ class DisplayTest extends ViewTestBase {
     $this->executeView($view);
     $output = $view->preview();
     $output = $renderer->renderRoot($output);
-    $this->assertTrue(strpos($output, '/node?page=1&amp;foo=bar') !== FALSE, 'The read more link with href "/node?page=1&foo=bar" was found.');
+    $this->assertStringContainsString('/node?page=1&amp;foo=bar', $output, 'The read more link with href "/node?page=1&foo=bar" was found.');
 
     // Test more link with fragment in the url.
     $view->display_handler->setOption('link_display', 'custom_url');
@@ -248,7 +248,7 @@ class DisplayTest extends ViewTestBase {
     $this->executeView($view);
     $output = $view->preview();
     $output = $renderer->renderRoot($output);
-    $this->assertTrue(strpos($output, '/node#target') !== FALSE, 'The read more link with href "/node#target" was found.');
+    $this->assertStringContainsString('/node#target', $output, 'The read more link with href "/node#target" was found.');
 
     // Test more link with arguments.
     $view = Views::getView('test_simple_argument');
@@ -261,7 +261,7 @@ class DisplayTest extends ViewTestBase {
     $this->executeView($view);
     $output = $view->preview();
     $output = $renderer->renderRoot($output);
-    $this->assertTrue(strpos($output, '/node?date=22&amp;foo=bar') !== FALSE, 'The read more link with href "/node?date=22&foo=bar" was found.');
+    $this->assertStringContainsString('/node?date=22&amp;foo=bar', $output, 'The read more link with href "/node?date=22&foo=bar" was found.');
 
     // Test more link with 1 dimension array query parameters with arguments.
     $view = Views::getView('test_simple_argument');
@@ -274,7 +274,7 @@ class DisplayTest extends ViewTestBase {
     $this->executeView($view);
     $output = $view->preview();
     $output = $renderer->renderRoot($output);
-    $this->assertTrue(strpos($output, '/node?f%5B0%5D=foo%3Abar&amp;f%5B1%5D=foo%3A22') !== FALSE, 'The read more link with href "/node?f[0]=foo:bar&f[1]=foo:22" was found.');
+    $this->assertStringContainsString('/node?f%5B0%5D=foo%3Abar&amp;f%5B1%5D=foo%3A22', $output, 'The read more link with href "/node?f[0]=foo:bar&f[1]=foo:22" was found.');
 
     // Test more link with arguments in path.
     $view->display_handler->setOption('link_url', 'node/{{ raw_arguments.age }}?date={{ raw_arguments.age }}&foo=bar');
@@ -282,7 +282,7 @@ class DisplayTest extends ViewTestBase {
     $this->executeView($view);
     $output = $view->preview();
     $output = $renderer->renderRoot($output);
-    $this->assertTrue(strpos($output, '/node/22?date=22&amp;foo=bar') !== FALSE, 'The read more link with href "/node/22?date=22&foo=bar" was found.');
+    $this->assertStringContainsString('/node/22?date=22&amp;foo=bar', $output, 'The read more link with href "/node/22?date=22&foo=bar" was found.');
 
     // Test more link with arguments in fragment.
     $view->display_handler->setOption('link_url', 'node?date={{ raw_arguments.age }}&foo=bar#{{ raw_arguments.age }}');
@@ -290,7 +290,7 @@ class DisplayTest extends ViewTestBase {
     $this->executeView($view);
     $output = $view->preview();
     $output = $renderer->renderRoot($output);
-    $this->assertTrue(strpos($output, '/node?date=22&amp;foo=bar#22') !== FALSE, 'The read more link with href "/node?date=22&foo=bar#22" was found.');
+    $this->assertStringContainsString('/node?date=22&amp;foo=bar#22', $output, 'The read more link with href "/node?date=22&foo=bar#22" was found.');
   }
 
   /**

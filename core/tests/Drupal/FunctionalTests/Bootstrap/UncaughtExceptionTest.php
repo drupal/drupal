@@ -280,12 +280,12 @@ class UncaughtExceptionTest extends BrowserTestBase {
     // Find fatal error logged to the error.log
     $errors = file(\Drupal::root() . '/' . $this->siteDirectory . '/error.log');
     $this->assertIdentical(count($errors), 8, 'The error + the error that the logging service is broken has been written to the error log.');
-    $this->assertTrue(strpos($errors[0], 'Failed to log error') !== FALSE, 'The error handling logs when an error could not be logged to the logger.');
+    $this->assertStringContainsString('Failed to log error', $errors[0], 'The error handling logs when an error could not be logged to the logger.');
 
     $expected_path = \Drupal::root() . '/core/modules/system/tests/modules/error_service_test/src/MonkeysInTheControlRoom.php';
     $expected_line = 59;
     $expected_entry = "Failed to log error: Exception: Deforestation in Drupal\\error_service_test\\MonkeysInTheControlRoom->handle() (line ${expected_line} of ${expected_path})";
-    $this->assert(strpos($errors[0], $expected_entry) !== FALSE, 'Original error logged to the PHP error log when an exception is thrown by a logger');
+    $this->assertStringContainsString($expected_entry, $errors[0], 'Original error logged to the PHP error log when an exception is thrown by a logger');
 
     // The exception is expected. Do not interpret it as a test failure. Not
     // using File API; a potential error must trigger a PHP warning.

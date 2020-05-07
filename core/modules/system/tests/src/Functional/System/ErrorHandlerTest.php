@@ -142,7 +142,7 @@ class ErrorHandlerTest extends BrowserTestBase {
 
     $this->drupalGet('error-test/trigger-exception');
     $this->assertNull($this->drupalGetHeader('X-Drupal-Cache'));
-    $this->assertIdentical(strpos($this->drupalGetHeader('Cache-Control'), 'public'), FALSE, 'Received expected HTTP status line.');
+    $this->assertSession()->responseHeaderNotContains('Cache-Control', 'public');
     $this->assertSession()->statusCodeEquals(500);
     $this->assertNoErrorMessage($error_exception);
   }
