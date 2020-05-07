@@ -234,7 +234,7 @@ interface ModuleHandlerInterface {
    *   An array of return values of the hook implementations. If modules return
    *   arrays from their implementations, those are merged into one array
    *   recursively. Note: integer keys in arrays will be lost, as the merge is
-   *   done using array_merge_recursive().
+   *   done using Drupal\Component\Utility\NestedArray::mergeDeepArray().
    */
   public function invokeAll($hook, array $args = []);
 
@@ -284,7 +284,7 @@ interface ModuleHandlerInterface {
    *   An array of return values of the hook implementations. If modules return
    *   arrays from their implementations, those are merged into one array
    *   recursively. Note: integer keys in arrays will be lost, as the merge is
-   *   done using array_merge_recursive().
+   *   done using Drupal\Component\Utility\NestedArray::mergeDeepArray().
    *
    * @see \Drupal\Core\Extension\ModuleHandlerInterface::invokeAll()
    * @see https://www.drupal.org/core/deprecation#how-hook
