@@ -22,4 +22,11 @@ class ThreeColumnLayout extends MultiWidthLayoutBase {
     ];
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  protected function getDefaultWidth() {
+    return '33-34-33';
+  }
+
 }
