@@ -52,6 +52,19 @@ abstract class MediaResourceTestBase extends EntityResourceTestBase {
       ->set('standalone_url', TRUE)
       ->save(TRUE);
 
+    // Provisioning the Media REST resource without the File REST resource does
+    // not make sense.
+    $this->resourceConfigStorage->create([
+      'id' => 'entity.file',
+      'granularity' => RestResourceConfigInterface::RESOURCE_GRANULARITY,
+      'configuration' => [
+        'methods' => ['GET'],
+        'formats' => [static::$format],
+        'authentication' => isset(static::$auth) ? [static::$auth] : [],
+      ],
+      'status' => TRUE,
+    ])->save();
+
     $this->container->get('router.builder')->rebuild();
   }
 
