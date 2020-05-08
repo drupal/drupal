@@ -32,8 +32,7 @@
         "symfony/filesystem": "~3.4.0",
         "symfony/finder": "~3.4.0",
         "symfony/lock": "~3.4.0",
-        "symfony/browser-kit": "^3.4.0",
-        "symfony/dom-crawler": "^3.4.0 !=3.4.38"
+        "symfony/browser-kit": "^3.4.0"
     },
     "minimum-stability": "dev",
     "prefer-stable": true,
