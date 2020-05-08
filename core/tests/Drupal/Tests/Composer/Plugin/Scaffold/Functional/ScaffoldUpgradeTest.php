@@ -44,10 +44,6 @@ class ScaffoldUpgradeTest extends TestCase {
    * Test upgrading the Composer Scaffold plugin.
    */
   public function testScaffoldUpgrade() {
-    $composerVersionLine = exec('composer --version');
-    if (strpos($composerVersionLine, 'Composer version 2') !== FALSE) {
-      $this->markTestSkipped('We cannot run the scaffold upgrade test with Composer 2 until we have a stable version of drupal/core-composer-scaffold to start from that we can install with Composer 2.x.');
-    }
     $this->fixturesDir = $this->fixtures->tmpDir($this->getName());
     $replacements = ['SYMLINK' => 'false', 'PROJECT_ROOT' => $this->fixtures->projectRoot()];
     $this->fixtures->cloneFixtureProjects($this->fixturesDir, $replacements);
