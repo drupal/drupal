@@ -1,25 +1,20 @@
 <?php
 
-namespace Drupal\Tests\search\Functional;
+namespace Drupal\Tests\search\Kernel;
 
-use Drupal\Tests\BrowserTestBase;
+use Drupal\KernelTests\KernelTestBase;
 
 /**
  * Tests that CJK tokenizer works as intended.
  *
  * @group search
  */
-class SearchTokenizerTest extends BrowserTestBase {
+class SearchTokenizerTest extends KernelTestBase {
 
   /**
    * {@inheritdoc}
    */
   protected static $modules = ['search'];
-
-  /**
-   * {@inheritdoc}
-   */
-  protected $defaultTheme = 'stark';
 
   /**
    * Verifies that strings of CJK characters are tokenized.
@@ -36,7 +31,6 @@ class SearchTokenizerTest extends BrowserTestBase {
       ->set('index.minimum_word_size', 1)
       ->set('index.overlap_cjk', TRUE)
       ->save();
-    $this->refreshVariables();
 
     // Create a string of CJK characters from various character ranges in
     // the Unicode tables.
@@ -124,7 +118,6 @@ class SearchTokenizerTest extends BrowserTestBase {
       ->set('index.minimum_word_size', 1)
       ->set('index.overlap_cjk', TRUE)
       ->save();
-    $this->refreshVariables();
 
     $letters = 'abcdefghijklmnopqrstuvwxyz';
     $out = trim(search_simplify($letters));

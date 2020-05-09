@@ -1,25 +1,20 @@
 <?php
 
-namespace Drupal\Tests\search\Functional;
+namespace Drupal\Tests\search\Kernel;
 
-use Drupal\Tests\BrowserTestBase;
+use Drupal\KernelTests\KernelTestBase;
 
 /**
  * Tests that the search_simply() function works as intended.
  *
  * @group search
  */
-class SearchSimplifyTest extends BrowserTestBase {
+class SearchSimplifyTest extends KernelTestBase {
 
   /**
    * {@inheritdoc}
    */
   protected static $modules = ['search'];
-
-  /**
-   * {@inheritdoc}
-   */
-  protected $defaultTheme = 'stark';
 
   /**
    * Tests that all Unicode characters simplify correctly.
