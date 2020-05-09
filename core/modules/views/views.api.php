@@ -921,27 +921,6 @@ function hook_views_preview_info_alter(array &$rows, ViewExecutable $view) {
   ];
 }
 
-/**
- * Alter the links displayed at the top of the view edit form.
- *
- * @param array $links
- *   A renderable array of links which will be displayed at the top of the
- *   view edit form. Each entry will be in a form suitable for
- *   '#theme' => 'links'.
- * @param \Drupal\views\ViewExecutable $view
- *   The view object being edited.
- * @param string $display_id
- *   The ID of the display being edited, e.g. 'default' or 'page_1'.
- *
- * @see \Drupal\views_ui\ViewUI::renderDisplayTop()
- */
-function hook_views_ui_display_top_links_alter(array &$links, ViewExecutable $view, $display_id) {
-  // Put the export link first in the list.
-  if (isset($links['export'])) {
-    $links = ['export' => $links['export']] + $links;
-  }
-}
-
 // @todo Describe how to alter a view ajax response with event listeners.
 
 /**
