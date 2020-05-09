@@ -271,7 +271,7 @@ class MenuForm extends EntityForm {
           'subgroup' => 'menu-parent',
           'source' => 'menu-id',
           'hidden' => TRUE,
-          'limit' => \Drupal::menuTree()->maxDepth() - 1,
+          'limit' => $this->menuTree->maxDepth() - 1,
         ],
         [
           'action' => 'order',
