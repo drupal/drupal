@@ -53,7 +53,7 @@
 function hook_field_info_alter(&$info) {
   // Change the default widget for fields of type 'foo'.
   if (isset($info['foo'])) {
-    $info['foo']['default widget'] = 'mymodule_widget';
+    $info['foo']['default_widget'] = 'mymodule_widget';
   }
 }
 
