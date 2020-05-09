@@ -7,7 +7,6 @@ use Drupal\Core\Session\AnonymousUserSession;
 use Drupal\Core\Site\Settings;
 use Drupal\Core\StackMiddleware\ReverseProxyMiddleware;
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
@@ -188,58 +187,6 @@ class UpdateKernel extends DrupalKernel {
 
     if (!Settings::get('update_free_access', FALSE) && !$db_update_access->access($account)->isAllowed()) {
       throw new AccessDeniedHttpException('In order to run update.php you need to either have "Administer software updates" permission or have set $settings[\'update_free_access\'] in your settings.php.');
-    }
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function loadLegacyIncludes() {
-    parent::loadLegacyIncludes();
-    static::fixSerializedExtensionObjects($this->container);
-  }
-
-  /**
-   * Fixes caches and theme info if they contain old Extension objects.
-   *
-   * @param \Symfony\Component\DependencyInjection\ContainerInterface $container
-   *   The container.
-   *
-   * @internal
-   *   This function is only to be called by the Drupal core update process.
-   *   Additionally, this function will be removed in minor release of Drupal.
-   *
-   * @todo https://www.drupal.org/project/drupal/issues/3031322 Remove once
-   *   Drupal 8.6.x is not supported.
-   */
-  public static function fixSerializedExtensionObjects(ContainerInterface $container) {
-    // Create a custom error handler that will clear caches if a warning occurs
-    // while getting 'system.theme.data' from state. If this state value was
-    // created by Drupal <= 8.6.7 then when it is read by Drupal >= 8.6.8 there
-    // will be PHP warnings. This silently fixes Drupal so that the update can
-    // continue.
-    $clear_caches = FALSE;
-    $callable = function ($errno, $errstr) use ($container, &$clear_caches) {
-      if ($errstr === 'Class Drupal\Core\Extension\Extension has no unserializer') {
-        $clear_caches = TRUE;
-      }
-    };
-
-    set_error_handler($callable, E_ERROR | E_WARNING);
-    $container->get('state')->get('system.theme.data', []);
-    restore_error_handler();
-
-    if ($clear_caches) {
-      // Reset static caches in profile list so the module list is rebuilt
-      // correctly.
-      $container->get('extension.list.profile')->reset();
-      foreach ($container->getParameter('cache_bins') as $service_id => $bin) {
-        $container->get($service_id)->deleteAll();
-      }
-      // The system.theme.data key is no longer used in Drupal 8.7.x.
-      $container->get('state')->delete('system.theme.data');
-      // Also rebuild themes because it uses state as cache.
-      $container->get('theme_handler')->refreshInfo();
     }
   }
 
