@@ -119,14 +119,13 @@ class CommentIntegrationTest extends KernelTestBase {
       '@display' => EntityViewMode::load("comment.$mode")->label(),
       '@mode' => $mode,
     ];
-    $logged = (bool) Database::getConnection()->select('watchdog')
-      ->fields('watchdog', ['wid'])
+    $logged = Database::getConnection()->select('watchdog')
+      ->fields('watchdog', ['variables'])
       ->condition('type', 'system')
       ->condition('message', "View display '@id': Comment field formatter '@name' was disabled because it is using the comment view display '@display' (@mode) that was just disabled.")
-      ->condition('variables', serialize($arguments))
       ->execute()
       ->fetchField();
-    $this->assertTrue($logged);
+    $this->assertEquals(serialize($arguments), $logged);
 
     // Re-enable the comment view display.
     EntityViewDisplay::load($comment_display_id)->setStatus(TRUE)->save();
