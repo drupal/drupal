@@ -13,8 +13,6 @@
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Url;
 
-@trigger_error('The Place Blocks module is deprecated in drupal:8.8.0 and will be removed from drupal:9.0.0. See the change record for a list of alternatives. See https://www.drupal.org/node/3081957.', E_USER_DEPRECATED);
-
 /**
  * Implements hook_help().
  */
