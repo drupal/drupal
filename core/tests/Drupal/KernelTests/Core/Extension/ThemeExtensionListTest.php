@@ -30,4 +30,12 @@ class ThemeExtensionListTest extends KernelTestBase {
     $this->assertArrayHasKey('test_theme', $extensions);
   }
 
+  /**
+   * Tests that themes have an empty default version set.
+   */
+  public function testThemeWithoutVersion() {
+    $theme = \Drupal::service('extension.list.theme')->get('test_theme_settings_features');
+    $this->assertNull($theme->info['version']);
+  }
+
 }
