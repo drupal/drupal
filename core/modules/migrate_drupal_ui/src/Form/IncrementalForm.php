@@ -82,7 +82,10 @@ class IncrementalForm extends MigrateUpgradeFormBase {
     //   https://www.drupal.org/node/2687849
     $form['upgrade_option_item'] = [
       '#type' => 'item',
-      '#prefix' => $this->t('An upgrade has already been performed on this site. To perform a new migration, create a clean and empty new install of Drupal 8. Rollbacks are not yet supported through the user interface. For more information, see the <a href=":url">upgrading handbook</a>.', [':url' => 'https://www.drupal.org/upgrade/migrate']),
+      '#prefix' => $this->t('An upgrade has already been performed on this site. To perform a new migration, create a clean and empty new install of Drupal @version. Rollbacks are not yet supported through the user interface. For more information, see the <a href=":url">upgrading handbook</a>.', [
+        '@version' => $this->destinationSiteVersion,
+        ':url' => 'https://www.drupal.org/upgrade/migrate',
+      ]),
       '#description' => $this->t('Last upgrade: @date', ['@date' => $this->dateFormatter->format($date_performed)]),
     ];
     return $form;
