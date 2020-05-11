@@ -1,6 +1,6 @@
-New minor (feature) releases of Drupal 8 are released every six months and
+New minor (feature) releases of Drupal are released every six months and
 patch (bugfix) releases are released every month. More information on the
-Drupal 8 release cycle: https://www.drupal.org/core/release-cycle-overview
+Drupal release cycle: https://www.drupal.org/core/release-cycle-overview
 
 * For a full list of fixes in the latest release, visit:
  https://www.drupal.org/8/download
