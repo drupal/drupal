@@ -602,7 +602,7 @@ class ContentModerationStateTest extends KernelTestBase {
     $node_type->delete();
     $workflow = Workflow::load('editorial');
     $entity_types = $workflow->getTypePlugin()->getEntityTypes();
-    $this->assertFalse(in_array('node', $entity_types));
+    $this->assertNotContains('node', $entity_types);
 
     // Uninstall entity test and ensure it's removed from the workflow.
     $this->container->get('config.manager')->uninstall('module', 'entity_test');

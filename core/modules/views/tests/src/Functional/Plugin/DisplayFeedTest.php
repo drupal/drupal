@@ -161,7 +161,7 @@ class DisplayFeedTest extends ViewTestBase {
     $view = Views::getView('test_attached_disabled');
     $view->setDisplay('page_1');
     $attached_displays = $view->display_handler->getAttachedDisplays();
-    $this->assertTrue(in_array('feed_1', $attached_displays), 'The feed display is attached to the page display.');
+    $this->assertContains('feed_1', $attached_displays, 'The feed display is attached to the page display.');
 
     // Check that the rss header is output on the page display.
     $this->drupalGet('/test-attached-disabled');

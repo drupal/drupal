@@ -334,7 +334,7 @@ class JsonApiRegressionTest extends JsonApiFunctionalTestBase {
       ],
     ]);
     $this->assertSame(200, $response->getStatusCode());
-    $this->assertTrue(in_array('user.node_grants:view', explode(' ', $response->getHeader('X-Drupal-Cache-Contexts')[0]), TRUE));
+    $this->assertContains('user.node_grants:view', explode(' ', $response->getHeader('X-Drupal-Cache-Contexts')[0]));
   }
 
   /**

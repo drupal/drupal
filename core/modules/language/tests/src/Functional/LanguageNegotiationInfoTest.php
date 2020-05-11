@@ -85,7 +85,7 @@ class LanguageNegotiationInfoTest extends BrowserTestBase {
 
     $type = LanguageInterface::TYPE_CONTENT;
     $language_types = $this->languageManager()->getLanguageTypes();
-    $this->assertTrue(in_array($type, $language_types), 'Content language type is configurable.');
+    $this->assertContains($type, $language_types, 'Content language type is configurable.');
 
     // Enable some core and custom language negotiation methods. The test
     // language type is supposed to be configurable.

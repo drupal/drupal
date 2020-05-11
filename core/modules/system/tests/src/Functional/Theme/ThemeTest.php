@@ -82,7 +82,7 @@ class ThemeTest extends BrowserTestBase {
     $suggestions = theme_get_suggestions(['user', 'login'], 'page');
     // Set it back to not annoy the batch runner.
     \Drupal::requestStack()->pop();
-    $this->assertTrue(in_array('page__front', $suggestions), 'Front page template was suggested.');
+    $this->assertContains('page__front', $suggestions, 'Front page template was suggested.');
   }
 
   /**

@@ -136,9 +136,9 @@ class FilterFormatAccessTest extends BrowserTestBase {
 
     // Perform similar checks as above, but now against the entire list of
     // available formats for this user.
-    $this->assertTrue(in_array($this->allowedFormat->id(), array_keys(filter_formats($this->webUser))), 'The allowed format appears in the list of available formats for a regular user.');
-    $this->assertFalse(in_array($this->disallowedFormat->id(), array_keys(filter_formats($this->webUser))), 'The disallowed format does not appear in the list of available formats for a regular user.');
-    $this->assertTrue(in_array(filter_fallback_format(), array_keys(filter_formats($this->webUser))), 'The fallback format appears in the list of available formats for a regular user.');
+    $this->assertContains($this->allowedFormat->id(), array_keys(filter_formats($this->webUser)), 'The allowed format appears in the list of available formats for a regular user.');
+    $this->assertNotContains($this->disallowedFormat->id(), array_keys(filter_formats($this->webUser)), 'The disallowed format does not appear in the list of available formats for a regular user.');
+    $this->assertContains(filter_fallback_format(), array_keys(filter_formats($this->webUser)), 'The fallback format appears in the list of available formats for a regular user.');
 
     // Make sure that a regular user only has permission to use the format
     // they were granted access to.
@@ -194,17 +194,17 @@ class FilterFormatAccessTest extends BrowserTestBase {
     // Check that this role appears in the list of roles that have access to an
     // allowed text format, but does not appear in the list of roles that have
     // access to a disallowed text format.
-    $this->assertTrue(in_array($rid, array_keys(filter_get_roles_by_format($this->allowedFormat))), 'A role which has access to a text format appears in the list of roles that have access to that format.');
-    $this->assertFalse(in_array($rid, array_keys(filter_get_roles_by_format($this->disallowedFormat))), 'A role which does not have access to a text format does not appear in the list of roles that have access to that format.');
+    $this->assertContains($rid, array_keys(filter_get_roles_by_format($this->allowedFormat)), 'A role which has access to a text format appears in the list of roles that have access to that format.');
+    $this->assertNotContains($rid, array_keys(filter_get_roles_by_format($this->disallowedFormat)), 'A role which does not have access to a text format does not appear in the list of roles that have access to that format.');
 
     // Check that the correct text format appears in the list of formats
     // available to that role.
-    $this->assertTrue(in_array($this->allowedFormat->id(), array_keys(filter_get_formats_by_role($rid))), 'A text format which a role has access to appears in the list of formats available to that role.');
-    $this->assertFalse(in_array($this->disallowedFormat->id(), array_keys(filter_get_formats_by_role($rid))), 'A text format which a role does not have access to does not appear in the list of formats available to that role.');
+    $this->assertContains($this->allowedFormat->id(), array_keys(filter_get_formats_by_role($rid)), 'A text format which a role has access to appears in the list of formats available to that role.');
+    $this->assertNotContains($this->disallowedFormat->id(), array_keys(filter_get_formats_by_role($rid)), 'A text format which a role does not have access to does not appear in the list of formats available to that role.');
 
     // Check that the fallback format is always allowed.
     $this->assertEqual(filter_get_roles_by_format(FilterFormat::load(filter_fallback_format())), user_role_names(), 'All roles have access to the fallback format.');
-    $this->assertTrue(in_array(filter_fallback_format(), array_keys(filter_get_formats_by_role($rid))), 'The fallback format appears in the list of allowed formats for any role.');
+    $this->assertContains(filter_fallback_format(), array_keys(filter_get_formats_by_role($rid)), 'The fallback format appears in the list of allowed formats for any role.');
   }
 
   /**

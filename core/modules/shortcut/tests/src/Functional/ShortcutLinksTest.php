@@ -84,7 +84,7 @@ class ShortcutLinksTest extends ShortcutTestBase {
       $this->assertText(t('Added a shortcut for @title.', ['@title' => $title]));
       $saved_set = ShortcutSet::load($set->id());
       $paths = $this->getShortcutInformation($saved_set, 'link');
-      $this->assertTrue(in_array('internal:' . $test_path, $paths), 'Shortcut created: ' . $test_path);
+      $this->assertContains('internal:' . $test_path, $paths, 'Shortcut created: ' . $test_path);
 
       if (in_array($test_path, $test_cases_non_access)) {
         $this->assertNoLink($title, new FormattableMarkup('Shortcut link %url not accessible on the page.', ['%url' => $test_path]));
@@ -239,7 +239,7 @@ class ShortcutLinksTest extends ShortcutTestBase {
     $this->drupalPostForm('admin/config/user-interface/shortcut/link/' . $shortcut->id(), ['title[0][value]' => $new_link_name], t('Save'));
     $saved_set = ShortcutSet::load($set->id());
     $titles = $this->getShortcutInformation($saved_set, 'title');
-    $this->assertTrue(in_array($new_link_name, $titles), 'Shortcut renamed: ' . $new_link_name);
+    $this->assertContains($new_link_name, $titles, 'Shortcut renamed: ' . $new_link_name);
     $this->assertLink($new_link_name, 0, 'Renamed shortcut link appears on the page.');
     $this->assertText(t('The shortcut @link has been updated.', ['@link' => $new_link_name]));
   }
@@ -258,7 +258,7 @@ class ShortcutLinksTest extends ShortcutTestBase {
     $this->drupalPostForm('admin/config/user-interface/shortcut/link/' . $shortcut->id(), ['title[0][value]' => $shortcut->getTitle(), 'link[0][uri]' => $new_link_path], t('Save'));
     $saved_set = ShortcutSet::load($set->id());
     $paths = $this->getShortcutInformation($saved_set, 'link');
-    $this->assertTrue(in_array('internal:' . $new_link_path, $paths), 'Shortcut path changed: ' . $new_link_path);
+    $this->assertContains('internal:' . $new_link_path, $paths, 'Shortcut path changed: ' . $new_link_path);
     $this->assertLinkByHref($new_link_path, 0, 'Shortcut with new path appears on the page.');
     $this->assertText(t('The shortcut @link has been updated.', ['@link' => $shortcut->getTitle()]));
   }
@@ -290,7 +290,7 @@ class ShortcutLinksTest extends ShortcutTestBase {
     $this->drupalPostForm('admin/config/user-interface/shortcut/link/' . $shortcut->id() . '/delete', [], 'Delete');
     $saved_set = ShortcutSet::load($set->id());
     $ids = $this->getShortcutInformation($saved_set, 'id');
-    $this->assertFalse(in_array($shortcut->id(), $ids), 'Successfully deleted a shortcut.');
+    $this->assertNotContains($shortcut->id(), $ids, 'Successfully deleted a shortcut.');
 
     // Delete all the remaining shortcut links.
     $storage = \Drupal::entityTypeManager()->getStorage('shortcut');

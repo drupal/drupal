@@ -268,12 +268,12 @@ class ConfigExportImportUITest extends BrowserTestBase {
     foreach ($content_list as $file) {
       $files[] = $file['filename'];
     }
-    $this->assertTrue(in_array('collection/test1/config_test.create.yml', $files), 'Config export contains collection/test1/config_test.create.yml.');
-    $this->assertTrue(in_array('collection/test2/config_test.another_create.yml', $files), 'Config export contains collection/test2/config_test.another_create.yml.');
-    $this->assertTrue(in_array('collection/test1/config_test.update.yml', $files), 'Config export contains collection/test1/config_test.update.yml.');
-    $this->assertTrue(in_array('collection/test2/config_test.another_update.yml', $files), 'Config export contains collection/test2/config_test.another_update.yml.');
-    $this->assertFalse(in_array('collection/test1/config_test.delete.yml', $files), 'Config export does not contain collection/test1/config_test.delete.yml.');
-    $this->assertFalse(in_array('collection/test2/config_test.another_delete.yml', $files), 'Config export does not contain collection/test2/config_test.another_delete.yml.');
+    $this->assertContains('collection/test1/config_test.create.yml', $files, 'Config export contains collection/test1/config_test.create.yml.');
+    $this->assertContains('collection/test2/config_test.another_create.yml', $files, 'Config export contains collection/test2/config_test.another_create.yml.');
+    $this->assertContains('collection/test1/config_test.update.yml', $files, 'Config export contains collection/test1/config_test.update.yml.');
+    $this->assertContains('collection/test2/config_test.another_update.yml', $files, 'Config export contains collection/test2/config_test.another_update.yml.');
+    $this->assertNotContains('collection/test1/config_test.delete.yml', $files, 'Config export does not contain collection/test1/config_test.delete.yml.');
+    $this->assertNotContains('collection/test2/config_test.another_delete.yml', $files, 'Config export does not contain collection/test2/config_test.another_delete.yml.');
 
     $this->drupalPostForm('admin/config/development/configuration/full/import', ['files[import_tarball]' => $filename], 'Upload');
     // Verify that there are configuration differences to import.

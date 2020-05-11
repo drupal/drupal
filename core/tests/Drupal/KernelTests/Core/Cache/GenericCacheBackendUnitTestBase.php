@@ -328,13 +328,13 @@ abstract class GenericCacheBackendUnitTestBase extends KernelTestBase {
     $this->assertIdentical($ret['test6']->data, 13, "Existing cache id test6 has the correct value.");
     $this->assertIdentical($ret['test7']->data, 17, "Existing cache id test7 has the correct value.");
     // Test $cids array - ensure it contains cache id's that do not exist.
-    $this->assert(in_array('test19', $cids), "Nonexistent cache id test19 is in cids array.");
-    $this->assert(in_array('test21', $cids), "Nonexistent cache id test21 is in cids array.");
+    $this->assertContains('test19', $cids, "Nonexistent cache id test19 is in cids array.");
+    $this->assertContains('test21', $cids, "Nonexistent cache id test21 is in cids array.");
     // Test $cids array - ensure it does not contain cache id's that exist.
-    $this->assertFalse(in_array('test2', $cids), "Existing cache id test2 is not in cids array.");
-    $this->assertFalse(in_array('test3', $cids), "Existing cache id test3 is not in cids array.");
-    $this->assertFalse(in_array('test6', $cids), "Existing cache id test6 is not in cids array.");
-    $this->assertFalse(in_array('test7', $cids), "Existing cache id test7 is not in cids array.");
+    $this->assertNotContains('test2', $cids, "Existing cache id test2 is not in cids array.");
+    $this->assertNotContains('test3', $cids, "Existing cache id test3 is not in cids array.");
+    $this->assertNotContains('test6', $cids, "Existing cache id test6 is not in cids array.");
+    $this->assertNotContains('test7', $cids, "Existing cache id test7 is not in cids array.");
 
     // Test a second time after deleting and setting new keys which ensures that
     // if the backend uses statics it does not cause unexpected results.
@@ -357,13 +357,13 @@ abstract class GenericCacheBackendUnitTestBase extends KernelTestBase {
     $this->assertIdentical($ret['test7']->data, 17, "Existing cache id test7 has the correct value.");
     $this->assertIdentical($ret['test19']->data, 57, "Added cache id test19 has the correct value.");
     // Test $cids array - ensure it contains cache id's that do not exist.
-    $this->assert(in_array('test3', $cids), "Deleted cache id test3 is in cids array.");
-    $this->assert(in_array('test6', $cids), "Deleted cache id test6 is in cids array.");
-    $this->assert(in_array('test21', $cids), "Nonexistent cache id test21 is in cids array.");
+    $this->assertContains('test3', $cids, "Deleted cache id test3 is in cids array.");
+    $this->assertContains('test6', $cids, "Deleted cache id test6 is in cids array.");
+    $this->assertContains('test21', $cids, "Nonexistent cache id test21 is in cids array.");
     // Test $cids array - ensure it does not contain cache id's that exist.
-    $this->assertFalse(in_array('test2', $cids), "Existing cache id test2 is not in cids array.");
-    $this->assertFalse(in_array('test7', $cids), "Existing cache id test7 is not in cids array.");
-    $this->assertFalse(in_array('test19', $cids), "Added cache id test19 is not in cids array.");
+    $this->assertNotContains('test2', $cids, "Existing cache id test2 is not in cids array.");
+    $this->assertNotContains('test7', $cids, "Existing cache id test7 is not in cids array.");
+    $this->assertNotContains('test19', $cids, "Added cache id test19 is not in cids array.");
 
     // Test with a long $cid and non-numeric array key.
     $cids = ['key:key' => $long_cid];

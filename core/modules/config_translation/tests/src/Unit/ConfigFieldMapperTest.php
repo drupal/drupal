@@ -111,7 +111,7 @@ class ConfigFieldMapperTest extends UnitTestCase {
 
     // Ensure that the configuration name was added to the mapper.
     $plugin_definition = $this->configFieldMapper->getPluginDefinition();
-    $this->assertTrue(in_array('config_prefix.field_storage_id', $plugin_definition['names']));
+    $this->assertContains('config_prefix.field_storage_id', $plugin_definition['names']);
 
     // Make sure setEntity() returns FALSE when called a second time.
     $result = $this->configFieldMapper->setEntity($this->entity);

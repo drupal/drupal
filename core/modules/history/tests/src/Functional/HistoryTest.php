@@ -112,7 +112,7 @@ class HistoryTest extends BrowserTestBase {
     // JavaScript present to record the node read.
     $settings = $this->getDrupalSettings();
     $libraries = explode(',', $settings['ajaxPageState']['libraries']);
-    $this->assertTrue(in_array('history/mark-as-read', $libraries), 'history/mark-as-read library is present.');
+    $this->assertContains('history/mark-as-read', $libraries, 'history/mark-as-read library is present.');
     $this->assertEqual([$nid => TRUE], $settings['history']['nodesToMarkAsRead'], 'drupalSettings to mark node as read are present.');
 
     // Simulate JavaScript: perform HTTP request to mark node as read.

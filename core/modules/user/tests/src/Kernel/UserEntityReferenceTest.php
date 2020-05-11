@@ -86,9 +86,9 @@ class UserEntityReferenceTest extends EntityKernelTestBase {
     foreach ($matches as $match) {
       $users[] = $match['label'];
     }
-    $this->assertTrue(in_array($user1->label(), $users));
-    $this->assertTrue(in_array($user2->label(), $users));
-    $this->assertFalse(in_array($user3->label(), $users));
+    $this->assertContains($user1->label(), $users);
+    $this->assertContains($user2->label(), $users);
+    $this->assertNotContains($user3->label(), $users);
 
     $matches = $autocomplete->getMatches('user', 'default', $field_definition->getSetting('handler_settings'), 'aabbbb');
     $this->assertEqual(count($matches), 0, '');

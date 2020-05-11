@@ -92,7 +92,7 @@ class FieldUIDeleteTest extends BrowserTestBase {
     $this->assertTrue($view->status());
     // Test that the View depends on the field.
     $dependencies = $view->getDependencies() + ['config' => []];
-    $this->assertTrue(in_array("field.storage.node.$field_name", $dependencies['config']));
+    $this->assertContains("field.storage.node.$field_name", $dependencies['config']);
 
     // Check the config dependencies of the first field, the field storage must
     // not be shown as being deleted yet.
@@ -133,7 +133,7 @@ class FieldUIDeleteTest extends BrowserTestBase {
     $this->assertFalse($view->status());
     // Test that the View no longer depends on the deleted field.
     $dependencies = $view->getDependencies() + ['config' => []];
-    $this->assertFalse(in_array("field.storage.node.$field_name", $dependencies['config']));
+    $this->assertNotContains("field.storage.node.$field_name", $dependencies['config']);
   }
 
 }

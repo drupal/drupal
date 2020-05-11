@@ -93,10 +93,10 @@ class ViewsIntegrationTest extends ViewsKernelTestBase {
     $view = Views::getView('dblog_integration_test');
     $view->setDisplay('page_1');
     // The uid relationship should now join to the {users_field_data} table.
-    $tables = array_keys($view->getBaseTables());
-    $this->assertTrue(in_array('users_field_data', $tables));
-    $this->assertFalse(in_array('users', $tables));
-    $this->assertTrue(in_array('watchdog', $tables));
+    $base_tables = $view->getBaseTables();
+    $this->assertArrayHasKey('users_field_data', $base_tables);
+    $this->assertArrayNotHasKey('users', $base_tables);
+    $this->assertArrayHasKey('watchdog', $base_tables);
   }
 
   /**

@@ -172,8 +172,8 @@ class SearchMultilingualEntityTest extends BrowserTestBase {
     // Nodes are saved directly after each other and have the same created time
     // so testing for the order is not possible.
     $results = [$search_result[0]['title'], $search_result[1]['title']];
-    $this->assertTrue(in_array('Third node this is the Hungarian title', $results), 'The search finds the correct Hungarian title.');
-    $this->assertTrue(in_array('Second node this is the English title', $results), 'The search finds the correct English title.');
+    $this->assertContains('Third node this is the Hungarian title', $results, 'The search finds the correct Hungarian title.');
+    $this->assertContains('Second node this is the English title', $results, 'The search finds the correct English title.');
 
     // Now filter for Hungarian results only.
     $this->plugin->setSearch('English OR Hungarian', ['f' => ['language:hu']], []);

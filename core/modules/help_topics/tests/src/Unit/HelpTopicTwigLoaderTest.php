@@ -48,8 +48,8 @@ class HelpTopicTwigLoaderTest extends UnitTestCase {
     // and non-existent directories were omitted.
     $paths = $this->helpLoader->getPaths(HelpTopicTwigLoader::MAIN_NAMESPACE);
     $this->assertEquals(count($paths), 2);
-    $this->assertTrue(in_array($this->directories['module']['test'] . '/help_topics', $paths));
-    $this->assertTrue(in_array($this->directories['theme']['test'] . '/help_topics', $paths));
+    $this->assertContains($this->directories['module']['test'] . '/help_topics', $paths);
+    $this->assertContains($this->directories['theme']['test'] . '/help_topics', $paths);
   }
 
   /**

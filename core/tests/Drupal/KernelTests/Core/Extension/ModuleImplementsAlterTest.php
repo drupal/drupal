@@ -44,10 +44,10 @@ class ModuleImplementsAlterTest extends KernelTestBase {
 
     $this->assertArrayHasKey('module_test', \Drupal::moduleHandler()->getModuleList());
 
-    $this->assertTrue(in_array('module_test', \Drupal::moduleHandler()->getImplementations('modules_installed')),
+    $this->assertContains('module_test', \Drupal::moduleHandler()->getImplementations('modules_installed'),
       'module_test implements hook_modules_installed().');
 
-    $this->assertTrue(in_array('module_test', \Drupal::moduleHandler()->getImplementations('module_implements_alter')),
+    $this->assertContains('module_test', \Drupal::moduleHandler()->getImplementations('module_implements_alter'),
       'module_test implements hook_module_implements_alter().');
 
     // Assert that module_test.implementations.inc is not included yet.
@@ -57,7 +57,7 @@ class ModuleImplementsAlterTest extends KernelTestBase {
     // Trigger hook discovery for hook_altered_test_hook().
     // Assert that module_test_module_implements_alter(*, 'altered_test_hook')
     // has added an implementation.
-    $this->assertTrue(in_array('module_test', \Drupal::moduleHandler()->getImplementations('altered_test_hook')),
+    $this->assertContains('module_test', \Drupal::moduleHandler()->getImplementations('altered_test_hook'),
       'module_test implements hook_altered_test_hook().');
 
     // Assert that module_test.implementations.inc was included as part of the process.

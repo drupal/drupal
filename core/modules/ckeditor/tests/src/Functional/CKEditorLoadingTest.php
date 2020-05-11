@@ -124,7 +124,7 @@ class CKEditorLoadingTest extends BrowserTestBase {
     $this->assertCount(1, $format_selector, 'A single text format selector exists on the page.');
     $specific_format_selector = $this->xpath('//select[contains(@class, "filter-list") and @data-editor-for="edit-body-0-value"]');
     $this->assertCount(1, $specific_format_selector, 'A single text format selector exists on the page and has a "data-editor-for" attribute with the correct value.');
-    $this->assertTrue(in_array('ckeditor/drupal.ckeditor', explode(',', $settings['ajaxPageState']['libraries'])), 'CKEditor glue library is present.');
+    $this->assertContains('ckeditor/drupal.ckeditor', explode(',', $settings['ajaxPageState']['libraries']), 'CKEditor glue library is present.');
 
     // Enable the ckeditor_test module, customize configuration. In this case,
     // there is additional CSS and JS to be loaded.
@@ -153,7 +153,7 @@ class CKEditorLoadingTest extends BrowserTestBase {
     $this->assertTrue($editor_settings_present, "Text Editor module's JavaScript settings are on the page.");
     $this->assertIdentical($expected, $this->castSafeStrings($settings['editor']), "Text Editor module's JavaScript settings on the page are correct.");
     $this->assertTrue($editor_js_present, 'Text Editor JavaScript is present.');
-    $this->assertTrue(in_array('ckeditor/drupal.ckeditor', explode(',', $settings['ajaxPageState']['libraries'])), 'CKEditor glue library is present.');
+    $this->assertContains('ckeditor/drupal.ckeditor', explode(',', $settings['ajaxPageState']['libraries']), 'CKEditor glue library is present.');
 
     // Assert that CKEditor uses Drupal's cache-busting query string by
     // comparing the setting sent with the page with the current query string.
