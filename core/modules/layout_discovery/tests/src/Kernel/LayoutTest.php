@@ -41,7 +41,7 @@ class LayoutTest extends KernelTestBase {
     $this->config('system.theme')->set('default', 'test_layout_theme')->save();
 
     $theme_definitions = $this->container->get('theme.registry')->get();
-    $this->assertTrue(in_array('template_preprocess_layout', $theme_definitions['test_layout_theme']['preprocess functions']));
+    $this->assertContains('template_preprocess_layout', $theme_definitions['test_layout_theme']['preprocess functions']);
   }
 
   /**

@@ -49,7 +49,7 @@ class TagTest extends ViewsKernelTestBase {
       return ['value' => $tag, 'label' => Html::escape($tag)];
     }, $tags);
     foreach ($matches as $match) {
-      $this->assertTrue(in_array($match, $suggestions), 'Make sure the returned array has the proper format.');
+      $this->assertContains($match, $suggestions, 'Make sure the returned array has the proper format.');
     }
 
     // Make sure that matching by a certain prefix works.

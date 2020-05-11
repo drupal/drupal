@@ -262,7 +262,7 @@ class ModuleTest extends ViewsKernelTestBase {
       $this->assertEqual($plugin_details['type'], $plugin_type, 'The expected plugin type was found.');
       $this->assertEqual($plugin_details['title'], $plugin_def['title'], 'The expected plugin title was found.');
       $this->assertEqual($plugin_details['provider'], $plugin_def['provider'], 'The expected plugin provider was found.');
-      $this->assertTrue(in_array('test_view', $plugin_details['views']), 'The test_view View was found in the list of views using this plugin.');
+      $this->assertContains('test_view', $plugin_details['views'], 'The test_view View was found in the list of views using this plugin.');
     }
   }
 

@@ -148,15 +148,15 @@ class EntityReferenceFieldDefaultValueTest extends BrowserTestBase {
 
     // Check that the field has a dependency on the default value.
     $config_entity = $this->config('field.field.node.reference_content.' . $field_name)->get();
-    $this->assertTrue(in_array($referenced_node_type->getConfigDependencyName(), $config_entity['dependencies']['config'], TRUE), 'The node type referenced_config_to_delete is a dependency of the field.');
-    $this->assertTrue(in_array($referenced_node_type2->getConfigDependencyName(), $config_entity['dependencies']['config'], TRUE), 'The node type referenced_config_to_preserve is a dependency of the field.');
+    $this->assertContains($referenced_node_type->getConfigDependencyName(), $config_entity['dependencies']['config'], 'The node type referenced_config_to_delete is a dependency of the field.');
+    $this->assertContains($referenced_node_type2->getConfigDependencyName(), $config_entity['dependencies']['config'], 'The node type referenced_config_to_preserve is a dependency of the field.');
 
     // Check that the field does not have a dependency on the default value
     // after deleting the node type.
     $referenced_node_type->delete();
     $config_entity = $this->config('field.field.node.reference_content.' . $field_name)->get();
-    $this->assertFalse(in_array($referenced_node_type->getConfigDependencyName(), $config_entity['dependencies']['config'], TRUE), 'The node type referenced_config_to_delete not a dependency of the field.');
-    $this->assertTrue(in_array($referenced_node_type2->getConfigDependencyName(), $config_entity['dependencies']['config'], TRUE), 'The node type referenced_config_to_preserve is a dependency of the field.');
+    $this->assertNotContains($referenced_node_type->getConfigDependencyName(), $config_entity['dependencies']['config'], 'The node type referenced_config_to_delete not a dependency of the field.');
+    $this->assertContains($referenced_node_type2->getConfigDependencyName(), $config_entity['dependencies']['config'], 'The node type referenced_config_to_preserve is a dependency of the field.');
   }
 
 }

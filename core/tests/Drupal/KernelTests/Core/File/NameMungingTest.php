@@ -42,7 +42,7 @@ class NameMungingTest extends FileTestBase {
     $munged_name = file_munge_filename($this->name, '', TRUE);
     $messages = \Drupal::messenger()->all();
     \Drupal::messenger()->deleteAll();
-    $this->assertTrue(in_array(strtr('For security reasons, your upload has been renamed to <em class="placeholder">%filename</em>.', ['%filename' => $munged_name]), $messages['status']), 'Alert properly set when a file is renamed.');
+    $this->assertContains(strtr('For security reasons, your upload has been renamed to <em class="placeholder">%filename</em>.', ['%filename' => $munged_name]), $messages['status'], 'Alert properly set when a file is renamed.');
     $this->assertNotEqual($munged_name, $this->name, new FormattableMarkup('The new filename (%munged) has been modified from the original (%original)', ['%munged' => $munged_name, '%original' => $this->name]));
   }
 

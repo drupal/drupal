@@ -312,13 +312,13 @@ class ResponsiveImageFieldDisplayTest extends ImageFieldTestBase {
     }
     $this->assertRaw('/styles/large/');
     $cache_tags = explode(' ', $this->drupalGetHeader('X-Drupal-Cache-Tags'));
-    $this->assertTrue(in_array('config:responsive_image.styles.style_one', $cache_tags));
+    $this->assertContains('config:responsive_image.styles.style_one', $cache_tags);
     if (!$empty_styles) {
-      $this->assertTrue(in_array('config:image.style.medium', $cache_tags));
-      $this->assertTrue(in_array('config:image.style.thumbnail', $cache_tags));
+      $this->assertContains('config:image.style.medium', $cache_tags);
+      $this->assertContains('config:image.style.thumbnail', $cache_tags);
       $this->assertRaw('type="image/png"');
     }
-    $this->assertTrue(in_array('config:image.style.large', $cache_tags));
+    $this->assertContains('config:image.style.large', $cache_tags);
 
     // Test the fallback image style.
     $image = \Drupal::service('image.factory')->get($image_uri);

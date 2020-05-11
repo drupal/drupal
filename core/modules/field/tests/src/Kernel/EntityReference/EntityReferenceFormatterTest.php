@@ -178,7 +178,7 @@ class EntityReferenceFormatterTest extends EntityKernelTestBase {
     $build = $this->buildRenderArray([$this->referencedEntity], $formatter);
 
     $renderer->renderRoot($build);
-    $this->assertTrue(in_array('custom_cache_tag', $build['#cache']['tags']));
+    $this->assertContains('custom_cache_tag', $build['#cache']['tags']);
   }
 
   /**

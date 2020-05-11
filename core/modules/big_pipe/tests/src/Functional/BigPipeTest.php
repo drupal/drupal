@@ -188,7 +188,7 @@ class BigPipeTest extends BrowserTestBase {
 
     $this->pass('Verifying BigPipe assets are present…', 'Debug');
     $this->assertFalse(empty($this->getDrupalSettings()), 'drupalSettings present.');
-    $this->assertTrue(in_array('big_pipe/big_pipe', explode(',', $this->getDrupalSettings()['ajaxPageState']['libraries'])), 'BigPipe asset library is present.');
+    $this->assertContains('big_pipe/big_pipe', explode(',', $this->getDrupalSettings()['ajaxPageState']['libraries']), 'BigPipe asset library is present.');
 
     // Verify that the two expected exceptions are logged as errors.
     $this->assertEqual($log_count + 2, $connection->query('SELECT COUNT(*) FROM {watchdog}')->fetchField(), 'Two new watchdog entries.');
