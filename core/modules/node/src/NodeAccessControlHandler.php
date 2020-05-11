@@ -3,6 +3,7 @@
 namespace Drupal\node;
 
 use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Cache\RefinableCacheableDependencyInterface;
 use Drupal\Core\Entity\EntityHandlerInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
@@ -104,7 +105,16 @@ class NodeAccessControlHandler extends EntityAccessControlHandler implements Nod
     }
 
     // Evaluate node grants.
-    return $this->grantStorage->access($node, $operation, $account);
+    $access_result = $this->grantStorage->access($node, $operation, $account);
+    if ($operation === 'view' && $access_result instanceof RefinableCacheableDependencyInterface) {
+      // Node variations can affect the access to the node. For instance, the
+      // access result cache varies on the node's published status. Only the
+      // 'view' node grant can currently be cached. The 'update' and 'delete'
+      // grants are already marked as uncacheable in the node grant storage.
+      // @see \Drupal\node\NodeGrantDatabaseStorage::access()
+      $access_result->addCacheableDependency($node);
+    }
+    return $access_result;
   }
 
   /**
