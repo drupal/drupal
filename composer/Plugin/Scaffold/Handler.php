@@ -164,7 +164,7 @@ class Handler {
     $scaffold_files->filterFiles($unchanged);
 
     // Process the list of scaffolded files.
-    $scaffold_results = $scaffold_files->process($this->io, $scaffold_options);
+    $scaffold_results = $scaffold_files->processScaffoldFiles($this->io, $scaffold_options);
 
     // Generate an autoload file in the document root that includes the
     // autoload.php file in the vendor directory, wherever that is. Drupal
