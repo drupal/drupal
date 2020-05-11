@@ -38,11 +38,11 @@ class InstallerCustomConfigDirectoryCreateTest extends InstallerTestBase {
   public function testInstaller() {
     $this->assertUrl('user/1');
     $this->assertResponse(200);
-    $this->assertDirectoryExists($this->publicFilesDirectory . '/config_custom') && is_dir($this->publicFilesDirectory . '/config_custom');
+    $this->assertDirectoryExists($this->publicFilesDirectory . '/config_custom');
 
     // Ensure the sync directory also exists.
     $sync_directory = Settings::get('config_sync_directory');
-    $this->assertDirectoryExists($sync_directory) && is_dir($sync_directory);
+    $this->assertDirectoryExists($sync_directory);
   }
 
 }
