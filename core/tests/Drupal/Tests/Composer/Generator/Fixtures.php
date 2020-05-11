@@ -33,6 +33,7 @@ class Fixtures {
       'license' => 'GPL-2.0-or-later',
       'require' =>
       [
+        'composer/installers' => '^1.9',
         'php' => '>=7.0.8',
         'symfony/yaml' => '~3.4.5',
       ],
@@ -59,6 +60,15 @@ class Fixtures {
       'content-hash' => 'da9910627bab73a256b39ceda83d7167',
       'packages' =>
       [
+        [
+          'name' => "composer/installers",
+          'version' => 'v1.9.0',
+          'source' => [
+            'type' => 'git',
+            'url' => 'https://github.com/composer/installers.git',
+            'reference' => 'b93bcf0fa1fccb0b7d176b0967d969691cd74cca',
+          ],
+        ],
         [
           'name' => 'symfony/polyfill-ctype',
           'version' => 'v1.12.0',
