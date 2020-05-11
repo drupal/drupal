@@ -5,7 +5,7 @@
 
 (function($, Drupal) {
   /**
-   * Move a block in the blocks table from one region to another.
+   * Reorder taxonomy terms.
    *
    * This behavior is dependent on the tableDrag behavior, since it uses the
    * objects initialized in that behavior to update the row.
@@ -19,7 +19,7 @@
     attach(context, settings) {
       const backStep = settings.taxonomy.backStep;
       const forwardStep = settings.taxonomy.forwardStep;
-      // Get the blocks tableDrag object.
+      // Get the taxonomy tableDrag object.
       const tableDrag = Drupal.tableDrag.taxonomy;
       const $table = $('#taxonomy');
       const rows = $table.find('tr').length;
