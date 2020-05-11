@@ -130,9 +130,37 @@ class ScaffoldFileCollection implements \IteratorAggregate {
    * @return \Drupal\Composer\Plugin\Scaffold\Operations\ScaffoldResult[]
    *   The results array.
    */
-  public function process(IOInterface $io, ScaffoldOptions $scaffold_options) {
+  public function processScaffoldFiles(IOInterface $io, ScaffoldOptions $scaffold_options) {
     $results = [];
     foreach ($this as $project_name => $scaffold_files) {
+      $io->write("Scaffolding files for <comment>{$project_name}</comment>:");
+      foreach ($scaffold_files as $scaffold_file) {
+        $results[$scaffold_file->destination()->relativePath()] = $scaffold_file->process($io, $scaffold_options);
+      }
+    }
+    return $results;
+  }
+
+  /**
+   * Processes the iterator created by ScaffoldFileCollection::create().
+   *
+   * @param \Drupal\Composer\Plugin\Scaffold\Operations\ScaffoldFileCollection $collection
+   *   The iterator to process.
+   * @param \Composer\IO\IOInterface $io
+   *   The Composer IO object.
+   * @param \Drupal\Composer\Plugin\Scaffold\ScaffoldOptions $scaffold_options
+   *   The scaffold options.
+   *
+   * @return \Drupal\Composer\Plugin\Scaffold\Operations\ScaffoldResult[]
+   *   The results array.
+   *
+   * @deprecated. Called when upgrading from the Core Composer Scaffold plugin
+   *   version 8.8.x due to a bug in the plugin and handler classes. Do not use
+   *   in 8.9.x or 9.x, and remove in Drupal 10.x.
+   */
+  public static function process(ScaffoldFileCollection $collection, IOInterface $io, ScaffoldOptions $scaffold_options) {
+    $results = [];
+    foreach ($collection as $project_name => $scaffold_files) {
       $io->write("Scaffolding files for <comment>{$project_name}</comment>:");
       foreach ($scaffold_files as $scaffold_file) {
         $results[$scaffold_file->destination()->relativePath()] = $scaffold_file->process($io, $scaffold_options);
