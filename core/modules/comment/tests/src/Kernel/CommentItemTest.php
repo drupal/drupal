@@ -56,11 +56,11 @@ class CommentItemTest extends FieldKernelTestBase {
     $entity = EntityTest::create();
     $entity->comment->generateSampleItems();
     $this->entityValidateAndSave($entity);
-    $this->assertTrue(in_array($entity->get('comment')->status, [
+    $this->assertContains($entity->get('comment')->status, [
       CommentItemInterface::HIDDEN,
       CommentItemInterface::CLOSED,
       CommentItemInterface::OPEN,
-    ]), 'Comment status value in defined range');
+    ], 'Comment status value in defined range');
 
     $mainProperty = $entity->comment[0]->mainPropertyName();
     $this->assertEqual('status', $mainProperty);

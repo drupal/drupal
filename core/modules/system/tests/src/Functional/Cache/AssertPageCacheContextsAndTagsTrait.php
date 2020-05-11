@@ -48,7 +48,7 @@ trait AssertPageCacheContextsAndTagsTrait {
    */
   protected function assertCacheContext($expected_cache_context) {
     $cache_contexts = explode(' ', $this->drupalGetHeader('X-Drupal-Cache-Contexts'));
-    $this->assertTrue(in_array($expected_cache_context, $cache_contexts), "'" . $expected_cache_context . "' is present in the X-Drupal-Cache-Contexts header.");
+    $this->assertContains($expected_cache_context, $cache_contexts, "'" . $expected_cache_context . "' is present in the X-Drupal-Cache-Contexts header.");
   }
 
   /**
@@ -59,7 +59,7 @@ trait AssertPageCacheContextsAndTagsTrait {
    */
   protected function assertNoCacheContext($not_expected_cache_context) {
     $cache_contexts = explode(' ', $this->drupalGetHeader('X-Drupal-Cache-Contexts'));
-    $this->assertFalse(in_array($not_expected_cache_context, $cache_contexts), "'" . $not_expected_cache_context . "' is not present in the X-Drupal-Cache-Contexts header.");
+    $this->assertNotContains($not_expected_cache_context, $cache_contexts, "'" . $not_expected_cache_context . "' is not present in the X-Drupal-Cache-Contexts header.");
   }
 
   /**

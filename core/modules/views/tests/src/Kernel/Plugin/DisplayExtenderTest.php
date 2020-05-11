@@ -53,7 +53,8 @@ class DisplayExtenderTest extends ViewsKernelTestBase {
     $errors = $view->validate();
 
     foreach ($view->displayHandlers as $id => $display) {
-      $this->assertTrue(isset($errors[$id]) && in_array('Display extender test error.', $errors[$id]), new FormattableMarkup('Error message found for @id display', ['@id' => $id]));
+      $this->assertArrayHasKey($id, $errors);
+      $this->assertContains('Display extender test error.', $errors[$id], new FormattableMarkup('Error message found for @id display', ['@id' => $id]));
     }
   }
 

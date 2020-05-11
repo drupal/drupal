@@ -53,12 +53,12 @@ class LanguageTest extends UnitTestCase {
     $config = $this->plugin->getConfig($editor);
 
     $this->assertIsArray($config);
-    $this->assertTrue(in_array('ar:Arabic:rtl', $config['language_list']));
-    $this->assertTrue(in_array('zh-hans:Chinese, Simplified', $config['language_list']));
-    $this->assertTrue(in_array('en:English', $config['language_list']));
-    $this->assertTrue(in_array('fr:French', $config['language_list']));
-    $this->assertTrue(in_array('ru:Russian', $config['language_list']));
-    $this->assertTrue(in_array('ar:Arabic:rtl', $config['language_list']));
+    $this->assertContains('ar:Arabic:rtl', $config['language_list']);
+    $this->assertContains('zh-hans:Chinese, Simplified', $config['language_list']);
+    $this->assertContains('en:English', $config['language_list']);
+    $this->assertContains('fr:French', $config['language_list']);
+    $this->assertContains('ru:Russian', $config['language_list']);
+    $this->assertContains('ar:Arabic:rtl', $config['language_list']);
     $this->assertEquals($expected_number, count($config['language_list']));
   }
 

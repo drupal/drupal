@@ -154,8 +154,8 @@ abstract class UpdateTestBase extends BrowserTestBase {
         $expected_release_urls[] = $release_url;
         $expected_download_urls[] = $download_url;
         // Ensure the expected links are security links.
-        $this->assertTrue(in_array($release_url, $all_security_release_urls), "Release $release_url is a security release link.");
-        $this->assertTrue(in_array($download_url, $all_security_download_urls), "Release $download_url is a security download link.");
+        $this->assertContains($release_url, $all_security_release_urls, "Release $release_url is a security release link.");
+        $this->assertContains($download_url, $all_security_download_urls, "Release $download_url is a security download link.");
         $assert_session->linkByHrefExists($release_url);
         $assert_session->linkByHrefExists($download_url);
       }

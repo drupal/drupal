@@ -51,7 +51,7 @@ class StatisticsTokenReplaceTest extends StatisticsTestBase {
     $tests['[node:last-view:short]'] = $date_formatter->format($statistics->getTimestamp(), 'short');
 
     // Test to make sure that we generated something for each token.
-    $this->assertFalse(in_array(0, array_map('strlen', $tests)), 'No empty tokens generated.');
+    $this->assertNotContains(0, array_map('strlen', $tests), 'No empty tokens generated.');
 
     foreach ($tests as $input => $expected) {
       $output = \Drupal::token()->replace($input, ['node' => $node], ['langcode' => $language_interface->getId()]);

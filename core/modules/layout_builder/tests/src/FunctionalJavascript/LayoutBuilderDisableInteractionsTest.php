@@ -291,7 +291,7 @@ class LayoutBuilderDisableInteractionsTest extends WebDriverTestBase {
    *   The element position.
    */
   protected function getElementVerticalPosition($css_selector, $position_type) {
-    $this->assertTrue(in_array($position_type, ['top', 'bottom']), 'Expected position type.');
+    $this->assertContains($position_type, ['top', 'bottom'], 'Expected position type.');
     return (int) $this->getSession()->evaluateScript("document.querySelector('$css_selector').getBoundingClientRect().$position_type + window.pageYOffset");
   }
 

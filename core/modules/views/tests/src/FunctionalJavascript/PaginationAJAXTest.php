@@ -142,7 +142,7 @@ class PaginationAJAXTest extends WebDriverTestBase {
     $scripts = $this->getSession()->getPage()->findAll('xpath', '//script');
     $script_src = [];
     foreach ($scripts as $script) {
-      $this->assertFalse(in_array($script->getAttribute('src'), $script_src));
+      $this->assertNotContains($script->getAttribute('src'), $script_src);
       $script_src[] = $script->getAttribute('src');
     }
   }

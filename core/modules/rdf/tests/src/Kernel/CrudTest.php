@@ -49,7 +49,7 @@ class CrudTest extends KernelTestBase {
     rdf_get_mapping($this->entityType, $this->bundle)->save();
     // Test that config file was saved.
     $mapping_config = \Drupal::configFactory()->listAll('rdf.mapping.');
-    $this->assertTrue(in_array($mapping_config_name, $mapping_config), 'Rdf mapping config saved.');
+    $this->assertContains($mapping_config_name, $mapping_config, 'Rdf mapping config saved.');
   }
 
   /**
