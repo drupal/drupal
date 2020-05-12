@@ -26,13 +26,6 @@ abstract class MigrateUpgradeFormBase extends FormBase {
   protected $store;
 
   /**
-   * The destination site major version.
-   *
-   * @var string
-   */
-  protected $destinationSiteVersion;
-
-  /**
    * Constructs the Migrate Upgrade Form Base.
    *
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
@@ -67,8 +60,6 @@ abstract class MigrateUpgradeFormBase extends FormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
-    // Get the current major version.
-    list($this->destinationSiteVersion) = explode('.', \Drupal::VERSION, 2);
     $form = [];
     $form['actions']['#type'] = 'actions';
     $form['actions']['submit'] = [
