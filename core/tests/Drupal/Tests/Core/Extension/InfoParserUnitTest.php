@@ -377,7 +377,7 @@ CORE_WITHOUT_CORE_VERSION_REQUIREMENT;
         "core_without_core_version_requirement-$core-duplicate.info.txt" => $core_without_core_version_requirement,
       ],
     ]);
-    $exception_message = "The 'core_version_requirement' key must be present in vfs://modules/fixtures/core_without_core_version_requirement-$core";
+    $exception_message = "'core: $core' is not supported. Use 'core_version_requirement' to specify core compatibility. Only 'core: 8.x' is supported to provide backwards compatibility for Drupal 8 when needed in vfs://modules/fixtures/core_without_core_version_requirement-$core";
     // Set the expected exception for the 2nd call to parse().
     $this->expectException('\Drupal\Core\Extension\InfoParserException');
     $this->expectExceptionMessage("$exception_message-duplicate.info.txt");
@@ -397,7 +397,6 @@ CORE_WITHOUT_CORE_VERSION_REQUIREMENT;
   public function providerCoreWithoutCoreVersionRequirement() {
     return [
       '7.x' => ['7.x'],
-      '8.x' => ['8.x'],
       '9.x' => ['9.x'],
       '10.x' => ['10.x'],
     ];
@@ -661,6 +660,35 @@ UNPARSABLE_CORE_VERSION_REQUIREMENT;
     $this->expectException(InfoParserException::class);
     $this->expectExceptionMessage("The 'core_version_requirement' constraint (not-this-version) is not a valid value in vfs://modules/fixtures/unparsable_core_version_requirement.info.txt");
     $this->infoParser->parse(vfsStream::url('modules/fixtures/unparsable_core_version_requirement.info.txt'));
+  }
+
+  /**
+   * Tests an info file with 'core: 8.x' but without 'core_version_requirement'.
+   *
+   * @covers ::parse
+   */
+  public function testCore8xNoCoreVersionRequirement() {
+    $info = <<<INFO
+package: Core
+core: 8.x
+version: VERSION
+type: module
+name: Module for That
+dependencies:
+  - field
+INFO;
+
+    vfsStream::setup('modules');
+    foreach (['1', '2'] as $file_delta) {
+      $filename = "core_version_requirement-$file_delta.info.txt";
+      vfsStream::create([
+        'fixtures' => [
+          $filename => $info,
+        ],
+      ]);
+      $info_values = $this->infoParser->parse(vfsStream::url("modules/fixtures/$filename"));
+      $this->assertSame(TRUE, $info_values['core_incompatible'], "Expected 'core_incompatible's for file: $filename");
+    }
   }
 
 }

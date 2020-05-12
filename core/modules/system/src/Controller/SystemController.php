@@ -209,10 +209,18 @@ class SystemController extends ControllerBase {
     $theme_groups = ['installed' => [], 'uninstalled' => []];
     $admin_theme = $config->get('admin');
     $admin_theme_options = [];
+    $incompatible_installed = FALSE;
 
     foreach ($themes as &$theme) {
       if (!empty($theme->info['hidden'])) {
         continue;
+      }
+      if (!$incompatible_installed && $theme->info['core_incompatible'] && $theme->status) {
+        $incompatible_installed = TRUE;
+        $this->messenger()->addWarning($this->t(
+          'There are errors with some installed themes. Visit the <a href=":link">status report page</a> for more information.',
+          [':link' => Url::fromRoute('system.status')->toString()]
+        ));
       }
       $theme->is_default = ($theme->getName() == $theme_default);
       $theme->is_admin = ($theme->getName() == $admin_theme || ($theme->is_default && empty($admin_theme)));
