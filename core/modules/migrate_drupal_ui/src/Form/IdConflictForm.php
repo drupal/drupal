@@ -94,7 +94,10 @@ class IdConflictForm extends MigrateUpgradeFormBase {
 
     $form['warning'] = [
       '#type' => 'markup',
-      '#markup' => '<p>' . $this->t('It looks like you have content on your new site which <strong>may be overwritten</strong> if you continue to run this upgrade. The upgrade should be performed on a clean Drupal 8 installation. For more information see the <a target="_blank" href=":id-conflicts-handbook">upgrade handbook</a>.', [':id-conflicts-handbook' => 'https://www.drupal.org/docs/8/upgrade/known-issues-when-upgrading-from-drupal-6-or-7-to-drupal-8#id_conflicts']) . '</p>',
+      '#markup' => '<p>' . $this->t('It looks like you have content on your new site which <strong>may be overwritten</strong> if you continue to run this upgrade. The upgrade should be performed on a clean Drupal @version installation. For more information see the <a target="_blank" href=":id-conflicts-handbook">upgrade handbook</a>.', [
+        '@version' => $this->destinationSiteVersion,
+        ':id-conflicts-handbook' => 'https://www.drupal.org/docs/8/upgrade/known-issues-when-upgrading-from-drupal-6-or-7-to-drupal-8#id_conflicts',
+      ]) . '</p>',
     ];
 
     return $form;
