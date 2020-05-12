@@ -76,17 +76,21 @@ class Combine extends StringFilter {
       }
     }
     if ($fields) {
-      $count = count($fields);
-      $separated_fields = [];
-      foreach ($fields as $key => $field) {
-        $separated_fields[] = $field;
-        if ($key < $count - 1) {
-          $separated_fields[] = "' '";
-        }
+      // We do not use the CONCAT_WS operator when there is only a single field.
+      // Using the CONCAT_WS operator with a single field is not a problem for
+      // the by core supported databases. Only the MS SQL Server requires the
+      // CONCAT_WS operator to be used with at least three arguments.
+      if (count($fields) == 1) {
+        $expression = reset($fields);
       }
-      $expression = implode(', ', $separated_fields);
-      $expression = "CONCAT_WS(' ', $expression)";
-
+      else {
+        // Multiple fields are separated by 3 spaces so that so that search
+        // strings that contain spaces are still only matched to single field
+        // values and not to multi-field values that exist only because we do
+        // the concatenation/LIKE trick.
+        $expression = implode(", ' ', ", $fields);
+        $expression = "CONCAT_WS(' ', $expression)";
+      }
       $info = $this->operators();
       if (!empty($info[$this->operator]['method'])) {
         $this->{$info[$this->operator]['method']}($expression);
