@@ -12,6 +12,13 @@ abstract class MigrateUpgradeExecuteTestBase extends MigrateUpgradeTestBase {
   use CreateTestContentEntitiesTrait;
 
   /**
+   * The destination site major version.
+   *
+   * @var string
+   */
+  protected $destinationSiteVersion;
+
+  /**
    * {@inheritdoc}
    */
   protected function setUp() {
@@ -19,6 +26,9 @@ abstract class MigrateUpgradeExecuteTestBase extends MigrateUpgradeTestBase {
 
     // Create content.
     $this->createContent();
+
+    // Get the current major version.
+    [$this->destinationSiteVersion] = explode('.', \Drupal::VERSION, 2);
   }
 
   /**
@@ -34,7 +44,7 @@ abstract class MigrateUpgradeExecuteTestBase extends MigrateUpgradeTestBase {
     $connection_options = $this->sourceDatabase->getConnectionOptions();
     $this->drupalGet('/upgrade');
     $session = $this->assertSession();
-    $session->responseContains('Upgrade a site by importing its files and the data from its database into a clean and empty new install of Drupal 8.');
+    $session->responseContains("Upgrade a site by importing its files and the data from its database into a clean and empty new install of Drupal $this->destinationSiteVersion.");
 
     $this->drupalPostForm(NULL, [], t('Continue'));
     $session->pageTextContains('Provide credentials for the database of the Drupal site you want to upgrade.');
@@ -99,7 +109,7 @@ abstract class MigrateUpgradeExecuteTestBase extends MigrateUpgradeTestBase {
 
     // Restart the upgrade process.
     $this->drupalGet('/upgrade');
-    $session->responseContains('Upgrade a site by importing its files and the data from its database into a clean and empty new install of Drupal 8.');
+    $session->responseContains("Upgrade a site by importing its files and the data from its database into a clean and empty new install of Drupal $this->destinationSiteVersion.");
 
     $this->drupalPostForm(NULL, [], t('Continue'));
     $session->pageTextContains('Provide credentials for the database of the Drupal site you want to upgrade.');
@@ -140,7 +150,7 @@ abstract class MigrateUpgradeExecuteTestBase extends MigrateUpgradeTestBase {
     $this->createContentPostUpgrade();
 
     $this->drupalGet('/upgrade');
-    $session->pageTextContains('An upgrade has already been performed on this site. To perform a new migration, create a clean and empty new install of Drupal 8. Rollbacks are not yet supported through the user interface.');
+    $session->pageTextContains("An upgrade has already been performed on this site. To perform a new migration, create a clean and empty new install of Drupal $this->destinationSiteVersion. Rollbacks are not yet supported through the user interface.");
     $this->drupalPostForm(NULL, [], t('Import new configuration and content from old site'));
     $this->drupalPostForm(NULL, $edits, t('Review upgrade'));
     $session->pageTextContains('WARNING: Content may be overwritten on your new site.');
