@@ -8,7 +8,6 @@ use Drupal\Tests\migrate_drupal\Kernel\d6\MigrateDrupal6TestBase;
  * Tests the user profile field instance migration.
  *
  * @group migrate_drupal_6
- * @group legacy
  */
 class MigrateUserProfileFieldInstanceTranslationTest extends MigrateDrupal6TestBase {
 

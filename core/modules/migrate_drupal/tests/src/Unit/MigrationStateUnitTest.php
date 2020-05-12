@@ -18,7 +18,6 @@ use org\bovigo\vfs\vfsStreamWrapper;
  * Defines a class for testing \Drupal\migrate_drupal\MigrationState.
  *
  * @group migrate_drupal
- * @group legacy
  *
  * @coversDefaultClass \Drupal\migrate_drupal\MigrationState
  */

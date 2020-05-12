@@ -11,7 +11,6 @@ use Drupal\Tests\migrate_drupal\Kernel\d7\MigrateDrupal7TestBase;
  * Tests migration field label and description i18n translations.
  *
  * @group migrate_drupal_7
- * @group legacy
  */
 class MigrateFieldInstanceLabelDescriptionTest extends MigrateDrupal7TestBase implements MigrateDumpAlterInterface {
 
