@@ -34,8 +34,7 @@ class OverviewForm extends MigrateUpgradeFormBase {
     $form['#title'] = $this->t('Upgrade');
 
     $form['info_header'] = [
-      '#markup' => '<p>' . $this->t('Upgrade a site by importing its files and the data from its database into a clean and empty new install of Drupal @version. See the <a href=":url">Drupal site upgrades handbook</a> for more information.', [
-          '@version' => $this->destinationSiteVersion,
+      '#markup' => '<p>' . $this->t('Upgrade a site by importing its files and the data from its database into a clean and empty new install of Drupal 8. See the <a href=":url">Drupal site upgrades handbook</a> for more information.', [
           ':url' => 'https://www.drupal.org/upgrade/migrate',
         ]),
     ];
@@ -46,7 +45,7 @@ class OverviewForm extends MigrateUpgradeFormBase {
     $form['legend']['#markup'] .= '<dt>' . $this->t('Old site') . '</dt>';
     $form['legend']['#markup'] .= '<dd>' . $this->t('The site you want to upgrade.') . '</dd>';
     $form['legend']['#markup'] .= '<dt>' . $this->t('New site') . '</dt>';
-    $form['legend']['#markup'] .= '<dd>' . $this->t('This empty Drupal @version installation you will import the old site to.', ['@version' => $this->destinationSiteVersion]) . '</dd>';
+    $form['legend']['#markup'] .= '<dd>' . $this->t('This empty Drupal 8 installation you will import the old site to.') . '</dd>';
     $form['legend']['#markup'] .= '</dl>';
 
     $info[] = $this->t('Make sure that <strong>access to the database</strong> for the old site is available from this new site.');
