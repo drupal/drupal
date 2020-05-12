@@ -11,7 +11,6 @@ use Drupal\Tests\migrate_drupal\Kernel\d6\MigrateDrupal6TestBase;
  * Tests migration of field label and description translations.
  *
  * @group migrate_drupal_6
- * @group legacy
  */
 class MigrateFieldInstanceLabelDescriptionTest extends MigrateDrupal6TestBase implements MigrateDumpAlterInterface {
 

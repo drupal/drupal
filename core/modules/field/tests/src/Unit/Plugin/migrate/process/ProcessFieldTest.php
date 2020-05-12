@@ -17,7 +17,6 @@ use Drupal\Tests\migrate\Unit\MigrateTestCase;
  *
  * @coversDefaultClass \Drupal\field\Plugin\migrate\process\ProcessField
  * @group field
- * @group legacy
  */
 class ProcessFieldTest extends MigrateTestCase {
 

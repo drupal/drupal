@@ -11,8 +11,6 @@ use Drupal\Tests\migrate_drupal_ui\Functional\MultilingualReviewPageTestBase;
  *
  * @group migrate_drupal_6
  * @group migrate_drupal_ui
- *
- * @group legacy
  */
 class MultilingualReviewPageTest extends MultilingualReviewPageTestBase {
 

@@ -11,7 +11,6 @@ use Prophecy\Argument;
 /**
  * @coversDefaultClass \Drupal\text\Plugin\migrate\field\d6\TextField
  * @group text
- * @group legacy
  */
 class TextFieldTest extends UnitTestCase {
 

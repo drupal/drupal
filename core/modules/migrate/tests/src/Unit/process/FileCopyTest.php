@@ -11,7 +11,6 @@ use Drupal\migrate\Plugin\MigrateProcessInterface;
  * Tests the file copy process plugin.
  *
  * @group migrate
- * @group legacy
  *
  * @coversDefaultClass \Drupal\migrate\Plugin\migrate\process\FileCopy
  */

@@ -7,7 +7,6 @@ use Drupal\Tests\migrate\Kernel\MigrateSqlSourceTestBase;
 /**
  * @covers \Drupal\book\Plugin\migrate\source\Book
  * @group book
- * @group legacy
  */
 class BookTest extends MigrateSqlSourceTestBase {
 
