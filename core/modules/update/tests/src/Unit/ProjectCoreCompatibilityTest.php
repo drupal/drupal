@@ -140,4 +140,3 @@ class ProjectCoreCompatibilityTest extends UnitTestCase {
   }
 
 }
-
