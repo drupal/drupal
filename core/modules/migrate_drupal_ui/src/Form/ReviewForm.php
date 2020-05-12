@@ -120,7 +120,7 @@ class ReviewForm extends MigrateUpgradeFormBase {
       '#type' => 'table',
       '#header' => [
         $this->t('Drupal @version', ['@version' => $version]),
-        $this->t('Drupal @version', ['@version' => $this->destinationSiteVersion]),
+        $this->t('Drupal 8'),
       ],
     ];
 
@@ -161,7 +161,7 @@ class ReviewForm extends MigrateUpgradeFormBase {
       '#type' => 'table',
       '#header' => [
         $this->t('Drupal @version', ['@version' => $version]),
-        $this->t('Drupal @version', ['@version' => $this->destinationSiteVersion]),
+        $this->t('Drupal 8'),
       ],
     ];
 
