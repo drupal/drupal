@@ -142,9 +142,6 @@ trait DeprecationListenerTrait {
     return [
       // The following deprecation message is skipped for testing purposes.
       '\Drupal\Tests\SkippedDeprecationTest deprecation',
-      // This deprecation comes from behat/mink-browserkit-driver when updating
-      // symfony/browser-kit to 4.3+.
-      'The "Symfony\Component\BrowserKit\Response::getStatus()" method is deprecated since Symfony 4.3, use getStatusCode() instead.',
       // The following Symfony deprecations are introduced in the Symfony 4
       // development cycle. They will need to be resolved prior to Symfony 5
       // compatibility.

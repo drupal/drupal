@@ -91,7 +91,7 @@ class QuickEditImageControllerTest extends BrowserTestBase {
     /** @var \Symfony\Component\BrowserKit\Client $client */
     $client = $this->getSession()->getDriver()->getClient();
     $client->request('POST', '/quickedit/image/upload/node/' . $node->id() . '/' . $this->fieldName . '/' . $node->language()->getId() . '/default');
-    $this->assertEquals('403', $client->getResponse()->getStatus());
+    $this->assertEquals('403', $client->getResponse()->getStatusCode());
   }
 
   /**
