@@ -2,6 +2,8 @@
 
 namespace Drupal\Tests;
 
+use Drupal\Component\Render\FormattableMarkup;
+
 /**
  * Tests the PHPUnit forward compatibility trait.
  *
@@ -48,6 +50,12 @@ class PhpunitCompatibilityTraitTest extends UnitTestCase {
     $this->assertStringContainsStringIgnoringCase("bingo", "foobarBiNgObongo");
     $this->assertStringNotContainsString("buzzer", "BUZZERbingobongo");
     $this->assertStringNotContainsStringIgnoringCase("buzzer", "foobarBiNgObongo");
+
+    // Test with stringable objects.
+    $this->assertStringContainsString(new FormattableMarkup("bingo", []), new FormattableMarkup("foobarbingobongo", []));
+    $this->assertStringContainsStringIgnoringCase(new FormattableMarkup("bingo", []), new FormattableMarkup("foobarBiNgObongo", []));
+    $this->assertStringNotContainsString(new FormattableMarkup("buzzer", []), new FormattableMarkup("BUZZERbingobongo", []));
+    $this->assertStringNotContainsStringIgnoringCase(new FormattableMarkup("buzzer", []), new FormattableMarkup("foobarBiNgObongo", []));
   }
 
   /**
