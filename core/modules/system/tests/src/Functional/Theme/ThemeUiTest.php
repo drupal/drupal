@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\system\Functional\Theme;
 
+use Drupal\Core\Serialization\Yaml;
 use Drupal\Tests\BrowserTestBase;
 
 /**
@@ -316,6 +317,61 @@ class ThemeUiTest extends BrowserTestBase {
     $theme_container = $this->getSession()->getPage()->find('css', 'h3:contains("Test Theme Depending on Version Constrained Modules")')->getParent();
     $this->assertStringContainsString('Requires: Test Module Theme Depends on with Compatible ConstraintTest Module Theme Depends on with Incompatible Constraint (>=8.x-2.x) (incompatible with version 8.x-1.8)', $theme_container->getText());
     $this->assertStringContainsString('This theme requires the listed modules to operate correctly.', $theme_container->getText());
+  }
+
+  /**
+   * Tests that incompatible themes message is shown.
+   */
+  public function testInstalledIncompatibleTheme() {
+    $page = $this->getSession()->getPage();
+    $assert_session = $this->assertSession();
+    $incompatitable_themes_message = 'There are errors with some installed themes. Visit the status report page for more information.';
+    $path = \Drupal::getContainer()->getParameter('site.path') . "/themes/changing_theme";
+    mkdir($path, 0777, TRUE);
+    $file_path = "$path/changing_theme.info.yml";
+    $theme_name = 'Theme that changes';
+    $info = [
+      'name' => $theme_name,
+      'type' => 'theme',
+      'base theme' => FALSE,
+    ];
+
+    $compatible_info = $info + ['core_version_requirement' => '*'];
+
+    file_put_contents($file_path, Yaml::encode($compatible_info));
+    $this->drupalGet('admin/appearance');
+    $this->assertNoText($incompatitable_themes_message);
+    $page->clickLink("Install $theme_name theme");
+    $assert_session->addressEquals('admin/appearance');
+    $assert_session->pageTextContains("The $theme_name theme has been installed");
+
+    $incompatible_updates = [
+      [
+        'core_version_requirement' => '^1',
+      ],
+      [
+        'core' => '8.x',
+      ],
+    ];
+    foreach ($incompatible_updates as $incompatible_update) {
+      $incompatible_info = $info + $incompatible_update;
+      file_put_contents($file_path, Yaml::encode($incompatible_info));
+      $this->drupalGet('admin/appearance');
+      $this->assertText($incompatitable_themes_message);
+
+      file_put_contents($file_path, Yaml::encode($compatible_info));
+      $this->drupalGet('admin/appearance');
+      $this->assertNoText($incompatitable_themes_message);
+    }
+    // Uninstall the theme and ensure that incompatible themes message is not
+    // displayed for themes that are not installed.
+    $this->uninstallTheme($theme_name);
+    foreach ($incompatible_updates as $incompatible_update) {
+      $incompatible_info = $info + $incompatible_update;
+      file_put_contents($file_path, Yaml::encode($incompatible_info));
+      $this->drupalGet('admin/appearance');
+      $this->assertNoText($incompatitable_themes_message);
+    }
   }
 
 }

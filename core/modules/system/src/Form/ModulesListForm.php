@@ -171,11 +171,19 @@ class ModulesListForm extends FormBase {
 
     // Iterate over each of the modules.
     $form['modules']['#tree'] = TRUE;
+    $incompatible_installed = FALSE;
     foreach ($modules as $filename => $module) {
       if (empty($module->info['hidden'])) {
         $package = $module->info['package'];
         $form['modules'][$package][$filename] = $this->buildRow($modules, $module, $distribution);
         $form['modules'][$package][$filename]['#parents'] = ['modules', $filename];
+      }
+      if (!$incompatible_installed && $module->status && $module->info['core_incompatible']) {
+        $incompatible_installed = TRUE;
+        $this->messenger()->addWarning($this->t(
+          'There are errors with some installed modules. Visit the <a href=":link">status report page</a> for more information.',
+          [':link' => Url::fromRoute('system.status')->toString()]
+        ));
       }
     }
 

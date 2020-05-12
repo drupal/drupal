@@ -68,7 +68,7 @@ class InfoParserDynamic implements InfoParserInterface {
           // easier for contrib to use test modules.
           $parsed_info['core_version_requirement'] = \Drupal::VERSION;
         }
-        else {
+        elseif (!isset($parsed_info['core'])) {
           // Non-core extensions must specify core compatibility.
           throw new InfoParserException("The 'core_version_requirement' key must be present in " . $filename);
         }
