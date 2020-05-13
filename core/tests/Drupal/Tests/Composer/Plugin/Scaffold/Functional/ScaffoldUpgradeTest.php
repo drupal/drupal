@@ -2,9 +2,11 @@
 
 namespace Drupal\Tests\Composer\Plugin\Scaffold\Functional;
 
+use Composer\Util\Filesystem;
 use Drupal\Tests\Composer\Plugin\Scaffold\AssertUtilsTrait;
 use Drupal\Tests\Composer\Plugin\Scaffold\ExecTrait;
 use Drupal\Tests\Composer\Plugin\Scaffold\Fixtures;
+use Drupal\Tests\PhpunitCompatibilityTrait;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -24,6 +26,7 @@ class ScaffoldUpgradeTest extends TestCase {
 
   use AssertUtilsTrait;
   use ExecTrait;
+  use PhpunitCompatibilityTrait;
 
   /**
    * The Fixtures object.
@@ -63,22 +66,57 @@ class ScaffoldUpgradeTest extends TestCase {
     // Packagist is disabled in the fixture; we bring it back by removing the
     // line that disables it.
     $this->mustExec("composer config --unset repositories.packagist.org", $sut);
-    $stdout = $this->mustExec("composer require drupal/core-composer-scaffold:8.8.0 --no-plugins 2>&1", $sut);
+    $stdout = $this->mustExec("composer require --no-ansi drupal/core-composer-scaffold:8.8.0 --no-plugins 2>&1", $sut);
     $this->assertContains("  - Installing drupal/core-composer-scaffold (8.8.0):", $stdout);
+
+    // We can't force the path repo to re-install over the stable version
+    // without removing it, and removing it masks the bugs we are testing for.
+    // We will therefore make a git repo so that we can tag an explicit version
+    // to require.
+    $testVersion = '99.99.99';
+    $scaffoldPluginTmpRepo = $this->createTmpRepo($this->fixtures->projectRoot(), $this->fixturesDir, $testVersion);
 
     // Disable packagist.org and upgrade back to the Scaffold plugin under test.
     // This puts the `"packagist.org": false` config line back in composer.json
     // so that Packagist will no longer be used.
-    $this->mustExec("composer remove drupal/core-composer-scaffold --no-plugins", $sut);
     $this->mustExec("composer config repositories.packagist.org false", $sut);
-    $stdout = $this->mustExec("composer require drupal/core-composer-scaffold:* 2>&1", $sut);
-    $this->assertRegExp("#Installing drupal/core-composer-scaffold.*Symlinking from#", $stdout);
+    $this->mustExec("composer config repositories.composer-scaffold vcs 'file:///$scaffoldPluginTmpRepo'", $sut);
+
+    // Using 'mustExec' was giving a strange binary string here.
+    $output = $this->mustExec("composer require --no-ansi drupal/core-composer-scaffold:$testVersion 2>&1", $sut);
+    $this->assertStringContainsString("Installing drupal/core-composer-scaffold ($testVersion)", $output);
+
     // Remove a scaffold file and run the scaffold command again to prove that
     // scaffolding is still working.
     unlink("$sut/index.php");
     $stdout = $this->mustExec("composer scaffold", $sut);
     $this->assertContains("Scaffolding files for", $stdout);
     $this->assertFileExists("$sut/index.php");
+  }
+
+  /**
+   * Copy the provided source directory and create a temporary git repository.
+   *
+   * @param string $source
+   *   Path to directory to copy.
+   * @param string $destParent
+   *   Path to location to create git repository.
+   * @param string $version
+   *   Version to tag the repository with.
+   * @return string
+   *   Path to temporary git repository.
+   */
+  protected function createTmpRepo($source, $destParent, $version) {
+    $target = $destParent . '/' . basename($source);
+    $filesystem = new Filesystem();
+    $filesystem->copy($source, $target);
+    $this->mustExec("git init", $target);
+    $this->mustExec('git config user.email "scaffoldtest@example.com"', $target);
+    $this->mustExec('git config user.name "Scaffold Test"', $target);
+    $this->mustExec("git add .", $target);
+    $this->mustExec("git commit -m 'Initial commit'", $target);
+    $this->mustExec("git tag $version", $target);
+    return $target;
   }
 
 }
