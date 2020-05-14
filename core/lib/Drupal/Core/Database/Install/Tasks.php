@@ -151,19 +151,6 @@ abstract class Tasks {
   }
 
   /**
-   * Checks engine version requirements for the status report.
-   *
-   * This method is called during runtime and update requirements checks.
-   *
-   * @return \Drupal\Core\StringTranslation\TranslatableMarkup[]
-   *   A list of error messages.
-   */
-  final public function engineVersionRequirementsCheck() {
-    $this->checkEngineVersion();
-    return $this->results['fail'];
-  }
-
-  /**
    * Check if we can connect to the database.
    */
   protected function connect() {
