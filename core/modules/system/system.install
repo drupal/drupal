@@ -435,9 +435,11 @@ function system_requirements($phase) {
       $requirements['database_extensions']['value'] = t('Enabled');
     }
   }
-  else {
+
+  if ($phase === 'runtime' || $phase === 'update') {
     // Database information.
     $class = Database::getConnection()->getDriverClass('Install\\Tasks');
+    /** @var \Drupal\Core\Database\Install\Tasks $tasks */
     $tasks = new $class();
     $requirements['database_system'] = [
       'title' => t('Database system'),
@@ -447,6 +449,19 @@ function system_requirements($phase) {
       'title' => t('Database system version'),
       'value' => Database::getConnection()->version(),
     ];
+
+    $errors = $tasks->engineVersionRequirementsCheck();
+    $error_count = count($errors);
+    if ($error_count > 0) {
+      $error_message = [
+        '#theme' => 'item_list',
+        '#items' => $errors,
+        // Use the comma-list style to display a single error without bullets.
+        '#context' => ['list_style' => $error_count === 1 ? 'comma-list' : ''],
+      ];
+      $requirements['database_system_version']['severity'] = REQUIREMENT_ERROR;
+      $requirements['database_system_version']['description'] = $error_message;
+    }
   }
 
   // Test PHP memory_limit
