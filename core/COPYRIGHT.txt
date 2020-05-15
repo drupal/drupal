@@ -1,4 +1,4 @@
-All Drupal code is Copyright 2001 - 2013 by the original authors.
+All Drupal code is Copyright 2001 - 2020 by the original authors.
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -24,45 +24,36 @@ Javascript
 
   Farbtastic - Copyright (c) 2010 Matt Farina
 
-  HTML5 Shiv - Copyright (c) 2012  Alexander Farkas, Jonathan Neal, Paul Irish,
+  HTML5 Shiv - Copyright (c) 2014  Alexander Farkas, Jonathan Neal, Paul Irish,
     and John-David Dalton
 
   jQuery - Copyright (c) 2011 John Resig
 
-  jQuery Bgiframe - Copyright (c) 2010 Brandon Aaron (http://brandonaaron.net)
+  jQuery Bgiframe - Copyright (c) 2013 Brandon Aaron (http://brandonaaron.net)
 
   jQuery BBQ - Copyright (c) 2010 "Cowboy" Ben Alman
 
-  jQuery Cookie - Copyright (c) 2010 Klaus Hartl
+  jQuery Cookie - Copyright (c) 2014 Klaus Hartl
 
-  jQuery Form - Copyright (c) 2011 Mike Alsup
+  jQuery Form - Copyright (c) 2017 Kevin Morris
 
   jQuery Globalize - Copyright (c) 2012 Software Freedom Conservancy, Inc.
 
-  jQuery Mousewheel - Copyright (c) 2010 Brandon Aaron
-    (http://brandonaaron.net)
+  jQuery Mousewheel - Copyright OpenJS Foundation and other contributors
+    (https://openjsf.org/)
 
   jQuery Metadata - Copyright (c) 2006 John Resig, Yehuda Katz, Jörn Zaefferer,
     Paul McLanahan
 
   jQuery Once - Copyright (c) 2009 Konstantin Käfer
 
-  jQuery UI - Copyright (c) 2012 by the original authors
+  jQuery UI - Copyright (c) 2015 by the authors and other contributors
     (http://jqueryui.com/about)
 
-  Sizzle.js - Copyright (c) 2011 The Dojo Foundation (http://sizzlejs.com/)
+  Sizzle.js - Copyright (c) 2016 JS Foundation and other contributors
+    (https://js.foundation)
 
 PHP
 
-  ArchiveTar - Copyright (c) 1997 - 2008 Vincent Blavet
-
-  Doctrine Common - Copyright (c) 2006 - 2012 Alexander Mols, Benjamin Eberlei,
-    Fabio B. Silva, Guilherme Blanco, Johannes M. Schmitt, Jonathan Wage,
-    Lukas K. Smith, Marco Pivetta et al.
-
-  Symfony2 - Copyright (c) 2004 - 2012 Fabien Potencier
-    - YUI - Copyright (c) 2010 Yahoo! Inc.
-    - Zend Framework (1.10dev - 2010-01-24) - Copyright (c) 2005-2010 Zend
-      Technologies USA Inc. (http://www.zend.com)
-
-  Twig - Copyright (c) 2009 Twig Team
+  Drupal depends on numerous PHP Composer packages. All Composer packages
+    retain the copyright of the authors.
