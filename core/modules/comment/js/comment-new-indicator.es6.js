@@ -41,7 +41,7 @@
         // this is the first new comment in the DOM.
         if (isFirstNewComment) {
           isFirstNewComment = false;
-          $comment.prev().before('<a id="new" />');
+          $comment.prev().before('<a id="new"></a>');
           // If the URL points to the first new comment, then scroll to that
           // comment.
           if (window.location.hash === '#new') {

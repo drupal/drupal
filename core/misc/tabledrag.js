@@ -63,8 +63,8 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
     if (this.indentEnabled) {
       this.indentCount = 1;
       var indent = Drupal.theme('tableDragIndentation');
-      var testRow = $('<tr/>').addClass('draggable').appendTo(table);
-      var testCell = $('<td/>').appendTo(testRow).prepend(indent).prepend(indent);
+      var testRow = $('<tr></tr>').addClass('draggable').appendTo(table);
+      var testCell = $('<td></td>').appendTo(testRow).prepend(indent).prepend(indent);
       var $indentation = testCell.find('.js-indentation');
       this.indentAmount = $indentation.get(1).offsetLeft - $indentation.get(0).offsetLeft;
       testRow.remove();
