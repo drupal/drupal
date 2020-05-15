@@ -22,7 +22,7 @@
 
         if (isFirstNewComment) {
           isFirstNewComment = false;
-          $comment.prev().before('<a id="new" />');
+          $comment.prev().before('<a id="new"></a>');
 
           if (window.location.hash === '#new') {
             window.scrollTo(0, $comment.offset().top - Drupal.displace.offsets.top);

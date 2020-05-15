@@ -23,7 +23,7 @@
         // Add 'ui-front' jQuery UI class so jQuery UI widgets like autocomplete
         // sit on top of dialogs. For more information see
         // http://api.jqueryui.com/theming/stacking-elements/.
-        $('<div id="drupal-modal" class="ui-front"/>')
+        $('<div id="drupal-modal" class="ui-front"></div>')
           .hide()
           .appendTo('body');
       }
@@ -109,7 +109,10 @@
     if (!$dialog.length) {
       // Create the element if needed.
       $dialog = $(
-        `<div id="${response.selector.replace(/^#/, '')}" class="ui-front"/>`,
+        `<div id="${response.selector.replace(
+          /^#/,
+          '',
+        )}" class="ui-front"></div>`,
       ).appendTo('body');
     }
     // Set up the wrapper, if there isn't one.

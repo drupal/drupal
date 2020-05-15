@@ -11,7 +11,7 @@
       var $context = $(context);
 
       if (!$('#drupal-modal').length) {
-        $('<div id="drupal-modal" class="ui-front"/>').hide().appendTo('body');
+        $('<div id="drupal-modal" class="ui-front"></div>').hide().appendTo('body');
       }
 
       var $dialog = $context.closest('.ui-dialog-content');
@@ -67,7 +67,7 @@
     var $dialog = $(response.selector);
 
     if (!$dialog.length) {
-      $dialog = $("<div id=\"".concat(response.selector.replace(/^#/, ''), "\" class=\"ui-front\"/>")).appendTo('body');
+      $dialog = $("<div id=\"".concat(response.selector.replace(/^#/, ''), "\" class=\"ui-front\"></div>")).appendTo('body');
     }
 
     if (!ajax.wrapper) {
