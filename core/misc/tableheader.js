@@ -98,7 +98,7 @@
     createSticky: function createSticky() {
       var $stickyHeader = this.$originalHeader.clone(true);
 
-      this.$stickyTable = $('<table class="sticky-header"/>').css({
+      this.$stickyTable = $('<table class="sticky-header"></table>').css({
         visibility: 'hidden',
         position: 'fixed',
         top: '0px'

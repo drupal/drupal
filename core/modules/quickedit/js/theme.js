@@ -8,7 +8,7 @@
 (function ($, Drupal) {
   Drupal.theme.quickeditBackstage = function (settings) {
     var html = '';
-    html += '<div id="' + settings.id + '" />';
+    html += '<div id="' + settings.id + '"></div>';
     return html;
   };
 
@@ -18,9 +18,9 @@
     html += '<i class="quickedit-toolbar-pointer"></i>';
     html += '<div class="quickedit-toolbar-content">';
     html += '<div class="quickedit-toolbar quickedit-toolbar-entity clearfix icon icon-pencil">';
-    html += '<div class="quickedit-toolbar-label" />';
+    html += '<div class="quickedit-toolbar-label"></div>';
     html += '</div>';
-    html += '<div class="quickedit-toolbar quickedit-toolbar-field clearfix" />';
+    html += '<div class="quickedit-toolbar quickedit-toolbar-field clearfix"></div>';
     html += '</div><div class="quickedit-toolbar-lining"></div></div>';
     return html;
   };
@@ -30,11 +30,11 @@
   };
 
   Drupal.theme.quickeditEntityToolbarFence = function () {
-    return '<div id="quickedit-toolbar-fence" />';
+    return '<div id="quickedit-toolbar-fence"></div>';
   };
 
   Drupal.theme.quickeditFieldToolbar = function (settings) {
-    return '<div id="' + settings.id + '" />';
+    return '<div id="' + settings.id + '"></div>';
   };
 
   Drupal.theme.quickeditToolgroup = function (settings) {
