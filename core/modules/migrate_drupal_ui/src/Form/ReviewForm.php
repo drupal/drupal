@@ -3,12 +3,14 @@
 namespace Drupal\migrate_drupal_ui\Form;
 
 use Drupal\Core\Config\ConfigFactoryInterface;
+use Drupal\Core\Extension\Exception\UnknownExtensionException;
+use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\State\StateInterface;
 use Drupal\Core\TempStore\PrivateTempStoreFactory;
-use Drupal\migrate_drupal_ui\Batch\MigrateUpgradeImportBatch;
-use Drupal\migrate_drupal\MigrationState;
 use Drupal\migrate\Plugin\MigrationPluginManagerInterface;
+use Drupal\migrate_drupal\MigrationState;
+use Drupal\migrate_drupal_ui\Batch\MigrateUpgradeImportBatch;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -45,6 +47,20 @@ class ReviewForm extends MigrateUpgradeFormBase {
   protected $migrationState;
 
   /**
+   * Module handler.
+   *
+   * @var \Drupal\Core\Extension\ModuleHandlerInterface
+   */
+  protected $moduleHandler;
+
+  /**
+   * Source system data set in buildForm().
+   *
+   * @var array
+   */
+  protected $systemData;
+
+  /**
    * ReviewForm constructor.
    *
    * @param \Drupal\Core\State\StateInterface $state
@@ -57,10 +73,17 @@ class ReviewForm extends MigrateUpgradeFormBase {
    *   Migration state service.
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The config factory service.
+   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
+   *   The module handler service.
    */
-  public function __construct(StateInterface $state, MigrationPluginManagerInterface $migration_plugin_manager, PrivateTempStoreFactory $tempstore_private, MigrationState $migrationState, ConfigFactoryInterface $config_factory) {
+  public function __construct(StateInterface $state, MigrationPluginManagerInterface $migration_plugin_manager, PrivateTempStoreFactory $tempstore_private, MigrationState $migrationState, ConfigFactoryInterface $config_factory, ModuleHandlerInterface $module_handler = NULL) {
     parent::__construct($config_factory, $migration_plugin_manager, $state, $tempstore_private);
     $this->migrationState = $migrationState;
+    if (!$module_handler) {
+      @trigger_error('Calling ' . __METHOD__ . ' without the $module_handler argument is deprecated in drupal:9.1.0 and will be required in drupal:10.0.0. See https://www.drupal.org/node/3136769', E_USER_DEPRECATED);
+      $module_handler = \Drupal::service('module_handler');
+    }
+    $this->moduleHandler = $module_handler;
   }
 
   /**
@@ -72,7 +95,8 @@ class ReviewForm extends MigrateUpgradeFormBase {
       $container->get('plugin.manager.migration'),
       $container->get('tempstore.private'),
       $container->get('migrate_drupal.migration_state'),
-      $container->get('config.factory')
+      $container->get('config.factory'),
+      $container->get('module_handler')
     );
   }
 
@@ -91,10 +115,10 @@ class ReviewForm extends MigrateUpgradeFormBase {
     $version = $this->store->get('version');
     $this->migrations = $this->store->get('migrations');
     // Fetch the source system data at the first opportunity.
-    $system_data = $this->store->get('system_data');
+    $this->systemData = $this->store->get('system_data');
 
     // If data is missing or this is the wrong step, start over.
-    if (!$version || !$this->migrations || !$system_data ||
+    if (!$version || !$this->migrations || !$this->systemData ||
       ($this->store->get('step') != 'review')) {
       return $this->restartUpgradeForm();
     }
@@ -105,7 +129,7 @@ class ReviewForm extends MigrateUpgradeFormBase {
     $migrations = $this->migrationPluginManager->createInstances(array_keys($this->store->get('migrations')));
 
     // Get the upgrade states for the source modules.
-    $display = $this->migrationState->getUpgradeStates($version, $system_data, $migrations);
+    $display = $this->migrationState->getUpgradeStates($version, $this->systemData, $migrations);
 
     // Missing migrations.
     $missing_module_list = [
@@ -119,14 +143,16 @@ class ReviewForm extends MigrateUpgradeFormBase {
     $missing_module_list['module_list'] = [
       '#type' => 'table',
       '#header' => [
-        $this->t('Drupal @version', ['@version' => $version]),
+        $this->t('Drupal @version module name', ['@version' => $version]),
+        $this->t('Drupal @version machine name', ['@version' => $version]),
         $this->t('Drupal @version', ['@version' => $this->destinationSiteVersion]),
       ],
     ];
 
     $missing_count = 0;
     if (isset($display[MigrationState::NOT_FINISHED])) {
-      foreach ($display[MigrationState::NOT_FINISHED] as $source_module => $destination_modules) {
+      $output = $this->prepareOutput($display[MigrationState::NOT_FINISHED]);
+      foreach ($output as $data) {
         $missing_count++;
         // Get the migration status for this $source_module, if a module of the
         // same name exists on the destination site.
@@ -134,7 +160,7 @@ class ReviewForm extends MigrateUpgradeFormBase {
           'source_module' => [
             '#type' => 'html_tag',
             '#tag' => 'span',
-            '#value' => $source_module,
+            '#value' => $data['source_module_name'],
             '#attributes' => [
               'class' => [
                 'upgrade-analysis-report__status-icon',
@@ -142,8 +168,11 @@ class ReviewForm extends MigrateUpgradeFormBase {
               ],
             ],
           ],
+          'source_machine_name' => [
+            '#plain_text' => $data['source_machine_name'],
+          ],
           'destination_module' => [
-            '#plain_text' => $destination_modules,
+            '#plain_text' => $data['destination'],
           ],
         ];
       }
@@ -160,20 +189,22 @@ class ReviewForm extends MigrateUpgradeFormBase {
     $available_module_list['module_list'] = [
       '#type' => 'table',
       '#header' => [
-        $this->t('Drupal @version', ['@version' => $version]),
+        $this->t('Drupal @version module name', ['@version' => $version]),
+        $this->t('Drupal @version machine name', ['@version' => $version]),
         $this->t('Drupal @version', ['@version' => $this->destinationSiteVersion]),
       ],
     ];
 
     $available_count = 0;
     if (isset($display[MigrationState::FINISHED])) {
-      foreach ($display[MigrationState::FINISHED] as $source_module => $destination_modules) {
+      $output = $this->prepareOutput($display[MigrationState::FINISHED]);
+      foreach ($output as $data) {
         $available_count++;
         $available_module_list['module_list'][] = [
           'source_module' => [
             '#type' => 'html_tag',
             '#tag' => 'span',
-            '#value' => $source_module,
+            '#value' => $data['source_module_name'],
             '#attributes' => [
               'class' => [
                 'upgrade-analysis-report__status-icon',
@@ -181,8 +212,11 @@ class ReviewForm extends MigrateUpgradeFormBase {
               ],
             ],
           ],
+          'source_machine_name' => [
+            '#plain_text' => $data['source_machine_name'],
+          ],
           'destination_module' => [
-            '#plain_text' => $destination_modules,
+            '#plain_text' => $data['destination'],
           ],
         ];
       }
@@ -252,6 +286,60 @@ class ReviewForm extends MigrateUpgradeFormBase {
    */
   public function getConfirmText() {
     return $this->t('Perform upgrade');
+  }
+
+  /**
+   * Prepare the migration state data for output.
+   *
+   * Each source and destination module_name is changed to the human-readable
+   * name, the destination modules are put into a CSV format, and everything is
+   * sorted.
+   *
+   * @param string[] $migration_state
+   *   An array where the keys are machine names of modules on
+   *   the source site. Values are lists of machine names of modules on the
+   *   destination site, in CSV format.
+   *
+   * @return string[][]
+   *   An indexed array of arrays that contain module data, sorted by the source
+   *   module name. Each sub-array contains the source module name, the source
+   *   module machine name, and the the destination module names in a sorted CSV
+   *   format.
+   */
+  protected function prepareOutput(array $migration_state) {
+    $output = [];
+    foreach ($migration_state as $source_machine_name => $destination_modules) {
+      $data = unserialize($this->systemData['module'][$source_machine_name]['info']);
+      $source_module_name = $data['name'] ?? $source_machine_name;
+      // Get the names of all the destination modules.
+      $destination_module_names = [];
+      if (!empty($destination_modules)) {
+        $destination_modules = explode(', ', $destination_modules);
+        foreach ($destination_modules as $destination_module) {
+          if ($destination_module === 'core') {
+            $destination_module_names[] = 'Core';
+          }
+          else {
+            try {
+              $destination_module_names[] = $this->moduleHandler->getName($destination_module);
+            }
+            catch (UnknownExtensionException $e) {
+              $destination_module_names[] = $destination_module;
+            }
+          }
+        }
+      }
+      sort($destination_module_names);
+      $output[$source_machine_name] = [
+        'source_module_name' => $source_module_name,
+        'source_machine_name' => $source_machine_name,
+        'destination' => implode(', ', $destination_module_names),
+      ];
+    }
+    usort($output, function ($a, $b) {
+      return strcmp($a['source_module_name'], $b['source_module_name']);
+    });
+    return $output;
   }
 
 }
