@@ -697,10 +697,10 @@ trait AssertLegacyTrait {
    * Deprecated in drupal:8.4.0 and is removed from drupal:10.0.0. Use
    *   $this->assertSession()->responseNotMatches() instead.
    *
-   * @see https://www.drupal.org/node/2864262
+   * @see https://www.drupal.org/node/3129738
    */
   protected function assertNoPattern($pattern) {
-    @trigger_error('AssertLegacyTrait::assertNoPattern() is deprecated in drupal:8.4.0 and is removed from drupal:10.0.0. Use $this->assertSession()->responseNotMatches() instead. See https://www.drupal.org/node/2864262', E_USER_DEPRECATED);
+    @trigger_error('AssertLegacyTrait::assertNoPattern() is deprecated in drupal:8.4.0 and is removed from drupal:10.0.0. Use $this->assertSession()->responseNotMatches() instead. See https://www.drupal.org/node/3129738', E_USER_DEPRECATED);
     $this->assertSession()->responseNotMatches($pattern);
   }
 
@@ -726,10 +726,10 @@ trait AssertLegacyTrait {
    * Deprecated in drupal:8.4.0 and is removed from drupal:10.0.0. Use
    *   $this->assertSession()->responseHeaderNotContains() instead.
    *
-   * @see https://www.drupal.org/node/2864029
+   * @see https://www.drupal.org/node/3129738
    */
   protected function assertNoCacheTag($cache_tag) {
-    @trigger_error('AssertLegacyTrait::assertNoCacheTag() is deprecated in drupal:8.4.0 and is removed from drupal:10.0.0. Use $this->assertSession()->responseHeaderNotContains() instead. See https://www.drupal.org/node/2864029', E_USER_DEPRECATED);
+    @trigger_error('AssertLegacyTrait::assertNoCacheTag() is deprecated in drupal:8.4.0 and is removed from drupal:10.0.0. Use $this->assertSession()->responseHeaderNotContains() instead. See https://www.drupal.org/node/3129738', E_USER_DEPRECATED);
     $this->assertSession()->responseHeaderNotContains('X-Drupal-Cache-Tags', $cache_tag);
   }
 
@@ -811,10 +811,10 @@ trait AssertLegacyTrait {
    * Deprecated in drupal:8.2.0 and is removed from drupal:10.0.0. Use
    *   $this->getSession()->getPage()->getContent() instead.
    *
-   * @see http://drupal.org/node/2735045
+   * @see https://www.drupal.org/node/3129738
    */
   protected function getRawContent() {
-    @trigger_error('AssertLegacyTrait::getRawContent() is deprecated in drupal:8.2.0 and is removed from drupal:10.0.0. Use $this->getSession()->getPage()->getContent() instead. See http://drupal.org/node/2735045', E_USER_DEPRECATED);
+    @trigger_error('AssertLegacyTrait::getRawContent() is deprecated in drupal:8.2.0 and is removed from drupal:10.0.0. Use $this->getSession()->getPage()->getContent() instead. See https://www.drupal.org/node/3129738', E_USER_DEPRECATED);
     return $this->getSession()->getPage()->getContent();
   }
 
@@ -830,10 +830,10 @@ trait AssertLegacyTrait {
    * Deprecated in drupal:8.5.0 and is removed from drupal:10.0.0. Use
    *   $element->findAll('xpath', 'option') instead.
    *
-   * @see http://drupal.org/node/2735045
+   * @see https://www.drupal.org/node/3129738
    */
   protected function getAllOptions(NodeElement $element) {
-    @trigger_error('AssertLegacyTrait::getAllOptions() is deprecated in drupal:8.5.0 and is removed from drupal:10.0.0. Use $element->findAll(\'xpath\', \'option\') instead. See http://drupal.org/node/2735045', E_USER_DEPRECATED);
+    @trigger_error('AssertLegacyTrait::getAllOptions() is deprecated in drupal:8.5.0 and is removed from drupal:10.0.0. Use $element->findAll(\'xpath\', \'option\') instead. See https://www.drupal.org/node/3129738', E_USER_DEPRECATED);
     return $element->findAll('xpath', '//option');
   }
 
