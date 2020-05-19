@@ -9,6 +9,7 @@
  */
 
 use Drupal\Component\Graph\Graph;
+use Drupal\Core\Extension\Exception\UnknownExtensionException;
 use Drupal\Core\Utility\Error;
 
 /**
@@ -340,11 +341,38 @@ function update_get_update_list() {
   $modules = drupal_get_installed_schema_version(NULL, FALSE, TRUE);
   /** @var \Drupal\Core\Extension\ExtensionList $extension_list */
   $extension_list = \Drupal::service('extension.list.module');
+  /** @var array $installed_module_info */
+  $installed_module_info = $extension_list->getAllInstalledInfo();
   foreach ($modules as $module => $schema_version) {
     // Skip uninstalled and incompatible modules.
-    if ($schema_version == SCHEMA_UNINSTALLED || $extension_list->checkIncompatibility($module)) {
+    try {
+      if ($schema_version == SCHEMA_UNINSTALLED || $extension_list->checkIncompatibility($module)) {
+        continue;
+      }
+    }
+    // It is possible that the system schema has orphaned entries, so the
+    // incompatibility checking might throw an exception.
+    catch (UnknownExtensionException $e) {
+      $args = [
+        '%name' => $module,
+        ':url' => 'https://www.drupal.org/node/3137656',
+      ];
+      \Drupal::messenger()->addWarning(t('Module %name has an entry in the system.schema key/value storage, but is missing from your site. <a href=":url">More information about this error</a>.', $args));
+      \Drupal::logger('system')->notice('Module %name has an entry in the system.schema key/value storage, but is missing from your site. <a href=":url">More information about this error</a>.', $args);
       continue;
     }
+    // There might be orphaned entries for modules that are in the filesystem
+    // but not installed. Also skip those, but warn site admins about it.
+    if (empty($installed_module_info[$module])) {
+      $args = [
+        '%name' => $module,
+        ':url' => 'https://www.drupal.org/node/3137656',
+      ];
+      \Drupal::messenger()->addWarning(t('Module %name has an entry in the system.schema key/value storage, but is not installed. <a href=":url">More information about this error</a>.', $args));
+      \Drupal::logger('system')->notice('Module %name has an entry in the system.schema key/value storage, but is not installed. <a href=":url">More information about this error</a>.', $args);
+      continue;
+    }
+
     // Display a requirements error if the user somehow has a schema version
     // from the previous Drupal major version.
     if ($schema_version < \Drupal::CORE_MINIMUM_SCHEMA_VERSION) {
@@ -631,10 +659,19 @@ function update_already_performed($module, $number) {
  */
 function update_retrieve_dependencies() {
   $return = [];
+  /** @var \Drupal\Core\Extension\ModuleExtensionList */
+  $extension_list = \Drupal::service('extension.list.module');
   // Get a list of installed modules, arranged so that we invoke their hooks in
   // the same order that \Drupal::moduleHandler()->invokeAll() does.
   foreach (\Drupal::keyValue('system.schema')->getAll() as $module => $schema) {
-    if ($schema == SCHEMA_UNINSTALLED) {
+    // Skip modules that are entirely missing from the filesystem here, since
+    // module_load_install() will call trigger_error() if invoked on a module
+    // that doesn't exist. There's no way to catch() that, so avoid it entirely.
+    // This can happen when there are orphaned entries in the system.schema k/v
+    // store for modules that have been removed from a site without first being
+    // cleanly uninstalled. We don't care here if the module has been installed
+    // or not, since we'll filter those out in update_get_update_list().
+    if ($schema == SCHEMA_UNINSTALLED || !$extension_list->exists($module)) {
       // Nothing to upgrade.
       continue;
     }
