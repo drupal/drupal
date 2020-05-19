@@ -4,4 +4,4 @@ description: 'Support module for update testing.'
 package: Testing
 version: VERSION
 dependencies:
-  - new_dependency_test_with_service
+  - drupal:new_dependency_test_with_service

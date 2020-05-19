@@ -4,5 +4,5 @@ description: 'Support module for user batch action testing.'
 package: Testing
 version: VERSION
 dependencies:
-  - views
-  - user
+  - drupal:views
+  - drupal:user
