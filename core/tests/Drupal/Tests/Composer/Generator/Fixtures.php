@@ -38,7 +38,7 @@ class Fixtures {
       ],
       'require-dev' =>
       [
-        'behat/mink' => '1.7.x-dev',
+        'behat/mink' => '^1.8',
       ],
     ];
   }
@@ -84,12 +84,12 @@ class Fixtures {
       [
         [
           'name' => 'behat/mink',
-          'version' => 'dev-master',
+          'version' => 'v1.8.0',
           'source' =>
           [
             'type' => 'git',
             'url' => 'https://github.com/minkphp/Mink.git',
-            'reference' => 'a534fe7dac9525e8e10ca68e737c3d7e5058ec83',
+            'reference' => 'e1772aabb6b654464264a6cc72158c8b3409d8bc',
           ],
         ],
         [

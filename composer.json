@@ -16,9 +16,9 @@
         "wikimedia/composer-merge-plugin": "^1.4"
     },
     "require-dev": {
-        "behat/mink": "1.7.x-dev",
+        "behat/mink": "^1.8",
         "behat/mink-goutte-driver": "^1.2",
-        "behat/mink-selenium2-driver": "1.3.x-dev",
+        "behat/mink-selenium2-driver": "^1.4",
         "composer/composer": "^1.9.1",
         "drupal/coder": "^8.3.2",
         "jcalderonzumba/gastonjs": "^1.0.2",
@@ -94,8 +94,7 @@
         "drupal-phpunit-upgrade-check": "Drupal\\Core\\Composer\\Composer::upgradePHPUnit",
         "drupal-phpunit-upgrade": "@composer update phpunit/phpunit symfony/phpunit-bridge phpspec/prophecy symfony/yaml --with-dependencies --no-progress",
         "post-update-cmd": [
-            "Drupal\\Composer\\Composer::generateMetapackages",
-            "Drupal\\Composer\\Composer::ensureBehatDriverVersions"
+            "Drupal\\Composer\\Composer::generateMetapackages"
         ],
         "phpcs": "phpcs --standard=core/phpcs.xml.dist --runtime-set installed_paths $($COMPOSER_BINARY config vendor-dir)/drupal/coder/coder_sniffer --",
         "phpcbf": "phpcbf --standard=core/phpcs.xml.dist --runtime-set installed_paths $($COMPOSER_BINARY config vendor-dir)/drupal/coder/coder_sniffer --"
