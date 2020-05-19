@@ -95,8 +95,8 @@ class InstallerTest extends InstallerTestBase {
     // Test that SiteConfigureForm::buildForm() has made the site directory and
     // the settings file non-writable.
     $site_directory = $this->container->getParameter('app.root') . '/' . $this->siteDirectory;
-    $this->assertFalse(is_writable($site_directory));
-    $this->assertFalse(is_writable($site_directory . '/settings.php'));
+    $this->assertDirectoryNotIsWritable($site_directory);
+    $this->assertFileNotIsWritable($site_directory . '/settings.php');
 
     parent::setUpSite();
   }

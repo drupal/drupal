@@ -65,8 +65,10 @@ class SitesDirectoryHardeningTest extends BrowserTestBase {
     $this->assertStringContainsString('settings.php is not protected from modifications and poses a security risk.', $description);
     $this->assertStringContainsString('services.yml is not protected from modifications and poses a security risk.', $description);
 
-    $this->assertTrue(is_writable($site_path), 'Site directory remains writable when automatically fixing permissions is disabled.');
-    $this->assertTrue(is_writable($settings_file), 'settings.php remains writable when automatically fixing permissions is disabled.');
+    // Verify that site directory and the settings.php remain writable when
+    // automatically enforcing file permissions is disabled.
+    $this->assertDirectoryIsWritable($site_path);
+    $this->assertFileIsWritable($settings_file);
 
     // Re-enable permissions enforcement.
     $settings = Settings::getAll();
@@ -77,8 +79,10 @@ class SitesDirectoryHardeningTest extends BrowserTestBase {
     $requirements = $this->checkSystemRequirements();
     $this->assertEquals('Protected', (string) $requirements['configuration_files']['value']);
 
-    $this->assertFalse(is_writable($site_path), 'Site directory is protected when automatically fixing permissions is enabled.');
-    $this->assertFalse(is_writable($settings_file), 'settings.php is protected when automatically fixing permissions is enabled.');
+    // Verify that site directory and the settings.php remain protected when
+    // automatically enforcing file permissions is enabled.
+    $this->assertDirectoryNotIsWritable($site_path);
+    $this->assertFileNotIsWritable($settings_file);
   }
 
   /**

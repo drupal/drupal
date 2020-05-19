@@ -188,7 +188,7 @@ class ImageTest extends UnitTestCase {
   public function testIsValid() {
     $this->getTestImage(FALSE);
     $this->assertTrue($this->image->isValid());
-    $this->assertTrue(is_readable($this->image->getSource()));
+    $this->assertFileIsReadable($this->image->getSource());
   }
 
   /**
