@@ -157,7 +157,7 @@ class ImageStyleDownloadController extends FileDownloadController {
       if (!$lock_acquired) {
         // Tell client to retry again in 3 seconds. Currently no browsers are
         // known to support Retry-After.
-        throw new ServiceUnavailableHttpException(3, $this->t('Image generation in progress. Try again shortly.'));
+        throw new ServiceUnavailableHttpException(3, 'Image generation in progress. Try again shortly.');
       }
     }
 

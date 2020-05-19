@@ -359,7 +359,7 @@ class Merge extends Query implements ConditionInterface {
 
     try {
       if (!count($this->condition)) {
-        throw new InvalidMergeQueryException(t('Invalid merge query: no conditions'));
+        throw new InvalidMergeQueryException('Invalid merge query: no conditions');
       }
       $select = $this->connection->select($this->conditionTable)
         ->condition($this->condition);

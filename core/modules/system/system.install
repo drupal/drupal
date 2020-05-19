@@ -356,7 +356,7 @@ function system_requirements($phase) {
     try {
       $bytes = random_bytes(10);
       if (strlen($bytes) != 10) {
-        throw new \Exception(t('Tried to generate 10 random bytes, generated @count', ['@count' => strlen($bytes)]));
+        throw new \Exception("Tried to generate 10 random bytes, generated '" . strlen($bytes) . "'");
       }
       $requirements['php_random_bytes']['value'] = t('Successful');
     }

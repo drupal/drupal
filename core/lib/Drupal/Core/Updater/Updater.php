@@ -64,7 +64,7 @@ class Updater {
       $updater = self::getUpdaterFromDirectory($source);
     }
     else {
-      throw new UpdaterException(t('Unable to determine the type of the source directory.'));
+      throw new UpdaterException('Unable to determine the type of the source directory.');
     }
     return new $updater($source, $root);
   }
@@ -89,7 +89,7 @@ class Updater {
         return $class;
       }
     }
-    throw new UpdaterException(t('Cannot determine the type of project.'));
+    throw new UpdaterException('Cannot determine the type of project.');
   }
 
   /**
@@ -142,7 +142,7 @@ class Updater {
     $info_file = static::findInfoFile($directory);
     $info = \Drupal::service('info_parser')->parse($info_file);
     if (empty($info)) {
-      throw new UpdaterException(t('Unable to parse info file: %info_file.', ['%info_file' => $info_file]));
+      throw new UpdaterException("Unable to parse info file: '$info_file'.");
     }
 
     return $info;
@@ -178,7 +178,7 @@ class Updater {
     $info_file = self::findInfoFile($directory);
     $info = \Drupal::service('info_parser')->parse($info_file);
     if (empty($info)) {
-      throw new UpdaterException(t('Unable to parse info file: %info_file.', ['%info_file' => $info_file]));
+      throw new UpdaterException("Unable to parse info file: '$info_file'.");
     }
     return $info['name'];
   }
@@ -228,7 +228,7 @@ class Updater {
 
       if (!$this->name) {
         // This is bad, don't want to delete the install directory.
-        throw new UpdaterException(t('Fatal error in update, cowardly refusing to wipe out the install directory.'));
+        throw new UpdaterException('Fatal error in update, cowardly refusing to wipe out the install directory.');
       }
 
       // Make sure the installation parent directory exists and is writable.
@@ -253,7 +253,7 @@ class Updater {
       return $this->postUpdateTasks();
     }
     catch (FileTransferException $e) {
-      throw new UpdaterFileTransferException(t('File Transfer failed, reason: @reason', ['@reason' => strtr($e->getMessage(), $e->arguments)]));
+      throw new UpdaterFileTransferException("File Transfer failed, reason: '" . strtr($e->getMessage(), $e->arguments) . "'");
     }
   }
 
@@ -291,7 +291,7 @@ class Updater {
       return $this->postInstallTasks();
     }
     catch (FileTransferException $e) {
-      throw new UpdaterFileTransferException(t('File Transfer failed, reason: @reason', ['@reason' => strtr($e->getMessage(), $e->arguments)]));
+      throw new UpdaterFileTransferException("File Transfer failed, reason: '" . strtr($e->getMessage(), $e->arguments)) . "'";
     }
   }
 

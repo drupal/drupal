@@ -168,7 +168,7 @@ class FileTransferAuthorizeForm extends FormBase {
       $filetransfer = $this->getFiletransfer($backend, $form_connection_settings[$backend]);
       try {
         if (!$filetransfer) {
-          throw new \Exception($this->t('The connection protocol %backend does not exist.', ['%backend' => $backend]));
+          throw new \Exception("The connection protocol '$backend' does not exist.");
         }
         $filetransfer->connect();
       }
