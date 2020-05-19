@@ -377,7 +377,7 @@ function drupal_rewrite_settings($settings = [], $settings_file = NULL) {
 
     // Write the new settings file.
     if (file_put_contents($settings_file, $buffer) === FALSE) {
-      throw new Exception(t('Failed to modify %settings. Verify the file permissions.', ['%settings' => $settings_file]));
+      throw new Exception("Failed to modify '$settings_file'. Verify the file permissions.");
     }
     else {
       // In case any $settings variables were written, import them into the
@@ -394,7 +394,7 @@ function drupal_rewrite_settings($settings = [], $settings_file = NULL) {
     }
   }
   else {
-    throw new Exception(t('Failed to open %settings. Verify the file permissions.', ['%settings' => $settings_file]));
+    throw new Exception("Failed to open '$settings_file'. Verify the file permissions.");
   }
 }
 
@@ -555,10 +555,7 @@ function drupal_install_config_directories() {
   // Bail out using a similar error message as in system_requirements().
   if (!\Drupal::service('file_system')->prepareDirectory($config_directories[CONFIG_SYNC_DIRECTORY], FileSystemInterface::CREATE_DIRECTORY)
     && !file_exists($config_directories[CONFIG_SYNC_DIRECTORY])) {
-    throw new Exception(t('The directory %directory could not be created. To proceed with the installation, either create the directory or ensure that the installer has the permissions to create it automatically. For more information, see the <a href=":handbook_url">online handbook</a>.', [
-      '%directory' => config_get_config_directory(CONFIG_SYNC_DIRECTORY),
-      ':handbook_url' => 'https://www.drupal.org/server-permissions',
-    ]));
+    throw new Exception("The directory '" . config_get_config_directory(CONFIG_SYNC_DIRECTORY) . "' could not be created. To proceed with the installation, either create the directory or ensure that the installer has the permissions to create it automatically. For more information, see the <a href='https://www.drupal.org/server-permissions'>online handbook</a>.");
   }
   elseif (is_writable($config_directories[CONFIG_SYNC_DIRECTORY])) {
     // Put a README.txt into the sync config directory. This is required so that

@@ -205,7 +205,7 @@ function update_set_schema($module, $schema_version) {
  * example:
  * @code
  * use Drupal\Core\Utility\UpdateException;
- * throw new UpdateException(t('Description of what went wrong'));
+ * throw new UpdateException('Description of what went wrong');
  * @endcode
  *
  * If an exception is thrown, the current update and all updates that depend on

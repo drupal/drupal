@@ -88,7 +88,7 @@ class DbLogResourceTest extends ResourceTestBase {
     // Request an unknown log entry.
     $url->setRouteParameter('id', 9999);
     $response = $this->request('GET', $url, $request_options);
-    $this->assertResourceErrorResponse(404, 'Log entry with ID 9999 was not found', $response);
+    $this->assertResourceErrorResponse(404, "Log entry with ID '9999' was not found", $response);
 
     // Make a bad request (a true malformed request would never be a route match).
     $url->setRouteParameter('id', 0);

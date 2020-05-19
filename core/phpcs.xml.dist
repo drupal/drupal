@@ -147,6 +147,7 @@
 
   <!-- Drupal Practice sniffs -->
   <rule ref="DrupalPractice.Commenting.ExpectedException"/>
+  <rule ref="DrupalPractice.General.ExceptionT"/>
 
   <!-- Generic sniffs -->
   <rule ref="Generic.Arrays.DisallowLongArraySyntax"/>

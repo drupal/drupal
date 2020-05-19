@@ -1163,7 +1163,7 @@ function node_query_node_access_alter(AlterableInterface $query) {
 
     // Bail out if the base table is missing.
     if (!$base_table) {
-      throw new Exception(t('Query tagged for node access but there is no node table, specify the base_table using meta data.'));
+      throw new Exception('Query tagged for node access but there is no node table, specify the base_table using meta data.');
     }
   }
 
