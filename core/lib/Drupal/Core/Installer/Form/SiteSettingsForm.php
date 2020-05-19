@@ -194,16 +194,7 @@ class SiteSettingsForm extends FormBase {
     $errors = array_diff_key($errors, $form_errors);
 
     if (count($errors)) {
-      $error_message = [
-        '#type' => 'inline_template',
-        '#template' => '{% trans %}Resolve all issues below to continue the installation. For help configuring your database server, see the <a href="https://www.drupal.org/docs/8/install">installation handbook</a>, or contact your hosting provider.{% endtrans%}{{ errors }}',
-        '#context' => [
-          'errors' => [
-            '#theme' => 'item_list',
-            '#items' => $errors,
-          ],
-        ],
-      ];
+      $error_message = static::getDatabaseErrorsTemplate($errors);
 
       // These are generic errors, so we do not have any specific key of the
       // database connection array to attach them to; therefore, we just put
@@ -212,6 +203,28 @@ class SiteSettingsForm extends FormBase {
     }
 
     return $form_errors;
+  }
+
+  /**
+   * Gets the inline template render array to display the database errors.
+   *
+   * @param \Drupal\Core\StringTranslation\TranslatableMarkup[] $errors
+   *   The database errors to list.
+   *
+   * @return mixed[]
+   *   The inline template render array to display the database errors.
+   */
+  public static function getDatabaseErrorsTemplate(array $errors) {
+    return [
+      '#type' => 'inline_template',
+      '#template' => '{% trans %}Resolve all issues below to continue the installation. For help configuring your database server, see the <a href="https://www.drupal.org/docs/8/install">installation handbook</a>, or contact your hosting provider.{% endtrans %}{{ errors }}',
+      '#context' => [
+        'errors' => [
+          '#theme' => 'item_list',
+          '#items' => $errors,
+        ],
+      ],
+    ];
   }
 
   /**

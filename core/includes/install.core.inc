@@ -20,6 +20,7 @@ use Drupal\Core\Form\FormState;
 use Drupal\Core\Installer\Exception\AlreadyInstalledException;
 use Drupal\Core\Installer\Exception\InstallerException;
 use Drupal\Core\Installer\Exception\NoProfilesException;
+use Drupal\Core\Installer\Form\SiteSettingsForm;
 use Drupal\Core\Installer\InstallerKernel;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Language\LanguageManager;
@@ -520,18 +521,14 @@ function install_begin_request($class_loader, &$install_state) {
   // accessing the database before it is set up yet.)
   drupal_maintenance_theme();
 
-  if ($install_state['database_verified']) {
-    // Verify the last completed task in the database, if there is one.
-    $task = install_verify_completed_task();
+  if (!$install_state['database_verified']) {
+    // Do not install over an existing installation. The call to
+    // install_verify_database_ready() will throw an AlreadyInstalledException
+    // if this is the case.
+    install_verify_database_ready();
   }
-  else {
-    $task = NULL;
-
-    // Do not install over a configured settings.php.
-    if (Database::getConnectionInfo()) {
-      throw new AlreadyInstalledException($container->get('string_translation'));
-    }
-  }
+  // Verify the last completed task in the database, if there is one.
+  $task = install_verify_completed_task();
 
   // Ensure that the active configuration is empty before installation starts.
   if ($install_state['config_verified'] && empty($task)) {
@@ -1173,16 +1170,28 @@ function install_verify_database_settings($site_path) {
 
 /**
  * Verify that the database is ready (no existing Drupal installation).
+ *
+ * @throws \Drupal\Core\Installer\Exception\AlreadyInstalledException
+ *   Thrown when the database already has a table that would be created by
+ *   installing the System module.
  */
 function install_verify_database_ready() {
   $system_schema = system_schema();
   end($system_schema);
   $table = key($system_schema);
 
+  $existing_install = FALSE;
   if ($database = Database::getConnectionInfo()) {
-    if (Database::getConnection()->schema()->tableExists($table)) {
-      throw new AlreadyInstalledException(\Drupal::service('string_translation'));
+    try {
+      $existing_install = Database::getConnection()->schema()->tableExists($table);
     }
+    // Do not trigger an error if the database query fails, since the database
+    // might not be set up yet.
+    catch (\Exception $e) {
+    }
+  }
+  if ($existing_install) {
+    throw new AlreadyInstalledException(\Drupal::service('string_translation'));
   }
 }
 
@@ -2218,6 +2227,25 @@ function install_check_requirements($install_state) {
               ':install_txt' => base_path() . 'core/INSTALL.txt',
               ':handbook_url' => 'https://www.drupal.org/server-permissions',
             ]),
+        ];
+      }
+    }
+
+    // Check the database settings if they have been configured in settings.php
+    // before running the Drupal installer.
+    if ($database = Database::getConnectionInfo()) {
+      $request = Request::createFromGlobals();
+      $site_path = empty($install_state['site_path']) ? DrupalKernel::findSitePath($request, FALSE) : $install_state['site_path'];
+      $database = $database['default'];
+      $settings_file = './' . $site_path . '/settings.php';
+
+      $errors = install_database_errors($database, $settings_file);
+      if (count($errors)) {
+        $error_message = SiteSettingsForm::getDatabaseErrorsTemplate($errors);
+        $requirements['database_install_errors'] = [
+          'title' => t('Database settings'),
+          'description' => $error_message,
+          'severity' => REQUIREMENT_ERROR,
         ];
       }
     }
