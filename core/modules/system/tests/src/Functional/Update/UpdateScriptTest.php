@@ -366,6 +366,68 @@ class UpdateScriptTest extends BrowserTestBase {
   }
 
   /**
+   * Tests that orphan schemas are handled properly.
+   */
+  public function testOrphanedSchemaEntries() {
+    $this->drupalLogin($this->updateUser);
+
+    // Insert a bogus value into the system.schema key/value storage for a
+    // nonexistent module. This replicates what would happen if you had a module
+    // installed and then completely remove it from the filesystem and clear it
+    // out of the core.extension config list without uninstalling it cleanly.
+    \Drupal::keyValue('system.schema')->set('my_already_removed_module', 8000);
+
+    // Visit update.php and make sure we can click through to the 'No pending
+    // updates' page without errors.
+    $assert_session = $this->assertSession();
+    $this->drupalGet($this->updateUrl, ['external' => TRUE]);
+    $this->updateRequirementsProblem();
+    $this->clickLink(t('Continue'));
+    // Make sure there are no pending updates (or uncaught exceptions).
+    $status_messages = $this->xpath('//div[@aria-label="Status message"]');
+    $this->assertCount(1, $status_messages);
+    $this->assertStringContainsString('No pending updates.', $status_messages[0]->getText());
+    // Verify that we warn the admin about this situation.
+    $warning_messages = $this->xpath('//div[@aria-label="Warning message"]');
+    $this->assertCount(1, $warning_messages);
+    $this->assertEquals('Warning message Module my_already_removed_module has an entry in the system.schema key/value storage, but is missing from your site. More information about this error.', $warning_messages[0]->getText());
+
+    // Try again with another orphaned entry, this time for a test module that
+    // does exist in the filesystem.
+    \Drupal::keyValue('system.schema')->delete('my_already_removed_module');
+    \Drupal::keyValue('system.schema')->set('update_test_0', 8000);
+    $this->drupalGet($this->updateUrl, ['external' => TRUE]);
+    $this->updateRequirementsProblem();
+    $this->clickLink(t('Continue'));
+    // There should not be any pending updates.
+    $status_messages = $this->xpath('//div[@aria-label="Status message"]');
+    $this->assertCount(1, $status_messages);
+    $this->assertStringContainsString('No pending updates.', $status_messages[0]->getText());
+    // Verify that we warn the admin about this situation.
+    $warning_messages = $this->xpath('//div[@aria-label="Warning message"]');
+    $this->assertCount(1, $warning_messages);
+    $this->assertEquals('Warning message Module update_test_0 has an entry in the system.schema key/value storage, but is not installed. More information about this error.', $warning_messages[0]->getText());
+
+    // Finally, try with both kinds of orphans and make sure we get both warnings.
+    \Drupal::keyValue('system.schema')->set('my_already_removed_module', 8000);
+    $this->drupalGet($this->updateUrl, ['external' => TRUE]);
+    $this->updateRequirementsProblem();
+    $this->clickLink(t('Continue'));
+    // There still should not be any pending updates.
+    $status_messages = $this->xpath('//div[@aria-label="Status message"]');
+    $this->assertCount(1, $status_messages);
+    $this->assertStringContainsString('No pending updates.', $status_messages[0]->getText());
+    // Verify that we warn the admin about both orphaned entries.
+    $warning_messages = $this->xpath('//div[@aria-label="Warning message"]');
+    $this->assertCount(1, $warning_messages);
+    $warning_message_text = $warning_messages[0]->getText();
+    $this->assertStringContainsString('Module update_test_0 has an entry in the system.schema key/value storage, but is not installed. More information about this error.', $warning_message_text);
+    $this->assertStringNotContainsString('Module update_test_0 has an entry in the system.schema key/value storage, but is missing from your site.', $warning_message_text);
+    $this->assertStringContainsString('Module my_already_removed_module has an entry in the system.schema key/value storage, but is missing from your site. More information about this error.', $warning_message_text);
+    $this->assertStringNotContainsString('Module my_already_removed_module has an entry in the system.schema key/value storage, but is not installed.', $warning_message_text);
+  }
+
+  /**
    * Data provider for testMissingExtension().
    */
   public function providerMissingExtension() {
