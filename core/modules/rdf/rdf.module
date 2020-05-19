@@ -117,7 +117,7 @@ function rdf_get_namespaces() {
     $function = $module . '_rdf_namespaces';
     foreach ($function() as $prefix => $namespace) {
       if (array_key_exists($prefix, $namespaces) && $namespace !== $namespaces[$prefix]) {
-        throw new Exception(t('Tried to map @prefix to @namespace, but @prefix is already mapped to @orig_namespace.', ['@prefix' => $prefix, '@namespace' => $namespace, '@orig_namespace' => $namespaces[$prefix]]));
+        throw new Exception("Tried to map '$prefix' to '$namespace', but '$prefix' is already mapped to '{$namespaces[$prefix]}'.");
       }
       else {
         $namespaces[$prefix] = $namespace;

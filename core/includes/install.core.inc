@@ -1240,7 +1240,7 @@ function install_select_profile(&$install_state) {
     else {
       // The non-interactive installer requires a profile parameter.
       if (!$install_state['interactive']) {
-        throw new InstallerException(t('Missing profile parameter.'));
+        throw new InstallerException('Missing profile parameter.');
       }
       // Otherwise, display a form to select a profile.
       return install_get_form('Drupal\Core\Installer\Form\SelectProfileForm', $install_state);
@@ -1385,7 +1385,7 @@ function install_select_language(&$install_state) {
         return;
       }
       else {
-        throw new InstallerException(t('You must select a language to continue the installation.'));
+        throw new InstallerException('You must select a language to continue the installation.');
       }
     }
   }

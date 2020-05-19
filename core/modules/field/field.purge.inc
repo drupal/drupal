@@ -157,7 +157,7 @@ function field_purge_field_storage(FieldStorageDefinitionInterface $field_storag
 
   $fields = $deleted_fields_repository->getFieldDefinitions($field_storage->getUniqueStorageIdentifier());
   if (count($fields) > 0) {
-    throw new FieldException(t('Attempt to purge a field storage @field_name that still has fields.', ['@field_name' => $field_storage->getName()]));
+    throw new FieldException("Attempt to purge a field storage '{$field_storage->getName()}' that still has fields.");
   }
 
   $deleted_fields_repository->removeFieldStorageDefinition($field_storage);
