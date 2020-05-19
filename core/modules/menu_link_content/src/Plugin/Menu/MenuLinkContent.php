@@ -141,8 +141,6 @@ class MenuLinkContent extends MenuLinkBase implements ContainerFactoryPluginInte
         // Fallback to the loading by the UUID.
         $uuid = $this->getUuid();
         $entity = $this->entityRepository->loadEntityByUuid('menu_link_content', $uuid);
-      }
-      if (!$entity) {
         throw new PluginException("Entity not found through the menu link plugin definition and could not fallback on UUID '$uuid'");
       }
       // Clone the entity object to avoid tampering with the static cache.
