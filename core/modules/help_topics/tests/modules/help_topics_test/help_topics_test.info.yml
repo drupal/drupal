@@ -5,4 +5,4 @@ type: module
 description: 'Support module for help testing.'
 package: Testing
 dependencies:
-  - help_topics
+  - drupal:help_topics

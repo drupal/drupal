@@ -4,5 +4,5 @@ description: 'Support module for Form API tests.'
 package: Testing
 version: VERSION
 dependencies:
-  - file
-  - filter
+  - drupal:file
+  - drupal:filter

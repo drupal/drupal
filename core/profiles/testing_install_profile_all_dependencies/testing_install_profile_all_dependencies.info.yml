@@ -4,8 +4,8 @@ description: 'Profile for testing that install profiles can require a module.'
 version: VERSION
 hidden: true
 dependencies:
-  - ban
-  - dblog
+  - drupal:ban
+  - drupal:dblog
 install: []
 themes:
   - classy

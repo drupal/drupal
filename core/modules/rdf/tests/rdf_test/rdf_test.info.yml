@@ -4,4 +4,4 @@ description: 'Test functionality for the RDF module.'
 package: Testing
 version: VERSION
 dependencies:
-  - rdf
+  - drupal:rdf

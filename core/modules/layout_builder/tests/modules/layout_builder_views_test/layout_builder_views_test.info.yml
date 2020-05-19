@@ -4,4 +4,4 @@ description: 'Support module for testing.'
 package: Testing
 version: VERSION
 dependencies:
-  - views
+  - drupal:views
