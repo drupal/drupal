@@ -12,16 +12,10 @@ use Drupal\KernelTests\AssertLegacyTrait as BaseAssertLegacyTrait;
 /**
  * Provides convenience methods for assertions in browser tests.
  *
- * Deprecated in drupal:8.2.0 and is removed from drupal:10.0.0. Use
- *   the methods on \Drupal\Tests\WebAssert instead, for example
- * @code
- *    $this->assertSession()->statusCodeEquals(200);
- * @endcode
+ * @deprecated in drupal:8.2.0 and is removed from drupal:10.0.0. Use
+ *   the methods from \Drupal\Tests\WebAssert instead.
  *
- * @todo https://www.drupal.org/project/drupal/issues/3114617 Note that
- *   deprecations in this file do not use the @ symbol in Drupal 8 because this
- *   will be removed in Drupal 10.0.0. Adding the @ back should re-enable coding
- *   standards checks.
+ * @see https://www.drupal.org/node/3129738
  */
 trait AssertLegacyTrait {
 
@@ -33,10 +27,13 @@ trait AssertLegacyTrait {
    * @param string $css_selector
    *   The CSS selector identifying the element to check.
    *
-   * Deprecated in drupal:8.2.0 and is removed from drupal:10.0.0. Use
+   * @deprecated in drupal:8.2.0 and is removed from drupal:10.0.0. Use
    *   $this->assertSession()->elementExists() instead.
+   *
+   * @see https://www.drupal.org/node/3129738
    */
   protected function assertElementPresent($css_selector) {
+    @trigger_error('AssertLegacyTrait::assertElementPresent() is deprecated in drupal:8.2.0 and is removed from drupal:10.0.0. Use $this->assertSession()->elementExists() instead. See https://www.drupal.org/node/3129738', E_USER_DEPRECATED);
     $this->assertSession()->elementExists('css', $css_selector);
   }
 
@@ -46,10 +43,13 @@ trait AssertLegacyTrait {
    * @param string $css_selector
    *   The CSS selector identifying the element to check.
    *
-   * Deprecated in drupal:8.2.0 and is removed from drupal:10.0.0. Use
+   * @deprecated in drupal:8.2.0 and is removed from drupal:10.0.0. Use
    *   $this->assertSession()->elementNotExists() instead.
+   *
+   * @see https://www.drupal.org/node/3129738
    */
   protected function assertElementNotPresent($css_selector) {
+    @trigger_error('AssertLegacyTrait::assertElementNotPresent() is deprecated in drupal:8.2.0 and is removed from drupal:10.0.0. Use $this->assertSession()->elementNotExists() instead. See https://www.drupal.org/node/3129738', E_USER_DEPRECATED);
     $this->assertSession()->elementNotExists('css', $css_selector);
   }
 
@@ -62,14 +62,17 @@ trait AssertLegacyTrait {
    * @param string $text
    *   Plain text to look for.
    *
-   * Deprecated in drupal:8.2.0 and is removed from drupal:10.0.0. Use
+   * @deprecated in drupal:8.2.0 and is removed from drupal:10.0.0. Use
    *   - $this->assertSession()->responseContains() for non-HTML responses,
    *     like XML or Json.
    *   - $this->assertSession()->pageTextContains() for HTML responses. Unlike
    *     the deprecated assertText(), the passed text should be HTML decoded,
    *     exactly as a human sees it in the browser.
+   *
+   * @see https://www.drupal.org/node/3129738
    */
   protected function assertText($text) {
+    @trigger_error('AssertLegacyTrait::assertText() is deprecated in drupal:8.2.0 and is removed from drupal:10.0.0. Use $this->assertSession()->responseContains() or $this->assertSession()->pageTextContains() instead. See https://www.drupal.org/node/3129738', E_USER_DEPRECATED);
     // Cast MarkupInterface to string.
     $text = (string) $text;
 
@@ -93,14 +96,17 @@ trait AssertLegacyTrait {
    * @param string $text
    *   Plain text to look for.
    *
-   * Deprecated in drupal:8.2.0 and is removed from drupal:10.0.0. Use
+   * @deprecated in drupal:8.2.0 and is removed from drupal:10.0.0. Use
    *   - $this->assertSession()->responseNotContains() for non-HTML responses,
    *     like XML or Json.
    *   - $this->assertSession()->pageTextNotContains() for HTML responses.
    *     Unlike the deprecated assertNoText(), the passed text should be HTML
    *     decoded, exactly as a human sees it in the browser.
+   *
+   * @see https://www.drupal.org/node/3129738
    */
   protected function assertNoText($text) {
+    @trigger_error('AssertLegacyTrait::assertNoText() is deprecated in drupal:8.2.0 and is removed from drupal:10.0.0. Use $this->assertSession()->responseNotContains() or $this->assertSession()->pageTextNotContains() instead. See https://www.drupal.org/node/3129738', E_USER_DEPRECATED);
     // Cast MarkupInterface to string.
     $text = (string) $text;
 
@@ -126,8 +132,15 @@ trait AssertLegacyTrait {
    *
    * @return bool
    *   TRUE on pass, FALSE on fail.
+   *
+   * @deprecated in drupal:8.2.0 and is removed from drupal:10.0.0. Use
+   *   $this->assertSession()->pageTextContains() or
+   *   $this->assertSession()->pageTextNotContains() instead.
+   *
+   * @see https://www.drupal.org/node/3129738
    */
   protected function assertTextHelper($text, $not_exists = TRUE) {
+    @trigger_error('AssertLegacyTrait::assertText() is deprecated in drupal:8.2.0 and is removed from drupal:10.0.0. Use $this->assertSession()->pageTextContains() or $this->assertSession()->pageTextNotContains() instead. See https://www.drupal.org/node/3129738', E_USER_DEPRECATED);
     $args = ['@text' => $text];
     $message = $not_exists ? new FormattableMarkup('"@text" not found', $args) : new FormattableMarkup('"@text" found', $args);
 
@@ -158,10 +171,13 @@ trait AssertLegacyTrait {
    *   (optional) A message to display with the assertion. Do not translate
    *   messages with t(). If left blank, a default message will be displayed.
    *
-   * Deprecated in drupal:8.2.0 and is removed from drupal:10.0.0. Use
+   * @deprecated in drupal:8.2.0 and is removed from drupal:10.0.0. Use
    *   $this->getSession()->getPage()->getText() and substr_count() instead.
+   *
+   * @see https://www.drupal.org/node/3129738
    */
   protected function assertUniqueText($text, $message = NULL) {
+    @trigger_error('AssertLegacyTrait::assertUniqueText() is deprecated in drupal:8.2.0 and is removed from drupal:10.0.0. Use $this->getSession()->getPage()->getText() and substr_count() instead. See https://www.drupal.org/node/3129738', E_USER_DEPRECATED);
     // Cast MarkupInterface objects to string.
     $text = (string) $text;
 
@@ -184,10 +200,13 @@ trait AssertLegacyTrait {
    *   (optional) A message to display with the assertion. Do not translate
    *   messages with t(). If left blank, a default message will be displayed.
    *
-   * Deprecated in drupal:8.2.0 and is removed from drupal:10.0.0. Use
+   * @deprecated in drupal:8.2.0 and is removed from drupal:10.0.0. Use
    *   $this->getSession()->getPage()->getText() and substr_count() instead.
+   *
+   * @see https://www.drupal.org/node/3129738
    */
   protected function assertNoUniqueText($text, $message = '') {
+    @trigger_error('AssertLegacyTrait::assertNoUniqueText() is deprecated in drupal:8.2.0 and is removed from drupal:10.0.0. Use $this->getSession()->getPage()->getText() and substr_count() instead. See https://www.drupal.org/node/3129738', E_USER_DEPRECATED);
     // Cast MarkupInterface objects to string.
     $text = (string) $text;
 
@@ -204,10 +223,13 @@ trait AssertLegacyTrait {
    *   Response code. For example 200 is a successful page request. For a list
    *   of all codes see http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html.
    *
-   * Deprecated in drupal:8.2.0 and is removed from drupal:10.0.0. Use
+   * @deprecated in drupal:8.2.0 and is removed from drupal:10.0.0. Use
    *   $this->assertSession()->statusCodeEquals() instead.
+   *
+   * @see https://www.drupal.org/node/3129738
    */
   protected function assertResponse($code) {
+    @trigger_error('AssertLegacyTrait::assertResponse() is deprecated in drupal:8.2.0 and is removed from drupal:10.0.0. Use $this->assertSession()->statusCodeEquals() instead. See https://www.drupal.org/node/3129738', E_USER_DEPRECATED);
     $this->assertSession()->statusCodeEquals($code);
   }
 
@@ -221,12 +243,15 @@ trait AssertLegacyTrait {
    *   to skip checking the actual value, while still checking that the field
    *   exists.
    *
-   * Deprecated in drupal:8.2.0 and is removed from drupal:10.0.0. Use
+   * @deprecated in drupal:8.2.0 and is removed from drupal:10.0.0. Use
    *   $this->assertSession()->fieldExists() or
    *   $this->assertSession()->buttonExists() or
    *   $this->assertSession()->fieldValueEquals() instead.
+   *
+   * @see https://www.drupal.org/node/3129738
    */
   protected function assertFieldByName($name, $value = NULL) {
+    @trigger_error('AssertLegacyTrait::assertFieldByName() is deprecated in drupal:8.2.0 and is removed from drupal:10.0.0. Use $this->assertSession()->fieldExists() or $this->assertSession()->buttonExists() or $this->assertSession()->fieldValueEquals() instead. See https://www.drupal.org/node/3129738', E_USER_DEPRECATED);
     $this->assertFieldByXPath($this->constructFieldXpath('name', $name), $value);
   }
 
@@ -241,12 +266,15 @@ trait AssertLegacyTrait {
    *   value, while still checking that the field does not exist. However, the
    *   default value ('') asserts that the field value is not an empty string.
    *
-   * Deprecated in drupal:8.2.0 and is removed from drupal:10.0.0. Use
+   * @deprecated in drupal:8.2.0 and is removed from drupal:10.0.0. Use
    *   $this->assertSession()->fieldNotExists() or
    *   $this->assertSession()->buttonNotExists() or
    *   $this->assertSession()->fieldValueNotEquals() instead.
+   *
+   * @see https://www.drupal.org/node/3129738
    */
   protected function assertNoFieldByName($name, $value = '') {
+    @trigger_error('AssertLegacyTrait::assertNoFieldByName() is deprecated in drupal:8.2.0 and is removed from drupal:10.0.0. Use $this->assertSession()->fieldNotExists() or $this->assertSession()->buttonNotExists() or $this->assertSession()->fieldValueNotEquals() instead. See https://www.drupal.org/node/3129738', E_USER_DEPRECATED);
     $this->assertNoFieldByXPath($this->constructFieldXpath('name', $name), $value);
   }
 
@@ -263,12 +291,15 @@ trait AssertLegacyTrait {
    *
    * @throws \Behat\Mink\Exception\ElementNotFoundException
    *
-   * Deprecated in drupal:8.2.0 and is removed from drupal:10.0.0. Use
+   * @deprecated in drupal:8.2.0 and is removed from drupal:10.0.0. Use
    *   $this->assertSession()->fieldExists() or
    *   $this->assertSession()->buttonExists() or
    *   $this->assertSession()->fieldValueEquals() instead.
+   *
+   * @see https://www.drupal.org/node/3129738
    */
   protected function assertFieldById($id, $value = '') {
+    @trigger_error('AssertLegacyTrait::assertFieldById() is deprecated in drupal:8.2.0 and is removed from drupal:10.0.0. Use $this->assertSession()->fieldExists() or $this->assertSession()->buttonExists() or $this->assertSession()->fieldValueEquals() instead. See https://www.drupal.org/node/3129738', E_USER_DEPRECATED);
     $this->assertFieldByXPath($this->constructFieldXpath('id', $id), $value);
   }
 
@@ -278,11 +309,14 @@ trait AssertLegacyTrait {
    * @param string $field
    *   Name or ID of field to assert.
    *
-   * Deprecated in drupal:8.2.0 and is removed from drupal:10.0.0. Use
+   * @deprecated in drupal:8.2.0 and is removed from drupal:10.0.0. Use
    *   $this->assertSession()->fieldExists() or
    *   $this->assertSession()->buttonExists() instead.
+   *
+   * @see https://www.drupal.org/node/3129738
    */
   protected function assertField($field) {
+    @trigger_error('AssertLegacyTrait::assertField() is deprecated in drupal:8.2.0 and is removed from drupal:10.0.0. Use $this->assertSession()->fieldExists() or $this->assertSession()->buttonExists() instead. See https://www.drupal.org/node/3129738', E_USER_DEPRECATED);
     $this->assertFieldByXPath($this->constructFieldXpath('name', $field) . '|' . $this->constructFieldXpath('id', $field));
   }
 
@@ -292,11 +326,14 @@ trait AssertLegacyTrait {
    * @param string $field
    *   Name or ID of field to assert.
    *
-   * Deprecated in drupal:8.2.0 and is removed from drupal:10.0.0. Use
+   * @deprecated in drupal:8.2.0 and is removed from drupal:10.0.0. Use
    *   $this->assertSession()->fieldNotExists() or
    *   $this->assertSession()->buttonNotExists() instead.
+   *
+   * @see https://www.drupal.org/node/3129738
    */
   protected function assertNoField($field) {
+    @trigger_error('AssertLegacyTrait::assertNoField() is deprecated in drupal:8.2.0 and is removed from drupal:10.0.0. Use $this->assertSession()->fieldNotExists() or $this->assertSession()->buttonNotExists() instead. See https://www.drupal.org/node/3129738', E_USER_DEPRECATED);
     $this->assertNoFieldByXPath($this->constructFieldXpath('name', $field) . '|' . $this->constructFieldXpath('id', $field));
   }
 
@@ -308,10 +345,13 @@ trait AssertLegacyTrait {
    * @param string $raw
    *   Raw (HTML) string to look for.
    *
-   * Deprecated in drupal:8.2.0 and is removed from drupal:10.0.0. Use
+   * @deprecated in drupal:8.2.0 and is removed from drupal:10.0.0. Use
    *   $this->assertSession()->responseContains() instead.
+   *
+   * @see https://www.drupal.org/node/3129738
    */
   protected function assertRaw($raw) {
+    @trigger_error('AssertLegacyTrait::assertRaw() is deprecated in drupal:8.2.0 and is removed from drupal:10.0.0. Use $this->assertSession()->responseContains() instead. See https://www.drupal.org/node/3129738', E_USER_DEPRECATED);
     $this->assertSession()->responseContains($raw);
   }
 
@@ -323,10 +363,13 @@ trait AssertLegacyTrait {
    * @param string $raw
    *   Raw (HTML) string to look for.
    *
-   * Deprecated in drupal:8.2.0 and is removed from drupal:10.0.0. Use
+   * @deprecated in drupal:8.2.0 and is removed from drupal:10.0.0. Use
    *   $this->assertSession()->responseNotContains() instead.
+   *
+   * @see https://www.drupal.org/node/3129738
    */
   protected function assertNoRaw($raw) {
+    @trigger_error('AssertLegacyTrait::assertNoRaw() is deprecated in drupal:8.2.0 and is removed from drupal:10.0.0. Use $this->assertSession()->responseNotContains() instead. See https://www.drupal.org/node/3129738', E_USER_DEPRECATED);
     $this->assertSession()->responseNotContains($raw);
   }
 
@@ -336,10 +379,13 @@ trait AssertLegacyTrait {
    * @param string $expected_title
    *   The string the page title should be.
    *
-   * Deprecated in drupal:8.2.0 and is removed from drupal:10.0.0. Use
+   * @deprecated in drupal:8.2.0 and is removed from drupal:10.0.0. Use
    *   $this->assertSession()->titleEquals() instead.
+   *
+   * @see https://www.drupal.org/node/3129738
    */
   protected function assertTitle($expected_title) {
+    @trigger_error('AssertLegacyTrait::assertTitle() is deprecated in drupal:8.2.0 and is removed from drupal:10.0.0. Use $this->assertSession()->titleEquals() instead. See https://www.drupal.org/node/3129738', E_USER_DEPRECATED);
     // Cast MarkupInterface to string.
     $expected_title = (string) $expected_title;
     return $this->assertSession()->titleEquals($expected_title);
@@ -355,10 +401,13 @@ trait AssertLegacyTrait {
    * @param int $index
    *   Link position counting from zero.
    *
-   * Deprecated in drupal:8.2.0 and is removed from drupal:10.0.0. Use
+   * @deprecated in drupal:8.2.0 and is removed from drupal:10.0.0. Use
    *   $this->assertSession()->linkExists() instead.
+   *
+   * @see https://www.drupal.org/node/3129738
    */
   protected function assertLink($label, $index = 0) {
+    @trigger_error('AssertLegacyTrait::assertLink() is deprecated in drupal:8.2.0 and is removed from drupal:10.0.0. Use $this->assertSession()->linkExists() instead. See https://www.drupal.org/node/3129738', E_USER_DEPRECATED);
     return $this->assertSession()->linkExists($label, $index);
   }
 
@@ -368,10 +417,13 @@ trait AssertLegacyTrait {
    * @param string|\Drupal\Component\Render\MarkupInterface $label
    *   Text between the anchor tags.
    *
-   * Deprecated in drupal:8.2.0 and is removed from drupal:10.0.0. Use
+   * @deprecated in drupal:8.2.0 and is removed from drupal:10.0.0. Use
    *   $this->assertSession()->linkNotExists() instead.
+   *
+   * @see https://www.drupal.org/node/3129738
    */
   protected function assertNoLink($label) {
+    @trigger_error('AssertLegacyTrait::assertNoLink() is deprecated in drupal:8.2.0 and is removed from drupal:10.0.0. Use $this->assertSession()->linkNotExists() instead. See https://www.drupal.org/node/3129738', E_USER_DEPRECATED);
     return $this->assertSession()->linkNotExists($label);
   }
 
@@ -383,10 +435,13 @@ trait AssertLegacyTrait {
    * @param int $index
    *   Link position counting from zero.
    *
-   * Deprecated in drupal:8.2.0 and is removed from drupal:10.0.0. Use
+   * @deprecated in drupal:8.2.0 and is removed from drupal:10.0.0. Use
    *   $this->assertSession()->linkByHrefExists() instead.
+   *
+   * @see https://www.drupal.org/node/3129738
    */
   protected function assertLinkByHref($href, $index = 0) {
+    @trigger_error('AssertLegacyTrait::assertLinkByHref() is deprecated in drupal:8.2.0 and is removed from drupal:10.0.0. Use $this->assertSession()->linkByHrefExists() instead. See https://www.drupal.org/node/3129738', E_USER_DEPRECATED);
     $this->assertSession()->linkByHrefExists($href, $index);
   }
 
@@ -396,10 +451,13 @@ trait AssertLegacyTrait {
    * @param string $href
    *   The full or partial value of the 'href' attribute of the anchor tag.
    *
-   * Deprecated in drupal:8.2.0 and is removed from drupal:10.0.0. Use
+   * @deprecated in drupal:8.2.0 and is removed from drupal:10.0.0. Use
    *   $this->assertSession()->linkByHrefNotExists() instead.
+   *
+   * @see https://www.drupal.org/node/3129738
    */
   protected function assertNoLinkByHref($href) {
+    @trigger_error('AssertLegacyTrait::assertNoLinkByHref() is deprecated in drupal:8.2.0 and is removed from drupal:10.0.0. Use $this->assertSession()->linkByHrefNotExists() instead. See https://www.drupal.org/node/3129738', E_USER_DEPRECATED);
     $this->assertSession()->linkByHrefNotExists($href);
   }
 
@@ -416,12 +474,15 @@ trait AssertLegacyTrait {
    *
    * @throws \Behat\Mink\Exception\ExpectationException
    *
-   * Deprecated in drupal:8.2.0 and is removed from drupal:10.0.0. Use
+   * @deprecated in drupal:8.2.0 and is removed from drupal:10.0.0. Use
    *   $this->assertSession()->fieldNotExists() or
    *   $this->assertSession()->buttonNotExists() or
    *   $this->assertSession()->fieldValueNotEquals() instead.
+   *
+   * @see https://www.drupal.org/node/3129738
    */
   protected function assertNoFieldById($id, $value = '') {
+    @trigger_error('AssertLegacyTrait::assertNoFieldById() is deprecated in drupal:8.2.0 and is removed from drupal:10.0.0. Use $this->assertSession()->fieldNotExists() or $this->assertSession()->buttonNotExists() or $this->assertSession()->fieldValueNotEquals() instead. See https://www.drupal.org/node/3129738', E_USER_DEPRECATED);
     $this->assertNoFieldByXPath($this->constructFieldXpath('id', $id), $value);
   }
 
@@ -431,10 +492,13 @@ trait AssertLegacyTrait {
    * @param \Drupal\Core\Url|string $path
    *   The expected system path or URL.
    *
-   * Deprecated in drupal:8.2.0 and is removed from drupal:10.0.0. Use
+   * @deprecated in drupal:8.2.0 and is removed from drupal:10.0.0. Use
    *   $this->assertSession()->addressEquals() instead.
+   *
+   * @see https://www.drupal.org/node/3129738
    */
   protected function assertUrl($path) {
+    @trigger_error('AssertLegacyTrait::assertUrl() is deprecated in drupal:8.2.0 and is removed from drupal:10.0.0. Use $this->assertSession()->addressEquals() instead. See https://www.drupal.org/node/3129738', E_USER_DEPRECATED);
     $this->assertSession()->addressEquals($path);
   }
 
@@ -446,10 +510,13 @@ trait AssertLegacyTrait {
    * @param string $option
    *   Option to assert.
    *
-   * Deprecated in drupal:8.2.0 and is removed from drupal:10.0.0. Use
+   * @deprecated in drupal:8.2.0 and is removed from drupal:10.0.0. Use
    *   $this->assertSession()->optionExists() instead.
+   *
+   * @see https://www.drupal.org/node/3129738
    */
   protected function assertOption($id, $option) {
+    @trigger_error('AssertLegacyTrait::assertOption() is deprecated in drupal:8.2.0 and is removed from drupal:10.0.0. Use $this->assertSession()->optionExists() instead. See https://www.drupal.org/node/3129738', E_USER_DEPRECATED);
     return $this->assertSession()->optionExists($id, $option);
   }
 
@@ -461,10 +528,13 @@ trait AssertLegacyTrait {
    * @param string $text
    *   The text for the option tag to assert.
    *
-   * Deprecated in drupal:8.4.0 and is removed from drupal:10.0.0. Use
+   * @deprecated in drupal:8.4.0 and is removed from drupal:10.0.0. Use
    *   $this->assertSession()->optionExists() instead.
+   *
+   * @see https://www.drupal.org/node/3129738
    */
   protected function assertOptionByText($id, $text) {
+    @trigger_error('AssertLegacyTrait::assertOptionByText() is deprecated in drupal:8.4.0 and is removed from drupal:10.0.0. Use $this->assertSession()->optionExists() instead. See https://www.drupal.org/node/3129738', E_USER_DEPRECATED);
     return $this->assertSession()->optionExists($id, $text);
   }
 
@@ -476,10 +546,13 @@ trait AssertLegacyTrait {
    * @param string $option
    *   Option to assert.
    *
-   * Deprecated in drupal:8.2.0 and is removed from drupal:10.0.0. Use
+   * @deprecated in drupal:8.2.0 and is removed from drupal:10.0.0. Use
    *   $this->assertSession()->optionNotExists() instead.
+   *
+   * @see https://www.drupal.org/node/3129738
    */
   protected function assertNoOption($id, $option) {
+    @trigger_error('AssertLegacyTrait::assertNoOption() is deprecated in drupal:8.2.0 and is removed from drupal:10.0.0. Use $this->assertSession()->optionNotExists() instead. See https://www.drupal.org/node/3129738', E_USER_DEPRECATED);
     return $this->assertSession()->optionNotExists($id, $option);
   }
 
@@ -494,11 +567,14 @@ trait AssertLegacyTrait {
    *   (optional) A message to display with the assertion. Do not translate
    *   messages with t(). If left blank, a default message will be displayed.
    *
-   * Deprecated in drupal:8.2.0 and is removed from drupal:10.0.0. Use
+   * @deprecated in drupal:8.2.0 and is removed from drupal:10.0.0. Use
    *   $this->assertSession()->optionExists() instead and check the
    *   "selected" attribute yourself.
+   *
+   * @see https://www.drupal.org/node/3129738
    */
   protected function assertOptionSelected($id, $option, $message = NULL) {
+    @trigger_error('AssertLegacyTrait::assertOptionSelected() is deprecated in drupal:8.2.0 and is removed from drupal:10.0.0. Use $this->assertSession()->optionExists() instead and check the "selected" attribute. See https://www.drupal.org/node/3129738', E_USER_DEPRECATED);
     $option_field = $this->assertSession()->optionExists($id, $option);
     $message = $message ?: "Option $option for field $id is selected.";
     $this->assertTrue($option_field->hasAttribute('selected'), $message);
@@ -510,10 +586,13 @@ trait AssertLegacyTrait {
    * @param string $id
    *   ID of field to assert.
    *
-   * Deprecated in drupal:8.2.0 and is removed from drupal:10.0.0. Use
+   * @deprecated in drupal:8.2.0 and is removed from drupal:10.0.0. Use
    *   $this->assertSession()->checkboxChecked() instead.
+   *
+   * @see https://www.drupal.org/node/3129738
    */
   protected function assertFieldChecked($id) {
+    @trigger_error('AssertLegacyTrait::assertFieldChecked() is deprecated in drupal:8.2.0 and is removed from drupal:10.0.0. Use $this->assertSession()->checkboxChecked() instead. See https://www.drupal.org/node/3129738', E_USER_DEPRECATED);
     $this->assertSession()->checkboxChecked($id);
   }
 
@@ -523,10 +602,13 @@ trait AssertLegacyTrait {
    * @param string $id
    *   ID of field to assert.
    *
-   * Deprecated in drupal:8.2.0 and is removed from drupal:10.0.0. Use
+   * @deprecated in drupal:8.2.0 and is removed from drupal:10.0.0. Use
    *   $this->assertSession()->checkboxNotChecked() instead.
+   *
+   * @see https://www.drupal.org/node/3129738
    */
   protected function assertNoFieldChecked($id) {
+    @trigger_error('AssertLegacyTrait::assertNoFieldChecked() is deprecated in drupal:8.2.0 and is removed from drupal:10.0.0. Use $this->assertSession()->checkboxNotChecked() instead. See https://www.drupal.org/node/3129738', E_USER_DEPRECATED);
     $this->assertSession()->checkboxNotChecked($id);
   }
 
@@ -543,10 +625,13 @@ trait AssertLegacyTrait {
    *   (optional) A message to display with the assertion. Do not translate
    *   messages with t().
    *
-   * Deprecated in drupal:8.3.0 and is removed from drupal:10.0.0. Use
+   * @deprecated in drupal:8.3.0 and is removed from drupal:10.0.0. Use
    *   $this->xpath() instead and check the values directly in the test.
+   *
+   * @see https://www.drupal.org/node/3129738
    */
   protected function assertFieldByXPath($xpath, $value = NULL, $message = '') {
+    @trigger_error('AssertLegacyTrait::assertFieldByXPath() is deprecated in drupal:8.3.0 and is removed from drupal:10.0.0. Use $this->xpath() instead and check the values directly in the test. See https://www.drupal.org/node/3129738', E_USER_DEPRECATED);
     $fields = $this->xpath($xpath);
 
     $this->assertFieldsByValue($fields, $value, $message);
@@ -566,10 +651,13 @@ trait AssertLegacyTrait {
    *
    * @throws \Behat\Mink\Exception\ExpectationException
    *
-   * Deprecated in drupal:8.3.0 and is removed from drupal:10.0.0. Use
+   * @deprecated in drupal:8.3.0 and is removed from drupal:10.0.0. Use
    *   $this->xpath() instead and assert that the result is empty.
+   *
+   * @see https://www.drupal.org/node/3129738
    */
   protected function assertNoFieldByXPath($xpath, $value = NULL, $message = '') {
+    @trigger_error('AssertLegacyTrait::assertNoFieldByXPath() is deprecated in drupal:8.3.0 and is removed from drupal:10.0.0. Use $this->xpath() instead and assert that the result is empty. See https://www.drupal.org/node/3129738', E_USER_DEPRECATED);
     $fields = $this->xpath($xpath);
 
     if (!empty($fields)) {
@@ -604,11 +692,14 @@ trait AssertLegacyTrait {
    *   (optional) A message to display with the assertion. Do not translate
    *   messages with t().
    *
-   * Deprecated in drupal:8.3.0 and is removed from drupal:10.0.0. Use
+   * @deprecated in drupal:8.3.0 and is removed from drupal:10.0.0. Use
    *   iteration over the fields yourself instead and directly check the values
    *   in the test.
+   *
+   * @see https://www.drupal.org/node/3129738
    */
   protected function assertFieldsByValue($fields, $value = NULL, $message = '') {
+    @trigger_error('AssertLegacyTrait::assertFieldsByValue() is deprecated in drupal:8.3.0 and is removed from drupal:10.0.0. Use iteration over the fields yourself instead and directly check the values in the test. See https://www.drupal.org/node/3129738', E_USER_DEPRECATED);
     // If value specified then check array for match.
     $found = TRUE;
     if (isset($value)) {
@@ -653,10 +744,13 @@ trait AssertLegacyTrait {
    * @param string $raw
    *   Raw (HTML) string to look for.
    *
-   * Deprecated in drupal:8.2.0 and is removed from drupal:10.0.0. Use
+   * @deprecated in drupal:8.2.0 and is removed from drupal:10.0.0. Use
    *   $this->assertSession()->assertEscaped() instead.
+   *
+   * @see https://www.drupal.org/node/3129738
    */
   protected function assertEscaped($raw) {
+    @trigger_error('AssertLegacyTrait::assertEscaped() is deprecated in drupal:8.2.0 and is removed from drupal:10.0.0. Use $this->assertSession()->assertEscaped() instead. See https://www.drupal.org/node/3129738', E_USER_DEPRECATED);
     $this->assertSession()->assertEscaped($raw);
   }
 
@@ -668,10 +762,13 @@ trait AssertLegacyTrait {
    * @param string $raw
    *   Raw (HTML) string to look for.
    *
-   * Deprecated in drupal:8.2.0 and is removed from drupal:10.0.0. Use
+   * @deprecated in drupal:8.2.0 and is removed from drupal:10.0.0. Use
    *   $this->assertSession()->assertNoEscaped() instead.
+   *
+   * @see https://www.drupal.org/node/3129738
    */
   protected function assertNoEscaped($raw) {
+    @trigger_error('AssertLegacyTrait::assertNoEscaped() is deprecated in drupal:8.2.0 and is removed from drupal:10.0.0. Use $this->assertSession()->assertNoEscaped() instead. See https://www.drupal.org/node/3129738', E_USER_DEPRECATED);
     $this->assertSession()->assertNoEscaped($raw);
   }
 
@@ -681,10 +778,13 @@ trait AssertLegacyTrait {
    * @param string $pattern
    *   Perl regex to look for including the regex delimiters.
    *
-   * Deprecated in drupal:8.2.0 and is removed from drupal:10.0.0. Use
-  *   $this->assertSession()->responseMatches() instead.
+   * @deprecated in drupal:8.2.0 and is removed from drupal:10.0.0. Use
+   *   $this->assertSession()->responseMatches() instead.
+   *
+   * @see https://www.drupal.org/node/3129738
    */
   protected function assertPattern($pattern) {
+    @trigger_error('AssertLegacyTrait::assertPattern() is deprecated in drupal:8.2.0 and is removed from drupal:10.0.0. Use $this->assertSession()->responseMatches() instead. See https://www.drupal.org/node/3129738', E_USER_DEPRECATED);
     $this->assertSession()->responseMatches($pattern);
   }
 
@@ -694,7 +794,7 @@ trait AssertLegacyTrait {
    * @param string $pattern
    *   Perl regex to look for including the regex delimiters.
    *
-   * Deprecated in drupal:8.4.0 and is removed from drupal:10.0.0. Use
+   * @deprecated in drupal:8.4.0 and is removed from drupal:10.0.0. Use
    *   $this->assertSession()->responseNotMatches() instead.
    *
    * @see https://www.drupal.org/node/3129738
@@ -710,10 +810,13 @@ trait AssertLegacyTrait {
    * @param string $expected_cache_tag
    *   The expected cache tag.
    *
-   * Deprecated in drupal:8.2.0 and is removed from drupal:10.0.0. Use
+   * @deprecated in drupal:8.2.0 and is removed from drupal:10.0.0. Use
    *   $this->assertSession()->responseHeaderContains() instead.
+   *
+   * @see https://www.drupal.org/node/3129738
    */
   protected function assertCacheTag($expected_cache_tag) {
+    @trigger_error('AssertLegacyTrait::assertCacheTag() is deprecated in drupal:8.2.0 and is removed from drupal:10.0.0. Use $this->assertSession()->responseHeaderContains() instead. See https://www.drupal.org/node/3129738', E_USER_DEPRECATED);
     $this->assertSession()->responseHeaderContains('X-Drupal-Cache-Tags', $expected_cache_tag);
   }
 
@@ -723,7 +826,7 @@ trait AssertLegacyTrait {
    * @param string $cache_tag
    *   The cache tag to check.
    *
-   * Deprecated in drupal:8.4.0 and is removed from drupal:10.0.0. Use
+   * @deprecated in drupal:8.4.0 and is removed from drupal:10.0.0. Use
    *   $this->assertSession()->responseHeaderNotContains() instead.
    *
    * @see https://www.drupal.org/node/3129738
@@ -741,10 +844,13 @@ trait AssertLegacyTrait {
    * @param string $value
    *   Value of the header to assert
    *
-   * Deprecated in drupal:8.3.0 and is removed from drupal:10.0.0. Use
+   * @deprecated in drupal:8.3.0 and is removed from drupal:10.0.0. Use
    *   $this->assertSession()->responseHeaderEquals() instead.
+   *
+   * @see https://www.drupal.org/node/3129738
    */
   protected function assertHeader($name, $value) {
+    @trigger_error('AssertLegacyTrait::assertHeader() is deprecated in drupal:8.2.0 and is removed from drupal:10.0.0. Use $this->assertSession()->responseHeaderEquals() instead. See https://www.drupal.org/node/3129738', E_USER_DEPRECATED);
     $this->assertSession()->responseHeaderEquals($name, $value);
   }
 
@@ -779,10 +885,13 @@ trait AssertLegacyTrait {
    * @return string
    *   An XPath query with arguments replaced.
    *
-   * Deprecated in drupal:8.2.0 and is removed from drupal:10.0.0. Use
+   * @deprecated in drupal:8.2.0 and is removed from drupal:10.0.0. Use
    *   $this->assertSession()->buildXPathQuery() instead.
+   *
+   * @see https://www.drupal.org/node/3129738
    */
   protected function buildXPathQuery($xpath, array $args = []) {
+    @trigger_error('AssertLegacyTrait::buildXPathQuery() is deprecated in drupal:8.2.0 and is removed from drupal:10.0.0. Use $this->assertSession()->buildXPathQuery() instead. See https://www.drupal.org/node/3129738', E_USER_DEPRECATED);
     return $this->assertSession()->buildXPathQuery($xpath, $args);
   }
 
@@ -797,10 +906,13 @@ trait AssertLegacyTrait {
    * @return string
    *   XPath for specified values.
    *
-   * Deprecated in drupal:8.5.0 and is removed from drupal:10.0.0. Use
+   * @deprecated in drupal:8.5.0 and is removed from drupal:10.0.0. Use
    *   $this->getSession()->getPage()->findField() instead.
+   *
+   * @see https://www.drupal.org/node/3129738
    */
   protected function constructFieldXpath($attribute, $value) {
+    @trigger_error('AssertLegacyTrait::constructFieldXpath() is deprecated in drupal:8.5.0 and is removed from drupal:10.0.0. Use $this->getSession()->getPage()->findField() instead. See https://www.drupal.org/node/3129738', E_USER_DEPRECATED);
     $xpath = '//textarea[@' . $attribute . '=:value]|//input[@' . $attribute . '=:value]|//select[@' . $attribute . '=:value]';
     return $this->buildXPathQuery($xpath, [':value' => $value]);
   }
@@ -808,7 +920,7 @@ trait AssertLegacyTrait {
   /**
    * Gets the current raw content.
    *
-   * Deprecated in drupal:8.2.0 and is removed from drupal:10.0.0. Use
+   * @deprecated in drupal:8.2.0 and is removed from drupal:10.0.0. Use
    *   $this->getSession()->getPage()->getContent() instead.
    *
    * @see https://www.drupal.org/node/3129738
@@ -827,7 +939,7 @@ trait AssertLegacyTrait {
    * @return \Behat\Mink\Element\NodeElement[]
    *   Option elements in select.
    *
-   * Deprecated in drupal:8.5.0 and is removed from drupal:10.0.0. Use
+   * @deprecated in drupal:8.5.0 and is removed from drupal:10.0.0. Use
    *   $element->findAll('xpath', 'option') instead.
    *
    * @see https://www.drupal.org/node/3129738

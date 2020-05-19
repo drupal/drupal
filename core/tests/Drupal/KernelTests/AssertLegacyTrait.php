@@ -8,72 +8,88 @@ namespace Drupal\KernelTests;
  * Protected methods are custom. Public static methods override methods of
  * \PHPUnit\Framework\Assert.
  *
- * Deprecated Scheduled for removal in Drupal 10.0.0. Use PHPUnit's native
- *   assert methods instead.
+ * @deprecated in drupal:8.0.0 and is removed from drupal:10.0.0. Use
+ *   PHPUnit's native assert methods instead.
  *
- * @todo https://www.drupal.org/project/drupal/issues/3031580 Note that
- *   deprecations in this file do not use the @ symbol in Drupal 8 because this
- *   will be removed in Drupal 10.0.0.
+ * @see https://www.drupal.org/node/3129738
  */
 trait AssertLegacyTrait {
 
   /**
    * @see \Drupal\simpletest\TestBase::assert()
    *
-   * Deprecated Scheduled for removal in Drupal 10.0.0. Use self::assertTrue()
-   *   instead.
+   * @deprecated in drupal:8.0.0 and is removed from drupal:10.0.0. Use
+   *   $this->assertTrue() instead.
+   *
+   * @see https://www.drupal.org/node/3129738
    */
   protected function assert($actual, $message = '') {
+    @trigger_error('AssertLegacyTrait::assert() is deprecated in drupal:8.0.0 and is removed from drupal:10.0.0. Use $this->assertTrue() instead. See https://www.drupal.org/node/3129738', E_USER_DEPRECATED);
     parent::assertTrue((bool) $actual, $message);
   }
 
   /**
    * @see \Drupal\simpletest\TestBase::assertEqual()
    *
-   * Deprecated Scheduled for removal in Drupal 10.0.0. Use self::assertEquals()
-   *   instead.
+   * @deprecated in drupal:8.0.0 and is removed from drupal:10.0.0. Use
+   *   $this->assertEquals() instead.
+   *
+   * @see https://www.drupal.org/node/3129738
    */
   protected function assertEqual($actual, $expected, $message = '') {
+    @trigger_error('AssertLegacyTrait::assertEqual() is deprecated in drupal:8.0.0 and is removed from drupal:10.0.0. Use $this->assertEquals() instead. See https://www.drupal.org/node/3129738', E_USER_DEPRECATED);
     $this->assertEquals($expected, $actual, (string) $message);
   }
 
   /**
    * @see \Drupal\simpletest\TestBase::assertNotEqual()
    *
-   * Deprecated Scheduled for removal in Drupal 10.0.0. Use
-   *   self::assertNotEquals() instead.
+   * @deprecated in drupal:8.0.0 and is removed from drupal:10.0.0. Use
+   *   $this->assertNotEquals() instead.
+   *
+   * @see https://www.drupal.org/node/3129738
    */
   protected function assertNotEqual($actual, $expected, $message = '') {
+    @trigger_error('AssertLegacyTrait::assertNotEqual() is deprecated in drupal:8.0.0 and is removed from drupal:10.0.0. Use $this->assertNotEquals() instead. See https://www.drupal.org/node/3129738', E_USER_DEPRECATED);
     $this->assertNotEquals($expected, $actual, (string) $message);
   }
 
   /**
    * @see \Drupal\simpletest\TestBase::assertIdentical()
    *
-   * Deprecated Scheduled for removal in Drupal 10.0.0. Use self::assertSame()
-   *   instead.
+   * @deprecated in drupal:8.0.0 and is removed from drupal:10.0.0. Use
+   *   $this->assertSame() instead.
+   *
+   * @see https://www.drupal.org/node/3129738
    */
   protected function assertIdentical($actual, $expected, $message = '') {
+    @trigger_error('AssertLegacyTrait::assertIdentical() is deprecated in drupal:8.0.0 and is removed from drupal:10.0.0. Use $this->assertSame() instead. See https://www.drupal.org/node/3129738', E_USER_DEPRECATED);
     $this->assertSame($expected, $actual, (string) $message);
   }
 
   /**
    * @see \Drupal\simpletest\TestBase::assertNotIdentical()
    *
-   * Deprecated Scheduled for removal in Drupal 10.0.0. Use
-   *   self::assertNotSame() instead.
+   * @deprecated in drupal:8.0.0 and is removed from drupal:10.0.0. Use
+   *   $this->assertNotSame() instead.
+   *
+   * @see https://www.drupal.org/node/3129738
    */
   protected function assertNotIdentical($actual, $expected, $message = '') {
+    @trigger_error('AssertLegacyTrait::assertNotIdentical() is deprecated in drupal:8.0.0 and is removed from drupal:10.0.0. Use $this->assertNotSame() instead. See https://www.drupal.org/node/3129738', E_USER_DEPRECATED);
     $this->assertNotSame($expected, $actual, (string) $message);
   }
 
   /**
    * @see \Drupal\simpletest\TestBase::assertIdenticalObject()
    *
-   * Deprecated Scheduled for removal in Drupal 10.0.0. Use self::assertEquals()
-   *   instead.
+   * @deprecated in drupal:8.0.0 and is removed from drupal:10.0.0. Use
+   *   $this->assertEquals() instead.
+   *
+   * @see https://www.drupal.org/node/3129738
    */
   protected function assertIdenticalObject($actual, $expected, $message = '') {
+    @trigger_error('AssertLegacyTrait::assertIdenticalObject() is deprecated in drupal:8.0.0 and is removed from drupal:10.0.0. Use $this->assertEquals() instead. See https://www.drupal.org/node/3129738', E_USER_DEPRECATED);
     // Note: ::assertSame checks whether its the same object. ::assertEquals
     // though compares
 
@@ -83,10 +99,15 @@ trait AssertLegacyTrait {
   /**
    * @see \Drupal\simpletest\TestBase::pass()
    *
-   * Deprecated Scheduled for removal in Drupal 10.0.0. Use self::assertTrue()
-   *   instead.
+   * @deprecated in drupal:8.0.0 and is removed from drupal:10.0.0. PHPUnit
+   *   interrupts a test as soon as a test assertion fails, so there is usually
+   *   no need to call this method. If a test's logic relies on this method,
+   *   refactor the test.
+   *
+   * @see https://www.drupal.org/node/3129738
    */
   protected function pass($message) {
+    @trigger_error('AssertLegacyTrait::pass() is deprecated in drupal:8.0.0 and is removed from drupal:10.0.0. PHPUnit interrupts a test as soon as a test assertion fails, so there is usually no need to call this method. If a test\'s logic relies on this method, refactor the test. See https://www.drupal.org/node/3129738', E_USER_DEPRECATED);
     $this->assertTrue(TRUE, $message);
   }
 
