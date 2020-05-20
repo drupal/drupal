@@ -99,6 +99,13 @@ function system_post_update_fix_jquery_extend() {
 }
 
 /**
+ * Clear the library cache and ensure aggregate files are regenerated.
+ */
+function system_post_update_fix_jquery_htmlprefilter() {
+  // Empty post-update hook.
+}
+
+/**
  * Change plugin IDs of actions.
  */
 function system_post_update_change_action_plugins() {

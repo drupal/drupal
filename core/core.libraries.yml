@@ -368,6 +368,9 @@ jquery:
     gpl-compatible: true
   js:
     assets/vendor/jquery/jquery.min.js: { minified: true, weight: -20 }
+    # This includes a security fix, so assign a weight that makes this load as
+    # soon after jquery.min.js is loaded as possible.
+    assets/vendor/jquery/jquery-htmlprefilter-3.5.0.js: { weight: -19 }
 
 jquery.cookie:
   remote: https://github.com/carhartl/jquery-cookie
