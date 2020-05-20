@@ -222,6 +222,7 @@ class MTimeProtectedFastFileStorage extends FileStorage {
    *   The directory where the temporary filename will be created.
    * @param $prefix
    *   The prefix of the generated temporary filename.
+   *
    * @return string
    *   Returns the new temporary filename (with path), or FALSE on failure.
    */

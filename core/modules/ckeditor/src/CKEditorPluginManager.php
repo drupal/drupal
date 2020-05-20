@@ -60,6 +60,7 @@ class CKEditorPluginManager extends DefaultPluginManager {
    * @param bool $include_internal_plugins
    *   Defaults to FALSE. When set to TRUE, plugins whose isInternal() method
    *   returns TRUE will also be included.
+   *
    * @return array
    *   A list of the enabled CKEditor plugins, with the plugin IDs as keys and
    *   the Drupal root-relative plugin files as values.

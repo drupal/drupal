@@ -15,6 +15,7 @@ use Drupal\TestTools\PhpUnitCompatibility\PhpUnit8\ClassWriter;
  *
  * @param string $scan_directory
  *   The directory that should be recursively scanned.
+ *
  * @return array
  *   An associative array of extension directories found within the scanned
  *   directory, keyed by extension name.

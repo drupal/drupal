@@ -437,6 +437,7 @@ function template_preprocess_entity_add_list(&$variables) {
  *   object created by authorize.php when the user authorizes the operation.
  * @param $page_title
  *   Optional string to use as the page title once redirected to authorize.php.
+ *
  * @return
  *   Nothing, this function just initializes variables in the user's session.
  */
@@ -464,6 +465,7 @@ function system_authorized_init($callback, $file, $arguments = [], $page_title =
  *
  * @param array $options
  *   Optional array of options to set on the \Drupal\Core\Url object.
+ *
  * @return \Drupal\Core\Url
  *   The full URL to authorize.php, using HTTPS if available.
  *
@@ -858,6 +860,7 @@ function system_check_directory($form_element, FormStateInterface $form_state) {
  * @param $show
  *   Possible values: REGIONS_ALL or REGIONS_VISIBLE. Visible excludes hidden
  *   regions.
+ *
  * @return
  *   An array of regions in the form $region['name'] = 'description'.
  */
@@ -923,6 +926,7 @@ function system_system_info_alter(&$info, Extension $file, $type) {
  *
  * @param $theme
  *   The name of a theme.
+ *
  * @return
  *   A string that is the region name.
  */

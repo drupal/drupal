@@ -225,6 +225,7 @@ class ManageDisplayTest extends BrowserTestBase {
    *   Plain text to look for.
    * @param $message
    *   Message to display.
+   *
    * @return
    *   TRUE on pass, FALSE on fail.
    */

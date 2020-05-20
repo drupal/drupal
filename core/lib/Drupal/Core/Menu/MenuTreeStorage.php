@@ -1459,6 +1459,7 @@ class MenuTreeStorage implements MenuTreeStorageInterface {
    *
    * @param array $definitions
    *   The new menu link definitions.
+   *
    * @return array
    *   A list of menu link IDs that no longer exist.
    */

@@ -169,6 +169,7 @@ interface SelectInterface extends ConditionInterface, AlterableInterface, Extend
    *
    * @param $distinct
    *   TRUE to flag this query DISTINCT, FALSE to disable it.
+   *
    * @return $this
    *   The called object.
    */
@@ -188,6 +189,7 @@ interface SelectInterface extends ConditionInterface, AlterableInterface, Extend
    *   automatically based on the $table_alias and $field. The alias will be
    *   checked for uniqueness, so the requested alias may not be the alias
    *   that is assigned in all cases.
+   *
    * @return
    *   The unique alias that was assigned for this field.
    */
@@ -211,6 +213,7 @@ interface SelectInterface extends ConditionInterface, AlterableInterface, Extend
    *   An indexed array of fields present in the specified table that should be
    *   included in this query. If not specified, $table_alias.* will be generated
    *   without any aliases.
+   *
    * @return $this
    *   The called object.
    */
@@ -232,6 +235,7 @@ interface SelectInterface extends ConditionInterface, AlterableInterface, Extend
    *   in all cases.
    * @param $arguments
    *   Any placeholder arguments needed for this expression.
+   *
    * @return
    *   The unique alias that was assigned for this expression.
    */
@@ -260,6 +264,7 @@ interface SelectInterface extends ConditionInterface, AlterableInterface, Extend
    *   system, for example, when joining the same table more than once.
    * @param $arguments
    *   An array of arguments to replace into the $condition of this join.
+   *
    * @return
    *   The unique alias that was assigned for this table.
    */
@@ -286,6 +291,7 @@ interface SelectInterface extends ConditionInterface, AlterableInterface, Extend
    *   system, for example, when joining the same table more than once.
    * @param $arguments
    *   An array of arguments to replace into the $condition of this join.
+   *
    * @return
    *   The unique alias that was assigned for this table.
    */
@@ -312,6 +318,7 @@ interface SelectInterface extends ConditionInterface, AlterableInterface, Extend
    *   system, for example, when joining the same table more than once.
    * @param $arguments
    *   An array of arguments to replace into the $condition of this join.
+   *
    * @return
    *   The unique alias that was assigned for this table.
    */
@@ -345,6 +352,7 @@ interface SelectInterface extends ConditionInterface, AlterableInterface, Extend
    *   system, for example, when joining the same table more than once.
    * @param $arguments
    *   An array of arguments to replace into the $condition of this join.
+   *
    * @return
    *   The unique alias that was assigned for this table.
    */
@@ -377,6 +385,7 @@ interface SelectInterface extends ConditionInterface, AlterableInterface, Extend
    * @param $direction
    *   The direction to sort. Legal values are "ASC" and "DESC". Any other value
    *   will be converted to "ASC".
+   *
    * @return $this
    *   The called object.
    */
@@ -415,6 +424,7 @@ interface SelectInterface extends ConditionInterface, AlterableInterface, Extend
    *   range directives that are set.
    * @param $length
    *   The number of records to return from the result set.
+   *
    * @return $this
    *   The called object.
    */
@@ -440,6 +450,7 @@ interface SelectInterface extends ConditionInterface, AlterableInterface, Extend
    * @param $type
    *   The type of UNION to add to the query. Defaults to plain
    *   UNION.
+   *
    * @return $this
    *   The called object.
    */
@@ -450,6 +461,7 @@ interface SelectInterface extends ConditionInterface, AlterableInterface, Extend
    *
    * @param $field
    *   The field on which to group. This should be the field as aliased.
+   *
    * @return $this
    *   The called object.
    */
@@ -505,6 +517,7 @@ interface SelectInterface extends ConditionInterface, AlterableInterface, Extend
    *   The comparison operator, such as =, <, or >=. It also accepts more complex
    *   options such as IN, LIKE, or BETWEEN. Defaults to IN if $value is an array
    *   = otherwise.
+   *
    * @return \Drupal\Core\Database\Query\ConditionInterface
    *   The called object.
    */

@@ -15,6 +15,7 @@ interface MetadataGeneratorInterface {
    *
    * @param \Drupal\Core\Entity\EntityInterface $entity
    *   The entity, in the language in which one of its fields is being edited.
+   *
    * @return array
    *   An array containing metadata with the following keys:
    *   - label: the user-visible label for the entity in the given language.
@@ -28,6 +29,7 @@ interface MetadataGeneratorInterface {
    *   The field values to be in-place edited.
    * @param string $view_mode
    *   The view mode the field should be rerendered in.
+   *
    * @return array
    *   An array containing metadata with the following keys:
    *   - label: the user-visible label for the field.
