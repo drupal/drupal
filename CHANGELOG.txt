@@ -1,6 +1,12 @@
 Drupal 7.xx, xxxx-xx-xx (development version)
 -----------------------
 
+Drupal 7.70, 2020-05-19
+-----------------------
+- Fixed security issues:
+   - SA-CORE-2020-002
+   - SA-CORE-2020-003
+
 Drupal 7.69, 2019-12-18
 -----------------------
 - Fixed security issues:

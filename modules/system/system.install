@@ -3293,6 +3293,13 @@ function system_update_7082() {
 }
 
 /**
+ * Add 'jquery-html-prefilter-3.5.0-backport.js' to the 'jquery' library.
+ */
+function system_update_7083() {
+  // Empty update to force a rebuild of hook_library() and JS aggregates.
+}
+
+/**
  * @} End of "defgroup updates-7.x-extra".
  * The next series of updates should start at 8000.
  */
