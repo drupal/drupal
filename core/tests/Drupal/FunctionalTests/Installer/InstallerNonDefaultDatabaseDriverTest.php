@@ -57,9 +57,9 @@ class InstallerNonDefaultDatabaseDriverTest extends InstallerTestBase {
     // Assert that in the settings.php the database connection array has the
     // correct values set.
     $contents = file_get_contents($this->root . '/' . $this->siteDirectory . '/settings.php');
-    $this->assertContains("'namespace' => 'Drupal\\\\driver_test\\\\Driver\\\\Database\\\\{$this->testDriverName}',", $contents);
-    $this->assertContains("'driver' => '{$this->testDriverName}',", $contents);
-    $this->assertContains("'autoload' => 'core/modules/system/tests/modules/driver_test/src/Driver/Database/{$this->testDriverName}/',", $contents);
+    $this->assertStringContainsString("'namespace' => 'Drupal\\\\driver_test\\\\Driver\\\\Database\\\\{$this->testDriverName}',", $contents);
+    $this->assertStringContainsString("'driver' => '{$this->testDriverName}',", $contents);
+    $this->assertStringContainsString("'autoload' => 'core/modules/system/tests/modules/driver_test/src/Driver/Database/{$this->testDriverName}/',", $contents);
   }
 
 }

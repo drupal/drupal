@@ -6,6 +6,7 @@ use Composer\Util\Filesystem;
 use Drupal\Tests\Composer\Plugin\Scaffold\Fixtures;
 use Drupal\Tests\Composer\Plugin\Scaffold\AssertUtilsTrait;
 use Drupal\Tests\Composer\Plugin\Scaffold\ExecTrait;
+use Drupal\Tests\PhpunitCompatibilityTrait;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -20,6 +21,7 @@ use PHPUnit\Framework\TestCase;
 class ManageGitIgnoreTest extends TestCase {
   use ExecTrait;
   use AssertUtilsTrait;
+  use PhpunitCompatibilityTrait;
 
   /**
    * The root of this project.

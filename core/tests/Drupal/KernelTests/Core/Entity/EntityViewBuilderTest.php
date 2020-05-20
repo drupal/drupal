@@ -291,7 +291,7 @@ class EntityViewBuilderTest extends EntityKernelTestBase {
     $reference_field = $main_entity->get('reference_field');
     $reference_field_array_english = $view_builder->viewField($reference_field, 'full');
     $rendered_reference_field_english = $renderer->renderRoot($reference_field_array_english);
-    $this->assertContains('Text in English', (string) $rendered_reference_field_english);
+    $this->assertStringContainsString('Text in English', (string) $rendered_reference_field_english);
 
     // Change the default language to Spanish and render the reference
     // field again. It should display the contents of the Spanish translation.
@@ -300,7 +300,7 @@ class EntityViewBuilderTest extends EntityKernelTestBase {
     \Drupal::languageManager()->getCurrentLanguage();
     $reference_field_array_spanish = $view_builder->viewField($reference_field, 'full');
     $rendered_reference_field_spanish = $renderer->renderRoot($reference_field_array_spanish);
-    $this->assertContains('Text in Spanish', (string) $rendered_reference_field_spanish);
+    $this->assertStringContainsString('Text in Spanish', (string) $rendered_reference_field_spanish);
   }
 
   /**

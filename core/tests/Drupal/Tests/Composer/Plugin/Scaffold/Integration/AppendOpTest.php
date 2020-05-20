@@ -5,6 +5,7 @@ namespace Drupal\Tests\Composer\Plugin\Scaffold\Integration;
 use Drupal\Composer\Plugin\Scaffold\Operations\AppendOp;
 use Drupal\Composer\Plugin\Scaffold\ScaffoldOptions;
 use Drupal\Tests\Composer\Plugin\Scaffold\Fixtures;
+use Drupal\Tests\PhpunitCompatibilityTrait;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -13,6 +14,7 @@ use PHPUnit\Framework\TestCase;
  * @group Scaffold
  */
 class AppendOpTest extends TestCase {
+  use PhpunitCompatibilityTrait;
 
   /**
    * @covers ::process
@@ -56,8 +58,8 @@ EOT;
     $this->assertEquals(trim($expected), $contents);
     // Confirm that expected output was written to our io fixture.
     $output = $fixtures->getOutput();
-    $this->assertContains('Prepend to [web-root]/robots.txt from assets/prepend-to-robots.txt', $output);
-    $this->assertContains('Append to [web-root]/robots.txt from assets/append-to-robots.txt', $output);
+    $this->assertStringContainsString('Prepend to [web-root]/robots.txt from assets/prepend-to-robots.txt', $output);
+    $this->assertStringContainsString('Append to [web-root]/robots.txt from assets/append-to-robots.txt', $output);
   }
 
 }

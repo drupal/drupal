@@ -219,7 +219,7 @@ class HandlerTest extends UITestBase {
 
       $this->drupalGet($href);
       $result = $this->xpath('//h1[@class="page-title"]');
-      $this->assertContains($text, $result[0]->getText(), 'Ensure the broken handler text was found.');
+      $this->assertStringContainsString($text, $result[0]->getText(), 'Ensure the broken handler text was found.');
 
       $original_configuration = [
         'field' => 'id_broken',

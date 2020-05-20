@@ -42,7 +42,7 @@ class StyleFieldsTest extends ViewsKernelTestBase {
     $view->initStyle();
     $output = $view->preview();
     $output = $renderer->renderRoot($output);
-    $this->assertContains('<div class="views-row"><span class="views-field views-field-age"><span class="field-content">25</span></span><br /><span class="views-field views-field-id"><span class="field-content">1</span></span><br /><span class="views-field views-field-name"><span class="field-content">John</span></span></div>', (string) $output);
+    $this->assertStringContainsString('<div class="views-row"><span class="views-field views-field-age"><span class="field-content">25</span></span><br /><span class="views-field views-field-id"><span class="field-content">1</span></span><br /><span class="views-field views-field-name"><span class="field-content">John</span></span></div>', (string) $output);
     $view->destroy();
 
     // Check that unsafe separators are stripped.
@@ -61,8 +61,8 @@ class StyleFieldsTest extends ViewsKernelTestBase {
     $view->initStyle();
     $output = $view->preview();
     $output = $renderer->renderRoot($output);
-    $this->assertNotContains('<script>', (string) $output);
-    $this->assertContains('alert("escape me!")', (string) $output);
+    $this->assertStringNotContainsString('<script>', (string) $output);
+    $this->assertStringContainsString('alert("escape me!")', (string) $output);
   }
 
 }

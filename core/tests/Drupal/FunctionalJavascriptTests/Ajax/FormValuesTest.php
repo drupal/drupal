@@ -76,7 +76,7 @@ class FormValuesTest extends WebDriverTestBase {
       // The select element is enabled as the response is receieved.
       $this->assertSession()->waitForElement('css', "select[name=\"$element_name\"]:enabled");
       $this->assertFileExists(DRUPAL_ROOT . '/' . $this->siteDirectory . '/error.log');
-      $this->assertContains('"The specified #ajax callback is empty or not callable."', file_get_contents(DRUPAL_ROOT . '/' . $this->siteDirectory . '/error.log'));
+      $this->assertStringContainsString('"The specified #ajax callback is empty or not callable."', file_get_contents(DRUPAL_ROOT . '/' . $this->siteDirectory . '/error.log'));
       // The exceptions are expected. Do not interpret them as a test failure.
       // Not using File API; a potential error must trigger a PHP warning.
       unlink(\Drupal::root() . '/' . $this->siteDirectory . '/error.log');

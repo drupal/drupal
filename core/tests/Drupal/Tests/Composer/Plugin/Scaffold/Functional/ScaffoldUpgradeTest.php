@@ -67,7 +67,7 @@ class ScaffoldUpgradeTest extends TestCase {
     // line that disables it.
     $this->mustExec("composer config --unset repositories.packagist.org", $sut);
     $stdout = $this->mustExec("composer require --no-ansi drupal/core-composer-scaffold:8.8.0 --no-plugins 2>&1", $sut);
-    $this->assertContains("  - Installing drupal/core-composer-scaffold (8.8.0):", $stdout);
+    $this->assertStringContainsString("  - Installing drupal/core-composer-scaffold (8.8.0):", $stdout);
 
     // We can't force the path repo to re-install over the stable version
     // without removing it, and removing it masks the bugs we are testing for.
@@ -90,7 +90,7 @@ class ScaffoldUpgradeTest extends TestCase {
     // scaffolding is still working.
     unlink("$sut/index.php");
     $stdout = $this->mustExec("composer scaffold", $sut);
-    $this->assertContains("Scaffolding files for", $stdout);
+    $this->assertStringContainsString("Scaffolding files for", $stdout);
     $this->assertFileExists("$sut/index.php");
   }
 

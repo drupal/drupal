@@ -143,7 +143,7 @@ class ProcessingTest extends BrowserTestBase {
     $this->drupalGet('batch-test/multistep', ['query' => ['big_tree' => 'small_axe']]);
     $this->drupalPostForm(NULL, [], 'Submit');
     $this->assertText('step 2', 'Form is displayed in step 2.');
-    $this->assertContains('batch-test/multistep?big_tree=small_axe', $this->getUrl(), 'Query argument was persisted and another extra argument was added.');
+    $this->assertStringContainsString('batch-test/multistep?big_tree=small_axe', $this->getUrl(), 'Query argument was persisted and another extra argument was added.');
   }
 
   /**

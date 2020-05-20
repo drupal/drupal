@@ -28,9 +28,9 @@ bar
 </body>
 EOT;
     $test->_setRawContent($raw_content);
-    $this->assertNotContains('foo', $test->_getTextContent());
-    $this->assertNotContains('<body>', $test->_getTextContent());
-    $this->assertContains('bar', $test->_getTextContent());
+    $this->assertStringNotContainsString('foo', $test->_getTextContent());
+    $this->assertStringNotContainsString('<body>', $test->_getTextContent());
+    $this->assertStringContainsString('bar', $test->_getTextContent());
   }
 
 }

@@ -352,7 +352,7 @@ class LinkFieldTest extends BrowserTestBase {
 
     $output = $this->renderTestEntity($id);
     $expected_link = (string) Link::fromTextAndUrl($value, Url::fromUri($value))->toString();
-    $this->assertContains($expected_link, $output);
+    $this->assertStringContainsString($expected_link, $output);
 
     // Verify that a link with text is rendered using the link text.
     $title = $this->randomMachineName();
@@ -364,7 +364,7 @@ class LinkFieldTest extends BrowserTestBase {
 
     $output = $this->renderTestEntity($id);
     $expected_link = (string) Link::fromTextAndUrl($title, Url::fromUri($value))->toString();
-    $this->assertContains($expected_link, $output);
+    $this->assertStringContainsString($expected_link, $output);
   }
 
   /**
@@ -468,51 +468,51 @@ class LinkFieldTest extends BrowserTestBase {
           case 'trim_length':
             $url = $url1;
             $title = isset($new_value) ? Unicode::truncate($title1, $new_value, FALSE, TRUE) : $title1;
-            $this->assertContains('<a href="' . Html::escape($url) . '">' . Html::escape($title) . '</a>', $output);
+            $this->assertStringContainsString('<a href="' . Html::escape($url) . '">' . Html::escape($title) . '</a>', $output);
 
             $url = $url2;
             $title = isset($new_value) ? Unicode::truncate($title2, $new_value, FALSE, TRUE) : $title2;
-            $this->assertContains('<a href="' . Html::escape($url) . '">' . Html::escape($title) . '</a>', $output);
+            $this->assertStringContainsString('<a href="' . Html::escape($url) . '">' . Html::escape($title) . '</a>', $output);
 
             $url = $url3;
             $title = isset($new_value) ? Unicode::truncate($title3, $new_value, FALSE, TRUE) : $title3;
-            $this->assertContains('<a href="' . Html::escape($url) . '">' . Html::escape($title) . '</a>', $output);
+            $this->assertStringContainsString('<a href="' . Html::escape($url) . '">' . Html::escape($title) . '</a>', $output);
             break;
 
           case 'rel':
             $rel = isset($new_value) ? ' rel="' . $new_value . '"' : '';
-            $this->assertContains('<a href="' . Html::escape($url1) . '"' . $rel . '>' . Html::escape($title1) . '</a>', $output);
-            $this->assertContains('<a href="' . Html::escape($url2) . '"' . $rel . '>' . Html::escape($title2) . '</a>', $output);
-            $this->assertContains('<a href="' . Html::escape($url3) . '"' . $rel . '>' . Html::escape($title3) . '</a>', $output);
+            $this->assertStringContainsString('<a href="' . Html::escape($url1) . '"' . $rel . '>' . Html::escape($title1) . '</a>', $output);
+            $this->assertStringContainsString('<a href="' . Html::escape($url2) . '"' . $rel . '>' . Html::escape($title2) . '</a>', $output);
+            $this->assertStringContainsString('<a href="' . Html::escape($url3) . '"' . $rel . '>' . Html::escape($title3) . '</a>', $output);
             break;
 
           case 'target':
             $target = isset($new_value) ? ' target="' . $new_value . '"' : '';
-            $this->assertContains('<a href="' . Html::escape($url1) . '"' . $target . '>' . Html::escape($title1) . '</a>', $output);
-            $this->assertContains('<a href="' . Html::escape($url2) . '"' . $target . '>' . Html::escape($title2) . '</a>', $output);
-            $this->assertContains('<a href="' . Html::escape($url3) . '"' . $target . '>' . Html::escape($title3) . '</a>', $output);
+            $this->assertStringContainsString('<a href="' . Html::escape($url1) . '"' . $target . '>' . Html::escape($title1) . '</a>', $output);
+            $this->assertStringContainsString('<a href="' . Html::escape($url2) . '"' . $target . '>' . Html::escape($title2) . '</a>', $output);
+            $this->assertStringContainsString('<a href="' . Html::escape($url3) . '"' . $target . '>' . Html::escape($title3) . '</a>', $output);
             break;
 
           case 'url_only':
             // In this case, $new_value is an array.
             if (!$new_value['url_only']) {
-              $this->assertContains('<a href="' . Html::escape($url1) . '">' . Html::escape($title1) . '</a>', $output);
-              $this->assertContains('<a href="' . Html::escape($url2) . '">' . Html::escape($title2) . '</a>', $output);
-              $this->assertContains('<a href="' . Html::escape($url3) . '">' . Html::escape($title3) . '</a>', $output);
+              $this->assertStringContainsString('<a href="' . Html::escape($url1) . '">' . Html::escape($title1) . '</a>', $output);
+              $this->assertStringContainsString('<a href="' . Html::escape($url2) . '">' . Html::escape($title2) . '</a>', $output);
+              $this->assertStringContainsString('<a href="' . Html::escape($url3) . '">' . Html::escape($title3) . '</a>', $output);
             }
             else {
               if (empty($new_value['url_plain'])) {
-                $this->assertContains('<a href="' . Html::escape($url1) . '">' . Html::escape($url1) . '</a>', $output);
-                $this->assertContains('<a href="' . Html::escape($url2) . '">' . Html::escape($url2) . '</a>', $output);
-                $this->assertContains('<a href="' . Html::escape($url3) . '">' . Html::escape($url3) . '</a>', $output);
+                $this->assertStringContainsString('<a href="' . Html::escape($url1) . '">' . Html::escape($url1) . '</a>', $output);
+                $this->assertStringContainsString('<a href="' . Html::escape($url2) . '">' . Html::escape($url2) . '</a>', $output);
+                $this->assertStringContainsString('<a href="' . Html::escape($url3) . '">' . Html::escape($url3) . '</a>', $output);
               }
               else {
-                $this->assertNotContains('<a href="' . Html::escape($url1) . '">' . Html::escape($url1) . '</a>', $output);
-                $this->assertNotContains('<a href="' . Html::escape($url2) . '">' . Html::escape($url2) . '</a>', $output);
-                $this->assertNotContains('<a href="' . Html::escape($url3) . '">' . Html::escape($url3) . '</a>', $output);
-                $this->assertContains(Html::escape($url1), $output);
-                $this->assertContains(Html::escape($url2), $output);
-                $this->assertContains(Html::escape($url3), $output);
+                $this->assertStringNotContainsString('<a href="' . Html::escape($url1) . '">' . Html::escape($url1) . '</a>', $output);
+                $this->assertStringNotContainsString('<a href="' . Html::escape($url2) . '">' . Html::escape($url2) . '</a>', $output);
+                $this->assertStringNotContainsString('<a href="' . Html::escape($url3) . '">' . Html::escape($url3) . '</a>', $output);
+                $this->assertStringContainsString(Html::escape($url1), $output);
+                $this->assertStringContainsString(Html::escape($url2), $output);
+                $this->assertStringContainsString(Html::escape($url3), $output);
               }
             }
             break;
@@ -607,7 +607,7 @@ class LinkFieldTest extends BrowserTestBase {
             $expected = '<div class="link-item">';
             $expected .= '<div class="link-url"><a href="' . Html::escape($url) . '">' . Html::escape($url_title) . '</a></div>';
             $expected .= '</div>';
-            $this->assertContains($expected, $output);
+            $this->assertStringContainsString($expected, $output);
 
             $url = $url2;
             $url_title = isset($new_value) ? Unicode::truncate($url, $new_value, FALSE, TRUE) : $url;
@@ -616,7 +616,7 @@ class LinkFieldTest extends BrowserTestBase {
             $expected .= '<div class="link-title">' . Html::escape($title) . '</div>';
             $expected .= '<div class="link-url"><a href="' . Html::escape($url) . '">' . Html::escape($url_title) . '</a></div>';
             $expected .= '</div>';
-            $this->assertContains($expected, $output);
+            $this->assertStringContainsString($expected, $output);
 
             $url = $url3;
             $url_title = isset($new_value) ? Unicode::truncate($url, $new_value, FALSE, TRUE) : $url;
@@ -625,21 +625,21 @@ class LinkFieldTest extends BrowserTestBase {
             $expected .= '<div class="link-title">' . Html::escape($title) . '</div>';
             $expected .= '<div class="link-url"><a href="' . Html::escape($url) . '">' . Html::escape($url_title) . '</a></div>';
             $expected .= '</div>';
-            $this->assertContains($expected, $output);
+            $this->assertStringContainsString($expected, $output);
             break;
 
           case 'rel':
             $rel = isset($new_value) ? ' rel="' . $new_value . '"' : '';
-            $this->assertContains('<div class="link-url"><a href="' . Html::escape($url1) . '"' . $rel . '>' . Html::escape($url1) . '</a></div>', $output);
-            $this->assertContains('<div class="link-url"><a href="' . Html::escape($url2) . '"' . $rel . '>' . Html::escape($url2) . '</a></div>', $output);
-            $this->assertContains('<div class="link-url"><a href="' . Html::escape($url3) . '"' . $rel . '>' . Html::escape($url3) . '</a></div>', $output);
+            $this->assertStringContainsString('<div class="link-url"><a href="' . Html::escape($url1) . '"' . $rel . '>' . Html::escape($url1) . '</a></div>', $output);
+            $this->assertStringContainsString('<div class="link-url"><a href="' . Html::escape($url2) . '"' . $rel . '>' . Html::escape($url2) . '</a></div>', $output);
+            $this->assertStringContainsString('<div class="link-url"><a href="' . Html::escape($url3) . '"' . $rel . '>' . Html::escape($url3) . '</a></div>', $output);
             break;
 
           case 'target':
             $target = isset($new_value) ? ' target="' . $new_value . '"' : '';
-            $this->assertContains('<div class="link-url"><a href="' . Html::escape($url1) . '"' . $target . '>' . Html::escape($url1) . '</a></div>', $output);
-            $this->assertContains('<div class="link-url"><a href="' . Html::escape($url2) . '"' . $target . '>' . Html::escape($url2) . '</a></div>', $output);
-            $this->assertContains('<div class="link-url"><a href="' . Html::escape($url3) . '"' . $target . '>' . Html::escape($url3) . '</a></div>', $output);
+            $this->assertStringContainsString('<div class="link-url"><a href="' . Html::escape($url1) . '"' . $target . '>' . Html::escape($url1) . '</a></div>', $output);
+            $this->assertStringContainsString('<div class="link-url"><a href="' . Html::escape($url2) . '"' . $target . '>' . Html::escape($url2) . '</a></div>', $output);
+            $this->assertStringContainsString('<div class="link-url"><a href="' . Html::escape($url3) . '"' . $target . '>' . Html::escape($url3) . '</a></div>', $output);
             break;
         }
       }
@@ -800,7 +800,7 @@ class LinkFieldTest extends BrowserTestBase {
     $id = $match[1];
     $output = $this->renderTestEntity($id);
     $expected_link = (string) $this->container->get('link_generator')->generate('Title, no link', Url::fromUri('route:<nolink>'));
-    $this->assertContains($expected_link, $output);
+    $this->assertStringContainsString($expected_link, $output);
 
     // Test a link with <none> uri.
     $edit = [
@@ -813,7 +813,7 @@ class LinkFieldTest extends BrowserTestBase {
     $id = $match[1];
     $output = $this->renderTestEntity($id);
     $expected_link = (string) $this->container->get('link_generator')->generate('Title, none', Url::fromUri('route:<none>'));
-    $this->assertContains($expected_link, $output);
+    $this->assertStringContainsString($expected_link, $output);
   }
 
   /**

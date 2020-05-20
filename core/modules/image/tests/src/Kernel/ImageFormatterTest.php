@@ -196,7 +196,7 @@ class ImageFormatterTest extends FieldKernelTestBase {
     $renderer = $this->container->get('renderer');
 
     $output = $renderer->renderRoot($build[$this->fieldName][0]);
-    $this->assertContains('<a href="' . $entity->toUrl()->toString() . '" data-attributes-test="test123"', (string) $output);
+    $this->assertStringContainsString('<a href="' . $entity->toUrl()->toString() . '" data-attributes-test="test123"', (string) $output);
   }
 
   /**

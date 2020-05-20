@@ -217,7 +217,7 @@ class ForumTest extends BrowserTestBase {
     $this->assertStringStartsWith('6 new posts', $elements[0]->getText(), 'Number of unread topics found.');
     // Verify that the forum name is in the unread topics text.
     $elements = $this->xpath('//tr[@id=:forum]//em[@class="placeholder"]', $forum_arg);
-    $this->assertContains($this->forum['name'], $elements[0]->getText(), 'Forum name found in unread topics text.');
+    $this->assertStringContainsString($this->forum['name'], $elements[0]->getText(), 'Forum name found in unread topics text.');
 
     // Verify total number of posts in forum.
     $elements = $this->xpath('//tr[@id=:forum]//td[@class="forum__posts"]', $forum_arg);

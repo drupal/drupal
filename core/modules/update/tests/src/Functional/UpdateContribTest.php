@@ -857,7 +857,7 @@ class UpdateContribTest extends UpdateTestBase {
     $update_element = $this->findUpdateElementByLabel($expected_release_title);
     $this->assertTrue($update_element->hasLink($version));
     $compatibility_details = $update_element->find('css', '.project-update__compatibility-details details');
-    $this->assertContains("Requires Drupal core: $expected_range", $compatibility_details->getText());
+    $this->assertStringContainsString("Requires Drupal core: $expected_range", $compatibility_details->getText());
     $details_summary_element = $compatibility_details->find('css', 'summary');
     if ($is_compatible) {
       $download_version = str_replace('.', '-', $version);

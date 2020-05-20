@@ -54,7 +54,7 @@ class TwigDebugMarkupTest extends BrowserTestBase {
     $this->assertStringContainsString('<!-- THEME DEBUG -->', $output, 'Twig debug markup found in theme output when debug is enabled.');
     $this->assertStringContainsString("THEME HOOK: 'node'", $output, 'Theme call information found.');
     $this->assertStringContainsString('* node--1--full' . $extension . PHP_EOL . '   x node--1' . $extension . PHP_EOL . '   * node--page--full' . $extension . PHP_EOL . '   * node--page' . $extension . PHP_EOL . '   * node--full' . $extension . PHP_EOL . '   * node' . $extension, $output, 'Suggested template files found in order and node ID specific template shown as current template.');
-    $this->assertContains(Html::escape('node--<script type="text/javascript">alert(\'yo\');</script>'), (string) $output);
+    $this->assertStringContainsString(Html::escape('node--<script type="text/javascript">alert(\'yo\');</script>'), (string) $output);
     $template_filename = $templates['node__1']['path'] . '/' . $templates['node__1']['template'] . $extension;
     $this->assertStringContainsString("BEGIN OUTPUT from '$template_filename'", $output, 'Full path to current template file found.');
 

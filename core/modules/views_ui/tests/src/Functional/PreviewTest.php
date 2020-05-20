@@ -87,7 +87,7 @@ class PreviewTest extends UITestBase {
     $this->clickLink(t('Feed'));
     $this->drupalPostForm(NULL, [], t('Update preview'));
     $result = $this->xpath('//div[@id="views-live-preview"]/pre');
-    $this->assertContains('<title>' . $view['page[title]'] . '</title>', $result[0]->getText(), 'The Feed RSS preview was rendered.');
+    $this->assertStringContainsString('<title>' . $view['page[title]'] . '</title>', $result[0]->getText(), 'The Feed RSS preview was rendered.');
 
     // Test the non-default UI display options.
     // Statistics only, no query.

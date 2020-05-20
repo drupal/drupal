@@ -90,7 +90,7 @@ class UninstallDefaultContentTest extends BrowserTestBase {
     $nodes = $node_storage->loadByProperties(['title' => 'Gluten free pizza']);
     $this->assertCount(1, $nodes);
     $node = reset($nodes);
-    $this->assertContains('Mix some of the milk and water in a jug', $node->field_recipe_instruction->value);
+    $this->assertStringContainsString('Mix some of the milk and water in a jug', $node->field_recipe_instruction->value);
   }
 
   /**
@@ -108,7 +108,7 @@ class UninstallDefaultContentTest extends BrowserTestBase {
     $nodes = $node_storage->loadByProperties(['title' => 'The umami guide to our favorite mushrooms']);
     $this->assertCount(1, $nodes);
     $node = reset($nodes);
-    $this->assertContains('One of the best things about mushrooms is their versatility', $node->body->value);
+    $this->assertStringContainsString('One of the best things about mushrooms is their versatility', $node->body->value);
   }
 
   /**

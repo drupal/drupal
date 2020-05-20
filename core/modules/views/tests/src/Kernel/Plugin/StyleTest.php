@@ -49,7 +49,7 @@ class StyleTest extends ViewsKernelTestBase {
 
     $output = $view->preview();
     $output = $renderer->renderRoot($output);
-    $this->assertContains($random_text, (string) $output);
+    $this->assertStringContainsString($random_text, (string) $output);
 
     // Test without row plugin support.
     $view = Views::getView('test_view');
@@ -69,7 +69,7 @@ class StyleTest extends ViewsKernelTestBase {
     $view->style_plugin->setOutput($random_text);
     $output = $view->preview();
     $output = $renderer->renderRoot($output);
-    $this->assertContains($random_text, (string) $output);
+    $this->assertStringContainsString($random_text, (string) $output);
   }
 
   /**
@@ -258,11 +258,11 @@ class StyleTest extends ViewsKernelTestBase {
     foreach ($rows as $row) {
       $attributes = $row->attributes();
       $class = (string) $attributes['class'][0];
-      $this->assertContains($random_name, $class);
+      $this->assertStringContainsString($random_name, $class);
 
       // Check token replacement.
       $name = $view->field['name']->getValue($view->result[$count]);
-      $this->assertContains("test-token-$name", $class);
+      $this->assertStringContainsString("test-token-$name", $class);
 
       $count++;
     }
