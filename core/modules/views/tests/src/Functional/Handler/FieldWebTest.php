@@ -125,6 +125,7 @@ class FieldWebTest extends ViewTestBase {
    *   The message to display along with the assertion.
    * @param string $group
    *   The type of assertion - examples are "Browser", "PHP".
+   *
    * @return bool
    *   TRUE if the assertion succeeded, FALSE otherwise.
    */
@@ -143,6 +144,7 @@ class FieldWebTest extends ViewTestBase {
    *   The message to display along with the assertion.
    * @param string $group
    *   The type of assertion - examples are "Browser", "PHP".
+   *
    * @return bool
    *   TRUE if the assertion succeeded, FALSE otherwise.
    */

@@ -46,6 +46,7 @@ class UmamiMultilingualInstallTest extends InstallerTestBase {
    *
    * @param string $langcode
    *   The language code.
+   *
    * @return string
    *   Contents for the test .po file.
    */

@@ -26,6 +26,7 @@
  *
  * @param $account
  *   The user account whose default shortcut set is being requested.
+ *
  * @return string
  *   The name of the shortcut set that this module recommends for that user, if
  *   there is one.

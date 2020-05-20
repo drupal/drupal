@@ -45,6 +45,7 @@ interface CKEditorPluginInterface extends PluginInspectionInterface {
    *
    * @param \Drupal\editor\Entity\Editor $editor
    *   A configured text editor object.
+   *
    * @return array
    *   An unindexed array of plugin names this plugin requires. Each plugin is
    *   is identified by its annotated ID.
@@ -59,6 +60,7 @@ interface CKEditorPluginInterface extends PluginInspectionInterface {
    *
    * @param \Drupal\editor\Entity\Editor $editor
    *   A configured text editor object.
+   *
    * @return array
    *   An array of libraries suitable for usage in a render API #attached
    *   property.
@@ -91,6 +93,7 @@ interface CKEditorPluginInterface extends PluginInspectionInterface {
    *
    * @param \Drupal\editor\Entity\Editor $editor
    *   A configured text editor object.
+   *
    * @return array
    *   A keyed array, whose keys will end up as keys under CKEDITOR.config.
    */

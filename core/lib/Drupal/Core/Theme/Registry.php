@@ -802,6 +802,7 @@ class Registry implements DestructableInterface {
    *
    * @param $prefixes
    *   An array of function prefixes by which the list can be limited.
+   *
    * @return array
    *   Functions grouped by the first prefix.
    */

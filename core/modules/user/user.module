@@ -159,6 +159,7 @@ function user_user_presave(UserInterface $account) {
  *
  * @param string $mail
  *   String with the account's email address.
+ *
  * @return object|bool
  *   A fully-loaded $user object upon successful user load or FALSE if user
  *   cannot be loaded.
@@ -176,6 +177,7 @@ function user_load_by_mail($mail) {
  *
  * @param string $name
  *   String with the account's user name.
+ *
  * @return object|bool
  *   A fully-loaded $user object upon successful user load or FALSE if user
  *   cannot be loaded.

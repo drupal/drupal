@@ -621,6 +621,7 @@ class LocaleConfigManager {
    *   Configuration override data.
    * @param array $translatable
    *   Translatable data array. @see self::getTranslatableData()
+   *
    * @return array
    *   Nested array of any items of $override_data which did not have keys in
    *   $translatable. May be empty if $override_data only had items which were

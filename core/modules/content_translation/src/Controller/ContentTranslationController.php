@@ -95,6 +95,7 @@ class ContentTranslationController extends ControllerBase {
    *   The route match.
    * @param string $entity_type_id
    *   (optional) The entity type ID.
+   *
    * @return array
    *   Array of page elements to render.
    */
