@@ -201,6 +201,9 @@ class StableDecoupledTest extends KernelTestBase {
           'progress.module.css',
           // This template is not used by core themes.
           'status-report.html.twig',
+          // We've intentionally left system.admin.css broken in stable.
+          // @see https://drupal.org/node/3033734
+          'system.admin.css',
           // The following two templates can be skipped as the only difference
           // is the removal of an unnecessary data-striping attribute in core's
           // version.
@@ -224,6 +227,9 @@ class StableDecoupledTest extends KernelTestBase {
           // The difference is a desired markup change.
           // @see https://drupal.org/node/3113211
           'views-ui-views-listing-table.html.twig',
+          // We've intentionally left system.admin.css broken in stable.
+          // @see https://drupal.org/node/3033734
+          'system.admin.css',
           // The following two templates can be skipped as the only difference
           // is the removal of an unnecessary data-striping attribute in core's
           // version.
@@ -255,6 +261,9 @@ class StableDecoupledTest extends KernelTestBase {
           'status-report-general-info.html.twig',
           // The differences in Stable vs. core are acceptable ones.
           'system-status-counter.css',
+          // We've intentionally left system.admin.css broken in stable.
+          // @see https://drupal.org/node/3033734
+          'system.admin.css',
           // The difference is a desired markup change.
           // @see https://drupal.org/node/3113211
           'views-ui-views-listing-table.html.twig',
@@ -289,6 +298,9 @@ class StableDecoupledTest extends KernelTestBase {
           'status-report-general-info.html.twig',
           // The differences in Stable vs. core are acceptable ones.
           'system-status-counter.css',
+          // We've intentionally left system.admin.css broken in stable.
+          // @see https://drupal.org/node/3033734
+          'system.admin.css',
           // The difference is a desired markup change.
           // @see https://drupal.org/node/3113211
           'views-ui-views-listing-table.html.twig',
