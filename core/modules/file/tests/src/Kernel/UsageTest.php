@@ -44,7 +44,7 @@ class UsageTest extends FileManagedUnitTestBase {
 
     $usage = $this->container->get('file.usage')->listUsage($file);
 
-    $this->assertEqual(count($usage['testing']), 2, 'Returned the correct number of items.');
+    $this->assertCount(2, $usage['testing'], 'Returned the correct number of items.');
     $this->assertTrue(isset($usage['testing']['foo'][1]), 'Returned the correct id.');
     $this->assertTrue(isset($usage['testing']['bar'][2]), 'Returned the correct id.');
     $this->assertEqual($usage['testing']['foo'][1], 1, 'Returned the correct count.');
@@ -68,7 +68,7 @@ class UsageTest extends FileManagedUnitTestBase {
       ->condition('f.fid', $file->id())
       ->execute()
       ->fetchAllAssoc('id');
-    $this->assertEqual(count($usage), 2, 'Created two records');
+    $this->assertCount(2, $usage, 'Created two records');
     $this->assertEqual($usage[1]->module, 'testing', 'Correct module');
     $this->assertEqual($usage[2]->module, 'testing', 'Correct module');
     $this->assertEqual($usage[1]->type, 'foo', 'Correct type');

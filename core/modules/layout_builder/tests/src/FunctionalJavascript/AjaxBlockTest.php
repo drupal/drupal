@@ -95,7 +95,7 @@ class AjaxBlockTest extends WebDriverTestBase {
     $assert_session->assertWaitOnAjaxRequest();
     $block_elements = $this->cssSelect('.block-layout-builder-test-testajax');
     // Should be exactly one of these in there.
-    $this->assertEquals(1, count($block_elements));
+    $this->assertCount(1, $block_elements);
     $assert_session->pageTextContains('Every word is like an unnecessary stain on silence and nothingness.');
   }
 

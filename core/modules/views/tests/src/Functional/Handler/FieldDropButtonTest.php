@@ -54,9 +54,9 @@ class FieldDropButtonTest extends ViewTestBase {
     $this->drupalGet('test-dropbutton');
     foreach ($nodes as $node) {
       $result = $this->xpath('//ul[contains(@class, dropbutton)]/li/a[contains(@href, :path) and text()=:title]', [':path' => '/node/' . $node->id(), ':title' => $node->label()]);
-      $this->assertEqual(count($result), 1, 'Just one node title link was found.');
+      $this->assertCount(1, $result, 'Just one node title link was found.');
       $result = $this->xpath('//ul[contains(@class, dropbutton)]/li/a[contains(@href, :path) and text()=:title]', [':path' => '/node/' . $node->id(), ':title' => 'Custom Text']);
-      $this->assertEqual(count($result), 1, 'Just one custom link was found.');
+      $this->assertCount(1, $result, 'Just one custom link was found.');
     }
 
     // Check if the dropbutton.js library is available.

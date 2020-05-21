@@ -177,7 +177,7 @@ class BlockContentTranslationUITest extends ContentTranslationUITestBase {
 
     // Make sure that only a single row was inserted into the block table.
     $rows = Database::getConnection()->query('SELECT * FROM {block_content_field_data} WHERE id = :id', [':id' => $enabled_block_content->id()])->fetchAll();
-    $this->assertEqual(1, count($rows));
+    $this->assertCount(1, $rows);
   }
 
   /**

@@ -355,8 +355,8 @@ class FieldAttachStorageTest extends FieldKernelTestBase {
     $entity = $this->entitySaveReload($entity);
 
     // Verify the fields are present on load
-    $this->assertEqual(count($entity->{$this->fieldTestData->field_name}), 4, 'First field got loaded');
-    $this->assertEqual(count($entity->{$field_name}), 1, 'Second field got loaded');
+    $this->assertCount(4, $entity->{$this->fieldTestData->field_name}, 'First field got loaded');
+    $this->assertCount(1, $entity->{$field_name}, 'Second field got loaded');
 
     // Delete the bundle.
     entity_test_delete_bundle($this->fieldTestData->field->getTargetBundle(), $entity_type);

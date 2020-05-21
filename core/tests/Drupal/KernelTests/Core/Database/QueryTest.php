@@ -14,10 +14,10 @@ class QueryTest extends DatabaseTestBase {
    */
   public function testArraySubstitution() {
     $names = $this->connection->query('SELECT name FROM {test} WHERE age IN ( :ages[] ) ORDER BY age', [':ages[]' => [25, 26, 27]])->fetchAll();
-    $this->assertEqual(count($names), 3, 'Correct number of names returned');
+    $this->assertCount(3, $names, 'Correct number of names returned');
 
     $names = $this->connection->query('SELECT name FROM {test} WHERE age IN ( :ages[] ) ORDER BY age', [':ages[]' => [25]])->fetchAll();
-    $this->assertEqual(count($names), 1, 'Correct number of names returned');
+    $this->assertCount(1, $names, 'Correct number of names returned');
   }
 
   /**

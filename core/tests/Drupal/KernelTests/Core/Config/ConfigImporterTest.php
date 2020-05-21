@@ -157,7 +157,7 @@ class ConfigImporterTest extends KernelTestBase {
 
     $this->assertFalse($this->configImporter->hasUnprocessedConfigurationChanges());
     $logs = $this->configImporter->getErrors();
-    $this->assertEqual(count($logs), 0);
+    $this->assertCount(0, $logs);
   }
 
   /**
@@ -211,7 +211,7 @@ class ConfigImporterTest extends KernelTestBase {
     // Verify that there is nothing more to import.
     $this->assertFalse($this->configImporter->hasUnprocessedConfigurationChanges());
     $logs = $this->configImporter->getErrors();
-    $this->assertEqual(count($logs), 0);
+    $this->assertCount(0, $logs);
   }
 
   /**
@@ -256,7 +256,7 @@ class ConfigImporterTest extends KernelTestBase {
     $this->assertEqual($secondary->label(), $values_secondary['label']);
 
     $logs = $this->configImporter->getErrors();
-    $this->assertEqual(count($logs), 1);
+    $this->assertCount(1, $logs);
     $this->assertEqual($logs[0], new FormattableMarkup('Deleted and replaced configuration entity "@name"', ['@name' => $name_secondary]));
   }
 
@@ -302,7 +302,7 @@ class ConfigImporterTest extends KernelTestBase {
     $this->assertEqual($secondary->label(), $values_secondary['label']);
 
     $logs = $this->configImporter->getErrors();
-    $this->assertEqual(count($logs), 1);
+    $this->assertCount(1, $logs);
     $this->assertEqual($logs[0], Html::escape("Unexpected error during import with operation create for $name_primary: 'config_test' entity with ID 'secondary' already exists."));
   }
 
@@ -384,7 +384,7 @@ class ConfigImporterTest extends KernelTestBase {
     $this->assertEqual($other->label(), $values_other['label']);
 
     $logs = $this->configImporter->getErrors();
-    $this->assertEqual(count($logs), 1);
+    $this->assertCount(1, $logs);
     $this->assertEqual($logs[0], new FormattableMarkup('Update target "@name" is missing.', ['@name' => $name_deletee]));
   }
 
@@ -435,7 +435,7 @@ class ConfigImporterTest extends KernelTestBase {
     $this->assertNull($entity_storage->load('deleter'));
     $this->assertNull($entity_storage->load('deletee'));
     $logs = $this->configImporter->getErrors();
-    $this->assertEqual(count($logs), 0);
+    $this->assertCount(0, $logs);
   }
 
   /**
@@ -477,7 +477,7 @@ class ConfigImporterTest extends KernelTestBase {
     // delete occurred in \Drupal\config_test\Entity\ConfigTest::postDelete()
     // this does not matter.
     $logs = $this->configImporter->getErrors();
-    $this->assertEqual(count($logs), 0);
+    $this->assertCount(0, $logs);
   }
 
   /**
@@ -534,7 +534,7 @@ class ConfigImporterTest extends KernelTestBase {
     // Verify that there is nothing more to import.
     $this->assertFalse($this->configImporter->hasUnprocessedConfigurationChanges());
     $logs = $this->configImporter->getErrors();
-    $this->assertEqual(count($logs), 0);
+    $this->assertCount(0, $logs);
   }
 
   /**

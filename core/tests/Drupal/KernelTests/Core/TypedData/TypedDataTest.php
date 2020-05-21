@@ -399,24 +399,24 @@ class TypedDataTest extends KernelTestBase {
     // Test dealing with NULL items.
     $typed_data[] = NULL;
     $this->assertTrue($typed_data->isEmpty());
-    $this->assertEqual(count($typed_data), 1);
+    $this->assertCount(1, $typed_data);
     $typed_data[] = '';
     $this->assertFalse($typed_data->isEmpty());
-    $this->assertEqual(count($typed_data), 2);
+    $this->assertCount(2, $typed_data);
     $typed_data[] = 'three';
     $this->assertFalse($typed_data->isEmpty());
-    $this->assertEqual(count($typed_data), 3);
+    $this->assertCount(3, $typed_data);
 
     $this->assertEqual($typed_data->getValue(), [NULL, '', 'three']);
     // Test unsetting.
     unset($typed_data[1]);
-    $this->assertEqual(count($typed_data), 2);
+    $this->assertCount(2, $typed_data);
     // Check that items were shifted.
     $this->assertEqual($typed_data[1]->getValue(), 'three');
 
     // Getting a not set list item returns NULL, and does not create a new item.
     $this->assertNull($typed_data[2]);
-    $this->assertEqual(count($typed_data), 2);
+    $this->assertCount(2, $typed_data);
 
     // Test setting the list with less values.
     $typed_data->setValue(['one']);

@@ -512,18 +512,18 @@ abstract class GenericCacheBackendUnitTestBase extends KernelTestBase {
 
     $cids = $reference;
     $ret = $backend->getMultiple($cids);
-    $this->assertEqual(count($ret), 4, 'Four items returned.');
+    $this->assertCount(4, $ret, 'Four items returned.');
 
     $backend->invalidate('test1');
     $backend->invalidateMultiple(['test2', 'test3']);
 
     $cids = $reference;
     $ret = $backend->getMultiple($cids);
-    $this->assertEqual(count($ret), 1, 'Only one item element returned.');
+    $this->assertCount(1, $ret, 'Only one item element returned.');
 
     $cids = $reference;
     $ret = $backend->getMultiple($cids, TRUE);
-    $this->assertEqual(count($ret), 4, 'Four items returned.');
+    $this->assertCount(4, $ret, 'Four items returned.');
 
     // Calling invalidateMultiple() with an empty array should not cause an
     // error.

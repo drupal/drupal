@@ -63,7 +63,7 @@ class InstallerTest extends InstallerTestBase {
     // Assert that the expected title is present.
     $this->assertEqual('Select an installation profile', $this->cssSelect('main h2')[0]->getText());
     $result = $this->xpath('//span[contains(@class, :class) and contains(text(), :text)]', [':class' => 'visually-hidden', ':text' => 'Select an installation profile']);
-    $this->assertEqual(count($result), 1, "Title/Label not displayed when '#title_display' => 'invisible' attribute is set");
+    $this->assertCount(1, $result, "Title/Label not displayed when '#title_display' => 'invisible' attribute is set");
 
     parent::setUpProfile();
   }

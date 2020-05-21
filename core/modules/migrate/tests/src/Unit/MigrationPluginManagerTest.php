@@ -57,7 +57,7 @@ class MigrationPluginManagerTest extends UnitTestCase {
       else {
         $requirements = array_combine($requirements, $requirements);
 
-        $this->assertEquals(1, count($migration->set));
+        $this->assertCount(1, $migration->set);
         list($set_prop, $set_requirements) = reset($migration->set);
         $this->assertEquals('requirements', $set_prop);
         $this->assertEquals($requirements, $set_requirements);

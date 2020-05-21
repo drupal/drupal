@@ -28,7 +28,7 @@ class PhpUnitErrorTest extends KernelTestBase {
     $phpunit_error_xml = __DIR__ . '/../../fixtures/phpunit_error.xml';
 
     $res = simpletest_phpunit_xml_to_rows(1, $phpunit_error_xml);
-    $this->assertEquals(count($res), 4, 'All testcases got extracted');
+    $this->assertCount(4, $res, 'All testcases got extracted');
     $this->assertNotEquals($res[0]['status'], 'pass');
     $this->assertEquals($res[0]['status'], 'fail');
 

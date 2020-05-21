@@ -184,7 +184,7 @@ class ConfigCRUDTest extends KernelTestBase {
     // previously accessed with get()
     $new_config = $config_factory->get('non_existing_key');
     $this->assertTrue($new_config->isNew());
-    $this->assertEqual(0, count($config_factory->loadMultiple(['non_existing_key'])), 'loadMultiple() does not return new objects');
+    $this->assertCount(0, $config_factory->loadMultiple(['non_existing_key']), 'loadMultiple() does not return new objects');
   }
 
   /**

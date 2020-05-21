@@ -38,7 +38,7 @@ class HandlerFilterPermissionTest extends UserKernelTestBase {
     $view->initHandlers();
     $view->filter['permission']->value = ['non_existent_permission'];
     $this->executeView($view);
-    $this->assertEqual(count($view->result), 4, 'A non existent permission is not filtered so everything is the result.');
+    $this->assertCount(4, $view->result, 'A non existent permission is not filtered so everything is the result.');
     $expected[] = ['uid' => 1];
     $expected[] = ['uid' => 2];
     $expected[] = ['uid' => 3];
@@ -50,7 +50,7 @@ class HandlerFilterPermissionTest extends UserKernelTestBase {
     $view->initHandlers();
     $view->filter['permission']->value = ['administer permissions'];
     $this->executeView($view);
-    $this->assertEqual(count($view->result), 2);
+    $this->assertCount(2, $view->result);
     $expected = [];
     $expected[] = ['uid' => 3];
     $expected[] = ['uid' => 4];
@@ -62,7 +62,7 @@ class HandlerFilterPermissionTest extends UserKernelTestBase {
     $view->filter['permission']->operator = 'not';
     $view->filter['permission']->value = ['administer users'];
     $this->executeView($view);
-    $this->assertEqual(count($view->result), 3);
+    $this->assertCount(3, $view->result);
     $expected = [];
     $expected[] = ['uid' => 1];
     $expected[] = ['uid' => 2];
@@ -75,7 +75,7 @@ class HandlerFilterPermissionTest extends UserKernelTestBase {
     $view->filter['permission']->operator = 'not';
     $view->filter['permission']->value = ['administer users', 'administer permissions'];
     $this->executeView($view);
-    $this->assertEqual(count($view->result), 2);
+    $this->assertCount(2, $view->result);
     $expected = [];
     $expected[] = ['uid' => 1];
     $expected[] = ['uid' => 2];
@@ -86,7 +86,7 @@ class HandlerFilterPermissionTest extends UserKernelTestBase {
     $view->initHandlers();
     $view->filter['permission']->value = ['administer users'];
     $this->executeView($view);
-    $this->assertEqual(count($view->result), 1);
+    $this->assertCount(1, $view->result);
     $expected = [];
     $expected[] = ['uid' => 4];
     $this->assertIdenticalResultset($view, $expected, $column_map);

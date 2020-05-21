@@ -422,7 +422,7 @@ class EntityReferenceItemTest extends FieldKernelTestBase {
     ]);
     $errors = $entity->validate();
     // Using target_id of NULL is valid with an unsaved entity.
-    $this->assertEqual(0, count($errors));
+    $this->assertCount(0, $errors);
     // Using target_id of NULL is not valid with a saved entity.
     $term->save();
     $entity = EntityTest::create([
@@ -432,13 +432,13 @@ class EntityReferenceItemTest extends FieldKernelTestBase {
       ],
     ]);
     $errors = $entity->validate();
-    $this->assertEqual(1, count($errors));
+    $this->assertCount(1, $errors);
     $this->assertEqual($errors[0]->getMessage(), 'This value should not be null.');
     $this->assertEqual($errors[0]->getPropertyPath(), 'field_test_taxonomy_term.0');
     // This should rectify the issue, favoring the entity over the target_id.
     $entity->save();
     $errors = $entity->validate();
-    $this->assertEqual(0, count($errors));
+    $this->assertCount(0, $errors);
 
     // Test with an unpublished and unsaved node.
     $title = $this->randomString();
@@ -455,14 +455,14 @@ class EntityReferenceItemTest extends FieldKernelTestBase {
     ]);
 
     $errors = $entity->validate();
-    $this->assertEqual(1, count($errors));
+    $this->assertCount(1, $errors);
     $this->assertEqual($errors[0]->getMessage(), new FormattableMarkup('This entity (%type: %label) cannot be referenced.', ['%type' => 'node', '%label' => $title]));
     $this->assertEqual($errors[0]->getPropertyPath(), 'field_test_node.0.entity');
 
     // Publish the node and try again.
     $node->setPublished();
     $errors = $entity->validate();
-    $this->assertEqual(0, count($errors));
+    $this->assertCount(0, $errors);
 
     // Test with a mix of valid and invalid nodes.
     $unsaved_unpublished_node_title = $this->randomString();
@@ -503,7 +503,7 @@ class EntityReferenceItemTest extends FieldKernelTestBase {
     ]);
 
     $errors = $entity->validate();
-    $this->assertEqual(2, count($errors));
+    $this->assertCount(2, $errors);
     $this->assertEqual($errors[0]->getMessage(), new FormattableMarkup('This entity (%type: %label) cannot be referenced.', ['%type' => 'node', '%label' => $unsaved_unpublished_node_title]));
     $this->assertEqual($errors[0]->getPropertyPath(), 'field_test_node.0.entity');
     $this->assertEqual($errors[1]->getMessage(), new FormattableMarkup('This entity (%type: %label) cannot be referenced.', ['%type' => 'node', '%label' => $saved_unpublished_node->id()]));
@@ -513,14 +513,14 @@ class EntityReferenceItemTest extends FieldKernelTestBase {
     $saved_unpublished_node->setPublished();
     $saved_unpublished_node->save();
     $errors = $entity->validate();
-    $this->assertEqual(1, count($errors));
+    $this->assertCount(1, $errors);
     $this->assertEqual($errors[0]->getMessage(), new FormattableMarkup('This entity (%type: %label) cannot be referenced.', ['%type' => 'node', '%label' => $unsaved_unpublished_node_title]));
     $this->assertEqual($errors[0]->getPropertyPath(), 'field_test_node.0.entity');
 
     // Publish the last invalid node and try again.
     $unsaved_unpublished_node->setPublished();
     $errors = $entity->validate();
-    $this->assertEqual(0, count($errors));
+    $this->assertCount(0, $errors);
 
     // Test with an unpublished and unsaved comment.
     $title = $this->randomString();
@@ -537,14 +537,14 @@ class EntityReferenceItemTest extends FieldKernelTestBase {
     ]);
 
     $errors = $entity->validate();
-    $this->assertEqual(1, count($errors));
+    $this->assertCount(1, $errors);
     $this->assertEqual($errors[0]->getMessage(), new FormattableMarkup('This entity (%type: %label) cannot be referenced.', ['%type' => 'comment', '%label' => $title]));
     $this->assertEqual($errors[0]->getPropertyPath(), 'field_test_comment.0.entity');
 
     // Publish the comment and try again.
     $comment->setPublished();
     $errors = $entity->validate();
-    $this->assertEqual(0, count($errors));
+    $this->assertCount(0, $errors);
 
     // Test with an inactive and unsaved user.
     $name = $this->randomString();
@@ -560,14 +560,14 @@ class EntityReferenceItemTest extends FieldKernelTestBase {
     ]);
 
     $errors = $entity->validate();
-    $this->assertEqual(1, count($errors));
+    $this->assertCount(1, $errors);
     $this->assertEqual($errors[0]->getMessage(), new FormattableMarkup('This entity (%type: %label) cannot be referenced.', ['%type' => 'user', '%label' => $name]));
     $this->assertEqual($errors[0]->getPropertyPath(), 'field_test_user.0.entity');
 
     // Activate the user and try again.
     $user->activate();
     $errors = $entity->validate();
-    $this->assertEqual(0, count($errors));
+    $this->assertCount(0, $errors);
 
     // Test with a temporary and unsaved file.
     $filename = $this->randomMachineName() . '.txt';
@@ -583,14 +583,14 @@ class EntityReferenceItemTest extends FieldKernelTestBase {
     ]);
 
     $errors = $entity->validate();
-    $this->assertEqual(1, count($errors));
+    $this->assertCount(1, $errors);
     $this->assertEqual($errors[0]->getMessage(), new FormattableMarkup('This entity (%type: %label) cannot be referenced.', ['%type' => 'file', '%label' => $filename]));
     $this->assertEqual($errors[0]->getPropertyPath(), 'field_test_file.0.entity');
 
     // Set the file as permanent and try again.
     $file->setPermanent();
     $errors = $entity->validate();
-    $this->assertEqual(0, count($errors));
+    $this->assertCount(0, $errors);
   }
 
 }

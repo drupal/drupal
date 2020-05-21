@@ -133,7 +133,7 @@ class EntityLegacyTest extends KernelTestBase {
       EntityTest::create(),
       EntityTest::create(),
     ];
-    $this->assertEquals(4, count(entity_view_multiple($entities, 'default')));
+    $this->assertCount(4, entity_view_multiple($entities, 'default'));
   }
 
   /**

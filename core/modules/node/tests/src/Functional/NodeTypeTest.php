@@ -74,7 +74,7 @@ class NodeTypeTest extends NodeTestBase {
     $this->assertCacheTag('config:node_type_list');
     $this->assertCacheContext('user.permissions');
     $elements = $this->cssSelect('dl.node-type-list dt');
-    $this->assertEqual(3, count($elements));
+    $this->assertCount(3, $elements);
 
     $edit = [
       'name' => 'foo',
@@ -87,7 +87,7 @@ class NodeTypeTest extends NodeTestBase {
 
     $this->drupalGet('node/add');
     $elements = $this->cssSelect('dl.node-type-list dt');
-    $this->assertEqual(4, count($elements));
+    $this->assertCount(4, $elements);
   }
 
   /**
@@ -245,7 +245,7 @@ class NodeTypeTest extends NodeTestBase {
   public function testNodeTypeNoContentType() {
     /** @var \Drupal\Core\Entity\EntityTypeBundleInfoInterface $bundle_info */
     $bundle_info = \Drupal::service('entity_type.bundle.info');
-    $this->assertEqual(2, count($bundle_info->getBundleInfo('node')), 'The bundle information service has 2 bundles for the Node entity type.');
+    $this->assertCount(2, $bundle_info->getBundleInfo('node'), 'The bundle information service has 2 bundles for the Node entity type.');
     $web_user = $this->drupalCreateUser(['administer content types']);
     $this->drupalLogin($web_user);
 
@@ -261,7 +261,7 @@ class NodeTypeTest extends NodeTestBase {
       ]), 'Empty text when there are no content types in the system is correct.');
 
     $bundle_info->clearCachedBundles();
-    $this->assertEqual(0, count($bundle_info->getBundleInfo('node')), 'The bundle information service has 0 bundles for the Node entity type.');
+    $this->assertCount(0, $bundle_info->getBundleInfo('node'), 'The bundle information service has 0 bundles for the Node entity type.');
   }
 
 }

@@ -374,7 +374,7 @@ class FilterAPITest extends EntityKernelTestBase {
 
     $data->setValue('plain_text');
     $violations = $data->validate();
-    $this->assertEqual(count($violations), 0, "No validation violation for format 'plain_text' found");
+    $this->assertCount(0, $violations, "No validation violation for format 'plain_text' found");
 
     // Anonymous doesn't have access to the 'filtered_html' format.
     $data->setValue('filtered_html');
@@ -384,7 +384,7 @@ class FilterAPITest extends EntityKernelTestBase {
     // Set user with access to 'filtered_html' format.
     \Drupal::currentUser()->setAccount($filtered_html_user);
     $violations = $data->validate();
-    $this->assertEqual(count($violations), 0, "No validation violation for accessible format 'filtered_html' found.");
+    $this->assertCount(0, $violations, "No validation violation for accessible format 'filtered_html' found.");
 
     $allowed_values = $data->getSettableValues($filtered_html_user);
     $this->assertEqual($allowed_values, ['filtered_html', 'plain_text']);

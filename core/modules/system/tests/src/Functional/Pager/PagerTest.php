@@ -201,7 +201,7 @@ class PagerTest extends BrowserTestBase {
     }
     $this->drupalGet('admin/reports/dblog');
     $elements = $this->cssSelect(".pager__item--ellipsis:contains('…')");
-    $this->assertEqual(count($elements), 0, 'No ellipsis has been set.');
+    $this->assertCount(0, $elements, 'No ellipsis has been set.');
 
     // Insert an extra 50 log messages to get 10 pages.
     $logger = $this->container->get('logger.factory')->get('pager_test');
@@ -210,7 +210,7 @@ class PagerTest extends BrowserTestBase {
     }
     $this->drupalGet('admin/reports/dblog');
     $elements = $this->cssSelect(".pager__item--ellipsis:contains('…')");
-    $this->assertEqual(count($elements), 1, 'Found the ellipsis.');
+    $this->assertCount(1, $elements, 'Found the ellipsis.');
   }
 
   /**

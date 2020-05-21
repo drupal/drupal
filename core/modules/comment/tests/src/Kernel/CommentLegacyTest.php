@@ -88,7 +88,7 @@ class CommentLegacyTest extends EntityKernelTestBase {
       $this->createComment(),
       $this->createComment(),
     ];
-    $this->assertEquals(4, count(comment_view_multiple($entities)));
+    $this->assertCount(4, comment_view_multiple($entities));
   }
 
   /**

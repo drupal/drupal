@@ -158,9 +158,9 @@ class ElementTest extends BrowserTestBase {
     // "button--foo" would contain "button". Instead, check
     // " button ". Make sure it matches in the beginning and the end too
     // by adding a space before and after.
-    $this->assertEqual(2, count($this->xpath('//*[contains(concat(" ", @class, " "), " button ")]')));
-    $this->assertEqual(1, count($this->xpath('//*[contains(concat(" ", @class, " "), " button--foo ")]')));
-    $this->assertEqual(1, count($this->xpath('//*[contains(concat(" ", @class, " "), " button--danger ")]')));
+    $this->assertCount(2, $this->xpath('//*[contains(concat(" ", @class, " "), " button ")]'));
+    $this->assertCount(1, $this->xpath('//*[contains(concat(" ", @class, " "), " button--foo ")]'));
+    $this->assertCount(1, $this->xpath('//*[contains(concat(" ", @class, " "), " button--danger ")]'));
   }
 
   /**
@@ -204,9 +204,9 @@ class ElementTest extends BrowserTestBase {
     $this->drupalGet('form-test/autocomplete');
 
     $result = $this->xpath('//input[@id="edit-autocomplete-1" and contains(@data-autocomplete-path, "form-test/autocomplete-1")]');
-    $this->assertEqual(count($result), 0, 'Ensure that the user does not have access to the autocompletion');
+    $this->assertCount(0, $result, 'Ensure that the user does not have access to the autocompletion');
     $result = $this->xpath('//input[@id="edit-autocomplete-2" and contains(@data-autocomplete-path, "form-test/autocomplete-2/value")]');
-    $this->assertEqual(count($result), 0, 'Ensure that the user does not have access to the autocompletion');
+    $this->assertCount(0, $result, 'Ensure that the user does not have access to the autocompletion');
 
     $user = $this->drupalCreateUser(['access autocomplete test']);
     $this->drupalLogin($user);
@@ -216,9 +216,9 @@ class ElementTest extends BrowserTestBase {
     $this->assertRaw('core/misc/autocomplete.js');
 
     $result = $this->xpath('//input[@id="edit-autocomplete-1" and contains(@data-autocomplete-path, "form-test/autocomplete-1")]');
-    $this->assertEqual(count($result), 1, 'Ensure that the user does have access to the autocompletion');
+    $this->assertCount(1, $result, 'Ensure that the user does have access to the autocompletion');
     $result = $this->xpath('//input[@id="edit-autocomplete-2" and contains(@data-autocomplete-path, "form-test/autocomplete-2/value")]');
-    $this->assertEqual(count($result), 1, 'Ensure that the user does have access to the autocompletion');
+    $this->assertCount(1, $result, 'Ensure that the user does have access to the autocompletion');
   }
 
   /**

@@ -162,7 +162,7 @@ class DisplayEntityReferenceTest extends ViewTestBase {
     $this->executeView($view);
 
     // Test that we have searched in both fields.
-    $this->assertEqual(count($view->result), 2, 'Search returned two rows');
+    $this->assertCount(2, $view->result, 'Search returned two rows');
     $view->destroy();
 
     // Test the 'CONTAINS' match_operator.
@@ -176,7 +176,7 @@ class DisplayEntityReferenceTest extends ViewTestBase {
     ];
     $view->display_handler->setOption('entity_reference_options', $options);
     $this->executeView($view);
-    $this->assertEqual(count($view->result), 13, 'Search returned thirteen rows');
+    $this->assertCount(13, $view->result, 'Search returned thirteen rows');
     $view->destroy();
 
     // Test the 'STARTS_WITH' match_operator.
@@ -190,7 +190,7 @@ class DisplayEntityReferenceTest extends ViewTestBase {
     ];
     $view->display_handler->setOption('entity_reference_options', $options);
     $this->executeView($view);
-    $this->assertEqual(count($view->result), 12, 'Search returned twelve rows');
+    $this->assertCount(12, $view->result, 'Search returned twelve rows');
     $view->destroy();
 
     // Test the '=' match_operator.
@@ -204,7 +204,7 @@ class DisplayEntityReferenceTest extends ViewTestBase {
     ];
     $view->display_handler->setOption('entity_reference_options', $options);
     $this->executeView($view);
-    $this->assertEqual(count($view->result), 2, 'Search returned two rows');
+    $this->assertCount(2, $view->result, 'Search returned two rows');
     $view->destroy();
 
     // Add a relationship and a field using that relationship.
@@ -234,7 +234,7 @@ class DisplayEntityReferenceTest extends ViewTestBase {
     $this->executeView($view);
 
     // Run validation when using a relationship to the same base table.
-    $this->assertEqual(count($view->result), 2, 'Search returned two rows');
+    $this->assertCount(2, $view->result, 'Search returned two rows');
     $view->destroy();
 
     $this->drupalPostForm('admin/structure/views/nojs/add-handler/test_display_entity_reference/default/relationship', ['name[entity_test__field_test_entity_ref_entity_ref.field_test_entity_ref_entity_ref]' => TRUE], t('Add and configure relationships'));
@@ -257,7 +257,7 @@ class DisplayEntityReferenceTest extends ViewTestBase {
 
     $this->executeView($view);
 
-    $this->assertEqual(count($view->result), 2, 'Search returned two rows');
+    $this->assertCount(2, $view->result, 'Search returned two rows');
 
     // Test that the render() return empty array for empty result.
     $view = Views::getView('test_display_entity_reference');

@@ -124,7 +124,7 @@ class AreaTest extends ViewTestBase {
     $view->initDisplay();
     $view->initHandlers();
     $handlers = $view->display_handler->getHandlers('empty');
-    $this->assertEqual(0, count($handlers));
+    $this->assertCount(0, $handlers);
 
     $output = $view->preview();
     $output = \Drupal::service('renderer')->renderRoot($output);
@@ -151,7 +151,7 @@ class AreaTest extends ViewTestBase {
     $output = $view->preview();
     $output = \Drupal::service('renderer')->renderRoot($output);
     $this->assertStringContainsString('a custom string', $output);
-    $this->assertEqual(1, count($handlers));
+    $this->assertCount(1, $handlers);
   }
 
   /**

@@ -66,7 +66,7 @@ class CommentRestExportTest extends CommentTestBase {
     $contents = Json::decode($this->getSession()->getPage()->getContent());
     $this->assertEqual($contents[0]['subject'], 'How much wood would a woodchuck chuck');
     $this->assertEqual($contents[1]['subject'], 'A lot, apparently');
-    $this->assertEqual(count($contents), 2);
+    $this->assertCount(2, $contents);
 
     // Ensure field-level access is respected - user shouldn't be able to see
     // mail or hostname fields.

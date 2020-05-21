@@ -52,7 +52,7 @@ class ContentTypeHeaderMatcherTest extends UnitTestCase {
 
     $request = Request::create('path/two', $method);
     $routes = $this->matcher->filter($collection, $request);
-    $this->assertEquals(count($routes), 7, 'The correct number of routes was found.');
+    $this->assertCount(7, $routes, 'The correct number of routes was found.');
   }
 
   public function providerTestSafeRequestFilter() {
@@ -75,7 +75,7 @@ class ContentTypeHeaderMatcherTest extends UnitTestCase {
     $request = Request::create('path/two', 'POST');
     $request->headers->set('Content-type', 'application/json');
     $routes = $this->matcher->filter($collection, $request);
-    $this->assertEquals(count($routes), 6, 'The correct number of routes was found.');
+    $this->assertCount(6, $routes, 'The correct number of routes was found.');
     $this->assertNotNull($routes->get('route_f'), 'The json route was found.');
     $this->assertNull($routes->get('route_g'), 'The xml route was not found.');
     foreach ($routes as $name => $route) {
@@ -96,7 +96,7 @@ class ContentTypeHeaderMatcherTest extends UnitTestCase {
     $request = Request::create('path/two', 'POST');
     $request->headers->set('Content-type', 'application/www-form-urlencoded');
     $routes = $this->matcher->filter($collection, $request);
-    $this->assertEquals(count($routes), 5, 'The correct number of routes was found.');
+    $this->assertCount(5, $routes, 'The correct number of routes was found.');
     $this->assertNull($routes->get('route_f'), 'The json route was found.');
     $this->assertNull($routes->get('route_g'), 'The xml route was not found.');
   }

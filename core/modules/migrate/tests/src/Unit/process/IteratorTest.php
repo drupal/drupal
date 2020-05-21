@@ -76,8 +76,8 @@ class IteratorTest extends MigrateTestCase {
     // values ended up in the proper destinations, and that the value of the
     // key (@id) is the same as the destination ID (42).
     $new_value = $plugin->transform($current_value, $migrate_executable, $row, 'test');
-    $this->assertSame(1, count($new_value));
-    $this->assertSame(2, count($new_value[42]));
+    $this->assertCount(1, $new_value);
+    $this->assertCount(2, $new_value[42]);
     $this->assertSame('test', $new_value[42]['foo']);
     $this->assertSame(42, $new_value[42]['id']);
   }

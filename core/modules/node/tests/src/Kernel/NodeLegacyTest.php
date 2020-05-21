@@ -74,7 +74,7 @@ class NodeLegacyTest extends EntityKernelTestBase {
       Node::create(['type' => 'page']),
       Node::create(['type' => 'page']),
     ];
-    $this->assertEquals(4, count(node_view_multiple($entities)));
+    $this->assertCount(4, node_view_multiple($entities));
   }
 
   /**

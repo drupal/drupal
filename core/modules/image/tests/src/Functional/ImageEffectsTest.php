@@ -150,7 +150,7 @@ class ImageEffectsTest extends ToolkitTestBase {
 
     // Check the parameters.
     $calls = $this->imageTestGetAllCalls();
-    $this->assertEqual(count($calls['desaturate'][0]), 0, 'No parameters were passed.');
+    $this->assertCount(0, $calls['desaturate'][0], 'No parameters were passed.');
   }
 
   /**

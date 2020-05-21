@@ -97,7 +97,7 @@ class FilterTest extends ViewTestBase {
 
     // Check that we have a single element, as a result of applying the '= John'
     // filter.
-    $this->assertEqual(count($view->result), 1, new FormattableMarkup('Results were returned. @count results.', ['@count' => count($view->result)]));
+    $this->assertCount(1, $view->result, new FormattableMarkup('Results were returned. @count results.', ['@count' => count($view->result)]));
 
     $view->destroy();
 
@@ -123,7 +123,7 @@ class FilterTest extends ViewTestBase {
 
     // Check if we have the other elements in the dataset, as a result of
     // applying the '<> John' filter.
-    $this->assertEqual(count($view->result), 4, new FormattableMarkup('Results were returned. @count results.', ['@count' => count($view->result)]));
+    $this->assertCount(4, $view->result, new FormattableMarkup('Results were returned. @count results.', ['@count' => count($view->result)]));
 
     $view->destroy();
     $view->initDisplay();
@@ -147,7 +147,7 @@ class FilterTest extends ViewTestBase {
     $this->executeView($view);
 
     // Check if we have all 5 results.
-    $this->assertEqual(count($view->result), 5, new FormattableMarkup('All @count results returned', ['@count' => count($view->displayHandlers)]));
+    $this->assertCount(5, $view->result, new FormattableMarkup('All @count results returned', ['@count' => count($view->displayHandlers)]));
   }
 
   /**

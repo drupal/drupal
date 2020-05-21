@@ -98,17 +98,17 @@ class ExposedFormCheckboxesTest extends ViewTestBase {
     $this->drupalGet('test_exposed_form_checkboxes');
 
     $actual = $this->xpath('//form//input[@type="checkbox" and @name="type[article]"]');
-    $this->assertEqual(count($actual), 1, 'Article option renders as a checkbox.');
+    $this->assertCount(1, $actual, 'Article option renders as a checkbox.');
     $actual = $this->xpath('//form//input[@type="checkbox" and @name="type[page]"]');
-    $this->assertEqual(count($actual), 1, 'Page option renders as a checkbox');
+    $this->assertCount(1, $actual, 'Page option renders as a checkbox');
 
     // Ensure that all results are displayed.
     $rows = $this->xpath("//div[contains(@class, 'views-row')]");
-    $this->assertEqual(count($rows), 5, '5 rows are displayed by default on the first page when no options are checked.');
+    $this->assertCount(5, $rows, '5 rows are displayed by default on the first page when no options are checked.');
 
     $this->clickLink('Page 2');
     $rows = $this->xpath("//div[contains(@class, 'views-row')]");
-    $this->assertEqual(count($rows), 1, '1 row is displayed by default on the second page when no options are checked.');
+    $this->assertCount(1, $rows, '1 row is displayed by default on the second page when no options are checked.');
     $this->assertNoText('An illegal choice has been detected. Please contact the site administrator.');
   }
 
@@ -156,7 +156,7 @@ class ExposedFormCheckboxesTest extends ViewTestBase {
 
     // Ensure that all results are displayed.
     $rows = $this->xpath("//div[contains(@class, 'views-row')]");
-    $this->assertEqual(count($rows), 8, 'All rows are displayed by default on the first page when no options are checked.');
+    $this->assertCount(8, $rows, 'All rows are displayed by default on the first page when no options are checked.');
     $this->assertNoText('An illegal choice has been detected. Please contact the site administrator.');
 
     // Select one option and ensure we still have results.
@@ -165,7 +165,7 @@ class ExposedFormCheckboxesTest extends ViewTestBase {
 
     // Ensure only nodes tagged with $tid are displayed.
     $rows = $this->xpath("//div[contains(@class, 'views-row')]");
-    $this->assertEqual(count($rows), 2, 'Correct rows are displayed when a tid is selected.');
+    $this->assertCount(2, $rows, 'Correct rows are displayed when a tid is selected.');
     $this->assertNoText('An illegal choice has been detected. Please contact the site administrator.');
   }
 

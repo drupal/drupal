@@ -45,7 +45,7 @@ class ContainerDerivativeDiscoveryDecoratorTest extends UnitTestCase {
     $definitions = $discovery->getDefinitions();
 
     // Ensure that both the instances from container and non-container test derivatives got added.
-    $this->assertEquals(4, count($definitions));
+    $this->assertCount(4, $definitions);
   }
 
 }

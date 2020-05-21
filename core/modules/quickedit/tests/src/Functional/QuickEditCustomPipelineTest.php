@@ -96,7 +96,7 @@ class QuickEditCustomPipelineTest extends BrowserTestBase {
       'http_errors' => FALSE,
     ]);
     $ajax_commands = Json::decode($response->getBody());
-    $this->assertIdentical(1, count($ajax_commands), 'The field form HTTP request results in one AJAX command.');
+    $this->assertCount(1, $ajax_commands, 'The field form HTTP request results in one AJAX command.');
     $this->assertIdentical('quickeditFieldFormSaved', $ajax_commands[0]['command'], 'The first AJAX command is a quickeditFieldFormSaved command.');
     $this->assertStringContainsString('Fine thanks.', $ajax_commands[0]['data'], 'Form value saved and printed back.');
     $this->assertStringContainsString('<div class="quickedit-test-wrapper">', $ajax_commands[0]['data'], 'Custom render pipeline used to render the value.');

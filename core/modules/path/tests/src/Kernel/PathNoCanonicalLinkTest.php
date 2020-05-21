@@ -55,11 +55,11 @@ class PathNoCanonicalLinkTest extends KernelTestBase {
 
     $entity_type->addTranslation('de', ['name' => 'name german']);
     $entity_type->save();
-    $this->assertEqual(count($entity_type->getTranslationLanguages()), 2);
+    $this->assertCount(2, $entity_type->getTranslationLanguages());
 
     $entity_type->removeTranslation('de');
     $entity_type->save();
-    $this->assertEqual(count($entity_type->getTranslationLanguages()), 1);
+    $this->assertCount(1, $entity_type->getTranslationLanguages());
   }
 
 }

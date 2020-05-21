@@ -324,12 +324,12 @@ class FieldStorageCrudTest extends FieldKernelTestBase {
 
     // Make sure that the field storage is deleted as it had no data.
     $field_storages = $field_storage_config_storage->loadByProperties(['field_name' => $field_storage_definition['field_name'], 'include_deleted' => TRUE]);
-    $this->assertEquals(0, count($field_storages), 'Field storage was deleted');
+    $this->assertCount(0, $field_storages, 'Field storage was deleted');
 
     // Make sure that this field is marked as deleted when it is
     // specifically loaded.
     $fields = \Drupal::entityTypeManager()->getStorage('field_config')->loadByProperties(['entity_type' => 'entity_test', 'field_name' => $field_definition['field_name'], 'bundle' => $field_definition['bundle'], 'include_deleted' => TRUE]);
-    $this->assertEquals(0, count($fields), 'Field storage was deleted');
+    $this->assertCount(0, $fields, 'Field storage was deleted');
 
     // Try to load the storage normally and make sure it does not show up.
     $field_storage = FieldStorageConfig::load('entity_test.' . $field_storage_definition['field_name']);

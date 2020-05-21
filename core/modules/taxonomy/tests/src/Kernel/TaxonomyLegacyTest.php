@@ -67,7 +67,7 @@ class TaxonomyLegacyTest extends KernelTestBase {
       $this->createTerm($this->createVocabulary()),
       $this->createTerm($this->createVocabulary()),
     ];
-    $this->assertEquals(4, count(taxonomy_term_view_multiple($entities)));
+    $this->assertCount(4, taxonomy_term_view_multiple($entities));
   }
 
 }

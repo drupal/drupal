@@ -33,7 +33,7 @@ class TableTest extends KernelTestBase {
     $this->render($table);
     // Make sure tableheader.js was attached.
     $tableheader = $this->xpath("//script[contains(@src, 'tableheader.js')]");
-    $this->assertEqual(count($tableheader), 1);
+    $this->assertCount(1, $tableheader);
     $this->assertRaw('sticky-enabled');
   }
 
@@ -58,7 +58,7 @@ class TableTest extends KernelTestBase {
     $this->render($table);
     // Make sure tableheader.js was not attached.
     $tableheader = $this->xpath("//script[contains(@src, 'tableheader.js')]");
-    $this->assertEqual(count($tableheader), 0);
+    $this->assertCount(0, $tableheader);
     $this->assertNoRaw('sticky-enabled');
   }
 

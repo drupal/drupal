@@ -172,12 +172,12 @@ class AttachedAssetsTest extends KernelTestBase {
     $build['#attached']['library'][] = 'core/drupal.vertical-tabs';
     $assets = AttachedAssets::createFromRenderArray($build);
 
-    $this->assertEqual(1, count($this->assetResolver->getCssAssets($assets, TRUE)), 'There is a sole aggregated CSS asset.');
+    $this->assertCount(1, $this->assetResolver->getCssAssets($assets, TRUE), 'There is a sole aggregated CSS asset.');
 
     list($header_js, $footer_js) = $this->assetResolver->getJsAssets($assets, TRUE);
     $this->assertEqual([], \Drupal::service('asset.js.collection_renderer')->render($header_js), 'There are 0 JavaScript assets in the header.');
     $rendered_footer_js = \Drupal::service('asset.js.collection_renderer')->render($footer_js);
-    $this->assertEqual(2, count($rendered_footer_js), 'There are 2 JavaScript assets in the footer.');
+    $this->assertCount(2, $rendered_footer_js, 'There are 2 JavaScript assets in the footer.');
     $this->assertEqual('drupal-settings-json', $rendered_footer_js[0]['#attributes']['data-drupal-selector'], 'The first of the two JavaScript assets in the footer has drupal settings.');
     $this->assertStringStartsWith(base_path(), $rendered_footer_js[1]['#attributes']['src'], 'The second of the two JavaScript assets in the footer has the sole aggregated JavaScript asset.');
   }

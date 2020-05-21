@@ -48,7 +48,7 @@ class UpdateApiEntityDefinitionUpdateTest extends BrowserTestBase {
 
     // Check that only a single value is stored for 'user_id'.
     $entity = $this->reloadEntity($entity);
-    $this->assertEqual(count($entity->user_id), 1);
+    $this->assertCount(1, $entity->user_id);
     $this->assertEqual($entity->user_id->target_id, $user_ids[0]);
 
     // Make 'user_id' multiple by applying updates.
@@ -60,14 +60,14 @@ class UpdateApiEntityDefinitionUpdateTest extends BrowserTestBase {
 
     // Check that data was correctly migrated.
     $entity = $this->reloadEntity($entity);
-    $this->assertEqual(count($entity->user_id), 1);
+    $this->assertCount(1, $entity->user_id);
     $this->assertEqual($entity->user_id->target_id, $user_ids[0]);
 
     // Store multiple data and check it is correctly stored.
     $entity->user_id = $user_ids;
     $entity->save();
     $entity = $this->reloadEntity($entity);
-    $this->assertEqual(count($entity->user_id), 2);
+    $this->assertCount(2, $entity->user_id);
     $this->assertEqual($entity->user_id[0]->target_id, $user_ids[0]);
     $this->assertEqual($entity->user_id[1]->target_id, $user_ids[1]);
 
@@ -77,14 +77,14 @@ class UpdateApiEntityDefinitionUpdateTest extends BrowserTestBase {
 
     // Check that data was correctly migrated/dropped.
     $entity = $this->reloadEntity($entity);
-    $this->assertEqual(count($entity->user_id), 1);
+    $this->assertCount(1, $entity->user_id);
     $this->assertEqual($entity->user_id->target_id, $user_ids[0]);
 
     // Check that only a single value is stored for 'user_id' again.
     $entity->user_id = $user_ids;
     $entity->save();
     $entity = $this->reloadEntity($entity);
-    $this->assertEqual(count($entity->user_id), 1);
+    $this->assertCount(1, $entity->user_id);
     $this->assertEqual($entity->user_id[0]->target_id, $user_ids[0]);
   }
 
@@ -99,7 +99,7 @@ class UpdateApiEntityDefinitionUpdateTest extends BrowserTestBase {
 
     // Check that only a single value is stored for 'user_id'.
     $entity = $this->reloadEntity($entity);
-    $this->assertEqual(count($entity->user_id), 1);
+    $this->assertCount(1, $entity->user_id);
     $this->assertEqual($entity->user_id->target_id, $user_ids[0]);
 
     // Make 'user_id' multiple and then single again by applying updates.
@@ -108,14 +108,14 @@ class UpdateApiEntityDefinitionUpdateTest extends BrowserTestBase {
 
     // Check that data was correctly migrated back and forth.
     $entity = $this->reloadEntity($entity);
-    $this->assertEqual(count($entity->user_id), 1);
+    $this->assertCount(1, $entity->user_id);
     $this->assertEqual($entity->user_id->target_id, $user_ids[0]);
 
     // Check that only a single value is stored for 'user_id' again.
     $entity->user_id = $user_ids;
     $entity->save();
     $entity = $this->reloadEntity($entity);
-    $this->assertEqual(count($entity->user_id), 1);
+    $this->assertCount(1, $entity->user_id);
     $this->assertEqual($entity->user_id[0]->target_id, $user_ids[0]);
   }
 

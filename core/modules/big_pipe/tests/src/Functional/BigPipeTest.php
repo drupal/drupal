@@ -371,7 +371,7 @@ class BigPipeTest extends BrowserTestBase {
       $expected_placeholder_replacement = '<script type="application/vnd.drupal-ajax" data-big-pipe-replacement-for-placeholder-with-id="' . $big_pipe_placeholder_id . '">';
       $result = $this->xpath('//script[@data-big-pipe-replacement-for-placeholder-with-id=:id]', [':id' => Html::decodeEntities($big_pipe_placeholder_id)]);
       if ($expected_ajax_response === NULL) {
-        $this->assertEqual(0, count($result));
+        $this->assertCount(0, $result);
         $this->assertNoRaw($expected_placeholder_replacement);
         continue;
       }

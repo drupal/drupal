@@ -85,7 +85,7 @@ class RevisionableContentEntityBaseTest extends EntityKernelTestBase {
     }
     $this->assertItemsTableCount(6, $definition);
 
-    $this->assertEqual(6, count($revision_ids));
+    $this->assertCount(6, $revision_ids);
 
     // Delete the first 3 revisions.
     foreach (range(0, 2) as $key) {

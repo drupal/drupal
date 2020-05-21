@@ -28,7 +28,7 @@ class FetchTest extends DatabaseTestBase {
       $this->assertSame('John', $record->name);
     }
 
-    $this->assertIdentical(count($records), 1, 'There is only one record.');
+    $this->assertCount(1, $records, 'There is only one record.');
   }
 
   /**
@@ -43,7 +43,7 @@ class FetchTest extends DatabaseTestBase {
       $this->assertSame('John', $record->name);
     }
 
-    $this->assertIdentical(count($records), 1, 'There is only one record.');
+    $this->assertCount(1, $records, 'There is only one record.');
   }
 
   /**
@@ -59,7 +59,7 @@ class FetchTest extends DatabaseTestBase {
       $this->assertSame('John', $record['name']);
     }
 
-    $this->assertIdentical(count($records), 1, 'There is only one record.');
+    $this->assertCount(1, $records, 'There is only one record.');
   }
 
   /**
@@ -76,7 +76,7 @@ class FetchTest extends DatabaseTestBase {
       $this->assertSame('John', $record->name);
     }
 
-    $this->assertIdentical(count($records), 1, 'There is only one record.');
+    $this->assertCount(1, $records, 'There is only one record.');
   }
 
   /**
@@ -129,7 +129,7 @@ class FetchTest extends DatabaseTestBase {
       $this->assertSame('John', $record[0]);
     }
 
-    $this->assertIdentical(count($records), 1, 'There is only one record');
+    $this->assertCount(1, $records, 'There is only one record');
   }
 
   /**
@@ -147,7 +147,7 @@ class FetchTest extends DatabaseTestBase {
       $this->assertSame('John', $record['name']);
     }
 
-    $this->assertIdentical(count($records), 1, 'There is only one record.');
+    $this->assertCount(1, $records, 'There is only one record.');
   }
 
   /**
@@ -169,7 +169,7 @@ class FetchTest extends DatabaseTestBase {
   public function testQueryFetchCol() {
     $result = $this->connection->query('SELECT name FROM {test} WHERE age > :age', [':age' => 25]);
     $column = $result->fetchCol();
-    $this->assertIdentical(count($column), 3, 'fetchCol() returns the right number of records.');
+    $this->assertCount(3, $column, 'fetchCol() returns the right number of records.');
 
     $result = $this->connection->query('SELECT name FROM {test} WHERE age > :age', [':age' => 25]);
     $i = 0;

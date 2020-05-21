@@ -70,17 +70,17 @@ class ElementsTableSelectTest extends BrowserTestBase {
 
     // There should be three labeled column headers and 1 for the input.
     $table_head = $this->xpath('//thead/tr/th');
-    $this->assertEquals(count($table_head), 4, 'There are four column headers');
+    $this->assertCount(4, $table_head, 'There are four column headers');
 
     // The first two body rows should each have 5 table cells: One for the
     // radio, one cell in the first column, one cell in the second column,
     // and two cells in the third column which has colspan 2.
     for ($i = 0; $i <= 1; $i++) {
-      $this->assertEquals(count($this->xpath('//tbody/tr[' . ($i + 1) . ']/td')), 5, 'There are five cells in row ' . $i);
+      $this->assertCount(5, $this->xpath('//tbody/tr[' . ($i + 1) . ']/td'), 'There are five cells in row ' . $i);
     }
     // The third row should have 3 cells, one for the radio, one spanning the
     // first and second column, and a third in column 3 (which has colspan 3).
-    $this->assertEquals(count($this->xpath('//tbody/tr[3]/td')), 3, 'There are three cells in row 3.');
+    $this->assertCount(3, $this->xpath('//tbody/tr[3]/td'), 'There are three cells in row 3.');
   }
 
   /**

@@ -78,7 +78,7 @@ class ContactPersonalTest extends BrowserTestBase {
     $this->assertEscaped($mail);
     $message = $this->submitPersonalContact($this->contactUser);
     $mails = $this->getMails();
-    $this->assertEqual(1, count($mails));
+    $this->assertCount(1, $mails);
     $mail = $mails[0];
     $this->assertEqual($mail['to'], $this->contactUser->getEmail());
     $this->assertEqual($mail['from'], $this->config('system.site')->get('mail'));

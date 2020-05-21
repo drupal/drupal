@@ -81,7 +81,7 @@ class UserEntityReferenceTest extends EntityKernelTestBase {
     $autocomplete = \Drupal::service('entity.autocomplete_matcher');
 
     $matches = $autocomplete->getMatches('user', 'default', $field_definition->getSetting('handler_settings'), 'aabb');
-    $this->assertEqual(count($matches), 2);
+    $this->assertCount(2, $matches);
     $users = [];
     foreach ($matches as $match) {
       $users[] = $match['label'];
@@ -91,7 +91,7 @@ class UserEntityReferenceTest extends EntityKernelTestBase {
     $this->assertNotContains($user3->label(), $users);
 
     $matches = $autocomplete->getMatches('user', 'default', $field_definition->getSetting('handler_settings'), 'aabbbb');
-    $this->assertEqual(count($matches), 0, '');
+    $this->assertCount(0, $matches);
   }
 
 }

@@ -256,7 +256,7 @@ class BlockContentCreationTest extends BlockContentTestBase {
     $block = BlockContent::load(1);
 
     // Test getInstances method.
-    $this->assertEqual(1, count($block->getInstances()));
+    $this->assertCount(1, $block->getInstances());
 
     // Navigate to home page.
     $this->drupalGet('');

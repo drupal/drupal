@@ -72,7 +72,7 @@ class AggregatorAdminTest extends AggregatorTestBase {
 
     $result = $this->xpath('//table/tbody/tr');
     // Check if the amount of feeds in the overview matches the amount created.
-    $this->assertEqual(1, count($result), 'Created feed is found in the overview');
+    $this->assertCount(1, $result, 'Created feed is found in the overview');
     // Check if the fields in the table match with what's expected.
     $link = $this->xpath('//table/tbody/tr//td[1]/a');
     $this->assertEquals($feed->label(), $link[0]->getText());

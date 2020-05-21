@@ -803,127 +803,127 @@ class EntityQueryTest extends EntityKernelTestBase {
       ->getQuery()
       ->condition('field_ci', $fixtures[0]['lowercase'] . $fixtures[1]['lowercase'])
       ->execute();
-    $this->assertIdentical(count($result), 1, 'Case insensitive, lowercase');
+    $this->assertCount(1, $result, 'Case insensitive, lowercase');
 
     $result = $this->storage
       ->getQuery()
       ->condition('field_ci', $fixtures[0]['uppercase'] . $fixtures[1]['uppercase'])
       ->execute();
-    $this->assertIdentical(count($result), 1, 'Case insensitive, uppercase');
+    $this->assertCount(1, $result, 'Case insensitive, uppercase');
 
     $result = $this->storage
       ->getQuery()
       ->condition('field_ci', $fixtures[0]['uppercase'] . $fixtures[1]['lowercase'])
       ->execute();
-    $this->assertIdentical(count($result), 1, 'Case insensitive, mixed.');
+    $this->assertCount(1, $result, 'Case insensitive, mixed.');
 
     // Check the case sensitive field, = operator.
     $result = $this->storage
       ->getQuery()
       ->condition('field_cs', $fixtures[0]['lowercase'] . $fixtures[1]['lowercase'])
       ->execute();
-    $this->assertIdentical(count($result), 0, 'Case sensitive, lowercase.');
+    $this->assertCount(0, $result, 'Case sensitive, lowercase.');
 
     $result = $this->storage
       ->getQuery()
       ->condition('field_cs', $fixtures[0]['uppercase'] . $fixtures[1]['uppercase'])
       ->execute();
-    $this->assertIdentical(count($result), 0, 'Case sensitive, uppercase.');
+    $this->assertCount(0, $result, 'Case sensitive, uppercase.');
 
     $result = $this->storage
       ->getQuery()
       ->condition('field_cs', $fixtures[0]['uppercase'] . $fixtures[1]['lowercase'])
       ->execute();
-    $this->assertIdentical(count($result), 1, 'Case sensitive, exact match.');
+    $this->assertCount(1, $result, 'Case sensitive, exact match.');
 
     // Check the case insensitive field, IN operator.
     $result = $this->storage
       ->getQuery()
       ->condition('field_ci', [$fixtures[0]['lowercase'] . $fixtures[1]['lowercase']], 'IN')
       ->execute();
-    $this->assertIdentical(count($result), 1, 'Case insensitive, lowercase');
+    $this->assertCount(1, $result, 'Case insensitive, lowercase');
 
     $result = $this->storage
       ->getQuery()
       ->condition('field_ci', [$fixtures[0]['uppercase'] . $fixtures[1]['uppercase']], 'IN')->execute();
-    $this->assertIdentical(count($result), 1, 'Case insensitive, uppercase');
+    $this->assertCount(1, $result, 'Case insensitive, uppercase');
 
     $result = $this->storage
       ->getQuery()
       ->condition('field_ci', [$fixtures[0]['uppercase'] . $fixtures[1]['lowercase']], 'IN')
       ->execute();
-    $this->assertIdentical(count($result), 1, 'Case insensitive, mixed');
+    $this->assertCount(1, $result, 'Case insensitive, mixed');
 
     // Check the case sensitive field, IN operator.
     $result = $this->storage
       ->getQuery()
       ->condition('field_cs', [$fixtures[0]['lowercase'] . $fixtures[1]['lowercase']], 'IN')
       ->execute();
-    $this->assertIdentical(count($result), 0, 'Case sensitive, lowercase');
+    $this->assertCount(0, $result, 'Case sensitive, lowercase');
 
     $result = $this->storage
       ->getQuery()
       ->condition('field_cs', [$fixtures[0]['uppercase'] . $fixtures[1]['uppercase']], 'IN')
       ->execute();
-    $this->assertIdentical(count($result), 0, 'Case sensitive, uppercase');
+    $this->assertCount(0, $result, 'Case sensitive, uppercase');
 
     $result = $this->storage
       ->getQuery()
       ->condition('field_cs', [$fixtures[0]['uppercase'] . $fixtures[1]['lowercase']], 'IN')
       ->execute();
-    $this->assertIdentical(count($result), 1, 'Case sensitive, mixed');
+    $this->assertCount(1, $result, 'Case sensitive, mixed');
 
     // Check the case insensitive field, STARTS_WITH operator.
     $result = $this->storage
       ->getQuery()
       ->condition('field_ci', $fixtures[0]['lowercase'], 'STARTS_WITH')
       ->execute();
-    $this->assertIdentical(count($result), 1, 'Case sensitive, lowercase.');
+    $this->assertCount(1, $result, 'Case sensitive, lowercase.');
 
     $result = $this->storage
       ->getQuery()
       ->condition('field_ci', $fixtures[0]['uppercase'], 'STARTS_WITH')
       ->execute();
-    $this->assertIdentical(count($result), 1, 'Case sensitive, exact match.');
+    $this->assertCount(1, $result, 'Case sensitive, exact match.');
 
     // Check the case sensitive field, STARTS_WITH operator.
     $result = $this->storage
       ->getQuery()
       ->condition('field_cs', $fixtures[0]['lowercase'], 'STARTS_WITH')
       ->execute();
-    $this->assertIdentical(count($result), 0, 'Case sensitive, lowercase.');
+    $this->assertCount(0, $result, 'Case sensitive, lowercase.');
 
     $result = $this->storage
       ->getQuery()
       ->condition('field_cs', $fixtures[0]['uppercase'], 'STARTS_WITH')
       ->execute();
-    $this->assertIdentical(count($result), 1, 'Case sensitive, exact match.');
+    $this->assertCount(1, $result, 'Case sensitive, exact match.');
 
     // Check the case insensitive field, ENDS_WITH operator.
     $result = $this->storage
       ->getQuery()
       ->condition('field_ci', $fixtures[1]['lowercase'], 'ENDS_WITH')
       ->execute();
-    $this->assertIdentical(count($result), 1, 'Case sensitive, lowercase.');
+    $this->assertCount(1, $result, 'Case sensitive, lowercase.');
 
     $result = $this->storage
       ->getQuery()
       ->condition('field_ci', $fixtures[1]['uppercase'], 'ENDS_WITH')
       ->execute();
-    $this->assertIdentical(count($result), 1, 'Case sensitive, exact match.');
+    $this->assertCount(1, $result, 'Case sensitive, exact match.');
 
     // Check the case sensitive field, ENDS_WITH operator.
     $result = $this->storage
       ->getQuery()
       ->condition('field_cs', $fixtures[1]['lowercase'], 'ENDS_WITH')
       ->execute();
-    $this->assertIdentical(count($result), 1, 'Case sensitive, lowercase.');
+    $this->assertCount(1, $result, 'Case sensitive, lowercase.');
 
     $result = $this->storage
       ->getQuery()
       ->condition('field_cs', $fixtures[1]['uppercase'], 'ENDS_WITH')
       ->execute();
-    $this->assertIdentical(count($result), 0, 'Case sensitive, exact match.');
+    $this->assertCount(0, $result, 'Case sensitive, exact match.');
 
     // Check the case insensitive field, CONTAINS operator, use the inner 8
     // characters of the uppercase and lowercase strings.
@@ -931,26 +931,26 @@ class EntityQueryTest extends EntityKernelTestBase {
       ->getQuery()
       ->condition('field_ci', mb_substr($fixtures[0]['uppercase'] . $fixtures[1]['lowercase'], 4, 8), 'CONTAINS')
       ->execute();
-    $this->assertIdentical(count($result), 1, 'Case sensitive, lowercase.');
+    $this->assertCount(1, $result, 'Case sensitive, lowercase.');
 
     $result = $this->storage
       ->getQuery()
       ->condition('field_ci', mb_strtolower(mb_substr($fixtures[0]['uppercase'] . $fixtures[1]['lowercase'], 4, 8)), 'CONTAINS')
       ->execute();
-    $this->assertIdentical(count($result), 1, 'Case sensitive, exact match.');
+    $this->assertCount(1, $result, 'Case sensitive, exact match.');
 
     // Check the case sensitive field, CONTAINS operator.
     $result = $this->storage
       ->getQuery()
       ->condition('field_cs', mb_substr($fixtures[0]['uppercase'] . $fixtures[1]['lowercase'], 4, 8), 'CONTAINS')
       ->execute();
-    $this->assertIdentical(count($result), 1, 'Case sensitive, lowercase.');
+    $this->assertCount(1, $result, 'Case sensitive, lowercase.');
 
     $result = $this->storage
       ->getQuery()
       ->condition('field_cs', mb_strtolower(mb_substr($fixtures[0]['uppercase'] . $fixtures[1]['lowercase'], 4, 8)), 'CONTAINS')
       ->execute();
-    $this->assertIdentical(count($result), 0, 'Case sensitive, exact match.');
+    $this->assertCount(0, $result, 'Case sensitive, exact match.');
 
   }
 
@@ -989,7 +989,7 @@ class EntityQueryTest extends EntityKernelTestBase {
       ->condition('description.format', 'format1')
       ->execute();
 
-    $this->assertEqual(count($ids), 1);
+    $this->assertCount(1, $ids);
     $this->assertEqual($term1->id(), reset($ids));
   }
 
@@ -1002,7 +1002,7 @@ class EntityQueryTest extends EntityKernelTestBase {
       ->getQuery()
       ->condition('id', [14], 'IN')
       ->execute();
-    $this->assertEqual(count($result), 1);
+    $this->assertCount(1, $result);
 
     // Set a revision on entity 14 that isn't the current default.
     $entity = EntityTestMulRev::load(14);
@@ -1021,7 +1021,7 @@ class EntityQueryTest extends EntityKernelTestBase {
       ->getQuery()
       ->condition('id', [14], 'IN')
       ->execute();
-    $this->assertEqual(count($result), 1);
+    $this->assertCount(1, $result);
 
     // Verify that field conditions on the default and pending revision are
     // work as expected.

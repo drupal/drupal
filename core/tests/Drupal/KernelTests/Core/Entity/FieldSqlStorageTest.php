@@ -266,7 +266,7 @@ class FieldSqlStorageTest extends EntityKernelTestBase {
     $entity->{$this->fieldName} = NULL;
     $entity->save();
     $rows = $connection->select($this->table, 't')->fields('t')->execute()->fetchAllAssoc('delta', \PDO::FETCH_ASSOC);
-    $this->assertEqual(count($rows), 0);
+    $this->assertCount(0, $rows);
   }
 
   /**

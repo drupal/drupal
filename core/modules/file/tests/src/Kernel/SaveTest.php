@@ -63,14 +63,14 @@ class SaveTest extends FileManagedUnitTestBase {
     $uppercase_file = File::create($uppercase_values);
     file_put_contents($uppercase_file->getFileUri(), 'hello world');
     $violations = $uppercase_file->validate();
-    $this->assertEqual(count($violations), 0, 'No violations when adding an URI with an existing filename in upper case.');
+    $this->assertCount(0, $violations, 'No violations when adding an URI with an existing filename in upper case.');
     $uppercase_file->save();
 
     // Ensure the database URI uniqueness constraint is triggered.
     $uppercase_file_duplicate = File::create($uppercase_values);
     file_put_contents($uppercase_file_duplicate->getFileUri(), 'hello world');
     $violations = $uppercase_file_duplicate->validate();
-    $this->assertEqual(count($violations), 1);
+    $this->assertCount(1, $violations);
     $this->assertEqual($violations[0]->getMessage(), t('The file %value already exists. Enter a unique file URI.', [
       '%value' => $uppercase_file_duplicate->getFileUri(),
     ]));
@@ -79,7 +79,7 @@ class SaveTest extends FileManagedUnitTestBase {
       ->condition('uri', $uppercase_file->getFileUri())
       ->execute();
 
-    $this->assertEqual(1, count($fids));
+    $this->assertCount(1, $fids);
     $this->assertEqual([$uppercase_file->id() => $uppercase_file->id()], $fids);
 
     // Save a file with zero bytes.

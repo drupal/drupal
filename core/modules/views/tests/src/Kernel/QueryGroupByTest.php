@@ -67,7 +67,7 @@ class QueryGroupByTest extends ViewsKernelTestBase {
     $view = Views::getView('test_aggregate_count');
     $this->executeView($view);
 
-    $this->assertEqual(count($view->result), 2, 'Make sure the count of items is right.');
+    $this->assertCount(2, $view->result, 'Make sure the count of items is right.');
 
     $types = [];
     foreach ($view->result as $item) {
@@ -105,7 +105,7 @@ class QueryGroupByTest extends ViewsKernelTestBase {
 
     $this->executeView($view);
 
-    $this->assertEqual(count($view->result), 2, 'Make sure the count of items is right.');
+    $this->assertCount(2, $view->result, 'Make sure the count of items is right.');
     // Group by name to identify the right count.
     $results = [];
     foreach ($view->result as $item) {
@@ -252,7 +252,7 @@ class QueryGroupByTest extends ViewsKernelTestBase {
 
     $view = Views::getView('test_group_by_count_multicardinality');
     $this->executeView($view);
-    $this->assertEqual(2, count($view->result));
+    $this->assertCount(2, $view->result);
 
     $this->assertEqual('3', $view->getStyle()->getField(0, 'id'));
     $this->assertEqual('1', $view->getStyle()->getField(0, 'field_test'));
@@ -266,7 +266,7 @@ class QueryGroupByTest extends ViewsKernelTestBase {
 
     $view = Views::getView('test_group_by_count_multicardinality');
     $this->executeView($view);
-    $this->assertEqual(5, count($view->result));
+    $this->assertCount(5, $view->result);
 
     $this->assertEqual('3', $view->getStyle()->getField(0, 'id'));
     $this->assertEqual('1', $view->getStyle()->getField(0, 'field_test'));
@@ -288,7 +288,7 @@ class QueryGroupByTest extends ViewsKernelTestBase {
     $view = Views::getView('test_group_by_count_multicardinality');
     $this->executeView($view);
 
-    $this->assertEqual(6, count($view->result));
+    $this->assertCount(6, $view->result);
     $this->assertEqual('3', $view->getStyle()->getField(5, 'id'));
     $this->assertEqual('6', $view->getStyle()->getField(5, 'field_test'));
   }
@@ -328,7 +328,7 @@ class QueryGroupByTest extends ViewsKernelTestBase {
     $view = Views::getView('test_group_by_field_not_within_bundle');
     $this->executeView($view);
 
-    $this->assertEqual(2, count($view->result));
+    $this->assertCount(2, $view->result);
     // The first result is coming from entity_test_mul2, so no field could be
     // rendered.
     $this->assertEqual('', $view->getStyle()->getField(0, 'field_test'));

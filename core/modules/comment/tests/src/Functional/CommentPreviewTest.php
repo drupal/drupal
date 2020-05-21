@@ -113,7 +113,7 @@ class CommentPreviewTest extends CommentTestBase {
     $this->drupalPostForm(NULL, [], 'Save');
     $this->assertText('Your comment has been posted.');
     $elements = $this->xpath('//section[contains(@class, "comment-wrapper")]/article');
-    $this->assertEqual(1, count($elements));
+    $this->assertCount(1, $elements);
 
     // Go back and re-submit the form.
     $this->getSession()->getDriver()->back();
@@ -121,7 +121,7 @@ class CommentPreviewTest extends CommentTestBase {
     $submit_button->click();
     $this->assertText('Your comment has been posted.');
     $elements = $this->xpath('//section[contains(@class, "comment-wrapper")]/article');
-    $this->assertEqual(2, count($elements));
+    $this->assertCount(2, $elements);
   }
 
   /**

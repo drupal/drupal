@@ -40,30 +40,30 @@ class TermValidationTest extends EntityKernelTestBase {
       'vid' => 'tags',
     ]);
     $violations = $term->validate();
-    $this->assertEqual(count($violations), 0, 'No violations when validating a default term.');
+    $this->assertCount(0, $violations, 'No violations when validating a default term.');
 
     $term->set('name', $this->randomString(256));
     $violations = $term->validate();
-    $this->assertEqual(count($violations), 1, 'Violation found when name is too long.');
+    $this->assertCount(1, $violations, 'Violation found when name is too long.');
     $this->assertEqual($violations[0]->getPropertyPath(), 'name.0.value');
     $field_label = $term->get('name')->getFieldDefinition()->getLabel();
     $this->assertEqual($violations[0]->getMessage(), t('%name: may not be longer than @max characters.', ['%name' => $field_label, '@max' => 255]));
 
     $term->set('name', NULL);
     $violations = $term->validate();
-    $this->assertEqual(count($violations), 1, 'Violation found when name is NULL.');
+    $this->assertCount(1, $violations, 'Violation found when name is NULL.');
     $this->assertEqual($violations[0]->getPropertyPath(), 'name');
     $this->assertEqual($violations[0]->getMessage(), t('This value should not be null.'));
     $term->set('name', 'test');
 
     $term->set('parent', 9999);
     $violations = $term->validate();
-    $this->assertEqual(count($violations), 1, 'Violation found when term parent is invalid.');
+    $this->assertCount(1, $violations, 'Violation found when term parent is invalid.');
     $this->assertEqual($violations[0]->getMessage(), new FormattableMarkup('The referenced entity (%type: %id) does not exist.', ['%type' => 'taxonomy_term', '%id' => 9999]));
 
     $term->set('parent', 0);
     $violations = $term->validate();
-    $this->assertEqual(count($violations), 0, 'No violations for parent id 0.');
+    $this->assertCount(0, $violations, 'No violations for parent id 0.');
   }
 
 }

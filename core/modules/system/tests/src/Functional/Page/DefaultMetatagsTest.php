@@ -23,7 +23,7 @@ class DefaultMetatagsTest extends BrowserTestBase {
     $this->drupalGet('');
     // Ensures that the charset metatag is on the page.
     $result = $this->xpath('//meta[@charset="utf-8"]');
-    $this->assertEqual(count($result), 1);
+    $this->assertCount(1, $result);
 
     // Ensure that the charset one is the first metatag.
     $result = $this->xpath('//meta');
@@ -31,7 +31,7 @@ class DefaultMetatagsTest extends BrowserTestBase {
 
     // Ensure that the shortcut icon is on the page.
     $result = $this->xpath('//link[@rel = "shortcut icon"]');
-    $this->assertEqual(count($result), 1, 'The shortcut icon is present.');
+    $this->assertCount(1, $result, 'The shortcut icon is present.');
   }
 
 }

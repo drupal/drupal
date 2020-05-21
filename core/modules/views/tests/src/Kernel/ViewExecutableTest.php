@@ -476,7 +476,7 @@ class ViewExecutableTest extends ViewsKernelTestBase {
     });
     // Assert that there were 9 total errors across 3 displays.
     $this->assertIdentical(9, $total_error_count);
-    $this->assertIdentical(3, count($errors));
+    $this->assertCount(3, $errors);
   }
 
   /**

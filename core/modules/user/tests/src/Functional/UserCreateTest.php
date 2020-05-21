@@ -109,11 +109,11 @@ class UserCreateTest extends BrowserTestBase {
 
       if ($notify) {
         $this->assertText(t('A welcome message with further instructions has been emailed to the new user @name.', ['@name' => $edit['name']]), 'User created');
-        $this->assertEqual(count($this->drupalGetMails()), 1, 'Notification email sent');
+        $this->assertCount(1, $this->drupalGetMails(), 'Notification email sent');
       }
       else {
         $this->assertText(t('Created a new user account for @name. No email has been sent.', ['@name' => $edit['name']]), 'User created');
-        $this->assertEqual(count($this->drupalGetMails()), 0, 'Notification email not sent');
+        $this->assertCount(0, $this->drupalGetMails(), 'Notification email not sent');
       }
 
       $this->drupalGet('admin/people');

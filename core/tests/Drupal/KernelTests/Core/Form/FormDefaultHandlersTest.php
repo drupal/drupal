@@ -92,11 +92,11 @@ class FormDefaultHandlersTest extends KernelTestBase implements FormInterface {
 
     $handlers = $form_state->get('test_handlers');
 
-    $this->assertIdentical(count($handlers['validate']), 2);
+    $this->assertCount(2, $handlers['validate']);
     $this->assertIdentical($handlers['validate'][0], 'customValidateForm');
     $this->assertIdentical($handlers['validate'][1], 'validateForm');
 
-    $this->assertIdentical(count($handlers['submit']), 2);
+    $this->assertCount(2, $handlers['submit']);
     $this->assertIdentical($handlers['submit'][0], 'customSubmitForm');
     $this->assertIdentical($handlers['submit'][1], 'submitForm');
   }

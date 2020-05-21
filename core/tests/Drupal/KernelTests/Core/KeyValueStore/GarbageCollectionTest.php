@@ -40,7 +40,7 @@ class GarbageCollectionTest extends KernelTestBase {
     for ($i = 0; $i <= 3; $i++) {
       $store->setWithExpire('key_' . $i, $this->randomObject(), rand(500, 100000));
     }
-    $this->assertIdentical(count($store->getAll()), 4, 'Four items were written to the storage.');
+    $this->assertCount(4, $store->getAll(), 'Four items were written to the storage.');
 
     // Manually expire the data.
     for ($i = 0; $i <= 3; $i++) {
@@ -65,7 +65,7 @@ class GarbageCollectionTest extends KernelTestBase {
       [
         ':collection' => $collection,
       ])->fetchAll();
-    $this->assertIdentical(count($result), 1, 'Only one item remains after garbage collection');
+    $this->assertCount(1, $result, 'Only one item remains after garbage collection');
 
   }
 

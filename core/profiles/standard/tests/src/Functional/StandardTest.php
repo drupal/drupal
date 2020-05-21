@@ -69,14 +69,14 @@ class StandardTest extends BrowserTestBase {
       ':id' => 'block-bartik-help',
     ]);
 
-    $this->assertEqual(count($elements), 1, 'Found complementary role on help block.');
+    $this->assertCount(1, $elements, 'Found complementary role on help block.');
 
     $this->drupalGet('');
     $elements = $this->xpath('//div[@role=:role and @id=:id]', [
       ':role' => 'complementary',
       ':id' => 'block-bartik-powered',
     ]);
-    $this->assertEqual(count($elements), 1, 'Found complementary role on powered by block.');
+    $this->assertCount(1, $elements, 'Found complementary role on powered by block.');
 
     // Verify anonymous user can see the block.
     $this->drupalLogout();

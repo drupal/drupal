@@ -120,7 +120,7 @@ class UserPictureTest extends BrowserTestBase {
     // Verify that the image is displayed on the node page.
     $this->drupalGet('node/' . $node->id());
     $elements = $this->cssSelect('.node__meta .field--name-user-picture img[alt="' . $alt_text . '"][src="' . $image_url . '"]');
-    $this->assertEqual(count($elements), 1, 'User picture with alt text found on node page.');
+    $this->assertCount(1, $elements, 'User picture with alt text found on node page.');
 
     // Enable user pictures on comments, instead of nodes.
     $this->config('system.theme.global')
@@ -133,7 +133,7 @@ class UserPictureTest extends BrowserTestBase {
     ];
     $this->drupalPostForm('comment/reply/node/' . $node->id() . '/comment', $edit, t('Save'));
     $elements = $this->cssSelect('.comment__meta .field--name-user-picture img[alt="' . $alt_text . '"][src="' . $image_url . '"]');
-    $this->assertEqual(count($elements), 1, 'User picture with alt text found on the comment.');
+    $this->assertCount(1, $elements, 'User picture with alt text found on the comment.');
 
     // Disable user pictures on comments and nodes.
     $this->config('system.theme.global')

@@ -58,14 +58,14 @@ class FieldImportCreateTest extends FieldKernelTestBase {
       ->condition('entity_type', 'entity_test')
       ->condition('bundle', 'entity_test')
       ->execute();
-    $this->assertEqual(count($ids), 2);
+    $this->assertCount(2, $ids);
     $this->assertTrue(isset($ids['entity_test.entity_test.field_test_import']));
     $this->assertTrue(isset($ids['entity_test.entity_test.field_test_import_2']));
     $ids = \Drupal::entityQuery('field_config')
       ->condition('entity_type', 'entity_test')
       ->condition('bundle', 'test_bundle')
       ->execute();
-    $this->assertEqual(count($ids), 1);
+    $this->assertCount(1, $ids);
     $this->assertTrue(isset($ids['entity_test.test_bundle.field_test_import_2']));
   }
 

@@ -53,7 +53,7 @@ class MenuLinkContentDeriverTest extends KernelTestBase {
     ]);
     $parent->save();
     $menu_tree = \Drupal::menuTree()->load('tools', new MenuTreeParameters());
-    $this->assertEqual(1, count($menu_tree));
+    $this->assertCount(1, $menu_tree);
     /** @var \Drupal\Core\Menu\MenuLinkTreeElement $tree_element */
     $tree_element = reset($menu_tree);
     $this->assertEqual('route_name_1', $tree_element->link->getRouteName());
@@ -66,7 +66,7 @@ class MenuLinkContentDeriverTest extends KernelTestBase {
 
     // Ensure that the new route name / parameters are captured by the tree.
     $menu_tree = \Drupal::menuTree()->load('tools', new MenuTreeParameters());
-    $this->assertEqual(1, count($menu_tree));
+    $this->assertCount(1, $menu_tree);
     /** @var \Drupal\Core\Menu\MenuLinkTreeElement $tree_element */
     $tree_element = reset($menu_tree);
     $this->assertEqual('route_name_2', $tree_element->link->getRouteName());
@@ -89,11 +89,11 @@ class MenuLinkContentDeriverTest extends KernelTestBase {
     $parent->set('link', [['uri' => 'entity:/example-path']]);
     $parent->save();
     $menu_tree = \Drupal::menuTree()->load('tools', new MenuTreeParameters());
-    $this->assertEqual(1, count($menu_tree));
+    $this->assertCount(1, $menu_tree);
     /** @var \Drupal\Core\Menu\MenuLinkTreeElement $tree_element */
     $tree_element = reset($menu_tree);
     $this->assertTrue($tree_element->hasChildren);
-    $this->assertEqual(1, count($tree_element->subtree));
+    $this->assertCount(1, $tree_element->subtree);
 
     // Edit child element link to use 'internal' instead of 'entity'.
     $child->set('link', [['uri' => 'internal:/example-path/child']]);
@@ -101,11 +101,11 @@ class MenuLinkContentDeriverTest extends KernelTestBase {
     \Drupal::service('plugin.manager.menu.link')->rebuild();
 
     $menu_tree = \Drupal::menuTree()->load('tools', new MenuTreeParameters());
-    $this->assertEqual(1, count($menu_tree));
+    $this->assertCount(1, $menu_tree);
     /** @var \Drupal\Core\Menu\MenuLinkTreeElement $tree_element */
     $tree_element = reset($menu_tree);
     $this->assertTrue($tree_element->hasChildren);
-    $this->assertEqual(1, count($tree_element->subtree));
+    $this->assertCount(1, $tree_element->subtree);
   }
 
 }

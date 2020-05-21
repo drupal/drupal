@@ -529,11 +529,11 @@ class TermTest extends TaxonomyTestBase {
 
     // Load multiple terms with the same name.
     $terms = taxonomy_term_load_multiple_by_name($term->getName());
-    $this->assertEqual(count($terms), 2, 'Two terms loaded with the same name.');
+    $this->assertCount(2, $terms, 'Two terms loaded with the same name.');
 
     // Load single term when restricted to one vocabulary.
     $terms = taxonomy_term_load_multiple_by_name($term->getName(), $this->vocabulary->id());
-    $this->assertEqual(count($terms), 1, 'One term loaded when restricted by vocabulary.');
+    $this->assertCount(1, $terms, 'One term loaded when restricted by vocabulary.');
     $this->assertTrue(isset($terms[$term->id()]), 'Term loaded using exact name and vocabulary machine name.');
 
     // Create a new term with another name.
@@ -546,7 +546,7 @@ class TermTest extends TaxonomyTestBase {
 
     // Try to load terms filtering by a non-existing vocabulary.
     $terms = taxonomy_term_load_multiple_by_name($term2->getName(), 'non_existing_vocabulary');
-    $this->assertEqual(count($terms), 0, 'No terms loaded when restricted by a non-existing vocabulary.');
+    $this->assertCount(0, $terms, 'No terms loaded when restricted by a non-existing vocabulary.');
   }
 
   /**
@@ -598,7 +598,7 @@ class TermTest extends TaxonomyTestBase {
     // Check the breadcrumb on the term edit page.
     $this->drupalGet('taxonomy/term/' . $term->id() . '/edit');
     $breadcrumbs = $this->getSession()->getPage()->findAll('css', 'nav.breadcrumb ol li a');
-    $this->assertIdentical(count($breadcrumbs), 2, 'The breadcrumbs are present on the page.');
+    $this->assertCount(2, $breadcrumbs, 'The breadcrumbs are present on the page.');
     $this->assertIdentical($breadcrumbs[0]->getText(), 'Home', 'First breadcrumb text is Home');
     $this->assertIdentical($breadcrumbs[1]->getText(), $term->label(), 'Second breadcrumb text is term name on term edit page.');
     $this->assertEscaped($breadcrumbs[1]->getText(), 'breadcrumbs displayed and escaped.');
@@ -606,7 +606,7 @@ class TermTest extends TaxonomyTestBase {
     // Check the breadcrumb on the term delete page.
     $this->drupalGet('taxonomy/term/' . $term->id() . '/delete');
     $breadcrumbs = $this->getSession()->getPage()->findAll('css', 'nav.breadcrumb ol li a');
-    $this->assertIdentical(count($breadcrumbs), 2, 'The breadcrumbs are present on the page.');
+    $this->assertCount(2, $breadcrumbs, 'The breadcrumbs are present on the page.');
     $this->assertIdentical($breadcrumbs[0]->getText(), 'Home', 'First breadcrumb text is Home');
     $this->assertIdentical($breadcrumbs[1]->getText(), $term->label(), 'Second breadcrumb text is term name on term delete page.');
     $this->assertEscaped($breadcrumbs[1]->getText(), 'breadcrumbs displayed and escaped.');

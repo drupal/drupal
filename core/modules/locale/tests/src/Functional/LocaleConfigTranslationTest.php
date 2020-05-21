@@ -90,7 +90,7 @@ class LocaleConfigTranslationTest extends BrowserTestBase {
 
     // Get translation and check we've only got the message.
     $translation = \Drupal::languageManager()->getLanguageConfigOverride($this->langcode, 'system.maintenance')->get();
-    $this->assertEqual(count($translation), 1, 'Got the right number of properties after translation.');
+    $this->assertCount(1, $translation, 'Got the right number of properties after translation.');
     $this->assertEqual($translation['message'], $message);
 
     // Check default medium date format exists and create a translation for it.
@@ -135,7 +135,7 @@ class LocaleConfigTranslationTest extends BrowserTestBase {
 
     // Check the string is unique and has no translation yet.
     $translations = $this->storage->getTranslations(['language' => $this->langcode, 'type' => 'configuration', 'name' => 'image.style.medium']);
-    $this->assertEqual(count($translations), 1);
+    $this->assertCount(1, $translations);
     $translation = reset($translations);
     $this->assertEqual($translation->source, $string->source);
     $this->assertEmpty($translation->translation);

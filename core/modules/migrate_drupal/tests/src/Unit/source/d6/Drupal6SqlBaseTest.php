@@ -82,8 +82,8 @@ class Drupal6SqlBaseTest extends MigrateTestCase {
   public function testGetSystemData() {
     $system_data = $this->base->getSystemData();
     // Should be 1 theme and 2 modules.
-    $this->assertEquals(1, count($system_data['theme']));
-    $this->assertEquals(2, count($system_data['module']));
+    $this->assertCount(1, $system_data['theme']);
+    $this->assertCount(2, $system_data['module']);
 
     // Calling again should be identical.
     $this->assertSame($system_data, $this->base->getSystemData());

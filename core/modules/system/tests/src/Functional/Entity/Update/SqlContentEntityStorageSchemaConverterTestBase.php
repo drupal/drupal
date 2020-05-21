@@ -86,7 +86,7 @@ abstract class SqlContentEntityStorageSchemaConverterTestBase extends UpdatePath
 
     /** @var \Drupal\Core\Entity\Sql\SqlEntityStorageInterface $storage */
     $storage = \Drupal::entityTypeManager()->getStorage('entity_test_update');
-    $this->assertEqual(count($storage->loadMultiple()), 102, 'All test entities were found.');
+    $this->assertCount(102, $storage->loadMultiple(), 'All test entities were found.');
 
     // Check that each field value was copied correctly to the revision tables.
     for ($i = 1; $i <= 102; $i++) {

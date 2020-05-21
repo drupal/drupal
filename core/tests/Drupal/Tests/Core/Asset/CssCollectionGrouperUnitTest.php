@@ -104,7 +104,7 @@ class CssCollectionGrouperUnitTest extends UnitTestCase {
 
     $groups = $this->grouper->group($css_assets);
 
-    $this->assertSame(5, count($groups), "5 groups created.");
+    $this->assertCount(5, $groups, "5 groups created.");
 
     // Check group 1.
     $group = $groups[0];
@@ -112,7 +112,7 @@ class CssCollectionGrouperUnitTest extends UnitTestCase {
     $this->assertSame('file', $group['type']);
     $this->assertSame('all', $group['media']);
     $this->assertSame(TRUE, $group['preprocess']);
-    $this->assertSame(3, count($group['items']));
+    $this->assertCount(3, $group['items']);
     $this->assertContains($css_assets['system.base.css'], $group['items']);
     $this->assertContains($css_assets['js.module.css'], $group['items']);
 
@@ -122,7 +122,7 @@ class CssCollectionGrouperUnitTest extends UnitTestCase {
     $this->assertSame('file', $group['type']);
     $this->assertSame('all', $group['media']);
     $this->assertSame(TRUE, $group['preprocess']);
-    $this->assertSame(1, count($group['items']));
+    $this->assertCount(1, $group['items']);
     $this->assertContains($css_assets['field.css'], $group['items']);
 
     // Check group 3.
@@ -131,7 +131,7 @@ class CssCollectionGrouperUnitTest extends UnitTestCase {
     $this->assertSame('external', $group['type']);
     $this->assertSame('all', $group['media']);
     $this->assertSame(TRUE, $group['preprocess']);
-    $this->assertSame(1, count($group['items']));
+    $this->assertCount(1, $group['items']);
     $this->assertContains($css_assets['external.css'], $group['items']);
 
     // Check group 4.
@@ -140,7 +140,7 @@ class CssCollectionGrouperUnitTest extends UnitTestCase {
     $this->assertSame('file', $group['type']);
     $this->assertSame('all', $group['media']);
     $this->assertSame(TRUE, $group['preprocess']);
-    $this->assertSame(1, count($group['items']));
+    $this->assertCount(1, $group['items']);
     $this->assertContains($css_assets['elements.css'], $group['items']);
 
     // Check group 5.
@@ -149,7 +149,7 @@ class CssCollectionGrouperUnitTest extends UnitTestCase {
     $this->assertSame('file', $group['type']);
     $this->assertSame('print', $group['media']);
     $this->assertSame(TRUE, $group['preprocess']);
-    $this->assertSame(1, count($group['items']));
+    $this->assertCount(1, $group['items']);
     $this->assertContains($css_assets['print.css'], $group['items']);
   }
 
