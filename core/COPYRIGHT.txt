@@ -57,3 +57,8 @@ PHP
 
   Drupal depends on numerous PHP Composer packages. All Composer packages
     retain the copyright of the authors.
+
+Brand materials
+
+  Drupal brand materials under core/misc/logo have a dedicated license. See
+  core/misc/logo/LICENSE.txt.
