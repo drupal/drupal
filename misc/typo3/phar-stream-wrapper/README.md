@@ -1,5 +1,6 @@
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/TYPO3/phar-stream-wrapper/badges/quality-score.png?b=v2)](https://scrutinizer-ci.com/g/TYPO3/phar-stream-wrapper/?branch=v2)
 [![Travis CI Build Status](https://travis-ci.org/TYPO3/phar-stream-wrapper.svg?branch=v2)](https://travis-ci.org/TYPO3/phar-stream-wrapper)
+[![AppVeyor Build status](https://ci.appveyor.com/api/projects/status/q4ls5tg4w1d6sf4i/branch/v2?svg=true)](https://ci.appveyor.com/project/ohader/phar-stream-wrapper)
 
 # PHP Phar Stream Wrapper
 
@@ -21,9 +22,11 @@ and has been addressed concerning the specific attack vector and for this generi
 `PharStreamWrapper` in TYPO3 versions 7.6.30 LTS, 8.7.17 LTS and 9.3.1 on 12th
 July 2018.
 
-* https://typo3.org/security/advisory/typo3-core-sa-2018-002/
 * https://blog.secarma.co.uk/labs/near-phar-dangerous-unserialization-wherever-you-are
 * https://youtu.be/GePBmsNJw6Y
+* https://typo3.org/security/advisory/typo3-psa-2018-001/
+* https://typo3.org/security/advisory/typo3-psa-2019-007/
+* https://typo3.org/security/advisory/typo3-psa-2019-008/
 
 ## License
 
