@@ -165,6 +165,7 @@
   position: static;
   display: inline-block;
   border: 0;
+  background: transparent;
 }
 .dropbutton-single .dropbutton-action a {
   width: auto !important;
