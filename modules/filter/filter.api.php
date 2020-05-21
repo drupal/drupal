@@ -202,7 +202,7 @@ function callback_filter_settings($form, &$form_state, $filter, $format, $defaul
  */
 function callback_filter_prepare($text, $filter, $format, $langcode, $cache, $cache_id) {
   // Escape <code> and </code> tags.
-  $text = preg_replace('|<code>(.+?)</code>|se', "[codefilter_code]$1[/codefilter_code]", $text);
+  $text = preg_replace('|<code>(.+?)</code>|s', "[codefilter_code]$1[/codefilter_code]", $text);
   return $text;
 }
 
@@ -234,7 +234,7 @@ function callback_filter_prepare($text, $filter, $format, $langcode, $cache, $ca
  * @ingroup callbacks
  */
 function callback_filter_process($text, $filter, $format, $langcode, $cache, $cache_id) {
-  $text = preg_replace('|\[codefilter_code\](.+?)\[/codefilter_code\]|se', "<pre>$1</pre>", $text);
+  $text = preg_replace('|\[codefilter_code\](.+?)\[/codefilter_code\]|s', "<pre>$1</pre>", $text);
 
   return $text;
 }
