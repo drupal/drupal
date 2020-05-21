@@ -265,6 +265,12 @@ function field_ui_menu_title($instance) {
  * Menu access callback for the 'view mode display settings' pages.
  */
 function _field_ui_view_mode_menu_access($entity_type, $bundle, $view_mode, $access_callback) {
+  // It's good practice to call func_get_args() at the beginning of a function
+  // to avoid problems with function parameters being modified later. The
+  // behavior of func_get_args() changed in PHP7.
+  // @see https://www.php.net/manual/en/migration70.incompatible.php#migration70.incompatible.other.func-parameter-modified
+  $all_args = func_get_args();
+
   // First, determine visibility according to the 'use custom display'
   // setting for the view mode.
   $bundle = field_extract_bundle($entity_type, $bundle);
@@ -275,7 +281,6 @@ function _field_ui_view_mode_menu_access($entity_type, $bundle, $view_mode, $acc
   // part of _menu_check_access().
   if ($visibility) {
     // Grab the variable 'access arguments' part.
-    $all_args = func_get_args();
     $args = array_slice($all_args, 4);
     $callback = empty($access_callback) ? 0 : trim($access_callback);
     if (is_numeric($callback)) {
