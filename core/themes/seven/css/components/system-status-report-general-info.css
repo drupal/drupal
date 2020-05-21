@@ -42,8 +42,8 @@
   background-position: 50% center;
   background-size: 35px;
 }
-.system-status-general-info__item-icon--d8:before {
-  background-image: url(../../images/icons/cccccc/d8-logo.svg);
+.system-status-general-info__item-icon--drupal:before {
+  background-image: url(../../../../misc/logo/drupal-logo.svg);
 }
 .system-status-general-info__item-icon--clock:before {
   background-image: url(../../images/icons/cccccc/clock.svg);

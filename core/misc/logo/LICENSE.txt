@@ -1,0 +1,3 @@
+The files in this directory are not covered by the GNU General Public License.
+See https://www.drupal.org/about/media-kit/copyright-and-trademark for the
+license terms of these Drupal brand materials.
