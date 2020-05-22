@@ -102,7 +102,7 @@ class MigrateNodeCompleteTest extends MigrateDrupal7TestBase {
     // that only the complete migration ran.
     $results = $this->nodeMigrateMapTableCount('7');
     $this->assertSame(0, $results['node']);
-    $this->assertSame(6, $results['node_complete']);
+    $this->assertSame(7, $results['node_complete']);
 
     $db = \Drupal::database();
     $this->assertEquals($this->expectedNodeFieldRevisionTable(), $db->select('node_field_revision', 'nr')
@@ -119,11 +119,7 @@ class MigrateNodeCompleteTest extends MigrateDrupal7TestBase {
       ->execute()
       ->fetchAll(\PDO::FETCH_ASSOC));
 
-    // Now load and test each revision,
-    // including the field 'field_text_long_plain' which has text reflecting the
-    // revision. Note that source node 1, uses entity translation which does
-    // not have a migration for revisions of translations.
-    // See https://www.drupal.org/project/drupal/issues/3076447.
+    // Load and test each revision.
     $data = $this->expectedRevisionEntityData()[0];
     foreach ($this->expectedNodeFieldRevisionTable() as $key => $revision) {
       $this->assertRevision($revision, $data[$key]);
@@ -146,12 +142,15 @@ class MigrateNodeCompleteTest extends MigrateDrupal7TestBase {
     $this->assertSame($revision['title'], $actual->getTitle(), sprintf("Title '%s' does not match actual '%s' for revision '%d' langcode '%s'", $revision['title'], $actual->getTitle(), $revision['vid'], $revision['langcode']));
     $this->assertSame($revision['revision_translation_affected'], $actual->get('revision_translation_affected')->value, sprintf("revision_translation_affected '%s' does not match actual '%s' for revision '%d' langcode '%s'", $revision['revision_translation_affected'], $actual->get('revision_translation_affected')->value, $revision['vid'], $revision['langcode']));
 
-    $this->assertSame($data['created'], $actual->getRevisionCreationTime(), sprintf("Creation time '%s' does not match actual '%s' for revision '%d' langcode '%s'", $data['created'], $actual->getRevisionCreationTime(), $revision['vid'], $revision['langcode']));
-    $this->assertSame($data['changed'], $actual->getChangedTime(), sprintf("Changed time '%s' does not match actual '%s' for revision '%d' langcode '%s'", $data['changed'], $actual->getChangedTime(), $revision['vid'], $revision['langcode']));
+    $this->assertSame($data['revision_created'], $actual->getRevisionCreationTime(), sprintf("Creation time '%s' does not match actual '%s' for revision '%d' langcode '%s'", $data['revision_created'], $actual->getRevisionCreationTime(), $revision['vid'], $revision['langcode']));
     $this->assertSame($data['log'], $actual->getRevisionLogMessage(), sprintf("Revision log '%s' does not match actual '%s' for revision '%d' langcode '%s'", var_export($data['log'], TRUE), $actual->getRevisionLogMessage(), $revision['vid'], $revision['langcode']));
-    if ($data['field_text_long_plain']) {
+    if (isset($data['field_text_long_plain'])) {
       $this->assertSame($data['field_text_long_plain'], $actual->field_text_long_plain->value, sprintf("field_text_long_plain value '%s' does not match actual '%s' for revision '%d' langcode '%s'", var_export($data['field_text_long_plain'], TRUE), $actual->field_text_long_plain->value, $revision['vid'], $revision['langcode']));
     }
+    if (isset($data['field_tree'])) {
+      $this->assertSame($data['field_tree'], $actual->field_tree->value, sprintf("field_tree value '%s' does not match actual '%s' for revision '%d' langcode '%s'", var_export($data['field_tree'], TRUE), $actual->field_tree->value, $revision['vid'], $revision['langcode']));
+    }
+
   }
 
   /**
@@ -171,8 +170,8 @@ class MigrateNodeCompleteTest extends MigrateDrupal7TestBase {
           'status' => '1',
           'uid' => '2',
           'title' => 'An English Node',
-          'created' => '1421727515',
-          'changed' => '1441032132',
+          'created' => '1529615790',
+          'changed' => '1529615790',
           'promote' => '1',
           'sticky' => '0',
           'default_langcode' => '1',
@@ -342,6 +341,60 @@ class MigrateNodeCompleteTest extends MigrateDrupal7TestBase {
           'content_translation_source' => 'en',
           'content_translation_outdated' => '0',
         ],
+      10 =>
+        [
+          'nid' => '11',
+          'vid' => '18',
+          'type' => 'et',
+          'langcode' => 'en',
+          'status' => '1',
+          'uid' => '1',
+          'title' => 'Page one',
+          'created' => '1568261523',
+          'changed' => '1568261687',
+          'promote' => '0',
+          'sticky' => '0',
+          'default_langcode' => '1',
+          'revision_translation_affected' => NULL,
+          'content_translation_source' => '',
+          'content_translation_outdated' => '0',
+        ],
+      11 =>
+        [
+          'nid' => '11',
+          'vid' => '18',
+          'type' => 'et',
+          'langcode' => 'fr',
+          'status' => '1',
+          'uid' => '1',
+          'title' => 'Page one',
+          'created' => '1568261721',
+          'changed' => '1568261721',
+          'promote' => '0',
+          'sticky' => '0',
+          'default_langcode' => '0',
+          'revision_translation_affected' => '1',
+          'content_translation_source' => 'en',
+          'content_translation_outdated' => '0',
+        ],
+      12 =>
+        [
+          'nid' => '11',
+          'vid' => '18',
+          'type' => 'et',
+          'langcode' => 'is',
+          'status' => '1',
+          'uid' => '1',
+          'title' => 'Page one',
+          'created' => '1568261548',
+          'changed' => '1568261548',
+          'promote' => '0',
+          'sticky' => '0',
+          'default_langcode' => '0',
+          'revision_translation_affected' => NULL,
+          'content_translation_source' => 'en',
+          'content_translation_outdated' => '0',
+        ],
     ];
   }
 
@@ -361,8 +414,8 @@ class MigrateNodeCompleteTest extends MigrateDrupal7TestBase {
           'status' => '1',
           'uid' => '2',
           'title' => 'An English Node',
-          'created' => '1421727515',
-          'changed' => '1441032132',
+          'created' => '1529615790',
+          'changed' => '1529615790',
           'promote' => '1',
           'sticky' => '0',
           'default_langcode' => '1',
@@ -744,6 +797,142 @@ class MigrateNodeCompleteTest extends MigrateDrupal7TestBase {
           'content_translation_source' => 'is',
           'content_translation_outdated' => '0',
         ],
+      23 =>
+        [
+          'nid' => '11',
+          'vid' => '15',
+          'langcode' => 'en',
+          'status' => '1',
+          'uid' => '1',
+          'title' => 'Page one',
+          'created' => '1568261523',
+          'changed' => '1568261523',
+          'promote' => '0',
+          'sticky' => '0',
+          'default_langcode' => '1',
+          'revision_translation_affected' => '1',
+          'content_translation_source' => NULL,
+          'content_translation_outdated' => '0',
+        ],
+      24 =>
+        [
+          'nid' => '11',
+          'vid' => '16',
+          'langcode' => 'en',
+          'status' => '1',
+          'uid' => '1',
+          'title' => 'Page one',
+          'created' => '1568261523',
+          'changed' => '1568261523',
+          'promote' => '0',
+          'sticky' => '0',
+          'default_langcode' => '1',
+          'revision_translation_affected' => NULL,
+          'content_translation_source' => '',
+          'content_translation_outdated' => '0',
+        ],
+      25 =>
+        [
+          'nid' => '11',
+          'vid' => '16',
+          'langcode' => 'is',
+          'status' => '1',
+          'uid' => '1',
+          'title' => 'Page one',
+          'created' => '1568261548',
+          'changed' => '1568261548',
+          'promote' => '0',
+          'sticky' => '0',
+          'default_langcode' => '0',
+          'revision_translation_affected' => '1',
+          'content_translation_source' => 'en',
+          'content_translation_outdated' => '0',
+        ],
+      26 =>
+        [
+          'nid' => '11',
+          'vid' => '17',
+          'langcode' => 'en',
+          'status' => '1',
+          'uid' => '1',
+          'title' => 'Page one',
+          'created' => '1568261523',
+          'changed' => '1568261687',
+          'promote' => '0',
+          'sticky' => '0',
+          'default_langcode' => '1',
+          'revision_translation_affected' => NULL,
+          'content_translation_source' => '',
+          'content_translation_outdated' => '0',
+        ],
+      27 =>
+        [
+          'nid' => '11',
+          'vid' => '17',
+          'langcode' => 'is',
+          'status' => '1',
+          'uid' => '1',
+          'title' => 'Page one',
+          'created' => '1568261548',
+          'changed' => '1568261548',
+          'promote' => '0',
+          'sticky' => '0',
+          'default_langcode' => '0',
+          'revision_translation_affected' => NULL,
+          'content_translation_source' => 'en',
+          'content_translation_outdated' => '0',
+        ],
+      28 =>
+        [
+          'nid' => '11',
+          'vid' => '18',
+          'langcode' => 'en',
+          'status' => '1',
+          'uid' => '1',
+          'title' => 'Page one',
+          'created' => '1568261523',
+          'changed' => '1568261687',
+          'promote' => '0',
+          'sticky' => '0',
+          'default_langcode' => '1',
+          'revision_translation_affected' => NULL,
+          'content_translation_source' => '',
+          'content_translation_outdated' => '0',
+        ],
+      29 =>
+        [
+          'nid' => '11',
+          'vid' => '18',
+          'langcode' => 'fr',
+          'status' => '1',
+          'uid' => '1',
+          'title' => 'Page one',
+          'created' => '1568261721',
+          'changed' => '1568261721',
+          'promote' => '0',
+          'sticky' => '0',
+          'default_langcode' => '0',
+          'revision_translation_affected' => '1',
+          'content_translation_source' => 'en',
+          'content_translation_outdated' => '0',
+        ],
+      30 =>
+        [
+          'nid' => '11',
+          'vid' => '18',
+          'langcode' => 'is',
+          'status' => '1',
+          'uid' => '1',
+          'title' => 'Page one',
+          'created' => '1568261548',
+          'changed' => '1568261548',
+          'promote' => '0',
+          'sticky' => '0',
+          'default_langcode' => '0',
+          'revision_translation_affected' => NULL,
+          'content_translation_source' => 'en',
+          'content_translation_outdated' => '0',
+        ],
     ];
   }
 
@@ -761,184 +950,225 @@ class MigrateNodeCompleteTest extends MigrateDrupal7TestBase {
           [
             'log' => NULL,
             'field_text_long_plain' => NULL,
-            'created' => '1441032132',
-            'changed' => '1441032132',
+            'revision_created' => '1529615790',
           ],
         // Node 2, revision 2, en.
         1 =>
           [
             'log' => 'DS9 1st rev',
             'field_text_long_plain' => 'DS9 1st rev',
-            'created' => '1564543588',
-            'changed' => '1564543588',
+            'revision_created' => '1564543588',
           ],
         // Node 2, revision 3, en.
         2 =>
           [
             'log' => 'is - DS9 1st rev',
             'field_text_long_plain' => 'DS9 1st rev',
-            'created' => '1564543677',
-            'changed' => '1564543588',
+            'revision_created' => '1564543677',
           ],
         // Node 2, revision 3, is.
         3 =>
           [
             'log' => 'is - DS9 1st rev',
             'field_text_long_plain' => 'is - DS9 1st rev',
-            'created' => '1564543677',
-            'changed' => '1564543677',
+            'revision_created' => '1564543677',
           ],
         // Node 4, revision 4, is.
         4 =>
           [
             'log' => 'is - Firefly 1st rev',
             'field_text_long_plain' => NULL,
-            'created' => '1478755274',
-            'changed' => '1478755274',
+            'revision_created' => '1478755274',
           ],
         // Node 4, revision 5, en.
         5 =>
           [
             'log' => 'Firefly 1st rev',
             'field_text_long_plain' => NULL,
-            'created' => '1564543887',
-            'changed' => '1564543887',
+            'revision_created' => '1564543887',
           ],
         // Node 4, revision 5, is.
         6 =>
           [
             'log' => 'Firefly 1st rev',
             'field_text_long_plain' => NULL,
-            'created' => '1564543887',
-            'changed' => '1478755274',
+            'revision_created' => '1564543887',
           ],
         // Node 6, revision 6, en.
         7 =>
           [
             'log' => NULL,
             'field_text_long_plain' => NULL,
-            'created' => '1504715414',
-            'changed' => '1504715414',
+            'revision_created' => '1504715414',
           ],
         // Node 7, revision 7, en.
         8 =>
           [
             'log' => NULL,
             'field_text_long_plain' => NULL,
-            'created' => '1504715432',
-            'changed' => '1504715432',
+            'revision_created' => '1504715432',
           ],
         // Node 8, revision 8, en.
         9 =>
           [
             'log' => NULL,
             'field_text_long_plain' => NULL,
-            'created' => '1552126247',
-            'changed' => '1552126247',
+            'revision_created' => '1552126247',
           ],
         // Node 8, revision 9, en.
         10 =>
           [
             'log' => NULL,
             'field_text_long_plain' => NULL,
-            'created' => '1552126296',
-            'changed' => '1552126247',
+            'revision_created' => '1552126296',
           ],
         // Node 8, revision 9, fr.
         11 =>
           [
             'log' => NULL,
             'field_text_long_plain' => NULL,
-            'created' => '1552126296',
-            'changed' => '1552126296',
+            'revision_created' => '1552126296',
           ],
         // Node 8, revision 10, en.
         12 =>
           [
             'log' => NULL,
             'field_text_long_plain' => NULL,
-            'created' => '1552126363',
-            'changed' => '1552126247',
+            'revision_created' => '1552126363',
           ],
         // Node 8, revision 10, fr.
         13 =>
           [
             'log' => NULL,
             'field_text_long_plain' => NULL,
-            'created' => '1552126363',
-            'changed' => '1552126296',
+            'revision_created' => '1552126363',
           ],
         // Node 8, revision 10, is.
         14 =>
           [
             'log' => NULL,
             'field_text_long_plain' => NULL,
-            'created' => '1552126363',
-            'changed' => '1552126363',
+            'revision_created' => '1552126363',
           ],
         // Node 2, revision 11, en.
         15 =>
           [
             'log' => 'DS9 2nd rev',
             'field_text_long_plain' => NULL,
-            'created' => '1564543637',
-            'changed' => '1564543637',
+            'revision_created' => '1564543637',
           ],
         // Node 2, revision 11, is.
         16 =>
           [
             'log' => 'DS9 2nd rev',
             'field_text_long_plain' => NULL,
-            'created' => '1564543637',
-            'changed' => '1564543637',
+            'revision_created' => '1564543637',
           ],
         // Node 2, revision 12, en.
         17 =>
           [
             'log' => 'is - DS9 2nd rev',
             'field_text_long_plain' => NULL,
-            'created' => '1564543706',
-            'changed' => '1564543637',
+            'revision_created' => '1564543706',
           ],
         // Node 2, revision 12, is.
         18 =>
           [
             'log' => 'is - DS9 2nd rev',
             'field_text_long_plain' => NULL,
-            'created' => '1564543706',
-            'changed' => '1564543706',
+            'revision_created' => '1564543706',
           ],
         // Node 4, revision 13, en.
         19 =>
           [
             'log' => 'is - Firefly 2nd rev',
             'field_text_long_plain' => NULL,
-            'created' => '1564543810',
-            'changed' => '1564543887',
+            'revision_created' => '1564543810',
           ],
         // Node 4, revision 13, is.
         20 =>
           [
             'log' => 'is - Firefly 2nd rev',
             'field_text_long_plain' => NULL,
-            'created' => '1564543810',
-            'changed' => '1564543810',
+            'revision_created' => '1564543810',
           ],
         // Node 4, revision 14, en.
         21 =>
           [
             'log' => 'Firefly 2nd rev',
             'field_text_long_plain' => NULL,
-            'created' => '1564543929',
-            'changed' => '1564543929',
+            'revision_created' => '1564543929',
           ],
         // Node 4, revision 14, is.
         22 =>
           [
             'log' => 'Firefly 2nd rev',
             'field_text_long_plain' => NULL,
-            'created' => '1564543929',
-            'changed' => '1564543810',
+            'revision_created' => '1564543929',
+          ],
+        // Node 11, revision 15, en.
+        23 =>
+          [
+            'log' => NULL,
+            'body' => '1st',
+            'field_tree' => 'lancewood',
+            'revision_created' => '1568261523',
+          ],
+        // Node 11, revision 16, en.
+        24 =>
+          [
+            'log' => NULL,
+            'body' => '1st',
+            'field_tree' => 'lancewood',
+            'revision_created' => '1568261548',
+          ],
+        // Node 11, revision 16, is.
+        25 =>
+          [
+            'log' => NULL,
+            'body' => '1st',
+            'field_tree' => 'is - lancewood',
+            'revision_created' => '1568261548',
+          ],
+        // Node 11, revision 17, en.
+        26 =>
+          [
+            'log' => '2nd',
+            'body' => '2nd',
+            'field_tree' => 'lancewood',
+            'revision_created' => '1568261548',
+          ],
+        // Node 11, revision 17, is.
+        27 =>
+          [
+            'log' => '2nd',
+            'body' => '2nd',
+            'field_tree' => 'is - lancewood',
+            'revision_created' => '1568261548',
+          ],
+        // Node 11, revision 18, en.
+        28 =>
+          [
+            'log' => NULL,
+            'body' => '2nd',
+            'field_tree' => 'lancewood',
+            'revision_created' => '1568261548',
+          ],
+        // Node 11, revision 18, f5.
+        29 =>
+          [
+            'log' => NULL,
+            'body' => '2nd',
+            'field_tree' => 'fr - lancewood',
+            'revision_created' => '1568261548',
+          ],
+        // Node 11, revision 18, is.
+        30 =>
+          [
+            'log' => NULL,
+            'body' => '2nd',
+            'field_tree' => 'is - lancewood',
+            'revision_created' => '1568261548',
           ],
       ],
     ];
