@@ -38,7 +38,7 @@ class ExperimentalHelpTest extends BrowserTestBase {
   protected $adminUser;
 
   /**
-   * {@inheritoc}
+   * {@inheritdoc}
    */
   protected function setUp() {
     parent::setUp();
