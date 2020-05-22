@@ -30,7 +30,15 @@ trait StorageCopyTrait {
       $source_collection = $source->createCollection($collection);
       $target_collection = $target->createCollection($collection);
       foreach ($source_collection->listAll() as $name) {
-        $target_collection->write($name, $source_collection->read($name));
+        $data = $source_collection->read($name);
+        if ($data !== FALSE) {
+          $target_collection->write($name, $data);
+        }
+        else {
+          \Drupal::logger('config')->notice('Missing required data for configuration: %config', [
+            '%config' => $name,
+          ]);
+        }
       }
     }
 

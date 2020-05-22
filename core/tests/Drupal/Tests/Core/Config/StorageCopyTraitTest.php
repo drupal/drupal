@@ -5,7 +5,11 @@ namespace Drupal\Tests\Core\Config;
 use Drupal\Core\Config\MemoryStorage;
 use Drupal\Core\Config\StorageCopyTrait;
 use Drupal\Core\Config\StorageInterface;
+use Drupal\Core\DependencyInjection\ContainerBuilder;
+use Drupal\Core\Logger\LoggerChannelFactoryInterface;
+use Drupal\Core\Logger\LoggerChannelInterface;
 use Drupal\Tests\UnitTestCase;
+use Prophecy\Argument;
 
 /**
  * @coversDefaultClass \Drupal\Core\Config\StorageCopyTrait
@@ -109,6 +113,73 @@ class StorageCopyTraitTest extends UnitTestCase {
         }
       }
     }
+  }
+
+  /**
+   * Tests replaceStorageContents() with config with an invalid configuration.
+   *
+   * @covers ::replaceStorageContents
+   */
+  public function testWithInvalidConfiguration() {
+    $source = new TestStorage();
+    $this->generateRandomData($source);
+
+    // Get a name from the source config storage and set the config value to
+    // false. It mimics a config storage read return value when that config
+    // storage has an invalid configuration.
+    $names = $source->listAll();
+    $test_name = reset($names);
+    $source->setValue($test_name, FALSE);
+
+    $logger_factory = $this->prophesize(LoggerChannelFactoryInterface::class);
+    $container = new ContainerBuilder();
+    $container->set('logger.factory', $logger_factory->reveal());
+    \Drupal::setContainer($container);
+
+    // Reading a config storage with an invalid configuration logs a notice.
+    $channel = $this->prophesize(LoggerChannelInterface::class);
+    $logger_factory->get('config')->willReturn($channel->reveal());
+    $channel->notice('Missing required data for configuration: %config', Argument::withEntry('%config', $test_name))->shouldBeCalled();
+
+    // Copy the config from the source storage to the target storage.
+    $target = new TestStorage();
+    self::replaceStorageContents($source, $target);
+
+    // Test that all configuration is copied correctly and that the value of the
+    // config with the invalid configuration has not been copied to the target
+    // storage.
+    foreach ($names as $name) {
+      if ($name === $test_name) {
+        $this->assertFalse($source->read($name));
+        $this->assertFalse($target->exists($name));
+      }
+      else {
+        $this->assertArrayEquals($source->read($name), $target->read($name));
+      }
+    }
+
+    // Test that the invalid configuration's name is in the source config
+    // storage, but not the target config storage. This ensures that it was not
+    // copied.
+    $this->assertContains($test_name, $source->listAll());
+    $this->assertNotContains($test_name, $target->listAll());
+  }
+
+}
+
+/**
+ * Provides a test implementation of \Drupal\Core\Config\StorageInterface.
+ */
+class TestStorage extends MemoryStorage {
+
+  /**
+   * Provides a setter to bypass the array typehint on ::write().
+   *
+   * This method allows us to create invalid configurations. The method
+   * ::write() only allows values of the type array.
+   */
+  public function setValue($name, $value) {
+    $this->config[$this->collection][$name] = $value;
   }
 
 }
