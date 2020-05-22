@@ -8,9 +8,6 @@ finished:
     taxonomy: language
   7:
     i18n_taxonomy: language
-    i18n_menu:
-      - language
     locale:
       - language
       - system
-    system: language
