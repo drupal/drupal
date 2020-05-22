@@ -383,23 +383,23 @@ class StyleSerializerTest extends ViewTestBase {
 
     $style_options = 'admin/structure/views/nojs/display/test_serializer_display_field/rest_export_1/style_options';
 
-    // Test with no format.
+    // Ensure a request with no format returns 406 Not Acceptable.
     $this->drupalGet('test/serialize/field');
     $this->assertHeader('content-type', 'text/html; charset=UTF-8');
-    $this->assertResponse(406, 'A 406 response was returned when no format was requested.');
+    $this->assertResponse(406);
 
     // Select only 'xml' as an accepted format.
     $this->drupalPostForm($style_options, ['style_options[formats][xml]' => 'xml'], t('Apply'));
     $this->drupalPostForm(NULL, [], t('Save'));
 
-    // Should return a 406.
+    // Ensure a request for JSON returns 406 Not Acceptable.
     $this->drupalGet('test/serialize/field', ['query' => ['_format' => 'json']]);
     $this->assertHeader('content-type', 'application/json');
-    $this->assertResponse(406, 'A 406 response was returned when JSON was requested.');
-    // Should return a 200.
+    $this->assertResponse(406);
+    // Ensure a request for XML returns 200 OK.
     $this->drupalGet('test/serialize/field', ['query' => ['_format' => 'xml']]);
     $this->assertHeader('content-type', 'text/xml; charset=UTF-8');
-    $this->assertResponse(200, 'A 200 response was returned when XML was requested.');
+    $this->assertResponse(200);
 
     // Add 'json' as an accepted format, so we have multiple.
     $this->drupalPostForm($style_options, ['style_options[formats][json]' => 'json'], t('Apply'));
@@ -408,39 +408,40 @@ class StyleSerializerTest extends ViewTestBase {
     // Should return a 406. Emulates a sample Firefox header.
     $this->drupalGet('test/serialize/field', [], ['Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8']);
     $this->assertHeader('content-type', 'text/html; charset=UTF-8');
-    $this->assertResponse(406, 'A 406 response was returned when a browser accept header was requested.');
+    $this->assertResponse(406);
 
-    // Should return a 406.
+    // Ensure a request for HTML returns 406 Not Acceptable.
     $this->drupalGet('test/serialize/field', ['query' => ['_format' => 'html']]);
     $this->assertHeader('content-type', 'text/html; charset=UTF-8');
-    $this->assertResponse(406, 'A 406 response was returned when HTML was requested.');
+    $this->assertResponse(406);
 
-    // Should return a 200.
+    // Ensure a request for JSON returns 200 OK.
     $this->drupalGet('test/serialize/field', ['query' => ['_format' => 'json']]);
     $this->assertHeader('content-type', 'application/json');
-    $this->assertResponse(200, 'A 200 response was returned when JSON was requested.');
+    $this->assertResponse(200);
 
-    // Should return a 200.
+    // Ensure a request XML returns 200 OK.
     $this->drupalGet('test/serialize/field', ['query' => ['_format' => 'xml']]);
     $this->assertHeader('content-type', 'text/xml; charset=UTF-8');
-    $this->assertResponse(200, 'A 200 response was returned when XML was requested');
+    $this->assertResponse(200);
 
     // Now configure no format, so both serialization formats should be allowed.
     $this->drupalPostForm($style_options, ['style_options[formats][json]' => '0', 'style_options[formats][xml]' => '0'], t('Apply'));
 
-    // Should return a 200.
+    // Ensure a request for JSON returns 200 OK.
     $this->drupalGet('test/serialize/field', ['query' => ['_format' => 'json']]);
     $this->assertHeader('content-type', 'application/json');
-    $this->assertResponse(200, 'A 200 response was returned when JSON was requested.');
-    // Should return a 200.
+    $this->assertResponse(200);
+
+    // Ensure a request for XML returns 200 OK.
     $this->drupalGet('test/serialize/field', ['query' => ['_format' => 'xml']]);
     $this->assertHeader('content-type', 'text/xml; charset=UTF-8');
-    $this->assertResponse(200, 'A 200 response was returned when XML was requested');
+    $this->assertResponse(200);
 
     // Should return a 406 for HTML still.
     $this->drupalGet('test/serialize/field', ['query' => ['_format' => 'html']]);
     $this->assertHeader('content-type', 'text/html; charset=UTF-8');
-    $this->assertResponse(406, 'A 406 response was returned when HTML was requested.');
+    $this->assertResponse(406);
   }
 
   /**

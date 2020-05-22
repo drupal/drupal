@@ -257,7 +257,7 @@ class LanguageUILanguageNegotiationTest extends BrowserTestBase {
       ->set('negotiation.' . LanguageInterface::TYPE_INTERFACE . '.enabled', array_flip(array_keys($language_interface_method_definitions)))
       ->save();
     $this->drupalGet("$langcode_unknown/admin/config", [], $http_header_browser_fallback);
-    $this->assertResponse(404, "Unknown language path prefix should return 404");
+    $this->assertResponse(404);
 
     // Set preferred langcode for user to NULL.
     $account = $this->loggedInUser;

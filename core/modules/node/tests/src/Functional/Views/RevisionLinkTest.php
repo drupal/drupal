@@ -48,7 +48,7 @@ class RevisionLinkTest extends NodeTestBase {
     $second_revision = $nodes[1]->getRevisionId();
 
     $this->drupalGet('test-node-revision-links');
-    $this->assertResponse(200, 'Test view can be accessed in the path expected');
+    $this->assertResponse(200);
     // The first node revision should link to the node directly as you get an
     // access denied if you link to the revision.
     $url = $nodes[0]->toUrl()->toString();

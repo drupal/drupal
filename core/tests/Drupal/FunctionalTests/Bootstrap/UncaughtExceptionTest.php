@@ -115,7 +115,7 @@ class UncaughtExceptionTest extends BrowserTestBase {
       '%function' => 'Drupal\error_test\Controller\ErrorTestController->Drupal\error_test\Controller\{closure}()',
     ];
     $this->drupalGet('error-test/generate-fatals');
-    $this->assertResponse(500, 'Received expected HTTP status code.');
+    $this->assertResponse(500);
     $message = new FormattableMarkup('%type: @message in %function (line ', $fatal_error);
     $this->assertRaw((string) $message);
     $this->assertRaw('<pre class="backtrace">');

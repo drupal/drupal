@@ -53,7 +53,7 @@ class ConfigExportUITest extends BrowserTestBase {
     // Submit the export form and verify response. This will create a file in
     // temporary directory with the default name config.tar.gz.
     $this->drupalPostForm('admin/config/development/configuration/full/export', [], t('Export'));
-    $this->assertResponse(200, 'User can access the download callback.');
+    $this->assertResponse(200);
 
     // Test if header contains file name with hostname and timestamp.
     $request = \Drupal::request();

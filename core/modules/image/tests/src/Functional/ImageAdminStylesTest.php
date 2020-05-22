@@ -217,7 +217,6 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
     // Check that the URL was updated.
     $this->drupalGet($style_path);
     $this->assertTitle(t('Edit style @name | Drupal', ['@name' => $style_label]));
-    $this->assertResponse(200, new FormattableMarkup('Image style %original renamed to %new', ['%original' => $style->id(), '%new' => $style_name]));
 
     // Check that the available image effects are properly sorted.
     $option = $this->xpath('//select[@id=:id]//option', [':id' => 'edit-new--2']);

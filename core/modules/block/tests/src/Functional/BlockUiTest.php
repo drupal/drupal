@@ -94,13 +94,15 @@ class BlockUiTest extends BrowserTestBase {
     $elements = $this->xpath('//div[contains(@class, "region-highlighted")]/div[contains(@class, "block-region") and contains(text(), :title)]', [':title' => 'Highlighted']);
     $this->assertTrue(!empty($elements), 'Block demo regions are shown.');
 
+    // Ensure that other themes can use the block demo page.
     \Drupal::service('theme_installer')->install(['test_theme']);
     $this->drupalGet('admin/structure/block/demo/test_theme');
     $this->assertEscaped('<strong>Test theme</strong>');
 
+    // Ensure that a hidden theme cannot use the block demo page.
     \Drupal::service('theme_installer')->install(['stable']);
     $this->drupalGet('admin/structure/block/demo/stable');
-    $this->assertResponse(404, 'Hidden themes that are not the default theme are not supported by the block demo screen');
+    $this->assertResponse(404);
   }
 
   /**
@@ -159,16 +161,19 @@ class BlockUiTest extends BrowserTestBase {
     $this->assertLink($theme_handler->getName('stark'));
     $this->assertNoLink($theme_handler->getName('stable'));
 
+    // Ensure that a hidden theme cannot use the block demo page.
     $this->drupalGet('admin/structure/block/list/stable');
-    $this->assertResponse(404, 'Placing blocks through UI is not possible for a hidden base theme.');
+    $this->assertResponse(404);
 
+    // Ensure that a hidden theme set as the admin theme can use the block demo
+    // page.
     \Drupal::configFactory()->getEditable('system.theme')->set('admin', 'stable')->save();
     \Drupal::service('router.builder')->rebuildIfNeeded();
     $this->drupalPlaceBlock('local_tasks_block', ['region' => 'header', 'theme' => 'stable']);
     $this->drupalGet('admin/structure/block');
     $this->assertLink($theme_handler->getName('stable'));
     $this->drupalGet('admin/structure/block/list/stable');
-    $this->assertResponse(200, 'Placing blocks through UI is possible for a hidden base theme that is the admin theme.');
+    $this->assertResponse(200);
   }
 
   /**

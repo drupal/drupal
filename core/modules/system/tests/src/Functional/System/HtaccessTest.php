@@ -108,7 +108,7 @@ class HtaccessTest extends BrowserTestBase {
 
     // Test that adding "/1" to a .php URL does not make it accessible.
     $this->drupalGet('core/lib/Drupal.php/1');
-    $this->assertResponse(403, "Access to core/lib/Drupal.php/1 is denied.");
+    $this->assertResponse(403);
 
     // Test that it is possible to have path aliases containing .php.
     $type = $this->drupalCreateContentType();
@@ -143,7 +143,7 @@ class HtaccessTest extends BrowserTestBase {
   protected function assertFileAccess($path, $response_code) {
     $this->assertFileExists(\Drupal::root() . '/' . $path);
     $this->drupalGet($path);
-    $this->assertResponse($response_code, "Response code to $path is $response_code.");
+    $this->assertEquals($response_code, $this->getSession()->getStatusCode(), "Response code to $path should be $response_code");
   }
 
   /**
