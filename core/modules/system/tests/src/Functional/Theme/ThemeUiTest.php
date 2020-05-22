@@ -325,7 +325,7 @@ class ThemeUiTest extends BrowserTestBase {
   public function testInstalledIncompatibleTheme() {
     $page = $this->getSession()->getPage();
     $assert_session = $this->assertSession();
-    $incompatitable_themes_message = 'There are errors with some installed themes. Visit the status report page for more information.';
+    $incompatible_themes_message = 'There are errors with some installed themes. Visit the status report page for more information.';
     $path = \Drupal::getContainer()->getParameter('site.path') . "/themes/changing_theme";
     mkdir($path, 0777, TRUE);
     $file_path = "$path/changing_theme.info.yml";
@@ -340,7 +340,7 @@ class ThemeUiTest extends BrowserTestBase {
 
     file_put_contents($file_path, Yaml::encode($compatible_info));
     $this->drupalGet('admin/appearance');
-    $this->assertNoText($incompatitable_themes_message);
+    $this->assertNoText($incompatible_themes_message);
     $page->clickLink("Install $theme_name theme");
     $assert_session->addressEquals('admin/appearance');
     $assert_session->pageTextContains("The $theme_name theme has been installed");
@@ -357,11 +357,11 @@ class ThemeUiTest extends BrowserTestBase {
       $incompatible_info = $info + $incompatible_update;
       file_put_contents($file_path, Yaml::encode($incompatible_info));
       $this->drupalGet('admin/appearance');
-      $this->assertText($incompatitable_themes_message);
+      $this->assertText($incompatible_themes_message);
 
       file_put_contents($file_path, Yaml::encode($compatible_info));
       $this->drupalGet('admin/appearance');
-      $this->assertNoText($incompatitable_themes_message);
+      $this->assertNoText($incompatible_themes_message);
     }
     // Uninstall the theme and ensure that incompatible themes message is not
     // displayed for themes that are not installed.
@@ -370,7 +370,7 @@ class ThemeUiTest extends BrowserTestBase {
       $incompatible_info = $info + $incompatible_update;
       file_put_contents($file_path, Yaml::encode($incompatible_info));
       $this->drupalGet('admin/appearance');
-      $this->assertNoText($incompatitable_themes_message);
+      $this->assertNoText($incompatible_themes_message);
     }
   }
 
