@@ -201,38 +201,47 @@ class PageCacheTest extends BrowserTestBase {
     $etag = $this->drupalGetHeader('ETag');
     $last_modified = $this->drupalGetHeader('Last-Modified');
 
+    // Ensure a conditional request returns 304 Not Modified.
     $this->drupalGet('', [], ['If-Modified-Since' => $last_modified, 'If-None-Match' => $etag]);
-    $this->assertResponse(304, 'Conditional request returned 304 Not Modified.');
+    $this->assertResponse(304);
 
+    // Ensure a conditional request with obsolete If-Modified-Since date
+    // returns 304 Not Modified.
     $this->drupalGet('', [], [
       'If-Modified-Since' => gmdate(DATE_RFC822, strtotime($last_modified)),
       'If-None-Match' => $etag,
     ]);
-    $this->assertResponse(304, 'Conditional request with obsolete If-Modified-Since date returned 304 Not Modified.');
+    $this->assertResponse(304);
 
+    // Ensure a conditional request with obsolete If-Modified-Since date
+    // returns 304 Not Modified.
     $this->drupalGet('', [], [
       'If-Modified-Since' => gmdate(DATE_RFC850, strtotime($last_modified)),
       'If-None-Match' => $etag,
     ]);
-    $this->assertResponse(304, 'Conditional request with obsolete If-Modified-Since date returned 304 Not Modified.');
+    $this->assertResponse(304);
 
+    // Ensure a conditional request without If-None-Match returns 200 OK.
     $this->drupalGet('', [], ['If-Modified-Since' => $last_modified, 'If-None-Match' => NULL]);
     // Verify the page is not printed twice when the cache is warm.
     $this->assertSession()->responseNotMatches('#<html.*<html#');
-    $this->assertResponse(200, 'Conditional request without If-None-Match returned 200 OK.');
+    $this->assertResponse(200);
     $this->assertEqual($this->drupalGetHeader('X-Drupal-Cache'), 'HIT', 'Page was cached.');
 
+    // Ensure a conditional request with If-Modified-Since newer than
+    // Last-Modified returns 200 OK.
     $this->drupalGet('', [], [
       'If-Modified-Since' => gmdate(DateTimePlus::RFC7231, strtotime($last_modified) + 1),
       'If-None-Match' => $etag,
     ]);
-    $this->assertResponse(200, 'Conditional request with new a If-Modified-Since date newer than Last-Modified returned 200 OK.');
+    $this->assertResponse(200);
     $this->assertEqual($this->drupalGetHeader('X-Drupal-Cache'), 'HIT', 'Page was cached.');
 
+    // Ensure a conditional request by an authenticated user returns 200 OK.
     $user = $this->drupalCreateUser();
     $this->drupalLogin($user);
     $this->drupalGet('', [], ['If-Modified-Since' => $last_modified, 'If-None-Match' => $etag]);
-    $this->assertResponse(200, 'Conditional request returned 200 OK for authenticated user.');
+    $this->assertResponse(200);
     $this->assertNull($this->drupalGetHeader('X-Drupal-Cache'), 'Absence of Page was not cached.');
   }
 

@@ -209,11 +209,11 @@ class BookTest extends BrowserTestBase {
 
     // Make sure we can't export an unsupported format.
     $this->drupalGet('book/export/foobar/' . $this->book->id());
-    $this->assertResponse('404', 'Unsupported export format returned "not found".');
+    $this->assertResponse(404);
 
     // Make sure we get a 404 on a not existing book node.
     $this->drupalGet('book/export/html/123');
-    $this->assertResponse('404', 'Not existing book node returned "not found".');
+    $this->assertResponse(404);
 
     // Make sure an anonymous user cannot view printer-friendly version.
     $this->drupalLogout();
@@ -224,14 +224,14 @@ class BookTest extends BrowserTestBase {
 
     // Try getting the URL directly, and verify it fails.
     $this->drupalGet('book/export/html/' . $this->book->id());
-    $this->assertResponse('403', 'Anonymous user properly forbidden.');
+    $this->assertResponse(403);
 
     // Now grant anonymous users permission to view the printer-friendly
     // version and verify that node access restrictions still prevent them from
     // seeing it.
     user_role_grant_permissions(RoleInterface::ANONYMOUS_ID, ['access printer-friendly version']);
     $this->drupalGet('book/export/html/' . $this->book->id());
-    $this->assertResponse('403', 'Anonymous user properly forbidden from seeing the printer-friendly version when denied by node access.');
+    $this->assertResponse(403);
   }
 
   /**
@@ -351,9 +351,11 @@ class BookTest extends BrowserTestBase {
     $this->drupalLogin($this->adminUser);
     $edit = [];
 
-    // Test access to delete top-level and child book nodes.
+    // Ensure that the top-level book node cannot be deleted.
     $this->drupalGet('node/' . $this->book->id() . '/outline/remove');
-    $this->assertResponse('403', 'Deleting top-level book node properly forbidden.');
+    $this->assertResponse(403);
+
+    // Ensure that a child book node can be deleted.
     $this->drupalPostForm('node/' . $nodes[4]->id() . '/outline/remove', $edit, t('Remove'));
     $node_storage->resetCache([$nodes[4]->id()]);
     $node4 = $node_storage->load($nodes[4]->id());

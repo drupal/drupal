@@ -157,13 +157,13 @@ class SearchPageTextTest extends BrowserTestBase {
     // Test that if you search for a URL with .. in it, you still end up at
     // the search page. See issue https://www.drupal.org/node/890058.
     $this->drupalPostForm('search/node', ['keys' => '../../admin'], t('Search'));
-    $this->assertResponse(200, 'Searching for ../../admin with non-admin user does not lead to a 403 error');
+    $this->assertResponse(200);
     $this->assertText('no results', 'Searching for ../../admin with non-admin user gives you a no search results page');
 
     // Test that if you search for a URL starting with "./", you still end up
     // at the search page. See issue https://www.drupal.org/node/1421560.
     $this->drupalPostForm('search/node', ['keys' => '.something'], t('Search'));
-    $this->assertResponse(200, 'Searching for .something does not lead to a 403 error');
+    $this->assertResponse(200);
     $this->assertText('no results', 'Searching for .something gives you a no search results page');
   }
 

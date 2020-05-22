@@ -190,7 +190,7 @@ class UpdatePathTestBaseFilledTest extends UpdatePathTestBaseTest {
     $this->drupalGet('admin/config/content/formats');
     $this->assertText('Test text format');
     $this->drupalGet('admin/config/content/formats/manage/test_text_format');
-    $this->assertResponse('200');
+    $this->assertResponse(200);
 
     // Make sure our feed still exists.
     $this->drupalGet('admin/config/services/aggregator');
@@ -323,7 +323,7 @@ class UpdatePathTestBaseFilledTest extends UpdatePathTestBaseTest {
     $this->assertText('Test root term');
     $this->assertText('Test child term');
     $this->drupalGet('taxonomy/term/3');
-    $this->assertResponse('200');
+    $this->assertResponse(200);
 
     // Make sure the terms are still translated.
     $this->drupalGet('taxonomy/term/2/translations');

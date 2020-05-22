@@ -185,7 +185,7 @@ class DateTimeTest extends BrowserTestBase {
     $this->drupalCreateContentType(['type' => 'page_with_date', 'name' => 'Page with date']);
 
     $this->drupalGet('admin/structure/types/manage/page_with_date');
-    $this->assertResponse(200, 'Content type created.');
+    $this->assertResponse(200);
 
     $this->drupalGet('admin/structure/types/manage/page_with_date/fields/add-field');
     $edit = [

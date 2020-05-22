@@ -64,7 +64,7 @@ class NodeTypeTest extends NodeTestBase {
     $this->drupalLogin($web_user);
 
     $this->drupalGet('node/add/' . $type->id());
-    $this->assertResponse(200, 'The new content type can be accessed at node/add.');
+    $this->assertResponse(200);
 
     // Create a content type via the user interface.
     $web_user = $this->drupalCreateUser(['bypass node access', 'administer content types']);

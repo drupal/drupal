@@ -53,14 +53,16 @@ class ThemeTest extends BrowserTestBase {
    * Test the theme settings form.
    */
   public function testThemeSettings() {
-    // Ensure invalid theme settings form URLs return a proper 404.
+    // Ensure a disabled theme settings form URL returns 404.
     $this->drupalGet('admin/appearance/settings/bartik');
-    $this->assertResponse(404, 'The theme settings form URL for a uninstalled theme could not be found.');
+    $this->assertResponse(404);
+    // Ensure a non existent theme settings form URL returns 404.
     $this->drupalGet('admin/appearance/settings/' . $this->randomMachineName());
-    $this->assertResponse(404, 'The theme settings form URL for a non-existent theme could not be found.');
+    $this->assertResponse(404);
+    // Ensure a hidden theme settings form URL returns 404.
     $this->assertTrue(\Drupal::service('theme_installer')->install(['stable']));
     $this->drupalGet('admin/appearance/settings/stable');
-    $this->assertResponse(404, 'The theme settings form URL for a hidden theme is unavailable.');
+    $this->assertResponse(404);
 
     // Specify a filesystem path to be used for the logo.
     $file = current($this->drupalGetTestFiles('image'));
@@ -211,7 +213,7 @@ class ThemeTest extends BrowserTestBase {
     $this->drupalGet('admin/appearance/settings');
     $this->assertLink($theme_handler->getName('stable'));
     $this->drupalGet('admin/appearance/settings/stable');
-    $this->assertResponse(200, 'The theme settings form URL for a hidden theme that is the admin theme is available.');
+    $this->assertResponse(200);
 
     // Ensure default logo and favicons are not triggering custom path
     // validation errors if their custom paths are set on the form.

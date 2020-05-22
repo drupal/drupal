@@ -491,7 +491,7 @@ class ForumTest extends BrowserTestBase {
 
     // Assert that the forum no longer exists.
     $this->drupalGet('forum/' . $tid);
-    $this->assertResponse(404, 'The forum was not found');
+    $this->assertResponse(404);
   }
 
   /**

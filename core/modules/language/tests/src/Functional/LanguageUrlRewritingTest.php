@@ -62,7 +62,7 @@ class LanguageUrlRewritingTest extends BrowserTestBase {
   public function testUrlRewritingEdgeCases() {
     // Check URL rewriting with a non-installed language.
     $non_existing = new Language(['id' => $this->randomMachineName()]);
-    $this->checkUrl($non_existing, 'Path language is ignored if language is not installed.', 'URL language negotiation does not work with non-installed languages');
+    $this->checkUrl($non_existing, 'Path language is ignored if language is not installed.');
 
     // Check that URL rewriting is not applied to subrequests.
     $this->drupalGet('language_test/subrequest');
@@ -78,12 +78,10 @@ class LanguageUrlRewritingTest extends BrowserTestBase {
    *
    * @param \Drupal\Core\Language\LanguageInterface $language
    *   The language object.
-   * @param string $message1
+   * @param string $message
    *   Message to display in assertion that language prefixes are not added.
-   * @param string $message2
-   *   The message to display confirming prefixed URL is not working.
    */
-  private function checkUrl(LanguageInterface $language, $message1, $message2) {
+  private function checkUrl(LanguageInterface $language, $message) {
     $options = ['language' => $language, 'script' => ''];
     $base_path = trim(base_path(), '/');
     $rewritten_path = trim(str_replace($base_path, '', Url::fromRoute('<front>', [], $options)->toString()), '/');
@@ -95,11 +93,11 @@ class LanguageUrlRewritingTest extends BrowserTestBase {
     // we can always check the prefixed URL.
     $prefixes = $this->config('language.negotiation')->get('url.prefixes');
     $stored_prefix = isset($prefixes[$language->getId()]) ? $prefixes[$language->getId()] : $this->randomMachineName();
-    $this->assertNotEqual($stored_prefix, $prefix, $message1);
+    $this->assertNotEqual($stored_prefix, $prefix, $message);
     $prefix = $stored_prefix;
 
     $this->drupalGet("$prefix/$path");
-    $this->assertResponse(404, $message2);
+    $this->assertResponse(404);
   }
 
   /**

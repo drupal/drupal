@@ -108,17 +108,19 @@ class UserSearchTest extends BrowserTestBase {
     $this->drupalPostForm('search/user', $edit, t('Search'));
     $this->assertText(t('Your search yielded no results.'), 'Blocked users are hidden from the user search results.');
 
-    // Create a user without search permission, and one without user page view
-    // permission. Verify that neither one can access the user search page.
+    // Ensure that a user without access to user profiles cannot access the
+    // user search page.
     $user3 = $this->drupalCreateUser(['search content']);
     $this->drupalLogin($user3);
     $this->drupalGet('search/user');
-    $this->assertResponse('403', 'User without user profile access cannot search');
+    $this->assertResponse(403);
 
+    // Ensure that a user without search permission cannot access the user
+    // search page.
     $user4 = $this->drupalCreateUser(['access user profiles']);
     $this->drupalLogin($user4);
     $this->drupalGet('search/user');
-    $this->assertResponse('403', 'User without search permission cannot search');
+    $this->assertResponse(403);
     $this->drupalLogout();
   }
 

@@ -304,9 +304,9 @@ class VocabularyPermissionsTest extends TaxonomyTestBase {
     $user = $this->drupalCreateUser(["edit terms in {$vocabulary->id()}"]);
     $this->drupalLogin($user);
 
-    // Visit the main taxonomy administration page.
+    // Ensure the taxonomy term add form is denied.
     $this->drupalGet('admin/structure/taxonomy/manage/' . $vocabulary->id() . '/add');
-    $this->assertResponse(403, 'Add taxonomy term form open failed.');
+    $this->assertResponse(403);
 
     // Create a test term.
     $term = $this->createTerm($vocabulary);
@@ -324,24 +324,24 @@ class VocabularyPermissionsTest extends TaxonomyTestBase {
     $view_link = $this->xpath('//div[@class="messages"]//a[contains(@href, :href)]', [':href' => 'term/']);
     $this->assert(isset($view_link), 'The message area contains a link to a term');
 
-    // Delete the vocabulary.
+    // Ensure the term cannot be deleted.
     $this->drupalGet('taxonomy/term/' . $term->id() . '/delete');
-    $this->assertResponse(403, 'Delete taxonomy term form open failed.');
+    $this->assertResponse(403);
 
     // Test as user with "delete" permissions.
     $user = $this->drupalCreateUser(["delete terms in {$vocabulary->id()}"]);
     $this->drupalLogin($user);
 
-    // Visit the main taxonomy administration page.
+    // Ensure the taxonomy term add form is denied.
     $this->drupalGet('admin/structure/taxonomy/manage/' . $vocabulary->id() . '/add');
-    $this->assertResponse(403, 'Add taxonomy term form open failed.');
+    $this->assertResponse(403);
 
     // Create a test term.
     $term = $this->createTerm($vocabulary);
 
-    // Edit the term.
+    // Ensure that the term cannot be edited.
     $this->drupalGet('taxonomy/term/' . $term->id() . '/edit');
-    $this->assertResponse(403, 'Edit taxonomy term form open failed.');
+    $this->assertResponse(403);
 
     // Delete the vocabulary.
     $this->drupalGet('taxonomy/term/' . $term->id() . '/delete');
@@ -355,20 +355,20 @@ class VocabularyPermissionsTest extends TaxonomyTestBase {
     $user = $this->drupalCreateUser();
     $this->drupalLogin($user);
 
-    // Visit the main taxonomy administration page.
+    // Ensure the taxonomy term add form is denied.
     $this->drupalGet('admin/structure/taxonomy/manage/' . $vocabulary->id() . '/add');
-    $this->assertResponse(403, 'Add taxonomy term form open failed.');
+    $this->assertResponse(403);
 
     // Create a test term.
     $term = $this->createTerm($vocabulary);
 
-    // Edit the term.
+    // Ensure that the term cannot be edited.
     $this->drupalGet('taxonomy/term/' . $term->id() . '/edit');
-    $this->assertResponse(403, 'Edit taxonomy term form open failed.');
+    $this->assertResponse(403);
 
-    // Delete the vocabulary.
+    // Ensure the term cannot be deleted.
     $this->drupalGet('taxonomy/term/' . $term->id() . '/delete');
-    $this->assertResponse(403, 'Delete taxonomy term form open failed.');
+    $this->assertResponse(403);
   }
 
 }

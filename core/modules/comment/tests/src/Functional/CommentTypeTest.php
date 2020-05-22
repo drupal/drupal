@@ -64,8 +64,9 @@ class CommentTypeTest extends CommentTestBase {
     // Log in a test user.
     $this->drupalLogin($this->adminUser);
 
+    // Ensure that the new comment type admin page can be accessed.
     $this->drupalGet('admin/structure/comment/manage/' . $type->id());
-    $this->assertResponse(200, 'The new comment type can be accessed at the edit form.');
+    $this->assertResponse(200);
 
     // Create a comment type via the user interface.
     $edit = [

@@ -34,10 +34,11 @@ class UserRegistrationTest extends BrowserTestBase {
     // Require email verification.
     $config->set('verify_mail', TRUE)->save();
 
-    // Set registration to administrator only.
+    // Set registration to administrator only and ensure the user registration
+    // page is inaccessible.
     $config->set('register', UserInterface::REGISTER_ADMINISTRATORS_ONLY)->save();
     $this->drupalGet('user/register');
-    $this->assertResponse(403, 'Registration page is inaccessible when only administrators can create accounts.');
+    $this->assertResponse(403);
 
     // Allow registration by site visitors without administrator approval.
     $config->set('register', UserInterface::REGISTER_VISITORS)->save();

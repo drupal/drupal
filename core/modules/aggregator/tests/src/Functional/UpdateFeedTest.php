@@ -44,7 +44,7 @@ class UpdateFeedTest extends AggregatorTestBase {
 
       // Check feed source.
       $this->drupalGet('aggregator/sources/' . $feed->id());
-      $this->assertResponse(200, 'Feed source exists.');
+      $this->assertResponse(200);
       $this->assertText($edit['title[0][value]'], 'Page title');
 
       // Set correct title so deleteFeed() will work.
