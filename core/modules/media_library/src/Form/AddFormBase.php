@@ -339,7 +339,7 @@ abstract class AddFormBase extends FormBase implements BaseFormIdInterface, Trus
   }
 
   /**
-   * {@inheritdodc}
+   * {@inheritdoc}
    */
   public static function trustedCallbacks() {
     return ['preRenderAddedMedia'];
