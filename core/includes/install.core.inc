@@ -204,8 +204,6 @@ function install_state_defaults() {
     'config_verified' => FALSE,
     // TRUE when there is a valid database connection.
     'database_verified' => FALSE,
-    // TRUE if database is empty & ready to install.
-    'database_ready' => FALSE,
     // TRUE when a valid settings.php exists (containing both database
     // connection information and config directory names).
     'settings_verified' => FALSE,
@@ -393,13 +391,6 @@ function install_begin_request($class_loader, &$install_state) {
   // A valid settings.php has database settings and a hash_salt value. Other
   // settings will be checked by system_requirements().
   $install_state['settings_verified'] = $install_state['database_verified'] && (bool) Settings::get('hash_salt', FALSE);
-
-  // Install factory tables only after checking the database.
-  if ($install_state['database_verified'] && $install_state['database_ready']) {
-    $container
-      ->register('path.matcher', 'Drupal\Core\Path\PathMatcher')
-      ->addArgument(new Reference('config.factory'));
-  }
 
   if ($install_state['settings_verified']) {
     try {
@@ -796,7 +787,7 @@ function install_tasks($install_state) {
       'function' => 'Drupal\Core\Installer\Form\SiteSettingsForm',
     ],
     'install_verify_database_ready' => [
-      'run' => $install_state['database_ready'] ? INSTALL_TASK_SKIP : INSTALL_TASK_RUN_IF_NOT_COMPLETED,
+      'run' => INSTALL_TASK_RUN_IF_NOT_COMPLETED,
     ],
     'install_base_system' => [
       'run' => $install_state['base_system_verified'] ? INSTALL_TASK_SKIP : INSTALL_TASK_RUN_IF_NOT_COMPLETED,
