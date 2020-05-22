@@ -251,10 +251,11 @@ class TextFormat extends RenderElement {
    * Render API callback: Hides the field value of 'text_format' elements.
    *
    * To not break form processing and previews if a user does not have access to
-   * a stored text format, the expanded form elements in filter_process_format()
-   * are forced to take over the stored #default_values for 'value' and
-   * 'format'. However, to prevent the unfiltered, original #value from being
-   * displayed to the user, we replace it with a friendly notice here.
+   * a stored text format, the expanded form elements in
+   * \Drupal\filter\Element\TextFormat::processFormat() are forced to take over
+   * the stored #default_values for 'value' and 'format'. However, to prevent
+   * the unfiltered, original #value from being displayed to the user, we
+   * replace it with a friendly notice here.
    *
    * @param array $element
    *   The render array to add the access denied message to.
