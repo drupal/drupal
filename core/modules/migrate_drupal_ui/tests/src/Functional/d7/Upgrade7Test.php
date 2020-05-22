@@ -80,21 +80,21 @@ class Upgrade7Test extends MigrateUpgradeExecuteTestBase {
       'comment' => 4,
       // The 'standard' profile provides the 'comment' comment type, and the
       // migration creates 6 comment types, one per node type.
-      'comment_type' => 7,
+      'comment_type' => 8,
       // Module 'language' comes with 'en', 'und', 'zxx'. Migration adds 'is'
       // and 'fr'.
       'configurable_language' => 5,
       'contact_form' => 3,
       'contact_message' => 0,
       'editor' => 2,
-      'field_config' => 76,
-      'field_storage_config' => 58,
+      'field_config' => 79,
+      'field_storage_config' => 60,
       'file' => 3,
       'filter_format' => 7,
       'image_style' => 6,
-      'language_content_settings' => 18,
-      'node' => 6,
-      'node_type' => 6,
+      'language_content_settings' => 20,
+      'node' => 7,
+      'node_type' => 7,
       'rdf_mapping' => 8,
       'search_page' => 2,
       'shortcut' => 6,
@@ -110,9 +110,9 @@ class Upgrade7Test extends MigrateUpgradeExecuteTestBase {
       'menu_link_content' => 12,
       'view' => 16,
       'date_format' => 11,
-      'entity_form_display' => 20,
+      'entity_form_display' => 22,
       'entity_form_mode' => 1,
-      'entity_view_display' => 31,
+      'entity_view_display' => 33,
       'entity_view_mode' => 14,
       'base_field_override' => 4,
     ];
@@ -127,7 +127,7 @@ class Upgrade7Test extends MigrateUpgradeExecuteTestBase {
     $counts['comment'] = 5;
     $counts['file'] = 4;
     $counts['menu_link_content'] = 13;
-    $counts['node'] = 7;
+    $counts['node'] = 8;
     $counts['taxonomy_term'] = 25;
     $counts['user'] = 5;
     return $counts;

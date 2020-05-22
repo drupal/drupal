@@ -115,6 +115,13 @@ class Node extends FieldableEntity {
     $source_language = $this->getEntityTranslationSourceLanguage('node', $nid);
     $language = $entity_translatable && $source_language ? $source_language : $row->getSourceProperty('language');
 
+    // If this is using d7_node_complete source plugin and this is a node
+    // using entity translation then set the language of this revision to the
+    // entity translation language.
+    if ($row->getSourceProperty('etr_created')) {
+      $language = $row->getSourceProperty('language');
+    }
+
     // Get Field API field values.
     foreach ($this->getFields('node', $type) as $field_name => $field) {
       // Ensure we're using the right language if the entity and the field are
