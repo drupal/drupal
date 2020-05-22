@@ -47,9 +47,9 @@ class Element implements TrustedCallbackInterface {
       return $element;
     }
 
-    // filter_process_format() copies properties to the expanded 'value' child
-    // element, including the #pre_render property. Skip this text format
-    // widget, if it contains no 'format'.
+    // \Drupal\filter\Element\TextFormat::processFormat() copies properties to
+    // the expanded 'value' to the child element, including the #pre_render
+    // property. Skip this text format widget, if it contains no 'format'.
     if (!isset($element['format'])) {
       return $element;
     }
