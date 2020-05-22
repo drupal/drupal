@@ -75,6 +75,7 @@ class FieldDiscoveryTest extends MigrateDrupal7TestBase {
       'article' => 'comment_node_article',
       'blog' => 'comment_node_blog',
       'book' => 'comment_node_book',
+      'et' => 'comment_node_et',
       'forum' => 'comment_forum',
       'test_content_type' => 'comment_node_test_content_type',
     ];
@@ -278,7 +279,7 @@ class FieldDiscoveryTest extends MigrateDrupal7TestBase {
     $this->assertArrayHasKey('test_vocabulary', $actual_fields['taxonomy_term']);
     $this->assertArrayHasKey('user', $actual_fields['user']);
     $this->assertArrayHasKey('test_content_type', $actual_fields['node']);
-    $this->assertCount(6, $actual_fields['node']);
+    $this->assertCount(7, $actual_fields['node']);
     $this->assertCount(6, $actual_fields['comment']);
     $this->assertCount(22, $actual_fields['node']['test_content_type']);
     foreach ($actual_fields as $entity_type_id => $bundles) {
