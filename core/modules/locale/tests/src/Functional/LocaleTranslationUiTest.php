@@ -182,7 +182,7 @@ class LocaleTranslationUiTest extends BrowserTestBase {
     // Reload to remove $name.
     $this->drupalGet($path);
     // Verify that language is no longer found.
-    $this->assertResponse(404, 'Language no longer found.');
+    $this->assertResponse(404);
     $this->drupalLogout();
 
     // Delete the string.

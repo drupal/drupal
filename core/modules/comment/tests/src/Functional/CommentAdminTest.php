@@ -156,12 +156,14 @@ class CommentAdminTest extends CommentTestBase {
 
     $this->assertFalse($this->commentExists($anonymous_comment4), 'Anonymous comment was not published.');
 
-    // Approve comment.
+    // Ensure comments cannot be approved without a valid token.
     $this->drupalLogin($this->adminUser);
     $this->drupalGet('comment/1/approve');
-    $this->assertResponse(403, 'Forged comment approval was denied.');
+    $this->assertResponse(403);
     $this->drupalGet('comment/1/approve', ['query' => ['token' => 'forged']]);
-    $this->assertResponse(403, 'Forged comment approval was denied.');
+    $this->assertResponse(403);
+
+    // Approve comment.
     $this->drupalGet('comment/1/edit');
     $this->assertFieldChecked('edit-status-0');
     $this->drupalGet('node/' . $this->node->id());

@@ -98,13 +98,17 @@ class TaxonomyImageTest extends TaxonomyTestBase {
     $access_user = $this->drupalCreateUser(['access content']);
     $no_access_user = $this->drupalCreateUser();
     $image = File::load($term->field_test->target_id);
+
+    // Ensure a user that should be able to access the file can access it.
     $this->drupalLogin($access_user);
     $this->drupalGet(file_create_url($image->getFileUri()));
-    $this->assertResponse(200, 'Private image on term is accessible with right permission');
+    $this->assertResponse(200);
 
+    // Ensure a user that should not be able to access the file cannot access
+    // it.
     $this->drupalLogin($no_access_user);
     $this->drupalGet(file_create_url($image->getFileUri()));
-    $this->assertResponse(403, 'Private image on term not accessible without right permission');
+    $this->assertResponse(403);
   }
 
 }

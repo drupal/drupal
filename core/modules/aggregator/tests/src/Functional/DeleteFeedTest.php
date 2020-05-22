@@ -45,7 +45,7 @@ class DeleteFeedTest extends AggregatorTestBase {
 
     // Check feed source.
     $this->drupalGet('aggregator/sources/' . $feed1->id());
-    $this->assertResponse(404, 'Deleted feed source does not exist.');
+    $this->assertResponse(404);
 
     // Check database for feed.
     $result = \Drupal::entityQuery('aggregator_feed')->condition('title', $feed1->label())->condition('url', $feed1->getUrl())->count()->execute();

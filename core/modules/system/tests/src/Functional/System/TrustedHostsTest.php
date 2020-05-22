@@ -34,7 +34,7 @@ class TrustedHostsTest extends BrowserTestBase {
    */
   public function testStatusPageWithoutConfiguration() {
     $this->drupalGet('admin/reports/status');
-    $this->assertResponse(200, 'The status page is reachable.');
+    $this->assertResponse(200);
 
     $this->assertRaw(t('Trusted Host Settings'));
     $this->assertRaw(t('The trusted_host_patterns setting is not configured in settings.php.'));
@@ -52,7 +52,7 @@ class TrustedHostsTest extends BrowserTestBase {
     $this->writeSettings($settings);
 
     $this->drupalGet('admin/reports/status');
-    $this->assertResponse(200, 'The status page is reachable.');
+    $this->assertResponse(200);
 
     $this->assertRaw(t('Trusted Host Settings'));
     $this->assertRaw(t('The trusted_host_patterns setting is set to allow'));

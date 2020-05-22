@@ -40,7 +40,7 @@ class FileFieldAnonymousSubmissionTest extends FileFieldTestBase {
     // Load the node form.
     $this->drupalLogout();
     $this->drupalGet('node/add/article');
-    $this->assertResponse(200, 'Loaded the article node form.');
+    $this->assertResponse(200);
     $this->assertText(strip_tags(t('Create @name', ['@name' => $bundle_label])));
 
     $edit = [
@@ -71,7 +71,7 @@ class FileFieldAnonymousSubmissionTest extends FileFieldTestBase {
     // Load the node form.
     $this->drupalLogout();
     $this->drupalGet('node/add/article');
-    $this->assertResponse(200, 'Loaded the article node form.');
+    $this->assertResponse(200);
     $this->assertText(strip_tags(t('Create @name', ['@name' => $bundle_label])));
 
     // Generate an image file.
@@ -128,7 +128,7 @@ class FileFieldAnonymousSubmissionTest extends FileFieldTestBase {
 
     // Load the node form.
     $this->drupalGet('node/add/article');
-    $this->assertResponse(200, 'Loaded the article node form.');
+    $this->assertResponse(200);
     $this->assertText(strip_tags(t('Create @name', ['@name' => $bundle_label])));
 
     // Generate an image file.

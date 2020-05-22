@@ -406,17 +406,12 @@ class ShortcutLinksTest extends ShortcutTestBase {
 
     // Verify that set administration pages are inaccessible without the
     // 'access shortcuts' permission.
-    $edit_paths = [
-      'admin/config/user-interface/shortcut/manage/default/customize',
-      'admin/config/user-interface/shortcut/manage/default',
-      'user/' . $noaccess_user->id() . '/shortcuts',
-    ];
-
-    foreach ($edit_paths as $path) {
-      $this->drupalGet($path);
-      $message = new FormattableMarkup('Access is denied on %s', ['%s' => $path]);
-      $this->assertResponse(403, $message);
-    }
+    $this->drupalGet('admin/config/user-interface/shortcut/manage/default/customize');
+    $this->assertResponse(403);
+    $this->drupalGet('admin/config/user-interface/shortcut/manage/default');
+    $this->assertResponse(403);
+    $this->drupalGet('user/' . $noaccess_user->id() . '/shortcuts');
+    $this->assertResponse(403);
   }
 
   /**

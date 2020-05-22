@@ -83,7 +83,7 @@ abstract class ContentTranslationUITestBase extends ContentTranslationTestBase {
     $entity = $storage->load($this->entityId);
     $this->assertNotEmpty($entity, 'Entity found in the database.');
     $this->drupalGet($entity->toUrl());
-    $this->assertResponse(200, 'Entity URL is valid.');
+    $this->assertResponse(200);
 
     // Ensure that the content language cache context is not yet added to the
     // page.

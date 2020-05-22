@@ -268,10 +268,10 @@ class ResponsiveImageFieldDisplayTest extends ImageFieldTestBase {
       $this->assertEqual($this->drupalGetHeader('Content-Type'), 'image/png', 'Content-Type header was sent.');
       $this->assertTrue(strstr($this->drupalGetHeader('Cache-Control'), 'private') !== FALSE, 'Cache-Control header was sent.');
 
-      // Log out and try to access the file.
+      // Log out and ensure the file cannot be accessed.
       $this->drupalLogout();
       $this->drupalGet(file_create_url($image_uri));
-      $this->assertResponse('403', 'Access denied to original image as anonymous user.');
+      $this->assertResponse(403);
 
       // Log in again.
       $this->drupalLogin($this->adminUser);
@@ -334,10 +334,10 @@ class ResponsiveImageFieldDisplayTest extends ImageFieldTestBase {
     $this->assertRaw($default_output, 'Image style large formatter displaying correctly on full node view.');
 
     if ($scheme == 'private') {
-      // Log out and try to access the file.
+      // Log out and ensure the file cannot be accessed.
       $this->drupalLogout();
       $this->drupalGet($large_style->buildUrl($image_uri));
-      $this->assertResponse('403', 'Access denied to image style large as anonymous user.');
+      $this->assertResponse(403);
       $cache_tags_header = $this->drupalGetHeader('X-Drupal-Cache-Tags');
       $this->assertTrue(!preg_match('/ image_style\:/', $cache_tags_header), 'No image style cache tag found.');
     }
