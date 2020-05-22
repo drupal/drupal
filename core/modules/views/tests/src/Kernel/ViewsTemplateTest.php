@@ -14,7 +14,7 @@ use Drupal\views\Views;
 class ViewsTemplateTest extends ViewsKernelTestBase {
 
   /**
-   * {@inheritdic}
+   * {@inheritdoc}
    */
   public static $testViews = ['test_view_display_template'];
 
