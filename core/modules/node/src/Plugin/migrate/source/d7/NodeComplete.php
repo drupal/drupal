@@ -48,8 +48,8 @@ class NodeComplete extends NodeRevision {
       $query->addField('etr', 'created', 'etr_created');
       $query->addField('etr', 'changed', 'etr_changed');
 
-      $query->orderBy('revision_id');
-      $query->orderBy('language');
+      $query->orderBy('etr.revision_id');
+      $query->orderBy('etr.language');
     }
     return $query;
   }
