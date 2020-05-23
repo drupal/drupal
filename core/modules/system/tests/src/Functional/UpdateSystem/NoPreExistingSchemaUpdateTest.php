@@ -11,7 +11,6 @@ use Drupal\Tests\RequirementsPageTrait;
  * Tries to update a module which has no pre-existing schema.
  *
  * @group Update
- * @group legacy
  */
 class NoPreExistingSchemaUpdateTest extends BrowserTestBase {
   use RequirementsPageTrait;

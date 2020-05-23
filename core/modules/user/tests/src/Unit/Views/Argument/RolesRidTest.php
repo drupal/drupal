@@ -18,13 +18,6 @@ class RolesRidTest extends UnitTestCase {
    * Tests the titleQuery method.
    *
    * @covers ::titleQuery
-   *
-   * @group legacy
-   *
-   * Note this is only a legacy test because it triggers a call to
-   * \Drupal\Core\Entity\EntityTypeInterface::getLabelCallback() which is mocked
-   * and triggers a deprecation error. Remove when ::getLabelCallback() is
-   * removed.
    */
   public function testTitleQuery() {
     $role1 = new Role([

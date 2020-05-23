@@ -8,7 +8,6 @@ use Drupal\FunctionalTests\Update\UpdatePathTestBase;
  * Ensures that update hook is run properly for deleting obsolete Hal settings.
  *
  * @group hal
- * @group legacy
  */
 class HalSettingsDeletionUpdateTest extends UpdatePathTestBase {
 
