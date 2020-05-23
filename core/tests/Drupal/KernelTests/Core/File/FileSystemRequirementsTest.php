@@ -6,7 +6,6 @@ use Drupal\KernelTests\KernelTestBase;
 
 /**
  * @group File
- * @group legacy
  */
 class FileSystemRequirementsTest extends KernelTestBase {
 

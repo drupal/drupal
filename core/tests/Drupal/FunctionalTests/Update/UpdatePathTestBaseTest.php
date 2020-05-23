@@ -10,7 +10,6 @@ use Drupal\Core\Database\Database;
  * Tests the update path base class.
  *
  * @group Update
- * @group legacy
  */
 class UpdatePathTestBaseTest extends UpdatePathTestBase {
 
