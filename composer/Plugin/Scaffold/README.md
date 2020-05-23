@@ -399,7 +399,6 @@ Sample composer.json for a project that relies on packages that use composer-sca
         "web-root": "./docroot"
       },
       "symlink": true,
-      "overwrite": true,
       "file-mapping": {
         "[web-root]/.htaccess": false,
         "[web-root]/robots.txt": "assets/robots-default.txt"
