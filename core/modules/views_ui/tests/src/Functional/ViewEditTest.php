@@ -132,7 +132,7 @@ class ViewEditTest extends UITestBase {
     ];
     foreach ($test_views as $view_name => $display) {
       $this->drupalGet('admin/structure/views/view/' . $view_name);
-      $this->assertResponse(200);
+      $this->assertSession()->statusCodeEquals(200);
       $langcode_url = 'admin/structure/views/nojs/display/' . $view_name . '/' . $display . '/rendering_language';
       $this->assertNoLinkByHref($langcode_url);
       $assert_session->linkNotExistsExact(t('@type language selected for page', ['@type' => t('Content')]));
@@ -148,7 +148,7 @@ class ViewEditTest extends UITestBase {
     // Language options should now exist with entity language the default.
     foreach ($test_views as $view_name => $display) {
       $this->drupalGet('admin/structure/views/view/' . $view_name);
-      $this->assertResponse(200);
+      $this->assertSession()->statusCodeEquals(200);
       $langcode_url = 'admin/structure/views/nojs/display/' . $view_name . '/' . $display . '/rendering_language';
       if ($view_name == 'test_view') {
         $this->assertNoLinkByHref($langcode_url);
@@ -162,7 +162,7 @@ class ViewEditTest extends UITestBase {
       }
 
       $this->drupalGet($langcode_url);
-      $this->assertResponse(200);
+      $this->assertSession()->statusCodeEquals(200);
       if ($view_name == 'test_view') {
         $this->assertText(t('The view is not based on a translatable entity type or the site is not multilingual.'));
       }
@@ -218,7 +218,7 @@ class ViewEditTest extends UITestBase {
         // Check the order for the langcode filter.
         $langcode_url = 'admin/structure/views/nojs/handler/' . $view_name . '/' . $display . '/filter/langcode';
         $this->drupalGet($langcode_url);
-        $this->assertResponse(200);
+        $this->assertSession()->statusCodeEquals(200);
 
         $expected_elements = [
           'all',

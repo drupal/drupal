@@ -340,7 +340,7 @@ class PagePreviewTest extends NodeTestBase {
     $this->clickLink(t('Back to content editing'));
     $this->drupalPostForm(NULL, [], t('Save'));
     $this->assertUrl($node->toUrl());
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
 
     /** @var \Drupal\Core\File\FileSystemInterface $file_system */
     $file_system = \Drupal::service('file_system');

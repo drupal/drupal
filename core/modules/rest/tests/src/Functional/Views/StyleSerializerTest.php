@@ -94,13 +94,13 @@ class StyleSerializerTest extends ViewTestBase {
   public function testRestViewsAuthentication() {
     // Assume the view is hidden behind a permission.
     $this->drupalGet('test/serialize/auth_with_perm', ['query' => ['_format' => 'json']]);
-    $this->assertResponse(401);
+    $this->assertSession()->statusCodeEquals(401);
 
     // Not even logging in would make it possible to see the view, because then
     // we are denied based on authentication method (cookie).
     $this->drupalLogin($this->adminUser);
     $this->drupalGet('test/serialize/auth_with_perm', ['query' => ['_format' => 'json']]);
-    $this->assertResponse(403);
+    $this->assertSession()->statusCodeEquals(403);
     $this->drupalLogout();
 
     // But if we use the basic auth authentication strategy, we should be able
@@ -116,7 +116,7 @@ class StyleSerializerTest extends ViewTestBase {
     // Ensure that any changes to variables in the other thread are picked up.
     $this->refreshVariables();
 
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
   }
 
   /**
@@ -129,7 +129,7 @@ class StyleSerializerTest extends ViewTestBase {
     $this->executeView($view);
 
     $actual_json = $this->drupalGet('test/serialize/field', ['query' => ['_format' => 'json']]);
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
     $this->assertCacheTags($view->getCacheTags());
     $this->assertCacheContexts(['languages:language_interface', 'theme', 'request_format']);
     // @todo Due to https://www.drupal.org/node/2352009 we can't yet test the
@@ -160,7 +160,7 @@ class StyleSerializerTest extends ViewTestBase {
 
     // Test a 403 callback.
     $this->drupalGet('test/serialize/denied', ['query' => ['_format' => 'json']]);
-    $this->assertResponse(403);
+    $this->assertSession()->statusCodeEquals(403);
 
     // Test the entity rows.
     $view = Views::getView('test_serializer_display_entity');
@@ -178,7 +178,7 @@ class StyleSerializerTest extends ViewTestBase {
     $expected = $serializer->serialize($entities, 'json');
 
     $actual_json = $this->drupalGet('test/serialize/entity', ['query' => ['_format' => 'json']]);
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
     $this->assertIdentical($actual_json, $expected, 'The expected JSON output was found.');
     $expected_cache_tags = $view->getCacheTags();
     $expected_cache_tags[] = 'entity_test_list';
@@ -238,19 +238,19 @@ class StyleSerializerTest extends ViewTestBase {
   public function testSharedPagePath() {
     // Test with no format as well as html explicitly.
     $this->drupalGet('test/serialize/shared');
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
     $this->assertHeader('content-type', 'text/html; charset=UTF-8');
 
     $this->drupalGet('test/serialize/shared', ['query' => ['_format' => 'html']]);
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
     $this->assertHeader('content-type', 'text/html; charset=UTF-8');
 
     $this->drupalGet('test/serialize/shared', ['query' => ['_format' => 'json']]);
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
     $this->assertHeader('content-type', 'application/json');
 
     $this->drupalGet('test/serialize/shared', ['query' => ['_format' => 'xml']]);
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
     $this->assertHeader('content-type', 'text/xml; charset=UTF-8');
   }
 
@@ -267,7 +267,7 @@ class StyleSerializerTest extends ViewTestBase {
 
     $this->drupalGet('test/serialize/entity', ['query' => ['_format' => 'json']]);
     // Verify that the endpoint is unavailable for anonymous users.
-    $this->assertResponse(503);
+    $this->assertSession()->statusCodeEquals(503);
   }
 
   /**
@@ -386,7 +386,7 @@ class StyleSerializerTest extends ViewTestBase {
     // Ensure a request with no format returns 406 Not Acceptable.
     $this->drupalGet('test/serialize/field');
     $this->assertHeader('content-type', 'text/html; charset=UTF-8');
-    $this->assertResponse(406);
+    $this->assertSession()->statusCodeEquals(406);
 
     // Select only 'xml' as an accepted format.
     $this->drupalPostForm($style_options, ['style_options[formats][xml]' => 'xml'], t('Apply'));
@@ -395,11 +395,11 @@ class StyleSerializerTest extends ViewTestBase {
     // Ensure a request for JSON returns 406 Not Acceptable.
     $this->drupalGet('test/serialize/field', ['query' => ['_format' => 'json']]);
     $this->assertHeader('content-type', 'application/json');
-    $this->assertResponse(406);
+    $this->assertSession()->statusCodeEquals(406);
     // Ensure a request for XML returns 200 OK.
     $this->drupalGet('test/serialize/field', ['query' => ['_format' => 'xml']]);
     $this->assertHeader('content-type', 'text/xml; charset=UTF-8');
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
 
     // Add 'json' as an accepted format, so we have multiple.
     $this->drupalPostForm($style_options, ['style_options[formats][json]' => 'json'], t('Apply'));
@@ -408,22 +408,22 @@ class StyleSerializerTest extends ViewTestBase {
     // Should return a 406. Emulates a sample Firefox header.
     $this->drupalGet('test/serialize/field', [], ['Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8']);
     $this->assertHeader('content-type', 'text/html; charset=UTF-8');
-    $this->assertResponse(406);
+    $this->assertSession()->statusCodeEquals(406);
 
     // Ensure a request for HTML returns 406 Not Acceptable.
     $this->drupalGet('test/serialize/field', ['query' => ['_format' => 'html']]);
     $this->assertHeader('content-type', 'text/html; charset=UTF-8');
-    $this->assertResponse(406);
+    $this->assertSession()->statusCodeEquals(406);
 
     // Ensure a request for JSON returns 200 OK.
     $this->drupalGet('test/serialize/field', ['query' => ['_format' => 'json']]);
     $this->assertHeader('content-type', 'application/json');
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
 
     // Ensure a request XML returns 200 OK.
     $this->drupalGet('test/serialize/field', ['query' => ['_format' => 'xml']]);
     $this->assertHeader('content-type', 'text/xml; charset=UTF-8');
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
 
     // Now configure no format, so both serialization formats should be allowed.
     $this->drupalPostForm($style_options, ['style_options[formats][json]' => '0', 'style_options[formats][xml]' => '0'], t('Apply'));
@@ -431,17 +431,17 @@ class StyleSerializerTest extends ViewTestBase {
     // Ensure a request for JSON returns 200 OK.
     $this->drupalGet('test/serialize/field', ['query' => ['_format' => 'json']]);
     $this->assertHeader('content-type', 'application/json');
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
 
     // Ensure a request for XML returns 200 OK.
     $this->drupalGet('test/serialize/field', ['query' => ['_format' => 'xml']]);
     $this->assertHeader('content-type', 'text/xml; charset=UTF-8');
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
 
     // Should return a 406 for HTML still.
     $this->drupalGet('test/serialize/field', ['query' => ['_format' => 'html']]);
     $this->assertHeader('content-type', 'text/html; charset=UTF-8');
-    $this->assertResponse(406);
+    $this->assertSession()->statusCodeEquals(406);
   }
 
   /**
@@ -636,7 +636,7 @@ class StyleSerializerTest extends ViewTestBase {
     $this->drupalLogin($this->adminUser);
     // Click the "Update preview button".
     $this->drupalPostForm('admin/structure/views/view/test_serializer_display_field/edit/rest_export_1', $edit = [], t('Update preview'));
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
     // Check if we receive the expected result.
     $result = $this->xpath('//div[@id="views-live-preview"]/pre');
     $json_preview = $result[0]->getText();

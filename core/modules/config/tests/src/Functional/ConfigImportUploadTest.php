@@ -47,7 +47,7 @@ class ConfigImportUploadTest extends BrowserTestBase {
   public function testImport() {
     // Verify access to the config upload form.
     $this->drupalGet('admin/config/development/configuration/full/import');
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
 
     // Attempt to upload a non-tar file.
     $text_file = $this->getTestFiles('text')[0];

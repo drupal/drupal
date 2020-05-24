@@ -214,11 +214,11 @@ class BookTest extends BrowserTestBase {
 
     // Make sure we can't export an unsupported format.
     $this->drupalGet('book/export/foobar/' . $this->book->id());
-    $this->assertResponse(404);
+    $this->assertSession()->statusCodeEquals(404);
 
     // Make sure we get a 404 on a not existing book node.
     $this->drupalGet('book/export/html/123');
-    $this->assertResponse(404);
+    $this->assertSession()->statusCodeEquals(404);
 
     // Make sure an anonymous user cannot view printer-friendly version.
     $this->drupalLogout();
@@ -229,14 +229,14 @@ class BookTest extends BrowserTestBase {
 
     // Try getting the URL directly, and verify it fails.
     $this->drupalGet('book/export/html/' . $this->book->id());
-    $this->assertResponse(403);
+    $this->assertSession()->statusCodeEquals(403);
 
     // Now grant anonymous users permission to view the printer-friendly
     // version and verify that node access restrictions still prevent them from
     // seeing it.
     user_role_grant_permissions(RoleInterface::ANONYMOUS_ID, ['access printer-friendly version']);
     $this->drupalGet('book/export/html/' . $this->book->id());
-    $this->assertResponse(403);
+    $this->assertSession()->statusCodeEquals(403);
   }
 
   /**
@@ -358,7 +358,7 @@ class BookTest extends BrowserTestBase {
 
     // Ensure that the top-level book node cannot be deleted.
     $this->drupalGet('node/' . $this->book->id() . '/outline/remove');
-    $this->assertResponse(403);
+    $this->assertSession()->statusCodeEquals(403);
 
     // Ensure that a child book node can be deleted.
     $this->drupalPostForm('node/' . $nodes[4]->id() . '/outline/remove', $edit, t('Remove'));
@@ -386,7 +386,7 @@ class BookTest extends BrowserTestBase {
     // Delete parent, and visit a child page.
     $this->drupalPostForm($this->book->toUrl('delete-form'), [], t('Delete'));
     $this->drupalGet($nodes[0]->toUrl());
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
     $this->assertText($nodes[0]->label());
     // The book parents should be updated.
     $node_storage = \Drupal::entityTypeManager()->getStorage('node');

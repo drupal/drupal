@@ -83,7 +83,7 @@ class ResourceTest extends BrowserTestBase {
     // means there's always a match and hence when there is no matching REST
     // route, the non-REST route is used, but can't render into
     // application/hal+json, so it returns a 406.
-    $this->assertResponse(406);
+    $this->assertSession()->statusCodeEquals(406);
   }
 
   /**
@@ -109,7 +109,7 @@ class ResourceTest extends BrowserTestBase {
     // means there's always a match and hence when there is no matching REST
     // route, the non-REST route is used, but can't render into
     // application/hal+json, so it returns a 406.
-    $this->assertResponse(406);
+    $this->assertSession()->statusCodeEquals(406);
   }
 
   /**

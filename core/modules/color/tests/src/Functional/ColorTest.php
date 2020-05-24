@@ -112,7 +112,7 @@ class ColorTest extends BrowserTestBase {
 
     $this->drupalLogin($this->bigUser);
     $this->drupalGet($settings_path);
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
     $this->assertUniqueText('Color set');
     $edit['scheme'] = '';
     $edit[$test_values['palette_input']] = '#123456';
@@ -127,7 +127,7 @@ class ColorTest extends BrowserTestBase {
     }
 
     $this->drupalGet($settings_path);
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
     $edit['scheme'] = $test_values['scheme'];
     $this->drupalPostForm($settings_path, $edit, t('Save configuration'));
 

@@ -206,7 +206,7 @@ class CommentTranslationUITest extends ContentTranslationUITestBase {
 
     // Verify translation links.
     $this->drupalGet('admin/content/comment');
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
     $this->assertLinkByHref('comment/' . $cid_translatable . '/translations');
     $this->assertNoLinkByHref('comment/' . $cid_untranslatable . '/translations');
   }

@@ -169,19 +169,19 @@ class ContentTranslationWorkflowsTest extends ContentTranslationTestBase {
     // Check whether the user is allowed to access the entity form in edit mode.
     $edit_url = $this->entity->toUrl('edit-form', $options);
     $this->drupalGet($edit_url, $options);
-    $this->assertResponse($expected_status['edit']);
+    $this->assertSession()->statusCodeEquals($expected_status['edit']);
 
     // Check whether the user is allowed to access the entity delete form.
     $delete_url = $this->entity->toUrl('delete-form', $options);
     $this->drupalGet($delete_url, $options);
-    $this->assertResponse($expected_status['delete']);
+    $this->assertSession()->statusCodeEquals($expected_status['delete']);
 
     // Check whether the user is allowed to access the translation overview.
     $langcode = $this->langcodes[1];
     $options['language'] = $languages[$langcode];
     $translations_url = $this->entity->toUrl('drupal:content-translation-overview', $options)->toString();
     $this->drupalGet($translations_url);
-    $this->assertResponse($expected_status['overview']);
+    $this->assertSession()->statusCodeEquals($expected_status['overview']);
 
     // Check whether the user is allowed to create a translation.
     $add_translation_url = Url::fromRoute("entity.$this->entityTypeId.content_translation_add", [$this->entityTypeId => $this->entity->id(), 'source' => $default_langcode, 'target' => $langcode], $options);
@@ -197,7 +197,7 @@ class ContentTranslationWorkflowsTest extends ContentTranslationTestBase {
     else {
       $this->drupalGet($add_translation_url);
     }
-    $this->assertResponse($expected_status['add_translation']);
+    $this->assertSession()->statusCodeEquals($expected_status['add_translation']);
 
     // Check whether the user is allowed to edit a translation.
     $langcode = $this->langcodes[2];
@@ -225,7 +225,7 @@ class ContentTranslationWorkflowsTest extends ContentTranslationTestBase {
     else {
       $this->drupalGet($edit_translation_url);
     }
-    $this->assertResponse($expected_status['edit_translation']);
+    $this->assertSession()->statusCodeEquals($expected_status['edit_translation']);
 
     // Check whether the user is allowed to delete a translation.
     $langcode = $this->langcodes[2];
@@ -253,7 +253,7 @@ class ContentTranslationWorkflowsTest extends ContentTranslationTestBase {
     else {
       $this->drupalGet($delete_translation_url);
     }
-    $this->assertResponse($expected_status['delete_translation']);
+    $this->assertSession()->statusCodeEquals($expected_status['delete_translation']);
   }
 
   /**

@@ -127,12 +127,12 @@ class AggregatorRenderingTest extends AggregatorTestBase {
     // Check the rss aggregator page as anonymous user.
     $this->drupalLogout();
     $this->drupalGet('aggregator/rss');
-    $this->assertResponse(403);
+    $this->assertSession()->statusCodeEquals(403);
 
     // Check the rss aggregator page as admin.
     $this->drupalLogin($this->adminUser);
     $this->drupalGet('aggregator/rss');
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
     $this->assertEqual($this->drupalGetHeader('Content-type'), 'application/rss+xml; charset=utf-8');
 
     // Check the opml aggregator page.

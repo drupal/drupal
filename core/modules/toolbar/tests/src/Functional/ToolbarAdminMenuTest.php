@@ -100,7 +100,7 @@ class ToolbarAdminMenuTest extends BrowserTestBase {
     $this->drupalLogin($this->adminUser);
 
     $this->drupalGet('test-page');
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
 
     // Assert that the toolbar is present in the HTML.
     $this->assertRaw('id="toolbar-administration"');
@@ -148,7 +148,7 @@ class ToolbarAdminMenuTest extends BrowserTestBase {
     $edit = [];
     $edit['enabled'] = FALSE;
     $this->drupalPostForm("admin/structure/menu/link/" . $admin_menu_link_id . "/edit", $edit, t('Save'));
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
     $this->assertText('The menu link has been saved.');
 
     // Assert that the subtrees hash has been altered because the subtrees
@@ -178,7 +178,7 @@ class ToolbarAdminMenuTest extends BrowserTestBase {
     // Get the hash for a second user.
     $this->drupalLogin($this->adminUser2);
     $this->drupalGet('test-page');
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
 
     // Assert that the toolbar is present in the HTML.
     $this->assertRaw('id="toolbar-administration"');
@@ -188,7 +188,7 @@ class ToolbarAdminMenuTest extends BrowserTestBase {
     // Log in the first admin user again.
     $this->drupalLogin($this->adminUser);
     $this->drupalGet('test-page');
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
 
     // Assert that the toolbar is present in the HTML.
     $this->assertRaw('id="toolbar-administration"');
@@ -211,7 +211,7 @@ class ToolbarAdminMenuTest extends BrowserTestBase {
 
     // Request a new page to refresh the drupalSettings object.
     $this->drupalGet('test-page');
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
     $new_subtree_hash = $this->getSubtreesHash();
 
     // Assert that the old admin menu subtree hash and the new admin menu
@@ -235,7 +235,7 @@ class ToolbarAdminMenuTest extends BrowserTestBase {
     // Get the subtree hash for adminUser2 to check later that it has not
     // changed. Request a new page to refresh the drupalSettings object.
     $this->drupalGet('test-page');
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
     $admin_user_2_hash = $this->getSubtreesHash();
 
     // Assign the role to the user.
@@ -288,7 +288,7 @@ class ToolbarAdminMenuTest extends BrowserTestBase {
 
     // Have the adminUser request a page in the new language.
     $this->drupalGet($langcode . '/test-page');
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
 
     // Get a baseline hash for the admin menu subtrees before translating one
     // of the menu link items.
@@ -328,7 +328,7 @@ class ToolbarAdminMenuTest extends BrowserTestBase {
     $this->drupalLogin($admin_user);
     // Have the adminUser request a page in the new language.
     $this->drupalGet($langcode . '/test-page');
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
     $new_subtree_hash = $this->getSubtreesHash();
 
     // Assert that the old admin menu subtrees hash and the new admin menu
@@ -430,7 +430,7 @@ class ToolbarAdminMenuTest extends BrowserTestBase {
   private function assertDifferentHash() {
     // Request a new page to refresh the drupalSettings object.
     $this->drupalGet('test-page');
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
     $new_subtree_hash = $this->getSubtreesHash();
 
     // Assert that the old admin menu subtree hash and the new admin menu

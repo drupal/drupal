@@ -94,17 +94,17 @@ class RedirectTest extends BrowserTestBase {
     // at the right URL.
     $expected = Url::fromRoute('form_test.route1', [], ['query' => ['test1' => 'test2'], 'absolute' => TRUE])->toString();
     $this->drupalGet('foo');
-    $this->assertResponse(404);
+    $this->assertSession()->statusCodeEquals(404);
     $this->drupalPostForm(NULL, [], t('Submit'));
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
     $this->assertUrl($expected, [], 'Redirected to correct URL/query.');
 
     // Visit the block admin page (403 page) and submit the form. Verify it
     // ends up at the right URL.
     $this->drupalGet('admin/structure/block');
-    $this->assertResponse(403);
+    $this->assertSession()->statusCodeEquals(403);
     $this->drupalPostForm(NULL, [], t('Submit'));
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
     $this->assertUrl($expected, [], 'Redirected to correct URL/query.');
   }
 

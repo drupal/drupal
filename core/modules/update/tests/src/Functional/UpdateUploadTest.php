@@ -96,7 +96,7 @@ class UpdateUploadTest extends UpdateTestBase {
     $this->assertLinkByHref(Url::fromRoute('system.admin')->toString());
     // Ensure we can reach the "Install another module" link.
     $this->clickLink(t('Install another module'));
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
     $this->assertUrl('admin/modules/install');
 
     // Check that the module has the correct version before trying to update

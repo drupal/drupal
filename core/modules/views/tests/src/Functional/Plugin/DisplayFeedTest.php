@@ -180,7 +180,7 @@ class DisplayFeedTest extends ViewTestBase {
 
     // Ensure the feed attachment returns 'Not found'.
     $this->drupalGet('/test-attached-disabled.xml');
-    $this->assertResponse(404);
+    $this->assertSession()->statusCodeEquals(404);
   }
 
   /**
@@ -197,10 +197,10 @@ class DisplayFeedTest extends ViewTestBase {
     \Drupal::service('router.builder')->rebuild();
 
     $this->drupalGet('test-attached-disabled');
-    $this->assertResponse(404);
+    $this->assertSession()->statusCodeEquals(404);
     // Ensure the feed can still be reached.
     $this->drupalGet('test-attached-disabled.xml');
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
   }
 
 }

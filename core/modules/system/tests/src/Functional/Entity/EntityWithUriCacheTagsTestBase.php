@@ -124,7 +124,7 @@ abstract class EntityWithUriCacheTagsTestBase extends EntityCacheTagsTestBase {
     // Verify that after deleting the entity, there is a cache miss.
     $this->entity->delete();
     $this->verifyPageCache($entity_url, 'MISS');
-    $this->assertResponse(404);
+    $this->assertSession()->statusCodeEquals(404);
   }
 
   /**

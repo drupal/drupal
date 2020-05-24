@@ -57,7 +57,7 @@ class ExposedFormTest extends ViewTestBase {
   public function testSubmitButton() {
     // Test the submit button value defaults to 'Apply'.
     $this->drupalGet('test_exposed_form_buttons');
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
     $this->helperButtonHasLabel('edit-submit-test-exposed-form-buttons', t('Apply'));
 
     // Rename the label of the submit button.
@@ -164,7 +164,7 @@ class ExposedFormTest extends ViewTestBase {
 
     // Test the reset works.
     $this->drupalGet('test_exposed_form_buttons', ['query' => ['op' => 'Reset']]);
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
     // Test the type has been reset.
     $this->assertFieldById('edit-type', 'All', 'Article type filter has been reset.');
 
@@ -173,7 +173,7 @@ class ExposedFormTest extends ViewTestBase {
 
     // Test the reset works with type set.
     $this->drupalGet('test_exposed_form_buttons', ['query' => ['type' => 'article', 'op' => 'Reset']]);
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
     $this->assertFieldById('edit-type', 'All', 'Article type filter has been reset.');
 
     // Test the button is hidden after reset.
@@ -191,7 +191,7 @@ class ExposedFormTest extends ViewTestBase {
 
     // Look whether the reset button label changed.
     $this->drupalGet('test_exposed_form_buttons', ['query' => ['type' => 'article']]);
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
 
     $this->helperButtonHasLabel('edit-reset', $expected_label);
   }
@@ -263,7 +263,7 @@ class ExposedFormTest extends ViewTestBase {
     $view->save();
 
     $this->drupalGet('test_exposed_form_buttons');
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
     $this->helperButtonHasLabel('edit-submit-test-exposed-form-buttons', t('Apply'));
 
     // Ensure that no results are displayed.
@@ -393,14 +393,14 @@ class ExposedFormTest extends ViewTestBase {
    */
   public function testFormErrorWithExposedForm() {
     $this->drupalGet('views_test_data_error_form_page');
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
     $form = $this->cssSelect('form.views-exposed-form');
     $this->assertNotEmpty($form, 'The exposed form element was found.');
     $this->assertRaw(t('Apply'), 'Ensure the exposed form is rendered before submitting the normal form.');
     $this->assertRaw('<div class="views-row">', 'Views result shown.');
 
     $this->drupalPostForm(NULL, [], t('Submit'));
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
     $form = $this->cssSelect('form.views-exposed-form');
     $this->assertNotEmpty($form, 'The exposed form element was found.');
     $this->assertRaw(t('Apply'), 'Ensure the exposed form is rendered after submitting the normal form.');

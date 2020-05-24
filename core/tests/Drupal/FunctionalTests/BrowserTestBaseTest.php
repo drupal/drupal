@@ -239,6 +239,17 @@ class BrowserTestBaseTest extends BrowserTestBase {
   }
 
   /**
+   * Tests legacy assertResponse().
+   *
+   * @group legacy
+   * @expectedDeprecation AssertLegacyTrait::assertResponse() is deprecated in drupal:8.2.0 and is removed from drupal:10.0.0. Use $this->assertSession()->statusCodeEquals() instead. See https://www.drupal.org/node/3129738
+   */
+  public function testAssertResponse() {
+    $this->drupalGet('test-encoded');
+    $this->assertResponse(200);
+  }
+
+  /**
    * Tests legacy text asserts.
    */
   public function testTextAsserts() {

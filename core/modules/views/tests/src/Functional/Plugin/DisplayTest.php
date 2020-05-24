@@ -298,7 +298,7 @@ class DisplayTest extends ViewTestBase {
    */
   public function testInvalidDisplayPlugins() {
     $this->drupalGet('test_display_invalid');
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
 
     // Change the page plugin id to an invalid one. Bypass the entity system
     // so no menu rebuild was executed (so the path is still available).
@@ -307,7 +307,7 @@ class DisplayTest extends ViewTestBase {
     $config->save();
 
     $this->drupalGet('test_display_invalid');
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
     $this->assertText('The &quot;invalid&quot; plugin does not exist.');
 
     // Rebuild the router, and ensure that the path is not accessible anymore.
@@ -315,7 +315,7 @@ class DisplayTest extends ViewTestBase {
     \Drupal::service('router.builder')->rebuildIfNeeded();
 
     $this->drupalGet('test_display_invalid');
-    $this->assertResponse(404);
+    $this->assertSession()->statusCodeEquals(404);
 
     // Change the display plugin ID back to the correct ID.
     $config = $this->config('views.view.test_display_invalid');
@@ -326,7 +326,7 @@ class DisplayTest extends ViewTestBase {
     $block = $this->drupalPlaceBlock('views_block:test_display_invalid-block_1', ['label' => 'Invalid display']);
 
     $this->drupalGet('<front>');
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
     $this->assertCount(1, $this->xpath('//div[@id = :id]', [':id' => 'block-' . $block->id()]));
 
     // Change the block plugin ID to an invalid one.
@@ -337,7 +337,7 @@ class DisplayTest extends ViewTestBase {
     // Test the page is still displayed, the block not present, and has the
     // plugin warning message.
     $this->drupalGet('<front>');
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
     $this->assertText('The &quot;invalid&quot; plugin does not exist.');
     $this->assertCount(0, $this->xpath('//div[@id = :id]', [':id' => 'block-' . $block->id()]));
   }

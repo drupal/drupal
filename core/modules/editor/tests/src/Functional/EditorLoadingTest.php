@@ -167,7 +167,7 @@ class EditorLoadingTest extends BrowserTestBase {
 
     // Load the editor image dialog form and make sure it does not fatal.
     $this->drupalGet('editor/dialog/image/full_html');
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
 
     $this->drupalLogout($this->privilegedUser);
 

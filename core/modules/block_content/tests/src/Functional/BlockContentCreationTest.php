@@ -82,7 +82,7 @@ class BlockContentCreationTest extends BlockContentTestBase {
     $this->assertRaw(new FormattableMarkup('A custom block with block description %value already exists.', [
       '%value' => $edit['info[0][value]'],
     ]));
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
   }
 
   /**
@@ -164,7 +164,7 @@ class BlockContentCreationTest extends BlockContentTestBase {
     $this->assertRaw(new FormattableMarkup('A custom block with block description %value already exists.', [
       '%value' => $edit['info[0][value]'],
     ]));
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
   }
 
   /**

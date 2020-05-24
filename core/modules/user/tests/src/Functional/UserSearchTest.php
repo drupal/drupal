@@ -113,14 +113,14 @@ class UserSearchTest extends BrowserTestBase {
     $user3 = $this->drupalCreateUser(['search content']);
     $this->drupalLogin($user3);
     $this->drupalGet('search/user');
-    $this->assertResponse(403);
+    $this->assertSession()->statusCodeEquals(403);
 
     // Ensure that a user without search permission cannot access the user
     // search page.
     $user4 = $this->drupalCreateUser(['access user profiles']);
     $this->drupalLogin($user4);
     $this->drupalGet('search/user');
-    $this->assertResponse(403);
+    $this->assertSession()->statusCodeEquals(403);
     $this->drupalLogout();
   }
 

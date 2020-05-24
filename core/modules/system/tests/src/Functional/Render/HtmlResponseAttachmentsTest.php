@@ -29,11 +29,11 @@ class HtmlResponseAttachmentsTest extends BrowserTestBase {
   public function testAttachments() {
     // Test ['#attached']['http_header] = ['Status', $code].
     $this->drupalGet('/render_attached_test/teapot');
-    $this->assertResponse(418);
+    $this->assertSession()->statusCodeEquals(418);
     $this->assertHeader('X-Drupal-Cache', 'MISS');
     // Repeat for the cache.
     $this->drupalGet('/render_attached_test/teapot');
-    $this->assertResponse(418);
+    $this->assertSession()->statusCodeEquals(418);
     $this->assertHeader('X-Drupal-Cache', 'HIT');
 
     // Test ['#attached']['http_header'] with various replacement rules.
@@ -83,7 +83,7 @@ class HtmlResponseAttachmentsTest extends BrowserTestBase {
     // Test that all our attached items are present.
     $this->assertFeed();
     $this->assertHead();
-    $this->assertResponse(418);
+    $this->assertSession()->statusCodeEquals(418);
     $this->assertTeapotHeaders();
 
     // Reload the page, to test caching.

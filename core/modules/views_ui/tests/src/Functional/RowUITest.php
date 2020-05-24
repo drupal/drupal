@@ -62,7 +62,7 @@ class RowUITest extends UITestBase {
 
     $this->drupalPostForm($row_plugin_url, ['row[type]' => 'fields'], 'Apply');
     $this->drupalGet($row_plugin_url);
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
     $this->assertFieldByName('row[type]', 'fields', 'Make sure that the fields got saved as used row plugin.');
 
     // Ensure that entity row plugins appear.

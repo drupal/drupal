@@ -51,7 +51,7 @@ class ContactLanguageTest extends BrowserTestBase {
   public function testContactLanguage() {
     // Ensure that contact form by default does not show the language select.
     $this->drupalGet('contact');
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
     $this->assertNoField('edit-langcode-0-value');
 
     // Enable language select from content language settings page.
@@ -62,7 +62,7 @@ class ContactLanguageTest extends BrowserTestBase {
 
     // Ensure that contact form now shows the language select.
     $this->drupalGet('contact');
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
     $this->assertField('edit-langcode-0-value');
   }
 

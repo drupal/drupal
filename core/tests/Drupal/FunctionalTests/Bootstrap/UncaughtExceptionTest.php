@@ -361,7 +361,11 @@ class UncaughtExceptionTest extends BrowserTestBase {
   }
 
   /**
-   * {@inheritdoc}
+   * Asserts the page responds with the specified response code.
+   *
+   * @param int $code
+   *   Response code. For example 200 is a successful page request. For a list
+   *   of all codes see http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html.
    */
   protected function assertResponse($code) {
     $this->assertSame($code, $this->info['http_code']);

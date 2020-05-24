@@ -58,7 +58,7 @@ class ExperimentalHelpTest extends BrowserTestBase {
     $this->assertNoText('This module is experimental.');
 
     // Ensure the actual help page is displayed to avoid a false positive.
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
     $this->assertText('online documentation for the Help Page Test module');
   }
 

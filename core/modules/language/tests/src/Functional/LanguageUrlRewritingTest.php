@@ -97,7 +97,7 @@ class LanguageUrlRewritingTest extends BrowserTestBase {
     $prefix = $stored_prefix;
 
     $this->drupalGet("$prefix/$path");
-    $this->assertResponse(404);
+    $this->assertSession()->statusCodeEquals(404);
   }
 
   /**
