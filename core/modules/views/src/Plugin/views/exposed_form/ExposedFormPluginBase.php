@@ -244,7 +244,6 @@ abstract class ExposedFormPluginBase extends PluginBase implements CacheableDepe
           '#default_value' => $default_sort_order,
         ];
       }
-      $form['submit']['#weight'] = 10;
     }
 
     if (!empty($this->options['reset_button'])) {
