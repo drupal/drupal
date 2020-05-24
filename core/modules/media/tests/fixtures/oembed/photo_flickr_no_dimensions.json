@@ -1,0 +1,10 @@
+{
+  "type": "photo",
+  "title": "Druplicon FTW!",
+  "url": "internal:\/core\/misc\/druplicon.png",
+  "thumbnail_url": "internal:\/core\/misc\/druplicon.png",
+  "thumbnail_width": 88,
+  "thumbnail_height": 100,
+  "provider_name": "Flickr",
+  "version": "1.0"
+}
