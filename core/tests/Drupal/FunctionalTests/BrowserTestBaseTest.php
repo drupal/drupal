@@ -250,6 +250,19 @@ class BrowserTestBaseTest extends BrowserTestBase {
   }
 
   /**
+   * Tests legacy assertHeader().
+   *
+   * @group legacy
+   * @expectedDeprecation AssertLegacyTrait::assertHeader() is deprecated in drupal:8.2.0 and is removed from drupal:10.0.0. Use $this->assertSession()->responseHeaderEquals() instead. See https://www.drupal.org/node/3129738
+   */
+  public function testAssertHeader() {
+    $account = $this->drupalCreateUser();
+    $this->drupalLogin($account);
+    $this->drupalGet('test-page');
+    $this->assertHeader('X-Drupal-Cache-Tags', 'http_response rendered');
+  }
+
+  /**
    * Tests legacy text asserts.
    */
   public function testTextAsserts() {
