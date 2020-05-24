@@ -318,4 +318,14 @@ class KernelTestBaseTest extends KernelTestBase {
     );
   }
 
+  /**
+   * Tests the deprecation of AssertLegacyTrait::assertIdenticalObject.
+   *
+   * @group legacy
+   * @expectedDeprecation AssertLegacyTrait::assertIdenticalObject() is deprecated in drupal:8.0.0 and is removed from drupal:10.0.0. Use $this->assertEquals() instead. See https://www.drupal.org/node/3129738
+    */
+  public function testAssertIdenticalObject() {
+    $this->assertIdenticalObject((object) ['foo' => 'bar'], (object) ['foo' => 'bar']);
+  }
+
 }
