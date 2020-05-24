@@ -119,6 +119,16 @@ class OEmbedFormatterTest extends MediaFunctionalTestBase {
           ],
         ],
       ],
+      'Flickr photo (no dimensions)' => [
+        'https://www.flickr.com/photos/amazeelabs/26497866357',
+        'photo_flickr_no_dimensions.json',
+        [],
+        [
+          'img' => [
+            'src' => '/core/misc/druplicon.png',
+          ],
+        ],
+      ],
     ];
   }
 

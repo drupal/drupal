@@ -441,7 +441,7 @@ class Resource implements CacheableDependencyInterface {
    *
    * @return int|null
    *   The width of the resource in pixels, or NULL if the resource has no
-   *   dimensions
+   *   width.
    */
   public function getWidth() {
     return $this->width;
@@ -452,7 +452,7 @@ class Resource implements CacheableDependencyInterface {
    *
    * @return int|null
    *   The height of the resource in pixels, or NULL if the resource has no
-   *   dimensions.
+   *   height.
    */
   public function getHeight() {
     return $this->height;
@@ -510,25 +510,20 @@ class Resource implements CacheableDependencyInterface {
   /**
    * Sets the dimensions.
    *
-   * @param int $width
+   * @param int|null $width
    *   The width of the resource.
-   * @param int $height
+   * @param int|null $height
    *   The height of the resource.
    *
    * @throws \InvalidArgumentException
    *   If either $width or $height are not numbers greater than zero.
    */
   protected function setDimensions($width, $height) {
-    $width = (int) $width;
-    $height = (int) $height;
-
-    if ($width > 0 && $height > 0) {
-      $this->width = $width;
-      $this->height = $height;
+    if ((isset($width) && $width <= 0) || (isset($height) && $height <= 0)) {
+      throw new \InvalidArgumentException('The dimensions must be NULL or numbers greater than zero.');
     }
-    else {
-      throw new \InvalidArgumentException('The dimensions must be numbers greater than zero.');
-    }
+    $this->width = isset($width) ? (int) $width : NULL;
+    $this->height = isset($height) ? (int) $height : NULL;
   }
 
 }
