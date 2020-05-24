@@ -177,11 +177,11 @@ class FilterTest extends ViewTestBase {
 
     $this->drupalGet('test_filter_in_operator_ui');
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertOption('edit-nid-op', '<');
-    $this->assertOption('edit-nid-op', '<=');
-    $this->assertOption('edit-nid-op', '=');
-    $this->assertNoOption('edit-nid-op', '>');
-    $this->assertNoOption('edit-nid-op', '>=');
+    $this->assertSession()->optionExists('edit-nid-op', '<');
+    $this->assertSession()->optionExists('edit-nid-op', '<=');
+    $this->assertSession()->optionExists('edit-nid-op', '=');
+    $this->assertSession()->optionNotExists('edit-nid-op', '>');
+    $this->assertSession()->optionNotExists('edit-nid-op', '>=');
 
     // Because there are not operators that use the min and max fields, those
     // fields should not be in the exposed form.
@@ -197,11 +197,11 @@ class FilterTest extends ViewTestBase {
 
     $this->drupalGet('test_filter_in_operator_ui');
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertNoOption('edit-nid-op', '<');
-    $this->assertNoOption('edit-nid-op', '<=');
-    $this->assertNoOption('edit-nid-op', '=');
-    $this->assertOption('edit-nid-op', '>');
-    $this->assertOption('edit-nid-op', '>=');
+    $this->assertSession()->optionNotExists('edit-nid-op', '<');
+    $this->assertSession()->optionNotExists('edit-nid-op', '<=');
+    $this->assertSession()->optionNotExists('edit-nid-op', '=');
+    $this->assertSession()->optionExists('edit-nid-op', '>');
+    $this->assertSession()->optionExists('edit-nid-op', '>=');
 
     $this->assertFieldById('edit-nid-value');
     $this->assertFieldById('edit-nid-min');

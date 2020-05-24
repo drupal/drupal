@@ -114,8 +114,8 @@ class BulkFormTest extends BrowserTestBase {
     $this->drupalGet('test_bulk_form');
     $options = $this->xpath('//select[@id=:id]/option', [':id' => 'edit-action']);
     $this->assertCount(2, $options);
-    $this->assertOption('edit-action', 'node_make_sticky_action');
-    $this->assertOption('edit-action', 'node_make_unsticky_action');
+    $this->assertSession()->optionExists('edit-action', 'node_make_sticky_action');
+    $this->assertSession()->optionExists('edit-action', 'node_make_unsticky_action');
 
     // Set up to exclude the sticky actions.
     $view = Views::getView('test_bulk_form');
@@ -124,8 +124,8 @@ class BulkFormTest extends BrowserTestBase {
     $view->save();
 
     $this->drupalGet('test_bulk_form');
-    $this->assertNoOption('edit-action', 'node_make_sticky_action');
-    $this->assertNoOption('edit-action', 'node_make_unsticky_action');
+    $this->assertSession()->optionNotExists('edit-action', 'node_make_sticky_action');
+    $this->assertSession()->optionNotExists('edit-action', 'node_make_unsticky_action');
 
     // Check the default title.
     $this->drupalGet('test_bulk_form');

@@ -674,12 +674,12 @@ class MenuUiTest extends BrowserTestBase {
     // The last link cannot be a parent in the new menu link form.
     $this->drupalGet('admin/structure/menu/manage/admin/add');
     $value = 'tools:' . $last_link->getPluginId();
-    $this->assertNoOption('edit-menu-parent', $value, 'The invalid option is not there.');
+    $this->assertSession()->optionNotExists('edit-menu-parent', $value);
 
     // All but the last link can be parents in the new menu link form.
     array_pop($created_links);
     foreach ($created_links as $key => $link) {
-      $this->assertOption('edit-menu-parent', $link, 'The valid option number ' . ($key + 1) . ' is there.');
+      $this->assertSession()->optionExists('edit-menu-parent', $link);
     }
   }
 

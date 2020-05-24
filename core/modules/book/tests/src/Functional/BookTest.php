@@ -295,10 +295,10 @@ class BookTest extends BrowserTestBase {
     $this->drupalGet($nodes[0]->toUrl('edit-form'));
     // Since Node 0 has children 2 levels deep, nodes 10 and 11 should not
     // appear in the selector.
-    $this->assertNoOption('edit-book-pid', $nodes[10]->id());
-    $this->assertNoOption('edit-book-pid', $nodes[11]->id());
+    $this->assertSession()->optionNotExists('edit-book-pid', $nodes[10]->id());
+    $this->assertSession()->optionNotExists('edit-book-pid', $nodes[11]->id());
     // Node 9 should be available as an option.
-    $this->assertOption('edit-book-pid', $nodes[9]->id());
+    $this->assertSession()->optionExists('edit-book-pid', $nodes[9]->id());
 
     // Get a shallow set of options.
     /** @var \Drupal\book\BookManagerInterface $manager */

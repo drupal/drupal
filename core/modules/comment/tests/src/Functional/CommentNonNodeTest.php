@@ -490,9 +490,9 @@ class CommentNonNodeTest extends BrowserTestBase {
     // Visit the Field UI field add page.
     $this->drupalGet('entity_test_string_id/structure/entity_test/fields/add-field');
     // Ensure field isn't shown for string IDs.
-    $this->assertNoOption('edit-new-storage-type', 'comment');
+    $this->assertSession()->optionNotExists('edit-new-storage-type', 'comment');
     // Ensure a core field type shown.
-    $this->assertOption('edit-new-storage-type', 'boolean');
+    $this->assertSession()->optionExists('edit-new-storage-type', 'boolean');
 
     // Create a bundle for entity_test_no_id.
     entity_test_create_bundle('entity_test', 'Entity Test', 'entity_test_no_id');
@@ -502,9 +502,9 @@ class CommentNonNodeTest extends BrowserTestBase {
     // Visit the Field UI field add page.
     $this->drupalGet('entity_test_no_id/structure/entity_test/fields/add-field');
     // Ensure field isn't shown for empty IDs.
-    $this->assertNoOption('edit-new-storage-type', 'comment');
+    $this->assertSession()->optionNotExists('edit-new-storage-type', 'comment');
     // Ensure a core field type shown.
-    $this->assertOption('edit-new-storage-type', 'boolean');
+    $this->assertSession()->optionExists('edit-new-storage-type', 'boolean');
   }
 
 }

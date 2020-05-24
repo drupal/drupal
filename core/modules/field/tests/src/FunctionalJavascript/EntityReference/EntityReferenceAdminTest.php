@@ -83,8 +83,8 @@ class EntityReferenceAdminTest extends WebDriverTestBase {
     $this->drupalGet($bundle_path . '/fields/add-field');
 
     // Check if the commonly referenced entity types appear in the list.
-    $this->assertOption('edit-new-storage-type', 'field_ui:entity_reference:node');
-    $this->assertOption('edit-new-storage-type', 'field_ui:entity_reference:user');
+    $this->assertSession()->optionExists('edit-new-storage-type', 'field_ui:entity_reference:node');
+    $this->assertSession()->optionExists('edit-new-storage-type', 'field_ui:entity_reference:user');
 
     $page->findField('new_storage_type')->setValue('entity_reference');
     $assert_session->waitForField('label')->setValue('Test');

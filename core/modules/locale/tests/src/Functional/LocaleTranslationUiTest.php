@@ -84,7 +84,8 @@ class LocaleTranslationUiTest extends BrowserTestBase {
 
     // No t() here, it's surely not translated yet.
     $this->assertText($name, 'name found on edit screen.');
-    $this->assertNoOption('edit-langcode', 'en', 'No way to translate the string to English.');
+    // Verify that there is no way to translate the string to English.
+    $this->assertSession()->optionNotExists('edit-langcode', 'en');
     $this->drupalLogout();
     $this->drupalLogin($admin_user);
     $this->drupalPostForm('admin/config/regional/language/edit/en', ['locale_translate_english' => TRUE], t('Save language'));

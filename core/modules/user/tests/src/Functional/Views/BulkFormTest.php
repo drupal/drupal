@@ -123,12 +123,12 @@ class BulkFormTest extends UserTestBase {
     $this->drupalPostForm('admin/structure/views/nojs/handler/test_user_bulk_form/default/field/user_bulk_form', $edit, t('Apply'));
     $this->drupalPostForm(NULL, [], t('Save'));
     $this->drupalGet('test-user-bulk-form');
-    $this->assertNoOption('edit-action', $action_id);
+    $this->assertSession()->optionNotExists('edit-action', $action_id);
     $edit['options[include_exclude]'] = 'include';
     $this->drupalPostForm('admin/structure/views/nojs/handler/test_user_bulk_form/default/field/user_bulk_form', $edit, t('Apply'));
     $this->drupalPostForm(NULL, [], t('Save'));
     $this->drupalGet('test-user-bulk-form');
-    $this->assertOption('edit-action', $action_id);
+    $this->assertSession()->optionExists('edit-action', $action_id);
   }
 
   /**

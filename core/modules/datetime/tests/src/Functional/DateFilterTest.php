@@ -86,9 +86,9 @@ class DateFilterTest extends ViewTestBase {
 
     $this->drupalGet('test_exposed_filter_datetime');
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertOption('edit-field-date-value-op', '=');
-    $this->assertNoOption('edit-field-date-value-op', '>');
-    $this->assertNoOption('edit-field-date-value-op', '>=');
+    $this->assertSession()->optionExists('edit-field-date-value-op', '=');
+    $this->assertSession()->optionNotExists('edit-field-date-value-op', '>');
+    $this->assertSession()->optionNotExists('edit-field-date-value-op', '>=');
 
     // Because there are not operators that use the min and max fields, those
     // fields should not be in the exposed form.
@@ -104,11 +104,11 @@ class DateFilterTest extends ViewTestBase {
 
     $this->drupalGet('test_exposed_filter_datetime');
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertNoOption('edit-field-date-value-op', '<');
-    $this->assertNoOption('edit-field-date-value-op', '<=');
-    $this->assertNoOption('edit-field-date-value-op', '=');
-    $this->assertOption('edit-field-date-value-op', '>');
-    $this->assertOption('edit-field-date-value-op', '>=');
+    $this->assertSession()->optionNotExists('edit-field-date-value-op', '<');
+    $this->assertSession()->optionNotExists('edit-field-date-value-op', '<=');
+    $this->assertSession()->optionNotExists('edit-field-date-value-op', '=');
+    $this->assertSession()->optionExists('edit-field-date-value-op', '>');
+    $this->assertSession()->optionExists('edit-field-date-value-op', '>=');
 
     $this->assertFieldById('edit-field-date-value-value');
     $this->assertFieldById('edit-field-date-value-min');

@@ -130,8 +130,10 @@ class BlockContentCreationTest extends BlockContentTestBase {
     $this->drupalGet('admin/structure/block/manage/testblock');
 
     // Test the available view mode options.
-    $this->assertOption('edit-settings-view-mode', 'default', 'The default view mode is available.');
-    $this->assertOption('edit-settings-view-mode', 'test_view_mode', 'The test view mode is available.');
+    // Verify that the default view mode is available.
+    $this->assertSession()->optionExists('edit-settings-view-mode', 'default');
+    // Verify that the test view mode is available.
+    $this->assertSession()->optionExists('edit-settings-view-mode', 'test_view_mode');
 
     $view_mode['settings[view_mode]'] = 'test_view_mode';
     $this->drupalPostForm(NULL, $view_mode, t('Save block'));

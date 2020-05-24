@@ -752,8 +752,8 @@ class ManageFieldsFunctionalTest extends BrowserTestBase {
 
     // Check that the preconfigured field option exist alongside the regular
     // field type option.
-    $this->assertOption('edit-new-storage-type', 'field_ui:test_field_with_preconfigured_options:custom_options');
-    $this->assertOption('edit-new-storage-type', 'test_field_with_preconfigured_options');
+    $this->assertSession()->optionExists('edit-new-storage-type', 'field_ui:test_field_with_preconfigured_options:custom_options');
+    $this->assertSession()->optionExists('edit-new-storage-type', 'test_field_with_preconfigured_options');
 
     // Add a field with every possible preconfigured value.
     $this->fieldUIAddNewField(NULL, 'test_custom_options', 'Test label', 'field_ui:test_field_with_preconfigured_options:custom_options');
