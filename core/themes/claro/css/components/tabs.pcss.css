@@ -13,15 +13,13 @@
   --tabs--focus-height: 3px;
   --tabs--active-height: 3px;
   --tabs-link-height: 3rem; /* 48px */
+  --tabs-secondary-link-height: 2.5rem; /* 40px */
   --tabs-base-border: 1px solid var(--color-lightgray);
   --tabs-base-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   --tabs-trigger-border: 1px solid rgba(216, 217, 224, 0.8);
   --tabs--hover-bg-color: #e6ecf8;
 }
 
-.tabs-wrapper {
-  display: flex;
-}
 .tabs-wrapper > nav {
   width: 100%;
 }
@@ -175,6 +173,9 @@
 }
 
 @media screen and (min-width: 48em) {
+  .tabs-wrapper {
+    display: flex;
+  }
   .is-horizontal .tabs {
     flex-direction: row;
     width: auto;
@@ -185,16 +186,28 @@
 
   .is-horizontal .tabs--secondary {
     overflow: hidden;
-    margin-right: calc(calc(var(--tabs--focus-height) + 3px) * -1);
-    margin-bottom: var(--space-m);
-    margin-left: calc(calc(var(--tabs--focus-height) + 3px) * -1);
+    margin: calc(calc(var(--tabs--focus-height) + 3px) * -1) calc(calc(var(--tabs--focus-height) + 3px) * -1) 0;
     padding: calc(var(--tabs--focus-height) + 3px) calc(var(--tabs--focus-height) + 3px) 0;
     border-radius: 0;
   }
 
+  .is-horizontal .tabs--secondary .tabs__tab {
+    font-size: var(--font-size-s);
+  }
+
+  .is-horizontal .tabs--secondary .tabs__link {
+    min-height: var(--tabs-secondary-link-height);
+    padding-top: var(--space-xs);
+    padding-bottom: var(--space-xs);
+  }
+
+  .is-horizontal .tabs--secondary .tabs__link:focus {
+    min-height: var(--tabs-secondary-link-height);
+  }
+
   .is-horizontal .tabs--secondary::after {
     position: absolute;
-    bottom: var(--space-m);
+    bottom: 0;
     left: 0;
     display: block;
     width: 100%;
