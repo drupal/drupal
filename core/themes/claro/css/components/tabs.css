@@ -56,11 +56,7 @@
 :root {
   /**
   * Tabs.
-  */ /* 48px */
-}
-
-.tabs-wrapper {
-  display: flex;
+  */ /* 48px */ /* 40px */
 }
 
 .tabs-wrapper > nav {
@@ -253,6 +249,9 @@ rgba(216, 217, 224, 0.8);
 }
 
 @media screen and (min-width: 48em) {
+  .tabs-wrapper {
+    display: flex;
+  }
   .is-horizontal .tabs {
     flex-direction: row;
     width: auto;
@@ -263,16 +262,28 @@ rgba(216, 217, 224, 0.8);
 
   .is-horizontal .tabs--secondary {
     overflow: hidden;
-    margin-right: -6px;
-    margin-bottom: 1rem;
-    margin-left: -6px;
+    margin: -6px -6px 0;
     padding: 6px 6px 0;
     border-radius: 0;
   }
 
+  .is-horizontal .tabs--secondary .tabs__tab {
+    font-size: 0.889rem;
+  }
+
+  .is-horizontal .tabs--secondary .tabs__link {
+    min-height: 2.5rem;
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+  }
+
+  .is-horizontal .tabs--secondary .tabs__link:focus {
+    min-height: 2.5rem;
+  }
+
   .is-horizontal .tabs--secondary::after {
     position: absolute;
-    bottom: 1rem;
+    bottom: 0;
     left: 0;
     display: block;
     width: 100%;

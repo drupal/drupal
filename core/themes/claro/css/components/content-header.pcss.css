@@ -6,7 +6,7 @@
 
 .content-header {
   overflow: hidden;
-  margin-bottom: 2rem;
-  padding: 1.5rem 0 0;
+  margin-bottom: var(--space-s);
+  padding: var(--space-l) 0 0;
   background-color: var(--color-whitesmoke);
 }
