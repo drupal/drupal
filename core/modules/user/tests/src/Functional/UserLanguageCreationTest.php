@@ -83,8 +83,8 @@ class UserLanguageCreationTest extends BrowserTestBase {
     $this->assertEqual($user->getPreferredLangcode(), $langcode, 'New user has correct preferred language set.');
     $this->assertEqual($user->language()->getId(), $langcode, 'New user has correct profile language set.');
 
-    // Test if the admin can use the language selector and if the
-    // correct language is was saved.
+    // Test that the admin can use the language selector and if the correct
+    // language is saved.
     $user_edit = $langcode . '/user/' . $user->id() . '/edit';
 
     $this->drupalLogin($admin_user);
