@@ -77,7 +77,8 @@ web hosting service provider might take its scaffold files from:
 
 Each project allowed to scaffold by the top-level project will be used in turn,
 with projects declared later in the `allowed-packages` list taking precedence
-over the projects named before. The top-level composer.json itself is always
+over the projects named before. `drupal/core` is implicitly allowed and will be
+placed at the top of the list. The top-level composer.json itself is also
 implicitly allowed to scaffold files, and its scaffold files have highest
 priority.
 
@@ -230,7 +231,7 @@ The `allowed-packages` configuration setting contains an ordered list of package
 names that will be used during the scaffolding phase.
 ```
 "allowed-packages": [
-  "drupal/core",
+  "example/assets",
 ],
 ```
 ### file-mapping
