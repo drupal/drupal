@@ -69,7 +69,7 @@ abstract class MultilingualReviewPageTestBase extends MigrateUpgradeTestBase {
     $this->assertUpgradePaths($session, $available_paths, $missing_paths);
 
     // Check there are no errors when a module does not have any migrations and
-    // does not need any. Test with a module that is was in both Drupal 6 and
+    // does not need any. Test with a module that is in both Drupal 6 and
     // Drupal 7 core.
     $module = 'help';
     $query = $this->sourceDatabase->delete('system');
