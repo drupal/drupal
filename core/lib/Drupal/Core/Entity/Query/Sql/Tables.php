@@ -117,13 +117,14 @@ class Tables implements TablesInterface {
         $column = NULL;
       }
 
-      // If there is revision support, only the current revisions are being
-      // queried, and the field is revisionable then use the revision id.
-      // Otherwise, the entity id will do.
-      if (($revision_key = $entity_type->getKey('revision')) && $all_revisions && $field_storage && $field_storage->isRevisionable()) {
+      // If there is revision support, all the revisions are being queried, and
+      // the field is revisionable or the revision ID field itself, then use the
+      // revision ID. Otherwise, the entity ID will do.
+      $query_revisions = $all_revisions && $field_storage && ($field_storage->isRevisionable() || $field_storage->getName() === $entity_type->getKey('revision'));
+      if ($query_revisions) {
         // This contains the relevant SQL field to be used when joining entity
         // tables.
-        $entity_id_field = $revision_key;
+        $entity_id_field = $entity_type->getKey('revision');
         // This contains the relevant SQL field to be used when joining field
         // tables.
         $field_id_field = 'revision_id';
@@ -201,7 +202,7 @@ class Tables implements TablesInterface {
         // it gets added before the base table.
         $entity_tables = [];
         $revision_table = NULL;
-        if ($all_revisions && $field_storage && $field_storage->isRevisionable()) {
+        if ($query_revisions) {
           $data_table = $entity_type->getRevisionDataTable();
           $entity_base_table = $entity_type->getRevisionTable();
         }
