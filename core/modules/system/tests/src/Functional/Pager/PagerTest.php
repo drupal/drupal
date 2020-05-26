@@ -75,7 +75,7 @@ class PagerTest extends BrowserTestBase {
 
     // Verify the pager does not render on a list without pagination.
     $this->drupalGet('admin/config/media/image-styles');
-    $this->assertElementNotPresent('.pager');
+    $this->assertSession()->elementNotExists('css', '.pager');
   }
 
   /**
