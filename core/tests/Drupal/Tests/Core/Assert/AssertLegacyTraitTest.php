@@ -179,6 +179,30 @@ class AssertLegacyTraitTest extends UnitTestCase {
   }
 
   /**
+   * @covers ::assertElementPresent
+   * @expectedDeprecation AssertLegacyTrait::assertElementPresent() is deprecated in drupal:8.2.0 and is removed from drupal:10.0.0. Use $this->assertSession()->elementExists() instead. See https://www.drupal.org/node/3129738
+   */
+  public function testAssertElementPresent() {
+    $this->webAssert
+      ->elementExists('css', '.pager')
+      ->shouldBeCalled();
+
+    $this->assertElementPresent('.pager');
+  }
+
+  /**
+   * @covers ::assertElementNotPresent
+   * @expectedDeprecation AssertLegacyTrait::assertElementNotPresent() is deprecated in drupal:8.2.0 and is removed from drupal:10.0.0. Use $this->assertSession()->elementNotExists() instead. See https://www.drupal.org/node/3129738
+   */
+  public function testAssertElementNotPresent() {
+    $this->webAssert
+      ->elementNotExists('css', '.pager')
+      ->shouldBeCalled();
+
+    $this->assertElementNotPresent('.pager');
+  }
+
+  /**
    * Returns a mocked behat session object.
    *
    * @return \Behat\Mink\Session
