@@ -571,7 +571,7 @@ class PageCacheTest extends BrowserTestBase {
 
     $this->drupalGet('/system-test/custom-cache-control');
     $this->assertResponse(200);
-    $this->assertHeader('Cache-Control', 'bar, private');
+    $this->assertSession()->responseHeaderEquals('Cache-Control', 'bar, private');
   }
 
   /**
