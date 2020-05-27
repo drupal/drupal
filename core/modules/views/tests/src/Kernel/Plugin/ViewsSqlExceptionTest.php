@@ -47,7 +47,7 @@ class ViewsSqlExceptionTest extends ViewsKernelTestBase {
     ]);
 
     $this->expectException(DatabaseExceptionWrapper::class);
-    $this->expectExceptionMessageRegExp('/^Exception in Test filters\[test_filter\]:/');
+    $this->expectExceptionMessageMatches('/^Exception in Test filters\[test_filter\]:/');
 
     $this->executeView($view);
   }
