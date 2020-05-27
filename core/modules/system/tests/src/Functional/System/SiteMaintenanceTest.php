@@ -162,7 +162,7 @@ class SiteMaintenanceTest extends BrowserTestBase {
       $this->drupalGet('<front>', ['query' => ['_format' => $format]]);
       $this->assertResponse(503);
       $this->assertRaw('Drupal is currently under maintenance. We should be back shortly. Thank you for your patience.');
-      $this->assertHeader('Content-Type', 'text/plain; charset=UTF-8');
+      $this->assertSession()->responseHeaderEquals('Content-Type', 'text/plain; charset=UTF-8');
     }
   }
 
