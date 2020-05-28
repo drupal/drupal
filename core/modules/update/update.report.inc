@@ -18,7 +18,7 @@ use Drupal\Core\Url;
  *   - data: An array of data about each project's status.
  */
 function template_preprocess_update_report(&$variables) {
-  $data = $variables['data'];
+  $data = isset($variables['data']) && is_array($variables['data']) ? $variables['data'] : [];
 
   $last = \Drupal::state()->get('update.last_check') ?: 0;
 
