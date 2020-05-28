@@ -60,7 +60,7 @@ class UninstallTest extends BrowserTestBase {
     $node->save();
 
     $this->drupalGet('admin/modules/uninstall');
-    $this->assertTitle(t('Uninstall') . ' | Drupal');
+    $this->assertTitle('Uninstall | Drupal');
 
     foreach (\Drupal::service('extension.list.module')->getAllInstalledInfo() as $module => $info) {
       $field_name = "uninstall[$module]";
@@ -136,7 +136,7 @@ class UninstallTest extends BrowserTestBase {
     // Make sure confirmation page is accessible only during uninstall process.
     $this->drupalGet('admin/modules/uninstall/confirm');
     $this->assertUrl('admin/modules/uninstall');
-    $this->assertTitle(t('Uninstall') . ' | Drupal');
+    $this->assertTitle('Uninstall | Drupal');
 
     // Make sure the correct error is shown when no modules are selected.
     $edit = [];
