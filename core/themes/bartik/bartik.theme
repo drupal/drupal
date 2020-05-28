@@ -183,7 +183,7 @@ function bartik_preprocess_image_widget(&$variables) {
  * Implements template_preprocess_links().
  *
  * This makes it so array keys of #links items are added as a class. This
- * functionality was removed in Drupal 8.1, but still neccessary in some
+ * functionality was removed in Drupal 8.1, but still necessary in some
  * instances.
  *
  * @todo remove in https://drupal.org/node/3120962
