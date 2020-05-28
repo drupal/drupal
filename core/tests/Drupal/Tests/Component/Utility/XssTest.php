@@ -247,7 +247,7 @@ class XssTest extends TestCase {
       [
         '<blockquote><script>alert(0)</script></blockquote>',
         'script',
-        'HTML tag stripping evasion -- script in a blockqoute.',
+        'HTML tag stripping evasion -- script in a blockquote.',
         ['blockquote'],
       ],
       [
