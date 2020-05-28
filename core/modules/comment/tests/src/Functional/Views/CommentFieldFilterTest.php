@@ -48,7 +48,7 @@ class CommentFieldFilterTest extends CommentTestBase {
     $this->commentTitles = [
       'en' => 'Food in Paris',
       'es' => 'Comida en Paris',
-      'fr' => 'Nouriture en Paris',
+      'fr' => 'Nourriture en Paris',
     ];
 
     // Create a new comment. Using the one created earlier will not work,
