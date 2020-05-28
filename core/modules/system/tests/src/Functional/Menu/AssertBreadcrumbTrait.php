@@ -41,7 +41,7 @@ trait AssertBreadcrumbTrait {
 
     // Additionally assert page title, if given.
     if (isset($page_title)) {
-      $this->assertTitle(strtr('@title | Drupal', ['@title' => $page_title]));
+      $this->assertTitle("$page_title | Drupal");
     }
 
     // Additionally assert active trail in a menu tree output, if given.

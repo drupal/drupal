@@ -105,12 +105,12 @@ class UserPasswordResetTest extends BrowserTestBase {
     // Check the one-time login page.
     $this->assertText($this->account->getAccountName(), 'One-time login page contains the correct username.');
     $this->assertText(t('This login can be used only once.'), 'Found warning about one-time login.');
-    $this->assertTitle(t('Reset password | Drupal'), 'Page title is "Reset password".');
+    $this->assertTitle('Reset password | Drupal');
 
     // Check successful login.
     $this->drupalPostForm(NULL, NULL, t('Log in'));
     $this->assertLink(t('Log out'));
-    $this->assertTitle(t('@name | @site', ['@name' => $this->account->getAccountName(), '@site' => $this->config('system.site')->get('name')]), 'Logged in using password reset link.');
+    $this->assertTitle($this->account->getAccountName() . ' | Drupal');
 
     // Change the forgotten password.
     $password = user_password();
@@ -189,7 +189,7 @@ class UserPasswordResetTest extends BrowserTestBase {
     $reset_url = $this->getResetURL();
     $this->drupalGet($reset_url . '/login');
     $this->assertLink(t('Log out'));
-    $this->assertTitle(t('@name | @site', ['@name' => $this->account->getAccountName(), '@site' => $this->config('system.site')->get('name')]), 'Logged in using password reset link.');
+    $this->assertTitle($this->account->getAccountName() . ' | Drupal');
 
     // Ensure blocked and deleted accounts can't access the user.reset.login
     // route.
@@ -359,7 +359,7 @@ class UserPasswordResetTest extends BrowserTestBase {
     $reset_url = $this->getResetURL();
     $this->drupalGet($reset_url . '/login');
     $this->assertLink(t('Log out'));
-    $this->assertTitle(t('@name | @site', ['@name' => $this->account->getAccountName(), '@site' => $this->config('system.site')->get('name')]), 'Logged in using password reset link.');
+    $this->assertTitle($this->account->getAccountName() . ' | Drupal');
     $this->drupalLogout();
 
     // The next request should *not* trigger flood control, since a successful

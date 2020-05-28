@@ -41,7 +41,7 @@ class ConfigDraggableListBuilderTest extends BrowserTestBase {
     $this->drupalGet('admin/people/roles');
 
     // Test for the page title.
-    $this->assertSession()->titleEquals(t('Roles') . ' | Drupal');
+    $this->assertSession()->titleEquals('Roles | Drupal');
 
     // Count the number of rows in table.
     $rows = $this->xpath('//form[@class="user-admin-roles-form"]/table/tbody/tr');

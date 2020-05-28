@@ -120,16 +120,16 @@ class UserAccountLinksTest extends BrowserTestBase {
     $title_suffix = ' | Drupal';
 
     $this->drupalGet('user');
-    $this->assertTitle('Log in' . $title_suffix, "Page title of /user is 'Log in'");
+    $this->assertTitle('Log in' . $title_suffix);
 
     $this->drupalGet('user/login');
-    $this->assertTitle('Log in' . $title_suffix, "Page title of /user/login is 'Log in'");
+    $this->assertTitle('Log in' . $title_suffix);
 
     $this->drupalGet('user/register');
-    $this->assertTitle('Create new account' . $title_suffix, "Page title of /user/register is 'Create new account' for anonymous users.");
+    $this->assertTitle('Create new account' . $title_suffix);
 
     $this->drupalGet('user/password');
-    $this->assertTitle('Reset your password' . $title_suffix, "Page title of /user/register is 'Reset your password' for anonymous users.");
+    $this->assertTitle('Reset your password' . $title_suffix);
 
     // Check the page title for registered users is "My Account" in menus.
     $this->drupalLogin($this->drupalCreateUser());

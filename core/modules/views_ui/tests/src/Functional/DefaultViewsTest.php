@@ -93,7 +93,7 @@ class DefaultViewsTest extends UITestBase {
     $edit = [
       'id' => 'duplicate_of_glossary',
     ];
-    $this->assertTitle(t('Duplicate of @label | @site-name', ['@label' => 'Glossary', '@site-name' => $this->config('system.site')->get('name')]));
+    $this->assertTitle('Duplicate of Glossary | Drupal');
     $this->drupalPostForm(NULL, $edit, t('Duplicate'));
     $this->assertUrl('admin/structure/views/view/duplicate_of_glossary', [], 'The normal duplicating name schema is applied.');
 
