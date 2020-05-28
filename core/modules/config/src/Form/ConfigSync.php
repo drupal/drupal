@@ -406,7 +406,7 @@ class ConfigSync extends FormBase {
    * @see https://www.drupal.org/node/2897299
    */
   public static function processBatch(ConfigImporter $config_importer, $sync_step, &$context) {
-    @trigger_error('\Drupal\config\Form\ConfigSync::processBatch() deprecated in Drupal 8.6.0 and will be removed before 9.0.0. Use \Drupal\Core\Config\Importer\ConfigImporterBatch::process() instead. See https://www.drupal.org/node/2897299');
+    @trigger_error('\Drupal\config\Form\ConfigSync::processBatch() deprecated in drupal:8.6.0 and will be removed before drupal:9.0.0. Use \Drupal\Core\Config\Importer\ConfigImporterBatch::process() instead. See https://www.drupal.org/node/2897299', E_USER_DEPRECATED);
     ConfigImporterBatch::process($config_importer, $sync_step, $context);
   }
 
@@ -422,7 +422,7 @@ class ConfigSync extends FormBase {
    * @see https://www.drupal.org/node/2897299
    */
   public static function finishBatch($success, $results, $operations) {
-    @trigger_error('\Drupal\config\Form\ConfigSync::finishBatch() deprecated in Drupal 8.6.0 and will be removed before 9.0.0. Use \Drupal\Core\Config\Importer\ConfigImporterBatch::finish() instead. See https://www.drupal.org/node/2897299');
+    @trigger_error('\Drupal\config\Form\ConfigSync::finishBatch() deprecated in drupal:8.6.0 and will be removed before drupal:9.0.0. Use \Drupal\Core\Config\Importer\ConfigImporterBatch::finish() instead. See https://www.drupal.org/node/2897299', E_USER_DEPRECATED);
     ConfigImporterBatch::finish($success, $results, $operations);
   }
 
