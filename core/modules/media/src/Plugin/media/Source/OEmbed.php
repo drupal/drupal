@@ -301,7 +301,7 @@ class OEmbed extends MediaSourceBase implements OEmbedInterface {
     $domain = $this->configFactory->get('media.settings')->get('iframe_domain');
     if (!$this->iFrameUrlHelper->isSecure($domain)) {
       array_unshift($form, [
-        '#markup' => '<p>' . $this->t('It is potentially insecure to display oEmbed content in a frame that is served from the same domain as your main Drupal site, as this may allow execution of third-party code. <a href=":url" target="_blank">You can specify a different domain for serving oEmbed content here</a> (opens in a new window).', [
+        '#markup' => '<p>' . $this->t('It is potentially insecure to display oEmbed content in a frame that is served from the same domain as your main Drupal site, as this may allow execution of third-party code. <a href=":url">You can specify a different domain for serving oEmbed content in the Media settings</a>.', [
           ':url' => Url::fromRoute('media.settings')->setAbsolute()->toString(),
         ]) . '</p>',
       ]);

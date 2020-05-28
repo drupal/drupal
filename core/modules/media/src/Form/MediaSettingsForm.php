@@ -78,7 +78,7 @@ class MediaSettingsForm extends ConfigFormBase {
     $domain = $this->config('media.settings')->get('iframe_domain');
 
     if (!$this->iFrameUrlHelper->isSecure($domain)) {
-      $message = $this->t('It is potentially insecure to display oEmbed content in a frame that is served from the same domain as your main Drupal site, as this may allow execution of third-party code. <a href="https://oembed.com/#section3" target="_blank">Take a look here for more information</a>.');
+      $message = $this->t('It is potentially insecure to display oEmbed content in a frame that is served from the same domain as your main Drupal site, as this may allow execution of third-party code. Refer to <a href="https://oembed.com/#section3">oEmbed Security Considerations</a>.');
       $this->messenger()->addWarning($message);
     }
 
