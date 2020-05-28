@@ -68,7 +68,7 @@ class TaxonomyFieldFilterTest extends ViewTestBase {
     $this->termNames = [
       'en' => 'Food in Paris',
       'es' => 'Comida en Paris',
-      'fr' => 'Nouriture en Paris',
+      'fr' => 'Nourriture en Paris',
     ];
 
     // Create a vocabulary.
