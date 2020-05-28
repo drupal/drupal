@@ -117,7 +117,7 @@ class ContactPersonalTest extends BrowserTestBase {
     // Test allowed access to admin user's contact form.
     $this->drupalLogin($this->webUser);
     $this->drupalGet('user/' . $this->adminUser->id() . '/contact');
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
     // Check the page title is properly displayed.
     $this->assertRaw(t('Contact @username', ['@username' => $this->adminUser->getDisplayName()]));
 
@@ -125,25 +125,25 @@ class ContactPersonalTest extends BrowserTestBase {
     $this->drupalLogout();
     $this->drupalLogin($this->adminUser);
     $this->drupalGet('user/' . $this->adminUser->id() . '/contact');
-    $this->assertResponse(403);
+    $this->assertSession()->statusCodeEquals(403);
 
     // Test allowed access to user with contact form enabled.
     $this->drupalLogin($this->webUser);
     $this->drupalGet('user/' . $this->contactUser->id() . '/contact');
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
 
     // Test that there is no access to personal contact forms for users
     // without an email address configured.
     $original_email = $this->contactUser->getEmail();
     $this->contactUser->setEmail(FALSE)->save();
     $this->drupalGet('user/' . $this->contactUser->id() . '/contact');
-    $this->assertResponse(404);
+    $this->assertSession()->statusCodeEquals(404);
 
     // Test that the 'contact tab' does not appear on the user profiles
     // for users without an email address configured.
     $this->drupalGet('user/' . $this->contactUser->id());
     $contact_link = '/user/' . $this->contactUser->id() . '/contact';
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
     $this->assertNoLinkByHref($contact_link, 'The "contact" tab is hidden on profiles for users with no email address');
 
     // Restore original email address.
@@ -151,30 +151,30 @@ class ContactPersonalTest extends BrowserTestBase {
 
     // Test denied access to the user's own contact form.
     $this->drupalGet('user/' . $this->webUser->id() . '/contact');
-    $this->assertResponse(403);
+    $this->assertSession()->statusCodeEquals(403);
 
     // Test always denied access to the anonymous user contact form.
     $this->drupalGet('user/0/contact');
-    $this->assertResponse(403);
+    $this->assertSession()->statusCodeEquals(403);
 
     // Test that anonymous users can access the contact form.
     $this->drupalLogout();
     user_role_grant_permissions(RoleInterface::ANONYMOUS_ID, ['access user contact forms']);
     $this->drupalGet('user/' . $this->contactUser->id() . '/contact');
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
 
     // Test that anonymous users can access admin user's contact form.
     $this->drupalGet('user/' . $this->adminUser->id() . '/contact');
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
     $this->assertCacheContext('user');
 
     // Revoke the personal contact permission for the anonymous user.
     user_role_revoke_permissions(RoleInterface::ANONYMOUS_ID, ['access user contact forms']);
     $this->drupalGet('user/' . $this->contactUser->id() . '/contact');
-    $this->assertResponse(403);
+    $this->assertSession()->statusCodeEquals(403);
     $this->assertCacheContext('user');
     $this->drupalGet('user/' . $this->adminUser->id() . '/contact');
-    $this->assertResponse(403);
+    $this->assertSession()->statusCodeEquals(403);
 
     // Disable the personal contact form.
     $this->drupalLogin($this->adminUser);
@@ -190,12 +190,12 @@ class ContactPersonalTest extends BrowserTestBase {
     // Test denied access to a user with contact form disabled.
     $this->drupalLogin($this->webUser);
     $this->drupalGet('user/' . $this->contactUser->id() . '/contact');
-    $this->assertResponse(403);
+    $this->assertSession()->statusCodeEquals(403);
 
     // Test allowed access for admin user to a user with contact form disabled.
     $this->drupalLogin($this->adminUser);
     $this->drupalGet('user/' . $this->contactUser->id() . '/contact');
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
 
     // Re-create our contacted user as a blocked user.
     $this->contactUser = $this->drupalCreateUser();
@@ -204,12 +204,12 @@ class ContactPersonalTest extends BrowserTestBase {
 
     // Test that blocked users can still be contacted by admin.
     $this->drupalGet('user/' . $this->contactUser->id() . '/contact');
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
 
     // Test that blocked users cannot be contacted by non-admins.
     $this->drupalLogin($this->webUser);
     $this->drupalGet('user/' . $this->contactUser->id() . '/contact');
-    $this->assertResponse(403);
+    $this->assertSession()->statusCodeEquals(403);
 
     // Test enabling and disabling the contact page through the user profile
     // form.
@@ -227,7 +227,7 @@ class ContactPersonalTest extends BrowserTestBase {
     \Drupal::service('user.data')->set('contact', $this->contactUser->id(), 'enabled', 1);
 
     $this->drupalGet('user/' . $this->contactUser->id() . '/contact');
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
   }
 
   /**
@@ -301,7 +301,7 @@ class ContactPersonalTest extends BrowserTestBase {
     $this->drupalLogout();
 
     $this->drupalGet('user/' . $user->id() . '/contact');
-    $this->assertResponse($response);
+    $this->assertSession()->statusCodeEquals($response);
   }
 
   /**

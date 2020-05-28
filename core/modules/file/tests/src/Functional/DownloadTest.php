@@ -77,7 +77,7 @@ class DownloadTest extends FileManagedTestBase {
     $this->drupalGet($url);
     $this->assertEqual($this->drupalGetHeader('x-foo'), 'Bar', 'Found header set by file_test module on private download.');
     $this->assertNull($this->drupalGetHeader('x-drupal-cache'), 'Page cache is disabled on private file download.');
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
     // Ensure hook_file_download is fired correctly.
     $this->assertEquals($file->getFileUri(), \Drupal::state()->get('file_test.results')['download'][0][0]);
 
@@ -174,7 +174,7 @@ class DownloadTest extends FileManagedTestBase {
     }
 
     $this->drupalGet($url);
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
     $this->assertRaw(file_get_contents($file->getFileUri()));
 
     $file->delete();

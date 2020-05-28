@@ -33,7 +33,7 @@ class NodeCommentsTest extends CommentTestBase {
    */
   public function testNewComments() {
     $this->drupalGet('test-new-comments');
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
     $new_comments = $this->cssSelect(".views-field-new-comments a:contains('1')");
     $this->assertCount(1, $new_comments, 'Found the number of new comments for a certain node.');
   }

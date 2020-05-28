@@ -176,7 +176,7 @@ class FilterTest extends ViewTestBase {
   public function testLimitExposedOperators() {
 
     $this->drupalGet('test_filter_in_operator_ui');
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
     $this->assertOption('edit-nid-op', '<');
     $this->assertOption('edit-nid-op', '<=');
     $this->assertOption('edit-nid-op', '=');
@@ -196,7 +196,7 @@ class FilterTest extends ViewTestBase {
     $this->drupalPostForm('admin/structure/views/view/test_filter_in_operator_ui/edit/default', [], t('Save'));
 
     $this->drupalGet('test_filter_in_operator_ui');
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
     $this->assertNoOption('edit-nid-op', '<');
     $this->assertNoOption('edit-nid-op', '<=');
     $this->assertNoOption('edit-nid-op', '=');

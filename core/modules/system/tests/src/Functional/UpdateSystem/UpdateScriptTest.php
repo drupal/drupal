@@ -82,7 +82,7 @@ class UpdateScriptTest extends BrowserTestBase {
     $regular_user = $this->drupalCreateUser();
     $this->drupalLogin($regular_user);
     $this->drupalGet($this->updateUrl, ['external' => TRUE]);
-    $this->assertResponse(403);
+    $this->assertSession()->statusCodeEquals(403);
 
     // Check that a link to the update page is not accessible to regular users.
     $this->drupalGet('/update-script-test/database-updates-menu-item');
@@ -91,7 +91,7 @@ class UpdateScriptTest extends BrowserTestBase {
     // Try accessing update.php as an anonymous user.
     $this->drupalLogout();
     $this->drupalGet($this->updateUrl, ['external' => TRUE]);
-    $this->assertResponse(403);
+    $this->assertSession()->statusCodeEquals(403);
 
     // Check that a link to the update page is not accessible to anonymous
     // users.
@@ -101,7 +101,7 @@ class UpdateScriptTest extends BrowserTestBase {
     // Access the update page with the proper permission.
     $this->drupalLogin($this->updateUser);
     $this->drupalGet($this->updateUrl, ['external' => TRUE]);
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
 
     // Check that a link to the update page is accessible to users with proper
     // permissions.
@@ -111,7 +111,7 @@ class UpdateScriptTest extends BrowserTestBase {
     // Access the update page as user 1.
     $this->drupalLogin($this->rootUser);
     $this->drupalGet($this->updateUrl, ['external' => TRUE]);
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
 
     // Check that a link to the update page is accessible to user 1.
     $this->drupalGet('/update-script-test/database-updates-menu-item');
@@ -522,7 +522,7 @@ class UpdateScriptTest extends BrowserTestBase {
     $this->assertNoLink('Administration pages');
     $this->assertEmpty($this->xpath('//main//a[contains(@href, :href)]', [':href' => 'update.php']));
     $this->clickLink('Front page');
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
 
     // Click through update.php with 'access administration pages' permission.
     $admin_user = $this->drupalCreateUser(['administer software updates', 'access administration pages']);
@@ -534,7 +534,7 @@ class UpdateScriptTest extends BrowserTestBase {
     $this->assertLink('Administration pages');
     $this->assertEmpty($this->xpath('//main//a[contains(@href, :href)]', [':href' => 'update.php']));
     $this->clickLink('Administration pages');
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
   }
 
   /**
@@ -570,7 +570,7 @@ class UpdateScriptTest extends BrowserTestBase {
     $this->assertLink('Administration pages');
     $this->assertEmpty($this->xpath('//main//a[contains(@href, :href)]', [':href' => 'update.php']));
     $this->clickLink('Administration pages');
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
   }
 
   /**
@@ -622,7 +622,7 @@ class UpdateScriptTest extends BrowserTestBase {
 
     // Visit status report page and ensure, that link to update.php has no path prefix set.
     $this->drupalGet('en/admin/reports/status', ['external' => TRUE]);
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
     $this->assertLinkByHref('/update.php');
     $this->assertNoLinkByHref('en/update.php');
 
@@ -638,7 +638,7 @@ class UpdateScriptTest extends BrowserTestBase {
     $this->assertLink('Administration pages');
     $this->assertEmpty($this->xpath('//main//a[contains(@href, :href)]', [':href' => 'update.php']));
     $this->clickLink('Administration pages');
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
   }
 
   /**
@@ -652,9 +652,9 @@ class UpdateScriptTest extends BrowserTestBase {
     ]);
     $this->drupalLogin($admin_user);
     $this->drupalGet($this->updateUrl, ['external' => TRUE]);
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
     $this->clickLink('maintenance mode');
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
     $this->assertEquals('Maintenance mode', $this->cssSelect('main h1')[0]->getText());
   }
 
@@ -700,7 +700,7 @@ class UpdateScriptTest extends BrowserTestBase {
 
     // Verify the front page can be visited following the upgrade.
     $this->clickLink('Front page');
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
   }
 
   /**

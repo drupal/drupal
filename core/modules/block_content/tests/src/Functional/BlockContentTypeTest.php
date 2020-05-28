@@ -60,7 +60,7 @@ class BlockContentTypeTest extends BlockContentTestBase {
 
     // Test the page with no block-types.
     $this->drupalGet('block/add');
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
     $this->assertText('You have not created any block types yet');
     $this->clickLink('block type creation page');
 
@@ -93,7 +93,7 @@ class BlockContentTypeTest extends BlockContentTestBase {
     $this->assertInstanceOf(BlockContentType::class, $block_type);
 
     $this->drupalGet('block/add/' . $block_type->id());
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
   }
 
   /**

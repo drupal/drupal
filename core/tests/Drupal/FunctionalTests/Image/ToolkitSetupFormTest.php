@@ -73,7 +73,7 @@ class ToolkitSetupFormTest extends BrowserTestBase {
     // Test access without the permission 'administer site configuration'.
     $this->drupalLogin($this->drupalCreateUser(['access administration pages']));
     $this->drupalGet('admin/config/media/image-toolkit');
-    $this->assertResponse(403);
+    $this->assertSession()->statusCodeEquals(403);
   }
 
 }

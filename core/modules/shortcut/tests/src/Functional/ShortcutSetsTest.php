@@ -111,7 +111,7 @@ class ShortcutSetsTest extends ShortcutTestBase {
     // Attempt to switch the default shortcut set to the newly created shortcut
     // set.
     $this->drupalPostForm('user/' . $this->adminUser->id() . '/shortcuts', ['set' => $new_set->id()], t('Change set'));
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
     $current_set = shortcut_current_displayed_set($this->adminUser);
     $this->assertTrue($new_set->id() == $current_set->id(), 'Successfully switched own shortcut set.');
   }
@@ -198,7 +198,7 @@ class ShortcutSetsTest extends ShortcutTestBase {
    */
   public function testShortcutSetDeleteDefault() {
     $this->drupalGet('admin/config/user-interface/shortcut/manage/default/delete');
-    $this->assertResponse(403);
+    $this->assertSession()->statusCodeEquals(403);
   }
 
   /**

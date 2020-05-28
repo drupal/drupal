@@ -110,7 +110,7 @@ class GlossaryTest extends ViewTestBase {
 
     // Check the actual page response.
     $this->drupalGet($url);
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
     foreach ($nodes_per_char as $char => $count) {
       $href = Url::fromRoute('view.glossary.page_1', ['arg_0' => $char])->toString();
       $label = mb_strtoupper($char);

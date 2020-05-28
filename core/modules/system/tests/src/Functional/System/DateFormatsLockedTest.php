@@ -33,15 +33,15 @@ class DateFormatsLockedTest extends BrowserTestBase {
 
     // Locked date formats are not editable.
     $this->drupalGet('admin/config/regional/date-time/formats/manage/short');
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
     $this->drupalGet('admin/config/regional/date-time/formats/manage/html_date');
-    $this->assertResponse(403);
+    $this->assertSession()->statusCodeEquals(403);
 
     // Locked date formats are not deletable.
     $this->drupalGet('admin/config/regional/date-time/formats/manage/short/delete');
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
     $this->drupalGet('admin/config/regional/date-time/formats/manage/html_date/delete');
-    $this->assertResponse(403);
+    $this->assertSession()->statusCodeEquals(403);
   }
 
 }

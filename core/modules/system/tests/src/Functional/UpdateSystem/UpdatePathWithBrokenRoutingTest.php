@@ -36,7 +36,7 @@ class UpdatePathWithBrokenRoutingTest extends BrowserTestBase {
     \Drupal::state()->set('update_script_test_broken_inbound', TRUE);
     $this->resetAll();
     $this->drupalGet('<front>');
-    $this->assertResponse(500);
+    $this->assertSession()->statusCodeEquals(500);
 
     $this->runUpdates(Url::fromRoute('system.db_update', [], ['path_processing' => FALSE]));
 
@@ -44,7 +44,7 @@ class UpdatePathWithBrokenRoutingTest extends BrowserTestBase {
     // the front page again.
     \Drupal::state()->set('update_script_test_broken_inbound', FALSE);
     $this->drupalGet('<front>');
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
   }
 
 }

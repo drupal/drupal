@@ -158,7 +158,7 @@ class TaggedWithTest extends WizardTestBase {
     // Visit the page and check that the nodes we expect are present and the
     // ones we don't expect are absent.
     $this->drupalGet($view1['page[path]']);
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
     $this->assertText($node_tag1_title);
     $this->assertText($node_tag1_tag2_title);
     $this->assertNoText($node_no_tags_title);
@@ -168,7 +168,7 @@ class TaggedWithTest extends WizardTestBase {
     $view2 = [];
     $view2['show[type]'] = $this->nodeTypeWithTags->id();
     $this->drupalPostForm('admin/structure/views/add', $view2, t('Update "of type" choice'));
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
     $view2['label'] = $this->randomMachineName(16);
     $view2['id'] = strtolower($this->randomMachineName(16));
     $view2['description'] = $this->randomMachineName(16);
@@ -177,7 +177,7 @@ class TaggedWithTest extends WizardTestBase {
     $view2['page[title]'] = $this->randomMachineName(16);
     $view2['page[path]'] = $this->randomMachineName(16);
     $this->drupalPostForm(NULL, $view2, t('Save and edit'));
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
     $this->drupalGet($view2['page[path]']);
     $this->assertNoText($node_tag1_title);
     $this->assertText($node_tag1_tag2_title);

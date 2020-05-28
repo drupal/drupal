@@ -72,7 +72,7 @@ class ExcludedFieldTokenTest extends ViewTestBase {
    */
   public function testExcludedTitleTokenDisplay() {
     $actual_json = $this->drupalGet($this->view->getPath(), ['query' => ['_format' => 'json']]);
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
 
     $expected = [
       ['nothing' => 'Article test 10'],

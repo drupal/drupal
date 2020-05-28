@@ -36,7 +36,7 @@ class NodeActionsConfigurationTest extends BrowserTestBase {
     $edit = [];
     $edit['action'] = 'node_assign_owner_action';
     $this->drupalPostForm('admin/config/system/actions', $edit, t('Create'));
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
 
     // Make a POST request to the individual action configuration page.
     $edit = [];
@@ -45,7 +45,7 @@ class NodeActionsConfigurationTest extends BrowserTestBase {
     $edit['id'] = strtolower($action_label);
     $edit['owner_uid'] = $user->id();
     $this->drupalPostForm('admin/config/system/actions/add/node_assign_owner_action', $edit, t('Save'));
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
 
     $action_id = $edit['id'];
 
@@ -60,7 +60,7 @@ class NodeActionsConfigurationTest extends BrowserTestBase {
     $edit['label'] = $new_action_label;
     $edit['owner_uid'] = $user->id();
     $this->drupalPostForm(NULL, $edit, t('Save'));
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
 
     // Make sure that the action updated properly.
     $this->assertText(t('The action has been successfully saved.'), 'The node_assign_owner_action action has been successfully updated.');
@@ -70,15 +70,15 @@ class NodeActionsConfigurationTest extends BrowserTestBase {
     // Make sure that deletions work properly.
     $this->drupalGet('admin/config/system/actions');
     $this->clickLink(t('Delete'));
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
     $edit = [];
     $this->drupalPostForm(NULL, $edit, t('Delete'));
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
 
     // Make sure that the action was actually deleted.
     $this->assertRaw(t('The action %action has been deleted.', ['%action' => $new_action_label]), 'The delete confirmation message appears after deleting the node_assign_owner_action action.');
     $this->drupalGet('admin/config/system/actions');
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
     $this->assertNoText($new_action_label, 'The label for the node_assign_owner_action action does not appear on the actions administration page after deleting.');
 
     $action = Action::load($action_id);

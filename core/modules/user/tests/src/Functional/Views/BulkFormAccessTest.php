@@ -49,7 +49,7 @@ class BulkFormAccessTest extends UserTestBase {
     // Ensure that the account "no_edit" can not be edited.
     $this->drupalGet('user/' . $no_edit_user->id() . '/edit');
     $this->assertFalse($no_edit_user->access('update', $admin_user));
-    $this->assertResponse(403);
+    $this->assertSession()->statusCodeEquals(403);
 
     // Test blocking the account "no_edit".
     $edit = [
@@ -57,7 +57,7 @@ class BulkFormAccessTest extends UserTestBase {
       'action' => 'user_block_user_action',
     ];
     $this->drupalPostForm('test-user-bulk-form', $edit, t('Apply to selected items'));
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
 
     $this->assertRaw(new FormattableMarkup('No access to execute %action on the @entity_type_label %entity_label.', [
       '%action' => 'Block the selected user(s)',
@@ -109,10 +109,10 @@ class BulkFormAccessTest extends UserTestBase {
 
     // Ensure that the account "no_delete" can not be deleted.
     $this->drupalGet('user/' . $account->id() . '/cancel');
-    $this->assertResponse(403);
+    $this->assertSession()->statusCodeEquals(403);
     // Ensure that the account "may_delete" *can* be deleted.
     $this->drupalGet('user/' . $account2->id() . '/cancel');
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
 
     // Test deleting the accounts "no_delete" and "may_delete".
     $edit = [

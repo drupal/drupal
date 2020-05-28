@@ -72,7 +72,7 @@ class DistributionProfileTest extends InstallerTestBase {
    */
   public function testInstalled() {
     $this->assertUrl('myrootuser');
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
     // Confirm that we are logged-in after installation.
     $this->assertText($this->rootUser->getAccountName());
 

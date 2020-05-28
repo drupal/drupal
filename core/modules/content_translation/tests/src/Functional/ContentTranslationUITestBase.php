@@ -83,7 +83,7 @@ abstract class ContentTranslationUITestBase extends ContentTranslationTestBase {
     $entity = $storage->load($this->entityId);
     $this->assertNotEmpty($entity, 'Entity found in the database.');
     $this->drupalGet($entity->toUrl());
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
 
     // Ensure that the content language cache context is not yet added to the
     // page.
@@ -377,7 +377,7 @@ abstract class ContentTranslationUITestBase extends ContentTranslationTestBase {
     // Check that the translator cannot delete the original translation.
     $args = [$this->entityTypeId => $entity->id(), 'language' => 'en'];
     $this->drupalGet(Url::fromRoute("entity.$this->entityTypeId.content_translation_delete", $args));
-    $this->assertResponse(403);
+    $this->assertSession()->statusCodeEquals(403);
   }
 
   /**

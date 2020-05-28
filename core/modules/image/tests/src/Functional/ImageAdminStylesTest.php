@@ -251,7 +251,7 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
     // Delete the 'image_crop' effect from the style.
     $this->drupalPostForm($style_path . '/effects/' . $uuids['image_crop'] . '/delete', [], t('Delete'));
     // Confirm that the form submission was successful.
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
     $image_crop_effect = $style->getEffect($uuids['image_crop']);
     $this->assertRaw(t('The image effect %name has been deleted.', ['%name' => $image_crop_effect->label()]));
     // Confirm that there is no longer a link to the effect.
@@ -418,7 +418,7 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
     // Try to edit a nonexistent effect.
     $uuid = $this->container->get('uuid');
     $this->drupalGet('admin/config/media/image-styles/manage/' . $style_name . '/effects/' . $uuid->generate());
-    $this->assertResponse(404);
+    $this->assertSession()->statusCodeEquals(404);
   }
 
   /**

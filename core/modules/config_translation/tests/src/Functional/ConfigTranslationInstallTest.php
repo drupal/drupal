@@ -68,7 +68,7 @@ ENDPO;
     $this->drupalPostForm('admin/modules', $edit, t('Install'));
 
     $this->drupalGet('/admin/structure/types/manage/article/fields');
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
   }
 
 }

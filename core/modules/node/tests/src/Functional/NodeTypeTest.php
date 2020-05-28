@@ -64,7 +64,7 @@ class NodeTypeTest extends NodeTestBase {
     $this->drupalLogin($web_user);
 
     $this->drupalGet('node/add/' . $type->id());
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
 
     // Create a content type via the user interface.
     $web_user = $this->drupalCreateUser(['bypass node access', 'administer content types']);
@@ -204,14 +204,14 @@ class NodeTypeTest extends NodeTestBase {
     $this->drupalGet('admin/structure/types/manage/default');
     $this->assertNoLink(t('Delete'));
     $this->drupalGet('admin/structure/types/manage/default/delete');
-    $this->assertResponse(403);
+    $this->assertSession()->statusCodeEquals(403);
     $this->container->get('module_installer')->uninstall(['node_test_config']);
     $this->container = \Drupal::getContainer();
     unset($locked['default']);
     \Drupal::state()->set('node.type.locked', $locked);
     $this->drupalGet('admin/structure/types/manage/default');
     $this->clickLink(t('Delete'));
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
     $this->drupalPostForm(NULL, [], t('Delete'));
     $this->assertFalse((bool) NodeType::load('default'), 'Node type with machine default deleted.');
   }

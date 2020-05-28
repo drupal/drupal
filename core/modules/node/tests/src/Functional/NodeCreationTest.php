@@ -44,7 +44,7 @@ class NodeCreationTest extends NodeTestBase {
     // Test /node/add page with only one content type.
     $node_type_storage->load('article')->delete();
     $this->drupalGet('node/add');
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
     $this->assertUrl('node/add/page');
     // Create a node.
     $edit = [];
@@ -249,7 +249,7 @@ class NodeCreationTest extends NodeTestBase {
    */
   public function testNodeAddWithoutContentTypes() {
     $this->drupalGet('node/add');
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
     $this->assertNoLinkByHref('/admin/structure/types/add');
 
     // Test /node/add page without content types.
@@ -258,7 +258,7 @@ class NodeCreationTest extends NodeTestBase {
     }
 
     $this->drupalGet('node/add');
-    $this->assertResponse(403);
+    $this->assertSession()->statusCodeEquals(403);
 
     $admin_content_types = $this->drupalCreateUser(['administer content types']);
     $this->drupalLogin($admin_content_types);

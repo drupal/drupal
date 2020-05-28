@@ -112,9 +112,9 @@ class ImageStyleFlushTest extends ImageFieldTestBase {
       $uuids[$effect->getPluginId()] = $uuid;
     }
     $this->drupalPostForm($style_path . '/effects/' . $uuids['image_scale'] . '/delete', [], t('Delete'));
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
     $this->drupalPostForm($style_path, [], t('Save'));
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
 
     // Post flush, expected 1 image in the 'public' wrapper (sample.png).
     $this->assertEqual($this->getImageCount($style, 'public'), 1, new FormattableMarkup('Image style %style flushed correctly for %wrapper wrapper.', ['%style' => $style->label(), '%wrapper' => 'public']));

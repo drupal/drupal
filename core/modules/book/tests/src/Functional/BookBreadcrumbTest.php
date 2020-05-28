@@ -203,7 +203,7 @@ class BookBreadcrumbTest extends BrowserTestBase {
     $this->assertCount(4, $got_breadcrumb);
     $this->assertEqual($nodes[2]->getTitle(), end($got_breadcrumb));
     $this->drupalGet($nodes[3]->toUrl());
-    $this->assertResponse(403);
+    $this->assertSession()->statusCodeEquals(403);
   }
 
 }

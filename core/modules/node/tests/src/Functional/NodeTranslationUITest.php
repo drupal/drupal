@@ -261,7 +261,7 @@ class NodeTranslationUITest extends ContentTranslationUITestBase {
     $this->assertNoRaw('core/themes/seven/css/base/elements.css', 'Translation uses frontend theme if edit is frontend.');
 
     // Assert presence of translation page itself (vs. DisabledBundle below).
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
   }
 
   /**
@@ -284,7 +284,7 @@ class NodeTranslationUITest extends ContentTranslationUITestBase {
 
     // Ensure the translation tab is not accessible.
     $this->drupalGet('node/' . $node->id() . '/translations');
-    $this->assertResponse(403);
+    $this->assertSession()->statusCodeEquals(403);
   }
 
   /**
@@ -500,7 +500,7 @@ class NodeTranslationUITest extends ContentTranslationUITestBase {
     // Should be different from regular node URL.
     $this->assertNotIdentical($original_revision_url, $original_revision->toUrl()->toString());
     $this->drupalGet($original_revision_url);
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
 
     // Contents should be in English, of correct revision.
     $this->assertText('First rev en title');
@@ -513,7 +513,7 @@ class NodeTranslationUITest extends ContentTranslationUITestBase {
     $this->assertNotIdentical($url_fr, $original_revision->toUrl()->toString());
     $this->assertNotIdentical($url_fr, $original_revision_url);
     $this->drupalGet($url_fr);
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
 
     // Contents should be in French, of correct revision.
     $this->assertText('First rev fr title');

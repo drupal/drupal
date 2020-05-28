@@ -22,7 +22,7 @@ class FeedAdminDisplayTest extends AggregatorTestBase {
     $scheduled_feed = $this->createFeed(NULL, ['refresh' => '900']);
 
     $this->drupalGet('admin/config/services/aggregator');
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
 
     // The scheduled feed shows that it has not been updated yet and is
     // scheduled.

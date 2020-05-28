@@ -47,7 +47,7 @@ class UrlAlterFunctionalTest extends BrowserTestBase {
 
     // Test a single altered path.
     $this->drupalGet("user/$name");
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
     $this->assertUrlOutboundAlter("/user/$uid", "/user/$name");
 
     // Test that a path always uses its alias.
@@ -61,7 +61,7 @@ class UrlAlterFunctionalTest extends BrowserTestBase {
     $this->drupalPostForm('admin/config/search/path/add', $edit, t('Save'));
     $this->assertText(t('The alias has been saved.'));
     $this->drupalGet('alias/test2');
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
     $this->assertUrlOutboundAlter("/user/$uid/edit", '/alias/test2');
 
     // Test a non-existent user is not altered.

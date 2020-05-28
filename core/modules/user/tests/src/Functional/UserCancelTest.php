@@ -61,7 +61,7 @@ class UserCancelTest extends BrowserTestBase {
     // Attempt bogus account cancellation request confirmation.
     $timestamp = $account->getLastLoginTime();
     $this->drupalGet("user/" . $account->id() . "/cancel/confirm/$timestamp/" . user_pass_rehash($account, $timestamp));
-    $this->assertResponse(403);
+    $this->assertSession()->statusCodeEquals(403);
     $user_storage->resetCache([$account->id()]);
     $account = $user_storage->load($account->id());
     $this->assertTrue($account->isActive(), 'User account was not canceled.');

@@ -32,7 +32,7 @@ class BlockContentPageViewTest extends BlockContentTestBase {
     $this->drupalGet('block-content/' . $block->id());
 
     // Ensure user was able to view the block.
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
     $this->drupalGet('<front>');
     $this->assertRaw(t('This block is broken or missing. You may be missing content or you might need to enable the original module.'));
   }

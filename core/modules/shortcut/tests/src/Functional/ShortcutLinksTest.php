@@ -80,7 +80,7 @@ class ShortcutLinksTest extends ShortcutTestBase {
         'link[0][uri]' => $test_path,
       ];
       $this->drupalPostForm('admin/config/user-interface/shortcut/manage/' . $set->id() . '/add-link', $form_data, t('Save'));
-      $this->assertResponse(200);
+      $this->assertSession()->statusCodeEquals(200);
       $this->assertText(t('Added a shortcut for @title.', ['@title' => $title]));
       $saved_set = ShortcutSet::load($set->id());
       $paths = $this->getShortcutInformation($saved_set, 'link');
@@ -113,7 +113,7 @@ class ShortcutLinksTest extends ShortcutTestBase {
       'link[0][uri]' => '/admin',
     ];
     $this->drupalPostForm('admin/config/user-interface/shortcut/manage/' . $set->id() . '/add-link', $form_data, t('Save'));
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
     $this->assertRaw(t("The path '@link_path' is inaccessible.", ['@link_path' => '/admin']));
 
     $form_data = [
@@ -136,7 +136,7 @@ class ShortcutLinksTest extends ShortcutTestBase {
       'link[0][uri]' => '/admin',
     ];
     $this->drupalPostForm('admin/config/user-interface/shortcut/manage/' . $edit['id'] . '/add-link', $form_data, t('Save'));
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
   }
 
   /**
@@ -269,14 +269,14 @@ class ShortcutLinksTest extends ShortcutTestBase {
   public function testShortcutLinkChangeRoute() {
     $this->drupalLogin($this->rootUser);
     $this->drupalGet('admin/content');
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
     // Disable the view.
     View::load('content')->disable()->save();
     /** @var \Drupal\Core\Routing\RouteBuilderInterface $router_builder */
     $router_builder = \Drupal::service('router.builder');
     $router_builder->rebuildIfNeeded();
     $this->drupalGet('admin/content');
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
   }
 
   /**
@@ -407,11 +407,11 @@ class ShortcutLinksTest extends ShortcutTestBase {
     // Verify that set administration pages are inaccessible without the
     // 'access shortcuts' permission.
     $this->drupalGet('admin/config/user-interface/shortcut/manage/default/customize');
-    $this->assertResponse(403);
+    $this->assertSession()->statusCodeEquals(403);
     $this->drupalGet('admin/config/user-interface/shortcut/manage/default');
-    $this->assertResponse(403);
+    $this->assertSession()->statusCodeEquals(403);
     $this->drupalGet('user/' . $noaccess_user->id() . '/shortcuts');
-    $this->assertResponse(403);
+    $this->assertSession()->statusCodeEquals(403);
   }
 
   /**

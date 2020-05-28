@@ -666,7 +666,7 @@ class FormTest extends FieldTestBase {
     $entity->save();
 
     $this->drupalGet('entity_test_base_field_display/manage/' . $entity->id());
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
     $this->assertText('A field with multiple values');
     // Test if labels were XSS filtered.
     $this->assertEscaped("<script>alert('a configurable field');</script>");

@@ -55,14 +55,14 @@ class ThemeTest extends BrowserTestBase {
   public function testThemeSettings() {
     // Ensure a disabled theme settings form URL returns 404.
     $this->drupalGet('admin/appearance/settings/bartik');
-    $this->assertResponse(404);
+    $this->assertSession()->statusCodeEquals(404);
     // Ensure a non existent theme settings form URL returns 404.
     $this->drupalGet('admin/appearance/settings/' . $this->randomMachineName());
-    $this->assertResponse(404);
+    $this->assertSession()->statusCodeEquals(404);
     // Ensure a hidden theme settings form URL returns 404.
     $this->assertTrue(\Drupal::service('theme_installer')->install(['stable']));
     $this->drupalGet('admin/appearance/settings/stable');
-    $this->assertResponse(404);
+    $this->assertSession()->statusCodeEquals(404);
 
     // Specify a filesystem path to be used for the logo.
     $file = current($this->drupalGetTestFiles('image'));
@@ -213,7 +213,7 @@ class ThemeTest extends BrowserTestBase {
     $this->drupalGet('admin/appearance/settings');
     $this->assertLink($theme_handler->getName('stable'));
     $this->drupalGet('admin/appearance/settings/stable');
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
 
     // Ensure default logo and favicons are not triggering custom path
     // validation errors if their custom paths are set on the form.
@@ -311,7 +311,7 @@ class ThemeTest extends BrowserTestBase {
     $normal_user = $this->drupalCreateUser(['view the administration theme']);
     $this->drupalLogin($normal_user);
     $this->drupalGet('admin/config');
-    $this->assertResponse(403);
+    $this->assertSession()->statusCodeEquals(403);
     $this->assertRaw('core/themes/seven', 'Administration theme used on an administration page.');
     $this->drupalLogin($this->adminUser);
 

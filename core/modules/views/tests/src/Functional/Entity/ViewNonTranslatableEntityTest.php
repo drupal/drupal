@@ -43,7 +43,7 @@ class ViewNonTranslatableEntityTest extends BrowserTestBase {
 
     // Visit the view page and assert it is displayed properly.
     $this->drupalGet('no-entity-translation-view');
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
     $this->assertText('No Entity Translation View');
     $this->assertText($no_language_entity->uuid());
   }

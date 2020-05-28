@@ -88,17 +88,17 @@ class SessionHttpsTest extends BrowserTestBase {
     // Verify that user is logged in on secure URL.
     $this->drupalGet($this->httpsUrl('admin/config'));
     $this->assertText(t('Configuration'));
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
 
     // Verify that user is not logged in on non-secure URL.
     $this->drupalGet($this->httpUrl('admin/config'));
     $this->assertNoText(t('Configuration'));
-    $this->assertResponse(403);
+    $this->assertSession()->statusCodeEquals(403);
 
     // Verify that empty SID cannot be used on the non-secure site.
     $browser_kit_cookie_jar->set(Cookie::fromString($this->insecureSessionName . '=', $this->baseUrl));
     $this->drupalGet($this->httpUrl('admin/config'));
-    $this->assertResponse(403);
+    $this->assertSession()->statusCodeEquals(403);
 
     // Remove the secure session name from the cookie jar before logging in via
     // HTTP on HTTPS environments.
@@ -108,13 +108,13 @@ class SessionHttpsTest extends BrowserTestBase {
     // which creates a mock HTTP request on HTTPS test environments.
     $this->loginHttp($user);
     $this->drupalGet($this->httpUrl('admin/config'));
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
     $this->assertSessionIds($this->getSession()->getCookie($this->insecureSessionName), 'Session has the correct SID and an empty secure SID.');
 
     // Verify that empty secure SID cannot be used on the secure site.
     $browser_kit_cookie_jar->set(Cookie::fromString($this->secureSessionName . '=', $this->baseUrl));
     $this->drupalGet($this->httpsUrl('admin/config'));
-    $this->assertResponse(403);
+    $this->assertSession()->statusCodeEquals(403);
   }
 
   /**
@@ -160,7 +160,7 @@ class SessionHttpsTest extends BrowserTestBase {
     // Follow the location header.
     $path = $this->getPathFromLocationHeader($response, FALSE);
     $this->drupalGet($this->httpUrl($path));
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
   }
 
   /**
@@ -206,7 +206,7 @@ class SessionHttpsTest extends BrowserTestBase {
     // Follow the location header.
     $path = $this->getPathFromLocationHeader($response, TRUE);
     $this->drupalGet($this->httpsUrl($path));
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
   }
 
   /**

@@ -163,24 +163,24 @@ class FilterFormatAccessTest extends BrowserTestBase {
 
     // Check regular user access to the filter tips pages.
     $this->drupalGet('filter/tips/' . $this->allowedFormat->id());
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
     $this->drupalGet('filter/tips/' . $this->disallowedFormat->id());
-    $this->assertResponse(403);
+    $this->assertSession()->statusCodeEquals(403);
     $this->drupalGet('filter/tips/' . filter_fallback_format());
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
     $this->drupalGet('filter/tips/invalid-format');
-    $this->assertResponse(404);
+    $this->assertSession()->statusCodeEquals(404);
 
     // Check admin user access to the filter tips pages.
     $this->drupalLogin($this->adminUser);
     $this->drupalGet('filter/tips/' . $this->allowedFormat->id());
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
     $this->drupalGet('filter/tips/' . $this->disallowedFormat->id());
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
     $this->drupalGet('filter/tips/' . filter_fallback_format());
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
     $this->drupalGet('filter/tips/invalid-format');
-    $this->assertResponse(404);
+    $this->assertSession()->statusCodeEquals(404);
   }
 
   /**

@@ -126,7 +126,7 @@ class ImageStylesPathAndUrlTest extends BrowserTestBase {
     $non_existent_uri = 'public://foo.png';
     $generated_url = $this->style->buildUrl($non_existent_uri);
     $this->drupalGet($generated_url);
-    $this->assertResponse(404);
+    $this->assertSession()->statusCodeEquals(404);
   }
 
   /**
@@ -185,10 +185,10 @@ class ImageStylesPathAndUrlTest extends BrowserTestBase {
     }
     // Add some extra chars to the token.
     $this->drupalGet(str_replace(IMAGE_DERIVATIVE_TOKEN . '=', IMAGE_DERIVATIVE_TOKEN . '=Zo', $generate_url));
-    $this->assertResponse(404);
+    $this->assertSession()->statusCodeEquals(404);
     // Change the parameter name so the token is missing.
     $this->drupalGet(str_replace(IMAGE_DERIVATIVE_TOKEN . '=', 'wrongparam=', $generate_url));
-    $this->assertResponse(404);
+    $this->assertSession()->statusCodeEquals(404);
 
     // Check that the generated URL is the same when we pass in a relative path
     // rather than a URI. We need to temporarily switch the default scheme to
@@ -202,7 +202,7 @@ class ImageStylesPathAndUrlTest extends BrowserTestBase {
 
     // Fetch the URL that generates the file.
     $this->drupalGet($generate_url);
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
     $this->assertFileExists($generated_uri);
     // assertRaw can't be used with string containing non UTF-8 chars.
     $this->assertNotEmpty(file_get_contents($generated_uri), 'URL returns expected file.');
@@ -224,7 +224,7 @@ class ImageStylesPathAndUrlTest extends BrowserTestBase {
       // Make sure that a second request to the already existing derivative
       // works too.
       $this->drupalGet($generate_url);
-      $this->assertResponse(200);
+      $this->assertSession()->statusCodeEquals(200);
 
       // Check that the second request also returned the generated image.
       $this->assertEqual($this->drupalGetHeader('Content-Length'), $image->getFileSize());
@@ -236,7 +236,7 @@ class ImageStylesPathAndUrlTest extends BrowserTestBase {
       // have access.
       \Drupal::state()->delete('image.test_file_download');
       $this->drupalGet($generate_url);
-      $this->assertResponse(403);
+      $this->assertSession()->statusCodeEquals(403);
 
       // Repeat this with a different file that we do not have access to and
       // make sure that access is denied.
@@ -247,7 +247,7 @@ class ImageStylesPathAndUrlTest extends BrowserTestBase {
       $generate_url_noaccess = $this->style->buildUrl($original_uri_noaccess);
 
       $this->drupalGet($generate_url_noaccess);
-      $this->assertResponse(403);
+      $this->assertSession()->statusCodeEquals(403);
       // Verify that images are not appended to the response.
       // Currently this test only uses PNG images.
       if (strpos($generate_url, '.png') === FALSE) {
@@ -268,7 +268,7 @@ class ImageStylesPathAndUrlTest extends BrowserTestBase {
       if ($clean_url) {
         // Add some extra chars to the token.
         $this->drupalGet(str_replace(IMAGE_DERIVATIVE_TOKEN . '=', IMAGE_DERIVATIVE_TOKEN . '=Zo', $generate_url));
-        $this->assertResponse(200);
+        $this->assertSession()->statusCodeEquals(200);
       }
     }
 
@@ -295,7 +295,7 @@ class ImageStylesPathAndUrlTest extends BrowserTestBase {
     $generate_url = $this->style->buildUrl($original_uri, $clean_url);
     $this->assertStringNotContainsString(IMAGE_DERIVATIVE_TOKEN . '=', $generate_url, 'The security token does not appear in the image style URL.');
     $this->drupalGet($generate_url);
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
 
     // Stop suppressing the security token in the URL.
     $this->config('image.settings')->set('suppress_itok_output', FALSE)->save();
@@ -309,16 +309,16 @@ class ImageStylesPathAndUrlTest extends BrowserTestBase {
     $this->assertTrue($matches_expected_url_format, "URL for a derivative of an image style matches expected format.");
     $nested_url_with_wrong_token = str_replace(IMAGE_DERIVATIVE_TOKEN . '=', 'wrongparam=', $nested_url);
     $this->drupalGet($nested_url_with_wrong_token);
-    $this->assertResponse(404);
+    $this->assertSession()->statusCodeEquals(404);
     // Check that this restriction cannot be bypassed by adding extra slashes
     // to the URL.
     $this->drupalGet(substr_replace($nested_url_with_wrong_token, '//styles/', strrpos($nested_url_with_wrong_token, '/styles/'), strlen('/styles/')));
-    $this->assertResponse(404);
+    $this->assertSession()->statusCodeEquals(404);
     $this->drupalGet(substr_replace($nested_url_with_wrong_token, '////styles/', strrpos($nested_url_with_wrong_token, '/styles/'), strlen('/styles/')));
-    $this->assertResponse(404);
+    $this->assertSession()->statusCodeEquals(404);
     // Make sure the image can still be generated if a correct token is used.
     $this->drupalGet($nested_url);
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
 
     // Check that requesting a nonexistent image does not create any new
     // directories in the file system.

@@ -183,7 +183,7 @@ class DbLogTest extends BrowserTestBase {
     // Try to read details of not existing event.
     $this->drupalGet('admin/reports/dblog/event/999999');
     // Verify 404 response.
-    $this->assertResponse(404);
+    $this->assertSession()->statusCodeEquals(404);
   }
 
   /**
@@ -242,7 +242,7 @@ class DbLogTest extends BrowserTestBase {
     $edit = [];
     $edit['dblog_row_limit'] = $row_limit;
     $this->drupalPostForm('admin/config/development/logging', $edit, t('Save configuration'));
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
 
     // Check row limit variable.
     $current_limit = $this->config('dblog.settings')->get('row_limit');
@@ -284,34 +284,34 @@ class DbLogTest extends BrowserTestBase {
   private function verifyReports($response = 200) {
     // View the database log help page.
     $this->drupalGet('admin/help/dblog');
-    $this->assertResponse($response);
+    $this->assertSession()->statusCodeEquals($response);
     if ($response == 200) {
       $this->assertText(t('Database Logging'), 'DBLog help was displayed');
     }
 
     // View the database log report page.
     $this->drupalGet('admin/reports/dblog');
-    $this->assertResponse($response);
+    $this->assertSession()->statusCodeEquals($response);
     if ($response == 200) {
       $this->assertText(t('Recent log messages'), 'DBLog report was displayed');
     }
 
     $this->drupalGet('admin/reports/dblog/confirm');
-    $this->assertResponse($response);
+    $this->assertSession()->statusCodeEquals($response);
     if ($response == 200) {
       $this->assertText(t('Are you sure you want to delete the recent logs?'), 'DBLog clear logs form was displayed');
     }
 
     // View the database log page-not-found report page.
     $this->drupalGet('admin/reports/page-not-found');
-    $this->assertResponse($response);
+    $this->assertSession()->statusCodeEquals($response);
     if ($response == 200) {
       $this->assertText("Top 'page not found' errors", 'DBLog page-not-found report was displayed');
     }
 
     // View the database log access-denied report page.
     $this->drupalGet('admin/reports/access-denied');
-    $this->assertResponse($response);
+    $this->assertSession()->statusCodeEquals($response);
     if ($response == 200) {
       $this->assertText("Top 'access denied' errors", 'DBLog access-denied report was displayed');
     }
@@ -319,7 +319,7 @@ class DbLogTest extends BrowserTestBase {
     // View the database log event page.
     $wid = Database::getConnection()->query('SELECT MIN(wid) FROM {watchdog}')->fetchField();
     $this->drupalGet('admin/reports/dblog/event/' . $wid);
-    $this->assertResponse($response);
+    $this->assertSession()->statusCodeEquals($response);
     if ($response == 200) {
       $this->assertText(t('Details'), 'DBLog event node was displayed');
     }
@@ -363,7 +363,7 @@ class DbLogTest extends BrowserTestBase {
    */
   public function verifySort($sort = 'asc', $order = 'Date') {
     $this->drupalGet('admin/reports/dblog', ['query' => ['sort' => $sort, 'order' => $order]]);
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
     $this->assertText(t('Recent log messages'), 'DBLog report was displayed correctly and sorting went fine.');
   }
 
@@ -402,7 +402,7 @@ class DbLogTest extends BrowserTestBase {
     $edit['pass[pass2]'] = $pass;
     $edit['status'] = 1;
     $this->drupalPostForm('admin/people/create', $edit, t('Create new account'));
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
     // Retrieve the user object.
     $user = user_load_by_name($name);
     $this->assertNotNull($user, new FormattableMarkup('User @name was loaded', ['@name' => $name]));
@@ -428,7 +428,7 @@ class DbLogTest extends BrowserTestBase {
 
     // View the database log report.
     $this->drupalGet('admin/reports/dblog');
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
 
     // Verify that the expected events were recorded.
     // Add user.
@@ -459,10 +459,10 @@ class DbLogTest extends BrowserTestBase {
     // Visit random URL (to generate page not found event).
     $not_found_url = $this->randomMachineName(60);
     $this->drupalGet($not_found_url);
-    $this->assertResponse(404);
+    $this->assertSession()->statusCodeEquals(404);
     // View the database log page-not-found report page.
     $this->drupalGet('admin/reports/page-not-found');
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
     // Check that full-length URL displayed.
     $this->assertText($not_found_url, 'DBLog event was recorded: [page not found]');
   }
@@ -485,29 +485,29 @@ class DbLogTest extends BrowserTestBase {
     $edit = $this->getContent($type);
     $title = $edit['title[0][value]'];
     $this->drupalPostForm('node/add/' . $type, $edit, t('Save'));
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
     // Retrieve the node object.
     $node = $this->drupalGetNodeByTitle($title);
     $this->assertNotNull($node, new FormattableMarkup('Node @title was loaded', ['@title' => $title]));
     // Edit the node.
     $edit = $this->getContentUpdate($type);
     $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, t('Save'));
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
     // Delete the node.
     $this->drupalPostForm('node/' . $node->id() . '/delete', [], t('Delete'));
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
     // View the node (to generate page not found event).
     $this->drupalGet('node/' . $node->id());
-    $this->assertResponse(404);
+    $this->assertSession()->statusCodeEquals(404);
     // View the database log report (to generate access denied event).
     $this->drupalGet('admin/reports/dblog');
-    $this->assertResponse(403);
+    $this->assertSession()->statusCodeEquals(403);
 
     // Log in the admin user.
     $this->drupalLogin($this->adminUser);
     // View the database log report.
     $this->drupalGet('admin/reports/dblog');
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
 
     // Verify that node events were recorded.
     // Was node content added?
@@ -519,13 +519,13 @@ class DbLogTest extends BrowserTestBase {
 
     // View the database log access-denied report page.
     $this->drupalGet('admin/reports/access-denied');
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
     // Verify that the 'access denied' event was recorded.
     $this->assertText('admin/reports/dblog', 'DBLog event was recorded: [access denied]');
 
     // View the database log page-not-found report page.
     $this->drupalGet('admin/reports/page-not-found');
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
     // Verify that the 'page not found' event was recorded.
     $this->assertText('node/' . $node->id(), 'DBLog event was recorded: [page not found]');
   }
@@ -677,7 +677,7 @@ class DbLogTest extends BrowserTestBase {
     }
 
     $this->drupalGet('admin/reports/dblog', ['query' => ['order' => 'Type']]);
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
     $this->assertText(t('Operations'), 'Operations text found');
 
     // Clear all logs and make sure the confirmation message is found.
@@ -807,7 +807,7 @@ class DbLogTest extends BrowserTestBase {
     // Delete the user.
     $tempuser->delete();
     $this->drupalGet('user/' . $tempuser_uid);
-    $this->assertResponse(404);
+    $this->assertSession()->statusCodeEquals(404);
 
     // Check if the full message displays on the details page.
     $this->drupalGet('admin/reports/dblog/event/' . $wid);
@@ -821,7 +821,7 @@ class DbLogTest extends BrowserTestBase {
     $this->drupalLogin($this->adminUser);
     $this->generateLogEntries(1, ['message' => "&lt;script&gt;alert('foo');&lt;/script&gt;<strong>Lorem</strong> ipsum dolor sit amet, consectetur adipiscing & elit."]);
     $this->drupalGet('admin/reports/dblog');
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
     // Make sure HTML tags are filtered out.
     $this->assertRaw('title="alert(&#039;foo&#039;);Lorem');
     $this->assertNoRaw("<script>alert('foo');</script>");

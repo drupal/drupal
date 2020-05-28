@@ -60,7 +60,7 @@ class AggregatorAdminTest extends AggregatorTestBase {
     $this->container->get('module_installer')->uninstall(['aggregator_test']);
     $this->resetAll();
     $this->drupalGet('admin/config/services/aggregator/settings');
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
   }
 
   /**

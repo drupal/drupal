@@ -98,7 +98,7 @@ class UpdateCoreTest extends UpdateTestBase {
 
     // Ensure that the update check requires a token.
     $this->drupalGet('admin/reports/updates/check');
-    $this->assertResponse(403);
+    $this->assertSession()->statusCodeEquals(403);
 
     foreach ([0, 1] as $minor_version) {
       foreach (['-alpha1', '-beta1', ''] as $extra_version) {

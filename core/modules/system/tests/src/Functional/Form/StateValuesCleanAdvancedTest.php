@@ -56,7 +56,7 @@ class StateValuesCleanAdvancedTest extends BrowserTestBase {
     $this->drupalPostForm('form_test/form-state-values-clean-advanced', $edit, t('Submit'));
 
     // Expecting a 200 HTTP code.
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
     $this->assertRaw(t('You WIN!'), 'Found the success message.');
   }
 

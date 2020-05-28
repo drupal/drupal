@@ -29,13 +29,13 @@ class MigrateAccessTest extends BrowserTestBase {
   public function testAccess() {
     $this->drupalLogin($this->rootUser);
     $this->drupalGet('upgrade');
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
     $this->assertText(t('Upgrade'));
 
     $user = $this->createUser(['administer software updates']);
     $this->drupalLogin($user);
     $this->drupalGet('upgrade');
-    $this->assertResponse(403);
+    $this->assertSession()->statusCodeEquals(403);
     $this->assertNoText(t('Upgrade'));
   }
 

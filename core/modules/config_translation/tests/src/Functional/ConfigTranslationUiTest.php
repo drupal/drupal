@@ -294,7 +294,7 @@ class ConfigTranslationUiTest extends BrowserTestBase {
     $this->drupalLogout();
     $this->drupalLogin($this->translatorUser);
     $this->drupalGet('admin/config/system/site-information');
-    $this->assertResponse(403);
+    $this->assertSession()->statusCodeEquals(403);
 
     // While translator can access the translation page, the edit link is not
     // present due to lack of permissions.
@@ -430,7 +430,7 @@ class ConfigTranslationUiTest extends BrowserTestBase {
     $this->drupalLogout();
     $this->drupalLogin($this->translatorUser);
     $this->drupalGet('admin/structure/contact/manage/feedback');
-    $this->assertResponse(403);
+    $this->assertSession()->statusCodeEquals(403);
 
     // While translator can access the translation page, the edit link is not
     // present due to lack of permissions.
@@ -552,7 +552,7 @@ class ConfigTranslationUiTest extends BrowserTestBase {
     // Loading translation page for not-specified language (und)
     // should return 403.
     $this->drupalGet('admin/config/system/site-information/translate/und/add');
-    $this->assertResponse(403);
+    $this->assertSession()->statusCodeEquals(403);
 
     // Check the source language doesn't have 'Add' or 'Delete' link and
     // make sure source language edit goes to original configuration page
@@ -565,15 +565,15 @@ class ConfigTranslationUiTest extends BrowserTestBase {
 
     // Translation addition to source language should return 403.
     $this->drupalGet('admin/config/system/site-information/translate/en/add');
-    $this->assertResponse(403);
+    $this->assertSession()->statusCodeEquals(403);
 
     // Translation editing in source language should return 403.
     $this->drupalGet('admin/config/system/site-information/translate/en/edit');
-    $this->assertResponse(403);
+    $this->assertSession()->statusCodeEquals(403);
 
     // Translation deletion in source language should return 403.
     $this->drupalGet('admin/config/system/site-information/translate/en/delete');
-    $this->assertResponse(403);
+    $this->assertSession()->statusCodeEquals(403);
 
     // Set default language of site information to not-specified language (und).
     $this->config('system.site')
@@ -586,7 +586,7 @@ class ConfigTranslationUiTest extends BrowserTestBase {
 
     // If source language is not specified, translation page should be 403.
     $this->drupalGet('admin/config/system/site-information/translate');
-    $this->assertResponse(403);
+    $this->assertSession()->statusCodeEquals(403);
   }
 
   /**
@@ -877,7 +877,7 @@ class ConfigTranslationUiTest extends BrowserTestBase {
     // Visit account setting translation page, this should not
     // throw any notices.
     $this->drupalGet('admin/config/people/accounts/translate');
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
   }
 
   /**

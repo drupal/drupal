@@ -58,11 +58,11 @@ class SessionAuthenticationTest extends BrowserTestBase {
     // Test that the route is not accessible as an anonymous user.
     $this->drupalGet($protected_url);
     $session = $this->getSession();
-    $this->assertResponse(401);
+    $this->assertSession()->statusCodeEquals(401);
 
     // We should be able to access the route with basic authentication.
     $this->basicAuthGet($protected_url, $this->user->getAccountName(), $this->user->passRaw);
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
 
     // Check that the correct user is logged in.
     $this->assertEqual($this->user->id(), json_decode($session->getPage()->getContent())->user, 'The correct user is authenticated on a route with basic authentication.');
@@ -71,13 +71,13 @@ class SessionAuthenticationTest extends BrowserTestBase {
     // If we now try to access a page without basic authentication then we
     // should no longer be logged in.
     $this->drupalGet($unprotected_url);
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
     $this->assertEquals(0, json_decode($session->getPage()->getContent())->user, 'The user is no longer authenticated after visiting a page without basic authentication.');
 
     // If we access the protected page again without basic authentication we
     // should get 401 Unauthorized.
     $this->drupalGet($protected_url);
-    $this->assertResponse(401);
+    $this->assertSession()->statusCodeEquals(401);
   }
 
   /**
@@ -88,12 +88,12 @@ class SessionAuthenticationTest extends BrowserTestBase {
     $test_value = 'alpaca';
     $response = $this->basicAuthGet('session-test/set-session/' . $test_value, $this->user->getAccountName(), $this->user->pass_raw);
     $this->assertSessionData($response, $test_value);
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
 
     // Test that on a subsequent request the session value is still present.
     $response = $this->basicAuthGet('session-test/get-session', $this->user->getAccountName(), $this->user->pass_raw);
     $this->assertSessionData($response, $test_value);
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
   }
 
   /**
@@ -126,7 +126,7 @@ class SessionAuthenticationTest extends BrowserTestBase {
     // session cookie should be set, the third party system is responsible for
     // sustaining the session.
     $this->basicAuthGet($no_cookie_url, $this->user->getAccountName(), $this->user->passRaw);
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
     $this->assertEmpty($this->getSessionCookies());
     // Mink stores some information in the session that breaks the next check if
     // not reset.

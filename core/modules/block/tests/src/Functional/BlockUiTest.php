@@ -97,7 +97,7 @@ class BlockUiTest extends BrowserTestBase {
     // Ensure that a hidden theme cannot use the block demo page.
     \Drupal::service('theme_installer')->install(['stable']);
     $this->drupalGet('admin/structure/block/demo/stable');
-    $this->assertResponse(404);
+    $this->assertSession()->statusCodeEquals(404);
   }
 
   /**
@@ -158,7 +158,7 @@ class BlockUiTest extends BrowserTestBase {
 
     // Ensure that a hidden theme cannot use the block demo page.
     $this->drupalGet('admin/structure/block/list/stable');
-    $this->assertResponse(404);
+    $this->assertSession()->statusCodeEquals(404);
 
     // Ensure that a hidden theme set as the admin theme can use the block demo
     // page.
@@ -168,7 +168,7 @@ class BlockUiTest extends BrowserTestBase {
     $this->drupalGet('admin/structure/block');
     $this->assertLink($theme_handler->getName('stable'));
     $this->drupalGet('admin/structure/block/list/stable');
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
   }
 
   /**
@@ -377,9 +377,9 @@ class BlockUiTest extends BrowserTestBase {
     $block = reset($this->blocks);
     // Ensure that the enable and disable routes are protected.
     $this->drupalGet('admin/structure/block/manage/' . $block->id() . '/disable');
-    $this->assertResponse(403);
+    $this->assertSession()->statusCodeEquals(403);
     $this->drupalGet('admin/structure/block/manage/' . $block->id() . '/enable');
-    $this->assertResponse(403);
+    $this->assertSession()->statusCodeEquals(403);
   }
 
 }

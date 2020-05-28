@@ -74,7 +74,7 @@ class FileListingTest extends FileFieldTestBase {
     // Users without sufficient permissions should not see file listing.
     $this->drupalLogin($this->baseUser);
     $this->drupalGet('admin/content/files');
-    $this->assertResponse(403);
+    $this->assertSession()->statusCodeEquals(403);
 
     // Log in with user with right permissions and test listing.
     $this->drupalLogin($this->adminUser);
@@ -84,16 +84,16 @@ class FileListingTest extends FileFieldTestBase {
     }
 
     $this->drupalGet('admin/content/files');
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
     $this->assertText('No files available.');
     $this->drupalGet('admin/content/files');
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
 
     // Create a file with no usage.
     $file = $this->createFile();
 
     $this->drupalGet('admin/content/files/usage/' . $file->id());
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
     $this->assertTitle(t('File usage information for @file | Drupal', ['@file' => $file->getFilename()]));
 
     foreach ($nodes as &$node) {
@@ -141,7 +141,7 @@ class FileListingTest extends FileFieldTestBase {
       $file = File::load($node->file->target_id);
       $usage = $file_usage->listUsage($file);
       $this->drupalGet('admin/content/files/usage/' . $file->id());
-      $this->assertResponse(200);
+      $this->assertSession()->statusCodeEquals(200);
       $this->assertText($node->getTitle(), 'Node title found on usage page.');
       $this->assertText('node', 'Registering entity type found on usage page.');
       $this->assertText('file', 'Registering module found on usage page.');
@@ -197,7 +197,7 @@ class FileListingTest extends FileFieldTestBase {
     // Load the file usage page for the created and attached file.
     $this->drupalGet('admin/content/files/usage/' . $file->id());
 
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
     // Entity name should be displayed, but not linked if Entity::toUrl
     // throws an exception
     $this->assertText($entity_name, 'Entity name is added to file usage listing.');

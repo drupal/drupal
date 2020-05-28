@@ -162,7 +162,7 @@ class CommentAnonymousTest extends CommentTestBase {
 
     // Comment 3 was deleted.
     $this->drupalGet('comment/reply/node/' . $this->node->id() . '/comment/' . $anonymous_comment3->id());
-    $this->assertResponse(403);
+    $this->assertSession()->statusCodeEquals(403);
 
     // Reset.
     user_role_change_permissions(RoleInterface::ANONYMOUS_ID, [
@@ -180,7 +180,7 @@ class CommentAnonymousTest extends CommentTestBase {
 
     // Attempt to view node-comment form while disallowed.
     $this->drupalGet('comment/reply/node/' . $this->node->id() . '/comment');
-    $this->assertResponse(403);
+    $this->assertSession()->statusCodeEquals(403);
 
     user_role_change_permissions(RoleInterface::ANONYMOUS_ID, [
       'access comments' => TRUE,
@@ -203,7 +203,7 @@ class CommentAnonymousTest extends CommentTestBase {
     $this->assertFieldByName('comment_body[0][value]', '', 'Comment field found.');
 
     $this->drupalGet('comment/reply/node/' . $this->node->id() . '/comment/' . $anonymous_comment2->id());
-    $this->assertResponse(403);
+    $this->assertSession()->statusCodeEquals(403);
   }
 
 }

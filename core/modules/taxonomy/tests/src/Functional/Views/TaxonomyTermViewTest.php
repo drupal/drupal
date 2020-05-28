@@ -156,9 +156,9 @@ class TaxonomyTermViewTest extends TaxonomyTestBase {
     // Test the default views disclose no data by default.
     $this->drupalLogout();
     $this->drupalGet('taxonomy/term/' . $term->id());
-    $this->assertResponse(403);
+    $this->assertSession()->statusCodeEquals(403);
     $this->drupalGet('taxonomy/term/' . $term->id() . '/feed');
-    $this->assertResponse(403);
+    $this->assertSession()->statusCodeEquals(403);
   }
 
 }

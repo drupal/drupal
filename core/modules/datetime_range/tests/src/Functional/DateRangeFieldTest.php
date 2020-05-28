@@ -869,7 +869,7 @@ class DateRangeFieldTest extends DateTestBase {
       }
 
       $this->drupalPostForm(NULL, $edit, t('Save'));
-      $this->assertResponse(200);
+      $this->assertSession()->statusCodeEquals(200);
       foreach ($expected as $expected_text) {
         $this->assertText(t($expected_text));
       }
@@ -889,7 +889,7 @@ class DateRangeFieldTest extends DateTestBase {
     }
 
     $this->drupalPostForm(NULL, $edit, t('Save'));
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
     preg_match('|entity_test/manage/(\d+)|', $this->getUrl(), $match);
     $id = $match[1];
     $this->assertText(t('entity_test @id has been created.', ['@id' => $id]));
@@ -908,7 +908,7 @@ class DateRangeFieldTest extends DateTestBase {
     }
 
     $this->drupalPostForm(NULL, $edit, t('Save'));
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
     $this->assertOptionSelected("edit-$field_name-0-value-minute", '0', 'Correct minute selected.');
     $this->assertOptionSelected("edit-$field_name-0-end-value-minute", '0', 'Correct minute selected.');
   }

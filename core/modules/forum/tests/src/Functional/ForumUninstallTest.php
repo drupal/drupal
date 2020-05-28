@@ -118,7 +118,7 @@ class ForumUninstallTest extends BrowserTestBase {
     $this->drupalGet('admin/structure/types/manage/forum');
     $this->clickLink(t('Delete'));
     $this->drupalPostForm(NULL, [], t('Delete'));
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
     $this->assertFalse((bool) NodeType::load('forum'), 'Node type with machine forum deleted.');
 
     // Double check everything by reinstalling the forum module again.

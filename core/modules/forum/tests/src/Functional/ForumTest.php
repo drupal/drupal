@@ -235,13 +235,13 @@ class ForumTest extends BrowserTestBase {
     $edit = [];
     $edit['comment_body[0][value]'] = $this->randomMachineName();
     $this->drupalPostForm('node/' . $node->id(), $edit, t('Save'));
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
 
     // Test editing a forum topic that has a comment.
     $this->drupalLogin($this->editAnyTopicsUser);
     $this->drupalGet('forum/' . $this->forum['tid']);
     $this->drupalPostForm('node/' . $node->id() . '/edit', [], t('Save'));
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
 
     // Test the root forum page title change.
     $this->drupalGet('forum');
@@ -307,7 +307,7 @@ class ForumTest extends BrowserTestBase {
     // Add forum to the Tools menu.
     $edit = [];
     $this->drupalPostForm('admin/structure/menu/manage/tools', $edit, t('Save'));
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
 
     // Edit forum taxonomy.
     // Restoration of the settings fails and causes subsequent tests to fail.
@@ -390,7 +390,7 @@ class ForumTest extends BrowserTestBase {
 
     // Edit the vocabulary.
     $this->drupalPostForm('admin/structure/taxonomy/manage/' . $original_vocabulary->id(), $edit, t('Save'));
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
     $this->assertRaw(t('Updated vocabulary %name.', ['%name' => $edit['name']]), 'Vocabulary was edited');
 
     // Grab the newly edited vocabulary.
@@ -434,7 +434,7 @@ class ForumTest extends BrowserTestBase {
 
     // Create forum.
     $this->drupalPostForm('admin/structure/forum/add/' . $type, $edit, t('Save'));
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
     $type = ($type == 'container') ? 'forum container' : 'forum';
     $this->assertText(
       t(
@@ -491,7 +491,7 @@ class ForumTest extends BrowserTestBase {
 
     // Assert that the forum no longer exists.
     $this->drupalGet('forum/' . $tid);
-    $this->assertResponse(404);
+    $this->assertSession()->statusCodeEquals(404);
   }
 
   /**
@@ -533,18 +533,18 @@ class ForumTest extends BrowserTestBase {
     $edit['subject[0][value]'] = $this->randomMachineName();
     $edit['comment_body[0][value]'] = $this->randomMachineName();
     $this->drupalPostForm('node/' . $node->id(), $edit, t('Save'));
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
 
     // Test replying to a comment.
     $this->clickLink('Reply');
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
     $this->assertFieldByName('comment_body[0][value]');
 
     // Log in as the first user.
     $this->drupalLogin($this->adminUser);
     // Check that forum renders properly.
     $this->drupalGet("forum/{$this->forum['tid']}");
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
 
     // Verify there is no unintentional HTML tag escaping.
     $this->assertNoEscaped('<', '');
@@ -618,7 +618,7 @@ class ForumTest extends BrowserTestBase {
 
     // View forum help node.
     $this->drupalGet('admin/help/forum');
-    $this->assertResponse($response2);
+    $this->assertSession()->statusCodeEquals($response2);
     if ($response2 == 200) {
       $this->assertTitle(t('Forum | Drupal'), 'Forum help title was displayed');
       $this->assertText(t('Forum'), 'Forum help node was displayed');
@@ -633,7 +633,7 @@ class ForumTest extends BrowserTestBase {
 
     // View forum node.
     $this->drupalGet('node/' . $node->id());
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
     $this->assertTitle($node->label() . ' | Drupal', 'Forum node was displayed');
     $breadcrumb_build = [
       Link::createFromRoute(t('Home'), '<front>'),
@@ -649,7 +649,7 @@ class ForumTest extends BrowserTestBase {
 
     // View forum edit node.
     $this->drupalGet('node/' . $node->id() . '/edit');
-    $this->assertResponse($response);
+    $this->assertSession()->statusCodeEquals($response);
     if ($response == 200) {
       $this->assertTitle('Edit Forum topic ' . $node->label() . ' | Drupal', 'Forum edit node was displayed');
     }
@@ -678,7 +678,7 @@ class ForumTest extends BrowserTestBase {
 
       // Delete forum node.
       $this->drupalPostForm('node/' . $node->id() . '/delete', [], t('Delete'));
-      $this->assertResponse($response);
+      $this->assertSession()->statusCodeEquals($response);
       $this->assertRaw(t('Forum topic %title has been deleted.', ['%title' => $edit['title[0][value]']]), 'Forum node was deleted');
     }
   }
@@ -694,7 +694,7 @@ class ForumTest extends BrowserTestBase {
   private function verifyForumView($forum, $parent = NULL) {
     // View forum page.
     $this->drupalGet('forum/' . $forum['tid']);
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
     $this->assertTitle($forum['name'] . ' | Drupal');
 
     $breadcrumb_build = [

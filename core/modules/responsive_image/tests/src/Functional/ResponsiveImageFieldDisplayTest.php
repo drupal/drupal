@@ -271,7 +271,7 @@ class ResponsiveImageFieldDisplayTest extends ImageFieldTestBase {
       // Log out and ensure the file cannot be accessed.
       $this->drupalLogout();
       $this->drupalGet(file_create_url($image_uri));
-      $this->assertResponse(403);
+      $this->assertSession()->statusCodeEquals(403);
 
       // Log in again.
       $this->drupalLogin($this->adminUser);
@@ -337,7 +337,7 @@ class ResponsiveImageFieldDisplayTest extends ImageFieldTestBase {
       // Log out and ensure the file cannot be accessed.
       $this->drupalLogout();
       $this->drupalGet($large_style->buildUrl($image_uri));
-      $this->assertResponse(403);
+      $this->assertSession()->statusCodeEquals(403);
       $cache_tags_header = $this->drupalGetHeader('X-Drupal-Cache-Tags');
       $this->assertTrue(!preg_match('/ image_style\:/', $cache_tags_header), 'No image style cache tag found.');
     }

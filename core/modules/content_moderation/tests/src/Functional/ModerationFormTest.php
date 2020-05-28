@@ -78,13 +78,13 @@ class ModerationFormTest extends ModerationStateTestBase {
     // The canonical view should have a moderation form, because it is not the
     // live revision.
     $this->drupalGet($canonical_path);
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
     $this->assertField('edit-new-state', 'The node view page has a moderation form.');
 
     // The latest version page should not show, because there is no pending
     // revision.
     $this->drupalGet($latest_version_path);
-    $this->assertResponse(403);
+    $this->assertSession()->statusCodeEquals(403);
 
     // Update the draft.
     $this->drupalPostForm($edit_path, [
@@ -95,7 +95,7 @@ class ModerationFormTest extends ModerationStateTestBase {
     // The canonical view should have a moderation form, because it is not the
     // live revision.
     $this->drupalGet($canonical_path);
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
     $this->assertField('edit-new-state', 'The node view page has a moderation form.');
 
     // Preview the draft.
@@ -109,14 +109,14 @@ class ModerationFormTest extends ModerationStateTestBase {
       'node_preview' => $node->uuid(),
       'view_mode_id' => 'full',
     ]);
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
     $this->assertUrl($preview_url);
     $this->assertNoField('edit-new-state', 'The node preview page has no moderation form.');
 
     // The latest version page should not show, because there is still no
     // pending revision.
     $this->drupalGet($latest_version_path);
-    $this->assertResponse(403);
+    $this->assertSession()->statusCodeEquals(403);
 
     // Publish the draft.
     $this->drupalPostForm($edit_path, [
@@ -140,13 +140,13 @@ class ModerationFormTest extends ModerationStateTestBase {
     // The published view should not have a moderation form, because it is the
     // live revision.
     $this->drupalGet($canonical_path);
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
     $this->assertNoField('edit-new-state', 'The node view page has no moderation form.');
 
     // The latest version page should not show, because there is still no
     // pending revision.
     $this->drupalGet($latest_version_path);
-    $this->assertResponse(403);
+    $this->assertSession()->statusCodeEquals(403);
 
     // Make a pending revision.
     $this->drupalPostForm($edit_path, [
@@ -157,13 +157,13 @@ class ModerationFormTest extends ModerationStateTestBase {
     // The published view should not have a moderation form, because it is the
     // live revision.
     $this->drupalGet($canonical_path);
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
     $this->assertNoField('edit-new-state', 'The node view page has no moderation form.');
 
     // The latest version page should show the moderation form and have "Draft"
     // status, because the pending revision is in "Draft".
     $this->drupalGet($latest_version_path);
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
     $this->assertField('edit-new-state', 'The latest-version page has a moderation form.');
     $this->assertText('Draft', 'Correct status found on the latest-version page.');
 
@@ -175,7 +175,7 @@ class ModerationFormTest extends ModerationStateTestBase {
     // The latest version page should not show, because there is no
     // pending revision.
     $this->drupalGet($latest_version_path);
-    $this->assertResponse(403);
+    $this->assertSession()->statusCodeEquals(403);
   }
 
   /**
@@ -192,7 +192,7 @@ class ModerationFormTest extends ModerationStateTestBase {
     // The latest version page should not show, because there is no pending
     // revision.
     $this->drupalGet('/entity_test_mulrevpub/manage/1/latest');
-    $this->assertResponse(403);
+    $this->assertSession()->statusCodeEquals(403);
 
     // Update the draft.
     $this->drupalPostForm('entity_test_mulrevpub/manage/1/edit', ['moderation_state[0][state]' => 'draft'], t('Save'));
@@ -200,7 +200,7 @@ class ModerationFormTest extends ModerationStateTestBase {
     // The latest version page should not show, because there is still no
     // pending revision.
     $this->drupalGet('/entity_test_mulrevpub/manage/1/latest');
-    $this->assertResponse(403);
+    $this->assertSession()->statusCodeEquals(403);
 
     // Publish the draft.
     $this->drupalPostForm('entity_test_mulrevpub/manage/1/edit', ['moderation_state[0][state]' => 'published'], t('Save'));
@@ -208,13 +208,13 @@ class ModerationFormTest extends ModerationStateTestBase {
     // The published view should not have a moderation form, because it is the
     // default revision.
     $this->drupalGet('entity_test_mulrevpub/manage/1');
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
     $this->assertNoText('Status', 'The node view page has no moderation form.');
 
     // The latest version page should not show, because there is still no
     // pending revision.
     $this->drupalGet('entity_test_mulrevpub/manage/1/latest');
-    $this->assertResponse(403);
+    $this->assertSession()->statusCodeEquals(403);
 
     // Make a pending revision.
     $this->drupalPostForm('entity_test_mulrevpub/manage/1/edit', ['moderation_state[0][state]' => 'draft'], t('Save'));
@@ -222,13 +222,13 @@ class ModerationFormTest extends ModerationStateTestBase {
     // The published view should not have a moderation form, because it is the
     // default revision.
     $this->drupalGet('entity_test_mulrevpub/manage/1');
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
     $this->assertNoText('Status', 'The node view page has no moderation form.');
 
     // The latest version page should show the moderation form and have "Draft"
     // status, because the pending revision is in "Draft".
     $this->drupalGet('entity_test_mulrevpub/manage/1/latest');
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
     $this->assertText('Moderation state', 'Form text found on the latest-version page.');
     $this->assertText('Draft', 'Correct status found on the latest-version page.');
 
@@ -240,7 +240,7 @@ class ModerationFormTest extends ModerationStateTestBase {
     // The latest version page should not show, because there is no
     // pending revision.
     $this->drupalGet('entity_test_mulrevpub/manage/1/latest');
-    $this->assertResponse(403);
+    $this->assertSession()->statusCodeEquals(403);
   }
 
   /**

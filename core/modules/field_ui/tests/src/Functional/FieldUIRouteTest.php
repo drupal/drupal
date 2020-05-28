@@ -48,7 +48,7 @@ class FieldUIRouteTest extends BrowserTestBase {
 
     // Test manage display tabs and titles.
     $this->drupalGet('admin/config/people/accounts/display/compact');
-    $this->assertResponse(403);
+    $this->assertSession()->statusCodeEquals(403);
 
     $this->drupalGet('admin/config/people/accounts/display');
     $this->assertTitle('Manage display | Drupal');
@@ -62,7 +62,7 @@ class FieldUIRouteTest extends BrowserTestBase {
 
     // Test manage form display tabs and titles.
     $this->drupalGet('admin/config/people/accounts/form-display/register');
-    $this->assertResponse(403);
+    $this->assertSession()->statusCodeEquals(403);
 
     $this->drupalGet('admin/config/people/accounts/form-display');
     $this->assertTitle('Manage form display | Drupal');
@@ -70,7 +70,7 @@ class FieldUIRouteTest extends BrowserTestBase {
 
     $edit = ['display_modes_custom[register]' => TRUE];
     $this->drupalPostForm(NULL, $edit, t('Save'));
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
     $this->drupalGet('admin/config/people/accounts/form-display/register');
     $this->assertTitle('Manage form display | Drupal');
     $this->assertLocalTasks();

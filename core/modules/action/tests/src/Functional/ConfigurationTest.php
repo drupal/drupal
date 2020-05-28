@@ -38,7 +38,7 @@ class ConfigurationTest extends BrowserTestBase {
     $edit = [];
     $edit['action'] = 'action_goto_action';
     $this->drupalPostForm('admin/config/system/actions', $edit, t('Create'));
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
 
     // Make a POST request to the individual action configuration page.
     $edit = [];
@@ -47,7 +47,7 @@ class ConfigurationTest extends BrowserTestBase {
     $edit['id'] = strtolower($action_label);
     $edit['url'] = 'admin';
     $this->drupalPostForm('admin/config/system/actions/add/action_goto_action', $edit, t('Save'));
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
 
     $action_id = $edit['id'];
 
@@ -63,7 +63,7 @@ class ConfigurationTest extends BrowserTestBase {
     $edit['label'] = $new_action_label;
     $edit['url'] = 'admin';
     $this->drupalPostForm(NULL, $edit, t('Save'));
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
 
     // Make sure that the action updated properly.
     $this->assertText(t('The action has been successfully saved.'), "Make sure we get a confirmation that we've successfully updated the complex action.");
@@ -77,15 +77,15 @@ class ConfigurationTest extends BrowserTestBase {
     // Make sure that deletions work properly.
     $this->drupalGet('admin/config/system/actions');
     $this->clickLink(t('Delete'));
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
     $edit = [];
     $this->drupalPostForm(NULL, $edit, t('Delete'));
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
 
     // Make sure that the action was actually deleted.
     $this->assertRaw(t('The action %action has been deleted.', ['%action' => $new_action_label]), 'Make sure that we get a delete confirmation message.');
     $this->drupalGet('admin/config/system/actions');
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
     $this->assertNoText($new_action_label, "Make sure the action label does not appear on the overview page after we've deleted the action.");
 
     $action = Action::load($action_id);

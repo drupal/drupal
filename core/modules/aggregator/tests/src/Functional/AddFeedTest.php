@@ -35,7 +35,7 @@ class AddFeedTest extends AggregatorTestBase {
 
     // Check feed source.
     $this->drupalGet('aggregator/sources/' . $feed->id());
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
     $this->assertText($feed->label(), 'Page title');
     $this->assertRaw($feed->getWebsiteUrl());
 
@@ -61,7 +61,7 @@ class AddFeedTest extends AggregatorTestBase {
     $this->checkForMetaRefresh();
 
     $this->drupalGet('aggregator/sources/' . $feed->id());
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
 
     $this->assertEscaped('Test feed title <script>alert(123);</script>');
     $this->assertNoRaw('Test feed title <script>alert(123);</script>');
@@ -91,7 +91,7 @@ class AddFeedTest extends AggregatorTestBase {
 
     // Check feed source.
     $this->drupalGet('aggregator/sources/' . $feed->id());
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
     $this->assertText($feed->label(), 'Page title');
 
     // Delete feeds.

@@ -52,7 +52,7 @@ class InstallerNonDefaultDatabaseDriverTest extends InstallerTestBase {
    */
   public function testInstalled() {
     $this->assertUrl('user/1');
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
 
     // Assert that in the settings.php the database connection array has the
     // correct values set.

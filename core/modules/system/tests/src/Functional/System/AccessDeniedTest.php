@@ -47,7 +47,7 @@ class AccessDeniedTest extends BrowserTestBase {
   public function testAccessDenied() {
     $this->drupalGet('admin');
     $this->assertText(t('Access denied'), 'Found the default 403 page');
-    $this->assertResponse(403);
+    $this->assertSession()->statusCodeEquals(403);
 
     // Ensure that users without permission are denied access and have the
     // correct path information in drupalSettings.
@@ -94,7 +94,7 @@ class AccessDeniedTest extends BrowserTestBase {
     $this->drupalLogout();
     $this->drupalGet('admin');
     $this->assertText(t('Access denied'), 'Found the default 403 page');
-    $this->assertResponse(403);
+    $this->assertSession()->statusCodeEquals(403);
     $this->assertText(t('Username'), 'Blocks are shown on the default 403 page');
 
     // Log back in, set the custom 403 page to /user/login and remove the block
@@ -124,14 +124,14 @@ class AccessDeniedTest extends BrowserTestBase {
     $this->drupalGet('/system-test/always-denied');
     $this->assertNoText('Admin-only 4xx response');
     $this->assertText('You are not authorized to access this page.');
-    $this->assertResponse(403);
+    $this->assertSession()->statusCodeEquals(403);
     // Verify the access cacheability metadata for custom 403 is bubbled.
     $this->assertCacheContext('user.roles');
 
     $this->drupalLogin($this->adminUser);
     $this->drupalGet('/system-test/always-denied');
     $this->assertText('Admin-only 4xx response');
-    $this->assertResponse(403);
+    $this->assertSession()->statusCodeEquals(403);
     // Verify the access cacheability metadata for custom 403 is bubbled.
     $this->assertCacheContext('user.roles');
   }

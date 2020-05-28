@@ -155,7 +155,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
       // Log out and ensure the file cannot be accessed.
       $this->drupalLogout();
       $this->drupalGet(file_create_url($image_uri));
-      $this->assertResponse(403);
+      $this->assertSession()->statusCodeEquals(403);
 
       // Log in again.
       $this->drupalLogin($this->adminUser);
@@ -214,7 +214,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
       // Log out and ensure the file cannot be accessed.
       $this->drupalLogout();
       $this->drupalGet(ImageStyle::load('thumbnail')->buildUrl($image_uri));
-      $this->assertResponse(403);
+      $this->assertSession()->statusCodeEquals(403);
     }
 
     // Test the image URL formatter without an image style.

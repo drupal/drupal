@@ -173,7 +173,7 @@ class PathLanguageTest extends PathTestBase {
     // situation only aliases in the default language and language neutral ones
     // should keep working.
     $this->drupalGet($french_alias);
-    $this->assertResponse(404);
+    $this->assertSession()->statusCodeEquals(404);
 
     // The alias manager has an internal path lookup cache. Check to see that
     // it has the appropriate contents at this point.
