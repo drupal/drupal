@@ -60,7 +60,7 @@ class ShortcutSetsTest extends ShortcutTestBase {
     $this->drupalGet('admin/config/user-interface/shortcut/manage/' . $set->id() . '/customize');
 
     // Test for the page title.
-    $this->assertTitle(t('List links') . ' | Drupal');
+    $this->assertTitle('List links | Drupal');
 
     // Test for the table.
     $element = $this->xpath('//div[@class="layout-content"]//table');
