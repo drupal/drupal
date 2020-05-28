@@ -3,6 +3,7 @@
 namespace Drupal\Tests\Core\Database;
 
 use Drupal\Tests\Core\Database\Stub\StubConnection;
+use Drupal\Tests\Core\Database\Stub\StubPDO;
 use Drupal\Tests\UnitTestCase;
 
 /**
@@ -295,6 +296,60 @@ class ConnectionTest extends UnitTestCase {
       $expected,
       $filter_comment->invokeArgs($connection, [$comment])
     );
+  }
+
+  /**
+   * Test rtrim() of query strings.
+   *
+   * @dataProvider provideQueriesToTrim
+   */
+  public function testQueryTrim($expected, $query, $options) {
+    $mock_pdo = $this->getMockBuilder(StubPdo::class)
+      ->setMethods(['execute', 'prepare', 'setAttribute'])
+      ->getMock();
+
+    // Ensure that PDO::prepare() is called only once, and with the
+    // correctly trimmed query string.
+    $mock_pdo->expects($this->once())
+      ->method('prepare')
+      ->with($expected)
+      ->willReturnSelf();
+    $connection = new StubConnection($mock_pdo, []);
+    $connection->query($query, [], $options);
+  }
+
+  /**
+   * Dataprovider for testQueryTrim().
+   *
+   * @return array
+   *   Array of arrays with the following elements:
+   *   - Expected trimmed query.
+   *   - Padded query.
+   *   - Query options.
+   */
+  public function provideQueriesToTrim() {
+    return [
+      'remove_semicolon' => [
+        'SELECT * FROM test',
+        'SELECT * FROM test;',
+        [],
+      ],
+      'keep_trailing_semicolon' => [
+        'SELECT * FROM test;',
+        'SELECT * FROM test;',
+        ['allow_delimiter_in_query' => TRUE],
+      ],
+      'remove_semicolon_with_whitespace' => [
+        'SELECT * FROM test',
+        'SELECT * FROM test; ',
+        [],
+      ],
+      'keep_trailing_semicolon_with_whitespace' => [
+        'SELECT * FROM test;',
+        'SELECT * FROM test; ',
+        ['allow_delimiter_in_query' => TRUE],
+      ],
+    ];
   }
 
 }

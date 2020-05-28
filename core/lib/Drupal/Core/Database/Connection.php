@@ -628,7 +628,11 @@ abstract class Connection {
         // semicolons should only be needed for special cases like defining a
         // function or stored procedure in SQL. Trim any trailing delimiter to
         // minimize false positives.
-        $query = rtrim($query, ";  \t\n\r\0\x0B");
+        $trim_chars = "  \t\n\r\0\x0B";
+        if (empty($options['allow_delimiter_in_query'])) {
+          $trim_chars .= ';';
+        }
+        $query = rtrim($query, $trim_chars);
         if (strpos($query, ';') !== FALSE && empty($options['allow_delimiter_in_query'])) {
           throw new \InvalidArgumentException('; is not supported in SQL strings. Use only one statement at a time.');
         }
