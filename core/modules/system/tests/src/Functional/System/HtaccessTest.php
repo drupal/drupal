@@ -108,7 +108,7 @@ class HtaccessTest extends BrowserTestBase {
 
     // Test that adding "/1" to a .php URL does not make it accessible.
     $this->drupalGet('core/lib/Drupal.php/1');
-    $this->assertResponse(403);
+    $this->assertSession()->statusCodeEquals(403);
 
     // Test that it is possible to have path aliases containing .php.
     $type = $this->drupalCreateContentType();
@@ -121,14 +121,14 @@ class HtaccessTest extends BrowserTestBase {
     ]);
     $node->save();
     $this->drupalGet('test.php');
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
     $this->assertText('This is a node');
 
     // Update node's alias to test.php/test.
     $node->path = '/test.php/test';
     $node->save();
     $this->drupalGet('test.php/test');
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
     $this->assertText('This is a node');
   }
 
@@ -151,7 +151,7 @@ class HtaccessTest extends BrowserTestBase {
    */
   public function testSvgzContentEncoding() {
     $this->drupalGet('core/modules/system/tests/logo.svgz');
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
 
     // Use x-encoded-content-encoding because of Content-Encoding responses
     // (gzip, deflate, etc.) are automatically decoded by Guzzle.

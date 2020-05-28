@@ -93,10 +93,10 @@ class UserRoleAdminTest extends BrowserTestBase {
     // Make sure that the system-defined roles can be edited via the user
     // interface.
     $this->drupalGet('admin/people/roles/manage/' . RoleInterface::ANONYMOUS_ID);
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
     $this->assertNoText(t('Delete role'), 'Delete button for the anonymous role is not present.');
     $this->drupalGet('admin/people/roles/manage/' . RoleInterface::AUTHENTICATED_ID);
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
     $this->assertNoText(t('Delete role'), 'Delete button for the authenticated role is not present.');
   }
 

@@ -359,7 +359,7 @@ class TermTest extends TaxonomyTestBase {
 
     // Check the term link can be clicked through to the term page.
     $this->clickLink($edit['name[0][value]']);
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
 
     // View the term and check that it is correct.
     $this->drupalGet('taxonomy/term/' . $term->id());
@@ -390,7 +390,7 @@ class TermTest extends TaxonomyTestBase {
 
     // Assert that the term no longer exists.
     $this->drupalGet('taxonomy/term/' . $term->id());
-    $this->assertResponse(404);
+    $this->assertSession()->statusCodeEquals(404);
   }
 
   /**

@@ -48,16 +48,16 @@ class EntityDisplayModeTest extends BrowserTestBase {
   public function testEntityViewModeUI() {
     // Test the listing page.
     $this->drupalGet('admin/structure/display-modes/view');
-    $this->assertResponse(403);
+    $this->assertSession()->statusCodeEquals(403);
     $this->drupalLogin($this->drupalCreateUser(['administer display modes']));
     $this->drupalGet('admin/structure/display-modes/view');
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
     $this->assertText(t('Add view mode'));
     $this->assertLinkByHref('admin/structure/display-modes/view/add');
     $this->assertLinkByHref('admin/structure/display-modes/view/add/entity_test');
 
     $this->drupalGet('admin/structure/display-modes/view/add/entity_test_mulrev');
-    $this->assertResponse(404);
+    $this->assertSession()->statusCodeEquals(404);
 
     $this->drupalGet('admin/structure/display-modes/view/add');
     $this->assertNoLink(t('Test entity - revisions and data table'), 'An entity type with no view builder cannot have view modes.');
@@ -103,15 +103,15 @@ class EntityDisplayModeTest extends BrowserTestBase {
   public function testEntityFormModeUI() {
     // Test the listing page.
     $this->drupalGet('admin/structure/display-modes/form');
-    $this->assertResponse(403);
+    $this->assertSession()->statusCodeEquals(403);
     $this->drupalLogin($this->drupalCreateUser(['administer display modes']));
     $this->drupalGet('admin/structure/display-modes/form');
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
     $this->assertText(t('Add form mode'));
     $this->assertLinkByHref('admin/structure/display-modes/form/add');
 
     $this->drupalGet('admin/structure/display-modes/form/add/entity_test_no_label');
-    $this->assertResponse(404);
+    $this->assertSession()->statusCodeEquals(404);
 
     $this->drupalGet('admin/structure/display-modes/form/add');
     $this->assertNoLink(t('Entity Test without label'), 'An entity type with no form cannot have form modes.');

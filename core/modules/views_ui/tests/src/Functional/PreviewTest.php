@@ -29,7 +29,7 @@ class PreviewTest extends UITestBase {
     $this->resetAll();
 
     $this->drupalGet('admin/structure/views/view/test_preview/edit');
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
     $this->drupalPostForm(NULL, $edit = [], t('Update preview'));
 
     $elements = $this->xpath('//div[@id="views-live-preview"]//ul[contains(@class, :ul-class)]/li[contains(@class, :li-class)]', [':ul-class' => 'contextual-links', ':li-class' => 'filter-add']);
@@ -49,7 +49,7 @@ class PreviewTest extends UITestBase {
    */
   public function testPreviewUI() {
     $this->drupalGet('admin/structure/views/view/test_preview/edit');
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
 
     $this->drupalPostForm(NULL, $edit = [], t('Update preview'));
 
@@ -138,7 +138,7 @@ SQL;
     $this->resetAll();
 
     $this->drupalGet('admin/structure/views/view/test_preview/edit');
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
 
     $this->drupalPostForm(NULL, $edit = [], t('Update preview'));
 
@@ -156,7 +156,7 @@ SQL;
    */
   public function testPreviewError() {
     $this->drupalGet('admin/structure/views/view/test_preview_error/edit');
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
 
     $this->drupalPostForm(NULL, $edit = [], t('Update preview'));
 

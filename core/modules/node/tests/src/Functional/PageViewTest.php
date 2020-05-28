@@ -26,7 +26,7 @@ class PageViewTest extends NodeTestBase {
 
     // Try to edit with anonymous user.
     $this->drupalGet("node/" . $node->id() . "/edit");
-    $this->assertResponse(403);
+    $this->assertSession()->statusCodeEquals(403);
 
     // Create a user without permission to edit node.
     $web_user = $this->drupalCreateUser(['access content']);
@@ -34,7 +34,7 @@ class PageViewTest extends NodeTestBase {
 
     // Attempt to access edit page.
     $this->drupalGet("node/" . $node->id() . "/edit");
-    $this->assertResponse(403);
+    $this->assertSession()->statusCodeEquals(403);
 
     // Create user with permission to edit node.
     $web_user = $this->drupalCreateUser(['bypass node access']);
@@ -42,7 +42,7 @@ class PageViewTest extends NodeTestBase {
 
     // Attempt to access edit page.
     $this->drupalGet("node/" . $node->id() . "/edit");
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
   }
 
 }

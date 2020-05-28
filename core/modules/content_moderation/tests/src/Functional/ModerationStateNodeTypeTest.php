@@ -79,16 +79,16 @@ class ModerationStateNodeTypeTest extends ModerationStateTestBase {
     }
     $node = reset($nodes);
     $this->drupalGet('node/' . $node->id());
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
     $this->assertLinkByHref('node/' . $node->id() . '/edit');
     $this->drupalGet('node/' . $node->id() . '/edit');
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
     $this->assertSession()->optionExists('moderation_state[0][state]', 'draft');
     $this->assertSession()->optionNotExists('moderation_state[0][state]', 'published');
 
     $this->drupalLogin($editor_with_publish);
     $this->drupalGet('node/' . $node->id() . '/edit');
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
     $this->assertSession()->optionExists('moderation_state[0][state]', 'draft');
     $this->assertSession()->optionExists('moderation_state[0][state]', 'published');
   }

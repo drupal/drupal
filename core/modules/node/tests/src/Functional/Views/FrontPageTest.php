@@ -185,7 +185,7 @@ class FrontPageTest extends ViewTestBase {
     $this->drupalLogin($this->rootUser);
     // Test frontpage view.
     $this->drupalGet('node');
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
     // Check that the frontpage view was rendered.
     $this->assertPattern('/class=".+view-frontpage/', 'Frontpage view was rendered');
   }

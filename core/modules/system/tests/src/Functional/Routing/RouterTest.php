@@ -118,22 +118,22 @@ class RouterTest extends BrowserTestBase {
     // routes are declared.
     // @see \Drupal\Core\Routing\RouteProvider::getRoutesByPath()
     $this->drupalGet('router-test/duplicate-path2');
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
     $this->assertRaw('router_test.two_duplicate1');
 
     // Tests three routes with same the path. One of the routes the path has a
     // different case.
     $this->drupalGet('router-test/case-sensitive-duplicate-path3');
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
     $this->assertRaw('router_test.case_sensitive_duplicate1');
     // While case-insensitive matching works, exact matches are preferred.
     $this->drupalGet('router-test/case-sensitive-Duplicate-PATH3');
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
     $this->assertRaw('router_test.case_sensitive_duplicate2');
     // Test that case-insensitive matching works, falling back to the first
     // route defined.
     $this->drupalGet('router-test/case-sensitive-Duplicate-Path3');
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
     $this->assertRaw('router_test.case_sensitive_duplicate1');
   }
 
@@ -145,7 +145,7 @@ class RouterTest extends BrowserTestBase {
     $values = ["0", $this->randomMachineName()];
     foreach ($values as $value) {
       $this->drupalGet('router_test/test3/' . $value);
-      $this->assertResponse(200);
+      $this->assertSession()->statusCodeEquals(200);
       $this->assertRaw($value, 'The correct string was returned because the route was successful.');
     }
 
@@ -163,7 +163,7 @@ class RouterTest extends BrowserTestBase {
    */
   public function testControllerPlaceholdersDefaultValues() {
     $this->drupalGet('router_test/test4');
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
     $this->assertRaw('narf', 'The correct string was returned because the route was successful.');
 
     // Confirm that the page wrapping is being added, so we're not getting a
@@ -180,7 +180,7 @@ class RouterTest extends BrowserTestBase {
    */
   public function testControllerPlaceholdersDefaultValuesProvided() {
     $this->drupalGet('router_test/test4/barf');
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
     $this->assertRaw('barf', 'The correct string was returned because the route was successful.');
 
     // Confirm that the page wrapping is being added, so we're not getting a
@@ -200,7 +200,7 @@ class RouterTest extends BrowserTestBase {
   public function testDynamicRoutes() {
     // Test the altered route.
     $this->drupalGet('router_test/test6');
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
     $this->assertRaw('test5', 'The correct string was returned because the route was successful.');
   }
 
@@ -236,12 +236,12 @@ class RouterTest extends BrowserTestBase {
    */
   public function testRouterMatching() {
     $this->drupalGet('router_test/test14/1');
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
     $this->assertText('User route "entity.user.canonical" was matched.');
 
     // Try to match a route for a non-existent user.
     $this->drupalGet('router_test/test14/2');
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
     $this->assertText('Route not matched.');
 
     // Check that very long paths don't cause an error.
@@ -250,7 +250,7 @@ class RouterTest extends BrowserTestBase {
     for ($i = 0; $i < 10; $i++) {
       $path .= $suffix;
       $this->drupalGet($path);
-      $this->assertResponse(404);
+      $this->assertSession()->statusCodeEquals(404);
     }
   }
 
@@ -259,7 +259,7 @@ class RouterTest extends BrowserTestBase {
    */
   public function testRouterResponsePsr7() {
     $this->drupalGet('/router_test/test23');
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
     $this->assertText('test23');
   }
 

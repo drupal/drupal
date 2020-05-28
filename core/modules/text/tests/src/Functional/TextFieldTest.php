@@ -127,12 +127,12 @@ class TextFieldTest extends StringFieldTest {
     $test_file = current($this->drupalGetTestFiles('text'));
     $edit['files[file_field_0]'] = \Drupal::service('file_system')->realpath($test_file->uri);
     $this->drupalPostForm('entity_test/add', $edit, 'Upload');
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
     $edit = [
       'text_long[0][value]' => 'Long text',
     ];
     $this->drupalPostForm(NULL, $edit, 'Save');
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
     $this->drupalGet('entity_test/1');
     $this->assertText('Long text');
   }

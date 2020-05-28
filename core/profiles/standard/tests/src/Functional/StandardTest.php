@@ -40,7 +40,7 @@ class StandardTest extends BrowserTestBase {
     $this->drupalGet('');
     $this->assertLink(t('Contact'));
     $this->clickLink(t('Contact'));
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
 
     // Test anonymous user can access 'Main navigation' block.
     $this->adminUser = $this->drupalCreateUser([
@@ -153,7 +153,7 @@ class StandardTest extends BrowserTestBase {
     $this->adminUser->addRole($role->id());
     $this->adminUser->save();
     $this->drupalGet('node/add');
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
 
     // Ensure that there are no pending updates after installation.
     $this->drupalLogin($this->rootUser);

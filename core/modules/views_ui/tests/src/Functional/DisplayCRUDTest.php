@@ -94,7 +94,7 @@ class DisplayCRUDTest extends UITestBase {
     $this->drupalPostForm("admin/structure/views/nojs/display/{$view['id']}/page_1/display_id", ['display_id' => $machine_name], 'Apply');
     $this->drupalPostForm(NULL, [], 'Delete Page');
     $this->drupalPostForm(NULL, [], t('Save'));
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
     $this->assertNoLinkByHref($path_prefix . '/new_machine_name', 'Make sure there is no display tab for the deleted display.');
   }
 

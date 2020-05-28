@@ -77,7 +77,7 @@ class UserPasswordResetTest extends BrowserTestBase {
     // Verify that accessing the password reset form without having the session
     // variables set results in an access denied message.
     $this->drupalGet(Url::fromRoute('user.reset.form', ['uid' => $this->account->id()]));
-    $this->assertResponse(403);
+    $this->assertSession()->statusCodeEquals(403);
 
     // Try to reset the password for an invalid account.
     $this->drupalGet('user/password');
@@ -159,7 +159,7 @@ class UserPasswordResetTest extends BrowserTestBase {
     $blocked_account = $this->drupalCreateUser()->block();
     $blocked_account->save();
     $this->drupalGet("user/reset/" . $blocked_account->id() . "/$timestamp/" . user_pass_rehash($blocked_account, $timestamp));
-    $this->assertResponse(403);
+    $this->assertSession()->statusCodeEquals(403);
 
     // Verify a blocked user can not request a new password.
     $this->drupalGet('user/password');
@@ -198,11 +198,11 @@ class UserPasswordResetTest extends BrowserTestBase {
     $blocked_account = $this->drupalCreateUser()->block();
     $blocked_account->save();
     $this->drupalGet("user/reset/" . $blocked_account->id() . "/$timestamp/" . user_pass_rehash($blocked_account, $timestamp) . '/login');
-    $this->assertResponse(403);
+    $this->assertSession()->statusCodeEquals(403);
 
     $blocked_account->delete();
     $this->drupalGet("user/reset/" . $blocked_account->id() . "/$timestamp/" . user_pass_rehash($blocked_account, $timestamp) . '/login');
-    $this->assertResponse(403);
+    $this->assertSession()->statusCodeEquals(403);
   }
 
   /**
@@ -263,9 +263,9 @@ class UserPasswordResetTest extends BrowserTestBase {
     // user.reset.form routes.
     $timestamp = REQUEST_TIME - 1;
     $this->drupalGet("user/reset/" . $this->account->id() . "/$timestamp/" . user_pass_rehash($this->account, $timestamp) . '/login');
-    $this->assertResponse(403);
+    $this->assertSession()->statusCodeEquals(403);
     $this->drupalGet("user/reset/" . $this->account->id());
-    $this->assertResponse(403);
+    $this->assertSession()->statusCodeEquals(403);
   }
 
   /**

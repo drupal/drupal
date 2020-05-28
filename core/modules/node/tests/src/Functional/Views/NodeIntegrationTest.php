@@ -41,10 +41,10 @@ class NodeIntegrationTest extends NodeTestBase {
     }
 
     $this->drupalGet('test-node-view');
-    $this->assertResponse(404);
+    $this->assertSession()->statusCodeEquals(404);
 
     $this->drupalGet('test-node-view/all');
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
     $this->assertNids($all_nids);
 
     foreach ($types as $type) {

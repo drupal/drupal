@@ -96,7 +96,7 @@ class ContentTranslationOperationsTest extends NodeTestBase {
     );
     $this->drupalLogin($this->baseUser1);
     $this->drupalGet($node->toUrl('drupal:content-translation-overview'));
-    $this->assertResponse(403);
+    $this->assertSession()->statusCodeEquals(403);
 
     // Ensure that the translation overview is also not accessible when the user
     // has 'access content', but the node is not published.
@@ -109,7 +109,7 @@ class ContentTranslationOperationsTest extends NodeTestBase {
     );
     $node->setUnpublished()->save();
     $this->drupalGet($node->toUrl('drupal:content-translation-overview'));
-    $this->assertResponse(403);
+    $this->assertSession()->statusCodeEquals(403);
     $this->drupalLogout();
 
     // Ensure the 'Translate' local task does not show up anymore when disabling

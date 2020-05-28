@@ -232,7 +232,7 @@ class CKEditorAdminTest extends BrowserTestBase {
     ];
     $this->submitForm($edit, 'editor_configure');
     $this->submitForm($edit, 'Save configuration');
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
     $this->assertText('The machine-readable name is already in use. It must be unique.');
   }
 

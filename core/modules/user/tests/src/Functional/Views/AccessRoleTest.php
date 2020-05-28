@@ -60,12 +60,12 @@ class AccessRoleTest extends AccessTestBase {
 
     $this->drupalLogin($this->webUser);
     $this->drupalGet('test-role');
-    $this->assertResponse(403);
+    $this->assertSession()->statusCodeEquals(403);
     $this->assertCacheContext('user.roles');
 
     $this->drupalLogin($this->normalUser);
     $this->drupalGet('test-role');
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
     $this->assertCacheContext('user.roles');
 
     // Test allowing multiple roles.
@@ -89,15 +89,15 @@ class AccessRoleTest extends AccessTestBase {
     $this->assertIdentical($expected, $view->calculateDependencies()->getDependencies());
     $this->drupalLogin($this->webUser);
     $this->drupalGet('test-role');
-    $this->assertResponse(403);
+    $this->assertSession()->statusCodeEquals(403);
     $this->assertCacheContext('user.roles');
     $this->drupalLogout();
     $this->drupalGet('test-role');
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
     $this->assertCacheContext('user.roles');
     $this->drupalLogin($this->normalUser);
     $this->drupalGet('test-role');
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
     $this->assertCacheContext('user.roles');
   }
 

@@ -111,7 +111,7 @@ class FieldUITest extends FieldTestBase {
 
     $url = "admin/structure/views/nojs/handler/test_view_fieldapi/default/field/field_name_0";
     $this->drupalGet($url);
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
 
     // Test the click sort column options.
     // Tests the available formatter options.
@@ -144,7 +144,7 @@ class FieldUITest extends FieldTestBase {
 
     $url = "admin/structure/views/nojs/add-handler/test_view_fieldapi/default/filter";
     $this->drupalPostForm($url, ['name[node__' . $field_name . '.' . $field_name . '_value]' => TRUE], t('Add and configure @handler', ['@handler' => t('filter criteria')]));
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
     // Verify that using a boolean field as a filter also results in using the
     // boolean plugin.
     $option = $this->xpath('//label[@for="edit-options-value-1"]');

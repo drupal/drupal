@@ -69,7 +69,7 @@ class BlockContentListViewsTest extends BlockContentTestBase {
     $link_text = t('Add custom block');
     $this->assertLink($link_text);
     $this->clickLink($link_text);
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
     $edit = [];
     $edit['info[0][value]'] = $label;
     $edit['body[0][value]'] = $this->randomMachineName(16);
@@ -96,7 +96,7 @@ class BlockContentListViewsTest extends BlockContentTestBase {
     if (!empty($block)) {
       $this->assertLinkByHref('block/' . $block->id());
       $this->clickLink(t('Edit'));
-      $this->assertResponse(200);
+      $this->assertSession()->statusCodeEquals(200);
       $this->assertTitle(strip_tags(t('Edit custom block %label', ['%label' => $label]) . ' | Drupal'));
       $edit = ['info[0][value]' => $new_label];
       $this->drupalPostForm(NULL, $edit, t('Save'));
@@ -113,7 +113,7 @@ class BlockContentListViewsTest extends BlockContentTestBase {
     $this->assertLinkByHref('block/' . $block->id() . '/delete');
     $delete_text = t('Delete');
     $this->clickLink($delete_text);
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
     $this->assertTitle(strip_tags(t('Are you sure you want to delete the custom block %label?', ['%label' => $new_label]) . ' | Drupal'));
     $this->drupalPostForm(NULL, [], $delete_text);
 

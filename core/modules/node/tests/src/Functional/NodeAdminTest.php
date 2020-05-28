@@ -133,7 +133,7 @@ class NodeAdminTest extends NodeTestBase {
 
     // Verify view, edit, and delete links for any content.
     $this->drupalGet('admin/content');
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
 
     $node_type_labels = $this->xpath('//td[contains(@class, "views-field-type")]');
     $delta = 0;
@@ -163,7 +163,7 @@ class NodeAdminTest extends NodeTestBase {
     $this->drupalLogout();
     $this->drupalLogin($this->baseUser1);
     $this->drupalGet('admin/content');
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
     $this->assertLinkByHref('node/' . $nodes['published_page']->id());
     $this->assertLinkByHref('node/' . $nodes['published_article']->id());
     $this->assertNoLinkByHref('node/' . $nodes['published_page']->id() . '/edit');
@@ -183,7 +183,7 @@ class NodeAdminTest extends NodeTestBase {
     $this->drupalLogout();
     $this->drupalLogin($this->baseUser2);
     $this->drupalGet('admin/content');
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
     $this->assertLinkByHref('node/' . $nodes['unpublished_page_2']->id());
     // Verify no operation links are displayed.
     $this->assertNoLinkByHref('node/' . $nodes['unpublished_page_2']->id() . '/edit');
@@ -201,7 +201,7 @@ class NodeAdminTest extends NodeTestBase {
     $this->drupalLogout();
     $this->drupalLogin($this->baseUser3);
     $this->drupalGet('admin/content');
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
     foreach ($nodes as $node) {
       $this->assertLinkByHref('node/' . $node->id());
       $this->assertLinkByHref('node/' . $node->id() . '/edit');

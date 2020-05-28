@@ -92,7 +92,7 @@ class IntegrationTest extends ViewTestBase {
     $this->drupalLogout();
     $this->drupalLogin($this->deniedUser);
     $this->drupalGet('test_statistics_integration');
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
 
     $this->assertSession()->pageTextNotContains('Total views:');
     $this->assertSession()->pageTextNotContains('Views today:');

@@ -67,7 +67,7 @@ class FieldWebTest extends ViewTestBase {
    */
   public function testClickSorting() {
     $this->drupalGet('test_click_sort');
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
 
     // Only the id and name should be click sortable, but not the name.
     $this->assertLinkByHref(Url::fromRoute('<none>', [], ['query' => ['order' => 'id', 'sort' => 'asc']])->toString());

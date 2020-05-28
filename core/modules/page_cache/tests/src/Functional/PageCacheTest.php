@@ -203,7 +203,7 @@ class PageCacheTest extends BrowserTestBase {
 
     // Ensure a conditional request returns 304 Not Modified.
     $this->drupalGet('', [], ['If-Modified-Since' => $last_modified, 'If-None-Match' => $etag]);
-    $this->assertResponse(304);
+    $this->assertSession()->statusCodeEquals(304);
 
     // Ensure a conditional request with obsolete If-Modified-Since date
     // returns 304 Not Modified.
@@ -211,7 +211,7 @@ class PageCacheTest extends BrowserTestBase {
       'If-Modified-Since' => gmdate(DATE_RFC822, strtotime($last_modified)),
       'If-None-Match' => $etag,
     ]);
-    $this->assertResponse(304);
+    $this->assertSession()->statusCodeEquals(304);
 
     // Ensure a conditional request with obsolete If-Modified-Since date
     // returns 304 Not Modified.
@@ -219,13 +219,13 @@ class PageCacheTest extends BrowserTestBase {
       'If-Modified-Since' => gmdate(DATE_RFC850, strtotime($last_modified)),
       'If-None-Match' => $etag,
     ]);
-    $this->assertResponse(304);
+    $this->assertSession()->statusCodeEquals(304);
 
     // Ensure a conditional request without If-None-Match returns 200 OK.
     $this->drupalGet('', [], ['If-Modified-Since' => $last_modified, 'If-None-Match' => NULL]);
     // Verify the page is not printed twice when the cache is warm.
     $this->assertSession()->responseNotMatches('#<html.*<html#');
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
     $this->assertEqual($this->drupalGetHeader('X-Drupal-Cache'), 'HIT', 'Page was cached.');
 
     // Ensure a conditional request with If-Modified-Since newer than
@@ -234,14 +234,14 @@ class PageCacheTest extends BrowserTestBase {
       'If-Modified-Since' => gmdate(DateTimePlus::RFC7231, strtotime($last_modified) + 1),
       'If-None-Match' => $etag,
     ]);
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
     $this->assertEqual($this->drupalGetHeader('X-Drupal-Cache'), 'HIT', 'Page was cached.');
 
     // Ensure a conditional request by an authenticated user returns 200 OK.
     $user = $this->drupalCreateUser();
     $this->drupalLogin($user);
     $this->drupalGet('', [], ['If-Modified-Since' => $last_modified, 'If-None-Match' => $etag]);
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
     $this->assertNull($this->drupalGetHeader('X-Drupal-Cache'), 'Absence of Page was not cached.');
   }
 
@@ -371,11 +371,11 @@ class PageCacheTest extends BrowserTestBase {
     foreach ($tests as $code => $content_url) {
       // Anonymous user, without permissions.
       $this->drupalGet($content_url);
-      $this->assertResponse($code);
+      $this->assertSession()->statusCodeEquals($code);
       $this->assertEqual($this->drupalGetHeader('X-Drupal-Cache'), 'MISS');
       $this->assertCacheTag('4xx-response');
       $this->drupalGet($content_url);
-      $this->assertResponse($code);
+      $this->assertSession()->statusCodeEquals($code);
       $this->assertEqual($this->drupalGetHeader('X-Drupal-Cache'), 'HIT');
       $entity_values = [
         'name' => $this->randomMachineName(),
@@ -391,15 +391,15 @@ class PageCacheTest extends BrowserTestBase {
       $entity->save();
       // Saving an entity clears 4xx cache tag.
       $this->drupalGet($content_url);
-      $this->assertResponse($code);
+      $this->assertSession()->statusCodeEquals($code);
       $this->assertEqual($this->drupalGetHeader('X-Drupal-Cache'), 'MISS');
       $this->drupalGet($content_url);
-      $this->assertResponse($code);
+      $this->assertSession()->statusCodeEquals($code);
       $this->assertEqual($this->drupalGetHeader('X-Drupal-Cache'), 'HIT');
       // Rebuilding the router should invalidate the 4xx cache tag.
       $this->container->get('router.builder')->rebuild();
       $this->drupalGet($content_url);
-      $this->assertResponse($code);
+      $this->assertSession()->statusCodeEquals($code);
       $this->assertEqual($this->drupalGetHeader('X-Drupal-Cache'), 'MISS');
 
       // Ensure the 'expire' field on the cache entry uses cache_ttl_4xx.
@@ -428,7 +428,7 @@ class PageCacheTest extends BrowserTestBase {
       // Getting the 404 page twice should still result in a cache miss.
       $this->drupalGet($content_url);
       $this->drupalGet($content_url);
-      $this->assertResponse($code);
+      $this->assertSession()->statusCodeEquals($code);
       $this->assertEqual($this->drupalGetHeader('X-Drupal-Cache'), 'MISS');
     }
   }
@@ -579,7 +579,7 @@ class PageCacheTest extends BrowserTestBase {
     $config->save();
 
     $this->drupalGet('/system-test/custom-cache-control');
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
     $this->assertSession()->responseHeaderEquals('Cache-Control', 'bar, private');
   }
 
