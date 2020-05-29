@@ -122,7 +122,6 @@
   <rule ref="Drupal.Semantics.FunctionAlias"/>
   <rule ref="Drupal.Semantics.FunctionT">
     <exclude name="Drupal.Semantics.FunctionT.NotLiteralString"/>
-    <exclude name="Drupal.Semantics.FunctionT.ConcatString"/>
   </rule>
   <rule ref="Drupal.Semantics.FunctionWatchdog"/>
   <rule ref="Drupal.Semantics.InstallHooks"/>
