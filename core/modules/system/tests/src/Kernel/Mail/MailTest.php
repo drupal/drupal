@@ -116,7 +116,7 @@ class MailTest extends KernelTestBase {
   public function testFromAndReplyToHeader() {
     $language = \Drupal::languageManager()->getCurrentLanguage();
 
-    // Set required site configuruation.
+    // Set required site configuration.
     $this->config('system.site')
       ->set('mail', 'mailtest@example.com')
       ->set('name', 'Drupal')
