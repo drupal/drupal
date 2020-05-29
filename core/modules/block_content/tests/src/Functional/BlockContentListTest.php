@@ -35,7 +35,7 @@ class BlockContentListTest extends BlockContentTestBase {
     $this->drupalGet('admin/structure/block/block-content');
 
     // Test for the page title.
-    $this->assertTitle(t('Custom block library') . ' | Drupal');
+    $this->assertTitle('Custom block library | Drupal');
 
     // Test for the table.
     $element = $this->xpath('//div[@class="layout-content"]//table');
@@ -102,7 +102,7 @@ class BlockContentListTest extends BlockContentTestBase {
     $delete_text = t('Delete');
     $this->clickLink($delete_text);
     $this->assertResponse(200);
-    $this->assertTitle(strip_tags(t('Are you sure you want to delete the custom block %label?', ['%label' => $new_label]) . ' | Drupal'));
+    $this->assertTitle("Are you sure you want to delete the custom block $new_label? | Drupal");
     $this->drupalPostForm(NULL, [], $delete_text);
 
     // Verify that the text of the label and machine name does not appear in

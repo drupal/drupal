@@ -2,7 +2,6 @@
 
 namespace Drupal\Tests\block_content\Functional;
 
-use Drupal\Component\Render\FormattableMarkup;
 use Drupal\block_content\Entity\BlockContentType;
 use Drupal\Component\Utility\Html;
 use Drupal\Core\Url;
@@ -121,7 +120,7 @@ class BlockContentTypeTest extends BlockContentTestBase {
       'label' => 'Bar',
     ];
     $this->drupalGet('admin/structure/block/block-content/manage/basic');
-    $this->assertTitle(new FormattableMarkup('Edit @type custom block type | Drupal', ['@type' => 'basic']));
+    $this->assertTitle('Edit basic custom block type | Drupal');
     $this->drupalPostForm(NULL, $edit, t('Save'));
     $front_page_path = Url::fromRoute('<front>')->toString();
     $this->assertBreadcrumb('admin/structure/block/block-content/manage/basic/fields', [

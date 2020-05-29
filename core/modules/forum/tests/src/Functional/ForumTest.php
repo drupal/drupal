@@ -246,12 +246,12 @@ class ForumTest extends BrowserTestBase {
     // Test the root forum page title change.
     $this->drupalGet('forum');
     $this->assertCacheTag('config:taxonomy.vocabulary.' . $this->forum['vid']);
-    $this->assertTitle(t('Forums | Drupal'));
+    $this->assertTitle('Forums | Drupal');
     $vocabulary = Vocabulary::load($this->forum['vid']);
     $vocabulary->set('name', 'Discussions');
     $vocabulary->save();
     $this->drupalGet('forum');
-    $this->assertTitle(t('Discussions | Drupal'));
+    $this->assertTitle('Discussions | Drupal');
 
     // Test anonymous action link.
     $this->drupalLogout();
@@ -620,7 +620,7 @@ class ForumTest extends BrowserTestBase {
     $this->drupalGet('admin/help/forum');
     $this->assertResponse($response2);
     if ($response2 == 200) {
-      $this->assertTitle(t('Forum | Drupal'), 'Forum help title was displayed');
+      $this->assertTitle('Forum | Drupal');
       $this->assertText(t('Forum'), 'Forum help node was displayed');
     }
 
@@ -634,7 +634,7 @@ class ForumTest extends BrowserTestBase {
     // View forum node.
     $this->drupalGet('node/' . $node->id());
     $this->assertResponse(200);
-    $this->assertTitle($node->label() . ' | Drupal', 'Forum node was displayed');
+    $this->assertTitle($node->label() . ' | Drupal');
     $breadcrumb_build = [
       Link::createFromRoute(t('Home'), '<front>'),
       Link::createFromRoute(t('Forums'), 'forum.index'),
@@ -651,7 +651,7 @@ class ForumTest extends BrowserTestBase {
     $this->drupalGet('node/' . $node->id() . '/edit');
     $this->assertResponse($response);
     if ($response == 200) {
-      $this->assertTitle('Edit Forum topic ' . $node->label() . ' | Drupal', 'Forum edit node was displayed');
+      $this->assertTitle('Edit Forum topic ' . $node->label() . ' | Drupal');
     }
 
     if ($response == 200) {

@@ -127,7 +127,7 @@ class HelpTest extends BrowserTestBase {
       $this->drupalGet('admin/help/' . $module);
       $this->assertResponse($response);
       if ($response == 200) {
-        $this->assertTitle($name . ' | Drupal', new FormattableMarkup('%module title was displayed', ['%module' => $module]));
+        $this->assertTitle("$name | Drupal");
         $this->assertEquals($name, $this->cssSelect('h1.page-title')[0]->getText(), "$module heading was displayed");
         $info = \Drupal::service('extension.list.module')->getExtensionInfo($module);
         $admin_tasks = system_get_module_admin_tasks($module, $info);

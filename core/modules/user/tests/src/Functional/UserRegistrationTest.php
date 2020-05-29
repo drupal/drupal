@@ -54,7 +54,7 @@ class UserRegistrationTest extends BrowserTestBase {
     $this->assertTrue($new_user->isActive(), 'New account is active after registration.');
     $resetURL = user_pass_reset_url($new_user);
     $this->drupalGet($resetURL);
-    $this->assertTitle(t('Set password | Drupal'), 'Page title is "Set password".');
+    $this->assertTitle('Set password | Drupal');
 
     // Allow registration by site visitors, but require administrator approval.
     $config->set('register', UserInterface::REGISTER_VISITORS_ADMINISTRATIVE_APPROVAL)->save();

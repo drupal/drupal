@@ -94,7 +94,7 @@ class FileListingTest extends FileFieldTestBase {
 
     $this->drupalGet('admin/content/files/usage/' . $file->id());
     $this->assertResponse(200);
-    $this->assertTitle(t('File usage information for @file | Drupal', ['@file' => $file->getFilename()]));
+    $this->assertTitle('File usage information for ' . $file->getFilename() . ' | Drupal');
 
     foreach ($nodes as &$node) {
       $this->drupalGet('node/' . $node->id() . '/edit');

@@ -301,7 +301,7 @@ class ConfigImportUITest extends BrowserTestBase {
     // Load the diff UI and verify that the diff reflects the change.
     $this->drupalGet('admin/config/development/configuration/sync/diff/' . $config_name);
     $this->assertNoRaw('&amp;nbsp;');
-    $this->assertTitle(new FormattableMarkup('View changes of @config_name | Drupal', ['@config_name' => $config_name]));
+    $this->assertTitle("View changes of $config_name | Drupal");
 
     // The following assertions do not use $this::assertEscaped() because
     // \Drupal\Component\Diff\DiffFormatter adds markup that signifies what has
