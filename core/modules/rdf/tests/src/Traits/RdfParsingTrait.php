@@ -5,7 +5,7 @@ namespace Drupal\Tests\rdf\Traits;
 use Drupal\Core\Url;
 
 /**
- * Override \EasyRdf_ParsedUri for PHP 7.4 compatibilty.
+ * Override \EasyRdf_ParsedUri for PHP 7.4 compatibility.
  *
  * @todo https://www.drupal.org/project/drupal/issues/3110972 Remove this work
  *   around.
