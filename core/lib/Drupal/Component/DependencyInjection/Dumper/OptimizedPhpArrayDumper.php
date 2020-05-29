@@ -47,6 +47,13 @@ class OptimizedPhpArrayDumper extends Dumper {
   protected $serialize = TRUE;
 
   /**
+   * A list of container aliases.
+   *
+   * @var array
+   */
+  protected $aliases;
+
+  /**
    * {@inheritdoc}
    */
   public function dump(array $options = []) {
@@ -61,8 +68,9 @@ class OptimizedPhpArrayDumper extends Dumper {
    */
   public function getArray() {
     $definition = [];
+    // Warm aliases first.
     $this->aliases = $this->getAliases();
-    $definition['aliases'] = $this->getAliases();
+    $definition['aliases'] = $this->aliases;
     $definition['parameters'] = $this->getParameters();
     $definition['services'] = $this->getServiceDefinitions();
     $definition['frozen'] = $this->container->isCompiled();
