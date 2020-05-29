@@ -30,7 +30,7 @@ class EntityAccessDeniedHttpException extends CacheableAccessDeniedHttpException
    * The error which caused the 403.
    *
    * The error contains:
-   *   - entity: The entity which the current user doens't have access to.
+   *   - entity: The entity which the current user does not have access to.
    *   - pointer: A path in the JSON:API response structure pointing to the
    *     entity.
    *   - reason: (Optional) An optional reason for this failure.

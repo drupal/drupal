@@ -1025,7 +1025,7 @@ DOCBLOCK;
     /**
      * @group DCOM-41
      */
-    public function testAnnotationDoesntThrowExceptionWhenAtSignIsNotFollowedByIdentifier()
+    public function testAnnotationDoesNotThrowExceptionWhenAtSignIsNotFollowedByIdentifier()
     {
         $parser = new DocParser();
         $result = $parser->parse("'@'");

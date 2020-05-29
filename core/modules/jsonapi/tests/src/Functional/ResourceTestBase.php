@@ -1118,7 +1118,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
           'related_author_id' => [
             'operator' => '<>',
             'path' => 'field_jsonapi_test_entity_ref.status',
-            'value' => 'doesnt@matter.com',
+            'value' => 'does_not@matter.com',
           ],
         ],
       ]);
