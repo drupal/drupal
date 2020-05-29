@@ -250,6 +250,17 @@ class BrowserTestBaseTest extends BrowserTestBase {
   }
 
   /**
+   * Tests legacy assertTitle().
+   *
+   * @group legacy
+   * @expectedDeprecation AssertLegacyTrait::assertTitle() is deprecated in drupal:8.2.0 and is removed from drupal:10.0.0. Use $this->assertSession()->titleEquals() instead. See https://www.drupal.org/node/3129738
+   */
+  public function testAssertTitle() {
+    $this->drupalGet('test-encoded');
+    $this->assertTitle("Page with encoded HTML | Drupal");
+  }
+
+  /**
    * Tests legacy assertHeader().
    *
    * @group legacy

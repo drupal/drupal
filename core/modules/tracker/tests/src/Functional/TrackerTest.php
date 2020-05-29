@@ -212,7 +212,7 @@ class TrackerTest extends BrowserTestBase {
     $this->assertNoLink($unpublished->label());
     // Verify that title and tab title have been set correctly.
     $this->assertText('Activity', 'The user activity tab has the name "Activity".');
-    $this->assertTitle($this->user->getAccountName() . ' | Drupal');
+    $this->assertSession()->titleEquals($this->user->getAccountName() . ' | Drupal');
 
     // Verify that unpublished comments are removed from the tracker.
     $admin_user = $this->drupalCreateUser(['post comments', 'administer comments', 'access user profiles']);

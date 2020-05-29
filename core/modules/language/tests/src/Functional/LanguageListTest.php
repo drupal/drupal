@@ -93,7 +93,7 @@ class LanguageListTest extends BrowserTestBase {
     // Ensure 'Edit' link works.
     $this->drupalGet('admin/config/regional/language');
     $this->clickLink(t('Edit'));
-    $this->assertTitle('Edit language | Drupal');
+    $this->assertSession()->titleEquals('Edit language | Drupal');
     // Edit a language.
     $name = $this->randomMachineName(16);
     $edit = [

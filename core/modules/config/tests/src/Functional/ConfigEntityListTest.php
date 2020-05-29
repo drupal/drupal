@@ -162,7 +162,7 @@ class ConfigEntityListTest extends BrowserTestBase {
     $this->drupalGet('admin/structure/config_test');
 
     // Test for the page title.
-    $this->assertTitle('Test configuration | Drupal');
+    $this->assertSession()->titleEquals('Test configuration | Drupal');
 
     // Test for the table.
     $element = $this->xpath('//div[@class="layout-content"]//table');
@@ -213,7 +213,7 @@ class ConfigEntityListTest extends BrowserTestBase {
     $this->assertLinkByHref('admin/structure/config_test/manage/antelope');
     $this->clickLink('Edit', 1);
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertTitle('Edit Antelope | Drupal');
+    $this->assertSession()->titleEquals('Edit Antelope | Drupal');
     $edit = ['label' => 'Albatross', 'id' => 'albatross'];
     $this->drupalPostForm(NULL, $edit, t('Save'));
 
@@ -227,7 +227,7 @@ class ConfigEntityListTest extends BrowserTestBase {
     $this->assertLinkByHref('admin/structure/config_test/manage/albatross/delete');
     $this->clickLink('Delete', 1);
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertTitle('Are you sure you want to delete the test configuration Albatross? | Drupal');
+    $this->assertSession()->titleEquals('Are you sure you want to delete the test configuration Albatross? | Drupal');
     $this->drupalPostForm(NULL, [], t('Delete'));
 
     // Verify that the text of the label and machine name does not appear in
@@ -238,7 +238,7 @@ class ConfigEntityListTest extends BrowserTestBase {
     // Delete the original entity using the operations link.
     $this->clickLink('Delete');
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertTitle('Are you sure you want to delete the test configuration Default? | Drupal');
+    $this->assertSession()->titleEquals('Are you sure you want to delete the test configuration Default? | Drupal');
     $this->drupalPostForm(NULL, [], t('Delete'));
 
     // Verify that the text of the label and machine name does not appear in

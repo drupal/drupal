@@ -120,7 +120,7 @@ class BlockContentTypeTest extends BlockContentTestBase {
       'label' => 'Bar',
     ];
     $this->drupalGet('admin/structure/block/block-content/manage/basic');
-    $this->assertTitle('Edit basic custom block type | Drupal');
+    $this->assertSession()->titleEquals('Edit basic custom block type | Drupal');
     $this->drupalPostForm(NULL, $edit, t('Save'));
     $front_page_path = Url::fromRoute('<front>')->toString();
     $this->assertBreadcrumb('admin/structure/block/block-content/manage/basic/fields', [

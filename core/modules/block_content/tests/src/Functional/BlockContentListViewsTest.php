@@ -38,7 +38,7 @@ class BlockContentListViewsTest extends BlockContentTestBase {
     $this->drupalGet('admin/structure/block/block-content');
 
     // Test for the page title.
-    $this->assertTitle('Custom block library | Drupal');
+    $this->assertSession()->titleEquals('Custom block library | Drupal');
 
     // Test for the exposed filters.
     $this->assertFieldByName('info');
@@ -97,7 +97,7 @@ class BlockContentListViewsTest extends BlockContentTestBase {
       $this->assertLinkByHref('block/' . $block->id());
       $this->clickLink(t('Edit'));
       $this->assertSession()->statusCodeEquals(200);
-      $this->assertTitle("Edit custom block $label | Drupal");
+      $this->assertSession()->titleEquals("Edit custom block $label | Drupal");
       $edit = ['info[0][value]' => $new_label];
       $this->drupalPostForm(NULL, $edit, t('Save'));
     }
@@ -114,7 +114,7 @@ class BlockContentListViewsTest extends BlockContentTestBase {
     $delete_text = t('Delete');
     $this->clickLink($delete_text);
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertTitle("Are you sure you want to delete the custom block $new_label? | Drupal");
+    $this->assertSession()->titleEquals("Are you sure you want to delete the custom block $new_label? | Drupal");
     $this->drupalPostForm(NULL, [], $delete_text);
 
     // Verify that the text of the label and machine name does not appear in

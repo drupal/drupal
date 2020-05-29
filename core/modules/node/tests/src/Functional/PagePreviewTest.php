@@ -440,7 +440,7 @@ class PagePreviewTest extends NodeTestBase {
     $this->drupalPostForm('node/add/page', $edit, t('Preview'));
 
     // Check that the preview is displaying the title, body and term.
-    $this->assertTitle($edit[$title_key] . ' | Drupal');
+    $this->assertSession()->titleEquals($edit[$title_key] . ' | Drupal');
     $this->assertText($edit[$title_key], 'Title displayed.');
     $this->assertText($edit[$body_key], 'Body displayed.');
     $this->assertText($edit[$term_key], 'Term displayed.');

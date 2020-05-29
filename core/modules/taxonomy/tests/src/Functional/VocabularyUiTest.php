@@ -81,7 +81,7 @@ class VocabularyUiTest extends TaxonomyTestBase {
     $this->drupalPostForm('admin/structure/taxonomy/add', $edit, t('Save'));
 
     $site_name = $this->config('system.site')->get('name');
-    $this->assertTitle("Don't Panic | $site_name");
+    $this->assertSession()->titleEquals("Don't Panic | $site_name");
   }
 
   /**

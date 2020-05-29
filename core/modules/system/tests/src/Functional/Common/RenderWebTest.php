@@ -35,7 +35,7 @@ class RenderWebTest extends BrowserTestBase {
     $this->drupalGet('common-test/type-link-active-class');
     $this->assertStringStartsWith("<!DOCTYPE html>\n<html", $this->getSession()->getPage()->getContent());
     $this->assertIdentical('text/html; charset=UTF-8', $this->drupalGetHeader('Content-Type'));
-    $this->assertTitle('Test active link class | Drupal');
+    $this->assertSession()->titleEquals('Test active link class | Drupal');
     $this->assertCacheContext('url.query_args:' . MainContentViewSubscriber::WRAPPER_FORMAT);
 
     $this->drupalGet('common-test/type-link-active-class', ['query' => [MainContentViewSubscriber::WRAPPER_FORMAT => 'json']]);

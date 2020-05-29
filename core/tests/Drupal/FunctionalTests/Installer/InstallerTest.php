@@ -108,7 +108,7 @@ class InstallerTest extends InstallerTestBase {
     parent::visitInstaller();
 
     // Assert the title is correct and has the title suffix.
-    $this->assertTitle('Choose language | Drupal');
+    $this->assertSession()->titleEquals('Choose language | Drupal');
   }
 
 }

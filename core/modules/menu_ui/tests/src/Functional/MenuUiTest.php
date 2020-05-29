@@ -709,7 +709,7 @@ class MenuUiTest extends BrowserTestBase {
       // Verify menu link link.
       $this->clickLink($title);
       $title = $parent_node->label();
-      $this->assertTitle("$title | Drupal");
+      $this->assertSession()->titleEquals("$title | Drupal");
     }
 
     // Verify menu link.
@@ -719,7 +719,7 @@ class MenuUiTest extends BrowserTestBase {
     // Verify menu link link.
     $this->clickLink($title);
     $title = $item_node->label();
-    $this->assertTitle("$title | Drupal");
+    $this->assertSession()->titleEquals("$title | Drupal");
   }
 
   /**

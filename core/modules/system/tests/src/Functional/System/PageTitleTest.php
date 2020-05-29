@@ -107,14 +107,14 @@ class PageTitleTest extends BrowserTestBase {
     // Test the '#title' render array attribute.
     $this->drupalGet('test-render-title');
 
-    $this->assertTitle('Foo | Drupal');
+    $this->assertSession()->titleEquals('Foo | Drupal');
     $result = $this->xpath('//h1[@class="page-title"]');
     $this->assertEqual('Foo', $result[0]->getText());
 
     // Test forms
     $this->drupalGet('form-test/object-builder');
 
-    $this->assertTitle('Test dynamic title | Drupal');
+    $this->assertSession()->titleEquals('Test dynamic title | Drupal');
     $result = $this->xpath('//h1[@class="page-title"]');
     $this->assertEqual('Test dynamic title', $result[0]->getText());
 
@@ -139,24 +139,24 @@ class PageTitleTest extends BrowserTestBase {
     // Ensure that the title got translated.
     $this->drupalGet('test-page-static-title');
 
-    $this->assertTitle('Static title translated | Drupal');
+    $this->assertSession()->titleEquals('Static title translated | Drupal');
     $result = $this->xpath('//h1[@class="page-title"]');
     $this->assertEqual('Static title translated', $result[0]->getText());
 
     // Test the dynamic '_title_callback' route option.
     $this->drupalGet('test-page-dynamic-title');
 
-    $this->assertTitle('Dynamic title | Drupal');
+    $this->assertSession()->titleEquals('Dynamic title | Drupal');
     $result = $this->xpath('//h1[@class="page-title"]');
     $this->assertEqual('Dynamic title', $result[0]->getText());
 
     // Ensure that titles are cacheable and are escaped normally if the
     // controller does not escape them.
     $this->drupalGet('test-page-cached-controller');
-    $this->assertTitle('Cached title | Drupal');
+    $this->assertSession()->titleEquals('Cached title | Drupal');
     $this->assertRaw(Html::escape('<span>Cached title</span>') . '</h1>');
     $this->drupalGet('test-page-cached-controller');
-    $this->assertTitle('Cached title | Drupal');
+    $this->assertSession()->titleEquals('Cached title | Drupal');
     $this->assertRaw(Html::escape('<span>Cached title</span>') . '</h1>');
   }
 

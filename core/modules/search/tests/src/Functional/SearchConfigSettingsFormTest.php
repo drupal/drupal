@@ -254,7 +254,7 @@ class SearchConfigSettingsFormTest extends BrowserTestBase {
     $edit = [];
     $edit['search_type'] = 'search_extra_type_search';
     $this->drupalPostForm(NULL, $edit, t('Add search page'));
-    $this->assertTitle('Add new search page | Drupal');
+    $this->assertSession()->titleEquals('Add new search page | Drupal');
 
     $first = [];
     $first['label'] = $this->randomString();
