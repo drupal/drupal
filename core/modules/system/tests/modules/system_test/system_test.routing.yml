@@ -131,9 +131,9 @@ system_test.permission_dependent_route_access:
     _permission: 'pet llamas'
 
 system_test.respond_response:
-  path: '/system-test/respond-reponse'
+  path: '/system-test/respond-response'
   defaults:
-    _controller: '\Drupal\system_test\Controller\SystemTestController::respondWithReponse'
+    _controller: '\Drupal\system_test\Controller\SystemTestController::respondWithResponse'
   requirements:
     _access: 'TRUE'
 
@@ -145,9 +145,9 @@ system_test.respond_public_response:
     _access: 'TRUE'
 
 system_test.respond_cacheable_response:
-  path: '/system-test/respond-cacheable-reponse'
+  path: '/system-test/respond-cacheable-response'
   defaults:
-    _controller: '\Drupal\system_test\Controller\SystemTestController::respondWithCacheableReponse'
+    _controller: '\Drupal\system_test\Controller\SystemTestController::respondWithCacheableResponse'
   requirements:
     _access: 'TRUE'
 
