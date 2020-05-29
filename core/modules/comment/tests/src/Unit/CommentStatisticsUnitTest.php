@@ -96,7 +96,7 @@ class CommentStatisticsUnitTest extends UnitTestCase {
    */
   public function testRead() {
     $this->calls_to_fetch = 0;
-    $results = $this->commentStatistics->read(['1' => 'boo', '2' => 'foo'], 'snafoos');
+    $results = $this->commentStatistics->read(['1' => 'boo', '2' => 'foo'], 'snafus');
     $this->assertEquals($results, ['something', 'something-else']);
   }
 
