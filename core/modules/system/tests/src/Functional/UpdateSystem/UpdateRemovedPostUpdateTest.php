@@ -63,7 +63,7 @@ class UpdateRemovedPostUpdateTest extends BrowserTestBase {
    * Tests hook_post_update_NAME().
    */
   public function testRemovedPostUpdate() {
-    // Mimic the behaviour of ModuleInstaller::install().
+    // Mimic the behavior of ModuleInstaller::install().
     $key_value = \Drupal::service('keyvalue');
     $existing_updates = $key_value->get('post_update')->get('existing_updates', []);
 

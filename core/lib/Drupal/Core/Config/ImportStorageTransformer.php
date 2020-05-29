@@ -12,7 +12,7 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
  * This service does not implement an interface and is final because it is not
  * meant to be replaced, extended or used in a different context.
  * Its single purpose is to transform a storage for the import step of a
- * configuration synchronisation by dispatching the import transformation event.
+ * configuration synchronization by dispatching the import transformation event.
  */
 final class ImportStorageTransformer {
 

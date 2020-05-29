@@ -240,7 +240,7 @@ class EntitySerializationTest extends NormalizerTestBase {
       'non_rev_field' => '<non_rev_field/>',
       'field_test_text' => '<field_test_text><value>' . $this->values['field_test_text']['value'] . '</value><format>' . $this->values['field_test_text']['format'] . '</format><processed><![CDATA[<p>' . $this->values['field_test_text']['value'] . '</p>]]></processed></field_test_text>',
     ];
-    // Sort it in the same order as normalised.
+    // Sort it in the same order as normalized.
     $expected = array_merge($normalized, $expected);
     // Add header and footer.
     array_unshift($expected, '<?xml version="1.0"?>' . PHP_EOL . '<response>');

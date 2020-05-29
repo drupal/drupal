@@ -65,7 +65,7 @@ class ExternalFormUrlTest extends KernelTestBase implements FormInterface {
   }
 
   /**
-   * Tests form behaviour.
+   * Tests form behavior.
    */
   public function testActionUrlBehavior() {
     // Create a new request which has a request uri with multiple leading

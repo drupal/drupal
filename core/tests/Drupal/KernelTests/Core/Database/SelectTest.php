@@ -58,7 +58,7 @@ class SelectTest extends DatabaseTestBase {
 
     // Check the returned number of rows.
     $this->assertCount(4, $records);
-    // Check that the flattened query contains the sanitised comment string.
+    // Check that the flattened query contains the sanitized comment string.
     $this->assertStringContainsString($expected, $query);
 
     $connection = Database::getConnection();

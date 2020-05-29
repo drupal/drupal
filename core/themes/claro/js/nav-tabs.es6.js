@@ -73,7 +73,7 @@
       .trigger('resize.tabs');
   }
   /**
-   * Initialise the tabs JS.
+   * Initialize the tabs JS.
    */
   Drupal.behaviors.navTabs = {
     attach(context) {

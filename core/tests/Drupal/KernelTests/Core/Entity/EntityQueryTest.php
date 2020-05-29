@@ -573,7 +573,7 @@ class EntityQueryTest extends EntityKernelTestBase {
    */
   public function testConditionCount() {
     // Query for all entities of the first bundle that
-    // have red as a colour AND are triangle shaped.
+    // have red as a color AND are triangle shaped.
     $query = $this->storage->getQuery();
 
     // Add an AND condition group with 2 conditions in it.

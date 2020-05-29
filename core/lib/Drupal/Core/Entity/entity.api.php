@@ -498,7 +498,7 @@ use Drupal\node\Entity\NodeType;
  * - \Drupal\Core\Entity\Routing\AdminHtmlRouteProvider provides the same
  *   routes, set up to use the administrative theme for edit and delete pages.
  * - You can also create your own class, extending one of these two classes if
- *   you only want to modify their behaviour slightly.
+ *   you only want to modify their behavior slightly.
  *
  * To register any route provider class, add lines like the following to your
  * entity class annotation:

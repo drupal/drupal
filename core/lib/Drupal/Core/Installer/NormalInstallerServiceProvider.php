@@ -14,7 +14,7 @@ class NormalInstallerServiceProvider implements ServiceProviderInterface {
    * {@inheritdoc}
    */
   public function register(ContainerBuilder $container) {
-    // Use a performance optimised module extension list.
+    // Use performance-optimized extension lists.
     $container->getDefinition('extension.list.module')->setClass('Drupal\Core\Installer\InstallerModuleExtensionList');
     $container->getDefinition('extension.list.theme')->setClass('Drupal\Core\Installer\InstallerThemeExtensionList');
     $container->getDefinition('extension.list.theme_engine')->setClass('Drupal\Core\Installer\InstallerThemeEngineExtensionList');

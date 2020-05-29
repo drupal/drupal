@@ -6,7 +6,7 @@ use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\Tests\BrowserTestBase;
 
 /**
- * Tests the content translation behaviours on date formats.
+ * Tests the content translation behaviors on date formats.
  *
  * @group config_translation
  */
@@ -40,7 +40,7 @@ class ConfigTranslationDateFormatUiTest extends BrowserTestBase {
   }
 
   /**
-   * Tests date format translation behaviour.
+   * Tests date format translation behavior.
    */
   public function testDateFormatUI() {
     $this->drupalGet('admin/config/regional/date-time');

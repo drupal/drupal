@@ -10,7 +10,7 @@ use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Reference;
 
 /**
- * Customises the container for running updates.
+ * Customizes the container for running updates.
  */
 class UpdateServiceProvider implements ServiceProviderInterface, ServiceModifierInterface {
 

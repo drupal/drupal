@@ -194,7 +194,7 @@ abstract class WebDriverTestBase extends BrowserTestBase {
    *   driver then this should be a JPG filename.
    * @param bool $set_background_color
    *   (optional) By default this method will set the background color to white.
-   *   Set to FALSE to override this behaviour.
+   *   Set to FALSE to override this behavior.
    *
    * @throws \Behat\Mink\Exception\UnsupportedDriverActionException
    *   When operation not supported by the driver.

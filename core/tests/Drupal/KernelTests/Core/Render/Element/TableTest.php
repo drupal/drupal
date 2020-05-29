@@ -305,7 +305,7 @@ class TableTest extends KernelTestBase {
     $form = \Drupal::formBuilder()->getForm('\Drupal\form_test\Form\FormTestTableForm');
     $this->render($form);
     $this->assertEscaped('Update <em>kitten</em>');
-    $this->assertRaw('Update my favourite fruit is <strong>bananas</strong>');
+    $this->assertRaw('Update my favorite fruit is <strong>bananas</strong>');
   }
 
 }

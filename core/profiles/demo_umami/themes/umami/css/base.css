@@ -77,7 +77,7 @@ blockquote > * {
   line-height: 1.5;
 }
 blockquote a {
-  /* Tweak default link colour to improve contrast for accessibility */
+  /* Tweak default link color to improve contrast for accessibility */
   color: #057d6d;
 }
 blockquote a:hover,

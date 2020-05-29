@@ -35,7 +35,7 @@ class FormTestTableForm extends FormTestTableSelectFormBase {
     ];
     $form['table']['another_row'] = [
       'data' => [
-        '#title' => $this->t('my favourite fruit is <strong>@fruit</strong>', ['@fruit' => 'bananas']),
+        '#title' => $this->t('my favorite fruit is <strong>@fruit</strong>', ['@fruit' => 'bananas']),
         '#markup' => '<p>some more text</p>',
       ],
     ];

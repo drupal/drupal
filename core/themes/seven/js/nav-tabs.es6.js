@@ -38,7 +38,7 @@
   }
 
   /**
-   * Initialise the tabs JS.
+   * Initialize the tabs JS.
    */
   Drupal.behaviors.navTabs = {
     attach(context, settings) {

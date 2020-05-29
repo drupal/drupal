@@ -15,7 +15,7 @@
    * @type {Drupal~behavior}
    *
    * @prop {Drupal~behaviorAttach} attach
-   *   Attaches admin behaviour to the "stylescombo" button.
+   *   Attaches admin behavior to the "stylescombo" button.
    */
   Drupal.behaviors.ckeditorStylesComboSettings = {
     attach(context) {
@@ -110,7 +110,7 @@
    * @type {Drupal~behavior}
    *
    * @prop {Drupal~behaviorAttach} attach
-   *   Attaches summary behaviour to the plugin settings vertical tab.
+   *   Attaches summary behavior to the plugin settings vertical tab.
    */
   Drupal.behaviors.ckeditorStylesComboSettingsSummary = {
     attach() {

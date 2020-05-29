@@ -1,6 +1,6 @@
 name: 'Locale Test Development Release'
 type: module
-description: 'Helper module to test the behaviour when the core verison is a development release.'
+description: 'Helper module to test the behavior when the core verison is a development release.'
 package: Testing
 version: VERSION
 core: 8.x

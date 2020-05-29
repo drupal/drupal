@@ -82,7 +82,7 @@ class LocalTasksTest extends BrowserTestBase {
   protected function assertLocalTaskAppers($title) {
     // SimpleXML gives us the unescaped text, not the actual escaped markup,
     // so use a pattern instead to check the raw content.
-    // This behaviour is a bug in libxml, see
+    // This behavior is a bug in libxml, see
     // https://bugs.php.net/bug.php?id=49437.
     return $this->assertPattern('@<a [^>]*>' . preg_quote($title, '@') . '</a>@');
   }

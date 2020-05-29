@@ -614,7 +614,7 @@ class ViewUI implements ViewEntityInterface {
 
       // Prepare the query information and statistics to show either above or
       // below the view preview.
-      // Initialise the empty rows arrays so we can safely merge them later.
+      // Initialize the empty rows arrays so we can safely merge them later.
       $rows['query'] = [];
       $rows['statistics'] = [];
       if ($show_info || $show_query || $show_stats) {

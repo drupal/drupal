@@ -154,7 +154,7 @@ final class ConfigEvents {
    * Together with \Drupal\Core\Config\ConfigEvents::STORAGE_TRANSFORM_EXPORT
    * subscribers can alter the active configuration in a config sync workflow
    * instead of just overriding at runtime via the config-override system.
-   * This allows a complete customisation of the workflow including additional
+   * This allows a complete customization of the workflow including additional
    * modules and editable configuration in different environments.
    *
    * @code

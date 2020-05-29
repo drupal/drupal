@@ -739,7 +739,7 @@ class Renderer implements RendererInterface {
       $elements['#markup'] = Markup::create(Html::escape($elements['#plain_text']));
     }
     elseif (!($elements['#markup'] instanceof MarkupInterface)) {
-      // The default behaviour is to XSS filter using the admin tag list.
+      // The default behavior is to XSS filter using the admin tag list.
       $tags = isset($elements['#allowed_tags']) ? $elements['#allowed_tags'] : Xss::getAdminTagList();
       $elements['#markup'] = Markup::create(Xss::filter($elements['#markup'], $tags));
     }

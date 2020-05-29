@@ -103,7 +103,7 @@ class Plugin implements PluginInterface, EventSubscriberInterface, Capable {
   }
 
   /**
-   * Post package event behaviour.
+   * Post package event behavior.
    *
    * @param \Composer\Installer\PackageEvent $event
    *   Composer package event sent on install/update/remove.

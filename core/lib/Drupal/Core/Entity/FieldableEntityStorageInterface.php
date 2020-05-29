@@ -16,7 +16,7 @@ interface FieldableEntityStorageInterface extends EntityStorageInterface {
    * @param \Drupal\Core\Field\FieldStorageDefinitionInterface $storage_definition
    *   The field for which to count data records.
    * @param bool $as_bool
-   *   (Optional) Optimises the query for checking whether there are any records
+   *   (Optional) Optimizes the query for checking whether there are any records
    *   or not. Defaults to FALSE.
    *
    * @return bool|int
