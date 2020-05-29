@@ -131,7 +131,7 @@ class ContainerBuilderTest extends UnitTestCase {
    * @preserveGlobalState disabled
    */
   public function testConstructor() {
-    class_alias(testInterface::class, 'Symfony\Component\Config\Resource\ResourceInterface');
+    class_alias(TestInterface::class, 'Symfony\Component\Config\Resource\ResourceInterface');
     $container = new ContainerBuilder();
     $this->assertFalse($container->isTrackingResources());
   }
@@ -143,5 +143,5 @@ class ContainerBuilderTest extends UnitTestCase {
  *
  * @see \Drupal\Tests\Core\DependencyInjection\ContainerBuilderTest::testConstructor()
  */
-interface testInterface {
+interface TestInterface {
 }
