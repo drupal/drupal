@@ -49,7 +49,7 @@ class UserChangedTest extends ViewTestBase {
 
     $this->drupalGet($path, $options);
 
-    $this->assertText(t('Updated date') . ': ' . date('Y-m-d', REQUEST_TIME));
+    $this->assertText('Updated date: ' . date('Y-m-d', REQUEST_TIME));
   }
 
 }
