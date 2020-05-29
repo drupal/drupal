@@ -115,7 +115,7 @@
    *   The name of the cookie.
    * @param {string|Object|Function|undefined} value
    *   A js-cookie converter callback when used as a getter. This callback must
-   *   be a function when using this shim for backwards-compatiblity with
+   *   be a function when using this shim for backwards-compatibility with
    *   jquery.cookie. When used as a setter, value is the string or JSON object
    *   to be used as the cookie value.
    * @param {Object|undefined} options
