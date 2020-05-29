@@ -141,7 +141,7 @@ EOD;
   /**
    * A fake autoloader for testing
    */
-  class fakeAutoloader {
+  class FakeAutoloader {
 
     /**
      * Registers this instance as an autoloader.
