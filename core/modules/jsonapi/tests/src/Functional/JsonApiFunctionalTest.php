@@ -862,7 +862,7 @@ class JsonApiFunctionalTest extends JsonApiFunctionalTestBase {
         'id' => $uuid,
         'type' => 'node--article',
         'attributes' => [
-          'field_that_doesnt_exist' => 'foobar',
+          'field_that_does_not_exist' => 'foobar',
         ],
       ],
     ];
@@ -876,7 +876,7 @@ class JsonApiFunctionalTest extends JsonApiFunctionalTestBase {
     ]);
     $updated_response = Json::decode($response->getBody()->__toString());
     $this->assertEquals(422, $response->getStatusCode());
-    $this->assertEquals("The attribute field_that_doesnt_exist does not exist on the node--article resource type.",
+    $this->assertEquals("The attribute field_that_does_not_exist does not exist on the node--article resource type.",
       $updated_response['errors']['0']['detail']);
     // 14. Successful DELETE.
     $response = $this->request('DELETE', $individual_url, [
