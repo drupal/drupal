@@ -646,7 +646,7 @@ abstract class Connection {
    * "/ * Exploit * / DROP TABLE node. -- * / UPDATE example SET field2=..."
    * @endcode
    *
-   * Unless the comment is sanitised first, the SQL server would drop the
+   * Unless the comment is sanitized first, the SQL server would drop the
    * node table and ignore the rest of the SQL statement.
    *
    * @param string $comment

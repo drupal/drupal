@@ -73,7 +73,7 @@
    * @type {Drupal~behavior}
    *
    * @prop {Drupal~behaviorAttach} attach
-   *   Attaches the tableDrag behaviour for blocks in block administration.
+   *   Attaches the tableDrag behavior for blocks in block administration.
    */
   Drupal.behaviors.blockDrag = {
     attach(context, settings) {

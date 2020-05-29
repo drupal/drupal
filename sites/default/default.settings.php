@@ -448,7 +448,7 @@ $settings['update_free_access'] = FALSE;
 /**
  * Class Loader.
  *
- * If the APCu extension is detected, the classloader will be optimised to use
+ * If the APCu extension is detected, the classloader will be optimized to use
  * it. Set to FALSE to disable this.
  *
  * @see https://getcomposer.org/doc/articles/autoloader-optimization.md

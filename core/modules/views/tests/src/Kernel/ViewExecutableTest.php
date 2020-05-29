@@ -527,7 +527,7 @@ class ViewExecutableTest extends ViewsKernelTestBase {
     // Serialize the ViewExecutable as part of other data.
     unserialize(serialize(['SOMETHING UNEXPECTED', $view_executable]));
 
-    // Make sure the serialisation of the ViewExecutable didn't influence the
+    // Make sure the serialization of the ViewExecutable didn't influence the
     // field definitions.
     $nid_definition_after = $field_manager->getBaseFieldDefinitions('node')['nid']
       ->getItemDefinition()

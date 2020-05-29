@@ -6,7 +6,7 @@ namespace Drupal\Tests\rdf\Traits;
 /**
  * This is copy of \EasyRdf_ParsedUri from the easyrdf/easyrdf library.
  *
- * It fixes a PHP 7.4 deprecation in \EasyRdf_ParsedUri::normalise().
+ * It fixes a PHP 7.4 deprecation in \EasyRdf_ParsedUri::normalize().
  *
  * @todo https://www.drupal.org/project/drupal/issues/3110972 Remove this work
  *   around.
@@ -204,14 +204,14 @@ class EasyRdf_ParsedUri
 
 
     /**
-     * Normalises the path of this URI if it has one. Normalising a path means
+     * Normalizes the path of this URI if it has one. Normalizing a path means
      * that any unnecessary '.' and '..' segments are removed. For example, the
-     * URI http://example.com/a/b/../c/./d would be normalised to
+     * URI http://example.com/a/b/../c/./d would be normalized to
      * http://example.com/a/c/d
      *
      * @return object EasyRdf_ParsedUri
      */
-    public function normalise()
+    public function normalize()
     {
         if (empty($this->path)) {
             return $this;
@@ -253,7 +253,7 @@ class EasyRdf_ParsedUri
             }
         }
 
-        // Construct the new normalised path
+        // Construct the new normalized path
         $this->path = implode('/', $newSegments);
 
         // Allow easy chaining of methods
@@ -313,7 +313,7 @@ class EasyRdf_ParsedUri
 
         $target->fragment = $relUri->fragment;
 
-        $target->normalise();
+        $target->normalize();
 
         return $target;
     }

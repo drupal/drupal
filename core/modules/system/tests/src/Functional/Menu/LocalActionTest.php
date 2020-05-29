@@ -82,7 +82,7 @@ class LocalActionTest extends BrowserTestBase {
       list($url, $title) = $action;
       // SimpleXML gives us the unescaped text, not the actual escaped markup,
       // so use a pattern instead to check the raw content.
-      // This behaviour is a bug in libxml, see
+      // This behavior is a bug in libxml, see
       // https://bugs.php.net/bug.php?id=49437.
       $this->assertPattern('@<a [^>]*class="[^"]*button-action[^"]*"[^>]*>' . preg_quote($title, '@') . '</@');
       $this->assertEqual($elements[$index]->getAttribute('href'), $url->toString());

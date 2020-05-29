@@ -118,7 +118,7 @@ class FieldUiLocalTask extends DeriverBase implements ContainerDeriverInterface 
         // The same base $path for the menu item (with a placeholder) can be
         // used for all bundles of a given entity type; but depending on
         // administrator settings, each bundle has a different set of view
-        // modes available for customisation. So we define menu items for all
+        // modes available for customization. So we define menu items for all
         // view modes, and use a route requirement to determine which ones are
         // actually visible for a given bundle.
         $this->derivatives['field_form_display_default_' . $entity_type_id] = [

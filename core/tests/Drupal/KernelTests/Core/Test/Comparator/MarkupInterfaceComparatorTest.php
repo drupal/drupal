@@ -14,7 +14,7 @@ use SebastianBergmann\Comparator\ComparisonFailure;
  * Tests \Drupal\TestTools\Comparator\MarkupInterfaceComparator.
  *
  * We need to test the class with a kernel test since casting MarkupInterface
- * objects to strings can require an initialised container.
+ * objects to strings can require an initialized container.
  *
  * @group Test
  *

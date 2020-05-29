@@ -15,7 +15,7 @@ class LanguageEditForm extends LanguageFormBase {
    * {@inheritdoc}
    */
   public function getFormId() {
-    // @todo Remove in favour of base method.
+    // @todo Remove in favor of base method.
     return 'language_admin_edit_form';
   }
 

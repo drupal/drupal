@@ -7,14 +7,14 @@
   Drupal.ckeditor = Drupal.ckeditor || {};
 
   /**
-   * Sets config behaviour and creates config views for the CKEditor toolbar.
+   * Sets config behavior and creates config views for the CKEditor toolbar.
    *
    * @type {Drupal~behavior}
    *
    * @prop {Drupal~behaviorAttach} attach
-   *   Attaches admin behaviour to the CKEditor buttons.
+   *   Attaches admin behavior to the CKEditor buttons.
    * @prop {Drupal~behaviorDetach} detach
-   *   Detaches admin behaviour from the CKEditor buttons on 'unload'.
+   *   Detaches admin behavior from the CKEditor buttons on 'unload'.
    */
   Drupal.behaviors.ckeditorAdmin = {
     attach(context) {
@@ -412,7 +412,7 @@
    * @type {Drupal~behavior}
    *
    * @prop {Drupal~behaviorAttach} attach
-   *   Attaches show/hide behaviour to Plugin Settings buttons.
+   *   Attaches show/hide behavior to Plugin Settings buttons.
    */
   Drupal.behaviors.ckeditorAdminButtonPluginSettings = {
     attach(context) {

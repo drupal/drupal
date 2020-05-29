@@ -10,7 +10,7 @@
    * @type {Drupal~behavior}
    *
    * @prop {Drupal~behaviorAttach} attach
-   *   Attaches summary behaviour entity form tabs.
+   *   Attaches summary behavior entity form tabs.
    *
    *   Specifically, it updates summaries to the revision information and the
    *   translation options.
