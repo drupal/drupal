@@ -208,7 +208,7 @@ class NodeViewsData extends EntityViewsData {
       'id' => 'node_nid',
       'numeric' => TRUE,
     ];
-    // @todo the NID field needs different behaviour on revision/non-revision
+    // @todo the NID field needs different behavior on revision/non-revision
     //   tables. It would be neat if this could be encoded in the base field
     //   definition.
     $data['node_field_revision']['nid']['relationship']['id'] = 'standard';

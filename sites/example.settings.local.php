@@ -131,15 +131,15 @@ $settings['rebuild_access'] = TRUE;
 $settings['skip_permissions_hardening'] = TRUE;
 
 /**
- * Exclude modules from configuration synchronisation.
+ * Exclude modules from configuration synchronization.
  *
  * On config export sync, no config or dependent config of any excluded module
  * is exported. On config import sync, any config of any installed excluded
  * module is ignored. In the exported configuration, it will be as if the
  * excluded module had never been installed. When syncing configuration, if an
  * excluded module is already installed, it will not be uninstalled by the
- * configuration synchronisation, and dependent configuration will remain
- * intact. This affects only configuration synchronisation; single import and
+ * configuration synchronization, and dependent configuration will remain
+ * intact. This affects only configuration synchronization; single import and
  * export of configuration are not affected.
  *
  * Drupal does not validate or sanity check the list of excluded modules. For
@@ -148,7 +148,7 @@ $settings['skip_permissions_hardening'] = TRUE;
  * anymore.
  *
  * This is an advanced feature and using it means opting out of some of the
- * guarantees the configuration synchronisation provides. It is not recommended
+ * guarantees the configuration synchronization provides. It is not recommended
  * to use this feature with modules that affect Drupal in a major way such as
  * the language or field module.
  */

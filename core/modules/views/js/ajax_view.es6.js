@@ -137,7 +137,7 @@
   Drupal.views.ajaxView.prototype.attachExposedFormAjax = function() {
     const that = this;
     this.exposedFormAjax = [];
-    // Exclude the reset buttons so no AJAX behaviours are bound. Many things
+    // Exclude the reset buttons so no AJAX behaviors are bound. Many things
     // break during the form reset phase if using AJAX.
     $('input[type=submit], input[type=image]', this.$exposed_form)
       .not('[data-drupal-selector=edit-reset]')

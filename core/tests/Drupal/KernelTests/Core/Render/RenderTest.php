@@ -48,7 +48,7 @@ class RenderTest extends KernelTestBase {
    */
   public function testRenderChildren() {
     // Ensure that #prefix and #suffix is only being printed once since that is
-    // the behaviour the caller code expects.
+    // the behavior the caller code expects.
     $build = [
       '#type' => 'container',
       '#theme' => 'theme_test_render_element_children',

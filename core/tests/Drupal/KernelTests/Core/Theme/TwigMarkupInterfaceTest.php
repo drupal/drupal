@@ -63,7 +63,7 @@ class TwigMarkupInterfaceTest extends KernelTestBase {
   }
 
   /**
-   * Tests behaviour if a string is translated to become an empty string.
+   * Tests behavior if a string is translated to become an empty string.
    */
   public function testEmptyTranslation() {
     $settings = Settings::getAll();

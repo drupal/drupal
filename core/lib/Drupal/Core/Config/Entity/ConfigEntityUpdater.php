@@ -83,7 +83,7 @@ class ConfigEntityUpdater implements ContainerInjectionInterface {
    *   save an entity. The callback can make changes to an entity. Note that all
    *   changes should comply with schema as an entity's data will not be
    *   validated against schema on save to avoid unexpected errors. If a
-   *   callback is not provided, the default behaviour is to update the
+   *   callback is not provided, the default behavior is to update the
    *   dependencies if required.
    *
    * @see hook_post_update_NAME()
@@ -113,7 +113,7 @@ class ConfigEntityUpdater implements ContainerInjectionInterface {
       $sandbox[self::SANDBOX_KEY]['count'] = count($sandbox[self::SANDBOX_KEY]['entities']);
     }
 
-    // The default behaviour is to fix dependencies.
+    // The default behavior is to fix dependencies.
     if ($callback === NULL) {
       $callback = function ($entity) {
         /** @var \Drupal\Core\Config\Entity\ConfigEntityInterface $entity */

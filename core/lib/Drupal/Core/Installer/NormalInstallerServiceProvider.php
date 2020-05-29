@@ -14,7 +14,7 @@ use Drupal\Core\Lock\NullLockBackend;
  * $conf['container_service_providers'] and optimizes the container for
  * installation.
  *
- * Note that the early installer environment requires the further customisations
+ * Note that the early installer environment requires the further customizations
  * in InstallerServiceProvider.
  *
  * @see install_begin_request()

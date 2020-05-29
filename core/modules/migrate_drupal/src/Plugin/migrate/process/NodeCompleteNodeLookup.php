@@ -14,7 +14,7 @@ use Drupal\migrate\Row;
  * migration. The classic node migration and complete node migration have a
  * different number of destination keys. This process plugin will ensure that
  * when the complete node migration is used in the lookup the nid value is
- * returned. This keeps the behaviour the same as the classic node migration.
+ * returned. This keeps the behavior the same as the classic node migration.
  *
  * @see \Drupal\migrate\Plugin\MigrateProcessInterface
  *

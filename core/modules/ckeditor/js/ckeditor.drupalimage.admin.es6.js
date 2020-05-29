@@ -10,7 +10,7 @@
    * @type {Drupal~behavior}
    *
    * @prop {Drupal~behaviorAttach} attach
-   *   Attaches summary behaviour to the "drupalimage" settings vertical tab.
+   *   Attaches summary behavior to the "drupalimage" settings vertical tab.
    */
   Drupal.behaviors.ckeditorDrupalImageSettingsSummary = {
     attach() {
