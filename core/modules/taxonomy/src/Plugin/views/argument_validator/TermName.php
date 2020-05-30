@@ -64,6 +64,7 @@ class TermName extends Entity {
   public function validateArgument($argument) {
     if ($this->options['transform']) {
       $argument = str_replace('-', ' ', $argument);
+      $this->argument->argument = $argument;
     }
     $terms = $this->termStorage->loadByProperties(['name' => $argument]);
 
