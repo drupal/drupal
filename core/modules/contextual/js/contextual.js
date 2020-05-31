@@ -107,7 +107,7 @@
         var html = storage.getItem('Drupal.contextual.' + contextualID.id);
         if (html && html.length) {
           window.setTimeout(function () {
-            initContextual($context.find('[data-contextual-id="' + contextualID.id + '"]'), html);
+            initContextual($context.find('[data-contextual-id="' + contextualID.id + '"]:empty').eq(0), html);
           });
           return;
         }
