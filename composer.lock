@@ -652,7 +652,7 @@
             "dist": {
                 "type": "path",
                 "url": "core",
-                "reference": "2650beaa5f4b4c7a2038133e60221b9c8b82d067"
+                "reference": "38c1ef280518a68c80c796780c4f94a259f50fc0"
             },
             "require": {
                 "asm89/stack-cors": "^1.1",
@@ -687,7 +687,7 @@
                 "symfony/console": "~3.4.0",
                 "symfony/dependency-injection": "~3.4.26",
                 "symfony/event-dispatcher": "~3.4.0",
-                "symfony/http-foundation": "~3.4.27",
+                "symfony/http-foundation": "~3.4.35",
                 "symfony/http-kernel": "~3.4.14",
                 "symfony/polyfill-iconv": "^1.0",
                 "symfony/process": "~3.4.0",

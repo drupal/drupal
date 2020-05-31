@@ -22,7 +22,7 @@
         "symfony/console": "~3.4.0",
         "symfony/dependency-injection": "~3.4.26",
         "symfony/event-dispatcher": "~3.4.0",
-        "symfony/http-foundation": "~3.4.27",
+        "symfony/http-foundation": "~3.4.35",
         "symfony/http-kernel": "~3.4.14",
         "symfony/routing": "~3.4.0",
         "symfony/serializer": "~3.4.0",
