@@ -4,7 +4,9 @@ namespace Drupal\migrate\Plugin\migrate\destination;
 
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityChangedInterface;
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\migrate\EntityFieldDefinitionTrait;
+use Drupal\migrate\Plugin\MigrateIdMapInterface;
 use Drupal\migrate\Row;
 
 /**
@@ -107,12 +109,34 @@ class EntityContentComplete extends EntityContentBase {
   /**
    * {@inheritdoc}
    */
+  protected function updateEntity(EntityInterface $entity, Row $row) {
+    $entity = parent::updateEntity($entity, $row);
+    // Always set the rollback action to delete. This is because the parent
+    // updateEntity will set the rollback action to preserve for the original
+    // language row, which is needed for the classic node migrations.
+    $this->setRollbackAction($row->getIdMap(), MigrateIdMapInterface::ROLLBACK_DELETE);
+    return $entity;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   protected function save(ContentEntityInterface $entity, array $old_destination_id_values = []) {
     parent::save($entity, $old_destination_id_values);
     return [
       $entity->id(),
       $entity->getRevisionId(),
     ];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function rollback(array $destination_identifier) {
+    // We want to delete the entity and all the translations so use
+    // Entity:rollback because EntityContentBase::rollback will not remove the
+    // default translation.
+    Entity::rollback($destination_identifier);
   }
 
 }
