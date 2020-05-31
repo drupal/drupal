@@ -72,6 +72,11 @@ class CssCollectionRenderer implements AssetCollectionRendererInterface {
           throw new \Exception('Invalid CSS asset type.');
       }
 
+      // Merge any additional attributes.
+      if (!empty($css_asset['attributes'])) {
+        $element['#attributes'] += $css_asset['attributes'];
+      }
+
       $elements[] = $element;
     }
 
