@@ -186,7 +186,9 @@
           // Drupal.contextual.collection.
           window.setTimeout(() => {
             initContextual(
-              $context.find(`[data-contextual-id="${contextualID.id}"]`),
+              $context
+                .find(`[data-contextual-id="${contextualID.id}"]:empty`)
+                .eq(0),
               html,
             );
           });
