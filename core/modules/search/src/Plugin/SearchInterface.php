@@ -145,4 +145,15 @@ interface SearchInterface extends PluginInspectionInterface {
    */
   public function buildSearchUrlQuery(FormStateInterface $form_state);
 
+  /**
+   * Returns whether or not search results should be displayed in admin theme.
+   *
+   * @return bool
+   *   TRUE if search results should be displayed in the admin theme, and FALSE
+   *   otherwise.
+   *
+   * @see \Drupal\search\Annotation\SearchPlugin::$use_admin_theme
+   */
+  public function usesAdminTheme();
+
 }

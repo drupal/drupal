@@ -37,4 +37,11 @@ class SearchPlugin extends Plugin {
    */
   public $title;
 
+  /**
+   * Whether or not search results should be displayed in admin theme.
+   *
+   * @var bool
+   */
+  public $use_admin_theme = FALSE;
+
 }
