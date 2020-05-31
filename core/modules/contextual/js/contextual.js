@@ -108,7 +108,7 @@
 
         if (html && html.length) {
           window.setTimeout(function () {
-            initContextual($context.find("[data-contextual-id=\"".concat(contextualID.id, "\"]")), html);
+            initContextual($context.find("[data-contextual-id=\"".concat(contextualID.id, "\"]:empty")).eq(0), html);
           });
           return;
         }
