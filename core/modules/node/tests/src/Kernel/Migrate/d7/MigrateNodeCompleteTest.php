@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\node\Kernel\Migrate\d7;
 
+use Drupal\migrate\MigrateExecutable;
 use Drupal\migrate_drupal\NodeMigrateType;
 use Drupal\node\NodeInterface;
 use Drupal\Tests\file\Kernel\Migrate\d7\FileMigrationSetupTrait;
@@ -123,6 +124,34 @@ class MigrateNodeCompleteTest extends MigrateDrupal7TestBase {
     $data = $this->expectedRevisionEntityData()[0];
     foreach ($this->expectedNodeFieldRevisionTable() as $key => $revision) {
       $this->assertRevision($revision, $data[$key]);
+    }
+  }
+
+  /**
+   * Tests rollback of the complete node migration.
+   */
+  public function testRollbackNodeComplete() {
+    $db = \Drupal::database();
+    $node_types = [
+      'article',
+      'blog',
+      'book',
+      'forum',
+      'page',
+      'test_content_type',
+    ];
+    foreach ($node_types as $node_type) {
+      // Execute the rollback.
+      $this->migration = $this->getMigration("d7_node_complete:$node_type");
+      (new MigrateExecutable($this->migration, $this))->rollback();
+
+      // Assert there are no nodes of node_type.
+      $count = $db->select('node_field_data')
+        ->condition('type', $node_type)
+        ->countQuery()
+        ->execute()
+        ->fetchField();
+      $this->assertSame($count, '0', "There are $count nodes of type $node_type");
     }
   }
 
