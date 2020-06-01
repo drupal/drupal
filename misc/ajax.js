@@ -198,6 +198,25 @@ Drupal.ajax = function (base, element, element_settings) {
     type: 'POST'
   };
 
+  // For multipart forms (e.g., file uploads), jQuery Form targets the form
+  // submission to an iframe instead of using an XHR object. The initial "src"
+  // of the iframe, prior to the form submission, is set to options.iframeSrc.
+  // "about:blank" is the semantically correct, standards-compliant, way to
+  // initialize a blank iframe; however, some old IE versions (possibly only 6)
+  // incorrectly report a mixed content warning when iframes with an
+  // "about:blank" src are added to a parent document with an https:// origin.
+  // jQuery Form works around this by defaulting to "javascript:false" instead,
+  // but that breaks on Chrome 83, so here we force the semantically correct
+  // behavior for all browsers except old IE.
+  // @see https://www.drupal.org/project/drupal/issues/3143016
+  // @see https://github.com/jquery-form/form/blob/df9cb101b9c9c085c8d75ad980c7ff1cf62063a1/jquery.form.js#L68
+  // @see https://bugs.chromium.org/p/chromium/issues/detail?id=1084874
+  // @see https://html.spec.whatwg.org/multipage/browsers.html#creating-browsing-contexts
+  // @see https://developer.mozilla.org/en-US/docs/Web/Security/Same-origin_policy
+  if (navigator.userAgent.indexOf("MSIE") === -1) {
+    ajax.options.iframeSrc = 'about:blank';
+  }
+
   // Bind the ajaxSubmit function to the element event.
   $(ajax.element).bind(element_settings.event, function (event) {
     if (!Drupal.settings.urlIsAjaxTrusted[ajax.url] && !Drupal.urlIsLocal(ajax.url)) {
