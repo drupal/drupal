@@ -776,8 +776,11 @@ class EntityType extends PluginDefinition implements EntityTypeInterface {
     if (empty($this->label_count)) {
       return $this->formatPlural($count, '@count @label', '@count @label entities', ['@label' => $this->getSingularLabel()], ['context' => 'Entity type label']);
     }
-    $context = isset($this->label_count['context']) ? $this->label_count['context'] : 'Entity type label';
-    return $this->formatPlural($count, $this->label_count['singular'], $this->label_count['plural'], ['context' => $context]);
+    $options = [];
+    if (isset($this->label_count['context'])) {
+      $options['context'] = $this->label_count['context'];
+    }
+    return $this->formatPlural($count, $this->label_count['singular'], $this->label_count['plural'], [], $options);
   }
 
   /**
