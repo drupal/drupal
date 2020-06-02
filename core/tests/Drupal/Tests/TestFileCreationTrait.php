@@ -153,9 +153,11 @@ trait TestFileCreationTrait {
           case 'text':
             $text .= chr(rand(32, 126));
             break;
+
           case 'binary':
             $text .= chr(rand(0, 31));
             break;
+
           case 'binary-text':
           default:
             $text .= rand(0, 1);

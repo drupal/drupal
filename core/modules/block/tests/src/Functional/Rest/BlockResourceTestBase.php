@@ -31,9 +31,11 @@ abstract class BlockResourceTestBase extends EntityResourceTestBase {
       case 'GET':
         $this->entity->setVisibilityConfig('user_role', [])->save();
         break;
+
       case 'POST':
         $this->grantPermissionsToTestedRole(['administer blocks']);
         break;
+
       case 'PATCH':
         $this->grantPermissionsToTestedRole(['administer blocks']);
         break;
@@ -137,6 +139,7 @@ abstract class BlockResourceTestBase extends EntityResourceTestBase {
     switch ($method) {
       case 'GET':
         return "The block visibility condition 'user_role' denied access.";
+
       default:
         return parent::getExpectedUnauthorizedAccessMessage($method);
     }

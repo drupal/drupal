@@ -273,6 +273,7 @@ class DbUpdateController extends ControllerBase {
         case 'update':
           $updates = update_get_update_list();
           break;
+
         case 'post_update':
           $updates = $this->postUpdateRegistry->getPendingUpdateInformation();
           break;

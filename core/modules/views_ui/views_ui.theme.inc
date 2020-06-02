@@ -495,40 +495,49 @@ function template_preprocess_views_ui_view_preview_section(&$variables) {
       $variables['title'] = t('Title');
       $links = views_ui_view_preview_section_display_category_links($variables['view'], 'title', $variables['title']);
       break;
+
     case 'header':
       $variables['title'] = t('Header');
       $links = views_ui_view_preview_section_handler_links($variables['view'], $variables['section']);
       break;
+
     case 'empty':
       $variables['title'] = t('No results behavior');
       $links = views_ui_view_preview_section_handler_links($variables['view'], $variables['section']);
       break;
+
     case 'exposed':
       // @todo Sorts can be exposed too, so we may need a better title.
       $variables['title'] = t('Exposed Filters');
       $links = views_ui_view_preview_section_display_category_links($variables['view'], 'exposed_form_options', $variables['title']);
       break;
+
     case 'rows':
       // @todo The title needs to depend on what is being viewed.
       $variables['title'] = t('Content');
       $links = views_ui_view_preview_section_rows_links($variables['view']);
       break;
+
     case 'pager':
       $variables['title'] = t('Pager');
       $links = views_ui_view_preview_section_display_category_links($variables['view'], 'pager_options', $variables['title']);
       break;
+
     case 'more':
       $variables['title'] = t('More');
       $links = views_ui_view_preview_section_display_category_links($variables['view'], 'use_more', $variables['title']);
       break;
+
     case 'footer':
       $variables['title'] = t('Footer');
       $links = views_ui_view_preview_section_handler_links($variables['view'], $variables['section']);
       break;
+
     case 'attachment_before':
       // @todo: Add links to the attachment configuration page.
       $variables['title'] = t('Attachment before');
       break;
+
     case 'attachment_after':
       // @todo: Add links to the attachment configuration page.
       $variables['title'] = t('Attachment after');

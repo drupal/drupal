@@ -209,9 +209,11 @@ class Page extends PathPluginBase {
       default:
         $menu_str = $this->t('No menu');
         break;
+
       case 'normal':
         $menu_str = $this->t('Normal: @title', ['@title' => $menu['title']]);
         break;
+
       case 'tab':
       case 'default tab':
         $menu_str = $this->t('Tab: @title', ['@title' => $menu['title']]);
@@ -371,6 +373,7 @@ class Page extends PathPluginBase {
           ],
         ];
         break;
+
       case 'tab_options':
         $form['#title'] .= $this->t('Default tab options');
         $tab_options = $this->getOption('tab_options');
@@ -488,6 +491,7 @@ class Page extends PathPluginBase {
           $form_state->get('view')->addFormToStack('display', $this->display['id'], 'tab_options');
         }
         break;
+
       case 'tab_options':
         $this->setOption('tab_options', $form_state->getValue('tab_options'));
         break;

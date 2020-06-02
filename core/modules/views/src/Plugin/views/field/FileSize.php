@@ -49,6 +49,7 @@ class FileSize extends FieldPluginBase {
       switch ($this->options['file_size_display']) {
         case 'bytes':
           return $value;
+
         case 'formatted':
         default:
           return format_size($value);

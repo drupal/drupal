@@ -57,6 +57,7 @@ abstract class UserResourceTestBase extends EntityResourceTestBase {
       case 'GET':
         $this->grantPermissionsToTestedRole(['access user profiles']);
         break;
+
       case 'POST':
       case 'PATCH':
       case 'DELETE':
@@ -308,10 +309,13 @@ abstract class UserResourceTestBase extends EntityResourceTestBase {
     switch ($method) {
       case 'GET':
         return "The 'access user profiles' permission is required and the user must be active.";
+
       case 'PATCH':
         return "Users can only update their own account, unless they have the 'administer users' permission.";
+
       case 'DELETE':
         return "The 'cancel account' permission is required.";
+
       default:
         return parent::getExpectedUnauthorizedAccessMessage($method);
     }

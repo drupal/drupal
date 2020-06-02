@@ -26,6 +26,7 @@ function rest_test_entity_field_access($operation, FieldDefinitionInterface $fie
         // Never ever allow this field to be viewed: this lets
         // EntityResourceTestBase::testGet() test in a "vanilla" way.
         return AccessResult::forbidden();
+
       case 'edit':
         return AccessResult::forbidden();
     }

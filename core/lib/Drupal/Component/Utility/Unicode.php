@@ -103,6 +103,7 @@ EOD;
     switch (static::check()) {
       case 'mb_strlen':
         return Unicode::STATUS_SINGLEBYTE;
+
       case '':
         return Unicode::STATUS_MULTIBYTE;
     }

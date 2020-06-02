@@ -32,6 +32,7 @@ class TextField extends FieldPluginBase {
       case 'string':
         $formatter_type = str_replace(['text_default', 'text_plain'], 'string', $formatter_type);
         break;
+
       case 'string_long':
         $formatter_type = str_replace('text_default', 'basic_string', $formatter_type);
         break;
@@ -51,6 +52,7 @@ class TextField extends FieldPluginBase {
       case 'string':
         $widget_type = str_replace('text_textfield', 'string_textfield', $widget_type);
         break;
+
       case 'string_long':
         $widget_type = str_replace('text_textarea', 'string_textarea', $widget_type);
         break;
@@ -75,6 +77,7 @@ class TextField extends FieldPluginBase {
         case '0':
           $plain_text = TRUE;
           break;
+
         case '1':
           $filtered_text = TRUE;
           break;

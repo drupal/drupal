@@ -222,10 +222,12 @@ class Node extends WizardPluginBase {
         $display_options['row']['type'] = 'entity:node';
         $display_options['row']['options']['view_mode'] = 'full';
         break;
+
       case 'teasers':
         $display_options['row']['type'] = 'entity:node';
         $display_options['row']['options']['view_mode'] = 'teaser';
         break;
+
       case 'titles_linked':
       case 'titles':
         $display_options['row']['type'] = 'fields';

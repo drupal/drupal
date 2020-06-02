@@ -237,6 +237,7 @@ class UncaughtExceptionTest extends BrowserTestBase {
       case 'mysql':
         $this->expectedExceptionMessage = $incorrect_username;
         break;
+
       default:
         // We can not carry out this test.
         $this->pass('Unable to run \Drupal\system\Tests\System\UncaughtExceptionTest::testLostDatabaseConnection for this database type.');

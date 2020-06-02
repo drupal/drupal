@@ -183,18 +183,21 @@ class Query extends QueryBase implements QueryInterface {
             return $id !== $value;
           };
           break;
+
         case 'STARTS_WITH':
           $filter = function ($name) use ($value, $prefix_length) {
             $id = substr($name, $prefix_length);
             return strpos($id, $value) === 0;
           };
           break;
+
         case 'CONTAINS':
           $filter = function ($name) use ($value, $prefix_length) {
             $id = substr($name, $prefix_length);
             return strpos($id, $value) !== FALSE;
           };
           break;
+
         case 'ENDS_WITH':
           $filter = function ($name) use ($value, $prefix_length) {
             $id = substr($name, $prefix_length);

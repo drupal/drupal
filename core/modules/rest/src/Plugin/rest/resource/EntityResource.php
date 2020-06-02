@@ -379,13 +379,16 @@ class EntityResource extends ResourceBase implements DependentPluginInterface {
       case 'GET':
         $route->setRequirement('_entity_access', $this->entityType->id() . '.view');
         break;
+
       case 'POST':
         $route->setRequirement('_entity_create_any_access', $this->entityType->id());
         $route->setOption('_ignore_create_bundle_access', TRUE);
         break;
+
       case 'PATCH':
         $route->setRequirement('_entity_access', $this->entityType->id() . '.update');
         break;
+
       case 'DELETE':
         $route->setRequirement('_entity_access', $this->entityType->id() . '.delete');
         break;

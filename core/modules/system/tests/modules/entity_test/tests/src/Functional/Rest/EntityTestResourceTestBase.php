@@ -43,9 +43,11 @@ abstract class EntityTestResourceTestBase extends EntityResourceTestBase {
       case 'GET':
         $this->grantPermissionsToTestedRole(['view test entity']);
         break;
+
       case 'POST':
         $this->grantPermissionsToTestedRole(['create entity_test entity_test_with_bundle entities']);
         break;
+
       case 'PATCH':
       case 'DELETE':
         $this->grantPermissionsToTestedRole(['administer entity_test content']);
@@ -155,8 +157,10 @@ abstract class EntityTestResourceTestBase extends EntityResourceTestBase {
     switch ($method) {
       case 'GET':
         return "The 'view test entity' permission is required.";
+
       case 'POST':
         return "The following permissions are required: 'administer entity_test content' OR 'administer entity_test_with_bundle content' OR 'create entity_test entity_test_with_bundle entities'.";
+
       default:
         return parent::getExpectedUnauthorizedAccessMessage($method);
     }

@@ -737,6 +737,7 @@ abstract class FileUploadResourceTestBase extends ResourceTestBase {
       case 'GET':
         $this->grantPermissionsToTestedRole(['view test entity']);
         break;
+
       case 'POST':
         $this->grantPermissionsToTestedRole(['create entity_test entity_test_with_bundle entities', 'access content']);
         break;

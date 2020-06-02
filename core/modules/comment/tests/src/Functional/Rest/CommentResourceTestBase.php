@@ -56,9 +56,11 @@ abstract class CommentResourceTestBase extends EntityResourceTestBase {
       case 'GET':
         $this->grantPermissionsToTestedRole(['access comments', 'view test entity']);
         break;
+
       case 'POST':
         $this->grantPermissionsToTestedRole(['post comments']);
         break;
+
       case 'PATCH':
         // Anonymous users are not ever allowed to edit their own comments. To
         // be able to test PATCHing comments as the anonymous user, the more
@@ -71,6 +73,7 @@ abstract class CommentResourceTestBase extends EntityResourceTestBase {
           $this->grantPermissionsToTestedRole(['administer comments']);
         }
         break;
+
       case 'DELETE':
         $this->grantPermissionsToTestedRole(['administer comments']);
         break;
@@ -315,10 +318,13 @@ abstract class CommentResourceTestBase extends EntityResourceTestBase {
     switch ($method) {
       case 'GET';
         return "The 'access comments' permission is required and the comment must be published.";
+
       case 'POST';
         return "The 'post comments' permission is required.";
+
       case 'PATCH';
         return "The 'edit own comments' permission is required, the user must be the comment author, and the comment must be published.";
+
       case 'DELETE':
         // \Drupal\comment\CommentAccessControlHandler::checkAccess() does not
         // specify a reason for not allowing a comment to be deleted.

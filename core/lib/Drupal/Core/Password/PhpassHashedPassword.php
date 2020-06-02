@@ -237,6 +237,7 @@ class PhpassHashedPassword implements PasswordInterface {
         // A normal Drupal 7 password using sha512.
         $computed_hash = $this->crypt('sha512', $password, $stored_hash);
         break;
+
       case '$H$':
         // phpBB3 uses "$H$" for the same thing as "$P$".
       case '$P$':
@@ -244,6 +245,7 @@ class PhpassHashedPassword implements PasswordInterface {
         // imported password or from an earlier Drupal version.
         $computed_hash = $this->crypt('md5', $password, $stored_hash);
         break;
+
       default:
         return FALSE;
     }

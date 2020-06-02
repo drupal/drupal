@@ -96,6 +96,7 @@ abstract class ShortcutSetResourceTestBase extends EntityResourceTestBase {
     switch ($method) {
       case 'GET':
         return "The 'access shortcuts' permission is required.";
+
       default:
         return parent::getExpectedUnauthorizedAccessMessage($method);
     }

@@ -204,6 +204,7 @@ function locale_test_tokens($type, $tokens, array $data = [], array $options = [
         case 'security_test1':
           $return[$original] = "javascript:alert('Mooooh!');";
           break;
+
         case 'security_test2':
           $return[$original] = "<script>alert('Mooooh!');</script>";
           break;

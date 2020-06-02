@@ -127,9 +127,11 @@ class LinkItem extends FieldItemBase implements LinkItemInterface {
         case DRUPAL_DISABLED:
           $values['title'] = '';
           break;
+
         case DRUPAL_REQUIRED:
           $values['title'] = $random->sentences(4);
           break;
+
         case DRUPAL_OPTIONAL:
           // In case of optional title, randomize its generation.
           $values['title'] = mt_rand(0, 1) ? $random->sentences(4) : '';

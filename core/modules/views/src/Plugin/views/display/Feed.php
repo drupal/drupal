@@ -281,6 +281,7 @@ class Feed extends PathPluginBase implements ResponseDisplayPluginInterface {
           ],
         ];
         break;
+
       case 'displays':
         $form['#title'] .= $this->t('Attach to');
         $displays = [];
@@ -298,6 +299,7 @@ class Feed extends PathPluginBase implements ResponseDisplayPluginInterface {
           '#default_value' => $this->getOption('displays'),
         ];
         break;
+
       case 'path':
         $form['path']['#description'] = $this->t('This view will be displayed by visiting this path on your site. It is recommended that the path be something like "path/%/%/feed" or "path/%/%/rss.xml", putting one % in the path for each contextual filter you have defined in the view.');
     }
@@ -313,6 +315,7 @@ class Feed extends PathPluginBase implements ResponseDisplayPluginInterface {
       case 'title':
         $this->setOption('sitename_title', $form_state->getValue('sitename_title'));
         break;
+
       case 'displays':
         $this->setOption($section, $form_state->getValue($section));
         break;
