@@ -70,20 +70,24 @@ trait XmlEntityNormalizationQuirksTrait {
             $value = &$normalization[$field_name][$i]['value'];
             $value = $value === TRUE ? '1' : '0';
             break;
+
           case IntegerItem::class:
           case ListIntegerItem::class:
             $value = &$normalization[$field_name][$i]['value'];
             $value = (string) $value;
             break;
+
           case PathItem::class:
             $pid = &$normalization[$field_name][$i]['pid'];
             $pid = (string) $pid;
             break;
+
           case EntityReferenceItem::class:
           case FileItem::class:
             $target_id = &$normalization[$field_name][$i]['target_id'];
             $target_id = (string) $target_id;
             break;
+
           case ChangedItem::class:
           case CreatedItem::class:
           case TimestampItem::class:
@@ -92,6 +96,7 @@ trait XmlEntityNormalizationQuirksTrait {
               $value = (string) $value;
             }
             break;
+
           case ImageItem::class:
             $height = &$normalization[$field_name][$i]['height'];
             $height = (string) $height;

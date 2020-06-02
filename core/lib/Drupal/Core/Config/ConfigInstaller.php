@@ -621,6 +621,7 @@ class ConfigInstaller implements ConfigInstallerInterface {
           case 'theme':
             $list_to_check = $enabled_extensions;
             break;
+
           case 'config':
             $list_to_check = $all_config;
             break;

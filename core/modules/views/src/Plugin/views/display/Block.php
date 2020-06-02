@@ -200,6 +200,7 @@ class Block extends DisplayPluginBase {
           '#default_value' => $this->getOption('block_description'),
         ];
         break;
+
       case 'block_category':
         $form['#title'] .= $this->t('Block category');
         $form['block_category'] = [
@@ -209,6 +210,7 @@ class Block extends DisplayPluginBase {
           '#default_value' => $this->getOption('block_category'),
         ];
         break;
+
       case 'block_hide_empty':
         $form['#title'] .= $this->t('Block empty settings');
 
@@ -219,6 +221,7 @@ class Block extends DisplayPluginBase {
           '#default_value' => $this->getOption('block_hide_empty'),
         ];
         break;
+
       case 'exposed_form_options':
         $this->view->initHandlers();
         if (!$this->usesExposed() && parent::usesExposed()) {
@@ -228,6 +231,7 @@ class Block extends DisplayPluginBase {
           ];
         }
         break;
+
       case 'allow':
         $form['#title'] .= $this->t('Allow settings in the block configuration');
 

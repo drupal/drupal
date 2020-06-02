@@ -33,6 +33,7 @@ class SortDateTest extends ViewsKernelTestBase {
             ['name' => 'George'],
           ];
           break;
+
         case 'minute':
           $expected = [
             ['name' => 'John'],
@@ -42,6 +43,7 @@ class SortDateTest extends ViewsKernelTestBase {
             ['name' => 'George'],
           ];
           break;
+
         case 'hour':
           $expected = [
             ['name' => 'John'],
@@ -51,6 +53,7 @@ class SortDateTest extends ViewsKernelTestBase {
             ['name' => 'George'],
           ];
           break;
+
         case 'day':
           $expected = [
             ['name' => 'John'],
@@ -60,6 +63,7 @@ class SortDateTest extends ViewsKernelTestBase {
             ['name' => 'George'],
           ];
           break;
+
         case 'month':
           $expected = [
             ['name' => 'John'],
@@ -69,6 +73,7 @@ class SortDateTest extends ViewsKernelTestBase {
             ['name' => 'Meredith'],
           ];
           break;
+
         case 'year':
           $expected = [
             ['name' => 'John'],
@@ -91,6 +96,7 @@ class SortDateTest extends ViewsKernelTestBase {
             ['name' => 'John'],
           ];
           break;
+
         case 'minute':
           $expected = [
             ['name' => 'George'],
@@ -100,6 +106,7 @@ class SortDateTest extends ViewsKernelTestBase {
             ['name' => 'John'],
            ];
           break;
+
         case 'hour':
           $expected = [
             ['name' => 'George'],
@@ -109,6 +116,7 @@ class SortDateTest extends ViewsKernelTestBase {
             ['name' => 'John'],
           ];
           break;
+
         case 'day':
           $expected = [
             ['name' => 'George'],
@@ -118,6 +126,7 @@ class SortDateTest extends ViewsKernelTestBase {
             ['name' => 'Meredith'],
           ];
           break;
+
         case 'month':
           $expected = [
             ['name' => 'John'],
@@ -127,6 +136,7 @@ class SortDateTest extends ViewsKernelTestBase {
             ['name' => 'Meredith'],
           ];
           break;
+
         case 'year':
           $expected = [
             ['name' => 'John'],

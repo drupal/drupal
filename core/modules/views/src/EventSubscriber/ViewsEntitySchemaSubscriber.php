@@ -169,30 +169,39 @@ class ViewsEntitySchemaSubscriber implements EntityTypeListenerInterface, EventS
         case static::BASE_TABLE_RENAME:
           $this->baseTableRename($all_views, $entity_type->id(), $original->getBaseTable(), $entity_type->getBaseTable());
           break;
+
         case static::DATA_TABLE_RENAME:
           $this->dataTableRename($all_views, $entity_type->id(), $original->getDataTable(), $entity_type->getDataTable());
           break;
+
         case static::DATA_TABLE_ADDITION:
           $this->dataTableAddition($all_views, $entity_type, $entity_type->getDataTable(), $entity_type->getBaseTable());
           break;
+
         case static::DATA_TABLE_REMOVAL:
           $this->dataTableRemoval($all_views, $entity_type->id(), $original->getDataTable(), $entity_type->getBaseTable());
           break;
+
         case static::REVISION_TABLE_RENAME:
           $this->baseTableRename($all_views, $entity_type->id(), $original->getRevisionTable(), $entity_type->getRevisionTable());
           break;
+
         case static::REVISION_TABLE_ADDITION:
           // If we add revision support we don't have to do anything.
           break;
+
         case static::REVISION_TABLE_REMOVAL:
           $this->revisionRemoval($all_views, $original);
           break;
+
         case static::REVISION_DATA_TABLE_RENAME:
           $this->dataTableRename($all_views, $entity_type->id(), $original->getRevisionDataTable(), $entity_type->getRevisionDataTable());
           break;
+
         case static::REVISION_DATA_TABLE_ADDITION:
           $this->dataTableAddition($all_views, $entity_type, $entity_type->getRevisionDataTable(), $entity_type->getRevisionTable());
           break;
+
         case static::REVISION_DATA_TABLE_REMOVAL:
           $this->dataTableRemoval($all_views, $entity_type->id(), $original->getRevisionDataTable(), $entity_type->getRevisionTable());
           break;

@@ -81,6 +81,7 @@ abstract class ConfigTestResourceTestBase extends EntityResourceTestBase {
     switch ($method) {
       case 'GET':
         return "The 'view config_test' permission is required.";
+
       default:
         return parent::getExpectedUnauthorizedAccessMessage($method);
     }

@@ -301,6 +301,7 @@ function drupal_rewrite_settings($settings = [], $settings_file = NULL) {
               $state = 'candidate_left';
             }
             break;
+
           case 'candidate_left':
             if ($value == '[') {
               $state = 'array_index';
@@ -309,6 +310,7 @@ function drupal_rewrite_settings($settings = [], $settings_file = NULL) {
               $state = 'candidate_right';
             }
             break;
+
           case 'array_index':
             if (_drupal_rewrite_settings_is_array_index($type, $value)) {
               $index = trim($value, '\'"');
@@ -319,6 +321,7 @@ function drupal_rewrite_settings($settings = [], $settings_file = NULL) {
               throw new Exception('invalid array index');
             }
             break;
+
           case 'right_bracket':
             if ($value == ']') {
               if (isset($current[$index])) {
@@ -337,6 +340,7 @@ function drupal_rewrite_settings($settings = [], $settings_file = NULL) {
               throw new Exception('] expected');
             }
             break;
+
           case 'candidate_right':
             if (_drupal_rewrite_settings_is_simple($type, $value)) {
               $value = _drupal_rewrite_settings_dump_one($current);
@@ -349,11 +353,13 @@ function drupal_rewrite_settings($settings = [], $settings_file = NULL) {
               $state = 'wait_for_semicolon';
             }
             break;
+
           case 'wait_for_semicolon':
             if ($value == ';') {
               $state = 'default';
             }
             break;
+
           case 'semicolon_skip':
             if ($value == ';') {
               $value = '';
@@ -672,31 +678,37 @@ function drupal_verify_install_file($file, $mask = NULL, $type = 'file', $autofi
               }
             }
             break;
+
           case FILE_READABLE:
             if (!is_readable($file)) {
               $return = FALSE;
             }
             break;
+
           case FILE_WRITABLE:
             if (!is_writable($file)) {
               $return = FALSE;
             }
             break;
+
           case FILE_EXECUTABLE:
             if (!is_executable($file)) {
               $return = FALSE;
             }
             break;
+
           case FILE_NOT_READABLE:
             if (is_readable($file)) {
               $return = FALSE;
             }
             break;
+
           case FILE_NOT_WRITABLE:
             if (is_writable($file)) {
               $return = FALSE;
             }
             break;
+
           case FILE_NOT_EXECUTABLE:
             if (is_executable($file)) {
               $return = FALSE;
@@ -734,9 +746,11 @@ function drupal_install_mkdir($file, $mask, $message = TRUE) {
         case FILE_READABLE:
           $mod |= 0444;
           break;
+
         case FILE_WRITABLE:
           $mod |= 0222;
           break;
+
         case FILE_EXECUTABLE:
           $mod |= 0111;
           break;
@@ -795,26 +809,31 @@ function drupal_install_fix_file($file, $mask, $message = TRUE) {
             $mod |= 0444;
           }
           break;
+
         case FILE_WRITABLE:
           if (!is_writable($file)) {
             $mod |= 0222;
           }
           break;
+
         case FILE_EXECUTABLE:
           if (!is_executable($file)) {
             $mod |= 0111;
           }
           break;
+
         case FILE_NOT_READABLE:
           if (is_readable($file)) {
             $mod &= ~0444;
           }
           break;
+
         case FILE_NOT_WRITABLE:
           if (is_writable($file)) {
             $mod &= ~0222;
           }
           break;
+
         case FILE_NOT_EXECUTABLE:
           if (is_executable($file)) {
             $mod &= ~0111;

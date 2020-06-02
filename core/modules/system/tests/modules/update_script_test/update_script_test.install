@@ -23,6 +23,7 @@ function update_script_test_requirements($phase) {
           'severity' => REQUIREMENT_WARNING,
         ];
         break;
+
       case REQUIREMENT_ERROR:
         $requirements['update_script_test'] = [
           'title' => 'Update script test',

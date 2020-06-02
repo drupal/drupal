@@ -134,6 +134,7 @@ class UpdateCoreTest extends UpdateTestBase {
               $this->assertRaw('check.svg', 'Check icon was found.');
             }
             break;
+
           case 1:
             // Both stable and unstable releases are available.
             // A stable release is the latest.

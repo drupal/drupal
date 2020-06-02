@@ -61,18 +61,25 @@ class LanguageNegotiation extends ProcessPluginBase {
     switch ($value) {
       case 'language-default':
         return 'language-selected';
+
       case 'locale-browser':
         return 'language-browser';
+
       case 'locale-interface':
         return 'language-interface';
+
       case 'locale-session':
         return 'language-session';
+
       case 'locale-url':
         return 'language-url';
+
       case 'locale-url-fallback':
         return 'language-url-fallback';
+
       case 'locale-user':
         return 'language-user';
+
       default:
         return $value;
     }

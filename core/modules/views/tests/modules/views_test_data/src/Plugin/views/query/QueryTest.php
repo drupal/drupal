@@ -135,6 +135,7 @@ class QueryTest extends QueryPluginBase {
     switch ($condition['operator']) {
       case '=':
         return $value == $condition['value'];
+
       case 'IN':
         return in_array($value, $condition['value']);
     }

@@ -120,6 +120,7 @@ class Condition extends ConditionBase {
           $condition['operator'] = 'LIKE';
         }
         break;
+
       case '<>':
         // If a field explicitly requests that queries should not be case
         // sensitive, use the NOT LIKE operator, otherwise keep <>.
@@ -128,6 +129,7 @@ class Condition extends ConditionBase {
           $condition['operator'] = 'NOT LIKE';
         }
         break;
+
       case 'STARTS_WITH':
         if ($case_sensitive) {
           $condition['operator'] = 'LIKE BINARY';

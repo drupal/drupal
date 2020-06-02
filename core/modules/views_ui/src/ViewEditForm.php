@@ -978,6 +978,7 @@ class ViewEditForm extends ViewFormBase {
         // TODO: Add another class to have another symbol for filter rearrange.
         $class = 'icon compact rearrange';
         break;
+
       case 'field':
         // Fetch the style plugin info so we know whether to list fields or not.
         $style_plugin = $executable->style_plugin;
@@ -991,6 +992,7 @@ class ViewEditForm extends ViewFormBase {
           return $build;
         }
         break;
+
       case 'header':
       case 'footer':
       case 'empty':

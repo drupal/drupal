@@ -34,9 +34,11 @@ abstract class FileProcessBase extends ProcessPluginBase {
         case 'use existing':
           $configuration['file_exists'] = FileSystemInterface::EXISTS_ERROR;
           break;
+
         case 'rename':
           $configuration['file_exists'] = FileSystemInterface::EXISTS_RENAME;
           break;
+
         default:
           $configuration['file_exists'] = FileSystemInterface::EXISTS_REPLACE;
       }

@@ -1285,17 +1285,20 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
           // is valid, we only care that it's different.
           $field->setValue(['target_id' => 99999]);
           break;
+
         case BooleanItem::class:
           // BooleanItem::generateSampleValue() picks either 0 or 1. So a 50%
           // chance of not picking a different value.
           $field->value = ((int) $field->value) === 1 ? '0' : '1';
           break;
+
         case PathItem::class:
           // PathItem::generateSampleValue() doesn't set a PID, which causes
           // PathItem::postSave() to fail. Keep the PID (and other properties),
           // just modify the alias.
           $field->alias = str_replace(' ', '-', strtolower((new Random())->sentences(3)));
           break;
+
         default:
           $original_field = clone $field;
           while ($field->equals($original_field)) {
@@ -1328,9 +1331,11 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
           $normalization[$label_field][1]['value'] = 'Second Title';
         }
         break;
+
       case 'id':
         $normalization[$entity_type->getKey('id')][0]['value'] = $this->anotherEntity->id();
         break;
+
       case 'uuid':
         $normalization[$entity_type->getKey('uuid')][0]['value'] = $this->anotherEntity->uuid();
         break;

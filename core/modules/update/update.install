@@ -139,16 +139,20 @@ function _update_requirement_check($project, $type) {
     case UpdateManagerInterface::NOT_SECURE:
       $requirement_label = t('Not secure!');
       break;
+
     case UpdateManagerInterface::REVOKED:
       $requirement_label = t('Revoked!');
       break;
+
     case UpdateManagerInterface::NOT_SUPPORTED:
       $requirement_label = t('Unsupported release');
       break;
+
     case UpdateManagerInterface::NOT_CURRENT:
       $requirement_label = t('Out of date');
       $requirement['severity'] = REQUIREMENT_WARNING;
       break;
+
     case UpdateFetcherInterface::UNKNOWN:
     case UpdateFetcherInterface::NOT_CHECKED:
     case UpdateFetcherInterface::NOT_FETCHED:
@@ -156,6 +160,7 @@ function _update_requirement_check($project, $type) {
       $requirement_label = isset($project['reason']) ? $project['reason'] : t('Can not determine status');
       $requirement['severity'] = REQUIREMENT_WARNING;
       break;
+
     default:
       $requirement_label = t('Up to date');
   }

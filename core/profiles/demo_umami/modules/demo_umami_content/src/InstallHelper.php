@@ -687,28 +687,36 @@ class InstallHelper implements ContainerInjectionInterface {
       case 'recipe':
         $structured_content = $this->processRecipe($content, $langcode);
         break;
+
       case 'article':
         $structured_content = $this->processArticle($content, $langcode);
         break;
+
       case 'page':
         $structured_content = $this->processPage($content, $langcode);
         break;
+
       case 'banner_block':
         $structured_content = $this->processBannerBlock($content, $langcode);
         break;
+
       case 'disclaimer_block':
         $structured_content = $this->processDisclaimerBlock($content);
         break;
+
       case 'footer_promo_block':
         $structured_content = $this->processFooterPromoBlock($content, $langcode);
         break;
+
       case 'image':
         $structured_content = $this->processImage($content);
         break;
+
       case 'recipe_category':
       case 'tags':
         $structured_content = $this->processTerm($content, $bundle_machine_name);
         break;
+
       default:
         break;
     }

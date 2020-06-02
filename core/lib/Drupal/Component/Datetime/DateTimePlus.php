@@ -641,6 +641,7 @@ class DateTimePlus {
               $valid_time = FALSE;
             }
             break;
+
           case 'minute':
           case 'second':
           default:

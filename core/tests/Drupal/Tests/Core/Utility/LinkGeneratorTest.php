@@ -452,8 +452,10 @@ class LinkGeneratorTest extends UnitTestCase {
         switch ($name) {
           case 'test_route_1':
             return (new GeneratedUrl())->setGeneratedUrl('/test-route-1');
+
           case 'test_route_3':
             return (new GeneratedUrl())->setGeneratedUrl('/test-route-3');
+
           case 'test_route_4':
             if ($parameters['object'] == '1') {
               return (new GeneratedUrl())->setGeneratedUrl('/test-route-4/1');

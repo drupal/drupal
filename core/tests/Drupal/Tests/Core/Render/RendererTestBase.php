@@ -127,9 +127,11 @@ abstract class RendererTestBase extends UnitTestCase {
           case 'details':
             $info = ['#theme_wrappers' => ['details']];
             break;
+
           case 'link':
             $info = ['#theme' => 'link'];
             break;
+
           default:
             $info = [];
         }
@@ -155,12 +157,15 @@ abstract class RendererTestBase extends UnitTestCase {
             case 'user.roles':
               $keys[] = 'r.' . $current_user_role;
               break;
+
             case 'languages:language_interface':
               $keys[] = 'en';
               break;
+
             case 'theme':
               $keys[] = 'stark';
               break;
+
             default:
               $keys[] = $context_id;
           }

@@ -106,6 +106,7 @@ abstract class CachePluginBase extends PluginBase {
       case 'query':
         // Not supported currently, but this is certainly where we'd put it.
         break;
+
       case 'results':
         $data = [
           'result' => $this->prepareViewResult($this->view->result),
@@ -135,6 +136,7 @@ abstract class CachePluginBase extends PluginBase {
       case 'query':
         // Not supported currently, but this is certainly where we'd put it.
         return FALSE;
+
       case 'results':
         // Values to set: $view->result, $view->total_rows, $view->execute_time,
         // $view->current_page.

@@ -153,8 +153,10 @@ class Statement extends \PDOStatement implements StatementInterface {
     switch (func_num_args()) {
       case 1:
         return parent::setFetchMode($mode);
+
       case 2:
         return parent::setFetchMode($mode, $a1);
+
       case 3:
       default:
         return parent::setFetchMode($mode, $a1, $a2);
@@ -171,10 +173,13 @@ class Statement extends \PDOStatement implements StatementInterface {
     switch (func_num_args()) {
       case 0:
         return parent::fetchAll();
+
       case 1:
         return parent::fetchAll($mode);
+
       case 2:
         return parent::fetchAll($mode, $column_index);
+
       case 3:
       default:
         return parent::fetchAll($mode, $column_index, $constructor_arguments);

@@ -744,14 +744,18 @@ abstract class Connection {
       switch ($options['return']) {
         case Database::RETURN_STATEMENT:
           return $stmt;
+
         case Database::RETURN_AFFECTED:
           $stmt->allowRowCount = TRUE;
           return $stmt->rowCount();
+
         case Database::RETURN_INSERT_ID:
           $sequence_name = isset($options['sequence_name']) ? $options['sequence_name'] : NULL;
           return $this->connection->lastInsertId($sequence_name);
+
         case Database::RETURN_NULL:
           return NULL;
+
         default:
           throw new \PDOException('Invalid return directive: ' . $options['return']);
       }
@@ -891,33 +895,43 @@ abstract class Connection {
           case 'Condition':
             $this->driverClasses[$class] = Condition::class;
             break;
+
           case 'Delete':
             $this->driverClasses[$class] = Delete::class;
             break;
+
           case 'Insert':
             $this->driverClasses[$class] = Insert::class;
             break;
+
           case 'Merge':
             $this->driverClasses[$class] = Merge::class;
             break;
+
           case 'Schema':
             $this->driverClasses[$class] = Schema::class;
             break;
+
           case 'Select':
             $this->driverClasses[$class] = Select::class;
             break;
+
           case 'Transaction':
             $this->driverClasses[$class] = Transaction::class;
             break;
+
           case 'Truncate':
             $this->driverClasses[$class] = Truncate::class;
             break;
+
           case 'Update':
             $this->driverClasses[$class] = Update::class;
             break;
+
           case 'Upsert':
             $this->driverClasses[$class] = Upsert::class;
             break;
+
           default:
             $this->driverClasses[$class] = $class;
         }
