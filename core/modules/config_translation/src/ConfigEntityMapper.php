@@ -244,8 +244,10 @@ class ConfigEntityMapper extends ConfigNamesMapper {
       case 'menu':
       case 'block':
         return $this->entityType;
+
       case 'view':
         return 'entity.view.edit_form';
+
       default:
         return NULL;
     }

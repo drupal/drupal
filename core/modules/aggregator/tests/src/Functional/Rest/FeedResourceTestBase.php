@@ -35,6 +35,7 @@ abstract class FeedResourceTestBase extends EntityResourceTestBase {
       case 'GET':
         $this->grantPermissionsToTestedRole(['access news feeds']);
         break;
+
       case 'POST':
       case 'PATCH':
       case 'DELETE':
@@ -182,10 +183,12 @@ abstract class FeedResourceTestBase extends EntityResourceTestBase {
     switch ($method) {
       case 'GET':
         return "The 'access news feeds' permission is required.";
+
       case 'POST':
       case 'PATCH':
       case 'DELETE':
         return "The 'administer news feeds' permission is required.";
+
       default:
         return parent::getExpectedUnauthorizedAccessMessage($method);
     }

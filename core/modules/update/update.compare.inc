@@ -225,6 +225,7 @@ function update_calculate_project_update_status(&$project_data, $available) {
           'data' => t('This project has been labeled insecure by the Drupal security team, and is no longer available for download. Immediately disabling everything included by this project is strongly recommended!'),
         ];
         break;
+
       case 'unpublished':
       case 'revoked':
         $project_data['status'] = UpdateManagerInterface::REVOKED;
@@ -236,6 +237,7 @@ function update_calculate_project_update_status(&$project_data, $available) {
           'data' => t('This project has been revoked, and is no longer available for download. Disabling everything included by this project is strongly recommended!'),
         ];
         break;
+
       case 'unsupported':
         $project_data['status'] = UpdateManagerInterface::NOT_SUPPORTED;
         if (empty($project_data['extra'])) {
@@ -246,6 +248,7 @@ function update_calculate_project_update_status(&$project_data, $available) {
           'data' => t('This project is no longer supported, and is no longer available for download. Disabling everything included by this project is strongly recommended!'),
         ];
         break;
+
       case 'not-fetched':
         $project_data['status'] = UpdateFetcherInterface::NOT_FETCHED;
         $project_data['reason'] = t('Failed to get available update data.');

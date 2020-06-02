@@ -353,14 +353,17 @@ class ToolkitGdTest extends KernelTestBase {
                 $x = 0;
                 $y = 0;
                 break;
+
               case 1:
                 $x = $image->getWidth() - 1;
                 $y = 0;
                 break;
+
               case 2:
                 $x = $image->getWidth() - 1;
                 $y = $image->getHeight() - 1;
                 break;
+
               case 3:
                 $x = 0;
                 $y = $image->getHeight() - 1;

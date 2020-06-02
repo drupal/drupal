@@ -66,6 +66,7 @@ trait UpdatePathTestTrait {
           case 'update':
             $all_updates = update_get_update_list();
             break;
+
           case 'post_update':
             $all_updates = \Drupal::service('update.post_update_registry')->getPendingUpdateInformation();
             break;

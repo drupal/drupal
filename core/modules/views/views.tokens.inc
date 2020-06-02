@@ -112,21 +112,27 @@ function views_tokens($type, $tokens, array $data, array $options, BubbleableMet
             $replacements[$original] = '';
           }
           break;
+
         case 'base-table':
           $replacements[$original] = $view->storage->get('base_table');
           break;
+
         case 'base-field':
           $replacements[$original] = $view->storage->get('base_field');
           break;
+
         case 'total-rows':
           $replacements[$original] = (int) $view->total_rows;
           break;
+
         case 'items-per-page':
           $replacements[$original] = (int) $view->getItemsPerPage();
           break;
+
         case 'current-page':
           $replacements[$original] = (int) $view->getCurrentPage() + 1;
           break;
+
         case 'page-count':
           // If there are no items per page, set this to 1 for the division.
           $per_page = $view->getItemsPerPage() ?: 1;

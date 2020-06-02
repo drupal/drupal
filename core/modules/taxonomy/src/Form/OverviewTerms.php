@@ -256,9 +256,11 @@ class OverviewTerms extends FormBase {
         case VocabularyInterface::HIERARCHY_DISABLED:
           $help_message = $this->t('You can reorganize the terms in %capital_name using their drag-and-drop handles, and group terms under a parent term by sliding them under and to the right of the parent.', $args);
           break;
+
         case VocabularyInterface::HIERARCHY_SINGLE:
           $help_message = $this->t('%capital_name contains terms grouped under parent terms. You can reorganize the terms in %capital_name using their drag-and-drop handles.', $args);
           break;
+
         case VocabularyInterface::HIERARCHY_MULTIPLE:
           $help_message = $this->t('%capital_name contains terms with multiple parents. Drag and drop of terms with multiple parents is not supported, but you can re-enable drag-and-drop support by editing each term to include only a single parent.', $args);
           break;
@@ -269,9 +271,11 @@ class OverviewTerms extends FormBase {
         case VocabularyInterface::HIERARCHY_DISABLED:
           $help_message = $this->t('%capital_name contains the following terms.', $args);
           break;
+
         case VocabularyInterface::HIERARCHY_SINGLE:
           $help_message = $this->t('%capital_name contains terms grouped under parent terms', $args);
           break;
+
         case VocabularyInterface::HIERARCHY_MULTIPLE:
           $help_message = $this->t('%capital_name contains terms with multiple parents.', $args);
           break;

@@ -172,10 +172,12 @@ class ManageFieldsFunctionalTest extends BrowserTestBase {
           $this->assertIdentical($url, $link->getAttribute('href'));
           $number_of_links_found++;
           break;
+
         case 'Edit storage settings.':
           $this->assertIdentical("$url/storage", $link->getAttribute('href'));
           $number_of_links_found++;
           break;
+
         case 'Delete field.':
           $this->assertIdentical("$url/delete", $link->getAttribute('href'));
           $number_of_links_found++;

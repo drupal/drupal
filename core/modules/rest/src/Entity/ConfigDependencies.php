@@ -78,9 +78,11 @@ class ConfigDependencies implements ContainerInjectionInterface {
       case RestResourceConfigInterface::METHOD_GRANULARITY:
         $methods = $rest_config->getMethods();
         break;
+
       case RestResourceConfigInterface::RESOURCE_GRANULARITY:
         $methods = array_slice($rest_config->getMethods(), 0, 1);
         break;
+
       default:
         throw new \InvalidArgumentException('Invalid granularity specified.');
     }
@@ -127,8 +129,10 @@ class ConfigDependencies implements ContainerInjectionInterface {
     switch ($granularity) {
       case RestResourceConfigInterface::METHOD_GRANULARITY:
         return $this->onDependencyRemovalForMethodGranularity($rest_config, $dependencies);
+
       case RestResourceConfigInterface::RESOURCE_GRANULARITY:
         return $this->onDependencyRemovalForResourceGranularity($rest_config, $dependencies);
+
       default:
         throw new \InvalidArgumentException('Invalid granularity specified.');
     }

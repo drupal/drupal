@@ -168,6 +168,7 @@ class ResourceFetcher implements ResourceFetcherInterface {
             $data['thumbnail_width'],
             $data['thumbnail_height']
           );
+
         case Resource::TYPE_VIDEO:
           return Resource::video(
             $data['html'],

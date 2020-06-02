@@ -93,30 +93,43 @@ class PhpSelection extends DefaultSelection {
     switch ($match_operator) {
       case '=':
         return $label == $match;
+
       case '>':
         return $label > $match;
+
       case '<':
         return $label < $match;
+
       case '>=':
         return $label >= $match;
+
       case '<=':
         return $label <= $match;
+
       case '<>':
         return $label != $match;
+
       case 'IN':
         return array_search($label, $match) !== FALSE;
+
       case 'NOT IN':
         return array_search($label, $match) === FALSE;
+
       case 'STARTS_WITH':
         return strpos($label, $match) === 0;
+
       case 'CONTAINS':
         return strpos($label, $match) !== FALSE;
+
       case 'ENDS_WITH':
         return mb_substr($label, -mb_strlen($match)) === (string) $match;
+
       case 'IS NOT NULL':
         return TRUE;
+
       case 'IS NULL':
         return FALSE;
+
       default:
         // Invalid match operator.
         return FALSE;

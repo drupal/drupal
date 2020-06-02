@@ -395,7 +395,8 @@ EOD;
         case 'smallint':
           $field['pgsql_type'] = $map['int:medium'];
           break;
-        case 'int' :
+
+        case 'int':
           $field['pgsql_type'] = $map['int:big'];
           break;
       }
