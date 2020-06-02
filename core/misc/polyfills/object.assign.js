@@ -6,7 +6,7 @@
 **/
 
 if (typeof Object.assign !== 'function') {
-  Object.defineProperty(Object, "assign", {
+  Object.defineProperty(Object, 'assign', {
     value: function assign(target, varArgs) {
       'use strict';
 
