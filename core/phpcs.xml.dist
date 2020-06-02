@@ -54,6 +54,9 @@
     <exclude name="Drupal.Commenting.DocComment.LongFullStop"/>
     <exclude name="Drupal.Commenting.DocComment.ShortNotCapital"/>
     <exclude name="Drupal.Commenting.DocComment.ShortFullStop"/>
+    <!-- TagsNotGrouped and ParamGroup have false-positives.
+      @see https://www.drupal.org/node/2060925 -->
+    <exclude name="Drupal.Commenting.DocComment.TagsNotGrouped"/>
     <exclude name="Drupal.Commenting.DocComment.ParamGroup"/>
     <exclude name="Drupal.Commenting.DocComment.ShortSingleLine"/>
     <exclude name="Drupal.Commenting.DocComment.TagGroupSpacing"/>
@@ -122,6 +125,7 @@
   <rule ref="Drupal.Semantics.FunctionAlias"/>
   <rule ref="Drupal.Semantics.FunctionT">
     <exclude name="Drupal.Semantics.FunctionT.NotLiteralString"/>
+    <exclude name="Drupal.Semantics.FunctionT.ConcatString"/>
   </rule>
   <rule ref="Drupal.Semantics.FunctionWatchdog"/>
   <rule ref="Drupal.Semantics.InstallHooks"/>
@@ -225,7 +229,9 @@
     <exclude name="PSR2.Classes.PropertyDeclaration.Underscore"/>
   </rule>
   <rule ref="PSR2.Namespaces.NamespaceDeclaration"/>
-  <rule ref="PSR2.Namespaces.UseDeclaration"/>
+  <rule ref="PSR2.Namespaces.UseDeclaration">
+    <exclude name="PSR2.Namespaces.UseDeclaration.UseAfterNamespace"/>
+  </rule>
 
   <!-- Squiz sniffs -->
   <rule ref="Squiz.Arrays.ArrayBracketSpacing"/>
