@@ -57,7 +57,9 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
     var statusText = void 0;
     var responseText = void 0;
     if (xmlhttp.status) {
-      statusCode = '\n' + Drupal.t('An AJAX HTTP error occurred.') + '\n' + Drupal.t('HTTP Result Code: !status', { '!status': xmlhttp.status });
+      statusCode = '\n' + Drupal.t('An AJAX HTTP error occurred.') + '\n' + Drupal.t('HTTP Result Code: !status', {
+        '!status': xmlhttp.status
+      });
     } else {
       statusCode = '\n' + Drupal.t('An AJAX HTTP request terminated abnormally.');
     }

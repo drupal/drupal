@@ -102,7 +102,9 @@
     if (xmlhttp.status) {
       statusCode = `\n${Drupal.t('An AJAX HTTP error occurred.')}\n${Drupal.t(
         'HTTP Result Code: !status',
-        { '!status': xmlhttp.status },
+        {
+          '!status': xmlhttp.status,
+        },
       )}`;
     } else {
       statusCode = `\n${Drupal.t(
@@ -1131,12 +1133,14 @@
     (response.effect || ajax.effect) !== 'none' &&
     $newContent.filter(
       i =>
-        !// We can not consider HTML comments or whitespace text as separate
-        // roots, since they do not cause visual regression with effect.
-        (
-          $newContent[i].nodeName === '#comment' ||
-          ($newContent[i].nodeName === '#text' &&
-            /^(\s|\n|\r)*$/.test($newContent[i].textContent))
+        !(
+          // We can not consider HTML comments or whitespace text as separate
+          // roots, since they do not cause visual regression with effect.
+          (
+            $newContent[i].nodeName === '#comment' ||
+            ($newContent[i].nodeName === '#text' &&
+              /^(\s|\n|\r)*$/.test($newContent[i].textContent))
+          )
         ),
     ).length > 1
       ? Drupal.theme('ajaxWrapperMultipleRootElements', $newContent)

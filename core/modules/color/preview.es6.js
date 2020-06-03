@@ -65,18 +65,14 @@
         colorStart = farb.unpack(
           form
             .find(
-              `.color-palette input[name="palette[${
-                settings.gradients[i].colors[0]
-              }]"]`,
+              `.color-palette input[name="palette[${settings.gradients[i].colors[0]}]"]`,
             )
             .val(),
         );
         colorEnd = farb.unpack(
           form
             .find(
-              `.color-palette input[name="palette[${
-                settings.gradients[i].colors[1]
-              }]"]`,
+              `.color-palette input[name="palette[${settings.gradients[i].colors[1]}]"]`,
             )
             .val(),
         );
