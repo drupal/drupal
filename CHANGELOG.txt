@@ -1,3 +1,6 @@
+Drupal 7.xx, xxxx-xx-xx (development version)
+-----------------------
+
 Drupal 7.71, 2020-06-03
 -----------------------
 - Fix for jQuery Form bug in Chromium-based browsers
