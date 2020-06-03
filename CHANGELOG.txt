@@ -1,5 +1,7 @@
-Drupal 7.xx, xxxx-xx-xx (development version)
+Drupal 7.71, 2020-06-03
 -----------------------
+- Fix for jQuery Form bug in Chromium-based browsers
+- Full support for PHP 7.4
 
 Drupal 7.70, 2020-05-19
 -----------------------
