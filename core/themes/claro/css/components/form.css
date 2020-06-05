@@ -185,6 +185,19 @@ tr .form-item,
   color: #82828c;
 }
 
+/* Add some spacing so that the focus ring and suffix don't overlap. */
+
+@media screen and (min-width: 601px) {
+  .form-item__suffix {
+    margin-left: 0.5rem; /* LTR */
+  }
+
+  [dir="rtl"] .form-item__suffix {
+    margin-right: 0.5rem;
+    margin-left: 0;
+  }
+}
+
 /**
  * Form actions.
  */
