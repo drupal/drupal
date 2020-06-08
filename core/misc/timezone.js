@@ -11,6 +11,13 @@
       var $timezone = $(context).find('.timezone-detect').once('timezone');
 
       if ($timezone.length) {
+        var tz = new Intl.DateTimeFormat().resolvedOptions().timeZone;
+
+        if (tz && $timezone.find("option[value=\"".concat(tz, "\"]")).length) {
+          $timezone.val(tz);
+          return;
+        }
+
         var dateString = Date();
         var matches = dateString.match(/\(([A-Z]{3,5})\)/);
         var abbreviation = matches ? matches[1] : 0;
