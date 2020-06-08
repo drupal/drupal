@@ -23,7 +23,7 @@ final class ClassWriter {
   /**
    * Mutates the TestCase class from PHPUnit to make it compatible with Drupal.
    *
-   * @param object $autoloader
+   * @param \Composer\Autoload\ClassLoader $autoloader
    *   The autoloader.
    *
    * @throws \ReflectionException
@@ -37,12 +37,12 @@ final class ClassWriter {
       return;
     }
     // Inspired by Symfony's simple-phpunit remove typehints from TestCase.
-    $reflector = new \ReflectionClass($autoloader);
-    $vendor_dir = dirname($reflector->getFileName(), 2);
+    $alteredFile = $autoloader->findFile('PHPUnit\Framework\TestCase');
+    $phpunit_dir = dirname($alteredFile, 3);
     // Mutate TestCase code to make it compatible with Drupal 8 and 9 tests.
-    $alteredCode = file_get_contents($alteredFile = $vendor_dir . '/phpunit/phpunit/src/Framework/TestCase.php');
+    $alteredCode = file_get_contents($alteredFile);
     $alteredCode = preg_replace('/^    ((?:protected|public)(?: static)? function \w+\(\)): void/m', '    $1', $alteredCode);
-    $alteredCode = str_replace("__DIR__ . '/../Util/", "'$vendor_dir/phpunit/phpunit/src/Util/", $alteredCode);
+    $alteredCode = str_replace("__DIR__ . '/../Util/", "'$phpunit_dir/src/Util/", $alteredCode);
     $simpletest_directory = __DIR__ . '/../../../../../../sites/simpletest';
     // Only write when necessary.
     $filename = $simpletest_directory . '/TestCase.php';
