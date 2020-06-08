@@ -59,3 +59,14 @@ services:
   user.toolbar_link_builder:
     class: Drupal\user\ToolbarLinkBuilder
     arguments: ['@current_user']
+  user.flood_control:
+    class: Drupal\user\UserFloodControl
+    arguments: ['@flood', '@event_dispatcher', '@request_stack']
+  user.flood_subcriber:
+    class: Drupal\user\EventSubscriber\UserFloodSubscriber
+    arguments: ['@logger.channel.user']
+    tags:
+      - { name: 'event_subscriber' }
+  logger.channel.user:
+    parent: logger.channel_base
+    arguments: ['user']

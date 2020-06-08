@@ -19,6 +19,13 @@ class UserLoginTest extends BrowserTestBase {
   protected $defaultTheme = 'stark';
 
   /**
+   * Modules to install.
+   *
+   * @var array
+   */
+  public static $modules = ['dblog'];
+
+  /**
    * Tests login with destination.
    */
   public function testLoginCacheTagsAndDestination() {
@@ -161,6 +168,7 @@ class UserLoginTest extends BrowserTestBase {
    *   - Set to NULL to expect a failed login.
    */
   public function assertFailedLogin($account, $flood_trigger = NULL) {
+    $database = \Drupal::database();
     $edit = [
       'name' => $account->getAccountName(),
       'pass' => $account->passRaw,
@@ -168,15 +176,20 @@ class UserLoginTest extends BrowserTestBase {
     $this->drupalPostForm('user/login', $edit, t('Log in'));
     $this->assertNoFieldByXPath("//input[@name='pass' and @value!='']", NULL, 'Password value attribute is blank.');
     if (isset($flood_trigger)) {
+      $this->assertSession()->statusCodeEquals(403);
+      $last_log = $database->queryRange('SELECT message FROM {watchdog} WHERE type = :type ORDER BY wid DESC', 0, 1, [':type' => 'user'])->fetchField();
       if ($flood_trigger == 'user') {
         $this->assertRaw(\Drupal::translation()->formatPlural($this->config('user.flood')->get('user_limit'), 'There has been more than one failed login attempt for this account. It is temporarily blocked. Try again later or <a href=":url">request a new password</a>.', 'There have been more than @count failed login attempts for this account. It is temporarily blocked. Try again later or <a href=":url">request a new password</a>.', [':url' => Url::fromRoute('user.pass')->toString()]));
+        $this->assertEquals('Flood control blocked login attempt for uid %uid from %ip', $last_log, 'A watchdog message was logged for the login attempt blocked by flood control per user.');
       }
       else {
         // No uid, so the limit is IP-based.
         $this->assertRaw(t('Too many failed login attempts from your IP address. This IP address is temporarily blocked. Try again later or <a href=":url">request a new password</a>.', [':url' => Url::fromRoute('user.pass')->toString()]));
+        $this->assertEquals('Flood control blocked login attempt from %ip', $last_log, 'A watchdog message was logged for the login attempt blocked by flood control per IP.');
       }
     }
     else {
+      $this->assertSession()->statusCodeEquals(200);
       $this->assertText(t('Unrecognized username or password. Forgot your password?'));
     }
   }
