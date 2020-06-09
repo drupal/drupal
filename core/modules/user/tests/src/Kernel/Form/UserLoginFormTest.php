@@ -18,7 +18,7 @@ class UserLoginFormTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['user'];
+  protected static $modules = ['user'];
 
   /**
    * @group legacy

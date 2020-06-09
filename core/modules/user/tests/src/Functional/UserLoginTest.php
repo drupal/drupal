@@ -19,11 +19,9 @@ class UserLoginTest extends BrowserTestBase {
   protected $defaultTheme = 'stark';
 
   /**
-   * Modules to install.
-   *
-   * @var array
+   * {@inheritdoc}
    */
-  public static $modules = ['dblog'];
+  protected static $modules = ['dblog'];
 
   /**
    * Tests login with destination.
