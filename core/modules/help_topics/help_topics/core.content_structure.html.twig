@@ -20,11 +20,15 @@ top_level: true
   <li>{% trans %}Date range (Datetime range module): Stores time/date periods with a start and and an end{% endtrans %}</li>
   <li>{% trans %}Email (core system): Stores email addresses{% endtrans %}</li>
   <li>{% trans %}Link (Link module): Stores URLs and link text{% endtrans %}</li>
-  <li>{% trans %}List (Options module): Stores values chosen from pre-defined lists; the values can be numbers or text{% endtrans %}</li>
-  <li>{% trans %}Reference (core system): Stores entity references{% endtrans %}</li>
+  <li>{% trans %}List (Options module): Stores values chosen from pre-defined lists, where the values can be numbers or text; see section below for more on list fields.{% endtrans %}</li>
+  <li>{% trans %}Reference (core system): Stores entity references; see section above{% endtrans %}</li>
   <li>{% trans %}Telephone (Telephone module): Stores telephone numbers{% endtrans %}</li>
-  <li>{% trans %}Text (Text module): Stores formatted and unformatted text{% endtrans %}</li>
+  <li>{% trans %}Text (Text module): Stores formatted and unformatted text; see section below for more on text fields.{% endtrans %}</li>
 </ul>
+<h2>{% trans %}What settings are available for List field types?{% endtrans %}</h2>
+<p>{% trans %}List fields associate pre-defined <em>keys</em> (or value codes) with <em>labels</em> that the user sees. For example, you might define a list field that shows the user the names of several locations, while behind the scenes a location code is stored in the database. Each list field type corresponds to one type of stored key. For example, a <em>List (integer)</em> field stores integers, while the <em>List (text)</em> field stores text strings. Once you have chosen the field type, the main setting for a list field is the <em>Allowed values</em> list, which associates the keys with the labels.{% endtrans %}</p>
+<h2>{% trans %}What types of Text fields are available?{% endtrans %}</h2>
+<p>{% trans %}There are several types of text fields, with different characteristics. Text fields can be either <em>plain</em> or <em>formatted</em>: plain text fields do not contain HTML, while formatted fields can contain HTML and are processed through <em>text filters</em> (these are provided by the core Filter module; if you have that module enabled, see the related topic below on filters for more information). Text fields can also be regular-length (with a limit of 255 characters) or <em>long</em> (with a very large character limit), and long formatted text fields can include a <em>summary</em> attribute. All possible combinations of these characteristics exist as text field types; for example, <em>Text (plain)</em> and <em>Text (formatted, long, with summary)</em> are two examples of text field types. {% endtrans %}</p>
 <h2>{% trans %}What is a formatter?{% endtrans %}</h2>
 <p>{% trans %}A <em>formatter</em> is a way to display a field; most field types offer several types of formatters, and most formatters have settings that further define how the field is displayed. It is also possible to completely hide a field from display, and you have the option of showing or hiding the field's label when it is displayed.{% endtrans %}</p>
 <h2>{% trans %}What is a widget?{% endtrans %}</h2>
