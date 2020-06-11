@@ -6,96 +6,178 @@
  */
 
 /**
+ * @file
  * Presentational styles for Drupal dialogs.
  */
 
+:root {
+  /*
+   * Color Palette.
+   */
+  /* Secondary. */
+  /* Variations. */ /* 5% darker than base. */ /* 10% darker than base. */ /* 10% darker than base. */ /* 20% darker than base. */ /* 5% darker than base. */ /* 10% darker than base. */ /* 5% darker than base. */ /* 10% darker than base. */ /* 5% darker than base. */ /* 10% darker than base. */
+  /*
+   * Base.
+   */
+  /*
+   * Typography.
+   */ /* 1rem = 16px if font root is 100% ands browser defaults are used. */ /* ~32px */ /* ~29px */ /* ~26px */ /* ~23px */ /* ~20px */ /* 18px */ /* ~14px */ /* ~13px */ /* ~11px */
+  /**
+   * Spaces.
+   */ /* 3 * 16px = 48px */ /* 1.5 * 16px = 24px */ /* 1 * 16px = 16px */ /* 0.75 * 16px = 12px */ /* 0.5 * 16px = 8px */
+  /*
+   * Common.
+   */
+  /*
+   * Inputs.
+   */ /* Absolute zero with opacity. */ /* Davy's grey with 0.6 opacity. */ /* Light gray with 0.3 opacity on white bg. */ /* Old silver with 0.5 opacity on white bg. */ /* (1/8)em ~ 2px */ /* (1/16)em ~ 1px */ /* Font size is too big to use 1rem for extrasmall line-height */ /* 7px inside the form element label. */ /* 8px with the checkbox width of 19px */
+  /*
+   * Details.
+   */
+  /**
+   * Buttons.
+   */
+  /**
+   * jQuery.UI dropdown.
+   */ /* Light gray with 0.8 opacity. */ /* Text color with 0.1 opacity. */
+  /**
+   * jQuery.UI dialog.
+   */
+  /**
+   * Progress bar.
+   */
+  /**
+   * Tabledrag icon size.
+   */ /* 17px */
+  /**
+   * Ajax progress.
+   */
+  /**
+   * Breadcrumb.
+   */
+}
+
 .ui-dialog {
-  position: absolute;
-  z-index: 1260;
   padding: 0;
   border: 0;
+  border-radius: 4px;
   background: transparent;
+  box-shadow: 0
+0
+1rem
+-0.25rem
+#222330;
+}
+
+.ui-dialog:focus {
+  outline: 2px
+dotted
+transparent;
+  box-shadow: 0
+0
+0
+3px
+#26a769;
 }
 
 @media all and (max-width: 48em) { /* 768px */
-  .ui-dialog {
+  .ui-dialog:not(.ui-dialog-off-canvas) {
     min-width: 92%;
     max-width: 92%;
   }
 }
 
 .ui-dialog .ui-dialog-titlebar {
-  padding: 15px 49px 15px 15px; /* LTR */
-  border-top-left-radius: 5px;
-  border-top-right-radius: 5px;
-  background: #6b6b6b;
+  position: relative;
+  box-sizing: border-box;
+  padding: 1rem 4rem 1rem 1.5rem; /* LTR */
+  color: #fff;
+  border-top-left-radius: 4px;
+  border-top-right-radius: 4px;
+  background: #222330;
+  line-height: 2rem;
 }
 
 [dir="rtl"] .ui-dialog .ui-dialog-titlebar {
-  padding-right: 15px;
-  padding-left: 49px;
+  padding-right: 1.5rem;
+  padding-left: 4rem;
 }
 
 .ui-dialog .ui-dialog-title {
-  margin: 0;
-  color: #fff;
-  font-size: 1.231em;
-  font-weight: 600;
   -webkit-font-smoothing: antialiased;
+  font-size: 1.424rem;
+  font-weight: bold;
 }
 
 .ui-dialog .ui-dialog-titlebar-close {
   position: absolute;
-  top: 10px;
-  right: 12px; /* LTR */
-  width: 30px;
-  height: 30px;
-  margin: 0;
+  top: 50%;
+  right: 0; /* LTR */
+  box-sizing: border-box;
+  width: 2rem;
+  height: 2rem;
+  margin: 0 1.5rem;
   padding: 0;
   transition: all 0.1s;
-  border: 3px solid #6b6b6b;
-  border-radius: 5px;
+  transform: translateY(-50%);
+  border: 2px solid transparent;
+  border-radius: 50%;
   background: none;
-}
-
-.ui-dialog .ui-dialog-titlebar-close:hover,
-.ui-dialog .ui-dialog-titlebar-close:focus {
-  border-color: #fff;
 }
 
 [dir="rtl"] .ui-dialog .ui-dialog-titlebar-close {
   right: auto;
-  left: 20px;
+  left: 0;
+}
+
+.ui-dialog .ui-dialog-titlebar-close:hover {
+  border-color: #fff;
+}
+
+.ui-dialog .ui-dialog-titlebar-close:focus {
+  border-color: #26a769;
+  outline: 2px
+dotted
+transparent;
+  box-shadow: none;
 }
 
 .ui-dialog .ui-icon.ui-icon-closethick {
-  margin-top: -8px;
-  background: url(../../images/core/ffffff/ex.svg) 0 0 no-repeat;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  transform: translate(-50%, -50%);
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28px' height='28px' viewBox='0 0 28 28'%3E%3Cpath stroke='%23D4D4D8' stroke-width='1.5' d='M19,9L9,19'/%3E%3Cpath stroke='%23D4D4D8' stroke-width='1.5' d='M19,19L9,9'/%3E%3C/svg%3E%0A") 50% 50% / 100% 100% no-repeat;
 }
 
-.ui-dialog .ui-widget-content.ui-dialog-content {
+.ui-dialog > .ui-dialog-content {
   overflow: auto;
-  padding: 1em;
+  padding-right: 1.5rem;
+  padding-left: 1.5rem;
+  color: #222330;
   background: #fff;
 }
 
-.views-ui-dialog .ui-widget-content.ui-dialog-content {
-  padding: 0;
+/**
+ * @todo it should not be necessary to specify not(.views-ui-dialog) after
+ *   https://drupal.org/node/3066006
+ */
+
+.ui-dialog:not(.views-ui-dialog) > .ui-dialog-content {
+  padding-top: 1rem;
+  padding-bottom: 1rem;
 }
 
-.ui-dialog .ui-widget-content.ui-dialog-buttonpane {
-  /* border-top: 1px solid #bfbfbf; */
-  margin: 0;
-  padding: 15px 20px;
-  border-bottom-right-radius: 5px;
-  border-bottom-left-radius: 5px;
-  background: #f5f5f2;
+.ui-dialog > .ui-dialog-buttonpane {
+  color: #222330;
+  border-bottom-right-radius: 4px;
+  border-bottom-left-radius: 4px;
+  background: #f3f4f9;
 }
 
-.ui-dialog .ui-dialog-buttonpane .ui-dialog-buttonset {
-  float: none;
-  margin: 0;
-  padding: 0;
+.ui-dialog-buttonpane .ui-dialog-buttonset {
+  justify-content: flex-end;
+  margin: 0 0.75rem;
 }
 
 .ui-dialog .ui-dialog-buttonpane .ui-button-text-only .ui-button-text {
@@ -113,41 +195,37 @@
   padding: 0;
 }
 
-.ui-dialog .ajax-progress-throbber {
-  position: fixed;
-  z-index: 1000;
-  top: 48.5%;
-  /* Can't do center:50% middle: 50%, so approximate it for a typical window size. */
-  left: 49%; /* LTR */
-  width: 24px;
-  height: 24px;
-  padding: 4px;
-  opacity: 0.9;
-  border-radius: 7px;
-  background-color: #232323;
-  background-image: url(../../images/loading-small.gif);
-  background-repeat: no-repeat;
-  background-position: center center;
-}
-
-[dir="rtl"] .ui-dialog .ajax-progress-throbber {
-  right: 49%;
-  left: auto;
-}
-
-.ui-dialog .ajax-progress-throbber .throbber,
-.ui-dialog .ajax-progress-throbber .message {
-  display: none;
-}
-
-.ui-dialog.ui-dialog-off-canvas .ui-dialog-titlebar {
-  position: relative;
-}
-
-.ui-dialog.ui-dialog-off-canvas .ui-dialog-titlebar-close {
-  top: 10px;
-}
+/**
+ * Off-canvas styles.
+ */
 
 .ui-dialog.ui-dialog-off-canvas .ui-widget-content.ui-dialog-content {
   background: none;
+}
+
+@media screen and (-ms-high-contrast: active) {
+  .ui-dialog .ui-icon.ui-icon-closethick {
+    background: none;
+  }
+
+  .ui-dialog .ui-icon.ui-icon-closethick::before,
+  .ui-dialog .ui-icon.ui-icon-closethick::after {
+    position: relative;
+    display: block;
+    width: 50%;
+    height: 100%;
+    content: "";
+  }
+  .ui-dialog .ui-icon.ui-icon-closethick::before {
+    top: -40%;
+    left: 60%;
+    transform: rotate(45deg);
+    border-bottom: 2px white solid;
+  }
+  .ui-dialog .ui-icon.ui-icon-closethick::after {
+    top: -78%;
+    left: 60%;
+    transform: rotate(-45deg);
+    border-top: 2px white solid;
+  }
 }

@@ -41,6 +41,9 @@
    * jQuery.UI dropdown.
    */ /* Light gray with 0.8 opacity. */ /* Text color with 0.1 opacity. */
   /**
+   * jQuery.UI dialog.
+   */
+  /**
    * Progress bar.
    */
   /**
@@ -136,7 +139,8 @@
  * Full screen throbber.
  */
 
-.ajax-progress--fullscreen {
+.ajax-progress--fullscreen,
+.ui-dialog .ajax-progress--throbber {
   position: fixed;
   z-index: 1000;
   top: 50%;
@@ -151,7 +155,8 @@
   box-shadow: 0 0.25rem 0.625rem rgba(34, 35, 48, 0.1);
 }
 
-.ajax-progress__throbber--fullscreen {
+.ajax-progress__throbber--fullscreen,
+.ui-dialog .ajax-progress__throbber {
   position: absolute;
   top: 50%;
   left: 50%;
@@ -161,6 +166,10 @@
   content: "";
   border: 3px solid #003cc5;
   border-right: 3px dotted transparent;
+}
+
+.ui-dialog .ajax-progress__message {
+  display: none;
 }
 
 @media screen and (-ms-high-contrast: active) {

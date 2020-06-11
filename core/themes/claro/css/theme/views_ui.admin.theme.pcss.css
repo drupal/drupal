@@ -5,6 +5,8 @@
  * Replaces the styles provided by the views_ui module.
  */
 
+@import "../base/variables.pcss.css";
+
 .views-admin .links {
   margin: 0;
   list-style: none outside none;
@@ -633,17 +635,21 @@ td.group-title {
 .views-ui-dialog .views-override > * {
   margin: 0;
 }
+
 .views-ui-dialog .views-progress-indicator {
   position: absolute;
-  top: 32px;
-  right: 10px; /* LTR */
-  color: #fff;
-  font-size: 11px;
+  z-index: 1;
+  top: 0;
+  right: var(--jui-dialog-close-button-reserved-space); /* LTR */
+  color: var(--jui-dialog-title-color);
+  font-size: var(--font-size-xxs);
+  line-height: var(--jui-dialog-close-button-reserved-space);
 }
 [dir="rtl"] .views-ui-dialog .views-progress-indicator {
   right: auto;
-  left: 10px;
+  left: var(--jui-dialog-close-button-reserved-space);
 }
+
 .views-ui-dialog .views-progress-indicator:before {
   content: "\003C\00A0";
 }

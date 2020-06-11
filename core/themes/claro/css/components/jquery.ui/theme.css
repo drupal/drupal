@@ -42,6 +42,9 @@
    * jQuery.UI dropdown.
    */ /* Light gray with 0.8 opacity. */ /* Text color with 0.1 opacity. */
   /**
+   * jQuery.UI dialog.
+   */
+  /**
    * Progress bar.
    */
   /**
@@ -65,6 +68,10 @@
 
 .ui-widget-content {
   border: none;
+}
+
+.ui-dialog {
+  z-index: 1260;
 }
 
 /**
@@ -584,9 +591,9 @@
  */
 
 .ui-widget-overlay {
+  z-index: 1259;
   opacity: 0.7;
-  filter: alpha(Opacity=70);
-  background: #000;
+  background: #222330;
 }
 
 /**
