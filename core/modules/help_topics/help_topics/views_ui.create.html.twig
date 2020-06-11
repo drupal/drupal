@@ -1,0 +1,19 @@
+---
+label: 'Creating a new view'
+related:
+  - views.overview
+  - views_ui.edit
+  - views_ui.add_display
+---
+{% set views = render_var(url('entity.view.collection')) %}
+<h2>{% trans %}Goal{% endtrans %}</h2>
+<p>{% trans %}Create a new view to list content or other items on your site.{% endtrans %}</p>
+<h2>{% trans %}Steps{% endtrans %}</h2>
+<ol>
+  <li>{% trans %}In the <em>Manage</em> administrative menu, navigate to <em>Structure</em> &gt; <a href="{{ views }}"><em>Views</em></a>.{% endtrans %}</li>
+  <li>{% trans %}Click <em>Add view</em>.{% endtrans %}</li>
+  <li>{% trans %}In the <em>View name</em> field, enter a name for the view, which is how it will be listed in the administrative interface.{% endtrans %}</li>
+  <li>{% trans %}In <em>View settings</em> &gt; <em>Show</em>, select the base data type to display in your view. This cannot be changed later.{% endtrans %}</li>
+  <li>{% trans %}Optionally, select or enter filtering, sorting, and page/block display settings; these can be added or changed later.{% endtrans %}</li>
+  <li>{% trans %}Click <em>Save and edit</em>. Your view will be created; edit it following the steps in the related topics below.{% endtrans %}</li>
+</ol>
