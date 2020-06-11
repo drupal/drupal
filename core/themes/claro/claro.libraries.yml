@@ -259,6 +259,14 @@ media_library.theme:
     theme:
       css/theme/media-library.css: {}
 
+media_library.ui:
+  version: VERSION
+  css:
+    component:
+      css/components/media-library.ui.css : {}
+  js:
+    js/media-library.ui.js: { weight: -1 }
+
 progress:
   version: VERSION
   css:

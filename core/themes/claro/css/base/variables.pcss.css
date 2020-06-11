@@ -156,6 +156,22 @@
   --jui-dropdown-border-color: rgba(216, 217, 224, 0.8); /* Light gray with 0.8 opacity. */
   --jui-dropdown-shadow-color: rgba(34, 35, 48, 0.1); /* Text color with 0.1 opacity. */
   /**
+   * jQuery.UI dialog.
+   */
+  --jui-dialog-title-color: var(--color-white);
+  --jui-dialog-title-bg-color: var(--color-text);
+  --jui-dialog-title-font-size: var(--font-size-h4);
+  --jui-dialog-close-button-size: calc(var(--space-m) * 2);
+  --jui-dialog-close-button-border-radius: 50%;
+  --jui-dialog-close-button-reserved-space: calc(var(--space-m) * 4);
+  --jui-dialog-off-canvas-close-button-reserved-space: calc(var(--space-m) * 3);
+  --jui-dialog-border-radius: 4px;
+  --jui-dialog-box-shadow: 0 0 var(--space-m) calc(var(--space-m) / -4) var(--color-text);
+  --jui-dialog--focus-outline: 2px dotted transparent;
+  --jui-dialog--focus-box-shadow: 0 0 0 3px var(--color-focus);
+  --jui-dialog-z-index: 1260;
+  --jui-dialog-off-canvas-z-index: 501;
+  /**
    * Progress bar.
    */
   --progress-bar-border-size: 1px;

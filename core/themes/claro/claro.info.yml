@@ -38,6 +38,11 @@ libraries-override:
       theme:
         css/system.admin.css: false
 
+  core/drupal.dialog.off_canvas:
+    css:
+      base:
+        misc/dialog/off-canvas.theme.css: css/base/off-canvas.theme.css
+
   core/drupal.dropbutton:
     css:
       component:
@@ -117,6 +122,8 @@ libraries-extend:
     - claro/views
   media/media_embed_ckeditor_theme:
     - claro/classy.media_embed_ckeditor_theme
+  media_library/ui:
+    - claro/media_library.ui
   media_library/view:
     - claro/media_library.theme
   media_library/widget:
