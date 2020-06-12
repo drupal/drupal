@@ -66,16 +66,16 @@ class NameMungingTest extends FileTestBase {
   }
 
   /**
-   * White listed extensions are ignored by file_munge_filename().
+   * Tests that allowed extensions are ignored by file_munge_filename().
    */
-  public function testMungeIgnoreWhitelisted() {
-    // Declare our extension as whitelisted. The declared extensions should
-    // be case insensitive so test using one with a different case.
+  public function testMungeIgnoreAllowedExtensions() {
+    // Declare that our extension is allowed. The declared extensions should be
+    // case insensitive, so test using one with a different case.
     $munged_name = file_munge_filename($this->nameWithUcExt, $this->badExtension);
-    $this->assertSame($munged_name, $this->nameWithUcExt, new FormattableMarkup('The new filename (%munged) matches the original (%original) once the extension has been whitelisted.', ['%munged' => $munged_name, '%original' => $this->nameWithUcExt]));
+    $this->assertSame($munged_name, $this->nameWithUcExt);
     // The allowed extensions should also be normalized.
     $munged_name = file_munge_filename($this->name, strtoupper($this->badExtension));
-    $this->assertSame($munged_name, $this->name, new FormattableMarkup('The new filename (%munged) matches the original (%original) also when the whitelisted extension is in uppercase.', ['%munged' => $munged_name, '%original' => $this->name]));
+    $this->assertSame($munged_name, $this->name);
   }
 
   /**
