@@ -112,10 +112,6 @@ abstract class ModerationStateTestBase extends BrowserTestBase {
     $this->drupalGet('admin/structure/types');
     $this->clickLink('Add content type');
 
-    // Check that the 'Create new revision' checkbox is checked and disabled.
-    $this->assertSession()->checkboxChecked('options[revision]');
-    $this->assertSession()->fieldDisabled('options[revision]');
-
     $edit = [
       'name' => $content_type_name,
       'type' => $content_type_id,
