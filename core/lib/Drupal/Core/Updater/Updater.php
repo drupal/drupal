@@ -291,7 +291,7 @@ class Updater {
       return $this->postInstallTasks();
     }
     catch (FileTransferException $e) {
-      throw new UpdaterFileTransferException("File Transfer failed, reason: '" . strtr($e->getMessage(), $e->arguments)) . "'";
+      throw new UpdaterFileTransferException("File Transfer failed, reason: '" . strtr($e->getMessage(), $e->arguments) . "'");
     }
   }
 
