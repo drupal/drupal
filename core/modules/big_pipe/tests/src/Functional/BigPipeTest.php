@@ -192,7 +192,9 @@ class BigPipeTest extends BrowserTestBase {
 
     // Verify that the two expected exceptions are logged as errors.
     $this->assertEqual($log_count + 2, $connection->query('SELECT COUNT(*) FROM {watchdog}')->fetchField(), 'Two new watchdog entries.');
-    $records = $connection->query('SELECT * FROM {watchdog} ORDER BY wid DESC LIMIT 2')->fetchAll();
+    // Using the method queryRange() allows contrib database drivers the ability
+    // to insert their own limit and offset functionality.
+    $records = $connection->queryRange('SELECT * FROM {watchdog} ORDER BY wid DESC', 0, 2)->fetchAll();
     $this->assertEqual(RfcLogLevel::ERROR, $records[0]->severity);
     $this->assertStringContainsString('Oh noes!', (string) unserialize($records[0]->variables)['@message']);
     $this->assertEqual(RfcLogLevel::ERROR, $records[1]->severity);
