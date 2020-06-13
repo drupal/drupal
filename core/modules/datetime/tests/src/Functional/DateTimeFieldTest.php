@@ -460,23 +460,23 @@ class DateTimeFieldTest extends DateTestBase {
 
     $this->assertFieldByXPath("//*[@id=\"edit-$field_name-0-value-year\"]", NULL, 'Year element found.');
     $this->assertOptionSelected("edit-$field_name-0-value-year", '', 'No year selected.');
-    $this->assertOptionByText("edit-$field_name-0-value-year", t('Year'));
+    $this->assertSession()->optionExists("edit-$field_name-0-value-year", t('Year'));
     $this->assertFieldByXPath("//*[@id=\"edit-$field_name-0-value-month\"]", NULL, 'Month element found.');
     $this->assertOptionSelected("edit-$field_name-0-value-month", '', 'No month selected.');
-    $this->assertOptionByText("edit-$field_name-0-value-month", t('Month'));
+    $this->assertSession()->optionExists("edit-$field_name-0-value-month", t('Month'));
     $this->assertFieldByXPath("//*[@id=\"edit-$field_name-0-value-day\"]", NULL, 'Day element found.');
     $this->assertOptionSelected("edit-$field_name-0-value-day", '', 'No day selected.');
-    $this->assertOptionByText("edit-$field_name-0-value-day", t('Day'));
+    $this->assertSession()->optionExists("edit-$field_name-0-value-day", t('Day'));
     $this->assertFieldByXPath("//*[@id=\"edit-$field_name-0-value-hour\"]", NULL, 'Hour element found.');
     $this->assertOptionSelected("edit-$field_name-0-value-hour", '', 'No hour selected.');
-    $this->assertOptionByText("edit-$field_name-0-value-hour", t('Hour'));
+    $this->assertSession()->optionExists("edit-$field_name-0-value-hour", t('Hour'));
     $this->assertFieldByXPath("//*[@id=\"edit-$field_name-0-value-minute\"]", NULL, 'Minute element found.');
     $this->assertOptionSelected("edit-$field_name-0-value-minute", '', 'No minute selected.');
-    $this->assertOptionByText("edit-$field_name-0-value-minute", t('Minute'));
+    $this->assertSession()->optionExists("edit-$field_name-0-value-minute", t('Minute'));
     $this->assertNoFieldByXPath("//*[@id=\"edit-$field_name-0-value-second\"]", NULL, 'Second element not found.');
     $this->assertFieldByXPath("//*[@id=\"edit-$field_name-0-value-ampm\"]", NULL, 'AMPM element found.');
     $this->assertOptionSelected("edit-$field_name-0-value-ampm", '', 'No ampm selected.');
-    $this->assertOptionByText("edit-$field_name-0-value-ampm", t('AM/PM'));
+    $this->assertSession()->optionExists("edit-$field_name-0-value-ampm", t('AM/PM'));
 
     // Submit a valid date and ensure it is accepted.
     $date_value = ['year' => 2012, 'month' => 12, 'day' => 31, 'hour' => 5, 'minute' => 15];

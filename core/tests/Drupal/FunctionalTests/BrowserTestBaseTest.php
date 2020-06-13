@@ -484,6 +484,7 @@ class BrowserTestBaseTest extends BrowserTestBase {
    * Tests legacy field asserts for options field type.
    *
    * @group legacy
+   * @expectedDeprecation AssertLegacyTrait::assertOptionByText() is deprecated in drupal:8.4.0 and is removed from drupal:10.0.0. Use $this->assertSession()->optionExists() instead. See https://www.drupal.org/node/3129738
    * @expectedDeprecation AssertLegacyTrait::assertOption() is deprecated in drupal:8.2.0 and is removed from drupal:10.0.0. Use $this->assertSession()->optionExists() instead. See https://www.drupal.org/node/3129738
    * @expectedDeprecation AssertLegacyTrait::assertNoOption() is deprecated in drupal:8.2.0 and is removed from drupal:10.0.0. Use $this->assertSession()->optionNotExists() instead. See https://www.drupal.org/node/3129738
    */
