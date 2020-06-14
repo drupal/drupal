@@ -378,6 +378,7 @@ class ViewsQueryAlter implements ContainerInjectionInterface {
    *
    * @return \Drupal\views\Plugin\views\join\JoinPluginInterface
    *   An adjusted views join object to add to the query.
+   *
    * @throws \Drupal\Component\Plugin\Exception\PluginException
    */
   protected function getRevisionTableJoin($relationship, $table, $field, $workspace_association_table, EntityTypeInterface $entity_type) {

@@ -624,6 +624,7 @@ function views_disable_view(View $view) {
  * @param array $element
  *   An associative array containing the properties of the element.
  *   Properties used: #substitutions, #children.
+ *
  * @return array
  *   The $element with prepared variables ready for #theme 'form'
  *   in views_form_views_form.
@@ -777,6 +778,7 @@ function views_embed_view($name, $display_id = 'default') {
  *   Everything after #views-tab- is the display ID, e.g. page_1.
  * @param ...
  *   Any additional parameters will be passed as arguments.
+ *
  * @return array
  *   An array containing an object for each view item.
  */

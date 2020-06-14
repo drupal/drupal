@@ -58,6 +58,7 @@ interface ThemeManagerInterface {
    *
    * @param \Drupal\Core\Theme\ActiveTheme $active_theme
    *   The new active theme.
+   *
    * @return $this
    */
   public function setActiveTheme(ActiveTheme $active_theme);

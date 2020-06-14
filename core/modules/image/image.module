@@ -248,6 +248,7 @@ function image_path_flush($path) {
  *
  * @param $include_empty
  *   If TRUE a '- None -' option will be inserted in the options array.
+ *
  * @return
  *   Array of image styles both key and value are set to style name.
  */

@@ -50,6 +50,7 @@ class FileListingTest extends FileFieldTestBase {
    *
    * @param $usage array
    *   Array of file usage information as returned from file_usage subsystem.
+   *
    * @return int
    *   Total usage count.
    */

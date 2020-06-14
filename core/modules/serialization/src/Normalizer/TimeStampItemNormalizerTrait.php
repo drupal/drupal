@@ -37,6 +37,7 @@ trait TimeStampItemNormalizerTrait {
    *
    * @param array $normalized
    *   The normalized field data to process.
+   *
    * @return array
    *   The processed data.
    */

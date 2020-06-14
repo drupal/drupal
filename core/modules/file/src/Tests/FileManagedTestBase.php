@@ -148,6 +148,7 @@ abstract class FileManagedTestBase extends WebTestBase {
    * @param string $scheme
    *   Optional string indicating the stream scheme to use. Drupal core includes
    *   public, private, and temporary. The public wrapper is the default.
+   *
    * @return \Drupal\file\FileInterface
    *   File entity.
    */

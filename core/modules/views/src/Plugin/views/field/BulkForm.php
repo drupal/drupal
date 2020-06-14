@@ -355,6 +355,7 @@ class BulkForm extends FieldPluginBase implements CacheableDependencyInterface {
    *
    * @param bool $filtered
    *   (optional) Whether to filter actions to selected actions.
+   *
    * @return array
    *   An associative array of operations, suitable for a select element.
    */

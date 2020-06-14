@@ -422,6 +422,7 @@ function _simpletest_batch_finished($success, $results, $operations, $elapsed) {
  *
  * @param $test_id
  *   The test ID to get the last test from.
+ *
  * @return array
  *   Array containing the last database prefix used and the last test class
  *   that ran.

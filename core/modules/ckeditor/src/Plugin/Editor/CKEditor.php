@@ -403,6 +403,7 @@ class CKEditor extends EditorBase implements ContainerFactoryPluginInterface {
    *
    * @param \Drupal\editor\Entity\Editor $editor
    *   A configured text editor object.
+   *
    * @return array
    *   An array containing the "toolbar" configuration.
    */
@@ -426,6 +427,7 @@ class CKEditor extends EditorBase implements ContainerFactoryPluginInterface {
    *
    * @param \Drupal\editor\Entity\Editor $editor
    *   A configured text editor object.
+   *
    * @return array
    *   An array containing the "contentsCss" configuration.
    */

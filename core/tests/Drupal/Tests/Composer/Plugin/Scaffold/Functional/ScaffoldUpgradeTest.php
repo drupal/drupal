@@ -103,6 +103,7 @@ class ScaffoldUpgradeTest extends TestCase {
    *   Path to location to create git repository.
    * @param string $version
    *   Version to tag the repository with.
+   *
    * @return string
    *   Path to temporary git repository.
    */

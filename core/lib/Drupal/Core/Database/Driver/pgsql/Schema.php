@@ -99,6 +99,7 @@ class Schema extends DatabaseSchema {
    *
    * @param $table_name
    *   The non-prefixed name of the table.
+   *
    * @return
    *   An object with two member variables:
    *     - 'blob_fields' that lists all the blob fields in the table.
@@ -264,6 +265,7 @@ EOD;
    *   The name of the table to create.
    * @param $table
    *   A Schema API table definition array.
+   *
    * @return
    *   An array of SQL statements to create the table.
    */
@@ -1074,6 +1076,7 @@ EOD;
    *
    * @param $data
    *   String to be hashed.
+   *
    * @return string
    *   A base-64 encoded sha-256 hash, with + and / replaced with _ and any =
    *   padding characters removed.

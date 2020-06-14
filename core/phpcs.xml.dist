@@ -59,7 +59,6 @@
     <exclude name="Drupal.Commenting.DocComment.TagsNotGrouped"/>
     <exclude name="Drupal.Commenting.DocComment.ParamGroup"/>
     <exclude name="Drupal.Commenting.DocComment.ShortSingleLine"/>
-    <exclude name="Drupal.Commenting.DocComment.TagGroupSpacing"/>
     <exclude name="Drupal.Commenting.DocComment.MissingShort"/>
   </rule>
   <rule ref="Drupal.Commenting.DocCommentStar"/>

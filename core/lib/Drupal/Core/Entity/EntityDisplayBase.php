@@ -452,6 +452,7 @@ abstract class EntityDisplayBase extends ConfigEntityBase implements EntityDispl
    *
    * @param \Drupal\Core\Field\FieldDefinitionInterface $definition
    *   A field definition.
+   *
    * @return array|null
    */
   private function fieldHasDisplayOptions(FieldDefinitionInterface $definition) {

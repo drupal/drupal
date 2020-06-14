@@ -778,6 +778,7 @@ abstract class Connection {
    *
    * @param string $class
    *   The class for which we want the potentially driver-specific class.
+   *
    * @return string
    *   The name of the class that should be used for this driver.
    */

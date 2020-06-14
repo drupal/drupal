@@ -373,7 +373,9 @@ class Tables implements TablesInterface {
    *
    * @param $field_name
    *   Name of the field.
+   *
    * @return string
+   *
    * @throws \Drupal\Core\Entity\Query\QueryException
    */
   protected function ensureFieldTable($index_prefix, &$field, $type, $langcode, $base_table, $entity_id_field, $field_id_field, $delta) {

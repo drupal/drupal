@@ -288,6 +288,7 @@ class NodeGrantDatabaseStorage implements NodeGrantDatabaseStorageInterface {
    *
    * @param array $node_access_grants
    *   An array of grants, as returned by node_access_grants().
+   *
    * @return \Drupal\Core\Database\Query\Condition
    *   A condition object to be passed to $query->condition().
    *

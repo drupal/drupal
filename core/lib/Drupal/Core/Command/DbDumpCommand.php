@@ -70,6 +70,7 @@ class DbDumpCommand extends DbCommandBase {
    *   The database connection to use.
    * @param array $schema_only
    *   Table patterns for which to only dump the schema, no data.
+   *
    * @return string
    *   The PHP script.
    */
@@ -105,6 +106,7 @@ class DbDumpCommand extends DbCommandBase {
    *
    * @param \Drupal\Core\Database\Connection $connection
    *   The database connection to use.
+   *
    * @return array
    *   An array of table names.
    */

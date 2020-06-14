@@ -478,6 +478,7 @@ function _drupal_rewrite_settings_global(&$ref, $variable) {
  *   The container for variable values.
  * @param string $variable_name
  *   Name of variable.
+ *
  * @return string
  *   A string containing valid PHP code of the variable suitable for placing
  *   into settings.php.
@@ -508,6 +509,7 @@ function _drupal_rewrite_settings_dump($variable, $variable_name) {
  *   A string to prepend to the variable's value.
  * @param string $suffix
  *   A string to append to the variable's value.
+ *
  * @return string
  *   A string containing valid PHP code of the variable suitable for placing
  *   into settings.php.

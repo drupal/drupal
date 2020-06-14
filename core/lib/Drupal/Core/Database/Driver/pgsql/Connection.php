@@ -281,6 +281,7 @@ class Connection extends DatabaseConnection {
    *
    * @param $string
    *   The string to escape.
+   *
    * @return string
    *   The escaped string.
    */

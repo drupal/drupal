@@ -107,6 +107,7 @@ interface QueryInterface extends AlterableInterface {
    *   Name of a field.
    * @param $langcode
    *   Language code (optional).
+   *
    * @return $this
    */
   public function exists($field, $langcode = NULL);
@@ -118,6 +119,7 @@ interface QueryInterface extends AlterableInterface {
    *   Name of a field.
    * @param $langcode
    *   Language code (optional).
+   *
    * @return $this
    */
   public function notExists($field, $langcode = NULL);
