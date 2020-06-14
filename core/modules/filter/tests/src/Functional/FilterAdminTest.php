@@ -320,7 +320,7 @@ class FilterAdminTest extends BrowserTestBase {
     $edit['body[0][format]'] = $plain;
     $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, t('Save'));
     $this->drupalGet('node/' . $node->id());
-    $this->assertEscaped($text, 'The "Plain text" text format escapes all HTML tags.');
+    $this->assertEscaped($text);
     $this->config('filter.settings')
       ->set('always_show_fallback_choice', FALSE)
       ->save();

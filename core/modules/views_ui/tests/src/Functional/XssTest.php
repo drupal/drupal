@@ -23,11 +23,13 @@ class XssTest extends UITestBase {
 
   public function testViewsUi() {
     $this->drupalGet('admin/structure/views/view/sa_contrib_2013_035');
-    $this->assertEscaped('<marquee>test</marquee>', 'Field admin label is properly escaped.');
+    // Verify that the field admin label is properly escaped.
+    $this->assertEscaped('<marquee>test</marquee>');
 
     $this->drupalGet('admin/structure/views/nojs/handler/sa_contrib_2013_035/page_1/header/area');
-    $this->assertEscaped('{{ title }} == <marquee>test</marquee>', 'Token label is properly escaped.');
-    $this->assertEscaped('{{ title_1 }} == <script>alert("XSS")</script>', 'Token label is properly escaped.');
+    // Verify that the token label is properly escaped.
+    $this->assertEscaped('{{ title }} == <marquee>test</marquee>');
+    $this->assertEscaped('{{ title_1 }} == <script>alert("XSS")</script>');
   }
 
   /**

@@ -159,7 +159,8 @@ class DateTimeTest extends BrowserTestBase {
     $date_format->save();
 
     $this->drupalGet(Url::fromRoute('entity.date_format.collection'));
-    $this->assertEscaped("<script>alert('XSS');</script>", 'The date format was properly escaped');
+    // Ensure that the date format is properly escaped.
+    $this->assertEscaped("<script>alert('XSS');</script>");
 
     // Add a new date format with HTML in it.
     $date_format_id = strtolower($this->randomMachineName(8));
