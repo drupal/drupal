@@ -11,14 +11,13 @@ use Drupal\block_content\BlockContentTypeInterface;
  * @ConfigEntityType(
  *   id = "block_content_type",
  *   label = @Translation("Custom block type"),
- *   label_collection = @Translation("Custom block types"),
+ *   label_collection = @Translation("Custom block library"),
  *   label_singular = @Translation("custom block type"),
  *   label_plural = @Translation("custom block types"),
  *   label_count = @PluralTranslation(
  *     singular = "@count custom block type",
  *     plural = "@count custom block types",
  *   ),
- *   label_collection = @Translation("Custom block library"),
  *   handlers = {
  *     "form" = {
  *       "default" = "Drupal\block_content\BlockContentTypeForm",
