@@ -54,14 +54,17 @@ class ProcessingTest extends BrowserTestBase {
     // Batch 0: no operation.
     $edit = ['batch' => 'batch_0'];
     $this->drupalPostForm('batch-test', $edit, 'Submit');
-    $this->assertNoEscaped('<', 'No escaped markup is present.');
+    // If there is any escaped markup it will include at least an escaped '<'
+    // character, so assert on each page that there is no escaped '<' as a way
+    // of verifying that no markup is incorrectly escaped.
+    $this->assertNoEscaped('<');
     $this->assertBatchMessages($this->_resultMessages('batch_0'), 'Batch with no operation performed successfully.');
     $this->assertText('Redirection successful.', 'Redirection after batch execution is correct.');
 
     // Batch 1: several simple operations.
     $edit = ['batch' => 'batch_1'];
     $this->drupalPostForm('batch-test', $edit, 'Submit');
-    $this->assertNoEscaped('<', 'No escaped markup is present.');
+    $this->assertNoEscaped('<');
     $this->assertBatchMessages($this->_resultMessages('batch_1'), 'Batch with simple operations performed successfully.');
     $this->assertEqual(batch_test_stack(), $this->_resultStack('batch_1'), 'Execution order was correct.');
     $this->assertText('Redirection successful.', 'Redirection after batch execution is correct.');
@@ -69,7 +72,7 @@ class ProcessingTest extends BrowserTestBase {
     // Batch 2: one multistep operation.
     $edit = ['batch' => 'batch_2'];
     $this->drupalPostForm('batch-test', $edit, 'Submit');
-    $this->assertNoEscaped('<', 'No escaped markup is present.');
+    $this->assertNoEscaped('<');
     $this->assertBatchMessages($this->_resultMessages('batch_2'), 'Batch with multistep operation performed successfully.');
     $this->assertEqual(batch_test_stack(), $this->_resultStack('batch_2'), 'Execution order was correct.');
     $this->assertText('Redirection successful.', 'Redirection after batch execution is correct.');
@@ -77,7 +80,7 @@ class ProcessingTest extends BrowserTestBase {
     // Batch 3: simple + multistep combined.
     $edit = ['batch' => 'batch_3'];
     $this->drupalPostForm('batch-test', $edit, 'Submit');
-    $this->assertNoEscaped('<', 'No escaped markup is present.');
+    $this->assertNoEscaped('<');
     $this->assertBatchMessages($this->_resultMessages('batch_3'), 'Batch with simple and multistep operations performed successfully.');
     $this->assertEqual(batch_test_stack(), $this->_resultStack('batch_3'), 'Execution order was correct.');
     $this->assertText('Redirection successful.', 'Redirection after batch execution is correct.');
@@ -85,7 +88,7 @@ class ProcessingTest extends BrowserTestBase {
     // Batch 4: nested batch.
     $edit = ['batch' => 'batch_4'];
     $this->drupalPostForm('batch-test', $edit, 'Submit');
-    $this->assertNoEscaped('<', 'No escaped markup is present.');
+    $this->assertNoEscaped('<');
     $this->assertBatchMessages($this->_resultMessages('batch_4'), 'Nested batch performed successfully.');
     $this->assertEqual(batch_test_stack(), $this->_resultStack('batch_4'), 'Execution order was correct.');
     $this->assertText('Redirection successful.', 'Redirection after batch execution is correct.');
@@ -121,7 +124,7 @@ class ProcessingTest extends BrowserTestBase {
    */
   public function testBatchFormMultistep() {
     $this->drupalGet('batch-test/multistep');
-    $this->assertNoEscaped('<', 'No escaped markup is present.');
+    $this->assertNoEscaped('<');
     $this->assertText('step 1', 'Form is displayed in step 1.');
 
     // First step triggers batch 1.
@@ -129,14 +132,14 @@ class ProcessingTest extends BrowserTestBase {
     $this->assertBatchMessages($this->_resultMessages('batch_1'), 'Batch for step 1 performed successfully.');
     $this->assertEqual(batch_test_stack(), $this->_resultStack('batch_1'), 'Execution order was correct.');
     $this->assertText('step 2', 'Form is displayed in step 2.');
-    $this->assertNoEscaped('<', 'No escaped markup is present.');
+    $this->assertNoEscaped('<');
 
     // Second step triggers batch 2.
     $this->drupalPostForm(NULL, [], 'Submit');
     $this->assertBatchMessages($this->_resultMessages('batch_2'), 'Batch for step 2 performed successfully.');
     $this->assertEqual(batch_test_stack(), $this->_resultStack('batch_2'), 'Execution order was correct.');
     $this->assertText('Redirection successful.', 'Redirection after batch execution is correct.');
-    $this->assertNoEscaped('<', 'No escaped markup is present.');
+    $this->assertNoEscaped('<');
 
     // Extra query arguments will trigger logic that will add them to the
     // redirect URL. Make sure they are persisted.
