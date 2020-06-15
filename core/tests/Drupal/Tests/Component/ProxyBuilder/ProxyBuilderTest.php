@@ -145,6 +145,30 @@ EOS;
   }
 
   /**
+   * @covers ::buildMethodBody
+   */
+  public function testBuildServiceMethodReturnsVoid() {
+    $class = TestServiceMethodReturnsVoid::class;
+
+    $result = $this->proxyBuilder->build($class);
+
+    // @todo Solve the silly linebreak for array()
+    $method_body = <<<'EOS'
+
+/**
+ * {@inheritdoc}
+ */
+public function methodReturnsVoid(string $parameter): void
+{
+    $this->lazyLoadItself()->methodReturnsVoid($parameter);
+}
+
+EOS;
+
+    $this->assertEquals($this->buildExpectedClass($class, $method_body), $result);
+  }
+
+  /**
    * @covers ::buildMethod
    * @covers ::buildMethodBody
    */
@@ -382,6 +406,14 @@ class TestServiceMethodWithParameter {
 class TestServiceComplexMethod {
 
   public function complexMethod(string $parameter, callable $function, TestServiceNoMethod $test_service = NULL, array &$elements = []): array {
+
+  }
+
+}
+
+class TestServiceMethodReturnsVoid {
+
+  public function methodReturnsVoid(string $parameter): void {
 
   }
 
