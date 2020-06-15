@@ -607,6 +607,16 @@ class ConnectionTest extends UnitTestCase {
    */
   public function provideQueriesToTrim() {
     return [
+      'remove_non_breaking_space' => [
+        'SELECT * FROM test',
+        "SELECT * FROM test\xA0",
+        [],
+      ],
+      'remove_ordinary_space' => [
+        'SELECT * FROM test',
+        'SELECT * FROM test ',
+        [],
+      ],
       'remove_semicolon' => [
         'SELECT * FROM test',
         'SELECT * FROM test;',
