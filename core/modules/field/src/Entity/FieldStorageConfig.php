@@ -175,12 +175,14 @@ class FieldStorageConfig extends ConfigEntityBase implements FieldStorageConfigI
    * The custom storage indexes for the field data storage.
    *
    * This set of indexes is merged with the "default" indexes specified by the
-   * field type in hook_field_schema() to determine the actual set of indexes
-   * that get created.
+   * field type in the class implementing
+   * \Drupal\Core\Field\FieldItemInterface::schema() method to determine the
+   * actual set of indexes that get created.
    *
    * The indexes are defined using the same definition format as Schema API
    * index specifications. Only columns that are part of the field schema, as
-   * defined by the field type in hook_field_schema(), are allowed.
+   * defined by the field type in the class implementing
+   * \Drupal\Core\Field\FieldItemInterface::schema() method, are allowed.
    *
    * Some storage backends might not support indexes, and discard that
    * information.

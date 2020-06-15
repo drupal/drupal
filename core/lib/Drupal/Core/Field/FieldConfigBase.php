@@ -125,9 +125,10 @@ abstract class FieldConfigBase extends ConfigEntityBase implements FieldConfigIn
    *
    * The default value is expressed as a numerically indexed array of items,
    * each item being an array of key/value pairs matching the set of 'columns'
-   * defined by the "field schema" for the field type, as exposed in
-   * hook_field_schema(). If the number of items exceeds the cardinality of the
-   * field, extraneous items will be ignored.
+   * defined by the "field schema" for the field type, as exposed in the class
+   * implementing \Drupal\Core\Field\FieldItemInterface::schema() method. If the
+   * number of items exceeds the cardinality of the field, extraneous items will
+   * be ignored.
    *
    * This property is overlooked if the $default_value_callback is non-empty.
    *
