@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\views\Unit;
 
+use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Tests\UnitTestCase;
 use Drupal\views\Views;
@@ -70,6 +71,21 @@ class ViewsTest extends UnitTestCase {
     $this->assertInstanceOf('Drupal\views\ViewExecutable', $executable);
     $this->assertEquals($view->id(), $executable->storage->id());
     $this->assertEquals(spl_object_hash($view), spl_object_hash($executable->storage));
+  }
+
+  /**
+   * Tests the getView() method against a non-existent view.
+   *
+   * @covers ::getView
+   */
+  public function testGetNonExistentView() {
+    $entity_type_manager = $this->prophesize(EntityTypeManagerInterface::class);
+    $storage = $this->prophesize(EntityStorageInterface::class);
+    $storage->load('test_view_non_existent')->willReturn(NULL);
+    $entity_type_manager->getStorage('view')->willReturn($storage->reveal());
+    $this->container->set('entity_type.manager', $entity_type_manager->reveal());
+    $executable_does_not_exist = Views::getView('test_view_non_existent');
+    $this->assertNull($executable_does_not_exist);
   }
 
   /**
