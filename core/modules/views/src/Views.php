@@ -115,14 +115,15 @@ class Views {
    * @param string $id
    *   The view ID to load.
    *
-   * @return \Drupal\views\ViewExecutable
-   *   A view executable instance, from the loaded entity.
+   * @return \Drupal\views\ViewExecutable|null
+   *   A view executable instance or NULL if the view does not exist.
    */
   public static function getView($id) {
     $view = \Drupal::entityTypeManager()->getStorage('view')->load($id);
     if ($view) {
       return static::executableFactory()->get($view);
     }
+    return NULL;
   }
 
   /**
