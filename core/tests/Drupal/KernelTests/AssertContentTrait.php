@@ -127,16 +127,12 @@ trait AssertContentTrait {
       $html_dom = new \DOMDocument();
       @$html_dom->loadHTML('<?xml encoding="UTF-8">' . $this->getRawContent());
       if ($html_dom) {
-        $this->pass(new FormattableMarkup('Valid HTML found on "@path"', ['@path' => $this->getUrl()]), 'Browser');
         // It's much easier to work with simplexml than DOM, luckily enough
         // we can just simply import our DOM tree.
         $this->elements = simplexml_import_dom($html_dom);
       }
     }
-    if ($this->elements === FALSE) {
-      $this->fail('Parsed page successfully.', 'Browser');
-    }
-
+    $this->assertNotFalse($this->elements, 'The current HTML page should be available for DOM navigation.');
     return $this->elements;
   }
 
