@@ -96,24 +96,24 @@ class TempStoreDatabaseTest extends KernelTestBase {
       $this->assertEqual(!$i, $stores[0]->setIfNotExists($key, $this->objects[$i]));
       $metadata = $stores[0]->getMetadata($key);
       $this->assertEqual($users[0], $metadata->owner);
-      $this->assertIdenticalObject($this->objects[0], $stores[0]->get($key));
+      $this->assertEquals($this->objects[0], $stores[0]->get($key));
       // Another user should get the same result.
       $metadata = $stores[1]->getMetadata($key);
       $this->assertEqual($users[0], $metadata->owner);
-      $this->assertIdenticalObject($this->objects[0], $stores[1]->get($key));
+      $this->assertEquals($this->objects[0], $stores[1]->get($key));
     }
 
     // Remove the item and try to set it again.
     $stores[0]->delete($key);
     $stores[0]->setIfNotExists($key, $this->objects[1]);
     // This time it should succeed.
-    $this->assertIdenticalObject($this->objects[1], $stores[0]->get($key));
+    $this->assertEquals($this->objects[1], $stores[0]->get($key));
 
     // This user can update the object.
     $stores[0]->set($key, $this->objects[2]);
-    $this->assertIdenticalObject($this->objects[2], $stores[0]->get($key));
+    $this->assertEquals($this->objects[2], $stores[0]->get($key));
     // The object is the same when another user loads it.
-    $this->assertIdenticalObject($this->objects[2], $stores[1]->get($key));
+    $this->assertEquals($this->objects[2], $stores[1]->get($key));
 
     // This user should be allowed to get, update, delete.
     $this->assertTrue($stores[0]->getIfOwner($key) instanceof \stdClass);
@@ -122,8 +122,8 @@ class TempStoreDatabaseTest extends KernelTestBase {
 
     // Another user can update the object and become the owner.
     $stores[1]->set($key, $this->objects[3]);
-    $this->assertIdenticalObject($this->objects[3], $stores[0]->get($key));
-    $this->assertIdenticalObject($this->objects[3], $stores[1]->get($key));
+    $this->assertEquals($this->objects[3], $stores[0]->get($key));
+    $this->assertEquals($this->objects[3], $stores[1]->get($key));
     $metadata = $stores[1]->getMetadata($key);
     $this->assertEqual($users[1], $metadata->owner);
 
