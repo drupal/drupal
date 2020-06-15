@@ -2,15 +2,19 @@
 
 namespace Drupal\Tests\views\Kernel;
 
+use Drupal\Component\Render\FormattableMarkup;
+use Drupal\Core\Form\FormState;
+use Drupal\views\Plugin\views\area\Broken as BrokenArea;
+use Drupal\views\Plugin\views\field\Broken as BrokenField;
+use Drupal\views\Plugin\views\filter\Broken as BrokenFilter;
+use Drupal\views\Plugin\views\filter\Standard;
+use Drupal\views\Views;
+
 /**
  * Tests basic functions from the Views module.
  *
  * @group views
  */
-use Drupal\views\Plugin\views\filter\Standard;
-use Drupal\views\Views;
-use Drupal\Component\Render\FormattableMarkup;
-
 class ModuleTest extends ViewsKernelTestBase {
 
   /**
@@ -42,14 +46,41 @@ class ModuleTest extends ViewsKernelTestBase {
    * @see \Drupal\views\Plugin\ViewsHandlerManager::getHandler()
    */
   public function testViewsGetHandler() {
-    $types = ['field', 'area', 'filter'];
-    foreach ($types as $type) {
-      $item = [
-        'table' => $this->randomMachineName(),
-        'field' => $this->randomMachineName(),
-      ];
-      $handler = $this->container->get('plugin.manager.views.' . $type)->getHandler($item);
-      $this->assertEqual('Drupal\views\Plugin\views\\' . $type . '\Broken', get_class($handler), new FormattableMarkup('Make sure that a broken handler of type: @type is created.', ['@type' => $type]));
+    $types = [
+      'field' => BrokenField::class,
+      'area' => BrokenArea::class,
+      'filter' => BrokenFilter::class,
+    ];
+    // Test non-existent tables/fields.
+    $items = [
+      [
+        'table' => 'table_invalid',
+        'field' => 'id',
+      ],
+      [
+        'table' => 'views_test_data',
+        'field' => 'field_invalid',
+      ],
+    ];
+    $form_state = new FormState();
+    $description_top = '<p>' . t('The handler for this item is broken or missing. The following details are available:') . '</p>';
+    $description_bottom = '<p>' . t('Enabling the appropriate module may solve this issue. Otherwise, check to see if there is a module update available.') . '</p>';
+    foreach ($types as $type => $class) {
+      foreach ($items as $item) {
+        $handler = $this->container->get('plugin.manager.views.' . $type)
+          ->getHandler($item);
+        $this->assertTrue($handler instanceof $class);
+        // Make sure details available at edit form.
+        $form = [];
+        $handler->buildOptionsForm($form, $form_state);
+        $this->assertEquals($description_top, $form['description']['description_top']['#markup']);
+        $this->assertEquals($description_bottom, $form['description']['description_bottom']['#markup']);
+        $details = [];
+        foreach ($item as $key => $value) {
+          $details[] = new FormattableMarkup('@key: @value', ['@key' => $key, '@value' => $value]);
+        }
+        $this->assertEquals($details, $form['description']['detail_list']['#items']);
+      }
     }
 
     $views_data = $this->viewsData();
@@ -77,61 +108,6 @@ class ModuleTest extends ViewsKernelTestBase {
     ];
     $handler = $this->container->get('plugin.manager.views.filter')->getHandler($item, 'standard');
     $this->assertInstanceOf(Standard::class, $handler);
-
-    // @todo Reinstate these tests when the debug() in views_get_handler() is
-    //   restored.
-    return;
-
-    // Test non-existent tables/fields.
-    set_error_handler([$this, 'customErrorHandler']);
-    $item = [
-      'table' => 'views_test_data',
-      'field' => 'field_invalid',
-    ];
-    $this->container->get('plugin.manager.views.field')->getHandler($item);
-    $this->assertStringContainsString(new FormattableMarkup("Missing handler: @table @field @type", ['@table' => 'views_test_data', '@field' => 'field_invalid', '@type' => 'field']), $this->lastErrorMessage, 'An invalid field name throws a debug message.');
-    unset($this->lastErrorMessage);
-
-    $item = [
-      'table' => 'table_invalid',
-      'field' => 'id',
-    ];
-    $this->container->get('plugin.manager.views.filter')->getHandler($item);
-    $this->assertStringContainsString(new FormattableMarkup("Missing handler: @table @field @type", ['@table' => 'table_invalid', '@field' => 'id', '@type' => 'filter']), $this->lastErrorMessage, 'An invalid table name throws a debug message.');
-    unset($this->lastErrorMessage);
-
-    $item = [
-      'table' => 'table_invalid',
-      'field' => 'id',
-    ];
-    $this->container->get('plugin.manager.views.filter')->getHandler($item);
-    $this->assertStringContainsString(new FormattableMarkup("Missing handler: @table @field @type", ['@table' => 'table_invalid', '@field' => 'id', '@type' => 'filter']), $this->lastErrorMessage, 'An invalid table name throws a debug message.');
-    unset($this->lastErrorMessage);
-
-    restore_error_handler();
-  }
-
-  /**
-   * Defines an error handler which is used in the test.
-   *
-   * Because this is registered in set_error_handler(), it has to be public.
-   *
-   * @param int $error_level
-   *   The level of the error raised.
-   * @param string $message
-   *   The error message.
-   * @param string $filename
-   *   The filename that the error was raised in.
-   * @param int $line
-   *   The line number the error was raised at.
-   * @param array $context
-   *   An array that points to the active symbol table at the point the error
-   *   occurred.
-   *
-   * @see set_error_handler()
-   */
-  public function customErrorHandler($error_level, $message, $filename, $line, $context) {
-    $this->lastErrorMessage = $message;
   }
 
   /**
