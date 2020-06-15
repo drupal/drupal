@@ -4,7 +4,6 @@ namespace Drupal\Tests;
 
 use Drupal\Core\Config\TypedConfigManagerInterface;
 use Drupal\Core\Config\Schema\SchemaCheckTrait;
-use Drupal\Component\Render\FormattableMarkup;
 
 /**
  * Provides a class for checking configuration schema.
@@ -24,25 +23,19 @@ trait SchemaCheckTestTrait {
    *   The configuration data.
    */
   public function assertConfigSchema(TypedConfigManagerInterface $typed_config, $config_name, $config_data) {
-    $errors = $this->checkConfigSchema($typed_config, $config_name, $config_data);
-    if ($errors === FALSE) {
-      // @todo Since the use of this trait is under TestBase, it works.
-      //   Can be fixed as part of https://www.drupal.org/node/2260053.
-      $this->fail(new FormattableMarkup('No schema for @config_name', ['@config_name' => $config_name]));
-      return;
+    $check = $this->checkConfigSchema($typed_config, $config_name, $config_data);
+    $message = '';
+    if ($check === FALSE) {
+      $message = 'Error: No schema exists.';
     }
-    elseif ($errors === TRUE) {
-      // @todo Since the use of this trait is under TestBase, it works.
-      //   Can be fixed as part of https://www.drupal.org/node/2260053.
-      $this->pass(new FormattableMarkup('Schema found for @config_name and values comply with schema.', ['@config_name' => $config_name]));
-    }
-    else {
-      foreach ($errors as $key => $error) {
-        // @todo Since the use of this trait is under TestBase, it works.
-        //   Can be fixed as part of https://www.drupal.org/node/2260053.
-        $this->fail(new FormattableMarkup('Schema key @key failed with: @error', ['@key' => $key, '@error' => $error]));
+    elseif ($check !== TRUE) {
+      $this->assertIsArray($check, "The config schema check errors should be in the form of an array.");
+      $message = "Errors:\n";
+      foreach ($check as $key => $error) {
+        $message .= "Schema key $key failed with: $error\n";
       }
     }
+    $this->assertTrue($check, "There should be no errors in configuration '$config_name'. $message");
   }
 
   /**
