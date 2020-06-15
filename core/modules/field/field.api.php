@@ -17,8 +17,8 @@
  *
  * In the Field API, each field has a type, which determines what kind of data
  * (integer, string, date, etc.) the field can hold, which settings it provides,
- * and so on. The data type(s) accepted by a field are defined in
- * hook_field_schema().
+ * and so on. The data type(s) accepted by a field are defined in the class
+ * implementing \Drupal\Core\Field\FieldItemInterface::schema() method.
  *
  * Field types are plugins annotated with class
  * \Drupal\Core\Field\Annotation\FieldType, and implement plugin interface
