@@ -136,7 +136,7 @@ class DisplayTest extends ViewTestBase {
 
     // Check the new value has been saved by checking the UI summary text.
     $this->drupalGet('admin/structure/views/view/test_view/edit/display_test_1');
-    $this->assertLink($test_option);
+    $this->assertSession()->linkExists($test_option);
 
     // Test the enable/disable status of a display.
     $view->display_handler->setOption('enabled', FALSE);

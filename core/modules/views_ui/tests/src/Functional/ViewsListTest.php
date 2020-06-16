@@ -50,7 +50,7 @@ class ViewsListTest extends UITestBase {
     // Check if we can access the main views admin page.
     $this->drupalGet('admin/structure/views');
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertLink(t('Add view'));
+    $this->assertSession()->linkExists(t('Add view'));
 
     // Check that there is a link to the content view without a destination
     // parameter.

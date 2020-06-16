@@ -40,7 +40,7 @@ class MenuTest extends WizardTestBase {
     // expect the main menu to display).
     $this->drupalGet('');
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertLink($view['page[link_properties][title]']);
+    $this->assertSession()->linkExists($view['page[link_properties][title]']);
     $this->assertLinkByHref(Url::fromUri('base:' . $view['page[path]'])->toString());
 
     // Make sure the link is associated with the main menu.

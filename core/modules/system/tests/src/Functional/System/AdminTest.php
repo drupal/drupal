@@ -63,7 +63,7 @@ class AdminTest extends BrowserTestBase {
     // Verify that all visible, top-level administration links are listed on
     // the main administration page.
     foreach ($this->getTopLevelMenuLinks() as $item) {
-      $this->assertLink($item->getTitle());
+      $this->assertSession()->linkExists($item->getTitle());
       $this->assertLinkByHref($item->getUrlObject()->toString());
       // The description should appear below the link.
       $this->assertText($item->getDescription());

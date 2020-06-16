@@ -190,7 +190,7 @@ class ConfigEntityListTest extends BrowserTestBase {
     $this->assertNotEmpty($elements[2]->find('xpath', '//ul'), 'Operations list found.');
 
     // Add a new entity using the operations link.
-    $this->assertLink('Add test configuration');
+    $this->assertSession()->linkExists('Add test configuration');
     $this->clickLink('Add test configuration');
     $this->assertSession()->statusCodeEquals(200);
     $edit = [

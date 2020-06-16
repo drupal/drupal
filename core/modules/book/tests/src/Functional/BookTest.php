@@ -225,7 +225,7 @@ class BookTest extends BrowserTestBase {
 
     // Load the book and verify there is no printer-friendly version link.
     $this->drupalGet('node/' . $this->book->id());
-    $this->assertNoLink(t('Printer-friendly version'), 'Anonymous user is not shown link to printer-friendly version.');
+    $this->assertSession()->linkNotExists(t('Printer-friendly version'), 'Anonymous user is not shown link to printer-friendly version.');
 
     // Try getting the URL directly, and verify it fails.
     $this->drupalGet('book/export/html/' . $this->book->id());
@@ -407,13 +407,13 @@ class BookTest extends BrowserTestBase {
     // Create new node not yet a book.
     $empty_book = $this->drupalCreateNode(['type' => 'book']);
     $this->drupalGet('node/' . $empty_book->id() . '/outline');
-    $this->assertNoLink(t('Book outline'), 'Book Author is not allowed to outline');
+    $this->assertSession()->linkNotExists(t('Book outline'), 'Book Author is not allowed to outline');
 
     $this->drupalLogin($this->adminUser);
     $this->drupalGet('node/' . $empty_book->id() . '/outline');
     $this->assertRaw(t('Book outline'));
     $this->assertOptionSelected('edit-book-bid', 0, 'Node does not belong to a book');
-    $this->assertNoLink(t('Remove from book outline'));
+    $this->assertSession()->linkNotExists(t('Remove from book outline'));
 
     $edit = [];
     $edit['book[bid]'] = '1';

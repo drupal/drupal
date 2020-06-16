@@ -704,7 +704,7 @@ class MenuUiTest extends BrowserTestBase {
     if (isset($parent)) {
       // Verify menu link.
       $title = $parent->getTitle();
-      $this->assertLink($title, 0, 'Parent menu link was displayed');
+      $this->assertSession()->linkExists($title, 0, 'Parent menu link was displayed');
 
       // Verify menu link link.
       $this->clickLink($title);
@@ -714,7 +714,7 @@ class MenuUiTest extends BrowserTestBase {
 
     // Verify menu link.
     $title = $item->getTitle();
-    $this->assertLink($title, 0, 'Menu link was displayed');
+    $this->assertSession()->linkExists($title, 0, 'Menu link was displayed');
 
     // Verify menu link link.
     $this->clickLink($title);

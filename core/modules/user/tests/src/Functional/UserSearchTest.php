@@ -46,19 +46,19 @@ class UserSearchTest extends BrowserTestBase {
     $keys = $user1->getAccountName();
     $edit = ['keys' => $keys];
     $this->drupalPostForm('search/user', $edit, t('Search'));
-    $this->assertLink($keys, 0, 'Search by username worked for non-admin user');
+    $this->assertSession()->linkExists($keys, 0, 'Search by username worked for non-admin user');
 
     // Verify that searching by sub-string works too.
     $subkey = substr($keys, 1, 5);
     $edit = ['keys' => $subkey];
     $this->drupalPostForm('search/user', $edit, t('Search'));
-    $this->assertLink($keys, 0, 'Search by username substring worked for non-admin user');
+    $this->assertSession()->linkExists($keys, 0, 'Search by username substring worked for non-admin user');
 
     // Verify that wildcard search works.
     $subkey = substr($keys, 0, 2) . '*' . substr($keys, 4, 2);
     $edit = ['keys' => $subkey];
     $this->drupalPostForm('search/user', $edit, t('Search'));
-    $this->assertLink($keys, 0, 'Search with wildcard worked for non-admin user');
+    $this->assertSession()->linkExists($keys, 0, 'Search with wildcard worked for non-admin user');
 
     // Verify that a user with 'administer users' permission can search by
     // email.

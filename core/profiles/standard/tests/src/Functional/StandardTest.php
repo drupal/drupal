@@ -38,7 +38,7 @@ class StandardTest extends BrowserTestBase {
    */
   public function testStandard() {
     $this->drupalGet('');
-    $this->assertLink(t('Contact'));
+    $this->assertSession()->linkExists(t('Contact'));
     $this->clickLink(t('Contact'));
     $this->assertSession()->statusCodeEquals(200);
 

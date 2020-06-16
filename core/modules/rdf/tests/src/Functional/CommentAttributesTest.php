@@ -158,7 +158,7 @@ class CommentAttributesTest extends CommentTestBase {
     // Ensure that the author link still works properly after the author output
     // is modified by the RDF module.
     $this->drupalGet('node/' . $this->node->id());
-    $this->assertLink($this->webUser->getAccountName());
+    $this->assertSession()->linkExists($this->webUser->getAccountName());
     $this->assertLinkByHref('user/' . $this->webUser->id());
   }
 

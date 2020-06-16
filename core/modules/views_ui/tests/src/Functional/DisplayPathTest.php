@@ -57,7 +57,7 @@ class DisplayPathTest extends UITestBase {
     // Add a new page display and check the appearing text.
     $this->drupalPostForm(NULL, [], 'Add Page');
     $this->assertText(t('No path is set'), 'The right text appears if no path was set.');
-    $this->assertNoLink(t('View @display', ['@display' => 'page']), 'No view page link found on the page.');
+    $this->assertSession()->linkNotExists(t('View @display', ['@display' => 'page']), 'No view page link found on the page.');
 
     // Save a path and make sure the summary appears as expected.
     $random_path = $this->randomMachineName();
@@ -68,7 +68,7 @@ class DisplayPathTest extends UITestBase {
     $this->drupalPostForm('admin/structure/views/nojs/display/test_view/page_1/path', ['path' => $random_path], t('Apply'));
     $this->assertText('/' . $random_path, 'The custom path appears in the summary.');
     $display_link_text = t('View @display', ['@display' => 'Page']);
-    $this->assertLink($display_link_text, 0, 'view page link found on the page.');
+    $this->assertSession()->linkExists($display_link_text, 0, 'view page link found on the page.');
     $this->clickLink($display_link_text);
     $this->assertUrl($random_path);
   }
@@ -159,7 +159,7 @@ class DisplayPathTest extends UITestBase {
     $this->assertUrl('admin/structure/views/view/test_view/edit/page_1');
 
     $this->drupalGet('admin/structure/views/view/test_view');
-    $this->assertLink(t('Tab: @title', ['@title' => 'Test tab title']));
+    $this->assertSession()->linkExists(t('Tab: @title', ['@title' => 'Test tab title']));
     // If it's a default tab, it should also have an additional settings link.
     $this->assertLinkByHref('admin/structure/views/nojs/display/test_view/page_1/tab_options');
 

@@ -87,7 +87,7 @@ class FieldUIRouteTest extends BrowserTestBase {
 
     $edit = ['display_modes_custom[test]' => TRUE];
     $this->drupalPostForm('admin/config/people/accounts/display', $edit, t('Save'));
-    $this->assertLink('Test');
+    $this->assertSession()->linkExists('Test');
 
     // Create new form mode and verify it's available on the Manage Form
     // Display screen after enabling it.
@@ -100,17 +100,17 @@ class FieldUIRouteTest extends BrowserTestBase {
 
     $edit = ['display_modes_custom[test]' => TRUE];
     $this->drupalPostForm('admin/config/people/accounts/form-display', $edit, t('Save'));
-    $this->assertLink('Test');
+    $this->assertSession()->linkExists('Test');
   }
 
   /**
    * Asserts that local tasks exists.
    */
   public function assertLocalTasks() {
-    $this->assertLink('Settings');
-    $this->assertLink('Manage fields');
-    $this->assertLink('Manage display');
-    $this->assertLink('Manage form display');
+    $this->assertSession()->linkExists('Settings');
+    $this->assertSession()->linkExists('Manage fields');
+    $this->assertSession()->linkExists('Manage display');
+    $this->assertSession()->linkExists('Manage form display');
   }
 
   /**

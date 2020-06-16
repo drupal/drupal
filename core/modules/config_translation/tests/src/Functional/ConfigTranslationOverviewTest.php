@@ -126,7 +126,7 @@ class ConfigTranslationOverviewTest extends BrowserTestBase {
       $this->assertRaw('<th>' . t('Language') . '</th>');
 
       $this->drupalGet($base_url);
-      $this->assertLink(t('Translate @title', ['@title' => $entity_type->getSingularLabel()]));
+      $this->assertSession()->linkExists(t('Translate @title', ['@title' => $entity_type->getSingularLabel()]));
     }
   }
 
