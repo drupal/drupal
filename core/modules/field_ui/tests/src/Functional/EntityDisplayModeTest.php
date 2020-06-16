@@ -60,7 +60,7 @@ class EntityDisplayModeTest extends BrowserTestBase {
     $this->assertSession()->statusCodeEquals(404);
 
     $this->drupalGet('admin/structure/display-modes/view/add');
-    $this->assertNoLink(t('Test entity - revisions and data table'), 'An entity type with no view builder cannot have view modes.');
+    $this->assertSession()->linkNotExists(t('Test entity - revisions and data table'), 'An entity type with no view builder cannot have view modes.');
 
     // Test adding a view mode including dots in machine_name.
     $this->clickLink(t('Test entity'));
@@ -114,7 +114,7 @@ class EntityDisplayModeTest extends BrowserTestBase {
     $this->assertSession()->statusCodeEquals(404);
 
     $this->drupalGet('admin/structure/display-modes/form/add');
-    $this->assertNoLink(t('Entity Test without label'), 'An entity type with no form cannot have form modes.');
+    $this->assertSession()->linkNotExists(t('Entity Test without label'), 'An entity type with no form cannot have form modes.');
 
     // Test adding a view mode including dots in machine_name.
     $this->clickLink(t('Test entity'));

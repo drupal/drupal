@@ -55,7 +55,7 @@ class BlockContentListTest extends BlockContentTestBase {
     $new_label = 'Albatross';
     // Add a new entity using the operations link.
     $link_text = t('Add custom block');
-    $this->assertLink($link_text);
+    $this->assertSession()->linkExists($link_text);
     $this->clickLink($link_text);
     $this->assertSession()->statusCodeEquals(200);
     $edit = [];

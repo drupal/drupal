@@ -158,7 +158,7 @@ class ManageFieldsFunctionalTest extends BrowserTestBase {
     }
 
     // Test the "Add field" action link.
-    $this->assertLink('Add field');
+    $this->assertSession()->linkExists('Add field');
 
     // Assert entity operations for all fields.
     $number_of_links = 3;
@@ -278,9 +278,9 @@ class ManageFieldsFunctionalTest extends BrowserTestBase {
     $this->assertFieldByXPath("//input[@name='cardinality_number']", 6);
 
     // Check that tabs displayed.
-    $this->assertLink(t('Edit'));
+    $this->assertSession()->linkExists(t('Edit'));
     $this->assertLinkByHref('admin/structure/types/manage/article/fields/node.article.body');
-    $this->assertLink(t('Field settings'));
+    $this->assertSession()->linkExists(t('Field settings'));
     $this->assertLinkByHref($field_edit_path);
 
     // Add two entries in the body.

@@ -53,7 +53,7 @@ class DefaultViewsTest extends UITestBase {
 
     // It should not be possible to revert the view yet.
     // @todo Figure out how to handle this with the new configuration system.
-    // $this->assertNoLink(t('Revert'));
+    // $this->assertSession()->linkNotExists(t('Revert'));
     // $revert_href = 'admin/structure/views/view/glossary/revert';
     // $this->assertNoLinkByHref($revert_href);
 
@@ -81,7 +81,7 @@ class DefaultViewsTest extends UITestBase {
     // It should now be possible to revert the view. Do that, and make sure the
     // view title we added above no longer is displayed.
     // $this->drupalGet('admin/structure/views');
-    // $this->assertLink(t('Revert'));
+    // $this->assertSession()->linkExists(t('Revert'));
     // $this->assertLinkByHref($revert_href);
     // $this->drupalPostForm($revert_href, array(), t('Revert'));
     // $this->drupalGet('glossary');

@@ -202,8 +202,8 @@ class FileListingTest extends FileFieldTestBase {
     // Entity name should be displayed, but not linked if Entity::toUrl
     // throws an exception
     $this->assertText($entity_name, 'Entity name is added to file usage listing.');
-    $this->assertNoLink($entity_name, 'Linked entity name not added to file usage listing.');
-    $this->assertLink($node->getTitle());
+    $this->assertSession()->linkNotExists($entity_name, 'Linked entity name not added to file usage listing.');
+    $this->assertSession()->linkExists($node->getTitle());
   }
 
   /**

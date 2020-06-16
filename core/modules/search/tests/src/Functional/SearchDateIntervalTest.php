@@ -78,8 +78,8 @@ class SearchDateIntervalTest extends BrowserTestBase {
 
     // The nodes must have the same node ID but the created date is different.
     // So only the Spanish translation must appear.
-    $this->assertLink('Node ES', 0, 'Spanish translation found in search results');
-    $this->assertNoLink('Node EN', 'Search results do not contain English node');
+    $this->assertSession()->linkExists('Node ES', 0, 'Spanish translation found in search results');
+    $this->assertSession()->linkNotExists('Node EN', 'Search results do not contain English node');
   }
 
 }

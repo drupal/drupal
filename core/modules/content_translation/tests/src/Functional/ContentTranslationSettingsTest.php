@@ -59,7 +59,7 @@ class ContentTranslationSettingsTest extends BrowserTestBase {
   public function testSettingsUI() {
     // Check for the content_translation_menu_links_discovered_alter() changes.
     $this->drupalGet('admin/config');
-    $this->assertLink('Content language and translation');
+    $this->assertSession()->linkExists('Content language and translation');
     $this->assertText('Configure language and translation support for content.');
     // Test that the translation settings are ignored if the bundle is marked
     // translatable but the entity type is not.

@@ -42,7 +42,7 @@ class EntityOperationsTest extends BrowserTestBase {
     $roles = user_roles();
     foreach ($roles as $role) {
       $this->assertLinkByHref($role->toUrl()->toString() . '/test_operation');
-      $this->assertLink(new FormattableMarkup('Test Operation: @label', ['@label' => $role->label()]));
+      $this->assertSession()->linkExists(new FormattableMarkup('Test Operation: @label', ['@label' => $role->label()]));
     }
   }
 

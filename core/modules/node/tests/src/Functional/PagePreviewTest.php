@@ -203,7 +203,7 @@ class PagePreviewTest extends NodeTestBase {
     $this->assertEscaped($edit[$title_key]);
     $this->assertText($edit[$body_key], 'Body displayed.');
     $this->assertText($edit[$term_key], 'Term displayed.');
-    $this->assertLink(t('Back to content editing'));
+    $this->assertSession()->linkExists(t('Back to content editing'));
 
     // Check that we see the class of the node type on the body element.
     $body_class_element = $this->xpath("//body[contains(@class, 'page-node-type-page')]");
@@ -243,7 +243,7 @@ class PagePreviewTest extends NodeTestBase {
     $this->assertEscaped($edit[$title_key]);
     $this->assertText($edit[$body_key], 'Body displayed.');
     $this->assertText($edit[$term_key], 'Term displayed.');
-    $this->assertLink(t('Back to content editing'));
+    $this->assertSession()->linkExists(t('Back to content editing'));
 
     // Assert the content is kept when reloading the page.
     $this->drupalGet('node/add/page', ['query' => ['uuid' => $uuid]]);
@@ -274,9 +274,9 @@ class PagePreviewTest extends NodeTestBase {
     $this->assertRaw('>' . $newterm1 . '<', 'First new term displayed.');
     $this->assertRaw('>' . $newterm2 . '<', 'Second new term displayed.');
     // The first term should be displayed as link, the others not.
-    $this->assertLink($this->term->getName());
-    $this->assertNoLink($newterm1);
-    $this->assertNoLink($newterm2);
+    $this->assertSession()->linkExists($this->term->getName());
+    $this->assertSession()->linkNotExists($newterm1);
+    $this->assertSession()->linkNotExists($newterm2);
 
     $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, t('Save'));
 
@@ -290,9 +290,9 @@ class PagePreviewTest extends NodeTestBase {
     $this->assertRaw('>' . $newterm2 . '<', 'Second existing term displayed.');
     $this->assertRaw('>' . $newterm3 . '<', 'Third new term displayed.');
     $this->assertNoText($this->term->getName());
-    $this->assertLink($newterm1);
-    $this->assertLink($newterm2);
-    $this->assertNoLink($newterm3);
+    $this->assertSession()->linkExists($newterm1);
+    $this->assertSession()->linkExists($newterm2);
+    $this->assertSession()->linkNotExists($newterm3);
 
     // Check that editing an existing node after it has been previewed and not
     // saved doesn't remember the previous changes.

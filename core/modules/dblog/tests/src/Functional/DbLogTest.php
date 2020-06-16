@@ -228,7 +228,7 @@ class DbLogTest extends BrowserTestBase {
 
     // Verify location is available as plain text.
     $this->assertEquals($request_uri, $this->cssSelect('table.dblog-event > tbody > tr:nth-child(4) > td')[0]->getHtml());
-    $this->assertNoLink($request_uri);
+    $this->assertSession()->linkNotExists($request_uri);
   }
 
   /**
@@ -782,7 +782,7 @@ class DbLogTest extends BrowserTestBase {
    */
   protected function assertLogMessage($log_message, $message) {
     $message_text = Unicode::truncate(Html::decodeEntities(strip_tags($log_message)), 56, TRUE, TRUE);
-    $this->assertLink($message_text, 0, $message);
+    $this->assertSession()->linkExists($message_text, 0, $message);
   }
 
   /**

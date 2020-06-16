@@ -76,7 +76,7 @@ class BasicAuthTest extends BrowserTestBase {
 
     // Ensure that a route without basic auth defined doesn't allow login.
     $this->basicAuthGet(Url::fromRoute('system.admin'), $account->getAccountName(), $account->pass_raw);
-    $this->assertNoLink('Log out', 'User is not logged in');
+    $this->assertSession()->linkNotExists('Log out', 'User is not logged in');
     $this->assertSession()->statusCodeEquals(403);
     $this->mink->resetSessions();
 

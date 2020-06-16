@@ -356,7 +356,7 @@ class InstallUninstallTest extends ModuleTestBase {
     $this->drupalGet('admin/help/' . $module);
     $this->assertSession()->statusCodeEquals(200);
     $this->assertText($name . ' module', "'$name module' is on the help page for $module");
-    $this->assertLink('online documentation for the ' . $name . ' module', 0, "Correct online documentation link is in the help page for $module");
+    $this->assertSession()->linkExists('online documentation for the ' . $name . ' module', 0, "Correct online documentation link is in the help page for $module");
   }
 
   /**

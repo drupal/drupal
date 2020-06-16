@@ -35,7 +35,7 @@ class AnalyzeTest extends UITestBase {
     $this->drupalLogin($this->adminUser);
 
     $this->drupalGet('admin/structure/views/view/test_view/edit');
-    $this->assertLink(t('Analyze view'));
+    $this->assertSession()->linkExists(t('Analyze view'));
 
     // This redirects the user to the analyze form.
     $this->clickLink(t('Analyze view'));

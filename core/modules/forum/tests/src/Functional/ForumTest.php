@@ -189,9 +189,9 @@ class ForumTest extends BrowserTestBase {
 
     // Verify that this user is shown a local task to add new forum content.
     $this->drupalGet('forum');
-    $this->assertLink(t('Add new Forum topic'));
+    $this->assertSession()->linkExists(t('Add new Forum topic'));
     $this->drupalGet('forum/' . $this->forum['tid']);
-    $this->assertLink(t('Add new Forum topic'));
+    $this->assertSession()->linkExists(t('Add new Forum topic'));
 
     // Log in a user with permission to edit any forum content.
     $this->drupalLogin($this->editAnyTopicsUser);
@@ -256,7 +256,7 @@ class ForumTest extends BrowserTestBase {
     // Test anonymous action link.
     $this->drupalLogout();
     $this->drupalGet('forum/' . $this->forum['tid']);
-    $this->assertLink(t('Log in to post new content in the forum.'));
+    $this->assertSession()->linkExists(t('Log in to post new content in the forum.'));
   }
 
   /**
@@ -319,8 +319,8 @@ class ForumTest extends BrowserTestBase {
     // Verify help text is shown.
     $this->assertText(t('Forums contain forum topics. Use containers to group related forums'));
     // Verify action links are there.
-    $this->assertLink('Add forum');
-    $this->assertLink('Add container');
+    $this->assertSession()->linkExists('Add forum');
+    $this->assertSession()->linkExists('Add container');
     $this->clickLink('edit container');
     $this->assertRaw('Edit container', 'Followed the link to edit the container');
     // Create forum inside the forum container.
@@ -365,7 +365,7 @@ class ForumTest extends BrowserTestBase {
     // Test tags vocabulary form is not affected.
     $this->drupalGet('admin/structure/taxonomy/manage/tags');
     $this->assertSession()->buttonExists('Save');
-    $this->assertLink(t('Delete'));
+    $this->assertSession()->linkExists(t('Delete'));
     // Test tags vocabulary term form is not affected.
     $this->drupalGet('admin/structure/taxonomy/manage/tags/add');
     $this->assertField('parent[]', 'Parent field found.');

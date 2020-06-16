@@ -47,7 +47,7 @@ trait FieldUiTestTrait {
     $this->drupalPostForm($bundle_path, $initial_edit, t('Save and continue'));
     $this->assertRaw(t('These settings apply to the %label field everywhere it is used.', ['%label' => $label]), 'Storage settings page was displayed.');
     // Test Breadcrumbs.
-    $this->assertLink($label, 0, 'Field label is correct in the breadcrumb of the storage settings page.');
+    $this->assertSession()->linkExists($label, 0, 'Field label is correct in the breadcrumb of the storage settings page.');
 
     // Second step: 'Storage settings' form.
     $this->drupalPostForm(NULL, $storage_edit, t('Save field settings'));
@@ -115,7 +115,7 @@ trait FieldUiTestTrait {
     $this->assertRaw(t('Are you sure you want to delete the field %label', ['%label' => $label]), 'Delete confirmation was found.');
 
     // Test Breadcrumbs.
-    $this->assertLink($label, 0, 'Field label is correct in the breadcrumb of the field delete page.');
+    $this->assertSession()->linkExists($label, 0, 'Field label is correct in the breadcrumb of the field delete page.');
 
     // Submit confirmation form.
     $this->drupalPostForm(NULL, [], t('Delete'));

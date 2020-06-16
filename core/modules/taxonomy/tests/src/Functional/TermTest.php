@@ -355,7 +355,7 @@ class TermTest extends TaxonomyTestBase {
     // Check that the term is still present at admin UI after edit.
     $this->drupalGet('admin/structure/taxonomy/manage/' . $this->vocabulary->id() . '/overview');
     $this->assertText($edit['name[0][value]'], 'The randomly generated term name is present.');
-    $this->assertLink(t('Edit'));
+    $this->assertSession()->linkExists(t('Edit'));
 
     // Check the term link can be clicked through to the term page.
     $this->clickLink($edit['name[0][value]']);
