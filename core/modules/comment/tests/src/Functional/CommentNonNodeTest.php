@@ -355,7 +355,7 @@ class CommentNonNodeTest extends BrowserTestBase {
     // Attempt to view comments while disallowed.
     $this->drupalGet('entity-test/' . $this->entity->id());
     $this->assertSession()->responseNotMatches('@<h2[^>]*>Comments</h2>@', 'Comments were not displayed.');
-    $this->assertNoLink('Add new comment', 'Link to add comment was found.');
+    $this->assertSession()->linkNotExists('Add new comment', 'Link to add comment was found.');
 
     // Attempt to view test entity comment form while disallowed.
     $this->drupalGet('comment/reply/entity_test/' . $this->entity->id() . '/comment');
@@ -371,8 +371,8 @@ class CommentNonNodeTest extends BrowserTestBase {
     ]);
     $this->drupalGet('entity_test/' . $this->entity->id());
     $this->assertPattern('@<h2[^>]*>Comments</h2>@', 'Comments were displayed.');
-    $this->assertLink('Log in', 0, 'Link to login was found.');
-    $this->assertLink('register', 0, 'Link to register was found.');
+    $this->assertSession()->linkExists('Log in', 0, 'Link to login was found.');
+    $this->assertSession()->linkExists('register', 0, 'Link to register was found.');
     $this->assertNoFieldByName('subject[0][value]', '', 'Subject field not found.');
     $this->assertNoFieldByName('comment_body[0][value]', '', 'Comment field not found.');
 

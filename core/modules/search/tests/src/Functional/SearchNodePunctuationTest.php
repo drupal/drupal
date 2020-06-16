@@ -59,7 +59,7 @@ class SearchNodePunctuationTest extends BrowserTestBase {
 
     // Check if the author is linked correctly to the user profile page.
     $username = $node->getOwner()->getAccountName();
-    $this->assertLink($username);
+    $this->assertSession()->linkExists($username);
 
     // Search for "&" and verify entities are not broken up in the output.
     $edit = ['keys' => '&'];

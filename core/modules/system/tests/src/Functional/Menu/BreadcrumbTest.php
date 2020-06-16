@@ -154,9 +154,9 @@ class BreadcrumbTest extends BrowserTestBase {
     $trail = $home;
     $this->assertBreadcrumb("node/$nid1", $trail);
     // Also verify that the node does not appear elsewhere (e.g., menu trees).
-    $this->assertNoLink($node1->getTitle());
+    $this->assertSession()->linkNotExists($node1->getTitle());
     // Also verify that the node does not appear elsewhere (e.g., menu trees).
-    $this->assertNoLink($node1->getTitle());
+    $this->assertSession()->linkNotExists($node1->getTitle());
 
     $trail += [
       "node/$nid1" => $node1->getTitle(),

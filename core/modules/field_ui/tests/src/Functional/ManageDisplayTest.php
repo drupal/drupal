@@ -149,12 +149,12 @@ class ManageDisplayTest extends BrowserTestBase {
   public function testViewModeLocalTasks() {
     $manage_display = 'admin/structure/types/manage/' . $this->type . '/display';
     $this->drupalGet($manage_display);
-    $this->assertNoLink('Full content');
-    $this->assertLink('Teaser');
+    $this->assertSession()->linkNotExists('Full content');
+    $this->assertSession()->linkExists('Teaser');
 
     $this->drupalGet($manage_display . '/teaser');
-    $this->assertNoLink('Full content');
-    $this->assertLink('Default');
+    $this->assertSession()->linkNotExists('Full content');
+    $this->assertSession()->linkExists('Default');
   }
 
   /**

@@ -202,16 +202,16 @@ class ThemeTest extends BrowserTestBase {
     $this->drupalPlaceBlock('local_tasks_block', ['region' => 'header']);
     $this->drupalGet('admin/appearance/settings');
     $theme_handler = \Drupal::service('theme_handler');
-    $this->assertLink($theme_handler->getName('classy'));
-    $this->assertLink($theme_handler->getName('bartik'));
-    $this->assertNoLink($theme_handler->getName('stable'));
+    $this->assertSession()->linkExists($theme_handler->getName('classy'));
+    $this->assertSession()->linkExists($theme_handler->getName('bartik'));
+    $this->assertSession()->linkNotExists($theme_handler->getName('stable'));
 
     // If a hidden theme is an admin theme it should be viewable.
     \Drupal::configFactory()->getEditable('system.theme')->set('admin', 'stable')->save();
     \Drupal::service('router.builder')->rebuildIfNeeded();
     $this->drupalPlaceBlock('local_tasks_block', ['region' => 'header', 'theme' => 'stable']);
     $this->drupalGet('admin/appearance/settings');
-    $this->assertLink($theme_handler->getName('stable'));
+    $this->assertSession()->linkExists($theme_handler->getName('stable'));
     $this->drupalGet('admin/appearance/settings/stable');
     $this->assertSession()->statusCodeEquals(200);
 

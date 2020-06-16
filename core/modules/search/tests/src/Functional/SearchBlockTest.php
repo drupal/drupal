@@ -134,7 +134,7 @@ class SearchBlockTest extends BrowserTestBase {
     $name = $this->adminUser->getAccountName();
     $email = $this->adminUser->getEmail();
     $this->drupalPostForm('node', ['keys' => $name], t('Search'));
-    $this->assertLink($name);
+    $this->assertSession()->linkExists($name);
   }
 
 }

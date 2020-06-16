@@ -83,7 +83,7 @@ class ShortcutSetsTest extends ShortcutTestBase {
       $title = $shortcut->getTitle();
 
       // Confirm that a link to the shortcut is found within the table.
-      $this->assertLink($title);
+      $this->assertSession()->linkExists($title);
 
       // Look for a test shortcut weight select form element.
       $this->assertFieldByName('shortcuts[links][' . $shortcut->id() . '][weight]');

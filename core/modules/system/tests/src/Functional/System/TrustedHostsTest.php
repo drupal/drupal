@@ -108,7 +108,7 @@ class TrustedHostsTest extends BrowserTestBase {
     $this->drupalPlaceBlock('shortcuts');
 
     $this->drupalGet('');
-    $this->assertLink($shortcut->label());
+    $this->assertSession()->linkExists($shortcut->label());
   }
 
 }

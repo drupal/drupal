@@ -73,7 +73,7 @@ class TourHelpPageTest extends BrowserTestBase {
     // All users should be able to see the module section.
     $this->assertText('Module overviews are provided by modules');
     foreach ($this->getModuleList() as $name) {
-      $this->assertLink($name);
+      $this->assertSession()->linkExists($name);
     }
 
     // Some users should be able to see the tour section.
@@ -89,10 +89,10 @@ class TourHelpPageTest extends BrowserTestBase {
     // Test the titles that should be links.
     foreach ($titles[0] as $title) {
       if ($tours_ok) {
-        $this->assertLink($title);
+        $this->assertSession()->linkExists($title);
       }
       else {
-        $this->assertNoLink($title);
+        $this->assertSession()->linkNotExists($title);
         // Just test the first item in the list of links that should not
         // be there, because the second matches the name of a module that is
         // in the Module overviews section, so the link will be there and

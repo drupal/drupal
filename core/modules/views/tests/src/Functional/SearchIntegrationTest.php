@@ -69,21 +69,21 @@ class SearchIntegrationTest extends ViewTestBase {
 
     // Page with a keyword filter of 'pizza'.
     $this->drupalGet('test-filter');
-    $this->assertLink('pizza');
-    $this->assertNoLink('sandwich');
-    $this->assertLink('cola');
+    $this->assertSession()->linkExists('pizza');
+    $this->assertSession()->linkNotExists('sandwich');
+    $this->assertSession()->linkExists('cola');
 
     // Page with a keyword argument, various argument values.
     // Verify that the correct nodes are shown, and only once.
     $this->drupalGet('test-arg/pizza');
     $this->assertOneLink('pizza');
-    $this->assertNoLink('sandwich');
+    $this->assertSession()->linkNotExists('sandwich');
     $this->assertOneLink('cola');
 
     $this->drupalGet('test-arg/sandwich');
-    $this->assertNoLink('pizza');
+    $this->assertSession()->linkNotExists('pizza');
     $this->assertOneLink('sandwich');
-    $this->assertNoLink('cola');
+    $this->assertSession()->linkNotExists('cola');
 
     $this->drupalGet('test-arg/pizza OR sandwich');
     $this->assertOneLink('pizza');
@@ -91,18 +91,18 @@ class SearchIntegrationTest extends ViewTestBase {
     $this->assertOneLink('cola');
 
     $this->drupalGet('test-arg/pizza sandwich OR cola');
-    $this->assertNoLink('pizza');
-    $this->assertNoLink('sandwich');
+    $this->assertSession()->linkNotExists('pizza');
+    $this->assertSession()->linkNotExists('sandwich');
     $this->assertOneLink('cola');
 
     $this->drupalGet('test-arg/cola pizza');
-    $this->assertNoLink('pizza');
-    $this->assertNoLink('sandwich');
+    $this->assertSession()->linkNotExists('pizza');
+    $this->assertSession()->linkNotExists('sandwich');
     $this->assertOneLink('cola');
 
     $this->drupalGet('test-arg/"cola is good"');
-    $this->assertNoLink('pizza');
-    $this->assertNoLink('sandwich');
+    $this->assertSession()->linkNotExists('pizza');
+    $this->assertSession()->linkNotExists('sandwich');
     $this->assertOneLink('cola');
 
     // Test sorting.

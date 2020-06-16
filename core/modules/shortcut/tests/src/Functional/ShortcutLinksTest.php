@@ -87,10 +87,10 @@ class ShortcutLinksTest extends ShortcutTestBase {
       $this->assertContains('internal:' . $test_path, $paths, 'Shortcut created: ' . $test_path);
 
       if (in_array($test_path, $test_cases_non_access)) {
-        $this->assertNoLink($title, new FormattableMarkup('Shortcut link %url not accessible on the page.', ['%url' => $test_path]));
+        $this->assertSession()->linkNotExists($title, new FormattableMarkup('Shortcut link %url not accessible on the page.', ['%url' => $test_path]));
       }
       else {
-        $this->assertLink($title, 0, new FormattableMarkup('Shortcut link %url found on the page.', ['%url' => $test_path]));
+        $this->assertSession()->linkExists($title, 0, new FormattableMarkup('Shortcut link %url found on the page.', ['%url' => $test_path]));
       }
     }
     $saved_set = ShortcutSet::load($set->id());
@@ -121,7 +121,7 @@ class ShortcutLinksTest extends ShortcutTestBase {
       'link[0][uri]' => '/node',
     ];
     $this->drupalPostForm('admin/config/user-interface/shortcut/manage/' . $set->id() . '/add-link', $form_data, t('Save'));
-    $this->assertLink($title, 0, 'Shortcut link found on the page.');
+    $this->assertSession()->linkExists($title, 0, 'Shortcut link found on the page.');
 
     // Create a new shortcut set and add a link to it.
     $this->drupalLogin($this->adminUser);
@@ -154,19 +154,19 @@ class ShortcutLinksTest extends ShortcutTestBase {
     // Test the "Add to shortcuts" link.
     $this->clickLink('Add to Default shortcuts');
     $this->assertText('Added a shortcut for Cron.');
-    $this->assertLink('Cron', 0, 'Shortcut link found on page');
+    $this->assertSession()->linkExists('Cron', 0, 'Shortcut link found on page');
 
     $this->drupalGet('admin/structure');
-    $this->assertLink('Cron', 0, 'Shortcut link found on different page');
+    $this->assertSession()->linkExists('Cron', 0, 'Shortcut link found on different page');
 
     // Test the "Remove from shortcuts" link.
     $this->clickLink('Cron');
     $this->clickLink('Remove from Default shortcuts');
     $this->assertText('The shortcut Cron has been deleted.');
-    $this->assertNoLink('Cron', 'Shortcut link removed from page');
+    $this->assertSession()->linkNotExists('Cron', 'Shortcut link removed from page');
 
     $this->drupalGet('admin/structure');
-    $this->assertNoLink('Cron', 'Shortcut link removed from different page');
+    $this->assertSession()->linkNotExists('Cron', 'Shortcut link removed from different page');
 
     $this->drupalGet('admin/people');
 
@@ -240,7 +240,7 @@ class ShortcutLinksTest extends ShortcutTestBase {
     $saved_set = ShortcutSet::load($set->id());
     $titles = $this->getShortcutInformation($saved_set, 'title');
     $this->assertContains($new_link_name, $titles, 'Shortcut renamed: ' . $new_link_name);
-    $this->assertLink($new_link_name, 0, 'Renamed shortcut link appears on the page.');
+    $this->assertSession()->linkExists($new_link_name, 0, 'Renamed shortcut link appears on the page.');
     $this->assertText(t('The shortcut @link has been updated.', ['@link' => $new_link_name]));
   }
 
@@ -352,13 +352,13 @@ class ShortcutLinksTest extends ShortcutTestBase {
     // Verify that users without the 'access shortcuts' permission can't see the
     // shortcuts.
     $this->drupalLogin($this->drupalCreateUser(['access toolbar']));
-    $this->assertNoLink('Shortcuts', 'Shortcut link not found on page.');
+    $this->assertSession()->linkNotExists('Shortcuts', 'Shortcut link not found on page.');
 
     // Verify that users without the 'administer site configuration' permission
     // can't see the cron shortcuts but can see shortcuts.
     $this->drupalLogin($this->drupalCreateUser(['access toolbar', 'access shortcuts']));
-    $this->assertLink('Shortcuts');
-    $this->assertNoLink('Cron', 'Cron shortcut link not found on page.');
+    $this->assertSession()->linkExists('Shortcuts');
+    $this->assertSession()->linkNotExists('Cron', 'Cron shortcut link not found on page.');
 
     // Verify that users with the 'access shortcuts' permission can see the
     // shortcuts.
@@ -366,7 +366,7 @@ class ShortcutLinksTest extends ShortcutTestBase {
       'access toolbar', 'access shortcuts', 'administer site configuration',
     ]));
     $this->clickLink('Shortcuts', 0, 'Shortcut link found on page.');
-    $this->assertLink('Cron', 0, 'Cron shortcut link found on page.');
+    $this->assertSession()->linkExists('Cron', 0, 'Cron shortcut link found on page.');
 
     $this->verifyAccessShortcutsPermissionForEditPages();
   }

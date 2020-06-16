@@ -153,7 +153,7 @@ class BookRelationshipTest extends ViewTestBase {
       $this->drupalGet('test-book/' . $nodes[$i]->id());
 
       for ($j = 0; $j < $i; $j++) {
-        $this->assertLink($nodes[$j]->label());
+        $this->assertSession()->linkExists($nodes[$j]->label());
       }
     }
   }

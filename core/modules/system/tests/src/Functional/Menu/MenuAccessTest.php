@@ -42,11 +42,11 @@ class MenuAccessTest extends BrowserTestBase {
     $this->drupalPlaceBlock('system_menu_block:account');
     // Test that there's link rendered on the route.
     $this->drupalGet('menu_test_access_check_session');
-    $this->assertLink('Test custom route access check');
+    $this->assertSession()->linkExists('Test custom route access check');
     // Page is still accessible but there should be no menu link.
     $this->drupalGet('menu_test_access_check_session');
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertNoLink('Test custom route access check');
+    $this->assertSession()->linkNotExists('Test custom route access check');
     // Test that page is no more accessible.
     $this->drupalGet('menu_test_access_check_session');
     $this->assertSession()->statusCodeEquals(403);

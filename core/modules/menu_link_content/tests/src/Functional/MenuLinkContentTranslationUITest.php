@@ -73,7 +73,7 @@ class MenuLinkContentTranslationUITest extends ContentTranslationUITestBase {
    */
   public function testTranslationLinkOnMenuEditForm() {
     $this->drupalGet('admin/structure/menu/manage/tools');
-    $this->assertNoLink(t('Translate'));
+    $this->assertSession()->linkNotExists(t('Translate'));
 
     $menu_link_content = MenuLinkContent::create([
       'menu_name' => 'tools',
@@ -82,7 +82,7 @@ class MenuLinkContentTranslationUITest extends ContentTranslationUITestBase {
     ]);
     $menu_link_content->save();
     $this->drupalGet('admin/structure/menu/manage/tools');
-    $this->assertLink(t('Translate'));
+    $this->assertSession()->linkExists(t('Translate'));
   }
 
   /**

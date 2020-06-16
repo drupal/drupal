@@ -74,7 +74,7 @@ class SettingsTest extends UITestBase {
     $view['id'] = strtolower($this->randomMachineName());
     $this->drupalPostForm('admin/structure/views/add', $view, t('Save and edit'));
 
-    $this->assertNoLink(t('Master'));
+    $this->assertSession()->linkNotExists(t('Master'));
 
     // Configure to always show the advanced settings.
     // @todo It doesn't seem to be a way to test this as this works just on js.

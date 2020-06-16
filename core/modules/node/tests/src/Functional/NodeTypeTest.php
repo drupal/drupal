@@ -202,7 +202,7 @@ class NodeTypeTest extends NodeTestBase {
     // way installing a module through the UI does.
     $this->resetAll();
     $this->drupalGet('admin/structure/types/manage/default');
-    $this->assertNoLink(t('Delete'));
+    $this->assertSession()->linkNotExists(t('Delete'));
     $this->drupalGet('admin/structure/types/manage/default/delete');
     $this->assertSession()->statusCodeEquals(403);
     $this->container->get('module_installer')->uninstall(['node_test_config']);
