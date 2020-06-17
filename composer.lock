@@ -648,7 +648,7 @@
         },
         {
             "name": "drupal/core",
-            "version": "8.9.0",
+            "version": "8.9.1",
             "dist": {
                 "type": "path",
                 "url": "core",
@@ -879,7 +879,7 @@
         },
         {
             "name": "drupal/core-project-message",
-            "version": "8.9.0",
+            "version": "8.9.1",
             "dist": {
                 "type": "path",
                 "url": "composer/Plugin/ProjectMessage",
@@ -909,7 +909,7 @@
         },
         {
             "name": "drupal/core-vendor-hardening",
-            "version": "8.9.0",
+            "version": "8.9.1",
             "dist": {
                 "type": "path",
                 "url": "composer/Plugin/VendorHardening",
@@ -942,12 +942,12 @@
             "version": "0.9.1",
             "source": {
                 "type": "git",
-                "url": "https://github.com/njh/easyrdf.git",
+                "url": "https://github.com/easyrdf/easyrdf.git",
                 "reference": "acd09dfe0555fbcfa254291e433c45fdd4652566"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/njh/easyrdf/zipball/acd09dfe0555fbcfa254291e433c45fdd4652566",
+                "url": "https://api.github.com/repos/easyrdf/easyrdf/zipball/acd09dfe0555fbcfa254291e433c45fdd4652566",
                 "reference": "acd09dfe0555fbcfa254291e433c45fdd4652566",
                 "shasum": ""
             },
