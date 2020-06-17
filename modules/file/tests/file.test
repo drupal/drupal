@@ -409,7 +409,7 @@ class FileManagedFileElementTestCase extends FileFieldTestCase {
           'form_token' => 'invalid token',
         );
         $this->drupalPost($path, $edit, t('Save'));
-        $this->assertText('The form has become outdated. Copy any unsaved work in the form below');
+        $this->assertText('The form has become outdated.');
         $last_fid = $this->getLastFileId();
         $this->assertEqual($last_fid_prior, $last_fid, 'File was not saved when uploaded with an invalid form token.');
 

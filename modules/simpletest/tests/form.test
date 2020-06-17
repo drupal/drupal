@@ -521,6 +521,9 @@ class FormsTestCase extends DrupalWebTestCase {
     $form_state['values'] = array();
     drupal_prepare_form($form_id, $form, $form_state);
 
+    // Set the CSRF token in the user-provided input.
+    $form_state['input']['form_token'] = $form['form_token']['#default_value'];
+
     // This is the main function we want to test: it is responsible for
     // populating user supplied $form_state['input'] to sanitized
     // $form_state['values'].
@@ -687,7 +690,7 @@ class FormValidationTestCase extends DrupalWebTestCase {
     $this->drupalPost(NULL, $edit, 'Save');
     $this->assertNoFieldByName('name', '#value changed by #validate', 'Form element #value was not altered.');
     $this->assertNoText('Name value: value changed by form_set_value() in #validate', 'Form element value in $form_state was not altered.');
-    $this->assertText('The form has become outdated. Copy any unsaved work in the form below');
+    $this->assertText('The form has become outdated.');
   }
 
   /**
