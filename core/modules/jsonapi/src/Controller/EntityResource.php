@@ -322,7 +322,7 @@ class EntityResource {
       ));
     }
     $data += ['attributes' => [], 'relationships' => []];
-    $field_names = array_merge(array_keys($data['attributes']), array_keys($data['relationships']));
+    $field_names = array_map([$resource_type, 'getInternalName'], array_merge(array_keys($data['attributes']), array_keys($data['relationships'])));
 
     // User resource objects contain a read-only attribute that is not a real
     // field on the user entity type.
