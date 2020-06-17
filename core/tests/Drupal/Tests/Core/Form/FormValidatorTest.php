@@ -131,7 +131,7 @@ class FormValidatorTest extends UnitTestCase {
       ->getMock();
     $form_state->expects($this->once())
       ->method('setErrorByName')
-      ->with('form_token', 'The form has become outdated. Copy any unsaved work in the form below and then <a href="/test/example?foo=bar">reload this page</a>.');
+      ->with('form_token', 'The form has become outdated. Press the back button, copy any unsaved work in the form, and then reload the page.');
     $form_state->setValue('form_token', 'some_random_token');
     $form_validator->validateForm('test_form_id', $form, $form_state);
     $this->assertTrue($form_state->isValidationComplete());
