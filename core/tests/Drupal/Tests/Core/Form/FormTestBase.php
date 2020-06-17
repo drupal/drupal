@@ -173,7 +173,7 @@ abstract class FormTestBase extends UnitTestCase {
       ->getMock();
     $this->account = $this->createMock('Drupal\Core\Session\AccountInterface');
     $this->themeManager = $this->createMock('Drupal\Core\Theme\ThemeManagerInterface');
-    $this->request = new Request();
+    $this->request = Request::createFromGlobals();
     $this->eventDispatcher = $this->createMock('Symfony\Component\EventDispatcher\EventDispatcherInterface');
     $this->requestStack = new RequestStack();
     $this->requestStack->push($this->request);
