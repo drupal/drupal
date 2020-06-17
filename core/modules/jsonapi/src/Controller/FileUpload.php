@@ -112,6 +112,7 @@ class FileUpload {
    *   created file entity.
    */
   public function handleFileUploadForExistingResource(Request $request, ResourceType $resource_type, $file_field_name, FieldableEntityInterface $entity) {
+    $file_field_name = $resource_type->getInternalName($file_field_name);
     $field_definition = $this->validateAndLoadFieldDefinition($resource_type->getEntityTypeId(), $resource_type->getBundle(), $file_field_name);
 
     static::ensureFileUploadAccess($this->currentUser, $field_definition, $entity);
@@ -138,7 +139,7 @@ class FileUpload {
     $entity->save();
 
     $route_parameters = ['entity' => $entity->uuid()];
-    $route_name = sprintf('jsonapi.%s.%s.related', $resource_type->getTypeName(), $file_field_name);
+    $route_name = sprintf('jsonapi.%s.%s.related', $resource_type->getTypeName(), $resource_type->getPublicName($file_field_name));
     $related_url = Url::fromRoute($route_name, $route_parameters)->toString(TRUE);
     $request = Request::create($related_url->getGeneratedUrl(), 'GET', [], $request->cookies->all(), [], $request->server->all());
     return $this->httpKernel->handle($request, HttpKernelInterface::SUB_REQUEST);
@@ -161,6 +162,7 @@ class FileUpload {
    *   Thrown when there are validation errors.
    */
   public function handleFileUploadForNewResource(Request $request, ResourceType $resource_type, $file_field_name) {
+    $file_field_name = $resource_type->getInternalName($file_field_name);
     $field_definition = $this->validateAndLoadFieldDefinition($resource_type->getEntityTypeId(), $resource_type->getBundle(), $file_field_name);
 
     static::ensureFileUploadAccess($this->currentUser, $field_definition);
@@ -182,7 +184,7 @@ class FileUpload {
     /* $self_link = new Link(new CacheableMetadata(), $this->entity->toUrl('jsonapi'), ['self']); */
     $links = new LinkCollection(['self' => $self_link]);
 
-    $relatable_resource_types = $resource_type->getRelatableResourceTypesByField($file_field_name);
+    $relatable_resource_types = $resource_type->getRelatableResourceTypesByField($resource_type->getPublicName($file_field_name));
     $file_resource_type = reset($relatable_resource_types);
     $resource_object = ResourceObject::createFromEntity($file_resource_type, $file);
     return new ResourceResponse(new JsonApiDocumentTopLevel(new ResourceObjectData([$resource_object], 1), new NullIncludedData(), $links), 201, []);
