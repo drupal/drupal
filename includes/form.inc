@@ -1135,12 +1135,8 @@ function drupal_prepare_form($form_id, &$form, &$form_state) {
  * Helper function to call form_set_error() if there is a token error.
  */
 function _drupal_invalid_token_set_form_error() {
-  $path = current_path();
-  $query = drupal_get_query_parameters();
-  $url = url($path, array('query' => $query));
-
   // Setting this error will cause the form to fail validation.
-  form_set_error('form_token', t('The form has become outdated. Copy any unsaved work in the form below and then <a href="@link">reload this page</a>.', array('@link' => $url)));
+  form_set_error('form_token', t('The form has become outdated. Press the back button, copy any unsaved work in the form, and then reload the page.'));
 }
 
 /**
@@ -1181,6 +1177,11 @@ function drupal_validate_form($form_id, &$form, &$form_state) {
   if (!empty($form['#token'])) {
     if (!drupal_valid_token($form_state['values']['form_token'], $form['#token']) || !empty($form_state['invalid_token'])) {
       _drupal_invalid_token_set_form_error();
+      // Ignore all submitted values.
+      $form_state['input'] = array();
+      $_POST = array();
+      // Make sure file uploads do not get processed.
+      $_FILES = array();
       // Stop here and don't run any further validation handlers, because they
       // could invoke non-safe operations which opens the door for CSRF
       // vulnerabilities.
@@ -1848,6 +1849,9 @@ function form_builder($form_id, &$element, &$form_state) {
           _drupal_invalid_token_set_form_error();
           // This value is checked in _form_builder_handle_input_element().
           $form_state['invalid_token'] = TRUE;
+          // Ignore all submitted values.
+          $form_state['input'] = array();
+          $_POST = array();
           // Make sure file uploads do not get processed.
           $_FILES = array();
         }
