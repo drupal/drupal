@@ -19,6 +19,7 @@ use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Session\AnonymousUserSession;
 use Drupal\Core\Site\Settings;
 use Drupal\Core\Url;
+use Drupal\image\Plugin\Field\FieldType\ImageItem;
 use Drupal\system\Entity\Action;
 use Drupal\user\Entity\Role;
 use Drupal\user\Entity\User;
@@ -317,8 +318,15 @@ function user_user_view(array &$build, UserInterface $account, EntityViewDisplay
  * accessibility.
  */
 function user_user_view_alter(array &$build, UserInterface $account, EntityViewDisplayInterface $display) {
-  if (user_picture_enabled() && !empty($build['user_picture'])) {
+  if (!empty($build['user_picture']) && user_picture_enabled()) {
     foreach (Element::children($build['user_picture']) as $key) {
+      if (!isset($build['user_picture'][$key]['#item']) || !($build['user_picture'][$key]['#item'] instanceof ImageItem)) {
+        // User picture field is provided by standard profile install. If the
+        // display is configured to use a different formatter, the #item render
+        // key may not exist, or may not be an image field.
+        continue;
+      }
+      /** @var \Drupal\image\Plugin\Field\FieldType\ImageItem $item */
       $item = $build['user_picture'][$key]['#item'];
       if (!$item->get('alt')->getValue()) {
         $item->get('alt')->setValue(\Drupal::translation()->translate('Profile picture for user @username', ['@username' => $account->getAccountName()]));
