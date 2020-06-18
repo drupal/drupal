@@ -16,12 +16,18 @@ function image_module_test_file_download($uri) {
 
 /**
  * Implements hook_image_effect_info_alter().
- *
- * Used to keep a count of cache misses in \Drupal\image\ImageEffectManager.
  */
 function image_module_test_image_effect_info_alter(&$effects) {
-  $image_effects_definition_called = &drupal_static(__FUNCTION__, 0);
-  $image_effects_definition_called++;
+  $state = \Drupal::state();
+  // The 'image_module_test.counter' state variable value is set and accessed
+  // from the ImageEffectsTest::testImageEffectsCaching() test and used to
+  // signal if the image effect plugin definitions were computed or were
+  // retrieved from the cache.
+  // @see \Drupal\Tests\image\Kernel\ImageEffectsTest::testImageEffectsCaching()
+  $counter = $state->get('image_module_test.counter');
+  // Increase the test counter, signaling that image effects were processed,
+  // rather than being served from the cache.
+  $state->set('image_module_test.counter', ++$counter);
 }
 
 /**
