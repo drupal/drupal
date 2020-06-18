@@ -176,11 +176,12 @@ class EntityUrlTest extends UnitTestCase {
     $entity->method('isDefaultRevision')->willReturn($is_default_revision);
     $this->registerLinkTemplate($link_template);
     // Even though this is tested with both the 'canonical' and the 'revision'
-    // template registered with the entity, we always ask for the 'revision'
-    // link template, to test that it falls back to the 'canonical' link
-    // template in case of the default revision.
+    // template registered with the entity, we ask for the 'revision' link
+    // template instead of 'canonical', to test that it falls back to the
+    // 'canonical' link template in case of the default revision.
+    $link_template = $link_template === 'canonical' ? 'revision' : $link_template;
     /** @var \Drupal\Core\Url $url */
-    $url = $entity->toUrl('revision');
+    $url = $entity->toUrl($link_template);
     $this->assertUrl($expected_route_name, $expected_route_parameters, $entity, TRUE, $url);
 
   }
@@ -199,6 +200,7 @@ class EntityUrlTest extends UnitTestCase {
     // Add the revision ID to the expected route parameters.
     $route_parameters['test_entity_revision'] = $this->revisionId;
     $test_cases['non_default_revision'] = [static::NON_DEFAULT_REVISION, 'revision', 'entity.test_entity.revision', $route_parameters];
+    $test_cases['revision-delete'] = [static::NON_DEFAULT_REVISION, 'revision-delete-form', 'entity.test_entity.revision_delete_form', $route_parameters];
 
     return $test_cases;
   }
