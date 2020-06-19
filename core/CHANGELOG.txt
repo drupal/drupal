@@ -3,6 +3,6 @@ patch (bugfix) releases are released every month. More information on the
 Drupal release cycle: https://www.drupal.org/core/release-cycle-overview
 
 * For a full list of fixes in the latest release, visit:
- https://www.drupal.org/8/download
+ https://www.drupal.org/latest-release
 * API change records for Drupal core:
  https://www.drupal.org/list-changes/drupal
