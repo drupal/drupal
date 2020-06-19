@@ -315,6 +315,11 @@ abstract class Connection {
    *   database type. In rare cases, such as creating an SQL function, []
    *   characters might be needed and can be allowed by changing this option to
    *   TRUE.
+   * - pdo: By default, queries will execute with the PDO options set on the
+   *   connection. In particular cases, it could be necessary to override the
+   *   PDO driver options on the statement level. In such case, pass the
+   *   required setting as an array here, and they will be passed to the
+   *   prepared statement. See https://www.php.net/manual/en/pdo.prepare.php.
    *
    * @return array
    *   An array of default query options.
@@ -326,6 +331,7 @@ abstract class Connection {
       'throw_exception' => TRUE,
       'allow_delimiter_in_query' => FALSE,
       'allow_square_brackets' => FALSE,
+      'pdo' => [],
     ];
   }
 
@@ -477,6 +483,31 @@ abstract class Connection {
   }
 
   /**
+   * Returns a prepared statement given a SQL string.
+   *
+   * This method caches prepared statements, reusing them when possible. It also
+   * prefixes tables names enclosed in curly braces and, optionally, quotes
+   * identifiers enclosed in square brackets.
+   *
+   * @param string $query
+   *   The query string as SQL, with curly braces surrounding the table names.
+   * @param array $options
+   *   An associative array of options to control how the query is run. See
+   *   the documentation for self::defaultOptions() for details. The content of
+   *   the 'pdo' key will be passed to the prepared statement.
+   *
+   * @return \Drupal\Core\Database\StatementInterface
+   *   A PDO prepared statement ready for its execute() method.
+   */
+  public function prepareStatement(string $query, array $options): StatementInterface {
+    $query = $this->prefixTables($query);
+    if (!($options['allow_square_brackets'] ?? FALSE)) {
+      $query = $this->quoteIdentifiers($query);
+    }
+    return $this->connection->prepare($query, $options['pdo'] ?? []);
+  }
+
+  /**
    * Prepares a query string and returns the prepared statement.
    *
    * This method caches prepared statements, reusing them when possible. It also
@@ -492,14 +523,15 @@ abstract class Connection {
    *
    * @return \Drupal\Core\Database\StatementInterface
    *   A PDO prepared statement ready for its execute() method.
+   *
+   * @deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. Use
+   *   ::prepareStatement instead.
+   *
+   * @see https://www.drupal.org/node/3137786
    */
   public function prepareQuery($query, $quote_identifiers = TRUE) {
-    $query = $this->prefixTables($query);
-    if ($quote_identifiers) {
-      $query = $this->quoteIdentifiers($query);
-    }
-
-    return $this->connection->prepare($query);
+    @trigger_error('Connection::prepareQuery() is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. Use ::prepareStatement() instead. See https://www.drupal.org/node/3137786', E_USER_DEPRECATED);
+    return $this->prepareStatement($query, ['allow_square_brackets' => !$quote_identifiers]);
   }
 
   /**
@@ -675,9 +707,7 @@ abstract class Connection {
    *   object to this method. It is used primarily for database drivers for
    *   databases that require special LOB field handling.
    * @param array $args
-   *   An array of arguments for the prepared statement. If the prepared
-   *   statement uses ? placeholders, this array must be an indexed array.
-   *   If it contains named placeholders, it must be an associative array.
+   *   The associative array of arguments for the prepared statement.
    * @param array $options
    *   An associative array of options to control how the query is run. The
    *   given options will be merged with self::defaultOptions(). See the
@@ -734,7 +764,7 @@ abstract class Connection {
         if (strpos($query, ';') !== FALSE && empty($options['allow_delimiter_in_query'])) {
           throw new \InvalidArgumentException('; is not supported in SQL strings. Use only one statement at a time.');
         }
-        $stmt = $this->prepareQuery($query, !$options['allow_square_brackets']);
+        $stmt = $this->prepareStatement($query, $options);
         $stmt->execute($args, $options);
       }
 
@@ -1668,9 +1698,17 @@ abstract class Connection {
    *
    * @throws \PDOException
    *
-   * @see \PDO::prepare()
+   * @see https://www.php.net/manual/en/pdo.prepare.php
+   *
+   * @deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. Database
+   *   drivers should instantiate \PDOStatement objects by calling
+   *   \PDO::prepare in their Collection::prepareStatement method instead.
+   *   \PDO::prepare should not be called outside of driver code.
+   *
+   * @see https://www.drupal.org/node/3137786
    */
   public function prepare($statement, array $driver_options = []) {
+    @trigger_error('Connection::prepare() is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. Database drivers should instantiate \PDOStatement objects by calling \PDO::prepare in their Collection::prepareStatement method instead. \PDO::prepare should not be called outside of driver code. See https://www.drupal.org/node/3137786', E_USER_DEPRECATED);
     return $this->connection->prepare($statement, $driver_options);
   }
 

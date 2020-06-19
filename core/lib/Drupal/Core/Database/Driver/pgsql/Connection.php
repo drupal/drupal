@@ -6,6 +6,7 @@ use Drupal\Core\Database\Database;
 use Drupal\Core\Database\Connection as DatabaseConnection;
 use Drupal\Core\Database\DatabaseAccessDeniedException;
 use Drupal\Core\Database\DatabaseNotFoundException;
+use Drupal\Core\Database\StatementInterface;
 
 /**
  * @addtogroup database
@@ -184,12 +185,16 @@ class Connection extends DatabaseConnection {
     return $return;
   }
 
-  public function prepareQuery($query, $quote_identifiers = TRUE) {
+  /**
+   * {@inheritdoc}
+   */
+  public function prepareStatement(string $query, array $options): StatementInterface {
     // mapConditionOperator converts some operations (LIKE, REGEXP, etc.) to
     // PostgreSQL equivalents (ILIKE, ~*, etc.). However PostgreSQL doesn't
     // automatically cast the fields to the right type for these operators,
     // so we need to alter the query and add the type-cast.
-    return parent::prepareQuery(preg_replace('/ ([^ ]+) +(I*LIKE|NOT +I*LIKE|~\*|!~\*) /i', ' ${1}::text ${2} ', $query), $quote_identifiers);
+    $query = preg_replace('/ ([^ ]+) +(I*LIKE|NOT +I*LIKE|~\*|!~\*) /i', ' ${1}::text ${2} ', $query);
+    return parent::prepareStatement($query, $options);
   }
 
   public function queryRange($query, $from, $count, array $args = [], array $options = []) {

@@ -221,7 +221,7 @@ class StatementPrefetch implements \Iterator, StatementInterface {
    *   A PDOStatement object.
    */
   protected function getStatement($query, &$args = []) {
-    return $this->dbh->prepare($query);
+    return $this->dbh->prepare($query, $this->driverOptions);
   }
 
   /**

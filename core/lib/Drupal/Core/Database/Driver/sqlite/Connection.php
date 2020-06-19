@@ -5,6 +5,7 @@ namespace Drupal\Core\Database\Driver\sqlite;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Database\DatabaseNotFoundException;
 use Drupal\Core\Database\Connection as DatabaseConnection;
+use Drupal\Core\Database\StatementInterface;
 
 /**
  * SQLite implementation of \Drupal\Core\Database\Connection.
@@ -336,6 +337,7 @@ class Connection extends DatabaseConnection {
    * {@inheritdoc}
    */
   public function prepare($statement, array $driver_options = []) {
+    @trigger_error('Connection::prepare() is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. Database drivers should instantiate \PDOStatement objects by calling \PDO::prepare in their Collection::prepareStatement method instead. \PDO::prepare should not be called outside of driver code. See https://www.drupal.org/node/3137786', E_USER_DEPRECATED);
     return new Statement($this->connection, $this, $statement, $driver_options);
   }
 
@@ -403,12 +405,12 @@ class Connection extends DatabaseConnection {
   /**
    * {@inheritdoc}
    */
-  public function prepareQuery($query, $quote_identifiers = TRUE) {
+  public function prepareStatement(string $query, array $options): StatementInterface {
     $query = $this->prefixTables($query);
-    if ($quote_identifiers) {
+    if (!($options['allow_square_brackets'] ?? FALSE)) {
       $query = $this->quoteIdentifiers($query);
     }
-    return $this->prepare($query);
+    return new Statement($this->connection, $this, $query, $options['pdo'] ?? []);
   }
 
   public function nextId($existing_id = 0) {

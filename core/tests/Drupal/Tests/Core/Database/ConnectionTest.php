@@ -3,6 +3,7 @@
 namespace Drupal\Tests\Core\Database;
 
 use Composer\Autoload\ClassLoader;
+use Drupal\Core\Database\Statement;
 use Drupal\Tests\Core\Database\Stub\StubConnection;
 use Drupal\Tests\Core\Database\Stub\StubPDO;
 use Drupal\Tests\UnitTestCase;
@@ -585,13 +586,16 @@ class ConnectionTest extends UnitTestCase {
     $mock_pdo = $this->getMockBuilder(StubPdo::class)
       ->setMethods(['execute', 'prepare', 'setAttribute'])
       ->getMock();
+    $mock_statement = $this->getMockBuilder(Statement::class)
+      ->disableOriginalConstructor()
+      ->getMock();
 
     // Ensure that PDO::prepare() is called only once, and with the
     // correctly trimmed query string.
     $mock_pdo->expects($this->once())
       ->method('prepare')
       ->with($expected)
-      ->willReturnSelf();
+      ->willReturn($mock_statement);
     $connection = new StubConnection($mock_pdo, []);
     $connection->query($query, [], $options);
   }

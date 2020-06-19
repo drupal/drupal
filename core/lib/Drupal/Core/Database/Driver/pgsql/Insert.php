@@ -20,7 +20,7 @@ class Insert extends QueryInsert {
       return NULL;
     }
 
-    $stmt = $this->connection->prepareQuery((string) $this);
+    $stmt = $this->connection->prepareStatement((string) $this, $this->queryOptions);
 
     // Fetch the list of blobs and sequences used on that table.
     $table_information = $this->connection->schema()->queryTableInformation($this->table);
