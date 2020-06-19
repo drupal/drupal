@@ -45,7 +45,7 @@ More about configuration:
  * Follow best practices:
    https://www.drupal.org/best-practices
  * Download contributed modules to /modules to extend Drupal's functionality:
-   https://www.drupal.org/project/modules
+   https://www.drupal.org/project/project_module
  * See also: "Developing for Drupal" for writing your own modules, below.
 
 
@@ -70,11 +70,11 @@ the required extensions separately; place the downloaded profile in the
 
 More about installation profiles and distributions:
  * Read about the difference between installation profiles and distributions:
-   https://www.drupal.org/docs/8/distributions/creating-distributions
+   https://www.drupal.org/docs/distributions/creating-distributions
  * Download contributed installation profiles and distributions:
-   https://www.drupal.org/project/distributions
+   https://www.drupal.org/project/project_distribution
  * Develop your own installation profile or distribution:
-   https://www.drupal.org/docs/8/creating-distributions
+   https://www.drupal.org/docs/distributions/creating-distributions
 
 
 APPEARANCE
@@ -87,9 +87,9 @@ custom theme.
 
 More about themes:
  * Download contributed themes to /themes to modify Drupal's appearance:
-   https://www.drupal.org/project/themes
+   https://www.drupal.org/project/project_theme
  * Develop your own theme:
-   https://www.drupal.org/docs/8/theming
+   https://www.drupal.org/docs/theming-drupal
 
 
 DEVELOPING FOR DRUPAL
@@ -111,15 +111,15 @@ when nothing existing comes close to what you need.
 
 More about developing:
  * Search for existing contributed modules:
-   https://www.drupal.org/project/modules
+   https://www.drupal.org/project/project_module
  * Contribute a patch:
    https://www.drupal.org/patch/submit
  * Develop your own module:
    https://www.drupal.org/developing/modules
  * Follow programming best practices:
-   https://www.drupal.org/developing/best-practices
+   https://www.drupal.org/docs/develop/standards
  * Refer to the API documentation:
-   https://api.drupal.org/api/drupal/8
+   https://api.drupal.org/api/drupal/9
  * Learn from documented Drupal API examples:
    https://www.drupal.org/project/examples
 
@@ -136,7 +136,7 @@ MORE INFORMATION
 
  * For information about the Drupal security process, or to find out how to
    report a potential security issue to the Drupal security team, see the
-   "Security team" page at https://www.drupal.org/security-team
+   "Security team" page at https://www.drupal.org/drupal-security-team
 
  * For information about the wide range of available support options, visit
    https://www.drupal.org and click on Community and Support in the top or
