@@ -61,8 +61,7 @@ trait RandomGeneratorTrait {
    *   TRUE if the random string is valid, FALSE if not.
    */
   public function randomStringValidate($string) {
-    // Consecutive spaces causes issues for
-    // \Drupal\simpletest\WebTestBase::assertLink().
+    // Consecutive spaces causes issues for link validation.
     if (preg_match('/\s{2,}/', $string)) {
       return FALSE;
     }
