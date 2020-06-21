@@ -53,7 +53,7 @@ class OverviewForm extends MigrateUpgradeFormBase {
     $info[] = $this->t('<strong>If the old site has private files</strong>, a copy of its files directory must also be accessible on the host of this new site.');
     $info[] = $this->t('<strong>Enable all modules on this new site</strong> that are enabled on the old site. For example, if the old site uses the Book module, then enable the Book module on this new site so that the existing data can be imported to it.');
     $info[] = $this->t('<strong>Do not add any content to the new site</strong> before upgrading. Any existing content is likely to be overwritten by the upgrade process. See <a href=":url">the upgrade preparation guide</a>.', [
-      ':url' => 'https://www.drupal.org/docs/8/upgrade/preparing-an-upgrade#dont_create_content',
+      ':url' => 'https://www.drupal.org/docs/8/upgrade/preparing-an-upgrade#do_not_create_content',
     ]);
     $info[] = $this->t('Put this site into <a href=":url">maintenance mode</a>.', [
       ':url' => Url::fromRoute('system.site_maintenance_mode')
