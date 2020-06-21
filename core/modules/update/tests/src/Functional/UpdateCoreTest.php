@@ -40,7 +40,11 @@ class UpdateCoreTest extends UpdateTestBase {
 
   protected function setUp(): void {
     parent::setUp();
-    $admin_user = $this->drupalCreateUser(['administer site configuration', 'administer modules', 'administer themes']);
+    $admin_user = $this->drupalCreateUser([
+      'administer site configuration',
+      'administer modules',
+      'administer themes',
+      ]);
     $this->drupalLogin($admin_user);
     $this->drupalPlaceBlock('local_actions_block');
   }
@@ -814,7 +818,12 @@ class UpdateCoreTest extends UpdateTestBase {
    * Ensures that the local actions appear.
    */
   public function testLocalActions() {
-    $admin_user = $this->drupalCreateUser(['administer site configuration', 'administer modules', 'administer software updates', 'administer themes']);
+    $admin_user = $this->drupalCreateUser([
+      'administer site configuration',
+      'administer modules',
+      'administer software updates',
+      'administer themes',
+    ]);
     $this->drupalLogin($admin_user);
 
     $this->drupalGet('admin/modules');

@@ -30,7 +30,10 @@ class TextareaWithSummaryTest extends WebDriverTestBase {
 
     $this->drupalCreateContentType(['type' => 'page']);
 
-    $account = $this->drupalCreateUser(['create page content', 'edit own page content']);
+    $account = $this->drupalCreateUser([
+      'create page content',
+      'edit own page content',
+    ]);
     $this->drupalLogin($account);
   }
 

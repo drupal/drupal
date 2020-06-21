@@ -36,7 +36,10 @@ class SearchNodeUpdateAndDeletionTest extends BrowserTestBase {
     $this->drupalCreateContentType(['type' => 'page', 'name' => 'Basic page']);
 
     // Create a test user and log in.
-    $this->testUser = $this->drupalCreateUser(['access content', 'search content']);
+    $this->testUser = $this->drupalCreateUser([
+      'access content',
+      'search content',
+    ]);
     $this->drupalLogin($this->testUser);
   }
 

@@ -34,7 +34,11 @@ class NodeAccessPagerTest extends BrowserTestBase {
     node_access_rebuild();
     $this->drupalCreateContentType(['type' => 'page', 'name' => t('Basic page')]);
     $this->addDefaultCommentField('node', 'page');
-    $this->webUser = $this->drupalCreateUser(['access content', 'access comments', 'node test view']);
+    $this->webUser = $this->drupalCreateUser([
+      'access content',
+      'access comments',
+      'node test view',
+    ]);
   }
 
   /**

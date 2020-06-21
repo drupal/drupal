@@ -78,7 +78,10 @@ class UserAccountLinksTest extends BrowserTestBase {
    */
   public function testDisabledAccountLink() {
     // Create an admin user and log in.
-    $this->drupalLogin($this->drupalCreateUser(['access administration pages', 'administer menu']));
+    $this->drupalLogin($this->drupalCreateUser([
+      'access administration pages',
+      'administer menu',
+    ]));
 
     // Verify that the 'My account' link exists before we check for its
     // disappearance.

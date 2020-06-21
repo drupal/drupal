@@ -28,7 +28,10 @@ class BlockDemoTest extends BrowserTestBase {
    */
   public function testBlockDemo() {
     // Create administrative user.
-    $admin_user = $this->drupalCreateUser(['administer blocks', 'administer themes']);
+    $admin_user = $this->drupalCreateUser([
+      'administer blocks',
+      'administer themes',
+    ]);
     $this->drupalLogin($admin_user);
 
     // Confirm we have access to the block demo page for the default theme.

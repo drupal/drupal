@@ -35,7 +35,10 @@ class SearchPageOverrideTest extends BrowserTestBase {
     parent::setUp();
 
     // Log in as a user that can create and search content.
-    $this->searchUser = $this->drupalCreateUser(['search content', 'administer search']);
+    $this->searchUser = $this->drupalCreateUser([
+      'search content',
+      'administer search',
+    ]);
     $this->drupalLogin($this->searchUser);
   }
 

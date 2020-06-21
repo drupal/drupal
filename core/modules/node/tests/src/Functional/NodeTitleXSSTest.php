@@ -22,7 +22,10 @@ class NodeTitleXSSTest extends NodeTestBase {
    */
   public function testNodeTitleXSS() {
     // Prepare a user to do the stuff.
-    $web_user = $this->drupalCreateUser(['create page content', 'edit any page content']);
+    $web_user = $this->drupalCreateUser([
+      'create page content',
+      'edit any page content',
+    ]);
     $this->drupalLogin($web_user);
 
     $xss = '<script>alert("xss")</script>';

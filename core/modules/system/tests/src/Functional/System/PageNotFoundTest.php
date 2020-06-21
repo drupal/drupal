@@ -34,7 +34,10 @@ class PageNotFoundTest extends BrowserTestBase {
     parent::setUp();
 
     // Create an administrative user.
-    $this->adminUser = $this->drupalCreateUser(['administer site configuration', 'link to any page']);
+    $this->adminUser = $this->drupalCreateUser([
+      'administer site configuration',
+      'link to any page',
+    ]);
     $this->adminUser->roles[] = 'administrator';
     $this->adminUser->save();
 

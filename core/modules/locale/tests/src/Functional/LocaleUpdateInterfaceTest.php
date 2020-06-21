@@ -29,7 +29,13 @@ class LocaleUpdateInterfaceTest extends LocaleUpdateBase {
    */
   protected function setUp(): void {
     parent::setUp();
-    $admin_user = $this->drupalCreateUser(['administer modules', 'administer site configuration', 'administer languages', 'access administration pages', 'translate interface']);
+    $admin_user = $this->drupalCreateUser([
+      'administer modules',
+      'administer site configuration',
+      'administer languages',
+      'access administration pages',
+      'translate interface',
+    ]);
     $this->drupalLogin($admin_user);
   }
 

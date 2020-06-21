@@ -36,7 +36,13 @@ class LocaleConfigTranslationImportTest extends BrowserTestBase {
    * Test update changes configuration translations if enabled after language.
    */
   public function testConfigTranslationImport() {
-    $admin_user = $this->drupalCreateUser(['administer modules', 'administer site configuration', 'administer languages', 'access administration pages', 'administer permissions']);
+    $admin_user = $this->drupalCreateUser([
+      'administer modules',
+      'administer site configuration',
+      'administer languages',
+      'access administration pages',
+      'administer permissions',
+    ]);
     $this->drupalLogin($admin_user);
 
     // Add a language. The Afrikaans translation file of locale_test_translate
@@ -91,7 +97,14 @@ class LocaleConfigTranslationImportTest extends BrowserTestBase {
     // import. Test that this override is in place.
     $this->assertFalse($this->config('locale.settings')->get('translation.import_enabled'), 'Translations imports are disabled by default in the Testing profile.');
 
-    $admin_user = $this->drupalCreateUser(['administer modules', 'administer site configuration', 'administer languages', 'access administration pages', 'administer permissions', 'translate configuration']);
+    $admin_user = $this->drupalCreateUser([
+      'administer modules',
+      'administer site configuration',
+      'administer languages',
+      'access administration pages',
+      'administer permissions',
+      'translate configuration',
+    ]);
     $this->drupalLogin($admin_user);
 
     // Enable import of translations. By default this is disabled for automated
@@ -150,7 +163,14 @@ class LocaleConfigTranslationImportTest extends BrowserTestBase {
     $this->container->get('module_installer')->install(['locale']);
     $this->resetAll();
 
-    $admin_user = $this->drupalCreateUser(['administer modules', 'administer site configuration', 'administer languages', 'access administration pages', 'administer permissions', 'translate interface']);
+    $admin_user = $this->drupalCreateUser([
+      'administer modules',
+      'administer site configuration',
+      'administer languages',
+      'access administration pages',
+      'administer permissions',
+      'translate interface',
+    ]);
     $this->drupalLogin($admin_user);
 
     // Enable import of translations. By default this is disabled for automated
@@ -188,7 +208,14 @@ class LocaleConfigTranslationImportTest extends BrowserTestBase {
     $this->container->get('module_installer')->install(['locale']);
     $this->resetAll();
 
-    $admin_user = $this->drupalCreateUser(['administer modules', 'administer site configuration', 'administer languages', 'access administration pages', 'administer permissions', 'translate interface']);
+    $admin_user = $this->drupalCreateUser([
+      'administer modules',
+      'administer site configuration',
+      'administer languages',
+      'access administration pages',
+      'administer permissions',
+      'translate interface',
+    ]);
     $this->drupalLogin($admin_user);
 
     // Enable import of translations. By default this is disabled for automated

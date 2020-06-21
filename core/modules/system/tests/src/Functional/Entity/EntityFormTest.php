@@ -27,7 +27,10 @@ class EntityFormTest extends BrowserTestBase {
 
   protected function setUp(): void {
     parent::setUp();
-    $web_user = $this->drupalCreateUser(['administer entity_test content', 'view test entity']);
+    $web_user = $this->drupalCreateUser([
+      'administer entity_test content',
+      'view test entity',
+    ]);
     $this->drupalLogin($web_user);
 
     // Add a language.

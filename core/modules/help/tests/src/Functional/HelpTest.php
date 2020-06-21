@@ -49,7 +49,11 @@ class HelpTest extends BrowserTestBase {
     parent::setUp();
 
     // Create users.
-    $this->adminUser = $this->drupalCreateUser(['access administration pages', 'view the administration theme', 'administer permissions']);
+    $this->adminUser = $this->drupalCreateUser([
+      'access administration pages',
+      'view the administration theme',
+      'administer permissions',
+    ]);
     $this->anyUser = $this->drupalCreateUser([]);
   }
 

@@ -80,7 +80,11 @@ class TaxonomyImageTest extends TaxonomyTestBase {
   }
 
   public function testTaxonomyImageAccess() {
-    $user = $this->drupalCreateUser(['administer site configuration', 'administer taxonomy', 'access user profiles']);
+    $user = $this->drupalCreateUser([
+      'administer site configuration',
+      'administer taxonomy',
+      'access user profiles',
+    ]);
     $this->drupalLogin($user);
 
     // Create a term and upload the image.

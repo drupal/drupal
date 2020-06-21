@@ -32,7 +32,13 @@ class ForumUninstallTest extends BrowserTestBase {
    * Tests if forum module uninstallation properly deletes the field.
    */
   public function testForumUninstallWithField() {
-    $this->drupalLogin($this->drupalCreateUser(['administer taxonomy', 'administer nodes', 'administer modules', 'delete any forum content', 'administer content types']));
+    $this->drupalLogin($this->drupalCreateUser([
+      'administer taxonomy',
+      'administer nodes',
+      'administer modules',
+      'delete any forum content',
+      'administer content types',
+    ]));
     // Ensure that the field exists before uninstallation.
     $field_storage = FieldStorageConfig::loadByName('node', 'taxonomy_forums');
     $this->assertNotNull($field_storage, 'The taxonomy_forums field storage exists.');

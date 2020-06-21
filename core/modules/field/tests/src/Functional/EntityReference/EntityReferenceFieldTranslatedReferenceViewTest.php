@@ -147,7 +147,9 @@ class EntityReferenceFieldTranslatedReferenceViewTest extends BrowserTestBase {
     $this->setUpEntityReferenceField();
     $this->createContent();
 
-    $this->webUser = $this->drupalCreateUser(['edit any ' . $this->referrerType->id() . ' content']);
+    $this->webUser = $this->drupalCreateUser([
+      'edit any ' . $this->referrerType->id() . ' content',
+    ]);
   }
 
   /**

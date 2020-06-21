@@ -59,7 +59,9 @@ class ContactSitewideTest extends BrowserTestBase {
    */
   public function testSiteWideContact() {
     // Tests name and email fields for authenticated and anonymous users.
-    $this->drupalLogin($this->drupalCreateUser(['access site-wide contact form']));
+    $this->drupalLogin($this->drupalCreateUser([
+      'access site-wide contact form',
+    ]));
     $this->drupalGet('contact');
 
     // Ensure that there is no textfield for name.

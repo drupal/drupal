@@ -100,7 +100,10 @@ class NodeAccessBaseTableTest extends NodeTestBase {
     // Array of nids marked private.
     $private_nodes = [];
     for ($i = 0; $i < $num_simple_users; $i++) {
-      $simple_users[$i] = $this->drupalCreateUser(['access content', 'create article content']);
+      $simple_users[$i] = $this->drupalCreateUser([
+        'access content',
+        'create article content',
+      ]);
     }
     foreach ($simple_users as $this->webUser) {
       $this->drupalLogin($this->webUser);
@@ -160,7 +163,12 @@ class NodeAccessBaseTableTest extends NodeTestBase {
     }
 
     // Now test that a user with 'node test view' permissions can view content.
-    $access_user = $this->drupalCreateUser(['access content', 'create article content', 'node test view', 'search content']);
+    $access_user = $this->drupalCreateUser([
+      'access content',
+      'create article content',
+      'node test view',
+      'search content',
+    ]);
     $this->drupalLogin($access_user);
 
     foreach ($this->nodesByUser as $private_status) {

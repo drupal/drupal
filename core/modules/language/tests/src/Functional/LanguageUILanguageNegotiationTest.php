@@ -74,7 +74,12 @@ class LanguageUILanguageNegotiationTest extends BrowserTestBase {
   protected function setUp(): void {
     parent::setUp();
 
-    $this->adminUser = $this->drupalCreateUser(['administer languages', 'translate interface', 'access administration pages', 'administer blocks']);
+    $this->adminUser = $this->drupalCreateUser([
+      'administer languages',
+      'translate interface',
+      'access administration pages',
+      'administer blocks',
+    ]);
     $this->drupalLogin($this->adminUser);
   }
 

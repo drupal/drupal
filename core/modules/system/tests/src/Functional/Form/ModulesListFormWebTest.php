@@ -28,7 +28,10 @@ class ModulesListFormWebTest extends BrowserTestBase {
   protected function setUp(): void {
     parent::setUp();
     \Drupal::state()->set('system_test.module_hidden', FALSE);
-    $this->drupalLogin($this->drupalCreateUser(['administer modules', 'administer permissions']));
+    $this->drupalLogin($this->drupalCreateUser([
+      'administer modules',
+      'administer permissions',
+    ]));
   }
 
   /**

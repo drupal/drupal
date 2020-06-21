@@ -68,7 +68,11 @@ class BulkFormTest extends BrowserTestBase {
     // Log in as a user with 'administer nodes' permission to have access to the
     // bulk operation.
     $this->drupalCreateContentType(['type' => 'page']);
-    $admin_user = $this->drupalCreateUser(['administer nodes', 'edit any page content', 'delete any page content']);
+    $admin_user = $this->drupalCreateUser([
+      'administer nodes',
+      'edit any page content',
+      'delete any page content',
+    ]);
     $this->drupalLogin($admin_user);
 
     $this->drupalGet('test_bulk_form');

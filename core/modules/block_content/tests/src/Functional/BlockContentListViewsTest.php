@@ -34,7 +34,10 @@ class BlockContentListViewsTest extends BlockContentTestBase {
    * Tests the custom block listing page.
    */
   public function testListing() {
-    $this->drupalLogin($this->drupalCreateUser(['administer blocks', 'translate configuration']));
+    $this->drupalLogin($this->drupalCreateUser([
+      'administer blocks',
+      'translate configuration',
+    ]));
     $this->drupalGet('admin/structure/block/block-content');
 
     // Test for the page title.

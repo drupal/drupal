@@ -29,7 +29,9 @@ class DateFormatTest extends WebDriverTestBase {
     parent::setUp();
 
     // Create admin user and log in admin user.
-    $this->drupalLogin($this->drupalCreateUser(['administer site configuration']));
+    $this->drupalLogin($this->drupalCreateUser([
+      'administer site configuration',
+    ]));
     $this->drupalPlaceBlock('local_actions_block');
   }
 

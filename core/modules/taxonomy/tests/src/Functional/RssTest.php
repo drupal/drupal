@@ -42,7 +42,12 @@ class RssTest extends TaxonomyTestBase {
   protected function setUp(): void {
     parent::setUp();
 
-    $this->drupalLogin($this->drupalCreateUser(['administer taxonomy', 'bypass node access', 'administer content types', 'administer node display']));
+    $this->drupalLogin($this->drupalCreateUser([
+      'administer taxonomy',
+      'bypass node access',
+      'administer content types',
+      'administer node display',
+    ]));
     $this->vocabulary = $this->createVocabulary();
     $this->fieldName = 'taxonomy_' . $this->vocabulary->id();
 

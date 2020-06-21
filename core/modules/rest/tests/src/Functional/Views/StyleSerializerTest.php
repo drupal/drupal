@@ -77,7 +77,12 @@ class StyleSerializerTest extends ViewTestBase {
 
     ViewTestData::createTestViews(get_class($this), ['rest_test_views']);
 
-    $this->adminUser = $this->drupalCreateUser(['administer views', 'administer entity_test content', 'access user profiles', 'view test entity']);
+    $this->adminUser = $this->drupalCreateUser([
+      'administer views',
+      'administer entity_test content',
+      'access user profiles',
+      'view test entity',
+    ]);
 
     // Save some entity_test entities.
     for ($i = 1; $i <= 10; $i++) {

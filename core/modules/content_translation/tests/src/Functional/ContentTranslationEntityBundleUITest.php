@@ -26,7 +26,12 @@ class ContentTranslationEntityBundleUITest extends BrowserTestBase {
 
   protected function setUp(): void {
     parent::setUp();
-    $user = $this->drupalCreateUser(['access administration pages', 'administer languages', 'administer content translation', 'administer content types']);
+    $user = $this->drupalCreateUser([
+      'access administration pages',
+      'administer languages',
+      'administer content translation',
+      'administer content types',
+    ]);
     $this->drupalLogin($user);
   }
 

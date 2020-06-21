@@ -66,7 +66,10 @@ class ViewsModerationStateFilterTest extends ViewTestBase {
     $new_workflow->getTypePlugin()->addEntityTypeAndBundle('node', 'example_c');
     $new_workflow->save();
 
-    $this->drupalLogin($this->drupalCreateUser(['administer workflows', 'administer views']));
+    $this->drupalLogin($this->drupalCreateUser([
+      'administer workflows',
+      'administer views',
+    ]));
 
     $this->container->get('module_installer')->install(['content_moderation_test_views']);
 

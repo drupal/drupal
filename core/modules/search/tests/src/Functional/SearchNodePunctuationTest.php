@@ -35,7 +35,12 @@ class SearchNodePunctuationTest extends BrowserTestBase {
 
     node_access_rebuild();
     // Create a test user and log in.
-    $this->testUser = $this->drupalCreateUser(['access content', 'search content', 'use advanced search', 'access user profiles']);
+    $this->testUser = $this->drupalCreateUser([
+      'access content',
+      'search content',
+      'use advanced search',
+      'access user profiles',
+    ]);
     $this->drupalLogin($this->testUser);
   }
 

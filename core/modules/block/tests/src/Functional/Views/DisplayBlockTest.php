@@ -65,7 +65,10 @@ class DisplayBlockTest extends ViewTestBase {
    * Tests default and custom block categories.
    */
   public function testBlockCategory() {
-    $this->drupalLogin($this->drupalCreateUser(['administer views', 'administer blocks']));
+    $this->drupalLogin($this->drupalCreateUser([
+      'administer views',
+      'administer blocks',
+    ]));
 
     // Create a new view in the UI.
     $edit = [];
@@ -368,7 +371,11 @@ class DisplayBlockTest extends ViewTestBase {
    * Tests the contextual links on a Views block.
    */
   public function testBlockContextualLinks() {
-    $this->drupalLogin($this->drupalCreateUser(['administer views', 'access contextual links', 'administer blocks']));
+    $this->drupalLogin($this->drupalCreateUser([
+      'administer views',
+      'access contextual links',
+      'administer blocks',
+    ]));
     $block = $this->drupalPlaceBlock('views_block:test_view_block-block_1');
     $cached_block = $this->drupalPlaceBlock('views_block:test_view_block-block_1');
     $this->drupalGet('test-page');

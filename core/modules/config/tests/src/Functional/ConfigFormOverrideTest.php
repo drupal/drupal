@@ -21,7 +21,10 @@ class ConfigFormOverrideTest extends BrowserTestBase {
    * Tests that overrides do not affect forms.
    */
   public function testFormsWithOverrides() {
-    $this->drupalLogin($this->drupalCreateUser(['access administration pages', 'administer site configuration']));
+    $this->drupalLogin($this->drupalCreateUser([
+      'access administration pages',
+      'administer site configuration',
+    ]));
 
     $overridden_name = 'Site name global conf override';
 

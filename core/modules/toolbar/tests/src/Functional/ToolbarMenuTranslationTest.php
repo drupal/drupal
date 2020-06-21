@@ -39,7 +39,12 @@ class ToolbarMenuTranslationTest extends BrowserTestBase {
     parent::setUp();
 
     // Create an administrative user and log it in.
-    $this->adminUser = $this->drupalCreateUser(['access toolbar', 'translate interface', 'administer languages', 'access administration pages']);
+    $this->adminUser = $this->drupalCreateUser([
+      'access toolbar',
+      'translate interface',
+      'administer languages',
+      'access administration pages',
+    ]);
     $this->drupalLogin($this->adminUser);
   }
 

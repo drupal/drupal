@@ -162,7 +162,10 @@ class UserAdminTest extends BrowserTestBase {
    */
   public function testNotificationEmailAddress() {
     // Test that the Notification Email address field is on the config page.
-    $admin_user = $this->drupalCreateUser(['administer users', 'administer account settings']);
+    $admin_user = $this->drupalCreateUser([
+      'administer users',
+      'administer account settings',
+    ]);
     $this->drupalLogin($admin_user);
     $this->drupalGet('admin/config/people/accounts');
     $this->assertRaw('id="edit-mail-notification-address"', 'Notification Email address field exists');

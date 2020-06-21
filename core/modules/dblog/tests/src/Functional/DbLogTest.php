@@ -64,7 +64,12 @@ class DbLogTest extends BrowserTestBase {
     $this->drupalPlaceBlock('page_title_block');
 
     // Create users with specific permissions.
-    $this->adminUser = $this->drupalCreateUser(['administer site configuration', 'access administration pages', 'access site reports', 'administer users']);
+    $this->adminUser = $this->drupalCreateUser([
+      'administer site configuration',
+      'access administration pages',
+      'access site reports',
+      'administer users',
+    ]);
     $this->webUser = $this->drupalCreateUser([]);
   }
 

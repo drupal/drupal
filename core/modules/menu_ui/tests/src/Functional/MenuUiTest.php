@@ -88,7 +88,12 @@ class MenuUiTest extends BrowserTestBase {
     $this->drupalCreateContentType(['type' => 'article', 'name' => 'Article']);
 
     // Create users.
-    $this->adminUser = $this->drupalCreateUser(['access administration pages', 'administer blocks', 'administer menu', 'create article content']);
+    $this->adminUser = $this->drupalCreateUser([
+      'access administration pages',
+      'administer blocks',
+      'administer menu',
+      'create article content',
+    ]);
     $this->authenticatedUser = $this->drupalCreateUser([]);
   }
 
@@ -557,7 +562,13 @@ class MenuUiTest extends BrowserTestBase {
    * Tests that menu items pointing to unpublished nodes are editable.
    */
   public function testUnpublishedNodeMenuItem() {
-    $this->drupalLogin($this->drupalCreateUser(['access administration pages', 'administer blocks', 'administer menu', 'create article content', 'bypass node access']));
+    $this->drupalLogin($this->drupalCreateUser([
+      'access administration pages',
+      'administer blocks',
+      'administer menu',
+      'create article content',
+      'bypass node access',
+    ]));
     // Create an unpublished node.
     $node = $this->drupalCreateNode([
       'type' => 'article',

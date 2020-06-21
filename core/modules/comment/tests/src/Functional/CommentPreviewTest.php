@@ -128,7 +128,12 @@ class CommentPreviewTest extends CommentTestBase {
    * Tests comment edit, preview, and save.
    */
   public function testCommentEditPreviewSave() {
-    $web_user = $this->drupalCreateUser(['access comments', 'post comments', 'skip comment approval', 'edit own comments']);
+    $web_user = $this->drupalCreateUser([
+      'access comments',
+      'post comments',
+      'skip comment approval',
+      'edit own comments',
+    ]);
     $this->drupalLogin($this->adminUser);
     $this->setCommentPreview(DRUPAL_OPTIONAL);
     $this->setCommentForm(TRUE);

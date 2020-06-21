@@ -34,7 +34,11 @@ class ConfigInstallWebTest extends BrowserTestBase {
   protected function setUp(): void {
     parent::setUp();
 
-    $this->adminUser = $this->drupalCreateUser(['administer modules', 'administer themes', 'administer site configuration']);
+    $this->adminUser = $this->drupalCreateUser([
+      'administer modules',
+      'administer themes',
+      'administer site configuration',
+    ]);
 
     // Ensure the global variable being asserted by this test does not exist;
     // a previous test executed in this request/process might have set it.

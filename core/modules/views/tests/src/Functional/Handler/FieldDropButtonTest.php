@@ -37,7 +37,11 @@ class FieldDropButtonTest extends ViewTestBase {
   protected function setUp($import_test_views = TRUE): void {
     parent::setUp($import_test_views);
 
-    $admin_user = $this->drupalCreateUser(['access content overview', 'administer nodes', 'bypass node access']);
+    $admin_user = $this->drupalCreateUser([
+      'access content overview',
+      'administer nodes',
+      'bypass node access',
+    ]);
     $this->drupalLogin($admin_user);
   }
 

@@ -55,7 +55,13 @@ class FeedLanguageTest extends AggregatorTestBase {
    * Tests creation of feeds with a language.
    */
   public function testFeedLanguage() {
-    $admin_user = $this->drupalCreateUser(['administer languages', 'access administration pages', 'administer news feeds', 'access news feeds', 'create article content']);
+    $admin_user = $this->drupalCreateUser([
+      'administer languages',
+      'access administration pages',
+      'administer news feeds',
+      'access news feeds',
+      'create article content',
+    ]);
     $this->drupalLogin($admin_user);
 
     // Enable language selection for feeds.

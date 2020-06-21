@@ -224,7 +224,11 @@ class ForumTest extends BrowserTestBase {
     $this->assertEquals('6', $elements[0]->getText(), 'Number of posts found.');
 
     // Test loading multiple forum nodes on the front page.
-    $this->drupalLogin($this->drupalCreateUser(['administer content types', 'create forum content', 'post comments']));
+    $this->drupalLogin($this->drupalCreateUser([
+      'administer content types',
+      'create forum content',
+      'post comments',
+    ]));
     $this->drupalPostForm('admin/structure/types/manage/forum', ['options[promote]' => 'promote'], t('Save content type'));
     $this->createForumTopic($this->forum, FALSE);
     $this->createForumTopic($this->forum, FALSE);
