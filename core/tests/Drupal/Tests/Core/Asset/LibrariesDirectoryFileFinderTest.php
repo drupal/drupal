@@ -82,7 +82,3 @@ class LibrariesDirectoryFileFinderTest extends UnitTestCase {
   }
 
 }
-
-if (!defined('DRUPAL_MINIMUM_PHP')) {
-  define('DRUPAL_MINIMUM_PHP', '7.0.8');
-}

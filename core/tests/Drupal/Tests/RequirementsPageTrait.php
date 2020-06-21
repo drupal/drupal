@@ -13,7 +13,7 @@ trait RequirementsPageTrait {
   protected function updateRequirementsProblem() {
     // Assert a warning is shown on older test environments.
     $links = $this->getSession()->getPage()->findAll('named', ['link', 'try again']);
-    if ($links && version_compare(phpversion(), DRUPAL_MINIMUM_SUPPORTED_PHP) < 0) {
+    if ($links && version_compare(phpversion(), \Drupal::MINIMUM_SUPPORTED_PHP) < 0) {
       $this->assertNoText('Errors found');
       $this->assertWarningSummaries(['PHP']);
       $this->clickLink('try again');

@@ -93,6 +93,53 @@ class Drupal {
   const CORE_MINIMUM_SCHEMA_VERSION = 8000;
 
   /**
+   * Minimum supported version of PHP.
+   *
+   * Below this version:
+   * - New sites cannot be installed, except from within tests.
+   * - Updates from previous Drupal versions can be run, but users are warned
+   *   that Drupal no longer supports that PHP version.
+   * - An error is shown in the status report that the PHP version is too old.
+   */
+  const MINIMUM_SUPPORTED_PHP = '7.3.0';
+
+  /**
+   * Minimum allowed version of PHP for Drupal to be bootstrapped.
+   *
+   * Below this version:
+   * - The installer cannot be run.
+   * - Updates cannot be run.
+   * - Modules and themes cannot be enabled.
+   * - If a site managed to bypass all of the above, then an error is shown in
+   *   the status report and various fatal errors occur on various pages.
+   *
+   * Note: To prevent the installer from having fatal errors on older versions
+   * of PHP, the value of this constant is hardcoded twice in core/install.php:
+   * - Once as a parameter of version_compare()
+   * - Once in the error message printed to the user immediately after.
+   * Remember to update both whenever this constant is updated.
+   */
+  const MINIMUM_PHP = '7.3.0';
+
+  /**
+   * Minimum recommended value of PHP memory_limit.
+   *
+   * 64M was chosen as a minimum requirement in order to allow for additional
+   * contributed modules to be installed prior to hitting the limit. However,
+   * 40M is the target for the Standard installation profile.
+   */
+  const MINIMUM_PHP_MEMORY_LIMIT = '64M';
+
+  /**
+   * Minimum recommended version of PHP.
+   *
+   * Sites installing Drupal on PHP versions lower than this will see a warning
+   * message, but Drupal can still be installed. Used for (e.g.) PHP versions
+   * that have reached their EOL or will in the near future.
+   */
+  const RECOMMENDED_PHP = '7.3';
+
+  /**
    * The currently active container object, or NULL if not initialized yet.
    *
    * @var \Symfony\Component\DependencyInjection\ContainerInterface|null

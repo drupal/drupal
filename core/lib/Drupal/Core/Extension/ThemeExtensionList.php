@@ -48,7 +48,7 @@ class ThemeExtensionList extends ExtensionList {
     ],
     'screenshot' => 'screenshot.png',
     'version' => NULL,
-    'php' => DRUPAL_MINIMUM_PHP,
+    'php' => \Drupal::MINIMUM_PHP,
     'libraries' => [],
     'libraries_extend' => [],
     'libraries_override' => [],

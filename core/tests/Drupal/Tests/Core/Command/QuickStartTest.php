@@ -86,7 +86,7 @@ class QuickStartTest extends TestCase {
    * Tests the quick-start command.
    */
   public function testQuickStartCommand() {
-    if (version_compare(phpversion(), DRUPAL_MINIMUM_SUPPORTED_PHP) < 0) {
+    if (version_compare(phpversion(), \Drupal::MINIMUM_SUPPORTED_PHP) < 0) {
       $this->markTestSkipped();
     }
     if (version_compare(\SQLite3::version()['versionString'], Tasks::SQLITE_MINIMUM_VERSION) < 0) {
@@ -144,7 +144,7 @@ class QuickStartTest extends TestCase {
    * Tests that the installer throws a requirement error on older PHP versions.
    */
   public function testPhpRequirement() {
-    if (version_compare(phpversion(), DRUPAL_MINIMUM_SUPPORTED_PHP) >= 0) {
+    if (version_compare(phpversion(), \Drupal::MINIMUM_SUPPORTED_PHP) >= 0) {
       $this->markTestSkipped();
     }
 
@@ -167,7 +167,7 @@ class QuickStartTest extends TestCase {
     $error_output = $process->getErrorOutput();
     $this->assertStringContainsString('Your PHP installation is too old.', $error_output);
     $this->assertStringContainsString('Drupal requires at least PHP', $error_output);
-    $this->assertStringContainsString(DRUPAL_MINIMUM_SUPPORTED_PHP, $error_output);
+    $this->assertStringContainsString(\Drupal::MINIMUM_SUPPORTED_PHP, $error_output);
 
     // Stop the web server.
     $process->stop();
@@ -177,7 +177,7 @@ class QuickStartTest extends TestCase {
    * Tests the quick-start commands.
    */
   public function testQuickStartInstallAndServerCommands() {
-    if (version_compare(phpversion(), DRUPAL_MINIMUM_SUPPORTED_PHP) < 0) {
+    if (version_compare(phpversion(), \Drupal::MINIMUM_SUPPORTED_PHP) < 0) {
       $this->markTestSkipped();
     }
     if (version_compare(\SQLite3::version()['versionString'], Tasks::SQLITE_MINIMUM_VERSION) < 0) {

@@ -1099,7 +1099,7 @@ function install_profile_info($profile, $langcode = 'en') {
       'description' => '',
       'version' => NULL,
       'hidden' => FALSE,
-      'php' => DRUPAL_MINIMUM_PHP,
+      'php' => \Drupal::MINIMUM_PHP,
       'config_install_path' => NULL,
     ];
     $profile_path = drupal_get_path('profile', $profile);
