@@ -114,6 +114,18 @@ tr .form-item,
   color: var(--input--disabled-fg-color);
 }
 
+/* Add some spacing so that the focus ring and suffix don't overlap. */
+@media screen and (min-width: 601px) {
+  .form-item__suffix {
+    margin-left: var(--space-xs); /* LTR */
+  }
+
+  [dir="rtl"] .form-item__suffix {
+    margin-right: var(--space-xs);
+    margin-left: 0;
+  }
+}
+
 /**
  * Form actions.
  */
