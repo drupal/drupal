@@ -652,7 +652,7 @@
             "dist": {
                 "type": "path",
                 "url": "core",
-                "reference": "38c1ef280518a68c80c796780c4f94a259f50fc0"
+                "reference": "00a84fa61ee921f106f7912c3ca0393a2c328e68"
             },
             "require": {
                 "asm89/stack-cors": "^1.1",
@@ -875,7 +875,10 @@
             "license": [
                 "GPL-2.0-or-later"
             ],
-            "description": "Drupal is an open source content management platform powering millions of websites and applications."
+            "description": "Drupal is an open source content management platform powering millions of websites and applications.",
+            "transport-options": {
+                "relative": true
+            }
         },
         {
             "name": "drupal/core-project-message",
@@ -883,7 +886,7 @@
             "dist": {
                 "type": "path",
                 "url": "composer/Plugin/ProjectMessage",
-                "reference": "ed6afc20bfed583e5325ca86f78d07a653d6045c"
+                "reference": "d55605e98b8eb1d14bf049124838fdf0c85a9524"
             },
             "require": {
                 "composer-plugin-api": "^1.1 || ^2",
@@ -905,7 +908,10 @@
             "homepage": "https://www.drupal.org/project/drupal",
             "keywords": [
                 "drupal"
-            ]
+            ],
+            "transport-options": {
+                "relative": true
+            }
         },
         {
             "name": "drupal/core-vendor-hardening",
@@ -913,7 +919,7 @@
             "dist": {
                 "type": "path",
                 "url": "composer/Plugin/VendorHardening",
-                "reference": "6773d713a655ec8a5ac8c29cd5df653cfec6d3cc"
+                "reference": "29f9f91029bb46c2c3d14f17f151b66ce3e66b5f"
             },
             "require": {
                 "composer-plugin-api": "^1.1 || ^2",
@@ -935,7 +941,10 @@
             "homepage": "https://www.drupal.org/project/drupal",
             "keywords": [
                 "drupal"
-            ]
+            ],
+            "transport-options": {
+                "relative": true
+            }
         },
         {
             "name": "easyrdf/easyrdf",
@@ -6529,5 +6538,6 @@
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": [],
-    "platform-dev": []
+    "platform-dev": [],
+    "plugin-api-version": "1.1.0"
 }
