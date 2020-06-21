@@ -148,7 +148,7 @@ INSTALLATION
 
    You will be guided through several screens to set up the database, add the
    site maintenance account (the first user, also known as user/1), and provide
-   basic web site settings.
+   basic website settings.
 
    During installation, several files and directories need to be created, which
    the install script will try to do automatically. However, on some hosting
