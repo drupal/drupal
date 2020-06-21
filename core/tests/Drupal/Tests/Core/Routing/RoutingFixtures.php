@@ -156,6 +156,7 @@ class RoutingFixtures {
     $collection->add('route_b', $route);
 
     // Uses Hebrew letter QOF (U+05E7)
+    // cSpell:disable-next-line
     $route = new Route('/somewhere/{item}/over/the/קainbow');
     $route->setMethods(['GET']);
     $collection->add('route_c', $route);
@@ -164,6 +165,7 @@ class RoutingFixtures {
     $collection->add('route_d', $route);
 
     // Greek letters lower case phi (U+03C6) and lower case omega (U+03C9)
+    // cSpell:disable-next-line
     $route = new Route('/place/meφω');
     $route->setMethods(['GET', 'HEAD']);
     $collection->add('route_e', $route);
@@ -197,10 +199,12 @@ class RoutingFixtures {
     $collection->add('route_d', $route);
 
     // Greek letters lower case phi (U+03C6) and lower case omega (U+03C9)
+    // cSpell:disable-next-line
     $route = new Route('/place/meφω');
     $route->setMethods(['GET', 'HEAD']);
     $collection->add('route_f', $route);
 
+    // cSpell:disable-next-line
     $route = new Route('/PLACE/meφω');
     $collection->add('route_e', $route);
 

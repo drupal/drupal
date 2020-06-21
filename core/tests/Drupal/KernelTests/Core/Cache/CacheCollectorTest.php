@@ -54,6 +54,7 @@ class CacheCollectorTest extends KernelTestBase {
       // Nothing special.
       ['foo', 'bar', 'baz'],
       // Invalid characters in CID.
+      // cSpell:disable-next-line
       ['éøïвβ中國書۞', 'foo', 'bar'],
       // Really long CID.
       [$this->randomString(1024), 'foo', 'bar'],

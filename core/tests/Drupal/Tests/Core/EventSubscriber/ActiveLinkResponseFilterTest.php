@@ -48,6 +48,7 @@ class ActiveLinkResponseFilterTest extends UnitTestCase {
       // https://www.drupal.org/comment/7938201#comment-7938201.
       1 => ['prefix' => '<div><p>', 'suffix' => '</p>' . $edge_case_html5 . '</div>'],
       // Multi-byte content *before* the HTML that needs the "is-active" class.
+      // cSpell:disable-next-line
       2 => ['prefix' => '<div><p>αβγδεζηθικλμνξοσὠ</p><p>', 'suffix' => '</p></div>'],
     ];
     $tags = [
@@ -64,6 +65,7 @@ class ActiveLinkResponseFilterTest extends UnitTestCase {
       // Mix of UTF-8 and HTML entities, both must be retained.
       '☆ 3 × 4 = €12 and 4 &times; 3 = &euro;12 &#9734',
       // Multi-byte content.
+      // cSpell:disable-next-line
       'ΑΒΓΔΕΖΗΘΙΚΛΜΝΞΟΣὨ',
       // Text that closely approximates an important attribute, but should be
       // ignored.

@@ -280,6 +280,7 @@ class AttributeTest extends UnitTestCase {
    *   a resulting string of classes and an optional array of attributes.
    */
   public function providerTestAttributeClassHelpers() {
+    // cSpell:disable
     return [
       ["{{ attributes.class }}", ''],
       ["{{ attributes.addClass('everest').class }}", 'everest'],
@@ -313,6 +314,7 @@ class AttributeTest extends UnitTestCase {
       // Test for the removal of an empty class name.
       ["{{ attributes.addClass('rakaposhi', '').class }}", 'rakaposhi'],
     ];
+    // cSpell:enable
   }
 
   /**

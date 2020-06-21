@@ -74,6 +74,7 @@ class FieldLink extends ProcessPluginBase {
       // and &#x00FF; (except × &#x00D7; and ÷ &#x00F7;) with the addition of
       // &#x0152;, &#x0153; and &#x0178;.
       // @see https://git.drupalcode.org/project/link/blob/7.x-1.5-beta2/link.module#L1382
+      // cSpell:disable-next-line
       $link_ichars = '¿ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûüýþÿŒœŸ';
 
       // Pattern specific to internal links.

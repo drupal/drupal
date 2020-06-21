@@ -41,6 +41,7 @@ class UserValidationTest extends KernelTestBase {
    * Tests user name validation.
    */
   public function testUsernames() {
+    // cSpell:disable
     $test_cases = [
       // '<username>' => ['<description>', 'assert<testName>'].
       'foo'                    => ['Valid username', 'assertNull'],
@@ -66,6 +67,7 @@ class UserValidationTest extends KernelTestBase {
       'foo' . chr(13) . 'bar'  => ['Invalid username containing chr(13)', 'assertNotNull'],
       str_repeat('x', UserInterface::USERNAME_MAX_LENGTH + 1) => ['Invalid excessively long username', 'assertNotNull'],
     ];
+    // cSpell:enable
     foreach ($test_cases as $name => $test_case) {
       list($description, $test) = $test_case;
       $result = user_validate_name($name);

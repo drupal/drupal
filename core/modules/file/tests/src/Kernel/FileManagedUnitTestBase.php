@@ -196,6 +196,7 @@ abstract class FileManagedUnitTestBase extends KernelTestBase {
     if (!isset($filepath)) {
       // Prefix with non-latin characters to ensure that all file-related
       // tests work with international filenames.
+      // cSpell:disable-next-line
       $filepath = 'Файл для тестирования ' . $this->randomMachineName();
     }
     if (!isset($scheme)) {

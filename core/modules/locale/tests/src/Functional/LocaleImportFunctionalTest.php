@@ -291,11 +291,13 @@ class LocaleImportFunctionalTest extends BrowserTestBase {
     $config_strings = [
       'system.maintenance' => [
         '@site is currently under maintenance. We should be back shortly. Thank you for your patience.',
+        // cSpell:disable-next-line
         '@site karbantartás alatt áll. Rövidesen visszatérünk. Köszönjük a türelmet.',
         'message',
       ],
       'user.role.anonymous' => [
         'Anonymous user',
+        // cSpell:disable-next-line
         'Névtelen felhasználó',
         'label',
       ],

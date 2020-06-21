@@ -111,6 +111,7 @@ class PathAliasTest extends PathTestBase {
       // currently unable to find the upper-case versions of non-ASCII
       // characters.
       // @todo fix this in https://www.drupal.org/node/2607432
+      // cSpell:disable-next-line
       $edit['alias[0][value]'] .= "ïвβéø";
     }
     $this->drupalPostForm('admin/config/search/path/edit/' . $pid, $edit, t('Save'));
@@ -266,6 +267,7 @@ class PathAliasTest extends PathTestBase {
       // currently unable to find the upper-case versions of non-ASCII
       // characters.
       // @todo fix this in https://www.drupal.org/node/2607432
+      // cSpell:disable-next-line
       $edit['path[0][alias]'] .= "ïвβéø";
     }
     $this->drupalPostForm('node/' . $node1->id() . '/edit', $edit, t('Save'));

@@ -229,6 +229,7 @@ class LanguageManager implements LanguageManagerInterface {
     // The "Left-to-right marker" comments and the enclosed UTF-8 markers are to
     // make otherwise strange looking PHP syntax natural (to not be displayed in
     // right to left). See https://www.drupal.org/node/128866#comment-528929.
+    // cSpell:disable
     return [
       'af' => ['Afrikaans', 'Afrikaans'],
       'am' => ['Amharic', 'አማርኛ'],
@@ -326,6 +327,7 @@ class LanguageManager implements LanguageManagerInterface {
       'zh-hans' => ['Chinese, Simplified', '简体中文'],
       'zh-hant' => ['Chinese, Traditional', '繁體中文'],
     ];
+    // cSpell:enable
   }
 
   /**
@@ -340,6 +342,7 @@ class LanguageManager implements LanguageManagerInterface {
    *   names as values.
    */
   public static function getUnitedNationsLanguageList() {
+    // cSpell:disable
     return [
       'ar' => ['Arabic', /* Left-to-right marker "‭" */ 'العربية', LanguageInterface::DIRECTION_RTL],
       'zh-hans' => ['Chinese, Simplified', '简体中文'],
@@ -348,6 +351,7 @@ class LanguageManager implements LanguageManagerInterface {
       'ru' => ['Russian', 'Русский'],
       'es' => ['Spanish', 'Español'],
     ];
+    // cSpell:enable
   }
 
   /**

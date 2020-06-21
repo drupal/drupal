@@ -51,6 +51,7 @@ class TextSummaryTest extends KernelTestBase {
    */
   public function testLongSentence() {
     // 125.
+    // cSpell:disable
     $text =
       'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. ' .
       // 108.
@@ -62,6 +63,7 @@ class TextSummaryTest extends KernelTestBase {
     $expected = 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. ' .
                 'Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. ' .
                 'Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.';
+    // cSpell:enable
     // First three sentences add up to: 336, so add one for space and then 3 to get half-way into next word.
     $this->assertTextSummary($text, $expected, NULL, 340);
   }

@@ -44,6 +44,7 @@ class SaveDataTest extends FileManagedUnitTestBase {
     $contents = $this->randomMachineName(8);
 
     // Using filename with non-latin characters.
+    // cSpell:disable-next-line
     $filename = 'Текстовый файл.txt';
 
     $result = file_save_data($contents, 'public://' . $filename);

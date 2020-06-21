@@ -40,6 +40,7 @@ class PhpTransliterationTest extends TestCase {
    *   self::testRemoveDiacritics().
    */
   public function providerTestPhpTransliterationRemoveDiacritics() {
+    // cSpell:disable
     return [
       // Test all characters in the Unicode range 0x00bf to 0x017f.
       ['ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏ', 'AAAAAAÆCEEEEIIII'],
@@ -66,6 +67,7 @@ class PhpTransliterationTest extends TestCase {
       ['ȰȱȲȳȴȵȶȷȸȹȺȻȼȽȾȿ', 'OoYylntjȸȹACcLTs'],
       ['ɀɁɂɃɄɅɆɇɈɉɊɋɌɍɎɏ', 'zɁɂBUɅEeJjQqRrYy'],
     ];
+    // cSpell:enable
   }
 
   /**
@@ -105,6 +107,7 @@ class PhpTransliterationTest extends TestCase {
     $random = $random_generator->string(10);
     // Make some strings with two, three, and four-byte characters for testing.
     // Note that the 3-byte character is overridden by the 'kg' language.
+    // cSpell:disable-next-line
     $two_byte = 'Ä Ö Ü Å Ø äöüåøhello';
     // This is a Cyrillic character that looks something like a "u". See
     // http://www.unicode.org/charts/PDF/U0400.pdf
@@ -117,6 +120,7 @@ class PhpTransliterationTest extends TestCase {
     // They are not in our tables, but should at least give us '?' (unknown).
     $five_byte = html_entity_decode('&#x10330;&#x10338;', ENT_NOQUOTES, 'UTF-8');
 
+    // cSpell:disable
     return [
       // Each test case is language code, input, output, unknown character, max
       // length.
@@ -171,6 +175,7 @@ class PhpTransliterationTest extends TestCase {
       // Keep many spaces between words.
       ['en', 'Too    many    spaces between words !', 'Too    many    spaces between words !'],
     ];
+    // cSpell:enable
   }
 
   /**

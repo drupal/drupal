@@ -301,8 +301,10 @@ class UpdatePathTestBaseFilledTest extends UpdatePathTestBaseTest {
 
     // Make sure strings are still translated.
     $this->drupalGet('admin/structure/views/view/content/translate/es/edit');
+    // cSpell:disable-next-line
     $this->assertText('Contenido');
     $this->drupalPostForm('admin/config/regional/translate', ['string' => 'Full comment'], 'Filter');
+    // cSpell:disable-next-line
     $this->assertText('Comentario completo');
 
     // Make sure our custom action is still there.

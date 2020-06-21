@@ -381,6 +381,7 @@ menu_test.exotic_path:
   # "Special" ASCII characters, characters that look like a percent-escaped
   # string, and characters from various non-ASCII alphabets.
   # @todo Find a way to use the correct path.
+  # cSpell:disable-next-line
   #path: "/menu-test/ -._~!$'\"()*@[]?&+%#,;=:%23%25%26%2B%2F%3Féøïвβ中國書۞"
   path: '/menu-test/{exotic}'
   defaults:

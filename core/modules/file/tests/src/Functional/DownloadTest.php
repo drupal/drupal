@@ -115,6 +115,7 @@ class DownloadTest extends FileManagedTestBase {
       // Characters that look like a percent-escaped string.
       "%23%25%26%2B%2F%3F" .
       // Characters from various non-ASCII alphabets.
+      // cSpell:disable-next-line
       "éøïвβ中國書۞";
     $basename_encoded = '%20-._~%21%24%27%22%28%29%2A%40%5B%5D%3F%26%2B%25%23%2C%3B%3D%3A__' .
       '%2523%2525%2526%252B%252F%253F' .

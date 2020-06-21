@@ -61,6 +61,7 @@ class UnicodeTest extends TestCase {
    *   An array containing a string and its uppercase first version.
    */
   public function providerUcfirst() {
+    // cSpell:disable
     return [
       ['tHe QUIcK bRoWn', 'THe QUIcK bRoWn'],
       ['françAIS', 'FrançAIS'],
@@ -69,6 +70,7 @@ class UnicodeTest extends TestCase {
       // A multibyte string.
       ['σion', 'Σion'],
     ];
+    // cSpell:enable
   }
 
   /**
@@ -90,6 +92,7 @@ class UnicodeTest extends TestCase {
    *   An array containing a string and its lowercase version.
    */
   public function providerLcfirst() {
+    // cSpell:disable
     return [
       ['tHe QUIcK bRoWn', 'tHe QUIcK bRoWn'],
       ['FrançAIS is ÜBER-åwesome', 'françAIS is ÜBER-åwesome'],
@@ -98,6 +101,7 @@ class UnicodeTest extends TestCase {
       // Add a multibyte string.
       ['ΑΒΓΔΕΖΗΘΙΚΛΜΝΞΟΣὨ', 'αΒΓΔΕΖΗΘΙΚΛΜΝΞΟΣὨ'],
     ];
+    // cSpell:enable
   }
 
   /**
@@ -119,6 +123,7 @@ class UnicodeTest extends TestCase {
    *   An array containing a string and its capitalized version.
    */
   public function providerUcwords() {
+    // cSpell:disable
     return [
       ['tHe QUIcK bRoWn', 'THe QUIcK BRoWn'],
       ['françAIS', 'FrançAIS'],
@@ -129,6 +134,7 @@ class UnicodeTest extends TestCase {
       // Add a multibyte string.
       ['σion', 'Σion'],
     ];
+    // cSpell:enable
   }
 
   /**
@@ -155,6 +161,7 @@ class UnicodeTest extends TestCase {
    *     - (optional) Boolean for the $add_ellipsis flag. Defaults to FALSE.
    */
   public function providerTruncate() {
+    // cSpell:disable
     $tests = [
       ['frànçAIS is über-åwesome', 24, 'frànçAIS is über-åwesome'],
       ['frànçAIS is über-åwesome', 23, 'frànçAIS is über-åwesom'],
@@ -201,6 +208,7 @@ class UnicodeTest extends TestCase {
       ['Help! Help! Help!', 3, 'He…', TRUE, TRUE],
       ['Help! Help! Help!', 2, 'H…', TRUE, TRUE],
     ];
+    // cSpell:enable
 
     // Test truncate on text with multiple lines.
     $multi_line = <<<EOF

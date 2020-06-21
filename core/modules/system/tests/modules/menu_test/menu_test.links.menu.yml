@@ -36,6 +36,7 @@ menu_test.exotic_path:
   route_name: menu_test.exotic_path
   # "Special" ASCII characters. Characters that look like a percent-escaped
   # string. Characters from various non-ASCII alphabets.
+  # cSpell:disable-next-line
   route_parameters: { exotic: ' -._~!$''"()*@[]?&+%#,;=:%23%25%26%2B%2F%3Féøïвβ中國書۞' }
 # Hidden tests; base parents.
 # Same structure as in Menu and Block modules. Since those structures can
