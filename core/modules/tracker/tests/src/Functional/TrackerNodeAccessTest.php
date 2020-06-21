@@ -42,7 +42,10 @@ class TrackerNodeAccessTest extends BrowserTestBase {
    */
   public function testTrackerNodeAccess() {
     // Create user with node test view permission.
-    $access_user = $this->drupalCreateUser(['node test view', 'access user profiles']);
+    $access_user = $this->drupalCreateUser([
+      'node test view',
+      'access user profiles',
+    ]);
 
     // Create user without node test view permission.
     $no_access_user = $this->drupalCreateUser(['access user profiles']);

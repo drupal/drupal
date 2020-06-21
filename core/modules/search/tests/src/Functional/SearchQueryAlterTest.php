@@ -29,7 +29,10 @@ class SearchQueryAlterTest extends BrowserTestBase {
     $this->drupalCreateContentType(['type' => 'article', 'name' => 'Article']);
 
     // Log in with sufficient privileges.
-    $this->drupalLogin($this->drupalCreateUser(['create page content', 'search content']));
+    $this->drupalLogin($this->drupalCreateUser([
+      'create page content',
+      'search content',
+    ]));
 
     // Create a node and an article with the same keyword. The query alter
     // test module will alter the query so only articles should be returned.

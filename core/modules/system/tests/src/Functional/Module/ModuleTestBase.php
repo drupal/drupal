@@ -26,7 +26,10 @@ abstract class ModuleTestBase extends BrowserTestBase {
   protected function setUp() {
     parent::setUp();
 
-    $this->adminUser = $this->drupalCreateUser(['access administration pages', 'administer modules']);
+    $this->adminUser = $this->drupalCreateUser([
+      'access administration pages',
+      'administer modules',
+    ]);
     $this->drupalLogin($this->adminUser);
   }
 

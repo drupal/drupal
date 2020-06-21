@@ -27,7 +27,11 @@ class LanguagePathMonolingualTest extends BrowserTestBase {
     parent::setUp();
 
     // Create and log in user.
-    $web_user = $this->drupalCreateUser(['administer languages', 'access administration pages', 'administer site configuration']);
+    $web_user = $this->drupalCreateUser([
+      'administer languages',
+      'access administration pages',
+      'administer site configuration',
+    ]);
     $this->drupalLogin($web_user);
 
     // Enable French language.

@@ -111,7 +111,10 @@ class FilterAdminTest extends BrowserTestBase {
       'access site reports',
     ]);
 
-    $this->webUser = $this->drupalCreateUser(['create page content', 'edit own page content']);
+    $this->webUser = $this->drupalCreateUser([
+      'create page content',
+      'edit own page content',
+    ]);
     user_role_grant_permissions('authenticated', [$basic_html_format->getPermissionName()]);
     user_role_grant_permissions('anonymous', [$restricted_html_format->getPermissionName()]);
     $this->drupalLogin($this->adminUser);

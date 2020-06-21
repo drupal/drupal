@@ -43,7 +43,11 @@ class CaseInsensitivePathTest extends BrowserTestBase {
     $this->assertSession()->pageTextMatches('/Log in/');
 
     // Tests paths defined by routes from the Views module.
-    $admin = $this->drupalCreateUser(['access administration pages', 'administer nodes', 'access content overview']);
+    $admin = $this->drupalCreateUser([
+      'access administration pages',
+      'administer nodes',
+      'access content overview',
+    ]);
     $this->drupalLogin($admin);
 
     $this->drupalGet('admin/content');

@@ -33,7 +33,15 @@ class SearchDateIntervalTest extends BrowserTestBase {
     $this->drupalCreateContentType(['type' => 'page', 'name' => 'Basic page']);
 
     // Create and log in user.
-    $test_user = $this->drupalCreateUser(['access content', 'search content', 'use advanced search', 'administer nodes', 'administer languages', 'access administration pages', 'administer site configuration']);
+    $test_user = $this->drupalCreateUser([
+      'access content',
+      'search content',
+      'use advanced search',
+      'administer nodes',
+      'administer languages',
+      'access administration pages',
+      'administer site configuration',
+    ]);
     $this->drupalLogin($test_user);
 
     // Add a new language.

@@ -92,7 +92,10 @@ class TranslationWebTest extends FieldTestBase {
    * Tests field translations when creating a new revision.
    */
   public function testFieldFormTranslationRevisions() {
-    $web_user = $this->drupalCreateUser(['view test entity', 'administer entity_test content']);
+    $web_user = $this->drupalCreateUser([
+      'view test entity',
+      'administer entity_test content',
+    ]);
     $this->drupalLogin($web_user);
 
     // Prepare the field translations.

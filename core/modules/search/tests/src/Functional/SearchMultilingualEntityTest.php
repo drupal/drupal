@@ -52,7 +52,14 @@ class SearchMultilingualEntityTest extends BrowserTestBase {
 
     // Create a user who can administer search, do searches, see the status
     // report, and administer cron. Log in.
-    $user = $this->drupalCreateUser(['administer search', 'search content', 'use advanced search', 'access content', 'access site reports', 'administer site configuration']);
+    $user = $this->drupalCreateUser([
+      'administer search',
+      'search content',
+      'use advanced search',
+      'access content',
+      'access site reports',
+      'administer site configuration',
+    ]);
     $this->drupalLogin($user);
 
     // Set up the search plugin.

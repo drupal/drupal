@@ -28,7 +28,10 @@ class ExperimentalThemeTest extends BrowserTestBase {
    */
   protected function setUp() {
     parent::setUp();
-    $this->adminUser = $this->drupalCreateUser(['access administration pages', 'administer themes']);
+    $this->adminUser = $this->drupalCreateUser([
+      'access administration pages',
+      'administer themes',
+    ]);
     $this->drupalLogin($this->adminUser);
   }
 

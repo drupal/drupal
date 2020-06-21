@@ -40,7 +40,10 @@ class FileListingTest extends FileFieldTestBase {
       ->set('make_unused_managed_files_temporary', TRUE)
       ->save();
 
-    $this->adminUser = $this->drupalCreateUser(['access files overview', 'bypass node access']);
+    $this->adminUser = $this->drupalCreateUser([
+      'access files overview',
+      'bypass node access',
+    ]);
     $this->baseUser = $this->drupalCreateUser();
     $this->createFileField('file', 'node', 'article', [], ['file_extensions' => 'txt png']);
   }

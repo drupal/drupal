@@ -191,7 +191,10 @@ class CommentFieldsTest extends CommentTestBase {
    */
   public function testCommentInstallAfterContentModule() {
     // Create a user to do module administration.
-    $this->adminUser = $this->drupalCreateUser(['access administration pages', 'administer modules']);
+    $this->adminUser = $this->drupalCreateUser([
+      'access administration pages',
+      'administer modules',
+    ]);
     $this->drupalLogin($this->adminUser);
 
     // Drop default comment field added in CommentTestBase::setup().
@@ -233,7 +236,12 @@ class CommentFieldsTest extends CommentTestBase {
     // Try to post a comment on each node. A failure will be triggered if the
     // comment body is missing on one of these forms, due to postComment()
     // asserting that the body is actually posted correctly.
-    $this->webUser = $this->drupalCreateUser(['access content', 'access comments', 'post comments', 'skip comment approval']);
+    $this->webUser = $this->drupalCreateUser([
+      'access content',
+      'access comments',
+      'post comments',
+      'skip comment approval',
+    ]);
     $this->drupalLogin($this->webUser);
     $this->postComment($book_node, $this->randomMachineName(), $this->randomMachineName());
   }

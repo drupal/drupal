@@ -59,7 +59,11 @@ class PagePreviewTest extends NodeTestBase {
     parent::setUp();
     $this->addDefaultCommentField('node', 'page');
 
-    $web_user = $this->drupalCreateUser(['edit own page content', 'create page content', 'administer menu']);
+    $web_user = $this->drupalCreateUser([
+      'edit own page content',
+      'create page content',
+      'administer menu',
+    ]);
     $this->drupalLogin($web_user);
 
     // Add a vocabulary so we can test different view modes.

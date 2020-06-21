@@ -217,7 +217,9 @@ class DateTimeTest extends BrowserTestBase {
     $this->drupalLogout();
 
     // Now log in as a regular editor.
-    $this->drupalLogin($this->drupalCreateUser(['create page_with_date content']));
+    $this->drupalLogin($this->drupalCreateUser([
+      'create page_with_date content',
+    ]));
 
     $this->drupalGet('node/add/page_with_date');
     $edit = [

@@ -507,7 +507,10 @@ class UpdateContribTest extends UpdateTestBase {
    */
   public function testHookUpdateStatusAlter() {
     $update_test_config = $this->config('update_test.settings');
-    $update_admin_user = $this->drupalCreateUser(['administer site configuration', 'administer software updates']);
+    $update_admin_user = $this->drupalCreateUser([
+      'administer site configuration',
+      'administer software updates',
+    ]);
     $this->drupalLogin($update_admin_user);
 
     $system_info = [

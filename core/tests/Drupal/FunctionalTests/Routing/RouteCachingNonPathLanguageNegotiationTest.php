@@ -39,7 +39,11 @@ class RouteCachingNonPathLanguageNegotiationTest extends BrowserTestBase {
     parent::setUp();
 
     // Create and log in user.
-    $this->adminUser = $this->drupalCreateUser(['administer blocks', 'administer languages', 'access administration pages']);
+    $this->adminUser = $this->drupalCreateUser([
+      'administer blocks',
+      'administer languages',
+      'access administration pages',
+    ]);
     $this->drupalLogin($this->adminUser);
 
     // Add language.

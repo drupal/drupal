@@ -60,7 +60,11 @@ class CommentBookTest extends BrowserTestBase {
     ]);
     $comment->save();
 
-    $commenting_user = $this->drupalCreateUser(['access printer-friendly version', 'access comments', 'post comments']);
+    $commenting_user = $this->drupalCreateUser([
+      'access printer-friendly version',
+      'access comments',
+      'post comments',
+    ]);
     $this->drupalLogin($commenting_user);
 
     $this->drupalGet('node/' . $book_node->id());

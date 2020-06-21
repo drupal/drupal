@@ -72,8 +72,16 @@ class CKEditorLoadingTest extends BrowserTestBase {
       'name' => 'Article',
     ]);
 
-    $this->untrustedUser = $this->drupalCreateUser(['create article content', 'edit any article content']);
-    $this->normalUser = $this->drupalCreateUser(['create article content', 'edit any article content', 'use text format filtered_html', 'use text format full_html']);
+    $this->untrustedUser = $this->drupalCreateUser([
+      'create article content',
+      'edit any article content',
+    ]);
+    $this->normalUser = $this->drupalCreateUser([
+      'create article content',
+      'edit any article content',
+      'use text format filtered_html',
+      'use text format full_html',
+    ]);
   }
 
   /**

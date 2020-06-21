@@ -49,7 +49,12 @@ class SearchRankingTest extends BrowserTestBase {
     $this->nodeSearch = SearchPage::load('node_search');
 
     // Log in with sufficient privileges.
-    $this->drupalLogin($this->drupalCreateUser(['post comments', 'skip comment approval', 'create page content', 'administer search']));
+    $this->drupalLogin($this->drupalCreateUser([
+      'post comments',
+      'skip comment approval',
+      'create page content',
+      'administer search',
+    ]));
   }
 
   public function testRankings() {

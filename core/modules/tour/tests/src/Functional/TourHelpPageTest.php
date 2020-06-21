@@ -46,8 +46,14 @@ class TourHelpPageTest extends BrowserTestBase {
     // Create users. For the Tour user, include permissions for the language
     // tours' parent pages, but not the translation tour's parent page. See
     // self:getTourList().
-    $this->tourUser = $this->drupalCreateUser(['access administration pages', 'access tour', 'administer languages']);
-    $this->noTourUser = $this->drupalCreateUser(['access administration pages']);
+    $this->tourUser = $this->drupalCreateUser([
+      'access administration pages',
+      'access tour',
+      'administer languages',
+    ]);
+    $this->noTourUser = $this->drupalCreateUser([
+      'access administration pages',
+    ]);
   }
 
   /**

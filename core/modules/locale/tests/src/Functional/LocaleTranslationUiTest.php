@@ -32,7 +32,10 @@ class LocaleTranslationUiTest extends BrowserTestBase {
    * Enable interface translation to English.
    */
   public function testEnglishTranslation() {
-    $admin_user = $this->drupalCreateUser(['administer languages', 'access administration pages']);
+    $admin_user = $this->drupalCreateUser([
+      'administer languages',
+      'access administration pages',
+    ]);
     $this->drupalLogin($admin_user);
 
     $this->drupalPostForm('admin/config/regional/language/edit/en', ['locale_translate_english' => TRUE], t('Save language'));
@@ -44,9 +47,15 @@ class LocaleTranslationUiTest extends BrowserTestBase {
    */
   public function testStringTranslation() {
     // User to add and remove language.
-    $admin_user = $this->drupalCreateUser(['administer languages', 'access administration pages']);
+    $admin_user = $this->drupalCreateUser([
+      'administer languages',
+      'access administration pages',
+    ]);
     // User to translate and delete string.
-    $translate_user = $this->drupalCreateUser(['translate interface', 'access administration pages']);
+    $translate_user = $this->drupalCreateUser([
+      'translate interface',
+      'access administration pages',
+    ]);
     // Code for the language.
     $langcode = 'xx';
     // The English name for the language. This will be translated.
@@ -216,7 +225,11 @@ class LocaleTranslationUiTest extends BrowserTestBase {
    * properly created and rebuilt on deletion.
    */
   public function testJavaScriptTranslation() {
-    $user = $this->drupalCreateUser(['translate interface', 'administer languages', 'access administration pages']);
+    $user = $this->drupalCreateUser([
+      'translate interface',
+      'administer languages',
+      'access administration pages',
+    ]);
     $this->drupalLogin($user);
     $config = $this->config('locale.settings');
 
@@ -279,7 +292,11 @@ class LocaleTranslationUiTest extends BrowserTestBase {
    */
   public function testStringValidation() {
     // User to add language and strings.
-    $admin_user = $this->drupalCreateUser(['administer languages', 'access administration pages', 'translate interface']);
+    $admin_user = $this->drupalCreateUser([
+      'administer languages',
+      'access administration pages',
+      'translate interface',
+    ]);
     $this->drupalLogin($admin_user);
     $langcode = 'xx';
     // The English name for the language. This will be translated.
@@ -333,9 +350,15 @@ class LocaleTranslationUiTest extends BrowserTestBase {
    */
   public function testStringSearch() {
     // User to add and remove language.
-    $admin_user = $this->drupalCreateUser(['administer languages', 'access administration pages']);
+    $admin_user = $this->drupalCreateUser([
+      'administer languages',
+      'access administration pages',
+    ]);
     // User to translate and delete string.
-    $translate_user = $this->drupalCreateUser(['translate interface', 'access administration pages']);
+    $translate_user = $this->drupalCreateUser([
+      'translate interface',
+      'access administration pages',
+    ]);
 
     // Code for the language.
     $langcode = 'xx';
@@ -474,7 +497,11 @@ class LocaleTranslationUiTest extends BrowserTestBase {
    * Tests that only changed strings are saved customized when edited.
    */
   public function testUICustomizedStrings() {
-    $user = $this->drupalCreateUser(['translate interface', 'administer languages', 'access administration pages']);
+    $user = $this->drupalCreateUser([
+      'translate interface',
+      'administer languages',
+      'access administration pages',
+    ]);
     $this->drupalLogin($user);
     ConfigurableLanguage::createFromLangcode('de')->save();
 

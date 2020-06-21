@@ -44,7 +44,14 @@ class LocalePathTest extends BrowserTestBase {
    */
   public function testPathLanguageConfiguration() {
     // User to add and remove language.
-    $admin_user = $this->drupalCreateUser(['administer languages', 'create page content', 'administer url aliases', 'create url aliases', 'access administration pages', 'access content overview']);
+    $admin_user = $this->drupalCreateUser([
+      'administer languages',
+      'create page content',
+      'administer url aliases',
+      'create url aliases',
+      'access administration pages',
+      'access content overview',
+    ]);
 
     // Add custom language.
     $this->drupalLogin($admin_user);

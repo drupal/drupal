@@ -66,8 +66,15 @@ class ContextualDynamicContextTest extends BrowserTestBase {
     ConfigurableLanguage::createFromLangcode('it')->save();
     $this->rebuildContainer();
 
-    $this->editorUser = $this->drupalCreateUser(['access content', 'access contextual links', 'edit any article content']);
-    $this->authenticatedUser = $this->drupalCreateUser(['access content', 'access contextual links']);
+    $this->editorUser = $this->drupalCreateUser([
+      'access content',
+      'access contextual links',
+      'edit any article content',
+    ]);
+    $this->authenticatedUser = $this->drupalCreateUser([
+      'access content',
+      'access contextual links',
+    ]);
     $this->anonymousUser = $this->drupalCreateUser(['access content']);
   }
 

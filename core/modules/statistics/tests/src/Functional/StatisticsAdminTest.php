@@ -58,7 +58,11 @@ class StatisticsAdminTest extends BrowserTestBase {
     if ($this->profile != 'standard') {
       $this->drupalCreateContentType(['type' => 'page', 'name' => 'Basic page']);
     }
-    $this->privilegedUser = $this->drupalCreateUser(['administer statistics', 'view post access counter', 'create page content']);
+    $this->privilegedUser = $this->drupalCreateUser([
+      'administer statistics',
+      'view post access counter',
+      'create page content',
+    ]);
     $this->drupalLogin($this->privilegedUser);
     $this->testNode = $this->drupalCreateNode(['type' => 'page', 'uid' => $this->privilegedUser->id()]);
     $this->client = \Drupal::httpClient();

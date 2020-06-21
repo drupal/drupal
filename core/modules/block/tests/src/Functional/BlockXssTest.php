@@ -32,7 +32,10 @@ class BlockXssTest extends BrowserTestBase {
    * Tests that nothing is escaped other than the blocks explicitly tested.
    */
   public function testNoUnexpectedEscaping() {
-    $this->drupalLogin($this->drupalCreateUser(['administer blocks', 'access administration pages']));
+    $this->drupalLogin($this->drupalCreateUser([
+      'administer blocks',
+      'access administration pages',
+    ]));
     $this->drupalGet(Url::fromRoute('block.admin_display'));
     $this->clickLink('Place block');
     $this->assertNoEscaped('<');
@@ -49,7 +52,10 @@ class BlockXssTest extends BrowserTestBase {
     $this->drupalGet('');
     $this->assertNoRaw('<script>alert("XSS label");</script>', 'The block title was properly sanitized when rendered.');
 
-    $this->drupalLogin($this->drupalCreateUser(['administer blocks', 'access administration pages']));
+    $this->drupalLogin($this->drupalCreateUser([
+      'administer blocks',
+      'access administration pages',
+    ]));
     $default_theme = $this->config('system.theme')->get('default');
     $this->drupalGet('admin/structure/block/list/' . $default_theme);
     $this->assertNoRaw("<script>alert('XSS subject');</script>", 'The block title was properly sanitized in Block Plugin UI Admin page.');
@@ -61,7 +67,10 @@ class BlockXssTest extends BrowserTestBase {
   public function testXssInCategory() {
     $this->container->get('module_installer')->install(['block_test']);
     $this->drupalPlaceBlock('test_xss_title');
-    $this->drupalLogin($this->drupalCreateUser(['administer blocks', 'access administration pages']));
+    $this->drupalLogin($this->drupalCreateUser([
+      'administer blocks',
+      'access administration pages',
+    ]));
     $this->drupalGet(Url::fromRoute('block.admin_display'));
     $this->clickLink('Place block');
     $this->assertNoRaw("<script>alert('XSS category');</script>");

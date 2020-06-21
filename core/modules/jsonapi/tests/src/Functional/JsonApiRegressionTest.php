@@ -1029,7 +1029,10 @@ class JsonApiRegressionTest extends JsonApiFunctionalTestBase {
     $this->assertInstanceOf(TranslatableInterface::class, $entity);
     $this->assertFalse($entity->isTranslatable());
     // Set up a test user with permission to view and update the test entity.
-    $user = $this->drupalCreateUser(['view test entity', 'administer entity_test content']);
+    $user = $this->drupalCreateUser([
+      'view test entity',
+      'administer entity_test content',
+    ]);
     $request_options[RequestOptions::HEADERS]['Accept'] = 'application/vnd.api+json';
     $request_options[RequestOptions::AUTH] = [
       $user->getAccountName(),

@@ -36,7 +36,10 @@ class LanguageConfigurationTest extends BrowserTestBase {
     $this->assertEqual(ConfigurableLanguage::load('en')->getWeight(), 0, 'The English language has a weight of 0.');
 
     // User to add and remove language.
-    $admin_user = $this->drupalCreateUser(['administer languages', 'access administration pages']);
+    $admin_user = $this->drupalCreateUser([
+      'administer languages',
+      'access administration pages',
+    ]);
     $this->drupalLogin($admin_user);
 
     // Check if the Default English language has no path prefix.
@@ -157,7 +160,10 @@ class LanguageConfigurationTest extends BrowserTestBase {
    */
   public function testLanguageConfigurationWeight() {
     // User to add and remove language.
-    $admin_user = $this->drupalCreateUser(['administer languages', 'access administration pages']);
+    $admin_user = $this->drupalCreateUser([
+      'administer languages',
+      'access administration pages',
+      ]);
     $this->drupalLogin($admin_user);
     $this->checkConfigurableLanguageWeight();
 

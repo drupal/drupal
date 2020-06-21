@@ -57,11 +57,19 @@ class ContactPersonalTest extends BrowserTestBase {
     parent::setUp();
 
     // Create an admin user.
-    $this->adminUser = $this->drupalCreateUser(['administer contact forms', 'administer users', 'administer account settings', 'access site reports']);
+    $this->adminUser = $this->drupalCreateUser([
+      'administer contact forms',
+      'administer users',
+      'administer account settings',
+      'access site reports',
+    ]);
 
     // Create some normal users with their contact forms enabled by default.
     $this->config('contact.settings')->set('user_default_enabled', TRUE)->save();
-    $this->webUser = $this->drupalCreateUser(['access user profiles', 'access user contact forms']);
+    $this->webUser = $this->drupalCreateUser([
+      'access user profiles',
+      'access user contact forms',
+    ]);
     $this->contactUser = $this->drupalCreateUser();
   }
 

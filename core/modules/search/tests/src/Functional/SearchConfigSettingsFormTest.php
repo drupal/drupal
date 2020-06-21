@@ -52,7 +52,16 @@ class SearchConfigSettingsFormTest extends BrowserTestBase {
     $this->drupalCreateContentType(['type' => 'page', 'name' => 'Basic page']);
 
     // Log in as a user that can create and search content.
-    $this->searchUser = $this->drupalCreateUser(['search content', 'administer search', 'administer nodes', 'bypass node access', 'access user profiles', 'administer users', 'administer blocks', 'access site reports']);
+    $this->searchUser = $this->drupalCreateUser([
+      'search content',
+      'administer search',
+      'administer nodes',
+      'bypass node access',
+      'access user profiles',
+      'administer users',
+      'administer blocks',
+      'access site reports',
+    ]);
     $this->drupalLogin($this->searchUser);
 
     // Add a single piece of content and index it.

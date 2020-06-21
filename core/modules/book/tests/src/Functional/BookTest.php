@@ -61,10 +61,32 @@ class BookTest extends BrowserTestBase {
     node_access_rebuild();
 
     // Create users.
-    $this->bookAuthor = $this->drupalCreateUser(['create new books', 'create book content', 'edit own book content', 'add content to books']);
-    $this->webUser = $this->drupalCreateUser(['access printer-friendly version', 'node test view']);
-    $this->webUserWithoutNodeAccess = $this->drupalCreateUser(['access printer-friendly version']);
-    $this->adminUser = $this->drupalCreateUser(['create new books', 'create book content', 'edit any book content', 'delete any book content', 'add content to books', 'administer blocks', 'administer permissions', 'administer book outlines', 'node test view', 'administer content types', 'administer site configuration']);
+    $this->bookAuthor = $this->drupalCreateUser([
+      'create new books',
+      'create book content',
+      'edit own book content',
+      'add content to books',
+    ]);
+    $this->webUser = $this->drupalCreateUser([
+      'access printer-friendly version',
+      'node test view',
+    ]);
+    $this->webUserWithoutNodeAccess = $this->drupalCreateUser([
+      'access printer-friendly version',
+    ]);
+    $this->adminUser = $this->drupalCreateUser([
+      'create new books',
+      'create book content',
+      'edit any book content',
+      'delete any book content',
+      'add content to books',
+      'administer blocks',
+      'administer permissions',
+      'administer book outlines',
+      'node test view',
+      'administer content types',
+      'administer site configuration',
+    ]);
   }
 
   /**
@@ -557,7 +579,11 @@ class BookTest extends BrowserTestBase {
     $this->createBook();
 
     // Create administrator user.
-    $administratorUser = $this->drupalCreateUser(['administer blocks', 'administer nodes', 'bypass node access']);
+    $administratorUser = $this->drupalCreateUser([
+      'administer blocks',
+      'administer nodes',
+      'bypass node access',
+    ]);
     $this->drupalLogin($administratorUser);
 
     // Enable the block with "Show block only on book pages" mode.

@@ -44,7 +44,10 @@ class FilterDefaultFormatTest extends BrowserTestBase {
     }
     list($first_format, $second_format) = $formats;
     $second_format_permission = $second_format->getPermissionName();
-    $first_user = $this->drupalCreateUser([$first_format->getPermissionName(), $second_format_permission]);
+    $first_user = $this->drupalCreateUser([
+      $first_format->getPermissionName(),
+      $second_format_permission,
+    ]);
     $second_user = $this->drupalCreateUser([$second_format_permission]);
 
     // Adjust the weights so that the first and second formats (in that order)

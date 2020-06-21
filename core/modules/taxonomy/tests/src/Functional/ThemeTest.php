@@ -27,7 +27,10 @@ class ThemeTest extends TaxonomyTestBase {
 
     // Create and log in as a user who has permission to add and edit taxonomy
     // terms and view the administrative theme.
-    $admin_user = $this->drupalCreateUser(['administer taxonomy', 'view the administration theme']);
+    $admin_user = $this->drupalCreateUser([
+      'administer taxonomy',
+      'view the administration theme',
+    ]);
     $this->drupalLogin($admin_user);
   }
 

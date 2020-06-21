@@ -48,8 +48,14 @@ class NodeEditFormTest extends NodeTestBase {
   protected function setUp() {
     parent::setUp();
 
-    $this->webUser = $this->drupalCreateUser(['edit own page content', 'create page content']);
-    $this->adminUser = $this->drupalCreateUser(['bypass node access', 'administer nodes']);
+    $this->webUser = $this->drupalCreateUser([
+      'edit own page content',
+      'create page content',
+    ]);
+    $this->adminUser = $this->drupalCreateUser([
+      'bypass node access',
+      'administer nodes',
+    ]);
     $this->drupalPlaceBlock('local_tasks_block');
 
     $this->nodeStorage = $this->container->get('entity_type.manager')->getStorage('node');
@@ -95,7 +101,10 @@ class NodeEditFormTest extends NodeTestBase {
     $this->assertText($edit[$body_key], 'Body displayed.');
 
     // Log in as a second administrator user.
-    $second_web_user = $this->drupalCreateUser(['administer nodes', 'edit any page content']);
+    $second_web_user = $this->drupalCreateUser([
+      'administer nodes',
+      'edit any page content',
+    ]);
     $this->drupalLogin($second_web_user);
     // Edit the same node, creating a new revision.
     $this->drupalGet("node/" . $node->id() . "/edit");

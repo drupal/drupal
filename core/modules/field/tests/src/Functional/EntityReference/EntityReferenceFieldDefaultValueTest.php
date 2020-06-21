@@ -44,7 +44,13 @@ class EntityReferenceFieldDefaultValueTest extends BrowserTestBase {
     $this->drupalCreateContentType(['type' => 'referenced_content']);
 
     // Create admin user.
-    $this->adminUser = $this->drupalCreateUser(['access content', 'administer content types', 'administer node fields', 'administer node form display', 'bypass node access']);
+    $this->adminUser = $this->drupalCreateUser([
+      'access content',
+      'administer content types',
+      'administer node fields',
+      'administer node form display',
+      'bypass node access',
+    ]);
     $this->drupalLogin($this->adminUser);
   }
 

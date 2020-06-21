@@ -52,7 +52,13 @@ class SearchCommentCountToggleTest extends BrowserTestBase {
     $this->drupalCreateContentType(['type' => 'article', 'name' => 'Article']);
 
     // Create searching user.
-    $this->searchingUser = $this->drupalCreateUser(['search content', 'access content', 'access comments', 'post comments', 'skip comment approval']);
+    $this->searchingUser = $this->drupalCreateUser([
+      'search content',
+      'access content',
+      'access comments',
+      'post comments',
+      'skip comment approval',
+    ]);
 
     // Log in with sufficient privileges.
     $this->drupalLogin($this->searchingUser);

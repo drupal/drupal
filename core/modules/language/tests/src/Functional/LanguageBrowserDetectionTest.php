@@ -25,7 +25,10 @@ class LanguageBrowserDetectionTest extends BrowserTestBase {
    */
   public function testUIBrowserLanguageMappings() {
     // User to manage languages.
-    $admin_user = $this->drupalCreateUser(['administer languages', 'access administration pages']);
+    $admin_user = $this->drupalCreateUser([
+      'administer languages',
+      'access administration pages',
+    ]);
     $this->drupalLogin($admin_user);
 
     // Check that the configure link exists.

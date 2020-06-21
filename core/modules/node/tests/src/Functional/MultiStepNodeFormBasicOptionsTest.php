@@ -29,7 +29,10 @@ class MultiStepNodeFormBasicOptionsTest extends NodeTestBase {
    */
   public function testMultiStepNodeFormBasicOptions() {
     // Prepare a user to create the node.
-    $web_user = $this->drupalCreateUser(['administer nodes', 'create page content']);
+    $web_user = $this->drupalCreateUser([
+      'administer nodes',
+      'create page content',
+    ]);
     $this->drupalLogin($web_user);
 
     // Create an unlimited cardinality field.

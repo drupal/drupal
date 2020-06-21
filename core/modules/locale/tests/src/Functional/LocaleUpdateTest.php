@@ -24,7 +24,13 @@ class LocaleUpdateTest extends LocaleUpdateBase {
     parent::setUp();
     module_load_include('compare.inc', 'locale');
     module_load_include('fetch.inc', 'locale');
-    $admin_user = $this->drupalCreateUser(['administer modules', 'administer site configuration', 'administer languages', 'access administration pages', 'translate interface']);
+    $admin_user = $this->drupalCreateUser([
+      'administer modules',
+      'administer site configuration',
+      'administer languages',
+      'access administration pages',
+      'translate interface',
+    ]);
     $this->drupalLogin($admin_user);
     // We use German as test language. This language must match the translation
     // file that come with the locale_test module (test.de.po) and can therefore

@@ -36,7 +36,12 @@ class AccessDeniedTest extends BrowserTestBase {
     $this->drupalPlaceBlock('page_title_block');
 
     // Create an administrative user.
-    $this->adminUser = $this->drupalCreateUser(['access administration pages', 'administer site configuration', 'link to any page', 'administer blocks']);
+    $this->adminUser = $this->drupalCreateUser([
+      'access administration pages',
+      'administer site configuration',
+      'link to any page',
+      'administer blocks',
+    ]);
     $this->adminUser->roles[] = 'administrator';
     $this->adminUser->save();
 

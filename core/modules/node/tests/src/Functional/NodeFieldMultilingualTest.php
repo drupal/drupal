@@ -34,7 +34,13 @@ class NodeFieldMultilingualTest extends BrowserTestBase {
     $this->drupalCreateContentType(['type' => 'page', 'name' => 'Basic page']);
 
     // Setup users.
-    $admin_user = $this->drupalCreateUser(['administer languages', 'administer content types', 'access administration pages', 'create page content', 'edit own page content']);
+    $admin_user = $this->drupalCreateUser([
+      'administer languages',
+      'administer content types',
+      'access administration pages',
+      'create page content',
+      'edit own page content',
+    ]);
     $this->drupalLogin($admin_user);
 
     // Add a new language.

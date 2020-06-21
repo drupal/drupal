@@ -32,7 +32,10 @@ class LanguageCustomLanguageConfigurationTest extends BrowserTestBase {
   public function testLanguageConfiguration() {
 
     // Create user with permissions to add and remove languages.
-    $admin_user = $this->drupalCreateUser(['administer languages', 'access administration pages']);
+    $admin_user = $this->drupalCreateUser([
+      'administer languages',
+      'access administration pages',
+    ]);
     $this->drupalLogin($admin_user);
 
     // Add custom language.

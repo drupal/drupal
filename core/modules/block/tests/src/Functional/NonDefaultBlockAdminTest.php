@@ -36,7 +36,10 @@ class NonDefaultBlockAdminTest extends BrowserTestBase {
    * Test non-default theme admin.
    */
   public function testNonDefaultBlockAdmin() {
-    $admin_user = $this->drupalCreateUser(['administer blocks', 'administer themes']);
+    $admin_user = $this->drupalCreateUser([
+      'administer blocks',
+      'administer themes',
+    ]);
     $this->drupalLogin($admin_user);
     $new_theme = 'bartik';
     \Drupal::service('theme_installer')->install([$new_theme]);

@@ -50,7 +50,10 @@ class TermIndexTest extends TaxonomyTestBase {
     parent::setUp();
 
     // Create an administrative user.
-    $this->drupalLogin($this->drupalCreateUser(['administer taxonomy', 'bypass node access']));
+    $this->drupalLogin($this->drupalCreateUser([
+      'administer taxonomy',
+      'bypass node access',
+    ]));
 
     // Create a vocabulary and add two term reference fields to article nodes.
     $this->vocabulary = $this->createVocabulary();

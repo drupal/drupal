@@ -35,7 +35,12 @@ class SearchAdvancedSearchFormTest extends BrowserTestBase {
     $this->drupalCreateContentType(['type' => 'article', 'name' => 'Article']);
 
     // Create and log in user.
-    $test_user = $this->drupalCreateUser(['access content', 'search content', 'use advanced search', 'administer nodes']);
+    $test_user = $this->drupalCreateUser([
+      'access content',
+      'search content',
+      'use advanced search',
+      'administer nodes',
+    ]);
     $this->drupalLogin($test_user);
 
     // Create initial node.

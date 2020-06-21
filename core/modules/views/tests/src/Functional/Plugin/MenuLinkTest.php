@@ -53,7 +53,10 @@ class MenuLinkTest extends ViewTestBase {
 
     $this->enableViewsTestModule();
 
-    $this->adminUser = $this->drupalCreateUser(['administer views', 'administer menu']);
+    $this->adminUser = $this->drupalCreateUser([
+      'administer views',
+      'administer menu',
+    ]);
     $this->drupalPlaceBlock('system_menu_block:main');
     $this->drupalCreateContentType(['type' => 'page']);
   }

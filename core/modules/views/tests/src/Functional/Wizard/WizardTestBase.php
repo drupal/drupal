@@ -20,7 +20,13 @@ abstract class WizardTestBase extends ViewTestBase {
     parent::setUp($import_test_views);
 
     // Create and log in a user with administer views permission.
-    $views_admin = $this->drupalCreateUser(['administer views', 'administer blocks', 'bypass node access', 'access user profiles', 'view all revisions']);
+    $views_admin = $this->drupalCreateUser([
+      'administer views',
+      'administer blocks',
+      'bypass node access',
+      'access user profiles',
+      'view all revisions',
+    ]);
     $this->drupalLogin($views_admin);
     $this->drupalPlaceBlock('local_actions_block');
   }

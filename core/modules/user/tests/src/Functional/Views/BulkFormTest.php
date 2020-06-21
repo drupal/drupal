@@ -114,7 +114,11 @@ class BulkFormTest extends UserTestBase {
     $this->assertTrue($anonymous_account->isBlocked(), 'Ensure the anonymous user got blocked.');
 
     // Test the list of available actions with a value that contains a dot.
-    $this->drupalLogin($this->drupalCreateUser(['administer permissions', 'administer views', 'administer users']));
+    $this->drupalLogin($this->drupalCreateUser([
+      'administer permissions',
+      'administer views',
+      'administer users',
+    ]));
     $action_id = 'user_add_role_action.' . $role;
     $edit = [
       'options[include_exclude]' => 'exclude',

@@ -56,7 +56,9 @@ class UpdateRemovedPostUpdateTest extends BrowserTestBase {
       ->execute();
 
     $this->updateUrl = Url::fromRoute('system.db_update');
-    $this->updateUser = $this->drupalCreateUser(['administer software updates']);
+    $this->updateUser = $this->drupalCreateUser([
+      'administer software updates',
+    ]);
   }
 
   /**

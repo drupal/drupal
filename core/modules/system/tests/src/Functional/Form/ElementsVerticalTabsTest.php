@@ -42,7 +42,9 @@ class ElementsVerticalTabsTest extends BrowserTestBase {
   protected function setUp() {
     parent::setUp();
 
-    $this->adminUser = $this->drupalCreateUser(['access vertical_tab_test tabs']);
+    $this->adminUser = $this->drupalCreateUser([
+      'access vertical_tab_test tabs',
+    ]);
     $this->webUser = $this->drupalCreateUser();
     $this->drupalLogin($this->adminUser);
   }

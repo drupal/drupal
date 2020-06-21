@@ -60,14 +60,19 @@ class NodeTypeTest extends NodeTestBase {
     $this->assertTrue($type_exists, 'The new content type has been created in the database.');
 
     // Log in a test user.
-    $web_user = $this->drupalCreateUser(['create ' . $type->label() . ' content']);
+    $web_user = $this->drupalCreateUser([
+      'create ' . $type->label() . ' content',
+    ]);
     $this->drupalLogin($web_user);
 
     $this->drupalGet('node/add/' . $type->id());
     $this->assertSession()->statusCodeEquals(200);
 
     // Create a content type via the user interface.
-    $web_user = $this->drupalCreateUser(['bypass node access', 'administer content types']);
+    $web_user = $this->drupalCreateUser([
+      'bypass node access',
+      'administer content types',
+    ]);
     $this->drupalLogin($web_user);
 
     $this->drupalGet('node/add');
@@ -96,7 +101,11 @@ class NodeTypeTest extends NodeTestBase {
   public function testNodeTypeEditing() {
     $assert = $this->assertSession();
     $this->drupalPlaceBlock('system_breadcrumb_block');
-    $web_user = $this->drupalCreateUser(['bypass node access', 'administer content types', 'administer node fields']);
+    $web_user = $this->drupalCreateUser([
+      'bypass node access',
+      'administer content types',
+      'administer node fields',
+    ]);
     $this->drupalLogin($web_user);
 
     $field = FieldConfig::loadByName('node', 'page', 'body');
@@ -221,7 +230,10 @@ class NodeTypeTest extends NodeTestBase {
    */
   public function testNodeTypeFieldUiPermissions() {
     // Create an admin user who can only manage node fields.
-    $admin_user_1 = $this->drupalCreateUser(['administer content types', 'administer node fields']);
+    $admin_user_1 = $this->drupalCreateUser([
+      'administer content types',
+      'administer node fields',
+    ]);
     $this->drupalLogin($admin_user_1);
 
     // Test that the user only sees the actions available to them.
@@ -230,7 +242,10 @@ class NodeTypeTest extends NodeTestBase {
     $this->assertNoLinkByHref('admin/structure/types/manage/article/display');
 
     // Create another admin user who can manage node fields display.
-    $admin_user_2 = $this->drupalCreateUser(['administer content types', 'administer node display']);
+    $admin_user_2 = $this->drupalCreateUser([
+      'administer content types',
+      'administer node display',
+    ]);
     $this->drupalLogin($admin_user_2);
 
     // Test that the user only sees the actions available to them.

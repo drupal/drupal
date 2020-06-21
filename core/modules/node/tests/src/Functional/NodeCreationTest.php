@@ -31,7 +31,10 @@ class NodeCreationTest extends NodeTestBase {
   protected function setUp() {
     parent::setUp();
 
-    $web_user = $this->drupalCreateUser(['create page content', 'edit own page content']);
+    $web_user = $this->drupalCreateUser([
+      'create page content',
+      'edit own page content',
+    ]);
     $this->drupalLogin($web_user);
   }
 
@@ -79,7 +82,10 @@ class NodeCreationTest extends NodeTestBase {
     $this->assertText($this->container->get('date.formatter')->format($node->getCreatedTime()));
 
     // Check if the node revision checkbox is not rendered on node creation form.
-    $admin_user = $this->drupalCreateUser(['administer nodes', 'create page content']);
+    $admin_user = $this->drupalCreateUser([
+      'administer nodes',
+      'create page content',
+    ]);
     $this->drupalLogin($admin_user);
     $this->drupalGet('node/add/page');
     $this->assertNoFieldById('edit-revision', NULL, 'The revision checkbox is not present.');
@@ -227,7 +233,10 @@ class NodeCreationTest extends NodeTestBase {
    * Tests the author autocompletion textfield.
    */
   public function testAuthorAutocomplete() {
-    $admin_user = $this->drupalCreateUser(['administer nodes', 'create page content']);
+    $admin_user = $this->drupalCreateUser([
+      'administer nodes',
+      'create page content',
+    ]);
     $this->drupalLogin($admin_user);
 
     $this->drupalGet('node/add/page');
@@ -235,7 +244,11 @@ class NodeCreationTest extends NodeTestBase {
     $result = $this->xpath('//input[@id="edit-uid-0-value" and contains(@data-autocomplete-path, "user/autocomplete")]');
     $this->assertCount(0, $result, 'No autocompletion without access user profiles.');
 
-    $admin_user = $this->drupalCreateUser(['administer nodes', 'create page content', 'access user profiles']);
+    $admin_user = $this->drupalCreateUser([
+      'administer nodes',
+      'create page content',
+      'access user profiles',
+    ]);
     $this->drupalLogin($admin_user);
 
     $this->drupalGet('node/add/page');
@@ -260,7 +273,9 @@ class NodeCreationTest extends NodeTestBase {
     $this->drupalGet('node/add');
     $this->assertSession()->statusCodeEquals(403);
 
-    $admin_content_types = $this->drupalCreateUser(['administer content types']);
+    $admin_content_types = $this->drupalCreateUser([
+      'administer content types',
+    ]);
     $this->drupalLogin($admin_content_types);
 
     $this->drupalGet('node/add');

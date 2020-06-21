@@ -28,7 +28,10 @@ class UserSearchTest extends BrowserTestBase {
     // Verify that a user without 'administer users' permission cannot search
     // for users by email address. Additionally, ensure that the username has a
     // plus sign to ensure searching works with that.
-    $user1 = $this->drupalCreateUser(['access user profiles', 'search content'], "foo+bar");
+    $user1 = $this->drupalCreateUser([
+      'access user profiles',
+      'search content',
+    ], "foo+bar");
     $this->drupalLogin($user1);
     $keys = $user1->getEmail();
     $edit = ['keys' => $keys];
@@ -62,7 +65,11 @@ class UserSearchTest extends BrowserTestBase {
 
     // Verify that a user with 'administer users' permission can search by
     // email.
-    $user2 = $this->drupalCreateUser(['administer users', 'access user profiles', 'search content']);
+    $user2 = $this->drupalCreateUser([
+      'administer users',
+      'access user profiles',
+      'search content',
+    ]);
     $this->drupalLogin($user2);
     $keys = $user2->getEmail();
     $edit = ['keys' => $keys];

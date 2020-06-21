@@ -54,7 +54,12 @@ class ModeratedContentViewTest extends BrowserTestBase {
     $workflow->getTypePlugin()->addEntityTypeAndBundle('node', 'article');
     $workflow->save();
 
-    $this->adminUser = $this->drupalCreateUser(['access administration pages', 'view any unpublished content', 'administer nodes', 'bypass node access']);
+    $this->adminUser = $this->drupalCreateUser([
+      'access administration pages',
+      'view any unpublished content',
+      'administer nodes',
+      'bypass node access',
+    ]);
   }
 
   /**

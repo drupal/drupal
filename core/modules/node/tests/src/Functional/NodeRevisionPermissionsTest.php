@@ -87,7 +87,10 @@ class NodeRevisionPermissionsTest extends NodeTestBase {
     }
 
     // Create an admin account (returns TRUE for all revision permissions).
-    $admin_account = $this->drupalCreateUser(['access content', 'administer nodes']);
+    $admin_account = $this->drupalCreateUser([
+      'access content',
+      'administer nodes',
+    ]);
     $admin_account->is_admin = TRUE;
     $this->accounts['admin'] = $admin_account;
     $accounts['admin'] = $admin_account;

@@ -36,7 +36,11 @@ class FilterHooksTest extends BrowserTestBase {
     $type = $this->drupalCreateContentType(['name' => $type_name, 'type' => $type_name]);
     $node_permission = "create $type_name content";
 
-    $admin_user = $this->drupalCreateUser(['administer filters', 'administer nodes', $node_permission]);
+    $admin_user = $this->drupalCreateUser([
+      'administer filters',
+      'administer nodes',
+      $node_permission,
+    ]);
     $this->drupalLogin($admin_user);
 
     // Add a text format.

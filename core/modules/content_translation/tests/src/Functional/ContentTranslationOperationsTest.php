@@ -64,7 +64,12 @@ class ContentTranslationOperationsTest extends NodeTestBase {
     \Drupal::service('router.builder')->rebuild();
 
     $this->baseUser1 = $this->drupalCreateUser(['access content overview']);
-    $this->baseUser2 = $this->drupalCreateUser(['access content overview', 'create content translations', 'update content translations', 'delete content translations']);
+    $this->baseUser2 = $this->drupalCreateUser([
+      'access content overview',
+      'create content translations',
+      'update content translations',
+      'delete content translations',
+    ]);
   }
 
   /**
