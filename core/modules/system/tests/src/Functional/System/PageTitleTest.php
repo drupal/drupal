@@ -39,7 +39,13 @@ class PageTitleTest extends BrowserTestBase {
 
     $this->drupalPlaceBlock('page_title_block');
 
-    $this->contentUser = $this->drupalCreateUser(['create page content', 'access content', 'administer themes', 'administer site configuration', 'link to any page']);
+    $this->contentUser = $this->drupalCreateUser([
+      'create page content',
+      'access content',
+      'administer themes',
+      'administer site configuration',
+      'link to any page',
+    ]);
     $this->drupalLogin($this->contentUser);
   }
 

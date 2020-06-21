@@ -41,7 +41,10 @@ class UserAdminLanguageTest extends BrowserTestBase {
   protected function setUp(): void {
     parent::setUp();
     // User to add and remove language.
-    $this->adminUser = $this->drupalCreateUser(['administer languages', 'access administration pages']);
+    $this->adminUser = $this->drupalCreateUser([
+      'administer languages',
+      'access administration pages',
+    ]);
     // User to check non-admin access.
     $this->regularUser = $this->drupalCreateUser();
   }

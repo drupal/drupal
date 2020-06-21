@@ -47,7 +47,10 @@ class HistoryTest extends BrowserTestBase {
 
     $this->drupalCreateContentType(['type' => 'page', 'name' => 'Basic page']);
 
-    $this->user = $this->drupalCreateUser(['create page content', 'access content']);
+    $this->user = $this->drupalCreateUser([
+      'create page content',
+      'access content',
+    ]);
     $this->drupalLogin($this->user);
     $this->testNode = $this->drupalCreateNode(['type' => 'page', 'uid' => $this->user->id()]);
   }

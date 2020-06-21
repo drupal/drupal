@@ -215,7 +215,11 @@ class TrackerTest extends BrowserTestBase {
     $this->assertTitle($this->user->getAccountName() . ' | Drupal');
 
     // Verify that unpublished comments are removed from the tracker.
-    $admin_user = $this->drupalCreateUser(['post comments', 'administer comments', 'access user profiles']);
+    $admin_user = $this->drupalCreateUser([
+      'post comments',
+      'administer comments',
+      'access user profiles',
+    ]);
     $this->drupalLogin($admin_user);
     $this->drupalPostForm('comment/1/edit', ['status' => CommentInterface::NOT_PUBLISHED], t('Save'));
     $this->drupalGet('user/' . $this->user->id() . '/activity');
@@ -418,7 +422,11 @@ class TrackerTest extends BrowserTestBase {
   public function testTrackerAdminUnpublish() {
     \Drupal::service('module_installer')->install(['views']);
     \Drupal::service('router.builder')->rebuild();
-    $admin_user = $this->drupalCreateUser(['access content overview', 'administer nodes', 'bypass node access']);
+    $admin_user = $this->drupalCreateUser([
+      'access content overview',
+      'administer nodes',
+      'bypass node access',
+    ]);
     $this->drupalLogin($admin_user);
 
     $node = $this->drupalCreateNode([

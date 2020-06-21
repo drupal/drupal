@@ -51,7 +51,10 @@ class PagerTest extends ViewTestBase {
     // Show the master display so the override selection is shown.
     \Drupal::configFactory()->getEditable('views.settings')->set('ui.show.master_display', TRUE)->save();
 
-    $admin_user = $this->drupalCreateUser(['administer views', 'administer site configuration']);
+    $admin_user = $this->drupalCreateUser([
+      'administer views',
+      'administer site configuration',
+    ]);
     $this->drupalLogin($admin_user);
     // Test behavior described in
     //   https://www.drupal.org/node/652712#comment-2354918.
@@ -384,7 +387,12 @@ class PagerTest extends ViewTestBase {
     $this->container->get('module_installer')->install(['locale', 'language', 'config_translation']);
     $this->resetAll();
 
-    $admin_user = $this->drupalCreateUser(['access content overview', 'administer nodes', 'bypass node access', 'translate configuration']);
+    $admin_user = $this->drupalCreateUser([
+      'access content overview',
+      'administer nodes',
+      'bypass node access',
+      'translate configuration',
+    ]);
     $this->drupalLogin($admin_user);
 
     $langcode = 'nl';

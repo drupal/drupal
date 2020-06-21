@@ -49,7 +49,12 @@ class ForumNodeAccessTest extends BrowserTestBase {
     // Create some users.
     $access_user = $this->drupalCreateUser(['node test view']);
     $no_access_user = $this->drupalCreateUser();
-    $admin_user = $this->drupalCreateUser(['access administration pages', 'administer modules', 'administer blocks', 'create forum content']);
+    $admin_user = $this->drupalCreateUser([
+      'access administration pages',
+      'administer modules',
+      'administer blocks',
+      'create forum content',
+    ]);
 
     $this->drupalLogin($admin_user);
 

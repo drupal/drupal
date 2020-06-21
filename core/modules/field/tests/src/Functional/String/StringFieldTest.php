@@ -37,7 +37,11 @@ class StringFieldTest extends BrowserTestBase {
   protected function setUp(): void {
     parent::setUp();
 
-    $this->webUser = $this->drupalCreateUser(['view test entity', 'administer entity_test content', 'access content']);
+    $this->webUser = $this->drupalCreateUser([
+      'view test entity',
+      'administer entity_test content',
+      'access content',
+    ]);
     $this->drupalLogin($this->webUser);
   }
 

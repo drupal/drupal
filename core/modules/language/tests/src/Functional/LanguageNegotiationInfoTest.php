@@ -31,7 +31,12 @@ class LanguageNegotiationInfoTest extends BrowserTestBase {
    */
   protected function setUp(): void {
     parent::setUp();
-    $admin_user = $this->drupalCreateUser(['administer languages', 'access administration pages', 'view the administration theme', 'administer modules']);
+    $admin_user = $this->drupalCreateUser([
+      'administer languages',
+      'access administration pages',
+      'view the administration theme',
+      'administer modules',
+    ]);
     $this->drupalLogin($admin_user);
     $this->drupalPostForm('admin/config/regional/language/add', ['predefined_langcode' => 'it'], t('Add language'));
   }

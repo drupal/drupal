@@ -41,7 +41,10 @@ class SiteMaintenanceTest extends BrowserTestBase {
     // Create a user allowed to access site in maintenance mode.
     $this->user = $this->drupalCreateUser(['access site in maintenance mode']);
     // Create an administrative user.
-    $this->adminUser = $this->drupalCreateUser(['administer site configuration', 'access site in maintenance mode']);
+    $this->adminUser = $this->drupalCreateUser([
+      'administer site configuration',
+      'access site in maintenance mode',
+    ]);
     $this->drupalLogin($this->adminUser);
   }
 

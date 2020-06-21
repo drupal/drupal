@@ -53,7 +53,10 @@ class SearchPageCacheTagsTest extends BrowserTestBase {
     $this->drupalCreateContentType(['type' => 'page', 'name' => 'Basic page']);
 
     // Create user.
-    $this->searchingUser = $this->drupalCreateUser(['search content', 'access user profiles']);
+    $this->searchingUser = $this->drupalCreateUser([
+      'search content',
+      'access user profiles',
+    ]);
 
     // Create a node and update the search index.
     $this->node = $this->drupalCreateNode(['title' => 'bike shed shop']);

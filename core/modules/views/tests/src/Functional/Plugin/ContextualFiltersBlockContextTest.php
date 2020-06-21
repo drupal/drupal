@@ -86,7 +86,10 @@ class ContextualFiltersBlockContextTest extends ViewTestBase {
    * Tests exposed context.
    */
   public function testBlockContext() {
-    $this->drupalLogin($this->drupalCreateUser(['administer views', 'administer blocks']));
+    $this->drupalLogin($this->drupalCreateUser([
+      'administer views',
+      'administer blocks',
+    ]));
 
     // Check if context was correctly propagated to the block.
     $definition = $this->container->get('plugin.manager.block')

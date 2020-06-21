@@ -91,7 +91,11 @@ class BulkFormTest extends NodeTestBase {
     $this->assertCount(10, $view->result, 'All created translations are selected.');
 
     // Check the operations are accessible to the logged in user.
-    $this->drupalLogin($this->drupalCreateUser(['administer nodes', 'access content overview', 'bypass node access']));
+    $this->drupalLogin($this->drupalCreateUser([
+      'administer nodes',
+      'access content overview',
+      'bypass node access',
+    ]));
     $this->drupalGet('test-node-bulk-form');
     $elements = $this->xpath('//select[@id="edit-action"]//option');
     $this->assertCount(8, $elements, 'All node operations are found.');

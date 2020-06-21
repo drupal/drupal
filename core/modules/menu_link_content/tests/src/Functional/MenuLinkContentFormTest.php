@@ -47,7 +47,10 @@ class MenuLinkContentFormTest extends BrowserTestBase {
    */
   protected function setUp(): void {
     parent::setUp();
-    $this->adminUser = $this->drupalCreateUser(['administer menu', 'link to any page']);
+    $this->adminUser = $this->drupalCreateUser([
+      'administer menu',
+      'link to any page',
+    ]);
     $this->basicUser = $this->drupalCreateUser(['administer menu']);
     $this->drupalLogin($this->adminUser);
   }

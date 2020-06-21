@@ -66,7 +66,11 @@ class FieldEntityOperationsTest extends ViewTestBase {
       $entities[$i] = $entity;
     }
 
-    $admin_user = $this->drupalCreateUser(['access administration pages', 'administer nodes', 'bypass node access']);
+    $admin_user = $this->drupalCreateUser([
+      'access administration pages',
+      'administer nodes',
+      'bypass node access',
+    ]);
     $this->drupalLogin($this->rootUser);
     $this->drupalGet('test-entity-operations');
     /** @var $entity \Drupal\entity_test\Entity\EntityTest */

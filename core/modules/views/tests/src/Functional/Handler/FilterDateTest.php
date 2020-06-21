@@ -184,7 +184,10 @@ class FilterDateTest extends ViewTestBase {
    */
   protected function _testUiValidation() {
 
-    $this->drupalLogin($this->drupalCreateUser(['administer views', 'administer site configuration']));
+    $this->drupalLogin($this->drupalCreateUser([
+      'administer views',
+      'administer site configuration',
+    ]));
 
     $this->drupalGet('admin/structure/views/view/test_filter_date_between/edit');
     $this->drupalGet('admin/structure/views/nojs/handler/test_filter_date_between/default/filter/created');

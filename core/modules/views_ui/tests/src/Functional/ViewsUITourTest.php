@@ -40,7 +40,10 @@ class ViewsUITourTest extends TourTestBase {
 
   protected function setUp(): void {
     parent::setUp();
-    $this->adminUser = $this->drupalCreateUser(['administer views', 'access tour']);
+    $this->adminUser = $this->drupalCreateUser([
+      'administer views',
+      'access tour',
+    ]);
     $this->drupalLogin($this->adminUser);
   }
 

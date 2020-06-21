@@ -32,7 +32,11 @@ class UpdateUploadTest extends UpdateTestBase {
 
   protected function setUp(): void {
     parent::setUp();
-    $admin_user = $this->drupalCreateUser(['administer modules', 'administer software updates', 'administer site configuration']);
+    $admin_user = $this->drupalCreateUser([
+      'administer modules',
+      'administer software updates',
+      'administer site configuration',
+    ]);
     $this->drupalLogin($admin_user);
   }
 

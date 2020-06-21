@@ -51,8 +51,15 @@ class NodeAccessFieldTest extends NodeTestBase {
     node_access_rebuild();
 
     // Create some users.
-    $this->adminUser = $this->drupalCreateUser(['access content', 'bypass node access']);
-    $this->contentAdminUser = $this->drupalCreateUser(['access content', 'administer content types', 'administer node fields']);
+    $this->adminUser = $this->drupalCreateUser([
+      'access content',
+      'bypass node access',
+    ]);
+    $this->contentAdminUser = $this->drupalCreateUser([
+      'access content',
+      'administer content types',
+      'administer node fields',
+    ]);
 
     // Add a custom field to the page content type.
     $this->fieldName = mb_strtolower($this->randomMachineName() . '_field_name');

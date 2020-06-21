@@ -129,7 +129,11 @@ class ContentTranslationWorkflowsTest extends ContentTranslationTestBase {
     $ops = ['create' => t('Add'), 'update' => t('Edit'), 'delete' => t('Delete')];
     $translations_url = $this->entity->toUrl('drupal:content-translation-overview');
     foreach ($ops as $current_op => $item) {
-      $user = $this->drupalCreateUser([$this->getTranslatePermission(), "$current_op content translations", 'view test entity']);
+      $user = $this->drupalCreateUser([
+        $this->getTranslatePermission(),
+        "$current_op content translations",
+        'view test entity',
+      ]);
       $this->drupalLogin($user);
       $this->drupalGet($translations_url);
 

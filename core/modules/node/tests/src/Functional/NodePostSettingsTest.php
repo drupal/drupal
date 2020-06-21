@@ -18,7 +18,11 @@ class NodePostSettingsTest extends NodeTestBase {
   protected function setUp(): void {
     parent::setUp();
 
-    $web_user = $this->drupalCreateUser(['create page content', 'administer content types', 'access user profiles']);
+    $web_user = $this->drupalCreateUser([
+      'create page content',
+      'administer content types',
+      'access user profiles',
+    ]);
     $this->drupalLogin($web_user);
   }
 

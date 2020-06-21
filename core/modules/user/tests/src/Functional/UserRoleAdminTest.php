@@ -37,7 +37,10 @@ class UserRoleAdminTest extends BrowserTestBase {
    */
   protected function setUp(): void {
     parent::setUp();
-    $this->adminUser = $this->drupalCreateUser(['administer permissions', 'administer users']);
+    $this->adminUser = $this->drupalCreateUser([
+      'administer permissions',
+      'administer users',
+    ]);
     $this->drupalPlaceBlock('local_tasks_block');
   }
 

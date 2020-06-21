@@ -121,7 +121,10 @@ class EntityReferenceFileUploadTest extends BrowserTestBase {
    * Tests that the autocomplete input element does not cause ajax fatal.
    */
   public function testFileUpload() {
-    $user1 = $this->drupalCreateUser(['access content', "create $this->referencingType content"]);
+    $user1 = $this->drupalCreateUser([
+      'access content',
+      "create $this->referencingType content",
+    ]);
     $this->drupalLogin($user1);
 
     $test_file = current($this->getTestFiles('text'));

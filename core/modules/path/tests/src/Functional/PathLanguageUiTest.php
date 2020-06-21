@@ -27,7 +27,14 @@ class PathLanguageUiTest extends PathTestBase {
     parent::setUp();
 
     // Create and log in user.
-    $web_user = $this->drupalCreateUser(['edit any page content', 'create page content', 'administer url aliases', 'create url aliases', 'administer languages', 'access administration pages']);
+    $web_user = $this->drupalCreateUser([
+      'edit any page content',
+      'create page content',
+      'administer url aliases',
+      'create url aliases',
+      'administer languages',
+      'access administration pages',
+    ]);
     $this->drupalLogin($web_user);
 
     // Enable French language.

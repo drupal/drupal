@@ -105,9 +105,23 @@ class EditorLoadingTest extends BrowserTestBase {
       ->save();
 
     // Create 3 users, each with access to different text formats.
-    $this->untrustedUser = $this->drupalCreateUser(['create article content', 'edit any article content']);
-    $this->normalUser = $this->drupalCreateUser(['create article content', 'edit any article content', 'use text format filtered_html']);
-    $this->privilegedUser = $this->drupalCreateUser(['create article content', 'edit any article content', 'create page content', 'edit any page content', 'use text format filtered_html', 'use text format full_html']);
+    $this->untrustedUser = $this->drupalCreateUser([
+      'create article content',
+      'edit any article content',
+    ]);
+    $this->normalUser = $this->drupalCreateUser([
+      'create article content',
+      'edit any article content',
+      'use text format filtered_html',
+    ]);
+    $this->privilegedUser = $this->drupalCreateUser([
+      'create article content',
+      'edit any article content',
+      'create page content',
+      'edit any page content',
+      'use text format filtered_html',
+      'use text format full_html',
+    ]);
   }
 
   /**

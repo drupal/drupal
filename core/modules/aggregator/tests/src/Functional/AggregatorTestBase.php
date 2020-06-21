@@ -46,7 +46,12 @@ abstract class AggregatorTestBase extends BrowserTestBase {
       $this->drupalCreateContentType(['type' => 'article', 'name' => 'Article']);
     }
 
-    $this->adminUser = $this->drupalCreateUser(['access administration pages', 'administer news feeds', 'access news feeds', 'create article content']);
+    $this->adminUser = $this->drupalCreateUser([
+      'access administration pages',
+      'administer news feeds',
+      'access news feeds',
+      'create article content',
+    ]);
     $this->drupalLogin($this->adminUser);
     $this->drupalPlaceBlock('local_tasks_block');
   }

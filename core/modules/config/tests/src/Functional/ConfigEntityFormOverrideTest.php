@@ -25,7 +25,9 @@ class ConfigEntityFormOverrideTest extends BrowserTestBase {
    * Tests that overrides do not affect forms or listing screens.
    */
   public function testFormsWithOverrides() {
-    $this->drupalLogin($this->drupalCreateUser(['administer site configuration']));
+    $this->drupalLogin($this->drupalCreateUser([
+      'administer site configuration',
+    ]));
 
     $original_label = 'Default';
     $overridden_label = 'Overridden label';

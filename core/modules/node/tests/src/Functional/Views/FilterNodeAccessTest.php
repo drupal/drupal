@@ -53,7 +53,10 @@ class FilterNodeAccessTest extends NodeTestBase {
     $this->users = [];
 
     for ($i = 0; $i < $num_simple_users; $i++) {
-      $this->users[$i] = $this->drupalCreateUser(['access content', 'create article content']);
+      $this->users[$i] = $this->drupalCreateUser([
+        'access content',
+        'create article content',
+      ]);
     }
     foreach ($this->users as $web_user) {
       $this->drupalLogin($web_user);
@@ -100,7 +103,10 @@ class FilterNodeAccessTest extends NodeTestBase {
     $this->assertNoText('Private Article created by ' . $this->users[0]->getAccountName());
 
     // Test that a user with administer nodes permission can't see all nodes.
-    $administer_nodes_user = $this->drupalCreateUser(['access content', 'administer nodes']);
+    $administer_nodes_user = $this->drupalCreateUser([
+      'access content',
+      'administer nodes',
+    ]);
     $this->drupalLogin($administer_nodes_user);
     $this->drupalGet('test_filter_node_access');
     $this->assertNoText('Private Article created by ' . $this->users[0]->getAccountName());
@@ -109,7 +115,10 @@ class FilterNodeAccessTest extends NodeTestBase {
     $this->assertText('Public Article created by ' . $this->users[1]->getAccountName());
 
     // Test that a user with bypass node access can see all nodes.
-    $bypass_access_user = $this->drupalCreateUser(['access content', 'bypass node access']);
+    $bypass_access_user = $this->drupalCreateUser([
+      'access content',
+      'bypass node access',
+    ]);
     $this->drupalLogin($bypass_access_user);
     $this->drupalGet('test_filter_node_access');
     $this->assertText('Private Article created by ' . $this->users[0]->getAccountName());

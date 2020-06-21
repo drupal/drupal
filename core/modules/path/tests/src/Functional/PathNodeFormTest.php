@@ -25,7 +25,10 @@ class PathNodeFormTest extends PathTestBase {
     parent::setUp();
 
     // Create test user and log in.
-    $web_user = $this->drupalCreateUser(['create page content', 'create url aliases']);
+    $web_user = $this->drupalCreateUser([
+      'create page content',
+      'create url aliases',
+    ]);
     $this->drupalLogin($web_user);
   }
 

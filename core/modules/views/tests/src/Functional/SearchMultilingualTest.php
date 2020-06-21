@@ -45,7 +45,14 @@ class SearchMultilingualTest extends ViewTestBase {
   public function testMultilingualSearchFilter() {
     // Create a user with admin for languages, content, and content types, plus
     // the ability to access content and searches.
-    $user = $this->drupalCreateUser(['administer nodes', 'administer content types', 'administer languages', 'administer content translation', 'access content', 'search content']);
+    $user = $this->drupalCreateUser([
+      'administer nodes',
+      'administer content types',
+      'administer languages',
+      'administer content translation',
+      'access content',
+      'search content',
+    ]);
     $this->drupalLogin($user);
 
     // Add Spanish language programmatically.

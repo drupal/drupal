@@ -35,7 +35,11 @@ class LocaleExportTest extends BrowserTestBase {
   protected function setUp(): void {
     parent::setUp();
 
-    $this->adminUser = $this->drupalCreateUser(['administer languages', 'translate interface', 'access administration pages']);
+    $this->adminUser = $this->drupalCreateUser([
+      'administer languages',
+      'translate interface',
+      'access administration pages',
+    ]);
     $this->drupalLogin($this->adminUser);
 
     // Copy test po files to the translations directory.

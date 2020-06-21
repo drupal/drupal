@@ -356,7 +356,10 @@ class ShortcutLinksTest extends ShortcutTestBase {
 
     // Verify that users without the 'administer site configuration' permission
     // can't see the cron shortcuts but can see shortcuts.
-    $this->drupalLogin($this->drupalCreateUser(['access toolbar', 'access shortcuts']));
+    $this->drupalLogin($this->drupalCreateUser([
+      'access toolbar',
+      'access shortcuts',
+    ]));
     $this->assertSession()->linkExists('Shortcuts');
     $this->assertSession()->linkNotExists('Cron', 'Cron shortcut link not found on page.');
 
@@ -376,7 +379,12 @@ class ShortcutLinksTest extends ShortcutTestBase {
    */
   public function testShortcutLinkOrder() {
     // Ensure to give permissions to access the shortcuts.
-    $this->drupalLogin($this->drupalCreateUser(['access toolbar', 'access shortcuts', 'access content overview', 'administer content types']));
+    $this->drupalLogin($this->drupalCreateUser([
+      'access toolbar',
+      'access shortcuts',
+      'access content overview',
+      'administer content types',
+    ]));
     $this->drupalGet(Url::fromRoute('<front>'));
     $shortcuts = $this->cssSelect('#toolbar-item-shortcuts-tray .toolbar-menu a');
     $this->assertEqual($shortcuts[0]->getText(), 'Add content');

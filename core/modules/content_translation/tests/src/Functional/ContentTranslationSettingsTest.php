@@ -49,7 +49,17 @@ class ContentTranslationSettingsTest extends BrowserTestBase {
     $this->addDefaultCommentField('node', 'article', 'comment_article', CommentItemInterface::OPEN, 'comment_article');
     $this->addDefaultCommentField('node', 'page', 'comment_page');
 
-    $admin_user = $this->drupalCreateUser(['access administration pages', 'administer languages', 'administer content translation', 'administer content types', 'administer node fields', 'administer comment fields', 'administer comments', 'administer comment types', 'administer account settings']);
+    $admin_user = $this->drupalCreateUser([
+      'access administration pages',
+      'administer languages',
+      'administer content translation',
+      'administer content types',
+      'administer node fields',
+      'administer comment fields',
+      'administer comments',
+      'administer comment types',
+      'administer account settings',
+    ]);
     $this->drupalLogin($admin_user);
   }
 

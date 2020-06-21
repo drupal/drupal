@@ -43,7 +43,13 @@ class ThemeTest extends BrowserTestBase {
 
     $this->drupalCreateContentType(['type' => 'page', 'name' => 'Basic page']);
 
-    $this->adminUser = $this->drupalCreateUser(['access administration pages', 'view the administration theme', 'administer themes', 'bypass node access', 'administer blocks']);
+    $this->adminUser = $this->drupalCreateUser([
+      'access administration pages',
+      'view the administration theme',
+      'administer themes',
+      'bypass node access',
+      'administer blocks',
+    ]);
     $this->drupalLogin($this->adminUser);
     $this->node = $this->drupalCreateNode();
     $this->drupalPlaceBlock('local_tasks_block');

@@ -525,7 +525,10 @@ class UpdateScriptTest extends BrowserTestBase {
     $this->assertSession()->statusCodeEquals(200);
 
     // Click through update.php with 'access administration pages' permission.
-    $admin_user = $this->drupalCreateUser(['administer software updates', 'access administration pages']);
+    $admin_user = $this->drupalCreateUser([
+      'administer software updates',
+      'access administration pages',
+    ]);
     $this->drupalLogin($admin_user);
     $this->drupalGet($this->updateUrl, ['external' => TRUE]);
     $this->updateRequirementsProblem();
@@ -558,7 +561,12 @@ class UpdateScriptTest extends BrowserTestBase {
 
     // Click through update.php with 'access administration pages' and
     // 'access site reports' permissions.
-    $admin_user = $this->drupalCreateUser(['administer software updates', 'access administration pages', 'access site reports', 'access site in maintenance mode']);
+    $admin_user = $this->drupalCreateUser([
+      'administer software updates',
+      'access administration pages',
+      'access site reports',
+      'access site in maintenance mode',
+    ]);
     $this->drupalLogin($admin_user);
     $this->drupalGet($this->updateUrl, ['external' => TRUE]);
     $this->updateRequirementsProblem();
@@ -617,7 +625,13 @@ class UpdateScriptTest extends BrowserTestBase {
     $this->assertEqual($schema_version, 8000, 'update_script_test schema version overridden to 8000.');
 
     // Create admin user.
-    $admin_user = $this->drupalCreateUser(['administer software updates', 'access administration pages', 'access site reports', 'access site in maintenance mode', 'administer site configuration']);
+    $admin_user = $this->drupalCreateUser([
+      'administer software updates',
+      'access administration pages',
+      'access site reports',
+      'access site in maintenance mode',
+      'administer site configuration',
+    ]);
     $this->drupalLogin($admin_user);
 
     // Visit status report page and ensure, that link to update.php has no path prefix set.

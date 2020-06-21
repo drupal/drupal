@@ -35,7 +35,10 @@ class FieldHelpTest extends BrowserTestBase {
     parent::setUp();
 
     // Create the admin user.
-    $this->adminUser = $this->drupalCreateUser(['access administration pages', 'view the administration theme']);
+    $this->adminUser = $this->drupalCreateUser([
+      'access administration pages',
+      'view the administration theme',
+    ]);
   }
 
   /**

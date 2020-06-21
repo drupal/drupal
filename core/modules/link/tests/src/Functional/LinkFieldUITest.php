@@ -68,8 +68,14 @@ class LinkFieldUITest extends BrowserTestBase {
 
     $this->firstContentType = $this->drupalCreateContentType();
     $this->secondContentType = $this->drupalCreateContentType();
-    $this->adminUser = $this->drupalCreateUser(['administer content types', 'administer node fields', 'administer node display']);
-    $this->helpTextUser = $this->drupalCreateUser(['create ' . $this->secondContentType->id() . ' content']);
+    $this->adminUser = $this->drupalCreateUser([
+      'administer content types',
+      'administer node fields',
+      'administer node display',
+    ]);
+    $this->helpTextUser = $this->drupalCreateUser([
+      'create ' . $this->secondContentType->id() . ' content',
+    ]);
     $this->drupalPlaceBlock('system_breadcrumb_block');
   }
 

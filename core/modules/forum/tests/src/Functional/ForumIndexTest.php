@@ -27,7 +27,13 @@ class ForumIndexTest extends BrowserTestBase {
     parent::setUp();
 
     // Create a test user.
-    $web_user = $this->drupalCreateUser(['create forum content', 'edit own forum content', 'edit any forum content', 'administer nodes', 'administer forums']);
+    $web_user = $this->drupalCreateUser([
+      'create forum content',
+      'edit own forum content',
+      'edit any forum content',
+      'administer nodes',
+      'administer forums',
+    ]);
     $this->drupalLogin($web_user);
   }
 

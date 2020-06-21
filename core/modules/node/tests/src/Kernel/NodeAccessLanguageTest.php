@@ -150,7 +150,10 @@ class NodeAccessLanguageTest extends NodeAccessTestBase {
 
     // Creating a private node with langcode Catalan to test that the
     // node_access_test_secret_catalan flag works.
-    $private_ca_user = $this->drupalCreateUser(['access content', 'node test view']);
+    $private_ca_user = $this->drupalCreateUser([
+      'access content',
+      'node test view',
+    ]);
     $node_private_ca = $this->drupalCreateNode(['body' => [[]], 'langcode' => 'ca', 'private' => TRUE]);
     $this->assertTrue($node_private_ca->language()->getId() == 'ca', 'Node created as Catalan.');
 

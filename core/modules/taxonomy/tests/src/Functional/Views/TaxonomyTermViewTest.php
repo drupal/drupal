@@ -49,7 +49,10 @@ class TaxonomyTermViewTest extends TaxonomyTestBase {
     parent::setUp($import_test_views);
 
     // Create an administrative user.
-    $this->adminUser = $this->drupalCreateUser(['administer taxonomy', 'bypass node access']);
+    $this->adminUser = $this->drupalCreateUser([
+      'administer taxonomy',
+      'bypass node access',
+    ]);
     $this->drupalLogin($this->adminUser);
 
     // Create a vocabulary and add two term reference fields to article nodes.
