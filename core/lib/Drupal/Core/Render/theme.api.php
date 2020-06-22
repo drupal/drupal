@@ -274,9 +274,9 @@
  *   vectors while allowing a permissive list of HTML tags that are not XSS
  *   vectors. (For example, <script> and <style> are not allowed.) See
  *   \Drupal\Component\Utility\Xss::$adminTags for the list of allowed tags. If
- *   your markup needs any of the tags not in this whitelist, then you can
- *   implement a theme hook and/or an asset library. Alternatively, you can use
- *   the key #allowed_tags to alter which tags are filtered.
+ *   your markup needs any of the tags not in this list, then you can implement
+ *   a theme hook and/or an asset library. Alternatively, you can use the key
+ *   #allowed_tags to alter which tags are filtered.
  * - #plain_text: Specifies that the array provides text that needs to be
  *   escaped. This value takes precedence over #markup.
  * - #allowed_tags: If #markup is supplied, this can be used to change which
