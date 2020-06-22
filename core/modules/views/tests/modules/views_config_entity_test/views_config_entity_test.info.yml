@@ -1,5 +1,0 @@
-name: 'views_config_entity_test'
-description: 'Adds a Config Entity with views data'
-type: module
-package: Testing
-version: VERSION

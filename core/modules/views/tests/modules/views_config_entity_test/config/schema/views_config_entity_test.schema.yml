@@ -1,9 +1,0 @@
-views_config_entity_test.type.*:
-  type: config_entity
-  label: 'Config entity type with Views data'
-  mapping:
-    id:
-      type: string
-    name:
-      type: label
-      label: 'Name'

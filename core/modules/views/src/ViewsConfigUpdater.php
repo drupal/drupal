@@ -8,7 +8,6 @@ use Drupal\Core\Config\TypedConfigManagerInterface;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
-use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Entity\Sql\DefaultTableMapping;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -286,7 +285,7 @@ class ViewsConfigUpdater implements ContainerInjectionInterface {
       $table_info = [];
 
       foreach ($this->entityTypeManager->getDefinitions() as $entity_type_id => $entity_type) {
-        if ($entity_type->hasHandlerClass('views_data') && $entity_type->entityClassImplements(FieldableEntityInterface::class)) {
+        if ($entity_type->hasHandlerClass('views_data')) {
           $base_field_definitions = $this->entityFieldManager->getBaseFieldDefinitions($entity_type_id);
 
           $entity_storage = $this->entityTypeManager->getStorage($entity_type_id);
