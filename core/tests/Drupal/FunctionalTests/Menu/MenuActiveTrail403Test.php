@@ -35,7 +35,7 @@ class MenuActiveTrail403Test extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['system', 'block', 'menu_link_content'];
+  protected static $modules = ['system', 'block', 'menu_link_content'];
 
   /**
    * {@inheritdoc}

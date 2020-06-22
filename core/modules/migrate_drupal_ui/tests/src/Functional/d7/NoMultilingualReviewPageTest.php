@@ -16,7 +16,7 @@ class NoMultilingualReviewPageTest extends NoMultilingualReviewPageTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = [
+  protected static $modules = [
     'aggregator',
     'book',
     'config_translation',
