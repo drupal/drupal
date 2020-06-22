@@ -22,6 +22,11 @@ class ViewsConfigUpdaterTest extends ViewsKernelTestBase {
   /**
    * {@inheritdoc}
    */
+  protected static $modules = ['views_config_entity_test'];
+
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp($import_test_views = TRUE) {
     parent::setUp();
 
