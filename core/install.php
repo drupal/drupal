@@ -22,7 +22,7 @@ $root_path = realpath('');
 define('MAINTENANCE_MODE', 'install');
 
 // Exit early if an incompatible PHP version is in use, so that the user sees a
-// helpful error message rather than a whitescreen from any fatal errors due to
+// helpful error message rather than a white screen from any fatal errors due to
 // the incompatible version. The minimum version is also hardcoded (instead of
 // \Drupal::MINIMUM_PHP), to avoid any fatal errors that might result from
 // loading the autoloader or core/lib/Drupal.php. Note: Remember to update the

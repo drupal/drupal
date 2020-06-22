@@ -62,7 +62,7 @@ services:
   user.flood_control:
     class: Drupal\user\UserFloodControl
     arguments: ['@flood', '@event_dispatcher', '@request_stack']
-  user.flood_subcriber:
+  user.flood_subscriber:
     class: Drupal\user\EventSubscriber\UserFloodSubscriber
     arguments: ['@logger.channel.user']
     tags:
