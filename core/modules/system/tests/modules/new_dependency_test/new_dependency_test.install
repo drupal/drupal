@@ -17,6 +17,7 @@ function new_dependency_test_update_8001() {
     'new_dependency_test.alias_dependency',
     'new_dependency_test.alias2',
     'new_dependency_test.alias_dependency2',
+    'new_dependency_test.setter_injection',
   ];
 
   // Gather the state of the services prior to installing the
