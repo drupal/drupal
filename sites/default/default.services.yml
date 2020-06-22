@@ -126,15 +126,13 @@ parameters:
   # Not recommended in production environments
   # @default false
   http.response.debug_cacheability_headers: false
-  factory.keyvalue:
-    {}
+  factory.keyvalue: {}
     # Default key/value storage service to use.
     # @default keyvalue.database
     # default: keyvalue.database
     # Collection-specific overrides.
     # state: keyvalue.database
-  factory.keyvalue.expirable:
-    {}
+  factory.keyvalue.expirable: {}
     # Default key/value expirable storage service to use.
     # @default keyvalue.database.expirable
     # default: keyvalue.database.expirable
