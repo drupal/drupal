@@ -2,14 +2,14 @@
 
 namespace Drupal\Core\Routing;
 
-use Symfony\Cmf\Component\Routing\VersatileGeneratorInterface;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface as SymfonyUrlGeneratorInterface;
 
 /**
  * Defines an interface for generating a url from a route or system path.
  *
  * Provides additional methods and options not present in the base interface.
  */
-interface UrlGeneratorInterface extends VersatileGeneratorInterface {
+interface UrlGeneratorInterface extends SymfonyUrlGeneratorInterface {
 
   /**
    * Gets the internal path (system path) for a route.

@@ -4,7 +4,7 @@ namespace Drupal\Tests\Core\EventSubscriber;
 
 use Drupal\Core\EventSubscriber\OptionsRequestSubscriber;
 use Drupal\Tests\UnitTestCase;
-use Symfony\Cmf\Component\Routing\RouteProviderInterface;
+use Drupal\Core\Routing\RouteProviderInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;

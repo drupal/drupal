@@ -4,7 +4,7 @@ namespace Drupal\Core\Entity\Enhancer;
 
 use Drupal\Core\Routing\EnhancerInterface;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Cmf\Component\Routing\RouteObjectInterface;
+use Drupal\Core\Routing\RouteObjectInterface;
 use Symfony\Component\Routing\Route;
 
 /**

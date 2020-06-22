@@ -11,7 +11,7 @@ use Drupal\Core\Session\AccountInterface;
 use Drupal\Component\Utility\ArgumentsResolverInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
-use Symfony\Cmf\Component\Routing\RouteObjectInterface;
+use Drupal\Core\Routing\RouteObjectInterface;
 
 /**
  * Attaches access check services to routes and runs them on request.

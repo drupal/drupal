@@ -2,7 +2,7 @@
 
 namespace Drupal\Core\ParamConverter;
 
-use Symfony\Cmf\Component\Routing\RouteObjectInterface;
+use Drupal\Core\Routing\RouteObjectInterface;
 use Symfony\Component\Routing\RouteCollection;
 
 /**

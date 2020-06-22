@@ -2,14 +2,13 @@
 
 namespace Drupal\Core\Routing;
 
-use Symfony\Cmf\Component\Routing\PagedRouteProviderInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
  * A Route Provider front-end for all Drupal-stored routes.
  */
-class RouteProviderLazyBuilder implements PreloadableRouteProviderInterface, PagedRouteProviderInterface, EventSubscriberInterface {
+class RouteProviderLazyBuilder implements PreloadableRouteProviderInterface, EventSubscriberInterface {
 
   /**
    * The route provider service.
@@ -122,16 +121,41 @@ class RouteProviderLazyBuilder implements PreloadableRouteProviderInterface, Pag
   }
 
   /**
-   * {@inheritdoc}
+   * Returns a chunk of routes.
+   *
+   * Should only be used in conjunction with an iterator.
+   *
+   * @param int $offset
+   *   The query offset.
+   * @param int $length
+   *   The number of records.
+   *
+   * @return \Symfony\Component\Routing\Route[]
+   *   Routes keyed by the route name.
+   *
+   * @deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. No direct
+   *   replacement is provided.
+   *
+   * @see https://www.drupal.org/node/3151009
    */
   public function getRoutesPaged($offset, $length = NULL) {
+    @trigger_error(__METHOD__ . '() is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. No direct replacement is provided. See https://www.drupal.org/node/3151009', E_USER_DEPRECATED);
     return $this->getRouteProvider()->getRoutesPaged($offset, $length);
   }
 
   /**
-   * {@inheritdoc}
+   * Gets the total count of routes provided by the router.
+   *
+   * @return int
+   *   Number of routes.
+   *
+   * @deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. No direct
+   *   replacement is provided.
+   *
+   * @see https://www.drupal.org/node/3151009
    */
   public function getRoutesCount() {
+    @trigger_error(__METHOD__ . '() is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. No direct replacement is provided. See https://www.drupal.org/node/3151009', E_USER_DEPRECATED);
     return $this->getRouteProvider()->getRoutesCount();
   }
 

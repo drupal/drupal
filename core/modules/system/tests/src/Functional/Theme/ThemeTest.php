@@ -4,7 +4,7 @@ namespace Drupal\Tests\system\Functional\Theme;
 
 use Drupal\Component\Serialization\Json;
 use Drupal\Tests\BrowserTestBase;
-use Symfony\Cmf\Component\Routing\RouteObjectInterface;
+use Drupal\Core\Routing\RouteObjectInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Route;
 

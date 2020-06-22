@@ -5,7 +5,7 @@ namespace Drupal\Tests\Core\ParamConverter;
 use Drupal\Core\ParamConverter\ParamConverterManager;
 use Drupal\Core\ParamConverter\ParamNotConvertedException;
 use Drupal\Tests\UnitTestCase;
-use Symfony\Cmf\Component\Routing\RouteObjectInterface;
+use Drupal\Core\Routing\RouteObjectInterface;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 

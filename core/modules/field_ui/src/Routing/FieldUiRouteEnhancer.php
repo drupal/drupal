@@ -3,7 +3,7 @@
 namespace Drupal\field_ui\Routing;
 
 use Drupal\Core\Routing\EnhancerInterface;
-use Symfony\Cmf\Component\Routing\RouteObjectInterface;
+use Drupal\Core\Routing\RouteObjectInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Route;

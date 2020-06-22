@@ -4,7 +4,7 @@ namespace Drupal\Tests\Core\Entity\Enhancer;
 
 use Drupal\Core\Entity\Enhancer\EntityRouteEnhancer;
 use Drupal\Tests\UnitTestCase;
-use Symfony\Cmf\Component\Routing\RouteObjectInterface;
+use Drupal\Core\Routing\RouteObjectInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Route;
 
