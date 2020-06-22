@@ -68,9 +68,9 @@ class ViewExecutableFactory {
    *   A ViewExecutable instance.
    */
   public function get(ViewEntityInterface $view) {
-    $view = new ViewExecutable($view, $this->user, $this->viewsData, $this->routeProvider);
-    $view->setRequest($this->requestStack->getCurrentRequest());
-    return $view;
+    $view_executable = new ViewExecutable($view, $this->user, $this->viewsData, $this->routeProvider);
+    $view_executable->setRequest($this->requestStack->getCurrentRequest());
+    return $view_executable;
   }
 
 }
