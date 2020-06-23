@@ -3,7 +3,7 @@
 namespace Drupal\Tests\Core\Routing;
 
 use Drupal\Core\Routing\RouteMatch;
-use Drupal\Core\Routing\RouteObjectInterface;
+use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Route;

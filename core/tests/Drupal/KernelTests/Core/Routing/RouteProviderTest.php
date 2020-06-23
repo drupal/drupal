@@ -294,32 +294,6 @@ class RouteProviderTest extends KernelTestBase {
   }
 
   /**
-   * Confirms RouteProvider::getAllRoutes() extracts information correctly from the database.
-   */
-  public function testGetAllRoutes() {
-    $connection = Database::getConnection();
-    $provider = new RouteProvider($connection, $this->state, $this->currentPath, $this->cache, $this->pathProcessor, $this->cacheTagsInvalidator, 'test_routes');
-
-    $this->fixtures->createTables($connection);
-
-    $dumper = new MatcherDumper($connection, $this->state, 'test_routes');
-    $dumper->addRoutes($this->fixtures->SampleRouteCollection());
-    $dumper->dump();
-
-    $sample_routes = $this->fixtures->staticSampleRouteCollection();
-    $expected_route_count = count($sample_routes);
-
-    $returned_routes = $provider->getAllRoutes();
-
-    $this->assertEqual($expected_route_count, count($returned_routes));
-
-    foreach ($returned_routes as $route_name => $route) {
-      $this->assertTrue(array_key_exists($route_name, $sample_routes));
-      $this->assertEquals($route->getPath(), $sample_routes[$route_name]['path']);
-    }
-  }
-
-  /**
    * Confirms that a trailing slash on the request does not result in a 404.
    */
   public function testOutlinePathMatchTrailingSlash() {
@@ -733,9 +707,6 @@ class RouteProviderTest extends KernelTestBase {
 
   /**
    * Tests getRoutesPaged().
-   *
-   * @group legacy
-   * @expectedDeprecation Drupal\Core\Routing\RouteProvider::getRoutesPaged() is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. No direct replacement is provided. See https://www.drupal.org/node/3151009
    */
   public function testGetRoutesPaged() {
     $connection = Database::getConnection();
@@ -759,23 +730,6 @@ class RouteProviderTest extends KernelTestBase {
     // Query a limited sets of routes.
     $routes = $provider->getRoutesPaged(1, 2);
     $this->assertEqual(array_keys($routes), array_slice(array_keys($fixture_routes), 1, 2));
-  }
-
-  /**
-   * Tests getRoutesCount().
-   *
-   * @group legacy
-   * @expectedDeprecation Drupal\Core\Routing\RouteProvider::getRoutesCount() is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. No direct replacement is provided. See https://www.drupal.org/node/3151009
-   */
-  public function testGetRoutesCount() {
-    $connection = Database::getConnection();
-    $provider = new RouteProvider($connection, $this->state, $this->currentPath, $this->cache, $this->pathProcessor, $this->cacheTagsInvalidator, 'test_routes');
-
-    $this->fixtures->createTables($connection);
-    $dumper = new MatcherDumper($connection, $this->state, 'test_routes');
-    $dumper->addRoutes($this->fixtures->sampleRouteCollection());
-    $dumper->dump();
-    $this->assertEqual($provider->getRoutesCount(), 5);
   }
 
 }
