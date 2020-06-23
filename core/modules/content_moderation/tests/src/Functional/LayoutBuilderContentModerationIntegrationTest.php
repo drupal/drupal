@@ -184,7 +184,7 @@ class LayoutBuilderContentModerationIntegrationTest extends BrowserTestBase {
     $assert_session->pageTextContains('Example block body');
 
     // Publish the draft of the page ensure the draft inline block content
-    // apears on the published page.
+    // appears on the published page.
     $this->submitForm([
       'new_state' => 'published',
     ], 'Apply');

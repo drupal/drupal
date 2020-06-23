@@ -62,7 +62,6 @@ anyall
 api's
 apng
 apos
-appers
 applix
 aptain
 archiver
