@@ -13,6 +13,7 @@ use Drupal\Core\Session\AccountInterface;
 use Drupal\content_moderation\ModerationInformation;
 use Drupal\Tests\UnitTestCase;
 use Drupal\workflows\WorkflowInterface;
+use Prophecy\Argument;
 
 /**
  * @coversDefaultClass \Drupal\content_moderation\ModerationInformation
@@ -38,6 +39,7 @@ class ModerationInformationTest extends UnitTestCase {
    */
   protected function getEntityTypeManager() {
     $entity_type_manager = $this->prophesize(EntityTypeManagerInterface::class);
+    $entity_type_manager->getHandler(Argument::any(), 'moderation')->willReturn(new ModerationHandler());
     return $entity_type_manager->reveal();
   }
 
@@ -94,6 +96,7 @@ class ModerationInformationTest extends UnitTestCase {
     ]);
     $entity = $this->prophesize(ContentEntityInterface::class);
     $entity->getEntityType()->willReturn($entity_type);
+    $entity->getEntityTypeId()->willReturn($entity_type->id());
     $entity->bundle()->willReturn('test_bundle');
 
     $this->assertEquals($expected, $moderation_information->isModeratedEntity($entity->reveal()));

@@ -31,6 +31,14 @@ class ModerationHandler implements ModerationHandlerInterface, EntityHandlerInte
   /**
    * {@inheritdoc}
    */
+  public function isModeratedEntity(ContentEntityInterface $entity) {
+    // Moderate all entities included in the moderation workflow by default.
+    return TRUE;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function onPresave(ContentEntityInterface $entity, $default_revision, $published_state) {
     // When entities are syncing, content moderation should not force a new
     // revision to be created and should not update the default status of a

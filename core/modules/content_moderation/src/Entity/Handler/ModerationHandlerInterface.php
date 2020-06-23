@@ -17,6 +17,29 @@ use Drupal\Core\Form\FormStateInterface;
 interface ModerationHandlerInterface {
 
   /**
+   * Determines if an entity should be moderated.
+   *
+   * At the workflow level, moderation is enabled or disabled for entire entity
+   * types or bundles. After a bundle has been enabled, there maybe be further
+   * decisions each entity type may make to evaluate if a given entity is
+   * appropriate to be included in a moderation workflow. The handler is only
+   * consulted after the user has configured the associated entity type and
+   * bundle to be included in a moderation workflow.
+   *
+   * Returning FALSE will remove the moderation state field widget from the
+   * associated entity form and opt out of all moderation related entity
+   * semantics, such as creating new revisions and changing the publishing
+   * status of a revision.
+   *
+   * @param \Drupal\Core\Entity\ContentEntityInterface $entity
+   *   The entity we may be moderating.
+   *
+   * @return bool
+   *   TRUE if this entity should be moderated, FALSE otherwise.
+   */
+  public function isModeratedEntity(ContentEntityInterface $entity);
+
+  /**
    * Operates on moderated content entities preSave().
    *
    * @param \Drupal\Core\Entity\ContentEntityInterface $entity

@@ -52,8 +52,10 @@ class ModerationInformation implements ModerationInformationInterface {
     if (!$entity instanceof ContentEntityInterface) {
       return FALSE;
     }
-
-    return $this->shouldModerateEntitiesOfBundle($entity->getEntityType(), $entity->bundle());
+    if (!$this->shouldModerateEntitiesOfBundle($entity->getEntityType(), $entity->bundle())) {
+      return FALSE;
+    }
+    return $this->entityTypeManager->getHandler($entity->getEntityTypeId(), 'moderation')->isModeratedEntity($entity);
   }
 
   /**
