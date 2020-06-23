@@ -5,7 +5,7 @@ token_test.test:
   requirements:
     _access: 'TRUE'
 token_test.test_without_bubbleable_metadata:
-  path: token-test-without-bubleable-metadata/{node}
+  path: token-test-without-bubbleable-metadata/{node}
   defaults:
     _controller: Drupal\token_test\Controller\TestController::tokenReplaceWithoutPassedBubbleableMetadata
   requirements:
