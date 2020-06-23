@@ -147,3 +147,17 @@ function system_post_update_uninstall_stable() {
     // depending on it.
   }
 }
+
+/**
+ * Update schema version to integers.
+ *
+ * @see https://www.drupal.org/project/drupal/issues/3143713
+ */
+function system_post_update_schema_version_int() {
+  $registry = \Drupal::keyValue('system.schema');
+  foreach ($registry->getAll() as $name => $schema) {
+    if (is_string($schema)) {
+      $registry->set($name, (int) $schema);
+    }
+  }
+}

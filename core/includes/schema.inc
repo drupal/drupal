@@ -47,7 +47,7 @@ function drupal_get_schema_versions($module) {
       // If this function is a module update function, add it to the list of
       // module updates.
       if (preg_match($regexp, $function, $matches)) {
-        $updates[$matches['module']][] = $matches['version'];
+        $updates[$matches['module']][] = (int) $matches['version'];
       }
     }
     // Ensure that updates are applied in numerical order.
