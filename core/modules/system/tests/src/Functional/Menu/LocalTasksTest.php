@@ -79,7 +79,7 @@ class LocalTasksTest extends BrowserTestBase {
    * @return bool
    *   TRUE if the local task exists on the page.
    */
-  protected function assertLocalTaskAppers($title) {
+  protected function assertLocalTaskAppears($title) {
     // SimpleXML gives us the unescaped text, not the actual escaped markup,
     // so use a pattern instead to check the raw content.
     // This behavior is a bug in libxml, see
@@ -116,9 +116,9 @@ class LocalTasksTest extends BrowserTestBase {
 
     // Verify that script tags are escaped on output.
     $title = Html::escape("Task 1 <script>alert('Welcome to the jungle!')</script>");
-    $this->assertLocalTaskAppers($title);
+    $this->assertLocalTaskAppears($title);
     $title = Html::escape("<script>alert('Welcome to the derived jungle!')</script>");
-    $this->assertLocalTaskAppers($title);
+    $this->assertLocalTaskAppears($title);
 
     // Verify that local tasks appear as defined in the router.
     $this->drupalGet(Url::fromRoute('menu_test.local_task_test_tasks_view'));
@@ -130,7 +130,7 @@ class LocalTasksTest extends BrowserTestBase {
     ]);
 
     $title = Html::escape("<script>alert('Welcome to the jungle!')</script>");
-    $this->assertLocalTaskAppers($title);
+    $this->assertLocalTaskAppears($title);
 
     // Ensure the view tab is active.
     $result = $this->xpath('//ul[contains(@class, "tabs")]//li[contains(@class, "active")]/a');
