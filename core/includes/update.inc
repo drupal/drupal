@@ -14,8 +14,15 @@ use Drupal\Core\Utility\Error;
 
 /**
  * Tests the compatibility of a module or theme.
+ *
+ * @deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. No direct
+ *   replacement is provided.
+ *
+ * @see https://www.drupal.org/node/3150727
+ * @see \Drupal\Core\Extension\ExtensionList::checkIncompatibility()
  */
 function update_check_incompatibility($name, $type = 'module') {
+  @trigger_error('update_check_incompatibility() is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. No direct replacement is provided. See https://www.drupal.org/node/3150727', E_USER_DEPRECATED);
   static $themes, $modules;
 
   // Store values of expensive functions for future use.
