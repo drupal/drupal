@@ -121,7 +121,7 @@ class BasicAuth implements AuthenticationProviderInterface, AuthenticationProvid
     }
     // Always register an IP-based failed login event.
     $this->flood->register('basic_auth.failed_login_ip', $flood_config->get('ip_window'));
-    return [];
+    return NULL;
   }
 
   /**
