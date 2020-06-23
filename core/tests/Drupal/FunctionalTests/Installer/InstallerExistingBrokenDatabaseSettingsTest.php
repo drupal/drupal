@@ -48,7 +48,6 @@ class InstallerExistingBrokenDatabaseSettingsTest extends InstallerTestBase {
    */
   protected function setUpSettings() {
     // This form will never be reached.
-    return;
   }
 
   /**
@@ -56,7 +55,6 @@ class InstallerExistingBrokenDatabaseSettingsTest extends InstallerTestBase {
    */
   protected function setUpSite() {
     // This form will never be reached.
-    return;
   }
 
   /**
