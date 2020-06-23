@@ -104,7 +104,6 @@ attrvals
 atttypid
 atttypmod
 auditable
-autcomplete
 auth's
 authless
 authmap
