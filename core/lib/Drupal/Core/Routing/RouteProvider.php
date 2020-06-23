@@ -10,8 +10,6 @@ use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\Path\CurrentPathStack;
 use Drupal\Core\PathProcessor\InboundPathProcessorInterface;
 use Drupal\Core\State\StateInterface;
-use Symfony\Cmf\Component\Routing\PagedRouteCollection;
-use Symfony\Cmf\Component\Routing\PagedRouteProviderInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
@@ -21,7 +19,7 @@ use Drupal\Core\Database\Connection;
 /**
  * A Route Provider front-end for all Drupal-stored routes.
  */
-class RouteProvider implements CacheableRouteProviderInterface, PreloadableRouteProviderInterface, PagedRouteProviderInterface, EventSubscriberInterface {
+class RouteProvider implements CacheableRouteProviderInterface, PreloadableRouteProviderInterface, EventSubscriberInterface {
 
   /**
    * The database connection from which to read route information.
@@ -401,7 +399,16 @@ class RouteProvider implements CacheableRouteProviderInterface, PreloadableRoute
    * {@inheritdoc}
    */
   public function getAllRoutes() {
-    return new PagedRouteCollection($this);
+    $select = $this->connection->select($this->tableName, 'router')
+      ->fields('router', ['name', 'route']);
+    $routes = $select->execute()->fetchAllKeyed();
+
+    $result = [];
+    foreach ($routes as $name => $route) {
+      $result[$name] = unserialize($route);
+    }
+
+    return $result;
   }
 
   /**
@@ -422,9 +429,25 @@ class RouteProvider implements CacheableRouteProviderInterface, PreloadableRoute
   }
 
   /**
-   * {@inheritdoc}
+   * Returns a chunk of routes.
+   *
+   * Should only be used in conjunction with an iterator.
+   *
+   * @param int $offset
+   *   The query offset.
+   * @param int $length
+   *   The number of records.
+   *
+   * @return \Symfony\Component\Routing\Route[]
+   *   Routes keyed by the route name.
+   *
+   * @deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. No direct
+   *   replacement is provided.
+   *
+   * @see https://www.drupal.org/node/3151009
    */
   public function getRoutesPaged($offset, $length = NULL) {
+    @trigger_error(__METHOD__ . '() is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. No direct replacement is provided. See https://www.drupal.org/node/3151009', E_USER_DEPRECATED);
     $select = $this->connection->select($this->tableName, 'router')
       ->fields('router', ['name', 'route']);
 
@@ -443,9 +466,18 @@ class RouteProvider implements CacheableRouteProviderInterface, PreloadableRoute
   }
 
   /**
-   * {@inheritdoc}
+   * Gets the total count of routes provided by the router.
+   *
+   * @return int
+   *   Number of routes.
+   *
+   * @deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. No direct
+   *   replacement is provided.
+   *
+   * @see https://www.drupal.org/node/3151009
    */
   public function getRoutesCount() {
+    @trigger_error(__METHOD__ . '() is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. No direct replacement is provided. See https://www.drupal.org/node/3151009', E_USER_DEPRECATED);
     return $this->connection->query("SELECT COUNT(*) FROM {" . $this->connection->escapeTable($this->tableName) . "}")->fetchField();
   }
 

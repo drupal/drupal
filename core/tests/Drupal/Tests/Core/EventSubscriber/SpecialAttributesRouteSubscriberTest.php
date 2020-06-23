@@ -6,7 +6,7 @@ use Drupal\Core\EventSubscriber\SpecialAttributesRouteSubscriber;
 use Drupal\Core\Routing\RouteBuildEvent;
 use Drupal\Tests\UnitTestCase;
 use PHPUnit\Framework\Error\Warning;
-use Symfony\Cmf\Component\Routing\RouteObjectInterface;
+use Drupal\Core\Routing\RouteObjectInterface;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 

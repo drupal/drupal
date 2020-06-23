@@ -9,7 +9,7 @@ use Drupal\Core\Routing\AccessAwareRouterInterface;
 use Drupal\Core\Routing\RequestContext;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Url;
-use Symfony\Cmf\Component\Routing\RouteObjectInterface;
+use Drupal\Core\Routing\RouteObjectInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\Routing\Exception\MethodNotAllowedException;

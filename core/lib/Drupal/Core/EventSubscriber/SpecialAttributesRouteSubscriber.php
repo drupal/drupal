@@ -4,7 +4,7 @@ namespace Drupal\Core\EventSubscriber;
 
 use Drupal\Core\Routing\RouteBuildEvent;
 use Drupal\Core\Routing\RouteSubscriberBase;
-use Symfony\Cmf\Component\Routing\RouteObjectInterface;
+use Drupal\Core\Routing\RouteObjectInterface;
 use Symfony\Component\Routing\RouteCollection;
 
 /**

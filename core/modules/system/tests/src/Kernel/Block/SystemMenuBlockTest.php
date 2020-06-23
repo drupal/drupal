@@ -10,7 +10,7 @@ use Drupal\Core\Render\Element;
 use Drupal\system\Tests\Routing\MockRouteProvider;
 use Drupal\Tests\Core\Menu\MenuLinkMock;
 use Drupal\user\Entity\User;
-use Symfony\Cmf\Component\Routing\RouteObjectInterface;
+use Drupal\Core\Routing\RouteObjectInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;

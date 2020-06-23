@@ -5,7 +5,7 @@ namespace Drupal\Core\Routing\Enhancer;
 use Drupal\Core\ParamConverter\ParamConverterManagerInterface;
 use Drupal\Core\ParamConverter\ParamNotConvertedException;
 use Drupal\Core\Routing\EnhancerInterface;
-use Symfony\Cmf\Component\Routing\RouteObjectInterface;
+use Drupal\Core\Routing\RouteObjectInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
