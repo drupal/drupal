@@ -25,7 +25,7 @@ class RssResponseRelativeUrlFilterTest extends UnitTestCase {
   <title>Drupal.org</title>
   <link>https://www.drupal.org</link>
   <description>Come for the software, stay for the community
-D rupal is an open source content management platform powering millions of websites and applications. It’s built, used, and supported by an active and diverse community of people around the world.</description>
+Drupal is an open source content management platform powering millions of websites and applications. It’s built, used, and supported by an active and diverse community of people around the world.</description>
   <language>en</language>
   <item>
      <title>Drupal 8 turns one!</title>
@@ -44,7 +44,7 @@ RSS;
   <title>Drupal.org</title>
   <link>https://www.drupal.org</link>
   <description>Come for the software, stay for the community
-D rupal is an open source content management platform powering millions of websites and applications. It’s built, used, and supported by an active and diverse community of people around the world.</description>
+Drupal is an open source content management platform powering millions of websites and applications. It’s built, used, and supported by an active and diverse community of people around the world.</description>
   <language>en</language>
   <item>
      <title>Drupal 8 turns one!</title>
@@ -66,7 +66,7 @@ RSS;
   <title>Drupal.org</title>
   <link>https://www.drupal.org</link>
   <description>Come for the software, stay for the community
-D rupal is an open source content management platform powering millions of websites and applications. It’s built, used, and supported by an active and diverse community of people around the world.</description>
+Drupal is an open source content management platform powering millions of websites and applications. It’s built, used, and supported by an active and diverse community of people around the world.</description>
   <language>en</language>
   <item>
      <title>Drupal 8 turns one!</title>
