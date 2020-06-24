@@ -39,7 +39,7 @@ class Plugin implements AnnotationInterface {
       return $value !== NULL;
     });
     $parsed_values = $this->parse($values);
-    $this->definition = NestedArray::mergeDeep($defaults, $parsed_values);
+    $this->definition = NestedArray::mergeDeepArray([$defaults, $parsed_values], TRUE);
   }
 
   /**
