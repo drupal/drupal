@@ -1599,7 +1599,6 @@ rsyslog
 rtsp
 ruleset
 rulesets
-rupal
 rxpq
 répét
 répété
