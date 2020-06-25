@@ -370,7 +370,6 @@ copmplete
 corefake
 coretest
 corge
-cotrol
 countquery
 coversions
 cpan
