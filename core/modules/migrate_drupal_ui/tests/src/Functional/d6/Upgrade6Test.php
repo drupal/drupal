@@ -87,7 +87,7 @@ class Upgrade6Test extends MigrateUpgradeExecuteTestBase {
       'field_storage_config' => 66,
       'file' => 7,
       'filter_format' => 7,
-      'image_style' => 5,
+      'image_style' => 6,
       'language_content_settings' => 15,
       'node' => 18,
       // The 'book' module provides the 'book' node type, and the migration

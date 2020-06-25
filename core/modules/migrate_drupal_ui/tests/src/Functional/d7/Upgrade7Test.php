@@ -91,7 +91,7 @@ class Upgrade7Test extends MigrateUpgradeExecuteTestBase {
       'field_storage_config' => 60,
       'file' => 3,
       'filter_format' => 7,
-      'image_style' => 6,
+      'image_style' => 7,
       'language_content_settings' => 20,
       'node' => 7,
       'node_type' => 7,
