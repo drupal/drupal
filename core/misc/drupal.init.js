@@ -19,7 +19,7 @@ document.documentElement.className += ' js';
     };
 
     if (document.readyState !== 'loading') {
-      callback();
+      setTimeout(callback, 0);
     } else {
       document.addEventListener('DOMContentLoaded', listener);
     }

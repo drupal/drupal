@@ -21,7 +21,7 @@ document.documentElement.className += ' js';
       document.removeEventListener('DOMContentLoaded', listener);
     };
     if (document.readyState !== 'loading') {
-      callback();
+      setTimeout(callback, 0);
     } else {
       document.addEventListener('DOMContentLoaded', listener);
     }
