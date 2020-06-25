@@ -1363,6 +1363,7 @@ persistable
 pharextract
 phars
 phpass
+phpcbf
 phpcs
 phpdoc
 phpdocumentor

@@ -3,6 +3,7 @@
     "language": "en-US",
     "allowCompoundWords": false,
     "ignorePaths": [
+      "composer.lock",
       "assets/vendor/**",
       "lib/Drupal/Component/Diff/**",
       "lib/Drupal/Component/Transliteration/data/**",
