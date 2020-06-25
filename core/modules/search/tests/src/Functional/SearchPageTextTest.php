@@ -86,8 +86,8 @@ class SearchPageTextTest extends BrowserTestBase {
     $this->assertNoText(t('Node'), 'Erroneous translated tab and breadcrumb text is not present');
     $this->assertText(t('Content'), 'Tab and breadcrumb text is present');
 
-    $this->clickLink('Search help');
-    $this->assertText('Search help', 'Correct title is on search help page');
+    $this->clickLink('About searching');
+    $this->assertText('About searching', 'Correct title is on search help page');
     $this->assertText('Use upper-case OR to get more results', 'Correct text is on content search help page');
 
     // Search for a longer text, and see that it is in the title, truncated.
@@ -109,8 +109,8 @@ class SearchPageTextTest extends BrowserTestBase {
     $this->assertText(t('Search'));
     $this->assertSession()->titleEquals('Search for ' . Unicode::truncate($this->searchingUser->getAccountName(), 60, TRUE, TRUE) . ' | Drupal');
 
-    $this->clickLink('Search help');
-    $this->assertText('Search help', 'Correct title is on search help page');
+    $this->clickLink('About searching');
+    $this->assertText('About searching', 'Correct title is on search help page');
     $this->assertText('user names and partial user names', 'Correct text is on user search help page');
 
     // Test that search keywords containing slashes are correctly loaded
