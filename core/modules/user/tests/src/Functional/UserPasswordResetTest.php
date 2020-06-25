@@ -391,28 +391,28 @@ class UserPasswordResetTest extends BrowserTestBase {
   }
 
   /**
-   * Helper function to make assertions about a password reset triggering user flood cotrol.
+   * Makes assertions about a password reset triggering user flood control.
    */
   public function assertPasswordUserFlood() {
     $this->assertText(t('Too many password recovery requests for this account. It is temporarily blocked. Try again later or contact the site administrator.'), 'User password reset flood error message shown.');
   }
 
   /**
-   * Helper function to make assertions about a password reset not triggering user flood control.
+   * Makes assertions about a password reset not triggering user flood control.
    */
   public function assertNoPasswordUserFlood() {
     $this->assertNoText(t('Too many password recovery requests for this account. It is temporarily blocked. Try again later or contact the site administrator.'), 'User password reset flood error message not shown.');
   }
 
   /**
-   * Helper function to make assertions about a password reset triggering IP flood cotrol.
+   * Makes assertions about a password reset triggering IP flood control.
    */
   public function assertPasswordIpFlood() {
     $this->assertText(t('Too many password recovery requests from your IP address. It is temporarily blocked. Try again later or contact the site administrator.'), 'IP password reset flood error message shown.');
   }
 
   /**
-   * Helper function to make assertions about a password reset not triggering IP flood control.
+   * Makes assertions about a password reset not triggering IP flood control.
    */
   public function assertNoPasswordIpFlood() {
     $this->assertNoText(t('Too many password recovery requests from your IP address. It is temporarily blocked. Try again later or contact the site administrator.'), 'IP password reset flood error message not shown.');
