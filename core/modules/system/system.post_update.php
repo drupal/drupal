@@ -149,6 +149,13 @@ function system_post_update_uninstall_stable() {
 }
 
 /**
+ * Clear caches due to trustedCallbacks changing in ClaroPreRender.
+ */
+function system_post_update_claro_dropbutton_variants() {
+  // Empty post-update hook.
+}
+
+/**
  * Update schema version to integers.
  *
  * @see https://www.drupal.org/project/drupal/issues/3143713

@@ -245,9 +245,17 @@ function claro_element_info_alter(&$type) {
     $type['text_format']['#pre_render'][] = [ClaroPreRender::class, 'textFormat'];
   }
 
-  // Add a pre-render function that handles dropbutton variants.
-  if (isset($type['dropbutton'])) {
-    $type['dropbutton']['#pre_render'][] = [ClaroPreRender::class, 'dropButton'];
+  // Add a pre-render function for Operations to set #dropbutton_type.
+  if (isset($type['operations'])) {
+    // In Claro, Operations should always use the extrasmall dropbutton variant.
+    // To add CSS classes based on variants, the element must have the
+    // #dropbutton_type property before it is processed by
+    // \Drupal\Core\Render\Element\Dropbutton::preRenderDropbutton(). This
+    // ensures #dropbutton_type is available to preRenderDropbutton().
+    $operations_pre_renders = !empty($type['operations']['#pre_render']) ? $type['operations']['#pre_render'] : [];
+    array_unshift($operations_pre_renders, [ClaroPreRender::class, 'operations']);
+
+    $type['operations']['#pre_render'] = $operations_pre_renders;
   }
 
   if (isset($type['vertical_tabs'])) {
@@ -612,13 +620,13 @@ function claro_views_ui_display_tab_alter(&$element) {
         foreach ($nested_child_keys as $nested_key) {
           $child_count++;
           $prefix = $dummy_dropbutton[$key][$nested_key]['#prefix'];
-          $dummy_dropbutton[$key][$nested_key]['#prefix'] = preg_replace($prefix_regex, '$1$2 dropbutton__item dropbutton__item--extrasmall$3', $prefix);
+          $dummy_dropbutton[$key][$nested_key]['#prefix'] = preg_replace($prefix_regex, '$1$2 dropbutton__item$3', $prefix);
         }
       }
       else {
         $child_count++;
         $prefix = $dummy_dropbutton[$key]['#prefix'];
-        $dummy_dropbutton[$key]['#prefix'] = preg_replace($prefix_regex, '$1$2 dropbutton__item dropbutton__item--extrasmall$3', $prefix);
+        $dummy_dropbutton[$key]['#prefix'] = preg_replace($prefix_regex, '$1$2 dropbutton__item$3', $prefix);
       }
     }
 
@@ -1005,20 +1013,6 @@ function claro_preprocess_views_view_table(&$variables) {
 }
 
 /**
- * Implements hook_preprocess_HOOK() for links__dropbutton__operations.
- *
- * Operations always use the extra small dropbutton variant.
- */
-function claro_preprocess_links__dropbutton__operations(&$variables) {
-  $item_classes = ['dropbutton__item', 'dropbutton__item--extrasmall'];
-  $variables['attributes']['class'][] = 'dropbutton--extrasmall';
-
-  foreach ($variables['links'] as &$link_data) {
-    $link_data['attributes']->addClass($item_classes);
-  }
-}
-
-/**
  * Implements hook_preprocess_HOOK() for links__dropbutton.
  */
 function claro_preprocess_links__dropbutton(&$variables) {
@@ -1029,21 +1023,8 @@ function claro_preprocess_links__dropbutton(&$variables) {
       : 'dropbutton--single';
   }
 
-  $item_classes = ['dropbutton__item'];
-
-  // Check that the dropbutton has a supported variant class.
-  // @todo Revisit after https://www.drupal.org/node/3057581 is added.
-  if (!empty($variables['attributes']['class'])) {
-    if (array_search('dropbutton--small', $variables['attributes']['class'])) {
-      $item_classes[] = 'dropbutton__item--small';
-    }
-    elseif (array_search('dropbutton--extrasmall', $variables['attributes']['class'])) {
-      $item_classes[] = 'dropbutton__item--extrasmall';
-    }
-  }
-
   foreach ($variables['links'] as &$link_data) {
-    $link_data['attributes']->addClass($item_classes);
+    $link_data['attributes']->addClass('dropbutton__item');
   }
 }
 
