@@ -1,6 +1,5 @@
 a'foo
 abantu
-abbrfilter
 abcdefg
 abcdefghijklmno
 abcdefghijklmnopqrstuvwxyz
@@ -19,7 +18,6 @@ adminforms
 adminlabel
 adnum
 adrelid
-adsense
 adsrc
 aewesome
 aflopend
@@ -122,7 +120,6 @@ autoescaped
 autoescaping
 autofilling
 autofix
-autofloat
 autogenerate
 autogenerator
 autoincrement
@@ -133,7 +130,6 @@ autoloaded
 autoloader
 autoloaders
 autoloading
-autop
 autoplay
 autoreply
 autosave
@@ -182,7 +178,6 @@ bgblue
 bgcolor
 bgred
 bgsound
-biblio
 bigpipe
 bigserial
 bikeshed
@@ -296,7 +291,6 @@ chvotes
 cidhash
 cids
 cillum
-cincopa
 circlesmall
 cjds
 ckeditor
@@ -321,7 +315,6 @@ closur
 cnenzrgre
 cnfi
 cochez
-codefilter
 codesniffer
 colgroups
 collegehumor
@@ -334,7 +327,6 @@ commandline
 commenter's
 commenters
 commmand
-commonmark
 commontest
 comparision
 compliane
@@ -435,7 +427,6 @@ deconstructor
 dedupe
 deduplicated
 deduplicates
-deepzoom
 defalt
 defaultable
 defgroup
@@ -567,9 +558,7 @@ elems
 elit
 embed's
 emebd
-emogrifier
 emptry
-emptyparagraphkiller
 emtity
 emtpy
 encapsed
@@ -702,7 +691,6 @@ foos
 fooÿñ
 forder
 foreaching
-forena
 forentity
 formated
 formating
@@ -760,7 +748,6 @@ goldfinger
 gonner
 googleapis
 gotit
-gotwo
 goutte
 grandgrandchild
 grandgrandchild's
@@ -817,10 +804,7 @@ hreflang
 hrefs
 htaccess
 htkey
-htmlcorrector
-htmlpurifier
 htmls
-htmltidy
 htmlto
 httpd
 httpheader
@@ -883,7 +867,6 @@ inteface
 intefacewithconstants
 interger
 internal's
-intlinks
 introspectable
 invalida
 invalidateby
@@ -965,7 +948,6 @@ latn
 layouted
 lazybuilder
 lazyload
-lazyloader
 lcode
 ldquo
 leftjoin
@@ -1120,11 +1102,9 @@ mulrevpub
 multibuys
 multibyte
 multicardinality
-multicolumn
 multifield
 multigroup
 multilanguage
-multilink
 multipage
 multipass
 multipleforms
@@ -1168,7 +1148,6 @@ mystring
 mytab
 mytable
 mytheme
-mytube
 mytype
 myvalue
 myvar
@@ -1290,9 +1269,7 @@ onewidgetfield
 onmediaerror
 onoff
 opendocument
-opengraph
 openid
-openlayers
 openxmlformats
 oplopend
 opmls
@@ -1607,7 +1584,6 @@ safed
 sameline
 samename
 sameorigin
-sanitizable
 sapere
 sata
 savepath
@@ -1655,7 +1631,6 @@ setval
 sevice
 sharedspace
 shatner
-shortcode
 shorterthan
 shortlink
 shortname
@@ -1980,7 +1955,6 @@ typehinted
 typehinting
 typehints
 typemanager
-typogrify
 typr
 tzid
 uberawesome
@@ -2188,7 +2162,6 @@ wmlscript
 woff
 wonkiness
 wontmatter
-wordfilter
 wordprocessingml
 wordsafe
 wordword
@@ -2205,7 +2178,6 @@ wxuczpzdmc
 wysiwygs
 xampl
 xbap
-xbbcode
 xbeg
 xbitmap
 xcache
