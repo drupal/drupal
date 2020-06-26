@@ -77,7 +77,7 @@
   });
 
   $(document).on({
-    'columnschange.TableHeader': tableHeaderResizeHandler,
+    'columnschange.TableHeader drupalToolbarTrayChange': tableHeaderResizeHandler,
 
     'drupalViewportOffsetChange.TableHeader': tableHeaderOffsetChangeHandler
   });
