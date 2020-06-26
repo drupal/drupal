@@ -11,7 +11,6 @@ use Drupal\Component\Utility\NestedArray;
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\GeneratedLink;
 use Drupal\Core\Link;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Template\Attribute;
@@ -927,26 +926,6 @@ function claro_preprocess_table(&$variables) {
   // https://www.drupal.org/node/1973418 is in.
   if (!empty($variables['header'])) {
     foreach ($variables['header'] as &$header_cell) {
-      // For 8.6.x and below.
-      // @todo Remove this after 8.6.x is out of support.
-      if ($header_cell['content'] instanceof GeneratedLink) {
-        $dom_doc = Html::load($header_cell['content']->getGeneratedLink());
-        $anchors = $dom_doc->getElementsByTagName('a');
-
-        if (!empty($anchors)) {
-          foreach ($anchors as $anchor) {
-            $anchor_href = $anchor->getAttribute('href');
-            $parsed_url = UrlHelper::parse($anchor_href);
-            $query = !empty($parsed_url['query']) ? $parsed_url['query'] : [];
-
-            if (isset($query['order']) && isset($query['sort'])) {
-              $header_cell['attributes']->addClass('sortable-heading');
-            }
-          }
-        }
-      }
-
-      // For 8.7.x and above.
       if ($header_cell['content'] instanceof Link) {
         $query = $header_cell['content']->getUrl()->getOption('query') ?: [];
 
