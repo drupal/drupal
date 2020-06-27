@@ -130,6 +130,7 @@ autoloaded
 autoloader
 autoloaders
 autoloading
+autop
 autoplay
 autoreply
 autosave
@@ -804,6 +805,7 @@ hreflang
 hrefs
 htaccess
 htkey
+htmlcorrector
 htmls
 htmlto
 httpd
