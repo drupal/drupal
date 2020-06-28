@@ -20,13 +20,13 @@ SQLITE DATABASE CREATION
 The Drupal installer will create the SQLite database for you. The only
 requirement is that the installer must have write permissions to the directory
 where the database file resides. This directory (not just the database file) also
-has to remain writeable by the web server going forward for SQLite to continue to
+has to remain writable by the web server going forward for SQLite to continue to
 be able to operate.
 
 On the "Database configuration" form in the "Database file" field, you must
 supply the exact path to where you wish your database file to reside. It is
 strongly suggested that you choose a path that is outside of the webroot, yet
-ensure that the directory is writeable by the web server.
+ensure that the directory is writable by the web server.
 
 If you must place your database file in your webroot, you could try using the
 following in your "Database file" field:

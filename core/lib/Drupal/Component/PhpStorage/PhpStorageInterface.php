@@ -52,7 +52,7 @@ interface PhpStorageInterface {
   public function save($name, $code);
 
   /**
-   * Whether this is a writeable storage.
+   * Whether this is a writable storage.
    *
    * @return bool
    */

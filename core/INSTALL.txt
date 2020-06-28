@@ -190,7 +190,7 @@ INSTALLATION
         chmod a+w sites/default/files
 
       Be sure to set the permissions for the default directory back after the
-      installation is finished! (Leave the files directory writeable.)
+      installation is finished! (Leave the files directory writable.)
       Sample command:
 
         chmod go-w sites/default
