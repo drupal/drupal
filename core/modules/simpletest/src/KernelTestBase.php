@@ -151,7 +151,7 @@ abstract class KernelTestBase extends TestBase {
     $this->configDirectories = [];
     // Assign the relative path to the global variable.
     $path = $this->siteDirectory . '/config_' . CONFIG_SYNC_DIRECTORY;
-    // Ensure the directory can be created and is writeable.
+    // Ensure the directory can be created and is writable.
     if (!\Drupal::service('file_system')->prepareDirectory($path, FileSystemInterface::CREATE_DIRECTORY | FileSystemInterface::MODIFY_PERMISSIONS)) {
       throw new \RuntimeException("Failed to create '" . CONFIG_SYNC_DIRECTORY . "' config directory $path");
     }

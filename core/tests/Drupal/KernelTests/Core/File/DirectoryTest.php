@@ -98,11 +98,11 @@ class DirectoryTest extends FileTestBase {
 
       // Make directory read only.
       @$file_system->chmod($directory, 0444);
-      $this->assertFalse($file_system->prepareDirectory($directory, 0), 'Error reported for a non-writeable directory.', 'File');
+      $this->assertFalse($file_system->prepareDirectory($directory, 0), 'Error reported for a non-writable directory.', 'File');
 
       // Test directory permission modification.
       $this->setSetting('file_chmod_directory', 0777);
-      $this->assertTrue($file_system->prepareDirectory($directory, FileSystemInterface::MODIFY_PERMISSIONS), 'No error reported when making directory writeable.', 'File');
+      $this->assertTrue($file_system->prepareDirectory($directory, FileSystemInterface::MODIFY_PERMISSIONS), 'No error reported when making directory writable.', 'File');
     }
 
     // Test that the directory has the correct permissions.
