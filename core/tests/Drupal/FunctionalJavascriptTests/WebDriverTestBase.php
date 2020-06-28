@@ -138,7 +138,7 @@ abstract class WebDriverTestBase extends BrowserTestBase {
    * Creates a screenshot.
    *
    * @param string $filename
-   *   The file name of the resulting screenshot including a writeable path. For
+   *   The file name of the resulting screenshot including a writable path. For
    *   example, /tmp/test_screenshot.jpg.
    * @param bool $set_background_color
    *   (optional) By default this method will set the background color to white.

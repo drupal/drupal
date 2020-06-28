@@ -118,7 +118,7 @@ class FileSystemForm extends ConfigFormBase {
       '#markup' => $this->fileSystem->getTempDirectory(),
       '#description' => t('A local file system path where temporary files will be stored. This directory should not be accessible over the web. This must be changed in settings.php.'),
     ];
-    // Any visible, writeable wrapper can potentially be used for the files
+    // Any visible, writable wrapper can potentially be used for the files
     // directory, including a remote file system that integrates with a CDN.
     $options = $this->streamWrapperManager->getDescriptions(StreamWrapperInterface::WRITE_VISIBLE);
 
