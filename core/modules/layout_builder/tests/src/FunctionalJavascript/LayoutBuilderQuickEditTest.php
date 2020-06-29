@@ -26,6 +26,7 @@ class LayoutBuilderQuickEditTest extends QuickEditJavascriptTestBase {
   protected static $modules = [
     'node',
     'layout_builder',
+    'field_ui',
   ];
 
   /**

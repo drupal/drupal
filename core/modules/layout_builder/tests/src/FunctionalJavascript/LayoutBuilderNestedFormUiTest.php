@@ -3,6 +3,7 @@
 namespace Drupal\Tests\layout_builder\FunctionalJavascript;
 
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
+use Drupal\layout_builder\Entity\LayoutBuilderEntityViewDisplay;
 
 /**
  * Tests placing blocks containing forms in theLayout Builder UI.
@@ -25,6 +26,7 @@ class LayoutBuilderNestedFormUiTest extends WebDriverTestBase {
    */
   protected static $modules = [
     'block',
+    'field_ui',
     'node',
     'layout_builder',
     'layout_builder_form_block_test',
@@ -53,6 +55,10 @@ class LayoutBuilderNestedFormUiTest extends WebDriverTestBase {
       'type' => 'bundle_with_section_field',
       'name' => 'Bundle with section field',
     ]);
+    LayoutBuilderEntityViewDisplay::load('node.bundle_with_section_field.default')
+      ->enableLayoutBuilder()
+      ->setOverridable()
+      ->save();
     for ($i = 1; $i <= count(static::FORM_BLOCK_LABELS); $i++) {
       $this->createNode([
         'type' => 'bundle_with_section_field',
@@ -70,11 +76,7 @@ class LayoutBuilderNestedFormUiTest extends WebDriverTestBase {
       'administer node display',
     ]));
 
-    // From the manage display page, enable Layout Builder.
     $field_ui_prefix = 'admin/structure/types/manage/bundle_with_section_field';
-    $this->drupalGet("$field_ui_prefix/display/default");
-    $this->submitForm(['layout[enabled]' => TRUE], 'Save');
-    $this->submitForm(['layout[allow_custom]' => TRUE], 'Save');
 
     // Save the entity view display so that it can be reverted to later.
     /** @var \Drupal\Core\Config\StorageInterface $active_config_storage */
@@ -101,14 +103,7 @@ class LayoutBuilderNestedFormUiTest extends WebDriverTestBase {
   public function testAddingFormBlocksToOverrides() {
     $this->drupalLogin($this->drupalCreateUser([
       'configure any layout',
-      'administer node display',
     ]));
-
-    // From the manage display page, enable Layout Builder.
-    $field_ui_prefix = 'admin/structure/types/manage/bundle_with_section_field';
-    $this->drupalGet("$field_ui_prefix/display/default");
-    $this->submitForm(['layout[enabled]' => TRUE], 'Save');
-    $this->submitForm(['layout[allow_custom]' => TRUE], 'Save');
 
     $expected_save_message = 'The layout override has been saved.';
     $nid = 1;

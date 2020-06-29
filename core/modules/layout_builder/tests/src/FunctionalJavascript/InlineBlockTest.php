@@ -18,6 +18,13 @@ class InlineBlockTest extends InlineBlockTestBase {
   protected $defaultTheme = 'classy';
 
   /**
+   * {@inheritdoc}
+   */
+  protected static $modules = [
+    'field_ui',
+  ];
+
+  /**
    * Tests adding and editing of inline blocks.
    */
   public function testInlineBlocks() {
@@ -32,11 +39,12 @@ class InlineBlockTest extends InlineBlockTestBase {
       'create and edit custom blocks',
     ]));
 
-    // Enable layout builder.
-    $this->drupalGet(static::FIELD_UI_PREFIX . '/display/default');
-    $this->submitForm(['layout[enabled]' => TRUE], 'Save');
-    $this->clickLink('Manage layout');
-    $assert_session->addressEquals(static::FIELD_UI_PREFIX . '/display/default/layout');
+    LayoutBuilderEntityViewDisplay::load('node.bundle_with_section_field.default')
+      ->enableLayoutBuilder()
+      ->setOverridable()
+      ->save();
+
+    $this->drupalGet(static::FIELD_UI_PREFIX . '/display/default/layout');
     // Add a basic block with the body field set.
     $this->addInlineBlockToLayout('Block title', 'The DEFAULT block body');
     $this->assertSaveLayout();
@@ -46,9 +54,6 @@ class InlineBlockTest extends InlineBlockTestBase {
     $this->drupalGet('node/2');
     $assert_session->pageTextContains('The DEFAULT block body');
 
-    // Enable overrides.
-    $this->drupalGet(static::FIELD_UI_PREFIX . '/display/default');
-    $this->submitForm(['layout[allow_custom]' => TRUE], 'Save');
     $this->drupalGet('node/1/layout');
 
     // Confirm the block can be edited.
@@ -116,11 +121,10 @@ class InlineBlockTest extends InlineBlockTestBase {
     $page = $this->getSession()->getPage();
     $this->assertEmpty($this->blockStorage->loadMultiple(), 'No entity blocks exist');
     // Enable layout builder and overrides.
-    $this->drupalGet(static::FIELD_UI_PREFIX . '/display/default');
-    $this->submitForm([
-      'layout[enabled]' => TRUE,
-      'layout[allow_custom]' => TRUE,
-    ], 'Save');
+    LayoutBuilderEntityViewDisplay::load('node.bundle_with_section_field.default')
+      ->enableLayoutBuilder()
+      ->setOverridable()
+      ->save();
 
     $this->drupalGet('node/1/layout');
     $this->addInlineBlockToLayout('Block title', 'The block body');
@@ -208,8 +212,10 @@ class InlineBlockTest extends InlineBlockTestBase {
       'create and edit custom blocks',
     ]));
     // Enable layout builder and overrides.
-    $this->drupalGet(static::FIELD_UI_PREFIX . '/display/default');
-    $this->submitForm(['layout[enabled]' => TRUE, 'layout[allow_custom]' => TRUE], 'Save');
+    LayoutBuilderEntityViewDisplay::load('node.bundle_with_section_field.default')
+      ->enableLayoutBuilder()
+      ->setOverridable()
+      ->save();
     $this->drupalGet('node/1/layout');
 
     // Add an inline block.
@@ -364,12 +370,12 @@ class InlineBlockTest extends InlineBlockTestBase {
     $page = $this->getSession()->getPage();
 
     // Enable layout builder.
-    $this->drupalGet(static::FIELD_UI_PREFIX . '/display/default');
-    $this->submitForm(['layout[enabled]' => TRUE], 'Save');
+    LayoutBuilderEntityViewDisplay::load('node.bundle_with_section_field.default')
+      ->enableLayoutBuilder()
+      ->setOverridable()
+      ->save();
     // Add a block to default layout.
-    $this->drupalGet(static::FIELD_UI_PREFIX . '/display/default');
-    $this->clickLink('Manage layout');
-    $assert_session->addressEquals(static::FIELD_UI_PREFIX . '/display/default/layout');
+    $this->drupalGet(static::FIELD_UI_PREFIX . '/display/default/layout');
     $this->addInlineBlockToLayout('Block title', 'The DEFAULT block body');
     $this->assertSaveLayout();
 
@@ -382,10 +388,6 @@ class InlineBlockTest extends InlineBlockTestBase {
     $this->drupalGet('node/2');
     $assert_session->pageTextContains('The DEFAULT block body');
 
-    // Enable overrides.
-    $this->drupalGet(static::FIELD_UI_PREFIX . '/display/default');
-    $this->submitForm(['layout[allow_custom]' => TRUE], 'Save');
-
     // Ensure we have 2 copies of the block in node overrides.
     $this->drupalGet('node/1/layout');
     $this->assertSaveLayout();
@@ -396,9 +398,7 @@ class InlineBlockTest extends InlineBlockTestBase {
     $node_2_block_id = $this->getLatestBlockEntityId();
     $this->assertCount(3, $this->blockStorage->loadMultiple());
 
-    $this->drupalGet(static::FIELD_UI_PREFIX . '/display/default');
-    $this->clickLink('Manage layout');
-    $assert_session->addressEquals(static::FIELD_UI_PREFIX . '/display/default/layout');
+    $this->drupalGet(static::FIELD_UI_PREFIX . '/display/default/layout');
 
     $this->assertNotEmpty($this->blockStorage->load($default_block_id));
     $this->assertNotEmpty($usage->getUsage($default_block_id));
@@ -433,9 +433,7 @@ class InlineBlockTest extends InlineBlockTestBase {
     $this->assertCount(1, $this->blockStorage->loadMultiple());
 
     // Add another block to the default.
-    $this->drupalGet(static::FIELD_UI_PREFIX . '/display/default');
-    $this->clickLink('Manage layout');
-    $assert_session->addressEquals(static::FIELD_UI_PREFIX . '/display/default/layout');
+    $this->drupalGet(static::FIELD_UI_PREFIX . '/display/default/layout');
     $this->addInlineBlockToLayout('Title 2', 'Body 2');
     $this->assertSaveLayout();
     $cron->run();
@@ -485,8 +483,10 @@ class InlineBlockTest extends InlineBlockTestBase {
     $assert_session = $this->assertSession();
 
     // Enable layout builder and overrides.
-    $this->drupalGet(static::FIELD_UI_PREFIX . '/display/default');
-    $this->submitForm(['layout[enabled]' => TRUE, 'layout[allow_custom]' => TRUE], 'Save');
+    LayoutBuilderEntityViewDisplay::load('node.bundle_with_section_field.default')
+      ->enableLayoutBuilder()
+      ->setOverridable()
+      ->save();
 
     // Ensure we have 2 copies of the block in node overrides.
     $this->drupalGet('node/1/layout');
@@ -535,8 +535,10 @@ class InlineBlockTest extends InlineBlockTestBase {
     ]));
 
     // Enable layout builder and overrides.
-    $this->drupalGet(static::FIELD_UI_PREFIX . '/display/default');
-    $this->submitForm(['layout[enabled]' => TRUE, 'layout[allow_custom]' => TRUE], 'Save');
+    LayoutBuilderEntityViewDisplay::load('node.bundle_with_section_field.default')
+      ->enableLayoutBuilder()
+      ->setOverridable()
+      ->save();
 
     $layout_default_path = 'admin/structure/types/manage/bundle_with_section_field/display/default/layout';
     $this->drupalGet($layout_default_path);
