@@ -1,0 +1,10 @@
+<?php
+
+/**
+ * @file
+ * Test module.
+ */
+
+use Drupal\module_autoload_test\SomeClass;
+
+define('MODULE_AUTOLOAD_TEST_CONSTANT', SomeClass::TEST);
