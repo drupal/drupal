@@ -73,60 +73,60 @@ class SearchPageCacheTagsTest extends BrowserTestBase {
 
     // Initial page for searching nodes.
     $this->drupalGet('search/node');
-    $this->assertCacheTag('config:search.page.node_search');
-    $this->assertCacheTag('search_index:node_search');
-    $this->assertCacheTag('node_list');
+    $this->assertSession()->responseHeaderContains('X-Drupal-Cache-Tags', 'config:search.page.node_search');
+    $this->assertSession()->responseHeaderContains('X-Drupal-Cache-Tags', 'search_index:node_search');
+    $this->assertSession()->responseHeaderContains('X-Drupal-Cache-Tags', 'node_list');
 
     // Node search results.
     $edit = [];
     $edit['keys'] = 'bike shed';
     $this->drupalPostForm('search/node', $edit, t('Search'));
     $this->assertText('bike shed shop');
-    $this->assertCacheTag('config:search.page.node_search');
-    $this->assertCacheTag('search_index');
-    $this->assertCacheTag('search_index:node_search');
-    $this->assertCacheTag('node:1');
-    $this->assertCacheTag('user:2');
-    $this->assertCacheTag('rendered');
-    $this->assertCacheTag('http_response');
-    $this->assertCacheTag('node_list');
+    $this->assertSession()->responseHeaderContains('X-Drupal-Cache-Tags', 'config:search.page.node_search');
+    $this->assertSession()->responseHeaderContains('X-Drupal-Cache-Tags', 'search_index');
+    $this->assertSession()->responseHeaderContains('X-Drupal-Cache-Tags', 'search_index:node_search');
+    $this->assertSession()->responseHeaderContains('X-Drupal-Cache-Tags', 'node:1');
+    $this->assertSession()->responseHeaderContains('X-Drupal-Cache-Tags', 'user:2');
+    $this->assertSession()->responseHeaderContains('X-Drupal-Cache-Tags', 'rendered');
+    $this->assertSession()->responseHeaderContains('X-Drupal-Cache-Tags', 'http_response');
+    $this->assertSession()->responseHeaderContains('X-Drupal-Cache-Tags', 'node_list');
 
     // Updating a node should invalidate the search plugin's index cache tag.
     $this->node->title = 'bike shop';
     $this->node->save();
     $this->drupalPostForm('search/node', $edit, t('Search'));
     $this->assertText('bike shop');
-    $this->assertCacheTag('config:search.page.node_search');
-    $this->assertCacheTag('search_index');
-    $this->assertCacheTag('search_index:node_search');
-    $this->assertCacheTag('node:1');
-    $this->assertCacheTag('user:2');
-    $this->assertCacheTag('rendered');
-    $this->assertCacheTag('http_response');
-    $this->assertCacheTag('node_list');
+    $this->assertSession()->responseHeaderContains('X-Drupal-Cache-Tags', 'config:search.page.node_search');
+    $this->assertSession()->responseHeaderContains('X-Drupal-Cache-Tags', 'search_index');
+    $this->assertSession()->responseHeaderContains('X-Drupal-Cache-Tags', 'search_index:node_search');
+    $this->assertSession()->responseHeaderContains('X-Drupal-Cache-Tags', 'node:1');
+    $this->assertSession()->responseHeaderContains('X-Drupal-Cache-Tags', 'user:2');
+    $this->assertSession()->responseHeaderContains('X-Drupal-Cache-Tags', 'rendered');
+    $this->assertSession()->responseHeaderContains('X-Drupal-Cache-Tags', 'http_response');
+    $this->assertSession()->responseHeaderContains('X-Drupal-Cache-Tags', 'node_list');
 
     // Deleting a node should invalidate the search plugin's index cache tag.
     $this->node->delete();
     $this->drupalPostForm('search/node', $edit, t('Search'));
     $this->assertText('Your search yielded no results.');
-    $this->assertCacheTag('config:search.page.node_search');
-    $this->assertCacheTag('search_index');
-    $this->assertCacheTag('search_index:node_search');
-    $this->assertCacheTag('node_list');
+    $this->assertSession()->responseHeaderContains('X-Drupal-Cache-Tags', 'config:search.page.node_search');
+    $this->assertSession()->responseHeaderContains('X-Drupal-Cache-Tags', 'search_index');
+    $this->assertSession()->responseHeaderContains('X-Drupal-Cache-Tags', 'search_index:node_search');
+    $this->assertSession()->responseHeaderContains('X-Drupal-Cache-Tags', 'node_list');
 
     // Initial page for searching users.
     $this->drupalGet('search/user');
-    $this->assertCacheTag('config:search.page.user_search');
-    $this->assertCacheTag('user_list');
+    $this->assertSession()->responseHeaderContains('X-Drupal-Cache-Tags', 'config:search.page.user_search');
+    $this->assertSession()->responseHeaderContains('X-Drupal-Cache-Tags', 'user_list');
     $this->assertSession()->responseHeaderNotContains('X-Drupal-Cache-Tags', 'search_index');
     $this->assertSession()->responseHeaderNotContains('X-Drupal-Cache-Tags', 'search_index:user_search');
 
     // User search results.
     $edit['keys'] = $this->searchingUser->getAccountName();
     $this->drupalPostForm('search/user', $edit, t('Search'));
-    $this->assertCacheTag('config:search.page.user_search');
-    $this->assertCacheTag('user_list');
-    $this->assertCacheTag('user:2');
+    $this->assertSession()->responseHeaderContains('X-Drupal-Cache-Tags', 'config:search.page.user_search');
+    $this->assertSession()->responseHeaderContains('X-Drupal-Cache-Tags', 'user_list');
+    $this->assertSession()->responseHeaderContains('X-Drupal-Cache-Tags', 'user:2');
     $this->assertSession()->responseHeaderNotContains('X-Drupal-Cache-Tags', 'search_index');
     $this->assertSession()->responseHeaderNotContains('X-Drupal-Cache-Tags', 'search_index:user_search');
   }

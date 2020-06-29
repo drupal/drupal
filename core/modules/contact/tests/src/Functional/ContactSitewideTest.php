@@ -95,7 +95,7 @@ class ContactSitewideTest extends BrowserTestBase {
 
     // Check the presence of expected cache tags.
     $this->drupalGet('contact');
-    $this->assertCacheTag('config:contact.settings');
+    $this->assertSession()->responseHeaderContains('X-Drupal-Cache-Tags', 'config:contact.settings');
 
     $flood_limit = 3;
     $this->config('contact.settings')

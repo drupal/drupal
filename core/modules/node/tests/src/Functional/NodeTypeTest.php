@@ -76,7 +76,7 @@ class NodeTypeTest extends NodeTestBase {
     $this->drupalLogin($web_user);
 
     $this->drupalGet('node/add');
-    $this->assertCacheTag('config:node_type_list');
+    $this->assertSession()->responseHeaderContains('X-Drupal-Cache-Tags', 'config:node_type_list');
     $this->assertCacheContext('user.permissions');
     $elements = $this->cssSelect('dl.node-type-list dt');
     $this->assertCount(3, $elements);

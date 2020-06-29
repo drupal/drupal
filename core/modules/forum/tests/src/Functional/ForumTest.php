@@ -137,10 +137,10 @@ class ForumTest extends BrowserTestBase {
     // Look for the "General discussion" default forum
     $this->assertRaw(Link::createFromRoute(t('General discussion'), 'forum.page', ['taxonomy_term' => 1])->toString(), "Found the default forum at the /forum listing");
     // Check the presence of expected cache tags.
-    $this->assertCacheTag('config:forum.settings');
+    $this->assertSession()->responseHeaderContains('X-Drupal-Cache-Tags', 'config:forum.settings');
 
     $this->drupalGet(Url::fromRoute('forum.page', ['taxonomy_term' => 1]));
-    $this->assertCacheTag('config:forum.settings');
+    $this->assertSession()->responseHeaderContains('X-Drupal-Cache-Tags', 'config:forum.settings');
 
     // Do the admin tests.
     $this->doAdminTests($this->adminUser);
@@ -249,7 +249,7 @@ class ForumTest extends BrowserTestBase {
 
     // Test the root forum page title change.
     $this->drupalGet('forum');
-    $this->assertCacheTag('config:taxonomy.vocabulary.' . $this->forum['vid']);
+    $this->assertSession()->responseHeaderContains('X-Drupal-Cache-Tags', 'config:taxonomy.vocabulary.' . $this->forum['vid']);
     $this->assertSession()->titleEquals('Forums | Drupal');
     $vocabulary = Vocabulary::load($this->forum['vid']);
     $vocabulary->set('name', 'Discussions');

@@ -96,8 +96,8 @@ class CommentAnonymousTest extends CommentTestBase {
     $this->assertTrue($this->commentContactInfoAvailable(), 'Contact information available.');
 
     // Check the presence of expected cache tags.
-    $this->assertCacheTag('config:field.field.node.article.comment');
-    $this->assertCacheTag('config:user.settings');
+    $this->assertSession()->responseHeaderContains('X-Drupal-Cache-Tags', 'config:field.field.node.article.comment');
+    $this->assertSession()->responseHeaderContains('X-Drupal-Cache-Tags', 'config:user.settings');
 
     $anonymous_comment2 = $this->postComment($this->node, $this->randomMachineName(), $this->randomMachineName());
     $this->assertTrue($this->commentExists($anonymous_comment2), 'Anonymous comment with contact info (optional) found.');

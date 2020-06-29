@@ -141,7 +141,7 @@ class ContentTranslationWorkflowsTest extends ContentTranslationTestBase {
       // for the entity are present.
       $this->assertCacheContext('user.permissions');
       foreach ($this->entity->getCacheTags() as $cache_tag) {
-        $this->assertCacheTag($cache_tag);
+        $this->assertSession()->responseHeaderContains('X-Drupal-Cache-Tags', $cache_tag);
       }
 
       foreach ($ops as $op => $label) {

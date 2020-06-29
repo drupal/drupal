@@ -76,7 +76,7 @@ class EntityListBuilderTest extends BrowserTestBase {
    */
   public function testCacheTags() {
     $this->drupalGet('entity_test/list');
-    $this->assertCacheTag('entity_test_list');
+    $this->assertSession()->responseHeaderContains('X-Drupal-Cache-Tags', 'entity_test_list');
   }
 
 }

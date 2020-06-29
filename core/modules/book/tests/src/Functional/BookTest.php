@@ -173,7 +173,7 @@ class BookTest extends BrowserTestBase {
 
     // Check the presence of expected cache tags.
     $this->drupalGet('node/add/book');
-    $this->assertCacheTag('config:book.settings');
+    $this->assertSession()->responseHeaderContains('X-Drupal-Cache-Tags', 'config:book.settings');
 
     /*
      * Add Node 5 under Node 3.

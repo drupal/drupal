@@ -51,7 +51,7 @@ class BlockSystemBrandingTest extends BlockTestBase {
     $this->assertTrue(!empty($site_logo_element), 'The branding block logo was found.');
     $this->assertTrue(!empty($site_name_element), 'The branding block site name was found.');
     $this->assertTrue(!empty($site_slogan_element), 'The branding block slogan was found.');
-    $this->assertCacheTag('config:system.site');
+    $this->assertSession()->responseHeaderContains('X-Drupal-Cache-Tags', 'config:system.site');
 
     // Be sure the slogan is XSS-filtered.
     $this->config('system.site')
@@ -73,7 +73,7 @@ class BlockSystemBrandingTest extends BlockTestBase {
     $this->assertTrue(empty($site_logo_element), 'The branding block logo was disabled.');
     $this->assertTrue(!empty($site_name_element), 'The branding block site name was found.');
     $this->assertTrue(!empty($site_slogan_element), 'The branding block slogan was found.');
-    $this->assertCacheTag('config:system.site');
+    $this->assertSession()->responseHeaderContains('X-Drupal-Cache-Tags', 'config:system.site');
 
     // Turn just the site name off.
     $this->config('block.block.site-branding')
@@ -88,7 +88,7 @@ class BlockSystemBrandingTest extends BlockTestBase {
     $this->assertTrue(!empty($site_logo_element), 'The branding block logo was found.');
     $this->assertTrue(empty($site_name_element), 'The branding block site name was disabled.');
     $this->assertTrue(!empty($site_slogan_element), 'The branding block slogan was found.');
-    $this->assertCacheTag('config:system.site');
+    $this->assertSession()->responseHeaderContains('X-Drupal-Cache-Tags', 'config:system.site');
 
     // Turn just the site slogan off.
     $this->config('block.block.site-branding')
@@ -103,7 +103,7 @@ class BlockSystemBrandingTest extends BlockTestBase {
     $this->assertTrue(!empty($site_logo_element), 'The branding block logo was found.');
     $this->assertTrue(!empty($site_name_element), 'The branding block site name was found.');
     $this->assertTrue(empty($site_slogan_element), 'The branding block slogan was disabled.');
-    $this->assertCacheTag('config:system.site');
+    $this->assertSession()->responseHeaderContains('X-Drupal-Cache-Tags', 'config:system.site');
 
     // Turn the site name and the site slogan off.
     $this->config('block.block.site-branding')
@@ -118,7 +118,7 @@ class BlockSystemBrandingTest extends BlockTestBase {
     $this->assertTrue(!empty($site_logo_element), 'The branding block logo was found.');
     $this->assertTrue(empty($site_name_element), 'The branding block site name was disabled.');
     $this->assertTrue(empty($site_slogan_element), 'The branding block slogan was disabled.');
-    $this->assertCacheTag('config:system.site');
+    $this->assertSession()->responseHeaderContains('X-Drupal-Cache-Tags', 'config:system.site');
   }
 
 }

@@ -31,7 +31,7 @@ class BlockInstallTest extends BrowserTestBase {
     // Check the same page, block.module's hook_install() should have
     // invalidated the 'rendered' cache tag to make blocks show up.
     $this->drupalGet('');
-    $this->assertCacheTag('config:block_list');
+    $this->assertSession()->responseHeaderContains('X-Drupal-Cache-Tags', 'config:block_list');
     $this->assertText('Powered by Drupal');
   }
 

@@ -246,7 +246,7 @@ class UserRegistrationTest extends BrowserTestBase {
 
     // Check the presence of expected cache tags.
     $this->drupalGet('user/register');
-    $this->assertCacheTag('config:user.settings');
+    $this->assertSession()->responseHeaderContains('X-Drupal-Cache-Tags', 'config:user.settings');
 
     $edit = [];
     $edit['name'] = $name = $this->randomMachineName();
@@ -319,8 +319,8 @@ class UserRegistrationTest extends BrowserTestBase {
     // Check that the field does not appear on the registration form.
     $this->drupalGet('user/register');
     $this->assertNoText($field->label(), 'The field does not appear on user registration form');
-    $this->assertCacheTag('config:core.entity_form_display.user.user.register');
-    $this->assertCacheTag('config:user.settings');
+    $this->assertSession()->responseHeaderContains('X-Drupal-Cache-Tags', 'config:core.entity_form_display.user.user.register');
+    $this->assertSession()->responseHeaderContains('X-Drupal-Cache-Tags', 'config:user.settings');
 
     // Have the field appear on the registration form.
     $display_repository->getFormDisplay('user', 'user', 'register')
@@ -386,10 +386,10 @@ class UserRegistrationTest extends BrowserTestBase {
    * Asserts the presence of cache tags on registration form with user fields.
    */
   protected function assertRegistrationFormCacheTagsWithUserFields() {
-    $this->assertCacheTag('config:core.entity_form_display.user.user.register');
-    $this->assertCacheTag('config:field.field.user.user.test_user_field');
-    $this->assertCacheTag('config:field.storage.user.test_user_field');
-    $this->assertCacheTag('config:user.settings');
+    $this->assertSession()->responseHeaderContains('X-Drupal-Cache-Tags', 'config:core.entity_form_display.user.user.register');
+    $this->assertSession()->responseHeaderContains('X-Drupal-Cache-Tags', 'config:field.field.user.user.test_user_field');
+    $this->assertSession()->responseHeaderContains('X-Drupal-Cache-Tags', 'config:field.storage.user.test_user_field');
+    $this->assertSession()->responseHeaderContains('X-Drupal-Cache-Tags', 'config:user.settings');
   }
 
 }

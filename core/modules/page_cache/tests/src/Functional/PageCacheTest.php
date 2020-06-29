@@ -320,20 +320,20 @@ class PageCacheTest extends BrowserTestBase {
     $this->drupalGet($content_url);
     $this->assertText('Permission to pet llamas: no!');
     $this->assertCacheContext('user.permissions');
-    $this->assertCacheTag('config:user.role.anonymous');
+    $this->assertSession()->responseHeaderContains('X-Drupal-Cache-Tags', 'config:user.role.anonymous');
     $this->drupalGet($route_access_url);
     $this->assertCacheContext('user.permissions');
-    $this->assertCacheTag('config:user.role.anonymous');
+    $this->assertSession()->responseHeaderContains('X-Drupal-Cache-Tags', 'config:user.role.anonymous');
 
     // 2. anonymous user, with permission.
     user_role_grant_permissions(RoleInterface::ANONYMOUS_ID, ['pet llamas']);
     $this->drupalGet($content_url);
     $this->assertText('Permission to pet llamas: yes!');
     $this->assertCacheContext('user.permissions');
-    $this->assertCacheTag('config:user.role.anonymous');
+    $this->assertSession()->responseHeaderContains('X-Drupal-Cache-Tags', 'config:user.role.anonymous');
     $this->drupalGet($route_access_url);
     $this->assertCacheContext('user.permissions');
-    $this->assertCacheTag('config:user.role.anonymous');
+    $this->assertSession()->responseHeaderContains('X-Drupal-Cache-Tags', 'config:user.role.anonymous');
 
     // 3. authenticated user, without permission.
     $auth_user = $this->drupalCreateUser();
@@ -373,7 +373,7 @@ class PageCacheTest extends BrowserTestBase {
       $this->drupalGet($content_url);
       $this->assertSession()->statusCodeEquals($code);
       $this->assertEqual($this->drupalGetHeader('X-Drupal-Cache'), 'MISS');
-      $this->assertCacheTag('4xx-response');
+      $this->assertSession()->responseHeaderContains('X-Drupal-Cache-Tags', '4xx-response');
       $this->drupalGet($content_url);
       $this->assertSession()->statusCodeEquals($code);
       $this->assertEqual($this->drupalGetHeader('X-Drupal-Cache'), 'HIT');
