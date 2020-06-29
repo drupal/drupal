@@ -28,7 +28,7 @@ class FileSecurity {
    *   TRUE if the file already exists or was created. FALSE otherwise.
    */
   public static function writeHtaccess($directory, $deny_public_access = TRUE, $force = FALSE) {
-    return self::writeFile($directory, '/.htaccess', self::htaccessLines($deny_public_access), $force);
+    return self::writeFile($directory, '.htaccess', self::htaccessLines($deny_public_access), $force);
   }
 
   /**
@@ -112,7 +112,7 @@ EOF;
    *   TRUE if the file already exists or was created. FALSE otherwise.
    */
   public static function writeWebConfig($directory, $force = FALSE) {
-    return self::writeFile($directory, '/web.config', self::webConfigLines(), $force);
+    return self::writeFile($directory, 'web.config', self::webConfigLines(), $force);
   }
 
   /**
@@ -154,7 +154,9 @@ EOT;
     if (file_exists($file_path) && !$force) {
       return TRUE;
     }
-    if (file_exists($directory) && is_writable($directory) && file_put_contents($file_path, $contents)) {
+    // Try to write the file. This can fail if concurrent requests are both
+    // trying to write a the same time.
+    if (@file_put_contents($file_path, $contents)) {
       return @chmod($file_path, 0444);
     }
     return FALSE;
