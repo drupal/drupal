@@ -9,7 +9,6 @@ use Behat\Mink\Session;
 use Drupal\Component\FileSystem\FileSystem as DrupalFilesystem;
 use Drupal\Tests\Traits\PHPUnit8Warnings;
 use PHPUnit\Framework\TestCase;
-use Symfony\Component\BrowserKit\Client as SymfonyClient;
 use Symfony\Component\Filesystem\Filesystem as SymfonyFilesystem;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Lock\Factory;
@@ -218,14 +217,7 @@ abstract class BuildTestBase extends TestCase {
    * @return \Behat\Mink\Session
    */
   protected function initMink() {
-    // If the Symfony BrowserKit client can followMetaRefresh(), we should use
-    // the Goutte descendent instead of ours.
-    if (method_exists(SymfonyClient::class, 'followMetaRefresh')) {
-      $client = new Client();
-    }
-    else {
-      $client = new DrupalMinkClient();
-    }
+    $client = new Client();
     $client->followMetaRefresh(TRUE);
     $driver = new GoutteDriver($client);
     $session = new Session($driver);
