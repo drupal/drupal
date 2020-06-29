@@ -183,15 +183,17 @@ class NodeRevisionsAllTest extends NodeTestBase {
         '%title' => $nodes[1]->getTitle(),
       ]),
       'Revision deleted.');
-    $connection = Database::getConnection();
-    $this->assertTrue($connection->query('SELECT COUNT(vid) FROM {node_revision} WHERE nid = :nid and vid = :vid',
-      [':nid' => $node->id(), ':vid' => $nodes[1]->getRevisionId()])->fetchField() == 0,
-      'Revision not found.');
+    $nids = \Drupal::entityQuery('node')
+      ->allRevisions()
+      ->condition('nid', $node->id())
+      ->condition('vid', $nodes[1]->getRevisionId())
+      ->execute();
+    $this->assertCount(0, $nids);
 
     // Set the revision timestamp to an older date to make sure that the
     // confirmation message correctly displays the stored revision date.
     $old_revision_date = REQUEST_TIME - 86400;
-    $connection->update('node_revision')
+    Database::getConnection()->update('node_revision')
       ->condition('vid', $nodes[2]->getRevisionId())
       ->fields([
         'revision_timestamp' => $old_revision_date,
