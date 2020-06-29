@@ -2,12 +2,22 @@
 
 namespace Drupal\FunctionalTests\Image;
 
+@trigger_error('The ' . __NAMESPACE__ . '\ToolkitTestBase class is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. . There is no replacement provided as functional test base class because toolkit operations should be tested as kernel tests. \Drupal\KernelTests\Core\Image\ToolkitTestTrait trait has been added to provide a similar functionality for toolkit kernel tests. See https://www.drupal.org/node/3035573.', E_USER_DEPRECATED);
+
 use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\TestFileCreationTrait;
 
 /**
  * Base class for image manipulation testing.
+ *
+ * @deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. There is
+ *   no replacement provided as functional test base class because toolkit
+ *   operations should be tested as kernel tests. ToolkitTestTrait trait has
+ *   been added to provide a similar functionality for toolkit kernel tests.
+ *
+ * @see https://www.drupal.org/node/3035573
+ * @see \Drupal\Tests\Traits\Core\Image\ToolkitTestTrait
  */
 abstract class ToolkitTestBase extends BrowserTestBase {
 
