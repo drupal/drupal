@@ -329,7 +329,7 @@ function hook_menu_local_tasks_alter(&$data, $route_name, \Drupal\Core\Cache\Ref
       ],
   ];
   // The tab we're adding is dependent on a user's access to add content.
-  $cacheability->addCacheTags(['user.permissions']);
+  $cacheability->addCacheContexts(['user.permissions']);
 }
 
 /**
