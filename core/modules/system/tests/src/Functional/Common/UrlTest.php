@@ -313,6 +313,11 @@ class UrlTest extends BrowserTestBase {
     $result = Url::fromUri($url)->toString();
     $this->assertEqual($url, $result);
 
+    // Verify external URL can contain a query string with an integer key.
+    $url = $test_url . '?120=1';
+    $result = Url::fromUri($url)->toString();
+    $this->assertEqual($url, $result);
+
     // Verify external URL can be extended with a query string.
     $url = $test_url;
     $query = ['awesome' => 'drupal'];
