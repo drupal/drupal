@@ -2,7 +2,6 @@
 
 namespace Drupal\Tests\node\Functional;
 
-use Drupal\Core\Database\Database;
 use Drupal\node\Entity\NodeType;
 
 /**
@@ -131,9 +130,19 @@ class NodeAccessBaseTableTest extends NodeTestBase {
         $this->nodesByUser[$this->webUser->id()][$node->id()] = $is_private;
       }
     }
-    $connection = Database::getConnection();
-    $this->publicTid = $connection->query('SELECT tid FROM {taxonomy_term_field_data} WHERE name = :name AND default_langcode = 1', [':name' => 'public'])->fetchField();
-    $this->privateTid = $connection->query('SELECT tid FROM {taxonomy_term_field_data} WHERE name = :name AND default_langcode = 1', [':name' => 'private'])->fetchField();
+    $public_tids = \Drupal::entityQuery('taxonomy_term')
+      ->accessCheck(FALSE)
+      ->condition('name', 'public')
+      ->condition('default_langcode', 1)
+      ->execute();
+    $this->publicTid = reset($public_tids);
+    $private_tids = \Drupal::entityQuery('taxonomy_term')
+      ->accessCheck(FALSE)
+      ->condition('name', 'private')
+      ->condition('default_langcode', 1)
+      ->execute();
+    $this->privateTid = reset($private_tids);
+
     $this->assertNotEmpty($this->publicTid, 'Public tid was found');
     $this->assertNotEmpty($this->privateTid, 'Private tid was found');
     foreach ($simple_users as $this->webUser) {
