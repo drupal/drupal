@@ -60,18 +60,6 @@ abstract class FileResourceTestBase extends EntityResourceTestBase {
   }
 
   /**
-   * {@inheritdoc}
-   */
-  protected function grantPermissionsToTestedRole(array $permissions) {
-    // testPatch() and testDelete() test the 'bc_entity_resource_permissions' BC
-    // layer; also call makeCurrentUserFileOwner() then.
-    if ($permissions === ['restful patch entity:file'] || $permissions === ['restful delete entity:file']) {
-      $this->makeCurrentUserFileOwner();
-    }
-    parent::grantPermissionsToTestedRole($permissions);
-  }
-
-  /**
    * Makes the current user the file owner.
    */
   protected function makeCurrentUserFileOwner() {

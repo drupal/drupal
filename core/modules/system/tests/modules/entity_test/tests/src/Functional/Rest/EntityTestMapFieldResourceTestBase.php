@@ -136,10 +136,6 @@ abstract class EntityTestMapFieldResourceTestBase extends EntityResourceTestBase
    * {@inheritdoc}
    */
   protected function getExpectedUnauthorizedAccessMessage($method) {
-    if ($this->config('rest.settings')->get('bc_entity_resource_permissions')) {
-      return parent::getExpectedUnauthorizedAccessMessage($method);
-    }
-
     return "The 'administer entity_test content' permission is required.";
   }
 
