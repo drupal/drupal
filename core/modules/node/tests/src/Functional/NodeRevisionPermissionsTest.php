@@ -112,6 +112,7 @@ class NodeRevisionPermissionsTest extends NodeTestBase {
     $node_revision_access = \Drupal::service('access_check.node.revision');
     $vids = \Drupal::entityQuery('node')
       ->allRevisions()
+      ->accessCheck(FALSE)
       ->condition('nid', $revision->id())
       ->execute();
     foreach ($permutations as $case) {
@@ -164,6 +165,7 @@ class NodeRevisionPermissionsTest extends NodeTestBase {
     $node_revision_access = \Drupal::service('access_check.node.revision');
     $vids = \Drupal::entityQuery('node')
       ->allRevisions()
+      ->accessCheck(FALSE)
       ->condition('nid', $revision->id())
       ->execute();
     foreach ($permutations as $case) {
