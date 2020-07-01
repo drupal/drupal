@@ -3,7 +3,6 @@
 namespace Drupal\Tests\node\Functional;
 
 use Drupal\Component\Render\FormattableMarkup;
-use Drupal\Core\Database\Database;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Tests\content_translation\Functional\ContentTranslationUITestBase;
 use Drupal\Core\Language\LanguageInterface;
@@ -279,8 +278,14 @@ class NodeTranslationUITest extends ContentTranslationUITestBase {
     ]);
 
     // Make sure that nothing was inserted into the {content_translation} table.
-    $rows = Database::getConnection()->query('SELECT nid, count(nid) AS count FROM {node_field_data} WHERE type <> :type GROUP BY nid HAVING count(nid) >= 2', [':type' => $this->bundle])->fetchAll();
-    $this->assertCount(0, $rows);
+    $nids = \Drupal::entityQueryAggregate('node')
+      ->aggregate('nid', 'COUNT')
+      ->accessCheck(FALSE)
+      ->condition('type', $this->bundle)
+      ->conditionAggregate('nid', 'COUNT', 2, '>=')
+      ->groupBy('nid')
+      ->execute();
+    $this->assertCount(0, $nids);
 
     // Ensure the translation tab is not accessible.
     $this->drupalGet('node/' . $node->id() . '/translations');
