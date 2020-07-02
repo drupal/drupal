@@ -205,7 +205,7 @@ class EntityDecoupledTranslationRevisionsTest extends EntityKernelTestBase {
    */
   public function testDecoupledPendingRevisions($sequence) {
     $revision_id = $this->doTestEditSequence($sequence);
-    $this->assertEquals(count($sequence), $revision_id);
+    $this->assertCount($revision_id, $sequence);
   }
 
   /**

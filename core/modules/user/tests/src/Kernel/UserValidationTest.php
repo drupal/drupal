@@ -201,7 +201,7 @@ class UserValidationTest extends KernelTestBase {
    */
   protected function assertLengthViolation(EntityInterface $entity, $field_name, $length, $count = 1, $expected_index = 0) {
     $violations = $entity->validate();
-    $this->assertEqual(count($violations), $count, "Violation found when $field_name is too long.");
+    $this->assertCount($count, $violations, "Violation found when $field_name is too long.");
     $this->assertEqual($violations[$expected_index]->getPropertyPath(), "$field_name.0.value");
     $field_label = $entity->get($field_name)->getFieldDefinition()->getLabel();
     $this->assertEqual($violations[$expected_index]->getMessage(), t('%name: may not be longer than @max characters.', ['%name' => $field_label, '@max' => $length]));

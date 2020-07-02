@@ -83,7 +83,7 @@ class ComposerProjectTemplatesTest extends BuildTestBase {
       ->name('composer.json')
       ->in($root . '/composer/Template');
 
-    $this->assertEquals(count($template_files), count($data));
+    $this->assertSame(count($template_files), count($data));
 
     // We could have the same number of templates but different names.
     $template_data = [];

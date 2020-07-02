@@ -118,7 +118,7 @@ class LanguageSelectElementTest extends BrowserTestBase {
       $this->assertEqual($option->getText(), $option_title);
       next($options);
     }
-    $this->assertEqual($count, count($options), new FormattableMarkup('The number of languages and the number of options shown by the language element are the same: @languages languages, @number options', ['@languages' => count($options), '@number' => $count]));
+    $this->assertCount($count, $options, new FormattableMarkup('The number of languages and the number of options shown by the language element are the same: @languages languages, @number options', ['@languages' => count($options), '@number' => $count]));
   }
 
 }

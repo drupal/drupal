@@ -326,16 +326,14 @@ class BookTest extends BrowserTestBase {
     /** @var \Drupal\book\BookManagerInterface $manager */
     $manager = $this->container->get('book.manager');
     $options = $manager->getTableOfContents($book->id(), 3);
+    // Verify that all expected option keys are present.
     $expected_nids = [$book->id(), $nodes[0]->id(), $nodes[1]->id(), $nodes[2]->id(), $nodes[3]->id(), $nodes[6]->id(), $nodes[4]->id()];
-    $this->assertEqual(count($options), count($expected_nids));
-    $diff = array_diff($expected_nids, array_keys($options));
-    $this->assertTrue(empty($diff), 'Found all expected option keys');
+    $this->assertEquals($expected_nids, array_keys($options));
     // Exclude Node 3.
     $options = $manager->getTableOfContents($book->id(), 3, [$nodes[3]->id()]);
+    // Verify that expected option keys are present after excluding Node 3.
     $expected_nids = [$book->id(), $nodes[0]->id(), $nodes[1]->id(), $nodes[2]->id(), $nodes[4]->id()];
-    $this->assertEqual(count($options), count($expected_nids));
-    $diff = array_diff($expected_nids, array_keys($options));
-    $this->assertTrue(empty($diff), 'Found all expected option keys after excluding Node 3');
+    $this->assertEquals($expected_nids, array_keys($options));
   }
 
   /**

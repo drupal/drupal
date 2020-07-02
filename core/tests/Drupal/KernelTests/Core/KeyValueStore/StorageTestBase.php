@@ -101,12 +101,10 @@ abstract class StorageTestBase extends KernelTestBase {
     // Verify that all items in a collection can be retrieved.
     // Ensure that an item with the same name exists in the other collection.
     $stores[1]->set('foo', $this->objects[5]);
-    $result = $stores[0]->getAll();
+
     // Not using assertSame(), since the order is not defined for getAll().
-    $this->assertEqual(count($result), count($values));
-    foreach ($result as $key => $value) {
-      $this->assertEqual($values[$key], $value);
-    }
+    $this->assertEquals($values, $stores[0]->getAll());
+
     // Verify that all items in the other collection are different.
     $result = $stores[1]->getAll();
     $this->assertEqual($result, ['foo' => $this->objects[5]]);

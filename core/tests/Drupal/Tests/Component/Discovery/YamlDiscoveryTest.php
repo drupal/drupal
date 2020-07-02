@@ -54,7 +54,7 @@ class YamlDiscoveryTest extends TestCase {
     $discovery = new YamlDiscovery('test', $directories);
     $data = $discovery->findAll();
 
-    $this->assertEquals(count($data), count($directories));
+    $this->assertCount(4, $data);
     $this->assertArrayHasKey('test_1', $data);
     $this->assertArrayHasKey('test_2', $data);
     $this->assertArrayHasKey('test_3', $data);

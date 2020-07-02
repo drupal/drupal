@@ -449,7 +449,7 @@ class ViewExecutableTest extends ViewsKernelTestBase {
       $count++;
     }
 
-    $this->assertEqual(count($view->displayHandlers), $count, 'Error messages from all handlers merged.');
+    $this->assertCount($count, $view->displayHandlers, 'Error messages from all handlers merged.');
 
     // Test that a deleted display is not included.
     $display = &$view->storage->getDisplay('default');

@@ -360,12 +360,10 @@ class SelectTest extends DatabaseTestBase {
 
     $query_1->union($query_2, 'ALL');
     $names = $query_1->execute()->fetchCol();
-
-    $query_3 = $query_1->countQuery();
-    $count = $query_3->execute()->fetchField();
+    $count = (int) $query_1->countQuery()->execute()->fetchField();
 
     // Ensure the counts match.
-    $this->assertEqual(count($names), $count, "The count query's result matched the number of rows in the UNION query.");
+    $this->assertSame(count($names), $count, "The count query's result matched the number of rows in the UNION query.");
   }
 
   /**

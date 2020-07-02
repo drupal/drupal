@@ -31,7 +31,8 @@ class OptionsSelectDynamicValuesTest extends OptionsDynamicValuesTestBase {
     // Display form.
     $this->drupalGet('entity_test_rev/manage/' . $this->entity->id() . '/edit');
     $options = $this->xpath('//select[@id="edit-test-options"]/option');
-    $this->assertEqual(count($options), count($this->test) + 1);
+    $options_expected_count = count($this->test) + 1;
+    $this->assertCount($options_expected_count, $options);
     foreach ($options as $option) {
       $value = $option->getValue();
       if ($value != '_none') {

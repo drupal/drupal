@@ -117,7 +117,7 @@ class EntityReferenceSelectionReferenceableTest extends KernelTestBase {
       $this->assertTrue(empty($referenceables[$this->bundle]));
     }
     else {
-      $this->assertSame(count($referenceables[$this->bundle]), $count_limited);
+      $this->assertCount($count_limited, $referenceables[$this->bundle]);
     }
 
     // Test returned items.

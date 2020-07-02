@@ -64,7 +64,7 @@ class BulkDeleteTest extends FieldKernelTestBase {
       $actual_invocations = $actual_hooks[$hook];
 
       // Check that the number of invocations is correct.
-      $this->assertEqual(count($actual_invocations), count($invocations), "$hook() was called the expected number of times.");
+      $this->assertSame(count($invocations), count($actual_invocations), "$hook() was called the expected number of times.");
 
       // Check that the hook was called for each expected argument.
       foreach ($invocations as $argument) {
@@ -336,7 +336,7 @@ class BulkDeleteTest extends FieldKernelTestBase {
         ->condition('type', $bundle)
         ->condition($field_name . '.deleted', 1)
         ->execute();
-      $this->assertEqual(count($found), $count, 'Correct number of entities found after purging 2');
+      $this->assertCount($count, $found, 'Correct number of entities found after purging 2');
     }
 
     // Check hooks invocations.

@@ -361,7 +361,7 @@ class FieldStorageCrudTest extends FieldKernelTestBase {
     $entity = $this->entitySaveReload($entity);
 
     // Verify the field is present on load
-    $this->assertIdentical(count($entity->{$field_storage->getName()}), count($values), "Data in previously deleted field saves and loads correctly");
+    $this->assertCount(1, $entity->{$field_storage->getName()}, "Data in previously deleted field saves and loads correctly");
     foreach ($values as $delta => $value) {
       $this->assertEqual($entity->{$field_storage->getName()}[$delta]->value, $values[$delta]['value'], "Data in previously deleted field saves and loads correctly");
     }
@@ -452,7 +452,7 @@ class FieldStorageCrudTest extends FieldKernelTestBase {
       }
       // Load back and assert there are $cardinality number of values.
       $entity = $this->entitySaveReload($entity);
-      $this->assertEqual(count($entity->field_update), $field_storage->getCardinality());
+      $this->assertCount($field_storage->getCardinality(), $entity->field_update);
       // Now check the values themselves.
       for ($delta = 0; $delta < $cardinality; $delta++) {
         $this->assertEqual($entity->field_update[$delta]->value, $delta + 1);

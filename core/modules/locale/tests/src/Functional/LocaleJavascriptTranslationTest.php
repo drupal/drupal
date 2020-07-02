@@ -107,7 +107,7 @@ class LocaleJavascriptTranslationTest extends BrowserTestBase {
         $this->assertTrue(isset($source_strings[$str]) && $source_strings[$str] === $context, $message);
       }
 
-      $this->assertEqual(count($source_strings), count($test_strings), 'Found correct number of source strings.');
+      $this->assertSame(count($test_strings), count($source_strings), 'Found correct number of source strings.');
     }
   }
 

@@ -139,7 +139,7 @@ class FieldDataCountTest extends FieldKernelTestBase {
 
     $storage = $this->container->get('entity_type.manager')->getStorage($entity_type);
     $entity = $storage->loadRevision($first_revision);
-    $this->assertEqual(count($entity->{$this->fieldTestData->field_name_2}), $cardinality, new FormattableMarkup('Revision %revision_id: expected number of values.', ['%revision_id' => $first_revision]));
+    $this->assertCount($cardinality, $entity->{$this->fieldTestData->field_name_2}, new FormattableMarkup('Revision %revision_id: expected number of values.', ['%revision_id' => $first_revision]));
   }
 
   /**

@@ -196,7 +196,7 @@ class FieldSqlStorageTest extends EntityKernelTestBase {
     $connection = Database::getConnection();
     // Read the tables and check the correct values have been stored.
     $rows = $connection->select($this->table, 't')->fields('t')->execute()->fetchAllAssoc('delta', \PDO::FETCH_ASSOC);
-    $this->assertEqual(count($rows), $this->fieldCardinality);
+    $this->assertCount($this->fieldCardinality, $rows);
     foreach ($rows as $delta => $row) {
       $expected = [
         'bundle' => $bundle,
@@ -216,10 +216,11 @@ class FieldSqlStorageTest extends EntityKernelTestBase {
     for ($delta = 0; $delta <= $this->fieldCardinality - 2; $delta++) {
       $values[$delta]['value'] = mt_rand(1, 127);
     }
+    $values_count = count($values);
     $entity->{$this->fieldName} = $values;
     $entity->save();
     $rows = $connection->select($this->table, 't')->fields('t')->execute()->fetchAllAssoc('delta', \PDO::FETCH_ASSOC);
-    $this->assertEqual(count($rows), count($values));
+    $this->assertCount($values_count, $rows);
     foreach ($rows as $delta => $row) {
       $expected = [
         'bundle' => $bundle,
@@ -247,7 +248,7 @@ class FieldSqlStorageTest extends EntityKernelTestBase {
     // Check that data for both revisions are in the revision table.
     foreach ($revision_values as $revision_id => $values) {
       $rows = $connection->select($this->revisionTable, 't')->fields('t')->condition('revision_id', $revision_id)->execute()->fetchAllAssoc('delta', \PDO::FETCH_ASSOC);
-      $this->assertEqual(count($rows), min(count($values), $this->fieldCardinality));
+      $this->assertCount(min(count($values), $this->fieldCardinality), $rows);
       foreach ($rows as $delta => $row) {
         $expected = [
           'bundle' => $bundle,

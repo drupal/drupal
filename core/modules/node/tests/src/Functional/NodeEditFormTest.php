@@ -143,7 +143,7 @@ class NodeEditFormTest extends NodeTestBase {
     $this->assertRaw('<details class="node-form-author js-form-wrapper form-wrapper" data-drupal-selector="edit-author" id="edit-author" open="open">');
     // Only one extra details element should now be open.
     $open_details_elements++;
-    $this->assertEqual(count($this->cssSelect('details[open="open"]')), $open_details_elements, 'Exactly one extra open &lt;details&gt; element found.');
+    $this->assertCount($open_details_elements, $this->cssSelect('details[open="open"]'), 'Exactly one extra open &lt;details&gt; element found.');
 
     // Edit the same node, save it and verify it's unpublished after unchecking
     // the 'Published' boolean_checkbox and clicking 'Save'.

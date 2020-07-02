@@ -212,7 +212,7 @@ class StandardProfileTest extends BrowserTestBase {
     $this->drupalGet(Url::fromRoute('<front>'));
 
     // Ensure that both articles are listed.
-    // $this->assertEqual(2, count($this->getRdfGraph(Url::fromRoute('<front>'), $this->baseUri)->allOfType('http://schema.org/Article')), 'Two articles found on front page.');
+    // $this->assertCount(2, $this->getRdfGraph(Url::fromRoute('<front>'), $this->baseUri)->allOfType('http://schema.org/Article'), 'Two articles found on front page.');
     $this->assertEqual(2, $this->getElementByRdfTypeCount(Url::fromRoute('<front>'), $this->baseUri, 'http://schema.org/Article'), 'Two articles found on front page.');
 
     // Test interaction count.

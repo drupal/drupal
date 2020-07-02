@@ -426,8 +426,8 @@ class MenuTreeStorageTest extends KernelTestBase {
     $query->condition('id', $parents, 'IN');
     $found_parents = $query->execute()->fetchAllKeyed(0, 1);
 
-    $this->assertEqual(count($parents), count($found_parents), 'Found expected number of parents');
-    $this->assertEqual($raw['depth'], count($found_parents), 'Number of parents is the same as the depth');
+    $this->assertSame(count($parents), count($found_parents), 'Found expected number of parents');
+    $this->assertCount($raw['depth'], $found_parents, 'Number of parents is the same as the depth');
 
     $materialized_path = $this->treeStorage->getRootPathIds($id);
     $this->assertEqual(array_values($materialized_path), array_values($parents), 'Parents match the materialized path');
@@ -443,11 +443,8 @@ class MenuTreeStorageTest extends KernelTestBase {
     if ($parents) {
       $this->assertEqual($raw['parent'], end($parents), 'Ensure that the parent field is set properly');
     }
-    $found_children = array_keys($this->treeStorage->loadAllChildren($id));
-    // We need both these checks since the 2nd will pass if there are extra
-    // IDs loaded in $found_children.
-    $this->assertEqual(count($children), count($found_children), "Found expected number of children for $id");
-    $this->assertEqual(array_intersect($children, $found_children), $children, 'Child IDs match');
+    // Verify that the child IDs match.
+    $this->assertEqualsCanonicalizing($children, array_keys($this->treeStorage->loadAllChildren($id)));
   }
 
 }

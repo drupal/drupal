@@ -101,7 +101,7 @@ class ContactLinkTest extends ViewTestBase {
    */
   public function assertContactLinks(array $accounts, array $names) {
     $result = $this->xpath('//div[contains(@class, "views-field-contact")]//a');
-    $this->assertEqual(count($result), count($names));
+    $this->assertSame(count($names), count($result));
     foreach ($names as $name) {
       $account = $accounts[$name];
 

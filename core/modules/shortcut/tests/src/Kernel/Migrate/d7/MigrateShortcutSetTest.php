@@ -66,7 +66,7 @@ class MigrateShortcutSetTest extends MigrateDrupal7TestBase {
 
     // Check the number of shortcuts in the set.
     $shortcuts = $shortcut_set->getShortcuts();
-    $this->assertIdentical(count($shortcuts), $expected_size);
+    $this->assertCount($expected_size, $shortcuts);
   }
 
 }
