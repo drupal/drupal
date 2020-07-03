@@ -83,14 +83,11 @@ interface MigrateDestinationInterface extends PluginInspectionInterface {
    * Derived classes must implement fields(), returning a list of available
    * destination fields.
    *
-   * @param \Drupal\migrate\Plugin\MigrationInterface $migration
-   *   Unused, will be removed before Drupal 9.0.x. Defaults to NULL.
-   *
    * @return array
    *   - Keys: machine names of the fields
    *   - Values: Human-friendly descriptions of the fields.
    */
-  public function fields(MigrationInterface $migration = NULL);
+  public function fields();
 
   /**
    * Import the row.

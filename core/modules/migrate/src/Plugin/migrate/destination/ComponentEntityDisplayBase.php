@@ -96,7 +96,7 @@ abstract class ComponentEntityDisplayBase extends DestinationBase implements Con
   /**
    * {@inheritdoc}
    */
-  public function fields(MigrationInterface $migration = NULL) {
+  public function fields() {
     // This is intentionally left empty.
   }
 

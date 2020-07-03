@@ -78,7 +78,7 @@ class UserData extends DestinationBase implements ContainerFactoryPluginInterfac
   /**
    * {@inheritdoc}
    */
-  public function fields(MigrationInterface $migration = NULL) {
+  public function fields() {
     return [
       'uid' => 'The user id.',
       'module' => 'The module name responsible for the settings.',
