@@ -664,20 +664,22 @@ function template_preprocess_views_view_table(&$variables) {
   // variables, although core templates now all use 'summary_element' instead.
   $variables['summary'] = $handler->options['summary'];
   $variables['description'] = $handler->options['description'];
-  $variables['summary_element'] = [
-    '#type' => 'details',
-    '#title' => $handler->options['summary'],
-    // To ensure that the description is properly escaped during rendering, use
-    // an 'inline_template' to let Twig do its magic, instead of 'markup'.
-    'description' => [
-      '#type' => 'inline_template',
-      '#template' => '{{ description }}',
-      '#context' => [
-        'description' => $handler->options['description'],
+  if (!empty($handler->options['summary']) || !empty($handler->options['description'])) {
+    $variables['summary_element'] = [
+      '#type' => 'details',
+      '#title' => $handler->options['summary'],
+      // To ensure that the description is properly escaped during rendering,
+      // use an 'inline_template' to let Twig do its magic, instead of 'markup'.
+      'description' => [
+        '#type' => 'inline_template',
+        '#template' => '{{ description }}',
+        '#context' => [
+          'description' => $handler->options['description'],
+        ],
       ],
-    ],
-  ];
-  $variables['caption_needed'] |= !empty($variables['summary']) || !empty($variables['description']);
+    ];
+    $variables['caption_needed'] = TRUE;
+  }
 
   $variables['responsive'] = FALSE;
   // If the table has headers and it should react responsively to columns hidden
