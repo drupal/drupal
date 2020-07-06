@@ -211,6 +211,8 @@ class StyleTableTest extends ViewTestBase {
 
     // Ensure that we don't find the caption containing unsafe markup.
     $this->assertNoRaw($unsafe_markup, "Didn't find caption containing unsafe markup.");
+    // Ensure that the summary isn't shown.
+    $this->assertEmpty($this->xpath('//caption/details'));
 
     // Ensure that all expected captions are found.
     foreach ($expected_captions as $raw_caption) {
