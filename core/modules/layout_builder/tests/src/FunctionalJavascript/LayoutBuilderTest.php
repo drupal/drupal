@@ -463,23 +463,16 @@ class LayoutBuilderTest extends WebDriverTestBase {
    *
    * @param string $expected_form_id
    *   The expected form ID.
-   * @param int $timeout
-   *   (Optional) Timeout in milliseconds, defaults to 10000.
    */
-  private function assertOffCanvasFormAfterWait($expected_form_id, $timeout = 10000) {
-    $page = $this->getSession()->getPage();
+  private function assertOffCanvasFormAfterWait($expected_form_id) {
     $this->assertSession()->assertWaitOnAjaxRequest();
-    $this->assertNotEmpty($page->waitFor($timeout / 1000, function () use ($page, $expected_form_id) {
-      // Ensure the form ID exists, is visible, and has the correct value.
-      $form_id_element = $page->find('hidden_field_selector', ['hidden_field', 'form_id']);
-
-      // Ensure the off canvas dialog is visible.
-      $off_canvas = $page->find('css', '#drupal-off-canvas');
-      if (!$off_canvas || !$off_canvas->isVisible()) {
-        return NULL;
-      }
-      return $form_id_element;
-    }));
+    $off_canvas = $this->assertSession()->waitForElementVisible('css', '#drupal-off-canvas');
+    $this->assertNotNull($off_canvas);
+    $form_id_element = $off_canvas->find('hidden_field_selector', ['hidden_field', 'form_id']);
+    // Ensure the form ID has the correct value and that the form is visible.
+    $this->assertNotEmpty($form_id_element);
+    $this->assertSame($expected_form_id, $form_id_element->getValue());
+    $this->assertTrue($form_id_element->getParent()->isVisible());
   }
 
   /**
