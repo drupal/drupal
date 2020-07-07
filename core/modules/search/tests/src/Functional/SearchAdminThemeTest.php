@@ -8,6 +8,7 @@ use Drupal\Tests\BrowserTestBase;
  * Verify the search results using administration theme for specific plugins.
  *
  * @see \Drupal\search\Annotation\SearchPlugin::$use_admin_theme
+ * @see \Drupal\search\Routing\SearchPageRoutes::routes()
  * @see \Drupal\Tests\system\Functional\System\ThemeTest::testAdministrationTheme()
  *
  * @group search
@@ -77,11 +78,11 @@ class SearchAdminThemeTest extends BrowserTestBase {
       $this->drupalGet($path);
       $session = $this->assertSession();
       // Make sure help plugin rendered help link.
-      // @todo Test label in https://www.drupal.org/node/3086795
       $path_help = $path . '/help';
       $session->linkByHrefExists($path_help);
       $this->assertSame($use_admin_theme, $plugin->usesAdminTheme());
       $this->assertAdminTheme($use_admin_theme);
+      // Make sure that search help also rendered in admin theme.
       $this->drupalGet($path_help);
       $this->assertAdminTheme($use_admin_theme);
     }
