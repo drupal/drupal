@@ -414,13 +414,16 @@
  * render array contained:
  * @code
  * $build['my_element'] = [
- *   '#attached' => ['placeholders' => ['@foo' => 'replacement']],
- *   '#markup' => ['Something about @foo'],
+ *   '#markup' => 'Something about @foo',
+ *   '#attached' => [
+ *     'placeholders' => [
+ *       '@foo' => ['#markup' => 'replacement'],
+ *     ],
  * ];
  * @endcode
  * then #markup would end up containing 'Something about replacement'.
  *
- * Note that each placeholder value can itself be a render array, which will be
+ * Note that each placeholder value *must* itself be a render array. It will be
  * rendered, and any cache tags generated during rendering will be added to the
  * cache tags for the markup.
  *
