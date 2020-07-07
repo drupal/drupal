@@ -22,7 +22,7 @@ class DeleteTruncateTest extends DatabaseTestBase {
    */
   public function testSubselectDelete() {
     $num_records_before = $this->connection->query('SELECT COUNT(*) FROM {test_task}')->fetchField();
-    $pid_to_delete = $this->connection->query("SELECT * FROM {test_task} WHERE task = 'sleep' ORDER BY tid")->fetchField();
+    $pid_to_delete = $this->connection->query("SELECT * FROM {test_task} WHERE [task] = 'sleep' ORDER BY [tid]")->fetchField();
 
     $subquery = $this->connection->select('test', 't')
       ->fields('t', ['id'])

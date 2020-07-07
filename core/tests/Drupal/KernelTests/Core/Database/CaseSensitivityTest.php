@@ -26,7 +26,7 @@ class CaseSensitivityTest extends DatabaseTestBase {
 
     $num_records_after = $this->connection->query('SELECT COUNT(*) FROM {test}')->fetchField();
     $this->assertSame($num_records_before + 1, (int) $num_records_after, 'Record inserts correctly.');
-    $saved_age = $this->connection->query('SELECT age FROM {test} WHERE name = :name', [':name' => 'john'])->fetchField();
+    $saved_age = $this->connection->query('SELECT [age] FROM {test} WHERE [name] = :name', [':name' => 'john'])->fetchField();
     $this->assertIdentical($saved_age, '2', 'Can retrieve after inserting.');
   }
 

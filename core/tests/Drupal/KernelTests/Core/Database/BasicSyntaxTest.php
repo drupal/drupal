@@ -37,7 +37,7 @@ class BasicSyntaxTest extends DatabaseTestBase {
    */
   public function testConcatFields() {
     $result = $this->connection->query(
-      'SELECT CONCAT(:a1, CONCAT(job, CONCAT(:a2, CONCAT(age, :a3)))) FROM {test} WHERE age = :age', [
+      'SELECT CONCAT(:a1, CONCAT([job], CONCAT(:a2, CONCAT([age], :a3)))) FROM {test} WHERE [age] = :age', [
         ':a1' => 'The age of ',
         ':a2' => ' is ',
         ':a3' => '.',
@@ -64,7 +64,7 @@ class BasicSyntaxTest extends DatabaseTestBase {
    * Tests string concatenation with separator, with field values.
    */
   public function testConcatWsFields() {
-    $result = $this->connection->query("SELECT CONCAT_WS('-', :a1, name, :a2, age) FROM {test} WHERE age = :age", [
+    $result = $this->connection->query("SELECT CONCAT_WS('-', :a1, [name], :a2, [age]) FROM {test} WHERE [age] = :age", [
       ':a1' => 'name',
       ':a2' => 'age',
       ':age' => 25,
@@ -160,7 +160,7 @@ class BasicSyntaxTest extends DatabaseTestBase {
     $this->assertIdentical('[square]', $result->fetchField());
 
     // Test that allow_square_brackets has no effect on arguments.
-    $result = $this->connection->query("select name from {test} where name = :value", [':value' => '[square]']);
+    $result = $this->connection->query("select [name] from {test} where [name] = :value", [':value' => '[square]']);
     $this->assertIdentical('[square]', $result->fetchField());
     $result = $this->connection->query("select name from {test} where name = :value", [':value' => '[square]'], ['allow_square_brackets' => TRUE]);
     $this->assertIdentical('[square]', $result->fetchField());

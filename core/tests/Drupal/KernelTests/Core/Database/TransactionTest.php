@@ -155,9 +155,9 @@ class TransactionTest extends DatabaseTestBase {
 
       // Neither of the rows we inserted in the two transaction layers
       // should be present in the tables post-rollback.
-      $saved_age = $this->connection->query('SELECT age FROM {test} WHERE name = :name', [':name' => 'DavidB'])->fetchField();
+      $saved_age = $this->connection->query('SELECT [age] FROM {test} WHERE [name] = :name', [':name' => 'DavidB'])->fetchField();
       $this->assertNotIdentical($saved_age, '24', 'Cannot retrieve DavidB row after commit.');
-      $saved_age = $this->connection->query('SELECT age FROM {test} WHERE name = :name', [':name' => 'DanielB'])->fetchField();
+      $saved_age = $this->connection->query('SELECT [age] FROM {test} WHERE [name] = :name', [':name' => 'DanielB'])->fetchField();
       $this->assertNotIdentical($saved_age, '19', 'Cannot retrieve DanielB row after commit.');
     }
     catch (\Exception $e) {
@@ -204,9 +204,9 @@ class TransactionTest extends DatabaseTestBase {
       $this->transactionOuterLayer('A');
 
       // Because we committed, both of the inserted rows should be present.
-      $saved_age = $this->connection->query('SELECT age FROM {test} WHERE name = :name', [':name' => 'DavidA'])->fetchField();
+      $saved_age = $this->connection->query('SELECT [age] FROM {test} WHERE [name] = :name', [':name' => 'DavidA'])->fetchField();
       $this->assertIdentical($saved_age, '24', 'Can retrieve DavidA row after commit.');
-      $saved_age = $this->connection->query('SELECT age FROM {test} WHERE name = :name', [':name' => 'DanielA'])->fetchField();
+      $saved_age = $this->connection->query('SELECT [age] FROM {test} WHERE [name] = :name', [':name' => 'DanielA'])->fetchField();
       $this->assertIdentical($saved_age, '19', 'Can retrieve DanielA row after commit.');
     }
     catch (\Exception $e) {
@@ -355,7 +355,7 @@ class TransactionTest extends DatabaseTestBase {
     if (!isset($message)) {
       $message = new FormattableMarkup('Row %name is present.', ['%name' => $name]);
     }
-    $present = (boolean) $this->connection->query('SELECT 1 FROM {test} WHERE name = :name', [':name' => $name])->fetchField();
+    $present = (boolean) $this->connection->query('SELECT 1 FROM {test} WHERE [name] = :name', [':name' => $name])->fetchField();
     return $this->assertTrue($present, $message);
   }
 
@@ -371,7 +371,7 @@ class TransactionTest extends DatabaseTestBase {
     if (!isset($message)) {
       $message = new FormattableMarkup('Row %name is absent.', ['%name' => $name]);
     }
-    $present = (boolean) $this->connection->query('SELECT 1 FROM {test} WHERE name = :name', [':name' => $name])->fetchField();
+    $present = (boolean) $this->connection->query('SELECT 1 FROM {test} WHERE [name] = :name', [':name' => $name])->fetchField();
     return $this->assertFalse($present, $message);
   }
 
@@ -495,7 +495,7 @@ class TransactionTest extends DatabaseTestBase {
 
     // Test a failed query using the query() method.
     try {
-      $this->connection->query('SELECT age FROM {test} WHERE name = :name', [':name' => 'David'])->fetchField();
+      $this->connection->query('SELECT [age] FROM {test} WHERE [name] = :name', [':name' => 'David'])->fetchField();
       $this->fail('Using the query method failed.');
     }
     catch (\Exception $e) {
@@ -600,7 +600,7 @@ class TransactionTest extends DatabaseTestBase {
     // Commit the transaction.
     unset($transaction);
 
-    $saved_age = $this->connection->query('SELECT age FROM {test} WHERE name = :name', [':name' => 'David'])->fetchField();
+    $saved_age = $this->connection->query('SELECT [age] FROM {test} WHERE [name] = :name', [':name' => 'David'])->fetchField();
     $this->assertEqual('24', $saved_age);
   }
 

@@ -27,7 +27,7 @@ class InsertTest extends DatabaseTestBase {
 
     $num_records_after = $this->connection->query('SELECT COUNT(*) FROM {test}')->fetchField();
     $this->assertSame($num_records_before + 1, (int) $num_records_after, 'Record inserts correctly.');
-    $saved_age = $this->connection->query('SELECT age FROM {test} WHERE name = :name', [':name' => 'Yoko'])->fetchField();
+    $saved_age = $this->connection->query('SELECT [age] FROM {test} WHERE [name] = :name', [':name' => 'Yoko'])->fetchField();
     $this->assertIdentical($saved_age, '29', 'Can retrieve after inserting.');
   }
 
@@ -62,11 +62,11 @@ class InsertTest extends DatabaseTestBase {
 
     $num_records_after = (int) $this->connection->query('SELECT COUNT(*) FROM {test}')->fetchField();
     $this->assertSame($num_records_before + 3, $num_records_after, 'Record inserts correctly.');
-    $saved_age = $this->connection->query('SELECT age FROM {test} WHERE name = :name', [':name' => 'Larry'])->fetchField();
+    $saved_age = $this->connection->query('SELECT [age] FROM {test} WHERE [name] = :name', [':name' => 'Larry'])->fetchField();
     $this->assertIdentical($saved_age, '30', 'Can retrieve after inserting.');
-    $saved_age = $this->connection->query('SELECT age FROM {test} WHERE name = :name', [':name' => 'Curly'])->fetchField();
+    $saved_age = $this->connection->query('SELECT [age] FROM {test} WHERE [name] = :name', [':name' => 'Curly'])->fetchField();
     $this->assertIdentical($saved_age, '31', 'Can retrieve after inserting.');
-    $saved_age = $this->connection->query('SELECT age FROM {test} WHERE name = :name', [':name' => 'Moe'])->fetchField();
+    $saved_age = $this->connection->query('SELECT [age] FROM {test} WHERE [name] = :name', [':name' => 'Moe'])->fetchField();
     $this->assertIdentical($saved_age, '32', 'Can retrieve after inserting.');
   }
 
@@ -105,11 +105,11 @@ class InsertTest extends DatabaseTestBase {
 
     $num_records_after = $this->connection->query('SELECT COUNT(*) FROM {test}')->fetchField();
     $this->assertSame((int) $num_records_before + 3, (int) $num_records_after, 'Record inserts correctly.');
-    $saved_age = $this->connection->query('SELECT age FROM {test} WHERE name = :name', [':name' => 'Larry'])->fetchField();
+    $saved_age = $this->connection->query('SELECT [age] FROM {test} WHERE [name] = :name', [':name' => 'Larry'])->fetchField();
     $this->assertIdentical($saved_age, '30', 'Can retrieve after inserting.');
-    $saved_age = $this->connection->query('SELECT age FROM {test} WHERE name = :name', [':name' => 'Curly'])->fetchField();
+    $saved_age = $this->connection->query('SELECT [age] FROM {test} WHERE [name] = :name', [':name' => 'Curly'])->fetchField();
     $this->assertIdentical($saved_age, '31', 'Can retrieve after inserting.');
-    $saved_age = $this->connection->query('SELECT age FROM {test} WHERE name = :name', [':name' => 'Moe'])->fetchField();
+    $saved_age = $this->connection->query('SELECT [age] FROM {test} WHERE [name] = :name', [':name' => 'Moe'])->fetchField();
     $this->assertIdentical($saved_age, '32', 'Can retrieve after inserting.');
   }
 
@@ -125,11 +125,11 @@ class InsertTest extends DatabaseTestBase {
       ->values(['Curly', '31'])
       ->values(['Moe', '32'])
       ->execute();
-    $saved_age = $this->connection->query('SELECT age FROM {test} WHERE name = :name', [':name' => 'Larry'])->fetchField();
+    $saved_age = $this->connection->query('SELECT [age] FROM {test} WHERE [name] = :name', [':name' => 'Larry'])->fetchField();
     $this->assertIdentical($saved_age, '30', 'Can retrieve after inserting.');
-    $saved_age = $this->connection->query('SELECT age FROM {test} WHERE name = :name', [':name' => 'Curly'])->fetchField();
+    $saved_age = $this->connection->query('SELECT [age] FROM {test} WHERE [name] = :name', [':name' => 'Curly'])->fetchField();
     $this->assertIdentical($saved_age, '31', 'Can retrieve after inserting.');
-    $saved_age = $this->connection->query('SELECT age FROM {test} WHERE name = :name', [':name' => 'Moe'])->fetchField();
+    $saved_age = $this->connection->query('SELECT [age] FROM {test} WHERE [name] = :name', [':name' => 'Moe'])->fetchField();
     $this->assertIdentical($saved_age, '32', 'Can retrieve after inserting.');
   }
 
@@ -169,7 +169,7 @@ class InsertTest extends DatabaseTestBase {
       ->from($query)
       ->execute();
 
-    $saved_age = $this->connection->query('SELECT age FROM {test} WHERE name = :name', [':name' => 'Meredith'])->fetchField();
+    $saved_age = $this->connection->query('SELECT [age] FROM {test} WHERE [name] = :name', [':name' => 'Meredith'])->fetchField();
     $this->assertIdentical($saved_age, '30', 'Can retrieve after inserting.');
   }
 
@@ -190,7 +190,7 @@ class InsertTest extends DatabaseTestBase {
       ->from($query)
       ->execute();
 
-    $saved_age = $this->connection->query('SELECT age FROM {test_people_copy} WHERE name = :name', [':name' => 'Meredith'])->fetchField();
+    $saved_age = $this->connection->query('SELECT [age] FROM {test_people_copy} WHERE [name] = :name', [':name' => 'Meredith'])->fetchField();
     $this->assertIdentical($saved_age, '30', 'Can retrieve after inserting.');
   }
 
@@ -204,7 +204,7 @@ class InsertTest extends DatabaseTestBase {
         'update' => 'Update value 2',
       ])
       ->execute();
-    $saved_value = $this->connection->query('SELECT [update] FROM {select} WHERE id = :id', [':id' => 2])->fetchField();
+    $saved_value = $this->connection->query('SELECT [update] FROM {select} WHERE [id] = :id', [':id' => 2])->fetchField();
     $this->assertEquals('Update value 2', $saved_value);
   }
 
