@@ -166,9 +166,9 @@ class SchemaTest extends KernelTestBase {
     $this->checkSchemaComment('Changed column description.', 'test_table', 'test_serial');
 
     $this->assertTrue($this->tryInsert(), 'Insert with a serial succeeded.');
-    $max1 = $this->connection->query('SELECT MAX(test_serial) FROM {test_table}')->fetchField();
+    $max1 = $this->connection->query('SELECT MAX([test_serial]) FROM {test_table}')->fetchField();
     $this->assertTrue($this->tryInsert(), 'Insert with a serial succeeded.');
-    $max2 = $this->connection->query('SELECT MAX(test_serial) FROM {test_table}')->fetchField();
+    $max2 = $this->connection->query('SELECT MAX([test_serial]) FROM {test_table}')->fetchField();
     $this->assertTrue($max2 > $max1, 'The serial is monotone.');
 
     $count = $this->connection->query('SELECT COUNT(*) FROM {test_table}')->fetchField();
@@ -186,9 +186,9 @@ class SchemaTest extends KernelTestBase {
     $this->assertSame(['test_serial'], $method->invoke($this->schema, 'test_table'));
 
     $this->assertTrue($this->tryInsert(), 'Insert with a serial succeeded.');
-    $max1 = $this->connection->query('SELECT MAX(test_serial) FROM {test_table}')->fetchField();
+    $max1 = $this->connection->query('SELECT MAX([test_serial]) FROM {test_table}')->fetchField();
     $this->assertTrue($this->tryInsert(), 'Insert with a serial succeeded.');
-    $max2 = $this->connection->query('SELECT MAX(test_serial) FROM {test_table}')->fetchField();
+    $max2 = $this->connection->query('SELECT MAX([test_serial]) FROM {test_table}')->fetchField();
     $this->assertTrue($max2 > $max1, 'The serial is monotone.');
 
     $count = $this->connection->query('SELECT COUNT(*) FROM {test_table}')->fetchField();
