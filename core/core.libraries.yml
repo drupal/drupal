@@ -341,16 +341,16 @@ html5shiv:
 
 jquery:
   remote: https://github.com/jquery/jquery
-  version: "3.2.1"
+  version: "3.5.1"
   license:
     name: MIT
-    url: https://github.com/jquery/jquery/blob/3.2.1/LICENSE.txt
+    url: https://github.com/jquery/jquery/blob/3.5.1/LICENSE.txt
     gpl-compatible: true
   js:
     assets/vendor/jquery/jquery.min.js: { minified: true, weight: -20 }
     # This includes a security fix, so assign a weight that makes this load as
     # soon after jquery.min.js is loaded as possible.
-    assets/vendor/jquery/jquery-extend-3.4.0.js: { weight: -19 }
+    assets/vendor/jquery/jquery-3.5.1.js: { weight: -19 }
 
 jquery.cookie:
   remote: https://github.com/carhartl/jquery-cookie
