@@ -87,6 +87,25 @@ class BackendCompilerPassTest extends UnitTestCase {
     $container->setParameter('default_backend', '');
     $data[] = [$prefix . 'Default', $container];
 
+    // Set the mysql and the DrivertestMysql service, now the DrivertestMysql
+    // service, as it is the driver override, should be used.
+    $container = $this->getDrivertestMysqlContainer($service);
+    $container->setDefinition('mysql.service', new Definition(__NAMESPACE__ . '\\ServiceClassMysql'));
+    $container->setDefinition('DrivertestMysql.service', new Definition(__NAMESPACE__ . '\\ServiceClassDrivertestMysql'));
+    $data[] = [$prefix . 'DrivertestMysql', $container];
+
+    // Set the mysql service, now the mysql service, as it is the database_type
+    // override, should be used.
+    $container = $this->getDrivertestMysqlContainer($service);
+    $container->setDefinition('mysql.service', new Definition(__NAMESPACE__ . '\\ServiceClassMysql'));
+    $data[] = [$prefix . 'Mysql', $container];
+
+    // Set the DrivertestMysql service, now the DrivertestMysql service, as it
+    // is the driver override, should be used.
+    $container = $this->getDrivertestMysqlContainer($service);
+    $container->setDefinition('DrivertestMysql.service', new Definition(__NAMESPACE__ . '\\ServiceClassDrivertestMysql'));
+    $data[] = [$prefix . 'DrivertestMysql', $container];
+
     return $data;
   }
 
@@ -126,6 +145,24 @@ class BackendCompilerPassTest extends UnitTestCase {
     return $container;
   }
 
+  /**
+   * Creates a container with a DrivertestMysql database mock definition in it.
+   *
+   * This is necessary because the container clone does not clone the parameter
+   * bag so the setParameter() call effects the parent container as well.
+   *
+   * @param $service
+   *
+   * @return \Symfony\Component\DependencyInjection\ContainerBuilder
+   */
+  protected function getDrivertestMysqlContainer($service) {
+    $container = new ContainerBuilder();
+    $container->setDefinition('service', $service);
+    $mock = $this->getMockBuilder('Drupal\driver_test\Driver\Database\DrivertestMysql\Connection')->setMethods(NULL)->disableOriginalConstructor()->getMock();
+    $container->set('database', $mock);
+    return $container;
+  }
+
 }
 
 class ServiceClassDefault {
@@ -138,4 +175,7 @@ class ServiceClassMariaDb extends ServiceClassMysql {
 }
 
 class ServiceClassSqlite extends ServiceClassDefault {
+}
+
+class ServiceClassDrivertestMysql extends ServiceClassDefault {
 }
