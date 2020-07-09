@@ -94,6 +94,7 @@ class FinalExceptionSubscriber implements EventSubscriberInterface {
       $error = $this->simplifyFileInError($error);
 
       unset($error['backtrace']);
+      unset($error['severity_level']);
 
       if (!$this->isErrorLevelVerbose()) {
         // Without verbose logging, use a simple message.

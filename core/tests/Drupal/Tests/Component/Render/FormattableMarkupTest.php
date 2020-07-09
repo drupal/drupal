@@ -91,12 +91,22 @@ class FormattableMarkupTest extends TestCase {
    */
   public function providerTestUnexpectedPlaceholder() {
     return [
-      ['Non alpha starting character: ~placeholder', ['~placeholder' => 'replaced'], E_USER_ERROR, 'Invalid placeholder (~placeholder) in string: Non alpha starting character: ~placeholder'],
-      ['Alpha starting character: placeholder', ['placeholder' => 'replaced'], E_USER_DEPRECATED, 'Invalid placeholder (placeholder) in string: Alpha starting character: placeholder'],
-      // Ensure that where the placeholder is located in the string is
+      ['Non alpha starting character: ~placeholder', ['~placeholder' => 'replaced'], E_USER_WARNING, 'Invalid placeholder (~placeholder) with string: "Non alpha starting character: ~placeholder"'],
+      ['Alpha starting character: placeholder', ['placeholder' => 'replaced'], E_USER_WARNING, 'Invalid placeholder (placeholder) with string: "Alpha starting character: placeholder"'],
+      // Ensure that where the placeholder is located in the the string is
       // irrelevant.
-      ['placeholder', ['placeholder' => 'replaced'], E_USER_DEPRECATED, 'Invalid placeholder (placeholder) in string: placeholder'],
+      ['placeholder', ['placeholder' => 'replaced'], E_USER_WARNING, 'Invalid placeholder (placeholder) with string: "placeholder"'],
     ];
+  }
+
+  /**
+   * @expectedDeprecation Support for keys without a placeholder prefix is deprecated in Drupal 9.1.0 and will be removed in Drupal 10.0.0. Invalid placeholder (foo) with string: "No replacements"
+   * @group legacy
+   */
+  public function testNoReplacementUnsupportedVariable() {
+    $markup = new FormattableMarkup('No replacements', ['foo' => 'bar']);
+    // Cast it to a string which will generate the deprecation notice.
+    $output = (string) $markup;
   }
 
 }

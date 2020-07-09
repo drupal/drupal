@@ -149,6 +149,10 @@ function error_displayable($error = NULL) {
 function _drupal_log_error($error, $fatal = FALSE) {
   $is_installer = InstallerKernel::installationAttempted();
 
+  // Remove 'severity_level' as is not a valid replacement for t().
+  $severity = $error['severity_level'];
+  unset($error['severity_level']);
+
   // Backtrace array is not a valid replacement value for t().
   $backtrace = $error['backtrace'];
   unset($error['backtrace']);
@@ -166,8 +170,10 @@ function _drupal_log_error($error, $fatal = FALSE) {
   // installer.
   if (\Drupal::hasService('logger.factory')) {
     try {
-      // Provide the PHP backtrace to logger implementations.
-      \Drupal::logger('php')->log($error['severity_level'], '%type: @message in %function (line %line of %file) @backtrace_string.', $error + ['backtrace' => $backtrace]);
+      // Provide the PHP backtrace to logger implementations. Add
+      // 'severity_level' to the context to maintain BC and allow logging
+      // implementations to use it.
+      \Drupal::logger('php')->log($severity, '%type: @message in %function (line %line of %file) @backtrace_string.', $error + ['backtrace' => $backtrace, 'severity_level' => $severity]);
     }
     catch (\Exception $e) {
       // We can't log, for example because the database connection is not
