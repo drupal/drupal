@@ -7,6 +7,7 @@ use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
 use Drupal\Tests\content_moderation\Traits\ContentModerationTestTrait;
+use Drupal\Tests\user\Traits\UserCreationTrait;
 use Drupal\Tests\views\Kernel\ViewsKernelTestBase;
 use Drupal\views\Views;
 use Drupal\workflows\Entity\Workflow;
@@ -21,6 +22,7 @@ use Drupal\workflows\Entity\Workflow;
 class ViewsModerationStateFilterTest extends ViewsKernelTestBase {
 
   use ContentModerationTestTrait;
+  use UserCreationTrait;
 
   /**
    * {@inheritdoc}
@@ -181,6 +183,52 @@ class ViewsModerationStateFilterTest extends ViewsKernelTestBase {
     ]);
     $view->execute();
     $this->assertIdenticalResultset($view, [['id' => $test_entity->id()]], ['id' => 'id']);
+  }
+
+  /**
+   * Tests the moderation state filter on an entity added via a relationship.
+   */
+  public function testModerationStateFilterOnJoinedEntity() {
+    $workflow = Workflow::load('editorial');
+    $workflow->getTypePlugin()->addEntityTypeAndBundle('node', 'example');
+    $workflow->save();
+
+    // Create some sample content that will satisfy a view of users with a
+    // relationship to an item of content.
+    $user = $this->createUser([], 'Test user');
+    $node = Node::create([
+      'type' => 'example',
+      'title' => 'Test node',
+      'moderation_state' => 'published',
+      'uid' => $user->id(),
+    ]);
+    $node->save();
+
+    // When filtering by published nodes, the sample content will appear.
+    $view = Views::getView('test_content_moderation_filter_via_relationship');
+    $view->setExposedInput([
+      'moderation_state' => 'editorial-published',
+    ]);
+    $view->execute();
+    $this->assertIdenticalResultset($view, [
+      [
+        'name' => 'Test user',
+        'title' => 'Test node',
+        'moderation_state' => 'published',
+      ],
+    ], [
+      'name' => 'name',
+      'title' => 'title',
+      'moderation_state' => 'moderation_state',
+    ]);
+
+    // Filtering by the draft state will filter out the sample content.
+    $view = Views::getView('test_content_moderation_filter_via_relationship');
+    $view->setExposedInput([
+      'moderation_state' => 'editorial-draft',
+    ]);
+    $view->execute();
+    $this->assertIdenticalResultset($view, [], ['name' => 'name']);
   }
 
   /**

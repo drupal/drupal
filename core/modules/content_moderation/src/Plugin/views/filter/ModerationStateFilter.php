@@ -137,7 +137,7 @@ class ModerationStateFilter extends InOperator implements DependentWithRemovalPl
       // If we have a list of moderated bundles, restrict the query to show only
       // entities in those bundles.
       if ($moderated_bundles) {
-        $entity_base_table_alias = $this->table;
+        $entity_base_table_alias = $this->relationship ?: $this->table;
 
         // The bundle field of an entity type is not revisionable so we need to
         // join the base table.
