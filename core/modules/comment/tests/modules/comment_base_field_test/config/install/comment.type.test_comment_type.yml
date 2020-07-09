@@ -1,0 +1,6 @@
+langcode: en
+status: true
+id: test_comment_type
+label: Test comment type
+target_entity_type_id: comment_test_base_field
+description: 'Test comment type.'
