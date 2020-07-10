@@ -17,7 +17,11 @@ abstract class NoMultilingualReviewPageTestBase extends MultilingualReviewPageTe
     // Start the upgrade process.
     $this->drupalGet('/upgrade');
     $this->drupalPostForm(NULL, [], t('Continue'));
-    $this->drupalPostForm(NULL, $this->edits, t('Review upgrade'));
+
+    // Get valid credentials.
+    $edits = $this->translatePostValues($this->getCredentials());
+
+    $this->drupalPostForm(NULL, $edits, t('Review upgrade'));
 
     $session = $this->assertSession();
     $session->pageTextContains('WARNING: Content may be overwritten on your new site.');

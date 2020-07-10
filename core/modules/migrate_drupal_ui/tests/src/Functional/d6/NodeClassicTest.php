@@ -81,7 +81,6 @@ class NodeClassicTest extends MigrateUpgradeExecuteTestBase {
     // Add a node classic migrate table to d8.
     $this->makeNodeMigrateMapTable(NodeMigrateType::NODE_MIGRATE_TYPE_CLASSIC, '6');
 
-    $connection_options = $this->sourceDatabase->getConnectionOptions();
     $this->drupalGet('/upgrade');
     $session = $this->assertSession();
     $session->responseContains("Upgrade a site by importing its files and the data from its database into a clean and empty new install of Drupal $this->destinationSiteVersion.");
@@ -90,25 +89,8 @@ class NodeClassicTest extends MigrateUpgradeExecuteTestBase {
     $session->pageTextContains('Provide credentials for the database of the Drupal site you want to upgrade.');
     $session->fieldExists('mysql[host]');
 
-    $driver = $connection_options['driver'];
-    $connection_options['prefix'] = $connection_options['prefix']['default'];
-
-    // Use the driver connection form to get the correct options out of the
-    // database settings. This supports all of the databases we test against.
-    $drivers = drupal_get_database_types();
-    $form = $drivers[$driver]->getFormOptions($connection_options);
-    $connection_options = array_intersect_key($connection_options, $form + $form['advanced_options']);
-    $version = $this->getLegacyDrupalVersion($this->sourceDatabase);
-    $edit = [
-      $driver => $connection_options,
-      'source_private_file_path' => $this->getSourceBasePath(),
-      'version' => $version,
-    ];
-    $edit['d6_source_base_path'] = $this->getSourceBasePath();
-    if (count($drivers) !== 1) {
-      $edit['driver'] = $driver;
-    }
-    $edits = $this->translatePostValues($edit);
+    // Get valid credentials.
+    $edits = $this->translatePostValues($this->getCredentials());
 
     // Start the upgrade process.
     $this->drupalGet('/upgrade');

@@ -260,4 +260,43 @@ abstract class MigrateUpgradeTestBase extends BrowserTestBase {
     }
   }
 
+  /**
+   * Creates an array of credentials for the Credential form.
+   *
+   * Before submitting to the Credential form the array must be processed by
+   * BrowserTestBase::translatePostValues() before submitting.
+   *
+   * @return array
+   *   An array of values suitable for BrowserTestBase::translatePostValues().
+   *
+   * @see \Drupal\migrate_drupal_ui\Form\CredentialForm
+   */
+  protected function getCredentials() {
+    $connection_options = $this->sourceDatabase->getConnectionOptions();
+    $version = $this->getLegacyDrupalVersion($this->sourceDatabase);
+    $driver = $connection_options['driver'];
+    $connection_options['prefix'] = $connection_options['prefix']['default'];
+
+    // Use the driver connection form to get the correct options out of the
+    // database settings. This supports all of the databases we test against.
+    $drivers = drupal_get_database_types();
+    $form = $drivers[$driver]->getFormOptions($connection_options);
+    $connection_options = array_intersect_key($connection_options, $form + $form['advanced_options']);
+    $edit = [
+      $driver => $connection_options,
+      'source_private_file_path' => $this->getSourceBasePath(),
+      'version' => $version,
+    ];
+    if ($version == 6) {
+      $edit['d6_source_base_path'] = $this->getSourceBasePath();
+    }
+    else {
+      $edit['source_base_path'] = $this->getSourceBasePath();
+    }
+    if (count($drivers) !== 1) {
+      $edit['driver'] = $driver;
+    }
+    return $edit;
+  }
+
 }
