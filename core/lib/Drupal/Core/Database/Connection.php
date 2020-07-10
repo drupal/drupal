@@ -258,15 +258,39 @@ abstract class Connection {
    * variables. In case of PDO database connection objects, PHP only closes the
    * connection when the PDO object is destructed, so any references to this
    * object may cause the number of maximum allowed connections to be exceeded.
+   *
+   * @deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. Move custom
+   *   database destruction logic to __destruct().
+   *
+   * @see https://www.drupal.org/node/3142866
    */
   public function destroy() {
-    // Destroy all references to this connection by setting them to NULL.
-    // The Statement class attribute only accepts a new value that presents a
-    // proper callable, so we reset it to PDOStatement.
-    if (!empty($this->statementClass)) {
-      $this->connection->setAttribute(\PDO::ATTR_STATEMENT_CLASS, ['PDOStatement', []]);
+    $backtrace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2);
+    if ($backtrace[1]['class'] !== self::class && $backtrace[1]['function'] !== '__destruct') {
+      @trigger_error(__METHOD__ . '() is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. Move custom database destruction logic to __destruct(). See https://www.drupal.org/node/3142866', E_USER_DEPRECATED);
+      // Destroy all references to this connection by setting them to NULL.
+      // The Statement class attribute only accepts a new value that presents a
+      // proper callable, so we reset it to PDOStatement.
+      if (!empty($this->statementClass)) {
+        $this->connection->setAttribute(\PDO::ATTR_STATEMENT_CLASS, ['PDOStatement', []]);
+      }
+      $this->schema = NULL;
     }
-    $this->schema = NULL;
+  }
+
+  /**
+   * Ensures that the PDO connection can be garbage collected.
+   */
+  public function __destruct() {
+    // Call the ::destroy method to provide a BC layer.
+    // @todo https://www.drupal.org/project/drupal/issues/3153864 Remove this
+    //   call in Drupal 10 as the logic in the destroy() method is no longer
+    //   required now we implement a proper destructor.
+    $this->destroy();
+    // Ensure that the circular reference caused by Connection::__construct()
+    // using $this in the call to set the statement class can be garbage
+    // collected.
+    $this->connection = NULL;
   }
 
   /**

@@ -199,6 +199,7 @@ class Connection extends DatabaseConnection {
         }
       }
     }
+    parent::__destruct();
   }
 
   /**

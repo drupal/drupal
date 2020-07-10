@@ -6,6 +6,7 @@ use Composer\Autoload\ClassLoader;
 use Drupal\Core\Database\Statement;
 use Drupal\Tests\Core\Database\Stub\StubConnection;
 use Drupal\Tests\Core\Database\Stub\StubPDO;
+use Drupal\Tests\Core\Database\Stub\Driver;
 use Drupal\Tests\UnitTestCase;
 
 /**
@@ -320,6 +321,9 @@ class ConnectionTest extends UnitTestCase {
 
   /**
    * Test Connection::destroy().
+   *
+   * @group legacy
+   * @expectedDeprecation Drupal\Core\Database\Connection::destroy() is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. Move custom database destruction logic to __destruct(). See https://www.drupal.org/node/3142866
    */
   public function testDestroy() {
     $mock_pdo = $this->createMock('Drupal\Tests\Core\Database\Stub\StubPDO');
@@ -335,6 +339,29 @@ class ConnectionTest extends UnitTestCase {
     $reflected_schema = (new \ReflectionObject($connection))->getProperty('schema');
     $reflected_schema->setAccessible(TRUE);
     $this->assertNull($reflected_schema->getValue($connection));
+  }
+
+  /**
+   * Test Connection::__destruct().
+   *
+   * @group legacy
+   * @expectedDeprecation Drupal\Core\Database\Connection::destroy() is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. Move custom database destruction logic to __destruct(). See https://www.drupal.org/node/3142866
+   */
+  public function testDestructBcLayer() {
+    $mock_pdo = $this->createMock(StubPDO::class);
+    $fake_connection = new class($mock_pdo, ['namespace' => Driver::class]) extends StubConnection {
+
+      public function destroy() {
+        parent::destroy();
+      }
+
+    };
+    // Destroy the object which will result in the Connection::__destruct()
+    // calling Connection::destroy() and a deprecation error being triggered.
+    // @see \Drupal\KernelTests\Core\Database\ConnectionUnitTest for tests that
+    // connection object destruction does not trigger deprecations unless
+    // Connection::destroy() is overridden.
+    $fake_connection = NULL;
   }
 
   /**

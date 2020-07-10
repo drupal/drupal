@@ -405,26 +405,15 @@ abstract class Database {
     if (!isset($key)) {
       $key = self::$activeKey;
     }
-    // To close a connection, it needs to be set to NULL and removed from the
-    // static variable. In all cases, closeConnection() might be called for a
-    // connection that was not opened yet, in which case the key is not defined
-    // yet and we just ensure that the connection key is undefined.
     if (isset($target)) {
-      if (isset(self::$connections[$key][$target])) {
-        self::$connections[$key][$target]->destroy();
-        self::$connections[$key][$target] = NULL;
-      }
       unset(self::$connections[$key][$target]);
     }
     else {
-      if (isset(self::$connections[$key])) {
-        foreach (self::$connections[$key] as $target => $connection) {
-          self::$connections[$key][$target]->destroy();
-          self::$connections[$key][$target] = NULL;
-        }
-      }
       unset(self::$connections[$key]);
     }
+    // Force garbage collection to run. This ensures that PDO connection objects
+    // and destroyed and results in the connections being closed.
+    gc_collect_cycles();
   }
 
   /**
