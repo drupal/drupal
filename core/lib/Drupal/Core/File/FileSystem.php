@@ -466,10 +466,11 @@ class FileSystem implements FileSystemInterface {
       // Perhaps $destination is a dir/file?
       $dirname = $this->dirname($destination);
       if (!$this->prepareDirectory($dirname)) {
-        $this->logger->error("The specified file '%original_source' could not be copied because the destination directory is not properly configured. This may be caused by a problem with file or directory permissions.", [
+        $this->logger->error("The specified file '%original_source' could not be copied because the destination directory '%destination_directory' is not properly configured. This may be caused by a problem with file or directory permissions.", [
           '%original_source' => $original_source,
+          '%destination_directory' => $dirname,
         ]);
-        throw new DirectoryNotReadyException("The specified file '$original_source' could not be copied because the destination directory is not properly configured. This may be caused by a problem with file or directory permissions.");
+        throw new DirectoryNotReadyException("The specified file '$original_source' could not be copied because the destination directory '$dirname' is not properly configured. This may be caused by a problem with file or directory permissions.");
       }
     }
 
