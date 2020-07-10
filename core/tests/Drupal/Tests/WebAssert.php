@@ -626,4 +626,20 @@ class WebAssert extends MinkWebAssert {
     throw new ResponseTextException($message, $this->session->getDriver());
   }
 
+  /**
+   * Asserts that each HTML ID is used for just a single element on the page.
+   *
+   * @throws \Behat\Mink\Exception\ExpectationException
+   */
+  public function pageContainsNoDuplicateId() {
+    $seen_ids = [];
+    foreach ($this->session->getPage()->findAll('xpath', '//*[@id]') as $element) {
+      $id = $element->getAttribute('id');
+      if (isset($seen_ids[$id])) {
+        throw new ExpectationException(sprintf('The page contains a duplicate HTML ID "%s".', $id), $this->session->getDriver());
+      }
+      $seen_ids[$id] = TRUE;
+    }
+  }
+
 }

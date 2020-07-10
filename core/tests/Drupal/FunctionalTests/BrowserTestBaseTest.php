@@ -771,6 +771,22 @@ class BrowserTestBaseTest extends BrowserTestBase {
   }
 
   /**
+   * Tests pageContainsNoDuplicateId() functionality.
+   *
+   * @see \Drupal\Tests\WebAssert::pageContainsNoDuplicateId()
+   */
+  public function testPageContainsNoDuplicateId() {
+    $assert_session = $this->assertSession();
+    $this->drupalGet(Url::fromRoute('test_page_test.page_without_duplicate_ids'));
+    $assert_session->pageContainsNoDuplicateId();
+
+    $this->drupalGet(Url::fromRoute('test_page_test.page_with_duplicate_ids'));
+    $this->expectException(ExpectationException::class);
+    $this->expectExceptionMessage('The page contains a duplicate HTML ID "page-element".');
+    $assert_session->pageContainsNoDuplicateId();
+  }
+
+  /**
    * Tests assertEscaped() and assertUnescaped().
    *
    * @see \Drupal\Tests\WebAssert::assertNoEscaped()
