@@ -109,6 +109,7 @@ class SiteInformationForm extends ConfigFormBase {
       '#title' => t('Slogan'),
       '#default_value' => $site_config->get('slogan'),
       '#description' => t("How this is used depends on your site's theme."),
+      '#maxlength' => 255,
     ];
     $form['site_information']['site_mail'] = [
       '#type' => 'email',
