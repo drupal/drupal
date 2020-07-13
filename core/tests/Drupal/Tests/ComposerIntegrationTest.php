@@ -260,9 +260,8 @@ class ComposerIntegrationTest extends UnitTestCase {
     $reflection = new \ReflectionProperty($class, $property);
     $reflection->setAccessible(TRUE);
     $config = $reflection->getValue();
-    foreach (array_keys($config) as $package) {
-      $this->assertContains(strtolower($package), $packages);
-    }
+    $config_packages = array_map('strtolower', array_keys($config));
+    $this->assertEqualsCanonicalizing($packages, $config_packages);
   }
 
   /**
