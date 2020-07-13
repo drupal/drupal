@@ -223,7 +223,7 @@ class BlockTest extends BlockTestBase {
     $this->assertNoText(t($block['settings[label]']));
     // Check for <div id="block-my-block-instance-name"> if the machine name
     // is my_block_instance_name.
-    $xpath = $this->buildXPathQuery('//div[@id=:id]/*', [':id' => 'block-' . str_replace('_', '-', strtolower($block['id']))]);
+    $xpath = $this->assertSession()->buildXPathQuery('//div[@id=:id]/*', [':id' => 'block-' . str_replace('_', '-', strtolower($block['id']))]);
     $this->assertNoFieldByXPath($xpath, FALSE, 'Block found in no regions.');
 
     // Test deleting the block from the edit form.
@@ -349,7 +349,7 @@ class BlockTest extends BlockTestBase {
     $this->assertText(t($block['settings[label]']), 'Block successfully being displayed on the page.');
 
     // Confirm that the custom block was found at the proper region.
-    $xpath = $this->buildXPathQuery('//div[@class=:region-class]//div[@id=:block-id]/*', [
+    $xpath = $this->assertSession()->buildXPathQuery('//div[@class=:region-class]//div[@id=:block-id]/*', [
       ':region-class' => 'region region-' . Html::getClass($region),
       ':block-id' => 'block-' . str_replace('_', '-', strtolower($block['id'])),
     ]);

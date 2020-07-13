@@ -914,7 +914,7 @@ trait AssertLegacyTrait {
   protected function constructFieldXpath($attribute, $value) {
     @trigger_error('AssertLegacyTrait::constructFieldXpath() is deprecated in drupal:8.5.0 and is removed from drupal:10.0.0. Use $this->getSession()->getPage()->findField() instead. See https://www.drupal.org/node/3129738', E_USER_DEPRECATED);
     $xpath = '//textarea[@' . $attribute . '=:value]|//input[@' . $attribute . '=:value]|//select[@' . $attribute . '=:value]';
-    return $this->buildXPathQuery($xpath, [':value' => $value]);
+    return $this->assertSession()->buildXPathQuery($xpath, [':value' => $value]);
   }
 
   /**

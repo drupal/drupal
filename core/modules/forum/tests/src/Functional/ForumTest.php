@@ -205,7 +205,7 @@ class ForumTest extends BrowserTestBase {
     $forum_arg = [':forum' => 'forum-list-' . $this->forum['tid']];
 
     // Topics cell contains number of topics and number of unread topics.
-    $xpath = $this->buildXPathQuery('//tr[@id=:forum]//td[@class="forum__topics"]', $forum_arg);
+    $xpath = $this->assertSession()->buildXPathQuery('//tr[@id=:forum]//td[@class="forum__topics"]', $forum_arg);
     $topics = $this->xpath($xpath);
     $topics = trim($topics[0]->getText());
     // The extracted text contains the number of topics (6) and new posts

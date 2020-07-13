@@ -197,7 +197,6 @@ trait DeprecationListenerTrait {
       'AssertLegacyTrait::assertEscaped() is deprecated in drupal:8.2.0 and is removed from drupal:10.0.0. Use $this->assertSession()->assertEscaped() instead. See https://www.drupal.org/node/3129738',
       'AssertLegacyTrait::assertNoEscaped() is deprecated in drupal:8.2.0 and is removed from drupal:10.0.0. Use $this->assertSession()->assertNoEscaped() instead. See https://www.drupal.org/node/3129738',
       'AssertLegacyTrait::assertPattern() is deprecated in drupal:8.2.0 and is removed from drupal:10.0.0. Use $this->assertSession()->responseMatches() instead. See https://www.drupal.org/node/3129738',
-      'AssertLegacyTrait::buildXPathQuery() is deprecated in drupal:8.2.0 and is removed from drupal:10.0.0. Use $this->assertSession()->buildXPathQuery() instead. See https://www.drupal.org/node/3129738',
       'AssertLegacyTrait::constructFieldXpath() is deprecated in drupal:8.5.0 and is removed from drupal:10.0.0. Use $this->getSession()->getPage()->findField() instead. See https://www.drupal.org/node/3129738',
     ];
   }

@@ -36,7 +36,7 @@ trait AssertMenuActiveTrailTrait {
           ':href' => Url::fromUri('base:' . $link_path)->toString(),
           ':title' => $link_title,
         ];
-        $xpath .= $this->buildXPathQuery($part_xpath, $part_args);
+        $xpath .= $this->assertSession()->buildXPathQuery($part_xpath, $part_args);
         $i++;
       }
       $elements = $this->xpath($xpath);
