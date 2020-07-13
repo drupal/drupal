@@ -136,7 +136,7 @@ class ConfigEntityAdapter extends EntityAdapter {
   /**
    * Gets typed data for config entity.
    *
-   * @return \Drupal\Core\TypedData\TraversableTypedDataInterface
+   * @return \Drupal\Core\TypedData\ComplexDataInterface
    *   The typed data.
    */
   protected function getConfigTypedData() {
