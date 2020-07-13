@@ -560,7 +560,6 @@ elit
 embed's
 emebd
 emptry
-emtity
 emtpy
 encapsed
 encoding's
@@ -972,7 +971,6 @@ linkback
 linkgenerator
 linkification
 linksby
-linktitle
 lisu
 litererally
 livescript
