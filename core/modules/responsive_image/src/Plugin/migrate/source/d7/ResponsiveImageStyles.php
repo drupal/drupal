@@ -10,7 +10,7 @@ use Drupal\migrate\Row;
  *
  * Breakpoints are YAML files in Drupal 8. If you have a custom
  * theme and want to migrate its responsive image styles to
- * Drupal 8, create the respective yourtheme.breakpoints.yml file at
+ * Drupal 8, create the respective your_theme.breakpoints.yml file at
  * the root of the theme.
  *
  * @see https://www.drupal.org/docs/8/theming-drupal-8/working-with-breakpoints-in-drupal-8

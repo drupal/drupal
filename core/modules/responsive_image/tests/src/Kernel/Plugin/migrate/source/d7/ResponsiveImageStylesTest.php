@@ -29,7 +29,7 @@ class ResponsiveImageStylesTest extends MigrateSqlSourceTestBase {
         'label' => 'Narrow',
         'machine_name' => 'narrow',
         'breakpoint_group' => 'responsive_image',
-        'mapping' => 'a:2:{s:38:"breakpoints.theme.my_theme_id.computer";a:3:{s:12:"multiplier_1";a:2:{s:12:"mapping_type";s:11:"image_style";s:11:"image_style";s:20:"custom_image_style_1";}s:12:"multiplier_2";a:3:{s:12:"mapping_type";s:5:"sizes";s:5:"sizes";i:2;s:18:"sizes_image_styles";a:2:{i:0;s:20:"custom_image_style_1";i:1;s:20:"custom_image_style_2";}}s:12:"multiplier_3";a:1:{s:12:"mapping_type";s:5:"_none";}}s:41:"breakpoints.theme.my_theme_id.computertwo";a:1:{s:12:"multiplier_2";a:3:{s:12:"mapping_type";s:5:"sizes";s:5:"sizes";i:2;s:18:"sizes_image_styles";a:2:{i:0;s:20:"custom_image_style_1";i:1;s:20:"custom_image_style_2";}}}}',
+        'mapping' => 'a:2:{s:38:"breakpoints.theme.my_theme_id.computer";a:3:{s:12:"multiplier_1";a:2:{s:12:"mapping_type";s:11:"image_style";s:11:"image_style";s:20:"custom_image_style_1";}s:12:"multiplier_2";a:3:{s:12:"mapping_type";s:5:"sizes";s:5:"sizes";i:2;s:18:"sizes_image_styles";a:2:{i:0;s:20:"custom_image_style_1";i:1;s:20:"custom_image_style_2";}}s:12:"multiplier_3";a:1:{s:12:"mapping_type";s:5:"_none";}}s:42:"breakpoints.theme.my_theme_id.computer_two";a:1:{s:12:"multiplier_2";a:3:{s:12:"mapping_type";s:5:"sizes";s:5:"sizes";i:2;s:18:"sizes_image_styles";a:2:{i:0;s:20:"custom_image_style_1";i:1;s:20:"custom_image_style_2";}}}}',
       ],
     ];
 
@@ -62,7 +62,7 @@ class ResponsiveImageStylesTest extends MigrateSqlSourceTestBase {
                   'mapping_type' => '_none',
                 ],
             ],
-          'breakpoints.theme.my_theme_id.computertwo' =>
+          'breakpoints.theme.my_theme_id.computer_two' =>
             [
               'multiplier_2' =>
                 [
