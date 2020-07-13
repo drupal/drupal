@@ -43414,6 +43414,51 @@ $connection->insert('node_type')
   'orig_type' => 'et',
 ))
 ->execute();
+
+$connection->schema()->createTable('picture_mapping', array(
+  'fields' => array(
+    'label' => array(
+      'type' => 'varchar',
+      'not null' => FALSE,
+      'length' => '255',
+    ),
+    'machine_name' => array(
+      'type' => 'varchar',
+      'not null' => TRUE,
+      'length' => '255',
+    ),
+    'breakpoint_group' => array(
+      'type' => 'varchar',
+      'not null' => FALSE,
+      'length' => '255',
+    ),
+    'mapping' => array(
+      'type' => 'blob',
+      'not null' => FALSE,
+      'size' => 'normal',
+    ),
+  ),
+  'primary key' => array(
+    'machine_name',
+  ),
+  'mysql_character_set' => 'utf8',
+));
+
+$connection->insert('picture_mapping')
+->fields(array(
+  'label',
+  'machine_name',
+  'breakpoint_group',
+  'mapping',
+))
+->values(array(
+  'label' => 'Narrow',
+  'machine_name' => 'narrow',
+  'breakpoint_group' => 'responsive_image',
+  'mapping' => 'a:2:{s:38:"breakpoints.theme.my_theme_id.computer";a:3:{s:12:"multiplier_1";a:2:{s:12:"mapping_type";s:11:"image_style";s:11:"image_style";s:20:"custom_image_style_1";}s:12:"multiplier_2";a:3:{s:12:"mapping_type";s:5:"sizes";s:5:"sizes";i:2;s:18:"sizes_image_styles";a:2:{i:0;s:20:"custom_image_style_1";i:1;s:20:"custom_image_style_2";}}s:12:"multiplier_3";a:1:{s:12:"mapping_type";s:5:"_none";}}s:41:"breakpoints.theme.my_theme_id.computertwo";a:1:{s:12:"multiplier_2";a:3:{s:12:"mapping_type";s:5:"sizes";s:5:"sizes";i:2;s:18:"sizes_image_styles";a:2:{i:0;s:20:"custom_image_style_1";i:1;s:20:"custom_image_style_2";}}}}',
+))
+->execute();
+
 $connection->schema()->createTable('queue', array(
   'fields' => array(
     'item_id' => array(

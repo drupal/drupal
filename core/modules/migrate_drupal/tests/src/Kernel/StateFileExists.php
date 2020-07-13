@@ -66,6 +66,7 @@ class StateFileExists extends MigrateDrupalTestBase {
     'options',
     'path',
     'rdf',
+    'responsive_image',
     'search',
     'shortcut',
     'statistics',
