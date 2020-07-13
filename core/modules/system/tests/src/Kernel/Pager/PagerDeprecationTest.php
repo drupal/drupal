@@ -13,7 +13,7 @@ use Drupal\KernelTests\KernelTestBase;
 class PagerDeprecationTest extends KernelTestBase {
 
   /**
-   * @expectedDeprecation pager_find_page is deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. Use \Drupal\Core\Pager\RequestPagerInterface->findPage() instead. See https://www.drupal.org/node/2779457
+   * @expectedDeprecation pager_find_page is deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. Use \Drupal\Core\Pager\PagerParametersInterface->findPage() instead. See https://www.drupal.org/node/2779457
    */
   public function testFindPage() {
     $this->assertInternalType('int', pager_find_page());
@@ -27,7 +27,7 @@ class PagerDeprecationTest extends KernelTestBase {
   }
 
   /**
-   * @expectedDeprecation pager_get_query_parameters is deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. Use \Drupal\Core\Pager\RequestPagerInterface->getQueryParameters() instead. See https://www.drupal.org/node/2779457
+   * @expectedDeprecation pager_get_query_parameters is deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. Use \Drupal\Core\Pager\PagerParametersInterface->getQueryParameters() instead. See https://www.drupal.org/node/2779457
    */
   public function testGetQueryParameters() {
     $this->assertInternalType('array', pager_get_query_parameters());

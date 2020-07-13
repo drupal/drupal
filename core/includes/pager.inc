@@ -26,13 +26,13 @@ use Drupal\Component\Utility\Html;
  *   displays the third page of search results at that URL.
  *
  * @deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. Use
- *   \Drupal\Core\Pager\RequestPagerInterface->findPage() instead.
+ *   \Drupal\Core\Pager\PagerParametersInterface->findPage() instead.
  *
  * @see https://www.drupal.org/node/2779457
  * @see \Drupal\Core\Pager\PagerParametersInterface::findPage()
  */
 function pager_find_page($element = 0) {
-  @trigger_error(__FUNCTION__ . ' is deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. Use \Drupal\Core\Pager\RequestPagerInterface->findPage() instead. See https://www.drupal.org/node/2779457', E_USER_DEPRECATED);
+  @trigger_error(__FUNCTION__ . ' is deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. Use \Drupal\Core\Pager\PagerParametersInterface->findPage() instead. See https://www.drupal.org/node/2779457', E_USER_DEPRECATED);
   /* @var $pager_parameters \Drupal\Core\Pager\PagerParametersInterface */
   $pager_parameters = \Drupal::service('pager.parameters');
   return $pager_parameters->findPage($element);
@@ -150,13 +150,13 @@ function pager_default_initialize($total, $limit, $element = 0) {
  *   page request except for those pertaining to paging.
  *
  * @deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. Use
- *   \Drupal\Core\Pager\RequestPagerInterface->getQueryParameters() instead.
+ *   \Drupal\Core\Pager\PagerParametersInterface->getQueryParameters() instead.
  *
  * @see https://www.drupal.org/node/2779457
  * @see \Drupal\Core\Pager\PagerParametersInterface::getQueryParameters()
  */
 function pager_get_query_parameters() {
-  @trigger_error(__FUNCTION__ . ' is deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. Use \Drupal\Core\Pager\RequestPagerInterface->getQueryParameters() instead. See https://www.drupal.org/node/2779457', E_USER_DEPRECATED);
+  @trigger_error(__FUNCTION__ . ' is deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. Use \Drupal\Core\Pager\PagerParametersInterface->getQueryParameters() instead. See https://www.drupal.org/node/2779457', E_USER_DEPRECATED);
   /* @var $pager_params \Drupal\Core\Pager\PagerParametersInterface */
   $pager_params = \Drupal::service('pager.parameters');
   return $pager_params->getQueryParameters();
