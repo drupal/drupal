@@ -83,7 +83,7 @@ class EntityReferenceRelationshipTest extends ViewsKernelTestBase {
     // Create reference from entity_test_mul to entity_test cardinality: infinite.
     $this->createEntityReferenceField('entity_test_mul', 'entity_test_mul', 'field_data_test_unlimited', 'field_data_test_unlimited', 'entity_test', 'default', [], FieldStorageConfig::CARDINALITY_UNLIMITED);
 
-    ViewTestData::createTestViews(get_class($this), ['entity_reference_test_views']);
+    ViewTestData::createTestViews(static::class, ['entity_reference_test_views']);
   }
 
   /**

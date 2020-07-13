@@ -32,7 +32,7 @@ class ExtensionViewsFieldTest extends ViewsKernelTestBase {
    */
   protected function setUp($import_test_views = TRUE): void {
     parent::setUp();
-    ViewTestData::createTestViews(get_class($this), ['file_test_views']);
+    ViewTestData::createTestViews(static::class, ['file_test_views']);
 
     $this->installEntitySchema('file');
 

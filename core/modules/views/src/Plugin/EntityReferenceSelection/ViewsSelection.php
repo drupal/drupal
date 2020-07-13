@@ -146,7 +146,7 @@ class ViewsSelection extends SelectionPluginBase implements ContainerFactoryPlug
     // into 'view_name' and 'view_display' in the final submitted values, so
     // we massage the data at validate time on the wrapping element (not
     // ideal).
-    $form['view']['#element_validate'] = [[get_called_class(), 'settingsFormValidate']];
+    $form['view']['#element_validate'] = [[static::class, 'settingsFormValidate']];
 
     if ($options) {
       $default = !empty($view_settings['view_name']) ? $view_settings['view_name'] . ':' . $view_settings['display_name'] : NULL;

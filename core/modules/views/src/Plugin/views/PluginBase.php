@@ -268,7 +268,7 @@ abstract class PluginBase extends ComponentPluginBase implements ContainerFactor
     // be moved into one because of the $form_state->getValues() hierarchy. Those
     // elements can add a #fieldset => 'fieldset_name' property, and they'll
     // be moved to their fieldset during pre_render.
-    $form['#pre_render'][] = [get_class($this), 'preRenderAddFieldsetMarkup'];
+    $form['#pre_render'][] = [static::class, 'preRenderAddFieldsetMarkup'];
   }
 
   /**

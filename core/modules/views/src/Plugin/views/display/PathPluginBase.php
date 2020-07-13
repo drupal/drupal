@@ -198,7 +198,7 @@ abstract class PathPluginBase extends DisplayPluginBase implements DisplayRouter
     // Set the argument map, in order to support named parameters.
     $route->setOption('_view_argument_map', $argument_map);
     $route->setOption('_view_display_plugin_id', $this->getPluginId());
-    $route->setOption('_view_display_plugin_class', get_called_class());
+    $route->setOption('_view_display_plugin_class', static::class);
     $route->setOption('_view_display_show_admin_links', $this->getOption('show_admin_links'));
 
     // Store whether the view will return a response.

@@ -127,7 +127,7 @@ abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface,
     // Populate the 'array_parents' information in $form_state->get('field')
     // after the form is built, so that we catch changes in the form structure
     // performed in alter() hooks.
-    $elements['#after_build'][] = [get_class($this), 'afterBuild'];
+    $elements['#after_build'][] = [static::class, 'afterBuild'];
     $elements['#field_name'] = $field_name;
     $elements['#field_parents'] = $parents;
     // Enforce the structure of submitted values.
@@ -253,9 +253,9 @@ abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface,
           '#value' => t('Add another item'),
           '#attributes' => ['class' => ['field-add-more-submit']],
           '#limit_validation_errors' => [array_merge($parents, [$field_name])],
-          '#submit' => [[get_class($this), 'addMoreSubmit']],
+          '#submit' => [[static::class, 'addMoreSubmit']],
           '#ajax' => [
-            'callback' => [get_class($this), 'addMoreAjax'],
+            'callback' => [static::class, 'addMoreAjax'],
             'wrapper' => $wrapper_id,
             'effect' => 'fade',
           ],

@@ -62,7 +62,7 @@ class BookRelationshipTest extends ViewTestBase {
         'add content to books',
       ]
     );
-    ViewTestData::createTestViews(get_class($this), ['book_test_views']);
+    ViewTestData::createTestViews(static::class, ['book_test_views']);
   }
 
   /**

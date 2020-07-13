@@ -50,7 +50,7 @@ class TranslationLinkTest extends ContentTranslationTestBase {
     $user->langcode = Language::LANGCODE_NOT_SPECIFIED;
     $user->save();
 
-    ViewTestData::createTestViews(get_class($this), ['content_translation_test_views']);
+    ViewTestData::createTestViews(static::class, ['content_translation_test_views']);
   }
 
   /**

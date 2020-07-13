@@ -53,7 +53,7 @@ class AccessTest extends ViewTestBase {
 
     $this->enableViewsTestModule();
 
-    ViewTestData::createTestViews(get_class($this), ['views_test_data']);
+    ViewTestData::createTestViews(static::class, ['views_test_data']);
 
     $this->webUser = $this->drupalCreateUser();
 

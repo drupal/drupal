@@ -59,7 +59,7 @@ abstract class CommentTestBase extends ViewTestBase {
   protected function setUp($import_test_views = TRUE) {
     parent::setUp($import_test_views);
 
-    ViewTestData::createTestViews(get_class($this), ['comment_test_views']);
+    ViewTestData::createTestViews(static::class, ['comment_test_views']);
 
     // Add two users, create a node with the user1 as author and another node
     // with user2 as author. For the second node add a comment from user1.

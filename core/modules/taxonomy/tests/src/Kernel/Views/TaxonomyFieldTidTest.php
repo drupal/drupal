@@ -53,7 +53,7 @@ class TaxonomyFieldTidTest extends ViewsKernelTestBase {
     $vocabulary = $this->createVocabulary();
     $this->term1 = $this->createTerm($vocabulary);
 
-    ViewTestData::createTestViews(get_class($this), ['taxonomy_test_views']);
+    ViewTestData::createTestViews(static::class, ['taxonomy_test_views']);
   }
 
   /**

@@ -191,7 +191,7 @@ class LinkWidget extends WidgetBase {
       // However, if it is inaccessible to the current user, do not display it
       // to them.
       '#default_value' => (!$item->isEmpty() && (\Drupal::currentUser()->hasPermission('link to any page') || $item->getUrl()->access())) ? static::getUriAsDisplayableString($item->uri) : NULL,
-      '#element_validate' => [[get_called_class(), 'validateUriElement']],
+      '#element_validate' => [[static::class, 'validateUriElement']],
       '#maxlength' => 2048,
       '#required' => $element['#required'],
       '#link_type' => $this->getFieldSetting('link_type'),
@@ -245,8 +245,8 @@ class LinkWidget extends WidgetBase {
     // Validate that title field is filled out (regardless of uri) when it is a
     // required field.
     if (!$this->isDefaultValueWidget($form_state) && $this->getFieldSetting('title') === DRUPAL_REQUIRED) {
-      $element['#element_validate'][] = [get_called_class(), 'validateTitleElement'];
-      $element['#element_validate'][] = [get_called_class(), 'validateTitleNoLink'];
+      $element['#element_validate'][] = [static::class, 'validateTitleElement'];
+      $element['#element_validate'][] = [static::class, 'validateTitleNoLink'];
 
       if (!$element['title']['#required']) {
         // Make title required on the front-end when URI filled-in.
@@ -268,7 +268,7 @@ class LinkWidget extends WidgetBase {
     // Ensure that a URI is always entered when an optional title field is
     // submitted.
     if (!$this->isDefaultValueWidget($form_state) && $this->getFieldSetting('title') == DRUPAL_OPTIONAL) {
-      $element['#element_validate'][] = [get_called_class(), 'validateTitleNoLink'];
+      $element['#element_validate'][] = [static::class, 'validateTitleNoLink'];
     }
 
     // Exposing the attributes array in the widget is left for alternate and more

@@ -95,7 +95,7 @@ class FieldUIDeleteTest extends BrowserTestBase {
     $this->fieldUIAddExistingField($bundle_path2, $field_name, $field_label);
 
     \Drupal::service('module_installer')->install(['views']);
-    ViewTestData::createTestViews(get_class($this), ['field_test_views']);
+    ViewTestData::createTestViews(static::class, ['field_test_views']);
 
     $view = View::load('test_view_field_delete');
     $this->assertNotNull($view);

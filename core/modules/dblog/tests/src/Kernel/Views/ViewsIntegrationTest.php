@@ -42,7 +42,7 @@ class ViewsIntegrationTest extends ViewsKernelTestBase {
     $this->installEntitySchema('user');
     $this->installSchema('dblog', ['watchdog']);
 
-    ViewTestData::createTestViews(get_class($this), ['dblog_test_views']);
+    ViewTestData::createTestViews(static::class, ['dblog_test_views']);
   }
 
   /**

@@ -61,7 +61,7 @@ class IntegrationTest extends ViewsKernelTestBase {
     $this->installEntitySchema('aggregator_item');
     $this->installEntitySchema('aggregator_feed');
 
-    ViewTestData::createTestViews(get_class($this), ['aggregator_test_views']);
+    ViewTestData::createTestViews(static::class, ['aggregator_test_views']);
 
     $this->itemStorage = $this->container->get('entity_type.manager')->getStorage('aggregator_item');
     $this->feedStorage = $this->container->get('entity_type.manager')->getStorage('aggregator_feed');

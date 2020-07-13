@@ -268,7 +268,7 @@ class EntityOperations implements ContainerInjectionInterface {
     // know in advance (before hook_entity_presave()) that the new revision will
     // be a pending one.
     if ($this->workspaceManager->hasActiveWorkspace()) {
-      $form['#entity_builders'][] = [get_called_class(), 'entityFormEntityBuild'];
+      $form['#entity_builders'][] = [static::class, 'entityFormEntityBuild'];
     }
 
     // Run the workspace conflict validation constraint when the entity form is

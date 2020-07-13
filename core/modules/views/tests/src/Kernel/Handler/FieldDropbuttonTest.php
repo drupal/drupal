@@ -78,7 +78,7 @@ class FieldDropbuttonTest extends ViewsKernelTestBase {
     $this->installConfig('node');
     $this->installConfig('filter');
 
-    ViewTestData::createTestViews(get_class($this), ['views_test_config']);
+    ViewTestData::createTestViews(static::class, ['views_test_config']);
     // Create two node types.
     $this->createContentType(['type' => 'foo']);
     $this->createContentType(['type' => 'bar']);

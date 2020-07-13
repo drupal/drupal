@@ -34,7 +34,7 @@ class ViewsBlockTest extends ViewsKernelTestBase {
   protected function setUp($import_test_views = TRUE): void {
     parent::setUp();
 
-    ViewTestData::createTestViews(get_class($this), ['block_test_views']);
+    ViewTestData::createTestViews(static::class, ['block_test_views']);
   }
 
   /**

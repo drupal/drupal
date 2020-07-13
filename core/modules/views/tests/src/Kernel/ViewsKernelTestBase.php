@@ -52,7 +52,7 @@ abstract class ViewsKernelTestBase extends KernelTestBase {
     $this->setUpFixtures();
 
     if ($import_test_views) {
-      ViewTestData::createTestViews(get_class($this), ['views_test_config']);
+      ViewTestData::createTestViews(static::class, ['views_test_config']);
     }
   }
 

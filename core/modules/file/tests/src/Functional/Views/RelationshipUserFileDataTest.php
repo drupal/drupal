@@ -54,7 +54,7 @@ class RelationshipUserFileDataTest extends ViewTestBase {
       'required' => 0,
     ])->save();
 
-    ViewTestData::createTestViews(get_class($this), ['file_test_views']);
+    ViewTestData::createTestViews(static::class, ['file_test_views']);
   }
 
   /**

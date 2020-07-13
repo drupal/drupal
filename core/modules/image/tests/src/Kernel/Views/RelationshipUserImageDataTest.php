@@ -61,7 +61,7 @@ class RelationshipUserImageDataTest extends ViewsKernelTestBase {
       'required' => 0,
     ])->save();
 
-    ViewTestData::createTestViews(get_class($this), ['image_test_views']);
+    ViewTestData::createTestViews(static::class, ['image_test_views']);
   }
 
   /**

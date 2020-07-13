@@ -50,7 +50,7 @@ class IntegrationTest extends ViewTestBase {
   protected function setUp($import_test_views = TRUE): void {
     parent::setUp($import_test_views);
 
-    ViewTestData::createTestViews(get_class($this), ['statistics_test_views']);
+    ViewTestData::createTestViews(static::class, ['statistics_test_views']);
 
     // Create a new user for viewing nodes and statistics.
     $this->webUser = $this->drupalCreateUser([

@@ -174,7 +174,7 @@ class ContentTranslationHandler implements ContentTranslationHandlerInterface, E
         ->setSetting('target_type', 'user')
         ->setSetting('handler', 'default')
         ->setRevisionable(TRUE)
-        ->setDefaultValueCallback(get_class($this) . '::getDefaultOwnerId')
+        ->setDefaultValueCallback(static::class . '::getDefaultOwnerId')
         ->setTranslatable(TRUE);
     }
 

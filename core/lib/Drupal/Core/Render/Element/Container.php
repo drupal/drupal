@@ -49,7 +49,7 @@ class Container extends RenderElement {
    * {@inheritdoc}
    */
   public function getInfo() {
-    $class = get_class($this);
+    $class = static::class;
     return [
       '#optional' => FALSE,
       '#process' => [

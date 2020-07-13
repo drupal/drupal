@@ -52,7 +52,7 @@ abstract class OptionsTestBase extends ViewsKernelTestBase {
     parent::setUp();
     $this->mockStandardInstall();
 
-    ViewTestData::createTestViews(get_class($this), ['options_test_views']);
+    ViewTestData::createTestViews(static::class, ['options_test_views']);
 
     $settings = [];
     $settings['type'] = 'article';

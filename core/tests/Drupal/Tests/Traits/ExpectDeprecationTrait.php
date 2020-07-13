@@ -38,7 +38,7 @@ trait ExpectDeprecationTrait {
   public function expectedDeprecations(array $messages) {
     if ($this instanceof TestCase) {
       // Ensure the class or method is in the legacy group.
-      $groups = Test::getGroups(get_class($this), $this->getName(FALSE));
+      $groups = Test::getGroups(static::class, $this->getName(FALSE));
       if (!in_array('legacy', $groups, TRUE)) {
         throw new AssertionFailedError('Only tests with the `@group legacy` annotation can call `setExpectedDeprecation()`.');
       }

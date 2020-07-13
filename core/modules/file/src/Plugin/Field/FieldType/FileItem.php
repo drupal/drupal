@@ -156,7 +156,7 @@ class FileItem extends EntityReferenceItem {
       '#title' => t('File directory'),
       '#default_value' => $settings['file_directory'],
       '#description' => t('Optional subdirectory within the upload destination where files will be stored. Do not include preceding or trailing slashes.'),
-      '#element_validate' => [[get_class($this), 'validateDirectory']],
+      '#element_validate' => [[static::class, 'validateDirectory']],
       '#weight' => 3,
     ];
 
@@ -167,7 +167,7 @@ class FileItem extends EntityReferenceItem {
       '#title' => t('Allowed file extensions'),
       '#default_value' => $extensions,
       '#description' => t('Separate extensions with a space or comma and do not include the leading dot.'),
-      '#element_validate' => [[get_class($this), 'validateExtensions']],
+      '#element_validate' => [[static::class, 'validateExtensions']],
       '#weight' => 1,
       '#maxlength' => 256,
       // By making this field required, we prevent a potential security issue
@@ -181,7 +181,7 @@ class FileItem extends EntityReferenceItem {
       '#default_value' => $settings['max_filesize'],
       '#description' => t('Enter a value like "512" (bytes), "80 KB" (kilobytes) or "50 MB" (megabytes) in order to restrict the allowed file size. If left empty the file sizes will be limited only by PHP\'s maximum post and file upload sizes (current limit <strong>%limit</strong>).', ['%limit' => format_size(Environment::getUploadMaxSize())]),
       '#size' => 10,
-      '#element_validate' => [[get_class($this), 'validateMaxFilesize']],
+      '#element_validate' => [[static::class, 'validateMaxFilesize']],
       '#weight' => 5,
     ];
 

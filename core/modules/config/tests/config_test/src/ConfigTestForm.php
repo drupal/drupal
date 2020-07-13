@@ -83,7 +83,7 @@ class ConfigTestForm extends EntityForm {
       '#attributes' => [
         'class' => ['js-hide'],
       ],
-      '#submit' => [[get_class($this), 'changeSize']],
+      '#submit' => [[static::class, 'changeSize']],
     ];
     $form['size_wrapper']['size_value'] = [
       '#type' => 'select',

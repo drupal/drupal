@@ -40,7 +40,7 @@ class HandlerTest extends UITestBase {
     parent::setUp($import_test_views);
 
     $this->placeBlock('page_title_block');
-    ViewTestData::createTestViews(get_class($this), ['node_test_views']);
+    ViewTestData::createTestViews(static::class, ['node_test_views']);
   }
 
   /**

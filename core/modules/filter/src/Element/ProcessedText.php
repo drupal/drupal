@@ -21,7 +21,7 @@ class ProcessedText extends RenderElement {
    * {@inheritdoc}
    */
   public function getInfo() {
-    $class = get_class($this);
+    $class = static::class;
     return [
       '#text' => '',
       '#format' => NULL,

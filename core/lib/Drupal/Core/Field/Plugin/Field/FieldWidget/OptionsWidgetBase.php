@@ -50,7 +50,7 @@ abstract class OptionsWidgetBase extends WidgetBase {
     $this->has_value = isset($items[0]->{$this->column});
 
     // Add our custom validator.
-    $element['#element_validate'][] = [get_class($this), 'validateElement'];
+    $element['#element_validate'][] = [static::class, 'validateElement'];
     $element['#key_column'] = $this->column;
 
     // The rest of the $element is built by child method implementations.

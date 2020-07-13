@@ -83,7 +83,7 @@ class ViewEntityDependenciesTest extends ViewsKernelTestBase {
       'settings' => ['display_summary' => TRUE],
     ])->save();
 
-    ViewTestData::createTestViews(get_class($this), ['views_test_config']);
+    ViewTestData::createTestViews(static::class, ['views_test_config']);
   }
 
   /**

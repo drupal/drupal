@@ -176,7 +176,7 @@ class ModerationStateWidget extends OptionsSelectWidget implements ContainerFact
         ],
       ],
     ];
-    $element['#element_validate'][] = [get_class($this), 'validateElement'];
+    $element['#element_validate'][] = [static::class, 'validateElement'];
 
     return $element;
   }

@@ -1822,7 +1822,7 @@ abstract class Connection {
     }
 
     // Use reflection to get the namespace of the class being called.
-    $reflector = new \ReflectionClass(get_called_class());
+    $reflector = new \ReflectionClass(static::class);
 
     $database = [
       'driver' => $url_components['scheme'],

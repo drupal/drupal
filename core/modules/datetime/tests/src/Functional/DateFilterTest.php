@@ -52,7 +52,7 @@ class DateFilterTest extends ViewTestBase {
    */
   protected function setUp($import_test_views = TRUE): void {
     parent::setUp($import_test_views);
-    ViewTestData::createTestViews(get_class($this), ['datetime_test']);
+    ViewTestData::createTestViews(static::class, ['datetime_test']);
 
     // Add a date field to page nodes.
     $node_type = NodeType::create([

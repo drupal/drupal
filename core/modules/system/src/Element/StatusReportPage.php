@@ -17,7 +17,7 @@ class StatusReportPage extends RenderElement {
    * {@inheritdoc}
    */
   public function getInfo() {
-    $class = get_class($this);
+    $class = static::class;
     return [
       '#theme' => 'status_report_page',
       '#pre_render' => [

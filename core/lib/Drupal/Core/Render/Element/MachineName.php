@@ -75,7 +75,7 @@ class MachineName extends Textfield {
    * {@inheritdoc}
    */
   public function getInfo() {
-    $class = get_class($this);
+    $class = static::class;
     return [
       '#input' => TRUE,
       '#default_value' => NULL,

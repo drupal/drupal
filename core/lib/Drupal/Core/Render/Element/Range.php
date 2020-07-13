@@ -34,7 +34,7 @@ class Range extends Number {
    */
   public function getInfo() {
     $info = parent::getInfo();
-    $class = get_class($this);
+    $class = static::class;
     return [
       '#min' => 0,
       '#max' => 100,

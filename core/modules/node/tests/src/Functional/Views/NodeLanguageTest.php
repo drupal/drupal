@@ -49,7 +49,7 @@ class NodeLanguageTest extends NodeTestBase {
     // Create Page content type.
     if ($this->profile != 'standard') {
       $this->drupalCreateContentType(['type' => 'page', 'name' => 'Basic page']);
-      ViewTestData::createTestViews(get_class($this), ['node_test_views']);
+      ViewTestData::createTestViews(static::class, ['node_test_views']);
     }
 
     // Add two new languages.

@@ -177,7 +177,7 @@ class DefaultSelection extends SelectionPluginBase implements ContainerFactoryPl
         '#required' => TRUE,
         '#size' => 6,
         '#multiple' => TRUE,
-        '#element_validate' => [[get_class($this), 'elementValidateFilter']],
+        '#element_validate' => [[static::class, 'elementValidateFilter']],
         '#ajax' => TRUE,
         '#limit_validation_errors' => [],
       ];

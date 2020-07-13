@@ -61,7 +61,7 @@ class RevisionUidTest extends ViewsKernelTestBase {
     $this->installEntitySchema('user');
 
     if ($import_test_views) {
-      ViewTestData::createTestViews(get_class($this), ['node_test_views']);
+      ViewTestData::createTestViews(static::class, ['node_test_views']);
     }
   }
 

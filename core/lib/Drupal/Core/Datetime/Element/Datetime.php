@@ -37,7 +37,7 @@ class Datetime extends DateElementBase {
       }
     }
 
-    $class = get_class($this);
+    $class = static::class;
 
     // Note that since this information is cached, the #date_timezone property
     // is not set here, as this needs to vary potentially by-user.

@@ -41,7 +41,7 @@ class RevisionRelationshipsTest extends ViewsKernelTestBase {
 
     ConfigurableLanguage::createFromLangcode('fr')->save();
 
-    ViewTestData::createTestViews(get_class($this), ['node_test_views']);
+    ViewTestData::createTestViews(static::class, ['node_test_views']);
   }
 
   /**

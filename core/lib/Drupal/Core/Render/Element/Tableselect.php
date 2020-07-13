@@ -56,7 +56,7 @@ class Tableselect extends Table {
    * {@inheritdoc}
    */
   public function getInfo() {
-    $class = get_class($this);
+    $class = static::class;
     return [
       '#input' => TRUE,
       '#js_select' => TRUE,

@@ -200,7 +200,7 @@ class ImageItem extends FileItem {
     $element['max_resolution'] = [
       '#type' => 'item',
       '#title' => t('Maximum image resolution'),
-      '#element_validate' => [[get_class($this), 'validateResolution']],
+      '#element_validate' => [[static::class, 'validateResolution']],
       '#weight' => 4.1,
       '#description' => t('The maximum allowed image size expressed as WIDTH×HEIGHT (e.g. 640×480). Leave blank for no restriction. If a larger image is uploaded, it will be resized to reflect the given width and height. Resizing images on upload will cause the loss of <a href="http://wikipedia.org/wiki/Exchangeable_image_file_format">EXIF data</a> in the image.'),
     ];
@@ -227,7 +227,7 @@ class ImageItem extends FileItem {
     $element['min_resolution'] = [
       '#type' => 'item',
       '#title' => t('Minimum image resolution'),
-      '#element_validate' => [[get_class($this), 'validateResolution']],
+      '#element_validate' => [[static::class, 'validateResolution']],
       '#weight' => 4.2,
       '#description' => t('The minimum allowed image size expressed as WIDTH×HEIGHT (e.g. 640×480). Leave blank for no restriction. If a smaller image is uploaded, it will be rejected.'),
     ];
@@ -428,7 +428,7 @@ class ImageItem extends FileItem {
       '#upload_location' => $settings['uri_scheme'] . '://default_images/',
       '#element_validate' => [
         '\Drupal\file\Element\ManagedFile::validateManagedFile',
-        [get_class($this), 'validateDefaultImageForm'],
+        [static::class, 'validateDefaultImageForm'],
       ],
       '#upload_validators' => $this->getUploadValidators(),
     ];

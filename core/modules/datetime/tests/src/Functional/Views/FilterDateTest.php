@@ -109,7 +109,7 @@ class FilterDateTest extends BrowserTestBase {
     $this->container->get('views.views_data')->clear();
 
     // Load test views.
-    ViewTestData::createTestViews(get_class($this), ['datetime_test']);
+    ViewTestData::createTestViews(static::class, ['datetime_test']);
   }
 
   /**

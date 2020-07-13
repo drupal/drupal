@@ -37,7 +37,7 @@ class RestExportTest extends ViewsKernelTestBase {
   protected function setUp($import_test_views = TRUE): void {
     parent::setUp($import_test_views);
 
-    ViewTestData::createTestViews(get_class($this), ['rest_test_views']);
+    ViewTestData::createTestViews(static::class, ['rest_test_views']);
     $this->installEntitySchema('entity_test');
   }
 

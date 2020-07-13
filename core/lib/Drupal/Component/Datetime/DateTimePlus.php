@@ -360,7 +360,7 @@ class DateTimePlus {
       throw new \Exception('DateTime object not set.');
     }
     if (!method_exists($this->dateTimeObject, $method)) {
-      throw new \BadMethodCallException(sprintf('Call to undefined method %s::%s()', get_class($this), $method));
+      throw new \BadMethodCallException(sprintf('Call to undefined method %s::%s()', static::class, $method));
     }
 
     $result = call_user_func_array([$this->dateTimeObject, $method], $args);
@@ -399,7 +399,7 @@ class DateTimePlus {
    */
   public static function __callStatic($method, $args) {
     if (!method_exists('\DateTime', $method)) {
-      throw new \BadMethodCallException(sprintf('Call to undefined method %s::%s()', get_called_class(), $method));
+      throw new \BadMethodCallException(sprintf('Call to undefined method %s::%s()', static::class, $method));
     }
     return call_user_func_array(['\DateTime', $method], $args);
   }

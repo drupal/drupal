@@ -270,7 +270,7 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
     drupal_valid_test_ua($this->databasePrefix);
 
     $settings = [
-      'hash_salt' => get_class($this),
+      'hash_salt' => static::class,
       'file_public_path' => $this->siteDirectory . '/files',
       // Disable Twig template caching/dumping.
       'twig_cache' => FALSE,
@@ -334,7 +334,7 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
     // Add this test class as a service provider.
     $GLOBALS['conf']['container_service_providers']['test'] = $this;
 
-    $modules = self::getModulesToEnable(get_class($this));
+    $modules = self::getModulesToEnable(static::class);
 
     // Bootstrap the kernel. Do not use createFromRequest() to retain Settings.
     $kernel = new DrupalKernel('testing', $this->classLoader, FALSE);
@@ -568,7 +568,7 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
    *   An array of config object names that are excluded from schema checking.
    */
   protected function getConfigSchemaExclusions() {
-    $class = get_class($this);
+    $class = static::class;
     $exceptions = [];
     while ($class) {
       if (property_exists($class, 'configSchemaCheckerExclusions')) {

@@ -141,7 +141,7 @@ trait BrowserHtmlDebugTrait {
     $this->htmlOutputBaseUrl = getenv('BROWSERTEST_OUTPUT_BASE_URL') ?: $GLOBALS['base_url'];
     if ($this->htmlOutputEnabled) {
       $this->htmlOutputFile = $browser_output_file;
-      $this->htmlOutputClassName = str_replace("\\", "_", get_called_class());
+      $this->htmlOutputClassName = str_replace("\\", "_", static::class);
       $this->htmlOutputDirectory = DRUPAL_ROOT . '/sites/simpletest/browser_output';
       // Do not use the file_system service so this method can be called before
       // it is available. Checks !is_dir() twice around mkdir() because a
@@ -209,7 +209,7 @@ trait BrowserHtmlDebugTrait {
     $backtrace = debug_backtrace();
     // Find the test class that has the test method.
     while ($caller = Error::getLastCaller($backtrace)) {
-      if (isset($caller['class']) && $caller['class'] === get_class($this)) {
+      if (isset($caller['class']) && $caller['class'] === static::class) {
         break;
       }
       // If the test method is implemented by a test class's parent then the

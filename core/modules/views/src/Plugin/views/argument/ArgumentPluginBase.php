@@ -163,7 +163,7 @@ abstract class ArgumentPluginBase extends HandlerBase implements CacheableDepend
 
     $argument_text = $this->view->display_handler->getArgumentText();
 
-    $form['#pre_render'][] = [get_class($this), 'preRenderMoveArgumentOptions'];
+    $form['#pre_render'][] = [static::class, 'preRenderMoveArgumentOptions'];
 
     $form['description'] = [
       '#markup' => $argument_text['description'],

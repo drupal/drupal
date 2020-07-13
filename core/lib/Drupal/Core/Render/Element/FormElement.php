@@ -108,7 +108,7 @@ abstract class FormElement extends RenderElement implements FormElementInterface
   public static function processPattern(&$element, FormStateInterface $form_state, &$complete_form) {
     if (isset($element['#pattern']) && !isset($element['#attributes']['pattern'])) {
       $element['#attributes']['pattern'] = $element['#pattern'];
-      $element['#element_validate'][] = [get_called_class(), 'validatePattern'];
+      $element['#element_validate'][] = [static::class, 'validatePattern'];
     }
 
     return $element;

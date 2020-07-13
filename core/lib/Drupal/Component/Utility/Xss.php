@@ -79,7 +79,7 @@ class Xss {
     $string = preg_replace('/&amp;([A-Za-z][A-Za-z0-9]*;)/', '&\1', $string);
     $html_tags = array_flip($html_tags);
     // Late static binding does not work inside anonymous functions.
-    $class = get_called_class();
+    $class = static::class;
     $splitter = function ($matches) use ($html_tags, $class) {
       return $class::split($matches[1], $html_tags, $class);
     };

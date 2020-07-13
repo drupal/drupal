@@ -22,7 +22,7 @@ abstract class NodeTestBase extends ViewTestBase {
     parent::setUp($import_test_views);
 
     if ($import_test_views) {
-      ViewTestData::createTestViews(get_class($this), ['node_test_views']);
+      ViewTestData::createTestViews(static::class, ['node_test_views']);
     }
   }
 

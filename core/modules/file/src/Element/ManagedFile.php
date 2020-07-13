@@ -26,7 +26,7 @@ class ManagedFile extends FormElement {
    * {@inheritdoc}
    */
   public function getInfo() {
-    $class = get_class($this);
+    $class = static::class;
     return [
       '#input' => TRUE,
       '#process' => [
@@ -225,7 +225,7 @@ class ManagedFile extends FormElement {
     $ajax_wrapper_id = Html::getUniqueId('ajax-wrapper');
 
     $ajax_settings = [
-      'callback' => [get_called_class(), 'uploadAjaxCallback'],
+      'callback' => [static::class, 'uploadAjaxCallback'],
       'options' => [
         'query' => [
           'element_parents' => implode('/', $element['#array_parents']),

@@ -39,7 +39,7 @@ class TextFormat extends RenderElement {
    * {@inheritdoc}
    */
   public function getInfo() {
-    $class = get_class($this);
+    $class = static::class;
     return [
       '#process' => [
         [$class, 'processFormat'],

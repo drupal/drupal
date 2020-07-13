@@ -48,7 +48,7 @@ abstract class BlockContentTestBase extends ViewTestBase {
     $this->adminUser = $this->drupalCreateUser($this->permissions);
 
     if ($import_test_views) {
-      ViewTestData::createTestViews(get_class($this), ['block_content_test_views']);
+      ViewTestData::createTestViews(static::class, ['block_content_test_views']);
     }
   }
 

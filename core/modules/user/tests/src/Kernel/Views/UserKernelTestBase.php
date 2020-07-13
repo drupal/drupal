@@ -41,7 +41,7 @@ abstract class UserKernelTestBase extends ViewsKernelTestBase {
   protected function setUp($import_test_views = TRUE) {
     parent::setUp();
 
-    ViewTestData::createTestViews(get_class($this), ['user_test_views']);
+    ViewTestData::createTestViews(static::class, ['user_test_views']);
 
     $this->installEntitySchema('user');
 

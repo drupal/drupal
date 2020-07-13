@@ -518,7 +518,7 @@ abstract class FilterPluginBase extends HandlerBase implements CacheableDependen
     // prior to rendering. That's why the preRender for it needs to run first,
     // so that when the next preRender (the one for fieldsets) runs, it gets
     // the flattened data.
-    array_unshift($form['#pre_render'], [get_class($this), 'preRenderFlattenData']);
+    array_unshift($form['#pre_render'], [static::class, 'preRenderFlattenData']);
     $form['expose']['#flatten'] = TRUE;
 
     if (empty($this->always_required)) {
@@ -948,7 +948,7 @@ abstract class FilterPluginBase extends HandlerBase implements CacheableDependen
     // prior to rendering. That's why the preRender for it needs to run first,
     // so that when the next preRender (the one for fieldsets) runs, it gets
     // the flattened data.
-    array_unshift($form['#pre_render'], [get_class($this), 'preRenderFlattenData']);
+    array_unshift($form['#pre_render'], [static::class, 'preRenderFlattenData']);
     $form['group_info']['#flatten'] = TRUE;
 
     if (!empty($this->options['group_info']['identifier'])) {

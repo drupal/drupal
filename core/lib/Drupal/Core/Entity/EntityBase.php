@@ -484,7 +484,7 @@ abstract class EntityBase implements EntityInterface {
   public static function load($id) {
     $entity_type_repository = \Drupal::service('entity_type.repository');
     $entity_type_manager = \Drupal::entityTypeManager();
-    $storage = $entity_type_manager->getStorage($entity_type_repository->getEntityTypeFromClass(get_called_class()));
+    $storage = $entity_type_manager->getStorage($entity_type_repository->getEntityTypeFromClass(static::class));
     return $storage->load($id);
   }
 
@@ -494,7 +494,7 @@ abstract class EntityBase implements EntityInterface {
   public static function loadMultiple(array $ids = NULL) {
     $entity_type_repository = \Drupal::service('entity_type.repository');
     $entity_type_manager = \Drupal::entityTypeManager();
-    $storage = $entity_type_manager->getStorage($entity_type_repository->getEntityTypeFromClass(get_called_class()));
+    $storage = $entity_type_manager->getStorage($entity_type_repository->getEntityTypeFromClass(static::class));
     return $storage->loadMultiple($ids);
   }
 
@@ -504,7 +504,7 @@ abstract class EntityBase implements EntityInterface {
   public static function create(array $values = []) {
     $entity_type_repository = \Drupal::service('entity_type.repository');
     $entity_type_manager = \Drupal::entityTypeManager();
-    $storage = $entity_type_manager->getStorage($entity_type_repository->getEntityTypeFromClass(get_called_class()));
+    $storage = $entity_type_manager->getStorage($entity_type_repository->getEntityTypeFromClass(static::class));
     return $storage->create($values);
   }
 

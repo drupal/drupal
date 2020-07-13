@@ -268,7 +268,7 @@ class ImageWidget extends FileWidget {
       '#weight' => -12,
       '#access' => (bool) $item['fids'] && $element['#alt_field'],
       '#required' => $element['#alt_field_required'],
-      '#element_validate' => $element['#alt_field_required'] == 1 ? [[get_called_class(), 'validateRequiredFields']] : [],
+      '#element_validate' => $element['#alt_field_required'] == 1 ? [[static::class, 'validateRequiredFields']] : [],
     ];
     $element['title'] = [
       '#type' => 'textfield',
@@ -279,7 +279,7 @@ class ImageWidget extends FileWidget {
       '#weight' => -11,
       '#access' => (bool) $item['fids'] && $element['#title_field'],
       '#required' => $element['#title_field_required'],
-      '#element_validate' => $element['#title_field_required'] == 1 ? [[get_called_class(), 'validateRequiredFields']] : [],
+      '#element_validate' => $element['#title_field_required'] == 1 ? [[static::class, 'validateRequiredFields']] : [],
     ];
 
     return parent::process($element, $form_state, $form);

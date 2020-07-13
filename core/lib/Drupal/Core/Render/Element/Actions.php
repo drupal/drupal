@@ -30,7 +30,7 @@ class Actions extends Container {
    * {@inheritdoc}
    */
   public function getInfo() {
-    $class = get_class($this);
+    $class = static::class;
     return [
       '#process' => [
         // @todo Move this to #pre_render.

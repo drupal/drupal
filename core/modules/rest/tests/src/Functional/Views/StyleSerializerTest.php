@@ -75,7 +75,7 @@ class StyleSerializerTest extends ViewTestBase {
   protected function setUp($import_test_views = TRUE): void {
     parent::setUp($import_test_views);
 
-    ViewTestData::createTestViews(get_class($this), ['rest_test_views']);
+    ViewTestData::createTestViews(static::class, ['rest_test_views']);
 
     $this->adminUser = $this->drupalCreateUser([
       'administer views',

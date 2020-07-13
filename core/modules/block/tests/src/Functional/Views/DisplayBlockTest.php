@@ -57,7 +57,7 @@ class DisplayBlockTest extends ViewTestBase {
   protected function setUp($import_test_views = TRUE): void {
     parent::setUp($import_test_views);
 
-    ViewTestData::createTestViews(get_class($this), ['block_test_views']);
+    ViewTestData::createTestViews(static::class, ['block_test_views']);
     $this->enableViewsTestModule();
   }
 

@@ -72,7 +72,7 @@ class TaxonomyFieldVidTest extends ViewsKernelTestBase {
     $this->adminUser->save();
     $this->container->get('current_user')->setAccount($this->adminUser);
 
-    ViewTestData::createTestViews(get_class($this), ['taxonomy_test_views']);
+    ViewTestData::createTestViews(static::class, ['taxonomy_test_views']);
   }
 
   /**

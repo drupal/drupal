@@ -47,7 +47,7 @@ class ArgumentValidateTest extends ViewsKernelTestBase {
     $this->installEntitySchema('user');
     $this->installEntitySchema('node');
     $this->account = $this->createUser();
-    ViewTestData::createTestViews(get_class($this), ['user_test_views']);
+    ViewTestData::createTestViews(static::class, ['user_test_views']);
   }
 
   /**

@@ -65,7 +65,7 @@ class AccessPermissionTest extends KernelTestBase {
     $this->webUser = $this->createUser();
     $this->normalUser = $this->createUser(['views_test_data test permission']);
 
-    ViewTestData::createTestViews(get_class($this), ['user_test_views']);
+    ViewTestData::createTestViews(static::class, ['user_test_views']);
   }
 
   /**

@@ -29,7 +29,7 @@ class Checkbox extends FormElement {
    * {@inheritdoc}
    */
   public function getInfo() {
-    $class = get_class($this);
+    $class = static::class;
     return [
       '#input' => TRUE,
       '#return_value' => 1,

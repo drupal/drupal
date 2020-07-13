@@ -711,7 +711,7 @@ abstract class BrowserTestBase extends TestCase {
         break;
       }
 
-      if (isset($caller['class']) && $caller['class'] === get_class($this)) {
+      if (isset($caller['class']) && $caller['class'] === static::class) {
         break;
       }
 

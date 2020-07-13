@@ -40,7 +40,7 @@ trait TestRequirementsTrait {
     }
 
     $missingRequirements = Test::getMissingRequirements(
-      get_class($this),
+      static::class,
       $this->getName(FALSE)
     );
 

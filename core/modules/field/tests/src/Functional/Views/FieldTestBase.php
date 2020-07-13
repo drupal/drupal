@@ -51,7 +51,7 @@ abstract class FieldTestBase extends ViewTestBase {
       'name' => 'page',
     ])->save();
 
-    ViewTestData::createTestViews(get_class($this), ['field_test_views']);
+    ViewTestData::createTestViews(static::class, ['field_test_views']);
   }
 
   public function setUpFieldStorages($amount = 3, $type = 'string') {

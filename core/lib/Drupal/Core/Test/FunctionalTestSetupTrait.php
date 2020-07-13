@@ -110,7 +110,7 @@ trait FunctionalTestSetupTrait {
       copy($settings_testing_file, $directory . '/settings.testing.php');
       // Add the name of the testing class to settings.php and include the
       // testing specific overrides.
-      file_put_contents($directory . '/settings.php', "\n\$test_class = '" . get_class($this) . "';\n" . 'include DRUPAL_ROOT . \'/\' . $site_path . \'/settings.testing.php\';' . "\n", FILE_APPEND);
+      file_put_contents($directory . '/settings.php', "\n\$test_class = '" . static::class . "';\n" . 'include DRUPAL_ROOT . \'/\' . $site_path . \'/settings.testing.php\';' . "\n", FILE_APPEND);
     }
     $settings_services_file = DRUPAL_ROOT . '/' . $this->originalSite . '/testing.services.yml';
     if (!file_exists($settings_services_file)) {
@@ -450,7 +450,7 @@ trait FunctionalTestSetupTrait {
    *   The container.
    */
   protected function installModulesFromClassProperty(ContainerInterface $container) {
-    $class = get_class($this);
+    $class = static::class;
     $modules = [];
     while ($class) {
       if (property_exists($class, 'modules')) {
