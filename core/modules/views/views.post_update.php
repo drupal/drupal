@@ -44,3 +44,10 @@ function views_post_update_field_names_for_multivalue_fields(&$sandbox = NULL) {
     return $view_config_updater->needsMultivalueBaseFieldUpdate($view);
   });
 }
+
+/**
+ * Clear errors caused by relationships to configuration entities.
+ */
+function views_post_update_configuration_entity_relationships() {
+  // Empty update to clear Views data.
+}

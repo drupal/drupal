@@ -63,6 +63,7 @@ class EntityReferenceRelationshipTest extends ViewsKernelTestBase {
     parent::setUp();
 
     $this->installEntitySchema('user');
+    $this->installEntitySchema('user_role');
     $this->installEntitySchema('entity_test');
     $this->installEntitySchema('entity_test_mul');
     $this->installEntitySchema('entity_test_mul_changed');
@@ -346,6 +347,20 @@ class EntityReferenceRelationshipTest extends ViewsKernelTestBase {
     $this->assertEquals('name1', $fields['name_2']->getValue($view->result[2]));
     // Ensure getValue works on empty references.
     $this->assertNull($fields['name_2']->getValue($view->result[3]));
+  }
+
+  /**
+   * Test that config entities don't get relationships added.
+   */
+  public function testEntityReferenceConfigEntity() {
+    // Create reference from entity_test to a config entity.
+    $this->createEntityReferenceField('entity_test', 'entity_test', 'field_test_config_entity', 'field_test_config_entity', 'user_role');
+    Views::viewsData()->clear();
+    $views_data = Views::viewsData()->getAll();
+    // Test that a relationship got added for content entities but not config
+    // entities.
+    $this->assertTrue(isset($views_data['entity_test__field_test_data']['field_test_data']['relationship']));
+    $this->assertFalse(isset($views_data['entity_test__field_test_config_entity']['field_test_config_entity']['relationship']));
   }
 
 }
