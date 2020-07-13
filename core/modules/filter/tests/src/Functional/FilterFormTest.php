@@ -231,7 +231,7 @@ class FilterFormTest extends BrowserTestBase {
       ]));
     }
 
-    $this->assertOptionSelected($id, $selected);
+    $this->assertTrue($this->assertSession()->optionExists($id, $selected)->isSelected());
   }
 
   /**

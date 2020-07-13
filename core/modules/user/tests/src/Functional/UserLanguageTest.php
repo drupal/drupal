@@ -67,7 +67,7 @@ class UserLanguageTest extends BrowserTestBase {
     // Ensure form was submitted successfully.
     $this->assertText(t('The changes have been saved.'), 'Changes were saved.');
     // Check if language was changed.
-    $this->assertOptionSelected('edit-preferred-langcode', $langcode, 'Default language successfully updated.');
+    $this->assertTrue($this->assertSession()->optionExists('edit-preferred-langcode', $langcode)->isSelected());
 
     $this->drupalLogout();
   }

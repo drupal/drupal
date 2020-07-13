@@ -109,7 +109,7 @@ class UserPermissionsTest extends BrowserTestBase {
     $this->drupalGet('admin/config/people/accounts');
 
     // Verify that the administration role is none by default.
-    $this->assertOptionSelected('edit-user-admin-role', '', 'Administration role defaults to none.');
+    $this->assertTrue($this->assertSession()->optionExists('edit-user-admin-role', '')->isSelected());
 
     $this->assertFalse(Role::load($this->rid)->isAdmin());
 

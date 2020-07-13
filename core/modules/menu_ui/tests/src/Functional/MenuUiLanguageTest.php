@@ -73,7 +73,7 @@ class MenuUiLanguageTest extends BrowserTestBase {
       ->save();
 
     // Check menu language.
-    $this->assertOptionSelected('edit-langcode', $edit['langcode'], 'The menu language was correctly selected.');
+    $this->assertTrue($this->assertSession()->optionExists('edit-langcode', $edit['langcode'])->isSelected());
 
     // Test menu link language.
     $link_path = '/';
@@ -132,7 +132,7 @@ class MenuUiLanguageTest extends BrowserTestBase {
     // page first.
     $this->drupalGet('admin/structure/menu/item/' . $menu_link->id() . '/edit');
     // Check that the language selector has the correct default value.
-    $this->assertOptionSelected('edit-langcode-0-value', 'bb', 'The menu link language was correctly selected.');
+    $this->assertTrue($this->assertSession()->optionExists('edit-langcode-0-value', 'bb')->isSelected());
 
     // Edit menu to hide the language select on menu link item add.
     ContentLanguageSettings::loadByEntityTypeBundle('menu_link_content', 'menu_link_content')

@@ -432,7 +432,8 @@ class BookTest extends BrowserTestBase {
     $this->drupalLogin($this->adminUser);
     $this->drupalGet('node/' . $empty_book->id() . '/outline');
     $this->assertRaw(t('Book outline'));
-    $this->assertOptionSelected('edit-book-bid', 0, 'Node does not belong to a book');
+    // Verify that the node does not belong to a book.
+    $this->assertTrue($this->assertSession()->optionExists('edit-book-bid', 0)->isSelected());
     $this->assertSession()->linkNotExists(t('Remove from book outline'));
 
     $edit = [];
@@ -472,7 +473,7 @@ class BookTest extends BrowserTestBase {
 
     // Test the form itself.
     $this->drupalGet('node/' . $node->id() . '/edit');
-    $this->assertOptionSelected('edit-book-bid', $node->id());
+    $this->assertTrue($this->assertSession()->optionExists('edit-book-bid', $node->id())->isSelected());
   }
 
   /**

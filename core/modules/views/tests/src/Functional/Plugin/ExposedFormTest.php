@@ -247,11 +247,11 @@ class ExposedFormTest extends ViewTestBase {
 
     // Test that the correct option is selected after form submission.
     $this->assertCacheContext('url');
-    $this->assertOptionSelected('Content: Type', 'All');
+    $this->assertTrue($this->assertSession()->optionExists('Content: Type', 'All')->isSelected());
     foreach (['All', 'article', 'page'] as $argument) {
       $this->drupalGet('test_exposed_block', ['query' => ['type' => $argument]]);
       $this->assertCacheContext('url');
-      $this->assertOptionSelected('Content: Type', $argument);
+      $this->assertTrue($this->assertSession()->optionExists('Content: Type', $argument)->isSelected());
     }
   }
 

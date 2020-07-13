@@ -56,7 +56,7 @@ class VocabularyLanguageTest extends TaxonomyTestBase {
 
     // Check the language on the edit page.
     $this->drupalGet('admin/structure/taxonomy/manage/' . $vid);
-    $this->assertOptionSelected('edit-langcode', $edit['langcode'], 'The vocabulary language was correctly selected.');
+    $this->assertTrue($this->assertSession()->optionExists('edit-langcode', $edit['langcode'])->isSelected());
 
     // Change the language and save again.
     $edit['langcode'] = 'bb';
@@ -65,7 +65,7 @@ class VocabularyLanguageTest extends TaxonomyTestBase {
 
     // Check again the language on the edit page.
     $this->drupalGet('admin/structure/taxonomy/manage/' . $vid);
-    $this->assertOptionSelected('edit-langcode', $edit['langcode'], 'The vocabulary language was correctly selected.');
+    $this->assertTrue($this->assertSession()->optionExists('edit-langcode', $edit['langcode'])->isSelected());
   }
 
   /**
@@ -93,7 +93,7 @@ class VocabularyLanguageTest extends TaxonomyTestBase {
     $this->assertTrue($language_settings->isLanguageAlterable(), 'The visibility setting was saved.');
 
     // Check that the correct options are selected in the interface.
-    $this->assertOptionSelected('edit-default-language-langcode', 'bb', 'The correct default language for the terms of this vocabulary is selected.');
+    $this->assertTrue($this->assertSession()->optionExists('edit-default-language-langcode', 'bb')->isSelected());
     $this->assertFieldChecked('edit-default-language-language-alterable', 'Show language selection option is checked.');
 
     // Edit the vocabulary and check that the new settings are updated.
@@ -109,7 +109,7 @@ class VocabularyLanguageTest extends TaxonomyTestBase {
     $this->assertFalse($language_settings->isLanguageAlterable(), 'The visibility setting was saved.');
 
     $this->drupalGet('admin/structure/taxonomy/manage/' . $vid);
-    $this->assertOptionSelected('edit-default-language-langcode', 'aa', 'The correct default language for the terms of this vocabulary is selected.');
+    $this->assertTrue($this->assertSession()->optionExists('edit-default-language-langcode', 'aa')->isSelected());
     $this->assertNoFieldChecked('edit-default-language-language-alterable', 'Show language selection option is not checked.');
 
     // Check that language settings are changed after editing vocabulary.

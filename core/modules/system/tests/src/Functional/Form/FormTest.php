@@ -215,7 +215,7 @@ class FormTest extends BrowserTestBase {
     $this->assertFieldByName('textfield', '');
     $this->assertNoFieldChecked('edit-checkboxes-foo');
     $this->assertNoFieldChecked('edit-checkboxes-bar');
-    $this->assertOptionSelected('edit-select', '');
+    $this->assertTrue($this->assertSession()->optionExists('edit-select', '')->isSelected());
     $this->assertNoFieldChecked('edit-radios-foo');
     $this->assertNoFieldChecked('edit-radios-bar');
     $this->assertNoFieldChecked('edit-radios-optional-foo');
@@ -270,7 +270,7 @@ class FormTest extends BrowserTestBase {
     $this->assertFieldByName('textfield', '');
     $this->assertNoFieldChecked('edit-checkboxes-foo');
     $this->assertNoFieldChecked('edit-checkboxes-bar');
-    $this->assertOptionSelected('edit-select', '');
+    $this->assertTrue($this->assertSession()->optionExists('edit-select', '')->isSelected());
     $this->assertNoFieldChecked('edit-radios-foo');
 
     // Check another form that has a textarea input.

@@ -132,16 +132,8 @@ class BlockUiTest extends BrowserTestBase {
     $this->drupalPostForm('admin/structure/block', $edit, t('Save blocks'));
     foreach ($this->blockValues as $values) {
       // Check if the region and weight settings changes have persisted.
-      $this->assertOptionSelected(
-        'edit-blocks-' . $values['settings']['id'] . '-region',
-        'header',
-        'The block "' . $label . '" has the correct region assignment (header).'
-      );
-      $this->assertOptionSelected(
-        'edit-blocks-' . $values['settings']['id'] . '-weight',
-        $values['test_weight'],
-        'The block "' . $label . '" has the correct weight assignment (' . $values['test_weight'] . ').'
-      );
+      $this->assertTrue($this->assertSession()->optionExists('edit-blocks-' . $values['settings']['id'] . '-region', 'header')->isSelected());
+      $this->assertTrue($this->assertSession()->optionExists('edit-blocks-' . $values['settings']['id'] . '-weight', $values['test_weight'])->isSelected());
     }
 
     // Add a block with a machine name the same as a region name.

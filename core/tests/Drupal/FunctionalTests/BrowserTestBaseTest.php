@@ -529,9 +529,9 @@ class BrowserTestBaseTest extends BrowserTestBase {
       $this->pass($e->getMessage());
     }
 
-    $this->assertOptionSelected('options', 2);
+    $this->assertTrue($this->assertSession()->optionExists('options', 2)->isSelected());
     try {
-      $this->assertOptionSelected('options', 4);
+      $this->assertTrue($this->assertSession()->optionExists('options', 4)->isSelected());
       $this->fail('The select option "4" was selected.');
     }
     catch (ExpectationException $e) {
@@ -539,7 +539,7 @@ class BrowserTestBaseTest extends BrowserTestBase {
     }
 
     try {
-      $this->assertOptionSelected('options', 1);
+      $this->assertTrue($this->assertSession()->optionExists('options', 1)->isSelected());
       $this->fail('The select option "1" was selected.');
     }
     catch (ExpectationFailedException $e) {

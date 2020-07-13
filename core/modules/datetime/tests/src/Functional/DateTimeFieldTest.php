@@ -459,23 +459,23 @@ class DateTimeFieldTest extends DateTestBase {
     $this->drupalGet('entity_test/add');
 
     $this->assertFieldByXPath("//*[@id=\"edit-$field_name-0-value-year\"]", NULL, 'Year element found.');
-    $this->assertOptionSelected("edit-$field_name-0-value-year", '', 'No year selected.');
+    $this->assertTrue($this->assertSession()->optionExists("edit-$field_name-0-value-year", '')->isSelected());
     $this->assertSession()->optionExists("edit-$field_name-0-value-year", 'Year');
     $this->assertFieldByXPath("//*[@id=\"edit-$field_name-0-value-month\"]", NULL, 'Month element found.');
-    $this->assertOptionSelected("edit-$field_name-0-value-month", '', 'No month selected.');
+    $this->assertTrue($this->assertSession()->optionExists("edit-$field_name-0-value-month", '')->isSelected());
     $this->assertSession()->optionExists("edit-$field_name-0-value-month", 'Month');
     $this->assertFieldByXPath("//*[@id=\"edit-$field_name-0-value-day\"]", NULL, 'Day element found.');
-    $this->assertOptionSelected("edit-$field_name-0-value-day", '', 'No day selected.');
+    $this->assertTrue($this->assertSession()->optionExists("edit-$field_name-0-value-day", '')->isSelected());
     $this->assertSession()->optionExists("edit-$field_name-0-value-day", 'Day');
     $this->assertFieldByXPath("//*[@id=\"edit-$field_name-0-value-hour\"]", NULL, 'Hour element found.');
-    $this->assertOptionSelected("edit-$field_name-0-value-hour", '', 'No hour selected.');
+    $this->assertTrue($this->assertSession()->optionExists("edit-$field_name-0-value-hour", '')->isSelected());
     $this->assertSession()->optionExists("edit-$field_name-0-value-hour", 'Hour');
     $this->assertFieldByXPath("//*[@id=\"edit-$field_name-0-value-minute\"]", NULL, 'Minute element found.');
-    $this->assertOptionSelected("edit-$field_name-0-value-minute", '', 'No minute selected.');
+    $this->assertTrue($this->assertSession()->optionExists("edit-$field_name-0-value-minute", '')->isSelected());
     $this->assertSession()->optionExists("edit-$field_name-0-value-minute", 'Minute');
     $this->assertNoFieldByXPath("//*[@id=\"edit-$field_name-0-value-second\"]", NULL, 'Second element not found.');
     $this->assertFieldByXPath("//*[@id=\"edit-$field_name-0-value-ampm\"]", NULL, 'AMPM element found.');
-    $this->assertOptionSelected("edit-$field_name-0-value-ampm", '', 'No ampm selected.');
+    $this->assertTrue($this->assertSession()->optionExists("edit-$field_name-0-value-ampm", '')->isSelected());
     $this->assertSession()->optionExists("edit-$field_name-0-value-ampm", 'AM/PM');
 
     // Submit a valid date and ensure it is accepted.
@@ -493,12 +493,12 @@ class DateTimeFieldTest extends DateTestBase {
     $id = $match[1];
     $this->assertText(t('entity_test @id has been created.', ['@id' => $id]));
 
-    $this->assertOptionSelected("edit-$field_name-0-value-year", '2012', 'Correct year selected.');
-    $this->assertOptionSelected("edit-$field_name-0-value-month", '12', 'Correct month selected.');
-    $this->assertOptionSelected("edit-$field_name-0-value-day", '31', 'Correct day selected.');
-    $this->assertOptionSelected("edit-$field_name-0-value-hour", '5', 'Correct hour selected.');
-    $this->assertOptionSelected("edit-$field_name-0-value-minute", '15', 'Correct minute selected.');
-    $this->assertOptionSelected("edit-$field_name-0-value-ampm", 'am', 'Correct ampm selected.');
+    $this->assertTrue($this->assertSession()->optionExists("edit-$field_name-0-value-year", '2012')->isSelected());
+    $this->assertTrue($this->assertSession()->optionExists("edit-$field_name-0-value-month", '12')->isSelected());
+    $this->assertTrue($this->assertSession()->optionExists("edit-$field_name-0-value-day", '31')->isSelected());
+    $this->assertTrue($this->assertSession()->optionExists("edit-$field_name-0-value-hour", '5')->isSelected());
+    $this->assertTrue($this->assertSession()->optionExists("edit-$field_name-0-value-minute", '15')->isSelected());
+    $this->assertTrue($this->assertSession()->optionExists("edit-$field_name-0-value-ampm", 'am')->isSelected());
 
     // Test the widget using increment other than 1 and 24 hour mode.
     $display_repository->getFormDisplay($this->field->getTargetEntityTypeId(), $this->field->getTargetBundle())
@@ -518,9 +518,8 @@ class DateTimeFieldTest extends DateTestBase {
 
     // Other elements are unaffected by the changed settings.
     $this->assertFieldByXPath("//*[@id=\"edit-$field_name-0-value-hour\"]", NULL, 'Hour element found.');
-    $this->assertOptionSelected("edit-$field_name-0-value-hour", '', 'No hour selected.');
+    $this->assertTrue($this->assertSession()->optionExists("edit-$field_name-0-value-hour", '')->isSelected());
     $this->assertNoFieldByXPath("//*[@id=\"edit-$field_name-0-value-ampm\"]", NULL, 'AMPM element not found.');
-
     // Submit a valid date and ensure it is accepted.
     $date_value = ['year' => 2012, 'month' => 12, 'day' => 31, 'hour' => 17, 'minute' => 15];
 
@@ -534,11 +533,11 @@ class DateTimeFieldTest extends DateTestBase {
     $id = $match[1];
     $this->assertText(t('entity_test @id has been created.', ['@id' => $id]));
 
-    $this->assertOptionSelected("edit-$field_name-0-value-year", '2012', 'Correct year selected.');
-    $this->assertOptionSelected("edit-$field_name-0-value-month", '12', 'Correct month selected.');
-    $this->assertOptionSelected("edit-$field_name-0-value-day", '31', 'Correct day selected.');
-    $this->assertOptionSelected("edit-$field_name-0-value-hour", '17', 'Correct hour selected.');
-    $this->assertOptionSelected("edit-$field_name-0-value-minute", '15', 'Correct minute selected.');
+    $this->assertTrue($this->assertSession()->optionExists("edit-$field_name-0-value-year", '2012')->isSelected());
+    $this->assertTrue($this->assertSession()->optionExists("edit-$field_name-0-value-month", '12')->isSelected());
+    $this->assertTrue($this->assertSession()->optionExists("edit-$field_name-0-value-day", '31')->isSelected());
+    $this->assertTrue($this->assertSession()->optionExists("edit-$field_name-0-value-hour", '17')->isSelected());
+    $this->assertTrue($this->assertSession()->optionExists("edit-$field_name-0-value-minute", '15')->isSelected());
 
     // Test the widget for partial completion of fields.
     $display_repository->getFormDisplay($this->field->getTargetEntityTypeId(), $this->field->getTargetBundle())
@@ -599,7 +598,7 @@ class DateTimeFieldTest extends DateTestBase {
 
     $this->drupalPostForm(NULL, $edit, t('Save'));
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertOptionSelected("edit-$field_name-0-value-minute", '0', 'Correct minute selected.');
+    $this->assertTrue($this->assertSession()->optionExists("edit-$field_name-0-value-minute", '0')->isSelected());
   }
 
   /**
@@ -697,7 +696,7 @@ class DateTimeFieldTest extends DateTestBase {
 
       // Check that default value is selected in default value form.
       $this->drupalGet('admin/structure/types/manage/date_content/fields/node.date_content.' . $field_name);
-      $this->assertOptionSelected('edit-default-value-input-default-date-type', 'now', 'The default value is selected in instance settings page');
+      $this->assertTrue($this->assertSession()->optionExists('edit-default-value-input-default-date-type', 'now')->isSelected());
       $this->assertFieldByName('default_value_input[default_date]', '', 'The relative default value is empty in instance settings page');
 
       // Check if default_date has been stored successfully.
@@ -735,7 +734,7 @@ class DateTimeFieldTest extends DateTestBase {
 
       // Check that default value is selected in default value form.
       $this->drupalGet('admin/structure/types/manage/date_content/fields/node.date_content.' . $field_name);
-      $this->assertOptionSelected('edit-default-value-input-default-date-type', 'relative', 'The default value is selected in instance settings page');
+      $this->assertTrue($this->assertSession()->optionExists('edit-default-value-input-default-date-type', 'relative')->isSelected());
       $this->assertFieldByName('default_value_input[default_date]', '+90 days', 'The relative default value is displayed in instance settings page');
 
       // Check if default_date has been stored successfully.
@@ -764,7 +763,7 @@ class DateTimeFieldTest extends DateTestBase {
 
       // Check that default value is selected in default value form.
       $this->drupalGet('admin/structure/types/manage/date_content/fields/node.date_content.' . $field_name);
-      $this->assertOptionSelected('edit-default-value-input-default-date-type', '', 'The default value is selected in instance settings page');
+      $this->assertTrue($this->assertSession()->optionExists('edit-default-value-input-default-date-type', '')->isSelected());
       $this->assertFieldByName('default_value_input[default_date]', '', 'The relative default value is empty in instance settings page');
 
       // Check if default_date has been stored successfully.

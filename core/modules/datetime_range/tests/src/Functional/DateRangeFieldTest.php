@@ -748,7 +748,7 @@ class DateRangeFieldTest extends DateTestBase {
     foreach (['value', 'end-value'] as $column) {
       foreach (['year', 'month', 'day', 'hour', 'minute', 'ampm'] as $element) {
         $this->assertFieldByXPath("//*[@id=\"edit-$field_name-0-$column-$element\"]", NULL, $element . ' element found.');
-        $this->assertOptionSelected("edit-$field_name-0-$column-$element", '', 'No ' . $element . ' selected.');
+        $this->assertTrue($this->assertSession()->optionExists("edit-$field_name-0-$column-$element", '')->isSelected());
       }
     }
 
@@ -772,19 +772,19 @@ class DateRangeFieldTest extends DateTestBase {
     $id = $match[1];
     $this->assertText(t('entity_test @id has been created.', ['@id' => $id]));
 
-    $this->assertOptionSelected("edit-$field_name-0-value-year", '2012', 'Correct year selected.');
-    $this->assertOptionSelected("edit-$field_name-0-value-month", '12', 'Correct month selected.');
-    $this->assertOptionSelected("edit-$field_name-0-value-day", '31', 'Correct day selected.');
-    $this->assertOptionSelected("edit-$field_name-0-value-hour", '5', 'Correct hour selected.');
-    $this->assertOptionSelected("edit-$field_name-0-value-minute", '15', 'Correct minute selected.');
-    $this->assertOptionSelected("edit-$field_name-0-value-ampm", 'am', 'Correct ampm selected.');
+    $this->assertTrue($this->assertSession()->optionExists("edit-$field_name-0-value-year", '2012')->isSelected());
+    $this->assertTrue($this->assertSession()->optionExists("edit-$field_name-0-value-month", '12')->isSelected());
+    $this->assertTrue($this->assertSession()->optionExists("edit-$field_name-0-value-day", '31')->isSelected());
+    $this->assertTrue($this->assertSession()->optionExists("edit-$field_name-0-value-hour", '5')->isSelected());
+    $this->assertTrue($this->assertSession()->optionExists("edit-$field_name-0-value-minute", '15')->isSelected());
+    $this->assertTrue($this->assertSession()->optionExists("edit-$field_name-0-value-ampm", 'am')->isSelected());
 
-    $this->assertOptionSelected("edit-$field_name-0-end-value-year", '2013', 'Correct year selected.');
-    $this->assertOptionSelected("edit-$field_name-0-end-value-month", '1', 'Correct month selected.');
-    $this->assertOptionSelected("edit-$field_name-0-end-value-day", '15', 'Correct day selected.');
-    $this->assertOptionSelected("edit-$field_name-0-end-value-hour", '3', 'Correct hour selected.');
-    $this->assertOptionSelected("edit-$field_name-0-end-value-minute", '30', 'Correct minute selected.');
-    $this->assertOptionSelected("edit-$field_name-0-end-value-ampm", 'pm', 'Correct ampm selected.');
+    $this->assertTrue($this->assertSession()->optionExists("edit-$field_name-0-end-value-year", '2013')->isSelected());
+    $this->assertTrue($this->assertSession()->optionExists("edit-$field_name-0-end-value-month", '1')->isSelected());
+    $this->assertTrue($this->assertSession()->optionExists("edit-$field_name-0-end-value-day", '15')->isSelected());
+    $this->assertTrue($this->assertSession()->optionExists("edit-$field_name-0-end-value-hour", '3')->isSelected());
+    $this->assertTrue($this->assertSession()->optionExists("edit-$field_name-0-end-value-minute", '30')->isSelected());
+    $this->assertTrue($this->assertSession()->optionExists("edit-$field_name-0-end-value-ampm", 'pm')->isSelected());
 
     // Test the widget using increment other than 1 and 24 hour mode.
     $display_repository->getFormDisplay($this->field->getTargetEntityTypeId(), $this->field->getTargetBundle())
@@ -804,10 +804,10 @@ class DateRangeFieldTest extends DateTestBase {
 
     // Other elements are unaffected by the changed settings.
     $this->assertFieldByXPath("//*[@id=\"edit-$field_name-0-value-hour\"]", NULL, 'Hour element found.');
-    $this->assertOptionSelected("edit-$field_name-0-value-hour", '', 'No hour selected.');
+    $this->assertTrue($this->assertSession()->optionExists("edit-$field_name-0-value-hour", '')->isSelected());
     $this->assertNoFieldByXPath("//*[@id=\"edit-$field_name-0-value-ampm\"]", NULL, 'AMPM element not found.');
     $this->assertFieldByXPath("//*[@id=\"edit-$field_name-0-end-value-hour\"]", NULL, 'Hour element found.');
-    $this->assertOptionSelected("edit-$field_name-0-end-value-hour", '', 'No hour selected.');
+    $this->assertTrue($this->assertSession()->optionExists("edit-$field_name-0-end-value-hour", '')->isSelected());
     $this->assertNoFieldByXPath("//*[@id=\"edit-$field_name-0-end-value-ampm\"]", NULL, 'AMPM element not found.');
 
     // Submit a valid date and ensure it is accepted.
@@ -827,17 +827,17 @@ class DateRangeFieldTest extends DateTestBase {
     $id = $match[1];
     $this->assertText(t('entity_test @id has been created.', ['@id' => $id]));
 
-    $this->assertOptionSelected("edit-$field_name-0-value-year", '2012', 'Correct year selected.');
-    $this->assertOptionSelected("edit-$field_name-0-value-month", '12', 'Correct month selected.');
-    $this->assertOptionSelected("edit-$field_name-0-value-day", '31', 'Correct day selected.');
-    $this->assertOptionSelected("edit-$field_name-0-value-hour", '17', 'Correct hour selected.');
-    $this->assertOptionSelected("edit-$field_name-0-value-minute", '15', 'Correct minute selected.');
+    $this->assertTrue($this->assertSession()->optionExists("edit-$field_name-0-value-year", '2012')->isSelected());
+    $this->assertTrue($this->assertSession()->optionExists("edit-$field_name-0-value-month", '12')->isSelected());
+    $this->assertTrue($this->assertSession()->optionExists("edit-$field_name-0-value-day", '31')->isSelected());
+    $this->assertTrue($this->assertSession()->optionExists("edit-$field_name-0-value-hour", '17')->isSelected());
+    $this->assertTrue($this->assertSession()->optionExists("edit-$field_name-0-value-minute", '15')->isSelected());
 
-    $this->assertOptionSelected("edit-$field_name-0-end-value-year", '2013', 'Correct year selected.');
-    $this->assertOptionSelected("edit-$field_name-0-end-value-month", '1', 'Correct month selected.');
-    $this->assertOptionSelected("edit-$field_name-0-end-value-day", '15', 'Correct day selected.');
-    $this->assertOptionSelected("edit-$field_name-0-end-value-hour", '3', 'Correct hour selected.');
-    $this->assertOptionSelected("edit-$field_name-0-end-value-minute", '30', 'Correct minute selected.');
+    $this->assertTrue($this->assertSession()->optionExists("edit-$field_name-0-end-value-year", '2013')->isSelected());
+    $this->assertTrue($this->assertSession()->optionExists("edit-$field_name-0-end-value-month", '1')->isSelected());
+    $this->assertTrue($this->assertSession()->optionExists("edit-$field_name-0-end-value-day", '15')->isSelected());
+    $this->assertTrue($this->assertSession()->optionExists("edit-$field_name-0-end-value-hour", '3')->isSelected());
+    $this->assertTrue($this->assertSession()->optionExists("edit-$field_name-0-end-value-minute", '30')->isSelected());
 
     // Test the widget for partial completion of fields.
     $display_repository->getFormDisplay($this->field->getTargetEntityTypeId(), $this->field->getTargetBundle())
@@ -909,8 +909,8 @@ class DateRangeFieldTest extends DateTestBase {
 
     $this->drupalPostForm(NULL, $edit, t('Save'));
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertOptionSelected("edit-$field_name-0-value-minute", '0', 'Correct minute selected.');
-    $this->assertOptionSelected("edit-$field_name-0-end-value-minute", '0', 'Correct minute selected.');
+    $this->assertTrue($this->assertSession()->optionExists("edit-$field_name-0-value-minute", '0')->isSelected());
+    $this->assertTrue($this->assertSession()->optionExists("edit-$field_name-0-end-value-minute", '0')->isSelected());
   }
 
   /**
@@ -1024,9 +1024,9 @@ class DateRangeFieldTest extends DateTestBase {
 
     // Check that default value is selected in default value form.
     $this->drupalGet('admin/structure/types/manage/date_content/fields/node.date_content.' . $field_name);
-    $this->assertOptionSelected('edit-default-value-input-default-date-type', 'now', 'The default start value is selected in instance settings page');
+    $this->assertTrue($this->assertSession()->optionExists('edit-default-value-input-default-date-type', 'now')->isSelected());
     $this->assertFieldByName('default_value_input[default_date]', '', 'The relative start default value is empty in instance settings page');
-    $this->assertOptionSelected('edit-default-value-input-default-end-date-type', 'now', 'The default end value is selected in instance settings page');
+    $this->assertTrue($this->assertSession()->optionExists('edit-default-value-input-default-end-date-type', 'now')->isSelected());
     $this->assertFieldByName('default_value_input[default_end_date]', '', 'The relative end default value is empty in instance settings page');
 
     // Check if default_date has been stored successfully.
@@ -1077,9 +1077,9 @@ class DateRangeFieldTest extends DateTestBase {
 
     // Check that default value is selected in default value form.
     $this->drupalGet('admin/structure/types/manage/date_content/fields/node.date_content.' . $field_name);
-    $this->assertOptionSelected('edit-default-value-input-default-date-type', 'relative', 'The default start value is selected in instance settings page');
+    $this->assertTrue($this->assertSession()->optionExists('edit-default-value-input-default-date-type', 'relative')->isSelected());
     $this->assertFieldByName('default_value_input[default_date]', '+45 days', 'The relative default start value is displayed in instance settings page');
-    $this->assertOptionSelected('edit-default-value-input-default-end-date-type', 'relative', 'The default end value is selected in instance settings page');
+    $this->assertTrue($this->assertSession()->optionExists('edit-default-value-input-default-end-date-type', 'relative')->isSelected());
     $this->assertFieldByName('default_value_input[default_end_date]', '+90 days', 'The relative default end value is displayed in instance settings page');
 
     // Check if default_date has been stored successfully.
@@ -1110,9 +1110,9 @@ class DateRangeFieldTest extends DateTestBase {
 
     // Check that default value is selected in default value form.
     $this->drupalGet('admin/structure/types/manage/date_content/fields/node.date_content.' . $field_name);
-    $this->assertOptionSelected('edit-default-value-input-default-date-type', '', 'The default start value is selected in instance settings page');
+    $this->assertTrue($this->assertSession()->optionExists('edit-default-value-input-default-date-type', '')->isSelected());
     $this->assertFieldByName('default_value_input[default_date]', '', 'The relative default start value is empty in instance settings page');
-    $this->assertOptionSelected('edit-default-value-input-default-end-date-type', '', 'The default end value is selected in instance settings page');
+    $this->assertTrue($this->assertSession()->optionExists('edit-default-value-input-default-end-date-type', '')->isSelected());
     $this->assertFieldByName('default_value_input[default_end_date]', '', 'The relative default end value is empty in instance settings page');
 
     // Check if default_date has been stored successfully.

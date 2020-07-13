@@ -272,7 +272,7 @@ class UpdatePathTestBaseFilledTest extends UpdatePathTestBaseTest {
     $this->drupalGet('admin/config/regional/date-time');
     $this->assertText('Test date format');
     $this->drupalGet('admin/config/regional/date-time/formats/manage/test_date_format');
-    $this->assertOptionSelected('edit-langcode', 'es');
+    $this->assertTrue($this->assertSession()->optionExists('edit-langcode', 'es')->isSelected());
 
     // Make sure our custom image style exists.
     $this->drupalGet('admin/config/media/image-styles/manage/test_image_style');

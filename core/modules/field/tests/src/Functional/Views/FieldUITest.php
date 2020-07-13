@@ -72,7 +72,7 @@ class FieldUITest extends FieldTestBase {
     $this->drupalPostForm(NULL, ['options[type]' => 'text_trimmed'], t('Apply'));
 
     $this->drupalGet($url);
-    $this->assertOptionSelected('edit-options-type', 'text_trimmed');
+    $this->assertTrue($this->assertSession()->optionExists('edit-options-type', 'text_trimmed')->isSelected());
 
     $random_number = rand(100, 400);
     $this->drupalPostForm(NULL, ['options[settings][trim_length]' => $random_number], t('Apply'));
