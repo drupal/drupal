@@ -69,7 +69,11 @@ class MediaLibraryFieldWidgetOpener implements MediaLibraryOpenerInterface {
     $storage = $this->entityTypeManager->getStorage($entity_type_id);
     $access_handler = $this->entityTypeManager->getAccessControlHandler($entity_type_id);
 
-    if ($parameters['entity_id']) {
+    if (!empty($parameters['revision_id'])) {
+      $entity = $storage->loadRevision($parameters['revision_id']);
+      $entity_access = $access_handler->access($entity, 'update', $account, TRUE);
+    }
+    elseif ($parameters['entity_id']) {
       $entity = $storage->load($parameters['entity_id']);
       $entity_access = $access_handler->access($entity, 'update', $account, TRUE);
     }
