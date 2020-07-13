@@ -234,7 +234,7 @@ class FilterID extends StaticMap implements ContainerFactoryPluginInterface {
         return FilterInterface::TYPE_HTML_RESTRICTOR;
 
       // https://www.drupal.org/project/entity_embed
-      case 'emtity_embed':
+      case 'entity_embed':
         return FilterInterface::TYPE_TRANSFORM_IRREVERSIBLE;
 
       case 'filter_align':
