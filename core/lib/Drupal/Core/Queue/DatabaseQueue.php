@@ -100,7 +100,7 @@ class DatabaseQueue implements ReliableQueueInterface, QueueGarbageCollectionInt
    */
   public function numberOfItems() {
     try {
-      return (int) $this->connection->query('SELECT COUNT(item_id) FROM {' . static::TABLE_NAME . '} WHERE name = :name', [':name' => $this->name])
+      return (int) $this->connection->query('SELECT COUNT([item_id]) FROM {' . static::TABLE_NAME . '} WHERE [name] = :name', [':name' => $this->name])
         ->fetchField();
     }
     catch (\Exception $e) {
@@ -120,7 +120,7 @@ class DatabaseQueue implements ReliableQueueInterface, QueueGarbageCollectionInt
     // are no unclaimed items left.
     while (TRUE) {
       try {
-        $item = $this->connection->queryRange('SELECT data, created, item_id FROM {' . static::TABLE_NAME . '} q WHERE expire = 0 AND name = :name ORDER BY created, item_id ASC', 0, 1, [':name' => $this->name])->fetchObject();
+        $item = $this->connection->queryRange('SELECT [data], [created], [item_id] FROM {' . static::TABLE_NAME . '} q WHERE [expire] = 0 AND [name] = :name ORDER BY [created], [item_id] ASC', 0, 1, [':name' => $this->name])->fetchObject();
       }
       catch (\Exception $e) {
         $this->catchException($e);

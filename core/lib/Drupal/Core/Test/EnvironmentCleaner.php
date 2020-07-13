@@ -171,7 +171,7 @@ class EnvironmentCleaner implements EnvironmentCleanerInterface {
   public function cleanResultsTable($test_id = NULL) {
     $count = 0;
     if ($test_id) {
-      $count = $this->resultsDatabase->query('SELECT COUNT(test_id) FROM {simpletest_test_id} WHERE test_id = :test_id', [':test_id' => $test_id])->fetchField();
+      $count = $this->resultsDatabase->query('SELECT COUNT([test_id]) FROM {simpletest_test_id} WHERE [test_id] = :test_id', [':test_id' => $test_id])->fetchField();
 
       $this->resultsDatabase->delete('simpletest')
         ->condition('test_id', $test_id)
@@ -181,7 +181,7 @@ class EnvironmentCleaner implements EnvironmentCleanerInterface {
         ->execute();
     }
     else {
-      $count = $this->resultsDatabase->query('SELECT COUNT(test_id) FROM {simpletest_test_id}')->fetchField();
+      $count = $this->resultsDatabase->query('SELECT COUNT([test_id]) FROM {simpletest_test_id}')->fetchField();
 
       // Clear test results.
       $this->resultsDatabase->delete('simpletest')->execute();

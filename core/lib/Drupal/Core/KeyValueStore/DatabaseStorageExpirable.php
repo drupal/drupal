@@ -33,7 +33,7 @@ class DatabaseStorageExpirable extends DatabaseStorage implements KeyValueStoreE
    * {@inheritdoc}
    */
   public function has($key) {
-    return (bool) $this->connection->query('SELECT 1 FROM {' . $this->connection->escapeTable($this->table) . '} WHERE collection = :collection AND name = :key AND expire > :now', [
+    return (bool) $this->connection->query('SELECT 1 FROM {' . $this->connection->escapeTable($this->table) . '} WHERE [collection] = :collection AND [name] = :key AND [expire] > :now', [
       ':collection' => $this->collection,
       ':key' => $key,
       ':now' => REQUEST_TIME,
@@ -45,7 +45,7 @@ class DatabaseStorageExpirable extends DatabaseStorage implements KeyValueStoreE
    */
   public function getMultiple(array $keys) {
     $values = $this->connection->query(
-      'SELECT name, value FROM {' . $this->connection->escapeTable($this->table) . '} WHERE expire > :now AND name IN ( :keys[] ) AND collection = :collection',
+      'SELECT [name], [value] FROM {' . $this->connection->escapeTable($this->table) . '} WHERE [expire] > :now AND [name] IN ( :keys[] ) AND [collection] = :collection',
       [
         ':now' => REQUEST_TIME,
         ':keys[]' => $keys,
@@ -59,7 +59,7 @@ class DatabaseStorageExpirable extends DatabaseStorage implements KeyValueStoreE
    */
   public function getAll() {
     $values = $this->connection->query(
-      'SELECT name, value FROM {' . $this->connection->escapeTable($this->table) . '} WHERE collection = :collection AND expire > :now',
+      'SELECT [name], [value] FROM {' . $this->connection->escapeTable($this->table) . '} WHERE [collection] = :collection AND [expire] > :now',
       [
         ':collection' => $this->collection,
         ':now' => REQUEST_TIME,

@@ -112,7 +112,7 @@ class DatabaseLockBackend extends LockBackendAbstract {
     $name = $this->normalizeName($name);
 
     try {
-      $lock = $this->database->query('SELECT expire, value FROM {semaphore} WHERE name = :name', [':name' => $name])->fetchAssoc();
+      $lock = $this->database->query('SELECT [expire], [value] FROM {semaphore} WHERE [name] = :name', [':name' => $name])->fetchAssoc();
     }
     catch (\Exception $e) {
       $this->catchException($e);

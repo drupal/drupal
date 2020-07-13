@@ -61,7 +61,7 @@ class DatabaseStorage extends StorageBase {
    * {@inheritdoc}
    */
   public function has($key) {
-    return (bool) $this->connection->query('SELECT 1 FROM {' . $this->connection->escapeTable($this->table) . '} WHERE collection = :collection AND name = :key', [
+    return (bool) $this->connection->query('SELECT 1 FROM {' . $this->connection->escapeTable($this->table) . '} WHERE [collection] = :collection AND [name] = :key', [
       ':collection' => $this->collection,
       ':key' => $key,
     ])->fetchField();
@@ -73,7 +73,7 @@ class DatabaseStorage extends StorageBase {
   public function getMultiple(array $keys) {
     $values = [];
     try {
-      $result = $this->connection->query('SELECT name, value FROM {' . $this->connection->escapeTable($this->table) . '} WHERE name IN ( :keys[] ) AND collection = :collection', [':keys[]' => $keys, ':collection' => $this->collection])->fetchAllAssoc('name');
+      $result = $this->connection->query('SELECT [name], [value] FROM {' . $this->connection->escapeTable($this->table) . '} WHERE [name] IN ( :keys[] ) AND [collection] = :collection', [':keys[]' => $keys, ':collection' => $this->collection])->fetchAllAssoc('name');
       foreach ($keys as $key) {
         if (isset($result[$key])) {
           $values[$key] = $this->serializer->decode($result[$key]->value);
@@ -92,7 +92,7 @@ class DatabaseStorage extends StorageBase {
    * {@inheritdoc}
    */
   public function getAll() {
-    $result = $this->connection->query('SELECT name, value FROM {' . $this->connection->escapeTable($this->table) . '} WHERE collection = :collection', [':collection' => $this->collection]);
+    $result = $this->connection->query('SELECT [name], [value] FROM {' . $this->connection->escapeTable($this->table) . '} WHERE [collection] = :collection', [':collection' => $this->collection]);
     $values = [];
 
     foreach ($result as $item) {
