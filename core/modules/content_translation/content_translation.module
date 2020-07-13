@@ -9,6 +9,7 @@ use Drupal\Core\Url;
 use Drupal\content_translation\BundleTranslationSettingsInterface;
 use Drupal\content_translation\ContentTranslationManager;
 use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Entity\ContentEntityFormInterface;
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityInterface;
@@ -656,6 +657,7 @@ function content_translation_preprocess_language_content_settings_table(&$variab
  * Implements hook_page_attachments().
  */
 function content_translation_page_attachments(&$page) {
+  $cache = CacheableMetadata::createFromRenderArray($page);
   $route_match = \Drupal::routeMatch();
 
   // If the current route has no parameters, return.
@@ -673,6 +675,13 @@ function content_translation_page_attachments(&$page) {
     if ($entity instanceof ContentEntityInterface && $entity->hasLinkTemplate('canonical')) {
       // Current route represents a content entity. Build hreflang links.
       foreach ($entity->getTranslationLanguages() as $language) {
+        // Skip any translation that cannot be viewed.
+        $translation = $entity->getTranslation($language->getId());
+        $access = $translation->access('view', NULL, TRUE);
+        $cache->addCacheableDependency($access);
+        if (!$access->isAllowed()) {
+          continue;
+        }
         $url = $entity->toUrl('canonical')
           ->setOption('language', $language)
           ->setAbsolute()
@@ -688,6 +697,8 @@ function content_translation_page_attachments(&$page) {
       }
     }
     // Since entity was found, no need to iterate further.
-    return;
+    break;
   }
+  // Apply updated caching information.
+  $cache->applyTo($page);
 }
