@@ -185,6 +185,7 @@ class NodeRevisionsAllTest extends NodeTestBase {
       'Revision deleted.');
     $nids = \Drupal::entityQuery('node')
       ->allRevisions()
+      ->accessCheck(FALSE)
       ->condition('nid', $node->id())
       ->condition('vid', $nodes[1]->getRevisionId())
       ->execute();
