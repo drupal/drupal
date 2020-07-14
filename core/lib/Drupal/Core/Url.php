@@ -297,7 +297,7 @@ class Url implements TrustedCallbackInterface {
     // Extract query parameters and fragment and merge them into $uri_options,
     // but preserve the original $options for the fallback case.
     $uri_options = $options;
-    if (isset($uri_parts['fragment'])) {
+    if (isset($uri_parts['fragment']) && $uri_parts['fragment'] !== '') {
       $uri_options += ['fragment' => $uri_parts['fragment']];
       unset($uri_parts['fragment']);
     }
