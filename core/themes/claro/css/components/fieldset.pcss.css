@@ -41,7 +41,7 @@ _:-ms-fullscreen,
   float: left; /* iOS Safari, Android Chrome, Edge. */
   width: 100%; /* iOS Safari, Android Chrome, Edge. */
   margin-bottom: var(--space-m);
-  color: var(--color-davysgrey);
+  color: var(--color-davysgray);
   font-weight: bold;
 }
 

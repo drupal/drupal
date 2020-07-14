@@ -81,7 +81,7 @@
 }
 
 /**
- * These are the (grey) lines that are visually separating the vertical tab menu
+ * These are the (gray) lines that are visually separating the vertical tab menu
  * items.
  */
 .vertical-tabs__menu-item::before,
@@ -207,7 +207,7 @@
 }
 
 .vertical-tabs__menu-item.is-selected .vertical-tabs__menu-link {
-  z-index: 3; /* The selected menu link should be on a higher level than the white masking line that hides the grey separator. */
+  z-index: 3; /* The selected menu link should be on a higher level than the white masking line that hides the gray separator. */
   color: var(--color-absolutezero);
   border-color: var(--vertical-tabs-border-color) transparent;
   background-color: var(--color-white);
@@ -259,7 +259,7 @@
 .vertical-tabs__menu-link-summary,
 .vertical-tabs__details-summary-summary {
   display: block;
-  color: var(--color-davysgrey);
+  color: var(--color-davysgray);
   font-size: var(--font-size-s);
   font-weight: normal;
 }

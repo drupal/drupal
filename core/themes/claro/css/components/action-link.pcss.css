@@ -44,7 +44,7 @@
   padding: calc(var(--space-m) - ((var(--space-l) - var(--space-m)) / 2)) var(--space-m);
   cursor: pointer;
   text-decoration: none;
-  color: var(--color-davysgrey);
+  color: var(--color-davysgray);
   border-radius: var(--button-border-radius-size);
   background-color: var(--color-bg);
   font-size: var(--font-size-base);

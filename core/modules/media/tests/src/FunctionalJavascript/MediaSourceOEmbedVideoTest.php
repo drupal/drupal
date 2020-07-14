@@ -170,13 +170,13 @@ class MediaSourceOEmbedVideoTest extends MediaSourceTestBase {
     // Without a hash should be denied.
     $no_hash_query = array_diff_key($query, ['hash' => '']);
     $this->drupalGet('media/oembed', ['query' => $no_hash_query]);
-    $assert_session->pageTextNotContains('By the power of Greyskull, Vimeo works!');
+    $assert_session->pageTextNotContains('By the power of Grayskull, Vimeo works!');
     $assert_session->pageTextContains('Access denied');
 
     // A correct query should be allowed because the anonymous role has the
     // 'view media' permission.
     $this->drupalGet('media/oembed', ['query' => $query]);
-    $assert_session->pageTextContains('By the power of Greyskull, Vimeo works!');
+    $assert_session->pageTextContains('By the power of Grayskull, Vimeo works!');
     $this->assertRaw('core/themes/stable/templates/content/media-oembed-iframe.html.twig');
     $this->assertNoRaw('core/modules/media/templates/media-oembed-iframe.html.twig');
 
@@ -184,7 +184,7 @@ class MediaSourceOEmbedVideoTest extends MediaSourceTestBase {
     \Drupal::service('theme_installer')->install(['stark']);
     $this->config('system.theme')->set('default', 'stark')->save();
     $this->drupalGet('media/oembed', ['query' => $query]);
-    $assert_session->pageTextContains('By the power of Greyskull, Vimeo works!');
+    $assert_session->pageTextContains('By the power of Grayskull, Vimeo works!');
     $this->assertNoRaw('core/themes/stable/templates/content/media-oembed-iframe.html.twig');
     $this->assertRaw('core/modules/media/templates/media-oembed-iframe.html.twig');
 
@@ -193,7 +193,7 @@ class MediaSourceOEmbedVideoTest extends MediaSourceTestBase {
     $role->revokePermission('view media');
     $role->save();
     $this->drupalGet('media/oembed', ['query' => $query]);
-    $assert_session->pageTextNotContains('By the power of Greyskull, Vimeo works!');
+    $assert_session->pageTextNotContains('By the power of Grayskull, Vimeo works!');
     $assert_session->pageTextContains('Access denied');
   }
 
