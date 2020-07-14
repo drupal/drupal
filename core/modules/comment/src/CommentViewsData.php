@@ -250,7 +250,7 @@ class CommentViewsData extends EntityViewsData {
       // the same two tables is not supported.
       if (\Drupal::service('comment.manager')->getFields($type)) {
         $data['comment_entity_statistics']['table']['join'][$entity_type->getDataTable() ?: $entity_type->getBaseTable()] = [
-          'type' => 'INNER',
+          'type' => 'LEFT',
           'left_field' => $entity_type->getKey('id'),
           'field' => 'entity_id',
           'extra' => [
