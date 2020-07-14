@@ -35,6 +35,10 @@ trait ModerationStateJoinViewsHandlerTrait {
             'field' => 'content_entity_type_id',
             'value' => $left_entity_type->id(),
           ],
+          [
+            'field' => 'content_entity_id',
+            'left_field' => $left_entity_type->getKey('id'),
+          ],
         ],
       ];
       if ($left_entity_type->isTranslatable()) {
