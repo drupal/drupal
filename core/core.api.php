@@ -2509,7 +2509,7 @@ function hook_validation_constraint_alter(array &$definitions) {
  * you should normally define as a constant in a separate static class (see
  * \Symfony\Component\HttpKernel\KernelEvents and
  * \Drupal\Core\Config\ConfigEvents for examples). The second argument is a
- * \Symfony\Component\EventDispatcher\Event object; normally you will need to
+ * \Drupal\Component\EventDispatcher\Event object; normally you will need to
  * extend this class, so that your event class can provide data to the event
  * subscribers.
  *

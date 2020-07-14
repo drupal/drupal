@@ -4,7 +4,7 @@ namespace Drupal\Core\Config;
 
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Language\LanguageInterface;
-use Symfony\Component\EventDispatcher\Event;
+use Drupal\Component\EventDispatcher\Event;
 
 /**
  * Event object to allow configuration to be overridden by modules.

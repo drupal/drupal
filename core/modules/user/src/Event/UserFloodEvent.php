@@ -2,7 +2,7 @@
 
 namespace Drupal\user\Event;
 
-use Symfony\Component\EventDispatcher\Event;
+use Drupal\Component\EventDispatcher\Event;
 
 /**
  * Provides a user flood event for event listeners.

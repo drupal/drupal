@@ -4,9 +4,9 @@ namespace Drupal\migrate\Event;
 
 use Drupal\migrate\Plugin\MigrationInterface;
 use Drupal\migrate\MigrateMessageInterface;
-use Symfony\Component\EventDispatcher\Event as SymfonyEvent;
+use Drupal\Component\EventDispatcher\Event;
 
-class EventBase extends SymfonyEvent {
+class EventBase extends Event {
 
   /**
    * The migration.

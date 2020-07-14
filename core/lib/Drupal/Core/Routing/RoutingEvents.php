@@ -48,11 +48,11 @@ final class RoutingEvents {
    *
    * This event gives modules the opportunity to perform some action after route
    * building has completed. The event listener receives a
-   * \Symfony\Component\EventDispatcher\Event instance.
+   * \Drupal\Component\EventDispatcher\Event instance.
    *
    * @Event
    *
-   * @see \Symfony\Component\EventDispatcher\Event
+   * @see \Drupal\Component\EventDispatcher\Event
    * @see \Drupal\Core\EventSubscriber\MenuRouterRebuildSubscriber
    * @see \Drupal\Core\Routing\RouteBuilder::rebuild()
    *

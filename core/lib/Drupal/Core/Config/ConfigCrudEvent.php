@@ -2,7 +2,7 @@
 
 namespace Drupal\Core\Config;
 
-use Symfony\Component\EventDispatcher\Event;
+use Drupal\Component\EventDispatcher\Event;
 
 /**
  * Wraps a configuration event for event listeners.
