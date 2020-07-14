@@ -55,4 +55,81 @@ class ExtractTest extends MigrateProcessTestCase {
     $this->assertSame('test', $value, '');
   }
 
+  /**
+   * Test the extract plugin with default values.
+   *
+   * @param array $value
+   *   The process plugin input value.
+   * @param array $configuration
+   *   The plugin configuration.
+   * @param string|null $expected
+   *   The expected transformed value.
+   *
+   * @throws \Drupal\migrate\MigrateException
+   *
+   * @dataProvider providerExtractDefault
+   */
+  public function testExtractDefault(array $value, array $configuration, $expected) {
+    $this->plugin = new Extract($configuration, 'map', []);
+
+    $value = $this->plugin->transform($value, $this->migrateExecutable, $this->row, 'destinationproperty');
+    $this->assertSame($expected, $value);
+  }
+
+  /**
+   * Data provider for testExtractDefault.
+   */
+  public function providerExtractDefault() {
+    return [
+      [
+        ['foo' => 'bar'],
+        [
+          'index' => ['foo'],
+          'default' => 'one',
+        ],
+        'bar',
+      ],
+      [
+        ['foo' => 'bar'],
+        [
+          'index' => ['not_key'],
+          'default' => 'two',
+        ],
+        'two',
+      ],
+      [
+        ['foo' => 'bar'],
+        [
+          'index' => ['not_key'],
+          'default' => NULL,
+        ],
+        NULL,
+      ],
+      [
+        ['foo' => 'bar'],
+        [
+          'index' => ['not_key'],
+          'default' => TRUE,
+        ],
+        TRUE,
+      ],
+      [
+        ['foo' => 'bar'],
+        [
+          'index' => ['not_key'],
+          'default' => FALSE,
+        ],
+        FALSE,
+      ],
+      [
+        ['foo' => ''],
+        [
+          'index' => ['foo'],
+          'default' => NULL,
+        ],
+        '',
+      ],
+    ];
+  }
+
 }
