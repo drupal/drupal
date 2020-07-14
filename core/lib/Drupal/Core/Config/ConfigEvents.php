@@ -121,7 +121,7 @@ final class ConfigEvents {
    * fire the event again to continue processing missing content dependencies.
    *
    * @see \Drupal\Core\Config\ConfigImporter::processMissingContent()
-   * @see \Drupal\Core\Config\MissingContentEvent
+   * @see \Drupal\Core\Config\Importer\MissingContentEvent
    */
   const IMPORT_MISSING_CONTENT = 'config.importer.missing_content';
 
