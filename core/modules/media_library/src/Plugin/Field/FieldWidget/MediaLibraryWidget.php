@@ -16,7 +16,6 @@ use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Field\WidgetBase;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Security\TrustedCallbackInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Url;
@@ -43,7 +42,7 @@ use Symfony\Component\Validator\ConstraintViolationInterface;
  * @internal
  *   Plugin classes are internal.
  */
-class MediaLibraryWidget extends WidgetBase implements ContainerFactoryPluginInterface, TrustedCallbackInterface {
+class MediaLibraryWidget extends WidgetBase implements TrustedCallbackInterface {
 
   /**
    * Entity type manager service.
