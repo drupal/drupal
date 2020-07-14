@@ -21,6 +21,7 @@ class WidgetAnonymousTest extends MediaLibraryTestBase {
     // Create a few example media items for use in selection.
     $this->createMediaItems([
       'type_one' => [
+        'Cat',
         'Dog',
       ],
     ]);
@@ -60,12 +61,23 @@ class WidgetAnonymousTest extends MediaLibraryTestBase {
 
     // Ensure that the selection completed successfully.
     $this->waitForText('Dog');
+    $assert_session->fieldNotExists('Weight');
 
+    // Add to the unlimited cardinality field.
+    $this->openMediaLibraryForField('field_unlimited_media');
+
+    // Select the second media item (should be Cat).
+    $this->selectMediaItem(1);
+    $this->pressInsertSelected('Added one media item.');
+
+    // Ensure that the selection completed successfully.
+    $this->waitForText('Cat');
     // Save the form.
     $assert_session->elementExists('css', '.js-media-library-widget-toggle-weight')->click();
     $this->submitForm([
       'title[0][value]' => 'My page',
       'field_unlimited_media[selection][0][weight]' => '0',
+      'field_unlimited_media[selection][1][weight]' => '1',
     ], 'Save');
     $assert_session->pageTextContains('Basic Page My page has been created');
     $assert_session->pageTextContains('Dog');

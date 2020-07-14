@@ -332,6 +332,7 @@ class MediaLibraryWidget extends WidgetBase implements TrustedCallbackInterface 
       return $element;
     }
 
+    $multiple_items = FALSE;
     if (empty($referenced_entities)) {
       $element['#field_prefix']['empty_selection'] = [
         '#markup' => $this->t('No media items are selected.'),
@@ -341,10 +342,12 @@ class MediaLibraryWidget extends WidgetBase implements TrustedCallbackInterface 
       // @todo Use a <button> link here, and delete
       // seven_preprocess_fieldset__media_library_widget(), when
       // https://www.drupal.org/project/drupal/issues/2999549 lands.
+      $multiple_items = count($referenced_entities) > 1;
       $element['#field_prefix']['weight_toggle'] = [
         '#type' => 'html_tag',
         '#tag' => 'button',
         '#value' => $this->t('Show media item weights'),
+        '#access' => $multiple_items,
         '#attributes' => [
           'class' => [
             'link',
@@ -415,6 +418,7 @@ class MediaLibraryWidget extends WidgetBase implements TrustedCallbackInterface 
           '#type' => 'number',
           '#theme' => 'input__number__media_library_item_weight',
           '#title' => $this->t('Weight'),
+          '#access' => $multiple_items,
           '#default_value' => $delta,
           '#attributes' => [
             'class' => [
