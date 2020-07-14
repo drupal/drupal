@@ -414,7 +414,7 @@ datetimecallback
 datetimeiso
 datetimeplus
 datetype
-davysgrey
+davysgray
 daycount
 daycounter
 dblog
@@ -753,8 +753,8 @@ grandgrandchild
 grandgrandchild's
 granularities
 grayblue
+grayskull
 greeking
-greyskull
 gripsmall
 groupable
 groupby

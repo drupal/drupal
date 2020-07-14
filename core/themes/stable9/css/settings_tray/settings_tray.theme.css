@@ -41,7 +41,7 @@
   background-color: #0066a1;
   background-image: linear-gradient(to bottom, #0066a1, #005b98);
 }
-/* Make the inactive icon grey. */
+/* Make the inactive icon gray. */
 .toolbar-tab > .toolbar-icon.toolbar-icon-edit.toolbar-item:before {
   background-image: url(../../../../misc/icons/bebebe/pencil.svg);
 }

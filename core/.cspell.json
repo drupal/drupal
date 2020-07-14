@@ -3,6 +3,7 @@
     "language": "en-US",
     "allowCompoundWords": false,
     "ignorePaths": [
+      ".cspell.json",
       "composer.lock",
       "assets/vendor/**",
       "lib/Drupal/Component/Diff/**",
@@ -34,6 +35,7 @@
       { "name": "drupal", "path": "./misc/cspell/dictionary.txt"}
     ],
     "flagWords": [
+      "grey",
       "hte"
     ],
     "overrides": [

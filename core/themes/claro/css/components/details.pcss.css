@@ -78,7 +78,7 @@
   transition: background-color var(--details-bg-color-transition-duration) ease-in-out;
   word-wrap: break-word;
   hyphens: auto;
-  color: var(--color-davysgrey);
+  color: var(--color-davysgray);
   border-radius: var(--size-summary-border-radius);
   background-color: transparent;
   line-height: var(--space-m);

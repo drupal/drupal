@@ -11,7 +11,7 @@
   */
   --pager-size: 2rem; /* --space-m Ã— 2 */
   --pager-border-width: 0.125rem; /* 2px */
-  --pager-fg-color: var(--color-davysgrey);
+  --pager-fg-color: var(--color-davysgray);
   --pager-bg-color: var(--color-white);
   --pager--hover-bg-color: var(--color-bgblue-active);
   --pager--focus-bg-color: var(--color-focus);

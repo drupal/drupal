@@ -63,7 +63,7 @@
   min-height: var(--tabs-link-height);
   padding: var(--space-s) var(--space-l);
   text-decoration: none;
-  color: var(--color-davysgrey);
+  color: var(--color-davysgray);
   line-height: 1.2rem;
 }
 .tabs__link:focus {
@@ -71,7 +71,7 @@
   margin: -1px;
   padding-left: calc(var(--space-l) - var(--tabs--focus-height) + 1px); /* LTR */
   text-decoration: none;
-  color: var(--color-davysgrey);
+  color: var(--color-davysgray);
   border: var(--tabs--focus-height) solid var(--color-focus);
   border-radius: var(--tabs-border-radius-size);
   outline: none;

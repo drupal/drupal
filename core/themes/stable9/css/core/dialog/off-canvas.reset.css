@@ -268,7 +268,7 @@
 #drupal-off-canvas input[type="reset"]:active,
 #drupal-off-canvas input[type="submit"]:active,
 #drupal-off-canvas input[type="button"]:active {
-  border-color: grey;
+  border-color: gray;
   background-image: none;
   box-shadow: none;
 }
@@ -313,7 +313,7 @@
 #drupal-off-canvas input[type="time"][disabled],
 #drupal-off-canvas input[type="url"][disabled],
 #drupal-off-canvas input[type="week"][disabled] {
-  background-color: grey;
+  background-color: gray;
 }
 #drupal-off-canvas input[type="hidden"] {
   visibility: hidden;
@@ -333,7 +333,7 @@
 }
 #drupal-off-canvas input:placeholder,
 #drupal-off-canvas textarea:placeholder {
-  color: grey;
+  color: gray;
 }
 #drupal-off-canvas textarea,
 #drupal-off-canvas select[size],
@@ -366,7 +366,7 @@
   vertical-align: middle;
   text-decoration: none;
   color: black;
-  border: 1px solid grey;
+  border: 1px solid gray;
   background: none;
 }
 #drupal-off-canvas * textarea,
@@ -376,7 +376,7 @@
   padding: 0;
   vertical-align: top;
   color: black;
-  border: 1px solid grey;
+  border: 1px solid gray;
   background: white;
 }
 

@@ -55,7 +55,7 @@
 
 .table-file-multiple-widget th {
   height: calc(var(--space-m) * 2);
-  color: var(--color-davysgrey);
+  color: var(--color-davysgray);
   background: var(--color-whitesmoke);
   font-size: var(--font-size-s);
 }

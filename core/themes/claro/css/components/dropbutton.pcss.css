@@ -341,7 +341,7 @@
   position: relative;
   padding: calc(var(--dropbutton-spacing-size) - var(--dropbutton-border-size));
   text-decoration: none;
-  color: var(--color-davysgrey);
+  color: var(--color-davysgray);
   border: var(--dropbutton-border-size) solid transparent !important; /* 1 */
   border-radius: var(--dropbutton-border-radius-size);
   background: var(--color-white);
