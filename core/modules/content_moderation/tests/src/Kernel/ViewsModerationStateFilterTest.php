@@ -345,8 +345,11 @@ class ViewsModerationStateFilterTest extends ViewsKernelTestBase {
     $this->assertEquals('vid', $configuration['left_field']);
     $this->assertEquals('content_entity_type_id', $configuration['extra'][0]['field']);
     $this->assertEquals('node', $configuration['extra'][0]['value']);
-    $this->assertEquals('langcode', $configuration['extra'][1]['field']);
-    $this->assertEquals('langcode', $configuration['extra'][1]['left_field']);
+
+    $this->assertEquals('content_entity_id', $configuration['extra'][1]['field']);
+    $this->assertEquals('nid', $configuration['extra'][1]['left_field']);
+    $this->assertEquals('langcode', $configuration['extra'][2]['field']);
+    $this->assertEquals('langcode', $configuration['extra'][2]['left_field']);
 
     $expected_result = [];
     foreach ($nodes as $node) {
