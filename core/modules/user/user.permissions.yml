@@ -1,5 +1,5 @@
 administer permissions:
-  title: Administer permissions
+  title: 'Administer roles and permissions'
   restrict access: true
 administer account settings:
   title: 'Administer account settings'
