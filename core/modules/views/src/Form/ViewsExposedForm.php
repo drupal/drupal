@@ -105,7 +105,7 @@ class ViewsExposedForm extends FormBase {
           // Grouped exposed filters have their own forms.
           // Instead of render the standard exposed form, a new Select or
           // Radio form field is rendered with the available groups.
-          // When an user choose an option the selected value is split
+          // When an user chooses an option the selected value is split
           // into the operator and value that the item represents.
           if ($handler->isAGroup()) {
             $handler->groupForm($form, $form_state);
