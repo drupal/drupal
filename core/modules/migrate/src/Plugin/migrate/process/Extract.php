@@ -72,7 +72,7 @@ class Extract extends ProcessPluginBase {
     }
     $new_value = NestedArray::getValue($value, $this->configuration['index'], $key_exists);
     if (!$key_exists) {
-      if (isset($this->configuration['default'])) {
+      if (array_key_exists('default', $this->configuration)) {
         $new_value = $this->configuration['default'];
       }
       else {
