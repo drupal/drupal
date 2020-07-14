@@ -87,7 +87,7 @@ abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface,
       $delta = isset($get_delta) ? $get_delta : 0;
       $element = [
         '#title' => $this->fieldDefinition->getLabel(),
-        '#description' => FieldFilteredMarkup::create(\Drupal::token()->replace($this->fieldDefinition->getDescription())),
+        '#description' => $this->getFilteredDescription(),
       ];
       $element = $this->formSingleElement($items, $delta, $element, $form, $form_state);
 
@@ -179,7 +179,7 @@ abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface,
     }
 
     $title = $this->fieldDefinition->getLabel();
-    $description = FieldFilteredMarkup::create(\Drupal::token()->replace($this->fieldDefinition->getDescription()));
+    $description = $this->getFilteredDescription();
 
     $elements = [];
 
