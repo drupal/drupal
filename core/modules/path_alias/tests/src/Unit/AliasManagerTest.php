@@ -108,7 +108,7 @@ class AliasManagerTest extends UnitTestCase {
    *
    * @covers ::getPathByAlias
    */
-  public function testGetPathByAliasNatch() {
+  public function testGetPathByAliasMatch() {
     $alias = $this->randomMachineName();
     $path = $this->randomMachineName();
 
