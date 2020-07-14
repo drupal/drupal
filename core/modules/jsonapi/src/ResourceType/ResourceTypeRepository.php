@@ -154,7 +154,7 @@ class ResourceTypeRepository implements ResourceTypeRepositoryInterface {
     $fields = static::getFields($raw_fields, $entity_type, $bundle);
     if (!$internalize_resource_type) {
       $event = ResourceTypeBuildEvent::createFromEntityTypeAndBundle($entity_type, $bundle, $fields);
-      $this->eventDispatcher->dispatch(ResourceTypeBuildEvents::BUILD, $event);
+      $this->eventDispatcher->dispatch($event, ResourceTypeBuildEvents::BUILD);
       $internalize_resource_type = $event->resourceTypeShouldBeDisabled();
       $fields = $event->getFields();
     }

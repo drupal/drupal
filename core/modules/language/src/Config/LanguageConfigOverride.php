@@ -62,7 +62,7 @@ class LanguageConfigOverride extends StorableConfigBase {
     // an update of configuration, but only for a specific language.
     Cache::invalidateTags($this->getCacheTags());
     $this->isNew = FALSE;
-    $this->eventDispatcher->dispatch(LanguageConfigOverrideEvents::SAVE_OVERRIDE, new LanguageConfigOverrideCrudEvent($this));
+    $this->eventDispatcher->dispatch(new LanguageConfigOverrideCrudEvent($this), LanguageConfigOverrideEvents::SAVE_OVERRIDE);
     $this->originalData = $this->data;
     return $this;
   }
@@ -75,7 +75,7 @@ class LanguageConfigOverride extends StorableConfigBase {
     $this->storage->delete($this->name);
     Cache::invalidateTags($this->getCacheTags());
     $this->isNew = TRUE;
-    $this->eventDispatcher->dispatch(LanguageConfigOverrideEvents::DELETE_OVERRIDE, new LanguageConfigOverrideCrudEvent($this));
+    $this->eventDispatcher->dispatch(new LanguageConfigOverrideCrudEvent($this), LanguageConfigOverrideEvents::DELETE_OVERRIDE);
     $this->originalData = $this->data;
     return $this;
   }

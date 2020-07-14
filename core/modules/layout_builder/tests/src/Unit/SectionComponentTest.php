@@ -33,11 +33,11 @@ class SectionComponentTest extends UnitTestCase {
     // Imitate an event subscriber by setting a resulting build on the event.
     $event_dispatcher = $this->prophesize(EventDispatcherInterface::class);
     $event_dispatcher
-      ->dispatch(LayoutBuilderEvents::SECTION_COMPONENT_BUILD_RENDER_ARRAY, Argument::type(SectionComponentBuildRenderArrayEvent::class))
+      ->dispatch(Argument::type(SectionComponentBuildRenderArrayEvent::class), LayoutBuilderEvents::SECTION_COMPONENT_BUILD_RENDER_ARRAY)
       ->shouldBeCalled()
       ->will(function ($args) {
         /** @var \Drupal\layout_builder\Event\SectionComponentBuildRenderArrayEvent $event */
-        $event = $args[1];
+        $event = $args[0];
         $event->setBuild(['#markup' => $event->getPlugin()->getPluginId()]);
         return;
       });

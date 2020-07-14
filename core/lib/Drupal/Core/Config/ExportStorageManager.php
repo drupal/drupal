@@ -85,7 +85,7 @@ final class ExportStorageManager implements StorageManagerInterface {
     }
 
     self::replaceStorageContents($this->active, $this->storage);
-    $this->eventDispatcher->dispatch(ConfigEvents::STORAGE_TRANSFORM_EXPORT, new StorageTransformEvent($this->storage));
+    $this->eventDispatcher->dispatch(new StorageTransformEvent($this->storage), ConfigEvents::STORAGE_TRANSFORM_EXPORT);
 
     return new ReadOnlyStorage($this->storage);
   }

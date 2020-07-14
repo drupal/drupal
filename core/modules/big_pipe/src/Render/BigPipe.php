@@ -649,7 +649,7 @@ EOF;
     assert($request_type === HttpKernelInterface::MASTER_REQUEST || $request_type === HttpKernelInterface::SUB_REQUEST);
     $this->requestStack->push($request);
     $event = new ResponseEvent($this->httpKernel, $request, $request_type, $response);
-    $this->eventDispatcher->dispatch(KernelEvents::RESPONSE, $event);
+    $this->eventDispatcher->dispatch($event, KernelEvents::RESPONSE);
     $filtered_response = $event->getResponse();
     $this->requestStack->pop();
     return $filtered_response;

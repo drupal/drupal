@@ -76,7 +76,7 @@ class EntityTypeListener implements EntityTypeListenerInterface {
       $this->entityLastInstalledSchemaRepository->setLastInstalledFieldStorageDefinitions($entity_type_id, $this->entityFieldManager->getFieldStorageDefinitions($entity_type_id));
     }
 
-    $this->eventDispatcher->dispatch(EntityTypeEvents::CREATE, new EntityTypeEvent($entity_type));
+    $this->eventDispatcher->dispatch(new EntityTypeEvent($entity_type), EntityTypeEvents::CREATE);
     $this->clearCachedDefinitions();
   }
 
@@ -98,7 +98,7 @@ class EntityTypeListener implements EntityTypeListenerInterface {
       $this->entityLastInstalledSchemaRepository->setLastInstalledFieldStorageDefinitions($entity_type_id, $field_storage_definitions);
     }
 
-    $this->eventDispatcher->dispatch(EntityTypeEvents::CREATE, new EntityTypeEvent($entity_type));
+    $this->eventDispatcher->dispatch(new EntityTypeEvent($entity_type), EntityTypeEvents::CREATE);
     $this->clearCachedDefinitions();
   }
 
@@ -119,7 +119,7 @@ class EntityTypeListener implements EntityTypeListenerInterface {
 
     $this->entityLastInstalledSchemaRepository->setLastInstalledDefinition($entity_type);
 
-    $this->eventDispatcher->dispatch(EntityTypeEvents::UPDATE, new EntityTypeEvent($entity_type, $original));
+    $this->eventDispatcher->dispatch(new EntityTypeEvent($entity_type, $original), EntityTypeEvents::UPDATE);
     $this->clearCachedDefinitions();
   }
 
@@ -142,7 +142,7 @@ class EntityTypeListener implements EntityTypeListenerInterface {
 
     $this->entityLastInstalledSchemaRepository->deleteLastInstalledDefinition($entity_type_id);
 
-    $this->eventDispatcher->dispatch(EntityTypeEvents::DELETE, new EntityTypeEvent($entity_type));
+    $this->eventDispatcher->dispatch(new EntityTypeEvent($entity_type), EntityTypeEvents::DELETE);
     $this->clearCachedDefinitions();
   }
 
@@ -165,7 +165,7 @@ class EntityTypeListener implements EntityTypeListenerInterface {
         $this->entityLastInstalledSchemaRepository->setLastInstalledFieldStorageDefinitions($entity_type_id, $field_storage_definitions);
       }
 
-      $this->eventDispatcher->dispatch(EntityTypeEvents::UPDATE, new EntityTypeEvent($entity_type, $original));
+      $this->eventDispatcher->dispatch(new EntityTypeEvent($entity_type, $original), EntityTypeEvents::UPDATE);
       $this->clearCachedDefinitions();
     }
   }

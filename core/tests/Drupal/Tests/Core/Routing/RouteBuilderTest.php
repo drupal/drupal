@@ -161,11 +161,11 @@ class RouteBuilderTest extends UnitTestCase {
     // Ensure that the alter routes events are fired.
     $this->dispatcher->expects($this->at(0))
       ->method('dispatch')
-      ->with(RoutingEvents::DYNAMIC, $route_build_event);
+      ->with($route_build_event, RoutingEvents::DYNAMIC);
 
     $this->dispatcher->expects($this->at(1))
       ->method('dispatch')
-      ->with(RoutingEvents::ALTER, $route_build_event);
+      ->with($route_build_event, RoutingEvents::ALTER);
 
     // Ensure that access checks are set.
     $this->checkProvider->expects($this->once())
@@ -231,11 +231,11 @@ class RouteBuilderTest extends UnitTestCase {
     // Ensure that the alter routes events are fired.
     $this->dispatcher->expects($this->at(0))
       ->method('dispatch')
-      ->with(RoutingEvents::DYNAMIC, $route_build_event);
+      ->with($route_build_event, RoutingEvents::DYNAMIC);
 
     $this->dispatcher->expects($this->at(1))
       ->method('dispatch')
-      ->with(RoutingEvents::ALTER, $route_build_event);
+      ->with($route_build_event, RoutingEvents::ALTER);
 
     // Ensure that access checks are set.
     $this->checkProvider->expects($this->once())
@@ -314,7 +314,7 @@ class RouteBuilderTest extends UnitTestCase {
     $route_build_event = new RouteBuildEvent($route_collection_filled);
     $this->dispatcher->expects($this->at(0))
       ->method('dispatch')
-      ->with(RoutingEvents::DYNAMIC, $route_build_event);
+      ->with($route_build_event, RoutingEvents::DYNAMIC);
 
     $this->assertTrue($this->routeBuilder->rebuild());
   }

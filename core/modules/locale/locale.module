@@ -1057,7 +1057,7 @@ function _locale_refresh_translations($langcodes, $lids = []) {
   }
 
   // Throw locale.save_translation event.
-  \Drupal::service('event_dispatcher')->dispatch(LocaleEvents::SAVE_TRANSLATION, new LocaleEvent($langcodes, $lids));
+  \Drupal::service('event_dispatcher')->dispatch(new LocaleEvent($langcodes, $lids), LocaleEvents::SAVE_TRANSLATION);
 }
 
 /**

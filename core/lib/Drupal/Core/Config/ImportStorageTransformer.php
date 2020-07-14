@@ -117,7 +117,7 @@ final class ImportStorageTransformer {
     self::replaceStorageContents($storage, $mutable);
 
     // Dispatch the event so that event listeners can alter the configuration.
-    $this->eventDispatcher->dispatch(ConfigEvents::STORAGE_TRANSFORM_IMPORT, new StorageTransformEvent($mutable));
+    $this->eventDispatcher->dispatch(new StorageTransformEvent($mutable), ConfigEvents::STORAGE_TRANSFORM_IMPORT);
 
     // Return the storage with the altered configuration.
     return $mutable;

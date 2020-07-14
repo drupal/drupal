@@ -62,7 +62,7 @@ class AccountProxy implements AccountProxyInterface {
     }
     $this->account = $account;
     $this->id = $account->id();
-    $this->eventDispatcher->dispatch(AccountEvents::SET_USER, new AccountSetEvent($account));
+    $this->eventDispatcher->dispatch(new AccountSetEvent($account), AccountEvents::SET_USER);
   }
 
   /**

@@ -384,7 +384,7 @@ class ConfigNamesMapper extends PluginBase implements ConfigMapperInterface, Con
     $this->langcode = $route_match->getParameter('langcode');
 
     $event = new ConfigMapperPopulateEvent($this, $route_match);
-    $this->eventDispatcher->dispatch(ConfigTranslationEvents::POPULATE_MAPPER, $event);
+    $this->eventDispatcher->dispatch($event, ConfigTranslationEvents::POPULATE_MAPPER);
   }
 
   /**

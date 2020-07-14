@@ -107,7 +107,7 @@ class ViewsEntitySchemaSubscriberIntegrationTest extends ViewsKernelTestBase {
     $this->assertTrue(isset($views['test_view_entity_test_additional_base_field']));
 
     $event = new EntityTypeEvent($this->entityTypeManager->getDefinition('entity_test_update'));
-    $this->eventDispatcher->dispatch(EntityTypeEvents::DELETE, $event);
+    $this->eventDispatcher->dispatch($event, EntityTypeEvents::DELETE);
 
     // We expect that views which use 'entity_test_update' as base tables are
     // disabled.

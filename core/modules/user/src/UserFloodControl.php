@@ -69,7 +69,7 @@ class UserFloodControl implements UserFloodControlInterface {
         $identifier = $this->requestStack->getCurrentRequest()->getClientIp();
       }
       $event = new UserFloodEvent($name, $threshold, $window, $identifier);
-      $this->eventDispatcher->dispatch($event_map[$name], $event);
+      $this->eventDispatcher->dispatch($event, $event_map[$name]);
     }
     return FALSE;
   }

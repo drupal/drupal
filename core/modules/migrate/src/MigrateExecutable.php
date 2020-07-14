@@ -157,7 +157,7 @@ class MigrateExecutable implements MigrateExecutableInterface {
         ]), 'error');
       return MigrationInterface::RESULT_FAILED;
     }
-    $this->getEventDispatcher()->dispatch(MigrateEvents::PRE_IMPORT, new MigrateImportEvent($this->migration, $this->message));
+    $this->getEventDispatcher()->dispatch(new MigrateImportEvent($this->migration, $this->message), MigrateEvents::PRE_IMPORT);
 
     // Knock off migration if the requirements haven't been met.
     try {
@@ -220,11 +220,11 @@ class MigrateExecutable implements MigrateExecutableInterface {
 
       if ($save) {
         try {
-          $this->getEventDispatcher()->dispatch(MigrateEvents::PRE_ROW_SAVE, new MigratePreRowSaveEvent($this->migration, $this->message, $row));
+          $this->getEventDispatcher()->dispatch(new MigratePreRowSaveEvent($this->migration, $this->message, $row), MigrateEvents::PRE_ROW_SAVE);
           $destination_ids = $id_map->lookupDestinationIds($this->sourceIdValues);
           $destination_id_values = $destination_ids ? reset($destination_ids) : [];
           $destination_id_values = $destination->import($row, $destination_id_values);
-          $this->getEventDispatcher()->dispatch(MigrateEvents::POST_ROW_SAVE, new MigratePostRowSaveEvent($this->migration, $this->message, $row, $destination_id_values));
+          $this->getEventDispatcher()->dispatch(new MigratePostRowSaveEvent($this->migration, $this->message, $row, $destination_id_values), MigrateEvents::POST_ROW_SAVE);
           if ($destination_id_values) {
             // We do not save an idMap entry for config.
             if ($destination_id_values !== TRUE) {
@@ -276,7 +276,7 @@ class MigrateExecutable implements MigrateExecutableInterface {
       }
     }
 
-    $this->getEventDispatcher()->dispatch(MigrateEvents::POST_IMPORT, new MigrateImportEvent($this->migration, $this->message));
+    $this->getEventDispatcher()->dispatch(new MigrateImportEvent($this->migration, $this->message), MigrateEvents::POST_IMPORT);
     $this->migration->setStatus(MigrationInterface::STATUS_IDLE);
     return $return;
   }
@@ -292,7 +292,7 @@ class MigrateExecutable implements MigrateExecutableInterface {
     }
 
     // Announce that rollback is about to happen.
-    $this->getEventDispatcher()->dispatch(MigrateEvents::PRE_ROLLBACK, new MigrateRollbackEvent($this->migration));
+    $this->getEventDispatcher()->dispatch(new MigrateRollbackEvent($this->migration), MigrateEvents::PRE_ROLLBACK);
 
     // Optimistically assume things are going to work out; if not, $return will be
     // updated to some other status.
@@ -310,10 +310,10 @@ class MigrateExecutable implements MigrateExecutableInterface {
         $map_row = $id_map->getRowByDestination($destination_key);
         if ($map_row['rollback_action'] == MigrateIdMapInterface::ROLLBACK_DELETE) {
           $this->getEventDispatcher()
-            ->dispatch(MigrateEvents::PRE_ROW_DELETE, new MigrateRowDeleteEvent($this->migration, $destination_key));
+            ->dispatch(new MigrateRowDeleteEvent($this->migration, $destination_key), MigrateEvents::PRE_ROW_DELETE);
           $destination->rollback($destination_key);
           $this->getEventDispatcher()
-            ->dispatch(MigrateEvents::POST_ROW_DELETE, new MigrateRowDeleteEvent($this->migration, $destination_key));
+            ->dispatch(new MigrateRowDeleteEvent($this->migration, $destination_key), MigrateEvents::POST_ROW_DELETE);
         }
         // We're now done with this row, so remove it from the map.
         $id_map->deleteDestination($destination_key);
@@ -340,7 +340,7 @@ class MigrateExecutable implements MigrateExecutableInterface {
     }
 
     // Notify modules that rollback attempt was complete.
-    $this->getEventDispatcher()->dispatch(MigrateEvents::POST_ROLLBACK, new MigrateRollbackEvent($this->migration));
+    $this->getEventDispatcher()->dispatch(new MigrateRollbackEvent($this->migration), MigrateEvents::POST_ROLLBACK);
     $this->migration->setStatus(MigrationInterface::STATUS_IDLE);
 
     return $return;
