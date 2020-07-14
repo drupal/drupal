@@ -33,7 +33,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *
  * @SearchPlugin(
  *   id = "help_search",
- *   title = @Translation("Help")
+ *   title = @Translation("Help"),
+ *   use_admin_theme = TRUE,
  * )
  *
  * @internal
