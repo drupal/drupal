@@ -193,7 +193,7 @@ class OverrideDisplaysTest extends UITestBase {
     // Revert the title of the block to the default ones, but submit some new
     // values to be sure that the new value is not stored.
     $edit = [];
-    $edit['title'] = $new_block_title = $this->randomMachineName();
+    $edit['title'] = $this->randomMachineName();
     $edit['override[dropdown]'] = 'default_revert';
 
     $this->drupalPostForm("admin/structure/views/nojs/display/{$view['id']}/block_1/title", $edit, t('Apply'));
