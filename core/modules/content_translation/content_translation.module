@@ -375,7 +375,8 @@ function content_translation_translate_access(EntityInterface $entity) {
   $account = \Drupal::currentUser();
   $condition = $entity instanceof ContentEntityInterface && $entity->access('view') &&
     !$entity->getUntranslated()->language()->isLocked() && \Drupal::languageManager()->isMultilingual() && $entity->isTranslatable() &&
-    ($account->hasPermission('create content translations') || $account->hasPermission('update content translations') || $account->hasPermission('delete content translations'));
+    ($account->hasPermission('create content translations') || $account->hasPermission('update content translations') || $account->hasPermission('delete content translations') ||
+    ($account->hasPermission('translate editable entities') && $entity->access('update')));
   return AccessResult::allowedIf($condition)->cachePerPermissions()->addCacheableDependency($entity);
 }
 
@@ -435,14 +436,23 @@ function content_translation_language_fallback_candidates_entity_view_alter(&$ca
   /** @var \Drupal\content_translation\ContentTranslationManagerInterface $manager */
   $manager = \Drupal::service('content_translation.manager');
   if ($manager->isEnabled($entity_type_id, $entity->bundle())) {
-    $entity_type = $entity->getEntityType();
-    $permission = $entity_type->getPermissionGranularity() == 'bundle' ? $permission = "translate {$entity->bundle()} $entity_type_id" : "translate $entity_type_id";
-    $current_user = \Drupal::currentuser();
-    if (!$current_user->hasPermission('translate any entity') && !$current_user->hasPermission($permission)) {
-      foreach ($entity->getTranslationLanguages() as $langcode => $language) {
-        $metadata = $manager->getTranslationMetadata($entity->getTranslation($langcode));
-        if (!$metadata->isPublished()) {
-          unset($candidates[$langcode]);
+    /* @var \Drupal\content_translation\ContentTranslationHandlerInterface $handler */
+    $handler = \Drupal::entityTypeManager()->getHandler($entity->getEntityTypeId(), 'translation');
+    foreach ($entity->getTranslationLanguages() as $langcode => $language) {
+      $metadata = $manager->getTranslationMetadata($entity->getTranslation($langcode));
+      if (!$metadata->isPublished()) {
+        $access = $handler->getTranslationAccess($entity, 'update');
+        $entity->addCacheableDependency($access);
+        if (!$access->isAllowed()) {
+
+          // If the user has no translation update access, also check view
+          // access for that translation, to allow other modules to allow access
+          // to unpublished translations.
+          $access = $entity->getTranslation($langcode)->access('view', NULL, TRUE);
+          $entity->addCacheableDependency($access);
+          if (!$access->isAllowed()) {
+            unset($candidates[$langcode]);
+          }
         }
       }
     }
