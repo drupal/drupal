@@ -314,7 +314,7 @@ class RouteProviderTest extends KernelTestBase {
     $this->assertEqual($expected_route_count, count($returned_routes));
 
     foreach ($returned_routes as $route_name => $route) {
-      $this->assertTrue(array_key_exists($route_name, $sample_routes));
+      $this->assertArrayHasKey($route_name, $sample_routes);
       $this->assertEquals($route->getPath(), $sample_routes[$route_name]['path']);
     }
   }
