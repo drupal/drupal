@@ -77,6 +77,7 @@ class MigrateCommentFieldInstanceTest extends MigrateDrupal7TestBase {
     $this->assertEntity('book', 'comment_node_book', 2, 1, 50, 0, TRUE, 1);
     $this->assertEntity('forum', 'comment_forum', 2, 1, 50, 0, TRUE, 1);
     $this->assertEntity('test_content_type', 'comment_node_test_content_type', 2, 1, 30, 0, TRUE, 1);
+    $this->assertEntity('et', 'comment_node_et', 2, 1, 50, 0, FALSE, 1);
   }
 
 }
