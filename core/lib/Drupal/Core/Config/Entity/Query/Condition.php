@@ -130,6 +130,11 @@ class Condition extends ConditionBase {
             return TRUE;
           }
         }
+        // If the parent does not exist, it's safe to say the actual property
+        // we're checking for is also NULL.
+        elseif ($condition['operator'] === 'IS NULL') {
+          return TRUE;
+        }
       }
       // Only try to match a scalar if there are no remaining keys in
       // $needs_matching as this indicates that we are looking for a specific
