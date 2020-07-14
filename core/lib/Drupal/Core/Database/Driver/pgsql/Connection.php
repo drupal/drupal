@@ -351,21 +351,6 @@ class Connection extends DatabaseConnection {
     }
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function upsert($table, array $options = []) {
-    // Use the (faster) native Upsert implementation for PostgreSQL >= 9.5.
-    if (version_compare($this->version(), '9.5', '>=')) {
-      $class = $this->getDriverClass('NativeUpsert');
-    }
-    else {
-      $class = $this->getDriverClass('Upsert');
-    }
-
-    return new $class($this, $table, $options);
-  }
-
 }
 
 /**
