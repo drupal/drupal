@@ -92,7 +92,7 @@ class BlockViewBuilder extends EntityViewBuilder implements TrustedCallbackInter
    * @return array
    *   A render array with a #pre_render callback to render the block.
    */
-  protected static function buildPreRenderableBlock($entity, ModuleHandlerInterface $module_handler) {
+  protected static function buildPreRenderableBlock(BlockInterface $entity, ModuleHandlerInterface $module_handler) {
     $plugin = $entity->getPlugin();
     $plugin_id = $plugin->getPluginId();
     $base_id = $plugin->getBaseId();
