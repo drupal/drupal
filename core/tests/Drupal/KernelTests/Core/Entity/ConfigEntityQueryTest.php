@@ -606,6 +606,16 @@ class ConfigEntityQueryTest extends KernelTestBase {
       ->notExists('array')
       ->execute();
     $this->assertResults([]);
+    // Make sure that "IS NULL" and "IS NOT NULL" work correctly when the dotted
+    // path cannot be fully followed.
+    $this->queryResults = $this->entityStorage->getQuery()
+      ->exists('does.not.exist')
+      ->execute();
+    $this->assertResults([]);
+    $this->queryResults = $this->entityStorage->getQuery()
+      ->notExists('does.not.exist')
+      ->execute();
+    $this->assertResults($all);
   }
 
   /**
