@@ -69,7 +69,7 @@ class ConfigEntityTest extends BrowserTestBase {
       $this->fail('EntityMalformedException was thrown.');
     }
     catch (EntityMalformedException $e) {
-      $this->pass('EntityMalformedException was thrown.');
+      // Expected exception; just continue testing.
     }
 
     // Verify that an empty entity cannot be saved.
@@ -78,7 +78,7 @@ class ConfigEntityTest extends BrowserTestBase {
       $this->fail('EntityMalformedException was thrown.');
     }
     catch (EntityMalformedException $e) {
-      $this->pass('EntityMalformedException was thrown.');
+      // Expected exception; just continue testing.
     }
 
     // Verify that an entity with an empty ID string is considered empty, too.
@@ -91,7 +91,7 @@ class ConfigEntityTest extends BrowserTestBase {
       $this->fail('EntityMalformedException was thrown.');
     }
     catch (EntityMalformedException $e) {
-      $this->pass('EntityMalformedException was thrown.');
+      // Expected exception; just continue testing.
     }
 
     // Verify properties on a newly created entity.
@@ -116,7 +116,6 @@ class ConfigEntityTest extends BrowserTestBase {
     // Verify that the entity can be saved.
     try {
       $status = $config_test->save();
-      $this->pass('EntityMalformedException was not thrown.');
     }
     catch (EntityMalformedException $e) {
       $this->fail('EntityMalformedException was not thrown.');
@@ -151,9 +150,6 @@ class ConfigEntityTest extends BrowserTestBase {
     ]);
     try {
       $id_length_config_test->save();
-      $this->pass(new FormattableMarkup("config_test entity with ID length @length was saved.", [
-        '@length' => strlen($id_length_config_test->id()),
-      ]));
     }
     catch (ConfigEntityIdLengthException $e) {
       $this->fail($e->getMessage());
@@ -165,9 +161,6 @@ class ConfigEntityTest extends BrowserTestBase {
     ]);
     try {
       $id_length_config_test->save();
-      $this->pass(new FormattableMarkup("config_test entity with ID length @length was saved.", [
-        '@length' => strlen($id_length_config_test->id()),
-      ]));
     }
     catch (ConfigEntityIdLengthException $e) {
       $this->fail($e->getMessage());
@@ -185,10 +178,7 @@ class ConfigEntityTest extends BrowserTestBase {
       ]));
     }
     catch (ConfigEntityIdLengthException $e) {
-      $this->pass(new FormattableMarkup("config_test entity with ID length @length exceeding the maximum allowed length of @max failed to save", [
-        '@length' => strlen($id_length_config_test->id()),
-        '@max' => static::MAX_ID_LENGTH,
-      ]));
+      // Expected exception; just continue testing.
     }
 
     // Ensure that creating an entity with the same id as an existing one is not
@@ -202,7 +192,7 @@ class ConfigEntityTest extends BrowserTestBase {
       $this->fail('Not possible to overwrite an entity entity.');
     }
     catch (EntityStorageException $e) {
-      $this->pass('Not possible to overwrite an entity entity.');
+      // Expected exception; just continue testing.
     }
 
     // Verify that renaming the ID returns correct status and properties.

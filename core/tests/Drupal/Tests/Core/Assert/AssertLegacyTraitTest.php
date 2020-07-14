@@ -217,6 +217,14 @@ class AssertLegacyTraitTest extends UnitTestCase {
   }
 
   /**
+   * @covers ::pass
+   * @expectedDeprecation AssertLegacyTrait::pass() is deprecated in drupal:8.0.0 and is removed from drupal:10.0.0. PHPUnit interrupts a test as soon as a test assertion fails, so there is usually no need to call this method. If a test's logic relies on this method, refactor the test. See https://www.drupal.org/node/3129738
+   */
+  public function testPass() {
+    $this->pass('Passed.');
+  }
+
+  /**
    * Returns a mocked behat session object.
    *
    * @return \Behat\Mink\Session

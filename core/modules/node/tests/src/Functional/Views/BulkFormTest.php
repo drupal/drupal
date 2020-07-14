@@ -2,7 +2,6 @@
 
 namespace Drupal\Tests\node\Functional\Views;
 
-use Drupal\Component\Render\FormattableMarkup;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\views\Views;
 
@@ -60,7 +59,6 @@ class BulkFormTest extends NodeTestBase {
         'promote' => FALSE,
       ];
       $node = $this->drupalCreateNode($values);
-      $this->pass(new FormattableMarkup('Node %title created with language %langcode.', ['%title' => $node->label(), '%langcode' => $node->language()->getId()]));
       $this->nodes[] = $node;
     }
 
@@ -71,7 +69,6 @@ class BulkFormTest extends NodeTestBase {
         if (!$node->hasTranslation($langcode)) {
           $title = $this->randomMachineName() . ' [' . $node->id() . ':' . $langcode . ']';
           $translation = $node->addTranslation($langcode, ['title' => $title, 'promote' => FALSE]);
-          $this->pass(new FormattableMarkup('Translation %title created with language %langcode.', ['%title' => $translation->label(), '%langcode' => $translation->language()->getId()]));
         }
       }
       $node->save();
@@ -82,7 +79,6 @@ class BulkFormTest extends NodeTestBase {
     $langcode = 'en';
     $title = $this->randomMachineName() . ' [' . $node->id() . ':' . $langcode . ']';
     $translation = $node->addTranslation($langcode, ['title' => $title]);
-    $this->pass(new FormattableMarkup('Translation %title created with language %langcode.', ['%title' => $translation->label(), '%langcode' => $translation->language()->getId()]));
     $node->save();
 
     // Check that all created translations are selected by the test view.

@@ -560,35 +560,29 @@ class ConfigSchemaTest extends KernelTestBase {
     // Ensure that keys can not be added or removed by
     // hook_config_schema_info_alter().
     \Drupal::state()->set('config_schema_test_exception_remove', TRUE);
-    $message = 'Expected ConfigSchemaAlterException thrown.';
     try {
       $typed_config->getDefinitions();
-      $this->fail($message);
+      $this->fail('Expected ConfigSchemaAlterException thrown.');
     }
     catch (ConfigSchemaAlterException $e) {
-      $this->pass($message);
       $this->assertEqual($e->getMessage(), 'Invoking hook_config_schema_info_alter() has removed (config_schema_test.hook) schema definitions');
     }
 
     \Drupal::state()->set('config_schema_test_exception_add', TRUE);
-    $message = 'Expected ConfigSchemaAlterException thrown.';
     try {
       $typed_config->getDefinitions();
-      $this->fail($message);
+      $this->fail('Expected ConfigSchemaAlterException thrown.');
     }
     catch (ConfigSchemaAlterException $e) {
-      $this->pass($message);
       $this->assertEqual($e->getMessage(), 'Invoking hook_config_schema_info_alter() has added (config_schema_test.hook_added_defintion) and removed (config_schema_test.hook) schema definitions');
     }
 
     \Drupal::state()->set('config_schema_test_exception_remove', FALSE);
-    $message = 'Expected ConfigSchemaAlterException thrown.';
     try {
       $typed_config->getDefinitions();
-      $this->fail($message);
+      $this->fail('Expected ConfigSchemaAlterException thrown.');
     }
     catch (ConfigSchemaAlterException $e) {
-      $this->pass($message);
       $this->assertEqual($e->getMessage(), 'Invoking hook_config_schema_info_alter() has added (config_schema_test.hook_added_defintion) schema definitions');
     }
 

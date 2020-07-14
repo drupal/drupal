@@ -57,15 +57,12 @@ class HtmlToTextTest extends BrowserTestBase {
     $tested_tags = implode(', ', array_unique($matches[1]));
     $message .= ' (' . $tested_tags . ')';
     $result = MailFormatHelper::htmlToText($html, $allowed_tags);
-    $pass = $this->assertEqual($result, $text, Html::escape($message));
+    $this->assertEqual($result, $text, Html::escape($message));
     $verbose = 'html = <pre>' . $this->stringToHtml($html)
       . '</pre><br />result = <pre>' . $this->stringToHtml($result)
       . '</pre><br />expected = <pre>' . $this->stringToHtml($text)
       . '</pre>';
     $this->verbose($verbose);
-    if (!$pass) {
-      $this->pass("Previous test verbose info:<br />$verbose");
-    }
   }
 
   /**

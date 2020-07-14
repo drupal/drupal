@@ -118,12 +118,10 @@ class BlockContentTranslationUITest extends ContentTranslationUITestBase {
     $entity->addTranslation('it', $values);
 
     try {
-      $message = 'Blocks can have translations with the same "info" value.';
       $entity->save();
-      $this->pass($message);
     }
     catch (\Exception $e) {
-      $this->fail($message);
+      $this->fail('Blocks can have translations with the same "info" value.');
     }
 
     // Check that the translate operation link is shown.

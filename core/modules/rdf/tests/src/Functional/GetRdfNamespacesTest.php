@@ -61,7 +61,7 @@ class GetRdfNamespacesTest extends BrowserTestBase {
       $this->fail('Expected exception not thrown for conflicting namespace declaration.');
     }
     catch (\Exception $e) {
-      $this->pass('Expected exception thrown: ' . $e->getMessage());
+      // Expected exception; just continue testing.
     }
   }
 

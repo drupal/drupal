@@ -59,7 +59,6 @@ class PageRenderTest extends KernelTestBase {
       $this->error($assertion);
     }
     catch (\LogicException $e) {
-      $this->pass($assertion);
       $this->assertEqual($e->getMessage(), 'Only #attached and #cache may be set in ' . $hook . '().');
     }
     \Drupal::state()->set('bc_test.' . $hook . '.descendant_attached', FALSE);
@@ -73,7 +72,6 @@ class PageRenderTest extends KernelTestBase {
       $this->error($assertion);
     }
     catch (\LogicException $e) {
-      $this->pass($assertion);
       $this->assertEqual($e->getMessage(), 'Only #attached and #cache may be set in ' . $hook . '().');
     }
     \Drupal::state()->set($module . '.' . $hook . '.render_array', FALSE);

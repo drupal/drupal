@@ -80,8 +80,8 @@ class FieldStorageCrudTest extends FieldKernelTestBase {
       FieldStorageConfig::create($field_storage_definition)->save();
       $this->fail('Cannot create two fields with the same name.');
     }
-    catch (EntityStorageException $e) {
-      $this->pass('Cannot create two fields with the same name.');
+    catch (\Exception $e) {
+      $this->assertInstanceOf(EntityStorageException::class, $e);
     }
 
     // Check that field type is required.
@@ -93,8 +93,8 @@ class FieldStorageCrudTest extends FieldKernelTestBase {
       FieldStorageConfig::create($field_storage_definition)->save();
       $this->fail('Cannot create a field with no type.');
     }
-    catch (FieldException $e) {
-      $this->pass('Cannot create a field with no type.');
+    catch (\Exception $e) {
+      $this->assertInstanceOf(FieldException::class, $e);
     }
 
     // Check that field name is required.
@@ -106,8 +106,8 @@ class FieldStorageCrudTest extends FieldKernelTestBase {
       FieldStorageConfig::create($field_storage_definition)->save();
       $this->fail('Cannot create an unnamed field.');
     }
-    catch (FieldException $e) {
-      $this->pass('Cannot create an unnamed field.');
+    catch (\Exception $e) {
+      $this->assertInstanceOf(FieldException::class, $e);
     }
     // Check that entity type is required.
     try {
@@ -118,8 +118,8 @@ class FieldStorageCrudTest extends FieldKernelTestBase {
       FieldStorageConfig::create($field_storage_definition)->save();
       $this->fail('Cannot create a field without an entity type.');
     }
-    catch (FieldException $e) {
-      $this->pass('Cannot create a field without an entity type.');
+    catch (\Exception $e) {
+      $this->assertInstanceOf(FieldException::class, $e);
     }
 
     // Check that field name must start with a letter or _.
@@ -132,8 +132,8 @@ class FieldStorageCrudTest extends FieldKernelTestBase {
       FieldStorageConfig::create($field_storage_definition)->save();
       $this->fail('Cannot create a field with a name starting with a digit.');
     }
-    catch (FieldException $e) {
-      $this->pass('Cannot create a field with a name starting with a digit.');
+    catch (\Exception $e) {
+      $this->assertInstanceOf(FieldException::class, $e);
     }
 
     // Check that field name must only contain lowercase alphanumeric or _.
@@ -146,8 +146,8 @@ class FieldStorageCrudTest extends FieldKernelTestBase {
       FieldStorageConfig::create($field_storage_definition)->save();
       $this->fail('Cannot create a field with a name containing an illegal character.');
     }
-    catch (FieldException $e) {
-      $this->pass('Cannot create a field with a name containing an illegal character.');
+    catch (\Exception $e) {
+      $this->assertInstanceOf(FieldException::class, $e);
     }
 
     // Check that field name cannot be longer than 32 characters long.
@@ -160,8 +160,8 @@ class FieldStorageCrudTest extends FieldKernelTestBase {
       FieldStorageConfig::create($field_storage_definition)->save();
       $this->fail('Cannot create a field with a name longer than 32 characters.');
     }
-    catch (FieldException $e) {
-      $this->pass('Cannot create a field with a name longer than 32 characters.');
+    catch (\Exception $e) {
+      $this->assertInstanceOf(FieldException::class, $e);
     }
 
     // Check that field name can not be an entity key.
@@ -175,8 +175,8 @@ class FieldStorageCrudTest extends FieldKernelTestBase {
       FieldStorageConfig::create($field_storage_definition)->save();
       $this->fail('Cannot create a field bearing the name of an entity key.');
     }
-    catch (FieldException $e) {
-      $this->pass('Cannot create a field bearing the name of an entity key.');
+    catch (\Exception $e) {
+      $this->assertInstanceOf(FieldException::class, $e);
     }
   }
 
@@ -380,8 +380,8 @@ class FieldStorageCrudTest extends FieldKernelTestBase {
       $field_storage->save();
       $this->fail('Cannot update a field to a different type.');
     }
-    catch (FieldException $e) {
-      $this->pass('Cannot update a field to a different type.');
+    catch (\Exception $e) {
+      $this->assertInstanceOf(FieldException::class, $e);
     }
   }
 
@@ -480,7 +480,6 @@ class FieldStorageCrudTest extends FieldKernelTestBase {
     $field_storage->setSetting('changeable', $field_storage->getSetting('changeable') + 1);
     try {
       $field_storage->save();
-      $this->pass('A changeable setting can be updated.');
     }
     catch (FieldStorageDefinitionUpdateForbiddenException $e) {
       $this->fail('An unchangeable setting cannot be updated.');
@@ -490,8 +489,8 @@ class FieldStorageCrudTest extends FieldKernelTestBase {
       $field_storage->save();
       $this->fail('An unchangeable setting can be updated.');
     }
-    catch (FieldStorageDefinitionUpdateForbiddenException $e) {
-      $this->pass('An unchangeable setting cannot be updated.');
+    catch (\Exception $e) {
+      $this->assertInstanceOf(FieldStorageDefinitionUpdateForbiddenException::class, $e);
     }
   }
 

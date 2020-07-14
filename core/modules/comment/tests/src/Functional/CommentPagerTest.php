@@ -429,7 +429,6 @@ class CommentPagerTest extends CommentTestBase {
     $urls = $this->xpath($xpath, $arguments);
     if (isset($urls[$index])) {
       $url_target = $this->getAbsoluteUrl($urls[$index]->getAttribute('href'));
-      $this->pass(new FormattableMarkup('Clicked link %label (@url_target) from @url_before', ['%label' => $xpath, '@url_target' => $url_target, '@url_before' => $url_before]), 'Browser');
       return $this->drupalGet($url_target);
     }
     $this->fail(new FormattableMarkup('Link %label does not exist on @url_before', ['%label' => $xpath, '@url_before' => $url_before]), 'Browser');

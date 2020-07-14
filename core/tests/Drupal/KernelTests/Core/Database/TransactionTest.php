@@ -268,7 +268,7 @@ class TransactionTest extends DatabaseTestBase {
         // $this->fail('Rolling back a transaction containing DDL should fail.');
       }
       catch (TransactionNoActiveException $e) {
-        $this->pass('Rolling back a transaction containing DDL should fail.');
+        // Expected exception; just continue testing.
       }
       $this->assertRowPresent('row');
     }
@@ -429,12 +429,12 @@ class TransactionTest extends DatabaseTestBase {
       $this->fail('Rolling back the outer transaction while the inner transaction is active resulted in an exception.');
     }
     catch (TransactionOutOfOrderException $e) {
-      $this->pass('Rolling back the outer transaction while the inner transaction is active resulted in an exception.');
+      // Expected exception; just continue testing.
     }
     $this->assertFalse($this->connection->inTransaction(), 'No more in a transaction after rolling back the outer transaction');
     // Try to commit one inner transaction.
     unset($transaction3);
-    $this->pass('Trying to commit an inner transaction resulted in an exception.');
+
     // Try to rollback one inner transaction.
     try {
       $transaction->rollBack();
@@ -442,7 +442,7 @@ class TransactionTest extends DatabaseTestBase {
       $this->fail('Trying to commit an inner transaction resulted in an exception.');
     }
     catch (TransactionNoActiveException $e) {
-      $this->pass('Trying to commit an inner transaction resulted in an exception.');
+      // Expected exception; just continue testing.
     }
     $this->assertRowAbsent('outer');
     $this->assertRowAbsent('inner');
@@ -459,10 +459,10 @@ class TransactionTest extends DatabaseTestBase {
     // Test a failed query using the query() method.
     try {
       $this->connection->query('SELECT [age] FROM {test} WHERE [name] = :name', [':name' => 'David'])->fetchField();
-      $this->fail('Using the query method failed.');
+      $this->fail('Using the query method should have failed.');
     }
     catch (\Exception $e) {
-      $this->pass('Using the query method failed.');
+      // Just continue testing.
     }
 
     // Test a failed select query.
@@ -471,10 +471,10 @@ class TransactionTest extends DatabaseTestBase {
         ->fields('test', ['name'])
         ->execute();
 
-      $this->fail('Select query failed.');
+      $this->fail('Select query should have failed.');
     }
     catch (\Exception $e) {
-      $this->pass('Select query failed.');
+      // Just continue testing.
     }
 
     // Test a failed insert query.
@@ -486,10 +486,10 @@ class TransactionTest extends DatabaseTestBase {
         ])
         ->execute();
 
-      $this->fail('Insert query failed.');
+      $this->fail('Insert query should have failed.');
     }
     catch (\Exception $e) {
-      $this->pass('Insert query failed.');
+      // Just continue testing.
     }
 
     // Test a failed update query.
@@ -499,10 +499,10 @@ class TransactionTest extends DatabaseTestBase {
         ->condition('id', 1)
         ->execute();
 
-      $this->fail('Update query failed.');
+      $this->fail('Update query should have failed.');
     }
     catch (\Exception $e) {
-      $this->pass('Update query failed.');
+      // Just continue testing.
     }
 
     // Test a failed delete query.
@@ -511,10 +511,10 @@ class TransactionTest extends DatabaseTestBase {
         ->condition('id', 1)
         ->execute();
 
-      $this->fail('Delete query failed.');
+      $this->fail('Delete query should have failed.');
     }
     catch (\Exception $e) {
-      $this->pass('Delete query failed.');
+      // Just continue testing.
     }
 
     // Test a failed merge query.
@@ -527,10 +527,10 @@ class TransactionTest extends DatabaseTestBase {
         ])
         ->execute();
 
-      $this->fail('Merge query failed.');
+      $this->fail('Merge query should have failed.');
     }
     catch (\Exception $e) {
-      $this->pass('Merge query failed.');
+      // Just continue testing.
     }
 
     // Test a failed upsert query.
@@ -545,10 +545,10 @@ class TransactionTest extends DatabaseTestBase {
         ])
         ->execute();
 
-      $this->fail('Upset query failed.');
+      $this->fail('Upsert query should have failed.');
     }
     catch (\Exception $e) {
-      $this->pass('Upset query failed.');
+      // Just continue testing.
     }
 
     // Create the missing schema and insert a row.

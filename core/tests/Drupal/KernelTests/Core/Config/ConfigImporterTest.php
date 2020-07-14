@@ -84,14 +84,9 @@ class ConfigImporterTest extends KernelTestBase {
    * fails.
    */
   public function testEmptyImportFails() {
-    try {
-      $this->container->get('config.storage.sync')->deleteAll();
-      $this->configImporter->reset()->import();
-      $this->fail('ConfigImporterException thrown, successfully stopping an empty import.');
-    }
-    catch (ConfigImporterException $e) {
-      $this->pass('ConfigImporterException thrown, successfully stopping an empty import.');
-    }
+    $this->expectException(ConfigImporterException::class);
+    $this->container->get('config.storage.sync')->deleteAll();
+    $this->configImporter->reset()->import();
   }
 
   /**
@@ -809,7 +804,7 @@ class ConfigImporterTest extends KernelTestBase {
       $this->fail('Expected \InvalidArgumentException thrown');
     }
     catch (\InvalidArgumentException $e) {
-      $this->pass('Expected \InvalidArgumentException thrown');
+      // Expected exception; just continue testing.
     }
     $this->assertFalse(\Drupal::isConfigSyncing(), 'After an invalid step \Drupal::isConfigSyncing() returns FALSE');
   }

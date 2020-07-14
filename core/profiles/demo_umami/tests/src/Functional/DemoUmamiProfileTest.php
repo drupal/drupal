@@ -83,7 +83,6 @@ class DemoUmamiProfileTest extends BrowserTestBase {
           // FunctionalTestSetupTrait::installParameters().
           'system.site' => ['uuid:', 'name:', 'mail:'],
         ]);
-        $this->pass("$config_name has no differences");
       }
       else {
         $this->fail("$config_name has not been installed");

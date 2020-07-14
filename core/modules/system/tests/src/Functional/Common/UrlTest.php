@@ -71,7 +71,6 @@ class UrlTest extends BrowserTestBase {
         '#url' => Url::fromUri($uri),
       ];
       \Drupal::service('renderer')->renderRoot($link);
-      $this->pass($title);
       $this->assertEqual($expected_cacheability, $link['#cache']);
       $this->assertEqual($expected_attachments, $link['#attached']);
     }
