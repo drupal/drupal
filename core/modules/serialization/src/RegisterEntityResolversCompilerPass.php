@@ -7,7 +7,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 
 /**
- * Adds services tagged 'normalizer' and 'encoder' to the Serializer.
+ * Adds services tagged 'entity_resolver' to the Serializer.
  */
 class RegisterEntityResolversCompilerPass implements CompilerPassInterface {
 
