@@ -26,7 +26,7 @@ class DatabaseStorageTest extends ConfigStorageTestBase {
   }
 
   protected function read($name) {
-    $data = Database::getConnection()->query('SELECT data FROM {config} WHERE name = :name', [':name' => $name])->fetchField();
+    $data = Database::getConnection()->select('config', 'c')->fields('c', ['data'])->condition('name', $name)->execute()->fetchField();
     return unserialize($data);
   }
 

@@ -97,15 +97,16 @@ class EntityApiTest extends EntityKernelTestBase {
     // Verify that all data got deleted.
     $definition = \Drupal::entityTypeManager()->getDefinition($entity_type);
     $connection = Database::getConnection();
-    $this->assertEqual(0, $connection->query('SELECT COUNT(*) FROM {' . $definition->getBaseTable() . '}')->fetchField(), 'Base table was emptied');
+    $this->assertEqual(0, (int) $connection->select($definition->getBaseTable())->countQuery()->execute()->fetchField(), 'Base table was emptied');
+
     if ($data_table = $definition->getDataTable()) {
-      $this->assertEqual(0, $connection->query('SELECT COUNT(*) FROM {' . $data_table . '}')->fetchField(), 'Data table was emptied');
+      $this->assertEqual(0, (int) $connection->select($data_table)->countQuery()->execute()->fetchField(), 'Data table was emptied');
     }
     if ($revision_table = $definition->getRevisionTable()) {
-      $this->assertEqual(0, $connection->query('SELECT COUNT(*) FROM {' . $revision_table . '}')->fetchField(), 'Data table was emptied');
+      $this->assertEqual(0, (int) $connection->select($revision_table)->countQuery()->execute()->fetchField(), 'Revision table was emptied');
     }
     if ($revision_data_table = $definition->getRevisionDataTable()) {
-      $this->assertEqual(0, $connection->query('SELECT COUNT(*) FROM {' . $revision_data_table . '}')->fetchField(), 'Data table was emptied');
+      $this->assertEqual(0, (int) $connection->select($revision_data_table)->countQuery()->execute()->fetchField(), 'Revision data table was emptied');
     }
 
     // Test deleting a list of entities not indexed by entity id.
@@ -125,15 +126,16 @@ class EntityApiTest extends EntityKernelTestBase {
 
     // Verify that all data got deleted from the tables.
     $definition = \Drupal::entityTypeManager()->getDefinition($entity_type);
-    $this->assertEqual(0, $connection->query('SELECT COUNT(*) FROM {' . $definition->getBaseTable() . '}')->fetchField(), 'Base table was emptied');
+    $this->assertEqual(0, (int) $connection->select($definition->getBaseTable())->countQuery()->execute()->fetchField(), 'Base table was emptied');
+
     if ($data_table = $definition->getDataTable()) {
-      $this->assertEqual(0, $connection->query('SELECT COUNT(*) FROM {' . $data_table . '}')->fetchField(), 'Data table was emptied');
+      $this->assertEqual(0, (int) $connection->select($data_table)->countQuery()->execute()->fetchField(), 'Data table was emptied');
     }
     if ($revision_table = $definition->getRevisionTable()) {
-      $this->assertEqual(0, $connection->query('SELECT COUNT(*) FROM {' . $revision_table . '}')->fetchField(), 'Data table was emptied');
+      $this->assertEqual(0, (int) $connection->select($revision_table)->countQuery()->execute()->fetchField(), 'Revision table was emptied');
     }
     if ($revision_data_table = $definition->getRevisionDataTable()) {
-      $this->assertEqual(0, $connection->query('SELECT COUNT(*) FROM {' . $revision_data_table . '}')->fetchField(), 'Data table was emptied');
+      $this->assertEqual(0, (int) $connection->select($revision_data_table)->countQuery()->execute()->fetchField(), 'Revision data table was emptied');
     }
   }
 

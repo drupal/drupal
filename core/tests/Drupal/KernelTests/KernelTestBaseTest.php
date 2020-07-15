@@ -297,11 +297,11 @@ class KernelTestBaseTest extends KernelTestBase {
       $this->assertTrue(empty($tables), 'All test tables have been removed.');
     }
     else {
-      $result = $connection->query("SELECT name FROM " . $this->databasePrefix . ".sqlite_master WHERE type = :type AND name LIKE :table_name AND name NOT LIKE :pattern", [
-        ':type' => 'table',
-        ':table_name' => '%',
-        ':pattern' => 'sqlite_%',
-      ])->fetchAllKeyed(0, 0);
+      $result = $connection->select($this->databasePrefix . "sqlite_master", 'sql_m')->fields('sql_m', ['name'])
+        ->condition('type', 'table')
+        ->condition('name', '%', 'LIKE')
+        ->condition('name', 'sqlite_%', 'NOT LIKE')
+        ->execute()->fetchAllKeyed(0, 0);
 
       $this->assertTrue(empty($result), 'All test tables have been removed.');
     }

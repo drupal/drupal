@@ -41,7 +41,10 @@ class UpdatePathTestBaseTest extends UpdatePathTestBase {
     // Ensure that all {router} entries can be unserialized. If they cannot be
     // unserialized a notice will be thrown by PHP.
 
-    $result = \Drupal::database()->query("SELECT name, route from {router}")->fetchAllKeyed(0, 1);
+    $result = \Drupal::database()->select('router', 'r')
+      ->fields('r', ['name', 'route'])
+      ->execute()
+      ->fetchAllKeyed(0, 1);
     // For the purpose of fetching the notices and displaying more helpful error
     // messages, let's override the error handler temporarily.
     set_error_handler(function ($severity, $message, $filename, $lineno) {
