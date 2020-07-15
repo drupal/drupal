@@ -591,6 +591,19 @@ class BrowserTestBaseTest extends BrowserTestBase {
   }
 
   /**
+   * Tests legacy assertFieldChecked() and assertNoFieldChecked().
+   *
+   * @group legacy
+   * @expectedDeprecation AssertLegacyTrait::assertFieldChecked() is deprecated in drupal:8.2.0 and is removed from drupal:10.0.0. Use $this->assertSession()->checkboxChecked() instead. See https://www.drupal.org/node/3129738
+   * @expectedDeprecation AssertLegacyTrait::assertNoFieldChecked() is deprecated in drupal:8.2.0 and is removed from drupal:10.0.0. Use $this->assertSession()->checkboxNotChecked() instead. See https://www.drupal.org/node/3129738
+   */
+  public function testLegacyFieldAssertsForCheckbox() {
+    $this->drupalGet('test-field-xpath');
+    $this->assertFieldChecked('edit-checkbox-enabled');
+    $this->assertNoFieldChecked('edit-checkbox-disabled');
+  }
+
+  /**
    * Tests legacy field asserts for checkbox field type.
    */
   public function testFieldAssertsForCheckbox() {
@@ -657,12 +670,12 @@ class BrowserTestBaseTest extends BrowserTestBase {
     }
 
     // Part 3 - Test the specific 'checked' assertions.
-    $this->assertFieldChecked('edit-checkbox-enabled');
-    $this->assertNoFieldChecked('edit-checkbox-disabled');
+    $this->assertSession()->checkboxChecked('edit-checkbox-enabled');
+    $this->assertSession()->checkboxNotChecked('edit-checkbox-disabled');
 
     // Test that the assertion fails correctly with non-existent field id.
     try {
-      $this->assertNoFieldChecked('incorrect_checkbox_id');
+      $this->assertSession()->checkboxNotChecked('incorrect_checkbox_id');
       $this->fail('The "incorrect_checkbox_id" field was found');
     }
     catch (ExpectationException $e) {
@@ -671,7 +684,7 @@ class BrowserTestBaseTest extends BrowserTestBase {
 
     // Test that the assertion fails correctly for a checkbox that is checked.
     try {
-      $this->assertNoFieldChecked('edit-checkbox-enabled');
+      $this->assertSession()->checkboxNotChecked('edit-checkbox-enabled');
       $this->fail('The "edit-checkbox-enabled" field was not found in a checked state.');
     }
     catch (ExpectationException $e) {
@@ -681,7 +694,7 @@ class BrowserTestBaseTest extends BrowserTestBase {
     // Test that the assertion fails correctly for a checkbox that is not
     // checked.
     try {
-      $this->assertFieldChecked('edit-checkbox-disabled');
+      $this->assertSession()->checkboxChecked('edit-checkbox-disabled');
       $this->fail('The "edit-checkbox-disabled" field was found and checked.');
     }
     catch (ExpectationException $e) {

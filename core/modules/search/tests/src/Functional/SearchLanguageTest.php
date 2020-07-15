@@ -139,12 +139,12 @@ class SearchLanguageTest extends BrowserTestBase {
     // Change the default language and delete English.
     $path = 'admin/config/regional/language';
     $this->drupalGet($path);
-    $this->assertFieldChecked('edit-site-default-language-en', 'Default language updated.');
+    $this->assertSession()->checkboxChecked('edit-site-default-language-en');
     $edit = [
       'site_default_language' => 'fr',
     ];
     $this->drupalPostForm($path, $edit, t('Save configuration'));
-    $this->assertNoFieldChecked('edit-site-default-language-en', 'Default language updated.');
+    $this->assertSession()->checkboxNotChecked('edit-site-default-language-en');
     $this->drupalPostForm('admin/config/regional/language/delete/en', [], t('Delete'));
   }
 

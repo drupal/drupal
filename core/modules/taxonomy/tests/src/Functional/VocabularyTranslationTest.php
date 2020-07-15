@@ -52,7 +52,7 @@ class VocabularyTranslationTest extends TaxonomyTestBase {
 
     // Check if content translation is enabled on the edit page.
     $this->drupalGet('admin/structure/taxonomy/manage/' . $vid);
-    $this->assertFieldChecked('edit-default-language-content-translation', 'The content translation was correctly selected.');
+    $this->assertSession()->checkboxChecked('edit-default-language-content-translation');
   }
 
 }

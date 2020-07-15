@@ -2,7 +2,6 @@
 
 namespace Drupal\Tests\views_ui\Functional;
 
-use Drupal\Component\Render\FormattableMarkup;
 use Drupal\views\Views;
 
 /**
@@ -38,9 +37,8 @@ class DisplayAttachmentTest extends UITestBase {
     // Display labels should be escaped.
     $this->assertEscaped('<em>Page</em>');
 
-    foreach (['default', 'page-1'] as $display_id) {
-      $this->assertNoFieldChecked("edit-displays-$display_id", new FormattableMarkup('Make sure the @display_id can be marked as attached', ['@display_id' => $display_id]));
-    }
+    $this->assertSession()->checkboxNotChecked("edit-displays-default");
+    $this->assertSession()->checkboxNotChecked("edit-displays-page-1");
 
     // Save the attachments and test the value on the view.
     $this->drupalPostForm($attachment_display_url, ['displays[page_1]' => 1], t('Apply'));

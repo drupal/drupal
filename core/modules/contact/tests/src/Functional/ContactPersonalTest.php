@@ -222,10 +222,10 @@ class ContactPersonalTest extends BrowserTestBase {
     // Test enabling and disabling the contact page through the user profile
     // form.
     $this->drupalGet('user/' . $this->webUser->id() . '/edit');
-    $this->assertNoFieldChecked('edit-contact--2');
+    $this->assertSession()->checkboxNotChecked('edit-contact--2');
     $this->assertNull(\Drupal::service('user.data')->get('contact', $this->webUser->id(), 'enabled'), 'Personal contact form disabled');
     $this->drupalPostForm(NULL, ['contact' => TRUE], t('Save'));
-    $this->assertFieldChecked('edit-contact--2');
+    $this->assertSession()->checkboxChecked('edit-contact--2');
     $this->assertNotEmpty(\Drupal::service('user.data')->get('contact', $this->webUser->id(), 'enabled'), 'Personal contact form enabled');
 
     // Test with disabled global default contact form in combination with a user
@@ -288,10 +288,10 @@ class ContactPersonalTest extends BrowserTestBase {
     $this->drupalLogin($this->adminUser);
     $this->drupalGet('admin/people/create');
     if ($this->config('contact.settings')->get('user_default_enabled', TRUE)) {
-      $this->assertFieldChecked('edit-contact--2');
+      $this->assertSession()->checkboxChecked('edit-contact--2');
     }
     else {
-      $this->assertNoFieldChecked('edit-contact--2');
+      $this->assertSession()->checkboxNotChecked('edit-contact--2');
     }
     $name = $this->randomMachineName();
     $edit = [

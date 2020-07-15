@@ -42,13 +42,13 @@ class BlockTest extends BlockTestBase {
     $edit['visibility[request_path][negate]'] = TRUE;
     $edit['visibility[user_role][roles][' . RoleInterface::AUTHENTICATED_ID . ']'] = TRUE;
     $this->drupalGet('admin/structure/block/add/' . $block_name . '/' . $default_theme);
-    $this->assertFieldChecked('edit-visibility-request-path-negate-0');
+    $this->assertSession()->checkboxChecked('edit-visibility-request-path-negate-0');
 
     $this->drupalPostForm(NULL, $edit, t('Save block'));
     $this->assertText('The block configuration has been saved.', 'Block was saved');
 
     $this->clickLink('Configure');
-    $this->assertFieldChecked('edit-visibility-request-path-negate-1');
+    $this->assertSession()->checkboxChecked('edit-visibility-request-path-negate-1');
 
     $this->drupalGet('');
     $this->assertText($title, 'Block was displayed on the front page.');
@@ -85,14 +85,14 @@ class BlockTest extends BlockTestBase {
     $edit['visibility[user_role][roles][' . RoleInterface::AUTHENTICATED_ID . ']'] = TRUE;
     $this->drupalPostForm('admin/structure/block/add/' . $block_name . '/' . $default_theme, $edit, t('Save block'));
     $this->clickLink('Configure');
-    $this->assertFieldChecked('edit-visibility-user-role-roles-authenticated');
+    $this->assertSession()->checkboxChecked('edit-visibility-user-role-roles-authenticated');
 
     $edit = [
       'visibility[user_role][roles][' . RoleInterface::AUTHENTICATED_ID . ']' => FALSE,
     ];
     $this->drupalPostForm(NULL, $edit, 'Save block');
     $this->clickLink('Configure');
-    $this->assertNoFieldChecked('edit-visibility-user-role-roles-authenticated');
+    $this->assertSession()->checkboxNotChecked('edit-visibility-user-role-roles-authenticated');
 
     // Ensure that no visibility is configured.
     /** @var \Drupal\block\BlockInterface $block */
@@ -316,7 +316,7 @@ class BlockTest extends BlockTestBase {
     $this->assertText('The block configuration has been saved.', 'Block was saved');
 
     $this->drupalGet('admin/structure/block/manage/' . $id);
-    $this->assertFieldChecked('edit-settings-label-display', 'The display_block option has the correct default value on the configuration form.');
+    $this->assertSession()->checkboxChecked('edit-settings-label-display');
 
     $this->drupalGet('user');
     $this->assertText($title, 'Block title was displayed when enabled.');

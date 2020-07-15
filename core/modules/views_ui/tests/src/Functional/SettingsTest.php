@@ -138,8 +138,8 @@ class SettingsTest extends UITestBase {
     ];
     $this->drupalPostForm('admin/structure/views/settings/advanced', $edit, t('Save configuration'));
 
-    $this->assertFieldChecked('edit-skip-cache', 'The skip_cache option is checked.');
-    $this->assertFieldChecked('edit-sql-signature', 'The sql_signature option is checked.');
+    $this->assertSession()->checkboxChecked('edit-skip-cache');
+    $this->assertSession()->checkboxChecked('edit-sql-signature');
 
     // Test the "Clear Views' cache" button.
     $this->drupalPostForm('admin/structure/views/settings/advanced', [], t("Clear Views' cache"));

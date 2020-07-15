@@ -159,7 +159,7 @@ class DisplayTest extends UITestBase {
     $this->assertEqual($result[0]->getHtml(), t('None'), 'Make sure that the link option summary shows "None" by default.');
 
     $this->drupalGet($link_display_path);
-    $this->assertFieldChecked('edit-link-display-0');
+    $this->assertSession()->checkboxChecked('edit-link-display-0');
 
     // Test the default radio option on the link display form.
     $this->drupalPostForm($link_display_path, ['link_display' => 'page_1'], t('Apply'));

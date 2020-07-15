@@ -292,7 +292,7 @@ class HandlerTest extends ViewTestBase {
     // Check content type filter options.
     $this->drupalGet('admin/structure/views/nojs/handler/test_get_entity_type/default/filter/type');
     $this->assertTrue($this->assertSession()->optionExists('edit-options-relationship', 'node')->isSelected());
-    $this->assertFieldChecked('edit-options-value-page');
+    $this->assertSession()->checkboxChecked('edit-options-value-page');
   }
 
   /**

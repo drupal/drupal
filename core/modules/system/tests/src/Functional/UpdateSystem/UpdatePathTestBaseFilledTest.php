@@ -109,7 +109,7 @@ class UpdatePathTestBaseFilledTest extends UpdatePathTestBaseTest {
     $this->drupalGet('node/8/edit');
     $this->assertText('Test title');
     $this->assertText('Test body');
-    $this->assertFieldChecked('edit-field-test-1-value');
+    $this->assertSession()->checkboxChecked('edit-field-test-1-value');
     $this->assertRaw('2015-08-16');
     $this->assertRaw('test@example.com');
     $this->assertRaw('drupal.org');
@@ -177,10 +177,10 @@ class UpdatePathTestBaseFilledTest extends UpdatePathTestBaseTest {
 
     // Make sure our custom visibility conditions are correct.
     $this->drupalGet('admin/structure/block/manage/testblock');
-    $this->assertNoFieldChecked('edit-visibility-language-langcodes-es');
-    $this->assertFieldChecked('edit-visibility-language-langcodes-en');
-    $this->assertNoFieldChecked('edit-visibility-node-type-bundles-book');
-    $this->assertFieldChecked('edit-visibility-node-type-bundles-test-content-type');
+    $this->assertSession()->checkboxNotChecked('edit-visibility-language-langcodes-es');
+    $this->assertSession()->checkboxChecked('edit-visibility-language-langcodes-en');
+    $this->assertSession()->checkboxNotChecked('edit-visibility-node-type-bundles-book');
+    $this->assertSession()->checkboxChecked('edit-visibility-node-type-bundles-test-content-type');
 
     // Make sure our block is still translated.
     $this->drupalGet('admin/structure/block/manage/testblock/translate/es/edit');
@@ -219,7 +219,7 @@ class UpdatePathTestBaseFilledTest extends UpdatePathTestBaseTest {
     $this->assertRaw('Menu test');
     // Make sure our custom menu link exists.
     $this->drupalGet('admin/structure/menu/item/1/edit');
-    $this->assertFieldChecked('edit-enabled-value');
+    $this->assertSession()->checkboxChecked('edit-enabled-value');
 
     // Make sure our comment type exists.
     $this->drupalGet('admin/structure/comment');
@@ -293,11 +293,11 @@ class UpdatePathTestBaseFilledTest extends UpdatePathTestBaseTest {
 
     // Make sure our language detection settings are still correct.
     $this->drupalGet('admin/config/regional/language/detection');
-    $this->assertFieldChecked('edit-language-interface-enabled-language-user-admin');
-    $this->assertFieldChecked('edit-language-interface-enabled-language-url');
-    $this->assertFieldChecked('edit-language-interface-enabled-language-session');
-    $this->assertFieldChecked('edit-language-interface-enabled-language-user');
-    $this->assertFieldChecked('edit-language-interface-enabled-language-browser');
+    $this->assertSession()->checkboxChecked('edit-language-interface-enabled-language-user-admin');
+    $this->assertSession()->checkboxChecked('edit-language-interface-enabled-language-url');
+    $this->assertSession()->checkboxChecked('edit-language-interface-enabled-language-session');
+    $this->assertSession()->checkboxChecked('edit-language-interface-enabled-language-user');
+    $this->assertSession()->checkboxChecked('edit-language-interface-enabled-language-browser');
 
     // Make sure strings are still translated.
     $this->drupalGet('admin/structure/views/view/content/translate/es/edit');

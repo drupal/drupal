@@ -46,7 +46,7 @@ class NodeTypeInitialLanguageTest extends NodeTestBase {
   public function testNodeTypeInitialLanguageDefaults() {
     $this->drupalGet('admin/structure/types/manage/article');
     $this->assertTrue($this->assertSession()->optionExists('edit-language-configuration-langcode', LanguageInterface::LANGCODE_SITE_DEFAULT)->isSelected());
-    $this->assertNoFieldChecked('edit-language-configuration-language-alterable', 'Language selector is hidden by default.');
+    $this->assertSession()->checkboxNotChecked('edit-language-configuration-language-alterable');
 
     // Tests if the language field cannot be rearranged on the manage fields tab.
     $this->drupalGet('admin/structure/types/manage/article/fields');

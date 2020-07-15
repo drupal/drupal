@@ -79,14 +79,14 @@ class LanguageListTest extends BrowserTestBase {
     // Check if we can change the default language.
     $path = 'admin/config/regional/language';
     $this->drupalGet($path);
-    $this->assertFieldChecked('edit-site-default-language-en', 'English is the default language.');
+    $this->assertSession()->checkboxChecked('edit-site-default-language-en');
     // Change the default language.
     $edit = [
       'site_default_language' => $langcode,
     ];
     $this->drupalPostForm(NULL, $edit, t('Save configuration'));
     $this->rebuildContainer();
-    $this->assertNoFieldChecked('edit-site-default-language-en', 'Default language updated.');
+    $this->assertSession()->checkboxNotChecked('edit-site-default-language-en');
     $this->assertUrl(Url::fromRoute('entity.configurable_language.collection', [], ['absolute' => TRUE, 'language' => $language])->toString());
 
     // Ensure we can't delete the default language.
@@ -164,14 +164,14 @@ class LanguageListTest extends BrowserTestBase {
     // Check if we can change the default language.
     $path = 'admin/config/regional/language';
     $this->drupalGet($path);
-    $this->assertFieldChecked('edit-site-default-language-en', 'English is the default language.');
+    $this->assertSession()->checkboxChecked('edit-site-default-language-en');
     // Change the default language.
     $edit = [
       'site_default_language' => $langcode,
     ];
     $this->drupalPostForm(NULL, $edit, t('Save configuration'));
     $this->rebuildContainer();
-    $this->assertNoFieldChecked('edit-site-default-language-en', 'Default language updated.');
+    $this->assertSession()->checkboxNotChecked('edit-site-default-language-en');
     $this->assertUrl(Url::fromRoute('entity.configurable_language.collection', [], ['absolute' => TRUE, 'language' => $language])->toString());
 
     $this->drupalPostForm('admin/config/regional/language/delete/en', [], t('Delete'));
@@ -200,7 +200,7 @@ class LanguageListTest extends BrowserTestBase {
 
     $this->drupalPostForm(NULL, ['site_default_language' => 'nl'], 'Save configuration');
     $this->assertText(t('Selected default language no longer exists.'));
-    $this->assertNoFieldChecked('edit-site-default-language-xx', 'The previous default language got deselected.');
+    $this->assertSession()->checkboxNotChecked('edit-site-default-language-xx');
   }
 
   /**

@@ -403,9 +403,9 @@ class CommentNonNodeTest extends BrowserTestBase {
     ]);
     $this->drupalLogin($limited_user);
     $this->drupalGet('entity_test/structure/entity_test/fields/entity_test.entity_test.comment');
-    $this->assertNoFieldChecked('edit-default-value-input-comment-0-status-0');
-    $this->assertNoFieldChecked('edit-default-value-input-comment-0-status-1');
-    $this->assertFieldChecked('edit-default-value-input-comment-0-status-2');
+    $this->assertSession()->checkboxNotChecked('edit-default-value-input-comment-0-status-0');
+    $this->assertSession()->checkboxNotChecked('edit-default-value-input-comment-0-status-1');
+    $this->assertSession()->checkboxChecked('edit-default-value-input-comment-0-status-2');
     // Test comment option change in field settings.
     $edit = [
       'default_value_input[comment][0][status]' => CommentItemInterface::CLOSED,
@@ -413,9 +413,9 @@ class CommentNonNodeTest extends BrowserTestBase {
     ];
     $this->drupalPostForm(NULL, $edit, t('Save settings'));
     $this->drupalGet('entity_test/structure/entity_test/fields/entity_test.entity_test.comment');
-    $this->assertNoFieldChecked('edit-default-value-input-comment-0-status-0');
-    $this->assertFieldChecked('edit-default-value-input-comment-0-status-1');
-    $this->assertNoFieldChecked('edit-default-value-input-comment-0-status-2');
+    $this->assertSession()->checkboxNotChecked('edit-default-value-input-comment-0-status-0');
+    $this->assertSession()->checkboxChecked('edit-default-value-input-comment-0-status-1');
+    $this->assertSession()->checkboxNotChecked('edit-default-value-input-comment-0-status-2');
     $this->assertFieldByName('settings[anonymous]', CommentInterface::ANONYMOUS_MAY_CONTACT);
 
     // Add a new comment-type.
@@ -448,8 +448,8 @@ class CommentNonNodeTest extends BrowserTestBase {
     $new_entity = EntityTest::create($data);
     $new_entity->save();
     $this->drupalGet('entity_test/manage/' . $new_entity->id() . '/edit');
-    $this->assertNoFieldChecked('edit-field-foobar-0-status-1');
-    $this->assertFieldChecked('edit-field-foobar-0-status-2');
+    $this->assertSession()->checkboxNotChecked('edit-field-foobar-0-status-1');
+    $this->assertSession()->checkboxChecked('edit-field-foobar-0-status-2');
     $this->assertNoField('edit-field-foobar-0-status-0');
 
     // @todo Check proper url and form https://www.drupal.org/node/2458323

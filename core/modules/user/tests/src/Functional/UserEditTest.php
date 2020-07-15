@@ -106,20 +106,20 @@ class UserEditTest extends BrowserTestBase {
     $this->drupalLogin($admin_user);
 
     $this->drupalGet('user/' . $user1->id() . '/edit');
-    $this->assertNoFieldChecked('edit-status-0');
-    $this->assertFieldChecked('edit-status-1');
+    $this->assertSession()->checkboxNotChecked('edit-status-0');
+    $this->assertSession()->checkboxChecked('edit-status-1');
 
     $edit = ['status' => 0];
     $this->drupalPostForm('user/' . $user1->id() . '/edit', $edit, t('Save'));
     $this->assertText(t('The changes have been saved.'));
-    $this->assertFieldChecked('edit-status-0');
-    $this->assertNoFieldChecked('edit-status-1');
+    $this->assertSession()->checkboxChecked('edit-status-0');
+    $this->assertSession()->checkboxNotChecked('edit-status-1');
 
     $edit = ['status' => 1];
     $this->drupalPostForm('user/' . $user1->id() . '/edit', $edit, t('Save'));
     $this->assertText(t('The changes have been saved.'));
-    $this->assertNoFieldChecked('edit-status-0');
-    $this->assertFieldChecked('edit-status-1');
+    $this->assertSession()->checkboxNotChecked('edit-status-0');
+    $this->assertSession()->checkboxChecked('edit-status-1');
   }
 
   /**

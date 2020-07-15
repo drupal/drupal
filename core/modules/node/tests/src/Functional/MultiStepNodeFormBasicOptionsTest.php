@@ -65,8 +65,8 @@ class MultiStepNodeFormBasicOptionsTest extends NodeTestBase {
       "{$this->fieldName}[0][value]" => $this->randomString(32),
     ];
     $this->drupalPostForm('node/add/page', $edit, t('Add another item'));
-    $this->assertNoFieldChecked('edit-promote-value', 'Promote stayed unchecked');
-    $this->assertFieldChecked('edit-sticky-value', 'Sticky stayed checked');
+    $this->assertSession()->checkboxNotChecked('edit-promote-value');
+    $this->assertSession()->checkboxChecked('edit-sticky-value');
   }
 
 }

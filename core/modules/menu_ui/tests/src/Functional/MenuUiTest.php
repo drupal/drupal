@@ -502,8 +502,8 @@ class MenuUiTest extends BrowserTestBase {
     $this->assertFieldByName('title[0][value]', '');
     $this->assertFieldByName('link[0][uri]', '');
 
-    $this->assertNoFieldChecked('edit-expanded-value');
-    $this->assertFieldChecked('edit-enabled-value');
+    $this->assertSession()->checkboxNotChecked('edit-expanded-value');
+    $this->assertSession()->checkboxChecked('edit-enabled-value');
 
     $this->assertFieldByName('description[0][value]', '');
     $this->assertFieldByName('weight[0][value]', 0);

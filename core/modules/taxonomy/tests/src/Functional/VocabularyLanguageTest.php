@@ -94,7 +94,7 @@ class VocabularyLanguageTest extends TaxonomyTestBase {
 
     // Check that the correct options are selected in the interface.
     $this->assertTrue($this->assertSession()->optionExists('edit-default-language-langcode', 'bb')->isSelected());
-    $this->assertFieldChecked('edit-default-language-language-alterable', 'Show language selection option is checked.');
+    $this->assertSession()->checkboxChecked('edit-default-language-language-alterable');
 
     // Edit the vocabulary and check that the new settings are updated.
     $edit = [
@@ -110,7 +110,7 @@ class VocabularyLanguageTest extends TaxonomyTestBase {
 
     $this->drupalGet('admin/structure/taxonomy/manage/' . $vid);
     $this->assertTrue($this->assertSession()->optionExists('edit-default-language-langcode', 'aa')->isSelected());
-    $this->assertNoFieldChecked('edit-default-language-language-alterable', 'Show language selection option is not checked.');
+    $this->assertSession()->checkboxNotChecked('edit-default-language-language-alterable');
 
     // Check that language settings are changed after editing vocabulary.
     $edit = [

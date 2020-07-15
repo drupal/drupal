@@ -57,7 +57,7 @@ class NodeRevisionsUiTest extends NodeTestBase {
 
     // Verify the checkbox is checked on the node edit form.
     $this->drupalGet('node/' . $node->id() . '/edit');
-    $this->assertFieldChecked('edit-revision', "'Create new revision' checkbox is checked");
+    $this->assertSession()->checkboxChecked('edit-revision');
 
     // Uncheck the create new revision checkbox and save the node.
     $edit = ['revision' => FALSE];
@@ -70,7 +70,7 @@ class NodeRevisionsUiTest extends NodeTestBase {
 
     // Verify the checkbox is checked on the node edit form.
     $this->drupalGet('node/' . $node->id() . '/edit');
-    $this->assertFieldChecked('edit-revision', "'Create new revision' checkbox is checked");
+    $this->assertSession()->checkboxChecked('edit-revision');
 
     // Submit the form without changing the checkbox.
     $edit = [];

@@ -70,7 +70,7 @@ class LanguageConfigurationTest extends BrowserTestBase {
 
     // Check if we can change the default language.
     $this->drupalGet('admin/config/regional/language');
-    $this->assertFieldChecked('edit-site-default-language-en', 'English is the default language.');
+    $this->assertSession()->checkboxChecked('edit-site-default-language-en');
 
     // Change the default language.
     $edit = [
@@ -78,7 +78,7 @@ class LanguageConfigurationTest extends BrowserTestBase {
     ];
     $this->drupalPostForm(NULL, $edit, t('Save configuration'));
     $this->rebuildContainer();
-    $this->assertFieldChecked('edit-site-default-language-fr', 'Default language updated.');
+    $this->assertSession()->checkboxChecked('edit-site-default-language-fr');
     $this->assertUrl(Url::fromRoute('entity.configurable_language.collection', [], ['absolute' => TRUE, 'langcode' => 'fr'])->toString(), [], 'Correct page redirection.');
 
     // Check if a valid language prefix is added after changing the default

@@ -158,7 +158,7 @@ class ContentTranslationSettingsTest extends BrowserTestBase {
     // Verify language widget appears on comment type form.
     $this->drupalGet('admin/structure/comment/manage/comment_article');
     $this->assertField('language_configuration[content_translation]');
-    $this->assertFieldChecked('edit-language-configuration-content-translation');
+    $this->assertSession()->checkboxChecked('edit-language-configuration-content-translation');
 
     // Verify that translation may be enabled for the article content type.
     $edit = [
@@ -167,10 +167,10 @@ class ContentTranslationSettingsTest extends BrowserTestBase {
     // Make sure the checkbox is available and not checked by default.
     $this->drupalGet('admin/structure/types/manage/article');
     $this->assertField('language_configuration[content_translation]');
-    $this->assertNoFieldChecked('edit-language-configuration-content-translation');
+    $this->assertSession()->checkboxNotChecked('edit-language-configuration-content-translation');
     $this->drupalPostForm('admin/structure/types/manage/article', $edit, t('Save content type'));
     $this->drupalGet('admin/structure/types/manage/article');
-    $this->assertFieldChecked('edit-language-configuration-content-translation');
+    $this->assertSession()->checkboxChecked('edit-language-configuration-content-translation');
 
     // Test that the title field of nodes is available in the settings form.
     $edit = [
@@ -228,14 +228,14 @@ class ContentTranslationSettingsTest extends BrowserTestBase {
     // Make sure the checkbox is available and not checked by default.
     $this->drupalGet('admin/config/people/accounts');
     $this->assertField('language[content_translation]');
-    $this->assertNoFieldChecked('edit-language-content-translation');
+    $this->assertSession()->checkboxNotChecked('edit-language-content-translation');
 
     $edit = [
       'language[content_translation]' => TRUE,
     ];
     $this->drupalPostForm('admin/config/people/accounts', $edit, t('Save configuration'));
     $this->drupalGet('admin/config/people/accounts');
-    $this->assertFieldChecked('edit-language-content-translation');
+    $this->assertSession()->checkboxChecked('edit-language-content-translation');
 
     // Make sure account settings can be saved.
     $this->drupalPostForm('admin/config/people/accounts', ['anonymous' => 'Save me please!'], 'Save configuration');

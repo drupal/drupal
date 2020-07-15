@@ -324,9 +324,9 @@ class ExposedFormUITest extends UITestBase {
 
     $this->drupalGet('admin/structure/views/nojs/handler/test_exposed_admin_ui/default/filter/status');
     // Assert the same settings defined before still are there.
-    $this->assertFieldChecked('edit-options-group-info-group-items-1-value-all');
-    $this->assertFieldChecked('edit-options-group-info-group-items-2-value-1');
-    $this->assertFieldChecked('edit-options-group-info-group-items-3-value-0');
+    $this->assertSession()->checkboxChecked('edit-options-group-info-group-items-1-value-all');
+    $this->assertSession()->checkboxChecked('edit-options-group-info-group-items-2-value-1');
+    $this->assertSession()->checkboxChecked('edit-options-group-info-group-items-3-value-0');
   }
 
 }

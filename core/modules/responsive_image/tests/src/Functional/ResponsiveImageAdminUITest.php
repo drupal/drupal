@@ -132,9 +132,9 @@ class ResponsiveImageAdminUITest extends BrowserTestBase {
     // Check the mapping for multipliers 1x and 2x for the narrow breakpoint.
     $this->assertFieldByName('keyed_styles[responsive_image_test_module.narrow][1x][image_mapping_type]', 'sizes');
     $this->assertFieldByName('keyed_styles[responsive_image_test_module.narrow][1x][sizes]', '(min-resolution: 192dpi) and (min-width: 170px) 386px, (min-width: 170px) 193px, (min-width: 768px) 18vw, (min-width: 480px) 30vw, 48vw');
-    $this->assertFieldChecked('edit-keyed-styles-responsive-image-test-modulenarrow-1x-sizes-image-styles-large');
-    $this->assertFieldChecked('edit-keyed-styles-responsive-image-test-modulenarrow-1x-sizes-image-styles-medium');
-    $this->assertNoFieldChecked('edit-keyed-styles-responsive-image-test-modulenarrow-1x-sizes-image-styles-thumbnail');
+    $this->assertSession()->checkboxChecked('edit-keyed-styles-responsive-image-test-modulenarrow-1x-sizes-image-styles-large');
+    $this->assertSession()->checkboxChecked('edit-keyed-styles-responsive-image-test-modulenarrow-1x-sizes-image-styles-medium');
+    $this->assertSession()->checkboxNotChecked('edit-keyed-styles-responsive-image-test-modulenarrow-1x-sizes-image-styles-thumbnail');
     $this->assertFieldByName('keyed_styles[responsive_image_test_module.narrow][2x][image_mapping_type]', '_none');
 
     // Check the mapping for multipliers 1x and 2x for the wide breakpoint.

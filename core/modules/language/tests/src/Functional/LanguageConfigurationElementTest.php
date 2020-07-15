@@ -58,7 +58,7 @@ class LanguageConfigurationElementTest extends BrowserTestBase {
     $this->assertFalse($lang_conf->isLanguageAlterable());
     $this->drupalGet('language-tests/language_configuration_element');
     $this->assertTrue($this->assertSession()->optionExists('edit-lang-configuration-langcode', 'current_interface')->isSelected());
-    $this->assertNoFieldChecked('edit-lang-configuration-language-alterable');
+    $this->assertSession()->checkboxNotChecked('edit-lang-configuration-language-alterable');
 
     // Reload the page and save again.
     $this->drupalGet('language-tests/language_configuration_element');
@@ -72,7 +72,7 @@ class LanguageConfigurationElementTest extends BrowserTestBase {
     $this->assertTrue($lang_conf->isLanguageAlterable());
     $this->drupalGet('language-tests/language_configuration_element');
     $this->assertTrue($this->assertSession()->optionExists('edit-lang-configuration-langcode', 'authors_default')->isSelected());
-    $this->assertFieldChecked('edit-lang-configuration-language-alterable');
+    $this->assertSession()->checkboxChecked('edit-lang-configuration-language-alterable');
 
     // Test if content type settings have been saved.
     $edit = [
@@ -86,7 +86,7 @@ class LanguageConfigurationElementTest extends BrowserTestBase {
     // Make sure the settings are saved when creating the content type.
     $this->drupalGet('admin/structure/types/manage/page');
     $this->assertTrue($this->assertSession()->optionExists('edit-language-configuration-langcode', 'authors_default')->isSelected());
-    $this->assertFieldChecked('edit-language-configuration-language-alterable');
+    $this->assertSession()->checkboxChecked('edit-language-configuration-language-alterable');
 
   }
 

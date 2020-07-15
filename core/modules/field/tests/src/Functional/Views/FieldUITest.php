@@ -160,7 +160,7 @@ class FieldUITest extends FieldTestBase {
     $this->drupalPostForm(NULL, ['options[value]' => 'All', 'options[expose][required]' => FALSE], 'Apply');
     $this->drupalPostForm(NULL, [], 'Save');
     $this->drupalGet('/admin/structure/views/nojs/handler/test_view_fieldapi/default/filter/field_boolean_value');
-    $this->assertFieldChecked('edit-options-value-all');
+    $this->assertSession()->checkboxChecked('edit-options-value-all');
   }
 
 }

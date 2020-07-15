@@ -213,15 +213,15 @@ class FormTest extends BrowserTestBase {
 
     // Verify that input elements are still empty.
     $this->assertFieldByName('textfield', '');
-    $this->assertNoFieldChecked('edit-checkboxes-foo');
-    $this->assertNoFieldChecked('edit-checkboxes-bar');
+    $this->assertSession()->checkboxNotChecked('edit-checkboxes-foo');
+    $this->assertSession()->checkboxNotChecked('edit-checkboxes-bar');
     $this->assertTrue($this->assertSession()->optionExists('edit-select', '')->isSelected());
-    $this->assertNoFieldChecked('edit-radios-foo');
-    $this->assertNoFieldChecked('edit-radios-bar');
-    $this->assertNoFieldChecked('edit-radios-optional-foo');
-    $this->assertNoFieldChecked('edit-radios-optional-bar');
-    $this->assertNoFieldChecked('edit-radios-optional-default-value-false-foo');
-    $this->assertNoFieldChecked('edit-radios-optional-default-value-false-bar');
+    $this->assertSession()->checkboxNotChecked('edit-radios-foo');
+    $this->assertSession()->checkboxNotChecked('edit-radios-bar');
+    $this->assertSession()->checkboxNotChecked('edit-radios-optional-foo');
+    $this->assertSession()->checkboxNotChecked('edit-radios-optional-bar');
+    $this->assertSession()->checkboxNotChecked('edit-radios-optional-default-value-false-foo');
+    $this->assertSession()->checkboxNotChecked('edit-radios-optional-default-value-false-bar');
 
     // Submit again with required fields set and verify that there are no
     // error messages.
@@ -268,10 +268,10 @@ class FormTest extends BrowserTestBase {
     $this->assertText('The form has become outdated.');
     // Ensure that we don't use the posted values.
     $this->assertFieldByName('textfield', '');
-    $this->assertNoFieldChecked('edit-checkboxes-foo');
-    $this->assertNoFieldChecked('edit-checkboxes-bar');
+    $this->assertSession()->checkboxNotChecked('edit-checkboxes-foo');
+    $this->assertSession()->checkboxNotChecked('edit-checkboxes-bar');
     $this->assertTrue($this->assertSession()->optionExists('edit-select', '')->isSelected());
-    $this->assertNoFieldChecked('edit-radios-foo');
+    $this->assertSession()->checkboxNotChecked('edit-radios-foo');
 
     // Check another form that has a textarea input.
     $this->drupalGet(Url::fromRoute('form_test.required'));

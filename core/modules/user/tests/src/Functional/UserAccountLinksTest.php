@@ -97,7 +97,7 @@ class UserAccountLinksTest extends BrowserTestBase {
     // the consistent label text.
     $this->drupalGet('admin/structure/menu/manage/account');
     $label = $this->xpath('//label[contains(.,:text)]/@for', [':text' => 'Enable My account menu link']);
-    $this->assertFieldChecked($label[0]->getText(), "The 'My account' link is enabled by default.");
+    $this->assertSession()->checkboxChecked($label[0]->getText());
 
     // Disable the 'My account' link.
     $edit['links[menu_plugin_id:user.page][enabled]'] = FALSE;

@@ -145,9 +145,9 @@ class OptionsWidgetsTest extends FieldTestBase {
 
     // With no field data, no buttons are checked.
     $this->drupalGet('entity_test/manage/' . $entity->id() . '/edit');
-    $this->assertNoFieldChecked('edit-card-1-0');
-    $this->assertNoFieldChecked('edit-card-1-1');
-    $this->assertNoFieldChecked('edit-card-1-2');
+    $this->assertSession()->checkboxNotChecked('edit-card-1-0');
+    $this->assertSession()->checkboxNotChecked('edit-card-1-1');
+    $this->assertSession()->checkboxNotChecked('edit-card-1-2');
     $this->assertRaw('Some dangerous &amp; unescaped <strong>markup</strong>', 'Option text was properly filtered.');
     $this->assertRaw('Some HTML encoded markup with &lt; &amp; &gt;');
 
@@ -158,9 +158,9 @@ class OptionsWidgetsTest extends FieldTestBase {
 
     // Check that the selected button is checked.
     $this->drupalGet('entity_test/manage/' . $entity->id() . '/edit');
-    $this->assertFieldChecked('edit-card-1-0');
-    $this->assertNoFieldChecked('edit-card-1-1');
-    $this->assertNoFieldChecked('edit-card-1-2');
+    $this->assertSession()->checkboxChecked('edit-card-1-0');
+    $this->assertSession()->checkboxNotChecked('edit-card-1-1');
+    $this->assertSession()->checkboxNotChecked('edit-card-1-2');
 
     // Unselect option.
     $edit = ['card_1' => '_none'];
@@ -173,7 +173,7 @@ class OptionsWidgetsTest extends FieldTestBase {
     $field->setRequired(TRUE);
     $field->save();
     $this->drupalGet('entity_test/manage/' . $entity->id() . '/edit');
-    $this->assertFieldChecked('edit-card-1-99');
+    $this->assertSession()->checkboxChecked('edit-card-1-99');
   }
 
   /**
@@ -203,9 +203,9 @@ class OptionsWidgetsTest extends FieldTestBase {
 
     // Display form: with no field data, nothing is checked.
     $this->drupalGet('entity_test/manage/' . $entity->id() . '/edit');
-    $this->assertNoFieldChecked('edit-card-2-0');
-    $this->assertNoFieldChecked('edit-card-2-1');
-    $this->assertNoFieldChecked('edit-card-2-2');
+    $this->assertSession()->checkboxNotChecked('edit-card-2-0');
+    $this->assertSession()->checkboxNotChecked('edit-card-2-1');
+    $this->assertSession()->checkboxNotChecked('edit-card-2-2');
     $this->assertRaw('Some dangerous &amp; unescaped <strong>markup</strong>', 'Option text was properly filtered.');
 
     // Submit form: select first and third options.
@@ -219,9 +219,9 @@ class OptionsWidgetsTest extends FieldTestBase {
 
     // Display form: check that the right options are selected.
     $this->drupalGet('entity_test/manage/' . $entity->id() . '/edit');
-    $this->assertFieldChecked('edit-card-2-0');
-    $this->assertNoFieldChecked('edit-card-2-1');
-    $this->assertFieldChecked('edit-card-2-2');
+    $this->assertSession()->checkboxChecked('edit-card-2-0');
+    $this->assertSession()->checkboxNotChecked('edit-card-2-1');
+    $this->assertSession()->checkboxChecked('edit-card-2-2');
 
     // Submit form: select only first option.
     $edit = [
@@ -234,9 +234,9 @@ class OptionsWidgetsTest extends FieldTestBase {
 
     // Display form: check that the right options are selected.
     $this->drupalGet('entity_test/manage/' . $entity->id() . '/edit');
-    $this->assertFieldChecked('edit-card-2-0');
-    $this->assertNoFieldChecked('edit-card-2-1');
-    $this->assertNoFieldChecked('edit-card-2-2');
+    $this->assertSession()->checkboxChecked('edit-card-2-0');
+    $this->assertSession()->checkboxNotChecked('edit-card-2-1');
+    $this->assertSession()->checkboxNotChecked('edit-card-2-2');
 
     // Submit form: select the three options while the field accepts only 2.
     $edit = [
@@ -263,7 +263,7 @@ class OptionsWidgetsTest extends FieldTestBase {
     $field->setRequired(TRUE);
     $field->save();
     $this->drupalGet('entity_test/manage/' . $entity->id() . '/edit');
-    $this->assertFieldChecked('edit-card-2-99');
+    $this->assertSession()->checkboxChecked('edit-card-2-99');
   }
 
   /**

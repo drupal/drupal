@@ -68,7 +68,7 @@ class NodeRevisionsUiBypassAccessTest extends NodeTestBase {
 
     // Verify the checkbox is checked on the node edit form.
     $this->drupalGet('node/' . $node->id() . '/edit');
-    $this->assertFieldChecked('edit-revision', "'Create new revision' checkbox is checked");
+    $this->assertSession()->checkboxChecked('edit-revision');
 
     // Uncheck the create new revision checkbox and save the node.
     $edit = ['revision' => FALSE];
@@ -80,7 +80,7 @@ class NodeRevisionsUiBypassAccessTest extends NodeTestBase {
 
     // Verify the checkbox is checked on the node edit form.
     $this->drupalGet('node/' . $node->id() . '/edit');
-    $this->assertFieldChecked('edit-revision', "'Create new revision' checkbox is checked");
+    $this->assertSession()->checkboxChecked('edit-revision');
 
     // Submit the form without changing the checkbox.
     $edit = [];
@@ -100,7 +100,7 @@ class NodeRevisionsUiBypassAccessTest extends NodeTestBase {
 
     // Verify the checkbox is unchecked on the node edit form.
     $this->drupalGet('node/' . $node->id() . '/edit');
-    $this->assertNoFieldChecked('edit-revision', "'Create new revision' checkbox is unchecked");
+    $this->assertSession()->checkboxNotChecked('edit-revision');
     // Submit the form without changing the checkbox.
     $edit = [];
     $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, 'Save');
@@ -112,7 +112,7 @@ class NodeRevisionsUiBypassAccessTest extends NodeTestBase {
 
     // Verify the checkbox is unchecked on the node edit form.
     $this->drupalGet('node/' . $node->id() . '/edit');
-    $this->assertNoFieldChecked('edit-revision', "'Create new revision' checkbox is unchecked");
+    $this->assertSession()->checkboxNotChecked('edit-revision');
 
     // Check the 'create new revision' checkbox and save the node.
     $edit = ['revision' => TRUE];
