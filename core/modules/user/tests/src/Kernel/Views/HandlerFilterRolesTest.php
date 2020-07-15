@@ -54,7 +54,7 @@ class HandlerFilterRolesTest extends UserKernelTestBase {
       'table' => 'user__roles',
       'field' => 'roles_target_id',
       'value' => [
-        'test_user_role' => 'test_user_role',
+        'test_user_role',
       ],
       'operator' => 'empty',
       'plugin_id' => 'user_roles',
@@ -70,7 +70,7 @@ class HandlerFilterRolesTest extends UserKernelTestBase {
       'table' => 'user__roles',
       'field' => 'roles_target_id',
       'value' => [
-        'test_user_role' => 'test_user_role',
+        'test_user_role',
       ],
       'operator' => 'not empty',
       'plugin_id' => 'user_roles',

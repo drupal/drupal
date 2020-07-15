@@ -208,7 +208,7 @@ class InOperator extends FilterPluginBase {
       }
 
       if (empty($this->options['expose']['multiple'])) {
-        if (empty($this->options['expose']['required']) && (empty($default_value) || !empty($this->options['expose']['reduce'])) || isset($this->options['value']['all'])) {
+        if (empty($this->options['expose']['required']) && (empty($default_value) || !empty($this->options['expose']['reduce'])) || in_array('all', $this->options['value'], TRUE)) {
           $default_value = 'All';
         }
         elseif (empty($default_value)) {
@@ -275,11 +275,11 @@ class InOperator extends FilterPluginBase {
       elseif (is_object($option) && !$option instanceof MarkupInterface) {
         $keys = array_keys($option->option);
         $key = array_shift($keys);
-        if (isset($this->options['value'][$key])) {
+        if (in_array($key, $this->options['value'], TRUE)) {
           $options[$id] = $option;
         }
       }
-      elseif (isset($this->options['value'][$id])) {
+      elseif (in_array($id, $this->options['value'], TRUE)) {
         $options[$id] = $option;
       }
     }
@@ -316,8 +316,7 @@ class InOperator extends FilterPluginBase {
     // Luckily, the '#value' on the checkboxes form actually contains
     // *only* a list of checkboxes that were set, and we can use that
     // instead.
-
-    $form_state->setValue(['options', 'value'], $form['value']['#value']);
+    $form_state->setValue(['options', 'value'], array_values($form['value']['#value']));
   }
 
   public function adminSummary() {

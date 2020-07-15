@@ -42,7 +42,7 @@ display:
           admin_label: ''
           operator: in
           value:
-            'en': 'en'
+            - en
           group: 1
           exposed: false
           entity_type: node
@@ -77,7 +77,7 @@ display:
           admin_label: ''
           operator: in
           value:
-            'de': 'de'
+            - de
           group: 1
           exposed: false
           entity_type: node

@@ -105,7 +105,7 @@ display:
           admin_label: ''
           operator: in
           value:
-            article: article
+            - article
           group: 1
           exposed: false
           expose:

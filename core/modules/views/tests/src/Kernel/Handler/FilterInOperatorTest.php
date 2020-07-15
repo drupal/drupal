@@ -15,6 +15,7 @@ use Drupal\views\Views;
  * @group views
  */
 class FilterInOperatorTest extends ViewsKernelTestBase {
+
   use StringTranslationTrait;
 
   protected static $modules = ['system'];
@@ -39,6 +40,22 @@ class FilterInOperatorTest extends ViewsKernelTestBase {
   public function viewsData() {
     $data = parent::viewsData();
     $data['views_test_data']['age']['filter']['id'] = 'in_operator';
+    $data['views_test_data']['job']['filter']['id'] = 'in_operator';
+    return $data;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function dataSet() {
+    $data = parent::dataSet();
+    $data[] = [
+      'name' => 'Dries',
+      'age' => 8,
+      'job' => 'B.D.F.L.',
+      'created' => gmmktime(6, 30, 30, 1, 1, 2000),
+      'status' => 1,
+    ];
     return $data;
   }
 
@@ -82,7 +99,7 @@ class FilterInOperatorTest extends ViewsKernelTestBase {
         'id' => 'age',
         'field' => 'age',
         'table' => 'views_test_data',
-        'value' => [26, 30],
+        'value' => [26, 30, 8],
         'operator' => 'not in',
       ],
     ]);
@@ -224,7 +241,7 @@ class FilterInOperatorTest extends ViewsKernelTestBase {
             2 => [
               'title' => 'Age is not one of 26, 30',
               'operator' => 'not in',
-              'value' => [26, 30],
+              'value' => [26, 30, 8],
             ],
           ],
         ],
@@ -246,7 +263,7 @@ class FilterInOperatorTest extends ViewsKernelTestBase {
     $manager = $this->container->get('plugin.manager.views.filter');
     /** @var \Drupal\views\Plugin\views\filter\InOperator $operator */
     $operator = $manager->createInstance('in_operator');
-    $options = ['value' => ['foo' => [], 'baz' => []]];
+    $options = ['value' => ['foo', 'baz']];
     $operator->init($view->reveal(), $display->reveal(), $options);
 
     $input_options = [
@@ -260,7 +277,38 @@ class FilterInOperatorTest extends ViewsKernelTestBase {
     $this->assertInstanceOf(TranslatableMarkup::class, $reduced_values['baz']);
     $this->assertSame('qux', (string) $reduced_values['baz']);
     $this->assertSame('bar', $reduced_values['foo']);
+  }
 
+  /**
+   * Tests that the InOperator filter can handle options containing dots.
+   */
+  public function testFilterInOperatorSimpleString(): void {
+    $view = Views::getView('test_view');
+    $view->setDisplay();
+
+    // Add an in_operator on job.
+    $view->displayHandlers->get('default')->overrideOption('filters', [
+      'job' => [
+        'id' => 'job',
+        'field' => 'job',
+        'table' => 'views_test_data',
+        'value' => ['B.D.F.L.' => 'B.D.F.L.'],
+        'plugin_id' => 'in_operator',
+      ],
+    ]);
+    $view->save();
+
+    $this->executeView($view);
+
+    $expected_result = [
+      [
+        'name' => 'Dries',
+        'age' => 8,
+      ],
+    ];
+
+    $this->assertCount(1, $view->result);
+    $this->assertIdenticalResultset($view, $expected_result, $this->columnMap);
   }
 
 }

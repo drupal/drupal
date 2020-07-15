@@ -171,8 +171,8 @@ display:
           admin_label: ''
           operator: in
           value:
-            article: article
-            recipe: recipe
+            - article
+            - recipe
           group: 1
           exposed: false
           expose:
@@ -330,7 +330,7 @@ display:
           admin_label: ''
           operator: in
           value:
-            recipe: recipe
+            - recipe
           group: 1
           exposed: false
           expose:
@@ -491,7 +491,7 @@ display:
           admin_label: ''
           operator: in
           value:
-            article: article
+            - article
           group: 1
           exposed: false
           expose:

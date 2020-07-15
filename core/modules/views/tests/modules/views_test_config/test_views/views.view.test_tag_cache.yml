@@ -68,7 +68,7 @@ display:
           admin_label: ''
           operator: in
           value:
-            page: page
+            - page
           group: 1
           exposed: false
           expose:

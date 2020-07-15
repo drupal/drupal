@@ -635,8 +635,8 @@ display:
           admin_label: ''
           operator: in
           value:
-            editorial-draft: editorial-draft
-            editorial-archived: editorial-archived
+            - editorial-draft
+            - editorial-archived
           group: 1
           exposed: true
           expose:
@@ -722,7 +722,7 @@ display:
           admin_label: ''
           operator: 'not in'
           value:
-            editorial-published: editorial-published
+            - editorial-published
           group: 1
           exposed: false
           expose:

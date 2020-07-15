@@ -180,7 +180,7 @@ display:
           table: node_field_data
           field: type
           value:
-            page: page
+            - page
           plugin_id: bundle
           entity_type: node
           entity_field: type
@@ -193,9 +193,9 @@ display:
           admin_label: ''
           operator: in
           value:
-            fr: fr
-            es: es
-            und: und
+            - fr
+            - es
+            - und
           group: 1
           exposed: false
           expose:
