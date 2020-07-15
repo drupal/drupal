@@ -118,11 +118,7 @@ class MatcherDumperTest extends KernelTestBase {
 
     $dumper->dump(['provider' => 'test']);
 
-    $record = $connection->select('test_routes', 'tr')
-      ->fields('tr')
-      ->condition('name', 'test_route')
-      ->execute()
-      ->fetchObject();
+    $record = $connection->query("SELECT * FROM {test_routes} WHERE name= :name", [':name' => 'test_route'])->fetchObject();
 
     $loaded_route = unserialize($record->route);
 
