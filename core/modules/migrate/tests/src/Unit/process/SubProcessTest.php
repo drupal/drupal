@@ -125,4 +125,73 @@ class SubProcessTest extends MigrateTestCase {
     ];
   }
 
+  /**
+   * Tests the sub_process process plugin.
+   *
+   * @dataProvider providerTestNotFoundSubProcess
+   */
+  public function testNotFoundSubProcess($process_configuration, $source_values = []) {
+    $migration = $this->getMigration();
+    // Set up the properties for the sub_process.
+    $plugin = new SubProcess($process_configuration, 'sub_process', []);
+    // Manually create the plugins. Migration::getProcessPlugins does this
+    // normally but the plugin system is not available.
+    foreach ($process_configuration['process'] as $destination => $source) {
+      $sub_process_plugins[$destination][] = new Get(['source' => $source], 'get', []);
+    }
+    $migration->expects($this->at(1))
+      ->method('getProcessPlugins')
+      ->willReturn($sub_process_plugins);
+    // Set up the key plugins.
+    if (array_key_exists('key', $process_configuration)) {
+      $key_plugin['key'][] = new Get(['source' => '@id'], 'get', []);
+      $migration->expects($this->at(2))
+        ->method('getProcessPlugins')
+        ->will($this->returnValue($key_plugin));
+    }
+    $event_dispatcher = $this->createMock(EventDispatcherInterface::class);
+    $migrate_executable = new MigrateExecutable($migration, $this->createMock(MigrateMessageInterface::class), $event_dispatcher);
+
+    // The current value of the pipeline.
+    $current_value = [
+      [
+        'source_foo' => 'test',
+        'source_id' => NULL,
+      ] + $source_values,
+    ];
+    // This is not used but the interface requires it, so create an empty row.
+    $row = new Row($source_values);
+
+    // After transformation, check to make sure that source_foo and source_id's
+    // values ended up in the proper destinations, and that the value of the
+    // key (@id) is the same as the destination ID (42).
+    $new_value = $plugin->transform($current_value, $migrate_executable, $row, 'test');
+    $this->assertArrayEquals([], $new_value);
+  }
+
+  /**
+   * Data provider for testNotFoundSubProcess().
+   */
+  public function providerTestNotFoundSubProcess() {
+    return [
+      'no key' => [
+        'process configuration' => [
+          'process' => [
+            'foo' => 'source_foo',
+          ],
+          'key' => '@id',
+        ],
+      ],
+      'lookup returns NULL' => [
+        'process configuration' => [
+          'process' => [
+            'foo' => 'source_foo',
+            'id' => 'source_id',
+          ],
+          'key' => '@id',
+        ],
+      ],
+    ];
+  }
+
 }
