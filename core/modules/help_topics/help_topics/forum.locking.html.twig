@@ -1,0 +1,16 @@
+---
+label: 'Locking a forum topic'
+related:
+  - forum.concept
+---
+{% set index = render_var(url('forum.index')) %}
+<h2>{% trans %}Goal{% endtrans %}</h2>
+<p>{% trans %}Lock a topic to prevent users from making any more comments.{% endtrans %}</p>
+<h2>{% trans %}Steps{% endtrans %}</h2>
+<ol>
+  <li>{% trans %}Starting from the <a href="{{ index }}">forums page</a>, navigate to the forum that currently contains the topic.{% endtrans %}</li>
+  <li>{% trans %}Locate the topic within the forum, and click on the title to view the topic.{% endtrans %}</li>
+  <li>{% trans %}Click <em>Edit</em>.{% endtrans %}</li>
+  <li>{% trans %}Under <em>Comment settings</em>, check <em>Closed</em>.{% endtrans %}</li>
+  <li>{% trans %}Click <em>Save</em>.{% endtrans %}</li>
+</ol>
