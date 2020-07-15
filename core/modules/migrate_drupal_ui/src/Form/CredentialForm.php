@@ -167,7 +167,7 @@ class CredentialForm extends MigrateUpgradeFormBase {
     ];
     $form['source']['d6_source_base_path'] = [
       '#type' => 'textfield',
-      '#title' => $this->t('Files directory'),
+      '#title' => $this->t('Document root for files'),
       '#description' => $this->t('To import files from your current Drupal site, enter a local file directory containing your site (e.g. /var/www/docroot), or your site address (for example http://example.com).'),
       '#states' => [
         'visible' => [
@@ -179,7 +179,7 @@ class CredentialForm extends MigrateUpgradeFormBase {
 
     $form['source']['source_base_path'] = [
       '#type' => 'textfield',
-      '#title' => $this->t('Public files directory'),
+      '#title' => $this->t('Document root for public files'),
       '#description' => $this->t('To import public files from your current Drupal site, enter a local file directory containing your site (e.g. /var/www/docroot), or your site address (for example http://example.com).'),
       '#states' => [
         'visible' => [
@@ -191,7 +191,7 @@ class CredentialForm extends MigrateUpgradeFormBase {
 
     $form['source']['source_private_file_path'] = [
       '#type' => 'textfield',
-      '#title' => $this->t('Private files directory'),
+      '#title' => $this->t('Document root for private files'),
       '#default_value' => '',
       '#description' => $this->t('To import private files from your current Drupal site, enter a local file directory containing your site (e.g. /var/www/docroot).'),
       '#states' => [
