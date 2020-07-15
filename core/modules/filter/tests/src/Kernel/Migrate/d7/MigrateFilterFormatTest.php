@@ -2,8 +2,11 @@
 
 namespace Drupal\Tests\filter\Kernel\Migrate\d7;
 
+use Drupal\Core\Database\Database;
 use Drupal\filter\Entity\FilterFormat;
 use Drupal\filter\FilterFormatInterface;
+use Drupal\KernelTests\KernelTestBase;
+use Drupal\Tests\migrate\Kernel\MigrateDumpAlterInterface;
 use Drupal\Tests\migrate_drupal\Kernel\d7\MigrateDrupal7TestBase;
 
 /**
@@ -11,7 +14,7 @@ use Drupal\Tests\migrate_drupal\Kernel\d7\MigrateDrupal7TestBase;
  *
  * @group filter
  */
-class MigrateFilterFormatTest extends MigrateDrupal7TestBase {
+class MigrateFilterFormatTest extends MigrateDrupal7TestBase implements MigrateDumpAlterInterface {
 
   /**
    * {@inheritdoc}
@@ -25,6 +28,30 @@ class MigrateFilterFormatTest extends MigrateDrupal7TestBase {
     parent::setUp();
     $this->installConfig(static::$modules);
     $this->executeMigration('d7_filter_format');
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function migrateDumpAlter(KernelTestBase $test) {
+    $db = Database::getConnection('default', 'migrate');
+    $fields = [
+      'format' => 'image_resize_filter',
+      'name' => 'Image resize',
+      'cache' => '1',
+      'status' => '1',
+      'weight' => '0',
+    ];
+    $db->insert('filter_format')->fields($fields)->execute();
+    $fields = [
+      'format' => 'image_resize_filter',
+      'module' => 'filter',
+      'name' => 'image_resize_filter',
+      'weight' => '0',
+      'status' => '1',
+      'settings' => serialize([]),
+    ];
+    $db->insert('filter')->fields($fields)->execute();
   }
 
   /**
@@ -80,6 +107,22 @@ class MigrateFilterFormatTest extends MigrateDrupal7TestBase {
     // The disabled php_code format gets migrated, but the php_code filter is
     // changed to filter_null.
     $this->assertEntity('php_code', 'PHP code', ['filter_null' => 0], 11, FALSE);
+
+    // Test a non-existent format.
+    $this->assertEntity('image_resize_filter', 'Image resize', [], 0, TRUE);
+
+    // For each filter that does not exist on the destination, there should be
+    // a log message.
+    $migration = $this->getMigration('d7_filter_format');
+    $errors = array_map(function ($message) {
+      return $message->message;
+    }, iterator_to_array($migration->getIdMap()->getMessages()));
+    $this->assertCount(2, $errors);
+    sort($errors);
+    $message = 'Filter image_resize_filter could not be mapped to an existing filter plugin; omitted since it is a transformation-only filter. Install and configure a successor after the migration.';
+    $this->assertEquals($errors[0], $message);
+    $message = ('Filter php_code could not be mapped to an existing filter plugin; defaulting to filter_null and dropping all settings. Either redo the migration with the module installed that provides an equivalent filter, or modify the text format after the migration to remove this filter if it is no longer necessary.');
+    $this->assertEquals($errors[1], $message);
   }
 
 }
