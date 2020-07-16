@@ -333,6 +333,22 @@ function database_test_schema() {
     'primary key' => ['id'],
   ];
 
+  $schema['virtual'] = [
+    'description' => 'A simple table with reserved name in MySQL 8.',
+    'fields' => [
+      'id' => [
+        'description' => 'Simple unique ID.',
+        'type' => 'int',
+        'not null' => TRUE,
+      ],
+      'function' => [
+        'description' => 'A column with reserved name in MySQL 8.',
+        'type' => 'text',
+      ],
+    ],
+    'primary key' => ['id'],
+  ];
+
   $schema['TEST_UPPERCASE'] = $schema['test'];
 
   return $schema;
