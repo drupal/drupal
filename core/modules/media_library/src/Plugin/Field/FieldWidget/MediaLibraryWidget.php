@@ -508,8 +508,19 @@ class MediaLibraryWidget extends WidgetBase implements ContainerFactoryPluginInt
     // JavaScript by adding the 'data-disabled-focus' attribute.
     // @see Drupal.behaviors.MediaLibraryWidgetDisableButton
     if (!$cardinality_unlimited && $remaining === 0) {
-      $element['open_button']['#attributes']['data-disabled-focus'] = 'true';
-      $element['open_button']['#attributes']['class'][] = 'visually-hidden';
+      $triggering_element = $form_state->getTriggeringElement();
+      if ($triggering_element && ($trigger_parents = $triggering_element['#array_parents']) && end($trigger_parents) === 'media_library_update_widget') {
+        // The widget is being rebuilt from a selection change.
+        $element['open_button']['#attributes']['data-disabled-focus'] = 'true';
+        $element['open_button']['#attributes']['class'][] = 'visually-hidden';
+      }
+      else {
+        // The widget is being built without a selection change, so we can just
+        // set the item to disabled now, there is no need to set the focus
+        // first.
+        $element['open_button']['#disabled'] = TRUE;
+        $element['open_button']['#attributes']['class'][] = 'visually-hidden';
+      }
     }
 
     // This hidden field and button are used to add new items to the widget.

@@ -15,13 +15,20 @@ class EntityReferenceWidgetTest extends MediaLibraryTestBase {
   protected static $modules = ['field_ui'];
 
   /**
+   * Test media items.
+   *
+   * @var \Drupal\media\MediaInterface[]
+   */
+  protected $mediaItems = [];
+
+  /**
    * {@inheritdoc}
    */
   protected function setUp() {
     parent::setUp();
 
     // Create a few example media items for use in selection.
-    $this->createMediaItems([
+    $this->mediaItems = $this->createMediaItems([
       'type_one' => [
         'Horse',
         'Bear',
@@ -46,6 +53,31 @@ class EntityReferenceWidgetTest extends MediaLibraryTestBase {
       'administer node form display',
     ]);
     $this->drupalLogin($user);
+  }
+
+  /**
+   * Tests that disabled media items don't capture focus on page load.
+   */
+  public function testFocusNotAppliedWithoutSelectionChange() {
+    // Create a node with the maximum number of values for the field_twin_media
+    // field.
+    $node = $this->drupalCreateNode([
+      'type' => 'basic_page',
+      'field_twin_media' => [
+        $this->mediaItems['Horse'],
+        $this->mediaItems['Bear'],
+      ],
+    ]);
+    $this->drupalGet($node->toUrl('edit-form'));
+    $open_button = $this->assertElementExistsAfterWait('css', '.js-media-library-open-button[name^="field_twin_media"]');
+    // The open button should be disabled, but not have the
+    // 'data-disabled-focus' attribute.
+    $this->assertFalse($open_button->hasAttribute('data-disabled-focus'));
+    $this->assertTrue($open_button->hasAttribute('disabled'));
+    // The button should be disabled.
+    $this->assertJsCondition('jQuery("#field_twin_media-media-library-wrapper .js-media-library-open-button").is(":disabled")');
+    // The button should not have focus.
+    $this->assertJsCondition('jQuery("#field_twin_media-media-library-wrapper .js-media-library-open-button").not(":focus")');
   }
 
   /**

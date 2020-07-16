@@ -25,8 +25,12 @@ abstract class MediaLibraryTestBase extends WebDriverTestBase {
    *
    * @param array $media_items
    *   A nested array of media item names keyed by media type.
+   *
+   * @return \Drupal\media\MediaInterface[]
+   *   An array of media entities keyed by the names passed in.
    */
   protected function createMediaItems(array $media_items) {
+    $created_items = [];
     $time = time();
     foreach ($media_items as $type => $names) {
       foreach ($names as $name) {
@@ -39,8 +43,10 @@ abstract class MediaLibraryTestBase extends WebDriverTestBase {
           ->getSourceFieldDefinition($media->bundle->entity)
           ->getName();
         $media->set($source_field, $name)->setCreatedTime(++$time)->save();
+        $created_items[$name] = $media;
       }
     }
+    return $created_items;
   }
 
   /**
