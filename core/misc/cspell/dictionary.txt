@@ -228,15 +228,12 @@ buttonset
 buytaert
 bytouched
 bzzzzzzzt
-cachable
 cacheability
 cacheable
 cacheablemetadata
-cacheablity
 cachebackend
 cachebackends
 cachebin
-cacheble
 cacher
 cachetag
 cachetags
