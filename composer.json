@@ -49,11 +49,6 @@
             "You can read more about this composer repository at:",
             "https://www.drupal.org/node/2718229"
         ],
-        "merge-plugin": {
-            "recurse": true,
-            "replace": false,
-            "merge-extra": false
-        },
         "installer-paths": {
             "core": ["type:drupal-core"],
             "libraries/{$name}": ["type:drupal-library"],

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "ffa355776a1fae1e88712fae77cbc517",
+    "content-hash": "a0aee7917924874fecf8fc9af3c86275",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -4326,9 +4326,6 @@
                 "ext-zip": "Enabling the zip extension allows you to unzip archives",
                 "ext-zlib": "Allow gzip compression of HTTP requests"
             },
-            "bin": [
-                "bin/composer"
-            ],
             "type": "library",
             "extra": {
                 "branch-alias": {
