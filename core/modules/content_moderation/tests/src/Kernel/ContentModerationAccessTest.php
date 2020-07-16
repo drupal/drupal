@@ -61,7 +61,7 @@ class ContentModerationAccessTest extends KernelTestBase {
   /**
    * Tests access cacheability.
    */
-  public function testAccessCacheablity() {
+  public function testAccessCacheability() {
     $node = $this->createNode(['type' => 'page']);
 
     /** @var \Drupal\user\RoleInterface $authenticated */
