@@ -68,6 +68,39 @@ class LayoutBuilderTest extends BrowserTestBase {
   }
 
   /**
+   * Tests deleting a field in-use by an overridden layout.
+   */
+  public function testDeleteField() {
+    $assert_session = $this->assertSession();
+    $page = $this->getSession()->getPage();
+
+    $this->drupalLogin($this->drupalCreateUser([
+      'configure any layout',
+      'administer node fields',
+    ]));
+
+    // Enable layout builder overrides.
+    LayoutBuilderEntityViewDisplay::load('node.bundle_with_section_field.default')
+      ->enableLayoutBuilder()
+      ->setOverridable()
+      ->save();
+
+    // Ensure there is a layout override.
+    $this->drupalGet('node/1/layout');
+    $page->pressButton('Save layout');
+
+    // Delete one of the fields in use.
+    $this->drupalGet('admin/structure/types/manage/bundle_with_section_field/fields/node.bundle_with_section_field.body/delete');
+    $page->pressButton('Delete');
+
+    // The node should still be accessible.
+    $this->drupalGet('node/1');
+    $assert_session->statusCodeEquals(200);
+    $this->drupalGet('node/1/layout');
+    $assert_session->statusCodeEquals(200);
+  }
+
+  /**
    * Tests Layout Builder overrides without access to edit the default layout.
    */
   public function testOverridesWithoutDefaultsAccess() {
