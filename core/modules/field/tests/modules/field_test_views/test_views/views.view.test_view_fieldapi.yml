@@ -57,6 +57,15 @@ display:
         type: default
       row:
         type: fields
+      sorts:
+        nid:
+          id: nid
+          table: node_field_data
+          field: nid
+          order: ASC
+          plugin_id: field
+          entity_type: node
+          entity_field: nid
     display_plugin: default
     display_title: Master
     id: default
