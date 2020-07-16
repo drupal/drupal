@@ -125,7 +125,7 @@ abstract class DraggableListBuilder extends ConfigEntityListBuilder implements F
     foreach ($this->entities as $entity) {
       $row = $this->buildRow($entity);
       if (isset($row['label'])) {
-        $row['label'] = ['#markup' => $row['label']];
+        $row['label'] = ['#plain_text' => $row['label']];
       }
       if (isset($row['weight'])) {
         $row['weight']['#delta'] = $delta;
