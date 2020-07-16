@@ -113,11 +113,34 @@ class FilterNumericWebTest extends UITestBase {
     $this->assertConfigSchemaByName('views.view.test_view');
 
     $this->drupalPostForm(NULL, [], t('Update preview'));
-    // Check the max field label.
-    $this->assertRaw('<label for="edit-age-max">And</label>', 'Max field label found');
-    $this->assertRaw('<label for="edit-age-min">Age between</label>', 'Min field label found');
+    // Check the field (wrapper) label.
+    $this->assertSession()->elementTextContains('css', 'fieldset#edit-age-wrapper legend', 'Age between');
+    // Check the min/max labels.
+    $min_element_label = $this->xpath('//fieldset[contains(@id, "edit-age-wrapper")]//label[contains(@for, "edit-age-min") and contains(text(), "Min")]');
+    $this->assertCount(1, $min_element_label);
+    $max_element_label = $this->xpath('//fieldset[contains(@id, "edit-age-wrapper")]//label[contains(@for, "edit-age-max") and contains(text(), "Max")]');
+    $this->assertCount(1, $max_element_label);
     // Check that the description is shown in the right place.
-    $this->assertEqual(trim($this->cssSelect('.form-item-age-min .description')[0]->getText()), 'Description of the exposed filter');
+    $this->assertEquals(trim($this->cssSelect('#edit-age-wrapper--description')[0]->getText()), 'Description of the exposed filter');
+
+    // Change to an operation that only requires one form element ('>').
+    $this->drupalGet('admin/structure/views/nojs/handler/test_view/default/filter/age');
+    $edit = [];
+    $edit['options[expose][label]'] = 'Age greater than';
+    $edit['options[expose][description]'] = 'Description of the exposed filter';
+    $edit['options[operator]'] = '>';
+    $edit['options[value][value]'] = 1000;
+    $this->drupalPostForm(NULL, $edit, t('Apply'));
+    $this->drupalPostForm('admin/structure/views/view/test_view', [], t('Save'));
+    $this->assertConfigSchemaByName('views.view.test_view');
+
+    $this->drupalPostForm(NULL, [], t('Update preview'));
+
+    // Make sure the label is visible and that there's no fieldset wrapper.
+    $label = $this->xpath('//label[contains(@for, "edit-age") and contains(text(), "Age greater than")]');
+    $this->assertCount(1, $label);
+    $fieldset = $this->xpath('//fieldset[contains(@id, "edit-age-wrapper")]');
+    $this->assertEmpty($fieldset);
   }
 
 }

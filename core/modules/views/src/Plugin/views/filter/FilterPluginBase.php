@@ -914,6 +914,17 @@ abstract class FilterPluginBase extends HandlerBase implements CacheableDependen
       $this->exposedTranslate($form[$operator], 'operator');
 
       unset($form['operator']);
+
+      // When the operator and value forms are both in play, enclose them within
+      // a wrapper.
+      if (!empty($this->options['expose']['identifier'])) {
+        $wrapper = $this->options['expose']['identifier'] . '_wrapper';
+        $this->buildValueWrapper($form, $wrapper);
+        $form[$operator]['#title_display'] = 'invisible';
+
+        $form[$wrapper][$operator] = $form[$operator];
+        unset($form[$operator]);
+      }
     }
 
     // Build the form and set the value based on the identifier.
@@ -930,6 +941,43 @@ abstract class FilterPluginBase extends HandlerBase implements CacheableDependen
 
       if ($value != 'value') {
         unset($form['value']);
+      }
+
+      // When the operator and value forms are both in play, enclose them within
+      // a wrapper, for usability. Also wrap if the value form is comprised of
+      // multiple elements.
+      if ((!empty($this->options['expose']['use_operator']) && !empty($this->options['expose']['operator_id'])) || count(Element::children($form[$value]))) {
+        $wrapper = $value . '_wrapper';
+        $this->buildValueWrapper($form, $wrapper);
+        $form[$wrapper][$value] = $form[$value];
+        unset($form[$value]);
+      }
+    }
+  }
+
+  /**
+   * Builds wrapper for value and operator forms.
+   *
+   * @param array $form
+   *   The form.
+   * @param string $wrapper_identifer
+   *   The key to use for the wrapper element.
+   */
+  protected function buildValueWrapper(&$form, $wrapper_identifer) {
+    // If both the field and the operator are exposed, this will end up being
+    // called twice. We don't want to wipe out what's already there, so if it
+    // exists already, do nothing.
+    if (!isset($form[$wrapper_identifer])) {
+      $form[$wrapper_identifer] = [
+        '#type' => 'fieldset',
+      ];
+
+      $exposed_info = $this->exposedInfo();
+      if (!empty($exposed_info['label'])) {
+        $form[$wrapper_identifer]['#title'] = $exposed_info['label'];
+      }
+      if (!empty($exposed_info['description'])) {
+        $form[$wrapper_identifer]['#description'] = $exposed_info['description'];
       }
     }
   }

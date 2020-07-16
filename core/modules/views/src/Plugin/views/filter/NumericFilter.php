@@ -277,17 +277,16 @@ class NumericFilter extends FilterPluginBase {
     if ($two_value_operators_available) {
       $form['value']['min'] = [
         '#type' => 'textfield',
-        '#title' => !$exposed ? $this->t('Min') : $this->exposedInfo()['label'],
+        '#title' => $this->t('Min'),
         '#size' => 30,
         '#default_value' => $this->value['min'],
-        '#description' => !$exposed ? '' : $this->exposedInfo()['description'],
       ];
       if (!empty($this->options['expose']['min_placeholder'])) {
         $form['value']['min']['#attributes']['placeholder'] = $this->options['expose']['min_placeholder'];
       }
       $form['value']['max'] = [
         '#type' => 'textfield',
-        '#title' => !$exposed ? $this->t('And max') : $this->t('And'),
+        '#title' => $this->t('Max'),
         '#size' => 30,
         '#default_value' => $this->value['max'],
       ];
