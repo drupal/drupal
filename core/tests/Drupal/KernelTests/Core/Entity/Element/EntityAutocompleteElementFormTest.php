@@ -48,7 +48,6 @@ class EntityAutocompleteElementFormTest extends EntityKernelTestBase implements 
 
     $this->installSchema('system', ['key_value_expire']);
     $this->installEntitySchema('entity_test_string_id');
-    \Drupal::service('router.builder')->rebuild();
 
     $this->testUser = User::create([
       'name' => 'foobar1',

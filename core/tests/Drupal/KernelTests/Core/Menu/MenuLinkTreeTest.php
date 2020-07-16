@@ -49,7 +49,6 @@ class MenuLinkTreeTest extends KernelTestBase {
    */
   protected function setUp(): void {
     parent::setUp();
-    \Drupal::service('router.builder')->rebuild();
     $this->installEntitySchema('user');
     $this->installEntitySchema('menu_link_content');
 

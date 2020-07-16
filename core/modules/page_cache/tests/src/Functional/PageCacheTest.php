@@ -470,7 +470,6 @@ class PageCacheTest extends BrowserTestBase {
     // Uninstall the page_cache module to verify that form is immutable
     // regardless of the internal page cache module.
     $this->container->get('module_installer')->uninstall(['page_cache']);
-    \Drupal::service('router.builder')->rebuild();
 
     $this->drupalGet('page_cache_form_test_immutability');
 

@@ -77,7 +77,6 @@ class UserCancelTest extends BrowserTestBase {
    */
   public function testUserCancelChangePermission() {
     \Drupal::service('module_installer')->install(['user_form_test']);
-    \Drupal::service('router.builder')->rebuild();
     $this->config('user.settings')->set('cancel_method', 'user_cancel_reassign')->save();
 
     // Create a regular user.
@@ -104,7 +103,6 @@ class UserCancelTest extends BrowserTestBase {
     $user_storage = $this->container->get('entity_type.manager')->getStorage('user');
 
     \Drupal::service('module_installer')->install(['views']);
-    \Drupal::service('router.builder')->rebuild();
 
     // Try to cancel uid 1's account with a different user.
     $admin_user = $this->drupalCreateUser(['administer users']);
@@ -542,7 +540,6 @@ class UserCancelTest extends BrowserTestBase {
    */
   public function testMassUserCancelByAdmin() {
     \Drupal::service('module_installer')->install(['views']);
-    \Drupal::service('router.builder')->rebuild();
     $this->config('user.settings')->set('cancel_method', 'user_cancel_reassign')->save();
     $user_storage = $this->container->get('entity_type.manager')->getStorage('user');
     // Enable account cancellation notification.

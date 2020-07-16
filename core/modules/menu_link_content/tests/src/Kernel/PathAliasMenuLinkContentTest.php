@@ -60,8 +60,6 @@ class PathAliasMenuLinkContentTest extends KernelTestBase {
    * Tests the path aliasing changing.
    */
   public function testPathAliasChange() {
-    \Drupal::service('router.builder')->rebuild();
-
     $path_alias = $this->createPathAlias('/test-page', '/my-blog');
     $menu_link_content = MenuLinkContent::create([
       'title' => 'Menu title',

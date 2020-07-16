@@ -31,8 +31,6 @@ class EntityResolverTest extends NormalizerTestBase {
   protected function setUp(): void {
     parent::setUp();
 
-    \Drupal::service('router.builder')->rebuild();
-
     // Create the test field storage.
     FieldStorageConfig::create([
       'entity_type' => 'entity_test_mulrev',

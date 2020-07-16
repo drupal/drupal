@@ -36,7 +36,6 @@ class EntityUrlLanguageTest extends LanguageTestBase {
 
     $this->installEntitySchema('entity_test');
     $this->installEntitySchema('configurable_language');
-    \Drupal::service('router.builder')->rebuild();
 
     // In order to reflect the changes for a multilingual site in the container
     // we have to rebuild it.

@@ -118,7 +118,6 @@ class FilterStringTest extends ViewsKernelTestBase {
     $view->setDisplay('page_1');
     $view->displayHandlers->get('page_1')->overrideOption('filters', $filters);
     $view->save();
-    $this->container->get('router.builder')->rebuild();
 
     $this->executeView($view);
 
@@ -175,7 +174,6 @@ class FilterStringTest extends ViewsKernelTestBase {
     $view->setDisplay('page_1');
     $view->displayHandlers->get('page_1')->overrideOption('filters', $filters);
     $view->save();
-    $this->container->get('router.builder')->rebuild();
 
     $this->executeView($view);
 
@@ -231,7 +229,6 @@ class FilterStringTest extends ViewsKernelTestBase {
     $view->setDisplay('page_1');
     $view->displayHandlers->get('page_1')->overrideOption('filters', $filters);
     $view->save();
-    $this->container->get('router.builder')->rebuild();
 
     $this->executeView($view);
 
@@ -341,7 +338,6 @@ class FilterStringTest extends ViewsKernelTestBase {
     $view->setDisplay('page_1');
     $view->displayHandlers->get('page_1')->overrideOption('filters', $filters);
     $view->save();
-    $this->container->get('router.builder')->rebuild();
 
     $this->executeView($view);
 
@@ -408,7 +404,6 @@ class FilterStringTest extends ViewsKernelTestBase {
     $view->setDisplay('page_1');
     $view->displayHandlers->get('page_1')->overrideOption('filters', $filters);
     $view->save();
-    $this->container->get('router.builder')->rebuild();
 
     $this->executeView($view);
 
@@ -461,7 +456,6 @@ class FilterStringTest extends ViewsKernelTestBase {
     $view->setDisplay('page_1');
     $view->displayHandlers->get('page_1')->overrideOption('filters', $filters);
     $view->save();
-    $this->container->get('router.builder')->rebuild();
 
     $this->executeView($view);
 
@@ -517,7 +511,6 @@ class FilterStringTest extends ViewsKernelTestBase {
     $view->setDisplay('page_1');
     $view->displayHandlers->get('page_1')->overrideOption('filters', $filters);
     $view->save();
-    $this->container->get('router.builder')->rebuild();
 
     $this->executeView($view);
 
@@ -570,7 +563,6 @@ class FilterStringTest extends ViewsKernelTestBase {
     $view->setDisplay('page_1');
     $view->displayHandlers->get('page_1')->overrideOption('filters', $filters);
     $view->save();
-    $this->container->get('router.builder')->rebuild();
 
     $this->executeView($view);
 
@@ -624,7 +616,6 @@ class FilterStringTest extends ViewsKernelTestBase {
     $view->setDisplay('page_1');
     $view->displayHandlers->get('page_1')->overrideOption('filters', $filters);
     $view->save();
-    $this->container->get('router.builder')->rebuild();
 
     $this->executeView($view);
 
@@ -678,7 +669,6 @@ class FilterStringTest extends ViewsKernelTestBase {
     $view->setDisplay('page_1');
     $view->displayHandlers->get('page_1')->overrideOption('filters', $filters);
     $view->save();
-    $this->container->get('router.builder')->rebuild();
 
     $this->executeView($view);
     $resultset = [
@@ -726,7 +716,6 @@ class FilterStringTest extends ViewsKernelTestBase {
     $view->setDisplay('page_1');
     $view->displayHandlers->get('page_1')->overrideOption('filters', $filters);
     $view->save();
-    $this->container->get('router.builder')->rebuild();
 
     $this->executeView($view);
     $resultset = [
@@ -770,7 +759,6 @@ class FilterStringTest extends ViewsKernelTestBase {
     $view->setDisplay('page_1');
     $view->displayHandlers->get('page_1')->overrideOption('filters', $filters);
     $view->save();
-    $this->container->get('router.builder')->rebuild();
 
     $this->executeView($view);
     $resultset = [

@@ -169,7 +169,6 @@ class UserRegistrationTest extends BrowserTestBase {
    */
   public function testUuidFormState() {
     \Drupal::service('module_installer')->install(['image']);
-    \Drupal::service('router.builder')->rebuild();
 
     // Add a picture field in order to ensure that no form cache is written,
     // which breaks registration of more than 1 user every 6 hours.

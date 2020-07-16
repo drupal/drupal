@@ -421,7 +421,6 @@ class TrackerTest extends BrowserTestBase {
    */
   public function testTrackerAdminUnpublish() {
     \Drupal::service('module_installer')->install(['views']);
-    \Drupal::service('router.builder')->rebuild();
     $admin_user = $this->drupalCreateUser([
       'access content overview',
       'administer nodes',

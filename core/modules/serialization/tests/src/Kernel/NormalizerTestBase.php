@@ -32,7 +32,6 @@ abstract class NormalizerTestBase extends KernelTestBase {
     $this->installEntitySchema('entity_test_mulrev');
     $this->installEntitySchema('user');
     $this->installConfig(['field']);
-    \Drupal::service('router.builder')->rebuild();
     \Drupal::moduleHandler()->invoke('rest', 'install');
 
     // Auto-create a field for testing.

@@ -65,7 +65,6 @@ class TrustedHostsTest extends BrowserTestBase {
    */
   public function testFakeRequests() {
     $this->container->get('module_installer')->install(['trusted_hosts_test']);
-    $this->container->get('router.builder')->rebuild();
 
     $host = $this->container->get('request_stack')->getCurrentRequest()->getHost();
     $settings['settings']['trusted_host_patterns'] = (object) [
@@ -85,7 +84,6 @@ class TrustedHostsTest extends BrowserTestBase {
   public function testShortcut() {
     $this->container->get('module_installer')->install(['block', 'shortcut']);
     $this->rebuildContainer();
-    $this->container->get('router.builder')->rebuild();
 
     /** @var \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager */
     $entity_type_manager = $this->container->get('entity_type.manager');

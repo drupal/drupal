@@ -51,7 +51,6 @@ class AjaxFormCacheTest extends WebDriverTestBase {
   public function testBlockForms() {
     $this->container->get('module_installer')->install(['block', 'search']);
     $this->rebuildContainer();
-    $this->container->get('router.builder')->rebuild();
     $this->drupalLogin($this->rootUser);
 
     $this->drupalPlaceBlock('search_form_block', ['weight' => -5]);

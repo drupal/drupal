@@ -61,8 +61,6 @@ class ContentTranslationOperationsTest extends NodeTestBase {
     // picked up.
     \Drupal::service('content_translation.manager')->setEnabled('node', 'article', TRUE);
 
-    \Drupal::service('router.builder')->rebuild();
-
     $this->baseUser1 = $this->drupalCreateUser(['access content overview']);
     $this->baseUser2 = $this->drupalCreateUser([
       'access content overview',

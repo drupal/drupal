@@ -54,9 +54,6 @@ class CommentDefaultFormatterCacheTagsTest extends EntityKernelTestBase {
     $this->installSchema('comment', ['comment_entity_statistics']);
     $this->installConfig(['system', 'filter', 'comment']);
 
-    // Comment rendering generates links, so build the router.
-    $this->container->get('router.builder')->rebuild();
-
     // Set up a field, so that the entity that'll be referenced bubbles up a
     // cache tag when rendering it entirely.
     $this->addDefaultCommentField('entity_test', 'entity_test');

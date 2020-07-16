@@ -309,7 +309,6 @@ class MenuLinksTest extends KernelTestBase {
    */
   public function testModuleUninstalledMenuLinks() {
     \Drupal::service('module_installer')->install(['menu_test']);
-    \Drupal::service('router.builder')->rebuild();
     \Drupal::service('plugin.manager.menu.link')->rebuild();
     $menu_links = $this->menuLinkManager->loadLinksByRoute('menu_test.menu_test');
     $this->assertCount(1, $menu_links);

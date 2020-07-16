@@ -43,8 +43,6 @@ class AggregatorTitleTest extends KernelTestBase {
     $this->installEntitySchema('aggregator_feed');
     $this->installEntitySchema('aggregator_item');
 
-    \Drupal::service('router.builder')->rebuild();
-
     $this->fieldName = 'title';
   }
 

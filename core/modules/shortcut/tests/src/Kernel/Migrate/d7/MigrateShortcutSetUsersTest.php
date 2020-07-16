@@ -32,7 +32,6 @@ class MigrateShortcutSetUsersTest extends MigrateDrupal7TestBase {
     $this->installEntitySchema('shortcut');
     $this->installEntitySchema('menu_link_content');
     $this->installSchema('shortcut', ['shortcut_set_users']);
-    \Drupal::service('router.builder')->rebuild();
     $this->migrateUsers(FALSE);
     $this->executeMigration('d7_shortcut_set');
     $this->executeMigration('d7_menu');

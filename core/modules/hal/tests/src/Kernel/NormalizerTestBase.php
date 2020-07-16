@@ -76,7 +76,6 @@ abstract class NormalizerTestBase extends KernelTestBase {
       $class = get_parent_class($class);
     }
     $this->installConfig(['field', 'language']);
-    \Drupal::service('router.builder')->rebuild();
 
     // Add German as a language.
     ConfigurableLanguage::create([

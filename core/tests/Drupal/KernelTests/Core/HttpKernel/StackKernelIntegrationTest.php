@@ -22,14 +22,6 @@ class StackKernelIntegrationTest extends KernelTestBase {
   protected static $modules = ['httpkernel_test', 'system'];
 
   /**
-   * {@inheritdoc}
-   */
-  protected function setUp(): void {
-    parent::setUp();
-    \Drupal::service('router.builder')->rebuild();
-  }
-
-  /**
    * Tests a request.
    */
   public function testRequest() {

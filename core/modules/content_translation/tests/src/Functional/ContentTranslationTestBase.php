@@ -168,8 +168,6 @@ abstract class ContentTranslationTestBase extends BrowserTestBase {
     // Enable translation for the current entity type and ensure the change is
     // picked up.
     \Drupal::service('content_translation.manager')->setEnabled($this->entityTypeId, $this->bundle, TRUE);
-
-    \Drupal::service('router.builder')->rebuild();
   }
 
   /**

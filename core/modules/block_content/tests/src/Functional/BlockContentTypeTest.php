@@ -202,7 +202,6 @@ class BlockContentTypeTest extends BlockContentTestBase {
       // Change the default theme.
       $theme_settings->set('default', $default_theme)->save();
       $this->drupalPlaceBlock('local_actions_block');
-      \Drupal::service('router.builder')->rebuild();
 
       // For each installed theme, go to its block page and test the redirects.
       foreach (['bartik', 'seven', 'stark'] as $theme) {

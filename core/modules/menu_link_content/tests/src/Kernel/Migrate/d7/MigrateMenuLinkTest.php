@@ -53,7 +53,6 @@ class MigrateMenuLinkTest extends MigrateDrupal7TestBase {
       'd7_menu_links',
       'node_translation_menu_links',
     ]);
-    \Drupal::service('router.builder')->rebuild();
   }
 
   /**

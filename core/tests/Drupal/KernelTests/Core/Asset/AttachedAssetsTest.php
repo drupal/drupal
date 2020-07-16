@@ -45,7 +45,6 @@ class AttachedAssetsTest extends KernelTestBase {
    */
   protected function setUp(): void {
     parent::setUp();
-    $this->container->get('router.builder')->rebuild();
 
     $this->assetResolver = $this->container->get('asset.resolver');
     $this->renderer = $this->container->get('renderer');

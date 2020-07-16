@@ -74,9 +74,6 @@ class EntityReferenceFormatterTest extends EntityKernelTestBase {
       ->grantPermission('view test entity')
       ->save();
 
-    // The label formatter rendering generates links, so build the router.
-    $this->container->get('router.builder')->rebuild();
-
     $this->createEntityReferenceField($this->entityType, $this->bundle, $this->fieldName, 'Field test', $this->entityType, 'default', [], FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED);
 
     // Set up a field, so that the entity that'll be referenced bubbles up a

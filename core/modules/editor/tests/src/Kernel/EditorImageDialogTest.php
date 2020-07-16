@@ -79,7 +79,6 @@ class EditorImageDialogTest extends EntityKernelTestBase {
     $type->save();
     node_add_body_field($type);
     $this->installEntitySchema('user');
-    \Drupal::service('router.builder')->rebuild();
   }
 
   /**

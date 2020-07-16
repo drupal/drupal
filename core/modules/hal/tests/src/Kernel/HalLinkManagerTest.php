@@ -50,8 +50,6 @@ class HalLinkManagerTest extends KernelTestBase {
       'bundle' => 'page',
       'field_name' => 'field_ref',
     ])->save();
-
-    \Drupal::service('router.builder')->rebuild();
   }
 
   /**

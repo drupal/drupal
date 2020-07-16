@@ -32,7 +32,6 @@ class PathNoCanonicalLinkTest extends KernelTestBase {
 
     $this->installEntitySchema('entity_test');
     $this->installEntitySchema('entity_test_mul');
-    \Drupal::service('router.builder')->rebuild();
 
     // Adding german language.
     ConfigurableLanguage::create(['id' => 'de'])->save();

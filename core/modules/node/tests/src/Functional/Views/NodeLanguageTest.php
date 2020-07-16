@@ -101,8 +101,6 @@ class NodeLanguageTest extends NodeTestBase {
       $node->save();
     }
 
-    $this->container->get('router.builder')->rebuild();
-
     $user = $this->drupalCreateUser([
       'access content overview',
       'access content',

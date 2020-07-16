@@ -22,11 +22,6 @@ class TokenReplaceTest extends ViewsKernelTestBase {
    */
   public static $testViews = ['test_tokens', 'test_invalid_tokens'];
 
-  protected function setUp($import_test_views = TRUE): void {
-    parent::setUp();
-    $this->container->get('router.builder')->rebuild();
-  }
-
   /**
    * Tests core token replacements generated from a view.
    */

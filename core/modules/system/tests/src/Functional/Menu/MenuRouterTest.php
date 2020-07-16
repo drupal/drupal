@@ -139,7 +139,6 @@ class MenuRouterTest extends BrowserTestBase {
     $this->assertEqual($menu_link->getPluginId(), 'menu_test.custom', 'Menu links added at hook_menu_links_discovered_alter() obtain the machine name from the $links key.');
     // Make sure that rebuilding the menu tree does not produce duplicates of
     // links added by hook_menu_links_discovered_alter().
-    \Drupal::service('router.builder')->rebuild();
     $this->drupalGet('menu-test');
     $this->assertUniqueText('Custom link', 'Menu links added by hook_menu_links_discovered_alter() do not duplicate after a menu rebuild.');
   }
@@ -178,7 +177,6 @@ class MenuRouterTest extends BrowserTestBase {
    */
   protected function doTestMenuOnRoute() {
     \Drupal::service('module_installer')->install(['router_test']);
-    \Drupal::service('router.builder')->rebuild();
     $this->resetAll();
 
     $this->drupalGet('router_test/test2');

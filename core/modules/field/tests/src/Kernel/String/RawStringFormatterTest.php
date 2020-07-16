@@ -58,7 +58,6 @@ class RawStringFormatterTest extends KernelTestBase {
 
     // Configure the theme system.
     $this->installConfig(['system', 'field']);
-    \Drupal::service('router.builder')->rebuild();
     $this->installEntitySchema('entity_test');
 
     $this->entityType = 'entity_test';

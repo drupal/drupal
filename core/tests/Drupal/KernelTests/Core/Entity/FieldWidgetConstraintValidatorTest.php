@@ -30,7 +30,6 @@ class FieldWidgetConstraintValidatorTest extends KernelTestBase {
     parent::setUp();
 
     $this->installSchema('system', ['key_value']);
-    $this->container->get('router.builder')->rebuild();
 
     $this->installEntitySchema('user');
     $this->installEntitySchema('entity_test_composite_constraint');

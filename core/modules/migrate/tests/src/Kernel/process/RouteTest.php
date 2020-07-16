@@ -259,8 +259,6 @@ class RouteTest extends KernelTestBase {
    *   The route information based on the source link_path.
    */
   protected function doTransform($value) {
-    // Rebuild the routes.
-    $this->container->get('router.builder')->rebuild();
     $pathValidator = $this->container->get('path.validator');
     $row = new Row();
     $migration = $this->prophesize(MigrationInterface::class)->reveal();

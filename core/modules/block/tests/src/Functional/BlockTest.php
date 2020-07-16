@@ -281,7 +281,6 @@ class BlockTest extends BlockTestBase {
     // Explicitly set the default and admin themes.
     $theme = 'block_test_specialchars_theme';
     \Drupal::service('theme_installer')->install([$theme]);
-    \Drupal::service('router.builder')->rebuild();
     $this->drupalGet('admin/structure/block');
     $this->assertEscaped('<"Cat" & \'Mouse\'>');
     $this->drupalGet('admin/structure/block/list/block_test_specialchars_theme');

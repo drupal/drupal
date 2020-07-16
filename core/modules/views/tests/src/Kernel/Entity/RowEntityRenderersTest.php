@@ -80,9 +80,6 @@ class RowEntityRenderersTest extends ViewsKernelTestBase {
     $this->installSchema('node', ['node_access']);
     $this->installConfig(['node', 'language']);
 
-    // The entity.node.canonical route must exist when nodes are rendered.
-    $this->container->get('router.builder')->rebuild();
-
     $this->langcodes = [\Drupal::languageManager()->getDefaultLanguage()->getId()];
     for ($i = 0; $i < 2; $i++) {
       $langcode = 'l' . $i;

@@ -134,9 +134,6 @@ class CommentFieldsTest extends CommentTestBase {
     // \Drupal\comment\CommentLinkBuilder::buildCommentedEntityLinks. Therefore
     // we need a node listing, let's use views for that.
     $this->container->get('module_installer')->install(['views'], TRUE);
-    // We also need a router rebuild, as the router is lazily rebuild in the
-    // module installer.
-    \Drupal::service('router.builder')->rebuild();
     $this->drupalGet('node');
 
     $link_info = $this->getDrupalSettings()['comment']['newCommentsLinks']['node']['comment2']['2'];

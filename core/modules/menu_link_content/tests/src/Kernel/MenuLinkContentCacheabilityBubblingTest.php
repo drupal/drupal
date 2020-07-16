@@ -54,8 +54,6 @@ class MenuLinkContentCacheabilityBubblingTest extends KernelTestBase {
    * Tests bubbleable metadata of menu links' outbound route/path processing.
    */
   public function testOutboundPathAndRouteProcessing() {
-    \Drupal::service('router.builder')->rebuild();
-
     $request_stack = \Drupal::requestStack();
     /** @var \Symfony\Component\Routing\RequestContext $request_context */
     $request_context = \Drupal::service('router.request_context');

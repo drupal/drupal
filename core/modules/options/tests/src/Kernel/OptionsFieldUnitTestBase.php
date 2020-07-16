@@ -51,7 +51,6 @@ abstract class OptionsFieldUnitTestBase extends FieldKernelTestBase {
    */
   protected function setUp() {
     parent::setUp();
-    $this->container->get('router.builder')->rebuild();
 
     $this->fieldStorageDefinition = [
       'field_name' => $this->fieldName,

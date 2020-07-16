@@ -415,7 +415,6 @@ class DisplayTest extends ViewTestBase {
    */
   public function testTranslationSetting() {
     \Drupal::service('module_installer')->install(['file']);
-    \Drupal::service('router.builder')->rebuild();
 
     // By default there should be no language settings.
     $this->checkTranslationSetting();

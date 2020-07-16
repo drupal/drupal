@@ -117,7 +117,6 @@ class ContentNegotiationRoutingTest extends KernelTestBase {
    */
   public function testFullNegotiation() {
     $this->enableModules(['accept_header_routing_test']);
-    \Drupal::service('router.builder')->rebuild();
     $tests = [
       // ['path', 'accept', 'content-type'],
 

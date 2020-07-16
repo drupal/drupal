@@ -73,9 +73,6 @@ class UserAccountFormFieldsTest extends KernelTestBase {
     // Install default configuration; required for AccountFormController.
     $this->installConfig(['user']);
 
-    // Install the router table and then rebuild.
-    \Drupal::service('router.builder')->rebuild();
-
     $form = $this->buildAccountForm('default');
 
     // Verify name and pass field order.

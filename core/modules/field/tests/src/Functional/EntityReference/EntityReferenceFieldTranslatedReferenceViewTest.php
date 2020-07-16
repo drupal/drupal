@@ -229,8 +229,6 @@ class EntityReferenceFieldTranslatedReferenceViewTest extends BrowserTestBase {
     // up.
     \Drupal::service('content_translation.manager')->setEnabled($this->testEntityTypeName, $this->referrerType->id(), TRUE);
     \Drupal::service('content_translation.manager')->setEnabled($this->testEntityTypeName, $this->referencedType->id(), TRUE);
-
-    \Drupal::service('router.builder')->rebuild();
   }
 
   /**

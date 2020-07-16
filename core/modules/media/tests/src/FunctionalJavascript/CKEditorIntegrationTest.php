@@ -267,7 +267,6 @@ class CKEditorIntegrationTest extends WebDriverTestBase {
     $this->config('node.settings')
       ->set('use_admin_theme', TRUE)
       ->save();
-    $this->container->get('router.builder')->rebuild();
 
     // Allow the test user to view the admin theme.
     $this->adminUser->addRole($this->drupalCreateRole(['view the administration theme']));

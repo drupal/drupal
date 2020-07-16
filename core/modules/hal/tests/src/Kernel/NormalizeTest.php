@@ -40,8 +40,6 @@ class NormalizeTest extends NormalizerTestBase {
         ],
       ],
     ])->save();
-
-    \Drupal::service('router.builder')->rebuild();
   }
 
   /**

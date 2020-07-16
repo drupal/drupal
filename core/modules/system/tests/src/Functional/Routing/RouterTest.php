@@ -301,7 +301,6 @@ class RouterTest extends BrowserTestBase {
    */
   public function testRouterUninstallInstall() {
     \Drupal::service('module_installer')->uninstall(['router_test']);
-    \Drupal::service('router.builder')->rebuild();
     try {
       \Drupal::service('router.route_provider')->getRouteByName('router_test.1');
       $this->fail('Route was delete on uninstall.');
@@ -311,7 +310,6 @@ class RouterTest extends BrowserTestBase {
     }
     // Install the module again.
     \Drupal::service('module_installer')->install(['router_test']);
-    \Drupal::service('router.builder')->rebuild();
     $route = \Drupal::service('router.route_provider')->getRouteByName('router_test.1');
     $this->assertNotNull($route, 'Route exists after module installation');
   }
