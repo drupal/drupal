@@ -1247,7 +1247,7 @@ class MenuTreeStorage implements MenuTreeStorageInterface {
           'default' => '',
         ],
         'route_name' => [
-          'description' => 'The machine name of a defined Symfony Route this menu item represents.',
+          'description' => 'The machine name of a defined Symfony Route this menu link represents.',
           'type' => 'varchar_ascii',
           'length' => 255,
         ],
@@ -1304,7 +1304,7 @@ class MenuTreeStorage implements MenuTreeStorageInterface {
           'default' => 'system',
         ],
         'enabled' => [
-          'description' => 'A flag for whether the link should be rendered in menus. (0 = a disabled menu item that may be shown on admin screens, 1 = a normal, visible link)',
+          'description' => 'A flag for whether the link should be rendered in menus. (0 = a disabled menu link that may be shown on admin screens, 1 = a normal, visible link)',
           'type' => 'int',
           'not null' => TRUE,
           'default' => 1,

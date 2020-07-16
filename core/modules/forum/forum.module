@@ -42,7 +42,7 @@ function forum_help($route_name, RouteMatchInterface $route_match) {
       $output .= '<dt>' . t('Starting a discussion') . '</dt>';
       $output .= '<dd>' . t('The <a href=":create-topic">Forum topic</a> link on the <a href=":content-add">Add content</a> page creates the first post of a new threaded discussion, or thread.', [':create-topic' => Url::fromRoute('node.add', ['node_type' => 'forum'])->toString(), ':content-add' => Url::fromRoute('node.add_page')->toString()]) . '</dd>';
       $output .= '<dt>' . t('Navigating in the forum') . '</dt>';
-      $output .= '<dd>' . t('Enabling the Forum module provides a default <em>Forums</em> menu item in the Tools menu that links to the <a href=":forums">Forums page</a>.', [':forums' => Url::fromRoute('forum.index')->toString()]) . '</dd>';
+      $output .= '<dd>' . t('Enabling the Forum module provides a default <em>Forums</em> menu link in the Tools menu that links to the <a href=":forums">Forums page</a>.', [':forums' => Url::fromRoute('forum.index')->toString()]) . '</dd>';
       $output .= '<dt>' . t('Moving forum topics') . '</dt>';
       $output .= '<dd>' . t('A forum topic (and all of its comments) may be moved between forums by selecting a different forum while editing a forum topic. When moving a forum topic between forums, the <em>Leave shadow copy</em> option creates a link in the original forum pointing to the new location.') . '</dd>';
       $output .= '<dt>' . t('Locking and disabling comments') . '</dt>';

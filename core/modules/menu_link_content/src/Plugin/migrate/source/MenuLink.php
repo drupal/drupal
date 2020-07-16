@@ -49,7 +49,7 @@ class MenuLink extends DrupalSqlBase {
       'link_title' => t('The text displayed for the link, which may be modified by a title callback stored in {menu_router}.'),
       'options' => t('A serialized array of options to set on the URL, such as a query string or HTML attributes.'),
       'module' => t('The name of the module that generated this link.'),
-      'hidden' => t('A flag for whether the link should be rendered in menus. (1 = a disabled menu item that may be shown on admin screens, -1 = a menu callback, 0 = a normal, visible link)'),
+      'hidden' => t('A flag for whether the link should be rendered in menus. (1 = a disabled menu link that may be shown on admin screens, -1 = a menu callback, 0 = a normal, visible link)'),
       'external' => t('A flag to indicate if the link points to a full URL starting with a protocol, like http:// (1 = external, 0 = internal).'),
       'has_children' => t('Flag indicating whether any links have this link as a parent (1 = children exist, 0 = no children).'),
       'expanded' => t('Flag for whether this link should be rendered as expanded in menus - expanded links always have their child links displayed, instead of only when the link is in the active trail (1 = expanded, 0 = not expanded)'),

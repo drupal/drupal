@@ -22,7 +22,7 @@ class ShortcutSetForm extends BundleEntityFormBase {
     $form['label'] = [
       '#type' => 'textfield',
       '#title' => t('Set name'),
-      '#description' => t('The new set is created by copying items from your default shortcut set.'),
+      '#description' => t('The new set is created by copying links from your default shortcut set.'),
       '#required' => TRUE,
       '#default_value' => $entity->label(),
     ];

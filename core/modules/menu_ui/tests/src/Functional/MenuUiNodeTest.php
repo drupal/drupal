@@ -111,7 +111,7 @@ class MenuUiNodeTest extends BrowserTestBase {
       'menu_parent' => 'main:',
     ];
     $this->drupalPostForm('admin/structure/types/manage/page', $edit, t('Save content type'));
-    $this->assertText(t('The selected menu item is not under one of the selected menus.'));
+    $this->assertText(t('The selected menu link is not under one of the selected menus.'));
     $this->assertNoRaw(t('The content type %name has been updated.', ['%name' => 'Basic page']));
 
     // Enable Tools menu as available menu.
