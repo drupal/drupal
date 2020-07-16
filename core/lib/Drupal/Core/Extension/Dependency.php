@@ -139,7 +139,7 @@ class Dependency {
    * Prevents unnecessary serialization of constraint objects.
    *
    * @return array
-   *   The properties to seriailize.
+   *   The properties to serialize.
    */
   public function __sleep() {
     return ['name', 'project', 'constraintString'];

@@ -458,7 +458,7 @@ function read_intl_data() {
   // Then you need to do a bunch of language-specific or script-specific
   // transliterations. Here is hopefully a representative set. There are
   // quite a few scripts that don't appear to have rules currently, such
-  // as Etheopian.
+  // as Ethiopian.
   $ops .= 'Greek-Latin; ';
   $ops .= 'Cyrillic-Latin; ';
   $ops .= 'Armenian-Latin; ';

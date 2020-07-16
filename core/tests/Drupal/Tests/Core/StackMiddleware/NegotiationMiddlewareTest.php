@@ -68,7 +68,7 @@ class NegotiationMiddlewareTest extends UnitTestCase {
    *
    * @covers ::getContentType
    */
-  public function testUnknowContentTypeReturnsNull() {
+  public function testUnknownContentTypeReturnsNull() {
     $request = new Request();
 
     $this->assertNull($this->contentNegotiation->getContentType($request));
@@ -79,7 +79,7 @@ class NegotiationMiddlewareTest extends UnitTestCase {
    *
    * @covers ::getContentType
    */
-  public function testUnknowContentTypeButAjaxRequest() {
+  public function testUnknownContentTypeButAjaxRequest() {
     $request = new Request();
     $request->headers->set('X-Requested-With', 'XMLHttpRequest');
 

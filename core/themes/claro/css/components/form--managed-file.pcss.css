@@ -208,7 +208,7 @@ td .form-managed-file.no-meta .form-managed-file__image-preview {
  */
 .form-managed-file__main .form-element--api-file {
   flex: 1 1 auto;
-  min-width: 1px; /* This makes the element to be shrinked on IE11 */
+  min-width: 1px; /* This makes the element shrink on IE11 */
 }
 
 /**

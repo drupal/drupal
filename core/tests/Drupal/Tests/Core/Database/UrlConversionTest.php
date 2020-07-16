@@ -7,7 +7,7 @@ use Drupal\Core\Site\Settings;
 use Drupal\Tests\UnitTestCase;
 
 /**
- * Tests for database URL to/from database connection array coversions.
+ * Tests for database URL to/from database connection array conversions.
  *
  * These tests run in isolation since we don't want the database static to
  * affect other tests.

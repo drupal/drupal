@@ -158,7 +158,7 @@ class UserAuthTest extends UnitTestCase {
       ->with($this->password, $this->testUser->getPassword())
       ->will($this->returnValue(TRUE));
 
-    $this->assertsame(1, $this->userAuth->authenticate($this->username, $this->password));
+    $this->assertSame(1, $this->userAuth->authenticate($this->username, $this->password));
   }
 
   /**
@@ -185,7 +185,7 @@ class UserAuthTest extends UnitTestCase {
       ->with(0, 0)
       ->will($this->returnValue(TRUE));
 
-    $this->assertsame(2, $this->userAuth->authenticate($this->username, 0));
+    $this->assertSame(2, $this->userAuth->authenticate($this->username, 0));
   }
 
   /**
@@ -217,7 +217,7 @@ class UserAuthTest extends UnitTestCase {
       ->with($this->testUser->getPassword())
       ->will($this->returnValue(TRUE));
 
-    $this->assertsame(1, $this->userAuth->authenticate($this->username, $this->password));
+    $this->assertSame(1, $this->userAuth->authenticate($this->username, $this->password));
   }
 
 }

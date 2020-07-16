@@ -368,7 +368,7 @@ abstract class ContentEntityStorageBase extends EntityStorageBase implements Con
     $entity_type = $this->getEntityType();
 
     // A list of known revision metadata fields which should be skipped from
-    // the comparision.
+    // the comparison.
     $field_names = [
       $entity_type->getKey('revision'),
       $entity_type->getKey('revision_translation_affected'),

@@ -1424,7 +1424,7 @@ abstract class ContentEntityBase extends EntityBase implements \IteratorAggregat
     $translation = $original->getTranslation($this->activeLangcode);
     $langcode = $this->language()->getId();
 
-    // The list of fields to skip from the comparision.
+    // The list of fields to skip from the comparison.
     $skip_fields = $this->getFieldsToSkipFromTranslationChangesCheck();
 
     // We also check untranslatable fields, so that a change to those will mark

@@ -110,7 +110,7 @@ class ManageDisplayTest extends WebDriverTestBase {
     $field_test_settings = $page->find('css', 'input[name="field_test_settings_edit"]');
     $weight_toggle = $page->find('css', '.tabledrag-toggle-weight');
 
-    // Assert the format typr field is visible and contains the expected
+    // Assert the format type field is visible and contains the expected
     // formatter.
     $this->assertTrue($field_test_format_type->isVisible());
     $this->assertEquals($format, $field_test_format_type->getValue());

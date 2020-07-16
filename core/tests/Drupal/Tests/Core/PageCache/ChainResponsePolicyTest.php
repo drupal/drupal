@@ -128,7 +128,7 @@ class ChainResponsePolicyTest extends UnitTestCase {
     $this->policy->addPolicy($ignored_rule);
 
     $actual_result = $this->policy->check($this->response, $this->request);
-    $this->assertsame(ResponsePolicyInterface::DENY, $actual_result);
+    $this->assertSame(ResponsePolicyInterface::DENY, $actual_result);
   }
 
 }

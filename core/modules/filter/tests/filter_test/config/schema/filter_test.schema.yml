@@ -2,7 +2,7 @@
 
 filter_settings.filter_test_restrict_tags_and_attributes:
   type: filter
-  label: 'Filter to restirct HTML tags and attributes'
+  label: 'Filter to restrict HTML tags and attributes'
   mapping:
     restrictions:
       type: mapping

@@ -343,7 +343,7 @@ class ConfigDependencyTest extends EntityKernelTestBase {
     // is called as expected and with the correct dependencies.
     $called = \Drupal::state()->get('config_test.on_dependency_removal_called', []);
     $this->assertArrayNotHasKey($entity_3->id(), $called, 'ConfigEntityInterface::onDependencyRemoval() is not called for entity 3.');
-    $this->assertSame([$entity_1->id(), $entity_4->id(), $entity_2->id(), $entity_5->id()], array_keys($called), 'The most dependent entites have ConfigEntityInterface::onDependencyRemoval() called first.');
+    $this->assertSame([$entity_1->id(), $entity_4->id(), $entity_2->id(), $entity_5->id()], array_keys($called), 'The most dependent entities have ConfigEntityInterface::onDependencyRemoval() called first.');
     $this->assertSame(['config' => [], 'content' => [], 'module' => ['node'], 'theme' => []], $called[$entity_1->id()]);
     $this->assertSame(['config' => [$entity_1->getConfigDependencyName()], 'content' => [], 'module' => [], 'theme' => []], $called[$entity_2->id()]);
     $this->assertSame(['config' => [$entity_1->getConfigDependencyName()], 'content' => [], 'module' => ['node'], 'theme' => []], $called[$entity_4->id()]);

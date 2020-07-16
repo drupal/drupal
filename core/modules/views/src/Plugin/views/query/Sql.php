@@ -868,8 +868,8 @@ class Sql extends QueryPluginBase {
   }
 
   /**
-   * Remove all fields that may've been added; primarily used for summary
-   * mode where we're changing the query because we didn't get data we needed.
+   * Remove all fields that may have been added; primarily used for summary mode
+   * where we're changing the query because we didn't get data we needed.
    */
   public function clearFields() {
     $this->fields = [];

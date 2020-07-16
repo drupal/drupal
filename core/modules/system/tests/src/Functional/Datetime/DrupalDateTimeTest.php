@@ -114,7 +114,7 @@ class DrupalDateTimeTest extends BrowserTestBase {
     $this->assertEqual($date->format('Y/m/d H:i:s e'), '1972/10/11 12:25:21 UTC', 'Date has default UTC time zone and correct date/time.');
 
     // Verify that the format method can override the time zone.
-    $this->assertEqual($date->format('Y/m/d H:i:s e', ['timezone' => 'America/New_York']), '1972/10/11 08:25:21 America/New_York', 'Date displayed overidden time zone and correct date/time');
+    $this->assertEqual($date->format('Y/m/d H:i:s e', ['timezone' => 'America/New_York']), '1972/10/11 08:25:21 America/New_York', 'Date displayed overridden time zone and correct date/time');
 
     // Verify that the date format method still displays the default time zone
     // for the date object.

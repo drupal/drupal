@@ -59,7 +59,7 @@ class BaseFieldOverrideTest extends KernelTestBase {
         FALSE,
         FieldItemList::class,
       ],
-      'String (overriden class)' => [
+      'String (overridden class)' => [
         'string',
         static::class,
         static::class,

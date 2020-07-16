@@ -49,7 +49,7 @@ class FieldNumericTest extends ViewsKernelTestBase {
    */
   public function providerTestFieldNumeric() {
     return [
-      'no-formating' => [
+      'no-formatting' => [
         [],
         [0, 0.1234, -0.1234, 1000.1234, -1000.1234],
         ['0', '0.1234', '-0.1234', '1,000.1234', '-1,000.1234'],

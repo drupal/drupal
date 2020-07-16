@@ -13,7 +13,7 @@
  * - The initial content of the tabledrag-cell is wrapped into a new DOM element
  *   ".tabledrag-cell-content__item". This new element is moved into an another
  *   ".tabledrag-cell-content" division that contains the drag handle, the
- *   identation elements and the tabledrag changed mark as well.
+ *   indentation elements and the tabledrag changed mark as well.
  *   This is needed to keep all of these element in a single line
  *   (https://www.drupal.org/node/3083044).
  *   Claro introduced two theme functions for these:

@@ -134,7 +134,7 @@ class JsonApiSpec {
    *   A custom query parameter name to validate.
    *
    * @return bool
-   *   Whether the given query parameter is in compliane with the JSON:API
+   *   Whether the given query parameter is in compliance with the JSON:API
    *   specification.
    *
    * @see http://jsonapi.org/format/#query-parameters

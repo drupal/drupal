@@ -45,7 +45,7 @@ class UpdateReportTest extends KernelTestBase {
       '$variables with data not set' => [
         [],
       ],
-      '$variables with data as an interger' => [
+      '$variables with data as an integer' => [
         ['data' => 4],
       ],
       '$variables with data as a string' => [

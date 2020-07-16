@@ -23,7 +23,7 @@ trait EntityChangesDetectionTrait {
     $entity_type = $entity->getEntityType();
 
     // A list of known revision metadata fields which should be skipped from
-    // the comparision.
+    // the comparison.
     $fields = [
       $entity_type->getKey('revision'),
       $entity_type->getKey('revision_translation_affected'),
