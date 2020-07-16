@@ -154,26 +154,15 @@ class ReviewForm extends MigrateUpgradeFormBase {
       $output = $this->prepareOutput($display[MigrationState::NOT_FINISHED]);
       foreach ($output as $data) {
         $missing_count++;
-        // Get the migration status for this $source_module, if a module of the
+        // Get the migration status for each source module, if a module of the
         // same name exists on the destination site.
-        $missing_module_list['module_list'][] = [
-          'source_module' => [
-            '#type' => 'html_tag',
-            '#tag' => 'span',
-            '#value' => $data['source_module_name'],
-            '#attributes' => [
-              'class' => [
-                'upgrade-analysis-report__status-icon',
-                'upgrade-analysis-report__status-icon--error',
-              ],
-            ],
+        $missing_module_list['module_list']['#rows'][] = [
+          [
+            'data' => $data['source_module_name'],
+            'class' => ['upgrade-analysis-report__status-icon', 'upgrade-analysis-report__status-icon--error'],
           ],
-          'source_machine_name' => [
-            '#plain_text' => $data['source_machine_name'],
-          ],
-          'destination_module' => [
-            '#plain_text' => $data['destination'],
-          ],
+          $data['source_machine_name'],
+          $data['destination'],
         ];
       }
     }
@@ -200,24 +189,13 @@ class ReviewForm extends MigrateUpgradeFormBase {
       $output = $this->prepareOutput($display[MigrationState::FINISHED]);
       foreach ($output as $data) {
         $available_count++;
-        $available_module_list['module_list'][] = [
-          'source_module' => [
-            '#type' => 'html_tag',
-            '#tag' => 'span',
-            '#value' => $data['source_module_name'],
-            '#attributes' => [
-              'class' => [
-                'upgrade-analysis-report__status-icon',
-                'upgrade-analysis-report__status-icon--checked',
-              ],
-            ],
+        $available_module_list['module_list']['#rows'][] = [
+          [
+            'data' => $data['source_module_name'],
+            'class' => ['upgrade-analysis-report__status-icon', 'upgrade-analysis-report__status-icon--checked'],
           ],
-          'source_machine_name' => [
-            '#plain_text' => $data['source_machine_name'],
-          ],
-          'destination_module' => [
-            '#plain_text' => $data['destination'],
-          ],
+          $data['source_machine_name'],
+          $data['destination'],
         ];
       }
     }
