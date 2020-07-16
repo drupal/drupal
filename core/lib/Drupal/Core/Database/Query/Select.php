@@ -807,13 +807,15 @@ class Select extends Query implements SelectInterface {
     $fields = [];
     foreach ($this->tables as $alias => $table) {
       if (!empty($table['all_fields'])) {
-        $fields[] = $this->connection->escapeTable($alias) . '.*';
+        $fields[] = $this->connection->escapeAlias($alias) . '.*';
       }
     }
     foreach ($this->fields as $field) {
+      // Note that $field['table'] holds the table_alias.
+      // @see \Drupal\Core\Database\Query\Select::addField
+      $table = isset($field['table']) ? $field['table'] . '.' : '';
       // Always use the AS keyword for field aliases, as some
       // databases require it (e.g., PostgreSQL).
-      $table = isset($field['table']) ? $field['table'] . '.' : '';
       $fields[] = $this->connection->escapeField($table . $field['field']) . ' AS ' . $this->connection->escapeAlias($field['alias']);
     }
     foreach ($this->expressions as $expression) {
