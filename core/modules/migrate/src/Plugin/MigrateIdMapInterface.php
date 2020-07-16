@@ -13,21 +13,56 @@ use Drupal\migrate\Row;
  * for audit and rollback purposes. The keys used in the migrate_map table are
  * of the form sourceidN and destidN for the source and destination values
  * respectively.
+ *
+ * The mappings are stored in a migrate_map table with properties:
+ * - source_ids_hash: A hash of the source IDs.
+ * - sourceidN: Any number of source IDs defined by a source plugin, where N
+ *   starts at 1, for example,  sourceid1, sourceid2 ... sourceidN.
+ * - destidN: Any number of destination IDs defined by a destination plugin,
+ *   where N starts at 1, for example,  destid1, destid2 ... destidN.
+ * - source_row_status:  Indicates current status of the source row, valid
+ *   values are self::STATUS_IMPORTED, self::STATUS_NEEDS_UPDATE,
+ *   self::STATUS_IGNORED or self::STATUS_FAILED.
+ * - rollback_action: Flag indicating what to do for this item on rollback. This
+ *   property is set in destination plugins. Valid values are
+ *   self::ROLLBACK_DELETE and self::ROLLBACK_PRESERVE.
+ * - last_imported: UNIX timestamp of the last time the row was imported.
+ * - hash: A hash of the source row data that is used to detect changes in the
+ *   source data.
  */
 interface MigrateIdMapInterface extends \Iterator, PluginInspectionInterface {
 
   /**
-   * Codes reflecting the current status of a map row.
+   * Indicates that the import of the row was successful.
    */
   const STATUS_IMPORTED = 0;
+
+  /**
+   * Indicates that the row needs to be updated.
+   */
   const STATUS_NEEDS_UPDATE = 1;
+
+  /**
+   * Indicates that the import of the row was ignored.
+   */
   const STATUS_IGNORED = 2;
+
+  /**
+   * Indicates that the import of the row failed.
+   */
   const STATUS_FAILED = 3;
 
   /**
-   * Codes reflecting how to handle the destination item on rollback.
+   * Indicates that the data for the row is to be deleted.
    */
   const ROLLBACK_DELETE = 0;
+
+  /**
+   * Indicates that the data for the row is to be preserved.
+   *
+   * Rows that refer to entities that already exist on the destination and are
+   * being updated are preserved.
+   */
   const ROLLBACK_PRESERVE = 1;
 
   /**
