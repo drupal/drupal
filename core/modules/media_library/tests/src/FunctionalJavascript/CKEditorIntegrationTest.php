@@ -278,7 +278,7 @@ class CKEditorIntegrationTest extends WebDriverTestBase {
       'all_media_types' => [],
       'only_image' => ['image' => 'image'],
       'only_arrakis' => ['arrakis' => 'arrakis'],
-      'both_items_chedked' => [
+      'both_items_checked' => [
         'image' => 'image',
         'arrakis' => 'arrakis',
       ],

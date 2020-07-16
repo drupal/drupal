@@ -19,7 +19,7 @@ class YamlTest extends UnitTestCase {
    * @covers ::getSerializer
    * @runInSeparateProcess
    */
-  public function testGetSeralization() {
+  public function testGetSerialization() {
     new Settings(['yaml_parser_class' => YamlParserProxy::class]);
 
     $this->assertEquals(YamlParserProxy::class, Settings::get('yaml_parser_class'));

@@ -80,7 +80,7 @@
      *   Message type, can be either 'status', 'error' or 'warning'.
      * @param {string} [options.announce]
      *   Screen-reader version of the message if necessary. To prevent a message
-     *   being sent to Drupal.announce() this should be an emptry string.
+     *   being sent to Drupal.announce() this should be an empty string.
      * @param {string} [options.priority]
      *   Priority of the message for Drupal.announce().
      *

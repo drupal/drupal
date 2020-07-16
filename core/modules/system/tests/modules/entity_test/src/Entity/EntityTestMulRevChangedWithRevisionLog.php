@@ -10,7 +10,7 @@ use Drupal\Core\Entity\RevisionLogInterface;
  * Defines the test entity class.
  *
  * @ContentEntityType(
- *   id = "entity_test_mulrev_chnged_revlog",
+ *   id = "entity_test_mulrev_changed_rev",
  *   label = @Translation("Test entity - revisions log and data table"),
  *   base_table = "entity_test_mulrev_changed_revlog",
  *   revision_table = "entity_test_mulrev_changed_revlog_revision",

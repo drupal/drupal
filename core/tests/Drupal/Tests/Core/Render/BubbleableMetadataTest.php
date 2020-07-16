@@ -684,7 +684,7 @@ class BubbleableMetadataTest extends UnitTestCase {
       ],
       'merge-attachments-metadata' => [
         (new BubbleableMetadata())->setAttachments(['foo' => []]),
-        (new BubbleableMetadata())->setAttachments(['baro' => []]),
+        (new BubbleableMetadata())->setAttachments(['bar' => []]),
         (new BubbleableMetadata())->setAttachments(['foo' => [], 'bar' => []]),
       ],
     ];

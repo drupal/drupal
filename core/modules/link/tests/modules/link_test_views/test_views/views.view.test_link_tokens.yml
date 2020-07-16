@@ -88,7 +88,7 @@ display:
           exclude: false
           alter:
             alter_text: true
-            text: "Formated: {{ field_link }}<br />\nRaw uri: {{ field_link__uri }}<br />\nRaw title: {{ field_link__title }}<br />\nRaw options: {{ field_link__options }}."
+            text: "Formatted: {{ field_link }}<br />\nRaw uri: {{ field_link__uri }}<br />\nRaw title: {{ field_link__title }}<br />\nRaw options: {{ field_link__options }}."
             make_link: false
             path: '{{ field_link__uri }}'
             absolute: false

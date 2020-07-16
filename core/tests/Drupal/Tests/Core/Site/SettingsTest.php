@@ -142,9 +142,9 @@ class SettingsTest extends UnitTestCase {
     $settings = new Settings([]);
 
     $class = new \ReflectionClass(Settings::class);
-    $instace_property = $class->getProperty("instance");
-    $instace_property->setAccessible(TRUE);
-    $instace_property->setValue(NULL);
+    $instance_property = $class->getProperty("instance");
+    $instance_property->setAccessible(TRUE);
+    $instance_property->setValue(NULL);
 
     $this->expectException(\BadMethodCallException::class);
     $settings->getInstance();

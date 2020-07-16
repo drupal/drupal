@@ -733,10 +733,10 @@ class ConfigSchemaTest extends KernelTestBase {
     $typed_values = [
       'tests' => [
         [
-          'id' => 'cat:persion.dog',
+          'id' => 'cat:persian.dog',
           'foo' => 'cat',
           'bar' => 'dog',
-          'breed' => 'persion',
+          'breed' => 'persian',
         ],
       ],
     ];

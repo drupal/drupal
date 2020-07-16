@@ -97,7 +97,7 @@ class FilterIdTest extends KernelTestBase {
    * Provides filter ids for testing transformations.
    *
    * @return array
-   *   Formatted as $source_id, $tranformed_id, $invalid_id.
+   *   Formatted as $source_id, $transformed_id, $invalid_id.
    *   When $invalid_id is provided the transformation should fail with the
    *   supplied id.
    */

@@ -213,7 +213,7 @@ class MigrationState {
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $moduleHandler
    *   Module handler.
    * @param \Drupal\Core\Messenger\MessengerInterface $messenger
-   *   Messenger sevice.
+   *   Messenger service.
    * @param \Drupal\Core\StringTranslation\TranslationInterface $stringTranslation
    *   String translation service.
    */

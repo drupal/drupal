@@ -224,7 +224,7 @@ class ViewsModerationStateFilterTest extends ViewTestBase {
   }
 
   /**
-   * Execute a view and asssert the expected results.
+   * Execute a view and assert the expected results.
    *
    * @param \Drupal\views\ViewEntityInterface $view_entity
    *   A view configuration entity.

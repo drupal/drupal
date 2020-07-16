@@ -35,7 +35,7 @@ class EntryPointTest extends BrowserTestBase {
   protected $defaultTheme = 'stark';
 
   /**
-   * Test GETing the entry point.
+   * Test GET to the entry point.
    */
   public function testEntryPoint() {
     $request_options = [];

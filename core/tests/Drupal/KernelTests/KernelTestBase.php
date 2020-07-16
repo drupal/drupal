@@ -369,7 +369,7 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
       $this->container->get('module_handler')->loadAll();
     }
 
-    // Setup the destion to the be frontpage by default.
+    // Setup the destination to the be frontpage by default.
     \Drupal::destination()->set('/');
 
     // Write the core.extension configuration.

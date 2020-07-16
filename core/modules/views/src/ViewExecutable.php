@@ -1848,7 +1848,7 @@ class ViewExecutable {
   /**
    * Overrides the view's current title.
    *
-   * The tokens in the title get's replaced before rendering.
+   * The tokens in the title gets replaced before rendering.
    *
    * @return true
    *   Always returns TRUE.

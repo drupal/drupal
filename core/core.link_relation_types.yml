@@ -294,7 +294,7 @@ via:
   description: "Identifies a resource that is the source of the information in the link's context."
   reference: '[RFC4287]'
 webmention:
-  description: "Identifies a target URI that supports the Webmention protcol. This allows clients that mention a resource in some form of publishing process to contact that endpoint and inform it that this resource has been mentioned."
+  description: "Identifies a target URI that supports the Webmention protocol. This allows clients that mention a resource in some form of publishing process to contact that endpoint and inform it that this resource has been mentioned."
   reference: '[http://www.w3.org/TR/webmention/]'
   notes: "This is a similar \"Linkback\" mechanism to the ones of Refback, Trackback, and Pingback. It uses a different protocol, though, and thus should be discoverable through its own link relation type."
 working-copy:

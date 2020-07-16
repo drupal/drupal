@@ -234,7 +234,7 @@ class FilterInOperatorTest extends ViewsKernelTestBase {
   }
 
   /**
-   * Tests that the InOperator filter can handle TranslateableMarkup.
+   * Tests that the InOperator filter can handle TranslatableMarkup.
    */
   public function testFilterOptionAsMarkup() {
     $view = $this->prophesize(ViewExecutable::class);

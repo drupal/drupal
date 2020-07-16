@@ -108,7 +108,7 @@ form_test.validate_without_csrf_token:
   requirements:
     _access: 'TRUE'
 
-form_test.validate_with_error_suppresion:
+form_test.validate_with_error_suppression:
   path: '/form-test/limit-validation-errors'
   defaults:
     _form: '\Drupal\form_test\Form\FormTestLimitValidationErrorsForm'

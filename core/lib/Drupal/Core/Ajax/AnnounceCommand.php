@@ -9,7 +9,7 @@ use Drupal\Core\Asset\AttachedAssets;
  *
  * Developers should be extra careful if this command and
  * \Drupal\Core\Ajax\MessageCommand are included in the same response. By
- * default, MessageCommmand will also call Drupal.announce() and announce the
+ * default, MessageCommand will also call Drupal.announce() and announce the
  * message to the screen reader (unless the option to suppress announcements is
  * passed to the constructor). Manual testing with a screen reader is strongly
  * recommended.

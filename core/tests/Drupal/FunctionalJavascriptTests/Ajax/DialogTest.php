@@ -125,7 +125,7 @@ class DialogTest extends WebDriverTestBase {
     $button2_dialog = $this->assertSession()->waitForElementVisible('css', 'div.ui-dialog-content');
     $this->assertNotNull($button2_dialog, 'Non-modal content displays as expected.');
 
-    // Use a link to close the pagnel opened by button 2.
+    // Use a link to close the panel opened by button 2.
     $this->getSession()->getPage()->clickLink('Link 4 (close non-modal if open)');
 
     // Form modal.

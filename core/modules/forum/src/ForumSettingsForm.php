@@ -48,7 +48,7 @@ class ForumSettingsForm extends ConfigFormBase {
       '#options' => array_combine($options, $options),
       '#description' => $this->t('Default number of forum topics displayed per page.'),
     ];
-    $forder = [
+    $order = [
       1 => $this->t('Date - newest first'),
       2 => $this->t('Date - oldest first'),
       3 => $this->t('Posts - most active first'),
@@ -58,7 +58,7 @@ class ForumSettingsForm extends ConfigFormBase {
       '#type' => 'radios',
       '#title' => $this->t('Default order'),
       '#default_value' => $config->get('topics.order'),
-      '#options' => $forder,
+      '#options' => $order,
       '#description' => $this->t('Default display order for topics.'),
     ];
 
