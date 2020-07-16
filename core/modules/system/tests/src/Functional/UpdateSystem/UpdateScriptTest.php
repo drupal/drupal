@@ -597,7 +597,7 @@ class UpdateScriptTest extends BrowserTestBase {
   }
 
   /**
-   * Tests perfoming updates with update.php in a multilingual environment.
+   * Tests performing updates with update.php in a multilingual environment.
    */
   public function testSuccessfulMultilingualUpdateFunctionality() {
     // Add some custom languages.

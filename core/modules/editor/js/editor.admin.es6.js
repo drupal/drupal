@@ -973,7 +973,7 @@
      * Updates all {@link Drupal.FilterStatus} objects to reflect current state.
      *
      * Automatically checks whether a filter is currently enabled or not. To
-     * support more finegrained.
+     * support more fine-grained.
      *
      * If a filter implements a live setting parser, then that will be used to
      * keep the HTML rules for the {@link Drupal.FilterStatus} object
