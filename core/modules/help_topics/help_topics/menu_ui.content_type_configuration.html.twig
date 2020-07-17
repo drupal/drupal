@@ -1,0 +1,18 @@
+---
+label: 'Configure menu settings for a content type'
+related:
+  - menu_ui.menu_item_add
+  - menu_ui.menu_operations
+  - core.menus
+---
+{% set content_types = render_var(url('entity.node_type.collection')) %}
+<h2>{% trans %}Goal{% endtrans %}</h2>
+<p>{% trans %}For an existing content type, configure the available menus that will be shown as options on content editing screens; links to content items of this type can be added to these menus during editing.{% endtrans %}</p>
+<h2>{% trans %}Steps{% endtrans %}</h2>
+<ol>
+  <li>{% trans %}In the <em>Manage</em> administrative menu, navigate to <em>Structure</em> &gt; <a href="{{ content_types }}"><em>Content types</em></a>.{% endtrans %}</li>
+  <li>{% trans %}Locate the content type you want to configure, and click <em>Edit</em> in the <em>Operations</em> list.{% endtrans %}</li>
+  <li>{% trans %}Under <em>Menu settings</em>, check the menus that you want to be available when editing a content item of this type.{% endtrans %}</li>
+  <li>{% trans %}Optionally, select the <em>Default parent item</em>, to put links to content items under a default location in the menu structure.{% endtrans %}</li>
+  <li>{% trans %}Click <em>Save content type</em>.{% endtrans %}</li>
+</ol>
