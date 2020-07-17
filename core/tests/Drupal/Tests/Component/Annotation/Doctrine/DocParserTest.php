@@ -1214,7 +1214,7 @@ DOCBLOCK;
         $this->assertInstanceOf(Null::class, $result[0]);
     }
 
-    public function testSetValuesExeption()
+    public function testSetValuesException()
     {
         $this->expectException('\Doctrine\Common\Annotations\AnnotationException');
         $this->expectExceptionMessage('[Creation Error] The annotation @SomeAnnotationClassNameWithoutConstructor declared on some class does not have a property named "invalidaProperty". Available properties: data, name');

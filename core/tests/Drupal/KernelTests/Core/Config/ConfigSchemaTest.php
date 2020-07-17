@@ -578,7 +578,7 @@ class ConfigSchemaTest extends KernelTestBase {
     }
     catch (ConfigSchemaAlterException $e) {
       $this->pass($message);
-      $this->assertEqual($e->getMessage(), 'Invoking hook_config_schema_info_alter() has added (config_schema_test.hook_added_defintion) and removed (config_schema_test.hook) schema definitions');
+      $this->assertEqual($e->getMessage(), 'Invoking hook_config_schema_info_alter() has added (config_schema_test.hook_added_definition) and removed (config_schema_test.hook) schema definitions');
     }
 
     \Drupal::state()->set('config_schema_test_exception_remove', FALSE);
@@ -589,7 +589,7 @@ class ConfigSchemaTest extends KernelTestBase {
     }
     catch (ConfigSchemaAlterException $e) {
       $this->pass($message);
-      $this->assertEqual($e->getMessage(), 'Invoking hook_config_schema_info_alter() has added (config_schema_test.hook_added_defintion) schema definitions');
+      $this->assertEqual($e->getMessage(), 'Invoking hook_config_schema_info_alter() has added (config_schema_test.hook_added_definition) schema definitions');
     }
 
     // Tests that hook_config_schema_info_alter() can add additional metadata to
