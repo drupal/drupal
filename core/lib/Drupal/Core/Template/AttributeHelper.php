@@ -26,7 +26,7 @@ class AttributeHelper {
    *   An Attribute object or an array of attributes.
    *
    * @return bool
-   *   TRUE if the attibute exists, FALSE otherwise.
+   *   TRUE if the attribute exists, FALSE otherwise.
    *
    * @throws \InvalidArgumentException
    *   When the input $collection is neither an Attribute object nor an array.

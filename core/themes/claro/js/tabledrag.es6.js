@@ -1808,7 +1808,7 @@
       },
 
       /**
-       * Constucts the table drag handle.
+       * Constructs the table drag handle.
        *
        * @return {string}
        *   A string representing a DOM fragment.
