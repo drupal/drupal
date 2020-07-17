@@ -46,6 +46,7 @@
             "themes/contrib/{$name}": ["type:drupal-theme"],
             "drush/Commands/contrib/{$name}": ["type:drupal-drush"],
             "modules/custom/{$name}": ["type:drupal-custom-module"],
+            "profiles/custom/{$name}": ["type:drupal-custom-profile"],
             "themes/custom/{$name}": ["type:drupal-custom-theme"]
         },
         "drupal-core-project-message": {
