@@ -545,7 +545,7 @@ class OverridesSectionStorageTest extends UnitTestCase {
 
     $collection = new RouteCollection();
     // Entity types that declare a link template for canonical must have a
-    // canonical route present in the route colletion.
+    // canonical route present in the route collection.
     $collection->add('entity.from_canonical.canonical', $expected['entity.from_canonical.canonical']);
     $collection->add('entity.with_string_id.canonical', $expected['entity.with_string_id.canonical']);
     $collection->add('entity.with_integer_id.canonical', $expected['entity.with_integer_id.canonical']);
