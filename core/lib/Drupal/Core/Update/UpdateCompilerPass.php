@@ -82,7 +82,7 @@ class UpdateCompilerPass implements CompilerPassInterface {
    *   TRUE if the argument is a reference to a service that is missing from the
    *   container and the reference is required, FALSE if not.
    */
-  protected function isArgumentMissingService($argument, ContainerBuilder $container) {
+  private function isArgumentMissingService($argument, ContainerBuilder $container) {
     if ($argument instanceof Reference) {
       $argument_id = (string) $argument;
       if (!$container->has($argument_id) && $argument->getInvalidBehavior() === ContainerInterface::EXCEPTION_ON_INVALID_REFERENCE) {
