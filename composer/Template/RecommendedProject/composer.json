@@ -1,6 +1,6 @@
 {
     "name": "drupal/recommended-project",
-    "description": "Project template for Drupal 8 projects with a relocated document root",
+    "description": "Project template for Drupal 9 projects with a relocated document root",
     "type": "project",
     "license": "GPL-2.0-or-later",
     "homepage": "https://www.drupal.org/project/drupal",
