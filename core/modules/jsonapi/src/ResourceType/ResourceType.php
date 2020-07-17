@@ -275,7 +275,7 @@ class ResourceType {
    * the HTTP API. For example, read-only data from an internal resource might
    * be embedded in a public resource using computed fields. Therefore,
    * including the internal resource as a relationship with distinct routes
-   * might uneccesarilly expose internal implementation details.
+   * might unnecessarily expose internal implementation details.
    *
    * @return bool
    *   TRUE if the resource type is internal. FALSE otherwise.
