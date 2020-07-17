@@ -34,3 +34,7 @@ services:
     decorates: new_dependency_test.another_service_two
     decoration_inner_name: new_dependency_test.foo
     arguments: ['@new_dependency_test.foo']
+  new_dependency_test.setter_injection:
+    class: Drupal\new_dependency_test\SetterInjection
+    calls:
+      - [setter, ['@new_dependency_test_with_service.service']]

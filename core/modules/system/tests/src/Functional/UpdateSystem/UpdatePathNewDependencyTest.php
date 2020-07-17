@@ -55,6 +55,7 @@ class UpdatePathNewDependencyTest extends BrowserTestBase {
     $this->assertEquals('Hello', $this->container->get('new_dependency_test.alias')->greet());
     $this->assertEquals('Hello World', $this->container->get('new_dependency_test.hard_dependency')->greet());
     $this->assertEquals('Hello World', $this->container->get('new_dependency_test.optional_dependency')->greet());
+    $this->assertEquals('Hello', $this->container->get('new_dependency_test.setter_injection')->greet());
 
     // Tests that existing decorated services work as expected during update.
     $this->assertTrue(\Drupal::state()->get('new_dependency_test_update_8001.decorated_service'), 'The new_dependency_test.another_service service is decorated');
@@ -70,6 +71,7 @@ class UpdatePathNewDependencyTest extends BrowserTestBase {
       'new_dependency_test.alias_dependency' => FALSE,
       'new_dependency_test.alias2' => FALSE,
       'new_dependency_test.alias_dependency2' => FALSE,
+      'new_dependency_test.setter_injection' => FALSE,
     ], $before_install);
 
     $after_install = \Drupal::state()->get('new_dependency_test_update_8001.has_after_install', []);
@@ -81,6 +83,7 @@ class UpdatePathNewDependencyTest extends BrowserTestBase {
       'new_dependency_test.alias_dependency' => TRUE,
       'new_dependency_test.alias2' => TRUE,
       'new_dependency_test.alias_dependency2' => TRUE,
+      'new_dependency_test.setter_injection' => TRUE,
     ], $after_install);
   }
 

@@ -27,16 +27,28 @@ class UpdateCompilerPass implements CompilerPassInterface {
     do {
       $has_changed = FALSE;
       foreach ($container->getDefinitions() as $key => $definition) {
+        // Ensure all the definition's arguments are valid.
         foreach ($definition->getArguments() as $argument) {
-          if ($argument instanceof Reference) {
-            $argument_id = (string) $argument;
-            if (!$container->has($argument_id) && $argument->getInvalidBehavior() === ContainerInterface::EXCEPTION_ON_INVALID_REFERENCE) {
-              // If the container does not have the argument and would throw an
-              // exception, remove the service.
+          if ($this->isArgumentMissingService($argument, $container)) {
+            $container->removeDefinition($key);
+            $container->log($this, sprintf('Removed service "%s"; reason: depends on non-existent service "%s".', $key, (string) $argument));
+            $has_changed = TRUE;
+            $process_aliases = TRUE;
+            // Process the next definition.
+            continue 2;
+          }
+        }
+
+        // Ensure all the method call arguments are valid.
+        foreach ($definition->getMethodCalls() as $call) {
+          foreach ($call[1] as $argument) {
+            if ($this->isArgumentMissingService($argument, $container)) {
               $container->removeDefinition($key);
-              $container->log($this, sprintf('Removed service "%s"; reason: depends on non-existent service "%s".', $key, $argument_id));
+              $container->log($this, sprintf('Removed service "%s"; reason: method call "%s" depends on non-existent service "%s".', $key, $call[0], (string) $argument));
               $has_changed = TRUE;
               $process_aliases = TRUE;
+              // Process the next definition.
+              continue 3;
             }
           }
         }
@@ -56,6 +68,28 @@ class UpdateCompilerPass implements CompilerPassInterface {
         }
       }
     }
+  }
+
+  /**
+   * Checks if a reference argument is to a missing service.
+   *
+   * @param mixed $argument
+   *   The argument to check.
+   * @param \Symfony\Component\DependencyInjection\ContainerBuilder $container
+   *   The container.
+   *
+   * @return bool
+   *   TRUE if the argument is a reference to a service that is missing from the
+   *   container and the reference is required, FALSE if not.
+   */
+  private function isArgumentMissingService($argument, ContainerBuilder $container) {
+    if ($argument instanceof Reference) {
+      $argument_id = (string) $argument;
+      if (!$container->has($argument_id) && $argument->getInvalidBehavior() === ContainerInterface::EXCEPTION_ON_INVALID_REFERENCE) {
+        return TRUE;
+      }
+    }
+    return FALSE;
   }
 
 }
