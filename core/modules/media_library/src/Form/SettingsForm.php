@@ -35,7 +35,7 @@ class SettingsForm extends ConfigFormBase {
       '#type' => 'checkbox',
       '#title' => $this->t('Enable advanced UI'),
       '#default_value' => $this->config('media_library.settings')->get('advanced_ui'),
-      '#description' => $this->t('If checked, users creating new media items in the media library will see a summary of their selected media items, and they will be able insert their selection directly into the media field or text editor.'),
+      '#description' => $this->t('If checked, users creating new media items in the media library will see a summary of their selected media items, and they will be able to insert their selection directly into the media field or text editor.'),
     ];
     return parent::buildForm($form, $form_state);
   }
