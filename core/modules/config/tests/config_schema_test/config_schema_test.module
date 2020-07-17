@@ -10,7 +10,7 @@
  */
 function config_schema_test_config_schema_info_alter(&$definitions) {
   if (\Drupal::state()->get('config_schema_test_exception_add')) {
-    $definitions['config_schema_test.hook_added_defintion'] = $definitions['config_schema_test.hook'];
+    $definitions['config_schema_test.hook_added_definition'] = $definitions['config_schema_test.hook'];
   }
   if (\Drupal::state()->get('config_schema_test_exception_remove')) {
     unset($definitions['config_schema_test.hook']);

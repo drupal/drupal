@@ -36,8 +36,8 @@ class EntityTypeTest extends UnitTestCase {
    *
    * @dataProvider providerTestGet
    */
-  public function testGet(array $defintion, $key, $expected) {
-    $entity_type = $this->setUpEntityType($defintion);
+  public function testGet(array $definition, $key, $expected) {
+    $entity_type = $this->setUpEntityType($definition);
     $this->assertSame($expected, $entity_type->get($key));
   }
 
