@@ -63,7 +63,7 @@ trait CommonCollectionFilterAccessTestPatternsTrait {
 
     // Test.
     $collection_url = Url::fromRoute('jsonapi.entity_test--bar.collection');
-    // Specifying a delta exercises TemporaryQueryGaurd more thoroughly.
+    // Specifying a delta exercises TemporaryQueryGuard more thoroughly.
     $filter_path = "spotlight.0.$label_field_name";
     $collection_filter_url = $collection_url->setOption('query', ["filter[$filter_path]" => $this->entity->label()]);
     $request_options = [];

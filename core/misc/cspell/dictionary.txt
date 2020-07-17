@@ -415,7 +415,6 @@ deduplicates
 defalt
 defaultable
 defgroup
-defintion
 deletable
 deletedline
 deletee
@@ -583,7 +582,6 @@ evenodd
 eventhandler
 exampleurl
 exdep
-exeption
 existant
 exitcode
 expirable
@@ -696,7 +694,6 @@ funic
 furchtbar
 gabilondo
 gato
-gaurd
 gbmb
 getcode
 getfile
@@ -1252,7 +1249,6 @@ othername
 otherpage
 otherprofile
 otsikko
-ouptut
 outdata
 outdent
 outdir
@@ -2078,7 +2074,6 @@ wiget
 wimoids
 windir
 winnt
-withut
 wmlscript
 woff
 wonkiness

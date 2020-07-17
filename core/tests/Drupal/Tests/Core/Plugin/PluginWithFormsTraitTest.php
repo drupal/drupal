@@ -42,7 +42,7 @@ class PluginWithFormsTraitTest extends UnitTestCase {
     return [
       'block plugin without forms, "configure" operation' => [$block_plugin_without_forms, 'configure', TestClass::class],
       'block plugin without forms, "tickle" operation'    => [$block_plugin_without_forms, 'tickle', NULL],
-      'block plugin withut forms, "poke" operation'       => [$block_plugin_without_forms, 'poke', NULL],
+      'block plugin without forms, "poke" operation'      => [$block_plugin_without_forms, 'poke', NULL],
       'block plugin with forms, "configure" operation' => [$block_plugin_with_forms, 'configure', TestClass::class],
       'block plugin with forms, "tickle" operation'    => [$block_plugin_with_forms, 'tickle', NULL],
       'block plugin with forms, "poke" operation'      => [$block_plugin_with_forms, 'poke', static::class],
