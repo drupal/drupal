@@ -317,7 +317,7 @@ class ConfigSingleImportForm extends ConfirmFormBase {
     }
 
     // Validate for config entities.
-    if ($form_state->getValue('config_type') !== 'system.simple') {
+    if ($form_state->getValue('config_type') && $form_state->getValue('config_type') !== 'system.simple') {
       $definition = $this->entityTypeManager->getDefinition($form_state->getValue('config_type'));
       $id_key = $definition->getKey('id');
 

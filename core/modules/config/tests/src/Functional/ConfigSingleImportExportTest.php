@@ -231,6 +231,10 @@ EOD;
     $this->drupalPostForm('admin/config/development/configuration/single/import', $edit, t('Import'));
     $this->assertText(t('Can not uninstall the Configuration module as part of a configuration synchronization through the user interface.'));
 
+    // Try to import without any values.
+    $this->drupalPostForm('admin/config/development/configuration/single/import', [], t('Import'));
+    $this->assertText('Configuration type field is required.');
+    $this->assertText('Paste your configuration here field is required.');
   }
 
   /**
