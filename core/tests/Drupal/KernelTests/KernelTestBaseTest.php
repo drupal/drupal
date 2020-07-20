@@ -292,18 +292,18 @@ class KernelTestBaseTest extends KernelTestBase {
     // point the original database connection is restored so we need to prefix
     // the tables.
     $connection = Database::getConnection();
-    if ($connection->databaseType() != 'sqlite') {
-      $tables = $connection->schema()->findTables($this->databasePrefix . '%');
-      $this->assertTrue(empty($tables), 'All test tables have been removed.');
-    }
-    else {
-      $result = $connection->query("SELECT name FROM " . $this->databasePrefix . ".sqlite_master WHERE type = :type AND name LIKE :table_name AND name NOT LIKE :pattern", [
+    if ($connection->databaseType() === 'sqlite') {
+      $result = $connection->query("SELECT name FROM " . $this->databasePrefix .
+        ".sqlite_master WHERE type = :type AND name LIKE :table_name AND name NOT LIKE :pattern", [
         ':type' => 'table',
         ':table_name' => '%',
         ':pattern' => 'sqlite_%',
       ])->fetchAllKeyed(0, 0);
-
       $this->assertTrue(empty($result), 'All test tables have been removed.');
+    }
+    else {
+      $tables = $connection->schema()->findTables($this->databasePrefix . '%');
+      $this->assertTrue(empty($tables), 'All test tables have been removed.');
     }
   }
 

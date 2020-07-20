@@ -213,7 +213,7 @@ class DbDumpTest extends KernelTestBase {
     }
 
     // Ensure the test config has been replaced.
-    $config = unserialize($connection->query("SELECT data FROM {config} WHERE name = 'test_config'")->fetchField());
+    $config = unserialize($connection->select('config', 'c')->fields('c', ['data'])->condition('name', 'test_config')->execute()->fetchField());
     $this->assertIdentical($config, $this->data, 'Script has properly restored the config table data.');
 
     // Ensure the cache data was not exported.
