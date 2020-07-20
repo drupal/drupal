@@ -61,8 +61,7 @@ class StandardTest extends BrowserTestBase {
     $this->drupalGet('');
     $this->assertText('Main navigation');
 
-    // Verify we have role = aria on system_powered_by and help_block
-    // blocks.
+    // Verify we have role = complementary on help_block blocks.
     $this->drupalGet('admin/structure/block');
     $elements = $this->xpath('//div[@role=:role and @id=:id]', [
       ':role' => 'complementary',
@@ -70,13 +69,6 @@ class StandardTest extends BrowserTestBase {
     ]);
 
     $this->assertCount(1, $elements, 'Found complementary role on help block.');
-
-    $this->drupalGet('');
-    $elements = $this->xpath('//div[@role=:role and @id=:id]', [
-      ':role' => 'complementary',
-      ':id' => 'block-bartik-powered',
-    ]);
-    $this->assertCount(1, $elements, 'Found complementary role on powered by block.');
 
     // Verify anonymous user can see the block.
     $this->drupalLogout();
