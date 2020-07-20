@@ -727,7 +727,9 @@ class LinkFieldTest extends BrowserTestBase {
     $entity_test_link = $entity_test_storage->create(['name' => 'correct link target']);
     $entity_test_link->save();
 
-    $node = $this->drupalCreateNode(['wrong link target']);
+    // Create a node with the same ID as the test entity to ensure that the link
+    // doesn't match incorrectly.
+    $this->drupalCreateNode(['title' => 'wrong link target']);
 
     $correct_link = 'entity:entity_test/' . $entity_test_link->id();
     $entity_test = $entity_test_storage->create([
