@@ -800,10 +800,6 @@ function system_preprocess_block(&$variables) {
         ];
       }
       break;
-
-    case 'system_powered_by_block':
-      $variables['attributes']['role'] = 'complementary';
-      break;
   }
 }
 
