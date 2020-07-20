@@ -60,7 +60,6 @@ class TaxonomyTermHierarchyConstraintValidator extends ConstraintValidator imple
     $new_parents = array_column($entity->parent->getValue(), 'target_id');
     $original_parents = array_keys($term_storage->loadParents($entity->id())) ?: [0];
     if (($is_pending_revision || $ancestor_is_pending_revision) && $new_parents != $original_parents) {
-      $a = 1;
       $this->context->buildViolation($constraint->message)
         ->atPath('parent')
         ->addViolation();
