@@ -21,9 +21,9 @@ class HtmlEscapedTextTest extends TestCase {
    * @dataProvider providerToString
    */
   public function testToString($text, $expected, $message) {
-    $escapeable_string = new HtmlEscapedText($text);
-    $this->assertEquals($expected, (string) $escapeable_string, $message);
-    $this->assertEquals($expected, $escapeable_string->jsonSerialize());
+    $escapable_string = new HtmlEscapedText($text);
+    $this->assertEquals($expected, (string) $escapable_string, $message);
+    $this->assertEquals($expected, $escapable_string->jsonSerialize());
   }
 
   /**
@@ -57,8 +57,8 @@ class HtmlEscapedTextTest extends TestCase {
    */
   public function testCount() {
     $string = 'Can I please have a <em>kitten</em>';
-    $escapeable_string = new HtmlEscapedText($string);
-    $this->assertEquals(strlen($string), $escapeable_string->count());
+    $escapable_string = new HtmlEscapedText($string);
+    $this->assertEquals(strlen($string), $escapable_string->count());
   }
 
 }

@@ -55,7 +55,7 @@ class ViewsUiIntegrationTest extends MediaLibraryTestBase {
     $page->find('css', '.js-media-library-view .view-filters')->pressButton('Apply filters');
     $this->waitForElementsCount('css', '.js-media-library-item', 1);
 
-    // Test the same routine but in the view for the table wiget.
+    // Test the same routine but in the view for the table widget.
     $this->drupalGet('/admin/structure/views/view/media_library/edit/widget_table');
     $this->waitForElementsCount('css', '.js-media-library-item', 8);
 
