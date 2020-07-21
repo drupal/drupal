@@ -569,7 +569,6 @@ eridani
 errmode
 errored
 errrf
-escapeable
 eslintignore
 eslinting
 espagnol
@@ -1392,7 +1391,6 @@ pseudotag
 ptablenode
 pterm
 pulks
-punit
 puzzlepiece
 pvde
 pwprompt
@@ -2070,7 +2068,6 @@ whos
 widget's
 widt
 widthx
-wiget
 wimoids
 windir
 winnt

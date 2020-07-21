@@ -57,7 +57,7 @@ class PhpUnitTestRunnerTest extends UnitTestCase {
       'test_id' => $test_id,
       'test_class' => 'SomeTest',
       'status' => TestStatus::label(TestStatus::EXCEPTION),
-      'message' => 'PHPunit Test failed to complete; Error: ',
+      'message' => 'PHPUnit Test failed to complete; Error: ',
       'message_group' => 'Other',
       'function' => 'SomeTest',
       'line' => '0',
