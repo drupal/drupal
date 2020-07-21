@@ -71,7 +71,7 @@ class SearchExcerptTest extends KernelTestBase {
    * Tests search_excerpt() with search keywords matching simplified words.
    *
    * Excerpting should handle keywords that are matched only after going through
-   * search_simplify(). This test passes keywords that match simplified words
+   * text analysis. This test passes keywords that match simplified words
    * and compares them with strings that contain the original unsimplified word.
    */
   public function testSearchExcerptSimplified() {

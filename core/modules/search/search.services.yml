@@ -9,4 +9,8 @@ services:
 
   search.index:
     class: Drupal\search\SearchIndex
-    arguments: ['@config.factory', '@database','@database.replica', '@cache_tags.invalidator']
+    arguments: ['@config.factory', '@database','@database.replica', '@cache_tags.invalidator', '@search.text_processor']
+
+  search.text_processor:
+    class: Drupal\search\SearchTextProcessor
+    arguments: ['@transliteration', '@config.factory', '@module_handler']

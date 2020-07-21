@@ -233,6 +233,8 @@ class SearchQuery extends SelectExtender {
     // Classify tokens.
     $in_or = FALSE;
     $limit_combinations = \Drupal::config('search.settings')->get('and_or_limit');
+    /** @var \Drupal\search\SearchTextProcessorInterface $text_processor */
+    $text_processor = \Drupal::service('search.text_processor');
     // The first search expression does not count as AND.
     $and_count = -1;
     $or_count = 0;
@@ -255,7 +257,7 @@ class SearchQuery extends SelectExtender {
       // Simplify keyword according to indexing rules and external
       // preprocessors. Use same process as during search indexing, so it
       // will match search index.
-      $words = search_simplify($match[2]);
+      $words = $text_processor->analyze($match[2]);
       // Re-explode in case simplification added more words, except when
       // matching a phrase.
       $words = $phrase ? [$words] : preg_split('/ /', $words, -1, PREG_SPLIT_NO_EMPTY);
