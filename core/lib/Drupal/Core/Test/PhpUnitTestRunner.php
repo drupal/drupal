@@ -217,7 +217,7 @@ class PhpUnitTestRunner implements ContainerInjectionInterface {
         'test_id' => $test_id,
         'test_class' => implode(",", $unescaped_test_classnames),
         'status' => TestStatus::label($status),
-        'message' => 'PHPunit Test failed to complete; Error: ' . implode("\n", $output),
+        'message' => 'PHPUnit Test failed to complete; Error: ' . implode("\n", $output),
         'message_group' => 'Other',
         'function' => implode(",", $unescaped_test_classnames),
         'line' => '0',
