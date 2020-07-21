@@ -6,6 +6,7 @@ use Drupal\Core\Cache\MemoryBackendFactory;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\DependencyInjection\ServiceProviderInterface;
 use Drupal\Core\Lock\NullLockBackend;
+use Symfony\Component\DependencyInjection\Reference;
 
 /**
  * Service provider for the installer environment.
@@ -49,6 +50,17 @@ class NormalInstallerServiceProvider implements ServiceProviderInterface {
     $container->getDefinition('extension.list.module')->setClass(InstallerModuleExtensionList::class);
     $container->getDefinition('extension.list.theme')->setClass(InstallerThemeExtensionList::class);
     $container->getDefinition('extension.list.theme_engine')->setClass(InstallerThemeEngineExtensionList::class);
+
+    // Don't register the lazy route provider in the super early installer.
+    if (get_called_class() === NormalInstallerServiceProvider::class) {
+      $lazy_route_provider = $container->register('router.route_provider.installer');
+      $lazy_route_provider
+        ->setClass(InstallerRouteProviderLazyBuilder::class)
+        ->setDecoratedService('router.route_provider')
+        ->addArgument(new Reference('router.route_provider.installer.inner'))
+        ->addArgument(new Reference('router.builder'))
+        ->addTag('event_subscriber');
+    }
   }
 
 }

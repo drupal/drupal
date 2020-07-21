@@ -1,0 +1,5 @@
+name: 'Router installer test'
+type: module
+description: 'Support module for routing testing.'
+package: Testing
+version: VERSION

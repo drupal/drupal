@@ -7,6 +7,7 @@ use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\DrupalKernelInterface;
 use Drupal\Core\Entity\EntityStorageException;
 use Drupal\Core\Entity\FieldableEntityInterface;
+use Drupal\Core\Installer\InstallerKernel;
 use Drupal\Core\Serialization\Yaml;
 
 /**
@@ -209,16 +210,18 @@ class ModuleInstaller implements ModuleInstallerInterface {
         $this->moduleHandler->load($module);
         module_load_install($module);
 
-        // Replace the route provider service with a version that will rebuild
-        // if routes used during installation. This ensures that a module's
-        // routes are available during installation. This has to occur before
-        // any services that depend on it are instantiated otherwise those
-        // services will have the old route provider injected. Note that, since
-        // the container is rebuilt by updating the kernel, the route provider
-        // service is the regular one even though we are in a loop and might
-        // have replaced it before.
-        \Drupal::getContainer()->set('router.route_provider.old', \Drupal::service('router.route_provider'));
-        \Drupal::getContainer()->set('router.route_provider', \Drupal::service('router.route_provider.lazy_builder'));
+        if (!InstallerKernel::installationAttempted()) {
+          // Replace the route provider service with a version that will rebuild
+          // if routes used during installation. This ensures that a module's
+          // routes are available during installation. This has to occur before
+          // any services that depend on it are instantiated otherwise those
+          // services will have the old route provider injected. Note that, since
+          // the container is rebuilt by updating the kernel, the route provider
+          // service is the regular one even though we are in a loop and might
+          // have replaced it before.
+          \Drupal::getContainer()->set('router.route_provider.old', \Drupal::service('router.route_provider'));
+          \Drupal::getContainer()->set('router.route_provider', \Drupal::service('router.route_provider.lazy_builder'));
+        }
 
         // Allow modules to react prior to the installation of a module.
         $this->moduleHandler->invokeAll('module_preinstall', [$module]);
@@ -331,17 +334,19 @@ class ModuleInstaller implements ModuleInstallerInterface {
 
     // If any modules were newly installed, invoke hook_modules_installed().
     if (!empty($modules_installed)) {
-      // If the container was rebuilt during hook_install() it might not have
-      // the 'router.route_provider.old' service.
-      if (\Drupal::hasService('router.route_provider.old')) {
-        \Drupal::getContainer()->set('router.route_provider', \Drupal::service('router.route_provider.old'));
-      }
-      if (!\Drupal::service('router.route_provider.lazy_builder')->hasRebuilt()) {
-        // Rebuild routes after installing module. This is done here on top of
-        // \Drupal\Core\Routing\RouteBuilder::destruct to not run into errors on
-        // fastCGI which executes ::destruct() after the module installation
-        // page was sent already.
-        \Drupal::service('router.builder')->rebuild();
+      if (!InstallerKernel::installationAttempted()) {
+        // If the container was rebuilt during hook_install() it might not have
+        // the 'router.route_provider.old' service.
+        if (\Drupal::hasService('router.route_provider.old')) {
+          \Drupal::getContainer()->set('router.route_provider', \Drupal::service('router.route_provider.old'));
+        }
+        if (!\Drupal::service('router.route_provider.lazy_builder')->hasRebuilt()) {
+          // Rebuild routes after installing module. This is done here on top of
+          // \Drupal\Core\Routing\RouteBuilder::destruct to not run into errors on
+          // fastCGI which executes ::destruct() after the module installation
+          // page was sent already.
+          \Drupal::service('router.builder')->rebuild();
+        }
       }
 
       $this->moduleHandler->invokeAll('modules_installed', [$modules_installed, $sync_status]);

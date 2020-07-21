@@ -2,6 +2,9 @@
 
 namespace Drupal\FunctionalTests\Installer;
 
+use Drupal\Core\Routing\RoutingEvents;
+use Drupal\Core\Test\PerformanceTestRecorder;
+
 /**
  * Tests the interactive installer.
  *
@@ -39,6 +42,8 @@ class InstallerTest extends InstallerTestBase {
 
     $this->assertArrayHasKey('testing', $extensions);
     $this->assertEquals(1000, $extensions['testing']->weight);
+    // Ensures that router is not rebuilt unnecessarily during the install.
+    $this->assertSame(1, \Drupal::service('core.performance.test.recorder')->getCount('event', RoutingEvents::FINISHED));
   }
 
   /**
@@ -60,6 +65,10 @@ class InstallerTest extends InstallerTestBase {
    * {@inheritdoc}
    */
   protected function setUpProfile() {
+    $settings_services_file = DRUPAL_ROOT . '/sites/default/default.services.yml';
+    // Copy the testing-specific service overrides in place.
+    copy($settings_services_file, $this->siteDirectory . '/services.yml');
+    PerformanceTestRecorder::registerService($this->siteDirectory . '/services.yml', TRUE);
     // Assert that the expected title is present.
     $this->assertEqual('Select an installation profile', $this->cssSelect('main h2')[0]->getText());
     $result = $this->xpath('//span[contains(@class, :class) and contains(text(), :text)]', [':class' => 'visually-hidden', ':text' => 'Select an installation profile']);

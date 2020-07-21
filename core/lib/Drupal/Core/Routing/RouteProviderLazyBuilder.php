@@ -65,7 +65,6 @@ class RouteProviderLazyBuilder implements PreloadableRouteProviderInterface, Eve
   protected function getRouteProvider() {
     if (!$this->rebuilt && !$this->rebuilding) {
       $this->routeBuilder->rebuild();
-      $this->rebuilt = TRUE;
     }
     return $this->routeProvider;
   }
@@ -190,6 +189,7 @@ class RouteProviderLazyBuilder implements PreloadableRouteProviderInterface, Eve
    */
   public function routerRebuildFinished() {
     $this->rebuilding = FALSE;
+    $this->rebuilt = TRUE;
   }
 
 }

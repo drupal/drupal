@@ -21,10 +21,6 @@ function standard_install() {
   $user->roles[] = 'administrator';
   $user->save();
 
-  // We install some menu links, so we have to rebuild the router, to ensure the
-  // menu links are valid.
-  \Drupal::service('router.builder')->rebuildIfNeeded();
-
   // Populate the default shortcut set.
   $shortcut = Shortcut::create([
     'shortcut_set' => 'default',
