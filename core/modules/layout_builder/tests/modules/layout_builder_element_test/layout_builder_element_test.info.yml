@@ -1,0 +1,7 @@
+name: 'Layout Builder element test'
+type: module
+description: 'Support module for testing the layout builder element.'
+package: Testing
+version: VERSION
+dependencies:
+  - drupal:layout_builder

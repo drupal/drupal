@@ -26,4 +26,17 @@ final class LayoutBuilderEvents {
    */
   const SECTION_COMPONENT_BUILD_RENDER_ARRAY = 'section_component.build.render_array';
 
+  /**
+   * Name of the event fired in when preparing a layout builder element.
+   *
+   * This event allows modules to collaborate on creating the sections used in
+   * \Drupal\layout_builder\Element\LayoutBuilder during #pre_render.
+   *
+   * @see \Drupal\layout_builder\Event\PrepareLayoutEvent
+   * @see \Drupal\layout_builder\Element\LayoutBuilder
+   *
+   * @var string
+   */
+  const PREPARE_LAYOUT = 'prepare_layout';
+
 }

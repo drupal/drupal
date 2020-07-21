@@ -1,0 +1,6 @@
+services:
+  layout_builder_element_test.prepare_layout:
+    class: Drupal\layout_builder_element_test\EventSubscriber\TestPrepareLayout
+    arguments: ['@layout_builder.tempstore_repository', '@messenger']
+    tags:
+      - { name: event_subscriber }

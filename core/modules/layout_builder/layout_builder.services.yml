@@ -51,3 +51,8 @@ services:
     class: Drupal\layout_builder\Controller\LayoutBuilderHtmlEntityFormController
     public: false
     arguments: ['@layout_builder.controller.entity_form.inner']
+  layout_builder.element.prepare_layout:
+    class: Drupal\layout_builder\EventSubscriber\PrepareLayout
+    arguments: ['@layout_builder.tempstore_repository', '@messenger']
+    tags:
+      - { name: event_subscriber }
