@@ -306,7 +306,6 @@ class ConfirmClassyCopiesTest extends KernelTestBase {
             'rdf-metadata.html.twig',
             'help-section.html.twig',
             'progress-bar.html.twig',
-            'textarea.html.twig',
             'radios.html.twig',
             'item-list.html.twig',
             'aggregator-feed.html.twig',

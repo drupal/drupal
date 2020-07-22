@@ -749,15 +749,6 @@ function claro_preprocess_input(&$variables) {
 }
 
 /**
- * Implements template_preprocess_HOOK() for textarea.
- */
-function claro_preprocess_textarea(&$variables) {
-  $variables['attributes']['class'][] = 'form-element';
-  $variables['attributes']['class'][] = 'form-element--type-textarea';
-  $variables['attributes']['class'][] = 'form-element--api-textarea';
-}
-
-/**
  * Implements template_preprocess_HOOK() for select.
  */
 function claro_preprocess_select(&$variables) {
