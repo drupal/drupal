@@ -162,6 +162,22 @@ class MediaLibraryDisplayModeTest extends BrowserTestBase {
     $this->assertFormDisplay($type_eight_id, FALSE, TRUE);
     $this->assertViewDisplay($type_eight_id, 'medium');
 
+    // Create an oEmbed media type with a mapped name field in the UI.
+    $type_id = 'pinto_bean';
+    $edit = [
+      'label' => $type_id,
+      'id' => $type_id,
+      'source' => 'oembed:video',
+    ];
+    $this->drupalPostForm('admin/structure/media/add', $edit, 'Save');
+    $edit = [
+      'field_map[title]' => 'name',
+    ];
+    $this->drupalPostForm(NULL, $edit, t('Save'));
+    $this->assertSession()->pageTextContains("Media Library form and view displays have been created for the $type_id media type.");
+    $this->assertFormDisplay($type_id, FALSE, FALSE);
+    $this->assertViewDisplay($type_id, 'medium');
+
     // Delete a form and view display.
     EntityFormDisplay::load('media.type_one.media_library')->delete();
     EntityViewDisplay::load('media.type_one.media_library')->delete();
