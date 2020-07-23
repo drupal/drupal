@@ -408,7 +408,8 @@ class RouteProvider implements CacheableRouteProviderInterface, PreloadableRoute
       $result[$name] = unserialize($route);
     }
 
-    return $result;
+    $array_object = new \ArrayObject($result);
+    return $array_object->getIterator();
   }
 
   /**

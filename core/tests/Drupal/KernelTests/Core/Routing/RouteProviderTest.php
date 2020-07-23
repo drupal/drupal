@@ -311,6 +311,7 @@ class RouteProviderTest extends KernelTestBase {
 
     $returned_routes = $provider->getAllRoutes();
 
+    $this->assertInstanceOf(\Iterator::class, $returned_routes);
     $this->assertEqual($expected_route_count, count($returned_routes));
 
     foreach ($returned_routes as $route_name => $route) {
