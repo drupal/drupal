@@ -74,6 +74,9 @@ class MenuLinkContentAccessControlHandler extends EntityAccessControlHandler imp
       case 'delete':
         return AccessResult::allowedIfHasPermission($account, 'administer menu')
           ->andIf(AccessResult::allowedIf(!$entity->isNew())->addCacheableDependency($entity));
+
+      default:
+        return parent::checkAccess($entity, $operation, $account);
     }
   }
 
