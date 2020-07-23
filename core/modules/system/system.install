@@ -1306,7 +1306,7 @@ function system_requirements($phase) {
   if ($phase === 'install' || $phase === 'update') {
     if (\Drupal::moduleHandler()->moduleExists('pathauto')) {
       $info = \Drupal::service('extension.list.module')->getExtensionInfo('pathauto');
-      if (version_compare($info['version'], '8.x-1.5') <= 0) {
+      if ($info['version'] && version_compare($info['version'], '8.x-1.5') <= 0) {
         $requirements['pathauto_module_incompatibility'] = [
           'title' => t('Pathauto'),
           'description' => t('The Pathauto module is not compatible with the current version of Drupal core. Update the <a href=":url">Pathauto</a> module to 8.x-1.6 or later.', [
