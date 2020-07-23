@@ -797,7 +797,6 @@ iframe's
 iframes
 iframeupload
 ignoretag
-iids
 ilike
 imageapi
 imagecache
@@ -1266,7 +1265,6 @@ pagina
 pangram
 paramconverter
 parens
-parentc
 parentlist
 parseable
 parsererror
@@ -1501,8 +1499,6 @@ robloach
 robo
 rolename
 roly
-roota
-rootb
 routable
 routeable
 routename
@@ -1868,8 +1864,6 @@ tsid
 tspan
 turbolinks
 twistie
-twoa
-twob
 twocol
 txtzzzz
 typehint

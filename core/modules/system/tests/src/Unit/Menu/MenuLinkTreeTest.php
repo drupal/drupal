@@ -241,9 +241,9 @@ class MenuLinkTreeTest extends UnitTestCase {
         ];
 
         // Multi-level tree.
-        $multi_level_root_a = MenuLinkMock::create(['id' => 'test.roota', 'route_name' => 'roota', 'title' => 'Root A']);
-        $multi_level_root_b = MenuLinkMock::create(['id' => 'test.rootb', 'route_name' => 'rootb', 'title' => 'Root B']);
-        $multi_level_parent_c = MenuLinkMock::create(['id' => 'test.parentc', 'route_name' => 'parentc', 'title' => 'Parent C']);
+        $multi_level_root_a = MenuLinkMock::create(['id' => 'test.root_a', 'route_name' => 'root_a', 'title' => 'Root A']);
+        $multi_level_root_b = MenuLinkMock::create(['id' => 'test.root_b', 'route_name' => 'root_b', 'title' => 'Root B']);
+        $multi_level_parent_c = MenuLinkMock::create(['id' => 'test.parent_c', 'route_name' => 'parent_c', 'title' => 'Parent C']);
         $tree = [
           new MenuLinkTreeElement($multi_level_root_a, TRUE, 0, FALSE, [
             new MenuLinkTreeElement($multi_level_parent_c, TRUE, 0, FALSE, [
@@ -256,13 +256,13 @@ class MenuLinkTreeTest extends UnitTestCase {
         ];
         $tree[0]->subtree[0]->subtree[0]->access = $access;
         $expected_build = $base_expected_build;
-        $expected_build['#items']['test.roota'] = $get_built_element($tree[0]);
-        $expected_build['#items']['test.roota']['below']['test.parentc'] = $get_built_element($tree[0]->subtree[0]);
+        $expected_build['#items']['test.root_a'] = $get_built_element($tree[0]);
+        $expected_build['#items']['test.root_a']['below']['test.parent_c'] = $get_built_element($tree[0]->subtree[0]);
         if ($access === NULL || $access->isAllowed()) {
-          $expected_build['#items']['test.roota']['below']['test.parentc']['below']['test.example1'] = $get_built_element($tree[0]->subtree[0]->subtree[0]);
+          $expected_build['#items']['test.root_a']['below']['test.parent_c']['below']['test.example1'] = $get_built_element($tree[0]->subtree[0]->subtree[0]);
         }
-        $expected_build['#items']['test.rootb'] = $get_built_element($tree[1]);
-        $expected_build['#items']['test.rootb']['below']['test.example2'] = $get_built_element($tree[1]->subtree[0]);
+        $expected_build['#items']['test.root_b'] = $get_built_element($tree[1]);
+        $expected_build['#items']['test.root_b']['below']['test.example2'] = $get_built_element($tree[1]->subtree[0]);
         $expected_build['#cache']['contexts'] = array_merge($expected_build['#cache']['contexts'], $access_cache_contexts, $links[0]->getCacheContexts(), $links[1]->getCacheContexts());
         $data[] = [
           'description' => "Multi-level tree; access=$i; link=$j.",

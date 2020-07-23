@@ -197,11 +197,8 @@ abstract class AggregatorTestBase extends BrowserTestBase {
     $this->clickLink('Update items');
 
     // Ensure we have the right number of items.
-    $iids = \Drupal::entityQuery('aggregator_item')->condition('fid', $feed->id())->execute();
-    $feed->items = [];
-    foreach ($iids as $iid) {
-      $feed->items[] = $iid;
-    }
+    $item_ids = \Drupal::entityQuery('aggregator_item')->condition('fid', $feed->id())->execute();
+    $feed->items = array_values($item_ids);
 
     if ($expected_count !== NULL) {
       $feed->item_count = count($feed->items);
