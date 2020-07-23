@@ -47,6 +47,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
     this.scrollInterval = null;
     this.scrollY = 0;
     this.windowHeight = 0;
+    this.$toggleWeightButton = null;
     this.indentEnabled = false;
     Object.keys(tableSettings || {}).forEach(function (group) {
       Object.keys(tableSettings[group] || {}).forEach(function (n) {
@@ -73,10 +74,13 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
     $table.find('> tr.draggable, > tbody > tr.draggable').each(function () {
       self.makeDraggable(this);
     });
-    $table.before($('<button type="button" class="link tabledrag-toggle-weight"></button>').on('click', $.proxy(function (e) {
+    var $toggleWeightWrapper = $(Drupal.theme('tableDragToggle'));
+    this.$toggleWeightButton = $toggleWeightWrapper.find('[data-drupal-selector="tabledrag-toggle-weight"]');
+    this.$toggleWeightButton.on('click', $.proxy(function (e) {
       e.preventDefault();
       this.toggleColumns();
-    }, this)).wrap('<div class="tabledrag-toggle-weight-wrapper"></div>').parent());
+    }, this));
+    $table.before($toggleWeightWrapper);
     self.initColumns();
     $(document).on('touchmove', function (event) {
       return self.dragRow(event.originalEvent.touches[0], self);
@@ -157,6 +161,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
         this.hideColumns();
       }
 
+    this.$toggleWeightButton.html(Drupal.theme('toggleButtonContent', displayWeight));
     $('table').findOnce('tabledrag').trigger('columnschange', !!displayWeight);
   };
 
@@ -178,7 +183,6 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
     $tables.find('.tabledrag-has-colspan').each(function () {
       this.colSpan -= 1;
     });
-    $('.tabledrag-toggle-weight').text(Drupal.t('Show row weights'));
   };
 
   Drupal.tableDrag.prototype.showColumns = function () {
@@ -188,7 +192,6 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
     $tables.find('.tabledrag-has-colspan').each(function () {
       this.colSpan += 1;
     });
-    $('.tabledrag-toggle-weight').text(Drupal.t('Hide row weights'));
   };
 
   Drupal.tableDrag.prototype.rowSettings = function (group, row) {
@@ -992,6 +995,12 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
     },
     tableDragChangedWarning: function tableDragChangedWarning() {
       return "<div class=\"tabledrag-changed-warning messages messages--warning\" role=\"alert\">".concat(Drupal.theme('tableDragChangedMarker'), " ").concat(Drupal.t('You have unsaved changes.'), "</div>");
+    },
+    tableDragToggle: function tableDragToggle() {
+      return "<div class=\"tabledrag-toggle-weight-wrapper\" data-drupal-selector=\"tabledrag-toggle-weight-wrapper\">\n            <button type=\"button\" class=\"link tabledrag-toggle-weight\" data-drupal-selector=\"tabledrag-toggle-weight\"></button>\n            </div>";
+    },
+    toggleButtonContent: function toggleButtonContent(show) {
+      return show ? Drupal.t('Hide row weights') : Drupal.t('Show row weights');
     }
   });
 })(jQuery, Drupal, drupalSettings);

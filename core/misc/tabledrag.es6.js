@@ -172,6 +172,11 @@
     this.windowHeight = 0;
 
     /**
+     * @type {?jQuery}
+     */
+    this.$toggleWeightButton = null;
+
+    /**
      * Check this table's settings for parent relationships.
      *
      * For efficiency, large sections of code can be skipped if we don't need to
@@ -226,19 +231,18 @@
       self.makeDraggable(this);
     });
 
-    // Add a link before the table for users to show or hide weight columns.
-    $table.before(
-      $('<button type="button" class="link tabledrag-toggle-weight"></button>')
-        .on(
-          'click',
-          $.proxy(function(e) {
-            e.preventDefault();
-            this.toggleColumns();
-          }, this),
-        )
-        .wrap('<div class="tabledrag-toggle-weight-wrapper"></div>')
-        .parent(),
+    const $toggleWeightWrapper = $(Drupal.theme('tableDragToggle'));
+    this.$toggleWeightButton = $toggleWeightWrapper.find(
+      '[data-drupal-selector="tabledrag-toggle-weight"]',
     );
+    this.$toggleWeightButton.on(
+      'click',
+      $.proxy(function(e) {
+        e.preventDefault();
+        this.toggleColumns();
+      }, this),
+    );
+    $table.before($toggleWeightWrapper);
 
     // Initialize the specified columns (for example, weight or parent columns)
     // to show or hide according to user preference. This aids accessibility
@@ -368,6 +372,11 @@
     else {
       this.hideColumns();
     }
+
+    this.$toggleWeightButton.html(
+      Drupal.theme('toggleButtonContent', displayWeight),
+    );
+
     // Trigger an event to allow other scripts to react to this display change.
     // Force the extra parameter as a bool.
     $('table')
@@ -407,8 +416,6 @@
     $tables.find('.tabledrag-has-colspan').each(function() {
       this.colSpan -= 1;
     });
-    // Change link text.
-    $('.tabledrag-toggle-weight').text(Drupal.t('Show row weights'));
   };
 
   /**
@@ -426,8 +433,6 @@
     $tables.find('.tabledrag-has-colspan').each(function() {
       this.colSpan += 1;
     });
-    // Change link text.
-    $('.tabledrag-toggle-weight').text(Drupal.t('Hide row weights'));
   };
 
   /**
@@ -1707,6 +1712,29 @@
           'tableDragChangedMarker',
         )} ${Drupal.t('You have unsaved changes.')}</div>`;
       },
+
+      /**
+       * The button for toggling table row weight visibility.
+       *
+       * @return {string}
+       *   HTML markup for the weight toggle button and its container.
+       */
+      tableDragToggle: () =>
+        `<div class="tabledrag-toggle-weight-wrapper" data-drupal-selector="tabledrag-toggle-weight-wrapper">
+            <button type="button" class="link tabledrag-toggle-weight" data-drupal-selector="tabledrag-toggle-weight"></button>
+            </div>`,
+
+      /**
+       * The contents of the toggle weight button.
+       *
+       * @param {boolean} show
+       *   If the table weights are currently displayed.
+       *
+       * @return {string}
+       *  HTML markup for the weight toggle button content.s
+       */
+      toggleButtonContent: show =>
+        show ? Drupal.t('Hide row weights') : Drupal.t('Show row weights'),
     },
   );
 })(jQuery, Drupal, drupalSettings);
