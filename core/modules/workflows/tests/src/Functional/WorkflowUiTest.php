@@ -343,16 +343,16 @@ class WorkflowUiTest extends BrowserTestBase {
       ->getTypePlugin()
       ->setConfiguration([
         'states' => [
-          'twoa' => [
-            'label' => 'twoa',
+          'two_a' => [
+            'label' => 'two a',
             'weight' => 2,
           ],
           'three' => [
             'label' => 'three',
             'weight' => 3,
           ],
-          'twob' => [
-            'label' => 'twob',
+          'two_b' => [
+            'label' => 'two b',
             'weight' => 2,
           ],
           'one' => [
@@ -367,10 +367,10 @@ class WorkflowUiTest extends BrowserTestBase {
             'to' => 'three',
             'weight' => 3,
           ],
-          'twoa' => [
-            'label' => 'twoa',
-            'from' => ['twoa'],
-            'to' => 'twoa',
+          'two_a' => [
+            'label' => 'two a',
+            'from' => ['two_a'],
+            'to' => 'two_a',
             'weight' => 2,
           ],
           'one' => [
@@ -379,10 +379,10 @@ class WorkflowUiTest extends BrowserTestBase {
             'to' => 'one',
             'weight' => 1,
           ],
-          'twob' => [
-            'label' => 'twob',
-            'from' => ['twob'],
-            'to' => 'twob',
+          'two_b' => [
+            'label' => 'two b',
+            'from' => ['two_b'],
+            'to' => 'two_b',
             'weight' => 2,
           ],
         ],
@@ -391,12 +391,12 @@ class WorkflowUiTest extends BrowserTestBase {
 
     $this->drupalLogin($this->createUser(['administer workflows']));
     $this->drupalGet('admin/config/workflow/workflows/manage/test');
-    $expected_states = ['one', 'twoa', 'twob', 'three'];
+    $expected_states = ['one', 'two a', 'two b', 'three'];
     $elements = $this->xpath('//details[@id="edit-states-container"]//table/tbody/tr');
     foreach ($elements as $key => $element) {
       $this->assertEquals($expected_states[$key], $element->find('xpath', 'td')->getText());
     }
-    $expected_transitions = ['one', 'twoa', 'twob', 'three'];
+    $expected_transitions = ['one', 'two a', 'two b', 'three'];
     $elements = $this->xpath('//details[@id="edit-transitions-container"]//table/tbody/tr');
     foreach ($elements as $key => $element) {
       $this->assertEquals($expected_transitions[$key], $element->find('xpath', 'td')->getText());
