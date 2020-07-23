@@ -5,6 +5,7 @@ namespace Drupal\Tests\node\Functional;
 use Drupal\block\Entity\Block;
 use Drupal\Core\Database\Database;
 use Drupal\Core\EventSubscriber\MainContentViewSubscriber;
+use Drupal\Core\Url;
 use Drupal\Tests\system\Functional\Cache\AssertPageCacheContextsAndTagsTrait;
 use Drupal\user\RoleInterface;
 
@@ -41,7 +42,7 @@ class NodeBlockFunctionalTest extends NodeTestBase {
    *
    * @var array
    */
-  protected static $modules = ['block', 'views'];
+  protected static $modules = ['block', 'views', 'node_block_test'];
 
   protected function setUp(): void {
     parent::setUp();
@@ -50,6 +51,7 @@ class NodeBlockFunctionalTest extends NodeTestBase {
     $this->adminUser = $this->drupalCreateUser([
       'administer content types',
       'administer nodes',
+      'bypass node access',
       'administer blocks',
       'access content overview',
     ]);
@@ -82,6 +84,12 @@ class NodeBlockFunctionalTest extends NodeTestBase {
     $node1 = $this->drupalCreateNode($default_settings);
     $node2 = $this->drupalCreateNode($default_settings);
     $node3 = $this->drupalCreateNode($default_settings);
+
+    // Create a second revision of node1.
+    $node1_revision_1 = $node1;
+    $node1->setNewRevision(TRUE);
+    $node1->setTitle('Node revision 2 title');
+    $node1->save();
 
     $connection = Database::getConnection();
     // Change the changed time for node so that we can test ordering.
@@ -183,7 +191,33 @@ class NodeBlockFunctionalTest extends NodeTestBase {
     $this->drupalGet('node/' . $node5->id());
     $this->assertSame('HIT', $this->getSession()->getResponseHeader('X-Drupal-Dynamic-Cache'));
 
+    // Place a block to determine which revision is provided as context
+    // to blocks.
+    $this->drupalPlaceBlock('node_block_test_context', [
+      'context_mapping' => ['node' => '@node.node_route_context:node'],
+    ]);
+
     $this->drupalLogin($this->adminUser);
+
+    $this->drupalGet('node/' . $node1->id());
+    $this->assertSession()->pageTextContains($label);
+    $this->assertSession()->pageTextContains('Displaying node #' . $node1->id() . ', revision #' . $node1->getRevisionId() . ': Node revision 2 title');
+
+    // Assert that the preview page displays the block as well.
+    $this->drupalPostForm('node/' . $node1->id() . '/edit', [], t('Preview'));
+    $this->assertSession()->pageTextContains($label);
+    // The previewed node object has no revision ID.
+    $this->assertSession()->pageTextContains('Displaying node #' . $node1->id() . ', revision #: Node revision 2 title');
+
+    // Assert that the revision page for both revisions displays the block.
+    $this->drupalGet(Url::fromRoute('entity.node.revision', ['node' => $node1->id(), 'node_revision' => $node1_revision_1->getRevisionId()]));
+    $this->assertSession()->pageTextContains($label);
+    $this->assertSession()->pageTextContains('Displaying node #' . $node1->id() . ', revision #' . $node1_revision_1->getRevisionId() . ': ' . $node1_revision_1->label());
+
+    $this->drupalGet(Url::fromRoute('entity.node.revision', ['node' => $node1->id(), 'node_revision' => $node1->getRevisionId()]));
+    $this->assertSession()->pageTextContains($label);
+    $this->assertSession()->pageTextContains('Displaying node #' . $node1->id() . ', revision #' . $node1->getRevisionId() . ': Node revision 2 title');
+
     $this->drupalGet('admin/structure/block');
     $this->assertText($label, 'Block was displayed on the admin/structure/block page.');
     $this->assertLinkByHref($block->toUrl()->toString());
