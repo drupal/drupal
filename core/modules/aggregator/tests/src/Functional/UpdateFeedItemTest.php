@@ -54,8 +54,8 @@ class UpdateFeedItemTest extends AggregatorTestBase {
     $feed = Feed::load(array_values($fids)[0]);
 
     $feed->refreshItems();
-    $iids = \Drupal::entityQuery('aggregator_item')->condition('fid', $feed->id())->execute();
-    $before = Item::load(array_values($iids)[0])->getPostedTime();
+    $item_ids = \Drupal::entityQuery('aggregator_item')->condition('fid', $feed->id())->execute();
+    $before = Item::load(array_values($item_ids)[0])->getPostedTime();
 
     // Sleep for 3 second.
     sleep(3);
@@ -67,7 +67,7 @@ class UpdateFeedItemTest extends AggregatorTestBase {
       ->save();
     $feed->refreshItems();
 
-    $after = Item::load(array_values($iids)[0])->getPostedTime();
+    $after = Item::load(array_values($item_ids)[0])->getPostedTime();
     $this->assertTrue($before === $after, new FormattableMarkup('Publish timestamp of feed item was not updated (@before === @after)', ['@before' => $before, '@after' => $after]));
 
     // Make sure updating items works even after uninstalling a module
