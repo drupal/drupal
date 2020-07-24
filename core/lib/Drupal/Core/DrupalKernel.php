@@ -4,7 +4,7 @@ namespace Drupal\Core;
 
 use Composer\Autoload\ClassLoader;
 use Drupal\Component\Assertion\Handle;
-use Symfony\Component\EventDispatcher\Event;
+use Drupal\Component\EventDispatcher\Event;
 use Drupal\Component\FileCache\FileCacheFactory;
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Cache\DatabaseBackend;
