@@ -53,17 +53,6 @@ class PathProcessorTest extends UnitTestCase {
       ],
     ];
 
-    // Create a URL-based language negotiation method definition.
-    $method_definitions = [
-      LanguageNegotiationUrl::METHOD_ID => [
-        'class' => '\Drupal\language\Plugin\LanguageNegotiation\LanguageNegotiationUrl',
-        'weight' => 9,
-      ],
-    ];
-
-    // Create a URL-based language negotiation method.
-    $method_instance = new LanguageNegotiationUrl($config);
-
     // Create a language manager stub.
     $language_manager = $this->getMockBuilder('Drupal\language\ConfigurableLanguageManagerInterface')
       ->getMock();
@@ -77,7 +66,6 @@ class PathProcessorTest extends UnitTestCase {
       ->method('getLanguageTypes')
       ->will($this->returnValue([LanguageInterface::TYPE_INTERFACE]));
 
-    $method_instance->setLanguageManager($language_manager);
     $this->languageManager = $language_manager;
   }
 
