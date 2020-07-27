@@ -118,7 +118,8 @@ parameters:
   # Cacheability debugging:
   #
   # Responses with cacheability metadata (CacheableResponseInterface instances)
-  # get X-Drupal-Cache-Tags and X-Drupal-Cache-Contexts headers.
+  # get X-Drupal-Cache-Tags, X-Drupal-Cache-Contexts and X-Drupal-Cache-Max-Age
+  # headers.
   #
   # For more information about debugging cacheable responses, see
   # https://www.drupal.org/developing/api/8/response/cacheable-response-interface

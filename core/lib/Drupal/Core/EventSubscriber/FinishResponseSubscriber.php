@@ -156,6 +156,14 @@ class FinishResponseSubscriber implements EventSubscriberInterface {
       $response_cacheability = $response->getCacheableMetadata();
       $response->headers->set('X-Drupal-Cache-Tags', implode(' ', $response_cacheability->getCacheTags()));
       $response->headers->set('X-Drupal-Cache-Contexts', implode(' ', $this->cacheContextsManager->optimizeTokens($response_cacheability->getCacheContexts())));
+      $max_age_message = $response_cacheability->getCacheMaxAge();
+      if ($max_age_message === 0) {
+        $max_age_message = '0 (Uncacheable)';
+      }
+      elseif ($max_age_message === -1) {
+        $max_age_message = '-1 (Permanent)';
+      }
+      $response->headers->set('X-Drupal-Cache-Max-Age', $max_age_message);
     }
 
     $is_cacheable = ($this->requestPolicy->check($request) === RequestPolicyInterface::ALLOW) && ($this->responsePolicy->check($response, $request) !== ResponsePolicyInterface::DENY);

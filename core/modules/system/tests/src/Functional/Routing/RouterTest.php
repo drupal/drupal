@@ -54,6 +54,7 @@ class RouterTest extends BrowserTestBase {
     $headers = $session->getResponseHeaders();
     $this->assertEqual($headers['X-Drupal-Cache-Contexts'], [implode(' ', $expected_cache_contexts)]);
     $this->assertEqual($headers['X-Drupal-Cache-Tags'], ['config:user.role.anonymous http_response rendered']);
+    $this->assertEqual($headers['X-Drupal-Cache-Max-Age'], ['-1 (Permanent)']);
     // Confirm that the page wrapping is being added, so we're not getting a
     // raw body returned.
     $this->assertRaw('</html>', 'Page markup was found.');
@@ -68,6 +69,7 @@ class RouterTest extends BrowserTestBase {
     $headers = $session->getResponseHeaders();
     $this->assertEqual($headers['X-Drupal-Cache-Contexts'], [implode(' ', Cache::mergeContexts($renderer_required_cache_contexts, ['url']))]);
     $this->assertEqual($headers['X-Drupal-Cache-Tags'], ['config:user.role.anonymous foo http_response rendered']);
+    $this->assertEqual($headers['X-Drupal-Cache-Max-Age'], ['60']);
     // 2. controller result: render array, per-role cacheable route access.
     $this->drupalGet('router_test/test19');
     $headers = $session->getResponseHeaders();
@@ -78,11 +80,13 @@ class RouterTest extends BrowserTestBase {
     $headers = $session->getResponseHeaders();
     $this->assertFalse(isset($headers['X-Drupal-Cache-Contexts']));
     $this->assertFalse(isset($headers['X-Drupal-Cache-Tags']));
+    $this->assertFalse(isset($headers['X-Drupal-Cache-Max-Age']));
     // 4. controller result: Response object, per-role cacheable route access.
     $this->drupalGet('router_test/test20');
     $headers = $session->getResponseHeaders();
     $this->assertFalse(isset($headers['X-Drupal-Cache-Contexts']));
     $this->assertFalse(isset($headers['X-Drupal-Cache-Tags']));
+    $this->assertFalse(isset($headers['X-Drupal-Cache-Max-Age']));
     // 5. controller result: CacheableResponse object, globally cacheable route access.
     $this->drupalGet('router_test/test21');
     $headers = $session->getResponseHeaders();
@@ -100,6 +104,7 @@ class RouterTest extends BrowserTestBase {
     $headers = $session->getResponseHeaders();
     $this->assertTrue(isset($headers['X-Drupal-Cache-Contexts']));
     $this->assertTrue(isset($headers['X-Drupal-Cache-Tags']));
+    $this->assertTrue(isset($headers['X-Drupal-Cache-Max-Age']));
     $this->setContainerParameter('http.response.debug_cacheability_headers', FALSE);
     $this->rebuildContainer();
     $this->resetAll();
@@ -107,6 +112,7 @@ class RouterTest extends BrowserTestBase {
     $headers = $session->getResponseHeaders();
     $this->assertFalse(isset($headers['X-Drupal-Cache-Contexts']));
     $this->assertFalse(isset($headers['X-Drupal-Cache-Tags']));
+    $this->assertFalse(isset($headers['X-Drupal-Cache-Max-Age']));
   }
 
   /**
