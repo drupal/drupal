@@ -190,7 +190,6 @@ class ScaffoldTest extends TestCase {
    */
   public function testProjectThatScaffoldsEmptyProject() {
     $fixture_name = 'project-allowing-empty-fixture';
-    $is_link = FALSE;
     $result = $this->scaffoldSut($fixture_name, FALSE, FALSE);
     $this->assertStringContainsString('The allowed package fixtures/empty-fixture does not provide a file mapping for Composer Scaffold', $result->scaffoldOutput());
     $this->assertCommonDrupalAssetsWereScaffolded($result->docroot(), FALSE);
