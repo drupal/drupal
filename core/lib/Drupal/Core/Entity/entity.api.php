@@ -616,6 +616,18 @@ use Drupal\node\Entity\NodeType;
  * are invoked are hook_entity_create_access() and
  * hook_ENTITY_TYPE_create_access() instead.
  *
+ * The access to an entity can be influenced in several ways:
+ * - To explicitly allow access, return an AccessResultInterface object with
+ * isAllowed() returning TRUE. Other modules can override this access by
+ * returning TRUE for isForbidden().
+ * - To explicitly forbid access, return an AccessResultInterface object with
+ * isForbidden() returning TRUE. Access will be forbidden even if your module
+ * (or another module) also returns TRUE for isNeutral() or isAllowed().
+ * - To neither allow nor explicitly forbid access, return an
+ * AccessResultInterface object with isNeutral() returning TRUE.
+ * - If your module does not return an AccessResultInterface object, neutral
+ * access will be assumed.
+ *
  * The Node entity type has a complex system for determining access, which
  * developers can interact with. This is described in the
  * @link node_access Node access topic. @endlink
@@ -643,7 +655,10 @@ use Drupal\node\Entity\NodeType;
  * @param string $operation
  *   The operation that is to be performed on $entity.
  * @param \Drupal\Core\Session\AccountInterface $account
- *   The account trying to access the entity.
+ *   The account trying to access the entity. Usually one of:
+ *   - "view"
+ *   - "update"
+ *   - "delete"
  *
  * @return \Drupal\Core\Access\AccessResultInterface
  *   The access result. The final result is calculated by using
@@ -677,7 +692,10 @@ function hook_entity_access(\Drupal\Core\Entity\EntityInterface $entity, $operat
  * @param \Drupal\Core\Entity\EntityInterface $entity
  *   The entity to check access to.
  * @param string $operation
- *   The operation that is to be performed on $entity.
+ *   The operation that is to be performed on $entity. Usually one of:
+ *   - "view"
+ *   - "update"
+ *   - "delete"
  * @param \Drupal\Core\Session\AccountInterface $account
  *   The account trying to access the entity.
  *
