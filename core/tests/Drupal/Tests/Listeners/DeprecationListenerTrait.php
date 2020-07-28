@@ -26,9 +26,6 @@ trait DeprecationListenerTrait {
 
   protected function deprecationStartTest($test) {
     if ($test instanceof TestCase) {
-      if ('disabled' !== getenv('SYMFONY_DEPRECATIONS_HELPER')) {
-        $this->registerErrorHandler($test);
-      }
       if ($this->willBeIsolated($test)) {
         putenv('DRUPAL_EXPECTED_DEPRECATIONS_SERIALIZE=' . tempnam(sys_get_temp_dir(), 'exdep'));
       }
@@ -157,8 +154,6 @@ trait DeprecationListenerTrait {
       'The "Twig\Environment::getTemplateClass()" method is considered internal. It may change without further notice. You should not extend it from "Drupal\Core\Template\TwigEnvironment".',
       '"Symfony\Component\DomCrawler\Crawler::text()" will normalize whitespaces by default in Symfony 5.0, set the second "$normalizeWhitespace" argument to false to retrieve the non-normalized version of the text.',
       // PHPUnit 8.
-      "The \"Drupal\Tests\Listeners\AfterSymfonyListener\" class implements \"PHPUnit\Framework\TestListener\" that is deprecated Use the `TestHook` interfaces instead.",
-      "The \"Drupal\Tests\Listeners\AfterSymfonyListener\" class uses \"PHPUnit\Framework\TestListenerDefaultImplementation\" that is deprecated The `TestListener` interface is deprecated.",
       "The \"PHPUnit\TextUI\ResultPrinter\" class is considered internal This class is not covered by the backward compatibility promise for PHPUnit. It may change without further notice. You should not use it from \"Drupal\Tests\Listeners\HtmlOutputPrinter\".",
       "The \"Drupal\Tests\Listeners\DrupalListener\" class implements \"PHPUnit\Framework\TestListener\" that is deprecated Use the `TestHook` interfaces instead.",
       "The \"Drupal\Tests\Listeners\DrupalListener\" class uses \"PHPUnit\Framework\TestListenerDefaultImplementation\" that is deprecated The `TestListener` interface is deprecated.",
@@ -201,7 +196,10 @@ trait DeprecationListenerTrait {
    * @see \Symfony\Bridge\PhpUnit\DeprecationErrorHandler
    * @see \Symfony\Bridge\PhpUnit\Legacy\SymfonyTestsListenerTrait
    */
-  protected function registerErrorHandler($test) {
+  protected function registerErrorHandler() {
+    if ($this->previousHandler || 'disabled' === getenv('SYMFONY_DEPRECATIONS_HELPER')) {
+      return;
+    }
     $deprecation_handler = function ($type, $msg, $file, $line, $context = []) {
       // Skip listed deprecations.
       if ($type === E_USER_DEPRECATED && static::isDeprecationSkipped($msg)) {
@@ -210,28 +208,18 @@ trait DeprecationListenerTrait {
       return call_user_func($this->previousHandler, $type, $msg, $file, $line, $context);
     };
 
-    if ($this->previousHandler) {
-      set_error_handler($deprecation_handler);
-      return;
-    }
     $this->previousHandler = set_error_handler($deprecation_handler);
+  }
 
-    // Register another listener so that we can remove the error handler before
-    // Symfony's DeprecationErrorHandler checks that it is the currently
-    // registered handler. Note this is done like this to ensure the error
-    // handler is removed after SymfonyTestsListenerTrait::endTest() is called.
-    // SymfonyTestsListenerTrait has its own error handler that needs to be
-    // removed before this one.
-    $test_result_object = $test->getTestResultObject();
-    // It's possible that a test does not have a result object. This can happen
-    // when a test class does not have any test methods.
-    if ($test_result_object) {
-      $reflection_class = new \ReflectionClass($test_result_object);
-      $reflection_property = $reflection_class->getProperty('listeners');
-      $reflection_property->setAccessible(TRUE);
-      $listeners = $reflection_property->getValue($test_result_object);
-      $listeners[] = new AfterSymfonyListener();
-      $reflection_property->setValue($test_result_object, $listeners);
+  /**
+   * Removes the error handler if registered.
+   *
+   * @see \Drupal\Tests\Listeners\DeprecationListenerTrait::registerErrorHandler()
+   */
+  protected function removeErrorHandler(): void {
+    if ($this->previousHandler) {
+      $this->previousHandler = NULL;
+      restore_error_handler();
     }
   }
 

@@ -2,20 +2,15 @@
 
 namespace Drupal\Tests\Traits;
 
-use Symfony\Bridge\PhpUnit\Legacy\SymfonyTestsListener as LegacySymfonyTestsListener;
-use Symfony\Bridge\PhpUnit\SymfonyTestsListener;
-use PHPUnit\Framework\AssertionFailedError;
-use PHPUnit\Framework\TestCase;
-use PHPUnit\Util\Test;
+use Symfony\Bridge\PhpUnit\Legacy\SymfonyTestsListenerTrait;
 
 /**
  * Adds the ability to dynamically set expected deprecation messages in tests.
  *
  * @internal
- *   This class should only be used by Drupal core and will be removed once
- *   https://github.com/symfony/symfony/pull/25757 is resolved.
  *
- * @todo Remove once https://github.com/symfony/symfony/pull/25757 is resolved.
+ * @todo https://www.drupal.org/project/drupal/issues/3157434 Deprecate the
+ *   trait and its methods.
  */
 trait ExpectDeprecationTrait {
 
@@ -34,40 +29,11 @@ trait ExpectDeprecationTrait {
    *
    * @param string[] $messages
    *   The expected deprecation messages.
+   *
+   * @see \Symfony\Bridge\PhpUnit\Legacy\ExpectDeprecationTraitForV8_4::expectDeprecation()
    */
   public function expectedDeprecations(array $messages) {
-    if ($this instanceof TestCase) {
-      // Ensure the class or method is in the legacy group.
-      $groups = Test::getGroups(static::class, $this->getName(FALSE));
-      if (!in_array('legacy', $groups, TRUE)) {
-        throw new AssertionFailedError('Only tests with the `@group legacy` annotation can call `setExpectedDeprecation()`.');
-      }
-
-      // If setting an expected deprecation there is no need to be strict about
-      // testing nothing as this is an assertion.
-      $this->getTestResultObject()
-        ->beStrictAboutTestsThatDoNotTestAnything(FALSE);
-
-      if ($trait = $this->getSymfonyTestListenerTrait()) {
-        // Add the expected deprecation message to the class property.
-        $reflection_class = new \ReflectionClass($trait);
-        $expected_deprecations_property = $reflection_class->getProperty('expectedDeprecations');
-        $expected_deprecations_property->setAccessible(TRUE);
-        $expected_deprecations = $expected_deprecations_property->getValue($trait);
-        $expected_deprecations = array_merge($expected_deprecations, $messages);
-        $expected_deprecations_property->setValue($trait, $expected_deprecations);
-
-        // Register the error handler if necessary.
-        $previous_error_handler_property = $reflection_class->getProperty('previousErrorHandler');
-        $previous_error_handler_property->setAccessible(TRUE);
-        $previous_error_handler = $previous_error_handler_property->getValue($trait);
-        if (!$previous_error_handler) {
-          $previous_error_handler = set_error_handler([$trait, 'handleError']);
-          $previous_error_handler_property->setValue($trait, $previous_error_handler);
-        }
-        return;
-      }
-    }
+    $this->getTestResultObject()->beStrictAboutTestsThatDoNotTestAnything(FALSE);
 
     // Expected deprecations set by isolated tests need to be written to a file
     // so that the test running process can take account of them.
@@ -80,31 +46,15 @@ trait ExpectDeprecationTrait {
         $expected_deprecations = $messages;
       }
       file_put_contents($file, serialize($expected_deprecations));
-      return;
     }
+    else {
+      // Copy code from ExpectDeprecationTraitForV8_4::expectDeprecation().
+      if (!SymfonyTestsListenerTrait::$previousErrorHandler) {
+        SymfonyTestsListenerTrait::$previousErrorHandler = set_error_handler([SymfonyTestsListenerTrait::class, 'handleError']);
+      }
 
-    throw new AssertionFailedError('Can not set an expected deprecation message because the Symfony\Bridge\PhpUnit\SymfonyTestsListener is not registered as a PHPUnit test listener.');
-  }
-
-  /**
-   * Gets the SymfonyTestsListenerTrait.
-   *
-   * @return \Symfony\Bridge\PhpUnit\Legacy\SymfonyTestsListenerTrait|null
-   *   The SymfonyTestsListenerTrait object or NULL is a Symfony test listener
-   *   is not present.
-   */
-  private function getSymfonyTestListenerTrait() {
-    $test_result_object = $this->getTestResultObject();
-    $reflection_class = new \ReflectionClass($test_result_object);
-    $reflection_property = $reflection_class->getProperty('listeners');
-    $reflection_property->setAccessible(TRUE);
-    $listeners = $reflection_property->getValue($test_result_object);
-    foreach ($listeners as $listener) {
-      if ($listener instanceof SymfonyTestsListener || $listener instanceof LegacySymfonyTestsListener) {
-        $reflection_class = new \ReflectionClass($listener);
-        $reflection_property = $reflection_class->getProperty('trait');
-        $reflection_property->setAccessible(TRUE);
-        return $reflection_property->getValue($listener);
+      foreach ($messages as $message) {
+        SymfonyTestsListenerTrait::$expectedDeprecations[] = $message;
       }
     }
   }

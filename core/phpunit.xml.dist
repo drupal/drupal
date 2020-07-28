@@ -57,9 +57,6 @@
   <listeners>
     <listener class="\Drupal\Tests\Listeners\DrupalListener">
     </listener>
-    <!-- The Symfony deprecation listener has to come after the Drupal listener -->
-    <listener class="Symfony\Bridge\PhpUnit\SymfonyTestsListener">
-    </listener>
   </listeners>
   <!-- Filter for coverage reports. -->
   <filter>
