@@ -746,16 +746,16 @@ function node_form_system_themes_admin_form_submit($form, FormStateInterface $fo
  * @{
  * The node access system determines who can do what to which nodes.
  *
- * In determining access rights for a node, \Drupal\node\NodeAccessControlHandler
- * first checks whether the user has the "bypass node access" permission. Such
- * users have unrestricted access to all nodes. user 1 will always pass this
- * check.
+ * In determining access rights for an existing node,
+ * \Drupal\node\NodeAccessControlHandler first checks whether the user has the
+ * "bypass node access" permission. Such users have unrestricted access to all
+ * nodes. user 1 will always pass this check.
  *
- * Next, all implementations of hook_node_access() will be called. Each
- * implementation may explicitly allow, explicitly forbid, or ignore the access
- * request. If at least one module says to forbid the request, it will be
- * rejected. If no modules deny the request and at least one says to allow it,
- * the request will be permitted.
+ * Next, all implementations of hook_ENTITY_TYPE_access() for node will
+ * be called. Each implementation may explicitly allow, explicitly forbid, or
+ * ignore the access request. If at least one module says to forbid the request,
+ * it will be rejected. If no modules deny the request and at least one says to
+ * allow it, the request will be permitted.
  *
  * If all modules ignore the access request, then the node_access table is used
  * to determine access. All node access modules are queried using
@@ -768,40 +768,42 @@ function node_form_system_themes_admin_form_submit($form, FormStateInterface $fo
  *
  * In node listings (lists of nodes generated from a select query, such as the
  * default home page at path 'node', an RSS feed, a recent content block, etc.),
- * the process above is followed except that hook_node_access() is not called on
- * each node for performance reasons and for proper functioning of the pager
- * system. When adding a node listing to your module, be sure to use an entity
- * query, which will add a tag of "node_access". This will allow modules dealing
- * with node access to ensure only nodes to which the user has access are
- * retrieved, through the use of hook_query_TAG_alter(). See the
+ * the process above is followed except that hook_ENTITY_TYPE_access() is not
+ * called on each node for performance reasons and for proper functioning of
+ * the pager system. When adding a node listing to your module, be sure to use
+ * an entity query, which will add a tag of "node_access". This will allow
+ * modules dealing with node access to ensure only nodes to which the user has
+ * access are retrieved, through the use of hook_query_TAG_alter(). See the
  * @link entity_api Entity API topic @endlink for more information on entity
  * queries. Tagging a query with "node_access" does not check the
  * published/unpublished status of nodes, so the base query is responsible
  * for ensuring that unpublished nodes are not displayed to inappropriate users.
  *
  * Note: Even a single module returning an AccessResultInterface object from
- * hook_node_access() whose isForbidden() method equals TRUE will block access
- * to the node. Therefore, implementers should take care to not deny access
- * unless they really intend to. Unless a module wishes to actively forbid
- * access it should return an AccessResultInterface object whose isAllowed() nor
- * isForbidden() methods return TRUE, to allow other modules or the node_access
- * table to control access.
+ * hook_ENTITY_TYPE_access() whose isForbidden() method equals TRUE will block
+ * access to the node. Therefore, implementers should take care to not deny
+ * access unless they really intend to. Unless a module wishes to actively
+ * forbid access it should return an AccessResultInterface object whose
+ * isAllowed() nor isForbidden() methods return TRUE, to allow other modules or
+ * the node_access table to control access.
+ *
+ * Note also that access to create nodes is handled by
+ * hook_ENTITY_TYPE_create_access().
  *
  * To see how to write a node access module of your own, see
  * node_access_example.module.
+ *
+ * @see \Drupal\node\NodeAccessControlHandler
  */
 
 /**
- * Implements hook_node_access().
+ * Implements hook_ENTITY_TYPE_access().
  */
 function node_node_access(NodeInterface $node, $op, AccountInterface $account) {
   $type = $node->bundle();
-  $access = AccessResult::neutral();
 
+  // Note create access is handled by hook_ENTITY_TYPE_create_access().
   switch ($op) {
-    case 'create':
-      $access = AccessResult::allowedIfHasPermission($account, 'create ' . $type . ' content');
-
     case 'update':
       $access = AccessResult::allowedIfHasPermission($account, 'edit any ' . $type . ' content');
       if (!$access->isAllowed() && $account->hasPermission('edit own ' . $type . ' content')) {
@@ -815,6 +817,9 @@ function node_node_access(NodeInterface $node, $op, AccountInterface $account) {
         $access = $access->orIf(AccessResult::allowedIf($account->id() == $node->getOwnerId()))->cachePerUser()->addCacheableDependency($node);
       }
       break;
+
+    default:
+      $access = AccessResult::neutral();
   }
 
   return $access;
