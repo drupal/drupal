@@ -163,7 +163,7 @@ class NodeNewComments extends NumericField {
     }
 
     if ($nids) {
-      $result = $this->database->query("SELECT n.nid, COUNT(c.cid) as num_comments FROM {node} n INNER JOIN {comment_field_data} c ON n.nid = c.entity_id AND c.entity_type = 'node' AND c.default_langcode = 1
+      $result = $this->database->query("SELECT n.nid, COUNT(c.cid) AS num_comments FROM {node} n INNER JOIN {comment_field_data} c ON n.nid = c.entity_id AND c.entity_type = 'node' AND c.default_langcode = 1
         LEFT JOIN {history} h ON h.nid = n.nid AND h.uid = :h_uid WHERE n.nid IN ( :nids[] )
         AND c.changed > GREATEST(COALESCE(h.timestamp, :timestamp1), :timestamp2) AND c.status = :status GROUP BY n.nid", [
         ':status' => CommentInterface::PUBLISHED,
