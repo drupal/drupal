@@ -236,7 +236,7 @@ class VocabularyPermissionsTest extends TaxonomyTestBase {
     // Visit the main taxonomy administration page.
     $this->drupalGet('admin/structure/taxonomy/manage/' . $vocabulary->id() . '/add');
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertField('edit-name-0-value', 'Add taxonomy term form opened successfully.');
+    $this->assertField('edit-name-0-value');
 
     // Submit the term.
     $edit = [];

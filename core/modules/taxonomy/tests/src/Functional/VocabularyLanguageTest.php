@@ -44,7 +44,7 @@ class VocabularyLanguageTest extends TaxonomyTestBase {
     $this->drupalGet('admin/structure/taxonomy/add');
 
     // Check that we have the language selector available.
-    $this->assertField('edit-langcode', 'The language selector field was found on the page.');
+    $this->assertField('edit-langcode');
 
     // Create the vocabulary.
     $vid = mb_strtolower($this->randomMachineName());

@@ -47,9 +47,10 @@ class ImportOpmlTest extends AggregatorTestBase {
 
     $this->drupalGet('admin/config/services/aggregator/add/opml');
     $this->assertText('A single OPML document may contain many feeds.', 'Found OPML help text.');
-    $this->assertField('files[upload]', 'Found file upload field.');
-    $this->assertField('remote', 'Found Remote URL field.');
-    $this->assertField('refresh', '', 'Found Refresh field.');
+    // Ensure that the file upload, remote URL, and refresh fields exist.
+    $this->assertField('files[upload]');
+    $this->assertField('remote');
+    $this->assertField('refresh');
   }
 
   /**

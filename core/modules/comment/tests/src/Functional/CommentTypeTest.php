@@ -85,7 +85,7 @@ class CommentTypeTest extends CommentTestBase {
 
     // Edit the comment-type and ensure that we cannot change the entity-type.
     $this->drupalGet('admin/structure/comment/manage/foo');
-    $this->assertNoField('target_entity_type_id', 'Entity type file not present');
+    $this->assertNoField('target_entity_type_id');
     $this->assertText(t('Target entity type'));
     // Save the form and ensure the entity-type value is preserved even though
     // the field isn't present.

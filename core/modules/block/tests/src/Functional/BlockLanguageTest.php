@@ -54,9 +54,10 @@ class BlockLanguageTest extends BrowserTestBase {
     // Check if the visibility setting is available.
     $default_theme = $this->config('system.theme')->get('default');
     $this->drupalGet('admin/structure/block/add/system_powered_by_block' . '/' . $default_theme);
-
-    $this->assertField('visibility[language][langcodes][en]', 'Language visibility field is visible.');
-    $this->assertNoField('visibility[language][context_mapping][language]', 'Language type field is not visible.');
+    // Ensure that the language visibility field is visible without a type
+    // setting.
+    $this->assertField('visibility[language][langcodes][en]');
+    $this->assertNoField('visibility[language][context_mapping][language]');
 
     // Enable a standard block and set the visibility setting for one language.
     $edit = [
@@ -138,8 +139,8 @@ class BlockLanguageTest extends BrowserTestBase {
     // Check if the visibility setting is available with a type setting.
     $default_theme = $this->config('system.theme')->get('default');
     $this->drupalGet('admin/structure/block/add/system_powered_by_block' . '/' . $default_theme);
-    $this->assertField('visibility[language][langcodes][en]', 'Language visibility field is visible.');
-    $this->assertField('visibility[language][context_mapping][language]', 'Language type field is visible.');
+    $this->assertField('visibility[language][langcodes][en]');
+    $this->assertField('visibility[language][context_mapping][language]');
 
     // Enable a standard block and set visibility to French only.
     $block_id = strtolower($this->randomMachineName(8));

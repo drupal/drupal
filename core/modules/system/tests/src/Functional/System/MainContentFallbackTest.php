@@ -58,13 +58,13 @@ class MainContentFallbackTest extends BrowserTestBase {
     // Drupal should fall back to SimplePageVariant. Both for the admin and the
     // front-end theme.
     $this->drupalGet('admin/config/system/site-information');
-    $this->assertField('site_name', 'Fallback to SimplePageVariant works for admin theme.');
+    $this->assertField('site_name');
     $this->drupalGet('system-test/main-content-fallback');
     $this->assertText(t('Content to test main content fallback'), 'Fallback to SimplePageVariant works for front-end theme.');
     // Request a user* page and see if it is displayed.
     $this->drupalLogin($this->webUser);
     $this->drupalGet('user/' . $this->webUser->id() . '/edit');
-    $this->assertField('mail', 'User interface still available.');
+    $this->assertField('mail');
 
     // Enable the block module again.
     $this->drupalLogin($this->adminUser);

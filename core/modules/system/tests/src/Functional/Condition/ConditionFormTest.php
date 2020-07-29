@@ -37,8 +37,8 @@ class ConditionFormTest extends BrowserTestBase {
     $article->save();
 
     $this->drupalGet('condition_test');
-    $this->assertField('bundles[article]', 'There is an article bundle selector.');
-    $this->assertField('bundles[page]', 'There is a page bundle selector.');
+    $this->assertField('bundles[article]');
+    $this->assertField('bundles[page]');
     $this->drupalPostForm(NULL, ['bundles[page]' => 'page', 'bundles[article]' => 'article'], t('Submit'));
     // @see \Drupal\condition_test\FormController::submitForm()
     $this->assertText('Bundle: page');

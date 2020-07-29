@@ -353,7 +353,7 @@ class ForumTest extends BrowserTestBase {
     // Test term edit form alterations.
     $this->drupalGet('taxonomy/term/' . $this->forumContainer['tid'] . '/edit');
     // Test parent field been hidden by forum module.
-    $this->assertNoField('parent[]', 'Parent field not found.');
+    $this->assertNoField('parent[]');
 
     // Create a default vocabulary named "Tags".
     $description = 'Use tags to group articles on similar topics into categories.';

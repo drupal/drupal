@@ -54,7 +54,7 @@ class LanguageSelectElementTest extends BrowserTestBase {
         'edit-languages-config-and-locked' => LanguageInterface::STATE_CONFIGURABLE | LanguageInterface::STATE_LOCKED,
     ];
     foreach ($ids as $id => $flags) {
-      $this->assertField($id, new FormattableMarkup('The @id field was found on the page.', ['@id' => $id]));
+      $this->assertField($id);
       $options = [];
       /* @var $language_manager \Drupal\Core\Language\LanguageManagerInterface */
       $language_manager = $this->container->get('language_manager');
@@ -65,7 +65,7 @@ class LanguageSelectElementTest extends BrowserTestBase {
     }
 
     // Test that the #options were not altered by #languages.
-    $this->assertField('edit-language-custom-options', new FormattableMarkup('The @id field was found on the page.', ['@id' => 'edit-language-custom-options']));
+    $this->assertField('edit-language-custom-options');
     $this->_testLanguageSelectElementOptions('edit-language-custom-options', ['opt1' => 'First option', 'opt2' => 'Second option', 'opt3' => 'Third option']);
   }
 
@@ -82,7 +82,7 @@ class LanguageSelectElementTest extends BrowserTestBase {
     // Check that the language fields were rendered on the page.
     $ids = ['edit-languages-all', 'edit-languages-configurable', 'edit-languages-locked', 'edit-languages-config-and-locked'];
     foreach ($ids as $id) {
-      $this->assertNoField($id, new FormattableMarkup('The @id field was not found on the page.', ['@id' => $id]));
+      $this->assertNoField($id);
     }
 
     // Check that the submitted values were the default values of the language

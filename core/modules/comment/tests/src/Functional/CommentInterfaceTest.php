@@ -179,21 +179,22 @@ class CommentInterfaceTest extends CommentTestBase {
     $this->assertNotNull($this->node, 'Article node created.');
     $this->drupalGet('comment/reply/node/' . $this->node->id() . '/comment');
     $this->assertSession()->statusCodeEquals(403);
-    $this->assertNoField('edit-comment', 'Comment body field found.');
+    $this->assertNoField('edit-comment');
 
     // Attempt to post to node with read-only comments.
     $this->node = $this->drupalCreateNode(['type' => 'article', 'promote' => 1, 'comment' => [['status' => CommentItemInterface::CLOSED]]]);
     $this->assertNotNull($this->node, 'Article node created.');
     $this->drupalGet('comment/reply/node/' . $this->node->id() . '/comment');
     $this->assertSession()->statusCodeEquals(403);
-    $this->assertNoField('edit-comment', 'Comment body field found.');
+    $this->assertNoField('edit-comment');
 
     // Attempt to post to node with comments enabled (check field names etc).
     $this->node = $this->drupalCreateNode(['type' => 'article', 'promote' => 1, 'comment' => [['status' => CommentItemInterface::OPEN]]]);
     $this->assertNotNull($this->node, 'Article node created.');
     $this->drupalGet('comment/reply/node/' . $this->node->id() . '/comment');
     $this->assertNoText('This discussion is closed', 'Posting to node with comments enabled');
-    $this->assertField('edit-comment-body-0-value', 'Comment body field found.');
+    // Ensure that the comment body field exists.
+    $this->assertField('edit-comment-body-0-value');
 
     // Delete comment and make sure that reply is also removed.
     $this->drupalLogout();

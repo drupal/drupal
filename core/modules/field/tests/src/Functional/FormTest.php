@@ -123,7 +123,8 @@ class FormTest extends FieldTestBase {
     $token_description = Html::escape($this->config('system.site')->get('name')) . '_description';
     $this->assertText($token_description, 'Token replacement for description is displayed');
     $this->assertFieldByName("{$field_name}[0][value]", '', 'Widget is displayed');
-    $this->assertNoField("{$field_name}[1][value]", 'No extraneous widget is displayed');
+    // Verify that no extraneous widget is displayed.
+    $this->assertNoField("{$field_name}[1][value]");
 
     // Check that hook_field_widget_form_alter() does not believe this is the
     // default value form.
@@ -155,7 +156,8 @@ class FormTest extends FieldTestBase {
     // Display edit form.
     $this->drupalGet('entity_test/manage/' . $id . '/edit');
     $this->assertFieldByName("{$field_name}[0][value]", $value, 'Widget is displayed with the correct default value');
-    $this->assertNoField("{$field_name}[1][value]", 'No extraneous widget is displayed');
+    // Verify that no extraneous widget is displayed.
+    $this->assertNoField("{$field_name}[1][value]");
 
     // Update the entity.
     $value = mt_rand(1, 127);
@@ -265,7 +267,8 @@ class FormTest extends FieldTestBase {
     // Display creation form -> 1 widget.
     $this->drupalGet('entity_test/add');
     $this->assertFieldByName("{$field_name}[0][value]", '', 'Widget 1 is displayed');
-    $this->assertNoField("{$field_name}[1][value]", 'No extraneous widget is displayed');
+    // Verify that no extraneous widget is displayed.
+    $this->assertNoField("{$field_name}[1][value]");
 
     // Check if aria-describedby attribute is placed on multiple value widgets.
     $elements = $this->xpath('//table[@id="field-unlimited-values" and @aria-describedby="edit-field-unlimited--description"]');
@@ -275,7 +278,8 @@ class FormTest extends FieldTestBase {
     $this->drupalPostForm(NULL, [], t('Add another item'));
     $this->assertFieldByName("{$field_name}[0][value]", '', 'Widget 1 is displayed');
     $this->assertFieldByName("{$field_name}[1][value]", '', 'New widget is displayed');
-    $this->assertNoField("{$field_name}[2][value]", 'No extraneous widget is displayed');
+    // Verify that no extraneous widget is displayed.
+    $this->assertNoField("{$field_name}[2][value]");
     // TODO : check that non-field inputs are preserved ('title'), etc.
 
     // Yet another time so that we can play with more values -> 3 widgets.
@@ -314,7 +318,8 @@ class FormTest extends FieldTestBase {
     $this->assertPattern("|$pattern|s", 'Widgets are displayed in the correct order');
     $this->assertFieldByName("{$field_name}[$delta][value]", '', "New widget is displayed");
     $this->assertFieldByName("{$field_name}[$delta][_weight]", $delta, "New widget has the right weight");
-    $this->assertNoField("{$field_name}[" . ($delta + 1) . '][value]', 'No extraneous widget is displayed');
+    // Verify that no extraneous widget is displayed.
+    $this->assertNoField("{$field_name}[" . ($delta + 1) . '][value]');
 
     // Submit the form and create the entity.
     $this->drupalPostForm(NULL, $edit, t('Save'));
@@ -411,7 +416,8 @@ class FormTest extends FieldTestBase {
     // Verify that the widget is added.
     $this->assertFieldByName("{$field_name}[0][value]", '', 'Widget 1 is displayed');
     $this->assertFieldByName("{$field_name}[1][value]", '', 'New widget is displayed');
-    $this->assertNoField("{$field_name}[2][value]", 'No extraneous widget is displayed');
+    // Verify that no extraneous widget is displayed.
+    $this->assertNoField("{$field_name}[2][value]");
   }
 
   /**
@@ -588,7 +594,7 @@ class FormTest extends FieldTestBase {
 
     // Create an entity and test that the default value is assigned correctly to
     // the field that uses the hidden widget.
-    $this->assertNoField("{$field_name}[0][value]", 'The field does not appear in the form');
+    $this->assertNoField("{$field_name}[0][value]");
     $this->drupalPostForm(NULL, [], t('Save'));
     preg_match('|' . $entity_type . '/manage/(\d+)|', $this->getUrl(), $match);
     $id = $match[1];
