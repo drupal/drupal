@@ -73,7 +73,7 @@ class Roles extends PrerenderList {
 
     if ($uids) {
       $roles = user_roles();
-      $result = $this->database->query('SELECT u.entity_id as uid, u.roles_target_id as rid FROM {user__roles} u WHERE u.entity_id IN ( :uids[] ) AND u.roles_target_id IN ( :rids[] )', [':uids[]' => $uids, ':rids[]' => array_keys($roles)]);
+      $result = $this->database->query('SELECT u.entity_id AS uid, u.roles_target_id AS rid FROM {user__roles} u WHERE u.entity_id IN ( :uids[] ) AND u.roles_target_id IN ( :rids[] )', [':uids[]' => $uids, ':rids[]' => array_keys($roles)]);
       foreach ($result as $role) {
         $this->items[$role->uid][$role->rid]['role'] = $roles[$role->rid]->label();
         $this->items[$role->uid][$role->rid]['rid'] = $role->rid;
