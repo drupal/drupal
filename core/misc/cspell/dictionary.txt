@@ -44,9 +44,9 @@ alternatif
 amet
 amphibius
 ampm
-and's
 anded
 andif
+anding
 annot
 annotationwithconstants
 annots
@@ -1233,8 +1233,6 @@ optimizable
 optin
 optionchecker
 optionwidgets
-or'd
-or's
 ored
 org's
 orgchart

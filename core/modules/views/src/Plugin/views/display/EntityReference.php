@@ -169,7 +169,7 @@ class EntityReference extends DisplayPluginBase {
         }
       }
 
-      // Multiple search fields are OR'd together.
+      // Multiple search fields are ORed together.
       $conditions = new Condition('OR');
 
       // Build the condition using the selected search fields.

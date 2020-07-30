@@ -266,7 +266,7 @@ class SearchQuery extends SelectExtender {
         $this->keys['negative'] = array_merge($this->keys['negative'], $words);
       }
       // OR operator: instead of a single keyword, we store an array of all
-      // OR'd keywords.
+      // ORed keywords.
       elseif ($match[2] == 'OR' && count($this->keys['positive'])) {
         $last = array_pop($this->keys['positive']);
         // Starting a new OR?
@@ -308,7 +308,7 @@ class SearchQuery extends SelectExtender {
     foreach ($this->keys['positive'] as $key) {
       // Group of ORed terms.
       if (is_array($key) && count($key)) {
-        // If we had already found one OR, this is another one AND-ed with the
+        // If we had already found one OR, this is another one ANDed with the
         // first, meaning it is not a simple query.
         if ($has_or) {
           $this->simple = FALSE;

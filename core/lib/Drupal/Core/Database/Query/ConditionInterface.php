@@ -16,7 +16,7 @@ interface ConditionInterface {
    *
    * If called with 1 parameter, it should be a ConditionInterface that in
    * itself forms a valid where clause. Use e.g. to build clauses with nested
-   * AND's and OR's.
+   * ANDs and ORs.
    *
    * If called with 2 parameters, they are taken as $field and $value with
    * $operator having a value of =.
