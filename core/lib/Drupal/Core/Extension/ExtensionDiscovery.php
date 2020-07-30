@@ -164,8 +164,8 @@ class ExtensionDiscovery {
     $searchdirs[static::ORIGIN_SITES_ALL] = 'sites/all';
 
     // Search for contributed and custom extensions in top-level directories.
-    // The scan uses a whitelist to limit recursion to the expected extension
-    // type specific directory names only.
+    // The scan uses a list of extension types to limit recursion to the
+    // expected extension type specific directory names only.
     $searchdirs[static::ORIGIN_ROOT] = '';
 
     // Simpletest uses the regular built-in multi-site functionality of Drupal
