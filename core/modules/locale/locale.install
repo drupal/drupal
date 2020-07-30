@@ -183,7 +183,6 @@ function locale_schema() {
       ],
     ],
     'indexes' => [
-      'string_id' => ['sid'],
       'string_type' => ['sid', 'type'],
     ],
   ];
@@ -306,6 +305,17 @@ function locale_requirements($phase) {
     }
   }
   return $requirements;
+}
+
+/**
+ * Delete an unnecessary index on the locales_location table.
+ */
+function locale_update_9101() {
+  $schema = \Drupal::database()->schema();
+  $table = 'locales_location';
+  if ($schema->indexExists($table, 'string_id')) {
+    $schema->dropIndex($table, 'string_id');
+  }
 }
 
 /**
