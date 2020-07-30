@@ -214,12 +214,15 @@ abstract class InstallerTestBase extends BrowserTestBase {
 
   /**
    * Installer step: Select language.
+   *
+   * @see \Drupal\Core\Installer\Form\SelectLanguageForm
    */
   protected function setUpLanguage() {
     $edit = [
       'langcode' => $this->langcode,
     ];
-    $this->drupalPostForm(NULL, $edit, $this->translations['Save and continue']);
+    // The 'Select Language' step is always English.
+    $this->drupalPostForm(NULL, $edit, 'Save and continue');
   }
 
   /**
