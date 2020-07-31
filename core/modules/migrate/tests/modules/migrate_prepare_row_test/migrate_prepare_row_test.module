@@ -21,8 +21,8 @@ function migrate_prepare_row_test_migrate_prepare_row(Row $row, MigrateSourceInt
     // Record mapping but don't record a message.
     throw new MigrateSkipRowException('', TRUE);
   }
-  elseif ($data == 'skip_and_dont_record') {
+  elseif ($data == 'skip_and_do_not_record') {
     // Don't record mapping but record a message.
-    throw new MigrateSkipRowException('skip_and_dont_record message', FALSE);
+    throw new MigrateSkipRowException('skip_and_do_not_record message', FALSE);
   }
 }

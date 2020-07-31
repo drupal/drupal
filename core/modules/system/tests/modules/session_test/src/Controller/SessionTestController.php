@@ -124,7 +124,7 @@ class SessionTestController extends ControllerBase {
    * @return string
    *   A notification message.
    */
-  public function setMessageButDontSave() {
+  public function setMessageButDoNotSave() {
     \Drupal::service('session_handler.write_safe')->setSessionWritable(FALSE);
     $this->setMessage();
     return ['#markup' => ''];
