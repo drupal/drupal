@@ -142,7 +142,7 @@ class TermLanguageTest extends TaxonomyTestBase {
 
     // Overview page in the other language shows the translated term
     $this->drupalGet('bb/admin/structure/taxonomy/manage/' . $this->vocabulary->id() . '/overview');
-    $this->assertPattern('|<a[^>]*>' . $translated_title . '</a>|', 'The term language is correct');
+    $this->assertPattern('|<a[^>]*>' . $translated_title . '</a>|');
   }
 
 }

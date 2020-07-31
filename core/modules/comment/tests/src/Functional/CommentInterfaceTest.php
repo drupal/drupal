@@ -55,7 +55,7 @@ class CommentInterfaceTest extends CommentTestBase {
 
     // Test the comment field title is displayed when there's comments.
     $this->drupalGet($this->node->toUrl());
-    $this->assertPattern('@<h2[^>]*>Comments</h2>@', 'Comments title is displayed.');
+    $this->assertPattern('@<h2[^>]*>Comments</h2>@');
 
     // Set comments to have subject and preview to required.
     $this->drupalLogout();
