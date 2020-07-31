@@ -78,6 +78,43 @@ class DefaultTableMappingIntegrationTest extends EntityKernelTestBase {
   }
 
   /**
+   * @covers ::getAllFieldTableNames
+   */
+  public function testGetAllFieldTableNames() {
+    // Check a field that is stored in all the shared tables.
+    $expected = [
+      'entity_test_mulrev',
+      'entity_test_mulrev_property_data',
+      'entity_test_mulrev_revision',
+      'entity_test_mulrev_property_revision',
+    ];
+    $this->assertEquals($expected, $this->tableMapping->getAllFieldTableNames('id'));
+
+    // Check a field that is stored only in the base table.
+    $expected = ['entity_test_mulrev'];
+    $this->assertEquals($expected, $this->tableMapping->getAllFieldTableNames('uuid'));
+
+    // Check a field that is stored only in the revision table.
+    $expected = ['entity_test_mulrev_revision'];
+    $this->assertEquals($expected, $this->tableMapping->getAllFieldTableNames('revision_default'));
+
+    // Check a field that field that is stored in the data and revision data
+    // tables.
+    $expected = [
+      'entity_test_mulrev_property_data',
+      'entity_test_mulrev_property_revision',
+    ];
+    $this->assertEquals($expected, $this->tableMapping->getAllFieldTableNames('name'));
+
+    // Check a field that is stored in dedicated data and revision data tables.
+    $expected = [
+      'entity_test_mulrev__multivalued_base_field',
+      'entity_test_mulrev_r__f86e511394',
+    ];
+    $this->assertEquals($expected, $this->tableMapping->getAllFieldTableNames('multivalued_base_field'));
+  }
+
+  /**
    * Tests DefaultTableMapping::getTableNames().
    *
    * @covers ::getTableNames
