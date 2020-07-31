@@ -14,10 +14,10 @@ backbone:
 
 ckeditor:
   remote: https://github.com/ckeditor/ckeditor-dev
-  version: "4.14.0"
+  version: "4.14.1"
   license:
     name: GNU-GPL-2.0-or-later
-    url: https://github.com/ckeditor/ckeditor4/blob/4.14.0/LICENSE.md
+    url: https://github.com/ckeditor/ckeditor4/blob/4.14.1/LICENSE.md
     gpl-compatible: true
   js:
     assets/vendor/ckeditor/ckeditor.js: { preprocess: false, minified: true }
