@@ -581,7 +581,6 @@ evenodd
 eventhandler
 exampleurl
 exdep
-existant
 exitcode
 expirable
 extlink
