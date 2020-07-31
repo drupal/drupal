@@ -29,14 +29,8 @@ class DatabaseExceptionWrapperTest extends KernelTestBase {
 
       $this->fail('Expected PDOException or DatabaseExceptionWrapper, none was thrown.');
     }
-    catch (\PDOException $e) {
-      $this->pass('Expected PDOException was thrown.');
-    }
-    catch (DatabaseExceptionWrapper $e) {
-      $this->pass('Expected DatabaseExceptionWrapper was thrown.');
-    }
     catch (\Exception $e) {
-      $this->fail("Thrown exception is not a PDOException:\n" . (string) $e);
+      $this->assertTrue($e instanceof \PDOException || $e instanceof DatabaseExceptionWrapper, 'Exception should be an instance of \PDOException or DatabaseExceptionWrapper, thrown ' . get_class($e));
     }
   }
 
@@ -44,17 +38,8 @@ class DatabaseExceptionWrapperTest extends KernelTestBase {
    * Tests the expected database exception thrown for inexistent tables.
    */
   public function testQueryThrowsDatabaseExceptionWrapperException() {
-    $connection = Database::getConnection();
-    try {
-      $connection->query('SELECT * FROM {does_not_exist}');
-      $this->fail('Expected PDOException, none was thrown.');
-    }
-    catch (DatabaseExceptionWrapper $e) {
-      $this->pass('Expected DatabaseExceptionWrapper was thrown.');
-    }
-    catch (\Exception $e) {
-      $this->fail("Thrown exception is not a DatabaseExceptionWrapper:\n" . (string) $e);
-    }
+    $this->expectException(DatabaseExceptionWrapper::class);
+    Database::getConnection()->query('SELECT * FROM {does_not_exist}');
   }
 
 }

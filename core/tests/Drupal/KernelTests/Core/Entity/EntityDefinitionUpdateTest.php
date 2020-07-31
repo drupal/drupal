@@ -145,7 +145,7 @@ class EntityDefinitionUpdateTest extends EntityKernelTestBase {
       $this->fail('EntityStorageException thrown when trying to apply an update that requires shared table schema changes.');
     }
     catch (EntityStorageException $e) {
-      $this->pass('EntityStorageException thrown when trying to apply an update that requires shared table schema changes.');
+      // Expected exception; just continue testing.
     }
   }
 
@@ -427,7 +427,6 @@ class EntityDefinitionUpdateTest extends EntityKernelTestBase {
     $this->assertTrue($assert, 'Columns created again in shared table for new_base_field.');
     $entity = $storage->create(['name' => $name]);
     $entity->save();
-    $this->pass('The new_base_field columns are still nullable');
   }
 
   /**
@@ -491,7 +490,6 @@ class EntityDefinitionUpdateTest extends EntityKernelTestBase {
         $this->database->insert('entity_test_update__new_bundle_field')
           ->fields($values)
           ->execute();
-        $this->pass($message);
       }
       else {
         // Keep throwing it.
@@ -816,7 +814,7 @@ class EntityDefinitionUpdateTest extends EntityKernelTestBase {
       $this->fail('FieldStorageDefinitionUpdateForbiddenException thrown when trying to update a field schema that has data.');
     }
     catch (FieldStorageDefinitionUpdateForbiddenException $e) {
-      $this->pass('FieldStorageDefinitionUpdateForbiddenException thrown when trying to update a field schema that has data.');
+      // Expected exception; just continue testing.
     }
   }
 
@@ -840,7 +838,7 @@ class EntityDefinitionUpdateTest extends EntityKernelTestBase {
       $this->fail('FieldStorageDefinitionUpdateForbiddenException thrown when trying to update a field schema that has data.');
     }
     catch (FieldStorageDefinitionUpdateForbiddenException $e) {
-      $this->pass('FieldStorageDefinitionUpdateForbiddenException thrown when trying to update a field schema that has data.');
+      // Expected exception; just continue testing.
     }
   }
 
@@ -1025,7 +1023,7 @@ class EntityDefinitionUpdateTest extends EntityKernelTestBase {
       $this->fail($message);
     }
     catch (PluginNotFoundException $e) {
-      $this->pass($message);
+      // Expected exception; just continue testing.
     }
 
     // Ensure that a field cannot be installed on non-existing entity type.
@@ -1038,7 +1036,7 @@ class EntityDefinitionUpdateTest extends EntityKernelTestBase {
       $this->fail($message);
     }
     catch (PluginNotFoundException $e) {
-      $this->pass($message);
+      // Expected exception; just continue testing.
     }
 
     // Ensure that installing an existing entity type is a no-op.
@@ -1167,14 +1165,13 @@ class EntityDefinitionUpdateTest extends EntityKernelTestBase {
       $this->fail($message);
     }
     catch (EntityStorageException $e) {
-      $this->pass($message);
+      // Expected exception; just continue testing.
     }
 
     // Check that the update is correctly applied when no NULL data is left.
     $entity->set('new_base_field', $this->randomString());
     $entity->save();
     $this->applyEntityUpdates();
-    $this->pass('The update is correctly performed when no NULL data exists.');
 
     // Check that the update actually applied a NOT NULL constraint.
     $entity->set('new_base_field', NULL);
@@ -1184,7 +1181,7 @@ class EntityDefinitionUpdateTest extends EntityKernelTestBase {
       $this->fail($message);
     }
     catch (EntityStorageException $e) {
-      $this->pass($message);
+      // Expected exception; just continue testing.
     }
   }
 
@@ -1322,7 +1319,6 @@ class EntityDefinitionUpdateTest extends EntityKernelTestBase {
     }
     catch (FieldException $e) {
       $this->assertEquals('Illegal initial value definition on new_base_field: The field field_that_does_not_exist does not exist.', $e->getMessage());
-      $this->pass('Using a non-existent field as initial value does not work.');
     }
 
     try {
@@ -1335,7 +1331,6 @@ class EntityDefinitionUpdateTest extends EntityKernelTestBase {
     }
     catch (FieldException $e) {
       $this->assertEquals('Illegal initial value definition on new_base_field: The field types do not match.', $e->getMessage());
-      $this->pass('Using a field of a different type as initial value does not work.');
     }
 
     try {
@@ -1359,7 +1354,6 @@ class EntityDefinitionUpdateTest extends EntityKernelTestBase {
     }
     catch (FieldException $e) {
       $this->assertEquals('Illegal initial value definition on new_base_field: Both fields have to be stored in the shared entity tables.', $e->getMessage());
-      $this->pass('Using a field that is not stored in the shared tables as initial value does not work.');
     }
   }
 

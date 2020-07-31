@@ -304,7 +304,6 @@ class FrontPageTest extends ViewTestBase {
       'timezone',
     ]);
 
-    $this->pass('First page');
     // First page.
     $first_page_result_cache_tags = [
       'config:views.view.frontpage',
@@ -344,7 +343,6 @@ class FrontPageTest extends ViewTestBase {
     );
 
     // Second page.
-    $this->pass('Second page');
     $this->assertPageCacheContextsAndTags(Url::fromRoute('view.frontpage.page_1', [], ['query' => ['page' => 1]]), $cache_contexts, [
       // The cache tags for the listed nodes.
       'node:1',

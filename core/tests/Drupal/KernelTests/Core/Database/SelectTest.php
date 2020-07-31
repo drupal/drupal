@@ -4,6 +4,7 @@ namespace Drupal\KernelTests\Core\Database;
 
 use Drupal\Core\Database\InvalidQueryException;
 use Drupal\Core\Database\Database;
+use Drupal\Core\Database\DatabaseExceptionWrapper;
 
 /**
  * Tests the Select query builder.
@@ -551,7 +552,7 @@ class SelectTest extends DatabaseTestBase {
   }
 
   /**
-   * Tests that an invalid merge query throws an exception.
+   * Tests that an invalid count query throws an exception.
    */
   public function testInvalidSelectCount() {
     try {
@@ -563,12 +564,9 @@ class SelectTest extends DatabaseTestBase {
         ->fields('t')
         ->countQuery()
         ->execute();
-
-      $this->pass('$options[\'throw_exception\'] is FALSE, no Exception thrown.');
     }
     catch (\Exception $e) {
       $this->fail('$options[\'throw_exception\'] is FALSE, but Exception thrown for invalid query.');
-      return;
     }
 
     try {
@@ -577,12 +575,11 @@ class SelectTest extends DatabaseTestBase {
         ->fields('t')
         ->countQuery()
         ->execute();
+      $this->fail('No Exception thrown.');
     }
     catch (\Exception $e) {
-      $this->pass('Exception thrown for invalid query.');
-      return;
+      $this->assertInstanceOf(DatabaseExceptionWrapper::class, $e);
     }
-    $this->fail('No Exception thrown.');
   }
 
   /**

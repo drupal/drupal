@@ -62,13 +62,12 @@ class EntityTranslationTest extends EntityLanguageTestBase {
     $this->assertEqual($field->getLangcode(), LanguageInterface::LANGCODE_NOT_SPECIFIED, new FormattableMarkup('%entity_type: Field object has the expected langcode.', ['%entity_type' => $entity_type]));
 
     // Try to get add a translation to language neutral entity.
-    $message = 'Adding a translation to a language-neutral entity results in an error.';
     try {
       $entity->addTranslation($this->langcodes[1]);
-      $this->fail($message);
+      $this->fail('Adding a translation to a language-neutral entity results in an error.');
     }
     catch (\InvalidArgumentException $e) {
-      $this->pass($message);
+      // Expected exception; just continue testing.
     }
 
     // Now, make the entity language-specific by assigning a language and test
@@ -101,26 +100,24 @@ class EntityTranslationTest extends EntityLanguageTestBase {
     $this->assertEqual($entity->getTranslationLanguages(FALSE), $translations, 'Translations retrieved.');
 
     // Try to get a value using a language code for a non-existing translation.
-    $message = 'Getting a non existing translation results in an error.';
     try {
       $entity->getTranslation($this->langcodes[2])->get($this->fieldName)->value;
-      $this->fail($message);
+      $this->fail('Getting a non existing translation results in an error.');
     }
     catch (\InvalidArgumentException $e) {
-      $this->pass($message);
+      // Expected exception; just continue testing.
     }
 
     // Try to get a not available translation.
     $this->assertNull($entity->addTranslation($this->langcodes[2])->get($this->fieldName)->value, new FormattableMarkup('%entity_type: A translation that is not available is NULL.', ['%entity_type' => $entity_type]));
 
     // Try to get a value using an invalid language code.
-    $message = 'Getting an invalid translation results in an error.';
     try {
       $entity->getTranslation('invalid')->get($this->fieldName)->value;
-      $this->fail($message);
+      $this->fail('Getting an invalid translation results in an error.');
     }
     catch (\InvalidArgumentException $e) {
-      $this->pass($message);
+      // Expected exception; just continue testing.
     }
 
     // Try to set a value using an invalid language code.
@@ -129,7 +126,7 @@ class EntityTranslationTest extends EntityLanguageTestBase {
       $this->fail(new FormattableMarkup('%entity_type: Setting a translation for an invalid language throws an exception.', ['%entity_type' => $entity_type]));
     }
     catch (\InvalidArgumentException $e) {
-      $this->pass(new FormattableMarkup('%entity_type: Setting a translation for an invalid language throws an exception.', ['%entity_type' => $entity_type]));
+      // Expected exception; just continue testing.
     }
 
     // Set the value in default language.
@@ -352,13 +349,12 @@ class EntityTranslationTest extends EntityLanguageTestBase {
 
     // Verify that trying to retrieve a translation for a locked language when
     // the entity is language-aware causes an exception to be thrown.
-    $message = 'A language-neutral translation cannot be retrieved.';
     try {
       $entity->getTranslation(LanguageInterface::LANGCODE_NOT_SPECIFIED);
-      $this->fail($message);
+      $this->fail('A language-neutral translation cannot be retrieved.');
     }
     catch (\LogicException $e) {
-      $this->pass($message);
+      // Expected exception; just continue testing.
     }
 
     // Create a translation and verify that the translation object and the
@@ -391,23 +387,20 @@ class EntityTranslationTest extends EntityLanguageTestBase {
 
     // Verify that changing translation language causes an exception to be
     // thrown.
-    $message = 'The translation language cannot be changed.';
     try {
       $translation->{$langcode_key}->value = $this->langcodes[2];
-      $this->fail($message);
+      $this->fail('The translation language cannot be changed.');
     }
     catch (\LogicException $e) {
-      $this->pass($message);
+      // Expected exception; just continue testing.
     }
 
     // Verify that reassigning the same translation language is allowed.
-    $message = 'The translation language can be reassigned the same value.';
     try {
       $translation->{$langcode_key}->value = $langcode;
-      $this->pass($message);
     }
     catch (\LogicException $e) {
-      $this->fail($message);
+      $this->fail('The translation language can be reassigned the same value.');
     }
 
     // Verify that changing the default translation flag causes an exception to
@@ -416,22 +409,19 @@ class EntityTranslationTest extends EntityLanguageTestBase {
       $translation = $entity->getTranslation($t_langcode);
       $default = $translation->isDefaultTranslation();
 
-      $message = 'The default translation flag can be reassigned the same value.';
       try {
         $translation->{$default_langcode_key}->value = $default;
-        $this->pass($message);
       }
       catch (\LogicException $e) {
-        $this->fail($message);
+        $this->fail('The default translation flag can be reassigned the same value.');
       }
 
-      $message = 'The default translation flag cannot be changed.';
       try {
         $translation->{$default_langcode_key}->value = !$default;
-        $this->fail($message);
+        $this->fail('The default translation flag cannot be changed.');
       }
       catch (\LogicException $e) {
-        $this->pass($message);
+        // Expected exception; just continue testing.
       }
 
       $this->assertEqual($translation->{$default_langcode_key}->value, $default);
@@ -464,13 +454,12 @@ class EntityTranslationTest extends EntityLanguageTestBase {
     $translation = $entity->getTranslation($langcode2);
     $entity->removeTranslation($langcode2);
     foreach (['get', 'set', '__get', '__set', 'createDuplicate'] as $method) {
-      $message = new FormattableMarkup('The @method method raises an exception when trying to manipulate a removed translation.', ['@method' => $method]);
       try {
         $translation->{$method}('name', $this->randomMachineName());
-        $this->fail($message);
+        $this->fail("The $method method raises an exception when trying to manipulate a removed translation.");
       }
       catch (\Exception $e) {
-        $this->pass($message);
+        // Expected exception; just continue testing.
       }
     }
 
@@ -486,13 +475,12 @@ class EntityTranslationTest extends EntityLanguageTestBase {
     // Check that removing an invalid translation causes an exception to be
     // thrown.
     foreach ([$default_langcode, LanguageInterface::LANGCODE_DEFAULT, $this->randomMachineName()] as $invalid_langcode) {
-      $message = new FormattableMarkup('Removing an invalid translation (@langcode) causes an exception to be thrown.', ['@langcode' => $invalid_langcode]);
       try {
         $entity->removeTranslation($invalid_langcode);
-        $this->fail($message);
+        $this->fail("Removing an invalid translation ($invalid_langcode) causes an exception to be thrown.");
       }
       catch (\Exception $e) {
-        $this->pass($message);
+        // Expected exception; just continue testing.
       }
     }
 
@@ -714,14 +702,13 @@ class EntityTranslationTest extends EntityLanguageTestBase {
     foreach ($translatable_fields as $name => $translatable) {
       $this->state->set('entity_test.field_definitions.translatable', [$name => $translatable]);
       $entity_field_manager->clearCachedFieldDefinitions();
-      $message = new FormattableMarkup('Field %field cannot be translatable.', ['%field' => $name]);
 
       try {
         $entity_field_manager->getBaseFieldDefinitions($entity_type);
-        $this->fail($message);
+        $this->fail("Field $name cannot be translatable.");
       }
       catch (\LogicException $e) {
-        $this->pass($message);
+        // Expected exception; just continue testing.
       }
     }
   }
@@ -778,13 +765,12 @@ class EntityTranslationTest extends EntityLanguageTestBase {
 
     // Check that setting the default language to an existing translation
     // language causes an exception to be thrown.
-    $message = 'An exception is thrown when setting the default language to an existing translation language';
     try {
       $entity->{$langcode_key}->value = $this->langcodes[2];
-      $this->fail($message);
+      $this->fail('An exception is thrown when setting the default language to an existing translation language');
     }
     catch (\InvalidArgumentException $e) {
-      $this->pass($message);
+      // Expected exception; just continue testing.
     }
   }
 

@@ -193,24 +193,22 @@ class ConfigCRUDTest extends KernelTestBase {
   public function testNameValidation() {
     // Verify that an object name without namespace causes an exception.
     $name = 'nonamespace';
-    $message = 'Expected ConfigNameException was thrown for a name without a namespace.';
     try {
       $this->config($name)->save();
-      $this->fail($message);
+      $this->fail('Expected ConfigNameException was thrown for a name without a namespace.');
     }
-    catch (ConfigNameException $e) {
-      $this->pass($message);
+    catch (\Exception $e) {
+      $this->assertInstanceOf(ConfigNameException::class, $e);
     }
 
     // Verify that a name longer than the maximum length causes an exception.
     $name = 'config_test.herman_melville.moby_dick_or_the_whale.harper_1851.now_small_fowls_flew_screaming_over_the_yet_yawning_gulf_a_sullen_white_surf_beat_against_its_steep_sides_then_all_collapsed_and_the_great_shroud_of_the_sea_rolled_on_as_it_rolled_five_thousand_years_ago';
-    $message = 'Expected ConfigNameException was thrown for a name longer than Config::MAX_NAME_LENGTH.';
     try {
       $this->config($name)->save();
-      $this->fail($message);
+      $this->fail('Expected ConfigNameException was thrown for a name longer than Config::MAX_NAME_LENGTH.');
     }
-    catch (ConfigNameException $e) {
-      $this->pass($message);
+    catch (\Exception $e) {
+      $this->assertInstanceOf(ConfigNameException::class, $e);
     }
 
     // Verify that disallowed characters in the name cause an exception.
@@ -231,14 +229,12 @@ class ConfigCRUDTest extends KernelTestBase {
 
     // Verify that a valid config object name can be saved.
     $name = 'namespace.object';
-    $message = 'ConfigNameException was not thrown for a valid object name.';
     try {
       $config = $this->config($name);
       $config->save();
-      $this->pass($message);
     }
     catch (ConfigNameException $e) {
-      $this->fail($message);
+      $this->fail('ConfigNameException was not thrown for a valid object name.');
     }
 
   }
@@ -248,23 +244,21 @@ class ConfigCRUDTest extends KernelTestBase {
    */
   public function testValueValidation() {
     // Verify that setData() will catch dotted keys.
-    $message = 'Expected ConfigValueException was thrown from setData() for value with dotted keys.';
     try {
       $this->config('namespace.object')->setData(['key.value' => 12])->save();
-      $this->fail($message);
+      $this->fail('Expected ConfigValueException was thrown from setData() for value with dotted keys.');
     }
-    catch (ConfigValueException $e) {
-      $this->pass($message);
+    catch (\Exception $e) {
+      $this->assertInstanceOf(ConfigValueException::class, $e);
     }
 
     // Verify that set() will catch dotted keys.
-    $message = 'Expected ConfigValueException was thrown from set() for value with dotted keys.';
     try {
       $this->config('namespace.object')->set('foo', ['key.value' => 12])->save();
-      $this->fail($message);
+      $this->fail('Expected ConfigValueException was thrown from set() for value with dotted keys.');
     }
-    catch (ConfigValueException $e) {
-      $this->pass($message);
+    catch (\Exception $e) {
+      $this->assertInstanceOf(ConfigValueException::class, $e);
     }
   }
 
@@ -325,9 +319,7 @@ class ConfigCRUDTest extends KernelTestBase {
       $this->fail('No Exception thrown upon saving invalid data type.');
     }
     catch (UnsupportedDataTypeConfigException $e) {
-      $this->pass(new FormattableMarkup('%class thrown upon saving invalid data type.', [
-        '%class' => get_class($e),
-      ]));
+      // Expected exception; just continue testing.
     }
 
     // Test that setting an unsupported type for a config object with no schema
@@ -342,9 +334,7 @@ class ConfigCRUDTest extends KernelTestBase {
       $this->fail('No Exception thrown upon saving invalid data type.');
     }
     catch (UnsupportedDataTypeConfigException $e) {
-      $this->pass(new FormattableMarkup('%class thrown upon saving invalid data type.', [
-        '%class' => get_class($e),
-      ]));
+      // Expected exception; just continue testing.
     }
   }
 

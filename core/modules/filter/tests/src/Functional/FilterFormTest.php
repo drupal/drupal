@@ -207,10 +207,6 @@ class FilterFormTest extends BrowserTestBase {
     foreach ($found_options as $found_key => $found_option) {
       $expected_key = array_search($found_option->getValue(), $expected_options);
       if ($expected_key !== FALSE) {
-        $this->pass(new FormattableMarkup('Option @option for field @id exists.', [
-          '@option' => $expected_options[$expected_key],
-          '@id' => $id,
-        ]));
         unset($found_options[$found_key]);
         unset($expected_options[$expected_key]);
       }

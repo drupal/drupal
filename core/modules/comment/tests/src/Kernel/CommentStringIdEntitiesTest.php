@@ -40,28 +40,23 @@ class CommentStringIdEntitiesTest extends KernelTestBase {
    * Tests that comment fields cannot be added entities with non-integer IDs.
    */
   public function testCommentFieldNonStringId() {
-    try {
-      $bundle = CommentType::create([
-        'id' => 'foo',
-        'label' => 'foo',
-        'description' => '',
-        'target_entity_type_id' => 'entity_test_string_id',
-      ]);
-      $bundle->save();
-      $field_storage = FieldStorageConfig::create([
-        'field_name' => 'foo',
-        'entity_type' => 'entity_test_string_id',
-        'settings' => [
-          'comment_type' => 'entity_test_string_id',
-        ],
-        'type' => 'comment',
-      ]);
-      $field_storage->save();
-      $this->fail('Did not throw an exception as expected.');
-    }
-    catch (\UnexpectedValueException $e) {
-      $this->pass('Exception thrown when trying to create comment field on Entity Type with string ID.');
-    }
+    $this->expectException(\UnexpectedValueException::class);
+    $bundle = CommentType::create([
+      'id' => 'foo',
+      'label' => 'foo',
+      'description' => '',
+      'target_entity_type_id' => 'entity_test_string_id',
+    ]);
+    $bundle->save();
+    $field_storage = FieldStorageConfig::create([
+      'field_name' => 'foo',
+      'entity_type' => 'entity_test_string_id',
+      'settings' => [
+        'comment_type' => 'entity_test_string_id',
+      ],
+      'type' => 'comment',
+    ]);
+    $field_storage->save();
   }
 
 }

@@ -118,10 +118,9 @@ class DefaultConfigTest extends KernelTestBase {
           $entity_storage->load($id)->calculateDependencies()->save();
         }
         $result = $config_manager->diff($default_config_storage, $active_config_storage, $config_name);
-        $this->assertConfigDiff($result, $config_name, static::$skippedConfig);
-        // The method call above will throw an exception if the configuration is
+        // ::assertConfigDiff will throw an exception if the configuration is
         // different.
-        $this->pass("$config_name has no differences");
+        $this->assertNull($this->assertConfigDiff($result, $config_name, static::$skippedConfig));
       }
       else {
         $info = $this->container->get('extension.list.module')->getExtensionInfo($module);

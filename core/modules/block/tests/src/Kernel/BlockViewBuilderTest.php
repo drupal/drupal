@@ -292,7 +292,6 @@ class BlockViewBuilderTest extends KernelTestBase {
 
     // Check that the expected cacheability metadata is present in:
     // - the built render array;
-    $this->pass('Built render array');
     $build = $this->getBlockRenderArray();
     $this->assertIdentical($expected_keys, $build['#cache']['keys']);
     $this->assertIdentical($expected_contexts, $build['#cache']['contexts']);
@@ -300,10 +299,8 @@ class BlockViewBuilderTest extends KernelTestBase {
     $this->assertIdentical($expected_max_age, $build['#cache']['max-age']);
     $this->assertFalse(isset($build['#create_placeholder']));
     // - the rendered render array;
-    $this->pass('Rendered render array');
     $this->renderer->renderRoot($build);
     // - the render cache item.
-    $this->pass('Render cache item');
     $final_cache_contexts = Cache::mergeContexts($expected_contexts, $required_cache_contexts);
     $cid = implode(':', $expected_keys) . ':' . implode(':', \Drupal::service('cache_contexts_manager')->convertTokensToKeys($final_cache_contexts)->getKeys());
     $cache_item = $this->container->get('cache.render')->get($cid);
