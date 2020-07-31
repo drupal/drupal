@@ -184,24 +184,6 @@ body.toolbar-tray-open.toolbar-fixed.toolbar-vertical .toolbar-oriented {
 .toolbar .toolbar-tray-vertical > .toolbar-lining {
   min-height: 100%;
 }
-.toolbar .toolbar-tray-vertical > .toolbar-lining:before {
-  width: 100%;
-}
-.toolbar-oriented .toolbar-tray-vertical > .toolbar-lining:before {
-  position: fixed;
-  z-index: -1;
-  top: 0;
-  bottom: 0;
-  left: 0; /* LTR */
-  display: block;
-  width: 240px;
-  width: 14rem;
-  content: "";
-}
-[dir="rtl"] .toolbar .toolbar-tray-vertical > .toolbar-lining:before {
-  right: 0;
-  left: auto;
-}
 /* Layer the links just above the toolbar-tray. */
 .toolbar .toolbar-bar .toolbar-tab > .toolbar-icon {
   position: relative;
