@@ -242,6 +242,14 @@ class CKEditorLoadingTest extends BrowserTestBase {
       'core/modules/system/tests/themes/test_ckeditor_stylesheets_relative/css/yokotsoko.css',
     ];
     $this->assertIdentical($expected, _ckeditor_theme_css('test_ckeditor_stylesheets_relative'));
+
+    // Case 4: Install theme which has a Drupal root CSS URL.
+    $theme_installer->install(['test_ckeditor_stylesheets_drupal_root']);
+    $this->config('system.theme')->set('default', 'test_ckeditor_stylesheets_drupal_root')->save();
+    $expected = [
+      'core/modules/system/tests/themes/test_ckeditor_stylesheets_drupal_root/css/yokotsoko.css',
+    ];
+    $this->assertIdentical($expected, _ckeditor_theme_css('test_ckeditor_stylesheets_drupal_root'));
   }
 
   protected function getThingsToCheck() {

@@ -89,9 +89,15 @@ function _ckeditor_theme_css($theme = NULL) {
     if (isset($info['ckeditor_stylesheets'])) {
       $css = $info['ckeditor_stylesheets'];
       foreach ($css as $key => $url) {
+        // CSS url is external.
         if (UrlHelper::isExternal($url)) {
           $css[$key] = $url;
         }
+        // CSS url is relative to Drupal root.
+        elseif ($url[0] === '/') {
+          $css[$key] = substr($url, 1);
+        }
+        // CSS url is relative to theme.
         else {
           $css[$key] = $theme_path . '/' . $url;
         }

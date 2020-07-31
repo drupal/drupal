@@ -1,0 +1,9 @@
+name: Test Drupal root CKEditor stylesheets
+type: theme
+description: 'A theme that uses a Drupal root CKEditor stylesheet.'
+package: Testing
+version: VERSION
+base theme: false
+
+ckeditor_stylesheets:
+  - /core/modules/system/tests/themes/test_ckeditor_stylesheets_drupal_root/css/yokotsoko.css
