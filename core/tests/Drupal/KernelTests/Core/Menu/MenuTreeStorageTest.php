@@ -214,7 +214,7 @@ class MenuTreeStorageTest extends KernelTestBase {
       $this->fail('Exception was not thrown');
     }
     catch (PluginException $e) {
-      $this->pass($e->getMessage());
+      // Expected exception; just continue testing.
     }
     // The opposite move should work, and change the has_children flag.
     $this->moveMenuLink('footerA', 'test1');
@@ -354,7 +354,6 @@ class MenuTreeStorageTest extends KernelTestBase {
       }
       catch (\InvalidArgumentException $e) {
         $this->assertRegExp('/^An invalid property name, .+ was specified. Allowed property names are:/', $e->getMessage(), 'Found expected exception message.');
-        $this->pass($message);
       }
     }
     $this->addMenuLink('test_link.1', '', 'test', [], 'menu1');

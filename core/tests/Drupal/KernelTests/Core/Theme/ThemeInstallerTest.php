@@ -115,8 +115,8 @@ class ThemeInstallerTest extends KernelTestBase {
       $this->themeInstaller()->install([$name]);
       $this->fail($message);
     }
-    catch (UnknownExtensionException $e) {
-      $this->pass(get_class($e) . ': ' . $e->getMessage());
+    catch (\Exception $e) {
+      $this->assertInstanceOf(UnknownExtensionException::class, $e);
     }
 
     $themes = $this->themeHandler()->listInfo();
@@ -134,8 +134,8 @@ class ThemeInstallerTest extends KernelTestBase {
       $this->themeInstaller()->install([$name]);
       $this->fail($message);
     }
-    catch (ExtensionNameLengthException $e) {
-      $this->pass(get_class($e) . ': ' . $e->getMessage());
+    catch (\Exception $e) {
+      $this->assertInstanceOf(ExtensionNameLengthException::class, $e);
     }
   }
 
@@ -230,8 +230,8 @@ class ThemeInstallerTest extends KernelTestBase {
       $this->themeInstaller()->uninstall([$name]);
       $this->fail($message);
     }
-    catch (\InvalidArgumentException $e) {
-      $this->pass(get_class($e) . ': ' . $e->getMessage());
+    catch (\Exception $e) {
+      $this->assertInstanceOf(\InvalidArgumentException::class, $e);
     }
 
     $themes = $this->themeHandler()->listInfo();
@@ -257,8 +257,8 @@ class ThemeInstallerTest extends KernelTestBase {
       $this->themeInstaller()->uninstall([$name]);
       $this->fail($message);
     }
-    catch (\InvalidArgumentException $e) {
-      $this->pass(get_class($e) . ': ' . $e->getMessage());
+    catch (\Exception $e) {
+      $this->assertInstanceOf(\InvalidArgumentException::class, $e);
     }
 
     $themes = $this->themeHandler()->listInfo();
@@ -295,8 +295,8 @@ class ThemeInstallerTest extends KernelTestBase {
       $this->themeInstaller()->uninstall([$name]);
       $this->fail($message);
     }
-    catch (\InvalidArgumentException $e) {
-      $this->pass(get_class($e) . ': ' . $e->getMessage());
+    catch (\Exception $e) {
+      $this->assertInstanceOf(\InvalidArgumentException::class, $e);
     }
 
     $themes = $this->themeHandler()->listInfo();
@@ -325,8 +325,8 @@ class ThemeInstallerTest extends KernelTestBase {
       $this->themeInstaller()->uninstall([$name]);
       $this->fail($message);
     }
-    catch (UnknownExtensionException $e) {
-      $this->pass(get_class($e) . ': ' . $e->getMessage());
+    catch (\Exception $e) {
+      $this->assertInstanceOf(UnknownExtensionException::class, $e);
     }
 
     $themes = $this->themeHandler()->listInfo();
@@ -367,8 +367,8 @@ class ThemeInstallerTest extends KernelTestBase {
       $this->themeInstaller()->uninstall([$name]);
       $this->fail($message);
     }
-    catch (UnknownExtensionException $e) {
-      $this->pass(get_class($e) . ': ' . $e->getMessage());
+    catch (\Exception $e) {
+      $this->assertInstanceOf(UnknownExtensionException::class, $e);
     }
   }
 

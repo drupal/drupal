@@ -207,11 +207,9 @@ class MergeTest extends DatabaseTestBase {
           'name' => 'Tiffany',
         ])
         ->execute();
-      $this->pass('$options[\'throw_exception\'] is FALSE, no InvalidMergeQueryException thrown.');
     }
     catch (InvalidMergeQueryException $e) {
       $this->fail('$options[\'throw_exception\'] is FALSE, but InvalidMergeQueryException thrown for invalid query.');
-      return;
     }
 
     try {
@@ -222,12 +220,11 @@ class MergeTest extends DatabaseTestBase {
           'name' => 'Tiffany',
         ])
         ->execute();
+      $this->fail('InvalidMergeQueryException should be thrown.');
     }
-    catch (InvalidMergeQueryException $e) {
-      $this->pass('InvalidMergeQueryException thrown for invalid query.');
-      return;
+    catch (\Exception $e) {
+      $this->assertInstanceOf(InvalidMergeQueryException::class, $e);
     }
-    $this->fail('No InvalidMergeQueryException thrown');
   }
 
 }

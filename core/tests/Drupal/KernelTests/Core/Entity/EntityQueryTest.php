@@ -1106,17 +1106,12 @@ class EntityQueryTest extends EntityKernelTestBase {
    * database driver's EntityQuery\Condition class.
    */
   public function testInjectionInCondition() {
-    try {
-      $this->queryResults = $this->storage
-        ->getQuery()
-        ->condition('1 ; -- ', [0, 1], 'IN')
-        ->sort('id')
-        ->execute();
-      $this->fail('SQL Injection attempt in Entity Query condition in operator should result in an exception.');
-    }
-    catch (\Exception $e) {
-      $this->pass('SQL Injection attempt in Entity Query condition in operator should result in an exception.');
-    }
+    $this->expectException(\Exception::class);
+    $this->queryResults = $this->storage
+      ->getQuery()
+      ->condition('1 ; -- ', [0, 1], 'IN')
+      ->sort('id')
+      ->execute();
   }
 
   /**

@@ -82,7 +82,6 @@ class FileStorageTest extends ConfigStorageTestBase {
       $config_parsed = $this->storage->read('core.extension');
     }
     catch (UnsupportedDataTypeConfigException $e) {
-      $this->pass('Exception thrown when trying to read a field containing invalid data type.');
       $this->assertStringContainsString($this->storage->getFilePath('core.extension'), $e->getMessage(), 'Erroneous file path is displayed.');
     }
   }

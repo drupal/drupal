@@ -77,15 +77,10 @@ class ModuleImplementsAlterTest extends KernelTestBase {
     // Install the module_test module.
     \Drupal::service('module_installer')->install(['module_test']);
 
-    try {
-      // Trigger hook discovery.
-      \Drupal::moduleHandler()->getImplementations('unimplemented_test_hook');
-      $this->fail('An exception should be thrown for the non-existing implementation.');
-    }
-    catch (\RuntimeException $e) {
-      $this->pass('An exception should be thrown for the non-existing implementation.');
-      $this->assertEqual($e->getMessage(), 'An invalid implementation module_test_unimplemented_test_hook was added by hook_module_implements_alter()');
-    }
+    // Trigger hook discovery.
+    $this->expectException(\RuntimeException::class);
+    $this->expectExceptionMessage('An invalid implementation module_test_unimplemented_test_hook was added by hook_module_implements_alter()');
+    \Drupal::moduleHandler()->getImplementations('unimplemented_test_hook');
   }
 
 }

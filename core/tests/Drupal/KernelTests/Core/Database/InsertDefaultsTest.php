@@ -36,7 +36,7 @@ class InsertDefaultsTest extends DatabaseTestBase {
       $this->fail('Expected exception NoFieldsException has not been thrown.');
     }
     catch (NoFieldsException $e) {
-      $this->pass('Expected exception NoFieldsException has been thrown.');
+      // Expected exception; just continue testing.
     }
 
     $num_records_after = (int) $this->connection->query('SELECT COUNT(*) FROM {test}')->fetchField();
