@@ -1253,7 +1253,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
     $cacheability = static::getExpectedCollectionCacheability($this->account, $collection, NULL, $filtered);
     $cacheability->setCacheMaxAge($merged_response->getCacheableMetadata()->getCacheMaxAge());
 
-    $collection_response = ResourceResponse::create($merged_document);
+    $collection_response = new ResourceResponse($merged_document);
     $collection_response->addCacheableDependency($cacheability);
 
     if (is_null($included_paths)) {

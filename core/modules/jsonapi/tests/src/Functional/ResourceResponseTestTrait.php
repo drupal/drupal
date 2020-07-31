@@ -203,7 +203,7 @@ trait ResourceResponseTestTrait {
     $basic_cacheability = (new CacheableMetadata())
       ->addCacheTags($this->getExpectedCacheTags())
       ->addCacheContexts($this->getExpectedCacheContexts());
-    return static::decorateExpectedResponseForIncludedFields(ResourceResponse::create($individual_document), $resource_data['responses'])
+    return static::decorateExpectedResponseForIncludedFields(new ResourceResponse($individual_document), $resource_data['responses'])
       ->addCacheableDependency($basic_cacheability);
   }
 
