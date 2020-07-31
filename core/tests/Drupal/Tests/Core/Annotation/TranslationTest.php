@@ -36,11 +36,6 @@ class TranslationTest extends UnitTestCase {
     $container->set('string_translation', $this->translationManager);
     \Drupal::setContainer($container);
 
-    $arguments = isset($values['arguments']) ? $values['arguments'] : [];
-    $options = isset($values['context']) ? [
-      'context' => $values['context'],
-    ] : [];
-
     $annotation = new Translation($values);
 
     $this->assertSame($expected, (string) $annotation->get());
