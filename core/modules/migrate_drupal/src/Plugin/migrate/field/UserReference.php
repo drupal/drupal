@@ -4,6 +4,8 @@ namespace Drupal\migrate_drupal\Plugin\migrate\field;
 
 use Drupal\migrate\Plugin\MigrationInterface;
 
+// cspell:ignore userreference
+
 /**
  * @MigrateField(
  *   id = "userreference",

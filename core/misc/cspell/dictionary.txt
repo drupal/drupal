@@ -1,5 +1,4 @@
 a'foo
-abantu
 abcdefg
 abcdefghijklmno
 abcdefghijklmnopqrstuvwxyz
@@ -61,7 +60,6 @@ api's
 apng
 apos
 applix
-aptain
 archiver
 archivers
 arctor
@@ -448,7 +446,6 @@ descripcion
 deserialization
 deserializes
 destid
-destinationproperty
 destructable
 destructured
 desynchronized
@@ -618,7 +615,6 @@ fieldgroups
 fielditem
 fieldlinks
 fieldnames
-fieldright
 fieldsets
 filecount
 filefield
@@ -797,13 +793,9 @@ iframes
 iframeupload
 ignoretag
 ilike
-imageapi
 imagecache
 imagecreatefrom
-imagefield
 imagefields
-imagelink
-imagemagick
 imagetest
 inator
 indexname
@@ -1153,7 +1145,6 @@ nocdata
 nocookie
 nocssjs
 nodeaccess
-nodeapi
 nodelink
 nodereference
 nodo
@@ -1231,7 +1222,6 @@ optgroups
 optimizable
 optin
 optionchecker
-optionwidgets
 ored
 org's
 orgchart
@@ -1545,7 +1535,6 @@ sebe
 secondcolumn
 seld
 selectbox
-selectlist
 semver
 sendmail
 serializer's
@@ -1990,7 +1979,6 @@ usecase
 userid
 userinfo
 userref
-userreference
 users's
 userspace
 usuario
@@ -2020,18 +2008,13 @@ viewports
 viewsviewfiles
 vivamus
 vmov
-vocabfixed
-vocablocalized
 vocabs
-vocabtranslate
 volgende
 vorige
 vous
 vxezb
 vxfbk
 waitfor
-wambooli
-wamboolipastafazoul
 wcprops
 wcsrefsdf
 webassert
@@ -2052,7 +2035,6 @@ webtest
 webuser
 wellformedwebentry
 wellformedwebrendererentry
-whakamataku
 whitespaces
 whois
 whos

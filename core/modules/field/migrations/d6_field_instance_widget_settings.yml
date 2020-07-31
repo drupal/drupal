@@ -1,3 +1,4 @@
+# cspell:ignore imagefield optionwidgets userreference
 id: d6_field_instance_widget_settings
 label: Field instance widget configuration
 migration_tags:

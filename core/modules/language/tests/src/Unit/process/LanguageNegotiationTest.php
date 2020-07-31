@@ -50,7 +50,7 @@ class LanguageNegotiationTest extends MigrateProcessTestCase {
         'language-selected' => -6,
       ],
     ];
-    $value = $this->plugin->transform($source, $this->migrateExecutable, $this->row, 'destinationproperty');
+    $value = $this->plugin->transform($source, $this->migrateExecutable, $this->row, 'destination_property');
     $this->assertSame($value, $expected);
   }
 
@@ -70,7 +70,7 @@ class LanguageNegotiationTest extends MigrateProcessTestCase {
         'language-url-fallback' => 1,
       ],
     ];
-    $value = $this->plugin->transform($source, $this->migrateExecutable, $this->row, 'destinationproperty');
+    $value = $this->plugin->transform($source, $this->migrateExecutable, $this->row, 'destination_property');
     $this->assertSame($value, $expected);
   }
 
@@ -81,7 +81,7 @@ class LanguageNegotiationTest extends MigrateProcessTestCase {
     $this->plugin = new LanguageNegotiation([], 'map', []);
     $this->expectException(MigrateException::class);
     $this->expectExceptionMessage('The input should be an array');
-    $this->plugin->transform('foo', $this->migrateExecutable, $this->row, 'destinationproperty');
+    $this->plugin->transform('foo', $this->migrateExecutable, $this->row, 'destination_property');
   }
 
 }

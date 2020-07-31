@@ -71,7 +71,7 @@ class MenuLinkParentTest extends MigrateProcessTestCase {
     $plugin = new MenuLinkParent([], 'map', [], $this->migrateLookup->reveal(), $this->menuLinkManager->reveal(), $this->menuLinkStorage->reveal(), $this->migration->reveal());
     $this->expectException(MigrateSkipRowException::class);
     $this->expectExceptionMessage("No parent link found for plid '1' in menu 'admin'.");
-    $plugin->transform([1, 'admin', NULL], $this->migrateExecutable, $this->row, 'destinationproperty');
+    $plugin->transform([1, 'admin', NULL], $this->migrateExecutable, $this->row, 'destination_property');
   }
 
   /**
@@ -91,7 +91,7 @@ class MenuLinkParentTest extends MigrateProcessTestCase {
     $this->menuLinkManager->createInstance('menu_link_content:fe151460-dfa2-4133-8864-c1746f28ab27')->willReturn($plugin->reveal());
     $plugin = new MenuLinkParent([], 'map', [], $this->migrateLookup->reveal(), $this->menuLinkManager->reveal(), $this->menuLinkStorage->reveal(), $this->migration->reveal());
 
-    $result = $plugin->transform([1, 'admin', 'http://example.com'], $this->migrateExecutable, $this->row, 'destinationproperty');
+    $result = $plugin->transform([1, 'admin', 'http://example.com'], $this->migrateExecutable, $this->row, 'destination_property');
     $this->assertEquals('menu_link_content:fe151460-dfa2-4133-8864-c1746f28ab27', $result);
   }
 

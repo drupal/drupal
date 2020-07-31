@@ -4,6 +4,8 @@ namespace Drupal\Tests\taxonomy\Kernel\Migrate;
 
 use Drupal\Tests\migrate_drupal\Kernel\d7\MigrateDrupal7TestBase;
 
+// cspell:ignore vocabfixed vocablocalized vocabtranslate
+
 /**
  * Tests d7 taxonomy term deriver.
  *

@@ -1,6 +1,7 @@
 # The modules listed here do not have an migration. A status of finished is
 # assigned so that they appear in the will not be upgraded list on the Review
 # form.
+# cspell:ignore imageapi imagemagick userreference
 finished:
   6:
     nodereference: core

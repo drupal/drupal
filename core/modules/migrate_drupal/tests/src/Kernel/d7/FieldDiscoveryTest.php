@@ -10,6 +10,8 @@ use Drupal\taxonomy\Entity\Vocabulary;
 use Drupal\Tests\migrate_drupal\Traits\FieldDiscoveryTestTrait;
 use Drupal\field_discovery_test\FieldDiscoveryTestClass;
 
+// cspell:ignore imagelink
+
 /**
  * Test FieldDiscovery Service against Drupal 7.
  *

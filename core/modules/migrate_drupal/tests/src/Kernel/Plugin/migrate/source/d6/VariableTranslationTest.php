@@ -4,6 +4,8 @@ namespace Drupal\Tests\migrate_drupal\Kernel\Plugin\migrate\source\d6;
 
 use Drupal\Tests\migrate\Kernel\MigrateSqlSourceTestBase;
 
+// cspell:ignore whakamataku
+
 /**
  * Tests the variable source plugin.
  *

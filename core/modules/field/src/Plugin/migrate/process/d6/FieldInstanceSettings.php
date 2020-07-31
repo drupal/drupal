@@ -6,6 +6,8 @@ use Drupal\migrate\MigrateExecutableInterface;
 use Drupal\migrate\ProcessPluginBase;
 use Drupal\migrate\Row;
 
+// cspell:ignore imagefield
+
 /**
  * @MigrateProcessPlugin(
  *   id = "d6_field_field_settings"
