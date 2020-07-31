@@ -109,13 +109,17 @@ function callback_batch_operation($multiple_params, &$context) {
  *   The value set in $context['results'] by callback_batch_operation().
  * @param $operations
  *   If $success is FALSE, contains the operations that remained unprocessed.
+ * @param string $elapsed
+ *   A string representing the elapsed time for the batch process, e.g.,
+ *   '1 min 30 secs'.
  */
-function callback_batch_finished($success, $results, $operations) {
+function callback_batch_finished($success, $results, $operations, $elapsed) {
   if ($success) {
     // Here we do something meaningful with the results.
-    $message = t("@count items were processed.", [
+    $message = t("@count items were processed (@elapsed).", [
       '@count' => count($results),
-      ]);
+      '@elapsed' => $elapsed,
+    ]);
     $list = [
       '#theme' => 'item_list',
       '#items' => $results,
