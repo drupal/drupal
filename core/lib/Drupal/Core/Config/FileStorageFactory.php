@@ -14,16 +14,14 @@ class FileStorageFactory {
    *
    * @return \Drupal\Core\Config\FileStorage FileStorage
    *
-   * @throws \Exception
+   * @throws \Drupal\Core\Config\ConfigDirectoryNotDefinedException
    *   In case the sync directory does not exist or is not defined in
    *   $settings['config_sync_directory'].
    */
   public static function getSync() {
     $directory = Settings::get('config_sync_directory', FALSE);
     if ($directory === FALSE) {
-      // @todo: throw a more specific exception.
-      // @see https://www.drupal.org/node/2696103
-      throw new \Exception('The config sync directory is not defined in $settings["config_sync_directory"]');
+      throw new ConfigDirectoryNotDefinedException('The config sync directory is not defined in $settings["config_sync_directory"]');
     }
     return new FileStorage($directory);
   }

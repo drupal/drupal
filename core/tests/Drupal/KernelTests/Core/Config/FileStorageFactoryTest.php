@@ -2,6 +2,7 @@
 
 namespace Drupal\KernelTests\Core\Config;
 
+use Drupal\Core\Config\ConfigDirectoryNotDefinedException;
 use Drupal\Core\Config\FileStorage;
 use Drupal\Core\Config\FileStorageFactory;
 use Drupal\Core\Site\Settings;
@@ -34,13 +35,9 @@ class FileStorageFactoryTest extends KernelTestBase {
     new Settings($settings);
 
     // On an empty settings there is an exception thrown.
-    try {
-      FileStorageFactory::getSync();
-      $this->fail("The exception was not thrown.");
-    }
-    catch (\Exception $exception) {
-      $this->assertEquals('The config sync directory is not defined in $settings["config_sync_directory"]', $exception->getMessage());
-    }
+    $this->expectException(ConfigDirectoryNotDefinedException::class);
+    $this->expectExceptionMessage('The config sync directory is not defined in $settings["config_sync_directory"]');
+    FileStorageFactory::getSync();
   }
 
 }
