@@ -1,0 +1,25 @@
+id: d7_language_content_menu_settings
+label: Drupal 7 language content menu settings
+migration_tags:
+  - Drupal 7
+  - Configuration
+source:
+  plugin: extension
+  name: i18n_menu
+  constants:
+    target_type: menu_link_content
+    langcode: site_default
+    enabled: true
+    hide: 0
+process:
+  target_entity_type_id: constants/target_type
+  # menu_link_content has a bundle key but no bundle support so use the entity
+  # type as the bundle.
+  target_bundle: constants/target_type
+  default_langcode: constants/langcode
+  # Drupal 7 menus are translated when the i18n_menu module is enabled.
+  language_alterable: status
+  third_party_settings/content_translation/enabled: constants/enabled
+  third_party_settings/content_translation/bundle_settings/untranslatable_fields_hide: constants/hide
+destination:
+  plugin: entity:language_content_settings
