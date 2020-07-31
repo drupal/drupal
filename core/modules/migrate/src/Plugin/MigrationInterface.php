@@ -104,6 +104,13 @@ interface MigrationInterface extends PluginInspectionInterface, DerivativeInspec
   public function label();
 
   /**
+   * Get a list of required plugin IDs.
+   *
+   * @returns string[]
+   */
+  public function getRequirements(): array;
+
+  /**
    * Returns the initialized source plugin.
    *
    * @return \Drupal\migrate\Plugin\MigrateSourceInterface
