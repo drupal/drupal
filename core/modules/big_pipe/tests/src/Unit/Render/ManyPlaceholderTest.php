@@ -31,7 +31,7 @@ class ManyPlaceholderTest extends UnitTestCase {
       $this->prophesize(EventDispatcherInterface::class)->reveal(),
       $this->prophesize(ConfigFactoryInterface::class)->reveal()
     );
-    $response = new BigPipeResponse(HtmlResponse::create());
+    $response = new BigPipeResponse(new HtmlResponse());
 
     // Add many placeholders.
     $many_placeholders = [];
