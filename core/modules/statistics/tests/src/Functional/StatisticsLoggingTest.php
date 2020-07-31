@@ -117,13 +117,13 @@ class StatisticsLoggingTest extends BrowserTestBase {
     // Verify that logging scripts are found on a valid node page.
     $this->drupalGet($path);
     $settings = $this->getDrupalSettings();
-    $this->assertPattern($expected_library, 'Found statistics library JS on node page.');
+    $this->assertPattern($expected_library);
     $this->assertIdentical($this->node->id(), $settings['statistics']['data']['nid'], 'Found statistics settings on node page.');
 
     // Verify the same when loading the site in a non-default language.
     $this->drupalGet($this->language['langcode'] . '/' . $path);
     $settings = $this->getDrupalSettings();
-    $this->assertPattern($expected_library, 'Found statistics library JS on a valid node page in a non-default language.');
+    $this->assertPattern($expected_library);
     $this->assertIdentical($this->node->id(), $settings['statistics']['data']['nid'], 'Found statistics settings on valid node page in a non-default language.');
 
     // Manually call statistics.php to simulate ajax data collection behavior.

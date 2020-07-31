@@ -315,7 +315,8 @@ class FormTest extends FieldTestBase {
     }
     ksort($pattern);
     $pattern = implode('.*', array_values($pattern));
-    $this->assertPattern("|$pattern|s", 'Widgets are displayed in the correct order');
+    // Verify that the widgets are displayed in the correct order.
+    $this->assertPattern("|$pattern|s");
     $this->assertFieldByName("{$field_name}[$delta][value]", '', "New widget is displayed");
     $this->assertFieldByName("{$field_name}[$delta][_weight]", $delta, "New widget has the right weight");
     // Verify that no extraneous widget is displayed.

@@ -95,7 +95,7 @@ trait BookTestTrait {
 
     // Check outline structure.
     if ($nodes !== NULL) {
-      $this->assertPattern($this->generateOutlinePattern($nodes), new FormattableMarkup('Node @number outline confirmed.', ['@number' => $number]));
+      $this->assertPattern($this->generateOutlinePattern($nodes));
     }
 
     // Check previous, up, and next links.

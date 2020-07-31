@@ -63,13 +63,13 @@ class TaxonomyTermPagerTest extends TaxonomyTestBase {
       $this->createTerm($this->vocabulary);
     }
 
-    // Get Page 1.
+    // Ensure that pager is visible on page 1.
     $this->drupalGet('admin/structure/taxonomy/manage/' . $this->vocabulary->id() . '/overview');
-    $this->assertPattern('|<nav class="pager" [^>]*>|', 'Pager is visible on page 1');
+    $this->assertPattern('|<nav class="pager" [^>]*>|');
 
-    // Get Page 2.
+    // Ensure that pager is visible on page 2.
     $this->drupalGet('admin/structure/taxonomy/manage/' . $this->vocabulary->id() . '/overview', ['query' => ['page' => 1]]);
-    $this->assertPattern('|<nav class="pager" [^>]*>|', 'Pager is visible on page 2');
+    $this->assertPattern('|<nav class="pager" [^>]*>|');
   }
 
 }
