@@ -213,7 +213,7 @@ class SessionTest extends BrowserTestBase {
     $this->assertNull($this->drupalGetHeader('Set-Cookie'), 'New session was not started.');
 
     // Verify that no session is created if drupal_save_session(FALSE) is called.
-    $this->drupalGet('session-test/set-message-but-dont-save');
+    $this->drupalGet('session-test/set-message-but-do-not-save');
     $this->assertSessionCookie(FALSE);
     $this->assertSessionEmpty(TRUE);
 

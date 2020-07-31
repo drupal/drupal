@@ -33,7 +33,7 @@ class MigrateSkipRowTest extends KernelTestBase {
         'plugin' => 'embedded_data',
         'data_rows' => [
           ['id' => '1', 'data' => 'skip_and_record'],
-          ['id' => '2', 'data' => 'skip_and_dont_record'],
+          ['id' => '2', 'data' => 'skip_and_do_not_record'],
         ],
         'ids' => [
           'id' => ['type' => 'string'],
@@ -69,7 +69,7 @@ class MigrateSkipRowTest extends KernelTestBase {
     $messages = $id_map_plugin->getMessages(['id' => 2])->fetchAll();
     $this->assertCount(1, $messages);
     $message = reset($messages);
-    $this->assertEquals('skip_and_dont_record message', $message->message);
+    $this->assertEquals('skip_and_do_not_record message', $message->message);
     $this->assertEquals(MigrationInterface::MESSAGE_INFORMATIONAL, $message->level);
 
     // Insert a custom processor in the process flow.
@@ -80,7 +80,7 @@ class MigrateSkipRowTest extends KernelTestBase {
     // Change data to avoid triggering again hook_migrate_prepare_row().
     $definition['source']['data_rows'] = [
       ['id' => '1', 'data' => 'skip_and_record (use plugin)'],
-      ['id' => '2', 'data' => 'skip_and_dont_record (use plugin)'],
+      ['id' => '2', 'data' => 'skip_and_do_not_record (use plugin)'],
     ];
     $migration = \Drupal::service('plugin.manager.migration')->createStubMigration($definition);
 
