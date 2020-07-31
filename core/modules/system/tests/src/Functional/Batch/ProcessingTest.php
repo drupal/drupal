@@ -316,38 +316,40 @@ class ProcessingTest extends BrowserTestBase {
   public function _resultMessages($id) {
     $messages = [];
 
+    // The elapsed time should be either in minutes and seconds or only seconds.
+    $pattern_elapsed = ' \((\d+ mins? )?\d+ secs?\)';
     switch ($id) {
       case 'batch_0':
-        $messages[] = 'results for batch 0<div class="item-list"><ul><li>none</li></ul></div>';
+        $messages[] = 'results for batch 0' . $pattern_elapsed . '<div class="item-list"><ul><li>none</li></ul></div>';
         break;
 
       case 'batch_1':
-        $messages[] = 'results for batch 1<div class="item-list"><ul><li>op 1: processed 10 elements</li></ul></div>';
+        $messages[] = 'results for batch 1' . $pattern_elapsed . '<div class="item-list"><ul><li>op 1: processed 10 elements</li></ul></div>';
         break;
 
       case 'batch_2':
-        $messages[] = 'results for batch 2<div class="item-list"><ul><li>op 2: processed 10 elements</li></ul></div>';
+        $messages[] = 'results for batch 2' . $pattern_elapsed . '<div class="item-list"><ul><li>op 2: processed 10 elements</li></ul></div>';
         break;
 
       case 'batch_3':
-        $messages[] = 'results for batch 3<div class="item-list"><ul><li>op 1: processed 10 elements</li><li>op 2: processed 10 elements</li></ul></div>';
+        $messages[] = 'results for batch 3' . $pattern_elapsed . '<div class="item-list"><ul><li>op 1: processed 10 elements</li><li>op 2: processed 10 elements</li></ul></div>';
         break;
 
       case 'batch_4':
-        $messages[] = 'results for batch 4<div class="item-list"><ul><li>op 1: processed 10 elements</li></ul></div>';
+        $messages[] = 'results for batch 4' . $pattern_elapsed . '<div class="item-list"><ul><li>op 1: processed 10 elements</li></ul></div>';
         $messages = array_merge($messages, $this->_resultMessages('batch_2'));
         break;
 
       case 'batch_5':
-        $messages[] = 'results for batch 5<div class="item-list"><ul><li>op 5: processed 10 elements</li></ul></div>';
+        $messages[] = 'results for batch 5' . $pattern_elapsed . '<div class="item-list"><ul><li>op 5: processed 10 elements</li></ul></div>';
         break;
 
       case 'batch_6':
-        $messages[] = 'results for batch 6<div class="item-list"><ul><li>op 6: processed 10 elements</li></ul></div>';
+        $messages[] = 'results for batch 6' . $pattern_elapsed . '<div class="item-list"><ul><li>op 6: processed 10 elements</li></ul></div>';
         break;
 
       case 'batch_7':
-        $messages[] = 'results for batch 7<div class="item-list"><ul><li>op 7: processed 10 elements</li></ul></div>';
+        $messages[] = 'results for batch 7' . $pattern_elapsed . '<div class="item-list"><ul><li>op 7: processed 10 elements</li></ul></div>';
         $messages = array_merge($messages, $this->_resultMessages('batch_6'));
         $messages = array_merge($messages, $this->_resultMessages('batch_5'));
         break;

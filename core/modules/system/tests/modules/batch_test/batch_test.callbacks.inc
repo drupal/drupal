@@ -122,7 +122,7 @@ function _batch_test_nested_batch_callback(array $batches = []) {
 /**
  * Provides a common 'finished' callback for batches 1 to 7.
  */
-function _batch_test_finished_helper($batch_id, $success, $results, $operations) {
+function _batch_test_finished_helper($batch_id, $success, $results, $operations, $elapsed) {
   if ($results) {
     foreach ($results as $op => $op_results) {
       $messages[] = 'op ' . Html::escape($op) . ': processed ' . count($op_results) . ' elements';
@@ -141,9 +141,10 @@ function _batch_test_finished_helper($batch_id, $success, $results, $operations)
   // Use item list template to render the messages.
   $error_message = [
     '#type' => 'inline_template',
-    '#template' => 'results for batch {{ batch_id }}{{ errors }}',
+    '#template' => 'results for batch {{ batch_id }} ({{ elapsed }}){{ errors }}',
     '#context' => [
       'batch_id' => $batch_id,
+      'elapsed' => $elapsed,
       'errors' => [
         '#theme' => 'item_list',
         '#items' => $messages,
@@ -152,6 +153,8 @@ function _batch_test_finished_helper($batch_id, $success, $results, $operations)
   ];
 
   \Drupal::messenger()->addStatus(\Drupal::service('renderer')->renderPlain($error_message));
+
+  \Drupal::messenger()->addMessage('elapsed time: ' . $elapsed);
 }
 
 /**
@@ -159,8 +162,8 @@ function _batch_test_finished_helper($batch_id, $success, $results, $operations)
  *
  * Triggers 'finished' callback for batch 0.
  */
-function _batch_test_finished_0($success, $results, $operations) {
-  _batch_test_finished_helper(0, $success, $results, $operations);
+function _batch_test_finished_0($success, $results, $operations, $elapsed) {
+  _batch_test_finished_helper(0, $success, $results, $operations, $elapsed);
 }
 
 /**
@@ -168,8 +171,8 @@ function _batch_test_finished_0($success, $results, $operations) {
  *
  * Triggers 'finished' callback for batch 1.
  */
-function _batch_test_finished_1($success, $results, $operations) {
-  _batch_test_finished_helper(1, $success, $results, $operations);
+function _batch_test_finished_1($success, $results, $operations, $elapsed) {
+  _batch_test_finished_helper(1, $success, $results, $operations, $elapsed);
 }
 
 /**
@@ -177,8 +180,8 @@ function _batch_test_finished_1($success, $results, $operations) {
  *
  * Triggers 'finished' callback for batch 1.
  */
-function _batch_test_finished_1_finished($success, $results, $operations) {
-  _batch_test_finished_helper(1, $success, $results, $operations);
+function _batch_test_finished_1_finished($success, $results, $operations, $elapsed) {
+  _batch_test_finished_helper(1, $success, $results, $operations, $elapsed);
   return new RedirectResponse(Url::fromRoute('test_page_test.test_page', [], ['absolute' => TRUE])->toString());
 }
 
@@ -187,8 +190,8 @@ function _batch_test_finished_1_finished($success, $results, $operations) {
  *
  * Triggers 'finished' callback for batch 2.
  */
-function _batch_test_finished_2($success, $results, $operations) {
-  _batch_test_finished_helper(2, $success, $results, $operations);
+function _batch_test_finished_2($success, $results, $operations, $elapsed) {
+  _batch_test_finished_helper(2, $success, $results, $operations, $elapsed);
 }
 
 /**
@@ -196,8 +199,8 @@ function _batch_test_finished_2($success, $results, $operations) {
  *
  * Triggers 'finished' callback for batch 3.
  */
-function _batch_test_finished_3($success, $results, $operations) {
-  _batch_test_finished_helper(3, $success, $results, $operations);
+function _batch_test_finished_3($success, $results, $operations, $elapsed) {
+  _batch_test_finished_helper(3, $success, $results, $operations, $elapsed);
 }
 
 /**
@@ -205,8 +208,8 @@ function _batch_test_finished_3($success, $results, $operations) {
  *
  * Triggers 'finished' callback for batch 4.
  */
-function _batch_test_finished_4($success, $results, $operations) {
-  _batch_test_finished_helper(4, $success, $results, $operations);
+function _batch_test_finished_4($success, $results, $operations, $elapsed) {
+  _batch_test_finished_helper(4, $success, $results, $operations, $elapsed);
 }
 
 /**
@@ -214,8 +217,8 @@ function _batch_test_finished_4($success, $results, $operations) {
  *
  * Triggers 'finished' callback for batch 5.
  */
-function _batch_test_finished_5($success, $results, $operations) {
-  _batch_test_finished_helper(5, $success, $results, $operations);
+function _batch_test_finished_5($success, $results, $operations, $elapsed) {
+  _batch_test_finished_helper(5, $success, $results, $operations, $elapsed);
 }
 
 /**
@@ -223,8 +226,8 @@ function _batch_test_finished_5($success, $results, $operations) {
  *
  * Triggers 'finished' callback for batch 6.
  */
-function _batch_test_finished_6($success, $results, $operations) {
-  _batch_test_finished_helper(6, $success, $results, $operations);
+function _batch_test_finished_6($success, $results, $operations, $elapsed) {
+  _batch_test_finished_helper(6, $success, $results, $operations, $elapsed);
 }
 
 /**
@@ -232,6 +235,6 @@ function _batch_test_finished_6($success, $results, $operations) {
  *
  * Triggers 'finished' callback for batch 7.
  */
-function _batch_test_finished_7($success, $results, $operations) {
-  _batch_test_finished_helper(7, $success, $results, $operations);
+function _batch_test_finished_7($success, $results, $operations, $elapsed) {
+  _batch_test_finished_helper(7, $success, $results, $operations, $elapsed);
 }
