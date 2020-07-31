@@ -50,6 +50,13 @@ class BlockContentViewsData extends EntityViewsData {
     $data['block_content_field_revision']['revision_id']['relationship']['title'] = $this->t('Block Content');
     $data['block_content_field_revision']['revision_id']['relationship']['label'] = $this->t('Get the actual block content from a block content revision.');
 
+    $data['block_content_revision']['revision_user']['help'] = $this->t('The user who created the revision.');
+    $data['block_content_revision']['revision_user']['relationship']['label'] = $this->t('revision user');
+    $data['block_content_revision']['revision_user']['filter']['id'] = 'user_name';
+
+    $data['block_content_revision']['table']['join']['block_content_field_data']['left_field'] = 'revision_id';
+    $data['block_content_revision']['table']['join']['block_content_field_data']['field'] = 'revision_id';
+
     return $data;
   }
 
