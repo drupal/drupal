@@ -221,7 +221,7 @@ class ProcessingTest extends BrowserTestBase {
    */
   public function assertBatchMessages($texts, $message) {
     $pattern = '|' . implode('.*', $texts) . '|s';
-    return $this->assertPattern($pattern, $message);
+    return $this->assertPattern($pattern);
   }
 
   /**

@@ -120,8 +120,9 @@ class ColorTest extends BrowserTestBase {
 
     $this->drupalGet('<front>');
     $stylesheets = $this->config('color.theme.' . $theme)->get('stylesheets');
+    // Make sure the color stylesheet is included in the content.
     foreach ($stylesheets as $stylesheet) {
-      $this->assertPattern('|' . file_url_transform_relative(file_create_url($stylesheet)) . '|', 'Make sure the color stylesheet is included in the content. (' . $theme . ')');
+      $this->assertPattern('|' . file_url_transform_relative(file_create_url($stylesheet)) . '|');
       $stylesheet_content = implode("\n", file($stylesheet));
       $this->assertStringContainsString('color: #123456', $stylesheet_content, 'Make sure the color we changed is in the color stylesheet. (' . $theme . ')');
     }

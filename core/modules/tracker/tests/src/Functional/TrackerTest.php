@@ -353,7 +353,9 @@ class TrackerTest extends BrowserTestBase {
     // It's almost certainly too brittle.
     $pattern = '/' . preg_quote($node_one->getTitle()) . '.+' . preg_quote($node_two->getTitle()) . '/s';
     $this->verbose($pattern);
-    $this->assertPattern($pattern, 'Most recently commented on node appears at the top of tracker');
+    // Verify that the most recent comment on node appears at the top of
+    // tracker.
+    $this->assertPattern($pattern);
   }
 
   /**

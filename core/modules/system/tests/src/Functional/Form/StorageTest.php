@@ -101,7 +101,8 @@ class StorageTest extends BrowserTestBase {
    */
   public function testValidation() {
     $this->drupalPostForm('form_test/form-storage', ['title' => '', 'value' => 'value_is_set'], 'Continue submit');
-    $this->assertPattern('/value_is_set/', 'The input values have been kept.');
+    // Ensure that the input values have been kept.
+    $this->assertPattern('/value_is_set/');
   }
 
   /**
