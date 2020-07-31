@@ -369,6 +369,20 @@ class CKEditorTest extends KernelTestBase {
     $editor->save();
     $expected['stylesSet'] = FALSE;
     $this->assertIdentical($expected, $stylescombo_plugin->getConfig($editor), '"StylesCombo" plugin configuration built correctly for customized toolbar.');
+
+    // Configuration that includes a dash in either the element or class name.
+    $settings['plugins']['stylescombo']['styles'] = "drupal-entity.has-dashes|Allowing Dashes";
+    $editor->setSettings($settings);
+    $editor->save();
+    $expected['stylesSet'] = [
+      [
+        'name' => 'Allowing Dashes',
+        'element' => 'drupal-entity',
+        'attributes' => ['class' => 'has-dashes'],
+      ],
+    ];
+    $this->assertIdentical($expected, $stylescombo_plugin->getConfig($editor), '"StylesCombo" plugin configuration built correctly for customized toolbar.');
+
   }
 
   /**
