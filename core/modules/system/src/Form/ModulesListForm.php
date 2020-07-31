@@ -77,6 +77,13 @@ class ModulesListForm extends FormBase {
   protected $moduleExtensionList;
 
   /**
+   * The access manager.
+   *
+   * @var \Drupal\Core\Access\AccessManagerInterface
+   */
+  protected $accessManager;
+
+  /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container) {
