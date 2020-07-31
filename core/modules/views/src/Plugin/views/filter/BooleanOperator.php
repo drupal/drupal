@@ -43,8 +43,6 @@ class BooleanOperator extends FilterPluginBase {
 
   // exposed filter options
   protected $alwaysMultiple = TRUE;
-  // Don't display empty space where the operator would be.
-  public $no_operator = TRUE;
   // Whether to accept NULL as a false value or not
   public $accept_null = FALSE;
 
