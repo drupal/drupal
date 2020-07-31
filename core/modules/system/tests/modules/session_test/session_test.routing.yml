@@ -66,11 +66,11 @@ session_test.set_message:
   requirements:
     _access: 'TRUE'
 
-session_test.set_message_but_dont_save:
-  path: '/session-test/set-message-but-dont-save'
+session_test.set_message_but_do_not_save:
+  path: '/session-test/set-message-but-do-not-save'
   defaults:
     _title: 'Set message but do not save session'
-    _controller: '\Drupal\session_test\Controller\SessionTestController::setMessageButDontSave'
+    _controller: '\Drupal\session_test\Controller\SessionTestController::setMessageButDoNotSave'
   requirements:
     _access: 'TRUE'
 

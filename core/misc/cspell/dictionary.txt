@@ -47,8 +47,6 @@ anded
 andif
 anding
 annot
-annotationwithconstants
-annots
 anonyme
 anonymize
 anothermodule
@@ -290,7 +288,6 @@ classmap
 classmaps
 classname
 classtype
-classwithconstants
 classy's
 cldr
 clearfix
@@ -402,7 +399,6 @@ daycounter
 dblog
 dbtng
 dburl
-dcom
 ddblock
 ddev
 deckard
@@ -473,7 +469,6 @@ docroot
 docroots
 docx
 dolore
-dont
 doubleclick
 downcasting
 downlevel

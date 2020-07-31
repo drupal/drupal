@@ -25,7 +25,7 @@ class TestSkipRowProcess extends ProcessPluginBase {
     if ($data == 'skip_and_record (use plugin)') {
       throw new MigrateSkipRowException('', TRUE);
     }
-    elseif ($data == 'skip_and_dont_record (use plugin)') {
+    elseif ($data == 'skip_and_do_not_record (use plugin)') {
       throw new MigrateSkipRowException('', FALSE);
     }
     return $value;
