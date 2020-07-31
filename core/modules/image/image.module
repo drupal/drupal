@@ -297,26 +297,35 @@ function template_preprocess_image_style(&$variables) {
 }
 
 /**
- * Accepts a keyword (center, top, left, etc) and returns it as a pixel offset.
+ * Returns the offset in pixels from the anchor.
  *
- * @param $value
- * @param $current_pixels
- * @param $new_pixels
+ * @param string $anchor
+ *   The anchor ('top', 'left', 'bottom', 'right', 'center').
+ * @param int $current_size
+ *   The current size, in pixels.
+ * @param int $new_size
+ *   The new size, in pixels.
+ *
+ * @return int|string
+ *   The offset from the anchor, in pixels, or the anchor itself, if its value
+ *   isn't one of the accepted values.
  */
-function image_filter_keyword($value, $current_pixels, $new_pixels) {
-  switch ($value) {
+function image_filter_keyword($anchor, $current_size, $new_size) {
+  switch ($anchor) {
     case 'top':
     case 'left':
       return 0;
 
     case 'bottom':
     case 'right':
-      return $current_pixels - $new_pixels;
+      return $current_size - $new_size;
 
     case 'center':
-      return $current_pixels / 2 - $new_pixels / 2;
+      return $current_size / 2 - $new_size / 2;
+
+    default:
+      return $anchor;
   }
-  return $value;
 }
 
 /**
