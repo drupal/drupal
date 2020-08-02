@@ -311,7 +311,7 @@ abstract class BuildTestBase extends TestCase {
    * @return \Symfony\Component\Process\Process
    */
   public function executeCommand($command_line, $working_dir = NULL) {
-    $this->commandProcess = new Process($command_line);
+    $this->commandProcess = Process::fromShellCommandline($command_line);
     $this->commandProcess->setWorkingDirectory($this->getWorkingPath($working_dir))
       ->setTimeout(300)
       ->setIdleTimeout(300);
