@@ -33,7 +33,7 @@ class MessagePlugin implements PluginInterface, EventSubscriberInterface {
   /**
    * Configuration.
    *
-   * @var \Drupal\Composer\VendorHardening\Config
+   * @var \Drupal\Composer\Plugin\VendorHardening\Config
    */
   protected $config;
 
