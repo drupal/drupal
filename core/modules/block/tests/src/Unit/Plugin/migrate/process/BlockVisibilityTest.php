@@ -37,7 +37,7 @@ class BlockVisibilityTest extends MigrateProcessTestCase {
    * @covers ::transform
    */
   public function testTransformNoData() {
-    $transformed_value = $this->plugin->transform([0, '', []], $this->migrateExecutable, $this->row, 'destinationproperty');
+    $transformed_value = $this->plugin->transform([0, '', []], $this->migrateExecutable, $this->row, 'destination_property');
     $this->assertEmpty($transformed_value);
   }
 
@@ -45,7 +45,7 @@ class BlockVisibilityTest extends MigrateProcessTestCase {
    * @covers ::transform
    */
   public function testTransformSinglePageWithFront() {
-    $visibility = $this->plugin->transform([0, '<front>', []], $this->migrateExecutable, $this->row, 'destinationproperty');
+    $visibility = $this->plugin->transform([0, '<front>', []], $this->migrateExecutable, $this->row, 'destination_property');
     $this->assertSame('request_path', $visibility['request_path']['id']);
     $this->assertTrue($visibility['request_path']['negate']);
     $this->assertSame('<front>', $visibility['request_path']['pages']);
@@ -55,7 +55,7 @@ class BlockVisibilityTest extends MigrateProcessTestCase {
    * @covers ::transform
    */
   public function testTransformMultiplePagesWithFront() {
-    $visibility = $this->plugin->transform([1, "foo\n/bar\rbaz\r\n<front>", []], $this->migrateExecutable, $this->row, 'destinationproperty');
+    $visibility = $this->plugin->transform([1, "foo\n/bar\rbaz\r\n<front>", []], $this->migrateExecutable, $this->row, 'destination_property');
     $this->assertSame('request_path', $visibility['request_path']['id']);
     $this->assertFalse($visibility['request_path']['negate']);
     $this->assertSame("/foo\n/bar\n/baz\n<front>", $visibility['request_path']['pages']);
@@ -66,7 +66,7 @@ class BlockVisibilityTest extends MigrateProcessTestCase {
    */
   public function testTransformPhpEnabled() {
     $this->moduleHandler->moduleExists('php')->willReturn(TRUE);
-    $visibility = $this->plugin->transform([2, '<?php', []], $this->migrateExecutable, $this->row, 'destinationproperty');
+    $visibility = $this->plugin->transform([2, '<?php', []], $this->migrateExecutable, $this->row, 'destination_property');
     $this->assertSame('php', $visibility['php']['id']);
     $this->assertFalse($visibility['php']['negate']);
     $this->assertSame('<?php', $visibility['php']['php']);
@@ -77,7 +77,7 @@ class BlockVisibilityTest extends MigrateProcessTestCase {
    */
   public function testTransformPhpDisabled() {
     $this->moduleHandler->moduleExists('php')->willReturn(FALSE);
-    $transformed_value = $this->plugin->transform([2, '<?php', []], $this->migrateExecutable, $this->row, 'destinationproperty');
+    $transformed_value = $this->plugin->transform([2, '<?php', []], $this->migrateExecutable, $this->row, 'destination_property');
     $this->assertEmpty($transformed_value);
   }
 
@@ -97,7 +97,7 @@ class BlockVisibilityTest extends MigrateProcessTestCase {
     $this->plugin = new BlockVisibility(['skip_php' => TRUE], 'block_visibility_pages', [], $this->moduleHandler->reveal(), $migrate_lookup->reveal());
     $this->expectException(MigrateSkipRowException::class);
     $this->expectExceptionMessage("The block with bid '99' from module 'foobar' will have no PHP or request_path visibility configuration.");
-    $this->plugin->transform([2, '<?php', []], $this->migrateExecutable, $this->row, 'destinationproperty');
+    $this->plugin->transform([2, '<?php', []], $this->migrateExecutable, $this->row, 'destination_property');
   }
 
 }

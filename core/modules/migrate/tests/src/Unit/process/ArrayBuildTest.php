@@ -35,7 +35,7 @@ class ArrayBuildTest extends MigrateProcessTestCase {
       'Foo' => 'Bar',
       'foo bar' => 'bar foo',
     ];
-    $value = $this->plugin->transform($source, $this->migrateExecutable, $this->row, 'destinationproperty');
+    $value = $this->plugin->transform($source, $this->migrateExecutable, $this->row, 'destination_property');
     $this->assertSame($value, $expected);
   }
 
@@ -48,7 +48,7 @@ class ArrayBuildTest extends MigrateProcessTestCase {
     ];
     $this->expectException(MigrateException::class);
     $this->expectExceptionMessage("The key 'foo' does not exist");
-    $this->plugin->transform($source, $this->migrateExecutable, $this->row, 'destinationproperty');
+    $this->plugin->transform($source, $this->migrateExecutable, $this->row, 'destination_property');
   }
 
   /**
@@ -60,7 +60,7 @@ class ArrayBuildTest extends MigrateProcessTestCase {
     ];
     $this->expectException(MigrateException::class);
     $this->expectExceptionMessage("The key 'bar' does not exist");
-    $this->plugin->transform($source, $this->migrateExecutable, $this->row, 'destinationproperty');
+    $this->plugin->transform($source, $this->migrateExecutable, $this->row, 'destination_property');
   }
 
   /**
@@ -70,7 +70,7 @@ class ArrayBuildTest extends MigrateProcessTestCase {
     $source = ['foo' => 'bar'];
     $this->expectException(MigrateException::class);
     $this->expectExceptionMessage('The input should be an array of arrays');
-    $this->plugin->transform($source, $this->migrateExecutable, $this->row, 'destinationproperty');
+    $this->plugin->transform($source, $this->migrateExecutable, $this->row, 'destination_property');
   }
 
   /**
@@ -80,7 +80,7 @@ class ArrayBuildTest extends MigrateProcessTestCase {
     $source = 'foo';
     $this->expectException(MigrateException::class);
     $this->expectExceptionMessage('The input should be an array of arrays');
-    $this->plugin->transform($source, $this->migrateExecutable, $this->row, 'destinationproperty');
+    $this->plugin->transform($source, $this->migrateExecutable, $this->row, 'destination_property');
   }
 
 }

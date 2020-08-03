@@ -21,7 +21,7 @@ class NullCoalesceTest extends MigrateProcessTestCase {
    */
   public function testExceptionOnInvalidValue() {
     $this->expectException(MigrateException::class);
-    (new NullCoalesce([], 'null_coalesce', []))->transform('invalid', $this->migrateExecutable, $this->row, 'destinationproperty');
+    (new NullCoalesce([], 'null_coalesce', []))->transform('invalid', $this->migrateExecutable, $this->row, 'destination_property');
   }
 
   /**
@@ -40,7 +40,7 @@ class NullCoalesceTest extends MigrateProcessTestCase {
    */
   public function testTransform(array $source, $expected_result) {
     $plugin = new NullCoalesce([], 'null_coalesce', []);
-    $result = $plugin->transform($source, $this->migrateExecutable, $this->row, 'destinationproperty');
+    $result = $plugin->transform($source, $this->migrateExecutable, $this->row, 'destination_property');
     $this->assertSame($expected_result, $result);
   }
 
@@ -83,10 +83,10 @@ class NullCoalesceTest extends MigrateProcessTestCase {
    */
   public function testTransformWithDefault() {
     $plugin = new NullCoalesce(['default_value' => 'default'], 'null_coalesce', []);
-    $result = $plugin->transform([NULL, NULL, 'Test', 'Test 2'], $this->migrateExecutable, $this->row, 'destinationproperty');
+    $result = $plugin->transform([NULL, NULL, 'Test', 'Test 2'], $this->migrateExecutable, $this->row, 'destination_property');
     $this->assertSame('Test', $result);
 
-    $this->assertSame('default', $plugin->transform([NULL, NULL], $this->migrateExecutable, $this->row, 'destinationproperty'));
+    $this->assertSame('default', $plugin->transform([NULL, NULL], $this->migrateExecutable, $this->row, 'destination_property'));
   }
 
 }
