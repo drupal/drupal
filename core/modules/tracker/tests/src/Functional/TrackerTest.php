@@ -91,7 +91,7 @@ class TrackerTest extends BrowserTestBase {
     $this->drupalGet('activity');
     $this->assertNoText($unpublished->label(), 'Unpublished node does not show up in the tracker listing.');
     $this->assertText($published->label(), 'Published node shows up in the tracker listing.');
-    $this->assertLink(t('My recent content'), 0, 'User tab shows up on the global tracker page.');
+    $this->assertSession()->linkExists(t('My recent content'), 0, 'User tab shows up on the global tracker page.');
 
     // Assert cache contexts, specifically the pager and node access contexts.
     $this->assertCacheContexts(['languages:language_interface', 'route', 'theme', 'url.query_args:' . MainContentViewSubscriber::WRAPPER_FORMAT, 'url.query_args.pagers:0', 'user.node_grants:view', 'user']);
@@ -208,8 +208,8 @@ class TrackerTest extends BrowserTestBase {
     $this->assertCacheTags($expected_tags);
     $this->assertCacheContexts(['languages:language_interface', 'route', 'theme', 'url.query_args:' . MainContentViewSubscriber::WRAPPER_FORMAT, 'url.query_args.pagers:0', 'user', 'user.node_grants:view']);
 
-    $this->assertLink($my_published->label());
-    $this->assertNoLink($unpublished->label());
+    $this->assertSession()->linkExists($my_published->label());
+    $this->assertSession()->linkNotExists($unpublished->label());
     // Verify that title and tab title have been set correctly.
     $this->assertText('Activity', 'The user activity tab has the name "Activity".');
     $this->assertTitle($this->user->getAccountName() . ' | Drupal');
