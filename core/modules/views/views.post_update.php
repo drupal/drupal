@@ -6,7 +6,6 @@
  */
 
 use Drupal\Core\Config\Entity\ConfigEntityUpdater;
-use Drupal\views\ViewEntityInterface;
 use Drupal\views\ViewsConfigUpdater;
 
 /**
@@ -51,15 +50,4 @@ function views_post_update_field_names_for_multivalue_fields(&$sandbox = NULL) {
  */
 function views_post_update_configuration_entity_relationships() {
   // Empty update to clear Views data.
-}
-
-/**
- * Update the in_operator filter plugins values.
- */
-function views_post_update_in_operator_values(?array &$sandbox = NULL): void {
-  /** @var \Drupal\views\ViewsConfigUpdater $view_config_updater */
-  $view_config_updater = \Drupal::classResolver(ViewsConfigUpdater::class);
-  \Drupal::classResolver(ConfigEntityUpdater::class)->update($sandbox, 'view', function (ViewEntityInterface $view) use ($view_config_updater): bool {
-    return $view_config_updater->needsInOperatorFilterValuesUpdate($view);
-  });
 }

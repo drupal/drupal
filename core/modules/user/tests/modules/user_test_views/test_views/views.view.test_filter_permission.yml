@@ -94,7 +94,7 @@ display:
           admin_label: ''
           operator: or
           value:
-            - access user profiles
+            'access user profiles': 'access user profiles'
           group: 1
           exposed: false
           expose:

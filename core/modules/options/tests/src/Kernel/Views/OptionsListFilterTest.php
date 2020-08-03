@@ -107,28 +107,6 @@ class OptionsListFilterTest extends OptionsTestBase {
 
     $column_map = ['nid' => 'nid'];
     $this->assertIdenticalResultset($view, $resultset, $column_map);
-    $view->destroy();
-
-    $view = Views::getView('test_options_list_filter');
-    $view->setDisplay();
-    // Add a filter with a period in the options.
-    $view->displayHandlers->get('default')->overrideOption('filters', [
-      'field_test_list_string_value' => [
-        'id' => 'field_test_list_string_value',
-        'table' => 'field_data_field_test_list_string',
-        'field' => 'field_test_list_string_value',
-        'relationship' => 'none',
-        'group_type' => 'group',
-        'admin_label' => '',
-        'operator' => 'or',
-        'value' => [$this->fieldValues[2] => $this->fieldValues[2]],
-        'exposed' => FALSE,
-        'plugin_id' => 'list_field',
-      ],
-    ]);
-    $view->save();
-
-    $this->executeView($view);
   }
 
 }

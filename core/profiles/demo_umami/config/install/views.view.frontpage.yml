@@ -133,7 +133,7 @@ display:
           admin_label: ''
           operator: in
           value:
-            - recipe
+            recipe: recipe
           group: 1
           exposed: false
           expose:

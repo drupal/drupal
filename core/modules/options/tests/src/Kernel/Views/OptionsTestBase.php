@@ -84,7 +84,6 @@ abstract class OptionsTestBase extends ViewsKernelTestBase {
     $this->fieldValues = [
       $this->randomMachineName(),
       $this->randomMachineName(),
-      'option.with.periods',
     ];
 
     $this->fieldNames = ['field_test_list_string', 'field_test_list_integer'];
@@ -99,7 +98,6 @@ abstract class OptionsTestBase extends ViewsKernelTestBase {
         'allowed_values' => [
           $this->fieldValues[0] => $this->fieldValues[0],
           $this->fieldValues[1] => $this->fieldValues[1],
-          $this->fieldValues[2] => $this->fieldValues[2],
         ],
       ],
     ])->save();
@@ -112,7 +110,6 @@ abstract class OptionsTestBase extends ViewsKernelTestBase {
         'allowed_values' => [
           $this->fieldValues[0],
           $this->fieldValues[1],
-          $this->fieldValues[2],
         ],
       ],
     ])->save();

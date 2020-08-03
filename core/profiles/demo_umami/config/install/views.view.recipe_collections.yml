@@ -118,7 +118,7 @@ display:
           table: taxonomy_term_field_data
           field: vid
           value:
-            - tags
+            tags: tags
           entity_type: taxonomy_term
           entity_field: vid
           plugin_id: bundle

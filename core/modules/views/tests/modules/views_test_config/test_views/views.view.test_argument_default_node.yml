@@ -135,7 +135,7 @@ display:
           table: node_field_data
           field: type
           value:
-            - page
+            page: page
           entity_type: node
           entity_field: type
           plugin_id: bundle

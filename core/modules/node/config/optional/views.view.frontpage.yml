@@ -132,7 +132,7 @@ display:
           admin_label: ''
           operator: in
           value:
-            - '***LANGUAGE_language_content***'
+            '***LANGUAGE_language_content***': '***LANGUAGE_language_content***'
           group: 1
           exposed: false
           expose:
