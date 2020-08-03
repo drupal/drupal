@@ -61,7 +61,8 @@ Drupal requires:
 
 For more detailed information about Drupal requirements, including a list of
 PHP extensions and configurations that are required, see "System requirements"
-(https://www.drupal.org/requirements) in the Drupal.org online documentation.
+(https://www.drupal.org/docs/system-requirements) in the Drupal.org online
+documentation.
 
 For detailed information on how to configure a test server environment using a
 variety of operating systems and web servers, see "Local server setup"

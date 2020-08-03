@@ -17,7 +17,7 @@ function aggregator_requirements($phase) {
   ];
   if (!$has_curl) {
     $requirements['curl']['severity'] = REQUIREMENT_ERROR;
-    $requirements['curl']['description'] = t('The Aggregator module requires the <a href="https://secure.php.net/manual/en/curl.setup.php">PHP cURL library</a>. For more information, see the <a href="https://www.drupal.org/requirements/php/curl">online information on installing the PHP cURL extension</a>.');
+    $requirements['curl']['description'] = t('The Aggregator module requires the <a href="https://secure.php.net/manual/en/curl.setup.php">PHP cURL library</a>. For more information, see the <a href="https://www.drupal.org/docs/system-requirements/php-requirements#curl">online information on installing the PHP cURL extension</a>.');
   }
   return $requirements;
 }
