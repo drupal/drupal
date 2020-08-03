@@ -187,7 +187,7 @@ class ConditionTest extends UnitTestCase {
       ->setConstructorArgs([NULL])
       ->disableOriginalConstructor()
       ->getMock();
-    $contrib_namespace = 'Drupal\Driver\Database\mock';
+    $contrib_namespace = 'Drupal\mock\Driver\Database\mock';
     $mocked_namespace = $contrib_namespace . '\\Condition';
     class_alias('MockCondition', $mocked_namespace);
 

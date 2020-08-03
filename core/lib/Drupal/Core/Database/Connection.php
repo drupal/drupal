@@ -214,6 +214,7 @@ abstract class Connection {
       @trigger_error('In drupal:10.0.0 not setting the $identifierQuotes property in the concrete Connection class will result in an RuntimeException. See https://www.drupal.org/node/2986894', E_USER_DEPRECATED);
       $this->identifierQuotes = ['', ''];
     }
+
     assert(count($this->identifierQuotes) === 2 && Inspector::assertAllStrings($this->identifierQuotes), '\Drupal\Core\Database\Connection::$identifierQuotes must contain 2 string values');
     // The 'transactions' option is deprecated.
     if (isset($connection_options['transactions'])) {
@@ -226,6 +227,12 @@ abstract class Connection {
     // \Drupal\Core\Database\Database::parseConnectionInfo().
     if (empty($connection_options['namespace'])) {
       $connection_options['namespace'] = (new \ReflectionObject($this))->getNamespaceName();
+    }
+
+    // The support for database drivers where the namespace that starts with
+    // Drupal\\Driver\\Database\\ is deprecated.
+    if (strpos($connection_options['namespace'], 'Drupal\Driver\Database') === 0) {
+      @trigger_error('Support for database drivers located in the "drivers/lib/Drupal/Driver/Database" directory is deprecated in drupal:9.1.0 and is removed in drupal:10.0.0. Contributed and custom database drivers should be provided by modules and use the namespace "Drupal\MODULE_NAME\Driver\Database\DRIVER_NAME". See https://www.drupal.org/node/3123251', E_USER_DEPRECATED);
     }
 
     // Initialize and prepare the connection prefix.
