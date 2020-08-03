@@ -49,7 +49,7 @@ class BooleanCheckboxWidget extends WidgetBase {
     $summary = [];
 
     $display_label = $this->getSetting('display_label');
-    $summary[] = t('Use field label: @display_label', ['@display_label' => ($display_label ? t('Yes') : 'No')]);
+    $summary[] = t('Use field label: @display_label', ['@display_label' => ($display_label ? t('Yes') : t('No'))]);
 
     return $summary;
   }
