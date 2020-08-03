@@ -27,7 +27,7 @@ class LanguageTypesTest extends MigrateProcessTestCase {
       1 => 'language_content',
       2 => 'language_interface',
     ];
-    $value = $this->plugin->transform($source, $this->migrateExecutable, $this->row, 'destinationproperty');
+    $value = $this->plugin->transform($source, $this->migrateExecutable, $this->row, 'destination_property');
     $this->assertSame($value, $expected);
   }
 
@@ -44,7 +44,7 @@ class LanguageTypesTest extends MigrateProcessTestCase {
     $expected = [
       0 => 'language_interface',
     ];
-    $value = $this->plugin->transform($source, $this->migrateExecutable, $this->row, 'destinationproperty');
+    $value = $this->plugin->transform($source, $this->migrateExecutable, $this->row, 'destination_property');
     $this->assertSame($value, $expected);
   }
 
@@ -55,7 +55,7 @@ class LanguageTypesTest extends MigrateProcessTestCase {
     $this->plugin = new LanguageTypes([], 'map', []);
     $this->expectException(MigrateException::class);
     $this->expectExceptionMessage('The input should be an array');
-    $this->plugin->transform('foo', $this->migrateExecutable, $this->row, 'destinationproperty');
+    $this->plugin->transform('foo', $this->migrateExecutable, $this->row, 'destination_property');
   }
 
 }

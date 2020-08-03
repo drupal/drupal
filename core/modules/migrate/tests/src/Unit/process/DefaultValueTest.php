@@ -21,7 +21,7 @@ class DefaultValueTest extends MigrateProcessTestCase {
    */
   public function testDefaultValue($configuration, $expected_value, $value) {
     $process = new DefaultValue($configuration, 'default_value', []);
-    $value = $process->transform($value, $this->migrateExecutable, $this->row, 'destinationproperty');
+    $value = $process->transform($value, $this->migrateExecutable, $this->row, 'destination_property');
     $this->assertSame($expected_value, $value);
   }
 

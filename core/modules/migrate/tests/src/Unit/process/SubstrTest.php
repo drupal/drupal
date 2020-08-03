@@ -30,7 +30,7 @@ class SubstrTest extends MigrateProcessTestCase {
     $configuration['start'] = $start;
     $configuration['length'] = $length;
     $this->plugin = new Substr($configuration, 'map', []);
-    $value = $this->plugin->transform('Captain Janeway', $this->migrateExecutable, $this->row, 'destinationproperty');
+    $value = $this->plugin->transform('Captain Janeway', $this->migrateExecutable, $this->row, 'destination_property');
     $this->assertSame($expected, $value);
   }
 
@@ -62,7 +62,7 @@ class SubstrTest extends MigrateProcessTestCase {
     $this->plugin = new Substr($configuration, 'map', []);
     $this->expectException(MigrateException::class);
     $this->expectExceptionMessage('The input value must be a string.');
-    $this->plugin->transform(['Captain Janeway'], $this->migrateExecutable, $this->row, 'destinationproperty');
+    $this->plugin->transform(['Captain Janeway'], $this->migrateExecutable, $this->row, 'destination_property');
   }
 
   /**
@@ -73,7 +73,7 @@ class SubstrTest extends MigrateProcessTestCase {
     $this->plugin = new Substr($configuration, 'map', []);
     $this->expectException(MigrateException::class);
     $this->expectExceptionMessage('The start position configuration value should be an integer. Omit this key to capture from the beginning of the string.');
-    $this->plugin->transform(['foo'], $this->migrateExecutable, $this->row, 'destinationproperty');
+    $this->plugin->transform(['foo'], $this->migrateExecutable, $this->row, 'destination_property');
   }
 
   /**
@@ -84,7 +84,7 @@ class SubstrTest extends MigrateProcessTestCase {
     $this->plugin = new Substr($configuration, 'map', []);
     $this->expectException(MigrateException::class);
     $this->expectExceptionMessage('The character length configuration value should be an integer. Omit this key to capture from the start position to the end of the string.');
-    $this->plugin->transform(['foo'], $this->migrateExecutable, $this->row, 'destinationproperty');
+    $this->plugin->transform(['foo'], $this->migrateExecutable, $this->row, 'destination_property');
   }
 
 }
