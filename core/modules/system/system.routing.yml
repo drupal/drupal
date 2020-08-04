@@ -220,7 +220,7 @@ system.site_maintenance_mode:
     _form: '\Drupal\system\Form\SiteMaintenanceModeForm'
     _title: 'Maintenance mode'
   requirements:
-    _permission: 'administer site configuration'
+    _permission: 'administer site configuration+administer software updates'
 
 system.run_cron:
   path: '/admin/reports/status/run-cron'
