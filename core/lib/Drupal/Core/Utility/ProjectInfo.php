@@ -35,11 +35,11 @@ class ProjectInfo {
    * @param bool $status
    *   Boolean that controls what status (enabled or uninstalled) to process out
    *   of the $list and add to the $projects array.
-   * @param array $additional_whitelist
+   * @param array $additional_elements
    *   (optional) Array of additional elements to be collected from the .info.yml
    *   file. Defaults to array().
    */
-  public function processInfoList(array &$projects, array $list, $project_type, $status, array $additional_whitelist = []) {
+  public function processInfoList(array &$projects, array $list, $project_type, $status, array $additional_elements = []) {
     foreach ($list as $file) {
       // Just projects with a matching status should be listed.
       if ($file->status != $status) {
@@ -111,7 +111,7 @@ class ProjectInfo {
           'name' => $project_name,
           // Only save attributes from the .info.yml file we care about so we do
           // not bloat our RAM usage needlessly.
-          'info' => $this->filterProjectInfo($file->info, $additional_whitelist),
+          'info' => $this->filterProjectInfo($file->info, $additional_elements),
           'datestamp' => $file->info['datestamp'],
           'includes' => [$file->getName() => $file->info['name']],
           'project_type' => $project_display_type,
@@ -165,7 +165,7 @@ class ProjectInfo {
    * @param array $info
    *   Array of .info.yml file data as returned by
    *   \Drupal\Core\Extension\InfoParser.
-   * @param $additional_whitelist
+   * @param $additional_elements
    *   (optional) Array of additional elements to be collected from the .info.yml
    *   file. Defaults to array().
    *
@@ -174,8 +174,8 @@ class ProjectInfo {
    *
    * @see \Drupal\Core\Utility\ProjectInfo::processInfoList()
    */
-  public function filterProjectInfo($info, $additional_whitelist = []) {
-    $whitelist = [
+  public function filterProjectInfo($info, $additional_elements = []) {
+    $elements = [
       '_info_file_ctime',
       'datestamp',
       'major',
@@ -185,8 +185,8 @@ class ProjectInfo {
       'project status url',
       'version',
     ];
-    $whitelist = array_merge($whitelist, $additional_whitelist);
-    return array_intersect_key($info, array_combine($whitelist, $whitelist));
+    $elements = array_merge($elements, $additional_elements);
+    return array_intersect_key($info, array_combine($elements, $elements));
   }
 
 }
