@@ -49,7 +49,7 @@ class ErrorTest extends UnitTestCase {
     $two_items[] = $this->createBacktraceItem('test_function_two', 'TestClass');
     $data[] = [$two_items, $this->createBacktraceItem('TestClass->test_function_two()')];
 
-    // Add blacklist functions to backtrace. They should get removed.
+    // Add ignored functions to backtrace. They should get removed.
     foreach (['debug', '_drupal_error_handler', '_drupal_exception_handler'] as $function) {
       $two_items = $single_item;
       // Push to the start of the backtrace.
