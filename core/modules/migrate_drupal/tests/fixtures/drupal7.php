@@ -5284,7 +5284,7 @@ $connection->insert('field_config_instance')
 ))
 ->values(array(
   'id' => '83',
-  'field_id' => '54',
+  'field_id' => '1',
   'field_name' => 'comment_body',
   'entity_type' => 'comment',
   'bundle' => 'comment_node_et',
