@@ -481,7 +481,7 @@
         },
         {
             "name": "drupal/core",
-            "version": "9.0.3",
+            "version": "9.0.x-dev",
             "dist": {
                 "type": "path",
                 "url": "core",
@@ -728,7 +728,7 @@
         },
         {
             "name": "drupal/core-project-message",
-            "version": "9.0.3",
+            "version": "9.0.x-dev",
             "dist": {
                 "type": "path",
                 "url": "composer/Plugin/ProjectMessage",
@@ -761,7 +761,7 @@
         },
         {
             "name": "drupal/core-vendor-hardening",
-            "version": "9.0.3",
+            "version": "9.0.x-dev",
             "dist": {
                 "type": "path",
                 "url": "composer/Plugin/VendorHardening",
@@ -4481,6 +4481,9 @@
                 "ext-zip": "Enabling the zip extension allows you to unzip archives",
                 "ext-zlib": "Allow gzip compression of HTTP requests"
             },
+            "bin": [
+                "bin/composer"
+            ],
             "type": "library",
             "extra": {
                 "branch-alias": {
@@ -7099,7 +7102,11 @@
     ],
     "aliases": [],
     "minimum-stability": "dev",
-    "stability-flags": [],
+    "stability-flags": {
+        "drupal/core": 20,
+        "drupal/core-project-message": 20,
+        "drupal/core-vendor-hardening": 20
+    },
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": [],
