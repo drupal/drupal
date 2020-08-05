@@ -304,7 +304,7 @@ class FilterFormat extends ConfigEntityBase implements FilterFormatInterface, En
         // with the existing set, to ensure we only end up with the tags that are
         // allowed by *all* filters with an "allowed html" setting.
         else {
-          // Track the union of forbidden (blacklisted) tags.
+          // Track the union of forbidden tags.
           if (isset($new_restrictions['forbidden_tags'])) {
             if (!isset($restrictions['forbidden_tags'])) {
               $restrictions['forbidden_tags'] = $new_restrictions['forbidden_tags'];
@@ -314,15 +314,15 @@ class FilterFormat extends ConfigEntityBase implements FilterFormatInterface, En
             }
           }
 
-          // Track the intersection of allowed (whitelisted) tags.
+          // Track the intersection of allowed tags.
           if (isset($restrictions['allowed'])) {
             $intersection = $restrictions['allowed'];
             foreach ($intersection as $tag => $attributes) {
-              // If the current tag is not whitelisted by the new filter, then
-              // it's outside of the intersection.
+              // If the current tag is not allowed by the new filter, then it's
+              // outside of the intersection.
               if (!array_key_exists($tag, $new_restrictions['allowed'])) {
                 // The exception is the asterisk (which applies to all tags): it
-                // does not need to be whitelisted by every filter in order to be
+                // does not need to be allowed by every filter in order to be
                 // used; not every filter needs attribute restrictions on all tags.
                 if ($tag === '*') {
                   continue;
@@ -375,10 +375,10 @@ class FilterFormat extends ConfigEntityBase implements FilterFormatInterface, En
         }
       }, NULL);
 
-      // Simplification: if we have both a (intersected) whitelist and a (unioned)
-      // blacklist, then remove any tags from the whitelist that also exist in the
-      // blacklist. Now the whitelist alone expresses all tag-level restrictions,
-      // and we can delete the blacklist.
+      // Simplification: if we have both allowed (intersected) and forbidden
+      // (unioned) tags, then remove any allowed tags that are also forbidden.
+      // Once complete, the list of allowed tags expresses all tag-level
+      // restrictions, and the list of forbidden tags can be removed.
       if (isset($restrictions['allowed']) && isset($restrictions['forbidden_tags'])) {
         foreach ($restrictions['forbidden_tags'] as $tag) {
           if (isset($restrictions['allowed'][$tag])) {
@@ -388,9 +388,9 @@ class FilterFormat extends ConfigEntityBase implements FilterFormatInterface, En
         unset($restrictions['forbidden_tags']);
       }
 
-      // Simplification: if the only remaining allowed tag is the asterisk (which
-      // contains attribute restrictions that apply to all tags), and only
-      // whitelisting filters were used, then effectively nothing is allowed.
+      // Simplification: if the only remaining allowed tag is the asterisk
+      // (which contains attribute restrictions that apply to all tags), and
+      // there are no forbidden tags, then effectively nothing is allowed.
       if (isset($restrictions['allowed'])) {
         if (count($restrictions['allowed']) === 1 && array_key_exists('*', $restrictions['allowed']) && !isset($restrictions['forbidden_tags'])) {
           $restrictions['allowed'] = [];

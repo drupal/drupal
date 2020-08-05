@@ -84,7 +84,7 @@ class TextFormat extends RenderElement {
 
     // Ensure that children appear as subkeys of this element.
     $element['#tree'] = TRUE;
-    $blacklist = [
+    $keys_not_to_copy = [
       // Make \Drupal::formBuilder()->doBuildForm() regenerate child properties.
       '#parents',
       '#id',
@@ -108,7 +108,7 @@ class TextFormat extends RenderElement {
     // Move this element into sub-element 'value'.
     unset($element['value']);
     foreach (Element::properties($element) as $key) {
-      if (!in_array($key, $blacklist)) {
+      if (!in_array($key, $keys_not_to_copy)) {
         $element['value'][$key] = $element[$key];
       }
     }
