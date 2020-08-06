@@ -5,7 +5,7 @@ backbone:
   version: "1.4.0"
   license:
     name: MIT
-    url: https://github.com/jashkenas/backbone/blob/1.4.0/LICENSE
+    url: https://raw.githubusercontent.com/jashkenas/backbone/1.4.0/LICENSE
     gpl-compatible: true
   js:
     assets/vendor/backbone/backbone-min.js: { weight: -19, minified: true }
@@ -17,7 +17,7 @@ ckeditor:
   version: "4.14.1"
   license:
     name: GNU-GPL-2.0-or-later
-    url: https://github.com/ckeditor/ckeditor4/blob/4.14.1/LICENSE.md
+    url: https://raw.githubusercontent.com/ckeditor/ckeditor4/4.14.1/LICENSE.md
     gpl-compatible: true
   js:
     assets/vendor/ckeditor/ckeditor.js: { preprocess: false, minified: true }
@@ -333,7 +333,7 @@ es6-promise:
   version: "4.2.8"
   license:
     name: MIT
-    url: https://github.com/stefanpenner/es6-promise/blob/v4.2.8/LICENSE
+    url: https://raw.githubusercontent.com/stefanpenner/es6-promise/v4.2.8/LICENSE
     gpl-compatible: true
   js:
     assets/vendor/es6-promise/es6-promise.auto.min.js: { weight: -20, minified: true }
@@ -343,7 +343,7 @@ jquery:
   version: "3.5.1"
   license:
     name: MIT
-    url: https://github.com/jquery/jquery/blob/3.5.1/LICENSE.txt
+    url: https://raw.githubusercontent.com/jquery/jquery/3.5.1/LICENSE.txt
     gpl-compatible: true
   js:
     assets/vendor/jquery/jquery.min.js: { minified: true, weight: -20 }
@@ -364,7 +364,7 @@ jquery.farbtastic:
   version: "1.2"
   license:
     name: GNU-GPL-2.0-or-later
-    url: https://github.com/mattfarina/farbtastic/blob/master/LICENSE.txt
+    url: https://raw.githubusercontent.com/mattfarina/farbtastic/master/LICENSE.txt
     gpl-compatible: true
   js:
     assets/vendor/farbtastic/farbtastic.js: { minified: true }
@@ -379,7 +379,7 @@ jquery.form:
   version: "4.22"
   license:
     name: GNU-GPL-2.0-or-later
-    url: https://raw.githubusercontent.com/jquery-form/form/master/LICENSE-LGPLv3
+    url: https://raw.githubusercontent.com/jquery-form/form/master/LICENSE
     gpl-compatible: true
   js:
     assets/vendor/jquery-form/jquery.form.min.js: { minified: true }
@@ -396,7 +396,7 @@ jquery.joyride:
   version: "2.1.0.1"
   license:
     name: MIT
-    url: https://github.com/zurb/joyride/blob/v2.1.0/README.markdown
+    url: https://raw.githubusercontent.com/zurb/joyride/v2.1.0/README.markdown
     gpl-compatible: true
   js:
     assets/vendor/jquery-joyride/jquery.joyride-2.1.js: { }
@@ -408,7 +408,7 @@ jquery.once:
   version: "2.2.3"
   license:
     name: GNU-GPL-2.0-or-later
-    url: https://github.com/RobLoach/jquery-once/blob/2.2.3/LICENSE.md
+    url: https://raw.githubusercontent.com/RobLoach/jquery-once/2.2.3/LICENSE.md
     gpl-compatible: true
   js:
     assets/vendor/jquery-once/jquery.once.min.js: { weight: -19, minified: true }
@@ -419,7 +419,7 @@ jquery.ui:
   version: &jquery_ui_version 1.12.1
   license: &jquery_ui_license
     name: Public Domain
-    url: https://github.com/jquery/jquery-ui/blob/1.12.1/LICENSE.txt
+    url: https://raw.githubusercontent.com/jquery/jquery-ui/1.12.1/LICENSE.txt
     gpl-compatible: true
   js:
     assets/vendor/jquery.ui/ui/data-min.js: { weight: -11, minified: true }
@@ -566,7 +566,7 @@ modernizr:
   remote: https://github.com/Modernizr/Modernizr
   license:
     name: MIT
-    url: http://modernizr.com/license/
+    url: https://modernizr.com/license/
     gpl-compatible: true
   version: "3.8.0"
   js:
@@ -578,7 +578,7 @@ normalize:
   version: "8.0.1"
   license:
     name: MIT
-    url: https://github.com/necolas/normalize.css/blob/8.0.1/LICENSE.md
+    url: https://raw.githubusercontent.com/necolas/normalize.css/8.0.1/LICENSE.md
     gpl-compatible: true
   css:
     base:
@@ -590,7 +590,7 @@ picturefill:
   version: "3.0.3"
   license:
     name: MIT
-    url: https://github.com/scottjehl/picturefill/blob/3.0.3/LICENSE
+    url: https://raw.githubusercontent.com/scottjehl/picturefill/3.0.3/LICENSE
     gpl-compatible: true
   js:
     assets/vendor/picturefill/picturefill.min.js: { weight: -10, minified: true }
@@ -599,7 +599,7 @@ popperjs:
   version: "2.0.6"
   license:
     name: MIT
-    url: https://github.com/popperjs/popper-core/blob/v2.0.6/LICENSE.md
+    url: https://raw.githubusercontent.com/popperjs/popper-core/v2.0.6/LICENSE.md
     gpl-compatible: true
   js:
     assets/vendor/popperjs/popper.min.js: { minified: true }
@@ -613,7 +613,7 @@ sortable:
   version: "1.10.2"
   license:
     name: MIT
-    url: https://github.com/SortableJS/Sortable/tree/1.10.2#mit-license
+    url: https://raw.githubusercontent.com/SortableJS/Sortable/1.10.2/LICENSE
     gpl-compatible: true
   js:
     assets/vendor/sortable/Sortable.min.js: { minified: true }
@@ -623,7 +623,7 @@ underscore:
   version: "1.9.1"
   license:
     name: MIT
-    url: https://github.com/jashkenas/underscore/blob/1.9.1/LICENSE
+    url: https://raw.githubusercontent.com/jashkenas/underscore/1.9.1/LICENSE
     gpl-compatible: true
   js:
     assets/vendor/underscore/underscore-min.js: { weight: -20, minified: true }
@@ -662,7 +662,7 @@ js-cookie:
   version: "v3.0.0-rc0"
   license:
     name: MIT
-    url: https://github.com/js-cookie/js-cookie/blob/v3.0.0-rc.0/LICENSE
+    url: https://raw.githubusercontent.com/js-cookie/js-cookie/v3.0.0-rc.0/LICENSE
     gpl-compatible: true
   js:
     assets/vendor/js-cookie/js.cookie.min.js: {}
