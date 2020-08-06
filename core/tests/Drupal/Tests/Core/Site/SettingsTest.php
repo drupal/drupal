@@ -5,6 +5,7 @@ namespace Drupal\Tests\Core\Site;
 use Drupal\Core\Site\Settings;
 use Drupal\Tests\Traits\ExpectDeprecationTrait;
 use Drupal\Tests\UnitTestCase;
+use org\bovigo\vfs\vfsStream;
 
 /**
  * @coversDefaultClass \Drupal\Core\Site\Settings
@@ -148,6 +149,127 @@ class SettingsTest extends UnitTestCase {
 
     $this->expectException(\BadMethodCallException::class);
     $settings->getInstance();
+  }
+
+  /**
+   * Tests deprecation messages and values when using fake deprecated settings.
+   *
+   * Note: Tests for real deprecated settings should not be added to this test
+   * or provider. This test is only for the general deprecated settings API
+   * itself.
+   *
+   * @param string[] $settings_config
+   *   Array of settings to put in the settings.php file for testing.
+   * @param string $setting_name
+   *   The name of the setting this case should use for Settings::get().
+   * @param string $expected_value
+   *   The expected value of the setting.
+   * @param bool $expect_deprecation_message
+   *   Should the case expect a deprecation message? Defaults to TRUE.
+   *
+   * @runInSeparateProcess
+   *
+   * @dataProvider providerTestFakeDeprecatedSettings
+   *
+   * @covers ::handleDeprecations
+   * @covers ::initialize
+   *
+   * @group legacy
+   */
+  public function testFakeDeprecatedSettings(array $settings_config, string $setting_name, string $expected_value, bool $expect_deprecation_message = TRUE): void {
+
+    $settings_file_content = "<?php\n";
+    foreach ($settings_config as $name => $value) {
+      $settings_file_content .= "\$settings['$name'] = '$value';\n";
+    }
+    $class_loader = NULL;
+    $vfs_root = vfsStream::setup('root');
+    $sites_directory = vfsStream::newDirectory('sites')->at($vfs_root);
+    vfsStream::newFile('settings.php')
+      ->at($sites_directory)
+      ->setContent($settings_file_content);
+
+    // This is the deprecated setting used by all cases for this test method.
+    $deprecated_setting = [
+      'replacement' => 'happy_replacement',
+      'message' => 'The settings key "deprecated_legacy" is deprecated in drupal:9.1.0 and will be removed in drupal:10.0.0. Use "happy_replacement" instead. See https://www.drupal.org/node/3163226.',
+    ];
+
+    $class = new \ReflectionClass(Settings::class);
+    $instance_property = $class->getProperty('deprecatedSettings');
+    $instance_property->setAccessible(TRUE);
+    $deprecated_settings = $instance_property->getValue();
+    $deprecated_settings['deprecated_legacy'] = $deprecated_setting;
+    $instance_property->setValue($deprecated_settings);
+
+    if ($expect_deprecation_message) {
+      $this->addExpectedDeprecationMessage($deprecated_setting['message']);
+    }
+
+    Settings::initialize(vfsStream::url('root'), 'sites', $class_loader);
+    $this->assertEquals($expected_value, Settings::get($setting_name));
+  }
+
+  /**
+   * Provides data for testFakeDeprecatedSettings().
+   *
+   * @return array
+   *   Test case data.
+   */
+  public function providerTestFakeDeprecatedSettings(): array {
+
+    $only_legacy = [
+      'deprecated_legacy' => 'old',
+    ];
+    $only_replacement = [
+      'happy_replacement' => 'new',
+    ];
+    $both_settings = [
+      'deprecated_legacy' => 'old',
+      'happy_replacement' => 'new',
+    ];
+
+    return [
+      'Only legacy defined, get legacy' => [
+        $only_legacy,
+        'deprecated_legacy',
+        'old',
+      ],
+      'Only legacy defined, get replacement' => [
+        $only_legacy,
+        'happy_replacement',
+        // Since the new setting isn't yet defined, use the old value.
+        'old',
+        // Since the old setting is there, we should see a deprecation message.
+      ],
+      'Both legacy and replacement defined, get legacy' => [
+        $both_settings,
+        'deprecated_legacy',
+        // Since the replacement is already defined, that should be used.
+        'new',
+      ],
+      'Both legacy and replacement defined, get replacement' => [
+        $both_settings,
+        'happy_replacement',
+        'new',
+        // Should see the deprecation, since the legacy setting is defined.
+      ],
+      'Only replacement defined, get legacy' => [
+        $only_replacement,
+        'deprecated_legacy',
+        // Should get the new value.
+        'new',
+        // But we should see a deprecation message for accessing the old name.
+      ],
+      'Only replacement defined, get replacement' => [
+        $only_replacement,
+        'happy_replacement',
+        // Should get the new value.
+        'new',
+        // No deprecation since the old name is neither used nor defined.
+        FALSE,
+      ],
+    ];
   }
 
 }
