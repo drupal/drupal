@@ -8,7 +8,7 @@ namespace Drupal\Core\DependencyInjection;
 trait DeprecatedServicePropertyTrait {
 
   /**
-   * Alows to access deprecated/removed properties.
+   * Allows to access deprecated/removed properties.
    *
    * This method must be public.
    */
