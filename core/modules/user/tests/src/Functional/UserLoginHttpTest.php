@@ -308,7 +308,13 @@ class UserLoginHttpTest extends BrowserTestBase {
     // IP limit has reached to its limit. Even valid user credentials will fail.
     $response = $this->loginRequest($user->getAccountName(), $user->passRaw);
     $this->assertHttpResponseWithMessage($response, '403', 'Access is blocked because of IP based flood prevention.');
-    $last_log = $database->queryRange('SELECT message FROM {watchdog} WHERE type = :type ORDER BY wid DESC', 0, 1, [':type' => 'user'])->fetchField();
+    $last_log = $database->select('watchdog', 'w')
+      ->fields('w', ['message'])
+      ->condition('type', 'user')
+      ->orderBy('wid', 'DESC')
+      ->range(0, 1)
+      ->execute()
+      ->fetchField();
     $this->assertEquals('Flood control blocked login attempt from %ip', $last_log, 'A watchdog message was logged for the login attempt blocked by flood control per IP.');
   }
 
@@ -401,7 +407,13 @@ class UserLoginHttpTest extends BrowserTestBase {
         $expected_log = 'Flood control blocked login attempt for uid %uid from %ip';
       }
       $this->assertHttpResponseWithMessage($response, 403, $expected_message);
-      $last_log = $database->queryRange('SELECT message FROM {watchdog} WHERE type = :type ORDER BY wid DESC', 0, 1, [':type' => 'user'])->fetchField();
+      $last_log = $database->select('watchdog', 'w')
+        ->fields('w', ['message'])
+        ->condition('type', 'user')
+        ->orderBy('wid', 'DESC')
+        ->range(0, 1)
+        ->execute()
+        ->fetchField();
       $this->assertEquals($expected_log, $last_log, 'A watchdog message was logged for the login attempt blocked by flood control per user.');
     }
 
