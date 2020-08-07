@@ -36,7 +36,6 @@ aliquet
 alle
 allowtransparency
 allwords
-alows
 alphadecimal
 alterjs
 alternatif
