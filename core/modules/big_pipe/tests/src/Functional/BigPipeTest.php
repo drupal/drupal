@@ -153,7 +153,7 @@ class BigPipeTest extends BrowserTestBase {
     $this->assertBigPipeNoJsCookieExists(FALSE);
 
     $connection = Database::getConnection();
-    $log_count = $connection->query('SELECT COUNT(*) FROM {watchdog}')->fetchField();
+    $log_count = $connection->select('watchdog')->countQuery()->execute()->fetchField();
 
     // By not calling performMetaRefresh() here, we simulate JavaScript being
     // enabled, because as far as the BigPipe module is concerned, JavaScript is
@@ -191,10 +191,11 @@ class BigPipeTest extends BrowserTestBase {
     $this->assertContains('big_pipe/big_pipe', explode(',', $this->getDrupalSettings()['ajaxPageState']['libraries']), 'BigPipe asset library is present.');
 
     // Verify that the two expected exceptions are logged as errors.
-    $this->assertEqual($log_count + 2, $connection->query('SELECT COUNT(*) FROM {watchdog}')->fetchField(), 'Two new watchdog entries.');
-    // Using the method queryRange() allows contrib database drivers the ability
-    // to insert their own limit and offset functionality.
-    $records = $connection->queryRange('SELECT * FROM {watchdog} ORDER BY wid DESC', 0, 2)->fetchAll();
+    $this->assertEqual($log_count + 2, (int) $connection->select('watchdog')->countQuery()->execute()->fetchField(), 'Two new watchdog entries.');
+    // Using dynamic select queries with the method range() allows contrib
+    // database drivers the ability to insert their own limit and offset
+    // functionality.
+    $records = $connection->select('watchdog', 'w')->fields('w')->orderBy('wid', 'DESC')->range(0, 2)->execute()->fetchAll();
     $this->assertEqual(RfcLogLevel::ERROR, $records[0]->severity);
     $this->assertStringContainsString('Oh noes!', (string) unserialize($records[0]->variables)['@message']);
     $this->assertEqual(RfcLogLevel::ERROR, $records[1]->severity);

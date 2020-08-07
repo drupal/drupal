@@ -298,7 +298,9 @@ class NodeCreationTest extends NodeTestBase {
     // PostgreSQL doesn't support bytea LIKE queries, so we need to unserialize
     // first to check for the rollback exception message.
     $matches = [];
-    $query = Database::getConnection()->query("SELECT wid, variables FROM {watchdog}");
+    $query = Database::getConnection()->select('watchdog', 'w')
+      ->fields('w', ['wid', 'variables'])
+      ->execute();
     foreach ($query as $row) {
       $variables = (array) unserialize($row->variables);
       if (isset($variables['@message']) && $variables['@message'] === 'Test exception for rollback.') {

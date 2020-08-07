@@ -31,7 +31,7 @@ class InstallTest extends BrowserTestBase {
    */
   public function testGetSchemaAtInstallTime() {
     // @see module_test_install()
-    $value = Database::getConnection()->query("SELECT data FROM {module_test}")->fetchField();
+    $value = Database::getConnection()->select('module_test', 'mt')->fields('mt', ['data'])->execute()->fetchField();
     $this->assertIdentical($value, 'varchar');
   }
 

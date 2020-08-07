@@ -975,9 +975,10 @@ abstract class ResourceTestBase extends BrowserTestBase {
     // contain a flattened response. Otherwise performance suffers.
     // @see \Drupal\jsonapi\EventSubscriber\ResourceResponseSubscriber::flattenResponse()
     $cache_items = $this->container->get('database')
-      ->query("SELECT cid, data FROM {cache_dynamic_page_cache} WHERE cid LIKE :pattern", [
-        ':pattern' => '%[route]=jsonapi.%',
-      ])
+      ->select('cache_dynamic_page_cache', 'cdp')
+      ->fields('cdp', ['cid', 'data'])
+      ->condition('cid', '%[route]=jsonapi.%', 'LIKE')
+      ->execute()
       ->fetchAllAssoc('cid');
     $this->assertTrue(count($cache_items) >= 2);
     $found_cache_redirect = FALSE;

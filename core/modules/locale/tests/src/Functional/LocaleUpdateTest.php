@@ -359,14 +359,22 @@ class LocaleUpdateTest extends LocaleUpdateBase {
 
     // Check if the language data is added to the database.
     $connection = Database::getConnection();
-    $result = $connection->query("SELECT project FROM {locale_file} WHERE langcode='nl'")->fetchField();
+    $result = $connection->select('locale_file', 'lf')
+      ->fields('lf', ['project'])
+      ->condition('langcode', 'nl')
+      ->execute()
+      ->fetchField();
     $this->assertNotEmpty($result, 'Files added to file history');
 
     // Remove a language.
     $this->drupalPostForm('admin/config/regional/language/delete/nl', [], t('Delete'));
 
     // Check if the language data is removed from the database.
-    $result = $connection->query("SELECT project FROM {locale_file} WHERE langcode='nl'")->fetchField();
+    $result = $connection->select('locale_file', 'lf')
+      ->fields('lf', ['project'])
+      ->condition('langcode', 'nl')
+      ->execute()
+      ->fetchField();
     $this->assertFalse($result, 'Files removed from file history');
 
     // Check that the Dutch translation is gone.
