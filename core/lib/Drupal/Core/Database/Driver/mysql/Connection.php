@@ -3,6 +3,7 @@
 namespace Drupal\Core\Database\Driver\mysql;
 
 use Drupal\Core\Database\DatabaseAccessDeniedException;
+use Drupal\Core\Database\IntegrityConstraintViolationException;
 use Drupal\Core\Database\DatabaseExceptionWrapper;
 
 use Drupal\Core\Database\Database;
@@ -85,6 +86,24 @@ class Connection extends DatabaseConnection {
       }
       throw $e;
     }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function handleQueryException(\PDOException $e, $query, array $args = [], $options = []) {
+    // In case of attempted INSERT of a record with an undefined column and no
+    // default value indicated in schema, MySql returns a 1364 error code.
+    // Throw an IntegrityConstraintViolationException here like the other
+    // drivers do, to avoid the parent class to throw a generic
+    // DatabaseExceptionWrapper instead.
+    if (!empty($e->errorInfo[1]) && $e->errorInfo[1] === 1364) {
+      $query_string = ($query instanceof StatementInterface) ? $query->getQueryString() : $query;
+      $message = $e->getMessage() . ": " . $query_string . "; " . print_r($args, TRUE);
+      throw new IntegrityConstraintViolationException($message, is_int($e->getCode()) ? $e->getCode() : 0, $e);
+    }
+
+    parent::handleQueryException($e, $query, $args, $options);
   }
 
   /**

@@ -2,6 +2,8 @@
 
 namespace Drupal\KernelTests\Core\Database;
 
+use Drupal\Core\Database\IntegrityConstraintViolationException;
+
 /**
  * Tests the insert builder.
  *
@@ -206,6 +208,28 @@ class InsertTest extends DatabaseTestBase {
       ->execute();
     $saved_value = $this->connection->query('SELECT [update] FROM {select} WHERE [id] = :id', [':id' => 2])->fetchField();
     $this->assertEquals('Update value 2', $saved_value);
+  }
+
+  /**
+   * Tests insertion integrity violation with no default value for a column.
+   */
+  public function testInsertIntegrityViolation() {
+    // Remove the default from the 'age' column, so that inserting a record
+    // without its value specified will lead to integrity failure.
+    $this->connection->schema()->changeField('test', 'age', 'age', [
+      'description' => "The person's age",
+      'type' => 'int',
+      'unsigned' => TRUE,
+      'not null' => TRUE,
+    ]);
+
+    // Try inserting a record that misses the value for the 'age' column,
+    // should raise an IntegrityConstraintViolationException.
+    $this->expectException(IntegrityConstraintViolationException::class);
+    $this->connection->insert('test')
+      ->fields(['name'])
+      ->values(['name' => 'Elvis'])
+      ->execute();
   }
 
 }
