@@ -41,7 +41,6 @@ class LayoutEntityHelperTraitTest extends KernelTestBase {
   protected function setUp(): void {
     parent::setUp();
 
-    $this->installSchema('system', ['key_value_expire']);
     $this->installEntitySchema('user');
     $this->installEntitySchema('entity_test');
   }

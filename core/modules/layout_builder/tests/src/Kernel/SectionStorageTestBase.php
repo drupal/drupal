@@ -33,8 +33,6 @@ abstract class SectionStorageTestBase extends EntityKernelTestBase {
   protected function setUp() {
     parent::setUp();
 
-    $this->installSchema('system', ['key_value_expire']);
-
     $section_data = [
       new Section('layout_test_plugin', [], [
         'first-uuid' => new SectionComponent('first-uuid', 'content', ['id' => 'foo']),

@@ -328,4 +328,16 @@ class KernelTestBaseTest extends KernelTestBase {
     $this->assertIdenticalObject((object) ['foo' => 'bar'], (object) ['foo' => 'bar']);
   }
 
+  /**
+   * Tests the deprecation of ::installSchema with the tables key_value(_expire).
+   *
+   * @group legacy
+   * @expectedDeprecation Installing the tables key_value and key_value_expire with the method KernelTestBase::installSchema() is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. The tables are now lazy loaded and therefore will be installed automatically when used. See https://www.drupal.org/node/3143286
+    */
+  public function testKernelTestBaseInstallSchema() {
+    $this->enableModules(['system']);
+    $this->installSchema('system', ['key_value', 'key_value_expire']);
+    $this->assertFalse(Database::getConnection()->schema()->tableExists('key_value'));
+  }
+
 }

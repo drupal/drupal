@@ -29,8 +29,6 @@ class FieldWidgetConstraintValidatorTest extends KernelTestBase {
   protected function setUp(): void {
     parent::setUp();
 
-    $this->installSchema('system', ['key_value']);
-
     $this->installEntitySchema('user');
     $this->installEntitySchema('entity_test_composite_constraint');
   }

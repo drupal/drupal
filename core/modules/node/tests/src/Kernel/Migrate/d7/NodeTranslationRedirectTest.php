@@ -37,7 +37,6 @@ class NodeTranslationRedirectTest extends MigrateDrupal7TestBase {
     $this->setUpCurrentUser();
 
     $this->installSchema('node', ['node_access']);
-    $this->installSchema('system', ['key_value']);
 
     $this->migrateUsers(FALSE);
     $this->migrateContentTypes();

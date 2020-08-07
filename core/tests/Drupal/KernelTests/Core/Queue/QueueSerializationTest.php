@@ -77,7 +77,7 @@ class QueueSerializationTest extends KernelTestBase implements FormInterface {
    */
   protected function setUp(): void {
     parent::setUp();
-    $this->installSchema('system', ['key_value_expire', 'sequences']);
+    $this->installSchema('system', ['sequences']);
     $this->installEntitySchema('user');
     $this->queue = \Drupal::service('queue.database')->get('aggregator_refresh');
     $test_user = User::create([

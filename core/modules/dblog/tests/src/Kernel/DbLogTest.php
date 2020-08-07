@@ -28,7 +28,7 @@ class DbLogTest extends KernelTestBase {
     parent::setUp();
 
     $this->installSchema('dblog', ['watchdog']);
-    $this->installSchema('system', ['key_value_expire', 'sequences']);
+    $this->installSchema('system', ['sequences']);
     $this->installConfig(['system']);
   }
 

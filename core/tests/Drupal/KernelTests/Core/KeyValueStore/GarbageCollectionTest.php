@@ -21,13 +21,6 @@ class GarbageCollectionTest extends KernelTestBase {
    */
   protected static $modules = ['system'];
 
-  protected function setUp(): void {
-    parent::setUp();
-
-    // These additional tables are necessary due to the call to system_cron().
-    $this->installSchema('system', ['key_value_expire']);
-  }
-
   /**
    * Tests garbage collection.
    */

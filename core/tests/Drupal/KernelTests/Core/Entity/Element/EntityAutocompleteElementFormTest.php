@@ -46,7 +46,6 @@ class EntityAutocompleteElementFormTest extends EntityKernelTestBase implements 
   protected function setUp(): void {
     parent::setUp();
 
-    $this->installSchema('system', ['key_value_expire']);
     $this->installEntitySchema('entity_test_string_id');
 
     $this->testUser = User::create([

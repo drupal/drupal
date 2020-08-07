@@ -48,7 +48,6 @@ class DefaultsSectionStorageTest extends KernelTestBase {
     parent::setUp();
 
     entity_test_create_bundle('bundle_with_extra_fields');
-    $this->installSchema('system', ['key_value_expire']);
     $this->installEntitySchema('entity_test');
     $this->installEntitySchema('user');
     $this->installConfig(['layout_builder_defaults_test']);

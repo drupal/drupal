@@ -33,44 +33,75 @@ class DatabaseStorageExpirable extends DatabaseStorage implements KeyValueStoreE
    * {@inheritdoc}
    */
   public function has($key) {
-    return (bool) $this->connection->query('SELECT 1 FROM {' . $this->connection->escapeTable($this->table) . '} WHERE [collection] = :collection AND [name] = :key AND [expire] > :now', [
-      ':collection' => $this->collection,
-      ':key' => $key,
-      ':now' => REQUEST_TIME,
-    ])->fetchField();
+    try {
+      return (bool) $this->connection->query('SELECT 1 FROM {' . $this->connection->escapeTable($this->table) . '} WHERE [collection] = :collection AND [name] = :key AND [expire] > :now', [
+        ':collection' => $this->collection,
+        ':key' => $key,
+        ':now' => REQUEST_TIME,
+      ])->fetchField();
+    }
+    catch (\Exception $e) {
+      $this->catchException($e);
+      return FALSE;
+    }
   }
 
   /**
    * {@inheritdoc}
    */
   public function getMultiple(array $keys) {
-    $values = $this->connection->query(
-      'SELECT [name], [value] FROM {' . $this->connection->escapeTable($this->table) . '} WHERE [expire] > :now AND [name] IN ( :keys[] ) AND [collection] = :collection',
-      [
-        ':now' => REQUEST_TIME,
-        ':keys[]' => $keys,
-        ':collection' => $this->collection,
-      ])->fetchAllKeyed();
-    return array_map([$this->serializer, 'decode'], $values);
+    try {
+      $values = $this->connection->query(
+        'SELECT [name], [value] FROM {' . $this->connection->escapeTable($this->table) . '} WHERE [expire] > :now AND [name] IN ( :keys[] ) AND [collection] = :collection',
+        [
+          ':now' => REQUEST_TIME,
+          ':keys[]' => $keys,
+          ':collection' => $this->collection,
+        ])->fetchAllKeyed();
+      return array_map([$this->serializer, 'decode'], $values);
+    }
+    catch (\Exception $e) {
+      // @todo: Perhaps if the database is never going to be available,
+      // key/value requests should return FALSE in order to allow exception
+      // handling to occur but for now, keep it an array, always.
+      // https://www.drupal.org/node/2787737
+      $this->catchException($e);
+    }
+    return [];
   }
 
   /**
    * {@inheritdoc}
    */
   public function getAll() {
-    $values = $this->connection->query(
-      'SELECT [name], [value] FROM {' . $this->connection->escapeTable($this->table) . '} WHERE [collection] = :collection AND [expire] > :now',
-      [
-        ':collection' => $this->collection,
-        ':now' => REQUEST_TIME,
-      ])->fetchAllKeyed();
-    return array_map([$this->serializer, 'decode'], $values);
+    try {
+      $values = $this->connection->query(
+        'SELECT [name], [value] FROM {' . $this->connection->escapeTable($this->table) . '} WHERE [collection] = :collection AND [expire] > :now',
+        [
+          ':collection' => $this->collection,
+          ':now' => REQUEST_TIME,
+        ])->fetchAllKeyed();
+      return array_map([$this->serializer, 'decode'], $values);
+    }
+    catch (\Exception $e) {
+      $this->catchException($e);
+    }
+    return [];
   }
 
   /**
-   * {@inheritdoc}
+   * Saves a value for a given key with a time to live.
+   *
+   * This will be called by setWithExpire() within a try block.
+   *
+   * @param string $key
+   *   The key of the data to store.
+   * @param mixed $value
+   *   The data to store.
+   * @param int $expire
+   *   The time to live for items, in seconds.
    */
-  public function setWithExpire($key, $value, $expire) {
+  protected function doSetWithExpire($key, $value, $expire) {
     $this->connection->merge($this->table)
       ->keys([
         'name' => $key,
@@ -86,12 +117,60 @@ class DatabaseStorageExpirable extends DatabaseStorage implements KeyValueStoreE
   /**
    * {@inheritdoc}
    */
-  public function setWithExpireIfNotExists($key, $value, $expire) {
+  public function setWithExpire($key, $value, $expire) {
+    try {
+      $this->doSetWithExpire($key, $value, $expire);
+    }
+    catch (\Exception $e) {
+      // If there was an exception, then try to create the table.
+      if ($this->ensureTableExists()) {
+        $this->doSetWithExpire($key, $value, $expire);
+      }
+      else {
+        throw $e;
+      }
+    }
+  }
+
+  /**
+   * Sets a value for a given key with a time to live if it does not yet exist.
+   *
+   * This will be called by setWithExpireIfNotExists() within a try block.
+   *
+   * @param string $key
+   *   The key of the data to store.
+   * @param mixed $value
+   *   The data to store.
+   * @param int $expire
+   *   The time to live for items, in seconds.
+   *
+   * @return bool
+   *   TRUE if the data was set, or FALSE if it already existed.
+   */
+  protected function doSetWithExpireIfNotExists($key, $value, $expire) {
     if (!$this->has($key)) {
       $this->setWithExpire($key, $value, $expire);
       return TRUE;
     }
     return FALSE;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setWithExpireIfNotExists($key, $value, $expire) {
+    try {
+      return $this->doSetWithExpireIfNotExists($key, $value, $expire);
+    }
+    catch (\Exception $e) {
+      // If there was an exception, try to create the table.
+      if ($this->ensureTableExists()) {
+        return $this->doSetWithExpireIfNotExists($key, $value, $expire);
+      }
+      else {
+        throw $e;
+      }
+    }
   }
 
   /**
@@ -108,6 +187,49 @@ class DatabaseStorageExpirable extends DatabaseStorage implements KeyValueStoreE
    */
   public function deleteMultiple(array $keys) {
     parent::deleteMultiple($keys);
+  }
+
+  /**
+   * Defines the schema for the key_value_expire table.
+   */
+  public static function schemaDefinition() {
+    return [
+      'description' => 'Generic key/value storage table with an expiration.',
+      'fields' => [
+        'collection' => [
+          'description' => 'A named collection of key and value pairs.',
+          'type' => 'varchar_ascii',
+          'length' => 128,
+          'not null' => TRUE,
+          'default' => '',
+        ],
+        'name' => [
+          // KEY is an SQL reserved word, so use 'name' as the key's field name.
+          'description' => 'The key of the key/value pair.',
+          'type' => 'varchar_ascii',
+          'length' => 128,
+          'not null' => TRUE,
+          'default' => '',
+        ],
+        'value' => [
+          'description' => 'The value of the key/value pair.',
+          'type' => 'blob',
+          'not null' => TRUE,
+          'size' => 'big',
+        ],
+        'expire' => [
+          'description' => 'The time since Unix epoch in seconds when this item expires. Defaults to the maximum possible time.',
+          'type' => 'int',
+          'not null' => TRUE,
+          'default' => 2147483647,
+        ],
+      ],
+      'primary key' => ['collection', 'name'],
+      'indexes' => [
+        'all' => ['name', 'collection', 'expire'],
+        'expire' => ['expire'],
+      ],
+    ];
   }
 
 }

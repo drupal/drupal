@@ -17,24 +17,6 @@ use Drupal\Core\Database\Database;
 class TempStoreDatabaseTest extends KernelTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
-   */
-  protected static $modules = ['system'];
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function setUp(): void {
-    parent::setUp();
-
-    // Install system tables to test the key/value storage without installing a
-    // full Drupal environment.
-    $this->installSchema('system', ['key_value_expire']);
-  }
-
-  /**
    * Tests the SharedTempStore API.
    */
   public function testSharedTempStore() {

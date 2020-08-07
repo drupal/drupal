@@ -40,7 +40,6 @@ class FormCacheTest extends KernelTestBase {
 
   protected function setUp(): void {
     parent::setUp();
-    $this->installSchema('system', ['key_value_expire']);
 
     $this->formBuildId = $this->randomMachineName();
     $this->form = [

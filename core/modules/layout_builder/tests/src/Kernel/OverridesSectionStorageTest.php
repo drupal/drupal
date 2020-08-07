@@ -51,7 +51,6 @@ class OverridesSectionStorageTest extends KernelTestBase {
     parent::setUp();
 
     $this->setUpCurrentUser();
-    $this->installSchema('system', ['key_value_expire']);
     $this->installEntitySchema('entity_test');
 
     $definition = $this->container->get('plugin.manager.layout_builder.section_storage')->getDefinition('overrides');
