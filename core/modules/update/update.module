@@ -701,6 +701,9 @@ function update_clear_update_disk_cache() {
  *
  * @param $path
  *   A string containing a file path or (streamwrapper) URI.
+ *
+ * @return bool
+ *   TRUE if the file is stale and deleted successfully, FALSE otherwise.
  */
 function update_delete_file_if_stale($path) {
   if (file_exists($path)) {
@@ -710,10 +713,13 @@ function update_delete_file_if_stale($path) {
     if (REQUEST_TIME - $filectime > $max_age || (preg_match('/.*-dev\.(tar\.gz|zip)/i', $path) && REQUEST_TIME - $filectime > 300)) {
       try {
         \Drupal::service('file_system')->deleteRecursive($path);
+        return TRUE;
       }
       catch (FileException $e) {
         // Ignore failed deletes.
       }
     }
   }
+
+  return FALSE;
 }
