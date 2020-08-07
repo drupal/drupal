@@ -3,7 +3,6 @@
 namespace Drupal\taxonomy\Plugin\views\argument;
 
 use Drupal\Core\Database\Database;
-use Drupal\Core\Database\Query\Condition;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
@@ -113,7 +112,7 @@ class IndexTidDepth extends ArgumentPluginBase implements ContainerFactoryPlugin
     // Now build the subqueries.
     $subquery = Database::getConnection()->select('taxonomy_index', 'tn');
     $subquery->addField('tn', 'nid');
-    $where = (new Condition('OR'))->condition('tn.tid', $tids, $operator);
+    $where = ($this->view->query->getConnection()->condition('OR'))->condition('tn.tid', $tids, $operator);
     $last = "tn";
 
     if ($this->options['depth'] > 0) {

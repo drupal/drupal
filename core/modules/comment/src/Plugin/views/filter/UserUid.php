@@ -3,7 +3,6 @@
 namespace Drupal\comment\Plugin\views\filter;
 
 use Drupal\Core\Database\Database;
-use Drupal\Core\Database\Query\Condition;
 use Drupal\views\Plugin\views\filter\FilterPluginBase;
 
 /**
@@ -28,7 +27,7 @@ class UserUid extends FilterPluginBase {
     $subselect->where("c.entity_id = $this->tableAlias.$entity_id");
     $subselect->condition('c.entity_type', $entity_type);
 
-    $condition = (new Condition('OR'))
+    $condition = ($this->view->query->getConnection()->condition('OR'))
       ->condition("$this->tableAlias.uid", $this->value, $this->operator)
       ->exists($subselect);
 

@@ -3,7 +3,6 @@
 namespace Drupal\views\Plugin\views\display;
 
 use Drupal\Core\Database\Connection;
-use Drupal\Core\Database\Query\Condition;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -170,7 +169,7 @@ class EntityReference extends DisplayPluginBase {
       }
 
       // Multiple search fields are ORed together.
-      $conditions = new Condition('OR');
+      $conditions = $this->view->query->getConnection()->condition('OR');
 
       // Build the condition using the selected search fields.
       foreach ($style_options['options']['search_fields'] as $field_id) {

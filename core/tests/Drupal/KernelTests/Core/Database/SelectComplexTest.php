@@ -4,7 +4,6 @@ namespace Drupal\KernelTests\Core\Database;
 
 use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Database\Database;
-use Drupal\Core\Database\Query\Condition;
 use Drupal\Core\Database\RowCountException;
 use Drupal\user\Entity\User;
 
@@ -313,7 +312,7 @@ class SelectComplexTest extends DatabaseTestBase {
     $query = $this->connection->select('test');
     $query->addField('test', 'job');
     $query->condition('name', 'Paul');
-    $query->condition((new Condition('OR'))->condition('age', 26)->condition('age', 27));
+    $query->condition(($this->connection->condition('OR'))->condition('age', 26)->condition('age', 27));
 
     $job = $query->execute()->fetchField();
     $this->assertEqual($job, 'Songwriter', 'Correct data retrieved.');
@@ -396,7 +395,7 @@ class SelectComplexTest extends DatabaseTestBase {
   public function testJoinConditionObject() {
     // Same test as testDefaultJoin, but with a Condition object.
     $query = $this->connection->select('test_task', 't');
-    $join_cond = (new Condition('AND'))->where('t.pid = p.id');
+    $join_cond = ($this->connection->condition('AND'))->where('t.pid = p.id');
     $people_alias = $query->join('test', 'p', $join_cond);
     $name_field = $query->addField($people_alias, 'name', 'name');
     $query->addField('t', 'task', 'task');
@@ -419,7 +418,7 @@ class SelectComplexTest extends DatabaseTestBase {
     // Test a condition object that creates placeholders.
     $t1_name = 'John';
     $t2_name = 'George';
-    $join_cond = (new Condition('AND'))
+    $join_cond = ($this->connection->condition('AND'))
       ->condition('t1.name', $t1_name)
       ->condition('t2.name', $t2_name);
     $query = $this->connection->select('test', 't1');

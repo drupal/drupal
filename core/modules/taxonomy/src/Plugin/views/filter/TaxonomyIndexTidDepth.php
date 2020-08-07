@@ -3,7 +3,6 @@
 namespace Drupal\taxonomy\Plugin\views\filter;
 
 use Drupal\Core\Database\Database;
-use Drupal\Core\Database\Query\Condition;
 use Drupal\Core\Form\FormStateInterface;
 
 /**
@@ -74,7 +73,7 @@ class TaxonomyIndexTidDepth extends TaxonomyIndexTid {
     // Now build the subqueries.
     $subquery = Database::getConnection()->select('taxonomy_index', 'tn');
     $subquery->addField('tn', 'nid');
-    $where = (new Condition('OR'))->condition('tn.tid', $this->value, $operator);
+    $where = ($this->view->query->getConnection()->condition('OR'))->condition('tn.tid', $this->value, $operator);
     $last = "tn";
 
     if ($this->options['depth'] > 0) {

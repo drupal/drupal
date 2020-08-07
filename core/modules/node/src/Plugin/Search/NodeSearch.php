@@ -7,7 +7,6 @@ use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Config\Config;
 use Drupal\Core\Database\Connection;
-use Drupal\Core\Database\Query\Condition;
 use Drupal\Core\Database\Query\SelectExtender;
 use Drupal\Core\Database\StatementInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
@@ -295,7 +294,7 @@ class NodeSearch extends ConfigurableSearchPluginBase implements AccessibleInter
         $info = $this->advanced[$option];
         // Insert additional conditions. By default, all use the OR operator.
         $operator = empty($info['operator']) ? 'OR' : $info['operator'];
-        $where = new Condition($operator);
+        $where = $this->databaseReplica->condition($operator);
         foreach ($matched as $value) {
           $where->condition($info['column'], $value);
         }

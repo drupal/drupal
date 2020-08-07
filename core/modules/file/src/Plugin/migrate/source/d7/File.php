@@ -2,7 +2,6 @@
 
 namespace Drupal\file\Plugin\migrate\source\d7;
 
-use Drupal\Core\Database\Query\Condition;
 use Drupal\migrate\Row;
 use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
 
@@ -58,7 +57,7 @@ class File extends DrupalSqlBase {
       $schemes = array_map([$this->getDatabase(), 'escapeLike'], $schemes);
 
       // Add conditions, uri LIKE 'public://%' OR uri LIKE 'private://%'.
-      $conditions = new Condition('OR');
+      $conditions = $this->getDatabase()->condition('OR');
       foreach ($schemes as $scheme) {
         $conditions->condition('uri', $scheme . '%', 'LIKE');
       }

@@ -3,7 +3,6 @@
 namespace Drupal\views\Plugin\views\filter;
 
 use Drupal\Core\Database\Connection;
-use Drupal\Core\Database\Query\Condition;
 use Drupal\Core\Form\FormStateInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -330,7 +329,7 @@ class StringFilter extends FilterPluginBase {
   }
 
   protected function opContainsWord($field) {
-    $where = $this->operator == 'word' ? new Condition('OR') : new Condition('AND');
+    $where = $this->operator == 'word' ? $this->query->getConnection()->condition('OR') : $this->query->getConnection()->condition('AND');
 
     // Don't filter on empty strings.
     if (empty($this->value)) {

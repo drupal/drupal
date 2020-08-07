@@ -5,7 +5,6 @@ namespace Drupal\views\Plugin\views\query;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Database\Database;
-use Drupal\Core\Database\Query\Condition;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Messenger\MessengerInterface;
@@ -885,7 +884,7 @@ class Sql extends QueryPluginBase {
    * @code
    * $this->query->addWhere(
    *   $this->options['group'],
-   *   (new Condition('OR'))
+   *   ($this->query->getConnection()->condition('OR'))
    *     ->condition($field, $value, 'NOT IN')
    *     ->condition($field, $value, 'IS NULL')
    * );
@@ -1111,13 +1110,16 @@ class Sql extends QueryPluginBase {
     $has_arguments = FALSE;
     $has_filter = FALSE;
 
-    $main_group = new Condition('AND');
-    $filter_group = $this->groupOperator == 'OR' ? new Condition('OR') : new Condition('AND');
+    /** @var \Drupal\Core\Database\Connection $connection */
+    $connection = $this->getConnection();
+
+    $main_group = $connection->condition('AND');
+    $filter_group = $this->groupOperator == 'OR' ? $connection->condition('OR') : $connection->condition('AND');
 
     foreach ($this->$where as $group => $info) {
 
       if (!empty($info['conditions'])) {
-        $sub_group = $info['type'] == 'OR' ? new Condition('OR') : new Condition('AND');
+        $sub_group = $info['type'] == 'OR' ? $connection->condition('OR') : $connection->condition('AND');
         foreach ($info['conditions'] as $clause) {
           if ($clause['operator'] == 'formula') {
             $has_condition = TRUE;

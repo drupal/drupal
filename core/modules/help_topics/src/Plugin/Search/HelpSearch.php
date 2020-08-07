@@ -6,7 +6,6 @@ use Drupal\Core\Access\AccessibleInterface;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Config\Config;
 use Drupal\Core\Database\Connection;
-use Drupal\Core\Database\Query\Condition;
 use Drupal\Core\Database\Query\PagerSelectExtender;
 use Drupal\Core\Database\StatementInterface;
 use Drupal\Core\Language\LanguageInterface;
@@ -454,7 +453,7 @@ class HelpSearch extends SearchPluginBase implements AccessibleInterface, Search
     $query = $this->database->select('help_search_items', 'hsi');
     $query->addExpression('COUNT(DISTINCT(hsi.sid))');
     $query->leftJoin('search_dataset', 'sd', 'hsi.sid = sd.sid AND sd.type = :type', [':type' => $this->getType()]);
-    $condition = new Condition('OR');
+    $condition = $this->database->condition('OR');
     $condition->condition('sd.reindex', 0, '<>')
       ->isNull('sd.sid');
     $query->condition($condition);

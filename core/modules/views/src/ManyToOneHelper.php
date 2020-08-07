@@ -2,7 +2,6 @@
 
 namespace Drupal\views;
 
-use Drupal\Core\Database\Query\Condition;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\views\Plugin\views\HandlerBase;
 
@@ -327,7 +326,7 @@ class ManyToOneHelper {
 
     if ($add_condition) {
       $field = $this->handler->realField;
-      $clause = $operator == 'or' ? new Condition('OR') : new Condition('AND');
+      $clause = $operator == 'or' ? $this->handler->query->getConnection()->condition('OR') : $this->handler->query->getConnection()->condition('AND');
       foreach ($this->handler->tableAliases as $value => $alias) {
         $clause->condition("$alias.$field", $value);
       }

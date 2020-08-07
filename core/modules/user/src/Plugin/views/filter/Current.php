@@ -2,7 +2,6 @@
 
 namespace Drupal\user\Plugin\views\filter;
 
-use Drupal\Core\Database\Query\Condition;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\ViewExecutable;
 use Drupal\views\Plugin\views\filter\BooleanOperator;
@@ -29,7 +28,7 @@ class Current extends BooleanOperator {
     $this->ensureMyTable();
 
     $field = $this->tableAlias . '.' . $this->realField . ' ';
-    $or = new Condition('OR');
+    $or = $this->view->query->getConnection()->condition('OR');
 
     if (empty($this->value)) {
       $or->condition($field, '***CURRENT_USER***', '<>');

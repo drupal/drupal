@@ -2,7 +2,6 @@
 
 namespace Drupal\views\Plugin\views\filter;
 
-use Drupal\Core\Database\Query\Condition;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\ViewExecutable;
@@ -234,12 +233,12 @@ class BooleanOperator extends FilterPluginBase {
     if (empty($this->value)) {
       if ($this->accept_null) {
         if ($query_operator === self::EQUAL) {
-          $condition = (new Condition('OR'))
+          $condition = ($this->query->getConnection()->condition('OR'))
             ->condition($field, 0, $query_operator)
             ->isNull($field);
         }
         else {
-          $condition = (new Condition('AND'))
+          $condition = ($this->query->getConnection()->condition('AND'))
             ->condition($field, 0, $query_operator)
             ->isNotNull($field);
         }
