@@ -40,7 +40,7 @@ class DbLogTest extends KernelTestBase {
     // Generate additional log entries.
     $this->generateLogEntries($row_limit + 10);
     // Verify that the database log row count exceeds the row limit.
-    $count = Database::getConnection()->query('SELECT COUNT(wid) FROM {watchdog}')->fetchField();
+    $count = Database::getConnection()->select('watchdog')->countQuery()->execute()->fetchField();
     $this->assertGreaterThan($row_limit, $count, new FormattableMarkup('Dblog row count of @count exceeds row limit of @limit', ['@count' => $count, '@limit' => $row_limit]));
 
     // Get the number of enabled modules. Cron adds a log entry for each module.
@@ -66,13 +66,17 @@ class DbLogTest extends KernelTestBase {
     // Get last ID to compare against; log entries get deleted, so we can't
     // reliably add the number of newly created log entries to the current count
     // to measure number of log entries created by cron.
-    $last_id = $connection->query('SELECT MAX(wid) FROM {watchdog}')->fetchField();
+    $query = $connection->select('watchdog');
+    $query->addExpression('MAX(wid)');
+    $last_id = $query->execute()->fetchField();
 
     // Run a cron job.
     $this->container->get('cron')->run();
 
     // Get last ID after cron was run.
-    $current_id = $connection->query('SELECT MAX(wid) FROM {watchdog}')->fetchField();
+    $query = $connection->select('watchdog');
+    $query->addExpression('MAX(wid)');
+    $current_id = $query->execute()->fetchField();
 
     return $current_id - $last_id;
   }

@@ -197,7 +197,12 @@ class LocalePluralFormatTest extends BrowserTestBase {
     // not save our source string for performance optimization if we do not ask
     // specifically for a language.
     \Drupal::translation()->formatPlural(1, '1 second', '@count seconds', [], ['langcode' => 'fr'])->render();
-    $lid = Database::getConnection()->query("SELECT lid FROM {locales_source} WHERE source = :source AND context = ''", [':source' => "1 second" . PoItem::DELIMITER . "@count seconds"])->fetchField();
+    $lid = Database::getConnection()->select('locales_source', 'ls')
+      ->fields('ls', ['lid'])
+      ->condition('source', "1 second" . PoItem::DELIMITER . "@count seconds")
+      ->condition('context', '')
+      ->execute()
+      ->fetchField();
     // Look up editing page for this plural string and check fields.
     $search = [
       'string' => '1 second',
@@ -282,7 +287,12 @@ class LocalePluralFormatTest extends BrowserTestBase {
 
     $connection = Database::getConnection();
     // Edit langcode hr translations and see if that took effect.
-    $lid = $connection->query("SELECT lid FROM {locales_source} WHERE source = :source AND context = ''", [':source' => "1 hour" . PoItem::DELIMITER . "@count hours"])->fetchField();
+    $lid = $connection->select('locales_source', 'ls')
+      ->fields('ls', ['lid'])
+      ->condition('source', "1 hour" . PoItem::DELIMITER . "@count hours")
+      ->condition('context', '')
+      ->execute()
+      ->fetchField();
     $edit = [
       "strings[$lid][translations][1]" => '@count sata edited',
     ];
@@ -308,7 +318,12 @@ class LocalePluralFormatTest extends BrowserTestBase {
     // not save our source string for performance optimization if we do not ask
     // specifically for a language.
     \Drupal::translation()->formatPlural(1, '1 day', '@count days', [], ['langcode' => 'fr'])->render();
-    $lid = $connection->query("SELECT lid FROM {locales_source} WHERE source = :source AND context = ''", [':source' => "1 day" . PoItem::DELIMITER . "@count days"])->fetchField();
+    $lid = $connection->select('locales_source', 'ls')
+      ->fields('ls', ['lid'])
+      ->condition('source', "1 day" . PoItem::DELIMITER . "@count days")
+      ->condition('context', '')
+      ->execute()
+      ->fetchField();
     // Look up editing page for this plural string and check fields.
     $search = [
       'string' => '1 day',

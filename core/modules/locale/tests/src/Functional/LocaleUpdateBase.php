@@ -301,7 +301,13 @@ EOF;
    *   (optional) A message to display with the assertion.
    */
   protected function assertTranslation($source, $translation, $langcode, $message = '') {
-    $db_translation = Database::getConnection()->query('SELECT translation FROM {locales_target} lt INNER JOIN {locales_source} ls ON ls.lid = lt.lid WHERE ls.source = :source AND lt.language = :langcode', [':source' => $source, ':langcode' => $langcode])->fetchField();
+    $query = Database::getConnection()->select('locales_target', 'lt');
+    $query->innerJoin('locales_source', 'ls', 'ls.lid = lt.lid');
+    $db_translation = $query->fields('lt', ['translation'])
+      ->condition('ls.source', $source)
+      ->condition('lt.language', $langcode)
+      ->execute()
+      ->fetchField();
     $db_translation = $db_translation == FALSE ? '' : $db_translation;
     $this->assertEqual($translation, $db_translation, $message ? $message : new FormattableMarkup('Correct translation of %source (%language)', ['%source' => $source, '%language' => $langcode]));
   }

@@ -39,7 +39,7 @@ class IpAddressBlockingTest extends BrowserTestBase {
     $edit = [];
     $edit['ip'] = '1.2.3.3';
     $this->drupalPostForm('admin/config/people/ban', $edit, t('Add'));
-    $ip = $connection->query("SELECT iid from {ban_ip} WHERE ip = :ip", [':ip' => $edit['ip']])->fetchField();
+    $ip = $connection->select('ban_ip', 'bi')->fields('bi', ['iid'])->condition('ip', $edit['ip'])->execute()->fetchField();
     $this->assertNotEmpty($ip, 'IP address found in database.');
     $this->assertRaw(t('The IP address %ip has been banned.', ['%ip' => $edit['ip']]), 'IP address was banned.');
 
@@ -70,7 +70,7 @@ class IpAddressBlockingTest extends BrowserTestBase {
     // Pass an IP address as a URL parameter and submit it.
     $submit_ip = '1.2.3.4';
     $this->drupalPostForm('admin/config/people/ban/' . $submit_ip, [], t('Add'));
-    $ip = $connection->query("SELECT iid from {ban_ip} WHERE ip = :ip", [':ip' => $submit_ip])->fetchField();
+    $ip = $connection->select('ban_ip', 'bi')->fields('bi', ['iid'])->condition('ip', $submit_ip)->execute()->fetchField();
     $this->assertNotEmpty($ip, 'IP address found in database');
     $this->assertRaw(t('The IP address %ip has been banned.', ['%ip' => $submit_ip]), 'IP address was banned.');
 

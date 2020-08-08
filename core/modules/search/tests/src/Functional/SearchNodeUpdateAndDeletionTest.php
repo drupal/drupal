@@ -100,7 +100,11 @@ class SearchNodeUpdateAndDeletionTest extends BrowserTestBase {
 
     // Get the node info from the search index tables.
     $connection = Database::getConnection();
-    $search_index_dataset = $connection->query("SELECT sid FROM {search_index} WHERE type = 'node_search' AND  word = :word", [':word' => 'dragons'])
+    $search_index_dataset = $connection->select('search_index', 'si')
+      ->fields('si', ['sid'])
+      ->condition('type', 'node_search')
+      ->condition('word', 'dragons')
+      ->execute()
       ->fetchField();
     $this->assertNotEqual($search_index_dataset, FALSE, t('Node info found on the search_index'));
 
@@ -108,7 +112,11 @@ class SearchNodeUpdateAndDeletionTest extends BrowserTestBase {
     $node->delete();
 
     // Check if the node info is gone from the search table.
-    $search_index_dataset = $connection->query("SELECT sid FROM {search_index} WHERE type = 'node_search' AND  word = :word", [':word' => 'dragons'])
+    $search_index_dataset = $connection->select('search_index', 'si')
+      ->fields('si', ['sid'])
+      ->condition('type', 'node_search')
+      ->condition('word', 'dragons')
+      ->execute()
       ->fetchField();
     $this->assertFalse($search_index_dataset, t('Node info successfully removed from search_index'));
 

@@ -38,8 +38,18 @@ class RelationshipTest extends RelationshipJoinTestBase {
   public function testRelationshipQuery() {
     $connection = Database::getConnection();
     // Set the first entry to have the admin as author.
-    $connection->query("UPDATE {views_test_data} SET uid = 1 WHERE id = 1");
-    $connection->query("UPDATE {views_test_data} SET uid = 2 WHERE id <> 1");
+    $connection->update('views_test_data')
+      ->fields([
+        'uid' => 1,
+      ])
+      ->condition('id', 1)
+      ->execute();
+    $connection->update('views_test_data')
+      ->fields([
+        'uid' => 2,
+      ])
+      ->condition('id', 1, '<>')
+      ->execute();
 
     $view = Views::getView('test_view');
     $view->setDisplay();
@@ -136,11 +146,26 @@ class RelationshipTest extends RelationshipJoinTestBase {
   public function testRelationshipRender() {
     $connection = Database::getConnection();
     $author1 = $this->createUser();
-    $connection->query("UPDATE {views_test_data} SET uid = :uid WHERE id = 1", [':uid' => $author1->id()]);
+    $connection->update('views_test_data')
+      ->fields([
+        'uid' => $author1->id(),
+      ])
+      ->condition('id', 1)
+      ->execute();
     $author2 = $this->createUser();
-    $connection->query("UPDATE {views_test_data} SET uid = :uid WHERE id = 2", [':uid' => $author2->id()]);
+    $connection->update('views_test_data')
+      ->fields([
+        'uid' => $author2->id(),
+      ])
+      ->condition('id', 2)
+      ->execute();
     // Set uid to non-existing author uid for row 3.
-    $connection->query("UPDATE {views_test_data} SET uid = :uid WHERE id = 3", [':uid' => $author2->id() + 123]);
+    $connection->update('views_test_data')
+      ->fields([
+        'uid' => $author2->id() + 123,
+      ])
+      ->condition('id', 3)
+      ->execute();
 
     $view = Views::getView('test_view');
     // Add a relationship for authors.

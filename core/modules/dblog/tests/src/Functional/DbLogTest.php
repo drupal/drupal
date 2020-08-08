@@ -123,7 +123,9 @@ class DbLogTest extends BrowserTestBase {
       'timestamp' => REQUEST_TIME,
     ];
     \Drupal::service('logger.dblog')->log(RfcLogLevel::NOTICE, 'Test message', $context);
-    $wid = Database::getConnection()->query('SELECT MAX(wid) FROM {watchdog}')->fetchField();
+    $query = Database::getConnection()->select('watchdog');
+    $query->addExpression('MAX(wid)');
+    $wid = $query->execute()->fetchField();
 
     // Verify the links appear correctly.
     $this->drupalGet('admin/reports/dblog/event/' . $wid);
@@ -153,7 +155,10 @@ class DbLogTest extends BrowserTestBase {
 
     $this->drupalLogin($this->adminUser);
 
-    $wid = Database::getConnection()->query("SELECT MAX(wid) FROM {watchdog} WHERE type='access denied'")->fetchField();
+    $query = Database::getConnection()->select('watchdog')
+      ->condition('type', 'access denied');
+    $query->addExpression('MAX(wid)');
+    $wid = $query->execute()->fetchField();
     $this->drupalGet('admin/reports/dblog/event/' . $wid);
 
     $table = $this->xpath("//table[@class='dblog-event']");
@@ -208,7 +213,9 @@ class DbLogTest extends BrowserTestBase {
     $this->generateLogEntries(1, [
       'referer' => NULL,
     ]);
-    $wid = $connection->query('SELECT MAX(wid) FROM {watchdog}')->fetchField();
+    $query = $connection->select('watchdog');
+    $query->addExpression('MAX(wid)');
+    $wid = $query->execute()->fetchField();
     $this->drupalGet('admin/reports/dblog/event/' . $wid);
 
     // Verify table headers are present, even though the referrer is missing.
@@ -222,7 +229,9 @@ class DbLogTest extends BrowserTestBase {
     $this->generateLogEntries(1, [
       'request_uri' => $request_uri,
     ]);
-    $wid = $connection->query('SELECT MAX(wid) FROM {watchdog}')->fetchField();
+    $query = $connection->select('watchdog');
+    $query->addExpression('MAX(wid)');
+    $wid = $query->execute()->fetchField();
     $this->drupalGet('admin/reports/dblog/event/' . $wid);
 
     // Verify table headers are present.
@@ -322,7 +331,9 @@ class DbLogTest extends BrowserTestBase {
     }
 
     // View the database log event page.
-    $wid = Database::getConnection()->query('SELECT MIN(wid) FROM {watchdog}')->fetchField();
+    $query = Database::getConnection()->select('watchdog');
+    $query->addExpression('MIN(wid)');
+    $wid = $query->execute()->fetchField();
     $this->drupalGet('admin/reports/dblog/event/' . $wid);
     $this->assertSession()->statusCodeEquals($response);
     if ($response == 200) {
@@ -335,7 +346,9 @@ class DbLogTest extends BrowserTestBase {
    */
   private function verifyBreadcrumbs() {
     // View the database log event page.
-    $wid = Database::getConnection()->query('SELECT MIN(wid) FROM {watchdog}')->fetchField();
+    $query = Database::getConnection()->select('watchdog');
+    $query->addExpression('MIN(wid)');
+    $wid = $query->execute()->fetchField();
     $this->drupalGet('admin/reports/dblog/event/' . $wid);
     $xpath = '//nav[@class="breadcrumb"]/ol/li[last()]/a';
     $this->assertEqual(current($this->xpath($xpath))->getText(), 'Recent log messages', 'DBLogs link displayed at breadcrumb in event page.');
@@ -384,7 +397,7 @@ class DbLogTest extends BrowserTestBase {
       'link' => $link,
     ]);
 
-    $result = Database::getConnection()->queryRange('SELECT wid FROM {watchdog} ORDER BY wid DESC', 0, 1);
+    $result = Database::getConnection()->select('watchdog', 'w')->fields('w', ['wid'])->orderBy('wid', 'DESC')->range(0, 1)->execute();
     $this->drupalGet('admin/reports/dblog/event/' . $result->fetchField());
 
     // Check if the link exists (unescaped).
@@ -418,7 +431,7 @@ class DbLogTest extends BrowserTestBase {
     // Log out user.
     $this->drupalLogout();
     // Fetch the row IDs in watchdog that relate to the user.
-    $result = Database::getConnection()->query('SELECT wid FROM {watchdog} WHERE uid = :uid', [':uid' => $user->id()]);
+    $result = Database::getConnection()->select('watchdog', 'w')->fields('w', ['wid'])->condition('uid', $user->id())->execute();
     foreach ($result as $row) {
       $ids[] = $row->wid;
     }
@@ -590,7 +603,7 @@ class DbLogTest extends BrowserTestBase {
     global $base_root;
     $connection = Database::getConnection();
     // Get a count of how many watchdog entries already exist.
-    $count = $connection->query('SELECT COUNT(*) FROM {watchdog}')->fetchField();
+    $count = $connection->select('watchdog')->countQuery()->execute()->fetchField();
     $log = [
       'channel'     => 'system',
       'message'     => 'Log entry added to test the doClearTest clear down.',
@@ -606,7 +619,7 @@ class DbLogTest extends BrowserTestBase {
     // Add a watchdog entry.
     $this->container->get('logger.dblog')->log($log['severity'], $log['message'], $log);
     // Make sure the table count has actually been incremented.
-    $this->assertEqual($count + 1, $connection->query('SELECT COUNT(*) FROM {watchdog}')->fetchField(), new FormattableMarkup('\Drupal\dblog\Logger\DbLog->log() added an entry to the dblog :count', [':count' => $count]));
+    $this->assertEqual($count + 1, (int) $connection->select('watchdog')->countQuery()->execute()->fetchField(), new FormattableMarkup('\Drupal\dblog\Logger\DbLog->log() added an entry to the dblog :count', [':count' => $count]));
     // Log in the admin user.
     $this->drupalLogin($this->adminUser);
     // Post in order to clear the database table.
@@ -614,7 +627,7 @@ class DbLogTest extends BrowserTestBase {
     // Confirm that the logs should be cleared.
     $this->drupalPostForm(NULL, [], 'Confirm');
     // Count the rows in watchdog that previously related to the deleted user.
-    $count = $connection->query('SELECT COUNT(*) FROM {watchdog}')->fetchField();
+    $count = $connection->select('watchdog')->countQuery()->execute()->fetchField();
     $this->assertEqual($count, 0, new FormattableMarkup('DBLog contains :count records after a clear.', [':count' => $count]));
   }
 
@@ -803,7 +816,9 @@ class DbLogTest extends BrowserTestBase {
 
     // Generate a single watchdog entry.
     $this->generateLogEntries(1, ['user' => $tempuser, 'uid' => $tempuser_uid]);
-    $wid = Database::getConnection()->query('SELECT MAX(wid) FROM {watchdog}')->fetchField();
+    $query = Database::getConnection()->select('watchdog');
+    $query->addExpression('MAX(wid)');
+    $wid = $query->execute()->fetchField();
 
     // Check if the full message displays on the details page.
     $this->drupalGet('admin/reports/dblog/event/' . $wid);
@@ -833,7 +848,9 @@ class DbLogTest extends BrowserTestBase {
 
     // Make sure HTML tags are filtered out in admin/reports/dblog/event/ too.
     $this->generateLogEntries(1, ['message' => "<script>alert('foo');</script> <strong>Lorem ipsum</strong>"]);
-    $wid = Database::getConnection()->query('SELECT MAX(wid) FROM {watchdog}')->fetchField();
+    $query = Database::getConnection()->select('watchdog');
+    $query->addExpression('MAX(wid)');
+    $wid = $query->execute()->fetchField();
     $this->drupalGet('admin/reports/dblog/event/' . $wid);
     $this->assertNoRaw("<script>alert('foo');</script>");
     $this->assertRaw("alert('foo'); <strong>Lorem ipsum</strong>");
@@ -864,7 +881,9 @@ class DbLogTest extends BrowserTestBase {
     $this->drupalLogin($this->adminUser);
     $this->drupalGet('/error-test/generate-warnings');
 
-    $wid = Database::getConnection()->query('SELECT MAX(wid) FROM {watchdog}')->fetchField();
+    $query = Database::getConnection()->select('watchdog');
+    $query->addExpression('MAX(wid)');
+    $wid = $query->execute()->fetchField();
     $this->drupalGet('admin/reports/dblog/event/' . $wid);
 
     $error_user_notice = [
