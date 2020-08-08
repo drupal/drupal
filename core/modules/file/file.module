@@ -1454,9 +1454,7 @@ function template_preprocess_file_link(&$variables) {
   $variables['#cache']['contexts'][] = 'url.site';
 
   $mime_type = $file->getMimeType();
-  // Set options as per anchor format described at
-  // http://microformats.org/wiki/file-format-examples
-  $options['attributes']['type'] = $mime_type . '; length=' . $file->getSize();
+  $options['attributes']['type'] = $mime_type;
 
   // Use the description as the link text if available.
   if (empty($variables['description'])) {
