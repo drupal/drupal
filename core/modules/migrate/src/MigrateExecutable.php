@@ -113,7 +113,7 @@ class MigrateExecutable implements MigrateExecutableInterface {
       $this->memoryLimit = PHP_INT_MAX;
     }
     else {
-      $this->memoryLimit = Bytes::toInt($limit);
+      $this->memoryLimit = Bytes::toNumber($limit);
     }
   }
 

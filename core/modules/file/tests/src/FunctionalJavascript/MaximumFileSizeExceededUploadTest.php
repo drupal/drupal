@@ -99,7 +99,7 @@ class MaximumFileSizeExceededUploadTest extends WebDriverTestBase {
     $session = $this->getSession();
 
     // Create a test file that exceeds the maximum POST size with 1 kilobyte.
-    $post_max_size = Bytes::toInt(ini_get('post_max_size'));
+    $post_max_size = Bytes::toNumber(ini_get('post_max_size'));
     $invalid_file = $this->generateFile('exceeding_post_max_size', ceil(($post_max_size + 1024) / 1024), 1024);
 
     // Go to the node creation form and try to upload the test file.
