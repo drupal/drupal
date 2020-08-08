@@ -1536,7 +1536,6 @@ serviceform
 sess
 sessionpath
 settingstray
-setttings
 setval
 sharedspace
 shatner

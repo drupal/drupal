@@ -2,8 +2,10 @@
 
 namespace Drupal\Tests\node\Functional;
 
+use Drupal\Component\Serialization\Json;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\system\Entity\Action;
+use Drupal\user\Entity\User;
 
 /**
  * Tests configuration of actions provided by the Node module.
@@ -83,6 +85,42 @@ class NodeActionsConfigurationTest extends BrowserTestBase {
 
     $action = Action::load($action_id);
     $this->assertNull($action, 'The node_assign_owner_action action is not available after being deleted.');
+  }
+
+  /**
+   * Tests the autocomplete field when configuring the AssignOwnerNode action.
+   */
+  public function testAssignOwnerNodeActionAutocomplete() {
+    // Create 200 users to force the action's configuration page to use an
+    // autocomplete field instead of a select field. See
+    // \Drupal\node\Plugin\Action\AssignOwnerNode::buildConfigurationForm().
+    for ($i = 0; $i < 200; $i++) {
+      $this->drupalCreateUser();
+    }
+
+    // Create a user with permission to view the actions administration pages
+    // and additionally permission to administer users. Otherwise the user would
+    // not be able to reference the anonymous user.
+    $this->drupalLogin($this->drupalCreateUser(['administer actions', 'administer users']));
+    // Create AssignOwnerNode action.
+    $this->drupalPostForm('admin/config/system/actions', ['action' => 'node_assign_owner_action'], 'Create');
+
+    // Get the autocomplete URL of the owner_uid textfield.
+    $autocomplete_field = $this->getSession()->getPage()->findField('owner_uid');
+    $autocomplete_url = $this->getAbsoluteUrl($autocomplete_field->getAttribute('data-autocomplete-path'));
+
+    // Make sure that autocomplete works.
+    $user = $this->drupalCreateUser();
+    $data = Json::decode($this->drupalGet($autocomplete_url, ['query' => ['q' => $user->getDisplayName(), '_format' => 'json']]));
+    $this->assertNotEmpty($data);
+
+    $anonymous = User::getAnonymousUser();
+    // Ensure that the anonymous user exists.
+    $this->assertNotNull($anonymous);
+    // Make sure the autocomplete does not show the anonymous user.
+    $data = Json::decode($this->drupalGet($autocomplete_url, ['query' => ['q' => $anonymous->getDisplayName(), '_format' => 'json']]));
+    $this->assertEmpty($data);
+
   }
 
 }
