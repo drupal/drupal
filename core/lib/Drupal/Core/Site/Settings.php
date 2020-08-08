@@ -37,7 +37,20 @@ final class Settings {
    *
    * @see self::handleDeprecations()
    */
-  private static $deprecatedSettings = [];
+  private static $deprecatedSettings = [
+    'twig_sandbox_whitelisted_classes' => [
+      'replacement' => 'twig_sandbox_allowed_classes',
+      'message' => 'The "twig_sandbox_whitelisted_classes" setting is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. Use "twig_sandbox_allowed_classes" instead. See https://www.drupal.org/node/3162897.',
+    ],
+    'twig_sandbox_whitelisted_methods' => [
+      'replacement' => 'twig_sandbox_allowed_methods',
+      'message' => 'The "twig_sandbox_whitelisted_methods" setting is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. Use "twig_sandbox_allowed_methods" instead. See https://www.drupal.org/node/3162897.',
+    ],
+    'twig_sandbox_whitelisted_prefixes' => [
+      'replacement' => 'twig_sandbox_allowed_prefixes',
+      'message' => 'The "twig_sandbox_whitelisted_prefixes" setting is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. Use "twig_sandbox_allowed_prefixes" instead. See https://www.drupal.org/node/3162897.',
+    ],
+  ];
 
   /**
    * Constructor.

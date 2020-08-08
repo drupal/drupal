@@ -8,7 +8,7 @@ use Twig\Source;
 /**
  * Loads string templates, also known as inline templates.
  *
- * This loader is intended to be used in a Twig loader chain and whitelists
+ * This loader is intended to be used in a Twig loader chain and only loads
  * string templates that begin with the following comment:
  * @code
  * {# inline_template_start #}

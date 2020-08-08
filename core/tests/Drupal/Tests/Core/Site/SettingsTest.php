@@ -272,4 +272,31 @@ class SettingsTest extends UnitTestCase {
     ];
   }
 
+  /**
+   * Tests legacy twig_sandbox_* settings.
+   *
+   * @runInSeparateProcess
+   *
+   * @group legacy
+   *
+   * @expectedDeprecation The "twig_sandbox_whitelisted_classes" setting is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. Use "twig_sandbox_allowed_classes" instead. See https://www.drupal.org/node/3162897.
+   * @expectedDeprecation The "twig_sandbox_whitelisted_methods" setting is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. Use "twig_sandbox_allowed_methods" instead. See https://www.drupal.org/node/3162897.
+   * @expectedDeprecation The "twig_sandbox_whitelisted_prefixes" setting is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. Use "twig_sandbox_allowed_prefixes" instead. See https://www.drupal.org/node/3162897.
+   */
+  public function testLegacyTwigSandboxSettings(): void {
+    $settings = <<<'EOD'
+<?php
+$settings['twig_sandbox_whitelisted_classes'] = ['a', 'b'];
+$settings['twig_sandbox_whitelisted_methods'] = ['aFoo', 'bBar'];
+$settings['twig_sandbox_whitelisted_prefixes'] = ['aPrefix', 'bPrefix'];
+EOD;
+    $class_loader = NULL;
+    $vfs_root = vfsStream::setup('root');
+    $sites_directory = vfsStream::newDirectory('sites')->at($vfs_root);
+    vfsStream::newFile('settings.php')
+      ->at($sites_directory)
+      ->setContent($settings);
+    Settings::initialize(vfsStream::url('root'), 'sites', $class_loader);
+  }
+
 }
