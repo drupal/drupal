@@ -2274,6 +2274,20 @@ $connection->insert('content_field_image')
   'field_image_list' => '1',
   'field_image_data' => 'a:2:{s:3:"alt";s:0:"";s:5:"title";s:0:"";}',
 ))
+->values(array(
+  'vid' => '5',
+  'nid' => '1',
+  'field_image_fid' => '2',
+  'field_image_list' => '1',
+  'field_image_data' => 'a:2:{s:3:"alt";s:0:"";s:5:"title";s:0:"";}',
+))
+->values(array(
+  'vid' => '2001',
+  'nid' => '1',
+  'field_image_fid' => '2',
+  'field_image_list' => '1',
+  'field_image_data' => 'a:2:{s:3:"alt";s:0:"";s:5:"title";s:0:"";}',
+))
 ->execute();
 $connection->schema()->createTable('content_field_multivalue', array(
   'fields' => array(
@@ -2390,12 +2404,6 @@ $connection->insert('content_field_test')
   'field_test_format' => '1',
 ))
 ->values(array(
-  'vid' => '2',
-  'nid' => '1',
-  'field_test_value' => 'This is a shared text field',
-  'field_test_format' => '1',
-))
-->values(array(
   'vid' => '3',
   'nid' => '2',
   'field_test_value' => NULL,
@@ -2403,14 +2411,20 @@ $connection->insert('content_field_test')
 ))
 ->values(array(
   'vid' => '5',
-  'nid' => '2',
-  'field_test_value' => NULL,
-  'field_test_format' => NULL,
+  'nid' => '1',
+  'field_test_value' => 'This is a shared text field',
+  'field_test_format' => '1',
 ))
 ->values(array(
   'vid' => '12',
   'nid' => '9',
   'field_test_value' => 'text for default value',
+  'field_test_format' => '1',
+))
+->values(array(
+  'vid' => '2001',
+  'nid' => '1',
+  'field_test_value' => 'This is a shared text field',
   'field_test_format' => '1',
 ))
 ->execute();
@@ -2470,12 +2484,17 @@ $connection->insert('content_field_test_text_single_checkbox')
 ))
 ->values(array(
   'vid' => '5',
-  'nid' => '2',
-  'field_test_text_single_checkbox_value' => NULL,
+  'nid' => '1',
+  'field_test_text_single_checkbox_value' => '0',
 ))
 ->values(array(
   'vid' => '12',
   'nid' => '9',
+  'field_test_text_single_checkbox_value' => '0',
+))
+->values(array(
+  'vid' => '2001',
+  'nid' => '1',
   'field_test_text_single_checkbox_value' => '0',
 ))
 ->execute();
@@ -2534,10 +2553,10 @@ $connection->insert('content_field_test_two')
   'field_test_two_value' => '10',
 ))
 ->values(array(
-  'vid' => '2',
+  'vid' => '1',
   'nid' => '1',
-  'delta' => '0',
-  'field_test_two_value' => NULL,
+  'delta' => '1',
+  'field_test_two_value' => '20',
 ))
 ->values(array(
   'vid' => '3',
@@ -2547,9 +2566,15 @@ $connection->insert('content_field_test_two')
 ))
 ->values(array(
   'vid' => '5',
-  'nid' => '2',
+  'nid' => '1',
   'delta' => '0',
-  'field_test_two_value' => NULL,
+  'field_test_two_value' => '10',
+))
+->values(array(
+  'vid' => '5',
+  'nid' => '1',
+  'delta' => '1',
+  'field_test_two_value' => '20',
 ))
 ->values(array(
   'vid' => '12',
@@ -2558,7 +2583,13 @@ $connection->insert('content_field_test_two')
   'field_test_two_value' => NULL,
 ))
 ->values(array(
-  'vid' => '1',
+  'vid' => '2001',
+  'nid' => '1',
+  'delta' => '0',
+  'field_test_two_value' => '10',
+))
+->values(array(
+  'vid' => '2001',
   'nid' => '1',
   'delta' => '1',
   'field_test_two_value' => '20',
@@ -3940,38 +3971,6 @@ $connection->insert('content_type_story')
   'field_test_string_selectlist_value' => NULL,
 ))
 ->values(array(
-  'nid' => '1',
-  'vid' => '2',
-  'uid' => '1',
-  'field_test_three_value' => '42.42',
-  'field_test_identical1_value' => '1',
-  'field_test_identical2_value' => '1',
-  'field_test_link_url' => 'https://www.drupal.org/project/drupal',
-  'field_test_link_title' => 'Drupal project page',
-  'field_test_link_attributes' => 's:32:"a:1:{s:6:"target";s:6:"_blank";}";',
-  'field_test_date_value' => '2013-01-02T04:05:00',
-  'field_test_datestamp_value' => '1391357160',
-  'field_test_datetime_value' => '2015-03-04 06:07:00',
-  'field_test_email_email' => 'PrincessRuwenne@example.com',
-  'field_test_filefield_fid' => NULL,
-  'field_test_filefield_list' => NULL,
-  'field_test_filefield_data' => NULL,
-  'field_test_four_value' => NULL,
-  'field_test_integer_selectlist_value' => NULL,
-  'field_test_float_single_checkbox_value' => NULL,
-  'field_test_decimal_radio_buttons_value' => NULL,
-  'field_test_phone_value' => NULL,
-  'field_test_exclude_unset_value' => NULL,
-  'field_test_exclude_unset_format' => NULL,
-  'field_test_imagefield_fid' => NULL,
-  'field_test_imagefield_list' => NULL,
-  'field_test_imagefield_data' => NULL,
-  'field_test_text_single_checkbox2_value' => NULL,
-  'field_test_datestamp_value2' => NULL,
-  'field_test_datetime_value2' => NULL,
-  'field_test_string_selectlist_value' => NULL,
-))
-->values(array(
   'nid' => '2',
   'vid' => '3',
   'uid' => '1',
@@ -4004,33 +4003,33 @@ $connection->insert('content_type_story')
   'field_test_string_selectlist_value' => NULL,
 ))
 ->values(array(
-  'nid' => '2',
+  'nid' => '1',
   'vid' => '5',
   'uid' => '1',
-  'field_test_three_value' => '23.20',
+  'field_test_three_value' => '42.42',
   'field_test_identical1_value' => '1',
   'field_test_identical2_value' => '1',
-  'field_test_link_url' => 'http://groups.drupal.org/',
-  'field_test_link_title' => 'Drupal Groups',
-  'field_test_link_attributes' => 's:6:"a:0:{}";',
-  'field_test_date_value' => NULL,
-  'field_test_datestamp_value' => NULL,
-  'field_test_datetime_value' => NULL,
-  'field_test_email_email' => NULL,
-  'field_test_filefield_fid' => NULL,
-  'field_test_filefield_list' => NULL,
-  'field_test_filefield_data' => NULL,
+  'field_test_link_url' => 'https://www.drupal.org/project/drupal',
+  'field_test_link_title' => 'Drupal project page',
+  'field_test_link_attributes' => 's:32:"a:1:{s:6:"target";s:6:"_blank";}";',
+  'field_test_date_value' => '2013-01-02T04:05:00',
+  'field_test_datestamp_value' => '1391357160',
+  'field_test_datetime_value' => '2015-03-04 06:07:00',
+  'field_test_email_email' => 'PrincessRuwenne@example.com',
+  'field_test_filefield_fid' => '5',
+  'field_test_filefield_list' => '1',
+  'field_test_filefield_data' => 'a:1:{s:11:"description";s:4:"desc";}',
   'field_test_four_value' => NULL,
-  'field_test_integer_selectlist_value' => NULL,
-  'field_test_float_single_checkbox_value' => NULL,
+  'field_test_integer_selectlist_value' => '3412',
+  'field_test_float_single_checkbox_value' => '3',
   'field_test_decimal_radio_buttons_value' => NULL,
   'field_test_phone_value' => NULL,
-  'field_test_exclude_unset_value' => NULL,
-  'field_test_exclude_unset_format' => NULL,
+  'field_test_exclude_unset_value' => 'This is a field with exclude unset.',
+  'field_test_exclude_unset_format' => '1',
   'field_test_imagefield_fid' => NULL,
   'field_test_imagefield_list' => NULL,
   'field_test_imagefield_data' => NULL,
-  'field_test_text_single_checkbox2_value' => NULL,
+  'field_test_text_single_checkbox2_value' => 'Hello',
   'field_test_datestamp_value2' => NULL,
   'field_test_datetime_value2' => NULL,
   'field_test_string_selectlist_value' => NULL,
@@ -4065,6 +4064,38 @@ $connection->insert('content_type_story')
   'field_test_text_single_checkbox2_value' => 'Off',
   'field_test_datestamp_value2' => '1391357160',
   'field_test_datetime_value2' => '2015-03-04 06:07:00',
+  'field_test_string_selectlist_value' => NULL,
+))
+->values(array(
+  'nid' => '1',
+  'vid' => '2001',
+  'uid' => '1',
+  'field_test_three_value' => '42.42',
+  'field_test_identical1_value' => '1',
+  'field_test_identical2_value' => '1',
+  'field_test_link_url' => 'https://www.drupal.org/project/drupal',
+  'field_test_link_title' => 'Drupal project page',
+  'field_test_link_attributes' => 's:32:"a:1:{s:6:"target";s:6:"_blank";}";',
+  'field_test_date_value' => '2013-01-02T04:05:00',
+  'field_test_datestamp_value' => '1391357160',
+  'field_test_datetime_value' => '2015-03-04 06:07:00',
+  'field_test_email_email' => 'PrincessRuwenne@example.com',
+  'field_test_filefield_fid' => '5',
+  'field_test_filefield_list' => '1',
+  'field_test_filefield_data' => 'a:1:{s:11:"description";s:4:"desc";}',
+  'field_test_four_value' => NULL,
+  'field_test_integer_selectlist_value' => '3412',
+  'field_test_float_single_checkbox_value' => '3',
+  'field_test_decimal_radio_buttons_value' => NULL,
+  'field_test_phone_value' => NULL,
+  'field_test_exclude_unset_value' => 'This is a field with exclude unset.',
+  'field_test_exclude_unset_format' => '1',
+  'field_test_imagefield_fid' => NULL,
+  'field_test_imagefield_list' => NULL,
+  'field_test_imagefield_data' => NULL,
+  'field_test_text_single_checkbox2_value' => 'Hello',
+  'field_test_datestamp_value2' => NULL,
+  'field_test_datetime_value2' => NULL,
   'field_test_string_selectlist_value' => NULL,
 ))
 ->execute();
@@ -44470,7 +44501,7 @@ $connection->insert('node')
 ))
 ->values(array(
   'nid' => '1',
-  'vid' => '1',
+  'vid' => '2001',
   'type' => 'story',
   'language' => '',
   'title' => 'Test title rev 3',
@@ -48086,6 +48117,16 @@ $connection->insert('term_node')
 ->values(array(
   'nid' => '1',
   'vid' => '2001',
+  'tid' => '1',
+))
+->values(array(
+  'nid' => '1',
+  'vid' => '2001',
+  'tid' => '2',
+))
+->values(array(
+  'nid' => '1',
+  'vid' => '2001',
   'tid' => '4',
 ))
 ->values(array(
@@ -48284,12 +48325,28 @@ $connection->insert('upload')
   'weight' => '1',
 ))
 ->values(array(
+  'fid' => '1',
+  'nid' => '1',
+  'vid' => '5',
+  'description' => 'file 1-1-1',
+  'list' => '0',
+  'weight' => '-1',
+))
+->values(array(
   'fid' => '3',
   'nid' => '12',
   'vid' => '15',
   'description' => 'file 12-15-3',
   'list' => '0',
   'weight' => '0',
+))
+->values(array(
+  'fid' => '1',
+  'nid' => '1',
+  'vid' => '2001',
+  'description' => 'file 1-1-1',
+  'list' => '0',
+  'weight' => '-1',
 ))
 ->execute();
 $connection->schema()->createTable('url_alias', array(
