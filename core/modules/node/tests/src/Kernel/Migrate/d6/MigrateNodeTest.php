@@ -52,24 +52,24 @@ class MigrateNodeTest extends MigrateNodeTestBase {
     $node = Node::load(1);
     $this->assertIdentical('1', $node->id(), 'Node 1 loaded.');
     $this->assertIdentical('und', $node->langcode->value);
-    $this->assertIdentical('test', $node->body->value);
-    $this->assertIdentical('test', $node->body->summary);
+    $this->assertIdentical('body test rev 3', $node->body->value);
+    $this->assertIdentical('teaser test rev 3', $node->body->summary);
     $this->assertIdentical('filtered_html', $node->body->format);
     $this->assertIdentical('story', $node->getType(), 'Node has the correct bundle.');
-    $this->assertIdentical('Test title', $node->getTitle(), 'Node has the correct title.');
+    $this->assertIdentical('Test title rev 3', $node->getTitle(), 'Node has the correct title.');
     $this->assertIdentical('1390095702', $node->getCreatedTime(), 'Node has the correct created time.');
     $this->assertFalse($node->isSticky());
     $this->assertIdentical('1', $node->getOwnerId());
-    $this->assertIdentical('1390095702', $node->getRevisionCreationTime());
+    $this->assertIdentical('1420861423', $node->getRevisionCreationTime());
 
     /** @var \Drupal\node\NodeInterface $node_revision */
-    $node_revision = \Drupal::entityTypeManager()->getStorage('node')->loadRevision(1);
-    $this->assertIdentical('Test title', $node_revision->getTitle());
-    $this->assertIdentical('1', $node_revision->getRevisionUser()->id(), 'Node revision has the correct user');
+    $node_revision = \Drupal::entityTypeManager()->getStorage('node')->loadRevision(2001);
+    $this->assertIdentical('Test title rev 3', $node_revision->getTitle());
+    $this->assertIdentical('2', $node_revision->getRevisionUser()->id(), 'Node revision has the correct user');
     $this->assertSame('1', $node_revision->id(), 'Node 1 loaded.');
-    $this->assertSame('1', $node_revision->getRevisionId(), 'Node 1 revision 1 loaded.');
+    $this->assertSame('2001', $node_revision->getRevisionId(), 'Node 1 revision 2001 loaded.');
     // This is empty on the first revision.
-    $this->assertIdentical(NULL, $node_revision->revision_log->value);
+    $this->assertIdentical('modified rev 3', $node_revision->revision_log->value);
     $this->assertIdentical('This is a shared text field', $node->field_test->value);
     $this->assertIdentical('filtered_html', $node->field_test->format);
     $this->assertIdentical('10', $node->field_test_two->value);
