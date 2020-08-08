@@ -4,7 +4,6 @@ namespace Drupal\Tests\migrate_drupal_ui\Functional\d7;
 
 use Drupal\node\Entity\Node;
 use Drupal\Tests\migrate_drupal_ui\Functional\MigrateUpgradeExecuteTestBase;
-use Drupal\user\Entity\User;
 
 /**
  * Tests Drupal 7 upgrade using the migrate UI.
@@ -221,10 +220,9 @@ class Upgrade7Test extends MigrateUpgradeExecuteTestBase {
   public function testMigrateUpgradeExecute() {
     parent::testMigrateUpgradeExecute();
 
-    // Ensure migrated users can log in.
-    $user = User::load(2);
-    $user->passRaw = 'a password';
-    $this->drupalLogin($user);
+    // Ensure a migrated user can log in.
+    $this->assertUserLogIn(2, 'a password');
+
     $this->assertFollowUpMigrationResults();
   }
 

@@ -61,9 +61,7 @@ abstract class MultilingualReviewPageTestBase extends MigrateUpgradeTestBase {
     $session->pageTextNotContains(t('module not found'));
 
     // Test the upgrade paths.
-    $available_paths = $this->getAvailablePaths();
-    $missing_paths = $this->getMissingPaths();
-    $this->assertUpgradePaths($session, $available_paths, $missing_paths);
+    $this->assertReviewForm();
 
     // Check there are no errors when a module does not have any migrations and
     // does not need any. Test with a module that is in both Drupal 6 and
@@ -85,8 +83,7 @@ abstract class MultilingualReviewPageTestBase extends MigrateUpgradeTestBase {
     // list.
     $available_paths = $this->getAvailablePaths();
     $available_paths = array_diff($available_paths, [$module_name]);
-    $missing_paths = $this->getMissingPaths();
-    $this->assertUpgradePaths($session, $available_paths, $missing_paths);
+    $this->assertReviewForm($available_paths);
   }
 
   /**

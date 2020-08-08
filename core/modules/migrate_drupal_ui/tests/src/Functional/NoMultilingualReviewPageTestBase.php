@@ -41,9 +41,7 @@ abstract class NoMultilingualReviewPageTestBase extends MultilingualReviewPageTe
     $session->pageTextNotContains(t('module not found'));
 
     // Test the upgrade paths.
-    $available_paths = $this->getAvailablePaths();
-    $missing_paths = $this->getMissingPaths();
-    $this->assertUpgradePaths($session, $available_paths, $missing_paths);
+    $this->assertReviewForm();
   }
 
 }

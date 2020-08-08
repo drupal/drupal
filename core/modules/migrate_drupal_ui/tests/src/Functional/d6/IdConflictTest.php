@@ -100,7 +100,7 @@ class IdConflictTest extends MigrateUpgradeExecuteTestBase {
       'comment',
       'node',
     ];
-    $this->assertIdConflict($session, $entity_types);
+    $this->assertIdConflictForm($entity_types);
   }
 
 }

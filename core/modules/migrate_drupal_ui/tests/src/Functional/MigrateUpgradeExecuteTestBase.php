@@ -12,13 +12,6 @@ abstract class MigrateUpgradeExecuteTestBase extends MigrateUpgradeTestBase {
   use CreateTestContentEntitiesTrait;
 
   /**
-   * The destination site major version.
-   *
-   * @var string
-   */
-  protected $destinationSiteVersion;
-
-  /**
    * {@inheritdoc}
    */
   protected function setUp() {
@@ -27,8 +20,6 @@ abstract class MigrateUpgradeExecuteTestBase extends MigrateUpgradeTestBase {
     // Create content.
     $this->createContent();
 
-    // Get the current major version.
-    [$this->destinationSiteVersion] = explode('.', \Drupal::VERSION, 2);
   }
 
   /**
@@ -103,7 +94,7 @@ abstract class MigrateUpgradeExecuteTestBase extends MigrateUpgradeTestBase {
       'taxonomy_term',
       'user',
     ];
-    $this->assertIdConflict($session, $entity_types);
+    $this->assertIdConflictForm($entity_types);
 
     $this->drupalPostForm(NULL, [], t('I acknowledge I may lose data. Continue anyway.'));
     $session->statusCodeEquals(200);
@@ -114,14 +105,11 @@ abstract class MigrateUpgradeExecuteTestBase extends MigrateUpgradeTestBase {
     // Ensure there are no errors about any other missing migration providers.
     $session->pageTextNotContains(t('module not found'));
 
-    // Test the review page.
-    $available_paths = $this->getAvailablePaths();
-    $missing_paths = $this->getMissingPaths();
-    $this->assertReviewPage($session, $available_paths, $missing_paths);
+    // Test the review form.
+    $this->assertReviewForm();
 
     $this->drupalPostForm(NULL, [], t('Perform upgrade'));
-    $this->assertText(t('Congratulations, you upgraded Drupal!'));
-    $this->assertMigrationResults($this->getEntityCounts(), $version);
+    $this->assertUpgrade($version, $this->getEntityCounts());
 
     \Drupal::service('module_installer')->install(['forum']);
     \Drupal::service('module_installer')->install(['book']);
@@ -144,8 +132,7 @@ abstract class MigrateUpgradeExecuteTestBase extends MigrateUpgradeTestBase {
 
     // Run the incremental migration and check the results.
     $this->drupalPostForm(NULL, [], t('Perform upgrade'));
-    $session->pageTextContains(t('Congratulations, you upgraded Drupal!'));
-    $this->assertMigrationResults($this->getEntityCountsIncremental(), $version);
+    $this->assertUpgrade($version, $this->getEntityCountsIncremental());
   }
 
 }
