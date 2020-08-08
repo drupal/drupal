@@ -9,6 +9,7 @@ use org\bovigo\vfs\vfsStream;
 
 /**
  * @coversDefaultClass \Drupal\Core\Site\Settings
+ * @runTestsInSeparateProcesses
  * @group Site
  */
 class SettingsTest extends UnitTestCase {
@@ -167,8 +168,6 @@ class SettingsTest extends UnitTestCase {
    * @param bool $expect_deprecation_message
    *   Should the case expect a deprecation message? Defaults to TRUE.
    *
-   * @runInSeparateProcess
-   *
    * @dataProvider providerTestFakeDeprecatedSettings
    *
    * @covers ::handleDeprecations
@@ -274,8 +273,6 @@ class SettingsTest extends UnitTestCase {
 
   /**
    * Tests legacy twig_sandbox_* settings.
-   *
-   * @runInSeparateProcess
    *
    * @group legacy
    *
