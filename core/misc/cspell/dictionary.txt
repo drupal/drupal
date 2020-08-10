@@ -325,7 +325,6 @@ conkey
 conname
 conneg
 conrelid
-contant
 contaynz
 contentblock
 contenteditable
@@ -571,7 +570,6 @@ eurozone
 evenodd
 eventhandler
 exampleurl
-exdep
 exitcode
 expirable
 extlink
@@ -807,11 +805,8 @@ instaclick
 install's
 installable
 instantiator
-inteface
-intefacewithconstants
 internal's
 introspectable
-invalida
 invalidateby
 invalidators
 invalididentifier
@@ -886,7 +881,6 @@ langcodes
 langname
 languageswitcher
 larowlan
-lastsplit
 latn
 layouted
 lazybuilder
@@ -1644,7 +1638,6 @@ subjectkeyword
 subkey
 subkeys
 submenu
-subpackage
 subparse
 subpath
 subpatterns
@@ -1960,7 +1953,6 @@ uploadsize
 uppercased
 upscaling
 upsert
-upserting
 upto
 urandom
 uri's
