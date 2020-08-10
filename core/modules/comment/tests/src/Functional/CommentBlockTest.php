@@ -43,7 +43,7 @@ class CommentBlockTest extends CommentTestBase {
    */
   public function testRecentCommentBlock() {
     $this->drupalLogin($this->adminUser);
-    $block = $this->drupalPlaceBlock('views_block:comments_recent-block_1');
+    $this->drupalPlaceBlock('views_block:comments_recent-block_1');
 
     // Add some test comments, with and without subjects. Because the 10 newest
     // comments should be shown by the block, we create 11 to test that behavior
