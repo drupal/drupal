@@ -9,12 +9,17 @@ use Drupal\Tests\Traits\ExpectDeprecationTrait;
  *
  * @group Test
  * @group legacy
+ *
+ * Do not remove this test when \Drupal\Tests\Traits\ExpectDeprecationTrait is
+ * removed. Change it to use \Symfony\Bridge\PhpUnit\ExpectDeprecationTrait
+ * instead to ensure Drupal has test coverage of Symfony's deprecation testing.
  */
 class ExpectDeprecationTest extends UnitTestCase {
   use ExpectDeprecationTrait;
 
   /**
    * @covers ::addExpectedDeprecationMessage
+   * @expectedDeprecation Drupal\Tests\Traits\ExpectDeprecationTrait::addExpectedDeprecationMessage() is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. Use \Symfony\Bridge\PhpUnit\ExpectDeprecationTrait::expectDeprecation() instead. See https://www.drupal.org/node/3161901
    */
   public function testExpectDeprecation() {
     $this->addExpectedDeprecationMessage('Test deprecation');
@@ -25,10 +30,12 @@ class ExpectDeprecationTest extends UnitTestCase {
    * @covers ::addExpectedDeprecationMessage
    * @runInSeparateProcess
    * @preserveGlobalState disabled
+   * @expectedDeprecation Drupal\Tests\Traits\ExpectDeprecationTrait::addExpectedDeprecationMessage() is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. Use \Symfony\Bridge\PhpUnit\ExpectDeprecationTrait::expectDeprecation() instead. See https://www.drupal.org/node/3161901
+   * @expectedDeprecation Drupal\Tests\Traits\ExpectDeprecationTrait::expectedDeprecations() is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. Use \Symfony\Bridge\PhpUnit\ExpectDeprecationTrait::expectDeprecation() instead. See https://www.drupal.org/node/3161901
    */
   public function testExpectDeprecationInIsolation() {
     $this->addExpectedDeprecationMessage('Test isolated deprecation');
-    $this->addExpectedDeprecationMessage('Test isolated deprecation2');
+    $this->expectedDeprecations(['Test isolated deprecation2']);
     @trigger_error('Test isolated deprecation', E_USER_DEPRECATED);
     @trigger_error('Test isolated deprecation2', E_USER_DEPRECATED);
   }

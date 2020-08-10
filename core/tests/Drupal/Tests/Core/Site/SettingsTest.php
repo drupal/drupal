@@ -3,9 +3,9 @@
 namespace Drupal\Tests\Core\Site;
 
 use Drupal\Core\Site\Settings;
-use Drupal\Tests\Traits\ExpectDeprecationTrait;
 use Drupal\Tests\UnitTestCase;
 use org\bovigo\vfs\vfsStream;
+use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 
 /**
  * @coversDefaultClass \Drupal\Core\Site\Settings
@@ -202,7 +202,7 @@ class SettingsTest extends UnitTestCase {
     $instance_property->setValue($deprecated_settings);
 
     if ($expect_deprecation_message) {
-      $this->addExpectedDeprecationMessage($deprecated_setting['message']);
+      $this->expectDeprecation($deprecated_setting['message']);
     }
 
     Settings::initialize(vfsStream::url('root'), 'sites', $class_loader);

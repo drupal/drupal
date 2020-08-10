@@ -4,7 +4,6 @@ namespace Drupal\Tests\Core\StackMiddleware;
 
 use Drupal\Core\Site\Settings;
 use Drupal\Core\StackMiddleware\ReverseProxyMiddleware;
-use Drupal\Tests\Traits\ExpectDeprecationTrait;
 use Drupal\Tests\UnitTestCase;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -14,7 +13,6 @@ use Symfony\Component\HttpFoundation\Request;
  * @group StackMiddleware
  */
 class ReverseProxyMiddlewareTest extends UnitTestCase {
-  use ExpectDeprecationTrait;
 
   /**
    * @var \Symfony\Component\HttpKernel\HttpKernelInterface|\PHPUnit\Framework\MockObject\MockObject

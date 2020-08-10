@@ -2,8 +2,6 @@
 
 namespace Drupal\Tests\Listeners;
 
-use Drupal\Tests\Traits\ExpectDeprecationTrait;
-use PHPUnit\Framework\TestCase;
 use PHPUnit\Util\Test;
 
 /**
@@ -15,22 +13,12 @@ use PHPUnit\Util\Test;
  */
 trait DeprecationListenerTrait {
 
-  use ExpectDeprecationTrait;
-
   /**
    * The previous error handler.
    *
    * @var callable
    */
   private $previousHandler;
-
-  protected function deprecationStartTest($test) {
-    if ($test instanceof TestCase) {
-      if ($this->willBeIsolated($test)) {
-        putenv('DRUPAL_EXPECTED_DEPRECATIONS_SERIALIZE=' . tempnam(sys_get_temp_dir(), 'exdep'));
-      }
-    }
-  }
 
   /**
    * Reacts to the end of a test.
@@ -42,13 +30,6 @@ trait DeprecationListenerTrait {
    */
   protected function deprecationEndTest($test, $time) {
     /** @var \PHPUnit\Framework\Test $test */
-    if ($file = getenv('DRUPAL_EXPECTED_DEPRECATIONS_SERIALIZE')) {
-      putenv('DRUPAL_EXPECTED_DEPRECATIONS_SERIALIZE');
-      $expected_deprecations = file_get_contents($file);
-      if ($expected_deprecations) {
-        $test->expectedDeprecations(unserialize($expected_deprecations));
-      }
-    }
     if ($file = getenv('SYMFONY_DEPRECATIONS_SERIALIZE')) {
       $method = $test->getName(FALSE);
       if (strpos($method, 'testLegacy') === 0
@@ -75,26 +56,6 @@ trait DeprecationListenerTrait {
         file_put_contents($file, serialize($deprecations));
       }
     }
-  }
-
-  /**
-   * Determines if a test is isolated.
-   *
-   * @param \PHPUnit\Framework\TestCase $test
-   *   The test to check.
-   *
-   * @return bool
-   *   TRUE if the isolated, FALSE if not.
-   */
-  private function willBeIsolated($test) {
-    if ($test->isInIsolation()) {
-      return FALSE;
-    }
-
-    $r = new \ReflectionProperty($test, 'runTestInSeparateProcess');
-    $r->setAccessible(TRUE);
-
-    return $r->getValue($test);
   }
 
   /**

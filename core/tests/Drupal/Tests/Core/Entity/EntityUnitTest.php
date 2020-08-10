@@ -10,7 +10,6 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Entity\EntityTypeRepositoryInterface;
 use Drupal\Core\Language\Language;
 use Drupal\entity_test\Entity\EntityTestMul;
-use Drupal\Tests\Traits\ExpectDeprecationTrait;
 use Drupal\Tests\UnitTestCase;
 
 /**
@@ -19,8 +18,6 @@ use Drupal\Tests\UnitTestCase;
  * @group Access
  */
 class EntityUnitTest extends UnitTestCase {
-
-  use ExpectDeprecationTrait;
 
   /**
    * The entity under test.

@@ -24,6 +24,6 @@
         "symfony/filesystem": "^4.4",
         "symfony/finder": "^4.4",
         "symfony/lock": "^4.4",
-        "symfony/phpunit-bridge": "^5.1"
+        "symfony/phpunit-bridge": "^5.1.3"
     }
 }

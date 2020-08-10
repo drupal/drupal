@@ -12,7 +12,6 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\TypedData\TypedDataManagerInterface;
-use Drupal\Tests\Traits\ExpectDeprecationTrait;
 use Drupal\Tests\UnitTestCase;
 use Drupal\Core\Language\Language;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
@@ -23,8 +22,6 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
  * @group Access
  */
 class ContentEntityBaseUnitTest extends UnitTestCase {
-
-  use ExpectDeprecationTrait;
 
   /**
    * The bundle of the entity under test.

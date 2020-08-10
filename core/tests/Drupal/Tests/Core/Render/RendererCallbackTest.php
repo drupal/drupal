@@ -3,15 +3,12 @@
 namespace Drupal\Tests\Core\Render;
 
 use Drupal\Core\Security\UntrustedCallbackException;
-use Drupal\Tests\Traits\ExpectDeprecationTrait;
 
 /**
  * @coversDefaultClass \Drupal\Core\Render\Renderer
  * @group Render
  */
 class RendererCallbackTest extends RendererTestBase {
-
-  use ExpectDeprecationTrait;
 
   /**
    * {@inheritdoc}

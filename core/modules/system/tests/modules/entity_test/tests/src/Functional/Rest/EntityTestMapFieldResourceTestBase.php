@@ -4,12 +4,9 @@ namespace Drupal\Tests\entity_test\Functional\Rest;
 
 use Drupal\entity_test\Entity\EntityTestMapField;
 use Drupal\Tests\rest\Functional\EntityResource\EntityResourceTestBase;
-use Drupal\Tests\Traits\ExpectDeprecationTrait;
 use Drupal\user\Entity\User;
 
 abstract class EntityTestMapFieldResourceTestBase extends EntityResourceTestBase {
-
-  use ExpectDeprecationTrait;
 
   /**
    * {@inheritdoc}

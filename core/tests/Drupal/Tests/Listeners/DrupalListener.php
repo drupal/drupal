@@ -81,7 +81,6 @@ class DrupalListener implements TestListener {
     // \Symfony\Bridge\PhpUnit\Legacy\SymfonyTestsListenerTrait::startTest()
     // that handles expected deprecations.
     $this->registerErrorHandler();
-    $this->deprecationStartTest($test);
     $this->symfonyListener->startTest($test);
     // Check for missing void return typehints in concrete test classes'
     // methods. If the method is inherited from a base test class, do
