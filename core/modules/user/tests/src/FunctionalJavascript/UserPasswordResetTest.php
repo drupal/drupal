@@ -103,7 +103,7 @@ class UserPasswordResetTest extends WebDriverTestBase {
     $this->assertSession()->waitForButton('Remove');
 
     // Change the forgotten password.
-    $password = user_password();
+    $password = \Drupal::service('password_generator')->generate();
     $edit = ['pass[pass1]' => $password, 'pass[pass2]' => $password];
     $this->drupalPostForm(NULL, $edit, t('Save'));
 

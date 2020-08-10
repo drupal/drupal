@@ -967,6 +967,8 @@ services:
   password:
     class: Drupal\Core\Password\PhpassHashedPassword
     arguments: [16]
+  password_generator:
+    class: Drupal\Core\Password\DefaultPasswordGenerator
   request_format_route_filter:
     class: Drupal\Core\Routing\RequestFormatRouteFilter
     tags:

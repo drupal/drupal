@@ -113,7 +113,7 @@ class UserPasswordResetTest extends BrowserTestBase {
     $this->assertSession()->titleEquals($this->account->getAccountName() . ' | Drupal');
 
     // Change the forgotten password.
-    $password = user_password();
+    $password = \Drupal::service('password_generator')->generate();
     $edit = ['pass[pass1]' => $password, 'pass[pass2]' => $password];
     $this->drupalPostForm(NULL, $edit, t('Save'));
     $this->assertText(t('The changes have been saved.'), 'Forgotten password changed.');
@@ -254,7 +254,7 @@ class UserPasswordResetTest extends BrowserTestBase {
     $this->drupalPostForm(NULL, NULL, t('Log in'));
 
     // Change the password.
-    $password = user_password();
+    $password = \Drupal::service('password_generator')->generate();
     $edit = ['pass[pass1]' => $password, 'pass[pass2]' => $password];
     $this->drupalPostForm(NULL, $edit, t('Save'));
     $this->assertText(t('The changes have been saved.'), 'Password changed.');

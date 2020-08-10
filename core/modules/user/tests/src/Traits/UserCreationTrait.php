@@ -177,7 +177,7 @@ trait UserCreationTrait {
     }
     $edit += [
       'mail' => $edit['name'] . '@example.com',
-      'pass' => user_password(),
+      'pass' => \Drupal::service('password_generator')->generate(),
       'status' => 1,
     ];
     if ($rid) {

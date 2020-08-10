@@ -410,7 +410,7 @@ class DbLogTest extends BrowserTestBase {
   private function doUser() {
     // Set user variables.
     $name = $this->randomMachineName();
-    $pass = user_password();
+    $pass = \Drupal::service('password_generator')->generate();
     // Add a user using the form to generate an add user event (which is not
     // triggered by drupalCreateUser).
     $edit = [];

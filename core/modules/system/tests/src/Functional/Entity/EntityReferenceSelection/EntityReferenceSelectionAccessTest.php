@@ -257,14 +257,14 @@ class EntityReferenceSelectionAccessTest extends KernelTestBase {
         'name' => 'non_admin <&>',
         'mail' => 'non_admin@example.com',
         'roles' => [],
-        'pass' => user_password(),
+        'pass' => \Drupal::service('password_generator')->generate(),
         'status' => 1,
       ],
       'blocked' => [
         'name' => 'blocked <&>',
         'mail' => 'blocked@example.com',
         'roles' => [],
-        'pass' => user_password(),
+        'pass' => \Drupal::service('password_generator')->generate(),
         'status' => 0,
       ],
     ];
