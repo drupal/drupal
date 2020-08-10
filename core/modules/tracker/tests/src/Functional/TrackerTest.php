@@ -355,7 +355,7 @@ class TrackerTest extends BrowserTestBase {
     $this->verbose($pattern);
     // Verify that the most recent comment on node appears at the top of
     // tracker.
-    $this->assertPattern($pattern);
+    $this->assertSession()->responseMatches($pattern);
   }
 
   /**

@@ -189,7 +189,7 @@ class CommentAnonymousTest extends CommentTestBase {
     ]);
     $this->drupalGet('node/' . $this->node->id());
     // Verify that the comment field title is displayed.
-    $this->assertPattern('@<h2[^>]*>Comments</h2>@');
+    $this->assertSession()->responseMatches('@<h2[^>]*>Comments</h2>@');
     $this->assertSession()->linkExists('Log in', 1, 'Link to login was found.');
     $this->assertSession()->linkExists('register', 1, 'Link to register was found.');
 

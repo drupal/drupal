@@ -286,6 +286,17 @@ class BrowserTestBaseTest extends BrowserTestBase {
   }
 
   /**
+   * Tests legacy assertPattern().
+   *
+   * @group legacy
+   * @expectedDeprecation AssertLegacyTrait::assertPattern() is deprecated in drupal:8.2.0 and is removed from drupal:10.0.0. Use $this->assertSession()->responseMatches() instead. See https://www.drupal.org/node/3129738
+   */
+  public function testAssertPattern() {
+    $this->drupalGet('test-escaped-characters');
+    $this->assertPattern('/div class.*escaped/');
+  }
+
+  /**
    * Tests legacy getRawContent().
    *
    * @group legacy

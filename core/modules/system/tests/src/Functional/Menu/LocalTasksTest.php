@@ -78,7 +78,7 @@ class LocalTasksTest extends BrowserTestBase {
     // so use a pattern instead to check the raw content.
     // This behavior is a bug in libxml, see
     // https://bugs.php.net/bug.php?id=49437.
-    return $this->assertPattern('@<a [^>]*>' . preg_quote($title, '@') . '</a>@');
+    return $this->assertSession()->responseMatches('@<a [^>]*>' . preg_quote($title, '@') . '</a>@');
   }
 
   /**

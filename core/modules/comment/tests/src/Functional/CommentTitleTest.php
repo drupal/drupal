@@ -46,7 +46,7 @@ class CommentTitleTest extends CommentTestBase {
     $regex .= $comment->comment_body->value . '(.*?)';
     $regex .= '/s';
     // Verify that the comment is created successfully.
-    $this->assertPattern($regex);
+    $this->assertSession()->responseMatches($regex);
     // Tests that markup is not generated for the comment without header.
     $this->assertSession()->responseNotMatches('|<h3[^>]*></h3>|', 'Comment title H3 element not found when title is an empty string.');
   }
@@ -77,7 +77,7 @@ class CommentTitleTest extends CommentTestBase {
     // Confirm that the comment was created.
     $this->assertTrue($this->commentExists($comment1), 'Comment #1. Comment found.');
     // Tests that markup is created for comment with heading.
-    $this->assertPattern('|<h3[^>]*><a[^>]*>' . $subject_text . '</a></h3>|');
+    $this->assertSession()->responseMatches('|<h3[^>]*><a[^>]*>' . $subject_text . '</a></h3>|');
     // Tests that the comment's title link is the permalink of the comment.
     $comment_permalink = $this->cssSelect('.permalink');
     $comment_permalink = $comment_permalink[0]->getAttribute('href');

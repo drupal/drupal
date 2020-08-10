@@ -371,7 +371,7 @@ class CommentNonNodeTest extends BrowserTestBase {
     ]);
     $this->drupalGet('entity_test/' . $this->entity->id());
     // Verify that the comment field title is displayed.
-    $this->assertPattern('@<h2[^>]*>Comments</h2>@');
+    $this->assertSession()->responseMatches('@<h2[^>]*>Comments</h2>@');
     $this->assertSession()->linkExists('Log in', 0, 'Link to login was found.');
     $this->assertSession()->linkExists('register', 0, 'Link to register was found.');
     $this->assertNoFieldByName('subject[0][value]', '', 'Subject field not found.');
