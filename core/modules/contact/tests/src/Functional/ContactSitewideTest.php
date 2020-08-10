@@ -195,7 +195,7 @@ class ContactSitewideTest extends BrowserTestBase {
     $this->assertSession()->assertEscaped($recipients[0]);
 
     // Test update contact form.
-    $this->updateContactForm($id, $label = $this->randomMachineName(16), $recipients_str = implode(',', [$recipients[0], $recipients[1]]), $reply = $this->randomMachineName(30), FALSE, 'Your message has been sent.', '/user');
+    $this->updateContactForm($id, $label = $this->randomMachineName(16), implode(',', [$recipients[0], $recipients[1]]), $reply = $this->randomMachineName(30), FALSE, 'Your message has been sent.', '/user');
     $config = $this->config('contact.form.' . $id)->get();
     $this->assertEqual($config['label'], $label);
     $this->assertEqual($config['recipients'], [$recipients[0], $recipients[1]]);
