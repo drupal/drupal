@@ -679,7 +679,7 @@ class FormTest extends FieldTestBase {
     $this->assertSession()->statusCodeEquals(200);
     $this->assertText('A field with multiple values');
     // Test if labels were XSS filtered.
-    $this->assertEscaped("<script>alert('a configurable field');</script>");
+    $this->assertSession()->assertEscaped("<script>alert('a configurable field');</script>");
   }
 
   /**

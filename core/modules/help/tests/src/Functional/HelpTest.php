@@ -141,16 +141,16 @@ class HelpTest extends BrowserTestBase {
         foreach ($admin_tasks as $task) {
           $this->assertSession()->linkExists($task['title']);
           // Ensure there are no double escaped '&' or '<' characters.
-          $this->assertNoEscaped('&amp;');
-          $this->assertNoEscaped('&lt;');
+          $this->assertSession()->assertNoEscaped('&amp;');
+          $this->assertSession()->assertNoEscaped('&lt;');
           // Ensure there are no escaped '<' characters.
-          $this->assertNoEscaped('<');
+          $this->assertSession()->assertNoEscaped('<');
         }
         // Ensure there are no double escaped '&' or '<' characters.
-        $this->assertNoEscaped('&amp;');
-        $this->assertNoEscaped('&lt;');
+        $this->assertSession()->assertNoEscaped('&amp;');
+        $this->assertSession()->assertNoEscaped('&lt;');
         // Ensure there are no escaped '<' characters.
-        $this->assertNoEscaped('<');
+        $this->assertSession()->assertNoEscaped('<');
       }
     }
   }

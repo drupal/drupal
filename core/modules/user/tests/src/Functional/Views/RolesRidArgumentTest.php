@@ -32,7 +32,7 @@ class RolesRidArgumentTest extends UserTestBase {
     $user->save();
 
     $this->drupalGet('/user_roles_rid_test/markup_role_name');
-    $this->assertEscaped('<em>Role name with markup</em>');
+    $this->assertSession()->assertEscaped('<em>Role name with markup</em>');
   }
 
 }

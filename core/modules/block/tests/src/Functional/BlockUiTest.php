@@ -97,7 +97,7 @@ class BlockUiTest extends BrowserTestBase {
     // Ensure that other themes can use the block demo page.
     \Drupal::service('theme_installer')->install(['test_theme']);
     $this->drupalGet('admin/structure/block/demo/test_theme');
-    $this->assertEscaped('<strong>Test theme</strong>');
+    $this->assertSession()->assertEscaped('<strong>Test theme</strong>');
 
     // Ensure that a hidden theme cannot use the block demo page.
     \Drupal::service('theme_installer')->install(['stable']);

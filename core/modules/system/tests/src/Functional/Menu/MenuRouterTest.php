@@ -68,7 +68,7 @@ class MenuRouterTest extends BrowserTestBase {
     $this->assertSession()->linkExists('Local task A');
     $this->assertSession()->linkExists('Local task B');
     $this->assertSession()->linkNotExists('Local task C');
-    $this->assertEscaped("<script>alert('Welcome to the jungle!')</script>");
+    $this->assertSession()->assertEscaped("<script>alert('Welcome to the jungle!')</script>");
     // Confirm correct local task href.
     $this->assertLinkByHref(Url::fromRoute('menu_test.router_test1', ['bar' => $machine_name])->toString());
     $this->assertLinkByHref(Url::fromRoute('menu_test.router_test2', ['bar' => $machine_name])->toString());

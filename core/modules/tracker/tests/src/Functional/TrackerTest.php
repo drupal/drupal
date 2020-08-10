@@ -230,12 +230,12 @@ class TrackerTest extends BrowserTestBase {
     Cache::invalidateTags(['rendered']);
     \Drupal::state()->set('user_hooks_test_user_format_name_alter', TRUE);
     $this->drupalGet('user/' . $this->user->id() . '/activity');
-    $this->assertEscaped('<em>' . $this->user->id() . '</em>');
+    $this->assertSession()->assertEscaped('<em>' . $this->user->id() . '</em>');
 
     \Drupal::state()->set('user_hooks_test_user_format_name_alter_safe', TRUE);
     Cache::invalidateTags(['rendered']);
     $this->drupalGet('user/' . $this->user->id() . '/activity');
-    $this->assertNoEscaped('<em>' . $this->user->id() . '</em>');
+    $this->assertSession()->assertNoEscaped('<em>' . $this->user->id() . '</em>');
     $this->assertRaw('<em>' . $this->user->id() . '</em>');
   }
 

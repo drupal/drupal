@@ -113,7 +113,7 @@ FROM
 {views_test_data} "views_test_data"
 WHERE (views_test_data.id = '100')
 SQL;
-    $this->assertEscaped($query_string);
+    $this->assertSession()->assertEscaped($query_string);
 
     // Test that the statistics and query are rendered above the preview.
     $this->assertTrue(strpos($this->getSession()->getPage()->getContent(), 'views-query-info') < strpos($this->getSession()->getPage()->getContent(), 'view-test-preview'), 'Statistics shown above the preview.');

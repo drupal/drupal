@@ -35,7 +35,7 @@ class DisplayAttachmentTest extends UITestBase {
     $attachment_display_url = 'admin/structure/views/nojs/display/test_attachment_ui/attachment_1/displays';
     $this->drupalGet($attachment_display_url);
     // Display labels should be escaped.
-    $this->assertEscaped('<em>Page</em>');
+    $this->assertSession()->assertEscaped('<em>Page</em>');
 
     $this->assertSession()->checkboxNotChecked("edit-displays-default");
     $this->assertSession()->checkboxNotChecked("edit-displays-page-1");
@@ -43,7 +43,7 @@ class DisplayAttachmentTest extends UITestBase {
     // Save the attachments and test the value on the view.
     $this->drupalPostForm($attachment_display_url, ['displays[page_1]' => 1], t('Apply'));
     // Options summary should be escaped.
-    $this->assertEscaped('<em>Page</em>');
+    $this->assertSession()->assertEscaped('<em>Page</em>');
     $this->assertNoRaw('<em>Page</em>');
     $result = $this->xpath('//a[@id = :id]', [':id' => 'views-attachment-1-displays']);
     $this->assertEqual($result[0]->getAttribute('title'), t('Page'));

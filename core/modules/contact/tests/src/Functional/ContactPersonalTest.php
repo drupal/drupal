@@ -83,7 +83,7 @@ class ContactPersonalTest extends BrowserTestBase {
     $this->drupalLogin($this->webUser);
 
     $this->drupalGet('user/' . $this->contactUser->id() . '/contact');
-    $this->assertEscaped($mail);
+    $this->assertSession()->assertEscaped($mail);
     $message = $this->submitPersonalContact($this->contactUser);
     $mails = $this->getMails();
     $this->assertCount(1, $mails);

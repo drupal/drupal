@@ -108,7 +108,7 @@ class ConfigTranslationOverviewTest extends BrowserTestBase {
       $base_url = 'admin/structure/config_test/manage/' . $test_entity->id();
       $this->drupalGet('admin/config/regional/config-translation/config_test');
       $this->assertLinkByHref($base_url . '/translate');
-      $this->assertEscaped($test_entity->label());
+      $this->assertSession()->assertEscaped($test_entity->label());
 
       // Make sure there is only a single 'Translate' operation for each
       // dropbutton.

@@ -323,7 +323,7 @@ class FilterAdminTest extends BrowserTestBase {
     $edit['body[0][format]'] = $plain;
     $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, t('Save'));
     $this->drupalGet('node/' . $node->id());
-    $this->assertEscaped($text);
+    $this->assertSession()->assertEscaped($text);
     $this->config('filter.settings')
       ->set('always_show_fallback_choice', FALSE)
       ->save();
@@ -438,7 +438,7 @@ class FilterAdminTest extends BrowserTestBase {
     $this->assertNoText('filtered text');
     // The text is not displayed unfiltered or escaped.
     $this->assertNoRaw($body_value);
-    $this->assertNoEscaped($body_value);
+    $this->assertSession()->assertNoEscaped($body_value);
 
     // Visit the dblog report page.
     $this->drupalLogin($this->adminUser);
@@ -454,7 +454,7 @@ class FilterAdminTest extends BrowserTestBase {
     $this->drupalGet($node->toUrl());
     // The text is not displayed unfiltered or escaped.
     $this->assertNoRaw($body_value);
-    $this->assertNoEscaped($body_value);
+    $this->assertSession()->assertNoEscaped($body_value);
 
     // Visit the dblog report page.
     $this->drupalGet('admin/reports/dblog');

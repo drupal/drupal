@@ -61,7 +61,7 @@ class SearchPageTextTest extends BrowserTestBase {
 
     $this->drupalLogin($this->searchingUser);
     $this->drupalGet('search/node');
-    $this->assertEscaped($keys['label']);
+    $this->assertSession()->assertEscaped($keys['label']);
   }
 
   /**

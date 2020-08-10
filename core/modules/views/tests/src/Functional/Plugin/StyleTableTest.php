@@ -216,7 +216,7 @@ class StyleTableTest extends ViewTestBase {
 
     // Ensure that all expected captions are found.
     foreach ($expected_captions as $raw_caption) {
-      $this->assertEscaped($raw_caption);
+      $this->assertSession()->assertEscaped($raw_caption);
     }
 
     $display = &$view->getDisplay('default');
@@ -238,7 +238,7 @@ class StyleTableTest extends ViewTestBase {
 
     // Ensure that all expected captions are found.
     foreach ($expected_captions as $raw_caption) {
-      $this->assertEscaped($raw_caption);
+      $this->assertSession()->assertEscaped($raw_caption);
     }
   }
 

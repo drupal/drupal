@@ -303,7 +303,8 @@ class ConfigImportUITest extends BrowserTestBase {
     $this->assertNoRaw('&amp;nbsp;');
     $this->assertSession()->titleEquals("View changes of $config_name | Drupal");
 
-    // The following assertions do not use $this::assertEscaped() because
+    // The following assertions do not use
+    // $this->assertSession()->assertEscaped() because
     // \Drupal\Component\Diff\DiffFormatter adds markup that signifies what has
     // changed.
 

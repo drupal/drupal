@@ -850,6 +850,19 @@ class BrowserTestBaseTest extends BrowserTestBase {
   }
 
   /**
+   * Tests deprecation of legacy assertEscaped() and assertNoEscaped().
+   *
+   * @group legacy
+   * @expectedDeprecation AssertLegacyTrait::assertNoEscaped() is deprecated in drupal:8.2.0 and is removed from drupal:10.0.0. Use $this->assertSession()->assertNoEscaped() instead. See https://www.drupal.org/node/3129738
+   * @expectedDeprecation AssertLegacyTrait::assertEscaped() is deprecated in drupal:8.2.0 and is removed from drupal:10.0.0. Use $this->assertSession()->assertEscaped() instead. See https://www.drupal.org/node/3129738
+   */
+  public function testLegacyEscapingAssertions(): void {
+    $this->drupalGet('test-escaped-characters');
+    $this->assertNoEscaped('<div class="escaped">');
+    $this->assertEscaped('Escaped: <"\'&>');
+  }
+
+  /**
    * Tests that deprecation headers do not get duplicated.
    *
    * @group legacy

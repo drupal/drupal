@@ -37,7 +37,7 @@ class TaxonomyFieldAllTermsTest extends TaxonomyTestBase {
     $this->assertCount(2, $actual, 'Correct number of taxonomy term1 links');
     $this->assertEqual($actual[0]->getText(), $this->term1->label());
     $this->assertEqual($actual[1]->getText(), $this->term1->label());
-    $this->assertEscaped($this->term1->label());
+    $this->assertSession()->assertEscaped($this->term1->label());
 
     $actual = $this->xpath('//a[@href="' . $this->term2->toUrl()->toString() . '"]');
     $this->assertCount(2, $actual, 'Correct number of taxonomy term2 links');

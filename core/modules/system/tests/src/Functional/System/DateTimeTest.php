@@ -160,7 +160,7 @@ class DateTimeTest extends BrowserTestBase {
 
     $this->drupalGet(Url::fromRoute('entity.date_format.collection'));
     // Ensure that the date format is properly escaped.
-    $this->assertEscaped("<script>alert('XSS');</script>");
+    $this->assertSession()->assertEscaped("<script>alert('XSS');</script>");
 
     // Add a new date format with HTML in it.
     $date_format_id = strtolower($this->randomMachineName(8));
@@ -175,7 +175,7 @@ class DateTimeTest extends BrowserTestBase {
     $this->assertUrl(Url::fromRoute('entity.date_format.collection', [], ['absolute' => TRUE])->toString(), [], 'Correct page redirection.');
     $this->assertText(t('Custom date format added.'), 'Date format added confirmation message appears.');
     $this->assertText($name, 'Custom date format appears in the date format list.');
-    $this->assertEscaped('<em>' . date("Y") . '</em>');
+    $this->assertSession()->assertEscaped('<em>' . date("Y") . '</em>');
   }
 
   /**

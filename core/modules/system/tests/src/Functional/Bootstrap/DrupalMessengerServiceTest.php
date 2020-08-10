@@ -48,7 +48,7 @@ class DrupalMessengerServiceTest extends BrowserTestBase {
     $this->assertNoUniqueText('Duplicate Markup / string.');
 
     // Ensure that strings that are not marked as safe are escaped.
-    $this->assertEscaped('<em>This<span>markup will be</span> escaped</em>.');
+    $this->assertSession()->assertEscaped('<em>This<span>markup will be</span> escaped</em>.');
 
     // Ensure messages survive a container rebuild.
     $assert = $this->assertSession();

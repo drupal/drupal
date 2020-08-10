@@ -81,7 +81,7 @@ class RowUITest extends UITestBase {
     $teaser->set('label', 'Teaser <em>markup</em>');
     $teaser->save();
     $this->drupalGet('admin/structure/views/view/frontpage/edit/default');
-    $this->assertEscaped('Teaser <em>markup</em>');
+    $this->assertSession()->assertEscaped('Teaser <em>markup</em>');
   }
 
 }

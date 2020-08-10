@@ -551,7 +551,7 @@ class ForumTest extends BrowserTestBase {
     $this->assertSession()->statusCodeEquals(200);
 
     // Verify there is no unintentional HTML tag escaping.
-    $this->assertNoEscaped('<');
+    $this->assertSession()->assertNoEscaped('<');
   }
 
   /**

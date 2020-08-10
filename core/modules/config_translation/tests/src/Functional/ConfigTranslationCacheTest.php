@@ -148,9 +148,9 @@ class ConfigTranslationCacheTest extends BrowserTestBase {
     $this->clickLink('Add');
 
     $this->assertText('Translatable field setting');
-    $this->assertEscaped($translatable_field_setting);
+    $this->assertSession()->assertEscaped($translatable_field_setting);
     $this->assertText('Translatable storage setting');
-    $this->assertEscaped($translatable_storage_setting);
+    $this->assertSession()->assertEscaped($translatable_storage_setting);
 
     // Add translation for label.
     $field_label_fr = $this->randomString();
@@ -163,19 +163,19 @@ class ConfigTranslationCacheTest extends BrowserTestBase {
     // Check if the translated label appears.
     $this->drupalLogin($this->adminUser);
     $this->drupalGet("/fr/entity_test/structure/$bundle/fields");
-    $this->assertEscaped($field_label_fr);
+    $this->assertSession()->assertEscaped($field_label_fr);
 
     // Clear cache on French version and check for translated label.
     $this->drupalPostForm('/fr/admin/config/development/performance', [], 'Clear all caches');
     $this->drupalGet("/fr/entity_test/structure/$bundle/fields");
     // Check if the translation is still there.
-    $this->assertEscaped($field_label_fr);
+    $this->assertSession()->assertEscaped($field_label_fr);
 
     // Clear cache on default version and check for translated label.
     $this->drupalPostForm('/admin/config/development/performance', [], 'Clear all caches');
     $this->drupalGet("/fr/entity_test/structure/$bundle/fields");
     // Check if the translation is still there.
-    $this->assertEscaped($field_label_fr);
+    $this->assertSession()->assertEscaped($field_label_fr);
   }
 
 }

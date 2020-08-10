@@ -759,9 +759,9 @@ class ConfigTranslationUiTest extends BrowserTestBase {
     $this->clickLink('Add');
 
     $this->assertText('Translatable field setting');
-    $this->assertEscaped($translatable_field_setting);
+    $this->assertSession()->assertEscaped($translatable_field_setting);
     $this->assertText('Translatable storage setting');
-    $this->assertEscaped($translatable_storage_setting);
+    $this->assertSession()->assertEscaped($translatable_storage_setting);
   }
 
   /**
@@ -800,8 +800,8 @@ class ConfigTranslationUiTest extends BrowserTestBase {
     $this->assertText(Html::escape(strip_tags($on_label)) . ' Boolean settings');
 
     // Checks that the correct on and off labels appear on the form.
-    $this->assertEscaped($on_label);
-    $this->assertEscaped($off_label);
+    $this->assertSession()->assertEscaped($on_label);
+    $this->assertSession()->assertEscaped($off_label);
   }
 
   /**

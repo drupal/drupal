@@ -282,9 +282,9 @@ class BlockTest extends BlockTestBase {
     $theme = 'block_test_specialchars_theme';
     \Drupal::service('theme_installer')->install([$theme]);
     $this->drupalGet('admin/structure/block');
-    $this->assertEscaped('<"Cat" & \'Mouse\'>');
+    $this->assertSession()->assertEscaped('<"Cat" & \'Mouse\'>');
     $this->drupalGet('admin/structure/block/list/block_test_specialchars_theme');
-    $this->assertEscaped('Demonstrate block regions (<"Cat" & \'Mouse\'>)');
+    $this->assertSession()->assertEscaped('Demonstrate block regions (<"Cat" & \'Mouse\'>)');
   }
 
   /**

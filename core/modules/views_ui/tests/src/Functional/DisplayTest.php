@@ -218,15 +218,15 @@ class DisplayTest extends UITestBase {
 
       $this->drupalGet("admin/structure/views/view/{$view->id()}");
       $escaped = views_ui_truncate($input, 25);
-      $this->assertEscaped($escaped);
+      $this->assertSession()->assertEscaped($escaped);
       $this->assertNoRaw($xss_markup);
 
       $this->drupalGet("admin/structure/views/view/{$view->id()}/edit/page_1");
-      $this->assertEscaped("View $escaped");
+      $this->assertSession()->assertEscaped("View $escaped");
       $this->assertNoRaw("View $xss_markup");
-      $this->assertEscaped("Duplicate $escaped");
+      $this->assertSession()->assertEscaped("Duplicate $escaped");
       $this->assertNoRaw("Duplicate $xss_markup");
-      $this->assertEscaped("Delete $escaped");
+      $this->assertSession()->assertEscaped("Delete $escaped");
       $this->assertNoRaw("Delete $xss_markup");
     }
   }
@@ -243,7 +243,7 @@ class DisplayTest extends UITestBase {
     $this->drupalPostForm($display_title_path, ['display_title' => $display_title], t('Apply'));
 
     // Ensure that the title is escaped as expected.
-    $this->assertEscaped($display_title);
+    $this->assertSession()->assertEscaped($display_title);
     $this->assertNoRaw($display_title);
 
     // Ensure that the dropdown buttons are displayed correctly.
@@ -258,7 +258,7 @@ class DisplayTest extends UITestBase {
     $this->assertNoFieldByXpath('//input[@type="submit"]', 'Disable ' . $display_title);
 
     // Ensure that the title is escaped as expected.
-    $this->assertEscaped($display_title);
+    $this->assertSession()->assertEscaped($display_title);
     $this->assertNoRaw($display_title);
   }
 

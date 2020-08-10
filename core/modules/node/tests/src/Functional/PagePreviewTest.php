@@ -204,7 +204,7 @@ class PagePreviewTest extends NodeTestBase {
     // Check that the preview is displaying the title, body and term.
     $expected_title = $edit[$title_key] . ' | Drupal';
     $this->assertSession()->titleEquals($expected_title);
-    $this->assertEscaped($edit[$title_key]);
+    $this->assertSession()->assertEscaped($edit[$title_key]);
     $this->assertText($edit[$body_key], 'Body displayed.');
     $this->assertText($edit[$term_key], 'Term displayed.');
     $this->assertSession()->linkExists(t('Back to content editing'));
@@ -244,7 +244,7 @@ class PagePreviewTest extends NodeTestBase {
     // Return to page preview to check everything is as expected.
     $this->drupalPostForm(NULL, [], t('Preview'));
     $this->assertSession()->titleEquals($expected_title);
-    $this->assertEscaped($edit[$title_key]);
+    $this->assertSession()->assertEscaped($edit[$title_key]);
     $this->assertText($edit[$body_key], 'Body displayed.');
     $this->assertText($edit[$term_key], 'Term displayed.');
     $this->assertSession()->linkExists(t('Back to content editing'));

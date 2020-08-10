@@ -49,7 +49,7 @@ class ViewsEscapingTest extends ViewTestBase {
     $this->drupalGet('test_page_display_200');
 
     // Assert that there are no escaped '<'s characters.
-    $this->assertNoEscaped('<');
+    $this->assertSession()->assertNoEscaped('<');
 
     // Install theme to test with template system.
     \Drupal::service('theme_installer')->install(['views_test_theme']);
@@ -66,7 +66,7 @@ class ViewsEscapingTest extends ViewTestBase {
     $this->assertText('force', 'The force is strong with this one');
 
     // Assert that there are no escaped '<'s characters.
-    $this->assertNoEscaped('<');
+    $this->assertSession()->assertNoEscaped('<');
   }
 
   /**
@@ -77,7 +77,7 @@ class ViewsEscapingTest extends ViewTestBase {
     $this->drupalGet('test_field_header');
 
     // Assert that there are no escaped '<'s characters.
-    $this->assertNoEscaped('<');
+    $this->assertSession()->assertNoEscaped('<');
 
     // Test with a field header label having a XSS test as a wrapper.
     $this->drupalGet('test_field_header_xss');

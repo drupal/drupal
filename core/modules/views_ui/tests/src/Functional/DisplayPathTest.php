@@ -87,9 +87,9 @@ class DisplayPathTest extends UITestBase {
     $this->drupalPostForm('admin/structure/views/view/test_view', [], t('Save'));
     $this->drupalGet('admin/structure/views');
     // The anchor text should be escaped.
-    $this->assertEscaped('/<object>malformed_path</object>');
-    $this->assertEscaped('/<script>alert("hello");</script>');
-    $this->assertEscaped('/<script>alert("hello I have placeholders %");</script>');
+    $this->assertSession()->assertEscaped('/<object>malformed_path</object>');
+    $this->assertSession()->assertEscaped('/<script>alert("hello");</script>');
+    $this->assertSession()->assertEscaped('/<script>alert("hello I have placeholders %");</script>');
     // Links should be url-encoded.
     $this->assertRaw('/%3Cobject%3Emalformed_path%3C/object%3E');
     $this->assertRaw('/%3Cscript%3Ealert%28%22hello%22%29%3B%3C/script%3E');

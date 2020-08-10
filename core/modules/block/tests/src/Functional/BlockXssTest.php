@@ -38,7 +38,7 @@ class BlockXssTest extends BrowserTestBase {
     ]));
     $this->drupalGet(Url::fromRoute('block.admin_display'));
     $this->clickLink('Place block');
-    $this->assertNoEscaped('<');
+    $this->assertSession()->assertNoEscaped('<');
   }
 
   /**
@@ -125,14 +125,14 @@ class BlockXssTest extends BrowserTestBase {
     // second one. Note that the second assertion is redundant with the one
     // further down which also checks for the Display label, but is included
     // here for clarity.
-    $this->assertNoEscaped('<script>alert("view1");</script>:');
-    $this->assertEscaped('<script>alert("view2");</script>:');
+    $this->assertSession()->assertNoEscaped('<script>alert("view1");</script>:');
+    $this->assertSession()->assertEscaped('<script>alert("view2");</script>:');
 
     // Assert that the blocks have their admin labels escaped and
     // don't appear anywhere unescaped.
-    $this->assertEscaped('<script>alert("view1");</script>');
+    $this->assertSession()->assertEscaped('<script>alert("view1");</script>');
     $this->assertNoRaw('<script>alert("view1");</script>');
-    $this->assertEscaped('<script>alert("view2");</script>: Fish & chips');
+    $this->assertSession()->assertEscaped('<script>alert("view2");</script>: Fish & chips');
     $this->assertNoRaw('<script>alert("view2");</script>');
     $this->assertNoRaw('Fish & chips');
 
@@ -153,7 +153,7 @@ class BlockXssTest extends BrowserTestBase {
     $this->drupalGet(Url::fromRoute('block.admin_display'));
     $this->clickLink('Place block');
 
-    $this->assertEscaped('<script>alert("menu");</script>');
+    $this->assertSession()->assertEscaped('<script>alert("menu");</script>');
     $this->assertNoRaw('<script>alert("menu");</script>');
   }
 
@@ -174,7 +174,7 @@ class BlockXssTest extends BrowserTestBase {
     $this->drupalGet(Url::fromRoute('block.admin_display'));
     $this->clickLink('Place block');
 
-    $this->assertEscaped('<script>alert("block_content");</script>');
+    $this->assertSession()->assertEscaped('<script>alert("block_content");</script>');
     $this->assertNoRaw('<script>alert("block_content");</script>');
   }
 

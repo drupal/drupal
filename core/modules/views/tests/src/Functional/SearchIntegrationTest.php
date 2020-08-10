@@ -120,7 +120,7 @@ class SearchIntegrationTest extends ViewTestBase {
     $results = $this->xpath($xpath);
     $this->assertEqual($results[0]->getText(), "Drupal's search rocks <em>really</em> rocks!");
     $this->assertEqual($results[1]->getText(), "Drupal's search rocks.");
-    $this->assertEscaped("Drupal's search rocks <em>really</em> rocks!");
+    $this->assertSession()->assertEscaped("Drupal's search rocks <em>really</em> rocks!");
 
     // Test sorting with another set of titles.
     $node = [

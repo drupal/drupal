@@ -78,7 +78,7 @@ class UpdatePostUpdateFailingTest extends BrowserTestBase {
     // First update, should not be run since this module's update hooks fail.
     $this->assertRaw('8001 -   This update will fail.');
     $this->assertRaw('8002 -   A further update.');
-    $this->assertEscaped("First update, should not be run since this module's update hooks fail.");
+    $this->assertSession()->assertEscaped("First update, should not be run since this module's update hooks fail.");
   }
 
 }

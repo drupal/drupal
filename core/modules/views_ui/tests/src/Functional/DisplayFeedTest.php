@@ -56,7 +56,7 @@ class DisplayFeedTest extends UITestBase {
     // Check the attach TO interface.
     $this->drupalGet('admin/structure/views/nojs/display/' . $view_name . '/feed_1/displays');
     // Display labels should be escaped.
-    $this->assertEscaped('<em>Page</em>');
+    $this->assertSession()->assertEscaped('<em>Page</em>');
 
     // Load all the options of the checkbox.
     $result = $this->xpath('//div[@id="edit-displays"]/div');
@@ -73,7 +73,7 @@ class DisplayFeedTest extends UITestBase {
     // Post and save this and check the output.
     $this->drupalPostForm('admin/structure/views/nojs/display/' . $view_name . '/feed_1/displays', ['displays[page]' => 'page'], t('Apply'));
     // Options summary should be escaped.
-    $this->assertEscaped('<em>Page</em>');
+    $this->assertSession()->assertEscaped('<em>Page</em>');
     $this->assertNoRaw('<em>Page</em>');
 
     $this->drupalGet('admin/structure/views/view/' . $view_name . '/edit/feed_1');

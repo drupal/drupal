@@ -50,12 +50,12 @@ class CommentPreviewTest extends CommentTestBase {
     $edit['subject[0][value]'] = $this->randomMachineName(8);
     $edit['comment_body[0][value]'] = $this->randomMachineName(16);
     $this->drupalPostForm('node/' . $this->node->id(), $edit, t('Preview'));
-    $this->assertEscaped('<em>' . $this->webUser->id() . '</em>');
+    $this->assertSession()->assertEscaped('<em>' . $this->webUser->id() . '</em>');
 
     \Drupal::state()->set('user_hooks_test_user_format_name_alter_safe', TRUE);
     $this->drupalPostForm('node/' . $this->node->id(), $edit, t('Preview'));
     $this->assertInstanceOf(MarkupInterface::class, $this->webUser->getDisplayName());
-    $this->assertNoEscaped('<em>' . $this->webUser->id() . '</em>');
+    $this->assertSession()->assertNoEscaped('<em>' . $this->webUser->id() . '</em>');
     $this->assertRaw('<em>' . $this->webUser->id() . '</em>');
 
     // Add a user picture.

@@ -400,7 +400,7 @@ class FormTest extends BrowserTestBase {
     $this->drupalGet('form-test/select');
 
     // Verify that the options are escaped as expected.
-    $this->assertEscaped('<strong>four</strong>');
+    $this->assertSession()->assertEscaped('<strong>four</strong>');
     $this->assertNoRaw('<strong>four</strong>');
 
     // Posting without any values should throw validation errors.
