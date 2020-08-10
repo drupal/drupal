@@ -40,14 +40,14 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *   parent:
  *     plugin: menu_link_parent
  *     source:
- *       - 20
- *       - management
- *       - admin/structure
+ *       - plid
+ *       - menu_name
+ *       - parent_link_path
  * @endcode
- * In this example we first try to look up a menu link item that had an ID '20'
- * in the source. If a parent menu item can't be found with this ID, we try to
- * determine the parent by a combination of 'management' menu name and
- * 'admin/structure' menu link path.
+ * In this example, first look for a menu link that had an ID defined by 'plid'
+ * in the source (e.g., '20'). If that fails, try to determine the parent by a
+ * combination of a menu name (e.g., 'management') and a parent menu link path
+ * (e.g., 'admin/structure').
  *
  * @see https://www.drupal.org/docs/8/api/menu-api
  * @see \Drupal\migrate\Plugin\MigrateProcessInterface
