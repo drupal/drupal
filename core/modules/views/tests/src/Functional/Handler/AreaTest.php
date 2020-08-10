@@ -80,9 +80,9 @@ class AreaTest extends ViewTestBase {
 
       // Test that the settings (empty/admin_label) are accessible.
       $this->drupalGet($edit_path);
-      $this->assertField('options[admin_label]');
+      $this->assertSession()->fieldExists('options[admin_label]');
       if ($type !== 'empty') {
-        $this->assertField('options[empty]');
+        $this->assertSession()->fieldExists('options[empty]');
       }
     }
   }

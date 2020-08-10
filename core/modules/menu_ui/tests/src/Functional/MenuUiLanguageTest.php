@@ -142,7 +142,7 @@ class MenuUiLanguageTest extends BrowserTestBase {
 
     // Check that the language selector is not available on menu link add page.
     $this->drupalGet("admin/structure/menu/manage/$menu_name/add");
-    $this->assertNoField('edit-langcode-0-value');
+    $this->assertSession()->fieldNotExists('edit-langcode-0-value');
   }
 
 }

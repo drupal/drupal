@@ -331,7 +331,7 @@ class FilterDateTest extends ViewTestBase {
     $this->drupalPostForm(NULL, [], t('Save'));
 
     $this->drupalGet('exposed-date-filter');
-    $this->assertField('created');
+    $this->assertSession()->fieldExists('created');
   }
 
 }

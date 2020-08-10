@@ -157,7 +157,7 @@ class ContentTranslationSettingsTest extends BrowserTestBase {
 
     // Verify language widget appears on comment type form.
     $this->drupalGet('admin/structure/comment/manage/comment_article');
-    $this->assertField('language_configuration[content_translation]');
+    $this->assertSession()->fieldExists('language_configuration[content_translation]');
     $this->assertSession()->checkboxChecked('edit-language-configuration-content-translation');
 
     // Verify that translation may be enabled for the article content type.
@@ -166,7 +166,7 @@ class ContentTranslationSettingsTest extends BrowserTestBase {
     ];
     // Make sure the checkbox is available and not checked by default.
     $this->drupalGet('admin/structure/types/manage/article');
-    $this->assertField('language_configuration[content_translation]');
+    $this->assertSession()->fieldExists('language_configuration[content_translation]');
     $this->assertSession()->checkboxNotChecked('edit-language-configuration-content-translation');
     $this->drupalPostForm('admin/structure/types/manage/article', $edit, t('Save content type'));
     $this->drupalGet('admin/structure/types/manage/article');
@@ -227,7 +227,7 @@ class ContentTranslationSettingsTest extends BrowserTestBase {
   public function testAccountLanguageSettingsUI() {
     // Make sure the checkbox is available and not checked by default.
     $this->drupalGet('admin/config/people/accounts');
-    $this->assertField('language[content_translation]');
+    $this->assertSession()->fieldExists('language[content_translation]');
     $this->assertSession()->checkboxNotChecked('edit-language-content-translation');
 
     $edit = [
@@ -305,7 +305,7 @@ class ContentTranslationSettingsTest extends BrowserTestBase {
    */
   public function testNonTranslatableTranslationSettingsUI() {
     $this->drupalGet('admin/config/regional/content-language');
-    $this->assertNoField('settings[entity_test][entity_test][translatable]');
+    $this->assertSession()->fieldNotExists('settings[entity_test][entity_test][translatable]');
   }
 
 }

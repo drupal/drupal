@@ -67,11 +67,11 @@ class UserAdminTest extends BrowserTestBase {
 
     // Test exposed filter elements.
     foreach (['user', 'role', 'permission', 'status'] as $field) {
-      $this->assertField("edit-$field");
+      $this->assertSession()->fieldExists("edit-$field");
     }
     // Make sure the reduce duplicates element from the ManyToOneHelper is not
     // displayed.
-    $this->assertNoField('edit-reduce-duplicates');
+    $this->assertSession()->fieldNotExists('edit-reduce-duplicates');
 
     // Filter the users by name/email.
     $this->drupalGet('admin/people', ['query' => ['user' => $user_a->getAccountName()]]);

@@ -2,6 +2,7 @@
 
 namespace Drupal\FunctionalTests;
 
+use Behat\Mink\Exception\ElementNotFoundException;
 use Behat\Mink\Exception\ExpectationException;
 use Drupal\Component\Serialization\Json;
 use Drupal\Component\Utility\Html;
@@ -350,16 +351,29 @@ class BrowserTestBaseTest extends BrowserTestBase {
 
   /**
    * Tests legacy field asserts using textfields.
+   *
+   * @group legacy
+   * @expectedDeprecation AssertLegacyTrait::assertField() is deprecated in drupal:8.2.0 and is removed from drupal:10.0.0. Use $this->assertSession()->fieldExists() or $this->assertSession()->buttonExists() instead. See https://www.drupal.org/node/3129738
+   * @expectedDeprecation AssertLegacyTrait::assertNoField() is deprecated in drupal:8.2.0 and is removed from drupal:10.0.0. Use $this->assertSession()->fieldNotExists() or $this->assertSession()->buttonNotExists() instead. See https://www.drupal.org/node/3129738
+   */
+  public function testAssertField() {
+    $this->drupalGet('test-field-xpath');
+    $this->assertField('name');
+    $this->assertNoField('invalid_name_and_id');
+  }
+
+  /**
+   * Tests field asserts using textfields.
    */
   public function testFieldAssertsForTextfields() {
     $this->drupalGet('test-field-xpath');
 
-    // *** 1. assertNoField().
-    $this->assertNoField('invalid_name_and_id');
+    // *** 1. fieldNotExists().
+    $this->assertSession()->fieldNotExists('invalid_name_and_id');
 
     // Test that the assertion fails correctly when searching by name.
     try {
-      $this->assertNoField('name');
+      $this->assertSession()->fieldNotExists('name');
       $this->fail('The "name" field was not found based on name.');
     }
     catch (ExpectationException $e) {
@@ -368,23 +382,23 @@ class BrowserTestBaseTest extends BrowserTestBase {
 
     // Test that the assertion fails correctly when searching by id.
     try {
-      $this->assertNoField('edit-name');
+      $this->assertSession()->fieldNotExists('edit-name');
       $this->fail('The "name" field was not found based on id.');
     }
     catch (ExpectationException $e) {
       // Expected exception; just continue testing.
     }
 
-    // *** 2. assertField().
-    $this->assertField('name');
-    $this->assertField('edit-name');
+    // *** 2. fieldExists().
+    $this->assertSession()->fieldExists('name');
+    $this->assertSession()->fieldExists('edit-name');
 
     // Test that the assertion fails correctly if the field does not exist.
     try {
-      $this->assertField('invalid_name_and_id');
+      $this->assertSession()->fieldExists('invalid_name_and_id');
       $this->fail('The "invalid_name_and_id" field was found.');
     }
-    catch (ExpectationFailedException $e) {
+    catch (ElementNotFoundException $e) {
       // Expected exception; just continue testing.
     }
 

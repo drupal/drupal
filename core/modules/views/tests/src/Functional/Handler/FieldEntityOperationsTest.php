@@ -99,8 +99,8 @@ class FieldEntityOperationsTest extends ViewTestBase {
 
     // Test that we can't enable click sorting on the operation field.
     $this->drupalGet('admin/structure/views/nojs/display/test_entity_operations/page_2/style_options');
-    $this->assertField('style_options[info][title][sortable]');
-    $this->assertNoField('style_options[info][operations][sortable]');
+    $this->assertSession()->fieldExists('style_options[info][title][sortable]');
+    $this->assertSession()->fieldNotExists('style_options[info][operations][sortable]');
   }
 
 }

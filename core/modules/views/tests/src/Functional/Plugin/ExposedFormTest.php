@@ -156,7 +156,7 @@ class ExposedFormTest extends ViewTestBase {
   public function testResetButton() {
     // Test the button is hidden when there is no exposed input.
     $this->drupalGet('test_exposed_form_buttons');
-    $this->assertNoField('edit-reset');
+    $this->assertSession()->fieldNotExists('edit-reset');
 
     $this->drupalGet('test_exposed_form_buttons', ['query' => ['type' => 'article']]);
     // Test that the type has been set.
@@ -169,7 +169,7 @@ class ExposedFormTest extends ViewTestBase {
     $this->assertFieldById('edit-type', 'All', 'Article type filter has been reset.');
 
     // Test the button is hidden after reset.
-    $this->assertNoField('edit-reset');
+    $this->assertSession()->fieldNotExists('edit-reset');
 
     // Test the reset works with type set.
     $this->drupalGet('test_exposed_form_buttons', ['query' => ['type' => 'article', 'op' => 'Reset']]);
@@ -177,7 +177,7 @@ class ExposedFormTest extends ViewTestBase {
     $this->assertFieldById('edit-type', 'All', 'Article type filter has been reset.');
 
     // Test the button is hidden after reset.
-    $this->assertNoField('edit-reset');
+    $this->assertSession()->fieldNotExists('edit-reset');
 
     // Rename the label of the reset button.
     $view = Views::getView('test_exposed_form_buttons');

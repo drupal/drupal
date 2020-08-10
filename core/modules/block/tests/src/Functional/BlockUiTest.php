@@ -121,11 +121,11 @@ class BlockUiTest extends BrowserTestBase {
       $element = $this->xpath('//*[@id="blocks"]/tbody/tr[' . $values['tr'] . ']/td[1]/text()');
       $this->assertEquals($element[0]->getText(), $label, 'The "' . $label . '" block title is set inside the ' . $values['settings']['region'] . ' region.');
       // Look for a test block region select form element.
-      $this->assertField('blocks[' . $values['settings']['id'] . '][region]');
+      $this->assertSession()->fieldExists('blocks[' . $values['settings']['id'] . '][region]');
       // Move the test block to the header region.
       $edit['blocks[' . $values['settings']['id'] . '][region]'] = 'header';
       // Look for a test block weight select form element.
-      $this->assertField('blocks[' . $values['settings']['id'] . '][weight]');
+      $this->assertSession()->fieldExists('blocks[' . $values['settings']['id'] . '][weight]');
       // Change the test block's weight.
       $edit['blocks[' . $values['settings']['id'] . '][weight]'] = $values['test_weight'];
     }

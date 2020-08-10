@@ -55,7 +55,7 @@ class NodeTypeInitialLanguageTest extends NodeTestBase {
 
     // Verify that language is not selectable on node add page by default.
     $this->drupalGet('node/add/article');
-    $this->assertNoField('langcode');
+    $this->assertSession()->fieldNotExists('langcode');
 
     // Adds a new language and set it as default.
     $edit = [
@@ -76,7 +76,7 @@ class NodeTypeInitialLanguageTest extends NodeTestBase {
     $this->drupalGet('node/add/article');
     // Ensure that the language is selectable on node add page when language
     // not hidden.
-    $this->assertField('langcode[0][value]');
+    $this->assertSession()->fieldExists('langcode[0][value]');
     $this->assertTrue($this->assertSession()->optionExists('edit-langcode-0-value', 'hu')->isSelected());
 
     // Tests if the language field can be rearranged on the manage form display

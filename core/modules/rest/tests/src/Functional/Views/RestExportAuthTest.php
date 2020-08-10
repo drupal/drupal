@@ -54,13 +54,13 @@ class RestExportAuthTest extends ViewTestBase {
     $this->drupalGet("admin/structure/views/nojs/display/$view_id/$view_display/auth");
     // The "basic_auth" will always be available since module,
     // providing it, has the same name.
-    $this->assertField('edit-auth-basic-auth');
+    $this->assertSession()->fieldExists('edit-auth-basic-auth');
     // The "cookie" authentication provider defined by "user" module.
-    $this->assertField('edit-auth-cookie');
+    $this->assertSession()->fieldExists('edit-auth-cookie');
     // Wrong behavior in "getAuthOptions()" method makes this option available
     // instead of "cookie".
     // @see \Drupal\rest\Plugin\views\display\RestExport::getAuthOptions()
-    $this->assertNoField('edit-auth-user');
+    $this->assertSession()->fieldNotExists('edit-auth-user');
 
     $this->drupalPostForm(NULL, ['auth[basic_auth]' => 1, 'auth[cookie]' => 1], 'Apply');
     $this->drupalPostForm(NULL, [], 'Save');

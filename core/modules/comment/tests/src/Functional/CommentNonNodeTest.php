@@ -276,12 +276,12 @@ class CommentNonNodeTest extends BrowserTestBase {
     // Test widget hidden option is not visible when there's no comments.
     $this->drupalGet('entity_test/structure/entity_test/fields/entity_test.entity_test.comment');
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertNoField('edit-default-value-input-comment-und-0-status-0');
+    $this->assertSession()->fieldNotExists('edit-default-value-input-comment-und-0-status-0');
     // Test that field to change cardinality is not available.
     $this->drupalGet('entity_test/structure/entity_test/fields/entity_test.entity_test.comment/storage');
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertNoField('cardinality_number');
-    $this->assertNoField('cardinality');
+    $this->assertSession()->fieldNotExists('cardinality_number');
+    $this->assertSession()->fieldNotExists('cardinality');
 
     $this->drupalLogin($this->adminUser);
 
@@ -451,7 +451,7 @@ class CommentNonNodeTest extends BrowserTestBase {
     $this->drupalGet('entity_test/manage/' . $new_entity->id() . '/edit');
     $this->assertSession()->checkboxNotChecked('edit-field-foobar-0-status-1');
     $this->assertSession()->checkboxChecked('edit-field-foobar-0-status-2');
-    $this->assertNoField('edit-field-foobar-0-status-0');
+    $this->assertSession()->fieldNotExists('edit-field-foobar-0-status-0');
 
     // @todo Check proper url and form https://www.drupal.org/node/2458323
     $this->drupalGet('comment/reply/entity_test/comment/' . $new_entity->id());

@@ -353,7 +353,7 @@ class ForumTest extends BrowserTestBase {
     // Test term edit form alterations.
     $this->drupalGet('taxonomy/term/' . $this->forumContainer['tid'] . '/edit');
     // Test parent field been hidden by forum module.
-    $this->assertNoField('parent[]');
+    $this->assertSession()->fieldNotExists('parent[]');
 
     // Create a default vocabulary named "Tags".
     $description = 'Use tags to group articles on similar topics into categories.';
@@ -372,7 +372,7 @@ class ForumTest extends BrowserTestBase {
     $this->assertSession()->linkExists(t('Delete'));
     // Test tags vocabulary term form is not affected.
     $this->drupalGet('admin/structure/taxonomy/manage/tags/add');
-    $this->assertField('parent[]', 'Parent field found.');
+    $this->assertSession()->fieldExists('parent[]');
     // Test relations widget exists.
     $relations_widget = $this->xpath("//details[@id='edit-relations']");
     $this->assertTrue(isset($relations_widget[0]), 'Relations widget element found.');

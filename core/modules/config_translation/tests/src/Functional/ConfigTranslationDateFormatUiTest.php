@@ -53,11 +53,11 @@ class ConfigTranslationDateFormatUiTest extends BrowserTestBase {
 
     // Date pattern is visible on unlocked date formats.
     $this->drupalGet('admin/config/regional/date-time/formats/manage/medium/translate/de/add');
-    $this->assertField('translation[config_names][core.date_format.medium][pattern]');
+    $this->assertSession()->fieldExists('translation[config_names][core.date_format.medium][pattern]');
 
     // Date pattern is not visible on locked date formats.
     $this->drupalGet('admin/config/regional/date-time/formats/manage/html_datetime/translate/es/add');
-    $this->assertNoField('translation[config_names][core.date_format.html_datetime][pattern]');
+    $this->assertSession()->fieldNotExists('translation[config_names][core.date_format.html_datetime][pattern]');
   }
 
 }

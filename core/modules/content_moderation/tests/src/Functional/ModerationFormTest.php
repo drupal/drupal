@@ -79,7 +79,7 @@ class ModerationFormTest extends ModerationStateTestBase {
     // live revision.
     $this->drupalGet($canonical_path);
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertField('edit-new-state');
+    $this->assertSession()->fieldExists('edit-new-state');
 
     // The latest version page should not show, because there is no pending
     // revision.
@@ -96,7 +96,7 @@ class ModerationFormTest extends ModerationStateTestBase {
     // live revision.
     $this->drupalGet($canonical_path);
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertField('edit-new-state');
+    $this->assertSession()->fieldExists('edit-new-state');
 
     // Preview the draft.
     $this->drupalPostForm($edit_path, [
@@ -111,7 +111,7 @@ class ModerationFormTest extends ModerationStateTestBase {
     ]);
     $this->assertSession()->statusCodeEquals(200);
     $this->assertUrl($preview_url);
-    $this->assertNoField('edit-new-state');
+    $this->assertSession()->fieldNotExists('edit-new-state');
 
     // The latest version page should not show, because there is still no
     // pending revision.
@@ -141,7 +141,7 @@ class ModerationFormTest extends ModerationStateTestBase {
     // live revision.
     $this->drupalGet($canonical_path);
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertNoField('edit-new-state');
+    $this->assertSession()->fieldNotExists('edit-new-state');
 
     // The latest version page should not show, because there is still no
     // pending revision.
@@ -158,13 +158,13 @@ class ModerationFormTest extends ModerationStateTestBase {
     // live revision.
     $this->drupalGet($canonical_path);
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertNoField('edit-new-state');
+    $this->assertSession()->fieldNotExists('edit-new-state');
 
     // The latest version page should show the moderation form and have "Draft"
     // status, because the pending revision is in "Draft".
     $this->drupalGet($latest_version_path);
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertField('edit-new-state');
+    $this->assertSession()->fieldExists('edit-new-state');
     $this->assertText('Draft', 'Correct status found on the latest-version page.');
 
     // Submit the moderation form to change status to published.

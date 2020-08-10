@@ -61,7 +61,7 @@ class LanguageBrowserDetectionTest extends BrowserTestBase {
     // Check we went back to the browser negotiation mapping overview.
     $this->assertUrl(Url::fromRoute('language.negotiation_browser', [], ['absolute' => TRUE])->toString());
     // Check that Chinese browser language code no longer exists.
-    $this->assertNoField('edit-mappings-zh-cn-browser-langcode');
+    $this->assertSession()->fieldNotExists('edit-mappings-zh-cn-browser-langcode');
 
     // Add a new custom mapping.
     $edit = [
