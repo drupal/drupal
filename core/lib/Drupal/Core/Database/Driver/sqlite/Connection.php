@@ -133,6 +133,7 @@ class Connection extends DatabaseConnection {
     // Create functions needed by SQLite.
     $pdo->sqliteCreateFunction('if', [__CLASS__, 'sqlFunctionIf']);
     $pdo->sqliteCreateFunction('greatest', [__CLASS__, 'sqlFunctionGreatest']);
+    $pdo->sqliteCreateFunction('least', [__CLASS__, 'sqlFunctionLeast']);
     $pdo->sqliteCreateFunction('pow', 'pow', 2);
     $pdo->sqliteCreateFunction('exp', 'exp', 1);
     $pdo->sqliteCreateFunction('length', 'strlen', 1);
@@ -237,6 +238,16 @@ class Connection extends DatabaseConnection {
     else {
       return NULL;
     }
+  }
+
+  /**
+   * SQLite compatibility implementation for the LEAST() SQL function.
+   */
+  public static function sqlFunctionLeast() {
+    // Remove all NULL, FALSE and empty strings values but leaves 0 (zero) values.
+    $values = array_filter(func_get_args(), 'strlen');
+
+    return count($values) < 1 ? NULL : min($values);
   }
 
   /**
