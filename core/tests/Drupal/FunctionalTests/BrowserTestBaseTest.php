@@ -57,6 +57,7 @@ class BrowserTestBaseTest extends BrowserTestBase {
     $this->assertStringNotContainsString('</html>', $text);
 
     // Response includes cache tags that we can assert.
+    $this->assertSession()->responseHeaderExists('X-Drupal-Cache-Tags');
     $this->assertSession()->responseHeaderEquals('X-Drupal-Cache-Tags', 'http_response rendered');
 
     // Test that we can read the JS settings.
@@ -75,6 +76,7 @@ class BrowserTestBaseTest extends BrowserTestBase {
     $this->drupalGet('system-test/header', [], [
       'Test-Header' => 'header value',
     ]);
+    $this->assertSession()->responseHeaderExists('Test-Header');
     $returned_header = $this->getSession()->getResponseHeader('Test-Header');
     $this->assertSame('header value', $returned_header);
   }
@@ -225,6 +227,16 @@ class BrowserTestBaseTest extends BrowserTestBase {
   public function testLinkNotExistsExact() {
     $this->drupalGet('test-pipe-char');
     $this->assertSession()->linkNotExistsExact('foo|bar');
+  }
+
+  /**
+   * Tests responseHeaderDoesNotExist() functionality.
+   *
+   * @see \Drupal\Tests\WebAssert::responseHeaderDoesNotExist()
+   */
+  public function testResponseHeaderDoesNotExist() {
+    $this->drupalGet('test-pipe-char');
+    $this->assertSession()->responseHeaderDoesNotExist('Foo-Bar');
   }
 
   /**

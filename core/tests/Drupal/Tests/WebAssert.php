@@ -10,6 +10,9 @@ use Behat\Mink\Exception\ElementNotFoundException;
 use Behat\Mink\Session;
 use Drupal\Component\Utility\Html;
 use Drupal\Core\Url;
+use PHPUnit\Framework\Assert;
+use PHPUnit\Framework\Constraint\ArrayHasKey;
+use PHPUnit\Framework\Constraint\LogicalNot;
 
 /**
  * Defines a class with methods for asserting presence of elements during tests.
@@ -53,6 +56,42 @@ class WebAssert extends MinkWebAssert {
       $url = "/$url";
     }
     return parent::cleanUrl($url);
+  }
+
+  /**
+   * Asserts that the current response header has a specific entry.
+   *
+   * @param string $name
+   *   The name of the header entry to check existence of.
+   * @param string $message
+   *   The failure message.
+   */
+  public function responseHeaderExists(string $name, string $message = ''): void {
+    if ($message === '') {
+      $message = "Failed asserting that the response has a '$name' header.";
+    }
+    $headers = $this->session->getResponseHeaders();
+    $constraint = new ArrayHasKey($name);
+    Assert::assertThat($headers, $constraint, $message);
+  }
+
+  /**
+   * Asserts that the current response header does not have a specific entry.
+   *
+   * @param string $name
+   *   The name of the header entry to check existence of.
+   * @param string $message
+   *   The failure message.
+   */
+  public function responseHeaderDoesNotExist(string $name, string $message = ''): void {
+    if ($message === '') {
+      $message = "Failed asserting that the response does not have a '$name' header.";
+    }
+    $headers = $this->session->getResponseHeaders();
+    $constraint = new LogicalNot(
+      new ArrayHasKey($name)
+    );
+    Assert::assertThat($headers, $constraint, $message);
   }
 
   /**

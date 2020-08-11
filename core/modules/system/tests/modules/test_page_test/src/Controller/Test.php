@@ -5,6 +5,7 @@ namespace Drupal\test_page_test\Controller;
 use Drupal\Core\Render\Markup;
 use Drupal\Core\Url;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
 /**
@@ -93,6 +94,20 @@ class Test {
     return [
       '#markup' => 'Content',
     ];
+  }
+
+  /**
+   * Sets an HTTP header,
+   *
+   * @param string $name
+   *   The header name.
+   * @param string $value
+   *   (optional) The header value ot set.
+   */
+  public function setHeader($name, $value = NULL) {
+    $response = new Response();
+    $response->headers->set($name, $value);
+    return $response;
   }
 
   /**

@@ -59,6 +59,14 @@ test_page_test.error:
   requirements:
     _access: 'TRUE'
 
+test_page_test.null_header:
+  path: '/test-null-header'
+  defaults:
+    _controller: '\Drupal\test_page_test\Controller\Test::setHeader'
+    name: Null-Header
+  requirements:
+    _access: 'TRUE'
+
 test_page_test.encoded:
   path: '/test-encoded'
   defaults:
