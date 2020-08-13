@@ -133,18 +133,26 @@ class ViewsModerationStateFilterTest extends ViewsKernelTestBase {
     $translated_forward_revision->moderation_state = 'translated_draft';
     $translated_forward_revision->save();
 
-    // The three default revisions are listed when no filter is specified.
-    $this->assertNodesWithFilters([$node, $second_node, $third_node], []);
+    // Test the filter within an AND filter group (the default) and an OR filter
+    // group.
+    $base_table_views = [
+      'test_content_moderation_state_filter_base_table',
+      'test_content_moderation_state_filter_base_table_filter_group_or',
+    ];
+    foreach ($base_table_views as $view_id) {
+      // The three default revisions are listed when no filter is specified.
+      $this->assertNodesWithFilters([$node, $second_node, $third_node], [], $view_id);
 
-    // The default revision of node one and three are published.
-    $this->assertNodesWithFilters([$node, $third_node], [
-      'default_revision_state' => 'editorial-published',
-    ]);
+      // The default revision of node one and three are published.
+      $this->assertNodesWithFilters([$node, $third_node], [
+        'default_revision_state' => 'editorial-published',
+      ], $view_id);
 
-    // The default revision of node two is draft.
-    $this->assertNodesWithFilters([$second_node], [
-      'default_revision_state' => 'editorial-draft',
-    ]);
+      // The default revision of node two is draft.
+      $this->assertNodesWithFilters([$second_node], [
+        'default_revision_state' => 'editorial-draft',
+      ], $view_id);
+    }
 
     // Test the same three revisions on a view displaying content revisions.
     // Both nodes have one draft revision.
