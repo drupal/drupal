@@ -256,13 +256,16 @@ class FieldResolver {
    *   The JSON:API resource type from which to resolve the field name.
    * @param string $external_field_name
    *   The public field name to map to a Drupal field name.
+   * @param string $operator
+   *   (optional) The operator of the condition for which the path should be
+   *   resolved.
    *
    * @return string
    *   The mapped field name.
    *
    * @throws \Drupal\Core\Http\Exception\CacheableBadRequestHttpException
    */
-  public function resolveInternalEntityQueryPath(ResourceType $resource_type, $external_field_name) {
+  public function resolveInternalEntityQueryPath(ResourceType $resource_type, $external_field_name, $operator = NULL) {
     $cacheability = (new CacheableMetadata())->addCacheContexts(['url.query_args:filter', 'url.query_args:sort']);
     if (empty($external_field_name)) {
       throw new CacheableBadRequestHttpException($cacheability, 'No field name was provided for the filter.');
@@ -355,7 +358,10 @@ class FieldResolver {
       // If there are no remaining path parts, the process is finished unless
       // the field has multiple properties, in which case one must be specified.
       if (empty($parts)) {
-        if ($property_specifier_needed) {
+        // If the operator is asserting the presence or absence of a
+        // relationship entirely, it does not make sense to require a property
+        // specifier.
+        if ($property_specifier_needed && (!$at_least_one_entity_reference_field || !in_array($operator, ['IS NULL', 'IS NOT NULL'], TRUE))) {
           $possible_specifiers = array_map(function ($specifier) use ($at_least_one_entity_reference_field) {
             return $at_least_one_entity_reference_field && $specifier !== 'id' ? "meta.$specifier" : $specifier;
           }, $candidate_property_names);
