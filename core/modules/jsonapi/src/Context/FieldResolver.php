@@ -256,18 +256,21 @@ class FieldResolver {
    *   The JSON:API resource type from which to resolve the field name.
    * @param string $external_field_name
    *   The public field name to map to a Drupal field name.
+   * @param string $operator
+   *   (optional) The operator of the condition for which the path should be
+   *   resolved.
    *
    * @return string
    *   The mapped field name.
    *
    * @throws \Drupal\Core\Http\Exception\CacheableBadRequestHttpException
    */
-  public function resolveInternalEntityQueryPath($resource_type, $external_field_name) {
+  public function resolveInternalEntityQueryPath($resource_type, $external_field_name, $operator = NULL) {
     $function_args = func_get_args();
     // @todo Remove this conditional block in drupal:9.0.0 and add a type hint
     // to the first argument of this method.
     // @see https://www.drupal.org/project/drupal/issues/3078045
-    if (count($function_args) === 3) {
+    if (count($function_args) === 3 && is_string($resource_type)) {
       @trigger_error('Passing the entity type ID and bundle to ' . __METHOD__ . ' is deprecated in drupal:8.8.0 and will throw a fatal error in drupal:9.0.0. Pass a JSON:API resource type instead. See https://www.drupal.org/node/3078036', E_USER_DEPRECATED);
       list($entity_type_id, $bundle, $external_field_name) = $function_args;
       $resource_type = $this->resourceTypeRepository->get($entity_type_id, $bundle);
@@ -368,7 +371,10 @@ class FieldResolver {
       // If there are no remaining path parts, the process is finished unless
       // the field has multiple properties, in which case one must be specified.
       if (empty($parts)) {
-        if ($property_specifier_needed) {
+        // If the operator is asserting the presence or absence of a
+        // relationship entirely, it does not make sense to require a property
+        // specifier.
+        if ($property_specifier_needed && (!$at_least_one_entity_reference_field || !in_array($operator, ['IS NULL', 'IS NOT NULL'], TRUE))) {
           $possible_specifiers = array_map(function ($specifier) use ($at_least_one_entity_reference_field) {
             return $at_least_one_entity_reference_field && $specifier !== 'id' ? "meta.$specifier" : $specifier;
           }, $candidate_property_names);
