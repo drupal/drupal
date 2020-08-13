@@ -919,6 +919,62 @@ class JsonApiRegressionTest extends JsonApiFunctionalTestBase {
   }
 
   /**
+   * Ensure filtering for entities with empty entity reference fields works.
+   *
+   * @see https://www.drupal.org/project/jsonapi/issues/3025372
+   */
+  public function testEmptyRelationshipFilteringFromIssue3025372() {
+    // Set up data model.
+    $this->drupalCreateContentType(['type' => 'folder']);
+    $this->createEntityReferenceField(
+      'node',
+      'folder',
+      'field_parent_folder',
+      NULL,
+      'node',
+      'default',
+      [
+        'target_bundles' => ['folder'],
+      ],
+      FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED
+    );
+    $this->rebuildAll();
+
+    // Create data.
+    $node = Node::create([
+      'title' => 'root folder',
+      'type' => 'folder',
+    ]);
+    $node->save();
+
+    // Test.
+    $user = $this->drupalCreateUser(['access content']);
+    $url = Url::fromRoute('jsonapi.node--folder.collection');
+    $request_options = [
+      RequestOptions::HEADERS => [
+        'Content-Type' => 'application/vnd.api+json',
+        'Accept' => 'application/vnd.api+json',
+      ],
+      RequestOptions::AUTH => [$user->getAccountName(), $user->pass_raw],
+    ];
+    $response = $this->request('GET', $url, $request_options);
+    $this->assertSame(200, $response->getStatusCode(), (string) $response->getBody());
+    $this->assertSame($node->uuid(), Json::decode((string) $response->getBody())['data'][0]['id']);
+    $response = $this->request('GET', $url->setOption('query', [
+      'filter[test][condition][path]' => 'field_parent_folder',
+      'filter[test][condition][operator]' => 'IS NULL',
+    ]), $request_options);
+    $this->assertSame(200, $response->getStatusCode(), (string) $response->getBody());
+    $this->assertSame($node->uuid(), Json::decode((string) $response->getBody())['data'][0]['id']);
+    $response = $this->request('GET', $url->setOption('query', [
+      'filter[test][condition][path]' => 'field_parent_folder',
+      'filter[test][condition][operator]' => 'IS NOT NULL',
+    ]), $request_options);
+    $this->assertSame(200, $response->getStatusCode(), (string) $response->getBody());
+    $this->assertEmpty(Json::decode((string) $response->getBody())['data']);
+  }
+
+  /**
    * Tests that the response still has meaningful error messages.
    */
   public function testRecursionDetectedWhenResponseContainsViolationsFrom3042124() {

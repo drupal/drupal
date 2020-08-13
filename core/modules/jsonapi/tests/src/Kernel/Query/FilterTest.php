@@ -413,7 +413,7 @@ class FilterTest extends JsonapiKernelTestBase {
    */
   protected function getFieldResolverMock(ResourceType $resource_type) {
     $field_resolver = $this->prophesize(FieldResolver::class);
-    $field_resolver->resolveInternalEntityQueryPath($resource_type, Argument::any())->willReturnArgument(1);
+    $field_resolver->resolveInternalEntityQueryPath($resource_type, Argument::any(), Argument::any())->willReturnArgument(1);
     return $field_resolver->reveal();
   }
 
