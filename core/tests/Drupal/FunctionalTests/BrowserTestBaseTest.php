@@ -77,8 +77,7 @@ class BrowserTestBaseTest extends BrowserTestBase {
       'Test-Header' => 'header value',
     ]);
     $this->assertSession()->responseHeaderExists('Test-Header');
-    $returned_header = $this->getSession()->getResponseHeader('Test-Header');
-    $this->assertSame('header value', $returned_header);
+    $this->assertSession()->responseHeaderEquals('Test-Header', 'header value');
   }
 
   /**

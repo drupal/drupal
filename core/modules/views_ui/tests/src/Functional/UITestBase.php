@@ -80,7 +80,7 @@ abstract class UITestBase extends ViewTestBase {
       $url = preg_replace('|/nojs/|', '/ajax/', $url, 1);
       $result = $this->drupalGet($url, $options);
       $this->assertSession()->statusCodeEquals(200);
-      $this->assertEquals('application/json', $this->getSession()->getResponseHeader('Content-Type'));
+      $this->assertSession()->responseHeaderEquals('Content-Type', 'application/json');
       $this->assertNotEmpty(json_decode($result), 'Ensure that the AJAX request returned valid content.');
     }
 

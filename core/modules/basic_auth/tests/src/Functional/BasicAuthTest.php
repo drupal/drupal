@@ -211,8 +211,8 @@ class BasicAuthTest extends BrowserTestBase {
     $assert_response_cacheability = function ($expected_page_cache_header_value, $expected_dynamic_page_cache_header_value) use ($session, $url) {
       $this->drupalGet($url);
       $this->assertSession()->statusCodeEquals(401);
-      $this->assertSame($expected_page_cache_header_value, $session->getResponseHeader('X-Drupal-Cache'));
-      $this->assertSame($expected_dynamic_page_cache_header_value, $session->getResponseHeader('X-Drupal-Dynamic-Cache'));
+      $this->assertSession()->responseHeaderEquals('X-Drupal-Cache', $expected_page_cache_header_value);
+      $this->assertSession()->responseHeaderEquals('X-Drupal-Dynamic-Cache', $expected_dynamic_page_cache_header_value);
     };
 
     // 1. First request: cold caches, both Page Cache and Dynamic Page Cache are
