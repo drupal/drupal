@@ -200,7 +200,7 @@ class CommentViewsData extends EntityViewsData {
       if ($type == 'comment' || !$entity_type->entityClassImplements(ContentEntityInterface::class) || !$entity_type->getBaseTable()) {
         continue;
       }
-      if ($fields = \Drupal::service('comment.manager')->getFields($type)) {
+      if (\Drupal::service('comment.manager')->getFields($type)) {
         $data['comment_field_data'][$type] = [
           'relationship' => [
             'title' => $entity_type->getLabel(),
