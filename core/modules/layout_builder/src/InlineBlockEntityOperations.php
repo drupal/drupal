@@ -163,18 +163,10 @@ class InlineBlockEntityOperations implements ContainerInjectionInterface {
         // duplicated.
         $duplicate_blocks = TRUE;
       }
-      $new_revision = FALSE;
-      if ($entity instanceof RevisionableInterface) {
-        // If the parent entity will have a new revision create a new revision
-        // of the block.
-        // @todo Currently revisions are never created for the parent entity.
-        //   This will be fixed in https://www.drupal.org/node/2937199.
-        //   To work around this always make a revision when the parent entity
-        //   is an instance of RevisionableInterface. After the issue is fixed
-        //   only create a new revision if '$entity->isNewRevision()'.
-        $new_revision = TRUE;
-      }
-
+      // Since multiple parent entity revisions may reference common block
+      // revisions, when a block is modified, it must always result in the
+      // creation of a new block revision.
+      $new_revision = $entity instanceof RevisionableInterface;
       foreach ($this->getInlineBlockComponents($sections) as $component) {
         $this->saveInlineBlockComponent($entity, $component, $new_revision, $duplicate_blocks);
       }
@@ -252,7 +244,7 @@ class InlineBlockEntityOperations implements ContainerInjectionInterface {
    * @param \Drupal\layout_builder\SectionComponent $component
    *   The section component with an inline block.
    * @param bool $new_revision
-   *   Whether a new revision of the block should be created.
+   *   Whether a new revision of the block should be created when modified.
    * @param bool $duplicate_blocks
    *   Whether the blocks should be duplicated.
    */
