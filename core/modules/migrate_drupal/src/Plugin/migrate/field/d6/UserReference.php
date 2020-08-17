@@ -1,12 +1,15 @@
 <?php
 
-namespace Drupal\migrate_drupal\Plugin\migrate\field;
+namespace Drupal\migrate_drupal\Plugin\migrate\field\d6;
 
 use Drupal\migrate\Plugin\MigrationInterface;
+use Drupal\migrate_drupal\Plugin\migrate\field\ReferenceBase;
 
 // cspell:ignore userreference
 
 /**
+ * MigrateField Plugin for Drupal 6 user reference fields.
+ *
  * @MigrateField(
  *   id = "userreference",
  *   core = {6},
@@ -16,8 +19,31 @@ use Drupal\migrate\Plugin\MigrationInterface;
  *   source_module = "userreference",
  *   destination_module = "core",
  * )
+ *
+ * @internal
  */
-class UserReference extends FieldPluginBase {
+class UserReference extends ReferenceBase {
+
+  /**
+   * The plugin ID for the reference type migration.
+   *
+   * @var string
+   */
+  protected $userTypeMigration = 'd6_user_role';
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function getEntityTypeMigrationId() {
+    return $this->userTypeMigration;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function entityId() {
+    return 'uid';
+  }
 
   /**
    * {@inheritdoc}
