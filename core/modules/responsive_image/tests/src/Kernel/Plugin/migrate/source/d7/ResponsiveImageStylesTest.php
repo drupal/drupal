@@ -15,7 +15,7 @@ class ResponsiveImageStylesTest extends MigrateSqlSourceTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['responsive_image'];
+  protected static $modules = ['responsive_image'];
 
   /**
    * {@inheritdoc}

@@ -15,7 +15,7 @@ class MigrateResponsiveImageStylesTest extends MigrateDrupal7TestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['responsive_image', 'breakpoint', 'image'];
+  protected static $modules = ['responsive_image', 'breakpoint', 'image'];
 
   /**
    * {@inheritdoc}
