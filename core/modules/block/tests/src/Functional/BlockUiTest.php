@@ -7,6 +7,8 @@ use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\language\Plugin\LanguageNegotiation\LanguageNegotiationUrl;
 use Drupal\Tests\BrowserTestBase;
 
+// cspell:ignore scriptalertxsssubjectscript
+
 /**
  * Tests that the block configuration UI exists and stores data correctly.
  *
@@ -333,13 +335,12 @@ class BlockUiTest extends BrowserTestBase {
     // block placement indicator. Click the first 'Place block' link to bring up
     // the list of blocks to place in the first available region.
     $this->clickLink('Place block');
-    // Select the first available block.
+    // Select the first available block, which is the 'test_xss_title' plugin,
+    // with a default machine name 'scriptalertxsssubjectscript' that is used
+    // for the 'block-placement' querystring parameter.
     $this->clickLink('Place block');
-    $block = [];
-    $block['id'] = strtolower($this->randomMachineName());
-    $block['theme'] = 'classy';
     $this->submitForm([], 'Save block');
-    $this->assertSession()->addressEquals('admin/structure/block/list/classy?block-placement=' . Html::getClass($block['id']));
+    $this->assertSession()->addressEquals('admin/structure/block/list/classy?block-placement=scriptalertxsssubjectscript');
 
     // Removing a block will remove the block placement indicator.
     $this->clickLink('Remove');

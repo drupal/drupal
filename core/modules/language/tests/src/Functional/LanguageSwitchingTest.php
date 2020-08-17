@@ -450,7 +450,7 @@ class LanguageSwitchingTest extends BrowserTestBase {
     // Click on the French link.
     $this->clickLink(t('French'));
     // There should be a query parameter to set the session language.
-    $this->assertUrl('user/2', ['query' => ['language' => 'fr']]);
+    $this->assertUrl('user/2?language=fr');
     // Click on the 'Home' Link.
     $this->clickLink(t('Home'));
     // There should be no query parameter.

@@ -49,7 +49,8 @@ class ConfirmFormTest extends BrowserTestBase {
     // Test cancelling the form with a complex destination.
     $this->drupalGet('form-test/confirm-form-array-path');
     $this->clickLink(t('ConfirmFormArrayPathTestForm::getCancelText().'));
-    $this->assertUrl('form-test/confirm-form', ['query' => ['destination' => 'admin/config']], "The form's complex cancel link was followed.");
+    // Verify that the form's complex cancel link was followed.
+    $this->assertUrl('form-test/confirm-form?destination=admin/config');
   }
 
   /**

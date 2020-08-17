@@ -60,7 +60,9 @@ class RedirectTest extends BrowserTestBase {
       'redirection' => FALSE,
     ];
     $this->drupalPostForm($path, $edit, t('Submit'), $options);
-    $this->assertUrl($path, $options, 'When redirect is set to FALSE, there should be no redirection, and the query parameters should be passed along.');
+    // When redirect is set to FALSE, there should be no redirection, and the
+    // query parameters should be passed along.
+    $this->assertUrl($path . '?foo=bar');
 
     // Test redirection back to the original path.
     $edit = [
@@ -76,7 +78,9 @@ class RedirectTest extends BrowserTestBase {
       'destination' => '',
     ];
     $this->drupalPostForm($path, $edit, t('Submit'), $options);
-    $this->assertUrl($path, $options, 'When using an empty redirection string, there should be no redirection, and the query parameters should be passed along.');
+    // When using an empty redirection string, there should be no redirection,
+    // and the query parameters should be passed along.
+    $this->assertUrl($path . '?foo=bar');
   }
 
   /**

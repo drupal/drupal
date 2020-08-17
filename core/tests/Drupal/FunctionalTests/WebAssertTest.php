@@ -3,6 +3,7 @@
 namespace Drupal\FunctionalTests;
 
 use Drupal\Tests\BrowserTestBase;
+use Behat\Mink\Exception\ExpectationException;
 use PHPUnit\Framework\AssertionFailedError;
 
 /**
@@ -18,6 +19,7 @@ class WebAssertTest extends BrowserTestBase {
    */
   protected static $modules = [
     'test_page_test',
+    'dblog',
   ];
 
   /**
@@ -51,6 +53,33 @@ class WebAssertTest extends BrowserTestBase {
     $this->expectException(AssertionFailedError::class);
     $this->expectExceptionMessage("Failed asserting that the response does not have a 'Null-Header' header.");
     $this->assertSession()->responseHeaderDoesNotExist('Null-Header');
+  }
+
+  /**
+   * Tests that addressEquals distinguishes querystrings.
+   *
+   * @covers ::addressEquals
+   */
+  public function testAddressEqualsDistinguishesQuerystrings() {
+    // Insert 300 log messages.
+    $logger = $this->container->get('logger.factory')->get('pager_test');
+    for ($i = 0; $i < 300; $i++) {
+      $logger->debug($this->randomString());
+    }
+
+    // Get to the db log report.
+    $this->drupalLogin($this->drupalCreateUser([
+      'access site reports',
+    ]));
+    $this->drupalGet('admin/reports/dblog');
+    $this->assertSession()->addressEquals('admin/reports/dblog');
+
+    // Go to the second page, we expect the querystring to change to '?page=1'.
+    $this->drupalGet('admin/reports/dblog', ['query' => ['page' => 1]]);
+    $this->assertSession()->addressEquals('admin/reports/dblog?page=1');
+    $this->expectException(ExpectationException::class);
+    $this->expectExceptionMessage('Current page is "/admin/reports/dblog?page=1", but "/admin/reports/dblog" expected.');
+    $this->assertSession()->addressEquals('admin/reports/dblog');
   }
 
 }
