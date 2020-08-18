@@ -140,16 +140,11 @@ tr .form-item,
 .form-item__label.form-required::after,
 .fieldset__label.form-required::after {
   display: inline-block;
-  width: 0.4375rem;
-  height: 0.4375rem;
-  margin-right: 0.3em;
-  margin-left: 0.3em;
-  content: "";
-  vertical-align: super;
-  /* Use a background image to prevent screen readers from announcing the text. */
-  background-image: url(../../images/core/ee0000/required.svg);
-  background-repeat: no-repeat;
-  background-size: 0.4375rem 0.4375rem;
+  margin-right: 0.15em;
+  margin-left: 0.15em;
+  content: "*";
+  color: #d72222;
+  font-size: 0.875rem;
 }
 
 /**
