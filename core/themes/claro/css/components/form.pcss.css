@@ -70,16 +70,11 @@ tr .form-item,
 .form-item__label.form-required::after,
 .fieldset__label.form-required::after {
   display: inline-block;
-  width: var(--input--required-mark-size);
-  height: var(--input--required-mark-size);
-  margin-right: 0.3em;
-  margin-left: 0.3em;
-  content: "";
-  vertical-align: super;
-  /* Use a background image to prevent screen readers from announcing the text. */
-  background-image: url(../../images/core/ee0000/required.svg);
-  background-repeat: no-repeat;
-  background-size: var(--input--required-mark-size) var(--input--required-mark-size);
+  margin-right: 0.15em;
+  margin-left: 0.15em;
+  content: "*";
+  color: var(--color-maximumred);
+  font-size: 0.875rem;
 }
 
 /**
