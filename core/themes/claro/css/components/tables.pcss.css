@@ -80,7 +80,7 @@ _:-ms-fullscreen, /* Only IE 11 */
   margin-top: -0.5rem;
   content: "";
   opacity: 0.5;
-  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='8' viewBox='0 0 14 8'%3E%3Cpath d='m1.75,0.25v1.5h10.5v-1.5z m0,3v1.5h7.5v-1.5z m0,3v1.5h4.5v-1.5z' fill='%23222330'/%3E%3C/svg%3E") no-repeat 50% 50%;
+  background: url(../../images/icons/222330/sort--inactive--ltr.svg) no-repeat 50% 50%;
   background-size: contain;
 }
 /* stylelint-disable-next-line selector-type-no-unknown */
@@ -94,7 +94,7 @@ _:-ms-fullscreen, /* Only IE 11 */
 [dir="rtl"] .sortable-heading > a::after {
   right: auto;
   left: 1rem;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='8' viewBox='0 0 14 8'%3E%3Cpath d='m12.25,0.25v1.5H1.75v-1.5z m0,3v1.5h-7.5v-1.5z m0,3v1.5h-4.5v-1.5z' fill='%23222330'/%3E%3C/svg%3E");
+  background-image: url(../../images/icons/222330/sort--inactive--rtl.svg);
 }
 /* stylelint-disable-next-line selector-type-no-unknown */
 _:-ms-fullscreen, /* Only IE 11 */

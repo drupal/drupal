@@ -142,7 +142,7 @@
   transition: transform var(--details-transform-transition-duration) ease-in 0s;
   transform: rotate(0); /* LTR */
   text-align: center;
-  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3E%3Cpath d='M5.2109375,1.3144531 3.7890625,2.7226562 9.0917969,8.0761719 3.7890625,13.429688 5.2109375,14.837891 11.908203,8.0761719Z' fill='%23545560'/%3E%3C/svg%3E") no-repeat 50% 50%;
+  background-image: url(../../images/icons/545560/chevron-right.svg);
   background-size: contain;
 }
 [dir="rtl"] .claro-details__summary::before {
@@ -263,7 +263,7 @@
 .claro-details[open] > .claro-details__summary--accordion::before,
 .claro-details[open] > .claro-details__summary--accordion-item::before,
 .claro-details[open] > .claro-details__summary--vertical-tabs-item::before {
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3E%3Cpath d='M5.2109375,1.3144531 3.7890625,2.7226562 9.0917969,8.0761719 3.7890625,13.429688 5.2109375,14.837891 11.908203,8.0761719Z' fill='%230036B1'/%3E%3C/svg%3E");
+  background-image: url(../../images/icons/0036b1/chevron-right.svg);
 }
 
 .claro-details[open] > .claro-details__summary {

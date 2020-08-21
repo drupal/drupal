@@ -7,7 +7,7 @@
 
 .form-element--type-select {
   padding-right: calc(2rem - var(--input-border-size));
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 14 9'%3E%3Cpath fill='none' stroke-width='1.5' d='M1 1L7 7L13 1' stroke='%23545560'/%3E%3C/svg%3E%0A");
+  background-image: url(../../images/icons/545560/chevron-down.svg);
   background-repeat: no-repeat;
   background-position: 100% 50%;
   background-size: 2.75rem 0.5625rem; /* w: 14px + (2 * 15px), h: 9px */
@@ -37,8 +37,8 @@
  * Select states.
  */
 .form-element--type-select:focus {
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 14 9'%3E%3Cpath fill='none' stroke-width='1.5' d='M1 1L7 7L13 1' stroke='%23004adc'/%3E%3C/svg%3E%0A");
+  background-image: url(../../images/icons/004adc/chevron-down.svg);
 }
 .form-element--type-select[disabled] {
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 14 9'%3E%3Cpath fill='none' stroke-width='1.5' d='M1 1L7 7L13 1' stroke='%238e929c'/%3E%3C/svg%3E%0A");
+  background-image: url(../../images/icons/8e929c/chevron-down.svg);
 }

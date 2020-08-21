@@ -15,7 +15,7 @@
   border: 1px solid var(--input-border-color);
   border-radius: 2px;
   background: var(--input-bg-color) no-repeat 50% 50%;
-  background-image: url("data:image/svg+xml,%3Csvg width='12' height='10' viewBox='0 0 12 10' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M4.18182 6.96572L1.97655 4.64855L1.79545 4.45826L1.61436 4.64855L0.818904 5.48437L0.654878 5.65672L0.818904 5.82907L4.00072 9.17235L4.18182 9.36263L4.36291 9.17235L11.1811 2.00817L11.3451 1.83582L11.1811 1.66347L10.3856 .827651L10.2045 .637365L10.0234 .82765L4.18182 6.96572Z' fill='white' /%3E%3C/svg%3E");
+  background-image: url(../../images/icons/ffffff/checkmark.svg);
   background-size: 100% 100%;
   box-shadow: 0 0 0 4px transparent;
 }
@@ -40,7 +40,7 @@
   color: transparent; /* IE */
   border-color: var(--input--focus-border-color);
   background-color: var(--input--focus-border-color);
-  background-image: url("data:image/svg+xml,%3Csvg width='16' height='16' viewBox='0 0 16 16' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M3.7949219,7.095703 6.1816406,9.601563 12.205078,3.2753906 13.689453,4.8359375 6.1816406,12.724609 2.3105469,8.65625 Z' fill='white'/%3E%3C/svg%3E");
+  background-image: url(../../images/icons/ffffff/checkmark-sm.svg);
 }
 .form-boolean--type-checkbox:checked:active::-ms-check,
 .form-boolean--type-checkbox:checked:hover::-ms-check {
@@ -50,7 +50,7 @@
 .form-boolean--type-radio:checked::-ms-check {
   color: transparent; /* IE */
   border-color: var(--input--focus-border-color);
-  background-image: url("data:image/svg+xml,%3Csvg width='17' height='17' viewBox='0 0 17 17' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle r='4.5' cx='8.5' cy='8.5' fill='%23004adc'/%3E%3C/svg%3E");
+  background-image: url(../../images/icons/004adc/circle.svg);
   box-shadow: inset 0 0 0 1px var(--input--focus-border-color);
 }
 .form-boolean--type-checkbox:checked:active::-ms-check,
@@ -60,7 +60,7 @@
 }
 .form-boolean--type-radio:checked::-ms-check {
   border-color: var(--input--focus-border-color);
-  background-image: url("data:image/svg+xml,%3Csvg width='17' height='17' viewBox='0 0 17 17' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle r='4.5' cx='8.5' cy='8.5' fill='%23004adc'/%3E%3C/svg%3E");
+  background-image: url(../../images/icons/004adc/circle.svg);
   box-shadow: inset 0 0 0 1px var(--input--focus-border-color);
 }
 .form-boolean--type-radio:checked:focus::-ms-check {
@@ -69,7 +69,7 @@
 .form-boolean--type-radio:checked:active::-ms-check,
 .form-boolean--type-radio:checked:hover::-ms-check {
   border-color: var(--input-fg-color);
-  background-image: url("data:image/svg+xml,%3Csvg width='17' height='17' viewBox='0 0 17 17' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle r='4.5' cx='8.5' cy='8.5' fill='%23222330'/%3E%3C/svg%3E");
+  background-image: url(../../images/icons/222330/circle.svg);
   box-shadow: inset 0 0 0 1px var(--input-fg-color);
 }
 .form-boolean--type-radio:checked:focus:active::-ms-check,
@@ -107,7 +107,7 @@
 .form-boolean--type-radio.error:checked::-ms-check,
 .form-boolean--type-radio.error:checked:active::-ms-check,
 .form-boolean--type-radio.error:checked:hover::-ms-check {
-  background-image: url("data:image/svg+xml,%3Csvg width='17' height='17' viewBox='0 0 17 17' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle r='4.5' cx='8.5' cy='8.5' fill='%23d72222'/%3E%3C/svg%3E");
+  background-image: url(../../images/icons/d72222/circle.svg);
 }
 .form-boolean--type-radio.error:checked:focus::-ms-check {
   box-shadow: 0 0 0 2px var(--color-white), 0 0 0 5px var(--color-focus), inset 0 0 0 1px var(--input--error-border-color);
@@ -130,10 +130,10 @@
 }
 .form-boolean--type-checkbox[disabled]:checked::-ms-check {
   color: transparent; /* IE */
-  background-image: url("data:image/svg+xml,%3Csvg width='16' height='16' viewBox='0 0 16 16' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M3.7949219,7.095703 6.1816406,9.601563 12.205078,3.2753906 13.689453,4.8359375 6.1816406,12.724609 2.3105469,8.65625 Z' fill='%2382828c'/%3E%3C/svg%3E");
+  background-image: url(../../images/icons/82828c/checkmark.svg);
 }
 .form-boolean--type-radio[disabled]:checked::-ms-check,
 .form-boolean--type-radio[disabled].error:checked::-ms-check {
   color: transparent; /* IE */
-  background-image: url("data:image/svg+xml,%3Csvg width='17' height='17' viewBox='0 0 17 17' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle r='4.5' cx='8.5' cy='8.5' fill='%2382828c'/%3E%3C/svg%3E");
+  background-image: url(../../images/icons/82828c/checkmark.svg);
 }

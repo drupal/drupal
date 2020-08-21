@@ -349,6 +349,7 @@ createrole
 createuser
 crema
 cript
+crossout
 crudui
 crypted
 cscript
@@ -370,6 +371,8 @@ customly
 customrequest
 cves
 cweagans
+dasharray
+dashoffset
 data's
 databasefilename
 databasename
@@ -859,6 +862,7 @@ kakec
 kangarookitten
 kerneltest
 kernighan
+keyframes
 keyname
 keypresses
 keyvalue

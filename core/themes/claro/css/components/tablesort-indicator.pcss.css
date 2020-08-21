@@ -11,7 +11,7 @@
   height: 1rem; /* 16px */
   margin-top: -0.5rem; /* -8px */
   opacity: 0.5;
-  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='8' viewBox='0 0 14 8'%3E%3Cpath d='m1.75,0.25v1.5h10.5v-1.5z m0,3v1.5h7.5v-1.5z m0,3v1.5h4.5v-1.5z' fill='%23222330'/%3E%3C/svg%3E") no-repeat 0 50%;
+  background: url(../../images/icons/222330/sort--inactive--ltr.svg) no-repeat 0 50%;
   background-size: auto;
 }
 /* stylelint-disable-next-line selector-type-no-unknown */
@@ -25,7 +25,7 @@ _:-ms-fullscreen, /* Only IE 11 */
 [dir="rtl"] .tablesort {
   right: auto;
   left: 1rem; /* 16px */
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='8' viewBox='0 0 14 8'%3E%3Cpath d='m12.25,0.25v1.5H1.75v-1.5z m0,3v1.5h-7.5v-1.5z m0,3v1.5h-4.5v-1.5z' fill='%23222330'/%3E%3C/svg%3E");
+  background-image: url(../../images/icons/222330/sort--inactive--rtl.svg);
 }
 /* stylelint-disable-next-line selector-type-no-unknown */
 _:-ms-fullscreen, /* Only IE 11 */
@@ -37,10 +37,10 @@ _:-ms-fullscreen, /* Only IE 11 */
 .tablesort--asc,
 [dir="rtl"] .tablesort--asc {
   opacity: 1;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='16' viewBox='0 0 10 12'%3E%3Cpath d='M 5 0.43945312 L 0.71875 4.71875 L 1.78125 5.78125 L 4.25 3.3125 L 4.25 11.25 L 5.75 11.25 L 5.75 3.3125 L 8.21875 5.78125 L 9.28125 4.71875 L 5 0.43945312 z' fill='%23004adc'/%3E%3C/svg%3E");
+  background-image: url(../../images/icons/004adc/sort--asc.svg);
 }
 .tablesort--desc,
 [dir="rtl"] .tablesort--desc {
   opacity: 1;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='16' viewBox='0 0 10 12'%3E%3Cpath d='M 4.25 0.75 L 4.25 8.6875 L 1.78125 6.21875 L 0.71875 7.28125 L 5 11.560547 L 9.28125 7.28125 L 8.21875 6.21875 L 5.75 8.6875 L 5.75 0.75 L 4.25 0.75 z' fill='%23004adc'/%3E%3C/svg%3E");
+  background-image: url(../../images/icons/004adc/sort--desc.svg);
 }
