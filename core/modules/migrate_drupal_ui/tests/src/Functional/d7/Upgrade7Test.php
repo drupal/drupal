@@ -99,7 +99,7 @@ class Upgrade7Test extends MigrateUpgradeExecuteTestBase {
       'shortcut' => 6,
       'shortcut_set' => 2,
       'action' => 19,
-      'menu' => 6,
+      'menu' => 7,
       'taxonomy_term' => 24,
       'taxonomy_vocabulary' => 7,
       'path_alias' => 8,

@@ -19382,6 +19382,36 @@ $connection->insert('i18n_string')
   'objectindex' => '0',
   'format' => '',
 ))
+->values(array(
+  'lid' => '800',
+  'textgroup' => 'menu',
+  'context' => 'menu:main-menu:title',
+  'objectid' => 'main-menu',
+  'type' => 'menu',
+  'property' => 'title',
+  'objectindex' => '0',
+  'format' => '',
+))
+->values(array(
+  'lid' => '801',
+  'textgroup' => 'menu',
+  'context' => 'menu:main-menu:description',
+  'objectid' => 'main-menu',
+  'type' => 'menu',
+  'property' => 'description',
+  'objectindex' => '0',
+  'format' => '',
+))
+->values(array(
+  'lid' => '802',
+  'textgroup' => 'menu',
+  'context' => 'menu:menu-test-menu:description',
+  'objectid' => 'menu-test-menu',
+  'type' => 'menu',
+  'property' => 'description',
+  'objectindex' => '0',
+  'format' => '',
+))
 ->execute();
 $connection->schema()->createTable('i18n_translation_set', array(
   'fields' => array(
@@ -20950,6 +20980,46 @@ $connection->insert('locales_target')
   'plural' => '0',
   'i18n_status' => '0',
 ))
+->values(array(
+  'lid' => '800',
+  'translation' => 'is - Main menu',
+  'language' => 'is',
+  'plid' => '0',
+  'plural' => '0',
+  'i18n_status' => '0',
+))
+->values(array(
+  'lid' => '801',
+  'translation' => 'is - Main menu description',
+  'language' => 'is',
+  'plid' => '0',
+  'plural' => '0',
+  'i18n_status' => '0',
+))
+->values(array(
+  'lid' => '800',
+  'translation' => 'fr - Main menu',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+  'i18n_status' => '0',
+))
+->values(array(
+  'lid' => '801',
+  'translation' => 'fr - Main menu description',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+  'i18n_status' => '0',
+))
+->values(array(
+  'lid' => '802',
+  'translation' => 'fr - Test menu description',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+  'i18n_status' => '0',
+))
 ->execute();
 $connection->schema()->createTable('menu_custom', array(
   'fields' => array(
@@ -21011,6 +21081,13 @@ $connection->insert('menu_custom')
   'description' => 'The <em>Management</em> menu contains links for administrative tasks.',
   'language' => 'und',
   'i18n_mode' => '0',
+))
+->values(array(
+  'menu_name' => 'menu-fixedlang',
+  'title' => 'FixedLang',
+  'description' => '',
+  'language' => 'is',
+  'i18n_mode' => '2',
 ))
 ->values(array(
   'menu_name' => 'menu-test-menu',
@@ -29753,9 +29830,9 @@ $connection->insert('menu_links')
   'module' => 'system',
   'hidden' => '-1',
   'external' => '0',
-  'has_children' => '0',
+  'has_children' => '1',
   'expanded' => '0',
-  'weight' => '2',
+  'weight' => '1',
   'depth' => '2',
   'customized' => '0',
   'p1' => '5',
@@ -32299,7 +32376,7 @@ $connection->insert('menu_links')
   'mlid' => '479',
   'plid' => '0',
   'link_path' => 'node/2',
-  'router_path' => 'node/2',
+  'router_path' => 'node/%',
   'link_title' => 'node link test',
   'options' => 'a:1:{s:10:"attributes";a:1:{s:5:"title";s:6:"node 2";}}',
   'module' => 'menu',
@@ -32575,6 +32652,35 @@ $connection->insert('menu_links')
   'p2' => '8',
   'p3' => '48',
   'p4' => '491',
+  'p5' => '0',
+  'p6' => '0',
+  'p7' => '0',
+  'p8' => '0',
+  'p9' => '0',
+  'updated' => '0',
+  'language' => 'und',
+  'i18n_tsid' => '0',
+))
+->values(array(
+  'menu_name' => 'management',
+  'mlid' => '535',
+  'plid' => '44',
+  'link_path' => 'admin/structure/menu/manage/menu-fixedlang',
+  'router_path' => 'admin/structure/menu/manage/%',
+  'link_title' => 'FixedLang',
+  'options' => 'a:0:{}',
+  'module' => 'menu',
+  'hidden' => '0',
+  'external' => '0',
+  'has_children' => '0',
+  'expanded' => '0',
+  'weight' => '0',
+  'depth' => '4',
+  'customized' => '0',
+  'p1' => '1',
+  'p2' => '20',
+  'p3' => '44',
+  'p4' => '535',
   'p5' => '0',
   'p6' => '0',
   'p7' => '0',

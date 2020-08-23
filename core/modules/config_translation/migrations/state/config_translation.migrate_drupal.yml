@@ -4,6 +4,7 @@ finished:
   7:
     i18n_variable: config_translation
     i18n_taxonomy: config_translation
+    i18n_menu: config_translation
 not_finished:
   6:
     # language content comment settings.

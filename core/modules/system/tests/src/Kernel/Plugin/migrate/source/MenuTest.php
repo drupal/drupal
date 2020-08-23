@@ -41,6 +41,19 @@ class MenuTest extends MigrateSqlSourceTestBase {
     // The expected results are identical to the source data.
     $tests[0]['expected_data'] = $tests[0]['source_data']['menu_custom'];
 
+    $tests[1] = $tests[0];
+    $tests[1]['source_data']['menu_custom'][0] +=
+      [
+        'language' => 'it',
+        'i18n_mode' => 1,
+      ];
+    $tests[1]['source_data']['menu_custom'][1] +=
+      [
+        'language' => 'fr',
+        'i18n_mode' => 2,
+      ];
+    $tests[1]['expected_data'] = $tests[1]['source_data']['menu_custom'];
+
     return $tests;
   }
 

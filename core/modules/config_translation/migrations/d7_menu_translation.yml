@@ -1,0 +1,31 @@
+id: d7_menu_translation
+label: Menu translation
+migration_tags:
+  - Drupal 7
+  - Configuration
+  - Multilingual
+source:
+  plugin: d7_menu_translation
+process:
+  id:
+    -
+      plugin: migration_lookup
+      migration: d7_menu
+      source: menu_name
+    -
+      plugin: skip_on_empty
+      method: row
+  langcode: language
+  property:
+    plugin: static_map
+    source: property
+    map:
+      title: label
+      description: description
+  translation: translation
+destination:
+  plugin: entity:menu
+  destination_module: config_translation
+migration_dependencies:
+  required:
+    - d7_menu

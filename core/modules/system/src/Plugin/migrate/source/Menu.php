@@ -25,11 +25,19 @@ class Menu extends DrupalSqlBase {
    * {@inheritdoc}
    */
   public function fields() {
-    return [
+    $fields = [
       'menu_name' => $this->t('The menu name. Primary key.'),
       'title' => $this->t('The human-readable name of the menu.'),
       'description' => $this->t('A description of the menu'),
     ];
+
+    if ($this->database->schema()->fieldExists('menu_custom', 'language')) {
+      $fields += [
+        'language' => $this->t('Menu language.'),
+        'i8n_mode' => $this->t('Menu i18n mode.'),
+      ];
+    }
+    return $fields;
   }
 
   /**
