@@ -7,6 +7,7 @@ use Drupal\comment\CommentInterface;
 use Drupal\comment\CommentManagerInterface;
 use Drupal\Tests\comment\Functional\CommentTestBase;
 use Drupal\Tests\rdf\Traits\RdfParsingTrait;
+use Drupal\user\Entity\User;
 use Drupal\user\RoleInterface;
 use Drupal\comment\Entity\Comment;
 
@@ -24,7 +25,13 @@ class CommentAttributesTest extends CommentTestBase {
    *
    * @var array
    */
-  protected static $modules = ['views', 'node', 'comment', 'rdf'];
+  protected static $modules = [
+    'views',
+    'node',
+    'comment',
+    'rdf',
+    'user_hooks_test',
+  ];
 
   /**
    * {@inheritdoc}
@@ -148,6 +155,9 @@ class CommentAttributesTest extends CommentTestBase {
    * Tests comment author link markup has not been broken by RDF.
    */
   public function testCommentRdfAuthorMarkup() {
+    // Set to test the altered display name.
+    \Drupal::state()->set('user_hooks_test_user_format_name_alter', TRUE);
+
     // Post a comment as a registered user.
     $this->saveComment($this->node->id(), $this->webUser->id());
 
@@ -158,7 +168,7 @@ class CommentAttributesTest extends CommentTestBase {
     // Ensure that the author link still works properly after the author output
     // is modified by the RDF module.
     $this->drupalGet('node/' . $this->node->id());
-    $this->assertSession()->linkExists($this->webUser->getAccountName());
+    $this->assertSession()->linkExistsExact($this->webUser->getDisplayName());
     $this->assertLinkByHref('user/' . $this->webUser->id());
   }
 
@@ -169,6 +179,9 @@ class CommentAttributesTest extends CommentTestBase {
    * on comments from registered and anonymous users.
    */
   public function testCommentRdfaMarkup() {
+    // Set to test the altered display name.
+    \Drupal::state()->set('user_hooks_test_user_format_name_alter', TRUE);
+
     // Posts comment #1 on behalf of registered user.
     $comment1 = $this->saveComment($this->node->id(), $this->webUser->id());
 
@@ -187,12 +200,13 @@ class CommentAttributesTest extends CommentTestBase {
     $anonymous_user['homepage'] = 'http://example.org/';
     $comment2 = $this->saveComment($this->node->id(), 0, $anonymous_user);
 
+    $anonymous = User::load(0);
     // Tests comment #2 as anonymous user.
-    $this->_testBasicCommentRdfaMarkup($comment2, $anonymous_user);
+    $this->_testBasicCommentRdfaMarkup($comment2, $anonymous);
 
     // Tests comment #2 as logged in user.
     $this->drupalLogin($this->webUser);
-    $this->_testBasicCommentRdfaMarkup($comment2, $anonymous_user);
+    $this->_testBasicCommentRdfaMarkup($comment2, $anonymous);
   }
 
   /**
@@ -240,7 +254,7 @@ class CommentAttributesTest extends CommentTestBase {
    * @param $account
    *   An array containing information about an anonymous user.
    */
-  public function _testBasicCommentRdfaMarkup(CommentInterface $comment, $account = []) {
+  public function _testBasicCommentRdfaMarkup(CommentInterface $comment, $account = NULL) {
     $this->drupalGet($this->node->toUrl());
     $comment_uri = $comment->toUrl('canonical', ['absolute' => TRUE])->toString();
 
@@ -303,7 +317,7 @@ class CommentAttributesTest extends CommentTestBase {
     }
 
     // Author name.
-    $name = empty($account["name"]) ? $this->webUser->getAccountName() : $account["name"] . " (not verified)";
+    $name = $account ? $account->getDisplayName() . " (not verified)" : $this->webUser->getDisplayName();
     $expected_value = [
       'type' => 'literal',
       'value' => $name,
