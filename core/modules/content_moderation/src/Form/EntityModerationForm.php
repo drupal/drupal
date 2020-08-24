@@ -2,7 +2,7 @@
 
 namespace Drupal\content_moderation\Form;
 
-use Drupal\Component\Datetime\Time;
+use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\RevisionLogInterface;
 use Drupal\Core\Form\FormBase;
@@ -29,7 +29,7 @@ class EntityModerationForm extends FormBase {
   /**
    * The time service.
    *
-   * @var \Drupal\Component\Datetime\Time
+   * @var \Drupal\Component\Datetime\TimeInterface
    */
   protected $time;
 
@@ -50,7 +50,7 @@ class EntityModerationForm extends FormBase {
    * @param \Drupal\Component\Datetime\Time $time
    *   The time service.
    */
-  public function __construct(ModerationInformationInterface $moderation_info, StateTransitionValidationInterface $validation, Time $time) {
+  public function __construct(ModerationInformationInterface $moderation_info, StateTransitionValidationInterface $validation, TimeInterface $time) {
     $this->moderationInfo = $moderation_info;
     $this->validation = $validation;
     $this->time = $time;
