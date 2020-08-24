@@ -30,8 +30,6 @@ class Image {
    *
    * @return bool
    *   TRUE if $dimensions was modified, FALSE otherwise.
-   *
-   * @see image_scale()
    */
   public static function scaleDimensions(array &$dimensions, $width = NULL, $height = NULL, $upscale = FALSE) {
     $aspect = $dimensions['height'] / $dimensions['width'];
