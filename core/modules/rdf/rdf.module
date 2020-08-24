@@ -237,12 +237,13 @@ function rdf_comment_storage_load($comments) {
       ->getPreparedFieldMapping('created');
     /** @var \Drupal\comment\CommentInterface $comment*/
     $comment->rdf_data['date'] = rdf_rdfa_attributes($created_mapping, $comment->get('created')->first()->toArray());
-    $entity = $comment->getCommentedEntity();
-    // The current function is a storage level hook, so avoid to bubble
-    // bubbleable metadata, because it can be outside of a render context.
-    $comment->rdf_data['entity_uri'] = $entity->toUrl()->toString(TRUE)->getGeneratedUrl();
-    if ($comment->hasParentComment()) {
-      $comment->rdf_data['pid_uri'] = $comment->getParentComment()->toUrl()->toString(TRUE)->getGeneratedUrl();
+    if ($entity = $comment->getCommentedEntity()) {
+      // The current function is a storage level hook, so avoid to bubble
+      // bubbleable metadata, because it can be outside of a render context.
+      $comment->rdf_data['entity_uri'] = $entity->toUrl()->toString(TRUE)->getGeneratedUrl();
+    }
+    if ($parent = $comment->getParentComment()) {
+      $comment->rdf_data['pid_uri'] = $parent->toUrl()->toString(TRUE)->getGeneratedUrl();
     }
   }
 }
