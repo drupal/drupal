@@ -22,7 +22,7 @@ class TagTest extends ViewsKernelTestBase {
   protected static $modules = ['views', 'views_ui', 'user'];
 
   /**
-   * Tests the views_ui_autocomplete_tag function.
+   * Tests the ViewsUIController::autocompleteTag() function.
    */
   public function testViewsUiAutocompleteTag() {
     \Drupal::moduleHandler()->loadInclude('views_ui', 'inc', 'admin');
@@ -66,6 +66,43 @@ class TagTest extends ViewsKernelTestBase {
     $result = $controller->autocompleteTag($request);
     $matches = (array) json_decode($result->getContent());
     $this->assertCount(0, $matches, "Make sure an invalid tag doesn't return anything.");
+  }
+
+  /**
+   * Tests that comma delimited tags are treated as individual tags.
+   *
+   * @dataProvider providerViewsUiAutocompleteIndividualTags
+   */
+  public function testViewsUiAutocompleteIndividualTags($expected_tag, $search_string) {
+    $controller = ViewsUIController::create($this->container);
+    $request = $this->container->get('request_stack')->getCurrentRequest();
+    $tag = 'comma, 你好, Foo bar';
+    View::create(['tag' => $tag, 'id' => $this->randomMachineName()])->save();
+    $request->query->set('q', $search_string);
+    $result = $controller->autocompleteTag($request);
+    $matches = (array) json_decode($result->getContent());
+    $this->assertCount(1, $matches);
+    $this->assertSame($expected_tag, $matches[0]->value);
+  }
+
+  /**
+   * Data provider for testViewsUiAutocompleteIndividualTags().
+   *
+   * @return array[]
+   *   The data set.
+   */
+  public function providerViewsUiAutocompleteIndividualTags() {
+    return [
+      'tag' => ['comma', 'comma'],
+      'case insensitive tag' => ['comma', 'COMMA'],
+      'Hello in Chinese (partial 1)' => ['你好', '你'],
+      'Hello in Chinese (partial 2)' => ['你好', '好'],
+      'Hello in Chinese' => ['你好', '你好'],
+      'Starts with partial and case-sensitive' => ['Foo bar', 'Foo'],
+      'Starts with partial and case-insensitive' => ['Foo bar', 'fOO'],
+      'Ends with partial and case-sensitive' => ['Foo bar', 'bar'],
+      'Ends with partial and case-insensitive' => ['Foo bar', 'BAR'],
+    ];
   }
 
 }
