@@ -10,13 +10,13 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
  * Logging severity levels as defined in RFC 5424.
  *
  * The constant definitions of this class correspond to the logging severity
- * levels defined in RFC 5424, section 4.1.1. PHP supplies predefined LOG_*
+ * levels defined in RFC 5424, section 6.2.1. PHP supplies predefined LOG_*
  * constants for use in the syslog() function, but their values on Windows
  * builds do not correspond to RFC 5424. The associated PHP bug report was
  * closed with the comment, "And it's also not a bug, as Windows just have less
  * log levels," and "So the behavior you're seeing is perfectly normal."
  *
- * @see http://tools.ietf.org/html/rfc5424
+ * @see https://tools.ietf.org/html/rfc5424#section-6.2.1
  * @see http://bugs.php.net/bug.php?id=18090
  * @see http://php.net/manual/function.syslog.php
  * @see http://php.net/manual/network.constants.php
