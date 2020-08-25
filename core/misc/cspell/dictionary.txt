@@ -1559,7 +1559,6 @@ sivun
 skiptags
 skos
 skynet
-skłodowska
 slackjaw
 slashentry
 slashrendererentry
