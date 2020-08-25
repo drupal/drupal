@@ -436,7 +436,7 @@ class LocalTaskManagerTest extends UnitTestCase {
       ->willReturn(new ParameterBag());
 
     $cacheability = new CacheableMetadata();
-    $local_tasks = $this->manager->getTasksBuild('menu_local_task_test_tasks_view', $cacheability);
+    $this->manager->getTasksBuild('menu_local_task_test_tasks_view', $cacheability);
 
     // Ensure that all cacheability metadata is merged together.
     $this->assertEquals(['tag.example1', 'tag.example2'], $cacheability->getCacheTags());
