@@ -851,6 +851,10 @@ function template_preprocess_image(&$variables) {
       $variables['attributes'][$key] = $variables[$key];
     }
   }
+
+  if (isset($variables['width'], $variables['height'])) {
+    $variables['attributes']['loading'] = 'lazy';
+  }
 }
 
 /**
