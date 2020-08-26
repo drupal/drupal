@@ -74,7 +74,6 @@ class EntityLinkTest extends UnitTestCase {
     $route_name = $route_name_map[$link_rel];
     $entity_id = 'test_entity_id';
     $entity_type_id = 'test_entity_type';
-    $expected = '<a href="/test_entity_type/test_entity_id">' . $expected_text . '</a>';
 
     $entity_type = $this->createMock('Drupal\Core\Entity\EntityTypeInterface');
     $entity_type->expects($this->once())
