@@ -200,7 +200,7 @@ class BlockContentTest extends ResourceTestBase {
    * {@inheritdoc}
    */
   public function testRelated() {
-    $this->markTestSkipped('Remove this in https://www.drupal.org/project/jsonapi/issues/2940339');
+    $this->markTestSkipped('Remove this in https://www.drupal.org/project/drupal/issues/2940339');
   }
 
   /**

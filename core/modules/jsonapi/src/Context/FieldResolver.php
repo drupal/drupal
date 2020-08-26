@@ -67,7 +67,7 @@ use Drupal\Core\Http\Exception\CacheableBadRequestHttpException;
  * @internal JSON:API maintains no PHP API. The API is the HTTP API. This class
  *   may change at any time and could break any dependencies on it.
  *
- * @see https://www.drupal.org/project/jsonapi/issues/3032787
+ * @see https://www.drupal.org/project/drupal/issues/3032787
  * @see jsonapi.api.php
  */
 class FieldResolver {
@@ -531,7 +531,7 @@ class FieldResolver {
    */
   protected function isMemberFilterable($external_name, array $resource_types) {
     return array_reduce($resource_types, function ($carry, ResourceType $resource_type) use ($external_name) {
-      // @todo: remove the next line and uncomment the following one in https://www.drupal.org/project/jsonapi/issues/3017047.
+      // @todo: remove the next line and uncomment the following one in https://www.drupal.org/project/drupal/issues/3017047.
       return $carry ?: $external_name === 'id' || $resource_type->isFieldEnabled($resource_type->getInternalName($external_name));
       /*return $carry ?: in_array($external_name, ['id', 'type']) || $resource_type->isFieldEnabled($resource_type->getInternalName($external_name));*/
     }, FALSE);
@@ -633,7 +633,7 @@ class FieldResolver {
         $prior_parts = array_slice($unresolved_path_parts, 0, count($unresolved_path_parts) - count($remaining_parts));
         return implode('.', array_merge($prior_parts, [$reference_name], $remaining_parts));
       }, $unique_reference_names);
-      // @todo Add test coverage for this in https://www.drupal.org/project/jsonapi/issues/2971281
+      // @todo Add test coverage for this in https://www.drupal.org/project/drupal/issues/2971281
       $message = sprintf('Ambiguous path. Try one of the following: %s, in place of the given path: %s', implode(', ', $choices), implode('.', $unresolved_path_parts));
       $cacheability = (new CacheableMetadata())->addCacheContexts(['url.query_args:filter', 'url.query_args:sort']);
       throw new CacheableBadRequestHttpException($cacheability, $message);
