@@ -117,10 +117,10 @@ class ConfigurableLanguageTest extends ResourceTestBase {
   /**
    * Test a GET request for a default config entity, which has a _core key.
    *
-   * @see https://www.drupal.org/project/jsonapi/issues/2915539
+   * @see https://www.drupal.org/project/drupal/issues/2915539
    */
   public function testGetIndividualDefaultConfig() {
-    // @todo Remove line below in favor of commented line in https://www.drupal.org/project/jsonapi/issues/2878463.
+    // @todo Remove line below in favor of commented line in https://www.drupal.org/project/drupal/issues/2878463.
     $url = Url::fromRoute('jsonapi.configurable_language--configurable_language.individual', ['entity' => ConfigurableLanguage::load('en')->uuid()]);
     /* $url = ConfigurableLanguage::load('en')->toUrl('jsonapi'); */
 

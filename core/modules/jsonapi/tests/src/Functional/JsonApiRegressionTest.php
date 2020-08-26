@@ -51,7 +51,7 @@ class JsonApiRegressionTest extends JsonApiFunctionalTestBase {
   /**
    * Ensure filtering on relationships works with bundle-specific target types.
    *
-   * @see https://www.drupal.org/project/jsonapi/issues/2953207
+   * @see https://www.drupal.org/project/drupal/issues/2953207
    */
   public function testBundleSpecificTargetEntityTypeFromIssue2953207() {
     // Set up data model.
@@ -87,7 +87,7 @@ class JsonApiRegressionTest extends JsonApiFunctionalTestBase {
   /**
    * Ensure deep nested include works on multi target entity type field.
    *
-   * @see https://www.drupal.org/project/jsonapi/issues/2973681
+   * @see https://www.drupal.org/project/drupal/issues/2973681
    */
   public function testDeepNestedIncludeMultiTargetEntityTypeFieldFromIssue2973681() {
     // Set up data model.
@@ -151,7 +151,7 @@ class JsonApiRegressionTest extends JsonApiFunctionalTestBase {
   /**
    * Ensure POST and PATCH works for bundle-less relationship routes.
    *
-   * @see https://www.drupal.org/project/jsonapi/issues/2976371
+   * @see https://www.drupal.org/project/drupal/issues/2976371
    */
   public function testBundlelessRelationshipMutationFromIssue2973681() {
     $this->config('jsonapi.settings')->set('read_only', FALSE)->save(TRUE);
@@ -202,7 +202,7 @@ class JsonApiRegressionTest extends JsonApiFunctionalTestBase {
   /**
    * Ensures GETting terms works when multiple vocabularies exist.
    *
-   * @see https://www.drupal.org/project/jsonapi/issues/2977879
+   * @see https://www.drupal.org/project/drupal/issues/2977879
    */
   public function testGetTermWhenMultipleVocabulariesExistFromIssue2977879() {
     // Set up data model.
@@ -238,7 +238,7 @@ class JsonApiRegressionTest extends JsonApiFunctionalTestBase {
   /**
    * Cannot PATCH an entity with dangling references in an ER field.
    *
-   * @see https://www.drupal.org/project/jsonapi/issues/2968972
+   * @see https://www.drupal.org/project/drupal/issues/2968972
    */
   public function testDanglingReferencesInAnEntityReferenceFieldFromIssue2968972() {
     $this->config('jsonapi.settings')->set('read_only', FALSE)->save(TRUE);
@@ -309,7 +309,7 @@ class JsonApiRegressionTest extends JsonApiFunctionalTestBase {
   /**
    * Ensures GETting node collection + hook_node_grants() implementations works.
    *
-   * @see https://www.drupal.org/project/jsonapi/issues/2984964
+   * @see https://www.drupal.org/project/drupal/issues/2984964
    */
   public function testGetNodeCollectionWithHookNodeGrantsImplementationsFromIssue2984964() {
     // Set up data model.
@@ -340,7 +340,7 @@ class JsonApiRegressionTest extends JsonApiFunctionalTestBase {
   /**
    * Cannot GET an entity with dangling references in an ER field.
    *
-   * @see https://www.drupal.org/project/jsonapi/issues/2984647
+   * @see https://www.drupal.org/project/drupal/issues/2984647
    */
   public function testDanglingReferencesInAnEntityReferenceFieldFromIssue2984647() {
     // Set up data model.
@@ -470,7 +470,7 @@ class JsonApiRegressionTest extends JsonApiFunctionalTestBase {
    * Adding a new relationship field should cause new routes to be immediately
    * regenerated. The site builder should not need to manually rebuild caches.
    *
-   * @see https://www.drupal.org/project/jsonapi/issues/2984886
+   * @see https://www.drupal.org/project/drupal/issues/2984886
    */
   public function testThatRoutesAreRebuiltAfterDataModelChangesFromIssue2984886() {
     $user = $this->drupalCreateUser(['access content']);
@@ -526,7 +526,7 @@ class JsonApiRegressionTest extends JsonApiFunctionalTestBase {
   /**
    * Ensures denormalizing relationships with aliased field names works.
    *
-   * @see https://www.drupal.org/project/jsonapi/issues/3007113
+   * @see https://www.drupal.org/project/drupal/issues/3007113
    * @see https://www.drupal.org/project/jsonapi_extras/issues/3004582#comment-12817261
    */
   public function testDenormalizeAliasedRelationshipFromIssue2953207() {
@@ -584,7 +584,7 @@ class JsonApiRegressionTest extends JsonApiFunctionalTestBase {
   /**
    * Ensures that Drupal's page cache is effective.
    *
-   * @see https://www.drupal.org/project/jsonapi/issues/3009596
+   * @see https://www.drupal.org/project/drupal/issues/3009596
    */
   public function testPageCacheFromIssue3009596() {
     $anonymous_role = Role::load(RoleInterface::ANONYMOUS_ID);
@@ -619,7 +619,7 @@ class JsonApiRegressionTest extends JsonApiFunctionalTestBase {
   /**
    * Ensures that filtering by a sequential internal ID named 'id' is possible.
    *
-   * @see https://www.drupal.org/project/jsonapi/issues/3015759
+   * @see https://www.drupal.org/project/drupal/issues/3015759
    */
   public function testFilterByIdFromIssue3015759() {
     // Set up data model.
@@ -659,7 +659,7 @@ class JsonApiRegressionTest extends JsonApiFunctionalTestBase {
   /**
    * Ensures datetime fields are normalized using the correct timezone.
    *
-   * @see https://www.drupal.org/project/jsonapi/issues/2999438
+   * @see https://www.drupal.org/project/drupal/issues/2999438
    */
   public function testPatchingDateTimeNormalizedWrongTimeZoneIssue3021194() {
     // Set up data model.
@@ -708,7 +708,7 @@ class JsonApiRegressionTest extends JsonApiFunctionalTestBase {
   /**
    * Ensures PATCHing datetime (both date-only & date+time) fields is possible.
    *
-   * @see https://www.drupal.org/project/jsonapi/issues/3021194
+   * @see https://www.drupal.org/project/drupal/issues/3021194
    */
   public function testPatchingDateTimeFieldsFromIssue3021194() {
     $this->config('jsonapi.settings')->set('read_only', FALSE)->save(TRUE);
@@ -791,7 +791,7 @@ class JsonApiRegressionTest extends JsonApiFunctionalTestBase {
   /**
    * Ensure includes are respected even when POSTing.
    *
-   * @see https://www.drupal.org/project/jsonapi/issues/3026030
+   * @see https://www.drupal.org/project/drupal/issues/3026030
    */
   public function testPostToIncludeUrlDoesNotReturnIncludeFromIssue3026030() {
     $this->config('jsonapi.settings')->set('read_only', FALSE)->save(TRUE);
@@ -828,7 +828,7 @@ class JsonApiRegressionTest extends JsonApiFunctionalTestBase {
   /**
    * Ensure includes are respected even when PATCHing.
    *
-   * @see https://www.drupal.org/project/jsonapi/issues/3026030
+   * @see https://www.drupal.org/project/drupal/issues/3026030
    */
   public function testPatchToIncludeUrlDoesNotReturnIncludeFromIssue3026030() {
     $this->config('jsonapi.settings')->set('read_only', FALSE)->save(TRUE);
@@ -874,7 +874,7 @@ class JsonApiRegressionTest extends JsonApiFunctionalTestBase {
   /**
    * Ensure `@FieldType=map` fields are normalized correctly.
    *
-   * @see https://www.drupal.org/project/jsonapi/issues/3040590
+   * @see https://www.drupal.org/project/drupal/issues/3040590
    */
   public function testMapFieldTypeNormalizationFromIssue3040590() {
     $this->assertTrue($this->container->get('module_installer')->install(['entity_test'], TRUE), 'Installed modules.');
@@ -1254,8 +1254,8 @@ class JsonApiRegressionTest extends JsonApiFunctionalTestBase {
   /**
    * Tests that "virtual/missing" resources can exist for renamed fields.
    *
-   * @see https://www.drupal.org/project/jsonapi/issues/3034786
-   * @see https://www.drupal.org/project/jsonapi_extras/issues/3035544
+   * @see https://www.drupal.org/project/drupal/issues/3034786
+   * @see https://www.drupal.org/project/drupal/issues/3035544
    */
   public function testAliasedFieldsWithVirtualRelationships() {
     // Set up the data model.

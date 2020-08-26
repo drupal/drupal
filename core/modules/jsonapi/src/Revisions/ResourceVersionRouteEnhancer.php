@@ -18,7 +18,7 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
  * @internal JSON:API maintains no PHP API since its API is the HTTP API. This
  *   class may change at any time and this will break any dependencies on it.
  *
- * @see https://www.drupal.org/project/jsonapi/issues/3032787
+ * @see https://www.drupal.org/project/drupal/issues/3032787
  * @see jsonapi.api.php
  */
 final class ResourceVersionRouteEnhancer implements EnhancerInterface {
@@ -103,7 +103,7 @@ final class ResourceVersionRouteEnhancer implements EnhancerInterface {
         /* Uncomment the next line and remove the following one when https://www.drupal.org/project/drupal/issues/3002352 lands in core. */
         /* throw new CacheableHttpException($cacheability, 501, 'Resource versioning is not yet supported for this resource type.'); */
         $message = 'JSON:API does not yet support resource versioning for this resource type.';
-        $message .= ' For context, see https://www.drupal.org/project/jsonapi/issues/2992833#comment-12818258.';
+        $message .= ' For context, see https://www.drupal.org/project/drupal/issues/2992833#comment-12818258.';
         $message .= ' To contribute, see https://www.drupal.org/project/drupal/issues/2350939 and https://www.drupal.org/project/drupal/issues/2809177.';
         throw new CacheableHttpException($cacheability, 501, $message, NULL, []);
       }

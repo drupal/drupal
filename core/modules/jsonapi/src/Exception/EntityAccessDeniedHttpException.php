@@ -18,7 +18,7 @@ use Drupal\jsonapi\JsonApiResource\ResourceIdentifierTrait;
  * @internal JSON:API maintains no PHP API. The API is the HTTP API. This class
  *   may change at any time and could break any dependencies on it.
  *
- * @see https://www.drupal.org/project/jsonapi/issues/3032787
+ * @see https://www.drupal.org/project/drupal/issues/3032787
  * @see jsonapi.api.php
  */
 class EntityAccessDeniedHttpException extends CacheableAccessDeniedHttpException implements ResourceIdentifierInterface {
@@ -71,7 +71,7 @@ class EntityAccessDeniedHttpException extends CacheableAccessDeniedHttpException
       $error['reason'] = $entity_access->getReason();
     }
     $this->error = $error;
-    // @todo: remove this ternary operation in https://www.drupal.org/project/jsonapi/issues/2997594.
+    // @todo: remove this ternary operation in https://www.drupal.org/project/drupal/issues/2997594.
     $this->resourceIdentifier = $entity ? ResourceIdentifier::fromEntity($entity) : NULL;
   }
 
