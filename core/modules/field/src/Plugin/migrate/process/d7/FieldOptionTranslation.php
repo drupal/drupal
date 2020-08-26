@@ -27,7 +27,6 @@ class FieldOptionTranslation extends ProcessPluginBase {
     $data = unserialize($data);
     $allowed_values = '';
     $translation_key = $row->getSourceProperty('property');
-    $i = 0;
     if (isset($data['settings']['allowed_values'])) {
       $allowed_values = $data['settings']['allowed_values'];
       switch ($type) {
