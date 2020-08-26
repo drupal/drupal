@@ -574,7 +574,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
     // Sanitize the request.
     $request = RequestSanitizer::sanitize(
       $request,
-      (array) Settings::get(RequestSanitizer::SANITIZE_WHITELIST, []),
+      (array) Settings::get(RequestSanitizer::SANITIZE_INPUT_SAFE_KEYS, []),
       (bool) Settings::get(RequestSanitizer::SANITIZE_LOG, FALSE)
     );
 

@@ -38,6 +38,10 @@ final class Settings {
    * @see self::handleDeprecations()
    */
   private static $deprecatedSettings = [
+    'sanitize_input_whitelist' => [
+      'replacement' => 'sanitize_input_safe_keys',
+      'message' => 'The "sanitize_input_whitelist" setting is deprecated in drupal:9.1.0 and will be removed in drupal:10.0.0. Use Drupal\Core\Security\RequestSanitizer::SANITIZE_INPUT_SAFE_KEYS instead. See https://www.drupal.org/node/3163148.',
+    ],
     'twig_sandbox_whitelisted_classes' => [
       'replacement' => 'twig_sandbox_allowed_classes',
       'message' => 'The "twig_sandbox_whitelisted_classes" setting is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. Use "twig_sandbox_allowed_classes" instead. See https://www.drupal.org/node/3162897.',

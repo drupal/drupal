@@ -159,6 +159,9 @@ class SettingsTest extends UnitTestCase {
    * or provider. This test is only for the general deprecated settings API
    * itself.
    *
+   * @see self::testRealDeprecatedSettings()
+   * @see self::providerTestRealDeprecatedSettings()
+   *
    * @param string[] $settings_config
    *   Array of settings to put in the settings.php file for testing.
    * @param string $setting_name
@@ -212,8 +215,9 @@ class SettingsTest extends UnitTestCase {
   /**
    * Provides data for testFakeDeprecatedSettings().
    *
-   * @return array
-   *   Test case data.
+   * Note: Tests for real deprecated settings should not be added here.
+   *
+   * @see self::providerTestRealDeprecatedSettings()
    */
   public function providerTestFakeDeprecatedSettings(): array {
 
@@ -272,28 +276,54 @@ class SettingsTest extends UnitTestCase {
   }
 
   /**
-   * Tests legacy twig_sandbox_* settings.
+   * Tests deprecation messages for real deprecated settings.
    *
+   * @param string $legacy_setting
+   *   The legacy name of the setting to test.
+   * @param string $expected_deprecation
+   *   The expected deprecation message.
+   *
+   * @dataProvider providerTestRealDeprecatedSettings
    * @group legacy
-   *
-   * @expectedDeprecation The "twig_sandbox_whitelisted_classes" setting is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. Use "twig_sandbox_allowed_classes" instead. See https://www.drupal.org/node/3162897.
-   * @expectedDeprecation The "twig_sandbox_whitelisted_methods" setting is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. Use "twig_sandbox_allowed_methods" instead. See https://www.drupal.org/node/3162897.
-   * @expectedDeprecation The "twig_sandbox_whitelisted_prefixes" setting is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. Use "twig_sandbox_allowed_prefixes" instead. See https://www.drupal.org/node/3162897.
    */
-  public function testLegacyTwigSandboxSettings(): void {
-    $settings = <<<'EOD'
-<?php
-$settings['twig_sandbox_whitelisted_classes'] = ['a', 'b'];
-$settings['twig_sandbox_whitelisted_methods'] = ['aFoo', 'bBar'];
-$settings['twig_sandbox_whitelisted_prefixes'] = ['aPrefix', 'bPrefix'];
-EOD;
+  public function testRealDeprecatedSettings(string $legacy_setting, string $expected_deprecation): void {
+
+    $settings_file_content = "<?php\n\$settings['$legacy_setting'] = 'foo';\n";
     $class_loader = NULL;
     $vfs_root = vfsStream::setup('root');
     $sites_directory = vfsStream::newDirectory('sites')->at($vfs_root);
     vfsStream::newFile('settings.php')
       ->at($sites_directory)
-      ->setContent($settings);
+      ->setContent($settings_file_content);
+
+    $this->expectDeprecation($expected_deprecation);
+
+    // Presence of the old name in settings.php is enough to trigger messages.
     Settings::initialize(vfsStream::url('root'), 'sites', $class_loader);
+  }
+
+  /**
+   * Provides data for testRealDeprecatedSettings().
+   */
+  public function providerTestRealDeprecatedSettings(): array {
+    return [
+      [
+        'sanitize_input_whitelist',
+        'The "sanitize_input_whitelist" setting is deprecated in drupal:9.1.0 and will be removed in drupal:10.0.0. Use Drupal\Core\Security\RequestSanitizer::SANITIZE_INPUT_SAFE_KEYS instead. See https://www.drupal.org/node/3163148.',
+      ],
+      [
+        'twig_sandbox_whitelisted_classes',
+        'The "twig_sandbox_whitelisted_classes" setting is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. Use "twig_sandbox_allowed_classes" instead. See https://www.drupal.org/node/3162897.',
+      ],
+      [
+        'twig_sandbox_whitelisted_methods',
+        'The "twig_sandbox_whitelisted_methods" setting is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. Use "twig_sandbox_allowed_methods" instead. See https://www.drupal.org/node/3162897.',
+      ],
+      [
+        'twig_sandbox_whitelisted_prefixes',
+        'The "twig_sandbox_whitelisted_prefixes" setting is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. Use "twig_sandbox_allowed_prefixes" instead. See https://www.drupal.org/node/3162897.',
+      ],
+    ];
   }
 
 }
