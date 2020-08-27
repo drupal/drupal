@@ -65,7 +65,7 @@ use Symfony\Component\Serializer\SerializerInterface;
  * @internal JSON:API maintains no PHP API. The API is the HTTP API. This class
  *   may change at any time and could break any dependencies on it.
  *
- * @see https://www.drupal.org/project/jsonapi/issues/3032787
+ * @see https://www.drupal.org/project/drupal/issues/3032787
  * @see jsonapi.api.php
  */
 class EntityResource {
@@ -307,7 +307,7 @@ class EntityResource {
    */
   public function patchIndividual(ResourceType $resource_type, EntityInterface $entity, Request $request) {
     if ($entity instanceof RevisionableInterface && !($entity->isLatestRevision() && $entity->isDefaultRevision())) {
-      throw new BadRequestHttpException('Updating a resource object that has a working copy is not yet supported. See https://www.drupal.org/project/jsonapi/issues/2795279.');
+      throw new BadRequestHttpException('Updating a resource object that has a working copy is not yet supported. See https://www.drupal.org/project/drupal/issues/2795279.');
     }
 
     $parsed_entity = $this->deserialize($resource_type, $request, JsonApiDocumentTopLevel::class);
@@ -408,7 +408,7 @@ class EntityResource {
     catch (\LogicException $e) {
       // Ensure good DX when an entity query involves a config entity type.
       // For example: getting users with a particular role, which is a config
-      // entity type: https://www.drupal.org/project/jsonapi/issues/2959445.
+      // entity type: https://www.drupal.org/project/drupal/issues/2959445.
       // @todo Remove the message parsing in https://www.drupal.org/project/drupal/issues/3028967.
       if (strpos($e->getMessage(), 'Getting the base fields is not supported for entity type') === 0) {
         preg_match('/entity type (.*)\./', $e->getMessage(), $matches);

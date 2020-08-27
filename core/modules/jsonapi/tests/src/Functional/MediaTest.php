@@ -348,7 +348,7 @@ class MediaTest extends ResourceTestBase {
    */
   public function testPostIndividual() {
     // @todo Mimic \Drupal\Tests\rest\Functional\EntityResource\Media\MediaResourceTestBase::testPost()
-    // @todo Later, use https://www.drupal.org/project/jsonapi/issues/2958554 to upload files rather than the REST module.
+    // @todo Later, use https://www.drupal.org/project/drupal/issues/2958554 to upload files rather than the REST module.
     parent::testPostIndividual();
   }
   // @codingStandardsIgnoreEnd

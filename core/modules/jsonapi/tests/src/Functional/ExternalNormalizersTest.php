@@ -145,7 +145,7 @@ class ExternalNormalizersTest extends BrowserTestBase {
     $this->assertSame(static::VALUE_ORIGINAL, $denormalized_entity->field_test->value);
 
     // Asserts the expected JSON:API normalization.
-    // @todo Remove line below in favor of commented line in https://www.drupal.org/project/jsonapi/issues/2878463.
+    // @todo Remove line below in favor of commented line in https://www.drupal.org/project/drupal/issues/2878463.
     $url = Url::fromRoute('jsonapi.entity_test--entity_test.individual', ['entity' => $this->entity->uuid()]);
     // $url = $this->entity->toUrl('jsonapi');
     $client = $this->getSession()->getDriver()->getClient()->getClient();

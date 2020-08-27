@@ -31,7 +31,7 @@ use Symfony\Component\Routing\RouterInterface;
  * @internal JSON:API maintains no PHP API. The API is the HTTP API. This class
  *   may change at any time and could break any dependencies on it.
  *
- * @see https://www.drupal.org/project/jsonapi/issues/3032787
+ * @see https://www.drupal.org/project/drupal/issues/3032787
  * @see jsonapi.api.php
  */
 class EntityAccessChecker {
@@ -238,7 +238,7 @@ class EntityAccessChecker {
    *
    * @todo: remove when a generic revision access API exists in Drupal core, and
    * also remove the injected "node" and "media" services.
-   * @see https://www.drupal.org/project/jsonapi/issues/2992833#comment-12818386
+   * @see https://www.drupal.org/project/drupal/issues/2992833#comment-12818386
    */
   protected function checkRevisionViewAccess(EntityInterface $entity, AccountInterface $account) {
     assert($entity instanceof RevisionableInterface);
@@ -257,7 +257,7 @@ class EntityAccessChecker {
 
       default:
         $reason = 'Only node and media revisions are supported by JSON:API.';
-        $reason .= ' For context, see https://www.drupal.org/project/jsonapi/issues/2992833#comment-12818258.';
+        $reason .= ' For context, see https://www.drupal.org/project/drupal/issues/2992833#comment-12818258.';
         $reason .= ' To contribute, see https://www.drupal.org/project/drupal/issues/2350939 and https://www.drupal.org/project/drupal/issues/2809177.';
         $access = AccessResult::neutral($reason);
     }

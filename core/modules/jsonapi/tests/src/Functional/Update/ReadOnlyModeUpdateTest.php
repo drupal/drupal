@@ -8,7 +8,7 @@ use Drupal\FunctionalTests\Update\UpdatePathTestBase;
  * Tests that existing sites have the new read-only mode to "off".
  *
  * @see jsonapi_update_8701()
- * @see https://www.drupal.org/project/jsonapi/issues/3039568
+ * @see https://www.drupal.org/project/drupal/issues/3039568
  *
  * @group jsonapi
  * @group Update

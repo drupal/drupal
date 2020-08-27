@@ -63,7 +63,7 @@ use Drupal\Core\Access\AccessResult;
  *
  * @see https://github.com/json-api/json-api/pull/1268
  * @see https://github.com/json-api/json-api/pull/1311
- * @see https://www.drupal.org/project/jsonapi/issues/2955020
+ * @see https://www.drupal.org/project/drupal/issues/2955020
  *
  * By implementing revision support as a profile, the JSON:API module should be
  * maximally compatible with other systems.
@@ -117,7 +117,7 @@ use Drupal\Core\Access\AccessResult;
  * It is not yet possible to request a collection of revisions. This is still
  * under development in issue [#3009588].
  *
- * @see https://www.drupal.org/project/jsonapi/issues/3009588.
+ * @see https://www.drupal.org/project/drupal/issues/3009588.
  * @see https://tools.ietf.org/html/rfc5829
  * @see https://www.drupal.org/docs/8/modules/jsonapi/revisions
  *

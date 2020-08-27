@@ -32,7 +32,7 @@ use Drupal\jsonapi\Query\Filter;
  * @see https://www.drupal.org/project/drupal/issues/2809177
  * @see https://www.drupal.org/project/drupal/issues/777578
  *
- * @see https://www.drupal.org/project/jsonapi/issues/3032787
+ * @see https://www.drupal.org/project/drupal/issues/3032787
  * @see jsonapi.api.php
  */
 class TemporaryQueryGuard {
