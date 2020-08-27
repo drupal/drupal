@@ -80,9 +80,11 @@ class CommentViewBuilder extends EntityViewBuilder {
 
     /** @var \Drupal\comment\CommentInterface $entity */
     // Store a threading field setting to use later in self::buildComponents().
-    $build['#comment_threaded'] = $entity->getCommentedEntity()
-      ->getFieldDefinition($entity->getFieldName())
-      ->getSetting('default_mode') === CommentManagerInterface::COMMENT_MODE_THREADED;
+    $commented_entity = $entity->getCommentedEntity();
+    $build['#comment_threaded'] =
+      is_null($commented_entity)
+      || $commented_entity->getFieldDefinition($entity->getFieldName())
+        ->getSetting('default_mode') === CommentManagerInterface::COMMENT_MODE_THREADED;
     // If threading is enabled, don't render cache individual comments, but do
     // keep the cacheability metadata, so it can bubble up.
     if ($build['#comment_threaded']) {
@@ -140,10 +142,12 @@ class CommentViewBuilder extends EntityViewBuilder {
 
       // Commented entities already loaded after self::getBuildDefaults().
       $commented_entity = $entity->getCommentedEntity();
+      // Set defaults if the commented_entity does not exist.
+      $bundle = $commented_entity ? $commented_entity->bundle() : '';
+      $is_node = $commented_entity ? $commented_entity->getEntityTypeId() === 'node' : NULL;
 
       $build[$id]['#entity'] = $entity;
-      $build[$id]['#theme'] = 'comment__' . $entity->getFieldName() . '__' . $commented_entity->bundle();
-
+      $build[$id]['#theme'] = 'comment__' . $entity->getFieldName() . '__' . $bundle;
       $display = $displays[$entity->bundle()];
       if ($display->getComponent('links')) {
         $build[$id]['links'] = [
@@ -164,7 +168,7 @@ class CommentViewBuilder extends EntityViewBuilder {
         $build[$id]['#attached'] = [];
       }
       $build[$id]['#attached']['library'][] = 'comment/drupal.comment-by-viewer';
-      if ($attach_history && $commented_entity->getEntityTypeId() === 'node') {
+      if ($attach_history && $is_node) {
         $build[$id]['#attached']['library'][] = 'comment/drupal.comment-new-indicator';
 
         // Embed the metadata for the comment "new" indicators on this node.
