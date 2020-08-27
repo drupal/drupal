@@ -607,9 +607,8 @@ function template_preprocess_comment(&$variables) {
 
   $variables['submitted'] = t('Submitted by @username on @datetime', ['@username' => $variables['author'], '@datetime' => $variables['created']]);
 
-  if ($comment->hasParentComment()) {
+  if ($comment_parent = $comment->getParentComment()) {
     // Fetch and store the parent comment information for use in templates.
-    $comment_parent = $comment->getParentComment();
     $account_parent = $comment_parent->getOwner();
     $variables['parent_comment'] = $comment_parent;
     $username = [

@@ -404,7 +404,8 @@ class Comment extends ContentEntityBase implements CommentInterface {
    * {@inheritdoc}
    */
   public function getAuthorName() {
-    if ($this->get('uid')->target_id) {
+    // If their is a valid user id and the user entity exists return the label.
+    if ($this->get('uid')->target_id && $this->get('uid')->entity) {
       return $this->get('uid')->entity->label();
     }
     return $this->get('name')->value ?: \Drupal::config('user.settings')->get('anonymous');
