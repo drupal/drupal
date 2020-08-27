@@ -141,4 +141,13 @@ class UserAccountLinksTest extends BrowserTestBase {
     $this->assertLinkByHref(\Drupal::urlGenerator()->generate('user.page'), 0);
   }
 
+  /**
+   * Ensures that logout url redirects an anonymous user to the front page.
+   */
+  public function testAnonymousLogout() {
+    $this->drupalGet('user/logout');
+    $this->assertSession()->addressEquals('/');
+    $this->assertSession()->statusCodeEquals(200);
+  }
+
 }
