@@ -271,7 +271,6 @@ abstract class ResourceTestBase extends BrowserTestBase {
     }
 
     $entity_bundle = $entity->bundle();
-    $account_bundle = $account->bundle();
 
     // Add access-protected field.
     FieldStorageConfig::create([
