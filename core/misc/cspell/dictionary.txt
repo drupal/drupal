@@ -2053,7 +2053,6 @@ xampl
 xbap
 xbeg
 xbitmap
-xcache
 xfbml
 xhr's
 xjkm

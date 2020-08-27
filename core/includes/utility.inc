@@ -15,8 +15,7 @@ use Symfony\Component\HttpFoundation\Request;
  *
  * @param $class_loader
  *   The class loader. Normally Composer's ClassLoader, as included by the
- *   front controller, but may also be decorated; e.g.,
- *   \Symfony\Component\ClassLoader\ApcClassLoader, \Symfony\Component\ClassLoader\WinCacheClassLoader, or \Symfony\Component\ClassLoader\XcacheClassLoader
+ *   front controller, but may also be decorated.
  * @param \Symfony\Component\HttpFoundation\Request $request
  *   The current request.
  *
