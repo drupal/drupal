@@ -14,7 +14,7 @@ class WebDriverWebAssert extends JSWebAssert {
    *   The status code.
    */
   public function statusCodeEquals($code) {
-    @trigger_error('Support for statusCodeEquals is to be dropped from Javascript tests. See https://www.drupal.org/node/2857562.');
+    @trigger_error('Support for statusCodeEquals is to be dropped from JavaScript tests. See https://www.drupal.org/node/2857562.');
     parent::statusCodeEquals($code);
   }
 
@@ -25,7 +25,7 @@ class WebDriverWebAssert extends JSWebAssert {
    *   The status code.
    */
   public function statusCodeNotEquals($code) {
-    @trigger_error('Support for statusCodeNotEquals is to be dropped from Javascript tests. See https://www.drupal.org/node/2857562.');
+    @trigger_error('Support for statusCodeNotEquals is to be dropped from JavaScript tests. See https://www.drupal.org/node/2857562.');
     parent::statusCodeNotEquals($code);
   }
 
@@ -38,7 +38,7 @@ class WebDriverWebAssert extends JSWebAssert {
    *   The value to check the header against.
    */
   public function responseHeaderEquals($name, $value) {
-    @trigger_error('Support for responseHeaderEquals is to be dropped from Javascript tests. See https://www.drupal.org/node/2857562.');
+    @trigger_error('Support for responseHeaderEquals is to be dropped from JavaScript tests. See https://www.drupal.org/node/2857562.');
     parent::responseHeaderEquals($name, $value);
   }
 
@@ -51,7 +51,7 @@ class WebDriverWebAssert extends JSWebAssert {
    *   The value to check the header against.
    */
   public function responseHeaderNotEquals($name, $value) {
-    @trigger_error('Support for responseHeaderNotEquals is to be dropped from Javascript tests. See https://www.drupal.org/node/2857562.');
+    @trigger_error('Support for responseHeaderNotEquals is to be dropped from JavaScript tests. See https://www.drupal.org/node/2857562.');
     parent::responseHeaderNotEquals($name, $value);
   }
 
@@ -64,7 +64,7 @@ class WebDriverWebAssert extends JSWebAssert {
    *   The value to check the header against.
    */
   public function responseHeaderContains($name, $value) {
-    @trigger_error('Support for responseHeaderContains is to be dropped from Javascript tests. See https://www.drupal.org/node/2857562.');
+    @trigger_error('Support for responseHeaderContains is to be dropped from JavaScript tests. See https://www.drupal.org/node/2857562.');
     parent::responseHeaderContains($name, $value);
   }
 
@@ -77,7 +77,7 @@ class WebDriverWebAssert extends JSWebAssert {
    *   The value to check the header against.
    */
   public function responseHeaderNotContains($name, $value) {
-    @trigger_error('Support for responseHeaderNotContains is to be dropped from Javascript tests. See https://www.drupal.org/node/2857562.');
+    @trigger_error('Support for responseHeaderNotContains is to be dropped from JavaScript tests. See https://www.drupal.org/node/2857562.');
     parent::responseHeaderNotContains($name, $value);
   }
 
@@ -90,7 +90,7 @@ class WebDriverWebAssert extends JSWebAssert {
    *   The value to check the header against.
    */
   public function responseHeaderMatches($name, $regex) {
-    @trigger_error('Support for responseHeaderMatches is to be dropped from Javascript tests. See https://www.drupal.org/node/2857562.');
+    @trigger_error('Support for responseHeaderMatches is to be dropped from JavaScript tests. See https://www.drupal.org/node/2857562.');
     parent::responseHeaderMatches($name, $regex);
   }
 
@@ -103,7 +103,7 @@ class WebDriverWebAssert extends JSWebAssert {
    *   The value to check the header against.
    */
   public function responseHeaderNotMatches($name, $regex) {
-    @trigger_error('Support for responseHeaderNotMatches is to be dropped from Javascript tests. See https://www.drupal.org/node/2857562.');
+    @trigger_error('Support for responseHeaderNotMatches is to be dropped from JavaScript tests. See https://www.drupal.org/node/2857562.');
     parent::responseHeaderNotMatches($name, $regex);
   }
 

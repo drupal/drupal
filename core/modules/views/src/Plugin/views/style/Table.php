@@ -215,7 +215,7 @@ class Table extends StylePluginBase implements CacheableDependencyInterface {
 
     $form['sticky'] = [
       '#type' => 'checkbox',
-      '#title' => $this->t('Enable Drupal style "sticky" table headers (Javascript)'),
+      '#title' => $this->t('Enable Drupal style "sticky" table headers (JavaScript)'),
       '#default_value' => !empty($this->options['sticky']),
       '#description' => $this->t('(Sticky header effects will not be active for preview below, only on live output.)'),
     ];

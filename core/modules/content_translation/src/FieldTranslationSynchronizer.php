@@ -142,7 +142,7 @@ class FieldTranslationSynchronizer implements FieldTranslationSynchronizerInterf
 
         // If a group was selected has the require_all_groups_for_translation
         // flag set, there are no untranslatable columns. This is done because
-        // the UI adds Javascript that disables the other checkboxes, so their
+        // the UI adds JavaScript that disables the other checkboxes, so their
         // values are not saved.
         foreach (array_filter($translation_sync) as $group) {
           if (!empty($column_groups[$group]['require_all_groups_for_translation'])) {

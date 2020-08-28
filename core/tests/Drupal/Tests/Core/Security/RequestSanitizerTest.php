@@ -321,7 +321,7 @@ class RequestSanitizerTest extends UnitTestCase {
     $data[] = ['/example.com'];
     // Internal URL using a colon is allowed.
     $data[] = ['example:test'];
-    // Javascript URL is allowed because it is treated as an internal URL.
+    // JavaScript URL is allowed because it is treated as an internal URL.
     $data[] = ['javascript:alert(0)'];
     return $data;
   }

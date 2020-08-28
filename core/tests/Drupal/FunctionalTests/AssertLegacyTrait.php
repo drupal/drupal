@@ -146,7 +146,7 @@ trait AssertLegacyTrait {
 
     $raw_content = $this->getSession()->getPage()->getContent();
     // Trying to simulate what the user sees, given that it removes all text
-    // inside the head tags, removes inline Javascript, fix all HTML entities,
+    // inside the head tags, removes inline JavaScript, fix all HTML entities,
     // removes dangerous protocols and filtering out all HTML tags, as they are
     // not visible in a normal browser.
     $raw_content = preg_replace('@<head>(.+?)</head>@si', '', $raw_content);

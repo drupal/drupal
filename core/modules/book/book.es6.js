@@ -1,6 +1,6 @@
 /**
  * @file
- * Javascript behaviors for the Book module.
+ * JavaScript behaviors for the Book module.
  */
 
 (function($, Drupal) {

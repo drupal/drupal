@@ -32,7 +32,7 @@ class JavascriptGetDrupalSettingsTest extends WebDriverTestBase {
     $js_settings = $this->getDrupalSettings();
     $this->assertSame('azAZ09();.,\\\/-_{}', $js_settings['test-setting']);
 
-    // Dynamically change the setting using Javascript.
+    // Dynamically change the setting using JavaScript.
     $script = <<<EndOfScript
 (function () {
   drupalSettings['test-setting'] = 'foo';

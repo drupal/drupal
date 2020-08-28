@@ -1,6 +1,6 @@
 /**
  * @file
- * Defines Javascript behaviors for the media form.
+ * Defines JavaScript behaviors for the media form.
  */
 
 (function($, Drupal) {

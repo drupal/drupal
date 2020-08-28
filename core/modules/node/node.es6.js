@@ -1,6 +1,6 @@
 /**
  * @file
- * Defines Javascript behaviors for the node module.
+ * Defines JavaScript behaviors for the node module.
  */
 
 (function($, Drupal, drupalSettings) {

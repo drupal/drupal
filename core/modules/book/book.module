@@ -148,7 +148,7 @@ function book_form_node_form_alter(&$form, FormStateInterface $form_state, $form
   if ($access) {
     $collapsed = !($node->isNew() && !empty($node->book['pid']));
     $form = \Drupal::service('book.manager')->addFormElements($form, $form_state, $node, $account, $collapsed);
-    // The "js-hide" class hides submit button when Javascript is enabled.
+    // The "js-hide" class hides submit button when JavaScript is enabled.
     $form['book']['pick-book'] = [
       '#type' => 'submit',
       '#value' => t('Change book (update list of parents)'),

@@ -193,7 +193,7 @@ function views_ui_ajax_update_form($form, FormStateInterface $form_state) {
 }
 
 /**
- * Non-Javascript fallback for updating the add view form.
+ * Non-JavaScript fallback for updating the add view form.
  */
 function views_ui_nojs_submit($form, FormStateInterface $form_state) {
   $form_state->setRebuild();

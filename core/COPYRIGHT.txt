@@ -20,7 +20,7 @@ Drupal includes works under other copyright notices and distributed
 according to the terms of the GNU General Public License or a compatible
 license, including:
 
-Javascript
+JavaScript
 
   Farbtastic - Copyright (c) 2010 Matt Farina
 

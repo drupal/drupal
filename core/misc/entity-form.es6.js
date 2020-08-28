@@ -1,6 +1,6 @@
 /**
  * @file
- * Defines Javascript behaviors for the block_content module.
+ * Defines JavaScript behaviors for the block_content module.
  */
 
 (function($, Drupal) {

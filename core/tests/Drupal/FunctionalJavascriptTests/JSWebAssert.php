@@ -222,7 +222,7 @@ JS;
    * Test that a node, or its specific corner, is visible in the viewport.
    *
    * Note: Always set the viewport size. This can be done in your test with
-   * \Behat\Mink\Session->resizeWindow(). Drupal CI Javascript tests by default
+   * \Behat\Mink\Session->resizeWindow(). Drupal CI JavaScript tests by default
    * use a viewport of 1024x768px.
    *
    * @param string $selector_type
@@ -319,7 +319,7 @@ JS;
   private function checkNodeVisibilityInViewport(NodeElement $node, $corner = FALSE) {
     $xpath = $node->getXpath();
 
-    // Build the Javascript to test if the complete element or a specific corner
+    // Build the JavaScript to test if the complete element or a specific corner
     // is in the viewport.
     switch ($corner) {
       case 'topLeft':
@@ -392,7 +392,7 @@ JS;
         throw new UnsupportedDriverActionException($corner, $this->session->getDriver());
     }
 
-    // Build the full Javascript test. The shared logic gets the corner
+    // Build the full JavaScript test. The shared logic gets the corner
     // specific test logic injected.
     $full_javascript_visibility_test = <<<JS
       (function(t){
@@ -408,7 +408,7 @@ JS;
       }($test_javascript_function));
 JS;
 
-    // Check the visibility by injecting and executing the full Javascript test
+    // Check the visibility by injecting and executing the full JavaScript test
     // script in the page.
     return $this->session->evaluateScript($full_javascript_visibility_test);
   }

@@ -1,6 +1,6 @@
 /**
  * @file
- * Javascript for the node content editing form.
+ * JavaScript for the node content editing form.
  */
 
 (function($, Drupal) {

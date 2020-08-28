@@ -51,7 +51,7 @@
   Drupal.views.instances = {};
 
   /**
-   * Javascript object for a certain view.
+   * JavaScript object for a certain view.
    *
    * @constructor
    *
