@@ -95,14 +95,14 @@ class DefaultViewsTest extends UITestBase {
     ];
     $this->assertSession()->titleEquals('Duplicate of Glossary | Drupal');
     $this->drupalPostForm(NULL, $edit, t('Duplicate'));
-    $this->assertUrl('admin/structure/views/view/duplicate_of_glossary', [], 'The normal duplicating name schema is applied.');
+    $this->assertUrl('admin/structure/views/view/duplicate_of_glossary');
 
     // Duplicate a view and set a custom name.
     $this->drupalGet('admin/structure/views');
     $this->clickViewsOperationLink('Duplicate', '/glossary');
     $random_name = strtolower($this->randomMachineName());
     $this->drupalPostForm(NULL, ['id' => $random_name], t('Duplicate'));
-    $this->assertUrl("admin/structure/views/view/$random_name", [], 'The custom view name got saved.');
+    $this->assertUrl("admin/structure/views/view/$random_name");
 
     // Now disable the view, and make sure it stops appearing on the main view
     // listing page but instead goes back to displaying on the disabled views

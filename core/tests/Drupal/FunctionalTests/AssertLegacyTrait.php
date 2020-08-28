@@ -499,6 +499,9 @@ trait AssertLegacyTrait {
    */
   protected function assertUrl($path) {
     @trigger_error('AssertLegacyTrait::assertUrl() is deprecated in drupal:8.2.0 and is removed from drupal:10.0.0. Use $this->assertSession()->addressEquals() instead. See https://www.drupal.org/node/3129738', E_USER_DEPRECATED);
+    if (func_num_args() > 1) {
+      @trigger_error('Calling AssertLegacyTrait::assertUrl() with more than one argument is deprecated in drupal:8.2.0 and the method is removed from drupal:10.0.0. Use $this->assertSession()->addressEquals() instead. See https://www.drupal.org/node/3129738', E_USER_DEPRECATED);
+    }
     $this->assertSession()->addressEquals($path);
   }
 

@@ -80,7 +80,7 @@ class UserBlocksTest extends BrowserTestBase {
     $this->assertNoText(t('User login'), 'Logged in.');
 
     // Check that we are still on the same page.
-    $this->assertUrl(Url::fromRoute('user.admin_permissions', [], ['absolute' => TRUE])->toString(), [], 'Still on the same page after login for access denied page');
+    $this->assertUrl(Url::fromRoute('user.admin_permissions'));
 
     // Now, log out and repeat with a non-403 page.
     $this->drupalLogout();
@@ -116,7 +116,7 @@ class UserBlocksTest extends BrowserTestBase {
     $this->drupalLogout();
     $this->drupalPostForm('http://example.com/', $edit, t('Log in'), ['external' => FALSE]);
     // Check that we remain on the site after login.
-    $this->assertUrl($user->toUrl('canonical', ['absolute' => TRUE])->toString(), [], 'Redirected to user profile page after login from the frontpage');
+    $this->assertUrl($user->toUrl('canonical'));
 
     // Verify that form validation errors are displayed immediately for forms
     // in blocks and not on subsequent page requests.

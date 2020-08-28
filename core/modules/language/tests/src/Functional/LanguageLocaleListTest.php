@@ -50,7 +50,7 @@ class LanguageLocaleListTest extends BrowserTestBase {
     ];
     $this->drupalPostForm('admin/config/regional/language/add', $edit, t('Add language'));
     $this->assertText('The language French has been created and can now be used');
-    $this->assertUrl(Url::fromRoute('entity.configurable_language.collection', [], ['absolute' => TRUE])->toString());
+    $this->assertUrl(Url::fromRoute('entity.configurable_language.collection'));
     $this->rebuildContainer();
 
     // Translate Spanish language to French (Espagnol).

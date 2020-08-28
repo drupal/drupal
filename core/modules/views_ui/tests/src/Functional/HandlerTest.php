@@ -118,11 +118,13 @@ class HandlerTest extends UITestBase {
         $edit_handler_url = "admin/structure/views/nojs/handler/test_view_empty/default/$type/$id";
       }
 
-      $this->assertUrl($edit_handler_url, [], 'The user got redirected to the handler edit form.');
+      // Verify that the user got redirected to the handler edit form.
+      $this->assertUrl($edit_handler_url);
       $random_label = $this->randomMachineName();
       $this->drupalPostForm(NULL, ['options[admin_label]' => $random_label], t('Apply'));
 
-      $this->assertUrl('admin/structure/views/view/test_view_empty/edit/default', [], 'The user got redirected to the views edit form.');
+      // Verify that the user got redirected to the views edit form.
+      $this->assertUrl('admin/structure/views/view/test_view_empty/edit/default');
 
       $this->assertLinkByHref($edit_handler_url, 0, 'The handler edit link appears in the UI.');
       $links = $this->xpath('//a[starts-with(normalize-space(text()), :label)]', [':label' => $random_label]);
@@ -155,7 +157,8 @@ class HandlerTest extends UITestBase {
     $id = 'name';
     $edit_handler_url = "admin/structure/views/nojs/handler/test_view_empty/default/field/$id";
 
-    $this->assertUrl($edit_handler_url, [], 'The user got redirected to the handler edit form.');
+    // Verify that the user got redirected to the handler edit form.
+    $this->assertUrl($edit_handler_url);
     $this->assertFieldByName('options[relationship]', 'uid', 'Ensure the relationship select is filled with the UID relationship.');
     $this->drupalPostForm(NULL, [], t('Apply'));
 

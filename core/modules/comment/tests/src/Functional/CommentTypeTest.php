@@ -114,7 +114,8 @@ class CommentTypeTest extends CommentTestBase {
     $this->drupalGet('admin/structure/comment');
     $this->assertRaw('Bar', 'New name was displayed.');
     $this->clickLink('Manage fields');
-    $this->assertUrl(Url::fromRoute('entity.comment.field_ui_fields', ['comment_type' => 'comment'], ['absolute' => TRUE])->toString(), [], 'Original machine name was used in URL.');
+    // Verify that the original machine name was used in the URL.
+    $this->assertUrl(Url::fromRoute('entity.comment.field_ui_fields', ['comment_type' => 'comment']));
     $this->assertCount(1, $this->cssSelect('tr#comment-body'), 'Body field exists.');
 
     // Remove the body field.

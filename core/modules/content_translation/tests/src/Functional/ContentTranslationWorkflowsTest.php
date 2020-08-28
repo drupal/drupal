@@ -329,7 +329,7 @@ class ContentTranslationWorkflowsTest extends ContentTranslationTestBase {
     $add_translation_url = Url::fromRoute("entity.$this->entityTypeId.content_translation_add", [$this->entityTypeId => $this->entity->id(), 'source' => $default_langcode, 'target' => $langcode], $options);
     if ($expected_status['add_translation'] == 200) {
       $this->clickLink('Add');
-      $this->assertUrl($add_translation_url->toString(), [], 'The translation overview points to the translation form when creating translations.');
+      $this->assertUrl($add_translation_url);
       // Check that the translation form does not contain shared elements for
       // translators.
       if ($expected_status['edit'] == 403) {
@@ -354,12 +354,12 @@ class ContentTranslationWorkflowsTest extends ContentTranslationTestBase {
         // An editor should be pointed to the entity form in multilingual mode.
         // We need a new expected edit path with a new language.
         $expected_edit_path = $this->entity->toUrl('edit-form', $options)->toString();
-        $this->assertUrl($expected_edit_path, [], 'The translation overview points to the edit form for editors when editing translations.');
+        $this->assertUrl($expected_edit_path);
       }
       else {
         $this->clickLink('Edit');
         // While a translator should be pointed to the translation form.
-        $this->assertUrl($edit_translation_url->toString(), [], 'The translation overview points to the translation form for translators when editing translations.');
+        $this->assertUrl($edit_translation_url);
         // Check that the translation form does not contain shared elements.
         $this->assertNoSharedElements();
       }
@@ -396,13 +396,13 @@ class ContentTranslationWorkflowsTest extends ContentTranslationTestBase {
         // multilingual mode. We need a new expected delete path with a new
         // language.
         $expected_delete_path = $this->entity->toUrl('delete-form', $options)->toString();
-        $this->assertUrl($expected_delete_path, [], 'The translation overview points to the delete form for editors when deleting translations.');
+        $this->assertUrl($expected_delete_path);
       }
       else {
         $this->clickLink('Delete');
         // While a translator should be pointed to the translation deletion
         // form.
-        $this->assertUrl($delete_translation_url->toString(), [], 'The translation overview points to the translation deletion form for translators when deleting translations.');
+        $this->assertUrl($delete_translation_url);
       }
     }
     else {

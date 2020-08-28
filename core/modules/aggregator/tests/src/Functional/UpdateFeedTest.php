@@ -39,7 +39,7 @@ class UpdateFeedTest extends AggregatorTestBase {
       $this->assert(isset($view_link), 'The message area contains a link to a feed');
 
       // Check feed data.
-      $this->assertUrl($feed->toUrl('canonical', ['absolute' => TRUE])->toString());
+      $this->assertUrl($feed->toUrl('canonical'));
       $this->assertTrue($this->uniqueFeed($edit['title[0][value]'], $edit['url[0][value]']), 'The feed is unique.');
 
       // Check feed source.

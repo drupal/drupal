@@ -38,14 +38,14 @@ class RedirectTest extends BrowserTestBase {
       'destination' => $this->randomMachineName(),
     ];
     $this->drupalPostForm($path, $edit, t('Submit'));
-    $this->assertUrl($edit['destination'], [], 'Basic redirection works.');
+    $this->assertUrl($edit['destination']);
 
     // Test without redirection.
     $edit = [
       'redirection' => FALSE,
     ];
     $this->drupalPostForm($path, $edit, t('Submit'));
-    $this->assertUrl($path, [], 'When redirect is set to FALSE, there should be no redirection.');
+    $this->assertUrl($path);
 
     // Test redirection with query parameters.
     $edit = [
@@ -53,7 +53,7 @@ class RedirectTest extends BrowserTestBase {
       'destination' => $this->randomMachineName(),
     ];
     $this->drupalPostForm($path, $edit, t('Submit'), $options);
-    $this->assertUrl($edit['destination'], [], 'Redirection with query parameters works.');
+    $this->assertUrl($edit['destination']);
 
     // Test without redirection but with query parameters.
     $edit = [
@@ -70,7 +70,7 @@ class RedirectTest extends BrowserTestBase {
       'destination' => '',
     ];
     $this->drupalPostForm($path, $edit, t('Submit'));
-    $this->assertUrl($path, [], 'When using an empty redirection string, there should be no redirection.');
+    $this->assertUrl($path);
 
     // Test redirection back to the original path with query parameters.
     $edit = [
@@ -101,7 +101,7 @@ class RedirectTest extends BrowserTestBase {
     $this->assertSession()->statusCodeEquals(404);
     $this->drupalPostForm(NULL, [], t('Submit'));
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertUrl($expected, [], 'Redirected to correct URL/query.');
+    $this->assertUrl($expected);
 
     // Visit the block admin page (403 page) and submit the form. Verify it
     // ends up at the right URL.
@@ -109,7 +109,7 @@ class RedirectTest extends BrowserTestBase {
     $this->assertSession()->statusCodeEquals(403);
     $this->drupalPostForm(NULL, [], t('Submit'));
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertUrl($expected, [], 'Redirected to correct URL/query.');
+    $this->assertUrl($expected);
   }
 
 }

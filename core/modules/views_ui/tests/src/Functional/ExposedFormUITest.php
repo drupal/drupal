@@ -191,7 +191,7 @@ class ExposedFormUITest extends UITestBase {
     $edit["options[group_info][group_items][3][value][article]"] = 'article';
     $edit["options[group_info][group_items][3][value][page]"] = 'page';
     $this->drupalPostForm(NULL, $edit, t('Apply'));
-    $this->assertUrl('admin/structure/views/view/test_exposed_admin_ui/edit/default', [], 'Correct validation of the node type filter.');
+    $this->assertUrl('admin/structure/views/view/test_exposed_admin_ui/edit/default');
     $this->assertNoGroupedFilterErrors();
 
     // Validate an "is empty" filter -- title without value is valid.
@@ -200,7 +200,7 @@ class ExposedFormUITest extends UITestBase {
     $edit["options[group_info][group_items][1][title]"] = 'No body';
     $edit["options[group_info][group_items][1][operator]"] = 'empty';
     $this->drupalPostForm(NULL, $edit, t('Apply'));
-    $this->assertUrl('admin/structure/views/view/test_exposed_admin_ui/edit/default', [], 'The "empty" operator validates correctly.');
+    $this->assertUrl('admin/structure/views/view/test_exposed_admin_ui/edit/default');
     $this->assertNoGroupedFilterErrors();
 
     // Ensure the string "0" can be used as a value for numeric filters.
@@ -212,7 +212,7 @@ class ExposedFormUITest extends UITestBase {
     $edit['options[group_info][group_items][1][operator]'] = '>';
     $edit['options[group_info][group_items][1][value][value]'] = '0';
     $this->drupalPostForm(NULL, $edit, t('Apply'));
-    $this->assertUrl('admin/structure/views/view/test_exposed_admin_ui/edit/default', [], 'A string "0" is a valid value.');
+    $this->assertUrl('admin/structure/views/view/test_exposed_admin_ui/edit/default');
     $this->assertNoGroupedFilterErrors();
 
     // Ensure "between" filters validate correctly.
@@ -222,7 +222,7 @@ class ExposedFormUITest extends UITestBase {
     $edit['options[group_info][group_items][1][value][min]'] = '0';
     $edit['options[group_info][group_items][1][value][max]'] = '10';
     $this->drupalPostForm(NULL, $edit, t('Apply'));
-    $this->assertUrl('admin/structure/views/view/test_exposed_admin_ui/edit/default', [], 'The "between" filter validates correctly.');
+    $this->assertUrl('admin/structure/views/view/test_exposed_admin_ui/edit/default');
     $this->assertNoGroupedFilterErrors();
   }
 

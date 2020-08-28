@@ -116,7 +116,8 @@ class ViewEditTest extends UITestBase {
     $this->drupalPostForm(NULL, [], 'Save');
     $this->drupalPostForm(NULL, [], t('Cancel'));
     $this->assertNoFieldByXpath('//div[contains(@class, "error")]', FALSE, 'No error message is displayed.');
-    $this->assertUrl('admin/structure/views', [], 'Redirected back to the view listing page..');
+    // Verify page was redirected to the view listing.
+    $this->assertUrl('admin/structure/views');
   }
 
   /**

@@ -670,7 +670,7 @@ class ManageFieldsFunctionalTest extends BrowserTestBase {
     $this->drupalPostForm($url, $edit, t('Save and continue'));
 
     $this->assertText(t('The machine-readable name is already in use. It must be unique.'));
-    $this->assertUrl($url, [], 'Stayed on the same page.');
+    $this->assertUrl($url);
   }
 
   /**

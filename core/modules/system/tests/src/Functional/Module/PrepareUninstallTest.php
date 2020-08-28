@@ -89,7 +89,7 @@ class PrepareUninstallTest extends BrowserTestBase {
 
     // Check that we are redirected to the uninstall page and data has been
     // removed.
-    $this->assertUrl('admin/modules/uninstall', []);
+    $this->assertUrl('admin/modules/uninstall');
     $this->assertText('All taxonomy terms have been deleted.');
 
     // Check that there is no more data to be deleted, Taxonomy is ready to be
@@ -137,7 +137,7 @@ class PrepareUninstallTest extends BrowserTestBase {
     $this->drupalPostForm(NULL, [], t('Delete all content items'));
 
     // Check we are redirected to the uninstall page and data has been removed.
-    $this->assertUrl('admin/modules/uninstall', []);
+    $this->assertUrl('admin/modules/uninstall');
     $this->assertText('All content items have been deleted.');
 
     // Check there is no more data to be deleted, Node is ready to be
