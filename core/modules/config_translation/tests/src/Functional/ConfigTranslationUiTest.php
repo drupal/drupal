@@ -299,7 +299,7 @@ class ConfigTranslationUiTest extends BrowserTestBase {
     // While translator can access the translation page, the edit link is not
     // present due to lack of permissions.
     $this->drupalGet($translation_base_url);
-    $this->assertSession()->linkNotExists(t('Edit'));
+    $this->assertSession()->linkNotExists('Edit');
 
     // Check 'Add' link for French.
     $this->assertLinkByHref("$translation_base_url/fr/add");
@@ -331,7 +331,7 @@ class ConfigTranslationUiTest extends BrowserTestBase {
 
     // Make sure translate tab is present.
     $this->drupalGet('admin/structure/contact/manage/feedback');
-    $this->assertSession()->linkExists(t('Translate @type', ['@type' => 'contact form']));
+    $this->assertSession()->linkExists('Translate contact form');
 
     // Visit the form to confirm the changes.
     $this->drupalGet('contact/feedback');
@@ -339,7 +339,7 @@ class ConfigTranslationUiTest extends BrowserTestBase {
 
     foreach ($this->langcodes as $langcode) {
       $this->drupalGet($translation_base_url);
-      $this->assertSession()->linkExists(t('Translate @type', ['@type' => 'contact form']));
+      $this->assertSession()->linkExists('Translate contact form');
 
       // 'Add' link should be present for $langcode translation.
       $translation_page_url = "$translation_base_url/$langcode/add";
@@ -435,7 +435,7 @@ class ConfigTranslationUiTest extends BrowserTestBase {
     // While translator can access the translation page, the edit link is not
     // present due to lack of permissions.
     $this->drupalGet($translation_base_url);
-    $this->assertSession()->linkNotExists(t('Edit'));
+    $this->assertSession()->linkNotExists('Edit');
 
     // Check 'Add' link for French.
     $this->assertLinkByHref("$translation_base_url/fr/add");
@@ -516,10 +516,10 @@ class ConfigTranslationUiTest extends BrowserTestBase {
     $this->drupalLogin($this->adminUser);
 
     $this->drupalGet('admin/config/people/accounts');
-    $this->assertSession()->linkExists(t('Translate @type', ['@type' => 'account settings']));
+    $this->assertSession()->linkExists('Translate account settings');
 
     $this->drupalGet('admin/config/people/accounts/translate');
-    $this->assertSession()->linkExists(t('Translate @type', ['@type' => 'account settings']));
+    $this->assertSession()->linkExists('Translate account settings');
     $this->assertLinkByHref('admin/config/people/accounts/translate/fr/add');
 
     // Update account settings fields for French.

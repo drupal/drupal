@@ -59,7 +59,7 @@ class NodePreviewAnonymousTest extends BrowserTestBase {
     $this->drupalPostForm('node/add/page', $edit, t('Preview'));
 
     // Check that the preview is displaying the title, body and term.
-    $this->assertSession()->linkExists(t('Back to content editing'));
+    $this->assertSession()->linkExists('Back to content editing');
     $this->assertSession()->responseContains($edit[$body_key]);
     $this->assertSession()->titleEquals($edit[$title_key] . ' | Drupal');
   }

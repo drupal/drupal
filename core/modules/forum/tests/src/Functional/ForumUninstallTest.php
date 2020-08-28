@@ -97,7 +97,7 @@ class ForumUninstallTest extends BrowserTestBase {
 
     // Ensure that the forum node type can not be deleted.
     $this->drupalGet('admin/structure/types/manage/forum');
-    $this->assertSession()->linkNotExists(t('Delete'));
+    $this->assertSession()->linkNotExists('Delete');
 
     // Now attempt to uninstall forum.
     $this->drupalGet('admin/modules/uninstall');

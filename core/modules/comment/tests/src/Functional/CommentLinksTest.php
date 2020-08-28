@@ -101,7 +101,7 @@ class CommentLinksTest extends CommentTestBase {
       // In teaser view, a link containing the comment count is always
       // expected.
       if ($path == 'node') {
-        $this->assertSession()->linkExists(t('1 comment'));
+        $this->assertSession()->linkExists('1 comment');
       }
       $this->assertSession()->linkExists('Add new comment');
     }

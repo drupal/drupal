@@ -207,7 +207,7 @@ class PagePreviewTest extends NodeTestBase {
     $this->assertSession()->assertEscaped($edit[$title_key]);
     $this->assertText($edit[$body_key], 'Body displayed.');
     $this->assertText($edit[$term_key], 'Term displayed.');
-    $this->assertSession()->linkExists(t('Back to content editing'));
+    $this->assertSession()->linkExists('Back to content editing');
 
     // Check that we see the class of the node type on the body element.
     $body_class_element = $this->xpath("//body[contains(@class, 'page-node-type-page')]");
@@ -247,7 +247,7 @@ class PagePreviewTest extends NodeTestBase {
     $this->assertSession()->assertEscaped($edit[$title_key]);
     $this->assertText($edit[$body_key], 'Body displayed.');
     $this->assertText($edit[$term_key], 'Term displayed.');
-    $this->assertSession()->linkExists(t('Back to content editing'));
+    $this->assertSession()->linkExists('Back to content editing');
 
     // Assert the content is kept when reloading the page.
     $this->drupalGet('node/add/page', ['query' => ['uuid' => $uuid]]);

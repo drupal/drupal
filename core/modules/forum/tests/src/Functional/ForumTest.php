@@ -189,9 +189,9 @@ class ForumTest extends BrowserTestBase {
 
     // Verify that this user is shown a local task to add new forum content.
     $this->drupalGet('forum');
-    $this->assertSession()->linkExists(t('Add new Forum topic'));
+    $this->assertSession()->linkExists('Add new Forum topic');
     $this->drupalGet('forum/' . $this->forum['tid']);
-    $this->assertSession()->linkExists(t('Add new Forum topic'));
+    $this->assertSession()->linkExists('Add new Forum topic');
 
     // Log in a user with permission to edit any forum content.
     $this->drupalLogin($this->editAnyTopicsUser);
@@ -260,7 +260,7 @@ class ForumTest extends BrowserTestBase {
     // Test anonymous action link.
     $this->drupalLogout();
     $this->drupalGet('forum/' . $this->forum['tid']);
-    $this->assertSession()->linkExists(t('Log in to post new content in the forum.'));
+    $this->assertSession()->linkExists('Log in to post new content in the forum.');
   }
 
   /**
@@ -369,7 +369,7 @@ class ForumTest extends BrowserTestBase {
     // Test tags vocabulary form is not affected.
     $this->drupalGet('admin/structure/taxonomy/manage/tags');
     $this->assertSession()->buttonExists('Save');
-    $this->assertSession()->linkExists(t('Delete'));
+    $this->assertSession()->linkExists('Delete');
     // Test tags vocabulary term form is not affected.
     $this->drupalGet('admin/structure/taxonomy/manage/tags/add');
     $this->assertSession()->fieldExists('parent[]');

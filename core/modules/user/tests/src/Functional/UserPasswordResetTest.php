@@ -109,7 +109,7 @@ class UserPasswordResetTest extends BrowserTestBase {
 
     // Check successful login.
     $this->drupalPostForm(NULL, NULL, t('Log in'));
-    $this->assertSession()->linkExists(t('Log out'));
+    $this->assertSession()->linkExists('Log out');
     $this->assertSession()->titleEquals($this->account->getAccountName() . ' | Drupal');
 
     // Change the forgotten password.
@@ -188,7 +188,7 @@ class UserPasswordResetTest extends BrowserTestBase {
     $this->drupalPostForm(NULL, $edit, t('Submit'));
     $reset_url = $this->getResetURL();
     $this->drupalGet($reset_url . '/login');
-    $this->assertSession()->linkExists(t('Log out'));
+    $this->assertSession()->linkExists('Log out');
     $this->assertSession()->titleEquals($this->account->getAccountName() . ' | Drupal');
 
     // Ensure blocked and deleted accounts can't access the user.reset.login
@@ -358,7 +358,7 @@ class UserPasswordResetTest extends BrowserTestBase {
     // Use the last password reset URL which was generated.
     $reset_url = $this->getResetURL();
     $this->drupalGet($reset_url . '/login');
-    $this->assertSession()->linkExists(t('Log out'));
+    $this->assertSession()->linkExists('Log out');
     $this->assertSession()->titleEquals($this->account->getAccountName() . ' | Drupal');
     $this->drupalLogout();
 

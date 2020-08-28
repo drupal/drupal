@@ -92,11 +92,11 @@ class UpdateUploadTest extends UpdateTestBase {
     $this->assertFileExists($installedInfoFilePath);
     // Ensure the links are relative to the site root and not
     // core/authorize.php.
-    $this->assertSession()->linkExists(t('Install another module'));
+    $this->assertSession()->linkExists('Install another module');
     $this->assertLinkByHref(Url::fromRoute('update.module_install')->toString());
-    $this->assertSession()->linkExists(t('Enable newly added modules'));
+    $this->assertSession()->linkExists('Enable newly added modules');
     $this->assertLinkByHref(Url::fromRoute('system.modules_list')->toString());
-    $this->assertSession()->linkExists(t('Administration pages'));
+    $this->assertSession()->linkExists('Administration pages');
     $this->assertLinkByHref(Url::fromRoute('system.admin')->toString());
     // Ensure we can reach the "Install another module" link.
     $this->clickLink(t('Install another module'));

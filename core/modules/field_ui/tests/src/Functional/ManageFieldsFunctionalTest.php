@@ -291,9 +291,9 @@ class ManageFieldsFunctionalTest extends BrowserTestBase {
     $this->assertFieldByXPath("//input[@name='cardinality_number']", 6);
 
     // Check that tabs displayed.
-    $this->assertSession()->linkExists(t('Edit'));
+    $this->assertSession()->linkExists('Edit');
     $this->assertLinkByHref('admin/structure/types/manage/article/fields/node.article.body');
-    $this->assertSession()->linkExists(t('Field settings'));
+    $this->assertSession()->linkExists('Field settings');
     $this->assertLinkByHref($field_edit_path);
 
     // Add two entries in the body.

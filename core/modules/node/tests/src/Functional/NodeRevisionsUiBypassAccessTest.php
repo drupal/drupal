@@ -75,7 +75,7 @@ class NodeRevisionsUiBypassAccessTest extends NodeTestBase {
 
     $this->assertUrl($node->toUrl());
     // Verify revisions exist since the content type has revisions enabled.
-    $this->assertSession()->linkExists(t('Revisions'));
+    $this->assertSession()->linkExists('Revisions');
 
     // Verify the checkbox is checked on the node edit form.
     $this->drupalGet('node/' . $node->id() . '/edit');
@@ -86,7 +86,7 @@ class NodeRevisionsUiBypassAccessTest extends NodeTestBase {
     $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, 'Save');
 
     $this->assertUrl($node->toUrl());
-    $this->assertSession()->linkExists(t('Revisions'));
+    $this->assertSession()->linkExists('Revisions');
 
     // Unset page revision setting 'create new revision'. This will mean new
     // revisions are not created by default when the node is edited.
@@ -107,7 +107,7 @@ class NodeRevisionsUiBypassAccessTest extends NodeTestBase {
     $this->assertUrl($node->toUrl());
     // Verify that no link to revisions is displayed since the type
     // has the 'create new revision' setting unset.
-    $this->assertSession()->linkNotExists(t('Revisions'));
+    $this->assertSession()->linkNotExists('Revisions');
 
     // Verify the checkbox is unchecked on the node edit form.
     $this->drupalGet('node/' . $node->id() . '/edit');
@@ -120,7 +120,7 @@ class NodeRevisionsUiBypassAccessTest extends NodeTestBase {
     $this->assertUrl($node->toUrl());
     // Verify that the link is displayed since a new revision is created and
     // the 'create new revision' checkbox on the node is checked.
-    $this->assertSession()->linkExists(t('Revisions'));
+    $this->assertSession()->linkExists('Revisions');
   }
 
 }

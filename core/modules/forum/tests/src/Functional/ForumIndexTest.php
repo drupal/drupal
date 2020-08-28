@@ -68,7 +68,7 @@ class ForumIndexTest extends BrowserTestBase {
       'parent[0]' => $tid,
     ];
     $this->drupalPostForm('admin/structure/forum/add/forum', $edit, t('Save'));
-    $this->assertSession()->linkExists(t('edit forum'));
+    $this->assertSession()->linkExists('edit forum');
 
     $tid_child = $tid + 1;
 

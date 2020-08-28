@@ -34,7 +34,7 @@ class CommentLinksAlterTest extends CommentTestBase {
 
     $this->drupalGet('node/' . $this->node->id());
 
-    $this->assertSession()->linkExists(t('Report'));
+    $this->assertSession()->linkExists('Report');
   }
 
 }

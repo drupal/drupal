@@ -323,7 +323,7 @@ class SearchConfigSettingsFormTest extends BrowserTestBase {
     // Disable the first search page.
     $this->clickLink(t('Disable'));
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertSession()->linkNotExists(t('Disable'));
+    $this->assertSession()->linkNotExists('Disable');
     $this->verifySearchPageOperations($first_id, TRUE, TRUE, FALSE, TRUE);
     $this->verifySearchPageOperations($second_id, TRUE, FALSE, FALSE, FALSE);
 
