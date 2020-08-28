@@ -100,7 +100,6 @@ class FieldAttachStorageTest extends FieldKernelTestBase {
         'type' => 'test_field',
       ]);
       $field_storage->save();
-      $field_ids[$i] = $field_storage->uuid();
       foreach ($field_bundles_map[$i] as $bundle) {
         FieldConfig::create([
           'field_name' => $field_names[$i],
