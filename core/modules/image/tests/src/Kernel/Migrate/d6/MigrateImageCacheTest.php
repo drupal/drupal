@@ -152,7 +152,7 @@ class MigrateImageCacheTest extends MigrateDrupal6TestBase {
    */
   protected function assertImageEffect($collection, $id, $config) {
     /** @var \Drupal\image\ConfigurableImageEffectBase $effect */
-    foreach ($collection as $key => $effect) {
+    foreach ($collection as $effect) {
       $effect_config = $effect->getConfiguration();
 
       if ($effect_config['id'] == $id && $effect_config['data'] == $config) {
