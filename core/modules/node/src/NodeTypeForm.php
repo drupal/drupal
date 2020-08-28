@@ -83,7 +83,7 @@ class NodeTypeForm extends BundleEntityFormBase {
         'exists' => ['Drupal\node\Entity\NodeType', 'load'],
         'source' => ['name'],
       ],
-      '#description' => t('A unique machine-readable name for this content type. It must only contain lowercase letters, numbers, and underscores. This name will be used for constructing the URL of the %node-add page, in which underscores will be converted into hyphens.', [
+      '#description' => t('A unique machine-readable name for this content type. It must only contain lowercase letters, numbers, and underscores. This name will be used for constructing the URL of the %node-add page.', [
         '%node-add' => t('Add content'),
       ]),
     ];
