@@ -256,8 +256,8 @@ class ResponsiveImageFieldDisplayTest extends ImageFieldTestBase {
       ->save();
 
     $this->drupalGet('node/' . $nid);
-    $cache_tags_header = $this->drupalGetHeader('X-Drupal-Cache-Tags');
-    $this->assertTrue(!preg_match('/ image_style\:/', $cache_tags_header), 'No image style cache tag found.');
+    // No image style cache tag should be found.
+    $this->assertSession()->responseHeaderNotContains('X-Drupal-Cache-Tags', 'image_style:');
 
     $this->assertSession()->responseMatches('/<a(.*?)href="' . preg_quote(file_url_transform_relative(file_create_url($image_uri)), '/') . '"(.*?)>\s*<picture/');
     // Verify that the image can be downloaded.
@@ -265,8 +265,8 @@ class ResponsiveImageFieldDisplayTest extends ImageFieldTestBase {
     if ($scheme == 'private') {
       // Only verify HTTP headers when using private scheme and the headers are
       // sent by Drupal.
-      $this->assertEqual($this->drupalGetHeader('Content-Type'), 'image/png', 'Content-Type header was sent.');
-      $this->assertTrue(strstr($this->drupalGetHeader('Cache-Control'), 'private') !== FALSE, 'Cache-Control header was sent.');
+      $this->assertSession()->responseHeaderEquals('Content-Type', 'image/png');
+      $this->assertSession()->responseHeaderContains('Cache-Control', 'private');
 
       // Log out and ensure the file cannot be accessed.
       $this->drupalLogout();
@@ -311,14 +311,13 @@ class ResponsiveImageFieldDisplayTest extends ImageFieldTestBase {
       $this->assertRaw('media="(min-width: 851px)"');
     }
     $this->assertRaw('/styles/large/');
-    $cache_tags = explode(' ', $this->drupalGetHeader('X-Drupal-Cache-Tags'));
-    $this->assertContains('config:responsive_image.styles.style_one', $cache_tags);
+    $this->assertSession()->responseHeaderContains('X-Drupal-Cache-Tags', 'config:responsive_image.styles.style_one');
     if (!$empty_styles) {
-      $this->assertContains('config:image.style.medium', $cache_tags);
-      $this->assertContains('config:image.style.thumbnail', $cache_tags);
+      $this->assertSession()->responseHeaderContains('X-Drupal-Cache-Tags', 'config:image.style.medium');
+      $this->assertSession()->responseHeaderContains('X-Drupal-Cache-Tags', 'config:image.style.thumbnail');
       $this->assertRaw('type="image/png"');
     }
-    $this->assertContains('config:image.style.large', $cache_tags);
+    $this->assertSession()->responseHeaderContains('X-Drupal-Cache-Tags', 'config:image.style.large');
 
     // Test the fallback image style.
     $image = \Drupal::service('image.factory')->get($image_uri);
@@ -338,8 +337,7 @@ class ResponsiveImageFieldDisplayTest extends ImageFieldTestBase {
       $this->drupalLogout();
       $this->drupalGet($large_style->buildUrl($image_uri));
       $this->assertSession()->statusCodeEquals(403);
-      $cache_tags_header = $this->drupalGetHeader('X-Drupal-Cache-Tags');
-      $this->assertTrue(!preg_match('/ image_style\:/', $cache_tags_header), 'No image style cache tag found.');
+      $this->assertSession()->responseHeaderNotMatches('X-Drupal-Cache-Tags', '/ image_style\:/');
     }
   }
 

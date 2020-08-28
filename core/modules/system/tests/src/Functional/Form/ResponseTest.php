@@ -36,8 +36,10 @@ class ResponseTest extends BrowserTestBase {
     $content = Json::decode($this->getSession()->getPage()->getContent());
     $this->assertSession()->statusCodeEquals(200);
     $this->assertIdentical($edit['content'], $content, 'Response content matches');
-    $this->assertIdentical('invoked', $this->drupalGetHeader('X-Form-Test-Response-Event'), 'Response handled by kernel response subscriber');
-    $this->assertIdentical('invoked', $this->drupalGetHeader('X-Form-Test-Stack-Middleware'), 'Response handled by kernel middleware');
+    // Verify that response was handled by kernel response subscriber.
+    $this->assertSession()->responseHeaderEquals('X-Form-Test-Response-Event', 'invoked');
+    // Verify that response was handled by kernel middleware.
+    $this->assertSession()->responseHeaderEquals('X-Form-Test-Stack-Middleware', 'invoked');
 
     $edit = [
       'content' => $this->randomString(),
@@ -47,8 +49,10 @@ class ResponseTest extends BrowserTestBase {
     $content = Json::decode($this->getSession()->getPage()->getContent());
     $this->assertSession()->statusCodeEquals(418);
     $this->assertIdentical($edit['content'], $content, 'Response content matches');
-    $this->assertIdentical('invoked', $this->drupalGetHeader('X-Form-Test-Response-Event'), 'Response handled by kernel response subscriber');
-    $this->assertIdentical('invoked', $this->drupalGetHeader('X-Form-Test-Stack-Middleware'), 'Response handled by kernel middleware');
+    // Verify that response was handled by kernel response subscriber.
+    $this->assertSession()->responseHeaderEquals('X-Form-Test-Response-Event', 'invoked');
+    // Verify that response was handled by kernel middleware.
+    $this->assertSession()->responseHeaderEquals('X-Form-Test-Stack-Middleware', 'invoked');
   }
 
 }

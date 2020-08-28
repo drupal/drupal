@@ -56,23 +56,23 @@ class DynamicPageCacheIntegrationTest extends BrowserTestBase {
     // Cache.
     $url = Url::fromUri('route:dynamic_page_cache_test.response');
     $this->drupalGet($url);
-    $this->assertNull($this->drupalGetHeader(DynamicPageCacheSubscriber::HEADER), 'Response object returned: Dynamic Page Cache is ignoring.');
+    $this->assertSession()->responseHeaderDoesNotExist(DynamicPageCacheSubscriber::HEADER);
 
     // Controllers returning CacheableResponseInterface (cacheable response)
     // objects are handled by Dynamic Page Cache.
     $url = Url::fromUri('route:dynamic_page_cache_test.cacheable_response');
     $this->drupalGet($url);
-    $this->assertEqual('MISS', $this->drupalGetHeader(DynamicPageCacheSubscriber::HEADER), 'Cacheable response object returned: Dynamic Page Cache is active, Dynamic Page Cache MISS.');
+    $this->assertSession()->responseHeaderEquals(DynamicPageCacheSubscriber::HEADER, 'MISS');
     $this->drupalGet($url);
-    $this->assertEqual('HIT', $this->drupalGetHeader(DynamicPageCacheSubscriber::HEADER), 'Cacheable response object returned: Dynamic Page Cache is active, Dynamic Page Cache HIT.');
+    $this->assertSession()->responseHeaderEquals(DynamicPageCacheSubscriber::HEADER, 'HIT');
 
     // Controllers returning render arrays, rendered as HTML responses, are
     // handled by Dynamic Page Cache.
     $url = Url::fromUri('route:dynamic_page_cache_test.html');
     $this->drupalGet($url);
-    $this->assertEqual('MISS', $this->drupalGetHeader(DynamicPageCacheSubscriber::HEADER), 'Render array returned, rendered as HTML response: Dynamic Page Cache is active, Dynamic Page Cache MISS.');
+    $this->assertSession()->responseHeaderEquals(DynamicPageCacheSubscriber::HEADER, 'MISS');
     $this->drupalGet($url);
-    $this->assertEqual('HIT', $this->drupalGetHeader(DynamicPageCacheSubscriber::HEADER), 'Render array returned, rendered as HTML response: Dynamic Page Cache is active, Dynamic Page Cache HIT.');
+    $this->assertSession()->responseHeaderEquals(DynamicPageCacheSubscriber::HEADER, 'HIT');
 
     // The above is the simple case, where the render array returned by the
     // response contains no cache contexts. So let's now test a route/controller
@@ -82,10 +82,10 @@ class DynamicPageCacheIntegrationTest extends BrowserTestBase {
       $url = Url::fromUri('route:dynamic_page_cache_test.html.with_cache_contexts', ['query' => ['animal' => $animal]]);
       $this->drupalGet($url);
       $this->assertRaw($animal);
-      $this->assertEqual('MISS', $this->drupalGetHeader(DynamicPageCacheSubscriber::HEADER), 'Render array returned, rendered as HTML response: Dynamic Page Cache is active, Dynamic Page Cache MISS.');
+      $this->assertSession()->responseHeaderEquals(DynamicPageCacheSubscriber::HEADER, 'MISS');
       $this->drupalGet($url);
       $this->assertRaw($animal);
-      $this->assertEqual('HIT', $this->drupalGetHeader(DynamicPageCacheSubscriber::HEADER), 'Render array returned, rendered as HTML response: Dynamic Page Cache is active, Dynamic Page Cache HIT.');
+      $this->assertSession()->responseHeaderEquals(DynamicPageCacheSubscriber::HEADER, 'HIT');
 
       // Finally, let's also verify that the 'dynamic_page_cache_test.html'
       // route continued to see cache hits if we specify a query argument,
@@ -93,39 +93,39 @@ class DynamicPageCacheIntegrationTest extends BrowserTestBase {
       // Cache hits.
       $url = Url::fromUri('route:dynamic_page_cache_test.html', ['query' => ['animal' => 'piglet']]);
       $this->drupalGet($url);
-      $this->assertEqual('HIT', $this->drupalGetHeader(DynamicPageCacheSubscriber::HEADER), 'Render array returned, rendered as HTML response: Dynamic Page Cache is active, Dynamic Page Cache HIT.');
+      $this->assertSession()->responseHeaderEquals(DynamicPageCacheSubscriber::HEADER, 'HIT');
     }
 
     // Controllers returning render arrays, rendered as anything except a HTML
     // response, are ignored by Dynamic Page Cache (but only because those
     // wrapper formats' responses do not implement CacheableResponseInterface).
     $this->drupalGet('dynamic-page-cache-test/html', ['query' => [MainContentViewSubscriber::WRAPPER_FORMAT => 'drupal_ajax']]);
-    $this->assertNull($this->drupalGetHeader(DynamicPageCacheSubscriber::HEADER), 'Render array returned, rendered as AJAX response: Dynamic Page Cache is ignoring.');
+    $this->assertSession()->responseHeaderDoesNotExist(DynamicPageCacheSubscriber::HEADER);
     $this->drupalGet('dynamic-page-cache-test/html', ['query' => [MainContentViewSubscriber::WRAPPER_FORMAT => 'drupal_dialog']]);
-    $this->assertNull($this->drupalGetHeader(DynamicPageCacheSubscriber::HEADER), 'Render array returned, rendered as dialog response: Dynamic Page Cache is ignoring.');
+    $this->assertSession()->responseHeaderDoesNotExist(DynamicPageCacheSubscriber::HEADER);
     $this->drupalGet('dynamic-page-cache-test/html', ['query' => [MainContentViewSubscriber::WRAPPER_FORMAT => 'drupal_modal']]);
-    $this->assertNull($this->drupalGetHeader(DynamicPageCacheSubscriber::HEADER), 'Render array returned, rendered as modal response: Dynamic Page Cache is ignoring.');
+    $this->assertSession()->responseHeaderDoesNotExist(DynamicPageCacheSubscriber::HEADER);
 
     // Admin routes are ignored by Dynamic Page Cache.
     $this->drupalGet('dynamic-page-cache-test/html/admin');
-    $this->assertNull($this->drupalGetHeader(DynamicPageCacheSubscriber::HEADER), 'Response returned, rendered as HTML response, admin route: Dynamic Page Cache is ignoring');
+    $this->assertSession()->responseHeaderDoesNotExist(DynamicPageCacheSubscriber::HEADER);
     $this->drupalGet('dynamic-page-cache-test/response/admin');
-    $this->assertNull($this->drupalGetHeader(DynamicPageCacheSubscriber::HEADER), 'Response returned, plain response, admin route: Dynamic Page Cache is ignoring');
+    $this->assertSession()->responseHeaderDoesNotExist(DynamicPageCacheSubscriber::HEADER);
     $this->drupalGet('dynamic-page-cache-test/cacheable-response/admin');
-    $this->assertNull($this->drupalGetHeader(DynamicPageCacheSubscriber::HEADER), 'Response returned, cacheable response, admin route: Dynamic Page Cache is ignoring');
+    $this->assertSession()->responseHeaderDoesNotExist(DynamicPageCacheSubscriber::HEADER);
 
     // Max-age = 0 responses are ignored by Dynamic Page Cache.
     $this->drupalGet('dynamic-page-cache-test/html/uncacheable/max-age');
-    $this->assertEqual('UNCACHEABLE', $this->drupalGetHeader(DynamicPageCacheSubscriber::HEADER), 'Render array returned, rendered as HTML response, but uncacheable: Dynamic Page Cache is running, but not caching.');
+    $this->assertSession()->responseHeaderEquals(DynamicPageCacheSubscriber::HEADER, 'UNCACHEABLE');
 
     // 'user' cache context responses are ignored by Dynamic Page Cache.
     $this->drupalGet('dynamic-page-cache-test/html/uncacheable/contexts');
-    $this->assertEqual('UNCACHEABLE', $this->drupalGetHeader(DynamicPageCacheSubscriber::HEADER), 'Render array returned, rendered as HTML response, but uncacheable: Dynamic Page Cache is running, but not caching.');
+    $this->assertSession()->responseHeaderEquals(DynamicPageCacheSubscriber::HEADER, 'UNCACHEABLE');
 
     // 'current-temperature' cache tag responses are ignored by Dynamic Page
     // Cache.
     $this->drupalGet('dynamic-page-cache-test/html/uncacheable/tags');
-    $this->assertEqual('MISS', $this->drupalGetHeader(DynamicPageCacheSubscriber::HEADER), 'By default, Drupal has no auto-placeholdering cache tags.');
+    $this->assertSession()->responseHeaderEquals(DynamicPageCacheSubscriber::HEADER, 'MISS');
   }
 
 }

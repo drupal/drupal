@@ -85,7 +85,7 @@ class UserBlocksTest extends BrowserTestBase {
     // Now, log out and repeat with a non-403 page.
     $this->drupalLogout();
     $this->drupalGet('filter/tips');
-    $this->assertEqual('MISS', $this->drupalGetHeader(DynamicPageCacheSubscriber::HEADER));
+    $this->assertSession()->responseHeaderEquals(DynamicPageCacheSubscriber::HEADER, 'MISS');
     $this->drupalPostForm(NULL, $edit, t('Log in'));
     $this->assertNoText('User login', 'Logged in.');
     // Verify that we are still on the same page after login for allowed page.
@@ -94,7 +94,7 @@ class UserBlocksTest extends BrowserTestBase {
     // Log out again and repeat with a non-403 page including query arguments.
     $this->drupalLogout();
     $this->drupalGet('filter/tips', ['query' => ['foo' => 'bar']]);
-    $this->assertEqual('HIT', $this->drupalGetHeader(DynamicPageCacheSubscriber::HEADER));
+    $this->assertSession()->responseHeaderEquals(DynamicPageCacheSubscriber::HEADER, 'HIT');
     $this->drupalPostForm(NULL, $edit, t('Log in'));
     $this->assertNoText('User login', 'Logged in.');
     // Verify that we are still on the same page after login for allowed page.
@@ -104,7 +104,7 @@ class UserBlocksTest extends BrowserTestBase {
     // Repeat with different query arguments.
     $this->drupalLogout();
     $this->drupalGet('filter/tips', ['query' => ['foo' => 'baz']]);
-    $this->assertEqual('HIT', $this->drupalGetHeader(DynamicPageCacheSubscriber::HEADER));
+    $this->assertSession()->responseHeaderEquals(DynamicPageCacheSubscriber::HEADER, 'HIT');
     $this->drupalPostForm(NULL, $edit, t('Log in'));
     $this->assertNoText('User login', 'Logged in.');
     // Verify that we are still on the same page after login for allowed page.

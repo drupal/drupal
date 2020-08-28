@@ -141,16 +141,16 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     $this->assertSession()->responseHeaderContains('X-Drupal-Cache-Tags', $file->getCacheTags()[0]);
     // @todo Remove in https://www.drupal.org/node/2646744.
     $this->assertCacheContext('url.site');
-    $cache_tags_header = $this->drupalGetHeader('X-Drupal-Cache-Tags');
-    $this->assertTrue(!preg_match('/ image_style\:/', $cache_tags_header), 'No image style cache tag found.');
+    // Verify that no image style cache tags are found.
+    $this->assertSession()->responseHeaderNotContains('X-Drupal-Cache-Tags', 'image_style:');
     $this->assertRaw($default_output, 'Image linked to file formatter displaying correctly on full node view.');
     // Verify that the image can be downloaded.
     $this->assertEqual(file_get_contents($test_image->uri), $this->drupalGet(file_create_url($image_uri)), 'File was downloaded successfully.');
     if ($scheme == 'private') {
       // Only verify HTTP headers when using private scheme and the headers are
       // sent by Drupal.
-      $this->assertEqual($this->drupalGetHeader('Content-Type'), 'image/png', 'Content-Type header was sent.');
-      $this->assertTrue(strstr($this->drupalGetHeader('Cache-Control'), 'private') !== FALSE, 'Cache-Control header was sent.');
+      $this->assertSession()->responseHeaderEquals('Content-Type', 'image/png');
+      $this->assertSession()->responseHeaderContains('Cache-Control', 'private');
 
       // Log out and ensure the file cannot be accessed.
       $this->drupalLogout();
@@ -173,8 +173,8 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     ];
     $this->drupalGet('node/' . $nid);
     $this->assertSession()->responseHeaderContains('X-Drupal-Cache-Tags', $file->getCacheTags()[0]);
-    $cache_tags_header = $this->drupalGetHeader('X-Drupal-Cache-Tags');
-    $this->assertTrue(!preg_match('/ image_style\:/', $cache_tags_header), 'No image style cache tag found.');
+    // Verify that no image style cache tags are found.
+    $this->assertSession()->responseHeaderNotContains('X-Drupal-Cache-Tags', 'image_style:');
     $elements = $this->xpath(
       '//a[@href=:path]/img[@src=:url and @alt=:alt and @width=:width and @height=:height]',
       [
@@ -368,8 +368,8 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     // Verify that no image is displayed on the page by checking for the class
     // that would be used on the image field.
     $this->assertSession()->responseNotMatches('<div class="(.*?)field--name-' . strtr($field_name, '_', '-') . '(.*?)">');
-    $cache_tags_header = $this->drupalGetHeader('X-Drupal-Cache-Tags');
-    $this->assertTrue(!preg_match('/ image_style\:/', $cache_tags_header), 'No image style cache tag found.');
+    // Verify that no image style cache tags are found.
+    $this->assertSession()->responseHeaderNotContains('X-Drupal-Cache-Tags', 'image_style:');
 
     // Add a default image to the public image field.
     $images = $this->drupalGetTestFiles('image');
@@ -399,8 +399,8 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     $default_output = str_replace("\n", NULL, $renderer->renderRoot($image));
     $this->drupalGet('node/' . $node->id());
     $this->assertSession()->responseHeaderContains('X-Drupal-Cache-Tags', $file->getCacheTags()[0]);
-    $cache_tags_header = $this->drupalGetHeader('X-Drupal-Cache-Tags');
-    $this->assertTrue(!preg_match('/ image_style\:/', $cache_tags_header), 'No image style cache tag found.');
+    // Verify that no image style cache tags are found.
+    $this->assertSession()->responseHeaderNotContains('X-Drupal-Cache-Tags', 'image_style:');
     $this->assertRaw($default_output, 'Default image displayed when no user supplied image is present.');
 
     // Create a node with an image attached and ensure that the default image
@@ -424,8 +424,8 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     $image_output = str_replace("\n", NULL, $renderer->renderRoot($image));
     $this->drupalGet('node/' . $nid);
     $this->assertSession()->responseHeaderContains('X-Drupal-Cache-Tags', $file->getCacheTags()[0]);
-    $cache_tags_header = $this->drupalGetHeader('X-Drupal-Cache-Tags');
-    $this->assertTrue(!preg_match('/ image_style\:/', $cache_tags_header), 'No image style cache tag found.');
+    // Verify that no image style cache tags are found.
+    $this->assertSession()->responseHeaderNotContains('X-Drupal-Cache-Tags', 'image_style:');
     $this->assertNoRaw($default_output, 'Default image is not displayed when user supplied image is present.');
     $this->assertRaw($image_output, 'User supplied image is displayed.');
 
@@ -475,8 +475,8 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     $default_output = str_replace("\n", NULL, $renderer->renderRoot($image));
     $this->drupalGet('node/' . $node->id());
     $this->assertSession()->responseHeaderContains('X-Drupal-Cache-Tags', $file->getCacheTags()[0]);
-    $cache_tags_header = $this->drupalGetHeader('X-Drupal-Cache-Tags');
-    $this->assertTrue(!preg_match('/ image_style\:/', $cache_tags_header), 'No image style cache tag found.');
+    // Verify that no image style cache tags are found.
+    $this->assertSession()->responseHeaderNotContains('X-Drupal-Cache-Tags', 'image_style:');
     $this->assertRaw($default_output, 'Default private image displayed when no user supplied image is present.');
   }
 

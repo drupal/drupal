@@ -45,7 +45,7 @@ class RouterTest extends BrowserTestBase {
     $this->assertSession()->responseHeaderEquals('Content-language', 'en');
     $this->assertSession()->responseHeaderEquals('X-Content-Type-Options', 'nosniff');
     $this->assertSession()->responseHeaderEquals('X-Frame-Options', 'SAMEORIGIN');
-    $this->assertSession()->responseHeaderEquals('Vary', NULL);
+    $this->assertSession()->responseHeaderDoesNotExist('Vary');
 
     $this->drupalGet('router_test/test2');
     $this->assertRaw('test2', 'The correct string was returned because the route was successful.');
@@ -292,7 +292,7 @@ class RouterTest extends BrowserTestBase {
     $headers[] = 'X-Requested-With: XMLHttpRequest';
     $this->drupalGet('/router_test/test10', $options, $headers);
 
-    $this->assertEqual($this->drupalGetHeader('Content-Type'), 'application/json', 'Correct mime content type was returned');
+    $this->assertSession()->responseHeaderEquals('Content-Type', 'application/json');
 
     $this->assertRaw('abcde', 'Correct body was found.');
   }

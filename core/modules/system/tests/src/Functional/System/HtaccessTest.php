@@ -155,8 +155,7 @@ class HtaccessTest extends BrowserTestBase {
 
     // Use x-encoded-content-encoding because of Content-Encoding responses
     // (gzip, deflate, etc.) are automatically decoded by Guzzle.
-    $header = $this->drupalGetHeader('x-encoded-content-encoding');
-    $this->assertEqual($header, 'gzip');
+    $this->assertSession()->responseHeaderEquals('x-encoded-content-encoding', 'gzip');
   }
 
 }

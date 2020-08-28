@@ -46,7 +46,7 @@ class FormStoragePageCacheTest extends BrowserTestBase {
    */
   public function testValidateFormStorageOnCachedPage() {
     $this->drupalGet('form-test/form-storage-page-cache');
-    $this->assertEqual($this->drupalGetHeader('X-Drupal-Cache'), 'MISS', 'Page was not cached.');
+    $this->assertSession()->responseHeaderEquals('X-Drupal-Cache', 'MISS');
     $this->assertText('No old build id', 'No old build id on the page');
     $build_id_initial = $this->getFormBuildId();
 
@@ -66,7 +66,7 @@ class FormStoragePageCacheTest extends BrowserTestBase {
 
     // Repeat the test sequence but this time with a page loaded from the cache.
     $this->drupalGet('form-test/form-storage-page-cache');
-    $this->assertEqual($this->drupalGetHeader('X-Drupal-Cache'), 'HIT', 'Page was cached.');
+    $this->assertSession()->responseHeaderEquals('X-Drupal-Cache', 'HIT');
     $this->assertText('No old build id', 'No old build id on the page');
     $build_id_from_cache_initial = $this->getFormBuildId();
     $this->assertEqual($build_id_initial, $build_id_from_cache_initial, 'Build id is the same as on the first request');
@@ -92,7 +92,7 @@ class FormStoragePageCacheTest extends BrowserTestBase {
    */
   public function testRebuildFormStorageOnCachedPage() {
     $this->drupalGet('form-test/form-storage-page-cache');
-    $this->assertEqual($this->drupalGetHeader('X-Drupal-Cache'), 'MISS', 'Page was not cached.');
+    $this->assertSession()->responseHeaderEquals('X-Drupal-Cache', 'MISS');
     $this->assertText('No old build id', 'No old build id on the page');
     $build_id_initial = $this->getFormBuildId();
 

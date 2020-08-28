@@ -262,7 +262,7 @@ class BigPipeTest extends BrowserTestBase {
     ]);
 
     // Verifying there are no BigPipe placeholders & replacements.
-    $this->assertEqual('<none>', $this->drupalGetHeader('BigPipe-Test-Placeholders'));
+    $this->assertSession()->responseHeaderEquals('BigPipe-Test-Placeholders', '<none>');
     // Verifying BigPipe start/stop signals are absent.
     $this->assertNoRaw(BigPipe::START_SIGNAL, 'BigPipe start signal absent.');
     $this->assertNoRaw(BigPipe::STOP_SIGNAL, 'BigPipe stop signal absent.');
@@ -327,8 +327,8 @@ class BigPipeTest extends BrowserTestBase {
   protected function assertBigPipeResponseHeadersPresent() {
     // Check that Cache-Control header set to "private".
     $this->assertSession()->responseHeaderContains('Cache-Control', 'private');
-    $this->assertEqual('no-store, content="BigPipe/1.0"', $this->drupalGetHeader('Surrogate-Control'));
-    $this->assertEqual('no', $this->drupalGetHeader('X-Accel-Buffering'));
+    $this->assertSession()->responseHeaderEquals('Surrogate-Control', 'no-store, content="BigPipe/1.0"');
+    $this->assertSession()->responseHeaderEquals('X-Accel-Buffering', 'no');
   }
 
   /**

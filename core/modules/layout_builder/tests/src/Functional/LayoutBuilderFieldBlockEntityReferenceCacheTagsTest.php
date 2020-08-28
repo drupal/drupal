@@ -2,7 +2,6 @@
 
 namespace Drupal\Tests\layout_builder\Functional;
 
-use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Url;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\field\Traits\EntityReferenceTestTrait;
@@ -128,8 +127,7 @@ class LayoutBuilderFieldBlockEntityReferenceCacheTagsTest extends BrowserTestBas
    */
   protected function verifyPageCacheContainsTags(Url $url, $hit_or_miss, $tags = FALSE) {
     $this->drupalGet($url);
-    $message = new FormattableMarkup('Page cache @hit_or_miss for %path.', ['@hit_or_miss' => $hit_or_miss, '%path' => $url->toString()]);
-    $this->assertEqual($this->drupalGetHeader('X-Drupal-Cache'), $hit_or_miss, $message);
+    $this->assertSession()->responseHeaderEquals('X-Drupal-Cache', $hit_or_miss);
 
     if ($hit_or_miss === 'HIT' && is_array($tags)) {
       $cache_tags = explode(' ', $this->drupalGetHeader('X-Drupal-Cache-Tags'));

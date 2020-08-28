@@ -96,11 +96,11 @@ class UserPasswordResetTest extends BrowserTestBase {
     // Ensure that the current url does not contain the hash and timestamp.
     $this->assertUrl(Url::fromRoute('user.reset.form', ['uid' => $this->account->id()]));
 
-    $this->assertNull($this->drupalGetHeader('X-Drupal-Cache'));
+    $this->assertSession()->responseHeaderDoesNotExist('X-Drupal-Cache');
 
     // Ensure the password reset URL is not cached.
     $this->drupalGet($resetURL);
-    $this->assertNull($this->drupalGetHeader('X-Drupal-Cache'));
+    $this->assertSession()->responseHeaderDoesNotExist('X-Drupal-Cache');
 
     // Check the one-time login page.
     $this->assertText($this->account->getAccountName(), 'One-time login page contains the correct username.');
