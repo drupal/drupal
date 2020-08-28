@@ -37,7 +37,7 @@ class DirectoryTest extends FileTestBase {
     $child_path = $parent_path . DIRECTORY_SEPARATOR . $child;
     /** @var \Drupal\Core\File\FileSystemInterface $file_system */
     $file_system = \Drupal::service('file_system');
-    $this->assertTrue($file_system->mkdir($child_path, 0775, TRUE), t('No error reported when creating new local directories.'), 'File');
+    $this->assertTrue($file_system->mkdir($child_path, 0775, TRUE), 'No error reported when creating new local directories.');
 
     // Ensure new directories also exist.
     $this->assertDirectoryExists($parent_path);

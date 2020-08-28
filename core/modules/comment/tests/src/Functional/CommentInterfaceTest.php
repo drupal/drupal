@@ -101,7 +101,8 @@ class CommentInterfaceTest extends CommentTestBase {
 
     // Test changing the comment author to "Anonymous".
     $comment = $this->postComment(NULL, $comment->comment_body->value, $comment->getSubject(), ['uid' => '']);
-    $this->assertTrue($comment->getAuthorName() == t('Anonymous') && $comment->getOwnerId() == 0, 'Comment author successfully changed to anonymous.');
+    $this->assertTrue($comment->getAuthorName() == 'Anonymous', 'Comment author successfully changed to anonymous.');
+    $this->assertTrue($comment->getOwnerId() == 0, 'Comment author successfully changed to anonymous.');
 
     // Test changing the comment author to an unverified user.
     $random_name = $this->randomMachineName();
