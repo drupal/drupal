@@ -140,7 +140,8 @@ abstract class UpdateTestBase extends BrowserTestBase {
       if ($expected_update_message_type === static::SECURITY_UPDATE_REQUIRED) {
         $assert_session->elementTextNotContains('css', $update_element_css_locator, 'Update available');
         $assert_session->elementTextContains('css', $update_element_css_locator, 'Security update required!');
-        $assert_session->responseContains('error.svg', 'Error icon was found.');
+        // Verify that the error icon is found.
+        $assert_session->responseContains('error.svg');
       }
       else {
         $assert_session->elementTextContains('css', $update_element_css_locator, 'Update available');

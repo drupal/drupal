@@ -141,11 +141,15 @@ JS;
 
     // Besides verifying there is no JavaScript syntax error, also verify the
     // HTML structure.
+    // The BigPipe stop signal is present just before the closing </body> and
+    // </html> tags.
     $this->assertSession()
-      ->responseContains(BigPipe::STOP_SIGNAL . "\n\n\n</body></html>", 'The BigPipe stop signal is present just before the closing </body> and </html> tags.');
+      ->responseContains(BigPipe::STOP_SIGNAL . "\n\n\n</body></html>");
     $js_code_until_closing_body_tag = substr(BigPipeRegressionTestController::MARKER_2678662, 0, strpos(BigPipeRegressionTestController::MARKER_2678662, '</body>'));
+    // The BigPipe start signal does NOT start at the closing </body> tag string
+    // in an inline script.
     $this->assertSession()
-      ->responseNotContains($js_code_until_closing_body_tag . "\n" . BigPipe::START_SIGNAL, 'The BigPipe start signal does NOT start at the closing </body> tag string in an inline script.');
+      ->responseNotContains($js_code_until_closing_body_tag . "\n" . BigPipe::START_SIGNAL);
   }
 
   /**

@@ -66,7 +66,8 @@ class StorageTest extends BrowserTestBase {
 
     $this->drupalPostForm(NULL, $edit, 'Save');
     $assert_session->pageTextContains('Form constructions: 4');
-    $assert_session->pageTextContains('Title: new', 'The form storage has stored the values.');
+    // Verify that the form storage has stored the values.
+    $assert_session->pageTextContains('Title: new');
   }
 
   /**
@@ -93,7 +94,8 @@ class StorageTest extends BrowserTestBase {
 
     $this->drupalPostForm(NULL, $edit, 'Save');
     $this->assertSession()->pageTextContains('Form constructions: 4');
-    $this->assertSession()->pageTextContains('Title: new', 'The form storage has stored the values.');
+    // Verify that the form storage has stored the values.
+    $this->assertSession()->pageTextContains('Title: new');
   }
 
   /**
@@ -137,7 +139,7 @@ class StorageTest extends BrowserTestBase {
     // validation error. Post again and verify that the rebuilt form contains
     // the values of the updated form storage.
     $this->drupalPostForm(NULL, ['title' => 'foo', 'value' => 'bar'], 'Save');
-    $this->assertSession()->pageTextContains("The thing has been changed.", 'The altered form storage value was updated in cache and taken over.');
+    $this->assertSession()->pageTextContains("The thing has been changed.");
   }
 
   /**

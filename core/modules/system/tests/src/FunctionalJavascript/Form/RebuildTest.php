@@ -109,7 +109,7 @@ class RebuildTest extends WebDriverTestBase {
       'title[0][value]' => $this->randomString(),
     ];
     $this->drupalPostForm(NULL, $edit, 'Save');
-    $this->assertSession()->pageTextContains('Test file field is required.', 'Non-AJAX submission correctly triggered a validation error.');
+    $this->assertSession()->pageTextContains('Test file field is required.');
 
     // Ensure that the form contains two items in the multi-valued field, so we
     // know we're testing a form that was correctly retrieved from cache.

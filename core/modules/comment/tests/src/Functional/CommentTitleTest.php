@@ -48,7 +48,7 @@ class CommentTitleTest extends CommentTestBase {
     // Verify that the comment is created successfully.
     $this->assertSession()->responseMatches($regex);
     // Tests that markup is not generated for the comment without header.
-    $this->assertSession()->responseNotMatches('|<h3[^>]*></h3>|', 'Comment title H3 element not found when title is an empty string.');
+    $this->assertSession()->responseNotMatches('|<h3[^>]*></h3>|');
   }
 
   /**

@@ -122,7 +122,7 @@ class FrameworkTest extends WebDriverTestBase {
     // information about the file; we only really care about whether it appears
     // in a LINK or STYLE tag, for which Drupal always adds a query string for
     // cache control.
-    $assert->responseNotContains('js.module.css?', 'Ajax lazy loading does not add overridden CSS files.');
+    $assert->responseNotContains('js.module.css?');
   }
 
 }

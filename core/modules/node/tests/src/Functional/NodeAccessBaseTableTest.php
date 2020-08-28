@@ -157,12 +157,7 @@ class NodeAccessBaseTableTest extends NodeTestBase {
           else {
             $should_be_visible = TRUE;
           }
-          $this->assertSession()->statusCodeEquals($should_be_visible ? 200 : 403, strtr('A %private node by user %uid is %visible for user %current_uid.', [
-            '%private' => $is_private ? 'private' : 'public',
-            '%uid' => $uid,
-            '%visible' => $should_be_visible ? 'visible' : 'not visible',
-            '%current_uid' => $this->webUser->id(),
-          ]));
+          $this->assertSession()->statusCodeEquals($should_be_visible ? 200 : 403);
         }
       }
 

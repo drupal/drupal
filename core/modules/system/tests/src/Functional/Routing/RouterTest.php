@@ -59,7 +59,7 @@ class RouterTest extends BrowserTestBase {
     $this->assertRaw('</html>', 'Page markup was found.');
     // In some instances, the subrequest handling may get confused and render
     // a page inception style.  This test verifies that is not happening.
-    $this->assertSession()->responseNotMatches('#</body>.*</body>#s', 'There was no double-page effect from a misrendered subrequest.');
+    $this->assertSession()->responseNotMatches('#</body>.*</body>#s');
 
     // Confirm that route-level access check's cacheability is applied to the
     // X-Drupal-Cache-Contexts and X-Drupal-Cache-Tags headers.
@@ -156,7 +156,7 @@ class RouterTest extends BrowserTestBase {
 
     // In some instances, the subrequest handling may get confused and render
     // a page inception style.  This test verifies that is not happening.
-    $this->assertSession()->responseNotMatches('#</body>.*</body>#s', 'There was no double-page effect from a misrendered subrequest.');
+    $this->assertSession()->responseNotMatches('#</body>.*</body>#s');
   }
 
   /**
@@ -173,7 +173,7 @@ class RouterTest extends BrowserTestBase {
 
     // In some instances, the subrequest handling may get confused and render
     // a page inception style.  This test verifies that is not happening.
-    $this->assertSession()->responseNotMatches('#</body>.*</body>#s', 'There was no double-page effect from a misrendered subrequest.');
+    $this->assertSession()->responseNotMatches('#</body>.*</body>#s');
   }
 
   /**
@@ -190,7 +190,7 @@ class RouterTest extends BrowserTestBase {
 
     // In some instances, the subrequest handling may get confused and render
     // a page inception style.  This test verifies that is not happening.
-    $this->assertSession()->responseNotMatches('#</body>.*</body>#s', 'There was no double-page effect from a misrendered subrequest.');
+    $this->assertSession()->responseNotMatches('#</body>.*</body>#s');
   }
 
   /**
@@ -219,7 +219,7 @@ class RouterTest extends BrowserTestBase {
 
     // In some instances, the subrequest handling may get confused and render
     // a page inception style. This test verifies that is not happening.
-    $this->assertSession()->responseNotMatches('#</body>.*</body>#s', 'There was no double-page effect from a misrendered subrequest.');
+    $this->assertSession()->responseNotMatches('#</body>.*</body>#s');
   }
 
   /**

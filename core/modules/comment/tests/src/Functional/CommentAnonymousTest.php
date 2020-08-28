@@ -175,7 +175,8 @@ class CommentAnonymousTest extends CommentTestBase {
     // NOTE: if authenticated user has permission to post comments, then a
     // "Login or register to post comments" type link may be shown.
     $this->drupalGet('node/' . $this->node->id());
-    $this->assertSession()->responseNotMatches('@<h2[^>]*>Comments</h2>@', 'Comments were not displayed.');
+    // Verify that comments were not displayed.
+    $this->assertSession()->responseNotMatches('@<h2[^>]*>Comments</h2>@');
     $this->assertSession()->linkNotExists('Add new comment', 'Link to add comment was found.');
 
     // Attempt to view node-comment form while disallowed.
@@ -199,7 +200,8 @@ class CommentAnonymousTest extends CommentTestBase {
       'skip comment approval' => TRUE,
     ]);
     $this->drupalGet('node/' . $this->node->id());
-    $this->assertSession()->responseNotMatches('@<h2[^>]*>Comments</h2>@', 'Comments were not displayed.');
+    // Verify that comments were not displayed.
+    $this->assertSession()->responseNotMatches('@<h2[^>]*>Comments</h2>@');
     $this->assertFieldByName('subject[0][value]', '', 'Subject field found.');
     $this->assertFieldByName('comment_body[0][value]', '', 'Comment field found.');
 

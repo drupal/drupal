@@ -112,7 +112,7 @@ class FileFieldDisplayTest extends FileFieldTestBase {
     $this->clickLink(t('Back to content editing'));
     $this->assertRaw($field_name . '[0][display]', 'First file appears as expected.');
     $this->assertRaw($field_name . '[1][display]', 'Second file appears as expected.');
-    $this->assertSession()->responseContains($field_name . '[1][description]', 'Description of second file appears as expected.');
+    $this->assertSession()->responseContains($field_name . '[1][description]');
 
     // Check that the file fields don't contain duplicate HTML IDs.
     $this->assertSession()->pageContainsNoDuplicateId();
