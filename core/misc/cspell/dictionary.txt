@@ -410,6 +410,7 @@ deduplicates
 defalt
 defaultable
 defgroup
+delayable
 deletable
 deletedline
 deletee

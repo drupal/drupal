@@ -8,7 +8,9 @@ use Drupal\Component\Utility\Timer;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Lock\LockBackendInterface;
 use Drupal\Core\Queue\QueueFactory;
+use Drupal\Core\Queue\DelayableQueueInterface;
 use Drupal\Core\Queue\QueueWorkerManagerInterface;
+use Drupal\Core\Queue\DelayedRequeueException;
 use Drupal\Core\Queue\RequeueException;
 use Drupal\Core\Queue\SuspendQueueException;
 use Drupal\Core\Session\AccountSwitcherInterface;
@@ -179,6 +181,18 @@ class Cron implements CronInterface {
           try {
             $queue_worker->processItem($item->data);
             $queue->deleteItem($item);
+          }
+          catch (DelayedRequeueException $e) {
+            // The worker requested the task not be immediately re-queued.
+            // - If the queue doesn't support ::delayItem(), we should leave the
+            // item's current expiry time alone.
+            // - If the queue does support ::delayItem(), we should allow the
+            // queue to update the item's expiry using the requested delay.
+            if ($queue instanceof DelayableQueueInterface) {
+              // This queue can handle a custom delay; use the duration provided
+              // by the exception.
+              $queue->delayItem($item, $e->getDelay());
+            }
           }
           catch (RequeueException $e) {
             // The worker requested the task be immediately requeued.

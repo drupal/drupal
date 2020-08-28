@@ -3,7 +3,11 @@
 namespace Drupal\Tests\system\Kernel\System;
 
 use Drupal\Core\Database\Database;
+use Drupal\Core\Queue\DatabaseQueue;
+use Drupal\Core\Queue\Memory;
 use Drupal\KernelTests\KernelTestBase;
+use Drupal\cron_queue_test\Plugin\QueueWorker\CronQueueTestDatabaseDelayException;
+use Prophecy\Argument;
 
 /**
  * Tests the Cron Queue runner.
@@ -34,6 +38,15 @@ class CronQueueTest extends KernelTestBase {
   protected $cron;
 
   /**
+   * The fake current time used for queue worker / cron testing purposes.
+   *
+   * This value should be greater than or equal to zero.
+   *
+   * @var int
+   */
+  protected $currentTime = 1000;
+
+  /**
    * {@inheritdoc}
    */
   protected function setUp(): void {
@@ -41,6 +54,70 @@ class CronQueueTest extends KernelTestBase {
 
     $this->connection = Database::getConnection();
     $this->cron = \Drupal::service('cron');
+
+    $time = $this->prophesize('Drupal\Component\Datetime\TimeInterface');
+    $time->getCurrentTime()->willReturn($this->currentTime);
+    $time->getRequestTime()->willReturn($this->currentTime);
+    \Drupal::getContainer()->set('datetime.time', $time->reveal());
+    $this->assertEquals($this->currentTime, \Drupal::time()->getCurrentTime());
+    $this->assertEquals($this->currentTime, \Drupal::time()->getRequestTime());
+
+    $realQueueFactory = $this->container->get('queue');
+    $queue_factory = $this->prophesize(get_class($realQueueFactory));
+    $database = new DatabaseQueue('cron_queue_test_database_delay_exception', $this->connection);
+    $memory = new Memory('cron_queue_test_memory_delay_exception');
+    $queue_factory->get('cron_queue_test_database_delay_exception', Argument::cetera())->willReturn($database);
+    $queue_factory->get('cron_queue_test_memory_delay_exception', Argument::cetera())->willReturn($memory);
+    $queue_factory->get(Argument::any(), Argument::cetera())->will(function ($args) use ($realQueueFactory) {
+      return $realQueueFactory->get($args[0], $args[1] ?? FALSE);
+    });
+
+    $this->container->set('queue', $queue_factory->reveal());
+  }
+
+  /**
+   * Tests that DelayedRequeueException behaves as expected when running cron.
+   */
+  public function testDelayException() {
+    $database = $this->container->get('queue')->get('cron_queue_test_database_delay_exception');
+    $memory = $this->container->get('queue')->get('cron_queue_test_memory_delay_exception');
+
+    // Ensure that the queues are of the correct type for this test.
+    $this->assertInstanceOf('Drupal\Core\Queue\DelayableQueueInterface', $database);
+    $this->assertNotInstanceOf('Drupal\Core\Queue\DelayableQueueInterface', $memory);
+
+    // Get the queue worker plugin manager.
+    $manager = $this->container->get('plugin.manager.queue_worker');
+    $definitions = $manager->getDefinitions();
+    $this->assertNotEmpty($database_lease_time = $definitions['cron_queue_test_database_delay_exception']['cron']['time']);
+    $this->assertNotEmpty($memory_lease_time = $definitions['cron_queue_test_memory_delay_exception']['cron']['time']);
+
+    // Create the necessary test data and run cron.
+    $database->createItem('test');
+    $memory->createItem('test');
+    $this->cron->run();
+
+    // Fetch the expiry time for the database queue.
+    $query = $this->connection->select('queue');
+    $query->condition('name', 'cron_queue_test_database_delay_exception');
+    $query->addField('queue', 'expire');
+    $query->range(0, 1);
+    $expire = $query->execute()->fetchField();
+
+    // Assert that the delay interval is greater than the lease interval. This
+    // allows us to assume that (if updated) the new expiry time will be greater
+    // than the initial expiry time. We can then also assume that the new expiry
+    // time offset will be identical to the delay interval.
+    $this->assertGreaterThan($database_lease_time, CronQueueTestDatabaseDelayException::DELAY_INTERVAL);
+    $this->assertGreaterThan($this->currentTime + $database_lease_time, $expire);
+    $this->assertEquals(CronQueueTestDatabaseDelayException::DELAY_INTERVAL, $expire - $this->currentTime);
+
+    // Ensure that the memory queue expiry time is unchanged after the
+    // DelayedRequeueException has been thrown.
+    $property = (new \ReflectionClass($memory))->getProperty('queue');
+    $property->setAccessible(TRUE);
+    $memory_queue_internal = $property->getValue($memory);
+    $this->assertEquals($this->currentTime + $memory_lease_time, reset($memory_queue_internal)->expire);
   }
 
   /**
