@@ -369,7 +369,7 @@ function locale_translate_batch_refresh(&$context) {
 function locale_translate_batch_finished($success, array $results) {
   $logger = \Drupal::logger('locale');
   if ($success) {
-    $additions = $updates = $deletes = $skips = $config = 0;
+    $additions = $updates = $deletes = $skips = 0;
     if (isset($results['failed_files'])) {
       if (\Drupal::moduleHandler()->moduleExists('dblog') && \Drupal::currentUser()->hasPermission('access site reports')) {
         $message = \Drupal::translation()->formatPlural(count($results['failed_files']), 'One translation file could not be imported. <a href=":url">See the log</a> for details.', '@count translation files could not be imported. <a href=":url">See the log</a> for details.', [':url' => Url::fromRoute('dblog.overview')->toString()]);
