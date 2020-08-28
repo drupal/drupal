@@ -480,16 +480,14 @@
       .find('a')
       .addClass('menu-item__link');
     // Create the handle.
-    const handle = $(
-      '<a href="#" class="tabledrag-handle"><div class="handle">&nbsp;</div></a>',
-    ).attr('title', Drupal.t('Drag to re-order'));
+    const $handle = $(Drupal.theme('tableDragHandle'));
     // Insert the handle after indentations (if any).
     const $indentationLast = $item
       .find('td:first-of-type')
       .find('.js-indentation')
       .eq(-1);
     if ($indentationLast.length) {
-      $indentationLast.after(handle);
+      $indentationLast.after($handle);
       // Update the total width of indentation in this entire table.
       self.indentCount = Math.max(
         $item.find('.js-indentation').length,
@@ -499,10 +497,10 @@
       $item
         .find('td')
         .eq(0)
-        .prepend(handle);
+        .prepend($handle);
     }
 
-    handle.on('mousedown touchstart pointerdown', event => {
+    $handle.on('mousedown touchstart pointerdown', event => {
       event.preventDefault();
       if (event.originalEvent.type === 'touchstart') {
         event = event.originalEvent.touches[0];
@@ -511,25 +509,25 @@
     });
 
     // Prevent the anchor tag from jumping us to the top of the page.
-    handle.on('click', e => {
+    $handle.on('click', e => {
       e.preventDefault();
     });
 
     // Set blur cleanup when a handle is focused.
-    handle.on('focus', () => {
+    $handle.on('focus', () => {
       self.safeBlur = true;
     });
 
     // On blur, fire the same function as a touchend/mouseup. This is used to
     // update values after a row has been moved through the keyboard support.
-    handle.on('blur', event => {
+    $handle.on('blur', event => {
       if (self.rowObject && self.safeBlur) {
         self.dropRow(event, self);
       }
     });
 
     // Add arrow-key support to the handle.
-    handle.on('keydown', event => {
+    $handle.on('keydown', event => {
       // If a rowObject doesn't yet exist and this isn't the tab key.
       if (event.keyCode !== 9 && !self.rowObject) {
         self.rowObject = new self.row(
@@ -607,7 +605,7 @@
               window.scrollBy(0, -parseInt(item.offsetHeight, 10));
             }
             // Regain focus after the DOM manipulation.
-            handle.trigger('focus');
+            $handle.trigger('focus');
           }
           break;
         }
@@ -669,7 +667,7 @@
               window.scrollBy(0, parseInt(item.offsetHeight, 10));
             }
             // Regain focus after the DOM manipulation.
-            handle.trigger('focus');
+            $handle.trigger('focus');
           }
           break;
         }
@@ -699,7 +697,7 @@
     // scrolling. IE and Safari will suppress scrolling on keydown, but all
     // other browsers need to return false on keypress.
     // http://www.quirksmode.org/js/keys.html
-    handle.on('keypress', event => {
+    $handle.on('keypress', event => {
       /* eslint-disable no-fallthrough */
 
       switch (event.keyCode) {
@@ -1735,6 +1733,15 @@
        */
       toggleButtonContent: show =>
         show ? Drupal.t('Hide row weights') : Drupal.t('Show row weights'),
+
+      /**
+       * @return {string}
+       *   HTML markup for a tableDrag handle.
+       */
+      tableDragHandle() {
+        return `<a href="#" title="${Drupal.t('Drag to re-order')}"
+        class="tabledrag-handle"><div class="handle">&nbsp;</div></a>`;
+      },
     },
   );
 })(jQuery, Drupal, drupalSettings);
