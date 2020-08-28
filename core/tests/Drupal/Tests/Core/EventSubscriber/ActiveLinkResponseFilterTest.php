@@ -84,7 +84,6 @@ class ActiveLinkResponseFilterTest extends UnitTestCase {
       'query' => [],
     ];
     // Nothing to do.
-    $markup = '<foo>bar</foo>';
     $situations[] = ['context' => $context, 'is active' => FALSE, 'attributes' => []];
     // Matching path, plus all matching variations.
     $attributes = [
