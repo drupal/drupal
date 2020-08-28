@@ -241,7 +241,7 @@ class DateTimeTest extends BrowserTestBase {
 
     $edit['field_dt[0][value][day]'] = '29';
     $this->drupalPostForm('node/add/page_with_date', $edit, t('Save'));
-    $this->assertNoText(t('Selected combination of day and month is not valid.'), 'Correct date passed validation.');
+    $this->assertNoText('Selected combination of day and month is not valid.', 'Correct date passed validation.');
 
     $this->drupalGet('node/1');
     $this->assertText(t('Mon, 02/29/2016 - 01:30'), 'Node successfully created with valid date.');

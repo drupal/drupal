@@ -189,7 +189,7 @@ class NodeTypeTest extends NodeTestBase {
       t('%type is used by 1 piece of content on your site. You can not remove this content type until you have removed all of the %type content.', ['%type' => $type->label()]),
       'The content type will not be deleted until all nodes of that type are removed.'
     );
-    $this->assertNoText(t('This action cannot be undone.'), 'The node type deletion confirmation form is not available.');
+    $this->assertNoText('This action cannot be undone.', 'The node type deletion confirmation form is not available.');
 
     // Delete the node.
     $node->delete();

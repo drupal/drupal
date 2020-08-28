@@ -49,7 +49,7 @@ class LocaleUpdateInterfaceTest extends LocaleUpdateBase {
     // No language added.
     // Check status page and Available translation updates page.
     $this->drupalGet('admin/reports/status');
-    $this->assertNoText(t('Translation update status'), 'No status message');
+    $this->assertNoText('Translation update status', 'No status message');
 
     $this->drupalGet('admin/reports/translations');
     $this->assertRaw(t('No translatable languages available. <a href=":add_language">Add a language</a> first.', [':add_language' => Url::fromRoute('entity.configurable_language.collection')->toString()]), 'Language message');

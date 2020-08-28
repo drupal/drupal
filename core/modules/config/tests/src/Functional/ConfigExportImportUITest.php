@@ -91,7 +91,7 @@ class ConfigExportImportUITest extends BrowserTestBase {
   public function testExportImport() {
     // After installation there is no snapshot and nothing to import.
     $this->drupalGet('admin/config/development/configuration');
-    $this->assertNoText(t('Warning message'));
+    $this->assertNoText('Warning message');
     $this->assertText(t('There are no configuration changes to import.'));
 
     $this->originalSlogan = $this->config('system.site')->get('slogan');
@@ -168,13 +168,13 @@ class ConfigExportImportUITest extends BrowserTestBase {
     file_put_contents($filename, $this->tarball);
     $this->drupalPostForm('admin/config/development/configuration/full/import', ['files[import_tarball]' => $filename], 'Upload');
     // There is no snapshot yet because an import has never run.
-    $this->assertNoText(t('Warning message'));
-    $this->assertNoText(t('There are no configuration changes to import.'));
+    $this->assertNoText('Warning message');
+    $this->assertNoText('There are no configuration changes to import.');
     $this->assertText($this->contentType->label());
 
     $this->drupalPostForm(NULL, [], 'Import all');
     // After importing the snapshot has been updated an there are no warnings.
-    $this->assertNoText(t('Warning message'));
+    $this->assertNoText('Warning message');
     $this->assertText(t('There are no configuration changes to import.'));
 
     $this->assertEquals($this->newSlogan, $this->config('system.site')->get('slogan'));
@@ -195,7 +195,7 @@ class ConfigExportImportUITest extends BrowserTestBase {
     // active and snapshot should no longer exist.
     \Drupal::service('config.storage.sync')->deleteAll();
     $this->drupalGet('admin/config/development/configuration');
-    $this->assertNoText(t('Warning message'));
+    $this->assertNoText('Warning message');
     $this->assertNoText('The following items in your active configuration have changes since the last import that may be lost on the next import.');
     $this->assertText(t('There are no configuration changes to import.'));
     // Write a file to sync. The warning about differences between the active
@@ -278,7 +278,7 @@ class ConfigExportImportUITest extends BrowserTestBase {
     $this->drupalPostForm('admin/config/development/configuration/full/import', ['files[import_tarball]' => $filename], 'Upload');
     // Verify that there are configuration differences to import.
     $this->drupalGet('admin/config/development/configuration');
-    $this->assertNoText(t('There are no configuration changes to import.'));
+    $this->assertNoText('There are no configuration changes to import.');
     $this->assertText(t('@collection configuration collection', ['@collection' => 'collection.test1']));
     $this->assertText(t('@collection configuration collection', ['@collection' => 'collection.test2']));
     $this->assertText('config_test.create');

@@ -238,7 +238,7 @@ class ConfigImportUITest extends BrowserTestBase {
 
     // Verify that there are configuration differences to import.
     $this->drupalGet('admin/config/development/configuration');
-    $this->assertNoText(t('There are no configuration changes to import.'));
+    $this->assertNoText('There are no configuration changes to import.');
 
     // Acquire a fake-lock on the import mechanism.
     $config_importer = $this->configImporter();
@@ -362,7 +362,7 @@ class ConfigImportUITest extends BrowserTestBase {
     $this->prepareSiteNameUpdate($new_site_name);
 
     $this->drupalGet('admin/config/development/configuration');
-    $this->assertNoText(t('There are no configuration changes to import.'));
+    $this->assertNoText('There are no configuration changes to import.');
     $this->drupalPostForm(NULL, [], t('Import all'));
 
     // Verify that the validation messages appear.
@@ -439,13 +439,13 @@ class ConfigImportUITest extends BrowserTestBase {
     $sync->write($name_secondary, $values_secondary);
     // Verify that there are configuration differences to import.
     $this->drupalGet('admin/config/development/configuration');
-    $this->assertNoText(t('There are no configuration changes to import.'));
+    $this->assertNoText('There are no configuration changes to import.');
 
     // Attempt to import configuration and verify that an error message appears.
     $this->drupalPostForm(NULL, [], t('Import all'));
     $this->assertText(new FormattableMarkup('Deleted and replaced configuration entity "@name"', ['@name' => $name_secondary]));
     $this->assertText(t('The configuration was imported with errors.'));
-    $this->assertNoText(t('The configuration was imported successfully.'));
+    $this->assertNoText('The configuration was imported successfully.');
     $this->assertText(t('There are no configuration changes to import.'));
   }
 

@@ -66,10 +66,10 @@ class ConfigDependencyWebTest extends BrowserTestBase {
     $entity2->save();
 
     $this->drupalGet($entity2->toUrl('delete-form'));
-    $this->assertNoText(t('Configuration updates'), 'No configuration updates found.');
-    $this->assertNoText(t('Configuration deletions'), 'No configuration deletes found.');
+    $this->assertNoText('Configuration updates', 'No configuration updates found.');
+    $this->assertNoText('Configuration deletions', 'No configuration deletes found.');
     $this->drupalGet($entity1->toUrl('delete-form'));
-    $this->assertNoText(t('Configuration updates'), 'No configuration updates found.');
+    $this->assertNoText('Configuration updates', 'No configuration updates found.');
     $this->assertText(t('Configuration deletions'), 'Configuration deletions found.');
     $this->assertText($entity2->id(), 'Entity2 id found');
     $this->drupalPostForm($entity1->toUrl('delete-form'), [], 'Delete');
@@ -118,7 +118,7 @@ class ConfigDependencyWebTest extends BrowserTestBase {
 
     $this->drupalGet($entity1->toUrl('delete-form'));
     $this->assertText(t('Configuration updates'), 'Configuration updates found.');
-    $this->assertNoText(t('Configuration deletions'), 'No configuration deletions found.');
+    $this->assertNoText('Configuration deletions', 'No configuration deletions found.');
     $this->assertNoText($entity2->id(), 'Entity2 id not found');
     $this->assertText($entity2->label(), 'Entity2 label not found');
     $this->assertNoText($entity3->id(), 'Entity3 id not found');

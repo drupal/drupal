@@ -897,8 +897,8 @@ class ConfigTranslationUiTest extends BrowserTestBase {
     // Check if the translation page does not have the altered out settings.
     $this->drupalGet('admin/config/people/accounts/translate/fr/add');
     $this->assertText(t('Name'));
-    $this->assertNoText(t('Account cancellation confirmation'));
-    $this->assertNoText(t('Password recovery'));
+    $this->assertNoText('Account cancellation confirmation');
+    $this->assertNoText('Password recovery');
   }
 
   /**

@@ -83,7 +83,7 @@ class SearchPageTextTest extends BrowserTestBase {
     $title_source = 'Search for @keywords | Drupal';
     $this->assertSession()->titleEquals('Search for ' . Unicode::truncate($search_terms, 60, TRUE, TRUE) . ' | Drupal');
     $this->assertNoText('Node', 'Erroneous tab and breadcrumb text is not present');
-    $this->assertNoText(t('Node'), 'Erroneous translated tab and breadcrumb text is not present');
+    $this->assertNoText('Node', 'Erroneous translated tab and breadcrumb text is not present');
     $this->assertText(t('Content'), 'Tab and breadcrumb text is present');
 
     $this->clickLink('About searching');
@@ -145,16 +145,16 @@ class SearchPageTextTest extends BrowserTestBase {
     // Make sure the "Please enter some keywords" message is NOT displayed if
     // you use "or" words or phrases in Advanced Search.
     $this->drupalPostForm('search/node', ['or' => $this->randomMachineName() . ' ' . $this->randomMachineName()], 'edit-submit--2');
-    $this->assertNoText(t('Please enter some keywords'), 'With advanced OR keywords entered, no keywords message is not displayed on node page');
+    $this->assertNoText('Please enter some keywords', 'With advanced OR keywords entered, no keywords message is not displayed on node page');
     $this->drupalPostForm('search/node', ['phrase' => '"' . $this->randomMachineName() . '" "' . $this->randomMachineName() . '"'], 'edit-submit--2');
-    $this->assertNoText(t('Please enter some keywords'), 'With advanced phrase entered, no keywords message is not displayed on node page');
+    $this->assertNoText('Please enter some keywords', 'With advanced phrase entered, no keywords message is not displayed on node page');
 
     // Verify that if you search for a too-short keyword, you get the right
     // message, and that if after that you search for a longer keyword, you
     // do not still see the message.
     $this->drupalPostForm('search/node', ['keys' => $this->randomMachineName(1)], t('Search'));
     $this->assertText('You must include at least one keyword', 'Keyword message is displayed when searching for short word');
-    $this->assertNoText(t('Please enter some keywords'), 'With short word entered, no keywords message is not displayed');
+    $this->assertNoText('Please enter some keywords', 'With short word entered, no keywords message is not displayed');
     $this->drupalPostForm(NULL, ['keys' => $this->randomMachineName()], t('Search'));
     $this->assertNoText('You must include at least one keyword', 'Keyword message is not displayed when searching for long word after short word search');
 

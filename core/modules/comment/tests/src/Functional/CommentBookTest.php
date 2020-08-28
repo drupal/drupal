@@ -81,7 +81,7 @@ class CommentBookTest extends BrowserTestBase {
     $this->assertText($comment_subject, 'Comment subject found');
     $this->assertText($comment_body, 'Comment body found');
 
-    $this->assertNoText(t('Add new comment'), 'Comment form not found');
+    $this->assertNoText('Add new comment', 'Comment form not found');
     // Verify that the comment form subject field is not found.
     $this->assertSession()->fieldNotExists('subject[0][value]');
   }

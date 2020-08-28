@@ -101,7 +101,7 @@ class LanguageConfigurationTest extends BrowserTestBase {
       'prefix[fr]' => '',
     ];
     $this->drupalPostForm(NULL, $edit, t('Save configuration'));
-    $this->assertNoText(t('The prefix may only be left blank for the selected detection fallback language.'), 'The path prefix can be removed for the default language');
+    $this->assertNoText('The prefix may only be left blank for the selected detection fallback language.', 'The path prefix can be removed for the default language');
 
     // Change default negotiation language.
     $this->config('language.negotiation')->set('selected_langcode', 'fr')->save();

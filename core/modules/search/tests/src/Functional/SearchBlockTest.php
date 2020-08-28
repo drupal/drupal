@@ -115,7 +115,7 @@ class SearchBlockTest extends BrowserTestBase {
     // search again with a longer keyword. First test using the block form.
     $this->drupalPostForm('node', ['keys' => $this->randomMachineName(1)], t('Search'));
     $this->assertText('You must include at least one keyword to match in the content', 'Keyword message is displayed when searching for short word');
-    $this->assertNoText(t('Please enter some keywords'), 'With short word entered, no keywords message is not displayed');
+    $this->assertNoText('Please enter some keywords', 'With short word entered, no keywords message is not displayed');
     $this->drupalPostForm(NULL, ['keys' => $this->randomMachineName()], t('Search'), [], 'search-block-form');
     $this->assertNoText('You must include at least one keyword to match in the content', 'Keyword message is not displayed when searching for long word after short word search');
 

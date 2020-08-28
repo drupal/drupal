@@ -431,7 +431,7 @@ class LocaleUpdateTest extends LocaleUpdateBase {
       'translation' => 'translated',
     ];
     $this->drupalPostForm('admin/config/regional/translate', $search, t('Filter'));
-    $this->assertNoText(t('No strings available.'), 'String successfully imported.');
+    $this->assertNoText('No strings available.', 'String successfully imported.');
 
     // Ensure the multiline string was imported.
     $search = [

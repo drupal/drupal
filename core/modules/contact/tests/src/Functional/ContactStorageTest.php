@@ -61,7 +61,7 @@ class ContactStorageTest extends ContactSitewideTest {
     $this->drupalLogout();
     $this->drupalGet('contact');
     $this->assertText(t('Your email address'));
-    $this->assertNoText(t('Form'));
+    $this->assertNoText('Form');
     $this->submitContact($name = $this->randomMachineName(16), $mail, $subject = $this->randomMachineName(16), $id, $message = $this->randomMachineName(64));
     $this->assertText(t('Your message has been sent.'));
 

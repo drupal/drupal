@@ -375,7 +375,7 @@ class UserPasswordResetTest extends BrowserTestBase {
    */
   public function assertValidPasswordReset($name) {
     // Make sure the error text is not displayed and email sent.
-    $this->assertNoText(t('Sorry, @name is not recognized as a username or an e-mail address.', ['@name' => $name]), 'Validation error message shown when trying to request password for invalid account.');
+    $this->assertNoText("Sorry, $name is not recognized as a username or an e-mail address.", 'Validation error message shown when trying to request password for invalid account.');
     $this->assertMail('to', $this->account->getEmail(), 'Password e-mail sent to user.');
     $subject = t('Replacement login information for @username at @site', ['@username' => $this->account->getAccountName(), '@site' => \Drupal::config('system.site')->get('name')]);
     $this->assertMail('subject', $subject, 'Password reset e-mail subject is correct.');
@@ -401,7 +401,7 @@ class UserPasswordResetTest extends BrowserTestBase {
    * Makes assertions about a password reset not triggering user flood control.
    */
   public function assertNoPasswordUserFlood() {
-    $this->assertNoText(t('Too many password recovery requests for this account. It is temporarily blocked. Try again later or contact the site administrator.'), 'User password reset flood error message not shown.');
+    $this->assertNoText('Too many password recovery requests for this account. It is temporarily blocked. Try again later or contact the site administrator.', 'User password reset flood error message not shown.');
   }
 
   /**
@@ -415,7 +415,7 @@ class UserPasswordResetTest extends BrowserTestBase {
    * Makes assertions about a password reset not triggering IP flood control.
    */
   public function assertNoPasswordIpFlood() {
-    $this->assertNoText(t('Too many password recovery requests from your IP address. It is temporarily blocked. Try again later or contact the site administrator.'), 'IP password reset flood error message not shown.');
+    $this->assertNoText('Too many password recovery requests from your IP address. It is temporarily blocked. Try again later or contact the site administrator.', 'IP password reset flood error message not shown.');
   }
 
   /**

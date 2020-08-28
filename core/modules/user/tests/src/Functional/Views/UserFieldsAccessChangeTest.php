@@ -39,9 +39,9 @@ class UserFieldsAccessChangeTest extends UserTestBase {
     $this->assertText(t('Created'));
 
     // User does not by default have access to init, mail and status.
-    $this->assertNoText(t('Init'));
-    $this->assertNoText(t('Email'));
-    $this->assertNoText(t('Status'));
+    $this->assertNoText('Init');
+    $this->assertNoText('Email');
+    $this->assertNoText('Status');
 
     // Assign sub-admin role to grant extra access.
     $user = $this->drupalCreateUser(['sub-admin']);

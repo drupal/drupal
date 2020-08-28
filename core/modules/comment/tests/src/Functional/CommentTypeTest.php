@@ -168,7 +168,7 @@ class CommentTypeTest extends CommentTestBase {
       ]),
       'The comment type will not be deleted until all fields of that type are removed.'
     );
-    $this->assertNoText(t('This action cannot be undone.'), 'The comment type deletion confirmation form is not available.');
+    $this->assertNoText('This action cannot be undone.', 'The comment type deletion confirmation form is not available.');
 
     // Delete the comment and the field.
     $comment->delete();

@@ -120,19 +120,19 @@ class ValidationTest extends BrowserTestBase {
     // validated, but the #element_validate handler for the 'test' field
     // is triggered.
     $this->drupalPostForm($path, $edit, t('Partial validate'));
-    $this->assertNoText(t('@name field is required.', ['@name' => 'Title']));
+    $this->assertNoText('Title field is required.');
     $this->assertText('Test element is invalid');
 
     // Edge case of #limit_validation_errors containing numeric indexes: same
     // thing with the 'Partial validate (numeric index)' button and the
     // 'test_numeric_index' field.
     $this->drupalPostForm($path, $edit, t('Partial validate (numeric index)'));
-    $this->assertNoText(t('@name field is required.', ['@name' => 'Title']));
+    $this->assertNoText('Title field is required.');
     $this->assertText('Test (numeric index) element is invalid');
 
     // Ensure something like 'foobar' isn't considered "inside" 'foo'.
     $this->drupalPostForm($path, $edit, t('Partial validate (substring)'));
-    $this->assertNoText(t('@name field is required.', ['@name' => 'Title']));
+    $this->assertNoText('Title field is required.');
     $this->assertText('Test (substring) foo element is invalid');
 
     // Ensure not validated values are not available to submit handlers.
@@ -219,15 +219,15 @@ class ValidationTest extends BrowserTestBase {
 
     foreach (Element::children($form) as $key) {
       if (isset($form[$key]['#required_error'])) {
-        $this->assertNoText(t('@name field is required.', ['@name' => $form[$key]['#title']]));
+        $this->assertNoText($form[$key]['#title'] . ' field is required.');
         $this->assertText($form[$key]['#required_error']);
       }
       elseif (isset($form[$key]['#form_test_required_error'])) {
-        $this->assertNoText(t('@name field is required.', ['@name' => $form[$key]['#title']]));
+        $this->assertNoText($form[$key]['#title'] . ' field is required.');
         $this->assertText($form[$key]['#form_test_required_error']);
       }
     }
-    $this->assertNoText(t('An illegal choice has been detected. Please contact the site administrator.'));
+    $this->assertNoText('An illegal choice has been detected. Please contact the site administrator.');
 
     // Verify that no custom validation error appears with valid values.
     $edit = [
@@ -239,15 +239,15 @@ class ValidationTest extends BrowserTestBase {
 
     foreach (Element::children($form) as $key) {
       if (isset($form[$key]['#required_error'])) {
-        $this->assertNoText(t('@name field is required.', ['@name' => $form[$key]['#title']]));
+        $this->assertNoText($form[$key]['#title'] . ' field is required.');
         $this->assertNoText($form[$key]['#required_error']);
       }
       elseif (isset($form[$key]['#form_test_required_error'])) {
-        $this->assertNoText(t('@name field is required.', ['@name' => $form[$key]['#title']]));
+        $this->assertNoText($form[$key]['#title'] . ' field is required.');
         $this->assertNoText($form[$key]['#form_test_required_error']);
       }
     }
-    $this->assertNoText(t('An illegal choice has been detected. Please contact the site administrator.'));
+    $this->assertNoText('An illegal choice has been detected. Please contact the site administrator.');
   }
 
 }

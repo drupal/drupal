@@ -61,7 +61,7 @@ class CommentBlockTest extends CommentTestBase {
     $this->drupalLogout();
     user_role_revoke_permissions(RoleInterface::ANONYMOUS_ID, ['access comments']);
     $this->drupalGet('');
-    $this->assertNoText(t('Recent comments'));
+    $this->assertNoText('Recent comments');
     user_role_grant_permissions(RoleInterface::ANONYMOUS_ID, ['access comments']);
 
     // Test that a user with the 'access comments' permission can see the

@@ -218,7 +218,7 @@ class LocaleTranslationUiTest extends BrowserTestBase {
       'translation' => 'untranslated',
     ];
     $this->drupalPostForm('admin/config/regional/translate', $search, t('Filter'));
-    $this->assertNoText(t('No strings available.'), 'The translation has been removed');
+    $this->assertNoText('No strings available.', 'The translation has been removed');
   }
 
   /**
@@ -342,7 +342,7 @@ class LocaleTranslationUiTest extends BrowserTestBase {
       // Check for a form error on the textarea.
       $form_class = $this->xpath('//form[@id="locale-translate-edit-form"]//textarea/@class');
       $this->assertStringContainsString('error', $form_class[0]->getText(), 'The string was rejected as unsafe.');
-      $this->assertNoText(t('The string has been saved.'), 'The string was not saved.');
+      $this->assertNoText('The string has been saved.', 'The string was not saved.');
     }
   }
 
@@ -423,7 +423,7 @@ class LocaleTranslationUiTest extends BrowserTestBase {
       'translation' => 'untranslated',
     ];
     $this->drupalPostForm('admin/config/regional/translate', $search, t('Filter'));
-    $this->assertNoText(t('No strings available.'), 'Search found the string.');
+    $this->assertNoText('No strings available.', 'Search found the string.');
 
     // Add translation.
     // Assume this is the only result, given the random name.
@@ -443,7 +443,7 @@ class LocaleTranslationUiTest extends BrowserTestBase {
       'translation' => 'translated',
     ];
     $this->drupalPostForm('admin/config/regional/translate', $search, t('Filter'));
-    $this->assertNoText(t('No strings available.'), 'Search found the translation.');
+    $this->assertNoText('No strings available.', 'Search found the translation.');
 
     // Ensure translated source string doesn't appear if searching on 'only
     // untranslated strings'.
@@ -472,7 +472,7 @@ class LocaleTranslationUiTest extends BrowserTestBase {
       'translation' => 'all',
     ];
     $this->drupalPostForm('admin/config/regional/translate', $search, t('Filter'));
-    $this->assertNoText(t('No strings available.'), 'Search found the translation.');
+    $this->assertNoText('No strings available.', 'Search found the translation.');
 
     // Ensure translated string doesn't appear if searching in System (English).
     $search = [

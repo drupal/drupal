@@ -36,7 +36,7 @@ class MigrateAccessTest extends BrowserTestBase {
     $this->drupalLogin($user);
     $this->drupalGet('upgrade');
     $this->assertSession()->statusCodeEquals(403);
-    $this->assertNoText(t('Upgrade'));
+    $this->assertNoText('Upgrade');
   }
 
 }

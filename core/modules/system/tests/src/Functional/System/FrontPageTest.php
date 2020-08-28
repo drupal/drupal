@@ -65,7 +65,7 @@ class FrontPageTest extends BrowserTestBase {
     $this->drupalGet('node');
     $this->assertText(t('On front page.'), 'Path is the front page.');
     $this->drupalGet($this->nodePath);
-    $this->assertNoText(t('On front page.'), 'Path is not the front page.');
+    $this->assertNoText('On front page.', 'Path is not the front page.');
 
     // Change the front page to an invalid path.
     $edit = ['site_frontpage' => '/kittens'];
@@ -85,7 +85,7 @@ class FrontPageTest extends BrowserTestBase {
     $this->drupalGet('');
     $this->assertText(t('On front page.'), 'Path is the front page.');
     $this->drupalGet('node');
-    $this->assertNoText(t('On front page.'), 'Path is not the front page.');
+    $this->assertNoText('On front page.', 'Path is not the front page.');
     $this->drupalGet($this->nodePath);
     $this->assertText(t('On front page.'), 'Path is the front page.');
   }

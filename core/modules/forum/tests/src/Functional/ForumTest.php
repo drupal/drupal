@@ -581,7 +581,7 @@ class ForumTest extends BrowserTestBase {
 
     $type = t('Forum topic');
     if ($container) {
-      $this->assertNoText(t('@type @title has been created.', ['@type' => $type, '@title' => $title]), 'Forum topic was not created');
+      $this->assertNoText("$type $title has been created.", 'Forum topic was not created');
       $this->assertRaw(t('The item %title is a forum container, not a forum.', ['%title' => $forum['name']]), 'Error message was shown');
       return;
     }

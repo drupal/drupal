@@ -208,7 +208,7 @@ class SessionTest extends BrowserTestBase {
     $this->assertSessionCookie(FALSE);
     // @todo Reinstate when REQUEST and RESPONSE events fire for cached pages.
     // $this->assertSessionEmpty(TRUE);
-    $this->assertNoText(t('This is a dummy message.'), 'Message was not cached.');
+    $this->assertNoText('This is a dummy message.', 'Message was not cached.');
     $this->assertEqual($this->drupalGetHeader('X-Drupal-Cache'), 'HIT', 'Page was cached.');
     $this->assertNull($this->drupalGetHeader('Set-Cookie'), 'New session was not started.');
 
@@ -222,7 +222,7 @@ class SessionTest extends BrowserTestBase {
     $this->assertSessionCookie(FALSE);
     // @todo Reinstate when REQUEST and RESPONSE events fire for cached pages.
     // $this->assertSessionEmpty(TRUE);
-    $this->assertNoText(t('This is a dummy message.'), 'The message was not saved.');
+    $this->assertNoText('This is a dummy message.', 'The message was not saved.');
   }
 
   /**

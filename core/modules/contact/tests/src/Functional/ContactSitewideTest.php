@@ -214,7 +214,7 @@ class ContactSitewideTest extends BrowserTestBase {
     $this->drupalLogout();
     $this->drupalGet('contact');
     $this->assertText(t('Your email address'));
-    $this->assertNoText(t('Form'));
+    $this->assertNoText('Form');
     $this->drupalLogin($admin_user);
 
     // Add more forms.
@@ -226,7 +226,7 @@ class ContactSitewideTest extends BrowserTestBase {
 
     // Try adding a form that already exists.
     $this->addContactForm($name, $label, '', '', FALSE);
-    $this->assertNoText(t('Contact form @label has been added.', ['@label' => $label]));
+    $this->assertNoText("Contact form $label has been added.");
     $this->assertRaw(t('The machine-readable name is already in use. It must be unique.'));
 
     $this->drupalLogout();

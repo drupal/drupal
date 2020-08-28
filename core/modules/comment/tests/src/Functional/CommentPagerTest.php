@@ -343,8 +343,8 @@ class CommentPagerTest extends CommentTestBase {
     $account = $this->drupalCreateUser(['administer node display']);
     $this->drupalLogin($account);
     $this->drupalGet('admin/structure/types/manage/article/display');
-    $this->assertNoText(t('Pager ID: @id', ['@id' => 0]), 'No summary for standard pager');
-    $this->assertText(t('Pager ID: @id', ['@id' => 1]));
+    $this->assertNoText('Pager ID: 0', 'No summary for standard pager');
+    $this->assertText('Pager ID: 1');
     $this->drupalPostForm(NULL, [], 'comment_settings_edit');
     // Change default pager to 2.
     $this->drupalPostForm(NULL, ['fields[comment][settings_edit_form][settings][pager_id]' => 2], t('Save'));
@@ -352,7 +352,7 @@ class CommentPagerTest extends CommentTestBase {
     // Revert the changes.
     $this->drupalPostForm(NULL, [], 'comment_settings_edit');
     $this->drupalPostForm(NULL, ['fields[comment][settings_edit_form][settings][pager_id]' => 0], t('Save'));
-    $this->assertNoText(t('Pager ID: @id', ['@id' => 0]), 'No summary for standard pager');
+    $this->assertNoText('Pager ID: 0', 'No summary for standard pager');
 
     $this->drupalLogin($this->adminUser);
 
