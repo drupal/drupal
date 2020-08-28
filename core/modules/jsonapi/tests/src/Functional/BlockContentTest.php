@@ -199,13 +199,6 @@ class BlockContentTest extends ResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  public function testRelated() {
-    $this->markTestSkipped('Remove this in https://www.drupal.org/project/drupal/issues/2940339');
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function testCollectionFilterAccess() {
     $this->entity->setPublished()->save();
     $this->doTestCollectionFilterAccessForPublishableEntities('info', NULL, 'administer blocks');

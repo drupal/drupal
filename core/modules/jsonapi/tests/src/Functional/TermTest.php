@@ -472,13 +472,6 @@ class TermTest extends ResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  public function testRelated() {
-    $this->markTestSkipped('Remove this in https://www.drupal.org/project/drupal/issues/2940339');
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function testCollectionFilterAccess() {
     $this->doTestCollectionFilterAccessBasedOnPermissions('name', 'access content');
   }
