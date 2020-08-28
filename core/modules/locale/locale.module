@@ -358,7 +358,7 @@ function locale_cron() {
   // Update translations only when an update frequency was set by the admin
   // and a translatable language was set.
   // Update tasks are added to the queue here but processed by Drupal's cron.
-  if ($frequency = \Drupal::config('locale.settings')->get('translation.update_interval_days') && locale_translatable_language_list()) {
+  if (\Drupal::config('locale.settings')->get('translation.update_interval_days') && locale_translatable_language_list()) {
     module_load_include('translation.inc', 'locale');
     locale_cron_fill_queue();
   }
