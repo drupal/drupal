@@ -6,6 +6,7 @@ use Drupal\Component\Assertion\Inspector;
 use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Component\Serialization\Json;
 use Drupal\Core\Cache\CacheableMetadata;
+use Drupal\Core\Cache\CacheableResponseInterface;
 use Drupal\Core\Config\Entity\ConfigEntityInterface;
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
@@ -26,6 +27,7 @@ use Drupal\Core\Render\RendererInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Url;
 use Drupal\jsonapi\Access\EntityAccessChecker;
+use Drupal\jsonapi\CacheableResourceResponse;
 use Drupal\jsonapi\Context\FieldResolver;
 use Drupal\jsonapi\Entity\EntityValidationTrait;
 use Drupal\jsonapi\Access\TemporaryQueryGuard;
@@ -279,7 +281,6 @@ class EntityResource {
     // we should send "Location" header to the frontend.
     if ($resource_type->isLocatable()) {
       $url = $resource_object->toUrl()->setAbsolute()->toString(TRUE);
-      $response->addCacheableDependency($url);
       $response->headers->set('Location', $url->getGeneratedUrl());
     }
 
@@ -536,7 +537,9 @@ class EntityResource {
 
     // $response does not contain the entity list cache tag. We add the
     // cacheable metadata for the finite list of entities in the relationship.
-    $response->addCacheableDependency($entity);
+    if ($response instanceof CacheableResponseInterface) {
+      $response->addCacheableDependency($entity);
+    }
 
     return $response;
   }
@@ -567,7 +570,9 @@ class EntityResource {
     $relationship = Relationship::createFromEntityReferenceField($resource_object, $field_list);
     $response = $this->buildWrappedResponse($relationship, $request, $this->getIncludes($request, $resource_object), $response_code);
     // Add the host entity as a cacheable dependency.
-    $response->addCacheableDependency($entity);
+    if ($response instanceof CacheableResponseInterface) {
+      $response->addCacheableDependency($entity);
+    }
     return $response;
   }
 
@@ -994,7 +999,11 @@ class EntityResource {
       $self_link = new Link(new CacheableMetadata(), self::getRequestLink($request), 'self');
       $links = $links->withLink('self', $self_link);
     }
-    $response = new ResourceResponse(new JsonApiDocumentTopLevel($data, $includes, $links, $meta), $response_code, $headers);
+    $document = new JsonApiDocumentTopLevel($data, $includes, $links, $meta);
+    if (!$request->isMethodCacheable()) {
+      return new ResourceResponse($document, $response_code, $headers);
+    }
+    $response = new CacheableResourceResponse($document, $response_code, $headers);
     $cacheability = (new CacheableMetadata())->addCacheContexts([
       // Make sure that different sparse fieldsets are cached differently.
       'url.query_args:fields',

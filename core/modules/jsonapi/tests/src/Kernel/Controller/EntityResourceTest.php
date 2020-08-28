@@ -3,6 +3,7 @@
 namespace Drupal\Tests\jsonapi\Kernel\Controller;
 
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
+use Drupal\jsonapi\CacheableResourceResponse;
 use Drupal\jsonapi\ResourceType\ResourceType;
 use Drupal\jsonapi\JsonApiResource\Data;
 use Drupal\jsonapi\JsonApiResource\JsonApiDocumentTopLevel;
@@ -200,6 +201,7 @@ class EntityResourceTest extends JsonapiKernelTestBase {
     $response = $entity_resource->getCollection($resource_type, $request);
 
     // Assertions.
+    $this->assertInstanceOf(CacheableResourceResponse::class, $response);
     $this->assertInstanceOf(JsonApiDocumentTopLevel::class, $response->getResponseData());
     $this->assertInstanceOf(Data::class, $response->getResponseData()->getData());
     $data = $response->getResponseData()->getData();
@@ -220,6 +222,7 @@ class EntityResourceTest extends JsonapiKernelTestBase {
     $response = $this->entityResource->getCollection($resource_type, $request);
 
     // Assertions.
+    $this->assertInstanceOf(CacheableResourceResponse::class, $response);
     $this->assertInstanceOf(JsonApiDocumentTopLevel::class, $response->getResponseData());
     $this->assertInstanceOf(Data::class, $response->getResponseData()->getData());
     $this->assertEquals(0, $response->getResponseData()->getData()->count());

@@ -1299,4 +1299,67 @@ class JsonApiRegressionTest extends JsonApiFunctionalTestBase {
     $this->assertSame(200, $response->getStatusCode());
   }
 
+  /**
+   * Tests that caching isn't happening for non-cacheable methods.
+   *
+   * @see https://www.drupal.org/project/drupal/issues/3072076
+   */
+  public function testNonCacheableMethods() {
+    $this->container->get('module_installer')->install([
+      'jsonapi_test_non_cacheable_methods',
+    ], TRUE);
+    $this->config('jsonapi.settings')->set('read_only', FALSE)->save(TRUE);
+
+    $node = Node::create([
+      'type' => 'article',
+      'title' => 'Llama non-cacheable',
+    ]);
+    $node->save();
+
+    $user = $this->drupalCreateUser([
+      'access content',
+      'create article content',
+      'edit any article content',
+      'delete any article content',
+    ]);
+    $base_request_options = [
+      RequestOptions::HEADERS => [
+        'Content-Type' => 'application/vnd.api+json',
+        'Accept' => 'application/vnd.api+json',
+      ],
+      RequestOptions::AUTH => [$user->getAccountName(), $user->pass_raw],
+    ];
+    $methods = [
+      'HEAD',
+      'GET',
+      'PATCH',
+      'DELETE',
+    ];
+    $non_post_request_options = $base_request_options + [
+      RequestOptions::JSON => [
+        'data' => [
+          'type' => 'node--article',
+          'id' => $node->uuid(),
+        ],
+      ],
+    ];
+    foreach ($methods as $method) {
+      $response = $this->request($method, Url::fromUri('internal:/jsonapi/node/article/' . $node->uuid()), $non_post_request_options);
+      $this->assertSame($method === 'DELETE' ? 204 : 200, $response->getStatusCode());
+    }
+
+    $post_request_options = $base_request_options + [
+      RequestOptions::JSON => [
+        'data' => [
+          'type' => 'node--article',
+          'attributes' => [
+            'title' => 'Llama non-cacheable',
+          ],
+        ],
+      ],
+    ];
+    $response = $this->request('POST', Url::fromUri('internal:/jsonapi/node/article'), $post_request_options);
+    $this->assertSame(201, $response->getStatusCode());
+  }
+
 }
