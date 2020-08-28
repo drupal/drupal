@@ -42,6 +42,7 @@ class ExceptionLoggingSubscriber implements EventSubscriberInterface {
     // why access was denied.
     $exception = $event->getThrowable();
     $error = Error::decodeException($exception);
+    unset($error['@backtrace_string']);
     $error['@uri'] = $event->getRequest()->getRequestUri();
     $this->logger->get('access denied')->warning('Path: @uri. %type: @message in %function (line %line of %file).', $error);
   }
