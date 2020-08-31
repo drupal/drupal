@@ -181,6 +181,9 @@ class TaxonomyIndexTid extends ManyToOne {
 
         if ($tree) {
           foreach ($tree as $term) {
+            if (!$term->isPublished()) {
+              continue;
+            }
             $choice = new \stdClass();
             $choice->option = [$term->id() => str_repeat('-', $term->depth) . \Drupal::service('entity.repository')->getTranslationFromContext($term)->label()];
             $options[] = $choice;
@@ -190,6 +193,7 @@ class TaxonomyIndexTid extends ManyToOne {
       else {
         $options = [];
         $query = \Drupal::entityQuery('taxonomy_term')
+          ->condition('status', 1)
           // @todo Sorting on vocabulary properties -
           //   https://www.drupal.org/node/1821274.
           ->sort('weight')
