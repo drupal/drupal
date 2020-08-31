@@ -174,4 +174,53 @@ class UserEditTest extends BrowserTestBase {
     $this->assertSession()->statusCodeEquals(403);
   }
 
+  /**
+   * Tests that a user is able to change site language.
+   */
+  public function testUserChangeSiteLanguage() {
+    // Install these modules here as these aren't needed for other test methods.
+    \Drupal::service('module_installer')->install([
+      'content_translation',
+      'language',
+    ]);
+    // Create and login as an admin user to add a new language and enable
+    // translation for user accounts.
+    $adminUser = $this->drupalCreateUser([
+      'administer account settings',
+      'administer languages',
+      'administer content translation',
+      'administer users',
+      'translate any entity',
+    ]);
+    $this->drupalLogin($adminUser);
+
+    // Add a new language into the system.
+    $edit = [
+      'predefined_langcode' => 'fr',
+    ];
+    $this->drupalPostForm('admin/config/regional/language/add', $edit, 'Add language');
+    $this->assertSession()->pageTextContains('French');
+
+    // Enable translation for user accounts.
+    $edit = [
+      'language[content_translation]' => 1,
+    ];
+    $this->drupalPostForm('admin/config/people/accounts', $edit, 'Save configuration');
+    $this->assertSession()->pageTextContains('The configuration options have been saved.');
+
+    // Create a regular user for whom translation will be enabled.
+    $webUser = $this->drupalCreateUser();
+
+    // Create a translation for a regular user account.
+    $this->drupalPostForm('user/' . $webUser->id() . '/translations/add/en/fr', [], 'Save');
+    $this->assertSession()->pageTextContains('The changes have been saved.');
+
+    // Update the site language of the user account.
+    $edit = [
+      'preferred_langcode' => 'fr',
+    ];
+    $this->drupalPostForm('user/' . $webUser->id() . '/edit', $edit, 'Save');
+    $this->assertSession()->statusCodeEquals(200);
+  }
+
 }
