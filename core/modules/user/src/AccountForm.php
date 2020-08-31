@@ -272,8 +272,11 @@ abstract class AccountForm extends ContentEntityForm implements TrustedCallbackI
     // separately, assume that the user profile data is in the user's preferred
     // language. This entity builder provides that synchronization. For
     // use-cases where this synchronization is not desired, a module can alter
-    // or remove this item.
-    $form['#entity_builders']['sync_user_langcode'] = '::syncUserLangcode';
+    // or remove this item. Sync user langcode only when a user registers and
+    // not when a user is updated or translated.
+    if ($register) {
+      $form['#entity_builders']['sync_user_langcode'] = '::syncUserLangcode';
+    }
 
     $system_date_config = \Drupal::config('system.date');
     $form['timezone'] = [
