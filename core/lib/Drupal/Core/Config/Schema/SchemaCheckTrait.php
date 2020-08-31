@@ -79,7 +79,15 @@ trait SchemaCheckTrait {
    */
   protected function checkValue($key, $value) {
     $error_key = $this->configName . ':' . $key;
+    /** @var \Drupal\Core\TypedData\TypedDataInterface $element */
     $element = $this->schema->get($key);
+
+    // Check if this type has been deprecated.
+    $data_definition = $element->getDataDefinition();
+    if (!empty($data_definition['deprecated'])) {
+      @trigger_error($data_definition['deprecated'], E_USER_DEPRECATED);
+    }
+
     if ($element instanceof Undefined) {
       return [$error_key => 'missing schema'];
     }
