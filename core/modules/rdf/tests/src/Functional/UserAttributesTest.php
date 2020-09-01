@@ -20,7 +20,7 @@ class UserAttributesTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = ['rdf', 'node'];
+  public static $modules = ['rdf', 'node', 'user_hooks_test'];
 
   /**
    * {@inheritdoc}
@@ -47,6 +47,9 @@ class UserAttributesTest extends BrowserTestBase {
 
     // Prepares commonly used URIs.
     $this->baseUri = Url::fromRoute('<front>', [], ['absolute' => TRUE])->toString();
+
+    // Set to test the altered display name.
+    \Drupal::state()->set('user_hooks_test_user_format_name_alter', TRUE);
   }
 
   /**
@@ -87,7 +90,7 @@ class UserAttributesTest extends BrowserTestBase {
       // User name.
       $expected_value = [
         'type' => 'literal',
-        'value' => $author->getAccountName(),
+        'value' => $author->getDisplayName(),
       ];
       $this->assertTrue($this->hasRdfProperty($this->getSession()->getPage()->getContent(), $this->baseUri, $account_uri, 'http://xmlns.com/foaf/0.1/name', $expected_value), 'User name found in RDF output (foaf:name).');
 
@@ -108,7 +111,7 @@ class UserAttributesTest extends BrowserTestBase {
       // User name.
       $expected_value = [
         'type' => 'literal',
-        'value' => $author->getAccountName(),
+        'value' => $author->getDisplayName(),
       ];
       $this->assertTrue($this->hasRdfProperty($this->getSession()->getPage()->getContent(), $this->baseUri, $account_uri, 'http://xmlns.com/foaf/0.1/name', $expected_value), 'User name found in RDF output (foaf:name).');
     }
