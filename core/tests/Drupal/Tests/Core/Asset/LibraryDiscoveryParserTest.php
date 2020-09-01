@@ -644,6 +644,24 @@ class LibraryDiscoveryParserTest extends UnitTestCase {
     $this->assertEquals('libraries/third_party_library/css/example.css', $library['css'][0]['data']);
   }
 
+  /**
+   * @covers ::parseLibraryInfo
+   */
+  public function testEmptyLibraryFile() {
+    $this->moduleHandler->expects($this->atLeastOnce())
+      ->method('moduleExists')
+      ->with('empty')
+      ->will($this->returnValue(TRUE));
+
+    $path = __DIR__ . '/library_test_files';
+    $path = substr($path, strlen($this->root) + 1);
+    $this->libraryDiscoveryParser->setPaths('module', 'empty', $path);
+
+    $libraries = $this->libraryDiscoveryParser->buildByExtension('empty');
+
+    $this->assertEquals([], $libraries);
+  }
+
 }
 
 /**
