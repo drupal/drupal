@@ -1217,6 +1217,7 @@ pagetop
 pageviews
 pagina
 pangram
+paragonie
 paramconverter
 parens
 parentlist
