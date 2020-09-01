@@ -341,7 +341,7 @@ class LibraryDiscoveryParser {
     $library_file = $path . '/' . $extension . '.libraries.yml';
     if (file_exists($this->root . '/' . $library_file)) {
       try {
-        $libraries = Yaml::decode(file_get_contents($this->root . '/' . $library_file));
+        $libraries = Yaml::decode(file_get_contents($this->root . '/' . $library_file)) ?? [];
       }
       catch (InvalidDataTypeException $e) {
         // Rethrow a more helpful exception to provide context.
