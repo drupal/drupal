@@ -2,7 +2,6 @@
 
 namespace Drupal\Tests\book\Unit;
 
-use Drupal\Tests\AssertHelperTrait;
 use Drupal\Tests\UnitTestCase;
 
 /**
@@ -10,8 +9,6 @@ use Drupal\Tests\UnitTestCase;
  * @group book
  */
 class BookUninstallValidatorTest extends UnitTestCase {
-
-  use AssertHelperTrait;
 
   /**
    * @var \Drupal\book\BookUninstallValidator|\PHPUnit\Framework\MockObject\MockObject
@@ -42,7 +39,7 @@ class BookUninstallValidatorTest extends UnitTestCase {
     $module = 'not_book';
     $expected = [];
     $reasons = $this->bookUninstallValidator->validate($module);
-    $this->assertSame($expected, $this->castSafeStrings($reasons));
+    $this->assertEquals($expected, $reasons);
   }
 
   /**
@@ -59,7 +56,7 @@ class BookUninstallValidatorTest extends UnitTestCase {
     $module = 'book';
     $expected = [];
     $reasons = $this->bookUninstallValidator->validate($module);
-    $this->assertSame($expected, $this->castSafeStrings($reasons));
+    $this->assertEquals($expected, $reasons);
   }
 
   /**
@@ -76,7 +73,7 @@ class BookUninstallValidatorTest extends UnitTestCase {
     $module = 'book';
     $expected = ['To uninstall Book, delete all content that has the Book content type'];
     $reasons = $this->bookUninstallValidator->validate($module);
-    $this->assertSame($expected, $this->castSafeStrings($reasons));
+    $this->assertEquals($expected, $reasons);
   }
 
   /**
@@ -92,7 +89,7 @@ class BookUninstallValidatorTest extends UnitTestCase {
     $module = 'book';
     $expected = ['To uninstall Book, delete all content that is part of a book'];
     $reasons = $this->bookUninstallValidator->validate($module);
-    $this->assertSame($expected, $this->castSafeStrings($reasons));
+    $this->assertEquals($expected, $reasons);
   }
 
 }

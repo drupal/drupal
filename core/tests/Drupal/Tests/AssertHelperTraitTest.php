@@ -8,12 +8,14 @@ use Drupal\Core\Render\Markup;
  * @coversDefaultClass \Drupal\Tests\AssertHelperTrait
  * @group simpletest
  * @group Tests
+ * @group legacy
  */
 class AssertHelperTraitTest extends UnitTestCase {
 
   /**
    * @covers ::castSafeStrings
    * @dataProvider providerCastSafeStrings
+   * @expectDeprecation AssertHelperTrait::castSafeStrings() is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. There is no replacement; assertEquals() will automatically cast MarkupInterface to strings when needed. See https://www.drupal.org/node/3123638
    */
   public function testCastSafeStrings($expected, $value) {
     $class = new AssertHelperTestClass();

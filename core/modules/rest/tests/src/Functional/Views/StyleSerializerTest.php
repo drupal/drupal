@@ -478,7 +478,7 @@ class StyleSerializerTest extends ViewTestBase {
       $expected[] = $expected_row;
     }
 
-    $this->assertIdentical(Json::decode($this->drupalGet('test/serialize/field', ['query' => ['_format' => 'json']])), $this->castSafeStrings($expected));
+    $this->assertEquals($expected, Json::decode($this->drupalGet('test/serialize/field', ['query' => ['_format' => 'json']])));
 
     // Test a random aliases for fields, they should be replaced.
     $alias_map = [
@@ -513,7 +513,7 @@ class StyleSerializerTest extends ViewTestBase {
       $expected[] = $expected_row;
     }
 
-    $this->assertIdentical(Json::decode($this->drupalGet('test/serialize/field', ['query' => ['_format' => 'json']])), $this->castSafeStrings($expected));
+    $this->assertEquals($expected, Json::decode($this->drupalGet('test/serialize/field', ['query' => ['_format' => 'json']])));
   }
 
   /**

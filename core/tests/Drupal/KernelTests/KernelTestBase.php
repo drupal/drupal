@@ -16,7 +16,6 @@ use Drupal\Core\Extension\ExtensionDiscovery;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Site\Settings;
 use Drupal\Core\Test\TestDatabase;
-use Drupal\Tests\AssertHelperTrait;
 use Drupal\Tests\ConfigTestTrait;
 use Drupal\Tests\RandomGeneratorTrait;
 use Drupal\Tests\TestRequirementsTrait;
@@ -76,7 +75,6 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
 
   use AssertLegacyTrait;
   use AssertContentTrait;
-  use AssertHelperTrait;
   use RandomGeneratorTrait;
   use ConfigTestTrait;
   use TestRequirementsTrait;

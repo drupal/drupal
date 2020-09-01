@@ -17,7 +17,6 @@ use Drupal\Core\Url;
 trait UiHelperTrait {
 
   use BrowserHtmlDebugTrait;
-  use AssertHelperTrait;
   use RefreshVariablesTrait;
 
   /**
@@ -197,9 +196,6 @@ trait UiHelperTrait {
     }
     if ($edit === NULL) {
       $edit = [];
-    }
-    if (is_array($edit)) {
-      $edit = $this->castSafeStrings($edit);
     }
 
     if (isset($path)) {

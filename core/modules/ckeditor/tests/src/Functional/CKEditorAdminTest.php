@@ -112,7 +112,7 @@ class CKEditorAdminTest extends BrowserTestBase {
       ],
       'plugins' => ['language' => ['language_list' => 'un']],
     ];
-    $this->assertIdentical($this->castSafeStrings($ckeditor->getDefaultSettings()), $expected_default_settings);
+    $this->assertEquals($expected_default_settings, $ckeditor->getDefaultSettings());
 
     // Keep the "CKEditor" editor selected and click the "Configure" button.
     $this->drupalPostForm(NULL, $edit, 'editor_configure');
@@ -300,7 +300,7 @@ class CKEditorAdminTest extends BrowserTestBase {
     $expected_settings['plugins']['stylescombo']['styles'] = '';
     $editor = Editor::load('amazing_format');
     $this->assertInstanceOf(Editor::class, $editor);
-    $this->assertEqual($this->castSafeStrings($expected_settings), $this->castSafeStrings($editor->getSettings()), 'The Editor config entity has the correct settings.');
+    $this->assertEquals($expected_settings, $editor->getSettings(), 'The Editor config entity has the correct settings.');
   }
 
 }

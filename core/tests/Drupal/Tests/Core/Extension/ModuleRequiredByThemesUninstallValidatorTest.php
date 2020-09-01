@@ -5,7 +5,6 @@ namespace Drupal\Tests\Core\Extension;
 use Drupal\Core\Extension\ModuleExtensionList;
 use Drupal\Core\Extension\ModuleRequiredByThemesUninstallValidator;
 use Drupal\Core\Extension\ThemeExtensionList;
-use Drupal\Tests\AssertHelperTrait;
 use Drupal\Tests\UnitTestCase;
 
 /**
@@ -13,8 +12,6 @@ use Drupal\Tests\UnitTestCase;
  * @group Extension
  */
 class ModuleRequiredByThemesUninstallValidatorTest extends UnitTestCase {
-
-  use AssertHelperTrait;
 
   /**
    * Instance of ModuleRequiredByThemesUninstallValidator.
@@ -104,7 +101,7 @@ class ModuleRequiredByThemesUninstallValidatorTest extends UnitTestCase {
     ];
 
     $reasons = $this->moduleRequiredByThemeUninstallValidator->validate($module);
-    $this->assertSame($expected, $this->castSafeStrings($reasons));
+    $this->assertEquals($expected, $reasons);
   }
 
   /**
@@ -151,7 +148,7 @@ class ModuleRequiredByThemesUninstallValidatorTest extends UnitTestCase {
     ];
 
     $reasons = $this->moduleRequiredByThemeUninstallValidator->validate($module);
-    $this->assertSame($expected, $this->castSafeStrings($reasons));
+    $this->assertEquals($expected, $reasons);
   }
 
 }
