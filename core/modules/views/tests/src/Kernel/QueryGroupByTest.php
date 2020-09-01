@@ -294,7 +294,7 @@ class QueryGroupByTest extends ViewsKernelTestBase {
   }
 
   /**
-   * Tests groupby with a field not existing on some bundle.
+   * Tests groupby with a non-existent field on some bundle.
    */
   public function testGroupByWithFieldsNotExistingOnBundle() {
     $field_storage = FieldStorageConfig::create([

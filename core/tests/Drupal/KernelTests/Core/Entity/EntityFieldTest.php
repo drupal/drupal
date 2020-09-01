@@ -206,7 +206,7 @@ class EntityFieldTest extends EntityKernelTestBase {
     $this->assertTrue(isset($entity->name[0]), new FormattableMarkup('%entity_type: Name string item is set.', ['%entity_type' => $entity_type]));
     $this->assertFalse(isset($entity->name[1]), new FormattableMarkup('%entity_type: Second name string item is not set as it does not exist', ['%entity_type' => $entity_type]));
     $this->assertTrue(isset($entity->name), new FormattableMarkup('%entity_type: Name field is set.', ['%entity_type' => $entity_type]));
-    $this->assertFalse(isset($entity->nameInvalid), new FormattableMarkup('%entity_type: Not existing field is not set.', ['%entity_type' => $entity_type]));
+    $this->assertFalse(isset($entity->nameInvalid), new FormattableMarkup('%entity_type: Non-existent field is not set.', ['%entity_type' => $entity_type]));
 
     unset($entity->name[0]);
     $this->assertFalse(isset($entity->name[0]), new FormattableMarkup('%entity_type: Name field item is not set.', ['%entity_type' => $entity_type]));

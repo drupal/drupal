@@ -190,7 +190,7 @@ class DbLogTest extends BrowserTestBase {
     // Login the admin user.
     $this->drupalLogin($this->adminUser);
 
-    // Try to read details of not existing event.
+    // Try to read details of non-existent event.
     $this->drupalGet('admin/reports/dblog/event/999999');
     // Verify 404 response.
     $this->assertSession()->statusCodeEquals(404);

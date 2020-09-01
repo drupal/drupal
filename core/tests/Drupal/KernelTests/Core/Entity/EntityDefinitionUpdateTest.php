@@ -375,7 +375,7 @@ class EntityDefinitionUpdateTest extends EntityKernelTestBase {
   /**
    * Tests creating and deleting a base field if entities exist.
    *
-   * This tests deletion when there are existing entities, but not existing data
+   * This tests deletion when there are existing entities, but non-existent data
    * for the field being deleted.
    *
    * @see testBaseFieldDeleteWithExistingData()
@@ -431,7 +431,7 @@ class EntityDefinitionUpdateTest extends EntityKernelTestBase {
   /**
    * Tests creating and deleting a bundle field if entities exist.
    *
-   * This tests deletion when there are existing entities, but not existing data
+   * This tests deletion when there are existing entities, but non-existent data
    * for the field being deleted.
    *
    * @see testBundleFieldDeleteWithExistingData()
