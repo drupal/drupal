@@ -1,0 +1,6 @@
+image_lazy_load_test:
+  path: /image-lazy-load-test
+  defaults:
+    _controller: Drupal\image_lazy_load_test\Controller\ImageLazyLoadController::renderImage
+  requirements:
+    _access: 'TRUE'
