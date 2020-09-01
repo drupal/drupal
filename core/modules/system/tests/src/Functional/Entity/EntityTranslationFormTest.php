@@ -99,8 +99,7 @@ class EntityTranslationFormTest extends BrowserTestBase {
     $this->assertText(t('Basic page @title has been created.', ['@title' => $edit['title[0][value]']]), 'Basic page created.');
 
     // Verify that the creation message contains a link to a node.
-    $view_link = $this->xpath('//div[@class="messages"]//a[contains(@href, :href)]', [':href' => 'node/']);
-    $this->assert(isset($view_link), 'The message area contains a link to a node');
+    $this->assertSession()->elementExists('xpath', '//div[@data-drupal-messages]//a[contains(@href, "node/")]');
 
     // Check to make sure the node was created.
     $node = $this->drupalGetNodeByTitle($edit['title[0][value]']);

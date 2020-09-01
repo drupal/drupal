@@ -277,8 +277,7 @@ class TermTest extends TaxonomyTestBase {
     $this->assertText(t('@type @title has been created.', ['@type' => t('Article'), '@title' => $edit['title[0][value]']]), 'The node was created successfully.');
 
     // Verify that the creation message contains a link to a node.
-    $view_link = $this->xpath('//div[@class="messages"]//a[contains(@href, :href)]', [':href' => 'node/']);
-    $this->assert(isset($view_link), 'The message area contains a link to a node');
+    $this->assertSession()->elementExists('xpath', '//div[@data-drupal-messages]//a[contains(@href, "node/")]');
 
     foreach ($terms as $term) {
       $this->assertText($term, 'The term was saved and appears on the node page.');

@@ -418,13 +418,19 @@ class NodeTranslationUITest extends ContentTranslationUITestBase {
         $this->drupalGet($urls[$langcode]);
         foreach ($urls as $alternate_langcode => $language_url) {
           // Retrieve desired link elements from the HTML head.
-          $links = $this->xpath('head/link[@rel = "alternate" and @href = :href and @hreflang = :hreflang]',
-             [':href' => $language_url->toString(), ':hreflang' => $alternate_langcode]);
+          $xpath = $this->assertSession()->buildXPathQuery('head/link[@rel = "alternate" and @href = :href and @hreflang = :hreflang]', [
+            ':href' => $language_url->toString(),
+            ':hreflang' => $alternate_langcode,
+          ]);
           if ($translations[$alternate_langcode]->isPublished()) {
-            $this->assert(isset($links[0]), new FormattableMarkup('The %langcode node translation has the correct alternate hreflang link for %alternate_langcode: %link.', ['%langcode' => $langcode, '%alternate_langcode' => $alternate_langcode, '%link' => $url->toString()]));
+            // Verify that the node translation has the correct alternate
+            // hreflang link for the alternate langcode.
+            $this->assertSession()->elementExists('xpath', $xpath);
           }
           else {
-            $this->assertFalse(isset($links[0]), new FormattableMarkup('The %langcode node translation has an hreflang link for unpublished %alternate_langcode translation: %link.', ['%langcode' => $langcode, '%alternate_langcode' => $alternate_langcode, '%link' => $url->toString()]));
+            // Verify that the node translation does not have an alternate
+            // hreflang link for the alternate langcode.
+            $this->assertSession()->elementNotExists('xpath', $xpath);
           }
         }
       }

@@ -67,7 +67,7 @@ class ConfigExportUITest extends BrowserTestBase {
     $file_path = $temp_directory . '/config.tar.gz';
     $archiver = new Tar($file_path);
     $archive_contents = $archiver->listContents();
-    $this->assert(!empty($archive_contents), 'Downloaded archive file is not empty.');
+    $this->assertNotEmpty($archive_contents, 'Downloaded archive file is not empty.');
 
     // Prepare the list of config files from active storage, see
     // \Drupal\config\Controller\ConfigController::downloadExport().

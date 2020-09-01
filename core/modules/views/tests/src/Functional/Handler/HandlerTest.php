@@ -234,14 +234,15 @@ class HandlerTest extends ViewTestBase {
    *   The type of assertion - examples are "Browser", "PHP".
    *
    * @return bool
-   *   TRUE if the assertion succeeded, FALSE otherwise.
+   *   TRUE if the assertion succeeded.
    */
   protected function assertEqualValue($expected, $handler, $message = '', $group = 'Other') {
     if (empty($message)) {
       $message = t('Comparing @first and @second', ['@first' => implode(',', $expected), '@second' => implode(',', $handler->value)]);
     }
 
-    return $this->assert($expected == $handler->value, $message, $group);
+    $this->assertEquals($expected, $handler->value, $message);
+    return TRUE;
   }
 
   /**

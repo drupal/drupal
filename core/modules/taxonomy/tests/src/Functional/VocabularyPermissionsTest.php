@@ -246,8 +246,7 @@ class VocabularyPermissionsTest extends TaxonomyTestBase {
     $this->assertText(t('Created new term @name.', ['@name' => $edit['name[0][value]']]), 'Term created successfully.');
 
     // Verify that the creation message contains a link to a term.
-    $view_link = $this->xpath('//div[@class="messages"]//a[contains(@href, :href)]', [':href' => 'term/']);
-    $this->assert(isset($view_link), 'The message area contains a link to a term');
+    $this->assertSession()->elementExists('xpath', '//div[@data-drupal-messages]//a[contains(@href, "term/")]');
 
     $terms = \Drupal::entityTypeManager()
       ->getStorage('taxonomy_term')
@@ -321,8 +320,7 @@ class VocabularyPermissionsTest extends TaxonomyTestBase {
     $this->assertText(t('Updated term @name.', ['@name' => $edit['name[0][value]']]), 'Term updated successfully.');
 
     // Verify that the update message contains a link to a term.
-    $view_link = $this->xpath('//div[@class="messages"]//a[contains(@href, :href)]', [':href' => 'term/']);
-    $this->assert(isset($view_link), 'The message area contains a link to a term');
+    $this->assertSession()->elementExists('xpath', '//div[@data-drupal-messages]//a[contains(@href, "term/")]');
 
     // Ensure the term cannot be deleted.
     $this->drupalGet('taxonomy/term/' . $term->id() . '/delete');

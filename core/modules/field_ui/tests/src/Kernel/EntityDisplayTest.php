@@ -694,7 +694,7 @@ class EntityDisplayTest extends KernelTestBase {
    *   The entity display object to get dependencies from.
    *
    * @return bool
-   *   TRUE if the assertion succeeded, FALSE otherwise.
+   *   TRUE if the assertion succeeded.
    */
   protected function assertDependencyHelper($assertion, $type, $key, EntityDisplayInterface $display) {
     $all_dependencies = $display->getDependencies();
@@ -703,7 +703,8 @@ class EntityDisplayTest extends KernelTestBase {
     $value = $assertion ? in_array($key, $dependencies) : !in_array($key, $dependencies);
     $args = ['@context' => $context, '@id' => $display->id(), '@type' => $type, '@key' => $key];
     $message = $assertion ? new FormattableMarkup("@context display '@id' depends on @type '@key'.", $args) : new FormattableMarkup("@context display '@id' do not depend on @type '@key'.", $args);
-    return $this->assert($value, $message);
+    $this->assertTrue($value, $message);
+    return TRUE;
   }
 
 }

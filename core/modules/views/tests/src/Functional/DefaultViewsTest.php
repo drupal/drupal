@@ -150,7 +150,6 @@ class DefaultViewsTest extends ViewTestBase {
           $view->preExecute($this->viewArgMap[$name]);
         }
 
-        $this->assert(TRUE, new FormattableMarkup('View @view will be executed.', ['@view' => $view->storage->id()]));
         $view->execute();
 
         $tokens = ['@name' => $name, '@display_id' => $display_id];

@@ -61,13 +61,10 @@ class AggregatorRenderingTest extends AggregatorTestBase {
 
     // Confirm items appear as links.
     $items = $this->container->get('entity_type.manager')->getStorage('aggregator_item')->loadByFeed($feed->id(), 1);
-    $links = $this->xpath('//a[@href = :href]', [':href' => reset($items)->getLink()]);
-    $this->assert(isset($links[0]), 'Item link found.');
+    $this->assertSession()->linkByHrefExists(reset($items)->getLink());
 
     // Find the expected read_more link.
-    $href = $feed->toUrl()->toString();
-    $links = $this->xpath('//a[@href = :href]', [':href' => $href]);
-    $this->assert(isset($links[0]), new FormattableMarkup('Link to href %href found.', ['%href' => $href]));
+    $this->assertSession()->linkByHrefExists($feed->toUrl()->toString());
     $this->assertSession()->responseHeaderContains('X-Drupal-Cache-Tags', 'aggregator_feed:' . $feed->id());
 
     // Visit that page.

@@ -171,16 +171,14 @@ class ContactSitewideTest extends BrowserTestBase {
     $this->assertText(t('Contact form @label has been added.', ['@label' => $label]));
 
     // Verify that the creation message contains a link to a contact form.
-    $view_link = $this->xpath('//div[@class="messages"]//a[contains(@href, :href)]', [':href' => 'contact/']);
-    $this->assert(isset($view_link), 'The message area contains a link to a contact form.');
+    $this->assertSession()->elementExists('xpath', '//div[@data-drupal-messages]//a[contains(@href, "contact/")]');
 
     // Create first valid form.
     $this->addContactForm($id = mb_strtolower($this->randomMachineName(16)), $label = $this->randomMachineName(16), implode(',', [$recipients[0]]), '', TRUE);
     $this->assertText(t('Contact form @label has been added.', ['@label' => $label]));
 
     // Verify that the creation message contains a link to a contact form.
-    $view_link = $this->xpath('//div[@class="messages"]//a[contains(@href, :href)]', [':href' => 'contact/']);
-    $this->assert(isset($view_link), 'The message area contains a link to a contact form.');
+    $this->assertSession()->elementExists('xpath', '//div[@data-drupal-messages]//a[contains(@href, "contact/")]');
 
     // Check that the form was created in site default language.
     $langcode = $this->config('contact.form.' . $id)->get('langcode');

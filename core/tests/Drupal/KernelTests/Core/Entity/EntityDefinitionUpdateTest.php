@@ -418,8 +418,8 @@ class EntityDefinitionUpdateTest extends EntityKernelTestBase {
     $entity->delete();
     $this->removeBaseField();
     $this->applyEntityUpdates();
-    $assert = !$schema_handler->fieldExists('entity_test_update', 'new_base_field__shape') && !$schema_handler->fieldExists('entity_test_update', 'new_base_field__color');
-    $this->assert($assert, 'Columns removed from the shared table for new_base_field.');
+    $this->assertFalse($schema_handler->fieldExists('entity_test_update', 'new_base_field__shape'), 'Shape column should be removed from the shared table for new_base_field.');
+    $this->assertFalse($schema_handler->fieldExists('entity_test_update', 'new_base_field__color'), 'Color column should be removed from the shared table for new_base_field.');
     $this->addBaseField('shape_required');
     $this->applyEntityUpdates();
     $assert = $schema_handler->fieldExists('entity_test_update', 'new_base_field__shape') && $schema_handler->fieldExists('entity_test_update', 'new_base_field__color');

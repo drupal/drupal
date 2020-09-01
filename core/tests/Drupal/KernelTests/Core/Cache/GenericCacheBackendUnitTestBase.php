@@ -311,10 +311,10 @@ abstract class GenericCacheBackendUnitTestBase extends KernelTestBase {
     $cids = $reference;
     $ret = $backend->getMultiple($cids);
     // Test return - ensure it contains existing cache ids.
-    $this->assert(isset($ret['test2']), "Existing cache id test2 is set.");
-    $this->assert(isset($ret['test3']), "Existing cache id test3 is set.");
-    $this->assert(isset($ret['test6']), "Existing cache id test6 is set.");
-    $this->assert(isset($ret['test7']), "Existing cache id test7 is set.");
+    $this->assertArrayHasKey('test2', $ret, "Existing cache id test2 is set.");
+    $this->assertArrayHasKey('test3', $ret, "Existing cache id test3 is set.");
+    $this->assertArrayHasKey('test6', $ret, "Existing cache id test6 is set.");
+    $this->assertArrayHasKey('test7', $ret, "Existing cache id test7 is set.");
     // Test return - ensure that objects has expected properties.
     $this->assertTrue($ret['test2']->valid, 'Item is marked as valid.');
     $this->assertTrue($ret['test2']->created >= REQUEST_TIME && $ret['test2']->created <= round(microtime(TRUE), 3), 'Created time is correct.');
@@ -345,9 +345,9 @@ abstract class GenericCacheBackendUnitTestBase extends KernelTestBase {
     $cids = $reference;
     $ret = $backend->getMultiple($cids);
     // Test return - ensure it contains existing cache ids.
-    $this->assert(isset($ret['test2']), "Existing cache id test2 is set");
-    $this->assert(isset($ret['test7']), "Existing cache id test7 is set");
-    $this->assert(isset($ret['test19']), "Added cache id test19 is set");
+    $this->assertArrayHasKey('test2', $ret, "Existing cache id test2 is set");
+    $this->assertArrayHasKey('test7', $ret, "Existing cache id test7 is set");
+    $this->assertArrayHasKey('test19', $ret, "Added cache id test19 is set");
     // Test return - ensure it does not contain nonexistent cache ids.
     $this->assertFalse(isset($ret['test3']), "Deleted cache id test3 is not set");
     $this->assertFalse(isset($ret['test6']), "Deleted cache id test6 is not set");

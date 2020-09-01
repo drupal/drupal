@@ -50,8 +50,7 @@ class NodeTypeInitialLanguageTest extends NodeTestBase {
 
     // Tests if the language field cannot be rearranged on the manage fields tab.
     $this->drupalGet('admin/structure/types/manage/article/fields');
-    $language_field = $this->xpath('//*[@id="field-overview"]/*[@id="language"]');
-    $this->assert(empty($language_field), 'Language field is not visible on manage fields tab.');
+    $this->assertSession()->elementNotExists('xpath', '//*[@id="field-overview"]/*[@id="language"]');
 
     // Verify that language is not selectable on node add page by default.
     $this->drupalGet('node/add/article');
@@ -82,13 +81,12 @@ class NodeTypeInitialLanguageTest extends NodeTestBase {
     // Tests if the language field can be rearranged on the manage form display
     // tab.
     $this->drupalGet('admin/structure/types/manage/article/form-display');
-    $language_field = $this->xpath('//*[@id="langcode"]');
-    $this->assert(!empty($language_field), 'Language field is visible on manage form display tab.');
+    $this->assertSession()->elementExists('xpath', '//*[@id="langcode"]');
 
     // Tests if the language field can be rearranged on the manage display tab.
     $this->drupalGet('admin/structure/types/manage/article/display');
-    $language_display = $this->xpath('//*[@id="langcode"]');
-    $this->assert(!empty($language_display), 'Language field is visible on manage display tab.');
+    $this->assertSession()->elementExists('xpath', '//*[@id="langcode"]');
+
     // Tests if the language field is hidden by default.
     $this->assertTrue($this->assertSession()->optionExists('edit-fields-langcode-region', 'hidden')->isSelected());
 

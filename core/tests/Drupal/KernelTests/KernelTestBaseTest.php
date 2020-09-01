@@ -319,6 +319,16 @@ class KernelTestBaseTest extends KernelTestBase {
   }
 
   /**
+   * Tests the deprecation of AssertLegacyTrait::assert.
+   *
+   * @group legacy
+   * @expectedDeprecation AssertLegacyTrait::assert() is deprecated in drupal:8.0.0 and is removed from drupal:10.0.0. Use $this->assertTrue() instead. See https://www.drupal.org/node/3129738
+   */
+  public function testAssert() {
+    $this->assert(TRUE);
+  }
+
+  /**
    * Tests the deprecation of AssertLegacyTrait::assertIdenticalObject.
    *
    * @group legacy

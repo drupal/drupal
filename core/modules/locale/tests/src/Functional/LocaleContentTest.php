@@ -140,8 +140,10 @@ class LocaleContentTest extends BrowserTestBase {
     $this->assertText(t('@title has been updated.', ['@title' => $node_title]));
 
     // Verify that the creation message contains a link to a node.
-    $view_link = $this->xpath('//div[@class="messages"]//a[contains(@href, :href)]', [':href' => 'node/' . $node->id()]);
-    $this->assert(isset($view_link), 'The message area contains the link to the edited node');
+    $xpath = $this->assertSession()->buildXPathQuery('//div[@data-drupal-messages]//a[contains(@href, :href)]', [
+      ':href' => 'node/' . $node->id(),
+    ]);
+    $this->assertSession()->elementExists('xpath', $xpath);
 
     $this->drupalLogout();
   }

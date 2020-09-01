@@ -47,8 +47,7 @@ class UpdateFeedItemTest extends AggregatorTestBase {
     $this->assertText(t('The feed @name has been added.', ['@name' => $edit['title[0][value]']]), new FormattableMarkup('The feed @name has been added.', ['@name' => $edit['title[0][value]']]));
 
     // Verify that the creation message contains a link to a feed.
-    $view_link = $this->xpath('//div[@class="messages"]//a[contains(@href, :href)]', [':href' => 'aggregator/sources/']);
-    $this->assert(isset($view_link), 'The message area contains a link to a feed');
+    $this->assertSession()->elementExists('xpath', '//div[@data-drupal-messages]//a[contains(@href, "aggregator/sources/")]');
 
     $fids = \Drupal::entityQuery('aggregator_feed')->condition('url', $edit['url[0][value]'])->execute();
     $feed = Feed::load(array_values($fids)[0]);

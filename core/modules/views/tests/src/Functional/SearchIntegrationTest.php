@@ -2,7 +2,6 @@
 
 namespace Drupal\Tests\views\Functional;
 
-use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Tests\Traits\Core\CronRunTrait;
 
 /**
@@ -146,12 +145,14 @@ class SearchIntegrationTest extends ViewTestBase {
    *   Link label to assert.
    *
    * @return bool
-   *   TRUE if the assertion succeeded, FALSE otherwise.
+   *   TRUE if the assertion succeeded.
    */
   protected function assertOneLink($label) {
-    $links = $this->xpath('//a[normalize-space(text())=:label]', [':label' => $label]);
-    $message = new FormattableMarkup('Link with label %label found once.', ['%label' => $label]);
-    return $this->assert(isset($links[0]) && !isset($links[1]), $message);
+    $xpath = $this->assertSession()->buildXPathQuery('//a[normalize-space(text())=:label]', [
+      ':label' => $label,
+    ]);
+    $this->assertSession()->elementsCount('xpath', $xpath, 1);
+    return TRUE;
   }
 
 }
