@@ -191,8 +191,7 @@ class ThemeTest extends BrowserTestBase {
     ];
     $this->drupalPostForm('admin/appearance/settings', $edit, t('Save configuration'));
 
-    $fields = $this->xpath($this->constructFieldXpath('name', 'logo_path'));
-    $uploaded_filename = 'public://' . $fields[0]->getValue();
+    $uploaded_filename = 'public://' . $this->getSession()->getPage()->findField('logo_path')->getValue();
 
     $this->drupalPlaceBlock('system_branding_block', ['region' => 'header']);
     $this->drupalGet('');

@@ -142,7 +142,6 @@ trait DeprecationListenerTrait {
       'AssertLegacyTrait::assertFieldByXPath() is deprecated in drupal:8.3.0 and is removed from drupal:10.0.0. Use $this->xpath() instead and check the values directly in the test. See https://www.drupal.org/node/3129738',
       'AssertLegacyTrait::assertNoFieldByXPath() is deprecated in drupal:8.3.0 and is removed from drupal:10.0.0. Use $this->xpath() instead and assert that the result is empty. See https://www.drupal.org/node/3129738',
       'AssertLegacyTrait::assertFieldsByValue() is deprecated in drupal:8.3.0 and is removed from drupal:10.0.0. Use iteration over the fields yourself instead and directly check the values in the test. See https://www.drupal.org/node/3129738',
-      'AssertLegacyTrait::constructFieldXpath() is deprecated in drupal:8.5.0 and is removed from drupal:10.0.0. Use $this->getSession()->getPage()->findField() instead. See https://www.drupal.org/node/3129738',
     ];
   }
 

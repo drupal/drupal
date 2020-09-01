@@ -10,6 +10,7 @@ use Drupal\FunctionalTests\AssertLegacyTrait;
 use Drupal\Tests\UnitTestCase;
 use Drupal\Tests\WebAssert;
 use PHPUnit\Framework\ExpectationFailedException;
+use Prophecy\Argument;
 
 /**
  * @coversDefaultClass \Drupal\FunctionalTests\AssertLegacyTrait
@@ -234,6 +235,18 @@ class AssertLegacyTraitTest extends UnitTestCase {
    */
   public function testPass() {
     $this->pass('Passed.');
+  }
+
+  /**
+   * @covers ::constructFieldXpath
+   * @expectedDeprecation AssertLegacyTrait::constructFieldXpath() is deprecated in drupal:8.5.0 and is removed from drupal:10.0.0. Use $this->getSession()->getPage()->findField() instead. See https://www.drupal.org/node/3129738
+   */
+  public function testConstructFieldXpath() {
+    $this->webAssert
+      ->buildXPathQuery(Argument::any(), Argument::any())
+      ->willReturn('qux');
+
+    $this->assertSame('qux', $this->constructFieldXpath('foo', ['bar']));
   }
 
   /**

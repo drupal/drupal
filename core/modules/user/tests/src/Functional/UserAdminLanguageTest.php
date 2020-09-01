@@ -58,7 +58,7 @@ class UserAdminLanguageTest extends BrowserTestBase {
     $path = 'user/' . $this->adminUser->id() . '/edit';
     $this->drupalGet($path);
     // Ensure administration pages language settings widget is not available.
-    $this->assertNoFieldByXPath($this->constructFieldXpath('id', 'edit-preferred-admin-langcode'), NULL, 'Administration pages language selector not available.');
+    $this->assertSession()->fieldNotExists('edit-preferred-admin-langcode');
   }
 
   /**
@@ -72,13 +72,13 @@ class UserAdminLanguageTest extends BrowserTestBase {
     // Checks with user administration pages language negotiation disabled.
     $this->drupalGet($path);
     // Ensure administration pages language settings widget is not available.
-    $this->assertNoFieldByXPath($this->constructFieldXpath('id', 'edit-preferred-admin-langcode'), NULL, 'Administration pages language selector not available.');
+    $this->assertSession()->fieldNotExists('edit-preferred-admin-langcode');
 
     // Checks with user administration pages language negotiation enabled.
     $this->setLanguageNegotiation();
     $this->drupalGet($path);
     // Ensure administration pages language settings widget is available.
-    $this->assertFieldByXPath($this->constructFieldXpath('id', 'edit-preferred-admin-langcode'), NULL, 'Administration pages language selector is available.');
+    $this->assertSession()->fieldExists('edit-preferred-admin-langcode');
   }
 
   /**
@@ -100,20 +100,20 @@ class UserAdminLanguageTest extends BrowserTestBase {
     $path = 'user/' . $this->adminUser->id() . '/edit';
     $this->drupalGet($path);
     // Ensure administration pages language setting is visible for admin.
-    $this->assertFieldByXPath($this->constructFieldXpath('id', 'edit-preferred-admin-langcode'), NULL, 'Administration pages language selector available for admins.');
+    $this->assertSession()->fieldExists('edit-preferred-admin-langcode');
 
     // Ensure administration pages language setting is visible for editors.
     $editor = $this->drupalCreateUser(['view the administration theme']);
     $this->drupalLogin($editor);
     $path = 'user/' . $editor->id() . '/edit';
     $this->drupalGet($path);
-    $this->assertFieldByXPath($this->constructFieldXpath('id', 'edit-preferred-admin-langcode'), NULL, 'Administration pages language selector available for editors.');
+    $this->assertSession()->fieldExists('edit-preferred-admin-langcode');
 
     // Ensure administration pages language setting is hidden for non-admins.
     $this->drupalLogin($this->regularUser);
     $path = 'user/' . $this->regularUser->id() . '/edit';
     $this->drupalGet($path);
-    $this->assertNoFieldByXPath($this->constructFieldXpath('id', 'edit-preferred-admin-langcode'), NULL, 'Administration pages language selector not available for regular user.');
+    $this->assertSession()->fieldNotExists('edit-preferred-admin-langcode');
   }
 
   /**

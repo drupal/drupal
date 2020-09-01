@@ -252,7 +252,8 @@ trait AssertLegacyTrait {
    */
   protected function assertFieldByName($name, $value = NULL) {
     @trigger_error('AssertLegacyTrait::assertFieldByName() is deprecated in drupal:8.2.0 and is removed from drupal:10.0.0. Use $this->assertSession()->fieldExists() or $this->assertSession()->buttonExists() or $this->assertSession()->fieldValueEquals() instead. See https://www.drupal.org/node/3129738', E_USER_DEPRECATED);
-    $this->assertFieldByXPath($this->constructFieldXpath('name', $name), $value);
+    $xpath = $this->assertSession()->buildXPathQuery('//textarea[@name=:value]|//input[@name=:value]|//select[@name=:value]', [':value' => $name]);
+    $this->assertFieldByXPath($xpath, $value);
   }
 
   /**
@@ -275,7 +276,8 @@ trait AssertLegacyTrait {
    */
   protected function assertNoFieldByName($name, $value = '') {
     @trigger_error('AssertLegacyTrait::assertNoFieldByName() is deprecated in drupal:8.2.0 and is removed from drupal:10.0.0. Use $this->assertSession()->fieldNotExists() or $this->assertSession()->buttonNotExists() or $this->assertSession()->fieldValueNotEquals() instead. See https://www.drupal.org/node/3129738', E_USER_DEPRECATED);
-    $this->assertNoFieldByXPath($this->constructFieldXpath('name', $name), $value);
+    $xpath = $this->assertSession()->buildXPathQuery('//textarea[@name=:value]|//input[@name=:value]|//select[@name=:value]', [':value' => $name]);
+    $this->assertNoFieldByXPath($xpath, $value);
   }
 
   /**
@@ -300,7 +302,8 @@ trait AssertLegacyTrait {
    */
   protected function assertFieldById($id, $value = '') {
     @trigger_error('AssertLegacyTrait::assertFieldById() is deprecated in drupal:8.2.0 and is removed from drupal:10.0.0. Use $this->assertSession()->fieldExists() or $this->assertSession()->buttonExists() or $this->assertSession()->fieldValueEquals() instead. See https://www.drupal.org/node/3129738', E_USER_DEPRECATED);
-    $this->assertFieldByXPath($this->constructFieldXpath('id', $id), $value);
+    $xpath = $this->assertSession()->buildXPathQuery('//textarea[@id=:value]|//input[@id=:value]|//select[@id=:value]', [':value' => $id]);
+    $this->assertFieldByXPath($xpath, $value);
   }
 
   /**
@@ -317,7 +320,10 @@ trait AssertLegacyTrait {
    */
   protected function assertField($field) {
     @trigger_error('AssertLegacyTrait::assertField() is deprecated in drupal:8.2.0 and is removed from drupal:10.0.0. Use $this->assertSession()->fieldExists() or $this->assertSession()->buttonExists() instead. See https://www.drupal.org/node/3129738', E_USER_DEPRECATED);
-    $this->assertFieldByXPath($this->constructFieldXpath('name', $field) . '|' . $this->constructFieldXpath('id', $field));
+    $xpath = $this->assertSession()->buildXPathQuery('//textarea[@name=:value]|//input[@name=:value]|//select[@name=:value]', [':value' => $field]) .
+      '|' .
+      $this->assertSession()->buildXPathQuery('//textarea[@id=:value]|//input[@id=:value]|//select[@id=:value]', [':value' => $field]);
+    $this->assertFieldByXPath($xpath);
   }
 
   /**
@@ -334,7 +340,10 @@ trait AssertLegacyTrait {
    */
   protected function assertNoField($field) {
     @trigger_error('AssertLegacyTrait::assertNoField() is deprecated in drupal:8.2.0 and is removed from drupal:10.0.0. Use $this->assertSession()->fieldNotExists() or $this->assertSession()->buttonNotExists() instead. See https://www.drupal.org/node/3129738', E_USER_DEPRECATED);
-    $this->assertNoFieldByXPath($this->constructFieldXpath('name', $field) . '|' . $this->constructFieldXpath('id', $field));
+    $xpath = $this->assertSession()->buildXPathQuery('//textarea[@name=:value]|//input[@name=:value]|//select[@name=:value]', [':value' => $field]) .
+      '|' .
+      $this->assertSession()->buildXPathQuery('//textarea[@id=:value]|//input[@id=:value]|//select[@id=:value]', [':value' => $field]);
+    $this->assertNoFieldByXPath($xpath);
   }
 
   /**
@@ -483,7 +492,8 @@ trait AssertLegacyTrait {
    */
   protected function assertNoFieldById($id, $value = '') {
     @trigger_error('AssertLegacyTrait::assertNoFieldById() is deprecated in drupal:8.2.0 and is removed from drupal:10.0.0. Use $this->assertSession()->fieldNotExists() or $this->assertSession()->buttonNotExists() or $this->assertSession()->fieldValueNotEquals() instead. See https://www.drupal.org/node/3129738', E_USER_DEPRECATED);
-    $this->assertNoFieldByXPath($this->constructFieldXpath('id', $id), $value);
+    $xpath = $this->assertSession()->buildXPathQuery('//textarea[@id=:value]|//input[@id=:value]|//select[@id=:value]', [':value' => $id]);
+    $this->assertNoFieldByXPath($xpath, $value);
   }
 
   /**
