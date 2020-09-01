@@ -4,6 +4,7 @@ namespace Drupal\taxonomy\Plugin\views\filter;
 
 use Drupal\Core\Entity\Element\EntityAutocomplete;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Session\AccountInterface;
 use Drupal\taxonomy\Entity\Term;
 use Drupal\taxonomy\TermStorageInterface;
 use Drupal\taxonomy\VocabularyStorageInterface;
@@ -39,6 +40,13 @@ class TaxonomyIndexTid extends ManyToOne {
   protected $termStorage;
 
   /**
+   * The current user.
+   *
+   * @var \Drupal\Core\Session\AccountInterface
+   */
+  protected $currentUser;
+
+  /**
    * Constructs a TaxonomyIndexTid object.
    *
    * @param array $configuration
@@ -51,11 +59,18 @@ class TaxonomyIndexTid extends ManyToOne {
    *   The vocabulary storage.
    * @param \Drupal\taxonomy\TermStorageInterface $term_storage
    *   The term storage.
+   * @param \Drupal\Core\Session\AccountInterface $current_user
+   *   The current user.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, VocabularyStorageInterface $vocabulary_storage, TermStorageInterface $term_storage) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, VocabularyStorageInterface $vocabulary_storage, TermStorageInterface $term_storage, AccountInterface $current_user = NULL) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->vocabularyStorage = $vocabulary_storage;
     $this->termStorage = $term_storage;
+    if (!$current_user) {
+      @trigger_error('The current_user service must be passed to ' . __NAMESPACE__ . '\TaxonomyIndexTid::__construct(). It was added in drupal:8.9.0 and will be required before drupal:10.0.0.', E_USER_DEPRECATED);
+      $current_user = \Drupal::service('current_user');
+    }
+    $this->currentUser = $current_user;
   }
 
   /**
@@ -67,7 +82,8 @@ class TaxonomyIndexTid extends ManyToOne {
       $plugin_id,
       $plugin_definition,
       $container->get('entity_type.manager')->getStorage('taxonomy_vocabulary'),
-      $container->get('entity_type.manager')->getStorage('taxonomy_term')
+      $container->get('entity_type.manager')->getStorage('taxonomy_term'),
+      $container->get('current_user')
     );
   }
 
@@ -181,6 +197,9 @@ class TaxonomyIndexTid extends ManyToOne {
 
         if ($tree) {
           foreach ($tree as $term) {
+            if (!$term->isPublished() && !$this->currentUser->hasPermission('administer taxonomy')) {
+              continue;
+            }
             $choice = new \stdClass();
             $choice->option = [$term->id() => str_repeat('-', $term->depth) . \Drupal::service('entity.repository')->getTranslationFromContext($term)->label()];
             $options[] = $choice;
@@ -195,6 +214,9 @@ class TaxonomyIndexTid extends ManyToOne {
           ->sort('weight')
           ->sort('name')
           ->addTag('taxonomy_term_access');
+        if (!$this->currentUser->hasPermission('administer taxonomy')) {
+          $query->condition('status', 1);
+        }
         if ($this->options['limit']) {
           $query->condition('vid', $vocabulary->id());
         }
