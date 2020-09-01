@@ -8,6 +8,8 @@ use Drupal\Core\Database\DatabaseAccessDeniedException;
 use Drupal\Core\Database\DatabaseNotFoundException;
 use Drupal\Core\Database\StatementInterface;
 
+// cSpell:ignore ilike nextval
+
 /**
  * @addtogroup database
  * @{
@@ -258,7 +260,7 @@ class Connection extends DatabaseConnection {
   public function nextId($existing = 0) {
 
     // Retrieve the name of the sequence. This information cannot be cached
-    // because the prefix may change, for example, like it does in simpletests.
+    // because the prefix may change, for example, like it does in tests.
     $sequence_name = $this->makeSequenceName('sequences', 'value');
 
     // When PostgreSQL gets a value too small then it will lock the table,

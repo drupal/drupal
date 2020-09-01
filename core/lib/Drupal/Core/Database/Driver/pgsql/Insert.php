@@ -5,6 +5,8 @@ namespace Drupal\Core\Database\Driver\pgsql;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Database\Query\Insert as QueryInsert;
 
+// cSpell:ignore nextval setval
+
 /**
  * @ingroup database
  * @{

@@ -4,6 +4,8 @@ namespace Drupal\Core\Database\Driver\pgsql;
 
 use Drupal\Core\Database\Query\Upsert as QueryUpsert;
 
+// cSpell:ignore nextval setval
+
 /**
  * PostgreSQL implementation of \Drupal\Core\Database\Query\Upsert.
  */

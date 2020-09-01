@@ -5,6 +5,8 @@ namespace Drupal\Tests\Core\Database\Driver\pgsql;
 use Drupal\Core\Database\Driver\pgsql\Schema;
 use Drupal\Tests\UnitTestCase;
 
+// cSpell:ignore conname
+
 /**
  * @coversDefaultClass \Drupal\Core\Database\Driver\pgsql\Schema
  * @group Database
