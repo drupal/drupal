@@ -5,10 +5,10 @@ namespace Drupal\aggregator;
 use Drupal\Core\Entity\Sql\SqlContentEntityStorage;
 
 /**
- * Controller class for aggregator's feeds.
+ * Defines the storage handler class for feed entities.
  *
- * This extends the Drupal\Core\Entity\Sql\SqlContentEntityStorage class, adding
- * required special handling for feed entities.
+ * This extends the base storage class, adding required special handling for
+ * feed entities.
  */
 class FeedStorage extends SqlContentEntityStorage implements FeedStorageInterface {
 
