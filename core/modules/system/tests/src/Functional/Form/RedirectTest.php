@@ -38,14 +38,14 @@ class RedirectTest extends BrowserTestBase {
       'destination' => $this->randomMachineName(),
     ];
     $this->drupalPostForm($path, $edit, t('Submit'));
-    $this->assertUrl($edit['destination']);
+    $this->assertSession()->addressEquals($edit['destination']);
 
     // Test without redirection.
     $edit = [
       'redirection' => FALSE,
     ];
     $this->drupalPostForm($path, $edit, t('Submit'));
-    $this->assertUrl($path);
+    $this->assertSession()->addressEquals($path);
 
     // Test redirection with query parameters.
     $edit = [
@@ -53,7 +53,7 @@ class RedirectTest extends BrowserTestBase {
       'destination' => $this->randomMachineName(),
     ];
     $this->drupalPostForm($path, $edit, t('Submit'), $options);
-    $this->assertUrl($edit['destination']);
+    $this->assertSession()->addressEquals($edit['destination']);
 
     // Test without redirection but with query parameters.
     $edit = [
@@ -62,7 +62,7 @@ class RedirectTest extends BrowserTestBase {
     $this->drupalPostForm($path, $edit, t('Submit'), $options);
     // When redirect is set to FALSE, there should be no redirection, and the
     // query parameters should be passed along.
-    $this->assertUrl($path . '?foo=bar');
+    $this->assertSession()->addressEquals($path . '?foo=bar');
 
     // Test redirection back to the original path.
     $edit = [
@@ -70,7 +70,7 @@ class RedirectTest extends BrowserTestBase {
       'destination' => '',
     ];
     $this->drupalPostForm($path, $edit, t('Submit'));
-    $this->assertUrl($path);
+    $this->assertSession()->addressEquals($path);
 
     // Test redirection back to the original path with query parameters.
     $edit = [
@@ -80,7 +80,7 @@ class RedirectTest extends BrowserTestBase {
     $this->drupalPostForm($path, $edit, t('Submit'), $options);
     // When using an empty redirection string, there should be no redirection,
     // and the query parameters should be passed along.
-    $this->assertUrl($path . '?foo=bar');
+    $this->assertSession()->addressEquals($path . '?foo=bar');
   }
 
   /**
@@ -101,7 +101,7 @@ class RedirectTest extends BrowserTestBase {
     $this->assertSession()->statusCodeEquals(404);
     $this->drupalPostForm(NULL, [], t('Submit'));
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertUrl($expected);
+    $this->assertSession()->addressEquals($expected);
 
     // Visit the block admin page (403 page) and submit the form. Verify it
     // ends up at the right URL.
@@ -109,7 +109,7 @@ class RedirectTest extends BrowserTestBase {
     $this->assertSession()->statusCodeEquals(403);
     $this->drupalPostForm(NULL, [], t('Submit'));
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertUrl($expected);
+    $this->assertSession()->addressEquals($expected);
   }
 
 }

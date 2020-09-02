@@ -95,7 +95,7 @@ class ModerationStateNodeTest extends ModerationStateTestBase {
 
     // After saving, we should be at the canonical URL and viewing the first
     // revision.
-    $this->assertUrl(Url::fromRoute('entity.node.canonical', ['node' => $node->id()]));
+    $this->assertSession()->addressEquals(Url::fromRoute('entity.node.canonical', ['node' => $node->id()]));
     $this->assertText('First version of the content.');
 
     // Create a new draft; after saving, we should still be on the canonical
@@ -104,7 +104,7 @@ class ModerationStateNodeTest extends ModerationStateTestBase {
       'body[0][value]' => 'Second version of the content.',
       'moderation_state[0][state]' => 'draft',
     ], t('Save'));
-    $this->assertUrl(Url::fromRoute('entity.node.canonical', ['node' => $node->id()]));
+    $this->assertSession()->addressEquals(Url::fromRoute('entity.node.canonical', ['node' => $node->id()]));
     $this->assertText('Second version of the content.');
 
     // Make a new published revision; after saving, we should be at the
@@ -113,7 +113,7 @@ class ModerationStateNodeTest extends ModerationStateTestBase {
       'body[0][value]' => 'Third version of the content.',
       'moderation_state[0][state]' => 'published',
     ], t('Save'));
-    $this->assertUrl(Url::fromRoute('entity.node.canonical', ['node' => $node->id()]));
+    $this->assertSession()->addressEquals(Url::fromRoute('entity.node.canonical', ['node' => $node->id()]));
     $this->assertText('Third version of the content.');
 
     // Make a new pending revision; after saving, we should be on the "Latest
@@ -122,7 +122,7 @@ class ModerationStateNodeTest extends ModerationStateTestBase {
       'body[0][value]' => 'Fourth version of the content.',
       'moderation_state[0][state]' => 'draft',
     ], t('Save'));
-    $this->assertUrl(Url::fromRoute('entity.node.latest_version', ['node' => $node->id()]));
+    $this->assertSession()->addressEquals(Url::fromRoute('entity.node.latest_version', ['node' => $node->id()]));
     $this->assertText('Fourth version of the content.');
   }
 

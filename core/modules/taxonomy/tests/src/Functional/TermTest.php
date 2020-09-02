@@ -454,7 +454,7 @@ class TermTest extends TaxonomyTestBase {
     // Submit confirmation form.
     $this->drupalPostForm(NULL, [], t('Reset to alphabetical'));
     // Ensure form redirected back to overview.
-    $this->assertUrl('admin/structure/taxonomy/manage/' . $this->vocabulary->id() . '/overview');
+    $this->assertSession()->addressEquals('admin/structure/taxonomy/manage/' . $this->vocabulary->id() . '/overview');
 
     $taxonomy_storage->resetCache();
     $terms = $taxonomy_storage->loadTree($this->vocabulary->id(), 0, NULL, TRUE);

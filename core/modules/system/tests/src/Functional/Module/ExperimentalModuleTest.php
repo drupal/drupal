@@ -136,7 +136,7 @@ class ExperimentalModuleTest extends BrowserTestBase {
     $this->drupalPostForm('admin/modules', $edit, 'Install');
     // Verify that if the module can not be installed, we are not taken to the
     // confirm form.
-    $this->assertUrl('admin/modules');
+    $this->assertSession()->addressEquals('admin/modules');
     $this->assertText('The Experimental Test Requirements module can not be installed.');
   }
 

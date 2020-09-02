@@ -35,22 +35,22 @@ class ConfirmFormTest extends BrowserTestBase {
 
     // Test cancelling the form.
     $this->clickLink(t('ConfirmFormTestForm::getCancelText().'));
-    $this->assertUrl('form-test/autocomplete');
+    $this->assertSession()->addressEquals('form-test/autocomplete');
 
     // Test submitting the form.
     $this->drupalPostForm('form-test/confirm-form', NULL, t('ConfirmFormTestForm::getConfirmText().'));
     $this->assertText('The ConfirmFormTestForm::submitForm() method was used for this form.');
-    $this->assertUrl('');
+    $this->assertSession()->addressEquals('');
 
     // Test submitting the form with a destination.
     $this->drupalPostForm('form-test/confirm-form', NULL, t('ConfirmFormTestForm::getConfirmText().'), ['query' => ['destination' => 'admin/config']]);
-    $this->assertUrl('admin/config');
+    $this->assertSession()->addressEquals('admin/config');
 
     // Test cancelling the form with a complex destination.
     $this->drupalGet('form-test/confirm-form-array-path');
     $this->clickLink(t('ConfirmFormArrayPathTestForm::getCancelText().'));
     // Verify that the form's complex cancel link was followed.
-    $this->assertUrl('form-test/confirm-form?destination=admin/config');
+    $this->assertSession()->addressEquals('form-test/confirm-form?destination=admin/config');
   }
 
   /**

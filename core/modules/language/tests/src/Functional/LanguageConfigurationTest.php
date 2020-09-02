@@ -56,7 +56,7 @@ class LanguageConfigurationTest extends BrowserTestBase {
     ];
     $this->drupalPostForm(NULL, $edit, 'Add language');
     $this->assertText('French');
-    $this->assertUrl(Url::fromRoute('entity.configurable_language.collection'));
+    $this->assertSession()->addressEquals(Url::fromRoute('entity.configurable_language.collection'));
     // Langcode for Languages is always 'en'.
     $language = $this->config('language.entity.fr')->get();
     $this->assertEqual($language['langcode'], 'en');
@@ -79,7 +79,7 @@ class LanguageConfigurationTest extends BrowserTestBase {
     $this->drupalPostForm(NULL, $edit, t('Save configuration'));
     $this->rebuildContainer();
     $this->assertSession()->checkboxChecked('edit-site-default-language-fr');
-    $this->assertUrl(Url::fromRoute('entity.configurable_language.collection', [], ['langcode' => 'fr']));
+    $this->assertSession()->addressEquals(Url::fromRoute('entity.configurable_language.collection', [], ['langcode' => 'fr']));
 
     // Check if a valid language prefix is added after changing the default
     // language.

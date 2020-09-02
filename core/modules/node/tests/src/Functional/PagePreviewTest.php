@@ -330,20 +330,20 @@ class PagePreviewTest extends NodeTestBase {
     $this->drupalPostForm($node->toUrl('edit-form'), [], t('Preview'), ['query' => ['destination' => $destination]]);
     $parameters = ['node_preview' => $node->uuid(), 'view_mode_id' => 'full'];
     $options = ['absolute' => TRUE, 'query' => ['destination' => $destination]];
-    $this->assertUrl(Url::fromRoute('entity.node.preview', $parameters, $options));
+    $this->assertSession()->addressEquals(Url::fromRoute('entity.node.preview', $parameters, $options));
     $this->drupalPostForm(NULL, ['view_mode' => 'teaser'], t('Switch'));
     $this->clickLink(t('Back to content editing'));
     $this->drupalPostForm(NULL, [], t('Save'));
-    $this->assertUrl($destination);
+    $this->assertSession()->addressEquals($destination);
 
     // Check that preview page works as expected without a destination set.
     $this->drupalPostForm($node->toUrl('edit-form'), [], t('Preview'));
     $parameters = ['node_preview' => $node->uuid(), 'view_mode_id' => 'full'];
-    $this->assertUrl(Url::fromRoute('entity.node.preview', $parameters));
+    $this->assertSession()->addressEquals(Url::fromRoute('entity.node.preview', $parameters));
     $this->drupalPostForm(NULL, ['view_mode' => 'teaser'], t('Switch'));
     $this->clickLink(t('Back to content editing'));
     $this->drupalPostForm(NULL, [], t('Save'));
-    $this->assertUrl($node->toUrl());
+    $this->assertSession()->addressEquals($node->toUrl());
     $this->assertSession()->statusCodeEquals(200);
 
     /** @var \Drupal\Core\File\FileSystemInterface $file_system */
@@ -495,7 +495,7 @@ class PagePreviewTest extends NodeTestBase {
 
     $edit2 = [$title_key => 'Another page title'];
     $this->drupalPostForm('node/' . $node->id() . '/edit', $edit2, t('Preview'));
-    $this->assertUrl(Url::fromRoute('entity.node.preview', ['node_preview' => $node->uuid(), 'view_mode_id' => 'full']));
+    $this->assertSession()->addressEquals(Url::fromRoute('entity.node.preview', ['node_preview' => $node->uuid(), 'view_mode_id' => 'full']));
     $this->assertText($edit2[$title_key]);
   }
 

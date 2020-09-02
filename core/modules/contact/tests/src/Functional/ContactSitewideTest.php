@@ -357,7 +357,7 @@ class ContactSitewideTest extends BrowserTestBase {
     ];
     $this->drupalPostForm(NULL, $edit, t('Send message'));
     $this->assertText('Thanks for your submission.');
-    $this->assertUrl('user/' . $admin_user->id());
+    $this->assertSession()->addressEquals('user/' . $admin_user->id());
 
     // Test Empty message.
     /** @var \Drupal\contact\ContactFormInterface $form */
@@ -378,7 +378,7 @@ class ContactSitewideTest extends BrowserTestBase {
     $this->drupalPostForm(NULL, $edit, t('Send message'));
     $result = $this->xpath('//div[@role=:role]', [':role' => 'contentinfo']);
     $this->assertCount(0, $result, 'Messages not found.');
-    $this->assertUrl('user/' . $admin_user->id());
+    $this->assertSession()->addressEquals('user/' . $admin_user->id());
 
     // Test preview and visibility of the message field and label. Submit the
     // contact form and verify the content.

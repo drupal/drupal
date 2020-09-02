@@ -36,8 +36,7 @@ class UserLoginTest extends BrowserTestBase {
     $this->drupalGet('user/login', ['query' => ['destination' => 'foo']]);
     $edit = ['name' => $user->getAccountName(), 'pass' => $user->passRaw];
     $this->drupalPostForm(NULL, $edit, t('Log in'));
-    // Verify that the user is redirected to the correct URL.
-    $this->assertUrl('foo');
+    $this->assertSession()->addressEquals('foo');
   }
 
   /**

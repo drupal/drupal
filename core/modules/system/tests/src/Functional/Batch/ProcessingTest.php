@@ -44,7 +44,7 @@ class ProcessingTest extends BrowserTestBase {
     $this->assertBatchMessages($this->_resultMessages('batch_1'), 'Batch for step 2 performed successfully.');
     $this->assertEqual(batch_test_stack(), $this->_resultStack('batch_1'), 'Execution order was correct.');
     $this->assertText('Test page text.', 'Custom redirection after batch execution displays the correct page.');
-    $this->assertUrl(Url::fromRoute('test_page_test.test_page'));
+    $this->assertSession()->addressEquals(Url::fromRoute('test_page_test.test_page'));
   }
 
   /**

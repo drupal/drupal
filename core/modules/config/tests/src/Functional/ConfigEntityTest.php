@@ -244,7 +244,7 @@ class ConfigEntityTest extends BrowserTestBase {
       'label' => $label1,
     ];
     $this->drupalPostForm('admin/structure/config_test/add', $edit, 'Save');
-    $this->assertUrl('admin/structure/config_test');
+    $this->assertSession()->addressEquals('admin/structure/config_test');
     $this->assertSession()->statusCodeEquals(200);
     $this->assertRaw($message_insert);
     $this->assertNoRaw($message_update);
@@ -255,7 +255,7 @@ class ConfigEntityTest extends BrowserTestBase {
       'label' => $label2,
     ];
     $this->drupalPostForm("admin/structure/config_test/manage/$id", $edit, 'Save');
-    $this->assertUrl('admin/structure/config_test');
+    $this->assertSession()->addressEquals('admin/structure/config_test');
     $this->assertSession()->statusCodeEquals(200);
     $this->assertNoRaw($message_insert);
     $this->assertRaw($message_update);
@@ -265,9 +265,9 @@ class ConfigEntityTest extends BrowserTestBase {
     // Delete the configuration entity.
     $this->drupalGet("admin/structure/config_test/manage/$id");
     $this->clickLink(t('Delete'));
-    $this->assertUrl("admin/structure/config_test/manage/$id/delete");
+    $this->assertSession()->addressEquals("admin/structure/config_test/manage/$id/delete");
     $this->drupalPostForm(NULL, [], 'Delete');
-    $this->assertUrl('admin/structure/config_test');
+    $this->assertSession()->addressEquals('admin/structure/config_test');
     $this->assertSession()->statusCodeEquals(200);
     $this->assertNoRaw($message_update);
     $this->assertRaw($message_delete);
@@ -280,7 +280,7 @@ class ConfigEntityTest extends BrowserTestBase {
       'label' => $label1,
     ];
     $this->drupalPostForm('admin/structure/config_test/add', $edit, 'Save');
-    $this->assertUrl('admin/structure/config_test');
+    $this->assertSession()->addressEquals('admin/structure/config_test');
     $this->assertSession()->statusCodeEquals(200);
     $this->assertText($label1);
     $this->assertLinkByHref("admin/structure/config_test/manage/$id");
@@ -291,7 +291,7 @@ class ConfigEntityTest extends BrowserTestBase {
       'label' => $label3,
     ];
     $this->drupalPostForm("admin/structure/config_test/manage/$id", $edit, 'Save');
-    $this->assertUrl('admin/structure/config_test');
+    $this->assertSession()->addressEquals('admin/structure/config_test');
     $this->assertSession()->statusCodeEquals(200);
     $this->assertNoText($label1);
     $this->assertNoText($label2);

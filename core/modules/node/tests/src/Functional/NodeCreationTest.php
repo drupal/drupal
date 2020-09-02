@@ -52,7 +52,7 @@ class NodeCreationTest extends NodeTestBase {
     $node_type_storage->load('article')->delete();
     $this->drupalGet('node/add');
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertUrl('node/add/page');
+    $this->assertSession()->addressEquals('node/add/page');
     // Create a node.
     $edit = [];
     $edit['title[0][value]'] = $this->randomMachineName(8);
@@ -146,7 +146,7 @@ class NodeCreationTest extends NodeTestBase {
     $this->drupalPostForm('node/add/page', $edit, t('Save'));
 
     // Check that the user was redirected to the home page.
-    $this->assertUrl('');
+    $this->assertSession()->addressEquals('');
     $this->assertText(t('Test page text'));
 
     // Confirm that the node was created.

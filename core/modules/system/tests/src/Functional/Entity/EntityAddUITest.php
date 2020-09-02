@@ -57,7 +57,7 @@ class EntityAddUITest extends BrowserTestBase {
       'description' => 'My test description',
     ])->save();
     $this->drupalGet('/entity_test_with_bundle/add');
-    $this->assertUrl('/entity_test_with_bundle/add/test');
+    $this->assertSession()->addressEquals('/entity_test_with_bundle/add/test');
 
     // Two bundles exist, confirm both are shown.
     EntityTestBundle::create([
@@ -135,7 +135,7 @@ class EntityAddUITest extends BrowserTestBase {
 
     // One bundle exists, confirm redirection to the add-form.
     $this->drupalGet('/entity_test_mul/add');
-    $this->assertUrl('/entity_test_mul/add/test');
+    $this->assertSession()->addressEquals('/entity_test_mul/add/test');
 
     // Two bundles exist, confirm both are shown.
     entity_test_create_bundle('test2', 'Test2 label', 'entity_test_mul');

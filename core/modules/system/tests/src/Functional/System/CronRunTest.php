@@ -122,7 +122,7 @@ class CronRunTest extends BrowserTestBase {
 
     $this->drupalPostForm(NULL, [], 'Save configuration');
     $this->assertText('The configuration options have been saved.');
-    $this->assertUrl('admin/config/system/cron');
+    $this->assertSession()->addressEquals('admin/config/system/cron');
 
     // Check that cron does not run when saving the configuration form.
     $this->assertEqual($cron_last, \Drupal::state()->get('system.cron_last'), 'Cron does not run when saving the configuration form.');

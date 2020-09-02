@@ -60,7 +60,7 @@ class ItemsPerPageTest extends WizardTestBase {
 
     // Make sure the page display shows the nodes we expect, and that they
     // appear in the expected order.
-    $this->assertUrl($view['page[path]']);
+    $this->assertSession()->addressEquals($view['page[path]']);
     $this->assertText($view['page[title]']);
     $content = $this->getSession()->getPage()->getContent();
     $this->assertText($node5->label());

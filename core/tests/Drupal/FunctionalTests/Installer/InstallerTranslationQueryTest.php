@@ -58,7 +58,7 @@ class InstallerTranslationQueryTest extends InstallerTestBase {
    * Verifies the expected behaviors of the installation result.
    */
   public function testInstaller() {
-    $this->assertUrl('user/1');
+    $this->assertSession()->addressEquals('user/1');
     $this->assertSession()->statusCodeEquals(200);
 
     // Verify German was configured but not English.

@@ -135,7 +135,7 @@ class UninstallTest extends BrowserTestBase {
 
     // Make sure confirmation page is accessible only during uninstall process.
     $this->drupalGet('admin/modules/uninstall/confirm');
-    $this->assertUrl('admin/modules/uninstall');
+    $this->assertSession()->addressEquals('admin/modules/uninstall');
     $this->assertSession()->titleEquals('Uninstall | Drupal');
 
     // Make sure the correct error is shown when no modules are selected.

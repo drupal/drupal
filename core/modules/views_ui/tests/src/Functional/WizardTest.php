@@ -61,7 +61,7 @@ class WizardTest extends WizardTestBase {
     // Make sure the view saving was successful and the browser got redirected
     // to the edit page.
     $this->drupalPostForm('admin/structure/views/add', $view, t('Save and edit'));
-    $this->assertUrl('admin/structure/views/view/' . $view['id']);
+    $this->assertSession()->addressEquals('admin/structure/views/view/' . $view['id']);
     // Assert that the page title is correctly truncated.
     $this->assertText(views_ui_truncate($view['page[title]'], 32));
   }

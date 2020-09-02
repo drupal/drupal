@@ -48,7 +48,7 @@ class DefaultViewsTest extends UITestBase {
     // page.
     $this->drupalGet('admin/structure/views');
     $this->clickViewsOperationLink('Enable', '/glossary/');
-    $this->assertUrl('admin/structure/views');
+    $this->assertSession()->addressEquals('admin/structure/views');
     $this->assertLinkByHref($edit_href);
 
     // It should not be possible to revert the view yet.
@@ -95,14 +95,14 @@ class DefaultViewsTest extends UITestBase {
     ];
     $this->assertSession()->titleEquals('Duplicate of Glossary | Drupal');
     $this->drupalPostForm(NULL, $edit, t('Duplicate'));
-    $this->assertUrl('admin/structure/views/view/duplicate_of_glossary');
+    $this->assertSession()->addressEquals('admin/structure/views/view/duplicate_of_glossary');
 
     // Duplicate a view and set a custom name.
     $this->drupalGet('admin/structure/views');
     $this->clickViewsOperationLink('Duplicate', '/glossary');
     $random_name = strtolower($this->randomMachineName());
     $this->drupalPostForm(NULL, ['id' => $random_name], t('Duplicate'));
-    $this->assertUrl("admin/structure/views/view/$random_name");
+    $this->assertSession()->addressEquals("admin/structure/views/view/$random_name");
 
     // Now disable the view, and make sure it stops appearing on the main view
     // listing page but instead goes back to displaying on the disabled views
@@ -110,13 +110,13 @@ class DefaultViewsTest extends UITestBase {
     // @todo Test this behavior with templates instead.
     $this->drupalGet('admin/structure/views');
     $this->clickViewsOperationLink('Disable', '/glossary/');
-    // $this->assertUrl('admin/structure/views');
+    // $this->assertSession()->addressEquals('admin/structure/views');
     // $this->assertNoLinkByHref($edit_href);
     // The easiest way to verify it appears on the disabled views listing page
     // is to try to click the "enable" link from there again.
     $this->drupalGet('admin/structure/views');
     $this->clickViewsOperationLink('Enable', '/glossary/');
-    $this->assertUrl('admin/structure/views');
+    $this->assertSession()->addressEquals('admin/structure/views');
     $this->assertLinkByHref($edit_href);
 
     // Clear permissions for anonymous users to check access for default views.
@@ -136,7 +136,7 @@ class DefaultViewsTest extends UITestBase {
     // Submit the confirmation form.
     $this->drupalPostForm(NULL, [], t('Delete'));
     // Ensure the view is no longer listed.
-    $this->assertUrl('admin/structure/views');
+    $this->assertSession()->addressEquals('admin/structure/views');
     $this->assertNoLinkByHref($edit_href);
     // Ensure the view is no longer available.
     $this->drupalGet($edit_href);

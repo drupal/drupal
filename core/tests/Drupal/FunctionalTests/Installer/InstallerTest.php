@@ -21,7 +21,7 @@ class InstallerTest extends InstallerTestBase {
    * Ensures that the user page is available after installation.
    */
   public function testInstaller() {
-    $this->assertUrl('user/1');
+    $this->assertSession()->addressEquals('user/1');
     $this->assertSession()->statusCodeEquals(200);
     // Confirm that we are logged-in after installation.
     $this->assertText($this->rootUser->getAccountName());

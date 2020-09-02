@@ -75,7 +75,7 @@ class BasicTest extends WizardTestBase {
 
     // Since the view has a page, we expect to be automatically redirected to
     // it.
-    $this->assertUrl($view2['page[path]']);
+    $this->assertSession()->addressEquals($view2['page[path]']);
     $this->assertText($view2['page[title]']);
     $this->assertText($node1->label());
     $this->assertText($node2->label());
@@ -125,7 +125,7 @@ class BasicTest extends WizardTestBase {
     $this->assertSession()->statusCodeEquals(200);
 
     // Make sure the view only displays the node we expect.
-    $this->assertUrl($view3['page[path]']);
+    $this->assertSession()->addressEquals($view3['page[path]']);
     $this->assertText($view3['page[title]']);
     $this->assertText($node1->label());
     $this->assertNoText($node2->label());

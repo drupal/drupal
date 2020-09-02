@@ -240,7 +240,7 @@ class BlockTest extends BlockTestBase {
     $this->assertRaw(t('Are you sure you want to remove the block @name?', ['@name' => $block->label()]));
     $this->drupalPostForm(NULL, [], t('Remove'));
     $this->assertRaw(t('The block %name has been removed.', ['%name' => $block->label()]));
-    $this->assertUrl('admin');
+    $this->assertSession()->addressEquals('admin');
     $this->assertNoRaw($block->id());
   }
 
@@ -261,7 +261,7 @@ class BlockTest extends BlockTestBase {
       $block['region'] = 'content';
       $this->drupalPostForm('admin/structure/block/add/system_powered_by_block', $block, t('Save block'));
       $this->assertText(t('The block configuration has been saved.'));
-      $this->assertUrl('admin/structure/block/list/' . $theme . '?block-placement=' . Html::getClass($block['id']));
+      $this->assertSession()->addressEquals('admin/structure/block/list/' . $theme . '?block-placement=' . Html::getClass($block['id']));
 
       // Set the default theme and ensure the block is placed.
       $theme_settings->set('default', $theme)->save();

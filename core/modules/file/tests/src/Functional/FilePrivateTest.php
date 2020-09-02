@@ -93,7 +93,7 @@ class FilePrivateTest extends FileFieldTestBase {
     $this->getSession()->getPage()->find('css', 'input[name="' . $field_name . '[0][fids]"]')->setValue($node_file->id());
     $this->getSession()->getPage()->pressButton(t('Save'));
     // Make sure the form submit failed - we stayed on the edit form.
-    $this->assertUrl('node/' . $new_node->id() . '/edit');
+    $this->assertSession()->addressEquals('node/' . $new_node->id() . '/edit');
     // Check that we got the expected constraint form error.
     $constraint = new ReferenceAccessConstraint();
     $this->assertRaw(new FormattableMarkup($constraint->message, ['%type' => 'file', '%id' => $node_file->id()]));
@@ -108,7 +108,7 @@ class FilePrivateTest extends FileFieldTestBase {
     $this->getSession()->getPage()->pressButton(t('Save'));
     $new_node = $this->drupalGetNodeByTitle($edit['title[0][value]']);
     $this->assertTrue(empty($new_node), 'Node was not created.');
-    $this->assertUrl('node/add/' . $type_name);
+    $this->assertSession()->addressEquals('node/add/' . $type_name);
     $this->assertRaw(new FormattableMarkup($constraint->message, ['%type' => 'file', '%id' => $node_file->id()]));
 
     // Now make file_test_file_download() return everything.

@@ -73,7 +73,7 @@ class RowUITest extends UITestBase {
     $this->drupalGet($row_plugin_url);
     $this->assertFieldByName('row[type]', 'entity:node');
     $this->drupalPostForm(NULL, ['row[type]' => 'entity:node'], t('Apply'));
-    $this->assertUrl($row_options_url);
+    $this->assertSession()->addressEquals($row_options_url);
     $this->assertFieldByName('row_options[view_mode]', 'teaser');
 
     // Change the teaser label to have markup so we can test escaping.

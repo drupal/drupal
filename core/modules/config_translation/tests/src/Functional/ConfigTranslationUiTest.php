@@ -154,7 +154,7 @@ class ConfigTranslationUiTest extends BrowserTestBase {
     $this->clickLink(t('Edit'));
     // Also check that saving the form leads back to the translation overview.
     $this->drupalPostForm(NULL, [], t('Save configuration'));
-    $this->assertUrl($translation_base_url);
+    $this->assertSession()->addressEquals($translation_base_url);
 
     // Check 'Add' link of French to visit add page.
     $this->assertLinkByHref("$translation_base_url/fr/add");

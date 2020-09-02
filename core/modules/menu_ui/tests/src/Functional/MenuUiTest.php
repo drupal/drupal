@@ -289,18 +289,18 @@ class MenuUiTest extends BrowserTestBase {
     $this->clickLink(t('Add link'));
     $link_title = $this->randomString();
     $this->drupalPostForm(NULL, ['link[0][uri]' => '/', 'title[0][value]' => $link_title], t('Save'));
-    $this->assertUrl(Url::fromRoute('entity.menu.edit_form', ['menu' => $menu_name]));
+    $this->assertSession()->addressEquals(Url::fromRoute('entity.menu.edit_form', ['menu' => $menu_name]));
     // Test the 'Edit' operation.
     $this->clickLink(t('Edit'));
     $this->assertFieldByName('title[0][value]', $link_title);
     $link_title = $this->randomString();
     $this->drupalPostForm(NULL, ['title[0][value]' => $link_title], t('Save'));
-    $this->assertUrl(Url::fromRoute('entity.menu.edit_form', ['menu' => $menu_name]));
+    $this->assertSession()->addressEquals(Url::fromRoute('entity.menu.edit_form', ['menu' => $menu_name]));
     // Test the 'Delete' operation.
     $this->clickLink(t('Delete'));
     $this->assertRaw(t('Are you sure you want to delete the custom menu link %item?', ['%item' => $link_title]));
     $this->drupalPostForm(NULL, [], t('Delete'));
-    $this->assertUrl(Url::fromRoute('entity.menu.edit_form', ['menu' => $menu_name]));
+    $this->assertSession()->addressEquals(Url::fromRoute('entity.menu.edit_form', ['menu' => $menu_name]));
 
     // Add nodes to use as links for menu links.
     $node1 = $this->drupalCreateNode(['type' => 'article']);

@@ -160,7 +160,7 @@ class AdminTest extends BrowserTestBase {
     $this->assertSession()->statusCodeEquals(200);
     // Verify that the user is redirected to the front page after turning on
     // compact mode.
-    $this->assertUrl($frontpage_url);
+    $this->assertSession()->addressEquals($frontpage_url);
     $this->assertEquals('1', $session->getCookie('Drupal.visitor.admin_compact_mode'), 'Compact mode turns on.');
     $this->drupalGet('admin/compact/on');
     $this->assertEquals('1', $session->getCookie('Drupal.visitor.admin_compact_mode'), 'Compact mode remains on after a repeat call.');
@@ -171,7 +171,7 @@ class AdminTest extends BrowserTestBase {
     $this->assertSession()->statusCodeEquals(200);
     // Verify that the user is redirected to the front page after turning off
     // compact mode.
-    $this->assertUrl($frontpage_url);
+    $this->assertSession()->addressEquals($frontpage_url);
     $this->assertNull($session->getCookie('Drupal.visitor.admin_compact_mode'), 'Compact mode turns off.');
     $this->drupalGet('admin/compact/off');
     $this->assertNull($session->getCookie('Drupal.visitor.admin_compact_mode'), 'Compact mode remains off after a repeat call.');

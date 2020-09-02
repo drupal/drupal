@@ -77,7 +77,7 @@ class InstallerExistingSettingsTest extends InstallerTestBase {
    * Verifies that installation succeeded.
    */
   public function testInstaller() {
-    $this->assertUrl('user/1');
+    $this->assertSession()->addressEquals('user/1');
     $this->assertSession()->statusCodeEquals(200);
     $this->assertEqual('testing', \Drupal::installProfile());
   }

@@ -30,7 +30,7 @@ class AddFeedTest extends AggregatorTestBase {
     $feed->refreshItems();
 
     // Check feed data.
-    $this->assertUrl(Url::fromRoute('aggregator.feed_add'));
+    $this->assertSession()->addressEquals(Url::fromRoute('aggregator.feed_add'));
     $this->assertTrue($this->uniqueFeed($feed->label(), $feed->getUrl()), 'The feed is unique.');
 
     // Check feed source.

@@ -114,7 +114,7 @@ class SearchLanguageTest extends BrowserTestBase {
 
     // Ensure selecting no language does not make the query different.
     $this->drupalPostForm('search/node', [], 'edit-submit--2');
-    $this->assertUrl(Url::fromRoute('search.view_node_search', [], ['query' => ['keys' => '']]));
+    $this->assertSession()->addressEquals(Url::fromRoute('search.view_node_search', [], ['query' => ['keys' => '']]));
 
     // Pick French and ensure it is selected.
     $edit = ['language[fr]' => TRUE];

@@ -70,7 +70,7 @@ class DisplayPathTest extends UITestBase {
     $display_link_text = t('View @display', ['@display' => 'Page']);
     $this->assertSession()->linkExists($display_link_text, 0, 'view page link found on the page.');
     $this->clickLink($display_link_text);
-    $this->assertUrl($random_path);
+    $this->assertSession()->addressEquals($random_path);
   }
 
   /**
@@ -102,11 +102,11 @@ class DisplayPathTest extends UITestBase {
     $url = 'admin/structure/views/nojs/display/test_view/page_1/path';
 
     $this->drupalPostForm($url, ['path' => '%/magrathea'], t('Apply'));
-    $this->assertUrl($url);
+    $this->assertSession()->addressEquals($url);
     $this->assertText('"%" may not be used for the first segment of a path.');
 
     $this->drupalPostForm($url, ['path' => 'user/%1/example'], t('Apply'));
-    $this->assertUrl($url);
+    $this->assertSession()->addressEquals($url);
     $this->assertText("Numeric placeholders may not be used. Please use plain placeholders (%).");
   }
 
@@ -152,11 +152,11 @@ class DisplayPathTest extends UITestBase {
 
     $this->drupalPostForm('admin/structure/views/nojs/display/test_view/page_1/menu', ['menu[type]' => 'default tab', 'menu[title]' => 'Test tab title'], t('Apply'));
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertUrl('admin/structure/views/nojs/display/test_view/page_1/tab_options');
+    $this->assertSession()->addressEquals('admin/structure/views/nojs/display/test_view/page_1/tab_options');
 
     $this->drupalPostForm(NULL, ['tab_options[type]' => 'tab', 'tab_options[title]' => $this->randomString()], t('Apply'));
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertUrl('admin/structure/views/view/test_view/edit/page_1');
+    $this->assertSession()->addressEquals('admin/structure/views/view/test_view/edit/page_1');
 
     $this->drupalGet('admin/structure/views/view/test_view');
     $this->assertSession()->linkExists('Tab: Test tab title');

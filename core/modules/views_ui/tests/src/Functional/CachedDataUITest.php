@@ -47,7 +47,7 @@ class CachedDataUITest extends UITestBase {
     $this->drupalPostForm(NULL, [], t('Cancel'));
     $this->assertEqual($temp_store->getMetadata('test_view'), NULL, 'Shared tempstore data has been removed.');
     // Test we are redirected to the view listing page.
-    $this->assertUrl('admin/structure/views');
+    $this->assertSession()->addressEquals('admin/structure/views');
 
     // Log in with another user and make sure the view is locked and break.
     $this->drupalPostForm('admin/structure/views/nojs/display/test_view/default/title', [], t('Apply'));

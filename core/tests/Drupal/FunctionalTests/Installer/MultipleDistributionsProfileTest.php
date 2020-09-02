@@ -75,7 +75,7 @@ class MultipleDistributionsProfileTest extends InstallerTestBase {
    * Confirms that the installation succeeded.
    */
   public function testInstalled() {
-    $this->assertUrl('user/1');
+    $this->assertSession()->addressEquals('user/1');
     $this->assertSession()->statusCodeEquals(200);
     // Confirm that we are logged-in after installation.
     $this->assertText($this->rootUser->getAccountName());

@@ -229,7 +229,7 @@ class PathAliasTest extends PathTestBase {
     $edit['alias[0][value]'] = $node5_alias . '/';
     $this->drupalPostForm('admin/config/search/path/add', $edit, t('Save'));
 
-    $this->assertUrl('admin/config/search/path/add');
+    $this->assertSession()->addressEquals('admin/config/search/path/add');
     $this->assertText('The source path has to start with a slash.');
     $this->assertText('The alias path has to start with a slash.');
   }

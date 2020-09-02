@@ -45,7 +45,7 @@ class SortingTest extends WizardTestBase {
     $this->assertSession()->statusCodeEquals(200);
 
     // Make sure the view shows the nodes in the expected order.
-    $this->assertUrl($view1['page[path]']);
+    $this->assertSession()->addressEquals($view1['page[path]']);
     $this->assertText($view1['page[title]']);
     $content = $this->getSession()->getPage()->getContent();
     $this->assertText($node1->label());
@@ -70,7 +70,7 @@ class SortingTest extends WizardTestBase {
     $this->assertSession()->statusCodeEquals(200);
 
     // Make sure the view shows the nodes in the expected order.
-    $this->assertUrl($view2['page[path]']);
+    $this->assertSession()->addressEquals($view2['page[path]']);
     $this->assertText($view2['page[title]']);
     $content = $this->getSession()->getPage()->getContent();
     $this->assertText($node3->label());

@@ -61,7 +61,7 @@ class InstallerNonEnglishProfileWithoutLocaleModuleTest extends InstallerTestBas
    */
   public function testNonEnglishProfileWithoutLocaleModule() {
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertUrl('user/1');
+    $this->assertSession()->addressEquals('user/1');
     // Confirm that we are logged-in after installation.
     $this->assertText($this->rootUser->getAccountName());
 

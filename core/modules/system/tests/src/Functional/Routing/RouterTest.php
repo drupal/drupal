@@ -322,19 +322,19 @@ class RouterTest extends BrowserTestBase {
     $request = $this->container->get('request_stack')->getCurrentRequest();
     $url = $request->getUriForPath('//router_test/test1');
     $this->drupalGet($url);
-    $this->assertUrl($request->getUriForPath('/router_test/test1'));
+    $this->assertSession()->addressEquals($request->getUriForPath('/router_test/test1'));
 
     // It should not matter how many leading slashes are used and query strings
     // should be preserved.
     $url = $request->getUriForPath('/////////////////////////////////////////////////router_test/test1') . '?qs=test';
     $this->drupalGet($url);
-    $this->assertUrl($request->getUriForPath('/router_test/test1') . '?qs=test');
+    $this->assertSession()->addressEquals($request->getUriForPath('/router_test/test1') . '?qs=test');
 
     // Ensure that external URLs in destination query params are not redirected
     // to.
     $url = $request->getUriForPath('/////////////////////////////////////////////////router_test/test1') . '?qs=test&destination=http://www.example.com%5c@drupal8alt.test';
     $this->drupalGet($url);
-    $this->assertUrl($request->getUriForPath('/router_test/test1') . '?qs=test');
+    $this->assertSession()->addressEquals($request->getUriForPath('/router_test/test1') . '?qs=test');
   }
 
 }

@@ -38,7 +38,7 @@ class UpdateFeedTest extends AggregatorTestBase {
       $this->assertSession()->elementExists('xpath', '//div[@data-drupal-messages]//a[contains(@href, "aggregator/sources/")]');
 
       // Check feed data.
-      $this->assertUrl($feed->toUrl('canonical'));
+      $this->assertSession()->addressEquals($feed->toUrl('canonical'));
       $this->assertTrue($this->uniqueFeed($edit['title[0][value]'], $edit['url[0][value]']), 'The feed is unique.');
 
       // Check feed source.

@@ -34,11 +34,11 @@ class ViewEditTest extends UITestBase {
     $view = $this->container->get('entity_type.manager')->getStorage('view')->load('test_view');
     $this->assertInstanceOf(View::class, $view);
     $this->clickLink(t('Delete view'));
-    $this->assertUrl('admin/structure/views/view/test_view/delete');
+    $this->assertSession()->addressEquals('admin/structure/views/view/test_view/delete');
     $this->drupalPostForm(NULL, [], t('Delete'));
     $this->assertRaw(t('The view %name has been deleted.', ['%name' => $view->label()]));
 
-    $this->assertUrl('admin/structure/views');
+    $this->assertSession()->addressEquals('admin/structure/views');
     $view = $this->container->get('entity_type.manager')->getStorage('view')->load('test_view');
     $this->assertNotInstanceOf(View::class, $view);
   }
@@ -117,7 +117,7 @@ class ViewEditTest extends UITestBase {
     $this->drupalPostForm(NULL, [], t('Cancel'));
     $this->assertNoFieldByXpath('//div[contains(@class, "error")]', FALSE, 'No error message is displayed.');
     // Verify page was redirected to the view listing.
-    $this->assertUrl('admin/structure/views');
+    $this->assertSession()->addressEquals('admin/structure/views');
   }
 
   /**

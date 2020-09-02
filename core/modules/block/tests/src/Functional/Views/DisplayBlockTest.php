@@ -98,7 +98,7 @@ class DisplayBlockTest extends ViewTestBase {
 
     // Duplicate the block before changing the category.
     $this->drupalPostForm('admin/structure/views/view/' . $edit['id'] . '/edit/block_1', [], t('Duplicate @display_title', ['@display_title' => 'Block']));
-    $this->assertUrl('admin/structure/views/view/' . $edit['id'] . '/edit/block_2');
+    $this->assertSession()->addressEquals('admin/structure/views/view/' . $edit['id'] . '/edit/block_2');
 
     // Change the block category to a random string.
     $this->drupalGet('admin/structure/views/view/' . $edit['id'] . '/edit/block_1');
@@ -110,7 +110,7 @@ class DisplayBlockTest extends ViewTestBase {
 
     // Duplicate the block after changing the category.
     $this->drupalPostForm(NULL, [], t('Duplicate @display_title', ['@display_title' => 'Block']));
-    $this->assertUrl('admin/structure/views/view/' . $edit['id'] . '/edit/block_3');
+    $this->assertSession()->addressEquals('admin/structure/views/view/' . $edit['id'] . '/edit/block_3');
 
     $this->drupalPostForm(NULL, [], t('Save'));
 

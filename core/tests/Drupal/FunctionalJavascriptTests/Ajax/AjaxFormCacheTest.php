@@ -102,7 +102,7 @@ class AjaxFormCacheTest extends WebDriverTestBase {
     $url->setOption('query', [
       'foo' => 'bar',
     ]);
-    $this->assertUrl($url);
+    $this->assertSession()->addressEquals($url);
   }
 
 }

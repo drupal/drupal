@@ -203,6 +203,7 @@ class AssertLegacyTraitTest extends UnitTestCase {
 
   /**
    * @covers ::assertUrl
+   * @expectedDeprecation AssertLegacyTrait::assertUrl() is deprecated in drupal:8.2.0 and is removed from drupal:10.0.0. Use $this->assertSession()->addressEquals() instead. See https://www.drupal.org/node/3129738
    * @expectedDeprecation Calling AssertLegacyTrait::assertUrl() with more than one argument is deprecated in drupal:8.2.0 and the method is removed from drupal:10.0.0. Use $this->assertSession()->addressEquals() instead. See https://www.drupal.org/node/3129738
    */
   public function testAssertUrl() {

@@ -291,7 +291,7 @@ class FilterFormatAccessTest extends BrowserTestBase {
     // Now select a new text format and make sure the node can be saved.
     $edit[$body_format_key] = filter_fallback_format();
     $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, t('Save'));
-    $this->assertUrl('node/' . $node->id());
+    $this->assertSession()->addressEquals('node/' . $node->id());
     $this->assertText($new_title, 'New title found.');
     $this->assertNoText($old_title, 'Old title not found.');
 
@@ -300,7 +300,7 @@ class FilterFormatAccessTest extends BrowserTestBase {
     $this->drupalLogin($this->adminUser);
     $edit = [$body_format_key => $this->allowedFormat->id()];
     $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, t('Save'));
-    $this->assertUrl('node/' . $node->id());
+    $this->assertSession()->addressEquals('node/' . $node->id());
     foreach (filter_formats() as $format) {
       if (!$format->isFallbackFormat()) {
         $format->disable()->save();
@@ -324,7 +324,7 @@ class FilterFormatAccessTest extends BrowserTestBase {
     $this->assertNoText($new_title, 'New title not found.');
     $edit[$body_format_key] = filter_fallback_format();
     $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, t('Save'));
-    $this->assertUrl('node/' . $node->id());
+    $this->assertSession()->addressEquals('node/' . $node->id());
     $this->assertText($new_title, 'New title found.');
     $this->assertNoText($old_title, 'Old title not found.');
   }

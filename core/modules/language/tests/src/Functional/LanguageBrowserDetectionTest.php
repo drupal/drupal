@@ -59,7 +59,7 @@ class LanguageBrowserDetectionTest extends BrowserTestBase {
     $this->assertRaw(t('The mapping for the %browser browser language code has been deleted.', $t_args), 'The test browser language code has been deleted.');
 
     // Check we went back to the browser negotiation mapping overview.
-    $this->assertUrl(Url::fromRoute('language.negotiation_browser'));
+    $this->assertSession()->addressEquals(Url::fromRoute('language.negotiation_browser'));
     // Check that Chinese browser language code no longer exists.
     $this->assertSession()->fieldNotExists('edit-mappings-zh-cn-browser-langcode');
 
@@ -69,7 +69,7 @@ class LanguageBrowserDetectionTest extends BrowserTestBase {
       'new_mapping[drupal_langcode]' => 'en',
     ];
     $this->drupalPostForm('admin/config/regional/language/detection/browser', $edit, t('Save configuration'));
-    $this->assertUrl(Url::fromRoute('language.negotiation_browser'));
+    $this->assertSession()->addressEquals(Url::fromRoute('language.negotiation_browser'));
     $this->assertFieldById('edit-mappings-xx-browser-langcode', 'xx');
     $this->assertFieldById('edit-mappings-xx-drupal-langcode', 'en');
 
@@ -91,7 +91,7 @@ class LanguageBrowserDetectionTest extends BrowserTestBase {
       'mappings[xx][drupal_langcode]' => 'zh-hans',
     ];
     $this->drupalPostForm('admin/config/regional/language/detection/browser', $edit, t('Save configuration'));
-    $this->assertUrl(Url::fromRoute('language.negotiation_browser'));
+    $this->assertSession()->addressEquals(Url::fromRoute('language.negotiation_browser'));
     $this->assertFieldById('edit-mappings-xx-browser-langcode', 'xx');
     $this->assertFieldById('edit-mappings-xx-drupal-langcode', 'zh-hans');
   }

@@ -96,7 +96,7 @@ class LocaleImportFunctionalTest extends BrowserTestBase {
     $this->assertEqual(2, $locale_plurals, 'Plural number initialized.');
 
     // Ensure we were redirected correctly.
-    $this->assertUrl(Url::fromRoute('locale.translate_page'));
+    $this->assertSession()->addressEquals(Url::fromRoute('locale.translate_page'));
 
     // Try importing a .po file with invalid tags.
     $this->importPoFile($this->getBadPoFile(), [
@@ -146,7 +146,7 @@ class LocaleImportFunctionalTest extends BrowserTestBase {
       'langcode' => 'fr',
       'files[file]' => $name,
     ], t('Import'));
-    $this->assertUrl(Url::fromRoute('locale.translate_import'));
+    $this->assertSession()->addressEquals(Url::fromRoute('locale.translate_import'));
     $this->assertText(t('File to import not found.'), 'File to import not found message.');
 
     // Try importing a .po file with overriding strings, and ensure existing

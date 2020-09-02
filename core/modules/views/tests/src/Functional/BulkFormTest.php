@@ -161,7 +161,7 @@ class BulkFormTest extends BrowserTestBase {
     $this->drupalPostForm(NULL, [], t('Delete'));
     $this->assertText(t('Deleted 5 content items.'));
     // Check if we got redirected to the original page.
-    $this->assertUrl('test_bulk_form');
+    $this->assertSession()->addressEquals('test_bulk_form');
 
     // Test that the bulk form works when a node gets deleted by another user
     // before the loaded bulk form can be used.
@@ -176,7 +176,7 @@ class BulkFormTest extends BrowserTestBase {
     ];
     $this->drupalPostForm(NULL, $edit, t('Apply to selected items'));
     // Make sure we just return to the bulk view with no warnings.
-    $this->assertUrl('test_bulk_form');
+    $this->assertSession()->addressEquals('test_bulk_form');
     $errors = $this->xpath('//div[contains(@class, "messages--status")]');
     $this->assertEmpty($errors, 'No action message shown.');
 

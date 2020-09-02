@@ -94,7 +94,7 @@ class UserPasswordResetTest extends BrowserTestBase {
     $resetURL = $this->getResetURL();
     $this->drupalGet($resetURL);
     // Ensure that the current url does not contain the hash and timestamp.
-    $this->assertUrl(Url::fromRoute('user.reset.form', ['uid' => $this->account->id()]));
+    $this->assertSession()->addressEquals(Url::fromRoute('user.reset.form', ['uid' => $this->account->id()]));
 
     $this->assertSession()->responseHeaderDoesNotExist('X-Drupal-Cache');
 
@@ -454,7 +454,7 @@ class UserPasswordResetTest extends BrowserTestBase {
     $this->drupalGet($attack_reset_url);
     $this->drupalPostForm(NULL, NULL, t('Log in'));
     $this->assertNoText($user2->getAccountName(), 'The invalid password reset page does not show the user name.');
-    $this->assertUrl('user/password');
+    $this->assertSession()->addressEquals('user/password');
     $this->assertText('You have tried to use a one-time login link that has either been used or is no longer valid. Please request a new one using the form below.');
   }
 

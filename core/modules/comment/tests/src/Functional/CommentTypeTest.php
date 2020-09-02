@@ -115,7 +115,7 @@ class CommentTypeTest extends CommentTestBase {
     $this->assertRaw('Bar', 'New name was displayed.');
     $this->clickLink('Manage fields');
     // Verify that the original machine name was used in the URL.
-    $this->assertUrl(Url::fromRoute('entity.comment.field_ui_fields', ['comment_type' => 'comment']));
+    $this->assertSession()->addressEquals(Url::fromRoute('entity.comment.field_ui_fields', ['comment_type' => 'comment']));
     $this->assertCount(1, $this->cssSelect('tr#comment-body'), 'Body field exists.');
 
     // Remove the body field.

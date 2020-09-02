@@ -240,7 +240,7 @@ class ManageFieldsFunctionalTest extends BrowserTestBase {
     $this->assertFieldSettings($this->contentType, $this->fieldName, $string);
 
     // Assert redirection back to the "manage fields" page.
-    $this->assertUrl('admin/structure/types/manage/' . $this->contentType . '/fields');
+    $this->assertSession()->addressEquals('admin/structure/types/manage/' . $this->contentType . '/fields');
   }
 
   /**
@@ -670,7 +670,7 @@ class ManageFieldsFunctionalTest extends BrowserTestBase {
     $this->drupalPostForm($url, $edit, t('Save and continue'));
 
     $this->assertText(t('The machine-readable name is already in use. It must be unique.'));
-    $this->assertUrl($url);
+    $this->assertSession()->addressEquals($url);
   }
 
   /**
@@ -682,7 +682,7 @@ class ManageFieldsFunctionalTest extends BrowserTestBase {
     ];
     $this->drupalPostForm('admin/structure/types/manage/article/fields/node.article.body/storage', [], 'Save field settings', $options);
     // The external redirect should not fire.
-    $this->assertUrl('admin/structure/types/manage/article/fields/node.article.body/storage?destinations%5B0%5D=http%3A//example.com');
+    $this->assertSession()->addressEquals('admin/structure/types/manage/article/fields/node.article.body/storage?destinations%5B0%5D=http%3A//example.com');
     $this->assertSession()->statusCodeEquals(200);
     $this->assertRaw('Attempt to update field <em class="placeholder">Body</em> failed: <em class="placeholder">The internal path component &#039;http://example.com&#039; is external. You are not allowed to specify an external URL together with internal:/.</em>.');
   }

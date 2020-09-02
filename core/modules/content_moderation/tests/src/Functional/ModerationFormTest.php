@@ -110,7 +110,7 @@ class ModerationFormTest extends ModerationStateTestBase {
       'view_mode_id' => 'full',
     ]);
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertUrl($preview_url);
+    $this->assertSession()->addressEquals($preview_url);
     $this->assertSession()->fieldNotExists('edit-new-state');
 
     // The latest version page should not show, because there is still no
