@@ -8,7 +8,7 @@
  * that you can use the JS to control visibility and avoid flicker.
  */
 .js .js-hide {
-  display: none !important;
+  display: none;
 }
 
 /**
