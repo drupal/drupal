@@ -44,7 +44,7 @@
         "symfony/dependency-injection": "v3.4.41",
         "symfony/event-dispatcher": "v3.4.41",
         "symfony/http-foundation": "v3.4.41",
-        "symfony/http-kernel": "v3.4.41",
+        "symfony/http-kernel": "v3.4.44",
         "symfony/polyfill-ctype": "v1.17.0",
         "symfony/polyfill-iconv": "v1.17.0",
         "symfony/polyfill-intl-idn": "v1.17.0",
