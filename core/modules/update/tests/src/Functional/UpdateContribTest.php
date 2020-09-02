@@ -478,7 +478,7 @@ class UpdateContribTest extends UpdateTestBase {
     $this->assertText(t('Up to date'));
     // We're expecting the report to say most projects are up to date, so we
     // hope that 'Up to date' is not unique.
-    $this->assertNoUniqueText(t('Up to date'));
+    $this->assertSession()->pageTextMatchesCount(3, '/Up to date/');
     // It should say we failed to get data, not that we're missing an update.
     $this->assertNoText('Update available');
 
@@ -488,8 +488,8 @@ class UpdateContribTest extends UpdateTestBase {
     $this->assertRaw('<div class="project-update__status">' . t('Failed to get available update data'));
 
     // We should see the output messages from fetching manually.
-    $this->assertUniqueText(t('Checked available update data for 3 projects.'));
-    $this->assertUniqueText(t('Failed to get available update data for one project.'));
+    $this->assertSession()->pageTextContainsOnce('Checked available update data for 3 projects.');
+    $this->assertSession()->pageTextContainsOnce('Failed to get available update data for one project.');
 
     // The other two should be listed as projects.
     $this->assertRaw(Link::fromTextAndUrl(t('AAA Update test'), Url::fromUri('http://example.com/project/aaa_update_test'))->toString(), 'Link to aaa_update_test project appears.');

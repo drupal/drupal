@@ -56,6 +56,7 @@ class AssertLegacyTraitTest extends UnitTestCase {
 
   /**
    * @covers ::assertUniqueText
+   * @expectedDeprecation AssertLegacyTrait::assertUniqueText() is deprecated in drupal:8.2.0 and is removed from drupal:10.0.0. Use $this->getSession()->pageTextContainsOnce() or $this->getSession()->pageTextMatchesCount() instead. See https://www.drupal.org/node/3129738
    */
   public function testAssertUniqueText() {
     $this->page->getText()->willReturn('foo bar bar');
@@ -64,6 +65,7 @@ class AssertLegacyTraitTest extends UnitTestCase {
 
   /**
    * @covers ::assertUniqueText
+   * @expectedDeprecation AssertLegacyTrait::assertUniqueText() is deprecated in drupal:8.2.0 and is removed from drupal:10.0.0. Use $this->getSession()->pageTextContainsOnce() or $this->getSession()->pageTextMatchesCount() instead. See https://www.drupal.org/node/3129738
    */
   public function testAssertUniqueTextFail() {
     $this->page->getText()->willReturn('foo bar bar');
@@ -73,6 +75,7 @@ class AssertLegacyTraitTest extends UnitTestCase {
 
   /**
    * @covers ::assertUniqueText
+   * @expectedDeprecation AssertLegacyTrait::assertUniqueText() is deprecated in drupal:8.2.0 and is removed from drupal:10.0.0. Use $this->getSession()->pageTextContainsOnce() or $this->getSession()->pageTextMatchesCount() instead. See https://www.drupal.org/node/3129738
    */
   public function testAssertUniqueTextUnknown() {
     $this->page->getText()->willReturn('foo bar bar');
@@ -82,6 +85,7 @@ class AssertLegacyTraitTest extends UnitTestCase {
 
   /**
    * @covers ::assertUniqueText
+   * @expectedDeprecation AssertLegacyTrait::assertUniqueText() is deprecated in drupal:8.2.0 and is removed from drupal:10.0.0. Use $this->getSession()->pageTextContainsOnce() or $this->getSession()->pageTextMatchesCount() instead. See https://www.drupal.org/node/3129738
    */
   public function testAssertUniqueTextMarkup() {
     $this->page->getText()->willReturn('foo bar bar');
@@ -92,6 +96,7 @@ class AssertLegacyTraitTest extends UnitTestCase {
 
   /**
    * @covers ::assertNoUniqueText
+   * @expectedDeprecation AssertLegacyTrait::assertNoUniqueText() is deprecated in drupal:8.2.0 and is removed from drupal:10.0.0. Instead, use $this->getSession()->pageTextMatchesCount() if you know the cardinality in advance, or $this->getSession()->getPage()->getText() and substr_count(). See https://www.drupal.org/node/3129738
    */
   public function testAssertNoUniqueText() {
     $this->page->getText()->willReturn('foo bar bar');
@@ -100,6 +105,7 @@ class AssertLegacyTraitTest extends UnitTestCase {
 
   /**
    * @covers ::assertNoUniqueText
+   * @expectedDeprecation AssertLegacyTrait::assertNoUniqueText() is deprecated in drupal:8.2.0 and is removed from drupal:10.0.0. Instead, use $this->getSession()->pageTextMatchesCount() if you know the cardinality in advance, or $this->getSession()->getPage()->getText() and substr_count(). See https://www.drupal.org/node/3129738
    */
   public function testAssertNoUniqueTextFail() {
     $this->page->getText()->willReturn('foo bar bar');
@@ -109,6 +115,7 @@ class AssertLegacyTraitTest extends UnitTestCase {
 
   /**
    * @covers ::assertNoUniqueText
+   * @expectedDeprecation AssertLegacyTrait::assertNoUniqueText() is deprecated in drupal:8.2.0 and is removed from drupal:10.0.0. Instead, use $this->getSession()->pageTextMatchesCount() if you know the cardinality in advance, or $this->getSession()->getPage()->getText() and substr_count(). See https://www.drupal.org/node/3129738
    */
   public function testAssertNoUniqueTextUnknown() {
     $this->page->getText()->willReturn('foo bar bar');
@@ -118,6 +125,7 @@ class AssertLegacyTraitTest extends UnitTestCase {
 
   /**
    * @covers ::assertNoUniqueText
+   * @expectedDeprecation AssertLegacyTrait::assertNoUniqueText() is deprecated in drupal:8.2.0 and is removed from drupal:10.0.0. Instead, use $this->getSession()->pageTextMatchesCount() if you know the cardinality in advance, or $this->getSession()->getPage()->getText() and substr_count(). See https://www.drupal.org/node/3129738
    */
   public function testAssertNoUniqueTextMarkup() {
     $this->page->getText()->willReturn('foo bar bar');

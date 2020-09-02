@@ -768,7 +768,7 @@ class UpdateCoreTest extends UpdateTestBase {
     $this->refreshUpdateStatus([], '503-error');
     // Ensure that no "Warning: SimpleXMLElement..." parse errors are found.
     $this->assertNoText('SimpleXMLElement');
-    $this->assertUniqueText(t('Failed to get available update data for one project.'));
+    $this->assertSession()->pageTextContainsOnce('Failed to get available update data for one project.');
   }
 
   /**

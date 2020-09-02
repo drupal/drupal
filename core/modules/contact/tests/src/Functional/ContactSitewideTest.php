@@ -186,7 +186,7 @@ class ContactSitewideTest extends BrowserTestBase {
     $this->assertEqual($langcode, $default_langcode);
 
     // Make sure the newly created form is included in the list of forms.
-    $this->assertNoUniqueText($label, 'New form included in forms list.');
+    $this->assertSession()->pageTextMatchesCount(2, '/' . $label . '/');
 
     // Ensure that the recipient email is escaped on the listing.
     $this->drupalGet('admin/structure/contact');

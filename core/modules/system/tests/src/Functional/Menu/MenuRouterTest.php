@@ -140,7 +140,7 @@ class MenuRouterTest extends BrowserTestBase {
     // Make sure that rebuilding the menu tree does not produce duplicates of
     // links added by hook_menu_links_discovered_alter().
     $this->drupalGet('menu-test');
-    $this->assertUniqueText('Custom link', 'Menu links added by hook_menu_links_discovered_alter() do not duplicate after a menu rebuild.');
+    $this->assertSession()->pageTextContainsOnce('Custom link');
   }
 
   /**

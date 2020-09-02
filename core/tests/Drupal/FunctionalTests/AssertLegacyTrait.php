@@ -172,12 +172,13 @@ trait AssertLegacyTrait {
    *   messages with t(). If left blank, a default message will be displayed.
    *
    * @deprecated in drupal:8.2.0 and is removed from drupal:10.0.0. Use
-   *   $this->getSession()->getPage()->getText() and substr_count() instead.
+   *   $this->getSession()->pageTextContainsOnce() or
+   *   $this->getSession()->pageTextMatchesCount() instead.
    *
    * @see https://www.drupal.org/node/3129738
    */
   protected function assertUniqueText($text, $message = NULL) {
-    @trigger_error('AssertLegacyTrait::assertUniqueText() is deprecated in drupal:8.2.0 and is removed from drupal:10.0.0. Use $this->getSession()->getPage()->getText() and substr_count() instead. See https://www.drupal.org/node/3129738', E_USER_DEPRECATED);
+    @trigger_error('AssertLegacyTrait::assertUniqueText() is deprecated in drupal:8.2.0 and is removed from drupal:10.0.0. Use $this->getSession()->pageTextContainsOnce() or $this->getSession()->pageTextMatchesCount() instead. See https://www.drupal.org/node/3129738', E_USER_DEPRECATED);
     // Cast MarkupInterface objects to string.
     $text = (string) $text;
 
@@ -200,13 +201,15 @@ trait AssertLegacyTrait {
    *   (optional) A message to display with the assertion. Do not translate
    *   messages with t(). If left blank, a default message will be displayed.
    *
-   * @deprecated in drupal:8.2.0 and is removed from drupal:10.0.0. Use
-   *   $this->getSession()->getPage()->getText() and substr_count() instead.
+   * @deprecated in drupal:8.2.0 and is removed from drupal:10.0.0. Instead,
+   *   use $this->getSession()->pageTextMatchesCount() if you know the
+   *   cardinality in advance, or $this->getSession()->getPage()->getText()
+   *   and substr_count().
    *
    * @see https://www.drupal.org/node/3129738
    */
   protected function assertNoUniqueText($text, $message = '') {
-    @trigger_error('AssertLegacyTrait::assertNoUniqueText() is deprecated in drupal:8.2.0 and is removed from drupal:10.0.0. Use $this->getSession()->getPage()->getText() and substr_count() instead. See https://www.drupal.org/node/3129738', E_USER_DEPRECATED);
+    @trigger_error('AssertLegacyTrait::assertNoUniqueText() is deprecated in drupal:8.2.0 and is removed from drupal:10.0.0. Instead, use $this->getSession()->pageTextMatchesCount() if you know the cardinality in advance, or $this->getSession()->getPage()->getText() and substr_count(). See https://www.drupal.org/node/3129738', E_USER_DEPRECATED);
     // Cast MarkupInterface objects to string.
     $text = (string) $text;
 

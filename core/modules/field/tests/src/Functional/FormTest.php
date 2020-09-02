@@ -739,7 +739,7 @@ class FormTest extends FieldTestBase {
     $this->rebuildAll();
 
     $this->drupalGet('entity_test/add');
-    $this->assertUniqueText("From $hook(): prefix on $field_name parent element.");
+    $this->assertSession()->pageTextMatchesCount(1, '/From ' . $hook . '.* prefix on ' . $field_name . ' parent element\./');
     if ($widget === 'test_field_widget_multiple_single_value') {
       $suffix_text = "From $hook(): suffix on $field_name child element.";
       $this->assertEqual($field_storage['cardinality'], substr_count($this->getTextContent(), $suffix_text), "'$suffix_text' was found {$field_storage['cardinality']} times  using widget $widget");

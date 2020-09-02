@@ -218,7 +218,7 @@ class LocalePluralFormatTest extends BrowserTestBase {
     $this->drupalPostForm($path, $edit, t('Save translations'));
 
     // User interface input for translating seconds should not be duplicated
-    $this->assertUniqueText('@count seconds', 'Interface translation input for @count seconds only appears once.');
+    $this->assertSession()->pageTextContainsOnce('@count seconds');
 
     // Member for time should be translated. Change the created time to ensure
     // that the we're dealing in multiple seconds and it can't be exactly 1

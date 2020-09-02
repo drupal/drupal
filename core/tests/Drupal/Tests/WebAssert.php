@@ -12,7 +12,9 @@ use Behat\Mink\Session;
 use Drupal\Component\Utility\Html;
 use Drupal\Core\Url;
 use PHPUnit\Framework\Assert;
+use PHPUnit\Framework\AssertionFailedError;
 use PHPUnit\Framework\Constraint\ArrayHasKey;
+use PHPUnit\Framework\Constraint\IsIdentical;
 use PHPUnit\Framework\Constraint\LogicalNot;
 
 /**
@@ -99,6 +101,26 @@ class WebAssert extends MinkWebAssert {
       new ArrayHasKey($name)
     );
     Assert::assertThat($headers, $constraint, $message);
+  }
+
+  /**
+   * Asserts that the current page text matches regex a number of times.
+   *
+   * @param int $count
+   *   The number of times the pattern is expected to be present.
+   * @param string $regex
+   *   The regex pattern.
+   * @param string $message
+   *   (Optional) the failure message.
+   */
+  public function pageTextMatchesCount(int $count, string $regex, string $message = ''): void {
+    $actual = preg_replace('/\s+/u', ' ', $this->session->getPage()->getText());
+    $matches = preg_match_all($regex, $actual);
+    if ($message === '') {
+      $message = "Failed asserting that the page matches the pattern '$regex' $count time(s), $matches found.";
+    }
+    $constraint = new IsIdentical($count);
+    Assert::assertThat($matches, $constraint, $message);
   }
 
   /**
@@ -705,22 +727,13 @@ class WebAssert extends MinkWebAssert {
     if (func_num_args() > 1) {
       @trigger_error('Calling ' . __METHOD__ . ' with more than one argument is deprecated in drupal:9.1.0 and will throw an \InvalidArgumentException in drupal:10.0.0. See https://www.drupal.org/node/3162537', E_USER_DEPRECATED);
     }
-    $actual = $this->session->getPage()->getText();
-    $actual = preg_replace('/\s+/u', ' ', $actual);
     $regex = '/' . preg_quote($text, '/') . '/ui';
-    $count = preg_match_all($regex, $actual);
-    if ($count === 1) {
-      return;
+    try {
+      $this->pageTextMatchesCount(1, $regex);
     }
-
-    if ($count > 1) {
-      $message = sprintf('The text "%s" appears in the text of this page more than once, but it should not.', $text);
+    catch (AssertionFailedError $e) {
+      throw new ResponseTextException($e->getMessage(), $this->session->getDriver());
     }
-    else {
-      $message = sprintf('The text "%s" was not found anywhere in the text of the current page.', $text);
-    }
-
-    throw new ResponseTextException($message, $this->session->getDriver());
   }
 
   /**
