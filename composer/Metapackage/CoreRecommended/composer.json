@@ -41,7 +41,7 @@
         "symfony/event-dispatcher": "v4.4.9",
         "symfony/event-dispatcher-contracts": "v1.1.7",
         "symfony/http-foundation": "v4.4.9",
-        "symfony/http-kernel": "v4.4.9",
+        "symfony/http-kernel": "v4.4.13",
         "symfony/mime": "v5.1.0",
         "symfony/polyfill-ctype": "v1.17.0",
         "symfony/polyfill-iconv": "v1.17.0",
