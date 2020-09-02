@@ -35,6 +35,12 @@
         "symfony/dom-crawler": "^4.4 !=4.4.5",
         "easyrdf/easyrdf": "^0.9"
     },
+    "replace": {
+        "paragonie/random_compat": "9.99.99",
+        "symfony/polyfill-php70": "*",
+        "symfony/polyfill-php72": "*",
+        "symfony/polyfill-php73": "*"
+    },
     "minimum-stability": "dev",
     "prefer-stable": true,
     "config": {
