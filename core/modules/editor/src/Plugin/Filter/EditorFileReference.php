@@ -79,6 +79,14 @@ class EditorFileReference extends FilterBase implements ContainerFactoryPluginIn
           $file = $this->entityRepository->loadEntityByUuid('file', $uuid);
           if ($file instanceof FileInterface) {
             $node->setAttribute('src', $file->createFileUrl());
+            if ($node->nodeName == 'img') {
+              // Without dimensions specified, layout shifts can occur,
+              // which are more noticeable on pages that take some time to load.
+              list($width, $height) = getimagesize($file->getFileUri());
+              $node->setAttribute('width', $width);
+              $node->setAttribute('height', $height);
+              $node->setAttribute('loading', 'lazy');
+            }
           }
         }
 
