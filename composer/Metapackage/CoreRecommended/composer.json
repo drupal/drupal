@@ -39,7 +39,7 @@
         "symfony/dependency-injection": "v3.4.35",
         "symfony/event-dispatcher": "v3.4.35",
         "symfony/http-foundation": "v3.4.35",
-        "symfony/http-kernel": "v3.4.35",
+        "symfony/http-kernel": "v3.4.44",
         "symfony/polyfill-ctype": "v1.12.0",
         "symfony/polyfill-iconv": "v1.12.0",
         "symfony/polyfill-mbstring": "v1.12.0",
