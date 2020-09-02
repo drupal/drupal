@@ -47,7 +47,7 @@ class EntityModerationForm extends FormBase {
    *   The moderation information service.
    * @param \Drupal\content_moderation\StateTransitionValidationInterface $validation
    *   The moderation state transition validation service.
-   * @param \Drupal\Component\Datetime\Time $time
+   * @param \Drupal\Component\Datetime\TimeInterface $time
    *   The time service.
    */
   public function __construct(ModerationInformationInterface $moderation_info, StateTransitionValidationInterface $validation, TimeInterface $time) {
