@@ -90,20 +90,14 @@ class MediaLibrarySelectForm extends FieldPluginBase {
         'query' => $query,
       ],
       'callback' => [static::class, 'updateWidget'],
+      // The AJAX system automatically moves focus to the first :tabbable
+      // element of the modal, so we need to disable refocus on the button.
+      'disable-refocus' => TRUE,
     ];
 
     $form['actions']['submit']['#value'] = $this->t('Insert selected');
     $form['actions']['submit']['#button_type'] = 'primary';
     $form['actions']['submit']['#field_id'] = $selection_field_id;
-    // By default, the AJAX system tries to move the focus back to the element
-    // that triggered the AJAX request. Since the media library is closed after
-    // clicking the select button, the focus can't be moved back. We need to set
-    // the 'data-disable-refocus' attribute to prevent the AJAX system from
-    // moving focus to a random element. The select button triggers an update in
-    // the opener, and the opener should be responsible for moving the focus. An
-    // example of this can be seen in MediaLibraryWidget::updateWidget().
-    // @see \Drupal\media_library\Plugin\Field\FieldWidget\MediaLibraryWidget::updateWidget()
-    $form['actions']['submit']['#attributes']['data-disable-refocus'] = 'true';
   }
 
   /**
