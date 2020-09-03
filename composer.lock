@@ -649,11 +649,11 @@
         },
         {
             "name": "drupal/core",
-            "version": "8.8.9",
+            "version": "8.8.x-dev",
             "dist": {
                 "type": "path",
                 "url": "core",
-                "reference": "67994f5a1eb5a32289d12dd53de872db02998046"
+                "reference": "7a296197c931668df3b70f0037b26067ec264094"
             },
             "require": {
                 "asm89/stack-cors": "^1.1",
@@ -882,11 +882,11 @@
         },
         {
             "name": "drupal/core-project-message",
-            "version": "8.8.9",
+            "version": "8.8.x-dev",
             "dist": {
                 "type": "path",
                 "url": "composer/Plugin/ProjectMessage",
-                "reference": "32daf154f8c3d6a67306fa307e64bd14cff8fcdb"
+                "reference": "3b795f469441eb27854798f70cb38e717d80bbfc"
             },
             "require": {
                 "composer-plugin-api": "^1.1",
@@ -915,11 +915,11 @@
         },
         {
             "name": "drupal/core-vendor-hardening",
-            "version": "8.8.9",
+            "version": "8.8.x-dev",
             "dist": {
                 "type": "path",
                 "url": "composer/Plugin/VendorHardening",
-                "reference": "63c4c2321b48b31ed8f8494bace9d8335729c39b"
+                "reference": "2db54f089065dedbe4a040b01f7b527f2bad68f6"
             },
             "require": {
                 "composer-plugin-api": "^1.1",
@@ -6401,7 +6401,11 @@
     ],
     "aliases": [],
     "minimum-stability": "dev",
-    "stability-flags": [],
+    "stability-flags": {
+        "drupal/core": 20,
+        "drupal/core-project-message": 20,
+        "drupal/core-vendor-hardening": 20
+    },
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": [],
