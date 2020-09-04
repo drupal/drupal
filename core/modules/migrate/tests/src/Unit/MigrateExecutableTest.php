@@ -66,12 +66,16 @@ class MigrateExecutableTest extends MigrateTestCase {
     $source->expects($this->once())
       ->method('rewind')
       ->will($this->throwException(new \Exception($exception_message)));
+    // The exception message contains the line number where it is thrown. Save
+    // it for the testing the exception message.
+    $line = (__LINE__) - 3;
 
     $this->migration->expects($this->any())
       ->method('getSourcePlugin')
       ->will($this->returnValue($source));
 
     // Ensure that a message with the proper message was added.
+    $exception_message .= " in " . __FILE__ . " line $line";
     $this->message->expects($this->once())
       ->method('display')
       ->with("Migration failed with source plugin exception: " . Html::escape($exception_message));
