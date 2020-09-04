@@ -452,7 +452,7 @@ function locale_system_update(array $components) {
 function locale_system_remove($components) {
   $components += ['module' => [], 'theme' => []];
   $list = array_merge($components['module'], $components['theme']);
-  if ($language_list = locale_translatable_language_list()) {
+  if (locale_translatable_language_list()) {
     module_load_include('compare.inc', 'locale');
     \Drupal::moduleHandler()->loadInclude('locale', 'bulk.inc');
 
