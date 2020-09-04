@@ -452,7 +452,7 @@ abstract class SqlBase extends SourcePluginBase implements ContainerFactoryPlugi
     }
 
     foreach (['username', 'password', 'host', 'port', 'namespace', 'driver'] as $key) {
-      if (isset($source_database_options[$key])) {
+      if (isset($source_database_options[$key]) && isset($id_map_database_options[$key])) {
         if ($id_map_database_options[$key] != $source_database_options[$key]) {
           return FALSE;
         }
