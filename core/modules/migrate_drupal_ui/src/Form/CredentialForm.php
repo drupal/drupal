@@ -134,6 +134,8 @@ class CredentialForm extends MigrateUpgradeFormBase {
       $form['database']['driver']['#options'][$key] = $driver->name();
 
       $form['database']['settings'][$key] = $driver->getFormOptions($default_options);
+      unset($form['database']['settings'][$key]['advanced_options']['prefix']['#description']);
+
       // @todo https://www.drupal.org/node/2678510 Using
       //   #limit_validation_errors in the submit does not work so it is not
       //   possible to require the database and username for mysql and pgsql.
