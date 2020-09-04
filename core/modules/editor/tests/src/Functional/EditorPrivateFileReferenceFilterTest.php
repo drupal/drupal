@@ -2,9 +2,11 @@
 
 namespace Drupal\Tests\editor\Functional;
 
+use Drupal\Core\File\FileSystemInterface;
 use Drupal\file\Entity\File;
 use Drupal\node\NodeInterface;
 use Drupal\Tests\BrowserTestBase;
+use Drupal\Tests\TestFileCreationTrait;
 use Drupal\user\Entity\Role;
 use Drupal\user\RoleInterface;
 
@@ -14,6 +16,8 @@ use Drupal\user\RoleInterface;
  * @group editor
  */
 class EditorPrivateFileReferenceFilterTest extends BrowserTestBase {
+
+  use TestFileCreationTrait;
 
   /**
    * Modules to enable.
@@ -49,6 +53,10 @@ class EditorPrivateFileReferenceFilterTest extends BrowserTestBase {
     // Create a content type with a body field.
     $this->drupalCreateContentType(['type' => 'page', 'name' => 'Basic page']);
 
+    // Get test files.
+    /** @var array stdClass */
+    $files = $this->getTestFiles('image');
+    $image = reset($files);
     // Create a file in the 'private:// ' stream.
     $filename = 'test.png';
     $src = '/system/files/' . $filename;
@@ -59,7 +67,7 @@ class EditorPrivateFileReferenceFilterTest extends BrowserTestBase {
     $file->setTemporary();
     $file->setOwner($author);
     // Create the file itself.
-    file_put_contents($file->getFileUri(), $this->randomString());
+    \Drupal::service('file_system')->copy($image->uri, $file->getFileUri(), FileSystemInterface::EXISTS_RENAME);
     $file->save();
 
     // The image should be visible for its author.
