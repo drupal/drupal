@@ -19,8 +19,14 @@ class LanguageContentSettingsTaxonomyVocabulary extends DrupalSqlBase {
    * {@inheritdoc}
    */
   public function query() {
-    return $this->select('vocabulary', 'v')
-      ->fields('v', ['vid', 'language']);
+    $query = $this->select('vocabulary', 'v')
+      ->fields('v', ['vid']);
+    if ($this->getDatabase()
+      ->schema()
+      ->fieldExists('vocabulary', 'language')) {
+      $query->addField('v', 'language');
+    }
+    return $query;
   }
 
   /**
@@ -44,9 +50,9 @@ class LanguageContentSettingsTaxonomyVocabulary extends DrupalSqlBase {
     // 2 - Predefined language for a vocabulary and its terms.
     // 3 - Per-language terms, translatable (referencing terms with different
     // languages) but not localizable.
-    $i18ntaxonomy_vocabulary = $this->variableGet('i18ntaxonomy_vocabulary', NULL);
+    $i18ntaxonomy_vocabulary = $this->variableGet('i18ntaxonomy_vocabulary', []);
     $vid = $row->getSourceProperty('vid');
-    $state = FALSE;
+    $state = 0;
     if (array_key_exists($vid, $i18ntaxonomy_vocabulary)) {
       $state = $i18ntaxonomy_vocabulary[$vid];
     }
