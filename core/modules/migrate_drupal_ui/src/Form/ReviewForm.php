@@ -281,7 +281,7 @@ class ReviewForm extends MigrateUpgradeFormBase {
    * @return string[][]
    *   An indexed array of arrays that contain module data, sorted by the source
    *   module name. Each sub-array contains the source module name, the source
-   *   module machine name, and the the destination module names in a sorted CSV
+   *   module machine name, and the destination module names in a sorted CSV
    *   format.
    */
   protected function prepareOutput(array $migration_state) {
