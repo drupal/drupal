@@ -2,7 +2,8 @@ module.exports = {
   '@tags': ['core'],
   before(browser) {
     browser.drupalInstall({
-      setupFile: 'core/tests/Drupal/TestSite/TestSiteInstallTestScript.php',
+      setupFile:
+        'core/tests/Drupal/TestSite/TestSiteMultilingualInstallTestScript.php',
       langcode: 'fr',
     });
   },
