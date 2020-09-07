@@ -484,7 +484,7 @@ use Drupal\node\Entity\NodeType;
  * - defaults: For entity form routes, use _entity_form rather than the generic
  *   _controller or _form. The value is composed of the entity type machine name
  *   and a form handler type from the entity annotation (see @ref define above
- *   more more on handlers and annotation). So, in this example, block.default
+ *   for more on handlers and annotation). So, in this example, block.default
  *   refers to the 'default' form handler on the block entity type, whose
  *   annotation contains:
  *   @code
