@@ -8,6 +8,15 @@
 use Drupal\media\OEmbed\Provider;
 
 /**
+ * Implements hook_preprocess_media_oembed_iframe().
+ */
+function media_test_oembed_preprocess_media_oembed_iframe(array &$variables) {
+  if ($variables['resource']->getProvider()->getName() === 'YouTube') {
+    $variables['media'] = str_replace('?feature=oembed', '?feature=oembed&pasta=rigatoni', (string) $variables['media']);
+  }
+}
+
+/**
  * Implements hook_oembed_resource_url_alter().
  */
 function media_test_oembed_oembed_resource_url_alter(array &$parsed_url, Provider $provider) {

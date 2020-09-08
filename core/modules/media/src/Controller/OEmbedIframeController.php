@@ -146,6 +146,7 @@ class OEmbedIframeController implements ContainerInjectionInterface {
       // metadata of the rendered HTML will be captured correctly.
       $element = [
         '#theme' => 'media_oembed_iframe',
+        '#resource' => $resource,
         // Even though the resource HTML is untrusted, IFrameMarkup::create()
         // will create a trusted string. The only reason this is okay is
         // because we are serving it in an iframe, which will mitigate the

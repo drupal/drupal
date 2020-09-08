@@ -2,6 +2,10 @@
 
 namespace Drupal\Tests\media\Kernel;
 
+use Drupal\media\Controller\OEmbedIframeController;
+use Drupal\media\OEmbed\Provider;
+use Drupal\media\OEmbed\Resource;
+use Prophecy\Argument;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -10,6 +14,11 @@ use Symfony\Component\HttpFoundation\Request;
  * @group media
  */
 class OEmbedIframeControllerTest extends MediaKernelTestBase {
+
+  /**
+   * {@inheritdoc}
+   */
+  protected static $modules = ['media_test_oembed'];
 
   /**
    * Data provider for testBadHashParameter().
@@ -52,6 +61,45 @@ class OEmbedIframeControllerTest extends MediaKernelTestBase {
       'hash' => $hash,
     ]);
     $controller($request);
+  }
+
+  /**
+   * Tests that resources can be used in media_oembed_iframe preprocess.
+   *
+   * @see media_test_oembed_preprocess_media_oembed_iframe()
+   *
+   * @covers ::render
+   */
+  public function testResourcePassedToPreprocess() {
+    $hash = $this->container->get('media.oembed.iframe_url_helper')
+      ->getHash('', 0, 0);
+
+    $url_resolver = $this->prophesize('\Drupal\media\OEmbed\UrlResolverInterface');
+    $resource_fetcher = $this->prophesize('\Drupal\media\OEmbed\ResourceFetcherInterface');
+
+    $provider = new Provider('YouTube', 'https://youtube.com', [
+      [
+        'url' => 'https://youtube.com/foo',
+      ],
+    ]);
+    $resource = Resource::rich('<iframe src="https://youtube.com/watch?feature=oembed"></iframe>', 320, 240, $provider);
+
+    $resource_fetcher->fetchResource(Argument::cetera())->willReturn($resource);
+
+    $this->container->set('media.oembed.url_resolver', $url_resolver->reveal());
+    $this->container->set('media.oembed.resource_fetcher', $resource_fetcher->reveal());
+
+    $request = new Request([
+      'url' => '',
+      'hash' => $hash,
+    ]);
+    $content = OEmbedIframeController::create($this->container)
+      ->render($request)
+      ->getContent();
+
+    // This query parameter is added by
+    // media_test_oembed_preprocess_media_oembed_iframe() for YouTube videos.
+    $this->assertStringContainsString('&pasta=rigatoni', $content);
   }
 
 }
