@@ -31,7 +31,7 @@ class ErrorHandlerTest extends BrowserTestBase {
     $config = $this->config('system.logging');
     $error_notice = [
       '%type' => 'Notice',
-      '@message' => 'Undefined variable: bananas',
+      '@message' => 'Undefined offset: 1',
       '%function' => 'Drupal\error_test\Controller\ErrorTestController->generateWarnings()',
       '%file' => drupal_get_path('module', 'error_test') . '/error_test.module',
     ];
