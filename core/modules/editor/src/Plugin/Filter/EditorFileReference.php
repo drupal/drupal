@@ -82,10 +82,13 @@ class EditorFileReference extends FilterBase implements ContainerFactoryPluginIn
             if ($node->nodeName == 'img') {
               // Without dimensions specified, layout shifts can occur,
               // which are more noticeable on pages that take some time to load.
-              list($width, $height) = getimagesize($file->getFileUri());
-              $node->setAttribute('width', $width);
-              $node->setAttribute('height', $height);
-              $node->setAttribute('loading', 'lazy');
+              // As a result, only mark images as lazy load that have dimensions.
+              [$width, $height] = @getimagesize($file->getFileUri());
+              if ($width != NULL && $height != NULL) {
+                $node->setAttribute('width', $width);
+                $node->setAttribute('height', $height);
+                $node->setAttribute('loading', 'lazy');
+              }
             }
           }
         }

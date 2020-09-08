@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\system\Functional\Theme;
 
+use Behat\Mink\Exception\ElementHtmlException;
 use Drupal\Tests\BrowserTestBase;
 
 /**
@@ -28,7 +29,13 @@ class ImageLoadingAttributeTest extends BrowserTestBase {
    */
   public function testImageLoadingAttribute() {
     $this->drupalGet('image-lazy-load-test');
-    $this->assertSession()->responseContains('loading="lazy"');
+    $this->assertSession()->elementAttributeExists('css', '#with-dimensions img', 'loading');
+    $this->assertSession()->elementAttributeContains('css', '#with-dimensions img', 'loading', 'lazy');
+
+    // Without image dimensions loading attribute is not generated.
+    $this->assertSession()->elementAttributeContains('css', '#without-dimensions img', 'alt', 'Image lazy load testing image without dimensions');
+    $this->expectExceptionMessage('The attribute "loading" was not found in the element matching css "#without-dimensions img".');
+    $this->assertSession()->elementAttributeExists('css', '#without-dimensions img', 'loading');
   }
 
 }
